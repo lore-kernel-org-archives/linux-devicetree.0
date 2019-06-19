@@ -1,77 +1,68 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Wed, 19 Jun 2019 14:23:16 +0200
-Message-ID: <CAK8P3a3e+U85yHTeE4dHa4okLVHgBd8Kke9=FytzvMwz+wB0sQ@mail.gmail.com>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
- <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org> <b23a83c18055470c5308fcd1eed018056371fc1d.camel@sipsolutions.net>
- <CAK8P3a1FeUQR3pgoQxHoRK05JGORyR+TFATVQiijLWtFKTv6OQ@mail.gmail.com>
- <613cdfde488eb23d7207c7ba6258662702d04840.camel@sipsolutions.net>
- <CAK8P3a2onXpxiE4y9PzRwuPM2dh=h_BKz7Eb0=LLPgBbZoK1bQ@mail.gmail.com> <6c70950d0c78bc02a3d016918ec3929e@codeaurora.org>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v5 2/2] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
+Date: Wed, 19 Jun 2019 14:26:22 +0200
+Message-ID: <20190619122622.GB29084@ravnborg.org>
+References: <20190603152331.23160-1-paul@crapouillou.net>
+ <20190603152331.23160-2-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6c70950d0c78bc02a3d016918ec3929e@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20190603152331.23160-2-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-Cc: Johannes Berg <johannes@sipsolutions.net>, Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, Dan Williams <dcbw@redhat.com>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 11:15 PM Subash Abhinov Kasiviswanathan
-<subashab@codeaurora.org> wrote:
->
-> On 2019-06-18 14:55, Arnd Bergmann wrote:
-> > On Tue, Jun 18, 2019 at 10:36 PM Johannes Berg
-> > <johannes@sipsolutions.net> wrote:
-> >>
-> >> On Tue, 2019-06-18 at 21:59 +0200, Arnd Bergmann wrote:
-> >> >
-> >> > From my understanding, the ioctl interface would create the lower
-> >> > netdev after talking to the firmware, and then user space would use
-> >> > the rmnet interface to create a matching upper-level device for that.
-> >> > This is an artifact of the strong separation of ipa and rmnet in the
-> >> > code.
-> >>
-> >> Huh. But if rmnet has muxing, and IPA supports that, why would you
-> >> ever
-> >> need multiple lower netdevs?
-> >
-> > From my reading of the code, there is always exactly a 1:1 relationship
-> > between an rmnet netdev an an ipa netdev. rmnet does the encapsulation/
-> > decapsulation of the qmap data and forwards it to the ipa netdev,
-> > which then just passes data through between a hardware queue and
-> > its netdevice.
-> >
->
-> There is a n:1 relationship between rmnet and IPA.
-> rmnet does the de-muxing to multiple netdevs based on the mux id
-> in the MAP header for RX packets and vice versa.
+Hi Paul.
 
-Oh, so you mean that even though IPA supports multiple channels
-and multiple netdev instances for a physical device, all the
-rmnet devices end up being thrown into a single channel in IPA?
+On Mon, Jun 03, 2019 at 05:23:31PM +0200, Paul Cercueil wrote:
+> Add a KMS driver for the Ingenic JZ47xx family of SoCs.
+> This driver is meant to replace the aging jz4740-fb driver.
+> 
+> This driver does not make use of the simple pipe helper, for the reason
+> that it will soon be updated to support more advanced features like
+> multiple planes, IPU integration for colorspace conversion and up/down
+> scaling, support for DSI displays, and TV-out and HDMI outputs.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+> 
+> Notes:
+>     v2: - Remove custom handling of panel. The panel is now discovered using
+>     	  the standard API.
+>     	- Lots of small tweaks suggested by upstream
+>     
+>     v3: - Use devm_drm_dev_init()
+>     	- Update compatible strings to -lcd instead of -drm
+>     	- Add destroy() callbacks to plane and crtc
+>     	- The ingenic,lcd-mode is now read from the bridge's DT node
+>     
+>     v4: Remove ingenic,lcd-mode property completely. The various modes are now
+>     	deduced from the connector type, the pixel format or the bus flags.
+>     
+>     v5: - Fix framebuffer size incorrectly calculated for 24bpp framebuffers
+>     	- Use 32bpp framebuffer instead of 16bpp, as it'll work with both
+>     	  16-bit and 24-bit panel
+>     	- Get rid of drm_format_plane_cpp() which has been dropped upstream
+>     	- Avoid using drm_format_info->depth, which is deprecated.
+In the drm world we include the revision notes in the changelog.
+So I did this when I applied it to drm-misc-next.
 
-What are the other channels for in IPA? I understand that there
-is one channel for commands that is separate, while the others
-are for network devices, but that seems to make no sense if
-we only use a single channel for rmnet data.
+Fixed a few trivial checkpatch warnings about indent too.
+There was a few too-long-lines warnings that I ignored. Fixing them
+would have hurt readability.
 
-> >> Yeah, but if you actually have a hardware queue per upper netdev then
-> >> you don't really need this - you just stop the netdev queue when the
-> >> hardware queue is full, and you have flow control automatically.
-> >>
-> >> So I really don't see any reason to have these messages going back and
-> >> forth unless you plan to have multiple sessions muxed on a single
-> >> hardware queue.
-> >
->
-> Hardware may flow control specific PDNs (rmnet interfaces) based on QoS
-> -
-> not necessarily only in case of hardware queue full.
+I assume you will maintain this driver onwards from now.
+Please request drm-misc commit rights (see
+https://www.freedesktop.org/wiki/AccountRequests/)
+You will need a legacy SSH account.
 
-Right, I guess that makes sense if everything ends up in a
-single queue in IPA.
+And you should familiarize yourself with the maintainer-tools:
+https://drm.pages.freedesktop.org/maintainer-tools/index.html
 
-      Arnd
+For my use I use "dim update-branches; dim apply; dim push
+So only a small subset i needed for simple use.
+
+	Sam
