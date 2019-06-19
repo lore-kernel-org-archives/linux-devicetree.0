@@ -1,60 +1,44 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH 3/8] iommu/arm-smmu-v3: Support platform SSID
-Date: Wed, 19 Jun 2019 12:53:46 +0100
-Message-ID: <73cfb797-5ae7-b9d9-01ea-fe98a1bed5c3@arm.com>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-4-jean-philippe.brucker@arm.com>
- <20190618180851.GK4270@fuggles.cambridge.arm.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v7 4/7] arm: Use common cpu_topology structure and
+ functions.
+Date: Wed, 19 Jun 2019 13:10:57 +0100
+Message-ID: <20190619121057.GE1360@e107155-lin>
+References: <20190617185920.29581-1-atish.patra@wdc.com>
+ <20190617185920.29581-5-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190618180851.GK4270@fuggles.cambridge.arm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190617185920.29581-5-atish.patra@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: "joro@8bytes.org" <joro@8bytes.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "eric.auger@redhat.com" <eric.auger@redhat.com>
+To: Atish Patra <atish.patra@wdc.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/06/2019 19:08, Will Deacon wrote:
->> +	/*
->> +	 * If the SMMU doesn't support 2-stage CD, limit the linear
->> +	 * tables to a reasonable number of contexts, let's say
->> +	 * 64kB / sizeof(ctx_desc) = 1024 = 2^10
->> +	 */
->> +	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB))
->> +		master->ssid_bits = min(master->ssid_bits, 10U);
+Hi Russell,
+
+On Mon, Jun 17, 2019 at 11:59:17AM -0700, Atish Patra wrote:
+> Currently, ARM32 and ARM64 uses different data structures to represent
+> their cpu topologies. Since, we are moving the ARM64 topology to common
+> code to be used by other architectures, we can reuse that for ARM32 as
+> well.
 > 
-> Please introduce a #define for the 10, so that it is computed in the way
-> you describe in the comment (a bit like we do for things like queue sizes).
-
-Ok
-
->> +
->>  	group = iommu_group_get_for_dev(dev);
->>  	if (!IS_ERR(group)) {
->>  		iommu_group_put(group);
->> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
->> index f04a6df65eb8..04f4f6b95d82 100644
->> --- a/drivers/iommu/of_iommu.c
->> +++ b/drivers/iommu/of_iommu.c
->> @@ -206,8 +206,12 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
->>  			if (err)
->>  				break;
->>  		}
->> -	}
->>  
->> +		fwspec = dev_iommu_fwspec_get(dev);
->> +		if (!err && fwspec)
->> +			of_property_read_u32(master_np, "pasid-num-bits",
->> +					     &fwspec->num_pasid_bits);
->> +	}
+> Take this opprtunity to remove the redundant functions from ARM32 and
+> reuse the common code instead.
 > 
-> Hmm. Do you know if there's anything in ACPI for this?
+> To: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Tested-by: Sudeep Holla <sudeep.holla@arm.com> (on TC2)
+> Reviewed-by : Sudeep Holla <sudeep.holla@arm.com>
+> 
+> ---
+> Hi Russell,
+> Can we get a ACK for this patch ? We are hoping that the entire
+> series can be merged at one go.
 
-Yes, IORT version D introduced a "substream width" field for the Named
-component node (platform device). I don't think it existed last time I
-checked, so I'll see about supporting it.
+It would be nice to get this in for v5.3 as it's almost there.
+Are you fine with these changes ?
 
-Thanks,
-Jean
+--
+Regards,
+Sudeep
