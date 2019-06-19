@@ -1,58 +1,39 @@
-From: Peng Ma <peng.ma@nxp.com>
-Subject: RE: [EXT] Re: [PATCH 2/4] arm64: dts: fsl: ls1028a: Add eDMA node
-Date: Wed, 19 Jun 2019 01:47:03 +0000
-Message-ID: <VI1PR04MB4431D32CF8F6F430B58A56D9EDE50@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20190506090344.37784-1-peng.ma@nxp.com>
- <20190506090344.37784-2-peng.ma@nxp.com> <20190618131319.GC1959@dragon>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v3 0/2] Add macb support for SiFive FU540-C000
+Date: Tue, 18 Jun 2019 22:02:51 -0400 (EDT)
+Message-ID: <20190618.220251.295948387700018458.davem@davemloft.net>
+References: <1560844568-4746-1-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190618131319.GC1959@dragon>
-Content-Language: en-US
+In-Reply-To: <1560844568-4746-1-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "vkoul@kernel.org" <vkoul@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Leo Li <leoyang.li@nxp.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: yash.shah@sifive.com
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com, ynezz@true.cz, sachin.ghadi@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFNoYXduIEd1byA8c2hhd25n
-dW9Aa2VybmVsLm9yZz4NCj5TZW50OiAyMDE5xOo21MIxOMjVIDIxOjEzDQo+VG86IFBlbmcgTWEg
-PHBlbmcubWFAbnhwLmNvbT4NCj5DYzogdmtvdWxAa2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwu
-b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgTGVvIExpDQo+PGxlb3lhbmcubGlAbnhwLmNvbT47
-IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZzsNCj5k
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsN
-Cj5saW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj5TdWJqZWN0OiBbRVhUXSBS
-ZTogW1BBVENIIDIvNF0gYXJtNjQ6IGR0czogZnNsOiBsczEwMjhhOiBBZGQgZURNQSBub2RlDQo+
-DQo+Q2F1dGlvbjogRVhUIEVtYWlsDQo+DQo+T24gTW9uLCBNYXkgMDYsIDIwMTkgYXQgMDk6MDM6
-NDJBTSArMDAwMCwgUGVuZyBNYSB3cm90ZToNCj4+IEFkZCB0aGUgZURNQSBkZXZpY2UgdHJlZSBu
-b2RlcyBmb3IgTFMxMDI4QSBkZXZpY2VzDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogUGVuZyBNYSA8
-cGVuZy5tYUBueHAuY29tPg0KPj4gLS0tDQo+PiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
-bGUvZnNsLWxzMTAyOGEuZHRzaSB8ICAgMTUgKysrKysrKysrKysrKysrDQo+PiAgMSBmaWxlcyBj
-aGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1n
-aXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+Yi9h
-cmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+PiBpbmRleCA4
-MTE2ZmIzLi43MWI4N2NiIDEwMDY0NA0KPj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPj4gQEAgLTIzNSw2ICsyMzUsMjEgQEANCj4+ICAgICAg
-ICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPj4gICAgICAgICAgICAgICB9
-Ow0KPj4NCj4+ICsgICAgICAgICAgICAgZWRtYTA6IGVkbWFAMjJjMDAwMCB7DQo+PiArICAgICAg
-ICAgICAgICAgICAgICAgI2RtYS1jZWxscyA9IDwyPjsNCj4+ICsgICAgICAgICAgICAgICAgICAg
-ICBjb21wYXRpYmxlID0gImZzbCx2ZjYxMC1lZG1hIjsNCj4+ICsgICAgICAgICAgICAgICAgICAg
-ICByZWcgPSA8MHgwIDB4MjJjMDAwMCAweDAgMHgxMDAwMD4sDQo+PiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgPDB4MCAweDIyZDAwMDAgMHgwIDB4MTAwMDA+LA0KPj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDwweDAgMHgyMmUwMDAwIDB4MCAweDEwMDAwPjsNCj4+ICsgICAgICAg
-ICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNTYNCj5JUlFfVFlQRV9MRVZFTF9I
-SUdIPiwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEdJQ19TUEkgNTYN
-Cj5JUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4+ICsgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1
-cHQtbmFtZXMgPSAiZWRtYS10eCIsICJlZG1hLWVyciI7DQo+PiArICAgICAgICAgICAgICAgICAg
-ICAgZG1hLWNoYW5uZWxzID0gPDMyPjsNCj4+ICsgICAgICAgICAgICAgICAgICAgICBjbG9jay1u
-YW1lcyA9ICJkbWFtdXgwIiwgImRtYW11eDEiOw0KPj4gKyAgICAgICAgICAgICAgICAgICAgIGNs
-b2NrcyA9IDwmY2xvY2tnZW4gNCAxPiwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICA8JmNsb2NrZ2VuIDQgMT47DQo+PiArICAgICAgICAgICAgIH07DQo+PiArDQo+DQo+VGhlIGVk
-bWFAMjJjMDAwMCBub2RlIGhhZCBhbHJlYWR5IGJlZW4gYWRkZWQgYnkgY29tbWl0IGJlbG93Og0K
-Pg0KPiAgZjU0ZjdiZTVjNWFjICgiYXJtNjQ6IGR0czogbHMxMDI4YTogQWRkIEF1ZGlvIERUIG5v
-ZGVzIikNCj4NCltQZW5nIE1hXSBPSywgZ290IGl0LCB0aGFua3MuDQoNCkJlc3QgUmVnYXJkcywN
-ClBlbmcNCj5TaGF3bg0KPg0KPj4gICAgICAgICAgICAgICBncGlvMTogZ3Bpb0AyMzAwMDAwIHsN
-Cj4+ICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxxb3JpcS1ncGlvIjsN
-Cj4+ICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4MjMwMDAwMCAweDAgMHgxMDAw
-MD47DQo+PiAtLQ0KPj4gMS43LjENCj4+DQo=
+From: Yash Shah <yash.shah@sifive.com>
+Date: Tue, 18 Jun 2019 13:26:06 +0530
+
+> On FU540, the management IP block is tightly coupled with the Cadence
+> MACB IP block. It manages many of the boundary signals from the MACB IP
+> This patchset controls the tx_clk input signal to the MACB IP. It
+> switches between the local TX clock (125MHz) and PHY TX clocks. This
+> is necessary to toggle between 1Gb and 100/10Mb speeds.
+> 
+> Future patches may add support for monitoring or controlling other IP
+> boundary signals.
+> 
+> This patchset is mostly based on work done by
+> Wesley Terpstra <wesley@sifive.com>
+> 
+> This patchset is based on Linux v5.2-rc1 and tested on HiFive Unleashed
+> board with additional board related patches needed for testing can be
+> found at dev/yashs/ethernet_v3 branch of:
+> https://github.com/yashshah7/riscv-linux.git
+> 
+> Change History:
+ ...
+
+Series applied, thank you.
