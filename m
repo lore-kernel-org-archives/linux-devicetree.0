@@ -1,39 +1,24 @@
-Return-Path: <SRS0=RfLZ=US=huawei.com=xuwei5@kernel.org>
-Subject: Re: [PATCH v2 07/11] arm64: dts: hi6220: Update coresight DT bindings
-References: <20190508021902.10358-1-leo.yan@linaro.org>
- <20190508021902.10358-8-leo.yan@linaro.org>
-From: Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <bab80295-7c83-3a3f-cb76-aa64fb93a5e7@hisilicon.com>
-Date: Wed, 19 Jun 2019 17:11:59 +0100
+Return-Path: <SRS0=LpfV=US=verge.net.au=horms@kernel.org>
+Date: Wed, 19 Jun 2019 16:32:53 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Remove "label" from
+ LEDs
+Message-ID: <20190619143252.nlolv6rruzbp7qix@verge.net.au>
+References: <1560953484-12777-1-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20190508021902.10358-8-leo.yan@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, "Mark Rutland  <mark.rutland@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mathieu Poirier" <mathieu.poirier@linaro.org>, Mike Leach <mike.leach@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: Guodong Xu <guodong.xu@linaro.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560953484-12777-1-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Leo,
-
-On 5/8/2019 3:18 AM, Leo Yan wrote:
-> CoreSight DT bindings have been updated, thus the old compatible strings
-> are obsolete and the drivers will report warning if DTS uses these
-> obsolete strings.
+On Wed, Jun 19, 2019 at 03:11:24PM +0100, Fabrizio Castro wrote:
+> Remove "label" properties from the LEDs device tree nodes, since
+> we don't have nice labels on the PCB.
 > 
-> This patch switches to the new bindings for CoreSight dynamic funnel and
-> static replicator, so can dismiss warning during initialisation.
-> 
-> Cc: Wei Xu <xuwei5@hisilicon.com>
-> Cc: Guodong Xu <guodong.xu@linaro.org>
-> Cc: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Applied to the hisilicon dt tree.
-Thanks!
+Thanks,
 
-Best Regards,
-Wei
+I have applied this for inclusion in v5.3.
