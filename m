@@ -1,48 +1,70 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/6] dt-bindings: qcom: Add ipq6018 bindings
-Date: Wed, 19 Jun 2019 08:54:40 -0600
-Message-ID: <CAL_Jsq+0TLtLiX17nRSyVWrJM2_UvLEVMsp7Hf2e3hU7fh4WGg@mail.gmail.com>
-References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org> <1559754961-26783-3-git-send-email-sricharan@codeaurora.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 1/3] dt-bindings: display: renesas: Add r8a774a1 support
+Date: Wed, 19 Jun 2019 08:08:09 +0000
+Message-ID: <TY1PR01MB1770E12DBC116A3F395DE17BC0E50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1560871119-16570-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1560871119-16570-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190618164338.GG21105@pendragon.ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559754961-26783-3-git-send-email-sricharan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190618164338.GG21105@pendragon.ideasonboard.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 11:16 AM Sricharan R <sricharan@codeaurora.org> wrote:
->
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: speriaka <speriaka@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-> index f6316ab..7b19028 100644
-> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
-> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-> @@ -36,6 +36,7 @@ description: |
->         mdm9615
->         ipq8074
->         sdm845
-> +       ipq6018
-
-You need to add actual schema for this, not just a description.
-
->
->    The 'board' element must be one of the following strings:
->
-> @@ -45,6 +46,7 @@ description: |
->         mtp
->         sbc
->         hk01
-> +       cp01-c1
->
->    The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
->    where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
->
+SGkgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrIQ0KDQo+IEZyb206IGxp
+bnV4LXJlbmVzYXMtc29jLW93bmVyQHZnZXIua2VybmVsLm9yZyA8bGludXgtcmVuZXNhcy1zb2Mt
+b3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgTGF1cmVudCBQaW5jaGFydA0KPiBT
+ZW50OiAxOCBKdW5lIDIwMTkgMTc6NDQNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIGR0LWJp
+bmRpbmdzOiBkaXNwbGF5OiByZW5lc2FzOiBBZGQgcjhhNzc0YTEgc3VwcG9ydA0KPiANCj4gSGkg
+RmFicml6aW8sDQo+IA0KPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4NCj4gDQo+IE9uIFR1ZSwg
+SnVuIDE4LCAyMDE5IGF0IDA0OjE4OjM3UE0gKzAxMDAsIEZhYnJpemlvIENhc3RybyB3cm90ZToN
+Cj4gPiBEb2N1bWVudCBSWi9HMk0gKFI4QTc3NEExKSBTb0MgYmluZGluZ3MuDQo+ID4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2Fz
+LmNvbT4NCj4gDQo+IFJldmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNo
+YXJ0QGlkZWFzb25ib2FyZC5jb20+DQo+IA0KPiBJIGRvbid0IGhhdmUgcGVuZGluZyBjaGFuZ2Vz
+IGZvciB0aGlzIGZpbGUgZm9yIHRoaXMga2VybmVsIHJlbGVhc2UuIEFzDQo+IHlvdXIgc2VyaWVz
+IGNvbnRhaW5zIERUIGNoYW5nZXMsIEknbSBmaW5lIGlmIHRoaXMgcGF0Y2ggZ2V0cyBtZXJnZWQN
+Cj4gdGhyb3VnaCB0aGUgQVJNIFNvQyB0cmVlIGFsb25nIHdpdGggdGhlIHJlc3QuIE90aGVyd2lz
+ZSBwbGVhc2UgbGV0IG1lDQo+IGtub3cgaWYgSSBzaG91bGQgaGFuZGxlIGl0IG15c2VsZi4NCg0K
+VGhhbmsgeW91IExhdXJlbnQsIEkgdGhpbmsgdGhpcyBwYXRjaCBjYW4gZ28gYWxvbmcgd2l0aCB0
+aGUgcmVzdCwgaWYgdGhhdCdzIE9LIHdpdGgNClNpbW9uPw0KDQpUaGFua3MsDQpGYWINCg0KPiAN
+Cj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+YnJpZGdlL3JlbmVzYXMsZHctaGRtaS50eHQgfCA0ICsrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQs
+IDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGR3
+LWhkbWkudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+YnJpZGdlL3JlbmVzYXMsZHctaGRtaS50eHQNCj4gPiBpbmRleCBhNDFkMjgwLi5kYjY4MDQxIDEw
+MDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2JyaWRnZS9yZW5lc2FzLGR3LWhkbWkudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsZHctaGRtaS50eHQNCj4gPiBA
+QCAtMTIsMTAgKzEyLDEyIEBAIGZvbGxvd2luZyBkZXZpY2Utc3BlY2lmaWMgcHJvcGVydGllcy4N
+Cj4gPiAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPg0KPiA+ICAtIGNvbXBhdGlibGUgOiBTaGFs
+bCBjb250YWluIG9uZSBvciBtb3JlIG9mDQo+ID4gKyAgLSAicmVuZXNhcyxyOGE3NzRhMS1oZG1p
+IiBmb3IgUjhBNzc0QTEgKFJaL0cyTSkgY29tcGF0aWJsZSBIRE1JIFRYDQo+ID4gICAgLSAicmVu
+ZXNhcyxyOGE3Nzk1LWhkbWkiIGZvciBSOEE3Nzk1IChSLUNhciBIMykgY29tcGF0aWJsZSBIRE1J
+IFRYDQo+ID4gICAgLSAicmVuZXNhcyxyOGE3Nzk2LWhkbWkiIGZvciBSOEE3Nzk2IChSLUNhciBN
+My1XKSBjb21wYXRpYmxlIEhETUkgVFgNCj4gPiAgICAtICJyZW5lc2FzLHI4YTc3OTY1LWhkbWki
+IGZvciBSOEE3Nzk2NSAoUi1DYXIgTTMtTikgY29tcGF0aWJsZSBIRE1JIFRYDQo+ID4gLSAgLSAi
+cmVuZXNhcyxyY2FyLWdlbjMtaGRtaSIgZm9yIHRoZSBnZW5lcmljIFItQ2FyIEdlbjMgY29tcGF0
+aWJsZSBIRE1JIFRYDQo+ID4gKyAgLSAicmVuZXNhcyxyY2FyLWdlbjMtaGRtaSIgZm9yIHRoZSBn
+ZW5lcmljIFItQ2FyIEdlbjMgYW5kIFJaL0cyIGNvbXBhdGlibGUNCj4gPiArCQkJICAgICBIRE1J
+IFRYDQo+ID4NCj4gPiAgICAgIFdoZW4gY29tcGF0aWJsZSB3aXRoIGdlbmVyaWMgdmVyc2lvbnMs
+IG5vZGVzIG11c3QgbGlzdCB0aGUgU29DLXNwZWNpZmljDQo+ID4gICAgICB2ZXJzaW9uIGNvcnJl
+c3BvbmRpbmcgdG8gdGhlIHBsYXRmb3JtIGZpcnN0LCBmb2xsb3dlZCBieSB0aGUNCj4gDQo+IC0t
+DQo+IFJlZ2FyZHMsDQo+IA0KPiBMYXVyZW50IFBpbmNoYXJ0DQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
