@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v3 15/16] ARM: dts: sunxi: h3/h5: Switch from phy-mode to phy-connection-type
-Date: Wed, 19 Jun 2019 11:47:24 +0200
-Message-ID: <b972da9d2751fa0868421a20a1232d9131c87ffc.1560937626.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v3 09/16] dt-bindings: net: sun7i-gmac: Convert the binding to a schemas
+Date: Wed, 19 Jun 2019 11:47:18 +0200
+Message-ID: <727b6d0540a500ccdb2addd9a54bcf62463b426f.1560937626.git-series.maxime.ripard@bootlin.com>
 References: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,300 +9,163 @@ Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
 Sender: netdev-owner@vger.kernel.org
 To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The phy-mode device tree property has been deprecated in favor of
-phy-connection-type, let's replace it.
+Switch our Allwinner A20 GMAC controller binding to a YAML schema to enable
+the DT validation. Since that controller is based on a Synopsys IP, let's
+add the validation to that schemas with a bunch of conditionals.
 
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
 ---
 
 Changes from v2:
-  - new patch
----
- arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts                    | 2 +-
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts                            | 2 +-
- arch/arm/boot/dts/sun8i-h3-mapleboard-mp130.dts                      | 2 +-
- arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts                        | 2 +-
- arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts                             | 2 +-
- arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts                            | 2 +-
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts                            | 2 +-
- arch/arm/boot/dts/sun8i-h3-orangepi-one.dts                          | 2 +-
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts                           | 2 +-
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts                         | 2 +-
- arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts                       | 2 +-
- arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts                         | 2 +-
- arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi                        | 2 +-
- arch/arm/boot/dts/sunxi-libretech-all-h3-cc.dtsi                     | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts         | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts              | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts             | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts           | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts       | 2 +-
- 20 files changed, 20 insertions(+), 20 deletions(-)
+  - Switch to phy-connection-type instead of phy-mode
 
-diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-index f19ed981da9d..671f21e1b771 100644
---- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-@@ -126,7 +126,7 @@
- 
- &emac {
- 	phy-handle = <&int_mii_phy>;
--	phy-mode = "mii";
-+	phy-connection-type = "mii";
- 	allwinner,leds-active-low;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-index ac9e26b1d906..782aac0cd2fe 100644
---- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-@@ -127,7 +127,7 @@
- 
- &emac {
- 	phy-handle = <&int_mii_phy>;
--	phy-mode = "mii";
-+	phy-connection-type = "mii";
- 	allwinner,leds-active-low;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-mapleboard-mp130.dts b/arch/arm/boot/dts/sun8i-h3-mapleboard-mp130.dts
-index ff0a7a952e0c..59ac1d349afa 100644
---- a/arch/arm/boot/dts/sun8i-h3-mapleboard-mp130.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-mapleboard-mp130.dts
-@@ -77,7 +77,7 @@
- 
- &emac {
- 	phy-handle = <&int_mii_phy>;
--	phy-mode = "mii";
-+	phy-connection-type = "mii";
- 	allwinner,leds-active-low;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-index 4ba533b0340f..54cfa753853f 100644
---- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-@@ -96,7 +96,7 @@
- 	pinctrl-0 = <&emac_rgmii_pins>;
- 	phy-supply = <&reg_gmac_3v3>;
- 	phy-handle = <&ext_rgmii_phy>;
--	phy-mode = "rgmii";
-+	phy-connection-type = "rgmii";
- 
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
-index 69243dcb30a6..e53458bf8c46 100644
---- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
-@@ -76,7 +76,7 @@
- 
- &emac {
- 	phy-handle = <&int_mii_phy>;
--	phy-mode = "mii";
-+	phy-connection-type = "mii";
- 	allwinner,leds-active-low;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-index 9f33f6fae595..744b35e4f50b 100644
---- a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-@@ -53,7 +53,7 @@
- 
- &emac {
- 	phy-handle = <&int_mii_phy>;
--	phy-mode = "mii";
-+	phy-connection-type = "mii";
- 	allwinner,leds-active-low;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-index 597c425d08ec..61ee3790ec94 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-@@ -129,7 +129,7 @@
- 
- &emac {
- 	phy-handle = <&int_mii_phy>;
--	phy-mode = "mii";
-+	phy-connection-type = "mii";
- 	allwinner,leds-active-low;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-index 4759ba3f2986..adf5c2508b80 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-@@ -131,7 +131,7 @@
- 
- &emac {
- 	phy-handle = <&int_mii_phy>;
--	phy-mode = "mii";
-+	phy-connection-type = "mii";
- 	allwinner,leds-active-low;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-index 5aff8ecc66cb..4b7d8692eb38 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-@@ -131,7 +131,7 @@
- 
- &emac {
- 	phy-handle = <&int_mii_phy>;
--	phy-mode = "mii";
-+	phy-connection-type = "mii";
- 	allwinner,leds-active-low;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-index 97f497854e05..49885968ca3d 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-@@ -85,7 +85,7 @@
- 	pinctrl-0 = <&emac_rgmii_pins>;
- 	phy-supply = <&reg_gmac_3v3>;
- 	phy-handle = <&ext_rgmii_phy>;
--	phy-mode = "rgmii";
-+	phy-connection-type = "rgmii";
- 
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts
-index 6dbf7b2e0c13..33c7df1ae939 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts
-@@ -67,7 +67,7 @@
- 	pinctrl-0 = <&emac_rgmii_pins>;
- 	phy-supply = <&reg_gmac_3v3>;
- 	phy-handle = <&ext_rgmii_phy>;
--	phy-mode = "rgmii";
-+	phy-connection-type = "rgmii";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts b/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
-index 4738f3a9efe4..b5bf16a0ce97 100644
---- a/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-rervision-dvk.dts
-@@ -54,7 +54,7 @@
- 
- &emac {
- 	phy-handle = <&int_mii_phy>;
--	phy-mode = "mii";
-+	phy-connection-type = "mii";
- 	allwinner,leds-active-low;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
-index 39263e74fbb5..c13f56f7aeb6 100644
---- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
-+++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
-@@ -126,7 +126,7 @@
- 	pinctrl-0 = <&emac_rgmii_pins>;
- 	phy-supply = <&reg_gmac_3v3>;
- 	phy-handle = <&ext_rgmii_phy>;
--	phy-mode = "rgmii";
-+	phy-connection-type = "rgmii";
- 
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sunxi-libretech-all-h3-cc.dtsi b/arch/arm/boot/dts/sunxi-libretech-all-h3-cc.dtsi
-index 19b3b23cfaa8..d6a47c63cae4 100644
---- a/arch/arm/boot/dts/sunxi-libretech-all-h3-cc.dtsi
-+++ b/arch/arm/boot/dts/sunxi-libretech-all-h3-cc.dtsi
-@@ -150,7 +150,7 @@
- 
- &emac {
- 	phy-handle = <&int_mii_phy>;
--	phy-mode = "mii";
-+	phy-connection-type = "mii";
- 	allwinner,leds-active-low;
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
-index c924090331d0..d15f994b59eb 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
-@@ -91,7 +91,7 @@
- 
- &emac {
- 	phy-handle = <&int_mii_phy>;
--	phy-mode = "mii";
-+	phy-connection-type = "mii";
- 	allwinner,leds-active-low;
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-index 1c7dde84e54d..2914d62dbe8a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-@@ -135,7 +135,7 @@
- 	pinctrl-0 = <&emac_rgmii_pins>;
- 	phy-supply = <&reg_gmac_3v3>;
- 	phy-handle = <&ext_rgmii_phy>;
--	phy-mode = "rgmii";
-+	phy-connection-type = "rgmii";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
-index 57a6f45036c1..5b20ae3edcdf 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
-@@ -114,7 +114,7 @@
- 	pinctrl-0 = <&emac_rgmii_pins>;
- 	phy-supply = <&reg_gmac_3v3>;
- 	phy-handle = <&ext_rgmii_phy>;
--	phy-mode = "rgmii";
-+	phy-connection-type = "rgmii";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-index e126c1c9f05c..a9cce14b8341 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-@@ -157,7 +157,7 @@
- 	pinctrl-0 = <&emac_rgmii_pins>;
- 	phy-supply = <&reg_gmac_3v3>;
- 	phy-handle = <&ext_rgmii_phy>;
--	phy-mode = "rgmii";
-+	phy-connection-type = "rgmii";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-index d9b3ed257088..80e9dd67316e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-@@ -164,7 +164,7 @@
- 	pinctrl-0 = <&emac_rgmii_pins>;
- 	phy-supply = <&reg_gmac_3v3>;
- 	phy-handle = <&ext_rgmii_phy>;
--	phy-mode = "rgmii";
-+	phy-connection-type = "rgmii";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
-index db6ea7b58999..5a7bc3aa5ae4 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
-@@ -72,7 +72,7 @@
- 	pinctrl-0 = <&emac_rgmii_pins>;
- 	phy-supply = <&reg_gmac_3v3>;
- 	phy-handle = <&ext_rgmii_phy>;
--	phy-mode = "rgmii";
-+	phy-connection-type = "rgmii";
- 	status = "okay";
- };
- 
+Changes from v1:
+  - Add a file of its own
+---
+ Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt  | 27 ---------------------------
+ Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml | 66 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Documentation/devicetree/bindings/net/snps,dwmac.yaml               |  3 +++
+ 3 files changed, 69 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt
+ create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt
+deleted file mode 100644
+index 8b3f953656e3..000000000000
+--- a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-* Allwinner GMAC ethernet controller
+-
+-This device is a platform glue layer for stmmac.
+-Please see stmmac.txt for the other unchanged properties.
+-
+-Required properties:
+- - compatible:  Should be "allwinner,sun7i-a20-gmac"
+- - clocks: Should contain the GMAC main clock, and tx clock
+-   The tx clock type should be "allwinner,sun7i-a20-gmac-clk"
+- - clock-names: Should contain the clock names "stmmaceth",
+-   and "allwinner_gmac_tx"
+-
+-Optional properties:
+-- phy-supply: phandle to a regulator if the PHY needs one
+-
+-Examples:
+-
+-	gmac: ethernet@1c50000 {
+-		compatible = "allwinner,sun7i-a20-gmac";
+-		reg = <0x01c50000 0x10000>,
+-		      <0x01c20164 0x4>;
+-		interrupts = <0 85 1>;
+-		interrupt-names = "macirq";
+-		clocks = <&ahb_gates 49>, <&gmac_tx>;
+-		clock-names = "stmmaceth", "allwinner_gmac_tx";
+-		phy-mode = "mii";
+-	};
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+new file mode 100644
+index 000000000000..38f6a2a73f46
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+@@ -0,0 +1,66 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/allwinner,sun7i-a20-gmac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A20 GMAC Device Tree Bindings
++
++allOf:
++  - $ref: "snps,dwmac.yaml#"
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  compatible:
++    const: allwinner,sun7i-a20-gmac
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-names:
++    const: macirq
++
++  clocks:
++    items:
++      - description: GMAC main clock
++      - description: TX clock
++
++  clock-names:
++    items:
++      - const: stmmaceth
++      - const: allwinner_gmac_tx
++
++  phy-supply:
++    description:
++      PHY regulator
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - clocks
++  - clock-names
++  - phy-connection-type
++
++examples:
++  - |
++    gmac: ethernet@1c50000 {
++        compatible = "allwinner,sun7i-a20-gmac";
++        reg = <0x01c50000 0x10000>,
++              <0x01c20164 0x4>;
++        interrupts = <0 85 1>;
++        interrupt-names = "macirq";
++        clocks = <&ahb_gates 49>, <&gmac_tx>;
++        clock-names = "stmmaceth", "allwinner_gmac_tx";
++        phy-connection-type = "mii";
++    };
++
++# FIXME: We should set it, but it would report all the generic
++# properties as additional properties.
++# additionalProperties: false
++
++...
+diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+index 30e2ff7a2dcb..fed623a81dcd 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+@@ -44,6 +44,7 @@ properties:
+   compatible:
+     contains:
+       enum:
++        - allwinner,sun7i-a20-gmac
+         - snps,dwmac
+         - snps,dwmac-3.50a
+         - snps,dwmac-3.610
+@@ -265,6 +266,7 @@ allOf:
+         compatible:
+           contains:
+             enum:
++              - allwinner,sun7i-a20-gmac
+               - snps,dwxgmac
+               - snps,dwxgmac-2.10
+               - st,spear600-gmac
+@@ -305,6 +307,7 @@ allOf:
+         compatible:
+           contains:
+             enum:
++              - allwinner,sun7i-a20-gmac
+               - snps,dwmac-4.00
+               - snps,dwmac-4.10a
+               - snps,dwxgmac
 -- 
 git-series 0.9.1
