@@ -1,80 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [EXT] Re: [v1 1/4] dt-bindings: display: Add DT bindings for
- LS1028A HDP-TX PHY.
-Date: Wed, 19 Jun 2019 08:07:12 -0600
-Message-ID: <CAL_JsqJnBw+OqEX46CC1E2=9CDmeT8hQtvMpufsnU8z3+1RoBQ@mail.gmail.com>
-References: <20190508103703.40885-1-wen.he_1@nxp.com> <20190613200813.GA895@bogus>
- <DB7PR04MB5195E49670279C9A28C28A5EE2EB0@DB7PR04MB5195.eurprd04.prod.outlook.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 10/16] dt-bindings: net: sun8i-emac: Convert the
+ binding to a schemas
+Date: Wed, 19 Jun 2019 08:10:13 -0600
+Message-ID: <CAL_JsqLyByqjpdSoebU7xboupmnbZb5q3D2L_oQt_sigBQeMnQ@mail.gmail.com>
+References: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
+ <a9c556114ab21793d100f31361da01a579bae84e.1560937626.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB7PR04MB5195E49670279C9A28C28A5EE2EB0@DB7PR04MB5195.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wen He <wen.he_1@nxp.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <a9c556114ab21793d100f31361da01a579bae84e.1560937626.git-series.maxime.ripard@bootlin.com>
+Sender: netdev-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 7:45 PM Wen He <wen.he_1@nxp.com> wrote:
+On Wed, Jun 19, 2019 at 3:48 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
+> Switch our Allwinner H3 EMAC controller binding to a YAML schema to enable
+> the DT validation. Since that controller is based on a Synopsys IP, let's
+> add the validation to that schemas with a bunch of conditionals.
 >
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 >
-> > -----Original Message-----
-> > From: Rob Herring <robh@kernel.org>
-> > Sent: 2019=E5=B9=B46=E6=9C=8814=E6=97=A5 4:08
-> > To: Wen He <wen.he_1@nxp.com>
-> > Cc: linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > devicetree@vger.kernel.org; shawnguo@kernel.org; Leo Li
-> > <leoyang.li@nxp.com>
-> > Subject: [EXT] Re: [v1 1/4] dt-bindings: display: Add DT bindings for L=
-S1028A
-> > HDP-TX PHY.
-> >
-> > Caution: EXT Email
-> >
-> > On Wed, May 08, 2019 at 10:35:25AM +0000, Wen He wrote:
-> > > Add DT bindings documentmation for the HDP-TX PHY controller. The
-> > > describes which could be found on NXP Layerscape ls1028a platform.
-> >
-> > Drop the hard stop (.) from the subject.
-> >
-> > >
-> > > Signed-off-by: Wen He <wen.he_1@nxp.com>
-> > > ---
-> > >  .../devicetree/bindings/display/fsl,hdp.txt   | 56 +++++++++++++++++=
-++
-> > >  1 file changed, 56 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/display/fsl,hdp.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/fsl,hdp.txt
-> > > b/Documentation/devicetree/bindings/display/fsl,hdp.txt
-> > > new file mode 100644
-> > > index 000000000000..36b5687a1261
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/fsl,hdp.txt
-> > > @@ -0,0 +1,56 @@
-> > > +NXP Layerscpae ls1028a HDP-TX PHY Controller
-> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > +
-> > > +The following bindings describe the Cadence HDP TX PHY on ls1028a
-> > > +that offer multi-protocol support of standars such as eDP and
-> > > +Displayport, supports for 25-600MHz pixel clock and up to 4k2k at 60=
-MHz
-> > resolution.
-> > > +The HDP transmitter is a Cadence HDP TX controller IP with a
-> > > +companion PHY IP.
-> >
-> > I'm confused. This binding covers both blocks or is just one of them?
-> >
+> ---
 >
-> Hi Rob,
+> Changes from v2:
+>   - Switch to phy-connection-type instead of phy-mode
+>   - Change the delay enum to using multipleOf
 >
-> This binding covers both blocks(HDP TX PHY and HDP TX Controller),
-> Because they are belong to the one IP.
+> Changes from v1:
+>   - Add specific binding document
+> ---
+>  Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml | 321 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/net/dwmac-sun8i.txt                | 201 +---------------------------------------------
+>  Documentation/devicetree/bindings/net/snps,dwmac.yaml                |  15 +++-
+>  3 files changed, 336 insertions(+), 201 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
 
-In that case, you should also have an output port to a DP connector
-node (or DP panel).
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
