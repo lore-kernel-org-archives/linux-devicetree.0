@@ -1,58 +1,164 @@
-Return-Path: <SRS0=E1nX=U3=mentor.com=Harish_Kandiga@kernel.org>
-From: Harish Jenny K N <harish_kandiga@mentor.com>
-Subject: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-Date: Fri, 28 Jun 2019 15:00:50 +0530
-Message-ID: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
+Return-Path: <SRS0=A4pV=US=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v2 1/2] media: dt-bindings: add bindings for Toshiba TC358746
+Date: Wed, 19 Jun 2019 17:28:37 +0200
+Message-Id: <20190619152838.25079-2-m.felsch@pengutronix.de>
+In-Reply-To: <20190619152838.25079-1-m.felsch@pengutronix.de>
+References: <20190619152838.25079-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Harish Jenny K N <harish_kandiga@mentor.com>, Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+Content-Transfer-Encoding: 8bit
+To: sakari.ailus@linux.intel.com, mchehab@kernel.org, robh+dt@kernel.org, Jacopo Mondi <jacopo@jmondi.org>
+Cc: devicetree@vger.kernel.org, graphics@pengutronix.de, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document the device tree binding for the inverter gpio
-controller to configure the polarity of the gpio pins
-used by the consumers.
+Add corresponding dt-bindings for the Toshiba tc358746 device and update
+the MAINTAINERS file too.
 
-Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- .../devicetree/bindings/gpio/gpio-inverter.txt     | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+Hi Rob,
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-inverter.txt b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+I droped your reviewed-by tag since there where several changes.
+
+Changes
+v2:
+ - use the Documentation/devicetree/bindings/media/ti,omap3isp.txt
+   formatting scheme
+ - Adapt introducing paragraph according Jacopo's comments
+ - drop the clock-names property
+ - drop the clock-lanes (csi-2) property
+ - adapt the property descriptions accroding Jacopo's comments
+ - use port@0 as input and port@1 as output port instead of mapping
+   port@0 to parallel and port@1 to csi-2 interface
+ - Adapt port/endpoint description according Jacopo's and Sakari's
+   comments
+ - Adapt the example
+ - squash v1 patch-3 and patch-1
+ - set status to Maintained
+
+ .../bindings/media/i2c/toshiba,tc358746.txt   | 95 +++++++++++++++++++
+ MAINTAINERS                                   |  7 ++
+ 2 files changed, 102 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
 new file mode 100644
-index 0000000..8bb6b2e
+index 000000000000..e79b45ee050e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
-@@ -0,0 +1,29 @@
-+GPIO-INVERTER
-+======
-+This binding defines the gpio-inverter. The gpio-inverter is a driver that
-+allows to properly describe the gpio polarities on the hardware.
++++ b/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
+@@ -0,0 +1,95 @@
++Toshiba TC358746 Parallel to MIPI CSI2-TX or MIPI CSI2-RX to Parallel Bridge
++============================================================================
 +
-+Please refer to gpio.txt for generic information regarding GPIO bindings.
++The Toshiba TC358746 converts a parallel into a MIPI CSI-2 stream. The direction
++can be either parallel-in -> csi-out e.g. to connect a parallel camera to a
++MIPI CSI-2 host or csi-in -> parallel-out e.g. to connect a parallel display to
++a MIPI CSI-2 host. It's programmable trough I2C and SPI. The SPI interface is
++only supported in parallel-in -> csi-out mode.
 +
-+Required properties:
-+- compatible : "gpio-inverter".
-+- gpio-controller: Marks the port as GPIO controller.
-+- #gpio-cells: One. This is the pin number.
-+- inverted-gpios: Array of GPIO pins required from consumers, whose polarity
-+  has to be inverted in the driver.
-+Note: gpio flag should be set as GPIO_ACTIVE_HIGH. Using GPIO_ACTICE_LOW will
-+cause double inversion.
++Required properties
++-------------------
 +
-+Optional properties:
-+- gpio-line-names: Refer to gpio.txt for details regarding this property.
++- compatible		: Shall be "toshiba,tc358746"
++- reg			: Shall be <0x0e>
++- clocks		: Phandle to the reference clock source
 +
-+Example:
++Optional properties
++-------------------
 +
-+gpio_inv: gpio-inv {
-+	compatible = "gpio-inverter";
-+	gpio-controller;
-+	#gpio-cells = <1>;
-+	inverted-gpios = <&gpio5 24 GPIO_ACTIVE_HIGH>,
-+	<&gpio7 0 GPIO_ACTIVE_HIGH>, <&gpio7 1 GPIO_ACTIVE_HIGH>;
-+	gpio-line-names = "JTAG_DNL_EN", "lvds-pwrdwn", "lcd-on";
++- reset-gpios		: Phandle to the GPIO connected to the reset input pin
++
++Port nodes (required)
++=====================
++
++The device node must contain two ports children nodes which should be grouped
++within a 'ports' node. The first port describes the input connection, the second
++one describes the output one. Each port shall contain one endpoint subnode that
++connects to a remote device and specifies the bus type of the input and output
++ports. Only one endpoint per port shall be present.
++
++More documentation on these bindings is available in [1].
++
++reg			: The interface:
++			  0 - Input, either parallel or MIPI CSI-2
++			  1 - Output, either parallel or MIPI CSI-2
++
++Endpoint nodes (required)
++=========================
++
++Required properties
++-------------------
++
++- bus-width		: Look at [1] for more information (Parallel endpoint)
++- data-lanes		: Look at [1] for more information (CSI-2 endpoint)
++- link-frequencies	: Array of frequencies the driver can choose to
++			  full-fill the parallel timings calculation. Look at
++			  [1] for more information (CSI-2 endpoint)
++
++Optional properties
++-------------------
++
++- bus-type		: Look at [1] for more information
++- clock-noncontinuous	: Look at [1] for more information (CSI-2 endpoint)
++
++[1] Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example
++=======
++
++&i2c {
++	csi-bridge@0e {
++		reg = <0x0e>;
++		compatible = "toshiba,tc358746";
++		pinctrl-names = "default";
++		clocks = <&clk_cam_ref>;
++		reset-gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* Input */
++			port@0 {
++				reg = <0>;
++
++				tc358746_parallel_in: endpoint {
++					bus-width = <8>;
++					remote-endpoint = <&micron_parallel_out>;
++				};
++			};
++
++			/* Output */
++			port@1 {
++				reg = <1>;
++
++				tc358746_mipi2_out: endpoint {
++					remote-endpoint = <&mipi_csi2_in>;
++					data-lanes = <1 2>;
++					clock-noncontinuous;
++					link-frequencies = /bits/ 64 <216000000>;
++				};
++			};
++		};
++	};
 +};
---
-2.7.4
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 57f496cff999..833b3c8fb301 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15955,6 +15955,13 @@ S:	Maintained
+ F:	drivers/media/i2c/tc358743*
+ F:	include/media/i2c/tc358743.h
+ 
++TOSHIBA TC358746 DRIVER
++M:	Marco Felsch <kernel@pengutronix.de>
++L:	linux-media@vger.kernel.org
++S:	Maintained
++F:	drivers/media/i2c/tc358746*
++F:	Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
++
+ TOSHIBA WMI HOTKEYS DRIVER
+ M:	Azael Avalos <coproscefalo@gmail.com>
+ L:	platform-driver-x86@vger.kernel.org
+-- 
+2.20.1
