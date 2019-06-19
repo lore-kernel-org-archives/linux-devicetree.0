@@ -1,161 +1,91 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
-Date: Wed, 19 Jun 2019 20:12:11 +0530
-Message-ID: <96fd8992-e333-6b3b-15c0-2845984120aa@codeaurora.org>
-References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
- <4056907.DrFocau5Ix@debian64>
- <1a00e8c8-d07c-3b02-8ea5-6d5f3e2c7b1a@codeaurora.org>
- <1981742.H2rzviYcjI@debian64>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 06/16] dt-bindings: net: sun4i-emac: Convert the
+ binding to a schemas
+Date: Wed, 19 Jun 2019 08:46:28 -0600
+Message-ID: <CAL_Jsq+A+jspyCpu9USL6FQ9y5qL_yqYS=DTE=aM5YzyeZwd0w@mail.gmail.com>
+References: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
+ <e7c13fc3c4e287df6292dbee27ae1caeca0c06c4.1560937626.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1981742.H2rzviYcjI@debian64>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Lamparter <chunkeey@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, agross@kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?0J/QsNCy0LXQuw==?= <be.dissent@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e7c13fc3c4e287df6292dbee27ae1caeca0c06c4.1560937626.git-series.maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Andrew Lunn <andrew@lunn.ch>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, netdev <netdev@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christian,
+On Wed, Jun 19, 2019 at 3:48 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> Switch our Allwinner A10 EMAC controller binding to a YAML schema to enable
+> the DT validation.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> ---
+>
+> Changes from v2:
+>   - Switch from the deprecated phy property to phy-handle
+> ---
+>  Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt      | 19 -------------------
+>  2 files changed, 55 insertions(+), 19 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+> new file mode 100644
+> index 000000000000..2ff9e605cd26
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/allwinner,sun4i-a10-emac.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner A10 EMAC Ethernet Controller Device Tree Bindings
+> +
+> +allOf:
+> +  - $ref: "ethernet-controller.yaml#"
+> +
+> +maintainers:
+> +  - Chen-Yu Tsai <wens@csie.org>
+> +  - Maxime Ripard <maxime.ripard@bootlin.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: allwinner,sun4i-a10-emac
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  allwinner,sram:
+> +    description: Phandle to the device SRAM
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - phy-handle
 
-On 6/15/2019 2:11 AM, Christian Lamparter wrote:
-> On Wednesday, June 12, 2019 11:48:48 AM CEST Sricharan R wrote:
->> Hi Christian,
->>
->> On 6/10/2019 5:45 PM, Christian Lamparter wrote:
->>> On Monday, June 10, 2019 12:09:56 PM CEST Sricharan R wrote:
->>>> Hi Christian,
->>>>
->>>> On 6/6/2019 2:11 AM, Christian Lamparter wrote:
->>>>> On Wed, Jun 5, 2019 at 7:16 PM Sricharan R <sricharan@codeaurora.org> wrote:
->>>>>>
->>>>>> Add initial device tree support for the Qualcomm IPQ6018 SoC and
->>>>>> CP01 evaluation board.
->>>>>>
->>>>>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->>>>>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
->>>>>> --- /dev/null
->>>>>> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
->>>>>>
->>>>>> +       clocks {
->>>>>> +               sleep_clk: sleep_clk {
->>>>>> +                       compatible = "fixed-clock";
->>>>>> +                       clock-frequency = <32000>;
->>>>>> +                       #clock-cells = <0>;
->>>>>> +               };
->>>>>> +
->>>>> Recently-ish, we ran into an issue with the clock-frequency of the sleep_clk
->>>>> on older IPQ40XX (and IPQ806x) on the OpenWrt Github and ML.
->>>>> From what I know, the external "32KHz" crystals have 32768 Hz, but the QSDK
->>>>> declares them at 32000 Hz. Since you probably have access to the BOM and
->>>>> datasheets. Can you please confirm what's the real clock frequency for
->>>>> the IPQ6018.
->>>>> (And maybe also for the sleep_clk of the IPQ4018 as well?).
->>>>>
->>>>
->>>> What exactly is the issue that you faced ?
->>>> Looking in to the docs, it is <32000> only on ipq6018 and ipq40xx as well.
->>>
->>> We need just a confirmation.
->>>
->>> Then again, Currently the qcom-ipq4019.dtsi is using 32768 Hz.
->>>
->>> |		sleep_clk: sleep_clk {
->>> |			compatible = "fixed-clock";
->>> |			clock-frequency = <32768>;
->>> |			#clock-cells = <0>;
->>> |		};
->>>
->>> <https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/qcom-ipq4019.dtsi#L144>
->>>
->>> Which makes sense, because all previous Qualcomm Atheros MIPS and the
->>> future IPQ8072 SoCs have been either using or deriving a 32768 Hz clock.
->>>
->>> For example: The AR9344 derives the clock from the 25MHz/40MHz external
->>> oscillator. This is explained in "8.16.9 Derived RTC Clock (DERIVED_RTC_CLK)".
->>> Which mentions that the "32KHz" clock interval is 30.5 usec / 30.48 usec
->>> depending whenever the external reference crystal has 40MHz or 25MHz.
->>> (1/30.5usec = 32.7868852 kilohertz!). The QCA9558 datasheet says the same
->>> in "10.19.11 Derived RTC Clock". 
->>>
->>> For IPQ8072: I point to the post by Sven Eckelmann on the OpenWrt ML:
->>> <http://lists.infradead.org/pipermail/openwrt-devel/2019-May/017131.html>
->>> "I was only able to verify for IPQ8072 that it had a 32.768 KHz
->>> sleep clock." 
->>>
->>> So this is pretty much "why there is an issue", it's confusing.
->>> Is possible can you please look if there are (fixed) divisors values
->>> listed in the documentation or the registers and bits that the values
->>> are stored in? Because then we could just calculate it. 
->>>
->>
->> Really sorry for the confusion. So looking little more, SLEEP_CLK is derived
->> from an external 38.4MHZ crystal, it is 32.768 KHZ.
-> That's really valuable information to have. Thank you!
-> 
->> Somehow the clk freq plan etc seems to mention them only as .032 MHZ and misses
->> out. That means i will correct the patch for 32768 and probably the
->> ipq8074.dtsi as well
-> 
-> Ok, there's one more issue that Paul found (at least with the IPQ4019),
-> https://patchwork.ozlabs.org/patch/1099482
-> 
-> it seems that the "sleep_clk" node in the qcom-ipq4019.dtsi is not used by
-> the gcc-ipq4019.c clk driver. this causes both wifi rtc_clks and the usb sleep
-> clks to dangle in the /sys/kernel/debug/clk/clk_summary (from a RT-AC58U)
-> 
->    clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
-> ----------------------------------------------------------------------------------------
->  xo                                       9            9    48000000          0 0
->  [...]
->  sleep_clk                                1            1       32768          0 0  
->  gcc_wcss5g_rtc_clk                       1            1           0          0 0  
->  gcc_wcss2g_rtc_clk                       1            1           0          0 0  
->  gcc_usb3_sleep_clk                       1            1           0          0 0  
->  gcc_usb2_sleep_clk                       1            1           0          0 0  
-> 
-> with his patch the /sys/kernel/debug/clk/clk_summary looks "better" 
-> 
-> (something like this:)
-> 
->    clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
-> ----------------------------------------------------------------------------------------
->  xo                                       9            9    48000000          0 0
->  [...] 
->  gcc_sleep_clk_src                        5            5       32000          0 0  
->     gcc_wcss5g_rtc_clk                    1            1       32000          0 0  
->     gcc_wcss2g_rtc_clk                    1            1       32000          0 0  
->     gcc_usb3_sleep_clk                    1            1       32000          0 0  
->     gcc_usb2_sleep_clk                    1            1       32000          0 0  
-> 
-> but judging from your comment "SLEEP_CLK is derived from an
-> external 38.4MHZ crystal" the gcc_sleep_clk_src / sleep_clk
-> should have xo as the parent. so the ideal output should be:
-> 
->    clock                         enable_cnt  prepare_cnt        rate   accuracy   phase
-> ----------------------------------------------------------------------------------------
->  xo                                      10           10    48000000          0 0
->  [...] 
->     gcc_sleep_clk                         5            5       32768          0 0  
->        gcc_wcss5g_rtc_clk                 1            1       32768          0 0  
->        gcc_wcss2g_rtc_clk                 1            1       32768          0 0  
->        gcc_usb3_sleep_clk                 1            1       32768          0 0  
->        gcc_usb2_sleep_clk                 1            1       32768          0 0  
-> 
-> or am I missing/skipping over something important? 
-> 
+Doesn't this throw an error if not listed in properties?
 
-Sorry for the delayed response. So what i said above (32768 clk) looks
-like true only for ipq8074. For ipq4019, looks like 32000.
-
-That means, there is still some thing unclear. I am checking for precise
-information from HW team for ipq4019/8074/6018. Please hang on, will
-update you asap.
-
-Regards,
- Sricharan
-
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Rob
