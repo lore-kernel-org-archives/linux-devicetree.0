@@ -1,7 +1,8 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 2/5] iio: adc: stm32-adc: add missing vdda-supply
-Date: Wed, 19 Jun 2019 14:29:55 +0200
-Message-ID: <1560947398-11592-3-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH 4/5] ARM: dts: stm32: add missing vdda-supply to adc on
+ stm32429i-eval
+Date: Wed, 19 Jun 2019 14:29:57 +0200
+Message-ID: <1560947398-11592-5-git-send-email-fabrice.gasnier@st.com>
 References: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,86 +22,40 @@ To: jic23@kernel.org, robh+dt@kernel.org, alexandre.torgue@st.com
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add missing vdda-supply, analog power supply, to STM32 ADC. When vdda is
-an independent supply, it needs to be properly turned on or off to supply
-the ADC.
+Add missing vdda-supply required by STM32 ADC.
 
-Fixes: 1add69880240 ("iio: adc: Add support for STM32 ADC core").
+Fixes: 7465d81191a1 ("ARM: dts: stm32: enable ADC on stm32f429i-eval
+board")
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- drivers/iio/adc/stm32-adc-core.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32429i-eval.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-index 2327ec1..1f7ce51 100644
---- a/drivers/iio/adc/stm32-adc-core.c
-+++ b/drivers/iio/adc/stm32-adc-core.c
-@@ -87,6 +87,7 @@ struct stm32_adc_priv_cfg {
-  * @domain:		irq domain reference
-  * @aclk:		clock reference for the analog circuitry
-  * @bclk:		bus clock common for all ADCs, depends on part used
-+ * @vdda:		vdda analog supply reference
-  * @vref:		regulator reference
-  * @cfg:		compatible configuration data
-  * @common:		common data for all ADC instances
-@@ -97,6 +98,7 @@ struct stm32_adc_priv {
- 	struct irq_domain		*domain;
- 	struct clk			*aclk;
- 	struct clk			*bclk;
-+	struct regulator		*vdda;
- 	struct regulator		*vref;
- 	const struct stm32_adc_priv_cfg	*cfg;
- 	struct stm32_adc_common		common;
-@@ -394,10 +396,16 @@ static int stm32_adc_core_hw_start(struct device *dev)
- 	struct stm32_adc_priv *priv = to_stm32_adc_priv(common);
- 	int ret;
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index d79f58f..ba08624 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -81,6 +81,12 @@
+ 		dma-ranges = <0xc0000000 0x0 0x10000000>;
+ 	};
  
-+	ret = regulator_enable(priv->vdda);
-+	if (ret < 0) {
-+		dev_err(dev, "vdda enable failed %d\n", ret);
-+		return ret;
-+	}
-+
- 	ret = regulator_enable(priv->vref);
- 	if (ret < 0) {
- 		dev_err(dev, "vref enable failed\n");
--		return ret;
-+		goto err_vdda_disable;
- 	}
++	vdda: regulator-vdda {
++		compatible = "regulator-fixed";
++		regulator-name = "vdda";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
  
- 	if (priv->bclk) {
-@@ -425,6 +433,8 @@ static int stm32_adc_core_hw_start(struct device *dev)
- 		clk_disable_unprepare(priv->bclk);
- err_regulator_disable:
- 	regulator_disable(priv->vref);
-+err_vdda_disable:
-+	regulator_disable(priv->vdda);
- 
- 	return ret;
- }
-@@ -441,6 +451,7 @@ static void stm32_adc_core_hw_stop(struct device *dev)
- 	if (priv->bclk)
- 		clk_disable_unprepare(priv->bclk);
- 	regulator_disable(priv->vref);
-+	regulator_disable(priv->vdda);
- }
- 
- static int stm32_adc_probe(struct platform_device *pdev)
-@@ -468,6 +479,14 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->common.base);
- 	priv->common.phys_base = res->start;
- 
-+	priv->vdda = devm_regulator_get(&pdev->dev, "vdda");
-+	if (IS_ERR(priv->vdda)) {
-+		ret = PTR_ERR(priv->vdda);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "vdda get failed, %d\n", ret);
-+		return ret;
-+	}
-+
- 	priv->vref = devm_regulator_get(&pdev->dev, "vref");
- 	if (IS_ERR(priv->vref)) {
- 		ret = PTR_ERR(priv->vref);
+ 	vref: regulator-vref {
+ 		compatible = "regulator-fixed";
+@@ -151,6 +157,7 @@
+ &adc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&adc3_in8_pin>;
++	vdda-supply = <&vdda>;
+ 	vref-supply = <&vref>;
+ 	status = "okay";
+ 	adc3: adc@200 {
 -- 
 2.7.4
