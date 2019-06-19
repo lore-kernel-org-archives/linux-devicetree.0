@@ -1,125 +1,52 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
-Date: Wed, 19 Jun 2019 11:40:28 -0600
-Message-ID: <8cd10509-6a67-7c5b-9139-89bdcaa35f3f@codeaurora.org>
-References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
- <20190612212721.32195-1-jeffrey.l.hugo@gmail.com>
- <20190612214636.GA40779@dtor-ws>
- <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
- <20190619171010.24c25oenpmjpiayw@penguin>
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: Re: [Freedreno] [PATCH 2/6] dt-bindings: display: msm: gmu: add
+ optional ocmem property
+Date: Wed, 19 Jun 2019 12:06:36 -0600
+Message-ID: <20190619180636.GB17590@jcrouse1-lnx.qualcomm.com>
+References: <20190616132930.6942-1-masneyb@onstation.org>
+ <20190616132930.6942-3-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190619171010.24c25oenpmjpiayw@penguin>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, benjamin.tissoires@redhat.com, jikos@kernel.org, hdegoede@redhat.com, bjorn.andersson@linaro.org, agross@kernel.org, lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190616132930.6942-3-masneyb@onstation.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Masney <masneyb@onstation.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jonathan@marek.ca, airlied@linux.ie, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, agross@kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, sean@poorly.run
 List-Id: devicetree@vger.kernel.org
 
-On 6/19/2019 11:10 AM, Dmitry Torokhov wrote:
-> On Wed, Jun 12, 2019 at 04:20:42PM -0600, Jeffrey Hugo wrote:
->> On 6/12/2019 3:46 PM, Dmitry Torokhov wrote:
->>> On Wed, Jun 12, 2019 at 02:27:21PM -0700, Jeffrey Hugo wrote:
->>>> There needs to be coordination between hid-quirks and the elan_i2c driver
->>>> about which devices are handled by what drivers.  Currently, both use
->>>> whitelists, which results in valid devices being unhandled by default,
->>>> when they should not be rejected by hid-quirks.  This is quickly becoming
->>>> an issue.
->>>>
->>>> Since elan_i2c has a maintained whitelist of what devices it will handle,
->>>> which is now in a header file that hid-quirks can access, use that to
->>>> implement a blacklist in hid-quirks so that only the devices that need to
->>>> be handled by elan_i2c get rejected by hid-quirks, and everything else is
->>>> handled by default.
->>>>
->>>> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->>>> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
->>>> ---
->>>>    drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
->>>>    1 file changed, 16 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
->>>> index e5ca6fe2ca57..bd81bb090222 100644
->>>> --- a/drivers/hid/hid-quirks.c
->>>> +++ b/drivers/hid/hid-quirks.c
->>>> @@ -16,6 +16,7 @@
->>>>    #include <linux/export.h>
->>>>    #include <linux/slab.h>
->>>>    #include <linux/mutex.h>
->>>> +#include <linux/input/elan-i2c-ids.h>
->>>>    #include "hid-ids.h"
->>>> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
->>>>    bool hid_ignore(struct hid_device *hdev)
->>>>    {
->>>> +	int i;
->>>> +
->>>>    	if (hdev->quirks & HID_QUIRK_NO_IGNORE)
->>>>    		return false;
->>>>    	if (hdev->quirks & HID_QUIRK_IGNORE)
->>>> @@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
->>>>    		break;
->>>>    	case USB_VENDOR_ID_ELAN:
->>>>    		/*
->>>> -		 * Many Elan devices have a product id of 0x0401 and are handled
->>>> -		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
->>>> -		 * is not (and cannot be) handled by that driver ->
->>>> -		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
->>>> +		 * Blacklist of everything that gets handled by the elan_i2c
->>>> +		 * input driver.  This avoids disabling valid touchpads and
->>>> +		 * other ELAN devices.
->>>>    		 */
->>>> -		if (hdev->product == 0x0401 &&
->>>> -		    strncmp(hdev->name, "ELAN0800", 8) != 0)
->>>> -			return true;
->>>> -		/* Same with product id 0x0400 */
->>>> -		if (hdev->product == 0x0400 &&
->>>> -		    strncmp(hdev->name, "QTEC0001", 8) != 0)
->>>> -			return true;
->>>> +		if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
->>>> +			for (i = 0; strlen(elan_acpi_id[i].id); ++i)
->>>> +				if (!strncmp(hdev->name, elan_acpi_id[i].id,
->>>> +					     strlen(elan_acpi_id[i].id)))
->>>> +					return true;
->>>> +			for (i = 0; strlen(elan_of_match[i].name); ++i)
->>>> +				if (!strncmp(hdev->name, elan_of_match[i].name,
->>>> +					     strlen(elan_of_match[i].name)))
->>>> +					return true;
->>>
->>> Do we really need to blacklist the OF case here? I thought that in ACPI
->>> case we have clashes as HID gets matched by elan_i2c and CID is matched
->>> by i2c-hid, but I do not believe we'll run into the same situation on OF
->>> systems.
->>
->> I think its the safer approach.
->>
->> On an OF system, such as patch 3 in the series, the "hid-over-i2c" will end
->> up running through this (kind of the whole reason why this series exists).
->> The vendor and product ids will still match, so we'll end up going through
->> the lists to see if the hdev->name (the compatible string) will match the
->> blacklist.  "hid-over-i2c" won't match the blacklist, but if there is a more
->> specific compatible, it might.
->>
->> In that case, not matching OF would work, however how it could break today
->> is if both "hid-over-i2c" and "elan,ekth3000" were listed for the same
->> device, and elan_i2c was not compiled.  In that case, if we skip the OF part
->> of the black list, hid-quirks will not reject the device, and you'll
->> probably have some odd behavior instead of the obvious "the device doesn't
->> work because the correct driver isn't present" behavior.
->>
->> While that scenario might be far fetched since having both "hid-over-i2c"
->> and "elan,ekth3000" probably violates the OF bindings, its still safer to
->> include the OF case in the blacklist against future scenarios.
-> 
-> Yes, I believe it is quite far fetched. We are talking about someone
-> setting compatible sting to something that is decidedly not compatible.
-> I.e. we know that devices driven by elan_i2c are not compatible with
-> hi-over-i2c driver/protocol, so why do we expect that they both will be
-> specified in the same compatible string? I know ACPI case is messier in
-> this regard as 2 drivers look at the different data items when
-> evaluating whether they should bind to the device, but here we are
-> dealing with the same string.
-
-Alright.  Sounds like you really want the DT matching dropped, so I'll 
-update the series with a new version ASAP that drops that.
+T24gU3VuLCBKdW4gMTYsIDIwMTkgYXQgMDk6Mjk6MjZBTSAtMDQwMCwgQnJpYW4gTWFzbmV5IHdy
+b3RlOgo+IFNvbWUgQTN4eCBhbmQgQTR4eCBBZHJlbm8gR1BVcyBkbyBub3QgaGF2ZSBHTUVNIGlu
+c2lkZSB0aGUgR1BVIGNvcmUgYW5kCj4gbXVzdCB1c2UgdGhlIE9uIENoaXAgTUVNb3J5IChPQ01F
+TSkgaW4gb3JkZXIgdG8gYmUgZnVuY3Rpb25hbC4gQWRkIHRoZQo+IG9wdGlvbmFsIG9jbWVtIHBy
+b3BlcnR5IHRvIHRoZSBBZHJlbm8gR3JhcGhpY3MgTWFuYWdlbWVudCBVbml0IGJpbmRpbmdzLgo+
+IAo+IFNpZ25lZC1vZmYtYnk6IEJyaWFuIE1hc25leSA8bWFzbmV5YkBvbnN0YXRpb24ub3JnPgo+
+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211
+LnR4dCB8IDQgKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCj4gCj4gZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9n
+bXUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dt
+dS50eHQKPiBpbmRleCA5MGFmNWIwYTU2YTkuLmM3NDZiOTVlOTVkNCAxMDA2NDQKPiAtLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dAo+ICsr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9nbXUudHh0
+Cj4gQEAgLTMxLDYgKzMxLDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIC0gaW9tbXVzOiBw
+aGFuZGxlIHRvIHRoZSBhZHJlbm8gaW9tbXUKPiAgLSBvcGVyYXRpbmctcG9pbnRzLXYyOiBwaGFu
+ZGxlIHRvIHRoZSBPUFAgb3BlcmF0aW5nIHBvaW50cwo+ICAKPiArT3B0aW9uYWwgcHJvcGVydGll
+czoKPiArLSBvY21lbTogcGhhbmRsZSB0byB0aGUgT24gQ2hpcCBNZW1vcnkgKE9DTUVNKSB0aGF0
+J3MgcHJlc2VudCBvbiBzb21lIFNuYXBkcmFnb24KPiArICAgICAgICAgU29Dcy4gU2VlIERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvcWNvbS9xY29tLG9jbWVtLnlhbWwuCj4g
+Kwo+ICBFeGFtcGxlOgoKWW91IHNob3VsZCBhZGQgYSBmdWxsLWZsZWRnZWQgYTR4eCBleGFtcGxl
+IGhlcmUgaW5jbHVkaW5nIGEgb2NtZW0gcGhhbmRsZS4KCkpvcmRhbgoKPiAgLyB7CgotLSAKVGhl
+IFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVy
+b3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
