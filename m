@@ -1,135 +1,97 @@
-Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 12/27] PCI: tegra: Enable PCIe xclk clock clamping
-Date: Tue, 18 Jun 2019 23:31:51 +0530
-Message-ID: <20190618180206.4908-13-mmaddireddy@nvidia.com>
-In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=IrFU=US=arm.com=lorenzo.pieralisi@kernel.org>
+Date: Wed, 19 Jun 2019 10:50:52 +0100
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH V6 20/27] PCI: tegra: Disable MSI for Tegra PCIe root port
+Message-ID: <20190619095052.GB10372@e121166-lin.cambridge.arm.com>
 References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+ <20190618180206.4908-21-mmaddireddy@nvidia.com>
+ <20190618194830.GA110859@google.com>
+ <e06f85eb-be0c-c2a5-84a9-51aa9b8372c3@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e06f85eb-be0c-c2a5-84a9-51aa9b8372c3@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Enable xclk clock clamping when entering L1. Clamp threshold will
-determine the time spent waiting for clock module to turn on xclk after
-signaling it. Default threshold value in Tegra124 and Tegra210 is not
-enough to turn on xclk clock. Increase the clamp threshold to meet the
-clock module timing in Tegra124 and Tegra210. Default threshold value is
-enough in Tegra20, Tegra30 and Tegra186.
+On Wed, Jun 19, 2019 at 09:25:54AM +0530, Manikanta Maddireddy wrote:
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V6: No change
+[...]
 
-V5: No change
+> > s/msi/MSI/
+> >
+> > What's going on here?  Vidya posted a very similar patch [1] (although
+> 
+> This series is focused on Tegra20, Tegra30, Tegra124, Tegra210 and Tegra186,
+> whereas Vidya's series is focused only on Tegra194. So I didn't include
+> Tegra194 device IDs.
+> 
+> > his included nice spec citations, which you omitted), but his added
+> > quirks for 0x1ad0, 0x1ad1, and 0x1ad2.  You didn't include any of
+> > those here.
+> >
+> > Maybe Lorenzo will sort this all out, but it would make things easier
+> > if you and Vidya got together and integrated your patches yourselves
+> > so Lorenzo didn't have to worry about it.
+> >
+> > [1] https://lore.kernel.org/lkml/20190612095339.20118-3-vidyas@nvidia.com
+> 
+> I talked with Vidya, he will take this changes in his series if he needs
+> to publish another version, or else he will publish a new patch to add
+> quirk for legacy Tegra SOCs.
+> 
+> Lorenzo,
+> If this series is ready for integration, please drop this patch.
 
-V4: No change
+OK, will do.
 
-V3: No change
+Thanks,
+Lorenzo
 
-V2: Took care of typos in commit log and coding style comments.
-
- drivers/pci/controller/pci-tegra.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 7cd2a8948919..add649d91e7c 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -219,8 +219,14 @@
- #define  RP_VEND_CTL2_PCA_ENABLE (1 << 7)
- 
- #define RP_PRIV_MISC	0x00000fe0
--#define  RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT (0xe << 0)
--#define  RP_PRIV_MISC_PRSNT_MAP_EP_ABSNT (0xf << 0)
-+#define  RP_PRIV_MISC_PRSNT_MAP_EP_PRSNT		(0xe << 0)
-+#define  RP_PRIV_MISC_PRSNT_MAP_EP_ABSNT		(0xf << 0)
-+#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD_MASK	(0x7f << 16)
-+#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD		(0xf << 16)
-+#define  RP_PRIV_MISC_CTLR_CLK_CLAMP_ENABLE		(1 << 23)
-+#define  RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD_MASK	(0x7f << 24)
-+#define  RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD		(0xf << 24)
-+#define  RP_PRIV_MISC_TMS_CLK_CLAMP_ENABLE		(1 << 31)
- 
- #define RP_LINK_CONTROL_STATUS			0x00000090
- #define  RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE	0x20000000
-@@ -298,6 +304,7 @@ struct tegra_pcie_soc {
- 	bool has_gen2;
- 	bool force_pca_enable;
- 	bool program_uphy;
-+	bool update_clamp_threshold;
- 	struct {
- 		struct {
- 			u32 rp_ectl_2_r1;
-@@ -529,6 +536,7 @@ static void tegra_pcie_port_reset(struct tegra_pcie_port *port)
- 
- static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- {
-+	const struct tegra_pcie_soc *soc = port->pcie->soc;
- 	u32 value;
- 
- 	/* Enable AER capability */
-@@ -549,6 +557,19 @@ static void tegra_pcie_enable_rp_features(struct tegra_pcie_port *port)
- 	value = readl(port->base + RP_VEND_XP_BIST);
- 	value |= RP_VEND_XP_BIST_GOTO_L1_L2_AFTER_DLLP_DONE;
- 	writel(value, port->base + RP_VEND_XP_BIST);
-+
-+	value = readl(port->base + RP_PRIV_MISC);
-+	value |= RP_PRIV_MISC_CTLR_CLK_CLAMP_ENABLE;
-+	value |= RP_PRIV_MISC_TMS_CLK_CLAMP_ENABLE;
-+
-+	if (soc->update_clamp_threshold) {
-+		value &= ~(RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD_MASK |
-+				RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD_MASK);
-+		value |= RP_PRIV_MISC_CTLR_CLK_CLAMP_THRESHOLD |
-+			RP_PRIV_MISC_TMS_CLK_CLAMP_THRESHOLD;
-+	}
-+
-+	writel(value, port->base + RP_PRIV_MISC);
- }
- 
- static void tegra_pcie_program_ectl_settings(struct tegra_pcie_port *port)
-@@ -2334,6 +2355,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.has_gen2 = false,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.update_clamp_threshold = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2358,6 +2380,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
- 	.has_gen2 = false,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.update_clamp_threshold = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2375,6 +2398,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = false,
- 	.program_uphy = true,
-+	.update_clamp_threshold = true,
- 	.ectl.enable = false,
- };
- 
-@@ -2392,6 +2416,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = true,
- 	.program_uphy = true,
-+	.update_clamp_threshold = true,
- 	.ectl = {
- 		.regs = {
- 			.rp_ectl_2_r1 = 0x0000000f,
-@@ -2428,6 +2453,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.has_gen2 = true,
- 	.force_pca_enable = false,
- 	.program_uphy = false,
-+	.update_clamp_threshold = false,
- 	.ectl.enable = false,
- };
- 
--- 
-2.17.1
+> Manikanta
+> 
+> >
+> >> + */
+> >> +static void pci_quirk_nvidia_tegra_disable_rp_msi(struct pci_dev *dev)
+> >> +{
+> >> +	dev->no_msi = 1;
+> >> +}
+> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf0,
+> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0bf1,
+> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c,
+> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d,
+> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e12,
+> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e13,
+> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0fae,
+> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0faf,
+> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x10e5,
+> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> >> +DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_NVIDIA, 0x10e6,
+> >> +			      PCI_CLASS_BRIDGE_PCI, 8,
+> >> +			      pci_quirk_nvidia_tegra_disable_rp_msi);
+> >> +
+> >>  /*
+> >>   * Some versions of the MCP55 bridge from Nvidia have a legacy IRQ routing
+> >>   * config register.  This register controls the routing of legacy
+> >> -- 
+> >> 2.17.1
+> >>
+> 
