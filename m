@@ -1,50 +1,104 @@
-From: Ashish Kumar <Ashish.Kumar@nxp.com>
-Subject: [Patch v3 2/2] dt-bindings: spi: spi-fsl-qspi: Add bindings of
- ls1088a and ls1012a
-Date: Wed, 19 Jun 2019 16:41:54 +0530
-Message-ID: <1560942714-13330-3-git-send-email-Ashish.Kumar@nxp.com>
-References: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] firmware: qcom_scm-64: Add atomic version of
+	qcom_scm_call
+Date: Wed, 19 Jun 2019 17:04:39 +0530
+Message-ID: <CAFp+6iEwN6jeEGNxKVU5_i5NxdEbuF2ZggegEJZ1Rq6F=H34jg@mail.gmail.com>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+	<20190612071554.13573-2-vivek.gautam@codeaurora.org>
+	<20190618175536.GI4270@fuggles.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: bbrezillon@kernel.org, Kuldeep Singh <kuldeep.singh@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>, broonie@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20190618175536.GI4270-UDVVEH7NWB15pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
-Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
----
-v3:
-Rebase to top
-v2: 
-Convert to patch series and rebasing done on top of tree
+On Tue, Jun 18, 2019 at 11:25 PM Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+>
+> On Wed, Jun 12, 2019 at 12:45:51PM +0530, Vivek Gautam wrote:
+> > There are scnenarios where drivers are required to make a
+> > scm call in atomic context, such as in one of the qcom's
+> > arm-smmu-500 errata [1].
+> >
+> > [1] ("https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/
+> >       drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/
+> >       msm-4.9&id=da765c6c75266b38191b38ef086274943f353ea7")
+> >
+> > Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/firmware/qcom_scm-64.c | 136 ++++++++++++++++++++++++++++-------------
+> >  1 file changed, 92 insertions(+), 44 deletions(-)
+> >
+> > diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+> > index 91d5ad7cf58b..b6dca32c5ac4 100644
+> > --- a/drivers/firmware/qcom_scm-64.c
+> > +++ b/drivers/firmware/qcom_scm-64.c
 
- Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 2 ++
- 1 file changed, 2 insertions(+)
+[snip]
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
-index 6d7c9ec..2c2a3e9 100644
---- a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
-@@ -6,6 +6,8 @@ Required properties:
- 		 "fsl,ls1021a-qspi", "fsl,ls2080a-qspi"
- 		 or
- 		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
-+		 "fsl,ls1012a-qspi" followed by "fsl,ls1021a-qspi"
-+		 "fsl,ls1088a-qspi" followed by "fsl,ls2080a-qspi"
-   - reg : the first contains the register location and length,
-           the second contains the memory mapping address and length
-   - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
+> > +
+> > +static void qcom_scm_call_do(const struct qcom_scm_desc *desc,
+> > +                          struct arm_smccc_res *res, u32 fn_id,
+> > +                          u64 x5, bool atomic)
+> > +{
+>
+> Maybe pass in the call type (ARM_SMCCC_FAST_CALL vs ARM_SMCCC_STD_CALL)
+> instead of "bool atomic"? Would certainly make the callsites easier to
+> understand.
+
+Sure, will do that.
+
+>
+> > +     int retry_count = 0;
+> > +
+> > +     if (!atomic) {
+> > +             do {
+> > +                     mutex_lock(&qcom_scm_lock);
+> > +
+> > +                     __qcom_scm_call_do(desc, res, fn_id, x5,
+> > +                                        ARM_SMCCC_STD_CALL);
+> > +
+> > +                     mutex_unlock(&qcom_scm_lock);
+> > +
+> > +                     if (res->a0 == QCOM_SCM_V2_EBUSY) {
+> > +                             if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
+> > +                                     break;
+> > +                             msleep(QCOM_SCM_EBUSY_WAIT_MS);
+> > +                     }
+> > +             }  while (res->a0 == QCOM_SCM_V2_EBUSY);
+> > +     } else {
+> > +             __qcom_scm_call_do(desc, res, fn_id, x5, ARM_SMCCC_FAST_CALL);
+> > +     }
+>
+> Is it safe to make concurrent FAST calls?
+
+I better add a spinlock here.
+
+Thanks & regards
+Vivek
+
+>
+> Will
+> _______________________________________________
+> iommu mailing list
+> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+
+
+
 -- 
-2.7.4
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
