@@ -1,42 +1,78 @@
-Return-Path: <SRS0=f++Q=UU=arm.com=lorenzo.pieralisi@kernel.org>
-Date: Fri, 21 Jun 2019 10:58:59 +0100
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Return-Path: <SRS0=LpfV=US=verge.net.au=horms@kernel.org>
+Date: Wed, 19 Jun 2019 13:48:13 +0200
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH] dt-bindings: PCI: rcar: Add device tree support for
  r8a774a1
-Message-ID: <20190621095859.GA8785@e121166-lin.cambridge.arm.com>
+Message-ID: <20190619114812.lwytuojd5ijonxfa@verge.net.au>
 References: <1559891016-56157-1-git-send-email-biju.das@bp.renesas.com>
+ <20190612114629.wpazihf5ea3g4wjn@verge.net.au>
+ <20190614163351.GA30511@e121166-lin.cambridge.arm.com>
+ <OSBPR01MB2103F1D063171E45B4E5034DB8EA0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1559891016-56157-1-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <OSBPR01MB2103F1D063171E45B4E5034DB8EA0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jun 07, 2019 at 08:03:36AM +0100, Biju Das wrote:
-> Add PCIe support for the RZ/G2M (a.k.a. R8A774A1).
+On Tue, Jun 18, 2019 at 10:38:21AM +0000, Biju Das wrote:
+> Hello Lorenzo and Simon,
 > 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Thanks for the feedback.
+> 
+> > Subject: Re: [PATCH] dt-bindings: PCI: rcar: Add device tree support for
+> > r8a774a1
+> > 
+> > On Wed, Jun 12, 2019 at 01:46:29PM +0200, Simon Horman wrote:
+> > > On Fri, Jun 07, 2019 at 08:03:36AM +0100, Biju Das wrote:
+> > > > Add PCIe support for the RZ/G2M (a.k.a. R8A774A1).
+> > > >
+> > > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > >
+> > > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> > 
+> > Should I pick this up and send it via the PCI tree ?
+> > 
+> > Just let me know please, thanks.
+> 
+> Simon, 
+> What do you think ?
 
-Applied to pci/rcar for v5.3, thanks.
+Hi Lorenzo, Hi Biju,
 
-Lorenzo
+yes, I think that is a good idea.
 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> index 6904882..45bba9f 100644
-> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> @@ -3,6 +3,7 @@
->  Required properties:
->  compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
->  	    "renesas,pcie-r8a7744" for the R8A7744 SoC;
-> +	    "renesas,pcie-r8a774a1" for the R8A774A1 SoC;
->  	    "renesas,pcie-r8a774c0" for the R8A774C0 SoC;
->  	    "renesas,pcie-r8a7779" for the R8A7779 SoC;
->  	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
-> -- 
-> 2.7.4
+Please feel free to push this via the PCI tree.
+
+In case it helps:
+
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+
+
+> 
+> Regards,
+> Biju
+> 
+> > 
+> > > > ---
+> > > >  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> > b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> > > > index 6904882..45bba9f 100644
+> > > > --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> > > > +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> > > > @@ -3,6 +3,7 @@
+> > > >  Required properties:
+> > > >  compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
+> > > >  	    "renesas,pcie-r8a7744" for the R8A7744 SoC;
+> > > > +	    "renesas,pcie-r8a774a1" for the R8A774A1 SoC;
+> > > >  	    "renesas,pcie-r8a774c0" for the R8A774C0 SoC;
+> > > >  	    "renesas,pcie-r8a7779" for the R8A7779 SoC;
+> > > >  	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
+> > > > --
+> > > > 2.7.4
+> > > >
 > 
