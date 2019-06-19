@@ -1,76 +1,155 @@
-From: Dan Williams <dcbw@redhat.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Wed, 19 Jun 2019 15:56:58 -0500
-Message-ID: <414bc504bf62ea8de2ad195c00ce64dc0acb773c.camel@redhat.com>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
-         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
-         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
-         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
-         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
-         <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
-         <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
-         <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
-         <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
-         <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
-         <d533b708-c97a-710d-1138-3ae79107f209@linaro.org>
-         <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
-         <CAK8P3a3ksrFTo2+dLB+doLeY+kPP7rYxv2O7BwvjYgK2cwCTuQ@mail.gmail.com>
-         <97cbfb3723607c95d78e25785262ae7b0acdb11c.camel@sipsolutions.net>
-         <CAK8P3a29+JKbDdS9ikhgaKa-AJ1qd1sDMTAfzivGh5wN4VL88A@mail.gmail.com>
-         <54a5acb6cf26ebc6447f8ebcbdcb8e0eed693ab3.camel@sipsolutions.net>
-         <CAK8P3a3r95gXMdq7s9GF=37v6t4kR+-2iyC6bnmUDVuM+bn80Q@mail.gmail.com>
+From: Tao Ren <taoren@fb.com>
+Subject: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
+Date: Wed, 19 Jun 2019 13:50:09 -0700
+Message-ID: <20190619205009.4176588-1-taoren@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3r95gXMdq7s9GF=37v6t4kR+-2iyC6bnmUDVuM+bn80Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Johannes Berg <johannes@sipsolutions.net>
-Cc: Alex Elder <elder@linaro.org>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Brendan Higgins <brendanhiggins@google.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Tao Ren <taoren@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-06-18 at 23:06 +0200, Arnd Bergmann wrote:
-> On Tue, Jun 18, 2019 at 10:39 PM Johannes Berg
-> <johannes@sipsolutions.net> wrote:
-> > On Tue, 2019-06-18 at 22:33 +0200, Arnd Bergmann wrote:
-> > It seems to me though that this is far more complex than what I'm
-> > proposing? What I'm proposing there doesn't even need any userspace
-> > involvement, as long as all the pieces are in the different sub-
-> > drivers,
-> > they'd fall out automatically.
-> > 
-> > And realistically, the wwan_device falls out anyway at some point,
-> > the
-> > only question is if we really make one specific driver be the
-> > "owner" of
-> > it. I'm suggesting that we don't, and just make its lifetime depend
-> > on
-> > the links to parts it has (unless something like IPA actually wants
-> > to
-> > be an owner).
-> 
-> My feeling so far is that having the wwan_device be owned by a device
-> gives a nicer abstraction model that is also simpler for the common
-> case. A device driver like ipa would end up with a probe() function
-> that does does wwan_device_alloc/wwan_device_register, corresponding
-> to alloc_etherdev/register_netdev, and then communicates through
-> callbacks.
-> 
-> I agree the compound device case would get more complex by
-> shoehorning it into this model, but that can be a valid tradeoff
-> if it's the exceptional case rather than the common one.
+Some intermittent I2C transaction failures are observed on Facebook CMM and
+Minipack (ast2500) BMC platforms, because slave devices (such as CPLD, BIC
+and etc.) NACK the address byte sometimes. The issue can be resolved by
+increasing base clock divisor which affects ASPEED I2C Controller's base
+clock and other AC timing parameters.
 
-In my experience, the compound device model is by far the most
-prevalent for regular Linux distros or anything *not* running on an SoC
-with an integrated modem.
+This patch allows to customize ASPEED I2C Controller's base clock divisor
+in device tree.
 
-But it's also quite common for Android, no? drivers/net/ethernet/msm/
-has rmnet and IPA ethernet drivers while arch/arm/mach-msm/ has various
-SMD-related control channel drivers like smd_tty.c and smd_qmi.c and
-smd_nmea.c. At least that's how I remember older SMD-based devices
-being in the 8xxx and 9xxx time.
+Signed-off-by: Tao Ren <taoren@fb.com>
+---
+ drivers/i2c/busses/i2c-aspeed.c | 48 ++++++++++++++++++++++-----------
+ 1 file changed, 33 insertions(+), 15 deletions(-)
 
-Ideally those setups can benefit from this framework as well, without
-having to write entirely new composite drivers for those devices.
-
-Dan
+diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
+index 6c8b38fd6e64..e4b1c4c71b62 100644
+--- a/drivers/i2c/busses/i2c-aspeed.c
++++ b/drivers/i2c/busses/i2c-aspeed.c
+@@ -145,7 +145,8 @@ struct aspeed_i2c_bus {
+ 	spinlock_t			lock;
+ 	struct completion		cmd_complete;
+ 	u32				(*get_clk_reg_val)(struct device *dev,
+-							   u32 divisor);
++							   u32 divisor,
++							   u32 base_clk_div);
+ 	unsigned long			parent_clk_frequency;
+ 	u32				bus_frequency;
+ 	/* Transaction state. */
+@@ -778,9 +779,10 @@ static const struct i2c_algorithm aspeed_i2c_algo = {
+ 
+ static u32 aspeed_i2c_get_clk_reg_val(struct device *dev,
+ 				      u32 clk_high_low_mask,
+-				      u32 divisor)
++				      u32 divisor,
++				      u32 base_clk_divisor)
+ {
+-	u32 base_clk_divisor, clk_high_low_max, clk_high, clk_low, tmp;
++	u32 clk_high_low_max, clk_high, clk_low, tmp;
+ 
+ 	/*
+ 	 * SCL_high and SCL_low represent a value 1 greater than what is stored
+@@ -809,10 +811,12 @@ static u32 aspeed_i2c_get_clk_reg_val(struct device *dev,
+ 	 *		((1 << base_clk_divisor) * (clk_high + 1 + clk_low + 1))
+ 	 * The documentation recommends clk_high >= clk_high_max / 2 and
+ 	 * clk_low >= clk_low_max / 2 - 1 when possible; this last constraint
+-	 * gives us the following solution:
++	 * gives us the following solution (unless base_clk_divisor is manually
++	 * configured in device tree):
+ 	 */
+-	base_clk_divisor = divisor > clk_high_low_max ?
+-			ilog2((divisor - 1) / clk_high_low_max) + 1 : 0;
++	if (base_clk_divisor > ASPEED_I2CD_TIME_BASE_DIVISOR_MASK)
++		base_clk_divisor = divisor > clk_high_low_max ?
++				ilog2((divisor - 1) / clk_high_low_max) + 1 : 0;
+ 
+ 	if (base_clk_divisor > ASPEED_I2CD_TIME_BASE_DIVISOR_MASK) {
+ 		base_clk_divisor = ASPEED_I2CD_TIME_BASE_DIVISOR_MASK;
+@@ -843,35 +847,49 @@ static u32 aspeed_i2c_get_clk_reg_val(struct device *dev,
+ 			   & ASPEED_I2CD_TIME_BASE_DIVISOR_MASK);
+ }
+ 
+-static u32 aspeed_i2c_24xx_get_clk_reg_val(struct device *dev, u32 divisor)
++static u32 aspeed_i2c_24xx_get_clk_reg_val(struct device *dev,
++					   u32 divisor,
++					   u32 base_clk_divisor)
+ {
+ 	/*
+ 	 * clk_high and clk_low are each 3 bits wide, so each can hold a max
+ 	 * value of 8 giving a clk_high_low_max of 16.
+ 	 */
+-	return aspeed_i2c_get_clk_reg_val(dev, GENMASK(2, 0), divisor);
++	return aspeed_i2c_get_clk_reg_val(dev, GENMASK(2, 0), divisor,
++					  base_clk_divisor);
+ }
+ 
+-static u32 aspeed_i2c_25xx_get_clk_reg_val(struct device *dev, u32 divisor)
++static u32 aspeed_i2c_25xx_get_clk_reg_val(struct device *dev,
++					   u32 divisor,
++					   u32 base_clk_divisor)
+ {
+ 	/*
+ 	 * clk_high and clk_low are each 4 bits wide, so each can hold a max
+ 	 * value of 16 giving a clk_high_low_max of 32.
+ 	 */
+-	return aspeed_i2c_get_clk_reg_val(dev, GENMASK(3, 0), divisor);
++	return aspeed_i2c_get_clk_reg_val(dev, GENMASK(3, 0), divisor,
++					  base_clk_divisor);
+ }
+ 
+ /* precondition: bus.lock has been acquired. */
+-static int aspeed_i2c_init_clk(struct aspeed_i2c_bus *bus)
++static int aspeed_i2c_init_clk(struct aspeed_i2c_bus *bus,
++			       struct platform_device *pdev)
+ {
+-	u32 divisor, clk_reg_val;
++	int ret;
++	u32 divisor, clk_reg_val, base_clk_divisor;
++
++	ret = of_property_read_u32(pdev->dev.of_node, "base-clock-divisor",
++				   &base_clk_divisor);
++	if (ret < 0)
++		base_clk_divisor = (u32)-1;
+ 
+ 	divisor = DIV_ROUND_UP(bus->parent_clk_frequency, bus->bus_frequency);
+ 	clk_reg_val = readl(bus->base + ASPEED_I2C_AC_TIMING_REG1);
+ 	clk_reg_val &= (ASPEED_I2CD_TIME_TBUF_MASK |
+ 			ASPEED_I2CD_TIME_THDSTA_MASK |
+ 			ASPEED_I2CD_TIME_TACST_MASK);
+-	clk_reg_val |= bus->get_clk_reg_val(bus->dev, divisor);
++	clk_reg_val |= bus->get_clk_reg_val(bus->dev, divisor,
++					    base_clk_divisor);
+ 	writel(clk_reg_val, bus->base + ASPEED_I2C_AC_TIMING_REG1);
+ 	writel(ASPEED_NO_TIMEOUT_CTRL, bus->base + ASPEED_I2C_AC_TIMING_REG2);
+ 
+@@ -888,7 +906,7 @@ static int aspeed_i2c_init(struct aspeed_i2c_bus *bus,
+ 	/* Disable everything. */
+ 	writel(0, bus->base + ASPEED_I2C_FUN_CTRL_REG);
+ 
+-	ret = aspeed_i2c_init_clk(bus);
++	ret = aspeed_i2c_init_clk(bus, pdev);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -989,7 +1007,7 @@ static int aspeed_i2c_probe_bus(struct platform_device *pdev)
+ 	if (!match)
+ 		bus->get_clk_reg_val = aspeed_i2c_24xx_get_clk_reg_val;
+ 	else
+-		bus->get_clk_reg_val = (u32 (*)(struct device *, u32))
++		bus->get_clk_reg_val = (u32 (*)(struct device *, u32, u32))
+ 				match->data;
+ 
+ 	/* Initialize the I2C adapter */
+-- 
+2.17.1
