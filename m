@@ -1,100 +1,72 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] ARM: dts: rockchip: Configure BT_DEV_WAKE in on rk3288-veyron
-Date: Wed, 19 Jun 2019 11:34:25 -0700
-Message-ID: <20190619183425.149470-1-dianders@chromium.org>
+From: Zhi Li <lznuaa@gmail.com>
+Subject: [PATCH V12 3/4] arm64: dts: imx8qxp: added ddr performance monitor
+ nodes
+Date: Wed, 19 Jun 2019 13:46:00 -0500
+Message-ID: <CAHrpEqT_34eNK-EzRgs-ocDD6pfLzD=FU8n83HgSQVsimJRxPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, mka@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the other half of the hacky solution from commit f497ab6b4bb8
-("ARM: dts: rockchip: Configure BT_HOST_WAKE as wake-up signal on
-veyron").  Specifically the LPM driver that the Broadcom Bluetooth
-expects to have (but is missing in mainline) has two halves of the
-equation: BT_HOST_WAKE and BT_DEV_WAKE.  The BT_HOST_WAKE (which was
-handled in the previous commit) is the one that lets the Bluetooth
-wake the system up.  The BT_DEV_WAKE (this patch) tells the Bluetooth
-that it's OK to go into a low power mode.  That means we were burning
-a bit of extra power in S3 without this patch.  Measurements are a bit
-noisy, but it appears to be a few mA worth of difference.
+Add ddr performance monitor
 
-NOTE: Though these pins don't do much on systems with Marvell
-Bluetooth, downstream kernels set it on all veyron boards so we'll do
-the same.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
 ---
 
- .../boot/dts/rk3288-veyron-chromebook.dtsi    |  2 ++
- arch/arm/boot/dts/rk3288-veyron.dtsi          | 20 +++++++++++++++++++
- 2 files changed, 22 insertions(+)
+Resent without base64 encode
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-index 5727017f34b2..1cadb522fd0d 100644
---- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-@@ -237,6 +237,7 @@
- 
- 		/* Wake only */
- 		&suspend_l_wake
-+		&bt_dev_wake_awake
- 	>;
- 	pinctrl-1 = <
- 		/* Common for sleep and wake, but no owners */
-@@ -246,6 +247,7 @@
- 
- 		/* Sleep only */
- 		&suspend_l_sleep
-+		&bt_dev_wake_sleep
- 	>;
- 
- 	backlight {
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index e2635ad574e7..53d2f2452868 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -485,12 +485,18 @@
- 		&ddr0_retention
- 		&ddrio_pwroff
- 		&global_pwroff
+Notes:
+    No change from v9 to v12
+
+    Change from v8 to v9
+    * put ddr-pmu under ddr_subsystem bus
+
+    Change from v3 to v8
+    * none
+
+    Change from v2 to v3
+    * ddr_pmu0 -> ddr-pmu
+
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index 0683ee2..a33e08c 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -378,6 +378,20 @@
+                };
+        };
+
++       ddr_subsyss: bus@5c000000 {
++               compatible = "simple-bus";
++               #address-cells = <1>;
++               #size-cells = <1>;
++               ranges = <0x5c000000 0x0 0x5c000000 0x1000000>;
 +
-+		/* Wake only */
-+		&bt_dev_wake_awake
- 	>;
- 	pinctrl-1 = <
- 		/* Common for sleep and wake, but no owners */
- 		&ddr0_retention
- 		&ddrio_pwroff
- 		&global_pwroff
++               ddr-pmu@5c020000 {
++                       compatible = "fsl,imx8-ddr-pmu";
++                       reg = <0x5c020000 0x10000>;
++                       interrupt-parent = <&gic>;
++                       interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
++               };
++       };
 +
-+		/* Sleep only */
-+		&bt_dev_wake_sleep
- 	>;
- 
- 	pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
-@@ -596,6 +602,20 @@
- 		sdio0_clk: sdio0-clk {
- 			rockchip,pins = <4 RK_PD1 1 &pcfg_pull_none_drv_8ma>;
- 		};
-+
-+		/*
-+		 * These pins are only present on very new veyron boards; on
-+		 * older boards bt_dev_wake is simply always high.  Note that
-+		 * gpio4_D2 is a NC on old veyron boards, so it doesn't hurt
-+		 * to map this pin everywhere
-+		 */
-+		bt_dev_wake_sleep: bt-dev-wake-sleep {
-+			rockchip,pins = <4 RK_PD2 RK_FUNC_GPIO &pcfg_output_low>;
-+		};
-+
-+		bt_dev_wake_awake: bt-dev-wake-awake {
-+			rockchip,pins = <4 RK_PD2 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
- 	};
- 
- 	tpm {
--- 
-2.22.0.410.gd8fdbe21b5-goog
+        lsio_subsys: bus@5d000000 {
+                compatible = "simple-bus";
+                #address-cells = <1>;
+--
+2.5.2
