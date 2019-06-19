@@ -1,80 +1,71 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [RFC PATCH 2/4] dt-bindings: display: Convert ampire,
- am-480272h3tmqw-t01h panel to DT schema
-Date: Wed, 19 Jun 2019 15:51:54 -0600
-Message-ID: <20190619215156.27795-2-robh@kernel.org>
+Subject: [RFC PATCH 4/4] dt-bindings: display: Convert innolux,ee101ia-01 panel to DT schema
+Date: Wed, 19 Jun 2019 15:51:56 -0600
+Message-ID: <20190619215156.27795-4-robh@kernel.org>
 References: <20190619215156.27795-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190619215156.27795-1-robh@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Q29udmVydCB0aGUgYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoIHBhbmVsIGJpbmRpbmcgdG8g
-RFQgc2NoZW1hLgoKQ2M6IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+
-CkNjOiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+CkNjOiBNYXhpbWUgUmlwYXJkIDxt
-YXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPgpDYzogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5w
-aW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgpDYzogZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpTaWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0KIC4u
-Li9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgudHh0ICAgICB8IDI2IC0tLS0tLS0t
-LS0tLQogLi4uL3BhbmVsL2FtcGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaC55YW1sICAgIHwgNDEg
-KysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA0MSBpbnNlcnRpb25zKCspLCAy
-NiBkZWxldGlvbnMoLSkKIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgudHh0
-CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnlhbWwKCmRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBpcmUs
-YW0tNDgwMjcyaDN0bXF3LXQwMWgudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dApkZWxldGVk
-IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggNjgxMjI4MGNiMTA5Li4wMDAwMDAwMDAwMDAKLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFt
-LTQ4MDI3MmgzdG1xdy10MDFoLnR4dAorKysgL2Rldi9udWxsCkBAIC0xLDI2ICswLDAgQEAKLUFt
-cGlyZSBBTS00ODAyNzJIM1RNUVctVDAxSCA0LjMiIFdRVkdBIFRGVCBMQ0QgcGFuZWwKLQotVGhp
-cyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdo
-aWNoIGlzIHNwZWNpZmllZAotaW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4K
-LQotUmVxdWlyZWQgcHJvcGVydGllczoKLS0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJhbXBpcmUs
-YW0tNDgwMjcyaDN0bXF3LXQwMWgiCi0KLU9wdGlvbmFsIHByb3BlcnRpZXM6Ci0tIHBvd2VyLXN1
-cHBseTogcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2b2x0YWdlCi0tIGVuYWJsZS1n
-cGlvczogR1BJTyBwaW4gdG8gZW5hYmxlIG9yIGRpc2FibGUgdGhlIHBhbmVsCi0tIGJhY2tsaWdo
-dDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwK
-LQotT3B0aW9uYWwgbm9kZXM6Ci0tIFZpZGVvIHBvcnQgZm9yIFJHQiBpbnB1dC4KLQotRXhhbXBs
-ZToKLQlwYW5lbF9yZ2I6IHBhbmVsLXJnYiB7Ci0JCWNvbXBhdGlibGUgPSAiYW1waXJlLGFtLTQ4
-MDI3MmgzdG1xdy10MDFoIjsKLQkJZW5hYmxlLWdwaW9zID0gPCZncGlvYSA4IDE+OwotCQlwb3J0
-IHsKLQkJCXBhbmVsX2luX3JnYjogZW5kcG9pbnQgewotCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
-Y29udHJvbGxlcl9vdXRfcmdiPjsKLQkJCX07Ci0JCX07Ci0JfTsKZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGlyZSxhbS00ODAy
-NzJoM3RtcXctdDAxaC55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnlhbWwKbmV3IGZpbGUgbW9k
-ZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5jYzJmNmVjNmViZjYKLS0tIC9kZXYvbnVsbAor
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBp
-cmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgueWFtbApAQCAtMCwwICsxLDQxIEBACisjIFNQRFgtTGlj
-ZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCislWUFNTCAxLjIKKy0tLQorJGlkOiBodHRwOi8vZGV2
-aWNldHJlZS5vcmcvc2NoZW1hcy9kaXNwbGF5L3BhbmVsL2FtcGlyZSxhbS00ODAyNzJoM3RtcXct
-dDAxaC55YW1sIworJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9j
-b3JlLnlhbWwjCisKK3RpdGxlOiBBbXBpcmUgQU0tNDgwMjcySDNUTVFXLVQwMUggNC4zIiBXUVZH
-QSBURlQgTENEIHBhbmVsCisKK21haW50YWluZXJzOgorICAtIFRoaWVycnkgUmVkaW5nIDx0cmVk
-aW5nQG52aWRpYS5jb20+CisKK2FsbE9mOgorICAtICRyZWY6IHBhbmVsLWNvbW1vbi55YW1sIwor
-Citwcm9wZXJ0aWVzOgorICBjb21wYXRpYmxlOgorICAgIGNvbnN0OiBhbXBpcmUsYW0tNDgwMjcy
-aDN0bXF3LXQwMWgKKworICBwb3dlci1zdXBwbHk6IHRydWUKKyAgZW5hYmxlLWdwaW9zOiB0cnVl
-CisgIGJhY2tsaWdodDogdHJ1ZQorICBwb3J0OiB0cnVlCisKK3JlcXVpcmVkOgorICAtIGNvbXBh
-dGlibGUKKworYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlCisKK2V4YW1wbGVzOgorICAtIHwK
-KyAgICBwYW5lbF9yZ2I6IHBhbmVsIHsKKyAgICAgIGNvbXBhdGlibGUgPSAiYW1waXJlLGFtLTQ4
-MDI3MmgzdG1xdy10MDFoIjsKKyAgICAgIGVuYWJsZS1ncGlvcyA9IDwmZ3Bpb2EgOCAxPjsKKyAg
-ICAgIHBvcnQgeworICAgICAgICBwYW5lbF9pbl9yZ2I6IGVuZHBvaW50IHsKKyAgICAgICAgICBy
-ZW1vdGUtZW5kcG9pbnQgPSA8JmNvbnRyb2xsZXJfb3V0X3JnYj47CisgICAgICAgIH07CisgICAg
-ICB9OworICAgIH07CisKKy4uLgotLSAKMi4yMC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWw=
+Convert the innolux,ee101ia-01 LVDS panel binding to DT schema.
+
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../display/panel/innolux,ee101ia-01d.txt     |  7 -------
+ .../display/panel/innolux,ee101ia-01d.yaml    | 21 +++++++++++++++++++
+ 2 files changed, 21 insertions(+), 7 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt b/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt
+deleted file mode 100644
+index e5ca4ccd55ed..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt
++++ /dev/null
+@@ -1,7 +0,0 @@
+-Innolux Corporation 10.1" EE101IA-01D WXGA (1280x800) LVDS panel
+-
+-Required properties:
+-- compatible: should be "innolux,ee101ia-01d"
+-
+-This binding is compatible with the lvds-panel binding, which is specified
+-in panel-lvds.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml b/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml
+new file mode 100644
+index 000000000000..53d0e9c6169f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml
+@@ -0,0 +1,21 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/innolux,ee101ia-01d.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Innolux Corporation 10.1" EE101IA-01D WXGA (1280x800) LVDS panel
++
++maintainers:
++  - Thierry Reding <thierry.reding@gmail.com>
++
++allOf:
++  - $ref: panel-lvds.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: innolux,ee101ia-01d
++      - {} # panel-lvds, but not listed here to avoid false select
++
++...
+-- 
+2.20.1
