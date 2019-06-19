@@ -1,60 +1,89 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH 2/6] dt-bindings: display: msm: gmu: add optional ocmem property
-Date: Wed, 19 Jun 2019 13:21:20 -0700
-Message-ID: <CAF6AEGs6By9-LGRBAPw2OwR9tRKJtEiZVgS2WVWRXmOK1VxNLA@mail.gmail.com>
-References: <20190616132930.6942-1-masneyb@onstation.org> <20190616132930.6942-3-masneyb@onstation.org>
- <CAL_Jsq+Ne=NEcLbO6C19iOny4bwm_m5QEtcsM78ZDeBmDUVO_Q@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 06/16] dt-bindings: net: sun4i-emac: Convert the
+ binding to a schemas
+Date: Wed, 19 Jun 2019 14:44:13 -0600
+Message-ID: <CAL_JsqLUDKi8jcJ=eZOAR9-ECX0bo9F8+d59sokWGOJzph_q7w@mail.gmail.com>
+References: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
+ <e7c13fc3c4e287df6292dbee27ae1caeca0c06c4.1560937626.git-series.maxime.ripard@bootlin.com>
+ <CAL_Jsq+A+jspyCpu9USL6FQ9y5qL_yqYS=DTE=aM5YzyeZwd0w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+Ne=NEcLbO6C19iOny4bwm_m5QEtcsM78ZDeBmDUVO_Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Brian Masney <masneyb@onstation.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Sean Paul <sean@poorly.run>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Jonathan Marek <jonathan@marek.ca>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, freedreno <freedreno@lists.freedesktop.org>, devicetree@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+A+jspyCpu9USL6FQ9y5qL_yqYS=DTE=aM5YzyeZwd0w@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 1:17 PM Rob Herring <robh+dt@kernel.org> wrote:
+On Wed, Jun 19, 2019 at 8:46 AM Rob Herring <robh+dt@kernel.org> wrote:
 >
-> On Sun, Jun 16, 2019 at 7:29 AM Brian Masney <masneyb@onstation.org> wrote:
+> On Wed, Jun 19, 2019 at 3:48 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > >
-> > Some A3xx and A4xx Adreno GPUs do not have GMEM inside the GPU core and
-> > must use the On Chip MEMory (OCMEM) in order to be functional. Add the
-> > optional ocmem property to the Adreno Graphics Management Unit bindings.
+> > Switch our Allwinner A10 EMAC controller binding to a YAML schema to enable
+> > the DT validation.
 > >
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> >
 > > ---
-> >  Documentation/devicetree/bindings/display/msm/gmu.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
 > >
-> > diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
-> > index 90af5b0a56a9..c746b95e95d4 100644
-> > --- a/Documentation/devicetree/bindings/display/msm/gmu.txt
-> > +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
-> > @@ -31,6 +31,10 @@ Required properties:
-> >  - iommus: phandle to the adreno iommu
-> >  - operating-points-v2: phandle to the OPP operating points
+> > Changes from v2:
+> >   - Switch from the deprecated phy property to phy-handle
+> > ---
+> >  Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt      | 19 -------------------
+> >  2 files changed, 55 insertions(+), 19 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
 > >
-> > +Optional properties:
-> > +- ocmem: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
-> > +         SoCs. See Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml.
+> > diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+> > new file mode 100644
+> > index 000000000000..2ff9e605cd26
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+> > @@ -0,0 +1,55 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/net/allwinner,sun4i-a10-emac.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Allwinner A10 EMAC Ethernet Controller Device Tree Bindings
+> > +
+> > +allOf:
+> > +  - $ref: "ethernet-controller.yaml#"
+> > +
+> > +maintainers:
+> > +  - Chen-Yu Tsai <wens@csie.org>
+> > +  - Maxime Ripard <maxime.ripard@bootlin.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: allwinner,sun4i-a10-emac
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  allwinner,sram:
+> > +    description: Phandle to the device SRAM
+> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - phy-handle
 >
-> We already have a couple of similar properties. Lets standardize on
-> 'sram' as that is what TI already uses.
->
-> Also, is the whole OCMEM allocated to the GMU? If not you should have
-> child nodes to subdivide the memory.
->
+> Doesn't this throw an error if not listed in properties?
 
-iirc, downstream a large chunk of OCMEM is statically allocated for
-GPU.. the remainder is dynamically allocated for different use-cases.
-The upstream driver Brian is proposing only handles the static
-allocation case (and I don't think we have upstream support for the
-various audio and video use-cases that used dynamic OCMEM allocation
-downstream)
+NM, it doesn't.
 
-Although maybe we should still have a child node to separate the
-statically and dynamically allocated parts?  I'm not sure what would
-make the most sense..
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-BR,
--R
+Rob
