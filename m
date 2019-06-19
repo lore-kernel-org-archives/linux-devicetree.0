@@ -1,43 +1,59 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH V4 4/4] dt-bindings: arm: imx: Add the soc binding for i.MX8MQ
-Date: Wed, 19 Jun 2019 10:21:45 +0800
-Message-ID: <20190619022145.42398-4-Anson.Huang@nxp.com>
-References: <20190619022145.42398-1-Anson.Huang@nxp.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH v2 0/6] qcom: add OCMEM support
+Date: Tue, 18 Jun 2019 22:32:03 -0400
+Message-ID: <20190619023209.10036-1-masneyb@onstation.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190619022145.42398-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org, j.neuschaefer@gmx.net, u.kleine-koenig@pengutronix.de, leoyang.li@nxp.com, aisheng.dong@nxp.com, l.stach@pengutronix.de, vabhav.sharma@nxp.com, bhaskar.upadhaya@nxp.com, ping.bai@nxp.com, pramod.kumar_1@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Linux-imx@nxp.com
+To: bjorn.andersson@linaro.org, agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org
+Cc: airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+This patch series adds support for Qualcomm's On Chip MEMory (OCMEM)
+that is needed in order to support some A3xx and A4xx based GPUs
+upstream. This is based on Rob Clark's patch series that he submitted
+in October 2015 and I am resubmitting updated patches with his
+permission. See the individual patches for the changelog.
 
-This patch adds the soc & board binding for i.MX8MQ.
+This was tested with the GPU on a LG Nexus 5 (hammerhead) phone and
+this will work on other msm8974-based systems. For a summary of what
+currently works upstream on the Nexus 5, see my status page at
+https://masneyb.github.io/nexus-5-upstream/.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-No changes.
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+Brian Masney (4):
+  dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
+  dt-bindings: display: msm: gmu: add optional ocmem property
+  soc: qcom: add OCMEM driver
+  drm/msm/gpu: add ocmem init/cleanup functions
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index b35abb1..f944df8 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -183,6 +183,12 @@ properties:
-               - fsl,imx8mn-ddr4-evk            # i.MX8MN DDR4 EVK Board
-           - const: fsl,imx8mn
- 
-+      - description: i.MX8MQ based Boards
-+        items:
-+          - enum:
-+              - fsl,imx8mq-evk            # i.MX8MQ EVK Board
-+          - const: fsl,imx8mq
-+
-       - description: i.MX8QXP based Boards
-         items:
-           - enum:
+Rob Clark (2):
+  firmware: qcom: scm: add OCMEM lock/unlock interface
+  firmware: qcom: scm: add support to restore secure config to
+    qcm_scm-32
+
+ .../devicetree/bindings/display/msm/gmu.txt   |   4 +
+ .../bindings/sram/qcom/qcom,ocmem.yaml        |  64 +++
+ drivers/firmware/qcom_scm-32.c                |  52 ++-
+ drivers/firmware/qcom_scm-64.c                |  12 +
+ drivers/firmware/qcom_scm.c                   |  53 +++
+ drivers/firmware/qcom_scm.h                   |   9 +
+ drivers/gpu/drm/msm/Kconfig                   |   1 +
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.c         |  33 +-
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.h         |   3 +-
+ drivers/gpu/drm/msm/adreno/a4xx_gpu.c         |  30 +-
+ drivers/gpu/drm/msm/adreno/a4xx_gpu.h         |   3 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  36 ++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h       |  10 +
+ drivers/soc/qcom/Kconfig                      |  10 +
+ drivers/soc/qcom/Makefile                     |   1 +
+ drivers/soc/qcom/ocmem.c                      | 433 ++++++++++++++++++
+ include/linux/qcom_scm.h                      |  26 ++
+ include/soc/qcom/ocmem.h                      |  62 +++
+ 18 files changed, 795 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sram/qcom/qcom,ocmem.yaml
+ create mode 100644 drivers/soc/qcom/ocmem.c
+ create mode 100644 include/soc/qcom/ocmem.h
+
 -- 
-2.7.4
+2.20.1
