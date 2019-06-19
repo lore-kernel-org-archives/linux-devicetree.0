@@ -1,56 +1,77 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: Add doc for the Ingenic JZ47xx LCD
- controller driver
-Date: Wed, 19 Jun 2019 14:18:46 +0200
-Message-ID: <20190619121846.GA29084@ravnborg.org>
-References: <20190603152331.23160-1-paul@crapouillou.net>
- <20190611215554.GA23791@bogus> <1560329392.1823.1@crapouillou.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Wed, 19 Jun 2019 14:23:16 +0200
+Message-ID: <CAK8P3a3e+U85yHTeE4dHa4okLVHgBd8Kke9=FytzvMwz+wB0sQ@mail.gmail.com>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+ <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+ <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+ <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
+ <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org> <b23a83c18055470c5308fcd1eed018056371fc1d.camel@sipsolutions.net>
+ <CAK8P3a1FeUQR3pgoQxHoRK05JGORyR+TFATVQiijLWtFKTv6OQ@mail.gmail.com>
+ <613cdfde488eb23d7207c7ba6258662702d04840.camel@sipsolutions.net>
+ <CAK8P3a2onXpxiE4y9PzRwuPM2dh=h_BKz7Eb0=LLPgBbZoK1bQ@mail.gmail.com> <6c70950d0c78bc02a3d016918ec3929e@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1560329392.1823.1@crapouillou.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Artur Rojek <contact@artur-rojek.eu>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Maxime Ripard <maxime.ripard@bootlin.com>, od@zcrc.me, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6c70950d0c78bc02a3d016918ec3929e@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>, Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, Dan Williams <dcbw@redhat.com>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMTIsIDIwMTkgYXQgMTA6NDk6NTJBTSArMDIwMCwgUGF1bCBDZXJjdWVpbCB3
-cm90ZToKPiAKPiAKPiBMZSBtYXIuIDExIGp1aW4gMjAxOSDDoCAyMzo1NSwgUm9iIEhlcnJpbmcg
-PHJvYmhAa2VybmVsLm9yZz4gYSDDqWNyaXQgOgo+ID4gT24gTW9uLCAgMyBKdW4gMjAxOSAxNzoy
-MzozMCArMDIwMCwgUGF1bCBDZXJjdWVpbCB3cm90ZToKPiA+ID4gIEFkZCBkb2N1bWVudGF0aW9u
-IGZvciB0aGUgZGV2aWNldHJlZSBiaW5kaW5ncyBvZiB0aGUgTENEIGNvbnRyb2xsZXIKPiA+ID4g
-cHJlc2VudCBpbgo+ID4gPiAgdGhlIEpaNDd4eCBmYW1pbHkgb2YgU29DcyBmcm9tIEluZ2VuaWMu
-Cj4gPiA+IAo+ID4gPiAgU2lnbmVkLW9mZi1ieTogUGF1bCBDZXJjdWVpbCA8cGF1bEBjcmFwb3Vp
-bGxvdS5uZXQ+Cj4gPiA+ICBUZXN0ZWQtYnk6IEFydHVyIFJvamVrIDxjb250YWN0QGFydHVyLXJv
-amVrLmV1Pgo+ID4gPiAgLS0tCj4gPiA+IAo+ID4gPiAgTm90ZXM6Cj4gPiA+ICAgICAgdjI6IFJl
-bW92ZSBpbmdlbmljLHBhbmVsIHByb3BlcnR5Lgo+ID4gPiAKPiA+ID4gICAgICB2MzogLSBSZW5h
-bWUgY29tcGF0aWJsZSBzdHJpbmdzIGZyb20gaW5nZW5pYyxqejQ3WFgtZHJtIHRvCj4gPiA+IGlu
-Z2VuaWMsano0N1hYLWxjZAo+ID4gPiAgICAgICAgICAtIFRoZSBpbmdlbmljLGxjZC1tb2RlIHBy
-b3BlcnR5IGlzIG5vdyByZWFkIGZyb20gdGhlIHBhbmVsCj4gPiA+IG5vZGUgaW5zdGVhZAo+ID4g
-PiAgICAgIAkgIG9mIGZyb20gdGhlIGRyaXZlciBub2RlCj4gPiA+IAo+ID4gPiAgICAgIHY0OiBS
-ZW1vdmUgaW5nZW5pYyxsY2QtbW9kZSBwcm9wZXJ0eSBjb21wbGV0ZWx5Lgo+ID4gPiAKPiA+ID4g
-ICAgICB2NTogTm8gY2hhbmdlCj4gPiA+IAo+ID4gPiAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2lu
-Z2VuaWMsbGNkLnR4dCAgICAgICAgICB8IDQ0Cj4gPiA+ICsrKysrKysrKysrKysrKysrKysKPiA+
-ID4gICAxIGZpbGUgY2hhbmdlZCwgNDQgaW5zZXJ0aW9ucygrKQo+ID4gPiAgIGNyZWF0ZSBtb2Rl
-IDEwMDY0NAo+ID4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9p
-bmdlbmljLGxjZC50eHQKPiA+ID4gCj4gPiAKPiA+IFBsZWFzZSBhZGQgQWNrZWQtYnkvUmV2aWV3
-ZWQtYnkgdGFncyB3aGVuIHBvc3RpbmcgbmV3IHZlcnNpb25zLiBIb3dldmVyLAo+ID4gdGhlcmUn
-cyBubyBuZWVkIHRvIHJlcG9zdCBwYXRjaGVzICpvbmx5KiB0byBhZGQgdGhlIHRhZ3MuIFRoZSB1
-cHN0cmVhbQo+ID4gbWFpbnRhaW5lciB3aWxsIGRvIHRoYXQgZm9yIGFja3MgcmVjZWl2ZWQgb24g
-dGhlIHZlcnNpb24gdGhleSBhcHBseS4KPiA+IAo+ID4gSWYgYSB0YWcgd2FzIG5vdCBhZGRlZCBv
-biBwdXJwb3NlLCBwbGVhc2Ugc3RhdGUgd2h5IGFuZCB3aGF0IGNoYW5nZWQuCj4gCj4gU29ycnkg
-Um9iLCBteSBtaXN0YWtlLiBJIHNpbXBseSBmb3Jnb3QgdGhhdCB5b3UgZXZlciByZXZpZXdlZCB0
-aGF0IHBhdGNoLgpBZGRlZCBSb2IncyByLWIgYW5kIHB1c2hlZCB0byBkcm0tbWlzYy1uZXh0CgoJ
-U2FtCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Tue, Jun 18, 2019 at 11:15 PM Subash Abhinov Kasiviswanathan
+<subashab@codeaurora.org> wrote:
+>
+> On 2019-06-18 14:55, Arnd Bergmann wrote:
+> > On Tue, Jun 18, 2019 at 10:36 PM Johannes Berg
+> > <johannes@sipsolutions.net> wrote:
+> >>
+> >> On Tue, 2019-06-18 at 21:59 +0200, Arnd Bergmann wrote:
+> >> >
+> >> > From my understanding, the ioctl interface would create the lower
+> >> > netdev after talking to the firmware, and then user space would use
+> >> > the rmnet interface to create a matching upper-level device for that.
+> >> > This is an artifact of the strong separation of ipa and rmnet in the
+> >> > code.
+> >>
+> >> Huh. But if rmnet has muxing, and IPA supports that, why would you
+> >> ever
+> >> need multiple lower netdevs?
+> >
+> > From my reading of the code, there is always exactly a 1:1 relationship
+> > between an rmnet netdev an an ipa netdev. rmnet does the encapsulation/
+> > decapsulation of the qmap data and forwards it to the ipa netdev,
+> > which then just passes data through between a hardware queue and
+> > its netdevice.
+> >
+>
+> There is a n:1 relationship between rmnet and IPA.
+> rmnet does the de-muxing to multiple netdevs based on the mux id
+> in the MAP header for RX packets and vice versa.
+
+Oh, so you mean that even though IPA supports multiple channels
+and multiple netdev instances for a physical device, all the
+rmnet devices end up being thrown into a single channel in IPA?
+
+What are the other channels for in IPA? I understand that there
+is one channel for commands that is separate, while the others
+are for network devices, but that seems to make no sense if
+we only use a single channel for rmnet data.
+
+> >> Yeah, but if you actually have a hardware queue per upper netdev then
+> >> you don't really need this - you just stop the netdev queue when the
+> >> hardware queue is full, and you have flow control automatically.
+> >>
+> >> So I really don't see any reason to have these messages going back and
+> >> forth unless you plan to have multiple sessions muxed on a single
+> >> hardware queue.
+> >
+>
+> Hardware may flow control specific PDNs (rmnet interfaces) based on QoS
+> -
+> not necessarily only in case of hardware queue full.
+
+Right, I guess that makes sense if everything ends up in a
+single queue in IPA.
+
+      Arnd
