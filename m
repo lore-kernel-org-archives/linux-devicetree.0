@@ -1,94 +1,68 @@
-Return-Path: <SRS0=19b9=UX=klsmartin.com=Leif.Middelschulte@kernel.org>
-From: "Middelschulte, Leif" <Leif.Middelschulte@klsmartin.com>
+MIME-Version: 1.0
+Date: Wed, 19 Jun 2019 07:46:05 -0600
+References: <20190527160736.30569-1-leif.middelschulte@klsmartin.com>
+	<20190527161938.31871-1-leif.middelschulte@klsmartin.com>
+	<20190527161938.31871-5-leif.middelschulte@klsmartin.com>
+	<20190614195859.GA6351@bogus>
+	<aeaec8c92e8cea8ab9a5f7f0c70bbe2de81b037e.camel@klsmartin.com>
+In-Reply-To: <aeaec8c92e8cea8ab9a5f7f0c70bbe2de81b037e.camel@klsmartin.com>
+Message-ID: <CAL_JsqJBqxfSJh0Htm3esnF9DnbnNHKFMxj=iLyGcuL88qepBw@mail.gmail.com>
 Subject: Re: [PATCH 09/10] dt-bindings: input: touchscreen: stmpe: add
  tracking index
-Date: Mon, 24 Jun 2019 11:44:49 +0000
-Message-ID: <4139715591ec75d8ae1bacfe0a66fafc26703607.camel@klsmartin.com>
-References: <20190527160736.30569-1-leif.middelschulte@klsmartin.com>
-	 <20190527161938.31871-1-leif.middelschulte@klsmartin.com>
-	 <20190527161938.31871-5-leif.middelschulte@klsmartin.com>
-	 <20190614195859.GA6351@bogus>
-	 <aeaec8c92e8cea8ab9a5f7f0c70bbe2de81b037e.camel@klsmartin.com>
-	 <CAL_JsqJBqxfSJh0Htm3esnF9DnbnNHKFMxj=iLyGcuL88qepBw@mail.gmail.com>
-In-Reply-To: <CAL_JsqJBqxfSJh0Htm3esnF9DnbnNHKFMxj=iLyGcuL88qepBw@mail.gmail.com>
-Content-Language: de-DE
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <58CDC9E453CE3540BEF615D35A056583@klsmartin.de>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-To: "robh@kernel.org" <robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: "Middelschulte, Leif" <Leif.Middelschulte@klsmartin.com>
 Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-QW0gTWl0dHdvY2gsIGRlbiAxOS4wNi4yMDE5LCAwNzo0NiAtMDYwMCBzY2hyaWViIFJvYiBIZXJy
-aW5nOg0KPiBPbiBXZWQsIEp1biAxOSwgMjAxOSBhdCA2OjQ3IEFNIE1pZGRlbHNjaHVsdGUsIExl
-aWYNCj4gPA0KPiBMZWlmLk1pZGRlbHNjaHVsdGVAa2xzbWFydGluLmNvbQ0KPiA+IHdyb3RlOg0K
-PiA+IEFtIEZyZWl0YWcsIGRlbiAxNC4wNi4yMDE5LCAxMzo1OCAtMDYwMCBzY2hyaWViIFJvYiBI
-ZXJyaW5nOg0KPiA+ID4gT24gTW9uLCBNYXkgMjcsIDIwMTkgYXQgMDY6MTk6MzdQTSArMDIwMCwg
-TGVpZiBNaWRkZWxzY2h1bHRlIHdyb3RlOg0KPiA+ID4gPiBUaGUgdHJhY2tpbmcgaW5kZXggaXMg
-YSAibWluaW11bSIgZGlzdGFuY2UgdHdvIHRvdWNoDQo+ID4gPiA+IHBvaW50cyBuZWVkIHRvIGhh
-dmUgaW4gb3JkZXIgZm9yIHRoZSBzZWNvbmQgdG8gYmUgdmFsaWQuDQo+ID4gPiA+IFRoaXMgYWRk
-cyB0aGUgY29ycmVzcG9uZGluZyBiaW5kaW5nIHByb3BlcnR5IGRvY3VtZW50YXRpb24uDQo+ID4g
-PiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBMZWlmIE1pZGRlbHNjaHVsdGUgPA0KPiA+ID4g
-PiBsZWlmLm1pZGRlbHNjaHVsdGVAa2xzbWFydGluLmNvbQ0KPiA+ID4gPiANCj4gPiA+ID4gDQo+
-ID4gPiA+IC0tLQ0KPiA+ID4gPiAgLi4uL2JpbmRpbmdzL2lucHV0L3RvdWNoc2NyZWVuL3N0bXBl
-LnR4dCAgICAgICAgICB8IDE1ICsrKysrKysrKysrKysrKw0KPiA+ID4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDE1IGluc2VydGlvbnMoKykNCj4gPiA+ID4gDQo+ID4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvdG91Y2hzY3JlZW4vc3RtcGUudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L3RvdWNoc2NyZWVuL3N0
-bXBlLnR4dA0KPiA+ID4gPiBpbmRleCAwOWQyZDRmMjg4Y2MuLjg2OTZhZjM1YTdiOCAxMDA2NDQN
-Cj4gPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L3Rv
-dWNoc2NyZWVuL3N0bXBlLnR4dA0KPiA+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvaW5wdXQvdG91Y2hzY3JlZW4vc3RtcGUudHh0DQo+ID4gPiA+IEBAIC00Miw2
-ICs0MiwyMSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgVGhlIGdpdmVuIHdpbmRvdyBhbHNvIGFmZmVjdHMgdGhlIHZhbHVlIHJhbmdl
-IChsaW1pdHMpIHNldA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgd2l0aGlu
-IHRoZSBpbnB1dCBzdWJzeXN0ZW0gd2hpY2gsIGluIHR1cm4sIGFmZmVjdHMNCj4gPiA+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHRoZSBpbnB1dCByZXNvbHV0aW9uIGNhbGN1bGF0aW9u
-IG9uIGJvdGggYXhlcy4NCj4gPiA+ID4gKy0gc3QsdHJhY2tpbmctaW5kZXggICAgICAgIDogTWlu
-aW1hbCBkaXN0YW5jZSBiZXR3ZWVuIHRoZSBjdXJyZW50IHRvdWNoIHBvc2l0aW9uIGFuZCB0aGUg
-cHJldmlvdXMNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgIHRvdWNoIHBvc2l0
-aW9uLiBJZiB0aGUgZGlzdGFuY2UgaXMgc2hvcnRlciB0aGFuIHRoZSB0cmFja2luZw0KPiA+ID4g
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgaW5kZXgsIGl0IGlzIGRpc2NhcmRlZC4gVGhl
-IHRyYWNraW5nIGlzIGNhbGN1bGF0ZWQgYnkgc3VtbWF0aW9uDQo+ID4gPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBvZiB0aGUgaG9yaXpvbnRhbCBhbmQgdmVydGljYWwgbW92ZW1lbnQu
-DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBJZiBwcmVzc3VyZSByZXBvcnRp
-bmcgaXMgZW5hYmxlZCAoWC9ZL1opLCBhbiBpbmNyZWFzZSBpbiBwcmVzc3VyZQ0KPiA+ID4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgb3ZlcnJpZGUgdGhlIG1vdmVtZW50IHRyYWNraW5n
-IGFuZCByZXBvcnQgdGhlIG5ldyBkYXRhIHNldCwgZXZlbg0KPiA+ID4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgaWYgWC9ZIGlzIHdpdGhpbiB0aGUgcHJldmlvdXMgdHJhY2tpbmcgaW5k
-ZXguDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAwIC0+IGRpc2FibGVkDQo+
-ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAxIC0+IDQNCj4gPiA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIDQgLT4gOA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgMyAtPiAxNg0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgNCAt
-PiAzMg0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgNSAtPiA2NA0KPiA+ID4g
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgNiAtPiA5Mg0KPiA+ID4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgNyAtPiAxMjcNCj4gPiA+IA0KPiA+ID4gVGhpcyBpcyB3aGF0IHRv
-dWNoc2NyZWVuLWZ1enoteC95IGlzIGZvci4NCj4gPiANCj4gPiBUaGUgc3RtcGUgdG91Y2hjb250
-cm9sbGVyIGRvZXMgbm90IHN1cHBvcnQgaGFuZGxpbmcgZWFjaCBheGlzIHNlcGFyYXRlbHkuDQo+
-ID4gQWxzbyBpdCBpcyBub3QgdG8gYmUgbWlzdGFrZW4gaW4gaXRzIHNwZWNpZmljIGJlaGF2aW9y
-IChpLmUuIG92ZXJyaWRlKQ0KPiA+IGZvciB0aGUgZ2VuZXJhbCBgZnV6emAgcGFyYW1ldGVyLiBI
-b3dldmVyLCBzaG91bGQgSSByZW5hbWUgaXQgdG8gYHN0LGZ1enoteC15YCBvciBzaW1pbGFyPw0K
-PiA+IA0KPiA+IEFGQUlDUyB0aGVyZVswXSBpcyBubyBnZW5lcmljIGNvbWJpbmVkIGRldmljZXRy
-ZWUgcHJvcGVydHksIGlzIHRoZXJlPw0KPiANCj4gQ2FuJ3QgeW91IHNldCBib3RoIHByb3BlcnRp
-ZXMgYW5kIHJlcXVpcmUgdGhlbSB0byBiZSB0aGUgc2FtZSB2YWx1ZT8NClRoZSBkb2N1bWVudGF0
-aW9uIHdvdWxkIGhhdmUgdG8gbWVudGlvbiB0aGUgKGRldmlhdGluZykgYmVoYXZpb3IgcG9zc2li
-bHkgbGlrZSBmb2xsb3dzOg0KYGBgIFRoaXMgc25pcHBldCBpcyBhZGFwdGVkIGZyb20gZWV0aS50
-eHRbMF0NClRoZSBmb2xsb3dpbmcgb3B0aW9uYWwgcHJvcGVydGllcyBkZXNjcmliZWQgaW4gdG91
-Y2hzY3JlZW4udHh0IGFyZQ0KYWxzbyBzdXBwb3J0ZWQ6DQoNCi0gdG91Y2hzY3JlZW4tZnV6ei14
-OiBUaGlzIHZhbHVlIG5lZWRzIHRvIGJlIHRoZSBzYW1lIGFzIHRvdWNoc2NyZWVuLWZ1enoteS4N
-CiAgICAgICAgICAgICAgICAgICAgICBJdCBpcyBmdXRoZXJtb3JlIGlnbm9yZWQsIGlmIHRoZSBa
-LWF4aXMgaXMgYWNxdWlyZWQgdG9vIGFuZCBhbiBpbmNyZWFzZSBpbiBwcmVzc3VyZSBpcyBkZXRl
-Y3RlZC4NCiAgICAgIA0KVGhlIGdpdmVuIHZhbHVlIGlzIGEgc3VtIG9mIHRoZSBkaXN0YW5jZXMg
-b2YgYm90aCBheGlzLg0KLSB0b3VjaHNjcmVlbi1mdXp6LXk6IFRoaXMgdmFsdWUgbmVlZHMgdG8g
-YmUgdGhlIHNhbWUgYXMgdG91Y2hzY3JlZW4tZnV6ei14Lg0KICAgICAgICAgICAgICAgICAgICAg
-IEl0IGlzIGZ1dGhlcm1vcmUgaWdub3JlZCwgaWYgdGhlIFotYXhpcyBpcyBhY3F1aXJlZCB0b28g
-YW5kIGFuIGluY3JlYXNlIGluIHByZXNzdXJlIGlzIGRldGVjdGVkLg0KICAgICAgICAgICAgICAg
-ICAgICAgIFRoZSBnaXZlbiB2YWx1ZSBpcyBhIHN1bSBvZiB0aGUgZGlzdGFuY2VzIG9mIGJvdGgg
-YXhpcy4NCmBgYA0KU2VlbXMgYSBiaXQgb2RkIHRvIGltYWdpbmUuIEhvdyB3b3VsZCB5b3Ugc3Vn
-Z2VzdCB0byBpdCB0byBsb29rIGxpa2U/DQoNCg0KSXQgc2VlbXMsIHRvIG1lLCB0aGF0IGVpdGhl
-ciBhIGdlbmVyYWwgY29tYmluZWQgdmFsdWUgc2hvdWxkIGJlIGludHJvZHVjZWQgb3IgdGhpcyBz
-aG91bGQgYmUgbGVmdCBzdG1wZSBzcGVjaWZpYyAoZXNwZWNpYWxseSB3aGVuIGNvbnNpZGVyaW5n
-IHRoZSBvdmVycmlkZSBiZWhhdmlvcikuDQoNClswXSBodHRwczovL3d3dy5rZXJuZWwub3JnL2Rv
-Yy9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvdG91Y2hzY3JlZW4vZWV0
-aS50eHQNCg0KTGVpZg0KDQo+IA0KPiBSb2INCj4gDQo=
+On Wed, Jun 19, 2019 at 6:47 AM Middelschulte, Leif
+<Leif.Middelschulte@klsmartin.com> wrote:
+>
+> Am Freitag, den 14.06.2019, 13:58 -0600 schrieb Rob Herring:
+> > On Mon, May 27, 2019 at 06:19:37PM +0200, Leif Middelschulte wrote:
+> > > The tracking index is a "minimum" distance two touch
+> > > points need to have in order for the second to be valid.
+> > > This adds the corresponding binding property documentation.
+> > >
+> > > Signed-off-by: Leif Middelschulte <
+> > > leif.middelschulte@klsmartin.com
+> > > >
+> > > ---
+> > >  .../bindings/input/touchscreen/stmpe.txt          | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+> > > index 09d2d4f288cc..8696af35a7b8 100644
+> > > --- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+> > > +++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+> > > @@ -42,6 +42,21 @@ Optional properties:
+> > >                             The given window also affects the value range (limits) set
+> > >                             within the input subsystem which, in turn, affects
+> > >                             the input resolution calculation on both axes.
+> > > +- st,tracking-index        : Minimal distance between the current touch position and the previous
+> > > +                           touch position. If the distance is shorter than the tracking
+> > > +                           index, it is discarded. The tracking is calculated by summation
+> > > +                           of the horizontal and vertical movement.
+> > > +                           If pressure reporting is enabled (X/Y/Z), an increase in pressure
+> > > +                           override the movement tracking and report the new data set, even
+> > > +                           if X/Y is within the previous tracking index.
+> > > +                           0 -> disabled
+> > > +                           1 -> 4
+> > > +                           4 -> 8
+> > > +                           3 -> 16
+> > > +                           4 -> 32
+> > > +                           5 -> 64
+> > > +                           6 -> 92
+> > > +                           7 -> 127
+> >
+> > This is what touchscreen-fuzz-x/y is for.
+>
+> The stmpe touchcontroller does not support handling each axis separately.
+> Also it is not to be mistaken in its specific behavior (i.e. override)
+> for the general `fuzz` parameter. However, should I rename it to `st,fuzz-x-y` or similar?
+>
+> AFAICS there[0] is no generic combined devicetree property, is there?
+
+Can't you set both properties and require them to be the same value?
+
+Rob
