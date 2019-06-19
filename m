@@ -1,84 +1,65 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH V5 2/5] clk: imx8mm: Make 1416X/1443X PLL macro definitions common for usage
-Date: Wed, 19 Jun 2019 13:52:44 +0800
-Message-ID: <20190619055247.35771-2-Anson.Huang@nxp.com>
-References: <20190619055247.35771-1-Anson.Huang@nxp.com>
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH 1/3] arch: riscv: add config option for building SiFive's SoC resource
+Date: Wed, 19 Jun 2019 00:04:12 -0700 (PDT)
+Message-ID: <mhng-57108556-f1ec-4ff8-a6a0-98ddfee8232a@palmer-si-x1e>
+References: <1560799790-20287-2-git-send-email-lollivier@baylibre.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190619055247.35771-1-Anson.Huang@nxp.com>
+In-Reply-To: <1560799790-20287-2-git-send-email-lollivier@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, maxime.ripard@bootlin.com, olof@lixom.net, horms+renesas@verge.net.au, jagan@amarulasolutions.com, leonard.crestez@nxp.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, enric.balletbo@collabora.com, aisheng.dong@nxp.com, ping.bai@nxp.com, abel.vesa@nxp.com, l.stach@pengutronix.de, peng.fan@nxp.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, lollivier@baylibre.com, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, khilman@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On Mon, 17 Jun 2019 12:29:48 PDT (-0700), lollivier@baylibre.com wrote:
+> Create a config option for building SiFive SoC specific resources
+> e.g. SiFive device tree, platform drivers...
+>
+> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> ---
+>  arch/riscv/Kconfig                  | 2 ++
+>  arch/riscv/Kconfig.socs             | 8 ++++++++
+>  arch/riscv/boot/dts/sifive/Makefile | 2 +-
+>  3 files changed, 11 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/riscv/Kconfig.socs
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index ee32c66e1af3..eace5857c9e9 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -94,6 +94,8 @@ config PGTABLE_LEVELS
+>  	default 3 if 64BIT
+>  	default 2
+>
+> +source "arch/riscv/Kconfig.socs"
+> +
+>  menu "Platform type"
+>
+>  choice
+> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+> new file mode 100644
+> index 000000000000..60dae1b5f276
+> --- /dev/null
+> +++ b/arch/riscv/Kconfig.socs
+> @@ -0,0 +1,8 @@
+> +menu "SoC selection"
+> +
+> +config SOC_SIFIVE
+> +       bool "SiFive SoCs"
+> +       help
+> +         This enables support for SiFive SoC platform hardware.
+> +
+> +endmenu
+> diff --git a/arch/riscv/boot/dts/sifive/Makefile b/arch/riscv/boot/dts/sifive/Makefile
+> index baaeef9efdcb..6d6189e6e4af 100644
+> --- a/arch/riscv/boot/dts/sifive/Makefile
+> +++ b/arch/riscv/boot/dts/sifive/Makefile
+> @@ -1,2 +1,2 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -dtb-y += hifive-unleashed-a00.dtb
+> +dtb-$(CONFIG_SOC_SIFIVE) += hifive-unleashed-a00.dtb
 
-1416X/1443X PLL are used on i.MX8MM and i.MX8MN and maybe
-other i.MX8M series SoC later, the macro definitions of
-these PLLs' initialization should be common for usage.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No changes.
----
- drivers/clk/imx/clk-imx8mm.c | 17 -----------------
- drivers/clk/imx/clk.h        | 17 +++++++++++++++++
- 2 files changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
-index 6b8e75d..43fa9c3 100644
---- a/drivers/clk/imx/clk-imx8mm.c
-+++ b/drivers/clk/imx/clk-imx8mm.c
-@@ -26,23 +26,6 @@ static u32 share_count_dcss;
- static u32 share_count_pdm;
- static u32 share_count_nand;
- 
--#define PLL_1416X_RATE(_rate, _m, _p, _s)		\
--	{						\
--		.rate	=	(_rate),		\
--		.mdiv	=	(_m),			\
--		.pdiv	=	(_p),			\
--		.sdiv	=	(_s),			\
--	}
--
--#define PLL_1443X_RATE(_rate, _m, _p, _s, _k)		\
--	{						\
--		.rate	=	(_rate),		\
--		.mdiv	=	(_m),			\
--		.pdiv	=	(_p),			\
--		.sdiv	=	(_s),			\
--		.kdiv	=	(_k),			\
--	}
--
- static const struct imx_pll14xx_rate_table imx8mm_pll1416x_tbl[] = {
- 	PLL_1416X_RATE(1800000000U, 225, 3, 0),
- 	PLL_1416X_RATE(1600000000U, 200, 3, 0),
-diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index d94d9cb..19d7b8b 100644
---- a/drivers/clk/imx/clk.h
-+++ b/drivers/clk/imx/clk.h
-@@ -153,6 +153,23 @@ enum imx_pllv3_type {
- struct clk_hw *imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
- 		const char *parent_name, void __iomem *base, u32 div_mask);
- 
-+#define PLL_1416X_RATE(_rate, _m, _p, _s)		\
-+	{						\
-+		.rate	=	(_rate),		\
-+		.mdiv	=	(_m),			\
-+		.pdiv	=	(_p),			\
-+		.sdiv	=	(_s),			\
-+	}
-+
-+#define PLL_1443X_RATE(_rate, _m, _p, _s, _k)		\
-+	{						\
-+		.rate	=	(_rate),		\
-+		.mdiv	=	(_m),			\
-+		.pdiv	=	(_p),			\
-+		.sdiv	=	(_s),			\
-+		.kdiv	=	(_k),			\
-+	}
-+
- struct clk_hw *imx_clk_pllv4(const char *name, const char *parent_name,
- 			     void __iomem *base);
- 
--- 
-2.7.4
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
