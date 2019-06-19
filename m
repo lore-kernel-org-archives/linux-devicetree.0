@@ -1,88 +1,170 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Date: Wed, 19 Jun 2019 18:22:37 +0100
-Message-ID: <44da6863-eb79-a61b-a4bf-9e8c6cacc2b8@arm.com>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <3129ed19-0259-d227-0cff-e9f165ce5964@arm.com>
- <4514bfa2-68b2-2074-b817-2f5037650c4e@amazon.com>
- <fdc3b458-96eb-1734-c294-2463f37f2244@arm.com>
- <bbb9b41d-8ffa-d4c5-c199-2400695cce8d@amazon.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 5/7] regulator: mt6392: Add support for MT6392
+ regulator
+Date: Wed, 19 Jun 2019 18:23:22 +0100
+Message-ID: <20190619172322.GX5316@sirena.org.uk>
+References: <20190619142013.20913-1-fparent@baylibre.com>
+ <20190619142013.20913-6-fparent@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="KGCJ2evWaA3eb4zZ"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bbb9b41d-8ffa-d4c5-c199-2400695cce8d@amazon.com>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <20190619142013.20913-6-fparent@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Hawa, Hanna" <hhhawa@amazon.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, linux-edac@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Fabien Parent <fparent@baylibre.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com, lee.jones@linaro.org, lgirdwood@gmail.com, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hawa,
 
-On 17/06/2019 14:00, Hawa, Hanna wrote:
->> I don't think it can, on a second reading, it looks to be even more complicated than I
->> thought! That bit is described as disabling forwarding of uncorrected data, but it looks
->> like the uncorrected data never actually reaches the other end. (I'm unsure what 'flush'
->> means in this context.)
->> I was looking for reasons you could 'know' that any reported error was corrected. This was
->> just a bad suggestion!
+--KGCJ2evWaA3eb4zZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Is there interrupt for un-correctable error?
+On Wed, Jun 19, 2019 at 04:20:11PM +0200, Fabien Parent wrote:
 
-The answer here is somewhere between 'not really' and 'maybe'.
-There is a signal you may have wired-up as an interrupt, but its not usable from linux.
+> connectcts as a slave to a SoC using SPI, wrapped inside PWRAP.
+>=20
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 
-A.8.2 "Asychronous error signals" of the A57 TRM [0] has:
-| nINTERRIRQ output Error indicator for an L2 RAM double-bit ECC error.
-("7.6 Asynchronous errors" has more on this).
+This has your signoff...
 
-Errors cause L2ECTLR[30] to get set, and this value output as a signal, you may have wired
-it up as an interrupt.
+> +++ b/drivers/regulator/mt6392-regulator.c
+> @@ -0,0 +1,490 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Chen Zhong <chen.zhong@mediatek.com>
+> + */
 
-If you did, beware its level sensitive, and can only be cleared by writing to L2ECTLR_EL1.
-You shouldn't allow linux to access this register as it could mess with the L2
-configuration, which could also affect your EL3 and any secure-world software.
+=2E..but someone else from a different company wrote it?  Also please make
+the entire header a C++ one so this looks more consistent.
 
-The arrival of this interrupt doesn't tell you which L2 tripped the error, and you can
-only clear it if you write to L2ECTLR_EL1 on a CPU attached to the right L2. So this isn't
-actually a shared (peripheral) interrupt.
+> +static const u32 ldo_volt_table2[] =3D {
+> +	3300000, 3400000, 3500000, 3600000,
+> +};
 
-This stuff is expected to be used by firmware, which can know the affinity constraints of
-signals coming in as interrupts.
+This looks like a linear range?
 
+> +static int mt6392_get_status(struct regulator_dev *rdev)
+> +{
+> +	int ret;
+> +	u32 regval;
+> +	struct mt6392_regulator_info *info =3D rdev_get_drvdata(rdev);
+> +
+> +	ret =3D regmap_read(rdev->regmap, info->desc.enable_reg, &regval);
+> +	if (ret !=3D 0) {
+> +		dev_err(&rdev->dev, "Failed to get enable reg: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return (regval & info->qi) ? REGULATOR_STATUS_ON : REGULATOR_STATUS_OFF;
+> +}
 
-> Does 'asynchronous errors' in L2 used to report UE?
+This appears to just be reading back the enable bit, the status
+operation should only be implemented if it can check if the regulator
+is actually working.
 
->From "7.2.4 Error correction code" single-bit errors are always corrected.
-A.8.2 quoted above gives the behaviour for double-bit errors.
+Please also don't use the ternery operator needlessly, just write normal
+conditional statements to help people read the code.
 
+> +static int mt6392_buck_set_mode(struct regulator_dev *rdev, unsigned int=
+ mode)
+> +{
+> +	int ret, val =3D 0;
+> +	struct mt6392_regulator_info *info =3D rdev_get_drvdata(rdev);
+> +	u32 reg_value;
+> +
+> +	if (!info->modeset_mask) {
+> +		dev_err(&rdev->dev, "regulator %s doesn't support set_mode\n",
+> +			info->desc.name);
+> +		return -EINVAL;
+> +	}
 
-> In case no interrupt, can we use die-notifier subsystem to check if any error had occur
-> while system shutdown?
+If a regulator doesn't have support for set_mode() the operation
+shouldn't be provided for it.
 
-notify_die() would imply a synchronous exception that killed a thread. SError are a whole
-lot worse. Before v8.2 these are all treated as 'uncontained': unknown memory corruption.
-Which in your L2 case is exactly what happened. The arch code will panic().
+> +	ret =3D regmap_update_bits(rdev->regmap, info->modeset_reg,
+> +				  info->modeset_mask, val);
+> +
+> +	if (regmap_read(rdev->regmap, info->modeset_reg, &reg_value) < 0) {
+> +		dev_err(&rdev->dev, "Failed to read register value\n");
+> +		return -EIO;
+> +	}
 
-If your driver can print something useful to help debug the panic(), then a panic_notifier
-sounds appropriate. But you can't rely on these notifiers being called, as kdump has some
-hooks that affect if/when they run.
+Why are we doing this read?  It's not like anything even looks at the
+value.
 
-(KVM will 'contain' SError that come from a guest to the guest, as we know a distinct set
-of memory was in use. You may see fatal error counters increasing without the system
-panic()ing)
+> +static int mt6392_set_buck_vosel_reg(struct platform_device *pdev)
+> +{
+> +	struct mt6397_chip *mt6392 =3D dev_get_drvdata(pdev->dev.parent);
+> +	int i;
+> +	u32 regval;
+> +
+> +	for (i =3D 0; i < MT6392_MAX_REGULATOR; i++) {
+> +		if (mt6392_regulators[i].vselctrl_reg) {
+> +			if (regmap_read(mt6392->regmap,
+> +				mt6392_regulators[i].vselctrl_reg,
+> +				&regval) < 0) {
+> +				dev_err(&pdev->dev,
+> +					"Failed to read buck ctrl\n");
+> +				return -EIO;
+> +			}
 
-contained/uncontained is part of the terminology from the v8.2 RAS spec [1].
+The indentation here is seriously messed up, parts of the conditional
+statement are indented as far as the code block inside the conditional
+statement - usually the continuation of the condition would align with
+the (.
 
+> +
+> +			if (regval & mt6392_regulators[i].vselctrl_mask) {
+> +				mt6392_regulators[i].desc.vsel_reg =3D
+> +				mt6392_regulators[i].vselon_reg;
+> +			}
 
-Thanks,
+Again here the indentation is weird, this is actually one statement in
+the { } but the second line isn't indented.
 
-James
+I'm also not altogether clear why this function is doing what it's
+doing, some comments or something would be good at least.
 
+> +		/* Constrain board-specific capabilities according to what
+> +		 * this driver and the chip itself can actually do.
+> +		 */
+> +		c =3D rdev->constraints;
+> +		c->valid_modes_mask |=3D REGULATOR_MODE_NORMAL|
+> +			REGULATOR_MODE_STANDBY | REGULATOR_MODE_FAST;
+> +		c->valid_ops_mask |=3D REGULATOR_CHANGE_MODE;
 
-[0]
-http://infocenter.arm.com/help/topic/com.arm.doc.ddi0488c/DDI0488C_cortex_a57_mpcore_r1p0_trm.pdf
-[1]
-https://static.docs.arm.com/ddi0587/ca/ARM_DDI_0587C_a_RAS.pdf?_ga=2.148234679.1686960568.1560964184-897392434.1556719556
+This is broken, the driver should absolutely not modify constraints.
+The driver isn't even doing what the comment says here, it's enabling
+permissions regardless of if they were enabled by the machine.
+
+> +static const struct of_device_id mt6392_of_match[] =3D {
+> +	{ .compatible =3D "mediatek,mt6392-regulator", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, mt6392_of_match);
+
+There is no need for a compatible for this subfunction, it's specific to
+a single chip so we should be able to enumerate it just by enumerating
+that chip and this way of binding regulators is very Linux specific.
+Just have the MFD register the regulator device.
+
+--KGCJ2evWaA3eb4zZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0Kb4kACgkQJNaLcl1U
+h9BDsgf/X5MVZRM8oSqh+qbgXqtR8u6TkB8hkxu3TG/2mXnlhwdaiIX2HooEaSKf
+dfdfsPf7Y7+qFGOVBryJXPfk+cn/JPZ5Ntb+oWgjbwpEfaMTKalm3xB9KmNPkZvD
+S+RtdwyB4ynaXaNuzGOsOb/JW7t9HBDGHE8hUFfNFWcWh8Wny8oXkLAbwjYDoWFs
+KcyScAOcNhFsQpnaVaZdM8S7kv5r2jBPsg6MCjD6gGhB527VxvJHtY3qQdxm1D55
+RF28e3Bz3cVfDAjXivdsQgsONR0KlBcrKnbvvKxzlXpkaPWYb5DzNWqHa9IN5B3A
+8DetMVMjgOYxfx74qGoBo3Wcpk5bRg==
+=MKSc
+-----END PGP SIGNATURE-----
+
+--KGCJ2evWaA3eb4zZ--
