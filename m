@@ -1,47 +1,63 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 1/5] dt-bindings: pwm-stm32: add #pwm-cells
-Date: Wed, 19 Jun 2019 11:52:01 +0200
-Message-ID: <1560937925-8990-2-git-send-email-fabrice.gasnier@st.com>
-References: <1560937925-8990-1-git-send-email-fabrice.gasnier@st.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [RFT 01/10] dt-bindings: gpu: mali: Add Samsung compatibles for
+ Midgard and Utgard
+Date: Wed, 19 Jun 2019 12:01:10 +0200
+Message-ID: <9d16d4f7-8353-e0f0-a005-1b04457d70f0@samsung.com>
+References: <20190618190534.4951-1-krzk@kernel.org>
+        <CGME20190618190551epcas2p38f3c93da2a05117c7741468bb5a7784c@epcas2p3.samsung.com>
+        <20190618190534.4951-2-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560937925-8990-1-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <20190618190534.4951-2-krzk@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com
-Cc: mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, benjamin.gaignard@st.com, linux-stm32@st-md-mailman.stormreply.com
+To: Krzysztof Kozlowski <krzk@kernel.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Olof Johansson <olof@lixom.net>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Joseph Kogut <joseph.kogut@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Inki Dae <inki.dae@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-STM32 Timers support generic 3 cells PWM bindings to encode PWM number,
-period and polarity as defined in pwm.txt.
+Hi Krzysztof,
 
-Fixes: cd9a99c2f8e8 ("dt-bindings: pwm: Add STM32 bindings")
+On 2019-06-18 21:05, Krzysztof Kozlowski wrote:
+> Add vendor compatibles for specific implementation of Mali Utgard
+> (Exynos3250, Exynos4-family) and Midgard (Exynos5433, Exynos7).
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>   Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 1 +
+>   Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt  | 1 +
+>   2 files changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> index e5ad3b2afe17..9b298edec5b2 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> @@ -17,6 +17,7 @@ Required properties:
+>     * which must be preceded by one of the following vendor specifics:
+>       + "allwinner,sun50i-h6-mali"
+>       + "amlogic,meson-gxm-mali"
+> +    + "samsung,exynos5433-mali"
+>       + "rockchip,rk3288-mali"
+>       + "rockchip,rk3399-mali"
+>   
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> index ae63f09fda7d..519018cb860b 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> @@ -17,6 +17,7 @@ Required properties:
+>         + amlogic,meson8b-mali
+>         + amlogic,meson-gxbb-mali
+>         + amlogic,meson-gxl-mali
+> +      + samsung,exynos3250-mali
+I would prefer 'samsung,exynos4-mali', because historically Exynos4 was 
+the first SoC with Mali400 and such prefix is already used for many hw 
+blocks.
+>         + rockchip,rk3036-mali
+>         + rockchip,rk3066-mali
+>         + rockchip,rk3188-mali
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- Documentation/devicetree/bindings/pwm/pwm-stm32.txt | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-index 3e6d550..a8690bf 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-@@ -8,6 +8,8 @@ Required parameters:
- - pinctrl-names: 	Set to "default".
- - pinctrl-0: 		List of phandles pointing to pin configuration nodes for PWM module.
- 			For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
-+- #pwm-cells:		Should be set to 3. This PWM chip uses the default 3 cells
-+			bindings defined in pwm.txt.
- 
- Optional parameters:
- - st,breakinput:	One or two <index level filter> to describe break input configurations.
-@@ -28,6 +30,7 @@ Example:
- 
- 		pwm {
- 			compatible = "st,stm32-pwm";
-+			#pwm-cells = <3>;
- 			pinctrl-0	= <&pwm1_pins>;
- 			pinctrl-names	= "default";
- 			st,breakinput = <0 1 5>;
+Best regards
 -- 
-2.7.4
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
