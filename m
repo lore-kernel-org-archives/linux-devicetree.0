@@ -1,55 +1,69 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH 3/3] mmc: sdhci-of-arasan: Add support for ZynqMP Platform
- Tap Delays Setup
-Date: Wed, 19 Jun 2019 08:40:36 +0000
-Message-ID: <MN2PR02MB6029DB87CEE32655B0F1E794C1E50@MN2PR02MB6029.namprd02.prod.outlook.com>
-References: <1560247011-26369-1-git-send-email-manish.narani@xilinx.com>
- <1560247011-26369-4-git-send-email-manish.narani@xilinx.com>
- <CAPDyKFrJwpwUUX_q2kcR9QY_fv9Lgos+ixPmU6JMeJVqJAiFpg@mail.gmail.com>
- <5feac3fb-bef3-b7d1-57d6-81e115e1f555@xilinx.com>
- <CAPDyKFp_ZvSjFp2FGonzGsnc9xPyZ7qOCaRnX1SimBxLpfz9-Q@mail.gmail.com>
+From: Claire Chang <tientzu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2] dt-bindings: serial: add documentation for Rx in-band
+ wakeup support
+Date: Wed, 19 Jun 2019 16:41:10 +0800
+Message-ID: <20190619084110.136713-1-tientzu@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFp_ZvSjFp2FGonzGsnc9xPyZ7qOCaRnX1SimBxLpfz9-Q@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Michal Simek <michals@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Nava kishore Manne <navam@xilinx.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jolly Shah <JOLLYS@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, changqi.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Claire Chang <tientzu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Uffe,
+To support Rx in-band wakeup, one must create an interrupt specifier with
+edge sensitivity on Rx pin and an addtional pinctrl to reconfigure Rx pin
+to normal GPIO in sleep state. Driver will switch to sleep mode pinctrl and
+enable irq wake before suspend and restore to default settings when
+resuming.
 
+Signed-off-by: Claire Chang <tientzu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+changes in v2:
+just document 'interrupts' instead of 'interrupts-extended'
 
-> -----Original Message-----
-> From: Ulf Hansson <ulf.hansson@linaro.org>
-> Sent: Monday, June 17, 2019 5:51 PM
-[...]
-> 
-> The "const struct zynqmp_eemi_ops *eemi_ops; should then be moved into
-> a clock provider specific struct, which is assigned when calling
-> sdhci_arasan_register_sdclk. I understand that all the clock data is
-> folded into struct sdhci_arasan_data today, but I think that should be
-> moved into a "sub-struct" for the clock specifics.
-> 
-> Moreover, when registering the clock, we should convert from using
-> devm_clk_register() into devm_clk_hw_register() as the first one is
-> now deprecated.
+ .../devicetree/bindings/serial/mtk-uart.txt         | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-Just a query here:
-When we switch to using devm_clk_hw_register() here, it will register the clk_hw and return int.
-Is there a way we can get the clk (related to the clk_hw registered) from the
-clock framework?
-I am asking this because we will need that clk pointer while calling clk_set_phase() function.
-
-Thanks,
-Manish
+diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+index bcfb13194f16..36b760c25ee3 100644
+--- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
++++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+@@ -21,7 +21,12 @@ Required properties:
+ 
+ - reg: The base address of the UART register bank.
+ 
+-- interrupts: A single interrupt specifier.
++- interrupts:
++  index 0: an interrupt specifier for the UART controller itself
++  index 1: optional, an interrupt specifier with edge sensitivity on Rx pin to
++           support Rx in-band wake up. If one would like to use this feature,
++           one must create an addtional pinctrl to reconfigure Rx pin to normal
++           GPIO before suspend.
+ 
+ - clocks : Must contain an entry for each entry in clock-names.
+   See ../clocks/clock-bindings.txt for details.
+@@ -37,7 +42,11 @@ Example:
+ 	uart0: serial@11006000 {
+ 		compatible = "mediatek,mt6589-uart", "mediatek,mt6577-uart";
+ 		reg = <0x11006000 0x400>;
+-		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
++		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 52 IRQ_TYPE_EDGE_FALLING>;
+ 		clocks = <&uart_clk>, <&bus_clk>;
+ 		clock-names = "baud", "bus";
++		pinctrl-names = "default", "sleep";
++		pinctrl-0 = <&uart_pin>;
++		pinctrl-1 = <&uart_pin_sleep>;
+ 	};
+-- 
+2.22.0.410.gd8fdbe21b5-goog
