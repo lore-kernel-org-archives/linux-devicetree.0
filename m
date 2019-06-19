@@ -1,95 +1,127 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 01/16] dt-bindings: net: Add YAML schemas for the
- generic Ethernet options
-Date: Wed, 19 Jun 2019 16:03:14 +0200
-Message-ID: <20190619140314.GC18352@lunn.ch>
-References: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
+Date: Wed, 19 Jun 2019 08:04:26 -0600
+Message-ID: <CAL_JsqJTWNKTB1D2wNysonzasgL9awLLvr1HdOckUnQbpgsDQw@mail.gmail.com>
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com> <20190506123456.6777-10-peter.ujfalusi@ti.com>
+ <20190613181626.GA7039@bogus> <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
+ <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com> <e811d674-b79f-4da8-c632-c7a90844b6c5@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e811d674-b79f-4da8-c632-c7a90844b6c5@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Dan Williams <dan.j.williams@intel.com>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime
+On Fri, Jun 14, 2019 at 7:42 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrot=
+e:
+>
+>
+> On 14/06/2019 16.20, Rob Herring wrote:
+> > On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> =
+wrote:
+> >>
+> >> Rob,
+> >>
+> >> On 13/06/2019 21.16, Rob Herring wrote:
+> >>>> +Remote PSI-L endpoint
+> >>>> +
+> >>>> +Required properties:
+> >>>> +--------------------
+> >>>> +- ti,psil-base:             PSI-L thread ID base of the endpoint
+> >>>> +
+> >>>> +Within the PSI-L endpoint node thread configuration subnodes must p=
+resent with:
+> >>>> +ti,psil-configX naming convention, where X is the thread ID offset.
+> >>>
+> >>> Don't use vendor prefixes on node names.
+> >>
+> >> OK.
+> >>
+> >>>> +
+> >>>> +Configuration node Required properties:
+> >>>> +--------------------
+> >>>> +- linux,udma-mode:  Channel mode, can be:
+> >>>> +                    - UDMA_PKT_MODE: for Packet mode channels (peri=
+pherals)
+> >>>> +                    - UDMA_TR_MODE: for Third-Party mode
+> >>>
+> >>> This is hardly a common linux thing. What determines the value here.
+> >>
+> >> Unfortunately it is.
+> >
+> > No, it's a feature of your h/w and in no way is something linux
+> > defined which is the point of 'linux' prefix.
+>
+> The channel can be either Packet or TR mode. The HW is really flexible
+> on this (and on other things as well).
+> It just happens that Linux need to use specific channels in a specific mo=
+de.
+>
+> Would it help if we assume that all channels are used in Packet mode,
+> but we have linux,tr-mode bool to indicate that the given channel in
+> Linux need to be used in TR mode.
 
-> +  phy-connection-type:
-> +    description:
-> +      Operation mode of the PHY interface
-> +    enum:
-> +      # There is not a standard bus between the MAC and the PHY,
-> +      # something proprietary is being used to embed the PHY in the
-> +      # MAC.
+Your use of 'linux' prefix is wrong. Stop using it.
 
-...
+> >> Each channel can be configured to Packet or TR mode. For some
+> >> peripherals it is true that they only support packet mode, these are t=
+he
+> >> newer PSI-L native peripherals.
+> >> For these channels a udma-mode property would be correct.
+> >>
+> >> But we have legacy peripherals as well and they are serviced by PDMA
+> >> (which is a native peripheral designed to talk to the given legacy IP)=
+.
+> >> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is i=
+n
+> >> most cases clear what to use, but for example for audio (McASP) channe=
+ls
+> >> Linux is using TR channel because we need cyclic DMA while for example
+> >> RTOS is using Packet mode as it fits their needs better.
+> >>
+> >> Here I need to prefix the udma-mode with linux as the mode is used by
+> >> Linux, but other OS might opt to use different channel mode.
+> >
+> > So you'd need <os>,udma-mode? That doesn't work... If the setting is
+> > per OS, then it belongs in the OS because the same dtb should work
+> > across OS's.
+>
+> So I should have a table for the thread IDs in the DMA driver and mark
+> channels as TR or Packet in there for Linux use?
 
-> +
-> +  phy-mode:
-> +    $ref: "#/properties/phy-connection-type"
-> +    deprecated: true
+Perhaps. I haven't heard any reasons why you need this in DT. If Linux
+is dictating the modes, then sounds like it should be in Linux.
 
-I don't think phy-mode is actually deprecated. ethernet.txt actually says:
+But really, I don't fully understand what you are doing here to tell
+you what to do beyond using 'linux' prefix is wrong.
 
-"This is now a de-facto standard property;" and no mentions that is
-should not be used. Looking at actual device trees, phy-mode is by far
-more popular than phy-connection-type.
+> Or just an array which would mark the non packet PSI-L thread IDs?
+>
+> I still prefer to have this coming via DT as a Linux parameter as other
+> OS is free to ignore the linux,udma-mode, but as I said there are
+> certain channels which must be used in Linux in certain mode while
+> others in different mode.
 
-fwnode_get_phy_mode() first looks for phy-mode and only falls back to
-phy-connection-type if it is not present. The same is true for
-of_get_phy_mode().
+A DT client is free to ignore any DT property. You don't need a client
+prefix for that.
 
-> +  fixed-link:
-> +    allOf:
-> +      - if:
-> +          type: array
-> +        then:
-> +          minItems: 1
-> +          maxItems: 1
-> +          items:
-> +            items:
-> +              - minimum: 0
-> +                maximum: 31
-> +                description:
-> +                  Emulated PHY ID, choose any but unique to the all
-> +                  specified fixed-links
-> +
-> +              - enum: [0, 1]
-> +                description:
-> +                  Duplex configuration. 0 for half duplex or 1 for
-> +                  full duplex
-> +
-> +              - enum: [10, 100, 1000]
-> +                description:
-> +                  Link speed in Mbits/sec.
-> +
-> +              - enum: [0, 1]
-> +                description:
-> +                  Pause configuration. 0 for no pause, 1 for pause
-> +
-> +              - enum: [0, 1]
-> +                description:
-> +                  Asymmetric pause configuration. 0 for no asymmetric
-> +                  pause, 1 for asymmetric pause
-> +
-
-This array of 5 values format should be marked as deprecated.
-
-> +
-> +      - if:
-> +          type: object
-> +        then:
-> +          properties:
-> +            speed:
-> +              allOf:
-> +                - $ref: /schemas/types.yaml#definitions/uint32
-> +                - enum: [10, 100, 1000]
-
-This recently changed, depending on context. If PHYLINK is being used,
-any speed is allowed. If phylib is used, then only these speeds are
-allowed. And we are starting to see some speeds other than listed
-here.
-
-	Andrew
+> >> The reason why this needs to be in the DT is that when the channel is
+> >> requested we need to configure the mode and it can not be swapped
+> >> runtime easily between Packet and TR mode.
+> >
+> > So when the client makes the channel request, why doesn't it specify th=
+e mode?
+>
+> This is UDMAP internal information on what type of Descriptors the
+> channel will expect and how it is going to dispatch the work.
+>
+> Packet and TR mode at the end does the same thing, but in a completely
+> different way.
+>
+> - P=C3=A9ter
+>
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
