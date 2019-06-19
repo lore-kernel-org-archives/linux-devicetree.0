@@ -1,63 +1,93 @@
-Return-Path: <SRS0=YfZA=US=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add HDMI encoder
+Return-Path: <SRS0=iYly=US=ideasonboard.com=laurent.pinchart@kernel.org>
+Date: Wed, 19 Jun 2019 15:38:56 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add HDMI encoder
  instance
-Date: Wed, 19 Jun 2019 12:42:24 +0000
-Message-ID: 
- <TY1PR01MB177067A85CA3535257A38C2FC0E50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Message-ID: <20190619123856.GA21753@pendragon.ideasonboard.com>
 References: <1560871119-16570-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <1560871119-16570-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190619123856.GA21753@pendragon.ideasonboard.com>
-In-Reply-To: <20190619123856.GA21753@pendragon.ideasonboard.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1560871119-16570-3-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGVsbG8gTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrLg0KDQo+IEZyb206
-IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4NCj4g
-U2VudDogMTkgSnVuZSAyMDE5IDEzOjM5DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8zXSBhcm02
-NDogZHRzOiByZW5lc2FzOiByOGE3NzRhMTogQWRkIEhETUkgZW5jb2RlciBpbnN0YW5jZQ0KPiAN
-Cj4gSGkgRmFicml6aW8sDQo+IA0KPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4NCj4gDQo+IE9u
-IFR1ZSwgSnVuIDE4LCAyMDE5IGF0IDA0OjE4OjM4UE0gKzAxMDAsIEZhYnJpemlvIENhc3RybyB3
-cm90ZToNCj4gPiBBZGQgdGhlIEhETUkgZW5jb2RlciB0byB0aGUgUjhBNzc0QTEgRFQgaW4gZGlz
-YWJsZWQgc3RhdGUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZh
-YnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gPg0KPiA+IC0tLQ0KPiA+IFRoaXMgcGF0
-Y2ggZGVwZW5kcyBvbjoNCj4gPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEw
-OTk1MTQ5Lw0KPiANCj4gSXMgdGhhdCB0aGUgY29ycmVjdCBvbmUgPyBJIGRvbid0IHNlZSBob3cg
-Q0FOIHN1cHBvcnQgaXMgcmVsYXRlZC4NCg0KSXQncyBvbmx5IHRvIHBsZWFzZSBnaXQgOy0pDQoN
-ClRoYW5rIHlvdSBmb3IgcmV2aWV3aW5nIHRoaXMuDQoNCkZhYg0KDQo+IA0KPiBJbiBhbnkgY2Fz
-ZSwNCj4gDQo+IFJldmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0
-QGlkZWFzb25ib2FyZC5jb20+DQo+IA0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMv
-cjhhNzc0YTEuZHRzaSB8IDMyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAg
-MSBmaWxlIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc0YTEuZHRzaSBiL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvcmVuZXNhcy9yOGE3NzRhMS5kdHNpDQo+ID4gaW5kZXggZDZkZDRiNi4uYTg0OWNhNyAx
-MDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc0YTEuZHRz
-aQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3NzRhMS5kdHNpDQo+
-ID4gQEAgLTIzOTcsNiArMjM5NywzNyBAQA0KPiA+ICAJCQl9Ow0KPiA+ICAJCX07DQo+ID4NCj4g
-PiArCQloZG1pMDogaGRtaUBmZWFkMDAwMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAicmVuZXNh
-cyxyOGE3NzRhMS1oZG1pIiwNCj4gPiArCQkJCSAgICAgInJlbmVzYXMscmNhci1nZW4zLWhkbWki
-Ow0KPiA+ICsJCQlyZWcgPSA8MCAweGZlYWQwMDAwIDAgMHgxMDAwMD47DQo+ID4gKwkJCWludGVy
-cnVwdHMgPSA8R0lDX1NQSSAzODkgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKwkJCWNsb2Nr
-cyA9IDwmY3BnIENQR19NT0QgNzI5PiwNCj4gPiArCQkJCSA8JmNwZyBDUEdfQ09SRSBSOEE3NzRB
-MV9DTEtfSERNST47DQo+ID4gKwkJCWNsb2NrLW5hbWVzID0gImlhaGIiLCAiaXNmciI7DQo+ID4g
-KwkJCXBvd2VyLWRvbWFpbnMgPSA8JnN5c2MgUjhBNzc0QTFfUERfQUxXQVlTX09OPjsNCj4gPiAr
-CQkJcmVzZXRzID0gPCZjcGcgNzI5PjsNCj4gPiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4g
-PiArDQo+ID4gKwkJCXBvcnRzIHsNCj4gPiArCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+
-ICsJCQkJI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKwkJCQlwb3J0QDAgew0KPiA+ICsJCQkJCXJl
-ZyA9IDwwPjsNCj4gPiArCQkJCQlkd19oZG1pMF9pbjogZW5kcG9pbnQgew0KPiA+ICsJCQkJCQly
-ZW1vdGUtZW5kcG9pbnQgPSA8JmR1X291dF9oZG1pMD47DQo+ID4gKwkJCQkJfTsNCj4gPiArCQkJ
-CX07DQo+ID4gKwkJCQlwb3J0QDEgew0KPiA+ICsJCQkJCXJlZyA9IDwxPjsNCj4gPiArCQkJCX07
-DQo+ID4gKwkJCQlwb3J0QDIgew0KPiA+ICsJCQkJCS8qIEhETUkgc291bmQgKi8NCj4gPiArCQkJ
-CQlyZWcgPSA8Mj47DQo+ID4gKwkJCQl9Ow0KPiA+ICsJCQl9Ow0KPiA+ICsJCX07DQo+ID4gKw0K
-PiA+ICAJCWR1OiBkaXNwbGF5QGZlYjAwMDAwIHsNCj4gPiAgCQkJY29tcGF0aWJsZSA9ICJyZW5l
-c2FzLGR1LXI4YTc3NGExIjsNCj4gPiAgCQkJcmVnID0gPDAgMHhmZWIwMDAwMCAwIDB4NzAwMDA+
-Ow0KPiA+IEBAIC0yNDIzLDYgKzI0NTQsNyBAQA0KPiA+ICAJCQkJcG9ydEAxIHsNCj4gPiAgCQkJ
-CQlyZWcgPSA8MT47DQo+ID4gIAkJCQkJZHVfb3V0X2hkbWkwOiBlbmRwb2ludCB7DQo+ID4gKwkJ
-CQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHdfaGRtaTBfaW4+Ow0KPiA+ICAJCQkJCX07DQo+ID4g
-IAkJCQl9Ow0KPiA+ICAJCQkJcG9ydEAyIHsNCj4gDQo+IC0tDQo+IFJlZ2FyZHMsDQo+IA0KPiBM
-YXVyZW50IFBpbmNoYXJ0DQo=
+Hi Fabrizio,
+
+Thank you for the patch.
+
+On Tue, Jun 18, 2019 at 04:18:38PM +0100, Fabrizio Castro wrote:
+> Add the HDMI encoder to the R8A774A1 DT in disabled state.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> ---
+> This patch depends on:
+> https://patchwork.kernel.org/patch/10995149/
+
+Is that the correct one ? I don't see how CAN support is related.
+
+In any case,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 32 +++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> index d6dd4b6..a849ca7 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> @@ -2397,6 +2397,37 @@
+>  			};
+>  		};
+>  
+> +		hdmi0: hdmi@fead0000 {
+> +			compatible = "renesas,r8a774a1-hdmi",
+> +				     "renesas,rcar-gen3-hdmi";
+> +			reg = <0 0xfead0000 0 0x10000>;
+> +			interrupts = <GIC_SPI 389 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 729>,
+> +				 <&cpg CPG_CORE R8A774A1_CLK_HDMI>;
+> +			clock-names = "iahb", "isfr";
+> +			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
+> +			resets = <&cpg 729>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				port@0 {
+> +					reg = <0>;
+> +					dw_hdmi0_in: endpoint {
+> +						remote-endpoint = <&du_out_hdmi0>;
+> +					};
+> +				};
+> +				port@1 {
+> +					reg = <1>;
+> +				};
+> +				port@2 {
+> +					/* HDMI sound */
+> +					reg = <2>;
+> +				};
+> +			};
+> +		};
+> +
+>  		du: display@feb00000 {
+>  			compatible = "renesas,du-r8a774a1";
+>  			reg = <0 0xfeb00000 0 0x70000>;
+> @@ -2423,6 +2454,7 @@
+>  				port@1 {
+>  					reg = <1>;
+>  					du_out_hdmi0: endpoint {
+> +						remote-endpoint = <&dw_hdmi0_in>;
+>  					};
+>  				};
+>  				port@2 {
+
+-- 
+Regards,
+
+Laurent Pinchart
