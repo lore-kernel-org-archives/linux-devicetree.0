@@ -1,71 +1,95 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 02/12] iommu/mediatek: Add probe_defer for smi-larb
-Date: Wed, 19 Jun 2019 15:52:40 +0200
-Message-ID: <a11fa818-cf62-cc24-2c41-4688fda5a88f@gmail.com>
-References: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
- <1560171313-28299-3-git-send-email-yong.wu@mediatek.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 01/16] dt-bindings: net: Add YAML schemas for the
+ generic Ethernet options
+Date: Wed, 19 Jun 2019 16:03:14 +0200
+Message-ID: <20190619140314.GC18352@lunn.ch>
+References: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560171313-28299-3-git-send-email-yong.wu@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Evan Green <evgreen@chromium.org>, Robin Murphy <robin.murphy@arm.com>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
+Sender: netdev-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Maxime
 
+> +  phy-connection-type:
+> +    description:
+> +      Operation mode of the PHY interface
+> +    enum:
+> +      # There is not a standard bus between the MAC and the PHY,
+> +      # something proprietary is being used to embed the PHY in the
+> +      # MAC.
 
-On 10/06/2019 14:55, Yong Wu wrote:
-> The iommu consumer should use device_link to connect with the
-> smi-larb(supplier). then the smi-larb should run before the iommu
-> consumer. Here we delay the iommu driver until the smi driver is
-> ready, then all the iommu consumer always is after the smi driver.
-> 
-> When there is no this patch, if some consumer drivers run before
-> smi-larb, the supplier link_status is DL_DEV_NO_DRIVER(0) in the
-> device_link_add, then device_links_driver_bound will use WARN_ON
-> to complain that the link_status of supplier is not right.
-> 
-> This is a preparing patch for adding device_link.
-> 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> ---
->  drivers/iommu/mtk_iommu.c    | 2 +-
->  drivers/iommu/mtk_iommu_v1.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 6fe3369..f7599d8 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -664,7 +664,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
->  			id = i;
->  
->  		plarbdev = of_find_device_by_node(larbnode);
-> -		if (!plarbdev) {
-> +		if (!plarbdev || !plarbdev->dev.driver) {
+...
 
-can't we use:
-device_lock()
-device_is_bound(struct device *dev)
-device_unlock()
+> +
+> +  phy-mode:
+> +    $ref: "#/properties/phy-connection-type"
+> +    deprecated: true
 
->  			of_node_put(larbnode);
->  			return -EPROBE_DEFER;
->  		}
-> diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
-> index 0b0908c..c43c4a0 100644
-> --- a/drivers/iommu/mtk_iommu_v1.c
-> +++ b/drivers/iommu/mtk_iommu_v1.c
-> @@ -604,7 +604,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
->  			plarbdev = of_platform_device_create(
->  						larb_spec.np, NULL,
->  						platform_bus_type.dev_root);
-> -			if (!plarbdev) {
-> +			if (!plarbdev || !plarbdev->dev.driver) {
->  				of_node_put(larb_spec.np);
->  				return -EPROBE_DEFER;
->  			}
-> 
+I don't think phy-mode is actually deprecated. ethernet.txt actually says:
+
+"This is now a de-facto standard property;" and no mentions that is
+should not be used. Looking at actual device trees, phy-mode is by far
+more popular than phy-connection-type.
+
+fwnode_get_phy_mode() first looks for phy-mode and only falls back to
+phy-connection-type if it is not present. The same is true for
+of_get_phy_mode().
+
+> +  fixed-link:
+> +    allOf:
+> +      - if:
+> +          type: array
+> +        then:
+> +          minItems: 1
+> +          maxItems: 1
+> +          items:
+> +            items:
+> +              - minimum: 0
+> +                maximum: 31
+> +                description:
+> +                  Emulated PHY ID, choose any but unique to the all
+> +                  specified fixed-links
+> +
+> +              - enum: [0, 1]
+> +                description:
+> +                  Duplex configuration. 0 for half duplex or 1 for
+> +                  full duplex
+> +
+> +              - enum: [10, 100, 1000]
+> +                description:
+> +                  Link speed in Mbits/sec.
+> +
+> +              - enum: [0, 1]
+> +                description:
+> +                  Pause configuration. 0 for no pause, 1 for pause
+> +
+> +              - enum: [0, 1]
+> +                description:
+> +                  Asymmetric pause configuration. 0 for no asymmetric
+> +                  pause, 1 for asymmetric pause
+> +
+
+This array of 5 values format should be marked as deprecated.
+
+> +
+> +      - if:
+> +          type: object
+> +        then:
+> +          properties:
+> +            speed:
+> +              allOf:
+> +                - $ref: /schemas/types.yaml#definitions/uint32
+> +                - enum: [10, 100, 1000]
+
+This recently changed, depending on context. If PHYLINK is being used,
+any speed is allowed. If phylib is used, then only these speeds are
+allowed. And we are starting to see some speeds other than listed
+here.
+
+	Andrew
