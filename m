@@ -1,49 +1,38 @@
-Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 01/27] soc/tegra: pmc: Export tegra_powergate_power_on()
-Date: Mon, 17 Jun 2019 23:09:26 +0530
-Message-ID: <20190617173952.29363-2-mmaddireddy@nvidia.com>
-In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
-References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=YfZA=US=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH] arm64: dts: renesas: hihope-common: Add LEDs support
+Date: Wed, 19 Jun 2019 14:11:41 +0000
+Message-ID: 
+ <TY1PR01MB177099A8BAF4B364AAE8A780C0E50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1560518075-2254-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdU8oag+1oNa_jS=v99W05=8SRLhdoZdCusmeVf1VZbarQ@mail.gmail.com>
+ <TY1PR01MB17707C3C979FB60611FB34A7C0EA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <CAMuHMdVb+sc0vdvbsAE0fkEY6wFS7KsbtqLmtB03ghVeuiHe1w@mail.gmail.com>
+ <TY1PR01MB1770F9972F006B57917A0731C0E50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20190619121808.hnqoeihjch6silcd@verge.net.au>
+In-Reply-To: <20190619121808.hnqoeihjch6silcd@verge.net.au>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Chris Paterson" <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>
 List-ID: <devicetree@vger.kernel.org>
 
-tegra_powergate_sequence_power_up() powers up partition and also enables
-clock & reset. However, if a controller like PCIe have multiple clocks
-& resets and they need to be enabled in a sequence, driver must use
-standalone function tegra_powergate_power_on() to power up partition.
+Hello Simon,
 
-Export tegra_powergate_power_on() to allow Tegra controller drivers to
-unpower gate partition independent to clock & reset.
+> From: Simon Horman <horms@verge.net.au>
+> Sent: 19 June 2019 13:18
+> Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Add LEDs support
+>=20
+> >
+> > Will do. Simon, do you want me to send an incremental patch for this (t=
+his patch
+> > is on devel branch already) or would you rather I sent a v2?
+>=20
+> Please send an incremental patch, thanks.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V5: No change
+Great, will send the patch in a minute.
 
-V4: No change
-
-V3: No change
-
-V2: No change
-
- drivers/soc/tegra/pmc.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 0c5f79528e5f..cb3de81348bd 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -701,6 +701,7 @@ int tegra_powergate_power_on(unsigned int id)
- 
- 	return tegra_powergate_set(pmc, id, true);
- }
-+EXPORT_SYMBOL(tegra_powergate_power_on);
- 
- /**
-  * tegra_powergate_power_off() - power off partition
--- 
-2.17.1
+Thanks,
+Fab
