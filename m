@@ -1,53 +1,58 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 01/10] clk: tegra20/30: Add custom EMC clock implementation
-Date: Tue, 18 Jun 2019 18:14:25 -0700
-Message-ID: <20190619011426.98D632085A@mail.kernel.org>
-References: <20190616233551.6838-1-digetx@gmail.com> <20190616233551.6838-2-digetx@gmail.com> <20190618122108.GO28892@ulmo>
+From: Peng Ma <peng.ma@nxp.com>
+Subject: RE: [EXT] Re: [PATCH 2/4] arm64: dts: fsl: ls1028a: Add eDMA node
+Date: Wed, 19 Jun 2019 01:47:03 +0000
+Message-ID: <VI1PR04MB4431D32CF8F6F430B58A56D9EDE50@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <20190506090344.37784-1-peng.ma@nxp.com>
+ <20190506090344.37784-2-peng.ma@nxp.com> <20190618131319.GC1959@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190618122108.GO28892@ulmo>
+In-Reply-To: <20190618131319.GC1959@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Dmitry Osipenko <digetx@gmail.com>, Rob Herring <robh+dt@kernel.org>, Joseph Lo <josephl@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "vkoul@kernel.org" <vkoul@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Leo Li <leoyang.li@nxp.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Thierry Reding (2019-06-18 05:21:08)
-> On Mon, Jun 17, 2019 at 02:35:42AM +0300, Dmitry Osipenko wrote:
-> > A proper External Memory Controller clock rounding and parent selection
-> > functionality is required by the EMC drivers. It is not available using
-> > the generic clock implementation, hence add a custom one. The clock rate
-> > rounding shall be done by the EMC drivers because they have information
-> > about available memory timings, so the drivers will have to register a
-> > callback that will round the requested rate. EMC clock users won't be a=
-ble
-> > to request EMC clock by getting -EPROBE_DEFER until EMC driver is probed
-> > and the callback is set up. The functionality is somewhat similar to the
-> > clk-emc.c which serves Tegra124+ SoC's, the later HW generations support
-> > more parent clock sources and the HW configuration and integration with
-> > the EMC drivers differs a tad from the older gens, hence it's not really
-> > worth to try to squash everything into a single source file.
-> >=20
-> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> > ---
-> >  drivers/clk/tegra/Makefile          |   2 +
-> >  drivers/clk/tegra/clk-tegra20-emc.c | 305 ++++++++++++++++++++++++++++
-> >  drivers/clk/tegra/clk-tegra20.c     |  55 ++---
-> >  drivers/clk/tegra/clk-tegra30.c     |  38 +++-
-> >  drivers/clk/tegra/clk.h             |   6 +
-> >  include/linux/clk/tegra.h           |  14 ++
-> >  6 files changed, 368 insertions(+), 52 deletions(-)
-> >  create mode 100644 drivers/clk/tegra/clk-tegra20-emc.c
->=20
-> Hi Mike, Stephen,
->=20
-> The remaining patches of this series have a build-time dependency on
-> this clock driver patch. Would you mind if I pick this up into the Tegra
-> tree, so that I can resolve the dependency there? I can send a pull
-> request of the stable branch with this one patch if we need to resolve a
-> conflict between the clk and Tegra trees.
->=20
-
-Sure. I have review comments though so hopefully they can be addressed
-first.
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFNoYXduIEd1byA8c2hhd25n
+dW9Aa2VybmVsLm9yZz4NCj5TZW50OiAyMDE5xOo21MIxOMjVIDIxOjEzDQo+VG86IFBlbmcgTWEg
+PHBlbmcubWFAbnhwLmNvbT4NCj5DYzogdmtvdWxAa2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwu
+b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgTGVvIExpDQo+PGxlb3lhbmcubGlAbnhwLmNvbT47
+IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZzsNCj5k
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsN
+Cj5saW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj5TdWJqZWN0OiBbRVhUXSBS
+ZTogW1BBVENIIDIvNF0gYXJtNjQ6IGR0czogZnNsOiBsczEwMjhhOiBBZGQgZURNQSBub2RlDQo+
+DQo+Q2F1dGlvbjogRVhUIEVtYWlsDQo+DQo+T24gTW9uLCBNYXkgMDYsIDIwMTkgYXQgMDk6MDM6
+NDJBTSArMDAwMCwgUGVuZyBNYSB3cm90ZToNCj4+IEFkZCB0aGUgZURNQSBkZXZpY2UgdHJlZSBu
+b2RlcyBmb3IgTFMxMDI4QSBkZXZpY2VzDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogUGVuZyBNYSA8
+cGVuZy5tYUBueHAuY29tPg0KPj4gLS0tDQo+PiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
+bGUvZnNsLWxzMTAyOGEuZHRzaSB8ICAgMTUgKysrKysrKysrKysrKysrDQo+PiAgMSBmaWxlcyBj
+aGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+Yi9h
+cmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+PiBpbmRleCA4
+MTE2ZmIzLi43MWI4N2NiIDEwMDY0NA0KPj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
+c2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
+c2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPj4gQEAgLTIzNSw2ICsyMzUsMjEgQEANCj4+ICAgICAg
+ICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPj4gICAgICAgICAgICAgICB9
+Ow0KPj4NCj4+ICsgICAgICAgICAgICAgZWRtYTA6IGVkbWFAMjJjMDAwMCB7DQo+PiArICAgICAg
+ICAgICAgICAgICAgICAgI2RtYS1jZWxscyA9IDwyPjsNCj4+ICsgICAgICAgICAgICAgICAgICAg
+ICBjb21wYXRpYmxlID0gImZzbCx2ZjYxMC1lZG1hIjsNCj4+ICsgICAgICAgICAgICAgICAgICAg
+ICByZWcgPSA8MHgwIDB4MjJjMDAwMCAweDAgMHgxMDAwMD4sDQo+PiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgPDB4MCAweDIyZDAwMDAgMHgwIDB4MTAwMDA+LA0KPj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDwweDAgMHgyMmUwMDAwIDB4MCAweDEwMDAwPjsNCj4+ICsgICAgICAg
+ICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNTYNCj5JUlFfVFlQRV9MRVZFTF9I
+SUdIPiwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEdJQ19TUEkgNTYN
+Cj5JUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4+ICsgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1
+cHQtbmFtZXMgPSAiZWRtYS10eCIsICJlZG1hLWVyciI7DQo+PiArICAgICAgICAgICAgICAgICAg
+ICAgZG1hLWNoYW5uZWxzID0gPDMyPjsNCj4+ICsgICAgICAgICAgICAgICAgICAgICBjbG9jay1u
+YW1lcyA9ICJkbWFtdXgwIiwgImRtYW11eDEiOw0KPj4gKyAgICAgICAgICAgICAgICAgICAgIGNs
+b2NrcyA9IDwmY2xvY2tnZW4gNCAxPiwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICA8JmNsb2NrZ2VuIDQgMT47DQo+PiArICAgICAgICAgICAgIH07DQo+PiArDQo+DQo+VGhlIGVk
+bWFAMjJjMDAwMCBub2RlIGhhZCBhbHJlYWR5IGJlZW4gYWRkZWQgYnkgY29tbWl0IGJlbG93Og0K
+Pg0KPiAgZjU0ZjdiZTVjNWFjICgiYXJtNjQ6IGR0czogbHMxMDI4YTogQWRkIEF1ZGlvIERUIG5v
+ZGVzIikNCj4NCltQZW5nIE1hXSBPSywgZ290IGl0LCB0aGFua3MuDQoNCkJlc3QgUmVnYXJkcywN
+ClBlbmcNCj5TaGF3bg0KPg0KPj4gICAgICAgICAgICAgICBncGlvMTogZ3Bpb0AyMzAwMDAwIHsN
+Cj4+ICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxxb3JpcS1ncGlvIjsN
+Cj4+ICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4MjMwMDAwMCAweDAgMHgxMDAw
+MD47DQo+PiAtLQ0KPj4gMS43LjENCj4+DQo=
