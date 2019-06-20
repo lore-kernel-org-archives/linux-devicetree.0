@@ -1,54 +1,56 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [RFC PATCH 4/4] dt-bindings: display: Convert innolux,ee101ia-01
- panel to DT schema
-Date: Thu, 20 Jun 2019 10:05:19 +0200
-Message-ID: <20190620080519.amnjyx2s22d7sswq@flea>
-References: <20190619215156.27795-1-robh@kernel.org>
- <20190619215156.27795-4-robh@kernel.org>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH] usb: dwc3: remove unused @lock member of dwc3_ep struct
+Date: Thu, 20 Jun 2019 16:12:31 +0800
+Message-ID: <342af01a252a9ef9457a6a6ec653a40698058fbc.1561018149.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7dh3dlztmkm4jtas"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190619215156.27795-4-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The member @lock of dwc2_ep struct is only initialized,
+and not used elsewhere, so remove it.
 
---7dh3dlztmkm4jtas
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ drivers/usb/dwc3/core.h   | 2 --
+ drivers/usb/dwc3/gadget.c | 2 --
+ 2 files changed, 4 deletions(-)
 
-On Wed, Jun 19, 2019 at 03:51:56PM -0600, Rob Herring wrote:
-> Convert the innolux,ee101ia-01 LVDS panel binding to DT schema.
->
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-
-Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---7dh3dlztmkm4jtas
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQs+PwAKCRDj7w1vZxhR
-xZzSAP0VMrPO/BLLAHovVlJITbpmiSRWBH0BIz6hiuUtFcG1LwD+Im5AkiEeau1A
-Se+DzhhbGMNFqc298NHpVI+1/01FJQg=
-=emVV
------END PGP SIGNATURE-----
-
---7dh3dlztmkm4jtas--
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index f19cbeb01087..72d28cb14bdf 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -649,7 +649,6 @@ struct dwc3_event_buffer {
+  * @cancelled_list: list of cancelled requests for this endpoint
+  * @pending_list: list of pending requests for this endpoint
+  * @started_list: list of started requests on this endpoint
+- * @lock: spinlock for endpoint request queue traversal
+  * @regs: pointer to first endpoint register
+  * @trb_pool: array of transaction buffers
+  * @trb_pool_dma: dma address of @trb_pool
+@@ -677,7 +676,6 @@ struct dwc3_ep {
+ 	struct list_head	pending_list;
+ 	struct list_head	started_list;
+ 
+-	spinlock_t		lock;
+ 	void __iomem		*regs;
+ 
+ 	struct dwc3_trb		*trb_pool;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index d67655384eb2..7f75da30caba 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2251,8 +2251,6 @@ static int dwc3_gadget_init_endpoint(struct dwc3 *dwc, u8 epnum)
+ 		dep->endpoint.comp_desc = NULL;
+ 	}
+ 
+-	spin_lock_init(&dep->lock);
+-
+ 	if (num == 0)
+ 		ret = dwc3_gadget_init_control_endpoint(dep);
+ 	else if (direction)
+-- 
+2.21.0
