@@ -1,44 +1,86 @@
 From: Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [RESEND PATCH 1/4] iio: adc: ad7124: Remove input number limitation
-Date: Thu, 20 Jun 2019 12:42:00 +0300
-Message-ID: <20190620094203.13654-1-mircea.caprioru@analog.com>
+Subject: [RESEND PATCH 2/4] iio: adc: ad7124: Add buffered input support
+Date: Thu, 20 Jun 2019 12:42:01 +0300
+Message-ID: <20190620094203.13654-2-mircea.caprioru@analog.com>
+References: <20190620094203.13654-1-mircea.caprioru@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190620094203.13654-1-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: jic23@kernel.org
 Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The driver limits the user to use only 4/8 differential inputs, but this
-device has the option to use pseudo-differential channels. This will
-increase the number of channels to be equal with the number of inputs so 8
-channels for ad7124-4 and 16 for ad7124-8.
+This patch adds the option to enable the buffered mode for positive and
+negative inputs. Each option can be enabled independently.
 
-This patch removes the check between channel nodes and num_inputs value.
+In buffered mode, the input channel feeds into a high impedance input stage
+of the buffer amplifier. Therefore, the input can tolerate significant
+source impedances and is tailored for direct connection to external
+resistive type sensors such as strain gages or RTDs.
 
 Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 ---
- drivers/iio/adc/ad7124.c | 7 -------
- 1 file changed, 7 deletions(-)
+ drivers/iio/adc/ad7124.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-index 659ef37d5fe8..810234db9c0d 100644
+index 810234db9c0d..ab52c5e9ecb1 100644
 --- a/drivers/iio/adc/ad7124.c
 +++ b/drivers/iio/adc/ad7124.c
-@@ -462,13 +462,6 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
- 		if (ret)
- 			goto err;
+@@ -61,6 +61,8 @@
+ #define AD7124_CONFIG_REF_SEL(x)	FIELD_PREP(AD7124_CONFIG_REF_SEL_MSK, x)
+ #define AD7124_CONFIG_PGA_MSK		GENMASK(2, 0)
+ #define AD7124_CONFIG_PGA(x)		FIELD_PREP(AD7124_CONFIG_PGA_MSK, x)
++#define AD7124_CONFIG_IN_BUFF_MSK	GENMASK(7, 6)
++#define AD7124_CONFIG_IN_BUFF(x)	FIELD_PREP(AD7124_CONFIG_IN_BUFF_MSK, x)
  
--		if (ain[0] >= st->chip_info->num_inputs ||
--		    ain[1] >= st->chip_info->num_inputs) {
--			dev_err(indio_dev->dev.parent,
--				"Input pin number out of range.\n");
--			ret = -EINVAL;
--			goto err;
--		}
- 		st->channel_config[channel].ain = AD7124_CHANNEL_AINP(ain[0]) |
- 						  AD7124_CHANNEL_AINM(ain[1]);
- 		st->channel_config[channel].bipolar =
+ /* AD7124_FILTER_X */
+ #define AD7124_FILTER_FS_MSK		GENMASK(10, 0)
+@@ -108,6 +110,8 @@ struct ad7124_chip_info {
+ struct ad7124_channel_config {
+ 	enum ad7124_ref_sel refsel;
+ 	bool bipolar;
++	bool buf_positive;
++	bool buf_negative;
+ 	unsigned int ain;
+ 	unsigned int vref_mv;
+ 	unsigned int pga_bits;
+@@ -473,6 +477,11 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ 		else
+ 			st->channel_config[channel].refsel = tmp;
+ 
++		st->channel_config[channel].buf_positive =
++			of_property_read_bool(child, "adi,buffered-positive");
++		st->channel_config[channel].buf_negative =
++			of_property_read_bool(child, "adi,buffered-negative");
++
+ 		*chan = ad7124_channel_template;
+ 		chan->address = channel;
+ 		chan->scan_index = channel;
+@@ -492,7 +501,7 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ static int ad7124_setup(struct ad7124_state *st)
+ {
+ 	unsigned int val, fclk, power_mode;
+-	int i, ret;
++	int i, ret, tmp;
+ 
+ 	fclk = clk_get_rate(st->mclk);
+ 	if (!fclk)
+@@ -525,8 +534,12 @@ static int ad7124_setup(struct ad7124_state *st)
+ 		if (ret < 0)
+ 			return ret;
+ 
++		tmp = (st->channel_config[i].buf_positive << 1)  +
++			st->channel_config[i].buf_negative;
++
+ 		val = AD7124_CONFIG_BIPOLAR(st->channel_config[i].bipolar) |
+-		      AD7124_CONFIG_REF_SEL(st->channel_config[i].refsel);
++		      AD7124_CONFIG_REF_SEL(st->channel_config[i].refsel) |
++		      AD7124_CONFIG_IN_BUFF(tmp);
+ 		ret = ad_sd_write_reg(&st->sd, AD7124_CONFIG(i), 2, val);
+ 		if (ret < 0)
+ 			return ret;
 -- 
 2.17.1
