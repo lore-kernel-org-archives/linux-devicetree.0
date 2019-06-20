@@ -1,29 +1,43 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC PATCH 2/4] dt-bindings: display: Convert
- ampire,am-480272h3tmqw-t01h panel to DT schema
-Date: Thu, 20 Jun 2019 11:04:33 +0200
-Message-ID: <20190620090433.GC26689@ulmo>
+Subject: Re: [RFC PATCH 3/4] dt-bindings: display: Convert panel-lvds to DT
+ schema
+Date: Thu, 20 Jun 2019 11:06:09 +0200
+Message-ID: <20190620090609.GD26689@ulmo>
 References: <20190619215156.27795-1-robh@kernel.org>
- <20190619215156.27795-2-robh@kernel.org>
+ <20190619215156.27795-3-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ncSAzJYg3Aa9+CRW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190619215156.27795-2-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0266225881=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190619215156.27795-3-robh@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Rob Herring <robh@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ncSAzJYg3Aa9+CRW
+--===============0266225881==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Hf61M2y+wYpnELGG"
+Content-Disposition: inline
+
+
+--Hf61M2y+wYpnELGG
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 19, 2019 at 03:51:54PM -0600, Rob Herring wrote:
-> Convert the ampire,am-480272h3tmqw-t01h panel binding to DT schema.
+On Wed, Jun 19, 2019 at 03:51:55PM -0600, Rob Herring wrote:
+> Convert the panel-lvds binding to use DT schema. The panel-lvds schema
+> inherits from the panel-common.yaml schema and specific LVDS panel
+> bindings should inherit from this schema.
 >=20
 > Cc: Thierry Reding <thierry.reding@gmail.com>
 > Cc: Sam Ravnborg <sam@ravnborg.org>
@@ -32,34 +46,49 @@ On Wed, Jun 19, 2019 at 03:51:54PM -0600, Rob Herring wrote:
 > Cc: dri-devel@lists.freedesktop.org
 > Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  .../panel/ampire,am-480272h3tmqw-t01h.txt     | 26 ------------
->  .../panel/ampire,am-480272h3tmqw-t01h.yaml    | 41 +++++++++++++++++++
->  2 files changed, 41 insertions(+), 26 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/ampir=
-e,am-480272h3tmqw-t01h.txt
->  create mode 100644 Documentation/devicetree/bindings/display/panel/ampir=
-e,am-480272h3tmqw-t01h.yaml
+>  .../bindings/display/panel/panel-lvds.txt     | 121 ------------------
+>  .../bindings/display/panel/panel-lvds.yaml    | 107 ++++++++++++++++
+>  2 files changed, 107 insertions(+), 121 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/panel=
+-lvds.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/panel=
+-lvds.yaml
+
+Similar to my comments on panel-common.yaml, perhaps make this just
+lvds.yaml? Otherwise:
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---ncSAzJYg3Aa9+CRW
+--Hf61M2y+wYpnELGG
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0LTCEACgkQ3SOs138+
-s6GvOQ//XxDI3X8EUQGi0NRcbq7IOM9paPnzNrYo2a4zkZMJ5ujAQrRoZiW1J2FI
-toUoyxQG9LTUGhOVrWccCwZEvmpvzJANlJRfgPL4Cpa49w75eywf7t4ZLnckaz4S
-xUdHR2OV8cSl5WnrqEVBXnPIuafBv3DRdjw8VtI3EIOXE5LwvuQML1avCPbD71uB
-SOFGia2wXlGoDfu4G/RW9LuEFoRbY9mZFIJxFFXLi9RvuGwP0/bPOsPbML+i+BJI
-hV4hh3fvX3FiS/vl8DSAaUC+SFehXKJX8ch9Nw4VO8S++sE6FmR8PHUSiRIGN6Z1
-KktrzUsJFs1oe4N0gRm+xZZHKzAGXS7VgOSp3Vjva49ZpTl3rJuShhMpMoWWikQB
-WUjsONmVfQyOuzwMPSdHbRVbOK3XG40V9WB7gqv5R9ofoW7hNbhqdPAXnRtY3z1x
-3eEukFHYOKl0mAzAYBHp+Zhro/94H50l+lrx12n6nwXoBB7VOix32BtWb6DHEhvr
-ZKuGSbzhyZr7VPpyMt2xpSQr0c0y/NOCRGrnSZQ4pa06p3pEej04PyzxOmmv0dqm
-/vE5lK4+78h9mDJrIByuWU1iv/3J4KiqBEb+v8i17+VE2hu48BbvdxpJ1D99y1Ys
-MKW1PyO0J9gyj2P/dOwi60W/MfcyR+IDzJRyBJ19pbElya/zs4A=
-=cdt8
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0LTIEACgkQ3SOs138+
+s6FLsw/+NC/6Khpjg6ysa3WInhNhqMUsQWEt+rIBtVK3wuiFuV3Fmhbj5eTi7pip
+azMl6odp9t4TnQbzpAbqOwA73Xsp1KWdjGawLxeZTXcdckPrMMzTbiCbbLkw3nuA
+26f+cj53Kp5vmuJlxOllFWS8YB3tPy0rV6+7DDBKqONdIne14CUu118dFgJMOcxq
+ATqXCBQGd9SJE0XRkVwY5uixnKjeuy2SMr1JU+Ear6UQqF2hVc9Lrkxs4Dd4YbMc
+GqcdrUuaSvUifujZ2dr1aZt6WleALu0yHfUnd/cuo3JOjBhsSJbrCg6EPMFdlsdh
+QjiWZCVsAnaO6NMLsLrxzTkDOsZnBW8T38bh+jIPEXgCGsKTNIOKaXtXPrKqPkPK
+5hy95N1u5UgvPNUw4BPVUVzjcuHgTuevyHrfnvR7cYa1BspbdVMhvwjifPTCR5Qa
+pSAezwB/wVTLpLEeq3wySXAHj3VACaGtAfuunZ1i7V2x0hMe4W2wYj3SGWMEAUo6
+srlTiiDZYxrZk5+ot2pRzlFIH4rC+iTTOKtnhnQzyeQA1kgqeouvHuHjJlBP2ZQD
+mul4nf2BMRhopoccrOLOw2ElpoyVQebipi3xkkapvrBY+0Y+c2N3zt5v4QLmuBvN
+4n9yVm1sJd8FTC3iRG9UnBCN8hxc3MnRlZd3nr1xDze2ujRNFUQ=
+=Cr2T
 -----END PGP SIGNATURE-----
 
---ncSAzJYg3Aa9+CRW--
+--Hf61M2y+wYpnELGG--
+
+--===============0266225881==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============0266225881==--
