@@ -1,46 +1,54 @@
-From: Ryan Chen <ryan_chen@aspeedtech.com>
-Subject: RE: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
-Date: Thu, 20 Jun 2019 08:01:58 +0000
-Message-ID: <195bb56028d04001bbaf835cc17e032e@TWMBX02.aspeed.com>
-References: <20190619205009.4176588-1-taoren@fb.com>
- <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
- <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
- <c610ecede7494c189a92a9a3f6d0fd16@TWMBX02.aspeed.com>
- <bdd53adb-6987-1b91-adde-298839b2c066@fb.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [RFC PATCH 2/4] dt-bindings: display: Convert
+ ampire,am-480272h3tmqw-t01h panel to DT schema
+Date: Thu, 20 Jun 2019 10:03:47 +0200
+Message-ID: <20190620080347.iin6g2msw75u7bnp@flea>
+References: <20190619215156.27795-1-robh@kernel.org>
+ <20190619215156.27795-2-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4jlljlkwbubxhkp4"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bdd53adb-6987-1b91-adde-298839b2c066@fb.com>
-Content-Language: zh-TW
+Content-Disposition: inline
+In-Reply-To: <20190619215156.27795-2-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tao Ren <taoren@fb.com>, Brendan Higgins <brendanhiggins@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gVGFvLA0KCUxldCBtZSBtb3JlIGNsZWFyLiBXaGVuIHlvdSBzZXQgKDMsIDE1LCAxNCkg
-dGhlIGRldmljZSBzb21ldGltZXMgcmVzcG9uc2UgbmFjay4gDQoJYnV0IHdoZW4geW91IHNldCAo
-NCwgNywgNyksIHRoZSBkZXZpY2UgYWx3YXlzIGFjay4gQW0gSSByaWdodD8gDQpSeWFuDQoNCi0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBUYW8gUmVuIFttYWlsdG86dGFvcmVuQGZi
-LmNvbV0gDQpTZW50OiBUaHVyc2RheSwgSnVuZSAyMCwgMjAxOSAzOjU3IFBNDQpUbzogUnlhbiBD
-aGVuIDxyeWFuX2NoZW5AYXNwZWVkdGVjaC5jb20+OyBCcmVuZGFuIEhpZ2dpbnMgPGJyZW5kYW5o
-aWdnaW5zQGdvb2dsZS5jb20+DQpDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNv
-bT47IGRldmljZXRyZWUgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgbGludXgtYXNwZWVk
-QGxpc3RzLm96bGFicy5vcmc7IE9wZW5CTUMgTWFpbGxpc3QgPG9wZW5ibWNAbGlzdHMub3psYWJz
-Lm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTGludXggQVJNIDxsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBsaW51eC1pMmNAdmdlci5rZXJuZWwu
-b3JnDQpTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0gaTJjOiBhc3BlZWQ6IGFsbG93IHRvIGN1c3Rv
-bWl6ZSBiYXNlIGNsb2NrIGRpdmlzb3INCg0KT24gNi8yMC8xOSAxMjoyOSBBTSwgUnlhbiBDaGVu
-IHdyb3RlOg0KPiBIZWxsbyBUYW8sDQo+IAlPdXIgcmVjb21tZW5kIGFib3V0IGNsayBkaXZpZGVy
-IHNldHRpbmcgaXMgZm9sbG93IHRoZSBkYXRhc2hlZXQgY2xvY2sgc2V0dGluZyB0YWJsZSBmb3Ig
-Y2xvY2sgZGl2aXNvci4gDQo+IA0KPiBSeWFuICANCg0KVGhhbmtzIFJ5YW4gZm9yIHRoZSByZXNw
-b25zZS4gQ291bGQgeW91IGFsc28gc2hhcmUgc29tZSByZWNvbW1lbmRhdGlvbnMvaGludHMgb24g
-aG93IHRvIHNvbHZlIHRoZSBpbnRlcm1pdHRlbnQgaTJjIHRyYW5zYWN0aW9uIGZhaWx1cmVzIG9u
-IEZhY2Vib29rIEFTVDI1MDAgQk1DIHBsYXRmb3Jtcz8NCg0KQlRXLCB0aGUgcGF0Y2ggaXMgbm90
-IGFpbWVkIGF0IG1vZGlmeWluZyB0aGUgZXhpc3RpbmcgZm9ybXVsYSBvZiBjYWxjdWxhdGluZyBj
-bG9jayBzZXR0aW5ncyBpbiBpMmMtYXNwZWVkIGRyaXZlcjogcGVvcGxlIHN0aWxsIGdldCB0aGUg
-cmVjb21tZW5kZWQgc2V0dGluZ3MgYnkgZGVmYXVsdC4gVGhlIGdvYWwgb2YgdGhlIHBhdGNoIGlz
-IHRvIGFsbG93IHBlb3BsZSB0byBjdXN0b21pemUgY2xvY2sgc2V0dGluZ3MgaW4gY2FzZSB0aGUg
-ZGVmYXVsdC9yZWNvbW1lbmRlZCBvbmUgZG9lc24ndCB3b3JrLg0KDQoNCkNoZWVycywgDQoNClRh
-bw0K
+
+--4jlljlkwbubxhkp4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jun 19, 2019 at 03:51:54PM -0600, Rob Herring wrote:
+> Convert the ampire,am-480272h3tmqw-t01h panel binding to DT schema.
+>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+
+Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--4jlljlkwbubxhkp4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQs94wAKCRDj7w1vZxhR
+xReyAQDFn3/FOI417nNEmOFpkumtOav5KSPANZPcHKVG0lp16gD/Q2OV7qBfucZA
+LFJsAItL3y0tpJ0jPKj7tMhYNeTaoQo=
+=TaLv
+-----END PGP SIGNATURE-----
+
+--4jlljlkwbubxhkp4--
