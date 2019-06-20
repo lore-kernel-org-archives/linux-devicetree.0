@@ -1,49 +1,144 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 1/3] dt-bindings: display: rockchip: document VOP gamma
- LUT address
-Date: Thu, 20 Jun 2019 09:43:33 -0700
-Message-ID: <CAD=FV=UpZAjrWkQ7qj5Wo2tf2wkg5Q-34Sun0MOtYLBAwY731Q@mail.gmail.com>
-References: <20190618213406.7667-1-ezequiel@collabora.com> <20190618213406.7667-2-ezequiel@collabora.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+Date: Thu, 20 Jun 2019 11:50:12 -0500
+Message-ID: <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com>
+References: <20190603083005.4304-1-peng.fan@nxp.com> <20190603083005.4304-3-peng.fan@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190618213406.7667-2-ezequiel@collabora.com>
+In-Reply-To: <20190603083005.4304-3-peng.fan@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@collabora.com>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Jacopo Mondi <jacopo@jmondi.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, ", Sascha Hauer" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, festevam@gmail.com, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Andre Przywara <andre.przywara@arm.com>, van.freenix@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, Jun 18, 2019 at 2:43 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+On Mon, Jun 3, 2019 at 3:28 AM <peng.fan@nxp.com> wrote:
 >
-> Add the register specifier description for an
-> optional gamma LUT address.
+> From: Peng Fan <peng.fan@nxp.com>
 >
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> This mailbox driver implements a mailbox which signals transmitted data
+> via an ARM smc (secure monitor call) instruction. The mailbox receiver
+> is implemented in firmware and can synchronously return data when it
+> returns execution to the non-secure world again.
+> An asynchronous receive path is not implemented.
+> This allows the usage of a mailbox to trigger firmware actions on SoCs
+> which either don't have a separate management processor or on which such
+> a core is not available. A user of this mailbox could be the SCP
+> interface.
+>
+> Modified from Andre Przywara's v2 patch
+> https://lore.kernel.org/patchwork/patch/812999/
+>
+> Cc: Andre Przywara <andre.przywara@arm.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->  .../bindings/display/rockchip/rockchip-vop.txt         | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
 >
-> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-> index 4f58c5a2d195..97ad78cc7e03 100644
-> --- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-> @@ -20,6 +20,13 @@ Required properties:
->                 "rockchip,rk3228-vop";
->                 "rockchip,rk3328-vop";
+> V2:
+>  Add interrupts notification support.
 >
-> +- reg: Must contain one entry corresponding to the base address and length
-> +       of the register space. Can optionally contain a second entry
-> +       corresponding to the CRTC gamma LUT address.
+>  drivers/mailbox/Kconfig                 |   7 ++
+>  drivers/mailbox/Makefile                |   2 +
+>  drivers/mailbox/arm-smc-mailbox.c       | 190 ++++++++++++++++++++++++++++++++
+>  include/linux/mailbox/arm-smc-mailbox.h |  10 ++
+>  4 files changed, 209 insertions(+)
+>  create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+>  create mode 100644 include/linux/mailbox/arm-smc-mailbox.h
+>
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index 595542bfae85..c3bd0f1ddcd8 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -15,6 +15,13 @@ config ARM_MHU
+>           The controller has 3 mailbox channels, the last of which can be
+>           used in Secure mode only.
+>
+> +config ARM_SMC_MBOX
+> +       tristate "Generic ARM smc mailbox"
+> +       depends on OF && HAVE_ARM_SMCCC
+> +       help
+> +         Generic mailbox driver which uses ARM smc calls to call into
+> +         firmware for triggering mailboxes.
 > +
-> +- reg-names: "base" for the base register space. If present, the CRTC
-> +       gamma LUT name should be "lut".
+>  config IMX_MBOX
+>         tristate "i.MX Mailbox"
+>         depends on ARCH_MXC || COMPILE_TEST
+> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> index c22fad6f696b..93918a84c91b 100644
+> --- a/drivers/mailbox/Makefile
+> +++ b/drivers/mailbox/Makefile
+> @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)      += mailbox-test.o
+>
+>  obj-$(CONFIG_ARM_MHU)  += arm_mhu.o
+>
+> +obj-$(CONFIG_ARM_SMC_MBOX)     += arm-smc-mailbox.o
+> +
+>  obj-$(CONFIG_IMX_MBOX) += imx-mailbox.o
+>
+>  obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)    += armada-37xx-rwtm-mailbox.o
+> diff --git a/drivers/mailbox/arm-smc-mailbox.c b/drivers/mailbox/arm-smc-mailbox.c
+> new file mode 100644
+> index 000000000000..fef6e38d8b98
+> --- /dev/null
+> +++ b/drivers/mailbox/arm-smc-mailbox.c
+> @@ -0,0 +1,190 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2016,2017 ARM Ltd.
+> + * Copyright 2019 NXP
+> + */
+> +
+> +#include <linux/arm-smccc.h>
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/mailbox/arm-smc-mailbox.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define ARM_SMC_MBOX_USE_HVC   BIT(0)
+> +#define ARM_SMC_MBOX_USB_IRQ   BIT(1)
+> +
+IRQ bit is unused (and unnecessary IMO)
 
-As per Rob Herring, current suggestion is to avoid reg-names when
-possible.  The code should just look for the presence of a 2nd entry
-and assume that if it's there that it's the lut range.  Full context:
+> +struct arm_smc_chan_data {
+> +       u32 function_id;
+> +       u32 flags;
+> +       int irq;
+> +};
+> +
+> +static int arm_smc_send_data(struct mbox_chan *link, void *data)
+> +{
+> +       struct arm_smc_chan_data *chan_data = link->con_priv;
+> +       struct arm_smccc_mbox_cmd *cmd = data;
+> +       struct arm_smccc_res res;
+> +       u32 function_id;
+> +
+> +       if (chan_data->function_id != UINT_MAX)
+> +               function_id = chan_data->function_id;
+> +       else
+> +               function_id = cmd->a0;
+> +
+Not sure about chan_data->function_id.  Why restrict from DT?
+'a0' is the function_id register, let the user pass func-id via the
+'a0' like other values via 'a[1-7]'
 
-https://lore.kernel.org/lkml/CAL_Jsq+MMunmVWqeW9v2RyzsMKP+=kMzeTHNMG4JDHM7Fy0HBg@mail.gmail.com/
 
--Doug
+> +       if (chan_data->flags & ARM_SMC_MBOX_USE_HVC)
+> +               arm_smccc_hvc(function_id, cmd->a1, cmd->a2, cmd->a3, cmd->a4,
+> +                             cmd->a5, cmd->a6, cmd->a7, &res);
+> +       else
+> +               arm_smccc_smc(function_id, cmd->a1, cmd->a2, cmd->a3, cmd->a4,
+> +                             cmd->a5, cmd->a6, cmd->a7, &res);
+> +
+> +       if (chan_data->irq)
+> +               return 0;
+> +
+This irq thing seems like oob signalling, that is, a protocol thing.
+And then it provides lesser info via chan_irq_handler (returns NULL)
+than res.a0 - which can always be ignored if not needed.
+So the irq should be implemented in the upper layer if the protocol needs it.
+
+> +       mbox_chan_received_data(link, (void *)res.a0);
+> +
+This is fine.
