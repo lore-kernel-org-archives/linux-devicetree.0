@@ -1,7 +1,7 @@
 From: Al Cooper <alcooperx@gmail.com>
-Subject: [PATCH 5/6] dt-bindings: usb: bdc: Update compatible strings
-Date: Thu, 20 Jun 2019 17:09:50 -0400
-Message-ID: <1561064991-16874-6-git-send-email-alcooperx@gmail.com>
+Subject: [PATCH 6/6] usb: bdc: Update compatible match strings
+Date: Thu, 20 Jun 2019 17:09:51 -0400
+Message-ID: <1561064991-16874-7-git-send-email-alcooperx@gmail.com>
 References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
@@ -15,30 +15,20 @@ Add "brcm,bdc-udc-v3.1" which exists for any STB system with BDC.
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- Documentation/devicetree/bindings/usb/brcm,bdc.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/udc/bdc/bdc_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/brcm,bdc.txt b/Documentation/devicetree/bindings/usb/brcm,bdc.txt
-index 63e63af3bf59..597f3902d857 100644
---- a/Documentation/devicetree/bindings/usb/brcm,bdc.txt
-+++ b/Documentation/devicetree/bindings/usb/brcm,bdc.txt
-@@ -4,7 +4,7 @@ Broadcom USB Device Controller (BDC)
- Required properties:
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index 15e28790142d..e2b2628925e6 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -644,6 +644,7 @@ static SIMPLE_DEV_PM_OPS(bdc_pm_ops, bdc_suspend,
+ 		bdc_resume);
  
- - compatible: must be one of:
--                "brcm,bdc-v0.16"
-+                "brcm,bdc-udc-v3.1"
-                 "brcm,bdc"
- - reg: the base register address and length
- - interrupts: the interrupt line for this controller
-@@ -21,7 +21,7 @@ On Broadcom STB platforms, these properties are required:
- Example:
- 
-         bdc@f0b02000 {
--                compatible = "brcm,bdc-v0.16";
-+                compatible = "brcm,bdc-udc-v3.1";
-                 reg = <0xf0b02000 0xfc4>;
-                 interrupts = <0x0 0x60 0x0>;
-                 phys = <&usbphy_0 0x0>;
+ static const struct of_device_id bdc_of_match[] = {
++	{ .compatible = "brcm,bdc-udc-v3.1" },
+ 	{ .compatible = "brcm,bdc-v0.16" },
+ 	{ .compatible = "brcm,bdc" },
+ 	{ /* sentinel */ }
 -- 
 1.9.0.138.g2de3478
