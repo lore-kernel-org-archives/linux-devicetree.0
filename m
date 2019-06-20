@@ -1,114 +1,67 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 01/16] dt-bindings: net: Add YAML schemas for the
- generic Ethernet options
-Date: Thu, 20 Jun 2019 11:08:57 +0200
-Message-ID: <20190620090857.z6gru4cilq6z7e4w@flea>
-References: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
- <20190619140314.GC18352@lunn.ch>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/3] arm64: tegra: Fix AGIC register range
+Date: Thu, 20 Jun 2019 11:13:07 +0200
+Message-ID: <20190620091307.GF26689@ulmo>
+References: <20190620081702.17209-1-jonathanh@nvidia.com>
+ <20190620081702.17209-2-jonathanh@nvidia.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="52tq5ryctgrkeugj"
-Return-path: <netdev-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="5CUMAwwhRxlRszMD"
+Return-path: <stable-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190619140314.GC18352@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>
+In-Reply-To: <20190620081702.17209-2-jonathanh@nvidia.com>
+Sender: stable-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---52tq5ryctgrkeugj
+--5CUMAwwhRxlRszMD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
+On Thu, Jun 20, 2019 at 09:17:00AM +0100, Jon Hunter wrote:
+> The Tegra AGIC interrupt controller is an ARM GIC400 interrupt
+> controller. Per the ARM GIC device-tree binding, the first address
+> region is for the GIC distributor registers and the second address
+> region is for the GIC CPU interface registers. The address space for
+> the distributor registers is 4kB, but currently this is incorrectly
+> defined as 8kB for the Tegra AGIC and overlaps with the CPU interface
+> registers. Correct the address space for the distributor to be 4kB.
+>=20
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wed, Jun 19, 2019 at 04:03:14PM +0200, Andrew Lunn wrote:
-> > +  phy-connection-type:
-> > +    description:
-> > +      Operation mode of the PHY interface
-> > +    enum:
-> > +      # There is not a standard bus between the MAC and the PHY,
-> > +      # something proprietary is being used to embed the PHY in the
-> > +      # MAC.
->
-> ...
->
-> > +
-> > +  phy-mode:
-> > +    $ref: "#/properties/phy-connection-type"
-> > +    deprecated: true
->
-> I don't think phy-mode is actually deprecated. ethernet.txt actually says:
->
-> "This is now a de-facto standard property;" and no mentions that is
-> should not be used. Looking at actual device trees, phy-mode is by far
-> more popular than phy-connection-type.
+Applied to for-5.3/arm64/dt, though I also added the following Fixes:
+line:
 
-Looking at the phy-connection-type documentation, I was under this
-impression, sorry.
+Fixes: bcdbde433542 ("arm64: tegra: Add AGIC node for Tegra210")
 
-I'll drop it then.
+Thanks,
+Thierry
 
-> fwnode_get_phy_mode() first looks for phy-mode and only falls back to
-> phy-connection-type if it is not present. The same is true for
-> of_get_phy_mode().
->
-> > +  fixed-link:
-> > +    allOf:
-> > +      - if:
-> > +          type: array
-> > +        then:
-> > +          minItems: 1
-> > +          maxItems: 1
-> > +          items:
-> > +            items:
-> > +              - minimum: 0
-> > +                maximum: 31
-> > +                description:
-> > +                  Emulated PHY ID, choose any but unique to the all
-> > +                  specified fixed-links
-> > +
-> > +              - enum: [0, 1]
-> > +                description:
-> > +                  Duplex configuration. 0 for half duplex or 1 for
-> > +                  full duplex
-> > +
-> > +              - enum: [10, 100, 1000]
-> > +                description:
-> > +                  Link speed in Mbits/sec.
-> > +
-> > +              - enum: [0, 1]
-> > +                description:
-> > +                  Pause configuration. 0 for no pause, 1 for pause
-> > +
-> > +              - enum: [0, 1]
-> > +                description:
-> > +                  Asymmetric pause configuration. 0 for no asymmetric
-> > +                  pause, 1 for asymmetric pause
-> > +
->
-> This array of 5 values format should be marked as deprecated.
+--5CUMAwwhRxlRszMD
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Right, I'll add it.
+-----BEGIN PGP SIGNATURE-----
 
-> > +
-> > +      - if:
-> > +          type: object
-> > +        then:
-> > +          properties:
-> > +            speed:
-> > +              allOf:
-> > +                - $ref: /schemas/types.yaml#definitions/uint32
-> > +                - enum: [10, 100, 1000]
->
-> This recently changed, depending on context. If PHYLINK is being used,
-> any speed is allowed. If phylib is used, then only these speeds are
-> allowed. And we are starting to see some speeds other than listed
-> here.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0LTiIACgkQ3SOs138+
+s6GY4w/+MMaim+cU/P4jt3haccBqVOz26dTGf4DqXEF/agrQwv0CwCOuwWjUxzLY
+enl2a+nzqXC6UwHRetCeL+En/ul0nbmF8+4OptO+gFd5t6E2T+bcV6KeV7DxrfMp
+uTWAwiQctbDqJjRJ2dv1weTTfbpC/hEtd4VmbPW7R62z5FEC+EmUcOFbIQql3XuK
+6No6LVFDiCvV+8p4zHpbNEmfm/glVzsoV/CjS/rGVszfGteG1+dNX2gt5ASuxjFB
+5XyN9z2NSzkQat9sMKMk56EY1xC+HuHi5ZlZboReTxf9wq/3rpofyalMoeWcm4RV
+rzNWNXU5yWoII8L4CR80WsGV4BphyklkzFUgC61Z7MXu/STIGrTPB3U9vbJdBNov
+kidAGdL1u+ya9cvrBB3St+G9P+rsYIGAgZY0yePBTlXRSUYbYkfSiyiKiDVdE1LM
+riiaB4gqMpxchLlY0AcUf0gGep+1z+eOTmKng2EmEbSAF1D3WW7r48EMyctvhRo/
+3jHaWe3K8uzYVT3eYANyAWK3pacyWFPjVSZTbFJ9taLZIKsKXj7LQrclZGZ79NvN
+QOxbQepxdHyMgJ+ZeueB+vbspaMpcmAfNhrcmlZ9oeFU2EDTjqCJfy4Tw8yEaKwn
+zK39Mhin/EY8vr76fV8k2Oz644MiCxV4zyz31F/b+TRisRf7AI4=
+=Gdxk
+-----END PGP SIGNATURE-----
 
-phylink seems to be described in a separate binding document, maybe we
-can adjust that later?
-
-Maxime
---52tq5ryctgrkeugj--
+--5CUMAwwhRxlRszMD--
