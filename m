@@ -1,79 +1,144 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 1/7] video: add HDMI state notifier support
-Date: Thu, 20 Jun 2019 23:12:04 +0200
-Message-ID: <20190620211204.GW12905@phenom.ffwll.local>
-References: <20190603080931.GG21222@phenom.ffwll.local>
- <CAFv8Nw+1sB8i1d87vLeKxRricZOi4gnXFSgOzW9k0sa_Tzybjg@mail.gmail.com>
- <20190604072411.GP21222@phenom.ffwll.local>
- <CAFv8NwKL9ZL=gNpDmdRV+R9eq22+Da_1kzuYBv8kMMyV3Hq14g@mail.gmail.com>
- <20190611123455.GD2458@phenom.ffwll.local>
- <CAFv8NwJxs-R=ehgeqyx=e+T5OmUBsk3uWnUb2t0cC-LDPS7G5w@mail.gmail.com>
- <20190618121220.GU12905@phenom.ffwll.local>
- <CAFv8NwLci2ALi3V-e=8jjatciHWOoOj-FeajwNLWRpWRtqgBdg@mail.gmail.com>
- <20190620092506.GP12905@phenom.ffwll.local>
- <CAFv8NwLbS_f4cfeorzqtmRzQSY0u1tgM7fitAokg_QfViPvq=Q@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 2/2] rtc: Add Amlogic Virtual Wake RTC
+Date: Thu, 20 Jun 2019 23:17:36 +0200
+Message-ID: <20190620211736.GF23549@piout.net>
+References: <20190607194343.18359-1-khilman@kernel.org>
+ <20190607194343.18359-2-khilman@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAFv8NwLbS_f4cfeorzqtmRzQSY0u1tgM7fitAokg_QfViPvq=Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Cheng-yi Chiang <cychiang@chromium.org>
-Cc: "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Takashi Iwai <tiwai@suse.com>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-rockchip@lists.infradead.org, Dylan Reid <dgreid@chromium.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, tzungbi@chromium.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Russell King <rmk+kernel@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Doug Anderson <dianders@chromium.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Dariusz Marcinkiewicz <darekm@google.com>
+In-Reply-To: <20190607194343.18359-2-khilman@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>
+Cc: linux-rtc@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-TWFzc2l2ZWx5IGN1dHRpbmcgdGhpcyB0aHJlYWQsIHNpbmNlIGhhbGZ3YXkgdGhyb3VnaCBpbiBt
-eSBwcmV2aW91cyByZXBseQpJIHJlYWxpemVkIHRoYXQgbWF5YmUgaGRtaV9jb2RlYyBpcyBhIG11
-Y2ggYmV0dGVyIHN0YXJ0aW5nIHBvaW50LgoKT24gVGh1LCBKdW4gMjAsIDIwMTkgYXQgMDk6MjM6
-MjNQTSArMDgwMCwgQ2hlbmcteWkgQ2hpYW5nIHdyb3RlOgo+IE9uIFRodSwgSnVuIDIwLCAyMDE5
-IGF0IDU6MjUgUE0gRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPiB3cm90ZToKPiA+IFll
-YWggZnVsbHkgYWdyZWVpbmcgdGhhdCBoZG1pX2F1ZGlvX2NvZGUgaXMgcHJvYmFibHkgYSBiZXR0
-ZXIgc3RhcnRpbmcKPiA+IHBvaW50LiBQcm9ibGVtIGlzIHRoYXQgYmVjdWFzZSBoZG1pX2NvZGVj
-IGlzIGJ1aWx0IG9uIHRvcCBvZiBwbGF0Zm9ybQo+ID4gZGV2aWNlIGl0J3MgcXVpdGUgYSBiaXQg
-aGFyZGVyIHRvIGV4dGVuZCB3aXRoIGNhbGxiYWNrcyBhbmQgdGhpbmdzIGxpa2UKPiA+IHRoYXQs
-IHdpdGhvdXQgYnJlYWtpbmcgdGhlIGRyaXZlciBtb2RlbC4KPiA+Cj4gPiBJIG5lZWQgdG8gdGhp
-bmsgYWJvdXQgdGhpcyBtb3JlLCBidXQgaWYgYWxsIHdlIG5lZWQgdG8gbG9vayBhdCBpcwo+ID4g
-aGRtaV9jb2RlYywgdGhlbiBJIHRoaW5rIHRoaXMgYmVjb21lcyBhIGxvdCBlYXNpZXIuIEFuZCB3
-ZSBjYW4gaWdub3JlCj4gPiBkcm1fYXVkaW9fY29tcG9uZW50LmggY29tcGxldGVseS4KPiAKPiAK
-PiBJdCBpcyBzdXJwcmlzaW5nIHRoYXQgeW91IHRoaW5rIHRoaXMgd2F5Lgo+IE1heWJlIHRoZSBv
-cmlnaW5hbCBwYXRjaCBiZWZvcmUgaGRtaS1ub3RpZmllciB3YXMgaW50cm9kdWNlZCBpcyB0aGUK
-PiBiZXR0ZXIgd2F5IHRvIHNvbHZlIHRoaXMgaXNzdWUsIGlmIHdlIG9ubHkgbmVlZCB0byBsb29r
-IGF0IGhkbWlfY29kZWMuCj4gCj4gVGhlIGhpc3Rvcnkgb2YgaGRtaV9jb2RlYyBkcml2ZXIgaXMg
-aW4gdGhpcyBwYXRjaCBzZXJpZXM6Cj4gCj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3
-b3JrL3BhdGNoLzUzOTY1Ni8KCkhtLCB0aGlzIGRvZXNuJ3Qgc2VlbSB0byBiZSB0aGUgaGRtaV9j
-b2RlYyBkcml2ZXIgSSBtZWFudCwgYnV0IGFub3RoZXIsCm5ldyBvbmUuIEkgd2FzIHRhbGtpbmcg
-YWJvdXQgU05EX1NPQ19IRE1JX0NPREVDLgoKPiBUaGVyZSB3YXMgYSBjYWxsYmFjayBtZWNoYW5p
-c20gaW1wbGVtZW50ZWQgYmV0d2VlbiBkdy1oZG1pIGFuZCBoZG1pCj4gY29kZWMgZHJpdmVyLgo+
-IEl0IHdhcyBsYXRlciBjb25zb2xpZGF0ZWQgYnkgRG91ZyBpbiB0aGlzIHBhdGNoIGZvciBiZXR0
-ZXIgamFjayBzdGF0dXMKPiByZXBvcnRpbmc6Cj4gCj4gaHR0cHM6Ly9jaHJvbWl1bS1yZXZpZXcu
-Z29vZ2xlc291cmNlLmNvbS9jL2Nocm9taXVtb3MvdGhpcmRfcGFydHkva2VybmVsLysvMzAzNTcz
-LwoKSG0gdGhhdCBzdGlsbCBzZWVtcyBlbnRpcmVseSBzZXBhcmF0ZSBoZG1pLWNvZGVjIHNwZWNp
-ZmljIHRvIGR3LWhkbWkgb25seQouLi4KCj4gSSBhbSBub3Qgc3VyZSB3aHkgdGhlIG9yaWdpbmFs
-IHBhdGNoIHNlcmllcyBkaWQgbm90IGdldCBmdWxseSBhY2NlcHRlZAo+IGluIHRoZSB1cHN0cmVh
-bS4KPiBJdCB3YXMgcXVpdGUgbG9uZyB0aW1lIGFnby4KPiAKPiBCdXQgaWYgeW91IHRoaW5rIHRo
-aXMgbWlnaHQgYmUgdGhlIHJpZ2h0IHdheSB0byBkbywgdGhlbiBpdCBpcyBldmVuCj4gYmV0dGVy
-IGZvciB1cyBiZWNhdXNlIHRoZSBwYXRjaCBzZXJpZXMgYW5kIERvdWcncyBwYXRjaCBoYWQgYmVl
-biBxdWl0ZQo+IHN0YWJsZQo+IG9uIG91ciBSSzMyODggcHJvZHVjdHMgZm9yIGFib3V0IGZvdXIg
-eWVhcnMgd2l0aCBwbGVudHkgb2YgdXNlcnMsIHNvCj4gd2UgaGF2ZSBtdWNoIGhpZ2hlciBjb25m
-aWRlbmNlIGluIHRoZW0uCj4gSSBjYW4gcmViYXNlIGFuZCBjbGVhbiB1cCB0aGVtIGFuZCBwb3N0
-IGFub3RoZXIgcGF0Y2ggZm9yIHJldmlldy4KPiAKPiBQbGVhc2UgbGV0IG1lIGtub3cgd2hhdCBh
-cHByb2FjaCB5b3UgZmVlbCBpcyBiZXR0ZXIuCj4gVGhhbmtzIGFnYWluIQoKTm90IHN1cmUgd2Un
-cmUgdGFsa2luZyBhYm91dCB0aGUgc2FtZS4gV2hhdCBJIGhhZCBpbiBtaW5kIGlzIHRvIGFkZCBq
-YWNrCnN0YXR1cyB0byB0aGUgaGRtaS1jb2RlYy5jIHN0dWZmLCB3aGljaCBpcyB1c2VkIGJ5IG11
-bHRpcGxlIHNvYyBkcm0KZGlzcGxheSBkcml2ZXJzIGFscmVhZHkuIExvb2tpbmcgYXQgZ2l0IGdy
-ZXAgb3V0cHV0LCB0aGVyZSBzZWVtcyB0byBiZQphbHJlYWR5IHNvbWUgc3VwcG9ydCBmb3IgZHct
-aGRtaSBzeW5vcHN5cyBkcm1fYnJpZGdlIGRyaXZlci4gSSB0aG91Z2h0IG9mCmV4dGVuZGluZyB0
-aGF0LiBEb2VzIHRoYXQgbm90IHdvcmsgZm9yIHlvdT8KClRoYW5rcywgRGFuaWVsCi0tIApEYW5p
-ZWwgVmV0dGVyClNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxv
-Zy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hello Kevin,
+
+On 07/06/2019 12:43:43-0700, Kevin Hilman wrote:
+> +static int meson_vrtc_read_time(struct device *dev, struct rtc_time *tm)
+> +{
+> +	unsigned long local_time;
+> +	struct timespec64 time;
+> +
+> +	ktime_get_raw_ts64(&time);
+> +	local_time = time.tv_sec - (sys_tz.tz_minuteswest * 60);
+The RTC is supposed to be set to UTC so the TZ adjustment is not
+necessary.
+
+> +	rtc_time_to_tm(local_time, tm);
+> +
+
+Please use the 64 bit version.
+
+> +	return 0;
+> +}
+> +
+> +static void meson_vrtc_set_wakeup_time(struct meson_vrtc_data *vrtc,
+> +				       unsigned long time)
+> +{
+> +	writel_relaxed(time, vrtc->io_alarm);
+> +
+> +	dev_dbg(&vrtc->pdev->dev, "set_wakeup_time: %lu\n", time);
+> +}
+> +
+> +static int meson_vrtc_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+> +{
+> +	struct meson_vrtc_data *vrtc = dev_get_drvdata(dev);
+> +	struct timespec64 time;
+> +	unsigned long local_time;
+> +	unsigned long alarm_secs;
+> +	int ret;
+> +
+> +	if (alarm->enabled) {
+> +		ret = rtc_tm_to_time(&alarm->time, &alarm_secs);
+> +		if (ret)
+> +			return ret;
+> +
+
+Use the 64bit version which makes it clear that it never fails (checking
+ret is useless).
+
+> +		ktime_get_raw_ts64(&time);
+> +		local_time = time.tv_sec - (sys_tz.tz_minuteswest * 60);
+> +
+> +		vrtc->alarm_time = alarm_secs;
+> +
+> +		if (alarm_secs >= local_time) {
+
+This is already ensured by the core so no need to check here.
+
+> +			alarm_secs = alarm_secs - local_time;
+> +
+> +			meson_vrtc_set_wakeup_time(vrtc, alarm_secs);
+> +
+> +			pr_debug("system will wakeup %lus later\n", alarm_secs);
+> +		}
+> +	} else {
+> +		vrtc->alarm_time = 0;
+> +		meson_vrtc_set_wakeup_time(vrtc, 0);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int meson_vrtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
+> +{
+> +	struct meson_vrtc_data *vrtc = dev_get_drvdata(dev);
+> +
+> +	if (!vrtc->alarm_time) {
+
+I think this test is inverted.
+
+> +		alm->enabled = true;
+> +
+> +		rtc_time_to_tm(vrtc->alarm_time, &alm->time);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct rtc_class_ops meson_vrtc_ops = {
+> +	.read_time = meson_vrtc_read_time,
+> +	.set_alarm = meson_vrtc_set_alarm,
+> +	.read_alarm = meson_vrtc_read_alarm,
+> +};
+> +
+> +static int meson_vrtc_probe(struct platform_device *pdev)
+> +{
+> +	struct meson_vrtc_data *vrtc;
+> +	struct resource *res;
+> +
+> +	vrtc = devm_kzalloc(&pdev->dev, sizeof(*vrtc), GFP_KERNEL);
+> +	if (!vrtc)
+> +		return -ENOMEM;
+> +
+> +	vrtc->pdev = pdev;
+> +
+> +	/* Alarm registers */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	vrtc->io_alarm = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(vrtc->io_alarm))
+> +		return PTR_ERR(vrtc->io_alarm);
+> +
+> +	device_init_wakeup(&pdev->dev, 1);
+> +
+> +	platform_set_drvdata(pdev, vrtc);
+> +
+> +	vrtc->rtc = devm_rtc_device_register(&pdev->dev, "meson-vrtc",
+> +					     &meson_vrtc_ops, THIS_MODULE);
+> +	if (IS_ERR(vrtc->rtc))
+> +		return PTR_ERR(vrtc->rtc);
+> +
+
+Please use devm_rtc_allocate_device and rtc_register_device. This
+doesn't help much but my plan is to get rid of devm_rtc_device_register.
+
+I suppose you don't get any interrupt for the alarm?
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
