@@ -1,33 +1,85 @@
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH] arm64: dts: fsl: librem5: enable the SNVS power key
-Date: Thu, 20 Jun 2019 11:05:32 -0600
-Message-ID: <20190620170532.18845-1-angus@akkea.ca>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: angus.ainslie@puri.sm
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH] dt-bindings: arm: Convert Conexant Digicolor board/soc
+ bindings to json-schema
+Date: Thu, 20 Jun 2019 20:12:05 +0300
+Message-ID: <87a7ecqize.fsf@tarshish>
+References: <20190618212229.32302-5-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20190618212229.32302-5-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the snvs power key.
+Hi Rob,
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 3 +++
- 1 file changed, 3 insertions(+)
+On Wed, Jun 19 2019, Rob Herring wrote:
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 93b3830e5406..e21215b01a62 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -715,6 +715,9 @@
- 	status = "okay";
- };
- 
-+&snvs_pwrkey {
-+	status = "okay";
-+};
- 
- &uart1 { /* console */
- 	pinctrl-names = "default";
+> Convert Conexant Digicolor SoC bindings to DT schema format using json-schema.
+>
+> Cc: Baruch Siach <baruch@tkos.co.il>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+
+Acked-by: Baruch Siach <baruch@tkos.co.il>
+
+Thanks,
+baruch
+
+> ---
+>  .../devicetree/bindings/arm/digicolor.txt        |  6 ------
+>  .../devicetree/bindings/arm/digicolor.yaml       | 16 ++++++++++++++++
+>  2 files changed, 16 insertions(+), 6 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/digicolor.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/digicolor.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/arm/digicolor.txt b/Documentation/devicetree/bindings/arm/digicolor.txt
+> deleted file mode 100644
+> index 658553f40b23..000000000000
+> --- a/Documentation/devicetree/bindings/arm/digicolor.txt
+> +++ /dev/null
+> @@ -1,6 +0,0 @@
+> -Conexant Digicolor Platforms Device Tree Bindings
+> -
+> -Each device tree must specify which Conexant Digicolor SoC it uses.
+> -Must be the following compatible string:
+> -
+> -  cnxt,cx92755
+> diff --git a/Documentation/devicetree/bindings/arm/digicolor.yaml b/Documentation/devicetree/bindings/arm/digicolor.yaml
+> new file mode 100644
+> index 000000000000..d9c80b827e9b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/digicolor.yaml
+> @@ -0,0 +1,16 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/digicolor.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Conexant Digicolor Platforms Device Tree Bindings
+> +
+> +maintainers:
+> +  - Baruch Siach <baruch@tkos.co.il>
+> +
+> +properties:
+> +  compatible:
+> +    const: cnxt,cx92755
+> +
+> +...
+
+
 -- 
-2.17.1
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
