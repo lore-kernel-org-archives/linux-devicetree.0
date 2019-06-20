@@ -1,97 +1,96 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 2/3] drm/rockchip: Add optional support for CRTC gamma LUT
-Date: Thu, 20 Jun 2019 10:25:25 -0700
-Message-ID: <CAD=FV=XoKNA4aW2LT7g8K2t+ABwgt=QJGAyiet1-Gyz3CgWmvg@mail.gmail.com>
-References: <20190618213406.7667-1-ezequiel@collabora.com> <20190618213406.7667-3-ezequiel@collabora.com>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] Revert "ARM: dts: rockchip: add startup delay to
+ rk3288-veyron panel-regulators"
+Date: Thu, 20 Jun 2019 11:20:56 -0700
+Message-ID: <20190620182056.61552-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190618213406.7667-3-ezequiel@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@collabora.com>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Jacopo Mondi <jacopo@jmondi.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, mka@chromium.org, enric.balletbo@collabora.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This reverts commit 1f45e8c6d0161f044d679f242fe7514e2625af4a.
 
-On Tue, Jun 18, 2019 at 2:43 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
->
-> +static void vop_crtc_gamma_set(struct vop *vop, struct drm_crtc *crtc,
-> +                              struct drm_crtc_state *old_state)
-> +{
-> +       int idle, ret, i;
-> +
-> +       spin_lock(&vop->reg_lock);
-> +       VOP_REG_SET(vop, common, dsp_lut_en, 0);
-> +       vop_cfg_done(vop);
-> +       spin_unlock(&vop->reg_lock);
-> +
-> +       ret = readx_poll_timeout(vop_dsp_lut_is_enable, vop,
-> +                          idle, !idle, 5, 30 * 1000);
-> +       if (ret)
+This 100 ms mystery delay is not on downstream kernels and no longer
+seems needed on upstream kernels either [1].  Presumably something in the
+meantime has made things better.  A few possibilities for patches that
+have landed in the meantime that could have made this better are
+commit 3157694d8c7f ("pwm-backlight: Add support for PWM delays
+proprieties."), commit 5fb5caee92ba ("pwm-backlight: Enable/disable
+the PWM before/after LCD enable toggle."), and commit 6d5922dd0d60
+("ARM: dts: rockchip: set PWM delay backlight settings for Veyron")
 
-Worth an error message?
+Let's revert and get our 100 ms back.
 
+[1] https://lkml.kernel.org/r/2226970.BAPq4liE1j@diego
 
-> @@ -1205,6 +1294,7 @@ static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
->
->  static const struct drm_crtc_helper_funcs vop_crtc_helper_funcs = {
->         .mode_fixup = vop_crtc_mode_fixup,
-> +       .atomic_check = vop_crtc_atomic_check,
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-At first I was worried that there was a bug here since in the context
-of dw_hdmi (an encoder) adding ".atomic_check" caused ".mode_fixup" to
-stop getting called as per mode_fixup() in
-"drivers/gpu/drm/drm_atomic_helper.c".
+ arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 1 -
+ arch/arm/boot/dts/rk3288-veyron-jerry.dts  | 1 -
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts | 1 -
+ arch/arm/boot/dts/rk3288-veyron-speedy.dts | 1 -
+ 4 files changed, 4 deletions(-)
 
-...but it seems like it's OK for CRTCs, so I think we're fine.
-
-
-> @@ -1323,6 +1413,7 @@ static const struct drm_crtc_funcs vop_crtc_funcs = {
->         .disable_vblank = vop_crtc_disable_vblank,
->         .set_crc_source = vop_crtc_set_crc_source,
->         .verify_crc_source = vop_crtc_verify_crc_source,
-> +       .gamma_set = drm_atomic_helper_legacy_gamma_set,
-
-Are there any issues in adding this ".gamma_set" property even though
-we may or may not actually have the ability to set the gamma
-(depending on whether or not the LUT register range was provided in
-the device tree)?  I am a DRM noob but
-drm_atomic_helper_legacy_gamma_set() is not a trivial little function
-and now we'll be running it in some cases where we don't actually have
-gamma.
-
-I also notice that there's at least one bit of code that seems to
-check if ".gamma_set" is NULL.  ...and if it is, it'll return -ENOSYS
-right away.  Do we still properly return -ENOSYS on devices that don't
-have the register range?
-
-It seems like the absolute safest would be to have two copies of this
-struct: one used for VOPs that have the range and one for VOPs that
-don't.
-
-...but possibly I'm just paranoid and as I've said I'm a clueless
-noob.  If someone says it's fine to always provide the .gamma_set
-property that's fine too.
-
-
->  static void vop_fb_unref_worker(struct drm_flip_work *work, void *val)
-> @@ -1480,6 +1571,10 @@ static int vop_create_crtc(struct vop *vop)
->                 goto err_cleanup_planes;
->
->         drm_crtc_helper_add(crtc, &vop_crtc_helper_funcs);
-> +       if (vop_data->lut_size) {
-> +               drm_mode_crtc_set_gamma_size(crtc, vop_data->lut_size);
-> +               drm_crtc_enable_color_mgmt(crtc, 0, false, vop_data->lut_size);
-
-Should we only do the above calls if we successfully mapped the resources?
-
-
-> @@ -1776,6 +1871,17 @@ static int vop_bind(struct device *dev, struct device *master, void *data)
->         if (IS_ERR(vop->regs))
->                 return PTR_ERR(vop->regs);
->
-> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lut");
-
-As per comments in the bindings, shouldn't use the name "lut" but
-should just pick resource #1.
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+index fcd119168cb6..5411ce148890 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+@@ -24,7 +24,6 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&lcd_enable_h>;
+ 		regulator-name = "panel_regulator";
+-		startup-delay-us = <100000>;
+ 		vin-supply = <&vcc33_sys>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+index 164561f04c1d..82ac9d23480e 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+@@ -26,7 +26,6 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&lcd_enable_h>;
+ 		regulator-name = "panel_regulator";
+-		startup-delay-us = <100000>;
+ 		vin-supply = <&vcc33_sys>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+index b2cc70a08554..f29501d8ff07 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+@@ -33,7 +33,6 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&lcd_enable_h>;
+ 		regulator-name = "panel_regulator";
+-		startup-delay-us = <100000>;
+ 		vin-supply = <&vcc33_sys>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+index 9b140db04456..a0f6fefc95f1 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+@@ -24,7 +24,6 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&lcd_enable_h>;
+ 		regulator-name = "panel_regulator";
+-		startup-delay-us = <100000>;
+ 		vin-supply = <&vcc33_sys>;
+ 	};
+ 
+-- 
+2.22.0.410.gd8fdbe21b5-goog
