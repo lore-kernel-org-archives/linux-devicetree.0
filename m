@@ -1,42 +1,28 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [RFC PATCH 3/4] dt-bindings: display: Convert panel-lvds to DT
- schema
-Date: Thu, 20 Jun 2019 10:04:22 +0200
-Message-ID: <20190620080422.ik4jyocavfmalfmj@flea>
+Subject: Re: [RFC PATCH 4/4] dt-bindings: display: Convert innolux,ee101ia-01
+ panel to DT schema
+Date: Thu, 20 Jun 2019 10:05:19 +0200
+Message-ID: <20190620080519.amnjyx2s22d7sswq@flea>
 References: <20190619215156.27795-1-robh@kernel.org>
- <20190619215156.27795-3-robh@kernel.org>
+ <20190619215156.27795-4-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1760211256=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190619215156.27795-3-robh@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7dh3dlztmkm4jtas"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190619215156.27795-4-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sam Ravnborg <sam@ravnborg.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
 
---===============1760211256==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dtxxu3k7wfwg3tvl"
-Content-Disposition: inline
-
-
---dtxxu3k7wfwg3tvl
+--7dh3dlztmkm4jtas
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jun 19, 2019 at 03:51:55PM -0600, Rob Herring wrote:
-> Convert the panel-lvds binding to use DT schema. The panel-lvds schema
-> inherits from the panel-common.yaml schema and specific LVDS panel
-> bindings should inherit from this schema.
+On Wed, Jun 19, 2019 at 03:51:56PM -0600, Rob Herring wrote:
+> Convert the innolux,ee101ia-01 LVDS panel binding to DT schema.
 >
 > Cc: Thierry Reding <thierry.reding@gmail.com>
 > Cc: Sam Ravnborg <sam@ravnborg.org>
@@ -54,27 +40,15 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---dtxxu3k7wfwg3tvl
+--7dh3dlztmkm4jtas
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQs+BgAKCRDj7w1vZxhR
-xVhsAQCZOT/yuGT9RX7g7Tj3kPGqIgywYWRIBZjdG17waLjCeAD/QPQim7QQwOVz
-ZPYlXj3U5iTu4KqlAPLNsMxXOJrdbww=
-=B12H
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQs+PwAKCRDj7w1vZxhR
+xZzSAP0VMrPO/BLLAHovVlJITbpmiSRWBH0BIz6hiuUtFcG1LwD+Im5AkiEeau1A
+Se+DzhhbGMNFqc298NHpVI+1/01FJQg=
+=emVV
 -----END PGP SIGNATURE-----
 
---dtxxu3k7wfwg3tvl--
-
---===============1760211256==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============1760211256==--
+--7dh3dlztmkm4jtas--
