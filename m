@@ -1,18 +1,18 @@
-From: Tao Ren <taoren@fb.com>
-Subject: Re: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
-Date: Thu, 20 Jun 2019 02:28:06 +0000
-Message-ID: <aefd4de2-31b4-1332-7cc0-92cc04fea045@fb.com>
-References: <20190619205009.4176588-1-taoren@fb.com>
- <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
- <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
- <4c8b9ca5e84db7db67ad552d8fdbaa17d11b6432.camel@kernel.crashing.org>
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [EXT] Re: [v1 1/4] dt-bindings: display: Add DT bindings for
+ LS1028A HDP-TX PHY.
+Date: Thu, 20 Jun 2019 03:35:28 +0000
+Message-ID: <DB7PR04MB51951DC431B5810DCDD9C776E2E40@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20190508103703.40885-1-wen.he_1@nxp.com>
+ <20190613200813.GA895@bogus>
+ <DB7PR04MB5195E49670279C9A28C28A5EE2EB0@DB7PR04MB5195.eurprd04.prod.outlook.com>
+ <CAL_JsqJnBw+OqEX46CC1E2=9CDmeT8hQtvMpufsnU8z3+1RoBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4c8b9ca5e84db7db67ad552d8fdbaa17d11b6432.camel@kernel.crashing.org>
+In-Reply-To: <CAL_JsqJnBw+OqEX46CC1E2=9CDmeT8hQtvMpufsnU8z3+1RoBQ@mail.gmail.com>
 Content-Language: en-US
-Content-ID: <8840564E23F9E849A053530EEF97466C@namprd15.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,55 +22,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Brendan Higgins <brendanhiggins@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "ryan_chen@aspeedtech.com" <ryan_chen@aspeedtech.com>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6/19/19 4:02 PM, Benjamin Herrenschmidt wrote:
-> On Wed, 2019-06-19 at 22:32 +0000, Tao Ren wrote:
->> Thank you for the quick response, Brendan.
->>
->> Aspeed I2C bus frequency is defined by 3 parameters
->> (base_clk_divisor, clk_high_width, clk_low_width), and I choose
->> base_clk_divisor because it controls all the Aspeed I2C timings (such
->> as setup time and hold time). Once base_clk_divisor is decided
->> (either by the current logic in i2c-aspeed driver or manually set in
->> device tree), clk_high_width and clk_low_width will be calculated by
->> i2c-aspeed driver to meet the specified I2C bus speed.
->>
->> For example, by setting I2C bus frequency to 100KHz on AST2500
->> platform, (base_clock_divisor, clk_high_width, clk_low_width) is set
->> to (3, 15, 14) by our driver. But some slave devices (on CMM i2c-8
->> and Minipack i2c-0) NACK byte transactions with the default timing
->> setting: the issue can be resolved by setting base_clk_divisor to 4,
->> and (clk_high_width, clk_low_width) will be set to (7, 7) by our i2c-
->> aspeed driver to achieve similar I2C bus speed.
->>
->> Not sure if my answer helps to address your concerns, but kindly let
->> me know if you have further questions/suggestions.
-> 
-> Did you look at the resulting output on a scope ? I'm curious what
-> might be wrong.... 
-> 
-> CCing Ryan from Aspeed, he might have some idea.
-> 
-> Could it be that with some specific dividers you have more jitter ?
-> Still, i2c devices tend to be rather robust vs crappy clocks unless you
-> are massively out of bounds, which makes me wonder whether something
-> else might be wrong in your setup.
-> 
-> Cheers,
-> Ben.
-
-I've reached out to hardware team to see if they can provide more inputs (such as protocol decoder output) but so far I don't have such data. I'm suspecting it's caused by I2C timing mainly because:
-
-1) the intermittent i2c transaction failures always happen to slave devices which are furthest away from ASPEED chip.
-
-2) As the i2c-aspeed driver in my kernel 4.1 tree (derived from ASPEED SDK) works properly, and I copied I2CD04 (Clock and AC Timing Control) register value from kernel 4.1 and applied to the latest upstream driver: the transaction failure is fixed :)
-
-Thank you Ben for looking into the issue and involving more experts (Ryan) for discussion. I have been suffering from the problem for several months and I'm looking forward for proper/right solutions.
-
-
-Cheers,
-
-Tao
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOeW5tDbmnIgxOeaXpSAyMjowNw0KPiBUbzogV2Vu
+IEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZzsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpDQo+IDxsZW95YW5nLmxp
+QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbRVhUXSBSZTogW3YxIDEvNF0gZHQtYmluZGluZ3M6
+IGRpc3BsYXk6IEFkZCBEVCBiaW5kaW5ncyBmb3INCj4gTFMxMDI4QSBIRFAtVFggUEhZLg0KPiAN
+Cj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBPbiBTdW4sIEp1biAxNiwgMjAxOSBhdCA3OjQ1
+IFBNIFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPg0KPiA+DQo+ID4g
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4NCj4gPiA+IFNlbnQ6IDIwMTnlubQ25pyIMTTml6UgNDowOA0KPiA+ID4g
+VG86IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNvbT4NCj4gPiA+IENjOiBsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnOw0KPiA+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Ow0KPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IHNoYXduZ3VvQGtlcm5lbC5vcmc7
+IExlbyBMaQ0KPiA+ID4gPGxlb3lhbmcubGlAbnhwLmNvbT4NCj4gPiA+IFN1YmplY3Q6IFtFWFRd
+IFJlOiBbdjEgMS80XSBkdC1iaW5kaW5nczogZGlzcGxheTogQWRkIERUIGJpbmRpbmdzDQo+ID4g
+PiBmb3IgTFMxMDI4QSBIRFAtVFggUEhZLg0KPiA+ID4NCj4gPiA+IENhdXRpb246IEVYVCBFbWFp
+bA0KPiA+ID4NCj4gPiA+IE9uIFdlZCwgTWF5IDA4LCAyMDE5IGF0IDEwOjM1OjI1QU0gKzAwMDAs
+IFdlbiBIZSB3cm90ZToNCj4gPiA+ID4gQWRkIERUIGJpbmRpbmdzIGRvY3VtZW50bWF0aW9uIGZv
+ciB0aGUgSERQLVRYIFBIWSBjb250cm9sbGVyLiBUaGUNCj4gPiA+ID4gZGVzY3JpYmVzIHdoaWNo
+IGNvdWxkIGJlIGZvdW5kIG9uIE5YUCBMYXllcnNjYXBlIGxzMTAyOGEgcGxhdGZvcm0uDQo+ID4g
+Pg0KPiA+ID4gRHJvcCB0aGUgaGFyZCBzdG9wICguKSBmcm9tIHRoZSBzdWJqZWN0Lg0KPiA+ID4N
+Cj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29t
+Pg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+ZnNsLGhkcC50eHQgICB8IDU2DQo+ICsrKysrKysrKysrKysrKysrKysNCj4gPiA+ID4gIDEgZmls
+ZSBjaGFuZ2VkLCA1NiBpbnNlcnRpb25zKCspDQo+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQN
+Cj4gPiA+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGhk
+cC50eHQNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxoZHAudHh0DQo+ID4gPiA+IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGhkcC50eHQNCj4gPiA+ID4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi4zNmI1Njg3YTEyNjEN
+Cj4gPiA+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9mc2wsaGRwLnR4dA0KPiA+ID4gPiBAQCAtMCwwICsxLDU2
+IEBADQo+ID4gPiA+ICtOWFAgTGF5ZXJzY3BhZSBsczEwMjhhIEhEUC1UWCBQSFkgQ29udHJvbGxl
+cg0KPiA+ID4gPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0N
+Cj4gPiA+ID4gKw0KPiA+ID4gPiArVGhlIGZvbGxvd2luZyBiaW5kaW5ncyBkZXNjcmliZSB0aGUg
+Q2FkZW5jZSBIRFAgVFggUEhZIG9uIGxzMTAyOGENCj4gPiA+ID4gK3RoYXQgb2ZmZXIgbXVsdGkt
+cHJvdG9jb2wgc3VwcG9ydCBvZiBzdGFuZGFycyBzdWNoIGFzIGVEUCBhbmQNCj4gPiA+ID4gK0Rp
+c3BsYXlwb3J0LCBzdXBwb3J0cyBmb3IgMjUtNjAwTUh6IHBpeGVsIGNsb2NrIGFuZCB1cCB0byA0
+azJrIGF0DQo+ID4gPiA+ICs2ME1Ieg0KPiA+ID4gcmVzb2x1dGlvbi4NCj4gPiA+ID4gK1RoZSBI
+RFAgdHJhbnNtaXR0ZXIgaXMgYSBDYWRlbmNlIEhEUCBUWCBjb250cm9sbGVyIElQIHdpdGggYQ0K
+PiA+ID4gPiArY29tcGFuaW9uIFBIWSBJUC4NCj4gPiA+DQo+ID4gPiBJJ20gY29uZnVzZWQuIFRo
+aXMgYmluZGluZyBjb3ZlcnMgYm90aCBibG9ja3Mgb3IgaXMganVzdCBvbmUgb2YgdGhlbT8NCj4g
+PiA+DQo+ID4NCj4gPiBIaSBSb2IsDQo+ID4NCj4gPiBUaGlzIGJpbmRpbmcgY292ZXJzIGJvdGgg
+YmxvY2tzKEhEUCBUWCBQSFkgYW5kIEhEUCBUWCBDb250cm9sbGVyKSwNCj4gPiBCZWNhdXNlIHRo
+ZXkgYXJlIGJlbG9uZyB0byB0aGUgb25lIElQLg0KPiANCj4gSW4gdGhhdCBjYXNlLCB5b3Ugc2hv
+dWxkIGFsc28gaGF2ZSBhbiBvdXRwdXQgcG9ydCB0byBhIERQIGNvbm5lY3RvciBub2RlIChvcg0K
+PiBEUCBwYW5lbCkuDQoNCkhpIFJvYiwNCg0KSSByZW1lbWJlciB0aGVyZSBhcmUgaW5jbHVkZWQg
+dGhlIERQIGNvbm5lY3RvciBub2RlIGRlc2NyaXB0aW9uIGFzIHNlZSBiZWxvdy4NCg0KLS0tDQpS
+ZXF1aXJlZCBzdWItbm9kZXM6DQotIHBvcnQNCg0KSXQgdGhlcmUgc2hvdWxkIGJlIHJpZ2h0Pw0K
+DQpCZXN0IFJlZ2FyZHMsDQpXZW4NCg0KPiANCj4gUm9iDQpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
