@@ -1,15 +1,16 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH V10 13/15] phy: tegra: Add PCIe PIPE2UPHY support
-Date: Thu, 20 Jun 2019 12:54:33 +0530
-Message-ID: <9e699085-ef5e-f7be-e27c-23907ba92c82@ti.com>
-References: <20190612095339.20118-1-vidyas@nvidia.com>
- <20190612095339.20118-14-vidyas@nvidia.com>
+From: Ryan Chen <ryan_chen@aspeedtech.com>
+Subject: RE: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
+Date: Thu, 20 Jun 2019 07:29:53 +0000
+Message-ID: <c610ecede7494c189a92a9a3f6d0fd16@TWMBX02.aspeed.com>
+References: <20190619205009.4176588-1-taoren@fb.com>
+ <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
+ <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190612095339.20118-14-vidyas@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
+Content-Language: zh-TW
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,193 +20,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
-Cc: devicetree@vger.kernel.org, mmaddireddy@nvidia.com, kthota@nvidia.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, linux-tegra@vger.kernel.org, digetx@gmail.com, linux-arm-kernel@lists.infradead.org, sagar.tv@gmail.com
+To: Tao Ren <taoren@fb.com>, Brendan Higgins <brendanhiggins@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Tao,
+	Our recommend about clk divider setting is follow the datasheet clock setting table for clock divisor. 
+
+Ryan  
+ 
+	
+
+-----Original Message-----
+From: Linux-aspeed [mailto:linux-aspeed-bounces+ryan_chen=aspeedtech.com@lists.ozlabs.org] On Behalf Of Tao Ren
+Sent: Thursday, June 20, 2019 6:33 AM
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>; devicetree <devicetree@vger.kernel.org>; linux-aspeed@lists.ozlabs.org; OpenBMC Maillist <openbmc@lists.ozlabs.org>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; Rob Herring <robh+dt@kernel.org>; Linux ARM <linux-arm-kernel@lists.infradead.org>; linux-i2c@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
+
+On 6/19/19 2:25 PM, Brendan Higgins wrote:
+> On Wed, Jun 19, 2019 at 2:00 PM Tao Ren <taoren@fb.com> wrote:
+>>
+>> Some intermittent I2C transaction failures are observed on Facebook 
+>> CMM and Minipack (ast2500) BMC platforms, because slave devices (such 
+>> as CPLD, BIC and etc.) NACK the address byte sometimes. The issue can 
+>> be resolved by increasing base clock divisor which affects ASPEED I2C 
+>> Controller's base clock and other AC timing parameters.
+>>
+>> This patch allows to customize ASPEED I2C Controller's base clock 
+>> divisor in device tree.
+> 
+> First off, are you sure you actually need this?
+> 
+> You should be able to achieve an effectively equivalent result by just 
+> lowering the `bus-frequency` property specified in the DT. The 
+> `bus-frequency` property ultimately determines all the register 
+> values, and you should be able to set it to whatever you want by 
+> refering to the Aspeed documentation.
+> 
+> Nevertheless, the code that determines the correct dividers from the 
+> frequency is based on the tables in the Aspeed documentation. I don't 
+> think the equation makes sense when the base_clk_divisor is fixed; I 
+> mean it will probably just set the other divisor to max or min 
+> depending on the values chosen. I think if someone really wants to 
+> program this parameter manually, they probably want to set the other 
+> parameters manually too.
+Thank you for the quick response, Brendan.
+
+Aspeed I2C bus frequency is defined by 3 parameters (base_clk_divisor, clk_high_width, clk_low_width), and I choose base_clk_divisor because it controls all the Aspeed I2C timings (such as setup time and hold time). Once base_clk_divisor is decided (either by the current logic in i2c-aspeed driver or manually set in device tree), clk_high_width and clk_low_width will be calculated by i2c-aspeed driver to meet the specified I2C bus speed.
+
+For example, by setting I2C bus frequency to 100KHz on AST2500 platform, (base_clock_divisor, clk_high_width, clk_low_width) is set to (3, 15, 14) by our driver. But some slave devices (on CMM i2c-8 and Minipack i2c-0) NACK byte transactions with the default timing setting: the issue can be resolved by setting base_clk_divisor to 4, and (clk_high_width, clk_low_width) will be set to (7, 7) by our i2c-aspeed driver to achieve similar I2C bus speed.
+
+Not sure if my answer helps to address your concerns, but kindly let me know if you have further questions/suggestions.
 
 
-On 12/06/19 3:23 PM, Vidya Sagar wrote:
-> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interface
-> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
-> For each PCIe lane of a controller, there is a P2U unit instantiated at
-> hardware level. This driver provides support for the programming required
-> for each P2U that is going to be used for a PCIe controller.
+Thanks,
 
-One minor comment below. With that fixed
-
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v9]:
-> * Used _relaxed() versions of readl() & writel()
-> 
-> Changes since [v8]:
-> * Made it dependent on ARCH_TEGRA_194_SOC directly instead of ARCH_TEGRA
-> 
-> Changes since [v7]:
-> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p2u.c
-> 
-> Changes since [v6]:
-> * None
-> 
-> Changes since [v5]:
-> * Addressed review comments from Thierry
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * Rebased on top of linux-next top of the tree
-> 
-> Changes since [v2]:
-> * Replaced spaces with tabs in Kconfig file
-> * Sorted header file inclusion alphabetically
-> 
-> Changes since [v1]:
-> * Added COMPILE_TEST in Kconfig
-> * Removed empty phy_ops implementations
-> * Modified code according to DT documentation file modifications
-> 
->  drivers/phy/tegra/Kconfig            |   7 ++
->  drivers/phy/tegra/Makefile           |   1 +
->  drivers/phy/tegra/phy-tegra194-p2u.c | 120 +++++++++++++++++++++++++++
->  3 files changed, 128 insertions(+)
->  create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
-> 
-> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
-> index e516967d695b..f9817c3ae85f 100644
-> --- a/drivers/phy/tegra/Kconfig
-> +++ b/drivers/phy/tegra/Kconfig
-> @@ -7,3 +7,10 @@ config PHY_TEGRA_XUSB
->  
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called phy-tegra-xusb.
-> +
-> +config PHY_TEGRA194_P2U
-> +	tristate "NVIDIA Tegra194 PIPE2UPHY PHY driver"
-> +	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable this to support the P2U (PIPE to UPHY) that is part of Tegra 19x SOCs.
-> diff --git a/drivers/phy/tegra/Makefile b/drivers/phy/tegra/Makefile
-> index 64ccaeacb631..320dd389f34d 100644
-> --- a/drivers/phy/tegra/Makefile
-> +++ b/drivers/phy/tegra/Makefile
-> @@ -6,3 +6,4 @@ phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_124_SOC) += xusb-tegra124.o
->  phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_132_SOC) += xusb-tegra124.o
->  phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_210_SOC) += xusb-tegra210.o
->  phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_186_SOC) += xusb-tegra186.o
-> +obj-$(CONFIG_PHY_TEGRA194_P2U) += phy-tegra194-p2u.o
-> diff --git a/drivers/phy/tegra/phy-tegra194-p2u.c b/drivers/phy/tegra/phy-tegra194-p2u.c
-> new file mode 100644
-> index 000000000000..df009abd2482
-> --- /dev/null
-> +++ b/drivers/phy/tegra/phy-tegra194-p2u.c
-> @@ -0,0 +1,120 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * P2U (PIPE to UPHY) driver for Tegra T194 SoC
-> + *
-> + * Copyright (C) 2019 NVIDIA Corporation.
-> + *
-> + * Author: Vidya Sagar <vidyas@nvidia.com>
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/phy/phy.h>
-> +
-> +#define P2U_PERIODIC_EQ_CTRL_GEN3	0xc0
-> +#define P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN		BIT(0)
-> +#define P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
-> +#define P2U_PERIODIC_EQ_CTRL_GEN4	0xc4
-> +#define P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
-> +
-> +#define P2U_RX_DEBOUNCE_TIME				0xa4
-> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK	0xffff
-> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL		160
-> +
-> +struct tegra_p2u {
-> +	void __iomem *base;
-> +};
-> +
-> +static inline void p2u_writel(struct tegra_p2u *phy, const u32 value,
-> +			      const u32 reg)
-> +{
-> +	writel_relaxed(value, phy->base + reg);
-> +}
-> +
-> +static inline u32 p2u_readl(struct tegra_p2u *phy, const u32 reg)
-> +{
-> +	return readl_relaxed(phy->base + reg);
-> +}
-> +
-> +static int tegra_p2u_power_on(struct phy *x)
-> +{
-> +	struct tegra_p2u *phy = phy_get_drvdata(x);
-> +	u32 val;
-> +
-> +	val = p2u_readl(phy, P2U_PERIODIC_EQ_CTRL_GEN3);
-> +	val &= ~P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN;
-> +	val |= P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN;
-> +	p2u_writel(phy, val, P2U_PERIODIC_EQ_CTRL_GEN3);
-> +
-> +	val = p2u_readl(phy, P2U_PERIODIC_EQ_CTRL_GEN4);
-> +	val |= P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN;
-> +	p2u_writel(phy, val, P2U_PERIODIC_EQ_CTRL_GEN4);
-> +
-> +	val = p2u_readl(phy, P2U_RX_DEBOUNCE_TIME);
-> +	val &= ~P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK;
-> +	val |= P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL;
-> +	p2u_writel(phy, val, P2U_RX_DEBOUNCE_TIME);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct phy_ops ops = {
-> +	.power_on = tegra_p2u_power_on,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static int tegra_p2u_probe(struct platform_device *pdev)
-> +{
-> +	struct phy_provider *phy_provider;
-> +	struct device *dev = &pdev->dev;
-> +	struct phy *generic_phy;
-> +	struct tegra_p2u *phy;
-> +	struct resource *res;
-> +
-> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
-> +	if (!phy)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctl");
-> +	phy->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(phy->base))
-> +		return PTR_ERR_OR_ZERO(phy->base);
-> +
-> +	platform_set_drvdata(pdev, phy);
-> +
-> +	generic_phy = devm_phy_create(dev, NULL, &ops);
-> +	if (IS_ERR(generic_phy))
-> +		return PTR_ERR_OR_ZERO(generic_phy);
-> +
-> +	phy_set_drvdata(generic_phy, phy);
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +	if (IS_ERR(phy_provider))
-> +		return PTR_ERR_OR_ZERO(phy_provider);
-> +
-> +	return 0;
-
-Just make this..
-phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-return PTR_ERR_OR_ZERO(phy_provider);
-
-Thanks
-Kishon
+Tao
