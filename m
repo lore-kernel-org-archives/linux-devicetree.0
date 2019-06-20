@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 2/5] ARM: dts: mmp2: fix the SPI nodes
-Date: Thu, 20 Jun 2019 17:07:21 +0200
-Message-ID: <20190620150724.1406757-3-lkundrak@v3.sk>
+Subject: [PATCH 4/5] ARM: dts: mmp2: add camera interfaces
+Date: Thu, 20 Jun 2019 17:07:23 +0200
+Message-ID: <20190620150724.1406757-5-lkundrak@v3.sk>
 References: <20190620150724.1406757-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,67 +12,43 @@ To: Olof Johansson <olof@lixom.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-The SPI bus has a single address cell and not size cells.
-
-Also, dtc thinks the SPI nodes are preferrably called "spi" and it is
-right to think so.
-
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/boot/dts/mmp2.dtsi | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/mmp2.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
 diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index 50b6c38b39cc..e64639ce57a9 100644
+index 21432cb9143f..68b547077323 100644
 --- a/arch/arm/boot/dts/mmp2.dtsi
 +++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -346,35 +346,43 @@
+@@ -170,6 +170,28 @@
+ 				interrupts =3D <54>;
  				status =3D "disabled";
  			};
-=20
--			ssp1: ssp@d4035000 {
-+			ssp1: spi@d4035000 {
- 				compatible =3D "marvell,mmp2-ssp";
- 				reg =3D <0xd4035000 0x1000>;
- 				clocks =3D <&soc_clocks MMP2_CLK_SSP0>;
- 				interrupts =3D <0>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
- 				status =3D "disabled";
- 			};
-=20
--			ssp2: ssp@d4036000 {
-+			ssp2: spi@d4036000 {
- 				compatible =3D "marvell,mmp2-ssp";
- 				reg =3D <0xd4036000 0x1000>;
- 				clocks =3D <&soc_clocks MMP2_CLK_SSP1>;
- 				interrupts =3D <1>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
- 				status =3D "disabled";
- 			};
-=20
--			ssp3: ssp@d4037000 {
-+			ssp3: spi@d4037000 {
- 				compatible =3D "marvell,mmp2-ssp";
- 				reg =3D <0xd4037000 0x1000>;
- 				clocks =3D <&soc_clocks MMP2_CLK_SSP2>;
- 				interrupts =3D <20>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
- 				status =3D "disabled";
- 			};
-=20
--			ssp4: ssp@d4039000 {
-+			ssp4: spi@d4039000 {
- 				compatible =3D "marvell,mmp2-ssp";
- 				reg =3D <0xd4039000 0x1000>;
- 				clocks =3D <&soc_clocks MMP2_CLK_SSP3>;
- 				interrupts =3D <21>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
- 				status =3D "disabled";
- 			};
++
++			camera0: camera@d420a000 {
++				compatible =3D "marvell,mmp2-ccic";
++				reg =3D <0xd420a000 0x800>;
++				interrupts =3D <42>;
++				clocks =3D <&soc_clocks MMP2_CLK_CCIC0>;
++				clock-names =3D "axi";
++				#clock-cells =3D <0>;
++				clock-output-names =3D "mclk";
++				status =3D "disabled";
++			};
++
++			camera1: camera@d420a800 {
++				compatible =3D "marvell,mmp2-ccic";
++				reg =3D <0xd420a800 0x800>;
++				interrupts =3D <30>;
++				clocks =3D <&soc_clocks MMP2_CLK_CCIC1>;
++				clock-names =3D "axi";
++				#clock-cells =3D <0>;
++				clock-output-names =3D "mclk";
++				status =3D "disabled";
++			};
  		};
+=20
+ 		apb@d4000000 {	/* APB */
 --=20
 2.21.0
