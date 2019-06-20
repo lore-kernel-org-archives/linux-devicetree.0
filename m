@@ -1,49 +1,46 @@
-From: Robert Chiras <robert.chiras@nxp.com>
-Subject: Re: [EXT] Re: [PATCH v2 1/2] dt-bindings: display: panel: Add support
- for Raydium RM67191 panel
-Date: Thu, 20 Jun 2019 07:58:41 +0000
-Message-ID: <1561017518.9328.57.camel@nxp.com>
-References: <1560864646-1468-1-git-send-email-robert.chiras@nxp.com>
-         <1560864646-1468-2-git-send-email-robert.chiras@nxp.com>
-         <CAOMZO5DwwL5+V4Eifskk=pKzpceRmk5bvdXNeCzZfU3jVwEhEA@mail.gmail.com>
+From: Ryan Chen <ryan_chen@aspeedtech.com>
+Subject: RE: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
+Date: Thu, 20 Jun 2019 08:01:58 +0000
+Message-ID: <195bb56028d04001bbaf835cc17e032e@TWMBX02.aspeed.com>
+References: <20190619205009.4176588-1-taoren@fb.com>
+ <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
+ <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
+ <c610ecede7494c189a92a9a3f6d0fd16@TWMBX02.aspeed.com>
+ <bdd53adb-6987-1b91-adde-298839b2c066@fb.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DwwL5+V4Eifskk=pKzpceRmk5bvdXNeCzZfU3jVwEhEA@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <358518C615FDE548B9E2869FAA7DB547@eurprd04.prod.outlook.com>
+In-Reply-To: <bdd53adb-6987-1b91-adde-298839b2c066@fb.com>
+Content-Language: zh-TW
 Sender: linux-kernel-owner@vger.kernel.org
-To: "festevam@gmail.com" <festevam@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sam@ravnborg.org" <sam@ravnborg.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>
+To: Tao Ren <taoren@fb.com>, Brendan Higgins <brendanhiggins@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTWksIDIwMTktMDYtMTkgYXQgMTA6MjEgLTAzMDAsIEZhYmlvIEVzdGV2YW0gd3JvdGU6DQo+
-IENhdXRpb246IEVYVCBFbWFpbA0KPiANCj4gSGkgUm9iZXJ0LA0KPiANCj4gT24gVHVlLCBKdW4g
-MTgsIDIwMTkgYXQgMTA6MzMgQU0gUm9iZXJ0IENoaXJhcyA8cm9iZXJ0LmNoaXJhc0BueHAuY29t
-DQo+ID4gd3JvdGU6DQo+IA0KPiA+IA0KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICst
-IHJlc2V0LWdwaW9zOsKgwqDCoMKgwqDCoMKgwqDCoGEgR1BJTyBzcGVjIGZvciB0aGUgUlNUX0Ig
-R1BJTyBwaW4NCj4gPiArLSBwaW5jdHJsLTDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwaGFuZGxl
-IHRvIHRoZSBwaW4gc2V0dGluZ3MgZm9yIHRoZSByZXNldA0KPiA+IHBpbg0KPiA+ICstIHdpZHRo
-LW1tOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBoeXNpY2FsIHBhbmVsIHdpZHRoIFttbV0NCj4g
-PiArLSBoZWlnaHQtbW06wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBoeXNpY2FsIHBhbmVsIGhlaWdo
-dCBbbW1dDQo+ID4gKy0gZGlzcGxheS10aW1pbmdzOsKgwqDCoMKgwqB0aW1pbmdzIGZvciB0aGUg
-Y29ubmVjdGVkIHBhbmVsIGFjY29yZGluZw0KPiA+IHRvIFsxXQ0KPiBTdGlsbCBub3QgY29udmlu
-Y2VkIHdlIG5lZWQgdGhlICdkaXNwbGF5LXRpbWluZ3MnIHByb3BlcnR5LCBldmVuIGFzDQo+IGFu
-DQo+IG9wdGlvbmFsIHByb3BlcnR5LiBNeSB1bmRlcnN0YW5kaW5nIGlzIHRoYXQgcGFzc2luZyBk
-aXNwbGF5IHRpbWluZ3MNCj4gaW4NCj4gdGhlIGRldmljZXRyZWUgaXMgbm90IGVuY291cmFnZWQu
-DQo+IA0KPiBMYXN0IHRpbWUgeW91IHNhaWQgeW91IG5lZWQgdG8gcGFzcyAnJ2Rpc3BsYXktdGlt
-aW5ncycgdG8gd29ya2Fyb3VuZA0KPiB0aGUgcHJvYmxlbSBvZiBjb25uZWN0aW5nIHRoaXMgcGFu
-ZWwgdG8gbXg4bSBEQ1NTIG9yIGVMQ0RJRi4NCj4gDQo+IFRoZSBwYW5lbCB0aW1pbmdzIGNvbWUg
-ZnJvbSB0aGUgTENEIG1hbnVmYWN0dXJlciBhbmQgaXQgaXMgYWdub3N0aWMNCj4gdG8NCj4gd2hh
-dCBkaXNwbGF5IGNvbnRyb2xsZXIgaW50ZXJmYWNlIGl0IGlzIGNvbm5lY3RlZCB0by4NCj4gDQo+
-IFNvIEkgc3VnZ2VzdCBtYWtpbmcgc3VyZSB0aGUgdGltaW5ncyBwYXNzZWQgaW4gdGhlIGRyaXZl
-ciBhcmUgY29ycmVjdA0KPiBhcyBwZXIgdGhlIHZlbmRvciBkYXRhc2hlZXQuIElmIHRoZXkgYXJl
-IGNvcnJlY3QgYW5kIG9uZSBzcGVjaWZpYw0KPiBpbnRlcmZhY2UgaXMgbm90IGFibGUgdG8gZHJp
-dmUgaXQsIHRoZW4gcHJvYmFibHkgaXQgaXMgYSBidWcgaW4gdGhpcw0KPiBzcGVjaWZpYyBkaXNw
-bGF5IGNvbnRyb2xsZXIgaW50ZXJmYWNlIG9yIGluIHRoZSBTb0MgY2xvY2sgZHJpdmVyLg0KDQpJ
-IHVuZGVyc3RhbmQuIEkgd2lsbCByZW1vdmUgdGhlIGRpc3BsYXktdGltaW5ncyBmcm9tIGR0IGFu
-ZCBhbHNvIGZyb20NCmRyaXZlci4gQ3VycmVudGx5LCB0aGlzIHBhbmVsIHdvcmtzIGluIHRoaXMg
-Zm9ybSB3aXRoIGJvdGggTENESUYgYW5kDQpEQ1NTIG9uIG91ciA4TSBTb0Mgc28sIGFzIHlvdSBz
-YWlkLCBwcm9iYWJseSB0aGUgaXNzdWUgd2Ugd2VyZSBzZWVpbmcNCmluIG91ciB0cmVlIHdhcyBj
-b21pbmcgZnJvbSBlbHNld2hlcmUu
+SGVsbG8gVGFvLA0KCUxldCBtZSBtb3JlIGNsZWFyLiBXaGVuIHlvdSBzZXQgKDMsIDE1LCAxNCkg
+dGhlIGRldmljZSBzb21ldGltZXMgcmVzcG9uc2UgbmFjay4gDQoJYnV0IHdoZW4geW91IHNldCAo
+NCwgNywgNyksIHRoZSBkZXZpY2UgYWx3YXlzIGFjay4gQW0gSSByaWdodD8gDQpSeWFuDQoNCi0t
+LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBUYW8gUmVuIFttYWlsdG86dGFvcmVuQGZi
+LmNvbV0gDQpTZW50OiBUaHVyc2RheSwgSnVuZSAyMCwgMjAxOSAzOjU3IFBNDQpUbzogUnlhbiBD
+aGVuIDxyeWFuX2NoZW5AYXNwZWVkdGVjaC5jb20+OyBCcmVuZGFuIEhpZ2dpbnMgPGJyZW5kYW5o
+aWdnaW5zQGdvb2dsZS5jb20+DQpDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNv
+bT47IGRldmljZXRyZWUgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgbGludXgtYXNwZWVk
+QGxpc3RzLm96bGFicy5vcmc7IE9wZW5CTUMgTWFpbGxpc3QgPG9wZW5ibWNAbGlzdHMub3psYWJz
+Lm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTGludXggQVJNIDxsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBsaW51eC1pMmNAdmdlci5rZXJuZWwu
+b3JnDQpTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0gaTJjOiBhc3BlZWQ6IGFsbG93IHRvIGN1c3Rv
+bWl6ZSBiYXNlIGNsb2NrIGRpdmlzb3INCg0KT24gNi8yMC8xOSAxMjoyOSBBTSwgUnlhbiBDaGVu
+IHdyb3RlOg0KPiBIZWxsbyBUYW8sDQo+IAlPdXIgcmVjb21tZW5kIGFib3V0IGNsayBkaXZpZGVy
+IHNldHRpbmcgaXMgZm9sbG93IHRoZSBkYXRhc2hlZXQgY2xvY2sgc2V0dGluZyB0YWJsZSBmb3Ig
+Y2xvY2sgZGl2aXNvci4gDQo+IA0KPiBSeWFuICANCg0KVGhhbmtzIFJ5YW4gZm9yIHRoZSByZXNw
+b25zZS4gQ291bGQgeW91IGFsc28gc2hhcmUgc29tZSByZWNvbW1lbmRhdGlvbnMvaGludHMgb24g
+aG93IHRvIHNvbHZlIHRoZSBpbnRlcm1pdHRlbnQgaTJjIHRyYW5zYWN0aW9uIGZhaWx1cmVzIG9u
+IEZhY2Vib29rIEFTVDI1MDAgQk1DIHBsYXRmb3Jtcz8NCg0KQlRXLCB0aGUgcGF0Y2ggaXMgbm90
+IGFpbWVkIGF0IG1vZGlmeWluZyB0aGUgZXhpc3RpbmcgZm9ybXVsYSBvZiBjYWxjdWxhdGluZyBj
+bG9jayBzZXR0aW5ncyBpbiBpMmMtYXNwZWVkIGRyaXZlcjogcGVvcGxlIHN0aWxsIGdldCB0aGUg
+cmVjb21tZW5kZWQgc2V0dGluZ3MgYnkgZGVmYXVsdC4gVGhlIGdvYWwgb2YgdGhlIHBhdGNoIGlz
+IHRvIGFsbG93IHBlb3BsZSB0byBjdXN0b21pemUgY2xvY2sgc2V0dGluZ3MgaW4gY2FzZSB0aGUg
+ZGVmYXVsdC9yZWNvbW1lbmRlZCBvbmUgZG9lc24ndCB3b3JrLg0KDQoNCkNoZWVycywgDQoNClRh
+bw0K
