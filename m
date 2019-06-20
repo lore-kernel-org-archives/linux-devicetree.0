@@ -1,218 +1,177 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RESEND PATCH 4/4] dt-bindings: iio: adc: Convert ad7124
- documentation to YAML
-Date: Thu, 20 Jun 2019 08:20:47 -0600
-Message-ID: <CAL_Jsq+P3oG1MPcMMrEfp58Ltw92kk66os34wVwNuUC9a=F2vg@mail.gmail.com>
-References: <20190620094203.13654-1-mircea.caprioru@analog.com> <20190620094203.13654-4-mircea.caprioru@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v7 1/5] Input: elan_i2c: Export the device id whitelist
+Date: Thu, 20 Jun 2019 07:33:18 -0700
+Message-ID: <20190620143318.11880-1-jeffrey.l.hugo@gmail.com>
+References: <20190620142801.11827-1-jeffrey.l.hugo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190620094203.13654-4-mircea.caprioru@analog.com>
+In-Reply-To: <20190620142801.11827-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mircea Caprioru <mircea.caprioru@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>, Stefan Popa <stefan.popa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
+To: benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com, jikos@kernel.org, hdegoede@redhat.com
+Cc: bjorn.andersson@linaro.org, agross@kernel.org, lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 3:42 AM Mircea Caprioru
-<mircea.caprioru@analog.com> wrote:
->
-> Convert AD7124 bindings documentation to YAML format.
->
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> ---
->  .../bindings/iio/adc/adi,ad7124.yaml          | 146 ++++++++++++++++++
->  1 file changed, 146 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
->
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-> new file mode 100644
-> index 000000000000..2dba3759b8e3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-> @@ -0,0 +1,146 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Elan_i2c and hid-quirks work in conjunction to decide which devices each
+driver will handle.  Elan_i2c has a whitelist of devices that should be
+consumed by hid-quirks so that there is one master list of devices to
+handoff between the drivers.  Put the ids in a header file so that
+hid-quirks can consume it instead of duplicating the list.
 
-The preference for new bindings is dual (GPL-2.0 OR BSD-2-Clause) if
-that is okay with you.
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/input/mouse/elan_i2c_core.c | 54 +----------------------
+ include/linux/input/elan-i2c-ids.h  | 68 +++++++++++++++++++++++++++++
+ 2 files changed, 69 insertions(+), 53 deletions(-)
+ create mode 100644 include/linux/input/elan-i2c-ids.h
 
-> +# Copyright 2019 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7124.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD7124 ADC device driver
-> +
-> +maintainers:
-> +  - Stefan Popa <stefan.popa@analog.com>
-> +
-> +description: |
-> +  Bindings for the Analog Devices AD7124 ADC device. Datasheet can be
-> +  found here:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7124-8.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7124-4
-> +      - adi,ad7124-8
-> +
-> +  reg:
-> +    description: SPI chip select number for the device
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: phandle to the master clock (mclk)
-> +
-> +  clock-names:
-> +    items:
-> +      - const: mclk
-> +
-> +  interrupts:
-> +    description: IRQ line for the ADC
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  refin1-supply:
-> +    description: refin1 supply can be used as reference for conversion.
-> +    maxItems: 1
-> +
-> +  refin2-supply:
-> +    description: refin2 supply can be used as reference for conversion.
-> +    maxItems: 1
-> +
-> +  avdd-supply:
-> +    description: avdd supply can be used as reference for conversion.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +
-> +patternProperties:
-> +  "^channel@[01]$":
-
-Need to allow 2-15?
-
-> +    type: object
-> +    description: |
-> +      Represents the external channels which are connected to the ADC.
-> +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
-> +
-> +    properties:
-> +      reg:
-> +        description: |
-> +          The channel number. It can have up to 8 channels on ad7124-4
-> +          and 16 channels on ad7124-8, numbered from 0 to 15.
-
-Sounds like constraints.
-
-items:
-  - minimum: 0
-    maximum: 15
-
-> +        maxItems: 1
-
-And then you can drop this as it is implied with the number of 'items' entries.
-
-> +
-> +      adi,reference-select:
-> +        description: |
-> +          Select the reference source to use when converting on
-> +          the specific channel.
-> +          If this field is left empty, internal reference is selected.
-> +        maxItems: 1
-
-Type? Range of values?
-
-> +
-> +      diff-channels:
-> +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-> +        maxItems: 1
-
-Not correct as this is an array. Assuming this is covered by a common
-adc schema, you just need to define constraints on the values:
-
-items:
-  minimum: 0
-  maximum: 15
-
-> +
-> +      bipolar:
-> +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-> +        maxItems: 1
-
-You can assume this is covered by common adc schema. So just 'bipolar:
-true' is enough.
-
-> +
-> +      adi,buffered-positive:
-> +        description: Enable buffered mode for positive input.
-> +        maxItems: 1
-
-Not right as this is bool. Needs 'type: boolean'
-
-> +      adi,buffered-negative:
-> +        description: Enable buffered mode for negative input.
-> +        maxItems: 1
-
-ditto
-
-> +
-> +    required:
-> +      - reg
-> +      - diff-channels
-> +
-> +examples:
-> +  - |
-> +    adc@0 {
-> +      compatible = "adi,ad7124-4";
-> +      reg = <0>;
-> +      spi-max-frequency = <5000000>;
-> +      interrupts = <25 2>;
-> +      interrupt-parent = <&gpio>;
-> +      refin1-supply = <&adc_vref>;
-> +      clocks = <&ad7124_mclk>;
-> +      clock-names = "mclk";
-> +
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      channel@0 {
-> +        reg = <0>;
-> +        diff-channels = <0 1>;
-> +        adi,reference-select = <0>;
-> +        adi,buffered-positive;
-> +      };
-> +
-> +      channel@1 {
-> +        reg = <1>;
-> +        bipolar;
-> +        diff-channels = <2 3>;
-> +        adi,reference-select = <0>;
-> +        adi,buffered-positive;
-> +        adi,buffered-negative;
-> +      };
-> +
-> +      channel@2 {
-> +        reg = <2>;
-> +        diff-channels = <4 5>;
-> +      };
-> +
-> +      channel@3 {
-> +        reg = <3>;
-> +        diff-channels = <6 7>;
-> +      };
-> +    };
-> --
-> 2.17.1
->
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index 65cd325eabc3..74585712e979 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -37,6 +37,7 @@
+ #include <linux/completion.h>
+ #include <linux/of.h>
+ #include <linux/property.h>
++#include <linux/input/elan-i2c-ids.h>
+ #include <linux/regulator/consumer.h>
+ #include <asm/unaligned.h>
+ 
+@@ -1375,63 +1376,10 @@ static const struct i2c_device_id elan_id[] = {
+ MODULE_DEVICE_TABLE(i2c, elan_id);
+ 
+ #ifdef CONFIG_ACPI
+-static const struct acpi_device_id elan_acpi_id[] = {
+-	{ "ELAN0000", 0 },
+-	{ "ELAN0100", 0 },
+-	{ "ELAN0600", 0 },
+-	{ "ELAN0601", 0 },
+-	{ "ELAN0602", 0 },
+-	{ "ELAN0603", 0 },
+-	{ "ELAN0604", 0 },
+-	{ "ELAN0605", 0 },
+-	{ "ELAN0606", 0 },
+-	{ "ELAN0607", 0 },
+-	{ "ELAN0608", 0 },
+-	{ "ELAN0609", 0 },
+-	{ "ELAN060B", 0 },
+-	{ "ELAN060C", 0 },
+-	{ "ELAN060F", 0 },
+-	{ "ELAN0610", 0 },
+-	{ "ELAN0611", 0 },
+-	{ "ELAN0612", 0 },
+-	{ "ELAN0615", 0 },
+-	{ "ELAN0616", 0 },
+-	{ "ELAN0617", 0 },
+-	{ "ELAN0618", 0 },
+-	{ "ELAN0619", 0 },
+-	{ "ELAN061A", 0 },
+-	{ "ELAN061B", 0 },
+-	{ "ELAN061C", 0 },
+-	{ "ELAN061D", 0 },
+-	{ "ELAN061E", 0 },
+-	{ "ELAN061F", 0 },
+-	{ "ELAN0620", 0 },
+-	{ "ELAN0621", 0 },
+-	{ "ELAN0622", 0 },
+-	{ "ELAN0623", 0 },
+-	{ "ELAN0624", 0 },
+-	{ "ELAN0625", 0 },
+-	{ "ELAN0626", 0 },
+-	{ "ELAN0627", 0 },
+-	{ "ELAN0628", 0 },
+-	{ "ELAN0629", 0 },
+-	{ "ELAN062A", 0 },
+-	{ "ELAN062B", 0 },
+-	{ "ELAN062C", 0 },
+-	{ "ELAN062D", 0 },
+-	{ "ELAN0631", 0 },
+-	{ "ELAN0632", 0 },
+-	{ "ELAN1000", 0 },
+-	{ }
+-};
+ MODULE_DEVICE_TABLE(acpi, elan_acpi_id);
+ #endif
+ 
+ #ifdef CONFIG_OF
+-static const struct of_device_id elan_of_match[] = {
+-	{ .compatible = "elan,ekth3000" },
+-	{ /* sentinel */ }
+-};
+ MODULE_DEVICE_TABLE(of, elan_of_match);
+ #endif
+ 
+diff --git a/include/linux/input/elan-i2c-ids.h b/include/linux/input/elan-i2c-ids.h
+new file mode 100644
+index 000000000000..8130bbebbdda
+--- /dev/null
++++ b/include/linux/input/elan-i2c-ids.h
+@@ -0,0 +1,68 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Elan I2C Touchpad devide whitelist
++ *
++ * Copyright (C) 2019 Jeffrey Hugo.  All rights reserved.
++ */
++
++#ifndef __ELAN_I2C_IDS_H
++#define __ELAN_I2C_IDS_H
++
++#include <linux/mod_devicetable.h>
++
++static const struct acpi_device_id elan_acpi_id[] = {
++	{ "ELAN0000", 0 },
++	{ "ELAN0100", 0 },
++	{ "ELAN0600", 0 },
++	{ "ELAN0601", 0 },
++	{ "ELAN0602", 0 },
++	{ "ELAN0603", 0 },
++	{ "ELAN0604", 0 },
++	{ "ELAN0605", 0 },
++	{ "ELAN0606", 0 },
++	{ "ELAN0607", 0 },
++	{ "ELAN0608", 0 },
++	{ "ELAN0609", 0 },
++	{ "ELAN060B", 0 },
++	{ "ELAN060C", 0 },
++	{ "ELAN060F", 0 },
++	{ "ELAN0610", 0 },
++	{ "ELAN0611", 0 },
++	{ "ELAN0612", 0 },
++	{ "ELAN0615", 0 },
++	{ "ELAN0616", 0 },
++	{ "ELAN0617", 0 },
++	{ "ELAN0618", 0 },
++	{ "ELAN0619", 0 },
++	{ "ELAN061A", 0 },
++	{ "ELAN061B", 0 },
++	{ "ELAN061C", 0 },
++	{ "ELAN061D", 0 },
++	{ "ELAN061E", 0 },
++	{ "ELAN061F", 0 },
++	{ "ELAN0620", 0 },
++	{ "ELAN0621", 0 },
++	{ "ELAN0622", 0 },
++	{ "ELAN0623", 0 },
++	{ "ELAN0624", 0 },
++	{ "ELAN0625", 0 },
++	{ "ELAN0626", 0 },
++	{ "ELAN0627", 0 },
++	{ "ELAN0628", 0 },
++	{ "ELAN0629", 0 },
++	{ "ELAN062A", 0 },
++	{ "ELAN062B", 0 },
++	{ "ELAN062C", 0 },
++	{ "ELAN062D", 0 },
++	{ "ELAN0631", 0 },
++	{ "ELAN0632", 0 },
++	{ "ELAN1000", 0 },
++	{ }
++};
++
++static const struct of_device_id elan_of_match[] = {
++	{ .compatible = "elan,ekth3000" },
++	{ /* sentinel */ }
++};
++
++#endif /* __ELAN_I2C_IDS_H */
+-- 
+2.17.1
