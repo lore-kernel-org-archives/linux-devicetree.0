@@ -1,74 +1,114 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 1/4] dt-bindings: display: Convert common panel
- bindings to DT schema
-Date: Thu, 20 Jun 2019 09:15:51 -0600
-Message-ID: <CAL_JsqJYWW3TPhWy0=tGc_x99w3jZPsSxcKzQJWuE+FrS19t2g@mail.gmail.com>
-References: <20190619215156.27795-1-robh@kernel.org> <20190620065508.GA24739@ravnborg.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 05/12] media: mtk-jpeg: Get rid of mtk_smi_larb_get/put
+Date: Thu, 20 Jun 2019 17:20:01 +0200
+Message-ID: <6539751d-1751-f309-1c51-b3f9576c1b99@gmail.com>
+References: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
+ <1560171313-28299-6-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190620065508.GA24739@ravnborg.org>
+In-Reply-To: <1560171313-28299-6-git-send-email-yong.wu@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Thierry Reding <thierry.reding@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Evan Green <evgreen@chromium.org>, Robin Murphy <robin.murphy@arm.com>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Rick Chang <rick.chang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 12:55 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Rob.
->
-> Thanks for starting the conversion of panel bindings to yaml.
->
-> On Wed, Jun 19, 2019 at 03:51:53PM -0600, Rob Herring wrote:
-> > Convert the common panel bindings to DT schema consolidating scattered
-> > definitions to a single schema file.
-> >
-> > The 'simple-panel' binding just a collection of properties and not a
-> > complete binding itself. All of the 'simple-panel' properties are
-> > covered by the panel-common.txt binding with the exception of the
-> > 'no-hpd' property, so add that to the schema.
-> >
-> > As there are lots of references to simple-panel.txt, just keep the file
-> > with a reference to panel-common.yaml for now until all the bindings are
-> > converted.
-> Good idea.
->
-> >
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > Note there's still some references to panel-common.txt that I need to
-> > update or just go ahead and convert to schema.
-> Better let it point to the .yaml variant, so this patchset does not
-> depend on too much other bindings to be converted.
 
-There's only 8 files referencing panel-common.txt which was why I was
-debating just converting all of them.
 
-> Then we can start the conversion of the remaining panel bindings.
-> Any tooling that helps the conversions?
+On 10/06/2019 14:55, Yong Wu wrote:
+> MediaTek IOMMU has already added device_link between the consumer
+> and smi-larb device. If the jpg device call the pm_runtime_get_sync,
+> the smi-larb's pm_runtime_get_sync also be called automatically.
 
-I have a doc2yaml script that helps with some of the boilerplate. It's
-in my yaml-bindings-v2 branch[1].
+Please help me out find this relation. I seem to miss something basic, because I
+can't find any between the jpeg IP and the iommu.
 
-> When this hits upstream I assume all future panel bindings shall be yaml
-> based - so we have a few pending contributions that need to do something.
+Regards,
+Matthias
 
-That would be ideal, but not strictly required. For pending things, no
-reason to make folks redo things. Requiring schema really depends on
-whomever is applying things to run at least 'make dt_binding_check'
-before accepting.
-
->
-> For the actual conversion below:
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
-Thanks.
-
-Rob
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/log/?h=yaml-bindings-v2
+> 
+> CC: Rick Chang <rick.chang@mediatek.com>
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+> ---
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 22 ----------------------
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h |  2 --
+>  2 files changed, 24 deletions(-)
+> 
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> index f761e4d..2f37538 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> @@ -29,7 +29,6 @@
+>  #include <media/v4l2-ioctl.h>
+>  #include <media/videobuf2-core.h>
+>  #include <media/videobuf2-dma-contig.h>
+> -#include <soc/mediatek/smi.h>
+>  
+>  #include "mtk_jpeg_hw.h"
+>  #include "mtk_jpeg_core.h"
+> @@ -901,11 +900,6 @@ static int mtk_jpeg_queue_init(void *priv, struct vb2_queue *src_vq,
+>  
+>  static void mtk_jpeg_clk_on(struct mtk_jpeg_dev *jpeg)
+>  {
+> -	int ret;
+> -
+> -	ret = mtk_smi_larb_get(jpeg->larb);
+> -	if (ret)
+> -		dev_err(jpeg->dev, "mtk_smi_larb_get larbvdec fail %d\n", ret);
+>  	clk_prepare_enable(jpeg->clk_jdec_smi);
+>  	clk_prepare_enable(jpeg->clk_jdec);
+>  }
+> @@ -914,7 +908,6 @@ static void mtk_jpeg_clk_off(struct mtk_jpeg_dev *jpeg)
+>  {
+>  	clk_disable_unprepare(jpeg->clk_jdec);
+>  	clk_disable_unprepare(jpeg->clk_jdec_smi);
+> -	mtk_smi_larb_put(jpeg->larb);
+>  }
+>  
+>  static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+> @@ -1059,21 +1052,6 @@ static int mtk_jpeg_release(struct file *file)
+>  
+>  static int mtk_jpeg_clk_init(struct mtk_jpeg_dev *jpeg)
+>  {
+> -	struct device_node *node;
+> -	struct platform_device *pdev;
+> -
+> -	node = of_parse_phandle(jpeg->dev->of_node, "mediatek,larb", 0);
+> -	if (!node)
+> -		return -EINVAL;
+> -	pdev = of_find_device_by_node(node);
+> -	if (WARN_ON(!pdev)) {
+> -		of_node_put(node);
+> -		return -EINVAL;
+> -	}
+> -	of_node_put(node);
+> -
+> -	jpeg->larb = &pdev->dev;
+> -
+>  	jpeg->clk_jdec = devm_clk_get(jpeg->dev, "jpgdec");
+>  	if (IS_ERR(jpeg->clk_jdec))
+>  		return PTR_ERR(jpeg->clk_jdec);
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> index 1a6cdfd..e35fb79 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> @@ -55,7 +55,6 @@ enum mtk_jpeg_ctx_state {
+>   * @dec_reg_base:	JPEG registers mapping
+>   * @clk_jdec:		JPEG hw working clock
+>   * @clk_jdec_smi:	JPEG SMI bus clock
+> - * @larb:		SMI device
+>   */
+>  struct mtk_jpeg_dev {
+>  	struct mutex		lock;
+> @@ -69,7 +68,6 @@ struct mtk_jpeg_dev {
+>  	void __iomem		*dec_reg_base;
+>  	struct clk		*clk_jdec;
+>  	struct clk		*clk_jdec_smi;
+> -	struct device		*larb;
+>  };
+>  
+>  /**
+> 
