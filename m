@@ -1,86 +1,67 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH 3/3] mmc: sdhci-of-arasan: Add support for ZynqMP Platform
- Tap Delays Setup
-Date: Thu, 20 Jun 2019 08:19:38 +0000
-Message-ID: <MN2PR02MB6029D633F47B3B0DDF77D841C1E40@MN2PR02MB6029.namprd02.prod.outlook.com>
-References: <1560247011-26369-1-git-send-email-manish.narani@xilinx.com>
- <1560247011-26369-4-git-send-email-manish.narani@xilinx.com>
- <CAPDyKFrJwpwUUX_q2kcR9QY_fv9Lgos+ixPmU6JMeJVqJAiFpg@mail.gmail.com>
- <5feac3fb-bef3-b7d1-57d6-81e115e1f555@xilinx.com>
- <CAPDyKFp_ZvSjFp2FGonzGsnc9xPyZ7qOCaRnX1SimBxLpfz9-Q@mail.gmail.com>
- <948514a0-e310-75fd-e8a8-6ef8bb14e41f@xilinx.com>
- <CAPDyKFp6O8rPZDZS4iKJam2+tXeen_ZMOXKw=WVzJNpBXcSc9g@mail.gmail.com>
- <MN2PR02MB60296837F9D1B3088667BE59C1EA0@MN2PR02MB6029.namprd02.prod.outlook.com>
- <CAPDyKFqC7aGX+BSP7U162Viq8qoL_df+N=zP_6P9xbzSZseipw@mail.gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH] usb: dwc3: remove unused @lock member of dwc3_ep struct
+Date: Thu, 20 Jun 2019 16:23:59 +0800
+Message-ID: <1561019039.19385.0.camel@mhfsdcap03>
+References: <342af01a252a9ef9457a6a6ec653a40698058fbc.1561018149.git.chunfeng.yun@mediatek.com>
+         <87pnn8brej.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqC7aGX+BSP7U162Viq8qoL_df+N=zP_6P9xbzSZseipw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <87pnn8brej.fsf@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Michal Simek <michals@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, Nava kishore Manne <navam@xilinx.com>, Olof Johansson <olof@lixom.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVWZmZSwNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFVsZiBI
-YW5zc29uIDx1bGYuaGFuc3NvbkBsaW5hcm8ub3JnPg0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUg
-MTksIDIwMTkgODoxMSBQTQ0KPiBUbzogTWFuaXNoIE5hcmFuaSA8TU5BUkFOSUB4aWxpbnguY29t
-Pg0KPiBDYzogTWljaGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlueC5jb20+OyBSb2IgSGVycmluZyA8
-cm9iaCtkdEBrZXJuZWwub3JnPjsNCj4gTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNv
-bT47IEFkcmlhbiBIdW50ZXINCj4gPGFkcmlhbi5odW50ZXJAaW50ZWwuY29tPjsgUmFqYW4gVmFq
-YSA8UkFKQU5WQHhpbGlueC5jb20+OyBKb2xseSBTaGFoDQo+IDxKT0xMWVNAeGlsaW54LmNvbT47
-IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YW1AeGlsaW54LmNvbT47IE9sb2YNCj4gSm9oYW5zc29u
-IDxvbG9mQGxpeG9tLm5ldD47IGxpbnV4LW1tY0B2Z2VyLmtlcm5lbC5vcmc7IERUTUwNCj4gPGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGlu
-dXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBBUk0gPGxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAzLzNdIG1tYzog
-c2RoY2ktb2YtYXJhc2FuOiBBZGQgc3VwcG9ydCBmb3IgWnlucU1QDQo+IFBsYXRmb3JtIFRhcCBE
-ZWxheXMgU2V0dXANCj4gDQo+IE9uIFR1ZSwgMTggSnVuIDIwMTkgYXQgMDY6NTksIE1hbmlzaCBO
-YXJhbmkgPE1OQVJBTklAeGlsaW54LmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaSBVZmZlLA0KPiA+
-DQo+ID4gVGhhbmtzIGZvciB0aGUgcmV2aWV3LiBQbGVhc2UgZmluZCBteSBjb21tZW50cyBiZWxv
-dy4NCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFVs
-ZiBIYW5zc29uIDx1bGYuaGFuc3NvbkBsaW5hcm8ub3JnPg0KPiA+ID4gU2VudDogTW9uZGF5LCBK
-dW5lIDE3LCAyMDE5IDg6MjkgUE0NCj4gPiA+IFRvOiBNaWNoYWwgU2ltZWsgPG1pY2hhbHNAeGls
-aW54LmNvbT4NCj4gPiA+IENjOiBNYW5pc2ggTmFyYW5pIDxNTkFSQU5JQHhpbGlueC5jb20+OyBS
-b2IgSGVycmluZw0KPiA+ID4gPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFy
-ay5ydXRsYW5kQGFybS5jb20+OyBBZHJpYW4NCj4gPiA+IEh1bnRlciA8YWRyaWFuLmh1bnRlckBp
-bnRlbC5jb20+OyBSYWphbiBWYWphIDxSQUpBTlZAeGlsaW54LmNvbT47IEpvbGx5DQo+ID4gPiBT
-aGFoIDxKT0xMWVNAeGlsaW54LmNvbT47IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YW1AeGlsaW54
-LmNvbT47DQo+IE9sb2YNCj4gPiA+IEpvaGFuc3NvbiA8b2xvZkBsaXhvbS5uZXQ+OyBsaW51eC1t
-bWNAdmdlci5rZXJuZWwub3JnOyBEVE1MDQo+ID4gPiA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC0NCj4gPiA+IGtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmc+OyBMaW51eCBBUk0gPGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmc+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIDMvM10gbW1jOiBzZGhjaS1vZi1h
-cmFzYW46IEFkZCBzdXBwb3J0IGZvciBaeW5xTVANCj4gPiA+IFBsYXRmb3JtIFRhcCBEZWxheXMg
-U2V0dXANCj4gPiA+DQo+ID4gPiBbLi4uXQ0KPiA+ID4NCj4gPiA+ID4gPj4NCj4gPiA+ID4gPj4N
-Cj4gPiA+ID4gPj4+IEluIHJlZ2FyZHMgdG8gdGhlIG1tYyBkYXRhIHBhcnQsIEkgc3VnZ2VzdCB0
-byBkcm9wIHRoZQ0KPiA+ID4gPiA+Pj4gLT5zZXRfdGFwX2RlbGF5KCkgY2FsbGJhY2ssIGJ1dCBy
-YXRoZXIgdXNlIGEgYm9vbGVhbiBmbGFnIHRvIGluZGljYXRlDQo+ID4gPiA+ID4+PiB3aGV0aGVy
-IGNsb2NrIHBoYXNlcyBuZWVkcyB0byBiZSBjaGFuZ2VkIGZvciB0aGUgdmFyaWFudC4gUG90ZW50
-aWFsbHkNCj4gPiA+ID4gPj4+IHRoYXQgY291bGQgZXZlbiBiZSBza2lwcGVkIGFuZCBpbnN0ZWFk
-IGNhbGwgY2xrX3NldF9waGFzZSgpDQo+ID4gPiA+ID4+PiB1bmNvbmRpdGlvbmFsbHksIGFzIHRo
-ZSBjbG9jayBjb3JlIGRlYWxzIGZpbmUgd2l0aCBjbG9jayBwcm92aWRlcnMNCj4gPiA+ID4gPj4+
-IHRoYXQgZG9lc24ndCBzdXBwb3J0IHRoZSAtPnNldF9waGFzZSgpIGNhbGxiYWNrLg0KPiA+DQo+
-ID4gSW4gdGhlIGN1cnJlbnQgaW1wbGVtZW50YXRpb24sIEkgYW0gdGFraW5nIGNhcmUgb2YgYm90
-aCB0aGUgaW5wdXQgYW5kDQo+ID4gb3V0cHV0IGNsb2NrIGRlbGF5cyB3aXRoIHRoZSBzaW5nbGUg
-Y2xvY2sgKHdoaWNoIGlzIG91dHB1dCBjbG9jaykgcmVnaXN0cmF0aW9uDQo+ID4gYW5kIGRpZmZl
-cmVudGlhdGluZyB0aGVzZSB0YXAgZGVsYXlzIGJhc2VkIG9uIHRoZWlyIHZhbHVlcw0KPiA+ICg8
-MjU2IHRoZW4gaW5wdXQgZGVsYXkgYW5kICA+PSAyNTYgdGhlbiBvdXRwdXQgZGVsYXkpLCBiZWNh
-dXNlIHRoYXQgaXMNCj4gPiB6eW5xbXAgc3BlY2lmaWMuIElmIHdlIHdhbnQgdG8gbWFrZSB0aGlz
-IGdlbmVyaWMsIHdlIG1heSBuZWVkIHRvDQo+ID4gcmVnaXN0ZXIgJ2Fub3RoZXInIGNsb2NrIHdo
-aWNoIHdpbGwgYmUgdGhlcmUgYXMgYW4gaW5wdXQgKHNhbXBsaW5nKSBjbG9jaw0KPiA+IGFuZCB0
-aGVuIHdlIGNhbiBtYWtlIHRoaXMgJ2Nsa19zZXRfcGhhc2UoKScgYmUgY2FsbGVkIHVuY29uZGl0
-aW9uYWxseQ0KPiA+IGVhY2ggZm9yIGJvdGggdGhlIGNsb2NrcyBhbmQgbGV0IHRoZSBwbGF0Zm9y
-bXMgaGFuZGxlIHRoZWlyIGNsb2NrIHBhcnQuDQo+ID4gV2hhdCdzIHlvdXIgdGFrZSBvbiB0aGlz
-Pw0KPiANCj4gTm90IHN1cmUgZXhhY3RseSB3aGF0IHlvdSBhcmUgc3VnZ2VzdGluZywgYnV0IG15
-IGd1dCBmZWVsaW5nIHNheXMgaXQNCj4gc291bmRzIGdvb2QuDQo+IA0KPiBIb3cgaXMgdGFwIGRl
-bGF5cyBtYW5hZ2VkIGZvciBib3RoIHRoZSBpbnB1dCBjbG9jayBhbmQgdGhlIG91dHB1dA0KPiBj
-bG9jaz8gSXMgc29tZSBtYW5hZ2VkIGJ5IHRoZSBjbG9jayBwcm92aWRlciAod2hpY2ggaXMgcHJv
-YmFibHkNCj4gZmlybXdhcmUgaW4geW91ciBjYXNlKSBhbmQgc29tZSBtYW5hZ2VkIGJ5IHRoZSBN
-TUMgY29udHJvbGxlcj8NCg0KWWVzLCBmb3IgdGhlIGV4aXN0aW5nICJ4bG54LHp5bnFtcC04Ljlh
-IiBjb250cm9sbGVyLCB0aGUgdGFwIGRlbGF5cyB3aWxsIGJlIG1hbmFnZWQgYnkgdGhlIGZpcm13
-YXJlLCBob3dldmVyIGluIHRoZSB1cGNvbWluZyAieGxueCx2ZXJzYWwtOC45YSIgdmFyaWFudCB0
-aGUgdGFwIGRlbGF5cyB3aWxsIGJlIG1hbmFnZWQgYnkgdGhlIE1NQyBjb250cm9sbGVyIGl0c2Vs
-Zi4NCkkgd2lsbCBpbmNsdWRlIHRoZSBWZXJzYWwgb25lIGluIHRoZSBuZXh0IHNlcmllcyBvZiBw
-YXRjaGVzLg0KDQpUaGFua3MsDQpNYW5pc2gNCg==
+Hi,
+On Thu, 2019-06-20 at 11:19 +0300, Felipe Balbi wrote:
+> Hi,
+> 
+> Chunfeng Yun <chunfeng.yun@mediatek.com> writes:
+> 
+> > The member @lock of dwc2_ep struct is only initialized,
+> > and not used elsewhere, so remove it.
+Sorry, I need send v2 to fix typo of dwc2_ep
+
+> >
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> >  drivers/usb/dwc3/core.h   | 2 --
+> >  drivers/usb/dwc3/gadget.c | 2 --
+> >  2 files changed, 4 deletions(-)
+> >
+> > diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> > index f19cbeb01087..72d28cb14bdf 100644
+> > --- a/drivers/usb/dwc3/core.h
+> > +++ b/drivers/usb/dwc3/core.h
+> > @@ -649,7 +649,6 @@ struct dwc3_event_buffer {
+> >   * @cancelled_list: list of cancelled requests for this endpoint
+> >   * @pending_list: list of pending requests for this endpoint
+> >   * @started_list: list of started requests on this endpoint
+> > - * @lock: spinlock for endpoint request queue traversal
+> >   * @regs: pointer to first endpoint register
+> >   * @trb_pool: array of transaction buffers
+> >   * @trb_pool_dma: dma address of @trb_pool
+> > @@ -677,7 +676,6 @@ struct dwc3_ep {
+> >  	struct list_head	pending_list;
+> >  	struct list_head	started_list;
+> >  
+> > -	spinlock_t		lock;
+> >  	void __iomem		*regs;
+> >  
+> >  	struct dwc3_trb		*trb_pool;
+> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> > index d67655384eb2..7f75da30caba 100644
+> > --- a/drivers/usb/dwc3/gadget.c
+> > +++ b/drivers/usb/dwc3/gadget.c
+> > @@ -2251,8 +2251,6 @@ static int dwc3_gadget_init_endpoint(struct dwc3 *dwc, u8 epnum)
+> >  		dep->endpoint.comp_desc = NULL;
+> >  	}
+> >  
+> > -	spin_lock_init(&dep->lock);
+> 
+> heh, thanks. This is left-over from when I playing with further
+> paralelizing the driver. Turned out that there are not enough gains to
+> justify that work. I'll apply this patch.
+> 
