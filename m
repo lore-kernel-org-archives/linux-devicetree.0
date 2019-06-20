@@ -1,122 +1,155 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
-Date: Thu, 20 Jun 2019 12:56:16 +0300
-Message-ID: <f7bb4e82-95ea-a043-e2b1-f429b16642ba@ti.com>
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
- <20190506123456.6777-10-peter.ujfalusi@ti.com> <20190613181626.GA7039@bogus>
- <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
- <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
- <e811d674-b79f-4da8-c632-c7a90844b6c5@ti.com>
- <CAL_JsqJTWNKTB1D2wNysonzasgL9awLLvr1HdOckUnQbpgsDQw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 03/16] dt-bindings: net: Add a YAML schemas for the
+ generic MDIO options
+Date: Thu, 20 Jun 2019 11:56:53 +0200
+Message-ID: <20190620095653.ffq7ii5n6bzlyfpl@flea>
+References: <27aeb33cf5b896900d5d11bd6957eda268014f0c.1560937626.git-series.maxime.ripard@bootlin.com>
+ <89b834af795fa6ad5ba1f04a5a61c54204bf4f96.1560937626.git-series.maxime.ripard@bootlin.com>
+ <CAL_JsqKeGrXEECmP8Gec5DdLTikyx0xS+kaopRXNQ7RUEJbx4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJTWNKTB1D2wNysonzasgL9awLLvr1HdOckUnQbpgsDQw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Dan Williams <dan.j.williams@intel.com>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="onszyfussrb4jgai"
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKeGrXEECmP8Gec5DdLTikyx0xS+kaopRXNQ7RUEJbx4g@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
+--onszyfussrb4jgai
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 19/06/2019 17.04, Rob Herring wrote:
-> On Fri, Jun 14, 2019 at 7:42 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>
->>
->> On 14/06/2019 16.20, Rob Herring wrote:
->>> On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>>>
->>>> Rob,
->>>>
->>>> On 13/06/2019 21.16, Rob Herring wrote:
->>>>>> +Remote PSI-L endpoint
->>>>>> +
->>>>>> +Required properties:
->>>>>> +--------------------
->>>>>> +- ti,psil-base:             PSI-L thread ID base of the endpoint
->>>>>> +
->>>>>> +Within the PSI-L endpoint node thread configuration subnodes must present with:
->>>>>> +ti,psil-configX naming convention, where X is the thread ID offset.
->>>>>
->>>>> Don't use vendor prefixes on node names.
->>>>
->>>> OK.
->>>>
->>>>>> +
->>>>>> +Configuration node Required properties:
->>>>>> +--------------------
->>>>>> +- linux,udma-mode:  Channel mode, can be:
->>>>>> +                    - UDMA_PKT_MODE: for Packet mode channels (peripherals)
->>>>>> +                    - UDMA_TR_MODE: for Third-Party mode
->>>>>
->>>>> This is hardly a common linux thing. What determines the value here.
->>>>
->>>> Unfortunately it is.
->>>
->>> No, it's a feature of your h/w and in no way is something linux
->>> defined which is the point of 'linux' prefix.
->>
->> The channel can be either Packet or TR mode. The HW is really flexible
->> on this (and on other things as well).
->> It just happens that Linux need to use specific channels in a specific mode.
->>
->> Would it help if we assume that all channels are used in Packet mode,
->> but we have linux,tr-mode bool to indicate that the given channel in
->> Linux need to be used in TR mode.
-> 
-> Your use of 'linux' prefix is wrong. Stop using it.
+Hi,
 
-OK, I can not argue with that.
-I'll have 'tr-mode' bool to indicate that the channel should be
-configured in TR mode for the given thread.
+On Wed, Jun 19, 2019 at 08:17:52AM -0600, Rob Herring wrote:
+> On Wed, Jun 19, 2019 at 3:47 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > The MDIO buses have a number of available device tree properties that can
+> > be used in their device tree node. Add a YAML schemas for those.
+> >
+> > Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> >
+> > ---
+> >
+> > Changes from v2:
+> >   - New patch
+> > ---
+> >  Documentation/devicetree/bindings/net/mdio.txt  | 38 +-------------
+> >  Documentation/devicetree/bindings/net/mdio.yaml | 51 ++++++++++++++++++-
+> >  2 files changed, 52 insertions(+), 37 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/net/mdio.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/mdio.txt b/Documentation/devicetree/bindings/net/mdio.txt
+> > index e3e1603f256c..cf8a0105488e 100644
+> > --- a/Documentation/devicetree/bindings/net/mdio.txt
+> > +++ b/Documentation/devicetree/bindings/net/mdio.txt
+> > @@ -1,37 +1 @@
+> > -Common MDIO bus properties.
+> > -
+> > -These are generic properties that can apply to any MDIO bus.
+> > -
+> > -Optional properties:
+> > -- reset-gpios: One GPIO that control the RESET lines of all PHYs on that MDIO
+> > -  bus.
+> > -- reset-delay-us: RESET pulse width in microseconds.
+> > -
+> > -A list of child nodes, one per device on the bus is expected. These
+> > -should follow the generic phy.txt, or a device specific binding document.
+> > -
+> > -The 'reset-delay-us' indicates the RESET signal pulse width in microseconds and
+> > -applies to all PHY devices. It must therefore be appropriately determined based
+> > -on all PHY requirements (maximum value of all per-PHY RESET pulse widths).
+> > -
+> > -Example :
+> > -This example shows these optional properties, plus other properties
+> > -required for the TI Davinci MDIO driver.
+> > -
+> > -       davinci_mdio: ethernet@5c030000 {
+> > -               compatible = "ti,davinci_mdio";
+> > -               reg = <0x5c030000 0x1000>;
+> > -               #address-cells = <1>;
+> > -               #size-cells = <0>;
+> > -
+> > -               reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
+> > -               reset-delay-us = <2>;
+> > -
+> > -               ethphy0: ethernet-phy@1 {
+> > -                       reg = <1>;
+> > -               };
+> > -
+> > -               ethphy1: ethernet-phy@3 {
+> > -                       reg = <3>;
+> > -               };
+> > -       };
+> > +This file has moved to mdio.yaml.
+> > diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
+> > new file mode 100644
+> > index 000000000000..8f4f9d0a2882
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/mdio.yaml
+> > @@ -0,0 +1,51 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/net/mdio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: MDIO Bus Generic Binding
+> > +
+> > +maintainers:
+> > +  - Andrew Lunn <andrew@lunn.ch>
+> > +  - Florian Fainelli <f.fainelli@gmail.com>
+> > +  - Heiner Kallweit <hkallweit1@gmail.com>
+> > +
+> > +description:
+> > +  These are generic properties that can apply to any MDIO bus. Any
+> > +  MDIO bus must have a list of child nodes, one per device on the
+> > +  bus. These should follow the generic ethernet-phy.yaml document, or
+> > +  a device specific binding document.
+> > +
+> > +properties:
+> > +  reset-gpios:
+> > +    maxItems: 1
+> > +    description:
+> > +      The phandle and specifier for the GPIO that controls the RESET
+> > +      lines of all PHYs on that MDIO bus.
+> > +
+> > +  reset-delay-us:
+> > +    description:
+> > +      RESET pulse width in microseconds. It applies to all PHY devices
+> > +      and must therefore be appropriately determined based on all PHY
+> > +      requirements (maximum value of all per-PHY RESET pulse widths).
+> > +
+> > +examples:
+> > +  - |
+> > +    davinci_mdio: ethernet@5c030000 {
+>
+> Shouldn't this be mdio@... ?
 
->>>> Each channel can be configured to Packet or TR mode. For some
->>>> peripherals it is true that they only support packet mode, these are the
->>>> newer PSI-L native peripherals.
->>>> For these channels a udma-mode property would be correct.
->>>>
->>>> But we have legacy peripherals as well and they are serviced by PDMA
->>>> (which is a native peripheral designed to talk to the given legacy IP).
->>>> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
->>>> most cases clear what to use, but for example for audio (McASP) channels
->>>> Linux is using TR channel because we need cyclic DMA while for example
->>>> RTOS is using Packet mode as it fits their needs better.
->>>>
->>>> Here I need to prefix the udma-mode with linux as the mode is used by
->>>> Linux, but other OS might opt to use different channel mode.
->>>
->>> So you'd need <os>,udma-mode? That doesn't work... If the setting is
->>> per OS, then it belongs in the OS because the same dtb should work
->>> across OS's.
->>
->> So I should have a table for the thread IDs in the DMA driver and mark
->> channels as TR or Packet in there for Linux use?
-> 
-> Perhaps. I haven't heard any reasons why you need this in DT. If Linux
-> is dictating the modes, then sounds like it should be in Linux.
-> 
-> But really, I don't fully understand what you are doing here to tell
-> you what to do beyond using 'linux' prefix is wrong.
+Yeah, I'll fix it.
 
-We have certain peripherals (McASP/UART/McSPI/etc) which is serviced by
-PDMAs to be compatible with the data movement architecture implemented
-within NAVSS.
-Unlike native peripherals, like networking we can configure the UDMAP
-channel to either Packet or TR mode. There are differences between the
-two modes, but the job can be done in both modes.
-In Linux we use TR mode for audio channels as it provides the needed
-functionality we need (efficient cyclic mode, can disable interrupts).
+> > +        compatible = "ti,davinci_mdio";
+> > +        reg = <0x5c030000 0x1000>;
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        reset-gpios = <&gpio2 5 1>;
+> > +        reset-delay-us = <2>;
+> > +
+> > +        ethphy0: ethernet-phy@1 {
+>
+> Would be good to have some unit-address checks. Could be a follow-up
+> though.
 
-There is no information from the HW on how a given thread is best used
-and other OSs can opt for not optimal use.
+I guess this could be good, but I'm not sure how to do that. We could
+add a patternProperties with the proper regex, but that would find
+some issues only if we have additionalProperties set, which we don't
+want since this is a generic binding and that would create another set
+of problems :)
 
-But the majority of threads are better served in Packet mode, so adding
-a bool flag to the thread configuration to indicate that TR mode is the
-advised mode for it is perfectly fine.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+maxime
+--onszyfussrb4jgai--
