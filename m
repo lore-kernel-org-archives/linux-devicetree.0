@@ -1,79 +1,133 @@
-From: Ryan Chen <ryan_chen@aspeedtech.com>
-Subject: RE: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
-Date: Thu, 20 Jun 2019 07:29:53 +0000
-Message-ID: <c610ecede7494c189a92a9a3f6d0fd16@TWMBX02.aspeed.com>
-References: <20190619205009.4176588-1-taoren@fb.com>
- <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
- <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: SPDX conversion under scripts/dtc/ of Linux Kernel
+Date: Thu, 20 Jun 2019 17:45:17 +1000
+Message-ID: <20190620074517.GA2066@umbus.BigPond>
+References: <CAK7LNARHHXv5Tu4BHN1avKOExS6HmPfd2c0ELZiQaxtmETOsDw@mail.gmail.com>
+ <20190619125948.GA27090@kroah.com>
+ <CAL_JsqJQ0bkMMpgA_JpGf-mo8ue28XpGf7oMFJ8bScGAmc+_1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
-Content-Language: zh-TW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tao Ren <taoren@fb.com>, Brendan Higgins <brendanhiggins@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJQ0bkMMpgA_JpGf-mo8ue28XpGf7oMFJ8bScGAmc+_1g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-spdx@vger.kernel.org, Devicetree Compiler <devicetree-compiler@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Tao,
-	Our recommend about clk divider setting is follow the datasheet clock setting table for clock divisor. 
 
-Ryan  
- 
-	
+--fdj2RfSjLxBAspz7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
------Original Message-----
-From: Linux-aspeed [mailto:linux-aspeed-bounces+ryan_chen=aspeedtech.com@lists.ozlabs.org] On Behalf Of Tao Ren
-Sent: Thursday, June 20, 2019 6:33 AM
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>; devicetree <devicetree@vger.kernel.org>; linux-aspeed@lists.ozlabs.org; OpenBMC Maillist <openbmc@lists.ozlabs.org>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; Rob Herring <robh+dt@kernel.org>; Linux ARM <linux-arm-kernel@lists.infradead.org>; linux-i2c@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
+On Wed, Jun 19, 2019 at 09:39:13AM -0600, Rob Herring wrote:
+> On Wed, Jun 19, 2019 at 6:59 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Jun 19, 2019 at 07:23:19PM +0900, Masahiro Yamada wrote:
+> > > Hi.
+> > >
+> > > In this development cycle of Linux kernel,
+> > > lots of files were converted to use SPDX
+> > > instead of the license boilerplate.
+> > >
+> > > However.
+> > >
+> > > Some files were imported from a different project,
+> > > and are periodically synchronized with the upstream.
+> > > Have we discussed what to do about this case?
+> > >
+> > >
+> > > For example, scripts/dtc/ is the case.
+> > >
+> > > The files in scripts/dtc/ are synced with the upstream
+> > > device tree compiler.
+> > >
+> > > Rob Herring periodically runs scripts/dtc/update-dtc-source.sh
+> > > to import outcome from the upstream.
+> > >
+> > >
+> > > The upstream DTC has not adopted SPDX yet.
+> > >
+> > > Some files in Linux (e.g. scripts/dtc/dtc.c)
+> > > have been converted to SPDX.
+> > >
+> > > So, they are out of sync now.
+> > >
+> > > The license boilerplate will come back
+> > > when Rob runs scripts/dtc/update-dtc-source.sh
+> > > next time.
+>=20
+> Already has. It just happened and is in next. The policy is everything
+> is upstream first and any changes to dtc in the kernel are rejected.
+>=20
+> > >
+> > > What shall we do?
+> > >
+> > > [1] Convert upstream DTC to SPDX
+> > >
+> > > This will be a happy solution if it is acceptable in DTC.
+> > > Since we cannot push the decision of the kernel to a different
+> > > project, this is totally up to David Gibson.
+> >
+> > That's fine with me :)
+>=20
+> I'll do the work if David is okay with it.
 
-On 6/19/19 2:25 PM, Brendan Higgins wrote:
-> On Wed, Jun 19, 2019 at 2:00 PM Tao Ren <taoren@fb.com> wrote:
->>
->> Some intermittent I2C transaction failures are observed on Facebook 
->> CMM and Minipack (ast2500) BMC platforms, because slave devices (such 
->> as CPLD, BIC and etc.) NACK the address byte sometimes. The issue can 
->> be resolved by increasing base clock divisor which affects ASPEED I2C 
->> Controller's base clock and other AC timing parameters.
->>
->> This patch allows to customize ASPEED I2C Controller's base clock 
->> divisor in device tree.
-> 
-> First off, are you sure you actually need this?
-> 
-> You should be able to achieve an effectively equivalent result by just 
-> lowering the `bus-frequency` property specified in the DT. The 
-> `bus-frequency` property ultimately determines all the register 
-> values, and you should be able to set it to whatever you want by 
-> refering to the Aspeed documentation.
-> 
-> Nevertheless, the code that determines the correct dividers from the 
-> frequency is based on the tables in the Aspeed documentation. I don't 
-> think the equation makes sense when the base_clk_divisor is fixed; I 
-> mean it will probably just set the other divisor to max or min 
-> depending on the values chosen. I think if someone really wants to 
-> program this parameter manually, they probably want to set the other 
-> parameters manually too.
-Thank you for the quick response, Brendan.
-
-Aspeed I2C bus frequency is defined by 3 parameters (base_clk_divisor, clk_high_width, clk_low_width), and I choose base_clk_divisor because it controls all the Aspeed I2C timings (such as setup time and hold time). Once base_clk_divisor is decided (either by the current logic in i2c-aspeed driver or manually set in device tree), clk_high_width and clk_low_width will be calculated by i2c-aspeed driver to meet the specified I2C bus speed.
-
-For example, by setting I2C bus frequency to 100KHz on AST2500 platform, (base_clock_divisor, clk_high_width, clk_low_width) is set to (3, 15, 14) by our driver. But some slave devices (on CMM i2c-8 and Minipack i2c-0) NACK byte transactions with the default timing setting: the issue can be resolved by setting base_clk_divisor to 4, and (clk_high_width, clk_low_width) will be set to (7, 7) by our i2c-aspeed driver to achieve similar I2C bus speed.
-
-Not sure if my answer helps to address your concerns, but kindly let me know if you have further questions/suggestions.
+I have no objection.
 
 
-Thanks,
+> > > [2] Change scripts/dtc/update-dtc-source.sh to
+> > >     take care of the license block somehow
+> >
+> > That would also be good.
+> >
+> > > [3] Go back to license boilerplate, and keep the files
+> > >     synced with the upstream
+> > >     (and scripts/dtc/ should be excluded from the
+> > >      SPDX conversion tool.)
+> >
+> > nothing is being excluded from the SPDX conversions, sorry.  The goal is
+> > to do this for every file in the kernel tree.  Otherwise it's pointless.
+> >
+> > > Or, what else?
+> >
+> > Rob remembers to keep those first lines of the files intact when doing
+> > the next sync?
+>=20
+> Patches to the import script are welcome. The only thing I have to
+> remember running the script is to add any new files. Otherwise, it's
+> scripted so I don't have to remember anything.
+>=20
+> Rob
+>=20
 
-Tao
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--fdj2RfSjLxBAspz7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl0LOYoACgkQbDjKyiDZ
+s5JO2Q//Qnvu8CIqR9v1DPhq1I1K6wFUT3RxjlX+pE03rujjRcwTv7K7d19AWqdL
+3lwaWAc8faWWg8/ceC8hBN/yXzNwtN1nnPyeeULgVUPWoPPPg4LzWjDFfuy+6M51
+CdS8lSkiCYNR52jEkirsDW6pd6NIwbaAsSgtYxd7EB39HGWwPk6xq726aPKqD6Vo
+ae70uJsDOH3tSbeXwFIx8//wvI1VtylMxROJU6MoKcs7c538jddrJSRQHjI1V0PY
+2Git/vQSI92xIkVc4ZrDCPhZ3TGUUuK+caYaxssLdK2lxd/lrQjL3fUCIoSykzOr
+u5vaBrxoYoP4GbZX9VxCZrwocXgAYn7Qf2ihw3Xs2/StrhdNsLVkrsuzP4A9pDbZ
+73Fr7FIw6UFarugBtKahlDV0yI3mQG42Awk6Is5SxLwFheyhrGMzkk8P33pV4ffb
+RYZ++8GwzVFl3ko0vf7tZIhNnLZLY4/MT+efPfmu+0+YF67oZ/TsdtHu1rHz+cJz
+tDj4hEzPXBRaj3jB3pEw3Xvs9EZvd6a3WeBEBoV8WtJWioS9cqHTvYtq5YQfOqzc
+qg82KlJpZg74ukamcHEmwfooC9AjfKFek/7ecqlBI5fBviEMM6fI7MfyTHAErVya
+ctngxdwSqxU/9DSCo5oRoSS7vgJkaaLo5rgNkd8M2DbmU9EM1ok=
+=vqV0
+-----END PGP SIGNATURE-----
+
+--fdj2RfSjLxBAspz7--
