@@ -1,73 +1,70 @@
-Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 10/27] PCI: tegra: Disable AFI dynamic clock gating
-Date: Tue, 18 Jun 2019 23:31:49 +0530
-Message-ID: <20190618180206.4908-11-mmaddireddy@nvidia.com>
-In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=7LTX=UT=gmail.com=thierry.reding@kernel.org>
+Date: Thu, 20 Jun 2019 12:14:48 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V6 23/27] arm64: tegra: Add PEX DPD states as pinctrl
+ properties
+Message-ID: <20190620101448.GA28703@ulmo>
 References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+ <20190618180206.4908-24-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
+Content-Disposition: inline
+In-Reply-To: <20190618180206.4908-24-mmaddireddy@nvidia.com>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Outstanding write counter in AFI is used to generate idle signal to
-dynamically gate the AFI clock. When there are 32 outstanding writes
-from AFI to memory, the outstanding write counter overflows and
-indicates that there are "0" outstanding write transactions.
 
-When memory controller is under heavy load, write completions to AFI
-gets delayed and AFI write counter overflows. This causes AFI clock gating
-even when there are outstanding transactions towards memory controller
-resulting in system hang.
+--cNdxnHkX5QqsyA0e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Disable dynamic clock gating of AFI clock to avoid system hang.
+On Tue, Jun 18, 2019 at 11:32:02PM +0530, Manikanta Maddireddy wrote:
+> Add PEX deep power down states as pinctrl properties to set in PCIe drive=
+r.
+> In Tegra210, BIAS pads are not in power down mode when clamps are applied.
+> To set the pads in DPD, pass the PEX DPD states as pinctrl properties to
+> PCIe driver.
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+> V6: No change
+>=20
+> V5: No change
+>=20
+> V4: No change
+>=20
+> V3: No change
+>=20
+> V2: Using standard pinctrl names, default and idle
+>=20
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 
-CLKEN_OVERRIDE bit is not defined in Tegra20 and Tegra30, however
-programming this bit doesn't cause any side effects. Program this
-bit for all Tegra SoCs to avoid conditional check.
+Applied to for-5.3/arm64/dt, thanks.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V6: No change
+Thierry
 
-V5: No change
+--cNdxnHkX5QqsyA0e
+Content-Type: application/pgp-signature; name="signature.asc"
 
-V4: No change
+-----BEGIN PGP SIGNATURE-----
 
-V3: No change
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0LXJMACgkQ3SOs138+
+s6F/mA//fJQuFOTfEgBtJKU2ttaAA4tljAjtpXw+rmm4/rRxiamPODEAxhM5h/mt
+YG9YYN0Q0BJQcFOQVa34OOIVhkkf1UZDWrOhfYDuEqXyhjlS1rysGSmsGH1W9+fM
+CKbNflkRjMWt50+XsrN+izdmtJop6OVJB3T9644ERt2N8s9sc46P3gPlPoXL9rXL
+w5yB2IvEG5wgRBCXYZzjiK2BBbaKb8EgXy/nhtd8UJZQbNx2YVWf/v8DGtmOUfbJ
+aTy0LvMJwFDkpf88+6Cgg4Ouh+n2PBZHifMCWdJy3WOTLMVx40NCbq5BAIu1Ziot
+nBSEs0Lvc1fOI5iEqdRV/bFBnbC8h88sWljznaqVBT/fKL/g8Te8a+hBmym4SlkY
+ULN/CZmcpbzDEcPLXwje3sK62OEEL3hAXBaxQ/DrugTT3B9svrg42unVCn3ByCyC
+TGcTqE9uA75PFT7nyCEXLXXJ2vzV5GZKaPYbv//J56UWiuSO2Ly7d4l4n76ppvz7
+gM3Nl25OnKvyWT38/cD9HxNjRxYjqYLVXDFw13BBhKNgpxFXpivdKpAiPIMq63Kg
+eCjZMcVWnBgo/wQ5sgjnk7ri7g3t4vCcjQE+9ClaU4OMi7eaWH+18iR8csNoa4ZD
+Anh9dzE/ZKXPjU1uw5vUNkO91oipN7x82nFbGojSZz/aer0XlnY=
+=W9FW
+-----END PGP SIGNATURE-----
 
-V2: No change
-
- drivers/pci/controller/pci-tegra.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 51691252ca10..ca02866fbbb4 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -95,7 +95,8 @@
- #define AFI_MSI_EN_VEC7		0xa8
- 
- #define AFI_CONFIGURATION		0xac
--#define  AFI_CONFIGURATION_EN_FPCI	(1 << 0)
-+#define  AFI_CONFIGURATION_EN_FPCI		(1 << 0)
-+#define  AFI_CONFIGURATION_CLKEN_OVERRIDE	(1 << 31)
- 
- #define AFI_FPCI_ERROR_MASKS	0xb0
- 
-@@ -1065,9 +1066,10 @@ static void tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- 		afi_writel(pcie, value, AFI_FUSE);
- 	}
- 
--	/* finally enable PCIe */
-+	/* Disable AFI dynamic clock gating and enable PCIe */
- 	value = afi_readl(pcie, AFI_CONFIGURATION);
- 	value |= AFI_CONFIGURATION_EN_FPCI;
-+	value |= AFI_CONFIGURATION_CLKEN_OVERRIDE;
- 	afi_writel(pcie, value, AFI_CONFIGURATION);
- 
- 	value = AFI_INTR_EN_INI_SLVERR | AFI_INTR_EN_INI_DECERR |
--- 
-2.17.1
+--cNdxnHkX5QqsyA0e--
