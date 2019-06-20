@@ -1,88 +1,218 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v5 2/2] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
-Date: Thu, 20 Jun 2019 16:15:59 +0200
-Message-ID: <1561040159.1978.0@crapouillou.net>
-References: <20190603152331.23160-1-paul@crapouillou.net>
-        <20190603152331.23160-2-paul@crapouillou.net>
-        <20190619122622.GB29084@ravnborg.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RESEND PATCH 4/4] dt-bindings: iio: adc: Convert ad7124
+ documentation to YAML
+Date: Thu, 20 Jun 2019 08:20:47 -0600
+Message-ID: <CAL_Jsq+P3oG1MPcMMrEfp58Ltw92kk66os34wVwNuUC9a=F2vg@mail.gmail.com>
+References: <20190620094203.13654-1-mircea.caprioru@analog.com> <20190620094203.13654-4-mircea.caprioru@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190619122622.GB29084@ravnborg.org>
+In-Reply-To: <20190620094203.13654-4-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+To: Mircea Caprioru <mircea.caprioru@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>, Stefan Popa <stefan.popa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 20, 2019 at 3:42 AM Mircea Caprioru
+<mircea.caprioru@analog.com> wrote:
+>
+> Convert AD7124 bindings documentation to YAML format.
+>
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> ---
+>  .../bindings/iio/adc/adi,ad7124.yaml          | 146 ++++++++++++++++++
+>  1 file changed, 146 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+> new file mode 100644
+> index 000000000000..2dba3759b8e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+> @@ -0,0 +1,146 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
+The preference for new bindings is dual (GPL-2.0 OR BSD-2-Clause) if
+that is okay with you.
 
-Le mer. 19 juin 2019 =E0 14:26, Sam Ravnborg <sam@ravnborg.org> a =E9crit=20
-:
-> Hi Paul.
->=20
-> On Mon, Jun 03, 2019 at 05:23:31PM +0200, Paul Cercueil wrote:
->>  Add a KMS driver for the Ingenic JZ47xx family of SoCs.
->>  This driver is meant to replace the aging jz4740-fb driver.
->>=20
->>  This driver does not make use of the simple pipe helper, for the=20
->> reason
->>  that it will soon be updated to support more advanced features like
->>  multiple planes, IPU integration for colorspace conversion and=20
->> up/down
->>  scaling, support for DSI displays, and TV-out and HDMI outputs.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
->>  ---
->>=20
->>  Notes:
->>      v2: - Remove custom handling of panel. The panel is now=20
->> discovered using
->>      	  the standard API.
->>      	- Lots of small tweaks suggested by upstream
->>=20
->>      v3: - Use devm_drm_dev_init()
->>      	- Update compatible strings to -lcd instead of -drm
->>      	- Add destroy() callbacks to plane and crtc
->>      	- The ingenic,lcd-mode is now read from the bridge's DT node
->>=20
->>      v4: Remove ingenic,lcd-mode property completely. The various=20
->> modes are now
->>      	deduced from the connector type, the pixel format or the bus=20
->> flags.
->>=20
->>      v5: - Fix framebuffer size incorrectly calculated for 24bpp=20
->> framebuffers
->>      	- Use 32bpp framebuffer instead of 16bpp, as it'll work with=20
->> both
->>      	  16-bit and 24-bit panel
->>      	- Get rid of drm_format_plane_cpp() which has been dropped=20
->> upstream
->>      	- Avoid using drm_format_info->depth, which is deprecated.
-> In the drm world we include the revision notes in the changelog.
-> So I did this when I applied it to drm-misc-next.
->=20
-> Fixed a few trivial checkpatch warnings about indent too.
-> There was a few too-long-lines warnings that I ignored. Fixing them
-> would have hurt readability.
+> +# Copyright 2019 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7124.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7124 ADC device driver
+> +
+> +maintainers:
+> +  - Stefan Popa <stefan.popa@analog.com>
+> +
+> +description: |
+> +  Bindings for the Analog Devices AD7124 ADC device. Datasheet can be
+> +  found here:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7124-8.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7124-4
+> +      - adi,ad7124-8
+> +
+> +  reg:
+> +    description: SPI chip select number for the device
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: phandle to the master clock (mclk)
+> +
+> +  clock-names:
+> +    items:
+> +      - const: mclk
+> +
+> +  interrupts:
+> +    description: IRQ line for the ADC
+> +    maxItems: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  refin1-supply:
+> +    description: refin1 supply can be used as reference for conversion.
+> +    maxItems: 1
+> +
+> +  refin2-supply:
+> +    description: refin2 supply can be used as reference for conversion.
+> +    maxItems: 1
+> +
+> +  avdd-supply:
+> +    description: avdd supply can be used as reference for conversion.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +patternProperties:
+> +  "^channel@[01]$":
 
-Thanks.
+Need to allow 2-15?
 
-> I assume you will maintain this driver onwards from now.
-> Please request drm-misc commit rights (see
-> https://www.freedesktop.org/wiki/AccountRequests/)
-> You will need a legacy SSH account.
+> +    type: object
+> +    description: |
+> +      Represents the external channels which are connected to the ADC.
+> +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
+> +
+> +    properties:
+> +      reg:
+> +        description: |
+> +          The channel number. It can have up to 8 channels on ad7124-4
+> +          and 16 channels on ad7124-8, numbered from 0 to 15.
 
-I requested an account here:
-https://gitlab.freedesktop.org/freedesktop/freedesktop/issues/162
+Sounds like constraints.
 
-> And you should familiarize yourself with the maintainer-tools:
-> https://drm.pages.freedesktop.org/maintainer-tools/index.html
->=20
-> For my use I use "dim update-branches; dim apply; dim push
-> So only a small subset i needed for simple use.
->=20
-> 	Sam
+items:
+  - minimum: 0
+    maximum: 15
 
-=
+> +        maxItems: 1
+
+And then you can drop this as it is implied with the number of 'items' entries.
+
+> +
+> +      adi,reference-select:
+> +        description: |
+> +          Select the reference source to use when converting on
+> +          the specific channel.
+> +          If this field is left empty, internal reference is selected.
+> +        maxItems: 1
+
+Type? Range of values?
+
+> +
+> +      diff-channels:
+> +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
+> +        maxItems: 1
+
+Not correct as this is an array. Assuming this is covered by a common
+adc schema, you just need to define constraints on the values:
+
+items:
+  minimum: 0
+  maximum: 15
+
+> +
+> +      bipolar:
+> +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
+> +        maxItems: 1
+
+You can assume this is covered by common adc schema. So just 'bipolar:
+true' is enough.
+
+> +
+> +      adi,buffered-positive:
+> +        description: Enable buffered mode for positive input.
+> +        maxItems: 1
+
+Not right as this is bool. Needs 'type: boolean'
+
+> +      adi,buffered-negative:
+> +        description: Enable buffered mode for negative input.
+> +        maxItems: 1
+
+ditto
+
+> +
+> +    required:
+> +      - reg
+> +      - diff-channels
+> +
+> +examples:
+> +  - |
+> +    adc@0 {
+> +      compatible = "adi,ad7124-4";
+> +      reg = <0>;
+> +      spi-max-frequency = <5000000>;
+> +      interrupts = <25 2>;
+> +      interrupt-parent = <&gpio>;
+> +      refin1-supply = <&adc_vref>;
+> +      clocks = <&ad7124_mclk>;
+> +      clock-names = "mclk";
+> +
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      channel@0 {
+> +        reg = <0>;
+> +        diff-channels = <0 1>;
+> +        adi,reference-select = <0>;
+> +        adi,buffered-positive;
+> +      };
+> +
+> +      channel@1 {
+> +        reg = <1>;
+> +        bipolar;
+> +        diff-channels = <2 3>;
+> +        adi,reference-select = <0>;
+> +        adi,buffered-positive;
+> +        adi,buffered-negative;
+> +      };
+> +
+> +      channel@2 {
+> +        reg = <2>;
+> +        diff-channels = <4 5>;
+> +      };
+> +
+> +      channel@3 {
+> +        reg = <3>;
+> +        diff-channels = <6 7>;
+> +      };
+> +    };
+> --
+> 2.17.1
+>
