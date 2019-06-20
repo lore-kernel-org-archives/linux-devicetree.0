@@ -1,46 +1,113 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sr-som: fix AR8035 phy interface mode
-Date: Wed, 19 Jun 2019 20:06:49 -0300
-Message-ID: <CAOMZO5BfbGoh6N42xsv2WBz3cHot8VOqa-4rx0Y8YczC2Xzz0g@mail.gmail.com>
-References: <E1hdjBO-0007Yt-9M@rmk-PC.armlinux.org.uk>
- <20190619223727.zgfypqxg7bpxtduh@shell.armlinux.org.uk>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
+Date: Wed, 19 Jun 2019 17:15:25 -0700
+Message-ID: <20190620001526.93426218BE@mail.kernel.org>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-2-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190619223727.zgfypqxg7bpxtduh@shell.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190617082613.109131-2-brendanhiggins@google.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc: pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, Brendan Higgins <brendanhiggins@google.com>, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, khilman@baylibre.com, knut.omang@oracle.com, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, kunit-dev@googlegroups.com, richard@nod.at, rdunlap@infradead.org, linux-kernel@vger.kernel.org, mpe@ellerman.id.au, linux-fsdevel@vger.kernel.org, logang@deltatee.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-
-On Wed, Jun 19, 2019 at 7:37 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Wed, Jun 19, 2019 at 11:35:58PM +0100, Russell King wrote:
-> > A change to the AT803x driver fixed the handling of the phy interface
-> > mode, but this breaks all platforms that use "rgmii" as the mode in
-> > their DT.  Fix the Solidrun platforms.
-> >
-> > Fixes: 6d4cd041f0af ("net: phy: at803x: disable delay only for RGMII mode")
-> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
->
-> Note that without this, SolidRun Hummingboard and Cubox-i platforms
-> have no working ethernet with at least 5.1 kernels, which is a
-> regression.
-
-Commit 0672d22a1924 ("ARM: dts: imx: Fix the AR803X phy-mode") fixes
-this issue in mainline and it has already been applied to the 5.1
-stable tree as well.
-
-Thanks
+UXVvdGluZyBCcmVuZGFuIEhpZ2dpbnMgKDIwMTktMDYtMTcgMDE6MjU6NTYpCj4gZGlmZiAtLWdp
+dCBhL2t1bml0L3Rlc3QuYyBiL2t1bml0L3Rlc3QuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4g
+aW5kZXggMDAwMDAwMDAwMDAwMC4uZDA1ZDI1NGYxNTIxZgo+IC0tLSAvZGV2L251bGwKPiArKysg
+Yi9rdW5pdC90ZXN0LmMKPiBAQCAtMCwwICsxLDIxMCBAQAo+ICsvLyBTUERYLUxpY2Vuc2UtSWRl
+bnRpZmllcjogR1BMLTIuMAo+ICsvKgo+ICsgKiBCYXNlIHVuaXQgdGVzdCAoS1VuaXQpIEFQSS4K
+PiArICoKPiArICogQ29weXJpZ2h0IChDKSAyMDE5LCBHb29nbGUgTExDLgo+ICsgKiBBdXRob3I6
+IEJyZW5kYW4gSGlnZ2lucyA8YnJlbmRhbmhpZ2dpbnNAZ29vZ2xlLmNvbT4KPiArICovCj4gKwo+
+ICsjaW5jbHVkZSA8bGludXgvc2NoZWQvZGVidWcuaD4KPiArI2luY2x1ZGUgPGt1bml0L3Rlc3Qu
+aD4KPiArCj4gK3N0YXRpYyBib29sIGt1bml0X2dldF9zdWNjZXNzKHN0cnVjdCBrdW5pdCAqdGVz
+dCkKPiArewo+ICsgICAgICAgdW5zaWduZWQgbG9uZyBmbGFnczsKPiArICAgICAgIGJvb2wgc3Vj
+Y2VzczsKPiArCj4gKyAgICAgICBzcGluX2xvY2tfaXJxc2F2ZSgmdGVzdC0+bG9jaywgZmxhZ3Mp
+Owo+ICsgICAgICAgc3VjY2VzcyA9IHRlc3QtPnN1Y2Nlc3M7Cj4gKyAgICAgICBzcGluX3VubG9j
+a19pcnFyZXN0b3JlKCZ0ZXN0LT5sb2NrLCBmbGFncyk7CgpJIHN0aWxsIGRvbid0IHVuZGVyc3Rh
+bmQgdGhlIGxvY2tpbmcgc2NoZW1lIGluIHRoaXMgY29kZS4gSXMgdGhlCmludGVudGlvbiB0byBt
+YWtlIGdldHRlciBhbmQgc2V0dGVyIEFQSXMgdGhhdCBhcmUgInNhZmUiIGJ5IGFkZGluZyBpbiBh
+CnNwaW5sb2NrIHRoYXQgaXMgaGVsZCBhcm91bmQgZ2V0dGluZyBhbmQgc2V0dGluZyB2YXJpb3Vz
+IG1lbWJlcnMgaW4gdGhlCmt1bml0IHN0cnVjdHVyZT8KCkluIHdoYXQgc2l0dWF0aW9uIGlzIHRo
+ZXJlIG1vcmUgdGhhbiBvbmUgdGhyZWFkIHJlYWRpbmcgb3Igd3JpdGluZyB0aGUKa3VuaXQgc3Ry
+dWN0PyBJc24ndCBpdCBvbmx5IGEgc2luZ2xlIHByb2Nlc3MgdGhhdCBpcyBnb2luZyB0byBiZQpv
+cGVyYXRpbmcgb24gdGhpcyBzdHJ1Y3R1cmU/IEFuZCB3aHkgZG8gd2UgbmVlZCB0byBkaXNhYmxl
+IGlycXM/IEFyZSB3ZQpleHBlY3RpbmcgdG8gYmUgbW9kaWZ5aW5nIHRoZSB1bml0IHRlc3RzIGZy
+b20gaXJxIGNvbnRleHRzPwoKPiArCj4gKyAgICAgICByZXR1cm4gc3VjY2VzczsKPiArfQo+ICsK
+PiArc3RhdGljIHZvaWQga3VuaXRfc2V0X3N1Y2Nlc3Moc3RydWN0IGt1bml0ICp0ZXN0LCBib29s
+IHN1Y2Nlc3MpCj4gK3sKPiArICAgICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7Cj4gKwo+ICsgICAg
+ICAgc3Bpbl9sb2NrX2lycXNhdmUoJnRlc3QtPmxvY2ssIGZsYWdzKTsKPiArICAgICAgIHRlc3Qt
+PnN1Y2Nlc3MgPSBzdWNjZXNzOwo+ICsgICAgICAgc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmdGVz
+dC0+bG9jaywgZmxhZ3MpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGt1bml0X3ZwcmludGtfZW1p
+dChpbnQgbGV2ZWwsIGNvbnN0IGNoYXIgKmZtdCwgdmFfbGlzdCBhcmdzKQo+ICt7Cj4gKyAgICAg
+ICByZXR1cm4gdnByaW50a19lbWl0KDAsIGxldmVsLCBOVUxMLCAwLCBmbXQsIGFyZ3MpOwo+ICt9
+Cj4gKwo+ICtzdGF0aWMgaW50IGt1bml0X3ByaW50a19lbWl0KGludCBsZXZlbCwgY29uc3QgY2hh
+ciAqZm10LCAuLi4pCj4gK3sKPiArICAgICAgIHZhX2xpc3QgYXJnczsKPiArICAgICAgIGludCBy
+ZXQ7Cj4gKwo+ICsgICAgICAgdmFfc3RhcnQoYXJncywgZm10KTsKPiArICAgICAgIHJldCA9IGt1
+bml0X3ZwcmludGtfZW1pdChsZXZlbCwgZm10LCBhcmdzKTsKPiArICAgICAgIHZhX2VuZChhcmdz
+KTsKPiArCj4gKyAgICAgICByZXR1cm4gcmV0Owo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCBrdW5p
+dF92cHJpbnRrKGNvbnN0IHN0cnVjdCBrdW5pdCAqdGVzdCwKPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgIGNvbnN0IGNoYXIgKmxldmVsLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgc3Ry
+dWN0IHZhX2Zvcm1hdCAqdmFmKQo+ICt7Cj4gKyAgICAgICBrdW5pdF9wcmludGtfZW1pdChsZXZl
+bFsxXSAtICcwJywgIlx0IyAlczogJXBWIiwgdGVzdC0+bmFtZSwgdmFmKTsKPiArfQo+ICsKPiAr
+c3RhdGljIGJvb2wga3VuaXRfaGFzX3ByaW50ZWRfdGFwX3ZlcnNpb247CgpDYW4geW91IHBsZWFz
+ZSBtb3ZlIHRoaXMgaW50byBmdW5jdGlvbiBsb2NhbCBzY29wZSBpbiB0aGUgZnVuY3Rpb24KYmVs
+b3c/Cgo+ICsKPiArc3RhdGljIHZvaWQga3VuaXRfcHJpbnRfdGFwX3ZlcnNpb24odm9pZCkKPiAr
+ewo+ICsgICAgICAgaWYgKCFrdW5pdF9oYXNfcHJpbnRlZF90YXBfdmVyc2lvbikgewo+ICsgICAg
+ICAgICAgICAgICBrdW5pdF9wcmludGtfZW1pdChMT0dMRVZFTF9JTkZPLCAiVEFQIHZlcnNpb24g
+MTRcbiIpOwo+ICsgICAgICAgICAgICAgICBrdW5pdF9oYXNfcHJpbnRlZF90YXBfdmVyc2lvbiA9
+IHRydWU7Cj4gKyAgICAgICB9Cj4gK30KPiArClsuLi5dCj4gKwo+ICtzdGF0aWMgYm9vbCBrdW5p
+dF9tb2R1bGVfaGFzX3N1Y2NlZWRlZChzdHJ1Y3Qga3VuaXRfbW9kdWxlICptb2R1bGUpCj4gK3sK
+PiArICAgICAgIGNvbnN0IHN0cnVjdCBrdW5pdF9jYXNlICp0ZXN0X2Nhc2U7Cj4gKyAgICAgICBi
+b29sIHN1Y2Nlc3MgPSB0cnVlOwo+ICsKPiArICAgICAgIGZvciAodGVzdF9jYXNlID0gbW9kdWxl
+LT50ZXN0X2Nhc2VzOyB0ZXN0X2Nhc2UtPnJ1bl9jYXNlOyB0ZXN0X2Nhc2UrKykKPiArICAgICAg
+ICAgICAgICAgaWYgKCF0ZXN0X2Nhc2UtPnN1Y2Nlc3MpIHsKPiArICAgICAgICAgICAgICAgICAg
+ICAgICBzdWNjZXNzID0gZmFsc2U7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7CgpX
+aHkgbm90ICdyZXR1cm4gZmFsc2UnPwoKPiArICAgICAgICAgICAgICAgfQo+ICsKPiArICAgICAg
+IHJldHVybiBzdWNjZXNzOwoKQW5kICdyZXR1cm4gdHJ1ZSc/Cgo+ICt9Cj4gKwo+ICtzdGF0aWMg
+c2l6ZV90IGt1bml0X21vZHVsZV9jb3VudGVyID0gMTsKPiArCj4gK3N0YXRpYyB2b2lkIGt1bml0
+X3ByaW50X3N1YnRlc3RfZW5kKHN0cnVjdCBrdW5pdF9tb2R1bGUgKm1vZHVsZSkKPiArewo+ICsg
+ICAgICAga3VuaXRfcHJpbnRfb2tfbm90X29rKGZhbHNlLAo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGt1bml0X21vZHVsZV9oYXNfc3VjY2VlZGVkKG1vZHVsZSksCj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAga3VuaXRfbW9kdWxlX2NvdW50ZXIrKywKPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBtb2R1bGUtPm5hbWUpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9p
+ZCBrdW5pdF9wcmludF90ZXN0X2Nhc2Vfb2tfbm90X29rKHN0cnVjdCBrdW5pdF9jYXNlICp0ZXN0
+X2Nhc2UsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXpl
+X3QgdGVzdF9udW1iZXIpCj4gK3sKPiArICAgICAgIGt1bml0X3ByaW50X29rX25vdF9vayh0cnVl
+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRlc3RfY2FzZS0+c3VjY2VzcywKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0ZXN0X251bWJlciwKPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB0ZXN0X2Nhc2UtPm5hbWUpOwo+ICt9Cj4gKwo+ICt2b2lkIGt1bml0
+X2luaXRfdGVzdChzdHJ1Y3Qga3VuaXQgKnRlc3QsIGNvbnN0IGNoYXIgKm5hbWUpCj4gK3sKPiAr
+ICAgICAgIHNwaW5fbG9ja19pbml0KCZ0ZXN0LT5sb2NrKTsKPiArICAgICAgIHRlc3QtPm5hbWUg
+PSBuYW1lOwo+ICsgICAgICAgdGVzdC0+c3VjY2VzcyA9IHRydWU7Cj4gK30KPiArCj4gKy8qCj4g
+KyAqIFBlcmZvcm1zIGFsbCBsb2dpYyB0byBydW4gYSB0ZXN0IGNhc2UuCj4gKyAqLwo+ICtzdGF0
+aWMgdm9pZCBrdW5pdF9ydW5fY2FzZShzdHJ1Y3Qga3VuaXRfbW9kdWxlICptb2R1bGUsCj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGt1bml0X2Nhc2UgKnRlc3RfY2FzZSkKPiAr
+ewo+ICsgICAgICAgc3RydWN0IGt1bml0IHRlc3Q7Cj4gKyAgICAgICBpbnQgcmV0ID0gMDsKPiAr
+Cj4gKyAgICAgICBrdW5pdF9pbml0X3Rlc3QoJnRlc3QsIHRlc3RfY2FzZS0+bmFtZSk7Cj4gKwo+
+ICsgICAgICAgaWYgKG1vZHVsZS0+aW5pdCkgewo+ICsgICAgICAgICAgICAgICByZXQgPSBtb2R1
+bGUtPmluaXQoJnRlc3QpOwo+ICsgICAgICAgICAgICAgICBpZiAocmV0KSB7Cj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAga3VuaXRfZXJyKCZ0ZXN0LCAiZmFpbGVkIHRvIGluaXRpYWxpemU6ICVk
+XG4iLCByZXQpOwo+ICsgICAgICAgICAgICAgICAgICAgICAgIGt1bml0X3NldF9zdWNjZXNzKCZ0
+ZXN0LCBmYWxzZSk7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuOwo+ICsgICAgICAg
+ICAgICAgICB9Cj4gKyAgICAgICB9Cj4gKwo+ICsgICAgICAgaWYgKCFyZXQpCj4gKyAgICAgICAg
+ICAgICAgIHRlc3RfY2FzZS0+cnVuX2Nhc2UoJnRlc3QpOwoKRG8gd2UgbmVlZCB0aGlzIGlmIGNv
+bmRpdGlvbj8gcmV0IGNhbiBvbmx5IGJlIHNldCB0byBub24temVybyBhYm92ZSBidXQKdGhlbiB3
+ZSdsbCBleGl0IHRoZSBmdW5jdGlvbiBlYXJseSBzbyBpdCBzZWVtcyB1bm5lY2Vzc2FyeS4gR2l2
+ZW4gdGhhdCwKcmV0IHNob3VsZCBwcm9iYWJseSBiZSBtb3ZlZCBpbnRvIHRoZSBtb2R1bGUtPmlu
+aXQgcGF0aC4KCj4gKwo+ICsgICAgICAgaWYgKG1vZHVsZS0+ZXhpdCkKPiArICAgICAgICAgICAg
+ICAgbW9kdWxlLT5leGl0KCZ0ZXN0KTsKPiArCj4gKyAgICAgICB0ZXN0X2Nhc2UtPnN1Y2Nlc3Mg
+PSBrdW5pdF9nZXRfc3VjY2VzcygmdGVzdCk7Cj4gK30KPiArCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
