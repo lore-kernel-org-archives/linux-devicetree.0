@@ -1,133 +1,87 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: SPDX conversion under scripts/dtc/ of Linux Kernel
-Date: Thu, 20 Jun 2019 17:45:17 +1000
-Message-ID: <20190620074517.GA2066@umbus.BigPond>
-References: <CAK7LNARHHXv5Tu4BHN1avKOExS6HmPfd2c0ELZiQaxtmETOsDw@mail.gmail.com>
- <20190619125948.GA27090@kroah.com>
- <CAL_JsqJQ0bkMMpgA_JpGf-mo8ue28XpGf7oMFJ8bScGAmc+_1g@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [RFC PATCH 1/4] dt-bindings: display: Convert common panel
+ bindings to DT schema
+Date: Thu, 20 Jun 2019 09:57:49 +0200
+Message-ID: <20190620075749.o6i76exxhe2xbpfo@flea>
+References: <20190619215156.27795-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJQ0bkMMpgA_JpGf-mo8ue28XpGf7oMFJ8bScGAmc+_1g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-spdx@vger.kernel.org, Devicetree Compiler <devicetree-compiler@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: multipart/mixed; boundary="===============1460645140=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190619215156.27795-1-robh@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
 
---fdj2RfSjLxBAspz7
+--===============1460645140==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4oxwmcz4cekh22my"
+Content-Disposition: inline
+
+
+--4oxwmcz4cekh22my
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 19, 2019 at 09:39:13AM -0600, Rob Herring wrote:
-> On Wed, Jun 19, 2019 at 6:59 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Jun 19, 2019 at 07:23:19PM +0900, Masahiro Yamada wrote:
-> > > Hi.
-> > >
-> > > In this development cycle of Linux kernel,
-> > > lots of files were converted to use SPDX
-> > > instead of the license boilerplate.
-> > >
-> > > However.
-> > >
-> > > Some files were imported from a different project,
-> > > and are periodically synchronized with the upstream.
-> > > Have we discussed what to do about this case?
-> > >
-> > >
-> > > For example, scripts/dtc/ is the case.
-> > >
-> > > The files in scripts/dtc/ are synced with the upstream
-> > > device tree compiler.
-> > >
-> > > Rob Herring periodically runs scripts/dtc/update-dtc-source.sh
-> > > to import outcome from the upstream.
-> > >
-> > >
-> > > The upstream DTC has not adopted SPDX yet.
-> > >
-> > > Some files in Linux (e.g. scripts/dtc/dtc.c)
-> > > have been converted to SPDX.
-> > >
-> > > So, they are out of sync now.
-> > >
-> > > The license boilerplate will come back
-> > > when Rob runs scripts/dtc/update-dtc-source.sh
-> > > next time.
->=20
-> Already has. It just happened and is in next. The policy is everything
-> is upstream first and any changes to dtc in the kernel are rejected.
->=20
-> > >
-> > > What shall we do?
-> > >
-> > > [1] Convert upstream DTC to SPDX
-> > >
-> > > This will be a happy solution if it is acceptable in DTC.
-> > > Since we cannot push the decision of the kernel to a different
-> > > project, this is totally up to David Gibson.
-> >
-> > That's fine with me :)
->=20
-> I'll do the work if David is okay with it.
+On Wed, Jun 19, 2019 at 03:51:53PM -0600, Rob Herring wrote:
+> Convert the common panel bindings to DT schema consolidating scattered
+> definitions to a single schema file.
+>
+> The 'simple-panel' binding just a collection of properties and not a
+> complete binding itself. All of the 'simple-panel' properties are
+> covered by the panel-common.txt binding with the exception of the
+> 'no-hpd' property, so add that to the schema.
+>
+> As there are lots of references to simple-panel.txt, just keep the file
+> with a reference to panel-common.yaml for now until all the bindings are
+> converted.
+>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-I have no objection.
+Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
+Maxime
 
-> > > [2] Change scripts/dtc/update-dtc-source.sh to
-> > >     take care of the license block somehow
-> >
-> > That would also be good.
-> >
-> > > [3] Go back to license boilerplate, and keep the files
-> > >     synced with the upstream
-> > >     (and scripts/dtc/ should be excluded from the
-> > >      SPDX conversion tool.)
-> >
-> > nothing is being excluded from the SPDX conversions, sorry.  The goal is
-> > to do this for every file in the kernel tree.  Otherwise it's pointless.
-> >
-> > > Or, what else?
-> >
-> > Rob remembers to keep those first lines of the files intact when doing
-> > the next sync?
->=20
-> Patches to the import script are welcome. The only thing I have to
-> remember running the script is to add any new files. Otherwise, it's
-> scripted so I don't have to remember anything.
->=20
-> Rob
->=20
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---fdj2RfSjLxBAspz7
+--4oxwmcz4cekh22my
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl0LOYoACgkQbDjKyiDZ
-s5JO2Q//Qnvu8CIqR9v1DPhq1I1K6wFUT3RxjlX+pE03rujjRcwTv7K7d19AWqdL
-3lwaWAc8faWWg8/ceC8hBN/yXzNwtN1nnPyeeULgVUPWoPPPg4LzWjDFfuy+6M51
-CdS8lSkiCYNR52jEkirsDW6pd6NIwbaAsSgtYxd7EB39HGWwPk6xq726aPKqD6Vo
-ae70uJsDOH3tSbeXwFIx8//wvI1VtylMxROJU6MoKcs7c538jddrJSRQHjI1V0PY
-2Git/vQSI92xIkVc4ZrDCPhZ3TGUUuK+caYaxssLdK2lxd/lrQjL3fUCIoSykzOr
-u5vaBrxoYoP4GbZX9VxCZrwocXgAYn7Qf2ihw3Xs2/StrhdNsLVkrsuzP4A9pDbZ
-73Fr7FIw6UFarugBtKahlDV0yI3mQG42Awk6Is5SxLwFheyhrGMzkk8P33pV4ffb
-RYZ++8GwzVFl3ko0vf7tZIhNnLZLY4/MT+efPfmu+0+YF67oZ/TsdtHu1rHz+cJz
-tDj4hEzPXBRaj3jB3pEw3Xvs9EZvd6a3WeBEBoV8WtJWioS9cqHTvYtq5YQfOqzc
-qg82KlJpZg74ukamcHEmwfooC9AjfKFek/7ecqlBI5fBviEMM6fI7MfyTHAErVya
-ctngxdwSqxU/9DSCo5oRoSS7vgJkaaLo5rgNkd8M2DbmU9EM1ok=
-=vqV0
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQs8fQAKCRDj7w1vZxhR
+xWqfAQC4mg5/Loj8+ISTLoz6dZc1DK9gRuM+Zd0n3nqR5qy78gEA6zQubCUl5ZuG
+Q2QwmDebJXYojsaueg4Yq1I2Jd28oQE=
+=8Jp7
 -----END PGP SIGNATURE-----
 
---fdj2RfSjLxBAspz7--
+--4oxwmcz4cekh22my--
+
+--===============1460645140==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============1460645140==--
