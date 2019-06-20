@@ -1,127 +1,100 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v7 0/6] Add support for Orange Pi 3
-Date: Thu, 20 Jun 2019 17:53:58 +0200
-Message-ID: <2263144.KN5DhQ2VKD@jernej-laptop>
-References: <20190620134748.17866-1-megous@megous.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH 2/3] drm/rockchip: Add optional support for CRTC gamma
+ LUT
+Date: Thu, 20 Jun 2019 13:02:32 -0300
+Message-ID: <fdb859f24673ffcec603d0a119c7c566929691ad.camel@collabora.com>
+References: <20190618213406.7667-1-ezequiel@collabora.com>
+         <CAKb7UvgvY0tJDV9A=4+8=iqraziyt8SGF-QrX=M8jz+R+5JC=A@mail.gmail.com>
+         <20372cd5e56d67b8e896c2d94b3d0d136cc2886e.camel@collabora.com>
+         <31857290.5uKucqQp3M@diego>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190620134748.17866-1-megous@megous.com>
+In-Reply-To: <31857290.5uKucqQp3M@diego>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-sunxi@googlegroups.com, megous@megous.com
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: Ilia Mirkin <imirkin@alum.mit.edu>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rockchip@lists.infradead.org, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Douglas Anderson <dianders@chromium.org>, Jacopo Mondi <jacopo@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Wed, 2019-06-19 at 00:18 +0200, Heiko Stübner wrote:
+> Am Mittwoch, 19. Juni 2019, 00:09:57 CEST schrieb Ezequiel Garcia:
+> > On Tue, 2019-06-18 at 17:47 -0400, Ilia Mirkin wrote:
+> > > On Tue, Jun 18, 2019 at 5:43 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> > > > Add an optional CRTC gamma LUT support, and enable it on RK3288.
+> > > > This is currently enabled via a separate address resource,
+> > > > which needs to be specified in the devicetree.
+> > > > 
+> > > > The address resource is required because on some SoCs, such as
+> > > > RK3288, the LUT address is after the MMU address, and the latter
+> > > > is supported by a different driver. This prevents the DRM driver
+> > > > from requesting an entire register space.
+> > > > 
+> > > > The current implementation works for RGB 10-bit tables, as that
+> > > > is what seems to work on RK3288.
+> > > > 
+> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > > ---
+> > > > Changes from RFC:
+> > > > * Request (an optional) address resource for the LUT.
+> > > > * Drop support for RK3399, which doesn't seem to work
+> > > >   out of the box and needs more research.
+> > > > * Support pass-thru setting when GAMMA_LUT is NULL.
+> > > > * Add a check for the gamma size, as suggested by Ilia.
+> > > > * Move gamma setting to atomic_commit_tail, as pointed
+> > > >   out by Jacopo/Laurent, is the correct way.
+> > > > ---
+> > > > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> > > > index 12ed5265a90b..5b6edbe2673f 100644
+> > > > --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> > > > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> > > > +static void vop_crtc_gamma_set(struct vop *vop, struct drm_crtc *crtc,
+> > > > +                              struct drm_crtc_state *old_state)
+> > > > +{
+> > > > +       int idle, ret, i;
+> > > > +
+> > > > +       spin_lock(&vop->reg_lock);
+> > > > +       VOP_REG_SET(vop, common, dsp_lut_en, 0);
+> > > > +       vop_cfg_done(vop);
+> > > > +       spin_unlock(&vop->reg_lock);
+> > > > +
+> > > > +       ret = readx_poll_timeout(vop_dsp_lut_is_enable, vop,
+> > > > +                          idle, !idle, 5, 30 * 1000);
+> > > > +       if (ret)
+> > > > +               return;
+> > > > +
+> > > > +       spin_lock(&vop->reg_lock);
+> > > > +
+> > > > +       if (crtc->state->gamma_lut) {
+> > > > +               if (!old_state->gamma_lut || (crtc->state->gamma_lut->base.id !=
+> > > > +                                             old_state->gamma_lut->base.id))
+> > > > +                       vop_crtc_write_gamma_lut(vop, crtc);
+> > > > +       } else {
+> > > > +               for (i = 0; i < crtc->gamma_size; i++) {
+> > > > +                       u32 word;
+> > > > +
+> > > > +                       word = (i << 20) | (i << 10) | i;
+> > > > +                       writel(word, vop->lut_regs + i * 4);
+> > > > +               }
+> > > 
+> > > Note - I'm not in any way familiar with the hardware, so take with a
+> > > grain of salt --
+> > > 
+> > > Could you just leave dsp_lut_en turned off in this case?
+> > > 
+> > 
+> > That was the first thing I tried :-)
+> > 
+> > It seems dsp_lut_en is not to enable the CRTC gamma LUT stage,
+> > but to enable writing the gamma LUT to the internal RAM.
+> 
+> I guess that warants a code comment stating this, so we don't end
+> up with well-meant cleanup patches in the future :-) .
+> 
 
-Dne =C4=8Detrtek, 20. junij 2019 ob 15:47:42 CEST je megous via linux-sunxi=
-=20
-napisal(a):
-> From: Ondrej Jirman <megous@megous.com>
->=20
-> This series implements support for Xunlong Orange Pi 3 board.
->=20
-> - ethernet support (patches 1-3)
+Sure, makes sense.
 
-Correct me if I'm wrong, but patches 1-2 aren't strictly necessary for=20
-OrangePi 3, right? H6 DTSI already has emac node with dual compatible (H6 a=
-nd=20
-A64) and since OrangePi 3 uses gigabit ethernet, quirk introduced by patche=
-s=20
-1-2 are not needed.
+Any other feedback aside from this?
 
-However, it is nice to have this 100 Mbit fix, because most STB DTS will ne=
-ed=20
-it.
-
-Best regards,
-Jernej
-
-> - HDMI support (patches 4-6)
->=20
-> For some people, ethernet doesn't work after reboot (but works on cold
-> boot), when the stmmac driver is built into the kernel. It works when
-> the driver is built as a module. It's either some timing issue, or power
-> supply issue or a combination of both. Module build induces a power
-> cycling of the phy.
->=20
-> I encourage people with this issue, to build the driver into the kernel,
-> and try to alter the reset timings for the phy in DTS or
-> startup-delay-us and report the findings.
->=20
->=20
-> Please take a look.
->=20
-> thank you and regards,
->   Ondrej Jirman
->=20
->=20
-> Changes in v7:
-> - dropped stored reference to connector_pdev as suggested by Jernej
-> - added forgotten dt-bindings reviewed-by tag
->=20
-> Changes in v6:
-> - added dt-bindings reviewed-by tag
-> - fix wording in stmmac commit (as suggested by Sergei)
->=20
-> Changes in v5:
-> - dropped already applied patches (pinctrl patches, mmc1 pinconf patch)
-> - rename GMAC-3V3 -> GMAC-3V to match the schematic (Jagan)
-> - changed hdmi-connector's ddc-supply property to ddc-en-gpios
->   (Rob Herring)
->=20
-> Changes in v4:
-> - fix checkpatch warnings/style issues
-> - use enum in struct sunxi_desc_function for io_bias_cfg_variant
-> - collected acked-by's
-> - fix compile error in drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c:156
->   caused by missing conversion from has_io_bias_cfg struct member
->   (I've kept the acked-by, because it's a trivial change, but feel free
->   to object.) (reported by Martin A. on github)
->   I did not have A80 pinctrl enabled for some reason, so I did not catch
->   this sooner.
-> - dropped brcm firmware patch (was already applied)
-> - dropped the wifi dts patch (will re-send after H6 RTC gets merged,
->   along with bluetooth support, in a separate series)
->=20
-> Changes in v3:
-> - dropped already applied patches
-> - changed pinctrl I/O bias selection constants to enum and renamed
-> - added /omit-if-no-ref/ to mmc1_pins
-> - made mmc1_pins default pinconf for mmc1 in H6 dtsi
-> - move ddc-supply to HDMI connector node, updated patch descriptions,
->   changed dt-bindings docs
->=20
-> Changes in v2:
-> - added dt-bindings documentation for the board's compatible string
->   (suggested by Clement)
-> - addressed checkpatch warnings and code formatting issues (on Maxime's
->   suggestions)
-> - stmmac: dropped useless parenthesis, reworded description of the patch
->   (suggested by Sergei)
-> - drop useles dev_info() about the selected io bias voltage
-> - docummented io voltage bias selection variant macros
-> - wifi: marked WiFi DTS patch and realted mmc1_pins as "DO NOT MERGE",
->   because wifi depends on H6 RTC support that's not merged yet (suggested
->   by Clement)
-> - added missing signed-of-bys
-> - changed &usb2otg dr_mode to otg, and added a note about VBUS
-> - improved wording of HDMI driver's DDC power supply patch
->=20
-> Icenowy Zheng (2):
->   net: stmmac: sun8i: add support for Allwinner H6 EMAC
->   net: stmmac: sun8i: force select external PHY when no internal one
->=20
-> Ondrej Jirman (4):
->   arm64: dts: allwinner: orange-pi-3: Enable ethernet
->   dt-bindings: display: hdmi-connector: Support DDC bus enable
->   drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
->   arm64: dts: allwinner: orange-pi-3: Enable HDMI output
->=20
->  .../display/connector/hdmi-connector.txt      |  1 +
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 70 +++++++++++++++++++
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         | 54 ++++++++++++--
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |  2 +
->  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 21 ++++++
->  5 files changed, 144 insertions(+), 4 deletions(-)
+Thanks,
+Ezequiel
