@@ -1,65 +1,99 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC PATCH 4/4] dt-bindings: display: Convert innolux,ee101ia-01
- panel to DT schema
-Date: Thu, 20 Jun 2019 11:07:20 +0200
-Message-ID: <20190620090720.GE26689@ulmo>
-References: <20190619215156.27795-1-robh@kernel.org>
- <20190619215156.27795-4-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2qXFWqzzG3v1+95a"
+From: Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v14 0/2] spi: Add Renesas R-Car Gen3 RPC-IF SPI driver
+Date: Thu, 20 Jun 2019 17:30:44 +0800
+Message-ID: <1561023046-20886-1-git-send-email-masonccyang@mxic.com.tw>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190619215156.27795-4-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, lee.jones@linaro.org, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>, Mason Yang <masonccyang@mxic.com.tw>, miquel.raynal@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
---2qXFWqzzG3v1+95a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+V14 patch including:
+1) Patch RPC-IF back to SPI mode only instead of MFD & SPI 
+   by MFD maintainer, Lee Jones comments.
+2) Patch pm_runtime control in spi transfer.
 
-On Wed, Jun 19, 2019 at 03:51:56PM -0600, Rob Herring wrote:
-> Convert the innolux,ee101ia-01 LVDS panel binding to DT schema.
->=20
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../display/panel/innolux,ee101ia-01d.txt     |  7 -------
->  .../display/panel/innolux,ee101ia-01d.yaml    | 21 +++++++++++++++++++
->  2 files changed, 21 insertions(+), 7 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/innol=
-ux,ee101ia-01d.txt
->  create mode 100644 Documentation/devicetree/bindings/display/panel/innol=
-ux,ee101ia-01d.yaml
+v13 patch including:
+1) rename mfd to ddata for SPI driver.
+2) Patch RPC-IF devicetree for SPI and HyperFlash.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+v12 patch including:
+1) add back "wbuf" in dts example.
+2) RPC-IF replace rpc-if in dts.
 
---2qXFWqzzG3v1+95a
-Content-Type: application/pgp-signature; name="signature.asc"
+v11 patch including:
+1) Patch mfd include header file.
+2) mfd coding style.
+3) add back wbuf description in dts.
 
------BEGIN PGP SIGNATURE-----
+v10 patch including:
+1) Address range for > 64M byte flash.
+2) Removed dirmap_write due to WBUF 256 bytes transfer issue.
+3) Dummy bytes setting according to spi-nor.c layer.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0LTMgACgkQ3SOs138+
-s6HTnA//XpMRpvIzlsj6bjRvDhdgl8TvPHw+KHstPrkShJJAVgRtW2KVQLdY5nTm
-24C05Hn72m0VpcFpczml93ye6xWbctMc2fTEVXEEoA9sSi3n0MPPP07qoun+aDHk
-gA+NM90RqQVW68KAckevmejVJxzhlN8IsmvLuZLxx4x2EcbEqFO5z9yt199zvItU
-M41Xi2lWdLvDJplQHd5kKPYPHVYxyXNVd5mZA/LbFbWjVxp3RpcHOGDSIwLchLIP
-exole/KJ1H7RECQyShMq1FRkL8I7cxQKF39b1SA8qY0zsUo+t49247jZrCJgkU8u
-dvIRdNsT4mEVpIAuPIUTLeRxZigihvqbz2Ay00C6eGU7iL8HQX97dQKhn1/MImxe
-ck662ma0pZHNNgCkcN3Bf+4fxvHVsBt1a2X3V0MM3cDLc8Bu0TiIuIpH3H9Bh44h
-PbQzzH+1052oizKdXIiFtmoyGfJpZ5jHRuNQGbzE4ykAy6lb7uey8epWmDql9B14
-kBUOHgAOdF+LKKZZMH02p5ISXGMAJ4Pe6HoHL/ox5DfosyMUnUGRIflYpUenliZe
-Mgwr3ThVkTKeLwOpyhQdMvJStL1I3WafYH9vGYDgju0Vqn9jLCrf9+GonIj8NKVV
-vsn6jEkuy9AQi56DWl3YRFUyv8J8lJyIHkcTWYxGe60cYnkbQeU=
-=wPVf
------END PGP SIGNATURE-----
+v9 patch is for RPC MFD driver and RPC SPI driver.
 
---2qXFWqzzG3v1+95a--
+v8 patch including:
+1) Supported SoC-specific values in DTS.
+2) Rename device node name as flash.
+
+v7 patch is according to Geert and Sergei's comments:
+1) Add all R-Car Gen3 model in dts.
+2) patch rpc-if child node search.
+3) minror coding style.
+
+v6 patch is accroding to Geert, Marek and Sergei's comments:
+1) spi_controller for new code.
+2) "renesas,rcar-gen3-rpc" instead of "renesas,r8a77995-rpc."
+3) patch external address read mode w/o u64 readq().
+4) patch dts for write buffer & drop "renesas,rpc-mode".
+5) coding style and so on.
+
+v5 patch is accroding to Sergei's comments:
+1) Read 6 bytes ID from Sergei's patch.
+2) regmap_update_bits().
+3) C++ style comment.
+
+v4 patch is according to Sergei's comments including:
+1) Drop soc_device_match().
+2) Drop unused RPC registers.
+3) Use ilog2() instead of fls().
+4) Patch read 6 bytes ID w/ one command.
+5) Coding style and so on.
+
+v3 patch is according to Marek and Geert's comments including:
+1) soc_device_mach() to set up RPC_PHYCNT_STRTIM.
+2) get_unaligned().
+3) rpc-mode for rpi-spi-flash or rpc-hyperflash.
+4) coding style and so on.
+
+v2 patch including:
+1) remove RPC clock enable/dis-able control,
+2) patch run time PM.
+3) add RPC module software reset,
+4) add regmap.
+5) other coding style and so on.
+
+thanks for your review.
+
+best regards,
+Mason
+
+
+Mason Yang (2):
+  spi: Add Renesas R-Car Gen3 RPC-IF SPI controller driver
+  dt-bindings: spi: Document Renesas R-Car Gen3 RPC-IF controller
+    bindings
+
+ .../devicetree/bindings/spi/spi-renesas-rpc.txt    |  43 ++
+ drivers/spi/Kconfig                                |   6 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-renesas-rpc.c                      | 760 +++++++++++++++++++++
+ 4 files changed, 810 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
+ create mode 100644 drivers/spi/spi-renesas-rpc.c
+
+-- 
+1.9.1
