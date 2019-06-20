@@ -1,32 +1,43 @@
-From: Tao Ren <taoren@fb.com>
-Subject: Re: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
-Date: Thu, 20 Jun 2019 08:13:59 +0000
-Message-ID: <56ff5fa8-091a-2cbc-dfa3-b912cf328695@fb.com>
-References: <20190619205009.4176588-1-taoren@fb.com>
- <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
- <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
- <c610ecede7494c189a92a9a3f6d0fd16@TWMBX02.aspeed.com>
- <bdd53adb-6987-1b91-adde-298839b2c066@fb.com>
- <195bb56028d04001bbaf835cc17e032e@TWMBX02.aspeed.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH 1/3] arm64: tegra: Fix AGIC register range
+Date: Thu, 20 Jun 2019 09:17:00 +0100
+Message-ID: <20190620081702.17209-2-jonathanh@nvidia.com>
+References: <20190620081702.17209-1-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <195bb56028d04001bbaf835cc17e032e@TWMBX02.aspeed.com>
-Content-Language: en-US
-Content-ID: <C26BC355B528F04297AFB94D467A3AFA@namprd15.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryan Chen <ryan_chen@aspeedtech.com>, Brendan Higgins <brendanhiggins@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190620081702.17209-1-jonathanh@nvidia.com>
+Sender: stable-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gNi8yMC8xOSAxOjAxIEFNLCBSeWFuIENoZW4gd3JvdGU6DQo+IEhlbGxvIFRhbywNCj4gCUxl
-dCBtZSBtb3JlIGNsZWFyLiBXaGVuIHlvdSBzZXQgKDMsIDE1LCAxNCkgdGhlIGRldmljZSBzb21l
-dGltZXMgcmVzcG9uc2UgbmFjay4gDQo+IAlidXQgd2hlbiB5b3Ugc2V0ICg0LCA3LCA3KSwgdGhl
-IGRldmljZSBhbHdheXMgYWNrLiBBbSBJIHJpZ2h0PyANCj4gUnlhbg0KDQpIZWxsbyBSeWFuLA0K
-DQpJdCdzIGNvcnJlY3QuIFdlIGhhdmUgc2VlbiB0aGUgcHJvYmxlbSBvbiAyIEZhY2Vib29rIEJN
-QyBwbGF0Zm9ybXMgc28gZmFyLiBHaXZlbiB0aGUgb3RoZXIgfjEwIEZhY2Vib29rIEJNQyBwbGF0
-Zm9ybXMgYXJlIHN0aWxsIHJ1bm5pbmcga2VybmVsIDQuMSAod2l0aCAoNCwgNywgNykgc2V0dGlu
-Z3MpLCBJJ2QgYXNzdW1lIG1vcmUgcGxhdGZvcm1zIHdpbGwgYmUgaW1wYWN0ZWQgYWZ0ZXIgdXBn
-cmFkaW5nIHRvIHRoZSBsYXRlc3Qga2VybmVsLg0KDQpUaGFuayB5b3UgZm9yIHNwZW5kaW5nIHRp
-bWUgb24gdGhpcyENCg0KDQpDaGVlcnMsDQoNClRhbw0K
+The Tegra AGIC interrupt controller is an ARM GIC400 interrupt
+controller. Per the ARM GIC device-tree binding, the first address
+region is for the GIC distributor registers and the second address
+region is for the GIC CPU interface registers. The address space for
+the distributor registers is 4kB, but currently this is incorrectly
+defined as 8kB for the Tegra AGIC and overlaps with the CPU interface
+registers. Correct the address space for the distributor to be 4kB.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index edf27fe2f10e..ec762b3455b4 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -1258,7 +1258,7 @@
+ 			compatible = "nvidia,tegra210-agic";
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
+-			reg = <0x702f9000 0x2000>,
++			reg = <0x702f9000 0x1000>,
+ 			      <0x702fa000 0x2000>;
+ 			interrupts = <GIC_SPI 102 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 			clocks = <&tegra_car TEGRA210_CLK_APE>;
+-- 
+2.17.1
