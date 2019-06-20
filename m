@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 4/5] ARM: dts: mmp2: add camera interfaces
-Date: Thu, 20 Jun 2019 17:07:23 +0200
-Message-ID: <20190620150724.1406757-5-lkundrak@v3.sk>
+Subject: [PATCH 1/5] ARM: dts: mmp2: trivial whitespace fix
+Date: Thu, 20 Jun 2019 17:07:20 +0200
+Message-ID: <20190620150724.1406757-2-lkundrak@v3.sk>
 References: <20190620150724.1406757-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,43 +12,25 @@ To: Olof Johansson <olof@lixom.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
+A missing space before a curly brace.
+
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/boot/dts/mmp2.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm/boot/dts/mmp2.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index 21432cb9143f..68b547077323 100644
+index b6f40743e07b..50b6c38b39cc 100644
 --- a/arch/arm/boot/dts/mmp2.dtsi
 +++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -170,6 +170,28 @@
- 				interrupts =3D <54>;
- 				status =3D "disabled";
+@@ -379,7 +379,7 @@
  			};
-+
-+			camera0: camera@d420a000 {
-+				compatible =3D "marvell,mmp2-ccic";
-+				reg =3D <0xd420a000 0x800>;
-+				interrupts =3D <42>;
-+				clocks =3D <&soc_clocks MMP2_CLK_CCIC0>;
-+				clock-names =3D "axi";
-+				#clock-cells =3D <0>;
-+				clock-output-names =3D "mclk";
-+				status =3D "disabled";
-+			};
-+
-+			camera1: camera@d420a800 {
-+				compatible =3D "marvell,mmp2-ccic";
-+				reg =3D <0xd420a800 0x800>;
-+				interrupts =3D <30>;
-+				clocks =3D <&soc_clocks MMP2_CLK_CCIC1>;
-+				clock-names =3D "axi";
-+				#clock-cells =3D <0>;
-+				clock-output-names =3D "mclk";
-+				status =3D "disabled";
-+			};
  		};
 =20
- 		apb@d4000000 {	/* APB */
+-		soc_clocks: clocks{
++		soc_clocks: clocks {
+ 			compatible =3D "marvell,mmp2-clock";
+ 			reg =3D <0xd4050000 0x1000>,
+ 			      <0xd4282800 0x400>,
 --=20
 2.21.0
