@@ -1,24 +1,18 @@
-From: Dan Williams <dcbw@redhat.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Wed, 19 Jun 2019 20:25:11 -0500
-Message-ID: <7c0e8909cee17623565ef88445b0497d5504fe1c.camel@redhat.com>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
- <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org>
- <b23a83c18055470c5308fcd1eed018056371fc1d.camel@sipsolutions.net>
- <CAK8P3a1FeUQR3pgoQxHoRK05JGORyR+TFATVQiijLWtFKTv6OQ@mail.gmail.com>
- <613cdfde488eb23d7207c7ba6258662702d04840.camel@sipsolutions.net>
- <CAK8P3a2onXpxiE4y9PzRwuPM2dh=h_BKz7Eb0=LLPgBbZoK1bQ@mail.gmail.com>
- <6c70950d0c78bc02a3d016918ec3929e@codeaurora.org>
- <CAK8P3a3e+U85yHTeE4dHa4okLVHgBd8Kke9=FytzvMwz+wB0sQ@mail.gmail.com>
- <2926e45fd7ff62fd7c4af9b338bf0caa@codeaurora.org>
+From: Tao Ren <taoren@fb.com>
+Subject: Re: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
+Date: Thu, 20 Jun 2019 02:28:06 +0000
+Message-ID: <aefd4de2-31b4-1332-7cc0-92cc04fea045@fb.com>
+References: <20190619205009.4176588-1-taoren@fb.com>
+ <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
+ <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
+ <4c8b9ca5e84db7db67ad552d8fdbaa17d11b6432.camel@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2926e45fd7ff62fd7c4af9b338bf0caa@codeaurora.org>
+In-Reply-To: <4c8b9ca5e84db7db67ad552d8fdbaa17d11b6432.camel@kernel.crashing.org>
+Content-Language: en-US
+Content-ID: <8840564E23F9E849A053530EEF97466C@namprd15.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -28,32 +22,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: DTML <devicetree@vger.kernel.org>, syadagir@codeaurora.org, Eric Caruso <ejcaruso@google.com>, David Miller <davem@davemloft.net>, linux-arm-msm@vger.kernel.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, evgreen@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Networking <netdev@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Alex Elder <elder@linaro.org>, Johannes Berg <johannes@sipsolutions.net>, linux-soc@vger.kernel.org, abhishek.esse@gmail.com, cpratapa@codeaurora.org, Ben Chan <benchan@google.com>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Brendan Higgins <brendanhiggins@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "ryan_chen@aspeedtech.com" <ryan_chen@aspeedtech.com>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-06-19 at 12:47 -0600, Subash Abhinov Kasiviswanathan
-wrote:
-> > > There is a n:1 relationship between rmnet and IPA.
-> > > rmnet does the de-muxing to multiple netdevs based on the mux id
-> > > in the MAP header for RX packets and vice versa.
-> > 
-> > Oh, so you mean that even though IPA supports multiple channels
-> > and multiple netdev instances for a physical device, all the
-> > rmnet devices end up being thrown into a single channel in IPA?
-> > 
-> > What are the other channels for in IPA? I understand that there
-> > is one channel for commands that is separate, while the others
-> > are for network devices, but that seems to make no sense if
-> > we only use a single channel for rmnet data.
-> > 
+On 6/19/19 4:02 PM, Benjamin Herrenschmidt wrote:
+> On Wed, 2019-06-19 at 22:32 +0000, Tao Ren wrote:
+>> Thank you for the quick response, Brendan.
+>>
+>> Aspeed I2C bus frequency is defined by 3 parameters
+>> (base_clk_divisor, clk_high_width, clk_low_width), and I choose
+>> base_clk_divisor because it controls all the Aspeed I2C timings (such
+>> as setup time and hold time). Once base_clk_divisor is decided
+>> (either by the current logic in i2c-aspeed driver or manually set in
+>> device tree), clk_high_width and clk_low_width will be calculated by
+>> i2c-aspeed driver to meet the specified I2C bus speed.
+>>
+>> For example, by setting I2C bus frequency to 100KHz on AST2500
+>> platform, (base_clock_divisor, clk_high_width, clk_low_width) is set
+>> to (3, 15, 14) by our driver. But some slave devices (on CMM i2c-8
+>> and Minipack i2c-0) NACK byte transactions with the default timing
+>> setting: the issue can be resolved by setting base_clk_divisor to 4,
+>> and (clk_high_width, clk_low_width) will be set to (7, 7) by our i2c-
+>> aspeed driver to achieve similar I2C bus speed.
+>>
+>> Not sure if my answer helps to address your concerns, but kindly let
+>> me know if you have further questions/suggestions.
 > 
-> AFAIK, the other channels are for use cases like tethering.
-> There is only a single channel which is used for RX
-> data which is then de-muxed using rmnet.
+> Did you look at the resulting output on a scope ? I'm curious what
+> might be wrong.... 
+> 
+> CCing Ryan from Aspeed, he might have some idea.
+> 
+> Could it be that with some specific dividers you have more jitter ?
+> Still, i2c devices tend to be rather robust vs crappy clocks unless you
+> are massively out of bounds, which makes me wonder whether something
+> else might be wrong in your setup.
+> 
+> Cheers,
+> Ben.
 
-That seems odd, since tethering is no different than any other data
-channel in QMI, just that it may have a different APN and QoS
-guarantees.
+I've reached out to hardware team to see if they can provide more inputs (such as protocol decoder output) but so far I don't have such data. I'm suspecting it's caused by I2C timing mainly because:
 
-Dan
+1) the intermittent i2c transaction failures always happen to slave devices which are furthest away from ASPEED chip.
+
+2) As the i2c-aspeed driver in my kernel 4.1 tree (derived from ASPEED SDK) works properly, and I copied I2CD04 (Clock and AC Timing Control) register value from kernel 4.1 and applied to the latest upstream driver: the transaction failure is fixed :)
+
+Thank you Ben for looking into the issue and involving more experts (Ryan) for discussion. I have been suffering from the problem for several months and I'm looking forward for proper/right solutions.
+
+
+Cheers,
+
+Tao
