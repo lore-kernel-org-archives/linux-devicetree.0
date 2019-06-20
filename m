@@ -1,72 +1,83 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH v11 2/2] phy: Add driver for mixel mipi dphy found on
- NXP's i.MX8 SoCs
-Date: Thu, 20 Jun 2019 21:43:13 +0200
-Message-ID: <20190620194313.GA13015@bogon.m.sigxcpu.org>
-References: <cover.1557657814.git.agx@sigxcpu.org>
- <2000bc4564175abd7966207a5e9fbb9bb7d82059.1557657814.git.agx@sigxcpu.org>
- <CAOMZO5BaFYJxh1v46n2mdPyc+-jg6LgvoGR1rTE+yHZg_0Z8PA@mail.gmail.com>
- <69fcb327-8b51-df9e-12d9-d75751974bce@ti.com>
- <9a872f5b-1544-32a0-bd93-1d6333468114@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v7 4/5] dt-bindings: mtd: Add bindings for TI's AM654
+ HyperBus memory controller
+Date: Thu, 20 Jun 2019 22:48:01 +0300
+Message-ID: <d4ddd75d-92ab-4bca-5e2f-853ade714ba2@cogentembedded.com>
+References: <20190620172250.9102-1-vigneshr@ti.com>
+ <20190620172250.9102-5-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9a872f5b-1544-32a0-bd93-1d6333468114@ti.com>
+In-Reply-To: <20190620172250.9102-5-vigneshr@ti.com>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Fabio Estevam <festevam@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Thierry Reding <treding@nvidia.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Heiko Stuebner <heiko@sntech.de>, Johan Hovold <johan@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, moderated list:ARM/FREESCALE IMX / MXC ARM ARCHI
+To: Vignesh Raghavendra <vigneshr@ti.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Thu, Jun 20, 2019 at 02:18:53PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 24/05/19 9:31 PM, Kishon Vijay Abraham I wrote:
-> > Hi,
-> > 
-> > On 24/05/19 5:53 PM, Fabio Estevam wrote:
-> >> Hi Kishon,
-> >>
-> >> On Sun, May 12, 2019 at 7:49 AM Guido Günther <agx@sigxcpu.org> wrote:
-> >>>
-> >>> This adds support for the Mixel DPHY as found on i.MX8 CPUs but since
-> >>> this is an IP core it will likely be found on others in the future. So
-> >>> instead of adding this to the nwl host driver make it a generic PHY
-> >>> driver.
-> >>>
-> >>> The driver supports the i.MX8MQ. Support for i.MX8QM and i.MX8QXP can be
-> >>> added once the necessary system controller bits are in via
-> >>> mixel_dphy_devdata.
-> >>>
-> >>> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> >>> Co-developed-by: Robert Chiras <robert.chiras@nxp.com>
-> >>> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> >>> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> >>> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> >>
-> >> Would you have any comments on this series, please?
-> > 
-> > I don't have any comments. I'll queue this once I start queuing patches for the
-> > next merge window.
-> 
-> Can you fix the following checkpatch warning and repost?
-> WARNING: quoted string split across lines
-> #420: FILE: drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:280:
-> +	dev_dbg(&phy->dev, "hs_prepare: %u, clk_prepare: %u, "
-> +		"hs_zero: %u, clk_zero: %u, "
-> 
-> WARNING: quoted string split across lines
-> #421: FILE: drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:281:
-> +		"hs_zero: %u, clk_zero: %u, "
-> +		"hs_trail: %u, clk_trail: %u, "
-> 
-> WARNING: quoted string split across lines
-> #422: FILE: drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:282:
-> +		"hs_trail: %u, clk_trail: %u, "
-> +		"rxhs_settle: %u\n",
+On 06/20/2019 08:22 PM, Vignesh Raghavendra wrote:
 
-Fixed in v12.
-Thanks,
- -- Guido
+> Add binding documentation for TI's HyperBus memory controller present on
+> AM654 SoC.
+> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+> 
+> v7: Fix example to move HyperBus node out of syscon
+> v6: Use generic names for bindings
+> 
+>  .../devicetree/bindings/mtd/ti,am654-hbmc.txt | 52 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+> new file mode 100644
+> index 000000000000..d424a0b88ab6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+[...]
+> +Example:
+> +
+> +	system-controller@47000000 {
+> +		compatible = "syscon", "simple-mfd";
+> +		reg = <0x0 0x47000000 0x0 0x100>;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		hbmc_mux: multiplexer {
+> +			compatible = "mmio-mux";
+> +			#mux-control-cells = <1>;
+> +			mux-reg-masks = <0x4 0x2>; /* 0: reg 0x4, bit 1 */
+> +		};
+> +
+
+   Empty line not needed here.
+
+> +	};
+> +
+> +	hbmc: hyperbus@47034000 {
+> +		compatible = "ti,am654-hbmc";
+> +		reg = <0x0 0x47034000 0x0 0x100>,
+> +			<0x5 0x00000000 0x1 0x0000000>;
+> +		power-domains = <&k3_pds 55>;
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
+> +			 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
+> +		mux-controls = <&hbmc_mux 0>;
+> +
+> +			/* Slave flash node */
+
+   Overindented.
+
+> +		flash@0,0 {
+> +			compatible = "cypress,hyperflash", "cfi-flash";
+> +			reg = <0x0 0x0 0x4000000>;
+> +		};
+> +	};
+[...]
+
+MBR, Sergei
