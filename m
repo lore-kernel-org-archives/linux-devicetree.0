@@ -1,133 +1,89 @@
-From: shuah <shuah@kernel.org>
-Subject: Re: [PATCH v5 00/18] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Fri, 21 Jun 2019 08:59:48 -0600
-Message-ID: <69809117-dcda-160a-ee0a-d1d3b4c5cd8a@kernel.org>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Frank Rowand <frowand.list@gmail.com>, Brendan Higgins <brendanhiggins@google.com>, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, linux-kselftest@vger.kernel.org, shuah <shuah@kernel.org>, linux-nvdimm@lists.01.org, khilman@baylibre.com, knut.omang@oracle.com, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, kunit-dev@googlegroups.com, richard@nod.at, rdunlap@infradead.org, linux-kernel@vger.kernel.org, mpe@ellerman.id.au, linux-fsdevel@vger.kernel.org, logang@deltatee.com
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v8 5/5] arm64: dts: qcom: Add Asus NovaGo TP370QL
+Date: Fri, 21 Jun 2019 07:59:51 -0700
+Message-ID: <20190621145951.38844-1-jeffrey.l.hugo@gmail.com>
+References: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, agross@kernel.org
+Cc: benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com, jikos@kernel.org, hdegoede@redhat.com, lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQnJlbmRhbiwKCk9uIDYvMTkvMTkgNzoxNyBQTSwgRnJhbmsgUm93YW5kIHdyb3RlOgo+IEhp
-IEJyZW5kYW4sCj4gCj4gSSBhbSBvbmx5IHJlc3BvbmRpbmcgdG8gdGhpcyBiZWNhdXNlIHlvdSBh
-c2tlZCBtZSB0byBpbiB0aGUgdjQgdGhyZWFkLgo+IAo+IFRoYW5rIHlvdSBmb3IgZXZhbHVhdGlu
-ZyBteSBjb21tZW50cyBpbiB0aGUgdjQgdGhyZWFkIGFuZCBhc2tpbmcgbWUgdG8KPiBjb21tZW50
-IG9uIHY1Cj4gCj4gT24gNi8xNy8xOSAxOjI1IEFNLCBCcmVuZGFuIEhpZ2dpbnMgd3JvdGU6Cj4+
-ICMjIFRMO0RSCj4+Cj4+IEEgbm90IHNvIHF1aWNrIGZvbGxvdy11cCB0byBTdGVwaGVuJ3Mgc3Vn
-Z2VzdGlvbnMgb24gUEFUQ0ggdjQuIE5vdGhpbmcKPj4gdGhhdCByZWFsbHkgY2hhbmdlcyBhbnkg
-ZnVuY3Rpb25hbGl0eSBvciB1c2FnZSB3aXRoIHRoZSBtaW5vciBleGNlcHRpb24KPj4gb2YgYSBj
-b3VwbGUgcHVibGljIGZ1bmN0aW9ucyB0aGF0IFN0ZXBoZW4gYXNrZWQgbWUgdG8gcmVuYW1lLgo+
-PiBOZXZlcnRoZWxlc3MsIGEgZ29vZCBkZWFsIG9mIGNsZWFuIHVwIGFuZCBmaXhlcy4gU2VlIGNo
-YW5nZXMgYmVsb3cuCj4+Cj4+IEFzIGZvciBvdXIgY3VycmVudCBzdGF0dXMsIHJpZ2h0IG5vdyB3
-ZSBnb3QgUmV2aWV3ZWQtYnlzIG9uIGFsbCBwYXRjaGVzCj4+IGV4Y2VwdDoKPj4KPj4gLSBbUEFU
-Q0ggdjUgMDgvMThdIG9ianRvb2w6IGFkZCBrdW5pdF90cnlfY2F0Y2hfdGhyb3cgdG8gdGhlIG5v
-cmV0dXJuCj4+ICAgIGxpc3QKPj4KPj4gSG93ZXZlciwgaXQgd291bGQgcHJvYmFibHkgYmUgZ29v
-ZCB0byBnZXQgcmV2aWV3cy9hY2tzIGZyb20gdGhlCj4+IHN1YnN5c3RlbSBtYWludGFpbmVycyBv
-bjoKPj4KPj4gLSBbUEFUQ0ggdjUgMDYvMThdIGtidWlsZDogZW5hYmxlIGJ1aWxkaW5nIEtVbml0
-Cj4+IC0gW1BBVENIIHY1IDA4LzE4XSBvYmp0b29sOiBhZGQga3VuaXRfdHJ5X2NhdGNoX3Rocm93
-IHRvIHRoZSBub3JldHVybgo+PiAgICBsaXN0Cj4+IC0gW1BBVENIIHY1IDE1LzE4XSBEb2N1bWVu
-dGF0aW9uOiBrdW5pdDogYWRkIGRvY3VtZW50YXRpb24gZm9yIEtVbml0Cj4+IC0gW1BBVENIIHY1
-IDE3LzE4XSBrZXJuZWwvc3lzY3RsLXRlc3Q6IEFkZCBudWxsIHBvaW50ZXIgdGVzdCBmb3IKPj4g
-ICAgc3lzY3RsLmM6cHJvY19kb2ludHZlYygpCj4+IC0gW1BBVENIIHY1IDE4LzE4XSBNQUlOVEFJ
-TkVSUzogYWRkIHByb2Mgc3lzY3RsIEtVbml0IHRlc3QgdG8gUFJPQwo+PiAgICBTWVNDVEwgc2Vj
-dGlvbgo+Pgo+PiBPdGhlciB0aGFuIHRoYXQsIEkgdGhpbmsgd2Ugc2hvdWxkIGJlIGdvb2QgdG8g
-Z28uCj4+Cj4+IE9uZSBsYXN0IHRoaW5nLCBJIHVwZGF0ZWQgdGhlIGJhY2tncm91bmQgdG8gaW5j
-bHVkZSBteSB0aG91Z2h0cyBvbiBLVW5pdAo+PiB2cy4gaW4ga2VybmVsIHRlc3Rpbmcgd2l0aCBr
-c2VsZnRlc3QgaW4gdGhlIGJhY2tncm91bmQgc2VjdGlvbnMgYXMKPj4gc3VnZ2VzdGVkIGJ5IEZy
-YW5rIGluIHRoZSBkaXNjdXNzaW9uIG9uIFBBVENIIHYyLgo+Pgo+PiAjIyBCYWNrZ3JvdW5kCj4+
-Cj4+IFRoaXMgcGF0Y2ggc2V0IHByb3Bvc2VzIEtVbml0LCBhIGxpZ2h0d2VpZ2h0IHVuaXQgdGVz
-dGluZyBhbmQgbW9ja2luZwo+PiBmcmFtZXdvcmsgZm9yIHRoZSBMaW51eCBrZXJuZWwuCj4+Cj4+
-IFVubGlrZSBBdXRvdGVzdCBhbmQga3NlbGZ0ZXN0LCBLVW5pdCBpcyBhIHRydWUgdW5pdCB0ZXN0
-aW5nIGZyYW1ld29yazsKPj4gaXQgZG9lcyBub3QgcmVxdWlyZSBpbnN0YWxsaW5nIHRoZSBrZXJu
-ZWwgb24gYSB0ZXN0IG1hY2hpbmUgb3IgaW4gYSBWTQo+PiAoaG93ZXZlciwgS1VuaXQgc3RpbGwg
-YWxsb3dzIHlvdSB0byBydW4gdGVzdHMgb24gdGVzdCBtYWNoaW5lcyBvciBpbiBWTXMKPj4gaWYg
-eW91IHdhbnRbMV0pIGFuZCBkb2VzIG5vdCByZXF1aXJlIHRlc3RzIHRvIGJlIHdyaXR0ZW4gaW4g
-dXNlcnNwYWNlCj4+IHJ1bm5pbmcgb24gYSBob3N0IGtlcm5lbC4gQWRkaXRpb25hbGx5LCBLVW5p
-dCBpcyBmYXN0OiBGcm9tIGludm9jYXRpb24KPj4gdG8gY29tcGxldGlvbiBLVW5pdCBjYW4gcnVu
-IHNldmVyYWwgZG96ZW4gdGVzdHMgaW4gdW5kZXIgYSBzZWNvbmQuCj4+IEN1cnJlbnRseSwgdGhl
-IGVudGlyZSBLVW5pdCB0ZXN0IHN1aXRlIGZvciBLVW5pdCBydW5zIGluIHVuZGVyIGEgc2Vjb25k
-Cj4+IGZyb20gdGhlIGluaXRpYWwgaW52b2NhdGlvbiAoYnVpbGQgdGltZSBleGNsdWRlZCkuCj4+
-Cj4+IEtVbml0IGlzIGhlYXZpbHkgaW5zcGlyZWQgYnkgSlVuaXQsIFB5dGhvbidzIHVuaXR0ZXN0
-Lm1vY2ssIGFuZAo+PiBHb29nbGV0ZXN0L0dvb2dsZW1vY2sgZm9yIEMrKy4gS1VuaXQgcHJvdmlk
-ZXMgZmFjaWxpdGllcyBmb3IgZGVmaW5pbmcKPj4gdW5pdCB0ZXN0IGNhc2VzLCBncm91cGluZyBy
-ZWxhdGVkIHRlc3QgY2FzZXMgaW50byB0ZXN0IHN1aXRlcywgcHJvdmlkaW5nCj4+IGNvbW1vbiBp
-bmZyYXN0cnVjdHVyZSBmb3IgcnVubmluZyB0ZXN0cywgbW9ja2luZywgc3B5aW5nLCBhbmQgbXVj
-aCBtb3JlLgo+Pgo+IAo+IEkgbG9va2VkIG9ubHkgYXQgdGhpcyBzZWN0aW9uLCBhcyB3YXMgc3Bl
-Y2lmaWNhbGx5IHJlcXVlc3RlZDoKPiAKPj4gIyMjIEJ1dCB3YWl0ISBEb2Vzbid0IGtzZWxmdGVz
-dCBzdXBwb3J0IGluIGtlcm5lbCB0ZXN0aW5nPyEKPj4KPj4gSW4gYSBwcmV2aW91cyB2ZXJzaW9u
-IG9mIHRoaXMgcGF0Y2hzZXQgRnJhbmsgcG9pbnRlZCBvdXQgdGhhdCBrc2VsZnRlc3QKPj4gYWxy
-ZWFkeSBzdXBwb3J0cyB3cml0aW5nIGEgdGVzdCB0aGF0IHJlc2lkZXMgaW4gdGhlIGtlcm5lbCB1
-c2luZyB0aGUKPj4gdGVzdCBtb2R1bGUgZmVhdHVyZVsyXS4gTFdOIGRpZCBhIHJlYWxseSBncmVh
-dCBzdW1tYXJ5IG9uIHRoaXMKPj4gZGlzY3Vzc2lvbiBoZXJlWzNdLgo+Pgo+PiBLc2VsZnRlc3Qg
-aGFzIGEgZmVhdHVyZSB0aGF0IGFsbG93cyBhIHRlc3QgbW9kdWxlIHRvIGJlIGxvYWRlZCBpbnRv
-IGEKPj4ga2VybmVsIHVzaW5nIHRoZSBrc2VsZnRlc3QgZnJhbWV3b3JrOyB0aGlzIGRvZXMgYWxs
-b3cgc29tZW9uZSB0byB3cml0ZQo+PiB0ZXN0cyBhZ2FpbnN0IGtlcm5lbCBjb2RlIG5vdCBkaXJl
-Y3RseSBleHBvc2VkIHRvIHVzZXJsYW5kOyBob3dldmVyLCBpdAo+PiBkb2VzIG5vdCBwcm92aWRl
-IG11Y2ggb2YgYSBmcmFtZXdvcmsgYXJvdW5kIGhvdyB0byBzdHJ1Y3R1cmUgdGhlIHRlc3RzLgo+
-PiBUaGUga3NlbGZ0ZXN0IHRlc3QgbW9kdWxlIGZlYXR1cmUganVzdCBwcm92aWRlcyBhIGhlYWRl
-ciB3aGljaCBoYXMgYQo+PiBzdGFuZGFyZGl6ZWQgd2F5IG9mIHJlcG9ydGluZyB0ZXN0IGZhaWx1
-cmVzLAo+IAo+IAo+PiBhbmQgdGhlbiBwcm92aWRlcwo+PiBpbmZyYXN0cnVjdHVyZSB0byBsb2Fk
-IGFuZCBydW4gdGhlIHRlc3RzIHVzaW5nIHRoZSBrc2VsZnRlc3QgdGVzdAo+PiBoYXJuZXNzLgo+
-IAo+IFRoZSBpbi1rZXJuZWwgdGVzdHMgY2FuIGFsc28gYmUgaW52b2tlZCBhdCBib290IHRpbWUg
-aWYgdGhleSBhcmUKPiBjb25maWd1cmVkIChLY29uZmlnKSBhcyBpbi1rZXJuZWwgaW5zdGVhZCBv
-ZiBhcyBtb2R1bGVzLiAgSSBkaWQgbm90Cj4gY2hlY2sgaG93IG1hbnkgb2YgdGhlIHRlc3RzIGhh
-dmUgdHJpLXN0YXRlIGNvbmZpZ3VyYXRpb24gdG8gYWxsb3cKPiB0aGlzLCBidXQgdGhlIGZldyB0
-aGF0IEkgbG9va2VkIGF0IGRpZC4KPiAKPj4KPj4gVGhlIGtzZWxmdGVzdCB0ZXN0IG1vZHVsZSBk
-b2VzIG5vdCBzZWVtIHRvIGJlIG9waW5pb25hdGVkIGF0IGFsbCBpbgo+PiByZWdhcmRzIHRvIGhv
-dyB0ZXN0cyBhcmUgc3RydWN0dXJlZCwgaG93IHRoZXkgY2hlY2sgZm9yIGZhaWx1cmVzLCBob3cK
-Pj4gdGVzdHMgYXJlIG9yZ2FuaXplZC4gRXZlbiBpbiB0aGUgbWV0aG9kIGl0IHByb3ZpZGVzIGZv
-ciByZXBvcnRpbmcKPj4gZmFpbHVyZXMgaXMgcHJldHR5IHNpbXBsZTsgaXQgZG9lc24ndCBoYXZl
-IGFueSBtb3JlIGFkdmFuY2VkIGZhaWx1cmUKPj4gcmVwb3J0aW5nIG9yIGxvZ2dpbmcgZmVhdHVy
-ZXMuIEdpdmVuIHdoYXQncyB0aGVyZSwgSSB0aGluayBpdCBpcyBmYWlyIHRvCj4+IHNheSB0aGF0
-IGl0IGlzIG5vdCBhY3R1YWxseSBhIGZyYW1ld29yaywgYnV0IGEgZmVhdHVyZSB0aGF0IG1ha2Vz
-IGl0Cj4+IHBvc3NpYmxlIGZvciBzb21lb25lIHRvIGRvIHNvbWUgY2hlY2tzIGluIGtlcm5lbCBz
-cGFjZS4KPiAKPiBJIHdvdWxkIGNhbGwgdGhhdCBkZXNjcmlwdGlvbiBhIGxpdHRsZSBkaXNtaXNz
-aXZlLiAgVGhlIHNldCBvZiBpbi1rZXJuZWwKPiB0ZXN0cyB0aGF0IEkgbG9va2VkIGxpa2UgZm9s
-bG93ZWQgYSBjb21tb24gcGF0dGVybiBhbmQgcmVwb3J0ZWQgcmVzdWx0cwo+IGluIGEgdW5pZm9y
-bSBtYW5uZXIuCj4gCj4+CgpJIHRoaW5rIEkgY29tbWVudGVkIG9uIHRoaXMgYmVmb3JlLiBJIGFn
-cmVlIHdpdGggdGhlIHN0YXRlbWVudCB0aGF0CnRoZXJlIGlzIG5vIG92ZXJsYXAgYmV0d2VlbiBL
-c2VsZnRlc3QgYW5kIEtVbml0LiBJIHdvdWxkIGxpa2Ugc2VlIHRoaXMKcmVtb3ZlZC4gS3NlbGZ0
-ZXN0IG1vZHVsZSBzdXBwb3J0IHN1cHBvcnRzIHVzZS1jYXNlcyBLVW5pdCB3b24ndCBiZSBhYmxl
-CnRvLiBJIGNhbiBidWlsZCBhbiBrZXJuZWwgd2l0aCBLc2VsZnRlc3QgdGVzdCBtb2R1bGVzIGFu
-ZCB1c2UgaXQgaW4gdGhlCmZpbGVkIHRvIGxvYWQgYW5kIHJ1biB0ZXN0cyBpZiBJIG5lZWQgdG8g
-ZGVidWcgYSBwcm9ibGVtIGFuZCBnZXQgZGF0YQpmcm9tIGEgc3lzdGVtLiBJIGNhbid0IGRvIHRo
-YXQgd2l0aCBLVW5pdC4KCkluIG15IG1pbmQsIEkgYW0gbm90IHZpZXdpbmcgdGhpcyBhcyB3aGlj
-aCBpcyBiZXR0ZXIuIEtzZWxmdGVzdCBhbmQKS1VuaXQgYm90aCBoYXZlIHRoZWlyIHBsYWNlIGlu
-IHRoZSBrZXJuZWwgZGV2ZWxvcG1lbnQgcHJvY2Vzcy4gSXQgaXNuJ3QKcHJvZHVjdGl2ZSBhbmQv
-b3IgbmVjZXNzYXJ5IHRvIGNvbXBhcmluZyBLc2VsZnRlc3QgYW5kIEtVbml0IHdpdGhvdXQgYQpn
-b29kIHVuZGVyc3RhbmRpbmcgb2YgdGhlIHByb2JsZW0gc3BhY2VzIGZvciBlYWNoIG9mIHRoZXNl
-LgoKSSB3b3VsZCBzdHJvbmdseSByZWNvbW1lbmQgbm90IG1ha2luZyByZWZlcmVuY2UgdG8gS3Nl
-bGZ0ZXN0IGFuZCB0YWxrCmFib3V0IHdoYXQgS1VuaXQgb2ZmZXJzLgoKPj4gRnVydGhlcm1vcmUs
-IGtzZWxmdGVzdCB0ZXN0IG1vZHVsZSBoYXMgdmVyeSBmZXcgdXNlcnMuIEkgY2hlY2tlZCBmb3Ig
-YWxsCj4+IHRoZSB0ZXN0cyB0aGF0IHVzZSBpdCB1c2luZyB0aGUgZm9sbG93aW5nIGdyZXAgY29t
-bWFuZDoKPj4KPj4gZ3JlcCAtSHJuIC1lICdrc2VsZnRlc3RfbW9kdWxlXC5oJwo+Pgo+PiBhbmQg
-b25seSBnb3QgdGhyZWUgcmVzdWx0czogbGliL3Rlc3Rfc3Ryc2NweS5jLCBsaWIvdGVzdF9wcmlu
-dGYuYywgYW5kCj4+IGxpYi90ZXN0X2JpdG1hcC5jLgo+IAoKQWdhaW4sIHVubmVjZXNzYXJ5LiBL
-VW5pdCBjYW4ndCByZXBsYWNlIEtzZWxmdGVzdCBtb2R1bGUgaW4gdGhlIHdheQpLc2VsZnRlc3Qg
-bW9kdWxlIHN1cHBvcnQgY2FuIGJlIHVzZWQgZm9yIGRlYnVnZ2luZyBhbmQgZ2F0aGVyaW5nCmlu
-Zm9ybWF0aW9uIG9uIHN5c3RlbSB0aGF0IG1pZ2h0IGJlIGluIGFjdGl2ZSB1c2UgYW5kIG5vdCBk
-ZWRpY2F0ZWQKdG8gdGVzdCBhbmQgZGV2ZWxvcG1lbnQgYWxvbmUuIEkgd291bGRuJ3QgaGVzaXRh
-dGUgbG9hZGluZyBhIEtzZWxmdGVzdAp0ZXN0IG1vZHVsZSBvbiBteSBsYXB0b3AgYW5kIHJ1bm5p
-bmcgdGVzdHMsIGJ1dCBJIHdvdWxkbid0IHVzZSBLVW5pdAp0aGUgc2FtZSB3YXkuCgpBZ2Fpbiwg
-dGhpcyBpcyBub3QgYSBjb21wZXRpdGlvbiBiZXR3ZWVuIHdoaWNoIGlzIGJldHRlci4gS3NlbGZ0
-ZXN0CmFuZCBLVW5pdCBzZXJ2ZSBkaWZmZXJlbnQgbmVlZHMgYW5kIHByb2JsZW0gc3BhY2VzLgoK
-UGxlYXNlIHJlZG8gdGhpcyBkb2N1bWVudGF0aW9uIHRvIHJlZmxlY3QgdGhhdC4KCnRoYW5rcywK
-LS0gU2h1YWgKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+This adds the initial DT for the Asus NovaGo TP370QL laptop.  Supported
+functionality includes USB (host), microSD-card, keyboard, and trackpad.
+
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/Makefile             |  1 +
+ .../dts/qcom/msm8998-asus-novago-tp370ql.dts  | 47 +++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 76436f33a013..5cd1844a6d33 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-asus-novago-tp370ql.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts b/arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts
+new file mode 100644
+index 000000000000..db5821be1e2f
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
++
++/dts-v1/;
++
++#include "msm8998-clamshell.dtsi"
++
++/ {
++	model = "Asus NovaGo TP370QL";
++	compatible = "asus,novago-tp370ql", "qcom,msm8998";
++};
++
++&blsp1_i2c6 {
++	status = "okay";
++
++	touchpad@15 {
++		compatible = "hid-over-i2c";
++		interrupt-parent = <&tlmm>;
++		interrupts = <0x7b IRQ_TYPE_LEVEL_LOW>;
++		reg = <0x15>;
++		hid-descr-addr = <0x0001>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&touchpad>;
++	};
++
++	keyboard@3a {
++		compatible = "hid-over-i2c";
++		interrupt-parent = <&tlmm>;
++		interrupts = <0x25 IRQ_TYPE_LEVEL_LOW>;
++		reg = <0x3a>;
++		hid-descr-addr = <0x0001>;
++	};
++};
++
++&sdhc2 {
++	cd-gpios = <&tlmm 95 GPIO_ACTIVE_HIGH>;
++};
++
++&tlmm {
++	touchpad: touchpad {
++		config {
++			pins = "gpio123";
++			bias-pull-up;
++		};
++	};
++};
+-- 
+2.17.1
