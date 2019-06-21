@@ -1,59 +1,39 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: display: panel: Add support for
- Raydium RM67191 panel
-Date: Fri, 21 Jun 2019 11:00:42 -0300
-Message-ID: <CAOMZO5DunK3+ovBd0c0X4NTf-zkW1Tjz6KgXFMaRQKMk2SBMiw@mail.gmail.com>
-References: <1561037428-13855-1-git-send-email-robert.chiras@nxp.com>
- <1561037428-13855-2-git-send-email-robert.chiras@nxp.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RE-RESEND PATCH v3 1/4] dt-bindings: memory: jz4780: Add
+ compatible string for JZ4740 SoC
+Date: Fri, 21 Jun 2019 16:08:45 +0200
+Message-ID: <20190621140845.GA26434@kroah.com>
+References: <20190604143018.11644-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1561037428-13855-2-git-send-email-robert.chiras@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Sam Ravnborg <sam@ravnborg.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190604143018.11644-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Boris Brezillon <bbrezillon@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iZXJ0LAoKT24gVGh1LCBKdW4gMjAsIDIwMTkgYXQgMTA6MzIgQU0gUm9iZXJ0IENoaXJh
-cyA8cm9iZXJ0LmNoaXJhc0BueHAuY29tPiB3cm90ZToKPgo+IEFkZCBkdC1iaW5kaW5ncyBkb2N1
-bWVudGF0aW9uIGZvciBSYXlkaXVtIFJNNjcxOTEgRFNJIHBhbmVsLgo+Cj4gU2lnbmVkLW9mZi1i
-eTogUm9iZXJ0IENoaXJhcyA8cm9iZXJ0LmNoaXJhc0BueHAuY29tPgo+IFJldmlld2VkLWJ5OiBT
-YW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNw
-bGF5L3BhbmVsL3JheWRpdW0scm02NzE5MS50eHQgICAgIHwgMzkgKysrKysrKysrKysrKysrKysr
-KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmF5
-ZGl1bSxybTY3MTkxLnR4dAo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3JheWRpdW0scm02NzE5MS50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9yYXlkaXVtLHJtNjcxOTEudHh0
-Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi41MmFmMjcyCj4gLS0tIC9k
-ZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3BhbmVsL3JheWRpdW0scm02NzE5MS50eHQKPiBAQCAtMCwwICsxLDM5IEBACj4gK1JheWRpdW0g
-Uk02NzE3MSBPTEVEIExDRCBwYW5lbCB3aXRoIE1JUEktRFNJIHByb3RvY29sCj4gKwo+ICtSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6ICAgICAgICAgICJyYXlkaXVtLHJtNjcx
-OTEiCj4gKy0gcmVnOiAgICAgICAgICAgICAgICAgdmlydHVhbCBjaGFubmVsIGZvciBNSVBJLURT
-SSBwcm90b2NvbAo+ICsgICAgICAgICAgICAgICAgICAgICAgIG11c3QgYmUgPDA+Cj4gKy0gZHNp
-LWxhbmVzOiAgICAgICAgICAgbnVtYmVyIG9mIERTSSBsYW5lcyB0byBiZSB1c2VkCj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgbXVzdCBiZSA8Mz4gb3IgPDQ+Cj4gKy0gcG9ydDogICAgICAgICAg
-ICAgICAgaW5wdXQgcG9ydCBub2RlIHdpdGggZW5kcG9pbnQgZGVmaW5pdGlvbiBhcwo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIGRlZmluZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2dyYXBoLnR4dDsKPiArICAgICAgICAgICAgICAgICAgICAgICB0aGUgaW5wdXQgcG9y
-dCBzaG91bGQgYmUgY29ubmVjdGVkIHRvIGEgTUlQSS1EU0kgZGV2aWNlCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgZHJpdmVyCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIHJlc2V0
-LWdwaW9zOiAgICAgICAgIGEgR1BJTyBzcGVjIGZvciB0aGUgUlNUX0IgR1BJTyBwaW4KPiArLSB3
-aWR0aC1tbTogICAgICAgICAgICBzZWUgcGFuZWwtY29tbW9uLnR4dAo+ICstIGhlaWdodC1tbTog
-ICAgICAgICAgIHNlZSBwYW5lbC1jb21tb24udHh0Cj4gKy0gdmlkZW8tbW9kZTogICAgICAgICAg
-MCAtIGJ1cnN0LW1vZGUKPiArICAgICAgICAgICAgICAgICAgICAgICAxIC0gbm9uLWJ1cnN0IHdp
-dGggc3luYyBldmVudAo+ICsgICAgICAgICAgICAgICAgICAgICAgIDIgLSBub24tYnVyc3Qgd2l0
-aCBzeW5jIHBvIHVsc2UKCk5vIHBvd2VyLXN1cHBseSBwcm9wZXJ0eT8KX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On Tue, Jun 04, 2019 at 04:30:15PM +0200, Paul Cercueil wrote:
+> Add a compatible string to support the memory controller built into the
+> JZ4740 SoC from Ingenic.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> 
+> Notes:
+>     v2: No change
+>     
+>     v3: Change compatible string for jz4740 instead of j4725b
+> 
+>  .../bindings/memory-controllers/ingenic,jz4780-nemc.txt          | 1 +
+>  1 file changed, 1 insertion(+)
+
+I guess I'll take this series...
+
+Is there really no maintainer for drivers/memory/ anymore?
+
+
+greg k-h
