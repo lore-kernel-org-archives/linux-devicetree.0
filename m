@@ -1,180 +1,40 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v8 1/5] Input: elan_i2c: Export the device id whitelist
-Date: Fri, 21 Jun 2019 07:50:42 -0700
-Message-ID: <20190621145042.38637-1-jeffrey.l.hugo@gmail.com>
-References: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
+From: Christophe Kerello <christophe.kerello@st.com>
+Subject: [PATCH 0/4] ARM: dts: stm32: enable FMC2 NAND controller on
+ stm32mp157c-ev1
+Date: Fri, 21 Jun 2019 16:49:46 +0200
+Message-ID: <1561128590-14621-1-git-send-email-christophe.kerello@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com, jikos@kernel.org, hdegoede@redhat.com
-Cc: bjorn.andersson@linaro.org, agross@kernel.org, lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, linux@armlinux.org.uk, olof@lixom.net, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, Christophe Kerello <christophe.kerello@st.com>, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Elan_i2c and hid-quirks work in conjunction to decide which devices each
-driver will handle.  Elan_i2c has a whitelist of devices that should be
-consumed by hid-quirks so that there is one master list of devices to
-handoff between the drivers.  Put the ids in a header file so that
-hid-quirks can consume it instead of duplicating the list.
+This patchset adds and enables FMC2 NAND controller used on
+stm32mp157c-ev1.
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/input/mouse/elan_i2c_core.c | 50 +------------------
- include/linux/input/elan-i2c-ids.h  | 76 +++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+), 49 deletions(-)
- create mode 100644 include/linux/input/elan-i2c-ids.h
+Christophe Kerello (4):
+  ARM: dts: stm32: add FMC2 NAND controller support on stm32mp157c
+  ARM: dts: stm32: add FMC2 NAND controller pins muxing on
+    stm32mp157c-ev1
+  ARM: dts: stm32: enable FMC2 NAND controller on stm32mp157c-ev1
+  ARM: multi_v7_defconfig: add FMC2 NAND  controller support
 
-diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-index 65cd325eabc3..e2c824abd19c 100644
---- a/drivers/input/mouse/elan_i2c_core.c
-+++ b/drivers/input/mouse/elan_i2c_core.c
-@@ -37,6 +37,7 @@
- #include <linux/completion.h>
- #include <linux/of.h>
- #include <linux/property.h>
-+#include <linux/input/elan-i2c-ids.h>
- #include <linux/regulator/consumer.h>
- #include <asm/unaligned.h>
- 
-@@ -1375,55 +1376,6 @@ static const struct i2c_device_id elan_id[] = {
- MODULE_DEVICE_TABLE(i2c, elan_id);
- 
- #ifdef CONFIG_ACPI
--static const struct acpi_device_id elan_acpi_id[] = {
--	{ "ELAN0000", 0 },
--	{ "ELAN0100", 0 },
--	{ "ELAN0600", 0 },
--	{ "ELAN0601", 0 },
--	{ "ELAN0602", 0 },
--	{ "ELAN0603", 0 },
--	{ "ELAN0604", 0 },
--	{ "ELAN0605", 0 },
--	{ "ELAN0606", 0 },
--	{ "ELAN0607", 0 },
--	{ "ELAN0608", 0 },
--	{ "ELAN0609", 0 },
--	{ "ELAN060B", 0 },
--	{ "ELAN060C", 0 },
--	{ "ELAN060F", 0 },
--	{ "ELAN0610", 0 },
--	{ "ELAN0611", 0 },
--	{ "ELAN0612", 0 },
--	{ "ELAN0615", 0 },
--	{ "ELAN0616", 0 },
--	{ "ELAN0617", 0 },
--	{ "ELAN0618", 0 },
--	{ "ELAN0619", 0 },
--	{ "ELAN061A", 0 },
--	{ "ELAN061B", 0 },
--	{ "ELAN061C", 0 },
--	{ "ELAN061D", 0 },
--	{ "ELAN061E", 0 },
--	{ "ELAN061F", 0 },
--	{ "ELAN0620", 0 },
--	{ "ELAN0621", 0 },
--	{ "ELAN0622", 0 },
--	{ "ELAN0623", 0 },
--	{ "ELAN0624", 0 },
--	{ "ELAN0625", 0 },
--	{ "ELAN0626", 0 },
--	{ "ELAN0627", 0 },
--	{ "ELAN0628", 0 },
--	{ "ELAN0629", 0 },
--	{ "ELAN062A", 0 },
--	{ "ELAN062B", 0 },
--	{ "ELAN062C", 0 },
--	{ "ELAN062D", 0 },
--	{ "ELAN0631", 0 },
--	{ "ELAN0632", 0 },
--	{ "ELAN1000", 0 },
--	{ }
--};
- MODULE_DEVICE_TABLE(acpi, elan_acpi_id);
- #endif
- 
-diff --git a/include/linux/input/elan-i2c-ids.h b/include/linux/input/elan-i2c-ids.h
-new file mode 100644
-index 000000000000..ceabb01a6a7d
---- /dev/null
-+++ b/include/linux/input/elan-i2c-ids.h
-@@ -0,0 +1,76 @@
-+/*
-+ * Elan I2C/SMBus Touchpad device whitelist
-+ *
-+ * Copyright (c) 2013 ELAN Microelectronics Corp.
-+ *
-+ * Author: æ維 (Duson Lin) <dusonlin@emc.com.tw>
-+ * Author: KT Liao <kt.liao@emc.com.tw>
-+ * Version: 1.6.3
-+ *
-+ * Based on cyapa driver:
-+ * copyright (c) 2011-2012 Cypress Semiconductor, Inc.
-+ * copyright (c) 2011-2012 Google, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published
-+ * by the Free Software Foundation.
-+ *
-+ * Trademarks are the property of their respective owners.
-+ */
-+
-+#ifndef __ELAN_I2C_IDS_H
-+#define __ELAN_I2C_IDS_H
-+
-+#include <linux/mod_devicetable.h>
-+
-+static const struct acpi_device_id elan_acpi_id[] = {
-+	{ "ELAN0000", 0 },
-+	{ "ELAN0100", 0 },
-+	{ "ELAN0600", 0 },
-+	{ "ELAN0601", 0 },
-+	{ "ELAN0602", 0 },
-+	{ "ELAN0603", 0 },
-+	{ "ELAN0604", 0 },
-+	{ "ELAN0605", 0 },
-+	{ "ELAN0606", 0 },
-+	{ "ELAN0607", 0 },
-+	{ "ELAN0608", 0 },
-+	{ "ELAN0609", 0 },
-+	{ "ELAN060B", 0 },
-+	{ "ELAN060C", 0 },
-+	{ "ELAN060F", 0 },
-+	{ "ELAN0610", 0 },
-+	{ "ELAN0611", 0 },
-+	{ "ELAN0612", 0 },
-+	{ "ELAN0615", 0 },
-+	{ "ELAN0616", 0 },
-+	{ "ELAN0617", 0 },
-+	{ "ELAN0618", 0 },
-+	{ "ELAN0619", 0 },
-+	{ "ELAN061A", 0 },
-+	{ "ELAN061B", 0 },
-+	{ "ELAN061C", 0 },
-+	{ "ELAN061D", 0 },
-+	{ "ELAN061E", 0 },
-+	{ "ELAN061F", 0 },
-+	{ "ELAN0620", 0 },
-+	{ "ELAN0621", 0 },
-+	{ "ELAN0622", 0 },
-+	{ "ELAN0623", 0 },
-+	{ "ELAN0624", 0 },
-+	{ "ELAN0625", 0 },
-+	{ "ELAN0626", 0 },
-+	{ "ELAN0627", 0 },
-+	{ "ELAN0628", 0 },
-+	{ "ELAN0629", 0 },
-+	{ "ELAN062A", 0 },
-+	{ "ELAN062B", 0 },
-+	{ "ELAN062C", 0 },
-+	{ "ELAN062D", 0 },
-+	{ "ELAN0631", 0 },
-+	{ "ELAN0632", 0 },
-+	{ "ELAN1000", 0 },
-+	{ }
-+};
-+
-+#endif /* __ELAN_I2C_IDS_H */
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 44 +++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-ev1.dts     | 16 +++++++++++
+ arch/arm/boot/dts/stm32mp157c.dtsi        | 19 +++++++++++++
+ arch/arm/configs/multi_v7_defconfig       |  1 +
+ 4 files changed, 80 insertions(+)
+
 -- 
-2.17.1
+1.9.1
