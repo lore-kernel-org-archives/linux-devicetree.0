@@ -1,96 +1,51 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: Re: [PATCH 2/3] backlight/arcxcnn fix vendor prefix
-Date: Sat, 22 Jun 2019 00:13:25 +0200
-Message-ID: <20190621221325.GA2343@amd>
-References: <1541592640-18478-1-git-send-email-bdodge09@gmail.com>
- <1541592640-18478-3-git-send-email-bdodge09@gmail.com>
- <20181111113053.GF27666@amd>
- <e372391c-1fd5-41ec-b766-7669fffb928d@gmail.com>
- <c4477220-7159-b5a8-16ea-4f4dbb645ced@linaro.org>
+From: Tao Ren <taoren@fb.com>
+Subject: Re: [Potential Spoof] Re: [PATCH 1/2] i2c: aspeed: allow to customize
+ base clock divisor
+Date: Fri, 21 Jun 2019 22:21:23 +0000
+Message-ID: <4b939e17-f364-4e63-f254-17bd531f75e6@fb.com>
+References: <20190619205009.4176588-1-taoren@fb.com>
+ <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
+ <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
+ <c610ecede7494c189a92a9a3f6d0fd16@TWMBX02.aspeed.com>
+ <bdd53adb-6987-1b91-adde-298839b2c066@fb.com>
+ <195bb56028d04001bbaf835cc17e032e@TWMBX02.aspeed.com>
+ <56ff5fa8-091a-2cbc-dfa3-b912cf328695@fb.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2011993797=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <c4477220-7159-b5a8-16ea-4f4dbb645ced@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Brian Dodge <bdodge09@gmail.com>, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, Peter Bacon <pbacon@psemi.com>, lee.jones@linaro.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <56ff5fa8-091a-2cbc-dfa3-b912cf328695@fb.com>
+Content-Language: en-US
+Content-ID: <C8E8C6F9194EF449903DD6E5BB84EF0B@namprd15.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ryan Chen <ryan_chen@aspeedtech.com>, Brendan Higgins <brendanhiggins@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 6/20/19 1:13 AM, Tao Ren wrote:
+> On 6/20/19 1:01 AM, Ryan Chen wrote:
+>> Hello Tao,
+>> 	Let me more clear. When you set (3, 15, 14) the device sometimes response nack. 
+>> 	but when you set (4, 7, 7), the device always ack. Am I right? 
+>> Ryan
+> 
+> Hello Ryan,
+> 
+> It's correct. We have seen the problem on 2 Facebook BMC platforms so far. Given the other ~10 Facebook BMC platforms are still running kernel 4.1 (with (4, 7, 7) settings), I'd assume more platforms will be impacted after upgrading to the latest kernel.
+> 
+> Thank you for spending time on this!
 
---===============2011993797==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
-Content-Disposition: inline
+Just heads up Ryan and I are working with ODM vendors to collect scope output; will update back when we have new findings. Thank you all for spending time on this.
 
 
---VbJkn9YxBvnuCH5J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cheers,
 
-Hi!
-
-> [Sorry to those receiving this twice... had to dig this out from the
-> archives and sent it to the lists from the wrong mailer]
->=20
-> On 27/11/2018 00:44, Brian Dodge wrote:
-> >Thank you Pavel, that is a good point.
-> >
-> >The chip vendor has indicated that there is no reason to maintain the
-> >old/improper prefix and wishes to go forward (only) with the "arctic"
-> >prefix and any existing dts files are or will be updated.
->=20
-> Looks like this patch series has fallen into the cracks a little.
->=20
-> I think I assumed this info would end in the description of patch v2 1/3 =
-(in
-> order to answer Rob's feedback) and I sat and waited for a respin. On the
-> other hand... I didn't actually say that explicitly anywhere! So... I'd
-> recommend a respin perhaps with a small bit of text explaining how the
-> vendor can state that any existing dts files will be updated. This is a
-> peripheral device so these strings are probably embedded into OEM
-> devicetrees rather than exclusively under the control of the vendor.
-
-So in next email you give good reason not to apply this :-).
-
-Anyway, this is Doc*/devicetree/, so not my area.
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---VbJkn9YxBvnuCH5J
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0NVoUACgkQMOfwapXb+vKcPQCeMXZLMpPGhmvkuIH+olZhfCFk
-CVIAoLN12wP5S77RinlmdQ/jZIZqwCWD
-=7Nqr
------END PGP SIGNATURE-----
-
---VbJkn9YxBvnuCH5J--
-
---===============2011993797==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============2011993797==--
+Tao
