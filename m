@@ -1,426 +1,844 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH V3 11/17] clk: tegra210: support for Tegra210 clocks
- suspend and resume
-Date: Fri, 21 Jun 2019 13:44:23 -0700
-Message-ID: <467eec6e-87fd-0b59-f2f6-75eae4a15a34@nvidia.com>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-12-git-send-email-skomatineni@nvidia.com>
- <20190618121607.GN28892@ulmo>
- <491e0b18-11e7-837c-4591-06ed30950e1d@nvidia.com>
- <20190619081541.GA3187@ulmo>
+From: Vivek Unune <npcomplete13@gmail.com>
+Subject: [PATCH v2] arm64: dts: rockchip: Add support for Hugsun X99 TV Box
+Date: Fri, 21 Jun 2019 16:53:08 -0400
+Message-ID: <20190621205308.5177-1-npcomplete13@gmail.com>
+References: <2273961.GTPgWWlV5T@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190619081541.GA3187@ulmo>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2273961.GTPgWWlV5T@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, Vivek Unune <npcomplete13@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add devicetree support for Hugsun X99 TV Box based on RK3399 SoC
 
-On 6/19/19 1:15 AM, Thierry Reding wrote:
-> On Tue, Jun 18, 2019 at 10:58:40AM -0700, Sowjanya Komatineni wrote:
->> On 6/18/19 5:16 AM, Thierry Reding wrote:
->>> On Tue, Jun 18, 2019 at 12:46:25AM -0700, Sowjanya Komatineni wrote:
->>>> This patch adds system suspend and resume support for Tegra210
->>>> clocks.
->>>>
->>>> All the CAR controller settings are lost on suspend when core power
->>>> goes off.
->>>>
->>>> This patch has implementation for saving and restoring all the PLLs
->>>> and clocks context during system suspend and resume to have the
->>>> system back to operating state.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>    drivers/clk/tegra/clk-tegra210.c | 218 +++++++++++++++++++++++++++++++++++++--
->>>>    1 file changed, 211 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
->>>> index e1ba62d2b1a0..c34d92e871f4 100644
->>>> --- a/drivers/clk/tegra/clk-tegra210.c
->>>> +++ b/drivers/clk/tegra/clk-tegra210.c
->>>> @@ -9,10 +9,12 @@
->>>>    #include <linux/clkdev.h>
->>>>    #include <linux/of.h>
->>>>    #include <linux/of_address.h>
->>>> +#include <linux/of_platform.h>
->>>>    #include <linux/delay.h>
->>>>    #include <linux/export.h>
->>>>    #include <linux/mutex.h>
->>>>    #include <linux/clk/tegra.h>
->>>> +#include <linux/syscore_ops.h>
->>>>    #include <dt-bindings/clock/tegra210-car.h>
->>>>    #include <dt-bindings/reset/tegra210-car.h>
->>>>    #include <linux/iopoll.h>
->>>> @@ -20,6 +22,7 @@
->>>>    #include <soc/tegra/pmc.h>
->>>>    #include "clk.h"
->>>> +#include "clk-dfll.h"
->>>>    #include "clk-id.h"
->>>>    /*
->>>> @@ -36,6 +39,8 @@
->>>>    #define CLK_SOURCE_LA 0x1f8
->>>>    #define CLK_SOURCE_SDMMC2 0x154
->>>>    #define CLK_SOURCE_SDMMC4 0x164
->>>> +#define CLK_OUT_ENB_Y 0x298
->>>> +#define CLK_ENB_PLLP_OUT_CPU BIT(31)
->>>>    #define PLLC_BASE 0x80
->>>>    #define PLLC_OUT 0x84
->>>> @@ -225,6 +230,7 @@
->>>>    #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
->>>>    #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
->>>> +#define CPU_SOFTRST_CTRL 0x380
->>>>    #define LVL2_CLK_GATE_OVRA 0xf8
->>>>    #define LVL2_CLK_GATE_OVRC 0x3a0
->>>> @@ -2820,6 +2826,7 @@ static int tegra210_enable_pllu(void)
->>>>    	struct tegra_clk_pll_freq_table *fentry;
->>>>    	struct tegra_clk_pll pllu;
->>>>    	u32 reg;
->>>> +	int ret;
->>>>    	for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
->>>>    		if (fentry->input_rate == pll_ref_freq)
->>>> @@ -2836,7 +2843,7 @@ static int tegra210_enable_pllu(void)
->>>>    	reg = readl_relaxed(clk_base + pllu.params->ext_misc_reg[0]);
->>>>    	reg &= ~BIT(pllu.params->iddq_bit_idx);
->>>>    	writel_relaxed(reg, clk_base + pllu.params->ext_misc_reg[0]);
->>>> -	udelay(5);
->>>> +	fence_udelay(5, clk_base);
->>>>    	reg = readl_relaxed(clk_base + PLLU_BASE);
->>>>    	reg &= ~GENMASK(20, 0);
->>>> @@ -2844,13 +2851,13 @@ static int tegra210_enable_pllu(void)
->>>>    	reg |= fentry->n << 8;
->>>>    	reg |= fentry->p << 16;
->>>>    	writel(reg, clk_base + PLLU_BASE);
->>>> -	udelay(1);
->>>> +	fence_udelay(1, clk_base);
->>> These udelay() -> fence_udelay() seem like they should be a separate
->>> patch.
->>>
->>>>    	reg |= PLL_ENABLE;
->>>>    	writel(reg, clk_base + PLLU_BASE);
->>>> +	fence_udelay(1, clk_base);
->>>> -	readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
->>>> -					  reg & PLL_BASE_LOCK, 2, 1000);
->>>> -	if (!(reg & PLL_BASE_LOCK)) {
->>>> +	ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
->>>> +	if (ret) {
->>>>    		pr_err("Timed out waiting for PLL_U to lock\n");
->>>>    		return -ETIMEDOUT;
->>>>    	}
->>>> @@ -2890,12 +2897,12 @@ static int tegra210_init_pllu(void)
->>>>    		reg = readl_relaxed(clk_base + XUSB_PLL_CFG0);
->>>>    		reg &= ~XUSB_PLL_CFG0_PLLU_LOCK_DLY_MASK;
->>>>    		writel_relaxed(reg, clk_base + XUSB_PLL_CFG0);
->>>> -		udelay(1);
->>>> +		fence_udelay(1, clk_base);
->>>>    		reg = readl_relaxed(clk_base + PLLU_HW_PWRDN_CFG0);
->>>>    		reg |= PLLU_HW_PWRDN_CFG0_SEQ_ENABLE;
->>>>    		writel_relaxed(reg, clk_base + PLLU_HW_PWRDN_CFG0);
->>>> -		udelay(1);
->>>> +		fence_udelay(1, clk_base);
->>>>    		reg = readl_relaxed(clk_base + PLLU_BASE);
->>>>    		reg &= ~PLLU_BASE_CLKENABLE_USB;
->>>> @@ -3282,6 +3289,188 @@ static void tegra210_disable_cpu_clock(u32 cpu)
->>>>    }
->>>>    #ifdef CONFIG_PM_SLEEP
->>>> +static u32 cpu_softrst_ctx[3];
->>>> +static struct platform_device *dfll_pdev;
->>>> +static u32 *periph_clk_src_ctx;
->>>> +struct periph_source_bank {
->>> Blank line between the above two.
->>>
->>>> +	u32 start;
->>>> +	u32 end;
->>>> +};
->>>> +
->>>> +static struct periph_source_bank periph_srcs[] = {
->>>> +	[0] = {
->>>> +		.start = 0x100,
->>>> +		.end = 0x198,
->>>> +	},
->>>> +	[1] = {
->>>> +		.start = 0x1a0,
->>>> +		.end = 0x1f8,
->>>> +	},
->>>> +	[2] = {
->>>> +		.start = 0x3b4,
->>>> +		.end = 0x42c,
->>>> +	},
->>>> +	[3] = {
->>>> +		.start = 0x49c,
->>>> +		.end = 0x4b4,
->>>> +	},
->>>> +	[4] = {
->>>> +		.start = 0x560,
->>>> +		.end = 0x564,
->>>> +	},
->>>> +	[5] = {
->>>> +		.start = 0x600,
->>>> +		.end = 0x678,
->>>> +	},
->>>> +	[6] = {
->>>> +		.start = 0x694,
->>>> +		.end = 0x6a0,
->>>> +	},
->>>> +	[7] = {
->>>> +		.start = 0x6b8,
->>>> +		.end = 0x718,
->>>> +	},
->>>> +};
->>>> +
->>>> +/* This array lists the valid clocks for each periph clk bank */
->>>> +static u32 periph_clks_on[] = {
->>>> +	0xdcd7dff9,
->>>> +	0x87d1f3e7,
->>>> +	0xf3fed3fa,
->>>> +	0xffc18cfb,
->>>> +	0x793fb7ff,
->>>> +	0x3fe66fff,
->>>> +	0xfc1fc7ff,
->>>> +};
->>> Hm... this is a bunch of magic. Perhaps replace this by a list of the
->>> clock IDs? That's perhaps a little more verbose, but if we ever need to
->>> tweak the list of IDs in that periph_clks_on array, that'll be quite the
->>> challenge.
->>>
->>> Also, is this list a "guess" or are these all guaranteed to be always
->>> on? What if some of these ended up getting disabled as part of suspend
->>> already (by their users). If we force them on, won't their references
->>> become unbalanced if the driver later enables them again on resume?
->> Yes, will replace with list of peripheral clock names..
->>
->> This list is not a guess. Each entry of this list maps to CLK_ENB set
->> register.
->>
->> Total 7 registers are available and each bit of these registers is for
->> enable/disable clock to corresponding peripheral.
->>
->> Some of the bits are off as those peripheral clocks don't need to be enabled
->> as we are not changing source or not using them like MIPIBIF, PLLG_REF..
->>
->> This list of peripheral clocks are enabled during resume before changing
->> clock sources and after clock source update, they are restored back to the
->> state they were before suspend. So their references don't become unbalanced.
-> Okay, good. Can you maybe put a version of that explanation in a comment
-> on top of the periph_clks_on declaration? And perhaps also describe this
-> in the commit message.
->
-> Or maybe even better, add some comments in the main suspend/resume paths
-> to sort of "guide" through what's happening.
->
->>>> +
->>>> +static struct platform_device *dfll_pdev;
->>> I think you already predeclared this one above.
->>>
->>>> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
->>>> +#define car_writel(_val, _base, _off) \
->>>> +		writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
->>>> +
->>>> +static u32 * __init tegra210_init_suspend_ctx(void)
->>>> +{
->>>> +	int i, size = 0;
->>> Can both be unsigned int.
->>>
->>>> +
->>>> +	for (i = 0; i < ARRAY_SIZE(periph_srcs); i++)
->>>> +		size += periph_srcs[i].end - periph_srcs[i].start + 4;
->>>> +
->>>> +	periph_clk_src_ctx = kmalloc(size, GFP_KERNEL);
->>>> +
->>>> +	return periph_clk_src_ctx;
->>> It's somewhat wasteful to return a global variable since you can access
->>> it anyway. Perhaps it'd be more useful to make the function return a
->>> boolean?
->>>
->>>> +}
->>>> +
->>>> +static int tegra210_clk_suspend(void)
->>>> +{
->>>> +	int i;
->>> unsigned int.
->>>
->>>> +	unsigned long off;
->>>> +	struct device_node *node;
->>>> +	u32 *clk_rst_ctx = periph_clk_src_ctx;
->>>> +	u32 val;
->>>> +
->>>> +	tegra_cclkg_burst_policy_save_context();
->>>> +
->>>> +	if (!dfll_pdev) {
->>>> +		node = of_find_compatible_node(NULL, NULL,
->>>> +					       "nvidia,tegra210-dfll");
->>>> +		if (node)
->>>> +			dfll_pdev = of_find_device_by_node(node);
->>>> +		of_node_put(node);
->>>> +		if (!dfll_pdev)
->>>> +			pr_err("dfll node not found. no suspend for dfll\n");
->>>> +	}
->>> Wouldn't it make sense to run this only once, perhaps as part of
->>> tegra210_init_suspend_ctx()?
+Tested with LibreElec running kernel v5.1.2.
+Following peripherals tested and work:
 
-tegra210_init_suspend_ctx is invoked during tegra210_clock_init and as 
-clock init happens earlier than dfll probe,
+Peripheral works:
+- UART2 debug
+- eMMC
+- USB 3.0 port
+- USB 2.0 port
+- sdio, sd-card
+- HDMI
+- Ethernet
+- WiFi/BT
 
-dfll platform device will not be available at that time. So acquiring 
-dfll pdev during 1st suspend.
+Not tested:
+- Type-C port
+- OPTICAL
+- IR
 
->>>> +
->>>> +	if (dfll_pdev)
->>>> +		tegra_dfll_suspend(dfll_pdev);
->>>> +
->>>> +	/* Enable PLLP_OUT_CPU after dfll suspend */
->>>> +	val = car_readl(CLK_OUT_ENB_Y, 0);
->>>> +	val |= CLK_ENB_PLLP_OUT_CPU;
->>>> +	car_writel(val, CLK_OUT_ENB_Y, 0);
->>>> +
->>>> +	tegra_clk_periph_suspend(clk_base);
->>>> +
->>>> +	for (i = 0; i < ARRAY_SIZE(periph_srcs); i++)
->>>> +		for (off = periph_srcs[i].start; off <= periph_srcs[i].end;
->>>> +		     off += 4)
->>>> +			*clk_rst_ctx++ = car_readl(off, 0);
->>>> +
->>>> +	tegra_sclk_cclklp_burst_policy_save_context();
->>>> +
->>>> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->>>> +		cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
->>>> +
->>>> +	clk_save_context();
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static void tegra210_clk_resume(void)
->>>> +{
->>>> +	int i;
->>>> +	unsigned long off;
->>>> +	u32 val;
->>>> +	u32 *clk_rst_ctx = periph_clk_src_ctx;
->>>> +	struct clk_hw *parent;
->>>> +	struct clk *clk;
->>>> +
->>>> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->>>> +		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
->>>> +
->>>> +	tegra_clk_osc_resume(clk_base);
->>>> +
->>>> +	/*
->>>> +	 * restore all the plls before configuring clocks and resetting
->>>> +	 * the devices.
->>>> +	 */
->>>> +	tegra210_init_pllu();
->>>> +	tegra_sclk_cpulp_burst_policy_restore_context();
->>>> +	clk_restore_context();
->>>> +
->>>> +	/* enable all clocks before configuring clock sources */
->>>> +	tegra_clk_periph_force_on(periph_clks_on, ARRAY_SIZE(periph_clks_on),
->>>> +				  clk_base);
->>>> +	/* wait for all writes to happen to have all the clocks enabled */
->>>> +	wmb();
->>>> +	fence_udelay(2, clk_base);
->>>> +
->>>> +	/* restore all the devices clock sources */
->>>> +	for (i = 0; i < ARRAY_SIZE(periph_srcs); i++)
->>>> +		for (off = periph_srcs[i].start; off <= periph_srcs[i].end;
->>>> +		     off += 4)
->>>> +			car_writel(*clk_rst_ctx++, off, 0);
->>>> +
->>>> +	/* propagate and restore resets, restore clock state */
->>>> +	fence_udelay(5, clk_base);
->>>> +	tegra_clk_periph_resume(clk_base);
->>>> +
->>>> +	/*
->>>> +	 * restore CPUG clocks:
->>>> +	 * - enable DFLL in open loop mode
->>>> +	 * - switch CPUG to DFLL clock source
->>>> +	 * - close DFLL loop
->>>> +	 * - sync PLLX state
->>>> +	 */
->>>> +	if (dfll_pdev)
->>>> +		tegra_dfll_resume(dfll_pdev, false);
->>>> +
->>>> +	tegra_cclkg_burst_policy_restore_context();
->>>> +	fence_udelay(2, clk_base);
->>>> +
->>>> +	if (dfll_pdev)
->>>> +		tegra_dfll_resume(dfll_pdev, true);
->>>> +
->>>> +	parent = clk_hw_get_parent(__clk_get_hw(clks[TEGRA210_CLK_CCLK_G]));
->>>> +	clk = clks[TEGRA210_CLK_PLL_X];
->>>> +	if (parent != __clk_get_hw(clk))
->>>> +		tegra_clk_sync_state_pll(__clk_get_hw(clk));
->>>> +
->>>> +	/* Disable PLL_OUT_CPU after DFLL resume */
->>>> +	val = car_readl(CLK_OUT_ENB_Y, 0);
->>>> +	val &= ~CLK_ENB_PLLP_OUT_CPU;
->>>> +	car_writel(val, CLK_OUT_ENB_Y, 0);
->>>> +}
->>> I'm surprised by the amount of work that we need to do here. I had hoped
->>> that the clock framework's save/restore infrastructure would be enough.
->>> I suppose you do call clk_restore_context() somewhere in there, so maybe
->>> this really is as good as it gets.
->>>
->>> Thierry
->> Reason is there are dependencies b/w the clocks and DFLL resume and clocks
->> resume order needed is not same as clock tree list.
->>
->> during resume as per clock tree, CPU clock configs to use DFLL will happen
->> first as its first in the clock tree but DFLL resume should be done prior to
->> switching CPU to use from DFLL output.
->>
->> To resume DFLL, peripheral clocks should be restored.
->>
->> Considering these dependencies, performing peripheral and DFLL/CPU resume in
->> Tegra210 clock driver rather than in corresponding peripheral clk_ops using
->> save and restore context callback.
-> Okay makes sense. As mentioned above, I think it'd be great if you could
-> add more comments throughout the tegra210_clk_{suspend,resume}() code to
-> guide the reader through what you're doing, given that this is far from
-> obvious. You already do quite a bit of that, but it's perhaps better to
-> explain more what's going on and, perhaps more importantly, why. You're
-> currently mostly repeating the code sequence in the code. It'd be great
-> to have the general suspend/resume sequence detailed and highlight why
-> the sequence is the way it is and what the dependencies are, etc.
->
-> Thierry
->
-OK, Will add more comments in V4
->>>> +
->>>>    static void tegra210_cpu_clock_suspend(void)
->>>>    {
->>>>    	/* switch coresite to clk_m, save off original source */
->>>> @@ -3295,8 +3484,20 @@ static void tegra210_cpu_clock_resume(void)
->>>>    	writel(tegra210_cpu_clk_sctx.clk_csite_src,
->>>>    				clk_base + CLK_SOURCE_CSITE);
->>>>    }
->>>> +#else
->>>> +#define tegra210_clk_suspend	NULL
->>>> +#define tegra210_clk_resume	NULL
->>>> +static inline u32 *tegra210_init_suspend_ctx(void)
->>>> +{
->>>> +	return NULL;
->>>> +}
->>>>    #endif
->>>> +static struct syscore_ops tegra_clk_syscore_ops = {
->>>> +	.suspend = tegra210_clk_suspend,
->>>> +	.resume = tegra210_clk_resume,
->>>> +};
->>>> +
->>>>    static struct tegra_cpu_car_ops tegra210_cpu_car_ops = {
->>>>    	.wait_for_reset	= tegra210_wait_cpu_in_reset,
->>>>    	.disable_clock	= tegra210_disable_cpu_clock,
->>>> @@ -3580,5 +3781,8 @@ static void __init tegra210_clock_init(struct device_node *np)
->>>>    	tegra210_mbist_clk_init();
->>>>    	tegra_cpu_car_ops = &tegra210_cpu_car_ops;
->>>> +
->>>> +	if (tegra210_init_suspend_ctx())
->>>> +		register_syscore_ops(&tegra_clk_syscore_ops);
->>>>    }
->>>>    CLK_OF_DECLARE(tegra210, "nvidia,tegra210-car", tegra210_clock_init);
->>>> -- 
->>>> 2.7.4
->>>>
+Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
+---
+
+Changes in v2:
+	- Correct manufacturer is Shenzhen Hugsun Technology Co. Ltd.
+	- Added vendor prefixes
+	- Removed vendor specific devicee tree bindings
+	- Removed comments
+---
+ .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../boot/dts/rockchip/rk3399-hugsun-x99.dts   | 736 ++++++++++++++++++
+ 4 files changed, 744 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 5c6bbf10abc9..7e065f3cdd50 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -316,6 +316,11 @@ properties:
+           - const: haoyu,marsboard-rk3066
+           - const: rockchip,rk3066a
+ 
++      - description: Hugsun X99 TV Box
++        items:
++          - const: hugsun,x99
++          - const: rockchip,rk3399
++
+       - description: mqmaker MiQi
+         items:
+           - const: mqmaker,miqi
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 33a65a45e319..af9c1fe9b82c 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -373,6 +373,8 @@ patternProperties:
+     description: Honeywell
+   "^hp,.*":
+     description: Hewlett Packard
++  "^hugsun,.*":
++    description: Shenzhen Hugsun Technology Co. Ltd.
+   "^holtek,.*":
+     description: Holtek Semiconductor, Inc.
+   "^hwacom,.*":
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index 5f2687acbf94..ad9319e269bf 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -16,6 +16,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-bob.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-kevin.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-scarlet-inx.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-scarlet-kd.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-hugsun-x99.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopc-t4.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+new file mode 100644
+index 000000000000..3a0bc8176a0b
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+@@ -0,0 +1,736 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/dts-v1/;
++#include <dt-bindings/pwm/pwm.h>
++#include <dt-bindings/input/input.h>
++#include "rk3399.dtsi"
++#include "rk3399-opp.dtsi"
++
++/ {
++	model = "Hugsun X99 TV BOX";
++	compatible = "hugsun,x99", "rockchip,rk3399";
++
++	chosen {
++		stdout-path = "serial2:1500000n8";
++	};
++
++	clkin_gmac: external-gmac-clock {
++		compatible = "fixed-clock";
++		clock-frequency = <125000000>;
++		clock-output-names = "clkin_gmac";
++		#clock-cells = <0>;
++	};
++
++	dc_5v: dc-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "dc_5v";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
++
++	vcc1v8_s0: vcc1v8-s0 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc1v8_s0";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	vcc_sys: vcc-sys {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_sys";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		vin-supply = <&dc_5v>;
++	};
++
++	vcc_phy: vcc-phy-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_phy";
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	vcc3v3_sys: vcc3v3-sys {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3_sys";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		vin-supply = <&vcc_sys>;
++	};
++
++	vcc5v0_host: vcc5v0-host-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&host_vbus_drv>;
++		regulator-name = "vcc5v0_host";
++		regulator-always-on;
++	};
++
++	vcc5v0_typec: vcc5v0-typec-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio1 RK_PA3 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&vcc5v0_typec_en>;
++		regulator-name = "vcc5v0_typec";
++		regulator-always-on;
++		vin-supply = <&vcc5v0_usb>;
++	};
++
++	vcc5v0_usb: vcc5v0-usb {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0_usb";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&dc_5v>;
++	};
++
++	vdd_log: vdd-log {
++		compatible = "pwm-regulator";
++		pwms = <&pwm2 0 25000 1>;
++		pwm-supply = <&vcc_sys>;
++		regulator-name = "vdd_log";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <1400000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		clocks = <&rk808 1>;
++		clock-names = "ext_clock";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_reg_on_h>;
++		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
++	};
++
++};
++
++&cpu_l0 {
++	cpu-supply = <&vdd_cpu_l>;
++};
++
++&cpu_l1 {
++	cpu-supply = <&vdd_cpu_l>;
++};
++
++&cpu_l2 {
++	cpu-supply = <&vdd_cpu_l>;
++};
++
++&cpu_l3 {
++	cpu-supply = <&vdd_cpu_l>;
++};
++
++&cpu_b0 {
++	cpu-supply = <&vdd_cpu_b>;
++};
++
++&cpu_b1 {
++	cpu-supply = <&vdd_cpu_b>;
++};
++
++&emmc_phy {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++	i2c-scl-rising-time-ns = <180>;
++	i2c-scl-falling-time-ns = <30>;
++	clock-frequency = <400000>;
++
++	vdd_cpu_b: syr827@40 {
++		compatible = "silergy,syr827";
++		reg = <0x40>;
++		regulator-compatible = "fan53555-reg";
++		pinctrl-0 = <&vsel1_gpio>;
++		regulator-name = "vdd_cpu_b";
++		regulator-min-microvolt = <712500>;
++		regulator-max-microvolt = <1500000>;
++		regulator-ramp-delay = <1000>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_sys>;
++		regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
++
++	vdd_gpu: syr828@41 {
++		compatible = "silergy,syr828";
++		reg = <0x41>;
++		regulator-compatible = "fan53555-reg";
++		pinctrl-0 = <&vsel2_gpio>;
++		regulator-name = "vdd_gpu";
++		regulator-min-microvolt = <712500>;
++		regulator-max-microvolt = <1500000>;
++		regulator-ramp-delay = <1000>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_sys>;
++		regulator-initial-mode = <1>;
++		regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
++
++	rk808: pmic@1b {
++		compatible = "rockchip,rk808";
++		reg = <0x1b>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_int_l>;
++		rockchip,system-power-controller;
++		wakeup-source;
++		#clock-cells = <1>;
++		clock-output-names = "xin32k", "rtc_clko_wifi";
++
++		vcc1-supply = <&vcc_sys>;
++		vcc2-supply = <&vcc_sys>;
++		vcc3-supply = <&vcc_sys>;
++		vcc4-supply = <&vcc_sys>;
++		vcc6-supply = <&vcc_sys>;
++		vcc7-supply = <&vcc_sys>;
++		vcc8-supply = <&vcc3v3_sys>;
++		vcc9-supply = <&vcc_sys>;
++		vcc10-supply = <&vcc_sys>;
++		vcc11-supply = <&vcc_sys>;
++		vcc12-supply = <&vcc3v3_sys>;
++		vddio-supply = <&vcc_1v8>;
++
++		regulators {
++			vdd_center: DCDC_REG1 {
++				regulator-name = "vdd_center";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <900000>;
++				regulator-ramp-delay = <6001>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_cpu_l: DCDC_REG2 {
++				regulator-name = "vdd_cpu_l";
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-ramp-delay = <6001>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_ddr: DCDC_REG3 {
++				regulator-name = "vcc_ddr";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
++
++			vcc_1v8: DCDC_REG4 {
++				regulator-name = "vcc_1v8";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			vcc1v8_dvp: LDO_REG1 {
++				regulator-name = "vcc1v8_dvp";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			vcca1v8_hdmi: LDO_REG2 {
++				regulator-name = "vcca1v8_hdmi";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			vcca_1v8: LDO_REG3 {
++				regulator-name = "vcca_1v8";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			vcc_sd: LDO_REG4 {
++				regulator-name = "vcc_sd";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vcc3v0_sd: LDO_REG5 {
++				regulator-name = "vcc3v0_sd";
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3000000>;
++				};
++			};
++
++			vcc_1v5: LDO_REG6 {
++				regulator-name = "vcc_1v5";
++				regulator-min-microvolt = <1500000>;
++				regulator-max-microvolt = <1500000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1500000>;
++				};
++			};
++
++			vcca0v9_hdmi: LDO_REG7 {
++				regulator-name = "vcca0v9_hdmi";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <900000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <900000>;
++				};
++			};
++
++			vcc_3v0: LDO_REG8 {
++				regulator-name = "vcc_3v0";
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3000000>;
++				};
++			};
++
++			vcc3v3_s3: SWITCH_REG1 {
++				regulator-name = "vcc3v3_s3";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
++
++			vcc3v3_s0: SWITCH_REG2 {
++				regulator-name = "vcc3v3_s0";
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
++		};
++	};
++};
++
++&i2c1 {
++	i2c-scl-rising-time-ns = <300>;
++	i2c-scl-falling-time-ns = <15>;
++	status = "okay";
++};
++
++&i2c3 {
++	i2c-scl-rising-time-ns = <450>;
++	i2c-scl-falling-time-ns = <15>;
++	status = "okay";
++};
++
++&i2c4 {
++	i2c-scl-rising-time-ns = <600>;
++	i2c-scl-falling-time-ns = <40>;
++	status = "okay";
++
++	fusb0: typec-portc@22 {
++		compatible = "fcs,fusb302";
++		reg = <0x22>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <RK_PA2 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&fusb0_int>;
++		vbus-supply = <&vcc5v0_typec>;
++		status = "okay";
++	};
++};
++
++&i2c7 {
++	status = "okay";
++};
++
++&i2s0 {
++	rockchip,playback-channels = <8>;
++	rockchip,capture-channels = <8>;
++	status = "okay";
++};
++
++&i2s1 {
++	rockchip,playback-channels = <2>;
++	rockchip,capture-channels = <2>;
++	status = "okay";
++};
++
++&i2s2 {
++	status = "okay";
++};
++
++&gmac {
++	assigned-clocks = <&cru SCLK_RMII_SRC>;
++	assigned-clock-parents = <&clkin_gmac>;
++	clock_in_out = "input";
++	phy-supply = <&vcc_phy>;
++	phy-mode = "rgmii";
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmii_pins>;
++	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
++	snps,reset-active-low;
++	snps,reset-delays-us = <0 10000 50000>;
++	tx_delay = <0x28>;
++	rx_delay = <0x11>;
++	status = "okay";
++};
++
++&gpu {
++	status = "okay";
++	mali-supply = <&vdd_gpu>;
++};
++
++&hdmi {
++	ddc-i2c-bus = <&i2c3>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&hdmi_cec>;
++	status = "okay";
++};
++
++&hdmi_sound {
++	status = "okay";
++};
++
++&io_domains {
++	status = "okay";
++
++	bt656-supply = <&vcc1v8_s0>;
++	audio-supply = <&vcc1v8_s0>;
++	sdmmc-supply = <&vcc_sd>;
++	gpio1830-supply = <&vcc_3v0>;
++};
++
++&pmu_io_domains {
++	status = "okay";
++	pmu1830-supply = <&vcc_1v8>;
++};
++
++&pinctrl {
++	fusb30x {
++		fusb0_int: fusb0-int {
++			rockchip,pins =
++				<1 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
++	gmac {
++		rgmii_sleep_pins: rgmii-sleep-pins {
++			rockchip,pins =
++				<3 RK_PB7 RK_FUNC_GPIO &pcfg_output_low>;
++		};
++	};
++
++
++	pmic {
++		pmic_int_l: pmic-int-l {
++			rockchip,pins =
++				<1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++
++		vsel1_gpio: vsel1-gpio {
++			rockchip,pins =
++				<1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++
++		vsel2_gpio: vsel2-gpio {
++			rockchip,pins =
++				<1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++	};
++
++	usb-typec {
++		vcc5v0_typec_en: vcc5v0_typec_en {
++			rockchip,pins = <1 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
++	sdio {
++		bt_host_wake_l: bt-host-wake-l {
++			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		bt_reg_on_h: bt-reg-on-h {
++			/* external pullup to VCC1V8_PMUPLL */
++			rockchip,pins = <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		bt_wake_l: bt-wake-l {
++			rockchip,pins = <2 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		wifi_reg_on_h: wifi-reg_on-h {
++			rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	wifi {
++		wifi_host_wake_l: wifi-host-wake-l {
++			rockchip,pins = <0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	usb2 {
++		host_vbus_drv: host-vbus-drv {
++			rockchip,pins =
++				<4 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++};
++
++&pwm0 {
++	status = "okay";
++};
++
++&pwm2 {
++	status = "okay";
++	pinctrl-0 = <&pwm2_pin_pull_down>;
++};
++
++&saradc {
++	vref-supply = <&vcc1v8_s0>;
++	status = "okay";
++};
++
++&sdmmc {
++	clock-frequency = <150000000>;
++	clock-freq-min-max = <200000 150000000>;
++	supports-sd;
++	bus-width = <4>;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
++	disable-wp;
++	vqmmc-supply = <&vcc_sd>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
++	card-detect-delay = <800>;
++	status = "okay";
++};
++
++&sdhci {
++	bus-width = <8>;
++	mmc-hs400-1_8v;
++	mmc-hs400-enhanced-strobe;
++	supports-emmc;
++	non-removable;
++	keep-power-in-suspend;
++	status = "okay";
++};
++
++&sdio0 {
++	bus-width = <4>;
++	clock-frequency = <50000000>;
++	cap-sdio-irq;
++	cap-sd-highspeed;
++	keep-power-in-suspend;
++	mmc-pwrseq = <&sdio_pwrseq>;
++	non-removable;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
++	sd-uhs-sdr104;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	brcmf: wifi@1 {
++		compatible = "brcm,bcm4329-fmac";
++		reg = <1>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
++		interrupt-names = "host-wake";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_host_wake_l>;
++	};
++};
++
++&spdif {
++	status = "okay";
++	pinctrl-0 = <&spdif_bus_1>;
++	#sound-dai-cells = <0>;
++};
++
++&spi1 {
++	status = "okay";
++	max-freq = <10000000>;
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0>;
++		spi-max-frequency = <10000000>;
++	};
++};
++
++&tcphy0 {
++	status = "okay";
++};
++
++&tcphy1 {
++	status = "okay";
++};
++
++&tsadc {
++	/* tshut mode 0:CRU 1:GPIO */
++	rockchip,hw-tshut-mode = <1>;
++	/* tshut polarity 0:LOW 1:HIGH */
++	rockchip,hw-tshut-polarity = <1>;
++	rockchip,hw-tshut-temp = <110000>;
++	status = "okay";
++};
++
++&u2phy0 {
++	status = "okay";
++
++	u2phy0_otg: otg-port {
++		status = "okay";
++	};
++
++	u2phy0_host: host-port {
++		phy-supply = <&vcc5v0_host>;
++		status = "okay";
++	};
++};
++
++&u2phy1 {
++	status = "okay";
++
++	u2phy1_otg: otg-port {
++		status = "okay";
++	};
++
++	u2phy1_host: host-port {
++		phy-supply = <&vcc5v0_host>;
++		status = "okay";
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_xfer &uart0_rts &uart0_cts>;
++	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&rk808 1>;
++		clock-names = "ext_clock";
++		device-wakeup-gpios = <&gpio2 RK_PD2 GPIO_ACTIVE_HIGH>;
++		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
++		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
++		max-speed = <4000000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&bt_reg_on_h &bt_host_wake_l &bt_wake_l>;
++		vbat-supply = <&vcc3v3_sys>;
++		vddio-supply = <&vcc_1v8>;
++	};
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&usb_host0_ohci {
++	status = "okay";
++};
++
++&usb_host1_ehci {
++	status = "okay";
++};
++
++&usb_host1_ohci {
++	status = "okay";
++};
++
++&usbdrd3_0 {
++	status = "okay";
++};
++
++&usbdrd_dwc3_0 {
++	status = "okay";
++	dr_mode = "otg";
++};
++
++&usbdrd3_1 {
++	status = "okay";
++};
++
++&usbdrd_dwc3_1 {
++	status = "okay";
++	dr_mode = "host";
++};
++
++&vopb {
++	status = "okay";
++};
++
++&vopb_mmu {
++	status = "okay";
++};
+-- 
+2.17.1
