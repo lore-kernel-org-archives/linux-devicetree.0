@@ -1,48 +1,195 @@
 From: Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH V2 1/4] iio: adc: ad7124: Remove input number limitation
-Date: Fri, 21 Jun 2019 15:13:41 +0300
-Message-ID: <20190621121344.24917-1-mircea.caprioru@analog.com>
+Subject: [PATCH V2 4/4] dt-bindings: iio: adc: Convert ad7124 documentation to YAML
+Date: Fri, 21 Jun 2019 15:13:44 +0300
+Message-ID: <20190621121344.24917-4-mircea.caprioru@analog.com>
+References: <20190621121344.24917-1-mircea.caprioru@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="y"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190621121344.24917-1-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: jic23@kernel.org
 Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The driver limits the user to use only 4/8 differential inputs, but this
-device has the option to use pseudo-differential channels. This will
-increase the number of channels to be equal with the number of inputs so 8
-channels for ad7124-4 and 16 for ad7124-8.
-
-This patch removes the check between channel nodes and num_inputs value.
+Convert AD7124 bindings documentation to YAML format.
 
 Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 ---
 
 Changelog v2:
-- nothing changed here
+- modified SPDX license to GPL-2.0 OR BSD-2-Clause
+- added regex for a range from 0 to 15
+- added minimum and maximum constraints for reg property
+- set type and range of values for adi,reference-select property
+- used items for diff-channels property
+- set bipolar, adi,buffered-positive and negative to type: boolean
 
- drivers/iio/adc/ad7124.c | 7 -------
- 1 file changed, 7 deletions(-)
+ .../bindings/iio/adc/adi,ad7124.yaml          | 155 ++++++++++++++++++
+ 1 file changed, 155 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
 
-diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-index 659ef37d5fe8..810234db9c0d 100644
---- a/drivers/iio/adc/ad7124.c
-+++ b/drivers/iio/adc/ad7124.c
-@@ -462,13 +462,6 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
- 		if (ret)
- 			goto err;
- 
--		if (ain[0] >= st->chip_info->num_inputs ||
--		    ain[1] >= st->chip_info->num_inputs) {
--			dev_err(indio_dev->dev.parent,
--				"Input pin number out of range.\n");
--			ret = -EINVAL;
--			goto err;
--		}
- 		st->channel_config[channel].ain = AD7124_CHANNEL_AINP(ain[0]) |
- 						  AD7124_CHANNEL_AINM(ain[1]);
- 		st->channel_config[channel].bipolar =
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+new file mode 100644
+index 000000000000..cf494a08b837
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+@@ -0,0 +1,155 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7124.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD7124 ADC device driver
++
++maintainers:
++  - Stefan Popa <stefan.popa@analog.com>
++
++description: |
++  Bindings for the Analog Devices AD7124 ADC device. Datasheet can be
++  found here:
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7124-8.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad7124-4
++      - adi,ad7124-8
++
++  reg:
++    description: SPI chip select number for the device
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++    description: phandle to the master clock (mclk)
++
++  clock-names:
++    items:
++      - const: mclk
++
++  interrupts:
++    description: IRQ line for the ADC
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  refin1-supply:
++    description: refin1 supply can be used as reference for conversion.
++    maxItems: 1
++
++  refin2-supply:
++    description: refin2 supply can be used as reference for conversion.
++    maxItems: 1
++
++  avdd-supply:
++    description: avdd supply can be used as reference for conversion.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++
++patternProperties:
++  "^channel@([0-9]|1[0-5])$":
++    type: object
++    description: |
++      Represents the external channels which are connected to the ADC.
++      See Documentation/devicetree/bindings/iio/adc/adc.txt.
++
++    properties:
++      reg:
++        description: |
++          The channel number. It can have up to 8 channels on ad7124-4
++          and 16 channels on ad7124-8, numbered from 0 to 15.
++        items:
++         minimum: 0
++         maximum: 15
++
++      adi,reference-select:
++        description: |
++          Select the reference source to use when converting on
++          the specific channel. Valid values are:
++          0: REFIN1(+)/REFIN1(−).
++          1: REFIN2(+)/REFIN2(−).
++          3: AVDD
++          If this field is left empty, internal reference is selected.
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32
++          - enum: [0, 1, 3]
++
++      diff-channels:
++        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
++        items:
++          minimum: 0
++          maximum: 15
++
++      bipolar:
++        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
++        type: boolean
++
++      adi,buffered-positive:
++        description: Enable buffered mode for positive input.
++        type: boolean
++
++      adi,buffered-negative:
++        description: Enable buffered mode for negative input.
++        type: boolean
++
++    required:
++      - reg
++      - diff-channels
++
++examples:
++  - |
++    adc@0 {
++      compatible = "adi,ad7124-4";
++      reg = <0>;
++      spi-max-frequency = <5000000>;
++      interrupts = <25 2>;
++      interrupt-parent = <&gpio>;
++      refin1-supply = <&adc_vref>;
++      clocks = <&ad7124_mclk>;
++      clock-names = "mclk";
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      channel@0 {
++        reg = <0>;
++        diff-channels = <0 1>;
++        adi,reference-select = <0>;
++        adi,buffered-positive;
++      };
++
++      channel@1 {
++        reg = <1>;
++        bipolar;
++        diff-channels = <2 3>;
++        adi,reference-select = <0>;
++        adi,buffered-positive;
++        adi,buffered-negative;
++      };
++
++      channel@2 {
++        reg = <2>;
++        diff-channels = <4 5>;
++      };
++
++      channel@3 {
++        reg = <3>;
++        diff-channels = <6 7>;
++      };
++    };
 -- 
 2.17.1
