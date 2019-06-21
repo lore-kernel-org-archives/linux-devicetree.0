@@ -1,52 +1,74 @@
-From: Atish Patra <Atish.Patra@wdc.com>
-Subject: Re: [PATCH v2] riscv: dts: Add DT node for SiFive FU540 Ethernet
- controller driver
-Date: Fri, 21 Jun 2019 19:14:27 +0000
-Message-ID: <18c7992607dd1fed062bd295ac0738a759eff078.camel@wdc.com>
-References: <1561114429-29612-1-git-send-email-yash.shah@sifive.com>
-         <1561114429-29612-2-git-send-email-yash.shah@sifive.com>
+From: shuah <shuah@kernel.org>
+Subject: Re: [PATCH v5 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Fri, 21 Jun 2019 13:20:58 -0600
+Message-ID: <6f3f5184-d14e-1b46-17f1-391ee67e699c@kernel.org>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com>
+ <69809117-dcda-160a-ee0a-d1d3b4c5cd8a@kernel.org>
+ <20190621181342.GA17166@mit.edu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561114429-29612-2-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <20190621181342.GA17166@mit.edu>
 Content-Language: en-US
-Content-ID: <0C3E41F463150B45B327C91AE3200B30@namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "yash.shah@sifive.com" <yash.shah@sifive.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "sachin.ghadi@sifive.com" <sachin.ghadi@sifive.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "palmer@sifive.com" <palmer@sifive.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>
+To: Theodore Ts'o <tytso@mit.edu>, Frank Rowand <frowand.list@gmail.com>, Brendan Higgins <brendanhiggins@google.com>, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@l
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA2LTIxIGF0IDE2OjIzICswNTMwLCBZYXNoIFNoYWggd3JvdGU6DQo+IERU
-IG5vZGUgZm9yIFNpRml2ZSBGVTU0MC1DMDAwIEdFTUdYTCBFdGhlcm5ldCBjb250cm9sbGVyIGRy
-aXZlciBhZGRlZA0KPiANCj4gU2lnbmVkLW9mZi1ieTogWWFzaCBTaGFoIDx5YXNoLnNoYWhAc2lm
-aXZlLmNvbT4NCj4gLS0tDQo+ICBhcmNoL3Jpc2N2L2Jvb3QvZHRzL3NpZml2ZS9mdTU0MC1jMDAw
-LmR0c2kgICAgICAgICAgfCAxNg0KPiArKysrKysrKysrKysrKysrDQo+ICBhcmNoL3Jpc2N2L2Jv
-b3QvZHRzL3NpZml2ZS9oaWZpdmUtdW5sZWFzaGVkLWEwMC5kdHMgfCAgOSArKysrKysrKysNCj4g
-IDIgZmlsZXMgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Fy
-Y2gvcmlzY3YvYm9vdC9kdHMvc2lmaXZlL2Z1NTQwLWMwMDAuZHRzaQ0KPiBiL2FyY2gvcmlzY3Yv
-Ym9vdC9kdHMvc2lmaXZlL2Z1NTQwLWMwMDAuZHRzaQ0KPiBpbmRleCA0ZThmYmRlLi5jNTNiNGVh
-IDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Jpc2N2L2Jvb3QvZHRzL3NpZml2ZS9mdTU0MC1jMDAwLmR0
-c2kNCj4gKysrIGIvYXJjaC9yaXNjdi9ib290L2R0cy9zaWZpdmUvZnU1NDAtYzAwMC5kdHNpDQo+
-IEBAIC0yMjUsNSArMjI1LDIxIEBADQo+ICAJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gIAkJ
-CSNzaXplLWNlbGxzID0gPDA+Ow0KPiAgCQl9Ow0KPiArCQlldGgwOiBldGhlcm5ldEAxMDA5MDAw
-MCB7DQo+ICsJCQljb21wYXRpYmxlID0gInNpZml2ZSxmdTU0MC1tYWNiIjsNCj4gKwkJCWludGVy
-cnVwdC1wYXJlbnQgPSA8JnBsaWMwPjsNCj4gKwkJCWludGVycnVwdHMgPSA8NTM+Ow0KPiArCQkJ
-cmVnID0gPDB4MCAweDEwMDkwMDAwIDB4MCAweDIwMDANCj4gKwkJCSAgICAgICAweDAgMHgxMDBh
-MDAwMCAweDAgMHgxMDAwPjsNCj4gKwkJCXJlZy1uYW1lcyA9ICJjb250cm9sIjsNCj4gKwkJCXN0
-YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICsJCQlsb2NhbC1tYWMtYWRkcmVzcyA9IFswMCAwMCAwMCAw
-MCAwMCAwMF07DQo+ICsJCQljbG9jay1uYW1lcyA9ICJwY2xrIiwgImhjbGsiOw0KPiArCQkJY2xv
-Y2tzID0gPCZwcmNpIFBSQ0lfQ0xLX0dFTUdYTFBMTD4sDQo+ICsJCQkJIDwmcHJjaSBQUkNJX0NM
-S19HRU1HWExQTEw+Ow0KPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCQkjc2l6ZS1j
-ZWxscyA9IDwwPjsNCj4gKwkJfTsNCj4gKw0KPiAgCX07DQo+ICB9Ow0KPiBkaWZmIC0tZ2l0IGEv
-YXJjaC9yaXNjdi9ib290L2R0cy9zaWZpdmUvaGlmaXZlLXVubGVhc2hlZC1hMDAuZHRzDQo+IGIv
-YXJjaC9yaXNjdi9ib290L2R0cy9zaWZpdmUvaGlmaXZlLXVubGVhc2hlZC1hMDAuZHRzDQo+IGlu
-ZGV4IDRkYTg4NzAuLmQ3ODNiZjIgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvcmlzY3YvYm9vdC9kdHMv
-c2lmaXZlL2hpZml2ZS11bmxlYXNoZWQtYTAwLmR0cw0KPiArKysgYi9hcmNoL3Jpc2N2L2Jvb3Qv
-ZHRzL3NpZml2ZS9oaWZpdmUtdW5sZWFzaGVkLWEwMC5kdHMNCj4gQEAgLTYzLDMgKzYzLDEyIEBA
-DQo+ICAJCWRpc2FibGUtd3A7DQo+ICAJfTsNCj4gIH07DQo+ICsNCj4gKyZldGgwIHsNCj4gKwlz
-dGF0dXMgPSAib2theSI7DQo+ICsJcGh5LW1vZGUgPSAiZ21paSI7DQo+ICsJcGh5LWhhbmRsZSA9
-IDwmcGh5MT47DQo+ICsJcGh5MTogZXRoZXJuZXQtcGh5QDAgew0KPiArCQlyZWcgPSA8MD47DQo+
-ICsJfTsNCj4gK307DQoNClRoYW5rcy4gSSBhbSBhYmxlIHRvIGJvb3QgVW5sZWFzaGVkIHdpdGgg
-bmV0d29ya2luZyBlbmFibGVkIHdpdGggdGhpcw0KcGF0Y2guDQoNCkZXSVcsIA0KVGVzdGVkLWJ5
-OiBBdGlzaCBQYXRyYSA8YXRpc2gucGF0cmFAd2RjLmNvbT4NCg0KUmVnYXJkcywNCkF0aXNoDQo=
+On 6/21/19 12:13 PM, Theodore Ts'o wrote:
+> On Fri, Jun 21, 2019 at 08:59:48AM -0600, shuah wrote:
+>>>> ### But wait! Doesn't kselftest support in kernel testing?!
+>>>>
+>>>> ....
+>>
+>> I think I commented on this before. I agree with the statement that
+>> there is no overlap between Kselftest and KUnit. I would like see this
+>> removed. Kselftest module support supports use-cases KUnit won't be able
+>> to. I can build an kernel with Kselftest test modules and use it in the
+>> filed to load and run tests if I need to debug a problem and get data
+>> from a system. I can't do that with KUnit.
+>>
+>> In my mind, I am not viewing this as which is better. Kselftest and
+>> KUnit both have their place in the kernel development process. It isn't
+>> productive and/or necessary to comparing Kselftest and KUnit without a
+>> good understanding of the problem spaces for each of these.
+>>
+>> I would strongly recommend not making reference to Kselftest and talk
+>> about what KUnit offers.
+> 
+> Shuah,
+> 
+> Just to recall the history, this section of the FAQ was added to rebut
+> the ***very*** strong statements that Frank made that there was
+> overlap between Kselftest and Kunit, and that having too many ways for
+> kernel developers to do the identical thing was harmful (he said it
+> was too much of a burden on a kernel developer) --- and this was an
+> argument for not including Kunit in the upstream kernel.
+> 
+> If we're past that objection, then perhaps this section can be
+> dropped, but there's a very good reason why it was there.  I wouldn't
+> Brendan to be accused of ignoring feedback from those who reviewed his
+> patches.   :-)
+> 
+
+Agreed. I understand that this FAQ probably was needed at one time and
+Brendan added it to address the concerns.
+
+I think at some point we do need to have a document that outlines when
+to KUnit and when to use Kselftest modules. I think one concern people
+have is that if KUnit is perceived as a  replacement for Ksefltest
+module, Kselftest module will be ignored leaving users without the
+ability to build and run with Kselftest modules and load them on a need
+basis to gather data on a systems that aren't dedicated strictly for
+testing.
+
+I am trying to move the conversation forward from KUnit vs. Kselftest
+modules discussion to which problem areas each one addresses keeping
+in mind that it is not about which is better. Kselftest and KUnit both
+have their place in the kernel development process. We just have to be
+clear on usage as we write tests for each.
+
+thanks,
+-- Shuah
