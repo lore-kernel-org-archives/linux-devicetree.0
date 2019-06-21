@@ -1,107 +1,105 @@
 From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: [PATCH net-next 1/6] ocelot: Filter out ocelot SoC specific PCS config from common path
-Date: Fri, 21 Jun 2019 18:38:47 +0300
-Message-ID: <1561131532-14860-2-git-send-email-claudiu.manoil@nxp.com>
+Subject: [PATCH net-next 3/6] ocelot: Factor out resource ioremap and regmap init common code
+Date: Fri, 21 Jun 2019 18:38:49 +0300
+Message-ID: <1561131532-14860-4-git-send-email-claudiu.manoil@nxp.com>
 References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: "David S . Miller" <davem@davemloft.net>
 Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Allan Nielsen <Allan.Nielsen@microsemi.com>, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-The adjust_link routine should be generic enough to be (re)used by
-any SoC that integrates a switch core compatible with the Ocelot
-core switch driver.  Currently all configurations are generic except
-for the PCS settings that are SoC specific.  Move these out to the
-Ocelot SoC/board instance.
+Let's make this ioremap and regmap init code common.  It should not
+be platform dependent as it should be usable by PCI devices too.
+Use better names where necessary to avoid clashes.
 
 Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 ---
- drivers/net/ethernet/mscc/ocelot.c      | 17 ++---------------
- drivers/net/ethernet/mscc/ocelot.h      |  2 ++
- drivers/net/ethernet/mscc/ocelot_regs.c | 21 +++++++++++++++++++++
- 3 files changed, 25 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/mscc/ocelot.h       |  4 +---
+ drivers/net/ethernet/mscc/ocelot_board.c | 12 ++++++++----
+ drivers/net/ethernet/mscc/ocelot_io.c    | 14 +++++---------
+ 3 files changed, 14 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-index b71e4ecbe469..66cf57e6fd76 100644
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -405,21 +405,8 @@ static void ocelot_port_adjust_link(struct net_device *dev)
- 	ocelot_port_writel(port, DEV_MAC_HDX_CFG_LATE_COL_POS(67),
- 			   DEV_MAC_HDX_CFG);
- 
--	/* Disable HDX fast control */
--	ocelot_port_writel(port, DEV_PORT_MISC_HDX_FAST_DIS, DEV_PORT_MISC);
--
--	/* SGMII only for now */
--	ocelot_port_writel(port, PCS1G_MODE_CFG_SGMII_MODE_ENA, PCS1G_MODE_CFG);
--	ocelot_port_writel(port, PCS1G_SD_CFG_SD_SEL, PCS1G_SD_CFG);
--
--	/* Enable PCS */
--	ocelot_port_writel(port, PCS1G_CFG_PCS_ENA, PCS1G_CFG);
--
--	/* No aneg on SGMII */
--	ocelot_port_writel(port, 0, PCS1G_ANEG_CFG);
--
--	/* No loopback */
--	ocelot_port_writel(port, 0, PCS1G_LB_CFG);
-+	if (ocelot->port_pcs_init)
-+		ocelot->port_pcs_init(port);
- 
- 	/* Set Max Length and maximum tags allowed */
- 	ocelot_port_writel(port, VLAN_ETH_FRAME_LEN, DEV_MAC_MAXLEN_CFG);
 diff --git a/drivers/net/ethernet/mscc/ocelot.h b/drivers/net/ethernet/mscc/ocelot.h
-index f7eeb4806897..e21a6fb22ef8 100644
+index e21a6fb22ef8..4235d7294772 100644
 --- a/drivers/net/ethernet/mscc/ocelot.h
 +++ b/drivers/net/ethernet/mscc/ocelot.h
-@@ -442,6 +442,8 @@ struct ocelot {
- 	u64 *stats;
- 	struct delayed_work stats_work;
- 	struct workqueue_struct *stats_queue;
+@@ -493,9 +493,7 @@ void ocelot_port_writel(struct ocelot_port *port, u32 val, u32 reg);
+ 
+ int ocelot_regfields_init(struct ocelot *ocelot,
+ 			  const struct reg_field *const regfields);
+-struct regmap *ocelot_io_platform_init(struct ocelot *ocelot,
+-				       struct platform_device *pdev,
+-				       const char *name);
++struct regmap *ocelot_io_init(struct ocelot *ocelot, struct resource *res);
+ 
+ #define ocelot_field_write(ocelot, reg, val) regmap_field_write((ocelot)->regfields[(reg)], (val))
+ #define ocelot_field_read(ocelot, reg, val) regmap_field_read((ocelot)->regfields[(reg)], (val))
+diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
+index 2a6ee4edb858..489177058d9e 100644
+--- a/drivers/net/ethernet/mscc/ocelot_board.c
++++ b/drivers/net/ethernet/mscc/ocelot_board.c
+@@ -182,7 +182,7 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
+ 	struct {
+ 		enum ocelot_target id;
+ 		char *name;
+-	} res[] = {
++	} io_target[] = {
+ 		{ SYS, "sys" },
+ 		{ REW, "rew" },
+ 		{ QSYS, "qsys" },
+@@ -201,14 +201,18 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, ocelot);
+ 	ocelot->dev = &pdev->dev;
+ 
+-	for (i = 0; i < ARRAY_SIZE(res); i++) {
++	for (i = 0; i < ARRAY_SIZE(io_target); i++) {
+ 		struct regmap *target;
++		struct resource *res;
 +
-+	void (*port_pcs_init)(struct ocelot_port *port);
++		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++						   io_target[i].name);
+ 
+-		target = ocelot_io_platform_init(ocelot, pdev, res[i].name);
++		target = ocelot_io_init(ocelot, res);
+ 		if (IS_ERR(target))
+ 			return PTR_ERR(target);
+ 
+-		ocelot->targets[res[i].id] = target;
++		ocelot->targets[io_target[i].id] = target;
+ 	}
+ 
+ 	hsio = syscon_regmap_lookup_by_compatible("mscc,ocelot-hsio");
+diff --git a/drivers/net/ethernet/mscc/ocelot_io.c b/drivers/net/ethernet/mscc/ocelot_io.c
+index c6db8ad31fdf..9a9a6766c231 100644
+--- a/drivers/net/ethernet/mscc/ocelot_io.c
++++ b/drivers/net/ethernet/mscc/ocelot_io.c
+@@ -97,20 +97,16 @@ static struct regmap_config ocelot_regmap_config = {
+ 	.reg_stride	= 4,
  };
  
- struct ocelot_port {
-diff --git a/drivers/net/ethernet/mscc/ocelot_regs.c b/drivers/net/ethernet/mscc/ocelot_regs.c
-index 6c387f994ec5..000c43984858 100644
---- a/drivers/net/ethernet/mscc/ocelot_regs.c
-+++ b/drivers/net/ethernet/mscc/ocelot_regs.c
-@@ -412,6 +412,26 @@ static void ocelot_pll5_init(struct ocelot *ocelot)
- 		     HSIO_PLL5G_CFG2_AMPC_SEL(0x10));
- }
- 
-+static void ocelot_port_pcs_init(struct ocelot_port *port)
-+{
-+	/* Disable HDX fast control */
-+	ocelot_port_writel(port, DEV_PORT_MISC_HDX_FAST_DIS, DEV_PORT_MISC);
-+
-+	/* SGMII only for now */
-+	ocelot_port_writel(port, PCS1G_MODE_CFG_SGMII_MODE_ENA,
-+			   PCS1G_MODE_CFG);
-+	ocelot_port_writel(port, PCS1G_SD_CFG_SD_SEL, PCS1G_SD_CFG);
-+
-+	/* Enable PCS */
-+	ocelot_port_writel(port, PCS1G_CFG_PCS_ENA, PCS1G_CFG);
-+
-+	/* No aneg on SGMII */
-+	ocelot_port_writel(port, 0, PCS1G_ANEG_CFG);
-+
-+	/* No loopback */
-+	ocelot_port_writel(port, 0, PCS1G_LB_CFG);
-+}
-+
- int ocelot_chip_init(struct ocelot *ocelot)
+-struct regmap *ocelot_io_platform_init(struct ocelot *ocelot,
+-				       struct platform_device *pdev,
+-				       const char *name)
++struct regmap *ocelot_io_init(struct ocelot *ocelot, struct resource *res)
  {
- 	int ret;
-@@ -420,6 +440,7 @@ int ocelot_chip_init(struct ocelot *ocelot)
- 	ocelot->stats_layout = ocelot_stats_layout;
- 	ocelot->num_stats = ARRAY_SIZE(ocelot_stats_layout);
- 	ocelot->shared_queue_sz = 224 * 1024;
-+	ocelot->port_pcs_init = ocelot_port_pcs_init;
+-	struct resource *res;
+ 	void __iomem *regs;
  
- 	ret = ocelot_regfields_init(ocelot, ocelot_regfields);
- 	if (ret)
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+ 	regs = devm_ioremap_resource(ocelot->dev, res);
+ 	if (IS_ERR(regs))
+ 		return ERR_CAST(regs);
+ 
+-	ocelot_regmap_config.name = name;
+-	return devm_regmap_init_mmio(ocelot->dev, regs,
+-				     &ocelot_regmap_config);
++	ocelot_regmap_config.name = res->name;
++
++	return devm_regmap_init_mmio(ocelot->dev, regs, &ocelot_regmap_config);
+ }
+-EXPORT_SYMBOL(ocelot_io_platform_init);
++EXPORT_SYMBOL(ocelot_io_init);
 -- 
 2.17.1
