@@ -1,69 +1,83 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH] ARM: dts: msm8974-FP2: add reboot-mode node
-Date: Thu, 20 Jun 2019 20:01:22 -0400
-Message-ID: <20190621000122.GA13036@onstation.org>
-References: <20190620225824.2845-1-luca@z3ntu.xyz>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 1/8] tpm: block messages while suspended
+Date: Thu, 20 Jun 2019 18:03:17 -0700
+Message-ID: <5d0c2cd6.1c69fb81.e66af.32bf@mx.google.com>
+References: <20190613180931.65445-1-swboyd@chromium.org> <20190613180931.65445-2-swboyd@chromium.org> <20190613232613.GH22901@ziepe.ca> <5d03e394.1c69fb81.f028c.bffb@mx.google.com> <20190617225134.GA30762@ziepe.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190620225824.2845-1-luca@z3ntu.xyz>
+In-Reply-To: <20190617225134.GA30762@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Weiss <luca@z3ntu.xyz>
-Cc: linux-arm-msm@vger.kernel.org, ~martijnbraam/pmos-upstream@lists.sr.ht, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>, Guenter Roeck <groeck@chromium.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Luca,
+Quoting Jason Gunthorpe (2019-06-17 15:51:34)
+> On Fri, Jun 14, 2019 at 11:12:36AM -0700, Stephen Boyd wrote:
+> > Quoting Jason Gunthorpe (2019-06-13 16:26:13)
+> > > On Thu, Jun 13, 2019 at 11:09:24AM -0700, Stephen Boyd wrote:
+> > > > From: Andrey Pronin <apronin@chromium.org>
+> > > >=20
+> > > > Other drivers or userspace may initiate sending a message to the tpm
+> > > > while the device itself and the controller of the bus it is on are
+> > > > suspended. That may break the bus driver logic.
+> > > > Block sending messages while the device is suspended.
+> > > >=20
+> > > > Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> > > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > > >=20
+> > > > I don't think this was ever posted before.
+> > >=20
+> > > Use a real lock.
+> > >=20
+> >=20
+> > To make sure the bit is tested under a lock so that suspend/resume can't
+> > update the bit in parallel?
+>=20
+> No, just use a real lock, don't make locks out of test bit/set bit
+>=20
 
-On Fri, Jun 21, 2019 at 12:58:24AM +0200, Luca Weiss wrote:
-> This enables userspace to signal the bootloader to go into the
-> bootloader or recovery mode.
-> 
-> The magic values can be found in both the downstream kernel and the LK
-> kernel (bootloader).
-> 
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> ---
-> Sidenote: Why are there no userspace tools to be found that support
-> this? Anyways, we have one now in postmarketOS :)
-> 
->  arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts b/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
-> index 643c57f84818..f86736a6d77e 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
-> +++ b/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
-> @@ -338,6 +338,20 @@
->  			};
->  		};
->  	};
-> +
-> +	imem@fe805000 {
-> +		compatible = "syscon", "simple-mfd";
-> +		reg = <0xfe805000 0x1000>;
-> +
-> +		reboot-mode {
-> +			compatible = "syscon-reboot-mode";
-> +			offset = <0x65c>;
-> +
-> +			mode-normal	= <0x77665501>;
-> +			mode-bootloader	= <0x77665500>;
-> +			mode-recovery	= <0x77665502>;
-> +		};
-> +	};
->  };
+Ok. I looked back on the history of this change in our kernel (seems it
+wasn't attempted upstream for some time) and it looks like the problem
+may have been that the khwrng kthread (i.e. hwrng_fill()) isn't frozen
+across suspend/resume. This kthread runs concurrently with devices being
+resumed, the cr50 hardware is still suspended, and then a tpm command is
+sent and it hangs the I2C bus because the device hasn't been properly
+resumed yet.
 
-I think that it makes sense to put this snippet in qcom-msm8974.dtsi
-with a status of disabled, and then enable it in
-qcom-msm8974-fairphone-fp2.dts like so:
+I suspect a better approach than trying to hold of all TPM commands
+across suspend/resume would be to fix the caller here to not even try to
+read the hwrng during this time. It's a general problem for other hwrngs
+that have some suspend/resume hooks too. This kthread is going to be
+running while suspend/resume is going on if the random entropy gets too
+low, and that probably shouldn't be the case.
 
-imem@fe805000 {
-	status = "ok";
-};
+What do you think of the attached patch? I haven't tested it, but it
+would make sure that the kthread is frozen so that the hardware can be
+resumed before the kthread is thawed and tries to go touch the hardware.
 
-What's the pmOS utility that utilizes this? I'll test it on the Nexus 5.
-
-Thanks,
-
-Brian
+----8<-----
+diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
+index 95be7228f327..3b88af3149a7 100644
+--- a/drivers/char/hw_random/core.c
++++ b/drivers/char/hw_random/core.c
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
++#include <linux/freezer.h>
+ #include <linux/fs.h>
+ #include <linux/hw_random.h>
+ #include <linux/kernel.h>
+@@ -421,7 +422,9 @@ static int hwrng_fillfn(void *unused)
+ {
+ 	long rc;
+=20
+-	while (!kthread_should_stop()) {
++	set_freezable();
++
++	while (!kthread_freezable_should_stop(NULL)) {
+ 		struct hwrng *rng;
+=20
+ 		rng =3D get_current_rng();
