@@ -1,83 +1,102 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 1/8] tpm: block messages while suspended
-Date: Thu, 20 Jun 2019 18:03:17 -0700
-Message-ID: <5d0c2cd6.1c69fb81.e66af.32bf@mx.google.com>
-References: <20190613180931.65445-1-swboyd@chromium.org> <20190613180931.65445-2-swboyd@chromium.org> <20190613232613.GH22901@ziepe.ca> <5d03e394.1c69fb81.f028c.bffb@mx.google.com> <20190617225134.GA30762@ziepe.ca>
+From: "dbasehore ." <dbasehore@chromium.org>
+Subject: Re: [PATCH 3/5] drm/panel: Add attach/detach callbacks
+Date: Thu, 20 Jun 2019 18:57:52 -0700
+Message-ID: <CAGAzgsoE5CgkQVhU_LSsetBRistMnuRqO7Sh+cuycMJa7QXzDg@mail.gmail.com>
+References: <20190611040350.90064-1-dbasehore@chromium.org>
+ <20190611040350.90064-4-dbasehore@chromium.org>
+ <20190611085722.GX21222@phenom.ffwll.local>
+ <CAGAzgsr2sh5B1xi_ztQPN0xoQsZd26DDXwWT_qqJ68XeKReJ_Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617225134.GA30762@ziepe.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>, Guenter Roeck <groeck@chromium.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
+In-Reply-To: <CAGAzgsr2sh5B1xi_ztQPN0xoQsZd26DDXwWT_qqJ68XeKReJ_Q@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
+To: Derek Basehore <dbasehore@chromium.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Intel Graphics <intel-gfx@lists.freedesktop.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>moderated
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jason Gunthorpe (2019-06-17 15:51:34)
-> On Fri, Jun 14, 2019 at 11:12:36AM -0700, Stephen Boyd wrote:
-> > Quoting Jason Gunthorpe (2019-06-13 16:26:13)
-> > > On Thu, Jun 13, 2019 at 11:09:24AM -0700, Stephen Boyd wrote:
-> > > > From: Andrey Pronin <apronin@chromium.org>
-> > > >=20
-> > > > Other drivers or userspace may initiate sending a message to the tpm
-> > > > while the device itself and the controller of the bus it is on are
-> > > > suspended. That may break the bus driver logic.
-> > > > Block sending messages while the device is suspended.
-> > > >=20
-> > > > Signed-off-by: Andrey Pronin <apronin@chromium.org>
-> > > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > > >=20
-> > > > I don't think this was ever posted before.
-> > >=20
-> > > Use a real lock.
-> > >=20
-> >=20
-> > To make sure the bit is tested under a lock so that suspend/resume can't
-> > update the bit in parallel?
->=20
-> No, just use a real lock, don't make locks out of test bit/set bit
->=20
-
-Ok. I looked back on the history of this change in our kernel (seems it
-wasn't attempted upstream for some time) and it looks like the problem
-may have been that the khwrng kthread (i.e. hwrng_fill()) isn't frozen
-across suspend/resume. This kthread runs concurrently with devices being
-resumed, the cr50 hardware is still suspended, and then a tpm command is
-sent and it hangs the I2C bus because the device hasn't been properly
-resumed yet.
-
-I suspect a better approach than trying to hold of all TPM commands
-across suspend/resume would be to fix the caller here to not even try to
-read the hwrng during this time. It's a general problem for other hwrngs
-that have some suspend/resume hooks too. This kthread is going to be
-running while suspend/resume is going on if the random entropy gets too
-low, and that probably shouldn't be the case.
-
-What do you think of the attached patch? I haven't tested it, but it
-would make sure that the kthread is frozen so that the hardware can be
-resumed before the kthread is thawed and tries to go touch the hardware.
-
-----8<-----
-diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
-index 95be7228f327..3b88af3149a7 100644
---- a/drivers/char/hw_random/core.c
-+++ b/drivers/char/hw_random/core.c
-@@ -13,6 +13,7 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/err.h>
-+#include <linux/freezer.h>
- #include <linux/fs.h>
- #include <linux/hw_random.h>
- #include <linux/kernel.h>
-@@ -421,7 +422,9 @@ static int hwrng_fillfn(void *unused)
- {
- 	long rc;
-=20
--	while (!kthread_should_stop()) {
-+	set_freezable();
-+
-+	while (!kthread_freezable_should_stop(NULL)) {
- 		struct hwrng *rng;
-=20
- 		rng =3D get_current_rng();
+SWYgd2Ugd2FudCB0byBxdWVyeSB0aGUgZGV2aWNlIHRyZWUgb3V0c2lkZSBvZiB0aGUgcGFuZWwg
+Y29kZSBpbgpoZWxwZXIgZnVuY3Rpb25zLCB3ZSBjYW4gZG8gdGhpcyB3aXRoIHRoZSBzdHJ1Y3Qg
+YXMgaXMuIFRoZXJlJ3MKYWxyZWFkeSBhIGRldmljZSBzdHJ1Y3QgcG9pbnRlciBpbiBkcm1fcGFu
+ZWwsIHNvIEkgdGhpbmsgd2UgY2FuIHB1bGwKZnJvbSB0aGF0LgoKT24gVHVlLCBKdW4gMTEsIDIw
+MTkgYXQgNToyNSBQTSBkYmFzZWhvcmUgLiA8ZGJhc2Vob3JlQGNocm9taXVtLm9yZz4gd3JvdGU6
+Cj4KPiBPbiBUdWUsIEp1biAxMSwgMjAxOSBhdCAxOjU3IEFNIERhbmllbCBWZXR0ZXIgPGRhbmll
+bEBmZndsbC5jaD4gd3JvdGU6Cj4gPgo+ID4gT24gTW9uLCBKdW4gMTAsIDIwMTkgYXQgMDk6MDM6
+NDhQTSAtMDcwMCwgRGVyZWsgQmFzZWhvcmUgd3JvdGU6Cj4gPiA+IFRoaXMgYWRkcyB0aGUgYXR0
+YWNoL2RldGFjaCBjYWxsYmFja3MuIFRoZXNlIGFyZSBmb3Igc2V0dGluZyB1cAo+ID4gPiBpbnRl
+cm5hbCBzdGF0ZSBmb3IgdGhlIGNvbm5lY3Rvci9wYW5lbCBwYWlyIHRoYXQgY2FuJ3QgYmUgZG9u
+ZSBhdAo+ID4gPiBwcm9iZSAoc2luY2UgdGhlIGNvbm5lY3RvciBkb2Vzbid0IGV4aXN0KSBhbmQg
+d2hpY2ggZG9uJ3QgbmVlZCB0byBiZQo+ID4gPiByZXBlYXRlZGx5IGRvbmUgZm9yIGV2ZXJ5IGdl
+dC9tb2RlcywgcHJlcGFyZSwgb3IgZW5hYmxlIGNhbGxiYWNrLgo+ID4gPiBWYWx1ZXMgc3VjaCBh
+cyB0aGUgcGFuZWwgb3JpZW50YXRpb24sIGFuZCBkaXNwbGF5IHNpemUgY2FuIGJlIGZpbGxlZAo+
+ID4gPiBpbiBmb3IgdGhlIGNvbm5lY3Rvci4KPiA+ID4KPiA+ID4gU2lnbmVkLW9mZi1ieTogRGVy
+ZWsgQmFzZWhvcmUgPGRiYXNlaG9yZUBjaHJvbWl1bS5vcmc+Cj4gPiA+IC0tLQo+ID4gPiAgZHJp
+dmVycy9ncHUvZHJtL2RybV9wYW5lbC5jIHwgMTQgKysrKysrKysrKysrKysKPiA+ID4gIGluY2x1
+ZGUvZHJtL2RybV9wYW5lbC5oICAgICB8ICA0ICsrKysKPiA+ID4gIDIgZmlsZXMgY2hhbmdlZCwg
+MTggaW5zZXJ0aW9ucygrKQo+ID4gPgo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L2RybV9wYW5lbC5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9wYW5lbC5jCj4gPiA+IGluZGV4IDNi
+Njg5Y2U0YTUxYS4uNzJmNjc2NzhkOWQ1IDEwMDY0NAo+ID4gPiAtLS0gYS9kcml2ZXJzL2dwdS9k
+cm0vZHJtX3BhbmVsLmMKPiA+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2RybV9wYW5lbC5jCj4g
+PiA+IEBAIC0xMDQsMTIgKzEwNCwyMyBAQCBFWFBPUlRfU1lNQk9MKGRybV9wYW5lbF9yZW1vdmUp
+Owo+ID4gPiAgICovCj4gPiA+ICBpbnQgZHJtX3BhbmVsX2F0dGFjaChzdHJ1Y3QgZHJtX3BhbmVs
+ICpwYW5lbCwgc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiA+ID4gIHsKPiA+ID4g
+KyAgICAgaW50IHJldDsKPiA+ID4gKwo+ID4gPiAgICAgICBpZiAocGFuZWwtPmNvbm5lY3RvcikK
+PiA+ID4gICAgICAgICAgICAgICByZXR1cm4gLUVCVVNZOwo+ID4gPgo+ID4gPiAgICAgICBwYW5l
+bC0+Y29ubmVjdG9yID0gY29ubmVjdG9yOwo+ID4gPiAgICAgICBwYW5lbC0+ZHJtID0gY29ubmVj
+dG9yLT5kZXY7Cj4gPiA+Cj4gPiA+ICsgICAgIGlmIChwYW5lbC0+ZnVuY3MtPmF0dGFjaCkgewo+
+ID4gPiArICAgICAgICAgICAgIHJldCA9IHBhbmVsLT5mdW5jcy0+YXR0YWNoKHBhbmVsKTsKPiA+
+ID4gKyAgICAgICAgICAgICBpZiAocmV0IDwgMCkgewo+ID4gPiArICAgICAgICAgICAgICAgICAg
+ICAgcGFuZWwtPmNvbm5lY3RvciA9IE5VTEw7Cj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBw
+YW5lbC0+ZHJtID0gTlVMTDsKPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIHJldHVybiByZXQ7
+Cj4gPiA+ICsgICAgICAgICAgICAgfQo+ID4gPiArICAgICB9Cj4gPgo+ID4gV2h5IGNhbid0IHdl
+IGp1c3QgaW1wbGVtZW50IHRoaXMgaW4gdGhlIGRybSBoZWxwZXJzIGZvciBldmVyeW9uZSwgYnkg
+ZS5nLgo+ID4gc3RvcmluZyBhIGR0IG5vZGUgaW4gZHJtX3BhbmVsPyBGZWVscyBhIGJpdCBvdmVy
+a2lsbCB0byBoYXZlIHRoZXNlIG5ldwo+ID4gaG9va3MgaGVyZS4KPiA+Cj4gPiBBbHNvLCBteSB1
+bmRlcnN0YW5kaW5nIGlzIHRoYXQgdGhpcyBkdCBzdHVmZiBpcyBzdXBwb3NlZCB0byBiZQo+ID4g
+c3RhbmRhcmRpemVkLCBzbyB0aGlzIHNob3VsZCB3b3JrLgo+Cj4gU28gZG8geW91IHdhbnQgYWxs
+IG9mIHRoaXMgaW5mb3JtYXRpb24gYWRkZWQgdG8gdGhlIGRybV9wYW5lbCBzdHJ1Y3Q/Cj4gSWYg
+d2UgZG8gdGhhdCwgd2UgZG9uJ3QgbmVjZXNzYXJpbHkgZXZlbiBuZWVkIHRoZSBkcm0gaGVscGVy
+IGZ1bmN0aW9uLgo+IFdlIGNvdWxkIGp1c3QgY29weSB0aGUgdmFsdWVzIG92ZXIgaGVyZSBpbiB0
+aGUgZHJtX3BhbmVsX2F0dGFjaAo+IGZ1bmN0aW9uIChhbmQgY2xlYXIgdGhlbSBpbiBkcm1fcGFu
+ZWxfZGV0YWNoKS4KPgo+ID4gLURhbmllbAo+ID4KPiA+ID4gKwo+ID4gPiAgICAgICByZXR1cm4g
+MDsKPiA+ID4gIH0KPiA+ID4gIEVYUE9SVF9TWU1CT0woZHJtX3BhbmVsX2F0dGFjaCk7Cj4gPiA+
+IEBAIC0xMjgsNiArMTM5LDkgQEAgRVhQT1JUX1NZTUJPTChkcm1fcGFuZWxfYXR0YWNoKTsKPiA+
+ID4gICAqLwo+ID4gPiAgaW50IGRybV9wYW5lbF9kZXRhY2goc3RydWN0IGRybV9wYW5lbCAqcGFu
+ZWwpCj4gPiA+ICB7Cj4gPiA+ICsgICAgIGlmIChwYW5lbC0+ZnVuY3MtPmRldGFjaCkKPiA+ID4g
+KyAgICAgICAgICAgICBwYW5lbC0+ZnVuY3MtPmRldGFjaChwYW5lbCk7Cj4gPiA+ICsKPiA+ID4g
+ICAgICAgcGFuZWwtPmNvbm5lY3RvciA9IE5VTEw7Cj4gPiA+ICAgICAgIHBhbmVsLT5kcm0gPSBO
+VUxMOwo+ID4gPgo+ID4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kcm0vZHJtX3BhbmVsLmggYi9p
+bmNsdWRlL2RybS9kcm1fcGFuZWwuaAo+ID4gPiBpbmRleCAxMzYzMWIyZWZiYWEuLmUxMzZlM2Ez
+Yzk5NiAxMDA2NDQKPiA+ID4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX3BhbmVsLmgKPiA+ID4gKysr
+IGIvaW5jbHVkZS9kcm0vZHJtX3BhbmVsLmgKPiA+ID4gQEAgLTM3LDYgKzM3LDggQEAgc3RydWN0
+IGRpc3BsYXlfdGltaW5nOwo+ID4gPiAgICogc3RydWN0IGRybV9wYW5lbF9mdW5jcyAtIHBlcmZv
+cm0gb3BlcmF0aW9ucyBvbiBhIGdpdmVuIHBhbmVsCj4gPiA+ICAgKiBAZGlzYWJsZTogZGlzYWJs
+ZSBwYW5lbCAodHVybiBvZmYgYmFjayBsaWdodCwgZXRjLikKPiA+ID4gICAqIEB1bnByZXBhcmU6
+IHR1cm4gb2ZmIHBhbmVsCj4gPiA+ICsgKiBAZGV0YWNoOiBkZXRhY2ggcGFuZWwtPmNvbm5lY3Rv
+ciAoY2xlYXIgaW50ZXJuYWwgc3RhdGUsIGV0Yy4pCj4gPiA+ICsgKiBAYXR0YWNoOiBhdHRhY2gg
+cGFuZWwtPmNvbm5lY3RvciAodXBkYXRlIGludGVybmFsIHN0YXRlLCBldGMuKQo+ID4gPiAgICog
+QHByZXBhcmU6IHR1cm4gb24gcGFuZWwgYW5kIHBlcmZvcm0gc2V0IHVwCj4gPiA+ICAgKiBAZW5h
+YmxlOiBlbmFibGUgcGFuZWwgKHR1cm4gb24gYmFjayBsaWdodCwgZXRjLikKPiA+ID4gICAqIEBn
+ZXRfbW9kZXM6IGFkZCBtb2RlcyB0byB0aGUgY29ubmVjdG9yIHRoYXQgdGhlIHBhbmVsIGlzIGF0
+dGFjaGVkIHRvIGFuZAo+ID4gPiBAQCAtNzAsNiArNzIsOCBAQCBzdHJ1Y3QgZGlzcGxheV90aW1p
+bmc7Cj4gPiA+ICBzdHJ1Y3QgZHJtX3BhbmVsX2Z1bmNzIHsKPiA+ID4gICAgICAgaW50ICgqZGlz
+YWJsZSkoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpOwo+ID4gPiAgICAgICBpbnQgKCp1bnByZXBh
+cmUpKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKTsKPiA+ID4gKyAgICAgdm9pZCAoKmRldGFjaCko
+c3RydWN0IGRybV9wYW5lbCAqcGFuZWwpOwo+ID4gPiArICAgICBpbnQgKCphdHRhY2gpKHN0cnVj
+dCBkcm1fcGFuZWwgKnBhbmVsKTsKPiA+ID4gICAgICAgaW50ICgqcHJlcGFyZSkoc3RydWN0IGRy
+bV9wYW5lbCAqcGFuZWwpOwo+ID4gPiAgICAgICBpbnQgKCplbmFibGUpKHN0cnVjdCBkcm1fcGFu
+ZWwgKnBhbmVsKTsKPiA+ID4gICAgICAgaW50ICgqZ2V0X21vZGVzKShzdHJ1Y3QgZHJtX3BhbmVs
+ICpwYW5lbCk7Cj4gPiA+IC0tCj4gPiA+IDIuMjIuMC5yYzIuMzgzLmdmNGZiYmYzMGMyLWdvb2cK
+PiA+ID4KPiA+Cj4gPiAtLQo+ID4gRGFuaWVsIFZldHRlcgo+ID4gU29mdHdhcmUgRW5naW5lZXIs
+IEludGVsIENvcnBvcmF0aW9uCj4gPiBodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpJbnRlbC1nZnggbWFpbGluZyBsaXN0
+CkludGVsLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9pbnRlbC1nZng=
