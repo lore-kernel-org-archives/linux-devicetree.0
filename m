@@ -1,34 +1,18 @@
-Return-Path: <SRS0=waX1=U4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:34992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726895AbfF2KOD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 29 Jun 2019 06:14:03 -0400
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: [PATCH 0/2] add support to STM LSM6DS3TR-C 6-axis Mems sensor
-Date: Sat, 29 Jun 2019 12:13:52 +0200
-Message-Id: <cover.1561802767.git.lorenzo@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Return-Path: <SRS0=9qL5=U5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from tako.kondi.net ([192.166.219.46]:42742 "EHLO
+        grzegorz.bedra.webh.me" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726416AbfF3CxU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 29 Jun 2019 22:53:20 -0400
+Received: from tako.kondi.net (localhost [IPv6:::1])
+        by grzegorz.bedra.webh.me (Postfix) with SMTP id 032512634B68
+        for <devicetree@vger.kernel.org>; Fri, 21 Jun 2019 19:18:51 +0200 (CEST)
+From: devicetree@vger.kernel.org
+Reply-To: prodawez@armyspy.com
+Subject: Klientskie bazy. Email: prodawez@armyspy.com Uznajte podrobnee.
+Message-Id: <20190621171852.032512634B68@grzegorz.bedra.webh.me>
+Date: Fri, 21 Jun 2019 19:18:51 +0200 (CEST)
 Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, lorenzo.bianconi@redhat.com
+To: FRidevicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add support to STM LSM6DS3TR-C 6-axis sensor
-https://www.st.com/resource/en/datasheet/lsm6ds3tr-c.pdf
-
-Lorenzo Bianconi (2):
-  iio: imu: st_lsm6dsx: add support to LSM6DS3TR-C
-  dt-bindings: iio: imu: st_lsm6dsx: add lsm6ds3tr-c device bindings
-
- Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
- drivers/iio/imu/st_lsm6dsx/Kconfig                       | 2 +-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h                  | 2 ++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c           | 8 ++++----
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c             | 5 ++++-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c              | 5 +++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c              | 5 +++++
- 7 files changed, 22 insertions(+), 6 deletions(-)
-
--- 
-2.21.0
+Klientskie bazy. Email: prodawez@armyspy.com Uznajte podrobnee.
