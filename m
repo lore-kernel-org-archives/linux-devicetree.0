@@ -1,79 +1,66 @@
-From: Luca Weiss <luca@z3ntu.xyz>
-Subject: Re: [PATCH] ARM: dts: msm8974-FP2: add reboot-mode node
-Date: Fri, 21 Jun 2019 21:25:17 +0200
-Message-ID: <4607058.UzJteFJyig@g550jk>
-References: <20190620225824.2845-1-luca@z3ntu.xyz> <20190621000122.GA13036@onstation.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 3/5] dt-bindings: riscv: convert cpu binding to json-schema
+Date: Fri, 21 Jun 2019 13:49:58 -0600
+Message-ID: <CAL_JsqL1a-irBa4MaVzak5DrTjxiySuqTJSQOqwzymVa=Uz=gg@mail.gmail.com>
+References: <20190602080126.31075-1-paul.walmsley@sifive.com>
+ <20190602080126.31075-4-paul.walmsley@sifive.com>
+ <CAL_JsqJd6s6ta==AoxmNXdpzWL1RytSwR2P4MOfAFSEJavbt+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1702504.p497Uvq6SK"; micalg="pgp-sha256"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621000122.GA13036@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: linux-arm-msm@vger.kernel.org, ~martijnbraam/pmos-upstream@lists.sr.ht, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJd6s6ta==AoxmNXdpzWL1RytSwR2P4MOfAFSEJavbt+w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart1702504.p497Uvq6SK
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+On Mon, Jun 10, 2019 at 3:46 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Sun, Jun 2, 2019 at 2:01 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> >
+> > At Rob's request, we're starting to migrate our DT binding
+> > documentation to json-schema YAML format.  Start by converting our cpu
+> > binding documentation.  While doing so, document more properties and
+> > nodes.  This includes adding binding documentation support for the E51
+> > and U54 CPU cores ("harts") that are present on this SoC.  These cores
+> > are described in:
+> >
+> >     https://static.dev.sifive.com/FU540-C000-v1.0.pdf
+> >
+> > This cpus.yaml file is intended to be a starting point and to
+> > evolve over time.  It passes dt-doc-validate as of the yaml-bindings
+> > commit 4c79d42e9216.
+> >
+> > This patch was originally based on the ARM json-schema binding
+> > documentation as added by commit 672951cbd1b7 ("dt-bindings: arm: Convert
+> > cpu binding to json-schema").
+> >
+> > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> > Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-riscv@lists.infradead.org
+> > ---
+> >  .../devicetree/bindings/riscv/cpus.yaml       | 168 ++++++++++++++++++
+> >  1 file changed, 168 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/riscv/cpus.yaml
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-On Freitag, 21. Juni 2019 02:01:22 CEST you wrote:
-> I think that it makes sense to put this snippet in qcom-msm8974.dtsi
-> with a status of disabled, and then enable it in
-> qcom-msm8974-fairphone-fp2.dts like so:
-> 
-> imem@fe805000 {
-> 	status = "ok";
-> };
+You all have applied this now leaving the binding checks broken. I
+have a fix for one issue validating the schema, but there's a
+dependency on schemas/cpus.yaml which I gave feedback on.
 
-Do you want me to put the whole node in the the dtsi file? Even though these 
-values are the same, there are also custom vendor-specified values for specific 
-phones.
-
-This opens another question, which values we should put into the dts files. For 
-example in the fairphone 2 bootloader source there's also the unused
-#define ALARM_BOOT        0x77665503
-
-and behind a #if VERIFIED_BOOT :
-#define DM_VERITY_LOGGING    0x77665508
-#define DM_VERITY_ENFORCING  0x77665509
-#define DM_VERITY_KEYSCLEAR  0x7766550A
-
-and 0x77665501 ("mode-normal") isn't used in the bootloader at all.
-
-On the Linux kernel side, it has bootloader (0x77665500), recovery 
-(0x77665502), rtc (0x77665503), oem-* (0x6f656d00 | somevalue), edl (some 
-other addresses), and the else statements writes the 0x77665501 value in my 
-patch.
-
-> What's the pmOS utility that utilizes this? I'll test it on the Nexus 5.
-
-"reboot-mode" at https://gitlab.com/postmarketOS/pmaports/merge_requests/442
-
-> Thanks,
-> 
-> Brian
-
-
---nextPart1702504.p497Uvq6SK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE66ocILd+OiPORlvAOY2pEqPLBhkFAl0NLx0ACgkQOY2pEqPL
-BhnupQ/+J5X6iAzE9VLMNps5lmr199+6n3YYOUtSk5H2cFxggDEpTM5xY3fxbNPD
-vVzkoL0EgcAu8N5V+FyBCkuG77a16NIls9c+UXDIGMKSs8RdfU5d3BbEYJNWSqUX
-mztUFZGQDqs8l9Ho1QaslS6f5mgIpgPHgY9kfmlqBikX0XtK4I+rE4EXatZ65K4Z
-eAb2RQtX+22aBPxMGInd20Eb19Hn/6TAzPEFW1oCAjauG8ObcNpjuLPM9eZ1Kefw
-ZmmHUznGDibDM/zsQC7HgbNTGCWJMStWCZze+LCANc/p8Oy2AgbDt/wKWg2azpiE
-+T0QqKM7LMaH468hPuyfG4EkPGdC3ROBKIIV/VoaU1XijR2Jnjuyx4gA9EPsLWTK
-MajOUIur3W9+7j1v3GFtkYntuk557Kxus5gO0T2hQGk7DuQRjAIOLiacg2n3X7sb
-aeE+Gat1nA++HwQM3VChm3rMPruY17FyioONl4bnDhI8PMg8xTFb7ym8iaL8gMeY
-CBqAR3LZp/vQSAmbkIQHQ8taVfJNePTGvBooDtkuY0+Hh9qfwBpOaRm6jw9MgT8c
-DlXnXvlkKPVNAkRbFOYeZKrLS5GH1ANlKP9V3Fdd4XoH+YEwf37Gd4wMukVeOadW
-GHIemce2KyzLYeHU3lL2XLYSGUyjz6lB7ENTpDb0OdTkSocAnx0=
-=FshW
------END PGP SIGNATURE-----
-
---nextPart1702504.p497Uvq6SK--
+Rob
