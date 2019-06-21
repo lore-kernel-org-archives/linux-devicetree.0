@@ -1,43 +1,46 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH 3/3] arm64: dts: imx8mq: Add system counter node
-Date: Fri, 21 Jun 2019 16:28:38 +0800
-Message-ID: <20190621082838.12630-3-Anson.Huang@nxp.com>
-References: <20190621082838.12630-1-Anson.Huang@nxp.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 6/6] usb: bdc: Update compatible match strings
+Date: Fri, 21 Jun 2019 11:28:33 +0300
+Message-ID: <facac509-1e64-e35b-ee25-5ba265a514c4@cogentembedded.com>
+References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
+ <1561064991-16874-7-git-send-email-alcooperx@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621082838.12630-1-Anson.Huang@nxp.com>
+In-Reply-To: <1561064991-16874-7-git-send-email-alcooperx@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, abel.vesa@nxp.com, ccaione@baylibre.com, angus@akkea.ca, andrew.smirnov@gmail.com, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Linux-imx@nxp.com
+To: Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+Hello!
 
-Add i.MX8MQ system counter node to enable timer-imx-sysctr
-broadcast timer driver.
+On 21.06.2019 0:09, Al Cooper wrote:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> Remove "brcm,bdc-v0.16" because it was never used on any system.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index d09b808..9d99191 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -635,6 +635,14 @@
- 				#pwm-cells = <2>;
- 				status = "disabled";
- 			};
-+
-+			system_counter: timer@306a0000 {
-+				compatible = "nxp,sysctr-timer";
-+				reg = <0x306a0000 0x30000>;
-+				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				clock-frequency = <8333333>;
-+			};
- 		};
- 
- 		bus@30800000 { /* AIPS3 */
--- 
-2.7.4
+    You're not really removing it, are you?
+
+> Add "brcm,bdc-udc-v3.1" which exists for any STB system with BDC.
+> 
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> ---
+>   drivers/usb/gadget/udc/bdc/bdc_core.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> index 15e28790142d..e2b2628925e6 100644
+> --- a/drivers/usb/gadget/udc/bdc/bdc_core.c
+> +++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> @@ -644,6 +644,7 @@ static SIMPLE_DEV_PM_OPS(bdc_pm_ops, bdc_suspend,
+>   		bdc_resume);
+>   
+>   static const struct of_device_id bdc_of_match[] = {
+> +	{ .compatible = "brcm,bdc-udc-v3.1" },
+>   	{ .compatible = "brcm,bdc-v0.16" },
+>   	{ .compatible = "brcm,bdc" },
+>   	{ /* sentinel */ }
+
+MBR, Sergei
