@@ -1,134 +1,89 @@
-From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH v7 0/6] Add support for Orange Pi 3
-Date: Fri, 21 Jun 2019 12:44:50 +0200
-Message-ID: <20190621104450.vyemihcou5cjayju@core.my.home>
-References: <20190620134748.17866-1-megous@megous.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] mmc: remove another TMIO MMC variant usdhi6rol0.c
+Date: Fri, 21 Jun 2019 12:50:25 +0200
+Message-ID: <20190621105025.GA2987@kunai>
+References: <20190621060511.29609-1-yamada.masahiro@socionext.com>
+ <CAK7LNASGVbkGgu7psy4DfCxmr-AxSQ3fmGJ=aDAiuSkJ5hrDwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBJHKWLUAKGQEZ3JLTXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190620134748.17866-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAK7LNASGVbkGgu7psy4DfCxmr-AxSQ3fmGJ=aDAiuSkJ5hrDwA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rabin Vincent <rabin.vincent@axis.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 03:47:42PM +0200, verejna wrote:
-> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> 
-> This series implements support for Xunlong Orange Pi 3 board.
-> 
-> - ethernet support (patches 1-3)
-> - HDMI support (patches 4-6)
-> 
-> For some people, ethernet doesn't work after reboot (but works on cold
-> boot), when the stmmac driver is built into the kernel. It works when
-> the driver is built as a module. It's either some timing issue, or power
-> supply issue or a combination of both. Module build induces a power
-> cycling of the phy.
-> 
-> I encourage people with this issue, to build the driver into the kernel,
-> and try to alter the reset timings for the phy in DTS or
-> startup-delay-us and report the findings.
 
-Other theory to test is that the PHY requires two power supplies to be
-enabled at the same time, and during reboot one of them (one controlled
-via GPIO) may be turned off, and ALDO2 controlled by AXP805 may not.
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It should be possible to turn off ALDO2 in u-boot via CONFIG_AXP_ALDO2_VOLT=0
-(You may need to enable CONFIG_AXP809_POWER and other options too, since
-it seems AXP805 support is not enabled for orange pi 3 in u-boot)
+Hi,
 
-regards,
-	o.
+On Fri, Jun 21, 2019 at 03:16:11PM +0900, Masahiro Yamada wrote:
+> (Added Lars Persson, Guennadi Liakhovetski)
+>=20
+> On Fri, Jun 21, 2019 at 3:06 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>=20
+> This needs Ack from Renesas.
+> But, I do not know if TMIO folks are sure about this driver, though.
+> (If they had been sure about it, they should not have duplicated the driv=
+er
+> in the first place.)
 
-> 
-> Please take a look.
-> 
-> thank you and regards,
->   Ondrej Jirman
-> 
-> 
-> Changes in v7:
-> - dropped stored reference to connector_pdev as suggested by Jernej
-> - added forgotten dt-bindings reviewed-by tag
-> 
-> Changes in v6:
-> - added dt-bindings reviewed-by tag
-> - fix wording in stmmac commit (as suggested by Sergei)
-> 
-> Changes in v5:
-> - dropped already applied patches (pinctrl patches, mmc1 pinconf patch)
-> - rename GMAC-3V3 -> GMAC-3V to match the schematic (Jagan)
-> - changed hdmi-connector's ddc-supply property to ddc-en-gpios
->   (Rob Herring)
-> 
-> Changes in v4:
-> - fix checkpatch warnings/style issues
-> - use enum in struct sunxi_desc_function for io_bias_cfg_variant
-> - collected acked-by's
-> - fix compile error in drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c:156
->   caused by missing conversion from has_io_bias_cfg struct member
->   (I've kept the acked-by, because it's a trivial change, but feel free
->   to object.) (reported by Martin A. on github)
->   I did not have A80 pinctrl enabled for some reason, so I did not catch
->   this sooner.
-> - dropped brcm firmware patch (was already applied)
-> - dropped the wifi dts patch (will re-send after H6 RTC gets merged,
->   along with bluetooth support, in a separate series)
-> 
-> Changes in v3:
-> - dropped already applied patches
-> - changed pinctrl I/O bias selection constants to enum and renamed
-> - added /omit-if-no-ref/ to mmc1_pins
-> - made mmc1_pins default pinconf for mmc1 in H6 dtsi
-> - move ddc-supply to HDMI connector node, updated patch descriptions,
->   changed dt-bindings docs
-> 
-> Changes in v2:
-> - added dt-bindings documentation for the board's compatible string
->   (suggested by Clement)
-> - addressed checkpatch warnings and code formatting issues (on Maxime's
->   suggestions)
-> - stmmac: dropped useless parenthesis, reworded description of the patch
->   (suggested by Sergei)
-> - drop useles dev_info() about the selected io bias voltage
-> - docummented io voltage bias selection variant macros
-> - wifi: marked WiFi DTS patch and realted mmc1_pins as "DO NOT MERGE",
->   because wifi depends on H6 RTC support that's not merged yet (suggested
->   by Clement)
-> - added missing signed-of-bys
-> - changed &usb2otg dr_mode to otg, and added a note about VBUS
-> - improved wording of HDMI driver's DDC power supply patch
-> 
-> Icenowy Zheng (2):
->   net: stmmac: sun8i: add support for Allwinner H6 EMAC
->   net: stmmac: sun8i: force select external PHY when no internal one
-> 
-> Ondrej Jirman (4):
->   arm64: dts: allwinner: orange-pi-3: Enable ethernet
->   dt-bindings: display: hdmi-connector: Support DDC bus enable
->   drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
->   arm64: dts: allwinner: orange-pi-3: Enable HDMI output
-> 
->  .../display/connector/hdmi-connector.txt      |  1 +
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 70 +++++++++++++++++++
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         | 54 ++++++++++++--
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |  2 +
->  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 21 ++++++
->  5 files changed, 144 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.22.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+=2E.. and from the original mail:
+
+> Delete this driver now. Please re-implement it based on tmio_mmc_core.c
+> if needed.
+
+I was never happy with this driver existing, yet I never knew which HW
+platform needed this, so I didn't touch it. But I'd like to see it go in
+favor of merging with the TMIO code base.
+
+>=20
+> Perhaps, some code snippets in this driver might be useful for cleaning
+> tmio_mmc. It will stay in git history forever, and you can dig for it
+> whenever you need it.
+>=20
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+I double checked there is no user in the current tree. I also searched
+the web and did not find any out-of-tree user or even a reference of it.
+
+So, for now:
+
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+But this seriously needs an Ack from Shimoda-san or Morimoto-san. And
+maybe Guennadi has remarks, too?
+
+Thanks,
+
+   Wolfram
+
+
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0Mtm0ACgkQFA3kzBSg
+KbbYNw//U2nOKt1qTxm7Lxvm3Ii9b1Qhqs/pvoKWphHfPaQw+dgf5vXSZlMkE6QR
+hG3it64ADcyRC+zdjUf+XUgF9GLHHTSZgGtECW4CYQSGjCEQ2Qfc+8WXr5AHCY8h
+NIK7wRhy6MVn0pkLUL0iFQqAYR1a8aFIPim3omAyEjDN2fj0abHuImzoTHtxTgQ3
+kklk1LlsCDS0yDOjkljhxHySzIOY2YkzRCTaOvYYVuyn30G0/uUXL9uuafF1jYPY
+lCPj+88A6px1qXROIJmYTzYpFxdHDmTWBfMtenRHGTM79vXf3nswy8Mxt5PDom04
+C872tCkhTo859e9IwcI24SYr576YZsSU0sw3GY23AJotsg58ifXVrzDjzEZewfNU
+s9MPvBXPhmjlMCEbwOkfEOGtwsDgcXOJdxjKPVF+bMYDbE4XGLxV375axcmf13Vw
+cj0OYvNBpHf9fcejEbYRnYHzAfc1Y4QMLF5NHccF2V1AAAVpl5hADEs+ypcjPBfe
+HChlxkw0rwz8e+ZdEr4FjcpXoIaVHIXYPAcyMn2u/XiADa8XUHmRJxvf0Rz6A30r
+h4ox4TRJrKQy69gPJMxNx4FGyZJjlPlMfa6khtYAhPoiEzruUttVdryTMIRwOD8l
+j/MmsFwAsK06IpUOqosDwNXoUpU/DHXtmk/i/xOo4+9euVaLMrk=
+=gcmd
+-----END PGP SIGNATURE-----
+
+--Q68bSM7Ycu6FN28Q--
