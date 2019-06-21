@@ -1,43 +1,42 @@
-Return-Path: <SRS0=Lahq=UV=outlook.com=leiwang_git@kernel.org>
-From: Lei Wang <leiwang_git@outlook.com>
-Subject: [PATCH v4 1/2] dt-bindings: edac: arm-dmc520.txt
-Date: Sat, 22 Jun 2019 06:30:00 +0000
-Message-ID: <BN6PR04MB1107334ECE18A058B4BE541E86E60@BN6PR04MB1107.namprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=f++Q=UU=arm.com=lorenzo.pieralisi@kernel.org>
+Date: Fri, 21 Jun 2019 10:58:59 +0100
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] dt-bindings: PCI: rcar: Add device tree support for
+ r8a774a1
+Message-ID: <20190621095859.GA8785@e121166-lin.cambridge.arm.com>
+References: <1559891016-56157-1-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
-To: "bp@alien8.de" <bp@alien8.de>, "james.morse@arm.com" <james.morse@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, "ruizhao@microsoft.com" <ruizhao@microsoft.com>, Lei
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559891016-56157-1-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-VGhpcyBpcyB0aGUgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIG5ldyBFREFDIGRyaXZlciBkbWM1
-MjBfZWRhYy5jLg0KDQpTaWduZWQtb2ZmLWJ5OiBMZWkgPGxlaXdhbmdfZ2l0QG91dGxvb2suY29t
-Pg0KLS0tDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9hcm0tZG1jNTIwLnR4dCAgIHwg
-MjYgKysrKysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCsp
-DQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9l
-ZGFjL2FybS1kbWM1MjAudHh0DQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZWRhYy9hcm0tZG1jNTIwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9lZGFjL2FybS1kbWM1MjAudHh0DQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5k
-ZXggMDAwMDAwMDAwMDAwLi43MWU3YWEzMjk3MWENCi0tLSAvZGV2L251bGwNCisrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9lZGFjL2FybS1kbWM1MjAudHh0DQpAQCAtMCww
-ICsxLDI2IEBADQorKiBBUk0gRE1DLTUyMCBFREFDIG5vZGUNCisNCitSZXF1aXJlZCBwcm9wZXJ0
-aWVzOg0KKy0gY29tcGF0aWJsZQkJOiAiYnJjbSxkbWMtNTIwIiwgImFybSxkbWMtNTIwIi4NCist
-IHJlZwkJCTogQWRkcmVzcyByYW5nZSBvZiB0aGUgRE1DLTUyMCByZWdpc3RlcnMuDQorLSBpbnRl
-cnJ1cHRzCQk6IERNQy01MjAgaW50ZXJydXB0IG51bWJlcnMuIFRoZSBleGFtcGxlIGJlbG93IHNw
-ZWNpZmllcw0KKwkJCSAgdHdvIGludGVycnVwdCBsaW5lcyBmb3IgZHJhbV9lY2NfZXJyY19pbnQg
-YW5kDQorCQkJICBkcmFtX2VjY19lcnJkX2ludC4NCistIGludGVycnVwdC1jb25maWcJOiBUaGlz
-IGlzIGFuIGFycmF5IG9mIGludGVycnVwdCBtYXNrcy4gRm9yIGVhY2ggb2YgdGhlDQorCQkJICBh
-Ym92ZSBpbnRlcnJ1cHQgbGluZSwgYWRkIG9uZSBpbnRlcnJ1cHQgbWFzayBlbGVtZW50IHRvDQor
-CQkJICBpdC4gVGhhdCBpcywgdGhlcmUgaXMgYSAxOjEgbWFwcGluZyBmcm9tIGVhY2ggaW50ZXJy
-dXB0DQorCQkJICBsaW5lIHRvIGFuIGludGVycnVwdCBtYXNrLiBBbiBpbnRlcnJ1cHQgbWFzayBj
-YW4gcmVwcmVzZW50DQorCQkJICBtdWx0aXBsZSBpbnRlcnJ1cHRzIGJlaW5nIGVuYWJsZWQuIFJl
-ZmVyIHRvIGludGVycnVwdF9jb250cm9sDQorCQkJICByZWdpc3RlciBpbiBETUMtNTIwIFRSTSBm
-b3IgaW50ZXJydXB0IG1hcHBpbmcuIEluIHRoZSBleGFtcGxlDQorCQkJICBiZWxvdywgdGhlIGlu
-dGVycnVwdCBjb25maWd1cmF0aW9uIGVuYWJsZXMgZHJhbV9lY2NfZXJyY19pbnQNCisJCQkgIGFu
-ZCBkcmFtX2VjY19lcnJkX2ludC4gQW5kIGVhY2ggaW50ZXJydXB0IGlzIGNvbm5lY3RlZCB0bw0K
-KwkJCSAgYSBzZXBhcmF0ZSBpbnRlcnJ1cHQgbGluZS4NCisNCitFeGFtcGxlOg0KKw0KK2RtYzA6
-IGRtY0AyMDAwMDAgew0KKwljb21wYXRpYmxlID0gImJyY20sZG1jLTUyMCIsICJhcm0sZG1jLTUy
-MCI7DQorCXJlZyA9IDwweDIwMDAwMCAweDgwMDAwPjsNCisJaW50ZXJydXB0cyA9IDwweDAgMHgz
-NDkgMHg0PiwgPDB4MCAweDM0QiAweDQ+Ow0KKwlpbnRlcnJ1cHQtY29uZmlnID0gPDB4ND4sIDww
-eDg+Ow0KK307DQotLSANCjIuMTcuMQ0KDQo=
+On Fri, Jun 07, 2019 at 08:03:36AM +0100, Biju Das wrote:
+> Add PCIe support for the RZ/G2M (a.k.a. R8A774A1).
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+>  1 file changed, 1 insertion(+)
+
+Applied to pci/rcar for v5.3, thanks.
+
+Lorenzo
+
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> index 6904882..45bba9f 100644
+> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> @@ -3,6 +3,7 @@
+>  Required properties:
+>  compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
+>  	    "renesas,pcie-r8a7744" for the R8A7744 SoC;
+> +	    "renesas,pcie-r8a774a1" for the R8A774A1 SoC;
+>  	    "renesas,pcie-r8a774c0" for the R8A774C0 SoC;
+>  	    "renesas,pcie-r8a7779" for the R8A7779 SoC;
+>  	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
+> -- 
+> 2.7.4
+> 
