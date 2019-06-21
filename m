@@ -1,74 +1,79 @@
-From: shuah <shuah@kernel.org>
-Subject: Re: [PATCH v5 00/18] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Fri, 21 Jun 2019 13:20:58 -0600
-Message-ID: <6f3f5184-d14e-1b46-17f1-391ee67e699c@kernel.org>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com>
- <69809117-dcda-160a-ee0a-d1d3b4c5cd8a@kernel.org>
- <20190621181342.GA17166@mit.edu>
+From: Luca Weiss <luca@z3ntu.xyz>
+Subject: Re: [PATCH] ARM: dts: msm8974-FP2: add reboot-mode node
+Date: Fri, 21 Jun 2019 21:25:17 +0200
+Message-ID: <4607058.UzJteFJyig@g550jk>
+References: <20190620225824.2845-1-luca@z3ntu.xyz> <20190621000122.GA13036@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="nextPart1702504.p497Uvq6SK"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621181342.GA17166@mit.edu>
-Content-Language: en-US
+In-Reply-To: <20190621000122.GA13036@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Theodore Ts'o <tytso@mit.edu>, Frank Rowand <frowand.list@gmail.com>, Brendan Higgins <brendanhiggins@google.com>, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@l
+To: Brian Masney <masneyb@onstation.org>
+Cc: linux-arm-msm@vger.kernel.org, ~martijnbraam/pmos-upstream@lists.sr.ht, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/21/19 12:13 PM, Theodore Ts'o wrote:
-> On Fri, Jun 21, 2019 at 08:59:48AM -0600, shuah wrote:
->>>> ### But wait! Doesn't kselftest support in kernel testing?!
->>>>
->>>> ....
->>
->> I think I commented on this before. I agree with the statement that
->> there is no overlap between Kselftest and KUnit. I would like see this
->> removed. Kselftest module support supports use-cases KUnit won't be able
->> to. I can build an kernel with Kselftest test modules and use it in the
->> filed to load and run tests if I need to debug a problem and get data
->> from a system. I can't do that with KUnit.
->>
->> In my mind, I am not viewing this as which is better. Kselftest and
->> KUnit both have their place in the kernel development process. It isn't
->> productive and/or necessary to comparing Kselftest and KUnit without a
->> good understanding of the problem spaces for each of these.
->>
->> I would strongly recommend not making reference to Kselftest and talk
->> about what KUnit offers.
-> 
-> Shuah,
-> 
-> Just to recall the history, this section of the FAQ was added to rebut
-> the ***very*** strong statements that Frank made that there was
-> overlap between Kselftest and Kunit, and that having too many ways for
-> kernel developers to do the identical thing was harmful (he said it
-> was too much of a burden on a kernel developer) --- and this was an
-> argument for not including Kunit in the upstream kernel.
-> 
-> If we're past that objection, then perhaps this section can be
-> dropped, but there's a very good reason why it was there.  I wouldn't
-> Brendan to be accused of ignoring feedback from those who reviewed his
-> patches.   :-)
-> 
+--nextPart1702504.p497Uvq6SK
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Agreed. I understand that this FAQ probably was needed at one time and
-Brendan added it to address the concerns.
+On Freitag, 21. Juni 2019 02:01:22 CEST you wrote:
+> I think that it makes sense to put this snippet in qcom-msm8974.dtsi
+> with a status of disabled, and then enable it in
+> qcom-msm8974-fairphone-fp2.dts like so:
+> 
+> imem@fe805000 {
+> 	status = "ok";
+> };
 
-I think at some point we do need to have a document that outlines when
-to KUnit and when to use Kselftest modules. I think one concern people
-have is that if KUnit is perceived as a  replacement for Ksefltest
-module, Kselftest module will be ignored leaving users without the
-ability to build and run with Kselftest modules and load them on a need
-basis to gather data on a systems that aren't dedicated strictly for
-testing.
+Do you want me to put the whole node in the the dtsi file? Even though these 
+values are the same, there are also custom vendor-specified values for specific 
+phones.
 
-I am trying to move the conversation forward from KUnit vs. Kselftest
-modules discussion to which problem areas each one addresses keeping
-in mind that it is not about which is better. Kselftest and KUnit both
-have their place in the kernel development process. We just have to be
-clear on usage as we write tests for each.
+This opens another question, which values we should put into the dts files. For 
+example in the fairphone 2 bootloader source there's also the unused
+#define ALARM_BOOT        0x77665503
 
-thanks,
--- Shuah
+and behind a #if VERIFIED_BOOT :
+#define DM_VERITY_LOGGING    0x77665508
+#define DM_VERITY_ENFORCING  0x77665509
+#define DM_VERITY_KEYSCLEAR  0x7766550A
+
+and 0x77665501 ("mode-normal") isn't used in the bootloader at all.
+
+On the Linux kernel side, it has bootloader (0x77665500), recovery 
+(0x77665502), rtc (0x77665503), oem-* (0x6f656d00 | somevalue), edl (some 
+other addresses), and the else statements writes the 0x77665501 value in my 
+patch.
+
+> What's the pmOS utility that utilizes this? I'll test it on the Nexus 5.
+
+"reboot-mode" at https://gitlab.com/postmarketOS/pmaports/merge_requests/442
+
+> Thanks,
+> 
+> Brian
+
+
+--nextPart1702504.p497Uvq6SK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE66ocILd+OiPORlvAOY2pEqPLBhkFAl0NLx0ACgkQOY2pEqPL
+BhnupQ/+J5X6iAzE9VLMNps5lmr199+6n3YYOUtSk5H2cFxggDEpTM5xY3fxbNPD
+vVzkoL0EgcAu8N5V+FyBCkuG77a16NIls9c+UXDIGMKSs8RdfU5d3BbEYJNWSqUX
+mztUFZGQDqs8l9Ho1QaslS6f5mgIpgPHgY9kfmlqBikX0XtK4I+rE4EXatZ65K4Z
+eAb2RQtX+22aBPxMGInd20Eb19Hn/6TAzPEFW1oCAjauG8ObcNpjuLPM9eZ1Kefw
+ZmmHUznGDibDM/zsQC7HgbNTGCWJMStWCZze+LCANc/p8Oy2AgbDt/wKWg2azpiE
++T0QqKM7LMaH468hPuyfG4EkPGdC3ROBKIIV/VoaU1XijR2Jnjuyx4gA9EPsLWTK
+MajOUIur3W9+7j1v3GFtkYntuk557Kxus5gO0T2hQGk7DuQRjAIOLiacg2n3X7sb
+aeE+Gat1nA++HwQM3VChm3rMPruY17FyioONl4bnDhI8PMg8xTFb7ym8iaL8gMeY
+CBqAR3LZp/vQSAmbkIQHQ8taVfJNePTGvBooDtkuY0+Hh9qfwBpOaRm6jw9MgT8c
+DlXnXvlkKPVNAkRbFOYeZKrLS5GH1ANlKP9V3Fdd4XoH+YEwf37Gd4wMukVeOadW
+GHIemce2KyzLYeHU3lL2XLYSGUyjz6lB7ENTpDb0OdTkSocAnx0=
+=FshW
+-----END PGP SIGNATURE-----
+
+--nextPart1702504.p497Uvq6SK--
