@@ -1,65 +1,93 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v2] riscv: dts: Add DT node for SiFive FU540 Ethernet controller driver
-Date: Fri, 21 Jun 2019 16:23:49 +0530
-Message-ID: <1561114429-29612-2-git-send-email-yash.shah@sifive.com>
-References: <1561114429-29612-1-git-send-email-yash.shah@sifive.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] arm64: dts: uniphier: update to new Denali NAND binding
+Date: Fri, 21 Jun 2019 20:02:25 +0900
+Message-ID: <20190621110225.22710-1-yamada.masahiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561114429-29612-1-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, paul.walmsley@sifive.com, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
+With commit d8e8fd0ebf8b ("mtd: rawnand: denali: decouple controller
+and NAND chips"), the Denali NAND controller driver migrated to the
+new controller/chip representation.
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Update DT for it.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 16 ++++++++++++++++
- arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  9 +++++++++
- 2 files changed, 25 insertions(+)
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 4e8fbde..c53b4ea 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -225,5 +225,21 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 		};
-+		eth0: ethernet@10090000 {
-+			compatible = "sifive,fu540-macb";
-+			interrupt-parent = <&plic0>;
-+			interrupts = <53>;
-+			reg = <0x0 0x10090000 0x0 0x2000
-+			       0x0 0x100a0000 0x0 0x1000>;
-+			reg-names = "control";
-+			status = "disabled";
-+			local-mac-address = [00 00 00 00 00 00];
-+			clock-names = "pclk", "hclk";
-+			clocks = <&prci PRCI_CLK_GEMGXLPLL>,
-+				 <&prci PRCI_CLK_GEMGXLPLL>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
+ arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts | 4 ++++
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi       | 2 ++
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi       | 2 ++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts    | 4 ++++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi       | 2 ++
+ 5 files changed, 14 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts b/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts
+index 7968d524351b..f72f048a0c9d 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts
+@@ -163,4 +163,8 @@
+ 
+ &nand {
+ 	status = "okay";
 +
- 	};
- };
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-index 4da8870..d783bf2 100644
---- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-@@ -63,3 +63,12 @@
- 		disable-wp;
- 	};
- };
-+
-+&eth0 {
-+	status = "okay";
-+	phy-mode = "gmii";
-+	phy-handle = <&phy1>;
-+	phy1: ethernet-phy@0 {
++	nand@0 {
 +		reg = <0>;
 +	};
-+};
+ };
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+index a3cd475b48d2..e32f8aef40bf 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+@@ -617,6 +617,8 @@
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
+ 			reg = <0x68000000 0x20>, <0x68100000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			interrupts = <0 65 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_nand>;
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+index 017f6328c191..0e1b30656fea 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+@@ -921,6 +921,8 @@
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
+ 			reg = <0x68000000 0x20>, <0x68100000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			interrupts = <0 65 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_nand>;
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts
+index 1965e4dfe4a4..754315bbd1c8 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts
++++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts
+@@ -115,4 +115,8 @@
+ 
+ &nand {
+ 	status = "okay";
++
++	nand@0 {
++		reg = <0>;
++	};
+ };
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
+index bb97abe1a55f..d3863157ddd9 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
+@@ -779,6 +779,8 @@
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
+ 			reg = <0x68000000 0x20>, <0x68100000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			interrupts = <0 65 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_nand>;
 -- 
-1.9.1
+2.17.1
