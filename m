@@ -1,66 +1,51 @@
 From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 0/3] RK3288 Gamma LUT
-Date: Fri, 21 Jun 2019 18:13:43 -0300
-Message-ID: <20190621211346.1324-1-ezequiel@collabora.com>
+Subject: [PATCH v2 1/3] dt-bindings: display: rockchip: document VOP gamma LUT address
+Date: Fri, 21 Jun 2019 18:13:44 -0300
+Message-ID: <20190621211346.1324-2-ezequiel@collabora.com>
+References: <20190621211346.1324-1-ezequiel@collabora.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190621211346.1324-1-ezequiel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org
 Cc: linux-rockchip@lists.infradead.org, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Douglas Anderson <dianders@chromium.org>, Jacopo Mondi <jacopo@jmondi.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-Let's support Gamma LUT configuration on RK3288 SoCs.
+Add the register specifier description for an
+optional gamma LUT address.
 
-In order to do so, this series adds a new and optional
-address resource.
-    
-A separate address resource is required because on this RK3288,
-the LUT address is after the MMU address, which is requested
-by the iommu driver. This prevents the DRM driver
-from requesting an entire register space.
-
-The current implementation works for RGB 10-bit tables, as that
-is what seems to work on RK3288.
-
-This has been tested on a Rock2 Square board, using
-a hacked 'modetest' tool, with legacy and atomic APIs. 
-
-Thanks,
-Eze
-
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
 Changes from v1:
-* drop explicit linear LUT after finding a proper
-  way to disable gamma correction.
-* avoid setting gamma is the CRTC is not active.
-* s/int/unsigned int as suggested by Jacopo.
-* only enable color management and set gamma size
-  if gamma LUT is supported, suggested by Doug.
-* drop the reg-names usage, and instead just use indexed reg
-  specifiers, suggested by Doug.
+* Drop reg-names, suggested by Doug.
+---
+ .../devicetree/bindings/display/rockchip/rockchip-vop.txt   | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Changes from RFC:
-* Request (an optional) address resource for the LUT.
-* Add devicetree changes.
-* Drop support for RK3399, which doesn't seem to work
-  out of the box and needs more research.
-* Support pass-thru setting when GAMMA_LUT is NULL.
-* Add a check for the gamma size, as suggested by Ilia.
-* Move gamma setting to atomic_commit_tail, as pointed
-  out by Jacopo/Laurent, is the correct way.
-
-Ezequiel Garcia (3):
-  dt-bindings: display: rockchip: document VOP gamma LUT address
-  drm/rockchip: Add optional support for CRTC gamma LUT
-  ARM: dts: rockchip: Add RK3288 VOP gamma LUT address
-
- .../display/rockchip/rockchip-vop.txt         |   6 +-
- arch/arm/boot/dts/rk3288.dtsi                 |   4 +-
- drivers/gpu/drm/rockchip/rockchip_drm_fb.c    |   3 +
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c   | 114 ++++++++++++++++++
- drivers/gpu/drm/rockchip/rockchip_drm_vop.h   |   7 ++
- drivers/gpu/drm/rockchip/rockchip_vop_reg.c   |   2 +
- 6 files changed, 133 insertions(+), 3 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+index 4f58c5a2d195..8b3a5f514205 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+@@ -20,6 +20,10 @@ Required properties:
+ 		"rockchip,rk3228-vop";
+ 		"rockchip,rk3328-vop";
+ 
++- reg: Must contain one entry corresponding to the base address and length
++	of the register space. Can optionally contain a second entry
++	corresponding to the CRTC gamma LUT address.
++
+ - interrupts: should contain a list of all VOP IP block interrupts in the
+ 		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
+ 		 format depends on the interrupt controller used.
+@@ -48,7 +52,7 @@ Example:
+ SoC specific DT entry:
+ 	vopb: vopb@ff930000 {
+ 		compatible = "rockchip,rk3288-vop";
+-		reg = <0xff930000 0x19c>;
++		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
+ 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
+ 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
 -- 
 2.20.1
