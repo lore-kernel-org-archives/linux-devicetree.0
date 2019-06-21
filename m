@@ -1,69 +1,55 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: Re: [PATCH 2/3] backlight/arcxcnn fix vendor prefix
-Date: Fri, 21 Jun 2019 14:46:05 +0100
-Message-ID: <c4477220-7159-b5a8-16ea-4f4dbb645ced@linaro.org>
-References: <1541592640-18478-1-git-send-email-bdodge09@gmail.com>
- <1541592640-18478-3-git-send-email-bdodge09@gmail.com>
- <20181111113053.GF27666@amd> <e372391c-1fd5-41ec-b766-7669fffb928d@gmail.com>
+From: Alan Cooper <alcooperx@gmail.com>
+Subject: Re: [PATCH 6/6] usb: bdc: Update compatible match strings
+Date: Fri, 21 Jun 2019 09:47:53 -0400
+Message-ID: <CAOGqxeWric9HkUGCJ9fKPh73Y6Do=wJnOjhubucqN6Qd006ExQ@mail.gmail.com>
+References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
+ <1561064991-16874-7-git-send-email-alcooperx@gmail.com> <facac509-1e64-e35b-ee25-5ba265a514c4@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e372391c-1fd5-41ec-b766-7669fffb928d@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Dodge <bdodge09@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, Peter Bacon <pbacon@psemi.com>, lee.jones@linaro.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <facac509-1e64-e35b-ee25-5ba265a514c4@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, USB list <linux-usb@vger.kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-W1NvcnJ5IHRvIHRob3NlIHJlY2VpdmluZyB0aGlzIHR3aWNlLi4uIGhhZCB0byBkaWcgdGhpcyBv
-dXQgZnJvbSB0aGUgCmFyY2hpdmVzIGFuZCBzZW50IGl0IHRvIHRoZSBsaXN0cyBmcm9tIHRoZSB3
-cm9uZyBtYWlsZXJdCgpPbiAyNy8xMS8yMDE4IDAwOjQ0LCBCcmlhbiBEb2RnZSB3cm90ZToKPiBU
-aGFuayB5b3UgUGF2ZWwsIHRoYXQgaXMgYSBnb29kIHBvaW50Lgo+IAo+IFRoZSBjaGlwIHZlbmRv
-ciBoYXMgaW5kaWNhdGVkIHRoYXQgdGhlcmUgaXMgbm8gcmVhc29uIHRvIG1haW50YWluIHRoZSAK
-PiBvbGQvaW1wcm9wZXIgcHJlZml4IGFuZCB3aXNoZXMgdG8gZ28gZm9yd2FyZCAob25seSkgd2l0
-aCB0aGUgImFyY3RpYyIgCj4gcHJlZml4IGFuZCBhbnkgZXhpc3RpbmcgZHRzIGZpbGVzIGFyZSBv
-ciB3aWxsIGJlIHVwZGF0ZWQuCgpMb29rcyBsaWtlIHRoaXMgcGF0Y2ggc2VyaWVzIGhhcyBmYWxs
-ZW4gaW50byB0aGUgY3JhY2tzIGEgbGl0dGxlLgoKSSB0aGluayBJIGFzc3VtZWQgdGhpcyBpbmZv
-IHdvdWxkIGVuZCBpbiB0aGUgZGVzY3JpcHRpb24gb2YgcGF0Y2ggdjIgMS8zIAooaW4gb3JkZXIg
-dG8gYW5zd2VyIFJvYidzIGZlZWRiYWNrKSBhbmQgSSBzYXQgYW5kIHdhaXRlZCBmb3IgYSByZXNw
-aW4uIApPbiB0aGUgb3RoZXIgaGFuZC4uLiBJIGRpZG4ndCBhY3R1YWxseSBzYXkgdGhhdCBleHBs
-aWNpdGx5IGFueXdoZXJlISAKU28uLi4gSSdkIHJlY29tbWVuZCBhIHJlc3BpbiBwZXJoYXBzIHdp
-dGggYSBzbWFsbCBiaXQgb2YgdGV4dCBleHBsYWluaW5nIApob3cgdGhlIHZlbmRvciBjYW4gc3Rh
-dGUgdGhhdCBhbnkgZXhpc3RpbmcgZHRzIGZpbGVzIHdpbGwgYmUgdXBkYXRlZC4gClRoaXMgaXMg
-YSBwZXJpcGhlcmFsIGRldmljZSBzbyB0aGVzZSBzdHJpbmdzIGFyZSBwcm9iYWJseSBlbWJlZGRl
-ZCBpbnRvIApPRU0gZGV2aWNldHJlZXMgcmF0aGVyIHRoYW4gZXhjbHVzaXZlbHkgdW5kZXIgdGhl
-IGNvbnRyb2wgb2YgdGhlIHZlbmRvci4KCgpEYW5pZWwuCgoKPiAKPiBPbiAxMS8xMS8xOCA2OjMw
-IEFNLCBQYXZlbCBNYWNoZWsgd3JvdGU6Cj4+IEhpIQo+Pgo+Pj4gVGhlIHZlbmRvci1wcmVmaXhl
-cy50eHQgZmlsZSBwcm9wZXJseSByZWZlcnMgdG8gQXJjdGljU2FuZAo+Pj4gYXMgYXJjdGljIGJ1
-dCB0aGUgZHJpdmVyIGltcHJvcGVybHkgYWJicmV2aWF0ZWQgdGhlIHByZWZpeAo+Pj4gdG8gYXJj
-LiBUaGlzIHdhcyBhIG1pc3Rha2UgaW4gdGhlIG9yaWdpbmFsIHBhdGNoCj4+Pgo+Pj4gU2lnbmVk
-LW9mZi1ieTogQnJpYW4gRG9kZ2UgPGJkb2RnZTA5QGdtYWlsLmNvbT4KPj4+IC0tLQo+Pj4gwqAg
-ZHJpdmVycy92aWRlby9iYWNrbGlnaHQvYXJjeGNubl9ibC5jIHwgMjIgKysrKysrKysrKystLS0t
-LS0tLS0tLQo+Pj4gwqAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDExIGRlbGV0
-aW9ucygtKQo+Pj4KPj4+IMKgwqAgKgo+Pj4gLSAqIENvcHlyaWdodCAyMDE2IEFyY3RpY1NhbmQs
-IEluYy4KPj4+IC0gKiBBdXRob3IgOiBCcmlhbiBEb2RnZSA8YmRvZGdlQGFyY3RpY3NhbmQuY29t
-Pgo+Pj4gKyAqIENvcHlyaWdodCAyMDE4IHBTZW1pLCBJbmMuCj4+PiArICogQXV0aG9yIDogQnJp
-YW4gRG9kZ2UgPGJkb2RnZUBwc2VtaS5jb20+Cj4+IFVtbW0uIENvcHlyaWdodCAyMDE2LTIwMTg/
-Cj4+Cj4+PiBAQCAtMjAyLDI3ICsyMDIsMjcgQEAgc3RhdGljIHZvaWQgYXJjeGNubl9wYXJzZV9k
-dChzdHJ1Y3QgYXJjeGNubiAqbHApCj4+PiDCoMKgwqDCoMKgIGlmIChyZXQgPT0gMCkKPj4+IMKg
-wqDCoMKgwqDCoMKgwqDCoCBscC0+cGRhdGEtPmluaXRpYWxfYnJpZ2h0bmVzcyA9IHByb2dfdmFs
-Owo+Pj4KPj4+IC3CoMKgwqAgcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxs
-ZWQtY29uZmlnLTAiLCAmcHJvZ192YWwpOwo+Pj4gK8KgwqDCoCByZXQgPSBvZl9wcm9wZXJ0eV9y
-ZWFkX3UzMihub2RlLCAiYXJjdGljLGxlZC1jb25maWctMCIsICZwcm9nX3ZhbCk7Cj4+PiDCoMKg
-wqDCoMKgIGlmIChyZXQgPT0gMCkKPj4+IMKgwqDCoMKgwqDCoMKgwqDCoCBscC0+cGRhdGEtPmxl
-ZF9jb25maWdfMCA9ICh1OClwcm9nX3ZhbDsKPj4+Cj4+IElmIHRoZXJlJ3MgYSBkdHMgdXNpbmcg
-dGhpcywgeW91IHdhbnQgdG8gdXBkYXRlIGl0IGF0IHRoZSBzYW1lCj4+IHRpbWUuIFlvdSBtYXkg
-d2FudCB0byBzdXBwb3J0IGJvdGggbmFtZXMgZ29pbmcgZm9yd2FyZC4KPj4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBQYXZlbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+> > Remove "brcm,bdc-v0.16" because it was never used on any system.
+>
+>     You're not really removing it, are you?
+
+Whoops, it was supposed to be removed.
+Thanks
+Al
+
+On Fri, Jun 21, 2019 at 4:28 AM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+>
+> Hello!
+>
+> On 21.06.2019 0:09, Al Cooper wrote:
+>
+> > Remove "brcm,bdc-v0.16" because it was never used on any system.
+>
+>     You're not really removing it, are you?
+>
+> > Add "brcm,bdc-udc-v3.1" which exists for any STB system with BDC.
+> >
+> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> > ---
+> >   drivers/usb/gadget/udc/bdc/bdc_core.c | 1 +
+> >   1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> > index 15e28790142d..e2b2628925e6 100644
+> > --- a/drivers/usb/gadget/udc/bdc/bdc_core.c
+> > +++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> > @@ -644,6 +644,7 @@ static SIMPLE_DEV_PM_OPS(bdc_pm_ops, bdc_suspend,
+> >               bdc_resume);
+> >
+> >   static const struct of_device_id bdc_of_match[] = {
+> > +     { .compatible = "brcm,bdc-udc-v3.1" },
+> >       { .compatible = "brcm,bdc-v0.16" },
+> >       { .compatible = "brcm,bdc" },
+> >       { /* sentinel */ }
+>
+> MBR, Sergei
