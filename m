@@ -1,36 +1,65 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V2 4/4] dt-bindings: iio: adc: Convert ad7124
- documentation to YAML
-Date: Fri, 21 Jun 2019 08:31:14 -0600
-Message-ID: <CAL_JsqLOMKQExp1Vu0Xo32Wx-ETdQk=AWSnex-GQ3QbzdZ7zQA@mail.gmail.com>
-References: <20190621121344.24917-1-mircea.caprioru@analog.com> <20190621121344.24917-4-mircea.caprioru@analog.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: [PATCH v7 1/5] Input: elan_i2c: Export the device id whitelist
+Date: Fri, 21 Jun 2019 08:34:26 -0600
+Message-ID: <CAOCk7NoKB6UtA3g-0+Yxi4Y46PDqapnOH0dHH0CupvnQ=ZSKVQ@mail.gmail.com>
+References: <20190620142801.11827-1-jeffrey.l.hugo@gmail.com>
+ <20190620143318.11880-1-jeffrey.l.hugo@gmail.com> <CAKdAkRRstvEWXtwnLCMKoW6PcCz0W3+M9iYqVFshJpw6y_=9bA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621121344.24917-4-mircea.caprioru@analog.com>
+In-Reply-To: <CAKdAkRRstvEWXtwnLCMKoW6PcCz0W3+M9iYqVFshJpw6y_=9bA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mircea Caprioru <mircea.caprioru@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>, Stefan Popa <stefan.popa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Jiri Kosina <jikos@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 6:15 AM Mircea Caprioru
-<mircea.caprioru@analog.com> wrote:
+On Thu, Jun 20, 2019 at 10:34 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 >
-> Convert AD7124 bindings documentation to YAML format.
+> Hi Jeffrey,
 >
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> ---
+> On Thu, Jun 20, 2019 at 7:33 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> >  #ifdef CONFIG_OF
+> > -static const struct of_device_id elan_of_match[] = {
+> > -       { .compatible = "elan,ekth3000" },
+> > -       { /* sentinel */ }
+> > -};
 >
-> Changelog v2:
-> - modified SPDX license to GPL-2.0 OR BSD-2-Clause
-> - added regex for a range from 0 to 15
-> - added minimum and maximum constraints for reg property
-> - set type and range of values for adi,reference-select property
-> - used items for diff-channels property
-> - set bipolar, adi,buffered-positive and negative to type: boolean
->
->  .../bindings/iio/adc/adi,ad7124.yaml          | 155 ++++++++++++++++++
->  1 file changed, 155 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+> I think OF IDs should stay in this file since we agreed HID will not
+> be checking them.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I thought it would be convenient to keep all the IDs in one place, but
+I'll put these back.
+
+>
+> >  MODULE_DEVICE_TABLE(of, elan_of_match);
+> >  #endif
+> >
+> > diff --git a/include/linux/input/elan-i2c-ids.h b/include/linux/input/elan-i2c-ids.h
+> > new file mode 100644
+> > index 000000000000..8130bbebbdda
+> > --- /dev/null
+> > +++ b/include/linux/input/elan-i2c-ids.h
+> > @@ -0,0 +1,68 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Elan I2C Touchpad devide whitelist
+>
+> s/devide/device/
+
+Doh.  Will fix.
+
+>
+> > + *
+> > + * Copyright (C) 2019 Jeffrey Hugo.  All rights reserved.
+>
+> This just moves the code around. If anything I'd say it should keep
+> the original Elan copyright.
+
+Ok.  No problem.
+
+>
+> Thanks.
+>
+> --
+> Dmitry
