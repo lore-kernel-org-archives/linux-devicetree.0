@@ -1,157 +1,114 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v5 2/2] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
-Date: Fri, 21 Jun 2019 11:17:34 +0200
-Message-ID: <1561108654.1777.1@crapouillou.net>
-References: <20190603152331.23160-1-paul@crapouillou.net>
-        <20190603152331.23160-2-paul@crapouillou.net>
-        <20190619122622.GB29084@ravnborg.org> <1561040159.1978.0@crapouillou.net>
-        <20190621090411.GY12905@phenom.ffwll.local>
-        <1561108050.1777.0@crapouillou.net>
-        <20190621091343.GA12905@phenom.ffwll.local>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 3/5] drm/panel: Add attach/detach callbacks
+Date: Fri, 21 Jun 2019 11:19:28 +0200
+Message-ID: <20190621091928.GA11839@ulmo>
+References: <20190611040350.90064-1-dbasehore@chromium.org>
+ <20190611040350.90064-4-dbasehore@chromium.org>
+ <20190611085722.GX21222@phenom.ffwll.local>
+ <CAGAzgsr2sh5B1xi_ztQPN0xoQsZd26DDXwWT_qqJ68XeKReJ_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621091343.GA12905@phenom.ffwll.local>
+Content-Disposition: inline
+In-Reply-To: <CAGAzgsr2sh5B1xi_ztQPN0xoQsZd26DDXwWT_qqJ68XeKReJ_Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+To: "dbasehore ." <dbasehore@chromium.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Intel Graphics <intel-gfx@lists.freedesktop.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel>
 List-Id: devicetree@vger.kernel.org
 
 
+--cWoXeonUoKmBZSoM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Le ven. 21 juin 2019 =E0 11:13, Daniel Vetter <daniel@ffwll.ch> a =E9crit=20
-:
-> On Fri, Jun 21, 2019 at 11:07:30AM +0200, Paul Cercueil wrote:
->>=20
->>=20
->>  Le ven. 21 juin 2019 =E0 11:04, Daniel Vetter <daniel@ffwll.ch> a=20
->> =E9crit :
->>  > On Thu, Jun 20, 2019 at 04:15:59PM +0200, Paul Cercueil wrote:
->>  > >
->>  > >
->>  > >  Le mer. 19 juin 2019 =E0 14:26, Sam Ravnborg <sam@ravnborg.org>=20
->> a
->>  > > =E9crit :
->>  > >  > Hi Paul.
->>  > >  >
->>  > >  > On Mon, Jun 03, 2019 at 05:23:31PM +0200, Paul Cercueil=20
->> wrote:
->>  > >  > >  Add a KMS driver for the Ingenic JZ47xx family of SoCs.
->>  > >  > >  This driver is meant to replace the aging jz4740-fb=20
->> driver.
->>  > >  > >
->>  > >  > >  This driver does not make use of the simple pipe helper,=20
->> for
->>  > > the
->>  > >  > > reason
->>  > >  > >  that it will soon be updated to support more advanced=20
->> features
->>  > > like
->>  > >  > >  multiple planes, IPU integration for colorspace=20
->> conversion and
->>  > >  > > up/down
->>  > >  > >  scaling, support for DSI displays, and TV-out and HDMI=20
->> outputs.
->>  > >  > >
->>  > >  > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  > >  > >  Tested-by: Artur Rojek <contact@artur-rojek.eu>
->>  > >  > >  ---
->>  > >  > >
->>  > >  > >  Notes:
->>  > >  > >      v2: - Remove custom handling of panel. The panel is=20
->> now
->>  > >  > > discovered using
->>  > >  > >      	  the standard API.
->>  > >  > >      	- Lots of small tweaks suggested by upstream
->>  > >  > >
->>  > >  > >      v3: - Use devm_drm_dev_init()
->>  > >  > >      	- Update compatible strings to -lcd instead of -drm
->>  > >  > >      	- Add destroy() callbacks to plane and crtc
->>  > >  > >      	- The ingenic,lcd-mode is now read from the bridge's=20
->> DT
->>  > > node
->>  > >  > >
->>  > >  > >      v4: Remove ingenic,lcd-mode property completely. The
->>  > > various
->>  > >  > > modes are now
->>  > >  > >      	deduced from the connector type, the pixel format or=20
->> the
->>  > > bus
->>  > >  > > flags.
->>  > >  > >
->>  > >  > >      v5: - Fix framebuffer size incorrectly calculated for=20
->> 24bpp
->>  > >  > > framebuffers
->>  > >  > >      	- Use 32bpp framebuffer instead of 16bpp, as it'll=20
->> work
->>  > > with
->>  > >  > > both
->>  > >  > >      	  16-bit and 24-bit panel
->>  > >  > >      	- Get rid of drm_format_plane_cpp() which has been=20
->> dropped
->>  > >  > > upstream
->>  > >  > >      	- Avoid using drm_format_info->depth, which is=20
->> deprecated.
->>  > >  > In the drm world we include the revision notes in the=20
->> changelog.
->>  > >  > So I did this when I applied it to drm-misc-next.
->>  > >  >
->>  > >  > Fixed a few trivial checkpatch warnings about indent too.
->>  > >  > There was a few too-long-lines warnings that I ignored.=20
->> Fixing
->>  > > them
->>  > >  > would have hurt readability.
->>  > >
->>  > >  Thanks.
->>  > >
->>  > >  > I assume you will maintain this driver onwards from now.
->>  > >  > Please request drm-misc commit rights (see
->>  > >  > https://www.freedesktop.org/wiki/AccountRequests/)
->>  > >  > You will need a legacy SSH account.
->>  > >
->>  > >  I requested an account here:
->>  > > =20
->> https://gitlab.freedesktop.org/freedesktop/freedesktop/issues/162
->>  >
->>  > This 404s for me. Did you set the issue to private by any chance?=20
->> Or
->>  > deleted already again?
->>  > -Daniel
->>=20
->>  Sorry, yes, I set it to private. I thought I had to :(
+On Tue, Jun 11, 2019 at 05:25:47PM -0700, dbasehore . wrote:
+> On Tue, Jun 11, 2019 at 1:57 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> >
+> > On Mon, Jun 10, 2019 at 09:03:48PM -0700, Derek Basehore wrote:
+> > > This adds the attach/detach callbacks. These are for setting up
+> > > internal state for the connector/panel pair that can't be done at
+> > > probe (since the connector doesn't exist) and which don't need to be
+> > > repeatedly done for every get/modes, prepare, or enable callback.
+> > > Values such as the panel orientation, and display size can be filled
+> > > in for the connector.
+> > >
+> > > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> > > ---
+> > >  drivers/gpu/drm/drm_panel.c | 14 ++++++++++++++
+> > >  include/drm/drm_panel.h     |  4 ++++
+> > >  2 files changed, 18 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+> > > index 3b689ce4a51a..72f67678d9d5 100644
+> > > --- a/drivers/gpu/drm/drm_panel.c
+> > > +++ b/drivers/gpu/drm/drm_panel.c
+> > > @@ -104,12 +104,23 @@ EXPORT_SYMBOL(drm_panel_remove);
+> > >   */
+> > >  int drm_panel_attach(struct drm_panel *panel, struct drm_connector *=
+connector)
+> > >  {
+> > > +     int ret;
+> > > +
+> > >       if (panel->connector)
+> > >               return -EBUSY;
+> > >
+> > >       panel->connector =3D connector;
+> > >       panel->drm =3D connector->dev;
+> > >
+> > > +     if (panel->funcs->attach) {
+> > > +             ret =3D panel->funcs->attach(panel);
+> > > +             if (ret < 0) {
+> > > +                     panel->connector =3D NULL;
+> > > +                     panel->drm =3D NULL;
+> > > +                     return ret;
+> > > +             }
+> > > +     }
+> >
+> > Why can't we just implement this in the drm helpers for everyone, by e.=
+g.
+> > storing a dt node in drm_panel? Feels a bit overkill to have these new
+> > hooks here.
+> >
+> > Also, my understanding is that this dt stuff is supposed to be
+> > standardized, so this should work.
 >=20
-> Well I can't ack it if its private, so please change that. Also,
-> everything is public around here, or almost everything ...
-> -Daniel
+> So do you want all of this information added to the drm_panel struct?
+> If we do that, we don't necessarily even need the drm helper function.
+> We could just copy the values over here in the drm_panel_attach
+> function (and clear them in drm_panel_detach).
 
-I closed the old one and created a new, public one:
-https://gitlab.freedesktop.org/freedesktop/freedesktop/issues/165
+Yeah, I think we should have all this extra information in the struct
+drm_panel. However, I think we need to more carefully split things such
+that the DT parsing happens at panel probe time. That way we can catch
+errors in DT, or missing entries/resources when we can still do
+something about it.
 
+If we start parsing DT and encounter failures, it's going to be very
+confusing if that's at panel attach time where code will usually just
+assume that everything is already validated and can't fail anymore.
 
->>=20
->>  > >
->>  > >  > And you should familiarize yourself with the=20
->> maintainer-tools:
->>  > >  > https://drm.pages.freedesktop.org/maintainer-tools/index.html
->>  > >  >
->>  > >  > For my use I use "dim update-branches; dim apply; dim push
->>  > >  > So only a small subset i needed for simple use.
->>  > >  >
->>  > >  > 	Sam
->>  > >
->>  > >
->>  >
->>  > --
->>  > Daniel Vetter
->>  > Software Engineer, Intel Corporation
->>  > http://blog.ffwll.ch
->>=20
->>=20
->=20
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+Thierry
 
-=
+--cWoXeonUoKmBZSoM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0MoR0ACgkQ3SOs138+
+s6HqSA/+K8hfGyhC4XmLpKlVudKyrd41RyGRD7AunVOl6aE/CaukHevacdCPSUtk
+d/jaIe1fC3ImLE/uIZQDQBsBL3JzwrJHo0RVxijTJ7P9X1jrMR1ynK5sOWW0dPxR
+Sd87iKVNNu0Rl8CxAYzucxHrr2Up2W6uT02H0Lbxk+idIWKixRrPbUAVCMpFHTyr
+MbaVLkRd1sOEqLzetlU7HoUCx3wKgWdQgeRllgTDYgGutEQWnizljTrTglT0IAeQ
+U2LAykWBhhM4LBxYoEcdfOnosYQpKrg9suaNHNXknN+KEB5lnt/UbWCi5poLg1P4
+vyXMGFN8GwXXRNEKP0hYKGlLTzM19i3g9FRXAzeKv1hxmYhdG6S3dnzX22TG75No
+g0mUT2aFCEImAtMtQaCsucDHAnU/+YfmTekla4NxZo2UdOh0GYyKTaZ8OKsaETu+
+Hb+l76/ebe16vU+nJUYzKF5i/T+UlplLKLLGF8ivNBDSbWDD4l5Gh+hec2akFAVd
+U/CvEE85FyPaUIM9rTztStgICDwaxJNk62apvYouCkIIHOR3QVlgkxvk6DM6O5/c
+AjfC0dJqHvnx1HYiD0Sz65SeWArm/ujA1tcNZAFKLtPN2P5CHo6b2P2C1DfclkCw
+HBVMLmjbClz3caQjKmTvXk9YSnSSZBejdPW6zptywAik+UBj2r0=
+=ph6O
+-----END PGP SIGNATURE-----
+
+--cWoXeonUoKmBZSoM--
