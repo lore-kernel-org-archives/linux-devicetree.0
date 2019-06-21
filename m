@@ -1,81 +1,33 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v8 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
-Date: Fri, 21 Jun 2019 07:53:12 -0700
-Message-ID: <20190621145312.38688-1-jeffrey.l.hugo@gmail.com>
-References: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] scripts/dtc: Update to upstream version
+ v1.5.0-30-g702c1b6c0e73
+Date: Fri, 21 Jun 2019 16:54:44 +0200
+Message-ID: <20190621145444.GB6313@kroah.com>
+References: <20190621142900.31988-1-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190621142900.31988-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com, jikos@kernel.org, hdegoede@redhat.com
-Cc: bjorn.andersson@linaro.org, agross@kernel.org, lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-There needs to be coordination between hid-quirks and the elan_i2c driver
-about which devices are handled by what drivers.  Currently, both use
-whitelists, which results in valid devices being unhandled by default,
-when they should not be rejected by hid-quirks.  This is quickly becoming
-an issue.
+On Fri, Jun 21, 2019 at 08:29:00AM -0600, Rob Herring wrote:
+> Pull in SPDX tag conversion from upstream dtc. This will replace the
+> conversion done in the kernel tree copy in v5.2-rc2.
+> 
+> This adds the following commits from upstream:
+> 
+> 702c1b6c0e73 README.license: Update to reflect SPDX tag usage
+> 4097bbffcf1d dtc: Add GPLv2 SPDX tags to files missing license text
+> 94f87cd5b7c5 libfdt: Add dual GPL/BSD SPDX tags to files missing license text
+> c4ffc05574b1 tests: Replace license boilerplate with SPDX tags
+> a5ac29baacd2 pylibfdt: Replace dual GPLv2/BSD license boilerplate with SPDX tags
+> 7fb0f4db2eb7 libfdt: Replace GPL/BSD boilerplate/reference with SPDX tags
+> acfe84f2c47e dtc: Replace GPLv2 boilerplate/reference with SPDX tags
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Since elan_i2c has a maintained whitelist of what devices it will handle,
-which is now in a header file that hid-quirks can access, use that to
-implement a blacklist in hid-quirks so that only the devices that need to
-be handled by elan_i2c get rejected by hid-quirks, and everything else is
-handled by default.
-
-Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
----
- drivers/hid/hid-quirks.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index e5ca6fe2ca57..48ed4caf0ebc 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -16,6 +16,7 @@
- #include <linux/export.h>
- #include <linux/slab.h>
- #include <linux/mutex.h>
-+#include <linux/input/elan-i2c-ids.h>
- 
- #include "hid-ids.h"
- 
-@@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
- 
- bool hid_ignore(struct hid_device *hdev)
- {
-+	int i;
-+
- 	if (hdev->quirks & HID_QUIRK_NO_IGNORE)
- 		return false;
- 	if (hdev->quirks & HID_QUIRK_IGNORE)
-@@ -978,18 +981,15 @@ bool hid_ignore(struct hid_device *hdev)
- 		break;
- 	case USB_VENDOR_ID_ELAN:
- 		/*
--		 * Many Elan devices have a product id of 0x0401 and are handled
--		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
--		 * is not (and cannot be) handled by that driver ->
--		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
-+		 * Blacklist of everything that gets handled by the elan_i2c
-+		 * input driver.  This avoids disabling valid touchpads and
-+		 * other ELAN devices.
- 		 */
--		if (hdev->product == 0x0401 &&
--		    strncmp(hdev->name, "ELAN0800", 8) != 0)
--			return true;
--		/* Same with product id 0x0400 */
--		if (hdev->product == 0x0400 &&
--		    strncmp(hdev->name, "QTEC0001", 8) != 0)
--			return true;
-+		if ((hdev->product == 0x0401 || hdev->product == 0x0400))
-+			for (i = 0; strlen(elan_acpi_id[i].id); ++i)
-+				if (!strncmp(hdev->name, elan_acpi_id[i].id,
-+					     strlen(elan_acpi_id[i].id)))
-+					return true;
- 		break;
- 	}
- 
--- 
-2.17.1
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
