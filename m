@@ -1,266 +1,368 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock
- gates in probe
-Date: Fri, 21 Jun 2019 16:00:59 +0800
-Message-ID: <CAGb2v65NYRkz=0_6jBg3kEyxmuGNv62pYp3dLk0P909T7_waCg@mail.gmail.com>
-References: <20190614164324.9427-1-jagan@amarulasolutions.com>
- <20190614164324.9427-6-jagan@amarulasolutions.com> <CAGb2v669MprYgy2wc_a7Kz8VpzzNGZxDxsj0z_Ujx5bV25+AWQ@mail.gmail.com>
- <CAMty3ZDRYBPKrGQxAZoB+trFiDLJ5BxDfNUOnPzgd+UWcpwCoQ@mail.gmail.com>
- <CAGb2v67uNhie9mb2-m04FGEi4Z7q7TYChOogGj2HgmSmEo4Arg@mail.gmail.com>
- <CAMty3ZBUrGEi+e62sFe7GkXinK3q076sGLwpEVz67qeoV+1ZeA@mail.gmail.com>
- <CAGb2v65YRVSv2mFfE2e=vqDOSu4Nie_oLQ-qpaDsTWKJwf-aeA@mail.gmail.com>
- <CAMty3ZA+hV_X0-=b83M3rDUhX=+g5RNC6EU-DzAS_pbvwc54FA@mail.gmail.com>
- <CAGb2v66onOEDPvXWLsLj7efxbReY0_z1HcQWkG78XUytLvMQ+g@mail.gmail.com> <CAMty3ZC=Mn2po=98onX7WcmTGOmV0aK+ZT5bYFEFw+q+SqK4FA@mail.gmail.com>
-Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 2/3] drm/rockchip: Add optional support for CRTC gamma LUT
+Date: Fri, 21 Jun 2019 10:22:22 +0200
+Message-ID: <20190621082222.4j3oghm7oevgt32n@uno.localdomain>
+References: <20190618213406.7667-1-ezequiel@collabora.com>
+ <20190618213406.7667-3-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBSU5WLUAKGQE24IW7HI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAMty3ZC=Mn2po=98onX7WcmTGOmV0aK+ZT5bYFEFw+q+SqK4FA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0651840699=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190618213406.7667-3-ezequiel@collabora.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Ezequiel Garcia <ezequiel@collabora.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 12:24 AM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+
+--===============0651840699==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="idwq5rt32qaze3qf"
+Content-Disposition: inline
+
+
+--idwq5rt32qaze3qf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Ezequiel,
+   just a few minor comments. Thanks for this new iteration.
+
+On Tue, Jun 18, 2019 at 06:34:05PM -0300, Ezequiel Garcia wrote:
+> Add an optional CRTC gamma LUT support, and enable it on RK3288.
+> This is currently enabled via a separate address resource,
+> which needs to be specified in the devicetree.
 >
-> On Tue, Jun 18, 2019 at 4:24 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> >
-> > On Tue, Jun 18, 2019 at 6:34 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> > >
-> > > On Tue, Jun 18, 2019 at 1:23 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> > > >
-> > > > On Tue, Jun 18, 2019 at 3:45 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> > > > >
-> > > > > On Tue, Jun 18, 2019 at 12:49 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> > > > > >
-> > > > > > On Mon, Jun 17, 2019 at 6:30 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> > > > > > >
-> > > > > > > On Sun, Jun 16, 2019 at 11:01 AM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> > > > > > > >
-> > > > > > > > On Sat, Jun 15, 2019 at 12:44 AM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> > > > > > > > >
-> > > > > > > > > TCON TOP have clock gates for TV0, TV1, dsi and right
-> > > > > > > > > now these are register during bind call.
-> > > > > > > > >
-> > > > > > > > > Of which, dsi clock gate would required during DPHY probe
-> > > > > > > > > but same can miss to get since tcon top is not bound at
-> > > > > > > > > that time.
-> > > > > > > > >
-> > > > > > > > > To solve, this circular dependency move the clock gate
-> > > > > > > > > registration from bind to probe so-that DPHY can get the
-> > > > > > > > > dsi gate clock on time.
-> > > > > > > > >
-> > > > > > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > > > > > > > > ---
-> > > > > > > > >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 94 ++++++++++++++------------
-> > > > > > > > >  1 file changed, 49 insertions(+), 45 deletions(-)
-> > > > > > > > >
-> > > > > > > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > > > > > > > index 465e9b0cdfee..a8978b3fe851 100644
-> > > > > > > > > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > > > > > > > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > > > > > > > @@ -124,7 +124,53 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
-> > > > > > > > >  static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
-> > > > > > > > >                                void *data)
-> > > > > > > > >  {
-> > > > > > > > > -       struct platform_device *pdev = to_platform_device(dev);
-> > > > > > > > > +       struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
-> > > > > > > > > +       int ret;
-> > > > > > > > > +
-> > > > > > > > > +       ret = reset_control_deassert(tcon_top->rst);
-> > > > > > > > > +       if (ret) {
-> > > > > > > > > +               dev_err(dev, "Could not deassert ctrl reset control\n");
-> > > > > > > > > +               return ret;
-> > > > > > > > > +       }
-> > > > > > > > > +
-> > > > > > > > > +       ret = clk_prepare_enable(tcon_top->bus);
-> > > > > > > > > +       if (ret) {
-> > > > > > > > > +               dev_err(dev, "Could not enable bus clock\n");
-> > > > > > > > > +               goto err_assert_reset;
-> > > > > > > > > +       }
-> > > > > > > >
-> > > > > > > > You have to de-assert the reset control and enable the clock before the
-> > > > > > > > clocks it provides are registered. Otherwise a consumer may come in and
-> > > > > > > > ask for the provided clock to be enabled, but since the TCON TOP's own
-> > > > > > > > reset and clock are still disabled, you can't actually access the registers
-> > > > > > > > that controls the provided clock.
-> > > > > > >
-> > > > > > > These rst and bus are common reset and bus clocks not tcon top clocks
-> > > > > > > that are trying to register here. ie reason I have not moved it in
-> > > > > > > top.
-> > > > > >
-> > > > > > And you're sure that toggling bits in the TCON TOP block doesn't require
-> > > > > > the reset to be de-asserted and the bus clock enabled?
-> > > > > >
-> > > > > > Somehow I doubt that.
-> > > > > >
-> > > > > > Once the driver register the clocks it provides, they absolutely must work.
-> > > > > > They can't only work after the bind phase when the reset gets de-asserted
-> > > > > > and the bus clock enabled. Or you should provide proper error reporting
-> > > > > > in the clock ops. I doubt you want to go that way either.
-> > > > >
-> > > > > Why would they won't work after bind phase? unlike tcon top gates,
-> > > > > these reset, and bus are common like  what we have in other DE block
-> > > > > so enable them in bind won't be an issue as per as I understand. let
-> > > > > me know if you want me to check in other directions.
-> > > >
-> > > > You misunderstood. When you moved the clock registering parts to the probe
-> > > > phase, but didn't move the clock enable and reset de-assert parts to go with,
-> > > > the clock ops will not work as expected between probe and bind time.
-> > >
-> > > If I understand correctly, I have moved tcon clock gates, not the bus
-> > > clock or the reset. Both have independent enablement phase, the bus
-> > > clock is enable in tcon top bind and the clock gate ("dsi") enable in
-> > > init call of phy_ops. is both bus clock and clock gates are same and
-> > > related that is what you are saying?
-> >
-> > I am saying that you may need the tcon top bus gates and resets properly
-> > configured to be able to read/write the tcon top address range. That includes
-> > enabling/disabling the clocks that the tcon top driver registers.
-> >
-> > In other words, the TCON TOP's bus gate and reset control have everything to do
-> > with what you can do within the TCON TOP block or address range.
-> >
-> > > >
-> > > > Simple way to verify it: Just use devmem to disable the TCON TOP bus gate
-> > > > and/or assert its reset control. Then try to toggle any of the bits in the
-> > > > TCON TOP block and see if it works, or if the bits stick.
-> > >
-> > > Yes I have verified "dsi" gate enablement before via devmem. Below is
-> > > the bus, reset disablement and re-enablement and result is similar for
-> > > the reset, bus clock in bind and even in probe.
-> > >
-> > > 00. get the existing value
-> > >
-> > > # devmem 0x1c70020
-> > > 0x00010000
-> > > # devmem 0x1c20064
-> > > 0x44021000
-> > > # devmem 0x1c202c4
-> > > 0x44021000
-> > >
-> > > 01: disable bus, and assert reset
-> > >
-> > > # devmem 0x1c20064 32 0x4021000
-> > > # devmem 0x1c202c4 32 0x4021000
-> > > # devmem 0x1c20064
-> > > 0x04021000
-> > > # devmem 0x1c202c4
-> > > 0x04021000
-> > > # devmem 0x1c70020
-> > > 0x00000000
-> >
-> > See here. The value became 0 when it was still 0x10000 in the previous phase.
-> > Any guesses to why this happened, assuming you didn't touch it?
+> The address resource is required because on some SoCs, such as
+> RK3288, the LUT address is after the MMU address, and the latter
+> is supported by a different driver. This prevents the DRM driver
+> from requesting an entire register space.
 >
-> Yes, I didn't touch anything here. and it indeed expected since the
-> bus and reset line goes disabled and asserted.
-
-OK. So you understand what's going on in the hardware.
-
-> >
-> > Now if you keep the bus gate disabled and the reset control asserted, and
-> > try to write some non-zero value to 0x1c70020, and read it back, does the
-> > value stick?
+> The current implementation works for RGB 10-bit tables, as that
+> is what seems to work on RK3288.
 >
-> No, value is not stick. what ever I wrote on on 0x1c70020 it is not taking.
-
-Yes. And that is expected since the reset is asserted.
-
-> >
-> > If you don't have the bus gate enabled and the reset control de-asserted,
-> > any operations you do to the TCON TOP is essentially not happening. Including
-> > bit operations that the clocks you registered are required to do.
-> >
-> > Get what I'm saying?
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+> Changes from RFC:
+> * Request (an optional) address resource for the LUT.
+> * Drop support for RK3399, which doesn't seem to work
+>   out of the box and needs more research.
+> * Support pass-thru setting when GAMMA_LUT is NULL.
+> * Add a check for the gamma size, as suggested by Ilia.
+> * Move gamma setting to atomic_commit_tail, as pointed
+>   out by Jacopo/Laurent, is the correct way.
+> ---
+>  drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |   3 +
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 106 ++++++++++++++++++++
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.h |   7 ++
+>  drivers/gpu/drm/rockchip/rockchip_vop_reg.c |   2 +
+>  4 files changed, 118 insertions(+)
 >
-> I understand it, the for accessing tcon space we have bus and reset
-> line to be enabled and desserted. But the thing is I didn't see any
-> difference in the behavior even If I enable or deassert the bus and
-> reset in probe or in bind.
-
-You mean the display pipeline bind as usual, regardless of whether
-you reset in probe or in bind, right?
-
-That is because the TCON and DSI blocks bind _after_ the TCON TOP block.
-The display component is traversed breadth first, and components bind
-in that order.
-
-What I'm trying to tell you is not that the display pipeline will stop
-working, but that you have a problem with how you use the API in the
-TCON TOP driver.
-
-
-When you call clk_hw_register_gate(), you are saying that from this point
-onward, the clock that got registered is available and will work properly,
-or it will return an error if not.
-
-That is not the case here. Because the TCON TOP reset control is deasserted
-and the bus clock enabled much later, right _now_ any attempts to control
-the newly registered gate will silently fail, because writes to the register
-do not go through.
-
-> The devmem numbers which I have listed above is same for both the
-> cases, one with this patch and another one is handle via probe
-> https://paste.ubuntu.com/p/ndHj9wHzvX/
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> index 1c69066b6894..bf9ad6240971 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> @@ -16,6 +16,7 @@
+>  #include "rockchip_drm_fb.h"
+>  #include "rockchip_drm_gem.h"
+>  #include "rockchip_drm_psr.h"
+> +#include "rockchip_drm_vop.h"
 >
-> >
-> > You need to have the bus gate enabled and the reset control de-asserted
-> > BEFORE you register the clocks you are providing, or something is going
-> > to go very wrong.
-> >
-> > Worst case scenario: the reset control was left de-asserted by the bootloader
-> > but the bus gate was disabled. When you register the clocks, the CCF tries
-> > to read back the current status of the clocks, and the I/O stalls because
-> > the bus gate wasn't enabled. System stalls.
-> >
-> > Do I need to draw a time flow chart for you?
+>  static int rockchip_drm_fb_dirty(struct drm_framebuffer *fb,
+>  				 struct drm_file *file,
+> @@ -128,6 +129,8 @@ rockchip_atomic_helper_commit_tail_rpm(struct drm_atomic_state *old_state)
 >
-> Sure, please.
-
-    tcon top probe                        tcon top bind
---[--------------|-]------------>-------[------|--------]------------->
-                 |                             |
-                 clk_hw_register_gate()        |
-                                               reset_control_deassert()
-                                               clk_prepare_enable()
-
-
-So the above is what is happening with your patch:
-
-Between the two square bracket blocks, if any consumer tries to use the
-clocks created by clk_hw_register_gate(), it will silently fail, because
-the function calls enabling the TCON TOP block happen much later.
-
-Again, the problem is not that the display pipeline stops working. Instead
-it is more fundamental: the code is not living up to the API contract that
-it declared it is following.
-
-There is also another register/unregister mismatch in this driver. You
-moved clk_hw_register_gate(), but the corresponding clk_hw_unregister_gate()
-calls that need to happen are still in the unbind function.
-
-So if I were to probe but not bind the driver, and then subsequently
-remove the driver, it would be leaking the registered clocks. (At this
-point the clocks might not even have code backing them, since I might
-have removed the module. I'm not sure if that's possible.) If I try
-to probe the driver again, it will fail because it tries to register
-clocks with the same names as the ones leaked in the previous round.
-
-
-ChenYu
-
-> > Also see the very simple example:
-> >
-> >     https://elixir.bootlin.com/linux/latest/source/drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c#L113
-> >
-> > where the bus gate is enabled before registering the clocks. This hardware
-> > block doesn't have a reset control for it, but the same principle applies.
+>  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
 >
-> Got it, thanks.
+> +	rockchip_drm_vop_gamma_set(old_state);
+> +
+>  	drm_atomic_helper_commit_modeset_enables(dev, old_state);
+>
+>  	drm_atomic_helper_commit_planes(dev, old_state,
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> index 12ed5265a90b..5b6edbe2673f 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> @@ -137,6 +137,7 @@ struct vop {
+>
+>  	uint32_t *regsbak;
+>  	void __iomem *regs;
+> +	void __iomem *lut_regs;
+>
+>  	/* physical map length of vop register */
+>  	uint32_t len;
+> @@ -1153,6 +1154,94 @@ static void vop_wait_for_irq_handler(struct vop *vop)
+>  	synchronize_irq(vop->irq);
+>  }
+>
+> +static bool vop_dsp_lut_is_enable(struct vop *vop)
+> +{
+> +	return vop_read_reg(vop, 0, &vop->data->common->dsp_lut_en);
+> +}
+> +
+> +static void vop_crtc_write_gamma_lut(struct vop *vop, struct drm_crtc *crtc)
+> +{
+> +	struct drm_color_lut *lut = crtc->state->gamma_lut->data;
+> +	int i;
+
+unsigned i
+
+> +
+> +	for (i = 0; i < crtc->gamma_size; i++) {
+> +		u32 word;
+
+here and below you could declare and initialize in one line. Matter of
+tastes, up to you.
+
+> +
+> +		word = (drm_color_lut_extract(lut[i].red, 10) << 20) |
+> +		       (drm_color_lut_extract(lut[i].green, 10) << 10) |
+> +			drm_color_lut_extract(lut[i].blue, 10);
+> +		writel(word, vop->lut_regs + i * 4);
+> +	}
+> +}
+> +
+> +static void vop_crtc_gamma_set(struct vop *vop, struct drm_crtc *crtc,
+> +			       struct drm_crtc_state *old_state)
+> +{
+> +	int idle, ret, i;
+
+idle and i could be unsigned
+
+> +
+> +	spin_lock(&vop->reg_lock);
+> +	VOP_REG_SET(vop, common, dsp_lut_en, 0);
+> +	vop_cfg_done(vop);
+> +	spin_unlock(&vop->reg_lock);
+> +
+> +	ret = readx_poll_timeout(vop_dsp_lut_is_enable, vop,
+> +			   idle, !idle, 5, 30 * 1000);
+> +	if (ret)
+> +		return;
+> +
+> +	spin_lock(&vop->reg_lock);
+> +
+> +	if (crtc->state->gamma_lut) {
+> +		if (!old_state->gamma_lut || (crtc->state->gamma_lut->base.id !=
+> +					      old_state->gamma_lut->base.id))
+> +			vop_crtc_write_gamma_lut(vop, crtc);
+> +	} else {
+
+i could also be declared here...
+
+> +		for (i = 0; i < crtc->gamma_size; i++) {
+> +			u32 word;
+> +
+> +			word = (i << 20) | (i << 10) | i;
+> +			writel(word, vop->lut_regs + i * 4);
+> +		}
+
+I might be confused, but are you here configuring a linear LUT table?
+Isn't this equivalent to have it disabled?
+
+> +	}
+> +
+> +	VOP_REG_SET(vop, common, dsp_lut_en, 1);
+> +	vop_cfg_done(vop);
+> +	spin_unlock(&vop->reg_lock);
+> +}
+> +
+> +static int vop_crtc_atomic_check(struct drm_crtc *crtc,
+> +				   struct drm_crtc_state *crtc_state)
+> +{
+> +	struct vop *vop = to_vop(crtc);
+> +
+> +	if (vop->lut_regs && crtc_state->color_mgmt_changed &&
+> +	    crtc_state->gamma_lut) {
+> +		int len;
+> +
+> +		len = drm_color_lut_size(crtc_state->gamma_lut);
+> +		if (len != crtc->gamma_size) {
+
+Don't you accept LUT tables whose size is < that the maximum
+crtc->gamma_size ?
+
+> +			DRM_DEBUG_KMS("Invalid LUT size; got %d, expected %d\n",
+> +				      len, crtc->gamma_size);
+> +			return -EINVAL;
+> +		}
+> +	}
+
+Most (but not all) functions in this file have an empty line before the
+return closing the function.
+
+> +	return 0;
+> +}
+> +
+> +void rockchip_drm_vop_gamma_set(struct drm_atomic_state *state)
+> +{
+> +	struct drm_crtc_state *old_crtc_state;
+> +	struct drm_crtc *crtc;
+> +	int i;
+
+unsigned i ?
+
+I'm glad you've been able to verify atomic_flush was not the right
+place where to update the LUT tables, as my testing is limited to
+run kms++ tests and I didn't notice any particular artifact. Thanks
+for checking!
+
+
+> +
+> +	for_each_old_crtc_in_state(state, crtc, old_crtc_state, i) {
+> +		struct vop *vop = to_vop(crtc);
+> +
+> +		if (vop->lut_regs && crtc->state->color_mgmt_changed)
+> +			vop_crtc_gamma_set(vop, crtc, old_crtc_state);
+> +	}
+> +}
+> +
+>  static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
+>  				  struct drm_crtc_state *old_crtc_state)
+>  {
+> @@ -1205,6 +1294,7 @@ static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
+>
+>  static const struct drm_crtc_helper_funcs vop_crtc_helper_funcs = {
+>  	.mode_fixup = vop_crtc_mode_fixup,
+> +	.atomic_check = vop_crtc_atomic_check,
+>  	.atomic_flush = vop_crtc_atomic_flush,
+>  	.atomic_enable = vop_crtc_atomic_enable,
+>  	.atomic_disable = vop_crtc_atomic_disable,
+> @@ -1323,6 +1413,7 @@ static const struct drm_crtc_funcs vop_crtc_funcs = {
+>  	.disable_vblank = vop_crtc_disable_vblank,
+>  	.set_crc_source = vop_crtc_set_crc_source,
+>  	.verify_crc_source = vop_crtc_verify_crc_source,
+> +	.gamma_set = drm_atomic_helper_legacy_gamma_set,
+>  };
+>
+>  static void vop_fb_unref_worker(struct drm_flip_work *work, void *val)
+> @@ -1480,6 +1571,10 @@ static int vop_create_crtc(struct vop *vop)
+>  		goto err_cleanup_planes;
+>
+>  	drm_crtc_helper_add(crtc, &vop_crtc_helper_funcs);
+> +	if (vop_data->lut_size) {
+> +		drm_mode_crtc_set_gamma_size(crtc, vop_data->lut_size);
+> +		drm_crtc_enable_color_mgmt(crtc, 0, false, vop_data->lut_size);
+> +	}
+>
+>  	/*
+>  	 * Create drm_planes for overlay windows with possible_crtcs restricted
+> @@ -1776,6 +1871,17 @@ static int vop_bind(struct device *dev, struct device *master, void *data)
+>  	if (IS_ERR(vop->regs))
+>  		return PTR_ERR(vop->regs);
+>
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lut");
+> +	if (res) {
+> +		if (!vop_data->lut_size) {
+> +			DRM_DEV_ERROR(dev, "no gamma LUT size defined\n");
+> +			return -EINVAL;
+> +		}
+> +		vop->lut_regs = devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(vop->lut_regs))
+> +			return PTR_ERR(vop->lut_regs);
+> +	}
+> +
+>  	vop->regsbak = devm_kzalloc(dev, vop->len, GFP_KERNEL);
+>  	if (!vop->regsbak)
+>  		return -ENOMEM;
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+> index 2149a889c29d..bd1bcd5a14e9 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+> @@ -7,6 +7,8 @@
+>  #ifndef _ROCKCHIP_DRM_VOP_H
+>  #define _ROCKCHIP_DRM_VOP_H
+>
+> +#include <drm/drm_atomic.h>
+> +
+>  /*
+>   * major: IP major version, used for IP structure
+>   * minor: big feature change under same structure
+> @@ -67,6 +69,7 @@ struct vop_common {
+>  	struct vop_reg dither_down_mode;
+>  	struct vop_reg dither_down_en;
+>  	struct vop_reg dither_up;
+> +	struct vop_reg dsp_lut_en;
+>  	struct vop_reg gate_en;
+>  	struct vop_reg mmu_en;
+>  	struct vop_reg out_mode;
+> @@ -170,6 +173,7 @@ struct vop_data {
+>  	const struct vop_win_yuv2yuv_data *win_yuv2yuv;
+>  	const struct vop_win_data *win;
+>  	unsigned int win_size;
+> +	unsigned int lut_size;
+>
+>  #define VOP_FEATURE_OUTPUT_RGB10	BIT(0)
+>  #define VOP_FEATURE_INTERNAL_RGB	BIT(1)
+> @@ -373,4 +377,7 @@ static inline int scl_vop_cal_lb_mode(int width, bool is_yuv)
+>  }
+>
+>  extern const struct component_ops vop_component_ops;
+> +
+> +void rockchip_drm_vop_gamma_set(struct drm_atomic_state *state);
+> +
+>  #endif /* _ROCKCHIP_DRM_VOP_H */
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+> index 7b9c74750f6d..30d49eff3670 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+> @@ -593,6 +593,7 @@ static const struct vop_common rk3288_common = {
+>  	.dither_down_en = VOP_REG(RK3288_DSP_CTRL1, 0x1, 2),
+>  	.pre_dither_down = VOP_REG(RK3288_DSP_CTRL1, 0x1, 1),
+>  	.dither_up = VOP_REG(RK3288_DSP_CTRL1, 0x1, 6),
+> +	.dsp_lut_en = VOP_REG(RK3288_DSP_CTRL1, 0x1, 0),
+>  	.data_blank = VOP_REG(RK3288_DSP_CTRL0, 0x1, 19),
+>  	.dsp_blank = VOP_REG(RK3288_DSP_CTRL0, 0x3, 18),
+>  	.out_mode = VOP_REG(RK3288_DSP_CTRL0, 0xf, 0),
+> @@ -641,6 +642,7 @@ static const struct vop_data rk3288_vop = {
+>  	.output = &rk3288_output,
+>  	.win = rk3288_vop_win_data,
+>  	.win_size = ARRAY_SIZE(rk3288_vop_win_data),
+> +	.lut_size = 1024,
+>  };
+>
+>  static const int rk3368_vop_intrs[] = {
+> --
+> 2.20.1
+>
+
+--idwq5rt32qaze3qf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0Mk74ACgkQcjQGjxah
+VjwF7xAArrs95MgtbrsJ7VWb0XwM5Mpw42oM+y34c7di9P06kR89XHy+Q/hXAx2z
+UIa7Hv9rT+Uj4EMO9VWsNpaLSHYIbJwtx/L2z71yTyisev9qgUog3U/aUU8iHihp
+gnrgZGj7Q+kIGEs0Sq0OL5q7l39znI1+/72fJT4GkecASAkgoX0WPZWnr/+fK+qQ
+iOUFCdpK2w0V4PHpC3tux/9fw+NL7BoB6yT/jZeoNp06LKpuTyr/3up4lOPLiKpj
+tYXmrD891EjZUAiOqb3vsLD26UOoPuYmKPXuAlK74cf/9RRkgys2cCoFI8MA/7Et
+zv3Z0UaADiPSbAQmXmThdcIOqC97gmBCRVYHpga9sfkIdHPe4PAwsqHHb1GWtmv1
+uFPqzSoXE41aPGP3vPwiKFtJ5q+QfmgOhsj65fx6YcC58j87n6ZAxKto84S29out
+jAnxkzPNeK0WnjfcvE8FiunZmbC1NGYuoPK/IHdw++2Cra1x6/3p7FKlFR0kDB8/
+4C+mlnHPayxdk85ZEEGby8FyVP9qB3gRtvmlABXMUEguprOOPxAvBJ7j/xVM+NWH
+cAxlsEUF23NH8ypFH7hWCx+BDlaCIpgpDLjvriRdlQsKrbdf9vyCFqL5Rj8fVGuO
+CYbd5FHEp0nDFjfMEfbzlttYOGVcdKGxbnZ4ndzjsge2dQJq3cw=
+=9VG0
+-----END PGP SIGNATURE-----
+
+--idwq5rt32qaze3qf--
+
+--===============0651840699==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============0651840699==--
