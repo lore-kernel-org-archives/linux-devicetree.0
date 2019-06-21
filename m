@@ -1,118 +1,74 @@
-From: Roger Lu <roger.lu@mediatek.com>
-Subject: [PATCH v3 1/2] dt-bindings: soc: add mtk svs dt-bindings
-Date: Fri, 21 Jun 2019 16:43:47 +0800
-Message-ID: <20190621084348.16834-2-roger.lu@mediatek.com>
-References: <20190621084348.16834-1-roger.lu@mediatek.com>
+From: Anup Patel <anup@brainfault.org>
+Subject: Re: [PATCH] riscv: dts: Add DT node for SiFive FU540 Ethernet
+ controller driver
+Date: Fri, 21 Jun 2019 14:31:22 +0530
+Message-ID: <CAAhSdy2zHozRnwAU6-+U+BE-5h5uNE67D_0TXHJnrHMi53gMog@mail.gmail.com>
+References: <1561097422-25130-1-git-send-email-yash.shah@sifive.com> <1561097422-25130-2-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621084348.16834-1-roger.lu@mediatek.com>
+In-Reply-To: <1561097422-25130-2-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Nicolas Boichat <drinkcat@google.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Fan Chen <fan.chen@mediatek.com>, HenryC Chen <HenryC.Chen@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Nishanth Menon <nm@ti.com>, Roger Lu <roger.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+To: Yash Shah <yash.shah@sifive.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, sachin.ghadi@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-Document the binding for enabling mtk svs on MediaTek SoC.
+On Fri, Jun 21, 2019 at 11:40 AM Yash Shah <yash.shah@sifive.com> wrote:
+>
+> DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
+>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>
+> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> index 4e8fbde..584e737 100644
+> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> @@ -225,5 +225,25 @@
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
+>                 };
+> +               eth0: ethernet@10090000 {
+> +                       compatible = "sifive,fu540-macb";
+> +                       interrupt-parent = <&plic0>;
+> +                       interrupts = <53>;
+> +                       reg = <0x0 0x10090000 0x0 0x2000
+> +                              0x0 0x100a0000 0x0 0x1000>;
+> +                       reg-names = "control";
+> +                       local-mac-address = [00 00 00 00 00 00];
+> +                       phy-mode = "gmii";
+> +                       phy-handle = <&phy1>;
+> +                       clock-names = "pclk", "hclk";
+> +                       clocks = <&prci PRCI_CLK_GEMGXLPLL>,
+> +                                <&prci PRCI_CLK_GEMGXLPLL>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
 
-Signed-off-by: Roger Lu <roger.lu@mediatek.com>
----
- .../devicetree/bindings/power/mtk-svs.txt     | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
+Have status = "disabled"; here and have
+status = "okay" in board DTS file.
 
-diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
-new file mode 100644
-index 000000000000..6a71992ef162
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
-@@ -0,0 +1,88 @@
-+* Mediatek Smart Voltage Scaling (MTK SVS)
-+
-+This describes the device tree binding for the MTK SVS controller (bank)
-+which helps provide the optimized CPU/GPU/CCI voltages. This device also
-+needs thermal data to calculate thermal slope for accurately compensate
-+the voltages when temperature change.
-+
-+Required properties:
-+- compatible:
-+  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
-+- reg: Address range of the MTK SVS controller.
-+- interrupts: IRQ for the MTK SVS controller.
-+- clocks, clock-names: Clocks needed for the svs controller. required
-+                       clocks are:
-+		       "main_clk": Main clock needed for register access
-+- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
-+- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
-+
-+Subnodes:
-+- svs_cpu_little: SVS bank device node of little CPU
-+  compatible: "mediatek,mt8183-svs-cpu-little"
-+  operating-points-v2: OPP table hooked by SVS little CPU bank.
-+		       SVS will optimze this OPP table voltage part.
-+  vcpu-little-supply: PMIC buck of little CPU
-+- svs_cpu_big: SVS bank device node of big CPU
-+  compatible: "mediatek,mt8183-svs-cpu-big"
-+  operating-points-v2: OPP table hooked by SVS big CPU bank.
-+		       SVS will optimze this OPP table voltage part.
-+  vcpu-big-supply: PMIC buck of big CPU
-+- svs_cci: SVS bank device node of CCI
-+  compatible: "mediatek,mt8183-svs-cci"
-+  operating-points-v2: OPP table hooked by SVS CCI bank.
-+		       SVS will optimze this OPP table voltage part.
-+  vcci-supply: PMIC buck of CCI
-+- svs_gpu: SVS bank device node of GPU
-+  compatible: "mediatek,mt8183-svs-gpu"
-+  operating-points-v2: OPP table hooked by SVS GPU bank.
-+		       SVS will optimze this OPP table voltage part.
-+  vgpu-spply: PMIC buck of GPU
-+
-+Example:
-+
-+	svs: svs@1100b000 {
-+		compatible = "mediatek,mt8183-svs";
-+		reg = <0 0x1100b000 0 0x1000>;
-+		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW 0>;
-+		clocks = <&infracfg CLK_INFRA_THERM>;
-+		clock-names = "main_clk";
-+		nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
-+		nvmem-cell-names = "svs-calibration-data", "calibration-data";
-+
-+		svs_cpu_little: svs_cpu_little {
-+			compatible = "mediatek,mt8183-svs-cpu-little";
-+			operating-points-v2 = <&cluster0_opp>;
-+		};
-+
-+		svs_cpu_big: svs_cpu_big {
-+			compatible = "mediatek,mt8183-svs-cpu-big";
-+			operating-points-v2 = <&cluster1_opp>;
-+		};
-+
-+		svs_cci: svs_cci {
-+			compatible = "mediatek,mt8183-svs-cci";
-+			operating-points-v2 = <&cci_opp>;
-+		};
-+
-+		svs_gpu: svs_gpu {
-+			compatible = "mediatek,mt8183-svs-gpu";
-+			power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
-+			operating-points-v2 = <&gpu_opp_table>;
-+		};
-+	};
-+
-+	&svs_cpu_little {
-+		vcpu-little-supply = <&mt6358_vproc12_reg>;
-+	};
-+
-+	&svs_cpu_big {
-+		vcpu-big-supply = <&mt6358_vproc11_reg>;
-+	};
-+
-+	&svs_cci {
-+		vcci-supply = <&mt6358_vproc12_reg>;
-+	};
-+
-+	&svs_gpu {
-+		vgpu-spply = <&mt6358_vgpu_reg>;
-+	};
--- 
-2.18.0
+General convention for any SOC device with external
+connection (e.g. ethernet, SPI, SDHC, SATA, PCI, etc)
+is:
+
+1. Define only device DT node in SOC DTSi file with
+status = "disabled"
+2. Enable device in Board DTS file with
+status = "okay"
+3. Define PHY or external PIN connection details
+in Board DTS file
+
+> +                       phy1: ethernet-phy@0 {
+> +                               reg = <0>;
+> +                       };
+
+The PHY DT node should be in Board DTS file.
+
+Of course, same comments apply to SPI DT nodes as well
+but I missed reviewing those DT nodes. You can send separate
+DT patch to re-organize SPI DT nodes.
+
+Regards,
+Anup
