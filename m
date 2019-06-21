@@ -1,7 +1,7 @@
 From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [RFC PATCH 10/11] tracing: of: Add kprobe event support
-Date: Sat, 22 Jun 2019 01:19:40 +0900
-Message-ID: <156113398039.28344.4353616217444927643.stgit@devnote2>
+Subject: [RFC PATCH 11/11] tracing: of: Add synthetic event support
+Date: Sat, 22 Jun 2019 01:19:51 +0900
+Message-ID: <156113399174.28344.17111722475993258131.stgit@devnote2>
 References: <156113387975.28344.16009584175308192243.stgit@devnote2>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -13,128 +13,115 @@ To: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Fran
 Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add kprobe event support in event node. User can add probe definitions
-by "probes" property as a string array.
+Add synthetic event node support. The synthetic event node must be
+a child node of ftrace node, and the node must start with "synth@"
+prefix. The synth node requires fields string (not string array),
+which defines the fields as same as tracing/synth_events interface.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/trace_kprobe.c |    5 +++
- kernel/trace/trace_of.c     |   65 ++++++++++++++++++++++++++++++++++++-------
- 2 files changed, 60 insertions(+), 10 deletions(-)
+ kernel/trace/trace_events_hist.c |    5 ++++
+ kernel/trace/trace_of.c          |   54 ++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 56 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 5166a12a9d49..cc5ba13028cd 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -765,6 +765,11 @@ static int create_or_delete_trace_kprobe(int argc, char **argv)
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index db973928e580..e7f5d0a353e2 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -1343,6 +1343,11 @@ static int create_or_delete_synth_event(int argc, char **argv)
  	return ret == -ECANCELED ? -EINVAL : ret;
  }
  
-+int trace_kprobe_run_command(const char *command)
++int synth_event_run_command(const char *command)
 +{
-+	return trace_run_command(command, create_or_delete_trace_kprobe);
++	return trace_run_command(command, create_or_delete_synth_event);
 +}
 +
- static int trace_kprobe_release(struct dyn_event *ev)
+ static int synth_event_create(int argc, const char **argv)
  {
- 	struct trace_kprobe *tk = to_trace_kprobe(ev);
+ 	const char *name = argv[0];
 diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
-index 696f59234e62..43d87e5065a3 100644
+index 43d87e5065a3..1b2a1306fc60 100644
 --- a/kernel/trace/trace_of.c
 +++ b/kernel/trace/trace_of.c
-@@ -23,6 +23,7 @@ extern void __init trace_init_tracepoint_printk(void);
- extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+@@ -24,6 +24,7 @@ extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
  					  unsigned long size, int cpu_id);
  extern int trigger_process_regex(struct trace_event_file *file, char *buff);
-+extern int trace_kprobe_run_command(const char *command);
+ extern int trace_kprobe_run_command(const char *command);
++extern int synth_event_run_command(const char *command);
  
  static void __init
  trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
-@@ -99,14 +100,47 @@ trace_of_enable_events(struct trace_array *tr, struct device_node *node)
- 	}
+@@ -133,6 +134,38 @@ trace_of_add_kprobe_event(struct device_node *node,
+ 	return 0;
  }
  
 +static int __init
-+trace_of_add_kprobe_event(struct device_node *node,
-+			  const char *group, const char *event)
++trace_of_add_synth_event(struct device_node *node, const char *event)
 +{
 +	struct property *prop;
-+	char buf[MAX_BUF_LEN];
++	char buf[MAX_BUF_LEN], *q;
 +	const char *p;
-+	char *q;
-+	int len, ret;
++	int len, delta, ret;
 +
-+	len = snprintf(buf, ARRAY_SIZE(buf) - 1, "p:%s/%s ", group, event);
-+	if (len >= ARRAY_SIZE(buf)) {
++	len = ARRAY_SIZE(buf);
++	delta = snprintf(buf, len, "%s", event);
++	if (delta >= len) {
 +		pr_err("Event name is too long: %s\n", event);
 +		return -E2BIG;
 +	}
-+	q = buf + len;
-+	len = ARRAY_SIZE(buf) - len;
++	len -= delta; q = buf + delta;
 +
-+	of_property_for_each_string(node, "probes", prop, p) {
-+		if (strlcpy(q, p, len) >= len) {
-+			pr_err("Probe definition is too long: %s\n", p);
++	of_property_for_each_string(node, "fields", prop, p) {
++		delta = snprintf(q, len, " %s;", p);
++		if (delta >= len) {
++			pr_err("fields string is too long: %s\n", p);
 +			return -E2BIG;
 +		}
-+		ret = trace_kprobe_run_command(buf);
-+		if (ret < 0) {
-+			pr_err("Failed to add probe: %s\n", buf);
-+			return ret;
-+		}
++		len -= delta; q += delta;
 +	}
 +
-+	return 0;
++	ret = synth_event_run_command(buf);
++	if (ret < 0)
++		pr_err("Failed to add synthetic event: %s\n", buf);
++
++	return ret;
 +}
 +
  static void __init
  trace_of_init_one_event(struct trace_array *tr, struct device_node *node)
  {
- 	struct trace_event_file *file;
- 	struct property *prop;
- 	char buf[MAX_BUF_LEN];
--	char *bufp;
--	const char *p;
-+	const char *p, *group;
-+	char *event;
- 	int err;
+@@ -160,15 +193,30 @@ trace_of_init_one_event(struct trace_array *tr, struct device_node *node)
+ 	event = buf;
  
- 	if (!of_node_name_prefix(node, "event"))
-@@ -123,18 +157,29 @@ trace_of_init_one_event(struct trace_array *tr, struct device_node *node)
- 		pr_err("Event name is too long: %s\n", p);
- 		return;
- 	}
--	bufp = buf;
--
--	p = strsep(&bufp, ":");
--	if (!bufp) {
--		pr_err("%s has no group name\n", buf);
--		return;
-+	event = buf;
+ 	group = strsep(&event, ":");
+-	/* For a kprobe event, we have to generates an event at first */
 +
-+	group = strsep(&event, ":");
-+	/* For a kprobe event, we have to generates an event at first */
-+	if (of_find_property(node, "probes", NULL)) {
-+		if (!event) {
++	/* Generates kprobe/synth event at first */
+ 	if (of_find_property(node, "probes", NULL)) {
++		if (of_find_property(node, "fields", NULL)) {
++			pr_err("Error: %s node has both probes and fields\n",
++				of_node_full_name(node));
++			return;
++		}
+ 		if (!event) {
+ 			event = buf;
+ 			group = "kprobes";
+ 		}
+-		err = trace_of_add_kprobe_event(node, group, event);
+-		if (err < 0)
++		if (trace_of_add_kprobe_event(node, group, event) < 0)
++			return;
++	} else if (of_find_property(node, "fields", NULL)) {
++		if (!event)
 +			event = buf;
-+			group = "kprobes";
-+		}
-+		err = trace_of_add_kprobe_event(node, group, event);
-+		if (err < 0)
-+			return;
-+	} else {
-+		if (!event) {
-+			pr_err("%s has no group name\n", buf);
++		else if (strcmp(group, "synthetic") != 0) {
++			pr_err("Synthetic event must be in synthetic group\n");
 +			return;
 +		}
- 	}
- 
- 	mutex_lock(&event_mutex);
--	file = find_event_file(tr, buf, bufp);
-+	file = find_event_file(tr, group, event);
- 	if (!file) {
--		pr_err("Failed to find event: %s\n", buf);
-+		pr_err("Failed to find event: %s:%s\n", group, event);
- 		return;
- 	}
- 
++		if (trace_of_add_synth_event(node, event) < 0)
+ 			return;
++		group = "synthetic";
+ 	} else {
+ 		if (!event) {
+ 			pr_err("%s has no group name\n", buf);
