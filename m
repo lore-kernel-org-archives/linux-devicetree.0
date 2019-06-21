@@ -1,51 +1,75 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v7 1/5] Input: elan_i2c: Export the device id whitelist
-Date: Thu, 20 Jun 2019 21:34:10 -0700
-Message-ID: <CAKdAkRRstvEWXtwnLCMKoW6PcCz0W3+M9iYqVFshJpw6y_=9bA@mail.gmail.com>
-References: <20190620142801.11827-1-jeffrey.l.hugo@gmail.com> <20190620143318.11880-1-jeffrey.l.hugo@gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 2/6] usb: bdc: Cleanup clock support
+Date: Fri, 21 Jun 2019 13:26:20 +0800
+Message-ID: <1561094780.19385.2.camel@mhfsdcap03>
+References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
+         <1561064991-16874-3-git-send-email-alcooperx@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190620143318.11880-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <1561064991-16874-3-git-send-email-alcooperx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Jiri Kosina <jikos@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org, Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+To: Al Cooper <alcooperx@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jeffrey,
+On Thu, 2019-06-20 at 17:09 -0400, Al Cooper wrote:
+> - Fix driver to defer on clk_get defer
+> 
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> ---
+>  drivers/usb/gadget/udc/bdc/bdc_core.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> index ccbd1d34eb2a..11a43de6c1c6 100644
+> --- a/drivers/usb/gadget/udc/bdc/bdc_core.c
+> +++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+> @@ -490,8 +490,14 @@ static int bdc_probe(struct platform_device *pdev)
+>  
+>  	dev_dbg(dev, "%s()\n", __func__);
+>  
+> +	bdc = devm_kzalloc(dev, sizeof(*bdc), GFP_KERNEL);
+> +	if (!bdc)
+> +		return -ENOMEM;
+> +
+>  	clk = devm_clk_get(dev, "sw_usbd");
+>  	if (IS_ERR(clk)) {
+> +		if (PTR_ERR(clk) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+what about using devm_clk_get_optional()?
 
-On Thu, Jun 20, 2019 at 7:33 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->  #ifdef CONFIG_OF
-> -static const struct of_device_id elan_of_match[] = {
-> -       { .compatible = "elan,ekth3000" },
-> -       { /* sentinel */ }
-> -};
-
-I think OF IDs should stay in this file since we agreed HID will not
-be checking them.
-
->  MODULE_DEVICE_TABLE(of, elan_of_match);
->  #endif
->
-> diff --git a/include/linux/input/elan-i2c-ids.h b/include/linux/input/elan-i2c-ids.h
-> new file mode 100644
-> index 000000000000..8130bbebbdda
-> --- /dev/null
-> +++ b/include/linux/input/elan-i2c-ids.h
-> @@ -0,0 +1,68 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Elan I2C Touchpad devide whitelist
-
-s/devide/device/
-
-> + *
-> + * Copyright (C) 2019 Jeffrey Hugo.  All rights reserved.
-
-This just moves the code around. If anything I'd say it should keep
-the original Elan copyright.
-
-Thanks.
-
--- 
-Dmitry
+>  		dev_info(dev, "Clock not found in Device Tree\n");
+>  		clk = NULL;
+>  	}
+> @@ -501,11 +507,6 @@ static int bdc_probe(struct platform_device *pdev)
+>  		dev_err(dev, "could not enable clock\n");
+>  		return ret;
+>  	}
+> -
+> -	bdc = devm_kzalloc(dev, sizeof(*bdc), GFP_KERNEL);
+> -	if (!bdc)
+> -		return -ENOMEM;
+> -
+>  	bdc->clk = clk;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> @@ -551,7 +552,7 @@ static int bdc_probe(struct platform_device *pdev)
+>  	ret = bdc_phy_init(bdc);
+>  	if (ret) {
+>  		dev_err(bdc->dev, "BDC phy init failure:%d\n", ret);
+> -		return ret;
+> +		goto clk_cleanup;
+>  	}
+>  
+>  	temp = bdc_readl(bdc->regs, BDC_BDCCAP1);
+> @@ -583,6 +584,8 @@ static int bdc_probe(struct platform_device *pdev)
+>  	bdc_hw_exit(bdc);
+>  phycleanup:
+>  	bdc_phy_exit(bdc);
+> +clk_cleanup:
+> +	clk_disable_unprepare(bdc->clk);
+>  	return ret;
+>  }
+>  
