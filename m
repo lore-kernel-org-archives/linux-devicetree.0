@@ -1,48 +1,103 @@
-Return-Path: <SRS0=yzYA=UX=metux.net=lkml@kernel.org>
+Return-Path: <SRS0=9gtZ=UU=gmail.com=frowand.list@kernel.org>
 Subject: Re: [RFC] Initial state for GPIOs
 References: <bee53b48c96603ae8970d42bc4bff386b876bc51.camel@collabora.com>
-From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <716ee0b5-21b8-e245-e957-e3e18b3d44b1@metux.net>
-Date: Mon, 24 Jun 2019 08:32:14 +0200
+From: Frank Rowand <frowand.list@gmail.com>
+Message-ID: <9d9caeea-4f24-7951-3bb6-fa5890744f06@gmail.com>
+Date: Thu, 20 Jun 2019 17:22:55 -0700
 MIME-Version: 1.0
 In-Reply-To: <bee53b48c96603ae8970d42bc4bff386b876bc51.camel@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To: Martyn Welch <martyn.welch@collabora.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Martyn Welch <martyn.welch@collabora.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>
 Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, kernel@collabora.com
 List-ID: <devicetree@vger.kernel.org>
 
-On 20.06.19 15:16, Martyn Welch wrote:
++frank (me)
 
-Hi,
-
-I haven't followed the previous discussions, so please forgive me when
-I'm missing something and asking dumb or already answered questions:
-
-> An alternative that has been briefly raised[4] when I approached the> subject recently on the GPIO mailing list is to add a property to the>
-controller node, rather than child nodes, that listed the expected>
-initial states of the pins as an array, much like the line names are>
-handled through "gpio-line-names".
-If it's really about early setting a specific state *once*, then I think
-this would be the best approach.
-
-OTOH, I'm still a bit unsure, whether the whole idea is really correct
-to begin with:
-
-I'd guess if a specific initial state is required, the pin has some
-special meaning, which indicates there should be a specific driver for
-it. I've got a strange feeling on splitting the semantics between board
-configuration like DT (or some board init code) and the driver - even if
-the driver is just some script in userland.
-
-What are the reasons for not just doing it in a bootup script ?
-
-Another problem might be timing: in either case, we don't know when the
-initial state is actually set. Doing it in the kernel instead of
-userland certainly moves it to an earlier point in time, but still a
-pretty much unpredictable one.
-
+On 6/20/19 6:16 AM, Martyn Welch wrote:
+> Hi Rob, Mark,
+> 
+> Attempts have been made to define an approach for describing the
+> initial state of gpios (direction and value when driven as an output) a
+> number of times in the past, but a concensus on the approach to take
+> seems to have never been reached.
+> 
+> The aim is to be able to describe GPIOs which a definitive use exists
+> (i.e. are routed from an SoC to a pin on another device with a
+> definitive purpose) and which the desired, and possibly required, state
+> of the pin is known. This differs from gpio-hog in that there is an
+> expectation that a consumer of the gpio may appear at a later date,
+> which may take the form of the GPIO being exported to user space.
+> 
+> Previous attempts have suggested a variation of the gpio-hogs[1][2].
+> "gpio-hogs" uses a node for each GPIO containing the "gpio-hogs"
+> property, with which the Linux kernel will act as a consumer,
+> statically setting the provided state on the GPIO line, for example:
+> 
+>         qe_pio_a: gpio-controller@1400 {
+>                 compatible = "fsl,qe-pario-bank-a", 
+> 			     "fsl,qe-pario-bank";
+>                 reg = <0x1400 0x18>;
+>                 gpio-controller;
+>                 #gpio-cells = <2>;
+> 
+>                 line_b {
+>                         gpio-hog;
+>                         gpios = <6 0>;
+>                         output-low;
+>                         line-name = "foo-bar-gpio";
+>                 };
+>         };
+> 
+> It had been suggested to either replace "gpio-hogs" with "gpio-initval" 
+> or to include a node without the "gpio-hogs" property to set an inital
+> state, but allow another consumer to come along at a later date.
+> 
+> A previous related attempt to upstream a "gpio-switch" consumer[3] also
+> took the approach of defining nodes in the device tree. The
+> conversation pointed towards a suggestion of using nodes with
+> compatible properties, for example:
+> 
+>         &gpiochip {
+>                 some_led {
+>                         compatible = "gpio-leds";
+>                         default-state = "on";
+>                         gpios = <3 0>;
+>                         line-name = "leda";
+>                 };
+> 
+>                 some_switch {
+>                         compatible = "gpio-switch", "gpio-initval";
+>                         gpios = <4 0>;
+>                         line-name = "switch1";
+> 
+>                         /*
+> 			 * This is used by gpio-initval in case 
+> 			 * gpio-switch is not implemented
+> 			 */
+>                         output-low;
+>                 };
+> 
+>                 some_interrupt {
+>                         gpios = <5 0>;
+>                         line-name = "some_interrupt_line";
+>                 };
+> 
+>                 line_b {
+>                         gpios = <6 0>;
+>                         line-name = "line-b";
+>                 };
+>         };
+> 
+> An alternative that has been briefly raised[4] when I approached the
+> subject recently on the GPIO mailing list is to add a property to the
+> controller node, rather than child nodes, that listed the expected
+> initial states of the pins as an array, much like the line names are
+> handled through "gpio-line-names". I'm not quite sure how it would best
+> to treat offsets where no special initial state is required (gpio-line-
+> names uses empty strings). Something like this?:
+> 
 > --- gpio.h
 >         /* Bit 4 express initial state */
 >         #define GPIO_INPUT 0
@@ -54,20 +109,20 @@ pretty much unpredictable one.
 >         
 >         #define GPIO_OUTPUT_LOW (GPIO_OUTPUT | GPIO_INITIAL_LOW)
 >         #define GPIO_OUTPUT_HIGH (GPIO_OUTPUT | GPIO_INITIAL_HIGH)
-
-Does it need to be an int value in DT ?
-Why not using human-readable strings, eg:
-
-   "in"
-   "out-low"
-   "out-hi"
-
-Yes, doing three strcmp()s takes more cycles than just a switch(),
-but does that really matter ?
-
+> ---
+> 
+> --- device tree
+>         &gpiochip {
+>                 gpio-line-names = "", "", "", "widget_en",
+> 			"widget_signal";
+>                 gpio-initial-states = <>, <>, <>,
+> 			<GPIO_OUTPUT_HIGH | GPIO_LINE_OPEN_DRAIN>,
+> 			<GPIO_INPUT | GPIO_ACTIVE_LOW>;
+>         };
+> ---        
+> 
 > An alternative option may be to provide the offset as the first item
 > (though this is then different from "gpio-line-names"), so:
->
 > 
 > --- device tree
 >         &gpiochip {
@@ -77,15 +132,18 @@ but does that really matter ?
 > 			<3 GPIO_OUTPUT_HIGH | GPIO_LINE_OPEN_DRAIN>,
 > 			<4 GPIO_INPUT | GPIO_ACTIVE_LOW>;
 >         };
-
-hmm, feels a bit strange to me. Yes, it allows a shorter notation, if
-one just wants to set very few lines, but IMHO complicates things.
-I feel a list w/ possibly NULL entries is cleaner.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> ---        
+> 
+> I'm interested in understanding what form would be acceptable as part
+> of the device tree binding.
+> 
+> Thanks in advance,
+> 
+> Martyn
+> 
+> [1] https://marc.info/?l=devicetree&m=145621411916777&w=2
+> [2] https://patchwork.ozlabs.org/patch/545493/
+> [3] https://lore.kernel.org/patchwork/patch/624195/
+> [4] https://www.spinics.net/lists/linux-gpio/msg39810.html
+> 
+> 
