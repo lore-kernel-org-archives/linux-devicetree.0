@@ -1,10 +1,8 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH 2/3] clocksource: imx-sysctr: Add of_clk skip option
-Date: Fri, 21 Jun 2019 16:28:37 +0800
-Message-ID: <20190621082838.12630-2-Anson.Huang@nxp.com>
-References: <20190621082838.12630-1-Anson.Huang@nxp.com>
+Subject: [PATCH 1/3] clocksource/drivers/sysctr: Add an optional property
+Date: Fri, 21 Jun 2019 16:28:36 +0800
+Message-ID: <20190621082838.12630-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621082838.12630-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, abel.vesa@nxp.com, ccaione@baylibre.com, angus@akkea.ca, andrew.smirnov@gmail.com, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: Linux-imx@nxp.com
@@ -12,42 +10,38 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-On some i.MX8M platforms, clock driver uses platform driver
-model and it is NOT ready during timer initialization phase,
-the clock operations will fail and system counter driver will
-fail too. As all the i.MX8M platforms' system counter clock
-are from OSC which is always enabled, so it is no need to enable
-clock for system counter driver, the ONLY thing is to pass
-clock frequence to driver.
-
-This patch adds an option of skipping of_clk operation for
-system counter driver, an optional property "clock-frequency"
-is introduced to pass the frequency value to system counter
-driver and indicate driver to skip of_clk operations.
+This patch adds an optional property "clock-frequency" to pass
+the system counter frequency value to kernel system counter
+driver and indicate the driver to skip of_clk operations, this
+is to support those platforms using platform driver model for
+clock driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/clocksource/timer-imx-sysctr.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
-index fd7d680..8ff3d7e 100644
---- a/drivers/clocksource/timer-imx-sysctr.c
-+++ b/drivers/clocksource/timer-imx-sysctr.c
-@@ -129,6 +129,14 @@ static void __init sysctr_clockevent_init(void)
- static int __init sysctr_timer_init(struct device_node *np)
- {
- 	int ret = 0;
-+	u32 rate;
-+
-+	if (!of_property_read_u32(np, "clock-frequency",
-+				  &rate)) {
-+		to_sysctr.of_clk.rate = rate;
-+		to_sysctr.of_clk.period = DIV_ROUND_UP(rate, HZ);
-+		to_sysctr.flags &= ~TIMER_OF_CLOCK;
-+	}
+diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+index d576599..c9907a0 100644
+--- a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
++++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+@@ -14,6 +14,11 @@ Required properties:
+ - clocks : 	    Specifies the counter clock.
+ - clock-names: 	    Specifies the clock's name of this module
  
- 	ret = timer_of_init(np, &to_sysctr);
- 	if (ret)
++Optional properties:
++
++- clock-frequency : Specifies system counter clock frequency and indicates system
++		    counter driver to skip clock operations.
++
+ Example:
+ 
+ 	system_counter: timer@306a0000 {
+@@ -22,4 +27,5 @@ Example:
+ 		clocks = <&clk_8m>;
+ 		clock-names = "per";
+ 		interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++		clock-frequency = <8333333>;
+ 	};
 -- 
 2.7.4
