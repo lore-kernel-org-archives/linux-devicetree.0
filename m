@@ -1,82 +1,90 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH v4 2/2] dt-bindings: mfd: max8998: Add charger subnode binding
-Date: Fri, 21 Jun 2019 13:56:02 +0200
-Message-ID: <20190621115602.17559-3-pawel.mikolaj.chmiel@gmail.com>
-References: <20190621115602.17559-1-pawel.mikolaj.chmiel@gmail.com>
+From: Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH V2 2/4] iio: adc: ad7124: Add buffered input support
+Date: Fri, 21 Jun 2019 15:13:42 +0300
+Message-ID: <20190621121344.24917-2-mircea.caprioru@analog.com>
+References: <20190621121344.24917-1-mircea.caprioru@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621115602.17559-1-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <20190621121344.24917-1-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+To: jic23@kernel.org
+Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds devicetree bindings documentation for
-battery charging controller as the subnode of MAX8998 PMIC.
+This patch adds the option to enable the buffered mode for positive and
+negative inputs. Each option can be enabled independently.
 
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+In buffered mode, the input channel feeds into a high impedance input stage
+of the buffer amplifier. Therefore, the input can tolerate significant
+source impedances and is tailored for direct connection to external
+resistive type sensors such as strain gages or RTDs.
+
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 ---
-Changes from v3:
-  - Property prefix should be maxim, not max8998
-  - Describe what End of Charge in percent means
 
-Changes from v2:
-  - Make charge-restart-level-microvolt optional.
-  - Make charge-timeout-hours optional.
+Changelog v2:
+- nothing changed here
 
-Changes from v1:
-  - Removed unneeded Fixes tag
-  - Correct description of all charger values
-  - Added missing property unit
----
- .../devicetree/bindings/mfd/max8998.txt       | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/iio/adc/ad7124.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Documentation/devicetree/bindings/mfd/max8998.txt
-index 5f2f07c09c90..368f787d6079 100644
---- a/Documentation/devicetree/bindings/mfd/max8998.txt
-+++ b/Documentation/devicetree/bindings/mfd/max8998.txt
-@@ -48,6 +48,25 @@ Additional properties required if max8998,pmic-buck2-dvs-gpio is defined:
- - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in microvolts
-   for buck2 regulator that can be selected using dvs gpio.
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index 810234db9c0d..ab52c5e9ecb1 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -61,6 +61,8 @@
+ #define AD7124_CONFIG_REF_SEL(x)	FIELD_PREP(AD7124_CONFIG_REF_SEL_MSK, x)
+ #define AD7124_CONFIG_PGA_MSK		GENMASK(2, 0)
+ #define AD7124_CONFIG_PGA(x)		FIELD_PREP(AD7124_CONFIG_PGA_MSK, x)
++#define AD7124_CONFIG_IN_BUFF_MSK	GENMASK(7, 6)
++#define AD7124_CONFIG_IN_BUFF(x)	FIELD_PREP(AD7124_CONFIG_IN_BUFF_MSK, x)
  
-+Charger: Configuration for battery charging controller should be added
-+inside a child node named 'charger'.
-+  Required properties:
-+  - maxim,end-of-charge-percentage: End of Charge in percent.
-+    When the charge current in constant-voltage phase drops below
-+    end-of-charge-percentage of it's start value, charging is terminated.
-+    If value equals 0, leave it unchanged. Otherwise it should be value
-+    from 10 to 45 by 5 step.
-+
-+  Optional properties:
-+  - maxim,charge-restart-threshold: Charge restart threshold in millivolts.
-+    If property is not present, this will be disabled.
-+    Valid values are: 0, 100, 150, 200. If the value equals 0, leave it
-+    unchanged.
-+
-+  - maxim,charge-timeout: Charge timeout in hours. If property is not
-+    present, this will be disabled. Valid values are: 0, 5, 6, 7.
-+    If the value equals 0, leave it unchanged.
-+
- Regulators: All the regulators of MAX8998 to be instantiated shall be
- listed in a child node named 'regulators'. Each regulator is represented
- by a child node of the 'regulators' node.
-@@ -97,6 +116,13 @@ Example:
- 		max8998,pmic-buck2-dvs-gpio = <&gpx0 0 3 0 0>; /* SET3 */
- 		max8998,pmic-buck2-dvs-voltage = <1350000>, <1300000>;
+ /* AD7124_FILTER_X */
+ #define AD7124_FILTER_FS_MSK		GENMASK(10, 0)
+@@ -108,6 +110,8 @@ struct ad7124_chip_info {
+ struct ad7124_channel_config {
+ 	enum ad7124_ref_sel refsel;
+ 	bool bipolar;
++	bool buf_positive;
++	bool buf_negative;
+ 	unsigned int ain;
+ 	unsigned int vref_mv;
+ 	unsigned int pga_bits;
+@@ -473,6 +477,11 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ 		else
+ 			st->channel_config[channel].refsel = tmp;
  
-+		/* Charger configuration */
-+		charger {
-+			maxim,end-of-charge-percentage = <20>;
-+			maxim,charge-restart-threshold = <100>;
-+			maxim,charge-timeout = <7>;
-+		};
++		st->channel_config[channel].buf_positive =
++			of_property_read_bool(child, "adi,buffered-positive");
++		st->channel_config[channel].buf_negative =
++			of_property_read_bool(child, "adi,buffered-negative");
 +
- 		/* Regulators to instantiate */
- 		regulators {
- 			ldo2_reg: LDO2 {
+ 		*chan = ad7124_channel_template;
+ 		chan->address = channel;
+ 		chan->scan_index = channel;
+@@ -492,7 +501,7 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ static int ad7124_setup(struct ad7124_state *st)
+ {
+ 	unsigned int val, fclk, power_mode;
+-	int i, ret;
++	int i, ret, tmp;
+ 
+ 	fclk = clk_get_rate(st->mclk);
+ 	if (!fclk)
+@@ -525,8 +534,12 @@ static int ad7124_setup(struct ad7124_state *st)
+ 		if (ret < 0)
+ 			return ret;
+ 
++		tmp = (st->channel_config[i].buf_positive << 1)  +
++			st->channel_config[i].buf_negative;
++
+ 		val = AD7124_CONFIG_BIPOLAR(st->channel_config[i].bipolar) |
+-		      AD7124_CONFIG_REF_SEL(st->channel_config[i].refsel);
++		      AD7124_CONFIG_REF_SEL(st->channel_config[i].refsel) |
++		      AD7124_CONFIG_IN_BUFF(tmp);
+ 		ret = ad_sd_write_reg(&st->sd, AD7124_CONFIG(i), 2, val);
+ 		if (ret < 0)
+ 			return ret;
 -- 
 2.17.1
