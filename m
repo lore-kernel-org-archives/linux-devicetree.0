@@ -1,118 +1,98 @@
-From: Paul Cercueil <paul@crapouillou.net>
+From: Daniel Vetter <daniel@ffwll.ch>
 Subject: Re: [PATCH v5 2/2] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
-Date: Fri, 21 Jun 2019 11:07:30 +0200
-Message-ID: <1561108050.1777.0@crapouillou.net>
+Date: Fri, 21 Jun 2019 11:13:43 +0200
+Message-ID: <20190621091343.GA12905@phenom.ffwll.local>
 References: <20190603152331.23160-1-paul@crapouillou.net>
-        <20190603152331.23160-2-paul@crapouillou.net>
-        <20190619122622.GB29084@ravnborg.org> <1561040159.1978.0@crapouillou.net>
-        <20190621090411.GY12905@phenom.ffwll.local>
+ <20190603152331.23160-2-paul@crapouillou.net>
+ <20190619122622.GB29084@ravnborg.org>
+ <1561040159.1978.0@crapouillou.net>
+ <20190621090411.GY12905@phenom.ffwll.local>
+ <1561108050.1777.0@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621090411.GY12905@phenom.ffwll.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, od@zcrc.me, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1561108050.1777.0@crapouillou.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, od@zcrc.me, Artur Rojek <contact@artur-rojek.eu>, David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-Le ven. 21 juin 2019 =E0 11:04, Daniel Vetter <daniel@ffwll.ch> a =E9crit=20
-:
-> On Thu, Jun 20, 2019 at 04:15:59PM +0200, Paul Cercueil wrote:
->>=20
->>=20
->>  Le mer. 19 juin 2019 =E0 14:26, Sam Ravnborg <sam@ravnborg.org> a=20
->> =E9crit :
->>  > Hi Paul.
->>  >
->>  > On Mon, Jun 03, 2019 at 05:23:31PM +0200, Paul Cercueil wrote:
->>  > >  Add a KMS driver for the Ingenic JZ47xx family of SoCs.
->>  > >  This driver is meant to replace the aging jz4740-fb driver.
->>  > >
->>  > >  This driver does not make use of the simple pipe helper, for=20
->> the
->>  > > reason
->>  > >  that it will soon be updated to support more advanced features=20
->> like
->>  > >  multiple planes, IPU integration for colorspace conversion and
->>  > > up/down
->>  > >  scaling, support for DSI displays, and TV-out and HDMI outputs.
->>  > >
->>  > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  > >  Tested-by: Artur Rojek <contact@artur-rojek.eu>
->>  > >  ---
->>  > >
->>  > >  Notes:
->>  > >      v2: - Remove custom handling of panel. The panel is now
->>  > > discovered using
->>  > >      	  the standard API.
->>  > >      	- Lots of small tweaks suggested by upstream
->>  > >
->>  > >      v3: - Use devm_drm_dev_init()
->>  > >      	- Update compatible strings to -lcd instead of -drm
->>  > >      	- Add destroy() callbacks to plane and crtc
->>  > >      	- The ingenic,lcd-mode is now read from the bridge's DT=20
->> node
->>  > >
->>  > >      v4: Remove ingenic,lcd-mode property completely. The=20
->> various
->>  > > modes are now
->>  > >      	deduced from the connector type, the pixel format or the=20
->> bus
->>  > > flags.
->>  > >
->>  > >      v5: - Fix framebuffer size incorrectly calculated for 24bpp
->>  > > framebuffers
->>  > >      	- Use 32bpp framebuffer instead of 16bpp, as it'll work=20
->> with
->>  > > both
->>  > >      	  16-bit and 24-bit panel
->>  > >      	- Get rid of drm_format_plane_cpp() which has been dropped
->>  > > upstream
->>  > >      	- Avoid using drm_format_info->depth, which is deprecated.
->>  > In the drm world we include the revision notes in the changelog.
->>  > So I did this when I applied it to drm-misc-next.
->>  >
->>  > Fixed a few trivial checkpatch warnings about indent too.
->>  > There was a few too-long-lines warnings that I ignored. Fixing=20
->> them
->>  > would have hurt readability.
->>=20
->>  Thanks.
->>=20
->>  > I assume you will maintain this driver onwards from now.
->>  > Please request drm-misc commit rights (see
->>  > https://www.freedesktop.org/wiki/AccountRequests/)
->>  > You will need a legacy SSH account.
->>=20
->>  I requested an account here:
->>  https://gitlab.freedesktop.org/freedesktop/freedesktop/issues/162
->=20
-> This 404s for me. Did you set the issue to private by any chance? Or
-> deleted already again?
-> -Daniel
-
-Sorry, yes, I set it to private. I thought I had to :(
-
--Paul
-
-
->>=20
->>  > And you should familiarize yourself with the maintainer-tools:
->>  > https://drm.pages.freedesktop.org/maintainer-tools/index.html
->>  >
->>  > For my use I use "dim update-branches; dim apply; dim push
->>  > So only a small subset i needed for simple use.
->>  >
->>  > 	Sam
->>=20
->>=20
->=20
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
-
-=
+T24gRnJpLCBKdW4gMjEsIDIwMTkgYXQgMTE6MDc6MzBBTSArMDIwMCwgUGF1bCBDZXJjdWVpbCB3
+cm90ZToKPiAKPiAKPiBMZSB2ZW4uIDIxIGp1aW4gMjAxOSDDoCAxMTowNCwgRGFuaWVsIFZldHRl
+ciA8ZGFuaWVsQGZmd2xsLmNoPiBhIMOpY3JpdCA6Cj4gPiBPbiBUaHUsIEp1biAyMCwgMjAxOSBh
+dCAwNDoxNTo1OVBNICswMjAwLCBQYXVsIENlcmN1ZWlsIHdyb3RlOgo+ID4gPiAKPiA+ID4gCj4g
+PiA+ICBMZSBtZXIuIDE5IGp1aW4gMjAxOSDDoCAxNDoyNiwgU2FtIFJhdm5ib3JnIDxzYW1AcmF2
+bmJvcmcub3JnPiBhCj4gPiA+IMOpY3JpdCA6Cj4gPiA+ICA+IEhpIFBhdWwuCj4gPiA+ICA+Cj4g
+PiA+ICA+IE9uIE1vbiwgSnVuIDAzLCAyMDE5IGF0IDA1OjIzOjMxUE0gKzAyMDAsIFBhdWwgQ2Vy
+Y3VlaWwgd3JvdGU6Cj4gPiA+ICA+ID4gIEFkZCBhIEtNUyBkcml2ZXIgZm9yIHRoZSBJbmdlbmlj
+IEpaNDd4eCBmYW1pbHkgb2YgU29Dcy4KPiA+ID4gID4gPiAgVGhpcyBkcml2ZXIgaXMgbWVhbnQg
+dG8gcmVwbGFjZSB0aGUgYWdpbmcgano0NzQwLWZiIGRyaXZlci4KPiA+ID4gID4gPgo+ID4gPiAg
+PiA+ICBUaGlzIGRyaXZlciBkb2VzIG5vdCBtYWtlIHVzZSBvZiB0aGUgc2ltcGxlIHBpcGUgaGVs
+cGVyLCBmb3IKPiA+ID4gdGhlCj4gPiA+ICA+ID4gcmVhc29uCj4gPiA+ICA+ID4gIHRoYXQgaXQg
+d2lsbCBzb29uIGJlIHVwZGF0ZWQgdG8gc3VwcG9ydCBtb3JlIGFkdmFuY2VkIGZlYXR1cmVzCj4g
+PiA+IGxpa2UKPiA+ID4gID4gPiAgbXVsdGlwbGUgcGxhbmVzLCBJUFUgaW50ZWdyYXRpb24gZm9y
+IGNvbG9yc3BhY2UgY29udmVyc2lvbiBhbmQKPiA+ID4gID4gPiB1cC9kb3duCj4gPiA+ICA+ID4g
+IHNjYWxpbmcsIHN1cHBvcnQgZm9yIERTSSBkaXNwbGF5cywgYW5kIFRWLW91dCBhbmQgSERNSSBv
+dXRwdXRzLgo+ID4gPiAgPiA+Cj4gPiA+ICA+ID4gIFNpZ25lZC1vZmYtYnk6IFBhdWwgQ2VyY3Vl
+aWwgPHBhdWxAY3JhcG91aWxsb3UubmV0Pgo+ID4gPiAgPiA+ICBUZXN0ZWQtYnk6IEFydHVyIFJv
+amVrIDxjb250YWN0QGFydHVyLXJvamVrLmV1Pgo+ID4gPiAgPiA+ICAtLS0KPiA+ID4gID4gPgo+
+ID4gPiAgPiA+ICBOb3RlczoKPiA+ID4gID4gPiAgICAgIHYyOiAtIFJlbW92ZSBjdXN0b20gaGFu
+ZGxpbmcgb2YgcGFuZWwuIFRoZSBwYW5lbCBpcyBub3cKPiA+ID4gID4gPiBkaXNjb3ZlcmVkIHVz
+aW5nCj4gPiA+ICA+ID4gICAgICAJICB0aGUgc3RhbmRhcmQgQVBJLgo+ID4gPiAgPiA+ICAgICAg
+CS0gTG90cyBvZiBzbWFsbCB0d2Vha3Mgc3VnZ2VzdGVkIGJ5IHVwc3RyZWFtCj4gPiA+ICA+ID4K
+PiA+ID4gID4gPiAgICAgIHYzOiAtIFVzZSBkZXZtX2RybV9kZXZfaW5pdCgpCj4gPiA+ICA+ID4g
+ICAgICAJLSBVcGRhdGUgY29tcGF0aWJsZSBzdHJpbmdzIHRvIC1sY2QgaW5zdGVhZCBvZiAtZHJt
+Cj4gPiA+ICA+ID4gICAgICAJLSBBZGQgZGVzdHJveSgpIGNhbGxiYWNrcyB0byBwbGFuZSBhbmQg
+Y3J0Ywo+ID4gPiAgPiA+ICAgICAgCS0gVGhlIGluZ2VuaWMsbGNkLW1vZGUgaXMgbm93IHJlYWQg
+ZnJvbSB0aGUgYnJpZGdlJ3MgRFQKPiA+ID4gbm9kZQo+ID4gPiAgPiA+Cj4gPiA+ICA+ID4gICAg
+ICB2NDogUmVtb3ZlIGluZ2VuaWMsbGNkLW1vZGUgcHJvcGVydHkgY29tcGxldGVseS4gVGhlCj4g
+PiA+IHZhcmlvdXMKPiA+ID4gID4gPiBtb2RlcyBhcmUgbm93Cj4gPiA+ICA+ID4gICAgICAJZGVk
+dWNlZCBmcm9tIHRoZSBjb25uZWN0b3IgdHlwZSwgdGhlIHBpeGVsIGZvcm1hdCBvciB0aGUKPiA+
+ID4gYnVzCj4gPiA+ICA+ID4gZmxhZ3MuCj4gPiA+ICA+ID4KPiA+ID4gID4gPiAgICAgIHY1OiAt
+IEZpeCBmcmFtZWJ1ZmZlciBzaXplIGluY29ycmVjdGx5IGNhbGN1bGF0ZWQgZm9yIDI0YnBwCj4g
+PiA+ICA+ID4gZnJhbWVidWZmZXJzCj4gPiA+ICA+ID4gICAgICAJLSBVc2UgMzJicHAgZnJhbWVi
+dWZmZXIgaW5zdGVhZCBvZiAxNmJwcCwgYXMgaXQnbGwgd29yawo+ID4gPiB3aXRoCj4gPiA+ICA+
+ID4gYm90aAo+ID4gPiAgPiA+ICAgICAgCSAgMTYtYml0IGFuZCAyNC1iaXQgcGFuZWwKPiA+ID4g
+ID4gPiAgICAgIAktIEdldCByaWQgb2YgZHJtX2Zvcm1hdF9wbGFuZV9jcHAoKSB3aGljaCBoYXMg
+YmVlbiBkcm9wcGVkCj4gPiA+ICA+ID4gdXBzdHJlYW0KPiA+ID4gID4gPiAgICAgIAktIEF2b2lk
+IHVzaW5nIGRybV9mb3JtYXRfaW5mby0+ZGVwdGgsIHdoaWNoIGlzIGRlcHJlY2F0ZWQuCj4gPiA+
+ICA+IEluIHRoZSBkcm0gd29ybGQgd2UgaW5jbHVkZSB0aGUgcmV2aXNpb24gbm90ZXMgaW4gdGhl
+IGNoYW5nZWxvZy4KPiA+ID4gID4gU28gSSBkaWQgdGhpcyB3aGVuIEkgYXBwbGllZCBpdCB0byBk
+cm0tbWlzYy1uZXh0Lgo+ID4gPiAgPgo+ID4gPiAgPiBGaXhlZCBhIGZldyB0cml2aWFsIGNoZWNr
+cGF0Y2ggd2FybmluZ3MgYWJvdXQgaW5kZW50IHRvby4KPiA+ID4gID4gVGhlcmUgd2FzIGEgZmV3
+IHRvby1sb25nLWxpbmVzIHdhcm5pbmdzIHRoYXQgSSBpZ25vcmVkLiBGaXhpbmcKPiA+ID4gdGhl
+bQo+ID4gPiAgPiB3b3VsZCBoYXZlIGh1cnQgcmVhZGFiaWxpdHkuCj4gPiA+IAo+ID4gPiAgVGhh
+bmtzLgo+ID4gPiAKPiA+ID4gID4gSSBhc3N1bWUgeW91IHdpbGwgbWFpbnRhaW4gdGhpcyBkcml2
+ZXIgb253YXJkcyBmcm9tIG5vdy4KPiA+ID4gID4gUGxlYXNlIHJlcXVlc3QgZHJtLW1pc2MgY29t
+bWl0IHJpZ2h0cyAoc2VlCj4gPiA+ICA+IGh0dHBzOi8vd3d3LmZyZWVkZXNrdG9wLm9yZy93aWtp
+L0FjY291bnRSZXF1ZXN0cy8pCj4gPiA+ICA+IFlvdSB3aWxsIG5lZWQgYSBsZWdhY3kgU1NIIGFj
+Y291bnQuCj4gPiA+IAo+ID4gPiAgSSByZXF1ZXN0ZWQgYW4gYWNjb3VudCBoZXJlOgo+ID4gPiAg
+aHR0cHM6Ly9naXRsYWIuZnJlZWRlc2t0b3Aub3JnL2ZyZWVkZXNrdG9wL2ZyZWVkZXNrdG9wL2lz
+c3Vlcy8xNjIKPiA+IAo+ID4gVGhpcyA0MDRzIGZvciBtZS4gRGlkIHlvdSBzZXQgdGhlIGlzc3Vl
+IHRvIHByaXZhdGUgYnkgYW55IGNoYW5jZT8gT3IKPiA+IGRlbGV0ZWQgYWxyZWFkeSBhZ2Fpbj8K
+PiA+IC1EYW5pZWwKPiAKPiBTb3JyeSwgeWVzLCBJIHNldCBpdCB0byBwcml2YXRlLiBJIHRob3Vn
+aHQgSSBoYWQgdG8gOigKCldlbGwgSSBjYW4ndCBhY2sgaXQgaWYgaXRzIHByaXZhdGUsIHNvIHBs
+ZWFzZSBjaGFuZ2UgdGhhdC4gQWxzbywKZXZlcnl0aGluZyBpcyBwdWJsaWMgYXJvdW5kIGhlcmUs
+IG9yIGFsbW9zdCBldmVyeXRoaW5nIC4uLgotRGFuaWVsCgo+IAo+IC1QYXVsCj4gCj4gCj4gPiA+
+IAo+ID4gPiAgPiBBbmQgeW91IHNob3VsZCBmYW1pbGlhcml6ZSB5b3Vyc2VsZiB3aXRoIHRoZSBt
+YWludGFpbmVyLXRvb2xzOgo+ID4gPiAgPiBodHRwczovL2RybS5wYWdlcy5mcmVlZGVza3RvcC5v
+cmcvbWFpbnRhaW5lci10b29scy9pbmRleC5odG1sCj4gPiA+ICA+Cj4gPiA+ICA+IEZvciBteSB1
+c2UgSSB1c2UgImRpbSB1cGRhdGUtYnJhbmNoZXM7IGRpbSBhcHBseTsgZGltIHB1c2gKPiA+ID4g
+ID4gU28gb25seSBhIHNtYWxsIHN1YnNldCBpIG5lZWRlZCBmb3Igc2ltcGxlIHVzZS4KPiA+ID4g
+ID4KPiA+ID4gID4gCVNhbQo+ID4gPiAKPiA+ID4gCj4gPiAKPiA+IC0tCj4gPiBEYW5pZWwgVmV0
+dGVyCj4gPiBTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KPiA+IGh0dHA6Ly9i
+bG9nLmZmd2xsLmNoCj4gCj4gCgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwg
+SW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
