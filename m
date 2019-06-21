@@ -1,65 +1,66 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH V7 00/11] misc: xilinx sd-fec drive
-Date: Fri, 21 Jun 2019 16:15:53 +0200
-Message-ID: <20190621141553.GA16650@kroah.com>
-References: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [EXT] Re: [PATCH v3 1/2] dt-bindings: display: panel: Add support
+ for Raydium RM67191 panel
+Date: Fri, 21 Jun 2019 14:16:28 +0000
+Message-ID: <1561126587.9328.76.camel@nxp.com>
+References: <1561037428-13855-1-git-send-email-robert.chiras@nxp.com>
+         <1561037428-13855-2-git-send-email-robert.chiras@nxp.com>
+         <CAOMZO5DunK3+ovBd0c0X4NTf-zkW1Tjz6KgXFMaRQKMk2SBMiw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
+In-Reply-To: <CAOMZO5DunK3+ovBd0c0X4NTf-zkW1Tjz6KgXFMaRQKMk2SBMiw@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <9EF40643811A1D4193F3D91D3C679BD7@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Cc: arnd@arndb.de, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Derek Kiernan <derek.kiernan@xilinx.com>
+To: "festevam@gmail.com" <festevam@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sam@ravnborg.org" <sam@ravnborg.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 06:29:34PM +0100, Dragan Cvetic wrote:
-> This patchset is adding the full Soft Decision Forward Error
-> Correction (SD-FEC) driver implementation, driver DT binding and
-> driver documentation.
-> 
-> Forward Error Correction (FEC) codes such as Low Density Parity
-> Check (LDPC) and turbo codes provide a means to control errors in
-> data transmissions over unreliable or noisy communication
-> channels. The SD-FEC Integrated Block is an optimized block for
-> soft-decision decoding of these codes. Fixed turbo codes are
-> supported directly, whereas custom and standardized LDPC codes
-> are supported through the ability to specify the parity check
-> matrix through an AXI4-Lite bus or using the optional programmable
-> (PL)-based support logic. For the further information see
-> https://www.xilinx.com/support/documentation/ip_documentation/
-> sd_fec/v1_1/pg256-sdfec-integrated-block.pdf
-> 
-> This driver is a platform device driver which supports SDFEC16
-> (16nm) IP. SD-FEC driver supports LDPC decoding and encoding and
-> Turbo code decoding. LDPC codes can be specified on
-> a codeword-by-codeword basis, also a custom LDPC code can be used.
-> 
-> The SD-FEC driver exposes a char device interface and supports
-> file operations: open(), close(), poll() and ioctl(). The driver
-> allows only one usage of the device, open() limits the number of
-> driver instances. The driver also utilize Common Clock Framework
-> (CCF).
-> 
-> The control and monitoring is supported over ioctl system call.
-> The features supported by ioctl():
-> - enable or disable data pipes to/from device
-> - configure the FEC algorithm parameters
-> - set the order of data
-> - provide a control of a SDFEC bypass option
-> - activates/deactivates SD-FEC
-> - collect and provide statistical data
-> - enable/disable interrupt mode
-
-Is there any userspace tool that talks to this device using these custom
-ioctls yet?
-
-Doing a one-off ioctl api is always a risky thing, you are pretty much
-just creating brand new system calls for one piece of hardware.
-
-Anyway, I took the first 3 patches here because they looked sane.  and
-stopped when I ran into the ioctl problem...
-
-thanks,
-
-greg k-h
+SGkgRmFiaW8sDQoNCk9uIFZpLCAyMDE5LTA2LTIxIGF0IDExOjAwIC0wMzAwLCBGYWJpbyBFc3Rl
+dmFtIHdyb3RlOg0KPiBIaSBSb2JlcnQsDQo+IA0KPiBPbiBUaHUsIEp1biAyMCwgMjAxOSBhdCAx
+MDozMiBBTSBSb2JlcnQgQ2hpcmFzIDxyb2JlcnQuY2hpcmFzQG54cC5jb20NCj4gPiB3cm90ZToN
+Cj4gPiANCj4gPiANCj4gPiBBZGQgZHQtYmluZGluZ3MgZG9jdW1lbnRhdGlvbiBmb3IgUmF5ZGl1
+bSBSTTY3MTkxIERTSSBwYW5lbC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBSb2JlcnQgQ2hp
+cmFzIDxyb2JlcnQuY2hpcmFzQG54cC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFNhbSBSYXZuYm9y
+ZyA8c2FtQHJhdm5ib3JnLm9yZz4NCj4gPiAtLS0NCj4gPiDCoC4uLi9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL3JheWRpdW0scm02NzE5MS50eHTCoMKgwqDCoMKgfCAzOQ0KPiA+ICsrKysrKysrKysr
+KysrKysrKysrKysNCj4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAzOSBpbnNlcnRpb25zKCspDQo+ID4g
+wqBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9wYW5lbC9yYXlkaXVtLHJtNjcxOTEudHh0DQo+ID4gDQo+ID4gZGlmZiAtLWdp
+dA0KPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+cmF5ZGl1bSxybTY3MTkxLnQNCj4gPiB4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmF5ZGl1bSxybTY3MTkxLnQNCj4gPiB4dA0KPiA+IG5l
+dyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uNTJhZjI3Mg0KPiA+IC0tLSAv
+ZGV2L251bGwNCj4gPiArKysNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL3JheWRpdW0scm02NzE5MS50DQo+ID4geHQNCj4gPiBAQCAtMCwwICsx
+LDM5IEBADQo+ID4gK1JheWRpdW0gUk02NzE3MSBPTEVEIExDRCBwYW5lbCB3aXRoIE1JUEktRFNJ
+IHByb3RvY29sDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICstIGNvbXBh
+dGlibGU6wqDCoMKgwqDCoMKgwqDCoMKgwqAicmF5ZGl1bSxybTY3MTkxIg0KPiA+ICstIHJlZzrC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgdmlydHVhbCBjaGFubmVsIGZvciBNSVBJ
+LURTSSBwcm90b2NvbA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgbXVzdCBiZSA8MD4NCj4gPiArLSBkc2ktbGFuZXM6wqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoG51bWJlciBvZiBEU0kgbGFuZXMgdG8gYmUgdXNlZA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbXVzdCBiZSA8Mz4gb3IgPDQ+DQo+ID4gKy0g
+cG9ydDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlucHV0IHBvcnQgbm9kZSB3aXRo
+IGVuZHBvaW50IGRlZmluaXRpb24gYXMNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoGRlZmluZWQgaW4NCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZ3JhcGgudHh0Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgdGhlIGlucHV0IHBvcnQgc2hvdWxkIGJlIGNvbm5lY3RlZCB0byBh
+DQo+ID4gTUlQSS1EU0kgZGV2aWNlDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqBkcml2ZXINCj4gPiArDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6
+DQo+ID4gKy0gcmVzZXQtZ3Bpb3M6wqDCoMKgwqDCoMKgwqDCoMKgYSBHUElPIHNwZWMgZm9yIHRo
+ZSBSU1RfQiBHUElPIHBpbg0KPiA+ICstIHdpZHRoLW1tOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oHNlZSBwYW5lbC1jb21tb24udHh0DQo+ID4gKy0gaGVpZ2h0LW1tOsKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqBzZWUgcGFuZWwtY29tbW9uLnR4dA0KPiA+ICstIHZpZGVvLW1vZGU6wqDCoMKgwqDCoMKg
+wqDCoMKgwqAwIC0gYnVyc3QtbW9kZQ0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgMSAtIG5vbi1idXJzdCB3aXRoIHN5bmMgZXZlbnQNCj4gPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDIgLSBub24tYnVyc3Qg
+d2l0aCBzeW5jIHBvIHVsc2UNCj4gTm8gcG93ZXItc3VwcGx5IHByb3BlcnR5Pw0KRnJvbSB3aGF0
+IEkndmUgc2VlbiBpbiB0aGUgc2NoZW1hdGljcywgdGhlIHBvd2VyIGxpbmVzIG9uIHRoZSBEU0kg
+cG9ydA0Kb24gYWxsIHRoZSBpLk1YOCBjb3JlcyBhcmUgY29taW5nIGZyb20gYSBQTUlDIHByb3Zp
+ZGluZyBwb3dlciBmb3IgYWxsDQp0aGUgcGVyaXBoZXJhbHMuIFNpbmNlIEkgZGlkbid0IGZpbmQg
+YSB3YXkgdG8gY3V0IHRoZSBwb3dlciBvbiBhIHNpbmdsZQ0KcGVyaXBoZXJhbCAobGlrZSBEU0ks
+IGZvciBleGFtcGxlKSBpdCBkb2Vzbid0IG1ha2Ugc2Vuc2UgZm9yIHBvd2VyLQ0Kc3VwcGx5IHBy
+b3BlcnR5LiBGb3Igbm93LCBhdCBsZWFzdC4=
