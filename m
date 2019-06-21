@@ -1,43 +1,133 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [EXT] Re: [PATCH v3 1/2] dt-bindings: display: panel: Add support
- for Raydium RM67191 panel
-Date: Fri, 21 Jun 2019 12:46:02 -0300
-Message-ID: <CAOMZO5D+7msAxc99KFi=OWCNeBSxKXtJ8O=J7U+YE6v=xz3cAg@mail.gmail.com>
-References: <1561037428-13855-1-git-send-email-robert.chiras@nxp.com>
- <1561037428-13855-2-git-send-email-robert.chiras@nxp.com>
- <CAOMZO5DunK3+ovBd0c0X4NTf-zkW1Tjz6KgXFMaRQKMk2SBMiw@mail.gmail.com>
- <1561126587.9328.76.camel@nxp.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH 2/3] drm/rockchip: Add optional support for CRTC gamma
+ LUT
+Date: Fri, 21 Jun 2019 12:52:51 -0300
+Message-ID: <33068f355edfaabb1c60d5e16a219a058a489531.camel@collabora.com>
+References: <20190618213406.7667-1-ezequiel@collabora.com>
+         <20190618213406.7667-3-ezequiel@collabora.com>
+         <CAD=FV=XoKNA4aW2LT7g8K2t+ABwgt=QJGAyiet1-Gyz3CgWmvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1561126587.9328.76.camel@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "airlied@linux.ie" <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "sam@ravnborg.org" <sam@ravnborg.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=XoKNA4aW2LT7g8K2t+ABwgt=QJGAyiet1-Gyz3CgWmvg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Jacopo Mondi <jacopo@jmondi.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iZXJ0LAoKT24gRnJpLCBKdW4gMjEsIDIwMTkgYXQgMTE6MTYgQU0gUm9iZXJ0IENoaXJh
-cyA8cm9iZXJ0LmNoaXJhc0BueHAuY29tPiB3cm90ZToKCj4gRnJvbSB3aGF0IEkndmUgc2VlbiBp
-biB0aGUgc2NoZW1hdGljcywgdGhlIHBvd2VyIGxpbmVzIG9uIHRoZSBEU0kgcG9ydAo+IG9uIGFs
-bCB0aGUgaS5NWDggY29yZXMgYXJlIGNvbWluZyBmcm9tIGEgUE1JQyBwcm92aWRpbmcgcG93ZXIg
-Zm9yIGFsbAo+IHRoZSBwZXJpcGhlcmFscy4gU2luY2UgSSBkaWRuJ3QgZmluZCBhIHdheSB0byBj
-dXQgdGhlIHBvd2VyIG9uIGEgc2luZ2xlCj4gcGVyaXBoZXJhbCAobGlrZSBEU0ksIGZvciBleGFt
-cGxlKSBpdCBkb2Vzbid0IG1ha2Ugc2Vuc2UgZm9yIHBvd2VyLQo+IHN1cHBseSBwcm9wZXJ0eS4g
-Rm9yIG5vdywgYXQgbGVhc3QuCgpUaGlzIHBhbmVsIGRyaXZlciBpcyBub3Qgc3VwcG9zZWQgdG8g
-b25seSB3b3JrIHdpdGggaS5NWDggTlhQIHJlZmVyZW5jZSBib2FyZHMuCgpUaGUgZHQtYmluZGlu
-Z3Mgc2hvdWxkIGJlIGFzIGFjY3VyYXRlIGFzIHBvc3NpYmxlIGZyb20gZGF5IG9uZSwgc28KZGVz
-Y3JpYmluZyB0aGUgcG93ZXItc3VwcGx5IGlzIGltcG9ydGFudC4KClBsZWFzZSBsb29rIGF0IHRo
-ZSBwYW5lbCBkYXRhc2hlZXQgYW5kIGRlc2NyaWJlIHRoZSByZXF1aXJlZCBwb3dlcgpzdXBwbGll
-cyBhY2NvcmRpbmdseS4KClRoYW5rcwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWw=
+On Thu, 2019-06-20 at 10:25 -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Tue, Jun 18, 2019 at 2:43 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> > +static void vop_crtc_gamma_set(struct vop *vop, struct drm_crtc *crtc,
+> > +                              struct drm_crtc_state *old_state)
+> > +{
+> > +       int idle, ret, i;
+> > +
+> > +       spin_lock(&vop->reg_lock);
+> > +       VOP_REG_SET(vop, common, dsp_lut_en, 0);
+> > +       vop_cfg_done(vop);
+> > +       spin_unlock(&vop->reg_lock);
+> > +
+> > +       ret = readx_poll_timeout(vop_dsp_lut_is_enable, vop,
+> > +                          idle, !idle, 5, 30 * 1000);
+> > +       if (ret)
+> 
+> Worth an error message?
+> 
+
+Sure.
+
+> 
+> > @@ -1205,6 +1294,7 @@ static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
+> > 
+> >  static const struct drm_crtc_helper_funcs vop_crtc_helper_funcs = {
+> >         .mode_fixup = vop_crtc_mode_fixup,
+> > +       .atomic_check = vop_crtc_atomic_check,
+> 
+> At first I was worried that there was a bug here since in the context
+> of dw_hdmi (an encoder) adding ".atomic_check" caused ".mode_fixup" to
+> stop getting called as per mode_fixup() in
+> "drivers/gpu/drm/drm_atomic_helper.c".
+> 
+> ...but it seems like it's OK for CRTCs, so I think we're fine.
+> 
+> 
+> > @@ -1323,6 +1413,7 @@ static const struct drm_crtc_funcs vop_crtc_funcs = {
+> >         .disable_vblank = vop_crtc_disable_vblank,
+> >         .set_crc_source = vop_crtc_set_crc_source,
+> >         .verify_crc_source = vop_crtc_verify_crc_source,
+> > +       .gamma_set = drm_atomic_helper_legacy_gamma_set,
+> 
+> Are there any issues in adding this ".gamma_set" property even though
+> we may or may not actually have the ability to set the gamma
+> (depending on whether or not the LUT register range was provided in
+> the device tree)?  I am a DRM noob but
+> drm_atomic_helper_legacy_gamma_set() is not a trivial little function
+> and now we'll be running it in some cases where we don't actually have
+> gamma.
+> 
+> I also notice that there's at least one bit of code that seems to
+> check if ".gamma_set" is NULL.  ...and if it is, it'll return -ENOSYS
+> right away.  Do we still properly return -ENOSYS on devices that don't
+> have the register range?
+> 
+> It seems like the absolute safest would be to have two copies of this
+> struct: one used for VOPs that have the range and one for VOPs that
+> don't.
+> 
+> ...but possibly I'm just paranoid and as I've said I'm a clueless
+> noob.  If someone says it's fine to always provide the .gamma_set
+> property that's fine too.
+> 
+
+Provided we do the suggestion below (setting gamma_size and enabling
+color management) when lut_regs is set, then I think we are fine.
+
+Before this change:
+
+* GAMMA_LUT property doesn't exist, and so can't be set.
+* DRM_IOCTL_MODE_SETGAMMA (legacy) return ENOSYS.
+
+After this change, on platforms that doesn't support this:
+
+* GAMMA_LUT property doesn't exist, and so can't be set.
+* DRM_IOCTL_MODE_SETGAMMA (legacy) return EINVAL.
+
+The only difference is the ENOSYS/EINVAL errno, which I doubt
+will regress anything.
+
+I don't think this difference deserves assigning (the legacy)
+.gamma_set hook conditionally, which would make the
+implementation too ugly.
+
+> 
+> >  static void vop_fb_unref_worker(struct drm_flip_work *work, void *val)
+> > @@ -1480,6 +1571,10 @@ static int vop_create_crtc(struct vop *vop)
+> >                 goto err_cleanup_planes;
+> > 
+> >         drm_crtc_helper_add(crtc, &vop_crtc_helper_funcs);
+> > +       if (vop_data->lut_size) {
+> > +               drm_mode_crtc_set_gamma_size(crtc, vop_data->lut_size);
+> > +               drm_crtc_enable_color_mgmt(crtc, 0, false, vop_data->lut_size);
+> 
+> Should we only do the above calls if we successfully mapped the resources?
+> 
+
+Yes, totally. See above.
+
+> 
+> > @@ -1776,6 +1871,17 @@ static int vop_bind(struct device *dev, struct device *master, void *data)
+> >         if (IS_ERR(vop->regs))
+> >                 return PTR_ERR(vop->regs);
+> > 
+> > +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lut");
+> 
+> As per comments in the bindings, shouldn't use the name "lut" but
+> should just pick resource #1.
+
+Yes.
+
+Thanks a lot for the review,
+Ezequiel
