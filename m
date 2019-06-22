@@ -1,53 +1,77 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH V2 4/4] dt-bindings: iio: adc: Convert ad7124
- documentation to YAML
-Date: Sat, 22 Jun 2019 09:33:25 +0100
-Message-ID: <20190622093325.77539301@archlinux>
-References: <20190621121344.24917-1-mircea.caprioru@analog.com>
-        <20190621121344.24917-4-mircea.caprioru@analog.com>
-        <CAL_JsqLOMKQExp1Vu0Xo32Wx-ETdQk=AWSnex-GQ3QbzdZ7zQA@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: add ethernet phy node for tinker board
+Date: Sat, 22 Jun 2019 10:33:57 +0200
+Message-ID: <1871177.hjLhdHVgcu@phil>
+References: <20190621180017.29646-1-katsuhiro@katsuster.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLOMKQExp1Vu0Xo32Wx-ETdQk=AWSnex-GQ3QbzdZ7zQA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mircea Caprioru <mircea.caprioru@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>, Stefan Popa <stefan.popa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190621180017.29646-1-katsuhiro@katsuster.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Jun 2019 08:31:14 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
+Hi,
 
-> On Fri, Jun 21, 2019 at 6:15 AM Mircea Caprioru
-> <mircea.caprioru@analog.com> wrote:
-> >
-> > Convert AD7124 bindings documentation to YAML format.
-> >
-> > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> > ---
-> >
-> > Changelog v2:
-> > - modified SPDX license to GPL-2.0 OR BSD-2-Clause
-> > - added regex for a range from 0 to 15
-> > - added minimum and maximum constraints for reg property
-> > - set type and range of values for adi,reference-select property
-> > - used items for diff-channels property
-> > - set bipolar, adi,buffered-positive and negative to type: boolean
-> >
-> >  .../bindings/iio/adc/adi,ad7124.yaml          | 155 ++++++++++++++++++
-> >  1 file changed, 155 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml  
+Am Freitag, 21. Juni 2019, 20:00:17 CEST schrieb Katsuhiro Suzuki:
+> This patch adds missing mdio and ethernet PHY nodes for rk3328 ASUS
+> tinker board.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-The result is presumably good but the structure of the patch is not
-as straight forward as it should be.  As the changelog makes clear we
-aren't just doing a conversion here.  It is a mixture of conversion
-and new properties.  Please break the patch in two to reflect that.
-First convert the existing binding, then add the new properties.
+> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-That will make it easier for people to see what is new.
+just for my understanding, which problem does this solve?
+Normally the gmac can establish connections just fine on
+the rk3288 by probing the phy in the automatic way.
 
-Thanks,
+And I also don't see any additional properties like phy
+interrupt line below.
 
-Jonathan
+
+Thanks
+Heiko
+
+> ---
+>  arch/arm/boot/dts/rk3288-tinker.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> index 293576869546..3190817e8d5d 100644
+> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> @@ -117,6 +117,7 @@
+>  	assigned-clocks = <&cru SCLK_MAC>;
+>  	assigned-clock-parents = <&ext_gmac>;
+>  	clock_in_out = "input";
+> +	phy-handle = <&phy0>;
+>  	phy-mode = "rgmii";
+>  	phy-supply = <&vcc33_lan>;
+>  	pinctrl-names = "default";
+> @@ -127,6 +128,17 @@
+>  	tx_delay = <0x30>;
+>  	rx_delay = <0x10>;
+>  	status = "ok";
+> +
+> +	mdio0 {
+> +		compatible = "snps,dwmac-mdio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		phy0: ethernet-phy@0 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
+> +			reg = <0>;
+> +		};
+> +	};
+>  };
+>  
+>  &gpu {
+> 
