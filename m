@@ -1,104 +1,46 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH V2 2/4] iio: adc: ad7124: Add buffered input support
-Date: Sat, 22 Jun 2019 09:37:11 +0100
-Message-ID: <20190622093654.61e31fc5@archlinux>
-References: <20190621121344.24917-1-mircea.caprioru@analog.com>
-        <20190621121344.24917-2-mircea.caprioru@analog.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 7/7] arm64: defconfig: Enable Panfrost driver
+Date: Sat, 22 Jun 2019 10:39:07 +0200
+Message-ID: <CAJKOXPdk2MmBHjiDU4M6PA6O4ifVe_sDifejUPJiGPCQ7MR1sQ@mail.gmail.com>
+References: <20190621180208.25361-1-krzk@kernel.org> <20190621180208.25361-7-krzk@kernel.org>
+ <CA+E=qVe45NVCfpSHRF6=0aYRpURZA4DVz8W-XkSaNDB=1mX2kA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621121344.24917-2-mircea.caprioru@analog.com>
+In-Reply-To: <CA+E=qVe45NVCfpSHRF6=0aYRpURZA4DVz8W-XkSaNDB=1mX2kA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mircea Caprioru <mircea.caprioru@analog.com>
-Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Joseph Kogut <joseph.kogut@gmail.com>, Inki Dae <inki.dae@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Jun 2019 15:13:42 +0300
-Mircea Caprioru <mircea.caprioru@analog.com> wrote:
+On Fri, 21 Jun 2019 at 22:15, Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> On Fri, Jun 21, 2019 at 11:04 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Enable support for Mali GPU with Panfrost driver, e.g. for Exynos5433
+> > and Exynos7 (having Mali T760).
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  arch/arm64/configs/defconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index 6b4f5cf23324..972b17239f13 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -517,6 +517,7 @@ CONFIG_DRM_HISI_HIBMC=m
+> >  CONFIG_DRM_HISI_KIRIN=m
+> >  CONFIG_DRM_MESON=m
+> >  CONFIG_DRM_PL111=m
+> > +CONFIG_DRM_PANFROST=m
+>
+> It makes sense to enable lima for arm64 defconfig as well since it's
+> used on number of 64-bit Allwinner SoCs.
 
-> This patch adds the option to enable the buffered mode for positive and
-> negative inputs. Each option can be enabled independently.
-> 
-> In buffered mode, the input channel feeds into a high impedance input stage
-> of the buffer amplifier. Therefore, the input can tolerate significant
-> source impedances and is tailored for direct connection to external
-> resistive type sensors such as strain gages or RTDs.
-> 
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-Hi Mircea,
+I wasn't aware that some of ARMv8 SoCs still use Utgard. In such case
+it makes sense indeed, I will send a follow up.
 
-This (and the other 2) looks good to me, but I won't
-pick them up until the binding patch is split up.  That
-way we won't end up with the driver being out of sync with
-the binding docs, even for a brief time.
+Thanks for feedback!
 
-Thanks,
-
-Jonathan
-
-> ---
-> 
-> Changelog v2:
-> - nothing changed here
-> 
->  drivers/iio/adc/ad7124.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-> index 810234db9c0d..ab52c5e9ecb1 100644
-> --- a/drivers/iio/adc/ad7124.c
-> +++ b/drivers/iio/adc/ad7124.c
-> @@ -61,6 +61,8 @@
->  #define AD7124_CONFIG_REF_SEL(x)	FIELD_PREP(AD7124_CONFIG_REF_SEL_MSK, x)
->  #define AD7124_CONFIG_PGA_MSK		GENMASK(2, 0)
->  #define AD7124_CONFIG_PGA(x)		FIELD_PREP(AD7124_CONFIG_PGA_MSK, x)
-> +#define AD7124_CONFIG_IN_BUFF_MSK	GENMASK(7, 6)
-> +#define AD7124_CONFIG_IN_BUFF(x)	FIELD_PREP(AD7124_CONFIG_IN_BUFF_MSK, x)
->  
->  /* AD7124_FILTER_X */
->  #define AD7124_FILTER_FS_MSK		GENMASK(10, 0)
-> @@ -108,6 +110,8 @@ struct ad7124_chip_info {
->  struct ad7124_channel_config {
->  	enum ad7124_ref_sel refsel;
->  	bool bipolar;
-> +	bool buf_positive;
-> +	bool buf_negative;
->  	unsigned int ain;
->  	unsigned int vref_mv;
->  	unsigned int pga_bits;
-> @@ -473,6 +477,11 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
->  		else
->  			st->channel_config[channel].refsel = tmp;
->  
-> +		st->channel_config[channel].buf_positive =
-> +			of_property_read_bool(child, "adi,buffered-positive");
-> +		st->channel_config[channel].buf_negative =
-> +			of_property_read_bool(child, "adi,buffered-negative");
-> +
->  		*chan = ad7124_channel_template;
->  		chan->address = channel;
->  		chan->scan_index = channel;
-> @@ -492,7 +501,7 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
->  static int ad7124_setup(struct ad7124_state *st)
->  {
->  	unsigned int val, fclk, power_mode;
-> -	int i, ret;
-> +	int i, ret, tmp;
->  
->  	fclk = clk_get_rate(st->mclk);
->  	if (!fclk)
-> @@ -525,8 +534,12 @@ static int ad7124_setup(struct ad7124_state *st)
->  		if (ret < 0)
->  			return ret;
->  
-> +		tmp = (st->channel_config[i].buf_positive << 1)  +
-> +			st->channel_config[i].buf_negative;
-> +
->  		val = AD7124_CONFIG_BIPOLAR(st->channel_config[i].bipolar) |
-> -		      AD7124_CONFIG_REF_SEL(st->channel_config[i].refsel);
-> +		      AD7124_CONFIG_REF_SEL(st->channel_config[i].refsel) |
-> +		      AD7124_CONFIG_IN_BUFF(tmp);
->  		ret = ad_sd_write_reg(&st->sd, AD7124_CONFIG(i), 2, val);
->  		if (ret < 0)
->  			return ret;
+Krzysztof
