@@ -1,105 +1,53 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH V7 00/11] misc: xilinx sd-fec drive
-Date: Sat, 22 Jun 2019 08:01:35 +0200
-Message-ID: <20190622060135.GB26200@kroah.com>
-References: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
- <20190621141553.GA16650@kroah.com>
- <CH2PR02MB635999D7374378CEA096FE72CBE70@CH2PR02MB6359.namprd02.prod.outlook.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH V2 4/4] dt-bindings: iio: adc: Convert ad7124
+ documentation to YAML
+Date: Sat, 22 Jun 2019 09:33:25 +0100
+Message-ID: <20190622093325.77539301@archlinux>
+References: <20190621121344.24917-1-mircea.caprioru@analog.com>
+        <20190621121344.24917-4-mircea.caprioru@analog.com>
+        <CAL_JsqLOMKQExp1Vu0Xo32Wx-ETdQk=AWSnex-GQ3QbzdZ7zQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CH2PR02MB635999D7374378CEA096FE72CBE70@CH2PR02MB6359.namprd02.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dragan Cvetic <draganc@xilinx.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Derek Kiernan <dkiernan@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLOMKQExp1Vu0Xo32Wx-ETdQk=AWSnex-GQ3QbzdZ7zQA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mircea Caprioru <mircea.caprioru@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>, Stefan Popa <stefan.popa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 05:49:45PM +0000, Dragan Cvetic wrote:
+On Fri, 21 Jun 2019 08:31:14 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
+
+> On Fri, Jun 21, 2019 at 6:15 AM Mircea Caprioru
+> <mircea.caprioru@analog.com> wrote:
+> >
+> > Convert AD7124 bindings documentation to YAML format.
+> >
+> > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> > ---
+> >
+> > Changelog v2:
+> > - modified SPDX license to GPL-2.0 OR BSD-2-Clause
+> > - added regex for a range from 0 to 15
+> > - added minimum and maximum constraints for reg property
+> > - set type and range of values for adi,reference-select property
+> > - used items for diff-channels property
+> > - set bipolar, adi,buffered-positive and negative to type: boolean
+> >
+> >  .../bindings/iio/adc/adi,ad7124.yaml          | 155 ++++++++++++++++++
+> >  1 file changed, 155 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml  
 > 
-> 
-> > -----Original Message-----
-> > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > Sent: Friday 21 June 2019 15:16
-> > To: Dragan Cvetic <draganc@xilinx.com>
-> > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
-> > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > Subject: Re: [PATCH V7 00/11] misc: xilinx sd-fec drive
-> > 
-> > On Tue, Jun 11, 2019 at 06:29:34PM +0100, Dragan Cvetic wrote:
-> > > This patchset is adding the full Soft Decision Forward Error
-> > > Correction (SD-FEC) driver implementation, driver DT binding and
-> > > driver documentation.
-> > >
-> > > Forward Error Correction (FEC) codes such as Low Density Parity
-> > > Check (LDPC) and turbo codes provide a means to control errors in
-> > > data transmissions over unreliable or noisy communication
-> > > channels. The SD-FEC Integrated Block is an optimized block for
-> > > soft-decision decoding of these codes. Fixed turbo codes are
-> > > supported directly, whereas custom and standardized LDPC codes
-> > > are supported through the ability to specify the parity check
-> > > matrix through an AXI4-Lite bus or using the optional programmable
-> > > (PL)-based support logic. For the further information see
-> > > https://www.xilinx.com/support/documentation/ip_documentation/
-> > > sd_fec/v1_1/pg256-sdfec-integrated-block.pdf
-> > >
-> > > This driver is a platform device driver which supports SDFEC16
-> > > (16nm) IP. SD-FEC driver supports LDPC decoding and encoding and
-> > > Turbo code decoding. LDPC codes can be specified on
-> > > a codeword-by-codeword basis, also a custom LDPC code can be used.
-> > >
-> > > The SD-FEC driver exposes a char device interface and supports
-> > > file operations: open(), close(), poll() and ioctl(). The driver
-> > > allows only one usage of the device, open() limits the number of
-> > > driver instances. The driver also utilize Common Clock Framework
-> > > (CCF).
-> > >
-> > > The control and monitoring is supported over ioctl system call.
-> > > The features supported by ioctl():
-> > > - enable or disable data pipes to/from device
-> > > - configure the FEC algorithm parameters
-> > > - set the order of data
-> > > - provide a control of a SDFEC bypass option
-> > > - activates/deactivates SD-FEC
-> > > - collect and provide statistical data
-> > > - enable/disable interrupt mode
-> > 
-> > Is there any userspace tool that talks to this device using these custom
-> > ioctls yet?
-> > 
-> Tools no, but could be the customer who is using the driver.
+> Reviewed-by: Rob Herring <robh@kernel.org>
+The result is presumably good but the structure of the patch is not
+as straight forward as it should be.  As the changelog makes clear we
+aren't just doing a conversion here.  It is a mixture of conversion
+and new properties.  Please break the patch in two to reflect that.
+First convert the existing binding, then add the new properties.
 
-I don't understand this.  Who has written code to talk to these
-special ioctls from userspace?  Is there a pointer to that code
-anywhere?
+That will make it easier for people to see what is new.
 
-> > Doing a one-off ioctl api is always a risky thing, you are pretty much
-> > just creating brand new system calls for one piece of hardware.
-> > 
-> 
-> Why is that wrong and what is the risk?
+Thanks,
 
-You now have custom syscalls for one specfic piece of hardware that you
-now have to maintain working properly for the next 40+ years.  You have
-to make sure those calls are correct and that this is the correct api to
-talk to this hardware.
-
-> What would you propose?
-> Definitely, I have to read about this.
-
-What is this hardware and what is it used for?  Who will be talking to
-it from userspace?  What userspace workload uses it?  What tools need to
-talk to it?  Where is the code that uses these new apis?
-
-thanks,
-
-greg k-h
+Jonathan
