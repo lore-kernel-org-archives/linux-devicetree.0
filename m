@@ -1,49 +1,57 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/2] MAINTAINERS: add entry for sensirion sps30 driver
-Date: Sat, 22 Jun 2019 09:49:40 +0100
-Message-ID: <20190622094940.3f869029@archlinux>
-References: <20190620195011.30942-1-tduszyns@gmail.com>
-        <20190620195011.30942-3-tduszyns@gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: iio: adc: stm32: add missing vdda supply
+Date: Sat, 22 Jun 2019 10:36:36 +0100
+Message-ID: <20190622103636.63148958@archlinux>
+References: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
+ <1560947398-11592-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190620195011.30942-3-tduszyns@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Duszynski <tduszyns@gmail.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1560947398-11592-2-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Jun 2019 21:50:11 +0200
-Tomasz Duszynski <tduszyns@gmail.com> wrote:
+On Wed, 19 Jun 2019 14:29:54 +0200
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-> Add myself as a sensirion sps30 driver maintainer.
+> Add missing vdda-supply, analog power supply, to STM32 ADC. It's required
+> to properly supply the ADC.
 > 
-> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-Applied.
+> Fixes: 841fcea454fe ("Documentation: dt-bindings: Document STM32 ADC DT
+> bindings")
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to ignore completely.
 
-Thanks,
+thanks,
 
 Jonathan
 
 > ---
->  MAINTAINERS | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1eb971608ac4..dafa02ba161c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14172,6 +14172,12 @@ S:	Maintained
->  F:	drivers/misc/phantom.c
->  F:	include/uapi/linux/phantom.h
->  
-> +SENSIRION SPS30 AIR POLLUTION SENSOR DRIVER
-> +M:	Tomasz Duszynski <tduszyns@gmail.com>
-> +S:	Maintained
-> +F:	drivers/iio/chemical/sps30.c
-> +F:	Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.yaml
-> +
->  SERIAL DEVICE BUS
->  M:	Rob Herring <robh@kernel.org>
->  L:	linux-serial@vger.kernel.org
+> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> index 8346bcb..93a0bd2 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> @@ -38,6 +38,7 @@ Required properties:
+>      It's required on stm32h7.
+>  - clock-names: Must be "adc" and/or "bus" depending on part used.
+>  - interrupt-controller: Identifies the controller node as interrupt-parent
+> +- vdda-supply: Phandle to the vdda input analog voltage.
+>  - vref-supply: Phandle to the vref input analog reference voltage.
+>  - #interrupt-cells = <1>;
+>  - #address-cells = <1>;
