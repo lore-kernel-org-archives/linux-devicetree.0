@@ -1,41 +1,49 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: chemical: sps30: convert bindings
- to yaml
-Date: Sat, 22 Jun 2019 09:48:50 +0100
-Message-ID: <20190622094850.6d0bea9e@archlinux>
+Subject: Re: [PATCH 2/2] MAINTAINERS: add entry for sensirion sps30 driver
+Date: Sat, 22 Jun 2019 09:49:40 +0100
+Message-ID: <20190622094940.3f869029@archlinux>
 References: <20190620195011.30942-1-tduszyns@gmail.com>
-        <20190620195011.30942-2-tduszyns@gmail.com>
-        <CAL_JsqLmZPTYqSkmSo-KuqUr7FY1BqE3XX7+PhcA_0phS4X3jQ@mail.gmail.com>
+        <20190620195011.30942-3-tduszyns@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLmZPTYqSkmSo-KuqUr7FY1BqE3XX7+PhcA_0phS4X3jQ@mail.gmail.com>
+In-Reply-To: <20190620195011.30942-3-tduszyns@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Tomasz Duszynski <tduszyns@gmail.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Tomasz Duszynski <tduszyns@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Jun 2019 15:21:47 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
+On Thu, 20 Jun 2019 21:50:11 +0200
+Tomasz Duszynski <tduszyns@gmail.com> wrote:
 
-> On Thu, Jun 20, 2019 at 1:52 PM Tomasz Duszynski <tduszyns@gmail.com> wrote:
-> >
-> > Convert existing device tree bindings to yaml.
-> >
-> > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> > ---
-> >  .../bindings/iio/chemical/sensirion,sps30.txt | 12 ------
-> >  .../iio/chemical/sensirion,sps30.yaml         | 39 +++++++++++++++++++
-> >  2 files changed, 39 insertions(+), 12 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.yaml  
+> Add myself as a sensirion sps30 driver maintainer.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
+Applied.
 
 Thanks,
 
 Jonathan
+
+> ---
+>  MAINTAINERS | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1eb971608ac4..dafa02ba161c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14172,6 +14172,12 @@ S:	Maintained
+>  F:	drivers/misc/phantom.c
+>  F:	include/uapi/linux/phantom.h
+>  
+> +SENSIRION SPS30 AIR POLLUTION SENSOR DRIVER
+> +M:	Tomasz Duszynski <tduszyns@gmail.com>
+> +S:	Maintained
+> +F:	drivers/iio/chemical/sps30.c
+> +F:	Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.yaml
+> +
+>  SERIAL DEVICE BUS
+>  M:	Rob Herring <robh@kernel.org>
+>  L:	linux-serial@vger.kernel.org
