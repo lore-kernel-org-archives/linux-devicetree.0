@@ -1,15 +1,15 @@
 From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 02/12] iommu/mediatek: Add probe_defer for smi-larb
-Date: Sat, 22 Jun 2019 10:42:47 +0800
-Message-ID: <1561171367.4850.8.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 05/12] media: mtk-jpeg: Get rid of mtk_smi_larb_get/put
+Date: Sat, 22 Jun 2019 10:42:35 +0800
+Message-ID: <1561171355.4850.7.camel@mhfsdcap03>
 References: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
-	<1560171313-28299-3-git-send-email-yong.wu@mediatek.com>
-	<a11fa818-cf62-cc24-2c41-4688fda5a88f@gmail.com>
+	<1560171313-28299-6-git-send-email-yong.wu@mediatek.com>
+	<6539751d-1751-f309-1c51-b3f9576c1b99@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <a11fa818-cf62-cc24-2c41-4688fda5a88f-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <6539751d-1751-f309-1c51-b3f9576c1b99-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
 	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
@@ -20,65 +20,109 @@ List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
 Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Wed, 2019-06-19 at 15:52 +0200, Matthias Brugger wrote:
+On Thu, 2019-06-20 at 17:20 +0200, Matthias Brugger wrote:
 > 
 > On 10/06/2019 14:55, Yong Wu wrote:
-> > The iommu consumer should use device_link to connect with the
-> > smi-larb(supplier). then the smi-larb should run before the iommu
-> > consumer. Here we delay the iommu driver until the smi driver is
-> > ready, then all the iommu consumer always is after the smi driver.
+> > MediaTek IOMMU has already added device_link between the consumer
+> > and smi-larb device. If the jpg device call the pm_runtime_get_sync,
+> > the smi-larb's pm_runtime_get_sync also be called automatically.
+> 
+> Please help me out find this relation. I seem to miss something basic, because I
+> can't find any between the jpeg IP and the iommu.
+
+JPEG also is a multimedia consumer. It also access memory via IOMMU. All
+the current SoC have the JPG smi ports. 
+
+grep -r JPG include/dt-bindings/memory/mt*
+
+> 
+> Regards,
+> Matthias
+> 
 > > 
-> > When there is no this patch, if some consumer drivers run before
-> > smi-larb, the supplier link_status is DL_DEV_NO_DRIVER(0) in the
-> > device_link_add, then device_links_driver_bound will use WARN_ON
-> > to complain that the link_status of supplier is not right.
-> > 
-> > This is a preparing patch for adding device_link.
-> > 
+> > CC: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Reviewed-by: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > > ---
-> >  drivers/iommu/mtk_iommu.c    | 2 +-
-> >  drivers/iommu/mtk_iommu_v1.c | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 22 ----------------------
+> >  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h |  2 --
+> >  2 files changed, 24 deletions(-)
 > > 
-> > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> > index 6fe3369..f7599d8 100644
-> > --- a/drivers/iommu/mtk_iommu.c
-> > +++ b/drivers/iommu/mtk_iommu.c
-> > @@ -664,7 +664,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
-> >  			id = i;
+> > diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> > index f761e4d..2f37538 100644
+> > --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> > +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> > @@ -29,7 +29,6 @@
+> >  #include <media/v4l2-ioctl.h>
+> >  #include <media/videobuf2-core.h>
+> >  #include <media/videobuf2-dma-contig.h>
+> > -#include <soc/mediatek/smi.h>
 > >  
-> >  		plarbdev = of_find_device_by_node(larbnode);
-> > -		if (!plarbdev) {
-> > +		if (!plarbdev || !plarbdev->dev.driver) {
-> 
-> can't we use:
-> device_lock()
-> device_is_bound(struct device *dev)
-> device_unlock()
-
-A new API for me. Thanks the hint. I have tried. it is ok.
-
-
-> 
-> >  			of_node_put(larbnode);
-> >  			return -EPROBE_DEFER;
-> >  		}
-> > diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
-> > index 0b0908c..c43c4a0 100644
-> > --- a/drivers/iommu/mtk_iommu_v1.c
-> > +++ b/drivers/iommu/mtk_iommu_v1.c
-> > @@ -604,7 +604,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
-> >  			plarbdev = of_platform_device_create(
-> >  						larb_spec.np, NULL,
-> >  						platform_bus_type.dev_root);
-> > -			if (!plarbdev) {
-> > +			if (!plarbdev || !plarbdev->dev.driver) {
-> >  				of_node_put(larb_spec.np);
-> >  				return -EPROBE_DEFER;
-> >  			}
+> >  #include "mtk_jpeg_hw.h"
+> >  #include "mtk_jpeg_core.h"
+> > @@ -901,11 +900,6 @@ static int mtk_jpeg_queue_init(void *priv, struct vb2_queue *src_vq,
+> >  
+> >  static void mtk_jpeg_clk_on(struct mtk_jpeg_dev *jpeg)
+> >  {
+> > -	int ret;
+> > -
+> > -	ret = mtk_smi_larb_get(jpeg->larb);
+> > -	if (ret)
+> > -		dev_err(jpeg->dev, "mtk_smi_larb_get larbvdec fail %d\n", ret);
+> >  	clk_prepare_enable(jpeg->clk_jdec_smi);
+> >  	clk_prepare_enable(jpeg->clk_jdec);
+> >  }
+> > @@ -914,7 +908,6 @@ static void mtk_jpeg_clk_off(struct mtk_jpeg_dev *jpeg)
+> >  {
+> >  	clk_disable_unprepare(jpeg->clk_jdec);
+> >  	clk_disable_unprepare(jpeg->clk_jdec_smi);
+> > -	mtk_smi_larb_put(jpeg->larb);
+> >  }
+> >  
+> >  static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+> > @@ -1059,21 +1052,6 @@ static int mtk_jpeg_release(struct file *file)
+> >  
+> >  static int mtk_jpeg_clk_init(struct mtk_jpeg_dev *jpeg)
+> >  {
+> > -	struct device_node *node;
+> > -	struct platform_device *pdev;
+> > -
+> > -	node = of_parse_phandle(jpeg->dev->of_node, "mediatek,larb", 0);
+> > -	if (!node)
+> > -		return -EINVAL;
+> > -	pdev = of_find_device_by_node(node);
+> > -	if (WARN_ON(!pdev)) {
+> > -		of_node_put(node);
+> > -		return -EINVAL;
+> > -	}
+> > -	of_node_put(node);
+> > -
+> > -	jpeg->larb = &pdev->dev;
+> > -
+> >  	jpeg->clk_jdec = devm_clk_get(jpeg->dev, "jpgdec");
+> >  	if (IS_ERR(jpeg->clk_jdec))
+> >  		return PTR_ERR(jpeg->clk_jdec);
+> > diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> > index 1a6cdfd..e35fb79 100644
+> > --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> > +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> > @@ -55,7 +55,6 @@ enum mtk_jpeg_ctx_state {
+> >   * @dec_reg_base:	JPEG registers mapping
+> >   * @clk_jdec:		JPEG hw working clock
+> >   * @clk_jdec_smi:	JPEG SMI bus clock
+> > - * @larb:		SMI device
+> >   */
+> >  struct mtk_jpeg_dev {
+> >  	struct mutex		lock;
+> > @@ -69,7 +68,6 @@ struct mtk_jpeg_dev {
+> >  	void __iomem		*dec_reg_base;
+> >  	struct clk		*clk_jdec;
+> >  	struct clk		*clk_jdec_smi;
+> > -	struct device		*larb;
+> >  };
+> >  
+> >  /**
 > > 
