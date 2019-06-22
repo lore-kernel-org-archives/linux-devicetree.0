@@ -1,61 +1,92 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH] ARM: dts: msm8974-FP2: add reboot-mode node
-Date: Fri, 21 Jun 2019 21:43:02 -0400
-Message-ID: <20190622014302.GA20947@onstation.org>
-References: <20190620225824.2845-1-luca@z3ntu.xyz>
- <20190621000122.GA13036@onstation.org>
- <4607058.UzJteFJyig@g550jk>
+From: "dbasehore ." <dbasehore@chromium.org>
+Subject: Re: [PATCH 3/5] drm/panel: Add attach/detach callbacks
+Date: Fri, 21 Jun 2019 18:54:57 -0700
+Message-ID: <CAGAzgsqkJnc4jESSVMtYEQ4=DhmLVKbo_8CTk9cwH0j+55ZuTw@mail.gmail.com>
+References: <20190611040350.90064-1-dbasehore@chromium.org>
+ <20190611040350.90064-4-dbasehore@chromium.org>
+ <20190611085722.GX21222@phenom.ffwll.local>
+ <CAGAzgsr2sh5B1xi_ztQPN0xoQsZd26DDXwWT_qqJ68XeKReJ_Q@mail.gmail.com>
+ <20190621091928.GA11839@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4607058.UzJteFJyig@g550jk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Weiss <luca@z3ntu.xyz>
-Cc: linux-arm-msm@vger.kernel.org, ~martijnbraam/pmos-upstream@lists.sr.ht, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
+In-Reply-To: <20190621091928.GA11839@ulmo>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Intel Graphics <intel-gfx@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Philipp Zabel <p.zabel@pengutronix.de>, CK Hu <ck.hu@mediatek.com>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Sam Ravnborg <sam@ravnborg.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 09:25:17PM +0200, Luca Weiss wrote:
-> On Freitag, 21. Juni 2019 02:01:22 CEST you wrote:
-> > I think that it makes sense to put this snippet in qcom-msm8974.dtsi
-> > with a status of disabled, and then enable it in
-> > qcom-msm8974-fairphone-fp2.dts like so:
-> > 
-> > imem@fe805000 {
-> > 	status = "ok";
-> > };
-> 
-> Do you want me to put the whole node in the the dtsi file? Even though these 
-> values are the same, there are also custom vendor-specified values for specific 
-> phones.
-
-mach-msm in the downstream hammerhead sources has those addresses:
-https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/arch/arm/mach-msm/restart.c#L271
-This lead me to think that it applies to other msm8974-based systems as
-well.
-
-I tried your device tree snippet on the Nexus 5 and it reboots the phone
-for me.
-
-/ # ./reboot-mode normal
-[   85.088556] reboot: Restarting system with command 'normal'
-
-The recovery and bootloader modes reboot the phone but into normal mode.
-Oddly, the bootloader shows different power on reasons after the
-"welcome to hammerhead bootloader" message.
-
-normal = [10] Power on reason 20001
-recovery = [10] Power on reason 1
-bootloader = [10] Power on reason 20001
-
-> On the Linux kernel side, it has bootloader (0x77665500), recovery 
-> (0x77665502), rtc (0x77665503), oem-* (0x6f656d00 | somevalue), edl (some 
-> other addresses), and the else statements writes the 0x77665501 value in my 
-> patch.
-
-The downstream hammerhead sources have the oem-*, and emergency download
-modes (edl) listed as well.
-
-I'm not sure on your other questions.
-
-Brian
+T24gRnJpLCBKdW4gMjEsIDIwMTkgYXQgMjoxOSBBTSBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5y
+ZWRpbmdAZ21haWwuY29tPiB3cm90ZToKPgo+IE9uIFR1ZSwgSnVuIDExLCAyMDE5IGF0IDA1OjI1
+OjQ3UE0gLTA3MDAsIGRiYXNlaG9yZSAuIHdyb3RlOgo+ID4gT24gVHVlLCBKdW4gMTEsIDIwMTkg
+YXQgMTo1NyBBTSBEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+IHdyb3RlOgo+ID4gPgo+
+ID4gPiBPbiBNb24sIEp1biAxMCwgMjAxOSBhdCAwOTowMzo0OFBNIC0wNzAwLCBEZXJlayBCYXNl
+aG9yZSB3cm90ZToKPiA+ID4gPiBUaGlzIGFkZHMgdGhlIGF0dGFjaC9kZXRhY2ggY2FsbGJhY2tz
+LiBUaGVzZSBhcmUgZm9yIHNldHRpbmcgdXAKPiA+ID4gPiBpbnRlcm5hbCBzdGF0ZSBmb3IgdGhl
+IGNvbm5lY3Rvci9wYW5lbCBwYWlyIHRoYXQgY2FuJ3QgYmUgZG9uZSBhdAo+ID4gPiA+IHByb2Jl
+IChzaW5jZSB0aGUgY29ubmVjdG9yIGRvZXNuJ3QgZXhpc3QpIGFuZCB3aGljaCBkb24ndCBuZWVk
+IHRvIGJlCj4gPiA+ID4gcmVwZWF0ZWRseSBkb25lIGZvciBldmVyeSBnZXQvbW9kZXMsIHByZXBh
+cmUsIG9yIGVuYWJsZSBjYWxsYmFjay4KPiA+ID4gPiBWYWx1ZXMgc3VjaCBhcyB0aGUgcGFuZWwg
+b3JpZW50YXRpb24sIGFuZCBkaXNwbGF5IHNpemUgY2FuIGJlIGZpbGxlZAo+ID4gPiA+IGluIGZv
+ciB0aGUgY29ubmVjdG9yLgo+ID4gPiA+Cj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogRGVyZWsgQmFz
+ZWhvcmUgPGRiYXNlaG9yZUBjaHJvbWl1bS5vcmc+Cj4gPiA+ID4gLS0tCj4gPiA+ID4gIGRyaXZl
+cnMvZ3B1L2RybS9kcm1fcGFuZWwuYyB8IDE0ICsrKysrKysrKysrKysrCj4gPiA+ID4gIGluY2x1
+ZGUvZHJtL2RybV9wYW5lbC5oICAgICB8ICA0ICsrKysKPiA+ID4gPiAgMiBmaWxlcyBjaGFuZ2Vk
+LCAxOCBpbnNlcnRpb25zKCspCj4gPiA+ID4KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
+cHUvZHJtL2RybV9wYW5lbC5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9wYW5lbC5jCj4gPiA+ID4g
+aW5kZXggM2I2ODljZTRhNTFhLi43MmY2NzY3OGQ5ZDUgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL2RybV9wYW5lbC5jCj4gPiA+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2Ry
+bV9wYW5lbC5jCj4gPiA+ID4gQEAgLTEwNCwxMiArMTA0LDIzIEBAIEVYUE9SVF9TWU1CT0woZHJt
+X3BhbmVsX3JlbW92ZSk7Cj4gPiA+ID4gICAqLwo+ID4gPiA+ICBpbnQgZHJtX3BhbmVsX2F0dGFj
+aChzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCwgc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3Rv
+cikKPiA+ID4gPiAgewo+ID4gPiA+ICsgICAgIGludCByZXQ7Cj4gPiA+ID4gKwo+ID4gPiA+ICAg
+ICAgIGlmIChwYW5lbC0+Y29ubmVjdG9yKQo+ID4gPiA+ICAgICAgICAgICAgICAgcmV0dXJuIC1F
+QlVTWTsKPiA+ID4gPgo+ID4gPiA+ICAgICAgIHBhbmVsLT5jb25uZWN0b3IgPSBjb25uZWN0b3I7
+Cj4gPiA+ID4gICAgICAgcGFuZWwtPmRybSA9IGNvbm5lY3Rvci0+ZGV2Owo+ID4gPiA+Cj4gPiA+
+ID4gKyAgICAgaWYgKHBhbmVsLT5mdW5jcy0+YXR0YWNoKSB7Cj4gPiA+ID4gKyAgICAgICAgICAg
+ICByZXQgPSBwYW5lbC0+ZnVuY3MtPmF0dGFjaChwYW5lbCk7Cj4gPiA+ID4gKyAgICAgICAgICAg
+ICBpZiAocmV0IDwgMCkgewo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBwYW5lbC0+Y29u
+bmVjdG9yID0gTlVMTDsKPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgcGFuZWwtPmRybSA9
+IE5VTEw7Cj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4gPiA+ID4g
+KyAgICAgICAgICAgICB9Cj4gPiA+ID4gKyAgICAgfQo+ID4gPgo+ID4gPiBXaHkgY2FuJ3Qgd2Ug
+anVzdCBpbXBsZW1lbnQgdGhpcyBpbiB0aGUgZHJtIGhlbHBlcnMgZm9yIGV2ZXJ5b25lLCBieSBl
+LmcuCj4gPiA+IHN0b3JpbmcgYSBkdCBub2RlIGluIGRybV9wYW5lbD8gRmVlbHMgYSBiaXQgb3Zl
+cmtpbGwgdG8gaGF2ZSB0aGVzZSBuZXcKPiA+ID4gaG9va3MgaGVyZS4KPiA+ID4KPiA+ID4gQWxz
+bywgbXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHRoaXMgZHQgc3R1ZmYgaXMgc3VwcG9zZWQgdG8g
+YmUKPiA+ID4gc3RhbmRhcmRpemVkLCBzbyB0aGlzIHNob3VsZCB3b3JrLgo+ID4KPiA+IFNvIGRv
+IHlvdSB3YW50IGFsbCBvZiB0aGlzIGluZm9ybWF0aW9uIGFkZGVkIHRvIHRoZSBkcm1fcGFuZWwg
+c3RydWN0Pwo+ID4gSWYgd2UgZG8gdGhhdCwgd2UgZG9uJ3QgbmVjZXNzYXJpbHkgZXZlbiBuZWVk
+IHRoZSBkcm0gaGVscGVyIGZ1bmN0aW9uLgo+ID4gV2UgY291bGQganVzdCBjb3B5IHRoZSB2YWx1
+ZXMgb3ZlciBoZXJlIGluIHRoZSBkcm1fcGFuZWxfYXR0YWNoCj4gPiBmdW5jdGlvbiAoYW5kIGNs
+ZWFyIHRoZW0gaW4gZHJtX3BhbmVsX2RldGFjaCkuCj4KPiBZZWFoLCBJIHRoaW5rIHdlIHNob3Vs
+ZCBoYXZlIGFsbCB0aGlzIGV4dHJhIGluZm9ybWF0aW9uIGluIHRoZSBzdHJ1Y3QKPiBkcm1fcGFu
+ZWwuIEhvd2V2ZXIsIEkgdGhpbmsgd2UgbmVlZCB0byBtb3JlIGNhcmVmdWxseSBzcGxpdCB0aGlu
+Z3Mgc3VjaAo+IHRoYXQgdGhlIERUIHBhcnNpbmcgaGFwcGVucyBhdCBwYW5lbCBwcm9iZSB0aW1l
+LiBUaGF0IHdheSB3ZSBjYW4gY2F0Y2gKPiBlcnJvcnMgaW4gRFQsIG9yIG1pc3NpbmcgZW50cmll
+cy9yZXNvdXJjZXMgd2hlbiB3ZSBjYW4gc3RpbGwgZG8KPiBzb21ldGhpbmcgYWJvdXQgaXQuCgpG
+b3Igbm93LCBJJ2xsIGp1c3QgcHV0IHdpZHRoLCBoZWlnaHQsIGJwYywgb3JpZW50YXRpb24sIGJ1
+c19mbGFncywgYW5kCmJ1c19mb3JtYXRzIGluIHRoZSBkcm1fcGFuZWwgc3RydWN0LiBUaG9zZSBh
+cmUgcHJldHR5IGNvbnNpc3RlbnRseSBzZXQKZnJvbSBlaXRoZXIgZ2V0X21vZGVzIG9yIHByZXBh
+cmUuIFRoZSBvdGhlciB0aGluZyB0aG9zZSBhbGwgaGF2ZSBpbgpjb21tb24gaXMgdGhhdCB0aGUg
+dmFsdWVzIGRvbid0IGNoYW5nZS4KCldlIGNvdWxkIGp1c3QgYWRkIGFuIGVudGlyZSBkcm1fZGlz
+cGxheV9pbmZvIHN0cnVjdCBpbnNpZGUgZHJtX3BhbmVsLApidXQgSSBkb24ndCBrbm93IGlmIHdl
+IGNhbiBqdXN0IGNvcHkgdGhhdCBvdmVyIG9yIHNldCBhIHBvaW50ZXIKd2l0aG91dCBicmVha2lu
+ZyBzb21ldGhpbmcgZWxzZSwgc2luY2Ugc29tZSBvZiB0aGUgdmFsdWVzIGluIHRoZQpkcm1fZGlz
+cGxheV9pbmZvIHN0cnVjdCBhcmUgbm90IHNldCBieSB0aGUgcGFuZWwgKGJ1dCBtYXliZSBzZXQg
+YnkKc29tZXRoaW5nIGVsc2UpLgoKPgo+IElmIHdlIHN0YXJ0IHBhcnNpbmcgRFQgYW5kIGVuY291
+bnRlciBmYWlsdXJlcywgaXQncyBnb2luZyB0byBiZSB2ZXJ5Cj4gY29uZnVzaW5nIGlmIHRoYXQn
+cyBhdCBwYW5lbCBhdHRhY2ggdGltZSB3aGVyZSBjb2RlIHdpbGwgdXN1YWxseSBqdXN0Cj4gYXNz
+dW1lIHRoYXQgZXZlcnl0aGluZyBpcyBhbHJlYWR5IHZhbGlkYXRlZCBhbmQgY2FuJ3QgZmFpbCBh
+bnltb3JlLgo+Cj4gVGhpZXJyeQoKVGhhbmtzIGZvciB0aGUgcmV2aWV3Cl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkludGVsLWdmeCBtYWlsaW5nIGxpc3QK
+SW50ZWwtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ludGVsLWdmeA==
