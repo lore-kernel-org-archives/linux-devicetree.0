@@ -1,243 +1,100 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 6/6] net/mssc/ocelot: Add basic Felix switch
- driver
-Date: Sat, 22 Jun 2019 22:57:20 +0200
-Message-ID: <20190622205720.GK8497@lunn.ch>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-7-git-send-email-claudiu.manoil@nxp.com>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/6] dt-bindings: display: msm: gmu: add
+ optional ocmem property
+Date: Sat, 22 Jun 2019 16:28:20 -0700
+Message-ID: <CAF6AEGuVKtAu60kLYNKOsy3=hT0FDbJ5vvEJE6gFLAodpU5MGA@mail.gmail.com>
+References: <20190616132930.6942-1-masneyb@onstation.org>
+ <20190616132930.6942-3-masneyb@onstation.org>
+ <CAL_Jsq+Ne=NEcLbO6C19iOny4bwm_m5QEtcsM78ZDeBmDUVO_Q@mail.gmail.com>
+ <CAF6AEGs6By9-LGRBAPw2OwR9tRKJtEiZVgS2WVWRXmOK1VxNLA@mail.gmail.com>
+ <20190621021444.GA13972@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1561131532-14860-7-git-send-email-claudiu.manoil@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, netdev@vger.kernel.org, alexandru.marginean@nxp.com, linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, Catalin Horghidan <catalin.horghidan@gmail.com>, "David S . Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20190621021444.GA13972-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jonathan Marek <jonathan-eSc4qw6YbEQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 06:38:52PM +0300, Claudiu Manoil wrote:
-> This supports a switch core ethernet device from Microsemi
-> (VSC9959) that can be integrated on different SoCs as a PCIe
-> endpoint device.
-> 
-> The switchdev functionality is provided by the core Ocelot
-> switch driver. In this regard, the current driver is an
-> instance of Microsemi's Ocelot core driver.
-> 
-> The patch adds the PCI device driver part and defines the
-> register map for the Felix switch core, as it has some
-> differences in register addresses and bitfield mappings
-> compared to the Ocelot switch.  Also some registers or
-> bitfields present on Ocelot are not available on Felix.
-> That's why this driver has its own register map instance.
-> Other than that, the common registers and bitfields have the
-> same functionality and share the same name.
-> 
-> In a few cases, some h/w operations have to be done differently
-> on Felix due to missing bitfields.  This is the case for the
-> switch core reset and init.  Because for this operation Ocelot
-> uses some bits that are not present on Felix, the later has to
-> use a register from the global registers block (GCB) instead.
-> 
-> Signed-off-by: Catalin Horghidan <catalin.horghidan@gmail.com>
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-> ---
->  drivers/net/ethernet/mscc/Kconfig       |   8 +
->  drivers/net/ethernet/mscc/Makefile      |   9 +-
->  drivers/net/ethernet/mscc/felix_board.c | 392 +++++++++++++++++++++
->  drivers/net/ethernet/mscc/felix_regs.c  | 448 ++++++++++++++++++++++++
->  drivers/net/ethernet/mscc/ocelot.h      |   7 +
->  5 files changed, 862 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/net/ethernet/mscc/felix_board.c
->  create mode 100644 drivers/net/ethernet/mscc/felix_regs.c
-> 
-> diff --git a/drivers/net/ethernet/mscc/Kconfig b/drivers/net/ethernet/mscc/Kconfig
-> index bcec0587cf61..e5a7fa69307e 100644
-> --- a/drivers/net/ethernet/mscc/Kconfig
-> +++ b/drivers/net/ethernet/mscc/Kconfig
-> @@ -29,4 +29,12 @@ config MSCC_OCELOT_SWITCH_OCELOT
->  	  This driver supports the Ocelot network switch device as present on
->  	  the Ocelot SoCs.
->  
-> +config MSCC_FELIX_SWITCH
-> +	tristate "Felix switch driver"
-> +	depends on MSCC_OCELOT_SWITCH
-> +	depends on PCI
-> +	help
-> +	  This driver supports the Felix network switch device, connected as a
-> +	  PCI device.
-> +
->  endif # NET_VENDOR_MICROSEMI
-> diff --git a/drivers/net/ethernet/mscc/Makefile b/drivers/net/ethernet/mscc/Makefile
-> index 9a36c26095c8..81593feb2ea1 100644
-> --- a/drivers/net/ethernet/mscc/Makefile
-> +++ b/drivers/net/ethernet/mscc/Makefile
-> @@ -1,5 +1,10 @@
->  # SPDX-License-Identifier: (GPL-2.0 OR MIT)
->  obj-$(CONFIG_MSCC_OCELOT_SWITCH) += mscc_ocelot_common.o
->  mscc_ocelot_common-y := ocelot.o ocelot_io.o
-> -mscc_ocelot_common-y += ocelot_regs.o ocelot_tc.o ocelot_police.o ocelot_ace.o ocelot_flower.o
-> -obj-$(CONFIG_MSCC_OCELOT_SWITCH_OCELOT) += ocelot_board.o
-> +mscc_ocelot_common-y += ocelot_tc.o ocelot_police.o ocelot_ace.o ocelot_flower.o
-> +
-> +obj-$(CONFIG_MSCC_OCELOT_SWITCH_OCELOT) += mscc_ocelot.o
-> +mscc_ocelot-$(CONFIG_MSCC_OCELOT_SWITCH_OCELOT) := ocelot_regs.o ocelot_board.o
-> +
-> +obj-$(CONFIG_MSCC_FELIX_SWITCH) += mscc_felix.o
-> +mscc_felix-$(CONFIG_MSCC_FELIX_SWITCH) := felix_regs.o felix_board.o
-> diff --git a/drivers/net/ethernet/mscc/felix_board.c b/drivers/net/ethernet/mscc/felix_board.c
-> new file mode 100644
-> index 000000000000..57f7a897b3ae
-> --- /dev/null
-> +++ b/drivers/net/ethernet/mscc/felix_board.c
-> @@ -0,0 +1,392 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/* Felix Switch driver
-> + *
-> + * Copyright 2018-2019 NXP
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/netdevice.h>
-> +#include <linux/phy_fixed.h>
-> +#include <linux/phy.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/of_net.h>
-> +#include <linux/iopoll.h>
-> +#include <net/switchdev.h>
-> +#include "ocelot.h"
-> +
-> +#define FELIX_DRV_VER_MAJ 1
-> +#define FELIX_DRV_VER_MIN 0
-> +
-> +#define FELIX_DRV_STR	"Felix Switch driver"
-> +#define FELIX_DRV_VER_STR __stringify(FELIX_DRV_VER_MAJ) "." \
-> +			  __stringify(FELIX_DRV_VER_MIN)
-
-Driver version strings are pretty pointless. What you really want to
-know if the specific kernel version.
-
-> +
-> +#define FELIX_PORT_RES_START	0x0100000
-> +#define FELIX_PORT_RES_SIZE	0x10000
-
-This should really be in device tree. You then get a lot closer to the
-binding for mscc-ocelot, and you can reuse more of its code.
-
-> +static void felix_release_ports(struct ocelot *ocelot)
-> +{
-> +	struct ocelot_port *ocelot_port;
-> +	struct phy_device *phydev;
-> +	struct device_node *dn;
-> +	int i;
-> +
-> +	for (i = 0; i < ocelot->num_phys_ports; i++) {
-> +		ocelot_port = ocelot->ports[i];
-> +		if (!ocelot_port || !ocelot_port->phy || !ocelot_port->dev)
-> +			continue;
-
-Phys are often optional, e.g. an RGMII interface to another switch, or
-an SFP port.
-
-> +
-> +		phydev = ocelot_port->phy;
-> +		unregister_netdev(ocelot_port->dev);
-> +		free_netdev(ocelot_port->dev);
-> +
-> +		if (phy_is_pseudo_fixed_link(phydev)) {
-> +			dn = phydev->mdio.dev.of_node;
-> +			/* decr refcnt: of_phy_register_fixed_link */
-> +			of_phy_deregister_fixed_link(dn);
-> +		}
-> +		phy_device_free(phydev); /* decr refcnt: of_phy_find_device */
-
-To be on the safe side, you should probably not free the netdev until
-you free the phydev.
-
-This function also seems pretty generic. Should it be shared?
-
-> +static int felix_ports_init(struct pci_dev *pdev)
-> +{
-> +	struct ocelot *ocelot = pci_get_drvdata(pdev);
-> +	struct device_node *np = ocelot->dev->of_node;
-> +	struct device_node *phy_node, *portnp;
-> +	struct phy_device *phydev;
-> +	void __iomem *port_regs;
-> +	resource_size_t base;
-> +	u32 port;
-> +	int err;
-> +
-> +	ocelot->num_phys_ports = FELIX_MAX_NUM_PHY_PORTS;
-> +
-> +	np = of_get_child_by_name(np, "ethernet-ports");
-> +	if (!np) {
-> +		dev_err(&pdev->dev, "ethernet-ports sub-node not found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* alloc netdev for each port */
-> +	err = ocelot_init(ocelot);
-> +	if (err)
-> +		return err;
-> +
-> +	base = pci_resource_start(pdev, FELIX_SWITCH_BAR);
-> +	for_each_available_child_of_node(np, portnp) {
-> +		struct resource res = {};
-> +		int phy_mode;
-> +
-> +		if (!portnp || !portnp->name ||
-> +		    of_node_cmp(portnp->name, "port") ||
-
-The name of the node should not matter.
-
-> +static int felix_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +
-> +	register_netdevice_notifier(&ocelot_netdevice_nb);
-> +	register_switchdev_notifier(&ocelot_switchdev_nb);
-> +	register_switchdev_blocking_notifier(&ocelot_switchdev_blocking_nb);
-
-This is also shared. So maybe move it into a common function?
-
-> +
-> +	dev_info(&pdev->dev, "%s v%s\n", FELIX_DRV_STR, FELIX_DRV_VER_STR);
-> +	return 0;
-> +
-> +err_ports_init:
-> +err_chip_init:
-> +err_sw_core_init:
-> +	pci_iounmap(pdev, regs);
-> +err_iomap:
-> +err_resource_len:
-> +err_alloc_ocelot:
-> +err_dma:
-> +	pci_disable_device(pdev);
-> +
-> +	return err;
-> +}
-> +
-> +static void felix_pci_remove(struct pci_dev *pdev)
-> +{
-> +	struct ocelot *ocelot;
-> +
-> +	ocelot = pci_get_drvdata(pdev);
-> +
-> +	/* stop workqueue thread */
-> +	ocelot_deinit(ocelot);
-> +	unregister_switchdev_blocking_notifier(&ocelot_switchdev_blocking_nb);
-> +	unregister_switchdev_notifier(&ocelot_switchdev_nb);
-> +	unregister_netdevice_notifier(&ocelot_netdevice_nb);
-
-This is also common.
-
-     Andrew
+T24gVGh1LCBKdW4gMjAsIDIwMTkgYXQgNzoxNCBQTSBCcmlhbiBNYXNuZXkgPG1hc25leWJAb25z
+dGF0aW9uLm9yZz4gd3JvdGU6Cj4KPiBPbiBXZWQsIEp1biAxOSwgMjAxOSBhdCAwMToyMToyMFBN
+IC0wNzAwLCBSb2IgQ2xhcmsgd3JvdGU6Cj4gPiBPbiBXZWQsIEp1biAxOSwgMjAxOSBhdCAxOjE3
+IFBNIFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4gPgo+ID4gPiBP
+biBTdW4sIEp1biAxNiwgMjAxOSBhdCA3OjI5IEFNIEJyaWFuIE1hc25leSA8bWFzbmV5YkBvbnN0
+YXRpb24ub3JnPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+IFNvbWUgQTN4eCBhbmQgQTR4eCBBZHJl
+bm8gR1BVcyBkbyBub3QgaGF2ZSBHTUVNIGluc2lkZSB0aGUgR1BVIGNvcmUgYW5kCj4gPiA+ID4g
+bXVzdCB1c2UgdGhlIE9uIENoaXAgTUVNb3J5IChPQ01FTSkgaW4gb3JkZXIgdG8gYmUgZnVuY3Rp
+b25hbC4gQWRkIHRoZQo+ID4gPiA+IG9wdGlvbmFsIG9jbWVtIHByb3BlcnR5IHRvIHRoZSBBZHJl
+bm8gR3JhcGhpY3MgTWFuYWdlbWVudCBVbml0IGJpbmRpbmdzLgo+ID4gPiA+Cj4gPiA+ID4gU2ln
+bmVkLW9mZi1ieTogQnJpYW4gTWFzbmV5IDxtYXNuZXliQG9uc3RhdGlvbi5vcmc+Cj4gPiA+ID4g
+LS0tCj4gPiA+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21z
+bS9nbXUudHh0IHwgNCArKysrCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
+KykKPiA+ID4gPgo+ID4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L21zbS9nbXUudHh0Cj4gPiA+ID4gaW5kZXggOTBhZjViMGE1NmE5Li5j
+NzQ2Yjk1ZTk1ZDQgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQKPiA+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dAo+ID4gPiA+IEBAIC0zMSw2
+ICszMSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gPiA+ICAtIGlvbW11czogcGhhbmRs
+ZSB0byB0aGUgYWRyZW5vIGlvbW11Cj4gPiA+ID4gIC0gb3BlcmF0aW5nLXBvaW50cy12MjogcGhh
+bmRsZSB0byB0aGUgT1BQIG9wZXJhdGluZyBwb2ludHMKPiA+ID4gPgo+ID4gPiA+ICtPcHRpb25h
+bCBwcm9wZXJ0aWVzOgo+ID4gPiA+ICstIG9jbWVtOiBwaGFuZGxlIHRvIHRoZSBPbiBDaGlwIE1l
+bW9yeSAoT0NNRU0pIHRoYXQncyBwcmVzZW50IG9uIHNvbWUgU25hcGRyYWdvbgo+ID4gPiA+ICsg
+ICAgICAgICBTb0NzLiBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9x
+Y29tL3Fjb20sb2NtZW0ueWFtbC4KPiA+ID4KPiA+ID4gV2UgYWxyZWFkeSBoYXZlIGEgY291cGxl
+IG9mIHNpbWlsYXIgcHJvcGVydGllcy4gTGV0cyBzdGFuZGFyZGl6ZSBvbgo+ID4gPiAnc3JhbScg
+YXMgdGhhdCBpcyB3aGF0IFRJIGFscmVhZHkgdXNlcy4KPiA+ID4KPiA+ID4gQWxzbywgaXMgdGhl
+IHdob2xlIE9DTUVNIGFsbG9jYXRlZCB0byB0aGUgR01VPyBJZiBub3QgeW91IHNob3VsZCBoYXZl
+Cj4gPiA+IGNoaWxkIG5vZGVzIHRvIHN1YmRpdmlkZSB0aGUgbWVtb3J5Lgo+ID4gPgo+ID4KPiA+
+IGlpcmMsIGRvd25zdHJlYW0gYSBsYXJnZSBjaHVuayBvZiBPQ01FTSBpcyBzdGF0aWNhbGx5IGFs
+bG9jYXRlZCBmb3IKPiA+IEdQVS4uIHRoZSByZW1haW5kZXIgaXMgZHluYW1pY2FsbHkgYWxsb2Nh
+dGVkIGZvciBkaWZmZXJlbnQgdXNlLWNhc2VzLgo+ID4gVGhlIHVwc3RyZWFtIGRyaXZlciBCcmlh
+biBpcyBwcm9wb3Npbmcgb25seSBoYW5kbGVzIHRoZSBzdGF0aWMKPiA+IGFsbG9jYXRpb24gY2Fz
+ZQo+Cj4gSXQgYXBwZWFycyB0aGF0IHRoZSBHUFUgZXhwZWN0cyB0byB1c2UgYSBzcGVjaWZpYyBy
+ZWdpb24gb2Ygb2NtZW0sCj4gc3BlY2lmaWNhbGx5IHN0YXJ0aW5nIGF0IDAuIFRoZSBmcmVlZHJl
+bm8gZHJpdmVyIGFsbG9jYXRlcyAxTUIgb2YKPiBvY21lbSBvbiB0aGUgTmV4dXMgNSBzdGFydGlu
+ZyBhdCBvY21lbSBhZGRyZXNzIDAuIEFzIGEgdGVzdCwgSQo+IGNoYW5nZWQgdGhlIHN0YXJ0aW5n
+IGFkZHJlc3MgdG8gMC41TUIgYW5kIGttc2N1YmUgc2hvd3Mgb25seSBoYWxmIHRoZQo+IGN1YmUs
+IGFuZCBmb3VyIHdpZGUgYmxhY2sgYmFycyBhY3Jvc3MgdGhlIHNjcmVlbjoKPgo+IGh0dHBzOi8v
+d3d3LmZsaWNrci5jb20vcGhvdG9zL21hc25leWIvNDgxMDA1MzQzODEvCj4KPiA+IChhbmQgSSBk
+b24ndCB0aGluayB3ZSBoYXZlIHVwc3RyZWFtIHN1cHBvcnQgZm9yIHRoZSB2YXJpb3VzIGF1ZGlv
+IGFuZAo+ID4gdmlkZW8gdXNlLWNhc2VzIHRoYXQgdXNlZCBkeW5hbWljIE9DTUVNIGFsbG9jYXRp
+b24gZG93bnN0cmVhbSkKPgo+IFRoYXQncyBteSB1bmRlcnN0YW5kaW5nIGFzIHdlbGwuCj4KPiA+
+IEFsdGhvdWdoIG1heWJlIHdlIHNob3VsZCBzdGlsbCBoYXZlIGEgY2hpbGQgbm9kZSB0byBzZXBh
+cmF0ZSB0aGUKPiA+IHN0YXRpY2FsbHkgYW5kIGR5bmFtaWNhbGx5IGFsbG9jYXRlZCBwYXJ0cz8g
+IEknbSBub3Qgc3VyZSB3aGF0IHdvdWxkCj4gPiBtYWtlIHRoZSBtb3N0IHNlbnNlLi4KPgo+IEdp
+dmVuIHRoYXQgdGhlIEdQVSBpcyBleHBlY3RpbmcgYSBmaXhlZCBhZGRyZXNzIGluIG9jbWVtLCBw
+ZXJoYXBzIGl0Cj4gbWFrZXMgc2Vuc2UgdG8gaGF2ZSB0aGUgY2hpbGQgbm9kZS4gSG93IGFib3V0
+IHRoaXMgYmFzZWQgb24gdGhlCj4gc3JhbS9zcmFtLnR4dCBiaW5kaW5ncz8KPgo+ICAgb2NtZW06
+IG9jbWVtQGZkZDAwMDAwIHsKPiAgICAgY29tcGF0aWJsZSA9ICJxY29tLG1zbTg5NzQtb2NtZW0i
+Owo+Cj4gICAgIHJlZyA9IDwweGZkZDAwMDAwIDB4MjAwMD4sIDwweGZlYzAwMDAwIDB4MTgwMDAw
+PjsKPiAgICAgcmVnLW5hbWVzID0gImN0cmwiLCAibWVtIjsKPgo+ICAgICBjbG9ja3MgPSA8JnJw
+bWNjIFJQTV9TTURfT0NNRU1HWF9DTEs+LCA8Jm1tY2MgT0NNRU1DWF9PQ01FTU5PQ19DTEs+Owo+
+ICAgICBjbG9jay1uYW1lcyA9ICJjb3JlIiwgImlmYWNlIjsKPgo+ICAgICBnbXUtc3JhbUAwIHsK
+PiAgICAgICByZWcgPSA8MHgwIDB4MTAwMDAwPjsKPiAgICAgICBwb29sOwo+ICAgICB9Owo+Cj4g
+ICAgIG1pc2Mtc3JhbUAwIHsKPiAgICAgICByZWcgPSA8MHgxMDAwMDAgMHgwODAwMDA+Owo+ICAg
+ICAgIGV4cG9ydDsKPiAgICAgfTsKPiAgIH07Cj4KPiBJIG1hcmtlZCB0aGUgbWlzYyBwb29sIGFz
+IGV4cG9ydCBzaW5jZSBJJ3ZlIHNlZW4gaW4gdGhlIGRvd25zdHJlYW0gb2NtZW0KPiBzb3VyY2Vz
+IGEgcmVmZXJlbmNlIHRvIHRoZWlyIGNsb3NlZCBsaWJzZW5zb3JzIHRoYXQgcnVucyBpbiB1c2Vy
+c3BhY2UuCj4KPiBMb29raW5nIGF0IHRoZSBzcmFtIGJpbmRpbmdzIGxlZCBtZSB0byB0aGUgZ2Vu
+YWxsb2MgQVBJCj4gKERvY3VtZW50YXRpb24vY29yZS1hcGkvZ2VuYWxsb2MucnN0KS4gSSB3b25k
+ZXIgaWYgdGhpcyBpcyB0aGUgd2F5IHRoYXQKPiB0aGlzIHNob3VsZCBiZSBkb25lPwoKd29uJ3Qg
+Y2xhaW0gdG8gYmUgYSBkdCBleHBlcnQsIGJ1dCB0aGlzIHNlZW1zIHNvbWV3aGF0IHNhbmUuLiAg
+bWF5YmUKZHJvcCB0aGUgZXhwb3J0IHVudGlsIGEgdXNlLWNhc2UgY29tZXMgYWxvbmcgZm9yIHRo
+YXQuLiBvciBldmVuIHRoZQplbnRpcmUgc2Vjb25kIGNoaWxkIG5vZGU/ICBJIGd1ZXNzIHRoYXQg
+Y29tZXMgZG93biB0byB3aGF0IHJvYmhlciBhbmQKb3RoZXJzIHByZWZlciwgSSBjYW4ndCByZWFs
+bHkgc3BlY3VsYXRlIHRvbyBtdWNoIGFib3V0IHRoZSBub24tZ3B1CnVzZS1jYXNlcyBmb3Igb2Nt
+ZW0gKG9yIGlmIHRoZXknbGwgZXZlciBiZSB1cHN0cmVhbSkKCkJSLAotUgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0
+CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
