@@ -1,128 +1,105 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 05/12] media: mtk-jpeg: Get rid of mtk_smi_larb_get/put
-Date: Sat, 22 Jun 2019 10:42:35 +0800
-Message-ID: <1561171355.4850.7.camel@mhfsdcap03>
-References: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
-	<1560171313-28299-6-git-send-email-yong.wu@mediatek.com>
-	<6539751d-1751-f309-1c51-b3f9576c1b99@gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH V7 00/11] misc: xilinx sd-fec drive
+Date: Sat, 22 Jun 2019 08:01:35 +0200
+Message-ID: <20190622060135.GB26200@kroah.com>
+References: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
+ <20190621141553.GA16650@kroah.com>
+ <CH2PR02MB635999D7374378CEA096FE72CBE70@CH2PR02MB6359.namprd02.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <6539751d-1751-f309-1c51-b3f9576c1b99-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CH2PR02MB635999D7374378CEA096FE72CBE70@CH2PR02MB6359.namprd02.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dragan Cvetic <draganc@xilinx.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Derek Kiernan <dkiernan@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-06-20 at 17:20 +0200, Matthias Brugger wrote:
+On Fri, Jun 21, 2019 at 05:49:45PM +0000, Dragan Cvetic wrote:
 > 
-> On 10/06/2019 14:55, Yong Wu wrote:
-> > MediaTek IOMMU has already added device_link between the consumer
-> > and smi-larb device. If the jpg device call the pm_runtime_get_sync,
-> > the smi-larb's pm_runtime_get_sync also be called automatically.
 > 
-> Please help me out find this relation. I seem to miss something basic, because I
-> can't find any between the jpeg IP and the iommu.
-
-JPEG also is a multimedia consumer. It also access memory via IOMMU. All
-the current SoC have the JPG smi ports. 
-
-grep -r JPG include/dt-bindings/memory/mt*
-
-> 
-> Regards,
-> Matthias
-> 
+> > -----Original Message-----
+> > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > Sent: Friday 21 June 2019 15:16
+> > To: Dragan Cvetic <draganc@xilinx.com>
+> > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > Subject: Re: [PATCH V7 00/11] misc: xilinx sd-fec drive
 > > 
-> > CC: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Reviewed-by: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > ---
-> >  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 22 ----------------------
-> >  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h |  2 --
-> >  2 files changed, 24 deletions(-)
+> > On Tue, Jun 11, 2019 at 06:29:34PM +0100, Dragan Cvetic wrote:
+> > > This patchset is adding the full Soft Decision Forward Error
+> > > Correction (SD-FEC) driver implementation, driver DT binding and
+> > > driver documentation.
+> > >
+> > > Forward Error Correction (FEC) codes such as Low Density Parity
+> > > Check (LDPC) and turbo codes provide a means to control errors in
+> > > data transmissions over unreliable or noisy communication
+> > > channels. The SD-FEC Integrated Block is an optimized block for
+> > > soft-decision decoding of these codes. Fixed turbo codes are
+> > > supported directly, whereas custom and standardized LDPC codes
+> > > are supported through the ability to specify the parity check
+> > > matrix through an AXI4-Lite bus or using the optional programmable
+> > > (PL)-based support logic. For the further information see
+> > > https://www.xilinx.com/support/documentation/ip_documentation/
+> > > sd_fec/v1_1/pg256-sdfec-integrated-block.pdf
+> > >
+> > > This driver is a platform device driver which supports SDFEC16
+> > > (16nm) IP. SD-FEC driver supports LDPC decoding and encoding and
+> > > Turbo code decoding. LDPC codes can be specified on
+> > > a codeword-by-codeword basis, also a custom LDPC code can be used.
+> > >
+> > > The SD-FEC driver exposes a char device interface and supports
+> > > file operations: open(), close(), poll() and ioctl(). The driver
+> > > allows only one usage of the device, open() limits the number of
+> > > driver instances. The driver also utilize Common Clock Framework
+> > > (CCF).
+> > >
+> > > The control and monitoring is supported over ioctl system call.
+> > > The features supported by ioctl():
+> > > - enable or disable data pipes to/from device
+> > > - configure the FEC algorithm parameters
+> > > - set the order of data
+> > > - provide a control of a SDFEC bypass option
+> > > - activates/deactivates SD-FEC
+> > > - collect and provide statistical data
+> > > - enable/disable interrupt mode
 > > 
-> > diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> > index f761e4d..2f37538 100644
-> > --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> > +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> > @@ -29,7 +29,6 @@
-> >  #include <media/v4l2-ioctl.h>
-> >  #include <media/videobuf2-core.h>
-> >  #include <media/videobuf2-dma-contig.h>
-> > -#include <soc/mediatek/smi.h>
-> >  
-> >  #include "mtk_jpeg_hw.h"
-> >  #include "mtk_jpeg_core.h"
-> > @@ -901,11 +900,6 @@ static int mtk_jpeg_queue_init(void *priv, struct vb2_queue *src_vq,
-> >  
-> >  static void mtk_jpeg_clk_on(struct mtk_jpeg_dev *jpeg)
-> >  {
-> > -	int ret;
-> > -
-> > -	ret = mtk_smi_larb_get(jpeg->larb);
-> > -	if (ret)
-> > -		dev_err(jpeg->dev, "mtk_smi_larb_get larbvdec fail %d\n", ret);
-> >  	clk_prepare_enable(jpeg->clk_jdec_smi);
-> >  	clk_prepare_enable(jpeg->clk_jdec);
-> >  }
-> > @@ -914,7 +908,6 @@ static void mtk_jpeg_clk_off(struct mtk_jpeg_dev *jpeg)
-> >  {
-> >  	clk_disable_unprepare(jpeg->clk_jdec);
-> >  	clk_disable_unprepare(jpeg->clk_jdec_smi);
-> > -	mtk_smi_larb_put(jpeg->larb);
-> >  }
-> >  
-> >  static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
-> > @@ -1059,21 +1052,6 @@ static int mtk_jpeg_release(struct file *file)
-> >  
-> >  static int mtk_jpeg_clk_init(struct mtk_jpeg_dev *jpeg)
-> >  {
-> > -	struct device_node *node;
-> > -	struct platform_device *pdev;
-> > -
-> > -	node = of_parse_phandle(jpeg->dev->of_node, "mediatek,larb", 0);
-> > -	if (!node)
-> > -		return -EINVAL;
-> > -	pdev = of_find_device_by_node(node);
-> > -	if (WARN_ON(!pdev)) {
-> > -		of_node_put(node);
-> > -		return -EINVAL;
-> > -	}
-> > -	of_node_put(node);
-> > -
-> > -	jpeg->larb = &pdev->dev;
-> > -
-> >  	jpeg->clk_jdec = devm_clk_get(jpeg->dev, "jpgdec");
-> >  	if (IS_ERR(jpeg->clk_jdec))
-> >  		return PTR_ERR(jpeg->clk_jdec);
-> > diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
-> > index 1a6cdfd..e35fb79 100644
-> > --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
-> > +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
-> > @@ -55,7 +55,6 @@ enum mtk_jpeg_ctx_state {
-> >   * @dec_reg_base:	JPEG registers mapping
-> >   * @clk_jdec:		JPEG hw working clock
-> >   * @clk_jdec_smi:	JPEG SMI bus clock
-> > - * @larb:		SMI device
-> >   */
-> >  struct mtk_jpeg_dev {
-> >  	struct mutex		lock;
-> > @@ -69,7 +68,6 @@ struct mtk_jpeg_dev {
-> >  	void __iomem		*dec_reg_base;
-> >  	struct clk		*clk_jdec;
-> >  	struct clk		*clk_jdec_smi;
-> > -	struct device		*larb;
-> >  };
-> >  
-> >  /**
+> > Is there any userspace tool that talks to this device using these custom
+> > ioctls yet?
 > > 
+> Tools no, but could be the customer who is using the driver.
+
+I don't understand this.  Who has written code to talk to these
+special ioctls from userspace?  Is there a pointer to that code
+anywhere?
+
+> > Doing a one-off ioctl api is always a risky thing, you are pretty much
+> > just creating brand new system calls for one piece of hardware.
+> > 
+> 
+> Why is that wrong and what is the risk?
+
+You now have custom syscalls for one specfic piece of hardware that you
+now have to maintain working properly for the next 40+ years.  You have
+to make sure those calls are correct and that this is the correct api to
+talk to this hardware.
+
+> What would you propose?
+> Definitely, I have to read about this.
+
+What is this hardware and what is it used for?  Who will be talking to
+it from userspace?  What userspace workload uses it?  What tools need to
+talk to it?  Where is the code that uses these new apis?
+
+thanks,
+
+greg k-h
