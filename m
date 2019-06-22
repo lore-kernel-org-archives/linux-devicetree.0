@@ -1,46 +1,41 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 7/7] arm64: defconfig: Enable Panfrost driver
-Date: Sat, 22 Jun 2019 10:39:07 +0200
-Message-ID: <CAJKOXPdk2MmBHjiDU4M6PA6O4ifVe_sDifejUPJiGPCQ7MR1sQ@mail.gmail.com>
-References: <20190621180208.25361-1-krzk@kernel.org> <20190621180208.25361-7-krzk@kernel.org>
- <CA+E=qVe45NVCfpSHRF6=0aYRpURZA4DVz8W-XkSaNDB=1mX2kA@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: chemical: sps30: convert bindings
+ to yaml
+Date: Sat, 22 Jun 2019 09:48:50 +0100
+Message-ID: <20190622094850.6d0bea9e@archlinux>
+References: <20190620195011.30942-1-tduszyns@gmail.com>
+        <20190620195011.30942-2-tduszyns@gmail.com>
+        <CAL_JsqLmZPTYqSkmSo-KuqUr7FY1BqE3XX7+PhcA_0phS4X3jQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+E=qVe45NVCfpSHRF6=0aYRpURZA4DVz8W-XkSaNDB=1mX2kA@mail.gmail.com>
+In-Reply-To: <CAL_JsqLmZPTYqSkmSo-KuqUr7FY1BqE3XX7+PhcA_0phS4X3jQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Joseph Kogut <joseph.kogut@gmail.com>, Inki Dae <inki.dae@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Tomasz Duszynski <tduszyns@gmail.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Jun 2019 at 22:15, Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> On Fri, Jun 21, 2019 at 11:04 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Thu, 20 Jun 2019 15:21:47 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
+
+> On Thu, Jun 20, 2019 at 1:52 PM Tomasz Duszynski <tduszyns@gmail.com> wrote:
 > >
-> > Enable support for Mali GPU with Panfrost driver, e.g. for Exynos5433
-> > and Exynos7 (having Mali T760).
+> > Convert existing device tree bindings to yaml.
 > >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
 > > ---
-> >  arch/arm64/configs/defconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > index 6b4f5cf23324..972b17239f13 100644
-> > --- a/arch/arm64/configs/defconfig
-> > +++ b/arch/arm64/configs/defconfig
-> > @@ -517,6 +517,7 @@ CONFIG_DRM_HISI_HIBMC=m
-> >  CONFIG_DRM_HISI_KIRIN=m
-> >  CONFIG_DRM_MESON=m
-> >  CONFIG_DRM_PL111=m
-> > +CONFIG_DRM_PANFROST=m
->
-> It makes sense to enable lima for arm64 defconfig as well since it's
-> used on number of 64-bit Allwinner SoCs.
+> >  .../bindings/iio/chemical/sensirion,sps30.txt | 12 ------
+> >  .../iio/chemical/sensirion,sps30.yaml         | 39 +++++++++++++++++++
+> >  2 files changed, 39 insertions(+), 12 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.yaml  
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-I wasn't aware that some of ARMv8 SoCs still use Utgard. In such case
-it makes sense indeed, I will send a follow up.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-Thanks for feedback!
+Thanks,
 
-Krzysztof
+Jonathan
