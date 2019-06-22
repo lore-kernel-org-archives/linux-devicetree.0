@@ -1,119 +1,147 @@
-From: Troy Benjegerdes <troy.benjegerdes@sifive.com>
-Subject: Re: [PATCH v2] riscv: dts: Add DT node for SiFive FU540 Ethernet
- controller driver
-Date: Fri, 21 Jun 2019 20:57:07 -0500
-Message-ID: <54493821-0155-4826-B165-B75FBB329D1A@sifive.com>
-References: <1561114429-29612-1-git-send-email-yash.shah@sifive.com>
- <1561114429-29612-2-git-send-email-yash.shah@sifive.com>
- <18c7992607dd1fed062bd295ac0738a759eff078.camel@wdc.com>
- <CAF5mof3QB8C7VjOyEvCsf9NEDkJhV3cBO5sBD+8z-GrWrnrAyg@mail.gmail.com>
- <3f91c8032e113a19dcec10ca71b017af1427ef7e.camel@wdc.com>
- <43da99709709d2a480b78f25356cda9255205372.camel@wdc.com>
- <A3E7D245-ABFA-4D81-87D6-3F6983AA3A93@sifive.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <A3E7D245-ABFA-4D81-87D6-3F6983AA3A93@sifive.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Atish Patra <Atish.Patra@wdc.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "palmer@sifive.com" <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "sachin.ghadi@sifive.com" <sachin.ghadi@sifive.com>, "yash.shah@sifive.com" <yash.shah@sifive.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 19/21] iommu/mediatek: Rename enable_4GB to dram_is_4gb
+Date: Sat, 22 Jun 2019 10:42:19 +0800
+Message-ID: <1561171339.4850.6.camel@mhfsdcap03>
+References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+	<1560169080-27134-20-git-send-email-yong.wu@mediatek.com>
+	<9bf13c22-0c73-2950-2204-23d577976b03@gmail.com>
+	<1561039192.4021.23.camel@mhfsdcap03>
+	<d932ded6-2e1c-f2d1-d3cf-8cb0cdbdbb0d@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <d932ded6-2e1c-f2d1-d3cf-8cb0cdbdbb0d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cgo+IE9uIEp1biAyMSwgMjAxOSwgYXQgNzozMyBQTSwgVHJveSBCZW5qZWdlcmRlcyA8dHJveS5i
-ZW5qZWdlcmRlc0BzaWZpdmUuY29tPiB3cm90ZToKPiAKPiAKPiAKPj4gT24gSnVuIDIxLCAyMDE5
-LCBhdCA0OjU5IFBNLCBBdGlzaCBQYXRyYSA8QXRpc2guUGF0cmFAd2RjLmNvbT4gd3JvdGU6Cj4+
-IAo+PiBPbiBGcmksIDIwMTktMDYtMjEgYXQgMTQ6NDYgLTA3MDAsIEF0aXNoIFBhdHJhIHdyb3Rl
-Ogo+Pj4gT24gRnJpLCAyMDE5LTA2LTIxIGF0IDE0OjE4IC0wNTAwLCBUcm95IEJlbmplZ2VyZGVz
-IHdyb3RlOgo+Pj4+IENhbiB5b3UgcG9zdCB0aGUgZnNibCBhbmQgb3RoZXIgaW1hZ2VzIHlvdSB1
-c2VkIHRvIGJvb3QvdGVzdCB0aGlzPwo+Pj4+IAo+Pj4gCj4+IAo+PiBSZXNlbmRpbmcgaXQgd2l0
-aG91dCB0aGUgYXR0YWNobWVudC4gT2J2aW91c2x5LCB0aGUgbWFpbCBkaWQgbm90IGdvCj4+IHRo
-cm91Z2ggd2l0aCB0aGUgYmluYXJ5IGJsb2IgYXR0YWNoZWQgOiggOiguIE15IGJhZC4KPj4gCj4+
-IExldCBtZSBrbm93IGlmIHlvdSBzdGlsbCB3YW50IG1lIHRvIHNoYXJlIHRoZSBiaW5hcnkgd2l0
-aCB5b3UuIEkgd2lsbAo+PiBwcm9iYWJseSBzaGFyZSBpdCB2aWEgc29tZSBvdGhlciBtZXRob2Qu
-Cj4gCj4gVGhlIGJsIGNhbWUgdGhyb3VnaCBhcyBpdCB3YXMgc2VudCBkaXJlY3QgdG8gbWUsIGFu
-ZCBJIGNhbiBkZWFsIHdpdGgKPiB0aGUgdGZ0cCBjb25maWcgbWFudWFsbHkuIEkgaGF2ZSBhIGtl
-cm5lbCBpbWFnZSwgYnV0IG5vdCB0aGUgYm9vdC5zY3IudWltZwo+IHRoYXQgaXQgbG9va3MgbGlr
-ZSB5b3UgYXJlIHVzaW5nLiBJcyB0aGF0IGZyb20gWW9jdG8/CgpJIGdvdCBjb25zb2xlIG91dHB1
-dCwgYWZ0ZXIgZXh0cmFjdGluZyB0aGUgYm9vdCBzY3JpcHQgZnJvbSB5b2N0by4KClRoZSBpbXBv
-cnRhbnQgcGFydCBzZWVtcyB0byBiZSBjYWxsaW5nCuKAmGJvb3RtICRrZXJuZWxfYWRkcl9yIC0g
-JGZkdF9hZGRyX3LigJkKCldoaWNoIG1heWJlIGxlYWRzIGludG8gYSBkaXNjdXNzaW9uIG9mIHdo
-YXQgY2FuIHdlIGRvIHRvIGF0CmxlYXN0IG91dHB1dCBzb21lIHNvcnQgb2YgdXNlZnVsIGRlYnVn
-IGluZm9ybWF0aW9uIGlmIHRoZSBkZXZpY2UKdHJlZSBpcyBub3QgZm91bmQgb3IgaW52YWxpZD8K
-CknigJlkIGFsc28gbGlrZSB0byBwcm9wb3NlIHRoYXQgb24gUmlzY1YsIHdlIHVzZSB0aGUgY2hv
-c2VuIG5vZGUKZm9yIGtlcm5lbCBjb21tYW5kIGxpbmUgYW5kIGluaXRyZCBsb2NhdGlvbiAobGlr
-ZSBxZW11IGRvZXMpLCBhbmQKaW4gdS1ib290LCBkZWZhdWx0IHRvIGFsd2F5cyBwYXNzaW5nIHRo
-ZSBkZXZpY2UgdHJlZSBmcm9tIGJvb3RtCmFuZCBvdGhlciBjb21tYW5kcyAobGlrZSBib290ZWxm
-KQoKPiAKPj4gCj4+PiBJIGhhdmUgbm90IGNoYW5nZWQgZnNibC4gSXQncyB0aGUgZGVmYXVsdCBv
-bmUgY2FtZSB3aXRoIHRoZSBib2FyZC4KPj4+IEhlcmUgYXJlIHRoZSBoZWFkcyBvZiBPcGVuU0JJ
-ICsgVS1Cb290ICsgTGludXggcmVwby4KPj4+IAo+Pj4gT3BlblNCSTogY2QyZGZkYzg3MGVkICht
-YXN0ZXIpCj4+PiBVLWJvb3Q6IDc3ZjZlMmRkMDU1MSArIEFudXAncyBwYXRjaCBzZXJpZXMgKHY0
-KQo+Pj4gaHR0cHM6Ly9naXRodWIuY29tL2F0aXNocDA0L3UtYm9vdC90cmVlL3VubGVhc2hlZF93
-b3JraW5nCj4+PiAKPj4+IExpbnV4OiBiZWQzYzBkODRlN2UgKyBZYXNoJ3MgTWFjYiBTZXJpZXMg
-KyB0aGlzIHBhdGNoCj4+PiBodHRwczovL2dpdGh1Yi5jb20vYXRpc2hwMDQvbGludXgvdHJlZS81
-LjItcmM2LXByZQo+Pj4gCj4+PiBJIGhhdmUgYWxzbyBhdHRhY2hlZCB0aGUgT3BlblNCSSArIFUt
-Ym9vdCBiaW5hcnkgYXMgd2VsbC4gQnV0IHRoaXMgaXMKPj4+IHByZS1jb25maWd1cmVkIHdpdGgg
-bXkgdGZ0cGJvb3Qgc2VydmVyLiBZb3UgbmVlZCB0byBjaGFuZ2UgdGhhdC4KPj4+IAo+Pj4+IEkg
-a2VlcCBydW5uaW5nIGludG8gdmFyaW91cyBmYWlsdXJlcyB3aGVuIEkgYnVpbGQgZnJvbSBzb3Vy
-Y2UgYW5kIEkKPj4+PiB3YW50IHRvIHJ1bGUgb3V0IHBvdGVudGlhbCBoYXJkd2FyZSBpc3N1ZXMg
-cmVsYXRlZCB0byBjbG9jayBhbmQvb3IKPj4+PiBkZHIgaW5pdGlhbGl6YXRpb24KPj4+PiAKPj4+
-PiBPbiBGcmksIEp1biAyMSwgMjAxOSwgMjoxNCBQTSBBdGlzaCBQYXRyYSA8QXRpc2guUGF0cmFA
-d2RjLmNvbT4KPj4+PiB3cm90ZToKPj4+Pj4gT24gRnJpLCAyMDE5LTA2LTIxIGF0IDE2OjIzICsw
-NTMwLCBZYXNoIFNoYWggd3JvdGU6Cj4+Pj4+PiBEVCBub2RlIGZvciBTaUZpdmUgRlU1NDAtQzAw
-MCBHRU1HWEwgRXRoZXJuZXQgY29udHJvbGxlciBkcml2ZXIKPj4+Pj4gYWRkZWQKPj4+Pj4+IFNp
-Z25lZC1vZmYtYnk6IFlhc2ggU2hhaCA8eWFzaC5zaGFoQHNpZml2ZS5jb20+Cj4+Pj4+PiAtLS0K
-Pj4+Pj4+IGFyY2gvcmlzY3YvYm9vdC9kdHMvc2lmaXZlL2Z1NTQwLWMwMDAuZHRzaSAgICAgICAg
-ICB8IDE2Cj4+Pj4+PiArKysrKysrKysrKysrKysrCj4+Pj4+PiBhcmNoL3Jpc2N2L2Jvb3QvZHRz
-L3NpZml2ZS9oaWZpdmUtdW5sZWFzaGVkLWEwMC5kdHMgfCAgOQo+Pj4+PiArKysrKysrKysKPj4+
-Pj4+IDIgZmlsZXMgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKQo+Pj4+Pj4gCj4+Pj4+PiBkaWZm
-IC0tZ2l0IGEvYXJjaC9yaXNjdi9ib290L2R0cy9zaWZpdmUvZnU1NDAtYzAwMC5kdHNpCj4+Pj4+
-PiBiL2FyY2gvcmlzY3YvYm9vdC9kdHMvc2lmaXZlL2Z1NTQwLWMwMDAuZHRzaQo+Pj4+Pj4gaW5k
-ZXggNGU4ZmJkZS4uYzUzYjRlYSAxMDA2NDQKPj4+Pj4+IC0tLSBhL2FyY2gvcmlzY3YvYm9vdC9k
-dHMvc2lmaXZlL2Z1NTQwLWMwMDAuZHRzaQo+Pj4+Pj4gKysrIGIvYXJjaC9yaXNjdi9ib290L2R0
-cy9zaWZpdmUvZnU1NDAtYzAwMC5kdHNpCj4+Pj4+PiBAQCAtMjI1LDUgKzIyNSwyMSBAQAo+Pj4+
-Pj4gICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4+Pj4+ICAgICAg
-ICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4+Pj4+PiAgICAgICAgICAgICB9Owo+
-Pj4+Pj4gKyAgICAgICAgICAgICBldGgwOiBldGhlcm5ldEAxMDA5MDAwMCB7Cj4+Pj4+PiArICAg
-ICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzaWZpdmUsZnU1NDAtbWFjYiI7Cj4+Pj4+
-PiArICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwmcGxpYzA+Owo+Pj4+
-Pj4gKyAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8NTM+Owo+Pj4+Pj4gKyAgICAg
-ICAgICAgICAgICAgICAgIHJlZyA9IDwweDAgMHgxMDA5MDAwMCAweDAgMHgyMDAwCj4+Pj4+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MCAweDEwMGEwMDAwIDB4MCAweDEwMDA+Owo+
-Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJjb250cm9sIjsKPj4+Pj4+
-ICsgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+Pj4+Pj4gKyAgICAg
-ICAgICAgICAgICAgICAgIGxvY2FsLW1hYy1hZGRyZXNzID0gWzAwIDAwIDAwIDAwIDAwIDAwXTsK
-Pj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJwY2xrIiwgImhjbGsi
-Owo+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmcHJjaSBQUkNJX0NMS19H
-RU1HWExQTEw+LAo+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmcHJjaSBQ
-UkNJX0NMS19HRU1HWExQTEw+Owo+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNz
-LWNlbGxzID0gPDE+Owo+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0g
-PDA+Owo+Pj4+Pj4gKyAgICAgICAgICAgICB9Owo+Pj4+Pj4gKwo+Pj4+Pj4gICAgIH07Cj4+Pj4+
-PiB9Owo+Pj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvcmlzY3YvYm9vdC9kdHMvc2lmaXZlL2hpZml2
-ZS11bmxlYXNoZWQtCj4+Pj4+PiBhMDAuZHRzCj4+Pj4+PiBiL2FyY2gvcmlzY3YvYm9vdC9kdHMv
-c2lmaXZlL2hpZml2ZS11bmxlYXNoZWQtYTAwLmR0cwo+Pj4+Pj4gaW5kZXggNGRhODg3MC4uZDc4
-M2JmMiAxMDA2NDQKPj4+Pj4+IC0tLSBhL2FyY2gvcmlzY3YvYm9vdC9kdHMvc2lmaXZlL2hpZml2
-ZS11bmxlYXNoZWQtYTAwLmR0cwo+Pj4+Pj4gKysrIGIvYXJjaC9yaXNjdi9ib290L2R0cy9zaWZp
-dmUvaGlmaXZlLXVubGVhc2hlZC1hMDAuZHRzCj4+Pj4+PiBAQCAtNjMsMyArNjMsMTIgQEAKPj4+
-Pj4+ICAgICAgICAgICAgIGRpc2FibGUtd3A7Cj4+Pj4+PiAgICAgfTsKPj4+Pj4+IH07Cj4+Pj4+
-PiArCj4+Pj4+PiArJmV0aDAgewo+Pj4+Pj4gKyAgICAgc3RhdHVzID0gIm9rYXkiOwo+Pj4+Pj4g
-KyAgICAgcGh5LW1vZGUgPSAiZ21paSI7Cj4+Pj4+PiArICAgICBwaHktaGFuZGxlID0gPCZwaHkx
-PjsKPj4+Pj4+ICsgICAgIHBoeTE6IGV0aGVybmV0LXBoeUAwIHsKPj4+Pj4+ICsgICAgICAgICAg
-ICAgcmVnID0gPDA+Owo+Pj4+Pj4gKyAgICAgfTsKPj4+Pj4+ICt9Owo+Pj4+PiAKPj4+Pj4gVGhh
-bmtzLiBJIGFtIGFibGUgdG8gYm9vdCBVbmxlYXNoZWQgd2l0aCBuZXR3b3JraW5nIGVuYWJsZWQg
-d2l0aAo+Pj4+PiB0aGlzCj4+Pj4+IHBhdGNoLgo+Pj4+PiAKPj4+Pj4gRldJVywgCj4+Pj4+IFRl
-c3RlZC1ieTogQXRpc2ggUGF0cmEgPGF0aXNoLnBhdHJhQHdkYy5jb20+Cj4+Pj4+IAo+Pj4+PiBS
-ZWdhcmRzLAo+Pj4+PiBBdGlzaAo+Pj4+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwo+Pj4+PiBsaW51eC1yaXNjdiBtYWlsaW5nIGxpc3QKPj4+Pj4gbGlu
-dXgtcmlzY3ZAbGlzdHMuaW5mcmFkZWFkLm9yZwo+Pj4+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJpc2N2Cj4gCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtcmlzY3YgbWFpbGluZyBsaXN0Cmxp
-bnV4LXJpc2N2QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1yaXNjdgo=
+
+On Fri, 2019-06-21 at 12:10 +0200, Matthias Brugger wrote:
+> 
+> On 20/06/2019 15:59, Yong Wu wrote:
+> > On Tue, 2019-06-18 at 18:06 +0200, Matthias Brugger wrote:
+> >>
+> >> On 10/06/2019 14:17, Yong Wu wrote:
+> >>> This patch only rename the variable name from enable_4GB to
+> >>> dram_is_4gb for readable.
+> >>
+> >> From my understanding this is true when available RAM > 4GB so I think the name
+> >> should be something like dram_bigger_4gb otherwise it may create confusion again.
+> > 
+> > Strictly, It is not "dram_bigger_4gb". actually if the dram size is over
+> > 3GB (the first 1GB is the register space), the "4GB mode" will be
+> > enabled. then how about the name "dram_enable_32bit"?(the PA 32bit will
+> > be enabled in the 4GB mode.)
+> 
+> Ok I think dram_is_4gb is ok then. But I'd suggest to add an explanation above
+> the struct mtk_iommu_data to explain exactly what this means.
+> 
+> >      
+> > There is another option, please see the last part in [1] suggested by
+> > Evan, something like below:
+> > ----
+> > data->enable_4GB = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
+> > if (!data->plat_data->has_4gb_mode)
+> >     data->enable_4GB = false;
+> > Then mtk_iommu_map would only have:
+> >     if (data->enable_4GB)
+> >          paddr |= BIT_ULL(32);
+> > ----
+> 
+> I think that's a nicer way to handle it.
+
+Thanks your feedback. then I will use this way.
+
+> 
+> Regards,
+> Matthias
+> 
+> > 
+> > Which one do you prefer?      
+> >       
+> > [1] https://lore.kernel.org/patchwork/patch/1028421/
+> > 
+> >>
+> >> Also from my point of view this patch should be done before
+> >> "[PATCH 06/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB Mode"
+> > 
+> > OK.
+> > 
+> >>
+> >> Regards,
+> >> Matthias
+> >>
+> >>>
+> >>> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>> Reviewed-by: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >>> ---
+> >>>  drivers/iommu/mtk_iommu.c | 10 +++++-----
+> >>>  drivers/iommu/mtk_iommu.h |  2 +-
+> >>>  2 files changed, 6 insertions(+), 6 deletions(-)
+> >>>
+> >>> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> >>> index 86158d8..67cab2d 100644
+> >>> --- a/drivers/iommu/mtk_iommu.c
+> >>> +++ b/drivers/iommu/mtk_iommu.c
+> >>> @@ -382,7 +382,7 @@ static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
+> >>>  	int ret;
+> >>>  
+> >>>  	/* The "4GB mode" M4U physically can not use the lower remap of Dram. */
+> >>> -	if (data->plat_data->has_4gb_mode && data->enable_4GB)
+> >>> +	if (data->plat_data->has_4gb_mode && data->dram_is_4gb)
+> >>>  		paddr |= BIT_ULL(32);
+> >>>  
+> >>>  	spin_lock_irqsave(&dom->pgtlock, flags);
+> >>> @@ -554,13 +554,13 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+> >>>  	writel_relaxed(regval, data->base + REG_MMU_INT_MAIN_CONTROL);
+> >>>  
+> >>>  	if (data->plat_data->m4u_plat == M4U_MT8173)
+> >>> -		regval = (data->protect_base >> 1) | (data->enable_4GB << 31);
+> >>> +		regval = (data->protect_base >> 1) | (data->dram_is_4gb << 31);
+> >>>  	else
+> >>>  		regval = lower_32_bits(data->protect_base) |
+> >>>  			 upper_32_bits(data->protect_base);
+> >>>  	writel_relaxed(regval, data->base + REG_MMU_IVRP_PADDR);
+> >>>  
+> >>> -	if (data->enable_4GB && data->plat_data->has_vld_pa_rng) {
+> >>> +	if (data->dram_is_4gb && data->plat_data->has_vld_pa_rng) {
+> >>>  		/*
+> >>>  		 * If 4GB mode is enabled, the validate PA range is from
+> >>>  		 * 0x1_0000_0000 to 0x1_ffff_ffff. here record bit[32:30].
+> >>> @@ -611,8 +611,8 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+> >>>  		return -ENOMEM;
+> >>>  	data->protect_base = ALIGN(virt_to_phys(protect), MTK_PROTECT_PA_ALIGN);
+> >>>  
+> >>> -	/* Whether the current dram is over 4GB */
+> >>> -	data->enable_4GB = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
+> >>> +	/* Whether the current dram is 4GB. */
+> >>> +	data->dram_is_4gb = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
+> >>>  
+> >>>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >>>  	data->base = devm_ioremap_resource(dev, res);
+> >>> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> >>> index 753266b..e8114b2 100644
+> >>> --- a/drivers/iommu/mtk_iommu.h
+> >>> +++ b/drivers/iommu/mtk_iommu.h
+> >>> @@ -65,7 +65,7 @@ struct mtk_iommu_data {
+> >>>  	struct mtk_iommu_domain		*m4u_dom;
+> >>>  	struct iommu_group		*m4u_group;
+> >>>  	struct mtk_smi_iommu		smi_imu;      /* SMI larb iommu info */
+> >>> -	bool                            enable_4GB;
+> >>> +	bool                            dram_is_4gb;
+> >>>  	bool				tlb_flush_active;
+> >>>  
+> >>>  	struct iommu_device		iommu;
+> >>>
+> > 
+> > 
