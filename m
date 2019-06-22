@@ -1,236 +1,59 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v12 04/13] mfd: Add Ingenic TCU driver
-Date: Sat, 22 Jun 2019 14:21:42 +0200
-Message-ID: <1561206102.1777.2@crapouillou.net>
-References: <20190521145141.9813-1-paul@crapouillou.net>
-        <20190521145141.9813-5-paul@crapouillou.net>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v2 0/2] extcon: Add fsa9480 extcon driver
+Date: Sat, 22 Jun 2019 21:44:49 +0900
+Message-ID: <CAGTfZH0EMos5AaLxeONDOd6_tyt5=Gt7s_Sam930H=6mf9rRiQ@mail.gmail.com>
+References: <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
+Reply-To: cwchoi00@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190521145141.9813-5-paul@crapouillou.net>
+In-Reply-To: <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+To: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-I'll make a V13 of this patchset on top of -rc6, any feedback
-for this MFD driver? It's been already one month.
+I applied this series to extcon-testing branch.
+If there are no build problem for few days, I'll move them to
+extcon-next branch.
 
-Thanks,
--Paul
+Best Regards,
+Chanwoo Choi
 
-
-
-Le mar. 21 mai 2019 =E0 16:51, Paul Cercueil <paul@crapouillou.net> a=20
-=E9crit :
-> This driver will provide a regmap that can be retrieved very early in
-> the boot process through the API function ingenic_tcu_get_regmap().
->=20
-> Additionally, it will call devm_of_platform_populate() so that all the
-> children devices will be probed.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->=20
-> Notes:
->     v12: New patch
->=20
->  drivers/mfd/Kconfig             |   8 +++
->  drivers/mfd/Makefile            |   1 +
->  drivers/mfd/ingenic-tcu.c       | 113=20
-> ++++++++++++++++++++++++++++++++
->  include/linux/mfd/ingenic-tcu.h |   8 +++
->  4 files changed, 130 insertions(+)
->  create mode 100644 drivers/mfd/ingenic-tcu.c
->=20
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 294d9567cc71..a13544474e05 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -494,6 +494,14 @@ config HTC_I2CPLD
->  	  This device provides input and output GPIOs through an I2C
->  	  interface to one or more sub-chips.
->=20
-> +config INGENIC_TCU
-> +	bool "Ingenic Timer/Counter Unit (TCU) support"
-> +	depends on MIPS || COMPILE_TEST
-> +	select REGMAP_MMIO
-> +	help
-> +	  Say yes here to support the Timer/Counter Unit (TCU) IP present
-> +	  in the JZ47xx SoCs from Ingenic.
-> +
->  config MFD_INTEL_QUARK_I2C_GPIO
->  	tristate "Intel Quark MFD I2C GPIO"
->  	depends on PCI
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 52b1a90ff515..fb89e131ae98 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -180,6 +180,7 @@ obj-$(CONFIG_AB8500_CORE)	+=3D ab8500-core.o=20
-> ab8500-sysctrl.o
->  obj-$(CONFIG_MFD_TIMBERDALE)    +=3D timberdale.o
->  obj-$(CONFIG_PMIC_ADP5520)	+=3D adp5520.o
->  obj-$(CONFIG_MFD_KEMPLD)	+=3D kempld-core.o
-> +obj-$(CONFIG_INGENIC_TCU)	+=3D ingenic-tcu.o
->  obj-$(CONFIG_MFD_INTEL_QUARK_I2C_GPIO)	+=3D intel_quark_i2c_gpio.o
->  obj-$(CONFIG_LPC_SCH)		+=3D lpc_sch.o
->  obj-$(CONFIG_LPC_ICH)		+=3D lpc_ich.o
-> diff --git a/drivers/mfd/ingenic-tcu.c b/drivers/mfd/ingenic-tcu.c
-> new file mode 100644
-> index 000000000000..6c1d5e4310c1
-> --- /dev/null
-> +++ b/drivers/mfd/ingenic-tcu.c
-> @@ -0,0 +1,113 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * JZ47xx SoCs TCU MFD driver
-> + * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
-> + */
-> +
-> +#include <linux/mfd/ingenic-tcu.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +struct ingenic_soc_info {
-> +	unsigned int num_channels;
-> +};
-> +
-> +static struct regmap *tcu_regmap __initdata;
-> +
-> +static const struct regmap_config ingenic_tcu_regmap_config =3D {
-> +	.reg_bits =3D 32,
-> +	.val_bits =3D 32,
-> +	.reg_stride =3D 4,
-> +	.max_register =3D TCU_REG_OST_CNTHBUF,
-> +};
-> +
-> +static const struct ingenic_soc_info jz4740_soc_info =3D {
-> +	.num_channels =3D 8,
-> +};
-> +
-> +static const struct ingenic_soc_info jz4725b_soc_info =3D {
-> +	.num_channels =3D 6,
-> +};
-> +
-> +static const struct of_device_id ingenic_tcu_of_match[] =3D {
-> +	{ .compatible =3D "ingenic,jz4740-tcu", .data =3D &jz4740_soc_info, },
-> +	{ .compatible =3D "ingenic,jz4725b-tcu", .data =3D &jz4725b_soc_info, }=
-,
-> +	{ .compatible =3D "ingenic,jz4770-tcu", .data =3D &jz4740_soc_info, },
-> +	{ }
-> +};
-> +
-> +static struct regmap * __init ingenic_tcu_create_regmap(struct=20
-> device_node *np)
-> +{
-> +	struct resource res;
-> +	void __iomem *base;
-> +	struct regmap *map;
-> +
-> +	if (!of_match_node(ingenic_tcu_of_match, np))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	base =3D of_io_request_and_map(np, 0, "TCU");
-> +	if (IS_ERR(base))
-> +		return ERR_PTR(PTR_ERR(base));
-> +
-> +	map =3D regmap_init_mmio(NULL, base, &ingenic_tcu_regmap_config);
-> +	if (IS_ERR(map))
-> +		goto err_iounmap;
-> +
-> +	return map;
-> +
-> +err_iounmap:
-> +	iounmap(base);
-> +	of_address_to_resource(np, 0, &res);
-> +	release_mem_region(res.start, resource_size(&res));
-> +
-> +	return map;
-> +}
-> +
-> +static int __init ingenic_tcu_probe(struct platform_device *pdev)
-> +{
-> +	struct regmap *map =3D ingenic_tcu_get_regmap(pdev->dev.of_node);
-> +
-> +	platform_set_drvdata(pdev, map);
-> +
-> +	regmap_attach_dev(&pdev->dev, map, &ingenic_tcu_regmap_config);
-> +
-> +	return devm_of_platform_populate(&pdev->dev);
-> +}
-> +
-> +static struct platform_driver ingenic_tcu_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "ingenic-tcu",
-> +		.of_match_table =3D ingenic_tcu_of_match,
-> +	},
-> +};
-> +
-> +static int __init ingenic_tcu_platform_init(void)
-> +{
-> +	return platform_driver_probe(&ingenic_tcu_driver,
-> +				     ingenic_tcu_probe);
-> +}
-> +subsys_initcall(ingenic_tcu_platform_init);
-> +
-> +struct regmap * __init ingenic_tcu_get_regmap(struct device_node *np)
-> +{
-> +	if (!tcu_regmap)
-> +		tcu_regmap =3D ingenic_tcu_create_regmap(np);
-> +
-> +	return tcu_regmap;
-> +}
-> +
-> +bool ingenic_tcu_pwm_can_use_chn(struct device *dev, unsigned int=20
-> channel)
-> +{
-> +	const struct ingenic_soc_info *soc =3D=20
-> device_get_match_data(dev->parent);
-> +
-> +	/* Enable all TCU channels for PWM use by default except channels=20
-> 0/1 */
-> +	u32 pwm_channels_mask =3D GENMASK(soc->num_channels - 1, 2);
-> +
-> +	device_property_read_u32(dev->parent, "ingenic,pwm-channels-mask",
-> +				 &pwm_channels_mask);
-> +
-> +	return !!(pwm_channels_mask & BIT(channel));
-> +}
-> +EXPORT_SYMBOL_GPL(ingenic_tcu_pwm_can_use_chn);
-> diff --git a/include/linux/mfd/ingenic-tcu.h=20
-> b/include/linux/mfd/ingenic-tcu.h
-> index 2083fa20821d..21df23916cd2 100644
-> --- a/include/linux/mfd/ingenic-tcu.h
-> +++ b/include/linux/mfd/ingenic-tcu.h
-> @@ -6,6 +6,11 @@
->  #define __LINUX_MFD_INGENIC_TCU_H_
->=20
->  #include <linux/bitops.h>
-> +#include <linux/init.h>
-> +
-> +struct device;
-> +struct device_node;
-> +struct regmap;
->=20
->  #define TCU_REG_WDT_TDR		0x00
->  #define TCU_REG_WDT_TCER	0x04
-> @@ -53,4 +58,7 @@
->  #define TCU_REG_TCNTc(c)	(TCU_REG_TCNT0 + ((c) * TCU_CHANNEL_STRIDE))
->  #define TCU_REG_TCSRc(c)	(TCU_REG_TCSR0 + ((c) * TCU_CHANNEL_STRIDE))
->=20
-> +struct regmap * __init ingenic_tcu_get_regmap(struct device_node=20
-> *np);
-> +bool ingenic_tcu_pwm_can_use_chn(struct device *dev, unsigned int=20
-> channel);
-> +
->  #endif /* __LINUX_MFD_INGENIC_TCU_H_ */
+2019=EB=85=84 6=EC=9B=94 21=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 8:14, P=
+awe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=
+=91=EC=84=B1:
+>
+> This small patchset adds support for Fairchild Semiconductor FSA9480
+> microUSB switch.
+>
+> It has been tested on Samsung Galaxy S and Samsung Fascinate 4G,
+> but it can be found also on other Samsung Aries (s5pv210) based devices.
+>
+> Tomasz Figa (2):
+>   dt-bindings: extcon: Add support for fsa9480 switch
+>   extcon: Add fsa9480 extcon driver
+>
+> Changes from v1:
+>   - Added newline at end of dt-bindings file
+>   - Removed interrupt-parent from dt-bindings file
+>   - Added Acked-by to dt-bindings patch
+>   - Remove license sentences from driver
+>   - Remove custom sysfs entries and manual switch code
+>   - Switch to using regmap api
+>
+>  .../bindings/extcon/extcon-fsa9480.txt        |  19 +
+>  drivers/extcon/Kconfig                        |  12 +
+>  drivers/extcon/Makefile                       |   1 +
+>  drivers/extcon/extcon-fsa9480.c               | 395 ++++++++++++++++++
+>  4 files changed, 427 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-fsa94=
+80.txt
+>  create mode 100644 drivers/extcon/extcon-fsa9480.c
+>
 > --
-> 2.21.0.593.g511ec345e18
->=20
-
-=
+> 2.17.1
+>
