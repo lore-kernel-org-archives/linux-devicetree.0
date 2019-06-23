@@ -1,7 +1,7 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v4 03/11] thermal: fix indentation in makefile
-Date: Sun, 23 Jun 2019 12:41:58 -0400
-Message-ID: <20190623164206.7467-4-tiny.windzz@gmail.com>
+Subject: [PATCH v4 06/11] thermal: sun8i: get ths init func from device compatible
+Date: Sun, 23 Jun 2019 12:42:01 -0400
+Message-ID: <20190623164206.7467-7-tiny.windzz@gmail.com>
 References: <20190623164206.7467-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190623164206.7467-1-tiny.windzz@gmail.com>
@@ -10,48 +10,43 @@ To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-To unify code style.
+There are some differences in register initialization for
+different socs. So we get different initialization functions
+from device compatible.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/thermal/Makefile | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/thermal/sun8i_thermal.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index fa6f8b206281..d7eafb5ef8ef 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -5,7 +5,7 @@
+diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+index e473a5651436..59acbbac76e4 100644
+--- a/drivers/thermal/sun8i_thermal.c
++++ b/drivers/thermal/sun8i_thermal.c
+@@ -59,6 +59,7 @@ struct ths_thermal_chip {
+ 	int		scale;
+ 	int		ft_deviation;
+ 	int		temp_data_base;
++	int		(*init)(struct ths_device *tmdev);
+ };
  
- obj-$(CONFIG_THERMAL)		+= thermal_sys.o
- thermal_sys-y			+= thermal_core.o thermal_sysfs.o \
--					thermal_helpers.o
-+				   thermal_helpers.o
+ struct ths_device {
+@@ -362,7 +363,7 @@ static int sun8i_ths_probe(struct platform_device *pdev)
+ 	if (irq < 0)
+ 		return irq;
  
- # interface to/from other layers providing sensors
- thermal_sys-$(CONFIG_THERMAL_HWMON)		+= thermal_hwmon.o
-@@ -25,11 +25,11 @@ thermal_sys-$(CONFIG_CPU_THERMAL)	+= cpu_cooling.o
- thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
+-	ret = sun50i_thermal_init(tmdev);
++	ret = tmdev->chip->init(tmdev);
+ 	if (ret)
+ 		return ret;
  
- # devfreq cooling
--thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
-+thermal_sys-$(CONFIG_DEVFREQ_THERMAL) 	+= devfreq_cooling.o
+@@ -400,6 +401,7 @@ static const struct ths_thermal_chip sun50i_h6_ths = {
+ 	.scale = -67,
+ 	.ft_deviation = SUN50I_H6_FT_DEVIATION,
+ 	.temp_data_base = SUN50I_H6_THS_TEMP_DATA,
++	.init = sun50i_thermal_init,
+ };
  
- # platform thermal drivers
- obj-y				+= broadcom/
--obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
-+obj-$(CONFIG_THERMAL_MMIO)	+= thermal_mmio.o
- obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
- obj-$(CONFIG_SUN8I_THERMAL)     += sun8i_thermal.o
- obj-$(CONFIG_ROCKCHIP_THERMAL)	+= rockchip_thermal.o
-@@ -50,7 +50,7 @@ obj-$(CONFIG_TI_SOC_THERMAL)	+= ti-soc-thermal/
- obj-y				+= st/
- obj-$(CONFIG_QCOM_TSENS)	+= qcom/
- obj-y				+= tegra/
--obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
-+obj-$(CONFIG_HISI_THERMAL)     	+= hisi_thermal.o
- obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
- obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
- obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
+ static const struct of_device_id of_ths_match[] = {
 -- 
 2.17.1
