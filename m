@@ -1,7 +1,7 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v4 10/11] dt-bindings: thermal: add binding document for h3 thermal controller
-Date: Sun, 23 Jun 2019 12:42:05 -0400
-Message-ID: <20190623164206.7467-11-tiny.windzz@gmail.com>
+Subject: [PATCH v4 05/11] thermal: sun8i: rework for sun8i_ths_get_temp()
+Date: Sun, 23 Jun 2019 12:42:00 -0400
+Message-ID: <20190623164206.7467-6-tiny.windzz@gmail.com>
 References: <20190623164206.7467-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190623164206.7467-1-tiny.windzz@gmail.com>
@@ -10,70 +10,81 @@ To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds binding document for allwinner h3 thermal controller.
+For different socs, the way they get and calculate the
+temperature is roughly the same. So get the difference
+from device compatible.
+
+Difference point:
+  1) temperature calculation formula parameters
+  2) ths data register start address
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- .../bindings/thermal/sun8i-thermal.yaml       | 29 +++++++++++++++++--
- 1 file changed, 26 insertions(+), 3 deletions(-)
+ drivers/thermal/sun8i_thermal.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-index 2c5acc61ed03..1eaf68b5dd5a 100644
---- a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-+++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-@@ -16,6 +16,7 @@ description: |-
- properties:
-   compatible:
-     enum:
-+      - allwinner,sun8i-h3-ths
-       - allwinner,sun50i-h6-ths
+diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+index c37e1c51a543..e473a5651436 100644
+--- a/drivers/thermal/sun8i_thermal.c
++++ b/drivers/thermal/sun8i_thermal.c
+@@ -22,9 +22,6 @@
  
-   reg:
-@@ -29,13 +30,22 @@ properties:
+ #define MAX_SENSOR_NUM	4
  
-   clocks:
-     minItems: 1
--    maxItems: 1
-+    maxItems: 2
+-#define SUN50I_H6_OFFSET	-2794
+-#define SUN50I_H6_SCALE		-67
+-
+ #define FT_TEMP_MASK				GENMASK(11, 0)
+ #define TEMP_CALIB_MASK				GENMASK(11, 0)
+ #define TEMP_TO_REG				672
+@@ -58,6 +55,10 @@ struct tsensor {
  
-   clock-names:
--    const: bus
-+    items:
-+      - const: bus
-+      - const: ahb
+ struct ths_thermal_chip {
+ 	int		sensor_num;
++	int		offset;
++	int		scale;
++	int		ft_deviation;
++	int		temp_data_base;
+ };
  
-   '#thermal-sensor-cells':
--    const: 1
-+    enum: [ 0, 1 ]
-+    description: |
-+      Definition depends on soc version:
-+
-+      For "allwinner,sun8i-h3-ths",
-+      value must be 0.
-+      For "allwinner,sun50i-h6-ths",
-+      value must be 1.
+ struct ths_device {
+@@ -73,7 +74,7 @@ struct ths_device {
+ static int sun8i_ths_reg2temp(struct ths_device *tmdev,
+ 			      int reg)
+ {
+-	return (reg + SUN50I_H6_OFFSET) * SUN50I_H6_SCALE;
++	return (reg + tmdev->chip->offset) * tmdev->chip->scale;
+ }
  
-   nvmem-cells:
-     items:
-@@ -55,6 +65,19 @@ required:
-   - '#thermal-sensor-cells'
+ static int sun8i_ths_get_temp(void *data, int *temp)
+@@ -82,7 +83,7 @@ static int sun8i_ths_get_temp(void *data, int *temp)
+ 	struct ths_device *tmdev = s->tmdev;
+ 	int val;
  
- examples:
-+  - |
-+    ths: ths@1c25000 {
-+         compatible = "allwinner,sun8i-h3-ths";
-+         reg = <0x01c25000 0x400>;
-+         clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
-+         clock-names = "bus", "ahb";
-+         resets = <&ccu RST_BUS_THS>;
-+         interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+         nvmem-cells = <&tsen_calib>;
-+         nvmem-cell-names = "calib";
-+         #thermal-sensor-cells = <0>;
-+    };
-+
-   - |
-     ths: ths@5070400 {
-          compatible = "allwinner,sun50i-h6-ths";
+-	regmap_read(tmdev->regmap, SUN50I_H6_THS_TEMP_DATA +
++	regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
+ 		    0x4 * s->id, &val);
+ 
+ 	/* ths have no data yet */
+@@ -98,7 +99,7 @@ static int sun8i_ths_get_temp(void *data, int *temp)
+ 	 * temperature above is also used when the sensor is calibrated. If
+ 	 * do this, the correct calibration formula is hard to know.
+ 	 */
+-	*temp += SUN50I_H6_FT_DEVIATION;
++	*temp += tmdev->chip->ft_deviation;
+ 
+ 	return 0;
+ }
+@@ -395,6 +396,10 @@ static int sun8i_ths_remove(struct platform_device *pdev)
+ 
+ static const struct ths_thermal_chip sun50i_h6_ths = {
+ 	.sensor_num = 2,
++	.offset = -2794,
++	.scale = -67,
++	.ft_deviation = SUN50I_H6_FT_DEVIATION,
++	.temp_data_base = SUN50I_H6_THS_TEMP_DATA,
+ };
+ 
+ static const struct of_device_id of_ths_match[] = {
 -- 
 2.17.1
