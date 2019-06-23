@@ -1,98 +1,41 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device
- tree bindings for vibrator
-Date: Sun, 23 Jun 2019 06:53:32 -0400
-Message-ID: <20190623105332.GA25506@onstation.org>
-References: <20190516085018.2207-1-masneyb@onstation.org>
- <20190520142149.D56DA214AE@mail.kernel.org>
- <CACRpkdZxu1LfK11OHEx5L_4kyjMZ7qERpvDzFj5u3Pk2kD1qRA@mail.gmail.com>
- <20190529101231.GA14540@basecamp>
- <CACRpkdY-TcF7rizbPz=UcHrFvDgPJD68vbovNdcWP-aBYppp=g@mail.gmail.com>
+From: Martin Kepplinger <martink@posteo.de>
+Subject: Re: [PATCH 3/3] arm64: dts: imx8mq: Add system counter node
+Date: Sun, 23 Jun 2019 13:20:40 +0200
+Message-ID: <8a887fee-54e7-16ac-6373-a693ec7ad944@posteo.de>
+References: <20190621082838.12630-1-Anson.Huang@nxp.com>
+ <20190621082838.12630-3-Anson.Huang@nxp.com>
+ <6c632476-9ecd-d6cc-b543-a28576c06a0c@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdY-TcF7rizbPz=UcHrFvDgPJD68vbovNdcWP-aBYppp=g@mail.gmail.com>
+In-Reply-To: <6c632476-9ecd-d6cc-b543-a28576c06a0c@posteo.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Anson.Huang@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, abel.vesa@nxp.com, ccaione@baylibre.com, angus@akkea.ca, andrew.smirnov@gmail.com, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen and Thierry,
+On 22.06.19 16:16, Martin Kepplinger wrote:
+> On 21.06.19 10:28, Anson.Huang@nxp.com wrote:
+>> From: Anson Huang <Anson.Huang@nxp.com>
+>>
+>> Add i.MX8MQ system counter node to enable timer-imx-sysctr
+>> broadcast timer driver.
+> 
+> with these changes and TIMER_IMX_SYS_CTR selected, I don't see cpuidle
+> working yet (which is what I want to achieve on imx8mq). Might there be
+> a system counter clock definition or anything else missing?
+> 
 
-On Fri, May 31, 2019 at 12:51:38PM +0200, Linus Walleij wrote:
-> On Wed, May 29, 2019 at 12:12 PM Brian Masney <masneyb@onstation.org> wrote:
-> 
-> > My first revision of this vibrator driver used the Linux PWM framework
-> > due to the variable duty cycle:
-> 
-> So what I perceive if I get the thread right is that actually a lot of
-> qcom clocks (all with the M/N/D counter set-up) have variable duty
-> cycle. Very few consumers use that feature.
-> 
-> It would be a bit much to ask that they all be implemented as PWMs
-> and then cast into clocks for the 50/50 dutycycle case, I get that.
-> 
-> What about simply doing both?
-> 
-> Export the same clocks from the clk and pwm frameworks and be
-> happy. Of course with some mutex inside the driver so that it can't
-> be used from both ends at the same time.
+To be clear about what I tried running: Abel's wakeup-workaround (with
+the corresponding ATF changes): https://lkml.org/lkml/2019/6/10/350 plus
+your patches here (although you don't define a system counter clock,
+like you do in your imx8mm patches).
 
-Do you have any feedback about this? As far as I understand, there are
-two options on the table right now:
+In any case, I might try to enable cpuidle totally wrong still :) and
+I'd be happy for hints and test your changes (no matter how fit they are
+to be merged right now).
 
-1) Add support for the duty cycle to the qcom clk driver and write a
-   general purpose clk-vibra driver for the input subsystem.
-
-2) Do what Linus suggests above. We can use v1 of this series from last
-   September (see below for link) that adds this to the pwm subsystem.
-   The locking would need to be added so that it won't conflict with the
-   clk subsystem. This can be tied into the input subsystem with the
-   existing pwm-vibra driver.
-
-Either case, the msm-vibrator driver that I added to the input subsystem
-will be dropped.
-
-Thanks,
-
-Brian
-
-> 
-> Further Thierry comments
-> https://lore.kernel.org/lkml/20181012114749.GC31561@ulmo/
-> 
-> > The device itself doesn't seem to be a
-> > generic PWM in the way that the PWM framework
-> > expects it.
-> 
-> I don't see why.  I just look at this function from the original
-> patch series:
-> 
-> +static int msm_vibra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> + int duty_ns, int period_ns)
-> +{
-> + struct msm_vibra_pwm *msm_pwm = to_msm_vibra_pwm(chip);
-> + int d_reg_val;
-> +
-> + d_reg_val = 127 - (((duty_ns / 1000) * 126) / (period_ns / 1000));
-> +
-> + msm_vibra_pwm_write(msm_pwm, REG_CFG_RCGR,
-> +    (2 << 12) | /* dual edge mode */
-> +    (0 << 8) |  /* cxo */
-> +    (7 << 0));
-> + msm_vibra_pwm_write(msm_pwm, REG_M, 1);
-> + msm_vibra_pwm_write(msm_pwm, REG_N, 128);
-> + msm_vibra_pwm_write(msm_pwm, REG_D, d_reg_val);
-> + msm_vibra_pwm_write(msm_pwm, REG_CMD_RCGR, 1);
-> + msm_vibra_pwm_write(msm_pwm, REG_CBCR, 1);
-> +
-> + return 0;
-> +}
-> 
-> How is this NOT a a generic PWM in the way that the PWM
-> framework expects it? It configures the period and duty cycle on
-> a square wave, that is what a generic PWM is in my book.
-> 
-> Yours,
-> Linus Walleij
+thanks,
+                                     martin
