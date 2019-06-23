@@ -1,69 +1,57 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2] dt-binding: mmc: rename tmio_mmc.txt to renesas,sdhi.txt
-Date: Mon, 24 Jun 2019 16:03:45 +0900
-Message-ID: <20190624070345.20373-1-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Simon Horman <simon.horman@netronome.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH] dt-bindings: display: Add ETM0700G0DH6 compatible string
+Date: Mon, 24 Jun 2019 00:43:49 +0200
+Message-ID: <3798152a-59a8-59e0-e733-1ca900c4d8a4@denx.de>
+References: <20190529102540.4608-1-marex@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190529102540.4608-1-marex@denx.de>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Thierry Reding <treding@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Jan Tuerk <jan.tuerk@emtrion.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As commit b6147490e6aa ("mmc: tmio: split core functionality, DMA and
-MFD glue") said, these MMC controllers use the IP from Panasonic.
-
-TMIO (Toshiba Mobile IO) MMC was the first upstreamed user of this IP.
-The common driver code was split and expanded as 'tmio-mmc-core', then
-it became historical misnomer since 'tmio' is not the name of this IP.
-
-In the discussion [1], we decide to keep this name as-is at least in
-Linux driver level because renaming everything is a big churn.
-
-However, DT should not be oriented to a particular project even though
-it is mainly developed in Linux communities.
-
-This is the misfortune only in Linux. Let's stop exporting it to other
-projects, where there is no good reason to call this hardware "TMIO".
-Rename the file to renesas,sdhi.txt. In fact, all the information in
-this file is specific to the Renesas platform.
-
-This commit also removes the first paragraph entirely. The DT-binding
-should describe the hardware. It is strange to talk about Linux driver
-internals such as how the drivers are probed, how platform data are
-handed off, etc.
-
-[1] https://www.spinics.net/lists/linux-mmc/msg46952.html
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-Changes in v2:
- - Rename to renesas,sdhi.txt instead of renesas_sdhi.txt
-
- .../bindings/mmc/{tmio_mmc.txt => renesas,sdhi.txt}   | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
- rename Documentation/devicetree/bindings/mmc/{tmio_mmc.txt => renesas,sdhi.txt} (87%)
-
-diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
-similarity index 87%
-rename from Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-rename to Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
-index 2b4f17ca9087..dd08d038a65c 100644
---- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
-@@ -1,13 +1,4 @@
--* Toshiba Mobile IO SD/MMC controller
--
--The tmio-mmc driver doesn't probe its devices actively, instead its binding to
--devices is managed by either MFD drivers or by the sh_mobile_sdhi platform
--driver. Those drivers supply the tmio-mmc driver with platform data, that either
--describe hardware capabilities, known to them, or are obtained by them from
--their own platform data or from their DT information. In the latter case all
--compulsory and any optional properties, common to all SD/MMC drivers, as
--described in mmc.txt, can be used. Additionally the following tmio_mmc-specific
--optional bindings can be used.
-+* Renesas SDHI SD/MMC controller
- 
- Required properties:
- - compatible: should contain one or more of the following:
--- 
-2.17.1
+T24gNS8yOS8xOSAxMjoyNSBQTSwgTWFyZWsgVmFzdXQgd3JvdGU6Cj4gVGhlIEVUTTA3MDBHMERI
+NiBpcyBjdXJyZW50bHkgZG9jdW1lbnRlZCBhcyB1c2luZyBlZHQsZXRtMDcwMDgwZGg2Cj4gY29t
+cGF0aWJsZSBzdHJpbmcsIGhvd2V2ZXIgdGhlIExpbnV4IGtlcm5lbCBkcml2ZXIgYXMgd2VsbCBh
+cyBhCj4gY291cGxlIG9mIERUcyB1c2UgZWR0LGV0bTA3MDBnMGRoNiBjb21wYXRpYmxlIHN0cmlu
+Zy4gQWRkIGl0IGludG8KPiB0aGUgZG9jdW1lbnRhdGlvbi4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBN
+YXJlayBWYXN1dCA8bWFyZXhAZGVueC5kZT4KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
+bmVsLm9yZz4KPiBDYzogSmFuIFR1ZXJrIDxqYW4udHVlcmtAZW10cmlvbi5jb20+Cj4gQ2M6IFRo
+aWVycnkgUmVkaW5nIDx0cmVkaW5nQG52aWRpYS5jb20+Cj4gQ2M6IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnCj4gVG86IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiAtLS0KPiAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9lZHQsZXQtc2VyaWVzLnR4dCAg
+ICAgICAgIHwgMiArLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRp
+b24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvZWR0LGV0LXNlcmllcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9lZHQsZXQtc2VyaWVzLnR4dAo+IGluZGV4IGJlODY4
+NDMyN2VlNC4uYjdhYzFjNzI1Zjk3IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2VkdCxldC1zZXJpZXMudHh0Cj4gKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZWR0LGV0LXNlcmll
+cy50eHQKPiBAQCAtNDAsNyArNDAsNyBAQCBzaW1wbGUtcGFuZWwudHh0Cj4gIHwgSWRlbnRpZmll
+ciAgICAgIHwgY29tcGF0YmlsZSAgICAgICAgICB8IGRlc2NyaXB0aW9uICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwKPiAgKz09PT09PT09PT09PT09PT09Kz09PT09PT09PT09PT09PT09PT09PSs9
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Kwo+ICB8IEVUTTA3MDBHMERINiAg
+ICB8IGVkdCxldG0wNzAwODBkaDYgICAgfCBXVkdBIFRGVCBEaXNwbGF5IHdpdGggY2FwYWNpdGl2
+ZSAgICB8Cj4gLXwgICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICB8IFRvdWNo
+c2NyZWVuICAgICAgICAgICAgICAgICAgICAgICAgIHwKPiArfCAgICAgICAgICAgICAgICAgfCBl
+ZHQsZXRtMDcwMGcwZGg2ICAgIHwgVG91Y2hzY3JlZW4gICAgICAgICAgICAgICAgICAgICAgICAg
+fAo+ICArLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCj4gIHwgRVRNMDcwMEcwQkRINiAgIHwgZWR0LGV0
+bTA3MDA4MGJkaDYgICB8IFNhbWUgYXMgRVRNMDcwMEcwREg2IGJ1dCB3aXRoICAgICAgIHwKPiAg
+fCAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgIHwgaW52ZXJ0ZWQgcGl4ZWwg
+Y2xvY2suICAgICAgICAgICAgICAgfAo+IAoKQnVtcCA/CgotLSAKQmVzdCByZWdhcmRzLApNYXJl
+ayBWYXN1dApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
