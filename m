@@ -1,53 +1,99 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v4 00/11] add thermal driver for h6
-Date: Sun, 23 Jun 2019 12:41:55 -0400
-Message-ID: <20190623164206.7467-1-tiny.windzz@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH v4 02/11] dt-bindings: thermal: add binding document for h6 thermal controller
+Date: Sun, 23 Jun 2019 12:41:57 -0400
+Message-ID: <20190623164206.7467-3-tiny.windzz@gmail.com>
+References: <20190623164206.7467-1-tiny.windzz@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190623164206.7467-1-tiny.windzz@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, davem@davemloft.net, gregkh@linuxfoundation.org, mchehab+samsung@kernel.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com
-Cc: Yangtao Li <tiny.windzz@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset add support for H3 and H6 thermal sensor.
+This patch adds binding document for allwinner h6 thermal controller.
 
-BTY, do a cleanup in thermal makfile.
-
-Yangtao Li (11):
-  thermal: sun8i: add thermal driver for h6
-  dt-bindings: thermal: add binding document for h6 thermal controller
-  thermal: fix indentation in makefile
-  thermal: sun8i: get ths sensor number from device compatible
-  thermal: sun8i: rework for sun8i_ths_get_temp()
-  thermal: sun8i: get ths init func from device compatible
-  thermal: sun8i: rework for ths irq handler func
-  thermal: sun8i: support ahb clocks
-  thermal: sun8i: rework for ths calibrate func
-  dt-bindings: thermal: add binding document for h3 thermal controller
-  thermal: sun8i: add thermal driver for h3
-
- .../bindings/thermal/sun8i-thermal.yaml       |  94 +++
- MAINTAINERS                                   |   7 +
- drivers/thermal/Kconfig                       |  14 +
- drivers/thermal/Makefile                      |   9 +-
- drivers/thermal/sun8i_thermal.c               | 534 ++++++++++++++++++
- 5 files changed, 654 insertions(+), 4 deletions(-)
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ .../bindings/thermal/sun8i-thermal.yaml       | 71 +++++++++++++++++++
+ 1 file changed, 71 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
- create mode 100644 drivers/thermal/sun8i_thermal.c
 
----
-v4:
--add h3 support
--fix yaml file
----
+diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+new file mode 100644
+index 000000000000..2c5acc61ed03
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner SUN8I Thermal Controller Device Tree Bindings
++
++maintainers:
++  - Yangtao Li <tiny.windzz@gmail.com>
++
++description: |-
++  This describes the device tree binding for the Allwinner thermal
++  controller which measures the on-SoC temperatures.
++
++properties:
++  compatible:
++    enum:
++      - allwinner,sun50i-h6-ths
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 1
++
++  clock-names:
++    const: bus
++
++  '#thermal-sensor-cells':
++    const: 1
++
++  nvmem-cells:
++    items:
++      - description: ths calibrate data
++
++  nvmem-cell-names:
++    items:
++      - const: calib
++
++required:
++  - compatible
++  - reg
++  - reset
++  - clocks
++  - clock-names
++  - interrupts
++  - '#thermal-sensor-cells'
++
++examples:
++  - |
++    ths: ths@5070400 {
++         compatible = "allwinner,sun50i-h6-ths";
++         reg = <0x05070400 0x100>;
++         clocks = <&ccu CLK_BUS_THS>;
++         clock-names = "bus";
++         resets = <&ccu RST_BUS_THS>;
++         interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++         nvmem-cells = <&tsen_calib>;
++         nvmem-cell-names = "calib";
++         #thermal-sensor-cells = <1>;
++    };
++
++...
+-- 
 2.17.1
