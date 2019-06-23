@@ -1,57 +1,69 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH RESEND V2 2/3] clocksource: imx-sysctr: Make timer work with clock driver using platform driver model
-Date: Sun, 23 Jun 2019 20:38:49 +0800
-Message-ID: <20190623123850.22584-2-Anson.Huang@nxp.com>
-References: <20190623123850.22584-1-Anson.Huang@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190623123850.22584-1-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, abel.vesa@nxp.com, ccaione@baylibre.com, angus@akkea.ca, andrew.smirnov@gmail.com, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Linux-imx@nxp.com
+From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Subject: Re: [PATCH] ARM: dts: rockchip: add ethernet phy node for tinker board
+Date: Sun, 23 Jun 2019 22:31:29 +0900
+Message-ID: <8a006d47-a546-163f-0c3f-f35b0056ba3a@katsuster.net>
+References: <20190621180017.29646-1-katsuhiro@katsuster.net>
+ <1871177.hjLhdHVgcu@phil>
+ <ccf5ad2c-bd56-2d77-4728-d7906045e302@katsuster.net>
+ <20190622175508.GE8497@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190622175508.GE8497@lunn.ch>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>, Jose Abreu <joabreu@synopsys.com>
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+Hello Heiko, Andrew,
 
-On some i.MX8M platforms, clock driver uses platform driver
-model and it is NOT ready during timer initialization phase,
-the clock operations will fail and system counter driver will
-fail too. As all the i.MX8M platforms' system counter clock
-are from OSC which is always enabled, so it is no need to enable
-clock for system counter driver, the ONLY thing is to pass
-clock frequence to driver.
+Thank you for comments. I found the commit that has regression:
+   74371272f97f net: stmmac: Convert to phylink and remove phylib logic
 
-To make system counter driver work for upper scenario, add an
-option of skipping of_clk operation for system counter driver,
-an optional property "clock-frequency" is introduced to pass
-the frequency value to system counter driver and indicate driver
-to skip of_clk operations.
+So I'll report it to netdev and stmmac guys.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Best Regards,
 ---
-Changes since V1:
-	- improve commit log, no content change.
----
- drivers/clocksource/timer-imx-sysctr.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Katsuhiro Suzuki
 
-diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
-index fd7d680..8ff3d7e 100644
---- a/drivers/clocksource/timer-imx-sysctr.c
-+++ b/drivers/clocksource/timer-imx-sysctr.c
-@@ -129,6 +129,14 @@ static void __init sysctr_clockevent_init(void)
- static int __init sysctr_timer_init(struct device_node *np)
- {
- 	int ret = 0;
-+	u32 rate;
-+
-+	if (!of_property_read_u32(np, "clock-frequency",
-+				  &rate)) {
-+		to_sysctr.of_clk.rate = rate;
-+		to_sysctr.of_clk.period = DIV_ROUND_UP(rate, HZ);
-+		to_sysctr.flags &= ~TIMER_OF_CLOCK;
-+	}
- 
- 	ret = timer_of_init(np, &to_sysctr);
- 	if (ret)
--- 
-2.7.4
+
+On 2019/06/23 2:55, Andrew Lunn wrote:
+> On Sat, Jun 22, 2019 at 11:50:10PM +0900, Katsuhiro Suzuki wrote:
+>> Hello,
+> 
+> Hi Katsuhiro
+> 
+> Please also report this to netdev, and the stmmac maintainers.
+> 
+> ./scripts/get_maintainer.pl -f drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> Giuseppe Cavallaro <peppe.cavallaro@st.com> (supporter:STMMAC ETHERNET DRIVER)
+> Alexandre Torgue <alexandre.torgue@st.com> (supporter:STMMAC ETHERNET DRIVER)
+> Jose Abreu <joabreu@synopsys.com> (supporter:STMMAC ETHERNET DRIVER)
+> "David S. Miller" <davem@davemloft.net> (odd fixer:NETWORKING DRIVERS)
+> Maxime Coquelin <mcoquelin.stm32@gmail.com> (maintainer:ARM/STM32 ARCHITECTURE)
+> netdev@vger.kernel.org (open list:STMMAC ETHERNET DRIVER)
+> linux-stm32@st-md-mailman.stormreply.com (moderated list:ARM/STM32 ARCHITECTURE)
+> linux-arm-kernel@lists.infradead.org (moderated list:ARM/STM32 ARCHITECTURE)
+> linux-kernel@vger.kernel.org (open list)
+> 
+>> I have not bisect commit of root cause yet... Is it better to bisect
+>> and find problem instead of sending this patch?
+> 
+> My guess is that it is one of these three which broken it:
+> 
+> 74371272f97f net: stmmac: Convert to phylink and remove phylib logic
+> eeef2f6b9f6e net: stmmac: Start adding phylink support
+> 9ad372fc5aaf net: stmmac: Prepare to convert to phylink
+> 
+> 	     Andrew
+> 
