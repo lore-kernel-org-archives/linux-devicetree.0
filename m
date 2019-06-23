@@ -1,81 +1,98 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 1/3] clocksource/drivers/sysctr: Add an optional property
-Date: Sun, 23 Jun 2019 12:46:40 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1906231232520.32342@nanos.tec.linutronix.de>
-References: <20190621082838.12630-1-Anson.Huang@nxp.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device
+ tree bindings for vibrator
+Date: Sun, 23 Jun 2019 06:53:32 -0400
+Message-ID: <20190623105332.GA25506@onstation.org>
+References: <20190516085018.2207-1-masneyb@onstation.org>
+ <20190520142149.D56DA214AE@mail.kernel.org>
+ <CACRpkdZxu1LfK11OHEx5L_4kyjMZ7qERpvDzFj5u3Pk2kD1qRA@mail.gmail.com>
+ <20190529101231.GA14540@basecamp>
+ <CACRpkdY-TcF7rizbPz=UcHrFvDgPJD68vbovNdcWP-aBYppp=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190621082838.12630-1-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson.Huang@nxp.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, angus@akkea.ca, abel.vesa@nxp.com, ccaione@baylibre.com, andrew.smirnov@gmail.com, festevam@gmail.com, s.hauer@pengutronix.de, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, agx@sigxcpu.org, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdY-TcF7rizbPz=UcHrFvDgPJD68vbovNdcWP-aBYppp=g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Anson,
+Hi Stephen and Thierry,
 
-On Fri, 21 Jun 2019, Anson.Huang@nxp.com wrote:
-
-> Subject : [PATCH 1/3] clocksource/drivers/sysctr: Add an optional property
-
-That subject line is not really informative. From Documentation:
-
-     The ``summary phrase`` in the email's Subject should concisely
-     describe the patch which that email contains.
-
-That means that it should tell which property it adds so it's immediately
-clear what this is about. Something like:
-
- Subject: clocksource/drivers/sysctr: Add optional clock-frequency property
-
-Hmm?
-
-> From: Anson Huang <Anson.Huang@nxp.com>
+On Fri, May 31, 2019 at 12:51:38PM +0200, Linus Walleij wrote:
+> On Wed, May 29, 2019 at 12:12 PM Brian Masney <masneyb@onstation.org> wrote:
 > 
-> This patch adds an optional property "clock-frequency" to pass
+> > My first revision of this vibrator driver used the Linux PWM framework
+> > due to the variable duty cycle:
+> 
+> So what I perceive if I get the thread right is that actually a lot of
+> qcom clocks (all with the M/N/D counter set-up) have variable duty
+> cycle. Very few consumers use that feature.
+> 
+> It would be a bit much to ask that they all be implemented as PWMs
+> and then cast into clocks for the 50/50 dutycycle case, I get that.
+> 
+> What about simply doing both?
+> 
+> Export the same clocks from the clk and pwm frameworks and be
+> happy. Of course with some mutex inside the driver so that it can't
+> be used from both ends at the same time.
 
-Please read Documentation/process/submitting-patches.rst and search for
-'This patch'
+Do you have any feedback about this? As far as I understand, there are
+two options on the table right now:
 
-> the system counter frequency value to kernel system counter
-> driver and indicate the driver to skip of_clk operations, this
-> is to support those platforms using platform driver model for
-> clock driver.
+1) Add support for the duty cycle to the qcom clk driver and write a
+   general purpose clk-vibra driver for the input subsystem.
 
-That sentence does not parse. Please structure your changelog in the
-following order:
+2) Do what Linus suggests above. We can use v1 of this series from last
+   September (see below for link) that adds this to the pwm subsystem.
+   The locking would need to be added so that it won't conflict with the
+   clk subsystem. This can be tied into the input subsystem with the
+   existing pwm-vibra driver.
 
-   1) Context or problem
-
-   2) Detailed analysis (if applicable and necessary)
-
-   3) Short description of the solution (the rest is obvious from the patch
-      itself).
-
-So something like this (assumed I decoded the above correctly):
-
-   Systems which use the system counter with the platform driver model
-   require the clock frequency to be supplied via device tree.
-
-   This is necessary as in the platform driver model the of_clk operations
-   do not work correctly because LENGHTY EXPLANATION WHY ...
-
-   Add the optinal clock-frequency to the device tree bindings of the NXP
-   system counter so the frequency can be handed in and the of_clk
-   operations can be skipped.
-
-The important part is the missing LENGTHY EXPLANATION WHY. I can't fill
-that in because you did not provide that information.
+Either case, the msm-vibrator driver that I added to the input subsystem
+will be dropped.
 
 Thanks,
 
-	tglx
+Brian
+
+> 
+> Further Thierry comments
+> https://lore.kernel.org/lkml/20181012114749.GC31561@ulmo/
+> 
+> > The device itself doesn't seem to be a
+> > generic PWM in the way that the PWM framework
+> > expects it.
+> 
+> I don't see why.  I just look at this function from the original
+> patch series:
+> 
+> +static int msm_vibra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> + int duty_ns, int period_ns)
+> +{
+> + struct msm_vibra_pwm *msm_pwm = to_msm_vibra_pwm(chip);
+> + int d_reg_val;
+> +
+> + d_reg_val = 127 - (((duty_ns / 1000) * 126) / (period_ns / 1000));
+> +
+> + msm_vibra_pwm_write(msm_pwm, REG_CFG_RCGR,
+> +    (2 << 12) | /* dual edge mode */
+> +    (0 << 8) |  /* cxo */
+> +    (7 << 0));
+> + msm_vibra_pwm_write(msm_pwm, REG_M, 1);
+> + msm_vibra_pwm_write(msm_pwm, REG_N, 128);
+> + msm_vibra_pwm_write(msm_pwm, REG_D, d_reg_val);
+> + msm_vibra_pwm_write(msm_pwm, REG_CMD_RCGR, 1);
+> + msm_vibra_pwm_write(msm_pwm, REG_CBCR, 1);
+> +
+> + return 0;
+> +}
+> 
+> How is this NOT a a generic PWM in the way that the PWM
+> framework expects it? It configures the period and duty cycle on
+> a square wave, that is what a generic PWM is in my book.
+> 
+> Yours,
+> Linus Walleij
