@@ -1,100 +1,69 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/6] dt-bindings: display: msm: gmu: add
- optional ocmem property
-Date: Sat, 22 Jun 2019 16:28:20 -0700
-Message-ID: <CAF6AEGuVKtAu60kLYNKOsy3=hT0FDbJ5vvEJE6gFLAodpU5MGA@mail.gmail.com>
-References: <20190616132930.6942-1-masneyb@onstation.org>
- <20190616132930.6942-3-masneyb@onstation.org>
- <CAL_Jsq+Ne=NEcLbO6C19iOny4bwm_m5QEtcsM78ZDeBmDUVO_Q@mail.gmail.com>
- <CAF6AEGs6By9-LGRBAPw2OwR9tRKJtEiZVgS2WVWRXmOK1VxNLA@mail.gmail.com>
- <20190621021444.GA13972@onstation.org>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v3 0/9] Support for Allwinner V3/S3L and Sochip S3
+Date: Sun, 23 Jun 2019 12:37:52 +0800
+Message-ID: <20190623043801.14040-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20190621021444.GA13972-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jonathan Marek <jonathan-eSc4qw6YbEQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBWEEXTUAKGQEACTDZGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKdW4gMjAsIDIwMTkgYXQgNzoxNCBQTSBCcmlhbiBNYXNuZXkgPG1hc25leWJAb25z
-dGF0aW9uLm9yZz4gd3JvdGU6Cj4KPiBPbiBXZWQsIEp1biAxOSwgMjAxOSBhdCAwMToyMToyMFBN
-IC0wNzAwLCBSb2IgQ2xhcmsgd3JvdGU6Cj4gPiBPbiBXZWQsIEp1biAxOSwgMjAxOSBhdCAxOjE3
-IFBNIFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4gPgo+ID4gPiBP
-biBTdW4sIEp1biAxNiwgMjAxOSBhdCA3OjI5IEFNIEJyaWFuIE1hc25leSA8bWFzbmV5YkBvbnN0
-YXRpb24ub3JnPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+IFNvbWUgQTN4eCBhbmQgQTR4eCBBZHJl
-bm8gR1BVcyBkbyBub3QgaGF2ZSBHTUVNIGluc2lkZSB0aGUgR1BVIGNvcmUgYW5kCj4gPiA+ID4g
-bXVzdCB1c2UgdGhlIE9uIENoaXAgTUVNb3J5IChPQ01FTSkgaW4gb3JkZXIgdG8gYmUgZnVuY3Rp
-b25hbC4gQWRkIHRoZQo+ID4gPiA+IG9wdGlvbmFsIG9jbWVtIHByb3BlcnR5IHRvIHRoZSBBZHJl
-bm8gR3JhcGhpY3MgTWFuYWdlbWVudCBVbml0IGJpbmRpbmdzLgo+ID4gPiA+Cj4gPiA+ID4gU2ln
-bmVkLW9mZi1ieTogQnJpYW4gTWFzbmV5IDxtYXNuZXliQG9uc3RhdGlvbi5vcmc+Cj4gPiA+ID4g
-LS0tCj4gPiA+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21z
-bS9nbXUudHh0IHwgNCArKysrCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
-KykKPiA+ID4gPgo+ID4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L21zbS9nbXUudHh0Cj4gPiA+ID4gaW5kZXggOTBhZjViMGE1NmE5Li5j
-NzQ2Yjk1ZTk1ZDQgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQKPiA+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dAo+ID4gPiA+IEBAIC0zMSw2
-ICszMSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gPiA+ICAtIGlvbW11czogcGhhbmRs
-ZSB0byB0aGUgYWRyZW5vIGlvbW11Cj4gPiA+ID4gIC0gb3BlcmF0aW5nLXBvaW50cy12MjogcGhh
-bmRsZSB0byB0aGUgT1BQIG9wZXJhdGluZyBwb2ludHMKPiA+ID4gPgo+ID4gPiA+ICtPcHRpb25h
-bCBwcm9wZXJ0aWVzOgo+ID4gPiA+ICstIG9jbWVtOiBwaGFuZGxlIHRvIHRoZSBPbiBDaGlwIE1l
-bW9yeSAoT0NNRU0pIHRoYXQncyBwcmVzZW50IG9uIHNvbWUgU25hcGRyYWdvbgo+ID4gPiA+ICsg
-ICAgICAgICBTb0NzLiBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9x
-Y29tL3Fjb20sb2NtZW0ueWFtbC4KPiA+ID4KPiA+ID4gV2UgYWxyZWFkeSBoYXZlIGEgY291cGxl
-IG9mIHNpbWlsYXIgcHJvcGVydGllcy4gTGV0cyBzdGFuZGFyZGl6ZSBvbgo+ID4gPiAnc3JhbScg
-YXMgdGhhdCBpcyB3aGF0IFRJIGFscmVhZHkgdXNlcy4KPiA+ID4KPiA+ID4gQWxzbywgaXMgdGhl
-IHdob2xlIE9DTUVNIGFsbG9jYXRlZCB0byB0aGUgR01VPyBJZiBub3QgeW91IHNob3VsZCBoYXZl
-Cj4gPiA+IGNoaWxkIG5vZGVzIHRvIHN1YmRpdmlkZSB0aGUgbWVtb3J5Lgo+ID4gPgo+ID4KPiA+
-IGlpcmMsIGRvd25zdHJlYW0gYSBsYXJnZSBjaHVuayBvZiBPQ01FTSBpcyBzdGF0aWNhbGx5IGFs
-bG9jYXRlZCBmb3IKPiA+IEdQVS4uIHRoZSByZW1haW5kZXIgaXMgZHluYW1pY2FsbHkgYWxsb2Nh
-dGVkIGZvciBkaWZmZXJlbnQgdXNlLWNhc2VzLgo+ID4gVGhlIHVwc3RyZWFtIGRyaXZlciBCcmlh
-biBpcyBwcm9wb3Npbmcgb25seSBoYW5kbGVzIHRoZSBzdGF0aWMKPiA+IGFsbG9jYXRpb24gY2Fz
-ZQo+Cj4gSXQgYXBwZWFycyB0aGF0IHRoZSBHUFUgZXhwZWN0cyB0byB1c2UgYSBzcGVjaWZpYyBy
-ZWdpb24gb2Ygb2NtZW0sCj4gc3BlY2lmaWNhbGx5IHN0YXJ0aW5nIGF0IDAuIFRoZSBmcmVlZHJl
-bm8gZHJpdmVyIGFsbG9jYXRlcyAxTUIgb2YKPiBvY21lbSBvbiB0aGUgTmV4dXMgNSBzdGFydGlu
-ZyBhdCBvY21lbSBhZGRyZXNzIDAuIEFzIGEgdGVzdCwgSQo+IGNoYW5nZWQgdGhlIHN0YXJ0aW5n
-IGFkZHJlc3MgdG8gMC41TUIgYW5kIGttc2N1YmUgc2hvd3Mgb25seSBoYWxmIHRoZQo+IGN1YmUs
-IGFuZCBmb3VyIHdpZGUgYmxhY2sgYmFycyBhY3Jvc3MgdGhlIHNjcmVlbjoKPgo+IGh0dHBzOi8v
-d3d3LmZsaWNrci5jb20vcGhvdG9zL21hc25leWIvNDgxMDA1MzQzODEvCj4KPiA+IChhbmQgSSBk
-b24ndCB0aGluayB3ZSBoYXZlIHVwc3RyZWFtIHN1cHBvcnQgZm9yIHRoZSB2YXJpb3VzIGF1ZGlv
-IGFuZAo+ID4gdmlkZW8gdXNlLWNhc2VzIHRoYXQgdXNlZCBkeW5hbWljIE9DTUVNIGFsbG9jYXRp
-b24gZG93bnN0cmVhbSkKPgo+IFRoYXQncyBteSB1bmRlcnN0YW5kaW5nIGFzIHdlbGwuCj4KPiA+
-IEFsdGhvdWdoIG1heWJlIHdlIHNob3VsZCBzdGlsbCBoYXZlIGEgY2hpbGQgbm9kZSB0byBzZXBh
-cmF0ZSB0aGUKPiA+IHN0YXRpY2FsbHkgYW5kIGR5bmFtaWNhbGx5IGFsbG9jYXRlZCBwYXJ0cz8g
-IEknbSBub3Qgc3VyZSB3aGF0IHdvdWxkCj4gPiBtYWtlIHRoZSBtb3N0IHNlbnNlLi4KPgo+IEdp
-dmVuIHRoYXQgdGhlIEdQVSBpcyBleHBlY3RpbmcgYSBmaXhlZCBhZGRyZXNzIGluIG9jbWVtLCBw
-ZXJoYXBzIGl0Cj4gbWFrZXMgc2Vuc2UgdG8gaGF2ZSB0aGUgY2hpbGQgbm9kZS4gSG93IGFib3V0
-IHRoaXMgYmFzZWQgb24gdGhlCj4gc3JhbS9zcmFtLnR4dCBiaW5kaW5ncz8KPgo+ICAgb2NtZW06
-IG9jbWVtQGZkZDAwMDAwIHsKPiAgICAgY29tcGF0aWJsZSA9ICJxY29tLG1zbTg5NzQtb2NtZW0i
-Owo+Cj4gICAgIHJlZyA9IDwweGZkZDAwMDAwIDB4MjAwMD4sIDwweGZlYzAwMDAwIDB4MTgwMDAw
-PjsKPiAgICAgcmVnLW5hbWVzID0gImN0cmwiLCAibWVtIjsKPgo+ICAgICBjbG9ja3MgPSA8JnJw
-bWNjIFJQTV9TTURfT0NNRU1HWF9DTEs+LCA8Jm1tY2MgT0NNRU1DWF9PQ01FTU5PQ19DTEs+Owo+
-ICAgICBjbG9jay1uYW1lcyA9ICJjb3JlIiwgImlmYWNlIjsKPgo+ICAgICBnbXUtc3JhbUAwIHsK
-PiAgICAgICByZWcgPSA8MHgwIDB4MTAwMDAwPjsKPiAgICAgICBwb29sOwo+ICAgICB9Owo+Cj4g
-ICAgIG1pc2Mtc3JhbUAwIHsKPiAgICAgICByZWcgPSA8MHgxMDAwMDAgMHgwODAwMDA+Owo+ICAg
-ICAgIGV4cG9ydDsKPiAgICAgfTsKPiAgIH07Cj4KPiBJIG1hcmtlZCB0aGUgbWlzYyBwb29sIGFz
-IGV4cG9ydCBzaW5jZSBJJ3ZlIHNlZW4gaW4gdGhlIGRvd25zdHJlYW0gb2NtZW0KPiBzb3VyY2Vz
-IGEgcmVmZXJlbmNlIHRvIHRoZWlyIGNsb3NlZCBsaWJzZW5zb3JzIHRoYXQgcnVucyBpbiB1c2Vy
-c3BhY2UuCj4KPiBMb29raW5nIGF0IHRoZSBzcmFtIGJpbmRpbmdzIGxlZCBtZSB0byB0aGUgZ2Vu
-YWxsb2MgQVBJCj4gKERvY3VtZW50YXRpb24vY29yZS1hcGkvZ2VuYWxsb2MucnN0KS4gSSB3b25k
-ZXIgaWYgdGhpcyBpcyB0aGUgd2F5IHRoYXQKPiB0aGlzIHNob3VsZCBiZSBkb25lPwoKd29uJ3Qg
-Y2xhaW0gdG8gYmUgYSBkdCBleHBlcnQsIGJ1dCB0aGlzIHNlZW1zIHNvbWV3aGF0IHNhbmUuLiAg
-bWF5YmUKZHJvcCB0aGUgZXhwb3J0IHVudGlsIGEgdXNlLWNhc2UgY29tZXMgYWxvbmcgZm9yIHRo
-YXQuLiBvciBldmVuIHRoZQplbnRpcmUgc2Vjb25kIGNoaWxkIG5vZGU/ICBJIGd1ZXNzIHRoYXQg
-Y29tZXMgZG93biB0byB3aGF0IHJvYmhlciBhbmQKb3RoZXJzIHByZWZlciwgSSBjYW4ndCByZWFs
-bHkgc3BlY3VsYXRlIHRvbyBtdWNoIGFib3V0IHRoZSBub24tZ3B1CnVzZS1jYXNlcyBmb3Igb2Nt
-ZW0gKG9yIGlmIHRoZXknbGwgZXZlciBiZSB1cHN0cmVhbSkKCkJSLAotUgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0
-CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
+This patchset tries to add support for Allwinner V3/S3L and Sochip S3.
+
+Allwinner V3/V3s/S3L and Sochip S3 share the same die, but with
+different package. V3 is BGA w/o co-packaged DDR, V3s is QFP w/ DDR2,
+S3L is BGA w/ DDR2 and S3 is BGA w/ DDR3. (S3 and S3L is compatible
+for pinout, but because of different DDR, DDR voltage is different
+between the two variants). Because of the pin count of V3s is
+restricted due to the package, some pins are not bound on V3s, but
+they're bound on V3/S3/S3L.
+
+Currently the kernel is only prepared for the features available on V3s.
+This patchset adds the features missing on V3s for using them on
+V3/S3/S3L, and add bindings for V3/S3/S3L. It also adds a S3 SoM by
+Sipeed, called Lichee Zero Plus.
+
+Icenowy Zheng (9):
+  pinctrl: sunxi: v3s: introduce support for V3
+  clk: sunxi-ng: v3s: add the missing PLL_DDR1
+  dt-bindings: clk: sunxi-ccu: add compatible string for V3 CCU
+  clk: sunxi-ng: v3s: add Allwinner V3 support
+  dt-bindings: vendor-prefixes: add SoChip
+  ARM: sunxi: dts: s3/s3l/v3: add DTSI files for S3/S3L/V3 SoCs
+  dt-bindings: vendor-prefixes: add Sipeed
+  dt-bindings: arm: sunxi: add binding for Lichee Zero Plus core board
+  ARM: dts: sun8i: s3: add devicetree for Lichee zero plus w/ S3
+
+ .../devicetree/bindings/arm/sunxi.yaml        |   5 +
+ .../clock/allwinner,sun4i-a10-ccu.yaml        |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   4 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |   8 +
+ .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    |  44 ++
+ arch/arm/boot/dts/sun8i-s3.dtsi               |   6 +
+ arch/arm/boot/dts/sun8i-s3l.dtsi              |   6 +
+ arch/arm/boot/dts/sun8i-v3.dtsi               |  14 +
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c          | 244 ++++++++-
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.h          |   6 +-
+ drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c     | 473 ++++++++++++++----
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h         |   2 +
+ include/dt-bindings/clock/sun8i-v3s-ccu.h     |   4 +
+ include/dt-bindings/reset/sun8i-v3s-ccu.h     |   3 +
+ 15 files changed, 704 insertions(+), 117 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+ create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-s3.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-s3l.dtsi
+ create mode 100644 arch/arm/boot/dts/sun8i-v3.dtsi
+
+-- 
+2.21.0
