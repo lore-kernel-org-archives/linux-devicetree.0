@@ -1,42 +1,44 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/3] clocksource/drivers/sysctr: Add an optional property
-Date: Sun, 23 Jun 2019 12:05:55 +0000
-Message-ID: <DB3PR0402MB39168010C09BDAE2BF27123CF5E10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190621082838.12630-1-Anson.Huang@nxp.com>
- <alpine.DEB.2.21.1906231232520.32342@nanos.tec.linutronix.de>
- <DB3PR0402MB3916B3B871FDEA9BFC960C67F5E10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <alpine.DEB.2.21.1906231331390.32342@nanos.tec.linutronix.de>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH V2 2/3] clocksource: imx-sysctr: Add of_clk skip option
+Date: Sun, 23 Jun 2019 14:17:31 +0200 (CEST)
+Message-ID: <alpine.DEB.2.21.1906231413110.32342@nanos.tec.linutronix.de>
+References: <20190623120434.19556-1-Anson.Huang@nxp.com> <20190623120434.19556-2-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.1906231331390.32342@nanos.tec.linutronix.de>
-Content-Language: en-US
+In-Reply-To: <20190623120434.19556-2-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kern>
+To: Anson.Huang@nxp.com
+Cc: daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, abel.vesa@nxp.com, ccaione@baylibre.com, angus@akkea.ca, andrew.smirnov@gmail.com, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-SGksIFRob21hcw0KDQo+IEFuc29uLA0KPiANCj4gQTogQmVjYXVzZSBpdCBtZXNzZXMgdXAgdGhl
-IG9yZGVyIGluIHdoaWNoIHBlb3BsZSBub3JtYWxseSByZWFkIHRleHQuDQo+IFE6IFdoeSBpcyB0
-b3AtcG9zdGluZyBzdWNoIGEgYmFkIHRoaW5nPw0KPiBBOiBUb3AtcG9zdGluZy4NCj4gUTogV2hh
-dCBpcyB0aGUgbW9zdCBhbm5veWluZyB0aGluZyBpbiBlLW1haWw/DQo+IA0KPiBBOiBOby4NCj4g
-UTogU2hvdWxkIEkgaW5jbHVkZSBxdW90YXRpb25zIGFmdGVyIG15IHJlcGx5Pw0KPiANCj4gaHR0
-cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0El
-MkYlMkZkYXJpbmdmDQo+IGlyZWJhbGwubmV0JTJGMjAwNyUyRjA3JTJGb25fdG9wJmFtcDtkYXRh
-PTAyJTdDMDElN0NhbnNvbi5odWFuZw0KPiAlNDBueHAuY29tJTdDNjU4ZDEyZTBkNjVhNDAxMDM0
-ZDIwOGQ2ZjdjZWNjODYlN0M2ODZlYTFkM2JjMmI0YzYNCj4gZmE5MmNkOTljNWMzMDE2MzUlN0Mw
-JTdDMSU3QzYzNjk2ODg2NDkwODMzODIzNiZhbXA7c2RhdGE9JTJGMCUNCj4gMkI5RElUMkhWdVZG
-Z0x2aFc3UUZGTkFYclJxYmNUaTklMkJKY2FzZ092MDglM0QmYW1wO3Jlc2VydmVkPTANCj4gDQoN
-ClRoYW5rcyBmb3IgdGhlc2UgaW5mby4NCg0KPiBPbiBTdW4sIDIzIEp1biAyMDE5LCBBbnNvbiBI
-dWFuZyB3cm90ZToNCj4gDQo+ID4gSGksIFRob21hcw0KPiA+IAlUaGFua3MgZm9yIHRoZSB1c2Vm
-dWwgY29tbWVudCwgSSB3aWxsIHJlc2VuZCB0aGUgcGF0Y2ggd2l0aA0KPiBpbXByb3ZlbWVudC4N
-Cj4gPg0KPiA+IEFuc29uLg0KPiA+IA0KPiBBbHNvIHBsZWFzZSBmaXggeW91ciBtYWlsZXIgdG8g
-Tk9UIGNvcHkgdGhlIGZ1bGwgbWFpbCBoZWFkZXIgaW50byB0aGUgcmVwbHkuDQo+IFRoYXQncyBh
-YnNvbHV0ZWx5IHVzZWxlc3MuDQoNClN1cmUsIHRoYW5rcyBmb3IgcmVtaW5kZXIuDQoNCj4gDQo+
-ID4gPg0KPiA+ID4gQW5zb24sDQo+ID4gPg0KPiA+ID4gT24gRnJpLCAyMSBKdW4gMjAxOSwgQW5z
-b24uSHVhbmdAbnhwLmNvbSB3cm90ZToNCj4gPiA+DQo+ID4gPiA+IFN1YmplY3QgOiBbUEFUQ0gg
-MS8zXSBjbG9ja3NvdXJjZS9kcml2ZXJzL3N5c2N0cjogQWRkIGFuIG9wdGlvbmFsDQo+ID4gPiA+
-IHByb3BlcnR5DQo+IA0KPiBBbmQgZmluYWxseSBwbGVhc2UgdHJpbSB5b3VyIHJlcGxpZXMsIHNv
-IHRoZSB1bmludGVyZXN0aW5nIHBhcnRzIGFyZSBnb25lLg0KPg0KDQpPSy4NCg0KVGhhbmtzLA0K
-QW5zb24uDQogDQo+IFRoYW5rcywNCj4gDQo+IAl0Z2x4DQo=
+On Sun, 23 Jun 2019, Anson.Huang@nxp.com wrote:
+
+Again the short summary could be more informative. Instead of 'Add foo' you
+could say:
+
+    .....: Make timer work with platform driver model
+
+That sums up the real meat of the patch. 'Add some option' is pretty
+uninformative.
+
+> On some i.MX8M platforms, clock driver uses platform driver
+> model and it is NOT ready during timer initialization phase,
+> the clock operations will fail and system counter driver will
+> fail too. As all the i.MX8M platforms' system counter clock
+> are from OSC which is always enabled, so it is no need to enable
+> clock for system counter driver, the ONLY thing is to pass
+> clock frequence to driver.
+> 
+> This patch adds an option of skipping of_clk operation for
+> system counter driver, an optional property "clock-frequency"
+> is introduced to pass the frequency value to system counter
+> driver and indicate driver to skip of_clk operations.
+
+The comments to the changelog of patch 1 apply here as well :)
+
+Hint: 'This patch'
+
+Thanks,
+
+	tglx
