@@ -1,10 +1,8 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH RESEND V2 3/3] arm64: dts: imx8mq: Add system counter node
-Date: Sun, 23 Jun 2019 20:38:50 +0800
-Message-ID: <20190623123850.22584-3-Anson.Huang@nxp.com>
-References: <20190623123850.22584-1-Anson.Huang@nxp.com>
+Subject: [PATCH RESEND V2 1/3] clocksource/drivers/sysctr: Add optional clock-frequency property
+Date: Sun, 23 Jun 2019 20:38:48 +0800
+Message-ID: <20190623123850.22584-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190623123850.22584-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, abel.vesa@nxp.com, ccaione@baylibre.com, angus@akkea.ca, andrew.smirnov@gmail.com, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: Linux-imx@nxp.com
@@ -12,34 +10,49 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Add i.MX8MQ system counter node to enable timer-imx-sysctr
-broadcast timer driver.
+Systems which use platform driver model for clock driver require the
+clock frequency to be supplied via device tree when system counter
+driver is enabled.
+
+This is necessary as in the platform driver model the of_clk operations
+do not work correctly because system counter driver is initialized in
+early phase of system boot up, and clock driver using platform driver
+model is NOT ready at that time, it will cause system counter driver
+initialization failed.
+
+Add the optinal clock-frequency to the device tree bindings of the NXP
+system counter, so the frequency can be handed in and the of_clk
+operations can be skipped.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-No change.
+Changes since V1:
+	- improve commit log, no content change.
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index d09b808..9d99191 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -635,6 +635,14 @@
- 				#pwm-cells = <2>;
- 				status = "disabled";
- 			};
-+
-+			system_counter: timer@306a0000 {
-+				compatible = "nxp,sysctr-timer";
-+				reg = <0x306a0000 0x30000>;
-+				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				clock-frequency = <8333333>;
-+			};
- 		};
+diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+index d576599..c9907a0 100644
+--- a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
++++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+@@ -14,6 +14,11 @@ Required properties:
+ - clocks : 	    Specifies the counter clock.
+ - clock-names: 	    Specifies the clock's name of this module
  
- 		bus@30800000 { /* AIPS3 */
++Optional properties:
++
++- clock-frequency : Specifies system counter clock frequency and indicates system
++		    counter driver to skip clock operations.
++
+ Example:
+ 
+ 	system_counter: timer@306a0000 {
+@@ -22,4 +27,5 @@ Example:
+ 		clocks = <&clk_8m>;
+ 		clock-names = "per";
+ 		interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++		clock-frequency = <8333333>;
+ 	};
 -- 
 2.7.4
