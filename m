@@ -1,159 +1,188 @@
-From: Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH 3/4] IIO: Ingenic JZ47xx: Set clock divider on probe
-Date: Sun, 23 Jun 2019 20:47:31 +0200
-Message-ID: <20190623184732.5492-3-contact@artur-rojek.eu>
-References: <20190623184732.5492-1-contact@artur-rojek.eu>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using devicetree
+Date: Sun, 23 Jun 2019 12:58:45 -0700
+Message-ID: <f0cee7b6-b83b-b74c-82f5-f43e39bd391a@gmail.com>
+References: <156113387975.28344.16009584175308192243.stgit@devnote2>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190623184732.5492-1-contact@artur-rojek.eu>
+In-Reply-To: <156113387975.28344.16009584175308192243.stgit@devnote2>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Maarten ter Huurne <maarten@treewalker.org>, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
+To: Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Maarten ter Huurne <maarten@treewalker.org>
+Hi Masami,
 
-The SADC component can run at up to 8 MHz on JZ4725B, but is fed
-a 12 MHz input clock (EXT). Divide it by two to get 6 MHz, then
-set up another divider to match, to produce a 10us clock.
+On 6/21/19 9:18 AM, Masami Hiramatsu wrote:
+> Hi,
+> 
+> Here is an RFC series of patches to add boot-time tracing using
+> devicetree.
+> 
+> Currently, kernel support boot-time tracing using kernel command-line
+> parameters. But that is very limited because of limited expressions
+> and limited length of command line. Recently, useful features like
+> histogram, synthetic events, etc. are being added to ftrace, but it is
+> clear that we can not expand command-line options to support these
+> features.
 
-If the clock dividers are left on their power-on defaults (a divider
-of 1), the SADC mostly works, but will occasionally produce erroneous
-readings. This led to button presses being detected out of nowhere on
-the RS90 every few minutes. With this change, no ghost button presses
-were logged in almost a day worth of testing.
+"it is clear that we can not expand command-line options" needs a fuller
+explanation.  And maybe further exploration.
 
-The ADCLK register for configuring clock dividers doesn't exist on
-JZ4740, so avoid writing it there.
 
-A function has been introduced rather than a flag because there is a lot
-of variation between the ADCLK registers on JZ47xx SoCs, both in
-the internal layout of the register and in the frequency range
-supported by the SADC. So this solution should make it easier
-to add support for other JZ47xx SoCs later.
+> 
+> Hoever, I've found that there is a devicetree which can pass more
+> structured commands to kernel at boot time :) The devicetree is usually
+> used for dscribing hardware configuration, but I think we can expand it
 
-Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
----
- drivers/iio/adc/ingenic-adc.c | 54 +++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+Devicetree is standardized and documented as hardware description.
 
-diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
-index 92b1d5037ac9..e234970b7150 100644
---- a/drivers/iio/adc/ingenic-adc.c
-+++ b/drivers/iio/adc/ingenic-adc.c
-@@ -11,6 +11,7 @@
- #include <linux/iio/iio.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
-+#include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/platform_device.h>
-@@ -22,8 +23,11 @@
- #define JZ_ADC_REG_ADTCH		0x18
- #define JZ_ADC_REG_ADBDAT		0x1c
- #define JZ_ADC_REG_ADSDAT		0x20
-+#define JZ_ADC_REG_ADCLK		0x28
- 
- #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
-+#define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
-+#define JZ_ADC_REG_ADCLK_CLKDIV10US_LSB	16
- 
- #define JZ_ADC_AUX_VREF				3300
- #define JZ_ADC_AUX_VREF_BITS			12
-@@ -34,6 +38,8 @@
- #define JZ4740_ADC_BATTERY_HIGH_VREF		(7500 * 0.986)
- #define JZ4740_ADC_BATTERY_HIGH_VREF_BITS	12
- 
-+struct ingenic_adc;
-+
- struct ingenic_adc_soc_data {
- 	unsigned int battery_high_vref;
- 	unsigned int battery_high_vref_bits;
-@@ -41,6 +47,7 @@ struct ingenic_adc_soc_data {
- 	size_t battery_raw_avail_size;
- 	const int *battery_scale_avail;
- 	size_t battery_scale_avail_size;
-+	int (*init_clk_div)(struct device *dev, struct ingenic_adc *adc);
- };
- 
- struct ingenic_adc {
-@@ -151,6 +158,42 @@ static const int jz4740_adc_battery_scale_avail[] = {
- 	JZ_ADC_BATTERY_LOW_VREF, JZ_ADC_BATTERY_LOW_VREF_BITS,
- };
- 
-+static int jz4725b_adc_init_clk_div(struct device *dev, struct ingenic_adc *adc)
-+{
-+	struct clk *parent_clk;
-+	unsigned long parent_rate, rate;
-+	unsigned int div_main, div_10us;
-+
-+	parent_clk = clk_get_parent(adc->clk);
-+	if (!parent_clk) {
-+		dev_err(dev, "ADC clock has no parent\n");
-+		return -ENODEV;
-+	}
-+	parent_rate = clk_get_rate(parent_clk);
-+
-+	/*
-+	 * The JZ4725B ADC works at 500 kHz to 8 MHz.
-+	 * We pick the highest rate possible.
-+	 * In practice we typically get 6 MHz, half of the 12 MHz EXT clock.
-+	 */
-+	div_main = DIV_ROUND_UP(parent_rate, 8000000);
-+	div_main = clamp(div_main, 1u, 64u);
-+	rate = parent_rate / div_main;
-+	if (rate < 500000 || rate > 8000000) {
-+		dev_err(dev, "No valid divider for ADC main clock\n");
-+		return -EINVAL;
-+	}
-+
-+	/* We also need a divider that produces a 10us clock. */
-+	div_10us = DIV_ROUND_UP(rate, 100000);
-+
-+	writel(((div_10us - 1) << JZ_ADC_REG_ADCLK_CLKDIV10US_LSB) |
-+	       (div_main - 1) << JZ_ADC_REG_ADCLK_CLKDIV_LSB,
-+	       adc->base + JZ_ADC_REG_ADCLK);
-+
-+	return 0;
-+}
-+
- static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
- 	.battery_high_vref = JZ4725B_ADC_BATTERY_HIGH_VREF,
- 	.battery_high_vref_bits = JZ4725B_ADC_BATTERY_HIGH_VREF_BITS,
-@@ -158,6 +201,7 @@ static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
- 	.battery_raw_avail_size = ARRAY_SIZE(jz4725b_adc_battery_raw_avail),
- 	.battery_scale_avail = jz4725b_adc_battery_scale_avail,
- 	.battery_scale_avail_size = ARRAY_SIZE(jz4725b_adc_battery_scale_avail),
-+	.init_clk_div = jz4725b_adc_init_clk_div,
- };
- 
- static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
-@@ -167,6 +211,7 @@ static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
- 	.battery_raw_avail_size = ARRAY_SIZE(jz4740_adc_battery_raw_avail),
- 	.battery_scale_avail = jz4740_adc_battery_scale_avail,
- 	.battery_scale_avail_size = ARRAY_SIZE(jz4740_adc_battery_scale_avail),
-+	.init_clk_div = NULL, /* no ADCLK register on JZ4740 */
- };
- 
- static int ingenic_adc_read_avail(struct iio_dev *iio_dev,
-@@ -317,6 +362,15 @@ static int ingenic_adc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	/* Set clock dividers. */
-+	if (soc_data->init_clk_div) {
-+		ret = soc_data->init_clk_div(dev, adc);
-+		if (ret) {
-+			clk_disable_unprepare(adc->clk);
-+			return ret;
-+		}
-+	}
-+
- 	/* Put hardware in a known passive state. */
- 	writeb(0x00, adc->base + JZ_ADC_REG_ENABLE);
- 	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
--- 
-2.22.0
+
+> for software configuration too (e.g. AOSP and OPTEE already introduced
+> firmware node.) Also, grub and qemu already supports loading devicetree,
+> so we can use it not only on embedded devices but also on x86 PC too.
+
+Devicetree is NOT for configuration information.  This has been discussed
+over and over again in mail lists, at various conferences, and was also an
+entire session at plumbers a few years ago:
+
+   https://elinux.org/Device_tree_future#Linux_Plumbers_2016_Device_Tree_Track
+
+There is one part of device tree that does allow non-hardware description,
+which is the "chosen" node which is provided to allow communication between
+the bootloader and the kernel.
+
+There clearly are many use cases for providing configuration information
+and other types of data to a booting kernel.  I have been encouraging
+people to come up with an additional boot time communication channel or
+data object to support this use case.  So far, no serious proposal that
+I am aware of.
+
+> 
+> With the devicetree, we can setup new kprobe and synthetic events, more
+> complicated event filters and trigger actions including histogram.
+> 
+> For example, following kernel parameters
+> 
+> trace_options=sym-addr trace_event=initcall:* tp_printk trace_buf_size=1M
+> 
+> it can be written in devicetree like below.
+> 
+> 	ftrace {
+> 		compatible = "linux,ftrace";
+> 		options = "sym-addr";
+> 		events = "initcall:*";
+> 		tp-printk;
+> 		buffer-size-kb = <0x400>;	// 1024KB == 1MB
+> 	};
+> 
+> Moreover, now we can expand it to add filters for events, kprobe events,
+> and synthetic events with histogram like below.
+> 
+> 	ftrace {
+> 		compatible = "linux,ftrace";
+> 		...
+> 		event0 {
+> 			event = "task:task_newtask";
+> 			filter = "pid < 128";	// adding filters
+> 			enable;
+> 		};
+> 		event1 {
+> 			event = "kprobes:vfs_read";
+> 			probes = "vfs_read $arg1 $arg2"; // add kprobes
+> 			filter = "common_pid < 200";
+> 			enable;
+> 		};
+> 		event2 {
+> 			event = "initcall_latency";	// add synth event
+> 			fields = "unsigned long func", "u64 lat";
+> 			// with histogram
+> 			actions = "hist:keys=func.sym,lat:vals=lat:sort=lat";
+> 		};
+> 		// and synthetic event callers
+> 		event3 {
+> 			event = "initcall:initcall_start";
+> 			actions = "hist:keys=func:ts0=common_timestamp.usecs";
+> 		};
+> 		event4 {
+> 			event = "initcall:initcall_finish";
+> 			actions = "hist:keys=func:lat=common_timestamp.usecs-$ts0:onmatch(initcall.initcall_start).initcall_latency(func,$lat)";
+> 		};
+> 	};
+> 
+> These complex configuration can not be done by kernel parameters.
+> However, this is not replacing boot-time tracing by kernel parameters.
+> This devicetree settings are applied in fs_initcall() stage, but kernel
+> parameters are applied earlier stage. Anyway, this is enough useful
+> for debugging/tracing kernel driver initializations.
+> 
+> I would like to discuss on some points about this idea.
+> 
+> - Can we use devicetree for configuring kernel dynamically?
+
+No.  Sorry.
+
+My understanding of this proposal is that it is intended to better
+support boot time kernel and driver debugging.  As an alternate
+implementation, could you compile the ftrace configuration information
+directly into a kernel data structure?  It seems like it would not be
+very difficult to populate the data structure data via a few macros.
+
+-Frank
+
+
+> - Would you have any comment for the devicetree format and default
+>   behaviors?
+> - Currently, kprobe and synthetic events are defined inside event
+>   node, but it is able to define globally in ftrace node. Which is
+>   better?
+> - Do we need to support "status" property on each event node so
+>   that someone can prepare "dtsi" include file and override the status?
+> - Do we need instance-wide pid filter (set_event_pid) when boot-time?
+> - Do we need more structured tree, like spliting event and group,
+>   event actions and probes to be a tree of node, etc?
+> - Do we need per group filter & enablement support?
+> - How to support instances? (nested tree or different tree?)
+> - What kind of options would we need?
+> 
+> Some kernel parameters are not implemented yet, like ftrace_filter,
+> ftrace_notrace, etc. These will be implemented afterwards.
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (11):
+>       tracing: Apply soft-disabled and filter to tracepoints printk
+>       tracing: kprobes: Output kprobe event to printk buffer
+>       tracing: Expose EXPORT_SYMBOL_GPL symbol
+>       tracing: kprobes: Register to dynevent earlier stage
+>       tracing: Accept different type for synthetic event fields
+>       tracing: Add NULL trace-array check in print_synth_event()
+>       dt-bindings: tracing: Add ftrace binding document
+>       tracing: of: Add setup tracing by devicetree support
+>       tracing: of: Add trace event settings
+>       tracing: of: Add kprobe event support
+>       tracing: of: Add synthetic event support
+> 
+> 
+>  .../devicetree/bindings/tracing/ftrace.yaml        |  170 +++++++++++
+>  include/linux/trace_events.h                       |    1 
+>  kernel/trace/Kconfig                               |   10 +
+>  kernel/trace/Makefile                              |    1 
+>  kernel/trace/trace.c                               |   49 ++-
+>  kernel/trace/trace_events.c                        |    3 
+>  kernel/trace/trace_events_hist.c                   |   14 +
+>  kernel/trace/trace_events_trigger.c                |    2 
+>  kernel/trace/trace_kprobe.c                        |   81 +++--
+>  kernel/trace/trace_of.c                            |  311 ++++++++++++++++++++
+>  10 files changed, 589 insertions(+), 53 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/tracing/ftrace.yaml
+>  create mode 100644 kernel/trace/trace_of.c
+> 
+> --
+> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
+> 
