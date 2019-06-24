@@ -1,75 +1,101 @@
-From: Alex Elder <elder@linaro.org>
-Subject: WWAN Controller Framework (was IPA [PATCH v2 00/17])
-Date: Mon, 24 Jun 2019 11:30:35 -0500
-Message-ID: <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
-References: <20190531035348.7194-1-elder@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Mon, 24 Jun 2019 18:40:57 +0200
+Message-ID: <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+ <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+ <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+ <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+ <36bca57c999f611353fd9741c55bb2a7@codeaurora.org> <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+ <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
+ <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+ <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
+ <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+ <d533b708-c97a-710d-1138-3ae79107f209@linaro.org> <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
+ <db34aa39-6cf1-4844-1bfe-528e391c3729@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190531035348.7194-1-elder@linaro.org>
-Content-Language: en-US
+In-Reply-To: <db34aa39-6cf1-4844-1bfe-528e391c3729@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org
-Cc: evgreen@chromium.org, benchan@google.com, ejcaruso@google.com, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+To: Alex Elder <elder@linaro.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>, Dan Williams <dcbw@redhat.com>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-OK I want to try to organize a little more concisely some of the
-discussion on this, because there is a very large amount of volume
-to date and I think we need to try to narrow the focus back down
-again.
+On Mon, Jun 24, 2019 at 6:21 PM Alex Elder <elder@linaro.org> wrote:
+> On 6/18/19 2:03 PM, Johannes Berg wrote:
+>
+> > Really there are two possible ways (and they intersect to some extent).
+> >
+> > One is the whole multi-function device, where a single WWAN device is
+> > composed of channels offered by actually different drivers, e.g. for a
+> > typical USB device you might have something like cdc_ether and the
+> > usb_wwan TTY driver. In this way, we need to "compose" the WWAN device
+> > similarly, e.g. by using the underlying USB device "struct device"
+> > pointer to tie it together.
+>
+> I *think* this model makes the most sense.  But at this point
+> it would take very little to convince me otherwise...  (And then
+> I saw Arnd's message advocating the other one, unfortunately...)
+>
+> > The other is something like IPA or the Intel modem driver, where the
+> > device is actually a single (e.g. PCIe) device and just has a single
+> > driver, but that single driver offers different channels.
+>
+> What I don't like about this is that it's more monolithic.  It
+> seems better to have the low-level IPA or Intel modem driver (or
+> any other driver that can support communication between the AP
+> and WWAN device) present communication paths that other function-
+> specific drivers can attach to and use.
 
-I'm going to use a few terms here.  Some of these I really don't
-like, but I want to be unambiguous *and* (at least for now) I want
-to avoid the very overloaded term "device".
+I did not understand Johannes description as two competing models
+for the same code, but rather two kinds of existing hardware that
+a new driver system would have to deal with.
 
-I have lots more to say, but let's start with a top-level picture,
-to make sure we're all on the same page.
+I was trying to simplify it to just having the second model, by adding
+a hack to support the first, but my view was rather unpopular so
+far, so if everyone agrees on one way to do it, don't worry about me ;-)
 
-         WWAN Communication
-         Channel (Physical)
-                 |     ------------------------
-------------     v     |           :+ Control |  \
-|          |-----------|           :+ Data    |  |
-|    AP    |           | WWAN unit :+ Voice   |   > Functions
-|          |===========|           :+ GPS     |  |
-------------     ^     |           :+ ...     |  /
-                 |     -------------------------
-          Multiplexed WWAN
-           Communication
-         Channel (Physical)
+> > Now, it's not clear to me where IPA actually falls, because so far we've
+> > been talking about the IPA driver only as providing *netdevs*, not any
+> > control channels, so I'm not actually sure where the control channel is.
+>
+> There is user space code that handles all of this, and as far as I
+> can tell, parts of it will always remain proprietary.
 
-- The *AP* is the main CPU complex that's running Linux on one or
-  more CPU cores.
-- A *WWAN unit* is an entity that shares one or more physical
-  *WWAN communication channels* with the AP.
-- A *WWAN communication channel* is a bidirectional means of
-  carrying data between the AP and WWAN unit.
-- A WWAN communication channel carries data using a *WWAN protocol*.
-- A WWAN unit implements one or more *WWAN functions*, such as
-  5G data, LTE voice, GPS, and so on.
-- A WWAN unit shall implement a *WWAN control function*, used to
-  manage the use of other WWAN functions, as well as the WWAN unit
-  itself.
-- The AP communicates with a WWAN function using a WWAN protocol.
-- A WWAN physical channel can be *multiplexed*, in which case it
-  carries the data for one or more *WWAN logical channels*.
-- A multiplexed WWAN communication channel uses a *WWAN wultiplexing
-  protocol*, which is used to separate independent data streams
-  carrying other WWAN protocols.
-- A WWAN logical channel carries a bidirectional stream of WWAN
-  protocol data between an entity on the AP and a WWAN function.
+Two replies on this:
 
-Does that adequately represent a very high-level picture of what
-we're trying to manage?
+- to answer Johannes question, my understanding is that the interface
+  between kernel and firmware/hardware for IPA has a single 'struct
+  device' that is used for both the data and the control channels,
+  rather than having a data channel and an independent control device,
+  so this falls into the same category as the Intel one (please correct
+  me on that)
 
-And if I understand it right, the purpose of the generic framework
-being discussed is to define a common mechanism for managing (i.e.,
-discovering, creating, destroying, querying, configuring, enabling,
-disabling, etc.) WWAN units and the functions they implement, along
-with the communication and logical channels used to communicate with
-them.
+- The user space being proprietary is exactly what we need to avoid
+  with the wwan subsystem. We need to be able to use the same
+  method for setting up Intel, Qualcomm, Samsung, Unisoc or
+  Hisilicon modems or anything else that hooks into the subsystem,
+  and support that in network manager as well as the Android
+  equivalent.
+  If Qualcomm wants to provide their own proprietary user space
+  solution, we can't stop them, but then that should also work on
+  all the others unless they intentionally break it. ;-)
 
-Comments?
+> > and simply require that the channel is attached to the wwan device with
+> > the representation-specific call (wwan_attach_netdev, wwan_attach_tty,
+> > ...).
+>
+> Or maybe have the WWAN device present interfaces with attributes,
+> and have drivers that are appropriate for each interface attach
+> to only the ones they recognize they support.
 
-					-Alex
+I think you both mean the same thing here, a structure with callback
+pointers that may or may not be filled by the driver depending on its
+capabilities.
+
+What we should try to avoid though is a way to add driver private
+interfaces that risk having multiple drivers create similar functionality
+in incompatible ways.
+
+        Arnd
