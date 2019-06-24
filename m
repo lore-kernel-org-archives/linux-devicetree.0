@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v13 09/13] MIPS: jz4740: Add DTS nodes for the TCU drivers
-Date: Tue, 25 Jun 2019 00:57:55 +0200
-Message-ID: <20190624225759.18299-10-paul@crapouillou.net>
+Subject: [PATCH v13 10/13] MIPS: qi_lb60: Reduce system timer and clocksource to 750 kHz
+Date: Tue, 25 Jun 2019 00:57:56 +0200
+Message-ID: <20190624225759.18299-11-paul@crapouillou.net>
 References: <20190624225759.18299-1-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,7 +12,8 @@ To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix
 Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-Add DTS nodes for the JZ4780, JZ4770 and JZ4740 devicetree files.
+The default clock (12 MHz) is too fast for the system timer, which fails
+to report time accurately.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
@@ -22,122 +23,34 @@ Tested-by: Artur Rojek <contact@artur-rojek.eu>
 Notes:
     v5: New patch
     
-    v6: Fix register lengths in watchdog/pwm nodes
+    v6: Remove ingenic,clocksource-channel property
     
-    v7: No change
-    
-    v8: - Fix wrong start address for PWM node
-    	- Add system timer and clocksource sub-nodes
-    
-    v9: Drop timer and clocksource sub-nodes
-    
-    v10-v11: No change
-    
-    v12: Drop PWM/watchdog/OST sub-nodes, for now.
-    
-    v13: No change
+    v7-v13: No change
 
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 22 ++++++++++++++++++++++
- arch/mips/boot/dts/ingenic/jz4770.dtsi | 21 +++++++++++++++++++++
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 21 +++++++++++++++++++++
- 3 files changed, 64 insertions(+)
+ arch/mips/boot/dts/ingenic/qi_lb60.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 2beb78a62b7d..807d9702d4cf 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -53,6 +53,28 @@
- 		clock-names = "rtc";
- 	};
+diff --git a/arch/mips/boot/dts/ingenic/qi_lb60.dts b/arch/mips/boot/dts/ingenic/qi_lb60.dts
+index 76aaf8982554..01b8c917cb33 100644
+--- a/arch/mips/boot/dts/ingenic/qi_lb60.dts
++++ b/arch/mips/boot/dts/ingenic/qi_lb60.dts
+@@ -2,6 +2,7 @@
+ /dts-v1/;
  
-+	tcu: timer@10002000 {
-+		compatible = "ingenic,jz4740-tcu";
-+		reg = <0x10002000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10002000 0x1000>;
-+
-+		#clock-cells = <1>;
-+
-+		clocks = <&cgu JZ4740_CLK_RTC
-+			  &cgu JZ4740_CLK_EXT
-+			  &cgu JZ4740_CLK_PCLK
-+			  &cgu JZ4740_CLK_TCU>;
-+		clock-names = "rtc", "ext", "pclk", "tcu";
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <23 22 21>;
-+	};
-+
- 	rtc_dev: rtc@10003000 {
- 		compatible = "ingenic,jz4740-rtc";
- 		reg = <0x10003000 0x40>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-index 49ede6c14ff3..70932fd90902 100644
---- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-@@ -46,6 +46,27 @@
- 		#clock-cells = <1>;
- 	};
+ #include "jz4740.dtsi"
++#include <dt-bindings/clock/ingenic,tcu.h>
  
-+	tcu: timer@10002000 {
-+		compatible = "ingenic,jz4770-tcu";
-+		reg = <0x10002000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10002000 0x1000>;
-+
-+		#clock-cells = <1>;
-+
-+		clocks = <&cgu JZ4770_CLK_RTC
-+			  &cgu JZ4770_CLK_EXT
-+			  &cgu JZ4770_CLK_PCLK>;
-+		clock-names = "rtc", "ext", "pclk";
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <27 26 25>;
-+	};
-+
- 	pinctrl: pin-controller@10010000 {
- 		compatible = "ingenic,jz4770-pinctrl";
- 		reg = <0x10010000 0x600>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index b03cdec56de9..495082ce7fc5 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -46,6 +46,27 @@
- 		#clock-cells = <1>;
+ / {
+ 	compatible = "qi,lb60", "ingenic,jz4740";
+@@ -31,3 +32,9 @@
+ 		bias-disable;
  	};
- 
-+	tcu: timer@10002000 {
-+		compatible = "ingenic,jz4770-tcu";
-+		reg = <0x10002000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10002000 0x1000>;
+ };
 +
-+		#clock-cells = <1>;
-+
-+		clocks = <&cgu JZ4780_CLK_RTCLK
-+			  &cgu JZ4780_CLK_EXCLK
-+			  &cgu JZ4780_CLK_PCLK>;
-+		clock-names = "rtc", "ext", "pclk";
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <27 26 25>;
-+	};
-+
- 	rtc_dev: rtc@10003000 {
- 		compatible = "ingenic,jz4780-rtc";
- 		reg = <0x10003000 0x4c>;
++&tcu {
++	/* 750 kHz for the system timer and clocksource */
++	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>;
++	assigned-clock-rates = <750000>, <750000>;
++};
 -- 
 2.21.0.593.g511ec345e18
