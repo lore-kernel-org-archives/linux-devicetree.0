@@ -1,67 +1,105 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 3/4] ARM: dts: exynos: Add regulator suspend
- configuration to Odroid XU3/XU4/HC1 family
-Date: Mon, 24 Jun 2019 09:41:27 +0200
-Message-ID: <CAJKOXPeXELUjsuW9eyGuRj56067qnL-J2Lt4U42mYiyx=X+F_Q@mail.gmail.com>
-References: <20190621155845.7079-1-krzk@kernel.org> <20190621155845.7079-3-krzk@kernel.org>
- <CGME20190623160226epcas2p3449814deb1faf7bf939481e6d4da2b86@epcas2p3.samsung.com>
- <CANAwSgTFQo8wL5s-djwPXFFOLtTHvRQif6234kFC=23PwMhuEQ@mail.gmail.com> <d94a2f99-fb99-c238-7011-9bbb4c0cd90f@samsung.com>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [EXT] Re: [PATCH v3 2/2] drm/panel: Add support for Raydium
+ RM67191 panel driver
+Date: Mon, 24 Jun 2019 07:44:39 +0000
+Message-ID: <1561362278.9328.83.camel@nxp.com>
+References: <1561037428-13855-1-git-send-email-robert.chiras@nxp.com>
+         <1561037428-13855-3-git-send-email-robert.chiras@nxp.com>
+         <CAOMZO5DS2v15h9E=qKg2vKuFkBSQQwdBHA5Th5mZ+ca6DWgQsw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d94a2f99-fb99-c238-7011-9bbb4c0cd90f@samsung.com>
+In-Reply-To: <CAOMZO5DS2v15h9E=qKg2vKuFkBSQQwdBHA5Th5mZ+ca6DWgQsw@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <1796AEB207541D4E834DA85DD569493F@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Anand Moon <linux.amoon@gmail.com>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+To: "festevam@gmail.com" <festevam@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sam@ravnborg.org" <sam@ravnborg.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Jun 2019 at 09:20, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
->
-> Hi Anand,
->
-> On 2019-06-23 18:02, Anand Moon wrote:
-> > Thanks for this patch. Please add my
-> >
-> > Tested-by: Anand Moon <linux.amoon@gmail.com>
-> >
-> > [snip]
-> >
-> > Could you integrate below small changes into this patch.
-> > with these below changes suspend and resume work correctly at my end.
-> >
-> > [1] XU4_suspendresume.patch
-> >
-> > As per S2MPS11B PMIC 1.2.1 Regulator (Features)
-> > Fix the min max value for *Buck7* and *Buck8*
-> >
-> > -- Buck7 (VDD_1.0V_LDO) 1.5 A (1.2 V to 1.5 V, 12.5 mV step, default on 1.35 V)
-> > -- Buck8 (VDD_1.8V_LDO) 2.5 A (1.8 V to 2.1 V, 12.5 mV step, default on 2.0 V)
->
-> Could you elaborate why such change for Buck7 and Buck8 is needed?
-
-Anand has here valid point - the constraints in DTS do not match
-hardware manual. This leads to question whether voltage table in
-driver is proper... Another point is the voltage itself. The
-schematics describes them as at specific voltage (1.35 V and 2.0 V)
-but after boot they are 1.2 V and 1.85 V. Maybe this shift comes from
-the problem above.
-
->
-> > Also add suspend-off for *Buck9*
-> > Buck9 internally controls the power of USB hub.
-> > Adding suspend the this node help proper reset of USB hub on Odroid
-> > XU4 / HC1/ XU3
-> > during suspend and resume. Below it the logs from my testing.
->
-> Disabling Buck9 in suspend indeed reduces the power consumed by the
-> board during suspend-to-ram from about 80mA to as little as 7-10mA, what
-> matches the results of OdroidXU3. Thanks for the hint!
-
-Although I did not get what is the difference in the logs (Anand
-pasted two logs but they look the same) but the power consumption is
-reason is good enough. I would be happy to put in the changelog entire
-consumption  difference. I can measure it on XU3-Lite but can you give
-me the XU4 (before and after)?
-
-Best regards,
-Krzysztof
+SGkgRmFiaW8sDQoNClRoYW5rcyBmb3IgeW91ciBmZWVkYmFjay4gSSB3aWxsIGhhbmRsZSB0aGVt
+IGFsbCwgYnV0IGZvciB0aGUgcG1fb3BzIEkNCmhhdmUgc29tZSBjb21tZW50cy4gU2VlIGlubGlu
+ZS4NCg0KT24gVmksIDIwMTktMDYtMjEgYXQgMTA6NTkgLTAzMDAsIEZhYmlvIEVzdGV2YW0gd3Jv
+dGU6DQo+IEhpIFJvYmVydCwNCj4gDQo+IE9uIFRodSwgSnVuIDIwLCAyMDE5IGF0IDEwOjMxIEFN
+IFJvYmVydCBDaGlyYXMgPHJvYmVydC5jaGlyYXNAbnhwLmNvbQ0KPiA+IHdyb3RlOg0KPiANCj4g
+PiANCj4gPiArZmFpbDoNCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAocmFkLT5yZXNldCkNCj4gPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKHJh
+ZC0+cmVzZXQsIDEpOw0KPiBncGlvZF9zZXRfdmFsdWVfY2Fuc2xlZXAoKSBjYW4gaGFuZGxlIE5V
+TEwsIHNvIG5vIG5lZWQgZm9yIHRoZSBpZigpDQo+IGNoZWNrLg0KPiANCj4gPiANCj4gPiArc3Rh
+dGljIGNvbnN0IHN0cnVjdCBkaXNwbGF5X3RpbWluZyByYWRfZGVmYXVsdF90aW1pbmcgPSB7DQo+
+ID4gK8KgwqDCoMKgwqDCoMKgLnBpeGVsY2xvY2sgPSB7IDEzMjAwMDAwMCwgMTMyMDAwMDAwLCAx
+MzIwMDAwMDAgfSwNCj4gSGF2aW5nIHRoZSBzYW1lIGluZm9ybWF0aW9uIGxpc3RlZCB0aHJlZSB0
+aW1lcyBkb2VzIG5vdCBzZWVtIHVzZWZ1bC4NCj4gDQo+IFlvdSBjb3VsZCB1c2UgYSBkcm1fZGlz
+cGxheV9tb2RlIHN0cnVjdHVyZSB3aXRoIGEgc2luZ2xlIGVudHJ5DQo+IGluc3RlYWQuDQo+IA0K
+PiA+IA0KPiA+ICvCoMKgwqDCoMKgwqDCoHZpZGVvbW9kZV9mcm9tX3RpbWluZygmcmFkX2RlZmF1
+bHRfdGltaW5nLCAmcGFuZWwtPnZtKTsNCj4gPiArDQo+ID4gK8KgwqDCoMKgwqDCoMKgb2ZfcHJv
+cGVydHlfcmVhZF91MzIobnAsICJ3aWR0aC1tbSIsICZwYW5lbC0+d2lkdGhfbW0pOw0KPiA+ICvC
+oMKgwqDCoMKgwqDCoG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAiaGVpZ2h0LW1tIiwgJnBhbmVs
+LT5oZWlnaHRfbW0pOw0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoMKgwqBwYW5lbC0+cmVzZXQgPSBk
+ZXZtX2dwaW9kX2dldChkZXYsICJyZXNldCIsIEdQSU9EX09VVF9MT1cpOw0KPiBTaW5jZSB0aGlz
+IGlzIG9wdGlvbmFsIGl0IHdvdWxkIGJlIGJldHRlciB0byB1c2UNCj4gZGV2bV9ncGlvZF9nZXRf
+b3B0aW9uYWwoKSBpbnN0ZWFkLg0KPiANCj4gDQo+ID4gDQo+ID4gKw0KPiA+ICvCoMKgwqDCoMKg
+wqDCoGlmIChJU19FUlIocGFuZWwtPnJlc2V0KSkNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgcGFuZWwtPnJlc2V0ID0gTlVMTDsNCj4gPiArwqDCoMKgwqDCoMKgwqBlbHNlDQo+
+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGdwaW9kX3NldF92YWx1ZV9jYW5zbGVl
+cChwYW5lbC0+cmVzZXQsIDEpOw0KPiBUaGlzIGlzIG5vdCBoYW5kbGluZyBkZWZlciBwcm9iaW5n
+LCBzbyBpdCB3b3VsZCBiZSBiZXR0ZXIgdG8gZG8gbGlrZQ0KPiB0aGlzOg0KPiANCj4gcGFuZWwt
+PnJlc2V0ID0gZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwoZGV2LCAicmVzZXQiLCBHUElPRF9PVVRf
+TE9XKTsNCj4gaWYgKElTX0VSUihwYW5lbC0+cmVzZXQpKQ0KPiDCoMKgwqDCoMKgwqByZXR1cm7C
+oMKgUFRSX0VSUihwYW5lbC0+cmVzZXQpOw0KPiANCj4gPiANCj4gPiArwqDCoMKgwqDCoMKgwqBt
+ZW1zZXQoJmJsX3Byb3BzLCAwLCBzaXplb2YoYmxfcHJvcHMpKTsNCj4gPiArwqDCoMKgwqDCoMKg
+wqBibF9wcm9wcy50eXBlID0gQkFDS0xJR0hUX1JBVzsNCj4gPiArwqDCoMKgwqDCoMKgwqBibF9w
+cm9wcy5icmlnaHRuZXNzID0gMjU1Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoGJsX3Byb3BzLm1heF9i
+cmlnaHRuZXNzID0gMjU1Ow0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoMKgwqBwYW5lbC0+YmFja2xp
+Z2h0ID0gZGV2bV9iYWNrbGlnaHRfZGV2aWNlX3JlZ2lzdGVyKGRldiwNCj4gPiBkZXZfbmFtZShk
+ZXYpLA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBkZXYsIGRzaSwNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgJnJhZF9ibF9vDQo+ID4gcHMsDQo+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCZibF9w
+cm9wcw0KPiA+ICk7DQo+IENvdWxkIHlvdSBwdXQgbW9yZSBwYXJhbWV0ZXJzIGludG8gdGhlIHNh
+bWUgbGluZT8NCj4gDQo+IFVzaW5nIDQgbGluZXMgc2VlbXMgZXhjZXNzaXZlLg0KPiANCj4gPiAN
+Cj4gPiArwqDCoMKgwqDCoMKgwqBpZiAoSVNfRVJSKHBhbmVsLT5iYWNrbGlnaHQpKSB7DQo+ID4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldCA9IFBUUl9FUlIocGFuZWwtPmJhY2ts
+aWdodCk7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRldl9lcnIoZGV2LCAi
+RmFpbGVkIHRvIHJlZ2lzdGVyIGJhY2tsaWdodCAoJWQpXG4iLA0KPiA+IHJldCk7DQo+ID4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiByZXQ7DQo+ID4gK8KgwqDCoMKgwqDC
+oMKgfQ0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoMKgwqBkcm1fcGFuZWxfaW5pdCgmcGFuZWwtPnBh
+bmVsKTsNCj4gPiArwqDCoMKgwqDCoMKgwqBwYW5lbC0+cGFuZWwuZnVuY3MgPSAmcmFkX3BhbmVs
+X2Z1bmNzOw0KPiA+ICvCoMKgwqDCoMKgwqDCoHBhbmVsLT5wYW5lbC5kZXYgPSBkZXY7DQo+ID4g
+K8KgwqDCoMKgwqDCoMKgZGV2X3NldF9kcnZkYXRhKGRldiwgcGFuZWwpOw0KPiA+ICsNCj4gPiAr
+wqDCoMKgwqDCoMKgwqByZXQgPSBkcm1fcGFuZWxfYWRkKCZwYW5lbC0+cGFuZWwpOw0KPiA+ICsN
+Cj4gVW5uZWVkZWQgYmxhbmsgbGluZQ0KPiANCj4gPiANCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAo
+cmV0IDwgMCkNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIHJldDsN
+Cj4gPiArDQo+ID4gK8KgwqDCoMKgwqDCoMKgcmV0ID0gbWlwaV9kc2lfYXR0YWNoKGRzaSk7DQo+
+ID4gK8KgwqDCoMKgwqDCoMKgaWYgKHJldCA8IDApDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoGRybV9wYW5lbF9yZW1vdmUoJnBhbmVsLT5wYW5lbCk7DQo+ID4gKw0KPiA+ICvC
+oMKgwqDCoMKgwqDCoHJldHVybiByZXQ7DQo+IFlvdSBkaWQgbm90IGhhbmRsZSB0aGUgInBvd2Vy
+IiByZWd1bGF0b3IuDQpUaGVyZSBpcyBubyBuZWVkIGZvciBhIHBvd2VyIHJlZ3VsYXRvci4NCj4g
+DQo+ID4gDQo+ID4gK3N0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgcmFkX3BhbmVsX3N1c3BlbmQo
+c3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ICt7DQo+ID4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IHJh
+ZF9wYW5lbCAqcmFkID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQo+ID4gKw0KPiA+ICvCoMKgwqDC
+oMKgwqDCoGlmICghcmFkLT5yZXNldCkNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgcmV0dXJuIDA7DQo+ID4gKw0KPiA+ICvCoMKgwqDCoMKgwqDCoGRldm1fZ3Bpb2RfcHV0KGRl
+diwgcmFkLT5yZXNldCk7DQo+ID4gK8KgwqDCoMKgwqDCoMKgcmFkLT5yZXNldCA9IE5VTEw7DQo+
+ID4gKw0KPiA+ICvCoMKgwqDCoMKgwqDCoHJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtz
+dGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIHJhZF9wYW5lbF9yZXN1bWUoc3RydWN0IGRldmljZSAq
+ZGV2KQ0KPiA+ICt7DQo+ID4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IHJhZF9wYW5lbCAqcmFkID0g
+ZGV2X2dldF9kcnZkYXRhKGRldik7DQo+ID4gKw0KPiA+ICvCoMKgwqDCoMKgwqDCoGlmIChyYWQt
+PnJlc2V0KQ0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gMDsNCj4g
+PiArDQo+ID4gK8KgwqDCoMKgwqDCoMKgcmFkLT5yZXNldCA9IGRldm1fZ3Bpb2RfZ2V0KGRldiwg
+InJlc2V0IiwgR1BJT0RfT1VUX0xPVyk7DQo+IFdoeSBkbyB5b3UgY2FsbCBkZXZtX2dwaW9kX2dl
+dCgpIG9uY2UgYWdhaW4/DQo+IA0KPiBJIGFtIGhhdmluZyBhIGhhcmQgdGltZSB0byB1bmRlcnN0
+YW5kIHRoZSBuZWVkIGZvciB0aGlzDQo+IHN1c3BlbmQvcmVzdW1lIGhvb2tzLg0KPiANCj4gQ2Fu
+J3QgeW91IHNpbXBseSByZW1vdmUgdGhlbT8NClRoZSByZXNldCBncGlvIHBpbiBpcyBzaGFyZWQg
+YmV0d2VlbiB0aGUgRFNJIGRpc3BsYXkgY29udHJvbGxlciBhbmQNCnRvdWNoIGNvbnRyb2xsZXIs
+IGJvdGggZm91bmQgb24gdGhlIHNhbWUgcGFuZWwuIFNpbmNlLCB0aGUgdG91Y2ggZHJpdmVyDQph
+bHNvIGFjY2VzZXMgdGhpcyBncGlvIHBpbiwgaW4gc29tZSBjYXNlcyB0aGUgZGlzcGxheSBjYW4g
+YmUgcHV0IHRvDQpzbGVlcCwgYnV0IHRoZSB0b3VjaCBpcyBzdGlsbCBhY3RpdmUuIFRoaXMgaXMg
+d2h5LCBkdXJpbmcgc3VzcGVuZCBJDQpyZWxlYXNlIHRoZSBncGlvIHJlc291cmNlLCBhbmQgSSBo
+YXZlIHRvIHRha2UgaXQgYmFjayBpbiByZXN1bWUuDQpXaXRob3V0IHRoaXMgcmVsZWFzZS9hY3F1
+aXJlIG1lY2hhbmlzbSBkdXJpbmcgc3VzcGVuZC9yZXN1bWUsIHN0cmVzcy0NCnRlc3RzIHNob3dl
+ZCBzb21lIGZhaWx1cmVzOiB0aGUgcmVzdW1lIGZyZWV6ZXMgY29tcGxldGx5Lg==
