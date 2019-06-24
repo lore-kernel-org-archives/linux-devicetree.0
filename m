@@ -1,129 +1,362 @@
-Return-Path: <SRS0=XSpL=UX=rock-chips.com=jay.xu@kernel.org>
-Date: Mon, 24 Jun 2019 09:57:09 +0800
-From: "jay.xu@rock-chips.com" <jay.xu@rock-chips.com>
-Subject: Re: Re: [PATCH v3 1/1] arm64: dts: rockchip: add core dtsi file for RK3399Pro SoCs
-References: <20190529074752.19388-1-jay.xu@rock-chips.com>,
-	<20190530000848.28106-1-jay.xu@rock-chips.com>,
-	<3309819.J5kelTtX6q@phil>
-Mime-Version: 1.0
-Message-ID: <2019062409570947233513@rock-chips.com>
-Content-Type: multipart/alternative;
-	boundary="----=_001_NextPart256882183164_=----"
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: "mark.rutland" <mark.rutland@arm.com>, robh+dt <robh+dt@kernel.org>, =?utf-8?B?5byg5b+X5p2w77yI5Yib5paw77yJ?= <zhangzj@rock-chips.com>, "manivannan.sadhasivam" <manivannan.sadhasivam@linaro.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Return-Path: <SRS0=N22M=UX=gerhold.net=stephan@kernel.org>
+From: Stephan Gerhold <stephan@gerhold.net>
+Subject: [RFC PATCH] arm64: dts: qcom: Add device tree for Samsung Galaxy A3U/A5U
+Date: Mon, 24 Jun 2019 19:33:43 +0200
+Message-Id: <20190624173341.5826-1-stephan@gerhold.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: Andy Gross <agross@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>, Michael Srba <Michael.Srba@seznam.cz>
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
+Samsung Galaxy A3 (SM-A300FU) and Samsung Galaxy A5 (SM-A500FU)
+are smartphones using the MSM8916 SoC released in 2015.
 
-------=_001_NextPart256882183164_=----
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+Add a device tree for A3U and A5U with initial support for:
+  - SDHCI (internal and external storage)
+  - USB Device Mode
+  - UART (on USB connector via the SM5502 MUIC)
+  - Regulators
 
-SGksIEtlaWtvIGFuZCBNYW5pdmFubmFuOg0KDQpTb3JyeSBsYXRlIHRvIHJlcGx5IHNpbmNlIEkg
-bWlzc2VkIHRoaXMgbWFpbCBhZnRlciBhIGxvbmcgbGVhdmUgdGltZS4NCg0KDQoNCmpheS54dUBy
-b2NrLWNoaXBzLmNvbQ0KIA0KRnJvbTogSGVpa28gU3R1ZWJuZXINCkRhdGU6IDIwMTktMDYtMTQg
-MTc6NTINClRvOiBKaWFucXVuIFh1DQpDQzogbWFyay5ydXRsYW5kOyByb2JoK2R0OyB6aGFuZ3pq
-OyBtYW5pdmFubmFuLnNhZGhhc2l2YW07IGxpbnV4LXJvY2tjaGlwOyBsaW51eC1hcm0ta2VybmVs
-OyBsaW51eC1rZXJuZWw7IGRldmljZXRyZWUNClN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMS8xXSBh
-cm02NDogZHRzOiByb2NrY2hpcDogYWRkIGNvcmUgZHRzaSBmaWxlIGZvciBSSzMzOTlQcm8gU29D
-cw0KSGkgSmlhbnF1biwNCiANCkFtIERvbm5lcnN0YWcsIDMwLiBNYWkgMjAxOSwgMDI6MDg6NDgg
-Q0VTVCBzY2hyaWViIEppYW5xdW4gWHU6DQo+IFRoaXMgcGF0Y2ggYWRkcyBjb3JlIGR0c2kgZmls
-ZSBmb3IgUm9ja2NoaXAgUkszMzk5UHJvIFNvQ3MsDQo+IGluY2x1ZGUgcmszMzk5LmR0c2kuIEFs
-c28gZW5hYmxlIHBjaWVpMC9wY2llX3BoeSBmb3IgQVAgdG8NCj4gdGFsayB0byBOUFUgcGFydCBp
-bnNpZGUgU29DLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogSmlhbnF1biBYdSA8amF5Lnh1QHJvY2st
-Y2hpcHMuY29tPg0KIA0KY291bGQgeW91IGFkZCB0aGUgbmVjZXNzYXJ5IHBpbmN0cmwgZW50cnks
-IGFzIHN1Z2dlc3RlZCBieSBNYW5pdmFubmFuPw0KSGksIHRoZXJlIGlzIG5vIHBpbmN0cmwgZm9y
-IGVwLWdwaW9zLCB3aGljaCB1c2VkIGFzIEdQSU8sIHRoZXkgd2lsbCBzZXQgYnkgZ3BpbyBkcml2
-ZXINCm11eCB0byBHUElPIGRlZmF1bHRseS4NCiANClRoYW5rcw0KSGVpa28NCiANCj4gLS0tDQo+
-IGNoYW5nZXMgc2luY2UgdjI6DQo+IC0gb25seSBlbmFibGUgcGNpZTAgYW5kIHBjaWVfcGh5IG5v
-ZGVzLCB0aGFua3MgZm9yIEhlaWtvIGFuZCBtYW5pdmFubmFuDQo+IA0KPiBjaGFuZ2VzIHNpbmNl
-IHYxOg0KPiAtIHJlbW92ZSBkZmkgYW5kIGRtYw0KPiANCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMv
-cm9ja2NoaXAvcmszMzk5cHJvLmR0c2kgfCAyMiArKysrKysrKysrKysrKysrKysrKysNCj4gIDEg
-ZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJj
-aC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTlwcm8uZHRzaQ0KPiANCj4gZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5cHJvLmR0c2kgYi9hcmNoL2Fy
-bTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OXByby5kdHNpDQo+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYmI1ZWJmNjYwOGI5DQo+IC0tLSAvZGV2L251bGwN
-Cj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTlwcm8uZHRzaQ0KPiBA
-QCAtMCwwICsxLDIyIEBADQo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAr
-IE9SIE1JVCkNCj4gKy8vIENvcHlyaWdodCAoYykgMjAxOSBGdXpob3UgUm9ja2NoaXAgRWxlY3Ry
-b25pY3MgQ28uLCBMdGQuDQo+ICsNCj4gKyNpbmNsdWRlICJyazMzOTkuZHRzaSINCj4gKw0KPiAr
-LyB7DQo+ICsgY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMzOTlwcm8iOw0KPiArfTsNCj4gKw0K
-PiArLyogRGVmYXVsdCB0byBlbmFibGVkIHNpbmNlIEFQIHRhbGsgdG8gTlBVIHBhcnQgb3ZlciBw
-Y2llICovDQo+ICsmcGNpZV9waHkgew0KPiArIHN0YXR1cyA9ICJva2F5IjsNCj4gK307DQo+ICsN
-Cj4gKy8qIERlZmF1bHQgdG8gZW5hYmxlZCBzaW5jZSBBUCB0YWxrIHRvIE5QVSBwYXJ0IG92ZXIg
-cGNpZSAqLw0KPiArJnBjaWUwIHsNCj4gKyBlcC1ncGlvcyA9IDwmZ3BpbzAgUktfUEI0IEdQSU9f
-QUNUSVZFX0hJR0g+Ow0KPiArIG51bS1sYW5lcyA9IDw0PjsNCj4gKyBwaW5jdHJsLW5hbWVzID0g
-ImRlZmF1bHQiOw0KPiArIHBpbmN0cmwtMCA9IDwmcGNpZV9jbGtyZXFuX2NwbT47DQo+ICsgc3Rh
-dHVzID0gIm9rYXkiOw0KPiArfTsNCj4gDQogDQogDQogDQogDQogDQo=
+The two devices (and all other variants of A3/A5 released in 2015)
+are very similar, with some differences in display, touchscreen
+and sensors. The common parts are shared in
+msm8916-samsung-a2015-common.dtsi to reduce duplication.
 
-------=_001_NextPart256882183164_=----
-Content-Type: text/html;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+The device tree is loosely based on apq8016-sbc.dtsi and the
+downstream kernel provided by Samsung, mixed with a lot of own
+research.
 
-<html><head><meta http-equiv=3D"content-type" content=3D"text/html; charse=
-t=3Dutf-8"><style>body { line-height: 1.5; }blockquote { margin-top: 0px; =
-margin-bottom: 0px; margin-left: 0.5em; }body { font-size: 10.5pt; font-fa=
-mily: =E5=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=91; color: rgb(0, 0, 0); line-heig=
-ht: 1.5; }</style></head><body>=0A<div><span></span>Hi, Keiko and Manivann=
-an:</div><div><br></div><div>Sorry late to reply since I missed this mail =
-after a long leave time.</div>=0A<div><br></div><hr style=3D"width: 210px;=
- height: 1px;" color=3D"#b5c4df" size=3D"1" align=3D"left">=0A<div><span><=
-div style=3D"MARGIN: 10px; FONT-FAMILY: verdana; FONT-SIZE: 10pt"><div>jay=
-.xu@rock-chips.com</div></div></span></div>=0A<blockquote style=3D"margin-=
-Top: 0px; margin-Bottom: 0px; margin-Left: 0.5em"><div>&nbsp;</div><div st=
-yle=3D"border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0cm 0cm 0c=
-m"><div style=3D"PADDING-RIGHT: 8px; PADDING-LEFT: 8px; FONT-SIZE: 12px;FO=
-NT-FAMILY:tahoma;COLOR:#000000; BACKGROUND: #efefef; PADDING-BOTTOM: 8px; =
-PADDING-TOP: 8px"><div><b>From:</b>&nbsp;<a href=3D"mailto:heiko@sntech.de=
-">Heiko Stuebner</a></div><div><b>Date:</b>&nbsp;2019-06-14&nbsp;17:52</di=
-v><div><b>To:</b>&nbsp;<a href=3D"mailto:jay.xu@rock-chips.com">Jianqun Xu=
-</a></div><div><b>CC:</b>&nbsp;<a href=3D"mailto:mark.rutland@arm.com">mar=
-k.rutland</a>; <a href=3D"mailto:robh+dt@kernel.org">robh+dt</a>; <a href=
-=3D"mailto:zhangzj@rock-chips.com">zhangzj</a>; <a href=3D"mailto:manivann=
-an.sadhasivam@linaro.org">manivannan.sadhasivam</a>; <a href=3D"mailto:lin=
-ux-rockchip@lists.infradead.org">linux-rockchip</a>; <a href=3D"mailto:lin=
-ux-arm-kernel@lists.infradead.org">linux-arm-kernel</a>; <a href=3D"mailto=
-:linux-kernel@vger.kernel.org">linux-kernel</a>; <a href=3D"mailto:devicet=
-ree@vger.kernel.org">devicetree</a></div><div><b>Subject:</b>&nbsp;Re: [PA=
-TCH v3 1/1] arm64: dts: rockchip: add core dtsi file for RK3399Pro SoCs</d=
-iv></div></div><div><div>Hi Jianqun,</div>=0A<div>&nbsp;</div>=0A<div>Am D=
-onnerstag, 30. Mai 2019, 02:08:48 CEST schrieb Jianqun Xu:</div>=0A<div>&g=
-t; This patch adds core dtsi file for Rockchip RK3399Pro SoCs,</div>=0A<di=
-v>&gt; include rk3399.dtsi. Also enable pciei0/pcie_phy for AP to</div>=0A=
-<div>&gt; talk to NPU part inside SoC.</div>=0A<div>&gt; </div>=0A<div>&gt=
-; Signed-off-by: Jianqun Xu &lt;jay.xu@rock-chips.com&gt;</div>=0A<div>&nb=
-sp;</div>=0A<div>could you add the necessary pinctrl entry, as suggested b=
-y Manivannan?</div><div>Hi, there is no pinctrl for ep-gpios, which used a=
-s GPIO, they will set by gpio driver</div><div>mux to GPIO defaultly.</div=
->=0A<div>&nbsp;</div>=0A<div>Thanks</div>=0A<div>Heiko</div>=0A<div>&nbsp;=
-</div>=0A<div>&gt; ---</div>=0A<div>&gt; changes since v2:</div>=0A<div>&g=
-t; - only enable pcie0 and pcie_phy nodes, thanks for Heiko and manivannan=
-</div>=0A<div>&gt; </div>=0A<div>&gt; changes since v1:</div>=0A<div>&gt; =
-- remove dfi and dmc</div>=0A<div>&gt; </div>=0A<div>&gt;&nbsp; arch/arm64=
-/boot/dts/rockchip/rk3399pro.dtsi | 22 +++++++++++++++++++++</div>=0A<div>=
-&gt;&nbsp; 1 file changed, 22 insertions(+)</div>=0A<div>&gt;&nbsp; create=
- mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro.dtsi</div>=0A<div>&gt;=
- </div>=0A<div>&gt; diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro.dt=
-si b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi</div>=0A<div>&gt; new fil=
-e mode 100644</div>=0A<div>&gt; index 000000000000..bb5ebf6608b9</div>=0A<=
-div>&gt; --- /dev/null</div>=0A<div>&gt; +++ b/arch/arm64/boot/dts/rockchi=
-p/rk3399pro.dtsi</div>=0A<div>&gt; @@ -0,0 +1,22 @@</div>=0A<div>&gt; +// =
-SPDX-License-Identifier: (GPL-2.0+ OR MIT)</div>=0A<div>&gt; +// Copyright=
- (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.</div>=0A<div>&gt; +</div>=
-=0A<div>&gt; +#include "rk3399.dtsi"</div>=0A<div>&gt; +</div>=0A<div>&gt;=
- +/ {</div>=0A<div>&gt; +	compatible =3D "rockchip,rk3399pro";</div>=0A<di=
-v>&gt; +};</div>=0A<div>&gt; +</div>=0A<div>&gt; +/* Default to enabled si=
-nce AP talk to NPU part over pcie */</div>=0A<div>&gt; +&amp;pcie_phy {</d=
-iv>=0A<div>&gt; +	status =3D "okay";</div>=0A<div>&gt; +};</div>=0A<div>&g=
-t; +</div>=0A<div>&gt; +/* Default to enabled since AP talk to NPU part ov=
-er pcie */</div>=0A<div>&gt; +&amp;pcie0 {</div>=0A<div>&gt; +	ep-gpios =
-=3D &lt;&amp;gpio0 RK_PB4 GPIO_ACTIVE_HIGH&gt;;</div>=0A<div>&gt; +	num-la=
-nes =3D &lt;4&gt;;</div>=0A<div>&gt; +	pinctrl-names =3D "default";</div>=
-=0A<div>&gt; +	pinctrl-0 =3D &lt;&amp;pcie_clkreqn_cpm&gt;;</div>=0A<div>&=
-gt; +	status =3D "okay";</div>=0A<div>&gt; +};</div>=0A<div>&gt; </div>=0A=
-<div>&nbsp;</div>=0A<div>&nbsp;</div>=0A<div>&nbsp;</div>=0A<div>&nbsp;</d=
-iv>=0A<div>&nbsp;</div>=0A</div></blockquote>=0A</body></html>
-------=_001_NextPart256882183164_=------
+Co-developed-by: Michael Srba <Michael.Srba@seznam.cz>
+Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+The idea is to leverage the efforts that went into mainline for
+the Dragonboard 410c. So far this is going quite well.
+
+In addition to the functionality provided by this patch,
+the following features also seem to work in initial tests:
+
+  - Display/GPU
+  - Touchscreen
+  - Sound (Earpiece and Headphones)
+  - Accelerometer + Magnetometer
+
+Those will be added in future patch sets.
+
+The primary known limitation is the lack of PSCI support in the
+signed TrustZone firmware. It seems like all production MSM8916
+smartphones were released without PSCI support, and only DB410c
+was updated. Not sure if there is any good solution for this...
+
+ arch/arm64/boot/dts/qcom/Makefile             |   2 +
+ .../msm8916-samsung-a2015-common-pins.dtsi    |  15 ++
+ .../qcom/msm8916-samsung-a2015-common.dtsi    | 226 ++++++++++++++++++
+ .../boot/dts/qcom/msm8916-samsung-a3u-eur.dts |  10 +
+ .../boot/dts/qcom/msm8916-samsung-a5u-eur.dts |  10 +
+ 5 files changed, 263 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index b3fe72ff2955..d07d9098cccf 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -3,6 +3,8 @@ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a3u-eur.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a5u-eur.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common-pins.dtsi
+new file mode 100644
+index 000000000000..58e0d827526d
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common-pins.dtsi
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++&msmgpio {
++	muic_int_default: muic_int_default {
++		pinmux {
++			function = "gpio";
++			pins = "gpio12";
++		};
++		pinconf {
++			pins = "gpio12";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+new file mode 100644
+index 000000000000..e756b6a39fe9
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+@@ -0,0 +1,226 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include "msm8916.dtsi"
++#include "pm8916.dtsi"
++#include "msm8916-samsung-a2015-common-pins.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++
++/ {
++	aliases {
++		serial0 = &blsp1_uart2;
++	};
++
++	chosen {
++		stdout-path = "serial0";
++	};
++
++	soc {
++		i2c-muic {
++			compatible = "i2c-gpio";
++			sda-gpios = <&msmgpio 105 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
++			scl-gpios = <&msmgpio 106 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
++
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			muic: sm5502@25 {
++				compatible = "siliconmitus,sm5502-muic";
++
++				reg = <0x25>;
++				interrupt-parent = <&msmgpio>;
++				interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
++
++				pinctrl-names = "default";
++				pinctrl-0 = <&muic_int_default>;
++			};
++		};
++
++		sdhci@7824000 {
++			status = "okay";
++
++			vmmc-supply = <&pm8916_l8>;
++			vqmmc-supply = <&pm8916_l5>;
++
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on>;
++			pinctrl-1 = <&sdc1_clk_off &sdc1_cmd_off &sdc1_data_off>;
++		};
++
++		sdhci@7864000 {
++			status = "okay";
++
++			vmmc-supply = <&pm8916_l11>;
++			vqmmc-supply = <&pm8916_l12>;
++
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
++			pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
++
++			cd-gpios = <&msmgpio 38 GPIO_ACTIVE_LOW>;
++		};
++
++		serial@78b0000 {
++			status = "okay";
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&blsp1_uart2_default>;
++			pinctrl-1 = <&blsp1_uart2_sleep>;
++		};
++
++		usb@78d9000 {
++			status = "okay";
++			extcon = <&muic>;
++
++			hnp-disable;
++			srp-disable;
++			adp-disable;
++
++			ulpi {
++				phy {
++					extcon = <&muic>;
++					v1p8-supply = <&pm8916_l7>;
++					v3p3-supply = <&pm8916_l13>;
++				};
++			};
++		};
++
++		/*
++		 * Attempting to enable these devices causes a "synchronous
++		 * external abort". Suspected cause is that the debug power
++		 * domain is not enabled by default on this device.
++		 * Disable these devices for now to avoid the crash.
++		 *
++		 * See: https://lore.kernel.org/linux-arm-msm/20190618202623.GA53651@gerhold.net/
++		 */
++		tpiu@820000 { status = "disabled"; };
++		funnel@821000 { status = "disabled"; };
++		replicator@824000 { status = "disabled"; };
++		etf@825000 { status = "disabled"; };
++		etr@826000 { status = "disabled"; };
++		funnel@841000 { status = "disabled"; };
++		debug@850000 { status = "disabled"; };
++		debug@852000 { status = "disabled"; };
++		debug@854000 { status = "disabled"; };
++		debug@856000 { status = "disabled"; };
++		etm@85c000 { status = "disabled"; };
++		etm@85d000 { status = "disabled"; };
++		etm@85e000 { status = "disabled"; };
++		etm@85f000 { status = "disabled"; };
++	};
++};
++
++&smd_rpm_regulators {
++	vdd_l1_l2_l3-supply = <&pm8916_s3>;
++	vdd_l4_l5_l6-supply = <&pm8916_s4>;
++	vdd_l7-supply = <&pm8916_s4>;
++
++	s1 {
++		regulator-min-microvolt = <500000>;
++		regulator-max-microvolt = <1300000>;
++	};
++
++	s3 {
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1300000>;
++	};
++
++	s4 {
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	l1 {
++		regulator-min-microvolt = <1225000>;
++		regulator-max-microvolt = <1225000>;
++	};
++
++	l2 {
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1200000>;
++	};
++
++	l3 {
++		regulator-min-microvolt = <500000>;
++		regulator-max-microvolt = <1287500>;
++	};
++
++	l4 {
++		regulator-min-microvolt = <2050000>;
++		regulator-max-microvolt = <2050000>;
++	};
++
++	l5 {
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	l6 {
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	l7 {
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	l8 {
++		regulator-min-microvolt = <2850000>;
++		regulator-max-microvolt = <2900000>;
++	};
++
++	l9 {
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	l10 {
++		regulator-min-microvolt = <2700000>;
++		regulator-max-microvolt = <2800000>;
++	};
++
++	l11 {
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <2950000>;
++		regulator-allow-set-load;
++		regulator-system-load = <200000>;
++	};
++
++	l12 {
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <2950000>;
++	};
++
++	l13 {
++		regulator-min-microvolt = <3075000>;
++		regulator-max-microvolt = <3075000>;
++	};
++
++	l14 {
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	l15 {
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	l16 {
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	l17 {
++		regulator-min-microvolt = <2850000>;
++		regulator-max-microvolt = <3100000>;
++	};
++
++	l18 {
++		regulator-min-microvolt = <2700000>;
++		regulator-max-microvolt = <2700000>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
+new file mode 100644
+index 000000000000..d10f7ac5089f
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
+@@ -0,0 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++/dts-v1/;
++
++#include "msm8916-samsung-a2015-common.dtsi"
++
++/ {
++	model = "Samsung Galaxy A3U (EUR)";
++	compatible = "samsung,a3u-eur", "qcom,msm8916";
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts b/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
+new file mode 100644
+index 000000000000..1aa59da98495
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
+@@ -0,0 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++/dts-v1/;
++
++#include "msm8916-samsung-a2015-common.dtsi"
++
++/ {
++	model = "Samsung Galaxy A5U (EUR)";
++	compatible = "samsung,a5u-eur", "qcom,msm8916";
++};
+-- 
+2.22.0
