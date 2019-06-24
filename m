@@ -1,58 +1,59 @@
-From: "Allan W. Nielsen" <allan.nielsen@microchip.com>
-Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Date: Mon, 24 Jun 2019 17:23:45 +0200
-Message-ID: <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
- <20190621164940.GL31306@lunn.ch>
- <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
- <20190624115558.GA5690@piout.net>
- <20190624142625.GR31306@lunn.ch>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH v7 4/7] arm: Use common cpu_topology structure and
+ functions.
+Date: Mon, 24 Jun 2019 16:30:33 +0100
+Message-ID: <20190624153033.3jpdd7vsekdiltmb@shell.armlinux.org.uk>
+References: <20190617185920.29581-1-atish.patra@wdc.com>
+ <20190617185920.29581-5-atish.patra@wdc.com>
+ <20190619121057.GE1360@e107155-lin>
+ <20190624150658.GA1623@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190624142625.GR31306@lunn.ch>
+In-Reply-To: <20190624150658.GA1623@e107155-lin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On Mon, Jun 24, 2019 at 04:06:58PM +0100, Sudeep Holla wrote:
+> On Wed, Jun 19, 2019 at 01:10:57PM +0100, Sudeep Holla wrote:
+> > Hi Russell,
+> >
+> > On Mon, Jun 17, 2019 at 11:59:17AM -0700, Atish Patra wrote:
+> > > Currently, ARM32 and ARM64 uses different data structures to represent
+> > > their cpu topologies. Since, we are moving the ARM64 topology to common
+> > > code to be used by other architectures, we can reuse that for ARM32 as
+> > > well.
+> > >
+> > > Take this opprtunity to remove the redundant functions from ARM32 and
+> > > reuse the common code instead.
+> > >
+> > > To: Russell King <linux@armlinux.org.uk>
+> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > Tested-by: Sudeep Holla <sudeep.holla@arm.com> (on TC2)
+> > > Reviewed-by : Sudeep Holla <sudeep.holla@arm.com>
+> > >
+> > > ---
+> > > Hi Russell,
+> > > Can we get a ACK for this patch ? We are hoping that the entire
+> > > series can be merged at one go.
+> >
+> > It would be nice to get this in for v5.3 as it's almost there.
+> > Are you fine with these changes ?
+> >
+> 
+> Do you have any objections with this patch ? We plan to merge through
+> RISC-V tree, please let us know. It has been acked-by all the other
+> maintainers.
 
-The 06/24/2019 16:26, Andrew Lunn wrote:
-> > > Yeah, there are 2 ethernet controller ports (managed by the enetc driver) 
-> > > connected inside the SoC via SGMII links to 2 of the switch ports, one of
-> > > these switch ports can be configured as CPU port (with follow-up patches).
-> > > 
-> > > This configuration may look prettier on DSA, but the main restriction here
-> > > is that the entire functionality is provided by the ocelot driver which is a
-> > > switchdev driver.  I don't think it would be a good idea to copy-paste code
-> > > from ocelot to a separate dsa driver.
-> > > 
-> > 
-> > We should probably make the ocelot driver a DSA driver then...
-> An important part of DSA is being able to direct frames out specific
-> ports when they ingress via the CPU port. Does the silicon support
-> this? At the moment, i think it is using polled IO.
+I have no interest in the CPU topology code; as far as I know I have
+no systems that are able to exercise this code in any way.  Therefore,
+I don't know this code, I have no way to test it, and so it is not
+appropriate for me to ack patches for it.
 
-That is supported, it requires a bit of initial configuration of the Chip, but
-nothing big (I believe this configuration is part of Claudiu's change-set).
-
-But how do you envision this done?
-
-- Let the existing SwitchDev driver and the DSA driver use a set of common
-  functions.
-- Convert the existing Ocelot driver from SwitchDev to DSA
-- Fork (copy) the existing driver of Ocelot, and modify it as needed for the
-  Felix driver
-
-My guess is the first one, but I would like to understand what you have in mind.
-
-BTW: The Ocelot switch does exist in an other (register compatible) version
-without the MIPS CPU. That version would use a MAC-2-MAC connection to an
-external CPU, and would fit the DSA model. And we have been considering how to
-best represent that version in the kernel.
-
-/Allan
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
