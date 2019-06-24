@@ -1,136 +1,71 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 2/2] dmaengine: milbeaut-hdmac: Add HDMAC driver for
- Milbeaut platforms
-Date: Mon, 24 Jun 2019 12:14:42 +0530
-Message-ID: <20190624064442.GW2962@vkoul-mobl>
-References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
- <20190613005247.2048-1-jassisinghbrar@gmail.com>
+From: Lars Persson <lists@bofh.nu>
+Subject: Re: [PATCH] mmc: remove another TMIO MMC variant usdhi6rol0.c
+Date: Mon, 24 Jun 2019 09:03:52 +0200
+Message-ID: <CADnJP=sg1Kp=TAvUD-ofQje9Y6mWWE_ZnQM_eB85uw3z6PHrVQ@mail.gmail.com>
+References: <20190621060511.29609-1-yamada.masahiro@socionext.com>
+ <CAK7LNASGVbkGgu7psy4DfCxmr-AxSQ3fmGJ=aDAiuSkJ5hrDwA@mail.gmail.com> <20190621105025.GA2987@kunai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190613005247.2048-1-jassisinghbrar@gmail.com>
+In-Reply-To: <20190621105025.GA2987@kunai>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jassisinghbrar@gmail.com
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, orito.takao@socionext.com, masami.hiramatsu@linaro.org, kasai.kazuhiro@socionext.com, Jassi Brar <jaswinder.singh@linaro.org>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-mmc <linux-mmc@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rabin Vincent <rabin.vincent@axis.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12-06-19, 19:52, jassisinghbrar@gmail.com wrote:
+On Fri, Jun 21, 2019 at 12:50 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+> Hi,
+>
+> On Fri, Jun 21, 2019 at 03:16:11PM +0900, Masahiro Yamada wrote:
+> > (Added Lars Persson, Guennadi Liakhovetski)
+> >
+> > On Fri, Jun 21, 2019 at 3:06 PM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> >
+> > This needs Ack from Renesas.
+> > But, I do not know if TMIO folks are sure about this driver, though.
+> > (If they had been sure about it, they should not have duplicated the driver
+> > in the first place.)
+>
+> ... and from the original mail:
+>
+> > Delete this driver now. Please re-implement it based on tmio_mmc_core.c
+> > if needed.
+>
+> I was never happy with this driver existing, yet I never knew which HW
+> platform needed this, so I didn't touch it. But I'd like to see it go in
+> favor of merging with the TMIO code base.
+>
+> >
+> > Perhaps, some code snippets in this driver might be useful for cleaning
+> > tmio_mmc. It will stay in git history forever, and you can dig for it
+> > whenever you need it.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>
+> I double checked there is no user in the current tree. I also searched
+> the web and did not find any out-of-tree user or even a reference of it.
+>
+> So, for now:
+>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>
+> But this seriously needs an Ack from Shimoda-san or Morimoto-san. And
+> maybe Guennadi has remarks, too?
+>
 
-> +#include <linux/bits.h>
-> +#include <linux/clk.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/dmaengine.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/list.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_dma.h>
+So let me tell you the real use of this driver.
 
-Do we need both, IIRC of_dma.h does include of.h!
+It is used by Axis Communications in our Artpec-6 chips that will be
+around for at least 5 years in active development at our side. The SoC
+is upstreamed, but the upstreaming effort was side-tracked before the
+usdhi6rol0 was added to the devicetree.
 
-> +/* mc->vc.lock must be held by caller */
-> +static void milbeaut_chan_start(struct milbeaut_hdmac_chan *mc,
-> +				struct milbeaut_hdmac_desc *md)
-> +{
-> +	struct scatterlist *sg;
-> +	u32  cb, ca, src_addr, dest_addr, len;
-           ^^
-double space
+I do agree with you guys that we should not keep two drivers for the
+same IP so there should be an effort to unify the drivers. In the mean
+time, we can make the connection with Axis more explicit by assigning
+us as maintainer and pushing the device tree entries.
 
-> +static irqreturn_t milbeaut_hdmac_interrupt(int irq, void *dev_id)
-> +{
-> +	struct milbeaut_hdmac_chan *mc = dev_id;
-> +	struct milbeaut_hdmac_desc *md;
-> +	irqreturn_t ret = IRQ_HANDLED;
-> +	u32 val;
-> +
-> +	spin_lock(&mc->vc.lock);
-> +
-> +	/* Ack and Disable irqs */
-> +	val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACB);
-> +	val &= ~(FIELD_PREP(MLB_HDMAC_SS, 0x7));
-                                         ^^^^
-Magic ..?
-
-> +static int milbeaut_hdmac_chan_pause(struct dma_chan *chan)
-> +{
-> +	struct virt_dma_chan *vc = to_virt_chan(chan);
-> +	struct milbeaut_hdmac_chan *mc = to_milbeaut_hdmac_chan(vc);
-> +	u32 val;
-> +
-> +	spin_lock(&mc->vc.lock);
-> +	val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACA);
-> +	val |= MLB_HDMAC_PB;
-> +	writel_relaxed(val, mc->reg_ch_base + MLB_HDMAC_DMACA);
-
-We really should have an updatel() and friends in kernel, feel free to
-add in your driver though!
-
-> +static int milbeaut_hdmac_chan_init(struct platform_device *pdev,
-> +				    struct milbeaut_hdmac_device *mdev,
-> +				    int chan_id)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct milbeaut_hdmac_chan *mc = &mdev->channels[chan_id];
-> +	char *irq_name;
-> +	int irq, ret;
-> +
-> +	irq = platform_get_irq(pdev, chan_id);
-> +	if (irq < 0) {
-> +		dev_err(&pdev->dev, "failed to get IRQ number for ch%d\n",
-> +			chan_id);
-> +		return irq;
-> +	}
-> +
-> +	irq_name = devm_kasprintf(dev, GFP_KERNEL, "milbeaut-hdmac-%d",
-> +				  chan_id);
-> +	if (!irq_name)
-> +		return -ENOMEM;
-> +
-> +	ret = devm_request_irq(dev, irq, milbeaut_hdmac_interrupt,
-> +			       IRQF_SHARED, irq_name, mc);
-
-I tend to dislike using devm_request_irq(), we have no control over when
-the irq is freed and what is a spirious irq is running while we are
-unrolling, so IMHO it make sense to free up and ensure all tasklets are
-quiesced when remove returns
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	mc->mdev = mdev;
-> +	mc->reg_ch_base = mdev->reg_base + MLB_HDMAC_CH_STRIDE * (chan_id + 1);
-> +	mc->vc.desc_free = milbeaut_hdmac_desc_free;
-> +	vchan_init(&mc->vc, &mdev->ddev);
-
-who kills the vc->task?
-
-> +static int milbeaut_hdmac_remove(struct platform_device *pdev)
-> +{
-> +	struct milbeaut_hdmac_device *mdev = platform_get_drvdata(pdev);
-> +	struct dma_chan *chan;
-> +	int ret;
-> +
-> +	/*
-> +	 * Before reaching here, almost all descriptors have been freed by the
-> +	 * ->device_free_chan_resources() hook. However, each channel might
-> +	 * be still holding one descriptor that was on-flight at that moment.
-> +	 * Terminate it to make sure this hardware is no longer running. Then,
-> +	 * free the channel resources once again to avoid memory leak.
-> +	 */
-> +	list_for_each_entry(chan, &mdev->ddev.channels, device_node) {
-> +		ret = dmaengine_terminate_sync(chan);
-> +		if (ret)
-> +			return ret;
-> +		milbeaut_hdmac_free_chan_resources(chan);
-> +	}
-> +
-> +	of_dma_controller_free(pdev->dev.of_node);
-> +	dma_async_device_unregister(&mdev->ddev);
-> +	clk_disable_unprepare(mdev->clk);
-
-And as suspected we have active tasklets and irq at this time :(
--- 
-~Vinod
+BR,
+ Lars
