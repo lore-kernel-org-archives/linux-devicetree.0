@@ -1,89 +1,158 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 15/15] dt-bindings: display: Convert sgd,
- gktw70sdae4se panel to DT schema
-Date: Mon, 24 Jun 2019 15:56:49 -0600
-Message-ID: <20190624215649.8939-16-robh@kernel.org>
+Subject: [PATCH v2 14/15] dt-bindings: display: Convert mitsubishi,aa121td01 panel to DT schema
+Date: Mon, 24 Jun 2019 15:56:48 -0600
+Message-ID: <20190624215649.8939-15-robh@kernel.org>
 References: <20190624215649.8939-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190624215649.8939-1-robh@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sam Ravnborg <sam@ravnborg.org>
+Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Q29udmVydCB0aGUgc2dkLGdrdHc3MHNkYWU0c2UgTFZEUyBwYW5lbCBiaW5kaW5nIHRvIERUIHNj
-aGVtYS4KCkNjOiBOZWlsIEFybXN0cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+CkNjOiBU
-aGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgpDYzogU2FtIFJhdm5ib3Jn
-IDxzYW1AcmF2bmJvcmcub3JnPgpDYzogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBib290
-bGluLmNvbT4KQ2M6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJv
-YXJkLmNvbT4KU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KLS0t
-CiAuLi4vZGlzcGxheS9wYW5lbC9zZ2QsZ2t0dzcwc2RhZTRzZS50eHQgICAgICAgfCA0MSAtLS0t
-LS0tLS0tLS0KIC4uLi9kaXNwbGF5L3BhbmVsL3NnZCxna3R3NzBzZGFlNHNlLnlhbWwgICAgICB8
-IDYzICsrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgNjMgaW5zZXJ0aW9ucygr
-KSwgNDEgZGVsZXRpb25zKC0pCiBkZWxldGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2dkLGdrdHc3MHNkYWU0c2UudHh0CiBjcmVh
-dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvc2dkLGdrdHc3MHNkYWU0c2UueWFtbAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NnZCxna3R3NzBzZGFlNHNlLnR4dCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NnZCxna3R3
-NzBzZGFlNHNlLnR4dApkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggZDA2NjQ0YjU1NWJk
-Li4wMDAwMDAwMDAwMDAKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvc2dkLGdrdHc3MHNkYWU0c2UudHh0CisrKyAvZGV2L251bGwKQEAgLTEsNDEg
-KzAsMCBAQAotU29sb21vbiBHb2xkZW50ZWsgRGlzcGxheSBHS1RXNzBTREFFNFNFIExWRFMgRGlz
-cGxheSBQYW5lbAotPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PQotCi1UaGUgR0tUVzcwU0RBRTRTRSBpcyBhIDciIFdWR0EgVEZULUxDRCBk
-aXNwbGF5IHBhbmVsLgotCi1UaGVzZSBEVCBiaW5kaW5ncyBmb2xsb3cgdGhlIExWRFMgcGFuZWwg
-YmluZGluZ3MgZGVmaW5lZCBpbiBwYW5lbC1sdmRzLnR4dAotd2l0aCB0aGUgZm9sbG93aW5nIGRl
-dmljZS1zcGVjaWZpYyBwcm9wZXJ0aWVzLgotCi1SZXF1aXJlZCBwcm9wZXJ0aWVzOgotCi0tIGNv
-bXBhdGlibGU6IFNoYWxsIGNvbnRhaW4gInNnZCxna3R3NzBzZGFlNHNlIiBhbmQgInBhbmVsLWx2
-ZHMiLCBpbiB0aGF0IG9yZGVyLgotCi1FeGFtcGxlCi0tLS0tLS0tCi0KLXBhbmVsIHsKLQljb21w
-YXRpYmxlID0gInNnZCxna3R3NzBzZGFlNHNlIiwgInBhbmVsLWx2ZHMiOwotCi0Jd2lkdGgtbW0g
-PSA8MTUzPjsKLQloZWlnaHQtbW0gPSA8ODY+OwotCi0JZGF0YS1tYXBwaW5nID0gImplaWRhLTE4
-IjsKLQotCXBhbmVsLXRpbWluZyB7Ci0JCWNsb2NrLWZyZXF1ZW5jeSA9IDwzMjAwMDAwMD47Ci0J
-CWhhY3RpdmUgPSA8ODAwPjsKLQkJdmFjdGl2ZSA9IDw0ODA+OwotCQloYmFjay1wb3JjaCA9IDwz
-OT47Ci0JCWhmcm9udC1wb3JjaCA9IDwzOT47Ci0JCXZiYWNrLXBvcmNoID0gPDI5PjsKLQkJdmZy
-b250LXBvcmNoID0gPDEzPjsKLQkJaHN5bmMtbGVuID0gPDQ3PjsKLQkJdnN5bmMtbGVuID0gPDI+
-OwotCX07Ci0KLQlwb3J0IHsKLQkJcGFuZWxfaW46IGVuZHBvaW50IHsKLQkJCXJlbW90ZS1lbmRw
-b2ludCA9IDwmbHZkc19lbmNvZGVyPjsKLQkJfTsKLQl9OwotfTsKZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NnZCxna3R3NzBzZGFl
-NHNlLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
-bC9zZ2QsZ2t0dzcwc2RhZTRzZS55YW1sCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAw
-MDAwMDAwMC4uNDg3MjgzMjg4Y2IwCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2dkLGdrdHc3MHNkYWU0c2UueWFtbApA
-QCAtMCwwICsxLDYzIEBACisjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCislWUFN
-TCAxLjIKKy0tLQorJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9kaXNwbGF5L3Bh
-bmVsL3NnZCxna3R3NzBzZGFlNHNlLnlhbWwjCiskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5v
-cmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKKwordGl0bGU6IFNvbG9tb24gR29sZGVudGVrIERp
-c3BsYXkgR0tUVzcwU0RBRTRTRSA3IiBXVkdBIExWRFMgRGlzcGxheSBQYW5lbAorCittYWludGFp
-bmVyczoKKyAgLSBOZWlsIEFybXN0cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+CisgIC0g
-VGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4KKworYWxsT2Y6CisgIC0g
-JHJlZjogbHZkcy55YW1sIworCitwcm9wZXJ0aWVzOgorICBjb21wYXRpYmxlOgorICAgIGl0ZW1z
-OgorICAgICAgLSBjb25zdDogc2dkLGdrdHc3MHNkYWU0c2UKKyAgICAgIC0ge30gIyBwYW5lbC1s
-dmRzLCBidXQgbm90IGxpc3RlZCBoZXJlIHRvIGF2b2lkIGZhbHNlIHNlbGVjdAorCisgIGRhdGEt
-bWFwcGluZzoKKyAgICBjb25zdDogamVpZGEtMTgKKworICB3aWR0aC1tbToKKyAgICBjb25zdDog
-MTUzCisKKyAgaGVpZ2h0LW1tOgorICAgIGNvbnN0OiA4NgorCityZXF1aXJlZDoKKyAgLSBjb21w
-YXRpYmxlCisKK2V4YW1wbGVzOgorICAtIHwrCisgICAgcGFuZWwgeworICAgICAgY29tcGF0aWJs
-ZSA9ICJzZ2QsZ2t0dzcwc2RhZTRzZSIsICJwYW5lbC1sdmRzIjsKKworICAgICAgd2lkdGgtbW0g
-PSA8MTUzPjsKKyAgICAgIGhlaWdodC1tbSA9IDw4Nj47CisKKyAgICAgIGRhdGEtbWFwcGluZyA9
-ICJqZWlkYS0xOCI7CisKKyAgICAgIHBhbmVsLXRpbWluZyB7CisgICAgICAgIGNsb2NrLWZyZXF1
-ZW5jeSA9IDwzMjAwMDAwMD47CisgICAgICAgIGhhY3RpdmUgPSA8ODAwPjsKKyAgICAgICAgdmFj
-dGl2ZSA9IDw0ODA+OworICAgICAgICBoYmFjay1wb3JjaCA9IDwzOT47CisgICAgICAgIGhmcm9u
-dC1wb3JjaCA9IDwzOT47CisgICAgICAgIHZiYWNrLXBvcmNoID0gPDI5PjsKKyAgICAgICAgdmZy
-b250LXBvcmNoID0gPDEzPjsKKyAgICAgICAgaHN5bmMtbGVuID0gPDQ3PjsKKyAgICAgICAgdnN5
-bmMtbGVuID0gPDI+OworICAgICAgfTsKKworICAgICAgcG9ydCB7CisgICAgICAgIHBhbmVsX2lu
-OiBlbmRwb2ludCB7CisgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzX2VuY29kZXI+
-OworICAgICAgICB9OworICAgICAgfTsKKyAgICB9OworCisuLi4KLS0gCjIuMjAuMQoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Convert the mitsubishi,aa121td01 LVDS panel binding to DT schema.
+
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../display/panel/mitsubishi,aa121td01.txt    | 47 -------------
+ .../display/panel/mitsubishi,aa121td01.yaml   | 69 +++++++++++++++++++
+ 2 files changed, 69 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
+deleted file mode 100644
+index d6e1097504fe..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-Mitsubishi AA121TD01 LVDS Display Panel
+-=======================================
+-
+-The AA121TD01 is a 12.1" WXGA TFT-LCD display panel.
+-
+-These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
+-with the following device-specific properties.
+-
+-
+-Required properties:
+-
+-- compatible: Shall contain "mitsubishi,aa121td01" and "panel-lvds", in that
+-  order.
+-- vcc-supply: Reference to the regulator powering the panel VCC pins.
+-
+-
+-Example
+--------
+-
+-panel {
+-	compatible = "mitsubishi,aa121td01", "panel-lvds";
+-	vcc-supply = <&vcc_3v3>;
+-
+-	width-mm = <261>;
+-	height-mm = <163>;
+-
+-	data-mapping = "jeida-24";
+-
+-	panel-timing {
+-		/* 1280x800 @60Hz */
+-		clock-frequency = <71000000>;
+-		hactive = <1280>;
+-		vactive = <800>;
+-		hsync-len = <70>;
+-		hfront-porch = <20>;
+-		hback-porch = <70>;
+-		vsync-len = <5>;
+-		vfront-porch = <3>;
+-		vback-porch = <15>;
+-	};
+-
+-	port {
+-		panel_in: endpoint {
+-			remote-endpoint = <&lvds_encoder>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml
+new file mode 100644
+index 000000000000..68750d8f0aef
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/mitsubishi,aa121td01.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Mitsubishi AA121TD01 12.1" WXGA LVDS Display Panel
++
++maintainers:
++  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++  - Thierry Reding <thierry.reding@gmail.com>
++
++allOf:
++  - $ref: lvds.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: mitsubishi,aa121td01
++      - {} # panel-lvds, but not listed here to avoid false select
++
++  vcc-supply:
++    description: Reference to the regulator powering the panel VCC pins.
++
++  data-mapping:
++    const: jeida-24
++
++  width-mm:
++    const: 261
++
++  height-mm:
++    const: 163
++
++required:
++  - compatible
++  - vcc-supply
++
++examples:
++  - |+
++    panel {
++      compatible = "mitsubishi,aa121td01", "panel-lvds";
++      vcc-supply = <&vcc_3v3>;
++
++      width-mm = <261>;
++      height-mm = <163>;
++
++      data-mapping = "jeida-24";
++
++      panel-timing {
++        /* 1280x800 @60Hz */
++        clock-frequency = <71000000>;
++        hactive = <1280>;
++        vactive = <800>;
++        hsync-len = <70>;
++        hfront-porch = <20>;
++        hback-porch = <70>;
++        vsync-len = <5>;
++        vfront-porch = <3>;
++        vback-porch = <15>;
++      };
++
++      port {
++        panel_in: endpoint {
++          remote-endpoint = <&lvds_encoder>;
++        };
++      };
++    };
++
++...
+-- 
+2.20.1
