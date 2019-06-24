@@ -1,62 +1,81 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 0/3] rtc: pcf8563: Fix unhandled interrupt storm
-Date: Mon, 24 Jun 2019 12:42:34 +0200
-Message-ID: <20190624104234.GG3133@piout.net>
-References: <20190604042337.26129-1-wens@kernel.org>
- <20190620162220.GA23549@piout.net>
- <CAGb2v67sf3L9zH9Li6tF3xunQ4-isoodBLQmSv2VJtAj6hS7Ug@mail.gmail.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCHv3 21/23] arm64: dts: qcom: qcs404: Add tsens controller
+Date: Mon, 24 Jun 2019 16:29:19 +0530
+Message-ID: <CAHLCerMr30LWt3QcoYVF9gyHjkmO5acTDV-39N6ZO22feYi9=Q@mail.gmail.com>
+References: <cover.1553086065.git.amit.kucheria@linaro.org> <9108372823aba9288b98b1c8a003c21b578d1e13.1553086065.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67sf3L9zH9Li6tF3xunQ4-isoodBLQmSv2VJtAj6hS7Ug@mail.gmail.com>
+In-Reply-To: <9108372823aba9288b98b1c8a003c21b578d1e13.1553086065.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@kernel.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Alessandro Zummo <a.zummo@towertech.it>, Vincent Donnefort <vdonnefort@gmail.com>, linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Brown <david.brown@linaro.org>, Zhang Rui <rui.zhang@intel.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/06/2019 18:34:29+0800, Chen-Yu Tsai wrote:
-> On Fri, Jun 21, 2019 at 12:22 AM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> >
-> > On 04/06/2019 12:23:34+0800, Chen-Yu Tsai wrote:
-> > > From: Chen-Yu Tsai <wens@csie.org>
-> > >
-> > > Hi everyone,
-> > >
-> > > While bringing up my Pine H64, I encountered an interrupt storm from the
-> > > pcf8563 RTC. The RTC chip's interrupt line is shared with the PMIC, and
-> > > was not properly added to the device tree. Also, the driver was using an
-> > > trigger method incompatible with the PMIC, preventing the interrupt line
-> > > from being shared. Last, the driver only clears and masks the alarm
-> > > interrupt, while leaving the timer interrupt untouched. This is a
-> > > problem if previous systems left the timer interrupt enabled, and there
-> > > was an interrupt pending.
-> > >
-> > > This patch set fixes all three issues, one per patch.
-> > >
-> > > Please have a look.
-> > >
-> >
-> > I don't have that particular RTC so I can't test but the interrupt
-> > handling in pcf8563_irq seems problematic too. I guess the RTC will only
-> > trigger once per second because the call to pcf8563_set_alarm_mode will
-> > explicitely leave the alarm enabled. The core doesn't really care but it
-> > doesn't really expect the alarm to stay enabled. i.e. It will ensure the
-> > alarm is enabled again after setting it when necessary. I think it would
-> > be safer to simply clear both AIE and AF here. Could you test?
-> 
-> Yeah, that bit looked weird to me as well. And actually the alarm doesn't
-> go down to the second, only the minute.
-> 
-> Is there a test program I can use to test the alarms?
-> 
+On Wed, Mar 20, 2019 at 6:50 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> qcs404 has a single TSENS IP block with 10 sensors. The calibration data
+> is stored in an eeprom (qfprom) that is accessed through the nvmem
+> framework. We add the qfprom node to allow the tsens sensors to be
+> calibrated correctly.
+>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-Sure, tools/testing/selftests/rtc/rtctest.c if you use a recent enough
-version, it will test minute boundaries.
+Hi Bjorn,
+
+Could you please pick this patch and patch 22 in this series if you
+have no other review comments? I can resend these separately if
+required.
+
+The driver (drivers/thermal/qcom/tsens-v1.c) was merged and only these
+DT changes are pending.
+
+Regards,
+Amit
 
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> ---
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> index e8fd26633d57..7881792980b8 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> @@ -259,6 +259,16 @@
+>                         reg = <0x00060000 0x6000>;
+>                 };
+>
+> +               qfprom: qfprom@a4000 {
+> +                       compatible = "qcom,qfprom";
+> +                       reg = <0x000a4000 0x1000>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       tsens_caldata: caldata@d0 {
+> +                               reg = <0x1f8 0x14>;
+> +                       };
+> +               };
+> +
+>                 rng: rng@e3000 {
+>                         compatible = "qcom,prng-ee";
+>                         reg = <0x000e3000 0x1000>;
+> @@ -266,6 +276,16 @@
+>                         clock-names = "core";
+>                 };
+>
+> +               tsens: thermal-sensor@4a9000 {
+> +                       compatible = "qcom,qcs404-tsens", "qcom,tsens-v1";
+> +                       reg = <0x004a9000 0x1000>, /* TM */
+> +                             <0x004a8000 0x1000>; /* SROT */
+> +                       nvmem-cells = <&tsens_caldata>;
+> +                       nvmem-cell-names = "calib";
+> +                       #qcom,sensors = <10>;
+> +                       #thermal-sensor-cells = <1>;
+> +               };
+> +
+>                 tlmm: pinctrl@1000000 {
+>                         compatible = "qcom,qcs404-pinctrl";
+>                         reg = <0x01000000 0x200000>,
+> --
+> 2.17.1
+>
