@@ -1,115 +1,59 @@
-From: Alex Elder <elder@linaro.org>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Mon, 24 Jun 2019 11:21:45 -0500
-Message-ID: <a9230cf8-c8f6-9270-c0e4-b56f340c3ecc@linaro.org>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
- <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org>
- <b23a83c18055470c5308fcd1eed018056371fc1d.camel@sipsolutions.net>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+Date: Mon, 24 Jun 2019 18:24:31 +0200
+Message-ID: <20190624162431.GX31306@lunn.ch>
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+ <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
+ <20190621164940.GL31306@lunn.ch>
+ <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+ <20190624115558.GA5690@piout.net>
+ <20190624142625.GR31306@lunn.ch>
+ <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <b23a83c18055470c5308fcd1eed018056371fc1d.camel@sipsolutions.net>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Johannes Berg <johannes@sipsolutions.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, Dan Williams <dcbw@redhat.com>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, syadagir@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6/18/19 2:14 PM, Johannes Berg wrote:
-> On Tue, 2019-06-18 at 08:16 -0500, Alex Elder wrote:
->> On 6/17/19 6:28 AM, Johannes Berg wrote:
->>> On Tue, 2019-06-11 at 13:56 +0200, Arnd Bergmann wrote:
->>>> On Tue, Jun 11, 2019 at 10:12 AM Johannes Berg
->>>> <johannes@sipsolutions.net> wrote:
->>>>
->>>>>> As I've made clear before, my work on this has been focused on the IPA transport,
-
-. . .
-
->> The IPA driver was very large, and in an effort to have an initial driver
->> that was more easily accepted upstream, it was carved down to support
->> a single, very simple use case.  It supports only a single channel for
->> carrying network data, and does not expose any of the IPA's other
->> capabilities like filtering and routing (and multiplexing).
+On Mon, Jun 24, 2019 at 05:23:45PM +0200, Allan W. Nielsen wrote:
+> Hi Andrew,
 > 
-> Ok. But it *does* use (or even require using) rmnet, so it has multiple
-> channels in a sense, no?
-
-Yes.  It's a multiplexing protocol, supporting one *or more* channels.
-
->> Originally the IPA code had an IOCTL interface for adding and removing
->> multiplexed channel IDs, but the simplified use case expected only one
->> channel to be used.  
+> The 06/24/2019 16:26, Andrew Lunn wrote:
+> > > > Yeah, there are 2 ethernet controller ports (managed by the enetc driver) 
+> > > > connected inside the SoC via SGMII links to 2 of the switch ports, one of
+> > > > these switch ports can be configured as CPU port (with follow-up patches).
+> > > > 
+> > > > This configuration may look prettier on DSA, but the main restriction here
+> > > > is that the entire functionality is provided by the ocelot driver which is a
+> > > > switchdev driver.  I don't think it would be a good idea to copy-paste code
+> > > > from ocelot to a separate dsa driver.
+> > > > 
+> > > 
+> > > We should probably make the ocelot driver a DSA driver then...
+> > An important part of DSA is being able to direct frames out specific
+> > ports when they ingress via the CPU port. Does the silicon support
+> > this? At the moment, i think it is using polled IO.
 > 
-> What did those channels do? Create different netdevs? Something else
-I don't know.  The code I started with only supported the use of
-one channel, but assumed the use of rmnet anyway (for aggregation
-and checksum offload most likely).
-
-. . .
-
->> So getting back to your question, the IPA in its current form only
->> has a single "multiplexed" channel carried over the connection
->> between the AP and modem.  Previously (and in the future) there
->> was a way to add or remove channels.
+> That is supported, it requires a bit of initial configuration of the Chip, but
+> nothing big (I believe this configuration is part of Claudiu's change-set).
 > 
-> What would those channels do?
+> But how do you envision this done?
 > 
-> I've not really been very clear with the differentiation between a
-> channel and what's multiplexed inside of the channel.
+> - Let the existing SwitchDev driver and the DSA driver use a set of common
+>   functions.
+> - Convert the existing Ocelot driver from SwitchDev to DSA
+> - Fork (copy) the existing driver of Ocelot, and modify it as needed for the
+>   Felix driver
 > 
-> Using the terminology you defined in your other mail, are you saying
-> that IPA (originally) allowed multiple *connections* to the device, or
-> is there basically just one connection, with multiple (QMAP-muxed)
-> *channels* on top of it?
+> My guess is the first one, but I would like to understand what you have in mind.
 
-One connection, with the ability to have multiple multiplexed
-channels.
-
-> If the latter, why did IPA need ioctls, rather than rmnet?
-
-The "full" IPA driver supported a lot more than what is being
-proposed right now.  The strategy for getting support upstream
-was to drastically reduce the size of the driver by focusing
-on a single use case:  providing a netdev data interface served
-by the modem.
-
-But even to support that, the IPA driver needed to allow user
-space to identify certain resources that need to be used for
-implementing that netdev, or configuring whether certain
-features (e.g. download checksum) were to be used.
-
-. . .
-
->> The hardware can aggregate multiple packets received from the
->> modem into a single buffer, which the rmnet driver is then able
->> to deaggregate.
-> 
-> Right, I gathered that much, but I'm not really sure I see why userspace
-> would even be allowed to control this? Either the device is doing it or
-> not, but the driver is going to have to cope either way?
-
-Maybe because doing aggregation or not is a policy decision?
-And/or a tunable parameter?  There might be a more appropriate
-way to do this.
-
-. . .
-
->> My goal continues to be getting a baseline IPA driver accepted
->> upstream as soon as possible, so I can then start building on
->> that foundation.
-> 
-> Yeah. My goal is actually the same, but for the Intel driver, but I
-> don't have much code yet (it's being cleaned up now) :-)
-
-Well then I guess I'll beat you to it (or I *hope* I do)...
-
-					-Alex
-
-> 
-> johannes
-> 
+I don't know the various architectures the switch is used in. But it
+does seem like a core library, and then a switchdev wrapper for Ocelot
+and a DSA wrapper for Felix would make sense.
+ 
+  Andrew
