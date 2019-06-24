@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 12/15] dt-bindings: display: Convert innolux,ee101ia-01 panel to DT schema
-Date: Mon, 24 Jun 2019 15:56:46 -0600
-Message-ID: <20190624215649.8939-13-robh@kernel.org>
+Subject: [PATCH v2 13/15] dt-bindings: display: Convert mitsubishi,aa104xd12 panel to DT schema
+Date: Mon, 24 Jun 2019 15:56:47 -0600
+Message-ID: <20190624215649.8939-14-robh@kernel.org>
 References: <20190624215649.8939-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,54 +9,92 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190624215649.8939-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <treding@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert the innolux,ee101ia-01 LVDS panel binding to DT schema.
+Convert the mitsubishi,aa104xd12 LVDS panel binding to DT schema.
 
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../display/panel/innolux,ee101ia-01d.txt     |  7 ------
- .../display/panel/innolux,ee101ia-01d.yaml    | 22 +++++++++++++++++++
- 2 files changed, 22 insertions(+), 7 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml
+ .../display/panel/mitsubishi,aa104xd12.txt    | 47 ------------
+ .../display/panel/mitsubishi,aa104xd12.yaml   | 71 +++++++++++++++++++
+ 2 files changed, 71 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt b/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
 deleted file mode 100644
-index e5ca4ccd55ed..000000000000
---- a/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt
+index ced0121aed7d..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
 +++ /dev/null
-@@ -1,7 +0,0 @@
--Innolux Corporation 10.1" EE101IA-01D WXGA (1280x800) LVDS panel
+@@ -1,47 +0,0 @@
+-Mitsubishi AA204XD12 LVDS Display Panel
+-=======================================
+-
+-The AA104XD12 is a 10.4" XGA TFT-LCD display panel.
+-
+-These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
+-with the following device-specific properties.
+-
 -
 -Required properties:
--- compatible: should be "innolux,ee101ia-01d"
 -
--This binding is compatible with the lvds-panel binding, which is specified
--in panel-lvds.txt in this directory.
-diff --git a/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml b/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml
+-- compatible: Shall contain "mitsubishi,aa121td01" and "panel-lvds", in that
+-  order.
+-- vcc-supply: Reference to the regulator powering the panel VCC pins.
+-
+-
+-Example
+--------
+-
+-panel {
+-	compatible = "mitsubishi,aa104xd12", "panel-lvds";
+-	vcc-supply = <&vcc_3v3>;
+-
+-	width-mm = <210>;
+-	height-mm = <158>;
+-
+-	data-mapping = "jeida-24";
+-
+-	panel-timing {
+-		/* 1024x768 @65Hz */
+-		clock-frequency = <65000000>;
+-		hactive = <1024>;
+-		vactive = <768>;
+-		hsync-len = <136>;
+-		hfront-porch = <20>;
+-		hback-porch = <160>;
+-		vfront-porch = <3>;
+-		vback-porch = <29>;
+-		vsync-len = <6>;
+-	};
+-
+-	port {
+-		panel_in: endpoint {
+-			remote-endpoint = <&lvds_encoder>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
 new file mode 100644
-index 000000000000..5cc97cbe17fa
+index 000000000000..fd97ca49c104
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml
-@@ -0,0 +1,22 @@
++++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
+@@ -0,0 +1,71 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/panel/innolux,ee101ia-01d.yaml#
++$id: http://devicetree.org/schemas/display/panel/mitsubishi,aa104xd12.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Innolux Corporation 10.1" EE101IA-01D WXGA (1280x800) LVDS panel
++title: Mitsubishi AA104XD12 10.4" XGA LVDS Display Panel
 +
 +maintainers:
-+  - Heiko Stuebner <heiko.stuebner@bq.com>
++  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 +  - Thierry Reding <thierry.reding@gmail.com>
 +
 +allOf:
@@ -65,8 +103,57 @@ index 000000000000..5cc97cbe17fa
 +properties:
 +  compatible:
 +    items:
-+      - const: innolux,ee101ia-01d
++      - const: mitsubishi,aa104xd12
 +      - {} # panel-lvds, but not listed here to avoid false select
++
++  vcc-supply:
++    description: Reference to the regulator powering the panel VCC pins.
++
++  data-mapping:
++    const: jeida-24
++
++  width-mm:
++    const: 210
++
++  height-mm:
++    const: 158
++
++
++required:
++  - compatible
++  - vcc-supply
++
++examples:
++  - |+
++
++    panel {
++      compatible = "mitsubishi,aa104xd12", "panel-lvds";
++      vcc-supply = <&vcc_3v3>;
++
++      width-mm = <210>;
++      height-mm = <158>;
++
++      data-mapping = "jeida-24";
++
++      panel-timing {
++        /* 1024x768 @65Hz */
++        clock-frequency = <65000000>;
++        hactive = <1024>;
++        vactive = <768>;
++        hsync-len = <136>;
++        hfront-porch = <20>;
++        hback-porch = <160>;
++        vfront-porch = <3>;
++        vback-porch = <29>;
++        vsync-len = <6>;
++      };
++
++      port {
++        panel_in: endpoint {
++          remote-endpoint = <&lvds_encoder>;
++        };
++      };
++    };
 +
 +...
 -- 
