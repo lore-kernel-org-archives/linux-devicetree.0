@@ -1,69 +1,37 @@
-From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH 1/2] net/macb: bindings doc: add sifive fu540-c000 binding
-Date: Mon, 24 Jun 2019 15:38:23 +0000
-Message-ID: <b0c60ec9-2f57-c3f5-c3b4-ee83a5ec4c45@microchip.com>
-References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
- <1558611952-13295-2-git-send-email-yash.shah@sifive.com>
- <CAL_Jsq+p5PnTDgxuh9_Aw1RvTk4aTYjKxyMq7DPczLzQVv8_ew@mail.gmail.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH] ARM: dts: socfpga: update to new Denali NAND binding
+Date: Mon, 24 Jun 2019 10:39:20 -0500
+Message-ID: <0e357fa8-3241-4ce4-fae7-d0ad36fb14c6@kernel.org>
+References: <20190621112306.17769-1-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+p5PnTDgxuh9_Aw1RvTk4aTYjKxyMq7DPczLzQVv8_ew@mail.gmail.com>
+In-Reply-To: <20190621112306.17769-1-yamada.masahiro@socionext.com>
 Content-Language: en-US
-Content-ID: <BF668DD5250ADD4CA5B56765716862D1@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, yash.shah@sifive.com
-Cc: davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, paul.walmsley@sifive.com, sachin.ghadi@sifive.com
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjMvMDUvMjAxOSBhdCAyMjo1MCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIFRodSwgTWF5
-IDIzLCAyMDE5IGF0IDY6NDYgQU0gWWFzaCBTaGFoIDx5YXNoLnNoYWhAc2lmaXZlLmNvbT4gd3Jv
-dGU6DQo+Pg0KPj4gQWRkIHRoZSBjb21wYXRpYmlsaXR5IHN0cmluZyBkb2N1bWVudGF0aW9uIGZv
-ciBTaUZpdmUgRlU1NDAtQzAwMDANCj4+IGludGVyZmFjZS4NCj4+IE9uIHRoZSBGVTU0MCwgdGhp
-cyBkcml2ZXIgYWxzbyBuZWVkcyB0byByZWFkIGFuZCB3cml0ZSByZWdpc3RlcnMgaW4gYQ0KPj4g
-bWFuYWdlbWVudCBJUCBibG9jayB0aGF0IG1vbml0b3JzIG9yIGRyaXZlcyBib3VuZGFyeSBzaWdu
-YWxzIGZvciB0aGUNCj4+IEdFTUdYTCBJUCBibG9jayB0aGF0IGFyZSBub3QgZGlyZWN0bHkgbWFw
-cGVkIHRvIEdFTUdYTCByZWdpc3RlcnMuDQo+PiBUaGVyZWZvcmUsIGFkZCBhZGRpdGlvbmFsIHJh
-bmdlIHRvICJyZWciIHByb3BlcnR5IGZvciBTaUZpdmUgR0VNR1hMDQo+PiBtYW5hZ2VtZW50IElQ
-IHJlZ2lzdGVycy4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBZYXNoIFNoYWggPHlhc2guc2hhaEBz
-aWZpdmUuY29tPg0KPj4gLS0tDQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9uZXQvbWFjYi50eHQgfCAzICsrKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25z
-KCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9uZXQvbWFjYi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L21h
-Y2IudHh0DQo+PiBpbmRleCA5YzVlOTQ0Li45MWEyYTY2IDEwMDY0NA0KPj4gLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tYWNiLnR4dA0KPj4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tYWNiLnR4dA0KPj4gQEAgLTQsNiArNCw3
-IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiAgIC0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJj
-ZG5zLFs8Y2hpcD4tXXttYWNifGdlbX0iDQo+PiAgICAgVXNlICJjZG5zLGF0OTFybTkyMDAtZW1h
-YyIgQXRtZWwgYXQ5MXJtOTIwMCBTb0MuDQo+PiAgICAgVXNlICJjZG5zLGF0OTFzYW05MjYwLW1h
-Y2IiIGZvciBBdG1lbCBhdDkxc2FtOSBTb0NzLg0KPj4gKyAgVXNlICJjZG5zLGZ1NTQwLW1hY2Ii
-IGZvciBTaUZpdmUgRlU1NDAtQzAwMCBTb0MuDQo+IA0KPiBUaGlzIHBhdHRlcm4gdGhhdCBBdG1l
-bCBzdGFydGVkIGlzbid0IHJlYWxseSBjb3JyZWN0LiBUaGUgdmVuZG9yDQo+IHByZWZpeCBoZXJl
-IHNob3VsZCBiZSBzaWZpdmUuICdjZG5zJyB3b3VsZCBiZSBhcHByb3ByaWF0ZSBmb3IgYQ0KPiBm
-YWxsYmFjay4NCg0KT2ssIHdlIG1pc3NlZCB0aGlzIGZvciB0aGUgc2FtOXg2MCBTb0MgdGhhdCB3
-ZSBhZGRlZCByZWNlbnRseSB0aGVuLg0KDQpBbnl3YXkgYSBsaXR0bGUgdG9vIGxhdGUsIGNvbWlu
-ZyBiYWNrIHRvIHRoaXMgbWFjaGluZSwgYW5kIHRhbGtpbmcgdG8gDQpZYXNoLCBpc24ndCAic2lm
-aXZlLGZ1NTQwLWMwMDAtbWFjYiIgbW9yZSBzcGVjaWZpYyBhbmQgYSBiZXR0ZXIgbWF0Y2ggDQpm
-b3IgYmVpbmcgZnV0dXJlIHByb29mPyBJIHdvdWxkIGFkdmljZSBmb3IgdGhlIG1vc3Qgc3BlY2lm
-aWMgcG9zc2libGUgDQp3aXRoIG90aGVyIGNvbXBhdGlibGUgc3RyaW5ncyBvbiB0aGUgc2FtZSBs
-aW5lIGluIHRoZSBEVCwgbGlrZToNCg0KInNpZml2ZSxmdTU0MC1jMDAwLW1hY2IiLCAic2lmaXZl
-LGZ1NTQwLW1hY2IiDQoNCk1vcmVvdmVyLCBpcyBpdCByZWFsbHkgYSAibWFjYiIgb3IgYSAiZ2Vt
-IiB0eXBlIG9mIGludGVyZmFjZSBmcm9tIA0KQ2FkZW5jZT8gTm90IGEgYmlnIGRlYWwsIGJ1dCBq
-dXN0IHRvIGRpc2N1c3MgdGhlIHRvcGljIHRvIHRoZSBib25lLi4uDQoNCk5vdGUgdGhhdCBJJ20g
-ZmluZSBpZiB5b3UgY29uc2lkZXIgdGhhdCB3aGF0IHlvdSBoYXZlIGluIG5ldC1uZXh0IG5ldyBp
-cyANCmNvcnJlY3QuDQoNClJlZ2FyZHMsDQogICBOaWNvbGFzDQoNCj4+ICAgICBVc2UgImNkbnMs
-c2FtOXg2MC1tYWNiIiBmb3IgTWljcm9jaGlwIHNhbTl4NjAgU29DLg0KPj4gICAgIFVzZSAiY2Ru
-cyxucDQtbWFjYiIgZm9yIE5QNCBTb0MgZGV2aWNlcy4NCj4+ICAgICBVc2UgImNkbnMsYXQzMmFw
-NzAwMC1tYWNiIiBmb3Igb3RoZXIgMTAvMTAwIHVzYWdlIG9yIHVzZSB0aGUgZ2VuZXJpYyBmb3Jt
-OiAiY2RucyxtYWNiIi4NCj4+IEBAIC0xNyw2ICsxOCw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6
-DQo+PiAgICAgVXNlICJjZG5zLHp5bnFtcC1nZW0iIGZvciBaeW5xIFVsdHJhc2NhbGUrIE1QU29D
-Lg0KPj4gICAgIE9yIHRoZSBnZW5lcmljIGZvcm06ICJjZG5zLGVtYWMiLg0KPj4gICAtIHJlZzog
-QWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQgZm9yIHRoZSBkZXZpY2UNCj4+
-ICsgICAgICAgRm9yICJjZG5zLGZ1NTQwLW1hY2IiLCBzZWNvbmQgcmFuZ2UgaXMgcmVxdWlyZWQg
-dG8gc3BlY2lmeSB0aGUNCj4+ICsgICAgICAgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdp
-c3RlcnMgZm9yIEdFTUdYTCBNYW5hZ2VtZW50IGJsb2NrLg0KPj4gICAtIGludGVycnVwdHM6IFNo
-b3VsZCBjb250YWluIG1hY2IgaW50ZXJydXB0DQo+PiAgIC0gcGh5LW1vZGU6IFNlZSBldGhlcm5l
-dC50eHQgZmlsZSBpbiB0aGUgc2FtZSBkaXJlY3RvcnkuDQo+PiAgIC0gY2xvY2stbmFtZXM6IFR1
-cGxlIGxpc3RpbmcgaW5wdXQgY2xvY2sgbmFtZXMuDQo+PiAtLQ0KPj4gMS45LjENCj4+DQo+IA0K
-DQoNCi0tIA0KTmljb2xhcyBGZXJyZQ0K
+
+
+On 6/21/19 6:23 AM, Masahiro Yamada wrote:
+> With commit d8e8fd0ebf8b ("mtd: rawnand: denali: decouple controller
+> and NAND chips"), the Denali NAND controller driver migrated to the
+> new controller/chip representation.
+> 
+> Update DT for it.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  arch/arm/boot/dts/socfpga.dtsi                |  2 +-
+>  arch/arm/boot/dts/socfpga_arria10.dtsi        |  2 +-
+>  .../boot/dts/socfpga_arria10_socdk_nand.dts   | 20 ++++++++++++-------
+>  3 files changed, 15 insertions(+), 9 deletions(-)
+> 
+
+Applied! Thanks!
+
+Dinh
