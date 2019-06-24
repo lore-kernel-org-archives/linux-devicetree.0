@@ -1,14 +1,14 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: Add ZII support for ZII i.MX7 RMU2 board
-Date: Mon, 24 Jun 2019 08:28:55 +0800
-Message-ID: <20190624002853.GC3800@dragon>
-References: <20190617153025.12120-1-andrew.smirnov@gmail.com>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6ul: fix PWM[1-4] interrupts
+Date: Mon, 24 Jun 2019 08:47:04 +0800
+Message-ID: <20190624004703.GF3800@dragon>
+References: <20190618155834.15545-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190617153025.12120-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190618155834.15545-1-sebastien.szymanski@armadeus.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,440 +18,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>, Liang Pan <Liang.Pan@zii.aero>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Fabio Estevam <festevam@gmail.com>, Bob Langer <Bob.Langer@zii.aero>, Lucas Stach <l.stach@pengutronix.de>
+To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 08:30:24AM -0700, Andrey Smirnov wrote:
-> Add support for ZII's i.MX7 based Remote Modem Unit 2 (RMU2) board.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Bob Langer <Bob.Langer@zii.aero>
-> Cc: Liang Pan <Liang.Pan@zii.aero>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
-> 
-> Changes since [v1]:
-> 
->     - Added missing #address-cells and #size-cells
->     
->     - Replaced reset-gpio -> reset-gpios
-> 
-> 
-> [v1] lore.kernel.org/r/20190614080317.16850-1-andrew.smirnov@gmail.com
-> 
->  arch/arm/boot/dts/Makefile           |   1 +
->  arch/arm/boot/dts/imx7d-zii-rmu2.dts | 361 +++++++++++++++++++++++++++
->  2 files changed, 362 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx7d-zii-rmu2.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 5559028b770e..516e2912236d 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -593,6 +593,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
->  	imx7d-sdb.dtb \
->  	imx7d-sdb-reva.dtb \
->  	imx7d-sdb-sht11.dtb \
-> +	imx7d-zii-rmu2.dtb \
->  	imx7d-zii-rpu2.dtb \
->  	imx7s-colibri-eval-v3.dtb \
->  	imx7s-mba7.dtb \
-> diff --git a/arch/arm/boot/dts/imx7d-zii-rmu2.dts b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
-> new file mode 100644
-> index 000000000000..e60b3232a090
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
-> @@ -0,0 +1,361 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Device tree file for ZII's RMU2 board
-> + *
-> + * RMU - Remote Modem Unit
-> + *
-> + * Copyright (C) 2019 Zodiac Inflight Innovations
-> + */
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/thermal/thermal.h>
-> +#include "imx7d.dtsi"
-> +
-> +/ {
-> +	model = "ZII RMU2 Board";
-> +	compatible = "zii,imx7d-rmu2", "fsl,imx7d";
-> +
-> +	chosen {
-> +		stdout-path = &uart2;
-> +	};
-> +
-> +	gpio-leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-0 = <&pinctrl_leds_debug>;
-> +		pinctrl-names = "default";
-> +
-> +		debug {
-> +			label = "zii:green:debug1";
-> +			gpios = <&gpio2 8 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +};
-> +
-> +&cpu0 {
-> +	arm-supply = <&sw1a_reg>;
-> +};
-> +
-> +&ecspi1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_ecspi1>;
-> +	cs-gpios = <&gpio4 19 GPIO_ACTIVE_HIGH>;
-> +	status = "okay";
-> +
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		spi-max-frequency = <20000000>;
-> +		reg = <0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +	};
-> +};
-> +
-> +&fec1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_enet1>;
-> +	assigned-clocks = <&clks IMX7D_ENET1_TIME_ROOT_SRC>,
-> +			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
-> +	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
-> +	assigned-clock-rates = <0>, <100000000>;
-> +	phy-mode = "rgmii";
-> +	phy-handle = <&fec1_phy>;
-> +	status = "okay";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		fec1_phy: phy@0 {
++Lothar
 
-ethernet-phy for node name.
+On Tue, Jun 18, 2019 at 05:58:34PM +0200, S=E9bastien Szymanski wrote:
+> According to the i.MX6UL/L RM, table 3.1 "ARM Cortex A7 domain interrupt
+> summary", the interrupts for the PWM[1-4] go from 83 to 86.
+> =
 
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_enet1_phy_reset>,
-> +				    <&pinctrl_enet1_phy_interrupt>;
-> +			reg = <0>;
-> +			interrupt-parent = <&gpio1>;
-> +			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-> +			reset-gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	clock-frequency = <100000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c1>;
-> +	status = "okay";
-> +
-> +	pmic: pmic@8 {
+> Fixes: b9901fe84f02 ("ARM: dts: imx6ul: add pwm[1-4] nodes")
+> Signed-off-by: S=E9bastien Szymanski <sebastien.szymanski@armadeus.com>
 
-Label can be more specific, so maybe:
-
-	pfuze3000: pmic@8
-
-> +		compatible = "fsl,pfuze3000";
-> +		reg = <0x08>;
-> +
-> +		regulators {
-> +			sw1a_reg: sw1a {
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +				regulator-ramp-delay = <6250>;
-> +			};
-> +
-> +			sw1c_reg: sw1b {
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1475000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +				regulator-ramp-delay = <6250>;
-> +			};
-> +
-> +			sw2_reg: sw2 {
-> +				regulator-min-microvolt = <1500000>;
-> +				regulator-max-microvolt = <1850000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			sw3a_reg: sw3 {
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <1650000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			swbst_reg: swbst {
-> +				regulator-min-microvolt = <5000000>;
-> +				regulator-max-microvolt = <5150000>;
-> +			};
-> +
-> +			snvs_reg: vsnvs {
-> +				regulator-min-microvolt = <1000000>;
-> +				regulator-max-microvolt = <3000000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vref_reg: vrefddr {
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vgen1_reg: vldo1 {
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vgen2_reg: vldo2 {
-> +				regulator-min-microvolt = <800000>;
-> +				regulator-max-microvolt = <1550000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vgen3_reg: vccsd {
-> +				regulator-min-microvolt = <2850000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vgen4_reg: v33 {
-> +				regulator-min-microvolt = <2850000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vgen5_reg: vldo3 {
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vgen6_reg: vldo4 {
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +			};
-> +		};
-> +	};
-> +
-> +	eeprom@50 {
-> +		compatible = "atmel,24c04";
-> +		reg = <0x50>;
-> +	};
-> +
-> +	eeprom@52 {
-> +		compatible = "atmel,24c04";
-> +		reg = <0x52>;
-> +	};
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart2>;
-> +	assigned-clocks = <&clks IMX7D_UART2_ROOT_SRC>;
-> +	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
-> +	status = "okay";
-> +};
-> +
-> +&uart4 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart4>;
-> +	assigned-clocks = <&clks IMX7D_UART4_ROOT_SRC>;
-> +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
-> +	status = "okay";
-> +
-> +	rave-sp {
-> +		compatible = "zii,rave-sp-rdu2";
-> +		current-speed = <1000000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		watchdog {
-> +			compatible = "zii,rave-sp-watchdog";
-> +		};
-> +
-> +		eeprom@a3 {
-> +			compatible = "zii,rave-sp-eeprom";
-> +			reg = <0xa3 0x4000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			zii,eeprom-name = "main-eeprom";
-> +		};
-> +	};
-> +};
-> +
-> +&usbotg2 {
-> +	dr_mode = "host";
-> +	disable-over-current;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	bus-width = <4>;
-> +	no-1-8-v;
-> +	no-sdio;
-> +	keep-power-in-suspend;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usdhc3>;
-> +	bus-width = <8>;
-> +	no-1-8-v;
-> +	non-removable;
-> +	no-sdio;
-> +	no-sd;
-> +	keep-power-in-suspend;
-> +	status = "okay";
-> +};
-> +
-> +&wdog1 {
-> +	status = "disabled";
-> +};
-> +
-> +&snvs_rtc {
-> +	status = "disabled";
-> +};
-
-Please sort it alphabetically in label name.
-
-> +
-> +&snvs_pwrkey {
-> +	status = "disabled";
-> +};
-
-We already queued up the patch below to disable snvs_pwrkey by default.
-
-https://lkml.org/lkml/2019/6/13/1170
-
-> +
-> +&iomuxc {
-> +	pinctrl_ecspi1: ecspi1grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_ECSPI1_SCLK__ECSPI1_SCLK	0x2
-> +			MX7D_PAD_ECSPI1_MOSI__ECSPI1_MOSI	0x2
-> +			MX7D_PAD_ECSPI1_MISO__ECSPI1_MISO	0x2
-> +			MX7D_PAD_ECSPI1_SS0__GPIO4_IO19         0x59
-> +		>;
-> +	};
-> +
-> +	pinctrl_enet1: enet1grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_SD2_CD_B__ENET1_MDIO				0x3
-> +			MX7D_PAD_SD2_WP__ENET1_MDC				0x3
-> +			MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC		0x1
-> +			MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0		0x1
-> +			MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1		0x1
-> +			MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2		0x1
-> +			MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3		0x1
-> +			MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL		0x1
-> +			MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC		0x1
-> +			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0		0x1
-> +			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1		0x1
-> +			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2		0x1
-> +			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3		0x1
-> +			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL		0x1
-> +		>;
-> +	};
-> +
-> +	pinctrl_enet1_phy_reset: enet1phyresetgrp {
-> +		fsl,pins = <
-> +			MX7D_PAD_SD2_RESET_B__GPIO5_IO11	0x14
-> +
-> +		>;
-> +	};
-> +
-> +	pinctrl_i2c1: i2c1grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_I2C1_SDA__I2C1_SDA		0x4000007f
-> +			MX7D_PAD_I2C1_SCL__I2C1_SCL		0x4000007f
-> +		>;
-> +	};
-> +
-> +	pinctrl_leds_debug: debuggrp {
-
-ledsgrp?
+Just curious - did you spot the error by testing PWM or merely by
+looking at the code and document?
 
 Shawn
 
-> +		fsl,pins = <
-> +			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x59
-> +		>;
-> +	};
-> +
-> +
-> +	pinctrl_uart2: uart2grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_UART2_RX_DATA__UART2_DCE_RX	0x79
-> +			MX7D_PAD_UART2_TX_DATA__UART2_DCE_TX	0x79
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart4: uart4grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_SD2_DATA0__UART4_DCE_RX	0x79
-> +			MX7D_PAD_SD2_DATA1__UART4_DCE_TX	0x79
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1: usdhc1grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_SD1_CMD__SD1_CMD		0x59
-> +			MX7D_PAD_SD1_CLK__SD1_CLK		0x19
-> +			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
-> +			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
-> +			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
-> +			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc3: usdhc3grp {
-> +		fsl,pins = <
-> +			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
-> +			MX7D_PAD_SD3_CLK__SD3_CLK		0x19
-> +			MX7D_PAD_SD3_DATA0__SD3_DATA0		0x59
-> +			MX7D_PAD_SD3_DATA1__SD3_DATA1		0x59
-> +			MX7D_PAD_SD3_DATA2__SD3_DATA2		0x59
-> +			MX7D_PAD_SD3_DATA3__SD3_DATA3		0x59
-> +			MX7D_PAD_SD3_DATA4__SD3_DATA4		0x59
-> +			MX7D_PAD_SD3_DATA5__SD3_DATA5		0x59
-> +			MX7D_PAD_SD3_DATA6__SD3_DATA6		0x59
-> +			MX7D_PAD_SD3_DATA7__SD3_DATA7		0x59
-> +			MX7D_PAD_SD3_RESET_B__SD3_RESET_B	0x59
-> +		>;
-> +	};
-> +};
-> +
-> +&iomuxc_lpsr {
-> +	pinctrl_enet1_phy_interrupt: enet1phyinterruptgrp {
-> +		fsl,phy = <
-> +			MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2	0x08
-> +		>;
-> +	};
-> +};
-> -- 
+> ---
+>  arch/arm/boot/dts/imx6ul.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> =
+
+> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+> index bbf010c73336..a7f6d1d58e20 100644
+> --- a/arch/arm/boot/dts/imx6ul.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul.dtsi
+> @@ -358,7 +358,7 @@
+>  			pwm1: pwm@2080000 {
+>  				compatible =3D "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+>  				reg =3D <0x02080000 0x4000>;
+> -				interrupts =3D <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupts =3D <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks =3D <&clks IMX6UL_CLK_PWM1>,
+>  					 <&clks IMX6UL_CLK_PWM1>;
+>  				clock-names =3D "ipg", "per";
+> @@ -369,7 +369,7 @@
+>  			pwm2: pwm@2084000 {
+>  				compatible =3D "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+>  				reg =3D <0x02084000 0x4000>;
+> -				interrupts =3D <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupts =3D <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks =3D <&clks IMX6UL_CLK_PWM2>,
+>  					 <&clks IMX6UL_CLK_PWM2>;
+>  				clock-names =3D "ipg", "per";
+> @@ -380,7 +380,7 @@
+>  			pwm3: pwm@2088000 {
+>  				compatible =3D "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+>  				reg =3D <0x02088000 0x4000>;
+> -				interrupts =3D <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupts =3D <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks =3D <&clks IMX6UL_CLK_PWM3>,
+>  					 <&clks IMX6UL_CLK_PWM3>;
+>  				clock-names =3D "ipg", "per";
+> @@ -391,7 +391,7 @@
+>  			pwm4: pwm@208c000 {
+>  				compatible =3D "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+>  				reg =3D <0x0208c000 0x4000>;
+> -				interrupts =3D <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupts =3D <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks =3D <&clks IMX6UL_CLK_PWM4>,
+>  					 <&clks IMX6UL_CLK_PWM4>;
+>  				clock-names =3D "ipg", "per";
+> -- =
+
 > 2.21.0
-> 
+> =
