@@ -1,64 +1,69 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v7 4/7] arm: Use common cpu_topology structure and
- functions.
-Date: Mon, 24 Jun 2019 16:33:38 +0100
-Message-ID: <20190624153338.GA3762@e107155-lin>
-References: <20190617185920.29581-1-atish.patra@wdc.com>
- <20190617185920.29581-5-atish.patra@wdc.com>
- <20190619121057.GE1360@e107155-lin>
- <20190624150658.GA1623@e107155-lin>
- <20190624153033.3jpdd7vsekdiltmb@shell.armlinux.org.uk>
+From: <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH 1/2] net/macb: bindings doc: add sifive fu540-c000 binding
+Date: Mon, 24 Jun 2019 15:38:23 +0000
+Message-ID: <b0c60ec9-2f57-c3f5-c3b4-ee83a5ec4c45@microchip.com>
+References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
+ <1558611952-13295-2-git-send-email-yash.shah@sifive.com>
+ <CAL_Jsq+p5PnTDgxuh9_Aw1RvTk4aTYjKxyMq7DPczLzQVv8_ew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190624153033.3jpdd7vsekdiltmb@shell.armlinux.org.uk>
+In-Reply-To: <CAL_Jsq+p5PnTDgxuh9_Aw1RvTk4aTYjKxyMq7DPczLzQVv8_ew@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <BF668DD5250ADD4CA5B56765716862D1@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+To: robh+dt@kernel.org, yash.shah@sifive.com
+Cc: davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, paul.walmsley@sifive.com, sachin.ghadi@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 04:30:33PM +0100, Russell King - ARM Linux admin wrote:
-> On Mon, Jun 24, 2019 at 04:06:58PM +0100, Sudeep Holla wrote:
-> > On Wed, Jun 19, 2019 at 01:10:57PM +0100, Sudeep Holla wrote:
-> > > Hi Russell,
-> > >
-> > > On Mon, Jun 17, 2019 at 11:59:17AM -0700, Atish Patra wrote:
-> > > > Currently, ARM32 and ARM64 uses different data structures to represent
-> > > > their cpu topologies. Since, we are moving the ARM64 topology to common
-> > > > code to be used by other architectures, we can reuse that for ARM32 as
-> > > > well.
-> > > >
-> > > > Take this opprtunity to remove the redundant functions from ARM32 and
-> > > > reuse the common code instead.
-> > > >
-> > > > To: Russell King <linux@armlinux.org.uk>
-> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > > Tested-by: Sudeep Holla <sudeep.holla@arm.com> (on TC2)
-> > > > Reviewed-by : Sudeep Holla <sudeep.holla@arm.com>
-> > > >
-> > > > ---
-> > > > Hi Russell,
-> > > > Can we get a ACK for this patch ? We are hoping that the entire
-> > > > series can be merged at one go.
-> > >
-> > > It would be nice to get this in for v5.3 as it's almost there.
-> > > Are you fine with these changes ?
-> > >
-> >
-> > Do you have any objections with this patch ? We plan to merge through
-> > RISC-V tree, please let us know. It has been acked-by all the other
-> > maintainers.
->
-> I have no interest in the CPU topology code; as far as I know I have
-> no systems that are able to exercise this code in any way.  Therefore,
-> I don't know this code, I have no way to test it, and so it is not
-> appropriate for me to ack patches for it.
->
-
-I completely understand that and we can take care of testing. As along
-as you don't have objections to this, that should be fine I believe.
-
---
-Regards,
-Sudeep
+T24gMjMvMDUvMjAxOSBhdCAyMjo1MCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIFRodSwgTWF5
+IDIzLCAyMDE5IGF0IDY6NDYgQU0gWWFzaCBTaGFoIDx5YXNoLnNoYWhAc2lmaXZlLmNvbT4gd3Jv
+dGU6DQo+Pg0KPj4gQWRkIHRoZSBjb21wYXRpYmlsaXR5IHN0cmluZyBkb2N1bWVudGF0aW9uIGZv
+ciBTaUZpdmUgRlU1NDAtQzAwMDANCj4+IGludGVyZmFjZS4NCj4+IE9uIHRoZSBGVTU0MCwgdGhp
+cyBkcml2ZXIgYWxzbyBuZWVkcyB0byByZWFkIGFuZCB3cml0ZSByZWdpc3RlcnMgaW4gYQ0KPj4g
+bWFuYWdlbWVudCBJUCBibG9jayB0aGF0IG1vbml0b3JzIG9yIGRyaXZlcyBib3VuZGFyeSBzaWdu
+YWxzIGZvciB0aGUNCj4+IEdFTUdYTCBJUCBibG9jayB0aGF0IGFyZSBub3QgZGlyZWN0bHkgbWFw
+cGVkIHRvIEdFTUdYTCByZWdpc3RlcnMuDQo+PiBUaGVyZWZvcmUsIGFkZCBhZGRpdGlvbmFsIHJh
+bmdlIHRvICJyZWciIHByb3BlcnR5IGZvciBTaUZpdmUgR0VNR1hMDQo+PiBtYW5hZ2VtZW50IElQ
+IHJlZ2lzdGVycy4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBZYXNoIFNoYWggPHlhc2guc2hhaEBz
+aWZpdmUuY29tPg0KPj4gLS0tDQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9uZXQvbWFjYi50eHQgfCAzICsrKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25z
+KCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9uZXQvbWFjYi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L21h
+Y2IudHh0DQo+PiBpbmRleCA5YzVlOTQ0Li45MWEyYTY2IDEwMDY0NA0KPj4gLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tYWNiLnR4dA0KPj4gKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tYWNiLnR4dA0KPj4gQEAgLTQsNiArNCw3
+IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiAgIC0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJj
+ZG5zLFs8Y2hpcD4tXXttYWNifGdlbX0iDQo+PiAgICAgVXNlICJjZG5zLGF0OTFybTkyMDAtZW1h
+YyIgQXRtZWwgYXQ5MXJtOTIwMCBTb0MuDQo+PiAgICAgVXNlICJjZG5zLGF0OTFzYW05MjYwLW1h
+Y2IiIGZvciBBdG1lbCBhdDkxc2FtOSBTb0NzLg0KPj4gKyAgVXNlICJjZG5zLGZ1NTQwLW1hY2Ii
+IGZvciBTaUZpdmUgRlU1NDAtQzAwMCBTb0MuDQo+IA0KPiBUaGlzIHBhdHRlcm4gdGhhdCBBdG1l
+bCBzdGFydGVkIGlzbid0IHJlYWxseSBjb3JyZWN0LiBUaGUgdmVuZG9yDQo+IHByZWZpeCBoZXJl
+IHNob3VsZCBiZSBzaWZpdmUuICdjZG5zJyB3b3VsZCBiZSBhcHByb3ByaWF0ZSBmb3IgYQ0KPiBm
+YWxsYmFjay4NCg0KT2ssIHdlIG1pc3NlZCB0aGlzIGZvciB0aGUgc2FtOXg2MCBTb0MgdGhhdCB3
+ZSBhZGRlZCByZWNlbnRseSB0aGVuLg0KDQpBbnl3YXkgYSBsaXR0bGUgdG9vIGxhdGUsIGNvbWlu
+ZyBiYWNrIHRvIHRoaXMgbWFjaGluZSwgYW5kIHRhbGtpbmcgdG8gDQpZYXNoLCBpc24ndCAic2lm
+aXZlLGZ1NTQwLWMwMDAtbWFjYiIgbW9yZSBzcGVjaWZpYyBhbmQgYSBiZXR0ZXIgbWF0Y2ggDQpm
+b3IgYmVpbmcgZnV0dXJlIHByb29mPyBJIHdvdWxkIGFkdmljZSBmb3IgdGhlIG1vc3Qgc3BlY2lm
+aWMgcG9zc2libGUgDQp3aXRoIG90aGVyIGNvbXBhdGlibGUgc3RyaW5ncyBvbiB0aGUgc2FtZSBs
+aW5lIGluIHRoZSBEVCwgbGlrZToNCg0KInNpZml2ZSxmdTU0MC1jMDAwLW1hY2IiLCAic2lmaXZl
+LGZ1NTQwLW1hY2IiDQoNCk1vcmVvdmVyLCBpcyBpdCByZWFsbHkgYSAibWFjYiIgb3IgYSAiZ2Vt
+IiB0eXBlIG9mIGludGVyZmFjZSBmcm9tIA0KQ2FkZW5jZT8gTm90IGEgYmlnIGRlYWwsIGJ1dCBq
+dXN0IHRvIGRpc2N1c3MgdGhlIHRvcGljIHRvIHRoZSBib25lLi4uDQoNCk5vdGUgdGhhdCBJJ20g
+ZmluZSBpZiB5b3UgY29uc2lkZXIgdGhhdCB3aGF0IHlvdSBoYXZlIGluIG5ldC1uZXh0IG5ldyBp
+cyANCmNvcnJlY3QuDQoNClJlZ2FyZHMsDQogICBOaWNvbGFzDQoNCj4+ICAgICBVc2UgImNkbnMs
+c2FtOXg2MC1tYWNiIiBmb3IgTWljcm9jaGlwIHNhbTl4NjAgU29DLg0KPj4gICAgIFVzZSAiY2Ru
+cyxucDQtbWFjYiIgZm9yIE5QNCBTb0MgZGV2aWNlcy4NCj4+ICAgICBVc2UgImNkbnMsYXQzMmFw
+NzAwMC1tYWNiIiBmb3Igb3RoZXIgMTAvMTAwIHVzYWdlIG9yIHVzZSB0aGUgZ2VuZXJpYyBmb3Jt
+OiAiY2RucyxtYWNiIi4NCj4+IEBAIC0xNyw2ICsxOCw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6
+DQo+PiAgICAgVXNlICJjZG5zLHp5bnFtcC1nZW0iIGZvciBaeW5xIFVsdHJhc2NhbGUrIE1QU29D
+Lg0KPj4gICAgIE9yIHRoZSBnZW5lcmljIGZvcm06ICJjZG5zLGVtYWMiLg0KPj4gICAtIHJlZzog
+QWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQgZm9yIHRoZSBkZXZpY2UNCj4+
+ICsgICAgICAgRm9yICJjZG5zLGZ1NTQwLW1hY2IiLCBzZWNvbmQgcmFuZ2UgaXMgcmVxdWlyZWQg
+dG8gc3BlY2lmeSB0aGUNCj4+ICsgICAgICAgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdp
+c3RlcnMgZm9yIEdFTUdYTCBNYW5hZ2VtZW50IGJsb2NrLg0KPj4gICAtIGludGVycnVwdHM6IFNo
+b3VsZCBjb250YWluIG1hY2IgaW50ZXJydXB0DQo+PiAgIC0gcGh5LW1vZGU6IFNlZSBldGhlcm5l
+dC50eHQgZmlsZSBpbiB0aGUgc2FtZSBkaXJlY3RvcnkuDQo+PiAgIC0gY2xvY2stbmFtZXM6IFR1
+cGxlIGxpc3RpbmcgaW5wdXQgY2xvY2sgbmFtZXMuDQo+PiAtLQ0KPj4gMS45LjENCj4+DQo+IA0K
+DQoNCi0tIA0KTmljb2xhcyBGZXJyZQ0K
