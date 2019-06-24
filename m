@@ -1,156 +1,207 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 2/2] arm64: dts: imx8qxp: sort LSIO subsystem devices
-Date: Mon, 24 Jun 2019 09:12:03 +0800
-Message-ID: <20190624011203.10711-2-shawnguo@kernel.org>
-References: <20190624011203.10711-1-shawnguo@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v5 09/10] memory: tegra: Consolidate registers definition into common header
+Date: Mon, 24 Jun 2019 03:31:31 +0300
+Message-ID: <20190624003132.29473-10-digetx@gmail.com>
+References: <20190624003132.29473-1-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190624011203.10711-1-shawnguo@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190624003132.29473-1-digetx@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We prefer to sort device nodes under simple bus in order of unit
-address.  Let's sort the devices under lsio_subsys properly.
+The Memory Controller registers definition is sparse and duplicated,
+let's consolidate everything into a common place for consistency.
 
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 106 ++++++++++-----------
- 1 file changed, 53 insertions(+), 53 deletions(-)
+ drivers/memory/tegra/mc.c       | 30 -------------------
+ drivers/memory/tegra/mc.h       | 52 +++++++++++++++++++++++++++++----
+ drivers/memory/tegra/tegra124.c | 20 -------------
+ drivers/memory/tegra/tegra30.c  | 20 -------------
+ 4 files changed, 47 insertions(+), 75 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index 33bf0a53db9e..2ce7030c5c4f 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -403,59 +403,6 @@
- 		#size-cells = <1>;
- 		ranges = <0x5d000000 0x0 0x5d000000 0x1000000>;
+diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+index 4c1492c653e1..c926aa81a6ac 100644
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -21,36 +21,6 @@
  
--		lsio_lpcg: clock-controller@5d400000 {
--			compatible = "fsl,imx8qxp-lpcg-lsio";
--			reg = <0x5d400000 0x400000>;
--			#clock-cells = <1>;
--		};
+ #include "mc.h"
+ 
+-#define MC_INTSTATUS 0x000
 -
--		lsio_mu0: mailbox@5d1b0000 {
--			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
--			reg = <0x5d1b0000 0x10000>;
--			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
--			#mbox-cells = <2>;
--			status = "disabled";
--		};
+-#define MC_INTMASK 0x004
 -
--		lsio_mu1: mailbox@5d1c0000 {
--			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
--			reg = <0x5d1c0000 0x10000>;
--			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
--			#mbox-cells = <2>;
--		};
+-#define MC_ERR_STATUS 0x08
+-#define  MC_ERR_STATUS_TYPE_SHIFT 28
+-#define  MC_ERR_STATUS_TYPE_INVALID_SMMU_PAGE (6 << MC_ERR_STATUS_TYPE_SHIFT)
+-#define  MC_ERR_STATUS_TYPE_MASK (0x7 << MC_ERR_STATUS_TYPE_SHIFT)
+-#define  MC_ERR_STATUS_READABLE (1 << 27)
+-#define  MC_ERR_STATUS_WRITABLE (1 << 26)
+-#define  MC_ERR_STATUS_NONSECURE (1 << 25)
+-#define  MC_ERR_STATUS_ADR_HI_SHIFT 20
+-#define  MC_ERR_STATUS_ADR_HI_MASK 0x3
+-#define  MC_ERR_STATUS_SECURITY (1 << 17)
+-#define  MC_ERR_STATUS_RW (1 << 16)
 -
--		lsio_mu2: mailbox@5d1d0000 {
--			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
--			reg = <0x5d1d0000 0x10000>;
--			interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
--			#mbox-cells = <2>;
--			status = "disabled";
--		};
+-#define MC_ERR_ADR 0x0c
 -
--		lsio_mu3: mailbox@5d1e0000 {
--			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
--			reg = <0x5d1e0000 0x10000>;
--			interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
--			#mbox-cells = <2>;
--			status = "disabled";
--		};
+-#define MC_GART_ERROR_REQ		0x30
+-#define MC_DECERR_EMEM_OTHERS_STATUS	0x58
+-#define MC_SECURITY_VIOLATION_STATUS	0x74
 -
--		lsio_mu4: mailbox@5d1f0000 {
--			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
--			reg = <0x5d1f0000 0x10000>;
--			interrupts = <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
--			#mbox-cells = <2>;
--			status = "disabled";
--		};
+-#define MC_EMEM_ARB_CFG 0x90
+-#define  MC_EMEM_ARB_CFG_CYCLES_PER_UPDATE(x)	(((x) & 0x1ff) << 0)
+-#define  MC_EMEM_ARB_CFG_CYCLES_PER_UPDATE_MASK	0x1ff
+-#define MC_EMEM_ARB_MISC0 0xd8
 -
--		lsio_mu13: mailbox@5d280000 {
--			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
--			reg = <0x5d280000 0x10000>;
--			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
--			#mbox-cells = <2>;
--			power-domains = <&pd IMX_SC_R_MU_13A>;
--		};
+-#define MC_EMEM_ADR_CFG 0x54
+-#define MC_EMEM_ADR_CFG_EMEM_NUMDEV BIT(0)
 -
- 		lsio_gpio0: gpio@5d080000 {
- 			compatible = "fsl,imx8qxp-gpio", "fsl,imx35-gpio";
- 			reg = <0x5d080000 0x10000>;
-@@ -543,5 +490,58 @@
- 			#interrupt-cells = <2>;
- 			power-domains = <&pd IMX_SC_R_GPIO_7>;
- 		};
+ static const struct of_device_id tegra_mc_of_match[] = {
+ #ifdef CONFIG_ARCH_TEGRA_2x_SOC
+ 	{ .compatible = "nvidia,tegra20-mc-gart", .data = &tegra20_mc_soc },
+diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
+index abc565b42225..65783063612f 100644
+--- a/drivers/memory/tegra/mc.h
++++ b/drivers/memory/tegra/mc.h
+@@ -15,6 +15,37 @@
+ 
+ #include <soc/tegra/mc.h>
+ 
++#define MC_INTSTATUS					0x00
++#define MC_INTMASK					0x04
++#define MC_ERR_STATUS					0x08
++#define MC_ERR_ADR					0x0c
++#define MC_GART_ERROR_REQ				0x30
++#define MC_EMEM_ADR_CFG					0x54
++#define MC_DECERR_EMEM_OTHERS_STATUS			0x58
++#define MC_SECURITY_VIOLATION_STATUS			0x74
++#define MC_EMEM_ARB_CFG					0x90
++#define MC_EMEM_ARB_OUTSTANDING_REQ			0x94
++#define MC_EMEM_ARB_TIMING_RCD				0x98
++#define MC_EMEM_ARB_TIMING_RP				0x9c
++#define MC_EMEM_ARB_TIMING_RC				0xa0
++#define MC_EMEM_ARB_TIMING_RAS				0xa4
++#define MC_EMEM_ARB_TIMING_FAW				0xa8
++#define MC_EMEM_ARB_TIMING_RRD				0xac
++#define MC_EMEM_ARB_TIMING_RAP2PRE			0xb0
++#define MC_EMEM_ARB_TIMING_WAP2PRE			0xb4
++#define MC_EMEM_ARB_TIMING_R2R				0xb8
++#define MC_EMEM_ARB_TIMING_W2W				0xbc
++#define MC_EMEM_ARB_TIMING_R2W				0xc0
++#define MC_EMEM_ARB_TIMING_W2R				0xc4
++#define MC_EMEM_ARB_DA_TURNS				0xd0
++#define MC_EMEM_ARB_DA_COVERS				0xd4
++#define MC_EMEM_ARB_MISC0				0xd8
++#define MC_EMEM_ARB_MISC1				0xdc
++#define MC_EMEM_ARB_RING1_THROTTLE			0xe0
++#define MC_EMEM_ARB_OVERRIDE				0xe8
++#define MC_TIMING_CONTROL_DBG				0xf8
++#define MC_TIMING_CONTROL				0xfc
 +
-+		lsio_mu0: mailbox@5d1b0000 {
-+			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-+			reg = <0x5d1b0000 0x10000>;
-+			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <2>;
-+			status = "disabled";
-+		};
+ #define MC_INT_DECERR_MTS				BIT(16)
+ #define MC_INT_SECERR_SEC				BIT(13)
+ #define MC_INT_DECERR_VPR				BIT(12)
+@@ -25,17 +56,28 @@
+ #define MC_INT_INVALID_GART_PAGE			BIT(7)
+ #define MC_INT_DECERR_EMEM				BIT(6)
+ 
+-#define MC_EMEM_ARB_OUTSTANDING_REQ			0x94
++#define MC_ERR_STATUS_TYPE_SHIFT			28
++#define MC_ERR_STATUS_TYPE_INVALID_SMMU_PAGE		(0x6 << 28)
++#define MC_ERR_STATUS_TYPE_MASK				(0x7 << 28)
++#define MC_ERR_STATUS_READABLE				BIT(27)
++#define MC_ERR_STATUS_WRITABLE				BIT(26)
++#define MC_ERR_STATUS_NONSECURE				BIT(25)
++#define MC_ERR_STATUS_ADR_HI_SHIFT			20
++#define MC_ERR_STATUS_ADR_HI_MASK			0x3
++#define MC_ERR_STATUS_SECURITY				BIT(17)
++#define MC_ERR_STATUS_RW				BIT(16)
 +
-+		lsio_mu1: mailbox@5d1c0000 {
-+			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-+			reg = <0x5d1c0000 0x10000>;
-+			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <2>;
-+		};
++#define MC_EMEM_ADR_CFG_EMEM_NUMDEV			BIT(0)
 +
-+		lsio_mu2: mailbox@5d1d0000 {
-+			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-+			reg = <0x5d1d0000 0x10000>;
-+			interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <2>;
-+			status = "disabled";
-+		};
++#define MC_EMEM_ARB_CFG_CYCLES_PER_UPDATE(x)		((x) & 0x1ff)
++#define MC_EMEM_ARB_CFG_CYCLES_PER_UPDATE_MASK		0x1ff
 +
-+		lsio_mu3: mailbox@5d1e0000 {
-+			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-+			reg = <0x5d1e0000 0x10000>;
-+			interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		lsio_mu4: mailbox@5d1f0000 {
-+			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-+			reg = <0x5d1f0000 0x10000>;
-+			interrupts = <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		lsio_mu13: mailbox@5d280000 {
-+			compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-+			reg = <0x5d280000 0x10000>;
-+			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <2>;
-+			power-domains = <&pd IMX_SC_R_MU_13A>;
-+		};
-+
-+		lsio_lpcg: clock-controller@5d400000 {
-+			compatible = "fsl,imx8qxp-lpcg-lsio";
-+			reg = <0x5d400000 0x400000>;
-+			#clock-cells = <1>;
-+		};
- 	};
- };
+ #define MC_EMEM_ARB_OUTSTANDING_REQ_MAX_MASK		0x1ff
+ #define MC_EMEM_ARB_OUTSTANDING_REQ_HOLDOFF_OVERRIDE	BIT(30)
+ #define MC_EMEM_ARB_OUTSTANDING_REQ_LIMIT_ENABLE	BIT(31)
+ 
+-#define MC_EMEM_ARB_OVERRIDE				0xe8
+ #define MC_EMEM_ARB_OVERRIDE_EACK_MASK			0x3
+ 
+-#define MC_TIMING_CONTROL_DBG				0xf8
+-
+-#define MC_TIMING_CONTROL				0xfc
+ #define MC_TIMING_UPDATE				BIT(0)
+ 
+ static inline u32 mc_readl(struct tegra_mc *mc, unsigned long offset)
+diff --git a/drivers/memory/tegra/tegra124.c b/drivers/memory/tegra/tegra124.c
+index 6985a4e33325..daff801db569 100644
+--- a/drivers/memory/tegra/tegra124.c
++++ b/drivers/memory/tegra/tegra124.c
+@@ -13,26 +13,6 @@
+ 
+ #include "mc.h"
+ 
+-#define MC_EMEM_ARB_CFG				0x90
+-#define MC_EMEM_ARB_OUTSTANDING_REQ		0x94
+-#define MC_EMEM_ARB_TIMING_RCD			0x98
+-#define MC_EMEM_ARB_TIMING_RP			0x9c
+-#define MC_EMEM_ARB_TIMING_RC			0xa0
+-#define MC_EMEM_ARB_TIMING_RAS			0xa4
+-#define MC_EMEM_ARB_TIMING_FAW			0xa8
+-#define MC_EMEM_ARB_TIMING_RRD			0xac
+-#define MC_EMEM_ARB_TIMING_RAP2PRE		0xb0
+-#define MC_EMEM_ARB_TIMING_WAP2PRE		0xb4
+-#define MC_EMEM_ARB_TIMING_R2R			0xb8
+-#define MC_EMEM_ARB_TIMING_W2W			0xbc
+-#define MC_EMEM_ARB_TIMING_R2W			0xc0
+-#define MC_EMEM_ARB_TIMING_W2R			0xc4
+-#define MC_EMEM_ARB_DA_TURNS			0xd0
+-#define MC_EMEM_ARB_DA_COVERS			0xd4
+-#define MC_EMEM_ARB_MISC0			0xd8
+-#define MC_EMEM_ARB_MISC1			0xdc
+-#define MC_EMEM_ARB_RING1_THROTTLE		0xe0
+-
+ static const struct tegra_mc_client tegra124_mc_clients[] = {
+ 	{
+ 		.id = 0x00,
+diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/tegra30.c
+index 67676677fd6a..f17488a0c5c7 100644
+--- a/drivers/memory/tegra/tegra30.c
++++ b/drivers/memory/tegra/tegra30.c
+@@ -13,26 +13,6 @@
+ 
+ #include "mc.h"
+ 
+-#define MC_EMEM_ARB_CFG				0x90
+-#define MC_EMEM_ARB_OUTSTANDING_REQ		0x94
+-#define MC_EMEM_ARB_TIMING_RCD			0x98
+-#define MC_EMEM_ARB_TIMING_RP			0x9c
+-#define MC_EMEM_ARB_TIMING_RC			0xa0
+-#define MC_EMEM_ARB_TIMING_RAS			0xa4
+-#define MC_EMEM_ARB_TIMING_FAW			0xa8
+-#define MC_EMEM_ARB_TIMING_RRD			0xac
+-#define MC_EMEM_ARB_TIMING_RAP2PRE		0xb0
+-#define MC_EMEM_ARB_TIMING_WAP2PRE		0xb4
+-#define MC_EMEM_ARB_TIMING_R2R			0xb8
+-#define MC_EMEM_ARB_TIMING_W2W			0xbc
+-#define MC_EMEM_ARB_TIMING_R2W			0xc0
+-#define MC_EMEM_ARB_TIMING_W2R			0xc4
+-#define MC_EMEM_ARB_DA_TURNS			0xd0
+-#define MC_EMEM_ARB_DA_COVERS			0xd4
+-#define MC_EMEM_ARB_MISC0			0xd8
+-#define MC_EMEM_ARB_MISC1			0xdc
+-#define MC_EMEM_ARB_RING1_THROTTLE		0xe0
+-
+ static const unsigned long tegra30_mc_emem_regs[] = {
+ 	MC_EMEM_ARB_CFG,
+ 	MC_EMEM_ARB_OUTSTANDING_REQ,
 -- 
-2.18.0
+2.22.0
