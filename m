@@ -1,37 +1,49 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH] ARM: dts: socfpga: update to new Denali NAND binding
-Date: Mon, 24 Jun 2019 10:39:20 -0500
-Message-ID: <0e357fa8-3241-4ce4-fae7-d0ad36fb14c6@kernel.org>
-References: <20190621112306.17769-1-yamada.masahiro@socionext.com>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH 3/4] dt-bindings: iio: frequency: Add ADF4372 PLL documentation
+Date: Mon, 24 Jun 2019 18:12:42 +0300
+Message-ID: <1561389162-26291-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621112306.17769-1-yamada.masahiro@socionext.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
+Document support for ADF4372 SPI Wideband Synthesizer.
 
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+ Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-On 6/21/19 6:23 AM, Masahiro Yamada wrote:
-> With commit d8e8fd0ebf8b ("mtd: rawnand: denali: decouple controller
-> and NAND chips"), the Denali NAND controller driver migrated to the
-> new controller/chip representation.
-> 
-> Update DT for it.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  arch/arm/boot/dts/socfpga.dtsi                |  2 +-
->  arch/arm/boot/dts/socfpga_arria10.dtsi        |  2 +-
->  .../boot/dts/socfpga_arria10_socdk_nand.dts   | 20 ++++++++++++-------
->  3 files changed, 15 insertions(+), 9 deletions(-)
-> 
-
-Applied! Thanks!
-
-Dinh
+diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+index 8a2a8f6..a268a9d 100644
+--- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
++++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+@@ -4,19 +4,21 @@
+ $id: http://devicetree.org/schemas/iio/frequency/adf4371.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+-title: Analog Devices ADF4371 Wideband Synthesizer
++title: Analog Devices ADF4371/ADF4372 Wideband Synthesizers
+ 
+ maintainers:
+   - Popa Stefan <stefan.popa@analog.com>
+ 
+ description: |
+-  Analog Devices ADF4371 SPI Wideband Synthesizer
++  Analog Devices ADF4371/ADF4372 SPI Wideband Synthesizers
+   https://www.analog.com/media/en/technical-documentation/data-sheets/adf4371.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/adf4372.pdf
+ 
+ properties:
+   compatible:
+     enum:
+       - adi,adf4371
++      - adi,adf4372
+ 
+   reg:
+     maxItems: 1
+-- 
+2.7.4
