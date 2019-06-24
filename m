@@ -1,15 +1,14 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v5 00/15] add ecspi ERR009165 for i.mx6/7 soc family
-Date: Mon, 24 Jun 2019 08:16:45 +0800
-Message-ID: <20190624001643.GB3800@dragon>
-References: <20190610081753.11422-1-yibin.gong@nxp.com>
- <1561135476.7537.5.camel@nxp.com>
+Subject: Re: [PATCH v2 1/2] ARM: dts: Add ZII support for ZII i.MX7 RMU2 board
+Date: Mon, 24 Jun 2019 08:28:55 +0800
+Message-ID: <20190624002853.GC3800@dragon>
+References: <20190617153025.12120-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1561135476.7537.5.camel@nxp.com>
+In-Reply-To: <20190617153025.12120-1-andrew.smirnov@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,141 +18,440 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Gong <yibin.gong@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "vkoul@kernel.org" <vkoul@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>, Liang Pan <Liang.Pan@zii.aero>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Fabio Estevam <festevam@gmail.com>, Bob Langer <Bob.Langer@zii.aero>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 08:42:48AM +0000, Robin Gong wrote:
-> Hello Shawn/Will,
-> =A0 Do you have comments for this V5 patch set? I got tags from Mark,
-> Vinod and Rob.
+On Mon, Jun 17, 2019 at 08:30:24AM -0700, Andrey Smirnov wrote:
+> Add support for ZII's i.MX7 based Remote Modem Unit 2 (RMU2) board.
+> 
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Bob Langer <Bob.Langer@zii.aero>
+> Cc: Liang Pan <Liang.Pan@zii.aero>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> ---
+> 
+> Changes since [v1]:
+> 
+>     - Added missing #address-cells and #size-cells
+>     
+>     - Replaced reset-gpio -> reset-gpios
+> 
+> 
+> [v1] lore.kernel.org/r/20190614080317.16850-1-andrew.smirnov@gmail.com
+> 
+>  arch/arm/boot/dts/Makefile           |   1 +
+>  arch/arm/boot/dts/imx7d-zii-rmu2.dts | 361 +++++++++++++++++++++++++++
+>  2 files changed, 362 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx7d-zii-rmu2.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 5559028b770e..516e2912236d 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -593,6 +593,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+>  	imx7d-sdb.dtb \
+>  	imx7d-sdb-reva.dtb \
+>  	imx7d-sdb-sht11.dtb \
+> +	imx7d-zii-rmu2.dtb \
+>  	imx7d-zii-rpu2.dtb \
+>  	imx7s-colibri-eval-v3.dtb \
+>  	imx7s-mba7.dtb \
+> diff --git a/arch/arm/boot/dts/imx7d-zii-rmu2.dts b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
+> new file mode 100644
+> index 000000000000..e60b3232a090
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
+> @@ -0,0 +1,361 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Device tree file for ZII's RMU2 board
+> + *
+> + * RMU - Remote Modem Unit
+> + *
+> + * Copyright (C) 2019 Zodiac Inflight Innovations
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/thermal/thermal.h>
+> +#include "imx7d.dtsi"
+> +
+> +/ {
+> +	model = "ZII RMU2 Board";
+> +	compatible = "zii,imx7d-rmu2", "fsl,imx7d";
+> +
+> +	chosen {
+> +		stdout-path = &uart2;
+> +	};
+> +
+> +	gpio-leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-0 = <&pinctrl_leds_debug>;
+> +		pinctrl-names = "default";
+> +
+> +		debug {
+> +			label = "zii:green:debug1";
+> +			gpios = <&gpio2 8 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	arm-supply = <&sw1a_reg>;
+> +};
+> +
+> +&ecspi1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi1>;
+> +	cs-gpios = <&gpio4 19 GPIO_ACTIVE_HIGH>;
+> +	status = "okay";
+> +
+> +	flash@0 {
+> +		compatible = "jedec,spi-nor";
+> +		spi-max-frequency = <20000000>;
+> +		reg = <0>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +	};
+> +};
+> +
+> +&fec1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet1>;
+> +	assigned-clocks = <&clks IMX7D_ENET1_TIME_ROOT_SRC>,
+> +			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
+> +	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+> +	assigned-clock-rates = <0>, <100000000>;
+> +	phy-mode = "rgmii";
+> +	phy-handle = <&fec1_phy>;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		fec1_phy: phy@0 {
 
-I'm fine with the DTS change, but not sure how the series should be
-merged.
+ethernet-phy for node name.
+
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_enet1_phy_reset>,
+> +				    <&pinctrl_enet1_phy_interrupt>;
+> +			reg = <0>;
+> +			interrupt-parent = <&gpio1>;
+> +			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+> +			reset-gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +
+> +	pmic: pmic@8 {
+
+Label can be more specific, so maybe:
+
+	pfuze3000: pmic@8
+
+> +		compatible = "fsl,pfuze3000";
+> +		reg = <0x08>;
+> +
+> +		regulators {
+> +			sw1a_reg: sw1a {
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <6250>;
+> +			};
+> +
+> +			sw1c_reg: sw1b {
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1475000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <6250>;
+> +			};
+> +
+> +			sw2_reg: sw2 {
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1850000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw3a_reg: sw3 {
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1650000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			swbst_reg: swbst {
+> +				regulator-min-microvolt = <5000000>;
+> +				regulator-max-microvolt = <5150000>;
+> +			};
+> +
+> +			snvs_reg: vsnvs {
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vref_reg: vrefddr {
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen1_reg: vldo1 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen2_reg: vldo2 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1550000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen3_reg: vccsd {
+> +				regulator-min-microvolt = <2850000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen4_reg: v33 {
+> +				regulator-min-microvolt = <2850000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen5_reg: vldo3 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen6_reg: vldo4 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +
+> +	eeprom@50 {
+> +		compatible = "atmel,24c04";
+> +		reg = <0x50>;
+> +	};
+> +
+> +	eeprom@52 {
+> +		compatible = "atmel,24c04";
+> +		reg = <0x52>;
+> +	};
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	assigned-clocks = <&clks IMX7D_UART2_ROOT_SRC>;
+> +	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart4>;
+> +	assigned-clocks = <&clks IMX7D_UART4_ROOT_SRC>;
+> +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+> +	status = "okay";
+> +
+> +	rave-sp {
+> +		compatible = "zii,rave-sp-rdu2";
+> +		current-speed = <1000000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		watchdog {
+> +			compatible = "zii,rave-sp-watchdog";
+> +		};
+> +
+> +		eeprom@a3 {
+> +			compatible = "zii,rave-sp-eeprom";
+> +			reg = <0xa3 0x4000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			zii,eeprom-name = "main-eeprom";
+> +		};
+> +	};
+> +};
+> +
+> +&usbotg2 {
+> +	dr_mode = "host";
+> +	disable-over-current;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	bus-width = <4>;
+> +	no-1-8-v;
+> +	no-sdio;
+> +	keep-power-in-suspend;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc3>;
+> +	bus-width = <8>;
+> +	no-1-8-v;
+> +	non-removable;
+> +	no-sdio;
+> +	no-sd;
+> +	keep-power-in-suspend;
+> +	status = "okay";
+> +};
+> +
+> +&wdog1 {
+> +	status = "disabled";
+> +};
+> +
+> +&snvs_rtc {
+> +	status = "disabled";
+> +};
+
+Please sort it alphabetically in label name.
+
+> +
+> +&snvs_pwrkey {
+> +	status = "disabled";
+> +};
+
+We already queued up the patch below to disable snvs_pwrkey by default.
+
+https://lkml.org/lkml/2019/6/13/1170
+
+> +
+> +&iomuxc {
+> +	pinctrl_ecspi1: ecspi1grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_ECSPI1_SCLK__ECSPI1_SCLK	0x2
+> +			MX7D_PAD_ECSPI1_MOSI__ECSPI1_MOSI	0x2
+> +			MX7D_PAD_ECSPI1_MISO__ECSPI1_MISO	0x2
+> +			MX7D_PAD_ECSPI1_SS0__GPIO4_IO19         0x59
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet1: enet1grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD2_CD_B__ENET1_MDIO				0x3
+> +			MX7D_PAD_SD2_WP__ENET1_MDC				0x3
+> +			MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC		0x1
+> +			MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0		0x1
+> +			MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1		0x1
+> +			MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2		0x1
+> +			MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3		0x1
+> +			MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL		0x1
+> +			MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC		0x1
+> +			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0		0x1
+> +			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1		0x1
+> +			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2		0x1
+> +			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3		0x1
+> +			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL		0x1
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet1_phy_reset: enet1phyresetgrp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD2_RESET_B__GPIO5_IO11	0x14
+> +
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_I2C1_SDA__I2C1_SDA		0x4000007f
+> +			MX7D_PAD_I2C1_SCL__I2C1_SCL		0x4000007f
+> +		>;
+> +	};
+> +
+> +	pinctrl_leds_debug: debuggrp {
+
+ledsgrp?
 
 Shawn
 
-> =
-
-> On 2019-06-10 at 08:17 +0000, yibin.gong@nxp.com wrote:
-> > From: Robin Gong <yibin.gong@nxp.com>
-> > =
-
-> > =A0 There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
-> > transfer to be send twice in DMA mode. Please get more information
-> > from:
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwww
-> > .nxp.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01%7Cyibin
-> > .gong%40nxp.com%7C67d3e78fe5ef4428b3af08d6ed7beb74%7C686ea1d3bc2b4c6f
-> > a92cd99c5c301635%7C0%7C1%7C636957513814970412&amp;sdata=3D%2F9sbrDEmIpu
-> > OazcIAVpIrELZMEjO94%2Bjen7wOOlVsVk%3D&amp;reserved=3D0. The workaround
-> > is adding
-> > new sdma ram script which works in XCH=A0=A0mode as PIO inside sdma
-> > instead
-> > of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should
-> > be
-> > exist on all legacy i.mx6/7 soc family before i.mx6ul.
-> > =A0 NXP fix this design issue from i.mx6ul, so newer chips including
-> > i.mx6ul/
-> > 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8
-> > chips
-> > still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
-> > for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need
-> > errata
-> > or not.
-> > =A0 The first two reverted patches should be the same issue, though, it
-> > seems 'fixed' by changing to other shp script. Hope Sean or Sascha
-> > could
-> > have the chance to test this patch set if could fix their issues.
-> > =A0 Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not
-> > work
-> > on i.mx8mm because the event id is zero.
-> > =
-
-> > PS:
-> > =A0=A0=A0Please get sdma firmware from below linux-firmware and copy it=
- to
-> > your
-> > local rootfs /lib/firmware/imx/sdma.
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit
-> > .kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ffirmware%2Flinux-
-> > firmware.git%2Ftree%2Fimx%2Fsdma&amp;data=3D02%7C01%7Cyibin.gong%40nxp.
-> > com%7C67d3e78fe5ef4428b3af08d6ed7beb74%7C686ea1d3bc2b4c6fa92cd99c5c30
-> > 1635%7C0%7C1%7C636957513814970412&amp;sdata=3DxXHBWpSaSLmMosb%2FajOAiXn
-> > nkxaYV6HCt25OOzgRLbI%3D&amp;reserved=3D0
-> > =
-
-> > v2:
-> > =A0 1.Add commit log for reverted patches.
-> > =A0 2.Add comment for 'ecspi_fixed' in sdma driver.
-> > =A0 3.Add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
-> > =A0=A0=A0=A0rather than remove.
-> > v3:
-> > =A0 1.Confirm with design team make sure ERR009165 fixed on
-> > i.mx6ul/i.mx6ull
-> > =A0=A0=A0=A0/i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy
-> > chips.
-> > =A0=A0=A0=A0Correct dts related dts patch in v2.
-> > =A0 2.Clean eratta information in binding doc and new 'tx_glitch_fixed'
-> > flag
-> > =A0=A0=A0=A0in spi-imx driver to state ERR009165 fixed or not.
-> > =A0 3.Enlarge burst size to fifo size for tx since tx_wml set to 0 in
-> > the
-> > =A0=A0=A0=A0errata workaroud, thus improve performance as possible.
-> > v4:
-> > =A0 1.add Ack tag from Mark and Vinod
-> > =A0 2. remove checking 'event_id1' zero as 'event_id0'.
-> > v5:
-> > =A0 1.Add another patch for compatible with the current uart driver
-> > which
-> > =A0=A0=A0=A0using rom script, so both uart ram script and rom script
-> > supported
-> > =A0=A0=A0=A0in latest firmware, by default uart rom script used. UART d=
-river
-> > =A0=A0=A0=A0will be broken without this patch. Latest sdma firmware has=
- been
-> > =A0=A0=A0=A0already updated in linux-firmware.=A0
-> > =
-
-> > Robin Gong (15):
-> > =A0 Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
-> > =A0 Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
-> > =A0 Revert "dmaengine: imx-sdma: refine to load context only once"
-> > =A0 dmaengine: imx-sdma: remove dupilicated sdma_load_context
-> > =A0 dmaengine: imx-sdma: add mcu_2_ecspi script
-> > =A0 spi: imx: fix ERR009165
-> > =A0 spi: imx: remove ERR009165 workaround on i.mx6ul
-> > =A0 spi: imx: add new i.mx6ul compatible name in binding doc
-> > =A0 dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
-> > =A0 dma: imx-sdma: add i.mx6ul/6sx compatible name
-> > =A0 dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
-> > =A0 ARM: dts: imx6ul: add dma support on ecspi
-> > =A0 ARM: dts: imx6sll: correct sdma compatible
-> > =A0 arm64: defconfig: Enable SDMA on i.mx8mq/8mm
-> > =A0 dmaengine: imx-sdma: add uart rom script
-> > =
-
-> > =A0.../devicetree/bindings/dma/fsl-imx-sdma.txt=A0=A0=A0=A0=A0=A0=A0|=
-=A0=A02 +
-> > =A0.../devicetree/bindings/spi/fsl-imx-cspi.txt=A0=A0=A0=A0=A0=A0=A0|=
-=A0=A01 +
-> > =A0arch/arm/boot/dts/imx6q.dtsi=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A02 +-
-> > =A0arch/arm/boot/dts/imx6qdl.dtsi=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A08 +-
-> > =A0arch/arm/boot/dts/imx6sll.dtsi=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A02 +-
-> > =A0arch/arm/boot/dts/imx6ul.dtsi=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A08 ++
-> > =A0arch/arm64/configs/defconfig=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A03 +
-> > =A0drivers/dma/imx-sdma.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0| 88
-> > ++++++++++++++++------
-> > =A0drivers/spi/spi-imx.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0| 61
-> > ++++++++++++---
-> > =A0include/linux/platform_data/dma-imx-sdma.h=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0| 11 ++-
-> > =A010 files changed, 145 insertions(+), 41 deletions(-)
-> > =
+> +		fsl,pins = <
+> +			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x59
+> +		>;
+> +	};
+> +
+> +
+> +	pinctrl_uart2: uart2grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_UART2_RX_DATA__UART2_DCE_RX	0x79
+> +			MX7D_PAD_UART2_TX_DATA__UART2_DCE_TX	0x79
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart4: uart4grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD2_DATA0__UART4_DCE_RX	0x79
+> +			MX7D_PAD_SD2_DATA1__UART4_DCE_TX	0x79
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD1_CMD__SD1_CMD		0x59
+> +			MX7D_PAD_SD1_CLK__SD1_CLK		0x19
+> +			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
+> +			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
+> +			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
+> +			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc3: usdhc3grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
+> +			MX7D_PAD_SD3_CLK__SD3_CLK		0x19
+> +			MX7D_PAD_SD3_DATA0__SD3_DATA0		0x59
+> +			MX7D_PAD_SD3_DATA1__SD3_DATA1		0x59
+> +			MX7D_PAD_SD3_DATA2__SD3_DATA2		0x59
+> +			MX7D_PAD_SD3_DATA3__SD3_DATA3		0x59
+> +			MX7D_PAD_SD3_DATA4__SD3_DATA4		0x59
+> +			MX7D_PAD_SD3_DATA5__SD3_DATA5		0x59
+> +			MX7D_PAD_SD3_DATA6__SD3_DATA6		0x59
+> +			MX7D_PAD_SD3_DATA7__SD3_DATA7		0x59
+> +			MX7D_PAD_SD3_RESET_B__SD3_RESET_B	0x59
+> +		>;
+> +	};
+> +};
+> +
+> +&iomuxc_lpsr {
+> +	pinctrl_enet1_phy_interrupt: enet1phyinterruptgrp {
+> +		fsl,phy = <
+> +			MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2	0x08
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.21.0
+> 
