@@ -1,56 +1,171 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2 3/4] ARM: dts: exynos: Add regulator suspend
- configuration to Odroid XU3/XU4/HC1 family
-Date: Mon, 24 Jun 2019 09:20:38 +0200
-Message-ID: <d94a2f99-fb99-c238-7011-9bbb4c0cd90f@samsung.com>
-References: <20190621155845.7079-1-krzk@kernel.org>
-        <20190621155845.7079-3-krzk@kernel.org>
-        <CGME20190623160226epcas2p3449814deb1faf7bf939481e6d4da2b86@epcas2p3.samsung.com>
-        <CANAwSgTFQo8wL5s-djwPXFFOLtTHvRQif6234kFC=23PwMhuEQ@mail.gmail.com>
+From: Neal Liu <neal.liu@mediatek.com>
+Subject: [PATCH v4 3/3] hwrng: add mtk-sec-rng driver
+Date: Mon, 24 Jun 2019 15:24:12 +0800
+Message-ID: <1561361052-13072-4-git-send-email-neal.liu@mediatek.com>
+References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgTFQo8wL5s-djwPXFFOLtTHvRQif6234kFC=23PwMhuEQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>
+To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>
+Cc: Neal Liu <neal.liu@mediatek.com>, Crystal Guo <Crystal.Guo@mediatek.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Anand,
+For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
+entropy sources is not accessible from normal world (linux) and
+rather accessible from secure world (ATF/TEE) only. This driver aims
+to provide a generic interface to ATF rng service.
 
-On 2019-06-23 18:02, Anand Moon wrote:
-> Thanks for this patch. Please add my
->
-> Tested-by: Anand Moon <linux.amoon@gmail.com>
->
-> [snip]
->
-> Could you integrate below small changes into this patch.
-> with these below changes suspend and resume work correctly at my end.
->
-> [1] XU4_suspendresume.patch
->
-> As per S2MPS11B PMIC 1.2.1 Regulator (Features)
-> Fix the min max value for *Buck7* and *Buck8*
->
-> -- Buck7 (VDD_1.0V_LDO) 1.5 A (1.2 V to 1.5 V, 12.5 mV step, default on 1.35 V)
-> -- Buck8 (VDD_1.8V_LDO) 2.5 A (1.8 V to 2.1 V, 12.5 mV step, default on 2.0 V)
+Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+---
+ drivers/char/hw_random/Kconfig       |   16 ++++++
+ drivers/char/hw_random/Makefile      |    1 +
+ drivers/char/hw_random/mtk-sec-rng.c |   97 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 114 insertions(+)
+ create mode 100644 drivers/char/hw_random/mtk-sec-rng.c
 
-Could you elaborate why such change for Buck7 and Buck8 is needed?
-
-> Also add suspend-off for *Buck9*
-> Buck9 internally controls the power of USB hub.
-> Adding suspend the this node help proper reset of USB hub on Odroid
-> XU4 / HC1/ XU3
-> during suspend and resume. Below it the logs from my testing.
-
-Disabling Buck9 in suspend indeed reduces the power consumed by the 
-board during suspend-to-ram from about 80mA to as little as 7-10mA, what 
-matches the results of OdroidXU3. Thanks for the hint!
-
-Best regards
+diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+index 25a7d8f..6c82a3b 100644
+--- a/drivers/char/hw_random/Kconfig
++++ b/drivers/char/hw_random/Kconfig
+@@ -398,6 +398,22 @@ config HW_RANDOM_MTK
+ 
+ 	  If unsure, say Y.
+ 
++config HW_RANDOM_MTK_SEC
++	tristate "MediaTek Security Random Number Generator support"
++	depends on HW_RANDOM
++	depends on ARCH_MEDIATEK || COMPILE_TEST
++	default HW_RANDOM
++	help
++	  This driver provides kernel-side support for the Random Number
++	  Generator hardware found on MediaTek SoCs. The difference with
++	  mtk-rng is the Random Number Generator hardware is secure
++	  access only.
++
++	  To compile this driver as a module, choose M here. the
++	  module will be called mtk-sec-rng.
++
++	  If unsure, say Y.
++
+ config HW_RANDOM_S390
+ 	tristate "S390 True Random Number Generator support"
+ 	depends on S390
+diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
+index 7c9ef4a..0ae4993 100644
+--- a/drivers/char/hw_random/Makefile
++++ b/drivers/char/hw_random/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_HW_RANDOM_PIC32) += pic32-rng.o
+ obj-$(CONFIG_HW_RANDOM_MESON) += meson-rng.o
+ obj-$(CONFIG_HW_RANDOM_CAVIUM) += cavium-rng.o cavium-rng-vf.o
+ obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
++obj-$(CONFIG_HW_RANDOM_MTK_SEC) += mtk-sec-rng.o
+ obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
+ obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
+ obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
+diff --git a/drivers/char/hw_random/mtk-sec-rng.c b/drivers/char/hw_random/mtk-sec-rng.c
+new file mode 100644
+index 0000000..ecd2e29
+--- /dev/null
++++ b/drivers/char/hw_random/mtk-sec-rng.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 MediaTek Inc.
++ */
++
++#include <linux/arm-smccc.h>
++#include <linux/hw_random.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/soc/mediatek/mtk_sip_svc.h>
++
++#define MT67XX_RNG_MAGIC	0x74726e67
++#define SMC_RET_NUM		4
++#define MTK_SEC_RND_SIZE	(sizeof(u32) * SMC_RET_NUM)
++
++struct mtk_sec_rng_priv {
++	struct hwrng rng;
++};
++
++static void mtk_sec_get_rnd(uint32_t *val)
++{
++	struct arm_smccc_res res;
++
++	arm_smccc_smc(MTK_SIP_KERNEL_GET_RND,
++		      MT67XX_RNG_MAGIC, 0, 0, 0, 0, 0, 0, &res);
++
++	val[0] = res.a0;
++	val[1] = res.a1;
++	val[2] = res.a2;
++	val[3] = res.a3;
++}
++
++static int mtk_sec_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
++{
++	u32 val[4] = {0};
++	int retval = 0;
++	int i;
++
++	while (max >= MTK_SEC_RND_SIZE) {
++		mtk_sec_get_rnd(val);
++
++		for (i = 0; i < SMC_RET_NUM; i++) {
++			*(u32 *)buf = val[i];
++			buf += sizeof(u32);
++		}
++
++		retval += MTK_SEC_RND_SIZE;
++		max -= MTK_SEC_RND_SIZE;
++	}
++
++	return retval;
++}
++
++static int mtk_sec_rng_probe(struct platform_device *pdev)
++{
++	struct mtk_sec_rng_priv *priv;
++	int ret;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->rng.name = pdev->name;
++	priv->rng.read = mtk_sec_rng_read;
++	priv->rng.priv = (unsigned long)&pdev->dev;
++	priv->rng.quality = 900;
++
++	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to register rng device: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id mtk_sec_rng_match[] = {
++	{ .compatible = "mediatek,mtk-sec-rng", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, mtk_sec_rng_match);
++
++static struct platform_driver mtk_sec_rng_driver = {
++	.probe = mtk_sec_rng_probe,
++	.driver = {
++		.name = KBUILD_MODNAME,
++		.owner = THIS_MODULE,
++		.of_match_table = mtk_sec_rng_match,
++	},
++};
++
++module_platform_driver(mtk_sec_rng_driver);
++
++MODULE_DESCRIPTION("MediaTek Security Random Number Generator Driver");
++MODULE_AUTHOR("Neal Liu <neal.liu@mediatek.com>");
++MODULE_LICENSE("GPL");
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+1.7.9.5
