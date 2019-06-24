@@ -1,106 +1,83 @@
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
- wait-for-safe logic
-Date: Mon, 24 Jun 2019 18:03:49 +0100
-Message-ID: <20190624170348.7dncuc5qezqeyvq2@willie-the-truck>
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
- <20190612071554.13573-4-vivek.gautam@codeaurora.org>
- <20190614040520.GK22737@tuxbook-pro>
- <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org>
- <20190618175218.GH4270@fuggles.cambridge.arm.com>
- <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: WWAN Controller Framework (was IPA [PATCH v2 00/17])
+Date: Mon, 24 Jun 2019 12:06:16 -0500
+Message-ID: <6dae9d1c-ceae-7e88-fe61-f4cda82820ea@linaro.org>
+References: <20190531035348.7194-1-elder@linaro.org>
+ <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com>
+In-Reply-To: <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, Andy Gross <agross@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+To: davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org, Dan Williams <dcbw@redhat.com>, Johannes Berg <johannes@sipsolutions.net>
+Cc: evgreen@chromium.org, benchan@google.com, ejcaruso@google.com, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[+Krishna]
+Sorry, I neglected to add Dan and Johannes--who have been
+primary contributors in this discussion--to this.  Adding now.
 
-Hi Vivek,
+					-Alex
 
-On Mon, Jun 24, 2019 at 03:58:32PM +0530, Vivek Gautam wrote:
-> On Tue, Jun 18, 2019 at 11:22 PM Will Deacon <will.deacon@arm.com> wrote:
-> > On Fri, Jun 14, 2019 at 02:48:07PM +0530, Vivek Gautam wrote:
-> > > On 6/14/2019 9:35 AM, Bjorn Andersson wrote:
-> > > > On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
-> > > > > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> > > > > index 0ad086da399c..3c3ad43eda97 100644
-> > > > > --- a/drivers/iommu/arm-smmu.c
-> > > > > +++ b/drivers/iommu/arm-smmu.c
-> > > > > @@ -39,6 +39,7 @@
-> > > > >   #include <linux/pci.h>
-> > > > >   #include <linux/platform_device.h>
-> > > > >   #include <linux/pm_runtime.h>
-> > > > > +#include <linux/qcom_scm.h>
-> > > > >   #include <linux/slab.h>
-> > > > >   #include <linux/spinlock.h>
-> > > > > @@ -177,6 +178,7 @@ struct arm_smmu_device {
-> > > > >           u32                             features;
-> > > > >   #define ARM_SMMU_OPT_SECURE_CFG_ACCESS (1 << 0)
-> > > > > +#define ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA (1 << 1)
-> > > > >           u32                             options;
-> > > > >           enum arm_smmu_arch_version      version;
-> > > > >           enum arm_smmu_implementation    model;
-> > > > > @@ -262,6 +264,7 @@ static bool using_legacy_binding, using_generic_binding;
-> > > > >   static struct arm_smmu_option_prop arm_smmu_options[] = {
-> > > > >           { ARM_SMMU_OPT_SECURE_CFG_ACCESS, "calxeda,smmu-secure-config-access" },
-> > > > > + { ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA, "qcom,smmu-500-fw-impl-safe-errata" },
-> > > > This should be added to the DT binding as well.
-> > >
-> > > Ah right. I missed that. Will add this and respin unless Robin and Will have
-> > > concerns with this change.
-> >
-> > My only concern really is whether it's safe for us to turn this off. It's
-> > clear that somebody went to a lot of effort to add this extra goodness to
-> > the IP, but your benchmarks suggest they never actually tried it out after
-> > they finished building it.
-> >
-> > Is there some downside I'm not seeing from disabling this stuff?
+On 6/24/19 11:30 AM, Alex Elder wrote:
+> OK I want to try to organize a little more concisely some of the
+> discussion on this, because there is a very large amount of volume
+> to date and I think we need to try to narrow the focus back down
+> again.
 > 
-> This wait-for-safe is a TLB invalidation enhancement to help display
-> and camera devices.
-> The SMMU hardware throttles the invalidations so that clients such as
-> display and camera can indicate when to start the invalidation.
-> So the SMMU essentially reduces the rate at which invalidations are
-> serviced from its queue. This also throttles the invalidations from
-> other masters too.
+> I'm going to use a few terms here.  Some of these I really don't
+> like, but I want to be unambiguous *and* (at least for now) I want
+> to avoid the very overloaded term "device".
 > 
-> On sdm845, the software is expected to serialize the invalidation
-> command loading into SMMU invalidation FIFO using hardware locks
-> (downstream code [2]), and is also expected to throttle non-real time
-> clients while waiting for SAFE==1 (downstream code[2]). We don't do
-> any of these yet, and as per my understanding as this wait-for-safe is
-> enabled by the bootloader in a one time config, this logic reduces
-> performance of devices such as usb and ufs.
+> I have lots more to say, but let's start with a top-level picture,
+> to make sure we're all on the same page.
 > 
-> There's isn't any downside from disabling this logic until we have all
-> the pieces together from downstream in upstream kernels, and until we
-> have sdm845 devices that are running with full display/gfx stack
-> running. That's when we plan to revisit this and enable all the pieces
-> to get display and USB/UFS working with their optimum performance.
-
-Generally, I'd agree that approaching this incrementally makes sense, but
-in this case you're adding new device-tree properties
-("qcom,smmu-500-fw-impl-safe-errata") in order to do so, which seems
-questionable if they're only going to be used in the short-term and will
-be obsolete once Linux knows how to drive the device properly.
-
-Instead, I think this needs to be part of a separate file that is maintained
-by you, which follows on from the work that Krishna is doing for nvidia
-built on top of Robin's prototype patches:
-
-http://linux-arm.org/git?p=linux-rm.git;a=shortlog;h=refs/heads/iommu/smmu-impl
-
-Once we have that, you can key this behaviour off the compatible string
-rather than having to add quirk properties to reflect the transient needs of
-Linux.
-
-Krishna -- how have you been getting on with the branch above?
-
-Will
+>          WWAN Communication
+>          Channel (Physical)
+>                  |     ------------------------
+> ------------     v     |           :+ Control |  \
+> |          |-----------|           :+ Data    |  |
+> |    AP    |           | WWAN unit :+ Voice   |   > Functions
+> |          |===========|           :+ GPS     |  |
+> ------------     ^     |           :+ ...     |  /
+>                  |     -------------------------
+>           Multiplexed WWAN
+>            Communication
+>          Channel (Physical)
+> 
+> - The *AP* is the main CPU complex that's running Linux on one or
+>   more CPU cores.
+> - A *WWAN unit* is an entity that shares one or more physical
+>   *WWAN communication channels* with the AP.
+> - A *WWAN communication channel* is a bidirectional means of
+>   carrying data between the AP and WWAN unit.
+> - A WWAN communication channel carries data using a *WWAN protocol*.
+> - A WWAN unit implements one or more *WWAN functions*, such as
+>   5G data, LTE voice, GPS, and so on.
+> - A WWAN unit shall implement a *WWAN control function*, used to
+>   manage the use of other WWAN functions, as well as the WWAN unit
+>   itself.
+> - The AP communicates with a WWAN function using a WWAN protocol.
+> - A WWAN physical channel can be *multiplexed*, in which case it
+>   carries the data for one or more *WWAN logical channels*.
+> - A multiplexed WWAN communication channel uses a *WWAN wultiplexing
+>   protocol*, which is used to separate independent data streams
+>   carrying other WWAN protocols.
+> - A WWAN logical channel carries a bidirectional stream of WWAN
+>   protocol data between an entity on the AP and a WWAN function.
+> 
+> Does that adequately represent a very high-level picture of what
+> we're trying to manage?
+> 
+> And if I understand it right, the purpose of the generic framework
+> being discussed is to define a common mechanism for managing (i.e.,
+> discovering, creating, destroying, querying, configuring, enabling,
+> disabling, etc.) WWAN units and the functions they implement, along
+> with the communication and logical channels used to communicate with
+> them.
+> 
+> Comments?
+> 
+> 					-Alex
+> 
