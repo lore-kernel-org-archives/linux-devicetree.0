@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/9] pinctrl: sunxi: v3s: introduce
- support for V3
-Date: Mon, 24 Jun 2019 14:40:19 +0200
-Message-ID: <20190624124019.o6acnnkjikekshl5@flea>
+Subject: Re: [PATCH v3 8/9] dt-bindings: arm: sunxi: add binding
+ for Lichee Zero Plus core board
+Date: Mon, 24 Jun 2019 14:42:03 +0200
+Message-ID: <20190624124203.r7vnlt6zzufoarte@flea>
 References: <20190623043801.14040-1-icenowy@aosc.io>
- <20190623043801.14040-2-icenowy@aosc.io>
+ <20190623043801.14040-9-icenowy@aosc.io>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2wajni7mcz7mizzf"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOMJYPUAKGQEAJLAOZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="cy2cjgv5uk45c43g"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIUKYPUAKGQE3UGTNEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190623043801.14040-2-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20190623043801.14040-9-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,51 +24,47 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai 
 List-Id: devicetree@vger.kernel.org
 
 
---2wajni7mcz7mizzf
+--cy2cjgv5uk45c43g
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Sun, Jun 23, 2019 at 12:37:53PM +0800, Icenowy Zheng wrote:
-> Introduce the GPIO pins that is only available on V3 (not on V3s) to the
-> V3s pinctrl driver.
+Hi,
+
+On Sun, Jun 23, 2019 at 12:38:00PM +0800, Icenowy Zheng wrote:
+> The Lichee Zero Plus is a core board made by Sipeed, with a microUSB
+> connector on it, TF slot or WSON8 SD chip, optional eMMC or SPI Flash.
+> It has a gold finger connector for expansion, and UART is available from
+> reserved pins w/ 2.54mm pitch. The board can use either SoChip S3 or
+> Allwinner V3L SoCs.
+>
+> Add the device tree binding of the basic version of the core board --
+> w/o eMMC or SPI Flash, w/ TF slot or WSON8 SD, and use S3 SoC.
 >
 > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
-> Changes in v3:
-> - Fixed code alignment.
-> - Fixed LVDS function number.
+> No changes in v3.
 >
-> Changes in v2:
-> - Dropped the driver rename patch and apply the changes directly on V3s
->   driver.
+> Patch introduced in v2.
 >
->  drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c | 473 +++++++++++++++++-----
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |   2 +
->  2 files changed, 366 insertions(+), 109 deletions(-)
+>  Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
-> index 6704ce8e5e3d..721c997d472b 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
-> @@ -1,5 +1,5 @@
->  /*
-> - * Allwinner V3s SoCs pinctrl driver.
-> + * Allwinner V3/V3s SoCs pinctrl driver.
->   *
->   * Copyright (C) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->   *
-> @@ -28,235 +28,433 @@ static const struct sunxi_desc_pin sun8i_v3s_pins[] = {
->  	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 0),
->  		  SUNXI_FUNCTION(0x0, "gpio_in"),
->  		  SUNXI_FUNCTION(0x1, "gpio_out"),
-> -		  SUNXI_FUNCTION(0x2, "uart2"),		/* TX */
-> -		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),	/* PB_EINT0 */
-> +		  SUNXI_FUNCTION(0x2, "uart2"),			/* TX */
-> +		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),		/* PB_EINT0 */
+> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+> index 000a00d12d6a..48c126a7a848 100644
+> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
+> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+> @@ -353,6 +353,11 @@ properties:
+>            - const: licheepi,licheepi-zero
+>            - const: allwinner,sun8i-v3s
+>
+> +      - description: Lichee Zero Plus (with S3, without eMMC/SPI Flash)
+> +        items:
+> +          - const: sipeed,lichee-zero-plus
+> +          - const: allwinner,sun8i-s3
+> +
 
-I'm not sure why all that churn is needed.
-
-Looks good otherwise.
+I didn't notice this before, but since this is not a LicheePi, it
+should be before it, not after.
 
 Maxime
 
@@ -76,4 +72,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---2wajni7mcz7mizzf--
+--cy2cjgv5uk45c43g--
