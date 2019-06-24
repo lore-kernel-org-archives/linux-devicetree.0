@@ -1,107 +1,164 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Date: Mon, 24 Jun 2019 13:55:58 +0200
-Message-ID: <20190624115558.GA5690@piout.net>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
- <20190621164940.GL31306@lunn.ch>
- <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+Subject: Re: [PATCH v4 11/11] thermal: sun8i: add thermal driver for h3
+Date: Mon, 24 Jun 2019 14:05:37 +0200
+Message-ID: <20190624120537.sxdm4y3jec3ksr4u@core.my.home>
+References: <20190623164206.7467-1-tiny.windzz@gmail.com>
+ <20190623164206.7467-12-tiny.windzz@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+In-Reply-To: <20190623164206.7467-12-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Yangtao Li <tiny.windzz@gmail.com>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, davem@davemloft.net, gregkh@linuxfoundation.org, mchehab+samsung@kernel.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/06/2019 11:45:37+0000, Claudiu Manoil wrote:
-> Hi Andrew,
-> 
-> >-----Original Message-----
-> >From: Andrew Lunn <andrew@lunn.ch>
-> >Sent: Friday, June 21, 2019 7:50 PM
-> >To: Claudiu Manoil <claudiu.manoil@nxp.com>
-> >Cc: David S . Miller <davem@davemloft.net>; devicetree@vger.kernel.org;
-> >Alexandre Belloni <alexandre.belloni@bootlin.com>; netdev@vger.kernel.org;
-> >Alexandru Marginean <alexandru.marginean@nxp.com>; linux-
-> >kernel@vger.kernel.org; UNGLinuxDriver@microchip.com; Allan Nielsen
-> ><Allan.Nielsen@microsemi.com>; Rob Herring <robh+dt@kernel.org>; linux-
-> >arm-kernel@lists.infradead.org
-> >Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch port
-> >DT node
-> >
-> >On Fri, Jun 21, 2019 at 06:38:50PM +0300, Claudiu Manoil wrote:
-> >> The switch device features 6 ports, 4 with external links
-> >> and 2 internally facing to the ls1028a SoC and connected via
-> >> fixed links to 2 internal enetc ethernet controller ports.
-> >
-> >Hi Claudiu
-> >
-> >> +			switch@0,5 {
-> >> +				compatible = "mscc,felix-switch";
-> >> +				reg = <0x000500 0 0 0 0>;
-> >> +
-> >> +				ethernet-ports {
-> >> +					#address-cells = <1>;
-> >> +					#size-cells = <0>;
-> >> +
-> >> +					/* external ports */
-> >> +					switch_port0: port@0 {
-> >> +						reg = <0>;
-> >> +					};
-> >> +					switch_port1: port@1 {
-> >> +						reg = <1>;
-> >> +					};
-> >> +					switch_port2: port@2 {
-> >> +						reg = <2>;
-> >> +					};
-> >> +					switch_port3: port@3 {
-> >> +						reg = <3>;
-> >> +					};
-> >> +					/* internal to-cpu ports */
-> >> +					port@4 {
-> >> +						reg = <4>;
-> >> +						fixed-link {
-> >> +							speed = <1000>;
-> >> +							full-duplex;
-> >> +						};
-> >> +					};
-> >> +					port@5 {
-> >> +						reg = <5>;
-> >> +						fixed-link {
-> >> +							speed = <1000>;
-> >> +							full-duplex;
-> >> +						};
-> >> +					};
-> >> +				};
-> >> +			};
-> >
-> >This sounds like a DSA setup, where you have SoC ports connected to
-> >the switch. With DSA, the CPU ports of the switch are special. We
-> >don't create netdev's for them, the binding explicitly list which SoC
-> >interface they are bound to, etc.
-> >
-> >What model are you using here? I'm just trying to understand the setup
-> >to ensure it is consistent with the swichdev model.
-> >
-> 
-> Yeah, there are 2 ethernet controller ports (managed by the enetc driver) 
-> connected inside the SoC via SGMII links to 2 of the switch ports, one of
-> these switch ports can be configured as CPU port (with follow-up patches).
-> 
-> This configuration may look prettier on DSA, but the main restriction here
-> is that the entire functionality is provided by the ocelot driver which is a
-> switchdev driver.  I don't think it would be a good idea to copy-paste code
-> from ocelot to a separate dsa driver.
-> 
+Hello Yangtao,
 
-We should probably make the ocelot driver a DSA driver then...
+On Sun, Jun 23, 2019 at 12:42:06PM -0400, Yangtao Li wrote:
+> This patch adds the support for allwinner h3 thermal sensor.
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  drivers/thermal/sun8i_thermal.c | 72 +++++++++++++++++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+> 
+> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> index 260b24340f5b..c8ee291f3b17 100644
+> --- a/drivers/thermal/sun8i_thermal.c
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -27,6 +27,14 @@
+>  #define TEMP_TO_REG				672
+>  #define CALIBRATE_DEFAULT			0x800
+>  
+> +#define SUN8I_THS_CTRL0				0x00
+> +#define SUN8I_THS_CTRL2				0x40
+> +#define SUN8I_THS_IC				0x44
+> +#define SUN8I_THS_IS				0x48
+> +#define SUN8I_THS_MFC				0x70
+> +#define SUN8I_THS_TEMP_CALIB			0x74
+> +#define SUN8I_THS_TEMP_DATA			0x80
+> +
+>  #define SUN50I_THS_CTRL0			0x00
+>  #define SUN50I_H6_THS_ENABLE			0x04
+>  #define SUN50I_H6_THS_PC			0x08
+> @@ -36,6 +44,9 @@
+>  #define SUN50I_H6_THS_TEMP_CALIB		0xa0
+>  #define SUN50I_H6_THS_TEMP_DATA			0xc0
+>  
+> +#define SUN8I_THS_CTRL0_T_ACQ0(x)		(GENMASK(15, 0) & (x))
+> +#define SUN8I_THS_CTRL2_T_ACQ1(x)		((GENMASK(15, 0) & (x)) << 16)
+> +
+>  #define SUN50I_THS_CTRL0_T_ACQ(x)		((GENMASK(15, 0) & (x)) << 16)
+>  #define SUN50I_THS_FILTER_EN			BIT(2)
+>  #define SUN50I_THS_FILTER_TYPE(x)		(GENMASK(1, 0) & (x))
+> @@ -121,6 +132,21 @@ static const struct regmap_config config = {
+>  	.fast_io = true,
+>  };
+>  
+> +static int sun8i_h3_irq_ack(struct ths_device *tmdev)
+> +{
+> +	int state, ret = 0;
+> +
+> +	regmap_read(tmdev->regmap, SUN8I_THS_IS, &state);
+> +
+> +	if (state & BIT(8)) {
+> +		regmap_write(tmdev->regmap, SUN8I_THS_IS,
+> +			     BIT(8));
+> +		ret |= BIT(1);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int sun50i_h6_irq_ack(struct ths_device *tmdev)
+>  {
+>  	int i, state, ret = 0;
+> @@ -154,6 +180,14 @@ static irqreturn_t sun8i_irq_thread(int irq, void *data)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static int sun8i_h3_ths_calibrate(struct ths_device *tmdev,
+> +			       u16 *caldata, int callen)
+> +{
+> +	regmap_write(tmdev->regmap, SUN8I_THS_TEMP_CALIB, *caldata);
 
+You're missing a sanity check for callen here.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+regards,
+	o.
+
+> +	return 0;
+> +}
+> +
+>  static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
+>  				   u16 *caldata, int callen)
+>  {
+> @@ -325,6 +359,32 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+>  	return ret;
+>  }
+>  
+> +static int sun8i_h3_thermal_init(struct ths_device *tmdev)
+> +{
+> +	/* average over 4 samples */
+> +	regmap_write(tmdev->regmap, SUN8I_THS_MFC,
+> +		     SUN50I_THS_FILTER_EN |
+> +		     SUN50I_THS_FILTER_TYPE(1));
+> +	/*
+> +	 * period = (x + 1) * 4096 / clkin; ~10ms
+> +	 * enable data interrupt
+> +	 */
+> +	regmap_write(tmdev->regmap, SUN8I_THS_IC,
+> +		     SUN50I_H6_THS_PC_TEMP_PERIOD(58) | BIT(8));
+> +	/*
+> +	 * clkin = 24MHz
+> +	 * T acquire = clkin / (x + 1)
+> +	 *           = 20us
+> +	 * enable sensor
+> +	 */
+> +	regmap_write(tmdev->regmap, SUN8I_THS_CTRL0,
+> +		     SUN8I_THS_CTRL0_T_ACQ0(479));
+> +	regmap_write(tmdev->regmap, SUN8I_THS_CTRL2,
+> +		     SUN8I_THS_CTRL2_T_ACQ1(479) | BIT(0));
+> +
+> +	return 0;
+> +}
+> +
+>  static int sun50i_thermal_init(struct ths_device *tmdev)
+>  {
+>  	int val;
+> @@ -431,6 +491,17 @@ static int sun8i_ths_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct ths_thermal_chip sun8i_h3_ths = {
+> +	.sensor_num = 1,
+> +	.offset = -1794,
+> +	.scale = -121,
+> +	.has_ahb_clk = true,
+> +	.temp_data_base = SUN8I_THS_TEMP_DATA,
+> +	.calibrate = sun8i_h3_ths_calibrate,
+> +	.init = sun8i_h3_thermal_init,
+> +	.irq_ack = sun8i_h3_irq_ack,
+> +};
+> +
+>  static const struct ths_thermal_chip sun50i_h6_ths = {
+>  	.sensor_num = 2,
+>  	.offset = -2794,
+> @@ -443,6 +514,7 @@ static const struct ths_thermal_chip sun50i_h6_ths = {
+>  };
+>  
+>  static const struct of_device_id of_ths_match[] = {
+> +	{ .compatible = "allwinner,sun8i-h3-ths", .data = &sun8i_h3_ths },
+>  	{ .compatible = "allwinner,sun50i-h6-ths", .data = &sun50i_h6_ths },
+>  	{ /* sentinel */ },
+>  };
+> -- 
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
