@@ -1,74 +1,34 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: properly connect USB
- PHY to port 0
-Date: Mon, 24 Jun 2019 21:03:17 +0800
-Message-ID: <CAGb2v66vNndnXXfQfF4tnkEfqPjom7e=kuWVzWggjcTSeDPWsA@mail.gmail.com>
-References: <20190620010127.12071-1-andre.przywara@arm.com>
- <CAGb2v66WOTFvXWSSGwtLh3hD+N4CeJkFEPnCMXp0FuU2h=LS9Q@mail.gmail.com> <20190624135806.7bc78378@donnerap.cambridge.arm.com>
-Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: RE: [PATCH net-next 6/6] net/mssc/ocelot: Add basic Felix switch
+ driver
+Date: Mon, 24 Jun 2019 13:19:46 +0000
+Message-ID: <VI1PR04MB48805E585FF56E111E84430896E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+ <1561131532-14860-7-git-send-email-claudiu.manoil@nxp.com>
+ <20190622205720.GK8497@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBIUUYPUAKGQES7PTG5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190624135806.7bc78378-DNuTxU4e2EH5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190622205720.GK8497@lunn.ch>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, Catalin Horghidan <catalin.horghidan@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 8:58 PM Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
->
-> On Mon, 24 Jun 2019 16:25:47 +0800
-> Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->
-> Hi,
->
-> > On Thu, Jun 20, 2019 at 9:02 AM Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> > >
-> > > In recent Allwinner SoCs the first USB host controller (HCI0) shares
-> > > the first PHY with the MUSB controller. Probably to make this sharing
-> > > work, we were avoiding to declare this in the DT. This has two
-> > > shortcomings:
-> > > - U-Boot (which uses the same .dts) cannot use this port without a PHY
-> > >   linked, so we were loosing one USB port there.
-> > > - It requires the MUSB driver to be enabled and loaded, although we
-> > >   don't actually use it.
-> > >
-> > > For those (64-bit) boards which use an USB-A socket for HCI0/MUSB, add
-> > > a "phys" property pointing to the USB PHY 0.
-> > >
-> > > This makes it work in U-Boot, also improves compatiblity when no MUSB
-> > > driver is loaded (for instance in distribution installers).
-> > >
-> > > Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-> > > ---
-> > > Hi,
-> > >
-> > > I have the feeling this belongs into the .dtsi, but cant't tell for sure
-> > > how this interacts with the MUSB driver. If need be, we can always pull
-> > > this up later, I guess.
-> >
-> > Have you tried if gadget mode and switching between gadget/host mode on
-> > an otg port still works? AFAICT that would be the main thing to worry
-> > about.
->
-> I briefly tried gadget mode on a BPi-M64, and that still seemed to work,
-> but I couldn't switch it to host mode. IIRC that didn't even work without
-> this patch, but I didn't find the time to investigate yet.
->
-> Is it supposed to switch automatically when the ID pin changes state? Do
-> you know a board/kernel combination which is known to work?
+>-----Original Message-----
+>From: Andrew Lunn <andrew@lunn.ch>
+>Sent: Saturday, June 22, 2019 11:57 PM
+>To: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-Yes it's supposed to switch automatically when you insert or remove the
-OTG host mode cable.
+[...]
 
-I think it worked during the last release cycle while I was adding support
-for VBUS polling. I'll do some tests on the current sunxi-next tomorrow
-and let you know.
+Ok for all, I can work more on refactoring if we agree on the basics.=20
+For instance I can change the driver to use reg-names, same as=20
+mscc-ocelot, and factor out the common code.
+So far my intention was to change the ocelot part as little as possible,=20
+only where necessary.
 
-ChenYu
+Thanks,
+Claudiu
