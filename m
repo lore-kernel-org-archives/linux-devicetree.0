@@ -1,65 +1,37 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: [PATCH] riscv: Add cpu topology DT entry.
-Date: Mon, 24 Jun 2019 15:38:19 -0700
-Message-ID: <20190624223819.14320-1-atish.patra@wdc.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 10/15] dt-bindings: display: Convert tpo,tpg110 panel
+ to DT schema
+Date: Mon, 24 Jun 2019 16:47:36 -0600
+Message-ID: <CAL_Jsq+uCMKhUFgCCK3uUetL9OwokQPaq74GJHQS2VS=UjVH8w@mail.gmail.com>
+References: <20190624215649.8939-1-robh@kernel.org> <20190624215649.8939-11-robh@kernel.org>
+ <CACRpkdYKE=zLJhmTeTWYGRCQNt3K8+rNNqsp5UDa2d31GG6Y2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Palmer Dabbelt <palmer@sifive.com>, Atish Patra <atish.patra@wdc.com>, Yash Shah <yash.shah@sifive.com>, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYKE=zLJhmTeTWYGRCQNt3K8+rNNqsp5UDa2d31GG6Y2g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently, there is no CPU topology defined for RISC-V.
-The following series adds topology support in RISC-V.
+On Mon, Jun 24, 2019 at 4:13 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Jun 24, 2019 at 11:59 PM Rob Herring <robh@kernel.org> wrote:
+>
+> > Convert the tpo,tpg110 panel binding to DT schema.
+> >
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Cc: dri-devel@lists.freedesktop.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+>
+> Awesome, fixed up the MAINATINERS entry and applied and
+> pushed for DRM next with my Reviewed-by.
 
-http://lists.infradead.org/pipermail/linux-riscv/2019-June/005072.html
+You shouldn't have because this is dependent on patch 2 and
+panel-common.yaml. So now 'make dt_binding_check' is broken.
 
-Add a DT node for unleashed that describes the CPU topology
-present in HiFive Unleashed.
-
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 83f40b00ab63..907564f4f07a 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -22,6 +22,24 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		timebase-frequency = <1000000>;
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu1>;
-+				};
-+				core1 {
-+					cpu = <&cpu2>;
-+				};
-+				core2 {
-+					cpu = <&cpu3>;
-+				};
-+				core3 {
-+					cpu = <&cpu4>;
-+				};
-+			};
-+		};
-+
- 		cpu0: cpu@0 {
- 			compatible = "sifive,e51", "sifive,rocket0", "riscv";
- 			device_type = "cpu";
--- 
-2.21.0
+Rob
