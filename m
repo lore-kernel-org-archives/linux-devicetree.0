@@ -1,81 +1,97 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v7 3/5] mtd: Add support for HyperBus memory devices
-Date: Mon, 24 Jun 2019 19:03:44 +0530
-Message-ID: <053894bc-1536-0b6c-5255-ab9be6d66eee@ti.com>
-References: <20190620172250.9102-1-vigneshr@ti.com>
- <20190620172250.9102-4-vigneshr@ti.com>
- <4d17e914-cd1f-c6fe-b70a-6aae02e0cf4e@cogentembedded.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH v2 3/4] ARM: dts: exynos: Add regulator suspend
+ configuration to Odroid XU3/XU4/HC1 family
+Date: Mon, 24 Jun 2019 19:12:46 +0530
+Message-ID: <CANAwSgTymg=u8oJy4bOoREpY1DvVqav=FfdizumeUJMYhntKaQ@mail.gmail.com>
+References: <20190621155845.7079-1-krzk@kernel.org> <20190621155845.7079-3-krzk@kernel.org>
+ <CGME20190623160226epcas2p3449814deb1faf7bf939481e6d4da2b86@epcas2p3.samsung.com>
+ <CANAwSgTFQo8wL5s-djwPXFFOLtTHvRQif6234kFC=23PwMhuEQ@mail.gmail.com>
+ <d94a2f99-fb99-c238-7011-9bbb4c0cd90f@samsung.com> <CAJKOXPeXELUjsuW9eyGuRj56067qnL-J2Lt4U42mYiyx=X+F_Q@mail.gmail.com>
+ <2f58b63e-adf1-7935-8849-f311dc991b84@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4d17e914-cd1f-c6fe-b70a-6aae02e0cf4e@cogentembedded.com>
-Content-Language: en-US
+In-Reply-To: <2f58b63e-adf1-7935-8849-f311dc991b84@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Marek / Krzysztof,
 
-
-On 22/06/19 1:22 AM, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 06/20/2019 08:22 PM, Vignesh Raghavendra wrote:
-> 
->> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
->> Bus interface between a host system master and one or more slave
->> interfaces. HyperBus is used to connect microprocessor, microcontroller,
->> or ASIC devices with random access NOR flash memory (called HyperFlash)
->> or self refresh DRAM (called HyperRAM).
->>
->> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
->> signal and either Single-ended clock(3.0V parts) or Differential clock
->> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
->> At bus level, it follows a separate protocol described in HyperBus
->> specification[1].
->>
->> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
->> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
->> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
->> HyperBus operates at >166MHz frequencies.
-> 
->    s/wrt/WRT/.
-
-OK
-
-[...]
->> diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
->> new file mode 100644
->> index 000000000000..ead969aad35b
->> --- /dev/null
->> +++ b/include/linux/mtd/hyperbus.h
->> @@ -0,0 +1,86 @@
-> [...]
->> +/**
->> + * struct hyperbus_ops - struct representing custom HyperBus operations
->> + * @read16: read 16 bit of data to flash in a single burst. Used to read
-> 
->    s/to flash/from flash/.
+On Mon, 24 Jun 2019 at 14:31, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>
+> Hi Krzysztof,
+>
+> On 2019-06-24 09:41, Krzysztof Kozlowski wrote:
+> > On Mon, 24 Jun 2019 at 09:20, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> >> On 2019-06-23 18:02, Anand Moon wrote:
+> >>> Thanks for this patch. Please add my
+> >>>
+> >>> Tested-by: Anand Moon <linux.amoon@gmail.com>
+> >>>
+> >>> [snip]
+> >>>
+> >>> Could you integrate below small changes into this patch.
+> >>> with these below changes suspend and resume work correctly at my end.
+> >>>
+> >>> [1] XU4_suspendresume.patch
+> >>>
+> >>> As per S2MPS11B PMIC 1.2.1 Regulator (Features)
+> >>> Fix the min max value for *Buck7* and *Buck8*
+> >>>
+> >>> -- Buck7 (VDD_1.0V_LDO) 1.5 A (1.2 V to 1.5 V, 12.5 mV step, default on 1.35 V)
+> >>> -- Buck8 (VDD_1.8V_LDO) 2.5 A (1.8 V to 2.1 V, 12.5 mV step, default on 2.0 V)
+> >> Could you elaborate why such change for Buck7 and Buck8 is needed?
+> > Anand has here valid point - the constraints in DTS do not match
+> > hardware manual. This leads to question whether voltage table in
+> > driver is proper... Another point is the voltage itself. The
+> > schematics describes them as at specific voltage (1.35 V and 2.0 V)
+> > but after boot they are 1.2 V and 1.85 V. Maybe this shift comes from
+> > the problem above.
+> >
+> >>> Also add suspend-off for *Buck9*
+> >>> Buck9 internally controls the power of USB hub.
+> >>> Adding suspend the this node help proper reset of USB hub on Odroid
+> >>> XU4 / HC1/ XU3
+> >>> during suspend and resume. Below it the logs from my testing.
+> >> Disabling Buck9 in suspend indeed reduces the power consumed by the
+> >> board during suspend-to-ram from about 80mA to as little as 7-10mA, what
+> >> matches the results of OdroidXU3. Thanks for the hint!
+> > Although I did not get what is the difference in the logs (Anand
+> > pasted two logs but they look the same) but the power consumption is
+> > reason is good enough. I would be happy to put in the changelog entire
+> > consumption  difference. I can measure it on XU3-Lite but can you give
+> > me the XU4 (before and after)?\
+>
+>
+> HC1:
+>
+> next-20190620: 120mA (@5V)
+> this patchset: 72mA (@5V)
+> this patchset + fixup from Anand: 7-10mA (@5V)
+>
+> XU4 (SDcard):
+>
+> next-20190620: 88mA (@5V)
+> this patchset: 74mA (@5V), sometimes 42mA (@5V)
+> this patchset + fixup from Anand: 6-9mA (@5V)
+>
+>
+> XU4 (eMMC):
+>
+> next-20190620: 100mA (@5V)
+> this patchset: 72mA (@5V), sometimes 41mA (@5V)
+> this patchset + fixup from Anand: 6-9mA (@5V)
+>
+>
+> Best regards
+> --
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
 >
 
-Will fix
+Thanks for this results.
 
-
-> [...]
->> +#endif /* __LINUX_MTD_HYPERBUS_H__ */
-> 
->    I thought you agreed to add the #defines for the HF commands. Well, I can add them
-> as well...
-> 
-
-Sorry, I thought you were proposing to add them to your driver's header
-file. Anyways, I think its better to add defines when there is an actual
-user.
-
-If there are no further comments, I will fixup things locally and queue
-up for next release.
-
--- 
-Regards
-Vignesh
+Best Regards
+-Anand
