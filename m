@@ -1,38 +1,46 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v5 04/10] memory: tegra20-emc: Include io.h instead of iopoll.h
-Date: Mon, 24 Jun 2019 03:31:26 +0300
-Message-ID: <20190624003132.29473-5-digetx@gmail.com>
-References: <20190624003132.29473-1-digetx@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: fsl: librem5: Limit the USB to 5V
+Date: Mon, 24 Jun 2019 10:08:15 +0800
+Message-ID: <20190624020815.GK3800@dragon>
+References: <20190620170439.18762-1-angus@akkea.ca>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190624003132.29473-1-digetx@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190620170439.18762-1-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc: angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The register polling code was gone, but the included header change was
-missed. Fix it up for consistency.
+On Thu, Jun 20, 2019 at 11:04:39AM -0600, Angus Ainslie (Purism) wrote:
+> The charge controller can handle 14V but the PTC on the devkit can only
+> handle 6V so limit the negotiated voltage to 5V.
+> 
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/memory/tegra/tegra20-emc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Prefix 'arm64: dts: librem5: ...' should be fine, so I changed it and
+applied the patch.
 
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index b519f02b0ee9..1ce351dd5461 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -10,7 +10,7 @@
- #include <linux/completion.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
--#include <linux/iopoll.h>
-+#include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of.h>
--- 
-2.22.0
+Shawn
+
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> index 3f4736fd3cea..ec85ada77955 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> @@ -353,7 +353,7 @@
+>  			sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM |
+>  				PDO_FIXED_DUAL_ROLE |
+>  				PDO_FIXED_DATA_SWAP )
+> -			     PDO_VAR(5000, 12000, 2000)>;
+> +			     PDO_VAR(5000, 3000, 3000)>;
+>  			op-sink-microwatt = <10000000>;
+>  
+>  			ports {
+> -- 
+> 2.17.1
+> 
