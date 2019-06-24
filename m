@@ -1,146 +1,129 @@
-Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 04/27] PCI: tegra: Mask AFI_INTR in runtime suspend
-Date: Tue, 18 Jun 2019 23:31:43 +0530
-Message-ID: <20190618180206.4908-5-mmaddireddy@nvidia.com>
-In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
-References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Return-Path: <SRS0=XSpL=UX=rock-chips.com=jay.xu@kernel.org>
+Date: Mon, 24 Jun 2019 09:57:09 +0800
+From: "jay.xu@rock-chips.com" <jay.xu@rock-chips.com>
+Subject: Re: Re: [PATCH v3 1/1] arm64: dts: rockchip: add core dtsi file for RK3399Pro SoCs
+References: <20190529074752.19388-1-jay.xu@rock-chips.com>,
+	<20190530000848.28106-1-jay.xu@rock-chips.com>,
+	<3309819.J5kelTtX6q@phil>
+Mime-Version: 1.0
+Message-ID: <2019062409570947233513@rock-chips.com>
+Content-Type: multipart/alternative;
+	boundary="----=_001_NextPart256882183164_=----"
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: "mark.rutland" <mark.rutland@arm.com>, robh+dt <robh+dt@kernel.org>, =?utf-8?B?5byg5b+X5p2w77yI5Yib5paw77yJ?= <zhangzj@rock-chips.com>, "manivannan.sadhasivam" <manivannan.sadhasivam@linaro.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-AFI_INTR is unmasked in tegra_pcie_enable_controller(), mask it to avoid
-unwanted interrupts raised by AFI after pex_rst is asserted.
+This is a multi-part message in MIME format.
 
-Following sequence triggers such scenario,
- - tegra_pcie_remove() triggers runtime suspend
- - pex_rst is asserted in runtime suspend
- - PRSNT_MAP bit field in RP_PRIV_MISC register changes from EP_PRSNT to
-   EP_ABSNT
- - This is sensed by AFI and triggers "Slot present pin change" interrupt
- - tegra_pcie_isr() function accesses AFI register when runtime suspend
-   is going through power off sequence
+------=_001_NextPart256882183164_=----
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
-rmmod pci-tegra
- pci_generic_config_write32: 108 callbacks suppressed
- pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x4c may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x9c may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x88 may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x90 may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:02.0 offset 0x4 may corrupt adjacent RW1C bits
- igb 0002:04:00.1: removed PHC on enP2p4s0f1
- igb 0002:04:00.0: removed PHC on enP2p4s0f0
- pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x4c may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x9c may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x88 may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x90 may corrupt adjacent RW1C bits
- pci_bus 0002:00: 2-byte config write to 0002:00:01.0 offset 0x4 may corrupt adjacent RW1C bits
- rcu: INFO: rcu_preempt self-detected stall on CPU
- SError Interrupt on CPU0, code 0xbf000002 -- SError
- CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W         5.1.0-rc3-next-20190405-00027-gcd8110499e6f-dirty #42
- Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
- pstate: 20000085 (nzCv daIf -PAN -UAO)
- pc : tegra_pcie_isr+0x58/0x178 [pci_tegra]
- lr : tegra_pcie_isr+0x40/0x178 [pci_tegra]
- sp : ffff000010003da0
- x29: ffff000010003da0 x28: 0000000000000000
- x27: ffff8000f9e61000 x26: ffff000010fbf420
- x25: ffff000011427f93 x24: ffff8000fa600410
- x23: ffff00001129d000 x22: ffff00001129d000
- x21: ffff8000f18bf3c0 x20: 0000000000000070
- x19: 00000000ffffffff x18: 0000000000000000
- x17: 0000000000000000 x16: 0000000000000000
- x15: 0000000000000000 x14: ffff000008d40a48
- x13: ffff000008d40a30 x12: ffff000008d40a20
- x11: ffff000008d40a10 x10: ffff000008d40a00
- x9 : ffff000008d409e8 x8 : ffff000008d40ae8
- x7 : ffff000008d40ad0 x6 : ffff000010003e58
- x5 : ffff8000fac00248 x4 : 0000000000000000
- x3 : ffff000008d40b08 x2 : fffffffffffffff8
- x1 : ffff000008d3f4e8 x0 : 00000000ffffffff
- Kernel panic - not syncing: Asynchronous SError Interrupt
- CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W         5.1.0-rc3-next-20190405-00027-gcd8110499e6f-dirty #42
- Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
- Call trace:
-  dump_backtrace+0x0/0x158
-  show_stack+0x14/0x20
-  dump_stack+0xa8/0xcc
-  panic+0x140/0x2f4
-  nmi_panic+0x6c/0x70
-  arm64_serror_panic+0x74/0x80
-  __pte_error+0x0/0x28
-  el1_error+0x84/0xf8
-  tegra_pcie_isr+0x58/0x178 [pci_tegra]
-  __handle_irq_event_percpu+0x70/0x198
-  handle_irq_event_percpu+0x34/0x88
-  handle_irq_event+0x48/0x78
-  handle_fasteoi_irq+0xb4/0x190
-  generic_handle_irq+0x24/0x38
-  __handle_domain_irq+0x5c/0xb8
-  gic_handle_irq+0x58/0xa8
-  el1_irq+0xb8/0x180
-  cpuidle_enter_state+0x138/0x358
-  cpuidle_enter+0x18/0x20
-  call_cpuidle+0x1c/0x48
-  do_idle+0x230/0x2d0
-  cpu_startup_entry+0x20/0x28
-  rest_init+0xd4/0xe0
-  arch_call_rest_init+0xc/0x14
-  start_kernel+0x444/0x470
+SGksIEtlaWtvIGFuZCBNYW5pdmFubmFuOg0KDQpTb3JyeSBsYXRlIHRvIHJlcGx5IHNpbmNlIEkg
+bWlzc2VkIHRoaXMgbWFpbCBhZnRlciBhIGxvbmcgbGVhdmUgdGltZS4NCg0KDQoNCmpheS54dUBy
+b2NrLWNoaXBzLmNvbQ0KIA0KRnJvbTogSGVpa28gU3R1ZWJuZXINCkRhdGU6IDIwMTktMDYtMTQg
+MTc6NTINClRvOiBKaWFucXVuIFh1DQpDQzogbWFyay5ydXRsYW5kOyByb2JoK2R0OyB6aGFuZ3pq
+OyBtYW5pdmFubmFuLnNhZGhhc2l2YW07IGxpbnV4LXJvY2tjaGlwOyBsaW51eC1hcm0ta2VybmVs
+OyBsaW51eC1rZXJuZWw7IGRldmljZXRyZWUNClN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMS8xXSBh
+cm02NDogZHRzOiByb2NrY2hpcDogYWRkIGNvcmUgZHRzaSBmaWxlIGZvciBSSzMzOTlQcm8gU29D
+cw0KSGkgSmlhbnF1biwNCiANCkFtIERvbm5lcnN0YWcsIDMwLiBNYWkgMjAxOSwgMDI6MDg6NDgg
+Q0VTVCBzY2hyaWViIEppYW5xdW4gWHU6DQo+IFRoaXMgcGF0Y2ggYWRkcyBjb3JlIGR0c2kgZmls
+ZSBmb3IgUm9ja2NoaXAgUkszMzk5UHJvIFNvQ3MsDQo+IGluY2x1ZGUgcmszMzk5LmR0c2kuIEFs
+c28gZW5hYmxlIHBjaWVpMC9wY2llX3BoeSBmb3IgQVAgdG8NCj4gdGFsayB0byBOUFUgcGFydCBp
+bnNpZGUgU29DLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogSmlhbnF1biBYdSA8amF5Lnh1QHJvY2st
+Y2hpcHMuY29tPg0KIA0KY291bGQgeW91IGFkZCB0aGUgbmVjZXNzYXJ5IHBpbmN0cmwgZW50cnks
+IGFzIHN1Z2dlc3RlZCBieSBNYW5pdmFubmFuPw0KSGksIHRoZXJlIGlzIG5vIHBpbmN0cmwgZm9y
+IGVwLWdwaW9zLCB3aGljaCB1c2VkIGFzIEdQSU8sIHRoZXkgd2lsbCBzZXQgYnkgZ3BpbyBkcml2
+ZXINCm11eCB0byBHUElPIGRlZmF1bHRseS4NCiANClRoYW5rcw0KSGVpa28NCiANCj4gLS0tDQo+
+IGNoYW5nZXMgc2luY2UgdjI6DQo+IC0gb25seSBlbmFibGUgcGNpZTAgYW5kIHBjaWVfcGh5IG5v
+ZGVzLCB0aGFua3MgZm9yIEhlaWtvIGFuZCBtYW5pdmFubmFuDQo+IA0KPiBjaGFuZ2VzIHNpbmNl
+IHYxOg0KPiAtIHJlbW92ZSBkZmkgYW5kIGRtYw0KPiANCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMv
+cm9ja2NoaXAvcmszMzk5cHJvLmR0c2kgfCAyMiArKysrKysrKysrKysrKysrKysrKysNCj4gIDEg
+ZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJj
+aC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTlwcm8uZHRzaQ0KPiANCj4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5cHJvLmR0c2kgYi9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OXByby5kdHNpDQo+IG5ldyBmaWxlIG1vZGUgMTAw
+NjQ0DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYmI1ZWJmNjYwOGI5DQo+IC0tLSAvZGV2L251bGwN
+Cj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTlwcm8uZHRzaQ0KPiBA
+QCAtMCwwICsxLDIyIEBADQo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAr
+IE9SIE1JVCkNCj4gKy8vIENvcHlyaWdodCAoYykgMjAxOSBGdXpob3UgUm9ja2NoaXAgRWxlY3Ry
+b25pY3MgQ28uLCBMdGQuDQo+ICsNCj4gKyNpbmNsdWRlICJyazMzOTkuZHRzaSINCj4gKw0KPiAr
+LyB7DQo+ICsgY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMzOTlwcm8iOw0KPiArfTsNCj4gKw0K
+PiArLyogRGVmYXVsdCB0byBlbmFibGVkIHNpbmNlIEFQIHRhbGsgdG8gTlBVIHBhcnQgb3ZlciBw
+Y2llICovDQo+ICsmcGNpZV9waHkgew0KPiArIHN0YXR1cyA9ICJva2F5IjsNCj4gK307DQo+ICsN
+Cj4gKy8qIERlZmF1bHQgdG8gZW5hYmxlZCBzaW5jZSBBUCB0YWxrIHRvIE5QVSBwYXJ0IG92ZXIg
+cGNpZSAqLw0KPiArJnBjaWUwIHsNCj4gKyBlcC1ncGlvcyA9IDwmZ3BpbzAgUktfUEI0IEdQSU9f
+QUNUSVZFX0hJR0g+Ow0KPiArIG51bS1sYW5lcyA9IDw0PjsNCj4gKyBwaW5jdHJsLW5hbWVzID0g
+ImRlZmF1bHQiOw0KPiArIHBpbmN0cmwtMCA9IDwmcGNpZV9jbGtyZXFuX2NwbT47DQo+ICsgc3Rh
+dHVzID0gIm9rYXkiOw0KPiArfTsNCj4gDQogDQogDQogDQogDQogDQo=
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V6: No change
+------=_001_NextPart256882183164_=----
+Content-Type: text/html;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-V5:
-* Added blank line before block-style comment
-
-V4: No change
-
-V3:
-* Update the commit log and comment to reflect why this fix is required
-* MSI interrupt is not disabled
-
-V2: This is new patch in V2
-
- drivers/pci/controller/pci-tegra.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index bb3c0af9c830..0453bfb2726e 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -1622,6 +1622,15 @@ static int tegra_pcie_disable_msi(struct tegra_pcie *pcie)
- 	return 0;
- }
- 
-+static void tegra_pcie_disable_interrupts(struct tegra_pcie *pcie)
-+{
-+	u32 value;
-+
-+	value = afi_readl(pcie, AFI_INTR_MASK);
-+	value &= ~AFI_INTR_MASK_INT_MASK;
-+	afi_writel(pcie, value, AFI_INTR_MASK);
-+}
-+
- static int tegra_pcie_get_xbar_config(struct tegra_pcie *pcie, u32 lanes,
- 				      u32 *xbar)
- {
-@@ -2467,6 +2476,12 @@ static int __maybe_unused tegra_pcie_pm_suspend(struct device *dev)
- 
- 	tegra_pcie_disable_ports(pcie);
- 
-+	/*
-+	 * AFI_INTR is unmasked in tegra_pcie_enable_controller(), mask it to
-+	 * avoid unwanted interrupts raised by AFI after pex_rst is asserted.
-+	 */
-+	tegra_pcie_disable_interrupts(pcie);
-+
- 	if (pcie->soc->program_uphy) {
- 		err = tegra_pcie_phy_power_off(pcie);
- 		if (err < 0)
--- 
-2.17.1
+<html><head><meta http-equiv=3D"content-type" content=3D"text/html; charse=
+t=3Dutf-8"><style>body { line-height: 1.5; }blockquote { margin-top: 0px; =
+margin-bottom: 0px; margin-left: 0.5em; }body { font-size: 10.5pt; font-fa=
+mily: =E5=BE=AE=E8=BD=AF=E9=9B=85=E9=BB=91; color: rgb(0, 0, 0); line-heig=
+ht: 1.5; }</style></head><body>=0A<div><span></span>Hi, Keiko and Manivann=
+an:</div><div><br></div><div>Sorry late to reply since I missed this mail =
+after a long leave time.</div>=0A<div><br></div><hr style=3D"width: 210px;=
+ height: 1px;" color=3D"#b5c4df" size=3D"1" align=3D"left">=0A<div><span><=
+div style=3D"MARGIN: 10px; FONT-FAMILY: verdana; FONT-SIZE: 10pt"><div>jay=
+.xu@rock-chips.com</div></div></span></div>=0A<blockquote style=3D"margin-=
+Top: 0px; margin-Bottom: 0px; margin-Left: 0.5em"><div>&nbsp;</div><div st=
+yle=3D"border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0cm 0cm 0c=
+m"><div style=3D"PADDING-RIGHT: 8px; PADDING-LEFT: 8px; FONT-SIZE: 12px;FO=
+NT-FAMILY:tahoma;COLOR:#000000; BACKGROUND: #efefef; PADDING-BOTTOM: 8px; =
+PADDING-TOP: 8px"><div><b>From:</b>&nbsp;<a href=3D"mailto:heiko@sntech.de=
+">Heiko Stuebner</a></div><div><b>Date:</b>&nbsp;2019-06-14&nbsp;17:52</di=
+v><div><b>To:</b>&nbsp;<a href=3D"mailto:jay.xu@rock-chips.com">Jianqun Xu=
+</a></div><div><b>CC:</b>&nbsp;<a href=3D"mailto:mark.rutland@arm.com">mar=
+k.rutland</a>; <a href=3D"mailto:robh+dt@kernel.org">robh+dt</a>; <a href=
+=3D"mailto:zhangzj@rock-chips.com">zhangzj</a>; <a href=3D"mailto:manivann=
+an.sadhasivam@linaro.org">manivannan.sadhasivam</a>; <a href=3D"mailto:lin=
+ux-rockchip@lists.infradead.org">linux-rockchip</a>; <a href=3D"mailto:lin=
+ux-arm-kernel@lists.infradead.org">linux-arm-kernel</a>; <a href=3D"mailto=
+:linux-kernel@vger.kernel.org">linux-kernel</a>; <a href=3D"mailto:devicet=
+ree@vger.kernel.org">devicetree</a></div><div><b>Subject:</b>&nbsp;Re: [PA=
+TCH v3 1/1] arm64: dts: rockchip: add core dtsi file for RK3399Pro SoCs</d=
+iv></div></div><div><div>Hi Jianqun,</div>=0A<div>&nbsp;</div>=0A<div>Am D=
+onnerstag, 30. Mai 2019, 02:08:48 CEST schrieb Jianqun Xu:</div>=0A<div>&g=
+t; This patch adds core dtsi file for Rockchip RK3399Pro SoCs,</div>=0A<di=
+v>&gt; include rk3399.dtsi. Also enable pciei0/pcie_phy for AP to</div>=0A=
+<div>&gt; talk to NPU part inside SoC.</div>=0A<div>&gt; </div>=0A<div>&gt=
+; Signed-off-by: Jianqun Xu &lt;jay.xu@rock-chips.com&gt;</div>=0A<div>&nb=
+sp;</div>=0A<div>could you add the necessary pinctrl entry, as suggested b=
+y Manivannan?</div><div>Hi, there is no pinctrl for ep-gpios, which used a=
+s GPIO, they will set by gpio driver</div><div>mux to GPIO defaultly.</div=
+>=0A<div>&nbsp;</div>=0A<div>Thanks</div>=0A<div>Heiko</div>=0A<div>&nbsp;=
+</div>=0A<div>&gt; ---</div>=0A<div>&gt; changes since v2:</div>=0A<div>&g=
+t; - only enable pcie0 and pcie_phy nodes, thanks for Heiko and manivannan=
+</div>=0A<div>&gt; </div>=0A<div>&gt; changes since v1:</div>=0A<div>&gt; =
+- remove dfi and dmc</div>=0A<div>&gt; </div>=0A<div>&gt;&nbsp; arch/arm64=
+/boot/dts/rockchip/rk3399pro.dtsi | 22 +++++++++++++++++++++</div>=0A<div>=
+&gt;&nbsp; 1 file changed, 22 insertions(+)</div>=0A<div>&gt;&nbsp; create=
+ mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro.dtsi</div>=0A<div>&gt;=
+ </div>=0A<div>&gt; diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro.dt=
+si b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi</div>=0A<div>&gt; new fil=
+e mode 100644</div>=0A<div>&gt; index 000000000000..bb5ebf6608b9</div>=0A<=
+div>&gt; --- /dev/null</div>=0A<div>&gt; +++ b/arch/arm64/boot/dts/rockchi=
+p/rk3399pro.dtsi</div>=0A<div>&gt; @@ -0,0 +1,22 @@</div>=0A<div>&gt; +// =
+SPDX-License-Identifier: (GPL-2.0+ OR MIT)</div>=0A<div>&gt; +// Copyright=
+ (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.</div>=0A<div>&gt; +</div>=
+=0A<div>&gt; +#include "rk3399.dtsi"</div>=0A<div>&gt; +</div>=0A<div>&gt;=
+ +/ {</div>=0A<div>&gt; +	compatible =3D "rockchip,rk3399pro";</div>=0A<di=
+v>&gt; +};</div>=0A<div>&gt; +</div>=0A<div>&gt; +/* Default to enabled si=
+nce AP talk to NPU part over pcie */</div>=0A<div>&gt; +&amp;pcie_phy {</d=
+iv>=0A<div>&gt; +	status =3D "okay";</div>=0A<div>&gt; +};</div>=0A<div>&g=
+t; +</div>=0A<div>&gt; +/* Default to enabled since AP talk to NPU part ov=
+er pcie */</div>=0A<div>&gt; +&amp;pcie0 {</div>=0A<div>&gt; +	ep-gpios =
+=3D &lt;&amp;gpio0 RK_PB4 GPIO_ACTIVE_HIGH&gt;;</div>=0A<div>&gt; +	num-la=
+nes =3D &lt;4&gt;;</div>=0A<div>&gt; +	pinctrl-names =3D "default";</div>=
+=0A<div>&gt; +	pinctrl-0 =3D &lt;&amp;pcie_clkreqn_cpm&gt;;</div>=0A<div>&=
+gt; +	status =3D "okay";</div>=0A<div>&gt; +};</div>=0A<div>&gt; </div>=0A=
+<div>&nbsp;</div>=0A<div>&nbsp;</div>=0A<div>&nbsp;</div>=0A<div>&nbsp;</d=
+iv>=0A<div>&nbsp;</div>=0A</div></blockquote>=0A</body></html>
+------=_001_NextPart256882183164_=------
