@@ -1,308 +1,112 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH] arm64: dts: fsl: wandboard: Add a device tree for
- the PICO-PI-IMX8M
-Date: Mon, 24 Jun 2019 08:52:47 +0300
-Message-ID: <20190624055247.GA10377@localhost.localdomain>
-References: <20190620133252.31373-1-andradanciu1997@gmail.com>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
+Date: Mon, 24 Jun 2019 08:58:16 +0300
+Message-ID: <87v9wvsex3.fsf@linux.intel.com>
+References: <20171115060459.45375-1-ran.wang_1@nxp.com> <87ineb9b5v.fsf@linux.intel.com> <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com> <87shdfet90.fsf@linux.intel.com> <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com> <87k1eaanjw.fsf@linux.intel.com> <AM5PR0402MB2865F3735D808E1BC9F67968F1180@AM5PR0402MB2865.eurprd04.prod.outlook.com> <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com> <87o92wgyqj.fsf@linux.intel.com> <VE1PR04MB66557834D3588FC8B558950AF1E00@VE1PR04MB6655.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190620133252.31373-1-andradanciu1997@gmail.com>
+In-Reply-To: <VE1PR04MB66557834D3588FC8B558950AF1E00@VE1PR04MB6655.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andra Danciu <andradanciu1997@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, aisheng.dong@nxp.com, sriram.dash@nxp.com, pramod.kumar_1@nxp.com, bhaskar.upadhaya@nxp.com, vabhav.sharma@nxp.com, pankaj.bansal@nxp.com, richard.hu@technexion.com, l.stach@pengutronix.de, ping.bai@nxp.com, manivannan.sadhasivam@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, daniel.baluta@nxp.com
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Richard,
 
-Nice to see you upstreaming this! Thumbs up!
+Hi,
 
-Just few remarks to pmic node from me:
+Ran Wang <ran.wang_1@nxp.com> writes:
+>> >> > >> >> >  /* Global Debug Queue/FIFO Space Available Register */
+>> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
+>> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
+>> >> > >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
+>> >> > >> >> >   * 	3	- Reserved
+>> >> > >> >> >   * @imod_interval: set the interrupt moderation interval in 250ns
+>> >> > >> >> >   *                 increments or 0 to disable.
+>> >> > >> >> > + * @dma_coherent: set if enable dma-coherent.
+>> >> > >> >>
+>> >> > >> >> you're not enabling dma coherency, you're enabling cache snooping.
+>> >> > >> >> And this property should describe that. Also, keep in mind
+>> >> > >> >> that different devices may want different cache types for
+>> >> > >> >> each of those fields, so your property would have to be a lot
+>> >> > >> >> more complex. Something
+>> >> > like:
+>> >> > >> >>
+>> >> > >> >> 	snps,cache-type = <foobar "cacheable">, <baz "cacheable">, ...
+>> >> > >> >>
+>> >> > >> >> Then driver would have to parse this properly to setup GSBUSCFG0.
+>> >> > >
+>> >> > > According to the DesignWare Cores SuperSpeed USB 3.0 Controller
+>> >> > > Databook (v2.60a), it has described Type Bit Assignments for all
+>> >> > > supported
+>> >> > master bus type:
+>> >> > > AHB, AXI3, AXI4 and Native. I found the bit definition are
+>> >> > > different among
+>> >> > them.
+>> >> > > So, for the example you gave above, feel a little bit confused.
+>> >> > > Did you mean:
+>> >> > >     snps,cache-type = <DATA_RD  "write allocate">, <DESC_RD
+>> >> > > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read allocate">
+>> >> >
+>> >> > yeah, something like that.
+>> >>
+>> >> I think DATA_RD  should be a macro, right? So, where I can put its define?
+>> >> Create a dwc3.h in include/dt-bindings/usb/ ?
+>> >
+>> > Could you please give me some advice here? I'd like to prepare next
+>> > version patch after getting this settled.
+>> >
+>> >> Another question about this remain open is: DWC3 data book's Table
+>> >> 6-5 Cache Type Bit Assignments show that bits definition will differ
+>> >> per MBUS_TYPEs as
+>> >> below:
+>> >> ----------------------------------------------------------------
+>> >>  MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
+>> >>  ----------------------------------------------------------------
+>> >>  AHB      |Cacheable     |Bufferable   |Privilegge |Data
+>> >>  AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
+>> >>  AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
+>> >>  AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
+>> >>  Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
+>> >>  ----------------------------------------------------------------
+>> >>  Note: The AHB, AXI3, AXI4, and PCIe busses use different names for
+>> >> certain  signals, which have the same meaning:
+>> >>    Bufferable = Posted
+>> >>    Cacheable = Modifiable = Snoop (negation of No Snoop)
+>> >>
+>> >> For Layerscape SoCs, MBUS_TYPE is AXI3. So I am not sure how to use
+>> >> snps,cache-type = <DATA_RD  "write allocate">, to cover all MBUS_TYPE?
+>> >> (you can notice that AHB and AXI3's cacheable are on different bit)
+>> >> Or I just need to handle AXI3 case?
+>> >
+>> > Also on this open. Thank you in advance.
+>> 
+>> You could pass two strings and let the driver process them. Something
+>> like:
+>> 
+>> 	snps,cache_type = <"data_wr" "write allocate">, <"desc_rd"
+>> "cacheable">...
+>> 
+>> And so on. The only thing missing is for the mbus_type to be known by the driver.
+>> Is that something we can figure out on any of the HWPARAMS registers or does
+>> it have to be told explicitly?
+>
+> I have checked Layerscape Reference manual, HWPARAMS0~8 doesn't contain mbus_type
+> Info, and I didn't know where have declared it explicitly.
+>
+>> Another option would be to pass a string followed by one hex digit for the bits:
+>> 
+>> 	snps,cache_type = <"data_wr" 0x8>, <"desc_rd" 0x2>...;
+>> 
+>> Then we don't need to describe mbus_type since the bits are what matters.
+>
+> Yes, it's also what we prefer to use, it will be more flexible, I can add above Table
+> 6-5 Cache Type Bit Assignments in binding to help user decide which value they
+> would use.
+>
+> I would submit another version of patch for further review, thank you very much.
 
-On Thu, Jun 20, 2019 at 04:32:52PM +0300, Andra Danciu wrote:
-> From: Richard Hu <richard.hu@technexion.com>
-> 
-> The current level of support yields a working console and is able to boot
-> userspace from an initial ramdisk copied via u-boot in RAM.
-> 
-> Additional subsystems that are active :
-> 	- Ethernet
-> 	- USB
-> 
-> Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> Signed-off-by: Richard Hu <richard.hu@technexion.com>
-> Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-> ---
->  I am using pico-pi-8mxm board to work on my project for Google Summer of Code.
->  This is based on patches from https://github.com/wandboard-org.
-> 
->  arch/arm64/boot/dts/freescale/Makefile       |   1 +
->  arch/arm64/boot/dts/freescale/wand-pi-8m.dts | 590 +++++++++++++++++++++++++++
->  2 files changed, 591 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/wand-pi-8m.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 984554343c83..5904d6a8a033 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -23,3 +23,4 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += wand-pi-8m.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/wand-pi-8m.dts b/arch/arm64/boot/dts/freescale/wand-pi-8m.dts
-> new file mode 100644
-> index 000000000000..9f7121014722
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/wand-pi-8m.dts
-> @@ -0,0 +1,590 @@
-
-// snip
-
-> +
-> +&i2c1 {
-> +	clock-frequency = <100000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c1>;
-> +	status = "okay";
-> +
-> +	typec_tusb320:tusb320@47 {
-> +		compatible = "ti,tusb320";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_tusb320_irq &pinctrl_typec_ss_sel>;
-> +		reg = <0x47>;
-> +		vbus-supply = <&reg_usb_otg_vbus>;
-> +		ss-sel-gpios = <&gpio3 5 GPIO_ACTIVE_HIGH>;
-> +		tusb320,int-gpio = <&gpio3 6 GPIO_ACTIVE_LOW>;
-> +		tusb320,select-mode = <0>;
-> +		tusb320,dfp-power = <0>;
-> +	};
-> +
-> +	pmic: bd71837@4b {
-
-I was once told the node names should be generic :] So, I'd suggest
-using "pmic@4b".
-
-> +		reg = <0x4b>;
-> +		compatible = "rohm,bd71837";
-> +		/* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-> +		pinctrl-0 = <&pinctrl_pmic>;
-> +		gpio_intr = <&gpio1 3 GPIO_ACTIVE_LOW>;
-> +
-> +		bd71837,pmic-buck1-uses-i2c-dvs;
-> +		bd71837,pmic-buck1-dvs-voltage = <900000>, <850000>, <800000>; /* VDD_SOC: Run-Idle-Suspend */
-> +		bd71837,pmic-buck2-uses-i2c-dvs;
-> +		bd71837,pmic-buck2-dvs-voltage = <1000000>, <900000>, <0>; /* VDD_ARM: Run-Idle */
-> +		bd71837,pmic-buck3-uses-i2c-dvs;
-> +		bd71837,pmic-buck3-dvs-voltage = <1000000>, <0>, <0>; /* VDD_GPU: Run */
-> +		bd71837,pmic-buck4-uses-i2c-dvs;
-> +		bd71837,pmic-buck4-dvs-voltage = <1000000>, <0>, <0>; /* VDD_VPU: Run */
-
-These entries should be replaced by proper properties for run-level voltage
-configuration. Please see the
-Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt and
-Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt.
-
-I think you wish to use rohm,dvs-run-voltage, rohm,dvs-idle-voltage,
-and rohm,dvs-suspend-voltage instead.
-
-Furthermore, I see you are not specifying rohm,reset-snvs-powered.
-I wonder if it is intentional to not use SNVS as reset target. Seeing you
-use i.MX8 and seeing used those unsupported run-level configuration properties
-which were present only in some very first proprietary driver draft - I
-expect this may not be intentional. I think that early driver defaulted
-to SNVS while it also failed to provide any regulator enable/disable
-control.
-
-> +
-> +		gpo {
-> +			rohm,drv = <0x0C>;	/* 0b0000_1100 all gpos with cmos output mode */
-> +		};
-
-What is this?
-
-> +
-> +		regulators {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			buck1_reg: regulator@0 {
-
-I don't think the node names are correct. As far as I know the regulator
-core uses node names - please see the valid names from documentation.
-
-> +				reg = <0>;
-> +				regulator-compatible = "buck1";
-I think you shouldn't use regulator-compatible. On the other hand, I
-think you should use regulator-name.
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +				regulator-ramp-delay = <1250>;
-> +			};
-> +
-> +			buck2_reg: regulator@1 {
-> +				reg = <1>;
-> +				regulator-compatible = "buck2";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +				regulator-ramp-delay = <1250>;
-> +			};
-> +
-> +			buck3_reg: regulator@2 {
-> +				reg = <2>;
-> +				regulator-compatible = "buck3";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-
-In typical BD71837 use-cases the buck 3 is used to power graphichs accelerator.
-I wonder if enable/disable control should be allowed to help thermal
-issues and power saving? (This comment can be ignored if not applicaple
-to your board)
-
-> +			};
-> +
-> +			buck4_reg: regulator@3 {
-> +				reg = <3>;
-> +				regulator-compatible = "buck4";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-
-In typical BD71837 use-cases the buck 4 is used to power VPU.
-I wonder if enable/disable control should be allowed to help thermal
-issues and power saving? (This comment can be ignored if not applicaple          
-to your board)
-
-> +			};
-> +
-> +			buck5_reg: regulator@4 {
-> +				reg = <4>;
-> +				regulator-compatible = "buck5";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck6_reg: regulator@5 {
-> +				reg = <5>;
-> +				regulator-compatible = "buck6";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck7_reg: regulator@6 {
-> +				reg = <6>;
-> +				regulator-compatible = "buck7";
-> +				regulator-min-microvolt = <1605000>;
-> +				regulator-max-microvolt = <1995000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck8_reg: regulator@7 {
-> +				reg = <7>;
-> +				regulator-compatible = "buck8";
-> +				regulator-min-microvolt = <800000>;
-> +				regulator-max-microvolt = <1400000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo1_reg: regulator@8 {
-> +				reg = <8>;
-> +				regulator-compatible = "ldo1";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo2_reg: regulator@9 {
-> +				reg = <9>;
-> +				regulator-compatible = "ldo2";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <900000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo3_reg: regulator@10 {
-> +				reg = <10>;
-> +				regulator-compatible = "ldo3";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo4_reg: regulator@11 {
-> +				reg = <11>;
-> +				regulator-compatible = "ldo4";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo5_reg: regulator@12 {
-> +				reg = <12>;
-> +				regulator-compatible = "ldo5";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-
-You may want to mark the BUCK6 as a supply for LDO5.
-
-> +			};
-> +
-> +			ldo6_reg: regulator@13 {
-> +				reg = <13>;
-> +				regulator-compatible = "ldo6";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-
-You may want to mark the BUCK7 as a supply for LDO6.
-
-> +			};
-> +
-> +			ldo7_reg: regulator@14 {
-> +				reg = <14>;
-> +				regulator-compatible = "ldo7";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-
-Best Regards
-	Matti Vaittinen
+cool, thanks
 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+balbi
