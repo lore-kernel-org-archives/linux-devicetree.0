@@ -1,79 +1,66 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 05/15] dt-bindings: display: Convert bananapi,s070wv20-ct16 panel to DT schema
-Date: Mon, 24 Jun 2019 15:56:39 -0600
-Message-ID: <20190624215649.8939-6-robh@kernel.org>
+Subject: [PATCH v2 04/15] dt-bindings: display: Convert armadeus,
+ st0700-adapt panel to DT schema
+Date: Mon, 24 Jun 2019 15:56:38 -0600
+Message-ID: <20190624215649.8939-5-robh@kernel.org>
 References: <20190624215649.8939-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20190624215649.8939-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert the bananapi,s070wv20-ct16 panel binding to DT schema.
-
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../display/panel/bananapi,s070wv20-ct16.txt  | 12 ----------
- .../display/panel/bananapi,s070wv20-ct16.yaml | 24 +++++++++++++++++++
- 2 files changed, 24 insertions(+), 12 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
-deleted file mode 100644
-index 35bc0c839f49..000000000000
---- a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
-+++ /dev/null
-@@ -1,12 +0,0 @@
--Banana Pi 7" (S070WV20-CT16) TFT LCD Panel
--
--Required properties:
--- compatible: should be "bananapi,s070wv20-ct16"
--- power-supply: see ./panel-common.txt
--
--Optional properties:
--- enable-gpios: see ./simple-panel.txt
--- backlight: see ./simple-panel.txt
--
--This binding is compatible with the simple-panel binding, which is specified
--in ./simple-panel.txt.
-diff --git a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml
-new file mode 100644
-index 000000000000..2c1d3bf2baa0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml
-@@ -0,0 +1,24 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/bananapi,s070wv20-ct16.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Banana Pi 7" (S070WV20-CT16) TFT LCD Panel
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Thierry Reding <thierry.reding@gmail.com>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: bananapi,s070wv20-ct16
-+
-+required:
-+  - compatible
-+  - power-supply
-+
-+...
--- 
-2.20.1
+Q29udmVydCB0aGUgYXJtYWRldXMsc3QwNzAwLWFkYXB0IHBhbmVsIGJpbmRpbmcgdG8gRFQgc2No
+ZW1hLgoKQ2M6IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+CkNjOiBT
+YW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+CkNjOiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUu
+cmlwYXJkQGJvb3RsaW4uY29tPgpDYzogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFy
+dEBpZGVhc29uYm9hcmQuY29tPgpDYzogZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpT
+aWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0KIC4uLi9kaXNw
+bGF5L3BhbmVsL2FybWFkZXVzLHN0MDcwMC1hZGFwdC50eHQgICB8ICA5IC0tLS0tLS0KIC4uLi9k
+aXNwbGF5L3BhbmVsL2FybWFkZXVzLHN0MDcwMC1hZGFwdC55YW1sICB8IDI3ICsrKysrKysrKysr
+KysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMo
+LSkKIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9wYW5lbC9hcm1hZGV1cyxzdDA3MDAtYWRhcHQudHh0CiBjcmVhdGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXJtYWRl
+dXMsc3QwNzAwLWFkYXB0LnlhbWwKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hcm1hZGV1cyxzdDA3MDAtYWRhcHQudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXJtYWRldXMsc3Qw
+NzAwLWFkYXB0LnR4dApkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggYTMwZDYzZGIzYzhm
+Li4wMDAwMDAwMDAwMDAKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvYXJtYWRldXMsc3QwNzAwLWFkYXB0LnR4dAorKysgL2Rldi9udWxsCkBAIC0x
+LDkgKzAsMCBAQAotQXJtYWRldXMgU1QwNzAwIEFkYXB0LiBBIFNhbnRlayBTVDA3MDBJNVktUkJT
+TFcgNy4wIiBXVkdBICg4MDB4NDgwKSBURlQgd2l0aAotYW4gYWRhcHRlciBib2FyZC4KLQotUmVx
+dWlyZWQgcHJvcGVydGllczoKLS0gY29tcGF0aWJsZTogImFybWFkZXVzLHN0MDcwMC1hZGFwdCIK
+LS0gcG93ZXItc3VwcGx5OiBzZWUgcGFuZWwtY29tbW9uLnR4dAotCi1PcHRpb25hbCBwcm9wZXJ0
+aWVzOgotLSBiYWNrbGlnaHQ6IHNlZSBwYW5lbC1jb21tb24udHh0CmRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hcm1hZGV1cyxzdDA3
+MDAtYWRhcHQueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL2FybWFkZXVzLHN0MDcwMC1hZGFwdC55YW1sCm5ldyBmaWxlIG1vZGUgMTAwNjQ0Cmlu
+ZGV4IDAwMDAwMDAwMDAwMC4uNTkzNzY2Njk0NDJhCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXJtYWRldXMsc3QwNzAw
+LWFkYXB0LnlhbWwKQEAgLTAsMCArMSwyNyBAQAorIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjog
+R1BMLTIuMAorJVlBTUwgMS4yCistLS0KKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVt
+YXMvZGlzcGxheS9wYW5lbC9hcm1hZGV1cyxzdDA3MDAtYWRhcHQueWFtbCMKKyRzY2hlbWE6IGh0
+dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIworCit0aXRsZTogQXJt
+YWRldXMgU1QwNzAwIEFkYXB0ZXIKKworZGVzY3JpcHRpb246CisgIEEgU2FudGVrIFNUMDcwMEk1
+WS1SQlNMVyA3LjAiIFdWR0EgKDgwMHg0ODApIFRGVCB3aXRoIGFuIGFkYXB0ZXIgYm9hcmQuCisK
+K21haW50YWluZXJzOgorICAtICciU8OpYmFzdGllbiBTenltYW5za2kiIDxzZWJhc3RpZW4uc3p5
+bWFuc2tpQGFybWFkZXVzLmNvbT4nCisgIC0gVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5n
+QGdtYWlsLmNvbT4KKworYWxsT2Y6CisgIC0gJHJlZjogcGFuZWwtY29tbW9uLnlhbWwjCisKK3By
+b3BlcnRpZXM6CisgIGNvbXBhdGlibGU6CisgICAgY29uc3Q6IGFybWFkZXVzLHN0MDcwMC1hZGFw
+dAorCityZXF1aXJlZDoKKyAgLSBjb21wYXRpYmxlCisgIC0gcG93ZXItc3VwcGx5CisKKy4uLgot
+LSAKMi4yMC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
