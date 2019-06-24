@@ -1,44 +1,136 @@
-From: Shubhashree Dhar <dhar@codeaurora.org>
-Subject: drm/msm/dpu: Correct dpu encoder spinlock initialization
-Date: Mon, 24 Jun 2019 11:57:12 +0530
-Message-ID: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 2/2] dmaengine: milbeaut-hdmac: Add HDMAC driver for
+ Milbeaut platforms
+Date: Mon, 24 Jun 2019 12:14:42 +0530
+Message-ID: <20190624064442.GW2962@vkoul-mobl>
+References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
+ <20190613005247.2048-1-jassisinghbrar@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190613005247.2048-1-jassisinghbrar@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Shubhashree Dhar <dhar@codeaurora.org>, linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, jsanka@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org, jshekhar@codeaurora.org
+To: jassisinghbrar@gmail.com
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, orito.takao@socionext.com, masami.hiramatsu@linaro.org, kasai.kazuhiro@socionext.com, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-dpu encoder spinlock should be initialized during dpu encoder
-init instead of dpu encoder setup which is part of commit.
-There are chances that vblank control uses the uninitialized
-spinlock if not initialized during encoder init.
+On 12-06-19, 19:52, jassisinghbrar@gmail.com wrote:
 
-Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
-Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> +#include <linux/bits.h>
+> +#include <linux/clk.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_dma.h>
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 5f085b5..22938c7 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device *dev, struct drm_encoder *enc,
- 	if (ret)
- 		goto fail;
- 
--	spin_lock_init(&dpu_enc->enc_spinlock);
--
- 	atomic_set(&dpu_enc->frame_done_timeout, 0);
- 	timer_setup(&dpu_enc->frame_done_timer,
- 			dpu_encoder_frame_done_timeout, 0);
-@@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct drm_device *dev,
- 
- 	drm_encoder_helper_add(&dpu_enc->base, &dpu_encoder_helper_funcs);
- 
-+	spin_lock_init(&dpu_enc->enc_spinlock);
- 	dpu_enc->enabled = false;
- 
- 	return &dpu_enc->base;
+Do we need both, IIRC of_dma.h does include of.h!
+
+> +/* mc->vc.lock must be held by caller */
+> +static void milbeaut_chan_start(struct milbeaut_hdmac_chan *mc,
+> +				struct milbeaut_hdmac_desc *md)
+> +{
+> +	struct scatterlist *sg;
+> +	u32  cb, ca, src_addr, dest_addr, len;
+           ^^
+double space
+
+> +static irqreturn_t milbeaut_hdmac_interrupt(int irq, void *dev_id)
+> +{
+> +	struct milbeaut_hdmac_chan *mc = dev_id;
+> +	struct milbeaut_hdmac_desc *md;
+> +	irqreturn_t ret = IRQ_HANDLED;
+> +	u32 val;
+> +
+> +	spin_lock(&mc->vc.lock);
+> +
+> +	/* Ack and Disable irqs */
+> +	val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACB);
+> +	val &= ~(FIELD_PREP(MLB_HDMAC_SS, 0x7));
+                                         ^^^^
+Magic ..?
+
+> +static int milbeaut_hdmac_chan_pause(struct dma_chan *chan)
+> +{
+> +	struct virt_dma_chan *vc = to_virt_chan(chan);
+> +	struct milbeaut_hdmac_chan *mc = to_milbeaut_hdmac_chan(vc);
+> +	u32 val;
+> +
+> +	spin_lock(&mc->vc.lock);
+> +	val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACA);
+> +	val |= MLB_HDMAC_PB;
+> +	writel_relaxed(val, mc->reg_ch_base + MLB_HDMAC_DMACA);
+
+We really should have an updatel() and friends in kernel, feel free to
+add in your driver though!
+
+> +static int milbeaut_hdmac_chan_init(struct platform_device *pdev,
+> +				    struct milbeaut_hdmac_device *mdev,
+> +				    int chan_id)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct milbeaut_hdmac_chan *mc = &mdev->channels[chan_id];
+> +	char *irq_name;
+> +	int irq, ret;
+> +
+> +	irq = platform_get_irq(pdev, chan_id);
+> +	if (irq < 0) {
+> +		dev_err(&pdev->dev, "failed to get IRQ number for ch%d\n",
+> +			chan_id);
+> +		return irq;
+> +	}
+> +
+> +	irq_name = devm_kasprintf(dev, GFP_KERNEL, "milbeaut-hdmac-%d",
+> +				  chan_id);
+> +	if (!irq_name)
+> +		return -ENOMEM;
+> +
+> +	ret = devm_request_irq(dev, irq, milbeaut_hdmac_interrupt,
+> +			       IRQF_SHARED, irq_name, mc);
+
+I tend to dislike using devm_request_irq(), we have no control over when
+the irq is freed and what is a spirious irq is running while we are
+unrolling, so IMHO it make sense to free up and ensure all tasklets are
+quiesced when remove returns
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	mc->mdev = mdev;
+> +	mc->reg_ch_base = mdev->reg_base + MLB_HDMAC_CH_STRIDE * (chan_id + 1);
+> +	mc->vc.desc_free = milbeaut_hdmac_desc_free;
+> +	vchan_init(&mc->vc, &mdev->ddev);
+
+who kills the vc->task?
+
+> +static int milbeaut_hdmac_remove(struct platform_device *pdev)
+> +{
+> +	struct milbeaut_hdmac_device *mdev = platform_get_drvdata(pdev);
+> +	struct dma_chan *chan;
+> +	int ret;
+> +
+> +	/*
+> +	 * Before reaching here, almost all descriptors have been freed by the
+> +	 * ->device_free_chan_resources() hook. However, each channel might
+> +	 * be still holding one descriptor that was on-flight at that moment.
+> +	 * Terminate it to make sure this hardware is no longer running. Then,
+> +	 * free the channel resources once again to avoid memory leak.
+> +	 */
+> +	list_for_each_entry(chan, &mdev->ddev.channels, device_node) {
+> +		ret = dmaengine_terminate_sync(chan);
+> +		if (ret)
+> +			return ret;
+> +		milbeaut_hdmac_free_chan_resources(chan);
+> +	}
+> +
+> +	of_dma_controller_free(pdev->dev.of_node);
+> +	dma_async_device_unregister(&mdev->ddev);
+> +	clk_disable_unprepare(mdev->clk);
+
+And as suspected we have active tasklets and irq at this time :(
 -- 
-1.9.1
+~Vinod
