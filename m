@@ -1,97 +1,156 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH v2 3/4] ARM: dts: exynos: Add regulator suspend
- configuration to Odroid XU3/XU4/HC1 family
-Date: Mon, 24 Jun 2019 19:12:46 +0530
-Message-ID: <CANAwSgTymg=u8oJy4bOoREpY1DvVqav=FfdizumeUJMYhntKaQ@mail.gmail.com>
-References: <20190621155845.7079-1-krzk@kernel.org> <20190621155845.7079-3-krzk@kernel.org>
- <CGME20190623160226epcas2p3449814deb1faf7bf939481e6d4da2b86@epcas2p3.samsung.com>
- <CANAwSgTFQo8wL5s-djwPXFFOLtTHvRQif6234kFC=23PwMhuEQ@mail.gmail.com>
- <d94a2f99-fb99-c238-7011-9bbb4c0cd90f@samsung.com> <CAJKOXPeXELUjsuW9eyGuRj56067qnL-J2Lt4U42mYiyx=X+F_Q@mail.gmail.com>
- <2f58b63e-adf1-7935-8849-f311dc991b84@samsung.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v3 9/9] ARM: dts: sun8i: s3: add devicetree
+ for Lichee zero plus w/ S3
+Date: Mon, 24 Jun 2019 21:43:23 +0800
+Message-ID: <1E6AB747-5A4C-4515-A0EB-F0E89F520CF7@aosc.io>
+References: <20190623043801.14040-1-icenowy@aosc.io> <20190623043801.14040-10-icenowy@aosc.io> <20190624124301.chwhfalk5o53fm5x@flea>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2f58b63e-adf1-7935-8849-f311dc991b84@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBCFHYPUAKGQE6SLK6ZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190624124301.chwhfalk5o53fm5x@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek / Krzysztof,
 
-On Mon, 24 Jun 2019 at 14:31, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
->
-> Hi Krzysztof,
->
-> On 2019-06-24 09:41, Krzysztof Kozlowski wrote:
-> > On Mon, 24 Jun 2019 at 09:20, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> >> On 2019-06-23 18:02, Anand Moon wrote:
-> >>> Thanks for this patch. Please add my
-> >>>
-> >>> Tested-by: Anand Moon <linux.amoon@gmail.com>
-> >>>
-> >>> [snip]
-> >>>
-> >>> Could you integrate below small changes into this patch.
-> >>> with these below changes suspend and resume work correctly at my end.
-> >>>
-> >>> [1] XU4_suspendresume.patch
-> >>>
-> >>> As per S2MPS11B PMIC 1.2.1 Regulator (Features)
-> >>> Fix the min max value for *Buck7* and *Buck8*
-> >>>
-> >>> -- Buck7 (VDD_1.0V_LDO) 1.5 A (1.2 V to 1.5 V, 12.5 mV step, default on 1.35 V)
-> >>> -- Buck8 (VDD_1.8V_LDO) 2.5 A (1.8 V to 2.1 V, 12.5 mV step, default on 2.0 V)
-> >> Could you elaborate why such change for Buck7 and Buck8 is needed?
-> > Anand has here valid point - the constraints in DTS do not match
-> > hardware manual. This leads to question whether voltage table in
-> > driver is proper... Another point is the voltage itself. The
-> > schematics describes them as at specific voltage (1.35 V and 2.0 V)
-> > but after boot they are 1.2 V and 1.85 V. Maybe this shift comes from
-> > the problem above.
-> >
-> >>> Also add suspend-off for *Buck9*
-> >>> Buck9 internally controls the power of USB hub.
-> >>> Adding suspend the this node help proper reset of USB hub on Odroid
-> >>> XU4 / HC1/ XU3
-> >>> during suspend and resume. Below it the logs from my testing.
-> >> Disabling Buck9 in suspend indeed reduces the power consumed by the
-> >> board during suspend-to-ram from about 80mA to as little as 7-10mA, what
-> >> matches the results of OdroidXU3. Thanks for the hint!
-> > Although I did not get what is the difference in the logs (Anand
-> > pasted two logs but they look the same) but the power consumption is
-> > reason is good enough. I would be happy to put in the changelog entire
-> > consumption  difference. I can measure it on XU3-Lite but can you give
-> > me the XU4 (before and after)?\
->
->
-> HC1:
->
-> next-20190620: 120mA (@5V)
-> this patchset: 72mA (@5V)
-> this patchset + fixup from Anand: 7-10mA (@5V)
->
-> XU4 (SDcard):
->
-> next-20190620: 88mA (@5V)
-> this patchset: 74mA (@5V), sometimes 42mA (@5V)
-> this patchset + fixup from Anand: 6-9mA (@5V)
->
->
-> XU4 (eMMC):
->
-> next-20190620: 100mA (@5V)
-> this patchset: 72mA (@5V), sometimes 41mA (@5V)
-> this patchset + fixup from Anand: 6-9mA (@5V)
->
->
-> Best regards
-> --
-> Marek Szyprowski, PhD
-> Samsung R&D Institute Poland
->
 
-Thanks for this results.
+=E4=BA=8E 2019=E5=B9=B46=E6=9C=8824=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888:=
+43:01, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Sun, Jun 23, 2019 at 12:38:01PM +0800, Icenowy Zheng wrote:
+>> Lichee zero plus is a core board made by Sipeed, which includes
+>on-board
+>> TF slot or SMT SD NAND, and optional SPI NOR or eMMC, a UART debug
+>> header, a microUSB slot and a gold finger connector for expansion. It
+>> can use either Sochip S3 or Allwinner S3L SoC.
+>>
+>> Add the basic device tree for the core board, w/o optional onboard
+>> storage, and with S3 SoC.
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> ---
+>> Changes in v3:
+>> - Drop common regulator DTSI usage and added vcc3v3 regulator.
+>>
+>>  arch/arm/boot/dts/Makefile                    |  1 +
+>>  .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |  8 ++++
+>>  .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    | 44
+>+++++++++++++++++++
+>>  3 files changed, 53 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+>>  create mode 100644
+>arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index c4742afe41a7..d24dec29245e 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -1113,6 +1113,7 @@ dtb-$(CONFIG_MACH_SUN8I) +=3D \
+>>  	sun8i-r16-nintendo-super-nes-classic.dtb \
+>>  	sun8i-r16-parrot.dtb \
+>>  	sun8i-r40-bananapi-m2-ultra.dtb \
+>> +	sun8i-s3-lichee-zero-plus.dtb \
+>>  	sun8i-t3-cqa3t-bv3.dtb \
+>>  	sun8i-v3s-licheepi-zero.dtb \
+>>  	sun8i-v3s-licheepi-zero-dock.dtb \
+>> diff --git a/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+>b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+>> new file mode 100644
+>> index 000000000000..7d2f6b145190
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+>> @@ -0,0 +1,8 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (C) 2019 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun8i-s3.dtsi"
+>> +#include "sun8i-s3-s3l-lichee-zero-plus.dtsi"
+>> diff --git a/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+>b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+>> new file mode 100644
+>> index 000000000000..e68f738c3046
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+>> @@ -0,0 +1,46 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (C) 2019 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> + */
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +
+>> +/ {
+>> +	aliases {
+>> +		serial0 =3D &uart0;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path =3D "serial0:115200n8";
+>> +	};
+>> +
+>> +	reg_vcc3v3: vcc3v3 {
+>> +		compatible =3D "regulator-fixed";
+>> +		regulator-name =3D "vcc3v3";
+>> +		regulator-min-microvolt =3D <3300000>;
+>> +		regulator-max-microvolt =3D <3300000>;
+>> +	};
+>> +};
+>> +
+>> +&mmc0 {
+>> +	broken-cd;
+>> +	bus-width =3D <4>;
+>> +	vmmc-supply =3D <&reg_vcc3v3>;
+>> +	status =3D "okay";
+>> +};
+>> +
+>> +&uart0 {
+>> +	pinctrl-0 =3D <&uart0_pb_pins>;
+>> +	pinctrl-names =3D "default";
+>> +	status =3D "okay";
+>> +};
+>> +
+>> +&usb_otg {
+>> +	dr_mode =3D "otg";
+>> +	status =3D "okay";
+>> +};
+>> +
+>> +&usbphy {
+>> +	usb0_id_det-gpios =3D <&pio 5 6 GPIO_ACTIVE_HIGH>;
+>> +	status =3D "okay";
+>> +};
+>
+>How can it do OTG if there's no controllable VBUS regulator?
 
-Best Regards
--Anand
+All 5V's are connected together, like Orange Pi Zero.
+
+>
+>Maxime
+>
+>--
+>Maxime Ripard, Bootlin
+>Embedded Linux and Kernel engineering
+>https://bootlin.com
+
+--=20
+=E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84An=
+droid=E8=AE=BE=E5=A4=87=E3=80=82
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/1E6AB747-5A4C-4515-A0EB-F0E89F520CF7%40aosc.io.
+For more options, visit https://groups.google.com/d/optout.
