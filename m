@@ -1,187 +1,42 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v5 2/8] usb: phy: phy-mxs-usb: add imx7ulp support
-Date: Mon, 24 Jun 2019 11:09:05 +0800
-Message-ID: <CAL411-r_=44bAi6zupcM7cG7-ivcEH_Mu3YYffoE8Ve0d+xqRg@mail.gmail.com>
-References: <20190624020258.21690-1-peter.chen@nxp.com>
- <20190624020258.21690-3-peter.chen@nxp.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv3 0/1] coresight: Do not default to CPU0 for missing CPU phandle
+Date: Mon, 24 Jun 2019 09:06:08 +0530
+Message-ID: <cover.1561346998.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190624020258.21690-3-peter.chen@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <peter.chen@nxp.com>
-Cc: aisheng.dong@nxp.com, balbi@kernel.org, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, USB list <linux-usb@vger.kernel.org>, chunfeng.yun@mediatek.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-> At imx7ulp, the USB related analog register is located in PHY register
-> region too, so we need to control PLL at PHY driver directly.
->
+In case of missing CPU phandle, the affinity is set default to
+CPU0 which is not a correct assumption. Fix this in coresight
+platform to set affinity to invalid and abort the probe in drivers.
+Also update the dt-bindings accordingly.
 
-Hi Felipe,
+v3:
+ * Addressed review comments from Suzuki and updated
+   acpi_coresight_get_cpu.
+ * Removed patch 2 which had invalid check for online
+   cpus.
 
-Would you please have a review for Patch 1 and Patch 2 in this series?
-Thanks.
+v2:
+ * Addressed review comments from Suzuki and Mathieu.
+ * Allows the probe of etm and cpu-debug to abort earlier
+   in case of unavailability of respective cpus.
 
-Peter
+Sai Prakash Ranjan (1):
+  coresight: Do not default to CPU0 for missing CPU phandle
 
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> ---
->  drivers/usb/phy/phy-mxs-usb.c | 67 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 66 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-> index 6fa16ab31e2e..70b8c8248caf 100644
-> --- a/drivers/usb/phy/phy-mxs-usb.c
-> +++ b/drivers/usb/phy/phy-mxs-usb.c
-> @@ -17,9 +17,11 @@
->  #include <linux/of_device.h>
->  #include <linux/regmap.h>
->  #include <linux/mfd/syscon.h>
-> +#include <linux/iopoll.h>
->
->  #define DRIVER_NAME "mxs_phy"
->
-> +/* Register Macro */
->  #define HW_USBPHY_PWD                          0x00
->  #define HW_USBPHY_TX                           0x10
->  #define HW_USBPHY_CTRL                         0x30
-> @@ -37,6 +39,11 @@
->  #define GM_USBPHY_TX_TXCAL45DN(x)            (((x) & 0xf) << 8)
->  #define GM_USBPHY_TX_D_CAL(x)                (((x) & 0xf) << 0)
->
-> +/* imx7ulp */
-> +#define HW_USBPHY_PLL_SIC                      0xa0
-> +#define HW_USBPHY_PLL_SIC_SET                  0xa4
-> +#define HW_USBPHY_PLL_SIC_CLR                  0xa8
-> +
->  #define BM_USBPHY_CTRL_SFTRST                  BIT(31)
->  #define BM_USBPHY_CTRL_CLKGATE                 BIT(30)
->  #define BM_USBPHY_CTRL_OTG_ID_VALUE            BIT(27)
-> @@ -55,6 +62,12 @@
->  #define BM_USBPHY_IP_FIX                       (BIT(17) | BIT(18))
->
->  #define BM_USBPHY_DEBUG_CLKGATE                        BIT(30)
-> +/* imx7ulp */
-> +#define BM_USBPHY_PLL_LOCK                     BIT(31)
-> +#define BM_USBPHY_PLL_REG_ENABLE               BIT(21)
-> +#define BM_USBPHY_PLL_BYPASS                   BIT(16)
-> +#define BM_USBPHY_PLL_POWER                    BIT(12)
-> +#define BM_USBPHY_PLL_EN_USB_CLKS              BIT(6)
->
->  /* Anatop Registers */
->  #define ANADIG_ANA_MISC0                       0x150
-> @@ -168,6 +181,9 @@ static const struct mxs_phy_data imx6ul_phy_data = {
->         .flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
->  };
->
-> +static const struct mxs_phy_data imx7ulp_phy_data = {
-> +};
-> +
->  static const struct of_device_id mxs_phy_dt_ids[] = {
->         { .compatible = "fsl,imx6sx-usbphy", .data = &imx6sx_phy_data, },
->         { .compatible = "fsl,imx6sl-usbphy", .data = &imx6sl_phy_data, },
-> @@ -175,6 +191,7 @@ static const struct of_device_id mxs_phy_dt_ids[] = {
->         { .compatible = "fsl,imx23-usbphy", .data = &imx23_phy_data, },
->         { .compatible = "fsl,vf610-usbphy", .data = &vf610_phy_data, },
->         { .compatible = "fsl,imx6ul-usbphy", .data = &imx6ul_phy_data, },
-> +       { .compatible = "fsl,imx7ulp-usbphy", .data = &imx7ulp_phy_data, },
->         { /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
-> @@ -199,6 +216,11 @@ static inline bool is_imx6sl_phy(struct mxs_phy *mxs_phy)
->         return mxs_phy->data == &imx6sl_phy_data;
->  }
->
-> +static inline bool is_imx7ulp_phy(struct mxs_phy *mxs_phy)
-> +{
-> +       return mxs_phy->data == &imx7ulp_phy_data;
-> +}
-> +
->  /*
->   * PHY needs some 32K cycles to switch from 32K clock to
->   * bus (such as AHB/AXI, etc) clock.
-> @@ -222,14 +244,49 @@ static void mxs_phy_tx_init(struct mxs_phy *mxs_phy)
->         }
->  }
->
-> +static int mxs_phy_pll_enable(void __iomem *base, bool enable)
-> +{
-> +       int ret = 0;
-> +
-> +       if (enable) {
-> +               u32 value;
-> +
-> +               writel(BM_USBPHY_PLL_REG_ENABLE, base + HW_USBPHY_PLL_SIC_SET);
-> +               writel(BM_USBPHY_PLL_BYPASS, base + HW_USBPHY_PLL_SIC_CLR);
-> +               writel(BM_USBPHY_PLL_POWER, base + HW_USBPHY_PLL_SIC_SET);
-> +               ret = readl_poll_timeout(base + HW_USBPHY_PLL_SIC,
-> +                       value, (value & BM_USBPHY_PLL_LOCK) != 0,
-> +                       100, 10000);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               writel(BM_USBPHY_PLL_EN_USB_CLKS, base +
-> +                               HW_USBPHY_PLL_SIC_SET);
-> +       } else {
-> +               writel(BM_USBPHY_PLL_EN_USB_CLKS, base +
-> +                               HW_USBPHY_PLL_SIC_CLR);
-> +               writel(BM_USBPHY_PLL_POWER, base + HW_USBPHY_PLL_SIC_CLR);
-> +               writel(BM_USBPHY_PLL_BYPASS, base + HW_USBPHY_PLL_SIC_SET);
-> +               writel(BM_USBPHY_PLL_REG_ENABLE, base + HW_USBPHY_PLL_SIC_CLR);
-> +       }
-> +
-> +       return ret;
-> +}
-> +
->  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
->  {
->         int ret;
->         void __iomem *base = mxs_phy->phy.io_priv;
->
-> +       if (is_imx7ulp_phy(mxs_phy)) {
-> +               ret = mxs_phy_pll_enable(base, true);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
->         ret = stmp_reset_block(base + HW_USBPHY_CTRL);
->         if (ret)
-> -               return ret;
-> +               goto disable_pll;
->
->         /* Power up the PHY */
->         writel(0, base + HW_USBPHY_PWD);
-> @@ -267,6 +324,11 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
->         mxs_phy_tx_init(mxs_phy);
->
->         return 0;
-> +
-> +disable_pll:
-> +       if (is_imx7ulp_phy(mxs_phy))
-> +               mxs_phy_pll_enable(base, false);
-> +       return ret;
->  }
->
->  /* Return true if the vbus is there */
-> @@ -388,6 +450,9 @@ static void mxs_phy_shutdown(struct usb_phy *phy)
->         writel(BM_USBPHY_CTRL_CLKGATE,
->                phy->io_priv + HW_USBPHY_CTRL_SET);
->
-> +       if (is_imx7ulp_phy(mxs_phy))
-> +               mxs_phy_pll_enable(phy->io_priv, false);
-> +
->         clk_disable_unprepare(mxs_phy->clk);
->  }
->
-> --
-> 2.14.1
->
+ .../bindings/arm/coresight-cpu-debug.txt         |  4 ++--
+ .../devicetree/bindings/arm/coresight.txt        |  8 +++++---
+ .../hwtracing/coresight/coresight-cpu-debug.c    |  3 +++
+ drivers/hwtracing/coresight/coresight-etm3x.c    |  3 +++
+ drivers/hwtracing/coresight/coresight-etm4x.c    |  3 +++
+ drivers/hwtracing/coresight/coresight-platform.c | 16 ++++++++--------
+ 6 files changed, 24 insertions(+), 13 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
