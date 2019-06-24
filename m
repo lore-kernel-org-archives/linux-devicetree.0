@@ -1,21 +1,53 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: fsl: librem5: enable the SNVS power key
-Date: Mon, 24 Jun 2019 10:08:42 +0800
-Message-ID: <20190624020841.GL3800@dragon>
-References: <20190620170532.18845-1-angus@akkea.ca>
+From: <orito.takao@socionext.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: add DT bindings for Milbeaut SD
+ controller
+Date: Mon, 24 Jun 2019 02:09:10 +0000
+Message-ID: <20190624110901.50EF.F0D17A80@socionext.com>
+References: <1559208131-426-1-git-send-email-orito.takao@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190620170532.18845-1-angus@akkea.ca>
+In-Reply-To: <1559208131-426-1-git-send-email-orito.takao@socionext.com>
+Content-Language: ja-JP
+Content-ID: <C9EDB484AEAF9B43A83E9452CF7C3FEB@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc: angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 11:05:32AM -0600, Angus Ainslie (Purism) wrote:
-> Enable the snvs power key.
-> 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-
-Applied, thanks.
+DQpIZWxsbw0KDQpEb2VzIGFueW9uZSBoYXZlIGFueSBjb21tZW50cyBvbiB0aGlzID8NCg0KPiBB
+ZGQgdGhlIGRldmljZS10cmVlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgTWlsYmVhdXQgU0RI
+Q0kgZHJpdmVyLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogVGFrYW8gT3JpdG8gPG9yaXRvLnRha2Fv
+QHNvY2lvbmV4dC5jb20+DQo+IC0tLQ0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL3Nk
+aGNpLW1pbGJlYXV0LnR4dCAgICAgfCAzMiArKysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZp
+bGUgY2hhbmdlZCwgMzIgaW5zZXJ0aW9ucygrKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvc2RoY2ktbWlsYmVhdXQudHh0DQo+IA0K
+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9zZGhj
+aS1taWxiZWF1dC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL3Nk
+aGNpLW1pbGJlYXV0LnR4dA0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAw
+Li42MDYzMTE2DQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL21tYy9zZGhjaS1taWxiZWF1dC50eHQNCj4gQEAgLTAsMCArMSwzMiBAQA0K
+PiArKiBTT0NJT05FWFQgTWlsYmVhdXQgU0RIQ0kgY29udHJvbGxlcg0KPiArDQo+ICtUaGlzIGZp
+bGUgZG9jdW1lbnRzIGRpZmZlcmVuY2VzIGJldHdlZW4gdGhlIGNvcmUgcHJvcGVydGllcyBpbiBt
+bWMudHh0DQo+ICthbmQgdGhlIHByb3BlcnRpZXMgdXNlZCBieSB0aGUgc2RoY2lfbWlsYmVhdXQg
+ZHJpdmVyLg0KPiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiArLSBjb21wYXRpYmxlOiAi
+c29jaW9uZXh0LG1pbGJlYXV0LW0xMHYtc2RoY2ktMy4wIg0KPiArLSBjbG9ja3M6IE11c3QgY29u
+dGFpbiBhbiBlbnRyeSBmb3IgZWFjaCBlbnRyeSBpbiBjbG9jay1uYW1lcy4gSXQgaXMgYQ0KPiAr
+ICBsaXN0IG9mIHBoYW5kbGVzIGFuZCBjbG9jay1zcGVjaWZpZXIgcGFpcnMuDQo+ICsgIFNlZSAu
+Li9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0IGZvciBkZXRhaWxzLg0KPiArLSBjbG9jay1uYW1l
+czogU2hvdWxkIGNvbnRhaW4gdGhlIGZvbGxvd2luZyB0d28gZW50cmllczoNCj4gKwkiaWZhY2Ui
+IC0gY2xvY2sgdXNlZCBmb3Igc2RoY2kgaW50ZXJmYWNlDQo+ICsJImNvcmUiICAtIGNvcmUgY2xv
+Y2sgZm9yIHNkaGNpIGNvbnRyb2xsZXINCj4gKy0gdm1tYy1zdXBwbHk6IGEgcGhhbmRsZSBvZiBh
+IGZpeGVkIEdQSU8gcmVndWxhdG9yDQo+ICsNCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ICst
+IGZ1aml0c3UsY21kLWRhdC1kZWxheS1zZWxlY3Q6IGJvb2xlYW4gcHJvcGVydHkgaW5kaWNhdGlu
+ZyB0aGF0IHRoaXMgaG9zdA0KPiArICByZXF1aXJlcyB0aGUgQ01EX0RBVF9ERUxBWSBjb250cm9s
+IHRvIGJlIGVuYWJsZWQuDQo+ICsNCj4gK0V4YW1wbGU6DQo+ICsJc2RoY2kzOiBtbWNAMWIwMTAw
+MDAgew0KPiArCQljb21wYXRpYmxlID0gInNvY2lvbmV4dCxtaWxiZWF1dC1tMTB2LXNkaGNpLTMu
+MCI7DQo+ICsJCXJlZyA9IDwweDFiMDEwMDAwIDB4MTAwMDA+Ow0KPiArCQlpbnRlcnJ1cHRzID0g
+PDAgMjY1IDB4ND47DQo+ICsJCXZvbHRhZ2UtcmFuZ2VzID0gPDMzMDAgMzMwMD47DQo+ICsJCWJ1
+cy13aWR0aCA9IDw0PjsNCj4gKwkJY2xvY2tzID0gPCZjbGsgNz4sIDwmYWhiX2Nsaz47DQo+ICsJ
+CWNsb2NrLW5hbWVzID0gImNvcmUiLCAiaWZhY2UiOw0KPiArCQljYXAtc2Rpby1pcnE7DQo+ICsJ
+CXZtbWMtc3VwcGx5ID0gPCZ2Y2Nfc2RoY2kzPjsNCj4gKwkJZnVqaXRzdSxjbWQtZGF0LWRlbGF5
+LXNlbGVjdDsNCj4gKwl9Ow0KPiAtLSANCj4gMS45LjENCj4gDQoNClRoYW5rcw0KT3JpdG8NCg0K
+LS0gDQpUYWthbyBPcml0byA8b3JpdG8udGFrYW9Ac29jaW9uZXh0LmNvbT4NCg==
