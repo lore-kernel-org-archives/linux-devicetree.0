@@ -1,63 +1,406 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 0/6] Add support for Orange Pi 3
-Date: Mon, 24 Jun 2019 19:46:37 +0200
-Message-ID: <20190624174637.6sznc5ifiuh4c3sm@core.my.home>
-References: <20190620134748.17866-1-megous@megous.com>
- <20190624.102927.1268781741493594465.davem@davemloft.net>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v2 1/2] ARM: dts: Add ZII support for ZII i.MX7 RMU2 board
+Date: Mon, 24 Jun 2019 11:00:12 -0700
+Message-ID: <CAHQ1cqEPfdZZw9Tp0t78U7pRtQAsVyPU6JcSrrG4_zcLR+vsqg@mail.gmail.com>
+References: <20190617153025.12120-1-andrew.smirnov@gmail.com> <20190624002853.GC3800@dragon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBB7UYYTUAKGQEXKOBJ6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190624.102927.1268781741493594465.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190624002853.GC3800@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Bob Langer <Bob.Langer@zii.aero>, Liang Pan <Liang.Pan@zii.aero>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 10:29:27AM -0700, David Miller wrote:
-> From: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-> Date: Thu, 20 Jun 2019 15:47:42 +0200
-> 
-> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> > 
-> > This series implements support for Xunlong Orange Pi 3 board.
-> > 
-> > - ethernet support (patches 1-3)
-> > - HDMI support (patches 4-6)
-> > 
-> > For some people, ethernet doesn't work after reboot (but works on cold
-> > boot), when the stmmac driver is built into the kernel. It works when
-> > the driver is built as a module. It's either some timing issue, or power
-> > supply issue or a combination of both. Module build induces a power
-> > cycling of the phy.
-> > 
-> > I encourage people with this issue, to build the driver into the kernel,
-> > and try to alter the reset timings for the phy in DTS or
-> > startup-delay-us and report the findings.
-> 
-> This is a mixture of networking and non-networking changes so it really
-> can't go through my tree.
-> 
-> I wonder how you expect this series to be merged?
-> 
-> Thanks.
+On Sun, Jun 23, 2019 at 5:29 PM Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Mon, Jun 17, 2019 at 08:30:24AM -0700, Andrey Smirnov wrote:
+> > Add support for ZII's i.MX7 based Remote Modem Unit 2 (RMU2) board.
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Fabio Estevam <festevam@gmail.com>
+> > Cc: Bob Langer <Bob.Langer@zii.aero>
+> > Cc: Liang Pan <Liang.Pan@zii.aero>
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > ---
+> >
+> > Changes since [v1]:
+> >
+> >     - Added missing #address-cells and #size-cells
+> >
+> >     - Replaced reset-gpio -> reset-gpios
+> >
+> >
+> > [v1] lore.kernel.org/r/20190614080317.16850-1-andrew.smirnov@gmail.com
+> >
+> >  arch/arm/boot/dts/Makefile           |   1 +
+> >  arch/arm/boot/dts/imx7d-zii-rmu2.dts | 361 +++++++++++++++++++++++++++
+> >  2 files changed, 362 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/imx7d-zii-rmu2.dts
+> >
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 5559028b770e..516e2912236d 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -593,6 +593,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+> >       imx7d-sdb.dtb \
+> >       imx7d-sdb-reva.dtb \
+> >       imx7d-sdb-sht11.dtb \
+> > +     imx7d-zii-rmu2.dtb \
+> >       imx7d-zii-rpu2.dtb \
+> >       imx7s-colibri-eval-v3.dtb \
+> >       imx7s-mba7.dtb \
+> > diff --git a/arch/arm/boot/dts/imx7d-zii-rmu2.dts b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
+> > new file mode 100644
+> > index 000000000000..e60b3232a090
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
+> > @@ -0,0 +1,361 @@
+> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > +/*
+> > + * Device tree file for ZII's RMU2 board
+> > + *
+> > + * RMU - Remote Modem Unit
+> > + *
+> > + * Copyright (C) 2019 Zodiac Inflight Innovations
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include <dt-bindings/thermal/thermal.h>
+> > +#include "imx7d.dtsi"
+> > +
+> > +/ {
+> > +     model = "ZII RMU2 Board";
+> > +     compatible = "zii,imx7d-rmu2", "fsl,imx7d";
+> > +
+> > +     chosen {
+> > +             stdout-path = &uart2;
+> > +     };
+> > +
+> > +     gpio-leds {
+> > +             compatible = "gpio-leds";
+> > +             pinctrl-0 = <&pinctrl_leds_debug>;
+> > +             pinctrl-names = "default";
+> > +
+> > +             debug {
+> > +                     label = "zii:green:debug1";
+> > +                     gpios = <&gpio2 8 GPIO_ACTIVE_HIGH>;
+> > +                     linux,default-trigger = "heartbeat";
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&cpu0 {
+> > +     arm-supply = <&sw1a_reg>;
+> > +};
+> > +
+> > +&ecspi1 {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&pinctrl_ecspi1>;
+> > +     cs-gpios = <&gpio4 19 GPIO_ACTIVE_HIGH>;
+> > +     status = "okay";
+> > +
+> > +     flash@0 {
+> > +             compatible = "jedec,spi-nor";
+> > +             spi-max-frequency = <20000000>;
+> > +             reg = <0>;
+> > +             #address-cells = <1>;
+> > +             #size-cells = <1>;
+> > +     };
+> > +};
+> > +
+> > +&fec1 {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&pinctrl_enet1>;
+> > +     assigned-clocks = <&clks IMX7D_ENET1_TIME_ROOT_SRC>,
+> > +                       <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
+> > +     assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+> > +     assigned-clock-rates = <0>, <100000000>;
+> > +     phy-mode = "rgmii";
+> > +     phy-handle = <&fec1_phy>;
+> > +     status = "okay";
+> > +
+> > +     mdio {
+> > +             #address-cells = <1>;
+> > +             #size-cells = <0>;
+> > +
+> > +             fec1_phy: phy@0 {
+>
+> ethernet-phy for node name.
+>
 
-This series was even longer before, with patches all around for various
-maintainers. I'd expect that relevant maintainers pick the range of patches
-meant for them. I don't know who's exactly responsible for what, but I think,
-this should work:
+OK, will change.
 
-- 2 stmmac patches should go together via some networking tree (is there
-  something specific for stmmac?)
-- all DTS patches should go via sunxi
-- hdmi patches via some drm tree
+> > +                     pinctrl-names = "default";
+> > +                     pinctrl-0 = <&pinctrl_enet1_phy_reset>,
+> > +                                 <&pinctrl_enet1_phy_interrupt>;
+> > +                     reg = <0>;
+> > +                     interrupt-parent = <&gpio1>;
+> > +                     interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+> > +                     reset-gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&i2c1 {
+> > +     clock-frequency = <100000>;
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&pinctrl_i2c1>;
+> > +     status = "okay";
+> > +
+> > +     pmic: pmic@8 {
+>
+> Label can be more specific, so maybe:
+>
+>         pfuze3000: pmic@8
+>
 
-thank you and regards,
-	o.
+Hmm, I don't think that label is used anywhere. I may as well just drop it.
+
+> > +             compatible = "fsl,pfuze3000";
+> > +             reg = <0x08>;
+> > +
+> > +             regulators {
+> > +                     sw1a_reg: sw1a {
+> > +                             regulator-min-microvolt = <700000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-boot-on;
+> > +                             regulator-always-on;
+> > +                             regulator-ramp-delay = <6250>;
+> > +                     };
+> > +
+> > +                     sw1c_reg: sw1b {
+> > +                             regulator-min-microvolt = <700000>;
+> > +                             regulator-max-microvolt = <1475000>;
+> > +                             regulator-boot-on;
+> > +                             regulator-always-on;
+> > +                             regulator-ramp-delay = <6250>;
+> > +                     };
+> > +
+> > +                     sw2_reg: sw2 {
+> > +                             regulator-min-microvolt = <1500000>;
+> > +                             regulator-max-microvolt = <1850000>;
+> > +                             regulator-boot-on;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     sw3a_reg: sw3 {
+> > +                             regulator-min-microvolt = <900000>;
+> > +                             regulator-max-microvolt = <1650000>;
+> > +                             regulator-boot-on;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     swbst_reg: swbst {
+> > +                             regulator-min-microvolt = <5000000>;
+> > +                             regulator-max-microvolt = <5150000>;
+> > +                     };
+> > +
+> > +                     snvs_reg: vsnvs {
+> > +                             regulator-min-microvolt = <1000000>;
+> > +                             regulator-max-microvolt = <3000000>;
+> > +                             regulator-boot-on;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     vref_reg: vrefddr {
+> > +                             regulator-boot-on;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     vgen1_reg: vldo1 {
+> > +                             regulator-min-microvolt = <1800000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     vgen2_reg: vldo2 {
+> > +                             regulator-min-microvolt = <800000>;
+> > +                             regulator-max-microvolt = <1550000>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     vgen3_reg: vccsd {
+> > +                             regulator-min-microvolt = <2850000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     vgen4_reg: v33 {
+> > +                             regulator-min-microvolt = <2850000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     vgen5_reg: vldo3 {
+> > +                             regulator-min-microvolt = <1800000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     vgen6_reg: vldo4 {
+> > +                             regulator-min-microvolt = <1800000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +             };
+> > +     };
+> > +
+> > +     eeprom@50 {
+> > +             compatible = "atmel,24c04";
+> > +             reg = <0x50>;
+> > +     };
+> > +
+> > +     eeprom@52 {
+> > +             compatible = "atmel,24c04";
+> > +             reg = <0x52>;
+> > +     };
+> > +};
+> > +
+> > +&uart2 {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&pinctrl_uart2>;
+> > +     assigned-clocks = <&clks IMX7D_UART2_ROOT_SRC>;
+> > +     assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
+> > +     status = "okay";
+> > +};
+> > +
+> > +&uart4 {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&pinctrl_uart4>;
+> > +     assigned-clocks = <&clks IMX7D_UART4_ROOT_SRC>;
+> > +     assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+> > +     status = "okay";
+> > +
+> > +     rave-sp {
+> > +             compatible = "zii,rave-sp-rdu2";
+> > +             current-speed = <1000000>;
+> > +             #address-cells = <1>;
+> > +             #size-cells = <1>;
+> > +
+> > +             watchdog {
+> > +                     compatible = "zii,rave-sp-watchdog";
+> > +             };
+> > +
+> > +             eeprom@a3 {
+> > +                     compatible = "zii,rave-sp-eeprom";
+> > +                     reg = <0xa3 0x4000>;
+> > +                     #address-cells = <1>;
+> > +                     #size-cells = <1>;
+> > +                     zii,eeprom-name = "main-eeprom";
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&usbotg2 {
+> > +     dr_mode = "host";
+> > +     disable-over-current;
+> > +     status = "okay";
+> > +};
+> > +
+> > +&usdhc1 {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&pinctrl_usdhc1>;
+> > +     bus-width = <4>;
+> > +     no-1-8-v;
+> > +     no-sdio;
+> > +     keep-power-in-suspend;
+> > +     status = "okay";
+> > +};
+> > +
+> > +&usdhc3 {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&pinctrl_usdhc3>;
+> > +     bus-width = <8>;
+> > +     no-1-8-v;
+> > +     non-removable;
+> > +     no-sdio;
+> > +     no-sd;
+> > +     keep-power-in-suspend;
+> > +     status = "okay";
+> > +};
+> > +
+> > +&wdog1 {
+> > +     status = "disabled";
+> > +};
+> > +
+> > +&snvs_rtc {
+> > +     status = "disabled";
+> > +};
+>
+> Please sort it alphabetically in label name.
+>
+
+Will do.
+
+> > +
+> > +&snvs_pwrkey {
+> > +     status = "disabled";
+> > +};
+>
+> We already queued up the patch below to disable snvs_pwrkey by default.
+>
+> https://lkml.org/lkml/2019/6/13/1170
+>
+
+OK, good to know, will drop.
+
+> > +
+> > +&iomuxc {
+> > +     pinctrl_ecspi1: ecspi1grp {
+> > +             fsl,pins = <
+> > +                     MX7D_PAD_ECSPI1_SCLK__ECSPI1_SCLK       0x2
+> > +                     MX7D_PAD_ECSPI1_MOSI__ECSPI1_MOSI       0x2
+> > +                     MX7D_PAD_ECSPI1_MISO__ECSPI1_MISO       0x2
+> > +                     MX7D_PAD_ECSPI1_SS0__GPIO4_IO19         0x59
+> > +             >;
+> > +     };
+> > +
+> > +     pinctrl_enet1: enet1grp {
+> > +             fsl,pins = <
+> > +                     MX7D_PAD_SD2_CD_B__ENET1_MDIO                           0x3
+> > +                     MX7D_PAD_SD2_WP__ENET1_MDC                              0x3
+> > +                     MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC               0x1
+> > +                     MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0               0x1
+> > +                     MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1               0x1
+> > +                     MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2               0x1
+> > +                     MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3               0x1
+> > +                     MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL         0x1
+> > +                     MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC               0x1
+> > +                     MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0               0x1
+> > +                     MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1               0x1
+> > +                     MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2               0x1
+> > +                     MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3               0x1
+> > +                     MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL         0x1
+> > +             >;
+> > +     };
+> > +
+> > +     pinctrl_enet1_phy_reset: enet1phyresetgrp {
+> > +             fsl,pins = <
+> > +                     MX7D_PAD_SD2_RESET_B__GPIO5_IO11        0x14
+> > +
+> > +             >;
+> > +     };
+> > +
+> > +     pinctrl_i2c1: i2c1grp {
+> > +             fsl,pins = <
+> > +                     MX7D_PAD_I2C1_SDA__I2C1_SDA             0x4000007f
+> > +                     MX7D_PAD_I2C1_SCL__I2C1_SCL             0x4000007f
+> > +             >;
+> > +     };
+> > +
+> > +     pinctrl_leds_debug: debuggrp {
+>
+> ledsgrp?
+>
+
+Sure, will change in next version.
+
+Thanks,
+Andrey Smirnov
