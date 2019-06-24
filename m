@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 14/15] dt-bindings: display: Convert mitsubishi,aa121td01 panel to DT schema
-Date: Mon, 24 Jun 2019 15:56:48 -0600
-Message-ID: <20190624215649.8939-15-robh@kernel.org>
+Subject: [PATCH v2 11/15] dt-bindings: display: Convert panel-lvds to DT schema
+Date: Mon, 24 Jun 2019 15:56:45 -0600
+Message-ID: <20190624215649.8939-12-robh@kernel.org>
 References: <20190624215649.8939-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,43 +9,235 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190624215649.8939-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert the mitsubishi,aa121td01 LVDS panel binding to DT schema.
+Convert the panel-lvds binding to use DT schema. The panel-lvds schema
+inherits from the panel-common.yaml schema and specific LVDS panel
+bindings should inherit from this schema.
 
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
+Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../display/panel/mitsubishi,aa121td01.txt    | 47 -------------
- .../display/panel/mitsubishi,aa121td01.yaml   | 69 +++++++++++++++++++
- 2 files changed, 69 insertions(+), 47 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml
+ .../bindings/display/panel/lvds.yaml          | 107 ++++++++++++++++
+ .../bindings/display/panel/panel-lvds.txt     | 121 ------------------
+ 2 files changed, 107 insertions(+), 121 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/lvds.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/panel-lvds.txt
 
-diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/lvds.yaml b/Documentation/devicetree/bindings/display/panel/lvds.yaml
+new file mode 100644
+index 000000000000..d0083301acbe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/lvds.yaml
+@@ -0,0 +1,107 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/lvds.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: LVDS Display Panel
++
++maintainers:
++  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
++  - Thierry Reding <thierry.reding@gmail.com>
++
++description: |+
++  LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
++  incompatible data link layers have been used over time to transmit image data
++  to LVDS panels. This bindings supports display panels compatible with the
++  following specifications.
++
++  [JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
++  1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
++  [LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
++  Semiconductor
++  [VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
++  Electronics Standards Association (VESA)
++
++  Device compatible with those specifications have been marketed under the
++  FPD-Link and FlatLink brands.
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    contains:
++      const: panel-lvds
++    description:
++      Shall contain "panel-lvds" in addition to a mandatory panel-specific
++      compatible string defined in individual panel bindings. The "panel-lvds"
++      value shall never be used on its own.
++
++  data-mapping:
++    enum:
++      - jeida-18
++      - jeida-24
++      - vesa-24
++    description: |
++      The color signals mapping order.
++
++      LVDS data mappings are defined as follows.
++
++      - "jeida-18" - 18-bit data mapping compatible with the [JEIDA], [LDI] and
++        [VESA] specifications. Data are transferred as follows on 3 LVDS lanes.
++
++      Slot	    0       1       2       3       4       5       6
++            ________________                         _________________
++      Clock	                \_______________________/
++              ______  ______  ______  ______  ______  ______  ______
++      DATA0	><__G0__><__R5__><__R4__><__R3__><__R2__><__R1__><__R0__><
++      DATA1	><__B1__><__B0__><__G5__><__G4__><__G3__><__G2__><__G1__><
++      DATA2	><_CTL2_><_CTL1_><_CTL0_><__B5__><__B4__><__B3__><__B2__><
++
++      - "jeida-24" - 24-bit data mapping compatible with the [DSIM] and [LDI]
++        specifications. Data are transferred as follows on 4 LVDS lanes.
++
++      Slot	    0       1       2       3       4       5       6
++            ________________                         _________________
++      Clock	                \_______________________/
++              ______  ______  ______  ______  ______  ______  ______
++      DATA0	><__G2__><__R7__><__R6__><__R5__><__R4__><__R3__><__R2__><
++      DATA1	><__B3__><__B2__><__G7__><__G6__><__G5__><__G4__><__G3__><
++      DATA2	><_CTL2_><_CTL1_><_CTL0_><__B7__><__B6__><__B5__><__B4__><
++      DATA3	><_CTL3_><__B1__><__B0__><__G1__><__G0__><__R1__><__R0__><
++
++      - "vesa-24" - 24-bit data mapping compatible with the [VESA] specification.
++        Data are transferred as follows on 4 LVDS lanes.
++
++      Slot	    0       1       2       3       4       5       6
++            ________________                         _________________
++      Clock	                \_______________________/
++              ______  ______  ______  ______  ______  ______  ______
++      DATA0	><__G0__><__R5__><__R4__><__R3__><__R2__><__R1__><__R0__><
++      DATA1	><__B1__><__B0__><__G5__><__G4__><__G3__><__G2__><__G1__><
++      DATA2	><_CTL2_><_CTL1_><_CTL0_><__B5__><__B4__><__B3__><__B2__><
++      DATA3	><_CTL3_><__B7__><__B6__><__G7__><__G6__><__R7__><__R6__><
++
++      Control signals are mapped as follows.
++
++      CTL0: HSync
++      CTL1: VSync
++      CTL2: Data Enable
++      CTL3: 0
++
++  data-mirror:
++    type: boolean
++    description:
++      If set, reverse the bit order described in the data mappings below on all
++      data lanes, transmitting bits for slots 6 to 0 instead of 0 to 6.
++
++required:
++  - compatible
++  - data-mapping
++  - width-mm
++  - height-mm
++  - panel-timing
++  - port
++
++...
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
 deleted file mode 100644
-index d6e1097504fe..000000000000
---- a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
+index 250850a2150b..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
 +++ /dev/null
-@@ -1,47 +0,0 @@
--Mitsubishi AA121TD01 LVDS Display Panel
--=======================================
+@@ -1,121 +0,0 @@
+-LVDS Display Panel
+-==================
 -
--The AA121TD01 is a 12.1" WXGA TFT-LCD display panel.
+-LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
+-incompatible data link layers have been used over time to transmit image data
+-to LVDS panels. This bindings supports display panels compatible with the
+-following specifications.
 -
--These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
--with the following device-specific properties.
+-[JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
+-1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
+-[LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
+-Semiconductor
+-[VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
+-Electronics Standards Association (VESA)
+-
+-Device compatible with those specifications have been marketed under the
+-FPD-Link and FlatLink brands.
 -
 -
 -Required properties:
 -
--- compatible: Shall contain "mitsubishi,aa121td01" and "panel-lvds", in that
--  order.
--- vcc-supply: Reference to the regulator powering the panel VCC pins.
+-- compatible: Shall contain "panel-lvds" in addition to a mandatory
+-  panel-specific compatible string defined in individual panel bindings. The
+-  "panel-lvds" value shall never be used on its own.
+-- width-mm: See panel-common.txt.
+-- height-mm: See panel-common.txt.
+-- data-mapping: The color signals mapping order, "jeida-18", "jeida-24"
+-  or "vesa-24".
+-
+-Optional properties:
+-
+-- label: See panel-common.txt.
+-- gpios: See panel-common.txt.
+-- backlight: See panel-common.txt.
+-- power-supply: See panel-common.txt.
+-- data-mirror: If set, reverse the bit order described in the data mappings
+-  below on all data lanes, transmitting bits for slots 6 to 0 instead of
+-  0 to 6.
+-
+-Required nodes:
+-
+-- panel-timing: See panel-common.txt.
+-- ports: See panel-common.txt. These bindings require a single port subnode
+-  corresponding to the panel LVDS input.
+-
+-
+-LVDS data mappings are defined as follows.
+-
+-- "jeida-18" - 18-bit data mapping compatible with the [JEIDA], [LDI] and
+-  [VESA] specifications. Data are transferred as follows on 3 LVDS lanes.
+-
+-Slot	    0       1       2       3       4       5       6
+-	________________                         _________________
+-Clock	                \_______________________/
+-	  ______  ______  ______  ______  ______  ______  ______
+-DATA0	><__G0__><__R5__><__R4__><__R3__><__R2__><__R1__><__R0__><
+-DATA1	><__B1__><__B0__><__G5__><__G4__><__G3__><__G2__><__G1__><
+-DATA2	><_CTL2_><_CTL1_><_CTL0_><__B5__><__B4__><__B3__><__B2__><
+-
+-- "jeida-24" - 24-bit data mapping compatible with the [DSIM] and [LDI]
+-  specifications. Data are transferred as follows on 4 LVDS lanes.
+-
+-Slot	    0       1       2       3       4       5       6
+-	________________                         _________________
+-Clock	                \_______________________/
+-	  ______  ______  ______  ______  ______  ______  ______
+-DATA0	><__G2__><__R7__><__R6__><__R5__><__R4__><__R3__><__R2__><
+-DATA1	><__B3__><__B2__><__G7__><__G6__><__G5__><__G4__><__G3__><
+-DATA2	><_CTL2_><_CTL1_><_CTL0_><__B7__><__B6__><__B5__><__B4__><
+-DATA3	><_CTL3_><__B1__><__B0__><__G1__><__G0__><__R1__><__R0__><
+-
+-- "vesa-24" - 24-bit data mapping compatible with the [VESA] specification.
+-  Data are transferred as follows on 4 LVDS lanes.
+-
+-Slot	    0       1       2       3       4       5       6
+-	________________                         _________________
+-Clock	                \_______________________/
+-	  ______  ______  ______  ______  ______  ______  ______
+-DATA0	><__G0__><__R5__><__R4__><__R3__><__R2__><__R1__><__R0__><
+-DATA1	><__B1__><__B0__><__G5__><__G4__><__G3__><__G2__><__G1__><
+-DATA2	><_CTL2_><_CTL1_><_CTL0_><__B5__><__B4__><__B3__><__B2__><
+-DATA3	><_CTL3_><__B7__><__B6__><__G7__><__G6__><__R7__><__R6__><
+-
+-Control signals are mapped as follows.
+-
+-CTL0: HSync
+-CTL1: VSync
+-CTL2: Data Enable
+-CTL3: 0
 -
 -
 -Example
@@ -53,7 +245,6 @@ index d6e1097504fe..000000000000
 -
 -panel {
 -	compatible = "mitsubishi,aa121td01", "panel-lvds";
--	vcc-supply = <&vcc_3v3>;
 -
 -	width-mm = <261>;
 -	height-mm = <163>;
@@ -79,80 +270,5 @@ index d6e1097504fe..000000000000
 -		};
 -	};
 -};
-diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml
-new file mode 100644
-index 000000000000..68750d8f0aef
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/mitsubishi,aa121td01.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Mitsubishi AA121TD01 12.1" WXGA LVDS Display Panel
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+  - Thierry Reding <thierry.reding@gmail.com>
-+
-+allOf:
-+  - $ref: lvds.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: mitsubishi,aa121td01
-+      - {} # panel-lvds, but not listed here to avoid false select
-+
-+  vcc-supply:
-+    description: Reference to the regulator powering the panel VCC pins.
-+
-+  data-mapping:
-+    const: jeida-24
-+
-+  width-mm:
-+    const: 261
-+
-+  height-mm:
-+    const: 163
-+
-+required:
-+  - compatible
-+  - vcc-supply
-+
-+examples:
-+  - |+
-+    panel {
-+      compatible = "mitsubishi,aa121td01", "panel-lvds";
-+      vcc-supply = <&vcc_3v3>;
-+
-+      width-mm = <261>;
-+      height-mm = <163>;
-+
-+      data-mapping = "jeida-24";
-+
-+      panel-timing {
-+        /* 1280x800 @60Hz */
-+        clock-frequency = <71000000>;
-+        hactive = <1280>;
-+        vactive = <800>;
-+        hsync-len = <70>;
-+        hfront-porch = <20>;
-+        hback-porch = <70>;
-+        vsync-len = <5>;
-+        vfront-porch = <3>;
-+        vback-porch = <15>;
-+      };
-+
-+      port {
-+        panel_in: endpoint {
-+          remote-endpoint = <&lvds_encoder>;
-+        };
-+      };
-+    };
-+
-+...
 -- 
 2.20.1
