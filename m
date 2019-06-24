@@ -1,37 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 10/15] dt-bindings: display: Convert tpo,tpg110 panel
- to DT schema
-Date: Mon, 24 Jun 2019 16:47:36 -0600
-Message-ID: <CAL_Jsq+uCMKhUFgCCK3uUetL9OwokQPaq74GJHQS2VS=UjVH8w@mail.gmail.com>
-References: <20190624215649.8939-1-robh@kernel.org> <20190624215649.8939-11-robh@kernel.org>
- <CACRpkdYKE=zLJhmTeTWYGRCQNt3K8+rNNqsp5UDa2d31GG6Y2g@mail.gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v13 00/13] Ingenic Timer/Counter Unit patchset v13
+Date: Tue, 25 Jun 2019 00:57:46 +0200
+Message-ID: <20190624225759.18299-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYKE=zLJhmTeTWYGRCQNt3K8+rNNqsp5UDa2d31GG6Y2g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 4:13 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Mon, Jun 24, 2019 at 11:59 PM Rob Herring <robh@kernel.org> wrote:
->
-> > Convert the tpo,tpg110 panel binding to DT schema.
-> >
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
->
-> Awesome, fixed up the MAINATINERS entry and applied and
-> pushed for DRM next with my Reviewed-by.
+Hi,
 
-You shouldn't have because this is dependent on patch 2 and
-panel-common.yaml. So now 'make dt_binding_check' is broken.
+This is the version 13 of my patchset to support the Timer/Counter Unit
+(TCU) present in JZ47xx SoCs from Ingenic.
 
-Rob
+Changelog:
+
+Patch [03/13]:
+ - Revert back to v11. Turns out it was okay.
+ - Remove 'interrupt-parent' of the list of required properties.
+
+Patch [05/13]:
+ - Don't enable/disable the TCU clock on demand. Enable it in the probe
+   and call it a day.
+ - Register suspend callbacks to gate/ungate the TCU clock on
+   suspend/resume.
+ - Use pr_fmt and pr_crit instead of custom TCU_ERR() macro
+ - Remove useless dependency on COMMON_CLK in Kconfig
+ - Remove registration of clkdev
+
+All the other patches have not been modified.
+The patchset was rebased on 5.2-rc6.
+
+Cheers,
+-Paul
