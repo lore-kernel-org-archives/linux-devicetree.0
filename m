@@ -1,207 +1,145 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v5 09/10] memory: tegra: Consolidate registers definition into common header
-Date: Mon, 24 Jun 2019 03:31:31 +0300
-Message-ID: <20190624003132.29473-10-digetx@gmail.com>
-References: <20190624003132.29473-1-digetx@gmail.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
+Date: Mon, 24 Jun 2019 01:45:13 +0000
+Message-ID: <VE1PR04MB66557834D3588FC8B558950AF1E00@VE1PR04MB6655.eurprd04.prod.outlook.com>
+References: <20171115060459.45375-1-ran.wang_1@nxp.com>
+ <87ineb9b5v.fsf@linux.intel.com>
+ <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com>
+ <87shdfet90.fsf@linux.intel.com>
+ <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <87k1eaanjw.fsf@linux.intel.com>
+ <AM5PR0402MB2865F3735D808E1BC9F67968F1180@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <87o92wgyqj.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190624003132.29473-1-digetx@gmail.com>
+In-Reply-To: <87o92wgyqj.fsf@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The Memory Controller registers definition is sparse and duplicated,
-let's consolidate everything into a common place for consistency.
+Hi Felipe,
 
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/memory/tegra/mc.c       | 30 -------------------
- drivers/memory/tegra/mc.h       | 52 +++++++++++++++++++++++++++++----
- drivers/memory/tegra/tegra124.c | 20 -------------
- drivers/memory/tegra/tegra30.c  | 20 -------------
- 4 files changed, 47 insertions(+), 75 deletions(-)
+On Monday, June 17, 2019 20:53, Felipe Balbi wrote:
+> Hi,
+>=20
+> Ran Wang <ran.wang_1@nxp.com> writes:
+> > Hi Felipe,
+> >
+> > On Thursday, May 30, 2019 17:09, Ran Wang wrote:
+> >>
+> >> <snip>
+> >> > >> >> >  /* Global Debug Queue/FIFO Space Available Register */
+> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
+> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
+> >> > >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
+> >> > >> >> >   * 	3	- Reserved
+> >> > >> >> >   * @imod_interval: set the interrupt moderation interval in=
+ 250ns
+> >> > >> >> >   *                 increments or 0 to disable.
+> >> > >> >> > + * @dma_coherent: set if enable dma-coherent.
+> >> > >> >>
+> >> > >> >> you're not enabling dma coherency, you're enabling cache snoop=
+ing.
+> >> > >> >> And this property should describe that. Also, keep in mind
+> >> > >> >> that different devices may want different cache types for
+> >> > >> >> each of those fields, so your property would have to be a lot
+> >> > >> >> more complex. Something
+> >> > like:
+> >> > >> >>
+> >> > >> >> 	snps,cache-type =3D <foobar "cacheable">, <baz "cacheable">, =
+...
+> >> > >> >>
+> >> > >> >> Then driver would have to parse this properly to setup GSBUSCF=
+G0.
+> >> > >
+> >> > > According to the DesignWare Cores SuperSpeed USB 3.0 Controller
+> >> > > Databook (v2.60a), it has described Type Bit Assignments for all
+> >> > > supported
+> >> > master bus type:
+> >> > > AHB, AXI3, AXI4 and Native. I found the bit definition are
+> >> > > different among
+> >> > them.
+> >> > > So, for the example you gave above, feel a little bit confused.
+> >> > > Did you mean:
+> >> > >     snps,cache-type =3D <DATA_RD  "write allocate">, <DESC_RD
+> >> > > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read allocate">
+> >> >
+> >> > yeah, something like that.
+> >>
+> >> I think DATA_RD  should be a macro, right? So, where I can put its def=
+ine?
+> >> Create a dwc3.h in include/dt-bindings/usb/ ?
+> >
+> > Could you please give me some advice here? I'd like to prepare next
+> > version patch after getting this settled.
+> >
+> >> Another question about this remain open is: DWC3 data book's Table
+> >> 6-5 Cache Type Bit Assignments show that bits definition will differ
+> >> per MBUS_TYPEs as
+> >> below:
+> >> ----------------------------------------------------------------
+> >>  MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
+> >>  ----------------------------------------------------------------
+> >>  AHB      |Cacheable     |Bufferable   |Privilegge |Data
+> >>  AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
+> >>  AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
+> >>  AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
+> >>  Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
+> >>  ----------------------------------------------------------------
+> >>  Note: The AHB, AXI3, AXI4, and PCIe busses use different names for
+> >> certain  signals, which have the same meaning:
+> >>    Bufferable =3D Posted
+> >>    Cacheable =3D Modifiable =3D Snoop (negation of No Snoop)
+> >>
+> >> For Layerscape SoCs, MBUS_TYPE is AXI3. So I am not sure how to use
+> >> snps,cache-type =3D <DATA_RD  "write allocate">, to cover all MBUS_TYP=
+E?
+> >> (you can notice that AHB and AXI3's cacheable are on different bit)
+> >> Or I just need to handle AXI3 case?
+> >
+> > Also on this open. Thank you in advance.
+>=20
+> You could pass two strings and let the driver process them. Something
+> like:
+>=20
+> 	snps,cache_type =3D <"data_wr" "write allocate">, <"desc_rd"
+> "cacheable">...
+>=20
+> And so on. The only thing missing is for the mbus_type to be known by the=
+ driver.
+> Is that something we can figure out on any of the HWPARAMS registers or d=
+oes
+> it have to be told explicitly?
 
-diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
-index 4c1492c653e1..c926aa81a6ac 100644
---- a/drivers/memory/tegra/mc.c
-+++ b/drivers/memory/tegra/mc.c
-@@ -21,36 +21,6 @@
- 
- #include "mc.h"
- 
--#define MC_INTSTATUS 0x000
--
--#define MC_INTMASK 0x004
--
--#define MC_ERR_STATUS 0x08
--#define  MC_ERR_STATUS_TYPE_SHIFT 28
--#define  MC_ERR_STATUS_TYPE_INVALID_SMMU_PAGE (6 << MC_ERR_STATUS_TYPE_SHIFT)
--#define  MC_ERR_STATUS_TYPE_MASK (0x7 << MC_ERR_STATUS_TYPE_SHIFT)
--#define  MC_ERR_STATUS_READABLE (1 << 27)
--#define  MC_ERR_STATUS_WRITABLE (1 << 26)
--#define  MC_ERR_STATUS_NONSECURE (1 << 25)
--#define  MC_ERR_STATUS_ADR_HI_SHIFT 20
--#define  MC_ERR_STATUS_ADR_HI_MASK 0x3
--#define  MC_ERR_STATUS_SECURITY (1 << 17)
--#define  MC_ERR_STATUS_RW (1 << 16)
--
--#define MC_ERR_ADR 0x0c
--
--#define MC_GART_ERROR_REQ		0x30
--#define MC_DECERR_EMEM_OTHERS_STATUS	0x58
--#define MC_SECURITY_VIOLATION_STATUS	0x74
--
--#define MC_EMEM_ARB_CFG 0x90
--#define  MC_EMEM_ARB_CFG_CYCLES_PER_UPDATE(x)	(((x) & 0x1ff) << 0)
--#define  MC_EMEM_ARB_CFG_CYCLES_PER_UPDATE_MASK	0x1ff
--#define MC_EMEM_ARB_MISC0 0xd8
--
--#define MC_EMEM_ADR_CFG 0x54
--#define MC_EMEM_ADR_CFG_EMEM_NUMDEV BIT(0)
--
- static const struct of_device_id tegra_mc_of_match[] = {
- #ifdef CONFIG_ARCH_TEGRA_2x_SOC
- 	{ .compatible = "nvidia,tegra20-mc-gart", .data = &tegra20_mc_soc },
-diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
-index abc565b42225..65783063612f 100644
---- a/drivers/memory/tegra/mc.h
-+++ b/drivers/memory/tegra/mc.h
-@@ -15,6 +15,37 @@
- 
- #include <soc/tegra/mc.h>
- 
-+#define MC_INTSTATUS					0x00
-+#define MC_INTMASK					0x04
-+#define MC_ERR_STATUS					0x08
-+#define MC_ERR_ADR					0x0c
-+#define MC_GART_ERROR_REQ				0x30
-+#define MC_EMEM_ADR_CFG					0x54
-+#define MC_DECERR_EMEM_OTHERS_STATUS			0x58
-+#define MC_SECURITY_VIOLATION_STATUS			0x74
-+#define MC_EMEM_ARB_CFG					0x90
-+#define MC_EMEM_ARB_OUTSTANDING_REQ			0x94
-+#define MC_EMEM_ARB_TIMING_RCD				0x98
-+#define MC_EMEM_ARB_TIMING_RP				0x9c
-+#define MC_EMEM_ARB_TIMING_RC				0xa0
-+#define MC_EMEM_ARB_TIMING_RAS				0xa4
-+#define MC_EMEM_ARB_TIMING_FAW				0xa8
-+#define MC_EMEM_ARB_TIMING_RRD				0xac
-+#define MC_EMEM_ARB_TIMING_RAP2PRE			0xb0
-+#define MC_EMEM_ARB_TIMING_WAP2PRE			0xb4
-+#define MC_EMEM_ARB_TIMING_R2R				0xb8
-+#define MC_EMEM_ARB_TIMING_W2W				0xbc
-+#define MC_EMEM_ARB_TIMING_R2W				0xc0
-+#define MC_EMEM_ARB_TIMING_W2R				0xc4
-+#define MC_EMEM_ARB_DA_TURNS				0xd0
-+#define MC_EMEM_ARB_DA_COVERS				0xd4
-+#define MC_EMEM_ARB_MISC0				0xd8
-+#define MC_EMEM_ARB_MISC1				0xdc
-+#define MC_EMEM_ARB_RING1_THROTTLE			0xe0
-+#define MC_EMEM_ARB_OVERRIDE				0xe8
-+#define MC_TIMING_CONTROL_DBG				0xf8
-+#define MC_TIMING_CONTROL				0xfc
-+
- #define MC_INT_DECERR_MTS				BIT(16)
- #define MC_INT_SECERR_SEC				BIT(13)
- #define MC_INT_DECERR_VPR				BIT(12)
-@@ -25,17 +56,28 @@
- #define MC_INT_INVALID_GART_PAGE			BIT(7)
- #define MC_INT_DECERR_EMEM				BIT(6)
- 
--#define MC_EMEM_ARB_OUTSTANDING_REQ			0x94
-+#define MC_ERR_STATUS_TYPE_SHIFT			28
-+#define MC_ERR_STATUS_TYPE_INVALID_SMMU_PAGE		(0x6 << 28)
-+#define MC_ERR_STATUS_TYPE_MASK				(0x7 << 28)
-+#define MC_ERR_STATUS_READABLE				BIT(27)
-+#define MC_ERR_STATUS_WRITABLE				BIT(26)
-+#define MC_ERR_STATUS_NONSECURE				BIT(25)
-+#define MC_ERR_STATUS_ADR_HI_SHIFT			20
-+#define MC_ERR_STATUS_ADR_HI_MASK			0x3
-+#define MC_ERR_STATUS_SECURITY				BIT(17)
-+#define MC_ERR_STATUS_RW				BIT(16)
-+
-+#define MC_EMEM_ADR_CFG_EMEM_NUMDEV			BIT(0)
-+
-+#define MC_EMEM_ARB_CFG_CYCLES_PER_UPDATE(x)		((x) & 0x1ff)
-+#define MC_EMEM_ARB_CFG_CYCLES_PER_UPDATE_MASK		0x1ff
-+
- #define MC_EMEM_ARB_OUTSTANDING_REQ_MAX_MASK		0x1ff
- #define MC_EMEM_ARB_OUTSTANDING_REQ_HOLDOFF_OVERRIDE	BIT(30)
- #define MC_EMEM_ARB_OUTSTANDING_REQ_LIMIT_ENABLE	BIT(31)
- 
--#define MC_EMEM_ARB_OVERRIDE				0xe8
- #define MC_EMEM_ARB_OVERRIDE_EACK_MASK			0x3
- 
--#define MC_TIMING_CONTROL_DBG				0xf8
--
--#define MC_TIMING_CONTROL				0xfc
- #define MC_TIMING_UPDATE				BIT(0)
- 
- static inline u32 mc_readl(struct tegra_mc *mc, unsigned long offset)
-diff --git a/drivers/memory/tegra/tegra124.c b/drivers/memory/tegra/tegra124.c
-index 6985a4e33325..daff801db569 100644
---- a/drivers/memory/tegra/tegra124.c
-+++ b/drivers/memory/tegra/tegra124.c
-@@ -13,26 +13,6 @@
- 
- #include "mc.h"
- 
--#define MC_EMEM_ARB_CFG				0x90
--#define MC_EMEM_ARB_OUTSTANDING_REQ		0x94
--#define MC_EMEM_ARB_TIMING_RCD			0x98
--#define MC_EMEM_ARB_TIMING_RP			0x9c
--#define MC_EMEM_ARB_TIMING_RC			0xa0
--#define MC_EMEM_ARB_TIMING_RAS			0xa4
--#define MC_EMEM_ARB_TIMING_FAW			0xa8
--#define MC_EMEM_ARB_TIMING_RRD			0xac
--#define MC_EMEM_ARB_TIMING_RAP2PRE		0xb0
--#define MC_EMEM_ARB_TIMING_WAP2PRE		0xb4
--#define MC_EMEM_ARB_TIMING_R2R			0xb8
--#define MC_EMEM_ARB_TIMING_W2W			0xbc
--#define MC_EMEM_ARB_TIMING_R2W			0xc0
--#define MC_EMEM_ARB_TIMING_W2R			0xc4
--#define MC_EMEM_ARB_DA_TURNS			0xd0
--#define MC_EMEM_ARB_DA_COVERS			0xd4
--#define MC_EMEM_ARB_MISC0			0xd8
--#define MC_EMEM_ARB_MISC1			0xdc
--#define MC_EMEM_ARB_RING1_THROTTLE		0xe0
--
- static const struct tegra_mc_client tegra124_mc_clients[] = {
- 	{
- 		.id = 0x00,
-diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/tegra30.c
-index 67676677fd6a..f17488a0c5c7 100644
---- a/drivers/memory/tegra/tegra30.c
-+++ b/drivers/memory/tegra/tegra30.c
-@@ -13,26 +13,6 @@
- 
- #include "mc.h"
- 
--#define MC_EMEM_ARB_CFG				0x90
--#define MC_EMEM_ARB_OUTSTANDING_REQ		0x94
--#define MC_EMEM_ARB_TIMING_RCD			0x98
--#define MC_EMEM_ARB_TIMING_RP			0x9c
--#define MC_EMEM_ARB_TIMING_RC			0xa0
--#define MC_EMEM_ARB_TIMING_RAS			0xa4
--#define MC_EMEM_ARB_TIMING_FAW			0xa8
--#define MC_EMEM_ARB_TIMING_RRD			0xac
--#define MC_EMEM_ARB_TIMING_RAP2PRE		0xb0
--#define MC_EMEM_ARB_TIMING_WAP2PRE		0xb4
--#define MC_EMEM_ARB_TIMING_R2R			0xb8
--#define MC_EMEM_ARB_TIMING_W2W			0xbc
--#define MC_EMEM_ARB_TIMING_R2W			0xc0
--#define MC_EMEM_ARB_TIMING_W2R			0xc4
--#define MC_EMEM_ARB_DA_TURNS			0xd0
--#define MC_EMEM_ARB_DA_COVERS			0xd4
--#define MC_EMEM_ARB_MISC0			0xd8
--#define MC_EMEM_ARB_MISC1			0xdc
--#define MC_EMEM_ARB_RING1_THROTTLE		0xe0
--
- static const unsigned long tegra30_mc_emem_regs[] = {
- 	MC_EMEM_ARB_CFG,
- 	MC_EMEM_ARB_OUTSTANDING_REQ,
--- 
-2.22.0
+I have checked Layerscape Reference manual, HWPARAMS0~8 doesn't contain mbu=
+s_type
+Info, and I didn't know where have declared it explicitly.
+
+> Another option would be to pass a string followed by one hex digit for th=
+e bits:
+>=20
+> 	snps,cache_type =3D <"data_wr" 0x8>, <"desc_rd" 0x2>...;
+>=20
+> Then we don't need to describe mbus_type since the bits are what matters.
+
+Yes, it's also what we prefer to use, it will be more flexible, I can add a=
+bove Table
+6-5 Cache Type Bit Assignments in binding to help user decide which value t=
+hey
+would use.
+
+I would submit another version of patch for further review, thank you very =
+much.
+
+Regards,
+Ran
+
+> Rob, any comments?
+>=20
+> --
+> balbi
