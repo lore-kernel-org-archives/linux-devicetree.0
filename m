@@ -1,40 +1,37 @@
-From: Robert Chiras <robert.chiras@nxp.com>
-Subject: Re: [EXT] Re: [PATCH v3 1/2] dt-bindings: display: panel: Add support
- for Raydium RM67191 panel
-Date: Mon, 24 Jun 2019 07:48:13 +0000
-Message-ID: <1561362492.9328.84.camel@nxp.com>
-References: <1561037428-13855-1-git-send-email-robert.chiras@nxp.com>
-         <1561037428-13855-2-git-send-email-robert.chiras@nxp.com>
-         <CAOMZO5DunK3+ovBd0c0X4NTf-zkW1Tjz6KgXFMaRQKMk2SBMiw@mail.gmail.com>
-         <1561126587.9328.76.camel@nxp.com>
-         <CAOMZO5D+7msAxc99KFi=OWCNeBSxKXtJ8O=J7U+YE6v=xz3cAg@mail.gmail.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [v2 0/2] add auo,kd101n80-45a panel driver
+Date: Mon, 24 Jun 2019 15:59:59 +0800
+Message-ID: <20190624080001.67222-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5D+7msAxc99KFi=OWCNeBSxKXtJ8O=J7U+YE6v=xz3cAg@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <D4765E46EF0F1E4FA320CFFAEC33B1B9@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "festevam@gmail.com" <festevam@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sam@ravnborg.org" <sam@ravnborg.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVmksIDIwMTktMDYtMjEgYXQgMTI6NDYgLTAzMDAsIEZhYmlvIEVzdGV2YW0gd3JvdGU6DQo+
-IENhdXRpb246IEVYVCBFbWFpbA0KPiANCj4gSGkgUm9iZXJ0LA0KPiANCj4gT24gRnJpLCBKdW4g
-MjEsIDIwMTkgYXQgMTE6MTYgQU0gUm9iZXJ0IENoaXJhcyA8cm9iZXJ0LmNoaXJhc0BueHAuY29t
-DQo+ID4gd3JvdGU6DQo+IA0KPiA+IA0KPiA+IEZyb20gd2hhdCBJJ3ZlIHNlZW4gaW4gdGhlIHNj
-aGVtYXRpY3MsIHRoZSBwb3dlciBsaW5lcyBvbiB0aGUgRFNJDQo+ID4gcG9ydA0KPiA+IG9uIGFs
-bCB0aGUgaS5NWDggY29yZXMgYXJlIGNvbWluZyBmcm9tIGEgUE1JQyBwcm92aWRpbmcgcG93ZXIg
-Zm9yDQo+ID4gYWxsDQo+ID4gdGhlIHBlcmlwaGVyYWxzLiBTaW5jZSBJIGRpZG4ndCBmaW5kIGEg
-d2F5IHRvIGN1dCB0aGUgcG93ZXIgb24gYQ0KPiA+IHNpbmdsZQ0KPiA+IHBlcmlwaGVyYWwgKGxp
-a2UgRFNJLCBmb3IgZXhhbXBsZSkgaXQgZG9lc24ndCBtYWtlIHNlbnNlIGZvciBwb3dlci0NCj4g
-PiBzdXBwbHkgcHJvcGVydHkuIEZvciBub3csIGF0IGxlYXN0Lg0KPiBUaGlzIHBhbmVsIGRyaXZl
-ciBpcyBub3Qgc3VwcG9zZWQgdG8gb25seSB3b3JrIHdpdGggaS5NWDggTlhQDQo+IHJlZmVyZW5j
-ZSBib2FyZHMuDQo+IA0KPiBUaGUgZHQtYmluZGluZ3Mgc2hvdWxkIGJlIGFzIGFjY3VyYXRlIGFz
-IHBvc3NpYmxlIGZyb20gZGF5IG9uZSwgc28NCj4gZGVzY3JpYmluZyB0aGUgcG93ZXItc3VwcGx5
-IGlzIGltcG9ydGFudC4NCj4gDQo+IFBsZWFzZSBsb29rIGF0IHRoZSBwYW5lbCBkYXRhc2hlZXQg
-YW5kIGRlc2NyaWJlIHRoZSByZXF1aXJlZCBwb3dlcg0KPiBzdXBwbGllcyBhY2NvcmRpbmdseS4N
-Ck9LLCBJIHdpbGwgYWRkIHRoZSBwb3dlciByZWd1bGF0b3JzIGFzIHRoZXkgYXJlIGRlc2NyaWJl
-ZCBpbiBwYW5lbA0KZGF0YXNoZWV0LiBJIGp1c3Qgd29uJ3QgYmUgYWJsZSB0byB0ZXN0IHRoZW0u
-DQo+IA0KPiBUaGFua3M=
+Q2hhbmdlcyBzaW5jZSB2MToKIC0gbWVyZ2UgYXVvLGtkMTAxbjgwLTQ1YSBhbmQgYm9lLHR2MTAx
+d3VtLW5sNiBpbiBvbmUgZHJpdmVyCgpUaGlzIHBhdGNoIGlzIGJhc2VkIG9uIHY1LjItcmMxIGFu
+ZCB0aGVzZSBwYXRjaGVzOgpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL2NvdmVyLzExMDEy
+MzU1LwpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMDEyMzQ1LwpodHRwczov
+L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMDEyMzQ5LwoKSml0YW8gU2hpICgyKToKICBk
+dC1iaW5kaW5nczogZGlzcGxheTogcGFuZWw6IGFkZCBhdW8ga2QxMDFuODAtNDVuYSBwYW5lbCBi
+aW5kaW5ncwogIGRybS9wYW5lbDogc3VwcG9ydCBmb3IgYXVvLGtkMTAxbjgwLTQ1bmEgd3V4Z2Eg
+ZHNpIHZpZGVvIG1vZGUgcGFuZWwKCiAuLi4vZGlzcGxheS9wYW5lbC9hdW8sa2QxMDFuODAtNDVu
+YS50eHQgICAgICAgfCAzNCArKysrKysrKysrKysrKysrCiAuLi4vZ3B1L2RybS9wYW5lbC9wYW5l
+bC1ib2UtdHYxMDF3dW0tbmw2LmMgICAgfCA0MCArKysrKysrKysrKysrKysrKysrCiAyIGZpbGVz
+IGNoYW5nZWQsIDc0IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8sa2QxMDFuODAtNDVuYS50
+eHQKCi0tIAoyLjIxLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbA==
