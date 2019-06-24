@@ -1,315 +1,106 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3] ARM: dts: exynos: Add regulator suspend configuration to Odroid XU3/XU4/HC1 family
-Date: Mon, 24 Jun 2019 18:54:19 +0200
-Message-ID: <20190624165419.4704-1-krzk@kernel.org>
+From: Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
+ wait-for-safe logic
+Date: Mon, 24 Jun 2019 18:03:49 +0100
+Message-ID: <20190624170348.7dncuc5qezqeyvq2@willie-the-truck>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-4-vivek.gautam@codeaurora.org>
+ <20190614040520.GK22737@tuxbook-pro>
+ <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org>
+ <20190618175218.GH4270@fuggles.cambridge.arm.com>
+ <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Anand Moon <linux.amoon@gmail.com>
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, Andy Gross <agross@kernel.org>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the PMIC regulator suspend configuration to entire Odroid
-XU3/XU4/HC1 family of boards to reduce power usage during suspend.  The
-configuration is based on vendor (Hardkernel) reference kernel with
-additional buck9 suspend configuration (for USB hub suspend and proper
-reset).
+[+Krishna]
 
-Energy consumption measurements from Marek Szyprowski during suspend to
-RAM:
- - all at 5 V power supply,
- - before: next-20190620,
- - after: next-20190620 + this patch + suspend configuration for s2mps11
-          regulator driver,
+Hi Vivek,
 
-Board              | before [mA] | after [mA] |
-Odroid HC1         |         120 |       7-10 |
-Odroid XU4, sdcard |          88 |        6-9 |
-Odroid XU4, eMMC   |         100 |        6-9 |
+On Mon, Jun 24, 2019 at 03:58:32PM +0530, Vivek Gautam wrote:
+> On Tue, Jun 18, 2019 at 11:22 PM Will Deacon <will.deacon@arm.com> wrote:
+> > On Fri, Jun 14, 2019 at 02:48:07PM +0530, Vivek Gautam wrote:
+> > > On 6/14/2019 9:35 AM, Bjorn Andersson wrote:
+> > > > On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
+> > > > > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > > > > index 0ad086da399c..3c3ad43eda97 100644
+> > > > > --- a/drivers/iommu/arm-smmu.c
+> > > > > +++ b/drivers/iommu/arm-smmu.c
+> > > > > @@ -39,6 +39,7 @@
+> > > > >   #include <linux/pci.h>
+> > > > >   #include <linux/platform_device.h>
+> > > > >   #include <linux/pm_runtime.h>
+> > > > > +#include <linux/qcom_scm.h>
+> > > > >   #include <linux/slab.h>
+> > > > >   #include <linux/spinlock.h>
+> > > > > @@ -177,6 +178,7 @@ struct arm_smmu_device {
+> > > > >           u32                             features;
+> > > > >   #define ARM_SMMU_OPT_SECURE_CFG_ACCESS (1 << 0)
+> > > > > +#define ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA (1 << 1)
+> > > > >           u32                             options;
+> > > > >           enum arm_smmu_arch_version      version;
+> > > > >           enum arm_smmu_implementation    model;
+> > > > > @@ -262,6 +264,7 @@ static bool using_legacy_binding, using_generic_binding;
+> > > > >   static struct arm_smmu_option_prop arm_smmu_options[] = {
+> > > > >           { ARM_SMMU_OPT_SECURE_CFG_ACCESS, "calxeda,smmu-secure-config-access" },
+> > > > > + { ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA, "qcom,smmu-500-fw-impl-safe-errata" },
+> > > > This should be added to the DT binding as well.
+> > >
+> > > Ah right. I missed that. Will add this and respin unless Robin and Will have
+> > > concerns with this change.
+> >
+> > My only concern really is whether it's safe for us to turn this off. It's
+> > clear that somebody went to a lot of effort to add this extra goodness to
+> > the IP, but your benchmarks suggest they never actually tried it out after
+> > they finished building it.
+> >
+> > Is there some downside I'm not seeing from disabling this stuff?
+> 
+> This wait-for-safe is a TLB invalidation enhancement to help display
+> and camera devices.
+> The SMMU hardware throttles the invalidations so that clients such as
+> display and camera can indicate when to start the invalidation.
+> So the SMMU essentially reduces the rate at which invalidations are
+> serviced from its queue. This also throttles the invalidations from
+> other masters too.
+> 
+> On sdm845, the software is expected to serialize the invalidation
+> command loading into SMMU invalidation FIFO using hardware locks
+> (downstream code [2]), and is also expected to throttle non-real time
+> clients while waiting for SAFE==1 (downstream code[2]). We don't do
+> any of these yet, and as per my understanding as this wait-for-safe is
+> enabled by the bootloader in a one time config, this logic reduces
+> performance of devices such as usb and ufs.
+> 
+> There's isn't any downside from disabling this logic until we have all
+> the pieces together from downstream in upstream kernels, and until we
+> have sdm845 devices that are running with full display/gfx stack
+> running. That's when we plan to revisit this and enable all the pieces
+> to get display and USB/UFS working with their optimum performance.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Tested-by: Anand Moon <linux.amoon@gmail.com>
+Generally, I'd agree that approaching this incrementally makes sense, but
+in this case you're adding new device-tree properties
+("qcom,smmu-500-fw-impl-safe-errata") in order to do so, which seems
+questionable if they're only going to be used in the short-term and will
+be obsolete once Linux knows how to drive the device properly.
 
----
+Instead, I think this needs to be part of a separate file that is maintained
+by you, which follows on from the work that Krishna is doing for nvidia
+built on top of Robin's prototype patches:
 
-Tested on XU3 and HC1 with SD card.
+http://linux-arm.org/git?p=linux-rm.git;a=shortlog;h=refs/heads/iommu/smmu-impl
 
----
+Once we have that, you can key this behaviour off the compatible string
+rather than having to add quirk properties to reflect the transient needs of
+Linux.
 
-Changes since v2:
-1. Suspend also buck9, as suggested by Anand.
-2. Add Anand's tag.
+Krishna -- how have you been getting on with the branch above?
 
-Changes since v1:
-1. Add Marek's tag.
----
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 96 +++++++++++++++++++
- 1 file changed, 96 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-index 0f967259ad29..9843d21d6924 100644
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -177,6 +177,10 @@
- 				regulator-name = "vdd_adc";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo5_reg: LDO5 {
-@@ -184,6 +188,10 @@
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo6_reg: LDO6 {
-@@ -191,6 +199,10 @@
- 				regulator-min-microvolt = <1000000>;
- 				regulator-max-microvolt = <1000000>;
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo7_reg: LDO7 {
-@@ -198,6 +210,10 @@
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo8_reg: LDO8 {
-@@ -205,6 +221,10 @@
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo9_reg: LDO9 {
-@@ -212,6 +232,10 @@
- 				regulator-min-microvolt = <3000000>;
- 				regulator-max-microvolt = <3000000>;
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo10_reg: LDO10 {
-@@ -219,6 +243,10 @@
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo11_reg: LDO11 {
-@@ -226,6 +254,10 @@
- 				regulator-min-microvolt = <1000000>;
- 				regulator-max-microvolt = <1000000>;
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo12_reg: LDO12 {
-@@ -239,6 +271,10 @@
- 				regulator-name = "vddq_mmc2";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <2800000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo14_reg: LDO14 {
-@@ -253,6 +289,10 @@
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo16_reg: LDO16 {
-@@ -267,18 +307,30 @@
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo18_reg: LDO18 {
- 				regulator-name = "vdd_emmc_1V8";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo19_reg: LDO19 {
- 				regulator-name = "vdd_sd";
- 				regulator-min-microvolt = <2800000>;
- 				regulator-max-microvolt = <2800000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo20_reg: LDO20 {
-@@ -307,6 +359,10 @@
- 				regulator-min-microvolt = <1100000>;
- 				regulator-max-microvolt = <1100000>;
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo24_reg: LDO24 {
-@@ -328,6 +384,10 @@
- 				regulator-name = "vdd_ldo26";
- 				regulator-min-microvolt = <800000>;
- 				regulator-max-microvolt = <3950000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo27_reg: LDO27 {
-@@ -335,6 +395,10 @@
- 				regulator-min-microvolt = <1000000>;
- 				regulator-max-microvolt = <1000000>;
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo28_reg: LDO28 {
-@@ -342,6 +406,10 @@
- 				regulator-name = "vdd_ldo28";
- 				regulator-min-microvolt = <800000>;
- 				regulator-max-microvolt = <3950000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo29_reg: LDO29 {
-@@ -420,6 +488,10 @@
- 				regulator-max-microvolt = <1300000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			buck2_reg: BUCK2 {
-@@ -428,6 +500,10 @@
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			buck3_reg: BUCK3 {
-@@ -436,6 +512,10 @@
- 				regulator-max-microvolt = <1400000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			buck4_reg: BUCK4 {
-@@ -444,6 +524,10 @@
- 				regulator-max-microvolt = <1400000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			buck5_reg: BUCK5 {
-@@ -460,6 +544,10 @@
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			buck7_reg: BUCK7 {
-@@ -484,12 +572,20 @@
- 				regulator-max-microvolt = <3750000>;
- 				regulator-always-on;
- 				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			buck10_reg: BUCK10 {
- 				regulator-name = "vdd_vmem";
- 				regulator-min-microvolt = <2850000>;
- 				regulator-max-microvolt = <2850000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 		};
- 	};
--- 
-2.17.1
+Will
