@@ -1,43 +1,154 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCHv3 1/1] coresight: Do not default to CPU0 for missing CPU
- phandle
-Date: Mon, 24 Jun 2019 14:57:53 +0530
-Message-ID: <d1fadd8d-4b3d-38a4-1d26-e72e8eff8ff1@codeaurora.org>
-References: <cover.1561346998.git.saiprakash.ranjan@codeaurora.org>
- <635466ab6a27781966bb083e93d2ca2729473ced.1561346998.git.saiprakash.ranjan@codeaurora.org>
- <4db99204-8553-7a80-f952-30cbd149593d@arm.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V4 02/18] pinctrl: tegra: add suspend and resume support
+Date: Mon, 24 Jun 2019 12:46:28 +0300
+Message-ID: <a03ce644-5efd-e721-fb06-16de097171bb@gmail.com>
+References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
+ <1561345379-2429-3-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4db99204-8553-7a80-f952-30cbd149593d@arm.com>
+In-Reply-To: <1561345379-2429-3-git-send-email-skomatineni@nvidia.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, mathieu.poirier@linaro.org, leo.yan@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com
-Cc: rnayak@codeaurora.org, vivek.gautam@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/24/2019 1:56 PM, Suzuki K Poulose wrote:
-> Sai,
+24.06.2019 6:02, Sowjanya Komatineni пишет:
+> This patch adds support for Tegra pinctrl driver suspend and resume.
 > 
-> Thanks for getting this done.
+> During suspend, context of all pinctrl registers are stored and
+> on resume they are all restored to have all the pinmux and pad
+> configuration for normal operation.
 > 
-> On 24/06/2019 04:36, Sai Prakash Ranjan wrote:
->> Coresight platform support assumes that a missing "cpu" phandle
->> defaults to CPU0. This could be problematic and unnecessarily binds
->> components to CPU0, where they may not be. Let us make the DT binding
->> rules a bit stricter by not defaulting to CPU0 for missing "cpu"
->> affinity information.
->>
->> Also in coresight etm and cpu-debug drivers, abort the probe
->> for such cases.
->>
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/pinctrl/tegra/pinctrl-tegra.c    | 47 ++++++++++++++++++++++++++++++++
+>  drivers/pinctrl/tegra/pinctrl-tegra.h    |  4 +++
+>  drivers/pinctrl/tegra/pinctrl-tegra210.c |  6 ++++
+>  3 files changed, 57 insertions(+)
 > 
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> index b03c465917b8..c0ba6fa63ad1 100644
+> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> @@ -631,6 +631,38 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>  	}
+>  }
+>  
+> +int __maybe_unused tegra_pinctrl_suspend(struct device *dev)
 
-Thanks for the review Suzuki.
+The "maybe_unused" attribute isn't needed for global functions because
+compiler always assumes that such functions are used somewhere outside.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> +{
+> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
+> +	u32 *backup_regs = pmx->backup_regs;
+> +	u32 *regs;
+> +	unsigned int i, j;
+> +
+> +	for (i = 0; i < pmx->nbanks; i++) {
+> +		regs = pmx->regs[i];
+> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+> +			*backup_regs++ = readl(regs++);
+> +	}
+> +
+> +	return pinctrl_force_sleep(pmx->pctl);
+> +}
+> +
+> +int __maybe_unused tegra_pinctrl_resume(struct device *dev)
+> +{
+> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
+> +	u32 *backup_regs = pmx->backup_regs;
+> +	u32 *regs;
+> +	unsigned int i, j;
+> +
+> +	for (i = 0; i < pmx->nbanks; i++) {
+> +		regs = pmx->regs[i];
+> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+> +			writel(*backup_regs++, regs++);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static bool gpio_node_has_range(const char *compatible)
+>  {
+>  	struct device_node *np;
+> @@ -655,6 +687,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+>  	int i;
+>  	const char **group_pins;
+>  	int fn, gn, gfn;
+> +	unsigned long backup_regs_size = 0;
+>  
+>  	pmx = devm_kzalloc(&pdev->dev, sizeof(*pmx), GFP_KERNEL);
+>  	if (!pmx)
+> @@ -707,6 +740,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+>  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+>  		if (!res)
+>  			break;
+> +		backup_regs_size += resource_size(res);
+>  	}
+>  	pmx->nbanks = i;
+>  
+> @@ -715,11 +749,24 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+>  	if (!pmx->regs)
+>  		return -ENOMEM;
+>  
+> +	pmx->reg_bank_size = devm_kcalloc(&pdev->dev, pmx->nbanks,
+> +					  sizeof(*pmx->reg_bank_size),
+> +					  GFP_KERNEL);
+> +	if (!pmx->reg_bank_size)
+> +		return -ENOMEM;
+> +
+> +	pmx->backup_regs = devm_kzalloc(&pdev->dev, backup_regs_size,
+> +					GFP_KERNEL);
+> +	if (!pmx->backup_regs)
+> +		return -ENOMEM;
+> +
+>  	for (i = 0; i < pmx->nbanks; i++) {
+>  		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+>  		pmx->regs[i] = devm_ioremap_resource(&pdev->dev, res);
+>  		if (IS_ERR(pmx->regs[i]))
+>  			return PTR_ERR(pmx->regs[i]);
+> +
+> +		pmx->reg_bank_size[i] = resource_size(res);
+>  	}
+>  
+>  	pmx->pctl = devm_pinctrl_register(&pdev->dev, &tegra_pinctrl_desc, pmx);
+> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
+> index 32642af3f871..65fcbf8c7579 100644
+> --- a/drivers/pinctrl/tegra/pinctrl-tegra.h
+> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
+> @@ -17,6 +17,8 @@ struct tegra_pmx {
+>  
+>  	int nbanks;
+>  	void __iomem **regs;
+> +	size_t *reg_bank_size;
+> +	u32 *backup_regs;
+>  };
+>  
+>  enum tegra_pinconf_param {
+> @@ -195,4 +197,6 @@ struct tegra_pinctrl_soc_data {
+>  
+>  int tegra_pinctrl_probe(struct platform_device *pdev,
+>  			const struct tegra_pinctrl_soc_data *soc_data);
+> +int __maybe_unused tegra_pinctrl_suspend(struct device *dev);
+> +int __maybe_unused tegra_pinctrl_resume(struct device *dev);
+>  #endif
+> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+> index 617ad963f5ad..4616bbc2efba 100644
+> --- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
+> +++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+> @@ -1562,6 +1562,11 @@ static int tegra210_pinctrl_probe(struct platform_device *pdev)
+>  	return tegra_pinctrl_probe(pdev, &tegra210_pinctrl);
+>  }
+>  
+> +static const struct dev_pm_ops tegra_pinctrl_pm = {
+> +	.suspend = &tegra_pinctrl_suspend,
+> +	.resume = &tegra_pinctrl_resume
+> +};
+
+What about to move tegra_pinctrl_pm out into pinctrl-tegra.c to make it
+common for all of the drivers?
