@@ -1,63 +1,35 @@
-From: Jeykumar Sankaran <jsanka@codeaurora.org>
-Subject: Re: drm/msm/dpu: Correct dpu encoder spinlock initialization
-Date: Mon, 24 Jun 2019 15:26:07 -0700
-Message-ID: <efade579f7ba59585b88ecb367422e5c@codeaurora.org>
-References: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device
+ tree bindings for vibrator
+Date: Tue, 25 Jun 2019 00:29:29 +0200
+Message-ID: <CACRpkdYTaM+sBs-bhaXVtAwFtp6+_PWWJ_k9jobd7qB41HubDg@mail.gmail.com>
+References: <20190516085018.2207-1-masneyb@onstation.org> <20190520142149.D56DA214AE@mail.kernel.org>
+ <CACRpkdZxu1LfK11OHEx5L_4kyjMZ7qERpvDzFj5u3Pk2kD1qRA@mail.gmail.com>
+ <20190529101231.GA14540@basecamp> <CACRpkdY-TcF7rizbPz=UcHrFvDgPJD68vbovNdcWP-aBYppp=g@mail.gmail.com>
+ <20190623105332.GA25506@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
+In-Reply-To: <20190623105332.GA25506@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shubhashree Dhar <dhar@codeaurora.org>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org, jshekhar@codeaurora.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-06-23 23:27, Shubhashree Dhar wrote:
-> dpu encoder spinlock should be initialized during dpu encoder
-> init instead of dpu encoder setup which is part of commit.
-> There are chances that vblank control uses the uninitialized
-> spinlock if not initialized during encoder init.
-Not much can be done if someone is performing a vblank operation
-before encoder_setup is done.
-Can you point to the path where this lock is acquired before
-the encoder_setup?
+On Sun, Jun 23, 2019 at 12:53 PM Brian Masney <masneyb@onstation.org> wrote:
 
-Thanks
-Jeykumar S.
-> 
-> Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
-> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> index 5f085b5..22938c7 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> @@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device *dev, 
-> struct
-> drm_encoder *enc,
->  	if (ret)
->  		goto fail;
-> 
-> -	spin_lock_init(&dpu_enc->enc_spinlock);
-> -
->  	atomic_set(&dpu_enc->frame_done_timeout, 0);
->  	timer_setup(&dpu_enc->frame_done_timer,
->  			dpu_encoder_frame_done_timeout, 0);
-> @@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct
-> drm_device *dev,
-> 
->  	drm_encoder_helper_add(&dpu_enc->base, &dpu_encoder_helper_funcs);
-> 
-> +	spin_lock_init(&dpu_enc->enc_spinlock);
->  	dpu_enc->enabled = false;
-> 
->  	return &dpu_enc->base;
+> 2) Do what Linus suggests above. We can use v1 of this series from last
+>    September (see below for link) that adds this to the pwm subsystem.
+>    The locking would need to be added so that it won't conflict with the
+>    clk subsystem. This can be tied into the input subsystem with the
+>    existing pwm-vibra driver.
 
--- 
-Jeykumar S
+What I imagined was that the clk driver would double as a pwm driver.
+Just register both interfaces.
+
+There are already plenty of combines clk+reset drivers for example.
+
+Otherwise I'm all for this approach (but that's just me).
+
+Yours,
+Linus Walleij
