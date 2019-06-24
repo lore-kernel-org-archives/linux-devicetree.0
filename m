@@ -1,368 +1,159 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v3 5/5] soc/tegra: regulators: Add regulators coupler for Tegra30
-Date: Mon, 24 Jun 2019 00:08:35 +0300
-Message-ID: <20190623210835.26281-6-digetx@gmail.com>
-References: <20190623210835.26281-1-digetx@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v5 00/15] add ecspi ERR009165 for i.mx6/7 soc family
+Date: Mon, 24 Jun 2019 08:16:45 +0800
+Message-ID: <20190624001643.GB3800@dragon>
+References: <20190610081753.11422-1-yibin.gong@nxp.com>
+ <1561135476.7537.5.camel@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190623210835.26281-1-digetx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1561135476.7537.5.camel@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Gong <yibin.gong@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "vkoul@kernel.org" <vkoul@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add regulators coupler for Tegra30 SoCs that performs voltage balancing
-of a coupled regulators and thus provides voltage scaling functionality.
+On Fri, Jun 21, 2019 at 08:42:48AM +0000, Robin Gong wrote:
+> Hello Shawn/Will,
+> =A0 Do you have comments for this V5 patch set? I got tags from Mark,
+> Vinod and Rob.
 
-There are 2 coupled regulators on all Tegra30 SoCs: CORE and CPU. The
-coupled regulator voltages shall be in a range of 300mV from each other
-and CORE voltage shall be higher than the CPU by N mV, where N depends
-on the CPU voltage.
+I'm fine with the DTS change, but not sure how the series should be
+merged.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/soc/tegra/Kconfig              |   4 +
- drivers/soc/tegra/Makefile             |   1 +
- drivers/soc/tegra/regulators-tegra30.c | 302 +++++++++++++++++++++++++
- 3 files changed, 307 insertions(+)
- create mode 100644 drivers/soc/tegra/regulators-tegra30.c
+Shawn
 
-diff --git a/drivers/soc/tegra/Kconfig b/drivers/soc/tegra/Kconfig
-index 539c01012b00..84bd615c4a92 100644
---- a/drivers/soc/tegra/Kconfig
-+++ b/drivers/soc/tegra/Kconfig
-@@ -29,6 +29,7 @@ config ARCH_TEGRA_3x_SOC
- 	select PL310_ERRATA_769419 if CACHE_L2X0
- 	select SOC_TEGRA_FLOWCTRL
- 	select SOC_TEGRA_PMC
-+	select SOC_TEGRA30_VOLTAGE_COUPLER
- 	select TEGRA_TIMER
- 	help
- 	  Support for NVIDIA Tegra T30 processor family, based on the
-@@ -141,3 +142,6 @@ config SOC_TEGRA20_VOLTAGE_COUPLER
- 	bool "Voltage scaling support for Tegra20 SoCs"
- 	depends on ARCH_TEGRA_2x_SOC || COMPILE_TEST
- 
-+config SOC_TEGRA30_VOLTAGE_COUPLER
-+	bool "Voltage scaling support for Tegra30 SoCs"
-+	depends on ARCH_TEGRA_3x_SOC || COMPILE_TEST
-diff --git a/drivers/soc/tegra/Makefile b/drivers/soc/tegra/Makefile
-index 9f0bdd53bef8..9c809c1814bd 100644
---- a/drivers/soc/tegra/Makefile
-+++ b/drivers/soc/tegra/Makefile
-@@ -6,3 +6,4 @@ obj-$(CONFIG_SOC_TEGRA_FLOWCTRL) += flowctrl.o
- obj-$(CONFIG_SOC_TEGRA_PMC) += pmc.o
- obj-$(CONFIG_SOC_TEGRA_POWERGATE_BPMP) += powergate-bpmp.o
- obj-$(CONFIG_SOC_TEGRA20_VOLTAGE_COUPLER) += regulators-tegra20.o
-+obj-$(CONFIG_SOC_TEGRA30_VOLTAGE_COUPLER) += regulators-tegra30.o
-diff --git a/drivers/soc/tegra/regulators-tegra30.c b/drivers/soc/tegra/regulators-tegra30.c
-new file mode 100644
-index 000000000000..7af22bacb088
---- /dev/null
-+++ b/drivers/soc/tegra/regulators-tegra30.c
-@@ -0,0 +1,302 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Voltage regulators coupler for NVIDIA Tegra30
-+// Copyright (C) 2019 GRATE-DRIVER project
-+//
-+// Voltage constraints borrowed from downstream kernel sources
-+// Copyright (C) 2010-2011 NVIDIA Corporation
-+
-+#define pr_fmt(fmt)	"tegra voltage-coupler: " fmt
-+
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/regulator/coupler.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+
-+#include <soc/tegra/fuse.h>
-+
-+struct tegra_regulator_coupler {
-+	struct regulator_coupler coupler;
-+	struct regulator_dev *core_rdev;
-+	struct regulator_dev *cpu_rdev;
-+	int core_min_uV;
-+};
-+
-+static inline struct tegra_regulator_coupler *
-+to_tegra_coupler(struct regulator_coupler *coupler)
-+{
-+	return container_of(coupler, struct tegra_regulator_coupler, coupler);
-+}
-+
-+static int tegra30_core_limit(struct tegra_regulator_coupler *tegra,
-+			      struct regulator_dev *core_rdev)
-+{
-+	int core_min_uV = 0;
-+	int core_max_uV;
-+	int core_cur_uV;
-+	int err;
-+
-+	if (tegra->core_min_uV > 0)
-+		return tegra->core_min_uV;
-+
-+	core_cur_uV = regulator_get_voltage_rdev(core_rdev);
-+	if (core_cur_uV < 0)
-+		return core_cur_uV;
-+
-+	core_max_uV = max(core_cur_uV, 1200000);
-+
-+	err = regulator_check_voltage(core_rdev, &core_min_uV, &core_max_uV);
-+	if (err)
-+		return err;
-+
-+	/*
-+	 * Limit minimum CORE voltage to a value left from bootloader or,
-+	 * if it's unreasonably low value, to the most common 1.2v or to
-+	 * whatever maximum value defined via board's device-tree.
-+	 */
-+	tegra->core_min_uV = core_max_uV;
-+
-+	pr_info("core minimum voltage limited to %duV\n", tegra->core_min_uV);
-+
-+	return tegra->core_min_uV;
-+}
-+
-+static int tegra30_core_cpu_limit(int cpu_uV)
-+{
-+	if (cpu_uV < 800000)
-+		return 950000;
-+
-+	if (cpu_uV < 900000)
-+		return 1000000;
-+
-+	if (cpu_uV < 1000000)
-+		return 1100000;
-+
-+	if (cpu_uV < 1100000)
-+		return 1200000;
-+
-+	if (cpu_uV < 1250000) {
-+		switch (tegra_sku_info.cpu_speedo_id) {
-+		case 0 ... 1:
-+		case 4:
-+		case 7 ... 8:
-+			return 1200000;
-+
-+		default:
-+			return 1300000;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int tegra30_voltage_update(struct tegra_regulator_coupler *tegra,
-+				  struct regulator_dev *cpu_rdev,
-+				  struct regulator_dev *core_rdev)
-+{
-+	int core_min_uV, core_max_uV = INT_MAX;
-+	int cpu_min_uV, cpu_max_uV = INT_MAX;
-+	int core_min_limited_uV;
-+	int core_target_uV;
-+	int cpu_target_uV;
-+	int core_max_step;
-+	int cpu_max_step;
-+	int max_spread;
-+	int core_uV;
-+	int cpu_uV;
-+	int err;
-+
-+	/*
-+	 * CPU voltage should not got lower than 300mV from the CORE.
-+	 * CPU voltage should stay below the CORE by 100mV+, depending
-+	 * by the CORE voltage. This applies to all Tegra30 SoC's.
-+	 */
-+	max_spread = cpu_rdev->constraints->max_spread[0];
-+	cpu_max_step = cpu_rdev->constraints->max_uV_step;
-+	core_max_step = core_rdev->constraints->max_uV_step;
-+
-+	if (!max_spread) {
-+		pr_err_once("cpu-core max-spread is undefined in device-tree\n");
-+		max_spread = 300000;
-+	}
-+
-+	if (!cpu_max_step) {
-+		pr_err_once("cpu max-step is undefined in device-tree\n");
-+		cpu_max_step = 150000;
-+	}
-+
-+	if (!core_max_step) {
-+		pr_err_once("core max-step is undefined in device-tree\n");
-+		core_max_step = 150000;
-+	}
-+
-+	/*
-+	 * The CORE voltage scaling is currently not hooked up in drivers,
-+	 * hence we will limit the minimum CORE voltage to a reasonable value.
-+	 * This should be good enough for the time being.
-+	 */
-+	core_min_uV = tegra30_core_limit(tegra, core_rdev);
-+	if (core_min_uV < 0)
-+		return core_min_uV;
-+
-+	err = regulator_check_consumers(core_rdev, &core_min_uV, &core_max_uV,
-+					PM_SUSPEND_ON);
-+	if (err)
-+		return err;
-+
-+	cpu_min_uV = core_min_uV - max_spread;
-+
-+	err = regulator_check_consumers(cpu_rdev, &cpu_min_uV, &cpu_max_uV,
-+					PM_SUSPEND_ON);
-+	if (err)
-+		return err;
-+
-+	err = regulator_check_voltage(cpu_rdev, &cpu_min_uV, &cpu_max_uV);
-+	if (err)
-+		return err;
-+
-+	cpu_uV = regulator_get_voltage_rdev(cpu_rdev);
-+	if (cpu_uV < 0)
-+		return cpu_uV;
-+
-+	core_uV = regulator_get_voltage_rdev(core_rdev);
-+	if (core_uV < 0)
-+		return core_uV;
-+
-+	/*
-+	 * Bootloader shall set up voltages correctly, but if it
-+	 * happens that there is a violation, then try to fix it
-+	 * at first.
-+	 */
-+	core_min_limited_uV = tegra30_core_cpu_limit(cpu_uV);
-+	if (core_min_limited_uV < 0)
-+		return core_min_limited_uV;
-+
-+	core_min_uV = max(core_min_uV, tegra30_core_cpu_limit(cpu_min_uV));
-+
-+	err = regulator_check_voltage(core_rdev, &core_min_uV, &core_max_uV);
-+	if (err)
-+		return err;
-+
-+	if (core_min_limited_uV > core_uV) {
-+		pr_err("core voltage constraint violated: %d %d %d\n",
-+		       core_uV, core_min_limited_uV, cpu_uV);
-+		goto update_core;
-+	}
-+
-+	while (cpu_uV != cpu_min_uV || core_uV != core_min_uV) {
-+		if (cpu_uV < cpu_min_uV) {
-+			cpu_target_uV = min(cpu_uV + cpu_max_step, cpu_min_uV);
-+		} else {
-+			cpu_target_uV = max(cpu_uV - cpu_max_step, cpu_min_uV);
-+			cpu_target_uV = max(core_uV - max_spread, cpu_target_uV);
-+		}
-+
-+		err = regulator_set_voltage_rdev(cpu_rdev,
-+						 cpu_target_uV,
-+						 cpu_max_uV,
-+						 PM_SUSPEND_ON);
-+		if (err)
-+			return err;
-+
-+		cpu_uV = cpu_target_uV;
-+update_core:
-+		core_min_limited_uV = tegra30_core_cpu_limit(cpu_uV);
-+		if (core_min_limited_uV < 0)
-+			return core_min_limited_uV;
-+
-+		core_target_uV = max(core_min_limited_uV, core_min_uV);
-+
-+		if (core_uV < core_target_uV) {
-+			core_target_uV = min(core_target_uV, core_uV + core_max_step);
-+			core_target_uV = min(core_target_uV, cpu_uV + max_spread);
-+		} else {
-+			core_target_uV = max(core_target_uV, core_uV - core_max_step);
-+		}
-+
-+		err = regulator_set_voltage_rdev(core_rdev,
-+						 core_target_uV,
-+						 core_max_uV,
-+						 PM_SUSPEND_ON);
-+		if (err)
-+			return err;
-+
-+		core_uV = core_target_uV;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tegra30_regulator_balance_voltage(struct regulator_coupler *coupler,
-+					     struct regulator_dev *rdev,
-+					     suspend_state_t state)
-+{
-+	struct tegra_regulator_coupler *tegra = to_tegra_coupler(coupler);
-+	struct regulator_dev *core_rdev = tegra->core_rdev;
-+	struct regulator_dev *cpu_rdev = tegra->cpu_rdev;
-+
-+	if ((core_rdev != rdev && cpu_rdev != rdev) || state != PM_SUSPEND_ON) {
-+		pr_err("regulators are not coupled properly\n");
-+		return -EINVAL;
-+	}
-+
-+	return tegra30_voltage_update(tegra, cpu_rdev, core_rdev);
-+}
-+
-+static int tegra30_regulator_attach(struct regulator_coupler *coupler,
-+				    struct regulator_dev *rdev)
-+{
-+	struct tegra_regulator_coupler *tegra = to_tegra_coupler(coupler);
-+	struct device_node *np = rdev->dev.of_node;
-+
-+	if (of_property_read_bool(np, "nvidia,tegra-core-regulator") &&
-+	    !tegra->core_rdev) {
-+		tegra->core_rdev = rdev;
-+		return 0;
-+	}
-+
-+	if (of_property_read_bool(np, "nvidia,tegra-cpu-regulator") &&
-+	    !tegra->cpu_rdev) {
-+		tegra->cpu_rdev = rdev;
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int tegra30_regulator_detach(struct regulator_coupler *coupler,
-+				    struct regulator_dev *rdev)
-+{
-+	struct tegra_regulator_coupler *tegra = to_tegra_coupler(coupler);
-+
-+	if (tegra->core_rdev == rdev) {
-+		tegra->core_rdev = NULL;
-+		return 0;
-+	}
-+
-+	if (tegra->cpu_rdev == rdev) {
-+		tegra->cpu_rdev = NULL;
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static struct tegra_regulator_coupler tegra30_coupler = {
-+	.coupler = {
-+		.attach_regulator = tegra30_regulator_attach,
-+		.detach_regulator = tegra30_regulator_detach,
-+		.balance_voltage = tegra30_regulator_balance_voltage,
-+	},
-+};
-+
-+static int __init tegra_regulator_coupler_init(void)
-+{
-+	if (!of_machine_is_compatible("nvidia,tegra30"))
-+		return 0;
-+
-+	return regulator_coupler_register(&tegra30_coupler.coupler);
-+}
-+arch_initcall(tegra_regulator_coupler_init);
--- 
-2.22.0
+> =
+
+> On 2019-06-10 at 08:17 +0000, yibin.gong@nxp.com wrote:
+> > From: Robin Gong <yibin.gong@nxp.com>
+> > =
+
+> > =A0 There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+> > transfer to be send twice in DMA mode. Please get more information
+> > from:
+> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwww
+> > .nxp.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01%7Cyibin
+> > .gong%40nxp.com%7C67d3e78fe5ef4428b3af08d6ed7beb74%7C686ea1d3bc2b4c6f
+> > a92cd99c5c301635%7C0%7C1%7C636957513814970412&amp;sdata=3D%2F9sbrDEmIpu
+> > OazcIAVpIrELZMEjO94%2Bjen7wOOlVsVk%3D&amp;reserved=3D0. The workaround
+> > is adding
+> > new sdma ram script which works in XCH=A0=A0mode as PIO inside sdma
+> > instead
+> > of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should
+> > be
+> > exist on all legacy i.mx6/7 soc family before i.mx6ul.
+> > =A0 NXP fix this design issue from i.mx6ul, so newer chips including
+> > i.mx6ul/
+> > 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8
+> > chips
+> > still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+> > for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need
+> > errata
+> > or not.
+> > =A0 The first two reverted patches should be the same issue, though, it
+> > seems 'fixed' by changing to other shp script. Hope Sean or Sascha
+> > could
+> > have the chance to test this patch set if could fix their issues.
+> > =A0 Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not
+> > work
+> > on i.mx8mm because the event id is zero.
+> > =
+
+> > PS:
+> > =A0=A0=A0Please get sdma firmware from below linux-firmware and copy it=
+ to
+> > your
+> > local rootfs /lib/firmware/imx/sdma.
+> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit
+> > .kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ffirmware%2Flinux-
+> > firmware.git%2Ftree%2Fimx%2Fsdma&amp;data=3D02%7C01%7Cyibin.gong%40nxp.
+> > com%7C67d3e78fe5ef4428b3af08d6ed7beb74%7C686ea1d3bc2b4c6fa92cd99c5c30
+> > 1635%7C0%7C1%7C636957513814970412&amp;sdata=3DxXHBWpSaSLmMosb%2FajOAiXn
+> > nkxaYV6HCt25OOzgRLbI%3D&amp;reserved=3D0
+> > =
+
+> > v2:
+> > =A0 1.Add commit log for reverted patches.
+> > =A0 2.Add comment for 'ecspi_fixed' in sdma driver.
+> > =A0 3.Add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
+> > =A0=A0=A0=A0rather than remove.
+> > v3:
+> > =A0 1.Confirm with design team make sure ERR009165 fixed on
+> > i.mx6ul/i.mx6ull
+> > =A0=A0=A0=A0/i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy
+> > chips.
+> > =A0=A0=A0=A0Correct dts related dts patch in v2.
+> > =A0 2.Clean eratta information in binding doc and new 'tx_glitch_fixed'
+> > flag
+> > =A0=A0=A0=A0in spi-imx driver to state ERR009165 fixed or not.
+> > =A0 3.Enlarge burst size to fifo size for tx since tx_wml set to 0 in
+> > the
+> > =A0=A0=A0=A0errata workaroud, thus improve performance as possible.
+> > v4:
+> > =A0 1.add Ack tag from Mark and Vinod
+> > =A0 2. remove checking 'event_id1' zero as 'event_id0'.
+> > v5:
+> > =A0 1.Add another patch for compatible with the current uart driver
+> > which
+> > =A0=A0=A0=A0using rom script, so both uart ram script and rom script
+> > supported
+> > =A0=A0=A0=A0in latest firmware, by default uart rom script used. UART d=
+river
+> > =A0=A0=A0=A0will be broken without this patch. Latest sdma firmware has=
+ been
+> > =A0=A0=A0=A0already updated in linux-firmware.=A0
+> > =
+
+> > Robin Gong (15):
+> > =A0 Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
+> > =A0 Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
+> > =A0 Revert "dmaengine: imx-sdma: refine to load context only once"
+> > =A0 dmaengine: imx-sdma: remove dupilicated sdma_load_context
+> > =A0 dmaengine: imx-sdma: add mcu_2_ecspi script
+> > =A0 spi: imx: fix ERR009165
+> > =A0 spi: imx: remove ERR009165 workaround on i.mx6ul
+> > =A0 spi: imx: add new i.mx6ul compatible name in binding doc
+> > =A0 dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
+> > =A0 dma: imx-sdma: add i.mx6ul/6sx compatible name
+> > =A0 dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
+> > =A0 ARM: dts: imx6ul: add dma support on ecspi
+> > =A0 ARM: dts: imx6sll: correct sdma compatible
+> > =A0 arm64: defconfig: Enable SDMA on i.mx8mq/8mm
+> > =A0 dmaengine: imx-sdma: add uart rom script
+> > =
+
+> > =A0.../devicetree/bindings/dma/fsl-imx-sdma.txt=A0=A0=A0=A0=A0=A0=A0|=
+=A0=A02 +
+> > =A0.../devicetree/bindings/spi/fsl-imx-cspi.txt=A0=A0=A0=A0=A0=A0=A0|=
+=A0=A01 +
+> > =A0arch/arm/boot/dts/imx6q.dtsi=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A02 +-
+> > =A0arch/arm/boot/dts/imx6qdl.dtsi=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A08 +-
+> > =A0arch/arm/boot/dts/imx6sll.dtsi=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A02 +-
+> > =A0arch/arm/boot/dts/imx6ul.dtsi=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A08 ++
+> > =A0arch/arm64/configs/defconfig=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A03 +
+> > =A0drivers/dma/imx-sdma.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0| 88
+> > ++++++++++++++++------
+> > =A0drivers/spi/spi-imx.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0| 61
+> > ++++++++++++---
+> > =A0include/linux/platform_data/dma-imx-sdma.h=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0| 11 ++-
+> > =A010 files changed, 145 insertions(+), 41 deletions(-)
+> > =
