@@ -1,215 +1,72 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 10/15] dt-bindings: display: Convert tpo,tpg110 panel to DT schema
-Date: Mon, 24 Jun 2019 15:56:44 -0600
-Message-ID: <20190624215649.8939-11-robh@kernel.org>
+Subject: [PATCH v2 07/15] dt-bindings: display: Convert pda,
+ 91-00156-a0 panel to DT schema
+Date: Mon, 24 Jun 2019 15:56:41 -0600
+Message-ID: <20190624215649.8939-8-robh@kernel.org>
 References: <20190624215649.8939-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20190624215649.8939-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert the tpo,tpg110 panel binding to DT schema.
-
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../bindings/display/panel/tpo,tpg110.txt     |  70 ------------
- .../bindings/display/panel/tpo,tpg110.yaml    | 101 ++++++++++++++++++
- 2 files changed, 101 insertions(+), 70 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/tpo,tpg110.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/panel/tpo,tpg110.txt b/Documentation/devicetree/bindings/display/panel/tpo,tpg110.txt
-deleted file mode 100644
-index 40f3d7c713bb..000000000000
---- a/Documentation/devicetree/bindings/display/panel/tpo,tpg110.txt
-+++ /dev/null
-@@ -1,70 +0,0 @@
--TPO TPG110 Panel
--================
--
--This panel driver is a component that acts as an intermediary
--between an RGB output and a variety of panels. The panel
--driver is strapped up in electronics to the desired resolution
--and other properties, and has a control interface over 3WIRE
--SPI. By talking to the TPG110 over SPI, the strapped properties
--can be discovered and the hardware is therefore mostly
--self-describing.
--
--       +--------+
--SPI -> |  TPO   | -> physical display
--RGB -> | TPG110 |
--       +--------+
--
--If some electrical strap or alternate resolution is desired,
--this can be set up by taking software control of the display
--over the SPI interface. The interface can also adjust
--for properties of the display such as gamma correction and
--certain electrical driving levels.
--
--The TPG110 does not know the physical dimensions of the panel
--connected, so this needs to be specified in the device tree.
--
--It requires a GPIO line for control of its reset line.
--
--The serial protocol has line names that resemble I2C but the
--protocol is not I2C but 3WIRE SPI.
--
--Required properties:
--- compatible : one of:
--  "ste,nomadik-nhk15-display", "tpo,tpg110"
--  "tpo,tpg110"
--- grestb-gpios : panel reset GPIO
--- width-mm : see display/panel/panel-common.txt
--- height-mm : see display/panel/panel-common.txt
--
--The device needs to be a child of an SPI bus, see
--spi/spi-bus.txt. The SPI child must set the following
--properties:
--- spi-3wire
--- spi-max-frequency = <3000000>;
--as these are characteristics of this device.
--
--The device node can contain one 'port' child node with one child
--'endpoint' node, according to the bindings defined in
--media/video-interfaces.txt. This node should describe panel's video bus.
--
--Example
---------
--
--panel: display@0 {
--	compatible = "tpo,tpg110";
--	reg = <0>;
--	spi-3wire;
--	/* 320 ns min period ~= 3 MHz */
--	spi-max-frequency = <3000000>;
--	/* Width and height from data sheet */
--	width-mm = <116>;
--	height-mm = <87>;
--	grestb-gpios = <&foo_gpio 5 GPIO_ACTIVE_LOW>;
--	backlight = <&bl>;
--
--	port {
--		nomadik_clcd_panel: endpoint {
--			remote-endpoint = <&foo>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml b/Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
-new file mode 100644
-index 000000000000..a51660b73f28
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
-@@ -0,0 +1,101 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/tpo,tpg110.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TPO TPG110 Panel
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+  - Thierry Reding <thierry.reding@gmail.com>
-+
-+description: |+
-+  This panel driver is a component that acts as an intermediary
-+  between an RGB output and a variety of panels. The panel
-+  driver is strapped up in electronics to the desired resolution
-+  and other properties, and has a control interface over 3WIRE
-+  SPI. By talking to the TPG110 over SPI, the strapped properties
-+  can be discovered and the hardware is therefore mostly
-+  self-describing.
-+
-+         +--------+
-+  SPI -> |  TPO   | -> physical display
-+  RGB -> | TPG110 |
-+         +--------+
-+
-+  If some electrical strap or alternate resolution is desired,
-+  this can be set up by taking software control of the display
-+  over the SPI interface. The interface can also adjust
-+  for properties of the display such as gamma correction and
-+  certain electrical driving levels.
-+
-+  The TPG110 does not know the physical dimensions of the panel
-+  connected, so this needs to be specified in the device tree.
-+
-+  It requires a GPIO line for control of its reset line.
-+
-+  The serial protocol has line names that resemble I2C but the
-+  protocol is not I2C but 3WIRE SPI.
-+
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - ste,nomadik-nhk15-display
-+          - const: tpo,tpg110
-+      - const: tpo,tpg110
-+
-+  reg: true
-+
-+  grestb-gpios:
-+    maxItems: 1
-+    description: panel reset GPIO
-+
-+  spi-3wire: true
-+
-+  spi-max-frequency:
-+    const: 3000000
-+
-+required:
-+  - compatible
-+  - reg
-+  - grestb-gpios
-+  - width-mm
-+  - height-mm
-+  - spi-3wire
-+  - spi-max-frequency
-+  - port
-+
-+examples:
-+  - |+
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      panel: display@0 {
-+        compatible = "tpo,tpg110";
-+        reg = <0>;
-+        spi-3wire;
-+        /* 320 ns min period ~= 3 MHz */
-+        spi-max-frequency = <3000000>;
-+        /* Width and height from data sheet */
-+        width-mm = <116>;
-+        height-mm = <87>;
-+        grestb-gpios = <&foo_gpio 5 1>;
-+        backlight = <&bl>;
-+
-+        port {
-+          nomadik_clcd_panel: endpoint {
-+            remote-endpoint = <&foo>;
-+          };
-+        };
-+      };
-+    };
-+
-+...
--- 
-2.20.1
+Q29udmVydCB0aGUgcGRhLDkxLTAwMTU2LWEwIHBhbmVsIGJpbmRpbmcgdG8gRFQgc2NoZW1hLgoK
+Q2M6IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+CkNjOiBTYW0gUmF2
+bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+CkNjOiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJk
+QGJvb3RsaW4uY29tPgpDYzogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVh
+c29uYm9hcmQuY29tPgpDYzogZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpTaWduZWQt
+b2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0KIC4uLi9kaXNwbGF5L3Bh
+bmVsL3BkYSw5MS0wMDE1Ni1hMC50eHQgICAgICAgICB8IDE0IC0tLS0tLS0tLS0tCiAuLi4vZGlz
+cGxheS9wYW5lbC9wZGEsOTEtMDAxNTYtYTAueWFtbCAgICAgICAgfCAyNSArKysrKysrKysrKysr
+KysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDI1IGluc2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygt
+KQogZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL3BkYSw5MS0wMDE1Ni1hMC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wZGEsOTEtMDAxNTYt
+YTAueWFtbAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL3BkYSw5MS0wMDE1Ni1hMC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wZGEsOTEtMDAxNTYtYTAudHh0CmRlbGV0ZWQgZmls
+ZSBtb2RlIDEwMDY0NAppbmRleCAxNjM5ZmIxN2E5ZjAuLjAwMDAwMDAwMDAwMAotLS0gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wZGEsOTEtMDAxNTYt
+YTAudHh0CisrKyAvZGV2L251bGwKQEAgLTEsMTQgKzAsMCBAQAotUERBIDkxLTAwMTU2LUEwIDUu
+MCIgV1ZHQSBURlQgTENEIHBhbmVsCi0KLVJlcXVpcmVkIHByb3BlcnRpZXM6Ci0tIGNvbXBhdGli
+bGU6IHNob3VsZCBiZSAicGRhLDkxLTAwMTU2LWEwIgotLSBwb3dlci1zdXBwbHk6IHRoaXMgcGFu
+ZWwgcmVxdWlyZXMgYSBzaW5nbGUgcG93ZXIgc3VwcGx5LiBBIHBoYW5kbGUgdG8gYQotcmVndWxh
+dG9yIG5lZWRzIHRvIGJlIHNwZWNpZmllZCBoZXJlLiBDb21wYXRpYmxlIHdpdGggcGFuZWwtY29t
+bW9uIGJpbmRpbmcgd2hpY2gKLWlzIHNwZWNpZmllZCBpbiB0aGUgcGFuZWwtY29tbW9uLnR4dCBp
+biB0aGlzIGRpcmVjdG9yeS4KLS0gYmFja2xpZ2h0OiB0aGlzIHBhbmVsJ3MgYmFja2xpZ2h0IGlz
+IGNvbnRyb2xsZWQgYnkgYW4gZXh0ZXJuYWwgYmFja2xpZ2h0Ci1jb250cm9sbGVyLiBBIHBoYW5k
+bGUgdG8gdGhpcyBjb250cm9sbGVyIG5lZWRzIHRvIGJlIHNwZWNpZmllZCBoZXJlLgotQ29tcGF0
+aWJsZSB3aXRoIHBhbmVsLWNvbW1vbiBiaW5kaW5nIHdoaWNoIGlzIHNwZWNpZmllZCBpbiB0aGUg
+cGFuZWwtY29tbW9uLnR4dAotaW4gdGhpcyBkaXJlY3RvcnkuCi0KLVRoaXMgYmluZGluZyBpcyBj
+b21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZp
+ZWQKLWluIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCmRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wZGEsOTEtMDAx
+NTYtYTAueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Bh
+bmVsL3BkYSw5MS0wMDE1Ni1hMC55YW1sCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAw
+MDAwMDAwMC4uY2VhNWJjYjNjNDU1Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGRhLDkxLTAwMTU2LWEwLnlhbWwKQEAg
+LTAsMCArMSwyNSBAQAorIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAorJVlBTUwg
+MS4yCistLS0KKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvZGlzcGxheS9wYW5l
+bC9wZGEsOTEtMDAxNTYtYTAueWFtbCMKKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9t
+ZXRhLXNjaGVtYXMvY29yZS55YW1sIworCit0aXRsZTogUERBIDkxLTAwMTU2LUEwIDUuMCIgV1ZH
+QSBURlQgTENEIHBhbmVsCisKK21haW50YWluZXJzOgorICAtIENyaXN0aWFuIEJpcnNhbiA8Y3Jp
+c3RpYW4uYmlyc2FuQG1pY3JvY2hpcC5jb20+CisgIC0gVGhpZXJyeSBSZWRpbmcgPHRoaWVycnku
+cmVkaW5nQGdtYWlsLmNvbT4KKworYWxsT2Y6CisgIC0gJHJlZjogcGFuZWwtY29tbW9uLnlhbWwj
+CisKK3Byb3BlcnRpZXM6CisgIGNvbXBhdGlibGU6CisgICAgY29uc3Q6IHBkYSw5MS0wMDE1Ni1h
+MAorCityZXF1aXJlZDoKKyAgLSBjb21wYXRpYmxlCisgIC0gcG93ZXItc3VwcGx5CisgIC0gYmFj
+a2xpZ2h0CisKKy4uLgotLSAKMi4yMC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWw=
