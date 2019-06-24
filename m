@@ -1,57 +1,70 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 08/11] thermal: sun8i: support ahb clocks
-Date: Mon, 24 Jun 2019 20:23:33 +0200
-Message-ID: <20190624182333.di7avywtdvzwukms@flea>
-References: <20190623164206.7467-1-tiny.windzz@gmail.com>
- <20190623164206.7467-9-tiny.windzz@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+Date: Mon, 24 Jun 2019 20:26:14 +0200
+Message-ID: <20190624182614.GC5690@piout.net>
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+ <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
+ <20190621164940.GL31306@lunn.ch>
+ <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+ <20190624115558.GA5690@piout.net>
+ <20190624142625.GR31306@lunn.ch>
+ <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
+ <20190624162431.GX31306@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190623164206.7467-9-tiny.windzz@gmail.com>
+In-Reply-To: <20190624162431.GX31306@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, davem@davemloft.net, gregkh@linuxfoundation.org, mchehab+samsung@kernel.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "Allan W. Nielsen" <allan.nielsen@microchip.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 23, 2019 at 12:42:03PM -0400, Yangtao Li wrote:
-> H3 has extra clock, so introduce something in ths_thermal_chip/ths_device
-> and adds the process of the clock.
->
-> This is pre-work for supprt it.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> index ed1c19bb27cf..04f53ffb6a14 100644
-> --- a/drivers/thermal/sun8i_thermal.c
-> +++ b/drivers/thermal/sun8i_thermal.c
-> @@ -54,6 +54,7 @@ struct tsensor {
->  };
->
->  struct ths_thermal_chip {
-> +	bool            has_ahb_clk;
->  	int		sensor_num;
->  	int		offset;
->  	int		scale;
-> @@ -69,6 +70,7 @@ struct ths_device {
->  	struct regmap				*regmap;
->  	struct reset_control			*reset;
->  	struct clk				*bus_clk;
-> +	struct clk                              *ahb_clk;
+On 24/06/2019 18:24:31+0200, Andrew Lunn wrote:
+> On Mon, Jun 24, 2019 at 05:23:45PM +0200, Allan W. Nielsen wrote:
+> > Hi Andrew,
+> > 
+> > The 06/24/2019 16:26, Andrew Lunn wrote:
+> > > > > Yeah, there are 2 ethernet controller ports (managed by the enetc driver) 
+> > > > > connected inside the SoC via SGMII links to 2 of the switch ports, one of
+> > > > > these switch ports can be configured as CPU port (with follow-up patches).
+> > > > > 
+> > > > > This configuration may look prettier on DSA, but the main restriction here
+> > > > > is that the entire functionality is provided by the ocelot driver which is a
+> > > > > switchdev driver.  I don't think it would be a good idea to copy-paste code
+> > > > > from ocelot to a separate dsa driver.
+> > > > > 
+> > > > 
+> > > > We should probably make the ocelot driver a DSA driver then...
+> > > An important part of DSA is being able to direct frames out specific
+> > > ports when they ingress via the CPU port. Does the silicon support
+> > > this? At the moment, i think it is using polled IO.
+> > 
+> > That is supported, it requires a bit of initial configuration of the Chip, but
+> > nothing big (I believe this configuration is part of Claudiu's change-set).
+> > 
+> > But how do you envision this done?
+> > 
+> > - Let the existing SwitchDev driver and the DSA driver use a set of common
+> >   functions.
+> > - Convert the existing Ocelot driver from SwitchDev to DSA
+> > - Fork (copy) the existing driver of Ocelot, and modify it as needed for the
+> >   Felix driver
+> > 
+> > My guess is the first one, but I would like to understand what you have in mind.
+> 
+> I don't know the various architectures the switch is used in. But it
+> does seem like a core library, and then a switchdev wrapper for Ocelot
+> and a DSA wrapper for Felix would make sense.
 
-Hmm, thinking a bit about this, the name of those two clocks doesn't
-make sense. AHB is the bus being used to access that device, so the
-bus clock is the AHB clock.
+Ocelot could also be used in a DSA setting where one port can be
+connected to an external MAC and be used to inject/extract frames
+to/from any other ports. In that case, the IFH would serve as the DSA
+tag.
 
-What is that clock being used for?
 
-Maxime
-
---
-Maxime Ripard, Bootlin
+-- 
+Alexandre Belloni, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
