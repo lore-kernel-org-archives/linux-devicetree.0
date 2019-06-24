@@ -1,92 +1,126 @@
-From: Jitao Shi <jitao.shi@mediatek.com>
-Subject: [v2 2/2] drm/panel: support for auo,kd101n80-45na wuxga dsi video mode panel
-Date: Mon, 24 Jun 2019 16:00:01 +0800
-Message-ID: <20190624080001.67222-3-jitao.shi@mediatek.com>
-References: <20190624080001.67222-1-jitao.shi@mediatek.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 2/5] clocksource/drivers/timer-microchip-pit64b: add
+ Microchip PIT64B support
+Date: Mon, 24 Jun 2019 10:06:57 +0200
+Message-ID: <1ebaa306-8a7f-fd58-56e0-a61b767357f7@linaro.org>
+References: <1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com>
+ <1552580772-8499-3-git-send-email-claudiu.beznea@microchip.com>
+ <a738fce5-1108-34d7-d255-dfcb86f51c56@linaro.org>
+ <20190408121141.GK7480@piout.net>
+ <88ab46de-c3b6-6dd2-3fa2-f2d0075e969f@microchip.com>
+ <7267f37b-4f80-97e3-7a8e-bc1a9a28b995@linaro.org>
+ <5e3d783e-7bcc-64c1-c814-eaf99a6aa205@microchip.com>
+ <845acd59-665a-4d0a-3da8-2ba605600928@linaro.org>
+ <34574b0f-7d09-eb92-ea62-4199c293b0e7@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190624080001.67222-1-jitao.shi@mediatek.com>
+In-Reply-To: <34574b0f-7d09-eb92-ea62-4199c293b0e7@microchip.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com, ck.hu@mediate
+To: Claudiu.Beznea@microchip.com, alexandre.belloni@bootlin.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, arnd.bergmann@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Auo,kd101n80-45na's connector is same as boe,tv101wum-nl6.
-The most codes can be reuse.
-So auo,kd101n80-45na and boe,tv101wum-nl6 use one driver file.
-Add the different parts in driver data.
+On 21/06/2019 12:34, Claudiu.Beznea@microchip.com wrote:
+> Hi Daniel,
+> 
+> On 20.06.2019 11:53, Daniel Lezcano wrote:
+>> Hi Claudiu,
+>>
+>> sorry for the late reply.
+> 
+> No problem, I understand.
+> 
+>>
+>>
+>> On 13/06/2019 16:12, Claudiu.Beznea@microchip.com wrote:
+>>> Hi Daniel,
+>>>
+>>> On 31.05.2019 13:41, Daniel Lezcano wrote:
+>>>>
+>>>> Hi Claudiu,
+>>>>
+>>>>
+>>>> On 30/05/2019 09:46, Claudiu.Beznea@microchip.com wrote:
+>>>>> Hi Daniel,
+>>>>>
+>>>>> Taking into account the discussion on this tread and the fact that we have
+>>>>> no answer from Rob on this topic (I'm talking about [1]), what do you think
+>>>>> it would be best for this driver to be accepted the soonest? Would it be OK
+>>>>> for you to mimic the approach done by:
+>>>>>
+>>>>> drivers/clocksource/timer-integrator-ap.c
+>>>>>
+>>>>> with the following bindings in DT:
+>>>>>
+>>>>> aliases {
+>>>>> 	arm,timer-primary = &timer2;
+>>>>> 	arm,timer-secondary = &timer1;
+>>>>> };
+>>>>>
+>>>>> also in PIT64B driver?
+>>>>>
+>>>>> Or do you think re-spinning the Alexandre's patches at [2] (which seems to
+>>>>> me like the generic way to do it) would be better?
+>>>>
+>>>> This hardware / OS connection problem is getting really annoying for
+>>>> everyone and this pattern is repeating itself since several years. It is
+>>>> time we fix it properly.
+>>>>
+>>>> The first solution looks hackish from my POV. The second approach looks
+>>>> nicer and generic as you say. So I would vote for [2]
+>>>> flagging approach proposed by Mark [3].
+>>>
+>>> With this flagging approach this would mean a kind unification of
+>>> clocksource and clockevent functionalities under a single one, right? So
+>>> that the driver would register to the above layers only one device w/ 2
+>>> functionalities (clocksource and clockevent)? Please correct me if I'm
+>>> wrong? If so, from my point of view this would require major re-working of
+>>> clocksource and clockevent subsystems. Correctly if I wrongly understood,
+>>> please.
+>>
+>> Well, actually I was not expecting to change all the framework but just
+>> pass a flag to the probe function telling if the node is for a
+>> clocksource, a clockevent or both.
+>>
+> 
+> Giving so, whit these proposals I'm thinking at having something like this,
+> using Alexandre's new macros from [2] and passing a bitmask to timer's
+> probing functions (in the above example adapted only for pit64b driver
+> introduced in this thread):
 
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
----
- .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Yes basically that is what I had in mind. Thanks for taking care of
+that. However after seeing the code I realize the impact is larger than
+expected as all the TIMER_OF_DECLARE will be impacted.
 
-diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-index 6e06c8506623..d1ee43cfcbe2 100644
---- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-+++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-@@ -372,6 +372,15 @@ static const struct panel_init_cmd boe_init_cmd[] = {
- 	{},
- };
- 
-+static const struct panel_init_cmd auo_init_cmd[] = {
-+	_INIT_DELAY_CMD(24),
-+	_INIT_DCS_CMD(0x11),
-+	_INIT_DELAY_CMD(120),
-+	_INIT_DCS_CMD(0x29),
-+	_INIT_DELAY_CMD(120),
-+	{},
-+};
-+
- static inline struct boe_panel *to_boe_panel(struct drm_panel *panel)
- {
- 	return container_of(panel, struct boe_panel, base);
-@@ -572,6 +581,34 @@ static const struct panel_desc boe_tv101wum_nl6_desc = {
- 	.init_cmds = boe_init_cmd,
- };
- 
-+static const struct drm_display_mode auo_default_mode = {
-+	.clock = 157000,
-+	.hdisplay = 1200,
-+	.hsync_start = 1200 + 80,
-+	.hsync_end = 1200 + 80 + 24,
-+	.htotal = 1200 + 80 + 24 + 36,
-+	.vdisplay = 1920,
-+	.vsync_start = 1920 + 16,
-+	.vsync_end = 1920 + 16 + 4,
-+	.vtotal = 1920 + 16 + 4 + 16,
-+	.vrefresh = 60,
-+	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-+};
-+
-+static const struct panel_desc auo_kd101n80_45na_desc = {
-+	.modes = &auo_default_mode,
-+	.bpc = 8,
-+	.size = {
-+		.width = 216,
-+		.height = 135,
-+	},
-+	.lanes = 4,
-+	.format = MIPI_DSI_FMT_RGB888,
-+	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-+		      MIPI_DSI_MODE_LPM,
-+	.init_cmds = auo_init_cmd,
-+};
-+
- static int boe_panel_get_modes(struct drm_panel *panel)
- {
- 	struct boe_panel *boe = to_boe_panel(panel);
-@@ -695,6 +732,9 @@ static const struct of_device_id boe_of_match[] = {
- 	{ .compatible = "boe,tv101wum-nl6",
- 	  .data = &boe_tv101wum_nl6_desc
- 	},
-+	{ .compatible = "auo,kd101n80-45na",
-+	  .data = &auo_kd101n80_45na_desc
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, boe_of_match);
+AFAICT, this driver can be converted to the timer-of API. So I think it
+makes sense to keep this contained in the API.
+
+In the function timer_of_init(), we can add the parsing of the node and
+set the timer-of flags with:
+
+#define TIMER_OF_IS_CLOCKSOURCE	 0x8
+#define TIMER_OF_IS_CLOCKEVENT  0x10
+
+In addition the API:
+
+int timer_of_is_clocksource(struct timer_of *to)
+{
+	return (to & TIMER_OF_IS_CLOCKSOURCE);
+}
+int timer_of_is_clockevents(struct timer_of *to)
+{
+	return (to & TIMER_OF_IS_CLOCKEVENT);
+}
+
+
+
+
 -- 
-2.21.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
