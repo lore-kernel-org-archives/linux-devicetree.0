@@ -1,163 +1,308 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv3 1/1] coresight: Do not default to CPU0 for missing CPU phandle
-Date: Mon, 24 Jun 2019 09:06:09 +0530
-Message-ID: <635466ab6a27781966bb083e93d2ca2729473ced.1561346998.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1561346998.git.saiprakash.ranjan@codeaurora.org>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [RFC PATCH] arm64: dts: fsl: wandboard: Add a device tree for
+ the PICO-PI-IMX8M
+Date: Mon, 24 Jun 2019 08:52:47 +0300
+Message-ID: <20190624055247.GA10377@localhost.localdomain>
+References: <20190620133252.31373-1-andradanciu1997@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1561346998.git.saiprakash.ranjan@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20190620133252.31373-1-andradanciu1997@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To: Andra Danciu <andradanciu1997@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, aisheng.dong@nxp.com, sriram.dash@nxp.com, pramod.kumar_1@nxp.com, bhaskar.upadhaya@nxp.com, vabhav.sharma@nxp.com, pankaj.bansal@nxp.com, richard.hu@technexion.com, l.stach@pengutronix.de, ping.bai@nxp.com, manivannan.sadhasivam@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, daniel.baluta@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Coresight platform support assumes that a missing "cpu" phandle
-defaults to CPU0. This could be problematic and unnecessarily binds
-components to CPU0, where they may not be. Let us make the DT binding
-rules a bit stricter by not defaulting to CPU0 for missing "cpu"
-affinity information.
+Hello Richard,
 
-Also in coresight etm and cpu-debug drivers, abort the probe
-for such cases.
+Nice to see you upstreaming this! Thumbs up!
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- .../bindings/arm/coresight-cpu-debug.txt         |  4 ++--
- .../devicetree/bindings/arm/coresight.txt        |  8 +++++---
- .../hwtracing/coresight/coresight-cpu-debug.c    |  3 +++
- drivers/hwtracing/coresight/coresight-etm3x.c    |  3 +++
- drivers/hwtracing/coresight/coresight-etm4x.c    |  3 +++
- drivers/hwtracing/coresight/coresight-platform.c | 16 ++++++++--------
- 6 files changed, 24 insertions(+), 13 deletions(-)
+Just few remarks to pmic node from me:
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-index 298291211ea4..f1de3247c1b7 100644
---- a/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-@@ -26,8 +26,8 @@ Required properties:
- 		processor core is clocked by the internal CPU clock, so it
- 		is enabled with CPU clock by default.
- 
--- cpu : the CPU phandle the debug module is affined to. When omitted
--	the module is considered to belong to CPU0.
-+- cpu : the CPU phandle the debug module is affined to. Do not assume it
-+        to default to CPU0 if omitted.
- 
- Optional properties:
- 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index 8a88ddebc1a2..fcc3bacfd8bc 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -59,6 +59,11 @@ its hardware characteristcs.
- 
- 	* port or ports: see "Graph bindings for Coresight" below.
- 
-+* Additional required property for Embedded Trace Macrocell (version 3.x and
-+  version 4.x):
-+	* cpu: the cpu phandle this ETM/PTM is affined to. Do not
-+	  assume it to default to CPU0 if omitted.
-+
- * Additional required properties for System Trace Macrocells (STM):
- 	* reg: along with the physical base address and length of the register
- 	  set as described above, another entry is required to describe the
-@@ -87,9 +92,6 @@ its hardware characteristcs.
- 	* arm,cp14: must be present if the system accesses ETM/PTM management
- 	  registers via co-processor 14.
- 
--	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
--	  source is considered to belong to CPU0.
--
- * Optional property for TMC:
- 
- 	* arm,buffer-size: size of contiguous buffer space for TMC ETR
-diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-index 07a1367c733f..58bfd6319f65 100644
---- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-+++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-@@ -579,6 +579,9 @@ static int debug_probe(struct amba_device *adev, const struct amba_id *id)
- 		return -ENOMEM;
- 
- 	drvdata->cpu = coresight_get_cpu(dev);
-+	if (drvdata->cpu < 0)
-+		return drvdata->cpu;
-+
- 	if (per_cpu(debug_drvdata, drvdata->cpu)) {
- 		dev_err(dev, "CPU%d drvdata has already been initialized\n",
- 			drvdata->cpu);
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
-index 225c2982e4fe..e2cb6873c3f2 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x.c
-@@ -816,6 +816,9 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
- 	}
- 
- 	drvdata->cpu = coresight_get_cpu(dev);
-+	if (drvdata->cpu < 0)
-+		return drvdata->cpu;
-+
- 	desc.name  = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
- 	if (!desc.name)
- 		return -ENOMEM;
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 7fe266194ab5..7bcac8896fc1 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -1101,6 +1101,9 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
- 	spin_lock_init(&drvdata->spinlock);
- 
- 	drvdata->cpu = coresight_get_cpu(dev);
-+	if (drvdata->cpu < 0)
-+		return drvdata->cpu;
-+
- 	desc.name = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
- 	if (!desc.name)
- 		return -ENOMEM;
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index 3c5ceda8db24..4990da2c13e9 100644
---- a/drivers/hwtracing/coresight/coresight-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -159,16 +159,16 @@ static int of_coresight_get_cpu(struct device *dev)
- 	struct device_node *dn;
- 
- 	if (!dev->of_node)
--		return 0;
-+		return -ENODEV;
-+
- 	dn = of_parse_phandle(dev->of_node, "cpu", 0);
--	/* Affinity defaults to CPU0 */
- 	if (!dn)
--		return 0;
-+		return -ENODEV;
-+
- 	cpu = of_cpu_node_to_id(dn);
- 	of_node_put(dn);
- 
--	/* Affinity to CPU0 if no cpu nodes are found */
--	return (cpu < 0) ? 0 : cpu;
-+	return cpu;
- }
- 
- /*
-@@ -734,14 +734,14 @@ static int acpi_coresight_get_cpu(struct device *dev)
- 	struct acpi_device *adev = ACPI_COMPANION(dev);
- 
- 	if (!adev)
--		return 0;
-+		return -ENODEV;
- 	status = acpi_get_parent(adev->handle, &cpu_handle);
- 	if (ACPI_FAILURE(status))
--		return 0;
-+		return -ENODEV;
- 
- 	cpu = acpi_handle_to_logical_cpuid(cpu_handle);
- 	if (cpu >= nr_cpu_ids)
--		return 0;
-+		return -ENODEV;
- 	return cpu;
- }
- 
+On Thu, Jun 20, 2019 at 04:32:52PM +0300, Andra Danciu wrote:
+> From: Richard Hu <richard.hu@technexion.com>
+> 
+> The current level of support yields a working console and is able to boot
+> userspace from an initial ramdisk copied via u-boot in RAM.
+> 
+> Additional subsystems that are active :
+> 	- Ethernet
+> 	- USB
+> 
+> Cc: Daniel Baluta <daniel.baluta@nxp.com>
+> Signed-off-by: Richard Hu <richard.hu@technexion.com>
+> Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+> ---
+>  I am using pico-pi-8mxm board to work on my project for Google Summer of Code.
+>  This is based on patches from https://github.com/wandboard-org.
+> 
+>  arch/arm64/boot/dts/freescale/Makefile       |   1 +
+>  arch/arm64/boot/dts/freescale/wand-pi-8m.dts | 590 +++++++++++++++++++++++++++
+>  2 files changed, 591 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/wand-pi-8m.dts
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 984554343c83..5904d6a8a033 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -23,3 +23,4 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
+> +dtb-$(CONFIG_ARCH_MXC) += wand-pi-8m.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/wand-pi-8m.dts b/arch/arm64/boot/dts/freescale/wand-pi-8m.dts
+> new file mode 100644
+> index 000000000000..9f7121014722
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/wand-pi-8m.dts
+> @@ -0,0 +1,590 @@
+
+// snip
+
+> +
+> +&i2c1 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +
+> +	typec_tusb320:tusb320@47 {
+> +		compatible = "ti,tusb320";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_tusb320_irq &pinctrl_typec_ss_sel>;
+> +		reg = <0x47>;
+> +		vbus-supply = <&reg_usb_otg_vbus>;
+> +		ss-sel-gpios = <&gpio3 5 GPIO_ACTIVE_HIGH>;
+> +		tusb320,int-gpio = <&gpio3 6 GPIO_ACTIVE_LOW>;
+> +		tusb320,select-mode = <0>;
+> +		tusb320,dfp-power = <0>;
+> +	};
+> +
+> +	pmic: bd71837@4b {
+
+I was once told the node names should be generic :] So, I'd suggest
+using "pmic@4b".
+
+> +		reg = <0x4b>;
+> +		compatible = "rohm,bd71837";
+> +		/* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
+> +		pinctrl-0 = <&pinctrl_pmic>;
+> +		gpio_intr = <&gpio1 3 GPIO_ACTIVE_LOW>;
+> +
+> +		bd71837,pmic-buck1-uses-i2c-dvs;
+> +		bd71837,pmic-buck1-dvs-voltage = <900000>, <850000>, <800000>; /* VDD_SOC: Run-Idle-Suspend */
+> +		bd71837,pmic-buck2-uses-i2c-dvs;
+> +		bd71837,pmic-buck2-dvs-voltage = <1000000>, <900000>, <0>; /* VDD_ARM: Run-Idle */
+> +		bd71837,pmic-buck3-uses-i2c-dvs;
+> +		bd71837,pmic-buck3-dvs-voltage = <1000000>, <0>, <0>; /* VDD_GPU: Run */
+> +		bd71837,pmic-buck4-uses-i2c-dvs;
+> +		bd71837,pmic-buck4-dvs-voltage = <1000000>, <0>, <0>; /* VDD_VPU: Run */
+
+These entries should be replaced by proper properties for run-level voltage
+configuration. Please see the
+Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt and
+Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt.
+
+I think you wish to use rohm,dvs-run-voltage, rohm,dvs-idle-voltage,
+and rohm,dvs-suspend-voltage instead.
+
+Furthermore, I see you are not specifying rohm,reset-snvs-powered.
+I wonder if it is intentional to not use SNVS as reset target. Seeing you
+use i.MX8 and seeing used those unsupported run-level configuration properties
+which were present only in some very first proprietary driver draft - I
+expect this may not be intentional. I think that early driver defaulted
+to SNVS while it also failed to provide any regulator enable/disable
+control.
+
+> +
+> +		gpo {
+> +			rohm,drv = <0x0C>;	/* 0b0000_1100 all gpos with cmos output mode */
+> +		};
+
+What is this?
+
+> +
+> +		regulators {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			buck1_reg: regulator@0 {
+
+I don't think the node names are correct. As far as I know the regulator
+core uses node names - please see the valid names from documentation.
+
+> +				reg = <0>;
+> +				regulator-compatible = "buck1";
+I think you shouldn't use regulator-compatible. On the other hand, I
+think you should use regulator-name.
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <1250>;
+> +			};
+> +
+> +			buck2_reg: regulator@1 {
+> +				reg = <1>;
+> +				regulator-compatible = "buck2";
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <1250>;
+> +			};
+> +
+> +			buck3_reg: regulator@2 {
+> +				reg = <2>;
+> +				regulator-compatible = "buck3";
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+
+In typical BD71837 use-cases the buck 3 is used to power graphichs accelerator.
+I wonder if enable/disable control should be allowed to help thermal
+issues and power saving? (This comment can be ignored if not applicaple
+to your board)
+
+> +			};
+> +
+> +			buck4_reg: regulator@3 {
+> +				reg = <3>;
+> +				regulator-compatible = "buck4";
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+
+In typical BD71837 use-cases the buck 4 is used to power VPU.
+I wonder if enable/disable control should be allowed to help thermal
+issues and power saving? (This comment can be ignored if not applicaple          
+to your board)
+
+> +			};
+> +
+> +			buck5_reg: regulator@4 {
+> +				reg = <4>;
+> +				regulator-compatible = "buck5";
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck6_reg: regulator@5 {
+> +				reg = <5>;
+> +				regulator-compatible = "buck6";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck7_reg: regulator@6 {
+> +				reg = <6>;
+> +				regulator-compatible = "buck7";
+> +				regulator-min-microvolt = <1605000>;
+> +				regulator-max-microvolt = <1995000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck8_reg: regulator@7 {
+> +				reg = <7>;
+> +				regulator-compatible = "buck8";
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1400000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo1_reg: regulator@8 {
+> +				reg = <8>;
+> +				regulator-compatible = "ldo1";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo2_reg: regulator@9 {
+> +				reg = <9>;
+> +				regulator-compatible = "ldo2";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <900000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo3_reg: regulator@10 {
+> +				reg = <10>;
+> +				regulator-compatible = "ldo3";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo4_reg: regulator@11 {
+> +				reg = <11>;
+> +				regulator-compatible = "ldo4";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo5_reg: regulator@12 {
+> +				reg = <12>;
+> +				regulator-compatible = "ldo5";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+
+You may want to mark the BUCK6 as a supply for LDO5.
+
+> +			};
+> +
+> +			ldo6_reg: regulator@13 {
+> +				reg = <13>;
+> +				regulator-compatible = "ldo6";
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+
+You may want to mark the BUCK7 as a supply for LDO6.
+
+> +			};
+> +
+> +			ldo7_reg: regulator@14 {
+> +				reg = <14>;
+> +				regulator-compatible = "ldo7";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+
+Best Regards
+	Matti Vaittinen
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
