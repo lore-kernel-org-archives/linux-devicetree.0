@@ -1,70 +1,434 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Date: Mon, 24 Jun 2019 20:26:14 +0200
-Message-ID: <20190624182614.GC5690@piout.net>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
- <20190621164940.GL31306@lunn.ch>
- <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
- <20190624115558.GA5690@piout.net>
- <20190624142625.GR31306@lunn.ch>
- <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
- <20190624162431.GX31306@lunn.ch>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v3 1/2] ARM: dts: Add ZII support for ZII i.MX7 RMU2 board
+Date: Mon, 24 Jun 2019 11:30:43 -0700
+Message-ID: <20190624183044.30240-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190624162431.GX31306@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "Allan W. Nielsen" <allan.nielsen@microchip.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Bob Langer <Bob.Langer@zii.aero>, Liang Pan <Liang.Pan@zii.aero>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/06/2019 18:24:31+0200, Andrew Lunn wrote:
-> On Mon, Jun 24, 2019 at 05:23:45PM +0200, Allan W. Nielsen wrote:
-> > Hi Andrew,
-> > 
-> > The 06/24/2019 16:26, Andrew Lunn wrote:
-> > > > > Yeah, there are 2 ethernet controller ports (managed by the enetc driver) 
-> > > > > connected inside the SoC via SGMII links to 2 of the switch ports, one of
-> > > > > these switch ports can be configured as CPU port (with follow-up patches).
-> > > > > 
-> > > > > This configuration may look prettier on DSA, but the main restriction here
-> > > > > is that the entire functionality is provided by the ocelot driver which is a
-> > > > > switchdev driver.  I don't think it would be a good idea to copy-paste code
-> > > > > from ocelot to a separate dsa driver.
-> > > > > 
-> > > > 
-> > > > We should probably make the ocelot driver a DSA driver then...
-> > > An important part of DSA is being able to direct frames out specific
-> > > ports when they ingress via the CPU port. Does the silicon support
-> > > this? At the moment, i think it is using polled IO.
-> > 
-> > That is supported, it requires a bit of initial configuration of the Chip, but
-> > nothing big (I believe this configuration is part of Claudiu's change-set).
-> > 
-> > But how do you envision this done?
-> > 
-> > - Let the existing SwitchDev driver and the DSA driver use a set of common
-> >   functions.
-> > - Convert the existing Ocelot driver from SwitchDev to DSA
-> > - Fork (copy) the existing driver of Ocelot, and modify it as needed for the
-> >   Felix driver
-> > 
-> > My guess is the first one, but I would like to understand what you have in mind.
-> 
-> I don't know the various architectures the switch is used in. But it
-> does seem like a core library, and then a switchdev wrapper for Ocelot
-> and a DSA wrapper for Felix would make sense.
+Add support for ZII's i.MX7 based Remote Modem Unit 2 (RMU2) board.
 
-Ocelot could also be used in a DSA setting where one port can be
-connected to an external MAC and be used to inject/extract frames
-to/from any other ports. In that case, the IFH would serve as the DSA
-tag.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Bob Langer <Bob.Langer@zii.aero>
+Cc: Liang Pan <Liang.Pan@zii.aero>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+---
+
+Changes since [v2]:
+
+    - Drop pmic label
+
+    - Rename phy -> ethernet-phy
+
+    - Drop snvs_pwrkey configuration
+    
+    - Move snvs_rtc up, to keep things alphabetical
+    
+    - Rename debuggrp -> ledsgrp
+
+    - Collected Reviewed-by from Fabio
+
+Changes since [v1]:
+
+    - Added missing #address-cells and #size-cells
+
+    - Replaced reset-gpio -> reset-gpios
 
 
+[v1] lore.kernel.org/r/20190614080317.16850-1-andrew.smirnov@gmail.com
+[v2] lore.kernel.org/r/20190617153025.12120-1-andrew.smirnov@gmail.com
+
+ arch/arm/boot/dts/Makefile           |   1 +
+ arch/arm/boot/dts/imx7d-zii-rmu2.dts | 357 +++++++++++++++++++++++++++
+ 2 files changed, 358 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx7d-zii-rmu2.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 5559028b770e..516e2912236d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -593,6 +593,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+ 	imx7d-sdb.dtb \
+ 	imx7d-sdb-reva.dtb \
+ 	imx7d-sdb-sht11.dtb \
++	imx7d-zii-rmu2.dtb \
+ 	imx7d-zii-rpu2.dtb \
+ 	imx7s-colibri-eval-v3.dtb \
+ 	imx7s-mba7.dtb \
+diff --git a/arch/arm/boot/dts/imx7d-zii-rmu2.dts b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
+new file mode 100644
+index 000000000000..2b8d6cc45a53
+--- /dev/null
++++ b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
+@@ -0,0 +1,357 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Device tree file for ZII's RMU2 board
++ *
++ * RMU - Remote Modem Unit
++ *
++ * Copyright (C) 2019 Zodiac Inflight Innovations
++ */
++
++/dts-v1/;
++#include <dt-bindings/thermal/thermal.h>
++#include "imx7d.dtsi"
++
++/ {
++	model = "ZII RMU2 Board";
++	compatible = "zii,imx7d-rmu2", "fsl,imx7d";
++
++	chosen {
++		stdout-path = &uart2;
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = <&pinctrl_leds_debug>;
++		pinctrl-names = "default";
++
++		debug {
++			label = "zii:green:debug1";
++			gpios = <&gpio2 8 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++};
++
++&cpu0 {
++	arm-supply = <&sw1a_reg>;
++};
++
++&ecspi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi1>;
++	cs-gpios = <&gpio4 19 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++	};
++};
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet1>;
++	assigned-clocks = <&clks IMX7D_ENET1_TIME_ROOT_SRC>,
++			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
++	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
++	assigned-clock-rates = <0>, <100000000>;
++	phy-mode = "rgmii";
++	phy-handle = <&fec1_phy>;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		fec1_phy: ethernet-phy@0 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_enet1_phy_reset>,
++				    <&pinctrl_enet1_phy_interrupt>;
++			reg = <0>;
++			interrupt-parent = <&gpio1>;
++			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++			reset-gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	pmic@8 {
++		compatible = "fsl,pfuze3000";
++		reg = <0x08>;
++
++		regulators {
++			sw1a_reg: sw1a {
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw1c_reg: sw1b {
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1475000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <1500000>;
++				regulator-max-microvolt = <1850000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3a_reg: sw3 {
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1650000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vgen1_reg: vldo1 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen2_reg: vldo2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++				regulator-always-on;
++			};
++
++			vgen3_reg: vccsd {
++				regulator-min-microvolt = <2850000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen4_reg: v33 {
++				regulator-min-microvolt = <2850000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vldo3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vldo4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++		};
++	};
++
++	eeprom@50 {
++		compatible = "atmel,24c04";
++		reg = <0x50>;
++	};
++
++	eeprom@52 {
++		compatible = "atmel,24c04";
++		reg = <0x52>;
++	};
++};
++
++&snvs_rtc {
++	status = "disabled";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	assigned-clocks = <&clks IMX7D_UART2_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
++	status = "okay";
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	assigned-clocks = <&clks IMX7D_UART4_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
++	status = "okay";
++
++	rave-sp {
++		compatible = "zii,rave-sp-rdu2";
++		current-speed = <1000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		watchdog {
++			compatible = "zii,rave-sp-watchdog";
++		};
++
++		eeprom@a3 {
++			compatible = "zii,rave-sp-eeprom";
++			reg = <0xa3 0x4000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			zii,eeprom-name = "main-eeprom";
++		};
++	};
++};
++
++&usbotg2 {
++	dr_mode = "host";
++	disable-over-current;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	bus-width = <4>;
++	no-1-8-v;
++	no-sdio;
++	keep-power-in-suspend;
++	status = "okay";
++};
++
++&usdhc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	bus-width = <8>;
++	no-1-8-v;
++	non-removable;
++	no-sdio;
++	no-sd;
++	keep-power-in-suspend;
++	status = "okay";
++};
++
++&wdog1 {
++	status = "disabled";
++};
++
++&iomuxc {
++	pinctrl_ecspi1: ecspi1grp {
++		fsl,pins = <
++			MX7D_PAD_ECSPI1_SCLK__ECSPI1_SCLK	0x2
++			MX7D_PAD_ECSPI1_MOSI__ECSPI1_MOSI	0x2
++			MX7D_PAD_ECSPI1_MISO__ECSPI1_MISO	0x2
++			MX7D_PAD_ECSPI1_SS0__GPIO4_IO19         0x59
++		>;
++	};
++
++	pinctrl_enet1: enet1grp {
++		fsl,pins = <
++			MX7D_PAD_SD2_CD_B__ENET1_MDIO				0x3
++			MX7D_PAD_SD2_WP__ENET1_MDC				0x3
++			MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC		0x1
++			MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0		0x1
++			MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1		0x1
++			MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2		0x1
++			MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3		0x1
++			MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL		0x1
++			MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC		0x1
++			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0		0x1
++			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1		0x1
++			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2		0x1
++			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3		0x1
++			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL		0x1
++		>;
++	};
++
++	pinctrl_enet1_phy_reset: enet1phyresetgrp {
++		fsl,pins = <
++			MX7D_PAD_SD2_RESET_B__GPIO5_IO11	0x14
++
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX7D_PAD_I2C1_SDA__I2C1_SDA		0x4000007f
++			MX7D_PAD_I2C1_SCL__I2C1_SCL		0x4000007f
++		>;
++	};
++
++	pinctrl_leds_debug: ledsgrp {
++		fsl,pins = <
++			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x59
++		>;
++	};
++
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX7D_PAD_UART2_RX_DATA__UART2_DCE_RX	0x79
++			MX7D_PAD_UART2_TX_DATA__UART2_DCE_TX	0x79
++		>;
++	};
++
++	pinctrl_uart4: uart4grp {
++		fsl,pins = <
++			MX7D_PAD_SD2_DATA0__UART4_DCE_RX	0x79
++			MX7D_PAD_SD2_DATA1__UART4_DCE_TX	0x79
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX7D_PAD_SD1_CMD__SD1_CMD		0x59
++			MX7D_PAD_SD1_CLK__SD1_CLK		0x19
++			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
++			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
++			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
++			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
++		>;
++	};
++
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
++			MX7D_PAD_SD3_CLK__SD3_CLK		0x19
++			MX7D_PAD_SD3_DATA0__SD3_DATA0		0x59
++			MX7D_PAD_SD3_DATA1__SD3_DATA1		0x59
++			MX7D_PAD_SD3_DATA2__SD3_DATA2		0x59
++			MX7D_PAD_SD3_DATA3__SD3_DATA3		0x59
++			MX7D_PAD_SD3_DATA4__SD3_DATA4		0x59
++			MX7D_PAD_SD3_DATA5__SD3_DATA5		0x59
++			MX7D_PAD_SD3_DATA6__SD3_DATA6		0x59
++			MX7D_PAD_SD3_DATA7__SD3_DATA7		0x59
++			MX7D_PAD_SD3_RESET_B__SD3_RESET_B	0x59
++		>;
++	};
++};
++
++&iomuxc_lpsr {
++	pinctrl_enet1_phy_interrupt: enet1phyinterruptgrp {
++		fsl,phy = <
++			MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2	0x08
++		>;
++	};
++};
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.21.0
