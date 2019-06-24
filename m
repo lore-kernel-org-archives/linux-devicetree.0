@@ -1,244 +1,315 @@
-From: Tokunori Ikegami <ikegami.t@gmail.com>
-Subject: Re: [PATCH v7 1/5] mtd: cfi_cmdset_0002: Add support for polling
- status register
-Date: Tue, 25 Jun 2019 01:46:13 +0900
-Message-ID: <571484c7-0cf4-6a7d-6d7f-375cfb13ce8b@gmail.com>
-References: <20190620172250.9102-1-vigneshr@ti.com>
- <20190620172250.9102-2-vigneshr@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3] ARM: dts: exynos: Add regulator suspend configuration to Odroid XU3/XU4/HC1 family
+Date: Mon, 24 Jun 2019 18:54:19 +0200
+Message-ID: <20190624165419.4704-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190620172250.9102-2-vigneshr@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh Raghavendra <vigneshr@ti.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Anand Moon <linux.amoon@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Add the PMIC regulator suspend configuration to entire Odroid
+XU3/XU4/HC1 family of boards to reduce power usage during suspend.  The
+configuration is based on vendor (Hardkernel) reference kernel with
+additional buck9 suspend configuration (for USB hub suspend and proper
+reset).
 
-On 2019/06/21 2:22, Vignesh Raghavendra wrote:
-> HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
-> Set (0x0002) for flash operations, therefore
-> drivers/mtd/chips/cfi_cmdset_0002.c can be used as is. But these devices
-> do not support DQ polling method of determining chip ready/good status.
-> These flashes provide Status Register whose bits can be polled to know
-> status of flash operation.
->
-> Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
-> Extended Query version 1.5. Bit 0 of "Software Features supported" field
-> of CFI Primary Vendor-Specific Extended Query table indicates
-> presence/absence of status register and Bit 1 indicates whether or not
-> DQ polling is supported. Using these bits, its possible to determine
-> whether flash supports DQ polling or need to use Status Register.
->
-> Add support for polling Status Register to know device ready/status of
-> erase/write operations when DQ polling is not supported.
-> Print error messages on erase/program failure by looking at related
-> Status Register bits.
->
-> [1] https://www.cypress.com/file/213346/download
->
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
-> v7: No change
->
->   drivers/mtd/chips/cfi_cmdset_0002.c | 90 +++++++++++++++++++++++++++++
->   include/linux/mtd/cfi.h             |  5 ++
->   2 files changed, 95 insertions(+)
->
-> diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
-> index c8fa5906bdf9..0f571f162e3b 100644
-> --- a/drivers/mtd/chips/cfi_cmdset_0002.c
-> +++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-> @@ -49,6 +49,16 @@
->   #define SST49LF008A		0x005a
->   #define AT49BV6416		0x00d6
->   
-> +/*
-> + * Status Register bit description. Used by flash devices that don't
-> + * support DQ polling (e.g. HyperFlash)
-> + */
-> +#define CFI_SR_DRB		BIT(7)
-> +#define CFI_SR_ESB		BIT(5)
-> +#define CFI_SR_PSB		BIT(4)
-> +#define CFI_SR_WBASB		BIT(3)
-> +#define CFI_SR_SLSB		BIT(1)
-> +
->   static int cfi_amdstd_read (struct mtd_info *, loff_t, size_t, size_t *, u_char *);
->   static int cfi_amdstd_write_words(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
->   static int cfi_amdstd_write_buffers(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
-> @@ -97,6 +107,48 @@ static struct mtd_chip_driver cfi_amdstd_chipdrv = {
->   	.module		= THIS_MODULE
->   };
->   
-> +/*
-> + * Use status register to poll for Erase/write completion when DQ is not
-> + * supported. This is indicated by Bit[1:0] of SoftwareFeatures field in
-> + * CFI Primary Vendor-Specific Extended Query table 1.5
-> + */
-> +static int cfi_use_status_reg(struct cfi_private *cfi)
-> +{
-> +	struct cfi_pri_amdstd *extp = cfi->cmdset_priv;
-> +
-> +	return extp->MinorVersion >= '5' &&
-> +		(extp->SoftwareFeatures & 0x3) == 0x1;
+Energy consumption measurements from Marek Szyprowski during suspend to
+RAM:
+ - all at 5 V power supply,
+ - before: next-20190620,
+ - after: next-20190620 + this patch + suspend configuration for s2mps11
+          regulator driver,
 
-Seems to be better to use defined values instead of 0x3 and 0x1 hard 
-coded values.
+Board              | before [mA] | after [mA] |
+Odroid HC1         |         120 |       7-10 |
+Odroid XU4, sdcard |          88 |        6-9 |
+Odroid XU4, eMMC   |         100 |        6-9 |
 
-> +}
-> +
-> +static void cfi_check_err_status(struct map_info *map, unsigned long adr)
-> +{
-> +	struct cfi_private *cfi = map->fldrv_priv;
-> +	map_word status;
-> +
-> +	if (!cfi_use_status_reg(cfi))
-> +		return;
-> +
-> +	cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Anand Moon <linux.amoon@gmail.com>
 
-Is it not necessary to set chip->start as the base parameter for 
-cfi_send_gen_cmd()?
+---
 
-> +			 cfi->device_type, NULL);
-> +	status = map_read(map, adr);
-> +
-> +	if (map_word_bitsset(map, status, CMD(0x3a))) {
-> +		unsigned long chipstatus = MERGESTATUS(status);
-> +
-> +		if (chipstatus & CFI_SR_ESB)
-> +			pr_err("%s erase operation failed, status %lx\n",
-> +			       map->name, chipstatus);
-> +		if (chipstatus & CFI_SR_PSB)
-> +			pr_err("%s program operation failed, status %lx\n",
-> +			       map->name, chipstatus);
-> +		if (chipstatus & CFI_SR_WBASB)
-> +			pr_err("%s buffer program command aborted, status %lx\n",
-> +			       map->name, chipstatus);
-> +		if (chipstatus & CFI_SR_SLSB)
-> +			pr_err("%s sector write protected, status %lx\n",
-> +			       map->name, chipstatus);
-> +	}
-> +}
->   
->   /* #define DEBUG_CFI_FEATURES */
->   
-> @@ -744,8 +796,22 @@ static struct mtd_info *cfi_amdstd_setup(struct mtd_info *mtd)
->    */
->   static int __xipram chip_ready(struct map_info *map, unsigned long addr)
->   {
-> +	struct cfi_private *cfi = map->fldrv_priv;
->   	map_word d, t;
->   
-> +	if (cfi_use_status_reg(cfi)) {
-> +		map_word ready = CMD(CFI_SR_DRB);
-> +		/*
-> +		 * For chips that support status register, check device
-> +		 * ready bit
-> +		 */
-> +		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
+Tested on XU3 and HC1 with SD card.
 
-Same comment as cfi_check_err_status() about the base address.
+---
 
-> +				 cfi->device_type, NULL);
-> +		d = map_read(map, addr);
-> +
-> +		return map_word_andequal(map, d, ready, ready);
-> +	}
-> +
->   	d = map_read(map, addr);
->   	t = map_read(map, addr);
->   
-> @@ -769,8 +835,27 @@ static int __xipram chip_ready(struct map_info *map, unsigned long addr)
->    */
->   static int __xipram chip_good(struct map_info *map, unsigned long addr, map_word expected)
->   {
-> +	struct cfi_private *cfi = map->fldrv_priv;
->   	map_word oldd, curd;
->   
-> +	if (cfi_use_status_reg(cfi)) {
-> +		map_word ready = CMD(CFI_SR_DRB);
-> +		map_word err = CMD(CFI_SR_PSB | CFI_SR_ESB);
+Changes since v2:
+1. Suspend also buck9, as suggested by Anand.
+2. Add Anand's tag.
 
-Is it not necessary to check CFI_SR_WBASB and CFI_SR_SLSB that are 
-checked by cfi_check_err_status()?
+Changes since v1:
+1. Add Marek's tag.
+---
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 96 +++++++++++++++++++
+ 1 file changed, 96 insertions(+)
 
-> +		/*
-> +		 * For chips that support status register, check device
-> +		 * ready bit and Erase/Program status bit to know if
-> +		 * operation succeeded.
-> +		 */
-> +		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-
-Same as cfi_check_err_status() and chip_ready() about the base address.
-
-> +				 cfi->device_type, NULL);
-> +		curd = map_read(map, addr);
-> +
-> +		if (map_word_andequal(map, curd, ready, ready))
-> +			return !map_word_bitsset(map, curd, err);
-> +
-> +		return 0;
-> +	}
-> +
->   	oldd = map_read(map, addr);
->   	curd = map_read(map, addr);
->   
-> @@ -1644,6 +1729,7 @@ static int __xipram do_write_oneword(struct map_info *map, struct flchip *chip,
->   	/* Did we succeed? */
->   	if (!chip_good(map, adr, datum)) {
->   		/* reset on all failures. */
-> +		cfi_check_err_status(map, adr);
->   		map_write(map, CMD(0xF0), chip->start);
->   		/* FIXME - should have reset delay before continuing */
->   
-> @@ -1901,6 +1987,7 @@ static int __xipram do_write_buffer(struct map_info *map, struct flchip *chip,
->   	 * See e.g.
->   	 * http://www.spansion.com/Support/Application%20Notes/MirrorBit_Write_Buffer_Prog_Page_Buffer_Read_AN.pdf
->   	 */
-> +	cfi_check_err_status(map, adr);
->   	cfi_send_gen_cmd(0xAA, cfi->addr_unlock1, chip->start, map, cfi,
->   			 cfi->device_type, NULL);
->   	cfi_send_gen_cmd(0x55, cfi->addr_unlock2, chip->start, map, cfi,
-> @@ -2107,6 +2194,7 @@ static int do_panic_write_oneword(struct map_info *map, struct flchip *chip,
->   
->   	if (!chip_good(map, adr, datum)) {
->   		/* reset on all failures. */
-> +		cfi_check_err_status(map, adr);
->   		map_write(map, CMD(0xF0), chip->start);
->   		/* FIXME - should have reset delay before continuing */
->   
-> @@ -2316,6 +2404,7 @@ static int __xipram do_erase_chip(struct map_info *map, struct flchip *chip)
->   	/* Did we succeed? */
->   	if (ret) {
->   		/* reset on all failures. */
-> +		cfi_check_err_status(map, adr);
->   		map_write(map, CMD(0xF0), chip->start);
->   		/* FIXME - should have reset delay before continuing */
->   
-> @@ -2412,6 +2501,7 @@ static int __xipram do_erase_oneblock(struct map_info *map, struct flchip *chip,
->   	/* Did we succeed? */
->   	if (ret) {
->   		/* reset on all failures. */
-> +		cfi_check_err_status(map, adr);
->   		map_write(map, CMD(0xF0), chip->start);
->   		/* FIXME - should have reset delay before continuing */
->   
-> diff --git a/include/linux/mtd/cfi.h b/include/linux/mtd/cfi.h
-> index 208c87cf2e3e..b50416169049 100644
-> --- a/include/linux/mtd/cfi.h
-> +++ b/include/linux/mtd/cfi.h
-> @@ -219,6 +219,11 @@ struct cfi_pri_amdstd {
->   	uint8_t  VppMin;
->   	uint8_t  VppMax;
->   	uint8_t  TopBottom;
-> +	/* Below field are added from version 1.5 */
-> +	uint8_t  ProgramSuspend;
-> +	uint8_t  UnlockBypass;
-> +	uint8_t  SecureSiliconSector;
-> +	uint8_t  SoftwareFeatures;
->   } __packed;
->   
->   /* Vendor-Specific PRI for Atmel chips (command set 0x0002) */
+diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+index 0f967259ad29..9843d21d6924 100644
+--- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+@@ -177,6 +177,10 @@
+ 				regulator-name = "vdd_adc";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo5_reg: LDO5 {
+@@ -184,6 +188,10 @@
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-always-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo6_reg: LDO6 {
+@@ -191,6 +199,10 @@
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <1000000>;
+ 				regulator-always-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo7_reg: LDO7 {
+@@ -198,6 +210,10 @@
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-always-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo8_reg: LDO8 {
+@@ -205,6 +221,10 @@
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-always-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo9_reg: LDO9 {
+@@ -212,6 +232,10 @@
+ 				regulator-min-microvolt = <3000000>;
+ 				regulator-max-microvolt = <3000000>;
+ 				regulator-always-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo10_reg: LDO10 {
+@@ -219,6 +243,10 @@
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-always-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo11_reg: LDO11 {
+@@ -226,6 +254,10 @@
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <1000000>;
+ 				regulator-always-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo12_reg: LDO12 {
+@@ -239,6 +271,10 @@
+ 				regulator-name = "vddq_mmc2";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <2800000>;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo14_reg: LDO14 {
+@@ -253,6 +289,10 @@
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo16_reg: LDO16 {
+@@ -267,18 +307,30 @@
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo18_reg: LDO18 {
+ 				regulator-name = "vdd_emmc_1V8";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo19_reg: LDO19 {
+ 				regulator-name = "vdd_sd";
+ 				regulator-min-microvolt = <2800000>;
+ 				regulator-max-microvolt = <2800000>;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo20_reg: LDO20 {
+@@ -307,6 +359,10 @@
+ 				regulator-min-microvolt = <1100000>;
+ 				regulator-max-microvolt = <1100000>;
+ 				regulator-always-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo24_reg: LDO24 {
+@@ -328,6 +384,10 @@
+ 				regulator-name = "vdd_ldo26";
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3950000>;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo27_reg: LDO27 {
+@@ -335,6 +395,10 @@
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <1000000>;
+ 				regulator-always-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo28_reg: LDO28 {
+@@ -342,6 +406,10 @@
+ 				regulator-name = "vdd_ldo28";
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3950000>;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			ldo29_reg: LDO29 {
+@@ -420,6 +488,10 @@
+ 				regulator-max-microvolt = <1300000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			buck2_reg: BUCK2 {
+@@ -428,6 +500,10 @@
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			buck3_reg: BUCK3 {
+@@ -436,6 +512,10 @@
+ 				regulator-max-microvolt = <1400000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			buck4_reg: BUCK4 {
+@@ -444,6 +524,10 @@
+ 				regulator-max-microvolt = <1400000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			buck5_reg: BUCK5 {
+@@ -460,6 +544,10 @@
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			buck7_reg: BUCK7 {
+@@ -484,12 +572,20 @@
+ 				regulator-max-microvolt = <3750000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 
+ 			buck10_reg: BUCK10 {
+ 				regulator-name = "vdd_vmem";
+ 				regulator-min-microvolt = <2850000>;
+ 				regulator-max-microvolt = <2850000>;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
+ 		};
+ 	};
+-- 
+2.17.1
