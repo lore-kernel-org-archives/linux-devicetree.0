@@ -1,75 +1,55 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v5 05/10] memory: tegra20-emc: Pre-configure debug register
-Date: Mon, 24 Jun 2019 03:31:27 +0300
-Message-ID: <20190624003132.29473-6-digetx@gmail.com>
-References: <20190624003132.29473-1-digetx@gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 1/4] arm64: Enable TIMER_IMX_SYS_CTR for ARCH_MXC
+ platforms
+Date: Mon, 24 Jun 2019 02:35:10 +0000
+Message-ID: <DB3PR0402MB39162662C69B45BDB948D002F5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190621070720.12395-1-Anson.Huang@nxp.com>
+ <20190624022200.GN3800@dragon> <20190624022713.GO3800@dragon>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190624003132.29473-1-digetx@gmail.com>
+In-Reply-To: <20190624022713.GO3800@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "will@kernel.org" <will@kernel.org>, mturqu
 List-Id: devicetree@vger.kernel.org
 
-The driver expects certain debug features to be disabled in order to
-work properly. Let's disable them explicitly for consistency and to not
-rely on a boot state.
-
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/memory/tegra/tegra20-emc.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index 1ce351dd5461..85c24f285fd4 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -22,6 +22,7 @@
- 
- #define EMC_INTSTATUS				0x000
- #define EMC_INTMASK				0x004
-+#define EMC_DBG					0x008
- #define EMC_TIMING_CONTROL			0x028
- #define EMC_RC					0x02c
- #define EMC_RFC					0x030
-@@ -80,6 +81,12 @@
- #define EMC_REFRESH_OVERFLOW_INT		BIT(3)
- #define EMC_CLKCHANGE_COMPLETE_INT		BIT(4)
- 
-+#define EMC_DBG_READ_MUX_ASSEMBLY		BIT(0)
-+#define EMC_DBG_WRITE_MUX_ACTIVE		BIT(1)
-+#define EMC_DBG_FORCE_UPDATE			BIT(2)
-+#define EMC_DBG_READ_DQM_CTRL			BIT(9)
-+#define EMC_DBG_CFG_PRIORITY			BIT(24)
-+
- static const u16 emc_timing_registers[] = {
- 	EMC_RC,
- 	EMC_RFC,
-@@ -396,7 +403,7 @@ tegra_emc_find_node_by_ram_code(struct device *dev)
- static int emc_setup_hw(struct tegra_emc *emc)
- {
- 	u32 intmask = EMC_REFRESH_OVERFLOW_INT | EMC_CLKCHANGE_COMPLETE_INT;
--	u32 emc_cfg;
-+	u32 emc_cfg, emc_dbg;
- 
- 	emc_cfg = readl_relaxed(emc->regs + EMC_CFG_2);
- 
-@@ -419,6 +426,14 @@ static int emc_setup_hw(struct tegra_emc *emc)
- 	writel_relaxed(intmask, emc->regs + EMC_INTMASK);
- 	writel_relaxed(intmask, emc->regs + EMC_INTSTATUS);
- 
-+	/* ensure that unwanted debug features are disabled */
-+	emc_dbg = readl_relaxed(emc->regs + EMC_DBG);
-+	emc_dbg |= EMC_DBG_CFG_PRIORITY;
-+	emc_dbg &= ~EMC_DBG_READ_MUX_ASSEMBLY;
-+	emc_dbg &= ~EMC_DBG_WRITE_MUX_ACTIVE;
-+	emc_dbg &= ~EMC_DBG_FORCE_UPDATE;
-+	writel_relaxed(emc_dbg, emc->regs + EMC_DBG);
-+
- 	return 0;
- }
- 
--- 
-2.22.0
+SGksIFNoYXduDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24g
+R3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIEp1bmUgMjQsIDIwMTkg
+MTA6MjcgQU0NCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzog
+bWFyay5ydXRsYW5kQGFybS5jb207IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+
+OyBQZW5nDQo+IEZhbiA8cGVuZy5mYW5AbnhwLmNvbT47IGZlc3RldmFtQGdtYWlsLmNvbTsgSmFj
+a3kgQmFpDQo+IDxwaW5nLmJhaUBueHAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+IHNib3lkQGtlcm5lbC5vcmc7DQo+IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOyBzLmhhdWVyQHBl
+bmd1dHJvbml4LmRlOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgRGFuaWVsIEJh
+bHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPjsgbGludXgtDQo+IGNsa0B2Z2VyLmtlcm5lbC5v
+cmc7IHJvYmgrZHRAa2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51eC0NCj4gaW14QG54cC5j
+b20+OyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IExlb25hcmQgQ3Jlc3Rleg0KPiA8bGVvbmFyZC5j
+cmVzdGV6QG54cC5jb20+OyB3aWxsQGtlcm5lbC5vcmc7IG10dXJxdWV0dGVAYmF5bGlicmUuY29t
+Ow0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IEFiZWwgVmVzYSA8YWJl
+bC52ZXNhQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS80XSBhcm02NDogRW5hYmxl
+IFRJTUVSX0lNWF9TWVNfQ1RSIGZvciBBUkNIX01YQw0KPiBwbGF0Zm9ybXMNCj4gDQo+IE9uIE1v
+biwgSnVuIDI0LCAyMDE5IGF0IDEwOjIyOjAxQU0gKzA4MDAsIFNoYXduIEd1byB3cm90ZToNCj4g
+PiBPbiBGcmksIEp1biAyMSwgMjAxOSBhdCAwMzowNzoxN1BNICswODAwLCBBbnNvbi5IdWFuZ0Bu
+eHAuY29tIHdyb3RlOg0KPiA+ID4gRnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5j
+b20+DQo+ID4gPg0KPiA+ID4gQVJDSF9NWEMgcGxhdGZvcm1zIG5lZWRzIHN5c3RlbSBjb3VudGVy
+IGFzIGJyb2FkY2FzdCB0aW1lciB0bw0KPiA+ID4gc3VwcG9ydCBjcHVpZGxlLCBlbmFibGUgaXQg
+YnkgZGVmYXVsdC4NCj4gPiA+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5z
+b24uSHVhbmdAbnhwLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gIGFyY2gvYXJtNjQvS2NvbmZpZy5w
+bGF0Zm9ybXMgfCAxICsNCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4g
+PiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9LY29uZmlnLnBsYXRmb3Jtcw0KPiA+
+ID4gYi9hcmNoL2FybTY0L0tjb25maWcucGxhdGZvcm1zIGluZGV4IDQ3NzhjNzcuLmY1ZTYyM2Yg
+MTAwNjQ0DQo+ID4gPiAtLS0gYS9hcmNoL2FybTY0L0tjb25maWcucGxhdGZvcm1zDQo+ID4gPiAr
+KysgYi9hcmNoL2FybTY0L0tjb25maWcucGxhdGZvcm1zDQo+ID4gPiBAQCAtMTczLDYgKzE3Myw3
+IEBAIGNvbmZpZyBBUkNIX01YQw0KPiA+ID4gIAlzZWxlY3QgUE0NCj4gPiA+ICAJc2VsZWN0IFBN
+X0dFTkVSSUNfRE9NQUlOUw0KPiA+ID4gIAlzZWxlY3QgU09DX0JVUw0KPiA+ID4gKwlzZWxlY3Qg
+VElNRVJfSU1YX1NZU19DVFINCj4gPg0KPiA+IFdoZXJlIGlzIHRoYXQgZHJpdmVyPw0KPiANCj4g
+T2theSwganVzdCBmb3VuZCBpdCBpbiB0aGUgbWFpbGJveC4gIFRoZXkgc2VlbSB0byBiZSBzZW50
+IGluIHRoZSB3cm9uZyBvcmRlci4NCj4gUmVhbGx5LCB5b3Ugc2hvdWxkIHNlbmQgdGhpcyBzZXJp
+ZXMgb25seSBhZnRlciB0aGUgZHJpdmVyIGxhbmRzIG9uIG1haW5saW5lLg0KDQpPSywganVzdCBu
+b3RpY2VkIHRoYXQgbWFpbmxpbmUgZG9lcyBOT1QgaGF2ZSBpdCwgc2luY2UgSSBkaWQgaXQgYmFz
+ZWQgb24gbmV4dCB0cmVlLg0KSSB3aWxsIHJlc2VuZCB0aGUgcGF0Y2ggc2VyaWVzIGFmdGVyIHRo
+ZSBzeXN0ZW0gY291bnRlciBkcml2ZXIgbGFuZGluZyBvbiBtYWlubGluZS4NCg0KVGhhbmtzLA0K
+QW5zb24uDQoNCj4gDQo+IFNoYXduDQo=
