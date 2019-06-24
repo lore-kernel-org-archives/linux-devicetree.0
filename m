@@ -1,36 +1,94 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V3 5/5] dt-bindings: iio: adc: Add buffered input property
-Date: Mon, 24 Jun 2019 07:51:04 -0600
-Message-ID: <CAL_Jsq+8K=YJUAYE2fzXWpQxBdS8OCfDe5iM=ZbpJbB48ubtug@mail.gmail.com>
-References: <20190624080845.18537-1-mircea.caprioru@analog.com> <20190624080845.18537-5-mircea.caprioru@analog.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH 2/3] backlight/arcxcnn fix vendor prefix
+Date: Mon, 24 Jun 2019 14:59:23 +0100
+Message-ID: <20190624135923.ej6o2oooncocjwyn@holly.lan>
+References: <1541592640-18478-1-git-send-email-bdodge09@gmail.com>
+ <1541592640-18478-3-git-send-email-bdodge09@gmail.com>
+ <20181111113053.GF27666@amd>
+ <e372391c-1fd5-41ec-b766-7669fffb928d@gmail.com>
+ <c4477220-7159-b5a8-16ea-4f4dbb645ced@linaro.org>
+ <20190621221325.GA2343@amd>
+ <20190624102405.gg2lnlw6wmfvjrxu@holly.lan>
+ <9d590b7b-5477-249e-a482-1fc17d7a106f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190624080845.18537-5-mircea.caprioru@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mircea Caprioru <mircea.caprioru@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>, Stefan Popa <stefan.popa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <9d590b7b-5477-249e-a482-1fc17d7a106f@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Dodge <bdodge09@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, Pavel Machek <pavel@ucw.cz>, Peter Bacon <pbacon@psemi.com>, lee.jones@linaro.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 2:09 AM Mircea Caprioru
-<mircea.caprioru@analog.com> wrote:
->
-> This patch adds the buffered mode device tree property for positive and
-> negative inputs. Each option can be enabled independently.
->
-> In buffered mode, the input channel feeds into a high impedance input stage
-> of the buffer amplifier. Therefore, the input can tolerate significant
-> source impedances and is tailored for direct connection to external
-> resistive type sensors such as strain gages or RTDs.
->
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> ---
->
-> Changelog v3:
-> - added this separate commit for adi,buffered-positive and negative
->   properties
->
->  .../devicetree/bindings/iio/adc/adi,ad7124.yaml       | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+T24gTW9uLCBKdW4gMjQsIDIwMTkgYXQgMDc6Mjk6MjBBTSAtMDQwMCwgQnJpYW4gRG9kZ2Ugd3Jv
+dGU6Cj4gVGhpcyBzdXJlIGRpZCBmYWxsIHRocm91Z2ggdGhlIGNyYWNrcy4KPiAKPiBJIGNvbmZp
+cm1lZCB3aXRoIHRoZSB2ZW5kb3IgdGhhdCB0aGVyZSBhcmUgbm8gZXhpc3RpbmcgZW1iZWRkZWQg
+RFRTIHdpdGggdGhlCj4gd3JvbmcgbmFtZShzKSBpbiB0aGVtIGJlZm9yZSBzdWJtaXR0aW5nIHRo
+aXMgcGF0Y2guCj4gCj4gVGhlIG5ldyBvd25lciBvZiB0aGlzIGNoaXAgZmFtaWx5LCBwU2VtaSwg
+anVzdCB3YW50ZWQgbWUgdG8gd3JhcCB0aGluZ3MgdXAKPiBhbmQgc3VwcG9ydCBhbGwgb2YgdGhl
+cmUgY2hpcHMgKDMpIGluIGEgc2luZ2xlIGRyaXZlciBhbmQgdGhhdCB3YXMgdGhlCj4gZXh0ZW50
+IG9mIHRoZSB3b3JrIGZvciBtZS7CoCBTaW5jZSB0aGVuIHRoZSBtYW5hZ2VyIG9mIHRoZSBwcm9n
+cmFtIHRoZXJlIGhhcwo+IGFsc28gY2hhbmdlZC7CoCBJIGFzc3VtZSB0aGV5J2Qgc3RpbGwgd2Fu
+dCB0aGVzZSBjaGFuZ2VzIGluIGZvciBjb21wbGV0ZW5lc3MuCj4gCj4gQUZBSUssIHRoZXJlIHdl
+cmUganVzdCBzb21lIHF1aWJibGVzIGFib3V0IHRoZSBjb3B5cmlnaHQgZGF0ZSByYW5nZS7CoCBD
+YW4KPiB5b3UgcGxlYXNlIGhlbHAgbWUgcHVzaCB0aGVzZSBwYXRjaGVzIGluPyBJdCdsbCB0YWtl
+IG1lIHNvbWUgdGltZSB0byBnZXQKPiBiYWNrIGluIHRvIHdoZXJlIEkgbGVmdCB0aGluZ3PCoCBz
+aW5jZSBpdHMgYmVlbiBzbyBsb25nLsKgIEkga25vdyBpdHMgYSBiaXQKPiBtZXNzeSBidXQgdGhl
+IERUUyBhbmQgZHJpdmVyIGNoYW5nZXMgbmVlZCB0byBiZSB0b2dldGhlciB0byBtYWtlIHNlbnNl
+IHNvIEkKPiBjb3VsZG4ndCByZWFsbHkgZG8gYW4gaW5jcmVtZW50YWwgcGF0Y2ggc2VxdWVuY2Uu
+Cj4gCj4gV2hhdCBpcyB0aGUgbmV4dCBzdGVwPwoKVGhlIG5leHQgc3RlcCBpcyBnZXR0aW5nIHRo
+ZSBjaGFuZ2VzIHRvIERUIGJpbmRpbmdzIGFncmVlZC4gVW50aWwgdGhhdApoYXBwZW5zIHRoZSBw
+YXRjaHNldCBjYW5ub3QgbW92ZSBhbmQgcmlnaHQgbm93IG5vdyB0aGUgdGhyZWFkIGZvciB0aGF0
+CnBhdGNoIGhhcyBmZWVkYmFjayB0aGF0IHdhcyBub3QgcmVwbGllcyB0bzoKaHR0cHM6Ly9wYXRj
+aHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDY3NTQ1MS8KClRoZSBleHBsYW5hdGlvbiBvZiB3aHkg
+aXQgaXMgc2FmZSB0byBhY2NlcHQgdGhlIGNoYW5nZSB0byB0aGUgRFQKYmluZGluZ3MgcmVhbGx5
+IHNob3VsZCBlbmQgdXAgaW4gdGhlIHBhdGNoIGRlc2NyaXB0aW9uIHJhdGhlciB0aGFuIHRoZQpt
+YWlsIHRocmVhZC4gSXQgd291bGQgcHJvYmFibHkgYWxzbyBoZWxwIHRvIGhhdmUgYSBsaW5rIHRv
+Cmh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE4LzkvMjUvNzI2IHdoZXJlIGl0IGxvb2tzIGxpa2Ug
+YXJjIHZlcnN1cwphcmN0aWMgd2FzIHByZXZpb3VzbHkgZGlzY3Vzc2VkLgoKVGhlIGZvbGxvd2lu
+ZyBtaWdodCBhbHNvIGJlIGNvbnZlbmllbnQgZm9yIHlvdToKCiAgQSBxdWljayB3ZWIgc2VhcmNo
+IGZvciAiYXJjLGFyYzJjMDYwOCIgc3VnZ2VzdHMgdGhhdCB0aGUgb25seSBwdWJsaWMKICB1c2Vy
+IGlzIHRoZSBTYW1zdW5nIENocm9tZWJvb2sgUGx1cyBhbmQgaXQgaXMgbGlrZWx5IHRoYXQgdGhp
+cyBkZXZpY2UKICB3aWxsIHJlbWFpbiBvbiB0aGUgdjQuNCBrZXJuZWwuIEZvciB0aGlzIHJlYXNv
+biB3ZSBkbyBub3QgcHJvdmlkZQogIGFueSBkZXByZWNhdGVkIGZhbGxiYWNrIG5hbWVzIGJhc2Vk
+IG9uICJhcmMiLgoKCkRhbmllbC4KCj4gCj4gQnJpYW4KPiAKPiBPbiA2LzI0LzE5IDY6MjQgQU0s
+IERhbmllbCBUaG9tcHNvbiB3cm90ZToKPiA+IE9uIFNhdCwgSnVuIDIyLCAyMDE5IGF0IDEyOjEz
+OjI1QU0gKzAyMDAsIFBhdmVsIE1hY2hlayB3cm90ZToKPiA+ID4gSGkhCj4gPiA+IAo+ID4gPiA+
+IFtTb3JyeSB0byB0aG9zZSByZWNlaXZpbmcgdGhpcyB0d2ljZS4uLiBoYWQgdG8gZGlnIHRoaXMg
+b3V0IGZyb20gdGhlCj4gPiA+ID4gYXJjaGl2ZXMgYW5kIHNlbnQgaXQgdG8gdGhlIGxpc3RzIGZy
+b20gdGhlIHdyb25nIG1haWxlcl0KPiA+ID4gPiAKPiA+ID4gPiBPbiAyNy8xMS8yMDE4IDAwOjQ0
+LCBCcmlhbiBEb2RnZSB3cm90ZToKPiA+ID4gPiA+IFRoYW5rIHlvdSBQYXZlbCwgdGhhdCBpcyBh
+IGdvb2QgcG9pbnQuCj4gPiA+ID4gPiAKPiA+ID4gPiA+IFRoZSBjaGlwIHZlbmRvciBoYXMgaW5k
+aWNhdGVkIHRoYXQgdGhlcmUgaXMgbm8gcmVhc29uIHRvIG1haW50YWluIHRoZQo+ID4gPiA+ID4g
+b2xkL2ltcHJvcGVyIHByZWZpeCBhbmQgd2lzaGVzIHRvIGdvIGZvcndhcmQgKG9ubHkpIHdpdGgg
+dGhlICJhcmN0aWMiCj4gPiA+ID4gPiBwcmVmaXggYW5kIGFueSBleGlzdGluZyBkdHMgZmlsZXMg
+YXJlIG9yIHdpbGwgYmUgdXBkYXRlZC4KPiA+ID4gPiBMb29rcyBsaWtlIHRoaXMgcGF0Y2ggc2Vy
+aWVzIGhhcyBmYWxsZW4gaW50byB0aGUgY3JhY2tzIGEgbGl0dGxlLgo+ID4gPiA+IAo+ID4gPiA+
+IEkgdGhpbmsgSSBhc3N1bWVkIHRoaXMgaW5mbyB3b3VsZCBlbmQgaW4gdGhlIGRlc2NyaXB0aW9u
+IG9mIHBhdGNoIHYyIDEvMyAoaW4KPiA+ID4gPiBvcmRlciB0byBhbnN3ZXIgUm9iJ3MgZmVlZGJh
+Y2spIGFuZCBJIHNhdCBhbmQgd2FpdGVkIGZvciBhIHJlc3Bpbi4gT24gdGhlCj4gPiA+ID4gb3Ro
+ZXIgaGFuZC4uLiBJIGRpZG4ndCBhY3R1YWxseSBzYXkgdGhhdCBleHBsaWNpdGx5IGFueXdoZXJl
+ISBTby4uLiBJJ2QKPiA+ID4gPiByZWNvbW1lbmQgYSByZXNwaW4gcGVyaGFwcyB3aXRoIGEgc21h
+bGwgYml0IG9mIHRleHQgZXhwbGFpbmluZyBob3cgdGhlCj4gPiA+ID4gdmVuZG9yIGNhbiBzdGF0
+ZSB0aGF0IGFueSBleGlzdGluZyBkdHMgZmlsZXMgd2lsbCBiZSB1cGRhdGVkLiBUaGlzIGlzIGEK
+PiA+ID4gPiBwZXJpcGhlcmFsIGRldmljZSBzbyB0aGVzZSBzdHJpbmdzIGFyZSBwcm9iYWJseSBl
+bWJlZGRlZCBpbnRvIE9FTQo+ID4gPiA+IGRldmljZXRyZWVzIHJhdGhlciB0aGFuIGV4Y2x1c2l2
+ZWx5IHVuZGVyIHRoZSBjb250cm9sIG9mIHRoZSB2ZW5kb3IuCj4gPiA+IFNvIGluIG5leHQgZW1h
+aWwgeW91IGdpdmUgZ29vZCByZWFzb24gbm90IHRvIGFwcGx5IHRoaXMgOi0pLgo+ID4gQWZyYWlk
+IHNvLi4uIGl0IHdhcyBvbiBwYWdlIDIgb2YgbXkgZ29vZ2xlIHNlYXJjaCBzbyBJIGRpZCBhIHF1
+aWNrCj4gPiBzZWFyY2gsIHNlbnQgdGhlIGZpcnN0IG1haWwgYW5kIHRoZW4gd2VudCBiYWNrIHRv
+IG15IHdlYiBicm93c2VyLgo+ID4gCj4gPiBJdCB3YXMgYXQgdGhhdCBtb21lbnQgdGhhdCBJIGRl
+Y2lkZWQgYSBxdWljayBzZWFyY2ggd2Fzbid0IGVub3VnaCBhbmQKPiA+IGRlY2lkZWQgdG8gZ290
+IGEgbGl0dGxlIGRlZXBlciEKPiA+IAo+ID4gCj4gPiBEYW5pZWwuCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
