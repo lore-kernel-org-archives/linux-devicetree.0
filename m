@@ -1,186 +1,187 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: [PATCH V4 07/18] clk: tegra: save and restore CPU and System clocks context
-Date: Sun, 23 Jun 2019 20:02:48 -0700
-Message-ID: <1561345379-2429-8-git-send-email-skomatineni@nvidia.com>
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v5 2/8] usb: phy: phy-mxs-usb: add imx7ulp support
+Date: Mon, 24 Jun 2019 11:09:05 +0800
+Message-ID: <CAL411-r_=44bAi6zupcM7cG7-ivcEH_Mu3YYffoE8Ve0d+xqRg@mail.gmail.com>
+References: <20190624020258.21690-1-peter.chen@nxp.com>
+ <20190624020258.21690-3-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190624020258.21690-3-peter.chen@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <peter.chen@nxp.com>
+Cc: aisheng.dong@nxp.com, balbi@kernel.org, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org, USB list <linux-usb@vger.kernel.org>, chunfeng.yun@mediatek.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-During system suspend state, core power goes off and looses all the
-CAR controller register settings.
+> At imx7ulp, the USB related analog register is located in PHY register
+> region too, so we need to control PLL at PHY driver directly.
+>
 
-This patch creates APIs for saving and restoring the context of Tegra
-CPUG, CPULP and SCLK.
+Hi Felipe,
 
-CPU and System clock context includes
-- CPUG, CPULP, and SCLK burst policy settings for clock sourcea of all
-  their normal states.
-- SCLK divisor and System clock rate for restoring SCLK, AHB and APB
-  rates on resume.
-- OSC_DIV settings which are used as reference clock input to some PLLs.
-- SPARE_REG and CLK_MASK settings.
+Would you please have a review for Patch 1 and Patch 2 in this series?
+Thanks.
 
-These APIs are used in Tegra210 clock driver during suspend and resume
-operation.
+Peter
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/clk/tegra/clk-tegra-super-gen4.c |  4 --
- drivers/clk/tegra/clk.c                  | 80 ++++++++++++++++++++++++++++++++
- drivers/clk/tegra/clk.h                  | 14 ++++++
- 3 files changed, 94 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/clk/tegra/clk-tegra-super-gen4.c b/drivers/clk/tegra/clk-tegra-super-gen4.c
-index cdfe7c9697e1..ed69ec4d883e 100644
---- a/drivers/clk/tegra/clk-tegra-super-gen4.c
-+++ b/drivers/clk/tegra/clk-tegra-super-gen4.c
-@@ -19,10 +19,6 @@
- #define PLLX_MISC2 0x514
- #define PLLX_MISC3 0x518
- 
--#define CCLKG_BURST_POLICY 0x368
--#define CCLKLP_BURST_POLICY 0x370
--#define SCLK_BURST_POLICY 0x028
--#define SYSTEM_CLK_RATE 0x030
- #define SCLK_DIVIDER 0x2c
- 
- static DEFINE_SPINLOCK(sysrate_lock);
-diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-index 573e3c967ae1..9e863362d2bf 100644
---- a/drivers/clk/tegra/clk.c
-+++ b/drivers/clk/tegra/clk.c
-@@ -70,6 +70,12 @@ static struct clk **clks;
- static int clk_num;
- static struct clk_onecell_data clk_data;
- 
-+static u32 cclkg_burst_policy_ctx[2];
-+static u32 cclklp_burst_policy_ctx[2];
-+static u32 sclk_burst_policy_ctx[2];
-+static u32 sys_clk_divisor_ctx, system_rate_ctx;
-+static u32 spare_ctx, misc_clk_enb_ctx, clk_arm_ctx;
-+
- /* Handlers for SoC-specific reset lines */
- static int (*special_reset_assert)(unsigned long);
- static int (*special_reset_deassert)(unsigned long);
-@@ -199,6 +205,80 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
- 	}
- }
- 
-+void tegra_cclkg_burst_policy_save_context(void)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
-+		cclkg_burst_policy_ctx[i] = readl_relaxed(clk_base +
-+							  CCLKG_BURST_POLICY +
-+							  (i * 4));
-+}
-+
-+void tegra_cclkg_burst_policy_restore_context(void)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
-+		writel_relaxed(cclkg_burst_policy_ctx[i],
-+			       clk_base + CCLKG_BURST_POLICY + (i * 4));
-+
-+	fence_udelay(2, clk_base);
-+}
-+
-+void tegra_sclk_cclklp_burst_policy_save_context(void)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
-+		cclklp_burst_policy_ctx[i] = readl_relaxed(clk_base +
-+							  CCLKLP_BURST_POLICY +
-+							  (i * 4));
-+
-+		sclk_burst_policy_ctx[i] = readl_relaxed(clk_base +
-+							  SCLK_BURST_POLICY +
-+							  (i * 4));
-+	}
-+
-+	sys_clk_divisor_ctx = readl_relaxed(clk_base + SYS_CLK_DIV);
-+	system_rate_ctx = readl_relaxed(clk_base + SYSTEM_CLK_RATE);
-+	spare_ctx = readl_relaxed(clk_base + SPARE_REG0);
-+	misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
-+	clk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
-+}
-+
-+void tegra_sclk_cpulp_burst_policy_restore_context(void)
-+{
-+	unsigned int i;
-+	u32 val;
-+
-+	/*
-+	 * resume SCLK and CPULP clocks
-+	 * for SCLk, set safe dividers values first and then restore source
-+	 * and dividers
-+	 */
-+
-+	writel_relaxed(0x1, clk_base + SYSTEM_CLK_RATE);
-+	val = readl_relaxed(clk_base + SYS_CLK_DIV);
-+	if (val < sys_clk_divisor_ctx)
-+		writel_relaxed(sys_clk_divisor_ctx, clk_base + SYS_CLK_DIV);
-+
-+	fence_udelay(2, clk_base);
-+
-+	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
-+		writel_relaxed(cclklp_burst_policy_ctx[i],
-+			       clk_base + CCLKLP_BURST_POLICY + (i * 4));
-+		writel_relaxed(sclk_burst_policy_ctx[i],
-+			       clk_base + SCLK_BURST_POLICY + (i * 4));
-+	}
-+
-+	writel_relaxed(sys_clk_divisor_ctx, clk_base + SYS_CLK_DIV);
-+	writel_relaxed(system_rate_ctx, clk_base + SYSTEM_CLK_RATE);
-+	writel_relaxed(spare_ctx, clk_base + SPARE_REG0);
-+	writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
-+	writel_relaxed(clk_arm_ctx, clk_base + CLK_MASK_ARM);
-+}
-+
- struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
- {
- 	clk_base = regs;
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index 581deb4f3ac0..5ba4f503aea0 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -10,6 +10,16 @@
- #include <linux/clkdev.h>
- #include <linux/delay.h>
- 
-+#define SCLK_BURST_POLICY	0x28
-+#define SYSTEM_CLK_RATE		0x30
-+#define CLK_MASK_ARM		0x44
-+#define MISC_CLK_ENB		0x48
-+#define CCLKG_BURST_POLICY	0x368
-+#define CCLKLP_BURST_POLICY	0x370
-+#define SYS_CLK_DIV		0x400
-+#define SPARE_REG0		0x55c
-+#define BURST_POLICY_REG_SIZE	2
-+
- /**
-  * struct tegra_clk_sync_source - external clock source from codec
-  *
-@@ -839,6 +849,10 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
- int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
- 		 u8 frac_width, u8 flags);
- void tegra_clk_sync_state_pll(struct clk_hw *hw);
-+void tegra_cclkg_burst_policy_save_context(void);
-+void tegra_cclkg_burst_policy_restore_context(void);
-+void tegra_sclk_cclklp_burst_policy_save_context(void);
-+void tegra_sclk_cpulp_burst_policy_restore_context(void);
- 
- /* Combined read fence with delay */
- #define fence_udelay(delay, reg)	\
--- 
-2.7.4
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> ---
+>  drivers/usb/phy/phy-mxs-usb.c | 67 ++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 66 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+> index 6fa16ab31e2e..70b8c8248caf 100644
+> --- a/drivers/usb/phy/phy-mxs-usb.c
+> +++ b/drivers/usb/phy/phy-mxs-usb.c
+> @@ -17,9 +17,11 @@
+>  #include <linux/of_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/mfd/syscon.h>
+> +#include <linux/iopoll.h>
+>
+>  #define DRIVER_NAME "mxs_phy"
+>
+> +/* Register Macro */
+>  #define HW_USBPHY_PWD                          0x00
+>  #define HW_USBPHY_TX                           0x10
+>  #define HW_USBPHY_CTRL                         0x30
+> @@ -37,6 +39,11 @@
+>  #define GM_USBPHY_TX_TXCAL45DN(x)            (((x) & 0xf) << 8)
+>  #define GM_USBPHY_TX_D_CAL(x)                (((x) & 0xf) << 0)
+>
+> +/* imx7ulp */
+> +#define HW_USBPHY_PLL_SIC                      0xa0
+> +#define HW_USBPHY_PLL_SIC_SET                  0xa4
+> +#define HW_USBPHY_PLL_SIC_CLR                  0xa8
+> +
+>  #define BM_USBPHY_CTRL_SFTRST                  BIT(31)
+>  #define BM_USBPHY_CTRL_CLKGATE                 BIT(30)
+>  #define BM_USBPHY_CTRL_OTG_ID_VALUE            BIT(27)
+> @@ -55,6 +62,12 @@
+>  #define BM_USBPHY_IP_FIX                       (BIT(17) | BIT(18))
+>
+>  #define BM_USBPHY_DEBUG_CLKGATE                        BIT(30)
+> +/* imx7ulp */
+> +#define BM_USBPHY_PLL_LOCK                     BIT(31)
+> +#define BM_USBPHY_PLL_REG_ENABLE               BIT(21)
+> +#define BM_USBPHY_PLL_BYPASS                   BIT(16)
+> +#define BM_USBPHY_PLL_POWER                    BIT(12)
+> +#define BM_USBPHY_PLL_EN_USB_CLKS              BIT(6)
+>
+>  /* Anatop Registers */
+>  #define ANADIG_ANA_MISC0                       0x150
+> @@ -168,6 +181,9 @@ static const struct mxs_phy_data imx6ul_phy_data = {
+>         .flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS,
+>  };
+>
+> +static const struct mxs_phy_data imx7ulp_phy_data = {
+> +};
+> +
+>  static const struct of_device_id mxs_phy_dt_ids[] = {
+>         { .compatible = "fsl,imx6sx-usbphy", .data = &imx6sx_phy_data, },
+>         { .compatible = "fsl,imx6sl-usbphy", .data = &imx6sl_phy_data, },
+> @@ -175,6 +191,7 @@ static const struct of_device_id mxs_phy_dt_ids[] = {
+>         { .compatible = "fsl,imx23-usbphy", .data = &imx23_phy_data, },
+>         { .compatible = "fsl,vf610-usbphy", .data = &vf610_phy_data, },
+>         { .compatible = "fsl,imx6ul-usbphy", .data = &imx6ul_phy_data, },
+> +       { .compatible = "fsl,imx7ulp-usbphy", .data = &imx7ulp_phy_data, },
+>         { /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, mxs_phy_dt_ids);
+> @@ -199,6 +216,11 @@ static inline bool is_imx6sl_phy(struct mxs_phy *mxs_phy)
+>         return mxs_phy->data == &imx6sl_phy_data;
+>  }
+>
+> +static inline bool is_imx7ulp_phy(struct mxs_phy *mxs_phy)
+> +{
+> +       return mxs_phy->data == &imx7ulp_phy_data;
+> +}
+> +
+>  /*
+>   * PHY needs some 32K cycles to switch from 32K clock to
+>   * bus (such as AHB/AXI, etc) clock.
+> @@ -222,14 +244,49 @@ static void mxs_phy_tx_init(struct mxs_phy *mxs_phy)
+>         }
+>  }
+>
+> +static int mxs_phy_pll_enable(void __iomem *base, bool enable)
+> +{
+> +       int ret = 0;
+> +
+> +       if (enable) {
+> +               u32 value;
+> +
+> +               writel(BM_USBPHY_PLL_REG_ENABLE, base + HW_USBPHY_PLL_SIC_SET);
+> +               writel(BM_USBPHY_PLL_BYPASS, base + HW_USBPHY_PLL_SIC_CLR);
+> +               writel(BM_USBPHY_PLL_POWER, base + HW_USBPHY_PLL_SIC_SET);
+> +               ret = readl_poll_timeout(base + HW_USBPHY_PLL_SIC,
+> +                       value, (value & BM_USBPHY_PLL_LOCK) != 0,
+> +                       100, 10000);
+> +               if (ret)
+> +                       return ret;
+> +
+> +               writel(BM_USBPHY_PLL_EN_USB_CLKS, base +
+> +                               HW_USBPHY_PLL_SIC_SET);
+> +       } else {
+> +               writel(BM_USBPHY_PLL_EN_USB_CLKS, base +
+> +                               HW_USBPHY_PLL_SIC_CLR);
+> +               writel(BM_USBPHY_PLL_POWER, base + HW_USBPHY_PLL_SIC_CLR);
+> +               writel(BM_USBPHY_PLL_BYPASS, base + HW_USBPHY_PLL_SIC_SET);
+> +               writel(BM_USBPHY_PLL_REG_ENABLE, base + HW_USBPHY_PLL_SIC_CLR);
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+>  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+>  {
+>         int ret;
+>         void __iomem *base = mxs_phy->phy.io_priv;
+>
+> +       if (is_imx7ulp_phy(mxs_phy)) {
+> +               ret = mxs_phy_pll_enable(base, true);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+>         ret = stmp_reset_block(base + HW_USBPHY_CTRL);
+>         if (ret)
+> -               return ret;
+> +               goto disable_pll;
+>
+>         /* Power up the PHY */
+>         writel(0, base + HW_USBPHY_PWD);
+> @@ -267,6 +324,11 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+>         mxs_phy_tx_init(mxs_phy);
+>
+>         return 0;
+> +
+> +disable_pll:
+> +       if (is_imx7ulp_phy(mxs_phy))
+> +               mxs_phy_pll_enable(base, false);
+> +       return ret;
+>  }
+>
+>  /* Return true if the vbus is there */
+> @@ -388,6 +450,9 @@ static void mxs_phy_shutdown(struct usb_phy *phy)
+>         writel(BM_USBPHY_CTRL_CLKGATE,
+>                phy->io_priv + HW_USBPHY_CTRL_SET);
+>
+> +       if (is_imx7ulp_phy(mxs_phy))
+> +               mxs_phy_pll_enable(phy->io_priv, false);
+> +
+>         clk_disable_unprepare(mxs_phy->clk);
+>  }
+>
+> --
+> 2.14.1
+>
