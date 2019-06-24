@@ -1,112 +1,86 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
-Date: Mon, 24 Jun 2019 08:58:16 +0300
-Message-ID: <87v9wvsex3.fsf@linux.intel.com>
-References: <20171115060459.45375-1-ran.wang_1@nxp.com> <87ineb9b5v.fsf@linux.intel.com> <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com> <87shdfet90.fsf@linux.intel.com> <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com> <87k1eaanjw.fsf@linux.intel.com> <AM5PR0402MB2865F3735D808E1BC9F67968F1180@AM5PR0402MB2865.eurprd04.prod.outlook.com> <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com> <87o92wgyqj.fsf@linux.intel.com> <VE1PR04MB66557834D3588FC8B558950AF1E00@VE1PR04MB6655.eurprd04.prod.outlook.com>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH v2 11/11] arm64: dts: sc9860: Update coresight DT bindings
+Date: Mon, 24 Jun 2019 13:58:17 +0800
+Message-ID: <CAAfSe-uwxTtSs1DN_SMzqV+TBSOUM4mv2_vC94CK2-j3_AaBAg@mail.gmail.com>
+References: <20190508021902.10358-1-leo.yan@linaro.org> <20190508021902.10358-12-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VE1PR04MB66557834D3588FC8B558950AF1E00@VE1PR04MB6655.eurprd04.prod.outlook.com>
+In-Reply-To: <20190508021902.10358-12-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Wang <ran.wang_1@nxp.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Mike Leach <mike.leach@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Linux ARM <linux-arm-kernel@l>
 List-Id: devicetree@vger.kernel.org
 
+Hi Leo,
 
-Hi,
+Applied the patch 10-11/11 to my tree, thanks!
 
-Ran Wang <ran.wang_1@nxp.com> writes:
->> >> > >> >> >  /* Global Debug Queue/FIFO Space Available Register */
->> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
->> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
->> >> > >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
->> >> > >> >> >   * 	3	- Reserved
->> >> > >> >> >   * @imod_interval: set the interrupt moderation interval in 250ns
->> >> > >> >> >   *                 increments or 0 to disable.
->> >> > >> >> > + * @dma_coherent: set if enable dma-coherent.
->> >> > >> >>
->> >> > >> >> you're not enabling dma coherency, you're enabling cache snooping.
->> >> > >> >> And this property should describe that. Also, keep in mind
->> >> > >> >> that different devices may want different cache types for
->> >> > >> >> each of those fields, so your property would have to be a lot
->> >> > >> >> more complex. Something
->> >> > like:
->> >> > >> >>
->> >> > >> >> 	snps,cache-type = <foobar "cacheable">, <baz "cacheable">, ...
->> >> > >> >>
->> >> > >> >> Then driver would have to parse this properly to setup GSBUSCFG0.
->> >> > >
->> >> > > According to the DesignWare Cores SuperSpeed USB 3.0 Controller
->> >> > > Databook (v2.60a), it has described Type Bit Assignments for all
->> >> > > supported
->> >> > master bus type:
->> >> > > AHB, AXI3, AXI4 and Native. I found the bit definition are
->> >> > > different among
->> >> > them.
->> >> > > So, for the example you gave above, feel a little bit confused.
->> >> > > Did you mean:
->> >> > >     snps,cache-type = <DATA_RD  "write allocate">, <DESC_RD
->> >> > > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read allocate">
->> >> >
->> >> > yeah, something like that.
->> >>
->> >> I think DATA_RD  should be a macro, right? So, where I can put its define?
->> >> Create a dwc3.h in include/dt-bindings/usb/ ?
->> >
->> > Could you please give me some advice here? I'd like to prepare next
->> > version patch after getting this settled.
->> >
->> >> Another question about this remain open is: DWC3 data book's Table
->> >> 6-5 Cache Type Bit Assignments show that bits definition will differ
->> >> per MBUS_TYPEs as
->> >> below:
->> >> ----------------------------------------------------------------
->> >>  MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
->> >>  ----------------------------------------------------------------
->> >>  AHB      |Cacheable     |Bufferable   |Privilegge |Data
->> >>  AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
->> >>  AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
->> >>  AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
->> >>  Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
->> >>  ----------------------------------------------------------------
->> >>  Note: The AHB, AXI3, AXI4, and PCIe busses use different names for
->> >> certain  signals, which have the same meaning:
->> >>    Bufferable = Posted
->> >>    Cacheable = Modifiable = Snoop (negation of No Snoop)
->> >>
->> >> For Layerscape SoCs, MBUS_TYPE is AXI3. So I am not sure how to use
->> >> snps,cache-type = <DATA_RD  "write allocate">, to cover all MBUS_TYPE?
->> >> (you can notice that AHB and AXI3's cacheable are on different bit)
->> >> Or I just need to handle AXI3 case?
->> >
->> > Also on this open. Thank you in advance.
->> 
->> You could pass two strings and let the driver process them. Something
->> like:
->> 
->> 	snps,cache_type = <"data_wr" "write allocate">, <"desc_rd"
->> "cacheable">...
->> 
->> And so on. The only thing missing is for the mbus_type to be known by the driver.
->> Is that something we can figure out on any of the HWPARAMS registers or does
->> it have to be told explicitly?
->
-> I have checked Layerscape Reference manual, HWPARAMS0~8 doesn't contain mbus_type
-> Info, and I didn't know where have declared it explicitly.
->
->> Another option would be to pass a string followed by one hex digit for the bits:
->> 
->> 	snps,cache_type = <"data_wr" 0x8>, <"desc_rd" 0x2>...;
->> 
->> Then we don't need to describe mbus_type since the bits are what matters.
->
-> Yes, it's also what we prefer to use, it will be more flexible, I can add above Table
-> 6-5 Cache Type Bit Assignments in binding to help user decide which value they
-> would use.
->
-> I would submit another version of patch for further review, thank you very much.
+Chunyan
 
-cool, thanks
 
--- 
-balbi
+
+Chunyan
+
+On Wed, 8 May 2019 at 10:21, Leo Yan <leo.yan@linaro.org> wrote:
+>
+> CoreSight DT bindings have been updated, thus the old compatible strings
+> are obsolete and the drivers will report warning if DTS uses these
+> obsolete strings.
+>
+> This patch switches to the new bindings for CoreSight dynamic funnel,
+> so can dismiss warning during initialisation.
+>
+> Cc: Chunyan Zhang <zhang.chunyan@linaro.org>
+> Cc: Orson Zhai <orsonzhai@gmail.com>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Acked-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+> ---
+>  arch/arm64/boot/dts/sprd/sc9860.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+> index b25d19977170..e27eb3ed1d47 100644
+> --- a/arch/arm64/boot/dts/sprd/sc9860.dtsi
+> +++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+> @@ -300,7 +300,7 @@
+>                 };
+>
+>                 funnel@10001000 { /* SoC Funnel */
+> -                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+>                         reg = <0 0x10001000 0 0x1000>;
+>                         clocks = <&ext_26m>;
+>                         clock-names = "apb_pclk";
+> @@ -367,7 +367,7 @@
+>                 };
+>
+>                 funnel@11001000 { /* Cluster0 Funnel */
+> -                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+>                         reg = <0 0x11001000 0 0x1000>;
+>                         clocks = <&ext_26m>;
+>                         clock-names = "apb_pclk";
+> @@ -415,7 +415,7 @@
+>                 };
+>
+>                 funnel@11002000 { /* Cluster1 Funnel */
+> -                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+>                         reg = <0 0x11002000 0 0x1000>;
+>                         clocks = <&ext_26m>;
+>                         clock-names = "apb_pclk";
+> @@ -513,7 +513,7 @@
+>                 };
+>
+>                 funnel@11005000 { /* Main Funnel */
+> -                       compatible = "arm,coresight-funnel", "arm,primecell";
+> +                       compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+>                         reg = <0 0x11005000 0 0x1000>;
+>                         clocks = <&ext_26m>;
+>                         clock-names = "apb_pclk";
+> --
+> 2.17.1
+>
