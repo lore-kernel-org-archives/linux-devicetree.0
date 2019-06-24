@@ -1,49 +1,44 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH 3/4] dt-bindings: iio: frequency: Add ADF4372 PLL documentation
-Date: Mon, 24 Jun 2019 18:12:42 +0300
-Message-ID: <1561389162-26291-1-git-send-email-stefan.popa@analog.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH] ARM: dts: socfpga: add the QSPI OCP reset property on arria10
+Date: Mon, 24 Jun 2019 10:45:58 -0500
+Message-ID: <20190624154558.5354-1-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: dinguyen@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document support for ADF4372 SPI Wideband Synthesizer.
+The QSPI module needs the OCP reset bit deasserted as well.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 ---
- Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/socfpga_arria10.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-index 8a2a8f6..a268a9d 100644
---- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-+++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-@@ -4,19 +4,21 @@
- $id: http://devicetree.org/schemas/iio/frequency/adf4371.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index a0a6d8507265..20af1543819a 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -753,7 +753,8 @@
+ 			cdns,fifo-width = <4>;
+ 			cdns,trigger-address = <0x00000000>;
+ 			clocks = <&qspi_clk>;
+-			resets = <&rst QSPI_RESET>;
++			resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
++			reset-names = "qspi", "qspi-ocp";
+ 			status = "disabled";
+ 		};
  
--title: Analog Devices ADF4371 Wideband Synthesizer
-+title: Analog Devices ADF4371/ADF4372 Wideband Synthesizers
- 
- maintainers:
-   - Popa Stefan <stefan.popa@analog.com>
- 
- description: |
--  Analog Devices ADF4371 SPI Wideband Synthesizer
-+  Analog Devices ADF4371/ADF4372 SPI Wideband Synthesizers
-   https://www.analog.com/media/en/technical-documentation/data-sheets/adf4371.pdf
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/adf4372.pdf
- 
- properties:
-   compatible:
-     enum:
-       - adi,adf4371
-+      - adi,adf4372
- 
-   reg:
-     maxItems: 1
 -- 
-2.7.4
+2.20.0
