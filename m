@@ -1,14 +1,15 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v5 8/8] usb: chipidea: imx: "fsl,
- usbphy" phandle is not mandatory now
-Date: Mon, 24 Jun 2019 10:02:58 +0800
-Message-ID: <20190624020258.21690-9-peter.chen@nxp.com>
-References: <20190624020258.21690-1-peter.chen@nxp.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V12 3/4] arm64: dts: imx8qxp: added ddr performance
+ monitor nodes
+Date: Mon, 24 Jun 2019 10:02:14 +0800
+Message-ID: <20190624020210.GJ3800@dragon>
+References: <CAHrpEqT_34eNK-EzRgs-ocDD6pfLzD=FU8n83HgSQVsimJRxPw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190624020258.21690-1-peter.chen@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <CAHrpEqT_34eNK-EzRgs-ocDD6pfLzD=FU8n83HgSQVsimJRxPw@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,34 +19,65 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: balbi@kernel.org, shawnguo@kernel.org
-Cc: aisheng.dong@nxp.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, Peter Chen <peter.chen@nxp.com>, linux-usb@vger.kernel.org, chunfeng.yun@mediatek.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+To: Zhi Li <lznuaa@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Since the chipidea common code support get the USB PHY phandle from
-"phys", the glue layer is not mandatory to get the "fsl,usbphy" phandle
-any more.
+On Wed, Jun 19, 2019 at 01:46:00PM -0500, Zhi Li wrote:
+> Add ddr performance monitor
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> ---
+> 
+> Resent without base64 encode
+> 
+> Notes:
+>     No change from v9 to v12
+> 
+>     Change from v8 to v9
+>     * put ddr-pmu under ddr_subsystem bus
+> 
+>     Change from v3 to v8
+>     * none
+> 
+>     Change from v2 to v3
+>     * ddr_pmu0 -> ddr-pmu
+> 
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index 0683ee2..a33e08c 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -378,6 +378,20 @@
+>                 };
+>         };
+> 
+> +       ddr_subsyss: bus@5c000000 {
+> +               compatible = "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges = <0x5c000000 0x0 0x5c000000 0x1000000>;
+> +
+> +               ddr-pmu@5c020000 {
+> +                       compatible = "fsl,imx8-ddr-pmu";
+> +                       reg = <0x5c020000 0x10000>;
+> +                       interrupt-parent = <&gic>;
+> +                       interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+> +               };
+> +       };
+> +
+>         lsio_subsys: bus@5d000000 {
+>                 compatible = "simple-bus";
+>                 #address-cells = <1>;
 
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
----
- drivers/usb/chipidea/ci_hdrc_imx.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+The patch format is corrupted.  All tabs are turned into spaces here.  I
+manually apply the patch, but please avoid it next time.
 
-diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
-index a76708501236..b5abfe89190c 100644
---- a/drivers/usb/chipidea/ci_hdrc_imx.c
-+++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-@@ -398,8 +398,9 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
- 		ret = PTR_ERR(data->phy);
- 		/* Return -EINVAL if no usbphy is available */
- 		if (ret == -ENODEV)
--			ret = -EINVAL;
--		goto err_clk;
-+			data->phy = NULL;
-+		else
-+			goto err_clk;
- 	}
- 
- 	pdata.usb_phy = data->phy;
--- 
-2.14.1
+Shawn
+
+> --
+> 2.5.2
