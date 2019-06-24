@@ -1,32 +1,68 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [RFC PATCH] arm64: dts: fsl: wandboard: Add a device tree for the
- PICO-PI-IMX8M
-Date: Mon, 24 Jun 2019 07:28:59 +0000
-Message-ID: <0c09227705b9f06bff3dc4341538968cba6c6cd0.camel@nxp.com>
-References: <20190620133252.31373-1-andradanciu1997@gmail.com>
-         <20190624055247.GA10377@localhost.localdomain>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones
+ conflict in rk3399.dtsi
+Date: Mon, 24 Jun 2019 09:31:34 +0200
+Message-ID: <a993a5a1-29a0-9ebd-9368-c6b08393cdee@linaro.org>
+References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190624055247.GA10377@localhost.localdomain>
+In-Reply-To: <20190604165802.7338-1-daniel.lezcano@linaro.org>
 Content-Language: en-US
-Content-ID: <A1F1956BB4511F4DAD550F85FF77E2C0@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "matti.vaittinen@fi.rohmeurope.com" <matti.vaittinen@fi.rohmeurope.com>, "andradanciu1997@gmail.com" <andradanciu1997@gmail.com>
-Cc: Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Richard Hu <richard.hu@technexion.com>, Pankaj Bansal <pankaj.bansal@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vabhav Sharma <vabhav.sharma@nxp.com>, "sriram.dash@nxp.com" <sriram.dash@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Pramod Kumar <pramod.kumar_1@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+To: heiko@sntech.de
+Cc: linux-kernel@vger.kernel.org, edubezval@gmail.com, manivannan.sadhasivam@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Emil Renner Berthing <kernel@esmil.dk>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infr>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA2LTI0IGF0IDA4OjUyICswMzAwLCBNYXR0aSBWYWl0dGluZW4gd3JvdGU6
-DQo+IEhlbGxvIFJpY2hhcmQsDQo+IA0KPiBOaWNlIHRvIHNlZSB5b3UgdXBzdHJlYW1pbmcgdGhp
-cyEgVGh1bWJzIHVwIQ0KPiANCj4gSnVzdCBmZXcgcmVtYXJrcyB0byBwbWljIG5vZGUgZnJvbSBt
-ZToNCj4gDQo+IA0KDQpUaGFua3MgYSBsb3QgTWF0dGkgZm9yIHJldmlldy4gSSBhbSB3b3JraW5n
-IHRvZ2V0aGVyIHdpdGggQW5kcmENCmZvciBhIEdvb2dsZSBTdW1tZXIgb2YgQ29kZSBwcm9qZWN0
-LiANCg0KVGhlIGZpcnN0IHN0ZXAgb2YgdGhlIHByb2plY3QgaXMgdG8gaGF2ZSBQSUNPLVBJLUlN
-WDhNIHdvcmtpbmcgd2l0aA0KdGhlIHVwc3RyZWFtIGtlcm5lbC4NCg0KU28sIHdlIHRvb2sgdGhl
-IHBhdGNoZXMgZnJvbSBodHRwczovL2dpdGh1Yi5jb20vd2FuZGJvYXJkLW9yZyB0cmltbWVkDQp0
-aGVtIHRvIGhhdmUgYmFzaWMgYm9vdCBzdXBwb3J0IGFuZCBzZW50IHRoZW0gZm9yIHJldmlldy4N
-Cg0KV2Ugd2lsbCB0cnkgdG8gYWRkcmVzcyBhbGwgeW91ciBjb21tZW50cyBpbiB2Mi4gVGhhbmtz
-IGFnYWluIGZvcg0KcmV2aWV3IQ0KDQpBZGRpbmcgbGludXgtaW14IG1haWxpbmcgbGlzdC4gDQoN
-CkZvciBjb250ZXh0OiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS82LzIwLzQ4Nw0KDQpEYW5p
-ZWwuDQo=
+
+Gentle ping ...
+
+
+On 04/06/2019 18:57, Daniel Lezcano wrote:
+> Currently the common thermal zones definitions for the rk3399 assumes
+> multiple thermal zones are supported by the governors. This is not the
+> case and each thermal zone has its own governor instance acting
+> individually without collaboration with other governors.
+> 
+> As the cooling device for the CPU and the GPU thermal zones is the
+> same, each governors take different decisions for the same cooling
+> device leading to conflicting instructions and an erratic behavior.
+> 
+> As the cooling-maps is about to become an optional property, let's
+> remove the cpu cooling device map from the GPU thermal zone.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 ---------
+>  1 file changed, 9 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 196ac9b78076..e1357e0f60f7 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -821,15 +821,6 @@
+>  					type = "critical";
+>  				};
+>  			};
+> -
+> -			cooling-maps {
+> -				map0 {
+> -					trip = <&gpu_alert0>;
+> -					cooling-device =
+> -						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> -						<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> -				};
+> -			};
+>  		};
+>  	};
+>  
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
