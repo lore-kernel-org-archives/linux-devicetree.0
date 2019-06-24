@@ -1,41 +1,166 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v7 0/6] Add support for Orange Pi 3
-Date: Mon, 24 Jun 2019 10:29:27 -0700 (PDT)
-Message-ID: <20190624.102927.1268781741493594465.davem@davemloft.net>
-References: <20190620134748.17866-1-megous@megous.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH V4 02/18] pinctrl: tegra: add suspend and resume support
+Date: Mon, 24 Jun 2019 10:34:13 -0700
+Message-ID: <896de0f3-78b0-c5fc-9b74-fee442ab116c@nvidia.com>
+References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
+ <1561345379-2429-3-git-send-email-skomatineni@nvidia.com>
+ <a03ce644-5efd-e721-fb06-16de097171bb@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190620134748.17866-1-megous@megous.com>
+In-Reply-To: <a03ce644-5efd-e721-fb06-16de097171bb@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: megous@megous.com
-Cc: linux-sunxi@googlegroups.com, maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, jernej.skrabec@gmail.com, airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, mcoquelin.stm32@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: megous@megous.com
-Date: Thu, 20 Jun 2019 15:47:42 +0200
 
-> From: Ondrej Jirman <megous@megous.com>
-> 
-> This series implements support for Xunlong Orange Pi 3 board.
-> 
-> - ethernet support (patches 1-3)
-> - HDMI support (patches 4-6)
-> 
-> For some people, ethernet doesn't work after reboot (but works on cold
-> boot), when the stmmac driver is built into the kernel. It works when
-> the driver is built as a module. It's either some timing issue, or power
-> supply issue or a combination of both. Module build induces a power
-> cycling of the phy.
-> 
-> I encourage people with this issue, to build the driver into the kernel,
-> and try to alter the reset timings for the phy in DTS or
-> startup-delay-us and report the findings.
-
-This is a mixture of networking and non-networking changes so it really
-can't go through my tree.
-
-I wonder how you expect this series to be merged?
-
-Thanks.
+On 6/24/19 2:46 AM, Dmitry Osipenko wrote:
+> 24.06.2019 6:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> This patch adds support for Tegra pinctrl driver suspend and resume.
+>>
+>> During suspend, context of all pinctrl registers are stored and
+>> on resume they are all restored to have all the pinmux and pad
+>> configuration for normal operation.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/pinctrl/tegra/pinctrl-tegra.c    | 47 ++++++++++++++++++++++++=
+++++++++
+>>   drivers/pinctrl/tegra/pinctrl-tegra.h    |  4 +++
+>>   drivers/pinctrl/tegra/pinctrl-tegra210.c |  6 ++++
+>>   3 files changed, 57 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/teg=
+ra/pinctrl-tegra.c
+>> index b03c465917b8..c0ba6fa63ad1 100644
+>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> @@ -631,6 +631,38 @@ static void tegra_pinctrl_clear_parked_bits(struct =
+tegra_pmx *pmx)
+>>   	}
+>>   }
+>>  =20
+>> +int __maybe_unused tegra_pinctrl_suspend(struct device *dev)
+> The "maybe_unused" attribute isn't needed for global functions because
+> compiler always assumes that such functions are used somewhere outside.
+Will fix this in V5
+>> +{
+>> +	struct tegra_pmx *pmx =3D dev_get_drvdata(dev);
+>> +	u32 *backup_regs =3D pmx->backup_regs;
+>> +	u32 *regs;
+>> +	unsigned int i, j;
+>> +
+>> +	for (i =3D 0; i < pmx->nbanks; i++) {
+>> +		regs =3D pmx->regs[i];
+>> +		for (j =3D 0; j < pmx->reg_bank_size[i] / 4; j++)
+>> +			*backup_regs++ =3D readl(regs++);
+>> +	}
+>> +
+>> +	return pinctrl_force_sleep(pmx->pctl);
+>> +}
+>> +
+>> +int __maybe_unused tegra_pinctrl_resume(struct device *dev)
+>> +{
+>> +	struct tegra_pmx *pmx =3D dev_get_drvdata(dev);
+>> +	u32 *backup_regs =3D pmx->backup_regs;
+>> +	u32 *regs;
+>> +	unsigned int i, j;
+>> +
+>> +	for (i =3D 0; i < pmx->nbanks; i++) {
+>> +		regs =3D pmx->regs[i];
+>> +		for (j =3D 0; j < pmx->reg_bank_size[i] / 4; j++)
+>> +			writel(*backup_regs++, regs++);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static bool gpio_node_has_range(const char *compatible)
+>>   {
+>>   	struct device_node *np;
+>> @@ -655,6 +687,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev=
+,
+>>   	int i;
+>>   	const char **group_pins;
+>>   	int fn, gn, gfn;
+>> +	unsigned long backup_regs_size =3D 0;
+>>  =20
+>>   	pmx =3D devm_kzalloc(&pdev->dev, sizeof(*pmx), GFP_KERNEL);
+>>   	if (!pmx)
+>> @@ -707,6 +740,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev=
+,
+>>   		res =3D platform_get_resource(pdev, IORESOURCE_MEM, i);
+>>   		if (!res)
+>>   			break;
+>> +		backup_regs_size +=3D resource_size(res);
+>>   	}
+>>   	pmx->nbanks =3D i;
+>>  =20
+>> @@ -715,11 +749,24 @@ int tegra_pinctrl_probe(struct platform_device *pd=
+ev,
+>>   	if (!pmx->regs)
+>>   		return -ENOMEM;
+>>  =20
+>> +	pmx->reg_bank_size =3D devm_kcalloc(&pdev->dev, pmx->nbanks,
+>> +					  sizeof(*pmx->reg_bank_size),
+>> +					  GFP_KERNEL);
+>> +	if (!pmx->reg_bank_size)
+>> +		return -ENOMEM;
+>> +
+>> +	pmx->backup_regs =3D devm_kzalloc(&pdev->dev, backup_regs_size,
+>> +					GFP_KERNEL);
+>> +	if (!pmx->backup_regs)
+>> +		return -ENOMEM;
+>> +
+>>   	for (i =3D 0; i < pmx->nbanks; i++) {
+>>   		res =3D platform_get_resource(pdev, IORESOURCE_MEM, i);
+>>   		pmx->regs[i] =3D devm_ioremap_resource(&pdev->dev, res);
+>>   		if (IS_ERR(pmx->regs[i]))
+>>   			return PTR_ERR(pmx->regs[i]);
+>> +
+>> +		pmx->reg_bank_size[i] =3D resource_size(res);
+>>   	}
+>>  =20
+>>   	pmx->pctl =3D devm_pinctrl_register(&pdev->dev, &tegra_pinctrl_desc, =
+pmx);
+>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/teg=
+ra/pinctrl-tegra.h
+>> index 32642af3f871..65fcbf8c7579 100644
+>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.h
+>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
+>> @@ -17,6 +17,8 @@ struct tegra_pmx {
+>>  =20
+>>   	int nbanks;
+>>   	void __iomem **regs;
+>> +	size_t *reg_bank_size;
+>> +	u32 *backup_regs;
+>>   };
+>>  =20
+>>   enum tegra_pinconf_param {
+>> @@ -195,4 +197,6 @@ struct tegra_pinctrl_soc_data {
+>>  =20
+>>   int tegra_pinctrl_probe(struct platform_device *pdev,
+>>   			const struct tegra_pinctrl_soc_data *soc_data);
+>> +int __maybe_unused tegra_pinctrl_suspend(struct device *dev);
+>> +int __maybe_unused tegra_pinctrl_resume(struct device *dev);
+>>   #endif
+>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl/=
+tegra/pinctrl-tegra210.c
+>> index 617ad963f5ad..4616bbc2efba 100644
+>> --- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
+>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+>> @@ -1562,6 +1562,11 @@ static int tegra210_pinctrl_probe(struct platform=
+_device *pdev)
+>>   	return tegra_pinctrl_probe(pdev, &tegra210_pinctrl);
+>>   }
+>>  =20
+>> +static const struct dev_pm_ops tegra_pinctrl_pm =3D {
+>> +	.suspend =3D &tegra_pinctrl_suspend,
+>> +	.resume =3D &tegra_pinctrl_resume
+>> +};
+> What about to move tegra_pinctrl_pm out into pinctrl-tegra.c to make it
+> common for all of the drivers?
+OK, Will do that in V5
