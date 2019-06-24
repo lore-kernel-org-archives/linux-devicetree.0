@@ -1,11 +1,13 @@
 From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v5 0/8] Add imx7ulp USBOTG1 support
-Date: Mon, 24 Jun 2019 10:02:50 +0800
-Message-ID: <20190624020258.21690-1-peter.chen@nxp.com>
+Subject: [PATCH v5 1/8] doc: dt-binding: mxs-usb-phy: add compatible for 7ulp
+Date: Mon, 24 Jun 2019 10:02:51 +0800
+Message-ID: <20190624020258.21690-2-peter.chen@nxp.com>
+References: <20190624020258.21690-1-peter.chen@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190624020258.21690-1-peter.chen@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,51 +21,34 @@ To: balbi@kernel.org, shawnguo@kernel.org
 Cc: aisheng.dong@nxp.com, devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, Peter Chen <peter.chen@nxp.com>, linux-usb@vger.kernel.org, chunfeng.yun@mediatek.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Changes for v5:
-- Change DT node name from 'usbphy' to usb-phy'. [Patch 1/8, 6/8]
+Add compatible for 7ulp USB PHY.
 
-Changes for v4:
-- Delete the oldest compatible for usbotg1, usbmisc and usbphy.
-[Patch 6/8]
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+---
+ Documentation/devicetree/bindings/phy/mxs-usb-phy.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Changes for v3:
-- Using readl_poll_timeout to replace private function. [Patch 2/8]
-- Add more commit log for new flag CI_HDRC_PMQOS. [Patch 5/8]
-- Move 'compatible' at the beginning of propeties. [Patch 6/8]
-
-Changes for v2:
-- Use common 'phys' property [Patch 6/8]
-- Add the last patch that "fsl,usbphy" phandle is not mandatory now
-[Patch 8/8]
-- Add Reviewed-by from Rob.
-
-
-There is a dual-role USB controller at imx7ulp, we add support for it
-in this patch set, and the dual-role function is tested at imx7ulp-evk
-board.
-
-Thanks.
-
-Peter Chen (8):
-  doc: dt-binding: mxs-usb-phy: add compatible for 7ulp
-  usb: phy: phy-mxs-usb: add imx7ulp support
-  doc: dt-binding: ci-hdrc-usb2: add compatible string for imx7ulp
-  doc: dt-binding: usbmisc-imx: add compatible string for imx7ulp
-  usb: chipidea: imx: add imx7ulp support
-  ARM: dts: imx7ulp: add imx7ulp USBOTG1 support
-  ARM: dts: imx7ulp-evk: enable USBOTG1 support
-  usb: chipidea: imx: "fsl,usbphy" phandle is not mandatory now
-
- .../devicetree/bindings/phy/mxs-usb-phy.txt        |  3 +-
- .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  1 +
- .../devicetree/bindings/usb/usbmisc-imx.txt        |  1 +
- arch/arm/boot/dts/imx7ulp-evk.dts                  | 35 +++++++++++
- arch/arm/boot/dts/imx7ulp.dtsi                     | 28 +++++++++
- drivers/usb/chipidea/ci_hdrc_imx.c                 | 33 ++++++++++-
- drivers/usb/chipidea/usbmisc_imx.c                 |  4 ++
- drivers/usb/phy/phy-mxs-usb.c                      | 67 +++++++++++++++++++++-
- include/linux/usb/chipidea.h                       |  1 +
- 9 files changed, 168 insertions(+), 5 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+index 6ac98b3b5f57..c9f5c0caf8a9 100644
+--- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
++++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+@@ -7,6 +7,7 @@ Required properties:
+ 	* "fsl,imx6sl-usbphy" for imx6sl
+ 	* "fsl,vf610-usbphy" for Vybrid vf610
+ 	* "fsl,imx6sx-usbphy" for imx6sx
++	* "fsl,imx7ulp-usbphy" for imx7ulp
+   "fsl,imx23-usbphy" is still a fallback for other strings
+ - reg: Should contain registers location and length
+ - interrupts: Should contain phy interrupt
+@@ -23,7 +24,7 @@ Optional properties:
+   the 17.78mA TX reference current. Default: 100
+ 
+ Example:
+-usbphy1: usbphy@20c9000 {
++usbphy1: usb-phy@20c9000 {
+ 	compatible = "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
+ 	reg = <0x020c9000 0x1000>;
+ 	interrupts = <0 44 0x04>;
 -- 
 2.14.1
