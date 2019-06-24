@@ -1,37 +1,32 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: rockchip: Add RK3288 VOP gamma LUT
- address
-Date: Mon, 24 Jun 2019 13:03:37 -0700
-Message-ID: <CAD=FV=UDswMa9X2QxRX9gRnY9=Y2ELMNOZvGZCz4g6fi2c6oEg@mail.gmail.com>
-References: <20190621211346.1324-1-ezequiel@collabora.com>
- <20190621211346.1324-4-ezequiel@collabora.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v7 0/6] Add support for Orange Pi 3
+Date: Mon, 24 Jun 2019 13:24:56 -0700 (PDT)
+Message-ID: <20190624.132456.2013417744691373807.davem@davemloft.net>
+References: <20190620134748.17866-1-megous@megous.com>
+        <20190624.102927.1268781741493594465.davem@davemloft.net>
+        <20190624174637.6sznc5ifiuh4c3sm@core.my.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190621211346.1324-4-ezequiel@collabora.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ezequiel Garcia <ezequiel@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, kernel@collabora.com
+Content-Type: Text/Plain; charset=iso-8859-2
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190624174637.6sznc5ifiuh4c3sm@core.my.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: megous@megous.com
+Cc: linux-sunxi@googlegroups.com, maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, jernej.skrabec@gmail.com, airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, mcoquelin.stm32@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBGcmksIEp1biAyMSwgMjAxOSBhdCAyOjE0IFBNIEV6ZXF1aWVsIEdhcmNpYSA8ZXpl
-cXVpZWxAY29sbGFib3JhLmNvbT4gd3JvdGU6Cj4KPiBSSzMyODggU29DIFZPUHMgaGF2ZSBvcHRp
-b25hbCBzdXBwb3J0IEdhbW1hIExVVCBzZXR0aW5nLAo+IHdoaWNoIHJlcXVpcmVzIHNwZWNpZnlp
-bmcgdGhlIEdhbW1hIExVVCBhZGRyZXNzIGluIHRoZSBkZXZpY2V0cmVlLgo+Cj4gU2lnbmVkLW9m
-Zi1ieTogRXplcXVpZWwgR2FyY2lhIDxlemVxdWllbEBjb2xsYWJvcmEuY29tPgo+IC0tLQo+IENo
-YW5nZXMgZnJvbSB2MToKPiAqIERyb3AgcmVnLW5hbWVzLCBhcyBzdWdnZXN0ZWQgYnkgRG91Zy4K
-PiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kgfCA0ICsrLS0KPiAgMSBmaWxl
-IGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKClJldmlld2VkLWJ5OiBE
-b3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+From: Ondøej Jirman <megous@megous.com>
+Date: Mon, 24 Jun 2019 19:46:37 +0200
+
+> This series was even longer before, with patches all around for various
+> maintainers. I'd expect that relevant maintainers pick the range of patches
+> meant for them. I don't know who's exactly responsible for what, but I think,
+> this should work:
+> 
+> - 2 stmmac patches should go together via some networking tree (is there
+>   something specific for stmmac?)
+> - all DTS patches should go via sunxi
+> - hdmi patches via some drm tree
+
+Thank you.  So I'll merge the first two patches that touch the stmmac
+driver via my net-next tree.
