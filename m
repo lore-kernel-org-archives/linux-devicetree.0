@@ -1,75 +1,67 @@
-From: =?UTF-8?Q?S=c3=a9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: Re: [PATCH 1/1] ARM: dts: imx6ul: fix PWM[1-4] interrupts
-Date: Mon, 24 Jun 2019 09:36:37 +0200
-Message-ID: <670f98af-2c55-de1f-d36c-37d1f33086c7@armadeus.com>
-References: <20190618155834.15545-1-sebastien.szymanski@armadeus.com>
- <20190624004703.GF3800@dragon>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 3/4] ARM: dts: exynos: Add regulator suspend
+ configuration to Odroid XU3/XU4/HC1 family
+Date: Mon, 24 Jun 2019 09:41:27 +0200
+Message-ID: <CAJKOXPeXELUjsuW9eyGuRj56067qnL-J2Lt4U42mYiyx=X+F_Q@mail.gmail.com>
+References: <20190621155845.7079-1-krzk@kernel.org> <20190621155845.7079-3-krzk@kernel.org>
+ <CGME20190623160226epcas2p3449814deb1faf7bf939481e6d4da2b86@epcas2p3.samsung.com>
+ <CANAwSgTFQo8wL5s-djwPXFFOLtTHvRQif6234kFC=23PwMhuEQ@mail.gmail.com> <d94a2f99-fb99-c238-7011-9bbb4c0cd90f@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190624004703.GF3800@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <LW@KARO-electronics.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d94a2f99-fb99-c238-7011-9bbb4c0cd90f@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Anand Moon <linux.amoon@gmail.com>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpPbiA2LzI0LzE5IDI6NDcgQU0sIFNoYXduIEd1byB3cm90ZToKPiArTG90aGFyCj4g
-Cj4gT24gVHVlLCBKdW4gMTgsIDIwMTkgYXQgMDU6NTg6MzRQTSArMDIwMCwgU8OpYmFzdGllbiBT
-enltYW5za2kgd3JvdGU6Cj4+IEFjY29yZGluZyB0byB0aGUgaS5NWDZVTC9MIFJNLCB0YWJsZSAz
-LjEgIkFSTSBDb3J0ZXggQTcgZG9tYWluIGludGVycnVwdAo+PiBzdW1tYXJ5IiwgdGhlIGludGVy
-cnVwdHMgZm9yIHRoZSBQV01bMS00XSBnbyBmcm9tIDgzIHRvIDg2Lgo+Pgo+PiBGaXhlczogYjk5
-MDFmZTg0ZjAyICgiQVJNOiBkdHM6IGlteDZ1bDogYWRkIHB3bVsxLTRdIG5vZGVzIikKPj4gU2ln
-bmVkLW9mZi1ieTogU8OpYmFzdGllbiBTenltYW5za2kgPHNlYmFzdGllbi5zenltYW5za2lAYXJt
-YWRldXMuY29tPgo+IAo+IEp1c3QgY3VyaW91cyAtIGRpZCB5b3Ugc3BvdCB0aGUgZXJyb3IgYnkg
-dGVzdGluZyBQV00gb3IgbWVyZWx5IGJ5Cj4gbG9va2luZyBhdCB0aGUgY29kZSBhbmQgZG9jdW1l
-bnQ/CgpJIHNwb3R0ZWQgdGhlIGVycm9yIHdoZW4gdHJ5aW5nIHRvIHBsYXkgc291bmQgd2l0aCBQ
-V00gWzFdLgpUaGUgUFdNIGRyaXZlciAoZHJpdmVycy9wd20vcHdtLWlteDI3LmMpIGRvbid0IHVz
-ZSBpbnRlcnJ1cHQgdGhhdCdzCnByb2JhYmx5IHdoeSBub2JvZHkgbm90aWNlIHRoaXMgZXJyb3Iu
-CgpbMV0gaHR0cHM6Ly9naXRodWIuY29tL3Nhc2FteS9pbXgtc25kLXB3bQoKUmVnYXJkcywKCj4g
-Cj4gU2hhd24KPiAKPj4gLS0tCj4+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaSB8IDgg
-KysrKy0tLS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25z
-KC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaSBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC5kdHNpCj4+IGluZGV4IGJiZjAxMGM3MzMzNi4uYTdmNmQx
-ZDU4ZTIwIDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQo+PiAr
-KysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQo+PiBAQCAtMzU4LDcgKzM1OCw3IEBA
-Cj4+ICAJCQlwd20xOiBwd21AMjA4MDAwMCB7Cj4+ICAJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14
-NnVsLXB3bSIsICJmc2wsaW14MjctcHdtIjsKPj4gIAkJCQlyZWcgPSA8MHgwMjA4MDAwMCAweDQw
-MDA+Owo+PiAtCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxMTUgSVJRX1RZUEVfTEVWRUxfSElH
-SD47Cj4+ICsJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDgzIElSUV9UWVBFX0xFVkVMX0hJR0g+
-Owo+PiAgCQkJCWNsb2NrcyA9IDwmY2xrcyBJTVg2VUxfQ0xLX1BXTTE+LAo+PiAgCQkJCQkgPCZj
-bGtzIElNWDZVTF9DTEtfUFdNMT47Cj4+ICAJCQkJY2xvY2stbmFtZXMgPSAiaXBnIiwgInBlciI7
-Cj4+IEBAIC0zNjksNyArMzY5LDcgQEAKPj4gIAkJCXB3bTI6IHB3bUAyMDg0MDAwIHsKPj4gIAkJ
-CQljb21wYXRpYmxlID0gImZzbCxpbXg2dWwtcHdtIiwgImZzbCxpbXgyNy1wd20iOwo+PiAgCQkJ
-CXJlZyA9IDwweDAyMDg0MDAwIDB4NDAwMD47Cj4+IC0JCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJ
-IDExNiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPj4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
-ODQgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4+ICAJCQkJY2xvY2tzID0gPCZjbGtzIElNWDZVTF9D
-TEtfUFdNMj4sCj4+ICAJCQkJCSA8JmNsa3MgSU1YNlVMX0NMS19QV00yPjsKPj4gIAkJCQljbG9j
-ay1uYW1lcyA9ICJpcGciLCAicGVyIjsKPj4gQEAgLTM4MCw3ICszODAsNyBAQAo+PiAgCQkJcHdt
-MzogcHdtQDIwODgwMDAgewo+PiAgCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDZ1bC1wd20iLCAi
-ZnNsLGlteDI3LXB3bSI7Cj4+ICAJCQkJcmVnID0gPDB4MDIwODgwMDAgMHg0MDAwPjsKPj4gLQkJ
-CQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTE3IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+PiArCQkJ
-CWludGVycnVwdHMgPSA8R0lDX1NQSSA4NSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPj4gIAkJCQlj
-bG9ja3MgPSA8JmNsa3MgSU1YNlVMX0NMS19QV00zPiwKPj4gIAkJCQkJIDwmY2xrcyBJTVg2VUxf
-Q0xLX1BXTTM+Owo+PiAgCQkJCWNsb2NrLW5hbWVzID0gImlwZyIsICJwZXIiOwo+PiBAQCAtMzkx
-LDcgKzM5MSw3IEBACj4+ICAJCQlwd200OiBwd21AMjA4YzAwMCB7Cj4+ICAJCQkJY29tcGF0aWJs
-ZSA9ICJmc2wsaW14NnVsLXB3bSIsICJmc2wsaW14MjctcHdtIjsKPj4gIAkJCQlyZWcgPSA8MHgw
-MjA4YzAwMCAweDQwMDA+Owo+PiAtCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxMTggSVJRX1RZ
-UEVfTEVWRUxfSElHSD47Cj4+ICsJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDg2IElSUV9UWVBF
-X0xFVkVMX0hJR0g+Owo+PiAgCQkJCWNsb2NrcyA9IDwmY2xrcyBJTVg2VUxfQ0xLX1BXTTQ+LAo+
-PiAgCQkJCQkgPCZjbGtzIElNWDZVTF9DTEtfUFdNND47Cj4+ICAJCQkJY2xvY2stbmFtZXMgPSAi
-aXBnIiwgInBlciI7Cj4+IC0tIAo+PiAyLjIxLjAKPj4KCgotLSAKU8OpYmFzdGllbiBTenltYW5z
-a2kKU29mdHdhcmUgZW5naW5lZXIsIEFybWFkZXVzIFN5c3RlbXMKVGVsOiArMzMgKDApOSA3MiAy
-OSA0MSA0NApGYXg6ICszMyAoMCk5IDcyIDI4IDc5IDI2CgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Mon, 24 Jun 2019 at 09:20, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>
+> Hi Anand,
+>
+> On 2019-06-23 18:02, Anand Moon wrote:
+> > Thanks for this patch. Please add my
+> >
+> > Tested-by: Anand Moon <linux.amoon@gmail.com>
+> >
+> > [snip]
+> >
+> > Could you integrate below small changes into this patch.
+> > with these below changes suspend and resume work correctly at my end.
+> >
+> > [1] XU4_suspendresume.patch
+> >
+> > As per S2MPS11B PMIC 1.2.1 Regulator (Features)
+> > Fix the min max value for *Buck7* and *Buck8*
+> >
+> > -- Buck7 (VDD_1.0V_LDO) 1.5 A (1.2 V to 1.5 V, 12.5 mV step, default on 1.35 V)
+> > -- Buck8 (VDD_1.8V_LDO) 2.5 A (1.8 V to 2.1 V, 12.5 mV step, default on 2.0 V)
+>
+> Could you elaborate why such change for Buck7 and Buck8 is needed?
+
+Anand has here valid point - the constraints in DTS do not match
+hardware manual. This leads to question whether voltage table in
+driver is proper... Another point is the voltage itself. The
+schematics describes them as at specific voltage (1.35 V and 2.0 V)
+but after boot they are 1.2 V and 1.85 V. Maybe this shift comes from
+the problem above.
+
+>
+> > Also add suspend-off for *Buck9*
+> > Buck9 internally controls the power of USB hub.
+> > Adding suspend the this node help proper reset of USB hub on Odroid
+> > XU4 / HC1/ XU3
+> > during suspend and resume. Below it the logs from my testing.
+>
+> Disabling Buck9 in suspend indeed reduces the power consumed by the
+> board during suspend-to-ram from about 80mA to as little as 7-10mA, what
+> matches the results of OdroidXU3. Thanks for the hint!
+
+Although I did not get what is the difference in the logs (Anand
+pasted two logs but they look the same) but the power consumption is
+reason is good enough. I would be happy to put in the changelog entire
+consumption  difference. I can measure it on XU3-Lite but can you give
+me the XU4 (before and after)?
+
+Best regards,
+Krzysztof
