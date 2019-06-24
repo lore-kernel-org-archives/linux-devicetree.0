@@ -1,82 +1,89 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 03/15] dt-bindings: display: Convert ampire,
- am-480272h3tmqw-t01h panel to DT schema
-Date: Mon, 24 Jun 2019 15:56:37 -0600
-Message-ID: <20190624215649.8939-4-robh@kernel.org>
+Subject: [PATCH v2 09/15] dt-bindings: display: Convert tfc,s9700rtwv43tr-01b panel to DT schema
+Date: Mon, 24 Jun 2019 15:56:43 -0600
+Message-ID: <20190624215649.8939-10-robh@kernel.org>
 References: <20190624215649.8939-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190624215649.8939-1-robh@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <treding@nvidia.com>, Sam Ravnborg <sam@ravnborg.org>
+Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Heiko Stuebner <heiko.stuebner@bq.com>
 List-Id: devicetree@vger.kernel.org
 
-Q29udmVydCB0aGUgYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoIHBhbmVsIGJpbmRpbmcgdG8g
-RFQgc2NoZW1hLgoKQ2M6IFlhbm5pY2sgRmVydHJlIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+CkNj
-OiBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgpDYzogU2FtIFJhdm5i
-b3JnIDxzYW1AcmF2bmJvcmcub3JnPgpDYzogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5j
-aGFydEBpZGVhc29uYm9hcmQuY29tPgpDYzogZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpSZXZpZXdlZC1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT4K
-QWNrZWQtYnk6IFRoaWVycnkgUmVkaW5nIDx0cmVkaW5nQG52aWRpYS5jb20+ClNpZ25lZC1vZmYt
-Ynk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQogLi4uL3BhbmVsL2FtcGlyZSxh
-bS00ODAyNzJoM3RtcXctdDAxaC50eHQgICAgIHwgMjYgLS0tLS0tLS0tLS0tCiAuLi4vcGFuZWwv
-YW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnlhbWwgICAgfCA0MiArKysrKysrKysrKysrKysr
-KysrCiAyIGZpbGVzIGNoYW5nZWQsIDQyIGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9ucygtKQog
-ZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3BhbmVsL2FtcGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaC50eHQKIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBp
-cmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgueWFtbAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGlyZSxhbS00ODAyNzJoM3RtcXct
-dDAxaC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
-bC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgudHh0CmRlbGV0ZWQgZmlsZSBtb2RlIDEwMDY0
-NAppbmRleCA2ODEyMjgwY2IxMDkuLjAwMDAwMDAwMDAwMAotLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQw
-MWgudHh0CisrKyAvZGV2L251bGwKQEAgLTEsMjYgKzAsMCBAQAotQW1waXJlIEFNLTQ4MDI3Mkgz
-VE1RVy1UMDFIIDQuMyIgV1FWR0EgVEZUIExDRCBwYW5lbAotCi1UaGlzIGJpbmRpbmcgaXMgY29t
-cGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVk
-Ci1pbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgotCi1SZXF1aXJlZCBwcm9w
-ZXJ0aWVzOgotLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImFtcGlyZSxhbS00ODAyNzJoM3RtcXct
-dDAxaCIKLQotT3B0aW9uYWwgcHJvcGVydGllczoKLS0gcG93ZXItc3VwcGx5OiByZWd1bGF0b3Ig
-dG8gcHJvdmlkZSB0aGUgc3VwcGx5IHZvbHRhZ2UKLS0gZW5hYmxlLWdwaW9zOiBHUElPIHBpbiB0
-byBlbmFibGUgb3IgZGlzYWJsZSB0aGUgcGFuZWwKLS0gYmFja2xpZ2h0OiBwaGFuZGxlIG9mIHRo
-ZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAotCi1PcHRpb25hbCBub2Rl
-czoKLS0gVmlkZW8gcG9ydCBmb3IgUkdCIGlucHV0LgotCi1FeGFtcGxlOgotCXBhbmVsX3JnYjog
-cGFuZWwtcmdiIHsKLQkJY29tcGF0aWJsZSA9ICJhbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgi
-OwotCQllbmFibGUtZ3Bpb3MgPSA8JmdwaW9hIDggMT47Ci0JCXBvcnQgewotCQkJcGFuZWxfaW5f
-cmdiOiBlbmRwb2ludCB7Ci0JCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZjb250cm9sbGVyX291dF9y
-Z2I+OwotCQkJfTsKLQkJfTsKLQl9OwpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnlh
-bWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBp
-cmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgueWFtbApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAw
-MDAwMDAwMDAwMDAuLmM2ZTMzZTdmMzZkMAotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGlyZSxhbS00ODAyNzJoM3Rt
-cXctdDAxaC55YW1sCkBAIC0wLDAgKzEsNDIgQEAKKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6
-IEdQTC0yLjAKKyVZQU1MIDEuMgorLS0tCiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hl
-bWFzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnlhbWwjCiskc2No
-ZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKKwordGl0
-bGU6IEFtcGlyZSBBTS00ODAyNzJIM1RNUVctVDAxSCA0LjMiIFdRVkdBIFRGVCBMQ0QgcGFuZWwK
-KworbWFpbnRhaW5lcnM6CisgIC0gWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNv
-bT4KKyAgLSBUaGllcnJ5IFJlZGluZyA8dHJlZGluZ0BudmlkaWEuY29tPgorCithbGxPZjoKKyAg
-LSAkcmVmOiBwYW5lbC1jb21tb24ueWFtbCMKKworcHJvcGVydGllczoKKyAgY29tcGF0aWJsZToK
-KyAgICBjb25zdDogYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoCisKKyAgcG93ZXItc3VwcGx5
-OiB0cnVlCisgIGVuYWJsZS1ncGlvczogdHJ1ZQorICBiYWNrbGlnaHQ6IHRydWUKKyAgcG9ydDog
-dHJ1ZQorCityZXF1aXJlZDoKKyAgLSBjb21wYXRpYmxlCisKK2FkZGl0aW9uYWxQcm9wZXJ0aWVz
-OiBmYWxzZQorCitleGFtcGxlczoKKyAgLSB8CisgICAgcGFuZWxfcmdiOiBwYW5lbCB7CisgICAg
-ICBjb21wYXRpYmxlID0gImFtcGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaCI7CisgICAgICBlbmFi
-bGUtZ3Bpb3MgPSA8JmdwaW9hIDggMT47CisgICAgICBwb3J0IHsKKyAgICAgICAgcGFuZWxfaW5f
-cmdiOiBlbmRwb2ludCB7CisgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZjb250cm9sbGVy
-X291dF9yZ2I+OworICAgICAgICB9OworICAgICAgfTsKKyAgICB9OworCisuLi4KLS0gCjIuMjAu
-MQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Convert the tfc,s9700rtwv43tr-01b panel binding to DT schema.
+
+Cc: Heiko Stuebner <heiko.stuebner@bq.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../display/panel/tfc,s9700rtwv43tr-01b.txt   | 15 ----------
+ .../display/panel/tfc,s9700rtwv43tr-01b.yaml  | 30 +++++++++++++++++++
+ 2 files changed, 30 insertions(+), 15 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.txt b/Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.txt
+deleted file mode 100644
+index dfb572f085eb..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.txt
++++ /dev/null
+@@ -1,15 +0,0 @@
+-TFC S9700RTWV43TR-01B 7" Three Five Corp 800x480 LCD panel with
+-resistive touch
+-
+-The panel is found on TI AM335x-evm.
+-
+-Required properties:
+-- compatible: should be "tfc,s9700rtwv43tr-01b"
+-- power-supply: See panel-common.txt
+-
+-Optional properties:
+-- enable-gpios: GPIO pin to enable or disable the panel, if there is one
+-- backlight: phandle of the backlight device attached to the panel
+-
+-This binding is compatible with the simple-panel binding, which is specified
+-in simple-panel.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.yaml b/Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.yaml
+new file mode 100644
+index 000000000000..614f4a8d8403
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.yaml
+@@ -0,0 +1,30 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/tfc,s9700rtwv43tr-01b.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TFC S9700RTWV43TR-01B 7" Three Five Corp 800x480 LCD panel with resistive touch
++
++maintainers:
++  - Jyri Sarha <jsarha@ti.com>
++  - Thierry Reding <thierry.reding@gmail.com>
++
++description: |+
++  The panel is found on TI AM335x-evm.
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    const: tfc,s9700rtwv43tr-01b
++
++  enable-gpios: true
++  backlight: true
++
++required:
++  - compatible
++  - power-supply
++
++...
+-- 
+2.20.1
