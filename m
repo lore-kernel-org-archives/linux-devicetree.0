@@ -1,39 +1,33 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Date: Mon, 24 Jun 2019 16:26:25 +0200
-Message-ID: <20190624142625.GR31306@lunn.ch>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
- <20190621164940.GL31306@lunn.ch>
- <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
- <20190624115558.GA5690@piout.net>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH 1/8] tpm: block messages while suspended
+Date: Mon, 24 Jun 2019 22:26:54 +0800
+Message-ID: <20190624142654.zprcpz42hivuyrjq@gondor.apana.org.au>
+References: <20190613180931.65445-1-swboyd@chromium.org>
+ <20190613180931.65445-2-swboyd@chromium.org>
+ <20190613232613.GH22901@ziepe.ca>
+ <5d03e394.1c69fb81.f028c.bffb@mx.google.com>
+ <20190617225134.GA30762@ziepe.ca>
+ <5d0c2cd6.1c69fb81.e66af.32bf@mx.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190624115558.GA5690@piout.net>
+In-Reply-To: <5d0c2cd6.1c69fb81.e66af.32bf@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Claudiu Manoil <claudiu.manoil@nxp.com>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>, Guenter Roeck <groeck@chromium.org>, Matt Mackall <mpm@selenic.com>, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > Yeah, there are 2 ethernet controller ports (managed by the enetc driver) 
-> > connected inside the SoC via SGMII links to 2 of the switch ports, one of
-> > these switch ports can be configured as CPU port (with follow-up patches).
-> > 
-> > This configuration may look prettier on DSA, but the main restriction here
-> > is that the entire functionality is provided by the ocelot driver which is a
-> > switchdev driver.  I don't think it would be a good idea to copy-paste code
-> > from ocelot to a separate dsa driver.
-> > 
-> 
-> We should probably make the ocelot driver a DSA driver then...
+On Thu, Jun 20, 2019 at 06:03:17PM -0700, Stephen Boyd wrote:
+>
+> What do you think of the attached patch? I haven't tested it, but it
+> would make sure that the kthread is frozen so that the hardware can be
+> resumed before the kthread is thawed and tries to go touch the hardware.
 
-Hi Claudiu, Alexandre
+Looks good to me.
 
-An important part of DSA is being able to direct frames out specific
-ports when they ingress via the CPU port. Does the silicon support
-this? At the moment, i think it is using polled IO.
-
-      Andrew
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
