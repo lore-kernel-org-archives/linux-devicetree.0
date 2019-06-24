@@ -1,160 +1,98 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 13/15] dt-bindings: display: Convert mitsubishi,aa104xd12 panel to DT schema
-Date: Mon, 24 Jun 2019 15:56:47 -0600
-Message-ID: <20190624215649.8939-14-robh@kernel.org>
+Subject: [PATCH v2 08/15] dt-bindings: display: Convert raspberrypi,
+ 7inch-touchscreen panel to DT schema
+Date: Mon, 24 Jun 2019 15:56:42 -0600
+Message-ID: <20190624215649.8939-9-robh@kernel.org>
 References: <20190624215649.8939-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20190624215649.8939-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert the mitsubishi,aa104xd12 LVDS panel binding to DT schema.
-
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../display/panel/mitsubishi,aa104xd12.txt    | 47 ------------
- .../display/panel/mitsubishi,aa104xd12.yaml   | 71 +++++++++++++++++++
- 2 files changed, 71 insertions(+), 47 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
-deleted file mode 100644
-index ced0121aed7d..000000000000
---- a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
-+++ /dev/null
-@@ -1,47 +0,0 @@
--Mitsubishi AA204XD12 LVDS Display Panel
--=======================================
--
--The AA104XD12 is a 10.4" XGA TFT-LCD display panel.
--
--These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
--with the following device-specific properties.
--
--
--Required properties:
--
--- compatible: Shall contain "mitsubishi,aa121td01" and "panel-lvds", in that
--  order.
--- vcc-supply: Reference to the regulator powering the panel VCC pins.
--
--
--Example
---------
--
--panel {
--	compatible = "mitsubishi,aa104xd12", "panel-lvds";
--	vcc-supply = <&vcc_3v3>;
--
--	width-mm = <210>;
--	height-mm = <158>;
--
--	data-mapping = "jeida-24";
--
--	panel-timing {
--		/* 1024x768 @65Hz */
--		clock-frequency = <65000000>;
--		hactive = <1024>;
--		vactive = <768>;
--		hsync-len = <136>;
--		hfront-porch = <20>;
--		hback-porch = <160>;
--		vfront-porch = <3>;
--		vback-porch = <29>;
--		vsync-len = <6>;
--	};
--
--	port {
--		panel_in: endpoint {
--			remote-endpoint = <&lvds_encoder>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
-new file mode 100644
-index 000000000000..fd97ca49c104
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/mitsubishi,aa104xd12.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Mitsubishi AA104XD12 10.4" XGA LVDS Display Panel
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+  - Thierry Reding <thierry.reding@gmail.com>
-+
-+allOf:
-+  - $ref: lvds.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: mitsubishi,aa104xd12
-+      - {} # panel-lvds, but not listed here to avoid false select
-+
-+  vcc-supply:
-+    description: Reference to the regulator powering the panel VCC pins.
-+
-+  data-mapping:
-+    const: jeida-24
-+
-+  width-mm:
-+    const: 210
-+
-+  height-mm:
-+    const: 158
-+
-+
-+required:
-+  - compatible
-+  - vcc-supply
-+
-+examples:
-+  - |+
-+
-+    panel {
-+      compatible = "mitsubishi,aa104xd12", "panel-lvds";
-+      vcc-supply = <&vcc_3v3>;
-+
-+      width-mm = <210>;
-+      height-mm = <158>;
-+
-+      data-mapping = "jeida-24";
-+
-+      panel-timing {
-+        /* 1024x768 @65Hz */
-+        clock-frequency = <65000000>;
-+        hactive = <1024>;
-+        vactive = <768>;
-+        hsync-len = <136>;
-+        hfront-porch = <20>;
-+        hback-porch = <160>;
-+        vfront-porch = <3>;
-+        vback-porch = <29>;
-+        vsync-len = <6>;
-+      };
-+
-+      port {
-+        panel_in: endpoint {
-+          remote-endpoint = <&lvds_encoder>;
-+        };
-+      };
-+    };
-+
-+...
--- 
-2.20.1
+Q29udmVydCB0aGUgcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4gcGFuZWwgYmluZGluZyB0
+byBEVCBzY2hlbWEuCgpDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KQ2M6IFRoaWVy
+cnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+CkNjOiBTYW0gUmF2bmJvcmcgPHNh
+bUByYXZuYm9yZy5vcmc+CkNjOiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4u
+Y29tPgpDYzogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQu
+Y29tPgpDYzogZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpTaWduZWQtb2ZmLWJ5OiBS
+b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0KIC4uLi9wYW5lbC9yYXNwYmVycnlwaSw3
+aW5jaC10b3VjaHNjcmVlbi50eHQgICB8IDQ5IC0tLS0tLS0tLS0tLS0KIC4uLi9wYW5lbC9yYXNw
+YmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi55YW1sICB8IDcxICsrKysrKysrKysrKysrKysrKysK
+IDIgZmlsZXMgY2hhbmdlZCwgNzEgaW5zZXJ0aW9ucygrKSwgNDkgZGVsZXRpb25zKC0pCiBkZWxl
+dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cGFuZWwvcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4udHh0CiBjcmVhdGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmFzcGJl
+cnJ5cGksN2luY2gtdG91Y2hzY3JlZW4ueWFtbAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNo
+c2NyZWVuLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Bh
+bmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLnR4dApkZWxldGVkIGZpbGUgbW9kZSAx
+MDA2NDQKaW5kZXggZTllMTljMDU5MjYwLi4wMDAwMDAwMDAwMDAKLS0tIGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmFzcGJlcnJ5cGksN2luY2gtdG91
+Y2hzY3JlZW4udHh0CisrKyAvZGV2L251bGwKQEAgLTEsNDkgKzAsMCBAQAotVGhpcyBiaW5kaW5n
+IGNvdmVycyB0aGUgb2ZmaWNpYWwgNyIgKDgwMHg0ODApIFJhc3BiZXJyeSBQaSB0b3VjaHNjcmVl
+bgotcGFuZWwuCi0KLVRoaXMgRFNJIHBhbmVsIGNvbnRhaW5zOgotCi0tIFRDMzU4NzYyIERTSS0+
+RFBJIGJyaWRnZQotLSBBdG1lbCBtaWNyb2NvbnRyb2xsZXIgb24gSTJDIGZvciBwb3dlciBzZXF1
+ZW5jaW5nIHRoZSBEU0kgYnJpZGdlIGFuZAotICBjb250cm9sbGluZyBiYWNrbGlnaHQKLS0gVG91
+Y2hzY3JlZW4gY29udHJvbGxlciBvbiBJMkMgZm9yIHRvdWNoIGlucHV0Ci0KLWFuZCB0aGlzIGJp
+bmRpbmcgY292ZXJzIHRoZSBEU0kgZGlzcGxheSBwYXJ0cyBidXQgbm90IGl0cyB0b3VjaCBpbnB1
+dC4KLQotUmVxdWlyZWQgcHJvcGVydGllczoKLS0gY29tcGF0aWJsZToJTXVzdCBiZSAicmFzcGJl
+cnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwiCi0tIHJlZzoJCU11c3QgYmUgIjQ1IgotLSBw
+b3J0OgkJU2VlIHBhbmVsLWNvbW1vbi50eHQKLQotRXhhbXBsZToKLQotZHNpMTogZHNpQDdlNzAw
+MDAwIHsKLQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKLQkjc2l6ZS1jZWxscyA9IDwwPjsKLQk8Li4u
+PgotCi0JcG9ydCB7Ci0JCWRzaV9vdXRfcG9ydDogZW5kcG9pbnQgewotCQkJcmVtb3RlLWVuZHBv
+aW50ID0gPCZwYW5lbF9kc2lfcG9ydD47Ci0JCX07Ci0JfTsKLX07Ci0KLWkyY19kc2k6IGkyYyB7
+Ci0JY29tcGF0aWJsZSA9ICJpMmMtZ3BpbyI7Ci0JI2FkZHJlc3MtY2VsbHMgPSA8MT47Ci0JI3Np
+emUtY2VsbHMgPSA8MD47Ci0JZ3Bpb3MgPSA8JmdwaW8gMjggMAotCQkgJmdwaW8gMjkgMD47Ci0K
+LQlsY2RANDUgewotCQljb21wYXRpYmxlID0gInJhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVu
+LXBhbmVsIjsKLQkJcmVnID0gPDB4NDU+OwotCi0JCXBvcnQgewotCQkJcGFuZWxfZHNpX3BvcnQ6
+IGVuZHBvaW50IHsKLQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXRfcG9ydD47Ci0JCQl9
+OwotCQl9OwotCX07Ci19OwpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4ueWFtbCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Jhc3BiZXJy
+eXBpLDdpbmNoLXRvdWNoc2NyZWVuLnlhbWwKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAw
+MDAwMDAwMDAwLi4yMmEwODNmN2JjOGUKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9yYXNwYmVycnlwaSw3aW5jaC10b3Vj
+aHNjcmVlbi55YW1sCkBAIC0wLDAgKzEsNzEgQEAKKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6
+IEdQTC0yLjAKKyVZQU1MIDEuMgorLS0tCiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hl
+bWFzL2Rpc3BsYXkvcGFuZWwvcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4ueWFtbCMKKyRz
+Y2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIworCit0
+aXRsZTogVGhlIG9mZmljaWFsIDciICg4MDB4NDgwKSBSYXNwYmVycnkgUGkgdG91Y2hzY3JlZW4K
+KworbWFpbnRhaW5lcnM6CisgIC0gRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KKyAgLSBU
+aGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgorCitkZXNjcmlwdGlvbjog
+fCsKKyAgVGhpcyBEU0kgcGFuZWwgY29udGFpbnM6CisKKyAgLSBUQzM1ODc2MiBEU0ktPkRQSSBi
+cmlkZ2UKKyAgLSBBdG1lbCBtaWNyb2NvbnRyb2xsZXIgb24gSTJDIGZvciBwb3dlciBzZXF1ZW5j
+aW5nIHRoZSBEU0kgYnJpZGdlIGFuZAorICAgIGNvbnRyb2xsaW5nIGJhY2tsaWdodAorICAtIFRv
+dWNoc2NyZWVuIGNvbnRyb2xsZXIgb24gSTJDIGZvciB0b3VjaCBpbnB1dAorCisgIGFuZCB0aGlz
+IGJpbmRpbmcgY292ZXJzIHRoZSBEU0kgZGlzcGxheSBwYXJ0cyBidXQgbm90IGl0cyB0b3VjaCBp
+bnB1dC4KKworcHJvcGVydGllczoKKyAgY29tcGF0aWJsZToKKyAgICBjb25zdDogcmFzcGJlcnJ5
+cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwKKworICByZWc6CisgICAgY29uc3Q6IDB4NDUKKwor
+ICBwb3J0OiB0cnVlCisKK3JlcXVpcmVkOgorICAtIGNvbXBhdGlibGUKKyAgLSByZWcKKyAgLSBw
+b3J0CisKK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQorCitleGFtcGxlczoKKyAgLSB8Kwor
+ICAgIGRzaTE6IGRzaSB7CisgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKKyAgICAgICNzaXpl
+LWNlbGxzID0gPDA+OworCisgICAgICBwb3J0IHsKKyAgICAgICAgZHNpX291dF9wb3J0OiBlbmRw
+b2ludCB7CisgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9kc2lfcG9ydD47Cisg
+ICAgICAgIH07CisgICAgICB9OworICAgIH07CisKKyAgICBpMmNfZHNpOiBpMmMgeworICAgICAg
+Y29tcGF0aWJsZSA9ICJpMmMtZ3BpbyI7CisgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKKyAg
+ICAgICNzaXplLWNlbGxzID0gPDA+OworICAgICAgc2NsLWdwaW9zID0gPCZncGlvIDI4IDA+Owor
+ICAgICAgc2RhLWdwaW9zID0gPCZncGlvIDI5IDA+OworCisgICAgICBsY2RANDUgeworICAgICAg
+ICBjb21wYXRpYmxlID0gInJhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBhbmVsIjsKKyAg
+ICAgICAgcmVnID0gPDB4NDU+OworCisgICAgICAgIHBvcnQgeworICAgICAgICAgIHBhbmVsX2Rz
+aV9wb3J0OiBlbmRwb2ludCB7CisgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9v
+dXRfcG9ydD47CisgICAgICAgICAgfTsKKyAgICAgICAgfTsKKyAgICAgIH07CisgICAgfTsKKwor
+Li4uCi0tIAoyLjIwLjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbA==
