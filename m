@@ -1,86 +1,49 @@
-Return-Path: <SRS0=bzHF=UJ=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V4 1/8] phy: tegra: xusb: t210: add XUSB dual mode support
-Date: Mon, 10 Jun 2019 15:49:02 +0530
-Message-ID: <1560161949-26031-2-git-send-email-nkristam@nvidia.com>
-In-Reply-To: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
-References: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <shawnguo@kernel.org>
+Date: Mon, 24 Jun 2019 08:38:20 +0800
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: imx6qdl-kontron-samx6i: add Kontron
+ SMARC SoM Support
+Message-ID: <20190624003819.GE3800@dragon>
+References: <20190617161432.32268-1-m.felsch@pengutronix.de>
+ <20190617161432.32268-4-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617161432.32268-4-m.felsch@pengutronix.de>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: robh+dt@kernel.org, linux-imx@nxp.com, devicetree@vger.kernel.org, Gilles.Buloz@kontron.com, frieder.schrempf@kontron.de, thomas.schaefer@kontron.com, Stefan.Nickl@kontron.com, Michael.Brunner@kontron.com, kernel@pengutronix.de, festevam@gmail.com, plaes@plaes.org, Michael Grzeschik <m.grzeschik@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Configure the port capabilities based on usb_dr_mode settings.
+On Mon, Jun 17, 2019 at 06:14:32PM +0200, Marco Felsch wrote:
+> From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+> 
+> The patch adds the following interfaces according the SMARC Spec 1.1
+> [1] and provided schematics:
+>  - SMARC SPI0/1
+>    Note: Since Kontron still uses silicon revisions below 1.3 they have
+>          add a spi-nor to implement Workaround #1 of erratum ERR006282.
+>  - SMARC SDIO
+>  - SMARC LCD
+>  - SMARC HDMI
+>  - SMARC Management pins
+>    Note: Kontron don't route all of these pins to the i.MX6, some are
+>          routed to the SoM CPLD.
+>  - SMARC GPIO
+>  - SMARC CSI Camera
+>    Note: As specified in [1] the data lanes are shared to cover the
+>          csi and the parallel case. The case depends on the baseboard so
+>          muxing the data lanes is not part of this patch.
+>  - SMARC I2S
+>  - SMARC Watchdog
+>    Note: The watchdog output pin is routed to the CPLD and the SMARC
+>          header. The CPLD performs a reset after a 30s timeout so we
+>          need to enable the watchdog per default.
+>  - SMARC module eeprom
+> 
+> Due to the lack of hardware not all of these interfaces are tesetd.
+> 
+> [1] https://sget.org/standards/smarc
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-Based on work by JC Kuo <jckuo@nvidia.com>.
-
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Reviewed-by: JC Kuo <jckuo@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
- drivers/phy/tegra/xusb-tegra210.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
-index 05bee32..4beebcc 100644
---- a/drivers/phy/tegra/xusb-tegra210.c
-+++ b/drivers/phy/tegra/xusb-tegra210.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2014, NVIDIA CORPORATION.  All rights reserved.
-+ * Copyright (c) 2014-2019, NVIDIA CORPORATION.  All rights reserved.
-  * Copyright (C) 2015 Google, Inc.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-@@ -47,7 +47,10 @@
- #define XUSB_PADCTL_USB2_PAD_MUX_USB2_BIAS_PAD_XUSB 0x1
- 
- #define XUSB_PADCTL_USB2_PORT_CAP 0x008
-+#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DISABLED(x) (0x0 << ((x) * 4))
- #define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(x) (0x1 << ((x) * 4))
-+#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DEVICE(x) (0x2 << ((x) * 4))
-+#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_OTG(x) (0x3 << ((x) * 4))
- #define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_MASK(x) (0x3 << ((x) * 4))
- 
- #define XUSB_PADCTL_SS_PORT_MAP 0x014
-@@ -72,6 +75,7 @@
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(x) (0x084 + (x) * 0x40)
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT 7
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK 0x3
-+#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL 0x1
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18 (1 << 6)
- 
- #define XUSB_PADCTL_USB2_OTG_PADX_CTL0(x) (0x088 + (x) * 0x40)
-@@ -965,7 +969,14 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- 
- 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_PORT_CAP);
- 	value &= ~XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_MASK(index);
--	value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(index);
-+	if (port->mode == USB_DR_MODE_UNKNOWN)
-+		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DISABLED(index);
-+	else if (port->mode == USB_DR_MODE_PERIPHERAL)
-+		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DEVICE(index);
-+	else if (port->mode == USB_DR_MODE_HOST)
-+		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(index);
-+	else if (port->mode == USB_DR_MODE_OTG)
-+		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_OTG(index);
- 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_PORT_CAP);
- 
- 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
-@@ -997,7 +1008,12 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- 			     XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
- 	value &= ~(XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK <<
- 		   XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT);
--	value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
-+	if (port->mode == USB_DR_MODE_HOST)
-+		value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
-+	else
-+		value |=
-+		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL <<
-+		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT;
- 	padctl_writel(padctl, value,
- 		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
- 
--- 
-2.7.4
+Applied, thanks.
