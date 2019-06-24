@@ -1,47 +1,54 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/4] arm64: Enable TIMER_IMX_SYS_CTR for ARCH_MXC
- platforms
-Date: Mon, 24 Jun 2019 10:22:01 +0800
-Message-ID: <20190624022200.GN3800@dragon>
-References: <20190621070720.12395-1-Anson.Huang@nxp.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v5 08/10] memory: tegra: Ensure timing control debug features are disabled
+Date: Mon, 24 Jun 2019 03:31:30 +0300
+Message-ID: <20190624003132.29473-9-digetx@gmail.com>
+References: <20190624003132.29473-1-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190621070720.12395-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190624003132.29473-1-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com
-Cc: catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, leonard.crestez@nxp.com, aisheng.dong@nxp.com, ping.bai@nxp.com, daniel.baluta@nxp.com, peng.fan@nxp.com, abel.vesa@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com
+To: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 03:07:17PM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> ARCH_MXC platforms needs system counter as broadcast timer
-> to support cpuidle, enable it by default.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  arch/arm64/Kconfig.platforms | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 4778c77..f5e623f 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -173,6 +173,7 @@ config ARCH_MXC
->  	select PM
->  	select PM_GENERIC_DOMAINS
->  	select SOC_BUS
-> +	select TIMER_IMX_SYS_CTR
+Timing control debug features should be disabled at a boot time, but you
+never now and hence it's better to disable them explicitly because some of
+those features are crucial for the driver to do a proper thing.
 
-Where is that driver?
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/memory/tegra/mc.c | 3 +++
+ drivers/memory/tegra/mc.h | 2 ++
+ 2 files changed, 5 insertions(+)
 
-Shawn
-
->  	help
->  	  This enables support for the ARMv8 based SoCs in the
->  	  NXP i.MX family.
-> -- 
-> 2.7.4
-> 
+diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+index eaebe371625c..4c1492c653e1 100644
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -660,6 +660,9 @@ static int tegra_mc_probe(struct platform_device *pdev)
+ 	} else
+ #endif
+ 	{
++		/* ensure that debug features are disabled */
++		mc_writel(mc, 0x00000000, MC_TIMING_CONTROL_DBG);
++
+ 		err = tegra_mc_setup_latency_allowance(mc);
+ 		if (err < 0) {
+ 			dev_err(&pdev->dev,
+diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
+index 0720a1d2023e..abc565b42225 100644
+--- a/drivers/memory/tegra/mc.h
++++ b/drivers/memory/tegra/mc.h
+@@ -33,6 +33,8 @@
+ #define MC_EMEM_ARB_OVERRIDE				0xe8
+ #define MC_EMEM_ARB_OVERRIDE_EACK_MASK			0x3
+ 
++#define MC_TIMING_CONTROL_DBG				0xf8
++
+ #define MC_TIMING_CONTROL				0xfc
+ #define MC_TIMING_UPDATE				BIT(0)
+ 
+-- 
+2.22.0
