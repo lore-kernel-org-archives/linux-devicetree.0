@@ -1,114 +1,68 @@
-From: Dan Williams <dcbw@redhat.com>
-Subject: Re: WWAN Controller Framework (was IPA [PATCH v2 00/17])
-Date: Mon, 24 Jun 2019 14:54:30 -0500
-Message-ID: <f0fcee096d779837abc46e7badae9105ee8aaecf.camel@redhat.com>
-References: <20190531035348.7194-1-elder@linaro.org>
-         <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 2/3] drm/rockchip: Add optional support for CRTC gamma LUT
+Date: Mon, 24 Jun 2019 13:03:12 -0700
+Message-ID: <CAD=FV=V3dq0qS2Finw7gxbZqyRvuLqGv-573LHX+41odjBOTxA@mail.gmail.com>
+References: <20190621211346.1324-1-ezequiel@collabora.com> <20190621211346.1324-3-ezequiel@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
+In-Reply-To: <20190621211346.1324-3-ezequiel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Elder <elder@linaro.org>, davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org
-Cc: evgreen@chromium.org, benchan@google.com, ejcaruso@google.com, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+To: Ezequiel Garcia <ezequiel@collabora.com>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Jacopo Mondi <jacopo@jmondi.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-06-24 at 11:30 -0500, Alex Elder wrote:
-> OK I want to try to organize a little more concisely some of the
-> discussion on this, because there is a very large amount of volume
-> to date and I think we need to try to narrow the focus back down
-> again.
-> 
-> I'm going to use a few terms here.  Some of these I really don't
-> like, but I want to be unambiguous *and* (at least for now) I want
-> to avoid the very overloaded term "device".
-> 
-> I have lots more to say, but let's start with a top-level picture,
-> to make sure we're all on the same page.
-> 
->          WWAN Communication
->          Channel (Physical)
->                  |     ------------------------
-> ------------     v     |           :+ Control |  \
-> >          |-----------|           :+ Data    |  |
-> >    AP    |           | WWAN unit :+ Voice   |   > Functions
-> >          |===========|           :+ GPS     |  |
-> ------------     ^     |           :+ ...     |  /
->                  |     -------------------------
->           Multiplexed WWAN
->            Communication
->          Channel (Physical)
-> 
-> - The *AP* is the main CPU complex that's running Linux on one or
->   more CPU cores.
-> - A *WWAN unit* is an entity that shares one or more physical
->   *WWAN communication channels* with the AP.
+Hi,
 
-You could just say "WWAN modem" here.
+On Fri, Jun 21, 2019 at 2:14 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+>
+> Add an optional CRTC gamma LUT support, and enable it on RK3288.
+> This is currently enabled via a separate address resource,
+> which needs to be specified in the devicetree.
+>
+> The address resource is required because on some SoCs, such as
+> RK3288, the LUT address is after the MMU address, and the latter
+> is supported by a different driver. This prevents the DRM driver
+> from requesting an entire register space.
+>
+> The current implementation works for RGB 10-bit tables, as that
+> is what seems to work on RK3288.
+>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+> Changes from v1:
+> * drop explicit linear LUT after finding a proper
+>   way to disable gamma correction.
+> * avoid setting gamma is the CRTC is not active.
+> * s/int/unsigned int as suggested by Jacopo.
+> * only enable color management and set gamma size
+>   if gamma LUT is supported, suggested by Doug.
+> * drop the reg-names usage, and instead just use indexed reg
+>   specifiers, suggested by Doug.
+>
+> Changes from RFC:
+> * Request (an optional) address resource for the LUT.
+> * Drop support for RK3399, which doesn't seem to work
+>   out of the box and needs more research.
+> * Support pass-thru setting when GAMMA_LUT is NULL.
+> * Add a check for the gamma size, as suggested by Ilia.
+> * Move gamma setting to atomic_commit_tail, as pointed
+>   out by Jacopo/Laurent, is the correct way.
+> ---
+>  drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |   3 +
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 114 ++++++++++++++++++++
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.h |   7 ++
+>  drivers/gpu/drm/rockchip/rockchip_vop_reg.c |   2 +
+>  4 files changed, 126 insertions(+)
 
-> - A *WWAN communication channel* is a bidirectional means of
->   carrying data between the AP and WWAN unit.
-> - A WWAN communication channel carries data using a *WWAN protocol*.
-> - A WWAN unit implements one or more *WWAN functions*, such as
->   5G data, LTE voice, GPS, and so on.
+Looks happy to me now.  Since I'm not a DRM expert and almost
+certainly don't know much about gamma LUT, take this as you will:
 
-Go more generic here. Not just 5G data but any WWAN IP-based data
-(GPRS, EDGE, CDMA, UMTS, EVDO, LTE, 5G, etc). And not just LTE voice
-but any voice data; plenty of devices don't support LTE but still have
-"WWAN logical communication channels"
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-> - A WWAN unit shall implement a *WWAN control function*, used to
->   manage the use of other WWAN functions, as well as the WWAN unit
->   itself.
-> - The AP communicates with a WWAN function using a WWAN protocol.
-> - A WWAN physical channel can be *multiplexed*, in which case it
->   carries the data for one or more *WWAN logical channels*.
+I'm not in front of my veyron device at the moment, so I can't re-test
+exactly this patch so I won't add a Tested-by tag.  However, I'll note
+that earlier versions worked for the test app I was able to find in
+Chrome OS and I'd imagine this one does too.
 
-It's unclear to me what "physical" means here. USB Interface or
-Endpoint or PCI Function or SMD channel? Or kernel TTY device?
-
-For example on Qualcomm-based USB dongles a given USB Interface's
-Endpoint represents a QMAP "IP data" channel which itself could be
-multiplexed into separate "IP data" channels.  Or that USB Endpoint(s)
-could be exposed as a TTY which itself can be MUX-ed dynamically using
-GSM 07.10.
-
-To me "physical" usually means the bus type (PCI, USB, SMD, whatever).
-A Linux hardware driver (IPA, qmi_wwan, option, sierra, etc) binds to
-that physical entity using hardware IDs (USB or PCI VID/PID, devicetree
-properties) and exposes some "WWAN logical communication channels".
-Those logical channels might be multiplexed and another driver (rmnet)
-could handle exposing the de-muxed logical channels that the muxed
-logical channel carries.
-
-> - A multiplexed WWAN communication channel uses a *WWAN wultiplexing
->   protocol*, which is used to separate independent data streams
->   carrying other WWAN protocols.
-> - A WWAN logical channel carries a bidirectional stream of WWAN
->   protocol data between an entity on the AP and a WWAN function.
-
-It *usually* is bidirectional. For example some GPS logical
-communication channels just start spitting out NMEA when you give the
-control function a command. The NMEA ports themselves don't accept any
-input.
-
-> Does that adequately represent a very high-level picture of what
-> we're trying to manage?
-
-Yes, pretty well. Thanks for trying to specify it all.
-
-> And if I understand it right, the purpose of the generic framework
-> being discussed is to define a common mechanism for managing (i.e.,
-> discovering, creating, destroying, querying, configuring, enabling,
-> disabling, etc.) WWAN units and the functions they implement, along
-> with the communication and logical channels used to communicate with
-> them.
-
-Yes.
-
-Dan
-
-> Comments?
-> 
-> 					-Alex
+-Doug
