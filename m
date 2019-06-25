@@ -1,81 +1,249 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [v2 2/2] drm/panel: support for auo, kd101n80-45na wuxga dsi
- video mode panel
-Date: Tue, 25 Jun 2019 08:42:57 +0800
-Message-ID: <CANMq1KDixwQN13o84Jp6E6tyfTQSZjiZSMzaNFZ02LEVPx0Z8g@mail.gmail.com>
-References: <20190624080001.67222-1-jitao.shi@mediatek.com>
- <20190624080001.67222-3-jitao.shi@mediatek.com>
+From: Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH] csky: dts: Add NationalChip GX6605S
+Date: Tue, 25 Jun 2019 08:45:51 +0800
+Message-ID: <CAJF2gTTnhTQK-mOyC+e8U8xrDwaoDUACb1R_zQfDCKwdKzc96w@mail.gmail.com>
+References: <20190625002829.17409-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190624080001.67222-3-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Thierry Reding <treding@nvidia.com>, Sean Paul <seanpaul@chromium.org>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream <srv_heupstream@mediatek.com>, lk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190625002829.17409-1-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdW4gMjQsIDIwMTkgYXQgNDowMCBQTSBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRp
-YXRlay5jb20+IHdyb3RlOgo+Cj4gQXVvLGtkMTAxbjgwLTQ1bmEncyBjb25uZWN0b3IgaXMgc2Ft
-ZSBhcyBib2UsdHYxMDF3dW0tbmw2Lgo+IFRoZSBtb3N0IGNvZGVzIGNhbiBiZSByZXVzZS4KPiBT
-byBhdW8sa2QxMDFuODAtNDVuYSBhbmQgYm9lLHR2MTAxd3VtLW5sNiB1c2Ugb25lIGRyaXZlciBm
-aWxlLgo+IEFkZCB0aGUgZGlmZmVyZW50IHBhcnRzIGluIGRyaXZlciBkYXRhLgo+Cj4gU2lnbmVk
-LW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPgo+IC0tLQo+ICAuLi4v
-Z3B1L2RybS9wYW5lbC9wYW5lbC1ib2UtdHYxMDF3dW0tbmw2LmMgICAgfCA0MCArKysrKysrKysr
-KysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0MCBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWJvZS10djEwMXd1bS1ubDYuYyBiL2Ry
-aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1ib2UtdHYxMDF3dW0tbmw2LmMKPiBpbmRleCA2ZTA2
-Yzg1MDY2MjMuLmQxZWU0M2NmY2JlMiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFu
-ZWwvcGFuZWwtYm9lLXR2MTAxd3VtLW5sNi5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVs
-L3BhbmVsLWJvZS10djEwMXd1bS1ubDYuYwo+IEBAIC0zNzIsNiArMzcyLDE1IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3QgcGFuZWxfaW5pdF9jbWQgYm9lX2luaXRfY21kW10gPSB7Cj4gICAgICAgICB7
-fSwKPiAgfTsKPgo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2luaXRfY21kIGF1b19pbml0
-X2NtZFtdID0gewo+ICsgICAgICAgX0lOSVRfREVMQVlfQ01EKDI0KSwKPiArICAgICAgIF9JTklU
-X0RDU19DTUQoMHgxMSksCj4gKyAgICAgICBfSU5JVF9ERUxBWV9DTUQoMTIwKSwKPiArICAgICAg
-IF9JTklUX0RDU19DTUQoMHgyOSksCj4gKyAgICAgICBfSU5JVF9ERUxBWV9DTUQoMTIwKSwKPiAr
-ICAgICAgIHt9LAo+ICt9Owo+ICsKPiAgc3RhdGljIGlubGluZSBzdHJ1Y3QgYm9lX3BhbmVsICp0
-b19ib2VfcGFuZWwoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpCj4gIHsKPiAgICAgICAgIHJldHVy
-biBjb250YWluZXJfb2YocGFuZWwsIHN0cnVjdCBib2VfcGFuZWwsIGJhc2UpOwo+IEBAIC01NzIs
-NiArNTgxLDM0IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBib2VfdHYxMDF3dW1f
-bmw2X2Rlc2MgPSB7Cj4gICAgICAgICAuaW5pdF9jbWRzID0gYm9lX2luaXRfY21kLAo+ICB9Owo+
-Cj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBhdW9fZGVmYXVsdF9tb2Rl
-ID0gewo+ICsgICAgICAgLmNsb2NrID0gMTU3MDAwLAo+ICsgICAgICAgLmhkaXNwbGF5ID0gMTIw
-MCwKPiArICAgICAgIC5oc3luY19zdGFydCA9IDEyMDAgKyA4MCwKPiArICAgICAgIC5oc3luY19l
-bmQgPSAxMjAwICsgODAgKyAyNCwKPiArICAgICAgIC5odG90YWwgPSAxMjAwICsgODAgKyAyNCAr
-IDM2LAo+ICsgICAgICAgLnZkaXNwbGF5ID0gMTkyMCwKPiArICAgICAgIC52c3luY19zdGFydCA9
-IDE5MjAgKyAxNiwKPiArICAgICAgIC52c3luY19lbmQgPSAxOTIwICsgMTYgKyA0LAo+ICsgICAg
-ICAgLnZ0b3RhbCA9IDE5MjAgKyAxNiArIDQgKyAxNiwKPiArICAgICAgIC52cmVmcmVzaCA9IDYw
-LAo+ICsgICAgICAgLnR5cGUgPSBEUk1fTU9ERV9UWVBFX0RSSVZFUiB8IERSTV9NT0RFX1RZUEVf
-UFJFRkVSUkVELAo+ICt9Owo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGF1
-b19rZDEwMW44MF80NW5hX2Rlc2MgPSB7Cj4gKyAgICAgICAubW9kZXMgPSAmYXVvX2RlZmF1bHRf
-bW9kZSwKPiArICAgICAgIC5icGMgPSA4LAo+ICsgICAgICAgLnNpemUgPSB7Cj4gKyAgICAgICAg
-ICAgICAgIC53aWR0aCA9IDIxNiwKPiArICAgICAgICAgICAgICAgLmhlaWdodCA9IDEzNSwKClNh
-bWUgaXNzdWUgYXMgdGhlIEJPRSBwYW5lbDoKVGhpcyBpcyB3cm9uZywgYXMgdGhpcyBpcyBhIHBv
-cnRyYWl0IHBhbmVsLCBzaG91bGQgYmU6IHdpZHRoPTEzNSwgaGVpZ2h0PTIxNi4KCj4gKyAgICAg
-ICB9LAo+ICsgICAgICAgLmxhbmVzID0gNCwKPiArICAgICAgIC5mb3JtYXQgPSBNSVBJX0RTSV9G
-TVRfUkdCODg4LAo+ICsgICAgICAgLm1vZGVfZmxhZ3MgPSBNSVBJX0RTSV9NT0RFX1ZJREVPIHwg
-TUlQSV9EU0lfTU9ERV9WSURFT19TWU5DX1BVTFNFIHwKPiArICAgICAgICAgICAgICAgICAgICAg
-TUlQSV9EU0lfTU9ERV9MUE0sCj4gKyAgICAgICAuaW5pdF9jbWRzID0gYXVvX2luaXRfY21kLAo+
-ICt9Owo+ICsKPiAgc3RhdGljIGludCBib2VfcGFuZWxfZ2V0X21vZGVzKHN0cnVjdCBkcm1fcGFu
-ZWwgKnBhbmVsKQo+ICB7Cj4gICAgICAgICBzdHJ1Y3QgYm9lX3BhbmVsICpib2UgPSB0b19ib2Vf
-cGFuZWwocGFuZWwpOwo+IEBAIC02OTUsNiArNzMyLDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBv
-Zl9kZXZpY2VfaWQgYm9lX29mX21hdGNoW10gPSB7Cj4gICAgICAgICB7IC5jb21wYXRpYmxlID0g
-ImJvZSx0djEwMXd1bS1ubDYiLAo+ICAgICAgICAgICAuZGF0YSA9ICZib2VfdHYxMDF3dW1fbmw2
-X2Rlc2MKPiAgICAgICAgIH0sCj4gKyAgICAgICB7IC5jb21wYXRpYmxlID0gImF1byxrZDEwMW44
-MC00NW5hIiwKPiArICAgICAgICAgLmRhdGEgPSAmYXVvX2tkMTAxbjgwXzQ1bmFfZGVzYwo+ICsg
-ICAgICAgfSwKPiAgICAgICAgIHsgLyogc2VudGluZWwgKi8gfQo+ICB9Owo+ICBNT0RVTEVfREVW
-SUNFX1RBQkxFKG9mLCBib2Vfb2ZfbWF0Y2gpOwo+IC0tCj4gMi4yMS4wCj4KPiBfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Thx for the patch. No need seperate part into dtsi, just follow:
+https://lore.kernel.org/linux-csky/1561376581-19568-1-git-send-email-guoren=
+@kernel.org/T/#u
+
+On Tue, Jun 25, 2019 at 8:28 AM Andreas F=C3=A4rber <afaerber@suse.de> wrot=
+e:
+>
+> Add Device Trees for NationalChip GX6605S SoC (based on CK610 CPU) and it=
+s
+> dev board. GxLoader expects as filename gx6605s.dtb, so keep that.
+> The bootargs are prepared to boot from USB and to output to serial.
+>
+> Compatibles for the SoC and board are left out for now.
+>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> ---
+>  arch/csky/boot/dts/gx6605s.dts  | 104 ++++++++++++++++++++++++++++++++++=
+++++++
+>  arch/csky/boot/dts/gx6605s.dtsi |  82 +++++++++++++++++++++++++++++++
+>  2 files changed, 186 insertions(+)
+>  create mode 100644 arch/csky/boot/dts/gx6605s.dts
+>  create mode 100644 arch/csky/boot/dts/gx6605s.dtsi
+>
+> diff --git a/arch/csky/boot/dts/gx6605s.dts b/arch/csky/boot/dts/gx6605s.=
+dts
+> new file mode 100644
+> index 000000000000..f7511024ec6f
+> --- /dev/null
+> +++ b/arch/csky/boot/dts/gx6605s.dts
+> @@ -0,0 +1,104 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause */
+> +/*
+> + * GX6605S dev board
+> + *
+> + * Copyright (c) 2019 Andreas F=C3=A4rber
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +#include "gx6605s.dtsi"
+> +
+> +/ {
+> +       model =3D "Nationalchip GX6605S";
+> +
+> +       aliases {
+> +               serial0 =3D &uart;
+> +       };
+> +
+> +       chosen {
+> +               bootargs =3D "console=3DttyS0,115200n8 root=3D/dev/sda2 r=
+w rootwait";
+> +               stdout-path =3D "serial0:115200n8";
+> +       };
+> +
+> +       memory@10000000 {
+> +               device_type =3D "memory";
+> +               reg =3D <0x10000000 0x04000000>;
+> +       };
+> +
+> +       dummy_apb_clk: dummy-apb-clk {
+> +               compatible =3D "fixed-clock";
+> +               clock-frequency =3D <24000000>; /* guesstimate */
+> +               #clock-cells =3D <0>;
+> +       };
+> +
+> +       buttons {
+> +               compatible =3D "gpio-keys-polled";
+> +               poll-interval =3D <100>;
+> +               autorepeat;
+> +
+> +               button5 {
+> +                       label =3D "button5";
+> +                       linux,code =3D <103>;
+> +                       gpios =3D <&gpio 5 GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               button6 {
+> +                       label =3D "button6";
+> +                       linux,code =3D <106>;
+> +                       gpios =3D <&gpio 6 GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               button7 {
+> +                       label =3D "button7";
+> +                       linux,code =3D <28>;
+> +                       gpios =3D <&gpio 7 GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               button8 {
+> +                       label =3D "button8";
+> +                       linux,code =3D <105>;
+> +                       gpios =3D <&gpio 8 GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               button9 {
+> +                       label =3D "button9";
+> +                       linux,code =3D <108>;
+> +                       gpios =3D <&gpio 9 GPIO_ACTIVE_LOW>;
+> +               };
+> +       };
+> +
+> +       leds {
+> +               compatible =3D "gpio-leds";
+> +
+> +               led0 {
+> +                       label =3D "led10";
+> +                       gpios =3D <&gpio 10 GPIO_ACTIVE_LOW>;
+> +                       linux,default-trigger =3D "heartbeat";
+> +               };
+> +
+> +               led1 {
+> +                       label =3D "led11";
+> +                       gpios =3D <&gpio 11 GPIO_ACTIVE_LOW>;
+> +                       linux,default-trigger =3D "timer";
+> +               };
+> +
+> +               led2 {
+> +                       label =3D "led12";
+> +                       gpios =3D <&gpio 12 GPIO_ACTIVE_LOW>;
+> +                       linux,default-trigger =3D "default-on";
+> +               };
+> +
+> +               led3 {
+> +                       label =3D "led13";
+> +                       gpios =3D <&gpio 13 GPIO_ACTIVE_LOW>;
+> +                       linux,default-trigger =3D "default-on";
+> +               };
+> +       };
+> +};
+> +
+> +&timer0 {
+> +               clocks =3D <&dummy_apb_clk>;
+> +};
+> diff --git a/arch/csky/boot/dts/gx6605s.dtsi b/arch/csky/boot/dts/gx6605s=
+.dtsi
+> new file mode 100644
+> index 000000000000..956af5674add
+> --- /dev/null
+> +++ b/arch/csky/boot/dts/gx6605s.dtsi
+> @@ -0,0 +1,82 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause */
+> +/*
+> + * NationalChip GX6605S SoC
+> + *
+> + * Copyright (c) 2019 Andreas F=C3=A4rber
+> + */
+> +
+> +/ {
+> +       #address-cells =3D <1>;
+> +       #size-cells =3D <1>;
+> +
+> +       cpus {
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +
+> +               cpu0: cpu@0 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "csky,ck610";
+> +                       reg =3D <0>;
+> +               };
+> +       };
+> +
+> +       soc {
+> +               compatible =3D "simple-bus";
+> +               interrupt-parent =3D <&intc>;
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <1>;
+> +               ranges;
+> +
+> +               timer0: timer@20a000 {
+> +                       compatible =3D "csky,gx6605s-timer";
+> +                       reg =3D <0x0020a000 0x400>;
+> +                       clocks =3D <&dummy_apb_clk>;
+> +                       interrupts =3D <10>;
+> +               };
+> +
+> +               gpio: gpio@305000 {
+> +                       compatible =3D "wd,mbl-gpio";
+> +                       reg-names =3D "dirout", "dat", "set", "clr";
+> +                       reg =3D <0x00305000 0x4>,
+> +                             <0x00305004 0x4>,
+> +                             <0x00305008 0x4>,
+> +                             <0x0030500c 0x4>;
+> +                       gpio-controller;
+> +                       #gpio-cells =3D <2>;
+> +               };
+> +
+> +               uart: serial@403000 {
+> +                       compatible =3D "ns16550a";
+> +                       reg =3D <0x00403000 0x400>;
+> +                       interrupts =3D <15>;
+> +                       clock-frequency =3D <29491200>;
+> +                       reg-shift =3D <2>;
+> +                       reg-io-width =3D <1>;
+> +               };
+> +
+> +               intc: interrupt-controller@500000 {
+> +                       compatible =3D "csky,gx6605s-intc";
+> +                       reg =3D <0x00500000 0x400>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells =3D <1>;
+> +               };
+> +
+> +               ehci_hcd: usb@900000 {
+> +                       compatible =3D "generic-ehci";
+> +                       reg =3D <0x00900000 0x400>;
+> +                       interrupts =3D <59>;
+> +               };
+> +
+> +               ohci_hcd0: usb@a00000 {
+> +                       compatible =3D "generic-ohci";
+> +                       reg =3D <0x00a00000 0x400>;
+> +                       interrupts =3D <58>;
+> +               };
+> +
+> +               ohci_hcd1: usb@b00000 {
+> +                       compatible =3D "generic-ohci";
+> +                       reg =3D <0x00b00000 0x400>;
+> +                       interrupts =3D <57>;
+> +               };
+> +       };
+> +};
+> --
+> 2.16.4
+>
+
+
+--=20
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
