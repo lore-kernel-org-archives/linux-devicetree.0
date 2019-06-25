@@ -1,30 +1,51 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv7 7/7] arm64: defconfig: Enable CONFIG_PCIE_LAYERSCAPE_GEN4
-Date: Tue, 25 Jun 2019 09:09:49 +0000
-Message-ID: <20190625091039.18933-8-Zhiqiang.Hou@nxp.com>
-References: <20190625091039.18933-1-Zhiqiang.Hou@nxp.com>
+From: <Eugen.Hristev@microchip.com>
+Subject: Re: [PATCH v2 6/9] dt-bindings: i2c: at91: add binding for
+ enable-ana-filt
+Date: Tue, 25 Jun 2019 09:14:13 +0000
+Message-ID: <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
+References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
+ <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
+ <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625091039.18933-1-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
 Content-Language: en-US
+Content-ID: <21506B8E5B03ED40A516D9564C071A00@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.>
-Cc: Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To: peda@axentia.se, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCg0KRW5hYmxlIHRoZSBQ
-Q0llIEdlbjQgY29udHJvbGxlciBkcml2ZXIgZm9yIExheWVyc2NhcGUgU29Dcy4NCg0KU2lnbmVk
-LW9mZi1ieTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NClJldmlld2VkLWJ5
-OiBNaW5naHVhbiBMaWFuIDxNaW5naHVhbi5MaWFuQG54cC5jb20+DQotLS0NClY3Og0KIC0gTm8g
-Y2hhbmdlLg0KDQogYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZyB8IDEgKw0KIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9jb25maWdz
-L2RlZmNvbmZpZyBiL2FyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcNCmluZGV4IGZiYmMwNjU0
-MTVkNC4uOGQ1OGRkZGQ3Zjk5IDEwMDY0NA0KLS0tIGEvYXJjaC9hcm02NC9jb25maWdzL2RlZmNv
-bmZpZw0KKysrIGIvYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZw0KQEAgLTE4Nyw2ICsxODcs
-NyBAQCBDT05GSUdfUENJX0hPU1RfVEhVTkRFUl9QRU09eQ0KIENPTkZJR19QQ0lfSE9TVF9USFVO
-REVSX0VDQU09eQ0KIENPTkZJR19QQ0lFX1JPQ0tDSElQX0hPU1Q9bQ0KIENPTkZJR19QQ0lfTEFZ
-RVJTQ0FQRT15DQorQ09ORklHX1BDSUVfTEFZRVJTQ0FQRV9HRU40PXkNCiBDT05GSUdfUENJX0hJ
-U0k9eQ0KIENPTkZJR19QQ0lFX1FDT009eQ0KIENPTkZJR19QQ0lFX0FSTUFEQV84Sz15DQotLSAN
-CjIuMTcuMQ0KDQo=
+DQoNCk9uIDI1LjA2LjIwMTkgMTE6NTUsIFBldGVyIFJvc2luIHdyb3RlOg0KDQo+IA0KPiBPbiAy
+MDE5LTA2LTI1IDEwOjA1LCBFdWdlbi5IcmlzdGV2QG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+PiBG
+cm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4g
+QWRkIGJpbmRpbmcgc3BlY2lmaWNhdGlvbiBmb3IgYW5hbG9naWMgZmlsdGVyIGluc2lkZSB0aGUg
+aTJjIGNvbnRyb2xsZXINCj4gDQo+IHMvYW5hbG9naWMvdGhlIGFuYWxvZy8NCj4gDQo+PiBTaWdu
+ZWQtb2ZmLWJ5OiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+
+PiAtLS0NCj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5
+MS50eHQgfCA0ICsrKysNCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQ0KPj4N
+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2ky
+Yy1hdDkxLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWF0
+OTEudHh0DQo+PiBpbmRleCA4MjY4NTk1Li4yMGQzMzRjIDEwMDY0NA0KPj4gLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5MS50eHQNCj4+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWF0OTEudHh0DQo+PiBAQCAt
+MjMsNiArMjMsOSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPj4gICAtIGVuYWJsZS1kaWctZmls
+dDogRW5hYmxlIHRoZSBidWlsdC1pbiBkaWdpdGFsIGZpbHRlciBvbiB0aGUgaTJjIGxpbmVzLA0K
+Pj4gICAgIHNwZWNpZmljYWxseSByZXF1aXJlZCBkZXBlbmRpbmcgb24gdGhlIGhhcmR3YXJlIFBD
+Qi9ib2FyZCBhbmQgaWYgdGhlDQo+PiAgICAgdmVyc2lvbiBvZiB0aGUgY29udHJvbGxlciBpbmNs
+dWRlcyBpdC4NCj4+ICstIGVuYWJsZS1hbmEtZmlsdDogRW5hYmxlIHRoZSBidWlsdC1pbiBhbmFs
+b2dpYyBmaWx0ZXIgb24gdGhlIGkyYyBsaW5lcywNCj4+ICsgIHNwZWNpZmljYWxseSByZXF1aXJl
+ZCBkZXBlbmRpbmcgb24gdGhlIGhhcmR3YXJlIFBDQi9ib2FyZCBhbmQgaWYgdGhlDQo+PiArICB2
+ZXJzaW9uIG9mIHRoZSBjb250cm9sbGVyIGluY2x1ZGVzIGl0Lg0KPj4gICAtIENoaWxkIG5vZGVz
+IGNvbmZvcm1pbmcgdG8gaTJjIGJ1cyBiaW5kaW5nDQo+PiAgIA0KPj4gICBFeGFtcGxlcyA6DQo+
+PiBAQCAtNjAsNiArNjMsNyBAQCBpMmMwOiBpMmNAZjgwMzQ2MDAgew0KPj4gICAJYXRtZWwsZmlm
+by1zaXplID0gPDE2PjsNCj4+ICAgCWkyYy1zZGEtaG9sZC10aW1lLW5zID0gPDMzNj47DQo+PiAg
+IAllbmFibGUtZGlnLWZpbHQ7DQo+PiArCWVuYWJsZS1hbmEtZmlsdDsNCj4gDQo+IFBlcmhhcHMN
+Cj4gDQo+IAltaWNyb2NoaXAsZGlnaXRhbC1maWx0ZXI7DQo+IAltaWNyb2NoaXAsYW5hbG9nLWZp
+bHRlcjsNCj4gDQo+ID8NCg0KSGkgUGV0ZXIsDQoNClRoYW5rcyBmb3IgcmV2aWV3aW5nLiBUaGUg
+bmFtZSBvZiB0aGUgcHJvcGVydHkgZG9lcyBub3QgbWF0dGVyIG11Y2ggdG8gDQptZSwgYW5kIHdl
+IGhhdmUgcHJvcGVydGllcyBwcmVmaXhlZCB3aXRoIHZlbmRvciwgYW5kIHNvbWUgYXJlIG5vdC4N
+Cg0KQEFsZXhhbmRyZSBCZWxsb25pOiB3aGljaCBuYW1lIHlvdSB0aGluayBpdCdzIGJlc3QgPw0K
+DQpFdWdlbg0KDQo+IA0KPiBDaGVlcnMsDQo+IFBldGVyDQo+IA0KPj4gICANCj4+ICAgCXdtODcz
+MTogd204NzMxQDFhIHsNCj4+ICAgCQljb21wYXRpYmxlID0gIndtODczMSI7DQo+Pg0KPiANCg==
