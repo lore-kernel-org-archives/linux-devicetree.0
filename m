@@ -1,143 +1,81 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: s2mps11: Reduce number of rdev_get_id() calls" to the regulator tree
-Date: Mon, 24 Jun 2019 17:32:21 +0100 (BST)
-Message-ID: <20190624163221.6A2A0440066@finisterre.sirena.org.uk>
-References: <20190620183530.5386-2-krzk@kernel.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: I2C filtering (was Re: [PATCH v2 6/9] dt-bindings: i2c: at91: add
+ binding for enable-ana-filt)
+Date: Tue, 25 Jun 2019 11:55:33 +0200
+Message-ID: <20190625095533.GC1688@kunai>
+References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
+ <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
+ <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
+ <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
+ <20190625093156.GF5690@piout.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="PuGuTyElPB9bOcsM"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190620183530.5386-2-krzk@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190625093156.GF5690@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Mark Brown <broonie@kernel.org>, notify@kernel.org, Sangbeom Kim <sbkim73@samsung.com>, Sylwester Nawrocki <snawrocki@kernel.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Eugen.Hristev@microchip.com, peda@axentia.se, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   regulator: s2mps11: Reduce number of rdev_get_id() calls
+--PuGuTyElPB9bOcsM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the regulator tree at
+On Tue, Jun 25, 2019 at 11:31:56AM +0200, Alexandre Belloni wrote:
+> On 25/06/2019 09:14:13+0000, Eugen.Hristev@microchip.com wrote:
+> > > Perhaps
+> > >=20
+> > > 	microchip,digital-filter;
+> > > 	microchip,analog-filter;
+> > >=20
+> > > ?
+> >=20
+> > Hi Peter,
+> >=20
+> > Thanks for reviewing. The name of the property does not matter much to=
+=20
+> > me, and we have properties prefixed with vendor, and some are not.
+> >=20
+> > @Alexandre Belloni: which name you think it's best ?
+> >=20
+>=20
+> I'm not sure, it depends on whether Wolfram thinks it is generic enough
+> to be used without a vendor prefix.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+I could imagine that we design a generic property for filters. The ones
+above make me wonder, though, because they are bool. I'd think you can
+configure the filters in some way, too?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+I never used such filtering, so I am unaware of the parameters needed /
+suitable. Quick grepping through I2C master drivers reveals that
+i2c-stm32f7.c also handles filters, but only with default values. Maybe
+DT configuration would be benefitial to that driver, too?
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Adding some people to CC.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+--PuGuTyElPB9bOcsM
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Mark
+-----BEGIN PGP SIGNATURE-----
 
->From df33799c5c3262a69acd29b7a4eb9e7cbd1b007c Mon Sep 17 00:00:00 2001
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Date: Thu, 20 Jun 2019 20:35:26 +0200
-Subject: [PATCH] regulator: s2mps11: Reduce number of rdev_get_id() calls
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0R75EACgkQFA3kzBSg
+KbaFyA//UefpasMtRS97YQqN/2m6N9Xgl7LiXTof1v53GW/mee1Y8ce675X8tAHL
+H2Hcvak1eeDIBiN+FPopoUSZ3EhxO3jsMeuR4cAXAKgbFS9lngHGyQcYWd8EZG3p
+lxcbnahpnUOBnvFKHet1j84f3RAkk8tksxEc7sFaV5puN3dReSBA5e++trJz73yk
+oUjx+42R9Zytrt27IsH+Vy86znzzuDboc+ngLwl+deTGG3E56xLAUNX4U5eGLJiJ
+jL7Ot0GUBIw+iHI610z+HrzuKREIQGY3XkGowq+ZU6RxgSnpdf0faRp8EqfRaJdb
+i0379EM5C0Hb4O0l7RLMmlNPWaIGPVhoh7Hr2cBSEXMmL4Fr8uBWNlpkKU1aFM4v
+4mq4KBULWYfihJ2CfFqWyKOLzY4320whOiHcq0O+81nYSrRoXCEpYyxHMLpfTicW
+YSysulIyWNbAv+j+Cns7y6SRE/Pm6HBaWsHuP8gqKha0+wjmAs+eE6zwZ4RiUYez
+tSqP31BTOQw7UG26/FOX+N/fAtBGQP2NcBePPSAmMBLTGAiAXWnEIZv/x9MO9qJ1
+kVEs2wtgeyX93qxwedyL9ueTa/d5HbmMpYDN0R3PFwpqGyC+qkyNlatWd/DJutwP
+oXKFHwEdabgjoSwYIaIfHkP4gxF/5BJp3F0H+vR/n+sDlQoaWp4=
+=qB/9
+-----END PGP SIGNATURE-----
 
-Store the regulator ID instead of calling rdev_get_id() every time.
-This makes code slightly easier to read as shorter 'rdev_id' variable is
-used instead of full call.  This can also speed things up by reducing
-number of calls, although effect was not measured.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/s2mps11.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index 134c62db36c5..93570712eb56 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -70,10 +70,11 @@ static int s2mps11_regulator_set_voltage_time_sel(struct regulator_dev *rdev,
- 				   unsigned int new_selector)
- {
- 	struct s2mps11_info *s2mps11 = rdev_get_drvdata(rdev);
-+	int rdev_id = rdev_get_id(rdev);
- 	unsigned int ramp_delay = 0;
- 	int old_volt, new_volt;
- 
--	switch (rdev_get_id(rdev)) {
-+	switch (rdev_id) {
- 	case S2MPS11_BUCK2:
- 		ramp_delay = s2mps11->ramp_delay2;
- 		break;
-@@ -111,9 +112,10 @@ static int s2mps11_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
- 	struct s2mps11_info *s2mps11 = rdev_get_drvdata(rdev);
- 	unsigned int ramp_val, ramp_shift, ramp_reg = S2MPS11_REG_RAMP_BUCK;
- 	unsigned int ramp_enable = 1, enable_shift = 0;
-+	int rdev_id = rdev_get_id(rdev);
- 	int ret;
- 
--	switch (rdev_get_id(rdev)) {
-+	switch (rdev_id) {
- 	case S2MPS11_BUCK1:
- 		if (ramp_delay > s2mps11->ramp_delay16)
- 			s2mps11->ramp_delay16 = ramp_delay;
-@@ -203,9 +205,8 @@ static int s2mps11_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
- 		goto ramp_disable;
- 
- 	/* Ramp delay can be enabled/disabled only for buck[2346] */
--	if ((rdev_get_id(rdev) >= S2MPS11_BUCK2 &&
--			rdev_get_id(rdev) <= S2MPS11_BUCK4) ||
--			rdev_get_id(rdev) == S2MPS11_BUCK6)  {
-+	if ((rdev_id >= S2MPS11_BUCK2 && rdev_id <= S2MPS11_BUCK4) ||
-+	    rdev_id == S2MPS11_BUCK6)  {
- 		ret = regmap_update_bits(rdev->regmap, S2MPS11_REG_RAMP,
- 					 1 << enable_shift, 1 << enable_shift);
- 		if (ret) {
-@@ -503,20 +504,21 @@ static const struct regulator_desc s2mps13_regulators[] = {
- static int s2mps14_regulator_enable(struct regulator_dev *rdev)
- {
- 	struct s2mps11_info *s2mps11 = rdev_get_drvdata(rdev);
-+	int rdev_id = rdev_get_id(rdev);
- 	unsigned int val;
- 
- 	switch (s2mps11->dev_type) {
- 	case S2MPS13X:
- 	case S2MPS14X:
--		if (test_bit(rdev_get_id(rdev), s2mps11->suspend_state))
-+		if (test_bit(rdev_id, s2mps11->suspend_state))
- 			val = S2MPS14_ENABLE_SUSPEND;
--		else if (s2mps11->ext_control_gpiod[rdev_get_id(rdev)])
-+		else if (s2mps11->ext_control_gpiod[rdev_id])
- 			val = S2MPS14_ENABLE_EXT_CONTROL;
- 		else
- 			val = rdev->desc->enable_mask;
- 		break;
- 	case S2MPU02:
--		if (test_bit(rdev_get_id(rdev), s2mps11->suspend_state))
-+		if (test_bit(rdev_id, s2mps11->suspend_state))
- 			val = S2MPU02_ENABLE_SUSPEND;
- 		else
- 			val = rdev->desc->enable_mask;
-@@ -570,7 +572,7 @@ static int s2mps14_regulator_set_suspend_disable(struct regulator_dev *rdev)
- 	if (ret < 0)
- 		return ret;
- 
--	set_bit(rdev_get_id(rdev), s2mps11->suspend_state);
-+	set_bit(rdev_id, s2mps11->suspend_state);
- 	/*
- 	 * Don't enable suspend mode if regulator is already disabled because
- 	 * this would effectively for a short time turn on the regulator after
-@@ -856,8 +858,9 @@ static int s2mps11_pmic_dt_parse(struct platform_device *pdev,
- static int s2mpu02_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
- {
- 	unsigned int ramp_val, ramp_shift, ramp_reg;
-+	int rdev_id = rdev_get_id(rdev);
- 
--	switch (rdev_get_id(rdev)) {
-+	switch (rdev_id) {
- 	case S2MPU02_BUCK1:
- 		ramp_shift = S2MPU02_BUCK1_RAMP_SHIFT;
- 		break;
--- 
-2.20.1
+--PuGuTyElPB9bOcsM--
