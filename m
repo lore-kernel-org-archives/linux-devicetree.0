@@ -1,65 +1,46 @@
-Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 16/27] PCI: tegra: Set target speed as Gen1 before starting LTSSM
-Date: Mon, 17 Jun 2019 23:09:41 +0530
-Message-ID: <20190617173952.29363-17-mmaddireddy@nvidia.com>
-In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
-References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=SZwX=UY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60207 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbfFYHFf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Jun 2019 03:05:35 -0400
+Date: Tue, 25 Jun 2019 09:05:33 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: devicetree-rebasing.git updates pausing for a couple of months
+Message-ID: <20190625070533.a5eay36f36jw3l6j@pengutronix.de>
+References: <3bc28d409a6e09046c001611972cc3c33b1695e3.camel@hellion.org.uk>
+ <20190625070240.6p6hedrcafntbj5c@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625070240.6p6hedrcafntbj5c@pengutronix.de>
+Sender: devicetree-owner@vger.kernel.org
+To: Ian Campbell <ijc@hellion.org.uk>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Andre Przywara <andre.przywara@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-PCIe link up fails with few legacy endpoints if root port advertises both
-Gen-1 and Gen-2 speeds in Tegra. This is because link number negotiation
-fails if both Gen1 & Gen2 are advertised. Tegra doesn't retry link up by
-advertising only Gen1. Hence, the strategy followed here is to initially
-advertise only Gen-1 and after link is up, retrain link to Gen-2 speed.
+On Tue, Jun 25, 2019 at 09:02:40AM +0200, Sascha Hauer wrote:
+> Hi Ian,
+> 
+> On Fri, Jun 21, 2019 at 01:01:27PM +0100, Ian Campbell wrote:
+> > Hi all,
+> > 
+> > I've no idea if anyone actually uses it any more, but the split out
+> > devicetree only git repo [0] is not going to receive any new updates
+> > for a little while (likely 1-2 months) while I relocate to another
+> > country.
+> 
+> I am still using it for barebox, so I'd appreciate devicetree-rebasing
+> coming back once you are relocated. Anyway, barebox can live without a
+> dts update for a while, so take your time ;)
 
-Tegra doesn't support HW autonomous speed change. Link comes up in Gen1
-even if Gen2 is advertised, so there is no downside of this change.
+BTW thanks for keeping devicetree-rebasing up to date for all the time.
+If the repository is of no personal use for you anymore, we at
+Pengutronix could offer to take over the repository.
 
-This behavior is observed with following two PCIe devices on Tegra,
- - Fusion HDTV 5 Express card
- - IOGear SIL - PCIE - SATA card
+Sascha
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V5: No change
-
-V4: No change
-
-V3: No change
-
-V2: Updated commit log to reflect why this issue is observed on Tegra with
-these particular cards
-
- drivers/pci/controller/pci-tegra.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 6ed406c46409..abb94595c76b 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -676,6 +676,17 @@ static void tegra_pcie_apply_sw_fixup(struct tegra_pcie_port *port)
- 		value |= soc->update_fc_threshold;
- 		writel(value, port->base + RP_VEND_XP);
- 	}
-+
-+	/*
-+	 * PCIe link doesn't come up with few legacy PCIe endpoints if
-+	 * root port advertises both Gen-1 and Gen-2 speeds in Tegra.
-+	 * Hence, the strategy followed here is to initially advertise
-+	 * only Gen-1 and after link is up, retrain link to Gen-2 speed
-+	 */
-+	value = readl(port->base + RP_LINK_CONTROL_STATUS_2);
-+	value &= ~PCI_EXP_LNKSTA_CLS;
-+	value |= PCI_EXP_LNKSTA_CLS_2_5GB;
-+	writel(value, port->base + RP_LINK_CONTROL_STATUS_2);
- }
- 
- static void tegra_pcie_port_enable(struct tegra_pcie_port *port)
 -- 
-2.17.1
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
