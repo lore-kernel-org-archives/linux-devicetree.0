@@ -1,68 +1,100 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v3 0/5] drm/panel-simple: Add panel parameters for
- ortustech-com37h3m05dtc/99dtc and sharp-lq070y3dg3b
-Date: Tue, 25 Jun 2019 22:43:56 +0200
-Message-ID: <20190625204356.GF18595@ravnborg.org>
-References: <cover.1559905870.git.hns@goldelico.com>
- <0842FF88-D8E0-441B-837B-769C2EF6C1CB@goldelico.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V3 06/17] clk: tegra: pll: save and restore pll context
+Date: Tue, 25 Jun 2019 13:46:40 -0700
+Message-ID: <20190625204640.D640E205ED@mail.kernel.org>
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com> <1560843991-24123-7-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0842FF88-D8E0-441B-837B-769C2EF6C1CB@goldelico.com>
+In-Reply-To: <1560843991-24123-7-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, tomi.valkeinen@ti.com, imirkin@alum.mit.edu, marek.belisko@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, letux-kernel@openphoenux.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+To: jason@lakedaemon.net, jonathanh@nvidia.com, linus.walleij@linaro.org, marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de, thierry.reding@gmail.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nikolaus
+Quoting Sowjanya Komatineni (2019-06-18 00:46:20)
+> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+> index 1583f5fc992f..4b0ed8fc6268 100644
+> --- a/drivers/clk/tegra/clk-pll.c
+> +++ b/drivers/clk/tegra/clk-pll.c
+> @@ -1008,6 +1008,54 @@ static unsigned long clk_plle_recalc_rate(struct c=
+lk_hw *hw,
+>         return rate;
+>  }
+> =20
+> +void tegra_clk_sync_state_pll(struct clk_hw *hw)
+> +{
+> +       if (!__clk_get_enable_count(hw->clk))
+> +               clk_pll_disable(hw);
+> +       else
+> +               clk_pll_enable(hw);
+> +}
+> +
+> +static int tegra_clk_pll_save_context(struct clk_hw *hw)
+> +{
+> +       struct tegra_clk_pll *pll =3D to_clk_pll(hw);
+> +
+> +       pll->rate =3D clk_hw_get_rate(hw);
+> +
+> +       if (!strcmp(__clk_get_name(hw->clk), "pll_mb"))
+> +               pll->pllbase_ctx =3D pll_readl_base(pll);
+> +       else if (!strcmp(__clk_get_name(hw->clk), "pll_re_vco"))
+> +               pll->pllbase_ctx =3D pll_readl_base(pll) & (0xf << 16);
+> +
+> +       return 0;
+> +}
+> +
+> +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
+> +{
+> +       struct tegra_clk_pll *pll =3D to_clk_pll(hw);
+> +       u32 val;
+> +
+> +       if (clk_pll_is_enabled(hw))
+> +               return;
+> +
+> +       if (!strcmp(__clk_get_name(hw->clk), "pll_mb")) {
 
-> > V3:
-> > * add bindings documentation (suggested by sam@ravnborg.org)
-> > 
-> > V2 2019-06-05 07:07:05:
-> > * fix typo in 99dtc panel compatible string (reported by imirkin@alum.mit.edu)
-> > 
-> > V1 2019-06-04 14:53:00:
-> > 
-> > Since v5.2-rc1 OMAP is no longer using a special display driver architecture
-> > for DPI panels, but uses the general drm/panel/panel-simple.
-> > 
-> > So we finally can add SoC independent panel definitions for two panel models
-> > which we already had worked on quite a while ago (before device tree was
-> > introduced):
-> > 
-> > 	https://patchwork.kernel.org/patch/2851295/
-> > 
-> > 
-> > 
-> > H. Nikolaus Schaller (5):
-> >  drm/panel: simple: Add Sharp LQ070Y3DG3B panel support
-> >  drm/panel: simple: Add Ortustech COM37H3M panel support
-> >  dt-bindings: drm/panel: simple: add ortustech,com37h3m05dtc panel
-> >  dt-bindings: drm/panel: simple: add ortustech,com37h3m99dtc panel
-> >  dt-bindings: drm/panel: simple: add sharp,lq070y3dg3b panel
-> > 
-> > .../display/panel/ortustech,com37h3m05dtc.txt | 12 ++++
-> > .../display/panel/ortustech,com37h3m99dtc.txt | 12 ++++
-> > .../display/panel/sharp,lq070y3dg3b.txt       | 12 ++++
-> > drivers/gpu/drm/panel/panel-simple.c          | 63 +++++++++++++++++++
-> > 4 files changed, 99 insertions(+)
-> > create mode 100644 Documentation/devicetree/bindings/display/panel/ortustech,com37h3m05dtc.txt
-> > create mode 100644 Documentation/devicetree/bindings/display/panel/ortustech,com37h3m99dtc.txt
-> > create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,lq070y3dg3b.txt
-> > 
-> > -- 
-> > 2.19.1
-> > 
-> 
-> any progress towards merging this somewhere? It did not yet arrive in linux-next.
-> 
-> BTW: should also be applied to 5.2
-The drm bits are reviewed. The DT bits needs OK from DT people.
-When we have OK from DT people we can apply them all to drm-misc-next.
+Is there any way to avoid doing a string comparison here, and instead do
+something like a pointer comparison? Or maybe look at some flag in the
+tegra_clk_pll to figure out what to do differently? Using a string
+comparison is not too nice. Or even have different clk ops for the
+different clks and then do different things in this restore clk_op?
 
-If we need them expedited towards the upstream kernel you will need help
-from someone else. But let's get them in drm-misc-next first.
+> +               pll_writel_base(pll->pllbase_ctx, pll);
+> +       } else if (!strcmp(__clk_get_name(hw->clk), "pll_re_vco")) {
+> +               val =3D pll_readl_base(pll);
+> +               val &=3D ~(0xf << 16);
+> +               pll_writel_base(pll->pllbase_ctx | val, pll);
+> +       }
+> +
+> +       if (pll->params->set_defaults)
+> +               pll->params->set_defaults(pll);
+> +
+> +       clk_set_rate(hw->clk, pll->rate);
 
-	Sam
+Do you need to call clk_set_rate() here to change the frequency of the
+clk or just the parents of the clk, or both? I'd think that when we're
+restoring the clk the cached rate of the clk would match whatever we're
+restoring to, so this is a NOP. So does this do anything?
+
+I'd prefer that the restore ops just restore the clk hardware state of
+the clk_hw passed in, and not try to fix up the entire tree around a
+certain clk, if that's even possible.
+
+> +
+> +       /* do not sync pllx state here. pllx is sync'd after dfll resume =
+*/
+> +       if (strcmp(__clk_get_name(hw->clk), "pll_x"))
+> +               tegra_clk_sync_state_pll(hw);
+> +}
+> +
+>  const struct clk_ops tegra_clk_pll_ops =3D {
+>         .is_enabled =3D clk_pll_is_enabled,
+>         .enable =3D clk_pll_enable,
+> @@ -1015,6 +1063,8 @@ const struct clk_ops tegra_clk_pll_ops =3D {
+>         .recalc_rate =3D clk_pll_recalc_rate,
+>         .round_rate =3D clk_pll_round_rate,
+>         .set_rate =3D clk_pll_set_rate,
+> +       .save_context =3D tegra_clk_pll_save_context,
+> +       .restore_context =3D tegra_clk_pll_restore_context,
