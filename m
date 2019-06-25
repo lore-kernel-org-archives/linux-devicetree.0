@@ -1,50 +1,49 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v5 06/18] kbuild: enable building KUnit
-Date: Tue, 25 Jun 2019 15:41:29 -0700
-Message-ID: <CAFd5g448rYqr3PHg0cfoddr70nktkWXcRfJoZHmuPJjTW53YYg@mail.gmail.com>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-7-brendanhiggins@google.com> <20190625221318.GO19023@42.do-not-panic.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: Re: [RFC PATCH v4 net-next 10/11] ARM: dts: am57xx-idk: add dt nodes
+ for new cpsw switch dev driver
+Date: Wed, 26 Jun 2019 01:49:54 +0300
+Message-ID: <20190625224953.GD6485@khorivan>
+References: <20190621181314.20778-1-grygorii.strashko@ti.com>
+ <20190621181314.20778-11-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625221318.GO19023@42.do-not-panic.com>
+Content-Disposition: inline
+In-Reply-To: <20190621181314.20778-11-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-ks>
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: netdev@vger.kernel.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Andrew Lunn <andrew@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@resnulli.us>, Florian Fainelli <f.fainelli@gmail.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Ivan Vecera <ivecera@redhat.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 3:13 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+On Fri, Jun 21, 2019 at 09:13:13PM +0300, Grygorii Strashko wrote:
+>Add DT nodes for new cpsw switch dev driver.
 >
-> On Mon, Jun 17, 2019 at 01:26:01AM -0700, Brendan Higgins wrote:
-> > diff --git a/Kconfig b/Kconfig
-> > index 48a80beab6853..10428501edb78 100644
-> > --- a/Kconfig
-> > +++ b/Kconfig
-> > @@ -30,3 +30,5 @@ source "crypto/Kconfig"
-> >  source "lib/Kconfig"
-> >
-> >  source "lib/Kconfig.debug"
-> > +
-> > +source "kunit/Kconfig"
+>Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>---
+> arch/arm/boot/dts/am571x-idk.dts         | 28 +++++++++++++
+> arch/arm/boot/dts/am572x-idk.dts         |  5 +++
+> arch/arm/boot/dts/am574x-idk.dts         |  5 +++
+> arch/arm/boot/dts/am57xx-idk-common.dtsi |  2 +-
+> arch/arm/boot/dts/dra7-l4.dtsi           | 53 ++++++++++++++++++++++++
+> 5 files changed, 92 insertions(+), 1 deletion(-)
 >
-> This patch would break compilation as kunit/Kconfig is not introduced. This
-> would would also break bisectability on this commit. This change should
-> either be folded in to the next patch, or just be a separate patch after
-> the next one.
 
-Maybe my brain isn't working right now, but I am pretty darn sure that
-I introduce kunit/Kconfig in the very first patch of this series.
-Quoting from the change summary from the first commit:
+[...]
 
->  include/kunit/test.h | 161 +++++++++++++++++++++++++++++++++
->  kunit/Kconfig        |  17 ++++
->  kunit/Makefile       |   1 +
->  kunit/test.c         | 210 +++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 389 insertions(+)
->  create mode 100644 include/kunit/test.h
->  create mode 100644 kunit/Kconfig
+>diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi 
+>b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+>index f7bd26458915..5c7663699efa 100644
+>--- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
+>+++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+>@@ -367,7 +367,7 @@
+> };
+>
+> &mac {
+>-	status = "okay";
+>+//	status = "okay";
+?
 
-I am not crazy, right?
 
->  create mode 100644 kunit/Makefile
->  create mode 100644 kunit/test.c
+-- 
+Regards,
+Ivan Khoronzhuk
