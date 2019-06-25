@@ -1,73 +1,27 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v6 1/6] dt-bindings: ap806: add the cluster clock node in the syscon file
-Date: Tue, 25 Jun 2019 10:38:24 +0200
-Message-ID: <87blymkqkf.fsf@FE-laptop>
-References: <20190619141539.16884-1-gregory.clement@bootlin.com> <20190619141539.16884-2-gregory.clement@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V2 1/3] dt-bindings: imx: Add pinctrl binding doc for i.MX8MN
+Date: Tue, 25 Jun 2019 10:40:00 +0200
+Message-ID: <CACRpkdYsunrq7CY4HhosxH-MVxBGLqLPGnraqx1=_gZ8DxYZLQ@mail.gmail.com>
+References: <20190611122535.23583-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190619141539.16884-2-gregory.clement@bootlin.com>
+In-Reply-To: <20190611122535.23583-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Olof Johansson <olof@lixom.net>, Simon Horman <horms+renesas@verge.net.au>, Jagan Teki <jagan@amarulasolutions.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Leonard Crestez <leonard.crestez@nxp.com>, Dinh Nguyen <dinguyen@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kerne>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+On Tue, Jun 11, 2019 at 2:24 PM <Anson.Huang@nxp.com> wrote:
 
-> Document the device tree binding for the cluster clock controllers found
-> in the Armada 7K/8K SoCs.
+> From: Anson Huang <Anson.Huang@nxp.com>
 >
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-
-Did you have the opportunity to have a look on this binding ? I think
-that I completely follow your requirement now.
-
-Thanks,
-
-Gregory
-
-> ---
->  .../arm/marvell/ap806-system-controller.txt   | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
+> Add binding doc for i.MX8MN pinctrl driver.
 >
-> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-> index 7b8b8eb0191f..4a3bb9c12312 100644
-> --- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-> +++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-> @@ -143,3 +143,28 @@ ap_syscon1: system-controller@6f8000 {
->  		#thermal-sensor-cells = <1>;
->  	};
->  };
-> +
-> +Cluster clocks:
-> +---------------
-> +
-> +Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
-> +cluster contain up to 2 CPUs running at the same frequency.
-> +
-> +Required properties:
-> +- compatible: must be  "marvell,ap806-cpu-clock";
-> +- #clock-cells : should be set to 1.
-> +- clocks : shall be the input parents clock phandle for the clock.
-> +- reg: register range associated with the cluster clocks
-> +
-> +
-> +ap_syscon1: system-controller@6f8000 {
-> +	compatible = "marvell,armada-ap806-syscon1", "syscon", "simple-mfd";
-> +	reg = <0x6f8000 0x1000>;
-> +
-> +	cpu_clk: clock-cpu@0 {
-> +		compatible = "marvell,ap806-cpu-clock";
-> +		clocks = <&ap_clk 0>, <&ap_clk 1>;
-> +		#clock-cells = <1>;
-> +		reg = <0x274 0xa30>;
-> +	};
-> +};
-> -- 
-> 2.20.1
->
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
 
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Patch applied.
+
+Yours,
+Linus Walleij
