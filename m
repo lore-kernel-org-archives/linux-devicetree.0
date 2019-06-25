@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH v3 12/14] arm64: dts: qcom: qcs404: Add the clocks for APCS mux/divider
-Date: Tue, 25 Jun 2019 18:47:31 +0200
-Message-ID: <20190625164733.11091-13-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v3 10/14] arm64: dts: qcom: qcs404: Add OPP table
+Date: Tue, 25 Jun 2019 18:47:29 +0200
+Message-ID: <20190625164733.11091-11-jorge.ramirez-ortiz@linaro.org>
 References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,29 +12,43 @@ To: jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org
 Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Specify the clocks that feed the APCS mux/divider instead of using
-default hardcoded values in the source code.
+Add a CPU OPP table to qcs404
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 94471aa31979..9569686dbc41 100644
+index 3f17e1b09c13..d876dae5b0a5 100644
 --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
 +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -850,6 +850,9 @@
- 			compatible = "qcom,qcs404-apcs-apps-global", "syscon";
- 			reg = <0x0b011000 0x1000>;
- 			#mbox-cells = <1>;
-+			clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
-+			clock-names = "aux", "pll";
-+			#clock-cells = <0>;
+@@ -83,6 +83,24 @@
  		};
+ 	};
  
- 		apcs_hfpll: clock-controller@b016000 {
++	cpu_opp_table: cpu-opp-table {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-1094400000 {
++			opp-hz = /bits/ 64 <1094400000>;
++			opp-microvolt = <1224000 1224000 1224000>;
++		};
++		opp-1248000000 {
++			opp-hz = /bits/ 64 <1248000000>;
++			opp-microvolt = <1288000 1288000 1288000>;
++		};
++		opp-1401600000 {
++			opp-hz = /bits/ 64 <1401600000>;
++			opp-microvolt = <1384000 1384000 1384000>;
++		};
++	};
++
+ 	firmware {
+ 		scm: scm {
+ 			compatible = "qcom,scm-qcs404", "qcom,scm";
 -- 
 2.21.0
