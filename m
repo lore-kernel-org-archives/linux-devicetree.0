@@ -1,226 +1,86 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
-Date: Tue, 25 Jun 2019 07:28:20 +0000
-Message-ID: <AM0PR04MB4481F27EA9E158C04835505888E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190603083005.4304-1-peng.fan@nxp.com>
- <20190603083005.4304-3-peng.fan@nxp.com> <20190620092301.GD1248@e107155-lin>
- <AM0PR04MB4481203DE76D290F311E3BFA88E40@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20190620111520.GB9575@e107155-lin>
+From: Brian Dodge <bdodge09@gmail.com>
+Subject: [PATCH 2/2] backlight: arcxcnn: add "arctic" vendor prefix
+Date: Tue, 25 Jun 2019 00:05:29 -0400
+Message-ID: <1561435529-7835-3-git-send-email-bdodge09@gmail.com>
+References: <1561435529-7835-1-git-send-email-bdodge09@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190620111520.GB9575@e107155-lin>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1561435529-7835-1-git-send-email-bdodge09@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, Brian Dodge <bdodge09@gmail.com>, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
-
-> Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
->=20
-> On Thu, Jun 20, 2019 at 10:21:09AM +0000, Peng Fan wrote:
-> > Hi Sudeep,
-> >
-> > > Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
-> > >
-> > > On Mon, Jun 03, 2019 at 04:30:05PM +0800, peng.fan@nxp.com wrote:
-> > > > From: Peng Fan <peng.fan@nxp.com>
-> > > >
-> > > > This mailbox driver implements a mailbox which signals transmitted
-> > > > data via an ARM smc (secure monitor call) instruction. The mailbox
-> > > > receiver is implemented in firmware and can synchronously return
-> > > > data when it returns execution to the non-secure world again.
-> > > > An asynchronous receive path is not implemented.
-> > > > This allows the usage of a mailbox to trigger firmware actions on
-> > > > SoCs which either don't have a separate management processor or on
-> > > > which such a core is not available. A user of this mailbox could
-> > > > be the SCP interface.
-> > > >
-> > > > Modified from Andre Przywara's v2 patch https://lore
-> > > > .kernel.org%2Fpatchwork%2Fpatch%2F812999%2F&amp;data=3D02%7C0
-> 1%7
-> > > Cpeng.fa
-> > > >
-> > >
-> n%40nxp.com%7C6b37f78032e446be750e08d6f560e707%7C686ea1d3bc2b4
-> > > c6fa92cd
-> > > >
-> > >
-> 99c5c301635%7C0%7C0%7C636966193913988679&amp;sdata=3DUNM4MTPs
-> > > brqoMqWStEy
-> > > > YzzwMEWTmX7hHO3TeNEz%2BOAw%3D&amp;reserved=3D0
-> > > >
-> > > > Cc: Andre Przywara <andre.przywara@arm.com>
-> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > > ---
-> > > >
-> > > > V2:
-> > > >  Add interrupts notification support.
-> > > >
-> > > >  drivers/mailbox/Kconfig                 |   7 ++
-> > > >  drivers/mailbox/Makefile                |   2 +
-> > > >  drivers/mailbox/arm-smc-mailbox.c       | 190
-> > > ++++++++++++++++++++++++++++++++
-> > > >  include/linux/mailbox/arm-smc-mailbox.h |  10 ++
-> > > >  4 files changed, 209 insertions(+)
-> > > >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create
-> mode
-> > > > 100644 include/linux/mailbox/arm-smc-mailbox.h
-> > > >
-> > > > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig inde=
-x
-> > > > 595542bfae85..c3bd0f1ddcd8 100644
-> > > > --- a/drivers/mailbox/Kconfig
-> > > > +++ b/drivers/mailbox/Kconfig
-> > > > @@ -15,6 +15,13 @@ config ARM_MHU
-> > > >  	  The controller has 3 mailbox channels, the last of which can be
-> > > >  	  used in Secure mode only.
-> > > >
-> > > > +config ARM_SMC_MBOX
-> > > > +	tristate "Generic ARM smc mailbox"
-> > > > +	depends on OF && HAVE_ARM_SMCCC
-> > > > +	help
-> > > > +	  Generic mailbox driver which uses ARM smc calls to call into
-> > > > +	  firmware for triggering mailboxes.
-> > > > +
-> > > >  config IMX_MBOX
-> > > >  	tristate "i.MX Mailbox"
-> > > >  	depends on ARCH_MXC || COMPILE_TEST
-> > > > diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile in=
-dex
-> > > > c22fad6f696b..93918a84c91b 100644
-> > > > --- a/drivers/mailbox/Makefile
-> > > > +++ b/drivers/mailbox/Makefile
-> > > > @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)	+=3D mailbox-test.o
-> > > >
-> > > >  obj-$(CONFIG_ARM_MHU)	+=3D arm_mhu.o
-> > > >
-> > > > +obj-$(CONFIG_ARM_SMC_MBOX)	+=3D arm-smc-mailbox.o
-> > > > +
-> > > >  obj-$(CONFIG_IMX_MBOX)	+=3D imx-mailbox.o
-> > > >
-> > > >  obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)	+=3D
-> > > armada-37xx-rwtm-mailbox.o
-> > > > diff --git a/drivers/mailbox/arm-smc-mailbox.c
-> > > > b/drivers/mailbox/arm-smc-mailbox.c
-> > > > new file mode 100644
-> > > > index 000000000000..fef6e38d8b98
-> > > > --- /dev/null
-> > > > +++ b/drivers/mailbox/arm-smc-mailbox.c
-> > > > @@ -0,0 +1,190 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * Copyright (C) 2016,2017 ARM Ltd.
-> > > > + * Copyright 2019 NXP
-> > > > + */
-> > > > +
-> > > > +#include <linux/arm-smccc.h>
-> > > > +#include <linux/device.h>
-> > > > +#include <linux/kernel.h>
-> > > > +#include <linux/interrupt.h>
-> > > > +#include <linux/mailbox_controller.h> #include
-> > > > +<linux/mailbox/arm-smc-mailbox.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +
-> > > > +#define ARM_SMC_MBOX_USE_HVC	BIT(0)
-> > > > +#define ARM_SMC_MBOX_USB_IRQ	BIT(1)
-> > > > +
-> > > > +struct arm_smc_chan_data {
-> > > > +	u32 function_id;
-> > > > +	u32 flags;
-> > > > +	int irq;
-> > > > +};
-> > > > +
-> > > > +static int arm_smc_send_data(struct mbox_chan *link, void *data) {
-> > > > +	struct arm_smc_chan_data *chan_data =3D link->con_priv;
-> > > > +	struct arm_smccc_mbox_cmd *cmd =3D data;
-> > > > +	struct arm_smccc_res res;
-> > > > +	u32 function_id;
-> > > > +
-> > > > +	if (chan_data->function_id !=3D UINT_MAX)
-> > > > +		function_id =3D chan_data->function_id;
-> > > > +	else
-> > > > +		function_id =3D cmd->a0;
-> > > > +
-> > > > +	if (chan_data->flags & ARM_SMC_MBOX_USE_HVC)
-> > > > +		arm_smccc_hvc(function_id, cmd->a1, cmd->a2, cmd->a3,
-> > > cmd->a4,
-> > > > +			      cmd->a5, cmd->a6, cmd->a7, &res);
-> > > > +	else
-> > > > +		arm_smccc_smc(function_id, cmd->a1, cmd->a2, cmd->a3,
-> > > cmd->a4,
-> > > > +			      cmd->a5, cmd->a6, cmd->a7, &res);
-> > > > +
-> > >
-> > > So how will the SMC/HVC handler in EL3/2 find which mailbox is being
-> > > referred with this command ? I prefer 2nd argument to be the mailbox
-> > > number.
-> > You mean channel number as following?
-> >
-> > @@ -37,10 +38,10 @@ static int arm_smc_send_data(struct mbox_chan
-> *link, void *data)
-> >                 function_id =3D cmd->a0;
-> >
-> >         if (chan_data->flags & ARM_SMC_MBOX_USE_HVC)
-> > -               arm_smccc_hvc(function_id, cmd->a1, cmd->a2,
-> cmd->a3, cmd->a4,
-> > +               arm_smccc_hvc(function_id, chan_data->chan_id,
-> cmd->a2, cmd->a3, cmd->a4,
-> >                               cmd->a5, cmd->a6, cmd->a7, &res);
-> >         else
-> > -               arm_smccc_smc(function_id, cmd->a1, cmd->a2,
-> cmd->a3, cmd->a4,
-> > +               arm_smccc_smc(function_id, chan_data->chan_id,
-> cmd->a2, cmd->a3, cmd->a4,
-> >                               cmd->a5, cmd->a6, cmd->a7, &res);
-> >
->=20
-> Yes something like above. There's a brief description of the same in
-> latest SCMI specification though it's not related to SCMI, it more
-> general note for SMC based mailbox.
->=20
-> "In case the doorbell is SMC/HVC based, it should follow the SMC Calling
-> Convention [SMCCC] and needs to provide the identifier of the Shared
-> Memory
-> area that contains the payload. On return from the call, the Shared Memor=
-y
-> area which contained the payload is now updated with the SCMI return
-> response.
-> The identifier of the Shared Memory area should be 32-bits and each
-> identifier
-> should denote a distinct Shared Memory area."
-
-Thanks for the info, it make sense to pass channel id to firmware.
-
->=20
-> > Or should that be passed from firmware driver?
-> >
->=20
-> No, we can't assume the id's in DT are 1-1 translation to mailbox ID used
-> though it may be the same most of the time.
-
-Understand.
-
->=20
-> > If not from firmware driver, just as above, I do not have a good idea w=
-hich
-> > should be passed to smc, from cmd->a1 to a5 or from cmd->a2 to a6.
-> >
->=20
-> Also I found copying those registers may not be always needed and can
-> be sub-optimal. May be a way to indicate that this in DT whether
-> register based transfers are used or using memory. Just a thought.
-
-"reg-transport" or "mem-transport" should help here.
-
-Thanks,
-peng.
-
->=20
-> --
-> Regards,
-> Sudeep
+VGhlIG9yaWdpbmFsIHBhdGNoIGFkZGluZyB0aGlzIGRyaXZlciBhbmQgRFQgYmluZGluZ3MgaW1w
+cm9wZXJseQp1c2VkICJhcmMiIGFzIHRoZSB2ZW5kb3ItcHJlZml4LiBUaGlzIGFkZHMgImFyY3Rp
+YyIgd2hpY2ggaXMgdGhlCnByb3BlciBwcmVmaXggYW5kIHJldGFpbnMgImFyYyIgdG8gYWxsb3cg
+ZXhpc3RpbmcgdXNlcnMgb2YgdGhlCiJhcmMiIHByZWZpeCB0byB1cGRhdGUgdG8gbmV3IGtlcm5l
+bHMuIFRoZXJlIGlzIGF0IGxlYXN0IG9uZQooU2Ftc3VuZyBDaHJvbWVib29rIFBsdXMpCgpTaWdu
+ZWQtb2ZmLWJ5OiBCcmlhbiBEb2RnZSA8YmRvZGdlMDlAZ21haWwuY29tPgotLS0KIGRyaXZlcnMv
+dmlkZW8vYmFja2xpZ2h0L2FyY3hjbm5fYmwuYyB8IDM1ICsrKysrKysrKysrKysrKysrKysrKysr
+KystLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRp
+b25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvYXJjeGNubl9ibC5j
+IGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvYXJjeGNubl9ibC5jCmluZGV4IDdiMWMwYTAuLjE0
+YzY3ZjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L2FyY3hjbm5fYmwuYwor
+KysgYi9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9hcmN4Y25uX2JsLmMKQEAgLTEsOSArMSw5IEBA
+CiAvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5CiAvKgotICogQmFja2xp
+Z2h0IGRyaXZlciBmb3IgQXJjdGljU2FuZCBBUkNfWF9DXzBOXzBOIERldmljZXMKKyAqIEJhY2ts
+aWdodCBkcml2ZXIgZm9yIHBTZW1pIChmb3JtZXJseSBBcmN0aWNTYW5kKSBBUkNfWF9DXzBOXzBO
+IERldmljZXMKICAqCi0gKiBDb3B5cmlnaHQgMjAxNiBBcmN0aWNTYW5kLCBJbmMuCi0gKiBBdXRo
+b3IgOiBCcmlhbiBEb2RnZSA8YmRvZGdlQGFyY3RpY3NhbmQuY29tPgorICogQ29weXJpZ2h0IDIw
+MTYtMjAxOSAgcFNlbWksIEluYy4KKyAqIEF1dGhvciA6IEJyaWFuIERvZGdlIDxiZG9kZ2VAcHNl
+bWkuY29tPgogICovCiAKICNpbmNsdWRlIDxsaW51eC9iYWNrbGlnaHQuaD4KQEAgLTE5MSwyNyAr
+MTkxLDQwIEBAIHN0YXRpYyB2b2lkIGFyY3hjbm5fcGFyc2VfZHQoc3RydWN0IGFyY3hjbm4gKmxw
+KQogCWlmIChyZXQgPT0gMCkKIAkJbHAtPnBkYXRhLT5pbml0aWFsX2JyaWdodG5lc3MgPSBwcm9n
+X3ZhbDsKIAotCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsICJhcmMsbGVkLWNvbmZp
+Zy0wIiwgJnByb2dfdmFsKTsKKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAiYXJj
+dGljLGxlZC1jb25maWctMCIsICZwcm9nX3ZhbCk7CisJaWYgKHJldCkKKwkJcmV0ID0gb2ZfcHJv
+cGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxsZWQtY29uZmlnLTAiLCAmcHJvZ192YWwpOwogCWlm
+IChyZXQgPT0gMCkKIAkJbHAtPnBkYXRhLT5sZWRfY29uZmlnXzAgPSAodTgpcHJvZ192YWw7CiAK
+LQlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAiYXJjLGxlZC1jb25maWctMSIsICZw
+cm9nX3ZhbCk7CisJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyY3RpYyxsZWQt
+Y29uZmlnLTEiLCAmcHJvZ192YWwpOworCWlmIChyZXQpCisJCXJldCA9IG9mX3Byb3BlcnR5X3Jl
+YWRfdTMyKG5vZGUsICJhcmMsbGVkLWNvbmZpZy0xIiwgJnByb2dfdmFsKTsKIAlpZiAocmV0ID09
+IDApCiAJCWxwLT5wZGF0YS0+bGVkX2NvbmZpZ18xID0gKHU4KXByb2dfdmFsOwogCi0JcmV0ID0g
+b2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxkaW0tZnJlcSIsICZwcm9nX3ZhbCk7CisJ
+cmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyY3RpYyxkaW0tZnJlcSIsICZwcm9n
+X3ZhbCk7CisJaWYgKHJldCkKKwkJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFy
+YyxkaW0tZnJlcSIsICZwcm9nX3ZhbCk7CiAJaWYgKHJldCA9PSAwKQogCQlscC0+cGRhdGEtPmRp
+bV9mcmVxID0gKHU4KXByb2dfdmFsOwogCi0JcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9k
+ZSwgImFyYyxjb21wLWNvbmZpZyIsICZwcm9nX3ZhbCk7CisJcmV0ID0gb2ZfcHJvcGVydHlfcmVh
+ZF91MzIobm9kZSwgImFyY3RpYyxjb21wLWNvbmZpZyIsICZwcm9nX3ZhbCk7CisJaWYgKHJldCkK
+KwkJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxjb21wLWNvbmZpZyIsICZw
+cm9nX3ZhbCk7CiAJaWYgKHJldCA9PSAwKQogCQlscC0+cGRhdGEtPmNvbXBfY29uZmlnID0gKHU4
+KXByb2dfdmFsOwogCi0JcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxmaWx0
+ZXItY29uZmlnIiwgJnByb2dfdmFsKTsKKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2Rl
+LCAiYXJjdGljLGZpbHRlci1jb25maWciLCAmcHJvZ192YWwpOworCWlmIChyZXQpCisJCXJldCA9
+IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsCisJCQkJImFyYyxmaWx0ZXItY29uZmlnIiwgJnBy
+b2dfdmFsKTsKIAlpZiAocmV0ID09IDApCiAJCWxwLT5wZGF0YS0+ZmlsdGVyX2NvbmZpZyA9ICh1
+OClwcm9nX3ZhbDsKIAotCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsICJhcmMsdHJp
+bS1jb25maWciLCAmcHJvZ192YWwpOworCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUs
+ICJhcmN0aWMsdHJpbS1jb25maWciLCAmcHJvZ192YWwpOworCWlmIChyZXQpCisJCXJldCA9IG9m
+X3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsICJhcmMsdHJpbS1jb25maWciLCAmcHJvZ192YWwpOwog
+CWlmIChyZXQgPT0gMCkKIAkJbHAtPnBkYXRhLT50cmltX2NvbmZpZyA9ICh1OClwcm9nX3ZhbDsK
+IApAQCAtMzgxLDYgKzM5NCw4IEBAIHN0YXRpYyBpbnQgYXJjeGNubl9yZW1vdmUoc3RydWN0IGky
+Y19jbGllbnQgKmNsKQogfQogCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBhcmN4
+Y25uX2R0X2lkc1tdID0geworCXsgLmNvbXBhdGlibGUgPSAiYXJjdGljLGFyYzJjMDYwOCIgfSwK
+KwkvKiBoZXJlIHRvIHJlbWFpbSBjb21wYXRpYmxlIHdpdGggYW4gb2xkZXIgYmluZGluZywgZG8g
+bm90IHVzZSAqLwogCXsgLmNvbXBhdGlibGUgPSAiYXJjLGFyYzJjMDYwOCIgfSwKIAl7IH0KIH07
+CkBAIC00MDQsNSArNDE5LDUgQEAgc3RhdGljIHN0cnVjdCBpMmNfZHJpdmVyIGFyY3hjbm5fZHJp
+dmVyID0gewogbW9kdWxlX2kyY19kcml2ZXIoYXJjeGNubl9kcml2ZXIpOwogCiBNT0RVTEVfTElD
+RU5TRSgiR1BMIHYyIik7Ci1NT0RVTEVfQVVUSE9SKCJCcmlhbiBEb2RnZSA8YmRvZGdlQGFyY3Rp
+Y3NhbmQuY29tPiIpOworTU9EVUxFX0FVVEhPUigiQnJpYW4gRG9kZ2UgPGJkb2RnZUBwc2VtaS5j
+b20+Iik7CiBNT0RVTEVfREVTQ1JJUFRJT04oIkFSQ1hDTk4gQmFja2xpZ2h0IGRyaXZlciIpOwot
+LSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
