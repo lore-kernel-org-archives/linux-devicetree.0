@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH v3 08/14] clk: qcom: hfpll: CLK_IGNORE_UNUSED
-Date: Tue, 25 Jun 2019 18:47:27 +0200
-Message-ID: <20190625164733.11091-9-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v3 04/14] dt-bindings: mailbox: qcom: Add clock-name optional property
+Date: Tue, 25 Jun 2019 18:47:23 +0200
+Message-ID: <20190625164733.11091-5-jorge.ramirez-ortiz@linaro.org>
 References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,52 +12,67 @@ To: jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org
 Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-When COMMON_CLK_DISABLED_UNUSED is set, in an effort to save power and
-to keep the software model of the clock in line with reality, the
-framework transverses the clock tree and disables those clocks that
-were enabled by the firmware but have not been enabled by any device
-driver.
+When the APCS clock is registered (platform dependent), it retrieves
+its parent names from hardcoded values in the driver.
 
-If CPUFREQ is enabled, early during the system boot, it might attempt
-to change the CPU frequency ("set_rate"). If the HFPLL is selected as
-a provider, it will then change the rate for this clock.
-
-As boot continues, clk_disable_unused_subtree will run. Since it wont
-find a valid counter (enable_count) for a clock that is actually
-enabled it will attempt to disable it which will cause the CPU to
-stop. Notice that in this driver, calls to check whether the clock is
-enabled are routed via the is_enabled callback which queries the
-hardware.
-
-The following commit, rather than marking the clock critical and
-forcing the clock to be always enabled, addresses the above scenario
-making sure the clock is not disabled but it continues to rely on the
-firmware to enable the clock.
+The following commit allows the DT node to provide such clock names to
+the platform data based clock driver therefore avoiding having to
+explicitly embed those names in the clock driver source code.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/qcom/hfpll.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../mailbox/qcom,apcs-kpss-global.txt         | 24 ++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
-index 0ffed0d41c50..d5fd27938e7b 100644
---- a/drivers/clk/qcom/hfpll.c
-+++ b/drivers/clk/qcom/hfpll.c
-@@ -58,6 +58,13 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
- 		.parent_names = (const char *[]){ "xo" },
- 		.num_parents = 1,
- 		.ops = &clk_ops_hfpll,
-+		/*
-+		 * rather than marking the clock critical and forcing the clock
-+		 * to be always enabled, we make sure that the clock is not
-+		 * disabled: the firmware remains responsible of enabling this
-+		 * clock (for more info check the commit log)
-+		 */
-+		.flags = CLK_IGNORE_UNUSED,
- 	};
+diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+index 1232fc9fc709..b69310322b09 100644
+--- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
++++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+@@ -18,10 +18,11 @@ platforms.
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+ 	Definition: must specify the base address and size of the global block
++
+ - clocks:
+-	Usage: required if #clocks-cells property is present
+-	Value type: <phandle>
+-	Definition: phandle to the input PLL, which feeds the APCS mux/divider
++	Usage: required if #clock-names property is present
++	Value type: <phandle array>
++	Definition: phandles to the two parent clocks of the clock driver.
  
- 	h = devm_kzalloc(dev, sizeof(*h), GFP_KERNEL);
+ - #mbox-cells:
+ 	Usage: required
+@@ -33,6 +34,12 @@ platforms.
+ 	Value type: <u32>
+ 	Definition: as described in clock.txt, must be 0
+ 
++- clock-names:
++	Usage: required if the platform data based clock driver needs to
++	retrieve the parent clock names from device tree.
++	This will requires two mandatory clocks to be defined.
++	Value type: <string-array>
++	Definition: must be "aux" and "pll"
+ 
+ = EXAMPLE
+ The following example describes the APCS HMSS found in MSM8996 and part of the
+@@ -65,3 +72,14 @@ Below is another example of the APCS binding on MSM8916 platforms:
+ 		clocks = <&a53pll>;
+ 		#clock-cells = <0>;
+ 	};
++
++Below is another example of the APCS binding on QCS404 platforms:
++
++	apcs_glb: mailbox@b011000 {
++		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
++		reg = <0x0b011000 0x1000>;
++		#mbox-cells = <1>;
++		clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
++		clock-names = "aux", "pll";
++		#clock-cells = <0>;
++	};
 -- 
 2.21.0
