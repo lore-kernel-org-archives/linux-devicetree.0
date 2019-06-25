@@ -1,73 +1,259 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: RE: [PATCH V3 3/4] clk: imx: Add support for i.MX8MN clock driver
-Date: Tue, 25 Jun 2019 15:34:56 -0700
-Message-ID: <20190625223457.1FCBF205ED@mail.kernel.org>
-References: <20190604015928.23157-1-Anson.Huang@nxp.com> <20190604015928.23157-3-Anson.Huang@nxp.com> <20190606162543.EFFB820645@mail.kernel.org> <DB3PR0402MB391625A0B3D838CE88C53E33F5100@DB3PR0402MB3916.eurprd04.prod.outlook.com> <20190607180039.611C7208C0@mail.kernel.org> <DB3PR0402MB391678C245944942EA2A7F62F5110@DB3PR0402MB3916.eurprd04.prod.outlook.com> <20190610151425.D8139207E0@mail.kernel.org> <DB3PR0402MB3916F7F7D7CA801F5C0D0610F5ED0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v13 05/13] clk: ingenic: Add driver for the TCU clocks
+Date: Wed, 26 Jun 2019 00:37:07 +0200
+Message-ID: <1561502227.10069.1@crapouillou.net>
+References: <20190624225759.18299-1-paul@crapouillou.net>
+        <20190624225759.18299-6-paul@crapouillou.net>
+        <20190625220931.2F69B2086D@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB3916F7F7D7CA801F5C0D0610F5ED0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <20190625220931.2F69B2086D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dinguyen@kernel.org" <dinguyen@kernel.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "festevam@gmail.com" <festevam@gmail.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, James Hogan <jhogan@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Michael Turquette <mturquette@baylibre.com>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Thomas Gleixner <tglx@linutronix.de>, Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Anson Huang (2019-06-10 19:06:22)
-> > >
-> > > Sorry, I am still a little confused, all the clock
-> > > register(clk_register()) are via each different clock types like
-> > > imx_clk_gate4/imx_clk_pll14xx, if using clk_hw_register, means we need
-> > > to re-write the clock driver using different clk register method, that
-> > > will make the driver completely different from i.mx8mq/i.mx8mm, they
-> > > are actually same series of SoC as i.mx8mn, it will introduce many
-> > confusion, is my understanding correct? And is it OK to just keep what =
-it is
-> > and make them all aligned?
-> > >
-> >=20
-> > Ok, the problem I'm trying to point out is that clk registrations need =
-to be
-> > undone, i.e. clk_unregister() needs to be called, when the driver fails=
- to
-> > probe. devm_*() is one way to do this, but if you have other ways of
-> > removing all the registered clks then that works too. Makes sense?
->=20
-> Yes, it makes sense. Do you think it is OK to add an imx_unregister_clock=
-s() API, then
-> call it in every place of returning failure in .probe function? If yes, I=
- will add it and also
-> fix it in i.MX8MQ driver which uses platform driver model but does NOT ha=
-ndle this case.=20
->=20
->         base =3D devm_platform_ioremap_resource(pdev, 0);
-> -       if (WARN_ON(IS_ERR(base)))
-> -               return PTR_ERR(base);
-> +       if (WARN_ON(IS_ERR(base))) {
-> +               ret =3D PTR_ERR(base);
-> +               goto unregister_clks;
-> +       }
->=20
->                 pr_err("failed to register clks for i.MX8MN\n");
-> -               return -EINVAL;
-> +               goto unregister_clks;
->         }
->=20
->         return 0;
-> +
-> +unregister_clks:
-> +       imx_unregister_clocks(clks, ARRAY_SIZE(clks));
-> +
-> +       return ret;
->=20
-> +void imx_unregister_clocks(struct clk *clks[], unsigned int count)
-> +{
-> +       unsigned i;
-> +
-> +       for (i =3D 0; i < count; i++)
-> +               clk_unregister(clks[i]);
-> +}
-> +
->=20
 
-Yes, looks better.
+
+Le mer. 26 juin 2019 =E0 0:09, Stephen Boyd <sboyd@kernel.org> a =E9crit :
+> Quoting Paul Cercueil (2019-06-24 15:57:51)
+>>  diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
+>>  new file mode 100644
+>>  index 000000000000..6d667c4a2bd5
+>>  --- /dev/null
+>>  +++ b/drivers/clk/ingenic/tcu.c
+>>  @@ -0,0 +1,473 @@
+>>  +// SPDX-License-Identifier: GPL-2.0
+>>  +/*
+>>  + * JZ47xx SoCs TCU clocks driver
+>>  + * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
+>>  + */
+>>  +
+>>  +#include <linux/clk.h>
+>>  +#include <linux/clk-provider.h>
+>>  +#include <linux/clockchips.h>
+>>  +#include <linux/mfd/ingenic-tcu.h>
+>>  +#include <linux/regmap.h>
+>>  +#include <linux/slab.h>
+>>  +#include <linux/syscore_ops.h>
+>>  +
+>>  +#include <dt-bindings/clock/ingenic,tcu.h>
+>>  +
+> [...]
+>>  +
+>>  +static const struct ingenic_soc_info jz4740_soc_info =3D {
+>>  +       .num_channels =3D 8,
+>>  +       .has_ost =3D false,
+>>  +       .has_tcu_clk =3D true,
+>>  +};
+>>  +
+>>  +static const struct ingenic_soc_info jz4725b_soc_info =3D {
+>>  +       .num_channels =3D 6,
+>>  +       .has_ost =3D true,
+>>  +       .has_tcu_clk =3D true,
+>>  +};
+>>  +
+>>  +static const struct ingenic_soc_info jz4770_soc_info =3D {
+>>  +       .num_channels =3D 8,
+>>  +       .has_ost =3D true,
+>>  +       .has_tcu_clk =3D false,
+>>  +};
+>>  +
+>>  +static const struct of_device_id ingenic_tcu_of_match[]=20
+>> __initconst =3D {
+>>  +       { .compatible =3D "ingenic,jz4740-tcu", .data =3D=20
+>> &jz4740_soc_info, },
+>>  +       { .compatible =3D "ingenic,jz4725b-tcu", .data =3D=20
+>> &jz4725b_soc_info, },
+>>  +       { .compatible =3D "ingenic,jz4770-tcu", .data =3D=20
+>> &jz4770_soc_info, },
+>>  +       { }
+>>  +};
+>>  +
+>>  +static int __init ingenic_tcu_probe(struct device_node *np)
+>>  +{
+>>  +       const struct of_device_id *id =3D=20
+>> of_match_node(ingenic_tcu_of_match, np);
+>>  +       struct ingenic_tcu *tcu;
+>>  +       struct regmap *map;
+>>  +       unsigned int i;
+>>  +       int ret;
+>>  +
+>>  +       map =3D ingenic_tcu_get_regmap(np);
+>>  +       if (IS_ERR(map))
+>>  +               return PTR_ERR(map);
+>>  +
+>>  +       tcu =3D kzalloc(sizeof(*tcu), GFP_KERNEL);
+>>  +       if (!tcu)
+>>  +               return -ENOMEM;
+>>  +
+>>  +       tcu->map =3D map;
+>>  +       tcu->soc_info =3D id->data;
+>>  +
+>>  +       if (tcu->soc_info->has_tcu_clk) {
+>>  +               tcu->clk =3D of_clk_get_by_name(np, "tcu");
+>=20
+> Do you need to get the clk by name? Or can that clk be "known" to the
+> TCU somehow so we can already have a direct clk pointer?
+
+This clock is provided by a separate driver, so I have to obtain the
+clock pointer from devicetree.
+
+>=20
+>>  +               if (IS_ERR(tcu->clk)) {
+>>  +                       ret =3D PTR_ERR(tcu->clk);
+>>  +                       pr_crit("Cannot get TCU clock\n");
+>>  +                       goto err_free_tcu;
+>>  +               }
+>>  +
+>>  +               ret =3D clk_prepare_enable(tcu->clk);
+>>  +               if (ret) {
+>>  +                       pr_crit("Unable to enable TCU clock\n");
+>>  +                       goto err_put_clk;
+>>  +               }
+>>  +       }
+>>  +
+>>  +       tcu->clocks =3D kzalloc(sizeof(*tcu->clocks) +
+>>  +                             sizeof(*tcu->clocks->hws) *=20
+>> TCU_CLK_COUNT,
+>>  +                             GFP_KERNEL);
+>>  +       if (!tcu->clocks) {
+>>  +               ret =3D -ENOMEM;
+>>  +               goto err_clk_disable;
+>>  +       }
+>>  +
+>>  +       tcu->clocks->num =3D TCU_CLK_COUNT;
+>>  +
+>>  +       for (i =3D 0; i < tcu->soc_info->num_channels; i++) {
+>>  +               ret =3D ingenic_tcu_register_clock(tcu, i,=20
+>> TCU_PARENT_EXT,
+>>  +                                               =20
+>> &ingenic_tcu_clk_info[i],
+>>  +                                                tcu->clocks);
+>>  +               if (ret) {
+>>  +                       pr_crit("cannot register clock %i\n", i);
+>>  +                       goto err_unregister_timer_clocks;
+>>  +               }
+>>  +       }
+>>  +
+>>  +       /*
+>>  +        * We set EXT as the default parent clock for all the TCU=20
+>> clocks
+>>  +        * except for the watchdog one, where we set the RTC clock=20
+>> as the
+>>  +        * parent. Since the EXT and PCLK are much faster than the=20
+>> RTC clock,
+>>  +        * the watchdog would kick after a maximum time of 5s, and=20
+>> we might
+>>  +        * want a slower kicking time.
+>>  +        */
+>>  +       ret =3D ingenic_tcu_register_clock(tcu, TCU_CLK_WDT,=20
+>> TCU_PARENT_RTC,
+>>  +                                       =20
+>> &ingenic_tcu_watchdog_clk_info,
+>>  +                                        tcu->clocks);
+>>  +       if (ret) {
+>>  +               pr_crit("cannot register watchdog clock\n");
+>>  +               goto err_unregister_timer_clocks;
+>>  +       }
+>>  +
+>>  +       if (tcu->soc_info->has_ost) {
+>>  +               ret =3D ingenic_tcu_register_clock(tcu, TCU_CLK_OST,
+>>  +                                                TCU_PARENT_EXT,
+>>  +                                               =20
+>> &ingenic_tcu_ost_clk_info,
+>>  +                                                tcu->clocks);
+>>  +               if (ret) {
+>>  +                       pr_crit("cannot register ost clock\n");
+>>  +                       goto err_unregister_watchdog_clock;
+>>  +               }
+>>  +       }
+>>  +
+>>  +       ret =3D of_clk_add_hw_provider(np, of_clk_hw_onecell_get,=20
+>> tcu->clocks);
+>>  +       if (ret) {
+>>  +               pr_crit("cannot add OF clock provider\n");
+>>  +               goto err_unregister_ost_clock;
+>>  +       }
+>>  +
+>>  +       ingenic_tcu =3D tcu;
+>>  +
+>>  +       return 0;
+>>  +
+>>  +err_unregister_ost_clock:
+>>  +       if (tcu->soc_info->has_ost)
+>>  +               clk_hw_unregister(tcu->clocks->hws[i + 1]);
+>>  +err_unregister_watchdog_clock:
+>>  +       clk_hw_unregister(tcu->clocks->hws[i]);
+>>  +err_unregister_timer_clocks:
+>>  +       for (i =3D 0; i < tcu->clocks->num; i++)
+>>  +               if (tcu->clocks->hws[i])
+>>  +                       clk_hw_unregister(tcu->clocks->hws[i]);
+>>  +       kfree(tcu->clocks);
+>>  +err_clk_disable:
+>>  +       if (tcu->soc_info->has_tcu_clk)
+>>  +               clk_disable_unprepare(tcu->clk);
+>>  +err_put_clk:
+>>  +       if (tcu->soc_info->has_tcu_clk)
+>>  +               clk_put(tcu->clk);
+>>  +err_free_tcu:
+>>  +       kfree(tcu);
+>>  +       return ret;
+>=20
+> Too bad this isn't a device with devm!
+>=20
+>>  +}
+>>  +
+>>  +static int __maybe_unused tcu_pm_suspend(void)
+>>  +{
+>>  +       struct ingenic_tcu *tcu =3D ingenic_tcu;
+>>  +
+>>  +       if (tcu->clk)
+>>  +               clk_disable(tcu->clk);
+>=20
+> Do you need to unprepare? Or it just isn't possible because this is
+> called from syscore and thus we can't sleep?
+
+I thought that clk_disable() was enough. We don't actually need to
+unprepare, do we? And yes, as you pointed out, this call cannot sleep.
+
+>>  +
+>>  +       return 0;
+>>  +}
+>>  +
+>>  +static void __maybe_unused tcu_pm_resume(void)
+>>  +{
+>>  +       struct ingenic_tcu *tcu =3D ingenic_tcu;
+>>  +
+>>  +       if (tcu->clk)
+>>  +               clk_enable(tcu->clk);
+>>  +}
+>>  +
+>>  +static struct syscore_ops __maybe_unused tcu_pm_ops =3D {
+>>  +       .suspend =3D tcu_pm_suspend,
+>>  +       .resume =3D tcu_pm_resume,
+>>  +};
+>>  +
+>>  +static void __init ingenic_tcu_init(struct device_node *np)
+>>  +{
+>>  +       int ret =3D ingenic_tcu_probe(np);
+>>  +
+>>  +       if (ret)
+>>  +               pr_crit("Failed to initialize TCU clocks: %i\n",=20
+>> ret);
+>=20
+> Should be %d instead of %i? Applies to all this file.
+
+OK.
+
+Thanks,
+-Paul
+
+>>  +
+>>  +       if (IS_ENABLED(CONFIG_PM_SLEEP))
+>>  +               register_syscore_ops(&tcu_pm_ops);
+>>  +}
+
+=
