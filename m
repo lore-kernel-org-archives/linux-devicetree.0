@@ -1,34 +1,66 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v2 3/4] pinctrl: mvebu: Add support for MV98DX1135
-Date: Tue, 25 Jun 2019 20:30:33 +0000
-Message-ID: <f08d52a1c4864c6981f3631523965cf5@svr-chch-ex1.atlnz.lc>
-References: <20190617215458.32688-1-chris.packham@alliedtelesis.co.nz>
- <20190617215458.32688-4-chris.packham@alliedtelesis.co.nz>
- <CACRpkdbSS18us3o=v7ki_=8cLXYjfDd8q321xMCounXPh11GAQ@mail.gmail.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v3 1/5] drm/panel: simple: Add Sharp LQ070Y3DG3B panel
+ support
+Date: Tue, 25 Jun 2019 22:39:37 +0200
+Message-ID: <20190625203937.GB18595@ravnborg.org>
+References: <cover.1559905870.git.hns@goldelico.com>
+ <d16aaa1ac93e4f15c13cd7d621de95836257676a.1559905870.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <d16aaa1ac93e4f15c13cd7d621de95836257676a.1559905870.git.hns@goldelico.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, letux-kernel@openphoenux.org, David Airlie <airlied@linux.ie>, marek.belisko@gmail.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, tomi.valkeinen@ti.com, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/06/19 12:27 AM, Linus Walleij wrote:=0A=
-> On Mon, Jun 17, 2019 at 11:55 PM Chris Packham=0A=
-> <chris.packham@alliedtelesis.co.nz> wrote:=0A=
-> =0A=
->> The 98DX1135 is a switch chip with an integrated CPU. This is similar to=
-=0A=
->> the 98DX4122 except the MPP assignments differ.=0A=
->>=0A=
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
->> Reviewed-by: Andrew Lunn <andrew@lunn.ch>=0A=
-> =0A=
-> Patch applied.=0A=
-> I just assume this one has no dependency on the clock patches=0A=
-> so I can merge it separately.=0A=
-=0A=
-Correct. There's no dependency between the patches but they're all =0A=
-needed to successfully boot a board.=0A=
+T24gRnJpLCBKdW4gMDcsIDIwMTkgYXQgMDE6MTE6MDdQTSArMDIwMCwgSC4gTmlrb2xhdXMgU2No
+YWxsZXIgd3JvdGU6Cj4gVGhlIGNoYW5nZSBhZGRzIHN1cHBvcnQgZm9yIHRoZSBTaGFycCBMUTA3
+MFkzREczQiA3LjAiIFRGVCBMQ0QgcGFuZWwuCj4gCj4gVGVzdGVkIG9uIExldHV4NzAwNC4KPiAK
+PiBTaWduZWQtb2ZmLWJ5OiBILiBOaWtvbGF1cyBTY2hhbGxlciA8aG5zQGdvbGRlbGljby5jb20+
+ClJldmlld2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+Cj4gLS0tCj4gIGRy
+aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyB8IDMwICsrKysrKysrKysrKysrKysr
+KysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKykKPiAKPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9n
+cHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gaW5kZXggNTY5YmU0ZWZkOGQxLi41YjI3ODI5
+YzVhNzggMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
+Cj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gQEAgLTIyMDQs
+NiArMjIwNCwzMyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2Mgc2Ftc3VuZ19sdG4x
+NDBhdDI5XzMwMSA9IHsKPiAgCX0sCj4gIH07Cj4gIAo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRy
+bV9kaXNwbGF5X21vZGUgc2hhcnBfbHEwNzB5M2RnM2JfbW9kZSA9IHsKPiArCS5jbG9jayA9IDMz
+MjYwLAo+ICsJLmhkaXNwbGF5ID0gODAwLAo+ICsJLmhzeW5jX3N0YXJ0ID0gODAwICsgNjQsCj4g
+KwkuaHN5bmNfZW5kID0gODAwICsgNjQgKyAxMjgsCj4gKwkuaHRvdGFsID0gODAwICsgNjQgKyAx
+MjggKyA2NCwKPiArCS52ZGlzcGxheSA9IDQ4MCwKPiArCS52c3luY19zdGFydCA9IDQ4MCArIDgs
+Cj4gKwkudnN5bmNfZW5kID0gNDgwICsgOCArIDIsCj4gKwkudnRvdGFsID0gNDgwICsgOCArIDIg
+KyAzNSwKPiArCS52cmVmcmVzaCA9IDYwLAo+ICsJLmZsYWdzID0gRElTUExBWV9GTEFHU19QSVhE
+QVRBX1BPU0VER0UsCj4gK307Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2Mg
+c2hhcnBfbHEwNzB5M2RnM2IgPSB7Cj4gKwkubW9kZXMgPSAmc2hhcnBfbHEwNzB5M2RnM2JfbW9k
+ZSwKPiArCS5udW1fbW9kZXMgPSAxLAo+ICsJLmJwYyA9IDgsCj4gKwkuc2l6ZSA9IHsKPiArCQku
+d2lkdGggPSAxNTIsCS8qIDE1Mi40bW0gKi8KPiArCQkuaGVpZ2h0ID0gOTEsCS8qIDkxLjRtbSAq
+Lwo+ICsJfSwKPiArCS5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I4ODhfMVgyNCwKPiAr
+CS5idXNfZmxhZ3MgPSBEUk1fQlVTX0ZMQUdfREVfSElHSCB8IERSTV9CVVNfRkxBR19QSVhEQVRB
+X1BPU0VER0UgfAo+ICsJCSAgICAgRFJNX0JVU19GTEFHX1NZTkNfRFJJVkVfUE9TRURHRSwKPiAr
+fTsKPiArCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBzaGFycF9scTAz
+NXE3ZGIwM19tb2RlID0gewo+ICAJLmNsb2NrID0gNTUwMCwKPiAgCS5oZGlzcGxheSA9IDI0MCwK
+PiBAQCAtMjc4Niw2ICsyODEzLDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
+cGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsKPiAgCX0sIHsKPiAgCQkuY29tcGF0aWJsZSA9ICJzaGFy
+cCxscTAzNXE3ZGIwMyIsCj4gIAkJLmRhdGEgPSAmc2hhcnBfbHEwMzVxN2RiMDMsCj4gKwl9LCB7
+Cj4gKwkJLmNvbXBhdGlibGUgPSAic2hhcnAsbHEwNzB5M2RnM2IiLAo+ICsJCS5kYXRhID0gJnNo
+YXJwX2xxMDcweTNkZzNiLAo+ICAJfSwgewo+ICAJCS5jb21wYXRpYmxlID0gInNoYXJwLGxxMTAx
+azFseTA0IiwKPiAgCQkuZGF0YSA9ICZzaGFycF9scTEwMWsxbHkwNCwKPiAtLSAKPiAyLjE5LjEK
+PiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4g
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
