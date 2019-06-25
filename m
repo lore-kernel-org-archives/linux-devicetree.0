@@ -1,610 +1,172 @@
-From: Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v4 1/2] mtd: rawnand: Add Macronix Raw NAND controller
-Date: Tue, 25 Jun 2019 14:10:55 +0800
-Message-ID: <1561443056-13766-2-git-send-email-masonccyang@mxic.com.tw>
-References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw>
-Sender: linux-kernel-owner@vger.kernel.org
-To: miquel.raynal@bootlin.com, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, bbrezillon@kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, vigneshr@ti.com, paul.burton@mips.com, liang.yang@amlogic.com, richard@nod.at, anders.roxell@linaro.org, christophe.kerello@st.com, paul@crapouillou.net, jianxin.pan@amlogic.com, stefan@agner.ch, devicetree@vger.kernel.org
-Cc: juliensu@mxic.com.tw, lee.jones@linaro.org, masonccyang@mxic.com.tw, broonie@kernel.org
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v7 1/5] mtd: cfi_cmdset_0002: Add support for polling
+ status register
+Date: Tue, 25 Jun 2019 11:22:24 +0530
+Message-ID: <c35bf193-02e2-6fe4-3db3-5be757616239@ti.com>
+References: <20190620172250.9102-1-vigneshr@ti.com>
+ <20190620172250.9102-2-vigneshr@ti.com>
+ <571484c7-0cf4-6a7d-6d7f-375cfb13ce8b@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <571484c7-0cf4-6a7d-6d7f-375cfb13ce8b@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Tokunori Ikegami <ikegami.t@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for Macronix raw NAND controller.
-
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- drivers/mtd/nand/raw/Kconfig     |   6 +
- drivers/mtd/nand/raw/Makefile    |   1 +
- drivers/mtd/nand/raw/mxic_nand.c | 551 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 558 insertions(+)
- create mode 100644 drivers/mtd/nand/raw/mxic_nand.c
-
-diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-index 5a711d8..9cff36a 100644
---- a/drivers/mtd/nand/raw/Kconfig
-+++ b/drivers/mtd/nand/raw/Kconfig
-@@ -407,6 +407,12 @@ config MTD_NAND_MTK
- 	  Enables support for NAND controller on MTK SoCs.
- 	  This controller is found on mt27xx, mt81xx, mt65xx SoCs.
- 
-+config MTD_NAND_MXIC
-+	tristate "Macronix raw NAND controller"
-+	depends on HAS_IOMEM || COMPILE_TEST
-+	help
-+	  This selects the Macronix raw NAND controller driver.
-+
- config MTD_NAND_TEGRA
- 	tristate "NVIDIA Tegra NAND controller"
- 	depends on ARCH_TEGRA || COMPILE_TEST
-diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
-index efaf5cd..9b43fbf 100644
---- a/drivers/mtd/nand/raw/Makefile
-+++ b/drivers/mtd/nand/raw/Makefile
-@@ -54,6 +54,7 @@ obj-$(CONFIG_MTD_NAND_HISI504)	        += hisi504_nand.o
- obj-$(CONFIG_MTD_NAND_BRCMNAND)		+= brcmnand/
- obj-$(CONFIG_MTD_NAND_QCOM)		+= qcom_nandc.o
- obj-$(CONFIG_MTD_NAND_MTK)		+= mtk_ecc.o mtk_nand.o
-+obj-$(CONFIG_MTD_NAND_MXIC)		+= mxic_nand.o
- obj-$(CONFIG_MTD_NAND_TEGRA)		+= tegra_nand.o
- obj-$(CONFIG_MTD_NAND_STM32_FMC2)	+= stm32_fmc2_nand.o
- obj-$(CONFIG_MTD_NAND_MESON)		+= meson_nand.o
-diff --git a/drivers/mtd/nand/raw/mxic_nand.c b/drivers/mtd/nand/raw/mxic_nand.c
-new file mode 100644
-index 0000000..14c0b3b
---- /dev/null
-+++ b/drivers/mtd/nand/raw/mxic_nand.c
-@@ -0,0 +1,551 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Macronix International Co., Ltd.
-+ *
-+ * Author:
-+ *	Mason Yang <masonccyang@mxic.com.tw>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/rawnand.h>
-+#include <linux/mtd/nand_ecc.h>
-+#include <linux/platform_device.h>
-+
-+#include "internals.h"
-+
-+#define HC_CFG			0x0
-+#define HC_CFG_IF_CFG(x)	((x) << 27)
-+#define HC_CFG_DUAL_SLAVE	BIT(31)
-+#define HC_CFG_INDIVIDUAL	BIT(30)
-+#define HC_CFG_NIO(x)		(((x) / 4) << 27)
-+#define HC_CFG_TYPE(s, t)	((t) << (23 + ((s) * 2)))
-+#define HC_CFG_TYPE_SPI_NOR	0
-+#define HC_CFG_TYPE_SPI_NAND	1
-+#define HC_CFG_TYPE_SPI_RAM	2
-+#define HC_CFG_TYPE_RAW_NAND	3
-+#define HC_CFG_SLV_ACT(x)	((x) << 21)
-+#define HC_CFG_CLK_PH_EN	BIT(20)
-+#define HC_CFG_CLK_POL_INV	BIT(19)
-+#define HC_CFG_BIG_ENDIAN	BIT(18)
-+#define HC_CFG_DATA_PASS	BIT(17)
-+#define HC_CFG_IDLE_SIO_LVL(x)	((x) << 16)
-+#define HC_CFG_MAN_START_EN	BIT(3)
-+#define HC_CFG_MAN_START	BIT(2)
-+#define HC_CFG_MAN_CS_EN	BIT(1)
-+#define HC_CFG_MAN_CS_ASSERT	BIT(0)
-+
-+#define INT_STS			0x4
-+#define INT_STS_EN		0x8
-+#define INT_SIG_EN		0xc
-+#define INT_STS_ALL		GENMASK(31, 0)
-+#define INT_RDY_PIN		BIT(26)
-+#define INT_RDY_SR		BIT(25)
-+#define INT_LNR_SUSP		BIT(24)
-+#define INT_ECC_ERR		BIT(17)
-+#define INT_CRC_ERR		BIT(16)
-+#define INT_LWR_DIS		BIT(12)
-+#define INT_LRD_DIS		BIT(11)
-+#define INT_SDMA_INT		BIT(10)
-+#define INT_DMA_FINISH		BIT(9)
-+#define INT_RX_NOT_FULL		BIT(3)
-+#define INT_RX_NOT_EMPTY	BIT(2)
-+#define INT_TX_NOT_FULL		BIT(1)
-+#define INT_TX_EMPTY		BIT(0)
-+
-+#define HC_EN			0x10
-+#define HC_EN_BIT		BIT(0)
-+
-+#define TXD(x)			(0x14 + ((x) * 4))
-+#define RXD			0x24
-+
-+#define SS_CTRL(s)		(0x30 + ((s) * 4))
-+#define LRD_CFG			0x44
-+#define LWR_CFG			0x80
-+#define RWW_CFG			0x70
-+#define OP_READ			BIT(23)
-+#define OP_DUMMY_CYC(x)		((x) << 17)
-+#define OP_ADDR_BYTES(x)	((x) << 14)
-+#define OP_CMD_BYTES(x)		(((x) - 1) << 13)
-+#define OP_OCTA_CRC_EN		BIT(12)
-+#define OP_DQS_EN		BIT(11)
-+#define OP_ENHC_EN		BIT(10)
-+#define OP_PREAMBLE_EN		BIT(9)
-+#define OP_DATA_DDR		BIT(8)
-+#define OP_DATA_BUSW(x)		((x) << 6)
-+#define OP_ADDR_DDR		BIT(5)
-+#define OP_ADDR_BUSW(x)		((x) << 3)
-+#define OP_CMD_DDR		BIT(2)
-+#define OP_CMD_BUSW(x)		(x)
-+#define OP_BUSW_1		0
-+#define OP_BUSW_2		1
-+#define OP_BUSW_4		2
-+#define OP_BUSW_8		3
-+
-+#define OCTA_CRC		0x38
-+#define OCTA_CRC_IN_EN(s)	BIT(3 + ((s) * 16))
-+#define OCTA_CRC_CHUNK(s, x)	((fls((x) / 32)) << (1 + ((s) * 16)))
-+#define OCTA_CRC_OUT_EN(s)	BIT(0 + ((s) * 16))
-+
-+#define ONFI_DIN_CNT(s)		(0x3c + (s))
-+
-+#define LRD_CTRL		0x48
-+#define RWW_CTRL		0x74
-+#define LWR_CTRL		0x84
-+#define LMODE_EN		BIT(31)
-+#define LMODE_SLV_ACT(x)	((x) << 21)
-+#define LMODE_CMD1(x)		((x) << 8)
-+#define LMODE_CMD0(x)		(x)
-+
-+#define LRD_ADDR		0x4c
-+#define LWR_ADDR		0x88
-+#define LRD_RANGE		0x50
-+#define LWR_RANGE		0x8c
-+
-+#define AXI_SLV_ADDR		0x54
-+
-+#define DMAC_RD_CFG		0x58
-+#define DMAC_WR_CFG		0x94
-+#define DMAC_CFG_PERIPH_EN	BIT(31)
-+#define DMAC_CFG_ALLFLUSH_EN	BIT(30)
-+#define DMAC_CFG_LASTFLUSH_EN	BIT(29)
-+#define DMAC_CFG_QE(x)		(((x) + 1) << 16)
-+#define DMAC_CFG_BURST_LEN(x)	(((x) + 1) << 12)
-+#define DMAC_CFG_BURST_SZ(x)	((x) << 8)
-+#define DMAC_CFG_DIR_READ	BIT(1)
-+#define DMAC_CFG_START		BIT(0)
-+
-+#define DMAC_RD_CNT		0x5c
-+#define DMAC_WR_CNT		0x98
-+
-+#define SDMA_ADDR		0x60
-+
-+#define DMAM_CFG		0x64
-+#define DMAM_CFG_START		BIT(31)
-+#define DMAM_CFG_CONT		BIT(30)
-+#define DMAM_CFG_SDMA_GAP(x)	(fls((x) / 8192) << 2)
-+#define DMAM_CFG_DIR_READ	BIT(1)
-+#define DMAM_CFG_EN		BIT(0)
-+
-+#define DMAM_CNT		0x68
-+
-+#define LNR_TIMER_TH		0x6c
-+
-+#define RDM_CFG0		0x78
-+#define RDM_CFG0_POLY(x)	(x)
-+
-+#define RDM_CFG1		0x7c
-+#define RDM_CFG1_RDM_EN		BIT(31)
-+#define RDM_CFG1_SEED(x)	(x)
-+
-+#define LWR_SUSP_CTRL		0x90
-+#define LWR_SUSP_CTRL_EN	BIT(31)
-+
-+#define DMAS_CTRL		0x9c
-+#define DMAS_CTRL_DIR_READ	BIT(31)
-+#define DMAS_CTRL_EN		BIT(30)
-+
-+#define DATA_STROB		0xa0
-+#define DATA_STROB_EDO_EN	BIT(2)
-+#define DATA_STROB_INV_POL	BIT(1)
-+#define DATA_STROB_DELAY_2CYC	BIT(0)
-+
-+#define IDLY_CODE(x)		(0xa4 + ((x) * 4))
-+#define IDLY_CODE_VAL(x, v)	((v) << (((x) % 4) * 8))
-+
-+#define GPIO			0xc4
-+#define GPIO_PT(x)		BIT(3 + ((x) * 16))
-+#define GPIO_RESET(x)		BIT(2 + ((x) * 16))
-+#define GPIO_HOLDB(x)		BIT(1 + ((x) * 16))
-+#define GPIO_WPB(x)		BIT((x) * 16)
-+
-+#define HC_VER			0xd0
-+
-+#define HW_TEST(x)		(0xe0 + ((x) * 4))
-+
-+#define MXIC_NFC_MAX_CLK_HZ	50000000
-+
-+struct mxic_nand_ctlr {
-+	struct clk *ps_clk;
-+	struct clk *send_clk;
-+	struct clk *send_dly_clk;
-+	void __iomem *regs;
-+	struct nand_controller controller;
-+	void *priv;
-+};
-+
-+struct mxic_nand_chip {
-+	struct nand_chip chip;
-+};
-+
-+static int mxic_nfc_clk_enable(struct mxic_nand_ctlr *nfc)
-+{
-+	int ret;
-+
-+	ret = clk_prepare_enable(nfc->send_clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(nfc->send_dly_clk);
-+	if (ret)
-+		goto err_send_dly_clk;
-+
-+	return ret;
-+
-+err_send_dly_clk:
-+	clk_disable_unprepare(nfc->send_clk);
-+
-+	return ret;
-+}
-+
-+static void mxic_nfc_clk_disable(struct mxic_nand_ctlr *nfc)
-+{
-+	clk_disable_unprepare(nfc->send_clk);
-+	clk_disable_unprepare(nfc->send_dly_clk);
-+}
-+
-+static void mxic_nfc_set_input_delay(struct mxic_nand_ctlr *nfc, u8 idly_code)
-+{
-+	writel(IDLY_CODE_VAL(0, idly_code) |
-+	       IDLY_CODE_VAL(1, idly_code) |
-+	       IDLY_CODE_VAL(2, idly_code) |
-+	       IDLY_CODE_VAL(3, idly_code),
-+	       nfc->regs + IDLY_CODE(0));
-+	writel(IDLY_CODE_VAL(4, idly_code) |
-+	       IDLY_CODE_VAL(5, idly_code) |
-+	       IDLY_CODE_VAL(6, idly_code) |
-+	       IDLY_CODE_VAL(7, idly_code),
-+	       nfc->regs + IDLY_CODE(1));
-+}
-+
-+static int mxic_nfc_clk_setup(struct mxic_nand_ctlr *nfc, unsigned long freq)
-+{
-+	int ret;
-+
-+	ret = clk_set_rate(nfc->send_clk, freq);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_set_rate(nfc->send_dly_clk, freq);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * A constant delay range from 0x0 ~ 0x1F for input delay,
-+	 * the unit is 78 ps, the max input delay is 2.418 ns.
-+	 */
-+	mxic_nfc_set_input_delay(nfc, 0xf);
-+
-+	/*
-+	 * Phase degree = 360 * freq * output-delay
-+	 * where output-delay is a constant value 1 ns in FPGA.
-+	 *
-+	 * Get Phase degree = 360 * freq * 1 ns
-+	 *                  = 360 * freq * 1 sec / 1000000000
-+	 *                  = 9 * freq / 25000000
-+	 */
-+	ret = clk_set_phase(nfc->send_dly_clk, 9 * freq / 25000000);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int mxic_nfc_set_freq(struct mxic_nand_ctlr *nfc, unsigned long freq)
-+{
-+	int ret;
-+
-+	if (freq > MXIC_NFC_MAX_CLK_HZ)
-+		freq = MXIC_NFC_MAX_CLK_HZ;
-+
-+	mxic_nfc_clk_disable(nfc);
-+	ret = mxic_nfc_clk_setup(nfc, freq);
-+	if (ret)
-+		return ret;
-+
-+	ret = mxic_nfc_clk_enable(nfc);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static void mxic_nfc_hw_init(struct mxic_nand_ctlr *nfc)
-+{
-+	writel(DATA_STROB_EDO_EN, nfc->regs + DATA_STROB);
-+	writel(HC_CFG_NIO(8) | HC_CFG_TYPE(1, HC_CFG_TYPE_RAW_NAND) |
-+	       HC_CFG_SLV_ACT(0) | HC_CFG_MAN_CS_EN |
-+	       HC_CFG_IDLE_SIO_LVL(1), nfc->regs + HC_CFG);
-+	writel(INT_STS_ALL, nfc->regs + INT_STS_EN);
-+	writel(0x0, nfc->regs + ONFI_DIN_CNT(0));
-+	writel(0, nfc->regs + LRD_CFG);
-+	writel(0, nfc->regs + LRD_CTRL);
-+	writel(0x0, nfc->regs + HC_EN);
-+
-+	/* Default 10 MHz to setup tRC_min/tWC_min:100 ns */
-+	mxic_nfc_set_freq(nfc, 10000000);
-+}
-+
-+static void mxic_nfc_cs_enable(struct mxic_nand_ctlr *nfc)
-+{
-+	writel(readl(nfc->regs + HC_CFG) | HC_CFG_MAN_CS_EN,
-+	       nfc->regs + HC_CFG);
-+	writel(HC_CFG_MAN_CS_ASSERT | readl(nfc->regs + HC_CFG),
-+	       nfc->regs + HC_CFG);
-+}
-+
-+static void mxic_nfc_cs_disable(struct mxic_nand_ctlr *nfc)
-+{
-+	writel(~HC_CFG_MAN_CS_ASSERT & readl(nfc->regs + HC_CFG),
-+	       nfc->regs + HC_CFG);
-+}
-+
-+static int  mxic_nfc_wait_ready(struct nand_chip *chip)
-+{
-+	struct mxic_nand_ctlr *nfc = nand_get_controller_data(chip);
-+	u32 sts;
-+
-+	return readl_poll_timeout(nfc->regs + INT_STS, sts,
-+				  sts & INT_RDY_PIN, 0, USEC_PER_SEC);
-+}
-+
-+static int mxic_nfc_data_xfer(struct mxic_nand_ctlr *nfc, const void *txbuf,
-+			      void *rxbuf, unsigned int len)
-+{
-+	unsigned int pos = 0;
-+
-+	while (pos < len) {
-+		unsigned int nbytes = len - pos;
-+		u32 data = 0xffffffff;
-+		u32 sts;
-+		int ret;
-+
-+		if (nbytes > 4)
-+			nbytes = 4;
-+
-+		if (txbuf)
-+			memcpy(&data, txbuf + pos, nbytes);
-+
-+		ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
-+					 sts & INT_TX_EMPTY, 0, USEC_PER_SEC);
-+		if (ret)
-+			return ret;
-+
-+		writel(data, nfc->regs + TXD(nbytes % 4));
-+
-+		if (rxbuf) {
-+			ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
-+						 sts & INT_TX_EMPTY, 0,
-+						 USEC_PER_SEC);
-+			if (ret)
-+				return ret;
-+
-+			ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
-+						 sts & INT_RX_NOT_EMPTY, 0,
-+						 USEC_PER_SEC);
-+			if (ret)
-+				return ret;
-+
-+			data = readl(nfc->regs + RXD);
-+			data >>= (8 * (4 - nbytes));
-+			memcpy(rxbuf + pos, &data, nbytes);
-+			WARN_ON(readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY);
-+		} else {
-+			readl(nfc->regs + RXD);
-+		}
-+		WARN_ON(readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY);
-+
-+		pos += nbytes;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mxic_nfc_exec_op(struct nand_chip *chip,
-+			    const struct nand_operation *op, bool check_only)
-+{
-+	struct mxic_nand_ctlr *nfc = nand_get_controller_data(chip);
-+	const struct nand_op_instr *instr = NULL;
-+	int ret = 0;
-+	unsigned int op_id;
-+
-+	mxic_nfc_cs_enable(nfc);
-+
-+	for (op_id = 0; op_id < op->ninstrs; op_id++) {
-+		instr = &op->instrs[op_id];
-+
-+		switch (instr->type) {
-+		case NAND_OP_CMD_INSTR:
-+			writel(0, nfc->regs + HC_EN);
-+			writel(HC_EN_BIT, nfc->regs + HC_EN);
-+			writel(OP_CMD_BUSW(OP_BUSW_8) |  OP_DUMMY_CYC(0x3F) |
-+			       OP_CMD_BYTES(0), nfc->regs + SS_CTRL(0));
-+
-+			ret = mxic_nfc_data_xfer(nfc,
-+						 &instr->ctx.cmd.opcode,
-+						 NULL, 1);
-+			break;
-+
-+		case NAND_OP_ADDR_INSTR:
-+			writel(OP_ADDR_BUSW(OP_BUSW_8) | OP_DUMMY_CYC(0x3F) |
-+			       OP_ADDR_BYTES(instr->ctx.addr.naddrs),
-+			       nfc->regs + SS_CTRL(0));
-+			ret = mxic_nfc_data_xfer(nfc,
-+						 instr->ctx.addr.addrs, NULL,
-+						 instr->ctx.addr.naddrs);
-+			break;
-+
-+		case NAND_OP_DATA_IN_INSTR:
-+			writel(0x0, nfc->regs + ONFI_DIN_CNT(0));
-+			writel(OP_DATA_BUSW(OP_BUSW_8) | OP_DUMMY_CYC(0x3F) |
-+			       OP_READ, nfc->regs + SS_CTRL(0));
-+			ret = mxic_nfc_data_xfer(nfc, NULL,
-+						 instr->ctx.data.buf.in,
-+						 instr->ctx.data.len);
-+			break;
-+
-+		case NAND_OP_DATA_OUT_INSTR:
-+			writel(instr->ctx.data.len,
-+			       nfc->regs + ONFI_DIN_CNT(0));
-+			writel(OP_DATA_BUSW(OP_BUSW_8) | OP_DUMMY_CYC(0x3F),
-+			       nfc->regs + SS_CTRL(0));
-+			ret = mxic_nfc_data_xfer(nfc,
-+						 instr->ctx.data.buf.out, NULL,
-+						 instr->ctx.data.len);
-+			break;
-+
-+		case NAND_OP_WAITRDY_INSTR:
-+			ret = mxic_nfc_wait_ready(chip);
-+			break;
-+		}
-+	}
-+
-+	mxic_nfc_cs_disable(nfc);
-+	return ret;
-+}
-+
-+static int mxic_nfc_setup_data_interface(struct nand_chip *chip, int chipnr,
-+					 const struct nand_data_interface *conf)
-+{
-+	struct mxic_nand_ctlr *nfc = nand_get_controller_data(chip);
-+	const struct nand_sdr_timings *sdr;
-+	unsigned long freq;
-+
-+	sdr = nand_get_sdr_timings(conf);
-+	if (IS_ERR(sdr))
-+		return PTR_ERR(sdr);
-+
-+	if (chipnr < 0)
-+		return 0;
-+
-+	if (sdr->tRC_min)
-+		freq = 1000000000 / (sdr->tRC_min / 1000);
-+
-+	return mxic_nfc_set_freq(nfc, freq);
-+}
-+
-+static const struct nand_controller_ops mxic_nand_controller_ops = {
-+	.exec_op = mxic_nfc_exec_op,
-+	.setup_data_interface = mxic_nfc_setup_data_interface,
-+};
-+
-+static int mxic_nfc_probe(struct platform_device *pdev)
-+{
-+	struct mtd_info *mtd;
-+	struct mxic_nand_ctlr *nfc;
-+	struct mxic_nand_chip *mxic_nand;
-+	struct nand_chip *nand_chip;
-+	struct resource *res;
-+	int err;
-+
-+	nfc = devm_kzalloc(&pdev->dev, sizeof(struct mxic_nand_ctlr),
-+			   GFP_KERNEL);
-+	if (!nfc)
-+		return -ENOMEM;
-+
-+	mxic_nand = devm_kzalloc(&pdev->dev, sizeof(struct mxic_nand_chip),
-+				 GFP_KERNEL);
-+	if (!mxic_nand)
-+		return -ENOMEM;
-+
-+	nfc->ps_clk = devm_clk_get(&pdev->dev, "ps_clk");
-+	if (IS_ERR(nfc->ps_clk))
-+		return PTR_ERR(nfc->ps_clk);
-+
-+	nfc->send_clk = devm_clk_get(&pdev->dev, "send_clk");
-+	if (IS_ERR(nfc->send_clk))
-+		return PTR_ERR(nfc->send_clk);
-+
-+	nfc->send_dly_clk = devm_clk_get(&pdev->dev, "send_dly_clk");
-+	if (IS_ERR(nfc->send_dly_clk))
-+		return PTR_ERR(nfc->send_dly_clk);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
-+	nfc->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(nfc->regs))
-+		return PTR_ERR(nfc->regs);
-+
-+	nand_chip = &mxic_nand->chip;
-+	mtd = nand_to_mtd(nand_chip);
-+	mtd->dev.parent = &pdev->dev;
-+	nand_chip->ecc.priv = NULL;
-+	nand_set_flash_node(nand_chip, pdev->dev.of_node);
-+	nand_chip->priv = nfc;
-+	nfc->priv = nand_chip;
-+
-+	nfc->controller.ops = &mxic_nand_controller_ops;
-+	nand_controller_init(&nfc->controller);
-+	nand_chip->controller = &nfc->controller;
-+
-+	mxic_nfc_hw_init(nfc);
-+
-+	err = nand_scan(nand_chip, 1);
-+	if (err)
-+		goto fail;
-+
-+	err = mtd_device_register(mtd, NULL, 0);
-+	if (err)
-+		goto fail;
-+
-+	platform_set_drvdata(pdev, nfc);
-+	return 0;
-+
-+fail:
-+	mxic_nfc_clk_disable(nfc);
-+	clk_disable_unprepare(nfc->ps_clk);
-+	return err;
-+}
-+
-+static int mxic_nfc_remove(struct platform_device *pdev)
-+{
-+	struct mxic_nand_ctlr *nfc = platform_get_drvdata(pdev);
-+
-+	nand_release(nfc->priv);
-+	mxic_nfc_clk_disable(nfc);
-+	clk_disable_unprepare(nfc->ps_clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mxic_nfc_of_ids[] = {
-+	{ .compatible = "mxic,raw-nand-ctlr", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, mxic_nfc_of_ids);
-+
-+static struct platform_driver mxic_nfc_driver = {
-+	.probe = mxic_nfc_probe,
-+	.remove = mxic_nfc_remove,
-+	.driver = {
-+		.name = "mxic-nfc",
-+		.of_match_table = mxic_nfc_of_ids,
-+	},
-+};
-+module_platform_driver(mxic_nfc_driver);
-+
-+MODULE_AUTHOR("Mason Yang <masonccyang@mxic.com.tw>");
-+MODULE_DESCRIPTION("Macronix RAW NAND Flash Controller driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+SGksCgpPbiAyNC8wNi8xOSAxMDoxNiBQTSwgVG9rdW5vcmkgSWtlZ2FtaSB3cm90ZToKPiAKWy4u
+Ll0KPj4gwqAgKy8qCj4+ICsgKiBVc2Ugc3RhdHVzIHJlZ2lzdGVyIHRvIHBvbGwgZm9yIEVyYXNl
+L3dyaXRlIGNvbXBsZXRpb24gd2hlbiBEUSBpcyBub3QKPj4gKyAqIHN1cHBvcnRlZC4gVGhpcyBp
+cyBpbmRpY2F0ZWQgYnkgQml0WzE6MF0gb2YgU29mdHdhcmVGZWF0dXJlcyBmaWVsZCBpbgo+PiAr
+ICogQ0ZJIFByaW1hcnkgVmVuZG9yLVNwZWNpZmljIEV4dGVuZGVkIFF1ZXJ5IHRhYmxlIDEuNQo+
+PiArICovCj4+ICtzdGF0aWMgaW50IGNmaV91c2Vfc3RhdHVzX3JlZyhzdHJ1Y3QgY2ZpX3ByaXZh
+dGUgKmNmaSkKPj4gK3sKPj4gK8KgwqDCoCBzdHJ1Y3QgY2ZpX3ByaV9hbWRzdGQgKmV4dHAgPSBj
+ZmktPmNtZHNldF9wcml2Owo+PiArCj4+ICvCoMKgwqAgcmV0dXJuIGV4dHAtPk1pbm9yVmVyc2lv
+biA+PSAnNScgJiYKPj4gK8KgwqDCoMKgwqDCoMKgIChleHRwLT5Tb2Z0d2FyZUZlYXR1cmVzICYg
+MHgzKSA9PSAweDE7Cj4gCj4gU2VlbXMgdG8gYmUgYmV0dGVyIHRvIHVzZSBkZWZpbmVkIHZhbHVl
+cyBpbnN0ZWFkIG9mIDB4MyBhbmQgMHgxIGhhcmQKPiBjb2RlZCB2YWx1ZXMuCj4gCgpPawoKPj4g
+K30KPj4gKwo+PiArc3RhdGljIHZvaWQgY2ZpX2NoZWNrX2Vycl9zdGF0dXMoc3RydWN0IG1hcF9p
+bmZvICptYXAsIHVuc2lnbmVkIGxvbmcKPj4gYWRyKQo+PiArewo+PiArwqDCoMKgIHN0cnVjdCBj
+ZmlfcHJpdmF0ZSAqY2ZpID0gbWFwLT5mbGRydl9wcml2Owo+PiArwqDCoMKgIG1hcF93b3JkIHN0
+YXR1czsKPj4gKwo+PiArwqDCoMKgIGlmICghY2ZpX3VzZV9zdGF0dXNfcmVnKGNmaSkpCj4+ICvC
+oMKgwqDCoMKgwqDCoCByZXR1cm47Cj4+ICsKPj4gK8KgwqDCoCBjZmlfc2VuZF9nZW5fY21kKDB4
+NzAsIGNmaS0+YWRkcl91bmxvY2sxLCAwLCBtYXAsIGNmaSwKPiAKPiBJcyBpdCBub3QgbmVjZXNz
+YXJ5IHRvIHNldCBjaGlwLT5zdGFydCBhcyB0aGUgYmFzZSBwYXJhbWV0ZXIgZm9yCj4gY2ZpX3Nl
+bmRfZ2VuX2NtZCgpPwo+IAoKUmlnaHQgbm93LCBJIGFtIG5vdCBhd2FyZSBvZiBhbnkgZmxhc2gg
+dGhhdCBzdXBwb3J0cyBzdGF0dXMgcmVnaXN0ZXJzCmFuZCBhcmUgYmFua2VkICh0aGF0J3Mgd2hl
+biAgY2hpcC0+c3RhcnQgY2FuIGJlIG5vbiB6ZXJvKS4gVGhlcmVmb3JlIEkKZGlkIG5vdCB0aGlu
+ayBvZiB1c2luZyBjaGlwLT5zdGFydC4KQnV0IGFueXdheXMsIEkgd2lsbCBmaXggdGhpcyB1cCB0
+byB1c2UgY2hpcC0+c3RhcnQgaGVyZSBhbmQgZWxzZXdoZXJlCmZvciBuZXh0IHZlcnNpb24sIGFz
+c3VtaW5nIHRoZXJlIHdpbGwgYmUgc3VjaCBjaGlwcyBpbiB0aGUgZnV0dXJlLgoKPj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBjZmktPmRldmljZV90eXBlLCBOVUxMKTsKPj4gK8KgwqDCoCBz
+dGF0dXMgPSBtYXBfcmVhZChtYXAsIGFkcik7Cj4+ICsKPj4gK8KgwqDCoCBpZiAobWFwX3dvcmRf
+Yml0c3NldChtYXAsIHN0YXR1cywgQ01EKDB4M2EpKSkgewo+PiArwqDCoMKgwqDCoMKgwqAgdW5z
+aWduZWQgbG9uZyBjaGlwc3RhdHVzID0gTUVSR0VTVEFUVVMoc3RhdHVzKTsKPj4gKwo+PiArwqDC
+oMKgwqDCoMKgwqAgaWYgKGNoaXBzdGF0dXMgJiBDRklfU1JfRVNCKQo+PiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBwcl9lcnIoIiVzIGVyYXNlIG9wZXJhdGlvbiBmYWlsZWQsIHN0YXR1cyAlbHhc
+biIsCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbWFwLT5uYW1lLCBj
+aGlwc3RhdHVzKTsKPj4gK8KgwqDCoMKgwqDCoMKgIGlmIChjaGlwc3RhdHVzICYgQ0ZJX1NSX1BT
+QikKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcHJfZXJyKCIlcyBwcm9ncmFtIG9wZXJhdGlv
+biBmYWlsZWQsIHN0YXR1cyAlbHhcbiIsCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgbWFwLT5uYW1lLCBjaGlwc3RhdHVzKTsKPj4gK8KgwqDCoMKgwqDCoMKgIGlmIChj
+aGlwc3RhdHVzICYgQ0ZJX1NSX1dCQVNCKQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwcl9l
+cnIoIiVzIGJ1ZmZlciBwcm9ncmFtIGNvbW1hbmQgYWJvcnRlZCwgc3RhdHVzICVseFxuIiwKPj4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBtYXAtPm5hbWUsIGNoaXBzdGF0
+dXMpOwo+PiArwqDCoMKgwqDCoMKgwqAgaWYgKGNoaXBzdGF0dXMgJiBDRklfU1JfU0xTQikKPj4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcHJfZXJyKCIlcyBzZWN0b3Igd3JpdGUgcHJvdGVjdGVk
+LCBzdGF0dXMgJWx4XG4iLAo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IG1hcC0+bmFtZSwgY2hpcHN0YXR1cyk7Cj4+ICvCoMKgwqAgfQo+PiArfQo+PiDCoCDCoCAvKiAj
+ZGVmaW5lIERFQlVHX0NGSV9GRUFUVVJFUyAqLwo+PiDCoCBAQCAtNzQ0LDggKzc5NiwyMiBAQCBz
+dGF0aWMgc3RydWN0IG10ZF9pbmZvICpjZmlfYW1kc3RkX3NldHVwKHN0cnVjdAo+PiBtdGRfaW5m
+byAqbXRkKQo+PiDCoMKgICovCj4+IMKgIHN0YXRpYyBpbnQgX194aXByYW0gY2hpcF9yZWFkeShz
+dHJ1Y3QgbWFwX2luZm8gKm1hcCwgdW5zaWduZWQgbG9uZwo+PiBhZGRyKQo+PiDCoCB7Cj4+ICvC
+oMKgwqAgc3RydWN0IGNmaV9wcml2YXRlICpjZmkgPSBtYXAtPmZsZHJ2X3ByaXY7Cj4+IMKgwqDC
+oMKgwqAgbWFwX3dvcmQgZCwgdDsKPj4gwqAgK8KgwqDCoCBpZiAoY2ZpX3VzZV9zdGF0dXNfcmVn
+KGNmaSkpIHsKPj4gK8KgwqDCoMKgwqDCoMKgIG1hcF93b3JkIHJlYWR5ID0gQ01EKENGSV9TUl9E
+UkIpOwo+PiArwqDCoMKgwqDCoMKgwqAgLyoKPj4gK8KgwqDCoMKgwqDCoMKgwqAgKiBGb3IgY2hp
+cHMgdGhhdCBzdXBwb3J0IHN0YXR1cyByZWdpc3RlciwgY2hlY2sgZGV2aWNlCj4+ICvCoMKgwqDC
+oMKgwqDCoMKgICogcmVhZHkgYml0Cj4+ICvCoMKgwqDCoMKgwqDCoMKgICovCj4+ICvCoMKgwqDC
+oMKgwqDCoCBjZmlfc2VuZF9nZW5fY21kKDB4NzAsIGNmaS0+YWRkcl91bmxvY2sxLCAwLCBtYXAs
+IGNmaSwKPiAKPiBTYW1lIGNvbW1lbnQgYXMgY2ZpX2NoZWNrX2Vycl9zdGF0dXMoKSBhYm91dCB0
+aGUgYmFzZSBhZGRyZXNzLgo+IAo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+Y2ZpLT5kZXZpY2VfdHlwZSwgTlVMTCk7Cj4+ICvCoMKgwqDCoMKgwqDCoCBkID0gbWFwX3JlYWQo
+bWFwLCBhZGRyKTsKPj4gKwo+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIG1hcF93b3JkX2FuZGVx
+dWFsKG1hcCwgZCwgcmVhZHksIHJlYWR5KTsKPj4gK8KgwqDCoCB9Cj4+ICsKPj4gwqDCoMKgwqDC
+oCBkID0gbWFwX3JlYWQobWFwLCBhZGRyKTsKPj4gwqDCoMKgwqDCoCB0ID0gbWFwX3JlYWQobWFw
+LCBhZGRyKTsKPj4gwqAgQEAgLTc2OSw4ICs4MzUsMjcgQEAgc3RhdGljIGludCBfX3hpcHJhbSBj
+aGlwX3JlYWR5KHN0cnVjdCBtYXBfaW5mbwo+PiAqbWFwLCB1bnNpZ25lZCBsb25nIGFkZHIpCj4+
+IMKgwqAgKi8KPj4gwqAgc3RhdGljIGludCBfX3hpcHJhbSBjaGlwX2dvb2Qoc3RydWN0IG1hcF9p
+bmZvICptYXAsIHVuc2lnbmVkIGxvbmcKPj4gYWRkciwgbWFwX3dvcmQgZXhwZWN0ZWQpCj4+IMKg
+IHsKPj4gK8KgwqDCoCBzdHJ1Y3QgY2ZpX3ByaXZhdGUgKmNmaSA9IG1hcC0+ZmxkcnZfcHJpdjsK
+Pj4gwqDCoMKgwqDCoCBtYXBfd29yZCBvbGRkLCBjdXJkOwo+PiDCoCArwqDCoMKgIGlmIChjZmlf
+dXNlX3N0YXR1c19yZWcoY2ZpKSkgewo+PiArwqDCoMKgwqDCoMKgwqAgbWFwX3dvcmQgcmVhZHkg
+PSBDTUQoQ0ZJX1NSX0RSQik7Cj4+ICvCoMKgwqDCoMKgwqDCoCBtYXBfd29yZCBlcnIgPSBDTUQo
+Q0ZJX1NSX1BTQiB8IENGSV9TUl9FU0IpOwo+IAo+IElzIGl0IG5vdCBuZWNlc3NhcnkgdG8gY2hl
+Y2sgQ0ZJX1NSX1dCQVNCIGFuZCBDRklfU1JfU0xTQiB0aGF0IGFyZQo+IGNoZWNrZWQgYnkgY2Zp
+X2NoZWNrX2Vycl9zdGF0dXMoKT8KPiAKCmNoaXBfZ29vZCgpIGlzIHVzZWQgdG8gdmVyaWZ5IHdo
+ZXRoZXIgd3JpdGUgb3IgZXJhc2Ugb3BlcmF0aW9uIHJlYWxseQpzdWNjZWVkZWQuIExvb2tpbmcg
+YXQgQ3lwcmVzcyBIeXBlckZsYXNoIGRhdGFzaGVldHMgYW5kIGFwcCBub3RlcyBvbgpzdGF0dXMg
+cmVnaXN0ZXIgcG9sbGluZywgaXRzIGVub3VnaCB0byBzZWUgaWYgQ0ZJX1NSX1BTQiBvciBDRklf
+U1JfUFNCCmlzIHNldCB0byBrbm93IGlmIHdyaXRlIG9yIGVyYXNlIGZhaWxlZC4gTm93LCB0aGUg
+cmVhc29uIGZvciBwcm9ncmFtIG9yCmVyYXNlIGZhaWx1cmUgY2FuIGJlIGtub3duIGJ5IGxvb2tp
+bmcgYXQgQ0ZJX1NSX1dCQVNCIGFuZCBDRklfU1JfU0xTQgp3aGljaCBpcyBkb25lIGZvciBjZmlf
+Y2hlY2tfZXJyX3N0YXR1cygpLgpUaGVyZWZvcmUsIEkgZmVlbCwgaXRzIGVub3VnaCB0byBsb29r
+IGZvciBDRklfU1JfUFNCIG9yIENGSV9TUl9FU0IgaGVyZS4KClRoYW5rcyBmb3IgdGhlIHJldmll
+dyEKClJlZ2FyZHMKVmlnbmVzaAoKPj4gK8KgwqDCoMKgwqDCoMKgIC8qCj4+ICvCoMKgwqDCoMKg
+wqDCoMKgICogRm9yIGNoaXBzIHRoYXQgc3VwcG9ydCBzdGF0dXMgcmVnaXN0ZXIsIGNoZWNrIGRl
+dmljZQo+PiArwqDCoMKgwqDCoMKgwqDCoCAqIHJlYWR5IGJpdCBhbmQgRXJhc2UvUHJvZ3JhbSBz
+dGF0dXMgYml0IHRvIGtub3cgaWYKPj4gK8KgwqDCoMKgwqDCoMKgwqAgKiBvcGVyYXRpb24gc3Vj
+Y2VlZGVkLgo+PiArwqDCoMKgwqDCoMKgwqDCoCAqLwo+PiArwqDCoMKgwqDCoMKgwqAgY2ZpX3Nl
+bmRfZ2VuX2NtZCgweDcwLCBjZmktPmFkZHJfdW5sb2NrMSwgMCwgbWFwLCBjZmksCj4gCj4gU2Ft
+ZSBhcyBjZmlfY2hlY2tfZXJyX3N0YXR1cygpIGFuZCBjaGlwX3JlYWR5KCkgYWJvdXQgdGhlIGJh
+c2UgYWRkcmVzcy4KPiAKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNmaS0+
+ZGV2aWNlX3R5cGUsIE5VTEwpOwo+PiArwqDCoMKgwqDCoMKgwqAgY3VyZCA9IG1hcF9yZWFkKG1h
+cCwgYWRkcik7Cj4+ICsKPj4gK8KgwqDCoMKgwqDCoMKgIGlmIChtYXBfd29yZF9hbmRlcXVhbCht
+YXAsIGN1cmQsIHJlYWR5LCByZWFkeSkpCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVy
+biAhbWFwX3dvcmRfYml0c3NldChtYXAsIGN1cmQsIGVycik7Cj4+ICsKPj4gK8KgwqDCoMKgwqDC
+oMKgIHJldHVybiAwOwo+PiArwqDCoMKgIH0KPj4gKwo+PiDCoMKgwqDCoMKgIG9sZGQgPSBtYXBf
+cmVhZChtYXAsIGFkZHIpOwo+PiDCoMKgwqDCoMKgIGN1cmQgPSBtYXBfcmVhZChtYXAsIGFkZHIp
+Owo+PiDCoCBAQCAtMTY0NCw2ICsxNzI5LDcgQEAgc3RhdGljIGludCBfX3hpcHJhbSBkb193cml0
+ZV9vbmV3b3JkKHN0cnVjdAo+PiBtYXBfaW5mbyAqbWFwLCBzdHJ1Y3QgZmxjaGlwICpjaGlwLAo+
+PiDCoMKgwqDCoMKgIC8qIERpZCB3ZSBzdWNjZWVkPyAqLwo+PiDCoMKgwqDCoMKgIGlmICghY2hp
+cF9nb29kKG1hcCwgYWRyLCBkYXR1bSkpIHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIC8qIHJlc2V0
+IG9uIGFsbCBmYWlsdXJlcy4gKi8KPj4gK8KgwqDCoMKgwqDCoMKgIGNmaV9jaGVja19lcnJfc3Rh
+dHVzKG1hcCwgYWRyKTsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIG1hcF93cml0ZShtYXAsIENNRCgw
+eEYwKSwgY2hpcC0+c3RhcnQpOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgLyogRklYTUUgLSBzaG91
+bGQgaGF2ZSByZXNldCBkZWxheSBiZWZvcmUgY29udGludWluZyAqLwo+PiDCoCBAQCAtMTkwMSw2
+ICsxOTg3LDcgQEAgc3RhdGljIGludCBfX3hpcHJhbSBkb193cml0ZV9idWZmZXIoc3RydWN0Cj4+
+IG1hcF9pbmZvICptYXAsIHN0cnVjdCBmbGNoaXAgKmNoaXAsCj4+IMKgwqDCoMKgwqDCoCAqIFNl
+ZSBlLmcuCj4+IMKgwqDCoMKgwqDCoCAqCj4+IGh0dHA6Ly93d3cuc3BhbnNpb24uY29tL1N1cHBv
+cnQvQXBwbGljYXRpb24lMjBOb3Rlcy9NaXJyb3JCaXRfV3JpdGVfQnVmZmVyX1Byb2dfUGFnZV9C
+dWZmZXJfUmVhZF9BTi5wZGYKPj4KPj4gwqDCoMKgwqDCoMKgICovCj4+ICvCoMKgwqAgY2ZpX2No
+ZWNrX2Vycl9zdGF0dXMobWFwLCBhZHIpOwo+PiDCoMKgwqDCoMKgIGNmaV9zZW5kX2dlbl9jbWQo
+MHhBQSwgY2ZpLT5hZGRyX3VubG9jazEsIGNoaXAtPnN0YXJ0LCBtYXAsIGNmaSwKPj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjZmktPmRldmljZV90eXBlLCBOVUxMKTsKPj4gwqDCoMKg
+wqDCoCBjZmlfc2VuZF9nZW5fY21kKDB4NTUsIGNmaS0+YWRkcl91bmxvY2syLCBjaGlwLT5zdGFy
+dCwgbWFwLCBjZmksCj4+IEBAIC0yMTA3LDYgKzIxOTQsNyBAQCBzdGF0aWMgaW50IGRvX3Bhbmlj
+X3dyaXRlX29uZXdvcmQoc3RydWN0Cj4+IG1hcF9pbmZvICptYXAsIHN0cnVjdCBmbGNoaXAgKmNo
+aXAsCj4+IMKgIMKgwqDCoMKgwqAgaWYgKCFjaGlwX2dvb2QobWFwLCBhZHIsIGRhdHVtKSkgewo+
+PiDCoMKgwqDCoMKgwqDCoMKgwqAgLyogcmVzZXQgb24gYWxsIGZhaWx1cmVzLiAqLwo+PiArwqDC
+oMKgwqDCoMKgwqAgY2ZpX2NoZWNrX2Vycl9zdGF0dXMobWFwLCBhZHIpOwo+PiDCoMKgwqDCoMKg
+wqDCoMKgwqAgbWFwX3dyaXRlKG1hcCwgQ01EKDB4RjApLCBjaGlwLT5zdGFydCk7Cj4+IMKgwqDC
+oMKgwqDCoMKgwqDCoCAvKiBGSVhNRSAtIHNob3VsZCBoYXZlIHJlc2V0IGRlbGF5IGJlZm9yZSBj
+b250aW51aW5nICovCj4+IMKgIEBAIC0yMzE2LDYgKzI0MDQsNyBAQCBzdGF0aWMgaW50IF9feGlw
+cmFtIGRvX2VyYXNlX2NoaXAoc3RydWN0Cj4+IG1hcF9pbmZvICptYXAsIHN0cnVjdCBmbGNoaXAg
+KmNoaXApCj4+IMKgwqDCoMKgwqAgLyogRGlkIHdlIHN1Y2NlZWQ/ICovCj4+IMKgwqDCoMKgwqAg
+aWYgKHJldCkgewo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgLyogcmVzZXQgb24gYWxsIGZhaWx1cmVz
+LiAqLwo+PiArwqDCoMKgwqDCoMKgwqAgY2ZpX2NoZWNrX2Vycl9zdGF0dXMobWFwLCBhZHIpOwo+
+PiDCoMKgwqDCoMKgwqDCoMKgwqAgbWFwX3dyaXRlKG1hcCwgQ01EKDB4RjApLCBjaGlwLT5zdGFy
+dCk7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoCAvKiBGSVhNRSAtIHNob3VsZCBoYXZlIHJlc2V0IGRl
+bGF5IGJlZm9yZSBjb250aW51aW5nICovCj4+IMKgIEBAIC0yNDEyLDYgKzI1MDEsNyBAQCBzdGF0
+aWMgaW50IF9feGlwcmFtIGRvX2VyYXNlX29uZWJsb2NrKHN0cnVjdAo+PiBtYXBfaW5mbyAqbWFw
+LCBzdHJ1Y3QgZmxjaGlwICpjaGlwLAo+PiDCoMKgwqDCoMKgIC8qIERpZCB3ZSBzdWNjZWVkPyAq
+Lwo+PiDCoMKgwqDCoMKgIGlmIChyZXQpIHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIC8qIHJlc2V0
+IG9uIGFsbCBmYWlsdXJlcy4gKi8KPj4gK8KgwqDCoMKgwqDCoMKgIGNmaV9jaGVja19lcnJfc3Rh
+dHVzKG1hcCwgYWRyKTsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIG1hcF93cml0ZShtYXAsIENNRCgw
+eEYwKSwgY2hpcC0+c3RhcnQpOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgLyogRklYTUUgLSBzaG91
+bGQgaGF2ZSByZXNldCBkZWxheSBiZWZvcmUgY29udGludWluZyAqLwo+PiDCoCBkaWZmIC0tZ2l0
+IGEvaW5jbHVkZS9saW51eC9tdGQvY2ZpLmggYi9pbmNsdWRlL2xpbnV4L210ZC9jZmkuaAo+PiBp
+bmRleCAyMDhjODdjZjJlM2UuLmI1MDQxNjE2OTA0OSAxMDA2NDQKPj4gLS0tIGEvaW5jbHVkZS9s
+aW51eC9tdGQvY2ZpLmgKPj4gKysrIGIvaW5jbHVkZS9saW51eC9tdGQvY2ZpLmgKPj4gQEAgLTIx
+OSw2ICsyMTksMTEgQEAgc3RydWN0IGNmaV9wcmlfYW1kc3RkIHsKPj4gwqDCoMKgwqDCoCB1aW50
+OF90wqAgVnBwTWluOwo+PiDCoMKgwqDCoMKgIHVpbnQ4X3TCoCBWcHBNYXg7Cj4+IMKgwqDCoMKg
+wqAgdWludDhfdMKgIFRvcEJvdHRvbTsKPj4gK8KgwqDCoCAvKiBCZWxvdyBmaWVsZCBhcmUgYWRk
+ZWQgZnJvbSB2ZXJzaW9uIDEuNSAqLwo+PiArwqDCoMKgIHVpbnQ4X3TCoCBQcm9ncmFtU3VzcGVu
+ZDsKPj4gK8KgwqDCoCB1aW50OF90wqAgVW5sb2NrQnlwYXNzOwo+PiArwqDCoMKgIHVpbnQ4X3TC
+oCBTZWN1cmVTaWxpY29uU2VjdG9yOwo+PiArwqDCoMKgIHVpbnQ4X3TCoCBTb2Z0d2FyZUZlYXR1
+cmVzOwo+PiDCoCB9IF9fcGFja2VkOwo+PiDCoCDCoCAvKiBWZW5kb3ItU3BlY2lmaWMgUFJJIGZv
+ciBBdG1lbCBjaGlwcyAoY29tbWFuZCBzZXQgMHgwMDAyKSAqLwoKLS0gClJlZ2FyZHMKVmlnbmVz
+aAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CkxpbnV4IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
