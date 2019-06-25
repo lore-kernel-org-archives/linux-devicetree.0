@@ -1,266 +1,197 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum
- rate for PLL_MIPI
-Date: Tue, 25 Jun 2019 16:49:30 +0200
-Message-ID: <20190625144930.5hegt6bkzqzykjid@flea>
-References: <20190125212433.ni2jg3wvpyjazlxf@flea>
- <CAMty3ZAsH2iZ+JEqTE3D58aXfGuhMSg9YoO56ZhhOeE4c4yQHQ@mail.gmail.com>
- <20190129151348.mh27btttsqcmeban@flea>
- <CAMty3ZAjAoti8Zu80c=OyCA+u-jtQnkidsKSNz_c2OaRswqc3w@mail.gmail.com>
- <20190201143102.rcvrxstc365mezvx@flea>
- <CAMty3ZC3_+z1upH4Y08R1z=Uq1C=OpWETNrBO8nGRoHhuNrHSA@mail.gmail.com>
- <20190605064933.6bmskkxzzgn35xz7@flea>
- <CAMty3ZCCP=oCqm5=49BsjwoxdDETgBfU_5g8fQ=bz=iWApV0tw@mail.gmail.com>
- <20190614142406.ybdiqfppo5mc5bgq@flea>
- <CAMty3ZB45cHx3WeXnywBh2_UA_bTmFs6yBTqLWA1BNf4fQtVvQ@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v4 1/5] dt-bindings: interconnect: Add Qualcomm QCS404 DT
+ bindings
+Date: Tue, 25 Jun 2019 18:00:05 +0300
+Message-ID: <c99c052d-40e7-1bff-34f9-3b48a821a175@linaro.org>
+References: <20190613151323.10850-1-georgi.djakov@linaro.org>
+ <20190613151323.10850-2-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mzbgbdizyzlrbfk4"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB77IZDUAKGQE6W3EOCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZB45cHx3WeXnywBh2_UA_bTmFs6yBTqLWA1BNf4fQtVvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190613151323.10850-2-georgi.djakov@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: bjorn.andersson@linaro.org, agross@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---mzbgbdizyzlrbfk4
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+On 6/13/19 18:13, Georgi Djakov wrote:
+> The Qualcomm QCS404 platform has several buses that could be controlled
+> and tuned according to the bandwidth demand.
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> 
+> v4:
+> - Add the DT header into this patch.
+> - Pick Bjorn's r-b.
+> 
+> v3:
+> - Add a reg property and move the interconnect nodes under the "soc" node.
+> 
+> v2:
+> - No changes.
+> 
+>  .../bindings/interconnect/qcom,qcs404.txt     | 46 ++++++++++
+>  .../dt-bindings/interconnect/qcom,qcs404.h    | 88 +++++++++++++++++++
+>  2 files changed, 134 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+>  create mode 100644 include/dt-bindings/interconnect/qcom,qcs404.h
+> 
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> new file mode 100644
+> index 000000000000..14a827268dda
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> @@ -0,0 +1,46 @@
+> +Qualcomm QCS404 Network-On-Chip interconnect driver binding
+> +-----------------------------------------------------------
+> +
+> +Required properties :
+> +- compatible : shall contain only one of the following:
+> +			"qcom,qcs404-bimc"
+> +			"qcom,qcs404-pcnoc"
+> +			"qcom,qcs404-snoc"
+> +- #interconnect-cells : should contain 1
+> +
+> +Optional properties :
+> +reg : specifies the physical base address and size of registers
+> +clocks : list of phandles and specifiers to all interconnect bus clocks
+> +clock-names : clock names should include both "bus_clk" and "bus_a_clk"
+> +
+> +Example:
+> +
+> +soc {
+> +	...
+> +	bimc: interconnect@400000 {
+> +		reg = <0x00400000 0x80000>;
+> +		compatible = "qcom,qcs404-bimc";
+> +		#interconnect-cells = <1>;
+> +		clock-names = "bus_clk", "bus_a_clk";
+> +		clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+> +			<&rpmcc RPM_SMD_BIMC_A_CLK>;
+> +	};
+> +
+> +	pnoc: interconnect@500000 {
+> +		reg = <0x00500000 0x15080>;
+> +		compatible = "qcom,qcs404-pcnoc";
+> +		#interconnect-cells = <1>;
+> +		clock-names = "bus_clk", "bus_a_clk";
+> +		clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+> +			<&rpmcc RPM_SMD_PNOC_A_CLK>;
+> +	};
+> +
+> +	snoc: interconnect@580000 {
+> +		reg = <0x00580000 0x23080>;
+> +		compatible = "qcom,qcs404-snoc";
+> +		#interconnect-cells = <1>;
+> +		clock-names = "bus_clk", "bus_a_clk";
+> +		clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+> +			<&rpmcc RPM_SMD_SNOC_A_CLK>;
+> +	};
+> +};
 
-On Thu, Jun 20, 2019 at 11:57:44PM +0530, Jagan Teki wrote:
-> On Fri, Jun 14, 2019 at 7:54 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Wed, Jun 05, 2019 at 01:03:16PM +0530, Jagan Teki wrote:
-> > > On Wed, Jun 5, 2019 at 12:19 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > I've reordered the mail a bit to work on chunks
-> > > >
-> > > > On Fri, May 24, 2019 at 03:37:42PM +0530, Jagan Teki wrote:
-> > > > > > I wish it was in your commit log in the first place, instead of having
-> > > > > > to exchange multiple mails over this.
-> > > > > >
-> > > > > > However, I don't think that's quite true, and it might be a bug in
-> > > > > > Allwinner's implementation (or rather something quite confusing).
-> > > > > >
-> > > > > > You're right that the lcd_rate and pll_rate seem to be generated from
-> > > > > > the pixel clock, and it indeed looks like the ratio between the pixel
-> > > > > > clock and the TCON dotclock is defined through the number of bits per
-> > > > > > lanes.
-> > > > > >
-> > > > > > However, in this case, dsi_rate is actually the same than lcd_rate,
-> > > > > > since pll_rate is going to be divided by dsi_div:
-> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L791
-> > > > > >
-> > > > > > Since lcd_div is 1, it also means that in this case, dsi_rate ==
-> > > > > > dclk_rate.
-> > > > > >
-> > > > > > The DSI module clock however, is always set to 148.5 MHz. Indeed, if
-> > > > > > we look at:
-> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L804
-> > > > > >
-> > > > > > We can see that the rate in clk_info is used if it's different than
-> > > > > > 0. This is filled by disp_al_lcd_get_clk_info, which, in the case of a
-> > > > > > DSI panel, will hardcode it to 148.5 MHz:
-> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L164
-> > > > >
-> > > > > Let me explain, something more.
-> > > > >
-> > > > > According to bsp there are clk_info.tcon_div which I will explain below.
-> > > > > clk_info.dsi_div which is dynamic and it depends on bpp/lanes, so it
-> > > > > is 6 for 24bpp and 4 lanes devices.
-> > > > >
-> > > > > PLL rate here depends on dsi_div (not tcon_div)
-> > > > >
-> > > > > Code here
-> > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L784
-> > > > >
-> > > > > is computing the actual set rate, which depends on dsi_rate.
-> > > > >
-> > > > > lcd_rate = dclk_rate * clk_info.dsi_div;
-> > > > > dsi_rate = pll_rate / clk_info.dsi_div;
-> > > > >
-> > > > > Say if the dclk_rate 148MHz then the dsi_rate is 888MHz which set rate
-> > > > > for above link you mentioned.
-> > > > >
-> > > > > Here are the evidence with some prints.
-> > > > >
-> > > > > https://gist.github.com/openedev/9bae2d87d2fcc06b999fe48c998b7043
-> > > > > https://gist.github.com/openedev/700de2e3701b2bf3ad1aa0f0fa862c9a
-> > > >
-> > > > Ok, so we agree up to this point, and the prints confirm that the
-> > > > analysis above is the right one.
-> > > >
-> > > > > > So, the DSI clock is set to this here:
-> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L805
-> > > >
-> > > > Your patch doesn't address that, so let's leave that one alone.
-> > >
-> > > Basically this is final pll set rate when sun4i_dotclock.c called the
-> > > desired rate with ccu_nkm.c so it ended the final rate with parent as
-> > > Line 8 of
-> > > https://gist.github.com/openedev/700de2e3701b2bf3ad1aa0f0fa862c9a
-> >
-> > If that's important to the driver, it should be set explicitly then,
-> > and not work by accident.
-> >
-> > > > > > The TCON *module* clock (the one in the clock controller) has been set
-> > > > > > to lcd_rate (so the pixel clock times the number of bits per lane) here:
-> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L800
-> > > > > >
-> > > > > > And the PLL has been set to the same rate here:
-> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L794
-> > > > > >
-> > > > > > Let's take a step back now: that function we were looking at,
-> > > > > > lcd_clk_config, is called by lcd_clk_enable, which is in turn called
-> > > > > > by disp_lcd_enable here:
-> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L1328
-> > > > > >
-> > > > > > The next function being called is disp_al_lcd_cfg, and that function
-> > > > > > will hardcode the TCON dotclock divider to 4, here:
-> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L240
-> > > > >
-> > > > > tcon_div from BSP point-of-view of there are two variants
-> > > > > 00) clk_info.tcon_div which is 4 and same is set the divider position
-> > > > > in SUN4I_TCON0_DCLK_REG (like above link refer)
-> > > > > 01) tcon_div which is 4 and used for edge timings computation
-> > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L12
-> > > > >
-> > > > > The real reason for 01) is again 4 is they set the divider to 4 in 00)
-> > > > > which is technically wrong because the dividers which used during
-> > > > > dotclock in above (dsi_div) should be used here as well. Since there
-> > > > > is no dynamic way of doing this BSP hard-coding these values.
-> > > > >
-> > > > > Patches 5,6,7 on this series doing this
-> > > > > https://patchwork.freedesktop.org/series/60847/
-> > > > >
-> > > > > Hope this explanation helps?
-> > > >
-> > > > It doesn't.
-> > > >
-> > > > The clock tree is this one:
-> > > >
-> > > > PLL(s) -> TCON module clock -> TCON dotclock.
-> > > >
-> > > > The links I mentioned above show that the clock set to lcd_rate is the
-> > > > TCON module clocks (and it should be the one taking the bpp and lanes
-> > > > into account), while the TCON dotclock uses a fixed divider of 4.
-> > >
-> > > Sorry, I can argue much other-than giving some code snips, according to [1]
-> > >
-> > > 00) Line 785, 786 with dclk_rate 148000000
-> > >
-> > > lcd_rate = dclk_rate * clk_info.dsi_div;
-> > > pll_rate = lcd_rate * clk_info.lcd_div;
-> > >
-> > > Since dsi_div is 6 (bpp/lanes), lcd_div 1
-> > >
-> > > lcd_rate = 888000000, pll_rate = 888000000
-> > >
-> > > 01)  Line 801, 804 are final rates computed as per clock driver (say
-> > > ccu_nkm in mainline)
-> > >
-> > > lcd_rate_set=891000000
-> > >
-> > > As per your comments if it would be 4 then the desired numbers are
-> > > would be 592000000 not 888000000.
-> > >
-> > > This is what I'm trying to say in all mails, and same as verified with
-> > > 2-lanes devices as well where the dsi_div is 12 so the final rate is
-> > > 290MHz * 12
-> >
-> > In the code you sent, you're forcing a divider on the internal TCON
-> > clock, while that one is fixed in the BSP.
-> >
-> > There's indeed the bpp / lanes divider, but it's used in the *parent*
-> > clock of the one you're changing.
-> >
-> > And the dsi0_clk clock you pointed out in the code snippet is yet
-> > another clock, the MIPI DSI module clock.
->
-> Correct, look like I refereed wrong reference in the above mail. sorry
-> for the noise.
->
-> Actually I'm trying to explain about pll_rate here which indeed
-> depends on dsi.div
-> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L786
->
-> lcd_rate = dclk_rate * clk_info.dsi_div;
-> pll_rate = lcd_rate * clk_info.lcd_div;
->
-> Say
->
-> 1) For 148MHz dclk_rate with dsi_div is 6 (24/4) lcd_div is 1 which
-> resulting pll_rate is 888MHz.
->
-> 2) For 30MHz dclk_rate with 4 lane and 24 RGB the resulting pll_rate is 180MHz
->
-> 3) For 27.5MHz dclk_rate with 2 lane and 24 RGB the resulting pll_rate is 330MHz
->
-> Here is the few more logs in code, for case 2)
->
-> [    1.920441] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 30000000
-> [    1.920505] ideal = 180000000, rounded = 178200000
-> [    1.920509] sun4i_dclk_round_rate: div = 6 rate = 29700000
-> [    1.920514] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 30000000
-> [    1.920532] ideal = 180000000, rounded = 178200000
-> [    1.920535] sun4i_dclk_round_rate: div = 6 rate = 29700000
-> [    1.920572] sun4i_dclk_recalc_rate: val = 1, rate = 178200000
-> [    1.920576] sun4i_dclk_recalc_rate: val = 1, rate = 178200000
-> [    1.920597] rate = 178200000
-> [    1.920599] parent_rate = 297000000
-> [    1.920602] reg = 0x90c00000
-> [    1.920605] _nkm.n = 3, nkm->n.offset = 0x1, nkm->n.shift = 8
-> [    1.920609] _nkm.k = 2, nkm->k.offset = 0x1, nkm->k.shift = 4
-> [    1.920612] _nkm.m = 10, nkm->m.offset = 0x1, nkm->m.shift = 0
-> [    1.920958] sun4i_dclk_set_rate div 6
-> [    1.920966] sun4i_dclk_recalc_rate: val = 6, rate = 29700000
->
-> and clk_summary:
->
->     pll-video0                        1        1        1   297000000
->         0     0  50000
->        hdmi                           0        0        0   297000000
->         0     0  50000
->        tcon1                          0        0        0   297000000
->         0     0  50000
->        pll-mipi                       1        1        1   178200000
->         0     0  50000
->           tcon0                       2        2        1   178200000
->         0     0  50000
->              tcon-pixel-clock         1        1        1    29700000
->         0     0  50000
->        pll-video0-2x                  0        0        0   594000000
->         0     0  50000
+Does this look ok from DT perspective?
 
-This discussion is going nowhere. I'm telling you that your patch
-doesn't apply the divider you want on the proper clock, and you're
-replying that indeed, you're applying it on the wrong clock.
+Thanks,
+Georgi
 
-It might work by accident in your case, but the board I have here
-clearly indicates otherwise, so there's two possible way out here:
-
-  - Either you apply that divider to the TCON *module* clock, and not
-    the dclk
-
-  - Or you point to somewhere in the allwinner code where the bpp /
-    lanes divider is used for the dclk divider.
-
-
-Maxim
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---mzbgbdizyzlrbfk4--
+> diff --git a/include/dt-bindings/interconnect/qcom,qcs404.h b/include/dt-bindings/interconnect/qcom,qcs404.h
+> new file mode 100644
+> index 000000000000..960f6e39c5f2
+> --- /dev/null
+> +++ b/include/dt-bindings/interconnect/qcom,qcs404.h
+> @@ -0,0 +1,88 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Qualcomm interconnect IDs
+> + *
+> + * Copyright (c) 2019, Linaro Ltd.
+> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
+> + */
+> +
+> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_QCS404_H
+> +#define __DT_BINDINGS_INTERCONNECT_QCOM_QCS404_H
+> +
+> +#define MASTER_AMPSS_M0			0
+> +#define MASTER_OXILI			1
+> +#define MASTER_MDP_PORT0		2
+> +#define MASTER_SNOC_BIMC_1		3
+> +#define MASTER_TCU_0			4
+> +#define SLAVE_EBI_CH0			5
+> +#define SLAVE_BIMC_SNOC			6
+> +
+> +#define MASTER_SPDM			0
+> +#define MASTER_BLSP_1			1
+> +#define MASTER_BLSP_2			2
+> +#define MASTER_XI_USB_HS1		3
+> +#define MASTER_CRYPT0			4
+> +#define MASTER_SDCC_1			5
+> +#define MASTER_SDCC_2			6
+> +#define MASTER_SNOC_PCNOC		7
+> +#define MASTER_QPIC			8
+> +#define PCNOC_INT_0			9
+> +#define PCNOC_INT_2			10
+> +#define PCNOC_INT_3			11
+> +#define PCNOC_S_0			12
+> +#define PCNOC_S_1			13
+> +#define PCNOC_S_2			14
+> +#define PCNOC_S_3			15
+> +#define PCNOC_S_4			16
+> +#define PCNOC_S_6			17
+> +#define PCNOC_S_7			18
+> +#define PCNOC_S_8			19
+> +#define PCNOC_S_9			20
+> +#define PCNOC_S_10			21
+> +#define PCNOC_S_11			22
+> +#define SLAVE_SPDM			23
+> +#define SLAVE_PDM			24
+> +#define SLAVE_PRNG			25
+> +#define SLAVE_TCSR			26
+> +#define SLAVE_SNOC_CFG			27
+> +#define SLAVE_MESSAGE_RAM		28
+> +#define SLAVE_DISP_SS_CFG		29
+> +#define SLAVE_GPU_CFG			30
+> +#define SLAVE_BLSP_1			31
+> +#define SLAVE_BLSP_2			32
+> +#define SLAVE_TLMM_NORTH		33
+> +#define SLAVE_PCIE			34
+> +#define SLAVE_ETHERNET			35
+> +#define SLAVE_TLMM_EAST			36
+> +#define SLAVE_TCU			37
+> +#define SLAVE_PMIC_ARB			38
+> +#define SLAVE_SDCC_1			39
+> +#define SLAVE_SDCC_2			40
+> +#define SLAVE_TLMM_SOUTH		41
+> +#define SLAVE_USB_HS			42
+> +#define SLAVE_USB3			43
+> +#define SLAVE_CRYPTO_0_CFG		44
+> +#define SLAVE_PCNOC_SNOC		45
+> +
+> +#define MASTER_QDSS_BAM			0
+> +#define MASTER_BIMC_SNOC		1
+> +#define MASTER_PCNOC_SNOC		2
+> +#define MASTER_QDSS_ETR			3
+> +#define MASTER_EMAC			4
+> +#define MASTER_PCIE			5
+> +#define MASTER_USB3			6
+> +#define QDSS_INT			7
+> +#define SNOC_INT_0			8
+> +#define SNOC_INT_1			9
+> +#define SNOC_INT_2			10
+> +#define SLAVE_KPSS_AHB			11
+> +#define SLAVE_WCSS			12
+> +#define SLAVE_SNOC_BIMC_1		13
+> +#define SLAVE_IMEM			14
+> +#define SLAVE_SNOC_PCNOC		15
+> +#define SLAVE_QDSS_STM			16
+> +#define SLAVE_CATS_0			17
+> +#define SLAVE_CATS_1			18
+> +#define SLAVE_LPASS			19
+> +
+> +#endif
+> 
