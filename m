@@ -1,62 +1,68 @@
-Return-Path: <SRS0=H+X4=UZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr50073.outbound.protection.outlook.com ([40.107.5.73]:61824
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726667AbfFZCks (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Jun 2019 22:40:48 -0400
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH] ARM: imx25: provide a fixed regulator for usb phys
-Date: Wed, 26 Jun 2019 02:40:04 +0000
-Message-ID: <VI1PR04MB5327E09DB0DFEB7E868DB59D8BE20@VI1PR04MB5327.eurprd04.prod.outlook.com>
+Return-Path: <SRS0=SZwX=UY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43670 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbfFYKok (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Jun 2019 06:44:40 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 16so15721415ljv.10
+        for <devicetree@vger.kernel.org>; Tue, 25 Jun 2019 03:44:39 -0700 (PDT)
+Subject: Re: [PATCH] ARM: imx25: provide a fixed regulator for usb phys
 References: <20190625100412.11815-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20190625100412.11815-1-u.kleine-koenig@pengutronix.de>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <8b8ffbd5-e481-b425-aa8c-c1b13e93faee@cogentembedded.com>
+Date: Tue, 25 Jun 2019 13:44:30 +0300
 MIME-Version: 1.0
+In-Reply-To: <20190625100412.11815-1-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Peter Chen <Peter.Chen@nxp.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-IA0KPiBTdWJqZWN0OiBbUEFUQ0hdIEFSTTogaW14MjU6IHByb3ZpZGUgYSBmaXhlZCByZWd1bGF0
-b3IgZm9yIHVzYiBwaHlzDQo+IA0KPiBUaGUgdXNiIHBoeXMgYXJlIGludGVybmFsIHRvIHRoZSBT
-b0MgYW5kIHNvIGl0IHRoZWlyIDVWIHN1cHBseS4gV2l0aCB0aGlzIHJlZ3VsYXRvcg0KPiBhZGRl
-ZCBleHBsaWNpdGx5IHRoZSBmb2xsb3dpbmcgKGhhcm1sZXNzKSBib290IG1lc3NhZ2VzIGdvIGF3
-YXk6DQo+IA0KPiAJdXNiX3BoeV9nZW5lcmljIHVzYnBoeTp1c2ItcGh5QDA6IHVzYnBoeTp1c2It
-cGh5QDAgc3VwcGx5IHZjYyBub3QNCj4gZm91bmQsIHVzaW5nIGR1bW15IHJlZ3VsYXRvcg0KPiAJ
-dXNiX3BoeV9nZW5lcmljIHVzYnBoeTp1c2ItcGh5QDE6IHVzYnBoeTp1c2ItcGh5QDEgc3VwcGx5
-IHZjYyBub3QNCj4gZm91bmQsIHVzaW5nIGR1bW15IHJlZ3VsYXRvcg0KPiANCg0KVG8gZWxpbWlu
-YXRlIHRoZSB3YXJuaW5nIG1lc3NhZ2UsIEkgc3VnZ2VzdCBkb2luZyBiZWxvdyBjaGFuZ2VzLCBh
-cyB2Y2MNCnN1cHBseSBpcyBub3QgbWFuZGF0b3J5Lg0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy91
-c2IvcGh5L3BoeS1nZW5lcmljLmMgYi9kcml2ZXJzL3VzYi9waHkvcGh5LWdlbmVyaWMuYw0KaW5k
-ZXggYTUzYjg5YmU1MzI0Li4wMWE1ZmYxYTA1MTUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9w
-aHkvcGh5LWdlbmVyaWMuYw0KKysrIGIvZHJpdmVycy91c2IvcGh5L3BoeS1nZW5lcmljLmMNCkBA
-IC0yNzUsNyArMjc1LDcgQEAgaW50IHVzYl9waHlfZ2VuX2NyZWF0ZV9waHkoc3RydWN0IGRldmlj
-ZSAqZGV2LCBzdHJ1Y3QgdXNiX3BoeV9nZW5lcmljICpub3AsDQogICAgICAgICAgICAgICAgfSAg
-IA0KICAgICAgICB9ICAgDQogDQotICAgICAgIG5vcC0+dmNjID0gZGV2bV9yZWd1bGF0b3JfZ2V0
-KGRldiwgInZjYyIpOw0KKyAgICAgICBub3AtPnZjYyA9IGRldm1fcmVndWxhdG9yX2dldF9vcHRp
-b25hbChkZXYsICJ2Y2MiKTsNCiAgICAgICAgaWYgKElTX0VSUihub3AtPnZjYykpIHsNCiAgICAg
-ICAgICAgICAgICBkZXZfZGJnKGRldiwgIkVycm9yIGdldHRpbmcgdmNjIHJlZ3VsYXRvcjogJWxk
-XG4iLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBUUl9FUlIobm9w
-LT52Y2MpKTsNCg0KUGV0ZXINCg0KPiBTaWduZWQtb2ZmLWJ5OiBVd2UgS2xlaW5lLUvDtm5pZyA8
-dS5rbGVpbmUta29lbmlnQHBlbmd1dHJvbml4LmRlPg0KPiAtLS0NCj4gSGVsbG8sDQo+IA0KPiBu
-b3RlIEknbSBhbiBVU0Igbm9vYiwgc28gcGxlYXNlIGNvbnNpZGVyIGNhcmVmdWxseSBiZWZvcmUg
-YXBwbHlpbmcgOi0pIEkgYWxzbyBwdXQgdGhlDQo+IHJlZ3VsYXRvciBuZWFyIHRoZSB1c2JwaHkg
-bm9kZSBpbnN0ZWFkIG9mIGluIGFscGhhYmV0aWMgb3JkZXIuIE5vdCBzdXJlIHdoYXQgaXMNCj4g
-c2Vuc2libGUvdXN1YWwgaGVyZSwgdG9vLg0KPiANCj4gQmVzdCByZWdhcmRzDQo+IFV3ZQ0KPiAN
-Cj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDI1LmR0c2kgfCA5ICsrKysrKysrKw0KPiAgMSBmaWxl
-IGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL2lteDI1LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXgyNS5kdHNpDQo+IC0tLSBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI1LmR0c2kNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14MjUuZHRzaQ0KPiBAQCAtNjE0LDYgKzYxNCwxMSBAQA0KPiAgCQl9Ow0KPiAgCX07DQo+IA0K
-PiArCXJlZ191c2I6IHJlZ3VsYXRvcl91c2JwaHkgew0KPiArCQljb21wYXRpYmxlID0gInJlZ3Vs
-YXRvci1maXhlZCI7DQo+ICsJCXJlZ3VsYXRvci1uYW1lID0gInVzYi1waHkgc3VwcGx5IjsNCj4g
-Kwl9Ow0KPiArDQo+ICAJdXNicGh5IHsNCj4gIAkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsN
-Cj4gIAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+IEBAIC02MjMsMTIgKzYzMCwxNCBAQA0KPiAg
-CQkJcmVnID0gPDA+Ow0KPiAgCQkJY29tcGF0aWJsZSA9ICJ1c2Itbm9wLXhjZWl2IjsNCj4gIAkJ
-CSNwaHktY2VsbHMgPSA8MD47DQo+ICsJCQl2Y2Mtc3VwcGx5ID0gPCZyZWdfdXNiPjsNCj4gIAkJ
-fTsNCj4gDQo+ICAJCXVzYnBoeTE6IHVzYi1waHlAMSB7DQo+ICAJCQlyZWcgPSA8MT47DQo+ICAJ
-CQljb21wYXRpYmxlID0gInVzYi1ub3AteGNlaXYiOw0KPiAgCQkJI3BoeS1jZWxscyA9IDwwPjsN
-Cj4gKwkJCXZjYy1zdXBwbHkgPSA8JnJlZ191c2I+Ow0KPiAgCQl9Ow0KPiAgCX07DQo+ICB9Ow0K
-PiAtLQ0KPiAyLjIwLjENCg0K
+Hello!
+
+On 25.06.2019 13:04, Uwe Kleine-König wrote:
+
+> The usb phys are internal to the SoC and so it their 5V supply. With
+
+    s/it/is/?
+
+> this regulator added explicitly the following (harmless) boot messages
+> go away:
+> 
+> 	usb_phy_generic usbphy:usb-phy@0: usbphy:usb-phy@0 supply vcc not found, using dummy regulator
+> 	usb_phy_generic usbphy:usb-phy@1: usbphy:usb-phy@1 supply vcc not found, using dummy regulator
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+> Hello,
+> 
+> note I'm an USB noob, so please consider carefully before applying :-)
+> I also put the regulator near the usbphy node instead of in alphabetic
+> order. Not sure what is sensible/usual here, too.
+> 
+> Best regards
+> Uwe
+> 
+>   arch/arm/boot/dts/imx25.dtsi | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+> --- a/arch/arm/boot/dts/imx25.dtsi
+> +++ b/arch/arm/boot/dts/imx25.dtsi
+> @@ -614,6 +614,11 @@
+>   		};
+>   	};
+>   
+> +	reg_usb: regulator_usbphy {
+
+    Hyphens are preferred to underscores in the prop names.
+
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb-phy supply";
+> +	};
+> +
+[...]
+
+MBR, Sergei
