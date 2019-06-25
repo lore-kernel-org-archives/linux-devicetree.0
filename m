@@ -1,85 +1,73 @@
-From: Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
-Date: Tue, 25 Jun 2019 22:33:12 +0000
-Message-ID: <20190625223312.GP19023@42.do-not-panic.com>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-2-brendanhiggins@google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: RE: [PATCH V3 3/4] clk: imx: Add support for i.MX8MN clock driver
+Date: Tue, 25 Jun 2019 15:34:56 -0700
+Message-ID: <20190625223457.1FCBF205ED@mail.kernel.org>
+References: <20190604015928.23157-1-Anson.Huang@nxp.com> <20190604015928.23157-3-Anson.Huang@nxp.com> <20190606162543.EFFB820645@mail.kernel.org> <DB3PR0402MB391625A0B3D838CE88C53E33F5100@DB3PR0402MB3916.eurprd04.prod.outlook.com> <20190607180039.611C7208C0@mail.kernel.org> <DB3PR0402MB391678C245944942EA2A7F62F5110@DB3PR0402MB3916.eurprd04.prod.outlook.com> <20190610151425.D8139207E0@mail.kernel.org> <DB3PR0402MB3916F7F7D7CA801F5C0D0610F5ED0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190617082613.109131-2-brendanhiggins@google.com>
+In-Reply-To: <DB3PR0402MB3916F7F7D7CA801F5C0D0610F5ED0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerma
+To: "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dinguyen@kernel.org" <dinguyen@kernel.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "festevam@gmail.com" <festevam@gmail.com>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 01:25:56AM -0700, Brendan Higgins wrote:
-> +/**
-> + * module_test() - used to register a &struct kunit_module with KUnit.
-> + * @module: a statically allocated &struct kunit_module.
-> + *
-> + * Registers @module with the test framework. See &struct kunit_module for more
-> + * information.
-> + */
-> +#define module_test(module) \
-> +		static int module_kunit_init##module(void) \
-> +		{ \
-> +			return kunit_run_tests(&module); \
-> +		} \
-> +		late_initcall(module_kunit_init##module)
-
-Becuase late_initcall() is used, if these modules are built-in, this
-would preclude the ability to test things prior to this part of the
-kernel under UML or whatever architecture runs the tests. So, this
-limits the scope of testing. Small detail but the scope whould be
-documented.
-
-> +static void kunit_print_tap_version(void)
+Quoting Anson Huang (2019-06-10 19:06:22)
+> > >
+> > > Sorry, I am still a little confused, all the clock
+> > > register(clk_register()) are via each different clock types like
+> > > imx_clk_gate4/imx_clk_pll14xx, if using clk_hw_register, means we need
+> > > to re-write the clock driver using different clk register method, that
+> > > will make the driver completely different from i.mx8mq/i.mx8mm, they
+> > > are actually same series of SoC as i.mx8mn, it will introduce many
+> > confusion, is my understanding correct? And is it OK to just keep what =
+it is
+> > and make them all aligned?
+> > >
+> >=20
+> > Ok, the problem I'm trying to point out is that clk registrations need =
+to be
+> > undone, i.e. clk_unregister() needs to be called, when the driver fails=
+ to
+> > probe. devm_*() is one way to do this, but if you have other ways of
+> > removing all the registered clks then that works too. Makes sense?
+>=20
+> Yes, it makes sense. Do you think it is OK to add an imx_unregister_clock=
+s() API, then
+> call it in every place of returning failure in .probe function? If yes, I=
+ will add it and also
+> fix it in i.MX8MQ driver which uses platform driver model but does NOT ha=
+ndle this case.=20
+>=20
+>         base =3D devm_platform_ioremap_resource(pdev, 0);
+> -       if (WARN_ON(IS_ERR(base)))
+> -               return PTR_ERR(base);
+> +       if (WARN_ON(IS_ERR(base))) {
+> +               ret =3D PTR_ERR(base);
+> +               goto unregister_clks;
+> +       }
+>=20
+>                 pr_err("failed to register clks for i.MX8MN\n");
+> -               return -EINVAL;
+> +               goto unregister_clks;
+>         }
+>=20
+>         return 0;
+> +
+> +unregister_clks:
+> +       imx_unregister_clocks(clks, ARRAY_SIZE(clks));
+> +
+> +       return ret;
+>=20
+> +void imx_unregister_clocks(struct clk *clks[], unsigned int count)
 > +{
-> +	if (!kunit_has_printed_tap_version) {
-> +		kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
-
-What is this TAP thing? Why should we care what version it is on?
-Why are we printing this?
-
-> +		kunit_has_printed_tap_version = true;
-> +	}
+> +       unsigned i;
+> +
+> +       for (i =3D 0; i < count; i++)
+> +               clk_unregister(clks[i]);
 > +}
 > +
-> +static size_t kunit_test_cases_len(struct kunit_case *test_cases)
-> +{
-> +	struct kunit_case *test_case;
-> +	size_t len = 0;
-> +
-> +	for (test_case = test_cases; test_case->run_case; test_case++)
+>=20
 
-If we make the last test case NULL, we'd just check for test_case here,
-and save ourselves an extra few bytes per test module. Any reason why
-the last test case cannot be NULL?
-
-> +void kunit_init_test(struct kunit *test, const char *name)
-> +{
-> +	spin_lock_init(&test->lock);
-> +	test->name = name;
-> +	test->success = true;
-> +}
-> +
-> +/*
-> + * Performs all logic to run a test case.
-> + */
-> +static void kunit_run_case(struct kunit_module *module,
-> +			   struct kunit_case *test_case)
-> +{
-> +	struct kunit test;
-> +	int ret = 0;
-> +
-> +	kunit_init_test(&test, test_case->name);
-> +
-> +	if (module->init) {
-> +		ret = module->init(&test);
-
-I believe if we used struct kunit_module *kmodule it would be much
-clearer who's init this is.
-
-  Luis
+Yes, looks better.
