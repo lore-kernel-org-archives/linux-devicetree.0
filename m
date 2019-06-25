@@ -1,46 +1,55 @@
-From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Subject: [PATCH 3/4] dt-bindings: display/panel: jh057n0090: Document power supply properties
-Date: Tue, 25 Jun 2019 19:05:18 +0200
-Message-ID: <5ebbc0cf3fc8fcfd0300fb4d81be5acae156a4d4.1561482165.git.agx@sigxcpu.org>
-References: <cover.1561482165.git.agx@sigxcpu.org>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH v13 04/13] mfd: Add Ingenic TCU driver
+Date: Tue, 25 Jun 2019 17:30:28 +0000
+Message-ID: <20190625173026.dbvx44iwywnijjql@pburton-laptop>
+References: <20190624225759.18299-1-paul@crapouillou.net>
+ <20190624225759.18299-5-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1561482165.git.agx@sigxcpu.org>
+In-Reply-To: <20190624225759.18299-5-paul@crapouillou.net>
+Content-Language: en-US
+Content-ID: <9BAE9DD0984EBD4FBCD7F23175005B2A@namprd22.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Mathieu Malaterre <malat@debian.org>, "od@zcrc.me" <od@zcrc.me>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Artur Rojek <contact@artur-ro>
 List-Id: devicetree@vger.kernel.org
 
-Document the vcc-supply and iovcc-supply propertes of the Rocktech
-jh057n0090 panel.
+Hi Paul,
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- .../bindings/display/panel/rocktech,jh057n00900.txt          | 5 +++++
- 1 file changed, 5 insertions(+)
+On Tue, Jun 25, 2019 at 12:57:50AM +0200, Paul Cercueil wrote:
+> +static const struct of_device_id ingenic_tcu_of_match[] =3D {
+> +	{ .compatible =3D "ingenic,jz4740-tcu", .data =3D &jz4740_soc_info, },
+> +	{ .compatible =3D "ingenic,jz4725b-tcu", .data =3D &jz4725b_soc_info, }=
+,
+> +	{ .compatible =3D "ingenic,jz4770-tcu", .data =3D &jz4740_soc_info, },
+> +	{ }
+> +};
 
-diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
-index 1b5763200cf6..a372c5d84695 100644
---- a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
-+++ b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
-@@ -5,6 +5,9 @@ Required properties:
- - reg: DSI virtual channel of the peripheral
- - reset-gpios: panel reset gpio
- - backlight: phandle of the backlight device attached to the panel
-+- vcc-supply: phandle of the regulator that provides the vcc supply voltage.
-+- iovcc-supply: phandle of the regulator that provides the iovcc supply
-+  voltage.
- 
- Example:
- 
-@@ -14,5 +17,7 @@ Example:
- 			reg = <0>;
- 			backlight = <&backlight>;
- 			reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
-+			vcc-supply = <&reg_2v8_p>;
-+			iovcc-supply = <&reg_1v8_p>;
- 		};
- 	};
--- 
-2.20.1
+Nit: why not order these numerically? ie. 25b, 40, 70.
+
+> +static struct regmap * __init ingenic_tcu_create_regmap(struct device_no=
+de *np)
+> +{
+> +	struct resource res;
+> +	void __iomem *base;
+> +	struct regmap *map;
+> +
+> +	if (!of_match_node(ingenic_tcu_of_match, np))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	base =3D of_io_request_and_map(np, 0, "TCU");
+> +	if (IS_ERR(base))
+> +		return ERR_PTR(PTR_ERR(base));
+
+This is equivalent to:
+
+    return ERR_CAST(base);
+
+Apart from those:
+
+    Reviewed-by: Paul Burton <paul.burton@mips.com>
+
+Thanks,
+    Paul
