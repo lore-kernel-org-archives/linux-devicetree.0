@@ -1,35 +1,53 @@
-From: Robin Gong <yibin.gong@nxp.com>
-Subject: RE: [PATCH v4 1/6] dmaengine: fsl-edma: add drvdata for fsl-edma
-Date: Tue, 25 Jun 2019 07:08:23 +0000
-Message-ID: <VE1PR04MB66387F57FA3B625CBA5D23B189E30@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20190614081724.13366-1-yibin.gong@nxp.com>
- <20190614081724.13366-2-yibin.gong@nxp.com>
- <20190625041216.GE2962@vkoul-mobl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: [PATCH v4 0/2] Add DSI panel driver for Raydium RM67191
+Date: Tue, 25 Jun 2019 10:11:12 +0300
+Message-ID: <1561446674-25084-1-git-send-email-robert.chiras@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625041216.GE2962@vkoul-mobl>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "angelo@sysam.it" <angelo@sysam.it>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com, Robert Chiras <robert.chiras@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Okay, will correct it and send v5 after rebase.
->On 25-06-19, 16:17, Vinod Koul wrote:
-> On 14-06-19, 16:17, yibin.gong@nxp.com wrote:
-> > From: Robin Gong <yibin.gong@nxp.com>
-> >
-> > There are some differences between vf610 and next i.mx7ulp. Put such
-> > differences into static driver data for distiguish easily at driver
->=20
-> Typo distiguish
->=20
-> Though I tried to apply 1-5 it doesnt apply for me, can you rebase and re=
-send
->=20
-> Thanks
->=20
-> --
-> ~Vinod
+This patch-set contains the DRM panel driver and dt-bindings documentation
+for the DSI driven panel: Raydium RM67191.
+
+v4:
+- Changed default_timing structure type from 'struct display_timing' to
+  'struct drm_display_mode' (fabio)
+- Replaced devm_gpiod_get with devm_gpiod_get_optional (fabio)
+- Added power regulators (fabio)
+- Removed pm_ops (fabio)
+
+v3:
+- Added myself to MAINTAINERS for this driver (sam)
+- Removed display-timings property (fabio)
+- Fixed dt description (sam)
+- Re-arranged calls inside get_modes function (sam)
+- Changed ifdefs with _maybe_unused for suspend/resume functions (sam)
+- Collected Reviewed-by from Sam
+
+v2:
+- Fixed 'reset-gpio' to 'reset-gpios' property naming (fabio)
+- Changed the state of the reset gpio to active low and fixed how it is
+  handled in driver (fabio)
+- Fixed copyright statement (daniel)
+- Reordered includes (sam)
+- Added defines for panel specific color formats (fabio)
+- Removed unnecessary tests in enable and unprepare (sam)
+- Removed the unnecessary backlight write in enable (sam)
+
+Robert Chiras (2):
+  dt-bindings: display: panel: Add support for Raydium RM67191 panel
+  drm/panel: Add support for Raydium RM67191 panel driver
+
+ .../bindings/display/panel/raydium,rm67191.txt     |  41 ++
+ MAINTAINERS                                        |   6 +
+ drivers/gpu/drm/panel/Kconfig                      |   9 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-raydium-rm67191.c      | 673 +++++++++++++++++++++
+ 5 files changed, 730 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-raydium-rm67191.c
+
+-- 
+2.7.4
