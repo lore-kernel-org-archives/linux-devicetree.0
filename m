@@ -1,118 +1,69 @@
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 3/5] iio: imu: adis: Add support for SPI transfer cs_change_stall_delay_us
-Date: Tue, 25 Jun 2019 16:13:26 +0300
-Message-ID: <20190625131328.11883-3-alexandru.ardelean@analog.com>
-References: <20190625131328.11883-1-alexandru.ardelean@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH] arm64: dts: imx8mm: Init rates and parents configs for clocks
+Date: Tue, 25 Jun 2019 16:26:31 +0300
+Message-ID: <1561469191-26840-1-git-send-email-abel.vesa@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625131328.11883-1-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>, Michael Hennerich <michael.hennerich@analog.com>
+To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The ADIS16460 requires a higher delay before the next transfer. Since the
-SPI framework supports configuring the delay before the next transfer, this
-driver will become the first user of it.
+Add the initial configuration for clocks that need default parent and rate
+setting. This is based on the vendor tree clock provider parents and rates
+configuration except this is doing the setup in dts rather than using clock
+consumer API in a clock provider driver.
 
-The support for this functionality in ADIS16460 requires an addition to the
-ADIS lib to support the `cs_change_stall_delay_us` functionality in SPI.
-
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- drivers/iio/imu/adis.c       | 9 +++++++++
- include/linux/iio/imu/adis.h | 2 ++
- 2 files changed, 11 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 36 +++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-index c771ae6803a9..90dac69910b3 100644
---- a/drivers/iio/imu/adis.c
-+++ b/drivers/iio/imu/adis.c
-@@ -40,28 +40,33 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
- 			.len = 2,
- 			.cs_change = 1,
- 			.delay_usecs = adis->data->write_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.tx_buf = adis->tx + 2,
- 			.bits_per_word = 8,
- 			.len = 2,
- 			.cs_change = 1,
- 			.delay_usecs = adis->data->write_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.tx_buf = adis->tx + 4,
- 			.bits_per_word = 8,
- 			.len = 2,
- 			.cs_change = 1,
- 			.delay_usecs = adis->data->write_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.tx_buf = adis->tx + 6,
- 			.bits_per_word = 8,
- 			.len = 2,
- 			.delay_usecs = adis->data->write_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.tx_buf = adis->tx + 8,
- 			.bits_per_word = 8,
- 			.len = 2,
- 			.delay_usecs = adis->data->write_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		},
- 	};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 232a741..ab92108 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -451,6 +451,42 @@
+ 					 <&clk_ext3>, <&clk_ext4>;
+ 				clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
+ 					      "clk_ext3", "clk_ext4";
++				assigned-clocks = <&clk IMX8MM_CLK_AUDIO_AHB>,
++						<&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
++						<&clk IMX8MM_SYS_PLL3>,
++						<&clk IMX8MM_VIDEO_PLL1>,
++						<&clk IMX8MM_CLK_NOC>,
++						<&clk IMX8MM_CLK_PCIE1_CTRL>,
++						<&clk IMX8MM_CLK_PCIE1_PHY>,
++						<&clk IMX8MM_CLK_CSI1_CORE>,
++						<&clk IMX8MM_CLK_CSI1_PHY_REF>,
++						<&clk IMX8MM_CLK_CSI1_ESC>,
++						<&clk IMX8MM_CLK_DISP_AXI>,
++						<&clk IMX8MM_CLK_DISP_APB>;
++				assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_800M>,
++						<0>,
++						<0>,
++						<0>,
++						<&clk IMX8MM_SYS_PLL3_OUT>,
++						<&clk IMX8MM_SYS_PLL2_250M>,
++						<&clk IMX8MM_SYS_PLL2_100M>,
++						<&clk IMX8MM_SYS_PLL2_1000M>,
++						<&clk IMX8MM_SYS_PLL2_1000M>,
++						<&clk IMX8MM_SYS_PLL1_800M>,
++						<&clk IMX8MM_SYS_PLL2_1000M>,
++						<&clk IMX8MM_SYS_PLL1_800M>;
++				assigned-clock-rates = <400000000>,
++							<400000000>,
++							<750000000>,
++							<594000000>,
++							<0>,
++							<0>,
++							<0>,
++							<0>,
++							<0>,
++							<0>,
++							<500000000>,
++							<200000000>;
+ 			};
  
-@@ -134,12 +139,14 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
- 			.len = 2,
- 			.cs_change = 1,
- 			.delay_usecs = adis->data->write_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.tx_buf = adis->tx + 2,
- 			.bits_per_word = 8,
- 			.len = 2,
- 			.cs_change = 1,
- 			.delay_usecs = adis->data->read_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.tx_buf = adis->tx + 4,
- 			.rx_buf = adis->rx,
-@@ -147,11 +154,13 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
- 			.len = 2,
- 			.cs_change = 1,
- 			.delay_usecs = adis->data->read_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.rx_buf = adis->rx + 2,
- 			.bits_per_word = 8,
- 			.len = 2,
- 			.delay_usecs = adis->data->read_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		},
- 	};
- 
-diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-index 469a493f7ae0..4aa248b6b3bd 100644
---- a/include/linux/iio/imu/adis.h
-+++ b/include/linux/iio/imu/adis.h
-@@ -27,6 +27,7 @@ struct adis_burst;
-  * struct adis_data - ADIS chip variant specific data
-  * @read_delay: SPI delay for read operations in us
-  * @write_delay: SPI delay for write operations in us
-+ * @cs_stall_delay: SPI stall delay between transfers in us
-  * @glob_cmd_reg: Register address of the GLOB_CMD register
-  * @msc_ctrl_reg: Register address of the MSC_CTRL register
-  * @diag_stat_reg: Register address of the DIAG_STAT register
-@@ -36,6 +37,7 @@ struct adis_burst;
- struct adis_data {
- 	unsigned int read_delay;
- 	unsigned int write_delay;
-+	unsigned int cs_stall_delay;
- 
- 	unsigned int glob_cmd_reg;
- 	unsigned int msc_ctrl_reg;
+ 			src: reset-controller@30390000 {
 -- 
-2.20.1
+2.7.4
