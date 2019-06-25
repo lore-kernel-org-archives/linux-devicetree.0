@@ -1,68 +1,71 @@
 Return-Path: <SRS0=SZwX=UY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43670 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbfFYKok (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Jun 2019 06:44:40 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 16so15721415ljv.10
-        for <devicetree@vger.kernel.org>; Tue, 25 Jun 2019 03:44:39 -0700 (PDT)
-Subject: Re: [PATCH] ARM: imx25: provide a fixed regulator for usb phys
-References: <20190625100412.11815-1-u.kleine-koenig@pengutronix.de>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <8b8ffbd5-e481-b425-aa8c-c1b13e93faee@cogentembedded.com>
-Date: Tue, 25 Jun 2019 13:44:30 +0300
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58225 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbfFYKE1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Jun 2019 06:04:27 -0400
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: [PATCH] ARM: imx25: provide a fixed regulator for usb phys
+Date: Tue, 25 Jun 2019 12:04:12 +0200
+Message-Id: <20190625100412.11815-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190625100412.11815-1-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Peter Chen <Peter.Chen@nxp.com>
+To: Shawn Guo <shawnguo@kernel.org>, Peter Chen <Peter.Chen@nxp.com>
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hello!
+The usb phys are internal to the SoC and so it their 5V supply. With
+this regulator added explicitly the following (harmless) boot messages
+go away:
 
-On 25.06.2019 13:04, Uwe Kleine-König wrote:
+	usb_phy_generic usbphy:usb-phy@0: usbphy:usb-phy@0 supply vcc not found, using dummy regulator
+	usb_phy_generic usbphy:usb-phy@1: usbphy:usb-phy@1 supply vcc not found, using dummy regulator
 
-> The usb phys are internal to the SoC and so it their 5V supply. With
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-    s/it/is/?
+note I'm an USB noob, so please consider carefully before applying :-)
+I also put the regulator near the usbphy node instead of in alphabetic
+order. Not sure what is sensible/usual here, too.
 
-> this regulator added explicitly the following (harmless) boot messages
-> go away:
-> 
-> 	usb_phy_generic usbphy:usb-phy@0: usbphy:usb-phy@0 supply vcc not found, using dummy regulator
-> 	usb_phy_generic usbphy:usb-phy@1: usbphy:usb-phy@1 supply vcc not found, using dummy regulator
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
-> Hello,
-> 
-> note I'm an USB noob, so please consider carefully before applying :-)
-> I also put the regulator near the usbphy node instead of in alphabetic
-> order. Not sure what is sensible/usual here, too.
-> 
-> Best regards
-> Uwe
-> 
->   arch/arm/boot/dts/imx25.dtsi | 9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
-> --- a/arch/arm/boot/dts/imx25.dtsi
-> +++ b/arch/arm/boot/dts/imx25.dtsi
-> @@ -614,6 +614,11 @@
->   		};
->   	};
->   
-> +	reg_usb: regulator_usbphy {
+Best regards
+Uwe
 
-    Hyphens are preferred to underscores in the prop names.
+ arch/arm/boot/dts/imx25.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "usb-phy supply";
-> +	};
-> +
-[...]
-
-MBR, Sergei
+diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+--- a/arch/arm/boot/dts/imx25.dtsi
++++ b/arch/arm/boot/dts/imx25.dtsi
+@@ -614,6 +614,11 @@
+ 		};
+ 	};
+ 
++	reg_usb: regulator_usbphy {
++		compatible = "regulator-fixed";
++		regulator-name = "usb-phy supply";
++	};
++
+ 	usbphy {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -623,12 +630,14 @@
+ 			reg = <0>;
+ 			compatible = "usb-nop-xceiv";
+ 			#phy-cells = <0>;
++			vcc-supply = <&reg_usb>;
+ 		};
+ 
+ 		usbphy1: usb-phy@1 {
+ 			reg = <1>;
+ 			compatible = "usb-nop-xceiv";
+ 			#phy-cells = <0>;
++			vcc-supply = <&reg_usb>;
+ 		};
+ 	};
+ };
+-- 
+2.20.1
