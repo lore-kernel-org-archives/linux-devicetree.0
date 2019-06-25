@@ -1,132 +1,84 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using
- devicetree
-Date: Tue, 25 Jun 2019 14:00:04 +0900
-Message-ID: <20190625140004.a74443238596b297a558a66f@kernel.org>
-References: <156113387975.28344.16009584175308192243.stgit@devnote2>
-        <f0cee7b6-b83b-b74c-82f5-f43e39bd391a@gmail.com>
-        <20190624115223.db1e53549a15c6548bfa1fa1@kernel.org>
-        <e5e3f55b-095b-e6fc-8734-d888ba5c87f3@gmail.com>
+From: dhar@codeaurora.org
+Subject: Re: drm/msm/dpu: Correct dpu encoder spinlock initialization
+Date: Tue, 25 Jun 2019 11:14:45 +0530
+Message-ID: <d61d7805b4ac0ec45309bf5b65841262@codeaurora.org>
+References: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
+ <efade579f7ba59585b88ecb367422e5c@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e5e3f55b-095b-e6fc-8734-d888ba5c87f3@gmail.com>
+In-Reply-To: <efade579f7ba59585b88ecb367422e5c@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jeykumar Sankaran <jsanka@codeaurora.org>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org, jshekhar@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
-
-On Mon, 24 Jun 2019 15:31:07 -0700
-Frank Rowand <frowand.list@gmail.com> wrote:
-> >>> Currently, kernel support boot-time tracing using kernel command-line
-> >>> parameters. But that is very limited because of limited expressions
-> >>> and limited length of command line. Recently, useful features like
-> >>> histogram, synthetic events, etc. are being added to ftrace, but it is
-> >>> clear that we can not expand command-line options to support these
-> >>> features.
-> >>
-> >> "it is clear that we can not expand command-line options" needs a fuller
-> >> explanation.  And maybe further exploration.
-> > 
-> > Indeed. As an example of tracing settings in the first mail, even for simple
-> > use-case,  the trace command is long and complicated. I think it is hard to
-> > express that as 1-liner kernel command line. But devicetree looks very good
-> > for expressing structured data. That is great and I like it :)
+On 2019-06-25 03:56, Jeykumar Sankaran wrote:
+> On 2019-06-23 23:27, Shubhashree Dhar wrote:
+>> dpu encoder spinlock should be initialized during dpu encoder
+>> init instead of dpu encoder setup which is part of commit.
+>> There are chances that vblank control uses the uninitialized
+>> spinlock if not initialized during encoder init.
+> Not much can be done if someone is performing a vblank operation
+> before encoder_setup is done.
+> Can you point to the path where this lock is acquired before
+> the encoder_setup?
 > 
-> But you could extend the command line paradigm to meet your needs.
+> Thanks
+> Jeykumar S.
+>> 
 
-But the kernel command line is a command line. Would you mean encoding the 
-structured setting in binary format with base64 and pass it? :(
+When running some dp usecase, we are hitting this callstack.
 
-> >> Devicetree is NOT for configuration information.  This has been discussed
-> >> over and over again in mail lists, at various conferences, and was also an
-> >> entire session at plumbers a few years ago:
-> >>
-> >>    https://elinux.org/Device_tree_future#Linux_Plumbers_2016_Device_Tree_Track
-> > 
-> > Thanks, I'll check that.
+Process kworker/u16:8 (pid: 215, stack limit = 0x00000000df9dd930)
+Call trace:
+  spin_dump+0x84/0x8c
+  spin_dump+0x0/0x8c
+  do_raw_spin_lock+0x80/0xb0
+  _raw_spin_lock_irqsave+0x34/0x44
+  dpu_encoder_toggle_vblank_for_crtc+0x8c/0xe8
+  dpu_crtc_vblank+0x168/0x1a0
+  dpu_kms_enable_vblank+0[   11.648998]  vblank_ctrl_worker+0x3c/0x60
+  process_one_work+0x16c/0x2d8
+  worker_thread+0x1d8/0x2b0
+  kthread+0x124/0x134
 
-I found following discussion in etherpad log, https://elinux.org/Device_tree_plumbers_2016_etherpad
-----
-If you have data that the kernel does not have a good way to get, that's OK to put into DT.
+Looks like vblank is getting enabled earlier causing this issue and we 
+are using the spinlock without initializing it.
 
-    Operating points are OK - but should still be structured well.
-----
+Thanks,
+Shubhashree
 
-This sounds like if it is structured well, and there are no other way,
-we will be able to use DT as a channel.
-
-> >>
-> >> There is one part of device tree that does allow non-hardware description,
-> >> which is the "chosen" node which is provided to allow communication between
-> >> the bootloader and the kernel.
-> > 
-> > Ah, "chosen" will be suit for me :)
-> 
-> No.  This is not communicating boot loader information.
-
-Hmm, it's a kind of communication with the operator of the boot loader, since there
-is an admin or developer behind it. I think the comminication is to communicate
-with that human. Then if they intend to trace boot process, that is a kind of
-communication.
-
-[...]
-> >>> - Can we use devicetree for configuring kernel dynamically?
-> >>
-> >> No.  Sorry.
-> >>
-> >> My understanding of this proposal is that it is intended to better
-> >> support boot time kernel and driver debugging.  As an alternate
-> >> implementation, could you compile the ftrace configuration information
-> >> directly into a kernel data structure?  It seems like it would not be
-> >> very difficult to populate the data structure data via a few macros.
-> > 
-> > No, that is not what I intended. My intention was to trace boot up
-> > process "without recompiling kernel", but with a structured data.
-> 
-> That is debugging.  Or if you want to be pedantic, a complex performance
-> measurement of the boot process (more than holding a stopwatch in your
-> hand).
-
-Yeah, that's right.
-
-> Recompiling a single object file (containing the ftrace command data)
-> and re-linking the kernel is not a big price in that context).
-
-No, if I can use DT, I can choose one of them while boot up.
-That will be a big difference.
-(Of course for that purpose, I should work on boot loader to support
-DT overlay)
-
->  Or if
-> you create a new communication channel, you will have the cost of
-> creating that data object (certainly not much different than compiling
-> a devicetree) and have the bootloader provide the ftrace data object
-> to the kernel.
-
-Yes, and for me, that sounds like just a reinvention of the wheel.
-If I can reuse devicetree infrastructure, it is easily done (as I
-implemented in this series. It's just about 500LOC (and YAML document)
-
-I can clone drivers/of/ code only for that new communication channel,
-but that makes no one happy. :(
-
-> > For such purpose, we have to implement a tool to parse and pack the
-> > data and a channel to load it at earlier stage in bootloader. And
-> > those are already done by devicetree. Thus I thought I could get a
-> > piggyback on devicetree.
-> 
-> Devicetree is not the universal dumping ground for communicating
-> information to a booting kernel.  Please create another communication
-> channel.
-
-Why should we so limit the availability of even a small corner of existing
-open source software...?
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+>> Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
+>> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+>> ---
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> index 5f085b5..22938c7 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> @@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device *dev, 
+>> struct
+>> drm_encoder *enc,
+>>  	if (ret)
+>>  		goto fail;
+>> 
+>> -	spin_lock_init(&dpu_enc->enc_spinlock);
+>> -
+>>  	atomic_set(&dpu_enc->frame_done_timeout, 0);
+>>  	timer_setup(&dpu_enc->frame_done_timer,
+>>  			dpu_encoder_frame_done_timeout, 0);
+>> @@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct
+>> drm_device *dev,
+>> 
+>>  	drm_encoder_helper_add(&dpu_enc->base, &dpu_encoder_helper_funcs);
+>> 
+>> +	spin_lock_init(&dpu_enc->enc_spinlock);
+>>  	dpu_enc->enabled = false;
+>> 
+>>  	return &dpu_enc->base;
