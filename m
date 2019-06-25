@@ -1,100 +1,89 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V3 06/17] clk: tegra: pll: save and restore pll context
-Date: Tue, 25 Jun 2019 13:46:40 -0700
-Message-ID: <20190625204640.D640E205ED@mail.kernel.org>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com> <1560843991-24123-7-git-send-email-skomatineni@nvidia.com>
+From: Angelo Dureghello <angelo@sysam.it>
+Subject: Re: [PATCH v5 0/6] add edma2 for i.mx7ulp
+Date: Tue, 25 Jun 2019 22:56:17 +0200
+Message-ID: <20190625205617.GA24968@jerusalem>
+References: <20190625094324.19196-1-yibin.gong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560843991-24123-7-git-send-email-skomatineni@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jason@lakedaemon.net, jonathanh@nvidia.com, linus.walleij@linaro.org, marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de, thierry.reding@gmail.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190625094324.19196-1-yibin.gong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: yibin.gong@nxp.com
+Cc: mark.rutland@arm.com, robh@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, vkoul@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, dmaengine@vger.kernel.org, dan.j.williams@intel.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sowjanya Komatineni (2019-06-18 00:46:20)
-> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-> index 1583f5fc992f..4b0ed8fc6268 100644
-> --- a/drivers/clk/tegra/clk-pll.c
-> +++ b/drivers/clk/tegra/clk-pll.c
-> @@ -1008,6 +1008,54 @@ static unsigned long clk_plle_recalc_rate(struct c=
-lk_hw *hw,
->         return rate;
->  }
-> =20
-> +void tegra_clk_sync_state_pll(struct clk_hw *hw)
-> +{
-> +       if (!__clk_get_enable_count(hw->clk))
-> +               clk_pll_disable(hw);
-> +       else
-> +               clk_pll_enable(hw);
-> +}
-> +
-> +static int tegra_clk_pll_save_context(struct clk_hw *hw)
-> +{
-> +       struct tegra_clk_pll *pll =3D to_clk_pll(hw);
-> +
-> +       pll->rate =3D clk_hw_get_rate(hw);
-> +
-> +       if (!strcmp(__clk_get_name(hw->clk), "pll_mb"))
-> +               pll->pllbase_ctx =3D pll_readl_base(pll);
-> +       else if (!strcmp(__clk_get_name(hw->clk), "pll_re_vco"))
-> +               pll->pllbase_ctx =3D pll_readl_base(pll) & (0xf << 16);
-> +
-> +       return 0;
-> +}
-> +
-> +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
-> +{
-> +       struct tegra_clk_pll *pll =3D to_clk_pll(hw);
-> +       u32 val;
-> +
-> +       if (clk_pll_is_enabled(hw))
-> +               return;
-> +
-> +       if (!strcmp(__clk_get_name(hw->clk), "pll_mb")) {
+Hi Robin,
 
-Is there any way to avoid doing a string comparison here, and instead do
-something like a pointer comparison? Or maybe look at some flag in the
-tegra_clk_pll to figure out what to do differently? Using a string
-comparison is not too nice. Or even have different clk ops for the
-different clks and then do different things in this restore clk_op?
+On Tue, Jun 25, 2019 at 05:43:18PM +0800, yibin.gong@nxp.com wrote:
+> From: Robin Gong <yibin.gong@nxp.com>
+> 
+> This patch set add new version of edma for i.mx7ulp, the main changes
+> are as belows:
+>  1. only one dmamux.
+>  2. another clock dma_clk except dmamux clk.
+>  3. 16 independent interrupts instead of only one interrupt for
+>     all channels
+> For the first change, need modify fsl-edma-common.c and mcf-edma,
+> so create the first two patches to prepare without any function impact.
+> 
+> For the third change, need request single irq for every channel with
+> the legacy handler. But actually 2 dma channels share one interrupt(16
+> channel interrupts, but 32 channels.),ch0/ch16,ch1/ch17... For now, just
+> simply request irq without IRQF_SHARED flag, since 16 channels are enough
+> on i.mx7ulp whose M4 domain own some peripherals.
+> 
+> change from v1:
+>   1. check .data of 'of_device_id' in probe instead of compatible name.
+> 
+> change from v2:
+>   1. move the difference between edma and edma2 into driver data so that
+>      no need version checking in fsl-edma.c.
+> 
+> change from v3:
+>   1. remove duplicated 'version' and 'dmamux_nr' in 'struct fsl_edma_engine'
+>      since they are included in drvdata already.
+>   2. downgrade print log level.
+>   3. address some minor indent issues raised by Vinod.
+> 
+> change from v4:
+>   1. correct typo.
+> 
+> Robin Gong (6):
+>   dmaengine: fsl-edma: add drvdata for fsl-edma
+>   dmaengine: fsl-edma-common: move dmamux register to another single
+>     function
+>   dmaengine: fsl-edma-common: version check for v2 instead
+>   dt-bindings: dma: fsl-edma: add new i.mx7ulp-edma
+>   dmaengine: fsl-edma: add i.mx7ulp edma2 version support
+>   ARM: dts: imx7ulp: add edma device node
+> 
+>  Documentation/devicetree/bindings/dma/fsl-edma.txt |  44 ++++++++-
+>  arch/arm/boot/dts/imx7ulp.dtsi                     |  28 ++++++
+>  drivers/dma/fsl-edma-common.c                      |  83 ++++++++++------
+>  drivers/dma/fsl-edma-common.h                      |  14 ++-
+>  drivers/dma/fsl-edma.c                             | 109 ++++++++++++++++++---
+>  drivers/dma/mcf-edma.c                             |  11 ++-
+>  6 files changed, 239 insertions(+), 50 deletions(-)
+> 
 
-> +               pll_writel_base(pll->pllbase_ctx, pll);
-> +       } else if (!strcmp(__clk_get_name(hw->clk), "pll_re_vco")) {
-> +               val =3D pll_readl_base(pll);
-> +               val &=3D ~(0xf << 16);
-> +               pll_writel_base(pll->pllbase_ctx | val, pll);
-> +       }
-> +
-> +       if (pll->params->set_defaults)
-> +               pll->params->set_defaults(pll);
-> +
-> +       clk_set_rate(hw->clk, pll->rate);
+I tested the patch-set on ColdFire mcf5441x (stmark2 board), all works fine.
 
-Do you need to call clk_set_rate() here to change the frequency of the
-clk or just the parents of the clk, or both? I'd think that when we're
-restoring the clk the cached rate of the clk would match whatever we're
-restoring to, so this is a NOP. So does this do anything?
+Tested-by: Angelo Dureghello <angelo@sysam.it>
 
-I'd prefer that the restore ops just restore the clk hardware state of
-the clk_hw passed in, and not try to fix up the entire tree around a
-certain clk, if that's even possible.
 
-> +
-> +       /* do not sync pllx state here. pllx is sync'd after dfll resume =
-*/
-> +       if (strcmp(__clk_get_name(hw->clk), "pll_x"))
-> +               tegra_clk_sync_state_pll(hw);
-> +}
-> +
->  const struct clk_ops tegra_clk_pll_ops =3D {
->         .is_enabled =3D clk_pll_is_enabled,
->         .enable =3D clk_pll_enable,
-> @@ -1015,6 +1063,8 @@ const struct clk_ops tegra_clk_pll_ops =3D {
->         .recalc_rate =3D clk_pll_recalc_rate,
->         .round_rate =3D clk_pll_round_rate,
->         .set_rate =3D clk_pll_set_rate,
-> +       .save_context =3D tegra_clk_pll_save_context,
-> +       .restore_context =3D tegra_clk_pll_restore_context,
+Regards,
+Angelo
+
+> -- 
+> 2.7.4
+> 
