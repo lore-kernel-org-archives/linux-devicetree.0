@@ -1,67 +1,37 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/4] dt-bindings: iio: frequency: Use dt-schema for
- clock-names
-Date: Tue, 25 Jun 2019 10:30:36 +0200
-Message-ID: <20190625083036.jrr7kz7f6ks6nqps@flea>
-References: <1561389097-26075-1-git-send-email-stefan.popa@analog.com>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH] riscv: dts: Re-organize SPI DT nodes
+Date: Tue, 25 Jun 2019 14:04:56 +0530
+Message-ID: <CAJ2_jOFaS4ZU4m8sE0SFM0sL32Q8fUbg9jbRoEKHU1U2Zqp3YQ@mail.gmail.com>
+References: <1561375453-3135-1-git-send-email-yash.shah@sifive.com> <alpine.DEB.2.21.9999.1906241421550.22820@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3yps4smao6vtc5y5"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1561389097-26075-1-git-send-email-stefan.popa@analog.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1906241421550.22820@viisi.sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Popa <stefan.popa@analog.com>
-Cc: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Sachin Ghadi <sachin.ghadi@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-
---3yps4smao6vtc5y5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Mon, Jun 24, 2019 at 06:11:37PM +0300, Stefan Popa wrote:
-> Dt-schema can be used for clock-names property.
+On Tue, Jun 25, 2019 at 2:53 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
 >
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> ---
->  Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+> On Mon, 24 Jun 2019, Yash Shah wrote:
 >
-> diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> index d7adf074..8a2a8f6 100644
-> --- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> @@ -27,9 +27,8 @@ properties:
->      maxItems: 1
+> > As per the General convention, define only device DT node in SOC DTSi
+> > file with status = "disabled" and enable device in Board DTS file with
+> > status = "okay"
+> >
+> > Reported-by: Anup Patel <anup@brainfault.org>
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
 >
->    clock-names:
-> -    description:
-> -      Must be "clkin"
-> -    maxItems: 1
-> +    items:
-> +      - clkin
+> This is a good start, but should also cover the other I/O devices in the
+> chip DT file.  The mandatory internal devices, like the PRCI and PLIC, can
+> stay the way they are.
 
-You can even just have const: clkin here
+Ok, I will send another patch which will cover the other I/O devices
+as well.  Please ignore this patch.
 
-Maxime
+- Yash
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---3yps4smao6vtc5y5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRHbrAAKCRDj7w1vZxhR
-xQZuAQC9jlgQRUnCtCGNePxUg5qP7pF5UA7RwPOekZVZTRmsvwD/c9wseWa2S6Qf
-Iz+4hrxBAEEHVy3f/iOqUj5u6guy/AQ=
-=k49w
------END PGP SIGNATURE-----
-
---3yps4smao6vtc5y5--
+>
+>
+> - Paul
