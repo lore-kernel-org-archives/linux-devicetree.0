@@ -1,146 +1,44 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v7 09/10] usb: roles: add USB Type-B GPIO connector
- driver
-Date: Tue, 25 Jun 2019 16:55:47 +0800
-Message-ID: <1561452947.32589.25.camel@mhfsdcap03>
-References: <1560242680-23844-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1560242680-23844-10-git-send-email-chunfeng.yun@mediatek.com>
-         <20190624095827.GA6501@kuha.fi.intel.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2 6/9] dt-bindings: i2c: at91: add binding for
+ enable-ana-filt
+Date: Tue, 25 Jun 2019 08:55:53 +0000
+Message-ID: <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
+References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
+ <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190624095827.GA6501@kuha.fi.intel.com>
+In-Reply-To: <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
+Content-Language: en-US
+Content-ID: <1181221CAD0DF84EA05524BA6EC34C79@eurprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Yu Chen <chenyu56@huawei.com>, Nagarjuna Kristam <nkristam@nvidia.com>, Felipe Balbi <felipe.balbi@linux.inte>
+To: "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heikki,
-
-On Mon, 2019-06-24 at 12:58 +0300, Heikki Krogerus wrote:
-> Hi Chunfeng,
-> 
-> On Tue, Jun 11, 2019 at 04:44:39PM +0800, Chunfeng Yun wrote:
-> > Due to the requirement of usb-connector.txt binding, the old way
-> > using extcon to support USB Dual-Role switch is now deprecated
-> > when use Type-B connector.
-> > This patch introduces a driver of Type-B connector which typically
-> > uses an input GPIO to detect USB ID pin, and try to replace the
-> > function provided by extcon-usb-gpio driver
-> 
-> I'm sorry for asking this so late, but why is this driver a Type-B
-> specific driver (I really thought somebody had already asked this
-> question)?
-It's mainly used for Type-B connector with ID pin. 
-
-> 
-> I don't see anything Type-B specific in the driver. 
-It's need add another compatible "usb-b-connector" except the driver
-provided.
-
-> Basically it looks
-> to me like just a gpio based connection detection driver that would
-> work fine with for example uAB connectors..
-Yes, it is.
-> 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > Tested-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> > ---
-> > v7 changes:
-> >   1. remove macro DEV_PMS_OPS suggested by Andy
-> >   2. add tested-by Nagarjuna
-> > 
-> > v6 changes:
-> >   1. get usb-role-swtich by usb_role_switch_get()
-> > 
-> > v5 changes:
-> >   1. put usb_role_switch when error happens suggested by Biju
-> >   2. don't treat bype-B connector as a virtual device suggested by Rob
-> > 
-> > v4 changes:
-> >   1. remove linux/gpio.h suggested by Linus
-> >   2. put node when error happens
-> > 
-> > v3 changes:
-> >   1. treat bype-B connector as a virtual device;
-> >   2. change file name again
-> > 
-> > v2 changes:
-> >   1. file name is changed
-> >   2. use new compatible
-> > ---
-> >  drivers/usb/roles/Kconfig           |  11 ++
-> >  drivers/usb/roles/Makefile          |   1 +
-> >  drivers/usb/roles/typeb-conn-gpio.c | 284 ++++++++++++++++++++++++++++
-> 
-> ..It also drives me crazy that you've put this driver under this
-> folder. It does not create a role switch so ideally it should not go
-> under driver/usb/roles/. 
-agree:)
-
-> I think a better place for it would be
-> drivers/usb/misc/, or actually, maybe it should go under
-> drivers/usb/common/?
-I'm not sure, but prefer misc/ folder.
-
-Hi Greg, 
-
-would you please give me some suggestions about this?  which folder I
-should put the driver into?
-
-> 
-> Could you still rename the driver to something like "usb-gpio.c" or
-> conn-gpio.c,
-I think about the name for a long time before, and have some doubt
-whether it's suitable to add typeb into the name.
-How about using usb-conn-gpio.c or conn-usb-gpio.c?
-
-Thanks a lot
-
->  or something else, and also move it under
-> drivers/usb/misc/ or drivers/usb/common/?
-> 
-> >  3 files changed, 296 insertions(+)
-> >  create mode 100644 drivers/usb/roles/typeb-conn-gpio.c
-> > 
-> > diff --git a/drivers/usb/roles/Kconfig b/drivers/usb/roles/Kconfig
-> > index f8b31aa67526..d1156e18a81a 100644
-> > --- a/drivers/usb/roles/Kconfig
-> > +++ b/drivers/usb/roles/Kconfig
-> > @@ -26,4 +26,15 @@ config USB_ROLES_INTEL_XHCI
-> >  	  To compile the driver as a module, choose M here: the module will
-> >  	  be called intel-xhci-usb-role-switch.
-> >  
-> > +config TYPEB_CONN_GPIO
-> > +	tristate "USB Type-B GPIO Connector"
-> 
-> USB GPIO connection detection driver?
-> 
-> > +	depends on GPIOLIB
-> > +	help
-> > +	  The driver supports USB role switch between host and device via GPIO
-> > +	  based USB cable detection, used typically if an input GPIO is used
-> > +	  to detect USB ID pin.
-> > +
-> > +	  To compile the driver as a module, choose M here: the module will
-> > +	  be called typeb-conn-gpio.ko
-> > +
-> >  endif # USB_ROLE_SWITCH
-> > diff --git a/drivers/usb/roles/Makefile b/drivers/usb/roles/Makefile
-> > index 757a7d2797eb..5d5620d9d113 100644
-> > --- a/drivers/usb/roles/Makefile
-> > +++ b/drivers/usb/roles/Makefile
-> > @@ -3,3 +3,4 @@
-> >  obj-$(CONFIG_USB_ROLE_SWITCH)		+= roles.o
-> >  roles-y					:= class.o
-> >  obj-$(CONFIG_USB_ROLES_INTEL_XHCI)	+= intel-xhci-usb-role-switch.o
-> > +obj-$(CONFIG_TYPEB_CONN_GPIO)		+= typeb-conn-gpio.o
-> > diff --git a/drivers/usb/roles/typeb-conn-gpio.c b/drivers/usb/roles/typeb-conn-gpio.c
-> > new file mode 100644
-> > index 000000000000..e3fba1656069
-> > --- /dev/null
-> > +++ b/drivers/usb/roles/typeb-conn-gpio.c
-> > @@ -0,0 +1,284 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
+T24gMjAxOS0wNi0yNSAxMDowNSwgRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIHdyb3RlOg0K
+PiBGcm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+IA0K
+PiBBZGQgYmluZGluZyBzcGVjaWZpY2F0aW9uIGZvciBhbmFsb2dpYyBmaWx0ZXIgaW5zaWRlIHRo
+ZSBpMmMgY29udHJvbGxlcg0KDQpzL2FuYWxvZ2ljL3RoZSBhbmFsb2cvDQoNCj4gU2lnbmVkLW9m
+Zi1ieTogRXVnZW4gSHJpc3RldiA8ZXVnZW4uaHJpc3RldkBtaWNyb2NoaXAuY29tPg0KPiAtLS0N
+Cj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWF0OTEudHh0IHwg
+NCArKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5MS50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dA0KPiBp
+bmRleCA4MjY4NTk1Li4yMGQzMzRjIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dA0KPiBAQCAtMjMsNiArMjMsOSBAQCBP
+cHRpb25hbCBwcm9wZXJ0aWVzOg0KPiAgLSBlbmFibGUtZGlnLWZpbHQ6IEVuYWJsZSB0aGUgYnVp
+bHQtaW4gZGlnaXRhbCBmaWx0ZXIgb24gdGhlIGkyYyBsaW5lcywNCj4gICAgc3BlY2lmaWNhbGx5
+IHJlcXVpcmVkIGRlcGVuZGluZyBvbiB0aGUgaGFyZHdhcmUgUENCL2JvYXJkIGFuZCBpZiB0aGUN
+Cj4gICAgdmVyc2lvbiBvZiB0aGUgY29udHJvbGxlciBpbmNsdWRlcyBpdC4NCj4gKy0gZW5hYmxl
+LWFuYS1maWx0OiBFbmFibGUgdGhlIGJ1aWx0LWluIGFuYWxvZ2ljIGZpbHRlciBvbiB0aGUgaTJj
+IGxpbmVzLA0KPiArICBzcGVjaWZpY2FsbHkgcmVxdWlyZWQgZGVwZW5kaW5nIG9uIHRoZSBoYXJk
+d2FyZSBQQ0IvYm9hcmQgYW5kIGlmIHRoZQ0KPiArICB2ZXJzaW9uIG9mIHRoZSBjb250cm9sbGVy
+IGluY2x1ZGVzIGl0Lg0KPiAgLSBDaGlsZCBub2RlcyBjb25mb3JtaW5nIHRvIGkyYyBidXMgYmlu
+ZGluZw0KPiAgDQo+ICBFeGFtcGxlcyA6DQo+IEBAIC02MCw2ICs2Myw3IEBAIGkyYzA6IGkyY0Bm
+ODAzNDYwMCB7DQo+ICAJYXRtZWwsZmlmby1zaXplID0gPDE2PjsNCj4gIAlpMmMtc2RhLWhvbGQt
+dGltZS1ucyA9IDwzMzY+Ow0KPiAgCWVuYWJsZS1kaWctZmlsdDsNCj4gKwllbmFibGUtYW5hLWZp
+bHQ7DQoNClBlcmhhcHMNCg0KCW1pY3JvY2hpcCxkaWdpdGFsLWZpbHRlcjsNCgltaWNyb2NoaXAs
+YW5hbG9nLWZpbHRlcjsNCg0KPw0KDQpDaGVlcnMsDQpQZXRlcg0KDQo+ICANCj4gIAl3bTg3MzE6
+IHdtODczMUAxYSB7DQo+ICAJCWNvbXBhdGlibGUgPSAid204NzMxIjsNCj4gDQoNCg==
