@@ -1,58 +1,59 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Init rates and parents configs for
- clocks
-Date: Tue, 25 Jun 2019 14:22:00 +0000
-Message-ID: <VI1PR04MB50550ACBAEA73FD7B5A97DD8EEE30@VI1PR04MB5055.eurprd04.prod.outlook.com>
-References: <1561467081-25701-1-git-send-email-abel.vesa@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 10/15] dt-bindings: display: Convert tpo,tpg110 panel
+ to DT schema
+Date: Tue, 25 Jun 2019 08:25:51 -0600
+Message-ID: <CAL_Jsq+45dKRMdRCjfKgEkvsk1MLyeXnY4fjZmh50WLweyJfCg@mail.gmail.com>
+References: <20190624215649.8939-1-robh@kernel.org> <20190624215649.8939-11-robh@kernel.org>
+ <CACRpkdYKE=zLJhmTeTWYGRCQNt3K8+rNNqsp5UDa2d31GG6Y2g@mail.gmail.com>
+ <CAL_Jsq+uCMKhUFgCCK3uUetL9OwokQPaq74GJHQS2VS=UjVH8w@mail.gmail.com> <CACRpkdYnSZibUyhe5D8W259fCJBm05rG0_EmX+uoi=uqbrqEYA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <CACRpkdYnSZibUyhe5D8W259fCJBm05rG0_EmX+uoi=uqbrqEYA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Jacky Bai <ping.bai@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Anson Huang <anson.huang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25.06.2019 15:51, Abel Vesa wrote:=0A=
-> Add the initial configuration for clocks that need default parent and rat=
-e=0A=
-> setting. This is based on the vendor tree clock provider parents and rate=
-s=0A=
-> configuration except this is doing the setup in dts rather then using clo=
-ck=0A=
-> consumer API in a clock provider driver.=0A=
-> =0A=
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>=0A=
-> ---=0A=
->   arch/arm64/boot/dts/freescale/imx8mq.dtsi | 34 ++++++++++++++++++++++++=
-+++++++=0A=
->   1 file changed, 34 insertions(+)=0A=
-> =0A=
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/=
-dts/freescale/imx8mq.dtsi=0A=
-> index d09b808..e0abe02 100644=0A=
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi=0A=
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi=0A=
-> @@ -489,6 +489,40 @@=0A=
-=0A=
-> +					<&clk IMX8MQ_CLK_PCIE1_CTRL>,=0A=
-> +					<&clk IMX8MQ_CLK_PCIE1_PHY>,=0A=
-> +					<&clk IMX8MQ_CLK_PCIE2_CTRL>,=0A=
-> +					<&clk IMX8MQ_CLK_PCIE2_PHY>,=0A=
-> +					<&clk IMX8MQ_CLK_CSI1_CORE>,=0A=
-> +					<&clk IMX8MQ_CLK_CSI1_PHY_REF>,=0A=
-> +					<&clk IMX8MQ_CLK_CSI1_ESC>,=0A=
-> +					<&clk IMX8MQ_CLK_CSI2_CORE>,=0A=
-> +					<&clk IMX8MQ_CLK_CSI2_PHY_REF>,=0A=
-> +					<&clk IMX8MQ_CLK_CSI2_ESC>;=0A=
-=0A=
-This stuff (and NAND) looks like it would belong to device nodes instead.=
-=0A=
-=0A=
-The rest seem fine though I'm not sure why exactly those clks are =0A=
-adjusted in vendor tree.=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+On Tue, Jun 25, 2019 at 2:26 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Tue, Jun 25, 2019 at 12:47 AM Rob Herring <robh@kernel.org> wrote:
+> > On Mon, Jun 24, 2019 at 4:13 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > On Mon, Jun 24, 2019 at 11:59 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > > Convert the tpo,tpg110 panel binding to DT schema.
+> > > >
+> > > > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > > > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > > Cc: dri-devel@lists.freedesktop.org
+> > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > >
+> > > Awesome, fixed up the MAINATINERS entry and applied and
+> > > pushed for DRM next with my Reviewed-by.
+> >
+> > You shouldn't have because this is dependent on patch 2 and
+> > panel-common.yaml. So now 'make dt_binding_check' is broken.
+>
+> Ooops easily happens when I am only adressee on this patch and
+> there is no mention of any dependencies.
+
+It's a series. I would assume the default is 1 person applies a series
+unless explicitly stated otherwise.
+
+> Can I simply just merge the panel-common patch as well and we
+> are all happy?
+
+I have drm-misc commit rights too, so I'll apply the whole lot when it's ready.
+
+> I can also pick up more panel binding patches, IMO the yaml
+> conversions are especially uncontroversial and should have low
+> threshold for merging.
+
+Yes, but the threshold is at least 'make dt_binding_check' should not
+break. But don't worry, there are 2 other breakages in linux-next
+currently.
+
+Rob
