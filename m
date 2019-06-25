@@ -1,76 +1,56 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH RESEND V2 1/3] clocksource/drivers/sysctr: Add optional
- clock-frequency property
-Date: Tue, 25 Jun 2019 23:12:35 +0200
-Message-ID: <55abafbd-c010-32b5-6d76-26040830d5b0@linaro.org>
-References: <20190623123850.22584-1-Anson.Huang@nxp.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 3/4] dt-bindings: display/panel: jh057n0090: Document
+ power supply properties
+Date: Tue, 25 Jun 2019 23:18:45 +0200
+Message-ID: <20190625211845.GA20625@ravnborg.org>
+References: <cover.1561482165.git.agx@sigxcpu.org>
+ <5ebbc0cf3fc8fcfd0300fb4d81be5acae156a4d4.1561482165.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190623123850.22584-1-Anson.Huang@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <5ebbc0cf3fc8fcfd0300fb4d81be5acae156a4d4.1561482165.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, abel.vesa@nxp.com, ccaione@baylibre.com, angus@akkea.ca, andrew.smirnov@gmail.com, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Linux-imx@nxp.com
+To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
-On 23/06/2019 14:38, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> Systems which use platform driver model for clock driver require the
-> clock frequency to be supplied via device tree when system counter
-> driver is enabled.
-> 
-> This is necessary as in the platform driver model the of_clk operations
-> do not work correctly because system counter driver is initialized in
-> early phase of system boot up, and clock driver using platform driver
-> model is NOT ready at that time, it will cause system counter driver
-> initialization failed.
-> 
-> Add the optinal clock-frequency to the device tree bindings of the NXP
-> system counter, so the frequency can be handed in and the of_clk
-> operations can be skipped.
+On Tue, Jun 25, 2019 at 07:05:18PM +0200, Guido Günther wrote:
+> Document the vcc-supply and iovcc-supply propertes of the Rocktech
+> jh057n0090 panel.
+s/propertes/properties
+s/jh057n0090/jh057n00900
 
-Isn't it possible to create a fixed-clock and refer to it? So no need to
-create a specific action before calling timer_of_init() ?
-
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
-> 	- improve commit log, no content change.
-> ---
->  Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+With these fixed:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 > 
-> diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-> index d576599..c9907a0 100644
-> --- a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-> +++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-> @@ -14,6 +14,11 @@ Required properties:
->  - clocks : 	    Specifies the counter clock.
->  - clock-names: 	    Specifies the clock's name of this module
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>  .../bindings/display/panel/rocktech,jh057n00900.txt          | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+> index 1b5763200cf6..a372c5d84695 100644
+> --- a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+> @@ -5,6 +5,9 @@ Required properties:
+>  - reg: DSI virtual channel of the peripheral
+>  - reset-gpios: panel reset gpio
+>  - backlight: phandle of the backlight device attached to the panel
+> +- vcc-supply: phandle of the regulator that provides the vcc supply voltage.
+> +- iovcc-supply: phandle of the regulator that provides the iovcc supply
+> +  voltage.
 >  
-> +Optional properties:
-> +
-> +- clock-frequency : Specifies system counter clock frequency and indicates system
-> +		    counter driver to skip clock operations.
-> +
 >  Example:
 >  
->  	system_counter: timer@306a0000 {
-> @@ -22,4 +27,5 @@ Example:
->  		clocks = <&clk_8m>;
->  		clock-names = "per";
->  		interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-> +		clock-frequency = <8333333>;
+> @@ -14,5 +17,7 @@ Example:
+>  			reg = <0>;
+>  			backlight = <&backlight>;
+>  			reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
+> +			vcc-supply = <&reg_2v8_p>;
+> +			iovcc-supply = <&reg_1v8_p>;
+>  		};
 >  	};
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org â”‚ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> -- 
+> 2.20.1
