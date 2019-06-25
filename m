@@ -1,151 +1,151 @@
-From: Johannes Berg <johannes@sipsolutions.net>
-Subject: Re: WWAN Controller Framework (was IPA [PATCH v2 00/17])
-Date: Tue, 25 Jun 2019 16:34:38 +0200
-Message-ID: <f1243295f088b70d48e4b832a28f79c0cd84ca1c.camel@sipsolutions.net>
-References: <20190531035348.7194-1-elder@linaro.org>
-         <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
-         <6dae9d1c-ceae-7e88-fe61-f4cda82820ea@linaro.org>
-         (sfid-20190624_190620_354118_89F0D47F)
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+Date: Tue, 25 Jun 2019 09:36:34 -0500
+Message-ID: <CABb+yY38MAZqVOhjyV+GByPvpFcTfKbNG1rJ8YDRd1vi1F4fqg@mail.gmail.com>
+References: <20190603083005.4304-1-peng.fan@nxp.com> <20190603083005.4304-3-peng.fan@nxp.com>
+ <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com> <AM0PR04MB44813A4DE544E53EB7B6F02B88E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6dae9d1c-ceae-7e88-fe61-f4cda82820ea@linaro.org> (sfid-20190624_190620_354118_89F0D47F)
+In-Reply-To: <AM0PR04MB44813A4DE544E53EB7B6F02B88E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Elder <elder@linaro.org>, davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org, Dan Williams <dcbw@redhat.com>
-Cc: evgreen@chromium.org, benchan@google.com, ejcaruso@google.com, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, ", Sascha Hauer" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Andre Przywara <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-06-24 at 12:06 -0500, Alex Elder wrote:
-
-> > OK I want to try to organize a little more concisely some of the
-> > discussion on this, because there is a very large amount of volume
-> > to date and I think we need to try to narrow the focus back down
-> > again.
-
-Sounds good to me!
-
-> > I'm going to use a few terms here.  Some of these I really don't
-> > like, but I want to be unambiguous *and* (at least for now) I want
-> > to avoid the very overloaded term "device".
-> > 
-> > I have lots more to say, but let's start with a top-level picture,
-> > to make sure we're all on the same page.
-> > 
-> >          WWAN Communication
-> >          Channel (Physical)
-> >                  |     ------------------------
-> > ------------     v     |           :+ Control |  \
-> > >          |-----------|           :+ Data    |  |
-> > >    AP    |           | WWAN unit :+ Voice   |   > Functions
-> > >          |===========|           :+ GPS     |  |
-> > 
-> > ------------     ^     |           :+ ...     |  /
-> >                  |     -------------------------
-> >           Multiplexed WWAN
-> >            Communication
-> >          Channel (Physical)
-
-Sounds right to me. I'm not sure if you're distinguishing here between
-the "Data function" and multiple data channels to the data function, but
-at this point I guess it doesn't matter.
-
-> > - The *AP* is the main CPU complex that's running Linux on one or
-> >   more CPU cores.
-> > - A *WWAN unit* is an entity that shares one or more physical
-> >   *WWAN communication channels* with the AP.
-> > - A *WWAN communication channel* is a bidirectional means of
-> >   carrying data between the AP and WWAN unit.
-> > - A WWAN communication channel carries data using a *WWAN protocol*.
-> > - A WWAN unit implements one or more *WWAN functions*, such as
-> >   5G data, LTE voice, GPS, and so on.
-> > - A WWAN unit shall implement a *WWAN control function*, used to
-> >   manage the use of other WWAN functions, as well as the WWAN unit
-> >   itself.
-
-I think here we need to be more careful. I don't know how you want to
-call it, but we actually have multiple levels of control here.
-
-You have
- * hardware control, to control how you actually use the (multiple or
-   not) physical communication channel(s) to the WWAN unit
- * this is partially exposed to userspace via the WWAN netlink family or
-   something like that, so userspace can create new netdevs to tx/rx
-   with the "data function" and to the network; note that it could be
-   one or multiple
- * WWAN control, which is typically userspace communicating with the
-   WWAN control function in the WWAN unit, but this can take different
-   forms (as I mentioned earlier, e.g. AT commands, MBIM, QMI)
-
-> > - The AP communicates with a WWAN function using a WWAN protocol.
-
-Right, that's just device specific (IPA vs. Intel vs. ...)
-
-> > - A WWAN physical channel can be *multiplexed*, in which case it
-> >   carries the data for one or more *WWAN logical channels*.
-
-This ... depends a bit on how you exactly define a physical channel
-here. Is that, to you, the PCIe/USB link? In that case, yes, obviously
-you have only one physical channel for each WWAN unit.
-
-However, I'd probably see this slightly differently, because e.g. the
-Intel modem has multiple DMA engines, and so you actually have multiple
-DMA rings to talk to the WWAN unit, and I'd have called each DMA ring a
-physical channel. And then, you just have a 1:1 from physical to logical
-channel since it doesn't actually carry a multiplexing protocol.
-
-> > - A multiplexed WWAN communication channel uses a *WWAN wultiplexing
-> >   protocol*, which is used to separate independent data streams
-> >   carrying other WWAN protocols.
-
-Like just described, this isn't really needed and is a device-specific
-property.
-
-> > - A WWAN logical channel carries a bidirectional stream of WWAN
-> >   protocol data between an entity on the AP and a WWAN function.
-> > 
-> > Does that adequately represent a very high-level picture of what
-> > we're trying to manage?
-
-Pretty much.
-
-I only disagree slightly on the control planes (there are multiple, and
-multiple options for the "Control function" one), and on the whole
-notion of physical link/logical link/multiplexing which is device
-specific.
-
-> > And if I understand it right, the purpose of the generic framework
-> > being discussed is to define a common mechanism for managing (i.e.,
-> > discovering, creating, destroying, querying, configuring, enabling,
-> > disabling, etc.) WWAN units and the functions they implement, along
-> > with the communication and logical channels used to communicate with
-> > them.
-
-Well, some subset of that matrix, the framework won't actually destroy
-WWAN units I hope ;-)
-
-But yes. I'd probably captured it in layers, and say that we have a
-
-WWAN framework layer
- - discover, query, configure WWAN units
- - enable, disable channels to the functions inside the WWAN units
-
-WWAN device driver
- - implement (partial) API offered by WWAN framework layer to allow
-   these things
-   (sometimes may not allow creating more control or data channels for
-   example, and fixed function channels are precreated, but then can
-   still discover data about the device and configure the channels
- - implement the device-specific protocols etc. necessary to achieve
-   this
-
-Userspace
- - uses control function channel (e.g. TTY) to talk directly to the WWAN
-   unit's control function
- - uses WWAN framework APIs to create/configure/... (other) function
-   channels
-   (it may be necessary to create a control channel even, before being
-   able to use it, since different options (AT/MBIM/QMI) may be there
- - configures netdevs (data function channels) after their creation
-
-johannes
+On Tue, Jun 25, 2019 at 2:30 AM Peng Fan <peng.fan@nxp.com> wrote:
+>
+> Hi Jassi
+>
+> > Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+> >
+> > On Mon, Jun 3, 2019 at 3:28 AM <peng.fan@nxp.com> wrote:
+> > >
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > This mailbox driver implements a mailbox which signals transmitted
+> > > data via an ARM smc (secure monitor call) instruction. The mailbox
+> > > receiver is implemented in firmware and can synchronously return data
+> > > when it returns execution to the non-secure world again.
+> > > An asynchronous receive path is not implemented.
+> > > This allows the usage of a mailbox to trigger firmware actions on SoCs
+> > > which either don't have a separate management processor or on which
+> > > such a core is not available. A user of this mailbox could be the SCP
+> > > interface.
+> > >
+> > > Modified from Andre Przywara's v2 patch
+> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore
+> > > .kernel.org%2Fpatchwork%2Fpatch%2F812999%2F&amp;data=02%7C01%7
+> > Cpeng.fa
+> > >
+> > n%40nxp.com%7C1237677cb01044ad714508d6f59f648f%7C686ea1d3bc2b4
+> > c6fa92cd
+> > >
+> > 99c5c301635%7C0%7C0%7C636966462272457978&amp;sdata=Hzgeu43m5
+> > ZkeRMtL8Bx
+> > > gUm3%2B6FBObib1OPHPlSccE%2B0%3D&amp;reserved=0
+> > >
+> > > Cc: Andre Przywara <andre.przywara@arm.com>
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >
+> > > V2:
+> > >  Add interrupts notification support.
+> > >
+> > >  drivers/mailbox/Kconfig                 |   7 ++
+> > >  drivers/mailbox/Makefile                |   2 +
+> > >  drivers/mailbox/arm-smc-mailbox.c       | 190
+> > ++++++++++++++++++++++++++++++++
+> > >  include/linux/mailbox/arm-smc-mailbox.h |  10 ++
+> > >  4 files changed, 209 insertions(+)
+> > >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create mode
+> > > 100644 include/linux/mailbox/arm-smc-mailbox.h
+> > >
+> > > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig index
+> > > 595542bfae85..c3bd0f1ddcd8 100644
+> > > --- a/drivers/mailbox/Kconfig
+> > > +++ b/drivers/mailbox/Kconfig
+> > > @@ -15,6 +15,13 @@ config ARM_MHU
+> > >           The controller has 3 mailbox channels, the last of which can be
+> > >           used in Secure mode only.
+> > >
+> > > +config ARM_SMC_MBOX
+> > > +       tristate "Generic ARM smc mailbox"
+> > > +       depends on OF && HAVE_ARM_SMCCC
+> > > +       help
+> > > +         Generic mailbox driver which uses ARM smc calls to call into
+> > > +         firmware for triggering mailboxes.
+> > > +
+> > >  config IMX_MBOX
+> > >         tristate "i.MX Mailbox"
+> > >         depends on ARCH_MXC || COMPILE_TEST diff --git
+> > > a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile index
+> > > c22fad6f696b..93918a84c91b 100644
+> > > --- a/drivers/mailbox/Makefile
+> > > +++ b/drivers/mailbox/Makefile
+> > > @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)      += mailbox-test.o
+> > >
+> > >  obj-$(CONFIG_ARM_MHU)  += arm_mhu.o
+> > >
+> > > +obj-$(CONFIG_ARM_SMC_MBOX)     += arm-smc-mailbox.o
+> > > +
+> > >  obj-$(CONFIG_IMX_MBOX) += imx-mailbox.o
+> > >
+> > >  obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)    +=
+> > armada-37xx-rwtm-mailbox.o
+> > > diff --git a/drivers/mailbox/arm-smc-mailbox.c
+> > > b/drivers/mailbox/arm-smc-mailbox.c
+> > > new file mode 100644
+> > > index 000000000000..fef6e38d8b98
+> > > --- /dev/null
+> > > +++ b/drivers/mailbox/arm-smc-mailbox.c
+> > > @@ -0,0 +1,190 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright (C) 2016,2017 ARM Ltd.
+> > > + * Copyright 2019 NXP
+> > > + */
+> > > +
+> > > +#include <linux/arm-smccc.h>
+> > > +#include <linux/device.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/mailbox_controller.h> #include
+> > > +<linux/mailbox/arm-smc-mailbox.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/platform_device.h>
+> > > +
+> > > +#define ARM_SMC_MBOX_USE_HVC   BIT(0)
+> > > +#define ARM_SMC_MBOX_USB_IRQ   BIT(1)
+> > > +
+> > IRQ bit is unused (and unnecessary IMO)
+> >
+> > > +struct arm_smc_chan_data {
+> > > +       u32 function_id;
+> > > +       u32 flags;
+> > > +       int irq;
+> > > +};
+> > > +
+> > > +static int arm_smc_send_data(struct mbox_chan *link, void *data) {
+> > > +       struct arm_smc_chan_data *chan_data = link->con_priv;
+> > > +       struct arm_smccc_mbox_cmd *cmd = data;
+> > > +       struct arm_smccc_res res;
+> > > +       u32 function_id;
+> > > +
+> > > +       if (chan_data->function_id != UINT_MAX)
+> > > +               function_id = chan_data->function_id;
+> > > +       else
+> > > +               function_id = cmd->a0;
+> > > +
+> > Not sure about chan_data->function_id.  Why restrict from DT?
+> > 'a0' is the function_id register, let the user pass func-id via the 'a0' like other
+> > values via 'a[1-7]'
+>
+> Missed to reply this comment.
+>
+> The firmware driver might not have func-id, such as SCMI/SCPI.
+> So add an optional func-id to let smc mailbox driver could
+> use smc SiP func id.
+>
+There is no end to conforming to protocols. Controller drivers should
+be written having no particular client in mind.
