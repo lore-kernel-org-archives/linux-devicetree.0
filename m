@@ -1,100 +1,43 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH] riscv: dts: Re-organize the DT nodes
-Date: Tue, 25 Jun 2019 15:01:31 +0530
-Message-ID: <1561455091-29488-1-git-send-email-yash.shah@sifive.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 6/9] dt-bindings: i2c: at91: add binding for
+ enable-ana-filt
+Date: Tue, 25 Jun 2019 11:31:56 +0200
+Message-ID: <20190625093156.GF5690@piout.net>
+References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
+ <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
+ <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
+ <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, paul.walmsley@sifive.com, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
+To: Eugen.Hristev@microchip.com
+Cc: peda@axentia.se, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As per the convention for any SOC device with external connection,
-define only device DT node in SOC DTSi file with status = "disabled"
-and enable device in Board DTS file with status = "okay"
+On 25/06/2019 09:14:13+0000, Eugen.Hristev@microchip.com wrote:
+> > Perhaps
+> > 
+> > 	microchip,digital-filter;
+> > 	microchip,analog-filter;
+> > 
+> > ?
+> 
+> Hi Peter,
+> 
+> Thanks for reviewing. The name of the property does not matter much to 
+> me, and we have properties prefixed with vendor, and some are not.
+> 
+> @Alexandre Belloni: which name you think it's best ?
+> 
 
-Reported-by: Anup Patel <anup@brainfault.org>
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi          |  6 ++++++
- arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 13 +++++++++++++
- 2 files changed, 19 insertions(+)
+I'm not sure, it depends on whether Wolfram thinks it is generic enough
+to be used without a vendor prefix.
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 4e8fbde..cc73522 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -177,6 +177,7 @@
- 			interrupt-parent = <&plic0>;
- 			interrupts = <4>;
- 			clocks = <&prci PRCI_CLK_TLCLK>;
-+			status = "disabled";
- 		};
- 		uart1: serial@10011000 {
- 			compatible = "sifive,fu540-c000-uart", "sifive,uart0";
-@@ -184,6 +185,7 @@
- 			interrupt-parent = <&plic0>;
- 			interrupts = <5>;
- 			clocks = <&prci PRCI_CLK_TLCLK>;
-+			status = "disabled";
- 		};
- 		i2c0: i2c@10030000 {
- 			compatible = "sifive,fu540-c000-i2c", "sifive,i2c0";
-@@ -195,6 +197,7 @@
- 			reg-io-width = <1>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			status = "disabled";
- 		};
- 		qspi0: spi@10040000 {
- 			compatible = "sifive,fu540-c000-spi", "sifive,spi0";
-@@ -205,6 +208,7 @@
- 			clocks = <&prci PRCI_CLK_TLCLK>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			status = "disabled";
- 		};
- 		qspi1: spi@10041000 {
- 			compatible = "sifive,fu540-c000-spi", "sifive,spi0";
-@@ -215,6 +219,7 @@
- 			clocks = <&prci PRCI_CLK_TLCLK>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			status = "disabled";
- 		};
- 		qspi2: spi@10050000 {
- 			compatible = "sifive,fu540-c000-spi", "sifive,spi0";
-@@ -224,6 +229,7 @@
- 			clocks = <&prci PRCI_CLK_TLCLK>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			status = "disabled";
- 		};
- 	};
- };
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-index 4da8870..0b55c53 100644
---- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-@@ -42,7 +42,20 @@
- 	};
- };
- 
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+};
-+
- &qspi0 {
-+	status = "okay";
- 	flash@0 {
- 		compatible = "issi,is25wp256", "jedec,spi-nor";
- 		reg = <0>;
+
 -- 
-1.9.1
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
