@@ -1,48 +1,83 @@
 From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Subject: [PATCH 2/4] drm/panel: jh057n0090: Don't use magic constant
-Date: Tue, 25 Jun 2019 19:05:17 +0200
-Message-ID: <ec1993368dba4e6ec1c72faa9c7bb25cf8ca95d3.1561482165.git.agx@sigxcpu.org>
+Subject: [PATCH 4/4] drm/panel: jh057n0090: Add regulator support
+Date: Tue, 25 Jun 2019 19:05:19 +0200
+Message-ID: <b239f1db7a1f67988a9bd1ed62f6a1cf1dce944c.1561482165.git.agx@sigxcpu.org>
 References: <cover.1561482165.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1561482165.git.agx@sigxcpu.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
-MHhCRiBpc24ndCBpbiBhbnkgU1Q3NzAzIGRhdGEgc2hlZXQgc28gbWFyayBpdCBhcyB1bmtub3du
-LiBUaGlzIGF2b2lkcwpjb25mdXNpb24gb24gd2hldGhlciB0aGVyZSBpcyBhIG1pc3NpbmcgY29t
-bWFuZCBpbiB0aGF0CmRzaV9nZW5lcmljX3dyaXRlX3NlcSgpIGNhbGwuCgpTaWduZWQtb2ZmLWJ5
-OiBHdWlkbyBHw7xudGhlciA8YWd4QHNpZ3hjcHUub3JnPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9w
-YW5lbC9wYW5lbC1yb2NrdGVjaC1qaDA1N24wMDkwMC5jIHwgMyArKy0KIDEgZmlsZSBjaGFuZ2Vk
-LCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vcGFuZWwvcGFuZWwtcm9ja3RlY2gtamgwNTduMDA5MDAuYyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9wYW5lbC9wYW5lbC1yb2NrdGVjaC1qaDA1N24wMDkwMC5jCmluZGV4IDZkY2I2OTJjNDcwMS4u
-YjhhMDY5MDU1ZmJjIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtcm9j
-a3RlY2gtamgwNTduMDA5MDAuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtcm9j
-a3RlY2gtamgwNTduMDA5MDAuYwpAQCAtMzMsNiArMzMsNyBAQAogI2RlZmluZSBTVDc3MDNfQ01E
-X1NFVEVYVEMJIDB4QjkKICNkZWZpbmUgU1Q3NzAzX0NNRF9TRVRNSVBJCSAweEJBCiAjZGVmaW5l
-IFNUNzcwM19DTURfU0VUVkRDCSAweEJDCisjZGVmaW5lIFNUNzcwM19DTURfVU5LTk9XTjAJIDB4
-QkYKICNkZWZpbmUgU1Q3NzAzX0NNRF9TRVRTQ1IJIDB4QzAKICNkZWZpbmUgU1Q3NzAzX0NNRF9T
-RVRQT1dFUgkgMHhDMQogI2RlZmluZSBTVDc3MDNfQ01EX1NFVFBBTkVMCSAweENDCkBAIC05NCw3
-ICs5NSw3IEBAIHN0YXRpYyBpbnQgamgwNTduX2luaXRfc2VxdWVuY2Uoc3RydWN0IGpoMDU3biAq
-Y3R4KQogCW1zbGVlcCgyMCk7CiAKIAlkc2lfZ2VuZXJpY193cml0ZV9zZXEoZHNpLCBTVDc3MDNf
-Q01EX1NFVFZDT00sIDB4M0YsIDB4M0YpOwotCWRzaV9nZW5lcmljX3dyaXRlX3NlcShkc2ksIDB4
-QkYsIDB4MDIsIDB4MTEsIDB4MDApOworCWRzaV9nZW5lcmljX3dyaXRlX3NlcShkc2ksIFNUNzcw
-M19DTURfVU5LTk9XTjAsIDB4MDIsIDB4MTEsIDB4MDApOwogCWRzaV9nZW5lcmljX3dyaXRlX3Nl
-cShkc2ksIFNUNzcwM19DTURfU0VUR0lQMSwKIAkJCSAgICAgIDB4ODIsIDB4MTAsIDB4MDYsIDB4
-MDUsIDB4OUUsIDB4MEEsIDB4QTUsIDB4MTIsCiAJCQkgICAgICAweDMxLCAweDIzLCAweDM3LCAw
-eDgzLCAweDA0LCAweEJDLCAweDI3LCAweDM4LAotLSAKMi4yMC4xCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Allow to specify regulators for vcc and iovcc. According to the data
+sheet the panel wants vcc (2.8V) and iovcc (1.8V) and there's no startup
+dependency between the two.
+
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ .../drm/panel/panel-rocktech-jh057n00900.c    | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+index b8a069055fbc..f8f6f087b9bc 100644
+--- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
++++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+@@ -15,6 +15,7 @@
+ #include <linux/gpio/consumer.h>
+ #include <linux/media-bus-format.h>
+ #include <linux/module.h>
++#include <linux/regulator/consumer.h>
+ #include <video/display_timing.h>
+ #include <video/mipi_display.h>
+ 
+@@ -47,6 +48,8 @@ struct jh057n {
+ 	struct drm_panel panel;
+ 	struct gpio_desc *reset_gpio;
+ 	struct backlight_device *backlight;
++	struct regulator *vcc;
++	struct regulator *iovcc;
+ 	bool prepared;
+ 
+ 	struct dentry *debugfs;
+@@ -160,6 +163,8 @@ static int jh057n_unprepare(struct drm_panel *panel)
+ 		return 0;
+ 
+ 	mipi_dsi_dcs_set_display_off(dsi);
++	regulator_disable(ctx->iovcc);
++	regulator_disable(ctx->vcc);
+ 	ctx->prepared = false;
+ 
+ 	return 0;
+@@ -174,6 +179,13 @@ static int jh057n_prepare(struct drm_panel *panel)
+ 		return 0;
+ 
+ 	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel\n");
++	ret = regulator_enable(ctx->vcc);
++	if (ret < 0)
++		return ret;
++	ret = regulator_enable(ctx->iovcc);
++	if (ret < 0)
++		return ret;
++
+ 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+ 	usleep_range(20, 40);
+ 	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+@@ -301,6 +313,13 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
+ 	if (IS_ERR(ctx->backlight))
+ 		return PTR_ERR(ctx->backlight);
+ 
++	ctx->vcc = devm_regulator_get(dev, "vcc");
++	if (IS_ERR(ctx->vcc))
++		return PTR_ERR(ctx->vcc);
++	ctx->iovcc = devm_regulator_get(dev, "iovcc");
++	if (IS_ERR(ctx->iovcc))
++		return PTR_ERR(ctx->iovcc);
++
+ 	drm_panel_init(&ctx->panel);
+ 	ctx->panel.dev = dev;
+ 	ctx->panel.funcs = &jh057n_drm_funcs;
+-- 
+2.20.1
