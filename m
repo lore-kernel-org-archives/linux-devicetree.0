@@ -1,41 +1,30 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 07/15] dt-bindings: display: Convert pda,91-00156-a0
- panel to DT schema
-Date: Tue, 25 Jun 2019 09:56:00 +0200
-Message-ID: <20190625075600.bqk7si7ljrp3wziv@flea>
+Subject: Re: [PATCH v2 08/15] dt-bindings: display: Convert
+ raspberrypi,7inch-touchscreen panel to DT schema
+Date: Tue, 25 Jun 2019 09:56:54 +0200
+Message-ID: <20190625075654.igm2yveodkpzays4@flea>
 References: <20190624215649.8939-1-robh@kernel.org>
- <20190624215649.8939-8-robh@kernel.org>
+ <20190624215649.8939-9-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0456492500=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190624215649.8939-8-robh@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mq7niu5ik2hotkzq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190624215649.8939-9-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sam Ravnborg <sam@ravnborg.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
 
---===============0456492500==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tetcemb75nz6lnkc"
-Content-Disposition: inline
-
-
---tetcemb75nz6lnkc
+--mq7niu5ik2hotkzq
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Jun 24, 2019 at 03:56:41PM -0600, Rob Herring wrote:
-> Convert the pda,91-00156-a0 panel binding to DT schema.
+On Mon, Jun 24, 2019 at 03:56:42PM -0600, Rob Herring wrote:
+> Convert the raspberrypi,7inch-touchscreen panel binding to DT schema.
 >
+> Cc: Eric Anholt <eric@anholt.net>
 > Cc: Thierry Reding <thierry.reding@gmail.com>
 > Cc: Sam Ravnborg <sam@ravnborg.org>
 > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
@@ -52,27 +41,15 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---tetcemb75nz6lnkc
+--mq7niu5ik2hotkzq
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRHTkAAKCRDj7w1vZxhR
-xbsHAQC+DItZS8FM/IwhhvjelXnaAO1PLBHqZkJhMjEYsWx2ZAEA05KkRSEAsqUQ
-xN5fn1gOLC4Ji1f0HZpTRyEo8fAcwQQ=
-=KgYT
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRHTxgAKCRDj7w1vZxhR
+xRiuAQC0hhwO4GcEwR2wlvS/0Zkgwy5BmuSOS80WbeehE6oCzQD+MNGVXo4UvKZm
+0uBgdxhxrT0uaxpYu1Qs16nyUld7IwI=
+=cKd6
 -----END PGP SIGNATURE-----
 
---tetcemb75nz6lnkc--
-
---===============0456492500==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============0456492500==--
+--mq7niu5ik2hotkzq--
