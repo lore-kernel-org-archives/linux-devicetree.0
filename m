@@ -1,80 +1,57 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH v3 00/14] Support CPU frequency scaling on QCS404
-Date: Tue, 25 Jun 2019 18:47:19 +0200
-Message-ID: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v3 02/14] mbox: qcom: add APCS child device for QCS404
+Date: Tue, 25 Jun 2019 18:47:21 +0200
+Message-ID: <20190625164733.11091-3-jorge.ramirez-ortiz@linaro.org>
+References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, sibis@codeaurora.org, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net
 Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-The following patchset enables CPU frequency scaling support on the
-QCS404 (with dynamic voltage scaling).
+There is clock controller functionality in the APCS hardware block of
+qcs404 devices similar to msm8916.
 
-Patch 8 "clk: qcom: hfpll: CLK_IGNORE_UNUSED" is a bit controversial;
-in this platform, this PLL provides the clock signal to a CPU
-core. But in others it might not.
+Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+---
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-We opted for the minimal ammount of changes without affecting the
-default functionality: simply bypassing the COMMON_CLK_DISABLE_UNUSED
-framework and letting the firwmare chose whether to enable or disable
-the clock at boot. However maybe a DT property and marking the clock
-as critical would be more appropriate for this PLL. we'd appreciate the
-maintainer's input on this topic.
-
-v2:
-   - dts: ms8916: apcs mux/divider: new bindings
-     (the driver can still support the old bindings)
-     
-   - qcs404.dtsi
-     fix apcs-hfpll definition
-     fix cpu_opp_table definition
-     
-   - GPLL0_AO_OUT operating frequency
-     define new alpha_pll_fixed_ops to limit the operating frequency
-
-v3:
-  - qcom-apcs-ipc-mailbox
-    replace goto to ease readability
-    
-  - apcs-msm8916.c
-    rework patch to use of_clk_parent_fill
-
-  - hfpll.c
-    add relevant comments to the code
-
-  - qcs404.dtsi
-    add voltage scaling support
-
-Jorge Ramirez-Ortiz (14):
-  clk: qcom: gcc: limit GPLL0_AO_OUT operating frequency
-  mbox: qcom: add APCS child device for QCS404
-  mbox: qcom: replace integer with valid macro
-  dt-bindings: mailbox: qcom: Add clock-name optional property
-  clk: qcom: apcs-msm8916: get parent clock names from DT
-  clk: qcom: hfpll: get parent clock names from DT
-  clk: qcom: hfpll: register as clock provider
-  clk: qcom: hfpll: CLK_IGNORE_UNUSED
-  arm64: dts: qcom: msm8916: Add the clocks for the APCS mux/divider
-  arm64: dts: qcom: qcs404: Add OPP table
-  arm64: dts: qcom: qcs404: Add HFPLL node
-  arm64: dts: qcom: qcs404: Add the clocks for APCS mux/divider
-  arm64: dts: qcom: qcs404: Add DVFS support
-  arm64: defconfig: Enable HFPLL
-
- .../mailbox/qcom,apcs-kpss-global.txt         | 24 +++++++++--
- arch/arm64/boot/dts/qcom/msm8916.dtsi         |  3 +-
- arch/arm64/boot/dts/qcom/qcs404.dtsi          | 42 +++++++++++++++++++
- arch/arm64/configs/defconfig                  |  1 +
- drivers/clk/qcom/apcs-msm8916.c               | 23 ++++++++--
- drivers/clk/qcom/clk-alpha-pll.c              |  8 ++++
- drivers/clk/qcom/clk-alpha-pll.h              |  1 +
- drivers/clk/qcom/gcc-qcs404.c                 |  2 +-
- drivers/clk/qcom/hfpll.c                      | 25 ++++++++++-
- drivers/mailbox/qcom-apcs-ipc-mailbox.c       | 18 ++++----
- 10 files changed, 130 insertions(+), 17 deletions(-)
-
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index 705e17a5479c..a05dc3aabac7 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -89,16 +89,18 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
+-		apcs->clk = platform_device_register_data(&pdev->dev,
+-							  "qcom-apcs-msm8916-clk",
+-							  -1, NULL, 0);
+-		if (IS_ERR(apcs->clk))
+-			dev_err(&pdev->dev, "failed to register APCS clk\n");
+-	}
+-
+ 	platform_set_drvdata(pdev, apcs);
+ 
++	if (!of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global") &&
++	    !of_device_is_compatible(np, "qcom,qcs404-apcs-apps-global"))
++		return 0;
++
++	apcs->clk = platform_device_register_data(&pdev->dev,
++						  "qcom-apcs-msm8916-clk",
++						  -1, NULL, 0);
++	if (IS_ERR(apcs->clk))
++		dev_err(&pdev->dev, "failed to register APCS clk\n");
++
+ 	return 0;
+ }
+ 
 -- 
 2.21.0
