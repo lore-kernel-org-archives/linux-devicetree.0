@@ -1,51 +1,43 @@
-From: Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH v5 07/18] kunit: test: add initial tests
-Date: Tue, 25 Jun 2019 23:22:49 +0000
-Message-ID: <20190625232249.GS19023@42.do-not-panic.com>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-8-brendanhiggins@google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v13 05/13] clk: ingenic: Add driver for the TCU clocks
+Date: Tue, 25 Jun 2019 16:28:20 -0700
+Message-ID: <20190625232820.D1D4A20645@mail.kernel.org>
+References: <20190624225759.18299-1-paul@crapouillou.net> <20190624225759.18299-6-paul@crapouillou.net> <20190625220931.2F69B2086D@mail.kernel.org> <1561502227.10069.1@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190617082613.109131-8-brendanhiggins@google.com>
+In-Reply-To: <1561502227.10069.1@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerma
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, James Hogan <jhogan@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Michael Turquette <mturquette@baylibre.com>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Thomas Gleixner <tglx@linutronix.de>, Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 01:26:02AM -0700, Brendan Higgins wrote:
-> diff --git a/kunit/example-test.c b/kunit/example-test.c
-> new file mode 100644
-> index 0000000000000..f44b8ece488bb
-> --- /dev/null
-> +++ b/kunit/example-test.c
+Quoting Paul Cercueil (2019-06-25 15:37:07)
+> >=20
+> > Do you need to get the clk by name? Or can that clk be "known" to the
+> > TCU somehow so we can already have a direct clk pointer?
+>=20
+> This clock is provided by a separate driver, so I have to obtain the
+> clock pointer from devicetree.
 
-<-- snip -->
+Ok.
 
-> +/*
-> + * This defines a suite or grouping of tests.
-> + *
-> + * Test cases are defined as belonging to the suite by adding them to
-> + * `kunit_cases`.
-> + *
-> + * Often it is desirable to run some function which will set up things which
-> + * will be used by every test; this is accomplished with an `init` function
-> + * which runs before each test case is invoked. Similarly, an `exit` function
-> + * may be specified which runs after every test case and can be used to for
-> + * cleanup. For clarity, running tests in a test module would behave as follows:
-> + *
+> >>  +}
+> >>  +
+> >>  +static int __maybe_unused tcu_pm_suspend(void)
+> >>  +{
+> >>  +       struct ingenic_tcu *tcu =3D ingenic_tcu;
+> >>  +
+> >>  +       if (tcu->clk)
+> >>  +               clk_disable(tcu->clk);
+> >=20
+> > Do you need to unprepare? Or it just isn't possible because this is
+> > called from syscore and thus we can't sleep?
+>=20
+> I thought that clk_disable() was enough. We don't actually need to
+> unprepare, do we? And yes, as you pointed out, this call cannot sleep.
 
-To be clear this is not the kernel module init, but rather the kunit
-module init. I think using kmodule would make this clearer to a reader.
-
-> + * module.init(test);
-> + * module.test_case[0](test);
-> + * module.exit(test);
-> + * module.init(test);
-> + * module.test_case[1](test);
-> + * module.exit(test);
-> + * ...;
-> + */
-
-  Luis
+Yeah unprepare isn't necessary, but it will be different on different
+platforms. This is a highly platform specific driver though so I suspect
+this is all fine.
