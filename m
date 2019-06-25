@@ -1,37 +1,73 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH] riscv: dts: Re-organize SPI DT nodes
-Date: Tue, 25 Jun 2019 14:04:56 +0530
-Message-ID: <CAJ2_jOFaS4ZU4m8sE0SFM0sL32Q8fUbg9jbRoEKHU1U2Zqp3YQ@mail.gmail.com>
-References: <1561375453-3135-1-git-send-email-yash.shah@sifive.com> <alpine.DEB.2.21.9999.1906241421550.22820@viisi.sifive.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v6 1/6] dt-bindings: ap806: add the cluster clock node in the syscon file
+Date: Tue, 25 Jun 2019 10:38:24 +0200
+Message-ID: <87blymkqkf.fsf@FE-laptop>
+References: <20190619141539.16884-1-gregory.clement@bootlin.com> <20190619141539.16884-2-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1906241421550.22820@viisi.sifive.com>
+In-Reply-To: <20190619141539.16884-2-gregory.clement@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Sachin Ghadi <sachin.ghadi@sifive.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 2:53 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> On Mon, 24 Jun 2019, Yash Shah wrote:
->
-> > As per the General convention, define only device DT node in SOC DTSi
-> > file with status = "disabled" and enable device in Board DTS file with
-> > status = "okay"
-> >
-> > Reported-by: Anup Patel <anup@brainfault.org>
-> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
->
-> This is a good start, but should also cover the other I/O devices in the
-> chip DT file.  The mandatory internal devices, like the PRCI and PLIC, can
-> stay the way they are.
+Hello Rob,
 
-Ok, I will send another patch which will cover the other I/O devices
-as well.  Please ignore this patch.
-
-- Yash
-
+> Document the device tree binding for the cluster clock controllers found
+> in the Armada 7K/8K SoCs.
 >
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+
+Did you have the opportunity to have a look on this binding ? I think
+that I completely follow your requirement now.
+
+Thanks,
+
+Gregory
+
+> ---
+>  .../arm/marvell/ap806-system-controller.txt   | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 >
-> - Paul
+> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+> index 7b8b8eb0191f..4a3bb9c12312 100644
+> --- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+> +++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+> @@ -143,3 +143,28 @@ ap_syscon1: system-controller@6f8000 {
+>  		#thermal-sensor-cells = <1>;
+>  	};
+>  };
+> +
+> +Cluster clocks:
+> +---------------
+> +
+> +Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
+> +cluster contain up to 2 CPUs running at the same frequency.
+> +
+> +Required properties:
+> +- compatible: must be  "marvell,ap806-cpu-clock";
+> +- #clock-cells : should be set to 1.
+> +- clocks : shall be the input parents clock phandle for the clock.
+> +- reg: register range associated with the cluster clocks
+> +
+> +
+> +ap_syscon1: system-controller@6f8000 {
+> +	compatible = "marvell,armada-ap806-syscon1", "syscon", "simple-mfd";
+> +	reg = <0x6f8000 0x1000>;
+> +
+> +	cpu_clk: clock-cpu@0 {
+> +		compatible = "marvell,ap806-cpu-clock";
+> +		clocks = <&ap_clk 0>, <&ap_clk 1>;
+> +		#clock-cells = <1>;
+> +		reg = <0x274 0xa30>;
+> +	};
+> +};
+> -- 
+> 2.20.1
+>
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
