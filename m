@@ -1,7 +1,7 @@
 From: yibin.gong@nxp.com
-Subject: [PATCH v5 6/6] ARM: dts: imx7ulp: add edma device node
-Date: Tue, 25 Jun 2019 17:43:24 +0800
-Message-ID: <20190625094324.19196-7-yibin.gong@nxp.com>
+Subject: [PATCH v5 4/6] dt-bindings: dma: fsl-edma: add new i.mx7ulp-edma
+Date: Tue, 25 Jun 2019 17:43:22 +0800
+Message-ID: <20190625094324.19196-5-yibin.gong@nxp.com>
 References: <20190625094324.19196-1-yibin.gong@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190625094324.19196-1-yibin.gong@nxp.com>
@@ -12,51 +12,95 @@ List-Id: devicetree@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-Add edma device node in dts.
+More channel interrupts, one more clock, and only one
+dmamux on i.mx7ulp-edma.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- arch/arm/boot/dts/imx7ulp.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ Documentation/devicetree/bindings/dma/fsl-edma.txt | 44 +++++++++++++++++++---
+ 1 file changed, 39 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-index dc5bc32..97496cf 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -123,6 +123,34 @@
- 			};
- 		};
+diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documentation/devicetree/bindings/dma/fsl-edma.txt
+index 97e213e..29dd3cc 100644
+--- a/Documentation/devicetree/bindings/dma/fsl-edma.txt
++++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
+@@ -9,15 +9,16 @@ group, DMAMUX0 or DMAMUX1, but not both.
+ Required properties:
+ - compatible :
+ 	- "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
++	- "fsl,imx7ulp-edma" for eDMA2 used similar to that on i.mx7ulp
+ - reg : Specifies base physical address(s) and size of the eDMA registers.
+ 	The 1st region is eDMA control register's address and size.
+ 	The 2nd and the 3rd regions are programmable channel multiplexing
+ 	control register's address and size.
+ - interrupts : A list of interrupt-specifiers, one for each entry in
+-	interrupt-names.
+-- interrupt-names : Should contain:
+-	"edma-tx" - the transmission interrupt
+-	"edma-err" - the error interrupt
++	interrupt-names on vf610 similar SoC. But for i.mx7ulp per channel
++	per transmission interrupt, total 16 channel interrupt and 1
++	error interrupt(located in the last), no interrupt-names list on
++	i.mx7ulp for clean on dts.
+ - #dma-cells : Must be <2>.
+ 	The 1st cell specifies the DMAMUX(0 for DMAMUX0 and 1 for DMAMUX1).
+ 	Specific request source can only be multiplexed by specific channels
+@@ -28,6 +29,7 @@ Required properties:
+ - clock-names : A list of channel group clock names. Should contain:
+ 	"dmamux0" - clock name of mux0 group
+ 	"dmamux1" - clock name of mux1 group
++	Note: No dmamux0 on i.mx7ulp, but another 'dma' clk added on i.mx7ulp.
+ - clocks : A list of phandle and clock-specifier pairs, one for each entry in
+ 	clock-names.
  
-+		edma1: dma-controller@40080000 {
-+			#dma-cells = <2>;
-+			compatible = "fsl,imx7ulp-edma";
-+			reg = <0x40080000 0x2000>,
-+				<0x40210000 0x1000>;
-+			dma-channels = <32>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "dma", "dmamux0";
-+			clocks = <&pcc2 IMX7ULP_CLK_DMA1>,
-+				 <&pcc2 IMX7ULP_CLK_DMA_MUX1>;
-+		};
-+
- 		lpuart4: serial@402d0000 {
- 			compatible = "fsl,imx7ulp-lpuart";
- 			reg = <0x402d0000 0x1000>;
+@@ -35,6 +37,10 @@ Optional properties:
+ - big-endian: If present registers and hardware scatter/gather descriptors
+ 	of the eDMA are implemented in big endian mode, otherwise in little
+ 	mode.
++- interrupt-names : Should contain the below on vf610 similar SoC but not used
++	on i.mx7ulp similar SoC:
++	"edma-tx" - the transmission interrupt
++	"edma-err" - the error interrupt
+ 
+ 
+ Examples:
+@@ -52,8 +58,36 @@ edma0: dma-controller@40018000 {
+ 	clock-names = "dmamux0", "dmamux1";
+ 	clocks = <&clks VF610_CLK_DMAMUX0>,
+ 		<&clks VF610_CLK_DMAMUX1>;
+-};
++}; /* vf610 */
+ 
++edma1: dma-controller@40080000 {
++	#dma-cells = <2>;
++	compatible = "fsl,imx7ulp-edma";
++	reg = <0x40080000 0x2000>,
++		<0x40210000 0x1000>;
++	dma-channels = <32>;
++	interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
++		     /* last is eDMA2-ERR interrupt */
++		     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++	clock-names = "dma", "dmamux0";
++	clocks = <&pcc2 IMX7ULP_CLK_DMA1>,
++		 <&pcc2 IMX7ULP_CLK_DMA_MUX1>;
++}; /* i.mx7ulp */
+ 
+ * DMA clients
+ DMA client drivers that uses the DMA function must use the format described
 -- 
 2.7.4
