@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH v3 06/14] clk: qcom: hfpll: get parent clock names from DT
-Date: Tue, 25 Jun 2019 18:47:25 +0200
-Message-ID: <20190625164733.11091-7-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v3 07/14] clk: qcom: hfpll: register as clock provider
+Date: Tue, 25 Jun 2019 18:47:26 +0200
+Message-ID: <20190625164733.11091-8-jorge.ramirez-ortiz@linaro.org>
 References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,46 +12,44 @@ To: jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org
 Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Allow accessing the parent clock name required for the driver
-operation using the device tree node.
-
-This permits extending the driver to other platforms without having to
-modify its source code.
-
-For backwards compatibility leave the previous value as default.
+Make the output of the high frequency pll a clock provider.
+On the QCS404 this PLL controls cpu frequency scaling.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/clk/qcom/hfpll.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clk/qcom/hfpll.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
-index a6de7101430c..87b7f46d27e0 100644
+index 87b7f46d27e0..0ffed0d41c50 100644
 --- a/drivers/clk/qcom/hfpll.c
 +++ b/drivers/clk/qcom/hfpll.c
-@@ -52,6 +52,7 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
- 	void __iomem *base;
+@@ -53,6 +53,7 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
  	struct regmap *regmap;
  	struct clk_hfpll *h;
-+	struct clk *pclk;
+ 	struct clk *pclk;
++	int ret;
  	struct clk_init_data init = {
  		.parent_names = (const char *[]){ "xo" },
  		.num_parents = 1,
-@@ -75,6 +76,13 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
- 					  0, &init.name))
- 		return -ENODEV;
- 
-+	/* get parent clock from device tree (optional) */
-+	pclk = devm_clk_get(dev, "xo");
-+	if (!IS_ERR(pclk))
-+		init.parent_names = (const char *[]){ __clk_get_name(pclk) };
-+	else if (PTR_ERR(pclk) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
- 	h->d = &hdata;
+@@ -87,7 +88,14 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
  	h->clkr.hw.init = &init;
  	spin_lock_init(&h->lock);
+ 
+-	return devm_clk_register_regmap(&pdev->dev, &h->clkr);
++	ret = devm_clk_register_regmap(dev, &h->clkr);
++	if (ret) {
++		dev_err(dev, "failed to register regmap clock: %d\n", ret);
++		return ret;
++	}
++
++	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
++					   &h->clkr.hw);
+ }
+ 
+ static struct platform_driver qcom_hfpll_driver = {
 -- 
 2.21.0
