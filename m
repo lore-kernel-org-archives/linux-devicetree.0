@@ -1,270 +1,227 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v13 03/13] dt-bindings: Add doc for the Ingenic TCU drivers
-Date: Tue, 25 Jun 2019 00:57:49 +0200
-Message-ID: <20190624225759.18299-4-paul@crapouillou.net>
-References: <20190624225759.18299-1-paul@crapouillou.net>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH] csky: dts: Add NationalChip GX6605S
+Date: Tue, 25 Jun 2019 02:28:29 +0200
+Message-ID: <20190625002829.17409-1-afaerber@suse.de>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190624225759.18299-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh@kernel.org>, Artur Rojek <contact@artur-rojek.eu>
+To: linux-csky@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guo Ren <guoren@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation about how to properly use the Ingenic TCU
-(Timer/Counter Unit) drivers from devicetree.
+Add Device Trees for NationalChip GX6605S SoC (based on CK610 CPU) and its
+dev board. GxLoader expects as filename gx6605s.dtb, so keep that.
+The bootargs are prepared to boot from USB and to output to serial.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
+Compatibles for the SoC and board are left out for now.
+
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
+ arch/csky/boot/dts/gx6605s.dts  | 104 ++++++++++++++++++++++++++++++++++++++++
+ arch/csky/boot/dts/gx6605s.dtsi |  82 +++++++++++++++++++++++++++++++
+ 2 files changed, 186 insertions(+)
+ create mode 100644 arch/csky/boot/dts/gx6605s.dts
+ create mode 100644 arch/csky/boot/dts/gx6605s.dtsi
 
-Notes:
-    v4: New patch in this series. Corresponds to V2 patches 3-4-5 with
-     added content.
-    
-    v5:
-     - Edited PWM/watchdog DT bindings documentation to point to the new
-       document.
-     - Moved main document to
-       Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-     - Updated documentation to reflect the new devicetree bindings.
-    
-    v6:
-     - Removed PWM/watchdog documentation files as asked by upstream
-     - Removed doc about properties that should be implicit
-     - Removed doc about ingenic,timer-channel /
-       ingenic,clocksource-channel as they are gone
-     - Fix WDT clock name in the binding doc
-     - Fix lengths of register areas in watchdog/pwm nodes
-    
-    v7: No change
-    
-    v8:
-     - Fix address of the PWM node
-     - Added doc about system timer and clocksource children nodes
-    
-    v9:
-     - Remove doc about system timer and clocksource children
-       nodes...
-     - Add doc about ingenic,pwm-channels-mask property
-    
-    v10: No change
-    
-    v11: Fix info about default value of ingenic,pwm-channels-mask
-    
-    v12: Drop sub-nodes for now; they will be introduced in a follow-up
-         patchset.
-    
-    v13:
-     - Revert back to v11. Turns out it was okay.
-     - Remove 'interrupt-parent' of the list of required properties.
-
- .../bindings/pwm/ingenic,jz47xx-pwm.txt       |  25 ----
- .../devicetree/bindings/timer/ingenic,tcu.txt | 136 ++++++++++++++++++
- .../bindings/watchdog/ingenic,jz4740-wdt.txt  |  17 ---
- 3 files changed, 136 insertions(+), 42 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
- create mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.txt
- delete mode 100644 Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
-
-diff --git a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-deleted file mode 100644
-index 7d9d3f90641b..000000000000
---- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--Ingenic JZ47xx PWM Controller
--=============================
--
--Required properties:
--- compatible: One of:
--  * "ingenic,jz4740-pwm"
--  * "ingenic,jz4770-pwm"
--  * "ingenic,jz4780-pwm"
--- #pwm-cells: Should be 3. See pwm.txt in this directory for a description
--  of the cells format.
--- clocks : phandle to the external clock.
--- clock-names : Should be "ext".
--
--
--Example:
--
--	pwm: pwm@10002000 {
--		compatible = "ingenic,jz4740-pwm";
--		reg = <0x10002000 0x1000>;
--
--		#pwm-cells = <3>;
--
--		clocks = <&ext>;
--		clock-names = "ext";
--	};
-diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+diff --git a/arch/csky/boot/dts/gx6605s.dts b/arch/csky/boot/dts/gx6605s.dts
 new file mode 100644
-index 000000000000..87962da64561
+index 000000000000..f7511024ec6f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-@@ -0,0 +1,136 @@
-+Ingenic JZ47xx SoCs Timer/Counter Unit devicetree bindings
-+==========================================================
++++ b/arch/csky/boot/dts/gx6605s.dts
+@@ -0,0 +1,104 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause */
++/*
++ * GX6605S dev board
++ *
++ * Copyright (c) 2019 Andreas Färber
++ */
 +
-+For a description of the TCU hardware and drivers, have a look at
-+Documentation/mips/ingenic-tcu.txt.
++/dts-v1/;
 +
-+Required properties:
++#include <dt-bindings/gpio/gpio.h>
 +
-+- compatible: Must be one of:
-+  * ingenic,jz4740-tcu
-+  * ingenic,jz4725b-tcu
-+  * ingenic,jz4770-tcu
-+- reg: Should be the offset/length value corresponding to the TCU registers
-+- clocks: List of phandle & clock specifiers for clocks external to the TCU.
-+  The "pclk", "rtc" and "ext" clocks should be provided. The "tcu" clock
-+  should be provided if the SoC has it.
-+- clock-names: List of name strings for the external clocks.
-+- #clock-cells: Should be <1>;
-+  Clock consumers specify this argument to identify a clock. The valid values
-+  may be found in <dt-bindings/clock/ingenic,tcu.h>.
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source. The value should be 1.
-+- interrupts : Specifies the interrupt the controller is connected to.
-+
-+Optional properties:
-+
-+- ingenic,pwm-channels-mask: Bitmask of TCU channels reserved for PWM use.
-+  Default value is 0xfc.
-+
-+
-+Children nodes
-+==========================================================
-+
-+
-+PWM node:
-+---------
-+
-+Required properties:
-+
-+- compatible: Must be one of:
-+  * ingenic,jz4740-pwm
-+  * ingenic,jz4725b-pwm
-+- #pwm-cells: Should be 3. See ../pwm/pwm.txt for a description of the cell
-+  format.
-+- clocks: List of phandle & clock specifiers for the TCU clocks.
-+- clock-names: List of name strings for the TCU clocks.
-+
-+
-+Watchdog node:
-+--------------
-+
-+Required properties:
-+
-+- compatible: Must be "ingenic,jz4740-watchdog"
-+- clocks: phandle to the WDT clock
-+- clock-names: should be "wdt"
-+
-+
-+OS Timer node:
-+---------
-+
-+Required properties:
-+
-+- compatible: Must be one of:
-+  * ingenic,jz4725b-ost
-+  * ingenic,jz4770-ost
-+- clocks: phandle to the OST clock
-+- clock-names: should be "ost"
-+- interrupts : Specifies the interrupt the OST is connected to.
-+
-+
-+Example
-+==========================================================
-+
-+#include <dt-bindings/clock/jz4770-cgu.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
++#include "gx6605s.dtsi"
 +
 +/ {
-+	tcu: timer@10002000 {
-+		compatible = "ingenic,jz4770-tcu";
-+		reg = <0x10002000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10002000 0x1000>;
++	model = "Nationalchip GX6605S";
 +
-+		#clock-cells = <1>;
++	aliases {
++		serial0 = &uart;
++	};
 +
-+		clocks = <&cgu JZ4770_CLK_RTC
-+			  &cgu JZ4770_CLK_EXT
-+			  &cgu JZ4770_CLK_PCLK>;
-+		clock-names = "rtc", "ext", "pclk";
++	chosen {
++		bootargs = "console=ttyS0,115200n8 root=/dev/sda2 rw rootwait";
++		stdout-path = "serial0:115200n8";
++	};
 +
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
++	memory@10000000 {
++		device_type = "memory";
++		reg = <0x10000000 0x04000000>;
++	};
 +
-+		interrupt-parent = <&intc>;
-+		interrupts = <27 26 25>;
++	dummy_apb_clk: dummy-apb-clk {
++		compatible = "fixed-clock";
++		clock-frequency = <24000000>; /* guesstimate */
++		#clock-cells = <0>;
++	};
 +
-+		watchdog: watchdog@0 {
-+			compatible = "ingenic,jz4740-watchdog";
-+			reg = <0x0 0xc>;
++	buttons {
++		compatible = "gpio-keys-polled";
++		poll-interval = <100>;
++		autorepeat;
 +
-+			clocks = <&tcu TCU_CLK_WDT>;
-+			clock-names = "wdt";
++		button5 {
++			label = "button5";
++			linux,code = <103>;
++			gpios = <&gpio 5 GPIO_ACTIVE_LOW>;
 +		};
 +
-+		pwm: pwm@40 {
-+			compatible = "ingenic,jz4740-pwm";
-+			reg = <0x40 0x80>;
-+
-+			#pwm-cells = <3>;
-+
-+			clocks = <&tcu TCU_CLK_TIMER0
-+				  &tcu TCU_CLK_TIMER1
-+				  &tcu TCU_CLK_TIMER2
-+				  &tcu TCU_CLK_TIMER3
-+				  &tcu TCU_CLK_TIMER4
-+				  &tcu TCU_CLK_TIMER5
-+				  &tcu TCU_CLK_TIMER6
-+				  &tcu TCU_CLK_TIMER7>;
-+			clock-names = "timer0", "timer1", "timer2", "timer3",
-+				      "timer4", "timer5", "timer6", "timer7";
++		button6 {
++			label = "button6";
++			linux,code = <106>;
++			gpios = <&gpio 6 GPIO_ACTIVE_LOW>;
 +		};
 +
-+		ost: timer@e0 {
-+			compatible = "ingenic,jz4770-ost";
-+			reg = <0xe0 0x20>;
++		button7 {
++			label = "button7";
++			linux,code = <28>;
++			gpios = <&gpio 7 GPIO_ACTIVE_LOW>;
++		};
 +
-+			clocks = <&tcu TCU_CLK_OST>;
-+			clock-names = "ost";
++		button8 {
++			label = "button8";
++			linux,code = <105>;
++			gpios = <&gpio 8 GPIO_ACTIVE_LOW>;
++		};
 +
-+			interrupts = <15>;
++		button9 {
++			label = "button9";
++			linux,code = <108>;
++			gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led0 {
++			label = "led10";
++			gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "heartbeat";
++		};
++
++		led1 {
++			label = "led11";
++			gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "timer";
++		};
++
++		led2 {
++			label = "led12";
++			gpios = <&gpio 12 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "default-on";
++		};
++
++		led3 {
++			label = "led13";
++			gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "default-on";
 +		};
 +	};
 +};
-diff --git a/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt b/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
-deleted file mode 100644
-index ce1cb72d5345..000000000000
---- a/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--Ingenic Watchdog Timer (WDT) Controller for JZ4740 & JZ4780
--
--Required properties:
--compatible: "ingenic,jz4740-watchdog" or "ingenic,jz4780-watchdog"
--reg: Register address and length for watchdog registers
--clocks: phandle to the RTC clock
--clock-names: should be "rtc"
--
--Example:
--
--watchdog: jz4740-watchdog@10002000 {
--	compatible = "ingenic,jz4740-watchdog";
--	reg = <0x10002000 0x10>;
--
--	clocks = <&cgu JZ4740_CLK_RTC>;
--	clock-names = "rtc";
--};
++
++&timer0 {
++		clocks = <&dummy_apb_clk>;
++};
+diff --git a/arch/csky/boot/dts/gx6605s.dtsi b/arch/csky/boot/dts/gx6605s.dtsi
+new file mode 100644
+index 000000000000..956af5674add
+--- /dev/null
++++ b/arch/csky/boot/dts/gx6605s.dtsi
+@@ -0,0 +1,82 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause */
++/*
++ * NationalChip GX6605S SoC
++ *
++ * Copyright (c) 2019 Andreas Färber
++ */
++
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "csky,ck610";
++			reg = <0>;
++		};
++	};
++
++	soc {
++		compatible = "simple-bus";
++		interrupt-parent = <&intc>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		timer0: timer@20a000 {
++			compatible = "csky,gx6605s-timer";
++			reg = <0x0020a000 0x400>;
++			clocks = <&dummy_apb_clk>;
++			interrupts = <10>;
++		};
++
++		gpio: gpio@305000 {
++			compatible = "wd,mbl-gpio";
++			reg-names = "dirout", "dat", "set", "clr";
++			reg = <0x00305000 0x4>,
++			      <0x00305004 0x4>,
++			      <0x00305008 0x4>,
++			      <0x0030500c 0x4>;
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++
++		uart: serial@403000 {
++			compatible = "ns16550a";
++			reg = <0x00403000 0x400>;
++			interrupts = <15>;
++			clock-frequency = <29491200>;
++			reg-shift = <2>;
++			reg-io-width = <1>;
++		};
++
++		intc: interrupt-controller@500000 {
++			compatible = "csky,gx6605s-intc";
++			reg = <0x00500000 0x400>;
++			interrupt-controller;
++			#interrupt-cells = <1>;
++		};
++
++		ehci_hcd: usb@900000 {
++			compatible = "generic-ehci";
++			reg = <0x00900000 0x400>;
++			interrupts = <59>;
++		};
++
++		ohci_hcd0: usb@a00000 {
++			compatible = "generic-ohci";
++			reg = <0x00a00000 0x400>;
++			interrupts = <58>;
++		};
++
++		ohci_hcd1: usb@b00000 {
++			compatible = "generic-ohci";
++			reg = <0x00b00000 0x400>;
++			interrupts = <57>;
++		};
++	};
++};
 -- 
-2.21.0.593.g511ec345e18
+2.16.4
