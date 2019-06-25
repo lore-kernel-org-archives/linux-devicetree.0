@@ -1,86 +1,33 @@
-From: Brian Dodge <bdodge09@gmail.com>
-Subject: [PATCH 2/2] backlight: arcxcnn: add "arctic" vendor prefix
-Date: Tue, 25 Jun 2019 00:05:29 -0400
-Message-ID: <1561435529-7835-3-git-send-email-bdodge09@gmail.com>
-References: <1561435529-7835-1-git-send-email-bdodge09@gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [patch 0/5] *** DMA based UART driver for AST2500 ***
+Date: Tue, 25 Jun 2019 15:27:15 +0800
+Message-ID: <20190625072715.GB18197@kroah.com>
+References: <1561115855-4186-1-git-send-email-open.sudheer@gmail.com>
+ <20190621131729.GA9997@kroah.com>
+ <CAE-5=DTdo4qDUPRw+Giu=bCcpqu7EdLDt5ddDvqLSgGbuqE1Fg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1561435529-7835-1-git-send-email-bdodge09@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, Brian Dodge <bdodge09@gmail.com>, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAE-5=DTdo4qDUPRw+Giu=bCcpqu7EdLDt5ddDvqLSgGbuqE1Fg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sudheer v <open.sudheer@gmail.com>
+Cc: Jiri Slaby <jslaby@suse.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, ShivahShankar Shakarnarayan rao <shivahshankar.shankarnarayanrao@aspeedtech.com>, Shiva shankar <shivahshankar@gmail.com>, Sudheer V <sudheer.veliseti@aspeedtech.com>, sudheer veliseti <sudheer.open@gmail.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIG9yaWdpbmFsIHBhdGNoIGFkZGluZyB0aGlzIGRyaXZlciBhbmQgRFQgYmluZGluZ3MgaW1w
-cm9wZXJseQp1c2VkICJhcmMiIGFzIHRoZSB2ZW5kb3ItcHJlZml4LiBUaGlzIGFkZHMgImFyY3Rp
-YyIgd2hpY2ggaXMgdGhlCnByb3BlciBwcmVmaXggYW5kIHJldGFpbnMgImFyYyIgdG8gYWxsb3cg
-ZXhpc3RpbmcgdXNlcnMgb2YgdGhlCiJhcmMiIHByZWZpeCB0byB1cGRhdGUgdG8gbmV3IGtlcm5l
-bHMuIFRoZXJlIGlzIGF0IGxlYXN0IG9uZQooU2Ftc3VuZyBDaHJvbWVib29rIFBsdXMpCgpTaWdu
-ZWQtb2ZmLWJ5OiBCcmlhbiBEb2RnZSA8YmRvZGdlMDlAZ21haWwuY29tPgotLS0KIGRyaXZlcnMv
-dmlkZW8vYmFja2xpZ2h0L2FyY3hjbm5fYmwuYyB8IDM1ICsrKysrKysrKysrKysrKysrKysrKysr
-KystLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRp
-b25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvYXJjeGNubl9ibC5j
-IGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvYXJjeGNubl9ibC5jCmluZGV4IDdiMWMwYTAuLjE0
-YzY3ZjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L2FyY3hjbm5fYmwuYwor
-KysgYi9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9hcmN4Y25uX2JsLmMKQEAgLTEsOSArMSw5IEBA
-CiAvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5CiAvKgotICogQmFja2xp
-Z2h0IGRyaXZlciBmb3IgQXJjdGljU2FuZCBBUkNfWF9DXzBOXzBOIERldmljZXMKKyAqIEJhY2ts
-aWdodCBkcml2ZXIgZm9yIHBTZW1pIChmb3JtZXJseSBBcmN0aWNTYW5kKSBBUkNfWF9DXzBOXzBO
-IERldmljZXMKICAqCi0gKiBDb3B5cmlnaHQgMjAxNiBBcmN0aWNTYW5kLCBJbmMuCi0gKiBBdXRo
-b3IgOiBCcmlhbiBEb2RnZSA8YmRvZGdlQGFyY3RpY3NhbmQuY29tPgorICogQ29weXJpZ2h0IDIw
-MTYtMjAxOSAgcFNlbWksIEluYy4KKyAqIEF1dGhvciA6IEJyaWFuIERvZGdlIDxiZG9kZ2VAcHNl
-bWkuY29tPgogICovCiAKICNpbmNsdWRlIDxsaW51eC9iYWNrbGlnaHQuaD4KQEAgLTE5MSwyNyAr
-MTkxLDQwIEBAIHN0YXRpYyB2b2lkIGFyY3hjbm5fcGFyc2VfZHQoc3RydWN0IGFyY3hjbm4gKmxw
-KQogCWlmIChyZXQgPT0gMCkKIAkJbHAtPnBkYXRhLT5pbml0aWFsX2JyaWdodG5lc3MgPSBwcm9n
-X3ZhbDsKIAotCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsICJhcmMsbGVkLWNvbmZp
-Zy0wIiwgJnByb2dfdmFsKTsKKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAiYXJj
-dGljLGxlZC1jb25maWctMCIsICZwcm9nX3ZhbCk7CisJaWYgKHJldCkKKwkJcmV0ID0gb2ZfcHJv
-cGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxsZWQtY29uZmlnLTAiLCAmcHJvZ192YWwpOwogCWlm
-IChyZXQgPT0gMCkKIAkJbHAtPnBkYXRhLT5sZWRfY29uZmlnXzAgPSAodTgpcHJvZ192YWw7CiAK
-LQlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAiYXJjLGxlZC1jb25maWctMSIsICZw
-cm9nX3ZhbCk7CisJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyY3RpYyxsZWQt
-Y29uZmlnLTEiLCAmcHJvZ192YWwpOworCWlmIChyZXQpCisJCXJldCA9IG9mX3Byb3BlcnR5X3Jl
-YWRfdTMyKG5vZGUsICJhcmMsbGVkLWNvbmZpZy0xIiwgJnByb2dfdmFsKTsKIAlpZiAocmV0ID09
-IDApCiAJCWxwLT5wZGF0YS0+bGVkX2NvbmZpZ18xID0gKHU4KXByb2dfdmFsOwogCi0JcmV0ID0g
-b2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxkaW0tZnJlcSIsICZwcm9nX3ZhbCk7CisJ
-cmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyY3RpYyxkaW0tZnJlcSIsICZwcm9n
-X3ZhbCk7CisJaWYgKHJldCkKKwkJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFy
-YyxkaW0tZnJlcSIsICZwcm9nX3ZhbCk7CiAJaWYgKHJldCA9PSAwKQogCQlscC0+cGRhdGEtPmRp
-bV9mcmVxID0gKHU4KXByb2dfdmFsOwogCi0JcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9k
-ZSwgImFyYyxjb21wLWNvbmZpZyIsICZwcm9nX3ZhbCk7CisJcmV0ID0gb2ZfcHJvcGVydHlfcmVh
-ZF91MzIobm9kZSwgImFyY3RpYyxjb21wLWNvbmZpZyIsICZwcm9nX3ZhbCk7CisJaWYgKHJldCkK
-KwkJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxjb21wLWNvbmZpZyIsICZw
-cm9nX3ZhbCk7CiAJaWYgKHJldCA9PSAwKQogCQlscC0+cGRhdGEtPmNvbXBfY29uZmlnID0gKHU4
-KXByb2dfdmFsOwogCi0JcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxmaWx0
-ZXItY29uZmlnIiwgJnByb2dfdmFsKTsKKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2Rl
-LCAiYXJjdGljLGZpbHRlci1jb25maWciLCAmcHJvZ192YWwpOworCWlmIChyZXQpCisJCXJldCA9
-IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsCisJCQkJImFyYyxmaWx0ZXItY29uZmlnIiwgJnBy
-b2dfdmFsKTsKIAlpZiAocmV0ID09IDApCiAJCWxwLT5wZGF0YS0+ZmlsdGVyX2NvbmZpZyA9ICh1
-OClwcm9nX3ZhbDsKIAotCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsICJhcmMsdHJp
-bS1jb25maWciLCAmcHJvZ192YWwpOworCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUs
-ICJhcmN0aWMsdHJpbS1jb25maWciLCAmcHJvZ192YWwpOworCWlmIChyZXQpCisJCXJldCA9IG9m
-X3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsICJhcmMsdHJpbS1jb25maWciLCAmcHJvZ192YWwpOwog
-CWlmIChyZXQgPT0gMCkKIAkJbHAtPnBkYXRhLT50cmltX2NvbmZpZyA9ICh1OClwcm9nX3ZhbDsK
-IApAQCAtMzgxLDYgKzM5NCw4IEBAIHN0YXRpYyBpbnQgYXJjeGNubl9yZW1vdmUoc3RydWN0IGky
-Y19jbGllbnQgKmNsKQogfQogCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBhcmN4
-Y25uX2R0X2lkc1tdID0geworCXsgLmNvbXBhdGlibGUgPSAiYXJjdGljLGFyYzJjMDYwOCIgfSwK
-KwkvKiBoZXJlIHRvIHJlbWFpbSBjb21wYXRpYmxlIHdpdGggYW4gb2xkZXIgYmluZGluZywgZG8g
-bm90IHVzZSAqLwogCXsgLmNvbXBhdGlibGUgPSAiYXJjLGFyYzJjMDYwOCIgfSwKIAl7IH0KIH07
-CkBAIC00MDQsNSArNDE5LDUgQEAgc3RhdGljIHN0cnVjdCBpMmNfZHJpdmVyIGFyY3hjbm5fZHJp
-dmVyID0gewogbW9kdWxlX2kyY19kcml2ZXIoYXJjeGNubl9kcml2ZXIpOwogCiBNT0RVTEVfTElD
-RU5TRSgiR1BMIHYyIik7Ci1NT0RVTEVfQVVUSE9SKCJCcmlhbiBEb2RnZSA8YmRvZGdlQGFyY3Rp
-Y3NhbmQuY29tPiIpOworTU9EVUxFX0FVVEhPUigiQnJpYW4gRG9kZ2UgPGJkb2RnZUBwc2VtaS5j
-b20+Iik7CiBNT0RVTEVfREVTQ1JJUFRJT04oIkFSQ1hDTk4gQmFja2xpZ2h0IGRyaXZlciIpOwot
-LSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Tue, Jun 25, 2019 at 10:30:32AM +0530, sudheer v wrote:
+> Hi Greg,
+> When i last submitted patches, i have not added change-logs.
+> and also used custom debugs instead of kernel dynamic debugs.
+> So i have resubmitted the patches , considering you have discarded old set.
+> I want to send any changes suggested  from now on wards  with versioning
+> V1,V2...so on.
+> Is this acceptable for you? or should i submit the patches again as V1 once
+> again.?
+
+No, please resend now as a v3 series, with the information that says
+what you changed from the previous versions.
+
+thanks,
+
+greg k-h
