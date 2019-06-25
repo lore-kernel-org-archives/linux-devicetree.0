@@ -1,259 +1,50 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v13 05/13] clk: ingenic: Add driver for the TCU clocks
-Date: Wed, 26 Jun 2019 00:37:07 +0200
-Message-ID: <1561502227.10069.1@crapouillou.net>
-References: <20190624225759.18299-1-paul@crapouillou.net>
-        <20190624225759.18299-6-paul@crapouillou.net>
-        <20190625220931.2F69B2086D@mail.kernel.org>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v5 06/18] kbuild: enable building KUnit
+Date: Tue, 25 Jun 2019 15:41:29 -0700
+Message-ID: <CAFd5g448rYqr3PHg0cfoddr70nktkWXcRfJoZHmuPJjTW53YYg@mail.gmail.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-7-brendanhiggins@google.com> <20190625221318.GO19023@42.do-not-panic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625220931.2F69B2086D@mail.kernel.org>
+In-Reply-To: <20190625221318.GO19023@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, James Hogan <jhogan@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Michael Turquette <mturquette@baylibre.com>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Thomas Gleixner <tglx@linutronix.de>, Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-ks>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 25, 2019 at 3:13 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Mon, Jun 17, 2019 at 01:26:01AM -0700, Brendan Higgins wrote:
+> > diff --git a/Kconfig b/Kconfig
+> > index 48a80beab6853..10428501edb78 100644
+> > --- a/Kconfig
+> > +++ b/Kconfig
+> > @@ -30,3 +30,5 @@ source "crypto/Kconfig"
+> >  source "lib/Kconfig"
+> >
+> >  source "lib/Kconfig.debug"
+> > +
+> > +source "kunit/Kconfig"
+>
+> This patch would break compilation as kunit/Kconfig is not introduced. This
+> would would also break bisectability on this commit. This change should
+> either be folded in to the next patch, or just be a separate patch after
+> the next one.
 
+Maybe my brain isn't working right now, but I am pretty darn sure that
+I introduce kunit/Kconfig in the very first patch of this series.
+Quoting from the change summary from the first commit:
 
-Le mer. 26 juin 2019 =E0 0:09, Stephen Boyd <sboyd@kernel.org> a =E9crit :
-> Quoting Paul Cercueil (2019-06-24 15:57:51)
->>  diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
->>  new file mode 100644
->>  index 000000000000..6d667c4a2bd5
->>  --- /dev/null
->>  +++ b/drivers/clk/ingenic/tcu.c
->>  @@ -0,0 +1,473 @@
->>  +// SPDX-License-Identifier: GPL-2.0
->>  +/*
->>  + * JZ47xx SoCs TCU clocks driver
->>  + * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
->>  + */
->>  +
->>  +#include <linux/clk.h>
->>  +#include <linux/clk-provider.h>
->>  +#include <linux/clockchips.h>
->>  +#include <linux/mfd/ingenic-tcu.h>
->>  +#include <linux/regmap.h>
->>  +#include <linux/slab.h>
->>  +#include <linux/syscore_ops.h>
->>  +
->>  +#include <dt-bindings/clock/ingenic,tcu.h>
->>  +
-> [...]
->>  +
->>  +static const struct ingenic_soc_info jz4740_soc_info =3D {
->>  +       .num_channels =3D 8,
->>  +       .has_ost =3D false,
->>  +       .has_tcu_clk =3D true,
->>  +};
->>  +
->>  +static const struct ingenic_soc_info jz4725b_soc_info =3D {
->>  +       .num_channels =3D 6,
->>  +       .has_ost =3D true,
->>  +       .has_tcu_clk =3D true,
->>  +};
->>  +
->>  +static const struct ingenic_soc_info jz4770_soc_info =3D {
->>  +       .num_channels =3D 8,
->>  +       .has_ost =3D true,
->>  +       .has_tcu_clk =3D false,
->>  +};
->>  +
->>  +static const struct of_device_id ingenic_tcu_of_match[]=20
->> __initconst =3D {
->>  +       { .compatible =3D "ingenic,jz4740-tcu", .data =3D=20
->> &jz4740_soc_info, },
->>  +       { .compatible =3D "ingenic,jz4725b-tcu", .data =3D=20
->> &jz4725b_soc_info, },
->>  +       { .compatible =3D "ingenic,jz4770-tcu", .data =3D=20
->> &jz4770_soc_info, },
->>  +       { }
->>  +};
->>  +
->>  +static int __init ingenic_tcu_probe(struct device_node *np)
->>  +{
->>  +       const struct of_device_id *id =3D=20
->> of_match_node(ingenic_tcu_of_match, np);
->>  +       struct ingenic_tcu *tcu;
->>  +       struct regmap *map;
->>  +       unsigned int i;
->>  +       int ret;
->>  +
->>  +       map =3D ingenic_tcu_get_regmap(np);
->>  +       if (IS_ERR(map))
->>  +               return PTR_ERR(map);
->>  +
->>  +       tcu =3D kzalloc(sizeof(*tcu), GFP_KERNEL);
->>  +       if (!tcu)
->>  +               return -ENOMEM;
->>  +
->>  +       tcu->map =3D map;
->>  +       tcu->soc_info =3D id->data;
->>  +
->>  +       if (tcu->soc_info->has_tcu_clk) {
->>  +               tcu->clk =3D of_clk_get_by_name(np, "tcu");
->=20
-> Do you need to get the clk by name? Or can that clk be "known" to the
-> TCU somehow so we can already have a direct clk pointer?
+>  include/kunit/test.h | 161 +++++++++++++++++++++++++++++++++
+>  kunit/Kconfig        |  17 ++++
+>  kunit/Makefile       |   1 +
+>  kunit/test.c         | 210 +++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 389 insertions(+)
+>  create mode 100644 include/kunit/test.h
+>  create mode 100644 kunit/Kconfig
 
-This clock is provided by a separate driver, so I have to obtain the
-clock pointer from devicetree.
+I am not crazy, right?
 
->=20
->>  +               if (IS_ERR(tcu->clk)) {
->>  +                       ret =3D PTR_ERR(tcu->clk);
->>  +                       pr_crit("Cannot get TCU clock\n");
->>  +                       goto err_free_tcu;
->>  +               }
->>  +
->>  +               ret =3D clk_prepare_enable(tcu->clk);
->>  +               if (ret) {
->>  +                       pr_crit("Unable to enable TCU clock\n");
->>  +                       goto err_put_clk;
->>  +               }
->>  +       }
->>  +
->>  +       tcu->clocks =3D kzalloc(sizeof(*tcu->clocks) +
->>  +                             sizeof(*tcu->clocks->hws) *=20
->> TCU_CLK_COUNT,
->>  +                             GFP_KERNEL);
->>  +       if (!tcu->clocks) {
->>  +               ret =3D -ENOMEM;
->>  +               goto err_clk_disable;
->>  +       }
->>  +
->>  +       tcu->clocks->num =3D TCU_CLK_COUNT;
->>  +
->>  +       for (i =3D 0; i < tcu->soc_info->num_channels; i++) {
->>  +               ret =3D ingenic_tcu_register_clock(tcu, i,=20
->> TCU_PARENT_EXT,
->>  +                                               =20
->> &ingenic_tcu_clk_info[i],
->>  +                                                tcu->clocks);
->>  +               if (ret) {
->>  +                       pr_crit("cannot register clock %i\n", i);
->>  +                       goto err_unregister_timer_clocks;
->>  +               }
->>  +       }
->>  +
->>  +       /*
->>  +        * We set EXT as the default parent clock for all the TCU=20
->> clocks
->>  +        * except for the watchdog one, where we set the RTC clock=20
->> as the
->>  +        * parent. Since the EXT and PCLK are much faster than the=20
->> RTC clock,
->>  +        * the watchdog would kick after a maximum time of 5s, and=20
->> we might
->>  +        * want a slower kicking time.
->>  +        */
->>  +       ret =3D ingenic_tcu_register_clock(tcu, TCU_CLK_WDT,=20
->> TCU_PARENT_RTC,
->>  +                                       =20
->> &ingenic_tcu_watchdog_clk_info,
->>  +                                        tcu->clocks);
->>  +       if (ret) {
->>  +               pr_crit("cannot register watchdog clock\n");
->>  +               goto err_unregister_timer_clocks;
->>  +       }
->>  +
->>  +       if (tcu->soc_info->has_ost) {
->>  +               ret =3D ingenic_tcu_register_clock(tcu, TCU_CLK_OST,
->>  +                                                TCU_PARENT_EXT,
->>  +                                               =20
->> &ingenic_tcu_ost_clk_info,
->>  +                                                tcu->clocks);
->>  +               if (ret) {
->>  +                       pr_crit("cannot register ost clock\n");
->>  +                       goto err_unregister_watchdog_clock;
->>  +               }
->>  +       }
->>  +
->>  +       ret =3D of_clk_add_hw_provider(np, of_clk_hw_onecell_get,=20
->> tcu->clocks);
->>  +       if (ret) {
->>  +               pr_crit("cannot add OF clock provider\n");
->>  +               goto err_unregister_ost_clock;
->>  +       }
->>  +
->>  +       ingenic_tcu =3D tcu;
->>  +
->>  +       return 0;
->>  +
->>  +err_unregister_ost_clock:
->>  +       if (tcu->soc_info->has_ost)
->>  +               clk_hw_unregister(tcu->clocks->hws[i + 1]);
->>  +err_unregister_watchdog_clock:
->>  +       clk_hw_unregister(tcu->clocks->hws[i]);
->>  +err_unregister_timer_clocks:
->>  +       for (i =3D 0; i < tcu->clocks->num; i++)
->>  +               if (tcu->clocks->hws[i])
->>  +                       clk_hw_unregister(tcu->clocks->hws[i]);
->>  +       kfree(tcu->clocks);
->>  +err_clk_disable:
->>  +       if (tcu->soc_info->has_tcu_clk)
->>  +               clk_disable_unprepare(tcu->clk);
->>  +err_put_clk:
->>  +       if (tcu->soc_info->has_tcu_clk)
->>  +               clk_put(tcu->clk);
->>  +err_free_tcu:
->>  +       kfree(tcu);
->>  +       return ret;
->=20
-> Too bad this isn't a device with devm!
->=20
->>  +}
->>  +
->>  +static int __maybe_unused tcu_pm_suspend(void)
->>  +{
->>  +       struct ingenic_tcu *tcu =3D ingenic_tcu;
->>  +
->>  +       if (tcu->clk)
->>  +               clk_disable(tcu->clk);
->=20
-> Do you need to unprepare? Or it just isn't possible because this is
-> called from syscore and thus we can't sleep?
-
-I thought that clk_disable() was enough. We don't actually need to
-unprepare, do we? And yes, as you pointed out, this call cannot sleep.
-
->>  +
->>  +       return 0;
->>  +}
->>  +
->>  +static void __maybe_unused tcu_pm_resume(void)
->>  +{
->>  +       struct ingenic_tcu *tcu =3D ingenic_tcu;
->>  +
->>  +       if (tcu->clk)
->>  +               clk_enable(tcu->clk);
->>  +}
->>  +
->>  +static struct syscore_ops __maybe_unused tcu_pm_ops =3D {
->>  +       .suspend =3D tcu_pm_suspend,
->>  +       .resume =3D tcu_pm_resume,
->>  +};
->>  +
->>  +static void __init ingenic_tcu_init(struct device_node *np)
->>  +{
->>  +       int ret =3D ingenic_tcu_probe(np);
->>  +
->>  +       if (ret)
->>  +               pr_crit("Failed to initialize TCU clocks: %i\n",=20
->> ret);
->=20
-> Should be %d instead of %i? Applies to all this file.
-
-OK.
-
-Thanks,
--Paul
-
->>  +
->>  +       if (IS_ENABLED(CONFIG_PM_SLEEP))
->>  +               register_syscore_ops(&tcu_pm_ops);
->>  +}
-
-=
+>  create mode 100644 kunit/Makefile
+>  create mode 100644 kunit/test.c
