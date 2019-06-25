@@ -1,43 +1,59 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 6/9] dt-bindings: i2c: at91: add binding for
- enable-ana-filt
-Date: Tue, 25 Jun 2019 11:31:56 +0200
-Message-ID: <20190625093156.GF5690@piout.net>
-References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
- <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
- <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
- <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH] riscv: Add cpu topology DT entry.
+Date: Tue, 25 Jun 2019 02:39:29 -0700 (PDT)
+Message-ID: <mhng-cbc0fa82-4c3e-4d7a-af9a-c730f7e3a3f1@palmer-si-x1e>
+References: <20190624223819.14320-1-atish.patra@wdc.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
+In-Reply-To: <20190624223819.14320-1-atish.patra@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen.Hristev@microchip.com
-Cc: peda@axentia.se, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, Atish Patra <Atish.Patra@wdc.com>, yash.shah@sifive.com, robh+dt@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/06/2019 09:14:13+0000, Eugen.Hristev@microchip.com wrote:
-> > Perhaps
-> > 
-> > 	microchip,digital-filter;
-> > 	microchip,analog-filter;
-> > 
-> > ?
-> 
-> Hi Peter,
-> 
-> Thanks for reviewing. The name of the property does not matter much to 
-> me, and we have properties prefixed with vendor, and some are not.
-> 
-> @Alexandre Belloni: which name you think it's best ?
-> 
+On Mon, 24 Jun 2019 15:38:19 PDT (-0700), Atish Patra wrote:
+> Currently, there is no CPU topology defined for RISC-V.
+> The following series adds topology support in RISC-V.
+>
+> http://lists.infradead.org/pipermail/linux-riscv/2019-June/005072.html
+>
+> Add a DT node for unleashed that describes the CPU topology
+> present in HiFive Unleashed.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> index 83f40b00ab63..907564f4f07a 100644
+> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> @@ -22,6 +22,24 @@
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+>  		timebase-frequency = <1000000>;
+> +
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 {
+> +					cpu = <&cpu1>;
+> +				};
+> +				core1 {
+> +					cpu = <&cpu2>;
+> +				};
+> +				core2 {
+> +					cpu = <&cpu3>;
+> +				};
+> +				core3 {
+> +					cpu = <&cpu4>;
+> +				};
+> +			};
+> +		};
+> +
+>  		cpu0: cpu@0 {
+>  			compatible = "sifive,e51", "sifive,rocket0", "riscv";
+>  			device_type = "cpu";
 
-I'm not sure, it depends on whether Wolfram thinks it is generic enough
-to be used without a vendor prefix.
-
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
