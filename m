@@ -1,59 +1,151 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 10/15] dt-bindings: display: Convert tpo,tpg110 panel
- to DT schema
-Date: Tue, 25 Jun 2019 08:25:51 -0600
-Message-ID: <CAL_Jsq+45dKRMdRCjfKgEkvsk1MLyeXnY4fjZmh50WLweyJfCg@mail.gmail.com>
-References: <20190624215649.8939-1-robh@kernel.org> <20190624215649.8939-11-robh@kernel.org>
- <CACRpkdYKE=zLJhmTeTWYGRCQNt3K8+rNNqsp5UDa2d31GG6Y2g@mail.gmail.com>
- <CAL_Jsq+uCMKhUFgCCK3uUetL9OwokQPaq74GJHQS2VS=UjVH8w@mail.gmail.com> <CACRpkdYnSZibUyhe5D8W259fCJBm05rG0_EmX+uoi=uqbrqEYA@mail.gmail.com>
+From: Johannes Berg <johannes@sipsolutions.net>
+Subject: Re: WWAN Controller Framework (was IPA [PATCH v2 00/17])
+Date: Tue, 25 Jun 2019 16:34:38 +0200
+Message-ID: <f1243295f088b70d48e4b832a28f79c0cd84ca1c.camel@sipsolutions.net>
+References: <20190531035348.7194-1-elder@linaro.org>
+         <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
+         <6dae9d1c-ceae-7e88-fe61-f4cda82820ea@linaro.org>
+         (sfid-20190624_190620_354118_89F0D47F)
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYnSZibUyhe5D8W259fCJBm05rG0_EmX+uoi=uqbrqEYA@mail.gmail.com>
+In-Reply-To: <6dae9d1c-ceae-7e88-fe61-f4cda82820ea@linaro.org> (sfid-20190624_190620_354118_89F0D47F)
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Alex Elder <elder@linaro.org>, davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org, Dan Williams <dcbw@redhat.com>
+Cc: evgreen@chromium.org, benchan@google.com, ejcaruso@google.com, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 2:26 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Tue, Jun 25, 2019 at 12:47 AM Rob Herring <robh@kernel.org> wrote:
-> > On Mon, Jun 24, 2019 at 4:13 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > > On Mon, Jun 24, 2019 at 11:59 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > > Convert the tpo,tpg110 panel binding to DT schema.
-> > > >
-> > > > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > > > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > > > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> > > > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > > Cc: dri-devel@lists.freedesktop.org
-> > > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > >
-> > > Awesome, fixed up the MAINATINERS entry and applied and
-> > > pushed for DRM next with my Reviewed-by.
-> >
-> > You shouldn't have because this is dependent on patch 2 and
-> > panel-common.yaml. So now 'make dt_binding_check' is broken.
->
-> Ooops easily happens when I am only adressee on this patch and
-> there is no mention of any dependencies.
+On Mon, 2019-06-24 at 12:06 -0500, Alex Elder wrote:
 
-It's a series. I would assume the default is 1 person applies a series
-unless explicitly stated otherwise.
+> > OK I want to try to organize a little more concisely some of the
+> > discussion on this, because there is a very large amount of volume
+> > to date and I think we need to try to narrow the focus back down
+> > again.
 
-> Can I simply just merge the panel-common patch as well and we
-> are all happy?
+Sounds good to me!
 
-I have drm-misc commit rights too, so I'll apply the whole lot when it's ready.
+> > I'm going to use a few terms here.  Some of these I really don't
+> > like, but I want to be unambiguous *and* (at least for now) I want
+> > to avoid the very overloaded term "device".
+> > 
+> > I have lots more to say, but let's start with a top-level picture,
+> > to make sure we're all on the same page.
+> > 
+> >          WWAN Communication
+> >          Channel (Physical)
+> >                  |     ------------------------
+> > ------------     v     |           :+ Control |  \
+> > >          |-----------|           :+ Data    |  |
+> > >    AP    |           | WWAN unit :+ Voice   |   > Functions
+> > >          |===========|           :+ GPS     |  |
+> > 
+> > ------------     ^     |           :+ ...     |  /
+> >                  |     -------------------------
+> >           Multiplexed WWAN
+> >            Communication
+> >          Channel (Physical)
 
-> I can also pick up more panel binding patches, IMO the yaml
-> conversions are especially uncontroversial and should have low
-> threshold for merging.
+Sounds right to me. I'm not sure if you're distinguishing here between
+the "Data function" and multiple data channels to the data function, but
+at this point I guess it doesn't matter.
 
-Yes, but the threshold is at least 'make dt_binding_check' should not
-break. But don't worry, there are 2 other breakages in linux-next
-currently.
+> > - The *AP* is the main CPU complex that's running Linux on one or
+> >   more CPU cores.
+> > - A *WWAN unit* is an entity that shares one or more physical
+> >   *WWAN communication channels* with the AP.
+> > - A *WWAN communication channel* is a bidirectional means of
+> >   carrying data between the AP and WWAN unit.
+> > - A WWAN communication channel carries data using a *WWAN protocol*.
+> > - A WWAN unit implements one or more *WWAN functions*, such as
+> >   5G data, LTE voice, GPS, and so on.
+> > - A WWAN unit shall implement a *WWAN control function*, used to
+> >   manage the use of other WWAN functions, as well as the WWAN unit
+> >   itself.
 
-Rob
+I think here we need to be more careful. I don't know how you want to
+call it, but we actually have multiple levels of control here.
+
+You have
+ * hardware control, to control how you actually use the (multiple or
+   not) physical communication channel(s) to the WWAN unit
+ * this is partially exposed to userspace via the WWAN netlink family or
+   something like that, so userspace can create new netdevs to tx/rx
+   with the "data function" and to the network; note that it could be
+   one or multiple
+ * WWAN control, which is typically userspace communicating with the
+   WWAN control function in the WWAN unit, but this can take different
+   forms (as I mentioned earlier, e.g. AT commands, MBIM, QMI)
+
+> > - The AP communicates with a WWAN function using a WWAN protocol.
+
+Right, that's just device specific (IPA vs. Intel vs. ...)
+
+> > - A WWAN physical channel can be *multiplexed*, in which case it
+> >   carries the data for one or more *WWAN logical channels*.
+
+This ... depends a bit on how you exactly define a physical channel
+here. Is that, to you, the PCIe/USB link? In that case, yes, obviously
+you have only one physical channel for each WWAN unit.
+
+However, I'd probably see this slightly differently, because e.g. the
+Intel modem has multiple DMA engines, and so you actually have multiple
+DMA rings to talk to the WWAN unit, and I'd have called each DMA ring a
+physical channel. And then, you just have a 1:1 from physical to logical
+channel since it doesn't actually carry a multiplexing protocol.
+
+> > - A multiplexed WWAN communication channel uses a *WWAN wultiplexing
+> >   protocol*, which is used to separate independent data streams
+> >   carrying other WWAN protocols.
+
+Like just described, this isn't really needed and is a device-specific
+property.
+
+> > - A WWAN logical channel carries a bidirectional stream of WWAN
+> >   protocol data between an entity on the AP and a WWAN function.
+> > 
+> > Does that adequately represent a very high-level picture of what
+> > we're trying to manage?
+
+Pretty much.
+
+I only disagree slightly on the control planes (there are multiple, and
+multiple options for the "Control function" one), and on the whole
+notion of physical link/logical link/multiplexing which is device
+specific.
+
+> > And if I understand it right, the purpose of the generic framework
+> > being discussed is to define a common mechanism for managing (i.e.,
+> > discovering, creating, destroying, querying, configuring, enabling,
+> > disabling, etc.) WWAN units and the functions they implement, along
+> > with the communication and logical channels used to communicate with
+> > them.
+
+Well, some subset of that matrix, the framework won't actually destroy
+WWAN units I hope ;-)
+
+But yes. I'd probably captured it in layers, and say that we have a
+
+WWAN framework layer
+ - discover, query, configure WWAN units
+ - enable, disable channels to the functions inside the WWAN units
+
+WWAN device driver
+ - implement (partial) API offered by WWAN framework layer to allow
+   these things
+   (sometimes may not allow creating more control or data channels for
+   example, and fixed function channels are precreated, but then can
+   still discover data about the device and configure the channels
+ - implement the device-specific protocols etc. necessary to achieve
+   this
+
+Userspace
+ - uses control function channel (e.g. TTY) to talk directly to the WWAN
+   unit's control function
+ - uses WWAN framework APIs to create/configure/... (other) function
+   channels
+   (it may be necessary to create a control channel even, before being
+   able to use it, since different options (AT/MBIM/QMI) may be there
+ - configures netdevs (data function channels) after their creation
+
+johannes
