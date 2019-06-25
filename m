@@ -1,89 +1,139 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 06/15] dt-bindings: display: Convert dlc,dlc0700yzg-1
- panel to DT schema
-Date: Tue, 25 Jun 2019 08:15:18 -0600
-Message-ID: <CAL_Jsq+OgNgS7yVgZaVLEo6=OeS9R9ebgBpUbPxz609C7G9oOw@mail.gmail.com>
-References: <20190624215649.8939-1-robh@kernel.org>
- <20190624215649.8939-7-robh@kernel.org>
- <20190625075542.u5kzex4cbrcss5ga@flea>
+From: Johannes Berg <johannes@sipsolutions.net>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Tue, 25 Jun 2019 16:19:54 +0200
+Message-ID: <efbcb3b84ff0a7d7eab875c37f3a5fa77e21d324.camel@sipsolutions.net>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
+         <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+         <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
+         <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+         <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
+         <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+         <d533b708-c97a-710d-1138-3ae79107f209@linaro.org>
+         <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
+         <db34aa39-6cf1-4844-1bfe-528e391c3729@linaro.org>
+         <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com>
+         (sfid-20190624_184119_378618_FFFDB00F)
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190625075542.u5kzex4cbrcss5ga@flea>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sam Ravnborg <sam@ravnborg.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com> (sfid-20190624_184119_378618_FFFDB00F)
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Alex Elder <elder@linaro.org>
+Cc: Dan Williams <dcbw@redhat.com>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMjUsIDIwMTkgYXQgMTo1NSBBTSBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlw
-YXJkQGJvb3RsaW4uY29tPiB3cm90ZToKPgo+IEhpLAo+Cj4gT24gTW9uLCBKdW4gMjQsIDIwMTkg
-YXQgMDM6NTY6NDBQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiBDb252ZXJ0IHRoZSBk
-bGMsZGxjMDcwMHl6Zy0xIHBhbmVsIGJpbmRpbmcgdG8gRFQgc2NoZW1hLgo+ID4KPiA+IENjOiBQ
-aGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgo+ID4gQ2M6IFRoaWVycnkgUmVk
-aW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+Cj4gPiBDYzogU2FtIFJhdm5ib3JnIDxzYW1A
-cmF2bmJvcmcub3JnPgo+ID4gQ2M6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxp
-bi5jb20+Cj4gPiBDYzogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29u
-Ym9hcmQuY29tPgo+ID4gQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiA+IFNp
-Z25lZC1vZmYtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gPiAtLS0KPiA+ICAu
-Li4vZGlzcGxheS9wYW5lbC9kbGMsZGxjMDcwMHl6Zy0xLnR4dCAgICAgICAgfCAxMyAtLS0tLS0t
-LS0KPiA+ICAuLi4vZGlzcGxheS9wYW5lbC9kbGMsZGxjMDcwMHl6Zy0xLnlhbWwgICAgICAgfCAy
-OCArKysrKysrKysrKysrKysrKysrCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAyOCBpbnNlcnRpb25z
-KCspLCAxMyBkZWxldGlvbnMoLSkKPiA+ICBkZWxldGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZGxjLGRsYzA3MDB5emctMS50eHQK
-PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvZGxjLGRsYzA3MDB5emctMS55YW1sCj4gPgo+ID4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2RsYyxkbGMw
-NzAweXpnLTEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvZGxjLGRsYzA3MDB5emctMS50eHQKPiA+IGRlbGV0ZWQgZmlsZSBtb2RlIDEwMDY0NAo+
-ID4gaW5kZXggYmYwNmJiMDI1YjA4Li4wMDAwMDAwMDAwMDAKPiA+IC0tLSBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2RsYyxkbGMwNzAweXpnLTEudHh0
-Cj4gPiArKysgL2Rldi9udWxsCj4gPiBAQCAtMSwxMyArMCwwIEBACj4gPiAtRExDIERpc3BsYXkg
-Q28uIERMQzA3MDBZWkctMSA3LjAiIFdTVkdBIFRGVCBMQ0QgcGFuZWwKPiA+IC0KPiA+IC1SZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+ID4gLS0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJkbGMsZGxjMDcw
-MHl6Zy0xIgo+ID4gLS0gcG93ZXItc3VwcGx5OiBTZWUgc2ltcGxlLXBhbmVsLnR4dAo+ID4gLQo+
-ID4gLU9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPiAtLSByZXNldC1ncGlvczogU2VlIHBhbmVsLWNv
-bW1vbi50eHQKPiA+IC0tIGVuYWJsZS1ncGlvczogU2VlIHNpbXBsZS1wYW5lbC50eHQKPiA+IC0t
-IGJhY2tsaWdodDogU2VlIHNpbXBsZS1wYW5lbC50eHQKPiA+IC0KPiA+IC1UaGlzIGJpbmRpbmcg
-aXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3Bl
-Y2lmaWVkCj4gPiAtaW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KPiA+IGRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
-bC9kbGMsZGxjMDcwMHl6Zy0xLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9wYW5lbC9kbGMsZGxjMDcwMHl6Zy0xLnlhbWwKPiA+IG5ldyBmaWxlIG1vZGUg
-MTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjFiMGI2M2Q0NmYzZQo+ID4gLS0tIC9kZXYv
-bnVsbAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvZGxjLGRsYzA3MDB5emctMS55YW1sCj4gPiBAQCAtMCwwICsxLDI4IEBACj4gPiArIyBT
-UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+ID4gKyVZQU1MIDEuMgo+ID4gKy0tLQo+
-ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvZGlzcGxheS9wYW5lbC9kbGMs
-ZGxjMDcwMHl6Zy0xLnlhbWwjCj4gPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21l
-dGEtc2NoZW1hcy9jb3JlLnlhbWwjCj4gPiArCj4gPiArdGl0bGU6IERMQyBEaXNwbGF5IENvLiBE
-TEMwNzAwWVpHLTEgNy4wIiBXU1ZHQSBURlQgTENEIHBhbmVsCj4gPiArCj4gPiArbWFpbnRhaW5l
-cnM6Cj4gPiArICAtIFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+Cj4gPiAr
-ICAtIFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+Cj4gPiArCj4gPiAr
-YWxsT2Y6Cj4gPiArICAtICRyZWY6IHBhbmVsLWNvbW1vbi55YW1sIwo+ID4gKwo+ID4gK3Byb3Bl
-cnRpZXM6Cj4gPiArICBjb21wYXRpYmxlOgo+ID4gKyAgICBjb25zdDogZGxjLGRsYzA3MDB5emct
-MQo+ID4gKwo+ID4gKyAgcmVzZXQtZ3Bpb3M6IHRydWUKPiA+ICsgIGVuYWJsZS1ncGlvczogdHJ1
-ZQo+ID4gKyAgYmFja2xpZ2h0OiB0cnVlCj4KPiBEbyB3ZSBuZWVkIHRvIGxpc3QgdGhlbT8KPgo+
-IFNpbmNlIHdlIGRvbid0IGhhdmUgYWRkaXRpb25hbEl0ZW1zLCBpdCBkb2Vzbid0IHJlYWxseSBj
-aGFuZ2UgYW55dGhpbmcKPiBzaW5jZSBpdCB3aWxsIGJlIHZhbGlkYXRlZCBieSBwYW5lbC1jb21t
-b24uCgpJJ3ZlIGdvbmUgYmFjayBhbmQgZm9ydGggb24gaXQuIEkgdGhpbmsgd2UgbmVlZCB0byBl
-eHByZXNzIHdoYXQKcHJvcGVydGllcyBmcm9tIHRoZSBjb21tb24gcHJvcGVydGllcyBhcHBseSBm
-b3IgYSBwYXJ0aWN1bGFyIHBhbmVsLgpJJ3ZlIGJlZW4gcmVxdWlyaW5nIHBhbmVsIGJpbmRpbmdz
-IHRvIGJlIGV4cGxpY2l0IGhlcmUgcmF0aGVyIHRoYW4KanVzdCBzYXkgInVzZXMgdGhlIHNpbXBs
-ZS1wYW5lbCBiaW5kaW5nLiIgRm9yIGV4YW1wbGUsIGlmCidwb3dlci1zdXBwbHknIGlzIG5vdCBs
-aXN0ZWQsIGRvZXMgdGhlIHBhbmVsIGhhdmUgYSBzaW5nbGUgc3VwcGx5IG9yCm11bHRpcGxlIHN1
-cHBsaWVzIHRoYXQgaGF2ZW4ndCBoYXZlbid0IGJlZW4gY29uc2lkZXJlZD8KCj4gRWl0aGVyIHdh
-eSwgaXQgc2hvdWxkIGJlIGNvbnNpc3RlbnQgYmV0d2VlbiB5b3VyIHBhdGNoZXMsIGFuZCB0aGUK
-PiBwcmV2aW91cyBwYXRjaGVzIGluIHRoaXMgc2VyaWVzIGRpZG4ndCBsaXN0IGFsbCB0aGUgcHJv
-cGVydGllcyBpbiB0aGUKPiBiaW5kaW5nLgoKSW5kZWVkLgoKUm9iCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Mon, 2019-06-24 at 18:40 +0200, Arnd Bergmann wrote:
+> On Mon, Jun 24, 2019 at 6:21 PM Alex Elder <elder@linaro.org> wrote:
+> > On 6/18/19 2:03 PM, Johannes Berg wrote:
+> > 
+> > > Really there are two possible ways (and they intersect to some extent).
+> > > 
+> > > One is the whole multi-function device, where a single WWAN device is
+> > > composed of channels offered by actually different drivers, e.g. for a
+> > > typical USB device you might have something like cdc_ether and the
+> > > usb_wwan TTY driver. In this way, we need to "compose" the WWAN device
+> > > similarly, e.g. by using the underlying USB device "struct device"
+> > > pointer to tie it together.
+> > 
+> > I *think* this model makes the most sense.  But at this point
+> > it would take very little to convince me otherwise...  (And then
+> > I saw Arnd's message advocating the other one, unfortunately...)
+> > 
+> > > The other is something like IPA or the Intel modem driver, where the
+> > > device is actually a single (e.g. PCIe) device and just has a single
+> > > driver, but that single driver offers different channels.
+> > 
+> > What I don't like about this is that it's more monolithic.  It
+> > seems better to have the low-level IPA or Intel modem driver (or
+> > any other driver that can support communication between the AP
+> > and WWAN device) present communication paths that other function-
+> > specific drivers can attach to and use.
+> 
+> I did not understand Johannes description as two competing models
+> for the same code, but rather two kinds of existing hardware that
+> a new driver system would have to deal with.
+
+Right.
+
+> I was trying to simplify it to just having the second model, by adding
+> a hack to support the first, but my view was rather unpopular so
+> far, so if everyone agrees on one way to do it, don't worry about me ;-)
+
+:-)
+
+However, to also reply to Alex: I don't know exactly how IPA works, but
+for the Intel modem at least you can't fundamentally have two drivers
+for different parts of the functionality, since it's just a single piece
+of hardware and you need to allocate hardware resources from a common
+pool etc. So you cannot split the driver into "Intel modem control
+channel driver" and "Intel modem data channel driver". In fact, it's
+just a single "struct device" on the PCIe bus that you can bind to, and
+only one driver can bind at a time.
+
+So, IOW, I'm not sure I see how you'd split that up. I guess you could
+if you actually do something like the "rmnet" model, and I suppose
+you're free to do that for IPA if you like, but I tend to think that's
+actually a burden, not a win since you just get more complex code that
+needs to interact with more pieces. A single driver for a single
+hardware that knows about the few types of channels seems simpler to me.
+
+> - to answer Johannes question, my understanding is that the interface
+>   between kernel and firmware/hardware for IPA has a single 'struct
+>   device' that is used for both the data and the control channels,
+>   rather than having a data channel and an independent control device,
+>   so this falls into the same category as the Intel one (please correct
+>   me on that)
+
+That sounds about the same then, right.
+
+Are the control channels to IPA are actually also tunnelled over the
+rmnet protocol? And even if they are, perhaps they have a different
+hardware queue or so? That'd be the case for Intel - different hardware
+queue, same (or at least similar) protocol spoken for the DMA hardware
+itself, but different contents of the messages obviously.
+
+> - The user space being proprietary is exactly what we need to avoid
+>   with the wwan subsystem. We need to be able to use the same
+>   method for setting up Intel, Qualcomm, Samsung, Unisoc or
+>   Hisilicon modems or anything else that hooks into the subsystem,
+>   and support that in network manager as well as the Android
+>   equivalent.
+>   If Qualcomm wants to provide their own proprietary user space
+>   solution, we can't stop them, but then that should also work on
+>   all the others unless they intentionally break it. ;-)
+
+:-)
+
+I tend to think there's always going to be some level of specific
+handling here, because e.g. the Intel modem can expose MBIM or AT
+command control channels, but not much else (that'd be useful for us
+anyway, since we don't know how to speak debug protocol etc.). Other
+modems will expose *only* AT commands, or *only* MBIM, and yet others
+may also offer QMI and then that might be preferable.
+
+> > > and simply require that the channel is attached to the wwan device with
+> > > the representation-specific call (wwan_attach_netdev, wwan_attach_tty,
+> > > ...).
+> > 
+> > Or maybe have the WWAN device present interfaces with attributes,
+> > and have drivers that are appropriate for each interface attach
+> > to only the ones they recognize they support.
+> 
+> I think you both mean the same thing here, a structure with callback
+> pointers that may or may not be filled by the driver depending on its
+> capabilities.
+
+:-)
+
+> What we should try to avoid though is a way to add driver private
+> interfaces that risk having multiple drivers create similar functionality
+> in incompatible ways.
+
+Right.
+
+johannes
