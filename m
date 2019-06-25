@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH v3 10/14] arm64: dts: qcom: qcs404: Add OPP table
-Date: Tue, 25 Jun 2019 18:47:29 +0200
-Message-ID: <20190625164733.11091-11-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v3 09/14] arm64: dts: qcom: msm8916: Add the clocks for the APCS mux/divider
+Date: Tue, 25 Jun 2019 18:47:28 +0200
+Message-ID: <20190625164733.11091-10-jorge.ramirez-ortiz@linaro.org>
 References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,43 +12,31 @@ To: jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org
 Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add a CPU OPP table to qcs404
+Specify the clocks that feed the APCS mux/divider instead of using
+default hardcoded values in the source code.
 
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+The driver still supports the previous bindings; however with this
+update it we allow the msm8916 to access the parent clock names
+required by the driver operation using the device tree node.
+
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 3f17e1b09c13..d876dae5b0a5 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -83,6 +83,24 @@
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 5ea9fb8f2f87..96dc7a12aa94 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -429,7 +429,8 @@
+ 			compatible = "qcom,msm8916-apcs-kpss-global", "syscon";
+ 			reg = <0xb011000 0x1000>;
+ 			#mbox-cells = <1>;
+-			clocks = <&a53pll>;
++			clocks = <&gcc GPLL0_VOTE>, <&a53pll>;
++			clock-names = "aux", "pll";
+ 			#clock-cells = <0>;
  		};
- 	};
  
-+	cpu_opp_table: cpu-opp-table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-1094400000 {
-+			opp-hz = /bits/ 64 <1094400000>;
-+			opp-microvolt = <1224000 1224000 1224000>;
-+		};
-+		opp-1248000000 {
-+			opp-hz = /bits/ 64 <1248000000>;
-+			opp-microvolt = <1288000 1288000 1288000>;
-+		};
-+		opp-1401600000 {
-+			opp-hz = /bits/ 64 <1401600000>;
-+			opp-microvolt = <1384000 1384000 1384000>;
-+		};
-+	};
-+
- 	firmware {
- 		scm: scm {
- 			compatible = "qcom,scm-qcs404", "qcom,scm";
 -- 
 2.21.0
