@@ -1,7 +1,7 @@
 From: yibin.gong@nxp.com
-Subject: [PATCH v5 5/6] dmaengine: fsl-edma: add i.mx7ulp edma2 version support
-Date: Tue, 25 Jun 2019 17:43:23 +0800
-Message-ID: <20190625094324.19196-6-yibin.gong@nxp.com>
+Subject: [PATCH v5 1/6] dmaengine: fsl-edma: add drvdata for fsl-edma
+Date: Tue, 25 Jun 2019 17:43:19 +0800
+Message-ID: <20190625094324.19196-2-yibin.gong@nxp.com>
 References: <20190625094324.19196-1-yibin.gong@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190625094324.19196-1-yibin.gong@nxp.com>
@@ -12,183 +12,284 @@ List-Id: devicetree@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-Add edma2 for i.mx7ulp by version v3, since v2 has already
-been used by mcf-edma.
-The big changes based on v1 are belows:
-1. only one dmamux.
-2. another clock dma_clk except dmamux clk.
-3. 16 independent interrupts instead of only one interrupt for
-all channels.
+There are some differences between vf610 and next i.mx7ulp. Put such
+differences into static driver data for distinguishing easily at
+driver level. Change mcf-edma accordingly.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- drivers/dma/fsl-edma-common.c | 18 +++++++++++-
- drivers/dma/fsl-edma-common.h |  4 +++
- drivers/dma/fsl-edma.c        | 66 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 87 insertions(+), 1 deletion(-)
+ drivers/dma/fsl-edma-common.c | 29 +++++++++++++++--------------
+ drivers/dma/fsl-edma-common.h | 10 +++++++++-
+ drivers/dma/fsl-edma.c        | 43 ++++++++++++++++++++++++++++++-------------
+ drivers/dma/mcf-edma.c        | 11 ++++++++---
+ 4 files changed, 62 insertions(+), 31 deletions(-)
 
 diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index 44d92c3..6d6d8a4 100644
+index 680b2a0..07d9689 100644
 --- a/drivers/dma/fsl-edma-common.c
 +++ b/drivers/dma/fsl-edma-common.c
-@@ -90,6 +90,19 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
- 	iowrite8(val8, addr + off);
- }
+@@ -47,7 +47,7 @@ static void fsl_edma_enable_request(struct fsl_edma_chan *fsl_chan)
+ 	struct edma_regs *regs = &fsl_chan->edma->regs;
+ 	u32 ch = fsl_chan->vchan.chan.chan_id;
  
-+void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
-+		     u32 off, u32 slot, bool enable)
-+{
-+	u32 val;
-+
-+	if (enable)
-+		val = EDMAMUX_CHCFG_ENBL << 24 | slot;
-+	else
-+		val = EDMAMUX_CHCFG_DIS;
-+
-+	iowrite32(val, addr + off * 4);
-+}
-+
- void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 			unsigned int slot, bool enable)
- {
-@@ -103,7 +116,10 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+-	if (fsl_chan->edma->version == v1) {
++	if (fsl_chan->edma->drvdata->version == v1) {
+ 		edma_writeb(fsl_chan->edma, EDMA_SEEI_SEEI(ch), regs->seei);
+ 		edma_writeb(fsl_chan->edma, ch, regs->serq);
+ 	} else {
+@@ -64,7 +64,7 @@ void fsl_edma_disable_request(struct fsl_edma_chan *fsl_chan)
+ 	struct edma_regs *regs = &fsl_chan->edma->regs;
+ 	u32 ch = fsl_chan->vchan.chan.chan_id;
+ 
+-	if (fsl_chan->edma->version == v1) {
++	if (fsl_chan->edma->drvdata->version == v1) {
+ 		edma_writeb(fsl_chan->edma, ch, regs->cerq);
+ 		edma_writeb(fsl_chan->edma, EDMA_CEEI_CEEI(ch), regs->ceei);
+ 	} else {
+@@ -83,8 +83,9 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+ 	u32 ch = fsl_chan->vchan.chan.chan_id;
+ 	void __iomem *muxaddr;
+ 	unsigned int chans_per_mux, ch_off;
++	u32 dmamux_nr = fsl_chan->edma->drvdata->dmamuxs;
+ 
+-	chans_per_mux = fsl_chan->edma->n_chans / DMAMUX_NR;
++	chans_per_mux = fsl_chan->edma->n_chans / dmamux_nr;
+ 	ch_off = fsl_chan->vchan.chan.chan_id % chans_per_mux;
  	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
  	slot = EDMAMUX_CHCFG_SOURCE(slot);
+@@ -647,28 +648,28 @@ void fsl_edma_setup_regs(struct fsl_edma_engine *edma)
+ 	edma->regs.erql = edma->membase + EDMA_ERQ;
+ 	edma->regs.eeil = edma->membase + EDMA_EEI;
  
--	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
-+	if (fsl_chan->edma->drvdata->version == v3)
-+		mux_configure32(fsl_chan, muxaddr, ch_off, slot, enable);
-+	else
-+		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
- }
- EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
+-	edma->regs.serq = edma->membase + ((edma->version == v1) ?
++	edma->regs.serq = edma->membase + ((edma->drvdata->version == v1) ?
+ 			EDMA_SERQ : EDMA64_SERQ);
+-	edma->regs.cerq = edma->membase + ((edma->version == v1) ?
++	edma->regs.cerq = edma->membase + ((edma->drvdata->version == v1) ?
+ 			EDMA_CERQ : EDMA64_CERQ);
+-	edma->regs.seei = edma->membase + ((edma->version == v1) ?
++	edma->regs.seei = edma->membase + ((edma->drvdata->version == v1) ?
+ 			EDMA_SEEI : EDMA64_SEEI);
+-	edma->regs.ceei = edma->membase + ((edma->version == v1) ?
++	edma->regs.ceei = edma->membase + ((edma->drvdata->version == v1) ?
+ 			EDMA_CEEI : EDMA64_CEEI);
+-	edma->regs.cint = edma->membase + ((edma->version == v1) ?
++	edma->regs.cint = edma->membase + ((edma->drvdata->version == v1) ?
+ 			EDMA_CINT : EDMA64_CINT);
+-	edma->regs.cerr = edma->membase + ((edma->version == v1) ?
++	edma->regs.cerr = edma->membase + ((edma->drvdata->version == v1) ?
+ 			EDMA_CERR : EDMA64_CERR);
+-	edma->regs.ssrt = edma->membase + ((edma->version == v1) ?
++	edma->regs.ssrt = edma->membase + ((edma->drvdata->version == v1) ?
+ 			EDMA_SSRT : EDMA64_SSRT);
+-	edma->regs.cdne = edma->membase + ((edma->version == v1) ?
++	edma->regs.cdne = edma->membase + ((edma->drvdata->version == v1) ?
+ 			EDMA_CDNE : EDMA64_CDNE);
+-	edma->regs.intl = edma->membase + ((edma->version == v1) ?
++	edma->regs.intl = edma->membase + ((edma->drvdata->version == v1) ?
+ 			EDMA_INTR : EDMA64_INTL);
+-	edma->regs.errl = edma->membase + ((edma->version == v1) ?
++	edma->regs.errl = edma->membase + ((edma->drvdata->version == v1) ?
+ 			EDMA_ERR : EDMA64_ERRL);
  
+-	if (edma->version == v2) {
++	if (edma->drvdata->version == v2) {
+ 		edma->regs.erqh = edma->membase + EDMA64_ERQH;
+ 		edma->regs.eeih = edma->membase + EDMA64_EEIH;
+ 		edma->regs.errh = edma->membase + EDMA64_ERRH;
 diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-index 4e17556..5eaa290 100644
+index c53f76e..4e17556 100644
 --- a/drivers/dma/fsl-edma-common.h
 +++ b/drivers/dma/fsl-edma-common.h
-@@ -125,6 +125,7 @@ struct fsl_edma_chan {
- 	dma_addr_t			dma_dev_addr;
- 	u32				dma_dev_size;
- 	enum dma_data_direction		dma_dir;
-+	char				chan_name[16];
- };
+@@ -7,6 +7,7 @@
+ #define _FSL_EDMA_COMMON_H_
  
- struct fsl_edma_desc {
-@@ -139,11 +140,13 @@ struct fsl_edma_desc {
- enum edma_version {
- 	v1, /* 32ch, Vybrid, mpc57x, etc */
+ #include <linux/dma-direction.h>
++#include <linux/platform_device.h>
+ #include "virt-dma.h"
+ 
+ #define EDMA_CR_EDBG		BIT(1)
+@@ -140,17 +141,24 @@ enum edma_version {
  	v2, /* 64ch Coldfire */
-+	v3, /* 32ch, i.mx7ulp */
  };
  
- struct fsl_edma_drvdata {
- 	enum edma_version	version;
- 	u32			dmamuxs;
-+	bool			has_dmaclk;
- 	int			(*setup_irq)(struct platform_device *pdev,
- 					     struct fsl_edma_engine *fsl_edma);
- };
-@@ -153,6 +156,7 @@ struct fsl_edma_engine {
++struct fsl_edma_drvdata {
++	enum edma_version	version;
++	u32			dmamuxs;
++	int			(*setup_irq)(struct platform_device *pdev,
++					     struct fsl_edma_engine *fsl_edma);
++};
++
+ struct fsl_edma_engine {
+ 	struct dma_device	dma_dev;
  	void __iomem		*membase;
  	void __iomem		*muxbase[DMAMUX_NR];
  	struct clk		*muxclk[DMAMUX_NR];
-+	struct clk		*dmaclk;
  	struct mutex		fsl_edma_mutex;
- 	const struct fsl_edma_drvdata *drvdata;
++	const struct fsl_edma_drvdata *drvdata;
  	u32			n_chans;
+ 	int			txirq;
+ 	int			errirq;
+ 	bool			big_endian;
+-	enum edma_version	version;
+ 	struct edma_regs	regs;
+ 	struct fsl_edma_chan	chans[];
+ };
 diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
-index fcbad6a..05215ab 100644
+index 0ddad3a..fcbad6a 100644
 --- a/drivers/dma/fsl-edma.c
 +++ b/drivers/dma/fsl-edma.c
-@@ -162,6 +162,50 @@ fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma
- 	return 0;
+@@ -92,7 +92,8 @@ static struct dma_chan *fsl_edma_xlate(struct of_phandle_args *dma_spec,
+ 	struct fsl_edma_engine *fsl_edma = ofdma->of_dma_data;
+ 	struct dma_chan *chan, *_chan;
+ 	struct fsl_edma_chan *fsl_chan;
+-	unsigned long chans_per_mux = fsl_edma->n_chans / DMAMUX_NR;
++	u32 dmamux_nr = fsl_edma->drvdata->dmamuxs;
++	unsigned long chans_per_mux = fsl_edma->n_chans / dmamux_nr;
+ 
+ 	if (dma_spec->args_count != 2)
+ 		return NULL;
+@@ -180,16 +181,38 @@ static void fsl_disable_clocks(struct fsl_edma_engine *fsl_edma, int nr_clocks)
+ 		clk_disable_unprepare(fsl_edma->muxclk[i]);
  }
  
-+static int
-+fsl_edma2_irq_init(struct platform_device *pdev,
-+		   struct fsl_edma_engine *fsl_edma)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	int i, ret, irq;
-+	int count;
-+
-+	count = of_irq_count(np);
-+	dev_dbg(&pdev->dev, "%s Found %d interrupts\r\n", __func__, count);
-+	if (count <= 2) {
-+		dev_err(&pdev->dev, "Interrupts in DTS not correct.\n");
-+		return -EINVAL;
-+	}
-+	/*
-+	 * 16 channel independent interrupts + 1 error interrupt on i.mx7ulp.
-+	 * 2 channel share one interrupt, for example, ch0/ch16, ch1/ch17...
-+	 * For now, just simply request irq without IRQF_SHARED flag, since 16
-+	 * channels are enough on i.mx7ulp whose M4 domain own some peripherals.
-+	 */
-+	for (i = 0; i < count; i++) {
-+		irq = platform_get_irq(pdev, i);
-+		if (irq < 0)
-+			return -ENXIO;
-+
-+		sprintf(fsl_edma->chans[i].chan_name, "eDMA2-CH%02d", i);
-+
-+		/* The last IRQ is for eDMA err */
-+		if (i == count - 1)
-+			ret = devm_request_irq(&pdev->dev, irq,
-+						fsl_edma_err_handler,
-+						0, "eDMA2-ERR", fsl_edma);
-+		else
-+			ret = devm_request_irq(&pdev->dev, irq,
-+						fsl_edma_tx_handler, 0,
-+						fsl_edma->chans[i].chan_name,
-+						fsl_edma);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static void fsl_edma_irq_exit(
- 		struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
- {
-@@ -187,8 +231,16 @@ static struct fsl_edma_drvdata vf610_data = {
- 	.setup_irq = fsl_edma_irq_init,
- };
- 
-+static struct fsl_edma_drvdata imx7ulp_data = {
-+	.version = v3,
-+	.dmamuxs = 1,
-+	.has_dmaclk = true,
-+	.setup_irq = fsl_edma2_irq_init,
++static struct fsl_edma_drvdata vf610_data = {
++	.version = v1,
++	.dmamuxs = DMAMUX_NR,
++	.setup_irq = fsl_edma_irq_init,
 +};
 +
- static const struct of_device_id fsl_edma_dt_ids[] = {
- 	{ .compatible = "fsl,vf610-edma", .data = &vf610_data},
-+	{ .compatible = "fsl,imx7ulp-edma", .data = &imx7ulp_data},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
-@@ -236,6 +288,20 @@ static int fsl_edma_probe(struct platform_device *pdev)
++static const struct of_device_id fsl_edma_dt_ids[] = {
++	{ .compatible = "fsl,vf610-edma", .data = &vf610_data},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
++
+ static int fsl_edma_probe(struct platform_device *pdev)
+ {
++	const struct of_device_id *of_id =
++			of_match_device(fsl_edma_dt_ids, &pdev->dev);
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct fsl_edma_engine *fsl_edma;
++	const struct fsl_edma_drvdata *drvdata = NULL;
+ 	struct fsl_edma_chan *fsl_chan;
+ 	struct edma_regs *regs;
+ 	struct resource *res;
+ 	int len, chans;
+ 	int ret, i;
+ 
++	if (of_id)
++		drvdata = of_id->data;
++	if (!drvdata) {
++		dev_err(&pdev->dev, "unable to find driver data\n");
++		return -EINVAL;
++	}
++
+ 	ret = of_property_read_u32(np, "dma-channels", &chans);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Can't get dma-channels.\n");
+@@ -201,7 +224,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 	if (!fsl_edma)
+ 		return -ENOMEM;
+ 
+-	fsl_edma->version = v1;
++	fsl_edma->drvdata = drvdata;
+ 	fsl_edma->n_chans = chans;
+ 	mutex_init(&fsl_edma->fsl_edma_mutex);
+ 
+@@ -213,7 +236,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
  	fsl_edma_setup_regs(fsl_edma);
  	regs = &fsl_edma->regs;
  
-+	if (drvdata->has_dmaclk) {
-+		fsl_edma->dmaclk = devm_clk_get(&pdev->dev, "dma");
-+		if (IS_ERR(fsl_edma->dmaclk)) {
-+			dev_err(&pdev->dev, "Missing DMA block clock.\n");
-+			return PTR_ERR(fsl_edma->dmaclk);
-+		}
-+
-+		ret = clk_prepare_enable(fsl_edma->dmaclk);
-+		if (ret) {
-+			dev_err(&pdev->dev, "DMA clk block failed.\n");
-+			return ret;
-+		}
-+	}
-+
- 	for (i = 0; i < fsl_edma->drvdata->dmamuxs; i++) {
+-	for (i = 0; i < DMAMUX_NR; i++) {
++	for (i = 0; i < fsl_edma->drvdata->dmamuxs; i++) {
  		char clkname[32];
+ 
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, 1 + i);
+@@ -259,7 +282,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	edma_writel(fsl_edma, ~0, regs->intl);
+-	ret = fsl_edma_irq_init(pdev, fsl_edma);
++	ret = fsl_edma->drvdata->setup_irq(pdev, fsl_edma);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -291,7 +314,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 	if (ret) {
+ 		dev_err(&pdev->dev,
+ 			"Can't register Freescale eDMA engine. (%d)\n", ret);
+-		fsl_disable_clocks(fsl_edma, DMAMUX_NR);
++		fsl_disable_clocks(fsl_edma, fsl_edma->drvdata->dmamuxs);
+ 		return ret;
+ 	}
+ 
+@@ -300,7 +323,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev,
+ 			"Can't register Freescale eDMA of_dma. (%d)\n", ret);
+ 		dma_async_device_unregister(&fsl_edma->dma_dev);
+-		fsl_disable_clocks(fsl_edma, DMAMUX_NR);
++		fsl_disable_clocks(fsl_edma, fsl_edma->drvdata->dmamuxs);
+ 		return ret;
+ 	}
+ 
+@@ -319,7 +342,7 @@ static int fsl_edma_remove(struct platform_device *pdev)
+ 	fsl_edma_cleanup_vchan(&fsl_edma->dma_dev);
+ 	of_dma_controller_free(np);
+ 	dma_async_device_unregister(&fsl_edma->dma_dev);
+-	fsl_disable_clocks(fsl_edma, DMAMUX_NR);
++	fsl_disable_clocks(fsl_edma, fsl_edma->drvdata->dmamuxs);
+ 
+ 	return 0;
+ }
+@@ -378,12 +401,6 @@ static const struct dev_pm_ops fsl_edma_pm_ops = {
+ 	.resume_early   = fsl_edma_resume_early,
+ };
+ 
+-static const struct of_device_id fsl_edma_dt_ids[] = {
+-	{ .compatible = "fsl,vf610-edma", },
+-	{ /* sentinel */ }
+-};
+-MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
+-
+ static struct platform_driver fsl_edma_driver = {
+ 	.driver		= {
+ 		.name	= "fsl-edma",
+diff --git a/drivers/dma/mcf-edma.c b/drivers/dma/mcf-edma.c
+index 7de54b2f..e15bd15 100644
+--- a/drivers/dma/mcf-edma.c
++++ b/drivers/dma/mcf-edma.c
+@@ -164,6 +164,11 @@ static void mcf_edma_irq_free(struct platform_device *pdev,
+ 		free_irq(irq, mcf_edma);
+ }
+ 
++static struct fsl_edma_drvdata mcf_data = {
++	.version = v2,
++	.setup_irq = mcf_edma_irq_init,
++};
++
+ static int mcf_edma_probe(struct platform_device *pdev)
+ {
+ 	struct mcf_edma_platform_data *pdata;
+@@ -187,8 +192,8 @@ static int mcf_edma_probe(struct platform_device *pdev)
+ 
+ 	mcf_edma->n_chans = chans;
+ 
+-	/* Set up version for ColdFire edma */
+-	mcf_edma->version = v2;
++	/* Set up drvdata for ColdFire edma */
++	mcf_edma->drvdata = &mcf_data;
+ 	mcf_edma->big_endian = 1;
+ 
+ 	if (!mcf_edma->n_chans) {
+@@ -223,7 +228,7 @@ static int mcf_edma_probe(struct platform_device *pdev)
+ 	iowrite32(~0, regs->inth);
+ 	iowrite32(~0, regs->intl);
+ 
+-	ret = mcf_edma_irq_init(pdev, mcf_edma);
++	ret = mcf_edma->drvdata->setup_irq(pdev, mcf_edma);
+ 	if (ret)
+ 		return ret;
  
 -- 
 2.7.4
