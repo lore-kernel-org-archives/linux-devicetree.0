@@ -1,105 +1,92 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH V3 06/17] clk: tegra: pll: save and restore pll context
-Date: Tue, 25 Jun 2019 14:22:43 -0700
-Message-ID: <1d34f117-9882-7e11-9641-90f3b7ebc273@nvidia.com>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-7-git-send-email-skomatineni@nvidia.com>
- <20190625204640.D640E205ED@mail.kernel.org>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 4/4] drm/panel: jh057n0090: Add regulator support
+Date: Tue, 25 Jun 2019 23:24:19 +0200
+Message-ID: <20190625212419.GB20625@ravnborg.org>
+References: <cover.1561482165.git.agx@sigxcpu.org>
+ <b239f1db7a1f67988a9bd1ed62f6a1cf1dce944c.1561482165.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625204640.D640E205ED@mail.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <b239f1db7a1f67988a9bd1ed62f6a1cf1dce944c.1561482165.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, jason@lakedaemon.net, jonathanh@nvidia.com, linus.walleij@linaro.org, marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de, thierry.reding@gmail.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
+To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 25, 2019 at 07:05:19PM +0200, Guido Günther wrote:
+> Allow to specify regulators for vcc and iovcc. According to the data
+> sheet the panel wants vcc (2.8V) and iovcc (1.8V) and there's no startup
+> dependency between the two.
+s/jh057n0090/jh057n00900
 
-On 6/25/19 1:46 PM, Stephen Boyd wrote:
-> Quoting Sowjanya Komatineni (2019-06-18 00:46:20)
->> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
->> index 1583f5fc992f..4b0ed8fc6268 100644
->> --- a/drivers/clk/tegra/clk-pll.c
->> +++ b/drivers/clk/tegra/clk-pll.c
->> @@ -1008,6 +1008,54 @@ static unsigned long clk_plle_recalc_rate(struct clk_hw *hw,
->>          return rate;
->>   }
->>   
->> +void tegra_clk_sync_state_pll(struct clk_hw *hw)
->> +{
->> +       if (!__clk_get_enable_count(hw->clk))
->> +               clk_pll_disable(hw);
->> +       else
->> +               clk_pll_enable(hw);
->> +}
->> +
->> +static int tegra_clk_pll_save_context(struct clk_hw *hw)
->> +{
->> +       struct tegra_clk_pll *pll = to_clk_pll(hw);
->> +
->> +       pll->rate = clk_hw_get_rate(hw);
->> +
->> +       if (!strcmp(__clk_get_name(hw->clk), "pll_mb"))
->> +               pll->pllbase_ctx = pll_readl_base(pll);
->> +       else if (!strcmp(__clk_get_name(hw->clk), "pll_re_vco"))
->> +               pll->pllbase_ctx = pll_readl_base(pll) & (0xf << 16);
->> +
->> +       return 0;
->> +}
->> +
->> +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
->> +{
->> +       struct tegra_clk_pll *pll = to_clk_pll(hw);
->> +       u32 val;
->> +
->> +       if (clk_pll_is_enabled(hw))
->> +               return;
->> +
->> +       if (!strcmp(__clk_get_name(hw->clk), "pll_mb")) {
-> Is there any way to avoid doing a string comparison here, and instead do
-> something like a pointer comparison? Or maybe look at some flag in the
-> tegra_clk_pll to figure out what to do differently? Using a string
-> comparison is not too nice. Or even have different clk ops for the
-> different clks and then do different things in this restore clk_op?
-OK, Will update...
->> +               pll_writel_base(pll->pllbase_ctx, pll);
->> +       } else if (!strcmp(__clk_get_name(hw->clk), "pll_re_vco")) {
->> +               val = pll_readl_base(pll);
->> +               val &= ~(0xf << 16);
->> +               pll_writel_base(pll->pllbase_ctx | val, pll);
->> +       }
->> +
->> +       if (pll->params->set_defaults)
->> +               pll->params->set_defaults(pll);
->> +
->> +       clk_set_rate(hw->clk, pll->rate);
-> Do you need to call clk_set_rate() here to change the frequency of the
-> clk or just the parents of the clk, or both? I'd think that when we're
-> restoring the clk the cached rate of the clk would match whatever we're
-> restoring to, so this is a NOP. So does this do anything?
->
-> I'd prefer that the restore ops just restore the clk hardware state of
-> the clk_hw passed in, and not try to fix up the entire tree around a
-> certain clk, if that's even possible.
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>  .../drm/panel/panel-rocktech-jh057n00900.c    | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> index b8a069055fbc..f8f6f087b9bc 100644
+> --- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> +++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/media-bus-format.h>
+>  #include <linux/module.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <video/display_timing.h>
+>  #include <video/mipi_display.h>
+>  
+> @@ -47,6 +48,8 @@ struct jh057n {
+>  	struct drm_panel panel;
+>  	struct gpio_desc *reset_gpio;
+>  	struct backlight_device *backlight;
+> +	struct regulator *vcc;
+> +	struct regulator *iovcc;
+>  	bool prepared;
+>  
+>  	struct dentry *debugfs;
+> @@ -160,6 +163,8 @@ static int jh057n_unprepare(struct drm_panel *panel)
+>  		return 0;
+>  
+>  	mipi_dsi_dcs_set_display_off(dsi);
+> +	regulator_disable(ctx->iovcc);
+> +	regulator_disable(ctx->vcc);
+>  	ctx->prepared = false;
+>  
+>  	return 0;
+> @@ -174,6 +179,13 @@ static int jh057n_prepare(struct drm_panel *panel)
+>  		return 0;
+>  
+>  	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel\n");
+> +	ret = regulator_enable(ctx->vcc);
+> +	if (ret < 0)
+> +		return ret;
+> +	ret = regulator_enable(ctx->iovcc);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+>  	usleep_range(20, 40);
+>  	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> @@ -301,6 +313,13 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
+>  	if (IS_ERR(ctx->backlight))
+>  		return PTR_ERR(ctx->backlight);
+>  
+> +	ctx->vcc = devm_regulator_get(dev, "vcc");
+> +	if (IS_ERR(ctx->vcc))
+> +		return PTR_ERR(ctx->vcc);
+> +	ctx->iovcc = devm_regulator_get(dev, "iovcc");
+> +	if (IS_ERR(ctx->iovcc))
+> +		return PTR_ERR(ctx->iovcc);
+> +
+Consider to write an error message.
+The regulators are now mandatory, but they be missing in some device
+trees. So it would be good to help them to understand why it fails.
 
-On restore, need to program tegra plls rate back to the same rate as 
-they were before suspend, so I am calling clk_set_rate to program pll 
-m,n,p values in hw registers.
+With this considered:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
->> +
->> +       /* do not sync pllx state here. pllx is sync'd after dfll resume */
->> +       if (strcmp(__clk_get_name(hw->clk), "pll_x"))
->> +               tegra_clk_sync_state_pll(hw);
->> +}
->> +
->>   const struct clk_ops tegra_clk_pll_ops = {
->>          .is_enabled = clk_pll_is_enabled,
->>          .enable = clk_pll_enable,
->> @@ -1015,6 +1063,8 @@ const struct clk_ops tegra_clk_pll_ops = {
->>          .recalc_rate = clk_pll_recalc_rate,
->>          .round_rate = clk_pll_round_rate,
->>          .set_rate = clk_pll_set_rate,
->> +       .save_context = tegra_clk_pll_save_context,
->> +       .restore_context = tegra_clk_pll_restore_context,
+	Sam
