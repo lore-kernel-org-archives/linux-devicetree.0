@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH v3 02/14] mbox: qcom: add APCS child device for QCS404
-Date: Tue, 25 Jun 2019 18:47:21 +0200
-Message-ID: <20190625164733.11091-3-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v3 06/14] clk: qcom: hfpll: get parent clock names from DT
+Date: Tue, 25 Jun 2019 18:47:25 +0200
+Message-ID: <20190625164733.11091-7-jorge.ramirez-ortiz@linaro.org>
 References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,46 +12,46 @@ To: jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org
 Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-There is clock controller functionality in the APCS hardware block of
-qcs404 devices similar to msm8916.
+Allow accessing the parent clock name required for the driver
+operation using the device tree node.
+
+This permits extending the driver to other platforms without having to
+modify its source code.
+
+For backwards compatibility leave the previous value as default.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 ---
- drivers/mailbox/qcom-apcs-ipc-mailbox.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/clk/qcom/hfpll.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-index 705e17a5479c..a05dc3aabac7 100644
---- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-+++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-@@ -89,16 +89,18 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
+index a6de7101430c..87b7f46d27e0 100644
+--- a/drivers/clk/qcom/hfpll.c
++++ b/drivers/clk/qcom/hfpll.c
+@@ -52,6 +52,7 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
+ 	void __iomem *base;
+ 	struct regmap *regmap;
+ 	struct clk_hfpll *h;
++	struct clk *pclk;
+ 	struct clk_init_data init = {
+ 		.parent_names = (const char *[]){ "xo" },
+ 		.num_parents = 1,
+@@ -75,6 +76,13 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
+ 					  0, &init.name))
+ 		return -ENODEV;
  
--	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
--		apcs->clk = platform_device_register_data(&pdev->dev,
--							  "qcom-apcs-msm8916-clk",
--							  -1, NULL, 0);
--		if (IS_ERR(apcs->clk))
--			dev_err(&pdev->dev, "failed to register APCS clk\n");
--	}
--
- 	platform_set_drvdata(pdev, apcs);
- 
-+	if (!of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global") &&
-+	    !of_device_is_compatible(np, "qcom,qcs404-apcs-apps-global"))
-+		return 0;
++	/* get parent clock from device tree (optional) */
++	pclk = devm_clk_get(dev, "xo");
++	if (!IS_ERR(pclk))
++		init.parent_names = (const char *[]){ __clk_get_name(pclk) };
++	else if (PTR_ERR(pclk) == -EPROBE_DEFER)
++		return -EPROBE_DEFER;
 +
-+	apcs->clk = platform_device_register_data(&pdev->dev,
-+						  "qcom-apcs-msm8916-clk",
-+						  -1, NULL, 0);
-+	if (IS_ERR(apcs->clk))
-+		dev_err(&pdev->dev, "failed to register APCS clk\n");
-+
- 	return 0;
- }
- 
+ 	h->d = &hdata;
+ 	h->clkr.hw.init = &init;
+ 	spin_lock_init(&h->lock);
 -- 
 2.21.0
