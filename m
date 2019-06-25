@@ -1,35 +1,37 @@
 From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Subject: [PATCH 1/4] MAINTAINERS: Add Purism mail alias as reviewer for their devkit's panel
-Date: Tue, 25 Jun 2019 19:05:16 +0200
-Message-ID: <a392758c914d436ec5e449980f619bc906c3054a.1561482165.git.agx@sigxcpu.org>
-References: <cover.1561482165.git.agx@sigxcpu.org>
+Subject: [PATCH 0/4] drm/panel: jh057n0090: Add regulators and drop magic value in init
+Date: Tue, 25 Jun 2019 19:05:15 +0200
+Message-ID: <cover.1561482165.git.agx@sigxcpu.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1561482165.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
-Add a mail alias as reviewer for the rocktech jh057n00900 panel driver.
+Fix the omission of regulators for the recently added panel and make
+sure all dsi commands start with a command instead of one having a magic
+constant (which already caused confusion).
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Also adds a mail alias to the panel's MAINTAINER entry to reduce the bus
+factor.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 10359a30ed3c..b7de43a4910d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5133,6 +5133,7 @@ F:	include/uapi/drm/r128_drm.h
- 
- DRM DRIVER FOR ROCKTECH JH057N00900 PANELS
- M:	Guido Günther <agx@sigxcpu.org>
-+R:	Purism Kernel Team <kernel@puri.sm>
- S:	Maintained
- F:	drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
- F:	Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+To: Thierry Reding <thierry.reding@gmail.com>,Sam Ravnborg <sam@ravnborg.org>,David Airlie <airlied@linux.ie>,Daniel Vetter <daniel@ffwll.ch>,Rob Herring <robh+dt@kernel.org>,Mark Rutland <mark.rutland@arm.com>,Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,"David S. Miller" <davem@davemloft.net>,Greg Kroah-Hartman <gregkh@linuxfoundation.org>,Nicolas Ferre <nicolas.ferre@microchip.com>,"Paul E. McKenney" <paulmck@linux.ibm.com>,dri-devel@lists.freedesktop.org,devicetree@vger.kernel.org,linux-kernel@vger.kernel.org,Purism Kernel Team <kernel@puri.sm>
+
+
+Guido Günther (4):
+  MAINTAINERS: Add Purism mail alias as reviewer for their devkit's
+    panel
+  drm/panel: jh057n0090: Don't use magic constant
+  dt-bindings: display/panel: jh057n0090: Document power supply
+    properties
+  drm/panel: jh057n0090: Add regulator support
+
+ .../display/panel/rocktech,jh057n00900.txt    |  5 +++++
+ MAINTAINERS                                   |  1 +
+ .../drm/panel/panel-rocktech-jh057n00900.c    | 22 ++++++++++++++++++-
+ 3 files changed, 27 insertions(+), 1 deletion(-)
+
 -- 
 2.20.1
