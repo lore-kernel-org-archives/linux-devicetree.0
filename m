@@ -1,69 +1,36 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH] arm64: dts: imx8mm: Init rates and parents configs for clocks
-Date: Tue, 25 Jun 2019 16:26:31 +0300
-Message-ID: <1561469191-26840-1-git-send-email-abel.vesa@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V4 03/18] gpio: tegra: use resume_noirq for tegra gpio resume
+Date: Tue, 25 Jun 2019 15:38:29 +0200
+Message-ID: <CACRpkda0=HeRco8kExdf6TmiLOnCec3Ek06s-MdjNJvVGw3ZNQ@mail.gmail.com>
+References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com> <1561345379-2429-4-git-send-email-skomatineni@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1561345379-2429-4-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com, Rob Herring <robh+dt@kernel.org>, Dmitry Osipenko <dig>
 List-Id: devicetree@vger.kernel.org
 
-Add the initial configuration for clocks that need default parent and rate
-setting. This is based on the vendor tree clock provider parents and rates
-configuration except this is doing the setup in dts rather than using clock
-consumer API in a clock provider driver.
+On Mon, Jun 24, 2019 at 5:03 AM Sowjanya Komatineni
+<skomatineni@nvidia.com> wrote:
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 36 +++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+> During SC7 resume, PARKED bit clear from the pinmux registers may
+> cause a glitch on the GPIO lines.
+>
+> So, Tegra GPIOs restore should happen prior to restoring Tegra pinmux
+> to keep the GPIO lines in a known good state prior to clearing PARKED
+> bit.
+>
+> This patch has fix for this by moving Tegra GPIOs restore to happen
+> very early than pinctrl resume.
+>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 232a741..ab92108 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -451,6 +451,42 @@
- 					 <&clk_ext3>, <&clk_ext4>;
- 				clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
- 					      "clk_ext3", "clk_ext4";
-+				assigned-clocks = <&clk IMX8MM_CLK_AUDIO_AHB>,
-+						<&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
-+						<&clk IMX8MM_SYS_PLL3>,
-+						<&clk IMX8MM_VIDEO_PLL1>,
-+						<&clk IMX8MM_CLK_NOC>,
-+						<&clk IMX8MM_CLK_PCIE1_CTRL>,
-+						<&clk IMX8MM_CLK_PCIE1_PHY>,
-+						<&clk IMX8MM_CLK_CSI1_CORE>,
-+						<&clk IMX8MM_CLK_CSI1_PHY_REF>,
-+						<&clk IMX8MM_CLK_CSI1_ESC>,
-+						<&clk IMX8MM_CLK_DISP_AXI>,
-+						<&clk IMX8MM_CLK_DISP_APB>;
-+				assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_800M>,
-+						<0>,
-+						<0>,
-+						<0>,
-+						<&clk IMX8MM_SYS_PLL3_OUT>,
-+						<&clk IMX8MM_SYS_PLL2_250M>,
-+						<&clk IMX8MM_SYS_PLL2_100M>,
-+						<&clk IMX8MM_SYS_PLL2_1000M>,
-+						<&clk IMX8MM_SYS_PLL2_1000M>,
-+						<&clk IMX8MM_SYS_PLL1_800M>,
-+						<&clk IMX8MM_SYS_PLL2_1000M>,
-+						<&clk IMX8MM_SYS_PLL1_800M>;
-+				assigned-clock-rates = <400000000>,
-+							<400000000>,
-+							<750000000>,
-+							<594000000>,
-+							<0>,
-+							<0>,
-+							<0>,
-+							<0>,
-+							<0>,
-+							<0>,
-+							<500000000>,
-+							<200000000>;
- 			};
- 
- 			src: reset-controller@30390000 {
--- 
-2.7.4
+Can this patch be applied in isolation from the other patches?
+
+WOuld be nice to have at least Thierry's ACK on it before I
+apply it.
+
+Yours,
+Linus Walleij
