@@ -1,57 +1,266 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v3 2/5] regulator: core: Expose some of core functions
- needed by couplers
-Date: Tue, 25 Jun 2019 17:40:01 +0300
-Message-ID: <a0626c9d-c68b-9043-8b2f-870f594938b8@gmail.com>
-References: <20190623210835.26281-1-digetx@gmail.com>
- <20190623210835.26281-3-digetx@gmail.com>
- <20190625111946.GP5316@sirena.org.uk>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum
+ rate for PLL_MIPI
+Date: Tue, 25 Jun 2019 16:49:30 +0200
+Message-ID: <20190625144930.5hegt6bkzqzykjid@flea>
+References: <20190125212433.ni2jg3wvpyjazlxf@flea>
+ <CAMty3ZAsH2iZ+JEqTE3D58aXfGuhMSg9YoO56ZhhOeE4c4yQHQ@mail.gmail.com>
+ <20190129151348.mh27btttsqcmeban@flea>
+ <CAMty3ZAjAoti8Zu80c=OyCA+u-jtQnkidsKSNz_c2OaRswqc3w@mail.gmail.com>
+ <20190201143102.rcvrxstc365mezvx@flea>
+ <CAMty3ZC3_+z1upH4Y08R1z=Uq1C=OpWETNrBO8nGRoHhuNrHSA@mail.gmail.com>
+ <20190605064933.6bmskkxzzgn35xz7@flea>
+ <CAMty3ZCCP=oCqm5=49BsjwoxdDETgBfU_5g8fQ=bz=iWApV0tw@mail.gmail.com>
+ <20190614142406.ybdiqfppo5mc5bgq@flea>
+ <CAMty3ZB45cHx3WeXnywBh2_UA_bTmFs6yBTqLWA1BNf4fQtVvQ@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625111946.GP5316@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mzbgbdizyzlrbfk4"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB77IZDUAKGQE6W3EOCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZB45cHx3WeXnywBh2_UA_bTmFs6yBTqLWA1BNf4fQtVvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-25.06.2019 14:19, Mark Brown пишет:
-> On Mon, Jun 24, 2019 at 12:08:32AM +0300, Dmitry Osipenko wrote:
->> Expose some of internal functions that are required for implementation of
->> customized regulator couplers.
-> 
-> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-> 
->   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-> 
-> are available in the Git repository at:
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-couple-api
-> 
-> for you to fetch changes up to d22b85a1b97d12a4940ef9d778f6122546736f78:
-> 
->   regulator: core: Expose some of core functions needed by couplers (2019-06-25 12:15:35 +0100)
-> 
-> ----------------------------------------------------------------
-> regulator: Coupling API
-> 
-> This series introduces a way of specifying a customized regulators coupler
-> which is necessary for cases like a non-trivial DVFS implementation.
-> 
-> ----------------------------------------------------------------
-> Dmitry Osipenko (2):
->       regulator: core: Introduce API for regulators coupling customization
->       regulator: core: Expose some of core functions needed by couplers
-> 
->  drivers/regulator/core.c          | 194 ++++++++++++++++++++++++++++----------
->  drivers/regulator/of_regulator.c  |  63 +++++++++----
->  include/linux/regulator/coupler.h |  97 +++++++++++++++++++
->  include/linux/regulator/driver.h  |   6 +-
->  include/linux/regulator/machine.h |   2 +-
->  5 files changed, 287 insertions(+), 75 deletions(-)
->  create mode 100644 include/linux/regulator/coupler.h
-> 
 
-Thank you very much! Very nice to see some more progress!
+--mzbgbdizyzlrbfk4
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Thu, Jun 20, 2019 at 11:57:44PM +0530, Jagan Teki wrote:
+> On Fri, Jun 14, 2019 at 7:54 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Wed, Jun 05, 2019 at 01:03:16PM +0530, Jagan Teki wrote:
+> > > On Wed, Jun 5, 2019 at 12:19 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > I've reordered the mail a bit to work on chunks
+> > > >
+> > > > On Fri, May 24, 2019 at 03:37:42PM +0530, Jagan Teki wrote:
+> > > > > > I wish it was in your commit log in the first place, instead of having
+> > > > > > to exchange multiple mails over this.
+> > > > > >
+> > > > > > However, I don't think that's quite true, and it might be a bug in
+> > > > > > Allwinner's implementation (or rather something quite confusing).
+> > > > > >
+> > > > > > You're right that the lcd_rate and pll_rate seem to be generated from
+> > > > > > the pixel clock, and it indeed looks like the ratio between the pixel
+> > > > > > clock and the TCON dotclock is defined through the number of bits per
+> > > > > > lanes.
+> > > > > >
+> > > > > > However, in this case, dsi_rate is actually the same than lcd_rate,
+> > > > > > since pll_rate is going to be divided by dsi_div:
+> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L791
+> > > > > >
+> > > > > > Since lcd_div is 1, it also means that in this case, dsi_rate ==
+> > > > > > dclk_rate.
+> > > > > >
+> > > > > > The DSI module clock however, is always set to 148.5 MHz. Indeed, if
+> > > > > > we look at:
+> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L804
+> > > > > >
+> > > > > > We can see that the rate in clk_info is used if it's different than
+> > > > > > 0. This is filled by disp_al_lcd_get_clk_info, which, in the case of a
+> > > > > > DSI panel, will hardcode it to 148.5 MHz:
+> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L164
+> > > > >
+> > > > > Let me explain, something more.
+> > > > >
+> > > > > According to bsp there are clk_info.tcon_div which I will explain below.
+> > > > > clk_info.dsi_div which is dynamic and it depends on bpp/lanes, so it
+> > > > > is 6 for 24bpp and 4 lanes devices.
+> > > > >
+> > > > > PLL rate here depends on dsi_div (not tcon_div)
+> > > > >
+> > > > > Code here
+> > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L784
+> > > > >
+> > > > > is computing the actual set rate, which depends on dsi_rate.
+> > > > >
+> > > > > lcd_rate = dclk_rate * clk_info.dsi_div;
+> > > > > dsi_rate = pll_rate / clk_info.dsi_div;
+> > > > >
+> > > > > Say if the dclk_rate 148MHz then the dsi_rate is 888MHz which set rate
+> > > > > for above link you mentioned.
+> > > > >
+> > > > > Here are the evidence with some prints.
+> > > > >
+> > > > > https://gist.github.com/openedev/9bae2d87d2fcc06b999fe48c998b7043
+> > > > > https://gist.github.com/openedev/700de2e3701b2bf3ad1aa0f0fa862c9a
+> > > >
+> > > > Ok, so we agree up to this point, and the prints confirm that the
+> > > > analysis above is the right one.
+> > > >
+> > > > > > So, the DSI clock is set to this here:
+> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L805
+> > > >
+> > > > Your patch doesn't address that, so let's leave that one alone.
+> > >
+> > > Basically this is final pll set rate when sun4i_dotclock.c called the
+> > > desired rate with ccu_nkm.c so it ended the final rate with parent as
+> > > Line 8 of
+> > > https://gist.github.com/openedev/700de2e3701b2bf3ad1aa0f0fa862c9a
+> >
+> > If that's important to the driver, it should be set explicitly then,
+> > and not work by accident.
+> >
+> > > > > > The TCON *module* clock (the one in the clock controller) has been set
+> > > > > > to lcd_rate (so the pixel clock times the number of bits per lane) here:
+> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L800
+> > > > > >
+> > > > > > And the PLL has been set to the same rate here:
+> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L794
+> > > > > >
+> > > > > > Let's take a step back now: that function we were looking at,
+> > > > > > lcd_clk_config, is called by lcd_clk_enable, which is in turn called
+> > > > > > by disp_lcd_enable here:
+> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L1328
+> > > > > >
+> > > > > > The next function being called is disp_al_lcd_cfg, and that function
+> > > > > > will hardcode the TCON dotclock divider to 4, here:
+> > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L240
+> > > > >
+> > > > > tcon_div from BSP point-of-view of there are two variants
+> > > > > 00) clk_info.tcon_div which is 4 and same is set the divider position
+> > > > > in SUN4I_TCON0_DCLK_REG (like above link refer)
+> > > > > 01) tcon_div which is 4 and used for edge timings computation
+> > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L12
+> > > > >
+> > > > > The real reason for 01) is again 4 is they set the divider to 4 in 00)
+> > > > > which is technically wrong because the dividers which used during
+> > > > > dotclock in above (dsi_div) should be used here as well. Since there
+> > > > > is no dynamic way of doing this BSP hard-coding these values.
+> > > > >
+> > > > > Patches 5,6,7 on this series doing this
+> > > > > https://patchwork.freedesktop.org/series/60847/
+> > > > >
+> > > > > Hope this explanation helps?
+> > > >
+> > > > It doesn't.
+> > > >
+> > > > The clock tree is this one:
+> > > >
+> > > > PLL(s) -> TCON module clock -> TCON dotclock.
+> > > >
+> > > > The links I mentioned above show that the clock set to lcd_rate is the
+> > > > TCON module clocks (and it should be the one taking the bpp and lanes
+> > > > into account), while the TCON dotclock uses a fixed divider of 4.
+> > >
+> > > Sorry, I can argue much other-than giving some code snips, according to [1]
+> > >
+> > > 00) Line 785, 786 with dclk_rate 148000000
+> > >
+> > > lcd_rate = dclk_rate * clk_info.dsi_div;
+> > > pll_rate = lcd_rate * clk_info.lcd_div;
+> > >
+> > > Since dsi_div is 6 (bpp/lanes), lcd_div 1
+> > >
+> > > lcd_rate = 888000000, pll_rate = 888000000
+> > >
+> > > 01)  Line 801, 804 are final rates computed as per clock driver (say
+> > > ccu_nkm in mainline)
+> > >
+> > > lcd_rate_set=891000000
+> > >
+> > > As per your comments if it would be 4 then the desired numbers are
+> > > would be 592000000 not 888000000.
+> > >
+> > > This is what I'm trying to say in all mails, and same as verified with
+> > > 2-lanes devices as well where the dsi_div is 12 so the final rate is
+> > > 290MHz * 12
+> >
+> > In the code you sent, you're forcing a divider on the internal TCON
+> > clock, while that one is fixed in the BSP.
+> >
+> > There's indeed the bpp / lanes divider, but it's used in the *parent*
+> > clock of the one you're changing.
+> >
+> > And the dsi0_clk clock you pointed out in the code snippet is yet
+> > another clock, the MIPI DSI module clock.
+>
+> Correct, look like I refereed wrong reference in the above mail. sorry
+> for the noise.
+>
+> Actually I'm trying to explain about pll_rate here which indeed
+> depends on dsi.div
+> https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L786
+>
+> lcd_rate = dclk_rate * clk_info.dsi_div;
+> pll_rate = lcd_rate * clk_info.lcd_div;
+>
+> Say
+>
+> 1) For 148MHz dclk_rate with dsi_div is 6 (24/4) lcd_div is 1 which
+> resulting pll_rate is 888MHz.
+>
+> 2) For 30MHz dclk_rate with 4 lane and 24 RGB the resulting pll_rate is 180MHz
+>
+> 3) For 27.5MHz dclk_rate with 2 lane and 24 RGB the resulting pll_rate is 330MHz
+>
+> Here is the few more logs in code, for case 2)
+>
+> [    1.920441] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 30000000
+> [    1.920505] ideal = 180000000, rounded = 178200000
+> [    1.920509] sun4i_dclk_round_rate: div = 6 rate = 29700000
+> [    1.920514] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 30000000
+> [    1.920532] ideal = 180000000, rounded = 178200000
+> [    1.920535] sun4i_dclk_round_rate: div = 6 rate = 29700000
+> [    1.920572] sun4i_dclk_recalc_rate: val = 1, rate = 178200000
+> [    1.920576] sun4i_dclk_recalc_rate: val = 1, rate = 178200000
+> [    1.920597] rate = 178200000
+> [    1.920599] parent_rate = 297000000
+> [    1.920602] reg = 0x90c00000
+> [    1.920605] _nkm.n = 3, nkm->n.offset = 0x1, nkm->n.shift = 8
+> [    1.920609] _nkm.k = 2, nkm->k.offset = 0x1, nkm->k.shift = 4
+> [    1.920612] _nkm.m = 10, nkm->m.offset = 0x1, nkm->m.shift = 0
+> [    1.920958] sun4i_dclk_set_rate div 6
+> [    1.920966] sun4i_dclk_recalc_rate: val = 6, rate = 29700000
+>
+> and clk_summary:
+>
+>     pll-video0                        1        1        1   297000000
+>         0     0  50000
+>        hdmi                           0        0        0   297000000
+>         0     0  50000
+>        tcon1                          0        0        0   297000000
+>         0     0  50000
+>        pll-mipi                       1        1        1   178200000
+>         0     0  50000
+>           tcon0                       2        2        1   178200000
+>         0     0  50000
+>              tcon-pixel-clock         1        1        1    29700000
+>         0     0  50000
+>        pll-video0-2x                  0        0        0   594000000
+>         0     0  50000
+
+This discussion is going nowhere. I'm telling you that your patch
+doesn't apply the divider you want on the proper clock, and you're
+replying that indeed, you're applying it on the wrong clock.
+
+It might work by accident in your case, but the board I have here
+clearly indicates otherwise, so there's two possible way out here:
+
+  - Either you apply that divider to the TCON *module* clock, and not
+    the dclk
+
+  - Or you point to somewhere in the allwinner code where the bpp /
+    lanes divider is used for the dclk divider.
+
+
+Maxim
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--mzbgbdizyzlrbfk4--
