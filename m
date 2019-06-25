@@ -1,95 +1,48 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 08/11] thermal: sun8i: support ahb clocks
-Date: Tue, 25 Jun 2019 10:25:07 +0200
-Message-ID: <20190625082507.mgycs6rzlxpvgqgu@flea>
-References: <20190623164206.7467-1-tiny.windzz@gmail.com>
- <20190623164206.7467-9-tiny.windzz@gmail.com>
- <20190624182333.di7avywtdvzwukms@flea>
- <20190625003416.pxve36mrxmotg2bq@core.my.home>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 10/15] dt-bindings: display: Convert tpo,tpg110 panel
+ to DT schema
+Date: Tue, 25 Jun 2019 10:26:41 +0200
+Message-ID: <CACRpkdYnSZibUyhe5D8W259fCJBm05rG0_EmX+uoi=uqbrqEYA@mail.gmail.com>
+References: <20190624215649.8939-1-robh@kernel.org> <20190624215649.8939-11-robh@kernel.org>
+ <CACRpkdYKE=zLJhmTeTWYGRCQNt3K8+rNNqsp5UDa2d31GG6Y2g@mail.gmail.com> <CAL_Jsq+uCMKhUFgCCK3uUetL9OwokQPaq74GJHQS2VS=UjVH8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ry5qotdx34xj2snb"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190625003416.pxve36mrxmotg2bq@core.my.home>
+In-Reply-To: <CAL_Jsq+uCMKhUFgCCK3uUetL9OwokQPaq74GJHQS2VS=UjVH8w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, edubezval@gmail.com, wens@csie.org, robh+dt@kernel.org, mchehab+samsung@kernel.org, rui.zhang@intel.com, paulmck@linux.ibm.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-
---ry5qotdx34xj2snb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 25, 2019 at 02:34:16AM +0200, Ond=C5=99ej Jirman wrote:
-> On Mon, Jun 24, 2019 at 08:23:33PM +0200, Maxime Ripard wrote:
-> > On Sun, Jun 23, 2019 at 12:42:03PM -0400, Yangtao Li wrote:
-> > > H3 has extra clock, so introduce something in ths_thermal_chip/ths_de=
-vice
-> > > and adds the process of the clock.
-> > >
-> > > This is pre-work for supprt it.
-> > >
-> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > > ---
-> > >  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
-> > >  1 file changed, 16 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_=
-thermal.c
-> > > index ed1c19bb27cf..04f53ffb6a14 100644
-> > > --- a/drivers/thermal/sun8i_thermal.c
-> > > +++ b/drivers/thermal/sun8i_thermal.c
-> > > @@ -54,6 +54,7 @@ struct tsensor {
-> > >  };
-> > >
-> > >  struct ths_thermal_chip {
-> > > +	bool            has_ahb_clk;
-> > >  	int		sensor_num;
-> > >  	int		offset;
-> > >  	int		scale;
-> > > @@ -69,6 +70,7 @@ struct ths_device {
-> > >  	struct regmap				*regmap;
-> > >  	struct reset_control			*reset;
-> > >  	struct clk				*bus_clk;
-> > > +	struct clk                              *ahb_clk;
+On Tue, Jun 25, 2019 at 12:47 AM Rob Herring <robh@kernel.org> wrote:
+> On Mon, Jun 24, 2019 at 4:13 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Mon, Jun 24, 2019 at 11:59 PM Rob Herring <robh@kernel.org> wrote:
 > >
-> > Hmm, thinking a bit about this, the name of those two clocks doesn't
-> > make sense. AHB is the bus being used to access that device, so the
-> > bus clock is the AHB clock.
+> > > Convert the tpo,tpg110 panel binding to DT schema.
+> > >
+> > > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > Cc: dri-devel@lists.freedesktop.org
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
 > >
-> > What is that clock being used for?
+> > Awesome, fixed up the MAINATINERS entry and applied and
+> > pushed for DRM next with my Reviewed-by.
 >
-> To control the A/D and sample averaging logic, I suppose. It's controlled=
- by the
-> THS_CLK_REG (THS Clock Register) in H3 user manual.
->
-> bus_clk controls THS_GATING in BUS_CLK_GATING_REG2 (THS module is connect=
-ed to
-> APB bus).
->
-> I'd call it ths_clk and bus_clk.
+> You shouldn't have because this is dependent on patch 2 and
+> panel-common.yaml. So now 'make dt_binding_check' is broken.
 
-Thanks. We've tried to make clock names a bit more generic and
-consistent, so let's use mod instead.
+Ooops easily happens when I am only adressee on this patch and
+there is no mention of any dependencies.
 
-Maxime
+Can I simply just merge the panel-common patch as well and we
+are all happy?
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+I can also pick up more panel binding patches, IMO the yaml
+conversions are especially uncontroversial and should have low
+threshold for merging.
 
---ry5qotdx34xj2snb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRHaYwAKCRDj7w1vZxhR
-xQrlAP9wwKwsQ2PbVvHGyuOJSFjRJZ9ASA22w83xIaKJDErjhgEAsmUAcw4APZyi
-BhQMziRi3MAIeW70nBIvZFtQhI4YBwI=
-=YZIB
------END PGP SIGNATURE-----
-
---ry5qotdx34xj2snb--
+Yours,
+Linus Walleij
