@@ -1,178 +1,199 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+From: Guo Ren <guoren@kernel.org>
 Subject: Re: [PATCH] csky: dts: Add NationalChip GX6605S
-Date: Tue, 25 Jun 2019 03:25:29 +0200
-Message-ID: <a27255d3-e21c-787d-c510-359d72f53a1c@suse.de>
-References: <20190625002829.17409-1-afaerber@suse.de>
- <CAJF2gTTnhTQK-mOyC+e8U8xrDwaoDUACb1R_zQfDCKwdKzc96w@mail.gmail.com>
+Date: Tue, 25 Jun 2019 09:57:38 +0800
+Message-ID: <CAJF2gTRkB+W_pYJYJLLcL=hkUm5Y6dvH_Z=BSdkz=M0+D0UOiA@mail.gmail.com>
+References: <20190625002829.17409-1-afaerber@suse.de> <CAJF2gTTnhTQK-mOyC+e8U8xrDwaoDUACb1R_zQfDCKwdKzc96w@mail.gmail.com>
+ <a27255d3-e21c-787d-c510-359d72f53a1c@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJF2gTTnhTQK-mOyC+e8U8xrDwaoDUACb1R_zQfDCKwdKzc96w@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <a27255d3-e21c-787d-c510-359d72f53a1c@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <guoren@kernel.org>
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
 Cc: linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 25.06.19 um 02:45 schrieb Guo Ren:
-> Thx for the patch. No need seperate part into dtsi,
+Hi Andreas,
 
-Sorry, I know from many arm contributions that using a .dtsi is the
-right thing here. It logically separates the chip from the board, even
-if there's only one evaluation board currently. Think about set-top
-boxes that someone might author a .dts for - they should be able to
-reuse the .dtsi for the SoC rather than copy it.
+On Tue, Jun 25, 2019 at 9:25 AM Andreas F=C3=A4rber <afaerber@suse.de> wrot=
+e:
+>
+> Am 25.06.19 um 02:45 schrieb Guo Ren:
+> > Thx for the patch. No need seperate part into dtsi,
+>
+> Sorry, I know from many arm contributions that using a .dtsi is the
+> right thing here. It logically separates the chip from the board, even
+> if there's only one evaluation board currently. Think about set-top
+> boxes that someone might author a .dts for - they should be able to
+> reuse the .dtsi for the SoC rather than copy it.
+gx6605s.dts is simple now, it's unnecessary to seperate it into two
+pieces. Other things from you is all OK for me.
 
-> just follow:
-> https://lore.kernel.org/linux-csky/1561376581-19568-1-git-send-email-guoren@kernel.org/T/#u
+>
+> > just follow:
+> > https://lore.kernel.org/linux-csky/1561376581-19568-1-git-send-email-gu=
+oren@kernel.org/T/#u
+>
+> Thanks for that pointer! I still think my node names are cleaner and
+> also the structure of keeping clocks and gpio users outside of /soc. I
+> see the value you use is 27 MHz, will try it tomorrow. I see you use
+> nice KEY_ constants, whereas I just took the raw values from the dtb.
+>
+> I notice that your patch doesn't have any Copyright header, how should I
+> credit you in the resulting combined patch? I would then also add your
+> SoB from the patch you linked to.
+Copyright could be the same in arch/csky/kernel/setup.c or add yours
+in addition.
 
-Thanks for that pointer! I still think my node names are cleaner and
-also the structure of keeping clocks and gpio users outside of /soc. I
-see the value you use is 27 MHz, will try it tomorrow. I see you use
-nice KEY_ constants, whereas I just took the raw values from the dtb.
+>
+> More comments inline...
+>
+> > On Tue, Jun 25, 2019 at 8:28 AM Andreas F=C3=A4rber <afaerber@suse.de> =
+wrote:
+> >>
+> >> Add Device Trees for NationalChip GX6605S SoC (based on CK610 CPU) and=
+ its
+> >> dev board. GxLoader expects as filename gx6605s.dtb, so keep that.
+> >> The bootargs are prepared to boot from USB and to output to serial.
+> >>
+> >> Compatibles for the SoC and board are left out for now.
+> >>
+> >> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> >> ---
+> >>  arch/csky/boot/dts/gx6605s.dts  | 104 +++++++++++++++++++++++++++++++=
++++++++++
+> >>  arch/csky/boot/dts/gx6605s.dtsi |  82 +++++++++++++++++++++++++++++++
+> >>  2 files changed, 186 insertions(+)
+> >>  create mode 100644 arch/csky/boot/dts/gx6605s.dts
+> >>  create mode 100644 arch/csky/boot/dts/gx6605s.dtsi
+> >>
+> >> diff --git a/arch/csky/boot/dts/gx6605s.dts b/arch/csky/boot/dts/gx660=
+5s.dts
+> >> new file mode 100644
+> >> index 000000000000..f7511024ec6f
+> >> --- /dev/null
+> >> +++ b/arch/csky/boot/dts/gx6605s.dts
+> [...]
+> >> +       leds {
+> >> +               compatible =3D "gpio-leds";
+> >> +
+> >> +               led0 {
+> >> +                       label =3D "led10";
+>
+> I forgot to align the numbering here. The label matches the GPIO and
+> what is printed on the board.
+leds and button is so specific, that's is just a example. You could
+keep your own style in the dts.
 
-I notice that your patch doesn't have any Copyright header, how should I
-credit you in the resulting combined patch? I would then also add your
-SoB from the patch you linked to.
+>
+> >> +                       gpios =3D <&gpio 10 GPIO_ACTIVE_LOW>;
+> >> +                       linux,default-trigger =3D "heartbeat";
+>
+> This green one stops blinking and stays on.
+Seems there is no driver for it.
 
-More comments inline...
+>
+> >> +               };
+> >> +
+> >> +               led1 {
+> >> +                       label =3D "led11";
+> >> +                       gpios =3D <&gpio 11 GPIO_ACTIVE_LOW>;
+> >> +                       linux,default-trigger =3D "timer";
+>
+> This red one keeps blinking after the panic.
+>
+> >> +               };
+> >> +
+> >> +               led2 {
+> >> +                       label =3D "led12";
+> >> +                       gpios =3D <&gpio 12 GPIO_ACTIVE_LOW>;
+> >> +                       linux,default-trigger =3D "default-on";
+> >> +               };
+> >> +
+> >> +               led3 {
+> >> +                       label =3D "led13";
+> >> +                       gpios =3D <&gpio 13 GPIO_ACTIVE_LOW>;
+> >> +                       linux,default-trigger =3D "default-on";
+>
+> These two remain off. So I wonder whether the GPIO polarity is wrong?
+> In the example usb.img the gpio-leds module is not loaded by default, so
+> maybe it wasn't noticed before?
+I try this 1 years ago in linux-4.9 and it need verifying.
 
-> On Tue, Jun 25, 2019 at 8:28 AM Andreas Färber <afaerber@suse.de> wrote:
->>
->> Add Device Trees for NationalChip GX6605S SoC (based on CK610 CPU) and its
->> dev board. GxLoader expects as filename gx6605s.dtb, so keep that.
->> The bootargs are prepared to boot from USB and to output to serial.
->>
->> Compatibles for the SoC and board are left out for now.
->>
->> Signed-off-by: Andreas Färber <afaerber@suse.de>
->> ---
->>  arch/csky/boot/dts/gx6605s.dts  | 104 ++++++++++++++++++++++++++++++++++++++++
->>  arch/csky/boot/dts/gx6605s.dtsi |  82 +++++++++++++++++++++++++++++++
->>  2 files changed, 186 insertions(+)
->>  create mode 100644 arch/csky/boot/dts/gx6605s.dts
->>  create mode 100644 arch/csky/boot/dts/gx6605s.dtsi
->>
->> diff --git a/arch/csky/boot/dts/gx6605s.dts b/arch/csky/boot/dts/gx6605s.dts
->> new file mode 100644
->> index 000000000000..f7511024ec6f
->> --- /dev/null
->> +++ b/arch/csky/boot/dts/gx6605s.dts
-[...]
->> +       leds {
->> +               compatible = "gpio-leds";
->> +
->> +               led0 {
->> +                       label = "led10";
+>
+> Also, many arm boards use more complex LED labels with multiple parts
+> separated by colon, like "boardname:name:function" or so.
+Name is Ok for me as long as it's correct.
 
-I forgot to align the numbering here. The label matches the GPIO and
-what is printed on the board.
+>
+> >> +               };
+> >> +       };
+> [...]
+> >> diff --git a/arch/csky/boot/dts/gx6605s.dtsi b/arch/csky/boot/dts/gx66=
+05s.dtsi
+> >> new file mode 100644
+> >> index 000000000000..956af5674add
+> >> --- /dev/null
+> >> +++ b/arch/csky/boot/dts/gx6605s.dtsi
+> >> @@ -0,0 +1,82 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause */
+> >> +/*
+> >> + * NationalChip GX6605S SoC
+> >> + *
+> >> + * Copyright (c) 2019 Andreas F=C3=A4rber
+> >> + */
+> >> +
+> >> +/ {
+> >> +       #address-cells =3D <1>;
+> >> +       #size-cells =3D <1>;
+> >> +
+> >> +       cpus {
+> >> +               #address-cells =3D <1>;
+> >> +               #size-cells =3D <0>;
+> >> +
+> >> +               cpu0: cpu@0 {
+> >> +                       device_type =3D "cpu";
+> >> +                       compatible =3D "csky,ck610";
+> >> +                       reg =3D <0>;
+> >> +               };
+> >> +       };
+> >> +
+> >> +       soc {
+> >> +               compatible =3D "simple-bus";
+> >> +               interrupt-parent =3D <&intc>;
+> >> +               #address-cells =3D <1>;
+> >> +               #size-cells =3D <1>;
+> >> +               ranges;
+> >> +
+> >> +               timer0: timer@20a000 {
+> >> +                       compatible =3D "csky,gx6605s-timer";
+>
+> The reason I left out the compatible for the SoC/board is that it looks
+> unclean to me that you're using a "csky," vendor prefix for interrupt
+> controller and timer instead of a new "nationalchip," prefix for the SoC
+> vendor. Did I miss some reasoning for that, or did that slip through
+> patch review?
+csky is my current company and nationalchip is my prior company. The
+gx6605s is belong to nationachip and gx6605s use csky 610 as its CPU.
 
->> +                       gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
->> +                       linux,default-trigger = "heartbeat";
+>
+> Being the first board we'd need to create a new YAML file to document
+> them, I assume. Not sure what the best scope (=3Dname) would be here.
+>
+> >> +                       reg =3D <0x0020a000 0x400>;
+> >> +                       clocks =3D <&dummy_apb_clk>;
+> >> +                       interrupts =3D <10>;
+> >> +               };
+> [...]
+> >> +               intc: interrupt-controller@500000 {
+> >> +                       compatible =3D "csky,gx6605s-intc";
+>
+> Here's the other SoC compatible.
+It's defined in irqchip/irq-csky-apb-intc.c.
 
-This green one stops blinking and stays on.
+--=20
+Best Regards
+ Guo Ren
 
->> +               };
->> +
->> +               led1 {
->> +                       label = "led11";
->> +                       gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
->> +                       linux,default-trigger = "timer";
-
-This red one keeps blinking after the panic.
-
->> +               };
->> +
->> +               led2 {
->> +                       label = "led12";
->> +                       gpios = <&gpio 12 GPIO_ACTIVE_LOW>;
->> +                       linux,default-trigger = "default-on";
->> +               };
->> +
->> +               led3 {
->> +                       label = "led13";
->> +                       gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
->> +                       linux,default-trigger = "default-on";
-
-These two remain off. So I wonder whether the GPIO polarity is wrong?
-In the example usb.img the gpio-leds module is not loaded by default, so
-maybe it wasn't noticed before?
-
-Also, many arm boards use more complex LED labels with multiple parts
-separated by colon, like "boardname:name:function" or so.
-
->> +               };
->> +       };
-[...]
->> diff --git a/arch/csky/boot/dts/gx6605s.dtsi b/arch/csky/boot/dts/gx6605s.dtsi
->> new file mode 100644
->> index 000000000000..956af5674add
->> --- /dev/null
->> +++ b/arch/csky/boot/dts/gx6605s.dtsi
->> @@ -0,0 +1,82 @@
->> +/* SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause */
->> +/*
->> + * NationalChip GX6605S SoC
->> + *
->> + * Copyright (c) 2019 Andreas Färber
->> + */
->> +
->> +/ {
->> +       #address-cells = <1>;
->> +       #size-cells = <1>;
->> +
->> +       cpus {
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +
->> +               cpu0: cpu@0 {
->> +                       device_type = "cpu";
->> +                       compatible = "csky,ck610";
->> +                       reg = <0>;
->> +               };
->> +       };
->> +
->> +       soc {
->> +               compatible = "simple-bus";
->> +               interrupt-parent = <&intc>;
->> +               #address-cells = <1>;
->> +               #size-cells = <1>;
->> +               ranges;
->> +
->> +               timer0: timer@20a000 {
->> +                       compatible = "csky,gx6605s-timer";
-
-The reason I left out the compatible for the SoC/board is that it looks
-unclean to me that you're using a "csky," vendor prefix for interrupt
-controller and timer instead of a new "nationalchip," prefix for the SoC
-vendor. Did I miss some reasoning for that, or did that slip through
-patch review?
-
-Being the first board we'd need to create a new YAML file to document
-them, I assume. Not sure what the best scope (=name) would be here.
-
->> +                       reg = <0x0020a000 0x400>;
->> +                       clocks = <&dummy_apb_clk>;
->> +                       interrupts = <10>;
->> +               };
-[...]
->> +               intc: interrupt-controller@500000 {
->> +                       compatible = "csky,gx6605s-intc";
-
-Here's the other SoC compatible.
-
->> +                       reg = <0x00500000 0x400>;
->> +                       interrupt-controller;
->> +                       #interrupt-cells = <1>;
->> +               };
-[snip]
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+ML: https://lore.kernel.org/linux-csky/
