@@ -1,755 +1,150 @@
-From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v4 2/2] drm/panel: Add support for Raydium RM67191 panel driver
-Date: Tue, 25 Jun 2019 10:11:14 +0300
-Message-ID: <1561446674-25084-3-git-send-email-robert.chiras@nxp.com>
-References: <1561446674-25084-1-git-send-email-robert.chiras@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561446674-25084-1-git-send-email-robert.chiras@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com, Robert Chiras <robert.chiras@nxp.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+Date: Tue, 25 Jun 2019 07:20:53 +0000
+Message-ID: <AM0PR04MB4481210CE83416353575C3D988E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190603083005.4304-1-peng.fan@nxp.com>
+ <20190603083005.4304-3-peng.fan@nxp.com>
+ <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, ", Sascha Hauer" <kernel@pengutronix.de>, Sudeep Holla <sudeep.holla@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Raydium RM67191 TFT LCD panel driver (MIPI-DSI
-protocol).
-
-Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
----
- MAINTAINERS                                   |   6 +
- drivers/gpu/drm/panel/Kconfig                 |   9 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- drivers/gpu/drm/panel/panel-raydium-rm67191.c | 673 ++++++++++++++++++++++++++
- 4 files changed, 689 insertions(+)
- create mode 100644 drivers/gpu/drm/panel/panel-raydium-rm67191.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7a2f487..cd93030e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5089,6 +5089,12 @@ S:	Maintained
- F:	drivers/gpu/drm/qxl/
- F:	include/uapi/drm/qxl_drm.h
- 
-+DRM DRIVER FOR RAYDIUM RM67191 PANELS
-+M:	Robert Chiras <robert.chiras@nxp.com>
-+S:	Maintained
-+F:	drivers/gpu/drm/panel/panel-raydium-rm67191.c
-+F:	Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
-+
- DRM DRIVER FOR RAGE 128 VIDEO CARDS
- S:	Orphan / Obsolete
- F:	drivers/gpu/drm/r128/
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index d9d931a..8be1ac1 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -159,6 +159,15 @@ config DRM_PANEL_RASPBERRYPI_TOUCHSCREEN
- 	  Pi 7" Touchscreen.  To compile this driver as a module,
- 	  choose M here.
- 
-+config DRM_PANEL_RAYDIUM_RM67191
-+	tristate "Raydium RM67191 FHD 1080x1920 DSI video mode panel"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for Raydium RM67191 FHD
-+	  (1080x1920) DSI panel.
-+
- config DRM_PANEL_RAYDIUM_RM68200
- 	tristate "Raydium RM68200 720x1280 DSI video mode panel"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index fb0cb3a..1fc0f68 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_DRM_PANEL_ORISETECH_OTM8009A) += panel-orisetech-otm8009a.o
- obj-$(CONFIG_DRM_PANEL_OSD_OSD101T2587_53TS) += panel-osd-osd101t2587-53ts.o
- obj-$(CONFIG_DRM_PANEL_PANASONIC_VVX10F034N00) += panel-panasonic-vvx10f034n00.o
- obj-$(CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN) += panel-raspberrypi-touchscreen.o
-+obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM67191) += panel-raydium-rm67191.o
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
- obj-$(CONFIG_DRM_PANEL_ROCKTECH_JH057N00900) += panel-rocktech-jh057n00900.o
- obj-$(CONFIG_DRM_PANEL_RONBO_RB070D30) += panel-ronbo-rb070d30.o
-diff --git a/drivers/gpu/drm/panel/panel-raydium-rm67191.c b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
-new file mode 100644
-index 0000000..1735b0f
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
-@@ -0,0 +1,673 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Raydium RM67191 MIPI-DSI panel driver
-+ *
-+ * Copyright 2019 NXP
-+ */
-+
-+#include <linux/backlight.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <video/mipi_display.h>
-+#include <video/of_videomode.h>
-+#include <video/videomode.h>
-+
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_print.h>
-+
-+/* Panel specific color-format bits */
-+#define COL_FMT_16BPP 0x55
-+#define COL_FMT_18BPP 0x66
-+#define COL_FMT_24BPP 0x77
-+
-+/* Write Manufacture Command Set Control */
-+#define WRMAUCCTR 0xFE
-+
-+/* Manufacturer Command Set pages (CMD2) */
-+struct cmd_set_entry {
-+	u8 cmd;
-+	u8 param;
-+};
-+
-+/*
-+ * There is no description in the Reference Manual about these commands.
-+ * We received them from vendor, so just use them as is.
-+ */
-+static const struct cmd_set_entry manufacturer_cmd_set[] = {
-+	{0xFE, 0x0B},
-+	{0x28, 0x40},
-+	{0x29, 0x4F},
-+	{0xFE, 0x0E},
-+	{0x4B, 0x00},
-+	{0x4C, 0x0F},
-+	{0x4D, 0x20},
-+	{0x4E, 0x40},
-+	{0x4F, 0x60},
-+	{0x50, 0xA0},
-+	{0x51, 0xC0},
-+	{0x52, 0xE0},
-+	{0x53, 0xFF},
-+	{0xFE, 0x0D},
-+	{0x18, 0x08},
-+	{0x42, 0x00},
-+	{0x08, 0x41},
-+	{0x46, 0x02},
-+	{0x72, 0x09},
-+	{0xFE, 0x0A},
-+	{0x24, 0x17},
-+	{0x04, 0x07},
-+	{0x1A, 0x0C},
-+	{0x0F, 0x44},
-+	{0xFE, 0x04},
-+	{0x00, 0x0C},
-+	{0x05, 0x08},
-+	{0x06, 0x08},
-+	{0x08, 0x08},
-+	{0x09, 0x08},
-+	{0x0A, 0xE6},
-+	{0x0B, 0x8C},
-+	{0x1A, 0x12},
-+	{0x1E, 0xE0},
-+	{0x29, 0x93},
-+	{0x2A, 0x93},
-+	{0x2F, 0x02},
-+	{0x31, 0x02},
-+	{0x33, 0x05},
-+	{0x37, 0x2D},
-+	{0x38, 0x2D},
-+	{0x3A, 0x1E},
-+	{0x3B, 0x1E},
-+	{0x3D, 0x27},
-+	{0x3F, 0x80},
-+	{0x40, 0x40},
-+	{0x41, 0xE0},
-+	{0x4F, 0x2F},
-+	{0x50, 0x1E},
-+	{0xFE, 0x06},
-+	{0x00, 0xCC},
-+	{0x05, 0x05},
-+	{0x07, 0xA2},
-+	{0x08, 0xCC},
-+	{0x0D, 0x03},
-+	{0x0F, 0xA2},
-+	{0x32, 0xCC},
-+	{0x37, 0x05},
-+	{0x39, 0x83},
-+	{0x3A, 0xCC},
-+	{0x41, 0x04},
-+	{0x43, 0x83},
-+	{0x44, 0xCC},
-+	{0x49, 0x05},
-+	{0x4B, 0xA2},
-+	{0x4C, 0xCC},
-+	{0x51, 0x03},
-+	{0x53, 0xA2},
-+	{0x75, 0xCC},
-+	{0x7A, 0x03},
-+	{0x7C, 0x83},
-+	{0x7D, 0xCC},
-+	{0x82, 0x02},
-+	{0x84, 0x83},
-+	{0x85, 0xEC},
-+	{0x86, 0x0F},
-+	{0x87, 0xFF},
-+	{0x88, 0x00},
-+	{0x8A, 0x02},
-+	{0x8C, 0xA2},
-+	{0x8D, 0xEA},
-+	{0x8E, 0x01},
-+	{0x8F, 0xE8},
-+	{0xFE, 0x06},
-+	{0x90, 0x0A},
-+	{0x92, 0x06},
-+	{0x93, 0xA0},
-+	{0x94, 0xA8},
-+	{0x95, 0xEC},
-+	{0x96, 0x0F},
-+	{0x97, 0xFF},
-+	{0x98, 0x00},
-+	{0x9A, 0x02},
-+	{0x9C, 0xA2},
-+	{0xAC, 0x04},
-+	{0xFE, 0x06},
-+	{0xB1, 0x12},
-+	{0xB2, 0x17},
-+	{0xB3, 0x17},
-+	{0xB4, 0x17},
-+	{0xB5, 0x17},
-+	{0xB6, 0x11},
-+	{0xB7, 0x08},
-+	{0xB8, 0x09},
-+	{0xB9, 0x06},
-+	{0xBA, 0x07},
-+	{0xBB, 0x17},
-+	{0xBC, 0x17},
-+	{0xBD, 0x17},
-+	{0xBE, 0x17},
-+	{0xBF, 0x17},
-+	{0xC0, 0x17},
-+	{0xC1, 0x17},
-+	{0xC2, 0x17},
-+	{0xC3, 0x17},
-+	{0xC4, 0x0F},
-+	{0xC5, 0x0E},
-+	{0xC6, 0x00},
-+	{0xC7, 0x01},
-+	{0xC8, 0x10},
-+	{0xFE, 0x06},
-+	{0x95, 0xEC},
-+	{0x8D, 0xEE},
-+	{0x44, 0xEC},
-+	{0x4C, 0xEC},
-+	{0x32, 0xEC},
-+	{0x3A, 0xEC},
-+	{0x7D, 0xEC},
-+	{0x75, 0xEC},
-+	{0x00, 0xEC},
-+	{0x08, 0xEC},
-+	{0x85, 0xEC},
-+	{0xA6, 0x21},
-+	{0xA7, 0x05},
-+	{0xA9, 0x06},
-+	{0x82, 0x06},
-+	{0x41, 0x06},
-+	{0x7A, 0x07},
-+	{0x37, 0x07},
-+	{0x05, 0x06},
-+	{0x49, 0x06},
-+	{0x0D, 0x04},
-+	{0x51, 0x04},
-+};
-+
-+static const u32 rad_bus_formats[] = {
-+	MEDIA_BUS_FMT_RGB888_1X24,
-+	MEDIA_BUS_FMT_RGB666_1X18,
-+	MEDIA_BUS_FMT_RGB565_1X16,
-+};
-+
-+static const u32 rad_bus_flags = DRM_BUS_FLAG_DE_LOW |
-+				 DRM_BUS_FLAG_PIXDATA_NEGEDGE;
-+
-+struct rad_panel {
-+	struct drm_panel panel;
-+	struct mipi_dsi_device *dsi;
-+
-+	struct gpio_desc *reset;
-+	struct backlight_device *backlight;
-+
-+	struct regulator_bulk_data *supplies;
-+	unsigned int num_supplies;
-+
-+	bool prepared;
-+	bool enabled;
-+};
-+
-+static const struct drm_display_mode default_mode = {
-+	.clock = 132000,
-+	.hdisplay = 1080,
-+	.hsync_start = 1080 + 20,
-+	.hsync_end = 1080 + 20 + 2,
-+	.htotal = 1080 + 20 + 2 + 34,
-+	.vdisplay = 1920,
-+	.vsync_start = 1920 + 10,
-+	.vsync_end = 1920 + 10 + 2,
-+	.vtotal = 1920 + 10 + 2 + 4,
-+	.vrefresh = 60,
-+	.width_mm = 68,
-+	.height_mm = 121,
-+	.flags = DRM_MODE_FLAG_NHSYNC |
-+		 DRM_MODE_FLAG_NVSYNC,
-+};
-+
-+static inline struct rad_panel *to_rad_panel(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct rad_panel, panel);
-+}
-+
-+static int rad_panel_push_cmd_list(struct mipi_dsi_device *dsi)
-+{
-+	size_t i;
-+	size_t count = ARRAY_SIZE(manufacturer_cmd_set);
-+	int ret = 0;
-+
-+	for (i = 0; i < count; i++) {
-+		const struct cmd_set_entry *entry = &manufacturer_cmd_set[i];
-+		u8 buffer[2] = { entry->cmd, entry->param };
-+
-+		ret = mipi_dsi_generic_write(dsi, &buffer, sizeof(buffer));
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return ret;
-+};
-+
-+static int color_format_from_dsi_format(enum mipi_dsi_pixel_format format)
-+{
-+	switch (format) {
-+	case MIPI_DSI_FMT_RGB565:
-+		return COL_FMT_16BPP;
-+	case MIPI_DSI_FMT_RGB666:
-+	case MIPI_DSI_FMT_RGB666_PACKED:
-+		return COL_FMT_18BPP;
-+	case MIPI_DSI_FMT_RGB888:
-+		return COL_FMT_24BPP;
-+	default:
-+		return COL_FMT_24BPP; /* for backward compatibility */
-+	}
-+};
-+
-+static int rad_panel_prepare(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+	int ret;
-+
-+	if (rad->prepared)
-+		return 0;
-+
-+	ret = regulator_bulk_enable(rad->num_supplies, rad->supplies);
-+	if (ret)
-+		return ret;
-+
-+	if (rad->reset) {
-+		gpiod_set_value_cansleep(rad->reset, 1);
-+		usleep_range(3000, 5000);
-+		gpiod_set_value_cansleep(rad->reset, 0);
-+		usleep_range(18000, 20000);
-+	}
-+
-+	rad->prepared = true;
-+
-+	return 0;
-+}
-+
-+static int rad_panel_unprepare(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+	int ret;
-+
-+	if (!rad->prepared)
-+		return 0;
-+
-+	/*
-+	 * Right after asserting the reset, we need to release it, so that the
-+	 * touch driver can have an active connection with the touch controller
-+	 * even after the display is turned off.
-+	 */
-+	if (rad->reset) {
-+		gpiod_set_value_cansleep(rad->reset, 1);
-+		usleep_range(15000, 17000);
-+		gpiod_set_value_cansleep(rad->reset, 0);
-+	}
-+
-+	ret = regulator_bulk_disable(rad->num_supplies, rad->supplies);
-+	if (ret)
-+		return ret;
-+
-+	rad->prepared = false;
-+
-+	return 0;
-+}
-+
-+static int rad_panel_enable(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+	struct mipi_dsi_device *dsi = rad->dsi;
-+	struct device *dev = &dsi->dev;
-+	int color_format = color_format_from_dsi_format(dsi->format);
-+	int ret;
-+
-+	if (rad->enabled)
-+		return 0;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	ret = rad_panel_push_cmd_list(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to send MCS (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	/* Select User Command Set table (CMD1) */
-+	ret = mipi_dsi_generic_write(dsi, (u8[]){ WRMAUCCTR, 0x00 }, 2);
-+	if (ret < 0)
-+		goto fail;
-+
-+	/* Software reset */
-+	ret = mipi_dsi_dcs_soft_reset(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to do Software Reset (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	usleep_range(15000, 17000);
-+
-+	/* Set DSI mode */
-+	ret = mipi_dsi_generic_write(dsi, (u8[]){ 0xC2, 0x0B }, 2);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set DSI mode (%d)\n", ret);
-+		goto fail;
-+	}
-+	/* Set tear ON */
-+	ret = mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set tear ON (%d)\n", ret);
-+		goto fail;
-+	}
-+	/* Set tear scanline */
-+	ret = mipi_dsi_dcs_set_tear_scanline(dsi, 0x380);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set tear scanline (%d)\n", ret);
-+		goto fail;
-+	}
-+	/* Set pixel format */
-+	ret = mipi_dsi_dcs_set_pixel_format(dsi, color_format);
-+	DRM_DEV_DEBUG_DRIVER(dev, "Interface color format set to 0x%x\n",
-+			     color_format);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set pixel format (%d)\n", ret);
-+		goto fail;
-+	}
-+	/* Exit sleep mode */
-+	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to exit sleep mode (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	usleep_range(5000, 7000);
-+
-+	ret = mipi_dsi_dcs_set_display_on(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set display ON (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	backlight_enable(rad->backlight);
-+
-+	rad->enabled = true;
-+
-+	return 0;
-+
-+fail:
-+	gpiod_set_value_cansleep(rad->reset, 1);
-+
-+	return ret;
-+}
-+
-+static int rad_panel_disable(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+	struct mipi_dsi_device *dsi = rad->dsi;
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	if (!rad->enabled)
-+		return 0;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	backlight_disable(rad->backlight);
-+
-+	usleep_range(10000, 12000);
-+
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set display OFF (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	usleep_range(5000, 10000);
-+
-+	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to enter sleep mode (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	rad->enabled = false;
-+
-+	return 0;
-+}
-+
-+static int rad_panel_get_modes(struct drm_panel *panel)
-+{
-+	struct drm_connector *connector = panel->connector;
-+	struct drm_display_mode *mode;
-+
-+	mode = drm_mode_duplicate(panel->drm, &default_mode);
-+	if (!mode) {
-+		DRM_DEV_ERROR(panel->dev, "failed to add mode %ux%ux@%u\n",
-+			  default_mode.hdisplay, default_mode.vdisplay,
-+			  default_mode.vrefresh);
-+		return -ENOMEM;
-+	}
-+
-+	drm_mode_set_name(mode);
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+	drm_mode_probed_add(panel->connector, mode);
-+
-+	connector->display_info.width_mm = mode->width_mm;
-+	connector->display_info.height_mm = mode->height_mm;
-+	connector->display_info.bus_flags = rad_bus_flags;
-+
-+	drm_display_info_set_bus_formats(&connector->display_info,
-+					 rad_bus_formats,
-+					 ARRAY_SIZE(rad_bus_formats));
-+	return 1;
-+}
-+
-+static int rad_bl_get_brightness(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
-+	struct device *dev = &dsi->dev;
-+	u16 brightness;
-+	int ret;
-+
-+	if (!rad->prepared)
-+		return 0;
-+
-+	DRM_DEV_DEBUG_DRIVER(dev, "\n");
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_get_display_brightness(dsi, &brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	bl->props.brightness = brightness;
-+
-+	return brightness & 0xff;
-+}
-+
-+static int rad_bl_update_status(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
-+	struct device *dev = &dsi->dev;
-+	int ret = 0;
-+
-+	if (!rad->prepared)
-+		return 0;
-+
-+	DRM_DEV_DEBUG_DRIVER(dev, "New brightness: %d\n", bl->props.brightness);
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_set_display_brightness(dsi, bl->props.brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct backlight_ops rad_bl_ops = {
-+	.update_status = rad_bl_update_status,
-+	.get_brightness = rad_bl_get_brightness,
-+};
-+
-+static const struct drm_panel_funcs rad_panel_funcs = {
-+	.prepare = rad_panel_prepare,
-+	.unprepare = rad_panel_unprepare,
-+	.enable = rad_panel_enable,
-+	.disable = rad_panel_disable,
-+	.get_modes = rad_panel_get_modes,
-+};
-+
-+static const char * const rad_supply_names[] = {
-+	"v3p3",
-+	"v1p8",
-+};
-+
-+static int rad_init_regulators(struct rad_panel *rad)
-+{
-+	struct device *dev = &rad->dsi->dev;
-+	int i;
-+
-+	rad->num_supplies = ARRAY_SIZE(rad_supply_names);
-+	rad->supplies = devm_kcalloc(dev, rad->num_supplies,
-+				     sizeof(*rad->supplies), GFP_KERNEL);
-+	if (!rad->supplies)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < rad->num_supplies; i++)
-+		rad->supplies[i].supply = rad_supply_names[i];
-+
-+	return devm_regulator_bulk_get(dev, rad->num_supplies, rad->supplies);
-+};
-+
-+static int rad_panel_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct device_node *np = dev->of_node;
-+	struct rad_panel *panel;
-+	struct backlight_properties bl_props;
-+	int ret;
-+	u32 video_mode;
-+
-+	panel = devm_kzalloc(&dsi->dev, sizeof(*panel), GFP_KERNEL);
-+	if (!panel)
-+		return -ENOMEM;
-+
-+	mipi_dsi_set_drvdata(dsi, panel);
-+
-+	panel->dsi = dsi;
-+
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags =  MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO |
-+			   MIPI_DSI_CLOCK_NON_CONTINUOUS;
-+
-+	ret = of_property_read_u32(np, "video-mode", &video_mode);
-+	if (!ret) {
-+		switch (video_mode) {
-+		case 0:
-+			/* burst mode */
-+			dsi->mode_flags |= MIPI_DSI_MODE_VIDEO_BURST;
-+			break;
-+		case 1:
-+			/* non-burst mode with sync event */
-+			break;
-+		case 2:
-+			/* non-burst mode with sync pulse */
-+			dsi->mode_flags |= MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
-+			break;
-+		default:
-+			dev_warn(dev, "invalid video mode %d\n", video_mode);
-+			break;
-+		}
-+	}
-+
-+	ret = of_property_read_u32(np, "dsi-lanes", &dsi->lanes);
-+	if (ret) {
-+		dev_err(dev, "Failed to get dsi-lanes property (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	panel->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-+
-+	memset(&bl_props, 0, sizeof(bl_props));
-+	bl_props.type = BACKLIGHT_RAW;
-+	bl_props.brightness = 255;
-+	bl_props.max_brightness = 255;
-+
-+	panel->backlight = devm_backlight_device_register(dev, dev_name(dev),
-+							  dev, dsi, &rad_bl_ops,
-+							  &bl_props);
-+	if (IS_ERR(panel->backlight)) {
-+		ret = PTR_ERR(panel->backlight);
-+		dev_err(dev, "Failed to register backlight (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ret = rad_init_regulators(panel);
-+	if (ret)
-+		return ret;
-+
-+	drm_panel_init(&panel->panel);
-+	panel->panel.funcs = &rad_panel_funcs;
-+	panel->panel.dev = dev;
-+	dev_set_drvdata(dev, panel);
-+
-+	ret = drm_panel_add(&panel->panel);
-+	if (ret)
-+		return ret;
-+
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret)
-+		drm_panel_remove(&panel->panel);
-+
-+	return ret;
-+}
-+
-+static int rad_panel_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	ret = mipi_dsi_detach(dsi);
-+	if (ret)
-+		DRM_DEV_ERROR(dev, "Failed to detach from host (%d)\n",
-+			      ret);
-+
-+	drm_panel_remove(&rad->panel);
-+
-+	return 0;
-+}
-+
-+static void rad_panel_shutdown(struct mipi_dsi_device *dsi)
-+{
-+	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
-+
-+	rad_panel_disable(&rad->panel);
-+	rad_panel_unprepare(&rad->panel);
-+}
-+
-+static const struct of_device_id rad_of_match[] = {
-+	{ .compatible = "raydium,rm67191", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, rad_of_match);
-+
-+static struct mipi_dsi_driver rad_panel_driver = {
-+	.driver = {
-+		.name = "panel-raydium-rm67191",
-+		.of_match_table = rad_of_match,
-+	},
-+	.probe = rad_panel_probe,
-+	.remove = rad_panel_remove,
-+	.shutdown = rad_panel_shutdown,
-+};
-+module_mipi_dsi_driver(rad_panel_driver);
-+
-+MODULE_AUTHOR("Robert Chiras <robert.chiras@nxp.com>");
-+MODULE_DESCRIPTION("DRM Driver for Raydium RM67191 MIPI DSI panel");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+SGkgSmFzc2ksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSmFzc2kg
+QnJhciBbbWFpbHRvOmphc3Npc2luZ2hicmFyQGdtYWlsLmNvbV0NCj4gU2VudDogMjAxOeW5tDbm
+nIgyMeaXpSAwOjUwDQo+IFRvOiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gQ2M6IFJv
+YiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsucnV0
+bGFuZEBhcm0uY29tPjsgU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT47IEZsb3Jp
+YW4NCj4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPjsgLCBTYXNjaGEgSGF1ZXIgPGtl
+cm5lbEBwZW5ndXRyb25peC5kZT47DQo+IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+
+OyBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+Ow0KPiBmZXN0ZXZhbUBnbWFpbC5jb207
+IERldmljZXRyZWUgTGlzdCA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eA0KPiBL
+ZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsNCj4gbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBBbmRyZSBQcnp5d2FyYQ0KPiA8YW5k
+cmUucHJ6eXdhcmFAYXJtLmNvbT47IHZhbi5mcmVlbml4QGdtYWlsLmNvbQ0KPiBTdWJqZWN0OiBS
+ZTogW1BBVENIIFYyIDIvMl0gbWFpbGJveDogaW50cm9kdWNlIEFSTSBTTUMgYmFzZWQgbWFpbGJv
+eA0KPiANCj4gT24gTW9uLCBKdW4gMywgMjAxOSBhdCAzOjI4IEFNIDxwZW5nLmZhbkBueHAuY29t
+PiB3cm90ZToNCj4gPg0KPiA+IEZyb206IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPg0KPiA+
+DQo+ID4gVGhpcyBtYWlsYm94IGRyaXZlciBpbXBsZW1lbnRzIGEgbWFpbGJveCB3aGljaCBzaWdu
+YWxzIHRyYW5zbWl0dGVkDQo+ID4gZGF0YSB2aWEgYW4gQVJNIHNtYyAoc2VjdXJlIG1vbml0b3Ig
+Y2FsbCkgaW5zdHJ1Y3Rpb24uIFRoZSBtYWlsYm94DQo+ID4gcmVjZWl2ZXIgaXMgaW1wbGVtZW50
+ZWQgaW4gZmlybXdhcmUgYW5kIGNhbiBzeW5jaHJvbm91c2x5IHJldHVybiBkYXRhDQo+ID4gd2hl
+biBpdCByZXR1cm5zIGV4ZWN1dGlvbiB0byB0aGUgbm9uLXNlY3VyZSB3b3JsZCBhZ2Fpbi4NCj4g
+PiBBbiBhc3luY2hyb25vdXMgcmVjZWl2ZSBwYXRoIGlzIG5vdCBpbXBsZW1lbnRlZC4NCj4gPiBU
+aGlzIGFsbG93cyB0aGUgdXNhZ2Ugb2YgYSBtYWlsYm94IHRvIHRyaWdnZXIgZmlybXdhcmUgYWN0
+aW9ucyBvbiBTb0NzDQo+ID4gd2hpY2ggZWl0aGVyIGRvbid0IGhhdmUgYSBzZXBhcmF0ZSBtYW5h
+Z2VtZW50IHByb2Nlc3NvciBvciBvbiB3aGljaA0KPiA+IHN1Y2ggYSBjb3JlIGlzIG5vdCBhdmFp
+bGFibGUuIEEgdXNlciBvZiB0aGlzIG1haWxib3ggY291bGQgYmUgdGhlIFNDUA0KPiA+IGludGVy
+ZmFjZS4NCj4gPg0KPiA+IE1vZGlmaWVkIGZyb20gQW5kcmUgUHJ6eXdhcmEncyB2MiBwYXRjaA0K
+PiA+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1o
+dHRwcyUzQSUyRiUyRmxvcmUNCj4gPiAua2VybmVsLm9yZyUyRnBhdGNod29yayUyRnBhdGNoJTJG
+ODEyOTk5JTJGJmFtcDtkYXRhPTAyJTdDMDElNw0KPiBDcGVuZy5mYQ0KPiA+DQo+IG4lNDBueHAu
+Y29tJTdDMTIzNzY3N2NiMDEwNDRhZDcxNDUwOGQ2ZjU5ZjY0OGYlN0M2ODZlYTFkM2JjMmI0DQo+
+IGM2ZmE5MmNkDQo+ID4NCj4gOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjk2NjQ2MjI3MjQ1Nzk3
+OCZhbXA7c2RhdGE9SHpnZXU0M201DQo+IFprZVJNdEw4QngNCj4gPiBnVW0zJTJCNkZCT2JpYjFP
+UEhQbFNjY0UlMkIwJTNEJmFtcDtyZXNlcnZlZD0wDQo+ID4NCj4gPiBDYzogQW5kcmUgUHJ6eXdh
+cmEgPGFuZHJlLnByenl3YXJhQGFybS5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGVuZyBGYW4g
+PHBlbmcuZmFuQG54cC5jb20+DQo+ID4gLS0tDQo+ID4NCj4gPiBWMjoNCj4gPiAgQWRkIGludGVy
+cnVwdHMgbm90aWZpY2F0aW9uIHN1cHBvcnQuDQo+ID4NCj4gPiAgZHJpdmVycy9tYWlsYm94L0tj
+b25maWcgICAgICAgICAgICAgICAgIHwgICA3ICsrDQo+ID4gIGRyaXZlcnMvbWFpbGJveC9NYWtl
+ZmlsZSAgICAgICAgICAgICAgICB8ICAgMiArDQo+ID4gIGRyaXZlcnMvbWFpbGJveC9hcm0tc21j
+LW1haWxib3guYyAgICAgICB8IDE5MA0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+Kw0KPiA+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvYXJtLXNtYy1tYWlsYm94LmggfCAgMTAgKysN
+Cj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAyMDkgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9tYWlsYm94L2FybS1zbWMtbWFpbGJveC5jICBjcmVhdGUgbW9kZQ0K
+PiA+IDEwMDY0NCBpbmNsdWRlL2xpbnV4L21haWxib3gvYXJtLXNtYy1tYWlsYm94LmgNCj4gPg0K
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21haWxib3gvS2NvbmZpZyBiL2RyaXZlcnMvbWFpbGJv
+eC9LY29uZmlnIGluZGV4DQo+ID4gNTk1NTQyYmZhZTg1Li5jM2JkMGYxZGRjZDggMTAwNjQ0DQo+
+ID4gLS0tIGEvZHJpdmVycy9tYWlsYm94L0tjb25maWcNCj4gPiArKysgYi9kcml2ZXJzL21haWxi
+b3gvS2NvbmZpZw0KPiA+IEBAIC0xNSw2ICsxNSwxMyBAQCBjb25maWcgQVJNX01IVQ0KPiA+ICAg
+ICAgICAgICBUaGUgY29udHJvbGxlciBoYXMgMyBtYWlsYm94IGNoYW5uZWxzLCB0aGUgbGFzdCBv
+ZiB3aGljaCBjYW4gYmUNCj4gPiAgICAgICAgICAgdXNlZCBpbiBTZWN1cmUgbW9kZSBvbmx5Lg0K
+PiA+DQo+ID4gK2NvbmZpZyBBUk1fU01DX01CT1gNCj4gPiArICAgICAgIHRyaXN0YXRlICJHZW5l
+cmljIEFSTSBzbWMgbWFpbGJveCINCj4gPiArICAgICAgIGRlcGVuZHMgb24gT0YgJiYgSEFWRV9B
+Uk1fU01DQ0MNCj4gPiArICAgICAgIGhlbHANCj4gPiArICAgICAgICAgR2VuZXJpYyBtYWlsYm94
+IGRyaXZlciB3aGljaCB1c2VzIEFSTSBzbWMgY2FsbHMgdG8gY2FsbCBpbnRvDQo+ID4gKyAgICAg
+ICAgIGZpcm13YXJlIGZvciB0cmlnZ2VyaW5nIG1haWxib3hlcy4NCj4gPiArDQo+ID4gIGNvbmZp
+ZyBJTVhfTUJPWA0KPiA+ICAgICAgICAgdHJpc3RhdGUgImkuTVggTWFpbGJveCINCj4gPiAgICAg
+ICAgIGRlcGVuZHMgb24gQVJDSF9NWEMgfHwgQ09NUElMRV9URVNUIGRpZmYgLS1naXQNCj4gPiBh
+L2RyaXZlcnMvbWFpbGJveC9NYWtlZmlsZSBiL2RyaXZlcnMvbWFpbGJveC9NYWtlZmlsZSBpbmRl
+eA0KPiA+IGMyMmZhZDZmNjk2Yi4uOTM5MThhODRjOTFiIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
+cnMvbWFpbGJveC9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMvbWFpbGJveC9NYWtlZmlsZQ0K
+PiA+IEBAIC03LDYgKzcsOCBAQCBvYmotJChDT05GSUdfTUFJTEJPWF9URVNUKSAgICAgICs9IG1h
+aWxib3gtdGVzdC5vDQo+ID4NCj4gPiAgb2JqLSQoQ09ORklHX0FSTV9NSFUpICArPSBhcm1fbWh1
+Lm8NCj4gPg0KPiA+ICtvYmotJChDT05GSUdfQVJNX1NNQ19NQk9YKSAgICAgKz0gYXJtLXNtYy1t
+YWlsYm94Lm8NCj4gPiArDQo+ID4gIG9iai0kKENPTkZJR19JTVhfTUJPWCkgKz0gaW14LW1haWxi
+b3gubw0KPiA+DQo+ID4gIG9iai0kKENPTkZJR19BUk1BREFfMzdYWF9SV1RNX01CT1gpICAgICs9
+DQo+IGFybWFkYS0zN3h4LXJ3dG0tbWFpbGJveC5vDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+bWFpbGJveC9hcm0tc21jLW1haWxib3guYw0KPiA+IGIvZHJpdmVycy9tYWlsYm94L2FybS1zbWMt
+bWFpbGJveC5jDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAw
+MDAuLmZlZjZlMzhkOGI5OA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL21h
+aWxib3gvYXJtLXNtYy1tYWlsYm94LmMNCj4gPiBAQCAtMCwwICsxLDE5MCBAQA0KPiA+ICsvLyBT
+UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ICsvKg0KPiA+ICsgKiBDb3B5cmln
+aHQgKEMpIDIwMTYsMjAxNyBBUk0gTHRkLg0KPiA+ICsgKiBDb3B5cmlnaHQgMjAxOSBOWFANCj4g
+PiArICovDQo+ID4gKw0KPiA+ICsjaW5jbHVkZSA8bGludXgvYXJtLXNtY2NjLmg+DQo+ID4gKyNp
+bmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0K
+PiA+ICsjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9t
+YWlsYm94X2NvbnRyb2xsZXIuaD4gI2luY2x1ZGUNCj4gPiArPGxpbnV4L21haWxib3gvYXJtLXNt
+Yy1tYWlsYm94Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiArI2luY2x1
+ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICsNCj4gPiArI2RlZmluZSBBUk1fU01D
+X01CT1hfVVNFX0hWQyAgIEJJVCgwKQ0KPiA+ICsjZGVmaW5lIEFSTV9TTUNfTUJPWF9VU0JfSVJR
+ICAgQklUKDEpDQo+ID4gKw0KPiBJUlEgYml0IGlzIHVudXNlZCAoYW5kIHVubmVjZXNzYXJ5IElN
+TykNCg0KVGhpcyB3aWxsIGJlIHJlbW92ZWQgaW4gbmV4dCB2ZXJzaW9uLg0KDQo+IA0KPiA+ICtz
+dHJ1Y3QgYXJtX3NtY19jaGFuX2RhdGEgew0KPiA+ICsgICAgICAgdTMyIGZ1bmN0aW9uX2lkOw0K
+PiA+ICsgICAgICAgdTMyIGZsYWdzOw0KPiA+ICsgICAgICAgaW50IGlycTsNCj4gPiArfTsNCj4g
+PiArDQo+ID4gK3N0YXRpYyBpbnQgYXJtX3NtY19zZW5kX2RhdGEoc3RydWN0IG1ib3hfY2hhbiAq
+bGluaywgdm9pZCAqZGF0YSkgew0KPiA+ICsgICAgICAgc3RydWN0IGFybV9zbWNfY2hhbl9kYXRh
+ICpjaGFuX2RhdGEgPSBsaW5rLT5jb25fcHJpdjsNCj4gPiArICAgICAgIHN0cnVjdCBhcm1fc21j
+Y2NfbWJveF9jbWQgKmNtZCA9IGRhdGE7DQo+ID4gKyAgICAgICBzdHJ1Y3QgYXJtX3NtY2NjX3Jl
+cyByZXM7DQo+ID4gKyAgICAgICB1MzIgZnVuY3Rpb25faWQ7DQo+ID4gKw0KPiA+ICsgICAgICAg
+aWYgKGNoYW5fZGF0YS0+ZnVuY3Rpb25faWQgIT0gVUlOVF9NQVgpDQo+ID4gKyAgICAgICAgICAg
+ICAgIGZ1bmN0aW9uX2lkID0gY2hhbl9kYXRhLT5mdW5jdGlvbl9pZDsNCj4gPiArICAgICAgIGVs
+c2UNCj4gPiArICAgICAgICAgICAgICAgZnVuY3Rpb25faWQgPSBjbWQtPmEwOw0KPiA+ICsNCj4g
+Tm90IHN1cmUgYWJvdXQgY2hhbl9kYXRhLT5mdW5jdGlvbl9pZC4gIFdoeSByZXN0cmljdCBmcm9t
+IERUPw0KPiAnYTAnIGlzIHRoZSBmdW5jdGlvbl9pZCByZWdpc3RlciwgbGV0IHRoZSB1c2VyIHBh
+c3MgZnVuYy1pZCB2aWEgdGhlICdhMCcgbGlrZSBvdGhlcg0KPiB2YWx1ZXMgdmlhICdhWzEtN10n
+DQo+IA0KPiANCj4gPiArICAgICAgIGlmIChjaGFuX2RhdGEtPmZsYWdzICYgQVJNX1NNQ19NQk9Y
+X1VTRV9IVkMpDQo+ID4gKyAgICAgICAgICAgICAgIGFybV9zbWNjY19odmMoZnVuY3Rpb25faWQs
+IGNtZC0+YTEsIGNtZC0+YTIsDQo+IGNtZC0+YTMsIGNtZC0+YTQsDQo+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgY21kLT5hNSwgY21kLT5hNiwgY21kLT5hNywgJnJlcyk7DQo+ID4g
+KyAgICAgICBlbHNlDQo+ID4gKyAgICAgICAgICAgICAgIGFybV9zbWNjY19zbWMoZnVuY3Rpb25f
+aWQsIGNtZC0+YTEsIGNtZC0+YTIsDQo+IGNtZC0+YTMsIGNtZC0+YTQsDQo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgY21kLT5hNSwgY21kLT5hNiwgY21kLT5hNywgJnJlcyk7DQo+
+ID4gKw0KPiA+ICsgICAgICAgaWYgKGNoYW5fZGF0YS0+aXJxKQ0KPiA+ICsgICAgICAgICAgICAg
+ICByZXR1cm4gMDsNCj4gPiArDQo+IFRoaXMgaXJxIHRoaW5nIHNlZW1zIGxpa2Ugb29iIHNpZ25h
+bGxpbmcsIHRoYXQgaXMsIGEgcHJvdG9jb2wgdGhpbmcuDQo+IEFuZCB0aGVuIGl0IHByb3ZpZGVz
+IGxlc3NlciBpbmZvIHZpYSBjaGFuX2lycV9oYW5kbGVyIChyZXR1cm5zIE5VTEwpIHRoYW4NCj4g
+cmVzLmEwIC0gd2hpY2ggY2FuIGFsd2F5cyBiZSBpZ25vcmVkIGlmIG5vdCBuZWVkZWQuDQo+IFNv
+IHRoZSBpcnEgc2hvdWxkIGJlIGltcGxlbWVudGVkIGluIHRoZSB1cHBlciBsYXllciBpZiB0aGUg
+cHJvdG9jb2wgbmVlZHMgaXQuDQoNClRoZSBpbnRlcnJ1cHRzIHdhcyBhZGRlZCBoZXJlIGJlY2F1
+c2UgaW4gdjEsIEZsb3JpYW4gc3VnZ2VzdA0KIg0KSSB3b3VsZCBqdXN0IHB1dCBhDQpwcm92aXNp
+b24gaW4gdGhlIGJpbmRpbmcgdG8gc3VwcG9ydCBhbiBvcHRpb25hbCBpbnRlcnJ1cHQgc3VjaCB0
+aGF0DQphc3luY2hyb25pc20gZ2V0cyByZWFzb25hYmx5IGVhc3kgdG8gcGx1ZyBpbiB3aGVuIGl0
+IGlzIGF2YWlsYWJsZSAoYW5kDQpkZXNpcmFibGUpLg0KIg0KDQpTbyBJIGludHJvZHVjZWQgaW50
+ZXJydXB0IGluIFYyLiBJbiBteSB0ZXN0Y2FzZSwgYWZ0ZXIgc21jIGNhbGwgZG9uZSwNCml0IG1l
+YW5zIGZpcm13YXJlLT5zbWMgbWFpbGJveC0+ZmlybXdhcmUgZG9uZS4gSW50ZXJydXB0IG5vdGlm
+aWNhdGlvbg0KZnJvbSBmaXJtd2FyZS0+TGludXgsIG1lYW5zIGZpcm13YXJlIGhhcyBkb25lIHRo
+ZSBvcGVyYXRpb24uDQoNCldoZW4gdXNpbmcgaW50ZXJydXB0cywgd2UgY291bGQgbm90IGtub3cg
+cmVzLmEwIGFzIHNtYyBzeW5jIGNhbGwuDQoNCkludGVycnVwdHMgaXMgbm90IGEgbXVzdCBpbiBt
+eSB0ZXN0Y2FzZSwgRmxvcmlhbiwgQW5kcmUsIGRvIHlvdSBoYXZlDQphbnkgY29tbWVudHM/IFNo
+b3VsZCBJIGtlZXAgaW50ZXJydXB0cyBpbiBWMyBvciBkcm9wIGl0IGFzIEphc3NpIGNvbW1lbnRz
+Pw0KDQpUaGFua3MsDQpQZW5nLg0KDQo+IA0KPiA+ICsgICAgICAgbWJveF9jaGFuX3JlY2VpdmVk
+X2RhdGEobGluaywgKHZvaWQgKilyZXMuYTApOw0KPiA+ICsNCj4gVGhpcyBpcyBmaW5lLg0KX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
+cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
+bAo=
