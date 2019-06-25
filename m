@@ -1,7 +1,7 @@
 From: Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH V4 3/5] iio: adc: ad7124: Shift to dynamic allocation for channel configuration
-Date: Tue, 25 Jun 2019 11:11:26 +0300
-Message-ID: <20190625081128.22190-3-mircea.caprioru@analog.com>
+Subject: [PATCHi V4 2/5] iio: adc: ad7124: Add buffered input support
+Date: Tue, 25 Jun 2019 11:11:25 +0300
+Message-ID: <20190625081128.22190-2-mircea.caprioru@analog.com>
 References: <20190625081128.22190-1-mircea.caprioru@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,17 +12,13 @@ To: jic23@kernel.org
 Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch changes the channel configuration member of the device
-structure from a fixed size array to a dynamic allocated one with a size
-equal to the number of channels specified in the device tree. This will
-ensure a more flexibility for compatible devices.
+This patch adds the option to enable the buffered mode for positive and
+negative inputs. Each option can be enabled independently.
 
-Ex. ad7124-4 - can have 4 differential or 8 pseudo-differential channels
-ad7124-8 - can have 8 differential or 16 pseudo-differential channels
-
-Also the device can suspport any other combination of differential and
-pseudo-differential channels base on the physical number of inputs
-available.
+In buffered mode, the input channel feeds into a high impedance input stage
+of the buffer amplifier. Therefore, the input can tolerate significant
+source impedances and is tailored for direct connection to external
+resistive type sensors such as strain gages or RTDs.
 
 Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 ---
@@ -36,44 +32,65 @@ Changelog v3:
 Changelog v4:
 - nothing changed here
 
- drivers/iio/adc/ad7124.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/iio/adc/ad7124.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-index ab52c5e9ecb1..edc6f1cc90b2 100644
+index 810234db9c0d..ab52c5e9ecb1 100644
 --- a/drivers/iio/adc/ad7124.c
 +++ b/drivers/iio/adc/ad7124.c
-@@ -121,7 +121,7 @@ struct ad7124_channel_config {
- struct ad7124_state {
- 	const struct ad7124_chip_info *chip_info;
- 	struct ad_sigma_delta sd;
--	struct ad7124_channel_config channel_config[4];
-+	struct ad7124_channel_config *channel_config;
- 	struct regulator *vref[4];
- 	struct clk *mclk;
- 	unsigned int adc_control;
-@@ -439,6 +439,7 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
- 	struct ad7124_state *st = iio_priv(indio_dev);
- 	struct device_node *child;
- 	struct iio_chan_spec *chan;
-+	struct ad7124_channel_config *chan_config;
- 	unsigned int ain[2], channel = 0, tmp;
- 	int ret;
+@@ -61,6 +61,8 @@
+ #define AD7124_CONFIG_REF_SEL(x)	FIELD_PREP(AD7124_CONFIG_REF_SEL_MSK, x)
+ #define AD7124_CONFIG_PGA_MSK		GENMASK(2, 0)
+ #define AD7124_CONFIG_PGA(x)		FIELD_PREP(AD7124_CONFIG_PGA_MSK, x)
++#define AD7124_CONFIG_IN_BUFF_MSK	GENMASK(7, 6)
++#define AD7124_CONFIG_IN_BUFF(x)	FIELD_PREP(AD7124_CONFIG_IN_BUFF_MSK, x)
  
-@@ -453,8 +454,14 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
- 	if (!chan)
- 		return -ENOMEM;
+ /* AD7124_FILTER_X */
+ #define AD7124_FILTER_FS_MSK		GENMASK(10, 0)
+@@ -108,6 +110,8 @@ struct ad7124_chip_info {
+ struct ad7124_channel_config {
+ 	enum ad7124_ref_sel refsel;
+ 	bool bipolar;
++	bool buf_positive;
++	bool buf_negative;
+ 	unsigned int ain;
+ 	unsigned int vref_mv;
+ 	unsigned int pga_bits;
+@@ -473,6 +477,11 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ 		else
+ 			st->channel_config[channel].refsel = tmp;
  
-+	chan_config = devm_kcalloc(indio_dev->dev.parent, st->num_channels,
-+				   sizeof(*chan_config), GFP_KERNEL);
-+	if (!chan_config)
-+		return -ENOMEM;
++		st->channel_config[channel].buf_positive =
++			of_property_read_bool(child, "adi,buffered-positive");
++		st->channel_config[channel].buf_negative =
++			of_property_read_bool(child, "adi,buffered-negative");
 +
- 	indio_dev->channels = chan;
- 	indio_dev->num_channels = st->num_channels;
-+	st->channel_config = chan_config;
+ 		*chan = ad7124_channel_template;
+ 		chan->address = channel;
+ 		chan->scan_index = channel;
+@@ -492,7 +501,7 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ static int ad7124_setup(struct ad7124_state *st)
+ {
+ 	unsigned int val, fclk, power_mode;
+-	int i, ret;
++	int i, ret, tmp;
  
- 	for_each_available_child_of_node(np, child) {
- 		ret = of_property_read_u32(child, "reg", &channel);
+ 	fclk = clk_get_rate(st->mclk);
+ 	if (!fclk)
+@@ -525,8 +534,12 @@ static int ad7124_setup(struct ad7124_state *st)
+ 		if (ret < 0)
+ 			return ret;
+ 
++		tmp = (st->channel_config[i].buf_positive << 1)  +
++			st->channel_config[i].buf_negative;
++
+ 		val = AD7124_CONFIG_BIPOLAR(st->channel_config[i].bipolar) |
+-		      AD7124_CONFIG_REF_SEL(st->channel_config[i].refsel);
++		      AD7124_CONFIG_REF_SEL(st->channel_config[i].refsel) |
++		      AD7124_CONFIG_IN_BUFF(tmp);
+ 		ret = ad_sd_write_reg(&st->sd, AD7124_CONFIG(i), 2, val);
+ 		if (ret < 0)
+ 			return ret;
 -- 
 2.17.1
