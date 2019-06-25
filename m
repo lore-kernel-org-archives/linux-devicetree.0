@@ -1,49 +1,51 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: Re: [RFC PATCH v4 net-next 10/11] ARM: dts: am57xx-idk: add dt nodes
- for new cpsw switch dev driver
-Date: Wed, 26 Jun 2019 01:49:54 +0300
-Message-ID: <20190625224953.GD6485@khorivan>
-References: <20190621181314.20778-1-grygorii.strashko@ti.com>
- <20190621181314.20778-11-grygorii.strashko@ti.com>
+From: Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
+Date: Tue, 25 Jun 2019 23:02:53 +0000
+Message-ID: <20190625230253.GQ19023@42.do-not-panic.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-2-brendanhiggins@google.com>
+ <20190620001526.93426218BE@mail.kernel.org>
+ <CAFd5g46Jhxsz6_VXHEVYvTeDRwwzgKpr=aUWLL5b3S4kUukb8g@mail.gmail.com>
+ <20190625214427.GN19023@42.do-not-panic.com>
+ <CAFd5g47OABqN127cPKqoCOA_Wr9w=LFh_0XkF7LXu2iY9sFkSw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190621181314.20778-11-grygorii.strashko@ti.com>
+In-Reply-To: <CAFd5g47OABqN127cPKqoCOA_Wr9w=LFh_0XkF7LXu2iY9sFkSw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: netdev@vger.kernel.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Andrew Lunn <andrew@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@resnulli.us>, Florian Fainelli <f.fainelli@gmail.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Ivan Vecera <ivecera@redhat.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>"open list:KERNEL SELFTEST FRAMEWORK" <li>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 09:13:13PM +0300, Grygorii Strashko wrote:
->Add DT nodes for new cpsw switch dev driver.
->
->Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->---
-> arch/arm/boot/dts/am571x-idk.dts         | 28 +++++++++++++
-> arch/arm/boot/dts/am572x-idk.dts         |  5 +++
-> arch/arm/boot/dts/am574x-idk.dts         |  5 +++
-> arch/arm/boot/dts/am57xx-idk-common.dtsi |  2 +-
-> arch/arm/boot/dts/dra7-l4.dtsi           | 53 ++++++++++++++++++++++++
-> 5 files changed, 92 insertions(+), 1 deletion(-)
->
+On Tue, Jun 25, 2019 at 03:14:45PM -0700, Brendan Higgins wrote:
+> On Tue, Jun 25, 2019 at 2:44 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > Since its a new architecture and since you seem to imply most tests
+> > don't require locking or even IRQs disabled, I think its worth to
+> > consider the impact of adding such extreme locking requirements for
+> > an initial ramp up.
+> 
+> Fair enough, I can see the point of not wanting to use irq disabled
+> until we get someone complaining about it, but I think making it
+> thread safe is reasonable. It means there is one less thing to confuse
+> a KUnit user and the only penalty paid is some very minor performance.
 
-[...]
+One reason I'm really excited about kunit is speed... so by all means I
+think we're at a good point to analyze performance optimizationsm if
+they do make sense.
 
->diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi 
->b/arch/arm/boot/dts/am57xx-idk-common.dtsi
->index f7bd26458915..5c7663699efa 100644
->--- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
->+++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
->@@ -367,7 +367,7 @@
-> };
->
-> &mac {
->-	status = "okay";
->+//	status = "okay";
-?
+While on the topic of parallization, what about support for running
+different test cases in parallel? Or at the very least different kunit
+modules in parallel.  Few questions come up based on this prospect:
 
+  * Why not support parallelism from the start?
+  * Are you opposed to eventually having this added? For instance, there is
+    enough code on lib/test_kmod.c for batching tons of kthreads each
+    one running its own thing for testing purposes which could be used
+    as template.
+  * If we eventually *did* support it:
+    - Would logs be skewed?
+    - Could we have a way to query: give me log for only kunit module
+      named "foo"?
 
--- 
-Regards,
-Ivan Khoronzhuk
+  Luis
