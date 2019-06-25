@@ -1,53 +1,52 @@
 From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v13 02/13] doc: Add doc for the Ingenic TCU hardware
-Date: Tue, 25 Jun 2019 08:44:26 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1906250840150.32342@nanos.tec.linutronix.de>
-References: <20190624225759.18299-1-paul@crapouillou.net> <20190624225759.18299-3-paul@crapouillou.net>
+Subject: Re: [PATCH v13 06/13] irqchip: Add irq-ingenic-tcu driver
+Date: Tue, 25 Jun 2019 08:51:07 +0200 (CEST)
+Message-ID: <alpine.DEB.2.21.1906250845540.32342@nanos.tec.linutronix.de>
+References: <20190624225759.18299-1-paul@crapouillou.net> <20190624225759.18299-7-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190624225759.18299-3-paul@crapouillou.net>
+In-Reply-To: <20190624225759.18299-7-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Paul Cercueil <paul@crapouillou.net>
 Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Lee Jones <lee.jones@linaro.org>, Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-Paul,
-
 On Tue, 25 Jun 2019, Paul Cercueil wrote:
 
-> Add a documentation file about the Timer/Counter Unit (TCU) present in
-
-s/Add a /Add /
-
-> the Ingenic JZ47xx SoCs.
-> 
-> diff --git a/Documentation/mips/ingenic-tcu.txt b/Documentation/mips/ingenic-tcu.txt
-> new file mode 100644
-> index 000000000000..1a753805779c
 > --- /dev/null
-> +++ b/Documentation/mips/ingenic-tcu.txt
+> +++ b/drivers/irqchip/irq-ingenic-tcu.c
+> @@ -0,0 +1,182 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * JZ47xx SoCs TCU IRQ driver
+> + * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
+> + */
 
-There is a massive effort to convert the whole Documentation tree to rst
-format. Please do not introduce new txt files.
+Nothing to complain here. Just a few nit picks.
 
-Also documentation wants a SPDX license identifier.
-
-> +Implementation
-> +--------------
 > +
-> +The functionalities of the TCU hardware are spread across multiple drivers:
-> +- boilerplate:      drivers/mfd/ingenic-tcu.c
-> +- clocks:           drivers/clk/ingenic/tcu.c
-> +- interrupts:       drivers/irqchip/irq-ingenic-tcu.c
-> +- timers:           drivers/clocksource/ingenic-timer.c
-> +- PWM:              drivers/pwm/pwm-jz4740.c
-> +- watchdog:         drivers/watchdog/jz4740_wdt.c
-> +- OST:              drivers/clocksource/ingenic-ost.c
+> +struct ingenic_tcu {
+> +	struct regmap *map;
+> +	struct clk *clk;
+> +
+> +	struct irq_domain *domain;
+> +	unsigned int nb_parent_irqs;
+> +	u32 parent_irqs[3];
+> +};
 
-Hrm. These file names are going to be stale over time, but I have no better
-idea either.
+In case you respin this then please format it tabular:
 
-Thanks,
+struct ingenic_tcu {
+	struct regmap		*map;
+	struct clk		*clk;
+	struct irq_domain	*domain;
+	unsigned int		nb_parent_irqs;
+	u32			parent_irqs[3];
+};
 
-	tglx
+It's simpler to parse that way, at least for me :)
+
+Anyway:
+
+      Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
