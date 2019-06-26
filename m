@@ -1,50 +1,76 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
-Date: Wed, 26 Jun 2019 10:07:45 -0700
-Message-ID: <886589a4-cc51-1c01-6ade-4a6a683407d2@gmail.com>
+Date: Wed, 26 Jun 2019 18:09:19 +0100
+Message-ID: <20190626170919.GC13572@e107155-lin>
 References: <20190603083005.4304-1-peng.fan@nxp.com>
  <20190603083005.4304-3-peng.fan@nxp.com>
  <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com>
- <AM0PR04MB4481210CE83416353575C3D988E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20c6cd30-642d-5f6e-15b8-2ef925ed90a6@arm.com>
+ <AM0PR04MB44813A4DE544E53EB7B6F02B88E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CABb+yY38MAZqVOhjyV+GByPvpFcTfKbNG1rJ8YDRd1vi1F4fqg@mail.gmail.com>
+ <AM0PR04MB44814D3BD59033ECDDE3094C88E20@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <e49278ba-f734-e019-ab44-53afe558bd85@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20c6cd30-642d-5f6e-15b8-2ef925ed90a6@arm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <e49278ba-f734-e019-ab44-53afe558bd85@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>, Peng Fan <peng.fan@nxp.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, ", Sascha Hauer" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Peng Fan <peng.fan@nxp.com>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, ", Sascha Hauer" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Andre Przywara <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6/26/19 10:05 AM, André Przywara wrote:
->> So I introduced interrupt in V2. In my testcase, after smc call done,
->> it means firmware->smc mailbox->firmware done. Interrupt notification
->> from firmware->Linux, means firmware has done the operation.
->>
->> When using interrupts, we could not know res.a0 as smc sync call.
->>
->> Interrupts is not a must in my testcase, Florian, Andre, do you have
->> any comments? Should I keep interrupts in V3 or drop it as Jassi comments?
-> 
-> The smc mailbox is by its very design a one-way channel - and it's
-> synchronous. I think this is all the mailbox driver should be concerned
-> about. The fact that there is a protocol user that would benefit from a
-> return channel is a separate issue.
-> The SCMI binding explicitly mentions *two* mailboxes, one TX, one RX, so
-> the return channel could be very well implemented by a separate driver.
-> I am wondering if we get away without a functioning return channel, at
-> least for a subset of SCMI functionality? Can we use some dummy driver?
-> Or specify another smc channel with some unhandled/ignored channel ID
-> for that purpose?
-> 
-> So I would leave the IRQ return channel out for now, unless we
-> desperately need it.
+On Wed, Jun 26, 2019 at 09:44:06AM -0700, Florian Fainelli wrote:
+> On 6/26/19 6:31 AM, Peng Fan wrote:
+> >>> The firmware driver might not have func-id, such as SCMI/SCPI.
+> >>> So add an optional func-id to let smc mailbox driver could
+> >>> use smc SiP func id.
+> >>>
+> >> There is no end to conforming to protocols. Controller drivers should
+> >> be written having no particular client in mind.
+> >
+> > If the func-id needs be passed from user, then the chan_id suggested
+> > by Sudeep should also be passed from user, not in mailbox driver.
+> >
+> > Jassi, so from your point, arm_smc_send_data just send a0 - a6
+> > to firmware, right?
+> >
+> > Sudeep, Andre, Florian,
+> >
+> > What's your suggestion? SCMI not support, do you have
+> > plan to add smc transport in SCMI?
+>
+> On the platforms that I work with, we have taken the liberty of
+> implementing SCMI in our monitor firmware because the other MCU we use
+> for dynamic voltage and frequency scaling did not have enough memory to
+> support that and we still had the ability to make that firmware be
+> trusted enough we could give it power management responsibilities. I
+> would certainly feel more comfortable if the SCMI specification was
+> amended to indicate that the Agent could be such a software entity,
+> still residing on the same host CPU as the Platform(s), but if not,
+> that's fine.
+>
 
-That's fine, the initial point was specifically about the binding
-already defining an optional interrupt property, but that can be removed
-too if this is too much confusion or opens up the discussion beyond this
-submission.
--- 
-Florian
+That's completely legal and there's nothing in the specification that
+prohibits. I understand it's not explicitly not mentioned and I have
+been trying to get such things clarified. But since it's main focus
+is on the message protocol, the clarity on transport mechanism is very
+thin and there's hesitation to add more details under the impression
+that it may restrict the usage.
+
+But as I mentioned, I understand what you need there :)
+
+> This has lead us to implement a mailbox driver that uses a proprietary
+> SMC call for the P2A path ("tx" channel) and the return being done via
+> either that same SMC or through SGI. You can take a look at it in our
+> downstream tree here actually:
+>
+> https://github.com/Broadcom/stblinux-4.9/blob/master/linux/drivers/mailbox/brcmstb-mailbox.c
+>
+
+Just curious, I see it's fast call and why do you still depend on
+interrupt to indicate completion of the message. Will the return from
+SMC not suffice ? Sorry if I am missing something obvious.
+
+--
+Regards,
+Sudeep
