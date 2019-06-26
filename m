@@ -1,128 +1,28 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH 3/5] iio: imu: adis: Add support for SPI transfer
- cs_change_stall_delay_us
-Date: Wed, 26 Jun 2019 19:35:24 +0100
-Message-ID: <20190626193524.2bf08a14@archlinux>
-References: <20190625131328.11883-1-alexandru.ardelean@analog.com>
-        <20190625131328.11883-3-alexandru.ardelean@analog.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 4/4] clk: at91: sckc: add support for SAM9X60
+Date: Wed, 26 Jun 2019 11:36:58 -0700
+Message-ID: <20190626183658.BA53A216FD@mail.kernel.org>
+References: <1558433454-27971-1-git-send-email-claudiu.beznea@microchip.com> <1558433454-27971-5-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625131328.11883-3-alexandru.ardelean@analog.com>
+In-Reply-To: <1558433454-27971-5-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: linux-iio@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Hennerich <michael.hennerich@analog.com>
+To: Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Jun 2019 16:13:26 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> The ADIS16460 requires a higher delay before the next transfer. Since the
-> SPI framework supports configuring the delay before the next transfer, this
-> driver will become the first user of it.
-> 
-> The support for this functionality in ADIS16460 requires an addition to the
-> ADIS lib to support the `cs_change_stall_delay_us` functionality in SPI.
-> 
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject to previous patch naming etc, this is fine and I'll pick it up once
-that's sorted.
-
-Thanks,
-
-Jonathan
-
+Quoting Claudiu.Beznea@microchip.com (2019-05-21 03:11:33)
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+>=20
+> Add support for SAM9X60's slow clock.
+>=20
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > ---
->  drivers/iio/imu/adis.c       | 9 +++++++++
->  include/linux/iio/imu/adis.h | 2 ++
->  2 files changed, 11 insertions(+)
-> 
-> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-> index c771ae6803a9..90dac69910b3 100644
-> --- a/drivers/iio/imu/adis.c
-> +++ b/drivers/iio/imu/adis.c
-> @@ -40,28 +40,33 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.tx_buf = adis->tx + 2,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.tx_buf = adis->tx + 4,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.tx_buf = adis->tx + 6,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.tx_buf = adis->tx + 8,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		},
->  	};
->  
-> @@ -134,12 +139,14 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.tx_buf = adis->tx + 2,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->read_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.tx_buf = adis->tx + 4,
->  			.rx_buf = adis->rx,
-> @@ -147,11 +154,13 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->read_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.rx_buf = adis->rx + 2,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.delay_usecs = adis->data->read_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		},
->  	};
->  
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index 469a493f7ae0..4aa248b6b3bd 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -27,6 +27,7 @@ struct adis_burst;
->   * struct adis_data - ADIS chip variant specific data
->   * @read_delay: SPI delay for read operations in us
->   * @write_delay: SPI delay for write operations in us
-> + * @cs_stall_delay: SPI stall delay between transfers in us
->   * @glob_cmd_reg: Register address of the GLOB_CMD register
->   * @msc_ctrl_reg: Register address of the MSC_CTRL register
->   * @diag_stat_reg: Register address of the DIAG_STAT register
-> @@ -36,6 +37,7 @@ struct adis_burst;
->  struct adis_data {
->  	unsigned int read_delay;
->  	unsigned int write_delay;
-> +	unsigned int cs_stall_delay;
->  
->  	unsigned int glob_cmd_reg;
->  	unsigned int msc_ctrl_reg;
+
+FYI, this patch is base64 encoded and causes my MUA to have lots of
+pain. It would be nice if you could send plain text emails, otherwise it
+takes me a few more seconds to extract the patch. Of course, it reminds
+me that I need to fix my MUA so maybe this is OK!
