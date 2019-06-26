@@ -1,74 +1,90 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RESEND PATCH v1 0/5] Solve postboot supplier cleanup and
- optimize probe ordering
-Date: Tue, 25 Jun 2019 22:49:32 -0700
-Message-ID: <f9ddae55-91b3-27b2-0919-579f4d895e99@gmail.com>
-References: <20190604003218.241354-1-saravanak@google.com>
- <20190624223707.GH203031@google.com> <20190625035313.GA13239@kroah.com>
- <20190626043052.GF212690@google.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v7 3/5] mtd: Add support for HyperBus memory devices
+Date: Wed, 26 Jun 2019 11:30:56 +0530
+Message-ID: <1131067e-a86d-f794-f6ae-be0a2b3e5832@ti.com>
+References: <20190620172250.9102-1-vigneshr@ti.com>
+ <20190620172250.9102-4-vigneshr@ti.com>
+ <OF97D41CEB.1200A9E4-ON48258425.0006AA42-48258425.000700E5@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190626043052.GF212690@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <OF97D41CEB.1200A9E4-ON48258425.0006AA42-48258425.000700E5@mxic.com.tw>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sandeep Patil <sspatil@android.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: masonccyang@mxic.com.tw
+Cc: devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Boris Brezillon <bbrezillon@kernel.org>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/25/19 9:30 PM, Sandeep Patil wrote:
-> On Tue, Jun 25, 2019 at 11:53:13AM +0800, Greg Kroah-Hartman wrote:
->> On Mon, Jun 24, 2019 at 03:37:07PM -0700, Sandeep Patil wrote:
->>> We are trying to make sure that all (most) drivers in an Aarch64 system can
->>> be kernel modules for Android, like any other desktop system for
->>> example. There are a number of problems we need to fix before that happens
->>> ofcourse.
->>
->> I will argue that this is NOT an android-specific issue.  If the goal of
->> creating an arm64 kernel that will "just work" for a wide range of
->> hardware configurations without rebuilding is going to happen, we need
->> to solve this problem with DT.  This goal was one of the original wishes
->> of the arm64 development effort, let's not loose sight of it as
->> obviously, this is not working properly just yet.
-> 
-> I believe the proposed solution in this patch series is just that. I am not
-> sure what the alternatives are. The alternative suggested was to reuse
-
-Look at the responses from myself and from Rob to patch 0.  No one responded
-to our comments.
-
--Frank
-
-
-> pre-existing dt-bindings for dependency based probe re-ordering and resolution.
-> 
-> However, it seems we had no way to *really* check if these dependencies are
-> the real. So, a device may or may not actually depend on the other device for
-> probe / initialization when the dependency is mentioned in it's dt node. From
-> DT's point of view, there is no way to tell this ..
-> 
-> I don't know how this is handled in x86. With DT, I don't see how we can do
-> this unless DT dependencies are _really_ tied with runtime dependencies (The
-> cycles would have been apparent if that was the case.
-> 
-> Honestly, the "depends-on" property suggested here just piles on to the
-> existing state. So, it is somewhat doubling the exiting bindings. It says,
-> you must use depends-on property to define probe / initialization dependency.
-> The existing bindings like 'clock', 'interrupt', '*-supply' do not enforce
-> that right now, so you will have device nodes that have these bindings right
-> now but don't necessarily need them for successful probe for example.
-> 
->>
->> It just seems that Android is the first one to actually try and
->> implement that goal :)
-> 
-> I guess :)
-> 
-> - ssp
-> 
->>
->> thanks,
->>
->> greg k-h
-> 
+CgpPbiAyNi8wNi8xOSA2OjQ2IEFNLCBtYXNvbmNjeWFuZ0BteGljLmNvbS50dyB3cm90ZToKPiBI
+aSBWaWduZXNoLAo+IAo+Pgo+PiBTdWJqZWN0Cj4+Cj4+IFtQQVRDSCB2NyAzLzVdIG10ZDogQWRk
+IHN1cHBvcnQgZm9yIEh5cGVyQnVzIG1lbW9yeSBkZXZpY2VzCj4+Cj4+IEN5cHJlc3MnIEh5cGVy
+QnVzIGlzIExvdyBTaWduYWwgQ291bnQsIEhpZ2ggUGVyZm9ybWFuY2UgRG91YmxlIERhdGEgUmF0
+ZQo+PiBCdXMgaW50ZXJmYWNlIGJldHdlZW4gYSBob3N0IHN5c3RlbSBtYXN0ZXIgYW5kIG9uZSBv
+ciBtb3JlIHNsYXZlCj4+IGludGVyZmFjZXMuIEh5cGVyQnVzIGlzIHVzZWQgdG8gY29ubmVjdCBt
+aWNyb3Byb2Nlc3NvciwgbWljcm9jb250cm9sbGVyLAo+PiBvciBBU0lDIGRldmljZXMgd2l0aCBy
+YW5kb20gYWNjZXNzIE5PUiBmbGFzaCBtZW1vcnkgKGNhbGxlZCBIeXBlckZsYXNoKQo+PiBvciBz
+ZWxmIHJlZnJlc2ggRFJBTSAoY2FsbGVkIEh5cGVyUkFNKS4KPj4KPj4gSXRzIGEgOC1iaXQgZGF0
+YSBidXMgKERRWzc6MF0pIHdpdGggIFJlYWQtV3JpdGUgRGF0YSBTdHJvYmUgKFJXRFMpCj4+IHNp
+Z25hbCBhbmQgZWl0aGVyIFNpbmdsZS1lbmRlZCBjbG9jaygzLjBWIHBhcnRzKSBvciBEaWZmZXJl
+bnRpYWwgY2xvY2sKPj4gKDEuOFYgcGFydHMpLiBJdCB1c2VzIENoaXBTZWxlY3QgbGluZXMgdG8g
+c2VsZWN0IGIvdyBtdWx0aXBsZSBzbGF2ZXMuCj4+IEF0IGJ1cyBsZXZlbCwgaXQgZm9sbG93cyBh
+IHNlcGFyYXRlIHByb3RvY29sIGRlc2NyaWJlZCBpbiBIeXBlckJ1cwo+PiBzcGVjaWZpY2F0aW9u
+WzFdLgo+Pgo+PiBIeXBlckZsYXNoIGZvbGxvd3MgQ0ZJIEFNRC9GdWppdHN1IEV4dGVuZGVkIENv
+bW1hbmQgU2V0ICgweDAwMDIpIHNpbWlsYXIKPj4gdG8gdGhhdCBvZiBleGlzdGluZyBwYXJhbGxl
+bCBOT1JzLiBTaW5jZSBIeXBlckJ1cyBpcyB4OCBERFIgYnVzLAo+PiBpdHMgZXF1aXZhbGVudCB0
+byB4MTYgcGFyYWxsZWwgTk9SIGZsYXNoIHdydCBiaXRzIHBlciBjbG9jayBjeWNsZS4gQnV0Cj4+
+IEh5cGVyQnVzIG9wZXJhdGVzIGF0ID4xNjZNSHogZnJlcXVlbmNpZXMuCj4+IEh5cGVyUkFNIHBy
+b3ZpZGVzIGRpcmVjdCByYW5kb20gcmVhZC93cml0ZSBhY2Nlc3MgdG8gZmxhc2ggbWVtb3J5Cj4+
+IGFycmF5Lgo+Pgo+PiBCdXQsIEh5cGVyQnVzIG1lbW9yeSBjb250cm9sbGVycyBzZWVtIHRvIGFi
+c3RyYWN0IGltcGxlbWVudGF0aW9uIGRldGFpbHMKPj4gYW5kIGV4cG9zZSBhIHNpbXBsZSBNTUlP
+IGludGVyZmFjZSB0byBhY2Nlc3MgY29ubmVjdGVkIGZsYXNoLgo+Pgo+PiBBZGQgc3VwcG9ydCBm
+b3IgcmVnaXN0ZXJpbmcgSHlwZXJGbGFzaCBkZXZpY2VzIHdpdGggTVREIGZyYW1ld29yay4gTVRE
+Cj4+IG1hcHMgZnJhbWV3b3JrIGFsb25nIHdpdGggQ0ZJIGNoaXAgc3VwcG9ydCBmcmFtZXdvcmsg
+YXJlIHVzZWQgdG8gc3VwcG9ydAo+PiBjb21tdW5pY2F0aW5nIHdpdGggZmxhc2guCj4+Cj4+IEZy
+YW1ld29yayBpcyBtb2RlbGxlZCBhbG9uZyB0aGUgbGluZXMgb2Ygc3BpLW5vciBmcmFtZXdvcmsu
+IEh5cGVyQnVzCj4+IG1lbW9yeSBjb250cm9sbGVyIChIQk1DKSBkcml2ZXJzIGNhbGxzIGh5cGVy
+YnVzX3JlZ2lzdGVyX2RldmljZSgpIHRvCj4+IHJlZ2lzdGVyIGEgc2luZ2xlIEh5cGVyRmxhc2gg
+ZGV2aWNlLiBIeXBlckZsYXNoIGNvcmUgcGFyc2VzIE1NSU8gYWNjZXNzCj4+IGluZm9ybWF0aW9u
+IGZyb20gRFQsIHNldHMgdXAgdGhlIG1hcF9pbmZvIHN0cnVjdCwgcHJvYmVzIENGSSBmbGFzaCBh
+bmQKPj4gcmVnaXN0ZXJzIGl0IHdpdGggTVREIGZyYW1ld29yay4KPj4KPj4gU29tZSBIQk1DIG1h
+c3RlcnMgbmVlZCBjYWxpYnJhdGlvbi90cmFpbmluZyBzZXF1ZW5jZVszXSB0byBiZSBjYXJyaWVk
+Cj4+IG91dCwgaW4gb3JkZXIgZm9yIERMTCBpbnNpZGUgdGhlIGNvbnRyb2xsZXIgdG8gbG9jaywg
+YnkgcmVhZGluZyBhIGtub3duCj4+IHN0cmluZy9wYXR0ZXJuLiBUaGlzIGlzIGRvbmUgYnkgcmVw
+ZWF0ZWRseSByZWFkaW5nIENGSSBRdWVyeQo+PiBJZGVudGlmaWNhdGlvbiBTdHJpbmcuIENhbGli
+cmF0aW9uIG5lZWRzIHRvIGJlIGRvbmUgYmVmb3JlIHRyeWluZyB0byAKPiBkZXRlY3QKPj4gZmxh
+c2ggYXMgcGFydCBvZiBDRkkgZmxhc2ggcHJvYmUuCj4+Cj4+IEh5cGVyUkFNIGlzIG5vdCBzdXBw
+b3J0ZWQgYXQgdGhlIG1vbWVudC4KPj4KPj4gSHlwZXJCdXMgc3BlY2lmaWNhdGlvbiBjYW4gYmUg
+Zm91bmQgYXRbMV0KPj4gSHlwZXJGbGFzaCBkYXRhc2hlZXQgY2FuIGJlIGZvdW5kIGF0WzJdCj4+
+Cj4+IFsxXSBodHRwczovL3d3dy5jeXByZXNzLmNvbS9maWxlLzIxMzM1Ni9kb3dubG9hZAo+PiBb
+Ml0gaHR0cHM6Ly93d3cuY3lwcmVzcy5jb20vZmlsZS8yMTMzNDYvZG93bmxvYWQKPj4gWzNdIGh0
+dHA6Ly93d3cudGkuY29tL2xpdC91Zy9zcHJ1aWQ3Yi9zcHJ1aWQ3Yi5wZGYKPj4gICAgIFRhYmxl
+IDEyLTU3NDEuIEh5cGVyRmxhc2ggQWNjZXNzIFNlcXVlbmNlCj4+Cj4+IFNpZ25lZC1vZmYtYnk6
+IFZpZ25lc2ggUmFnaGF2ZW5kcmEgPHZpZ25lc2hyQHRpLmNvbT4KPiAKPiBDeXByZXNzIGhhcyBh
+bm5vdW5jZWQgdGhlIGluY2x1c2lvbiBvZiBDeXByZXNz4oCZIGhpZ2gtYmFuZHdpZHRoIAo+IEh5
+cGVyQnVz4oSiIDgtYml0IHNlcmlhbCBtZW1vcnkgaW50ZXJmYWNlIGludG8gdGhlIG5ldyBlWHBh
+bmRlZCBTUEkgKHhTUEkpIAo+IGVsZWN0cmljYWwgaW50ZXJmYWNlIHN0YW5kYXJkIGZyb20gdGhl
+IEpFREVDIFNvbGlkIFN0YXRlIFRlY2hub2xvZ3kgCj4gQXNzb2NpYXRpb24gCj4gCj4gZm9yIGRl
+dGFpbCwgcGxlYXNlIGdvZXMgdG8KPiBodHRwczovL3d3dy5jeXByZXNzLmNvbS9uZXdzL2N5cHJl
+c3MtaHlwZXJidXMtbWVtb3J5LWludGVyZmFjZS1pbnN0YW50LWFwcGxpY2F0aW9ucy1pbmNvcnBv
+cmF0ZWQtamVkZWMteHNwaS1lbGVjdHJpY2FsIAo+IAoKVGhhbmtzIGZvciB0aGUgbGluayEKQW5u
+b3VuY2VtZW50IHNlZW1zIHRvIGJlIGZyb20gTWFyY2ggMjAxOCBzaW5jZSB0aGVuIEN5cHJlc3Mg
+aGFzCnB1Ymxpc2hlZCBkZXRhaWxlZCBIeXBlckJ1cyBwcm90b2NvbCBpbiBwdWJsaWMgZG9tYWlu
+IC4gQ29tcGFyaW5nIEpFREVDCnhTUEkgc3BlY2lmaWNhdGlvbiBhbmQgSHlwZXJCdXMgcHJvdG9j
+b2wgdGhhdCBDeXByZXNzIGhhcyBwdWJsaXNoZWQsCnRoZXkgc2VlbSB0byBiZSBmb2xsb3dpbmcg
+OEQtOEQtOEQgUHJvZmlsZSAyLjAgd2l0aCBFeHRlbmRlZCBDb21tYW5kCk1vZGlmaWVyIG9mIEpF
+REVDIHhTUEkgc3BlYy4KRGlkIHlvdSBzZWUgYW55dGhpbmcgbWlzc2luZy9kaWZmZXJlbnQ/CgpJ
+IG5lZWQgdG8gc3R1ZHkgeFNQSSBzcGVjIGluIG1vcmUgZGV0YWlsLCBidXQgc2VlbXMgbGlrZSBh
+cyBsb25nIGFzIHdlCnN1cHBvcnQgSHlwZXJCdXMgUHJvdG9jb2wgc3BlYyBmcm9tIEN5cHJlc3Mg
+d2Ugc2hvdWxkIGJlIHNhZmUuCgotLSAKUmVnYXJkcwpWaWduZXNoCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
