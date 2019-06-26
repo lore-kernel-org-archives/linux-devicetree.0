@@ -1,60 +1,60 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH V4 4/5] dt-bindings: iio: adc: Convert ad7124
- documentation to YAML
-Date: Wed, 26 Jun 2019 20:34:49 +0100
-Message-ID: <20190626203449.75e2a8ea@archlinux>
-References: <20190625081128.22190-1-mircea.caprioru@analog.com>
-        <20190625081128.22190-4-mircea.caprioru@analog.com>
-        <CAL_JsqLHpT1z3O5QctG6WWB6bcOms5XYTOOrq6tK6uOZPNQtDQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: iio: frequency: Use dt-schema for
+ clock-names
+Date: Wed, 26 Jun 2019 20:42:11 +0100
+Message-ID: <20190626204211.4d05ab38@archlinux>
+References: <1561389097-26075-1-git-send-email-stefan.popa@analog.com>
+        <20190625083036.jrr7kz7f6ks6nqps@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLHpT1z3O5QctG6WWB6bcOms5XYTOOrq6tK6uOZPNQtDQ@mail.gmail.com>
+In-Reply-To: <20190625083036.jrr7kz7f6ks6nqps@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mircea Caprioru <mircea.caprioru@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>, Stefan Popa <stefan.popa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Stefan Popa <stefan.popa@analog.com>, robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 26 Jun 2019 08:44:36 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
+On Tue, 25 Jun 2019 10:30:36 +0200
+Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 
-> On Tue, Jun 25, 2019 at 2:12 AM Mircea Caprioru
-> <mircea.caprioru@analog.com> wrote:
-> >
-> > Convert AD7124 bindings documentation to YAML format.
-> >
-> > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> > ---
-> >
-> > Changelog v2:
-> > - modified SPDX license to GPL-2.0 OR BSD-2-Clause
-> > - added regex for a range from 0 to 15
-> > - added minimum and maximum constraints for reg property
-> > - set type and range of values for adi,reference-select property
-> > - used items for diff-channels property
-> > - set bipolar, adi,buffered-positive and negative to type: boolean
-> >
-> > Changelog v3:
-> > - moved adi,buffered-positive and negative properties to own commit
-> >
-> > Changelog v4:
-> > - removed old txt dt-binding
-> >
-> >  .../bindings/iio/adc/adi,ad7124.txt           |  75 ---------
-> >  .../bindings/iio/adc/adi,ad7124.yaml          | 144 ++++++++++++++++++
-> >  2 files changed, 144 insertions(+), 75 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml  
+> Hi,
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Something a bit odd happened when trying to apply this, so I ended up doing
-it rather manually.
+> On Mon, Jun 24, 2019 at 06:11:37PM +0300, Stefan Popa wrote:
+> > Dt-schema can be used for clock-names property.
+> >
+> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> > ---
+> >  Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> > index d7adf074..8a2a8f6 100644
+> > --- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> > @@ -27,9 +27,8 @@ properties:
+> >      maxItems: 1
+> >
+> >    clock-names:
+> > -    description:
+> > -      Must be "clkin"
+> > -    maxItems: 1
+> > +    items:
+> > +      - clkin  
+> 
+> You can even just have const: clkin here
+> 
+Given this is fairly independent from the rest of the series, I'll plough
+on with the others and expect a v2 of this one to address Maxime's
+suggestion.
 
-error: cannot convert from y to UTF-8
-fatal: could not parse patch
-
-Anyhow, I think it's fine now, but would welcome any suggestion on what causes
-that one?  Patch was perfectly happy with it.
+Thanks,
 
 Jonathan
+
+> Maxime
+> 
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
