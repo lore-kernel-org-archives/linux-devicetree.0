@@ -1,91 +1,39 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] dt-bindings: Add silabs,si5341
-Date: Wed, 26 Jun 2019 14:24:08 -0700
-Message-ID: <20190626212409.9C0E6208E3@mail.kernel.org>
-References: <20190424090216.18417-1-mike.looijmans@topic.nl> <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com> <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl> <155632584222.168659.9675557812377718927@swboyd.mtv.corp.google.com> <cd52a35b-d289-24e1-70db-9d63fd9f6448@topic.nl> <155658342800.168659.4922821141203707564@swboyd.mtv.corp.google.com> <c7f5184f-f484-e8ad-33ae-36b0da061113@topic.nl>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RESEND PATCH v1 0/5] Solve postboot supplier cleanup and
+ optimize probe ordering
+Date: Wed, 26 Jun 2019 15:30:57 -0600
+Message-ID: <CAL_JsqJyO9Fpq+Lzrc9NdiFBZ_9M31_mjfRyKM=ENtW-zVa8VA@mail.gmail.com>
+References: <20190604003218.241354-1-saravanak@google.com> <20190624223707.GH203031@google.com>
+ <20190625035313.GA13239@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c7f5184f-f484-e8ad-33ae-36b0da061113@topic.nl>
+In-Reply-To: <20190625035313.GA13239@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Looijmans <mike.looijmans@topic.nl>
-Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Sandeep Patil <sspatil@android.com>, Saravana Kannan <saravanak@google.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-Sorry, I'm getting through my inbox pile and saw this one.
+On Mon, Jun 24, 2019 at 9:54 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Jun 24, 2019 at 03:37:07PM -0700, Sandeep Patil wrote:
+> > We are trying to make sure that all (most) drivers in an Aarch64 system can
+> > be kernel modules for Android, like any other desktop system for
+> > example. There are a number of problems we need to fix before that happens
+> > ofcourse.
+>
+> I will argue that this is NOT an android-specific issue.  If the goal of
+> creating an arm64 kernel that will "just work" for a wide range of
+> hardware configurations without rebuilding is going to happen, we need
+> to solve this problem with DT.  This goal was one of the original wishes
+> of the arm64 development effort, let's not loose sight of it as
+> obviously, this is not working properly just yet.
 
-Quoting Mike Looijmans (2019-04-30 22:46:55)
-> On 30-04-19 02:17, Stephen Boyd wrote:
-> >=20
-> > Why can't that driver call clk_prepare_enable()? Is there some sort of
-> > assumption that this clk will always be enabled and not have a driver
-> > that configures the rate and gates/ungates it?
->=20
-> Not only clk_prepare_enable(), but the driver could also call clk_set_rat=
-e()=20
-> and clk_set_parent() and the likes, but it doesn't, so that's why there i=
-s=20
-> "assigned-clocks" right?
->=20
-> There are multiple scenario's, similar to why regulators also have proper=
-ties=20
-> like these.
->=20
-> - The clock is related to hardware that the kernel is not aware of.
-> - The clock is for a driver that isn't aware of its clock requirements. I=
-t=20
-> might be an extra clock for an FPGA implemented controller that mimics=20
-> existing hardware.
+I fail to see how the different Linux behavior between drivers
+built-in and as modules has anything whatsoever to do with DT. Fix the
+problems in Linux and use the dependencies that are already expressed
+in DT and *then* we can talk about using DT to provide *hints* for
+solving any remaining problems.
 
-Are these hypothetical scenarios or actual scenarios you need to
-support?
-
->=20
-> I'd also consider patching "assigned-clocks" to call "clk_prepare_enable(=
-)",=20
-> would that make sense, or is it intentional that assigned-clocks doesn't =
-do that?
->=20
-
-It's intentional that assigned-clocks doesn't really do anything besides
-setup the list of clks to operate on with the rate or parent settings
-specified in other properties. We would need to add another property
-indicating which clks we want to mark as 'critical' or 'always-on'.
-
-There have been prior discussions where we had developers want to mark
-clks with the CLK_IS_CRITICAL flag from DT, but we felt like that was
-putting SoC level details into the DT. While that was correct for SoC
-specific clk drivers, I can see board designs where it's configurable
-and we want to express that a board has some clks that must be enabled
-early on and left enabled forever because the hardware engineer has
-design the board that way. In this case, marking the clk with the
-CLK_IS_CRITICAL flag needs to be done from DT.
-
-In fact, we pretty much already have support for this with
-of_clk_detect_critical(). Maybe we should re-use that binding with
-'clock-critical' to let clk providers indicate that they have some clks
-that should be marked critical once they're registered. We could
-probably add another property too that indicates certain clks are
-enabled out of the bootloader, similar to the regulator-boot-on
-property, but where it takes a clock-cells wide list for the provider
-the property is inside of.
-
-We need to be careful though and make sure that clk drivers don't start
-putting everything in DT. In your example, it sounds like you have a
-consumer driver that wants to make sure the clk is prepared or enabled
-when the consumer probes. In this case the prepare/enable calls should
-be put directly into the consumer driver so it can manage the clk state.
-For the case of rates and parents, it's essentially a oneshot
-configuration of the rate or the parents of a clk. We don't need to
-"undo" the configuration when the device driver is removed. For prepare
-and enable though, we typically want to disable clks when the hardware
-is not in use to save power. Adding a property to DT should only be done
-to indicate a clk must always be on in this board configuration, not to
-avoid calling clk_prepare_enable() in the driver probe.
-
-To put it another way, I'm looking to describe how the board is designed
-and to indicate that certain clks are always enabled at power on or are
-enabled by the bootloader. Configuration has it's place too, just that
-configuration is a oneshot sort of thing that never needs to change at
-runtime.
+Rob
