@@ -1,38 +1,118 @@
-From: Luis Chamberlain <mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 13/18] kunit: tool: add Python wrappers for running
- KUnit tests
-Date: Wed, 26 Jun 2019 00:01:50 +0000
-Message-ID: <20190626000150.GT19023@42.do-not-panic.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
+Date: Tue, 25 Jun 2019 17:07:32 -0700
+Message-ID: <CAFd5g46TLAONgXiZkFM98BPd-sariMTwhmYG9hSJ+M9=r-ixeg@mail.gmail.com>
 References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-14-brendanhiggins@google.com>
+ <20190617082613.109131-2-brendanhiggins@google.com> <20190625223312.GP19023@42.do-not-panic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190617082613.109131-14-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Felix Guo <felixguoxiuping-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, jpoimboe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, tytso-3s7WtUTddSA@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190625223312.GP19023@42.do-not-panic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-ks>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 01:26:08AM -0700, Brendan Higgins wrote:
->  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-all_passed.log
->  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-crash.log
->  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-failure.log
->  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-no_tests_run.log
->  create mode 100644 tools/testing/kunit/test_data/test_output_isolated_correctly.log
->  create mode 100644 tools/testing/kunit/test_data/test_read_from_file.kconfig
+On Tue, Jun 25, 2019 at 3:33 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Mon, Jun 17, 2019 at 01:25:56AM -0700, Brendan Higgins wrote:
+> > +/**
+> > + * module_test() - used to register a &struct kunit_module with KUnit.
+> > + * @module: a statically allocated &struct kunit_module.
+> > + *
+> > + * Registers @module with the test framework. See &struct kunit_module for more
+> > + * information.
+> > + */
+> > +#define module_test(module) \
+> > +             static int module_kunit_init##module(void) \
+> > +             { \
+> > +                     return kunit_run_tests(&module); \
+> > +             } \
+> > +             late_initcall(module_kunit_init##module)
+>
+> Becuase late_initcall() is used, if these modules are built-in, this
+> would preclude the ability to test things prior to this part of the
+> kernel under UML or whatever architecture runs the tests. So, this
+> limits the scope of testing. Small detail but the scope whould be
+> documented.
 
-Why are these being added upstream? The commit log does not explain
-this.
+You aren't the first person to complain about this (and I am not sure
+it is the first time you have complained about it). Anyway, I have
+some follow on patches that will improve the late_initcall thing, and
+people seemed okay with discussing the follow on patches as part of a
+subsequent patchset after this gets merged.
 
-  Luis
+I will nevertheless document the restriction until then.
+
+> > +static void kunit_print_tap_version(void)
+> > +{
+> > +     if (!kunit_has_printed_tap_version) {
+> > +             kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
+>
+> What is this TAP thing? Why should we care what version it is on?
+> Why are we printing this?
+
+It's part of the TAP specification[1]. Greg and Frank asked me to make
+the intermediate format conform to TAP. Seems like something else I
+should probable document...
+
+> > +             kunit_has_printed_tap_version = true;
+> > +     }
+> > +}
+> > +
+> > +static size_t kunit_test_cases_len(struct kunit_case *test_cases)
+> > +{
+> > +     struct kunit_case *test_case;
+> > +     size_t len = 0;
+> > +
+> > +     for (test_case = test_cases; test_case->run_case; test_case++)
+>
+> If we make the last test case NULL, we'd just check for test_case here,
+> and save ourselves an extra few bytes per test module. Any reason why
+> the last test case cannot be NULL?
+
+Is there anyway to make that work with a statically defined array?
+
+Basically, I want to be able to do something like:
+
+static struct kunit_case example_test_cases[] = {
+        KUNIT_CASE(example_simple_test),
+        KUNIT_CASE(example_mock_test),
+        {}
+};
+
+FYI,
+#define KUNIT_CASE(test_name) { .run_case = test_name, .name = #test_name }
+
+In order to do what you are proposing, I think I need an array of
+pointers to test cases, which is not ideal.
+
+> > +void kunit_init_test(struct kunit *test, const char *name)
+> > +{
+> > +     spin_lock_init(&test->lock);
+> > +     test->name = name;
+> > +     test->success = true;
+> > +}
+> > +
+> > +/*
+> > + * Performs all logic to run a test case.
+> > + */
+> > +static void kunit_run_case(struct kunit_module *module,
+> > +                        struct kunit_case *test_case)
+> > +{
+> > +     struct kunit test;
+> > +     int ret = 0;
+> > +
+> > +     kunit_init_test(&test, test_case->name);
+> > +
+> > +     if (module->init) {
+> > +             ret = module->init(&test);
+>
+> I believe if we used struct kunit_module *kmodule it would be much
+> clearer who's init this is.
+
+That's reasonable. I will fix in next revision.
+
+Cheers!
+
+[1] https://github.com/TestAnything/Specification/blob/tap-14-specification/specification.md
