@@ -1,48 +1,49 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add video nodes
-Date: Wed, 26 Jun 2019 14:32:40 -0700
-Message-ID: <5d13e479.1c69fb81.dd08b.b1e4@mx.google.com>
-References: <1561550047-19600-1-git-send-email-amasule@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using devicetree
+Date: Wed, 26 Jun 2019 15:58:50 -0600
+Message-ID: <CAL_JsqJOc+tkFEGcc+KN0RE8Xjg_i9icPWZ37Ynk_9sR2X1Uwg@mail.gmail.com>
+References: <156113387975.28344.16009584175308192243.stgit@devnote2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561550047-19600-1-git-send-email-amasule@codeaurora.org>
+In-Reply-To: <156113387975.28344.16009584175308192243.stgit@devnote2>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mgottam@codeaurora.org, vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Frank Rowand <frowand.list@gmail.com>, Tom Zanussi <tom.zanussi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Aniket Masule (2019-06-26 04:54:07)
-> This adds video nodes to sdm845 based on the examples
-> in the bindings.
->=20
-> Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
+On Fri, Jun 21, 2019 at 10:18 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> Hi,
+>
+> Here is an RFC series of patches to add boot-time tracing using
+> devicetree.
+>
+> Currently, kernel support boot-time tracing using kernel command-line
+> parameters. But that is very limited because of limited expressions
+> and limited length of command line. Recently, useful features like
+> histogram, synthetic events, etc. are being added to ftrace, but it is
+> clear that we can not expand command-line options to support these
+> features.
+>
+> Hoever, I've found that there is a devicetree which can pass more
+> structured commands to kernel at boot time :) The devicetree is usually
+> used for dscribing hardware configuration, but I think we can expand it
+> for software configuration too (e.g. AOSP and OPTEE already introduced
+> firmware node.) Also, grub and qemu already supports loading devicetree,
+> so we can use it not only on embedded devices but also on x86 PC too.
 
-There should be a From: line with this person's name in the email if
-they're the author. Otherwise this sign-off chain doesn't make sense and
-it should most likely have a Co-developed-by tag instead.
+Do the x86 versions of grub, qemu, EFI, any other bootloader actually
+enable DT support? I didn't think so. Certainly, an x86 kernel doesn't
+normally (other than OLPC and ce4100) have a defined way to even pass
+a dtb from the bootloader to the kernel and the kernel doesn't
+unflatten the dtb.
 
-> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/q=
-com/sdm845.dtsi
-> index fcb9330..ff94cfa 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -2437,6 +2437,36 @@
->                                 <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>;
->                         iommus =3D <&apps_smmu 0x0040 0x1>;
->                 };
-> +
-> +               video-codec@aa00000 {
+For arm64, the bootloader to kernel interface is DT even for ACPI
+based systems. So unlike Frank, I'm not completely against DT being
+the interface, but it's hardly universal across architectures and
+something like this should be. Neither making DT the universal kernel
+boot interface nor creating some new channel as Frank suggested seems
+like an easy task.
 
-This needs to be sorted by address. It doesn't come after 18800000 (the
-address of the node above).
-
-> +                       compatible =3D "qcom,sdm845-venus";
-> +                       reg =3D <0x0aa00000 0xff000>;
-> +                       interrupts =3D <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+Rob
