@@ -1,115 +1,64 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 1/3] scsi: ufs: Introduce vops for resetting device
-Date: Tue, 25 Jun 2019 20:45:29 -0700
-Message-ID: <20190626034529.GE24205@tuxbook-pro>
-References: <20190608050450.12056-1-bjorn.andersson@linaro.org>
- <CGME20190608050458epcas1p30f03f6d448eb962a6af56a4c0b021ef0@epcas1p3.samsung.com>
- <20190608050450.12056-2-bjorn.andersson@linaro.org>
- <ad1c2a2a-91d6-25ce-9dfb-3b386b572ee2@samsung.com>
+From: Sandeep Patil <sspatil@android.com>
+Subject: Re: [RESEND PATCH v1 0/5] Solve postboot supplier cleanup and
+ optimize probe ordering
+Date: Tue, 25 Jun 2019 21:30:52 -0700
+Message-ID: <20190626043052.GF212690@google.com>
+References: <20190604003218.241354-1-saravanak@google.com>
+ <20190624223707.GH203031@google.com>
+ <20190625035313.GA13239@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ad1c2a2a-91d6-25ce-9dfb-3b386b572ee2@samsung.com>
+In-Reply-To: <20190625035313.GA13239@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue 25 Jun 05:41 PDT 2019, Alim Akhtar wrote:
-
-> Hi Bjorn,
-> Are you planning to address Bean's comment on patch#2 and want to 
-> re-spin this series?
-> I am ok with taking this patch as it is and take a Softreset patch as a 
-> separate patch.
+On Tue, Jun 25, 2019 at 11:53:13AM +0800, Greg Kroah-Hartman wrote:
+> On Mon, Jun 24, 2019 at 03:37:07PM -0700, Sandeep Patil wrote:
+> > We are trying to make sure that all (most) drivers in an Aarch64 system can
+> > be kernel modules for Android, like any other desktop system for
+> > example. There are a number of problems we need to fix before that happens
+> > ofcourse.
 > 
+> I will argue that this is NOT an android-specific issue.  If the goal of
+> creating an arm64 kernel that will "just work" for a wide range of
+> hardware configurations without rebuilding is going to happen, we need
+> to solve this problem with DT.  This goal was one of the original wishes
+> of the arm64 development effort, let's not loose sight of it as
+> obviously, this is not working properly just yet.
 
-I still intend to attempt to implement a softreset "fallback", per
-Bean's suggestion - just haven't found the time yet. But I would be
-happy to see these patches merged in the meantime, as they do resolve
-the issue of failing to being up the UFS link on a significant number of
-Qualcomm devices.
+I believe the proposed solution in this patch series is just that. I am not
+sure what the alternatives are. The alternative suggested was to reuse
+pre-existing dt-bindings for dependency based probe re-ordering and resolution.
 
+However, it seems we had no way to *really* check if these dependencies are
+the real. So, a device may or may not actually depend on the other device for
+probe / initialization when the dependency is mentioned in it's dt node. From
+DT's point of view, there is no way to tell this ..
 
-I think it's best if you take patch 1 and 2 through your tree and we
-take the dts patch through the Qualcomm/arm-soc tree.
+I don't know how this is handled in x86. With DT, I don't see how we can do
+this unless DT dependencies are _really_ tied with runtime dependencies (The
+cycles would have been apparent if that was the case.
 
-Thanks,
-Bjorn
+Honestly, the "depends-on" property suggested here just piles on to the
+existing state. So, it is somewhat doubling the exiting bindings. It says,
+you must use depends-on property to define probe / initialization dependency.
+The existing bindings like 'clock', 'interrupt', '*-supply' do not enforce
+that right now, so you will have device nodes that have these bindings right
+now but don't necessarily need them for successful probe for example.
 
-> On 6/8/19 10:34 AM, Bjorn Andersson wrote:
-> > Some UFS memory devices needs their reset line toggled in order to get
-> > them into a good state for initialization. Provide a new vops to allow
-> > the platform driver to implement this operation.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> feel free to add
-> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-> > 
-> > Changes since v2:
-> > - New patch, to allow moving implementation to platform driver
-> > 
-> >   drivers/scsi/ufs/ufshcd.c | 6 ++++++
-> >   drivers/scsi/ufs/ufshcd.h | 8 ++++++++
-> >   2 files changed, 14 insertions(+)
-> > 
-> > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> > index 04d3686511c8..ee895a625456 100644
-> > --- a/drivers/scsi/ufs/ufshcd.c
-> > +++ b/drivers/scsi/ufs/ufshcd.c
-> > @@ -6191,6 +6191,9 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
-> >   	int retries = MAX_HOST_RESET_RETRIES;
-> >   
-> >   	do {
-> > +		/* Reset the attached device */
-> > +		ufshcd_vops_device_reset(hba);
-> > +
-> >   		err = ufshcd_host_reset_and_restore(hba);
-> >   	} while (err && --retries);
-> >   
-> > @@ -8322,6 +8325,9 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
-> >   		goto exit_gating;
-> >   	}
-> >   
-> > +	/* Reset the attached device */
-> > +	ufshcd_vops_device_reset(hba);
-> > +
-> >   	/* Host controller enable */
-> >   	err = ufshcd_hba_enable(hba);
-> >   	if (err) {
-> > diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> > index 994d73d03207..cd8139052ed6 100644
-> > --- a/drivers/scsi/ufs/ufshcd.h
-> > +++ b/drivers/scsi/ufs/ufshcd.h
-> > @@ -298,6 +298,7 @@ struct ufs_pwr_mode_info {
-> >    * @resume: called during host controller PM callback
-> >    * @dbg_register_dump: used to dump controller debug information
-> >    * @phy_initialization: used to initialize phys
-> > + * @device_reset: called to issue a reset pulse on the UFS device
-> >    */
-> >   struct ufs_hba_variant_ops {
-> >   	const char *name;
-> > @@ -326,6 +327,7 @@ struct ufs_hba_variant_ops {
-> >   	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
-> >   	void	(*dbg_register_dump)(struct ufs_hba *hba);
-> >   	int	(*phy_initialization)(struct ufs_hba *);
-> > +	void	(*device_reset)(struct ufs_hba *);
-> >   };
-> >   
-> >   /* clock gating state  */
-> > @@ -1045,6 +1047,12 @@ static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba)
-> >   		hba->vops->dbg_register_dump(hba);
-> >   }
-> >   
-> > +static inline void ufshcd_vops_device_reset(struct ufs_hba *hba)
-> > +{
-> > +	if (hba->vops && hba->vops->device_reset)
-> > +		hba->vops->device_reset(hba);
-> > +}
-> > +
-> >   extern struct ufs_pm_lvl_states ufs_pm_lvl_states[];
-> >   
-> >   /*
-> > 
+> 
+> It just seems that Android is the first one to actually try and
+> implement that goal :)
+
+I guess :)
+
+- ssp
+
+> 
+> thanks,
+> 
+> greg k-h
