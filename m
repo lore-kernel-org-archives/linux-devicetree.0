@@ -1,29 +1,41 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2] Revert "ARM: dts: rockchip: set PWM delay backlight settings for Minnie"
-Date: Thu, 27 Jun 2019 00:02:59 +0200
-Message-ID: <2109910.Z3vxzrnhVQ@phil>
-References: <20190618184531.1137-1-mka@chromium.org>
+From: Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH v5 13/18] kunit: tool: add Python wrappers for running
+ KUnit tests
+Date: Wed, 26 Jun 2019 22:03:50 +0000
+Message-ID: <20190626220350.GA19023@42.do-not-panic.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-14-brendanhiggins@google.com>
+ <20190626000150.GT19023@42.do-not-panic.com>
+ <CAFd5g44kkepB2hZcpYL-NB5ZHYE5tP7W-0yducGCX7Khd9gd9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190618184531.1137-1-mka@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <CAFd5g44kkepB2hZcpYL-NB5ZHYE5tP7W-0yducGCX7Khd9gd9w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Pavel Machek <pavel@ucw.cz>, Douglas Anderson <dianders@chromium.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-ksel>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 18. Juni 2019, 20:45:31 CEST schrieb Matthias Kaehlcke:
-> This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
+On Wed, Jun 26, 2019 at 01:02:55AM -0700, Brendan Higgins wrote:
+> On Tue, Jun 25, 2019 at 5:01 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> >
+> > On Mon, Jun 17, 2019 at 01:26:08AM -0700, Brendan Higgins wrote:
+> > >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-all_passed.log
+> > >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-crash.log
+> > >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-failure.log
+> > >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-no_tests_run.log
+> > >  create mode 100644 tools/testing/kunit/test_data/test_output_isolated_correctly.log
+> > >  create mode 100644 tools/testing/kunit/test_data/test_read_from_file.kconfig
+> >
+> > Why are these being added upstream? The commit log does not explain
+> > this.
 > 
-> The commit assumes that the minnie panel is a AUO B101EAN01.1 (LVDS
-> interface), however it is a AUO B101EAN01.8 (eDP interface). The eDP
-> panel doesn't need the 200 ms delay.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Oh sorry, those are for testing purposes. I thought that was clear
+> from being in the test_data directory. I will reference it in the
+> commit log in the next revision.
 
-applied for 5.3
+Still, I don't get it. They seem to be results from a prior run. Why do
+we need them for testing purposes?
 
-Thanks
-Heiko
+  Luis
