@@ -1,96 +1,206 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: i3c: Document MediaTek I3C master
- bindings
-Date: Wed, 26 Jun 2019 18:23:39 +0200
-Message-ID: <20190626182339.0c6301a2@collabora.com>
-References: <1561527388-4829-1-git-send-email-qii.wang@mediatek.com>
-        <1561527388-4829-2-git-send-email-qii.wang@mediatek.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH V4 14/18] soc/tegra: pmc: add pmc wake support for
+ tegra210
+Date: Wed, 26 Jun 2019 09:27:26 -0700
+Message-ID: <272f25b0-aa1c-eb3c-fcfe-eb4eeec3c346@nvidia.com>
+References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
+ <1561345379-2429-15-git-send-email-skomatineni@nvidia.com>
+ <20190626102614.GF6362@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561527388-4829-2-git-send-email-qii.wang@mediatek.com>
+In-Reply-To: <20190626102614.GF6362@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Qii Wang <qii.wang@mediatek.com>
-Cc: bbrezillon@kernel.org, matthias.bgg@gmail.com, linux-i3c@lists.infradead.org, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, liguo.zhang@mediatek.com, xinping.qian@mediatek.com
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 26 Jun 2019 13:36:27 +0800
-Qii Wang <qii.wang@mediatek.com> wrote:
 
-> Document MediaTek I3C master DT bindings.
-> 
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-> ---
->  .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   47 ++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
-> new file mode 100644
-> index 0000000..3fd4f17
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
-> @@ -0,0 +1,47 @@
-> +Bindings for MediaTek I3C master block
-> +=====================================
-> +
-> +Required properties:
-> +--------------------
-> +- compatible: shall be "mediatek,i3c-master"
-> +- reg: physical base address of the controller and apdma base, length of
-> +  memory mapped region.
-> +- reg-names: should be "main" for controller and "dma" for apdma.
-> +- interrupts: interrupt number to the cpu.
-
-Depending on the interrupt controller, each interrupt cell might
-contain more than just the interrupt number.
-
-> +- clocks: clock name from clock manager.
-
-This property does not contain clock names but clk references.
-
-> +- clock-names: must include "main" and "dma".
-> +
-> +Mandatory properties defined by the generic binding (see
-> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-> +
-> +- #address-cells: shall be set to 3
-> +- #size-cells: shall be set to 0
-> +
-> +Optional properties defined by the generic binding (see
-> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-> +
-> +- i2c-scl-hz
-> +- i3c-scl-hz
-> +
-> +I3C device connected on the bus follow the generic description (see
-> +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
-> +
-> +Example:
-> +
-> +	i3c0: i3c@1100d000 {
-> +		compatible = "mediatek,i3c-master";
-> +		reg = <0x1100d000 0x100>,
-> +		      <0x11000300 0x80>;
-> +		reg-names = "main", "dma";
-> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&i3c0_ck>, <&ap_dma_ck>;
-> +		clock-names = "main", "dma";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		i2c-scl-hz = <100000>;
-> +
-> +		nunchuk: nunchuk@52 {
-> +			compatible = "nintendo,nunchuk";
-> +			reg = <0x52 0x80000010 0>;
-
-reg is wrong here, should be
-
-			reg = <0x52 0x0 0x10>;
-
-While at it, can you send a patch to fix the example in the cadence
-binding doc?
-
-> +		};
-> +	};
+On 6/26/19 3:26 AM, Thierry Reding wrote:
+> On Sun, Jun 23, 2019 at 08:02:55PM -0700, Sowjanya Komatineni wrote:
+>> This patch implements PMC wakeup sequence for Tegra210 and defines
+>> common used RTC alarm wake event.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/soc/tegra/pmc.c | 111 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 111 insertions(+)
+> One general note, and it's a really pedantic one, which means that this
+> patch is plenty good already: sstart the commit subject with a capital
+> letter after the prefix, and watch the capitalization of the rest of the
+> line:
+>
+> 	soc/tegra: pmc: Add PMC wake support for Tegra210
+>
+> I will usually fix up these trivialities when applying, but you can save
+> me a couple of seconds per patch by doing this right to begin with. =)
+>
+> Thanks again for the great work on this series!
+>
+> Thierry
+Sorry Thierry. Sure will follow that from now on...
+>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>> index e87f29a35fcf..603fc3bd73f5 100644
+>> --- a/drivers/soc/tegra/pmc.c
+>> +++ b/drivers/soc/tegra/pmc.c
+>> @@ -57,6 +57,12 @@
+>>   #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
+>>   #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
+>>   #define  PMC_CNTRL_MAIN_RST		BIT(4)
+>> +#define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
+>> +
+>> +#define PMC_WAKE_MASK			0x0c
+>> +#define PMC_WAKE_LEVEL			0x10
+>> +#define PMC_WAKE_STATUS			0x14
+>> +#define PMC_SW_WAKE_STATUS		0x18
+>>   
+>>   #define DPD_SAMPLE			0x020
+>>   #define  DPD_SAMPLE_ENABLE		BIT(0)
+>> @@ -87,6 +93,11 @@
+>>   
+>>   #define PMC_SCRATCH41			0x140
+>>   
+>> +#define PMC_WAKE2_MASK			0x160
+>> +#define PMC_WAKE2_LEVEL			0x164
+>> +#define PMC_WAKE2_STATUS		0x168
+>> +#define PMC_SW_WAKE2_STATUS		0x16c
+>> +
+>>   #define PMC_SENSOR_CTRL			0x1b0
+>>   #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
+>>   #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
+>> @@ -1921,6 +1932,55 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
+>>   	.alloc = tegra_pmc_irq_alloc,
+>>   };
+>>   
+>> +static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>> +{
+>> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>> +	unsigned int offset, bit;
+>> +	u32 value;
+>> +
+>> +	if (data->hwirq == ULONG_MAX)
+>> +		return 0;
+>> +
+>> +	offset = data->hwirq / 32;
+>> +	bit = data->hwirq % 32;
+>> +
+>> +	/*
+>> +	 * latch wakeups to SW_WAKE_STATUS register to capture events
+>> +	 * that would not make it into wakeup event register during LP0 exit.
+>> +	 */
+>> +	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+>> +	value |= PMC_CNTRL_LATCH_WAKEUPS;
+>> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>> +	udelay(120);
+>> +
+>> +	value &= ~PMC_CNTRL_LATCH_WAKEUPS;
+>> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>> +	udelay(120);
+>> +
+>> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
+>> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
+>> +
+>> +	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
+>> +	tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
+>> +
+>> +	/* enable PMC wake */
+>> +	if (data->hwirq >= 32)
+>> +		offset = PMC_WAKE2_MASK;
+>> +	else
+>> +		offset = PMC_WAKE_MASK;
+>> +
+>> +	value = tegra_pmc_readl(pmc, offset);
+>> +
+>> +	if (on)
+>> +		value |= 1 << bit;
+>> +	else
+>> +		value &= ~(1 << bit);
+>> +
+>> +	tegra_pmc_writel(pmc, value, offset);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>>   {
+>>   	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>> @@ -1953,6 +2013,49 @@ static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>>   	return 0;
+>>   }
+>>   
+>> +static int tegra210_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+>> +{
+>> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>> +	unsigned int offset, bit;
+>> +	u32 value;
+>> +
+>> +	if (data->hwirq == ULONG_MAX)
+>> +		return 0;
+>> +
+>> +	offset = data->hwirq / 32;
+>> +	bit = data->hwirq % 32;
+>> +
+>> +	if (data->hwirq >= 32)
+>> +		offset = PMC_WAKE2_LEVEL;
+>> +	else
+>> +		offset = PMC_WAKE_LEVEL;
+>> +
+>> +	value = tegra_pmc_readl(pmc, offset);
+>> +
+>> +	switch (type) {
+>> +	case IRQ_TYPE_EDGE_RISING:
+>> +	case IRQ_TYPE_LEVEL_HIGH:
+>> +		value |= 1 << bit;
+>> +		break;
+>> +
+>> +	case IRQ_TYPE_EDGE_FALLING:
+>> +	case IRQ_TYPE_LEVEL_LOW:
+>> +		value &= ~(1 << bit);
+>> +		break;
+>> +
+>> +	case IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING:
+>> +		value ^= 1 << bit;
+>> +		break;
+>> +
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	tegra_pmc_writel(pmc, value, offset);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+>>   {
+>>   	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>> @@ -2541,6 +2644,10 @@ static const struct pinctrl_pin_desc tegra210_pin_descs[] = {
+>>   	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
+>>   };
+>>   
+>> +static const struct tegra_wake_event tegra210_wake_events[] = {
+>> +	TEGRA_WAKE_IRQ("rtc", 16, 2),
+>> +};
+>> +
+>>   static const struct tegra_pmc_soc tegra210_pmc_soc = {
+>>   	.num_powergates = ARRAY_SIZE(tegra210_powergates),
+>>   	.powergates = tegra210_powergates,
+>> @@ -2558,10 +2665,14 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
+>>   	.regs = &tegra20_pmc_regs,
+>>   	.init = tegra20_pmc_init,
+>>   	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
+>> +	.irq_set_wake = tegra210_pmc_irq_set_wake,
+>> +	.irq_set_type = tegra210_pmc_irq_set_type,
+>>   	.reset_sources = tegra210_reset_sources,
+>>   	.num_reset_sources = ARRAY_SIZE(tegra210_reset_sources),
+>>   	.reset_levels = NULL,
+>>   	.num_reset_levels = 0,
+>> +	.num_wake_events = ARRAY_SIZE(tegra210_wake_events),
+>> +	.wake_events = tegra210_wake_events,
+>>   };
+>>   
+>>   #define TEGRA186_IO_PAD_TABLE(_pad)					     \
+>> -- 
+>> 2.7.4
