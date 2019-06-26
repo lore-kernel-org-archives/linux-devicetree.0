@@ -1,60 +1,99 @@
-From: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc rgmii performance.
-Date: Wed, 26 Jun 2019 13:04:43 +0000
-Message-ID: <20190626130443.22025-1-pgwipeout@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings: mfd: max8998: Add charger subnode
+ binding
+Date: Wed, 26 Jun 2019 14:06:24 +0100
+Message-ID: <20190626130624.GT21119@dell>
+References: <20190621115602.17559-1-pawel.mikolaj.chmiel@gmail.com>
+ <20190621115602.17559-3-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: "Leonidas P . Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190621115602.17559-3-pawel.mikolaj.chmiel@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Currently the rk3328-roc-cc ethernet is enabled using "snps,force_thresh_dma_mode".
-While this works, the performance leaves a lot to be desired.
-A previous attempt to improve performance used "snps,txpbl = <0x4>".
-This also allowed networking to function, but performance varied between boards.
+On Fri, 21 Jun 2019, Paweł Chmiel wrote:
 
-This patch takes that one step further.
-Set txpbl and rxpbl to 0x4.
-This can also be accomplished with "snps,pbl =<0x4>" which affects both.
-Also set "snps,aal" which forces address aligned DMA mode.
+> This patch adds devicetree bindings documentation for
+> battery charging controller as the subnode of MAX8998 PMIC.
 
-Fixes: 4bc4d6013b7f (arm64: dts: rockchip: fix rk3328-roc-cc gmac2io stability issues)
+It makes sense to place this in:
 
-Signed-off-by: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ Documentation/devicetree/bindings/power/supply/
 
-Tested-by: Leonidas P. Papadakos <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+And link to it from this file using the following syntax:
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 5d499c9086fb..8bcc08de82fb 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-@@ -141,10 +141,12 @@
- 	phy-mode = "rgmii";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&rgmiim1_pins>;
--	snps,force_thresh_dma_mode;
- 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 50000>;
-+	snps,txpbl = <0x4>;
-+	snps,rxpbl = <0x4>;
-+	snps,aal;
- 	tx_delay = <0x24>;
- 	rx_delay = <0x18>;
- 	status = "okay";
+ See: ../power/supply/<file>.txt
+
+> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> ---
+> Changes from v3:
+>   - Property prefix should be maxim, not max8998
+>   - Describe what End of Charge in percent means
+> 
+> Changes from v2:
+>   - Make charge-restart-level-microvolt optional.
+>   - Make charge-timeout-hours optional.
+> 
+> Changes from v1:
+>   - Removed unneeded Fixes tag
+>   - Correct description of all charger values
+>   - Added missing property unit
+> ---
+>  .../devicetree/bindings/mfd/max8998.txt       | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Documentation/devicetree/bindings/mfd/max8998.txt
+> index 5f2f07c09c90..368f787d6079 100644
+> --- a/Documentation/devicetree/bindings/mfd/max8998.txt
+> +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
+> @@ -48,6 +48,25 @@ Additional properties required if max8998,pmic-buck2-dvs-gpio is defined:
+>  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in microvolts
+>    for buck2 regulator that can be selected using dvs gpio.
+>  
+> +Charger: Configuration for battery charging controller should be added
+> +inside a child node named 'charger'.
+> +  Required properties:
+> +  - maxim,end-of-charge-percentage: End of Charge in percent.
+> +    When the charge current in constant-voltage phase drops below
+> +    end-of-charge-percentage of it's start value, charging is terminated.
+> +    If value equals 0, leave it unchanged. Otherwise it should be value
+> +    from 10 to 45 by 5 step.
+> +
+> +  Optional properties:
+> +  - maxim,charge-restart-threshold: Charge restart threshold in millivolts.
+> +    If property is not present, this will be disabled.
+> +    Valid values are: 0, 100, 150, 200. If the value equals 0, leave it
+> +    unchanged.
+> +
+> +  - maxim,charge-timeout: Charge timeout in hours. If property is not
+> +    present, this will be disabled. Valid values are: 0, 5, 6, 7.
+> +    If the value equals 0, leave it unchanged.
+> +
+>  Regulators: All the regulators of MAX8998 to be instantiated shall be
+>  listed in a child node named 'regulators'. Each regulator is represented
+>  by a child node of the 'regulators' node.
+> @@ -97,6 +116,13 @@ Example:
+>  		max8998,pmic-buck2-dvs-gpio = <&gpx0 0 3 0 0>; /* SET3 */
+>  		max8998,pmic-buck2-dvs-voltage = <1350000>, <1300000>;
+>  
+> +		/* Charger configuration */
+> +		charger {
+> +			maxim,end-of-charge-percentage = <20>;
+> +			maxim,charge-restart-threshold = <100>;
+> +			maxim,charge-timeout = <7>;
+> +		};
+> +
+>  		/* Regulators to instantiate */
+>  		regulators {
+>  			ldo2_reg: LDO2 {
+
 -- 
-2.20.1
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
