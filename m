@@ -1,831 +1,443 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: =?UTF-8?Q?Re:_=E7=AD=94=E5=A4=8D:_[External]__Re:_[PATCH]_[PATCH_v1]_ARM?=
- =?UTF-8?Q?:_dts:_aspeed:_Adding_Lenovo_Hr855xg2_BMC?=
-Date: Wed, 26 Jun 2019 11:35:07 +0930
-Message-ID: <42f067e5-fbfe-4ae3-9943-c191cbee828b@www.fastmail.com>
-References: <1561444696-446373-1-git-send-email-pengms1@lenovo.com>
- <b9abadd4-58e1-4a47-bbcf-f173a1dd2bff@www.fastmail.com>
- <498f5c2517744d70bc82eb5b4c7fd085@lenovo.com>
+From: Luis Chamberlain <mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 17/18] kernel/sysctl-test: Add null pointer test for
+ sysctl.c:proc_dointvec()
+Date: Wed, 26 Jun 2019 02:17:44 +0000
+Message-ID: <20190626021744.GU19023@42.do-not-panic.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-18-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <498f5c2517744d70bc82eb5b4c7fd085@lenovo.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Peng <pengms1@lenovo.com>, Patrick Venture <venture@google.com>, Benjamin Fair <benjaminfair@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Lisa YJ19 Liu <liuyj19@lenovo.com>, Duke KH Du <dukh@lenovo.com>, Yonghui YH21 Liu <liuyh21@lenovo.com>, Harry Sung1 <hsung1@lenovo.com>, Joel Stanley <joel@jms.id.au>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, Derek Lin <dlin23@lenovo.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190617082613.109131-18-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Iurii Zaikin <yzaikin-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, jpoimboe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, tytso-3s7WtUTddSA@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.orgl
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jun 17, 2019 at 01:26:12AM -0700, Brendan Higgins wrote:
+> From: Iurii Zaikin <yzaikin-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> 
+> KUnit tests for initialized data behavior of proc_dointvec that is
+> explicitly checked in the code. Includes basic parsing tests including
+> int min/max overflow.
 
+First, thanks for this work! My review below.
+> 
+> Signed-off-by: Iurii Zaikin <yzaikin-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> Reviewed-by: Logan Gunthorpe <logang-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>
+> ---
+> Changes Since Last Revision:
+>  - Iurii did some clean up (thanks Iurii!) as suggested by Stephen Boyd.
+> ---
+>  kernel/Makefile      |   2 +
+>  kernel/sysctl-test.c | 242 +++++++++++++++++++++++++++++++++++++++++++
+>  lib/Kconfig.debug    |  10 ++
+>  3 files changed, 254 insertions(+)
+>  create mode 100644 kernel/sysctl-test.c
+> 
+> diff --git a/kernel/Makefile b/kernel/Makefile
+> index a8d923b5481ba..50fd511cd0ee0 100644
+> --- a/kernel/Makefile
+> +++ b/kernel/Makefile
+> @@ -114,6 +114,8 @@ obj-$(CONFIG_HAS_IOMEM) += iomem.o
+>  obj-$(CONFIG_ZONE_DEVICE) += memremap.o
+>  obj-$(CONFIG_RSEQ) += rseq.o
+>  
+> +obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
 
-On Wed, 26 Jun 2019, at 11:31, Andrew MS1 Peng wrote:
-> Hi Andrew
->=20
-> We've got a couple of patches on their way upstream for 5.3 that remov=
-e=20
-> the need to reserve memory simply to satisfy the aspeed-lpc-ctrl drive=
-r.
-> If you base the patch on top of Joel's aspeed-5.3-soc tag you can=20
-> remove this node and the phandle reference to it.
-> 	I reserve 1MB for lpc-bridge in DT file for in-band firmware update=20=
+And we have lib/test_sysctl.c of selftests.
 
-> (phosphor-ipmi-flash).
+I'm fine with this going in as-is to its current place, but if we have
+to learn from selftests I'd say we try to stick to a convention so
+folks know what framework a test is for, and to ensure folks can
+easily tell if its test code or not.
 
-Ah! Great. I'll keep that in mind in future reviews.
+Perhaps simply a directory for kunit tests would suffice alone.
 
->=20
-> Just want to confirm that you want the kernel to hog these lines (the=20=
+> +
+>  obj-$(CONFIG_GCC_PLUGIN_STACKLEAK) += stackleak.o
+>  KASAN_SANITIZE_stackleak.o := n
+>  KCOV_INSTRUMENT_stackleak.o := n
+> diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+> new file mode 100644
+> index 0000000000000..cb61ad3c7db63
+> --- /dev/null
+> +++ b/kernel/sysctl-test.c
+> @@ -0,0 +1,242 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * KUnit test of proc sysctl.
+> + */
+> +
+> +#include <kunit/test.h>
+> +#include <linux/sysctl.h>
+> +
+> +static int i_zero;
+> +static int i_one_hundred = 100;
+> +
+> +struct test_sysctl_data {
+> +	int int_0001;
+> +	int int_0002;
+> +	int int_0003[4];
+> +
+> +	unsigned int uint_0001;
+> +
+> +	char string_0001[65];
+> +};
+> +
+> +static struct test_sysctl_data test_data = {
+> +	.int_0001 = 60,
+> +	.int_0002 = 1,
+> +
+> +	.int_0003[0] = 0,
+> +	.int_0003[1] = 1,
+> +	.int_0003[2] = 2,
+> +	.int_0003[3] = 3,
+> +
+> +	.uint_0001 = 314,
+> +
+> +	.string_0001 = "(none)",
+> +};
+> +
+> +static void sysctl_test_dointvec_null_tbl_data(struct kunit *test)
+> +{
+> +	struct ctl_table table = {
+> +		.procname = "foo",
+> +		.data		= NULL,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= &i_zero,
+> +		.extra2         = &i_one_hundred,
+> +	};
+> +	void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> +	size_t len;
+> +	loff_t pos;
+> +
+> +	len = 1234;
+> +	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
+> +	KUNIT_EXPECT_EQ(test, (size_t)0, len);
 
-> consequence is they're unavailable to userspace).
-> 	Yes, I have confirmed the setting of GPIO.
+It is a bit odd, but it does happen, for a developer to be calling
+proc_dointvec() directly, instead typically folks just register a table
+and let it do its thing.  That said, someone not too familiar with proc
+code would see this and really have no clue exactly what is being
+tested.
 
-Thanks. In which case:
+Even as a maintainer, I had to read the code for proc_dointvec() a bit
+to understand that the above is a *read* attempt to the .data field
+being allocated. Because its a write, the len set to a bogus does not
+matter as we are expecting the proc_dointvec() to update len for us.
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+If a test fails, it would be good to for anyone to easily grasp what is
+being tested. So... a few words documenting each test case would be nice.
 
->=20
-> Regards,
-> Andrew Peng
->=20
-> -----=E9=82=AE=E4=BB=B6=E5=8E=9F=E4=BB=B6-----
-> =E5=8F=91=E4=BB=B6=E4=BA=BA: Andrew Jeffery <andrew@aj.id.au>=20
-> =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4: 2019=E5=B9=B46=E6=9C=8826=E6=97=A5=
- 8:31
-> =E6=94=B6=E4=BB=B6=E4=BA=BA: Andrew MS1 Peng <pengms1@lenovo.com>; Pat=
-rick Venture=20
-> <venture@google.com>; Benjamin Fair <benjaminfair@google.com>;=20
-> linux-kernel@vger.kernel.org; linux-aspeed@lists.ozlabs.org;=20
-> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;=20
-> mark.rutland@arm.com; Rob Herring <robh+dt@kernel.org>
-> =E6=8A=84=E9=80=81: Lisa YJ19 Liu <liuyj19@lenovo.com>; Duke KH Du <du=
-kh@lenovo.com>;=20
-> Yonghui YH21 Liu <liuyh21@lenovo.com>; Harry Sung1 <hsung1@lenovo.com>=
-;=20
-> Joel Stanley <joel@jms.id.au>; openbmc@lists.ozlabs.org; Derek Lin23=20=
+> +	len = 1234;
+> +	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, buffer, &len, &pos));
+> +	KUNIT_EXPECT_EQ(test, (size_t)0, len);
 
-> <dlin23@lenovo.com>
-> =E4=B8=BB=E9=A2=98: [External] Re: [PATCH] [PATCH v1] ARM: dts: aspeed=
-: Adding Lenovo=20
-> Hr855xg2 BMC
->=20
->=20
->=20
-> On Tue, 25 Jun 2019, at 16:08, Andrew Peng wrote:
-> > Initial introduction of Lenovo Hr855xg2 family equipped with Aspeed=20=
+And this is a write...
 
-> > 2500 BMC SoC. Hr855xg2 is a x86 server development kit with a ASPEED=
-=20
-> > ast2500 BMC manufactured by Lenovo.
-> > Specifically, This adds the Hr855xg2 platform device tree file used =
-by=20
-> > the Hr855xg2 BMC machines.
-> >=20
-> > This also adds an entry of Hr855xg2 device tree file in Makefile
-> >=20
-> > Signed-off-by: Andrew Peng <pengms1@lenovo.com>
-> > Signed-off-by: Yonghui Liu <liuyh21@lenovo.com>
-> > Signed-off-by: Lisa Liu <liuyj19@lenovo.com>
-> > Signed-off-by: Harry Sung <hsung1@lenovo.com>
-> > Signed-off-by: Derek Lin <dlin23@lenovo.com>
-> > ---
-> >  arch/arm/boot/dts/Makefile                       |   1 +
-> >  arch/arm/boot/dts/aspeed-bmc-lenovo-hr855xg2.dts | 687=20
-> > +++++++++++++++++++++++
-> >  2 files changed, 688 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/aspeed-bmc-lenovo-hr855xg2.dts=
+A nice tests given the data on the table allocated is not assigned.
 
-> >=20
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile=
-=20
-> > index dab2914f..d874777 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -1269,6 +1269,7 @@ dtb-$(CONFIG_ARCH_ASPEED) +=3D \
-> >  	aspeed-bmc-facebook-cmm.dtb \
-> >  	aspeed-bmc-facebook-tiogapass.dtb \
-> >  	aspeed-bmc-intel-s2600wf.dtb \
-> > +	aspeed-bmc-lenovo-hr855xg2.dtb \
-> >  	aspeed-bmc-opp-lanyang.dtb \
-> >  	aspeed-bmc-opp-palmetto.dtb \
-> >  	aspeed-bmc-opp-romulus.dtb \
-> > diff --git a/arch/arm/boot/dts/aspeed-bmc-lenovo-hr855xg2.dts
-> > b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr855xg2.dts
-> > new file mode 100644
-> > index 0000000..d8dbf3a
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr855xg2.dts
-> > @@ -0,0 +1,687 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Device Tree file for Lenovo Hr855xg2 platform
-> > + *
-> > + * Copyright (C) 2019-present Lenovo
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "aspeed-g5.dtsi"
-> > +#include <dt-bindings/gpio/aspeed-gpio.h>
-> > +
-> > +/ {
-> > +	model =3D "HR855XG2 BMC";
-> > +	compatible =3D "lenovo,hr855xg2-bmc", "aspeed,ast2500";
-> > +
-> > +	aliases {
-> > +		i2c14 =3D &i2c_riser1;
-> > +		i2c15 =3D &i2c_riser2;
-> > +		i2c16 =3D &i2c_riser3;
-> > +		i2c17 =3D &i2c_M2;
-> > +		i2c18 =3D &channel_0;
-> > +		i2c19 =3D &channel_1;
-> > +		i2c20 =3D &channel_2;
-> > +		i2c21 =3D &channel_3;
-> > +	};
-> > +
-> > +	chosen {
-> > +		stdout-path =3D &uart5;
-> > +		bootargs =3D "console=3Dtty0 console=3DttyS4,115200 earlyprintk";=
+I don't see any other areas in the kernel where we open code a
+proc_dointvec() call where the second argument is a digit, it
+always is with a variable. As such there would be no need for
+us to expose helpers to make it clear if one is a read or write.
+But for *this* case, I think it would be useful to add two wrappers
+inside this kunit test module which sprinkles the 0 or 1, this way
+a reader can easily know what mode is being tested.
 
-> > +	};
-> > +
-> > +	memory@80000000 {
-> > +		device_type =3D "memory";
-> > +		reg =3D <0x80000000 0x20000000>;
-> > +	};
-> > +
-> > +	reserved-memory {
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <1>;
-> > +		ranges;
-> > +
-> > +		flash_memory: region@98000000 {
-> > +			no-map;
-> > +			reg =3D <0x98000000 0x00100000>; /* 1M */
-> > +		};
->=20
-> We've got a couple of patches on their way upstream for 5.3 that remov=
-e=20
-> the need to reserve memory simply to satisfy the aspeed-lpc-ctrl drive=
-r.
->=20
-> If you base the patch on top of Joel's aspeed-5.3-soc tag you can=20
-> remove this node and the phandle reference to it.
->=20
-> > +
-> > +		gfx_memory: framebuffer {
-> > +			size =3D <0x01000000>;
-> > +			alignment =3D <0x01000000>;
-> > +			compatible =3D "shared-dma-pool";
-> > +			reusable;
-> > +		};
-> > +	};
-> > +
-> > +	leds {
-> > +		compatible =3D "gpio-leds";
-> > +
-> > +		heartbeat {
-> > +			gpios =3D <&gpio ASPEED_GPIO(C, 7) GPIO_ACTIVE_LOW>;
-> > +		};
-> > +
-> > +		fault {
-> > +			gpios =3D <&gpio ASPEED_GPIO(G, 3) GPIO_ACTIVE_LOW>;
-> > +		};
-> > +	};
-> > +
-> > +	iio-hwmon {
-> > +		compatible =3D "iio-hwmon";
-> > +		io-channels =3D <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
-> > +		<&adc 4>, <&adc 5>, <&adc 6>, <&adc 7>,
-> > +		<&adc 8>, <&adc 9>, <&adc 10>,<&adc 11>,
-> > +		<&adc 12>,<&adc 13>,<&adc 14>;
-> > +	};
-> > +
-> > +	iio-hwmon-battery {
-> > +		compatible =3D "iio-hwmon";
-> > +		io-channels =3D <&adc 15>;
-> > +	};
-> > +
-> > +};
-> > +
-> > +&fmc {
-> > +	status =3D "okay";
-> > +	flash@0 {
-> > +		status =3D "okay";
-> > +		m25p,fast-read;
-> > +		label =3D "bmc";
-> > +		spi-max-frequency =3D <50000000>;
-> > +#include "openbmc-flash-layout.dtsi"
-> > +	};
-> > +};
-> > +
-> > +&lpc_ctrl {
-> > +	status =3D "okay";
-> > +	memory-region =3D <&flash_memory>;
->=20
-> i.e. remove the above.
->=20
-> > +	flash =3D <&spi1>;
-> > +};
-> > +
-> > +&lpc_snoop {
-> > +	status =3D "okay";
-> > +	snoop-ports =3D <0x80>;
-> > +};
-> > +
-> > +&uart1 {
-> > +	status =3D "okay";
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&pinctrl_txd1_default
-> > +			&pinctrl_rxd1_default>;
-> > +};
-> > +
-> > +&uart2 {
-> > +	/* Rear RS-232 connector */
-> > +	status =3D "okay";
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&pinctrl_txd2_default
-> > +			&pinctrl_rxd2_default
-> > +			&pinctrl_nrts2_default
-> > +			&pinctrl_ndtr2_default
-> > +			&pinctrl_ndsr2_default
-> > +			&pinctrl_ncts2_default
-> > +			&pinctrl_ndcd2_default
-> > +			&pinctrl_nri2_default>;
-> > +};
-> > +
-> > +&uart3 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&uart5 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&ibt {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&mac0 {
-> > +	status =3D "okay";
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&pinctrl_rmii1_default>;
-> > +	use-ncsi;
-> > +};
-> > +
-> > +&mac1 {
-> > +	status =3D "okay";
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&pinctrl_rgmii2_default &pinctrl_mdio2_default>; };=
+kunit_proc_dointvec_read()
+kunit_proc_dointvec_write()
 
-> > +
-> > +&adc{
-> > +	status =3D "okay";
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&pinctrl_adc0_default
-> > +			&pinctrl_adc1_default
-> > +			&pinctrl_adc2_default
-> > +			&pinctrl_adc3_default
-> > +			&pinctrl_adc4_default
-> > +			&pinctrl_adc5_default
-> > +			&pinctrl_adc6_default
-> > +			&pinctrl_adc7_default
-> > +			&pinctrl_adc8_default
-> > +			&pinctrl_adc9_default
-> > +			&pinctrl_adc10_default
-> > +			&pinctrl_adc11_default
-> > +			&pinctrl_adc12_default
-> > +			&pinctrl_adc13_default
-> > +			&pinctrl_adc14_default
-> > +			&pinctrl_adc15_default>;
-> > +};
-> > +
-> > +&peci0 {
-> > +	status =3D "okay";
-> > +
-> > +	peci-client@30 {
-> > +		compatible =3D "intel,peci-client";
-> > +		reg =3D <0x30>;
-> > +	};
-> > +
-> > +	peci-client@31 {
-> > +		compatible =3D "intel,peci-client";
-> > +		reg =3D <0x31>;
-> > +	};
-> > +
-> > +	peci-client@32 {
-> > +		compatible =3D "intel,peci-client";
-> > +		reg =3D <0x32>;
-> > +	};
-> > +
-> > +	peci-client@33 {
-> > +		compatible =3D "intel,peci-client";
-> > +		reg =3D <0x33>;
-> > +	};
-> > +};
-> > +
-> > +&i2c0 {
-> > +	status =3D "okay";
-> > +
-> > +	i2c-switch@70 {
-> > +		compatible =3D "nxp,pca9545";
-> > +		reg =3D <0x70>;
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <0>;
-> > +
-> > +		i2c_riser1: i2c@0 {
-> > +			#address-cells =3D <1>;
-> > +			#size-cells =3D <0>;
-> > +			reg =3D <0>;
-> > +		};
-> > +
-> > +		i2c_riser2: i2c@1 {
-> > +			#address-cells =3D <1>;
-> > +			#size-cells =3D <0>;
-> > +			reg =3D <1>;
-> > +		};
-> > +
-> > +		i2c_riser3: i2c@2 {
-> > +			#address-cells =3D <1>;
-> > +			#size-cells =3D <0>;
-> > +			reg =3D <2>;
-> > +		};
-> > +
-> > +		i2c_M2: i2c@3 {
-> > +			#address-cells =3D <1>;
-> > +			#size-cells =3D <0>;
-> > +			reg =3D <3>;
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&i2c1 {
-> > +	status =3D "okay";
-> > +	bus-frequency =3D <90000>;
-> > +	HotSwap@10 {
-> > +		compatible =3D "adm1272";
-> > +		reg =3D <0x10>;
-> > +	};
-> > +
-> > +	VR@45 {
-> > +		compatible =3D "pmbus";
-> > +		reg =3D <0x45>;
-> > +	};
-> > +};
-> > +
-> > +&i2c2 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&i2c3 {
-> > +	status =3D "okay";
-> > +	i2c-switch@70 {
-> > +		compatible =3D "nxp,pca9546";
-> > +		reg =3D <0x70>;
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <0>;
-> > +
-> > +		channel_0: i2c@0 {
-> > +			#address-cells =3D <1>;
-> > +			#size-cells =3D <0>;
-> > +			reg =3D <0>;
-> > +		};
-> > +
-> > +		channel_1: i2c@1 {
-> > +			#address-cells =3D <1>;
-> > +			#size-cells =3D <0>;
-> > +			reg =3D <1>;
-> > +		};
-> > +
-> > +		channel_2: i2c@2 {
-> > +			#address-cells =3D <1>;
-> > +			#size-cells =3D <0>;
-> > +			reg =3D <2>;
-> > +		};
-> > +
-> > +		channel_3: i2c@3 {
-> > +			#address-cells =3D <1>;
-> > +			#size-cells =3D <0>;
-> > +			reg =3D <3>;
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&i2c4 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&i2c5 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&i2c6 {
-> > +	status =3D "okay";
-> > +	/* temp1 */
-> > +	tmp75@49 {
-> > +		compatible =3D "national,lm75";
-> > +		reg =3D <0x49>;
-> > +	};
-> > +
-> > +	/* temp2 */
-> > +	tmp75@4d {
-> > +		compatible =3D "national,lm75";
-> > +		reg =3D <0x4d>;
-> > +	};
-> > +
-> > +	eeprom@54 {
-> > +		compatible =3D "atmel,24c256";
-> > +		reg =3D <0x54>;
-> > +		pagesize =3D <16>;
-> > +	};
-> > +};
-> > +
-> > +&i2c7 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&i2c8 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&i2c9 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&i2c10 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&i2c11 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&i2c13 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&ehci1 {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&uhci {
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&gfx {
-> > +	status =3D "okay";
-> > +	memory-region =3D <&gfx_memory>;
-> > +};
-> > +
-> > +&pwm_tacho {
-> > +	status =3D "okay";
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&pinctrl_pwm0_default
-> > +	&pinctrl_pwm1_default
-> > +	&pinctrl_pwm2_default
-> > +	&pinctrl_pwm3_default
-> > +	&pinctrl_pwm4_default
-> > +	&pinctrl_pwm5_default
-> > +	&pinctrl_pwm6_default
-> > +	&pinctrl_pwm7_default>;
-> > +
-> > +	fan@0 {
-> > +		reg =3D <0x00>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x00>;
-> > +	};
-> > +
-> > +	fan@1 {
-> > +		reg =3D <0x00>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x01>;
-> > +	};
-> > +
-> > +	fan@2 {
-> > +		reg =3D <0x01>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x02>;
-> > +	};
-> > +
-> > +	fan@3 {
-> > +		reg =3D <0x01>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x03>;
-> > +	};
-> > +
-> > +	fan@4 {
-> > +		reg =3D <0x02>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x04>;
-> > +	};
-> > +
-> > +	fan@5 {
-> > +		reg =3D <0x02>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x05>;
-> > +	};
-> > +
-> > +	fan@6 {
-> > +		reg =3D <0x03>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x06>;
-> > +	};
-> > +
-> > +	fan@7 {
-> > +		reg =3D <0x03>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x07>;
-> > +	};
-> > +
-> > +	fan@8 {
-> > +		reg =3D <0x04>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x08>;
-> > +	};
-> > +
-> > +	fan@9 {
-> > +		reg =3D <0x04>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x09>;
-> > +	};
-> > +
-> > +	fan@10 {
-> > +		reg =3D <0x05>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x0a>;
-> > +	};
-> > +
-> > +	fan@11 {
-> > +		reg =3D <0x05>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x0b>;
-> > +	};
-> > +
-> > +	fan@12 {
-> > +		reg =3D <0x06>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x0c>;
-> > +	};
-> > +
-> > +	fan@13 {
-> > +		reg =3D <0x06>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x0d>;
-> > +	};
-> > +
-> > +	fan@14 {
-> > +		reg =3D <0x07>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x0e>;
-> > +	};
-> > +
-> > +	fan@15 {
-> > +		reg =3D <0x07>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x0f>;
-> > +	};
-> > +
-> > +	fan@16 {
-> > +		reg =3D <0x07>;
-> > +		aspeed,fan-tach-ch =3D /bits/ 8 <0x0f>;
-> > +	};
-> > +};
-> > +
-> > +&gpio {
-> > +
-> > +	pin_gpio_a1 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(A, 1) GPIO_ACTIVE_LOW>;
-> > +		output-high;
-> > +		line-name =3D "BMC_EMMC_RST_N";
-> > +	};
-> > +
-> > +	pin_gpio_a3 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(A, 3) GPIO_ACTIVE_LOW>;
-> > +		output-high;
-> > +		line-name =3D "PCH_PWROK_BMC_FPGA";
-> > +	};
-> > +
-> > +	pin_gpio_b5 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(B, 5) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "IRQ_BMC_PCH_SMI_LPC_N";
-> > +	};
-> > +
-> > +	pin_gpio_b7 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(B, 7) GPIO_ACTIVE_LOW>;
-> > +		output-low;
-> > +		line-name =3D "CPU_SM_WP";
-> > +	};
-> > +
-> > +	pin_gpio_e0 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(E, 0) GPIO_ACTIVE_HIGH>;
-> > +		input;
-> > +		line-name =3D "PDB_PSU_SEL";
-> > +	};
-> > +
-> > +	pin_gpio_e2 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(E, 2) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "LOCATOR_LED_N";
-> > +	};
-> > +
-> > +	pin_gpio_e5 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(E, 5) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "FM_BMC_DBP_PRESENT_R1_N";
-> > +	};
-> > +
-> > +	pin_gpio_e6 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(E, 6) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "BMC_ME_SECURITY_OVERRIDE_N";
-> > +	};
-> > +
-> > +	pin_gpio_f0 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(F, 0) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "IRQ_BMC_PCH_NMI_R";
-> > +	};
-> > +
-> > +	pin_gpio_f1 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(F, 1) GPIO_ACTIVE_HIGH>;
-> > +		input;
-> > +		line-name =3D "CPU2_PROCDIS_BMC_N";
-> > +	};
-> > +
-> > +	pin_gpio_f2 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(F, 2) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "RM_THROTTLE_EN_N";
-> > +	};
-> > +
-> > +	pin_gpio_f3 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(F, 3) GPIO_ACTIVE_HIGH>;
-> > +		output-low;
-> > +		line-name =3D "FM_PMBUS_ALERT_B_EN";
-> > +	};
-> > +
-> > +	pin_gpio_f4 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(F, 4) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "BMC_FORCE_NM_THROTTLE_N";
-> > +	};
-> > +
-> > +	pin_gpio_f6 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(F, 6) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "FM_BMC_CPU_PWR_DEBUG_N";
-> > +	};
-> > +
-> > +	pin_gpio_g7 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(G, 7) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "BMC_PCIE_I2C_MUX_RST_N";
-> > +	};
-> > +
-> > +	pin_gpio_h6 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(H, 6) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "FM_BMC_DBP_PRESENT_R2_N";
-> > +	};
-> > +
-> > +	pin_gpio_i3 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(I, 3) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "SPI_BMC_BIOS_WP_N";
-> > +	};
-> > +
-> > +	pin_gpio_j1 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(J, 1) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "BMC_USB_SEL";
-> > +	};
-> > +
-> > +	pin_gpio_j2 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(J, 2) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "PDB_SMB_RST_N";
-> > +	};
-> > +
-> > +	pin_gpio_j3 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(J, 3) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "SPI_BMC_BIOS_HOLD_N";
-> > +	};
-> > +
-> > +	pin_gpio_l0 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(L, 0) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "PDB_FAN_TACH_SEL";
-> > +	};
-> > +
-> > +	pin_gpio_l1 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(L, 1) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "SYS_RESET_BMC_FPGA_N";
-> > +	};
-> > +
-> > +	pin_gpio_l4 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(L, 4) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "FM_EFUSE_FAN_G1_EN";
-> > +	};
-> > +
-> > +	pin_gpio_l5 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(L, 5) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "FM_EFUSE_FAN_G2_EN";
-> > +	};
-> > +
-> > +	pin_gpio_r6 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(R, 6) GPIO_ACTIVE_HIGH>;
-> > +		input;
-> > +		line-name =3D "CPU3_PROCDIS_BMC_N";
-> > +	};
-> > +
-> > +	pin_gpio_r7 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(R, 7) GPIO_ACTIVE_HIGH>;
-> > +		input;
-> > +		line-name =3D "CPU4_PROCDIS_BMC_N";
-> > +	};
-> > +
-> > +	pin_gpio_s1 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(S, 1) GPIO_ACTIVE_HIGH>;
-> > +		output-low;
-> > +		line-name =3D "DBP_SYSPWROK_BMC";
-> > +	};
-> > +
-> > +	pin_gpio_s2 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(S, 2) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "PCH_RST_RSMRST_N";
-> > +	};
-> > +
-> > +	pin_gpio_s6 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(S, 6) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "BMC_HW_STRAP_5";
-> > +	};
-> > +
-> > +	pin_gpio_z3 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(Z, 3) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "FM_BMC_PCH_SCI_LPC_N";
-> > +	};
-> > +
-> > +	pin_gpio_aa0 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
-> > +		output-low;
-> > +		line-name =3D "FW_PSU_ALERT_EN_N";
-> > +	};
-> > +
-> > +	pin_gpio_aa4 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(AA, 4) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "DBP_CPU_PREQ_N";
-> > +	};
-> > +
-> > +	pin_gpio_ab3 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(AB, 3) GPIO_ACTIVE_HIGH>;
-> > +		output-low;
-> > +		line-name =3D "BMC_WDTRST";
-> > +	};
-> > +
-> > +	pin_gpio_ac6 {
-> > +		gpio-hog;
-> > +		gpios =3D <ASPEED_GPIO(AC, 6) GPIO_ACTIVE_HIGH>;
-> > +		output-high;
-> > +		line-name =3D "ESPI_BMC_ALERT_N";
-> > +	};
->=20
-> Just want to confirm that you want the kernel to hog these lines (the=20=
+Or just use #define KUNIT_PROC_READ 0, #define KUNIT_PROC_WRITE 1.
+Whatever makes this code more legible.
 
-> consequence is they're unavailable to userspace).
->=20
-> Cheers,
->=20
-> Andrew
->=20
-> > +
-> > +};
-> > --
-> > 2.7.4
-> >=20
-> >
->
+> +}
+> +
+> +static void sysctl_test_dointvec_table_maxlen_unset(struct kunit *test)
+> +{
+> +	struct ctl_table table = {
+> +		.procname = "foo",
+> +		.data		= &test_data.int_0001,
+> +		.maxlen		= 0,
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= &i_zero,
+> +		.extra2         = &i_one_hundred,
+> +	};
+> +	void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> +	size_t len;
+> +	loff_t pos;
+> +
+> +	len = 1234;
+> +	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
+> +	KUNIT_EXPECT_EQ(test, (size_t)0, len);
+> +	len = 1234;
+> +	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, buffer, &len, &pos));
+> +	KUNIT_EXPECT_EQ(test, (size_t)0, len);
+> +}
+
+In a way this is also testing for general kernel API changes. This is and the
+last one were good examples. So this is not just testing functionality
+here. There is no wrong or write answer if 0 or -EINVAL was returned
+other than the fact that we have been doing this for years.
+
+Its a perhaps small but important difference for some of these tests.  I
+*do* think its worth clarifying through documentation which ones are
+testing for API consistency Vs proper correctness.
+
+> +
+> +static void sysctl_test_dointvec_table_len_is_zero(struct kunit *test)
+> +{
+> +	struct ctl_table table = {
+> +		.procname = "foo",
+> +		.data		= &test_data.int_0001,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= &i_zero,
+> +		.extra2         = &i_one_hundred,
+> +	};
+> +	void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> +	size_t len;
+> +	loff_t pos;
+> +
+> +	len = 0;
+> +	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
+> +	KUNIT_EXPECT_EQ(test, (size_t)0, len);
+> +	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, buffer, &len, &pos));
+> +	KUNIT_EXPECT_EQ(test, (size_t)0, len);
+> +}
+
+Likewise an API change test.
+
+> +
+> +static void sysctl_test_dointvec_table_read_but_position_set(struct kunit *test)
+> +{
+> +	struct ctl_table table = {
+> +		.procname = "foo",
+> +		.data		= &test_data.int_0001,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= &i_zero,
+> +		.extra2         = &i_one_hundred,
+> +	};
+> +	void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> +	size_t len;
+> +	loff_t pos;
+> +
+> +	len = 1234;
+> +	pos = 1;
+> +	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
+> +	KUNIT_EXPECT_EQ(test, (size_t)0, len);
+> +}
+
+Likewise an API test.
+
+All the above kunit test cases are currently testing this call on
+__do_proc_dointvec():
+
+        if (!tbl_data || !table->maxlen || !*lenp || (*ppos && !write))
+	{
+		*lenp = 0;
+		return 0;
+	}
+
+Just an API test.
+
+Perhaps use an api prefix or postfix for these to help distinguish
+which are api tests Vs correctness. We want someone who runs into
+a failure to *easily* determine *what* went wrong.
+
+Right now this kunit test leaves no leashes around to help the reader.
+
+> +
+> +static void sysctl_test_dointvec_happy_single_positive(struct kunit *test)
+> +{
+> +	struct ctl_table table = {
+> +		.procname = "foo",
+> +		.data		= &test_data.int_0001,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= &i_zero,
+> +		.extra2         = &i_one_hundred,
+> +	};
+> +	char input[] = "9";
+> +	size_t len = sizeof(input) - 1;
+> +	loff_t pos = 0;
+> +
+> +	table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> +	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, &len, &pos));
+> +	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> +	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, (size_t)pos);
+> +	KUNIT_EXPECT_EQ(test, 9, ((int *)table.data)[0]);
+> +}
+
+Yeap, running these kunit test cases will surely be faster than stupid
+shell :) nice!
+
+> +static void sysctl_test_dointvec_happy_single_negative(struct kunit *test)
+> +{
+> +	struct ctl_table table = {
+> +		.procname = "foo",
+> +		.data		= &test_data.int_0001,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= &i_zero,
+> +		.extra2         = &i_one_hundred,
+> +	};
+> +	char input[] = "-9";
+> +	size_t len = sizeof(input) - 1;
+> +	loff_t pos = 0;
+> +
+> +	table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> +	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, &len, &pos));
+> +	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> +	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, (size_t)pos);
+> +	KUNIT_EXPECT_EQ(test, -9, ((int *)table.data)[0]);
+> +}
+> +
+> +static void sysctl_test_dointvec_single_less_int_min(struct kunit *test)
+> +{
+> +	struct ctl_table table = {
+> +		.procname = "foo",
+> +		.data		= &test_data.int_0001,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= &i_zero,
+> +		.extra2         = &i_one_hundred,
+> +	};
+> +	char input[32];
+> +	size_t len = sizeof(input) - 1;
+> +	loff_t pos = 0;
+> +	unsigned long abs_of_less_than_min = (unsigned long)INT_MAX
+> +					     - (INT_MAX + INT_MIN) + 1;
+> +
+> +	KUNIT_EXPECT_LT(test,
+> +			(size_t)snprintf(input, sizeof(input), "-%lu",
+> +					 abs_of_less_than_min),
+> +			sizeof(input));
+> +
+> +	table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> +	KUNIT_EXPECT_EQ(test, -EINVAL,
+> +			proc_dointvec(&table, 1, input, &len, &pos));
+> +	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> +	KUNIT_EXPECT_EQ(test, 0, ((int *)table.data)[0]);
+> +}
+
+API test.
+
+> +static void sysctl_test_dointvec_single_greater_int_max(struct kunit *test)
+> +{
+> +	struct ctl_table table = {
+> +		.procname = "foo",
+> +		.data		= &test_data.int_0001,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= &i_zero,
+> +		.extra2         = &i_one_hundred,
+> +	};
+> +	char input[32];
+> +	size_t len = sizeof(input) - 1;
+> +	loff_t pos = 0;
+> +	unsigned long greater_than_max = (unsigned long)INT_MAX + 1;
+> +
+> +	KUNIT_EXPECT_GT(test, greater_than_max, (unsigned long)INT_MAX);
+> +	KUNIT_EXPECT_LT(test, (size_t)snprintf(input, sizeof(input), "%lu",
+> +					       greater_than_max),
+> +			sizeof(input));
+> +	table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> +	KUNIT_EXPECT_EQ(test, -EINVAL,
+> +			proc_dointvec(&table, 1, input, &len, &pos));
+> +	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> +	KUNIT_EXPECT_EQ(test, 0, ((int *)table.data)[0]);
+> +}
+> +
+
+API test.
+
+> +static struct kunit_case sysctl_test_cases[] = {
+> +	KUNIT_CASE(sysctl_test_dointvec_null_tbl_data),
+> +	KUNIT_CASE(sysctl_test_dointvec_table_maxlen_unset),
+> +	KUNIT_CASE(sysctl_test_dointvec_table_len_is_zero),
+> +	KUNIT_CASE(sysctl_test_dointvec_table_read_but_position_set),
+> +	KUNIT_CASE(sysctl_test_dointvec_happy_single_positive),
+> +	KUNIT_CASE(sysctl_test_dointvec_happy_single_negative),
+> +	KUNIT_CASE(sysctl_test_dointvec_single_less_int_min),
+> +	KUNIT_CASE(sysctl_test_dointvec_single_greater_int_max),
+> +	{}
+> +};
+
+Oh all are API tests.. perhaps then just rename then
+sysctl_test_cases to sysctl_api_test_cases.
+
+Would be good to add at least *two* other tests cases for this
+example, one which does a valid read and one which does a valid write.
+
+If that is done either we add another kunit test module for correctness
+or just extend the above and use prefix / postfixes on the functions
+to distinguish between API / correctness somehow.
+
+> +
+> +static struct kunit_module sysctl_test_module = {
+> +	.name = "sysctl_test",
+> +	.test_cases = sysctl_test_cases,
+> +};
+> +
+> +module_test(sysctl_test_module);
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index cbdfae3798965..389b8986f5b77 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -1939,6 +1939,16 @@ config TEST_SYSCTL
+>  
+>  	  If unsure, say N.
+>  
+> +config SYSCTL_KUNIT_TEST
+> +	bool "KUnit test for sysctl"
+> +	depends on KUNIT
+> +	help
+> +	  This builds the proc sysctl unit test, which runs on boot. For more
+> +	  information on KUnit and unit tests in general please refer to the
+> +	  KUnit documentation in Documentation/dev-tools/kunit/.
+
+A little more description here would help. It is testing for API and
+hopefully also correctness (if extended with those two examples I
+mentioned).
+
+> +
+> +	  If unsure, say N.
+> +
+>  config TEST_UDELAY
+>  	tristate "udelay test driver"
+>  	help
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
+
+Thanks for the work, it is very much appreciated and gives a clearer
+appreciation of value of kunit and what can be done and not. Another
+random test idea that comes up, would be to use different memory types
+for the table data. In case the kernel API users does something odd,
+we should be ensuring we do something proper.
+
+  Luis
