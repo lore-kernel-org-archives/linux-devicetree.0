@@ -1,63 +1,272 @@
-From: Alex Elder <elder@linaro.org>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Wed, 26 Jun 2019 08:51:02 -0500
-Message-ID: <2d40bbcc-1d29-3aa7-e8cb-b0bc5835b8dc@linaro.org>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
- <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
- <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
- <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
- <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
- <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
- <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
- <d533b708-c97a-710d-1138-3ae79107f209@linaro.org>
- <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
- <db34aa39-6cf1-4844-1bfe-528e391c3729@linaro.org>
- <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v12 04/13] mfd: Add Ingenic TCU driver
+Date: Wed, 26 Jun 2019 15:55:50 +0200
+Message-ID: <1561557350.1872.0@crapouillou.net>
+References: <20190521145141.9813-1-paul@crapouillou.net>
+        <20190521145141.9813-5-paul@crapouillou.net> <20190626131850.GW21119@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Johannes Berg <johannes@sipsolutions.net>, Dan Williams <dcbw@redhat.com>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190626131850.GW21119@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
 List-Id: devicetree@vger.kernel.org
 
-On 6/24/19 11:40 AM, Arnd Bergmann wrote:
-> On Mon, Jun 24, 2019 at 6:21 PM Alex Elder <elder@linaro.org> wrote:
->> On 6/18/19 2:03 PM, Johannes Berg wrote:
->>
->>> Really there are two possible ways (and they intersect to some extent).
+Hi Lee,
 
-. . .
+Le mer. 26 juin 2019 =C3=A0 15:18, Lee Jones <lee.jones@linaro.org> a=20
+=C3=A9crit :
+> On Tue, 21 May 2019, Paul Cercueil wrote:
+>=20
+>>  This driver will provide a regmap that can be retrieved very early=20
+>> in
+>>  the boot process through the API function ingenic_tcu_get_regmap().
+>>=20
+>>  Additionally, it will call devm_of_platform_populate() so that all=20
+>> the
+>>  children devices will be probed.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v12: New patch
+>>=20
+>>   drivers/mfd/Kconfig             |   8 +++
+>>   drivers/mfd/Makefile            |   1 +
+>>   drivers/mfd/ingenic-tcu.c       | 113=20
+>> ++++++++++++++++++++++++++++++++
+>>   include/linux/mfd/ingenic-tcu.h |   8 +++
+>>   4 files changed, 130 insertions(+)
+>>   create mode 100644 drivers/mfd/ingenic-tcu.c
+>>=20
+>>  diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>>  index 294d9567cc71..a13544474e05 100644
+>>  --- a/drivers/mfd/Kconfig
+>>  +++ b/drivers/mfd/Kconfig
+>>  @@ -494,6 +494,14 @@ config HTC_I2CPLD
+>>   	  This device provides input and output GPIOs through an I2C
+>>   	  interface to one or more sub-chips.
+>>=20
+>>  +config INGENIC_TCU
+>>  +	bool "Ingenic Timer/Counter Unit (TCU) support"
+>>  +	depends on MIPS || COMPILE_TEST
+>>  +	select REGMAP_MMIO
+>>  +	help
+>>  +	  Say yes here to support the Timer/Counter Unit (TCU) IP present
+>>  +	  in the JZ47xx SoCs from Ingenic.
+>>  +
+>>   config MFD_INTEL_QUARK_I2C_GPIO
+>>   	tristate "Intel Quark MFD I2C GPIO"
+>>   	depends on PCI
+>>  diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>>  index 52b1a90ff515..fb89e131ae98 100644
+>>  --- a/drivers/mfd/Makefile
+>>  +++ b/drivers/mfd/Makefile
+>>  @@ -180,6 +180,7 @@ obj-$(CONFIG_AB8500_CORE)	+=3D ab8500-core.o=20
+>> ab8500-sysctrl.o
+>>   obj-$(CONFIG_MFD_TIMBERDALE)    +=3D timberdale.o
+>>   obj-$(CONFIG_PMIC_ADP5520)	+=3D adp5520.o
+>>   obj-$(CONFIG_MFD_KEMPLD)	+=3D kempld-core.o
+>>  +obj-$(CONFIG_INGENIC_TCU)	+=3D ingenic-tcu.o
+>>   obj-$(CONFIG_MFD_INTEL_QUARK_I2C_GPIO)	+=3D intel_quark_i2c_gpio.o
+>>   obj-$(CONFIG_LPC_SCH)		+=3D lpc_sch.o
+>>   obj-$(CONFIG_LPC_ICH)		+=3D lpc_ich.o
+>>  diff --git a/drivers/mfd/ingenic-tcu.c b/drivers/mfd/ingenic-tcu.c
+>>  new file mode 100644
+>>  index 000000000000..6c1d5e4310c1
+>>  --- /dev/null
+>>  +++ b/drivers/mfd/ingenic-tcu.c
+>>  @@ -0,0 +1,113 @@
+>>  +// SPDX-License-Identifier: GPL-2.0
+>>  +/*
+>>  + * JZ47xx SoCs TCU MFD driver
+>=20
+> Nit: Another line here please.
+>=20
+>>  + * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
+>>  + */
+>>  +
+>>  +#include <linux/mfd/ingenic-tcu.h>
+>>  +#include <linux/of_address.h>
+>>  +#include <linux/of_platform.h>
+>>  +#include <linux/platform_device.h>
+>>  +#include <linux/regmap.h>
+>>  +
+>>  +struct ingenic_soc_info {
+>>  +	unsigned int num_channels;
+>>  +};
+>>  +
+>>  +static struct regmap *tcu_regmap __initdata;
+>>  +
+>>  +static const struct regmap_config ingenic_tcu_regmap_config =3D {
+>>  +	.reg_bits =3D 32,
+>>  +	.val_bits =3D 32,
+>>  +	.reg_stride =3D 4,
+>>  +	.max_register =3D TCU_REG_OST_CNTHBUF,
+>>  +};
+>>  +
+>>  +static const struct ingenic_soc_info jz4740_soc_info =3D {
+>>  +	.num_channels =3D 8,
+>>  +};
+>>  +
+>>  +static const struct ingenic_soc_info jz4725b_soc_info =3D {
+>>  +	.num_channels =3D 6,
+>>  +};
+>>  +
+>>  +static const struct of_device_id ingenic_tcu_of_match[] =3D {
+>>  +	{ .compatible =3D "ingenic,jz4740-tcu", .data =3D &jz4740_soc_info, }=
+,
+>>  +	{ .compatible =3D "ingenic,jz4725b-tcu", .data =3D &jz4725b_soc_info,=
+=20
+>> },
+>>  +	{ .compatible =3D "ingenic,jz4770-tcu", .data =3D &jz4740_soc_info, }=
+,
+>>  +	{ }
+>>  +};
+>>  +
+>>  +static struct regmap * __init ingenic_tcu_create_regmap(struct=20
+>> device_node *np)
+>>  +{
+>>  +	struct resource res;
+>>  +	void __iomem *base;
+>>  +	struct regmap *map;
+>>  +
+>>  +	if (!of_match_node(ingenic_tcu_of_match, np))
+>>  +		return ERR_PTR(-EINVAL);
+>>  +
+>>  +	base =3D of_io_request_and_map(np, 0, "TCU");
+>>  +	if (IS_ERR(base))
+>>  +		return ERR_PTR(PTR_ERR(base));
+>>  +
+>>  +	map =3D regmap_init_mmio(NULL, base, &ingenic_tcu_regmap_config);
+>>  +	if (IS_ERR(map))
+>>  +		goto err_iounmap;
+>>  +
+>>  +	return map;
+>>  +
+>>  +err_iounmap:
+>>  +	iounmap(base);
+>>  +	of_address_to_resource(np, 0, &res);
+>>  +	release_mem_region(res.start, resource_size(&res));
+>>  +
+>>  +	return map;
+>>  +}
+>=20
+> Why does this need to be set-up earlier than probe()?
 
->>> The other is something like IPA or the Intel modem driver, where the
->>> device is actually a single (e.g. PCIe) device and just has a single
->>> driver, but that single driver offers different channels.
->>
->> What I don't like about this is that it's more monolithic.  It
->> seems better to have the low-level IPA or Intel modem driver (or
->> any other driver that can support communication between the AP
->> and WWAN device) present communication paths that other function-
->> specific drivers can attach to and use.
-> 
-> I did not understand Johannes description as two competing models
-> for the same code, but rather two kinds of existing hardware that
-> a new driver system would have to deal with.
+See the explanation below.
 
-Based on my understanding of what he said in a message I just
-responded to, I think you are exactly right.
+>>  +static int __init ingenic_tcu_probe(struct platform_device *pdev)
+>>  +{
+>>  +	struct regmap *map =3D ingenic_tcu_get_regmap(pdev->dev.of_node);
+>>  +
+>>  +	platform_set_drvdata(pdev, map);
+>>  +
+>>  +	regmap_attach_dev(&pdev->dev, map, &ingenic_tcu_regmap_config);
+>>  +
+>>  +	return devm_of_platform_populate(&pdev->dev);
+>>  +}
+>>  +
+>>  +static struct platform_driver ingenic_tcu_driver =3D {
+>>  +	.driver =3D {
+>>  +		.name =3D "ingenic-tcu",
+>>  +		.of_match_table =3D ingenic_tcu_of_match,
+>>  +	},
+>>  +};
+>>  +
+>>  +static int __init ingenic_tcu_platform_init(void)
+>>  +{
+>>  +	return platform_driver_probe(&ingenic_tcu_driver,
+>>  +				     ingenic_tcu_probe);
+>=20
+> What?  Why?
 
-. . .
+The device driver probed here will populate the children devices,
+which will be able to retrieve the pointer to the regmap through
+device_get_regmap(dev->parent).
 
-> What we should try to avoid though is a way to add driver private
-> interfaces that risk having multiple drivers create similar functionality
-> in incompatible ways.
+The children devices are normal platform drivers that can be probed
+the normal way. These are the PWM driver, the watchdog driver, and the
+OST (OS Timer) clocksource driver, all part of the same hardware block
+(the Timer/Counter Unit or TCU).
 
-Agreed.
+>>  +}
+>>  +subsys_initcall(ingenic_tcu_platform_init);
+>>  +
+>>  +struct regmap * __init ingenic_tcu_get_regmap(struct device_node=20
+>> *np)
+>>  +{
+>>  +	if (!tcu_regmap)
+>>  +		tcu_regmap =3D ingenic_tcu_create_regmap(np);
+>>  +
+>>  +	return tcu_regmap;
+>>  +}
+>=20
+> This makes me pretty uncomfortable.
+>=20
+> What calls it?
 
-					-Alex
+The TCU IRQ driver (patch [06/13]), clocks driver (patch [05/13]), and=20
+the
+non-OST clocksource driver (patch [07/13]) all probe very early in the=20
+boot
+process, and share the same devicetree node. They call this function to=20
+get
+a pointer to the regmap.
+
+>>  +bool ingenic_tcu_pwm_can_use_chn(struct device *dev, unsigned int=20
+>> channel)
+>>  +{
+>>  +	const struct ingenic_soc_info *soc =3D=20
+>> device_get_match_data(dev->parent);
+>>  +
+>>  +	/* Enable all TCU channels for PWM use by default except channels=20
+>> 0/1 */
+>>  +	u32 pwm_channels_mask =3D GENMASK(soc->num_channels - 1, 2);
+>>  +
+>>  +	device_property_read_u32(dev->parent, "ingenic,pwm-channels-mask",
+>>  +				 &pwm_channels_mask);
+>>  +
+>>  +	return !!(pwm_channels_mask & BIT(channel));
+>>  +}
+>>  +EXPORT_SYMBOL_GPL(ingenic_tcu_pwm_can_use_chn);
+>>  diff --git a/include/linux/mfd/ingenic-tcu.h=20
+>> b/include/linux/mfd/ingenic-tcu.h
+>>  index 2083fa20821d..21df23916cd2 100644
+>>  --- a/include/linux/mfd/ingenic-tcu.h
+>>  +++ b/include/linux/mfd/ingenic-tcu.h
+>>  @@ -6,6 +6,11 @@
+>>   #define __LINUX_MFD_INGENIC_TCU_H_
+>>=20
+>>   #include <linux/bitops.h>
+>>  +#include <linux/init.h>
+>>  +
+>>  +struct device;
+>>  +struct device_node;
+>>  +struct regmap;
+>>=20
+>>   #define TCU_REG_WDT_TDR		0x00
+>>   #define TCU_REG_WDT_TCER	0x04
+>>  @@ -53,4 +58,7 @@
+>>   #define TCU_REG_TCNTc(c)	(TCU_REG_TCNT0 + ((c) *=20
+>> TCU_CHANNEL_STRIDE))
+>>   #define TCU_REG_TCSRc(c)	(TCU_REG_TCSR0 + ((c) *=20
+>> TCU_CHANNEL_STRIDE))
+>>=20
+>>  +struct regmap * __init ingenic_tcu_get_regmap(struct device_node=20
+>> *np);
+>>  +bool ingenic_tcu_pwm_can_use_chn(struct device *dev, unsigned int=20
+>> channel);
+>>  +
+>>   #endif /* __LINUX_MFD_INGENIC_TCU_H_ */
+>=20
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Linaro Services Technical Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+
+=
