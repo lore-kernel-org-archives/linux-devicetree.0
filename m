@@ -1,38 +1,37 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v5 2/2] drm/panel: Add support for Raydium RM67191 panel
- driver
-Date: Wed, 26 Jun 2019 13:33:06 +0200
-Message-ID: <20190626113306.GA24921@ravnborg.org>
-References: <1561544420-15572-1-git-send-email-robert.chiras@nxp.com>
- <1561544420-15572-3-git-send-email-robert.chiras@nxp.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v10 0/6] support a new type of PMIC,including two
+ chips(rk817 and rk809)
+Date: Wed, 26 Jun 2019 12:52:51 +0100
+Message-ID: <20190626115251.GR21119@dell>
+References: <20190621103258.8154-1-tony.xie@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1561544420-15572-3-git-send-email-robert.chiras@nxp.com>
+In-Reply-To: <20190621103258.8154-1-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com
+To: Tony Xie <tony.xie@rock-chips.com>
+Cc: heiko@sntech.de, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Robert.
+On Fri, 21 Jun 2019, Tony Xie wrote:
 
-On Wed, Jun 26, 2019 at 01:20:20PM +0300, Robert Chiras wrote:
-> This patch adds Raydium RM67191 TFT LCD panel driver (MIPI-DSI
-> protocol).
+> Most of functions and registers of the rk817 and rk808 are the same,
+> so they can share allmost all codes.
+> 
+> Their specifications are as follows:
+>   1) The RK809 and RK809 consist of 5 DCDCs, 9 LDOs and have the same
+> registers
+>      for these components except dcdc5.
+>   2) The dcdc5 is a boost dcdc for RK817 and is a buck for RK809.
+>   3) The RK817 has one switch but The Rk809 has two.
 
-I was about to apply these - but I get following warnings during build:
-  CC      drivers/gpu/drm/panel/panel-raydium-rm67191.o
-/home/sam/drm/linux.git/drivers/gpu/drm/panel/panel-raydium-rm67191.c: In function ‘rad_bl_get_brightness’:
-/home/sam/drm/linux.git/drivers/gpu/drm/panel/panel-raydium-rm67191.c:470:17: warning: unused variable ‘dev’ [-Wunused-variable]
-  struct device *dev = &dsi->dev;
-                 ^~~
-/home/sam/drm/linux.git/drivers/gpu/drm/panel/panel-raydium-rm67191.c: In function ‘rad_bl_update_status’:
-/home/sam/drm/linux.git/drivers/gpu/drm/panel/panel-raydium-rm67191.c:492:17: warning: unused variable ‘dev’ [-Wunused-variable]
-  struct device *dev = &dsi->dev;
-                 ^~~
+Just tried to apply this set to a v5.2-rc1 base, but it doesn't seem
+to do so cleanly.  Would you be able to rebase and resend please?
 
-Please fix and update your scripts to catch this in the future.
-
-	Sam
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
