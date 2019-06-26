@@ -1,182 +1,165 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] ASoC: soc-core: support dai_link with platforms_num != 1
-Date: Wed, 26 Jun 2019 15:36:17 +0200
-Message-ID: <20190626133617.25959-3-jbrunet@baylibre.com>
-References: <20190626133617.25959-1-jbrunet@baylibre.com>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+Date: Wed, 26 Jun 2019 08:36:53 -0500
+Message-ID: <0f5c0332-6894-2fdd-fd25-7af9a21b445b@linaro.org>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+ <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+ <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+ <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+ <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
+ <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+ <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
+ <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+ <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
+ <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+ <e6ba8a9063e63506c0b88a70418d74ca4efe85cd.camel@sipsolutions.net>
+ <850eed1d-0fec-c396-6e91-b5f1f8440ded@linaro.org>
+ <84153d9e7c903084b492ceccc0dd98cbb32c12ac.camel@redhat.com>
+ <7de004be-27b6-ac63-389d-8ea9d23d0361@linaro.org>
+ <868e949b1fc8cf22307f579ab1f14543064bec20.camel@sipsolutions.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190626133617.25959-1-jbrunet@baylibre.com>
+In-Reply-To: <868e949b1fc8cf22307f579ab1f14543064bec20.camel@sipsolutions.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To: Johannes Berg <johannes@sipsolutions.net>, Dan Williams <dcbw@redhat.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add support platforms_num != 1 in dai_link. Initially, the main purpose of
-this change was to make the platform optional in the dai_link, instead of
-inserting the dummy platform driver.
+On 6/25/19 9:14 AM, Johannes Berg wrote:
+> Hi Alex,
+> 
+> I'll just pick a few or your messages and reply there - some other
+> subthreads seem to have pretty much completed.
+> 
 
-This particular case had just been solved by Kuninori Morimoto with
-commit 1d7689892878 ("ASoC: soc-core: allow no Platform on dai_link").
+. . .
 
-However, this change may still be useful for those who need multiple
-platform components on a single dai_link (it solves one of the FIXME
-note in soc-core)
+>>> Linux usually tries to keep drivers generic and focused; each driver is
+>>> written for a specific function. For example, a USB device usually
+>>> provides multiple USB interfaces which will be bound to different Linux
+>>> drivers like a TTY, cdc-ether, QMI (via qmi_wwan), cdc-acm, etc.
+>>
+>> So USB has some attributes similar to what we're talking about
+>> here.  But if I'm not mistaken we want some sort of an overall
+>> management scheme as well.
+> 
+> Yes. For the record, I think the part about "keep drivers generic and
+> focused" really only works for USB devices that expose different pieces
+> that look like any other network device or a TTY device on the USB
+> level, just the combination of these things (and knowing about that)
+> really makes them a modem.
+> 
+> For things like IPA or the (hypothetical) Intel driver we're talking
+> about, it's still all managed by a single (PCIe) driver. For the Intel
+> device in particular, even all the control channels are over exactly the
+> same transport mechanism as the data channels.
 
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- include/sound/soc.h  |  6 ++++
- sound/soc/soc-core.c | 66 +++++++++++++++++++-------------------------
- 2 files changed, 34 insertions(+), 38 deletions(-)
+Actually the setup for IPA requires certain things to be done via
+QMI by something outside the IPA driver, and it uses a separate
+communication path.  But I understand what you're saying.
 
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 64405cdab8bb..4e8071269639 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -997,6 +997,12 @@ struct snd_soc_dai_link {
- 	     ((i) < link->num_codecs) && ((codec) = &link->codecs[i]);	\
- 	     (i)++)
- 
-+#define for_each_link_platforms(link, i, platform)			\
-+	for ((i) = 0;							\
-+	     ((i) < link->num_platforms) &&				\
-+	     ((platform) = &link->platforms[i]);			\
-+	     (i)++)
-+
- /*
-  * Sample 1 : Single CPU/Codec/Platform
-  *
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 002ddbf4e5a3..3053a4a461b3 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -887,7 +887,7 @@ static int soc_bind_dai_link(struct snd_soc_card *card,
- 	struct snd_soc_dai_link *dai_link)
- {
- 	struct snd_soc_pcm_runtime *rtd;
--	struct snd_soc_dai_link_component *codecs;
-+	struct snd_soc_dai_link_component *dlc;
- 	struct snd_soc_component *component;
- 	int i;
- 
-@@ -917,13 +917,14 @@ static int soc_bind_dai_link(struct snd_soc_card *card,
- 
- 	/* Find CODEC from registered CODECs */
- 	rtd->num_codecs = dai_link->num_codecs;
--	for_each_link_codecs(dai_link, i, codecs) {
--		rtd->codec_dais[i] = snd_soc_find_dai(codecs);
-+	for_each_link_codecs(dai_link, i, dlc) {
-+		rtd->codec_dais[i] = snd_soc_find_dai(dlc);
- 		if (!rtd->codec_dais[i]) {
- 			dev_info(card->dev, "ASoC: CODEC DAI %s not registered\n",
--				 codecs->dai_name);
-+				 dlc->dai_name);
- 			goto _err_defer;
- 		}
-+
- 		snd_soc_rtdcom_add(rtd, rtd->codec_dais[i]->component);
- 	}
- 
-@@ -931,12 +932,13 @@ static int soc_bind_dai_link(struct snd_soc_card *card,
- 	rtd->codec_dai = rtd->codec_dais[0];
- 
- 	/* Find PLATFORM from registered PLATFORMs */
--	for_each_component(component) {
--		if (!snd_soc_is_matching_component(dai_link->platforms,
--						   component))
--			continue;
-+	for_each_link_platforms(dai_link, i, dlc) {
-+		for_each_component(component) {
-+			if (!snd_soc_is_matching_component(dlc, component))
-+				continue;
- 
--		snd_soc_rtdcom_add(rtd, component);
-+			snd_soc_rtdcom_add(rtd, component);
-+		}
- 	}
- 
- 	soc_add_pcm_runtime(card, rtd);
-@@ -1051,22 +1053,22 @@ static int soc_init_dai_link(struct snd_soc_card *card,
- 			     struct snd_soc_dai_link *link)
- {
- 	int i;
--	struct snd_soc_dai_link_component *codec;
-+	struct snd_soc_dai_link_component *dlc;
- 
--	for_each_link_codecs(link, i, codec) {
-+	for_each_link_codecs(link, i, dlc) {
- 		/*
- 		 * Codec must be specified by 1 of name or OF node,
- 		 * not both or neither.
- 		 */
--		if (!!codec->name ==
--		    !!codec->of_node) {
-+		if (!!dlc->name ==
-+		    !!dlc->of_node) {
- 			dev_err(card->dev, "ASoC: Neither/both codec name/of_node are set for %s\n",
- 				link->name);
- 			return -EINVAL;
- 		}
- 
- 		/* Codec DAI name must be specified */
--		if (!codec->dai_name) {
-+		if (!dlc->dai_name) {
- 			dev_err(card->dev, "ASoC: codec_dai_name not set for %s\n",
- 				link->name);
- 			return -EINVAL;
-@@ -1076,40 +1078,28 @@ static int soc_init_dai_link(struct snd_soc_card *card,
- 		 * Defer card registartion if codec component is not added to
- 		 * component list.
- 		 */
--		if (!soc_find_component(codec))
-+		if (!soc_find_component(dlc))
- 			return -EPROBE_DEFER;
- 	}
- 
--	/*
--	 * Platform may be specified by either name or OF node,
--	 * or no Platform.
--	 *
--	 * FIXME
--	 *
--	 * We need multi-platform support
--	 */
--	if (link->num_platforms > 0) {
--
--		if (link->num_platforms > 1) {
--			dev_err(card->dev,
--				"ASoC: multi platform is not yet supported %s\n",
--				link->name);
--			return -EINVAL;
--		}
--
--		if (link->platforms->name && link->platforms->of_node) {
-+	for_each_link_platforms(link, i, dlc) {
-+		/*
-+		 * Platform may be specified by either name or OF node, but it
-+		 * can be left unspecified, then no components will be inserted
-+		 * in the rtdcom list
-+		 */
-+		if (!!dlc->name == !!dlc->of_node) {
- 			dev_err(card->dev,
--				"ASoC: Both platform name/of_node are set for %s\n",
-+				"ASoC: Neither/both platform name/of_node are set for %s\n",
- 				link->name);
- 			return -EINVAL;
- 		}
- 
- 		/*
--		 * Defer card registartion if platform dai component is not
--		 * added to component list.
-+		 * Defer card registartion if platform component is not added to
-+		 * component list.
- 		 */
--		if ((link->platforms->of_node || link->platforms->name) &&
--		    !soc_find_component(link->platforms))
-+		if (!soc_find_component(dlc))
- 			return -EPROBE_DEFER;
- 	}
- 
--- 
-2.21.0
+. . .
+
+>> I don't like the "maybe" API unless there's no other way to do it.
+>>
+>> Instead I think it would be better for the probing driver to register
+>> with a whatever the WWAN core is, and then have the WWAN core be
+>> responsible for pulling things all together when it receives a
+>> request to do so.  I.e., something in user space should request
+>> that a registered data interface be brought up, and at that
+>> time everything "knows" it's implemented as part of a WWAN
+>> device.
+> 
+> Right, but then we just punt to userspace. Mostly we *do* (eventually!)
+> know that it's a WWAN device, just not every component can detect it.
+> Some components typically can.
+
+We need to identify the existence of a WWAN device (which is I
+guess--typically? always?--a modem).  Perhaps that can be
+discovered in some cases but I think it means a node described
+by Device Tree.
+
+> So for example, you might have a USB multi-function device with a
+> network function (looks just like ethernet pretty much) but another TTY
+> control channel that actually has some specific WWAN IDs, so that part
+> can know it's a WWAN.
+> 
+> Here, the ethernet function would need "maybe" attach, and the control
+> channel would "definitively" attach, pulling it together as a WWAN
+> device without requiring any more action or information.
+
+So you're saying you have a single Ethernet driver, and it can
+drive an Ethernet device connected to a WWAN, or not connected
+to a WWAN, without any changes.  The only distinction is that
+if the device is part of a WWAN it needs to register with the
+WWAN framework.  Is that right?
+
+>> So maybe:
+>> - Hardware probe detects a WWAN device
+>> - The drivers that detect the WWAN device register it with the
+>>   WWAN core code.
+>> - A control channel is instantiated at/before the time the WWAN
+>>   device is registered
+>> - Something in user space should manage the bring-up of any
+>>   other things on the WWAN device thereafter
+> 
+> But those things need to actually get connected first :-)
+
+What I meant is that the registering with the "WWAN core code"
+is what does that "connecting."  The WWAN code has the information
+about what got registered.  But as I said above, this WWAN device
+needs to be identified, and I think (at least for IPA) that will
+require something in Device Tree.  That will "connect" them.
+
+Or I might be misunderstanding your point.
+
+> In IPA/Intel case this is easy since it's a single driver. But if
+> there's multi-function device with ethernet being a completely separate
+> driver, the control channel cannot even reach that to tell it to create
+> a new data channel.
+
+There's a lot more to talk about with control.  I think
+you discuss this in another message, and I'll get to that
+shortly.  But I think understand your point, and again
+I think it comes back to having an abstraction that
+represents the modem, distinct from (but "connected" to)
+the functions it implements/includes.
+
+>>> userspace should probably always create the netdevices (since they are
+>>> always useless until userspace coordinates with the firmware about
+>>> them) but that's not how things are yet.
+>>
+>> That's too bad.  How hard would that be to change?
+> 
+> Depends, but as I said above it's probably orthogonal to the question.
+> The data channel driver would still need to attach to the WWAN device
+> somehow so it becomes reachable by the control plane (note this isn't
+> the same as "control channel" since the latter talks to the modem, the
+> control plane talks to the kernel drivers).
+> 
+>>>> - What causes a created channel to be removed?
+>>>
+>>> Driver removal, userspace WWAN daemon terminating the packet data
+>>> connection which the channel represents, the modem terminating the
+>>> packet data connection (eg network initiated disconnect), etc.
+>>
+>> OK this is as I expected.  Driver (or device) removal is somewhat
+>> obvious, but you're confirming user space might request it as well.
+> 
+> If userspace actually had the ability to create (data) channels, then it
+> would have the ability to also remove them. Right now, this may or may
+> not be supported by the drivers that act together to form the interfaces
+> to a WWAN device.
+
+I think this (user space control) needs to be an option, but
+it doesn't have to be the only way.
+
+. . .
+
+You made some other good clarifications in this message but I'm
+going to try to capture them elsewhere rather than respond here.
+
+					-Alex
