@@ -1,29 +1,36 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v5 2/2] drm/panel: Add support for Raydium RM67191 panel driver
-Date: Wed, 26 Jun 2019 07:59:34 -0300
-Message-ID: <CAOMZO5CFSXHe7bFQ1xudmnm2=9sUL-FRqtzOtf_c=f7=e=bdqg@mail.gmail.com>
-References: <1561544420-15572-1-git-send-email-robert.chiras@nxp.com> <1561544420-15572-3-git-send-email-robert.chiras@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCHv2 1/2] PCI: layerscape: Add the bar_fixed_64bit property in EP driver.
+Date: Wed, 26 Jun 2019 19:11:38 +0800
+Message-ID: <20190626111139.32878-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561544420-15572-3-git-send-email-robert.chiras@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>
+To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, pombredanne@nexb.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Robert,
+The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1
+is 32bit, BAR3 and BAR4 is 64bit, this is determined by hardware,
+so set the bar_fixed_64bit with 0x14.
 
-On Wed, Jun 26, 2019 at 7:21 AM Robert Chiras <robert.chiras@nxp.com> wrote:
->
-> This patch adds Raydium RM67191 TFT LCD panel driver (MIPI-DSI
-> protocol).
->
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+---
+v2:
+ - Replace value 0x14 with a macro.
 
-Looks good to me:
+ drivers/pci/controller/dwc/pci-layerscape-ep.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-
-Thanks
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index be61d96..227c33b 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -44,6 +44,7 @@ static int ls_pcie_establish_link(struct dw_pcie *pci)
+ 	.linkup_notifier = false,
+ 	.msi_capable = true,
+ 	.msix_capable = false,
++	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+ };
+ 
+ static const struct pci_epc_features*
+-- 
+1.7.1
