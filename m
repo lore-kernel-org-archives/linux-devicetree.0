@@ -1,14 +1,14 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 1/2] ARM: dts: rockchip: move rk3288-veryon display
- settings into a separate file
-Date: Thu, 27 Jun 2019 00:19:27 +0200
-Message-ID: <2418036.tTYI8lUvN5@phil>
-References: <20190625222629.154619-1-mka@chromium.org>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: Add support for Hugsun X99 TV Box
+Date: Thu, 27 Jun 2019 00:38:25 +0200
+Message-ID: <3247989.aGYRIomCNH@phil>
+References: <2273961.GTPgWWlV5T@phil>
+ <20190621205308.5177-1-npcomplete13@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190625222629.154619-1-mka@chromium.org>
+In-Reply-To: <20190621205308.5177-1-npcomplete13@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,34 +18,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, enric.balletbo@collabora.com, linux-arm-kernel@lists.infradead.org
+To: Vivek Unune <npcomplete13@gmail.com>
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-Am Mittwoch, 26. Juni 2019, 00:26:28 CEST schrieb Matthias Kaehlcke:
-> The chromebook .dtsi file contains common settings for veyron
-> Chromebooks with eDP displays. Some veyron devices with a display
-> aren't Chromebooks (e.g. 'tiger' aka 'AOpen Chromebase Mini'), move
-> display related bits from the chromebook .dtsi into a separate file
-> to avoid redundant DT settings.
+Am Freitag, 21. Juni 2019, 22:53:08 CEST schrieb Vivek Unune:
+> Add devicetree support for Hugsun X99 TV Box based on RK3399 SoC
 > 
-> The new file is included from the chromebook .dtsi and can be
-> included by non-Chromebook devices with a display.
+> Tested with LibreElec running kernel v5.1.2.
+> Following peripherals tested and work:
 > 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> This series is based on v5.3-armsoc/dts32 (f497ab6b4bb8 "ARM:
-> dts: rockchip: Configure BT_HOST_WAKE as wake-up signal on
-> veyron") plus the display timing patches from Doug:
+> Peripheral works:
+> - UART2 debug
+> - eMMC
+> - USB 3.0 port
+> - USB 2.0 port
+> - sdio, sd-card
+> - HDMI
+> - Ethernet
+> - WiFi/BT
+> 
+> Not tested:
+> - Type-C port
+> - OPTICAL
+> - IR
+> 
+> Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
 
-the display-timing patches are still stuck on panel-review.
-
-But while we wait for that to get resolved, you could also check if
-the veyron panels could use Enric's fanzy new automatic calculation
-of brightness-leves in the pwm-backlight driver, so that we possibly
-could get rid of the long table of levels.
-
+applied for 5.3 after doing some reordering to make things
+alphabetical.
 
 Heiko
