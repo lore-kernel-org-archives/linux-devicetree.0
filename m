@@ -1,89 +1,52 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH V4 3/5] iio: adc: ad7124: Shift to dynamic allocation
- for channel configuration
-Date: Wed, 26 Jun 2019 20:25:25 +0100
-Message-ID: <20190626202525.6eec81fe@archlinux>
+Subject: Re: [PATCH V4 5/5] dt-bindings: iio: adc: Add buffered input
+ property
+Date: Wed, 26 Jun 2019 20:34:38 +0100
+Message-ID: <20190626203438.59019143@archlinux>
 References: <20190625081128.22190-1-mircea.caprioru@analog.com>
-        <20190625081128.22190-3-mircea.caprioru@analog.com>
+        <20190625081128.22190-5-mircea.caprioru@analog.com>
+        <CAL_Jsq+ryELXJNdzZBxzCfMQnMdeGr_xC+ABJ3wGx2tZum6AwA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625081128.22190-3-mircea.caprioru@analog.com>
+In-Reply-To: <CAL_Jsq+ryELXJNdzZBxzCfMQnMdeGr_xC+ABJ3wGx2tZum6AwA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mircea Caprioru <mircea.caprioru@analog.com>
-Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mircea Caprioru <mircea.caprioru@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>, Stefan Popa <stefan.popa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Jun 2019 11:11:26 +0300
-Mircea Caprioru <mircea.caprioru@analog.com> wrote:
+On Wed, 26 Jun 2019 08:45:01 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
 
-> This patch changes the channel configuration member of the device
-> structure from a fixed size array to a dynamic allocated one with a size
-> equal to the number of channels specified in the device tree. This will
-> ensure a more flexibility for compatible devices.
+> On Tue, Jun 25, 2019 at 2:12 AM Mircea Caprioru
+> <mircea.caprioru@analog.com> wrote:
+> >
+> > This patch adds the buffered mode device tree property for positive and
+> > negative inputs. Each option can be enabled independently.
+> >
+> > In buffered mode, the input channel feeds into a high impedance input stage
+> > of the buffer amplifier. Therefore, the input can tolerate significant
+> > source impedances and is tailored for direct connection to external
+> > resistive type sensors such as strain gages or RTDs.
+> >
+> > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> > ---
+> >
+> > Changelog v3:
+> > - added this separate commit for adi,buffered-positive and negative
+> >   properties
+> >
+> > Changelog v4:
+> > - nothing changed here
+> >
+> >  .../devicetree/bindings/iio/adc/adi,ad7124.yaml       | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)  
 > 
-> Ex. ad7124-4 - can have 4 differential or 8 pseudo-differential channels
-> ad7124-8 - can have 8 differential or 16 pseudo-differential channels
-> 
-> Also the device can suspport any other combination of differential and
-> pseudo-differential channels base on the physical number of inputs
-> available.
-> 
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-Applied.
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thanks,
+Applied to the togreg branch of iio.git and pushed out as testing.
+
+thanks,
 
 Jonathan
-
-> ---
-> 
-> Changelog v2:
-> - nothing changed here
-> 
-> Changelog v3:
-> - nothing changed here
-> 
-> Changelog v4:
-> - nothing changed here
-> 
->  drivers/iio/adc/ad7124.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-> index ab52c5e9ecb1..edc6f1cc90b2 100644
-> --- a/drivers/iio/adc/ad7124.c
-> +++ b/drivers/iio/adc/ad7124.c
-> @@ -121,7 +121,7 @@ struct ad7124_channel_config {
->  struct ad7124_state {
->  	const struct ad7124_chip_info *chip_info;
->  	struct ad_sigma_delta sd;
-> -	struct ad7124_channel_config channel_config[4];
-> +	struct ad7124_channel_config *channel_config;
->  	struct regulator *vref[4];
->  	struct clk *mclk;
->  	unsigned int adc_control;
-> @@ -439,6 +439,7 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
->  	struct ad7124_state *st = iio_priv(indio_dev);
->  	struct device_node *child;
->  	struct iio_chan_spec *chan;
-> +	struct ad7124_channel_config *chan_config;
->  	unsigned int ain[2], channel = 0, tmp;
->  	int ret;
->  
-> @@ -453,8 +454,14 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
->  	if (!chan)
->  		return -ENOMEM;
->  
-> +	chan_config = devm_kcalloc(indio_dev->dev.parent, st->num_channels,
-> +				   sizeof(*chan_config), GFP_KERNEL);
-> +	if (!chan_config)
-> +		return -ENOMEM;
-> +
->  	indio_dev->channels = chan;
->  	indio_dev->num_channels = st->num_channels;
-> +	st->channel_config = chan_config;
->  
->  	for_each_available_child_of_node(np, child) {
->  		ret = of_property_read_u32(child, "reg", &channel);
