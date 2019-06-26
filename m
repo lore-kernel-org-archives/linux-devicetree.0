@@ -1,90 +1,395 @@
 From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v7 3/5] mtd: Add support for HyperBus memory devices
-Date: Wed, 26 Jun 2019 11:30:56 +0530
-Message-ID: <1131067e-a86d-f794-f6ae-be0a2b3e5832@ti.com>
-References: <20190620172250.9102-1-vigneshr@ti.com>
- <20190620172250.9102-4-vigneshr@ti.com>
- <OF97D41CEB.1200A9E4-ON48258425.0006AA42-48258425.000700E5@mxic.com.tw>
+Subject: Re: [PATCH v8 1/5] mtd: cfi_cmdset_0002: Add support for polling
+ status register
+Date: Wed, 26 Jun 2019 11:47:17 +0530
+Message-ID: <b7ace44e-5b19-769c-cd00-004c698c44bb@ti.com>
+References: <20190625075746.10439-1-vigneshr@ti.com>
+ <20190625075746.10439-2-vigneshr@ti.com>
+ <ade6097f-bd02-1e6d-017e-cf6bd06e03bd@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <OF97D41CEB.1200A9E4-ON48258425.0006AA42-48258425.000700E5@mxic.com.tw>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ade6097f-bd02-1e6d-017e-cf6bd06e03bd@gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: masonccyang@mxic.com.tw
-Cc: devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Boris Brezillon <bbrezillon@kernel.org>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tokunori Ikegami <ikegami.t@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAyNi8wNi8xOSA2OjQ2IEFNLCBtYXNvbmNjeWFuZ0BteGljLmNvbS50dyB3cm90ZToKPiBI
-aSBWaWduZXNoLAo+IAo+Pgo+PiBTdWJqZWN0Cj4+Cj4+IFtQQVRDSCB2NyAzLzVdIG10ZDogQWRk
-IHN1cHBvcnQgZm9yIEh5cGVyQnVzIG1lbW9yeSBkZXZpY2VzCj4+Cj4+IEN5cHJlc3MnIEh5cGVy
-QnVzIGlzIExvdyBTaWduYWwgQ291bnQsIEhpZ2ggUGVyZm9ybWFuY2UgRG91YmxlIERhdGEgUmF0
-ZQo+PiBCdXMgaW50ZXJmYWNlIGJldHdlZW4gYSBob3N0IHN5c3RlbSBtYXN0ZXIgYW5kIG9uZSBv
-ciBtb3JlIHNsYXZlCj4+IGludGVyZmFjZXMuIEh5cGVyQnVzIGlzIHVzZWQgdG8gY29ubmVjdCBt
-aWNyb3Byb2Nlc3NvciwgbWljcm9jb250cm9sbGVyLAo+PiBvciBBU0lDIGRldmljZXMgd2l0aCBy
-YW5kb20gYWNjZXNzIE5PUiBmbGFzaCBtZW1vcnkgKGNhbGxlZCBIeXBlckZsYXNoKQo+PiBvciBz
-ZWxmIHJlZnJlc2ggRFJBTSAoY2FsbGVkIEh5cGVyUkFNKS4KPj4KPj4gSXRzIGEgOC1iaXQgZGF0
-YSBidXMgKERRWzc6MF0pIHdpdGggIFJlYWQtV3JpdGUgRGF0YSBTdHJvYmUgKFJXRFMpCj4+IHNp
-Z25hbCBhbmQgZWl0aGVyIFNpbmdsZS1lbmRlZCBjbG9jaygzLjBWIHBhcnRzKSBvciBEaWZmZXJl
-bnRpYWwgY2xvY2sKPj4gKDEuOFYgcGFydHMpLiBJdCB1c2VzIENoaXBTZWxlY3QgbGluZXMgdG8g
-c2VsZWN0IGIvdyBtdWx0aXBsZSBzbGF2ZXMuCj4+IEF0IGJ1cyBsZXZlbCwgaXQgZm9sbG93cyBh
-IHNlcGFyYXRlIHByb3RvY29sIGRlc2NyaWJlZCBpbiBIeXBlckJ1cwo+PiBzcGVjaWZpY2F0aW9u
-WzFdLgo+Pgo+PiBIeXBlckZsYXNoIGZvbGxvd3MgQ0ZJIEFNRC9GdWppdHN1IEV4dGVuZGVkIENv
-bW1hbmQgU2V0ICgweDAwMDIpIHNpbWlsYXIKPj4gdG8gdGhhdCBvZiBleGlzdGluZyBwYXJhbGxl
-bCBOT1JzLiBTaW5jZSBIeXBlckJ1cyBpcyB4OCBERFIgYnVzLAo+PiBpdHMgZXF1aXZhbGVudCB0
-byB4MTYgcGFyYWxsZWwgTk9SIGZsYXNoIHdydCBiaXRzIHBlciBjbG9jayBjeWNsZS4gQnV0Cj4+
-IEh5cGVyQnVzIG9wZXJhdGVzIGF0ID4xNjZNSHogZnJlcXVlbmNpZXMuCj4+IEh5cGVyUkFNIHBy
-b3ZpZGVzIGRpcmVjdCByYW5kb20gcmVhZC93cml0ZSBhY2Nlc3MgdG8gZmxhc2ggbWVtb3J5Cj4+
-IGFycmF5Lgo+Pgo+PiBCdXQsIEh5cGVyQnVzIG1lbW9yeSBjb250cm9sbGVycyBzZWVtIHRvIGFi
-c3RyYWN0IGltcGxlbWVudGF0aW9uIGRldGFpbHMKPj4gYW5kIGV4cG9zZSBhIHNpbXBsZSBNTUlP
-IGludGVyZmFjZSB0byBhY2Nlc3MgY29ubmVjdGVkIGZsYXNoLgo+Pgo+PiBBZGQgc3VwcG9ydCBm
-b3IgcmVnaXN0ZXJpbmcgSHlwZXJGbGFzaCBkZXZpY2VzIHdpdGggTVREIGZyYW1ld29yay4gTVRE
-Cj4+IG1hcHMgZnJhbWV3b3JrIGFsb25nIHdpdGggQ0ZJIGNoaXAgc3VwcG9ydCBmcmFtZXdvcmsg
-YXJlIHVzZWQgdG8gc3VwcG9ydAo+PiBjb21tdW5pY2F0aW5nIHdpdGggZmxhc2guCj4+Cj4+IEZy
-YW1ld29yayBpcyBtb2RlbGxlZCBhbG9uZyB0aGUgbGluZXMgb2Ygc3BpLW5vciBmcmFtZXdvcmsu
-IEh5cGVyQnVzCj4+IG1lbW9yeSBjb250cm9sbGVyIChIQk1DKSBkcml2ZXJzIGNhbGxzIGh5cGVy
-YnVzX3JlZ2lzdGVyX2RldmljZSgpIHRvCj4+IHJlZ2lzdGVyIGEgc2luZ2xlIEh5cGVyRmxhc2gg
-ZGV2aWNlLiBIeXBlckZsYXNoIGNvcmUgcGFyc2VzIE1NSU8gYWNjZXNzCj4+IGluZm9ybWF0aW9u
-IGZyb20gRFQsIHNldHMgdXAgdGhlIG1hcF9pbmZvIHN0cnVjdCwgcHJvYmVzIENGSSBmbGFzaCBh
-bmQKPj4gcmVnaXN0ZXJzIGl0IHdpdGggTVREIGZyYW1ld29yay4KPj4KPj4gU29tZSBIQk1DIG1h
-c3RlcnMgbmVlZCBjYWxpYnJhdGlvbi90cmFpbmluZyBzZXF1ZW5jZVszXSB0byBiZSBjYXJyaWVk
-Cj4+IG91dCwgaW4gb3JkZXIgZm9yIERMTCBpbnNpZGUgdGhlIGNvbnRyb2xsZXIgdG8gbG9jaywg
-YnkgcmVhZGluZyBhIGtub3duCj4+IHN0cmluZy9wYXR0ZXJuLiBUaGlzIGlzIGRvbmUgYnkgcmVw
-ZWF0ZWRseSByZWFkaW5nIENGSSBRdWVyeQo+PiBJZGVudGlmaWNhdGlvbiBTdHJpbmcuIENhbGli
-cmF0aW9uIG5lZWRzIHRvIGJlIGRvbmUgYmVmb3JlIHRyeWluZyB0byAKPiBkZXRlY3QKPj4gZmxh
-c2ggYXMgcGFydCBvZiBDRkkgZmxhc2ggcHJvYmUuCj4+Cj4+IEh5cGVyUkFNIGlzIG5vdCBzdXBw
-b3J0ZWQgYXQgdGhlIG1vbWVudC4KPj4KPj4gSHlwZXJCdXMgc3BlY2lmaWNhdGlvbiBjYW4gYmUg
-Zm91bmQgYXRbMV0KPj4gSHlwZXJGbGFzaCBkYXRhc2hlZXQgY2FuIGJlIGZvdW5kIGF0WzJdCj4+
-Cj4+IFsxXSBodHRwczovL3d3dy5jeXByZXNzLmNvbS9maWxlLzIxMzM1Ni9kb3dubG9hZAo+PiBb
-Ml0gaHR0cHM6Ly93d3cuY3lwcmVzcy5jb20vZmlsZS8yMTMzNDYvZG93bmxvYWQKPj4gWzNdIGh0
-dHA6Ly93d3cudGkuY29tL2xpdC91Zy9zcHJ1aWQ3Yi9zcHJ1aWQ3Yi5wZGYKPj4gICAgIFRhYmxl
-IDEyLTU3NDEuIEh5cGVyRmxhc2ggQWNjZXNzIFNlcXVlbmNlCj4+Cj4+IFNpZ25lZC1vZmYtYnk6
-IFZpZ25lc2ggUmFnaGF2ZW5kcmEgPHZpZ25lc2hyQHRpLmNvbT4KPiAKPiBDeXByZXNzIGhhcyBh
-bm5vdW5jZWQgdGhlIGluY2x1c2lvbiBvZiBDeXByZXNz4oCZIGhpZ2gtYmFuZHdpZHRoIAo+IEh5
-cGVyQnVz4oSiIDgtYml0IHNlcmlhbCBtZW1vcnkgaW50ZXJmYWNlIGludG8gdGhlIG5ldyBlWHBh
-bmRlZCBTUEkgKHhTUEkpIAo+IGVsZWN0cmljYWwgaW50ZXJmYWNlIHN0YW5kYXJkIGZyb20gdGhl
-IEpFREVDIFNvbGlkIFN0YXRlIFRlY2hub2xvZ3kgCj4gQXNzb2NpYXRpb24gCj4gCj4gZm9yIGRl
-dGFpbCwgcGxlYXNlIGdvZXMgdG8KPiBodHRwczovL3d3dy5jeXByZXNzLmNvbS9uZXdzL2N5cHJl
-c3MtaHlwZXJidXMtbWVtb3J5LWludGVyZmFjZS1pbnN0YW50LWFwcGxpY2F0aW9ucy1pbmNvcnBv
-cmF0ZWQtamVkZWMteHNwaS1lbGVjdHJpY2FsIAo+IAoKVGhhbmtzIGZvciB0aGUgbGluayEKQW5u
-b3VuY2VtZW50IHNlZW1zIHRvIGJlIGZyb20gTWFyY2ggMjAxOCBzaW5jZSB0aGVuIEN5cHJlc3Mg
-aGFzCnB1Ymxpc2hlZCBkZXRhaWxlZCBIeXBlckJ1cyBwcm90b2NvbCBpbiBwdWJsaWMgZG9tYWlu
-IC4gQ29tcGFyaW5nIEpFREVDCnhTUEkgc3BlY2lmaWNhdGlvbiBhbmQgSHlwZXJCdXMgcHJvdG9j
-b2wgdGhhdCBDeXByZXNzIGhhcyBwdWJsaXNoZWQsCnRoZXkgc2VlbSB0byBiZSBmb2xsb3dpbmcg
-OEQtOEQtOEQgUHJvZmlsZSAyLjAgd2l0aCBFeHRlbmRlZCBDb21tYW5kCk1vZGlmaWVyIG9mIEpF
-REVDIHhTUEkgc3BlYy4KRGlkIHlvdSBzZWUgYW55dGhpbmcgbWlzc2luZy9kaWZmZXJlbnQ/CgpJ
-IG5lZWQgdG8gc3R1ZHkgeFNQSSBzcGVjIGluIG1vcmUgZGV0YWlsLCBidXQgc2VlbXMgbGlrZSBh
-cyBsb25nIGFzIHdlCnN1cHBvcnQgSHlwZXJCdXMgUHJvdG9jb2wgc3BlYyBmcm9tIEN5cHJlc3Mg
-d2Ugc2hvdWxkIGJlIHNhZmUuCgotLSAKUmVnYXJkcwpWaWduZXNoCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+
+On 25/06/19 10:31 PM, Tokunori Ikegami wrote:
+> Hi,
+> 
+> Thanks for the fix.
+> 
+> Reviewed-by: Tokunori Ikegami <ikegami.t@gmail.com>
+> 
+> I have just tested the patch quickly on my local environment that uses
+> the cfi_cmdset_0002 flash device but not HyperFlash family.
+> So tested as not affected by the change.
+> 
+
+Thanks for testing!
+
+> On 2019/06/25 16:57, Vignesh Raghavendra wrote:
+>> HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
+>> Set (0x0002) for flash operations, therefore
+>> drivers/mtd/chips/cfi_cmdset_0002.c can be used as is. But these devices
+>> do not support DQ polling method of determining chip ready/good status.
+>> These flashes provide Status Register whose bits can be polled to know
+>> status of flash operation.
+>>
+>> Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
+>> Extended Query version 1.5. Bit 0 of "Software Features supported" field
+>> of CFI Primary Vendor-Specific Extended Query table indicates
+>> presence/absence of status register and Bit 1 indicates whether or not
+>> DQ polling is supported. Using these bits, its possible to determine
+>> whether flash supports DQ polling or need to use Status Register.
+>>
+>> Add support for polling Status Register to know device ready/status of
+>> erase/write operations when DQ polling is not supported.
+>> Print error messages on erase/program failure by looking at related
+>> Status Register bits.
+>>
+>> [1] https://www.cypress.com/file/213346/download
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> ---
+>> v8:
+>> Fix up status register polling to support banked flashes in patch 1/5.
+>>
+>>
+>>   drivers/mtd/chips/cfi_cmdset_0002.c | 130 ++++++++++++++++++++++++----
+>>   include/linux/mtd/cfi.h             |   7 ++
+>>   2 files changed, 120 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c
+>> b/drivers/mtd/chips/cfi_cmdset_0002.c
+>> index c8fa5906bdf9..09f8aaf1e763 100644
+>> --- a/drivers/mtd/chips/cfi_cmdset_0002.c
+>> +++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+>> @@ -49,6 +49,16 @@
+>>   #define SST49LF008A        0x005a
+>>   #define AT49BV6416        0x00d6
+>>   +/*
+>> + * Status Register bit description. Used by flash devices that don't
+>> + * support DQ polling (e.g. HyperFlash)
+>> + */
+>> +#define CFI_SR_DRB        BIT(7)
+>> +#define CFI_SR_ESB        BIT(5)
+>> +#define CFI_SR_PSB        BIT(4)
+>> +#define CFI_SR_WBASB        BIT(3)
+>> +#define CFI_SR_SLSB        BIT(1)
+>> +
+>>   static int cfi_amdstd_read (struct mtd_info *, loff_t, size_t,
+>> size_t *, u_char *);
+>>   static int cfi_amdstd_write_words(struct mtd_info *, loff_t, size_t,
+>> size_t *, const u_char *);
+>>   static int cfi_amdstd_write_buffers(struct mtd_info *, loff_t,
+>> size_t, size_t *, const u_char *);
+>> @@ -97,6 +107,50 @@ static struct mtd_chip_driver cfi_amdstd_chipdrv = {
+>>       .module        = THIS_MODULE
+>>   };
+>>   +/*
+>> + * Use status register to poll for Erase/write completion when DQ is not
+>> + * supported. This is indicated by Bit[1:0] of SoftwareFeatures field in
+>> + * CFI Primary Vendor-Specific Extended Query table 1.5
+>> + */
+>> +static int cfi_use_status_reg(struct cfi_private *cfi)
+>> +{
+>> +    struct cfi_pri_amdstd *extp = cfi->cmdset_priv;
+>> +    u8 poll_mask = CFI_POLL_STATUS_REG | CFI_POLL_DQ;
+>> +
+>> +    return extp->MinorVersion >= '5' &&
+>> +        (extp->SoftwareFeatures & poll_mask) == CFI_POLL_STATUS_REG;
+>> +}
+>> +
+>> +static void cfi_check_err_status(struct map_info *map, struct flchip
+>> *chip,
+> 
+> Just a minor comment.
+> I though that it is better to be called this function in chip_good()
+> instead of to be called separately.
+> But I can understand that the chip_good() is called repeatedly in
+> do_erase_chip(), do_erase_oneblock() and do_write_buffer() until timeout.
+> Also do_write_oneword() is also possible to be changed to call the
+> chip_good() repeatedly instead of chip_ready().
+> So additional logics is needed to avoid the repeated error messages in
+> the function above.
+> Anyway it is okay for the current implementation to me.
+> 
+
+Will do that as an incremental change once base support for HyperFlash
+is in.
+
+Regards
+Vignesh
+
+> Regards,
+> Ikegami
+> 
+>> +                 unsigned long adr)
+>> +{
+>> +    struct cfi_private *cfi = map->fldrv_priv;
+>> +    map_word status;
+>> +
+>> +    if (!cfi_use_status_reg(cfi))
+>> +        return;
+>> +
+>> +    cfi_send_gen_cmd(0x70, cfi->addr_unlock1, chip->start, map, cfi,
+>> +             cfi->device_type, NULL);
+>> +    status = map_read(map, adr);
+>> +
+>> +    if (map_word_bitsset(map, status, CMD(0x3a))) {
+>> +        unsigned long chipstatus = MERGESTATUS(status);
+>> +
+>> +        if (chipstatus & CFI_SR_ESB)
+>> +            pr_err("%s erase operation failed, status %lx\n",
+>> +                   map->name, chipstatus);
+>> +        if (chipstatus & CFI_SR_PSB)
+>> +            pr_err("%s program operation failed, status %lx\n",
+>> +                   map->name, chipstatus);
+>> +        if (chipstatus & CFI_SR_WBASB)
+>> +            pr_err("%s buffer program command aborted, status %lx\n",
+>> +                   map->name, chipstatus);
+>> +        if (chipstatus & CFI_SR_SLSB)
+>> +            pr_err("%s sector write protected, status %lx\n",
+>> +                   map->name, chipstatus);
+>> +    }
+>> +}
+>>     /* #define DEBUG_CFI_FEATURES */
+>>   @@ -742,10 +796,25 @@ static struct mtd_info
+>> *cfi_amdstd_setup(struct mtd_info *mtd)
+>>    * correctly and is therefore not done    (particularly with
+>> interleaved chips
+>>    * as each chip must be checked independently of the others).
+>>    */
+>> -static int __xipram chip_ready(struct map_info *map, unsigned long addr)
+>> +static int __xipram chip_ready(struct map_info *map, struct flchip
+>> *chip,
+>> +                   unsigned long addr)
+>>   {
+>> +    struct cfi_private *cfi = map->fldrv_priv;
+>>       map_word d, t;
+>>   +    if (cfi_use_status_reg(cfi)) {
+>> +        map_word ready = CMD(CFI_SR_DRB);
+>> +        /*
+>> +         * For chips that support status register, check device
+>> +         * ready bit
+>> +         */
+>> +        cfi_send_gen_cmd(0x70, cfi->addr_unlock1, chip->start, map, cfi,
+>> +                 cfi->device_type, NULL);
+>> +        d = map_read(map, addr);
+>> +
+>> +        return map_word_andequal(map, d, ready, ready);
+>> +    }
+>> +
+>>       d = map_read(map, addr);
+>>       t = map_read(map, addr);
+>>   @@ -767,10 +836,30 @@ static int __xipram chip_ready(struct map_info
+>> *map, unsigned long addr)
+>>    * as each chip must be checked independently of the others).
+>>    *
+>>    */
+>> -static int __xipram chip_good(struct map_info *map, unsigned long
+>> addr, map_word expected)
+>> +static int __xipram chip_good(struct map_info *map, struct flchip *chip,
+>> +                  unsigned long addr, map_word expected)
+>>   {
+>> +    struct cfi_private *cfi = map->fldrv_priv;
+>>       map_word oldd, curd;
+>>   +    if (cfi_use_status_reg(cfi)) {
+>> +        map_word ready = CMD(CFI_SR_DRB);
+>> +        map_word err = CMD(CFI_SR_PSB | CFI_SR_ESB);
+>> +        /*
+>> +         * For chips that support status register, check device
+>> +         * ready bit and Erase/Program status bit to know if
+>> +         * operation succeeded.
+>> +         */
+>> +        cfi_send_gen_cmd(0x70, cfi->addr_unlock1, chip->start, map, cfi,
+>> +                 cfi->device_type, NULL);
+>> +        curd = map_read(map, addr);
+>> +
+>> +        if (map_word_andequal(map, curd, ready, ready))
+>> +            return !map_word_bitsset(map, curd, err);
+>> +
+>> +        return 0;
+>> +    }
+>> +
+>>       oldd = map_read(map, addr);
+>>       curd = map_read(map, addr);
+>>   @@ -792,7 +881,7 @@ static int get_chip(struct map_info *map, struct
+>> flchip *chip, unsigned long adr
+>>         case FL_STATUS:
+>>           for (;;) {
+>> -            if (chip_ready(map, adr))
+>> +            if (chip_ready(map, chip, adr))
+>>                   break;
+>>                 if (time_after(jiffies, timeo)) {
+>> @@ -830,7 +919,7 @@ static int get_chip(struct map_info *map, struct
+>> flchip *chip, unsigned long adr
+>>           chip->state = FL_ERASE_SUSPENDING;
+>>           chip->erase_suspended = 1;
+>>           for (;;) {
+>> -            if (chip_ready(map, adr))
+>> +            if (chip_ready(map, chip, adr))
+>>                   break;
+>>                 if (time_after(jiffies, timeo)) {
+>> @@ -1362,7 +1451,7 @@ static int do_otp_lock(struct map_info *map,
+>> struct flchip *chip, loff_t adr,
+>>       /* wait for chip to become ready */
+>>       timeo = jiffies + msecs_to_jiffies(2);
+>>       for (;;) {
+>> -        if (chip_ready(map, adr))
+>> +        if (chip_ready(map, chip, adr))
+>>               break;
+>>             if (time_after(jiffies, timeo)) {
+>> @@ -1628,22 +1717,24 @@ static int __xipram do_write_oneword(struct
+>> map_info *map, struct flchip *chip,
+>>               continue;
+>>           }
+>>   -        if (time_after(jiffies, timeo) && !chip_ready(map, adr)){
+>> +        if (time_after(jiffies, timeo) &&
+>> +            !chip_ready(map, chip, adr)) {
+>>               xip_enable(map, chip, adr);
+>>               printk(KERN_WARNING "MTD %s(): software timeout\n",
+>> __func__);
+>>               xip_disable(map, chip, adr);
+>>               break;
+>>           }
+>>   -        if (chip_ready(map, adr))
+>> +        if (chip_ready(map, chip, adr))
+>>               break;
+>>             /* Latency issues. Drop the lock, wait a while and retry */
+>>           UDELAY(map, chip, adr, 1);
+>>       }
+>>       /* Did we succeed? */
+>> -    if (!chip_good(map, adr, datum)) {
+>> +    if (!chip_good(map, chip, adr, datum)) {
+>>           /* reset on all failures. */
+>> +        cfi_check_err_status(map, chip, adr);
+>>           map_write(map, CMD(0xF0), chip->start);
+>>           /* FIXME - should have reset delay before continuing */
+>>   @@ -1881,10 +1972,11 @@ static int __xipram do_write_buffer(struct
+>> map_info *map, struct flchip *chip,
+>>            * We check "time_after" and "!chip_good" before checking
+>> "chip_good" to avoid
+>>            * the failure due to scheduling.
+>>            */
+>> -        if (time_after(jiffies, timeo) && !chip_good(map, adr, datum))
+>> +        if (time_after(jiffies, timeo) &&
+>> +            !chip_good(map, chip, adr, datum))
+>>               break;
+>>   -        if (chip_good(map, adr, datum)) {
+>> +        if (chip_good(map, chip, adr, datum)) {
+>>               xip_enable(map, chip, adr);
+>>               goto op_done;
+>>           }
+>> @@ -1901,6 +1993,7 @@ static int __xipram do_write_buffer(struct
+>> map_info *map, struct flchip *chip,
+>>        * See e.g.
+>>        *
+>> http://www.spansion.com/Support/Application%20Notes/MirrorBit_Write_Buffer_Prog_Page_Buffer_Read_AN.pdf
+>>
+>>        */
+>> +    cfi_check_err_status(map, chip, adr);
+>>       cfi_send_gen_cmd(0xAA, cfi->addr_unlock1, chip->start, map, cfi,
+>>                cfi->device_type, NULL);
+>>       cfi_send_gen_cmd(0x55, cfi->addr_unlock2, chip->start, map, cfi,
+>> @@ -2018,7 +2111,7 @@ static int cfi_amdstd_panic_wait(struct map_info
+>> *map, struct flchip *chip,
+>>        * If the driver thinks the chip is idle, and no toggle bits
+>>        * are changing, then the chip is actually idle for sure.
+>>        */
+>> -    if (chip->state == FL_READY && chip_ready(map, adr))
+>> +    if (chip->state == FL_READY && chip_ready(map, chip, adr))
+>>           return 0;
+>>         /*
+>> @@ -2035,7 +2128,7 @@ static int cfi_amdstd_panic_wait(struct map_info
+>> *map, struct flchip *chip,
+>>             /* wait for the chip to become ready */
+>>           for (i = 0; i < jiffies_to_usecs(timeo); i++) {
+>> -            if (chip_ready(map, adr))
+>> +            if (chip_ready(map, chip, adr))
+>>                   return 0;
+>>                 udelay(1);
+>> @@ -2099,14 +2192,15 @@ static int do_panic_write_oneword(struct
+>> map_info *map, struct flchip *chip,
+>>       map_write(map, datum, adr);
+>>         for (i = 0; i < jiffies_to_usecs(uWriteTimeout); i++) {
+>> -        if (chip_ready(map, adr))
+>> +        if (chip_ready(map, chip, adr))
+>>               break;
+>>             udelay(1);
+>>       }
+>>   -    if (!chip_good(map, adr, datum)) {
+>> +    if (!chip_good(map, chip, adr, datum)) {
+>>           /* reset on all failures. */
+>> +        cfi_check_err_status(map, chip, adr);
+>>           map_write(map, CMD(0xF0), chip->start);
+>>           /* FIXME - should have reset delay before continuing */
+>>   @@ -2300,7 +2394,7 @@ static int __xipram do_erase_chip(struct
+>> map_info *map, struct flchip *chip)
+>>               chip->erase_suspended = 0;
+>>           }
+>>   -        if (chip_good(map, adr, map_word_ff(map)))
+>> +        if (chip_good(map, chip, adr, map_word_ff(map)))
+>>               break;
+>>             if (time_after(jiffies, timeo)) {
+>> @@ -2316,6 +2410,7 @@ static int __xipram do_erase_chip(struct
+>> map_info *map, struct flchip *chip)
+>>       /* Did we succeed? */
+>>       if (ret) {
+>>           /* reset on all failures. */
+>> +        cfi_check_err_status(map, chip, adr);
+>>           map_write(map, CMD(0xF0), chip->start);
+>>           /* FIXME - should have reset delay before continuing */
+>>   @@ -2396,7 +2491,7 @@ static int __xipram do_erase_oneblock(struct
+>> map_info *map, struct flchip *chip,
+>>               chip->erase_suspended = 0;
+>>           }
+>>   -        if (chip_good(map, adr, map_word_ff(map)))
+>> +        if (chip_good(map, chip, adr, map_word_ff(map)))
+>>               break;
+>>             if (time_after(jiffies, timeo)) {
+>> @@ -2412,6 +2507,7 @@ static int __xipram do_erase_oneblock(struct
+>> map_info *map, struct flchip *chip,
+>>       /* Did we succeed? */
+>>       if (ret) {
+>>           /* reset on all failures. */
+>> +        cfi_check_err_status(map, chip, adr);
+>>           map_write(map, CMD(0xF0), chip->start);
+>>           /* FIXME - should have reset delay before continuing */
+>>   @@ -2589,7 +2685,7 @@ static int __maybe_unused do_ppb_xxlock(struct
+>> map_info *map,
+>>        */
+>>       timeo = jiffies + msecs_to_jiffies(2000);    /* 2s max
+>> (un)locking */
+>>       for (;;) {
+>> -        if (chip_ready(map, adr))
+>> +        if (chip_ready(map, chip, adr))
+>>               break;
+>>             if (time_after(jiffies, timeo)) {
+>> diff --git a/include/linux/mtd/cfi.h b/include/linux/mtd/cfi.h
+>> index 208c87cf2e3e..c98a21108688 100644
+>> --- a/include/linux/mtd/cfi.h
+>> +++ b/include/linux/mtd/cfi.h
+>> @@ -219,6 +219,13 @@ struct cfi_pri_amdstd {
+>>       uint8_t  VppMin;
+>>       uint8_t  VppMax;
+>>       uint8_t  TopBottom;
+>> +    /* Below field are added from version 1.5 */
+>> +    uint8_t  ProgramSuspend;
+>> +    uint8_t  UnlockBypass;
+>> +    uint8_t  SecureSiliconSector;
+>> +    uint8_t  SoftwareFeatures;
+>> +#define CFI_POLL_STATUS_REG    BIT(0)
+>> +#define CFI_POLL_DQ        BIT(1)
+>>   } __packed;
+>>     /* Vendor-Specific PRI for Atmel chips (command set 0x0002) */
+
+-- 
+Regards
+Vignesh
