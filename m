@@ -1,56 +1,34 @@
-From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH 06/10] drm/mxsfb: Add max-res property for MXSFB
-Date: Wed, 26 Jun 2019 16:32:14 +0300
-Message-ID: <1561555938-21595-7-git-send-email-robert.chiras@nxp.com>
-References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/2] ASoC: soc-core: update dai_link init
+Date: Wed, 26 Jun 2019 15:36:15 +0200
+Message-ID: <20190626133617.25959-1-jbrunet@baylibre.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Because of stability issues, we may want to limit the maximum resolution
-supported by the MXSFB (eLCDIF) driver.
-This patch add support for a new property which we can use to impose such
-limitation.
+My initial goal with this patchset was to allow a dai_link to have no
+no platform component, instead of having dummy by default.
 
-Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
----
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+However, when rebasing, I discovered that Kuninori Morimoto had recently
+done that in a different way :)
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 64575df..9a1ee70 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -260,6 +260,7 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
- 	struct platform_device *pdev = to_platform_device(drm->dev);
- 	struct mxsfb_drm_private *mxsfb;
- 	struct resource *res;
-+	u32 max_res[2] = {0, 0};
- 	int ret;
- 
- 	mxsfb = devm_kzalloc(&pdev->dev, sizeof(*mxsfb), GFP_KERNEL);
-@@ -340,10 +341,17 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
- 		}
- 	}
- 
-+	of_property_read_u32_array(drm->dev->of_node, "max-res",
-+				   &max_res[0], 2);
-+	if (!max_res[0])
-+		max_res[0] = MXSFB_MAX_XRES;
-+	if (!max_res[1])
-+		max_res[1] = MXSFB_MAX_YRES;
-+
- 	drm->mode_config.min_width	= MXSFB_MIN_XRES;
- 	drm->mode_config.min_height	= MXSFB_MIN_YRES;
--	drm->mode_config.max_width	= MXSFB_MAX_XRES;
--	drm->mode_config.max_height	= MXSFB_MAX_YRES;
-+	drm->mode_config.max_width	= max_res[0];
-+	drm->mode_config.max_height	= max_res[1];
- 	drm->mode_config.funcs		= &mxsfb_mode_config_funcs;
- 	drm->mode_config.helper_private	= &mxsfb_mode_config_helpers;
- 
+I am still submitting my change since it should allow multiple platform
+components on a dai_link, which is one of the FIXME note in soc-core.
+
+I have also added a check on the codecs component availability to align
+on what was done for platforms and cpus
+
+Jerome Brunet (2):
+  ASoC: soc-core: defer card registration if codec component is missing
+  ASoC: soc-core: support dai_link with platforms_num != 1
+
+ include/sound/soc.h  |  6 ++++
+ sound/soc/soc-core.c | 72 +++++++++++++++++++++-----------------------
+ 2 files changed, 41 insertions(+), 37 deletions(-)
+
 -- 
-2.7.4
+2.21.0
