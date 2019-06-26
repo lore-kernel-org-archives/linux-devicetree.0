@@ -1,92 +1,101 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH v3 13/14] arm64: dts: qcom: qcs404: Add DVFS support
-Date: Wed, 26 Jun 2019 11:10:47 +0200
-Message-ID: <CAHYWTt2bHqR5aP4-zJ==txGvzuhAa=+q=5Qpag7ucMEEnM1dZg@mail.gmail.com>
-References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
- <20190625164733.11091-14-jorge.ramirez-ortiz@linaro.org> <CAHYWTt37Q1E_bggbKb8VdcHRj_YYubqaoVHNN7+1kcr8+XMX0g@mail.gmail.com>
+From: Andreas Fenkart <afenkart@gmail.com>
+Subject: regression: nand/spi flashes listed in reversed order after "ARM:
+ dts: at91: Switch to the new NAND bindings"
+Date: Wed, 26 Jun 2019 11:36:06 +0200
+Message-ID: <CALtMJEBpxc+oN1Uf03F0oG-smHZazeeptE=BRX7tPpixnAgFrw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHYWTt37Q1E_bggbKb8VdcHRj_YYubqaoVHNN7+1kcr8+XMX0g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, jassisinghbrar@gmail.com, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, Sibi Sankar <sibis@codeaurora.org>, enric.balletbo@collabora.com, Jagan Teki <jagan@amarulasolutions.com>, olof@lixom.net, Vinod Koul <vkoul@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-cl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+Cc: alexandre.belloni@free-electrons.com, "Michonski,
+ Krzysztof" <krzysztof.michonski@digitalstrom.com>
 List-Id: devicetree@vger.kernel.org
 
-Perhaps I should look at the recipient list next time before posting :)
+After this patch, which is of course much appreciated:
 
-Kind regards,
-Niklas
+1004a2977bdc7566bca87c565541c3232ed467c4
+Refs: v4.12-rc1-7-g1004a2977bdc
+Author:     Boris Brezillon <boris.brezillon@free-electrons.com>
+AuthorDate: Tue May 30 11:20:53 2017 +0200
+Commit:     Alexandre Belloni <alexandre.belloni@free-electrons.com>
+CommitDate: Wed May 31 11:55:41 2017 +0200
 
-On Wed, 26 Jun 2019 at 11:08, Niklas Cassel <niklas.cassel@linaro.org> wrote:
->
-> I actually think that it makes sense to squash this patch with the
-> [PATCH v3 10/14] arm64: dts: qcom: qcs404: Add OPP table
-> patch.
->
-> But that might be a personal preference.
->
-> Either way, I think this series in ready for the real mailing list.
->
->
->
->
-> On Tue, 25 Jun 2019 at 18:48, Jorge Ramirez-Ortiz
-> <jorge.ramirez-ortiz@linaro.org> wrote:
-> >
-> > Support dynamic voltage and frequency scaling on qcs404.
-> >
-> > Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > index 9569686dbc41..4b4ce0b5df76 100644
-> > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > @@ -34,6 +34,9 @@
-> >                         enable-method = "psci";
-> >                         cpu-idle-states = <&CPU_SLEEP_0>;
-> >                         next-level-cache = <&L2_0>;
-> > +                       clocks = <&apcs_glb>;
-> > +                       operating-points-v2 = <&cpu_opp_table>;
-> > +                       cpu-supply = <&pms405_s3>;
-> >                 };
-> >
-> >                 CPU1: cpu@101 {
-> > @@ -43,6 +46,9 @@
-> >                         enable-method = "psci";
-> >                         cpu-idle-states = <&CPU_SLEEP_0>;
-> >                         next-level-cache = <&L2_0>;
-> > +                       clocks = <&apcs_glb>;
-> > +                       operating-points-v2 = <&cpu_opp_table>;
-> > +                       cpu-supply = <&pms405_s3>;
-> >                 };
-> >
-> >                 CPU2: cpu@102 {
-> > @@ -52,6 +58,9 @@
-> >                         enable-method = "psci";
-> >                         cpu-idle-states = <&CPU_SLEEP_0>;
-> >                         next-level-cache = <&L2_0>;
-> > +                       clocks = <&apcs_glb>;
-> > +                       operating-points-v2 = <&cpu_opp_table>;
-> > +                       cpu-supply = <&pms405_s3>;
-> >                 };
-> >
-> >                 CPU3: cpu@103 {
-> > @@ -61,6 +70,9 @@
-> >                         enable-method = "psci";
-> >                         cpu-idle-states = <&CPU_SLEEP_0>;
-> >                         next-level-cache = <&L2_0>;
-> > +                       clocks = <&apcs_glb>;
-> > +                       operating-points-v2 = <&cpu_opp_table>;
-> > +                       cpu-supply = <&pms405_s3>;
-> >                 };
-> >
-> >                 L2_0: l2-cache {
-> > --
-> > 2.21.0
-> >
+    ARM: dts: at91: Switch to the new NAND bindings
+
+    Use the new EBI/NAND bindings to declare NAND chips and remove old NAND
+    nodes along the way.
+
+    Note that we keep using old bindings in at91rm9200.dtsi because this
+    SoC is not supported by the EBI driver.
+
+The listing and indexing of my mtd devices changed:
+
+root@after:~# cat /proc/mtd
+dev:    size   erasesize  name
+mtd0: 00080000 00010000 "spi32766.0"
+...
+mtd4: 32000000 00080000 "rootfs"
+mtd5: 0bc00000 00080000 "config"
+
+root@before:~# cat /proc/mtd
+dev:    size   erasesize  name
+...
+mtd3: 32000000 00080000 "rootfs"
+mtd4: 0bc00000 00080000 "config"
+mtd5: 00080000 00010000 "spi32766.0"
+
+
+I assume sorting the mtd listing in a specific order is not supported
+nor desired by the mtd maintainers. So I'm not argueing about that.
+
+But since the index of rootfs device is hard-coded in the cmdline, the
+fw-utils config file and a custom script to backup/retrieve
+configuration, this is causing me some problems.
+
+The nand is partitioned, the spi is not:
+mtdparts=mtdparts=atmel_nand:2M(foo),2M(bar),32M(baz),800M(rootfs),-(config)
+
+While the bootargs can be fixed easily by using the human readable
+name (ubi.mtd=rootfs). I can't retrieve that human readable name from
+udev alone, nor can I build something from major/minor alone, since
+the major is the same for nand/spi flash.
+
+root@before:/etc/udev/rules.d# udevadm info /dev/mtd3
+P: /devices/platform/ahb/40000000.nand/mtd/mtd3
+N: mtd3
+E: DEVNAME=/dev/mtd3
+E: DEVPATH=/devices/platform/ahb/40000000.nand/mtd/mtd3
+E: DEVTYPE=mtd
+E: MAJOR=90
+E: MINOR=6
+
+root@dSS:/etc/udev/rules.d# udevadm info /dev/mtd5
+P: /devices/platform/ahb/ahb:apb/fffc8000.spi/spi_master/spi32766/spi32766.0/mtd/mtd5
+N: mtd5
+E: DEVNAME=/dev/mtd5
+E: DEVPATH=/devices/platform/ahb/ahb:apb/fffc8000.spi/spi_master/spi32766/spi32766.0/mtd/mtd5
+E: DEVTYPE=mtd
+E: MAJOR=90
+E: MINOR=10
+E: OF_COMPATIBLE_0=st,m25p40
+E: OF_COMPATIBLE_N=1
+E: OF_FULLNAME=/ahb/apb/spi@fffc8000/m25p40@0
+E: OF_NAME=m25p40
+E: SUBSYSTEM=mtd
+
+What is the preferred to make the rootfs agnostic of a particular mtd
+listing order
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
