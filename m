@@ -1,62 +1,40 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v6 0/2] Add DSI panel driver for Raydium RM67191
-Date: Wed, 26 Jun 2019 14:41:00 +0200
-Message-ID: <20190626124100.GA7337@ravnborg.org>
-References: <1561550907-9733-1-git-send-email-robert.chiras@nxp.com>
-Mime-Version: 1.0
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v3 0/5] drm/panel-simple: Add panel parameters for ortustech-com37h3m05dtc/99dtc and sharp-lq070y3dg3b
+Date: Wed, 26 Jun 2019 14:40:50 +0200
+Message-ID: <CF1D9929-58D2-4E75-932A-870D11BBFBDE@goldelico.com>
+References: <cover.1559905870.git.hns@goldelico.com> <0842FF88-D8E0-441B-837B-769C2EF6C1CB@goldelico.com> <20190625204356.GF18595@ravnborg.org> <20190626073350.GA15288@ravnborg.org>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1561550907-9733-1-git-send-email-robert.chiras@nxp.com>
+In-Reply-To: <20190626073350.GA15288@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, David Airlie <airlied@linux.ie>, marek.belisko@gmail.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, tomi.valkeinen@ti.com, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 03:08:25PM +0300, Robert Chiras wrote:
-> This patch-set contains the DRM panel driver and dt-bindings documentation
-> for the DSI driven panel: Raydium RM67191.
-> 
-> v6:
-> - Collected Reviewed-by from Fabio
-> - Removed unused variables (sam)
-> 
-> v5:
-> - Removed unnecessary debug messages (fabio)
-> - Handled error case for gpio pin (fabio)
-> 
-> v4:
-> - Changed default_timing structure type from 'struct display_timing' to
->   'struct drm_display_mode' (fabio)
-> - Replaced devm_gpiod_get with devm_gpiod_get_optional (fabio)
-> - Added power regulators (fabio)
-> - Removed pm_ops (fabio)
-> 
-> v3:
-> - Added myself to MAINTAINERS for this driver (sam)
-> - Removed display-timings property (fabio)
-> - Fixed dt description (sam)
-> - Re-arranged calls inside get_modes function (sam)
-> - Changed ifdefs with _maybe_unused for suspend/resume functions (sam)
-> - Collected Reviewed-by from Sam
-> 
-> v2:
-> - Fixed 'reset-gpio' to 'reset-gpios' property naming (fabio)
-> - Changed the state of the reset gpio to active low and fixed how it is
->   handled in driver (fabio)
-> - Fixed copyright statement (daniel)
-> - Reordered includes (sam)
-> - Added defines for panel specific color formats (fabio)
-> - Removed unnecessary tests in enable and unprepare (sam)
-> - Removed the unnecessary backlight write in enable (sam)
-> *** SUBJECT HERE ***
-> 
-> *** BLURB HERE ***
-> 
-> Robert Chiras (2):
->   dt-bindings: display: panel: Add support for Raydium RM67191 panel
->   drm/panel: Add support for Raydium RM67191 panel driver
+Hi Sam,
 
-Thanks, patches are applied to drm-misc-next and pushed out.
+> Am 26.06.2019 um 09:33 schrieb Sam Ravnborg <sam@ravnborg.org>:
+>=20
+> Hi Nikolaus.
+>=20
+>>>=20
+>>> any progress towards merging this somewhere? It did not yet arrive =
+in linux-next.
+>>>=20
+>>> BTW: should also be applied to 5.2
+>> The drm bits are reviewed. The DT bits needs OK from DT people.
+>> When we have OK from DT people we can apply them all to =
+drm-misc-next.
+>=20
+> I got OK on irc from Rob to process these.
+> All patches are now applied to drm-misc-next.
 
-	Sam
+Thanks for taking care of this!
+
+>=20
+> 	Sam
+
+BR,
+Nikolaus
