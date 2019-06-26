@@ -1,51 +1,45 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Add support for Hugsun X99 TV Box
-Date: Thu, 27 Jun 2019 00:38:25 +0200
-Message-ID: <3247989.aGYRIomCNH@phil>
-References: <2273961.GTPgWWlV5T@phil>
- <20190621205308.5177-1-npcomplete13@gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc rgmii
+ performance.
+Date: Thu, 27 Jun 2019 00:22:36 +0200
+Message-ID: <1609807.FCSDk0ZevM@phil>
+References: <20190626130443.22025-1-pgwipeout@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190621205308.5177-1-npcomplete13@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vivek Unune <npcomplete13@gmail.com>
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190626130443.22025-1-pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "Leonidas P . Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 21. Juni 2019, 22:53:08 CEST schrieb Vivek Unune:
-> Add devicetree support for Hugsun X99 TV Box based on RK3399 SoC
+Am Mittwoch, 26. Juni 2019, 15:04:43 CEST schrieb Peter Geis:
+> Currently the rk3328-roc-cc ethernet is enabled using "snps,force_thresh_dma_mode".
+> While this works, the performance leaves a lot to be desired.
+> A previous attempt to improve performance used "snps,txpbl = <0x4>".
+> This also allowed networking to function, but performance varied between boards.
 > 
-> Tested with LibreElec running kernel v5.1.2.
-> Following peripherals tested and work:
+> This patch takes that one step further.
+> Set txpbl and rxpbl to 0x4.
+> This can also be accomplished with "snps,pbl =<0x4>" which affects both.
+> Also set "snps,aal" which forces address aligned DMA mode.
 > 
-> Peripheral works:
-> - UART2 debug
-> - eMMC
-> - USB 3.0 port
-> - USB 2.0 port
-> - sdio, sd-card
-> - HDMI
-> - Ethernet
-> - WiFi/BT
+> Fixes: 4bc4d6013b7f (arm64: dts: rockchip: fix rk3328-roc-cc gmac2io stability issues)
 > 
-> Not tested:
-> - Type-C port
-> - OPTICAL
-> - IR
+> Signed-off-by: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
+> Tested-by: Leonidas P. Papadakos <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-applied for 5.3 after doing some reordering to make things
-alphabetical.
+applied for 5.3 after sorting the new properties alphabetically.
 
+Thanks
 Heiko
