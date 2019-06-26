@@ -1,100 +1,81 @@
-From: Will Deacon <will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/8] iommu/arm-smmu-v3: Add support for Substream IDs
-Date: Wed, 26 Jun 2019 19:00:26 +0100
-Message-ID: <20190626180025.g4clm6qnbbna65de@willie-the-truck>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
-	<20190610184714.6786-5-jean-philippe.brucker@arm.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+Date: Wed, 26 Jun 2019 13:27:41 -0500
+Message-ID: <CABb+yY2B_bGqZhd3HRm2qOwGNXG8UYvRo0_uBmwGbx_1gA-vfA@mail.gmail.com>
+References: <20190603083005.4304-1-peng.fan@nxp.com>
+ <20190603083005.4304-3-peng.fan@nxp.com>
+ <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com>
+ <AM0PR04MB44813A4DE544E53EB7B6F02B88E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CABb+yY38MAZqVOhjyV+GByPvpFcTfKbNG1rJ8YDRd1vi1F4fqg@mail.gmail.com>
+ <AM0PR04MB44814D3BD59033ECDDE3094C88E20@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <e49278ba-f734-e019-ab44-53afe558bd85@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190610184714.6786-5-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e49278ba-f734-e019-ab44-53afe558bd85@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, ", Sascha Hauer" <kernel@pengutronix.de>, Sudeep Holla <sudeep.holla@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 07:47:10PM +0100, Jean-Philippe Brucker wrote:
-> At the moment, the SMMUv3 driver implements only one stage-1 or stage-2
-> page directory per device. However SMMUv3 allows more than one address
-> space for some devices, by providing multiple stage-1 page directories. In
-> addition to the Stream ID (SID), that identifies a device, we can now have
-> Substream IDs (SSID) identifying an address space. In PCIe, SID is called
-> Requester ID (RID) and SSID is called Process Address-Space ID (PASID).
-> 
-> Prepare the driver for SSID support, by adding context descriptor tables
-> in STEs (previously a single static context descriptor). A complete
-> stage-1 walk is now performed like this by the SMMU:
-> 
->       Stream tables          Ctx. tables          Page tables
->         +--------+   ,------->+-------+   ,------->+-------+
->         :        :   |        :       :   |        :       :
->         +--------+   |        +-------+   |        +-------+
->    SID->|  STE   |---'  SSID->|  CD   |---'  IOVA->|  PTE  |--> IPA
->         +--------+            +-------+            +-------+
->         :        :            :       :            :       :
->         +--------+            +-------+            +-------+
-> 
-> Implement a single level of context descriptor table for now, but as with
-> stream and page tables, an SSID can be split to index multiple levels of
-> tables.
-> 
-> In all stream table entries, we set S1DSS=SSID0 mode, making translations
-> without an SSID use context descriptor 0. Although it would be possible by
-> setting S1DSS=BYPASS, we don't currently support SSID when user selects
-> iommu.passthrough.
+On Wed, Jun 26, 2019 at 11:44 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> On 6/26/19 6:31 AM, Peng Fan wrote:
+> >>> The firmware driver might not have func-id, such as SCMI/SCPI.
+> >>> So add an optional func-id to let smc mailbox driver could
+> >>> use smc SiP func id.
+> >>>
+> >> There is no end to conforming to protocols. Controller drivers should
+> >> be written having no particular client in mind.
+> >
+> > If the func-id needs be passed from user, then the chan_id suggested
+> > by Sudeep should also be passed from user, not in mailbox driver.
+> >
+> > Jassi, so from your point, arm_smc_send_data just send a0 - a6
+> > to firmware, right?
+> >
+> > Sudeep, Andre, Florian,
+> >
+> > What's your suggestion? SCMI not support, do you have
+> > plan to add smc transport in SCMI?
+>
+> On the platforms that I work with, we have taken the liberty of
+> implementing SCMI in our monitor firmware because the other MCU we use
+> for dynamic voltage and frequency scaling did not have enough memory to
+> support that and we still had the ability to make that firmware be
+> trusted enough we could give it power management responsibilities. I
+> would certainly feel more comfortable if the SCMI specification was
+> amended to indicate that the Agent could be such a software entity,
+> still residing on the same host CPU as the Platform(s), but if not,
+> that's fine.
+>
+> This has lead us to implement a mailbox driver that uses a proprietary
+> SMC call for the P2A path ("tx" channel) and the return being done via
+> either that same SMC or through SGI. You can take a look at it in our
+> downstream tree here actually:
+>
+> https://github.com/Broadcom/stblinux-4.9/blob/master/linux/drivers/mailbox/brcmstb-mailbox.c
+>
+> If we can get rid of our own driver and uses a standard SMC based
+> mailbox driver that supports our use case that involves interrupts (we
+> can always change their kind without our firmware/boot loader since FDT
+> is generated from that component), that would be great.
+>
+static irqreturn_t brcm_isr(void)
+{
+         mbox_chan_received_data(&chans[0], NULL);
+         return IRQ_HANDLED;
+}
 
-I don't understand your comment here: iommu.passthrough works just as it did
-before, right, since we set bypass in the STE config field so S1DSS is not
-relevant? I also notice that SSID0 causes transactions with SSID==0 to
-abort. Is a PASID of 0 reserved, so this doesn't matter?
-
-> @@ -1062,33 +1143,90 @@ static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
->  	return val;
->  }
->  
-> -static void arm_smmu_write_ctx_desc(struct arm_smmu_device *smmu,
-> -				    struct arm_smmu_s1_cfg *cfg)
-> +static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
-> +				   int ssid, struct arm_smmu_ctx_desc *cd)
->  {
->  	u64 val;
-> +	bool cd_live;
-> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
-> +	__le64 *cdptr = arm_smmu_get_cd_ptr(&smmu_domain->s1_cfg, ssid);
->  
->  	/*
-> -	 * We don't need to issue any invalidation here, as we'll invalidate
-> -	 * the STE when installing the new entry anyway.
-> +	 * This function handles the following cases:
-> +	 *
-> +	 * (1) Install primary CD, for normal DMA traffic (SSID = 0).
-> +	 * (2) Install a secondary CD, for SID+SSID traffic.
-> +	 * (3) Update ASID of a CD. Atomically write the first 64 bits of the
-> +	 *     CD, then invalidate the old entry and mappings.
-> +	 * (4) Remove a secondary CD.
->  	 */
-> -	val = arm_smmu_cpu_tcr_to_cd(cfg->cd.tcr) |
-> +
-> +	if (!cdptr)
-> +		return -ENOMEM;
-> +
-> +	val = le64_to_cpu(cdptr[0]);
-> +	cd_live = !!(val & CTXDESC_CD_0_V);
-> +
-> +	if (!cd) { /* (4) */
-> +		cdptr[0] = 0;
-
-Should we be using WRITE_ONCE here? (although I notice we don't seem to
-bother for STEs either...)
-
-Will
+Sorry, I fail to understand why the irq can't be moved inside the
+client driver itself? There can't be more cost to it and there
+definitely is no functionality lost.
