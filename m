@@ -1,49 +1,48 @@
-From: Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH v5 00/18] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Wed, 26 Jun 2019 02:38:09 +0000
-Message-ID: <20190626023809.GW19023@42.do-not-panic.com>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [v3 0/4] Add drivers for auo, kd101n80-45na and boe,
+ tv101wum-nl6 panels
+Date: Wed, 26 Jun 2019 10:53:56 +0800
+Message-ID: <20190626025400.109567-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Brendan Higgins <brendanhiggins@google.com>, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@delt
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark
+ Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 06:17:51PM -0700, Frank Rowand wrote:
-> It does not matter whether KUnit provides additional things, relative
-> to kselftest.  The point I was making is that there appears to be
-> _some_ overlap between kselftest and KUnit, and if there is overlap
-> then it is worth considering whether the overlap can be unified instead
-> of duplicated.
-
->From my experience as an author of several kselftests drivers, one
-faily complex, and after reviewing the sysctl kunit test module, I
-disagree with this.
-
-Even if there were an overlap, I'd say let the best test harness win.
-Just as we have different LSMs that do something similar.
-
-But this is not about that though. Although both are testing code,
-they do so in *very* different ways.
-
-The design philosophy and architecture are fundamentally different. The
-*only* thing I can think of where there is overlap is that both can test
-similar code paths. Beyond that, the layout of how one itemizes tests
-could be borrowed, but that would be up to each kselftest author to
-decide, in fact some ksefltests do exist which follow similar pattern of
-itemizing test cases and running them. Kunit just provides a proper
-framework to do this easily but also with a focus on UML. This last
-aspect makes kselftests fundamentally orthogonal from an architecture /
-design perspective.
-
-After careful review, I cannot personally identify what could be shared
-at this point. Can you? If you did identify one part, how do you
-recommend to share it?
-
-  Luis
+Q2hhbmdlcyBzaW5jZSB2MjoKIC0gY29ycmVjdCB0aGUgcGFuZWwgc2l6ZQogLSByZW1vdmUgYmxh
+bmsgbGluZSBpbiBLY29uZmlnCiAtIG1vdmUgYXVvLGtkMTAxbjgwLTQ1bmEgcGFuZWwgZHJpdmVy
+IGluIHRoaXMgc2VyaWVzLgoKQ2hhbmdlcyBzaW5jZSB2MToKCiAtIHVwZGF0ZSB0eXBvIG5sNiAt
+PiBuMTYuCiAtIHVwZGF0ZSBuZXcgcGFuZWwgY29uZmlnIGFuZCBtYWtlZmlsZSBhcmUgYWRkZWQg
+aW4gYWxwaGFiZXRpY2FsbHkgb3JkZXIuCiAtIGFkZCB0aGUgcGFuZWwgbW9kZSBhbmQgcGFuZWwg
+aW5mbyBpbiBkcml2ZXIgZGF0YS4KIC0gbWVyZ2UgYXVvLGtkMTAxbjgwLTQ1YSBhbmQgYm9lLHR2
+MTAxd3VtLW5sNiBpbiBvbmUgZHJpdmVyCgpKaXRhbyBTaGkgKDQpOgogIGR0LWJpbmRuZ3M6IGRp
+c3BsYXk6IHBhbmVsOiBBZGQgQk9FIHR2MTAxd3VtLW4xNiBwYW5lbCBiaW5kaW5ncwogIGRybS9w
+YW5lbDogc3VwcG9ydCBmb3IgQk9FIHR2MTAxd3VtLW5sNiB3dXhnYSBkc2kgdmlkZW8gbW9kZSBw
+YW5lbAogIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBwYW5lbDogYWRkIGF1byBrZDEwMW44MC00NW5h
+IHBhbmVsIGJpbmRpbmdzCiAgZHJtL3BhbmVsOiBzdXBwb3J0IGZvciBhdW8sa2QxMDFuODAtNDVu
+YSB3dXhnYSBkc2kgdmlkZW8gbW9kZSBwYW5lbAoKIC4uLi9kaXNwbGF5L3BhbmVsL2F1byxrZDEw
+MW44MC00NW5hLnR4dCAgICAgICB8ICAzNCArCiAuLi4vZGlzcGxheS9wYW5lbC9ib2UsdHYxMDF3
+dW0tbmw2LnR4dCAgICAgICAgfCAgMzQgKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcg
+ICAgICAgICAgICAgICAgIHwgICA5ICsKIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9NYWtlZmlsZSAg
+ICAgICAgICAgICAgICB8ICAgMSArCiAuLi4vZ3B1L2RybS9wYW5lbC9wYW5lbC1ib2UtdHYxMDF3
+dW0tbmw2LmMgICAgfCA3NTMgKysrKysrKysrKysrKysrKysrCiA1IGZpbGVzIGNoYW5nZWQsIDgz
+MSBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXVvLGtkMTAxbjgwLTQ1bmEudHh0CiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvYm9lLHR2MTAxd3VtLW5sNi50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0vcGFuZWwvcGFuZWwtYm9lLXR2MTAxd3VtLW5sNi5jCgotLSAKMi4yMS4wCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
