@@ -1,158 +1,83 @@
-From: Alex Elder <elder@linaro.org>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-Date: Wed, 26 Jun 2019 08:39:36 -0500
-Message-ID: <edea19ef-f225-bdcd-f394-77e326d1d3ad@linaro.org>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
- <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
- <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
- <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
- <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
- <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
- <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
- <d533b708-c97a-710d-1138-3ae79107f209@linaro.org>
- <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
- <db34aa39-6cf1-4844-1bfe-528e391c3729@linaro.org>
- <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com>
- <efbcb3b84ff0a7d7eab875c37f3a5fa77e21d324.camel@sipsolutions.net>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/2] dt-bindings: i2c: Add MediaTek i2c AC timing binding
+Date: Wed, 26 Jun 2019 15:39:41 +0200
+Message-ID: <20190626133941.GL801@ninjato>
+References: <1560240715-22595-1-git-send-email-qii.wang@mediatek.com>
+ <1560240715-22595-2-git-send-email-qii.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VBq/nvTu32OVLBUP"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <efbcb3b84ff0a7d7eab875c37f3a5fa77e21d324.camel@sipsolutions.net>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1560240715-22595-2-git-send-email-qii.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johannes Berg <johannes@sipsolutions.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: Dan Williams <dcbw@redhat.com>, Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>, abhishek.esse@gmail.com, Ben Chan <benchan@google.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, cpratapa@codeaurora.org, David Miller <davem@davemloft.net>, DTML <devicetree@vger.kernel.org>, Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>, syadagir@codeaurora.org
+To: Qii Wang <qii.wang@mediatek.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, matthias.bgg@gmail.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/25/19 9:19 AM, Johannes Berg wrote:
-> On Mon, 2019-06-24 at 18:40 +0200, Arnd Bergmann wrote:
->> On Mon, Jun 24, 2019 at 6:21 PM Alex Elder <elder@linaro.org> wrote:
->>> On 6/18/19 2:03 PM, Johannes Berg wrote:
->>>
->>>> Really there are two possible ways (and they intersect to some extent).
->>>>
->>>> One is the whole multi-function device, where a single WWAN device is
->>>> composed of channels offered by actually different drivers, e.g. for a
->>>> typical USB device you might have something like cdc_ether and the
->>>> usb_wwan TTY driver. In this way, we need to "compose" the WWAN device
->>>> similarly, e.g. by using the underlying USB device "struct device"
->>>> pointer to tie it together.
->>>
->>> I *think* this model makes the most sense.  But at this point
->>> it would take very little to convince me otherwise...  (And then
->>> I saw Arnd's message advocating the other one, unfortunately...)
->>>
->>>> The other is something like IPA or the Intel modem driver, where the
->>>> device is actually a single (e.g. PCIe) device and just has a single
->>>> driver, but that single driver offers different channels.
->>>
->>> What I don't like about this is that it's more monolithic.  It
->>> seems better to have the low-level IPA or Intel modem driver (or
->>> any other driver that can support communication between the AP
->>> and WWAN device) present communication paths that other function-
->>> specific drivers can attach to and use.
->>
->> I did not understand Johannes description as two competing models
->> for the same code, but rather two kinds of existing hardware that
->> a new driver system would have to deal with.
-> 
-> Right.
-> 
->> I was trying to simplify it to just having the second model, by adding
->> a hack to support the first, but my view was rather unpopular so
->> far, so if everyone agrees on one way to do it, don't worry about me ;-)
-> 
-> :-)
-> 
-> However, to also reply to Alex: I don't know exactly how IPA works, but
-> for the Intel modem at least you can't fundamentally have two drivers
-> for different parts of the functionality, since it's just a single piece
-> of hardware and you need to allocate hardware resources from a common
-> pool etc. So you cannot split the driver into "Intel modem control
-> channel driver" and "Intel modem data channel driver". In fact, it's
-> just a single "struct device" on the PCIe bus that you can bind to, and
-> only one driver can bind at a time.
 
-Interesting.  So a single modem driver needs to implement
-*all* of the features/functions?  Like GPS or data log or
-whatever, all needs to share the same struct device?
-Or does what you're describing apply to a subset of the
-modem's functionality?  Or something else?
+--VBq/nvTu32OVLBUP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> So, IOW, I'm not sure I see how you'd split that up. I guess you could
-> if you actually do something like the "rmnet" model, and I suppose
-> you're free to do that for IPA if you like, but I tend to think that's
-> actually a burden, not a win since you just get more complex code that
-> needs to interact with more pieces. A single driver for a single
-> hardware that knows about the few types of channels seems simpler to me.
-> 
->> - to answer Johannes question, my understanding is that the interface
->>   between kernel and firmware/hardware for IPA has a single 'struct
->>   device' that is used for both the data and the control channels,
->>   rather than having a data channel and an independent control device,
->>   so this falls into the same category as the Intel one (please correct
->>   me on that)
+Hi,
 
-I don't think that's quite right, but it might be partially
-right.  There is a single device representing IPA, but the
-picture is a little more complicated.
+On Tue, Jun 11, 2019 at 04:11:54PM +0800, Qii Wang wrote:
+> Add i2c AC timing binding to binding file. It can give the AC
+> timing parameters to meet I2C specification at different speed.
+>=20
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
 
-The IPA hardware is actually something that sits *between* the
-AP and the modem.  It implements one form of communication
-pathway (IP data), but there are others (including QMI, which
-presents a network-like interface but it's actually implemented
-via clever use of shared memory and interrupts).
+I think this is a too specific 1:1 mapping of your register set into DT
+world. We already have these generic parameters:
 
-What we're talking about here is WWAN/modem management more
-generally though.  It *sounds* like the Intel modem is
-more like a single device, which requires a single driver,
-that seems to implement a bunch of distinct functions.
+- clock-frequency
+        frequency of bus clock in Hz.
 
-On this I'm not very knowledgeable but for Qualcomm there is
-user space code that is in charge of overall management of
-the modem.  It implements what I think you're calling control
-functions, negotiating with the modem to allow new data channels
-to be created.  Normally the IPA driver would provide information
-to user space about available resources, but would only make a
-communication pathway available when requested.
+- i2c-scl-falling-time-ns
+        Number of nanoseconds the SCL signal takes to fall; t(f) in the I2C
+        specification.
 
-I'm going to leave it at that for now.
+- i2c-scl-internal-delay-ns
+        Number of nanoseconds the IP core additionally needs to setup SCL.
 
-> That sounds about the same then, right.
-> 
-> Are the control channels to IPA are actually also tunnelled over the
-> rmnet protocol? And even if they are, perhaps they have a different
-> hardware queue or so? That'd be the case for Intel - different hardware
-> queue, same (or at least similar) protocol spoken for the DMA hardware
-> itself, but different contents of the messages obviously.
+- i2c-scl-rising-time-ns
+        Number of nanoseconds the SCL signal takes to rise; t(r) in the I2C
+        specification.
 
-I want to be careful talking about "control" but for IPA it comes
-from user space.  For the purpose of getting initial code upstream,
-all of that control functionality (which was IOCTL based) has been
-removed, and a fixed configuration is assumed.
+- i2c-sda-falling-time-ns
+        Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
+        specification.
 
->> - The user space being proprietary is exactly what we need to avoid
->>   with the wwan subsystem. We need to be able to use the same
->>   method for setting up Intel, Qualcomm, Samsung, Unisoc or
->>   Hisilicon modems or anything else that hooks into the subsystem,
->>   and support that in network manager as well as the Android
->>   equivalent.
->>   If Qualcomm wants to provide their own proprietary user space
->>   solution, we can't stop them, but then that should also work on
->>   all the others unless they intentionally break it. ;-)
+(check Documentation/devicetree/bindings/i2c/i2c.txt)
 
-I won't comment on this, in part because I really don't know
-right now what is proprietary or why.  I think that having
-user space (proprietary or not) be able to provide management
-capability is a good thing.  If a unified kernel interface
-provides a common/generic way to manage the modem, I don't
-know why Qualcomm wouldn't adapt their code to use it.
-But I can't really speak for Qualcomm.
+Can't you use those to derive your values from that? Which ones are you mis=
+sing
+if not?
 
-. . .
+Regards,
 
-					-Alex
+   Wolfram
+
+--VBq/nvTu32OVLBUP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0TdZ0ACgkQFA3kzBSg
+KbYdwg//dQgqHhmthL0M3JNNdA09iWqGwQ9bMoPtMtoM/+hklFt9CRstWC+xJM/Z
+R0urToI6NYfU6uUHLyk/Rm+qLRpxjdm49flzF/e0MbEEwW1xXifpbQJOK5Dcwb1w
+qRI46Nb8IjHa3+P6az+WgHlKg/1xURj5oPnVgbl/vNsxXbdubtpYUlOm10WROnNE
+vx+ge9+OzERZ2KhNkOWbvx3szlBE5KF183VZVfXYvYnR4X0Uz8LJt1H90o9ointF
+5dXC/UzCOBOkyp5lL4KqbDTcoSeaTEWkAnt3tKnyXig+vgK1O/aeOdAENd4m2xsh
+1kfdlwXrACKg5zUN5jUPF4KF9r0+YI2GJZHgyxqmzuWabRd9F1o+rXvKwintgJ0L
+Ffb9SOLW7fqDVJKBCOkFOglJZUOWxeU6TfsQWYwNhYorI0HcJ+EcQR4195ZyhtD3
+zEEpeh6Qpxk+maQyvO9NzBd7+HLLEUqHQZWTsOctYucIyLbpolJ2Iq6V9LasLiwO
+U5N29cEdhN/YLXC+aAzBu9iJlPc2C+blG99j80l3D/uDY42G0cHXkThzgDSSTEmx
+lIz41aICZKF/3RHgbSz7yEKH5ulFOvd8qFz5Yn2nQQEHKzm/sN1XU0o3VgWIEnbN
+byFUoWjaiu3xM0xFmKf5WtZ0qpRM0y5VIUO27JwSkBREDVJ7QV4=
+=h1Pk
+-----END PGP SIGNATURE-----
+
+--VBq/nvTu32OVLBUP--
