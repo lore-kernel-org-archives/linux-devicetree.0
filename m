@@ -1,119 +1,77 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/8] dt-bindings: pinctrl: aspeed: Convert AST2400
- bindings to json-schema
-Date: Wed, 26 Jun 2019 07:47:25 -0600
-Message-ID: <CAL_JsqKXPzFYTHos-uvCUtBj-bcsNfrzt5GjxQ=PmgeXpp5J-A@mail.gmail.com>
-References: <20190626071430.28556-1-andrew@aj.id.au> <20190626071430.28556-3-andrew@aj.id.au>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] dt-bindings: i2c-stm32: document optional dmas
+Date: Wed, 26 Jun 2019 15:50:29 +0200
+Message-ID: <20190626135029.GO801@ninjato>
+References: <1559655253-27008-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="keoAwTxaagou87Dg"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190626071430.28556-3-andrew@aj.id.au>
+Content-Disposition: inline
+In-Reply-To: <1559655253-27008-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Ryan Chen <ryan_chen@aspeedtech.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 1:21 AM Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> Convert ASPEED pinctrl bindings to DT schema format using json-schema
 
-BTW, ASPEED is one of the remaining platforms needing the top-level
-board bindings converted.
+--keoAwTxaagou87Dg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+On Tue, Jun 04, 2019 at 03:34:13PM +0200, Fabrice Gasnier wrote:
+> Add missing documentation for "dmas" and "dma-names" properties that can =
+be
+> used on i2c-stm32.
+>=20
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+
+Maintainers?
+
 > ---
->  .../pinctrl/aspeed,ast2400-pinctrl.txt        | 80 -------------------
->  .../pinctrl/aspeed,ast2400-pinctrl.yaml       | 73 +++++++++++++++++
->  2 files changed, 73 insertions(+), 80 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+>  Documentation/devicetree/bindings/i2c/i2c-stm32.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt b/Docume=
+ntation/devicetree/bindings/i2c/i2c-stm32.txt
+> index f334738..ce3df2ff 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+> @@ -21,6 +21,8 @@ Optional properties:
+>    100000 and 400000.
+>    For STM32F7, STM32H7 and STM32MP1 SoCs, Standard-mode, Fast-mode and F=
+ast-mode
+>    Plus are supported, possible values are 100000, 400000 and 1000000.
+> +- dmas: List of phandles to rx and tx DMA channels. Refer to stm32-dma.t=
+xt.
+> +- dma-names: List of dma names. Valid names are: "rx" and "tx".
+>  - i2c-scl-rising-time-ns: I2C SCL Rising time for the board (default: 25)
+>    For STM32F7, STM32H7 and STM32MP1 only.
+>  - i2c-scl-falling-time-ns: I2C SCL Falling time for the board (default: =
+10)
+> --=20
+> 2.7.4
+>=20
 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..3b8cf3e51506
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-> @@ -0,0 +1,73 @@
-> +# SPDX-License-Identifier: GPL-2.0+
+--keoAwTxaagou87Dg
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Do you have rights to change the license? If so, the preference is to
-dual license with (GPL-2.0 OR BSD-2-Clause).
+-----BEGIN PGP SIGNATURE-----
 
-BTW, '-or-later' is the preferred form over '+'.
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0TeCUACgkQFA3kzBSg
+KbYAzRAApZytjukntjxaFMm+so69LjERp5Yg3pQwCd5U0L3E3OjLo5dsPhuffoi8
+je+cHGsEMB7A8KV48HJ581rmyC/elLIsJ+rr39tLbiyUMvWrabTLB4BvFPq1FKRR
+ZTavWSA01Z+q6BTcrEynX6woY/SYD3WeES+sC+fILuqp1sY6t/RtSLPfT7Y657+g
+PU0AlBy/Z3reWy9pQVUWe93UHuEI4KP3MJXuEiRylCUq7FSip2BdMnVyEY7QIrCJ
+z9o1MeJ4BJD402tJI++NTPX4uxbkqCsIq1OaQkxn/lWcirCy8oL23oN7YAOzPMSw
+5akc4UgfiBeE5lxSyapgnUe2Bd4zPI1epSbiQpPCt5mWTRac3MhUko4YcjCTq6Lm
+i2RgCsQre1/B4ZBUOeD1A9atsqVsJvYj+X9sJW+9C/AWRT0VrIYlc0OVHZpIJO1L
+M2o0LQFeQdaSfcH/2xmVFAXilcUQYHi8AWb7X0awvBY65XeDA+Khl7cvQQ3lA+kL
+oJyQy0W52P6piSns80Ho+F77uGqJvKwca9GxFmNs6kM+21Ipfxux8NXaMeCWUEjR
+O1BUWFFumbh7VS4BN5pGsFJ6VWt9vrQe4ko37UkkLGkzNXvq2X6+OSAwQqLkiYTv
+MmykLVk1yMcVJAKSny8k/bjJKE5ushPTIINoUA6LiGxgBby4+TQ=
+=uE1/
+-----END PGP SIGNATURE-----
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/aspeed,ast2400-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ASPEED AST2400 Pin Controller
-> +
-> +maintainers:
-> +  - Andrew Jeffery <andrew@aj.id.au>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +        - enum:
-> +          - aspeed,ast2400-pinctrl
-> +      - items:
-> +        - enum:
-> +          - aspeed,g4-pinctrl
-
-This can be simplified to:
-
-compatible:
-  enum:
-    - aspeed,ast2400-pinctrl
-    - aspeed,g4-pinctrl
-
-> +
-> +required:
-> +  - compatible
-> +
-> +description: |+
-
-description goes before properties.
-
-> +  The pin controller node should be the child of a syscon node with the
-> +  required property:
-> +
-> +  - compatible:     Should be one of the following:
-> +                    "aspeed,ast2400-scu", "syscon", "simple-mfd"
-> +                    "aspeed,g4-scu", "syscon", "simple-mfd"
-> +
-> +  Refer to the the bindings described in
-> +  Documentation/devicetree/bindings/mfd/syscon.txt
-> +
-> +  For the AST2400 pinmux, each mux function has only one associated pin group.
-> +  Each group is named by its function. The following values for the function
-> +  and groups properties are supported:
-> +
-> +  ACPI ADC0 ADC1 ADC10 ADC11 ADC12 ADC13 ADC14 ADC15 ADC2 ADC3 ADC4 ADC5 ADC6
-> +  ADC7 ADC8 ADC9 BMCINT DDCCLK DDCDAT EXTRST FLACK FLBUSY FLWP GPID GPID0 GPID2
-> +  GPID4 GPID6 GPIE0 GPIE2 GPIE4 GPIE6 I2C10 I2C11 I2C12 I2C13 I2C14 I2C3 I2C4
-> +  I2C5 I2C6 I2C7 I2C8 I2C9 LPCPD LPCPME LPCRST LPCSMI MAC1LINK MAC2LINK MDIO1
-> +  MDIO2 NCTS1 NCTS2 NCTS3 NCTS4 NDCD1 NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4
-> +  NDTR1 NDTR2 NDTR3 NDTR4 NDTS4 NRI1 NRI2 NRI3 NRI4 NRTS1 NRTS2 NRTS3 OSCCLK
-> +  PWM0 PWM1 PWM2 PWM3 PWM4 PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 ROM16 ROM8
-> +  ROMCS1 ROMCS2 ROMCS3 ROMCS4 RXD1 RXD2 RXD3 RXD4 SALT1 SALT2 SALT3 SALT4 SD1
-> +  SD2 SGPMCK SGPMI SGPMLD SGPMO SGPSCK SGPSI0 SGPSI1 SGPSLD SIOONCTRL SIOPBI
-> +  SIOPBO SIOPWREQ SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1DEBUG SPI1PASSTHRU
-> +  SPICS1 TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2 TXD3 TXD4 UART6
-> +  USB11D1 USB11H2 USB2D1 USB2H1 USBCKI VGABIOS_ROM VGAHS VGAVS VPI18 VPI24
-> +  VPI30 VPO12 VPO24 WDTRST1 WDTRST2
-
-This should be a schema. You need to define child nodes and list these
-as values for 'function' and 'group'. Ideally, the child nodes would
-have some sort of pattern, but if not, you can just match on '^.*$'
-under patternProperties.
-
-BTW, You can put the names under a 'definitions' key and then use
-'$ref' to reference them from function and group to avoid duplicating
-the names. Or use patternProperties with '^(function|group)$'.
-
-Similar comments apply to AST2500 binding.
-
-Rob
+--keoAwTxaagou87Dg--
