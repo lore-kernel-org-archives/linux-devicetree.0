@@ -1,49 +1,50 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH V4 03/18] gpio: tegra: use resume_noirq for tegra gpio
- resume
-Date: Wed, 26 Jun 2019 10:06:33 -0700
-Message-ID: <7b97ec08-212e-76fb-ad12-6d1be5ab6149@nvidia.com>
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
- <1561345379-2429-4-git-send-email-skomatineni@nvidia.com>
- <CACRpkda0=HeRco8kExdf6TmiLOnCec3Ek06s-MdjNJvVGw3ZNQ@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+Date: Wed, 26 Jun 2019 10:07:45 -0700
+Message-ID: <886589a4-cc51-1c01-6ade-4a6a683407d2@gmail.com>
+References: <20190603083005.4304-1-peng.fan@nxp.com>
+ <20190603083005.4304-3-peng.fan@nxp.com>
+ <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com>
+ <AM0PR04MB4481210CE83416353575C3D988E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20c6cd30-642d-5f6e-15b8-2ef925ed90a6@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda0=HeRco8kExdf6TmiLOnCec3Ek06s-MdjNJvVGw3ZNQ@mail.gmail.com>
+In-Reply-To: <20c6cd30-642d-5f6e-15b8-2ef925ed90a6@arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com, Rob Herring <robh+dt@kernel.org>, Dmitry
+To: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>, Peng Fan <peng.fan@nxp.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, ", Sascha Hauer" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "van.freenix@gmail.com" <van.freenix@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 6/25/19 6:38 AM, Linus Walleij wrote:
-> On Mon, Jun 24, 2019 at 5:03 AM Sowjanya Komatineni
-> <skomatineni@nvidia.com> wrote:
->
->> During SC7 resume, PARKED bit clear from the pinmux registers may
->> cause a glitch on the GPIO lines.
+On 6/26/19 10:05 AM, André Przywara wrote:
+>> So I introduced interrupt in V2. In my testcase, after smc call done,
+>> it means firmware->smc mailbox->firmware done. Interrupt notification
+>> from firmware->Linux, means firmware has done the operation.
 >>
->> So, Tegra GPIOs restore should happen prior to restoring Tegra pinmux
->> to keep the GPIO lines in a known good state prior to clearing PARKED
->> bit.
+>> When using interrupts, we could not know res.a0 as smc sync call.
 >>
->> This patch has fix for this by moving Tegra GPIOs restore to happen
->> very early than pinctrl resume.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> Can this patch be applied in isolation from the other patches?
->
-> WOuld be nice to have at least Thierry's ACK on it before I
-> apply it.
->
-> Yours,
-> Linus Walleij
+>> Interrupts is not a must in my testcase, Florian, Andre, do you have
+>> any comments? Should I keep interrupts in V3 or drop it as Jassi comments?
+> 
+> The smc mailbox is by its very design a one-way channel - and it's
+> synchronous. I think this is all the mailbox driver should be concerned
+> about. The fact that there is a protocol user that would benefit from a
+> return channel is a separate issue.
+> The SCMI binding explicitly mentions *two* mailboxes, one TX, one RX, so
+> the return channel could be very well implemented by a separate driver.
+> I am wondering if we get away without a functioning return channel, at
+> least for a subset of SCMI functionality? Can we use some dummy driver?
+> Or specify another smc channel with some unhandled/ignored channel ID
+> for that purpose?
+> 
+> So I would leave the IRQ return channel out for now, unless we
+> desperately need it.
 
-Just to confirm, Will not include this in V5 as you are planning to 
-apply this patch separately.
-
-Thanks
-
-Sowjanya
+That's fine, the initial point was specifically about the binding
+already defining an optional interrupt property, but that can be removed
+too if this is too much confusion or opens up the discussion beyond this
+submission.
+-- 
+Florian
