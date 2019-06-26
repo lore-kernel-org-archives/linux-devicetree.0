@@ -1,49 +1,37 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using devicetree
-Date: Wed, 26 Jun 2019 15:58:50 -0600
-Message-ID: <CAL_JsqJOc+tkFEGcc+KN0RE8Xjg_i9icPWZ37Ynk_9sR2X1Uwg@mail.gmail.com>
-References: <156113387975.28344.16009584175308192243.stgit@devnote2>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: Configure BT_DEV_WAKE in on rk3288-veyron
+Date: Wed, 26 Jun 2019 23:59:58 +0200
+Message-ID: <1962605.yMxvVRIssp@phil>
+References: <20190619183425.149470-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <156113387975.28344.16009584175308192243.stgit@devnote2>
+In-Reply-To: <20190619183425.149470-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Frank Rowand <frowand.list@gmail.com>, Tom Zanussi <tom.zanussi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: linux-rockchip@lists.infradead.org, mka@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 10:18 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> Hi,
->
-> Here is an RFC series of patches to add boot-time tracing using
-> devicetree.
->
-> Currently, kernel support boot-time tracing using kernel command-line
-> parameters. But that is very limited because of limited expressions
-> and limited length of command line. Recently, useful features like
-> histogram, synthetic events, etc. are being added to ftrace, but it is
-> clear that we can not expand command-line options to support these
-> features.
->
-> Hoever, I've found that there is a devicetree which can pass more
-> structured commands to kernel at boot time :) The devicetree is usually
-> used for dscribing hardware configuration, but I think we can expand it
-> for software configuration too (e.g. AOSP and OPTEE already introduced
-> firmware node.) Also, grub and qemu already supports loading devicetree,
-> so we can use it not only on embedded devices but also on x86 PC too.
+Am Mittwoch, 19. Juni 2019, 20:34:25 CEST schrieb Douglas Anderson:
+> This is the other half of the hacky solution from commit f497ab6b4bb8
+> ("ARM: dts: rockchip: Configure BT_HOST_WAKE as wake-up signal on
+> veyron").  Specifically the LPM driver that the Broadcom Bluetooth
+> expects to have (but is missing in mainline) has two halves of the
+> equation: BT_HOST_WAKE and BT_DEV_WAKE.  The BT_HOST_WAKE (which was
+> handled in the previous commit) is the one that lets the Bluetooth
+> wake the system up.  The BT_DEV_WAKE (this patch) tells the Bluetooth
+> that it's OK to go into a low power mode.  That means we were burning
+> a bit of extra power in S3 without this patch.  Measurements are a bit
+> noisy, but it appears to be a few mA worth of difference.
+> 
+> NOTE: Though these pins don't do much on systems with Marvell
+> Bluetooth, downstream kernels set it on all veyron boards so we'll do
+> the same.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Do the x86 versions of grub, qemu, EFI, any other bootloader actually
-enable DT support? I didn't think so. Certainly, an x86 kernel doesn't
-normally (other than OLPC and ce4100) have a defined way to even pass
-a dtb from the bootloader to the kernel and the kernel doesn't
-unflatten the dtb.
+applied for 5.3
 
-For arm64, the bootloader to kernel interface is DT even for ACPI
-based systems. So unlike Frank, I'm not completely against DT being
-the interface, but it's hardly universal across architectures and
-something like this should be. Neither making DT the universal kernel
-boot interface nor creating some new channel as Frank suggested seems
-like an easy task.
-
-Rob
+Thanks
+Heiko
