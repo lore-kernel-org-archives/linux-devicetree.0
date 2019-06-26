@@ -1,96 +1,56 @@
-From: Oleh Kravchenko <oleg@kaa.org.ua>
-Subject: Re: [PATCH v5 05/26] leds: core: Add support for composing LED class
- device names
-Date: Wed, 26 Jun 2019 23:07:15 +0300
-Message-ID: <b65ba5ea-4b79-8245-bddb-3ecf1424892f@kaa.org.ua>
-References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
- <20190609190803.14815-6-jacek.anaszewski@gmail.com>
- <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] [PATCH 1/2] ASoC: soc-core: defer card registration
+ if codec component is missing
+Date: Wed, 26 Jun 2019 23:20:22 +0200
+Message-ID: <8b4822f7-6671-1c23-572d-37f7e94ea8cc@linux.intel.com>
+References: <20190626133617.25959-1-jbrunet@baylibre.com>
+ <20190626133617.25959-2-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="d0yCGDtABOsUsagkAYEPZkKFIhs6JAL1J"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
+In-Reply-To: <20190626133617.25959-2-jbrunet@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org, pavel@ucw.cz, dmurphy@ti.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com, linux@roeck-us.net, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
+To: Jerome Brunet <jbrunet@baylibre.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---d0yCGDtABOsUsagkAYEPZkKFIhs6JAL1J
-Content-Type: multipart/mixed; boundary="LBr20YCteCuborVTrf1GiddCODPSBF69k";
- protected-headers="v1"
-From: Oleh Kravchenko <oleg@kaa.org.ua>
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>,
- linux-leds@vger.kernel.org, pavel@ucw.cz, dmurphy@ti.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- robh@kernel.org, dtor@google.com, linux@roeck-us.net,
- Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Simon Shields <simon@lineageos.org>
-Message-ID: <b65ba5ea-4b79-8245-bddb-3ecf1424892f@kaa.org.ua>
-Subject: Re: [PATCH v5 05/26] leds: core: Add support for composing LED class
- device names
-References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
- <20190609190803.14815-6-jacek.anaszewski@gmail.com>
- <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
-In-Reply-To: <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
+On 6/26/19 3:36 PM, Jerome Brunet wrote:
+> Like cpus and platforms, defer sound card initialization if the codec
+> component is missing when initializing the dai_link
+> 
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>   sound/soc/soc-core.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+> 
+> diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+> index 358f1fbf9a30..002ddbf4e5a3 100644
+> --- a/sound/soc/soc-core.c
+> +++ b/sound/soc/soc-core.c
+> @@ -1064,12 +1064,20 @@ static int soc_init_dai_link(struct snd_soc_card *card,
+>   				link->name);
+>   			return -EINVAL;
+>   		}
+> +
+>   		/* Codec DAI name must be specified */
+>   		if (!codec->dai_name) {
+>   			dev_err(card->dev, "ASoC: codec_dai_name not set for %s\n",
+>   				link->name);
+>   			return -EINVAL;
+>   		}
+> +
+> +		/*
+> +		 * Defer card registartion if codec component is not added to
 
---LBr20YCteCuborVTrf1GiddCODPSBF69k
-Content-Type: text/plain; charset=utf-8
-Content-Language: uk-UA
-Content-Transfer-Encoding: quoted-printable
+registration
 
-Hello Jacek,
-so after this patch will be merged.
-
-There will be a way to define custom function name by DeviceTree?
-
-26.06.19 22:05, Jacek Anaszewski =D0=BF=D0=B8=D1=88=D0=B5:
-> Gentle reminder.
->=20
-> Pavel, Dan - any conclusions?
->=20
-> This patch is the main part of the proposed changes,
-> so it would be good to spot any remaining issues.
->=20
-> What needs a consensus is also a new
-> Documentation/leds/led-functions.txt file I introduce
-> in the patch 26/26.
->=20
-> Best regards,
-> Jacek Anaszewski
-
---=20
-Best regards,
-Oleh Kravchenko
-
-
-
---LBr20YCteCuborVTrf1GiddCODPSBF69k--
-
---d0yCGDtABOsUsagkAYEPZkKFIhs6JAL1J
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEC/TM5t+2NenFhW0Q0xNJm20pl4wFAl0T0HcACgkQ0xNJm20p
-l4zlVw/+OPDiiXs0MqGGwsZoTDMJFF/PG0Dh8o2htgeleIMR8nIzt4sgTUlIfNQR
-f7o0Rcl1WmVOS3tC4MVlB/iwqlWliILs/+PT/cEgdHjaVUJnlqLQW5tLBbKdOyv9
-Hjb5AaSJpkbMLfPHU8FzsVe8W8LA5n3fWPw/I/PZNMNeRyWfey5rf1NnENde5R1/
-1oYoX0AFA6mCvwLkcOqGVWXnPJRFi5botDkUqJ/TgWovoCejdNa6RpfoFAarvmso
-IafiZbKkLZkdDo97yCk0YO6DAyJzpRfuXm66o4QKUsDJ97nK7cqn1dV32NgugxMA
-n71QDPklGROEqt0vsCICsuICPiA+gsuSVugY76isADLS4e4/5ozdSdgZGB8xeJUq
-EFFoa3OLrb/uKjLdvYfITz4TiCVt+ID6z6n6mGljqthS7Q/N8dj/hObp7gBZsnXm
-A6tymz6Px1l6sziiRjZh6GB4whX15idudReP4pCDOy9rZEYX+ymXGgA+lyAUoNVU
-dOWtR9uK6sdn5wboWlw8pXxgENuropBE5Va7ZplNbzdY1RuCFP1kG6xMLjhhjv3J
-gakQcJRlcHnOPx2bS8JLuHq4nJniAZpaH3DB2e3AIlIzNDrK/mtFFL5p6uVTyxzC
-HZSer1I6XoIbCckSJp+IiGeJNSSh4zppozAvC2tv3re+O65ttsc=
-=AHkY
------END PGP SIGNATURE-----
-
---d0yCGDtABOsUsagkAYEPZkKFIhs6JAL1J--
+> +		 * component list.
+> +		 */
+> +		if (!soc_find_component(codec))
+> +			return -EPROBE_DEFER;
+>   	}
+>   
+>   	/*
+> 
