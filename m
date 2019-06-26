@@ -1,60 +1,35 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: iio: frequency: Use dt-schema for
- clock-names
-Date: Wed, 26 Jun 2019 20:42:11 +0100
-Message-ID: <20190626204211.4d05ab38@archlinux>
-References: <1561389097-26075-1-git-send-email-stefan.popa@analog.com>
-        <20190625083036.jrr7kz7f6ks6nqps@flea>
+Subject: Re: [PATCH 3/4] dt-bindings: iio: frequency: Add ADF4372 PLL
+ documentation
+Date: Wed, 26 Jun 2019 20:44:19 +0100
+Message-ID: <20190626204419.5b0f56f8@archlinux>
+References: <1561389162-26291-1-git-send-email-stefan.popa@analog.com>
+        <CAL_JsqKW5qKYOXD8N=uCdoUxuw9iT+Lw-NhJuUuUPWj0dzdv-Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625083036.jrr7kz7f6ks6nqps@flea>
+In-Reply-To: <CAL_JsqKW5qKYOXD8N=uCdoUxuw9iT+Lw-NhJuUuUPWj0dzdv-Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Stefan Popa <stefan.popa@analog.com>, robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Stefan Popa <stefan.popa@analog.com>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Michael Hennerich <Michael.Hennerich@analog.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Jun 2019 10:30:36 +0200
-Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+On Wed, 26 Jun 2019 08:45:58 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
 
-> Hi,
-> 
-> On Mon, Jun 24, 2019 at 06:11:37PM +0300, Stefan Popa wrote:
-> > Dt-schema can be used for clock-names property.
+> On Mon, Jun 24, 2019 at 9:40 AM Stefan Popa <stefan.popa@analog.com> wrote:
+> >
+> > Document support for ADF4372 SPI Wideband Synthesizer.
 > >
 > > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 > > ---
-> >  Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > index d7adf074..8a2a8f6 100644
-> > --- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > @@ -27,9 +27,8 @@ properties:
-> >      maxItems: 1
-> >
-> >    clock-names:
-> > -    description:
-> > -      Must be "clkin"
-> > -    maxItems: 1
-> > +    items:
-> > +      - clkin  
+> >  Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)  
 > 
-> You can even just have const: clkin here
-> 
-Given this is fairly independent from the rest of the series, I'll plough
-on with the others and expect a v2 of this one to address Maxime's
-suggestion.
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing.
 
 Thanks,
 
 Jonathan
-
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
