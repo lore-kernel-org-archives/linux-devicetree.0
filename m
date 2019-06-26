@@ -1,113 +1,62 @@
 Return-Path: <SRS0=H+X4=UZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59513 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfFZFyL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Jun 2019 01:54:11 -0400
-Date: Wed, 26 Jun 2019 07:54:09 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH] ARM: imx25: provide a fixed regulator for usb phys
-Message-ID: <20190626055409.jjiwptyths6p6jty@pengutronix.de>
+Received: from mail-eopbgr50073.outbound.protection.outlook.com ([40.107.5.73]:61824
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726667AbfFZCks (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Jun 2019 22:40:48 -0400
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH] ARM: imx25: provide a fixed regulator for usb phys
+Date: Wed, 26 Jun 2019 02:40:04 +0000
+Message-ID: <VI1PR04MB5327E09DB0DFEB7E868DB59D8BE20@VI1PR04MB5327.eurprd04.prod.outlook.com>
 References: <20190625100412.11815-1-u.kleine-koenig@pengutronix.de>
- <VI1PR04MB5327E09DB0DFEB7E868DB59D8BE20@VI1PR04MB5327.eurprd04.prod.outlook.com>
+In-Reply-To: <20190625100412.11815-1-u.kleine-koenig@pengutronix.de>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR04MB5327E09DB0DFEB7E868DB59D8BE20@VI1PR04MB5327.eurprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Peter Chen <peter.chen@nxp.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>
+To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 19-06-26 02:40, Peter Chen wrote:
->  
-> > Subject: [PATCH] ARM: imx25: provide a fixed regulator for usb phys
-> > 
-> > The usb phys are internal to the SoC and so it their 5V supply. With this regulator
-> > added explicitly the following (harmless) boot messages go away:
-> > 
-> > 	usb_phy_generic usbphy:usb-phy@0: usbphy:usb-phy@0 supply vcc not
-> > found, using dummy regulator
-> > 	usb_phy_generic usbphy:usb-phy@1: usbphy:usb-phy@1 supply vcc not
-> > found, using dummy regulator
-> > 
-> 
-> To eliminate the warning message, I suggest doing below changes, as vcc
-> supply is not mandatory.
-> 
-> diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generic.c
-> index a53b89be5324..01a5ff1a0515 100644
-> --- a/drivers/usb/phy/phy-generic.c
-> +++ b/drivers/usb/phy/phy-generic.c
-> @@ -275,7 +275,7 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop,
->                 }   
->         }   
->  
-> -       nop->vcc = devm_regulator_get(dev, "vcc");
-> +       nop->vcc = devm_regulator_get_optional(dev, "vcc");
-
-Is the regulator optional? IMHO this shouldn't be the fix. I think the
-right fix is Uwe's approach.
-
-Regards,
-  Marco
-
->         if (IS_ERR(nop->vcc)) {
->                 dev_dbg(dev, "Error getting vcc regulator: %ld\n",
->                                         PTR_ERR(nop->vcc));
-> 
-> Peter
-> 
-> > Signed-off-by: Uwe Kleine-K�nig <u.kleine-koenig@pengutronix.de>
-> > ---
-> > Hello,
-> > 
-> > note I'm an USB noob, so please consider carefully before applying :-) I also put the
-> > regulator near the usbphy node instead of in alphabetic order. Not sure what is
-> > sensible/usual here, too.
-> > 
-> > Best regards
-> > Uwe
-> > 
-> >  arch/arm/boot/dts/imx25.dtsi | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
-> > --- a/arch/arm/boot/dts/imx25.dtsi
-> > +++ b/arch/arm/boot/dts/imx25.dtsi
-> > @@ -614,6 +614,11 @@
-> >  		};
-> >  	};
-> > 
-> > +	reg_usb: regulator_usbphy {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "usb-phy supply";
-> > +	};
-> > +
-> >  	usbphy {
-> >  		compatible = "simple-bus";
-> >  		#address-cells = <1>;
-> > @@ -623,12 +630,14 @@
-> >  			reg = <0>;
-> >  			compatible = "usb-nop-xceiv";
-> >  			#phy-cells = <0>;
-> > +			vcc-supply = <&reg_usb>;
-> >  		};
-> > 
-> >  		usbphy1: usb-phy@1 {
-> >  			reg = <1>;
-> >  			compatible = "usb-nop-xceiv";
-> >  			#phy-cells = <0>;
-> > +			vcc-supply = <&reg_usb>;
-> >  		};
-> >  	};
-> >  };
-> > --
-> > 2.20.1
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+IA0KPiBTdWJqZWN0OiBbUEFUQ0hdIEFSTTogaW14MjU6IHByb3ZpZGUgYSBmaXhlZCByZWd1bGF0
+b3IgZm9yIHVzYiBwaHlzDQo+IA0KPiBUaGUgdXNiIHBoeXMgYXJlIGludGVybmFsIHRvIHRoZSBT
+b0MgYW5kIHNvIGl0IHRoZWlyIDVWIHN1cHBseS4gV2l0aCB0aGlzIHJlZ3VsYXRvcg0KPiBhZGRl
+ZCBleHBsaWNpdGx5IHRoZSBmb2xsb3dpbmcgKGhhcm1sZXNzKSBib290IG1lc3NhZ2VzIGdvIGF3
+YXk6DQo+IA0KPiAJdXNiX3BoeV9nZW5lcmljIHVzYnBoeTp1c2ItcGh5QDA6IHVzYnBoeTp1c2It
+cGh5QDAgc3VwcGx5IHZjYyBub3QNCj4gZm91bmQsIHVzaW5nIGR1bW15IHJlZ3VsYXRvcg0KPiAJ
+dXNiX3BoeV9nZW5lcmljIHVzYnBoeTp1c2ItcGh5QDE6IHVzYnBoeTp1c2ItcGh5QDEgc3VwcGx5
+IHZjYyBub3QNCj4gZm91bmQsIHVzaW5nIGR1bW15IHJlZ3VsYXRvcg0KPiANCg0KVG8gZWxpbWlu
+YXRlIHRoZSB3YXJuaW5nIG1lc3NhZ2UsIEkgc3VnZ2VzdCBkb2luZyBiZWxvdyBjaGFuZ2VzLCBh
+cyB2Y2MNCnN1cHBseSBpcyBub3QgbWFuZGF0b3J5Lg0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy91
+c2IvcGh5L3BoeS1nZW5lcmljLmMgYi9kcml2ZXJzL3VzYi9waHkvcGh5LWdlbmVyaWMuYw0KaW5k
+ZXggYTUzYjg5YmU1MzI0Li4wMWE1ZmYxYTA1MTUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9w
+aHkvcGh5LWdlbmVyaWMuYw0KKysrIGIvZHJpdmVycy91c2IvcGh5L3BoeS1nZW5lcmljLmMNCkBA
+IC0yNzUsNyArMjc1LDcgQEAgaW50IHVzYl9waHlfZ2VuX2NyZWF0ZV9waHkoc3RydWN0IGRldmlj
+ZSAqZGV2LCBzdHJ1Y3QgdXNiX3BoeV9nZW5lcmljICpub3AsDQogICAgICAgICAgICAgICAgfSAg
+IA0KICAgICAgICB9ICAgDQogDQotICAgICAgIG5vcC0+dmNjID0gZGV2bV9yZWd1bGF0b3JfZ2V0
+KGRldiwgInZjYyIpOw0KKyAgICAgICBub3AtPnZjYyA9IGRldm1fcmVndWxhdG9yX2dldF9vcHRp
+b25hbChkZXYsICJ2Y2MiKTsNCiAgICAgICAgaWYgKElTX0VSUihub3AtPnZjYykpIHsNCiAgICAg
+ICAgICAgICAgICBkZXZfZGJnKGRldiwgIkVycm9yIGdldHRpbmcgdmNjIHJlZ3VsYXRvcjogJWxk
+XG4iLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBUUl9FUlIobm9w
+LT52Y2MpKTsNCg0KUGV0ZXINCg0KPiBTaWduZWQtb2ZmLWJ5OiBVd2UgS2xlaW5lLUvDtm5pZyA8
+dS5rbGVpbmUta29lbmlnQHBlbmd1dHJvbml4LmRlPg0KPiAtLS0NCj4gSGVsbG8sDQo+IA0KPiBu
+b3RlIEknbSBhbiBVU0Igbm9vYiwgc28gcGxlYXNlIGNvbnNpZGVyIGNhcmVmdWxseSBiZWZvcmUg
+YXBwbHlpbmcgOi0pIEkgYWxzbyBwdXQgdGhlDQo+IHJlZ3VsYXRvciBuZWFyIHRoZSB1c2JwaHkg
+bm9kZSBpbnN0ZWFkIG9mIGluIGFscGhhYmV0aWMgb3JkZXIuIE5vdCBzdXJlIHdoYXQgaXMNCj4g
+c2Vuc2libGUvdXN1YWwgaGVyZSwgdG9vLg0KPiANCj4gQmVzdCByZWdhcmRzDQo+IFV3ZQ0KPiAN
+Cj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDI1LmR0c2kgfCA5ICsrKysrKysrKw0KPiAgMSBmaWxl
+IGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL2lteDI1LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXgyNS5kdHNpDQo+IC0tLSBh
+L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI1LmR0c2kNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+aW14MjUuZHRzaQ0KPiBAQCAtNjE0LDYgKzYxNCwxMSBAQA0KPiAgCQl9Ow0KPiAgCX07DQo+IA0K
+PiArCXJlZ191c2I6IHJlZ3VsYXRvcl91c2JwaHkgew0KPiArCQljb21wYXRpYmxlID0gInJlZ3Vs
+YXRvci1maXhlZCI7DQo+ICsJCXJlZ3VsYXRvci1uYW1lID0gInVzYi1waHkgc3VwcGx5IjsNCj4g
+Kwl9Ow0KPiArDQo+ICAJdXNicGh5IHsNCj4gIAkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsN
+Cj4gIAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+IEBAIC02MjMsMTIgKzYzMCwxNCBAQA0KPiAg
+CQkJcmVnID0gPDA+Ow0KPiAgCQkJY29tcGF0aWJsZSA9ICJ1c2Itbm9wLXhjZWl2IjsNCj4gIAkJ
+CSNwaHktY2VsbHMgPSA8MD47DQo+ICsJCQl2Y2Mtc3VwcGx5ID0gPCZyZWdfdXNiPjsNCj4gIAkJ
+fTsNCj4gDQo+ICAJCXVzYnBoeTE6IHVzYi1waHlAMSB7DQo+ICAJCQlyZWcgPSA8MT47DQo+ICAJ
+CQljb21wYXRpYmxlID0gInVzYi1ub3AteGNlaXYiOw0KPiAgCQkJI3BoeS1jZWxscyA9IDwwPjsN
+Cj4gKwkJCXZjYy1zdXBwbHkgPSA8JnJlZ191c2I+Ow0KPiAgCQl9Ow0KPiAgCX07DQo+ICB9Ow0K
+PiAtLQ0KPiAyLjIwLjENCg0K
