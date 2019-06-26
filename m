@@ -1,83 +1,133 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 1/2] dt-bindings: i2c: Add MediaTek i2c AC timing binding
-Date: Wed, 26 Jun 2019 15:39:41 +0200
-Message-ID: <20190626133941.GL801@ninjato>
-References: <1560240715-22595-1-git-send-email-qii.wang@mediatek.com>
- <1560240715-22595-2-git-send-email-qii.wang@mediatek.com>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: WWAN Controller Framework (was IPA [PATCH v2 00/17])
+Date: Wed, 26 Jun 2019 08:40:11 -0500
+Message-ID: <25bb0936-686c-101b-c5a4-474ed37536aa@linaro.org>
+References: <20190531035348.7194-1-elder@linaro.org>
+ <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
+ <6dae9d1c-ceae-7e88-fe61-f4cda82820ea@linaro.org>
+ <f1243295f088b70d48e4b832a28f79c0cd84ca1c.camel@sipsolutions.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VBq/nvTu32OVLBUP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1560240715-22595-2-git-send-email-qii.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qii Wang <qii.wang@mediatek.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, matthias.bgg@gmail.com, robh+dt@kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <f1243295f088b70d48e4b832a28f79c0cd84ca1c.camel@sipsolutions.net>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Johannes Berg <johannes@sipsolutions.net>, davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org, Dan Williams <dcbw@redhat.com>
+Cc: evgreen@chromium.org, benchan@google.com, ejcaruso@google.com, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 6/25/19 9:34 AM, Johannes Berg wrote:
+> On Mon, 2019-06-24 at 12:06 -0500, Alex Elder wrote:
+> 
+>>> OK I want to try to organize a little more concisely some of the
+>>> discussion on this, because there is a very large amount of volume
+>>> to date and I think we need to try to narrow the focus back down
+>>> again.
+> 
+> Sounds good to me!
 
---VBq/nvTu32OVLBUP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+. . .
 
-Hi,
+>>> - A WWAN unit shall implement a *WWAN control function*, used to
+>>>   manage the use of other WWAN functions, as well as the WWAN unit
+>>>   itself.
+> 
+> I think here we need to be more careful. I don't know how you want to
+> call it, but we actually have multiple levels of control here.
 
-On Tue, Jun 11, 2019 at 04:11:54PM +0800, Qii Wang wrote:
-> Add i2c AC timing binding to binding file. It can give the AC
-> timing parameters to meet I2C specification at different speed.
->=20
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+I completely agree with you.  From what I understand there exists
+a control channel (or even more than one?) that serves a very
+specific purpose in modem management.  The main reason I mention
+the WWAN control function is that someone (maybe you) indicated
+that a control channel automatically gets created.
 
-I think this is a too specific 1:1 mapping of your register set into DT
-world. We already have these generic parameters:
+But I agree, we need to be careful to avoid confusion here.
 
-- clock-frequency
-        frequency of bus clock in Hz.
+> You have
+>  * hardware control, to control how you actually use the (multiple or
+>    not) physical communication channel(s) to the WWAN unit
+>  * this is partially exposed to userspace via the WWAN netlink family or
+>    something like that, so userspace can create new netdevs to tx/rx
+>    with the "data function" and to the network; note that it could be
+>    one or multiple
+>  * WWAN control, which is typically userspace communicating with the
+>    WWAN control function in the WWAN unit, but this can take different
+>    forms (as I mentioned earlier, e.g. AT commands, MBIM, QMI)
+> 
+>>> - The AP communicates with a WWAN function using a WWAN protocol.
+> 
+> Right, that's just device specific (IPA vs. Intel vs. ...)
+> 
+>>> - A WWAN physical channel can be *multiplexed*, in which case it
+>>>   carries the data for one or more *WWAN logical channels*.
+> 
+> This ... depends a bit on how you exactly define a physical channel
+> here. Is that, to you, the PCIe/USB link? In that case, yes, obviously
+> you have only one physical channel for each WWAN unit.
 
-- i2c-scl-falling-time-ns
-        Number of nanoseconds the SCL signal takes to fall; t(f) in the I2C
-        specification.
+I think that was what I was trying to capture.  There exists
+one or more "physical" communication paths between the AP
+and WWAN unit/modem.  And while one path *could* carry just
+one type of traffic, it could also carry multiple logical
+channels of traffic by multiplexing.
 
-- i2c-scl-internal-delay-ns
-        Number of nanoseconds the IP core additionally needs to setup SCL.
+> However, I'd probably see this slightly differently, because e.g. the
+> Intel modem has multiple DMA engines, and so you actually have multiple
+> DMA rings to talk to the WWAN unit, and I'd have called each DMA ring a
+> physical channel. And then, you just have a 1:1 from physical to logical
+> channel since it doesn't actually carry a multiplexing protocol.
 
-- i2c-scl-rising-time-ns
-        Number of nanoseconds the SCL signal takes to rise; t(r) in the I2C
-        specification.
+Understood.
 
-- i2c-sda-falling-time-ns
-        Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
-        specification.
+. . .
 
-(check Documentation/devicetree/bindings/i2c/i2c.txt)
+> I only disagree slightly on the control planes (there are multiple, and
+> multiple options for the "Control function" one), and on the whole
+> notion of physical link/logical link/multiplexing which is device
+> specific.
+> 
+>>> And if I understand it right, the purpose of the generic framework
+>>> being discussed is to define a common mechanism for managing (i.e.,
+>>> discovering, creating, destroying, querying, configuring, enabling,
+>>> disabling, etc.) WWAN units and the functions they implement, along
+>>> with the communication and logical channels used to communicate with
+>>> them.
+> 
+> Well, some subset of that matrix, the framework won't actually destroy
+> WWAN units I hope ;-)
 
-Can't you use those to derive your values from that? Which ones are you mis=
-sing
-if not?
+Hardware self-destruct would be an optional behavior.
 
-Regards,
+> But yes. I'd probably captured it in layers, and say that we have a
+> 
+> WWAN framework layer
+>  - discover, query, configure WWAN units
+>  - enable, disable channels to the functions inside the WWAN units
+> 
+> WWAN device driver
+>  - implement (partial) API offered by WWAN framework layer to allow
+>    these things
+>    (sometimes may not allow creating more control or data channels for
+>    example, and fixed function channels are precreated, but then can
+>    still discover data about the device and configure the channels
+>  - implement the device-specific protocols etc. necessary to achieve
+>    this
+> 
+> Userspace
+>  - uses control function channel (e.g. TTY) to talk directly to the WWAN
+>    unit's control function
+>  - uses WWAN framework APIs to create/configure/... (other) function
+>    channels
+>    (it may be necessary to create a control channel even, before being
+>    able to use it, since different options (AT/MBIM/QMI) may be there
+>  - configures netdevs (data function channels) after their creation
 
-   Wolfram
+I don't think I have any argument with this.  I'm going to try to
+put together something that goes beyond what I wrote in this message,
+to try to capture what I think we agree on in a sort of loose design
+document.
 
---VBq/nvTu32OVLBUP
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks Johannes.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0TdZ0ACgkQFA3kzBSg
-KbYdwg//dQgqHhmthL0M3JNNdA09iWqGwQ9bMoPtMtoM/+hklFt9CRstWC+xJM/Z
-R0urToI6NYfU6uUHLyk/Rm+qLRpxjdm49flzF/e0MbEEwW1xXifpbQJOK5Dcwb1w
-qRI46Nb8IjHa3+P6az+WgHlKg/1xURj5oPnVgbl/vNsxXbdubtpYUlOm10WROnNE
-vx+ge9+OzERZ2KhNkOWbvx3szlBE5KF183VZVfXYvYnR4X0Uz8LJt1H90o9ointF
-5dXC/UzCOBOkyp5lL4KqbDTcoSeaTEWkAnt3tKnyXig+vgK1O/aeOdAENd4m2xsh
-1kfdlwXrACKg5zUN5jUPF4KF9r0+YI2GJZHgyxqmzuWabRd9F1o+rXvKwintgJ0L
-Ffb9SOLW7fqDVJKBCOkFOglJZUOWxeU6TfsQWYwNhYorI0HcJ+EcQR4195ZyhtD3
-zEEpeh6Qpxk+maQyvO9NzBd7+HLLEUqHQZWTsOctYucIyLbpolJ2Iq6V9LasLiwO
-U5N29cEdhN/YLXC+aAzBu9iJlPc2C+blG99j80l3D/uDY42G0cHXkThzgDSSTEmx
-lIz41aICZKF/3RHgbSz7yEKH5ulFOvd8qFz5Yn2nQQEHKzm/sN1XU0o3VgWIEnbN
-byFUoWjaiu3xM0xFmKf5WtZ0qpRM0y5VIUO27JwSkBREDVJ7QV4=
-=h1Pk
------END PGP SIGNATURE-----
-
---VBq/nvTu32OVLBUP--
+					-Alex
