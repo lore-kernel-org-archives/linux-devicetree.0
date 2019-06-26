@@ -1,684 +1,820 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 3/5] perf: stm32: ddrperfm driver creation
-Date: Wed, 26 Jun 2019 13:25:24 +0100
-Message-ID: <20190626122524.GA20635@lakrids.cambridge.arm.com>
-References: <1558366019-24214-1-git-send-email-gerald.baeza@st.com>
- <1558366019-24214-4-git-send-email-gerald.baeza@st.com>
- <20190626122228.GB20313@lakrids.cambridge.arm.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v10.1 3/6] regulator: rk808: add RK809 and RK817 support.
+Date: Wed, 26 Jun 2019 14:29:18 +0200
+Message-ID: <2530880.ZKY9jcxCHy@phil>
+References: <20190621103258.8154-1-tony.xie@rock-chips.com> <20190621103258.8154-4-tony.xie@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190626122228.GB20313@lakrids.cambridge.arm.com>
+In-Reply-To: <20190621103258.8154-4-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gerald BAEZA <gerald.baeza@st.com>
-Cc: Will Deacon <Will.Deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "corbet@lwn.net" <corbet@lwn.net>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "olof@lixom.net" <olof@lixom.net>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+To: Tony Xie <tony.xie@rock-chips.com>
+Cc: broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+    Add support for the rk809 and rk817 regulator driver.
+    Their specifications are as follows：
+    1. The RK809 and RK809 consist of 5 DCDCs, 9 LDOs
+       and have the same registers for these components except dcdc5.
+    2. The dcdc5 is a boost dcdc for RK817 and is a buck for RK809.
+    3. The RK817 has one switch but The Rk809 has two.
 
-Sorry for the (quite horrific) mangling my mailserver has inflicted via
-my reply. Obviously, the confidentiality disclaimer is bogus, too.
+    The output voltages are configurable and are meant to supply power
+    to the main processor and other components.
 
-I'll make sure I use the right SMTP server in future.
+Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Mark Brown <broonie@kernel.org>
+[rebased on top of 5.2-rc1]
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+Hi Lee,
 
-Mark.
+to maybe help that along as Tony is probably asleep right now,
+I just did the rebase of this patch on top of 5.2-rc1 .
 
-On Wed, Jun 26, 2019 at 12:22:31PM +0000, Mark Rutland wrote:
-> On Mon, May 20, 2019 at 03:27:17PM +0000, Gerald BAEZA wrote:
-> > The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1 SOC.
-> >
-> > This perf drivers supports the read, write, activate, idle and total
-> > time counters, described in the reference manual RM0436.
-> 
-> Is this document publicly accessible anywhere?
-> 
-> If so, could you please provide a link?
-> 
-> > A 'bandwidth' attribute is added in the 'ddrperfm' event_source in order
-> > to directly get the read and write bandwidths (in MB/s), from the last
-> > read, write and total time counters reading.
-> > This attribute is aside the 'events' attributes group because it is not
-> > a counter, as seen by perf tool.
-> 
-> This should be removed. This is unusually stateful, and this can be
-> calculated in userspace by using the events. I'm also not keen on
-> creating a precedent for weird sysfs bits for PMUs.
-> 
-> > Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
-> > ---
-> >  drivers/perf/Kconfig         |   6 +
-> >  drivers/perf/Makefile        |   1 +
-> >  drivers/perf/stm32_ddr_pmu.c | 512 +++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 519 insertions(+)
-> >  create mode 100644 drivers/perf/stm32_ddr_pmu.c
-> >
-> > diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-> > index a94e586..9add8a7 100644
-> > --- a/drivers/perf/Kconfig
-> > +++ b/drivers/perf/Kconfig
-> > @@ -105,6 +105,12 @@ config THUNDERX2_PMU
-> >     The SoC has PMU support in its L3 cache controller (L3C) and
-> >     in the DDR4 Memory Controller (DMC).
-> >
-> > +config STM32_DDR_PMU
-> > +       tristate "STM32 DDR PMU"
-> > +       depends on MACH_STM32MP157
-> > +       help
-> > +         Support for STM32 DDR performance monitor (DDRPERFM).
-> > +
-> >  config XGENE_PMU
-> >          depends on ARCH_XGENE
-> >          bool "APM X-Gene SoC PMU"
-> > diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
-> > index 3048994..fa64719 100644
-> > --- a/drivers/perf/Makefile
-> > +++ b/drivers/perf/Makefile
-> > @@ -8,6 +8,7 @@ obj-$(CONFIG_ARM_SMMU_V3_PMU) += arm_smmuv3_pmu.o
-> >  obj-$(CONFIG_HISI_PMU) += hisilicon/
-> >  obj-$(CONFIG_QCOM_L2_PMU)+= qcom_l2_pmu.o
-> >  obj-$(CONFIG_QCOM_L3_PMU) += qcom_l3_pmu.o
-> > +obj-$(CONFIG_STM32_DDR_PMU) += stm32_ddr_pmu.o
-> >  obj-$(CONFIG_THUNDERX2_PMU) += thunderx2_pmu.o
-> >  obj-$(CONFIG_XGENE_PMU) += xgene_pmu.o
-> >  obj-$(CONFIG_ARM_SPE_PMU) += arm_spe_pmu.o
-> > diff --git a/drivers/perf/stm32_ddr_pmu.c b/drivers/perf/stm32_ddr_pmu.c
-> > new file mode 100644
-> > index 0000000..ae4a813
-> > --- /dev/null
-> > +++ b/drivers/perf/stm32_ddr_pmu.c
-> > @@ -0,0 +1,512 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * This file is the STM32 DDR performance monitor (DDRPERFM) driver
-> > + *
-> > + * Copyright (C) 2019, STMicroelectronics - All Rights Reserved
-> > + * Author: Gerald Baeza <gerald.baeza@st.com>
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/hrtimer.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/perf_event.h>
-> > +#include <linux/reset.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/types.h>
-> > +
-> > +#define POLL_MS4000/* The counter roll over after ~8s @533MHz */
-> 
-> I take it this is because there's no IRQ? If so, please expand the
-> comment to call that out, e.g.
-> 
-> /*
->  * The PMU has no overflow IRQ, so we must poll to avoid losing events.
->  * The fastest counter can overflow in ~8s @533MHz, so we poll in 4s
->  * intervals to ensure we don't miss a rollover.
->  */
-> #define POLL_MS4000
-> 
-> Which clock specifically is operating at 533MHz, and is this something
-> that may vary? Is it possible that this may go higher in future?
-> 
-> > +#define WORD_LENGTH4/* Bytes */
-> > +#define BURST_LENGTH8/* Words */
-> > +
-> > +#define DDRPERFM_CTL0x000
-> > +#define DDRPERFM_CFG0x004
-> > +#define DDRPERFM_STATUS 0x008
-> > +#define DDRPERFM_CCR0x00C
-> > +#define DDRPERFM_IER0x010
-> > +#define DDRPERFM_ISR0x014
-> > +#define DDRPERFM_ICR0x018
-> > +#define DDRPERFM_TCNT0x020
-> > +#define DDRPERFM_CNT(X)(0x030 + 8 * (X))
-> > +#define DDRPERFM_HWCFG0x3F0
-> > +#define DDRPERFM_VER0x3F4
-> > +#define DDRPERFM_ID0x3F8
-> > +#define DDRPERFM_SID0x3FC
-> > +
-> > +#define CTL_START0x00000001
-> > +#define CTL_STOP0x00000002
-> > +#define CCR_CLEAR_ALL0x8000000F
-> > +#define SID_MAGIC_ID0xA3C5DD01
-> > +
-> > +#define STRING "Read = %llu, Write = %llu, Read & Write = %llu (MB/s)\n"
-> 
-> If you need this, please expand it in-place. As-is, this is needless
-> obfuscation.
-> 
-> > +
-> > +enum {
-> > +READ_CNT,
-> > +WRITE_CNT,
-> > +ACTIVATE_CNT,
-> > +IDLE_CNT,
-> > +TIME_CNT,
-> > +PMU_NR_COUNTERS
-> > +};
-> 
-> I take it these are fixed-purpose counters in the hardware?
-> 
-> > +
-> > +struct stm32_ddr_pmu {
-> > +struct pmu pmu;
-> > +void __iomem *membase;
-> > +struct clk *clk;
-> > +struct clk *clk_ddr;
-> > +unsigned long clk_ddr_rate;
-> > +struct hrtimer hrtimer;
-> > +ktime_t poll_period;
-> > +spinlock_t lock; /* for shared registers access */
-> 
-> All accesses to a PMU instance should be serialized on the same CPU,
-> so you shouldn't need a lock (though you will need to disable IRQs to
-> serialize with the interrupt handler).
-> 
-> The perf subsystem cannot sanely access the PMU across multiple CPUs.
-> 
-> > +struct perf_event *events[PMU_NR_COUNTERS];
-> > +u64 events_cnt[PMU_NR_COUNTERS];
-> > +};
-> > +
-> > +static inline struct stm32_ddr_pmu *pmu_to_stm32_ddr_pmu(struct pmu *p)
-> > +{
-> > +return container_of(p, struct stm32_ddr_pmu, pmu);
-> > +}
-> > +
-> > +static inline struct stm32_ddr_pmu *hrtimer_to_stm32_ddr_pmu(struct hrtimer *h)
-> > +{
-> > +return container_of(h, struct stm32_ddr_pmu, hrtimer);
-> > +}
-> > +
-> > +static u64 stm32_ddr_pmu_compute_bw(struct stm32_ddr_pmu *stm32_ddr_pmu,
-> > +    int counter)
-> > +{
-> > +u64 bw = stm32_ddr_pmu->events_cnt[counter], tmp;
-> > +u64 div = stm32_ddr_pmu->events_cnt[TIME_CNT];
-> > +u32 prediv = 1, premul = 1;
-> > +
-> > +if (bw && div) {
-> > +/* Maximize the dividend into 64 bits */
-> > +while ((bw < 0x8000000000000000ULL) &&
-> > +       (premul < 0x40000000UL)) {
-> > +bw = bw << 1;
-> > +premul *= 2;
-> > +}
-> > +/* Minimize the dividor to fit in 32 bits */
-> > +while ((div > 0xffffffffUL) && (prediv < 0x40000000UL)) {
-> > +div = div >> 1;
-> > +prediv *= 2;
-> > +}
-> > +/* Divide counter per time and multiply per DDR settings */
-> > +do_div(bw, div);
-> > +tmp = bw * BURST_LENGTH * WORD_LENGTH;
-> > +tmp *= stm32_ddr_pmu->clk_ddr_rate;
-> > +if (tmp < bw)
-> > +goto error;
-> > +bw = tmp;
-> > +/* Cancel the prediv and premul factors */
-> > +while (prediv > 1) {
-> > +bw = bw >> 1;
-> > +prediv /= 2;
-> > +}
-> > +while (premul > 1) {
-> > +bw = bw >> 1;
-> > +premul /= 2;
-> > +}
-> > +/* Convert MHz to Hz and B to MB, to finally get MB/s */
-> > +tmp = bw * 1000000;
-> > +if (tmp < bw)
-> > +goto error;
-> > +bw = tmp;
-> > +premul = 1024 * 1024;
-> > +while (premul > 1) {
-> > +bw = bw >> 1;
-> > +premul /= 2;
-> > +}
-> > +}
-> > +return bw;
-> > +
-> > +error:
-> > +pr_warn("stm32-ddr-pmu: overflow detected\n");
-> > +return 0;
-> > +}
-> 
-> IIUC this is for the stateful sysfs stuff, which should be removed.
-> 
-> > +
-> > +static void stm32_ddr_pmu_event_configure(struct perf_event *event)
-> > +{
-> > +struct stm32_ddr_pmu *stm32_ddr_pmu = pmu_to_stm32_ddr_pmu(event->pmu);
-> > +unsigned long lock_flags, config_base = event->hw.config_base;
-> > +u32 val;
-> > +
-> > +spin_lock_irqsave(&stm32_ddr_pmu->lock, lock_flags);
-> > +writel_relaxed(CTL_STOP, stm32_ddr_pmu->membase + DDRPERFM_CTL);
-> > +
-> > +if (config_base < TIME_CNT) {
-> > +val = readl_relaxed(stm32_ddr_pmu->membase + DDRPERFM_CFG);
-> > +val |= (1 << config_base);
-> > +writel_relaxed(val, stm32_ddr_pmu->membase + DDRPERFM_CFG);
-> > +}
-> > +spin_unlock_irqrestore(&stm32_ddr_pmu->lock, lock_flags);
-> > +}
-> 
-> You don't need the lock here. This is called from your pmu::{start,add}
-> callbacks, and the perf core already ensures those are serialized (via
-> the context lock), and called with IRQs disabled.
-> 
-> > +
-> > +static void stm32_ddr_pmu_event_read(struct perf_event *event)
-> > +{
-> > +struct stm32_ddr_pmu *stm32_ddr_pmu = pmu_to_stm32_ddr_pmu(event->pmu);
-> > +unsigned long flags, config_base = event->hw.config_base;
-> > +struct hw_perf_event *hw = &event->hw;
-> > +u64 prev_count, new_count, mask;
-> > +u32 val, offset, bit;
-> > +
-> > +spin_lock_irqsave(&stm32_ddr_pmu->lock, flags);
-> > +
-> > +writel_relaxed(CTL_STOP, stm32_ddr_pmu->membase + DDRPERFM_CTL);
-> > +
-> > +if (config_base == TIME_CNT) {
-> > +offset = DDRPERFM_TCNT;
-> > +bit = 1 << 31;
-> > +} else {
-> > +offset = DDRPERFM_CNT(config_base);
-> > +bit = 1 << config_base;
-> > +}
-> > +val = readl_relaxed(stm32_ddr_pmu->membase + DDRPERFM_STATUS);
-> > +if (val & bit)
-> > +pr_warn("stm32_ddr_pmu hardware overflow\n");
-> > +val = readl_relaxed(stm32_ddr_pmu->membase + offset);
-> > +writel_relaxed(bit, stm32_ddr_pmu->membase + DDRPERFM_CCR);
-> > +writel_relaxed(CTL_START, stm32_ddr_pmu->membase + DDRPERFM_CTL);
-> > +
-> > +do {
-> > +prev_count = local64_read(&hw->prev_count);
-> > +new_count = prev_count + val;
-> > +} while (local64_xchg(&hw->prev_count, new_count) != prev_count);
-> > +
-> > +mask = GENMASK_ULL(31, 0);
-> > +local64_add(val & mask, &event->count);
-> > +
-> > +if (new_count < prev_count)
-> > +pr_warn("STM32 DDR PMU counter saturated\n");
-> 
-> Do the counter saturate, or do they roll-over?
-> 
-> I think that the message is misleading here, but I just want to check.
-> 
-> > +
-> > +spin_unlock_irqrestore(&stm32_ddr_pmu->lock, flags);
-> > +}
-> > +
-> > +static void stm32_ddr_pmu_event_start(struct perf_event *event, int flags)
-> > +{
-> > +struct stm32_ddr_pmu *stm32_ddr_pmu = pmu_to_stm32_ddr_pmu(event->pmu);
-> > +struct hw_perf_event *hw = &event->hw;
-> > +unsigned long lock_flags;
-> > +
-> > +if (WARN_ON_ONCE(!(hw->state & PERF_HES_STOPPED)))
-> > +return;
-> > +
-> > +if (flags & PERF_EF_RELOAD)
-> > +WARN_ON_ONCE(!(hw->state & PERF_HES_UPTODATE));
-> > +
-> > +stm32_ddr_pmu_event_configure(event);
-> > +
-> > +/* Clear all counters to synchronize them, then start */
-> > +spin_lock_irqsave(&stm32_ddr_pmu->lock, lock_flags);
-> > +writel_relaxed(CCR_CLEAR_ALL, stm32_ddr_pmu->membase + DDRPERFM_CCR);
-> > +writel_relaxed(CTL_START, stm32_ddr_pmu->membase + DDRPERFM_CTL);
-> > +spin_unlock_irqrestore(&stm32_ddr_pmu->lock, lock_flags);
-> 
-> By 'clear' do you mean set the counters to zero?
-> 
-> Or is there a control bit that determine whether they count?
-> 
-> If we're updating the counter, we could update prev_count at the same
-> instant.
-> 
-> > +
-> > +hw->state = 0;
-> > +}
-> > +
-> > +static void stm32_ddr_pmu_event_stop(struct perf_event *event, int flags)
-> > +{
-> > +struct stm32_ddr_pmu *stm32_ddr_pmu = pmu_to_stm32_ddr_pmu(event->pmu);
-> > +unsigned long lock_flags, config_base = event->hw.config_base;
-> > +struct hw_perf_event *hw = &event->hw;
-> > +u32 val, bit;
-> > +
-> > +if (WARN_ON_ONCE(hw->state & PERF_HES_STOPPED))
-> > +return;
-> > +
-> > +spin_lock_irqsave(&stm32_ddr_pmu->lock, lock_flags);
-> > +writel_relaxed(CTL_STOP, stm32_ddr_pmu->membase + DDRPERFM_CTL);
-> > +if (config_base == TIME_CNT)
-> > +bit = 1 << 31;
-> > +else
-> > +bit = 1 << config_base;
-> > +writel_relaxed(bit, stm32_ddr_pmu->membase + DDRPERFM_CCR);
-> > +if (config_base < TIME_CNT) {
-> > +val = readl_relaxed(stm32_ddr_pmu->membase + DDRPERFM_CFG);
-> > +val &= ~bit;
-> > +writel_relaxed(val, stm32_ddr_pmu->membase + DDRPERFM_CFG);
-> > +}
-> > +spin_unlock_irqrestore(&stm32_ddr_pmu->lock, lock_flags);
-> > +
-> > +hw->state |= PERF_HES_STOPPED;
-> > +
-> > +if (flags & PERF_EF_UPDATE) {
-> > +stm32_ddr_pmu_event_read(event);
-> > +hw->state |= PERF_HES_UPTODATE;
-> > +}
-> > +}
-> > +
-> > +static int stm32_ddr_pmu_event_add(struct perf_event *event, int flags)
-> > +{
-> > +struct stm32_ddr_pmu *stm32_ddr_pmu = pmu_to_stm32_ddr_pmu(event->pmu);
-> > +unsigned long config_base = event->hw.config_base;
-> > +struct hw_perf_event *hw = &event->hw;
-> > +
-> > +stm32_ddr_pmu->events_cnt[config_base] = 0;
-> > +stm32_ddr_pmu->events[config_base] = event;
-> > +
-> > +clk_enable(stm32_ddr_pmu->clk);
-> > +hrtimer_start(&stm32_ddr_pmu->hrtimer, stm32_ddr_pmu->poll_period,
-> > +      HRTIMER_MODE_REL);
-> > +
-> > +stm32_ddr_pmu_event_configure(event);
-> > +
-> > +hw->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
-> > +
-> > +if (flags & PERF_EF_START)
-> > +stm32_ddr_pmu_event_start(event, 0);
-> > +
-> > +return 0;
-> > +}
-> > +
-> > +static void stm32_ddr_pmu_event_del(struct perf_event *event, int flags)
-> > +{
-> > +struct stm32_ddr_pmu *stm32_ddr_pmu = pmu_to_stm32_ddr_pmu(event->pmu);
-> > +unsigned long config_base = event->hw.config_base;
-> > +bool stop = true;
-> > +int i;
-> > +
-> > +stm32_ddr_pmu_event_stop(event, PERF_EF_UPDATE);
-> > +
-> > +stm32_ddr_pmu->events_cnt[config_base] += local64_read(&event->count);
-> > +stm32_ddr_pmu->events[config_base] = NULL;
-> > +
-> > +for (i = 0; i < PMU_NR_COUNTERS; i++)
-> > +if (stm32_ddr_pmu->events[i])
-> > +stop = false;
-> > +if (stop)
-> > +hrtimer_cancel(&stm32_ddr_pmu->hrtimer);
-> > +
-> > +clk_disable(stm32_ddr_pmu->clk);
-> 
-> This doesn't look right. If I add two events A and B, then delete event
-> A, surely we want the clock on for event B?
-> 
-> Does the clock only affect whether the counters count, or does it also
-> affect whether the register file is usable?
-> 
-> > +}
-> > +
-> > +static int stm32_ddr_pmu_event_init(struct perf_event *event)
-> > +{
-> > +struct hw_perf_event *hw = &event->hw;
-> > +
-> > +if (is_sampling_event(event))
-> > +return -EINVAL;
-> > +
-> > +if (event->attach_state & PERF_ATTACH_TASK)
-> > +return -EINVAL;
-> > +
-> > +if (event->attr.exclude_user   ||
-> > +    event->attr.exclude_kernel ||
-> > +    event->attr.exclude_hv     ||
-> > +    event->attr.exclude_idle   ||
-> > +    event->attr.exclude_host   ||
-> > +    event->attr.exclude_guest)
-> > +return -EINVAL;
-> > +
-> > +if (event->cpu < 0)
-> > +return -EINVAL;
-> 
-> For a system PMU like this, you must ensure that all events are assigned
-> to the same CPU.
-> 
-> You'll need to designate some arbitrary CPU to mange the PMU, expose
-> that under sysfs, and upon hotplug events you must choose a new CPU and
-> migrate existing events.
-> 
-> For a simple example, see arch/arm/mm/cache-l2x0-pmu.c.
-> 
-> > +
-> > +hw->config_base = event->attr.config;
-> > +
-> > +return 0;
-> > +}
-> > +
-> > +static enum hrtimer_restart stm32_ddr_pmu_poll(struct hrtimer *hrtimer)
-> > +{
-> > +struct stm32_ddr_pmu *stm32_ddr_pmu = hrtimer_to_stm32_ddr_pmu(hrtimer);
-> > +int i;
-> > +
-> > +for (i = 0; i < PMU_NR_COUNTERS; i++)
-> > +if (stm32_ddr_pmu->events[i])
-> > +stm32_ddr_pmu_event_read(stm32_ddr_pmu->events[i]);
-> > +
-> > +hrtimer_forward_now(hrtimer, stm32_ddr_pmu->poll_period);
-> > +
-> > +return HRTIMER_RESTART;
-> > +}
-> > +
-> > +static ssize_t stm32_ddr_pmu_sysfs_show(struct device *dev,
-> > +struct device_attribute *attr,
-> > +char *buf)
-> > +{
-> > +struct dev_ext_attribute *eattr;
-> > +
-> > +eattr = container_of(attr, struct dev_ext_attribute, attr);
-> > +
-> > +return sprintf(buf, "config=0x%lx\n", (unsigned long)eattr->var);
-> > +}
-> > +
-> > +static ssize_t bandwidth_show(struct device *dev,
-> > +      struct device_attribute *attr,
-> > +      char *buf)
-> > +{
-> > +struct stm32_ddr_pmu *stm32_ddr_pmu = dev_get_drvdata(dev);
-> > +u64 r_bw, w_bw;
-> > +int ret;
-> > +
-> > +if (stm32_ddr_pmu->events_cnt[TIME_CNT]) {
-> > +r_bw = stm32_ddr_pmu_compute_bw(stm32_ddr_pmu, READ_CNT);
-> > +w_bw = stm32_ddr_pmu_compute_bw(stm32_ddr_pmu, WRITE_CNT);
-> > +
-> > +ret = snprintf(buf, PAGE_SIZE, STRING,
-> > +       r_bw, w_bw, (r_bw + w_bw));
-> > +} else {
-> > +ret = snprintf(buf, PAGE_SIZE, "No data available\n");
-> > +}
-> > +
-> > +return ret;
-> > +}
-> 
-> As commented above, this should not be exposed under sysfs. It doesn't
-> follow the usual ABI rules, it's weirdly stateful, and it's redundant.
-> 
-> > +
-> > +#define STM32_DDR_PMU_ATTR(_name, _func, _config)\
-> > +(&((struct dev_ext_attribute[]) {\
-> > +{ __ATTR(_name, 0444, _func, NULL), (void *)_config }   \
-> > +})[0].attr.attr)
-> > +
-> > +#define STM32_DDR_PMU_EVENT_ATTR(_name, _config)\
-> > +STM32_DDR_PMU_ATTR(_name, stm32_ddr_pmu_sysfs_show,\
-> > +   (unsigned long)_config)
-> > +
-> > +static struct attribute *stm32_ddr_pmu_event_attrs[] = {
-> > +STM32_DDR_PMU_EVENT_ATTR(read_cnt, READ_CNT),
-> > +STM32_DDR_PMU_EVENT_ATTR(write_cnt, WRITE_CNT),
-> > +STM32_DDR_PMU_EVENT_ATTR(activate_cnt, ACTIVATE_CNT),
-> > +STM32_DDR_PMU_EVENT_ATTR(idle_cnt, IDLE_CNT),
-> > +STM32_DDR_PMU_EVENT_ATTR(time_cnt, TIME_CNT),
-> > +NULL
-> > +};
-> > +
-> > +static DEVICE_ATTR_RO(bandwidth);
-> > +static struct attribute *stm32_ddr_pmu_bandwidth_attrs[] = {
-> > +&dev_attr_bandwidth.attr,
-> > +NULL,
-> > +};
-> > +
-> > +static struct attribute_group stm32_ddr_pmu_event_attrs_group = {
-> > +.name = "events",
-> > +.attrs = stm32_ddr_pmu_event_attrs,
-> > +};
-> > +
-> > +static struct attribute_group stm32_ddr_pmu_bandwidth_attrs_group = {
-> > +.attrs = stm32_ddr_pmu_bandwidth_attrs,
-> > +};
-> > +
-> > +static const struct attribute_group *stm32_ddr_pmu_attr_groups[] = {
-> > +&stm32_ddr_pmu_event_attrs_group,
-> > +&stm32_ddr_pmu_bandwidth_attrs_group,
-> > +NULL,
-> > +};
-> > +
-> > +static int stm32_ddr_pmu_device_probe(struct platform_device *pdev)
-> > +{
-> > +struct stm32_ddr_pmu *stm32_ddr_pmu;
-> > +struct reset_control *rst;
-> > +struct resource *res;
-> > +int i, ret;
-> > +u32 val;
-> > +
-> > +stm32_ddr_pmu = devm_kzalloc(&pdev->dev, sizeof(struct stm32_ddr_pmu),
-> > +     GFP_KERNEL);
-> > +if (!stm32_ddr_pmu)
-> > +return -ENOMEM;
-> > +platform_set_drvdata(pdev, stm32_ddr_pmu);
-> > +
-> > +res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +stm32_ddr_pmu->membase = devm_ioremap_resource(&pdev->dev, res);
-> > +if (IS_ERR(stm32_ddr_pmu->membase)) {
-> > +pr_warn("Unable to get STM32 DDR PMU membase\n");
-> > +return PTR_ERR(stm32_ddr_pmu->membase);
-> > +}
-> > +
-> > +stm32_ddr_pmu->clk = devm_clk_get(&pdev->dev, "bus");
-> > +if (IS_ERR(stm32_ddr_pmu->clk)) {
-> > +pr_warn("Unable to get STM32 DDR PMU clock\n");
-> > +return PTR_ERR(stm32_ddr_pmu->clk);
-> > +}
-> > +
-> > +ret = clk_prepare_enable(stm32_ddr_pmu->clk);
-> > +if (ret) {
-> > +pr_warn("Unable to prepare STM32 DDR PMU clock\n");
-> > +return ret;
-> > +}
-> > +
-> > +stm32_ddr_pmu->clk_ddr = devm_clk_get(&pdev->dev, "ddr");
-> > +if (IS_ERR(stm32_ddr_pmu->clk_ddr)) {
-> > +pr_warn("Unable to get STM32 DDR clock\n");
-> > +return PTR_ERR(stm32_ddr_pmu->clk_ddr);
-> > +}
-> > +stm32_ddr_pmu->clk_ddr_rate = clk_get_rate(stm32_ddr_pmu->clk_ddr);
-> > +stm32_ddr_pmu->clk_ddr_rate /= 1000000;
-> > +
-> > +stm32_ddr_pmu->poll_period = ms_to_ktime(POLL_MS);
-> > +hrtimer_init(&stm32_ddr_pmu->hrtimer, CLOCK_MONOTONIC,
-> > +     HRTIMER_MODE_REL);
-> > +stm32_ddr_pmu->hrtimer.function = stm32_ddr_pmu_poll;
-> > +spin_lock_init(&stm32_ddr_pmu->lock);
-> > +
-> > +for (i = 0; i < PMU_NR_COUNTERS; i++) {
-> > +stm32_ddr_pmu->events[i] = NULL;
-> > +stm32_ddr_pmu->events_cnt[i] = 0;
-> > +}
-> > +
-> > +val = readl_relaxed(stm32_ddr_pmu->membase + DDRPERFM_SID);
-> > +if (val != SID_MAGIC_ID)
-> > +return -EINVAL;
-> > +
-> > +stm32_ddr_pmu->pmu = (struct pmu) {
-> > +.task_ctx_nr = perf_invalid_context,
-> > +.start = stm32_ddr_pmu_event_start,
-> > +.stop = stm32_ddr_pmu_event_stop,
-> > +.add = stm32_ddr_pmu_event_add,
-> > +.del = stm32_ddr_pmu_event_del,
-> > +.event_init = stm32_ddr_pmu_event_init,
-> > +.attr_groups = stm32_ddr_pmu_attr_groups,
-> > +};
-> > +ret = perf_pmu_register(&stm32_ddr_pmu->pmu, "ddrperfm", -1);
-> 
-> Please give this a better name. The usual convention is to use "_pmu" as
-> the suffix, so we should use that rather than "perfm".
-> 
-> To be unambiguous, something like "stm32_ddr_pmu" would be good.
-> 
-> Thanks,
-> Mark.
-> 
-> > +if (ret) {
-> > +pr_warn("Unable to register STM32 DDR PMU\n");
-> > +return ret;
-> > +}
-> > +
-> > +rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-> > +if (!IS_ERR(rst)) {
-> > +reset_control_assert(rst);
-> > +udelay(2);
-> > +reset_control_deassert(rst);
-> > +}
-> > +
-> > +pr_info("stm32-ddr-pmu: probed (ID=0x%08x VER=0x%08x), DDR@%luMHz\n",
-> > +readl_relaxed(stm32_ddr_pmu->membase + DDRPERFM_ID),
-> > +readl_relaxed(stm32_ddr_pmu->membase + DDRPERFM_VER),
-> > +stm32_ddr_pmu->clk_ddr_rate);
-> > +
-> > +clk_disable(stm32_ddr_pmu->clk);
-> > +
-> > +return 0;
-> > +}
-> > +
-> > +static int stm32_ddr_pmu_device_remove(struct platform_device *pdev)
-> > +{
-> > +struct stm32_ddr_pmu *stm32_ddr_pmu = platform_get_drvdata(pdev);
-> > +
-> > +perf_pmu_unregister(&stm32_ddr_pmu->pmu);
-> > +
-> > +return 0;
-> > +}
-> > +
-> > +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
-> > +{ .compatible = "st,stm32-ddr-pmu" },
-> > +{ },
-> > +};
-> > +
-> > +static struct platform_driver stm32_ddr_pmu_driver = {
-> > +.driver = {
-> > +.name= "stm32-ddr-pmu",
-> > +.of_match_table = of_match_ptr(stm32_ddr_pmu_of_match),
-> > +},
-> > +.probe = stm32_ddr_pmu_device_probe,
-> > +.remove = stm32_ddr_pmu_device_remove,
-> > +};
-> > +
-> > +module_platform_driver(stm32_ddr_pmu_driver);
-> > +
-> > +MODULE_DESCRIPTION("Perf driver for STM32 DDR performance monitor");
-> > +MODULE_AUTHOR("Gerald Baeza <gerald.baeza@st.com>");
-> > +MODULE_LICENSE("GPL v2");
-> > --
-> > 2.7.4
-> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
+The other patches seemed to apply fine.
+
+ drivers/regulator/Kconfig           |   4 +-
+ drivers/regulator/rk808-regulator.c | 646 ++++++++++++++++++++++++++--
+ include/linux/mfd/rk808.h           |   3 +
+ 3 files changed, 625 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 6c37f0df9323..214a958ff3e5 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -762,11 +762,11 @@ config REGULATOR_RC5T583
+ 	  outputs which can be controlled by i2c communication.
+ 
+ config REGULATOR_RK808
+-	tristate "Rockchip RK805/RK808/RK818 Power regulators"
++	tristate "Rockchip RK805/RK808/RK809/RK817/RK818 Power regulators"
+ 	depends on MFD_RK808
+ 	help
+ 	  Select this option to enable the power regulator of ROCKCHIP
+-	  PMIC RK805,RK808 and RK818.
++	  PMIC RK805,RK809&RK817,RK808 and RK818.
+ 	  This driver supports the control of different power rails of device
+ 	  through regulator interface. The device supports multiple DCDC/LDO
+ 	  outputs which can be controlled by i2c communication.
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index 23713e16c286..e9b0bb996fc4 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -36,6 +36,12 @@
+ #define RK808_BUCK4_VSEL_MASK	0xf
+ #define RK808_LDO_VSEL_MASK	0x1f
+ 
++#define RK809_BUCK5_VSEL_MASK		0x7
++
++#define RK817_LDO_VSEL_MASK		0x7f
++#define RK817_BOOST_VSEL_MASK		0x7
++#define RK817_BUCK_VSEL_MASK		0x7f
++
+ #define RK818_BUCK_VSEL_MASK		0x3f
+ #define RK818_BUCK4_VSEL_MASK		0x1f
+ #define RK818_LDO_VSEL_MASK		0x1f
+@@ -65,30 +71,36 @@
+ /* max steps for increase voltage of Buck1/2, equal 100mv*/
+ #define MAX_STEPS_ONE_TIME 8
+ 
+-#define RK805_DESC(_id, _match, _supply, _min, _max, _step, _vreg,      \
+-	_vmask, _ereg, _emask, _etime)                                  \
+-	[_id] = {                                                       \
+-		.name           = (_match),                             \
+-		.supply_name    = (_supply),                            \
+-		.of_match       = of_match_ptr(_match),                 \
+-		.regulators_node = of_match_ptr("regulators"),          \
+-		.type           = REGULATOR_VOLTAGE,                    \
+-		.id             = (_id),                                \
+-		.n_voltages     = (((_max) - (_min)) / (_step) + 1),    \
+-		.owner          = THIS_MODULE,                          \
+-		.min_uV         = (_min) * 1000,                        \
+-		.uV_step        = (_step) * 1000,                       \
+-		.vsel_reg       = (_vreg),                              \
+-		.vsel_mask      = (_vmask),                             \
+-		.enable_reg     = (_ereg),                              \
+-		.enable_mask    = (_emask),                             \
+-		.enable_time    = (_etime),                             \
+-		.ops            = &rk805_reg_ops,                       \
++#define ENABLE_MASK(id)			(BIT(id) | BIT(4 + (id)))
++#define DISABLE_VAL(id)			(BIT(4 + (id)))
++
++#define RK817_BOOST_DESC(_id, _match, _supply, _min, _max, _step, _vreg,\
++	_vmask, _ereg, _emask, _enval, _disval, _etime, m_drop)		\
++	{							\
++		.name		= (_match),				\
++		.supply_name	= (_supply),				\
++		.of_match	= of_match_ptr(_match),			\
++		.regulators_node = of_match_ptr("regulators"),		\
++		.type		= REGULATOR_VOLTAGE,			\
++		.id		= (_id),				\
++		.n_voltages	= (((_max) - (_min)) / (_step) + 1),	\
++		.owner		= THIS_MODULE,				\
++		.min_uV		= (_min) * 1000,			\
++		.uV_step	= (_step) * 1000,			\
++		.vsel_reg	= (_vreg),				\
++		.vsel_mask	= (_vmask),				\
++		.enable_reg	= (_ereg),				\
++		.enable_mask	= (_emask),				\
++		.enable_val     = (_enval),				\
++		.disable_val     = (_disval),				\
++		.enable_time	= (_etime),				\
++		.min_dropout_uV = (m_drop) * 1000,			\
++		.ops		= &rk817_boost_ops,			\
+ 	}
+ 
+-#define RK8XX_DESC(_id, _match, _supply, _min, _max, _step, _vreg,	\
+-	_vmask, _ereg, _emask, _etime)					\
+-	[_id] = {							\
++#define RK8XX_DESC_COM(_id, _match, _supply, _min, _max, _step, _vreg,	\
++	_vmask, _ereg, _emask, _enval, _disval, _etime, _ops)		\
++	{								\
+ 		.name		= (_match),				\
+ 		.supply_name	= (_supply),				\
+ 		.of_match	= of_match_ptr(_match),			\
+@@ -103,12 +115,30 @@
+ 		.vsel_mask	= (_vmask),				\
+ 		.enable_reg	= (_ereg),				\
+ 		.enable_mask	= (_emask),				\
++		.enable_val     = (_enval),				\
++		.disable_val     = (_disval),				\
+ 		.enable_time	= (_etime),				\
+-		.ops		= &rk808_reg_ops,			\
++		.ops		= _ops,			\
+ 	}
+ 
+-#define RK8XX_DESC_SWITCH(_id, _match, _supply, _ereg, _emask)		\
+-	[_id] = {							\
++#define RK805_DESC(_id, _match, _supply, _min, _max, _step, _vreg,	\
++	_vmask, _ereg, _emask, _etime)					\
++	RK8XX_DESC_COM(_id, _match, _supply, _min, _max, _step, _vreg,	\
++	_vmask, _ereg, _emask, 0, 0, _etime, &rk805_reg_ops)
++
++#define RK8XX_DESC(_id, _match, _supply, _min, _max, _step, _vreg,	\
++	_vmask, _ereg, _emask, _etime)					\
++	RK8XX_DESC_COM(_id, _match, _supply, _min, _max, _step, _vreg,	\
++	_vmask, _ereg, _emask, 0, 0, _etime, &rk808_reg_ops)
++
++#define RK817_DESC(_id, _match, _supply, _min, _max, _step, _vreg,	\
++	_vmask, _ereg, _emask, _disval, _etime)				\
++	RK8XX_DESC_COM(_id, _match, _supply, _min, _max, _step, _vreg,	\
++	_vmask, _ereg, _emask, _emask, _disval, _etime, &rk817_reg_ops)
++
++#define RKXX_DESC_SWITCH_COM(_id, _match, _supply, _ereg, _emask,	\
++	_enval, _disval, _ops)						\
++	{								\
+ 		.name		= (_match),				\
+ 		.supply_name	= (_supply),				\
+ 		.of_match	= of_match_ptr(_match),			\
+@@ -117,10 +147,20 @@
+ 		.id		= (_id),				\
+ 		.enable_reg	= (_ereg),				\
+ 		.enable_mask	= (_emask),				\
++		.enable_val     = (_enval),				\
++		.disable_val     = (_disval),				\
+ 		.owner		= THIS_MODULE,				\
+-		.ops		= &rk808_switch_ops			\
++		.ops		= _ops					\
+ 	}
+ 
++#define RK817_DESC_SWITCH(_id, _match, _supply, _ereg, _emask,		\
++	_disval)							\
++	RKXX_DESC_SWITCH_COM(_id, _match, _supply, _ereg, _emask,	\
++	_emask, _disval, &rk817_switch_ops)
++
++#define RK8XX_DESC_SWITCH(_id, _match, _supply, _ereg, _emask)		\
++	RKXX_DESC_SWITCH_COM(_id, _match, _supply, _ereg, _emask,	\
++	0, 0, &rk808_switch_ops)
+ 
+ struct rk808_regulator_data {
+ 	struct gpio_desc *dvs_gpio[2];
+@@ -138,6 +178,51 @@ static const struct regulator_linear_range rk808_ldo3_voltage_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(2500000, 15, 15, 0),
+ };
+ 
++#define RK809_BUCK5_SEL_CNT		(8)
++
++static const struct regulator_linear_range rk809_buck5_voltage_ranges[] = {
++	REGULATOR_LINEAR_RANGE(1500000, 0, 0, 0),
++	REGULATOR_LINEAR_RANGE(1800000, 1, 3, 200000),
++	REGULATOR_LINEAR_RANGE(2800000, 4, 5, 200000),
++	REGULATOR_LINEAR_RANGE(3300000, 6, 7, 300000),
++};
++
++#define RK817_BUCK1_MIN0 500000
++#define RK817_BUCK1_MAX0 1500000
++
++#define RK817_BUCK1_MIN1 1600000
++#define RK817_BUCK1_MAX1 2400000
++
++#define RK817_BUCK3_MAX1 3400000
++
++#define RK817_BUCK1_STP0 12500
++#define RK817_BUCK1_STP1 100000
++
++#define RK817_BUCK1_SEL0 ((RK817_BUCK1_MAX0 - RK817_BUCK1_MIN0) /\
++						  RK817_BUCK1_STP0)
++#define RK817_BUCK1_SEL1 ((RK817_BUCK1_MAX1 - RK817_BUCK1_MIN1) /\
++						  RK817_BUCK1_STP1)
++
++#define RK817_BUCK3_SEL1 ((RK817_BUCK3_MAX1 - RK817_BUCK1_MIN1) /\
++						  RK817_BUCK1_STP1)
++
++#define RK817_BUCK1_SEL_CNT (RK817_BUCK1_SEL0 + RK817_BUCK1_SEL1 + 1)
++#define RK817_BUCK3_SEL_CNT (RK817_BUCK1_SEL0 + RK817_BUCK3_SEL1 + 1)
++
++static const struct regulator_linear_range rk817_buck1_voltage_ranges[] = {
++	REGULATOR_LINEAR_RANGE(RK817_BUCK1_MIN0, 0,
++			       RK817_BUCK1_SEL0, RK817_BUCK1_STP0),
++	REGULATOR_LINEAR_RANGE(RK817_BUCK1_MIN1, RK817_BUCK1_SEL0 + 1,
++			       RK817_BUCK1_SEL_CNT, RK817_BUCK1_STP1),
++};
++
++static const struct regulator_linear_range rk817_buck3_voltage_ranges[] = {
++	REGULATOR_LINEAR_RANGE(RK817_BUCK1_MIN0, 0,
++			       RK817_BUCK1_SEL0, RK817_BUCK1_STP0),
++	REGULATOR_LINEAR_RANGE(RK817_BUCK1_MIN1, RK817_BUCK1_SEL0 + 1,
++			       RK817_BUCK3_SEL_CNT, RK817_BUCK1_STP1),
++};
++
+ static int rk808_buck1_2_get_voltage_sel_regmap(struct regulator_dev *rdev)
+ {
+ 	struct rk808_regulator_data *pdata = rdev_get_drvdata(rdev);
+@@ -289,6 +374,36 @@ static int rk808_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
+ 				  RK808_RAMP_RATE_MASK, ramp_value);
+ }
+ 
++/*
++ * RK817 RK809
++ */
++static int rk817_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
++{
++	unsigned int ramp_value = RK817_RAMP_RATE_25MV_PER_US;
++	unsigned int reg = RK817_BUCK_CONFIG_REG(rdev_get_id(rdev));
++
++	switch (ramp_delay) {
++	case 0 ... 3000:
++		ramp_value = RK817_RAMP_RATE_3MV_PER_US;
++		break;
++	case 3001 ... 6300:
++		ramp_value = RK817_RAMP_RATE_6_3MV_PER_US;
++		break;
++	case 6301 ... 12500:
++		ramp_value = RK817_RAMP_RATE_12_5MV_PER_US;
++		break;
++	case 12501 ... 25000:
++		break;
++	default:
++		dev_warn(&rdev->dev,
++			 "%s ramp_delay: %d not supported, setting 10000\n",
++			 rdev->desc->name, ramp_delay);
++	}
++
++	return regmap_update_bits(rdev->regmap, reg,
++				  RK817_RAMP_RATE_MASK, ramp_value);
++}
++
+ static int rk808_set_suspend_voltage(struct regulator_dev *rdev, int uv)
+ {
+ 	unsigned int reg;
+@@ -304,6 +419,21 @@ static int rk808_set_suspend_voltage(struct regulator_dev *rdev, int uv)
+ 				  sel);
+ }
+ 
++static int rk817_set_suspend_voltage(struct regulator_dev *rdev, int uv)
++{
++	unsigned int reg;
++	int sel = regulator_map_voltage_linear(rdev, uv, uv);
++	/* only ldo1~ldo9 */
++	if (sel < 0)
++		return -EINVAL;
++
++	reg = rdev->desc->vsel_reg + RK808_SLP_REG_OFFSET;
++
++	return regmap_update_bits(rdev->regmap, reg,
++				  rdev->desc->vsel_mask,
++				  sel);
++}
++
+ static int rk808_set_suspend_voltage_range(struct regulator_dev *rdev, int uv)
+ {
+ 	unsigned int reg;
+@@ -363,6 +493,131 @@ static int rk808_set_suspend_disable(struct regulator_dev *rdev)
+ 				  rdev->desc->enable_mask);
+ }
+ 
++static int rk817_set_suspend_enable_ctrl(struct regulator_dev *rdev,
++					 unsigned int en)
++{
++	unsigned int reg;
++	int id = rdev_get_id(rdev);
++	unsigned int id_slp, msk, val;
++
++	if (id >= RK817_ID_DCDC1 && id <= RK817_ID_DCDC4)
++		id_slp = id;
++	else if (id >= RK817_ID_LDO1 && id <= RK817_ID_LDO8)
++		id_slp = 8 + (id - RK817_ID_LDO1);
++	else if (id >= RK817_ID_LDO9 && id <= RK809_ID_SW2)
++		id_slp = 4 + (id - RK817_ID_LDO9);
++	else
++		return -EINVAL;
++
++	reg = RK817_POWER_SLP_EN_REG(id_slp / 8);
++
++	msk = BIT(id_slp % 8);
++	if (en)
++		val = msk;
++	else
++		val = 0;
++
++	return regmap_update_bits(rdev->regmap, reg, msk, val);
++}
++
++static int rk817_set_suspend_enable(struct regulator_dev *rdev)
++{
++	return rk817_set_suspend_enable_ctrl(rdev, 1);
++}
++
++static int rk817_set_suspend_disable(struct regulator_dev *rdev)
++{
++	return rk817_set_suspend_enable_ctrl(rdev, 0);
++}
++
++static int rk8xx_set_suspend_mode(struct regulator_dev *rdev, unsigned int mode)
++{
++	unsigned int reg;
++
++	reg = rdev->desc->vsel_reg + RK808_SLP_REG_OFFSET;
++
++	switch (mode) {
++	case REGULATOR_MODE_FAST:
++		return regmap_update_bits(rdev->regmap, reg,
++					  PWM_MODE_MSK, FPWM_MODE);
++	case REGULATOR_MODE_NORMAL:
++		return regmap_update_bits(rdev->regmap, reg,
++					  PWM_MODE_MSK, AUTO_PWM_MODE);
++	default:
++		dev_err(&rdev->dev, "do not support this mode\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int rk8xx_set_mode(struct regulator_dev *rdev, unsigned int mode)
++{
++	switch (mode) {
++	case REGULATOR_MODE_FAST:
++		return regmap_update_bits(rdev->regmap, rdev->desc->vsel_reg,
++					  PWM_MODE_MSK, FPWM_MODE);
++	case REGULATOR_MODE_NORMAL:
++		return regmap_update_bits(rdev->regmap, rdev->desc->vsel_reg,
++					  PWM_MODE_MSK, AUTO_PWM_MODE);
++	default:
++		dev_err(&rdev->dev, "do not support this mode\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static unsigned int rk8xx_get_mode(struct regulator_dev *rdev)
++{
++	unsigned int val;
++	int err;
++
++	err = regmap_read(rdev->regmap, rdev->desc->vsel_reg, &val);
++	if (err)
++		return err;
++
++	if (val & FPWM_MODE)
++		return REGULATOR_MODE_FAST;
++	else
++		return REGULATOR_MODE_NORMAL;
++}
++
++static int rk8xx_is_enabled_wmsk_regmap(struct regulator_dev *rdev)
++{
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(rdev->regmap, rdev->desc->enable_reg, &val);
++	if (ret != 0)
++		return ret;
++
++	/* add write mask bit */
++	val |= (rdev->desc->enable_mask & 0xf0);
++	val &= rdev->desc->enable_mask;
++
++	if (rdev->desc->enable_is_inverted) {
++		if (rdev->desc->enable_val)
++			return val != rdev->desc->enable_val;
++		return (val == 0);
++	}
++	if (rdev->desc->enable_val)
++		return val == rdev->desc->enable_val;
++	return val != 0;
++}
++
++static unsigned int rk8xx_regulator_of_map_mode(unsigned int mode)
++{
++	switch (mode) {
++	case 1:
++		return REGULATOR_MODE_FAST;
++	case 2:
++		return REGULATOR_MODE_NORMAL;
++	default:
++		return -EINVAL;
++	}
++}
++
+ static const struct regulator_ops rk805_reg_ops = {
+ 	.list_voltage           = regulator_list_voltage_linear,
+ 	.map_voltage            = regulator_map_voltage_linear,
+@@ -439,6 +694,71 @@ static const struct regulator_linear_range rk805_buck_1_2_voltage_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(2300000, 63, 63, 0),
+ };
+ 
++static struct regulator_ops rk809_buck5_ops_range = {
++	.list_voltage		= regulator_list_voltage_linear_range,
++	.map_voltage		= regulator_map_voltage_linear_range,
++	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
++	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.is_enabled		= rk8xx_is_enabled_wmsk_regmap,
++	.set_suspend_voltage	= rk808_set_suspend_voltage_range,
++	.set_suspend_enable	= rk817_set_suspend_enable,
++	.set_suspend_disable	= rk817_set_suspend_disable,
++};
++
++static struct regulator_ops rk817_reg_ops = {
++	.list_voltage		= regulator_list_voltage_linear,
++	.map_voltage		= regulator_map_voltage_linear,
++	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.is_enabled		= rk8xx_is_enabled_wmsk_regmap,
++	.set_suspend_voltage	= rk817_set_suspend_voltage,
++	.set_suspend_enable	= rk817_set_suspend_enable,
++	.set_suspend_disable	= rk817_set_suspend_disable,
++};
++
++static struct regulator_ops rk817_boost_ops = {
++	.list_voltage		= regulator_list_voltage_linear,
++	.map_voltage		= regulator_map_voltage_linear,
++	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.is_enabled		= rk8xx_is_enabled_wmsk_regmap,
++	.set_suspend_enable	= rk817_set_suspend_enable,
++	.set_suspend_disable	= rk817_set_suspend_disable,
++};
++
++static struct regulator_ops rk817_buck_ops_range = {
++	.list_voltage		= regulator_list_voltage_linear_range,
++	.map_voltage		= regulator_map_voltage_linear_range,
++	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
++	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.is_enabled		= rk8xx_is_enabled_wmsk_regmap,
++	.set_mode		= rk8xx_set_mode,
++	.get_mode		= rk8xx_get_mode,
++	.set_suspend_mode	= rk8xx_set_suspend_mode,
++	.set_ramp_delay		= rk817_set_ramp_delay,
++	.set_suspend_voltage	= rk808_set_suspend_voltage_range,
++	.set_suspend_enable	= rk817_set_suspend_enable,
++	.set_suspend_disable	= rk817_set_suspend_disable,
++};
++
++static struct regulator_ops rk817_switch_ops = {
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.is_enabled		= rk8xx_is_enabled_wmsk_regmap,
++	.set_suspend_enable	= rk817_set_suspend_enable,
++	.set_suspend_disable	= rk817_set_suspend_disable,
++};
++
+ static const struct regulator_desc rk805_reg[] = {
+ 	{
+ 		.name = "DCDC_REG1",
+@@ -595,6 +915,271 @@ static const struct regulator_desc rk808_reg[] = {
+ 		RK808_DCDC_EN_REG, BIT(6)),
+ };
+ 
++static const struct regulator_desc rk809_reg[] = {
++	{
++		.name = "DCDC_REG1",
++		.supply_name = "vcc1",
++		.of_match = of_match_ptr("DCDC_REG1"),
++		.regulators_node = of_match_ptr("regulators"),
++		.id = RK817_ID_DCDC1,
++		.ops = &rk817_buck_ops_range,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = RK817_BUCK1_SEL_CNT + 1,
++		.linear_ranges = rk817_buck1_voltage_ranges,
++		.n_linear_ranges = ARRAY_SIZE(rk817_buck1_voltage_ranges),
++		.vsel_reg = RK817_BUCK1_ON_VSEL_REG,
++		.vsel_mask = RK817_BUCK_VSEL_MASK,
++		.enable_reg = RK817_POWER_EN_REG(0),
++		.enable_mask = ENABLE_MASK(RK817_ID_DCDC1),
++		.enable_val = ENABLE_MASK(RK817_ID_DCDC1),
++		.disable_val = DISABLE_VAL(RK817_ID_DCDC1),
++		.of_map_mode = rk8xx_regulator_of_map_mode,
++		.owner = THIS_MODULE,
++	}, {
++		.name = "DCDC_REG2",
++		.supply_name = "vcc2",
++		.of_match = of_match_ptr("DCDC_REG2"),
++		.regulators_node = of_match_ptr("regulators"),
++		.id = RK817_ID_DCDC2,
++		.ops = &rk817_buck_ops_range,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = RK817_BUCK1_SEL_CNT + 1,
++		.linear_ranges = rk817_buck1_voltage_ranges,
++		.n_linear_ranges = ARRAY_SIZE(rk817_buck1_voltage_ranges),
++		.vsel_reg = RK817_BUCK2_ON_VSEL_REG,
++		.vsel_mask = RK817_BUCK_VSEL_MASK,
++		.enable_reg = RK817_POWER_EN_REG(0),
++		.enable_mask = ENABLE_MASK(RK817_ID_DCDC2),
++		.enable_val = ENABLE_MASK(RK817_ID_DCDC2),
++		.disable_val = DISABLE_VAL(RK817_ID_DCDC2),
++		.of_map_mode = rk8xx_regulator_of_map_mode,
++		.owner = THIS_MODULE,
++	}, {
++		.name = "DCDC_REG3",
++		.supply_name = "vcc3",
++		.of_match = of_match_ptr("DCDC_REG3"),
++		.regulators_node = of_match_ptr("regulators"),
++		.id = RK817_ID_DCDC3,
++		.ops = &rk817_buck_ops_range,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = RK817_BUCK1_SEL_CNT + 1,
++		.linear_ranges = rk817_buck1_voltage_ranges,
++		.n_linear_ranges = ARRAY_SIZE(rk817_buck1_voltage_ranges),
++		.vsel_reg = RK817_BUCK3_ON_VSEL_REG,
++		.vsel_mask = RK817_BUCK_VSEL_MASK,
++		.enable_reg = RK817_POWER_EN_REG(0),
++		.enable_mask = ENABLE_MASK(RK817_ID_DCDC3),
++		.enable_val = ENABLE_MASK(RK817_ID_DCDC3),
++		.disable_val = DISABLE_VAL(RK817_ID_DCDC3),
++		.of_map_mode = rk8xx_regulator_of_map_mode,
++		.owner = THIS_MODULE,
++	}, {
++		.name = "DCDC_REG4",
++		.supply_name = "vcc4",
++		.of_match = of_match_ptr("DCDC_REG4"),
++		.regulators_node = of_match_ptr("regulators"),
++		.id = RK817_ID_DCDC4,
++		.ops = &rk817_buck_ops_range,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = RK817_BUCK3_SEL_CNT + 1,
++		.linear_ranges = rk817_buck3_voltage_ranges,
++		.n_linear_ranges = ARRAY_SIZE(rk817_buck3_voltage_ranges),
++		.vsel_reg = RK817_BUCK4_ON_VSEL_REG,
++		.vsel_mask = RK817_BUCK_VSEL_MASK,
++		.enable_reg = RK817_POWER_EN_REG(0),
++		.enable_mask = ENABLE_MASK(RK817_ID_DCDC4),
++		.enable_val = ENABLE_MASK(RK817_ID_DCDC4),
++		.disable_val = DISABLE_VAL(RK817_ID_DCDC4),
++		.of_map_mode = rk8xx_regulator_of_map_mode,
++		.owner = THIS_MODULE,
++	},
++	{
++		.name = "DCDC_REG5",
++		.supply_name = "vcc9",
++		.of_match = of_match_ptr("DCDC_REG5"),
++		.regulators_node = of_match_ptr("regulators"),
++		.id = RK809_ID_DCDC5,
++		.ops = &rk809_buck5_ops_range,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = RK809_BUCK5_SEL_CNT,
++		.linear_ranges = rk809_buck5_voltage_ranges,
++		.n_linear_ranges = ARRAY_SIZE(rk809_buck5_voltage_ranges),
++		.vsel_reg = RK809_BUCK5_CONFIG(0),
++		.vsel_mask = RK809_BUCK5_VSEL_MASK,
++		.enable_reg = RK817_POWER_EN_REG(3),
++		.enable_mask = ENABLE_MASK(1),
++		.enable_val = ENABLE_MASK(1),
++		.disable_val = DISABLE_VAL(1),
++		.of_map_mode = rk8xx_regulator_of_map_mode,
++		.owner = THIS_MODULE,
++	},
++	RK817_DESC(RK817_ID_LDO1, "LDO_REG1", "vcc5", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(0), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(1), ENABLE_MASK(0),
++		   DISABLE_VAL(0), 400),
++	RK817_DESC(RK817_ID_LDO2, "LDO_REG2", "vcc5", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(1), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(1), ENABLE_MASK(1),
++		   DISABLE_VAL(1), 400),
++	RK817_DESC(RK817_ID_LDO3, "LDO_REG3", "vcc5", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(2), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(1), ENABLE_MASK(2),
++		   DISABLE_VAL(2), 400),
++	RK817_DESC(RK817_ID_LDO4, "LDO_REG4", "vcc6", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(3), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(1), ENABLE_MASK(3),
++		   DISABLE_VAL(3), 400),
++	RK817_DESC(RK817_ID_LDO5, "LDO_REG5", "vcc6", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(4), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(2), ENABLE_MASK(0),
++		   DISABLE_VAL(0), 400),
++	RK817_DESC(RK817_ID_LDO6, "LDO_REG6", "vcc6", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(5), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(2), ENABLE_MASK(1),
++		   DISABLE_VAL(1), 400),
++	RK817_DESC(RK817_ID_LDO7, "LDO_REG7", "vcc7", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(6), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(2), ENABLE_MASK(2),
++		   DISABLE_VAL(2), 400),
++	RK817_DESC(RK817_ID_LDO8, "LDO_REG8", "vcc7", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(7), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(2), ENABLE_MASK(3),
++		   DISABLE_VAL(3), 400),
++	RK817_DESC(RK817_ID_LDO9, "LDO_REG9", "vcc7", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(8), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(3), ENABLE_MASK(0),
++		   DISABLE_VAL(0), 400),
++	RK817_DESC_SWITCH(RK809_ID_SW1, "SWITCH_REG1", "vcc9",
++			  RK817_POWER_EN_REG(3), ENABLE_MASK(2),
++			  DISABLE_VAL(2)),
++	RK817_DESC_SWITCH(RK809_ID_SW2, "SWITCH_REG2", "vcc8",
++			  RK817_POWER_EN_REG(3), ENABLE_MASK(3),
++			  DISABLE_VAL(3)),
++};
++
++static const struct regulator_desc rk817_reg[] = {
++	{
++		.name = "DCDC_REG1",
++		.supply_name = "vcc1",
++		.of_match = of_match_ptr("DCDC_REG1"),
++		.regulators_node = of_match_ptr("regulators"),
++		.id = RK817_ID_DCDC1,
++		.ops = &rk817_buck_ops_range,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = RK817_BUCK1_SEL_CNT + 1,
++		.linear_ranges = rk817_buck1_voltage_ranges,
++		.n_linear_ranges = ARRAY_SIZE(rk817_buck1_voltage_ranges),
++		.vsel_reg = RK817_BUCK1_ON_VSEL_REG,
++		.vsel_mask = RK817_BUCK_VSEL_MASK,
++		.enable_reg = RK817_POWER_EN_REG(0),
++		.enable_mask = ENABLE_MASK(RK817_ID_DCDC1),
++		.enable_val = ENABLE_MASK(RK817_ID_DCDC1),
++		.disable_val = DISABLE_VAL(RK817_ID_DCDC1),
++		.of_map_mode = rk8xx_regulator_of_map_mode,
++		.owner = THIS_MODULE,
++	}, {
++		.name = "DCDC_REG2",
++		.supply_name = "vcc2",
++		.of_match = of_match_ptr("DCDC_REG2"),
++		.regulators_node = of_match_ptr("regulators"),
++		.id = RK817_ID_DCDC2,
++		.ops = &rk817_buck_ops_range,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = RK817_BUCK1_SEL_CNT + 1,
++		.linear_ranges = rk817_buck1_voltage_ranges,
++		.n_linear_ranges = ARRAY_SIZE(rk817_buck1_voltage_ranges),
++		.vsel_reg = RK817_BUCK2_ON_VSEL_REG,
++		.vsel_mask = RK817_BUCK_VSEL_MASK,
++		.enable_reg = RK817_POWER_EN_REG(0),
++		.enable_mask = ENABLE_MASK(RK817_ID_DCDC2),
++		.enable_val = ENABLE_MASK(RK817_ID_DCDC2),
++		.disable_val = DISABLE_VAL(RK817_ID_DCDC2),
++		.of_map_mode = rk8xx_regulator_of_map_mode,
++		.owner = THIS_MODULE,
++	}, {
++		.name = "DCDC_REG3",
++		.supply_name = "vcc3",
++		.of_match = of_match_ptr("DCDC_REG3"),
++		.regulators_node = of_match_ptr("regulators"),
++		.id = RK817_ID_DCDC3,
++		.ops = &rk817_buck_ops_range,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = RK817_BUCK1_SEL_CNT + 1,
++		.linear_ranges = rk817_buck1_voltage_ranges,
++		.n_linear_ranges = ARRAY_SIZE(rk817_buck1_voltage_ranges),
++		.vsel_reg = RK817_BUCK3_ON_VSEL_REG,
++		.vsel_mask = RK817_BUCK_VSEL_MASK,
++		.enable_reg = RK817_POWER_EN_REG(0),
++		.enable_mask = ENABLE_MASK(RK817_ID_DCDC3),
++		.enable_val = ENABLE_MASK(RK817_ID_DCDC3),
++		.disable_val = DISABLE_VAL(RK817_ID_DCDC3),
++		.of_map_mode = rk8xx_regulator_of_map_mode,
++		.owner = THIS_MODULE,
++	}, {
++		.name = "DCDC_REG4",
++		.supply_name = "vcc4",
++		.of_match = of_match_ptr("DCDC_REG4"),
++		.regulators_node = of_match_ptr("regulators"),
++		.id = RK817_ID_DCDC4,
++		.ops = &rk817_buck_ops_range,
++		.type = REGULATOR_VOLTAGE,
++		.n_voltages = RK817_BUCK3_SEL_CNT + 1,
++		.linear_ranges = rk817_buck3_voltage_ranges,
++		.n_linear_ranges = ARRAY_SIZE(rk817_buck3_voltage_ranges),
++		.vsel_reg = RK817_BUCK4_ON_VSEL_REG,
++		.vsel_mask = RK817_BUCK_VSEL_MASK,
++		.enable_reg = RK817_POWER_EN_REG(0),
++		.enable_mask = ENABLE_MASK(RK817_ID_DCDC4),
++		.enable_val = ENABLE_MASK(RK817_ID_DCDC4),
++		.disable_val = DISABLE_VAL(RK817_ID_DCDC4),
++		.of_map_mode = rk8xx_regulator_of_map_mode,
++		.owner = THIS_MODULE,
++	},
++	RK817_DESC(RK817_ID_LDO1, "LDO_REG1", "vcc5", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(0), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(1), ENABLE_MASK(0),
++		   DISABLE_VAL(0), 400),
++	RK817_DESC(RK817_ID_LDO2, "LDO_REG2", "vcc5", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(1), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(1), ENABLE_MASK(1),
++		   DISABLE_VAL(1), 400),
++	RK817_DESC(RK817_ID_LDO3, "LDO_REG3", "vcc5", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(2), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(1), ENABLE_MASK(2),
++		   DISABLE_VAL(2), 400),
++	RK817_DESC(RK817_ID_LDO4, "LDO_REG4", "vcc6", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(3), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(1), ENABLE_MASK(3),
++		   DISABLE_VAL(3), 400),
++	RK817_DESC(RK817_ID_LDO5, "LDO_REG5", "vcc6", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(4), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(2), ENABLE_MASK(0),
++		   DISABLE_VAL(0), 400),
++	RK817_DESC(RK817_ID_LDO6, "LDO_REG6", "vcc6", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(5), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(2), ENABLE_MASK(1),
++		   DISABLE_VAL(1), 400),
++	RK817_DESC(RK817_ID_LDO7, "LDO_REG7", "vcc7", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(6), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(2), ENABLE_MASK(2),
++		   DISABLE_VAL(2), 400),
++	RK817_DESC(RK817_ID_LDO8, "LDO_REG8", "vcc7", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(7), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(2), ENABLE_MASK(3),
++		   DISABLE_VAL(3), 400),
++	RK817_DESC(RK817_ID_LDO9, "LDO_REG9", "vcc7", 600, 3400, 25,
++		   RK817_LDO_ON_VSEL_REG(8), RK817_LDO_VSEL_MASK,
++		   RK817_POWER_EN_REG(3), ENABLE_MASK(0),
++		   DISABLE_VAL(0), 400),
++	RK817_BOOST_DESC(RK817_ID_BOOST, "BOOST", "vcc8", 4700, 5400, 100,
++			 RK817_BOOST_OTG_CFG, RK817_BOOST_VSEL_MASK,
++			 RK817_POWER_EN_REG(3), ENABLE_MASK(1), ENABLE_MASK(1),
++		   DISABLE_VAL(1), 400, 3500 - 5400),
++	RK817_DESC_SWITCH(RK817_ID_BOOST_OTG_SW, "OTG_SWITCH", "vcc9",
++			  RK817_POWER_EN_REG(3), ENABLE_MASK(2),
++			  DISABLE_VAL(2)),
++};
++
+ static const struct regulator_desc rk818_reg[] = {
+ 	{
+ 		.name = "DCDC_REG1",
+@@ -765,6 +1350,14 @@ static int rk808_regulator_probe(struct platform_device *pdev)
+ 		regulators = rk808_reg;
+ 		nregulators = RK808_NUM_REGULATORS;
+ 		break;
++	case RK809_ID:
++		regulators = rk809_reg;
++		nregulators = RK809_NUM_REGULATORS;
++		break;
++	case RK817_ID:
++		regulators = rk817_reg;
++		nregulators = RK817_NUM_REGULATORS;
++		break;
+ 	case RK818_ID:
+ 		regulators = rk818_reg;
+ 		nregulators = RK818_NUM_REGULATORS;
+@@ -803,6 +1396,7 @@ static struct platform_driver rk808_regulator_driver = {
+ module_platform_driver(rk808_regulator_driver);
+ 
+ MODULE_DESCRIPTION("regulator driver for the RK805/RK808/RK818 series PMICs");
++MODULE_AUTHOR("Tony xie <tony.xie@rock-chips.com>");
+ MODULE_AUTHOR("Chris Zhong <zyw@rock-chips.com>");
+ MODULE_AUTHOR("Zhang Qing <zhangqing@rock-chips.com>");
+ MODULE_AUTHOR("Wadim Egorov <w.egorov@phytec.de>");
+diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+index 0fd9eedf3c20..2a9cd01691b2 100644
+--- a/include/linux/mfd/rk808.h
++++ b/include/linux/mfd/rk808.h
+@@ -396,7 +396,10 @@ enum rk805_reg {
+ #define SHUTDOWN_FUN			(0x2 << 2)
+ #define SLEEP_FUN			(0x1 << 2)
+ #define RK8XX_ID_MSK			0xfff0
++#define PWM_MODE_MSK			BIT(7)
+ #define FPWM_MODE			BIT(7)
++#define AUTO_PWM_MODE			0
++
+ enum rk817_reg_id {
+ 	RK817_ID_DCDC1 = 0,
+ 	RK817_ID_DCDC2,
+-- 
+2.20.1
