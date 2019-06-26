@@ -1,207 +1,71 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RFC PATCH V1 6/6] platform: mtk-isp: Add Mediatek DIP driver
-Date: Wed, 26 Jun 2019 13:24:54 +0900
-Message-ID: <CAAFQd5D8WDQJaN8SYKwOXyC9-YPRC1U58HirPVzL5969MSvkgA@mail.gmail.com>
-References: <20190417104511.21514-1-frederic.chen@mediatek.com>
- <20190417104511.21514-7-frederic.chen@mediatek.com>
- <20190509094846.GA65444@google.com>
- <1561464978.23799.37.camel@mtksdccf07>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [RFC v2 4/4] media: platform: mtk-mdp3: Add Mediatek MDP3 driver
+Date: Wed, 26 Jun 2019 13:41:04 +0900
+Message-ID: <CAHD77HkJ8aHgKugC3+Du-OoqP9yg0yKt+-_RyL1cZ4e5QkuUhQ@mail.gmail.com>
+References: <20190516032332.56844-1-daoyuan.huang@mediatek.com>
+ <20190516032332.56844-5-daoyuan.huang@mediatek.com>
+ <20190604112039.GA12168@chromium.org>
+ <CAPBb6MUCYK3eyk5Oq_p8yBvFh1EszzPDcvbB0VLTu_KKzCLTMA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1561464978.23799.37.camel@mtksdccf07>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Cc: Shik Chen <shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?SG9sbWVzIENoaW91ICjpgrHmjLop?= <holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= <christie.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEmxxBWXNxL4zz@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPBb6MUCYK3eyk5Oq_p8yBvFh1EszzPDcvbB0VLTu_KKzCLTMA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre Courbot <acourbot@chromium.org>
+Cc: devicetree@vger.kernel.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng@mediatek.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu@mediatek.com>, =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= <christie.yu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, =?UTF-8?B?SG9sbWVzIENoaW91ICjpgrHmjLop?= <holmes.chiou@mediatek.com>, Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin@mediatek.com>, Sj Huang <sj.huang@mediatek.com>, Yu Zhao <yuzhao@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Ping-Hsun Wu <ping-hsun.wu@mediatek.com>, Ross Zwisler <zwisler@chromium.org>, Frederic Chen <frederic.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, moderated list:ARM/Mediatek SoC support
 List-Id: devicetree@vger.kernel.org
 
-Hi Frederic,
-
-On Tue, Jun 25, 2019 at 9:16 PM Frederic Chen
-<frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+On Thu, Jun 20, 2019 at 1:48 PM Alexandre Courbot <acourbot@chromium.org> wrote:
 >
-> Dear Tomasz,
->
-> Would you comment on the following points in further? Thank you for the
-> review.
->
-> On Thu, 2019-05-09 at 18:48 +0900, Tomasz Figa wrote:
-> > Hi Frederic,
+> On Tue, Jun 4, 2019 at 8:20 PM Tomasz Figa <tfiga@chromium.org> wrote:
+> > > +
+> > > +     ret = mdp_vpu_get_locked(mdp);
+> > > +     if (ret < 0)
+> > > +             goto err_load_vpu;
 > >
->
-> [snip]
->
-> > > +int mtk_dip_pipe_job_start(struct mtk_dip_pipe *dip_pipe,
-> > > +                          struct mtk_dip_pipe_job_info *pipe_job_info)
-> > > +{
-> > > +       struct platform_device *pdev = dip_pipe->dip_dev->pdev;
-> > > +       int ret;
-> > > +       int out_img_buf_idx;
-> > > +       struct img_ipi_frameparam dip_param;
-> > > +       struct mtk_dip_dev_buffer *dev_buf_in;
-> > > +       struct mtk_dip_dev_buffer *dev_buf_out;
-> > > +       struct mtk_dip_dev_buffer *dev_buf_tuning;
-> > > +
-> > > +       if (!pipe_job_info) {
-> > > +               dev_err(&pdev->dev,
-> > > +                       "pipe_job_info(%p) in start can't be NULL\n",
-> > > +                       pipe_job_info);
-> > > +               return -EINVAL;
-> > > +       }
+> > This shouldn't happen in open(), but rather the latest possible point in
+> > time. If one needs to keep the VPU running for the time of streaming, then
+> > it should be start_streaming. If one can safely turn the VPU off if there is
+> > no frame queued for long time, it should be just in m2m job_run.
 > >
-> > This should be impossible to happen.
-> >
-> > > +
-> > > +       /* We need RAW and at least MDP0 or MDP 1 buffer */
-> > > +       if (!pipe_job_info->buf_map[MTK_DIP_VIDEO_NODE_ID_RAW_OUT] ||
-> > > +           (!pipe_job_info->buf_map[MTK_DIP_VIDEO_NODE_ID_MDP0_CAPTURE] &&
-> > > +                !pipe_job_info->buf_map[MTK_DIP_VIDEO_NODE_ID_MDP1_CAPTURE])){
-> > > +               struct mtk_dip_dev_buffer **map = pipe_job_info->buf_map;
-> > > +
-> > > +               dev_dbg(&pdev->dev,
-> > > +                       "can't trigger job: raw(%p), mdp0(%p), mdp1(%p)\n",
-> > > +                       map[MTK_DIP_VIDEO_NODE_ID_RAW_OUT],
-> > > +                       map[MTK_DIP_VIDEO_NODE_ID_MDP0_CAPTURE],
-> > > +                       map[MTK_DIP_VIDEO_NODE_ID_MDP1_CAPTURE]);
-> > > +               return -EINVAL;
-> >
-> > This must be validated at the time of request_validate. We can't fail at
-> > this stage anymore.
+> > Generally the userspace should be able to
+> > just open an m2m device for querying it, without any side effects like
+> > actually powering on the hardware or grabbing a hardware instance (which
+> > could block some other processes, trying to grab one too).
 >
-> After the modification about checking the required buffers in
-> req_validate(), we got failed in the following testRequests()
-> of V4L2 compliance test. The V4L2 compliance test case doesn't know
-> which buffers of the video devices are required and expects that the
-> MEDIA_REQUEST_IOC_QUEUE succeed when the request has any valid buffer.
+> OTOH looking at the code of mdp_vpu_get_locked(), we do the whole
+> rproc_boot and VPU init procedure if we were the only user. So I can
+> understand we want to avoid doing this too often.
 >
-> For example, when the request has MDP 0 buffer only, the DIP's
-> req_validate() should return an error since it also need a buffer
-> from RAW video device, but it make compliance test get failed.
->
-> May I still check the required buffers in req_validate() in the next
-> patch? I will add some note to explain that the compliance test failed
-> item is related to the limitation?
->
-> =======================================================
-> int testRequests(struct node *node, bool test_streaming)
-> // ......
-> if (i)
->         fail_on_test(!buf.qbuf(node));
-> buf.s_flags(buf.g_flags() | V4L2_BUF_FLAG_REQUEST_FD);
-> buf.s_request_fd(buf_req_fds[i]);
-> buf.s_field(V4L2_FIELD_ANY);
-> fail_on_test(buf.qbuf(node));
-> if (v4l_type_is_video(buf.g_type()) && v4l_type_is_output(buf.g_type()))
->         fail_on_test(buf.g_field() == V4L2_FIELD_ANY);
-> fail_on_test(buf.querybuf(node, i));
->
-> // ......
->
-> // LINE 1807 in v4l2-test-buffers.cpp, we will got the  failed here.
-> // Since we need one RAW and one MDP0 buffer at least.
-> // v4l2-test-buffers.cpp(1807): doioctl_fd(buf_req_fds[i],
-> // MEDIA_REQUEST_IOC_QUEUE, 0)
-> //      test Requests: FAIL
-> fail_on_test(doioctl_fd(buf_req_fds[i], MEDIA_REQUEST_IOC_QUEUE, 0));
-> =======================================================
->
+> Maybe mdp_vpu_get_locked() can be reorganized in a better way. I feel
+> like the call to mdp_vpu_register() should be done in probe, and maybe
+> we can use runtime PM (with a reasonable timeout) to control the rproc
+> and VPU init?
 
-Sounds like a limitation of the compliance test. Request API testing
-there is still new and possibly just made for simple mem-to-mem
-devices.
+I think it depends on when exactly the rproc and VPU need stay
+initialized. In general, we want to turn off as much as possible as
+quickly as possible, but keeping in mind any turn on latencies.
 
-Hans, the driver always requires some buffers to be given, like the
-raw frame input, while other, e.g. downscaled output, are optional.
-Any ideas?
+For example. if it takes 10 ms to boot rproc/VPU, we probably
+shouldn't turn it off unless we already spent 20-30 ms idling, which
+could be handled with runtime PM with (delayed) autosuspend. However,
+things like clock gating are normally very fast, so we could just stop
+any clocks as soon as frame processing ends and restart when next
+frame is getting scheduled and if we use autosuspend, we wouldn't be
+able to do it using PM runtime.
 
-> > > +
-> > > +static int mtk_dip_vb2_queue_setup(struct vb2_queue *vq,
-> > > +                                  unsigned int *num_buffers,
-> > > +                                  unsigned int *num_planes,
-> > > +                                  unsigned int sizes[],
-> > > +                                  struct device *alloc_devs[])
-> > > +{
-> > > +       struct mtk_dip_pipe *dip_pipe = vb2_get_drv_priv(vq);
-> > > +       struct mtk_dip_video_device *node =
-> > > +               mtk_dip_vbq_to_node(vq);
-> > > +       struct device *dev = &dip_pipe->dip_dev->pdev->dev;
-> > > +       struct device *buf_alloc_ctx;
-> > > +
->
-> [snip]
->
-> > > +
-> > > +       if (vq->type == V4L2_BUF_TYPE_META_CAPTURE ||
-> > > +           vq->type == V4L2_BUF_TYPE_META_OUTPUT)
-> > > +               size = fmt->fmt.meta.buffersize;
-> > > +       else
-> > > +               size = fmt->fmt.pix_mp.plane_fmt[0].sizeimage;
-> > > +
-> > > +       if (*num_planes) {
-> > > +               if (sizes[0] < size) {
-> > > +                       dev_dbg(dev, "%s:%s:%s: size error(user:%d, max:%d)\n",
-> > > +                               __func__, dip_pipe->desc->name,
-> > > +                               node->desc->name, sizes[0], size);
-> > > +                       return -EINVAL;
-> > > +               }
-> >
-> > I don't think this is an error. This is for handling VIDIOC_CREATE_BUFS,
-> > which can allocate for any arbitrary format.
-> >
-> > Whether the size of the buffer is big enough for current format should be
-> > checked in .buf_prepare callback.
->
-> When executing V4L2 compliance test, we need to check this image size to
-> pass the following q.create_bufs() test (LINE:709,
-> v4l2-test-buffers.cpp).
->
-> ========================================================
-> node->g_fmt(fmt, q.g_type());
-> //....
-> fmt.s_height(fmt.g_height() / 2);
-> for (unsigned p = 0; p < fmt.g_num_planes(); p++)
->         fmt.s_sizeimage(fmt.g_sizeimage(p) / 2, p);
->
-> // LINE 709 in v4l2-test-buffers.cpp
-> // It seems that the driver needs to return EINVAL when the buffer
-> //size is smaller than the sizeimage required
->         fail_on_test(q.create_bufs(node, 1, &fmt) != EINVAL);
-> ========================================================
->
-> The kernel document has some similar description on VIDIOC_CREATE_BUFS.
->
-> https://www.kernel.org/doc/html/latest/media/uapi/v4l/vidioc-create-bufs.html
->
-> =======================================================
-> Usually if the format.pix.sizeimage field is less than the minimum
-> required for the given format, then an error will be returned since
-> drivers will typically not allow this.
-> =======================================================
->
-> Should we check the image size of each plane here so that we can pass
-> the test?
-
-Note that "given format" there means the format field of
-structv4l2_create_buffers, _not_ the currently active format. That's
-really strange because we don't get that inside queue_setup.
-
-Hans, how should we handle this in the driver? Right now we just call
-vb2_create_bufs(), which doesn't care about anything else than
-sizeimage. Do we need to implement our own .vidioc_create_bufs()
-handler that validates the sizeimage wrt the other parts of the given
-format before calling vb2_create_bufs()?
-
-Another thing is that the spec isn't very precise on this, especially
-given the "usually" and "typically" in the description quoted above.
+My point was that just open() is not the right place for doing this.
+Any later stage should be okay, as long as it suits the hardware
+architecture.
 
 Best regards,
 Tomasz
