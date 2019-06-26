@@ -1,102 +1,23 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: backlight: fix vendor prefix for
- ArcticSand arcxcnn driver bindings
-Date: Wed, 26 Jun 2019 11:56:14 +0100
-Message-ID: <20190626105614.ujmryi7qou2ra7aq@holly.lan>
-References: <1561435529-7835-1-git-send-email-bdodge09@gmail.com>
- <1561435529-7835-2-git-send-email-bdodge09@gmail.com>
- <20190625085534.xf2ullyju3ewbgik@holly.lan>
- <CAFaGBPnH=75=wJRM4EX9MYR8MSehEa2_hBEOsqo-DZvD6c6f_A@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: display: panel: Add support for
+ Raydium RM67191 panel
+Date: Wed, 26 Jun 2019 07:58:39 -0300
+Message-ID: <CAOMZO5AKOgcRcyOyz71MyHY5VbGF2OCSdVfREwoNPrVk8rbVAA@mail.gmail.com>
+References: <1561544420-15572-1-git-send-email-robert.chiras@nxp.com> <1561544420-15572-2-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAFaGBPnH=75=wJRM4EX9MYR8MSehEa2_hBEOsqo-DZvD6c6f_A@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Dodge <bdodge09@gmail.com>
-Cc: devicetree@vger.kernel.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, Pavel Machek <pavel@ucw.cz>, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1561544420-15572-2-git-send-email-robert.chiras@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Chiras <robert.chiras@nxp.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMjUsIDIwMTkgYXQgMDc6NDQ6MDZBTSAtMDQwMCwgQnJpYW4gRG9kZ2Ugd3Jv
-dGU6Cj4gSSB3b3VsZCBsaWtlIHRvIGRlcHJlY2F0ZSB0aGUgb2xkIHByZWZpeCBpbiB0aGUgZnV0
-dXJlIGFmdGVyIGNvbW11bmljYXRpbmcKPiB3aXRoIGFsbCBjaGlwIGN1c3RvbWVycywgd2hpY2gg
-aXMgd2h5IHRoZSBvbGQgcHJlZml4IGlzIG5vdCBkb2N1bWVudGVkIGluCj4gdGhlIG5ldyBiaW5k
-aW5ncy4KCkRlcHJlY2F0aW9uIGlzIGZpbmUgKGJ5IG1lIGF0IGxlYXN0KSBpdCdzIGp1c3QgdGhh
-dCBJJ20gbm90IHN1cmUgdGhhdApyZW1vdmluZyB0aGUgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIGRl
-cHJlY2F0ZWQgYmluZGluZ3MgaXMgdGhlIHJpZ2h0IHdheQp0byBkbyBpdC4gV2hhdCBpcyB0aGUg
-cHJpb3IgYXJ0IGhlcmU/CgoKRGFuaWVsLgoKCgo+IAo+IAo+IE9uIFR1ZSwgSnVuIDI1LCAyMDE5
-LCA0OjU1IEFNIERhbmllbCBUaG9tcHNvbiA8ZGFuaWVsLnRob21wc29uQGxpbmFyby5vcmc+Cj4g
-d3JvdGU6Cj4gCj4gPiBPbiBUdWUsIEp1biAyNSwgMjAxOSBhdCAxMjowNToyOEFNIC0wNDAwLCBC
-cmlhbiBEb2RnZSB3cm90ZToKPiA+ID4gICAgIFRoZSB2ZW5kb3ItcHJlZml4ZXMudHh0IGZpbGUg
-cHJvcGVybHkgcmVmZXJzIHRvIEFyY3RpY1NhbmQKPiA+ID4gICAgIGFzIGFyY3RpYyBidXQgdGhl
-IGRyaXZlciBiaW5kaW5ncyBpbXByb3Blcmx5IGFiYnJldmlhdGVkIHRoZQo+ID4gPiAgICAgcHJl
-Zml4IHRvIGFyYy4gVGhpcyB3YXMgYSBtaXN0YWtlIGluIHRoZSBvcmlnaW5hbCBwYXRjaAo+ID4g
-Pgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBCcmlhbiBEb2RnZSA8YmRvZGdlMDlAZ21haWwuY29tPgo+
-ID4gPiAtLS0KPiA+ID4gIC4uLi9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4
-dCAgICAgICAgIHwgMjQKPiA+ICsrKysrKysrKysrKystLS0tLS0tLS0KPiA+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkKPiA+ID4KPiA+ID4gZGlm
-ZiAtLWdpdAo+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNr
-bGlnaHQvYXJjeGNubl9ibC50eHQKPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5fYmwudHh0Cj4gPiA+IGluZGV4IDIzMGFiZGUuLjlj
-ZjRjNDQgMTAwNjQ0Cj4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9sZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4dAo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvYXJjeGNubl9ibC50eHQKPiA+ID4g
-QEAgLTEsOCArMSwxMiBAQAo+ID4gPiAtQmluZGluZyBmb3IgQXJjdGljU2FuZCBhcmMyYzA2MDgg
-TEVEIGRyaXZlcgo+ID4gPiArQmluZGluZyBmb3IgQXJjdGljU2FuZCBhcmMgZmFtaWx5IExFRCBk
-cml2ZXJzCj4gPiA+Cj4gPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gPiAtLSBjb21wYXRp
-YmxlOiAgICAgICAgICAgICAgICBzaG91bGQgYmUgImFyYyxhcmMyYzA2MDgiCj4gPiA+IC0tIHJl
-ZzogICAgICAgICAgICAgICAgICAgICAgIHNsYXZlIGFkZHJlc3MKPiA+ID4gKy0gY29tcGF0aWJs
-ZTogb25lIG9mCj4gPiA+ICsgICAgICJhcmN0aWMsYXJjMWMwNjA4Igo+ID4gPiArICAgICAiYXJj
-dGljLGFyYzJjMDYwOCIKPiA+ID4gKyAgICAgImFyY3RpYyxhcmMzYzA4NDUiCj4gPgo+ID4gVGhp
-cyBpcyBtb3JlIGEgcXVlc3Rpb24gZm9yIHRoZSBEVCBmb2xrcyB0aGFuIGZvciBCcmlhbiBidXQu
-Li4KPiA+Cj4gPiBBRkFJQ1QgdGhpcyBwYXRjaCBpcyBmaXhpbmcgdGhlIGJpbmRpbmcgZm9yIHRo
-ZSBBcmN0aWNTYW5kIGRldmljZXMgdG8KPiA+IHVzZSB0aGUgY29ycmVjdCB2YWx1ZSBmcm9tIHZl
-bmRvci1wcmVmaXhlcy55YW1sIGFuZCBoYXMgYmVlbiBwcmV2aW91c2x5Cj4gPiBkaXNjdXNzZWQg
-aGVyZToKPiA+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE4LzkvMjUvNzI2Cj4gPgo+ID4gQ3Vy
-cmVudGx5IHRoaXMgcGF0Y2ggc2VyaWVzIGp1c3QgdXBkYXRlcyB0aGUgRFQgYmluZGluZ3MgYnV0
-IHRoZQo+ID4gaW1wbGVtZW50YXRpb24gYWxzbyBob25vdXJzIHRoZSBvbGQgdmFsdWVzIChzaW5j
-ZSB0aGVyZSBpcyBhIENocm9tZWJvb2sKPiA+IGluIHRoZSB3aWxkIHRoYXQgdXNlcyB0aGUgY3Vy
-cmVudCBiaW5kaW5ncykuCj4gPgo+ID4gSGVuY2UgSSdtIG5vdCBjbGVhciB3aGV0aGVyIHRoZSBi
-aW5kaW5ncyBzaG91bGQgZG9jdW1lbnQgdGhlIGRlcHJlY2F0ZWQKPiA+IG9wdGlvbnMgdG9vIChl
-LmcuIG1ha2UgaXQgZWFzaWVyIHRvIGZpbmQgdGhlIGJpbmRpbmdzIGRvYyB3aXRoIGdpdCBncmVw
-Cj4gPiBhbmQgZnJpZW5kcykuCj4gPgo+ID4KPiA+IERhbmllbC4KPiA+Cj4gPgo+ID4gPiArCj4g
-PiA+ICstIHJlZzogICAgICAgICAgICAgICBzbGF2ZSBhZGRyZXNzCj4gPiA+Cj4gPiA+ICBPcHRp
-b25hbCBwcm9wZXJ0aWVzOgo+ID4gPiAgLSBkZWZhdWx0LWJyaWdodG5lc3M6ICAgICAgICBicmln
-aHRuZXNzIHZhbHVlIG9uIGJvb3QsIHZhbHVlIGZyb206Cj4gPiAwLTQwOTUKPiA+ID4gQEAgLTEx
-LDE5ICsxNSwxOSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gPiAgLSBsZWQtc291cmNlczog
-ICAgICAgICAgICAgICBMaXN0IG9mIGVuYWJsZWQgY2hhbm5lbHMgZnJvbSAwIHRvIDUuCj4gPiA+
-ICAgICAgICAgICAgICAgICAgICAgICBTZWUKPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9sZWRzL2NvbW1vbi50eHQKPiA+ID4KPiA+ID4gLS0gYXJjLGxlZC1jb25maWctMDog
-IHNldHRpbmcgZm9yIHJlZ2lzdGVyIElMRURfQ09ORklHXzAKPiA+ID4gLS0gYXJjLGxlZC1jb25m
-aWctMTogIHNldHRpbmcgZm9yIHJlZ2lzdGVyIElMRURfQ09ORklHXzEKPiA+ID4gLS0gYXJjLGRp
-bS1mcmVxOiAgICAgICAgICAgICAgUFdNIG1vZGUgZnJlcXVlbmNlIHNldHRpbmcgKGJpdHMgWzM6
-MF0KPiA+IHVzZWQpCj4gPiA+IC0tIGFyYyxjb21wLWNvbmZpZzogICBzZXR0aW5nIGZvciByZWdp
-c3RlciBDT05GSUdfQ09NUAo+ID4gPiAtLSBhcmMsZmlsdGVyLWNvbmZpZzogc2V0dGluZyBmb3Ig
-cmVnaXN0ZXIgRklMVEVSX0NPTkZJRwo+ID4gPiAtLSBhcmMsdHJpbS1jb25maWc6ICAgc2V0dGlu
-ZyBmb3IgcmVnaXN0ZXIgSU1BWFRVTkUKPiA+ID4gKy0gYXJjdGljLGxlZC1jb25maWctMDogICAg
-ICAgc2V0dGluZyBmb3IgcmVnaXN0ZXIgSUxFRF9DT05GSUdfMAo+ID4gPiArLSBhcmN0aWMsbGVk
-LWNvbmZpZy0xOiAgICAgICBzZXR0aW5nIGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18xCj4gPiA+
-ICstIGFyY3RpYyxkaW0tZnJlcTogICAgICAgICAgIFBXTSBtb2RlIGZyZXF1ZW5jZSBzZXR0aW5n
-IChiaXRzIFszOjBdCj4gPiB1c2VkKQo+ID4gPiArLSBhcmN0aWMsY29tcC1jb25maWc6ICAgICAg
-ICBzZXR0aW5nIGZvciByZWdpc3RlciBDT05GSUdfQ09NUAo+ID4gPiArLSBhcmN0aWMsZmlsdGVy
-LWNvbmZpZzogICAgICBzZXR0aW5nIGZvciByZWdpc3RlciBGSUxURVJfQ09ORklHCj4gPiA+ICst
-IGFyY3RpYyx0cmltLWNvbmZpZzogICAgICAgIHNldHRpbmcgZm9yIHJlZ2lzdGVyIElNQVhUVU5F
-Cj4gPiA+Cj4gPiA+ICBOb3RlOiBPcHRpb25hbCBwcm9wZXJ0aWVzIG5vdCBzcGVjaWZpZWQgd2ls
-bCBkZWZhdWx0IHRvIHZhbHVlcyBpbiBJQwo+ID4gRVBST00KPiA+ID4KPiA+ID4gIEV4YW1wbGU6
-Cj4gPiA+Cj4gPiA+ICBhcmMyYzA2MDhAMzAgewo+ID4gPiAtICAgICBjb21wYXRpYmxlID0gImFy
-YyxhcmMyYzA2MDgiOwo+ID4gPiArICAgICBjb21wYXRpYmxlID0gImFyY3RpYyxhcmMyYzA2MDgi
-Owo+ID4gPiAgICAgICByZWcgPSA8MHgzMD47Cj4gPiA+ICAgICAgIGRlZmF1bHQtYnJpZ2h0bmVz
-cyA9IDw1MDA+Owo+ID4gPiAgICAgICBsYWJlbCA9ICJsY2QtYmFja2xpZ2h0IjsKPiA+ID4gLS0K
-PiA+ID4gMi43LjQKPiA+ID4KPiA+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbA==
+On Wed, Jun 26, 2019 at 7:21 AM Robert Chiras <robert.chiras@nxp.com> wrote:
+>
+> Add dt-bindings documentation for Raydium RM67191 DSI panel.
+>
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
