@@ -1,167 +1,36 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/4] IIO: Ingenic JZ47xx: Set clock divider on probe
-Date: Wed, 26 Jun 2019 21:00:42 +0100
-Message-ID: <20190626210042.386ae6e2@archlinux>
-References: <20190623184732.5492-1-contact@artur-rojek.eu>
-        <20190623184732.5492-3-contact@artur-rojek.eu>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 4/4] iio: frequency: adf4371: Add support for output stage mute
+Date: Wed, 26 Jun 2019 14:04:40 -0600
+Message-ID: <CAL_JsqLmXi6Uy9W0tXX87tHuV99H05_+yc98mRUmX_JA0bG=4Q@mail.gmail.com>
+References: <1561389236-26464-1-git-send-email-stefan.popa@analog.com> <20190626204820.513fb866@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190623184732.5492-3-contact@artur-rojek.eu>
+In-Reply-To: <20190626204820.513fb866@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Artur Rojek <contact@artur-rojek.eu>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Maarten ter Huurne <maarten@treewalker.org>, Paul Cercueil <paul@crapouillou.net>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Stefan Popa <stefan.popa@analog.com>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Michael Hennerich <Michael.Hennerich@analog.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 23 Jun 2019 20:47:31 +0200
-Artur Rojek <contact@artur-rojek.eu> wrote:
+On Wed, Jun 26, 2019 at 1:48 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Mon, 24 Jun 2019 18:13:56 +0300
+> Stefan Popa <stefan.popa@analog.com> wrote:
+>
+> > Another feature of the ADF4371/ADF4372 is that the supply current to the
+> > RF8P and RF8N output stage can shut down until the ADF4371 achieves lock
+> > as measured by the digital lock detect circuitry. The mute to lock
+> > detect bit (MUTE_LD) in REG25 enables this function.
+> >
+> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> Bit of fuzz on this due to me ignoring patch 1 for now.
+>
+> Rob probably missed the binding as it was buried inside a patch that wasn't
+> clearly labelled and it is unlike him to review part of the bindings in
+> a series.
 
-> From: Maarten ter Huurne <maarten@treewalker.org>
-> 
-> The SADC component can run at up to 8 MHz on JZ4725B, but is fed
-> a 12 MHz input clock (EXT). Divide it by two to get 6 MHz, then
-> set up another divider to match, to produce a 10us clock.
-> 
-> If the clock dividers are left on their power-on defaults (a divider
-> of 1), the SADC mostly works, but will occasionally produce erroneous
-> readings. This led to button presses being detected out of nowhere on
-> the RS90 every few minutes. With this change, no ghost button presses
-> were logged in almost a day worth of testing.
-> 
-> The ADCLK register for configuring clock dividers doesn't exist on
-> JZ4740, so avoid writing it there.
-> 
-> A function has been introduced rather than a flag because there is a lot
-> of variation between the ADCLK registers on JZ47xx SoCs, both in
-> the internal layout of the register and in the frequency range
-> supported by the SADC. So this solution should make it easier
-> to add support for other JZ47xx SoCs later.
-> 
-> Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-This sounds like it perhaps should be marked as a fix and have appropriate
-fixes tag?  Otherwise, looks fine to me.
+I wrote my reply this morning, but then got distracted with why the
+meta-schema didn't catch the problem of missing a type definition. Now
+it will once I commit it and fix the other cases that we already have.
 
-Jonathan
-
-> ---
->  drivers/iio/adc/ingenic-adc.c | 54 +++++++++++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
-> 
-> diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
-> index 92b1d5037ac9..e234970b7150 100644
-> --- a/drivers/iio/adc/ingenic-adc.c
-> +++ b/drivers/iio/adc/ingenic-adc.c
-> @@ -11,6 +11,7 @@
->  #include <linux/iio/iio.h>
->  #include <linux/io.h>
->  #include <linux/iopoll.h>
-> +#include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/platform_device.h>
-> @@ -22,8 +23,11 @@
->  #define JZ_ADC_REG_ADTCH		0x18
->  #define JZ_ADC_REG_ADBDAT		0x1c
->  #define JZ_ADC_REG_ADSDAT		0x20
-> +#define JZ_ADC_REG_ADCLK		0x28
->  
->  #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
-> +#define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
-> +#define JZ_ADC_REG_ADCLK_CLKDIV10US_LSB	16
->  
->  #define JZ_ADC_AUX_VREF				3300
->  #define JZ_ADC_AUX_VREF_BITS			12
-> @@ -34,6 +38,8 @@
->  #define JZ4740_ADC_BATTERY_HIGH_VREF		(7500 * 0.986)
->  #define JZ4740_ADC_BATTERY_HIGH_VREF_BITS	12
->  
-> +struct ingenic_adc;
-> +
->  struct ingenic_adc_soc_data {
->  	unsigned int battery_high_vref;
->  	unsigned int battery_high_vref_bits;
-> @@ -41,6 +47,7 @@ struct ingenic_adc_soc_data {
->  	size_t battery_raw_avail_size;
->  	const int *battery_scale_avail;
->  	size_t battery_scale_avail_size;
-> +	int (*init_clk_div)(struct device *dev, struct ingenic_adc *adc);
->  };
->  
->  struct ingenic_adc {
-> @@ -151,6 +158,42 @@ static const int jz4740_adc_battery_scale_avail[] = {
->  	JZ_ADC_BATTERY_LOW_VREF, JZ_ADC_BATTERY_LOW_VREF_BITS,
->  };
->  
-> +static int jz4725b_adc_init_clk_div(struct device *dev, struct ingenic_adc *adc)
-> +{
-> +	struct clk *parent_clk;
-> +	unsigned long parent_rate, rate;
-> +	unsigned int div_main, div_10us;
-> +
-> +	parent_clk = clk_get_parent(adc->clk);
-> +	if (!parent_clk) {
-> +		dev_err(dev, "ADC clock has no parent\n");
-> +		return -ENODEV;
-> +	}
-> +	parent_rate = clk_get_rate(parent_clk);
-> +
-> +	/*
-> +	 * The JZ4725B ADC works at 500 kHz to 8 MHz.
-> +	 * We pick the highest rate possible.
-> +	 * In practice we typically get 6 MHz, half of the 12 MHz EXT clock.
-> +	 */
-> +	div_main = DIV_ROUND_UP(parent_rate, 8000000);
-> +	div_main = clamp(div_main, 1u, 64u);
-> +	rate = parent_rate / div_main;
-> +	if (rate < 500000 || rate > 8000000) {
-> +		dev_err(dev, "No valid divider for ADC main clock\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* We also need a divider that produces a 10us clock. */
-> +	div_10us = DIV_ROUND_UP(rate, 100000);
-> +
-> +	writel(((div_10us - 1) << JZ_ADC_REG_ADCLK_CLKDIV10US_LSB) |
-> +	       (div_main - 1) << JZ_ADC_REG_ADCLK_CLKDIV_LSB,
-> +	       adc->base + JZ_ADC_REG_ADCLK);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
->  	.battery_high_vref = JZ4725B_ADC_BATTERY_HIGH_VREF,
->  	.battery_high_vref_bits = JZ4725B_ADC_BATTERY_HIGH_VREF_BITS,
-> @@ -158,6 +201,7 @@ static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
->  	.battery_raw_avail_size = ARRAY_SIZE(jz4725b_adc_battery_raw_avail),
->  	.battery_scale_avail = jz4725b_adc_battery_scale_avail,
->  	.battery_scale_avail_size = ARRAY_SIZE(jz4725b_adc_battery_scale_avail),
-> +	.init_clk_div = jz4725b_adc_init_clk_div,
->  };
->  
->  static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
-> @@ -167,6 +211,7 @@ static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
->  	.battery_raw_avail_size = ARRAY_SIZE(jz4740_adc_battery_raw_avail),
->  	.battery_scale_avail = jz4740_adc_battery_scale_avail,
->  	.battery_scale_avail_size = ARRAY_SIZE(jz4740_adc_battery_scale_avail),
-> +	.init_clk_div = NULL, /* no ADCLK register on JZ4740 */
->  };
->  
->  static int ingenic_adc_read_avail(struct iio_dev *iio_dev,
-> @@ -317,6 +362,15 @@ static int ingenic_adc_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	/* Set clock dividers. */
-> +	if (soc_data->init_clk_div) {
-> +		ret = soc_data->init_clk_div(dev, adc);
-> +		if (ret) {
-> +			clk_disable_unprepare(adc->clk);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	/* Put hardware in a known passive state. */
->  	writeb(0x00, adc->base + JZ_ADC_REG_ENABLE);
->  	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
+Rob
