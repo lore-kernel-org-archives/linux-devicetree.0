@@ -1,89 +1,63 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mm: Init rates and parents configs for
- clocks
-Date: Wed, 26 Jun 2019 15:45:15 +0300
-Message-ID: <CAEnQRZCVQ0+pRh6akiZJXU-fRugEXmnthZp8Q2=aXFXCO3vcUg@mail.gmail.com>
-References: <1561469191-26840-1-git-send-email-abel.vesa@nxp.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH] dt-bindings: display: Add ETM0700G0DH6 compatible string
+Date: Wed, 26 Jun 2019 14:48:21 +0200
+Message-ID: <20190626124821.GA23428@ravnborg.org>
+References: <20190529102540.4608-1-marex@denx.de>
+ <3798152a-59a8-59e0-e733-1ca900c4d8a4@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1561469191-26840-1-git-send-email-abel.vesa@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Abel Vesa <abel.vesa@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Anson Huang <anson.huang@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <3798152a-59a8-59e0-e733-1ca900c4d8a4@denx.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marek Vasut <marex@denx.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Thierry Reding <treding@nvidia.com>, Jan Tuerk <jan.tuerk@emtrion.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 4:42 PM Abel Vesa <abel.vesa@nxp.com> wrote:
->
-> Add the initial configuration for clocks that need default parent and rate
-> setting. This is based on the vendor tree clock provider parents and rates
-> configuration except this is doing the setup in dts rather than using clock
-> consumer API in a clock provider driver.
->
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 36 +++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index 232a741..ab92108 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -451,6 +451,42 @@
->                                          <&clk_ext3>, <&clk_ext4>;
->                                 clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
->                                               "clk_ext3", "clk_ext4";
-> +                               assigned-clocks = <&clk IMX8MM_CLK_AUDIO_AHB>,
-> +                                               <&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
-> +                                               <&clk IMX8MM_SYS_PLL3>,
-> +                                               <&clk IMX8MM_VIDEO_PLL1>,
-> +                                               <&clk IMX8MM_CLK_NOC>,
-> +                                               <&clk IMX8MM_CLK_PCIE1_CTRL>,
-> +                                               <&clk IMX8MM_CLK_PCIE1_PHY>,
-> +                                               <&clk IMX8MM_CLK_CSI1_CORE>,
-> +                                               <&clk IMX8MM_CLK_CSI1_PHY_REF>,
-> +                                               <&clk IMX8MM_CLK_CSI1_ESC>,
-> +                                               <&clk IMX8MM_CLK_DISP_AXI>,
-> +                                               <&clk IMX8MM_CLK_DISP_APB>;
-> +                               assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_800M>,
-> +                                               <0>,
-Isn't there a macro for 0? (dummy clock?)
-
-
-> +                                               <0>,
-> +                                               <0>,
-> +                                               <&clk IMX8MM_SYS_PLL3_OUT>,
-> +                                               <&clk IMX8MM_SYS_PLL2_250M>,
-> +                                               <&clk IMX8MM_SYS_PLL2_100M>,
-> +                                               <&clk IMX8MM_SYS_PLL2_1000M>,
-> +                                               <&clk IMX8MM_SYS_PLL2_1000M>,
-> +                                               <&clk IMX8MM_SYS_PLL1_800M>,
-> +                                               <&clk IMX8MM_SYS_PLL2_1000M>,
-> +                                               <&clk IMX8MM_SYS_PLL1_800M>;
-> +                               assigned-clock-rates = <400000000>,
-> +                                                       <400000000>,
-> +                                                       <750000000>,
-> +                                                       <594000000>,
-> +                                                       <0>,
-> +                                                       <0>,
-> +                                                       <0>,
-> +                                                       <0>,
-> +                                                       <0>,
-> +                                                       <0>,
-> +                                                       <500000000>,
-> +                                                       <200000000>;
->                         };
->
->                         src: reset-controller@30390000 {
-> --
-> 2.7.4
->
+SGkgTWFyZWsuCgpPbiBNb24sIEp1biAyNCwgMjAxOSBhdCAxMjo0Mzo0OUFNICswMjAwLCBNYXJl
+ayBWYXN1dCB3cm90ZToKPiBPbiA1LzI5LzE5IDEyOjI1IFBNLCBNYXJlayBWYXN1dCB3cm90ZToK
+PiA+IFRoZSBFVE0wNzAwRzBESDYgaXMgY3VycmVudGx5IGRvY3VtZW50ZWQgYXMgdXNpbmcgZWR0
+LGV0bTA3MDA4MGRoNgo+ID4gY29tcGF0aWJsZSBzdHJpbmcsIGhvd2V2ZXIgdGhlIExpbnV4IGtl
+cm5lbCBkcml2ZXIgYXMgd2VsbCBhcyBhCj4gPiBjb3VwbGUgb2YgRFRzIHVzZSBlZHQsZXRtMDcw
+MGcwZGg2IGNvbXBhdGlibGUgc3RyaW5nLiBBZGQgaXQgaW50bwo+ID4gdGhlIGRvY3VtZW50YXRp
+b24uCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IE1hcmVrIFZhc3V0IDxtYXJleEBkZW54LmRlPgo+
+ID4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Cj4gPiBDYzogSmFuIFR1ZXJr
+IDxqYW4udHVlcmtAZW10cmlvbi5jb20+Cj4gPiBDYzogVGhpZXJyeSBSZWRpbmcgPHRyZWRpbmdA
+bnZpZGlhLmNvbT4KPiA+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+ID4gVG86IGRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiA+IC0tLQo+ID4gIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZWR0LGV0LXNlcmllcy50eHQgICAgICAgICB8IDIgKy0K
+PiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPiA+IAo+
+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL2VkdCxldC1zZXJpZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvcGFuZWwvZWR0LGV0LXNlcmllcy50eHQKPiA+IGluZGV4IGJlODY4NDMyN2Vl
+NC4uYjdhYzFjNzI1Zjk3IDEwMDY0NAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZWR0LGV0LXNlcmllcy50eHQKPiA+ICsrKyBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2VkdCxldC1zZXJpZXMu
+dHh0Cj4gPiBAQCAtNDAsNyArNDAsNyBAQCBzaW1wbGUtcGFuZWwudHh0Cj4gPiAgfCBJZGVudGlm
+aWVyICAgICAgfCBjb21wYXRiaWxlICAgICAgICAgIHwgZGVzY3JpcHRpb24gICAgICAgICAgICAg
+ICAgICAgICAgICAgfAo+ID4gICs9PT09PT09PT09PT09PT09PSs9PT09PT09PT09PT09PT09PT09
+PT0rPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PSsKPiA+ICB8IEVUTTA3MDBH
+MERINiAgICB8IGVkdCxldG0wNzAwODBkaDYgICAgfCBXVkdBIFRGVCBEaXNwbGF5IHdpdGggY2Fw
+YWNpdGl2ZSAgICB8Cj4gPiAtfCAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAg
+IHwgVG91Y2hzY3JlZW4gICAgICAgICAgICAgICAgICAgICAgICAgfAo+ID4gK3wgICAgICAgICAg
+ICAgICAgIHwgZWR0LGV0bTA3MDBnMGRoNiAgICB8IFRvdWNoc2NyZWVuICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwKPiA+ICArLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+Ky0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCj4gPiAgfCBFVE0wNzAwRzBC
+REg2ICAgfCBlZHQsZXRtMDcwMDgwYmRoNiAgIHwgU2FtZSBhcyBFVE0wNzAwRzBESDYgYnV0IHdp
+dGggICAgICAgfAo+ID4gIHwgICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICB8
+IGludmVydGVkIHBpeGVsIGNsb2NrLiAgICAgICAgICAgICAgIHwKPiA+IAo+IAo+IEJ1bXAgPwpB
+cyBJIGdvdCBPSyBvbiBpcnggdG8gYXBwbHkgdHJpdmlhbCBkdC1iaW5kaW5ncyBwYXRjaGVzIGZv
+ciBwYW5sZXMgSQpoYXZlIG5vdyB0YWtlbiBjYXJlIG9mIHRoaXMgb25lLgpBcHBsaWVkIHRvIGRy
+bS1taXNjLW5leHQgYW5kIHdpbGwgcHVzaCBpdCBvdXQgc29vbi4KCglTYW0KX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
