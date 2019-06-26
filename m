@@ -1,79 +1,66 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 2/2] dt-bindings: i2c: mv64xxx: Add YAML schemas
-Date: Wed, 26 Jun 2019 15:31:16 +0200
-Message-ID: <20190626133116.GJ801@ninjato>
-References: <20190611090309.7930-1-maxime.ripard@bootlin.com>
- <20190611090309.7930-2-maxime.ripard@bootlin.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3870789782217075812=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190611090309.7930-2-maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: [PATCH 00/10] Improvements and fixes for mxsfb DRM driver
+Date: Wed, 26 Jun 2019 16:32:08 +0300
+Message-ID: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like 8MQ, 8MM
+and 8QXP). Following, are the new features added and fixes from this
+patch-set:
 
---===============3870789782217075812==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ZG+WKzXzVby2T9Ro"
-Content-Disposition: inline
+1. Add support for drm_bridge
+On 8MQ and 8MM, the LCDIF block is not directly connected to a parallel
+display connector, where an LCD panel can be attached, but instead it is
+connected to DSI controller. Since this DSI stands between the display
+controller (eLCDIF) and the physical connector, the DSI can be implemented
+as a DRM bridge. So, in order to be able to connect the mxsfb driver to
+the DSI driver, the support for a drm_bridge was needed in mxsfb DRM
+driver (the actual driver for the eLCDIF block).
 
+2. Add support for additional pixel formats
+Some of the pixel formats needed by Android were not implemented in this
+driver, but they were actually supported. So, add support for them.
 
---ZG+WKzXzVby2T9Ro
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+3. Add support for horizontal stride
+Having support for horizontal stride allows the use of eLCDIF with a GPU
+(for example) that can only output resolution sizes multiple of a power of
+8. For example, 1080 is not a power of 16, so in order to support 1920x1080
+output from GPUs that can produce linear buffers only in sizes multiple to 16,
+this feature is needed.
 
-On Tue, Jun 11, 2019 at 11:03:09AM +0200, Maxime Ripard wrote:
-> Switch the DT binding to a YAML schema to enable the DT validation.
->=20
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->=20
+3. Few minor features and bug-fixing
+The addition of max-res DT property was actually needed in order to limit
+the bandwidth usage of the eLCDIF block. This is need on systems where
+multiple display controllers are presend and the memory bandwidth is not
+enough to handle all of them at maximum capacity (like it is the case on
+8MQ, where there are two display controllers: DCSS and eLCDIF).
+The rest of the patches are bug-fixes.
 
-Applied to for-next, thanks!
+Mirela Rabulea (1):
+  drm/mxsfb: Signal mode changed when bpp changed
 
+Robert Chiras (9):
+  drm/mxsfb: Update mxsfb to support a bridge
+  drm/mxsfb: Update mxsfb with additional pixel formats
+  drm/mxsfb: Fix the vblank events
+  dt-bindings: display: Add max-res property for mxsfb
+  drm/mxsfb: Add max-res property for MXSFB
+  drm/mxsfb: Update mxsfb to support LCD reset
+  drm/mxsfb: Improve the axi clock usage
+  drm/mxsfb: Clear OUTSTANDING_REQS bits
+  drm/mxsfb: Add support for horizontal stride
 
---ZG+WKzXzVby2T9Ro
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../devicetree/bindings/display/mxsfb.txt          |   6 +
+ drivers/gpu/drm/mxsfb/mxsfb_crtc.c                 | 290 ++++++++++++++++++---
+ drivers/gpu/drm/mxsfb/mxsfb_drv.c                  | 189 +++++++++++---
+ drivers/gpu/drm/mxsfb/mxsfb_drv.h                  |  10 +-
+ drivers/gpu/drm/mxsfb/mxsfb_out.c                  |  26 +-
+ drivers/gpu/drm/mxsfb/mxsfb_regs.h                 | 128 ++++++---
+ 6 files changed, 531 insertions(+), 118 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0Tc6QACgkQFA3kzBSg
-KbYHgA/9F8nLcTx2NE4YvEyysDBH0L3/XFU39GvfNfR00Uu3Js8xbbyCmj/GYwLr
-fPMNWfOtjF5ROVZOnhKc8BVhk9ps9qzOVDjn11VgnScxpWym2IuvpFfY1yXfT0H6
-9arS6XHnikWTkLUpZIAWSA4yHByNptL+ZRmcJ2gcabBn/8rCrfwe2JvxfLNyLAsI
-rL+ynFioJZqhZOEXrag9AwPPzIH8UnItUbt/yFgNdurRynJUDmKM2eZ/xwf8mgga
-WXVGHIVHjSJFp0kool7FJagDUqJ5nVTMDBkUePCxUihg6CSse2YDQtONGKY2fxmY
-2aSpGhNYUj+jRTOtJSHPjGfCFJ7t6k6nhuk0Psqz5rOV3fxy+Hldi23MJa5D6GWb
-jbclbxhwIKKuBsCx694ESa2yUoKXdPkIukw1IDTynpFUgF5/Gm9cafxcCGK5wNrd
-aIzPaDVP/9JGdXx/i7kkVTFtPO+J3ToXqA/UHhbz/JoX8ORlun18NBrcgfpl26p3
-TST6uEr15dx+SR46ebz7r5RdnirxWyBD2kn4iMnj7YmUi9ONSPXttjN+4/Mnq1wk
-9wnM4tic6utMMEQN5oHCnViFi1ZS4/FqEQ0CTZlb1+DG5UwRTSUAgN4v+fWffM/2
-k4Mnmq4JmdQaFsFmcM282vpYVQAm7UwU5wQYZOd1Be/tWe+Tsxg=
-=RozK
------END PGP SIGNATURE-----
-
---ZG+WKzXzVby2T9Ro--
-
-
---===============3870789782217075812==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3870789782217075812==--
+-- 
+2.7.4
