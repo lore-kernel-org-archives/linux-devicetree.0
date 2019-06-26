@@ -1,63 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v10 1/6] mfd: rk808: remove the id_table
-Date: Wed, 26 Jun 2019 12:53:58 +0100
-Message-ID: <20190626115358.GS21119@dell>
-References: <20190621103258.8154-1-tony.xie@rock-chips.com>
- <20190621103258.8154-2-tony.xie@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Aniket Masule <amasule@codeaurora.org>
+Subject: [PATCH] arm64: dts: sdm845: Add video nodes
+Date: Wed, 26 Jun 2019 17:24:07 +0530
+Message-ID: <1561550047-19600-1-git-send-email-amasule@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190621103258.8154-2-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Xie <tony.xie@rock-chips.com>
-Cc: heiko@sntech.de, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
+To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mgottam@codeaurora.org, vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Jun 2019, Tony Xie wrote:
+This adds video nodes to sdm845 based on the examples
+in the bindings.
 
-> Remove the id_table because it's not used.
-> 
-> Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
-> ---
->  drivers/mfd/rk808.c | 9 ---------
->  1 file changed, 9 deletions(-)
+Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
+Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Also, this patch already appears to be applied.
-
-Once patches are taken from the set, you should avoid resending them.
-
-> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-> index 216fbf6adec9..94377782d208 100644
-> --- a/drivers/mfd/rk808.c
-> +++ b/drivers/mfd/rk808.c
-> @@ -568,14 +568,6 @@ static int rk808_remove(struct i2c_client *client)
->  	return 0;
->  }
->  
-> -static const struct i2c_device_id rk808_ids[] = {
-> -	{ "rk805" },
-> -	{ "rk808" },
-> -	{ "rk818" },
-> -	{ },
-> -};
-> -MODULE_DEVICE_TABLE(i2c, rk808_ids);
-> -
->  static struct i2c_driver rk808_i2c_driver = {
->  	.driver = {
->  		.name = "rk808",
-> @@ -583,7 +575,6 @@ static struct i2c_driver rk808_i2c_driver = {
->  	},
->  	.probe    = rk808_probe,
->  	.remove   = rk808_remove,
-> -	.id_table = rk808_ids,
->  };
->  
->  module_i2c_driver(rk808_i2c_driver);
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index fcb9330..ff94cfa 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2437,6 +2437,36 @@
+ 				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>;
+ 			iommus = <&apps_smmu 0x0040 0x1>;
+ 		};
++
++		video-codec@aa00000 {
++			compatible = "qcom,sdm845-venus";
++			reg = <0x0aa00000 0xff000>;
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++			power-domains = <&videocc VENUS_GDSC>;
++			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
++				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
++				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
++			clock-names = "core", "iface", "bus";
++			iommus = <&apps_smmu 0x10a0 0x8>,
++				 <&apps_smmu 0x10b0 0x0>;
++			memory-region = <&venus_region>;
++
++			video-core0 {
++				compatible = "venus-decoder";
++				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
++					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
++				clock-names = "core", "bus";
++				power-domains = <&videocc VCODEC0_GDSC>;
++			};
++
++			video-core1 {
++				compatible = "venus-encoder";
++				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
++					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
++				clock-names = "core", "bus";
++				power-domains = <&videocc VCODEC1_GDSC>;
++			};
++		};
+ 	};
+ 
+ 	thermal-zones {
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
