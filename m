@@ -1,47 +1,42 @@
 From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Subject: [PATCH v2 2/4] drm/panel: jh057n00900: Don't use magic constant
-Date: Wed, 26 Jun 2019 12:37:49 +0200
-Message-ID: <7f50fa6de2ae029111f158f8ea7fd69a0903eb97.1561542477.git.agx@sigxcpu.org>
-References: <cover.1561542477.git.agx@sigxcpu.org>
+Subject: [PATCH v2 0/4] drm/panel: jh057n0090: Add regulators and drop magic
+ value in init
+Date: Wed, 26 Jun 2019 12:37:47 +0200
+Message-ID: <cover.1561542477.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1561542477.git.agx@sigxcpu.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
-0xBF isn't in any ST7703 data sheet so mark it as unknown. This avoids
-confusion on whether there is a missing command in that
-dsi_generic_write_seq() call.
-
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
----
- drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-index 6dcb692c4701..b8a069055fbc 100644
---- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-+++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-@@ -33,6 +33,7 @@
- #define ST7703_CMD_SETEXTC	 0xB9
- #define ST7703_CMD_SETMIPI	 0xBA
- #define ST7703_CMD_SETVDC	 0xBC
-+#define ST7703_CMD_UNKNOWN0	 0xBF
- #define ST7703_CMD_SETSCR	 0xC0
- #define ST7703_CMD_SETPOWER	 0xC1
- #define ST7703_CMD_SETPANEL	 0xCC
-@@ -94,7 +95,7 @@ static int jh057n_init_sequence(struct jh057n *ctx)
- 	msleep(20);
- 
- 	dsi_generic_write_seq(dsi, ST7703_CMD_SETVCOM, 0x3F, 0x3F);
--	dsi_generic_write_seq(dsi, 0xBF, 0x02, 0x11, 0x00);
-+	dsi_generic_write_seq(dsi, ST7703_CMD_UNKNOWN0, 0x02, 0x11, 0x00);
- 	dsi_generic_write_seq(dsi, ST7703_CMD_SETGIP1,
- 			      0x82, 0x10, 0x06, 0x05, 0x9E, 0x0A, 0xA5, 0x12,
- 			      0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
--- 
-2.20.1
+Rml4IHRoZSBvbWlzc2lvbiBvZiBhIHJlZ3VsYXRvcnMgZm9yIHRoZSByZWNlbnRseSBhZGRlZCBw
+YW5lbCBhbmQgbWFrZSBzdXJlIGFsbApkc2kgY29tbWFuZHMgc3RhcnQgd2l0aCBhIGNvbW1hbmQg
+aW5zdGVhZCBvZiBvbmUgaGF2aW5nIGEgbWFnaWMgY29uc3RhbnQgKHdoaWNoCmFscmVhZHkgY2F1
+c2VkIGNvbmZ1c2lvbikuCgpBbHNvIGFkZHMgYSBtYWlsIGFsaWFzIHRvIHRoZSBwYW5lbCdzIE1B
+SU5UQUlORVIgZW50cnkgdG8gcmVkdWNlIHRoZSBidXMKZmFjdG9yLgoKQ2hhbmdlcyBmcm9tIHYx
+OgoqIEFzIHBlciByZXZpZXcgY29tbWVudHMgZnJvbSBTYW0gUmF2bmJvcmc6CiAgLSBQcmludCBl
+cnJvciBvbiBkZXZtX3JlZ3VsYXRvcl9nZXQoKSBmYWlscmVzCiAgLSBGaXggdHlwb3MgaW4gY29t
+bWl0IG1lc3NhZ2VzCiogUHJpbnQgYW4gZXJyb3Igb24gcmVndWxhdG9yX2VuYWJsZSgpCiogRGlz
+YWJsZSB2Y2MgaWYgaW92Y2MgZmFpbHMgdG8gZW5hYmxlCgpHdWlkbyBHw7xudGhlciAoNCk6CiAg
+TUFJTlRBSU5FUlM6IEFkZCBQdXJpc20gbWFpbCBhbGlhcyBhcyByZXZpZXdlciBmb3IgdGhlaXIg
+ZGV2a2l0J3MKICAgIHBhbmVsCiAgZHJtL3BhbmVsOiBqaDA1N24wMDkwMDogRG9uJ3QgdXNlIG1h
+Z2ljIGNvbnN0YW50CiAgZHQtYmluZGluZ3M6IGRpc3BsYXkvcGFuZWw6IGpoMDU3bjAwOTAwOiBE
+b2N1bWVudCBwb3dlciBzdXBwbHkKICAgIHByb3BlcnRpZXMKICBkcm0vcGFuZWw6IGpoMDU3bjAw
+OTAwOiBBZGQgcmVndWxhdG9yIHN1cHBvcnQKCiAuLi4vZGlzcGxheS9wYW5lbC9yb2NrdGVjaCxq
+aDA1N24wMDkwMC50eHQgICAgfCAgNSArKysKIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAxICsKIC4uLi9kcm0vcGFuZWwvcGFuZWwtcm9ja3RlY2gtamgw
+NTduMDA5MDAuYyAgICB8IDQ0ICsrKysrKysrKysrKysrKysrKy0KIDMgZmlsZXMgY2hhbmdlZCwg
+NDkgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKLS0gCjIuMjAuMQoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
