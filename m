@@ -1,135 +1,115 @@
-From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
-Date: Tue, 25 Jun 2019 20:40:59 -0700
-Message-ID: <20190626034100.B238520883@mail.kernel.org>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-2-brendanhiggins@google.com>
- <20190620001526.93426218BE@mail.kernel.org>
- <CAFd5g46Jhxsz6_VXHEVYvTeDRwwzgKpr=aUWLL5b3S4kUukb8g@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 1/3] scsi: ufs: Introduce vops for resetting device
+Date: Tue, 25 Jun 2019 20:45:29 -0700
+Message-ID: <20190626034529.GE24205@tuxbook-pro>
+References: <20190608050450.12056-1-bjorn.andersson@linaro.org>
+ <CGME20190608050458epcas1p30f03f6d448eb962a6af56a4c0b021ef0@epcas1p3.samsung.com>
+ <20190608050450.12056-2-bjorn.andersson@linaro.org>
+ <ad1c2a2a-91d6-25ce-9dfb-3b386b572ee2@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAFd5g46Jhxsz6_VXHEVYvTeDRwwzgKpr=aUWLL5b3S4kUukb8g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuah <shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, David Rientjes <rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kbuild <linux-kbuild-u79uwXL29TasMV2rI37PzA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <ad1c2a2a-91d6-25ce-9dfb-3b386b572ee2@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brendan Higgins (2019-06-25 13:28:25)
-> On Wed, Jun 19, 2019 at 5:15 PM Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >
-> > Quoting Brendan Higgins (2019-06-17 01:25:56)
-> > > diff --git a/kunit/test.c b/kunit/test.c
-> > > new file mode 100644
-> > > index 0000000000000..d05d254f1521f
-> > > --- /dev/null
-> > > +++ b/kunit/test.c
-> > > @@ -0,0 +1,210 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Base unit test (KUnit) API.
-> > > + *
-> > > + * Copyright (C) 2019, Google LLC.
-> > > + * Author: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> > > + */
-> > > +
-> > > +#include <linux/sched/debug.h>
-> > > +#include <kunit/test.h>
-> > > +
-> > > +static bool kunit_get_success(struct kunit *test)
-> > > +{
-> > > +       unsigned long flags;
-> > > +       bool success;
-> > > +
-> > > +       spin_lock_irqsave(&test->lock, flags);
-> > > +       success = test->success;
-> > > +       spin_unlock_irqrestore(&test->lock, flags);
-> >
-> > I still don't understand the locking scheme in this code. Is the
-> > intention to make getter and setter APIs that are "safe" by adding in a
-> > spinlock that is held around getting and setting various members in the
-> > kunit structure?
+On Tue 25 Jun 05:41 PDT 2019, Alim Akhtar wrote:
+
+> Hi Bjorn,
+> Are you planning to address Bean's comment on patch#2 and want to 
+> re-spin this series?
+> I am ok with taking this patch as it is and take a Softreset patch as a 
+> separate patch.
 > 
-> Yes, your understanding is correct. It is possible for a user to write
-> a test such that certain elements may be updated in different threads;
-> this would most likely happen in the case where someone wants to make
-> an assertion or an expectation in a thread created by a piece of code
-> under test. Although this should generally be avoided, it is possible,
-> and there are occasionally good reasons to do so, so it is
-> functionality that we should support.
-> 
-> Do you think I should add a comment to this effect?
 
-No, I think the locking should be removed.
+I still intend to attempt to implement a softreset "fallback", per
+Bean's suggestion - just haven't found the time yet. But I would be
+happy to see these patches merged in the meantime, as they do resolve
+the issue of failing to being up the UFS link on a significant number of
+Qualcomm devices.
 
-> 
-> > In what situation is there more than one thread reading or writing the
-> > kunit struct? Isn't it only a single process that is going to be
-> 
-> As I said above, it is possible that the code under test may spawn a
-> new thread that may make an expectation or an assertion. It is not a
-> super common use case, but it is possible.
 
-Sure, sounds super possible and OK.
+I think it's best if you take patch 1 and 2 through your tree and we
+take the dts patch through the Qualcomm/arm-soc tree.
 
-> 
-> > operating on this structure? And why do we need to disable irqs? Are we
-> > expecting to be modifying the unit tests from irq contexts?
-> 
-> There are instances where someone may want to test a driver which has
-> an interrupt handler in it. I actually have (not the greatest) example
-> here. Now in these cases, I expect someone to use a mock irqchip or
-> some other fake mechanism to trigger the interrupt handler and not
-> actual hardware; technically speaking in this case, it is not going to
-> be accessed from a "real" irq context; however, the code under test
-> should think that it is in an irq context; given that, I figured it is
-> best to just treat it as a real irq context. Does that make sense?
+Thanks,
+Bjorn
 
-Can you please describe the scenario in which grabbing the lock here,
-updating a single variable, and then releasing the lock right after
-does anything useful vs. not having the lock? I'm looking for a two CPU
-scenario like below, but where it is a problem. There could be three
-CPUs, or even one CPU and three threads if you want to describe the
-extra thread scenario.
-
-Here's my scenario where it isn't needed:
-
-    CPU0                                      CPU1
-    ----                                      ----
-    kunit_run_test(&test)
-                                              test_case_func()
-					        ....
-                                              [mock hardirq]
-					        kunit_set_success(&test)
-					      [hardirq ends]
-                                                ...
-                                                complete(&test_done)
-      wait_for_completion(&test_done)
-      kunit_get_success(&test)
-
-We don't need to care about having locking here because success or
-failure only happens in one place and it's synchronized with the
-completion.
-
-> 
-> > > +
-> > > +       return success;
-> > > +}
-> > > +
-> > > +static void kunit_set_success(struct kunit *test, bool success)
-> > > +{
-> > > +       unsigned long flags;
-> > > +
-> > > +       spin_lock_irqsave(&test->lock, flags);
-> > > +       test->success = success;
-> > > +       spin_unlock_irqrestore(&test->lock, flags);
-> > > +}
+> On 6/8/19 10:34 AM, Bjorn Andersson wrote:
+> > Some UFS memory devices needs their reset line toggled in order to get
+> > them into a good state for initialization. Provide a new vops to allow
+> > the platform driver to implement this operation.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> feel free to add
+> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+> > 
+> > Changes since v2:
+> > - New patch, to allow moving implementation to platform driver
+> > 
+> >   drivers/scsi/ufs/ufshcd.c | 6 ++++++
+> >   drivers/scsi/ufs/ufshcd.h | 8 ++++++++
+> >   2 files changed, 14 insertions(+)
+> > 
+> > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> > index 04d3686511c8..ee895a625456 100644
+> > --- a/drivers/scsi/ufs/ufshcd.c
+> > +++ b/drivers/scsi/ufs/ufshcd.c
+> > @@ -6191,6 +6191,9 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+> >   	int retries = MAX_HOST_RESET_RETRIES;
+> >   
+> >   	do {
+> > +		/* Reset the attached device */
+> > +		ufshcd_vops_device_reset(hba);
+> > +
+> >   		err = ufshcd_host_reset_and_restore(hba);
+> >   	} while (err && --retries);
+> >   
+> > @@ -8322,6 +8325,9 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+> >   		goto exit_gating;
+> >   	}
+> >   
+> > +	/* Reset the attached device */
+> > +	ufshcd_vops_device_reset(hba);
+> > +
+> >   	/* Host controller enable */
+> >   	err = ufshcd_hba_enable(hba);
+> >   	if (err) {
+> > diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> > index 994d73d03207..cd8139052ed6 100644
+> > --- a/drivers/scsi/ufs/ufshcd.h
+> > +++ b/drivers/scsi/ufs/ufshcd.h
+> > @@ -298,6 +298,7 @@ struct ufs_pwr_mode_info {
+> >    * @resume: called during host controller PM callback
+> >    * @dbg_register_dump: used to dump controller debug information
+> >    * @phy_initialization: used to initialize phys
+> > + * @device_reset: called to issue a reset pulse on the UFS device
+> >    */
+> >   struct ufs_hba_variant_ops {
+> >   	const char *name;
+> > @@ -326,6 +327,7 @@ struct ufs_hba_variant_ops {
+> >   	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
+> >   	void	(*dbg_register_dump)(struct ufs_hba *hba);
+> >   	int	(*phy_initialization)(struct ufs_hba *);
+> > +	void	(*device_reset)(struct ufs_hba *);
+> >   };
+> >   
+> >   /* clock gating state  */
+> > @@ -1045,6 +1047,12 @@ static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba)
+> >   		hba->vops->dbg_register_dump(hba);
+> >   }
+> >   
+> > +static inline void ufshcd_vops_device_reset(struct ufs_hba *hba)
+> > +{
+> > +	if (hba->vops && hba->vops->device_reset)
+> > +		hba->vops->device_reset(hba);
+> > +}
+> > +
+> >   extern struct ufs_pm_lvl_states ufs_pm_lvl_states[];
+> >   
+> >   /*
+> > 
