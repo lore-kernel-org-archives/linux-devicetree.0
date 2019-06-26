@@ -1,64 +1,149 @@
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
- wait-for-safe logic
-Date: Wed, 26 Jun 2019 15:48:45 +0100
-Message-ID: <20190626144844.key3n6ueb6skgkp4@willie-the-truck>
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
- <20190612071554.13573-4-vivek.gautam@codeaurora.org>
- <20190614040520.GK22737@tuxbook-pro>
- <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org>
- <20190618175218.GH4270@fuggles.cambridge.arm.com>
- <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com>
- <20190624170348.7dncuc5qezqeyvq2@willie-the-truck>
- <CAFp+6iF0TQtAy2JFXk6zjX5GpjeLFesqPZV6ezbDXmc85yvMEA@mail.gmail.com>
- <20190625133924.fqq3y7p3i3fqem5p@willie-the-truck>
- <CAFp+6iH-KzX7x1j8AAuKJcOP6v=fyP-yLvaeeE_Ly3oueu_ngg@mail.gmail.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: arm: fsl: Add DSP IPC binding support
+Date: Wed, 26 Jun 2019 17:49:21 +0300
+Message-ID: <CAEnQRZBNA4ndSL1vMStHemYkzt9TxqjgdWWjqFwnBFQ+ha+egA@mail.gmail.com>
+References: <20190614081650.11880-1-daniel.baluta@nxp.com> <20190614081650.11880-3-daniel.baluta@nxp.com>
+ <CAL_JsqJKgMB1PNA33gmFju4AQTc2WaSBoOGQExVaGd9LZRmk_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iH-KzX7x1j8AAuKJcOP6v=fyP-yLvaeeE_Ly3oueu_ngg@mail.gmail.com>
+In-Reply-To: <CAL_JsqJKgMB1PNA33gmFju4AQTc2WaSBoOGQExVaGd9LZRmk_g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, robh+dt <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "S.j. Wang" <shengjiu.wang@nxp.com>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 12:03:02PM +0530, Vivek Gautam wrote:
-> On Tue, Jun 25, 2019 at 7:09 PM Will Deacon <will@kernel.org> wrote:
+Hi Rob,
+
+This is my first time documenting the bindings using the
+new yaml format so thanks for your patience and explanations!
+
+On Fri, Jun 14, 2019 at 5:53 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Fri, Jun 14, 2019 at 2:15 AM <daniel.baluta@nxp.com> wrote:
 > >
-> > On Tue, Jun 25, 2019 at 12:34:56PM +0530, Vivek Gautam wrote:
-> > > On Mon, Jun 24, 2019 at 10:33 PM Will Deacon <will@kernel.org> wrote:
-> > > > Instead, I think this needs to be part of a separate file that is maintained
-> > > > by you, which follows on from the work that Krishna is doing for nvidia
-> > > > built on top of Robin's prototype patches:
-> > > >
-> > > > http://linux-arm.org/git?p=linux-rm.git;a=shortlog;h=refs/heads/iommu/smmu-impl
-> > >
-> > > Looking at this branch quickly, it seem there can be separate implementation
-> > > level configuration file that can be added.
-> > > But will this also handle separate page table ops when required in future.
+> > From: Daniel Baluta <daniel.baluta@nxp.com>
 > >
-> > Nothing's set in stone, but having the implementation-specific code
-> > constrain the page-table format (especially wrt quirks) sounds reasonable to
-> > me. I'm currently waiting for Krishna to respin the nvidia changes [1] on
-> > top of this so that we can see how well the abstractions are holding up.
-> 
-> Sure. Would you want me to try Robin's branch and take out the qualcomm
-> related stuff to its own implementation? Or, would you like me to respin this
-> series so that you can take it in to enable SDM845 boards such as, MTP
-> and dragonboard to have a sane build - debian, etc. so people benefit
-> out of it.
+> > DSP IPC is the layer that allows the Host CPU to communicate
+> > with DSP firmware.
+> > DSP is part of some i.MX8 boards (e.g i.MX8QM, i.MX8QXP)
+> >
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > ---
+> >  .../bindings/arm/freescale/fsl,dsp.yaml       | 43 +++++++++++++++++++
+>
+> bindings/dsp/...
 
-I can't take this series without Acks on the firmware calling changes, and I
-plan to send my 5.3 patches to Joerg at the end of the week so they get some
-time in -next. In which case, I think it may be worth you having a play with
-the branch above so we can get a better idea of any additional smmu_impl hooks
-you may need.
+Fair enough. Will fix in v2.
 
-> Qualcomm stuff is lying in qcom-smmu and arm-smmu and may take some
-> time to stub out the implementation related details.
+>
+> >  1 file changed, 43 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml b/Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
+> > new file mode 100644
+> > index 000000000000..16d9df1d397b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
+> > @@ -0,0 +1,43 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+>
+> The preference is to dual license new bindings: GPL-2.0 OR BSD-2-Clause
+>
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/arm/freescale/fsl,dsp.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: NXP i.MX IPC DSP driver
+>
+> This isn't a driver.
 
-Not sure I follow you here. Are you talking about qcom_iommu.c?
+I see. This node is actually the representation of DSP IPC so not a driver.
+>
+> > +
+> > +maintainers:
+> > +  - Daniel Baluta <daniel.baluta@nxp.com>
+> > +
+> > +description: |
+> > +  IPC communication layer between Host CPU and DSP on NXP i.MX8 platforms
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - fsl,imx-dsp
+>
+> You can have a fallback, but it needs SoC specific compatible(s).
+Agree. Will fix in v2.
 
-Will
+>
+> > +
+> > +  mboxes:
+> > +    description:
+> > +      List of phandle of 2 MU channels for TXDB, 2 MU channels for RXDB
+> > +      (see mailbox/fsl,mu.txt)
+> > +    maxItems: 1
+>
+> Should be 4?
+
+Actually is just a list with 1 item. I think is the terminology:
+
+You can have an example here of the mboxes defined for SCU.
+https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/freescale/imx8qxp.dtsi#L123
+
+
+>
+> > +
+> > +  mbox-names
+> > +    description:
+> > +      Mailboxes names
+> > +    allOf:
+> > +      - $ref: "/schemas/types.yaml#/definitions/string"
+>
+> No need for this, '*-names' already has a defined type.
+So, should I remove the above two lines ?
+>
+> > +      - enum: [ "txdb0", "txdb1", "rxdb0", "rxdb1" ]
+>
+> Should be an 'items' list with 4 entries?
+
+Let me better read the yaml spec. But "items" list indeed sounds better.
+
+>
+> > +required:
+> > +  - compatible
+> > +  - mboxes
+> > +  - mbox-names
+>
+> This seems incomplete. How does one boot the DSP? Load firmware? No
+> resources that Linux has to manage. Shared memory?
+
+This is only the IPC mailboxes used by DSP to communicate with Linux. The
+loading of the firmware, the resources needed to be managed by Linux, etc
+are part of the DSP node.
+
+To avoid confusion I have renamed this node from dsp to dsp_ipc.
+
+>
+> > +
+> > +examples:
+> > +  - |
+> > +    dsp {
+> > +      compatbile = "fsl,imx-dsp";
+> > +      mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
+> > +      mboxes = <&lsio_mu13 2 0 &lsio_mu13 2 1 &lsio_mu13 3 0 &lsio_mu13 3 1>;
+>
+> mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
+
+Actually no! It looks like the imx mailbox expects one element with a
+list of phandles directions and index.
+
+See again, how SCU uses the mailbox node.
+
+https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/freescale/imx8qxp.dtsi#L123
+
+>
+> > +    };
+> > --
+> > 2.17.1
+> >
