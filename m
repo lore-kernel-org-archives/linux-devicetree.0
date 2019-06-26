@@ -1,70 +1,96 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 4/4] iio: frequency: adf4371: Add support for output
- stage mute
-Date: Wed, 26 Jun 2019 21:13:31 +0100
-Message-ID: <20190626211331.6e335fe8@archlinux>
-References: <1561389236-26464-1-git-send-email-stefan.popa@analog.com>
-        <CAL_JsqL-Pxef5oNAx5-crGxL9Q0Ph5gx2Z=KejLSq_jdgVUvbQ@mail.gmail.com>
+From: Oleh Kravchenko <oleg@kaa.org.ua>
+Subject: Re: [PATCH v5 05/26] leds: core: Add support for composing LED class
+ device names
+Date: Wed, 26 Jun 2019 23:07:15 +0300
+Message-ID: <b65ba5ea-4b79-8245-bddb-3ecf1424892f@kaa.org.ua>
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+ <20190609190803.14815-6-jacek.anaszewski@gmail.com>
+ <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="d0yCGDtABOsUsagkAYEPZkKFIhs6JAL1J"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL-Pxef5oNAx5-crGxL9Q0Ph5gx2Z=KejLSq_jdgVUvbQ@mail.gmail.com>
+In-Reply-To: <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Stefan Popa <stefan.popa@analog.com>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Michael Hennerich <Michael.Hennerich@analog.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org, pavel@ucw.cz, dmurphy@ti.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com, linux@roeck-us.net, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 26 Jun 2019 13:59:49 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--d0yCGDtABOsUsagkAYEPZkKFIhs6JAL1J
+Content-Type: multipart/mixed; boundary="LBr20YCteCuborVTrf1GiddCODPSBF69k";
+ protected-headers="v1"
+From: Oleh Kravchenko <oleg@kaa.org.ua>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+ linux-leds@vger.kernel.org, pavel@ucw.cz, dmurphy@ti.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ robh@kernel.org, dtor@google.com, linux@roeck-us.net,
+ Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Simon Shields <simon@lineageos.org>
+Message-ID: <b65ba5ea-4b79-8245-bddb-3ecf1424892f@kaa.org.ua>
+Subject: Re: [PATCH v5 05/26] leds: core: Add support for composing LED class
+ device names
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+ <20190609190803.14815-6-jacek.anaszewski@gmail.com>
+ <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
+In-Reply-To: <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
 
-> On Mon, Jun 24, 2019 at 9:14 AM Stefan Popa <stefan.popa@analog.com> wrote:
-> >
-> > Another feature of the ADF4371/ADF4372 is that the supply current to the
-> > RF8P and RF8N output stage can shut down until the ADF4371 achieves lock
-> > as measured by the digital lock detect circuitry. The mute to lock
-> > detect bit (MUTE_LD) in REG25 enables this function.
-> >
-> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> > ---
-> >  .../devicetree/bindings/iio/frequency/adf4371.yaml          |  6 ++++++  
-> 
-> If you resend and in the future, please split bindings to separate patch.
-> 
-> >  drivers/iio/frequency/adf4371.c                             | 13 +++++++++++++
-> >  2 files changed, 19 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > index a268a9d..6db8742 100644
-> > --- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > @@ -32,6 +32,12 @@ properties:
-> >      items:
-> >        - clkin
-> >
-> > +  adi,mute-till-lock-en:
-> > +    description:
-> > +      If this property is present, then the supply current to RF8P and RF8N
-> > +      output stage will shut down until the ADF4371/ADF4372 achieves lock as
-> > +      measured by the digital lock detect circuitry.  
-> 
-> You need to define the type:
-> 
-> type: boolean
-> 
-> Maybe Jonathan will fix up.
-Doh. I should have caught that.
+--LBr20YCteCuborVTrf1GiddCODPSBF69k
+Content-Type: text/plain; charset=utf-8
+Content-Language: uk-UA
+Content-Transfer-Encoding: quoted-printable
 
-Fixed up with
-type: boolean
+Hello Jacek,
+so after this patch will be merged.
 
-Hopefully I did it right
+There will be a way to define custom function name by DeviceTree?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/commit/?h=testing&id=6e68162fcc94ec81c1656e15e6e1893fee0c309a
+26.06.19 22:05, Jacek Anaszewski =D0=BF=D0=B8=D1=88=D0=B5:
+> Gentle reminder.
+>=20
+> Pavel, Dan - any conclusions?
+>=20
+> This patch is the main part of the proposed changes,
+> so it would be good to spot any remaining issues.
+>=20
+> What needs a consensus is also a new
+> Documentation/leds/led-functions.txt file I introduce
+> in the patch 26/26.
+>=20
+> Best regards,
+> Jacek Anaszewski
 
-Thanks Rob!
+--=20
+Best regards,
+Oleh Kravchenko
 
-Jonathan
 
-> 
-> Rob
+
+--LBr20YCteCuborVTrf1GiddCODPSBF69k--
+
+--d0yCGDtABOsUsagkAYEPZkKFIhs6JAL1J
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEC/TM5t+2NenFhW0Q0xNJm20pl4wFAl0T0HcACgkQ0xNJm20p
+l4zlVw/+OPDiiXs0MqGGwsZoTDMJFF/PG0Dh8o2htgeleIMR8nIzt4sgTUlIfNQR
+f7o0Rcl1WmVOS3tC4MVlB/iwqlWliILs/+PT/cEgdHjaVUJnlqLQW5tLBbKdOyv9
+Hjb5AaSJpkbMLfPHU8FzsVe8W8LA5n3fWPw/I/PZNMNeRyWfey5rf1NnENde5R1/
+1oYoX0AFA6mCvwLkcOqGVWXnPJRFi5botDkUqJ/TgWovoCejdNa6RpfoFAarvmso
+IafiZbKkLZkdDo97yCk0YO6DAyJzpRfuXm66o4QKUsDJ97nK7cqn1dV32NgugxMA
+n71QDPklGROEqt0vsCICsuICPiA+gsuSVugY76isADLS4e4/5ozdSdgZGB8xeJUq
+EFFoa3OLrb/uKjLdvYfITz4TiCVt+ID6z6n6mGljqthS7Q/N8dj/hObp7gBZsnXm
+A6tymz6Px1l6sziiRjZh6GB4whX15idudReP4pCDOy9rZEYX+ymXGgA+lyAUoNVU
+dOWtR9uK6sdn5wboWlw8pXxgENuropBE5Va7ZplNbzdY1RuCFP1kG6xMLjhhjv3J
+gakQcJRlcHnOPx2bS8JLuHq4nJniAZpaH3DB2e3AIlIzNDrK/mtFFL5p6uVTyxzC
+HZSer1I6XoIbCckSJp+IiGeJNSSh4zppozAvC2tv3re+O65ttsc=
+=AHkY
+-----END PGP SIGNATURE-----
+
+--d0yCGDtABOsUsagkAYEPZkKFIhs6JAL1J--
