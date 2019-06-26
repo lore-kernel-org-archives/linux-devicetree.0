@@ -1,39 +1,48 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RESEND PATCH v1 0/5] Solve postboot supplier cleanup and
- optimize probe ordering
-Date: Wed, 26 Jun 2019 15:30:57 -0600
-Message-ID: <CAL_JsqJyO9Fpq+Lzrc9NdiFBZ_9M31_mjfRyKM=ENtW-zVa8VA@mail.gmail.com>
-References: <20190604003218.241354-1-saravanak@google.com> <20190624223707.GH203031@google.com>
- <20190625035313.GA13239@kroah.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add video nodes
+Date: Wed, 26 Jun 2019 14:32:40 -0700
+Message-ID: <5d13e479.1c69fb81.dd08b.b1e4@mx.google.com>
+References: <1561550047-19600-1-git-send-email-amasule@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625035313.GA13239@kroah.com>
+In-Reply-To: <1561550047-19600-1-git-send-email-amasule@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Sandeep Patil <sspatil@android.com>, Saravana Kannan <saravanak@google.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, David Collins <collinsd@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
+To: andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mgottam@codeaurora.org, vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 9:54 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Jun 24, 2019 at 03:37:07PM -0700, Sandeep Patil wrote:
-> > We are trying to make sure that all (most) drivers in an Aarch64 system can
-> > be kernel modules for Android, like any other desktop system for
-> > example. There are a number of problems we need to fix before that happens
-> > ofcourse.
->
-> I will argue that this is NOT an android-specific issue.  If the goal of
-> creating an arm64 kernel that will "just work" for a wide range of
-> hardware configurations without rebuilding is going to happen, we need
-> to solve this problem with DT.  This goal was one of the original wishes
-> of the arm64 development effort, let's not loose sight of it as
-> obviously, this is not working properly just yet.
+Quoting Aniket Masule (2019-06-26 04:54:07)
+> This adds video nodes to sdm845 based on the examples
+> in the bindings.
+>=20
+> Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
 
-I fail to see how the different Linux behavior between drivers
-built-in and as modules has anything whatsoever to do with DT. Fix the
-problems in Linux and use the dependencies that are already expressed
-in DT and *then* we can talk about using DT to provide *hints* for
-solving any remaining problems.
+There should be a From: line with this person's name in the email if
+they're the author. Otherwise this sign-off chain doesn't make sense and
+it should most likely have a Co-developed-by tag instead.
 
-Rob
+> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/q=
+com/sdm845.dtsi
+> index fcb9330..ff94cfa 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -2437,6 +2437,36 @@
+>                                 <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>;
+>                         iommus =3D <&apps_smmu 0x0040 0x1>;
+>                 };
+> +
+> +               video-codec@aa00000 {
+
+This needs to be sorted by address. It doesn't come after 18800000 (the
+address of the node above).
+
+> +                       compatible =3D "qcom,sdm845-venus";
+> +                       reg =3D <0x0aa00000 0xff000>;
+> +                       interrupts =3D <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
