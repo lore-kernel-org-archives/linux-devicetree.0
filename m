@@ -1,45 +1,61 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: improve rk3328-roc-cc rgmii
- performance.
-Date: Thu, 27 Jun 2019 00:22:36 +0200
-Message-ID: <1609807.FCSDk0ZevM@phil>
-References: <20190626130443.22025-1-pgwipeout@gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 1/2] ARM: dts: rockchip: move rk3288-veryon display
+ settings into a separate file
+Date: Wed, 26 Jun 2019 15:56:24 -0700
+Message-ID: <20190626225624.GC137143@google.com>
+References: <20190625222629.154619-1-mka@chromium.org>
+ <2418036.tTYI8lUvN5@phil>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190626130443.22025-1-pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jose Abreu <jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "Leonidas P . Papadakos" <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <2418036.tTYI8lUvN5@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, enric.balletbo@collabora.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 26. Juni 2019, 15:04:43 CEST schrieb Peter Geis:
-> Currently the rk3328-roc-cc ethernet is enabled using "snps,force_thresh_dma_mode".
-> While this works, the performance leaves a lot to be desired.
-> A previous attempt to improve performance used "snps,txpbl = <0x4>".
-> This also allowed networking to function, but performance varied between boards.
+On Thu, Jun 27, 2019 at 12:19:27AM +0200, Heiko Stuebner wrote:
+> Hi Matthias,
 > 
-> This patch takes that one step further.
-> Set txpbl and rxpbl to 0x4.
-> This can also be accomplished with "snps,pbl =<0x4>" which affects both.
-> Also set "snps,aal" which forces address aligned DMA mode.
+> Am Mittwoch, 26. Juni 2019, 00:26:28 CEST schrieb Matthias Kaehlcke:
+> > The chromebook .dtsi file contains common settings for veyron
+> > Chromebooks with eDP displays. Some veyron devices with a display
+> > aren't Chromebooks (e.g. 'tiger' aka 'AOpen Chromebase Mini'), move
+> > display related bits from the chromebook .dtsi into a separate file
+> > to avoid redundant DT settings.
+> > 
+> > The new file is included from the chromebook .dtsi and can be
+> > included by non-Chromebook devices with a display.
+> > 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > This series is based on v5.3-armsoc/dts32 (f497ab6b4bb8 "ARM:
+> > dts: rockchip: Configure BT_HOST_WAKE as wake-up signal on
+> > veyron") plus the display timing patches from Doug:
 > 
-> Fixes: 4bc4d6013b7f (arm64: dts: rockchip: fix rk3328-roc-cc gmac2io stability issues)
+> the display-timing patches are still stuck on panel-review.
 > 
-> Signed-off-by: Peter Geis <pgwipeout-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Tested-by: Leonidas P. Papadakos <papadakospan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> But while we wait for that to get resolved, you could also check if
+> the veyron panels could use Enric's fanzy new automatic calculation
+> of brightness-leves in the pwm-backlight driver, so that we possibly
+> could get rid of the long table of levels.
 
-applied for 5.3 after sorting the new properties alphabetically.
+We could get rid of the tables after "backlight: pwm_bl: Fix heuristic
+to determine number of brightness levels"
+(https://lore.kernel.org/patchwork/patch/1087809/) lands.
 
-Thanks
-Heiko
+Ideally we would also have something like this series
+https://lore.kernel.org/patchwork/project/lkml/list/?series=399607 ,
+to provide userspace information about the brightness scale. Currently
+Chrome OS would interpret Enric's table as being linear and adjust the
+brightness slider incorrectly.
