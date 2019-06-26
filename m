@@ -1,40 +1,45 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v3 0/5] drm/panel-simple: Add panel parameters for ortustech-com37h3m05dtc/99dtc and sharp-lq070y3dg3b
-Date: Wed, 26 Jun 2019 14:40:50 +0200
-Message-ID: <CF1D9929-58D2-4E75-932A-870D11BBFBDE@goldelico.com>
-References: <cover.1559905870.git.hns@goldelico.com> <0842FF88-D8E0-441B-837B-769C2EF6C1CB@goldelico.com> <20190625204356.GF18595@ravnborg.org> <20190626073350.GA15288@ravnborg.org>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v2 0/4] drm/panel: jh057n0090: Add regulators and drop
+ magic value in init
+Date: Wed, 26 Jun 2019 14:41:39 +0200
+Message-ID: <20190626124139.GB7337@ravnborg.org>
+References: <cover.1561542477.git.agx@sigxcpu.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190626073350.GA15288@ravnborg.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1561542477.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, David Airlie <airlied@linux.ie>, marek.belisko@gmail.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, tomi.valkeinen@ti.com, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org, letux-kernel@openphoenux.org
+To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sam,
+Hi Guido.
 
-> Am 26.06.2019 um 09:33 schrieb Sam Ravnborg <sam@ravnborg.org>:
->=20
-> Hi Nikolaus.
->=20
->>>=20
->>> any progress towards merging this somewhere? It did not yet arrive =
-in linux-next.
->>>=20
->>> BTW: should also be applied to 5.2
->> The drm bits are reviewed. The DT bits needs OK from DT people.
->> When we have OK from DT people we can apply them all to =
-drm-misc-next.
->=20
-> I got OK on irc from Rob to process these.
-> All patches are now applied to drm-misc-next.
+On Wed, Jun 26, 2019 at 12:37:47PM +0200, Guido Günther wrote:
+> Fix the omission of a regulators for the recently added panel and make sure all
+> dsi commands start with a command instead of one having a magic constant (which
+> already caused confusion).
+> 
+> Also adds a mail alias to the panel's MAINTAINER entry to reduce the bus
+> factor.
+> 
+> Changes from v1:
+> * As per review comments from Sam Ravnborg:
+>   - Print error on devm_regulator_get() failres
+>   - Fix typos in commit messages
+> * Print an error on regulator_enable()
+> * Disable vcc if iovcc fails to enable
+> 
+> Guido Günther (4):
+>   MAINTAINERS: Add Purism mail alias as reviewer for their devkit's
+>     panel
+>   drm/panel: jh057n00900: Don't use magic constant
+>   dt-bindings: display/panel: jh057n00900: Document power supply
+>     properties
+>   drm/panel: jh057n00900: Add regulator support
 
-Thanks for taking care of this!
+Patches applied to drm-misc-next and pushed out
 
->=20
-> 	Sam
-
-BR,
-Nikolaus
+	Sam
