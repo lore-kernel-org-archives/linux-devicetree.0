@@ -1,17 +1,15 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v3 0/5] drm/panel-simple: Add panel parameters for
- ortustech-com37h3m05dtc/99dtc and sharp-lq070y3dg3b
-Date: Wed, 26 Jun 2019 09:33:50 +0200
-Message-ID: <20190626073350.GA15288@ravnborg.org>
-References: <cover.1559905870.git.hns@goldelico.com>
- <0842FF88-D8E0-441B-837B-769C2EF6C1CB@goldelico.com>
- <20190625204356.GF18595@ravnborg.org>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v5 07/18] kunit: test: add initial tests
+Date: Wed, 26 Jun 2019 00:53:18 -0700
+Message-ID: <CAFd5g46mnd=a0OqFCx0hOHX+DxW+5yA2LXH5Q0gEg8yUZK=4FA@mail.gmail.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-8-brendanhiggins@google.com>
+ <20190625232249.GS19023@42.do-not-panic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190625204356.GF18595@ravnborg.org>
+In-Reply-To: <20190625232249.GS19023@42.do-not-panic.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -21,17 +19,35 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, letux-kernel@openphoenux.org, David Airlie <airlied@linux.ie>, marek.belisko@gmail.com, tomi.valkeinen@ti.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-omap@vger.kernel.org
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, shuah <shuah@kernel.org>, linux-nvdimm <linux-nvdimm@lists.01.org>, Frank Rowand <frowand.list@gmail.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>, "Bird,
+ Timothy" <Tim.Bird>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTmlrb2xhdXMuCgo+ID4gCj4gPiBhbnkgcHJvZ3Jlc3MgdG93YXJkcyBtZXJnaW5nIHRoaXMg
-c29tZXdoZXJlPyBJdCBkaWQgbm90IHlldCBhcnJpdmUgaW4gbGludXgtbmV4dC4KPiA+IAo+ID4g
-QlRXOiBzaG91bGQgYWxzbyBiZSBhcHBsaWVkIHRvIDUuMgo+IFRoZSBkcm0gYml0cyBhcmUgcmV2
-aWV3ZWQuIFRoZSBEVCBiaXRzIG5lZWRzIE9LIGZyb20gRFQgcGVvcGxlLgo+IFdoZW4gd2UgaGF2
-ZSBPSyBmcm9tIERUIHBlb3BsZSB3ZSBjYW4gYXBwbHkgdGhlbSBhbGwgdG8gZHJtLW1pc2MtbmV4
-dC4KCkkgZ290IE9LIG9uIGlyYyBmcm9tIFJvYiB0byBwcm9jZXNzIHRoZXNlLgpBbGwgcGF0Y2hl
-cyBhcmUgbm93IGFwcGxpZWQgdG8gZHJtLW1pc2MtbmV4dC4KCglTYW0KX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+T24gVHVlLCBKdW4gMjUsIDIwMTkgYXQgNDoyMiBQTSBMdWlzIENoYW1iZXJsYWluIDxtY2dyb2ZA
+a2VybmVsLm9yZz4gd3JvdGU6Cj4KPiBPbiBNb24sIEp1biAxNywgMjAxOSBhdCAwMToyNjowMkFN
+IC0wNzAwLCBCcmVuZGFuIEhpZ2dpbnMgd3JvdGU6Cj4gPiBkaWZmIC0tZ2l0IGEva3VuaXQvZXhh
+bXBsZS10ZXN0LmMgYi9rdW5pdC9leGFtcGxlLXRlc3QuYwo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2
+NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMDAuLmY0NGI4ZWNlNDg4YmIKPiA+IC0tLSAvZGV2L251
+bGwKPiA+ICsrKyBiL2t1bml0L2V4YW1wbGUtdGVzdC5jCj4KPiA8LS0gc25pcCAtLT4KPgo+ID4g
+Ky8qCj4gPiArICogVGhpcyBkZWZpbmVzIGEgc3VpdGUgb3IgZ3JvdXBpbmcgb2YgdGVzdHMuCj4g
+PiArICoKPiA+ICsgKiBUZXN0IGNhc2VzIGFyZSBkZWZpbmVkIGFzIGJlbG9uZ2luZyB0byB0aGUg
+c3VpdGUgYnkgYWRkaW5nIHRoZW0gdG8KPiA+ICsgKiBga3VuaXRfY2FzZXNgLgo+ID4gKyAqCj4g
+PiArICogT2Z0ZW4gaXQgaXMgZGVzaXJhYmxlIHRvIHJ1biBzb21lIGZ1bmN0aW9uIHdoaWNoIHdp
+bGwgc2V0IHVwIHRoaW5ncyB3aGljaAo+ID4gKyAqIHdpbGwgYmUgdXNlZCBieSBldmVyeSB0ZXN0
+OyB0aGlzIGlzIGFjY29tcGxpc2hlZCB3aXRoIGFuIGBpbml0YCBmdW5jdGlvbgo+ID4gKyAqIHdo
+aWNoIHJ1bnMgYmVmb3JlIGVhY2ggdGVzdCBjYXNlIGlzIGludm9rZWQuIFNpbWlsYXJseSwgYW4g
+YGV4aXRgIGZ1bmN0aW9uCj4gPiArICogbWF5IGJlIHNwZWNpZmllZCB3aGljaCBydW5zIGFmdGVy
+IGV2ZXJ5IHRlc3QgY2FzZSBhbmQgY2FuIGJlIHVzZWQgdG8gZm9yCj4gPiArICogY2xlYW51cC4g
+Rm9yIGNsYXJpdHksIHJ1bm5pbmcgdGVzdHMgaW4gYSB0ZXN0IG1vZHVsZSB3b3VsZCBiZWhhdmUg
+YXMgZm9sbG93czoKPiA+ICsgKgo+Cj4gVG8gYmUgY2xlYXIgdGhpcyBpcyBub3QgdGhlIGtlcm5l
+bCBtb2R1bGUgaW5pdCwgYnV0IHJhdGhlciB0aGUga3VuaXQKPiBtb2R1bGUgaW5pdC4gSSB0aGlu
+ayB1c2luZyBrbW9kdWxlIHdvdWxkIG1ha2UgdGhpcyBjbGVhcmVyIHRvIGEgcmVhZGVyLgoKU2Vl
+bXMgcmVhc29uYWJsZS4gV2lsbCBmaXggaW4gbmV4dCByZXZpc2lvbi4KCj4gPiArICogbW9kdWxl
+LmluaXQodGVzdCk7Cj4gPiArICogbW9kdWxlLnRlc3RfY2FzZVswXSh0ZXN0KTsKPiA+ICsgKiBt
+b2R1bGUuZXhpdCh0ZXN0KTsKPiA+ICsgKiBtb2R1bGUuaW5pdCh0ZXN0KTsKPiA+ICsgKiBtb2R1
+bGUudGVzdF9jYXNlWzFdKHRlc3QpOwo+ID4gKyAqIG1vZHVsZS5leGl0KHRlc3QpOwo+ID4gKyAq
+IC4uLjsKPiA+ICsgKi8KPgo+ICAgTHVpcwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWw=
