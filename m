@@ -1,116 +1,149 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 03/13] dt-bindings: net: Add a YAML schemas for the
- generic MDIO options
-Date: Thu, 27 Jun 2019 10:06:57 -0600
-Message-ID: <CAL_JsqLhUP62vP=RY8Bn_0X92hFphbk_gLqi4K48us56Gxw7tA@mail.gmail.com>
-References: <cover.e80da8845680a45c2e07d5f17280fdba84555b8a.1561649505.git-series.maxime.ripard@bootlin.com>
- <e99ff7377a0d3d140cf62200fd9d62c108dac24e.1561649505.git-series.maxime.ripard@bootlin.com>
- <CAL_JsqKQoj6x-8cMxp2PFQLcu93aitGO2wALDYaH2h72cPSyfg@mail.gmail.com> <20190627155708.myxychzngc3trxhc@flea>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH V11 03/12] PCI: dwc: Perform dbi regs write lock towards
+ the end
+Date: Thu, 27 Jun 2019 22:22:03 +0530
+Message-ID: <fbef2fee-1ca9-b894-6d1a-f2a9449968a5@nvidia.com>
+References: <20190624091505.1711-1-vidyas@nvidia.com>
+ <20190624091505.1711-4-vidyas@nvidia.com>
+ <20190627145800.GD3782@e121166-lin.cambridge.arm.com>
+ <ecae46b4-54cc-7f4d-5a86-908431fd472a@nvidia.com>
+ <20190627155047.GF3782@e121166-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190627155708.myxychzngc3trxhc@flea>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190627155047.GF3782@e121166-lin.cambridge.arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 9:57 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi Rob,
->
-> On Thu, Jun 27, 2019 at 09:48:06AM -0600, Rob Herring wrote:
-> > On Thu, Jun 27, 2019 at 9:32 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > The MDIO buses have a number of available device tree properties that can
-> > > be used in their device tree node. Add a YAML schemas for those.
-> > >
-> > > Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/net/mdio.txt  | 38 +-------------
-> > >  Documentation/devicetree/bindings/net/mdio.yaml | 51 ++++++++++++++++++-
-> > >  2 files changed, 52 insertions(+), 37 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/net/mdio.yaml
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> >
-> > However, some comments for a follow-up...
-> >
-> > > diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
-> > > new file mode 100644
-> > > index 000000000000..b8fa8251c4bc
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/net/mdio.yaml
-> > > @@ -0,0 +1,51 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/net/mdio.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: MDIO Bus Generic Binding
-> > > +
-> > > +maintainers:
-> > > +  - Andrew Lunn <andrew@lunn.ch>
-> > > +  - Florian Fainelli <f.fainelli@gmail.com>
-> > > +  - Heiner Kallweit <hkallweit1@gmail.com>
-> > > +
-> > > +description:
-> > > +  These are generic properties that can apply to any MDIO bus. Any
-> > > +  MDIO bus must have a list of child nodes, one per device on the
-> > > +  bus. These should follow the generic ethernet-phy.yaml document, or
-> > > +  a device specific binding document.
-> > > +
-> > > +properties:
-> > > +  reset-gpios:
-> > > +    maxItems: 1
-> > > +    description:
-> > > +      The phandle and specifier for the GPIO that controls the RESET
-> > > +      lines of all PHYs on that MDIO bus.
-> > > +
-> > > +  reset-delay-us:
-> > > +    description:
-> > > +      RESET pulse width in microseconds. It applies to all PHY devices
-> > > +      and must therefore be appropriately determined based on all PHY
-> > > +      requirements (maximum value of all per-PHY RESET pulse widths).
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    davinci_mdio: mdio@5c030000 {
-> >
-> > Can we enforce nodename to be mdio? That may not work for muxes.
-> > You'll probably have to implement it and see.
->
-> Ok, I'll send a follow-up patch for this.
->
-> > > +        compatible = "ti,davinci_mdio";
-> > > +        reg = <0x5c030000 0x1000>;
-> > > +        #address-cells = <1>;
-> > > +        #size-cells = <0>;
-> >
-> > These 2 should have a schema.
->
-> Indeed, I'll do it for that too.
->
-> > > +
-> > > +        reset-gpios = <&gpio2 5 1>;
-> > > +        reset-delay-us = <2>;
-> > > +
-> > > +        ethphy0: ethernet-phy@1 {
-> > > +            reg = <1>;
-> >
-> > Need a child node schema to validate the unit-address and reg property.
->
-> This should be already covered by the ethernet-phy.yaml schemas
-> earlier in this series.
+On 6/27/2019 9:20 PM, Lorenzo Pieralisi wrote:
+> On Thu, Jun 27, 2019 at 09:03:08PM +0530, Vidya Sagar wrote:
+>> On 6/27/2019 8:28 PM, Lorenzo Pieralisi wrote:
+>>> On Mon, Jun 24, 2019 at 02:44:56PM +0530, Vidya Sagar wrote:
+>>>> Remove multiple write enable and disable sequences of dbi registers as
+>>>> Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
+>>>> DBI write-lock enable bit thereby not allowing any further writes to BAR-0
+>>>> register in config space to take place. Hence enabling write permission at
+>>>> the start of function and disabling the same only towards the end.
+>>>
+>>> I do not understand what this patch does, I would like to rephrase
+>>> the commit log in a way that is easier to parse.
+>>>
+>>> In particular I do not get what you mean in relation to BAR-0, I am
+>>> confused, please clarify.
+>>>
+>>> Lorenzo
+>> Well, some of the Synopsys DesignWare core's DBI registers are
+>> protected with a lock without which, they are read-only by default.
+>> Existing code in dw_pcie_setup_rc() API tries to unlock and lock
+>> multiple times whenever it wants to update those write-protected
+>> registers. This patch attempts to unlock all such write-protected
+>> registers for writing once in the beginning of the function and lock
+>> them back towards the end.  As far as BAR-0 register (which is at
+>> offset 0x10 in DBI space... nothing but the config space) in Tegra194
+>> is concerned, it is one of those registers to which writes are
+>> protected. I could have added unlock/lock pair around accessing this
+>> register, but that would bloat this API with one more pair of
+>> unlock/lock, instead I chose to remove unlock/lock pairs for all
+>> protected registers and have unlock in the beginning and lock towards
+>> the end.
+> 
+> Ok, so DBI space registers that require write permissions are per-IP.
+> This is clearer so the commit log must be rewritten, it is not clear at
+> all in this respect at least not as-is, if you read it you will
+> notice ;-)
+Ok. I'll update commit message in next patch series.
 
-Partially, yes.
-
-> Were you expecting something else?
-
-That would not prevent having a child node such as 'foo {};'  or
-'foo@bad {};'. It would also not check valid nodes named something
-other than 'ethernet-phy'.
-
-Rob
+-Vidya Sagar
+> 
+> Lorenzo
+> 
+>>
+>> -Vidya Sagar
+>>
+>>>
+>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>> Reviewed-by: Thierry Reding <treding@nvidia.com>
+>>>> Acked-by: Jingoo Han <jingoohan1@gmail.com>
+>>>> ---
+>>>> Changes since [v10]:
+>>>> * None
+>>>>
+>>>> Changes since [v9]:
+>>>> * None
+>>>>
+>>>> Changes since [v8]:
+>>>> * None
+>>>>
+>>>> Changes since [v7]:
+>>>> * None
+>>>>
+>>>> Changes since [v6]:
+>>>> * None
+>>>>
+>>>> Changes since [v5]:
+>>>> * Moved write enable to the beginning of the API and write disable to the end
+>>>>
+>>>> Changes since [v4]:
+>>>> * None
+>>>>
+>>>> Changes since [v3]:
+>>>> * None
+>>>>
+>>>> Changes since [v2]:
+>>>> * None
+>>>>
+>>>> Changes since [v1]:
+>>>> * None
+>>>>
+>>>>    drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
+>>>>    1 file changed, 8 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>> index f93252d0da5b..d3156446ff27 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>> @@ -628,6 +628,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>>>>    	u32 val, ctrl, num_ctrls;
+>>>>    	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>>> +	/*
+>>>> +	 * Enable DBI read-only registers for writing/updating configuration.
+>>>> +	 * Write permission gets disabled towards the end of this function.
+>>>> +	 */
+>>>> +	dw_pcie_dbi_ro_wr_en(pci);
+>>>> +
+>>>>    	dw_pcie_setup(pci);
+>>>>    	if (!pp->ops->msi_host_init) {
+>>>> @@ -650,12 +656,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>>>>    	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
+>>>>    	/* Setup interrupt pins */
+>>>> -	dw_pcie_dbi_ro_wr_en(pci);
+>>>>    	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
+>>>>    	val &= 0xffff00ff;
+>>>>    	val |= 0x00000100;
+>>>>    	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
+>>>> -	dw_pcie_dbi_ro_wr_dis(pci);
+>>>>    	/* Setup bus numbers */
+>>>>    	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
+>>>> @@ -687,15 +691,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>>>>    	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
+>>>> -	/* Enable write permission for the DBI read-only register */
+>>>> -	dw_pcie_dbi_ro_wr_en(pci);
+>>>>    	/* Program correct class for RC */
+>>>>    	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+>>>> -	/* Better disable write permission right after the update */
+>>>> -	dw_pcie_dbi_ro_wr_dis(pci);
+>>>>    	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
+>>>>    	val |= PORT_LOGIC_SPEED_CHANGE;
+>>>>    	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
+>>>> +
+>>>> +	dw_pcie_dbi_ro_wr_dis(pci);
+>>>>    }
+>>>>    EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
+>>>> -- 
+>>>> 2.17.1
+>>>>
+>>
