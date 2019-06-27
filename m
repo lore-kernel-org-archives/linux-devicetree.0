@@ -1,47 +1,39 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v2 2/2] dt-bindings: dsp: fsl: Add DSP IPC binding support
-Date: Thu, 27 Jun 2019 08:12:20 +0000
-Message-ID: <20190627081205.22065-3-daniel.baluta@nxp.com>
-References: <20190627081205.22065-1-daniel.baluta@nxp.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v10 0/6] support a new type of PMIC,including two chips(rk817 and rk809)
+Date: Thu, 27 Jun 2019 10:18:54 +0200
+Message-ID: <2084806.DiqCa91xLP@phil>
+References: <20190621103258.8154-1-tony.xie@rock-chips.com> <20190626115251.GR21119@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627081205.22065-1-daniel.baluta@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190626115251.GR21119@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>
-Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "S.j. Wang" <shengjiu.wang@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Tony Xie <tony.xie@rock-chips.com>, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-RFNQIElQQyBpcyB0aGUgbGF5ZXIgdGhhdCBhbGxvd3MgdGhlIEhvc3QgQ1BVIHRvIGNvbW11bmlj
-YXRlDQp3aXRoIERTUCBmaXJtd2FyZS4NCkRTUCBpcyBwYXJ0IG9mIHNvbWUgaS5NWDggYm9hcmRz
-IChlLmcgaS5NWDhRTSwgaS5NWDhRWFApDQoNClNpZ25lZC1vZmYtYnk6IERhbmllbCBCYWx1dGEg
-PGRhbmllbC5iYWx1dGFAbnhwLmNvbT4NCi0tLQ0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rz
-cC9mc2wsZHNwX2lwYy55YW1sICB8IDQ0ICsrKysrKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hh
-bmdlZCwgNDQgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZHNwL2ZzbCxkc3BfaXBjLnlhbWwNCg0KZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kc3AvZnNsLGRzcF9pcGMueWFtbCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kc3AvZnNsLGRzcF9pcGMueWFtbA0K
-bmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAwMDAwMC4uMWNiZjVkMjViMjU4DQot
-LS0gL2Rldi9udWxsDQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHNw
-L2ZzbCxkc3BfaXBjLnlhbWwNCkBAIC0wLDAgKzEsNDQgQEANCisjIFNQRFgtTGljZW5zZS1JZGVu
-dGlmaWVyOiAoR1BMLTIuMCBPUiBCU0QtMi1DbGF1c2UpDQorJVlBTUwgMS4yDQorLS0tDQorJGlk
-OiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9hcm0vZnJlZXNjYWxlL2ZzbCxkc3AueWFt
-bCMNCiskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFt
-bCMNCisNCit0aXRsZTogTlhQIGkuTVg4IElQQyBEU1AgaW50ZXJmYWNlDQorDQorbWFpbnRhaW5l
-cnM6DQorICAtIERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT4NCisNCitkZXNj
-cmlwdGlvbjogfA0KKyAgSVBDIGNvbW11bmljYXRpb24gbGF5ZXIgYmV0d2VlbiBIb3N0IENQVSBh
-bmQgRFNQIG9uIE5YUCBpLk1YOCBwbGF0Zm9ybXMNCisNCitwcm9wZXJ0aWVzOg0KKyAgY29tcGF0
-aWJsZToNCisgICAgZW51bToNCisgICAgICAtIGZzbCxpbXg4cXhwLWRzcA0KKw0KKyAgbWJveGVz
-Og0KKyAgICBkZXNjcmlwdGlvbjoNCisgICAgICBMaXN0IG9mIDwmcGhhbmRsZSB0eXBlIGNoYW5u
-ZWw+IC0gMiBjaGFubmVscyBmb3IgVFhEQiwgMiBjaGFubmVscyBmb3IgUlhEQg0KKyAgICAgIChz
-ZWUgbWFpbGJveC9mc2wsbXUudHh0KQ0KKyAgICBtYXhJdGVtczogNA0KKw0KKyAgbWJveC1uYW1l
-czoNCisgICAgaXRlbXM6DQorICAgICAgLSBjb25zdDogdHhkYjANCisgICAgICAtIGNvbnN0OiB0
-eGRiMQ0KKyAgICAgIC0gY29uc3Q6IHJ4ZGIwDQorICAgICAgLSBjb25zdDogcnhkYjENCisNCity
-ZXF1aXJlZDoNCisgIC0gY29tcGF0aWJsZQ0KKyAgLSBtYm94ZXMNCisgIC0gbWJveC1uYW1lcw0K
-Kw0KK2V4YW1wbGVzOg0KKyAgLSB8DQorICAgIGRzcF9pcGMgew0KKyAgICAgIGNvbXBhdGJpbGUg
-PSAiZnNsLGlteDhxeHAtZHNwIjsNCisgICAgICBtYm94LW5hbWVzID0gInR4ZGIwIiwgInR4ZGIx
-IiwgInJ4ZGIwIiwgInJ4ZGIxIjsNCisgICAgICBtYm94ZXMgPSA8JmxzaW9fbXUxMyAyIDA+LCA8
-JmxzaW9fbXUxMyAyIDE+LCA8JmxzaW9fbXUxMyAzIDA+LCA8JmxzaW9fbXUxMyAzIDE+Ow0KKyAg
-ICB9Ow0KLS0gDQoyLjE3LjENCg0K
+Hi Lee,
+
+Am Mittwoch, 26. Juni 2019, 13:52:51 CEST schrieb Lee Jones:
+> On Fri, 21 Jun 2019, Tony Xie wrote:
+> 
+> > Most of functions and registers of the rk817 and rk808 are the same,
+> > so they can share allmost all codes.
+> > 
+> > Their specifications are as follows:
+> >   1) The RK809 and RK809 consist of 5 DCDCs, 9 LDOs and have the same
+> > registers
+> >      for these components except dcdc5.
+> >   2) The dcdc5 is a boost dcdc for RK817 and is a buck for RK809.
+> >   3) The RK817 has one switch but The Rk809 has two.
+> 
+> Just tried to apply this set to a v5.2-rc1 base, but it doesn't seem
+> to do so cleanly.  Would you be able to rebase and resend please?
+
+I took the liberty of rebasing patch 3 accordingly and sent it as reply
+to the original patch3 as (v10.1). The other patches did apply cleanly
+after that.
+
+
+Heiko
