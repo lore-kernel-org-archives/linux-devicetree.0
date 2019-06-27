@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 13/35] dt-bindings: can: mcp251x: add mcp25625 support
-Date: Wed, 26 Jun 2019 20:39:01 -0400
-Message-ID: <20190627003925.21330-13-sashal@kernel.org>
-References: <20190627003925.21330-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 10/21] dt-bindings: can: mcp251x: add mcp25625 support
+Date: Wed, 26 Jun 2019 20:41:10 -0400
+Message-ID: <20190627004122.21671-10-sashal@kernel.org>
+References: <20190627004122.21671-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627003925.21330-1-sashal@kernel.org>
+In-Reply-To: <20190627004122.21671-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Sean Nyekjaer <sean@geanix.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
