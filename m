@@ -1,31 +1,35 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH] dt-bindings: arm: Limit cpus schema to only check Arm
- 'cpu' nodes
-Date: Wed, 26 Jun 2019 18:02:22 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1906261759390.29311@viisi.sifive.com>
-References: <20190627000044.12739-1-robh@kernel.org>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH 0/8] pinctrl: aspeed: Preparation for AST2600
+Date: Thu, 27 Jun 2019 10:38:44 +0930
+Message-ID: <fa54f9a1-481e-4146-a4c2-7c43cf9a26e8@www.fastmail.com>
+References: <20190626071430.28556-1-andrew@aj.id.au>
+ <CACRpkdboxjMmeb8feffyG5JJ7fGPR6hqC8sc+XV5We3TC__LXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627000044.12739-1-robh@kernel.org>
+In-Reply-To: <CACRpkdboxjMmeb8feffyG5JJ7fGPR6hqC8sc+XV5We3TC__LXg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 26 Jun 2019, Rob Herring wrote:
 
-> Matching on the 'cpus' node was a bad choice because the schema is
-> incorrectly applied to non-Arm cpus nodes. As we now have a common cpus
-> schema which checks the general structure, it is also redundant to do so
-> in the Arm CPU schema.
+
+On Wed, 26 Jun 2019, at 17:25, Linus Walleij wrote:
+> On Wed, Jun 26, 2019 at 9:15 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 > 
-> The downside is one could conceivably mix different architecture's cpu
-> nodes or have typos in the compatible string. The latter problem pretty
-> much exists for every schema.
+> > The ASPEED AST2600 is in the pipeline, and we have enough information to start
+> > preparing to upstream support for it. This series lays some ground work;
+> > splitting the bindings and dicing the implementation up a little further to
+> > facilitate differences between the 2600 and previous SoC generations.
+> 
+> All looks good to me, but Rob should have a glance at the DT bindings
+> and YAML syntax before I proceed to apply them.
 
-The RISC-V patch applies cleanly, but this one doesn't apply here on 
-either master or next-20190626.  Is there a different base commit?
+Thanks for the quick review. Rob's responded, looks like I'll need to send a v2 at
+least. Might need a hand sorting out describing generic pinctrl dt bits (subnodes
+with function and group properties).
 
+Cheers,
 
-- Paul
+Andrew
