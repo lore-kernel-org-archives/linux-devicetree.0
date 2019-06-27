@@ -1,116 +1,44 @@
-Return-Path: <SRS0=mLec=UR=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 3/3] arm64: dts: renesas: hihope-common: Add HDMI support
-Date: Tue, 18 Jun 2019 16:18:39 +0100
-Message-Id: <1560871119-16570-4-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1560871119-16570-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1560871119-16570-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
+Return-Path: <SRS0=n/3y=U2=bootlin.com=miquel.raynal@kernel.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v3 1/4] clk: mvebu: armada-37xx-periph: add PCIe gated clock
+Date: Thu, 27 Jun 2019 14:52:42 +0200
+Message-Id: <20190627125245.26788-2-miquel.raynal@bootlin.com>
+In-Reply-To: <20190627125245.26788-1-miquel.raynal@bootlin.com>
+References: <20190627125245.26788-1-miquel.raynal@bootlin.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add HDMI support to the HiHope RZ/G2[MN] mother board common
-dtsi.
+The PCIe clock is a gated clock which has the same source as GbE0
+(both IPs share a set of registers). This source clock is called
+'gbe_core' in the driver.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
-Please note that this patch was tested with a 4K monitor and cma=96M
+ drivers/clk/mvebu/armada-37xx-periph.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- arch/arm64/boot/dts/renesas/hihope-common.dtsi | 62 ++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/hihope-common.dtsi b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-index 625c3aa..e7568e1 100644
---- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-@@ -17,6 +17,18 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/drivers/clk/mvebu/armada-37xx-periph.c b/drivers/clk/mvebu/armada-37xx-periph.c
+index 4c20093a42fb..1e18c5a875bd 100644
+--- a/drivers/clk/mvebu/armada-37xx-periph.c
++++ b/drivers/clk/mvebu/armada-37xx-periph.c
+@@ -304,6 +304,7 @@ PERIPH_CLK_GATE_DIV(gbe_bm, 12, DIV_SEL1, 0, clk_table1);
+ PERIPH_CLK_FULL_DD(sdio, 11, 14, DIV_SEL0, DIV_SEL0, 3, 6);
+ PERIPH_CLK_FULL_DD(usb32_usb2_sys, 16, 16, DIV_SEL0, DIV_SEL0, 9, 12);
+ PERIPH_CLK_FULL_DD(usb32_ss_sys, 17, 18, DIV_SEL0, DIV_SEL0, 15, 18);
++static PERIPH_GATE(pcie, 14);
  
-+	hdmi0-out {
-+		compatible = "hdmi-connector";
-+		label = "HDMI0 OUT";
-+		type = "a";
-+
-+		port {
-+			hdmi0_con: endpoint {
-+				remote-endpoint = <&rcar_dw_hdmi0_out>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -82,6 +94,30 @@
- 		states = <3300000 1
- 			  1800000 0>;
- 	};
-+
-+	x302_clk: x302-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <33000000>;
-+	};
-+
-+	x304_clk: x304-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <25000000>;
-+	};
-+};
-+
-+&du {
-+	clocks = <&cpg CPG_MOD 724>,
-+		 <&cpg CPG_MOD 723>,
-+		 <&cpg CPG_MOD 722>,
-+		 <&versaclock5 1>,
-+		 <&x302_clk>,
-+		 <&versaclock5 2>;
-+	clock-names = "du.0", "du.1", "du.2",
-+		      "dclkin.0", "dclkin.1", "dclkin.2";
-+	status = "okay";
+ static struct clk_periph_data data_sb[] = {
+ 	REF_CLK_MUX_DD(gbe_50),
+@@ -319,6 +320,7 @@ static struct clk_periph_data data_sb[] = {
+ 	REF_CLK_FULL_DD(sdio),
+ 	REF_CLK_FULL_DD(usb32_usb2_sys),
+ 	REF_CLK_FULL_DD(usb32_ss_sys),
++	REF_CLK_GATE(pcie, "gbe_core"),
+ 	{ },
  };
  
- &ehci0 {
-@@ -109,11 +145,37 @@
- 	};
- };
- 
-+&hdmi0 {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			reg = <1>;
-+			rcar_dw_hdmi0_out: endpoint {
-+				remote-endpoint = <&hdmi0_con>;
-+			};
-+		};
-+	};
-+};
-+
- &hsusb {
- 	dr_mode = "otg";
- 	status = "okay";
- };
- 
-+&i2c4 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	versaclock5: clock-generator@6a {
-+		compatible = "idt,5p49v5923";
-+		reg = <0x6a>;
-+		#clock-cells = <1>;
-+		clocks = <&x304_clk>;
-+		clock-names = "xin";
-+	};
-+};
-+
- &ohci0 {
- 	status = "okay";
- };
 -- 
-2.7.4
+2.19.1
