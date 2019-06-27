@@ -1,108 +1,61 @@
-Return-Path: <SRS0=nfyP=UR=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V6 18/27] PCI: tegra: Program AFI_CACHE* registers only for Tegra20
-Date: Tue, 18 Jun 2019 23:31:57 +0530
-Message-ID: <20190618180206.4908-19-mmaddireddy@nvidia.com>
-In-Reply-To: <20190618180206.4908-1-mmaddireddy@nvidia.com>
-References: <20190618180206.4908-1-mmaddireddy@nvidia.com>
+Return-Path: <SRS0=gWt2=U2=gmail.com=thierry.reding@kernel.org>
+Date: Thu, 27 Jun 2019 11:21:26 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [Patch V4 2/8] phy: tegra: xusb: t210: add usb3 port fake support
+Message-ID: <20190627092126.GA21242@ulmo>
+References: <1560161949-26031-1-git-send-email-nkristam@nvidia.com>
+ <1560161949-26031-3-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
+Content-Disposition: inline
+In-Reply-To: <1560161949-26031-3-git-send-email-nkristam@nvidia.com>
+To: Nagarjuna Kristam <nkristam@nvidia.com>
+Cc: balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Cacheable upstream transactions are supported in Tegra20 and Tegra186 only.
-AFI_CACHE* registers are available in Tegra20 to support cacheable upstream
-transactions. In Tegra186, AFI_AXCACHE register is defined instead of
-AFI_CACHE* to be in line with its MSS design. Therefore, program AFI_CACHE*
-registers only for Tegra20.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+--jRHKVT23PllUwdXP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jun 10, 2019 at 03:49:03PM +0530, Nagarjuna Kristam wrote:
+> On Tegra210, usb2 only otg/peripheral ports dont work in device mode.
+> They need an assosciated usb3 port to work in device mode. Identify
+> an unused usb3 port and assign it as a fake USB3 port to USB2 only
+> port whose mode is otg/peripheral.
+>=20
+> Based on work by BH Hsieh <bhsieh@nvidia.com>.
+>=20
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> ---
+>  drivers/phy/tegra/xusb-tegra210.c | 56 +++++++++++++++++++++++++++++++++
+>  drivers/phy/tegra/xusb.c          | 65 +++++++++++++++++++++++++++++++++=
+++++++
+>  drivers/phy/tegra/xusb.h          |  2 ++
+>  3 files changed, 123 insertions(+)
+
 Acked-by: Thierry Reding <treding@nvidia.com>
----
-V6: No change
 
-V5: No change
+--jRHKVT23PllUwdXP
+Content-Type: application/pgp-signature; name="signature.asc"
 
-V4: No change
+-----BEGIN PGP SIGNATURE-----
 
-V3: Initialized has_cache_bars variable for each soc data structure.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0UipMACgkQ3SOs138+
+s6Hecg/+JCCGEunVOF6lHr9nPIXV42u9d0szF6m1qKtcHCVItNkzqPKrOu4f3UrD
+b/tj93rC6g5qp1SWgv/APmLDb5jwi8enZOrXBsffw8wVnxzYgQ6XInIIY2v4Jkvr
+3hFEvAfsIZoDVmEMVTSxMqCMxgixKvEvURD8NPw367PSt1+K/OCpFAiFZpADmov9
+x8HHQPyD/GjNk4bhrP9XfZYErApF60JKiSq7J8dke/VH/hH97b0Wb8s4k5hCzDsv
+cWYClQEvIAzwM0g8NwuRqxAi07qlZsaBoOtX53MysagRjuUbv7yO706qGlcUpsen
+SEICZIR68OSx4iCcAcFfFvMPjOy3JwUYZI8PTO05PISKp+jdRzyDO+da2rQrYzkH
+X/Wb8TKYUE+otEH+PmQ+Rf/9yks1vTWCdkPN9JbsDVpHYBuoaVCrxel0h5WwRBVk
+yXR/t5qKEX0t5IapnISMrZNf+o5kGMl/jDV9OWZyG/Z1XCvNCxss1sQHFu6qffqT
+TR02FMqBYbkMnWaPBxgWYk7IgJhHs0/dKakgzRedjLVyrZXC+uV+KXnUdu7oNgy+
+6HQJg3ML4OjoXhzdDAxyGkb0dvP8YKckpBhZUdYVBihVglhPAgc26mKxOXmNi1yp
+7jLPGQItg2J3Fp1Qb5EIIhjHnrYIkM6kD0uRRj9uvxBpAlpAifw=
+=fS/u
+-----END PGP SIGNATURE-----
 
-V2: Used soc variable for comparision instead of compatible string.
-
- drivers/pci/controller/pci-tegra.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 3d9028cecc18..a746d963ca36 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -323,6 +323,7 @@ struct tegra_pcie_soc {
- 	bool program_deskew_time;
- 	bool raw_violation_fixup;
- 	bool update_fc_timer;
-+	bool has_cache_bars;
- 	struct {
- 		struct {
- 			u32 rp_ectl_2_r1;
-@@ -932,11 +933,13 @@ static void tegra_pcie_setup_translations(struct tegra_pcie *pcie)
- 	afi_writel(pcie, 0, AFI_AXI_BAR5_SZ);
- 	afi_writel(pcie, 0, AFI_FPCI_BAR5);
- 
--	/* map all upstream transactions as uncached */
--	afi_writel(pcie, 0, AFI_CACHE_BAR0_ST);
--	afi_writel(pcie, 0, AFI_CACHE_BAR0_SZ);
--	afi_writel(pcie, 0, AFI_CACHE_BAR1_ST);
--	afi_writel(pcie, 0, AFI_CACHE_BAR1_SZ);
-+	if (pcie->soc->has_cache_bars) {
-+		/* map all upstream transactions as uncached */
-+		afi_writel(pcie, 0, AFI_CACHE_BAR0_ST);
-+		afi_writel(pcie, 0, AFI_CACHE_BAR0_SZ);
-+		afi_writel(pcie, 0, AFI_CACHE_BAR1_ST);
-+		afi_writel(pcie, 0, AFI_CACHE_BAR1_SZ);
-+	}
- 
- 	/* MSI translations are setup only when needed */
- 	afi_writel(pcie, 0, AFI_MSI_FPCI_BAR_ST);
-@@ -2441,6 +2444,7 @@ static const struct tegra_pcie_soc tegra20_pcie = {
- 	.program_deskew_time = false,
- 	.raw_violation_fixup = false,
- 	.update_fc_timer = false,
-+	.has_cache_bars = true,
- 	.ectl.enable = false,
- };
- 
-@@ -2469,6 +2473,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
- 	.program_deskew_time = false,
- 	.raw_violation_fixup = false,
- 	.update_fc_timer = false,
-+	.has_cache_bars = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2492,6 +2497,7 @@ static const struct tegra_pcie_soc tegra124_pcie = {
- 	.program_deskew_time = false,
- 	.raw_violation_fixup = true,
- 	.update_fc_timer = false,
-+	.has_cache_bars = false,
- 	.ectl.enable = false,
- };
- 
-@@ -2515,6 +2521,7 @@ static const struct tegra_pcie_soc tegra210_pcie = {
- 	.program_deskew_time = true,
- 	.raw_violation_fixup = false,
- 	.update_fc_timer = true,
-+	.has_cache_bars = false,
- 	.ectl = {
- 		.regs = {
- 			.rp_ectl_2_r1 = 0x0000000f,
-@@ -2555,6 +2562,7 @@ static const struct tegra_pcie_soc tegra186_pcie = {
- 	.program_deskew_time = false,
- 	.raw_violation_fixup = false,
- 	.update_fc_timer = false,
-+	.has_cache_bars = false,
- 	.ectl.enable = false,
- };
- 
--- 
-2.17.1
+--jRHKVT23PllUwdXP--
