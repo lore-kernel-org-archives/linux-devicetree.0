@@ -1,81 +1,122 @@
-From: Eddie James <eajames@linux.ibm.com>
-Subject: Re: [PATCH v3 1/8] dt-bindings: soc: Add Aspeed XDMA engine binding
- documentation
-Date: Thu, 27 Jun 2019 14:19:47 -0500
-Message-ID: <c8d80e9a-6fa9-aa57-3b5f-e20b20dd0f66@linux.ibm.com>
-References: <1559153408-31190-1-git-send-email-eajames@linux.ibm.com>
- <1559153408-31190-2-git-send-email-eajames@linux.ibm.com>
- <58b74556-cbf0-4da2-9392-4c4ac40ad760@www.fastmail.com>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: [PATCH v8 0/7] Unify CPU topology across ARM & RISC-V
+Date: Thu, 27 Jun 2019 12:52:55 -0700
+Message-ID: <20190627195302.28300-1-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <58b74556-cbf0-4da2-9392-4c4ac40ad760@www.fastmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, Joel Stanley <joel@jms.id.au>
+To: linux-kernel@vger.kernel.org
+Cc: Atish Patra <atish.patra@wdc.com>, Jeremy Linton <jeremy.linton@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Johan Hovold <johan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>R
 List-Id: devicetree@vger.kernel.org
 
+The cpu-map DT entry in ARM can describe the CPU topology in much better
+way compared to other existing approaches. RISC-V can easily adopt this
+binding to represent its own CPU topology. Thus, both cpu-map DT
+binding and topology parsing code can be moved to a common location so
+that RISC-V or any other architecture can leverage that.
 
-On 5/30/19 12:30 AM, Andrew Jeffery wrote:
->
-> On Thu, 30 May 2019, at 03:40, Eddie James wrote:
->> Document the bindings.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
->> ---
->>   .../devicetree/bindings/soc/aspeed/xdma.txt        | 23 ++++++++++++++++++++++
->>   1 file changed, 23 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
->>
->> diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
->> b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
->> new file mode 100644
->> index 0000000..85e82ea
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
->> @@ -0,0 +1,23 @@
->> +* Device tree bindings for the Aspeed XDMA Engine
->> +
->> +The XDMA Engine embedded in the AST2500 SOC can perform automatic DMA
->> +operations over PCI between the AST2500 (acting as a BMC) and a host
->> processor.
->> +
->> +Required properties:
->> +
->> + - compatible		"aspeed,ast2500-xdma"
->> + - reg			contains the offset and length of the memory region
->> +			assigned to the XDMA registers
->> + - resets		reset specifier for the syscon reset associated with
->> +			the XDMA engine
->> + - interrupts		the interrupt associated with the XDMA engine on this
->> +			platform
-> The indentation is quite distracting. If you rev the series can you fix it?
+The relevant discussion regarding unifying cpu topology can be found in
+[1].
 
+arch_topology seems to be a perfect place to move the common code. I
+have not introduced any significant functional changes in the moved code.
+The only downside in this approach is that the capacity code will be
+executed for RISC-V as well. But, it will exit immediately after not
+able to find the appropriate DT node. If the overhead is considered too
+much, we can always compile out capacity related functions under a
+different config for the architectures that do not support them.
 
-I think the diff is throwing it off; it all lines up when applied.
+There was an opportunity to unify topology data structure for ARM32 done
+by patch 3/4. But, I refrained from making any other changes as I am not
+very well versed with original intention for some functions that
+are present in arch_topology.c. I hope this patch series can be served
+as a baseline for such changes in the future.
 
-Thanks,
+The patches have been tested for RISC-V, ARM64, ARM32 & compile tested for
+x86.
 
-Eddie
+>From Jeremy,
 
+"I applied these to 5.2rc2, along with my PPTT/MT change and verified the 
+system & scheduler topology/etc on DAWN and ThunderX2 using ACPI on arm64.
+They appear to be working correctly.
 
->
-> Otherwise,
->
-> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
->
->> +
->> +Example:
->> +
->> +    xdma@1e6e7000 {
->> +        compatible = "aspeed,ast2500-xdma";
->> +        reg = <0x1e6e7000 0x100>;
->> +        resets = <&syscon ASPEED_RESET_XDMA>;
->> +        interrupts = <6>;
->> +    };
->> -- 
->> 1.8.3.1
->>
->>
+so for the series,
+Tested-by: Jeremy Linton <jeremy.linton@arm.com>"
+
+The socket change[2] is also now part of this series.
+
+[1] https://lkml.org/lkml/2018/11/6/19
+[2] https://lkml.org/lkml/2018/11/7/918
+
+This patch series can also be found at
+https://github.com/atishp04/linux/tree/5.2-rc6_topology
+
+QEMU changes for RISC-V topology are available here
+https://lists.nongnu.org/archive/html/qemu-devel/2019-06/msg05974.html
+
+HiFive Unleashed DT with topology node is available here.
+https://patchwork.kernel.org/patch/11014313/
+
+Changes from v7->v8
+1. Regenerated the patch series without -b option in git format-patch.
+   Without that, git apply from email won't work because ignored space
+   changes.
+ 
+Changes from v6->v7
+1. Added socket to HiFive Unleashed topology example.
+2. Added Acked-by & Reviewed-by.
+
+Changes from v5->v6
+1. Added two more patches from Sudeep about maintainership of arch_topology.c
+   and Kconfig update.
+2. Added Tested-by & Reviewed-by
+3. Fixed a nit (reordering of variables)
+
+Changes from v4-v5
+1. Removed the arch_topology.h header inclusion from topology.c and arch_topology.c
+file. Added it in linux/topology.h.
+2. core_id is set to -1 upon reset. Otherwise, ARM topology store function does not
+work.
+
+Changes from v3->v4
+1. Get rid of ARM32 specific information in topology structure.
+2. Remove redundant functions from ARM32 and use common code instead. 
+
+Changes from v2->v3
+1. Cover letter update with experiment DT for topology changes.
+2. Added the patch for [2].
+
+Changes from v1->v2
+1. ARM32 can now use the common code as well.
+
+Atish Patra (4):
+dt-binding: cpu-topology: Move cpu-map to a common binding.
+cpu-topology: Move cpu topology code to common code.
+arm: Use common cpu_topology structure and functions.
+RISC-V: Parse cpu topology during boot.
+
+Sudeep Holla (3):
+Documentation: DT: arm: add support for sockets defining package
+boundaries
+base: arch_topology: update Kconfig help description
+MAINTAINERS: Add an entry for generic architecture topology
+
+.../topology.txt => cpu/cpu-topology.txt}     | 256 ++++++++++-----
+MAINTAINERS                                   |   7 +
+arch/arm/include/asm/topology.h               |  20 --
+arch/arm/kernel/topology.c                    |  60 +---
+arch/arm64/include/asm/topology.h             |  23 --
+arch/arm64/kernel/topology.c                  | 303 +-----------------
+arch/riscv/Kconfig                            |   1 +
+arch/riscv/kernel/smpboot.c                   |   3 +
+drivers/base/Kconfig                          |   2 +-
+drivers/base/arch_topology.c                  | 298 +++++++++++++++++
+include/linux/arch_topology.h                 |  26 ++
+include/linux/topology.h                      |   1 +
+12 files changed, 514 insertions(+), 486 deletions(-)
+rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (66%)
+
+--
+2.21.0
