@@ -1,85 +1,52 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
-Date: Thu, 27 Jun 2019 10:32:27 -0500
-Message-ID: <CABb+yY1aVbKfuqX=GvTzyjkgRXB3DXLvgjZARGn8k8m2R2vSqA@mail.gmail.com>
-References: <20190603083005.4304-1-peng.fan@nxp.com> <20190603083005.4304-3-peng.fan@nxp.com>
- <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com>
- <AM0PR04MB44813A4DE544E53EB7B6F02B88E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CABb+yY38MAZqVOhjyV+GByPvpFcTfKbNG1rJ8YDRd1vi1F4fqg@mail.gmail.com>
- <AM0PR04MB44814D3BD59033ECDDE3094C88E20@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <e49278ba-f734-e019-ab44-53afe558bd85@gmail.com> <CABb+yY2B_bGqZhd3HRm2qOwGNXG8UYvRo0_uBmwGbx_1gA-vfA@mail.gmail.com>
- <20190627090903.GD13572@e107155-lin>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v4 11/13] dt-bindings: net: dwmac: Deprecate the PHY reset properties
+Date: Thu, 27 Jun 2019 17:31:53 +0200
+Message-ID: <bdec137a2b0366c88815b8d9b4880a222e359cad.1561649505.git-series.maxime.ripard@bootlin.com>
+References: <cover.e80da8845680a45c2e07d5f17280fdba84555b8a.1561649505.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627090903.GD13572@e107155-lin>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Peng Fan <peng.fan@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, ", Sascha Hauer" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Andre Przywara <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <cover.e80da8845680a45c2e07d5f17280fdba84555b8a.1561649505.git-series.maxime.ripard@bootlin.com>
+Sender: netdev-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 4:09 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Wed, Jun 26, 2019 at 01:27:41PM -0500, Jassi Brar wrote:
-> > On Wed, Jun 26, 2019 at 11:44 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> > >
-> > > On 6/26/19 6:31 AM, Peng Fan wrote:
-> > > >>> The firmware driver might not have func-id, such as SCMI/SCPI.
-> > > >>> So add an optional func-id to let smc mailbox driver could
-> > > >>> use smc SiP func id.
-> > > >>>
-> > > >> There is no end to conforming to protocols. Controller drivers should
-> > > >> be written having no particular client in mind.
-> > > >
-> > > > If the func-id needs be passed from user, then the chan_id suggested
-> > > > by Sudeep should also be passed from user, not in mailbox driver.
-> > > >
-> > > > Jassi, so from your point, arm_smc_send_data just send a0 - a6
-> > > > to firmware, right?
-> > > >
-> > > > Sudeep, Andre, Florian,
-> > > >
-> > > > What's your suggestion? SCMI not support, do you have
-> > > > plan to add smc transport in SCMI?
-> > >
-> > > On the platforms that I work with, we have taken the liberty of
-> > > implementing SCMI in our monitor firmware because the other MCU we use
-> > > for dynamic voltage and frequency scaling did not have enough memory to
-> > > support that and we still had the ability to make that firmware be
-> > > trusted enough we could give it power management responsibilities. I
-> > > would certainly feel more comfortable if the SCMI specification was
-> > > amended to indicate that the Agent could be such a software entity,
-> > > still residing on the same host CPU as the Platform(s), but if not,
-> > > that's fine.
-> > >
-> > > This has lead us to implement a mailbox driver that uses a proprietary
-> > > SMC call for the P2A path ("tx" channel) and the return being done via
-> > > either that same SMC or through SGI. You can take a look at it in our
-> > > downstream tree here actually:
-> > >
-> > > https://github.com/Broadcom/stblinux-4.9/blob/master/linux/drivers/mailbox/brcmstb-mailbox.c
-> > >
-> > > If we can get rid of our own driver and uses a standard SMC based
-> > > mailbox driver that supports our use case that involves interrupts (we
-> > > can always change their kind without our firmware/boot loader since FDT
-> > > is generated from that component), that would be great.
-> > >
-> > static irqreturn_t brcm_isr(void)
-> > {
-> >          mbox_chan_received_data(&chans[0], NULL);
-> >          return IRQ_HANDLED;
-> > }
-> >
-> > Sorry, I fail to understand why the irq can't be moved inside the
-> > client driver itself? There can't be more cost to it and there
-> > definitely is no functionality lost.
->
-> What if there are multiple clients ?
->
-There is a flag IRQF_SHARED for such situations.
-(good to see you considering multiple clients per channel as a legit scenario)
+Even though the DWMAC driver uses some driver specific properties, the PHY
+core has a bunch of generic properties and can deal with them nicely.
 
-> And I assume you are referring to case like this where IRQ is not tied
-> to the mailbox IP.
->
-Yes, and that is the reason the irq should not be managed by the mailbox driver.
+Let's deprecate our specific properties.
+
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ Documentation/devicetree/bindings/net/snps,dwmac.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+index 956308806c33..0bf322408500 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+@@ -172,16 +172,19 @@ properties:
+           * snps,priority, TX queue priority (Range 0x0 to 0xF)
+ 
+   snps,reset-gpio:
++    deprecated: true
+     maxItems: 1
+     description:
+       PHY Reset GPIO
+ 
+   snps,reset-active-low:
++    deprecated: true
+     $ref: /schemas/types.yaml#definitions/flag
+     description:
+       Indicates that the PHY Reset is active low
+ 
+   snps,reset-delays-us:
++    deprecated: true
+     allOf:
+       - $ref: /schemas/types.yaml#definitions/uint32-array
+       - minItems: 3
+-- 
+git-series 0.9.1
