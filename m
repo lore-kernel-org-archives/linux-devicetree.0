@@ -1,68 +1,101 @@
-From: Atish Patra <Atish.Patra@wdc.com>
-Subject: Re: [PATCH v7 1/7] Documentation: DT: arm: add support for sockets
- defining package boundaries
-Date: Thu, 27 Jun 2019 19:58:50 +0000
-Message-ID: <513883349e80792884b3754c259357d8066ad348.camel@wdc.com>
-References: <20190617185920.29581-1-atish.patra@wdc.com>
-         <20190617185920.29581-2-atish.patra@wdc.com>
-         <alpine.DEB.2.21.9999.1906261724000.23534@viisi.sifive.com>
-         <873a80f0-e704-dd7e-4db9-b159b23847fc@wdc.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] dt-bindings: Add silabs,si5341
+Date: Thu, 27 Jun 2019 13:54:26 -0700
+Message-ID: <20190627205427.5C3482075E@mail.kernel.org>
+References: <20190424090216.18417-1-mike.looijmans@topic.nl> <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com> <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl> <155632584222.168659.9675557812377718927@swboyd.mtv.corp.google.com> <cd52a35b-d289-24e1-70db-9d63fd9f6448@topic.nl> <155658342800.168659.4922821141203707564@swboyd.mtv.corp.google.com> <c7f5184f-f484-e8ad-33ae-36b0da061113@topic.nl> <20190626212409.9C0E6208E3@mail.kernel.org> <61fae574-2cea-cbdc-bc8a-3cc34c681d01@topic.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <873a80f0-e704-dd7e-4db9-b159b23847fc@wdc.com>
-Content-Language: en-US
-Content-ID: <DE6C3B113F433D42A951EC64A666E802@namprd04.prod.outlook.com>
+In-Reply-To: <61fae574-2cea-cbdc-bc8a-3cc34c681d01@topic.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>
-Cc: "will.deacon@arm.com" <will.deacon@arm.com>, "robh@kernel.org" <robh@kernel.org>, "rfontana@redhat.com" <rfontana@redhat.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "davem@davemloft.net" <davem@davemloft.net>, "palmer@sifive.com" <palmer@sifive.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "mingo@kernel.org" <mingo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ottosabart@seberm.com" <ottosabart@seberm.com>, "morten.rasmussen@arm.com" <morten.rasm>
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Looijmans <mike.looijmans@topic.nl>
+Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA2LTI2IGF0IDE5OjE4IC0wNzAwLCBBdGlzaCBQYXRyYSB3cm90ZToNCj4g
-T24gNi8yNi8xOSA1OjMxIFBNLCBQYXVsIFdhbG1zbGV5IHdyb3RlOg0KPiA+IEhpIFN1ZGVlcCwg
-QXRpc2gsDQo+ID4gDQo+ID4gT24gTW9uLCAxNyBKdW4gMjAxOSwgQXRpc2ggUGF0cmEgd3JvdGU6
-DQo+ID4gDQo+ID4gPiBGcm9tOiBTdWRlZXAgSG9sbGEgPHN1ZGVlcC5ob2xsYUBhcm0uY29tPg0K
-PiA+ID4gDQo+ID4gPiBUaGUgY3VycmVudCBBUk0gRFQgdG9wb2xvZ3kgZGVzY3JpcHRpb24gcHJv
-dmlkZXMgdGhlIG9wZXJhdGluZw0KPiA+ID4gc3lzdGVtDQo+ID4gPiB3aXRoIGEgdG9wb2xvZ2lj
-YWwgdmlldyBvZiB0aGUgc3lzdGVtIHRoYXQgaXMgYmFzZWQgb24gbGVhZiBub2Rlcw0KPiA+ID4g
-cmVwcmVzZW50aW5nIGVpdGhlciBjb3JlcyBvciB0aHJlYWRzIChpbiBhbiBTTVQgc3lzdGVtKSBh
-bmQgYQ0KPiA+ID4gaGllcmFyY2hpY2FsIHNldCBvZiBjbHVzdGVyIG5vZGVzIHRoYXQgY3JlYXRl
-cyBhIGhpZXJhcmNoaWNhbA0KPiA+ID4gdG9wb2xvZ3kNCj4gPiA+IHZpZXcgb2YgaG93IHRob3Nl
-IGNvcmVzIGFuZCB0aHJlYWRzIGFyZSBncm91cGVkLg0KPiA+ID4gDQo+ID4gPiBIb3dldmVyIHRo
-aXMgaGllcmFyY2hpY2FsIHJlcHJlc2VudGF0aW9uIG9mIGNsdXN0ZXJzIGRvZXMgbm90DQo+ID4g
-PiBhbGxvdyB0bw0KPiA+ID4gZGVzY3JpYmUgd2hhdCB0b3BvbG9neSBsZXZlbCBhY3R1YWxseSBy
-ZXByZXNlbnRzIHRoZSBwaHlzaWNhbA0KPiA+ID4gcGFja2FnZSBvcg0KPiA+ID4gdGhlIHNvY2tl
-dCBib3VuZGFyeSwgd2hpY2ggaXMgYSBrZXkgcGllY2Ugb2YgaW5mb3JtYXRpb24gdG8gYmUNCj4g
-PiA+IHVzZWQgYnkNCj4gPiA+IGFuIG9wZXJhdGluZyBzeXN0ZW0gdG8gb3B0aW1pemUgcmVzb3Vy
-Y2UgYWxsb2NhdGlvbiBhbmQNCj4gPiA+IHNjaGVkdWxpbmcuDQo+ID4gPiANCj4gPiA+IExldHMg
-YWRkIGEgbmV3ICJzb2NrZXQiIG5vZGUgdHlwZSBpbiB0aGUgY3B1LW1hcCBub2RlIHRvIGRlc2Ny
-aWJlDQo+ID4gPiB0aGUNCj4gPiA+IHNhbWUuDQo+ID4gPiANCj4gPiA+IFNpZ25lZC1vZmYtYnk6
-IFN1ZGVlcCBIb2xsYSA8c3VkZWVwLmhvbGxhQGFybS5jb20+DQo+ID4gPiBSZXZpZXdlZC1ieTog
-Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gPiANCj4gPiBUaGlzIG9uZSBkb2Vzbid0
-IGFwcGx5IGNsZWFubHkgaGVyZSBvbiB0b3Agb2YgdjUuMi1yYzIsIExpbnVzJ3MNCj4gPiBtYXN0
-ZXINCj4gPiBicmFuY2gsIGFuZCBuZXh0LTIwMTkwNjI2LiAgVGhlIHJlamVjdCBmaWxlIGlzIGJl
-bG93LiAgQW0gSSBtaXNzaW5nDQo+ID4gYSBwYXRjaD8NCj4gPiANCj4gDQo+IFRoYXQncyB3ZWly
-ZC4gSSBjb3VsZCBhcHBseSB0aGUgcGF0Y2ggZnJvbSBhbnkgZ2l0IHRyZWUgKGdpdGh1YiBvciAN
-Cj4gZ2l0Lmtlcm5lbC5vcmcpIGJ1dCBub3QgZnJvbSBtYWlsIG9yIHBhdGNod29ya3MuDQo+IA0K
-PiBnaXQgbG9nIGRvZXNuJ3Qgc2hvdyBhbnkgcmVjZW50IG1vZGlmaWNhdGlvbnMgb2YgdGhhdCBm
-aWxlLiBJIGFtDQo+IHRyeWluZyANCj4gdG8gZmlndXJlIG91dCB3aGF0J3Mgd3JvbmcuDQoNClRo
-ZSBzcGFjZSBjaGFuZ2VzIGluIHRoaXMgcGF0Y2ggY2F1c2VkIHRoZSBjb25mbGljdC4gVGhlIHBh
-dGNoIHdhcw0KZ2VuZXJhdGVkIHdpdGggLWIgd2hpY2ggd2FzIHN1Z2dlc3RlZCBkdXJpbmcgdGhl
-IGluaXRpYWwgcmV2aWV3LiANCg0KSSBzaG91bGQgcmVtb3ZlZCBpdCBiZWZvcmUgc2VuZGluZyB2
-Ny4gTXkgYmFkLg0KSSBoYXZlIGZpeGVkIHRoYXQgYW5kIHNlbnQgYSB2OCB0aGF0IHNob3VsZCBi
-ZSBjbGVhbmx5IGFwcGxpZWQgb24NCmxhdGVzdCBtYXN0ZXIuIFRoZSBwYXRjaCBzZXJpZXMgaXMg
-YWxzbyBhdmFpbGFibGUgYXQgDQoNCmh0dHBzOi8vZ2l0aHViLmNvbS9hdGlzaHAwNC9saW51eC90
-cmVlLzUuMi1yYzZfdG9wb2xvZ3kNCg0KUmVnYXJkcywNCkF0aXNoDQo+ID4gLSBQYXVsDQo+ID4g
-DQo+ID4gLS0tIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vdG9wb2xvZ3ku
-dHh0DQo+ID4gKysrIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vdG9wb2xv
-Z3kudHh0DQo+ID4gQEAgLTE4NSwxMyArMjA2LDE1IEBAIEJpbmRpbmdzIGZvciBjbHVzdGVyL2Nw
-dS90aHJlYWQgbm9kZXMgYXJlDQo+ID4gZGVmaW5lZCBhcyBmb2xsb3dzOg0KPiA+ICAgNCAtIEV4
-YW1wbGUgZHRzDQo+ID4gICA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09DQo+ID4gICANCj4gPiAtRXhhbXBsZSAxIChBUk0gNjQtYml0LCAxNi1jcHUgc3lzdGVtLCB0
-d28gY2x1c3RlcnMgb2YgY2x1c3RlcnMpOg0KPiA+ICtFeGFtcGxlIDEgKEFSTSA2NC1iaXQsIDE2
-LWNwdSBzeXN0ZW0sIHR3byBjbHVzdGVycyBvZiBjbHVzdGVycyBpbg0KPiA+IGEgc2luZ2xlDQo+
-ID4gK3BoeXNpY2FsIHNvY2tldCk6DQo+ID4gICANCj4gPiAgIGNwdXMgew0KPiA+ICAgCSNzaXpl
-LWNlbGxzID0gPDA+Ow0KPiA+ICAgCSNhZGRyZXNzLWNlbGxzID0gPDI+Ow0KPiA+ICAgDQo+ID4g
-ICAJY3B1LW1hcCB7DQo+ID4gKwkJc29ja2V0MCB7DQo+ID4gICAJCQljbHVzdGVyMCB7DQo+ID4g
-ICAJCQkJY2x1c3RlcjAgew0KPiA+ICAgCQkJCQljb3JlMCB7DQo+ID4gDQo+IA0KPiANCg==
+Quoting Mike Looijmans (2019-06-27 04:38:16)
+> On 26-06-19 23:24, Stephen Boyd wrote:
+> > Sorry, I'm getting through my inbox pile and saw this one.
+> >=20
+> > Quoting Mike Looijmans (2019-04-30 22:46:55)
+> >> On 30-04-19 02:17, Stephen Boyd wrote:
+> >>>
+> >>> Why can't that driver call clk_prepare_enable()? Is there some sort of
+> >>> assumption that this clk will always be enabled and not have a driver
+> >>> that configures the rate and gates/ungates it?
+> >>
+> >> Not only clk_prepare_enable(), but the driver could also call clk_set_=
+rate()
+> >> and clk_set_parent() and the likes, but it doesn't, so that's why ther=
+e is
+> >> "assigned-clocks" right?
+> >>
+> >> There are multiple scenario's, similar to why regulators also have pro=
+perties
+> >> like these.
+> >>
+> >> - The clock is related to hardware that the kernel is not aware of.
+> >> - The clock is for a driver that isn't aware of its clock requirements=
+. It
+> >> might be an extra clock for an FPGA implemented controller that mimics
+> >> existing hardware.
+> >=20
+> > Are these hypothetical scenarios or actual scenarios you need to
+> > support?
+>=20
+> Actual scenario's.
+>=20
+> Clocks are required for FPGA logic, and a some of those do not involve=20
+> software drivers at all.
+>=20
+> The GTR transceivers on the Xilinx ZynqMP chips use these clocks for SATA=
+ and=20
+> PCIe, but the driver implementation from Xilinx for these is far from mat=
+ure,=20
+> for example it passes the clock frequency as a PHY parameter and isn't ev=
+en=20
+> aware of the clk framework at the moment. Xilinx hasn't even attempted=20
+> submitting this 3 year old driver to mainline.
+
+I think they may have submitted the "fixed rate from PHY parameter"
+support. I merged it because I suspected it would help in those rare
+cases where an MMIO register is used to express information about the
+configuration and the bootloader does nothing to help create a fixed
+rate clk in DT.
+
+> >=20
+> > To put it another way, I'm looking to describe how the board is designed
+> > and to indicate that certain clks are always enabled at power on or are
+> > enabled by the bootloader. Configuration has it's place too, just that
+> > configuration is a oneshot sort of thing that never needs to change at
+> > runtime.
+> >=20
+>=20
+> I can see where you going with this, and yes, we definitely should promot=
+e=20
+> that drivers should take care of their clock (enable) requirements.
+>=20
+> For the case of 'clock-critical', that would serve the purpose quite well=
+=20
+> indeed. It does add the risk of people sprinkling that all over the devic=
+etree.
+>=20
+> Short term, I guess the best thing to do here is to remove the "always-on=
+"=20
+> property from my patch.
+
+Ok. Will you resend or should I look at the latest binding patch and
+remove always-on? I don't see it there so maybe everything is fine.
+
+>=20
+> I'll put the "clock-critical" idea on my list of generic clock patches to=
+=20
+> sneak in on other budgets, it'll be right behind "allow sub-1Hz or fracti=
+onal=20
+> clock rate accuracy" (yes I actually have a use case for that) and "allow=
+=20
+> frequencies over 4GHz" (the 14GHz clock in the Si5341 luckily isn't avail=
+able=20
+> on the outside so I can cheat)...
+
+Ok. Good to know it's not as high a priority as these other things.
