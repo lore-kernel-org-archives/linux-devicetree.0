@@ -1,111 +1,211 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v9 11/12] soc: mediatek: cmdq: add
- cmdq_dev_get_client_reg function
-Date: Thu, 27 Jun 2019 14:37:12 +0800
-Message-ID: <1561617432.17285.4.camel@mtksdaap41>
-References: <20190627061958.9488-1-bibby.hsieh@mediatek.com>
-         <20190627061958.9488-12-bibby.hsieh@mediatek.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v12 04/13] mfd: Add Ingenic TCU driver
+Date: Thu, 27 Jun 2019 07:58:08 +0100
+Message-ID: <20190627065808.GY21119@dell>
+References: <20190521145141.9813-1-paul@crapouillou.net>
+ <20190521145141.9813-5-paul@crapouillou.net>
+ <20190626131850.GW21119@dell>
+ <1561557350.1872.0@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627061958.9488-12-bibby.hsieh@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <1561557350.1872.0@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
+On Wed, 26 Jun 2019, Paul Cercueil wrote:
+> Le mer. 26 juin 2019 à 15:18, Lee Jones <lee.jones@linaro.org> a écrit :
+> > On Tue, 21 May 2019, Paul Cercueil wrote:
+> > 
+> > >  This driver will provide a regmap that can be retrieved very early
+> > > in
+> > >  the boot process through the API function ingenic_tcu_get_regmap().
+> > > 
+> > >  Additionally, it will call devm_of_platform_populate() so that all
+> > > the
+> > >  children devices will be probed.
+> > > 
+> > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > >  ---
+> > > 
+> > >  Notes:
+> > >      v12: New patch
+> > > 
+> > >   drivers/mfd/Kconfig             |   8 +++
+> > >   drivers/mfd/Makefile            |   1 +
+> > >   drivers/mfd/ingenic-tcu.c       | 113
+> > > ++++++++++++++++++++++++++++++++
+> > >   include/linux/mfd/ingenic-tcu.h |   8 +++
+> > >   4 files changed, 130 insertions(+)
+> > >   create mode 100644 drivers/mfd/ingenic-tcu.c
 
-On Thu, 2019-06-27 at 14:19 +0800, Bibby Hsieh wrote:
-> GCE cannot know the register base address, this function
-> can help cmdq client to get the cmdq_client_reg structure.
+[...]
+
+> > >  +static struct regmap * __init ingenic_tcu_create_regmap(struct
+> > > device_node *np)
+> > >  +{
+> > >  +	struct resource res;
+> > >  +	void __iomem *base;
+> > >  +	struct regmap *map;
+> > >  +
+> > >  +	if (!of_match_node(ingenic_tcu_of_match, np))
+> > >  +		return ERR_PTR(-EINVAL);
+
+Drop this check.
+
+> > >  +	base = of_io_request_and_map(np, 0, "TCU");
+> > >  +	if (IS_ERR(base))
+> > >  +		return ERR_PTR(PTR_ERR(base));
+> > >  +
+> > >  +	map = regmap_init_mmio(NULL, base, &ingenic_tcu_regmap_config);
+> > >  +	if (IS_ERR(map))
+> > >  +		goto err_iounmap;
+
+Place this inside probe().
+
+> > >  +	return map;
+> > >  +
+> > >  +err_iounmap:
+> > >  +	iounmap(base);
+> > >  +	of_address_to_resource(np, 0, &res);
+> > >  +	release_mem_region(res.start, resource_size(&res));
+> > >  +
+> > >  +	return map;
+> > >  +}
+> > 
+> > Why does this need to be set-up earlier than probe()?
 > 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c | 24 ++++++++++++++++++++++++
->  include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++++
->  2 files changed, 45 insertions(+)
+> See the explanation below.
+
+I think the answer is, it doesn't.
+
+> > >  +static int __init ingenic_tcu_probe(struct platform_device *pdev)
+> > >  +{
+> > >  +	struct regmap *map = ingenic_tcu_get_regmap(pdev->dev.of_node);
+> > >  +
+> > >  +	platform_set_drvdata(pdev, map);
+> > >  +
+> > >  +	regmap_attach_dev(&pdev->dev, map, &ingenic_tcu_regmap_config);
+> > >  +
+> > >  +	return devm_of_platform_populate(&pdev->dev);
+> > >  +}
+> > >  +
+> > >  +static struct platform_driver ingenic_tcu_driver = {
+> > >  +	.driver = {
+> > >  +		.name = "ingenic-tcu",
+> > >  +		.of_match_table = ingenic_tcu_of_match,
+> > >  +	},
+> > >  +};
+> > >  +
+> > >  +static int __init ingenic_tcu_platform_init(void)
+> > >  +{
+> > >  +	return platform_driver_probe(&ingenic_tcu_driver,
+> > >  +				     ingenic_tcu_probe);
+> > 
+> > What?  Why?
 > 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 70ad4d806fac..ceb1b569891f 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -27,6 +27,30 @@ struct cmdq_instruction {
->  	u8 op;
->  };
->  
-> +int cmdq_dev_get_client_reg(struct device *dev,
-> +			    struct cmdq_client_reg *client_reg, int idx)
-> +{
-> +	struct of_phandle_args spec;
-> +
-> +	if (!client_reg)
-> +		return -ENOENT;
-> +
-> +	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
-> +				       "#subsys-cells", idx, &spec)) {
-> +		dev_err(dev, "can't parse gce-client-reg property (%d)", idx);
-> +
-> +		return -ENOENT;
+> The device driver probed here will populate the children devices,
+> which will be able to retrieve the pointer to the regmap through
+> device_get_regmap(dev->parent).
 
-Maybe my expression is not so clear. of_parse_phandle_with_args() may
-return -ENOENT, but it also may return -EINVAL. My point is why do you
-change the return value of of_parse_phandle_with_args(). What the error
-you get from of_parse_phandle_with_args(), you could also return it to
-the caller of cmdq_dev_get_client_reg().
+I've never heard of this call.  Where is it?
 
-Regards,
-CK
+> The children devices are normal platform drivers that can be probed
+> the normal way. These are the PWM driver, the watchdog driver, and the
+> OST (OS Timer) clocksource driver, all part of the same hardware block
+> (the Timer/Counter Unit or TCU).
 
-> +	}
-> +
-> +	client_reg->subsys = spec.args[0];
-> +	client_reg->offset = spec.args[1];
-> +	client_reg->size = spec.args[2];
-> +	of_node_put(spec.np);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index a345870a6d10..be402c4c740e 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -15,6 +15,12 @@
->  
->  struct cmdq_pkt;
->  
-> +struct cmdq_client_reg {
-> +	u8 subsys;
-> +	u16 offset;
-> +	u16 size;
-> +};
-> +
->  struct cmdq_client {
->  	spinlock_t lock;
->  	u32 pkt_cnt;
-> @@ -142,4 +148,19 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
->   */
->  int cmdq_pkt_flush(struct cmdq_pkt *pkt);
->  
-> +/**
-> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
-> + *			       node of CMDQ client
-> + * @dev:	device of CMDQ mailbox clienti
-> + * @client_reg: CMDQ client reg pointer
-> + * @idx:	the index of desired reg
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + *
-> + * Help CMDQ client pasing the cmdq client reg
-> + * from the device node of CMDQ client.
-> + */
-> +int cmdq_dev_get_client_reg(struct device *dev,
-> +			    struct cmdq_client_reg *client_reg, int idx);
-> +
->  #endif	/* __MTK_CMDQ_H__ */
+If they are normal devices, then there is no need to roll your own
+regmap-getter implementation like this.
+
+> > >  +}
+> > >  +subsys_initcall(ingenic_tcu_platform_init);
+> > >  +
+> > >  +struct regmap * __init ingenic_tcu_get_regmap(struct device_node
+> > > *np)
+> > >  +{
+> > >  +	if (!tcu_regmap)
+> > >  +		tcu_regmap = ingenic_tcu_create_regmap(np);
+> > >  +
+> > >  +	return tcu_regmap;
+> > >  +}
+> > 
+> > This makes me pretty uncomfortable.
+> > 
+> > What calls it?
+> 
+> The TCU IRQ driver (patch [06/13]), clocks driver (patch [05/13]), and the
+> non-OST clocksource driver (patch [07/13]) all probe very early in the boot
+> process, and share the same devicetree node. They call this function to get
+> a pointer to the regmap.
+
+Horrible!
+
+Instead, you should send it through platform_set_drvdata() and collect
+it in the child drivers with platform_get_drvdata(dev->parent).
+
+> > >  +bool ingenic_tcu_pwm_can_use_chn(struct device *dev, unsigned int
+> > > channel)
+> > >  +{
+> > >  +	const struct ingenic_soc_info *soc =
+> > > device_get_match_data(dev->parent);
+> > >  +
+> > >  +	/* Enable all TCU channels for PWM use by default except channels
+> > > 0/1 */
+> > >  +	u32 pwm_channels_mask = GENMASK(soc->num_channels - 1, 2);
+> > >  +
+> > >  +	device_property_read_u32(dev->parent, "ingenic,pwm-channels-mask",
+> > >  +				 &pwm_channels_mask);
+
+Doesn't this call overwrite the previous assignment above?
+
+> > >  +	return !!(pwm_channels_mask & BIT(channel));
+> > >  +}
+> > >  +EXPORT_SYMBOL_GPL(ingenic_tcu_pwm_can_use_chn);
+
+Where is this called from?
+
+I think this needs a review by the DT guys.
+
+> > >  diff --git a/include/linux/mfd/ingenic-tcu.h
+> > > b/include/linux/mfd/ingenic-tcu.h
+> > >  index 2083fa20821d..21df23916cd2 100644
+> > >  --- a/include/linux/mfd/ingenic-tcu.h
+> > >  +++ b/include/linux/mfd/ingenic-tcu.h
+> > >  @@ -6,6 +6,11 @@
+> > >   #define __LINUX_MFD_INGENIC_TCU_H_
+> > > 
+> > >   #include <linux/bitops.h>
+> > >  +#include <linux/init.h>
+> > >  +
+> > >  +struct device;
+> > >  +struct device_node;
+> > >  +struct regmap;
+> > > 
+> > >   #define TCU_REG_WDT_TDR		0x00
+> > >   #define TCU_REG_WDT_TCER	0x04
+> > >  @@ -53,4 +58,7 @@
+> > >   #define TCU_REG_TCNTc(c)	(TCU_REG_TCNT0 + ((c) *
+> > > TCU_CHANNEL_STRIDE))
+> > >   #define TCU_REG_TCSRc(c)	(TCU_REG_TCSR0 + ((c) *
+> > > TCU_CHANNEL_STRIDE))
+> > > 
+> > >  +struct regmap * __init ingenic_tcu_get_regmap(struct device_node
+> > > *np);
+> > >  +bool ingenic_tcu_pwm_can_use_chn(struct device *dev, unsigned int
+> > > channel);
+> > >  +
+> > >   #endif /* __LINUX_MFD_INGENIC_TCU_H_ */
+> > 
+> 
+> 
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
