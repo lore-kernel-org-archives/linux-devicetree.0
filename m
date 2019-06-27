@@ -1,64 +1,43 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v7 1/7] Documentation: DT: arm: add support for sockets
- defining package boundaries
-Date: Wed, 26 Jun 2019 17:31:37 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1906261724000.23534@viisi.sifive.com>
-References: <20190617185920.29581-1-atish.patra@wdc.com> <20190617185920.29581-2-atish.patra@wdc.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 37/95] dt-bindings: can: mcp251x: add mcp25625 support
+Date: Wed, 26 Jun 2019 20:29:22 -0400
+Message-ID: <20190627003021.19867-37-sashal@kernel.org>
+References: <20190627003021.19867-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190617185920.29581-2-atish.patra@wdc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, Atish Patra <atish.patra@wdc.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Richard
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Sean Nyekjaer <sean@geanix.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep, Atish,
+From: Sean Nyekjaer <sean@geanix.com>
 
-On Mon, 17 Jun 2019, Atish Patra wrote:
+[ Upstream commit 0df82dcd55832a99363ab7f9fab954fcacdac3ae ]
 
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> The current ARM DT topology description provides the operating system
-> with a topological view of the system that is based on leaf nodes
-> representing either cores or threads (in an SMT system) and a
-> hierarchical set of cluster nodes that creates a hierarchical topology
-> view of how those cores and threads are grouped.
-> 
-> However this hierarchical representation of clusters does not allow to
-> describe what topology level actually represents the physical package or
-> the socket boundary, which is a key piece of information to be used by
-> an operating system to optimize resource allocation and scheduling.
-> 
-> Lets add a new "socket" node type in the cpu-map node to describe the
-> same.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Fully compatible with mcp2515, the mcp25625 have integrated transceiver.
 
-This one doesn't apply cleanly here on top of v5.2-rc2, Linus's master 
-branch, and next-20190626.  The reject file is below.  Am I missing 
-a patch?
+This patch add the mcp25625 to the device tree bindings documentation.
 
+Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-- Paul
-
---- Documentation/devicetree/bindings/arm/topology.txt
-+++ Documentation/devicetree/bindings/arm/topology.txt
-@@ -185,13 +206,15 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
- 4 - Example dts
- ===========================================
- 
--Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters):
-+Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters in a single
-+physical socket):
- 
- cpus {
- 	#size-cells = <0>;
- 	#address-cells = <2>;
- 
- 	cpu-map {
-+		socket0 {
- 			cluster0 {
- 				cluster0 {
- 					core0 {
+diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+index 188c8bd4eb67..5a0111d4de58 100644
+--- a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
++++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+@@ -4,6 +4,7 @@ Required properties:
+  - compatible: Should be one of the following:
+    - "microchip,mcp2510" for MCP2510.
+    - "microchip,mcp2515" for MCP2515.
++   - "microchip,mcp25625" for MCP25625.
+  - reg: SPI chip select.
+  - clocks: The clock feeding the CAN controller.
+  - interrupts: Should contain IRQ line for the CAN controller.
+-- 
+2.20.1
