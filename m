@@ -1,80 +1,316 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: properly connect USB
- PHY to port 0
-Date: Thu, 27 Jun 2019 11:34:09 +0800
-Message-ID: <CAGb2v67woLtn4bdD8YbCN9CyLPm_9r9+wd_Cxp8AUeVed0O-pA@mail.gmail.com>
-References: <20190620010127.12071-1-andre.przywara@arm.com>
- <CAGb2v66WOTFvXWSSGwtLh3hD+N4CeJkFEPnCMXp0FuU2h=LS9Q@mail.gmail.com>
- <20190624135806.7bc78378@donnerap.cambridge.arm.com> <CAGb2v66vNndnXXfQfF4tnkEfqPjom7e=kuWVzWggjcTSeDPWsA@mail.gmail.com>
-Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: =?UTF-8?Q?Re:_[PATCH_2/8]_dt-bindings:_pinctrl:_aspeed:_Convert_AST2400_?=
+ =?UTF-8?Q?bindings_to_json-schema?=
+Date: Thu, 27 Jun 2019 13:25:42 +0930
+Message-ID: <30d5585b-7591-4149-87c4-816e4c18fb9d@www.fastmail.com>
+References: <20190626071430.28556-1-andrew@aj.id.au>
+ <20190626071430.28556-3-andrew@aj.id.au>
+ <CAL_JsqKXPzFYTHos-uvCUtBj-bcsNfrzt5GjxQ=PmgeXpp5J-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBPXS2DUAKGQE6JKUA7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v66vNndnXXfQfF4tnkEfqPjom7e=kuWVzWggjcTSeDPWsA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKXPzFYTHos-uvCUtBj-bcsNfrzt5GjxQ=PmgeXpp5J-A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Ryan Chen <ryan_chen@aspeedtech.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 9:03 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->
-> On Mon, Jun 24, 2019 at 8:58 PM Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> >
-> > On Mon, 24 Jun 2019 16:25:47 +0800
-> > Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> >
-> > Hi,
-> >
-> > > On Thu, Jun 20, 2019 at 9:02 AM Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> > > >
-> > > > In recent Allwinner SoCs the first USB host controller (HCI0) shares
-> > > > the first PHY with the MUSB controller. Probably to make this sharing
-> > > > work, we were avoiding to declare this in the DT. This has two
-> > > > shortcomings:
-> > > > - U-Boot (which uses the same .dts) cannot use this port without a PHY
-> > > >   linked, so we were loosing one USB port there.
-> > > > - It requires the MUSB driver to be enabled and loaded, although we
-> > > >   don't actually use it.
-> > > >
-> > > > For those (64-bit) boards which use an USB-A socket for HCI0/MUSB, add
-> > > > a "phys" property pointing to the USB PHY 0.
-> > > >
-> > > > This makes it work in U-Boot, also improves compatiblity when no MUSB
-> > > > driver is loaded (for instance in distribution installers).
-> > > >
-> > > > Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-> > > > ---
-> > > > Hi,
-> > > >
-> > > > I have the feeling this belongs into the .dtsi, but cant't tell for sure
-> > > > how this interacts with the MUSB driver. If need be, we can always pull
-> > > > this up later, I guess.
-> > >
-> > > Have you tried if gadget mode and switching between gadget/host mode on
-> > > an otg port still works? AFAICT that would be the main thing to worry
-> > > about.
-> >
-> > I briefly tried gadget mode on a BPi-M64, and that still seemed to work,
-> > but I couldn't switch it to host mode. IIRC that didn't even work without
-> > this patch, but I didn't find the time to investigate yet.
-> >
-> > Is it supposed to switch automatically when the ID pin changes state? Do
-> > you know a board/kernel combination which is known to work?
->
-> Yes it's supposed to switch automatically when you insert or remove the
-> OTG host mode cable.
->
-> I think it worked during the last release cycle while I was adding support
-> for VBUS polling. I'll do some tests on the current sunxi-next tomorrow
-> and let you know.
 
-So it works properly for me on the Bananapi M64 with the latest sunxi-next
-branch. I have the gadget drivers built-in.
 
-ChenYu
+On Wed, 26 Jun 2019, at 23:17, Rob Herring wrote:
+> On Wed, Jun 26, 2019 at 1:21 AM Andrew Jeffery <andrew@aj.id.au> wrote=
+:
+> > +  The pin controller node should be the child of a syscon node with=
+ the
+> > +  required property:
+> > +
+> > +  - compatible:     Should be one of the following:
+> > +                    "aspeed,ast2400-scu", "syscon", "simple-mfd"
+> > +                    "aspeed,g4-scu", "syscon", "simple-mfd"
+> > +
+> > +  Refer to the the bindings described in
+> > +  Documentation/devicetree/bindings/mfd/syscon.txt
+> > +
+> > +  For the AST2400 pinmux, each mux function has only one associated=
+ pin group.
+> > +  Each group is named by its function. The following values for the=
+ function
+> > +  and groups properties are supported:
+> > +
+> > +  ACPI ADC0 ADC1 ADC10 ADC11 ADC12 ADC13 ADC14 ADC15 ADC2 ADC3 ADC4=
+ ADC5 ADC6
+> > +  ADC7 ADC8 ADC9 BMCINT DDCCLK DDCDAT EXTRST FLACK FLBUSY FLWP GPID=
+ GPID0 GPID2
+> > +  GPID4 GPID6 GPIE0 GPIE2 GPIE4 GPIE6 I2C10 I2C11 I2C12 I2C13 I2C14=
+ I2C3 I2C4
+> > +  I2C5 I2C6 I2C7 I2C8 I2C9 LPCPD LPCPME LPCRST LPCSMI MAC1LINK MAC2=
+LINK MDIO1
+> > +  MDIO2 NCTS1 NCTS2 NCTS3 NCTS4 NDCD1 NDCD2 NDCD3 NDCD4 NDSR1 NDSR2=
+ NDSR3 NDSR4
+> > +  NDTR1 NDTR2 NDTR3 NDTR4 NDTS4 NRI1 NRI2 NRI3 NRI4 NRTS1 NRTS2 NRT=
+S3 OSCCLK
+> > +  PWM0 PWM1 PWM2 PWM3 PWM4 PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2=
+ ROM16 ROM8
+> > +  ROMCS1 ROMCS2 ROMCS3 ROMCS4 RXD1 RXD2 RXD3 RXD4 SALT1 SALT2 SALT3=
+ SALT4 SD1
+> > +  SD2 SGPMCK SGPMI SGPMLD SGPMO SGPSCK SGPSI0 SGPSI1 SGPSLD SIOONCT=
+RL SIOPBI
+> > +  SIOPBO SIOPWREQ SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1DEBUG SPI1PA=
+SSTHRU
+> > +  SPICS1 TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2 TXD3 T=
+XD4 UART6
+> > +  USB11D1 USB11H2 USB2D1 USB2H1 USBCKI VGABIOS_ROM VGAHS VGAVS VPI1=
+8 VPI24
+> > +  VPI30 VPO12 VPO24 WDTRST1 WDTRST2
+>=20
+> This should be a schema. You need to define child nodes and list these=
+
+> as values for 'function' and 'group'. Ideally, the child nodes would
+> have some sort of pattern, but if not, you can just match on '^.*$'
+> under patternProperties.
+
+The children don't have any pattern in their node name, which drives
+me towards the '^.*$' pattern match, however, what I've found is that
+I get the following errors for some of the relevant dts files:
+
+```
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.=
+dt.yaml: compatible: ['aspeed,g4-pinctrl'] is not of type 'object'      =
+                                                                        =
+                                                       =20
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.=
+dt.yaml: pinctrl-names: ['default'] is not of type 'object'
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.=
+dt.yaml: pinctrl-0: [[7, 8, 9, 10, 11, 12]] is not of type 'object'     =
+                                                                        =
+                                                       =20
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.=
+dt.yaml: phandle: [[13]] is not of type 'object'
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.=
+dt.yaml: $nodename: ['pinctrl'] is not of type 'object'
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: compatible: ['aspeed,g4-pinctrl'] is not of type 'object'       =
+                                                                        =
+                                                       =20
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: pinctrl-names: ['default'] is not of type 'object'
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: pinctrl-0: [[9, 10, 11, 12]] is not of type 'object'
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: phandle: [[13]] is not of type 'object'
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: $nodename: ['pinctrl'] is not of type 'object'
+```
+
+We shouldn't be expecting these properties in the child nodes, so
+something is busted. Looking at processed-schema.yaml, we have:
+
+```
+- $filename: /home/andrew/src/linux/aspeed/Documentation/devicetree/bind=
+ings/pinctrl/aspeed,ast2400-pinctrl.yaml
+  $id: http://devicetree.org/schemas/pinctrl/aspeed,ast2400-pinctrl.yaml=
+#
+  $schema: http://devicetree.org/meta-schemas/core.yaml#
+  patternProperties:
+    ^.*$:
+      patternProperties:
+        ^function|groups$:
+          allOf:
+          - {$ref: /schemas/types.yaml#/definitions/string}
+          - additionalItems: false
+            items:
+              enum: [ACPI, ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14=
+, ADC15, ADC2,
+                ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT, DDCCLK=
+, DDCDAT,
+                EXTRST, FLACK, FLBUSY, FLWP, GPID, GPID0, GPID2, GPID4, =
+GPID6, GPIE0,
+                GPIE2, GPIE4, GPIE6, I2C10, I2C11, I2C12, I2C13, I2C14, =
+I2C3, I2C4,
+                I2C5, I2C6, I2C7, I2C8, I2C9, LPCPD, LPCPME, LPCRST, LPC=
+SMI, MAC1LINK,
+                MAC2LINK, MDIO1, MDIO2, NCTS1, NCTS2, NCTS3, NCTS4, NDCD=
+1, NDCD2,
+                NDCD3, NDCD4, NDSR1, NDSR2, NDSR3, NDSR4, NDTR1, NDTR2, =
+NDTR3, NDTR4,
+                NDTS4, NRI1, NRI2, NRI3, NRI4, NRTS1, NRTS2, NRTS3, OSCC=
+LK, PWM0,
+                PWM1, PWM2, PWM3, PWM4, PWM5, PWM6, PWM7, RGMII1, RGMII2=
+, RMII1, RMII2,
+                ROM16, ROM8, ROMCS1, ROMCS2, ROMCS3, ROMCS4, RXD1, RXD2,=
+ RXD3, RXD4,
+                SALT1, SALT2, SALT3, SALT4, SD1, SD2, SGPMCK, SGPMI, SGP=
+MLD, SGPMO,
+                SGPSCK, SGPSI0, SGPSI1, SGPSLD, SIOONCTRL, SIOPBI, SIOPB=
+O, SIOPWREQ,
+                SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1, SPI1DEBUG, SPI1PAS=
+STHRU, SPICS1,
+                TIMER3, TIMER4, TIMER5, TIMER6, TIMER7, TIMER8, TXD1, TX=
+D2, TXD3,
+                TXD4, UART6, USB11D1, USB11H2, USB2D1, USB2H1, USBCKI, V=
+GABIOS_ROM,
+                VGAHS, VGAVS, VPI18, VPI24, VPI30, VPO12, VPO24, WDTRST1=
+, WDTRST2]
+            maxItems: 1
+            minItems: 1
+            type: array
+        pinctrl-[0-9]+: true
+      properties: {phandle: true, pinctrl-names: true, status: true}
+      type: object
+    pinctrl-[0-9]+: true
+  properties:
+    $nodename: true
+    compatible:
+      additionalItems: false
+      items:
+      - enum: ['aspeed,ast2400-pinctrl', 'aspeed,g4-pinctrl']
+      maxItems: 1
+      minItems: 1
+      type: array
+    phandle: true
+    pinctrl-names: true
+    status: true
+  required: [compatible]
+  select:
+    properties:
+      compatible:
+        contains:
+          enum: ['aspeed,ast2400-pinctrl', 'aspeed,g4-pinctrl']
+    required: [compatible]
+  title: ASPEED AST2400 Pin Controller
+```
+
+`properties: {phandle: true, pinctrl-names: true, status: true}` has bee=
+n
+merged into my '^.*$' patternProperty, presumably partly from
+pinctrl-consumer.yaml, and this seems to be the source of the bad
+output. If as a hack I change my pattern to '^.*_default$' the problem
+goes away as we no longer try to enforce the constraints on properties
+provided by other bindings, but the problem is the node names are
+largely freeform[1] (unless I enforce a naming constraint as part of my
+bindings?).
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
+ree/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt?h=3Dv=
+5.2-rc6#n112
+
+>=20
+> BTW, You can put the names under a 'definitions' key and then use
+> '$ref' to reference them from function and group to avoid duplicating
+> the names. Or use patternProperties with '^(function|group)$'.
+
+I've used the patternProperties approach above as I couldn't get the
+definitions/$ref approach to work. I did the following:
+
+```
+definitions:
+  pinctrl-value:
+    allOf:
+      - $ref: "/schemas/types.yaml#/definitions/string"
+      - enum: [ "ACPI", "ADC0", "ADC1", "ADC10", "ADC11", "ADC12", "ADC1=
+3",
+        "ADC14", "ADC15", "ADC2", "ADC3", "ADC4", "ADC5", "ADC6", "ADC7"=
+,
+        "ADC8", "ADC9", "BMCINT", "DDCCLK", "DDCDAT", "EXTRST", "FLACK",=
+
+        "FLBUSY", "FLWP", "GPID", "GPID0", "GPID2", "GPID4", "GPID6", "G=
+PIE0",
+        "GPIE2", "GPIE4", "GPIE6", "I2C10", "I2C11", "I2C12", "I2C13", "=
+I2C14",
+        "I2C3", "I2C4", "I2C5", "I2C6", "I2C7", "I2C8", "I2C9", "LPCPD",=
+
+        "LPCPME", "LPCRST", "LPCSMI", "MAC1LINK", "MAC2LINK", "MDIO1", "=
+MDIO2",
+        "NCTS1", "NCTS2", "NCTS3", "NCTS4", "NDCD1", "NDCD2", "NDCD3", "=
+NDCD4",
+        "NDSR1", "NDSR2", "NDSR3", "NDSR4", "NDTR1", "NDTR2", "NDTR3", "=
+NDTR4",
+        "NDTS4", "NRI1", "NRI2", "NRI3", "NRI4", "NRTS1", "NRTS2", "NRTS=
+3",
+        "OSCCLK", "PWM0", "PWM1", "PWM2", "PWM3", "PWM4", "PWM5", "PWM6"=
+,
+        "PWM7", "RGMII1", "RGMII2", "RMII1", "RMII2", "ROM16", "ROM8",
+        "ROMCS1", "ROMCS2", "ROMCS3", "ROMCS4", "RXD1", "RXD2", "RXD3", =
+"RXD4",
+        "SALT1", "SALT2", "SALT3", "SALT4", "SD1", "SD2", "SGPMCK", "SGP=
+MI",
+        "SGPMLD", "SGPMO", "SGPSCK", "SGPSI0", "SGPSI1", "SGPSLD", "SIOO=
+NCTRL",
+        "SIOPBI", "SIOPBO", "SIOPWREQ", "SIOPWRGD", "SIOS3", "SIOS5", "S=
+IOSCI",
+        "SPI1", "SPI1DEBUG", "SPI1PASSTHRU", "SPICS1", "TIMER3", "TIMER4=
+",
+        "TIMER5", "TIMER6", "TIMER7", "TIMER8", "TXD1", "TXD2", "TXD3", =
+"TXD4",
+        "UART6", "USB11D1", "USB11H2", "USB2D1", "USB2H1", "USBCKI",
+        "VGABIOS_ROM", "VGAHS", "VGAVS", "VPI18", "VPI24", "VPI30", "VPO=
+12",
+        "VPO24", "WDTRST1", "WDTRST2" ]
+
+patternProperties:
+  '^.*_default$':
+    type: object
+    properties:
+      function:
+        $ref: "#/definitions/pinctrl-value"
+      groups:
+        $ref: "#/definitions/pinctrl-value"
+```
+
+But it gave me output like:
+
+```
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: wdtrst2_default:function: ['WDTRST2'] is not one of ['ACPI', 'AD=
+C0', 'ADC1', 'ADC10', 'ADC11', 'ADC12', 'ADC13', 'ADC14', 'ADC15', 'ADC2=
+', 'ADC3', 'ADC4', 'ADC5', 'ADC6', 'ADC7', 'ADC8', 'ADC9', 'BMCINT', 'DD=
+CCLK', 'DDCDAT', 'EXTRST', 'FLACK', 'FLBUSY', 'FLWP', 'GPID', 'GPID0', '=
+GPID2', 'GPID4', 'GPID6', 'GPIE0', 'GPIE2', 'GPIE4', 'GPIE6', 'I2C10', '=
+I2C11', 'I2C12', 'I2C13', 'I2C14', 'I2C3', 'I2C4', 'I2C5', 'I2C6', 'I2C7=
+', 'I2C8', 'I2C9', 'LPCPD', 'LPCPME', 'LPCRST', 'LPCSMI', 'MAC1LINK', 'M=
+AC2LINK', 'MDIO1', 'MDIO2', 'NCTS1', 'NCTS2', 'NCTS3', 'NCTS4', 'NDCD1',=
+ 'NDCD2', 'NDCD3', 'NDCD4', 'NDSR1', 'NDSR2', 'NDSR3', 'NDSR4', 'NDTR1',=
+ 'NDTR2', 'NDTR3', 'NDTR4', 'NDTS4', 'NRI1', 'NRI2', 'NRI3', 'NRI4', 'NR=
+TS1', 'NRTS2', 'NRTS3', 'OSCCLK', 'PWM0', 'PWM1', 'PWM2', 'PWM3', 'PWM4'=
+, 'PWM5', 'PWM6', 'PWM7', 'RGMII1', 'RGMII2', 'RMII1', 'RMII2', 'ROM16',=
+ 'ROM8', 'ROMCS1', 'ROMCS2', 'ROMCS3', 'ROMCS4', 'RXD1', 'RXD2', 'RXD3',=
+ 'RXD4', 'SALT1', 'SALT2', 'SALT3', 'SALT4', 'SD1', 'SD2', 'SGPMCK', 'SG=
+PMI', 'SGPMLD', 'SGPMO', 'SGPSCK', 'SGPSI0', 'SGPSI1', 'SGPSLD', 'SIOONC=
+TRL', 'SIOPBI', 'SIOPBO', 'SIOPWREQ', 'SIOPWRGD', 'SIOS3', 'SIOS5', 'SIO=
+SCI', 'SPI1', 'SPI1DEBUG', 'SPI1PASSTHRU', 'SPICS1', 'TIMER3', 'TIMER4',=
+ 'TIMER5', 'TIMER6', 'TIMER7', 'TIMER8', 'TXD1', 'TXD2', 'TXD3', 'TXD4',=
+ 'UART6', 'USB11D1', 'USB11H2', 'USB2D1', 'USB2H1', 'USBCKI', 'VGABIOS_R=
+OM', 'VGAHS', 'VGAVS', 'VPI18', 'VPI24', 'VPI30', 'VPO12', 'VPO24', 'WDT=
+RST1', 'WDTRST2']
+/home/andrew/src/linux/aspeed/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.d=
+t.yaml: wdtrst2_default:groups: ['WDTRST2'] is not one of ['ACPI', 'ADC0=
+', 'ADC1', 'ADC10', 'ADC11', 'ADC12', 'ADC13', 'ADC14', 'ADC15', 'ADC2',=
+ 'ADC3', 'ADC4', 'ADC5', 'ADC6', 'ADC7', 'ADC8', 'ADC9', 'BMCINT', 'DDCC=
+LK', 'DDCDAT', 'EXTRST', 'FLACK', 'FLBUSY', 'FLWP', 'GPID', 'GPID0', 'GP=
+ID2', 'GPID4', 'GPID6', 'GPIE0', 'GPIE2', 'GPIE4', 'GPIE6', 'I2C10', 'I2=
+C11', 'I2C12', 'I2C13', 'I2C14', 'I2C3', 'I2C4', 'I2C5', 'I2C6', 'I2C7',=
+ 'I2C8', 'I2C9', 'LPCPD', 'LPCPME', 'LPCRST', 'LPCSMI', 'MAC1LINK', 'MAC=
+2LINK', 'MDIO1', 'MDIO2', 'NCTS1', 'NCTS2', 'NCTS3', 'NCTS4', 'NDCD1', '=
+NDCD2', 'NDCD3', 'NDCD4', 'NDSR1', 'NDSR2', 'NDSR3', 'NDSR4', 'NDTR1', '=
+NDTR2', 'NDTR3', 'NDTR4', 'NDTS4', 'NRI1', 'NRI2', 'NRI3', 'NRI4', 'NRTS=
+1', 'NRTS2', 'NRTS3', 'OSCCLK', 'PWM0', 'PWM1', 'PWM2', 'PWM3', 'PWM4', =
+'PWM5', 'PWM6', 'PWM7', 'RGMII1', 'RGMII2', 'RMII1', 'RMII2', 'ROM16', '=
+ROM8', 'ROMCS1', 'ROMCS2', 'ROMCS3', 'ROMCS4', 'RXD1', 'RXD2', 'RXD3', '=
+RXD4', 'SALT1', 'SALT2', 'SALT3', 'SALT4', 'SD1', 'SD2', 'SGPMCK', 'SGPM=
+I', 'SGPMLD', 'SGPMO', 'SGPSCK', 'SGPSI0', 'SGPSI1', 'SGPSLD', 'SIOONCTR=
+L', 'SIOPBI', 'SIOPBO', 'SIOPWREQ', 'SIOPWRGD', 'SIOS3', 'SIOS5', 'SIOSC=
+I', 'SPI1', 'SPI1DEBUG', 'SPI1PASSTHRU', 'SPICS1', 'TIMER3', 'TIMER4', '=
+TIMER5', 'TIMER6', 'TIMER7', 'TIMER8', 'TXD1', 'TXD2', 'TXD3', 'TXD4', '=
+UART6', 'USB11D1', 'USB11H2', 'USB2D1', 'USB2H1', 'USBCKI', 'VGABIOS_ROM=
+', 'VGAHS', 'VGAVS', 'VPI18', 'VPI24', 'VPI30', 'VPO12', 'VPO24', 'WDTRS=
+T1', 'WDTRST2']
+```
+
+Clearly I haven't got it quite right, but I'm not sure what's wrong with=
+ my approach. Can you tell me? It looks like the property is interpreted=
+ as a string-array rather than a string, but I'm not sure why.
+
+Cheers,
+
+Andrew
