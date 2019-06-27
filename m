@@ -1,44 +1,64 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: Update DWC3 modules on RK3399 SoCs
-Date: Thu, 27 Jun 2019 14:42:46 +0200
-Message-ID: <1960228.jn0vabPeDx@phil>
-References: <20190613162745.12195-1-enric.balletbo@collabora.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH RESEND V2 2/3] clocksource: imx-sysctr: Make timer work
+ with clock driver using platform driver model
+Date: Thu, 27 Jun 2019 12:49:17 +0000
+Message-ID: <DB3PR0402MB3916A7348E71A33E4746D5FAF5FD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190623123850.22584-1-Anson.Huang@nxp.com>
+ <20190623123850.22584-2-Anson.Huang@nxp.com>
+ <41ab1a50-f431-ec73-8444-11ecca1412d8@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190613162745.12195-1-enric.balletbo@collabora.com>
+In-Reply-To: <41ab1a50-f431-ec73-8444-11ecca1412d8@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: devicetree@vger.kernel.org, Collabora Kernel ML <kernel@collabora.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Vicente Bergas <vicencb@gmail.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.i
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 13. Juni 2019, 18:27:45 CEST schrieb Enric Balletbo i Serra:
-> As per binding documentation [1], the DWC3 core should have the "ref",
-> "bus_early" and "suspend" clocks. As explained in the binding, those
-> clocks are required for new platforms but not for existing platforms
-> before commit fe8abf332b8f ("usb: dwc3: support clocks and resets for
-> DWC3 core").
-> 
-> However, as those clocks are really treated as required, this ends with
-> having some annoying messages when the "rockchip,rk3399-dwc3" is used:
-> 
-> [    1.724107] dwc3 fe800000.dwc3: Failed to get clk 'ref': -2
-> [    1.731893] dwc3 fe900000.dwc3: Failed to get clk 'ref': -2
-> [    2.495937] dwc3 fe800000.dwc3: Failed to get clk 'ref': -2
-> [    2.647239] dwc3 fe900000.dwc3: Failed to get clk 'ref': -2
-> 
-> In order to remove those annoying messages, update the DWC3 hardware
-> module node and add all the required clocks. With this change, both, the
-> glue node and the DWC3 core node, have the clocks defined, but that's
-> not really a problem and there isn't a side effect on do this. So, we
-> can get rid of the annoying get clk error messages.
-> 
-> [1] Documentation/devicetree/bindings/usb/dwc3.txt
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-applied for 5.3
-
-Thanks
-Heiko
+SGksIERhbmllbA0KDQo+IE9uIDIzLzA2LzIwMTkgMTQ6MzgsIEFuc29uLkh1YW5nQG54cC5jb20g
+d3JvdGU6DQo+ID4gRnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4N
+Cj4gPiBPbiBzb21lIGkuTVg4TSBwbGF0Zm9ybXMsIGNsb2NrIGRyaXZlciB1c2VzIHBsYXRmb3Jt
+IGRyaXZlciBtb2RlbCBhbmQNCj4gPiBpdCBpcyBOT1QgcmVhZHkgZHVyaW5nIHRpbWVyIGluaXRp
+YWxpemF0aW9uIHBoYXNlLCB0aGUgY2xvY2sNCj4gPiBvcGVyYXRpb25zIHdpbGwgZmFpbCBhbmQg
+c3lzdGVtIGNvdW50ZXIgZHJpdmVyIHdpbGwgZmFpbCB0b28uIEFzIGFsbA0KPiA+IHRoZSBpLk1Y
+OE0gcGxhdGZvcm1zJyBzeXN0ZW0gY291bnRlciBjbG9jayBhcmUgZnJvbSBPU0Mgd2hpY2ggaXMN
+Cj4gPiBhbHdheXMgZW5hYmxlZCwgc28gaXQgaXMgbm8gbmVlZCB0byBlbmFibGUgY2xvY2sgZm9y
+IHN5c3RlbSBjb3VudGVyDQo+ID4gZHJpdmVyLCB0aGUgT05MWSB0aGluZyBpcyB0byBwYXNzIGNs
+b2NrIGZyZXF1ZW5jZSB0byBkcml2ZXIuDQo+ID4NCj4gPiBUbyBtYWtlIHN5c3RlbSBjb3VudGVy
+IGRyaXZlciB3b3JrIGZvciB1cHBlciBzY2VuYXJpbywgYWRkIGFuIG9wdGlvbg0KPiA+IG9mIHNr
+aXBwaW5nIG9mX2NsayBvcGVyYXRpb24gZm9yIHN5c3RlbSBjb3VudGVyIGRyaXZlciwgYW4gb3B0
+aW9uYWwNCj4gPiBwcm9wZXJ0eSAiY2xvY2stZnJlcXVlbmN5IiBpcyBpbnRyb2R1Y2VkIHRvIHBh
+c3MgdGhlIGZyZXF1ZW5jeSB2YWx1ZQ0KPiA+IHRvIHN5c3RlbSBjb3VudGVyIGRyaXZlciBhbmQg
+aW5kaWNhdGUgZHJpdmVyIHRvIHNraXAgb2ZfY2xrDQo+ID4gb3BlcmF0aW9ucy4NCj4gPg0KPiA+
+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0t
+LQ0KPiA+IENoYW5nZXMgc2luY2UgVjE6DQo+ID4gCS0gaW1wcm92ZSBjb21taXQgbG9nLCBubyBj
+b250ZW50IGNoYW5nZS4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1p
+bXgtc3lzY3RyLmMgfCA4ICsrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlv
+bnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLWlt
+eC1zeXNjdHIuYw0KPiA+IGIvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1pbXgtc3lzY3RyLmMN
+Cj4gPiBpbmRleCBmZDdkNjgwLi44ZmYzZDdlIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvY2xv
+Y2tzb3VyY2UvdGltZXItaW14LXN5c2N0ci5jDQo+ID4gKysrIGIvZHJpdmVycy9jbG9ja3NvdXJj
+ZS90aW1lci1pbXgtc3lzY3RyLmMNCj4gPiBAQCAtMTI5LDYgKzEyOSwxNCBAQCBzdGF0aWMgdm9p
+ZCBfX2luaXQgc3lzY3RyX2Nsb2NrZXZlbnRfaW5pdCh2b2lkKQ0KPiA+IHN0YXRpYyBpbnQgX19p
+bml0IHN5c2N0cl90aW1lcl9pbml0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApICB7DQo+ID4gIAlp
+bnQgcmV0ID0gMDsNCj4gPiArCXUzMiByYXRlOw0KPiA+ICsNCj4gPiArCWlmICghb2ZfcHJvcGVy
+dHlfcmVhZF91MzIobnAsICJjbG9jay1mcmVxdWVuY3kiLA0KPiA+ICsJCQkJICAmcmF0ZSkpIHsN
+Cj4gPiArCQl0b19zeXNjdHIub2ZfY2xrLnJhdGUgPSByYXRlOw0KPiA+ICsJCXRvX3N5c2N0ci5v
+Zl9jbGsucGVyaW9kID0gRElWX1JPVU5EX1VQKHJhdGUsIEhaKTsNCj4gPiArCQl0b19zeXNjdHIu
+ZmxhZ3MgJj0gflRJTUVSX09GX0NMT0NLOw0KPiA+ICsJfQ0KPiANCj4gUGxlYXNlIHRha2UgdGhl
+IG9wcG9ydHVuaXR5IHRvIGFkZCB0aGUgVElNRVJfT0ZfQ0xPQ0tfRlJFUVVFTkNZIGZsYWcgaW4N
+Cj4gdGltZXItb2YgYW5kIHRoZSBjb3JyZXNwb25kaW5nIGNvZGUgYWJvdmUuDQoNCk9LLCBzbyBh
+bm90aGVyIHBhdGNoIGZvciB0aW1lci1vZiBpcyBuZWNlc3NhcnksIGlmIFRJTUVSX09GX0NMT0NL
+X0ZSRVFVRU5DWSBmbGFnDQppcyBwcmVzZW50LCBqdXN0IHJlYWQgdGhlICJjbG9jay1mcmVxdWVu
+Y3kiIGZyb20gRFQgaW5zdGVhZCBvZiBnZXR0aW5nIGNsb2NrIHJhdGUgZnJvbQ0KY2xvY2sgdHJl
+ZSwgcmlnaHQ/IEkgdGhpbmsgdGhpcyBiZWNvbWVzIGEgY29tbW9uIGNhc2UgZm9yIHRpbWVyIGRy
+aXZlciwgYXMgbW9yZSBhbmQgbW9yZQ0KcGxhdGZvcm1zIHdpbGwgdXNlIHBsYXRmb3JtIGRyaXZl
+ciBtb2RlbCBmb3IgY2xvY2sgZHJpdmVyLCBpdCB3b3VsZCBiZSBnb29kIGlmIHRpbWVyLW9mIGNh
+bg0KcHJvdmlkZSBzb2x1dGlvbi4NCg0KPiANCj4gVGhlbiBjaGVjayB0aGUgY2xvY2stZnJlcXVl
+bmN5IHByZXNlbmNlIGFuZCBhZGQgVElNRVJfT0ZfQ0xPQ0sgb3INCj4gVElNRVJfT0ZfQ0xPQ0tf
+RlJFUVVFTkNZIGZsYWcgdG8gdGhlIHRpbWVyLW9mIHN0cnVjdHVyZS4NCj4gDQo+IGVnOg0KPiAN
+Cj4gICAgIHRvX3N5c2N0ci5mbGFncyB8PSBvZl9maW5kX3Byb3BlcnR5KG5wLCAiY2xvY2stZnJl
+cXVlbmN5IiwgTlVMTCkgPw0KPiAJCVRJTUVSX09GX0NMT0NLX0ZSRVFVRU5DWSA6IFRJTUVSX09G
+X0NMT0NLOw0KPiANCg0KT0suDQoNClRoYW5rcywNCkFuc29uLg0KDQo=
