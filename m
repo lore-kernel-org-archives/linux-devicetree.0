@@ -1,61 +1,51 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using devicetree
-Date: Wed, 26 Jun 2019 19:55:54 -0700
-Message-ID: <9f0cfc20-213a-b8ad-5a7f-ce811d0d5513@gmail.com>
-References: <156113387975.28344.16009584175308192243.stgit@devnote2>
- <CAL_JsqJOc+tkFEGcc+KN0RE8Xjg_i9icPWZ37Ynk_9sR2X1Uwg@mail.gmail.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [v5 0/3] Support mipitx for mt8183
+Date: Thu, 27 Jun 2019 10:58:58 +0800
+Message-ID: <20190627025901.28418-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJOc+tkFEGcc+KN0RE8Xjg_i9icPWZ37Ynk_9sR2X1Uwg@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com, ck.hu@mediate
 List-Id: devicetree@vger.kernel.org
 
-On 6/26/19 2:58 PM, Rob Herring wrote:
-> On Fri, Jun 21, 2019 at 10:18 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->>
->> Hi,
->>
->> Here is an RFC series of patches to add boot-time tracing using
->> devicetree.
->>
->> Currently, kernel support boot-time tracing using kernel command-line
->> parameters. But that is very limited because of limited expressions
->> and limited length of command line. Recently, useful features like
->> histogram, synthetic events, etc. are being added to ftrace, but it is
->> clear that we can not expand command-line options to support these
->> features.
->>
->> Hoever, I've found that there is a devicetree which can pass more
->> structured commands to kernel at boot time :) The devicetree is usually
->> used for dscribing hardware configuration, but I think we can expand it
->> for software configuration too (e.g. AOSP and OPTEE already introduced
->> firmware node.) Also, grub and qemu already supports loading devicetree,
->> so we can use it not only on embedded devices but also on x86 PC too.
-> 
-> Do the x86 versions of grub, qemu, EFI, any other bootloader actually
-> enable DT support? I didn't think so. Certainly, an x86 kernel doesn't
-> normally (other than OLPC and ce4100) have a defined way to even pass
-> a dtb from the bootloader to the kernel and the kernel doesn't
-> unflatten the dtb.
-> 
-> For arm64, the bootloader to kernel interface is DT even for ACPI
-> based systems. So unlike Frank, I'm not completely against DT being
-> the interface, but it's hardly universal across architectures and
-> something like this should be. Neither making DT the universal kernel
-> boot interface nor creating some new channel as Frank suggested seems
-> like an easy task.
-> 
-> Rob
-> 
-Agreed, creating a new generic channel is not a small or easy task.  And
-if it does get added it should support several different use cases that
-have been expressed over the last few years.  Or have enough good
-architecturfe such thatvit is easy to add support for other use cases
-without impacting previously existing cases.
+Change since v4:
+ - fine tune the mipi_tx->ref_clk and mipi_tx->pll sequence
+   1. Prepare mipi_tx->ref_clk
+   2. Prepare mipi_tx->pll
+   3. Enable mipi_tx->ref_clk
+   4. Enable mipi_tx->pll
 
--Frank
+Changes since v3:
+ - turn off PLL before setting PLL parameters.
+
+Changes since v2:
+ - update Acked-by: Rob Herring <robh@kernel.org>
+ - update mt8183 max bit rate support
+
+Changes since v1:
+ - update dt-bindings document for mt8183 mipitx.
+ - remove mtk_mipitx_clk_get_ops and assign clk_ops in probe.
+ - fix the lincence
+ - remove txdiv1 from mtk_mipi_tx_pll_prepare
+
+Jitao Shi (3):
+  dt-bindings: display: mediatek: update dsi supported chips
+  drm/mediatek: separate mipi_tx to different file
+  drm/mediatek: add mipi_tx driver for mt8183
+
+ .../display/mediatek/mediatek,dsi.txt         |   4 +-
+ drivers/gpu/drm/mediatek/Makefile             |   2 +
+ drivers/gpu/drm/mediatek/mtk_mipi_tx.c        | 345 ++----------------
+ drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |  50 +++
+ drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c | 289 +++++++++++++++
+ drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 181 +++++++++
+ 6 files changed, 550 insertions(+), 321 deletions(-)
+ create mode 100644 drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+ create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c
+ create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+
+-- 
+2.21.0
