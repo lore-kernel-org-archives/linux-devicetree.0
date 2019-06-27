@@ -1,19 +1,19 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: riscv: Limit cpus schema to only check RiscV 'cpu' nodes
-Date: Wed, 26 Jun 2019 17:57:59 -0600
-Message-ID: <20190626235759.3615-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: arm: Limit cpus schema to only check Arm 'cpu' nodes
+Date: Wed, 26 Jun 2019 18:00:44 -0600
+Message-ID: <20190627000044.12739-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
 Matching on the 'cpus' node was a bad choice because the schema is
-incorrectly applied to non-RiscV cpus nodes. As we now have a common cpus
+incorrectly applied to non-Arm cpus nodes. As we now have a common cpus
 schema which checks the general structure, it is also redundant to do so
-in the Risc-V CPU schema.
+in the Arm CPU schema.
 
 The downside is one could conceivably mix different architecture's cpu
 nodes or have typos in the compatible string. The latter problem pretty
@@ -21,171 +21,524 @@ much exists for every schema.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/riscv/cpus.yaml       | 143 ++++++++----------
- 1 file changed, 61 insertions(+), 82 deletions(-)
+ .../devicetree/bindings/arm/cpus.yaml         | 500 ++++++++----------
+ 1 file changed, 231 insertions(+), 269 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index 27f02ec4bb45..67e54251eb90 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -10,97 +10,76 @@ maintainers:
-   - Paul Walmsley <paul.walmsley@sifive.com>
-   - Palmer Dabbelt <palmer@sifive.com>
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index 17ac2c642e68..b9c994593537 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -39,280 +39,242 @@ description: |+
+   described below.
  
--allOf:
--  - $ref: /schemas/cpus.yaml#
--
  properties:
 -  $nodename:
 -    const: cpus
 -    description: Container of cpu nodes
 -
 -  '#address-cells':
--    const: 1
--    description: |
--      A single unsigned 32-bit integer uniquely identifies each RISC-V
--      hart in a system.  (See the "reg" node under the "cpu" node,
--      below).
+-    enum: [1, 2]
++  reg:
++    maxItems: 1
+     description: |
+-      Definition depends on ARM architecture version and configuration:
++      Usage and definition depend on ARM architecture version and
++      configuration:
+ 
+       On uniprocessor ARM architectures previous to v7
+-        value must be 1, to enable a simple enumeration
+-        scheme for processors that do not have a HW CPU
+-        identification register.
+-      On 32-bit ARM 11 MPcore, ARM v7 or later systems
+-        value must be 1, that corresponds to CPUID/MPIDR
+-        registers sizes.
+-      On ARM v8 64-bit systems value should be set to 2,
+-        that corresponds to the MPIDR_EL1 register size.
+-        If MPIDR_EL1[63:32] value is equal to 0 on all CPUs
+-        in the system, #address-cells can be set to 1, since
+-        MPIDR_EL1[63:32] bits are not used for CPUs
+-        identification.
 -
 -  '#size-cells':
 -    const: 0
-+  compatible:
-+    items:
-+      - enum:
-+          - sifive,rocket0
-+          - sifive,e5
-+          - sifive,e51
-+          - sifive,u54-mc
-+          - sifive,u54
-+          - sifive,u5
-+      - const: riscv
-+    description:
-+      Identifies that the hart uses the RISC-V instruction set
-+      and identifies the type of the hart.
-+
-+  mmu-type:
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/string"
-+      - enum:
-+          - riscv,sv32
-+          - riscv,sv39
-+          - riscv,sv48
-+    description:
-+      Identifies the MMU address translation mode used on this
-+      hart.  These values originate from the RISC-V Privileged
-+      Specification document, available from
-+      https://riscv.org/specifications/
-+
-+  riscv,isa:
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/string"
-+      - enum:
-+          - rv64imac
-+          - rv64imafdc
-+    description:
-+      Identifies the specific RISC-V instruction set architecture
-+      supported by the hart.  These are documented in the RISC-V
-+      User-Level ISA document, available from
-+      https://riscv.org/specifications/
-+
-+  timebase-frequency:
-+    type: integer
-+    minimum: 1
-+    description:
-+      Specifies the clock frequency of the system timer in Hz.
-+      This value is common to all harts on a single system image.
-+
-+  interrupt-controller:
-+    type: object
-+    description: Describes the CPU's local interrupt controller
- 
+-
 -patternProperties:
 -  '^cpu@[0-9a-f]+$':
-     properties:
+-    type: object
+-    properties:
+-      device_type:
+-        const: cpu
+-
+-      reg:
+-        maxItems: 1
+-        description: |
+-          Usage and definition depend on ARM architecture version and
+-          configuration:
+-
+-          On uniprocessor ARM architectures previous to v7
+-          this property is required and must be set to 0.
+-
+-          On ARM 11 MPcore based systems this property is
+-            required and matches the CPUID[11:0] register bits.
+-
+-            Bits [11:0] in the reg cell must be set to
+-            bits [11:0] in CPU ID register.
+-
+-            All other bits in the reg cell must be set to 0.
+-
+-          On 32-bit ARM v7 or later systems this property is
+-            required and matches the CPU MPIDR[23:0] register
+-            bits.
+-
+-            Bits [23:0] in the reg cell must be set to
+-            bits [23:0] in MPIDR.
+-
+-            All other bits in the reg cell must be set to 0.
+-
+-          On ARM v8 64-bit systems this property is required
+-            and matches the MPIDR_EL1 register affinity bits.
+-
+-            * If cpus node's #address-cells property is set to 2
+-
+-              The first reg cell bits [7:0] must be set to
+-              bits [39:32] of MPIDR_EL1.
+-
+-              The second reg cell bits [23:0] must be set to
+-              bits [23:0] of MPIDR_EL1.
+-
+-            * If cpus node's #address-cells property is set to 1
+-
+-              The reg cell bits [23:0] must be set to bits [23:0]
+-              of MPIDR_EL1.
+-
+-          All other bits in the reg cells must be set to 0.
+-
 -      compatible:
--        type: array
--        items:
--          - enum:
--              - sifive,rocket0
--              - sifive,e5
--              - sifive,e51
--              - sifive,u54-mc
--              - sifive,u54
--              - sifive,u5
--          - const: riscv
--        description:
--          Identifies that the hart uses the RISC-V instruction set
--          and identifies the type of the hart.
+-        enum:
+-              - arm,arm710t
+-              - arm,arm720t
+-              - arm,arm740t
+-              - arm,arm7ej-s
+-              - arm,arm7tdmi
+-              - arm,arm7tdmi-s
+-              - arm,arm9es
+-              - arm,arm9ej-s
+-              - arm,arm920t
+-              - arm,arm922t
+-              - arm,arm925
+-              - arm,arm926e-s
+-              - arm,arm926ej-s
+-              - arm,arm940t
+-              - arm,arm946e-s
+-              - arm,arm966e-s
+-              - arm,arm968e-s
+-              - arm,arm9tdmi
+-              - arm,arm1020e
+-              - arm,arm1020t
+-              - arm,arm1022e
+-              - arm,arm1026ej-s
+-              - arm,arm1136j-s
+-              - arm,arm1136jf-s
+-              - arm,arm1156t2-s
+-              - arm,arm1156t2f-s
+-              - arm,arm1176jzf
+-              - arm,arm1176jz-s
+-              - arm,arm1176jzf-s
+-              - arm,arm11mpcore
+-              - arm,armv8 # Only for s/w models
+-              - arm,cortex-a5
+-              - arm,cortex-a7
+-              - arm,cortex-a8
+-              - arm,cortex-a9
+-              - arm,cortex-a12
+-              - arm,cortex-a15
+-              - arm,cortex-a17
+-              - arm,cortex-a53
+-              - arm,cortex-a57
+-              - arm,cortex-a72
+-              - arm,cortex-a73
+-              - arm,cortex-m0
+-              - arm,cortex-m0+
+-              - arm,cortex-m1
+-              - arm,cortex-m3
+-              - arm,cortex-m4
+-              - arm,cortex-r4
+-              - arm,cortex-r5
+-              - arm,cortex-r7
+-              - brcm,brahma-b15
+-              - brcm,brahma-b53
+-              - brcm,vulcan
+-              - cavium,thunder
+-              - cavium,thunder2
+-              - faraday,fa526
+-              - intel,sa110
+-              - intel,sa1100
+-              - marvell,feroceon
+-              - marvell,mohawk
+-              - marvell,pj4a
+-              - marvell,pj4b
+-              - marvell,sheeva-v5
+-              - marvell,sheeva-v7
+-              - nvidia,tegra132-denver
+-              - nvidia,tegra186-denver
+-              - nvidia,tegra194-carmel
+-              - qcom,krait
+-              - qcom,kryo
+-              - qcom,kryo385
+-              - qcom,scorpion
 -
--      mmu-type:
+-      enable-method:
 -        allOf:
--          - $ref: "/schemas/types.yaml#/definitions/string"
--          - enum:
--              - riscv,sv32
--              - riscv,sv39
--              - riscv,sv48
+-          - $ref: '/schemas/types.yaml#/definitions/string'
+-          - oneOf:
+-            # On ARM v8 64-bit this property is required
+-            - enum:
+-                - psci
+-                - spin-table
+-            # On ARM 32-bit systems this property is optional
+-            - enum:
+-                - actions,s500-smp
+-                - allwinner,sun6i-a31
+-                - allwinner,sun8i-a23
+-                - allwinner,sun9i-a80-smp
+-                - allwinner,sun8i-a83t-smp
+-                - amlogic,meson8-smp
+-                - amlogic,meson8b-smp
+-                - arm,realview-smp
+-                - brcm,bcm11351-cpu-method
+-                - brcm,bcm23550
+-                - brcm,bcm2836-smp
+-                - brcm,bcm63138
+-                - brcm,bcm-nsp-smp
+-                - brcm,brahma-b15
+-                - marvell,armada-375-smp
+-                - marvell,armada-380-smp
+-                - marvell,armada-390-smp
+-                - marvell,armada-xp-smp
+-                - marvell,98dx3236-smp
+-                - mediatek,mt6589-smp
+-                - mediatek,mt81xx-tz-smp
+-                - qcom,gcc-msm8660
+-                - qcom,kpss-acc-v1
+-                - qcom,kpss-acc-v2
+-                - renesas,apmu
+-                - renesas,r9a06g032-smp
+-                - rockchip,rk3036-smp
+-                - rockchip,rk3066-smp
+-                - socionext,milbeaut-m10v-smp
+-                - ste,dbx500-smp
+-
+-      cpu-release-addr:
+-        $ref: '/schemas/types.yaml#/definitions/uint64'
+-
 -        description:
--          Identifies the MMU address translation mode used on this
--          hart.  These values originate from the RISC-V Privileged
--          Specification document, available from
--          https://riscv.org/specifications/
+-          Required for systems that have an "enable-method"
+-            property value of "spin-table".
+-          On ARM v8 64-bit systems must be a two cell
+-            property identifying a 64-bit zero-initialised
+-            memory location.
 -
--      riscv,isa:
--        allOf:
--          - $ref: "/schemas/types.yaml#/definitions/string"
--          - enum:
--              - rv64imac
--              - rv64imafdc
+-      cpu-idle-states:
+-        $ref: '/schemas/types.yaml#/definitions/phandle-array'
+-        description: |
+-          List of phandles to idle state nodes supported
+-          by this cpu (see ./idle-states.txt).
+-
+-      capacity-dmips-mhz:
+-        $ref: '/schemas/types.yaml#/definitions/uint32'
 -        description:
--          Identifies the specific RISC-V instruction set architecture
--          supported by the hart.  These are documented in the RISC-V
--          User-Level ISA document, available from
--          https://riscv.org/specifications/
-+      '#interrupt-cells':
-+        const: 1
- 
--      timebase-frequency:
--        type: integer
--        minimum: 1
+-          u32 value representing CPU capacity (see ./cpu-capacity.txt) in
+-          DMIPS/MHz, relative to highest capacity-dmips-mhz
+-          in the system.
+-
+-      dynamic-power-coefficient:
+-        $ref: '/schemas/types.yaml#/definitions/uint32'
 -        description:
--          Specifies the clock frequency of the system timer in Hz.
--          This value is common to all harts on a single system image.
+-          A u32 value that represents the running time dynamic
+-          power coefficient in units of uW/MHz/V^2. The
+-          coefficient can either be calculated from power
+-          measurements or derived by analysis.
 -
--      interrupt-controller:
--        type: object
--        description: Describes the CPU's local interrupt controller
+-          The dynamic power consumption of the CPU  is
+-          proportional to the square of the Voltage (V) and
+-          the clock frequency (f). The coefficient is used to
+-          calculate the dynamic power as below -
 -
--        properties:
--          '#interrupt-cells':
--            const: 1
+-          Pdyn = dynamic-power-coefficient * V^2 * f
 -
--          compatible:
--            const: riscv,cpu-intc
+-          where voltage is in V, frequency is in MHz.
 -
--          interrupt-controller: true
-+      compatible:
-+        const: riscv,cpu-intc
- 
--        required:
--          - '#interrupt-cells'
--          - compatible
--          - interrupt-controller
-+      interrupt-controller: true
- 
-     required:
--      - riscv,isa
--      - timebase-frequency
-+      - '#interrupt-cells'
-+      - compatible
-       - interrupt-controller
- 
-+required:
-+  - riscv,isa
-+  - timebase-frequency
-+  - interrupt-controller
+-      qcom,saw:
+-        $ref: '/schemas/types.yaml#/definitions/phandle'
+-        description: |
+-          Specifies the SAW* node associated with this CPU.
+-
+-          Required for systems that have an "enable-method" property
+-          value of "qcom,kpss-acc-v1" or "qcom,kpss-acc-v2"
+-
+-          * arm/msm/qcom,saw2.txt
+-
+-      qcom,acc:
+-        $ref: '/schemas/types.yaml#/definitions/phandle'
+-        description: |
+-          Specifies the ACC* node associated with this CPU.
+-
+-          Required for systems that have an "enable-method" property
+-          value of "qcom,kpss-acc-v1" or "qcom,kpss-acc-v2"
+-
+-          * arm/msm/qcom,kpss-acc.txt
+-
+-      rockchip,pmu:
+-        $ref: '/schemas/types.yaml#/definitions/phandle'
+-        description: |
+-          Specifies the syscon node controlling the cpu core power domains.
+-
+-          Optional for systems that have an "enable-method"
+-          property value of "rockchip,rk3066-smp"
+-          While optional, it is the preferred way to get access to
+-          the cpu-core power-domains.
+-
+-    required:
+-      - device_type
+-      - reg
+-      - compatible
+-
+-    dependencies:
+-      cpu-release-addr: [enable-method]
+-      rockchip,pmu: [enable-method]
++      this property is required and must be set to 0.
 +
++      On ARM 11 MPcore based systems this property is
++        required and matches the CPUID[11:0] register bits.
++
++        Bits [11:0] in the reg cell must be set to
++        bits [11:0] in CPU ID register.
++
++        All other bits in the reg cell must be set to 0.
++
++      On 32-bit ARM v7 or later systems this property is
++        required and matches the CPU MPIDR[23:0] register
++        bits.
++
++        Bits [23:0] in the reg cell must be set to
++        bits [23:0] in MPIDR.
++
++        All other bits in the reg cell must be set to 0.
++
++      On ARM v8 64-bit systems this property is required
++        and matches the MPIDR_EL1 register affinity bits.
++
++        * If cpus node's #address-cells property is set to 2
++
++          The first reg cell bits [7:0] must be set to
++          bits [39:32] of MPIDR_EL1.
++
++          The second reg cell bits [23:0] must be set to
++          bits [23:0] of MPIDR_EL1.
++
++        * If cpus node's #address-cells property is set to 1
++
++          The reg cell bits [23:0] must be set to bits [23:0]
++          of MPIDR_EL1.
++
++      All other bits in the reg cells must be set to 0.
++
++  compatible:
++    enum:
++          - arm,arm710t
++          - arm,arm720t
++          - arm,arm740t
++          - arm,arm7ej-s
++          - arm,arm7tdmi
++          - arm,arm7tdmi-s
++          - arm,arm9es
++          - arm,arm9ej-s
++          - arm,arm920t
++          - arm,arm922t
++          - arm,arm925
++          - arm,arm926e-s
++          - arm,arm926ej-s
++          - arm,arm940t
++          - arm,arm946e-s
++          - arm,arm966e-s
++          - arm,arm968e-s
++          - arm,arm9tdmi
++          - arm,arm1020e
++          - arm,arm1020t
++          - arm,arm1022e
++          - arm,arm1026ej-s
++          - arm,arm1136j-s
++          - arm,arm1136jf-s
++          - arm,arm1156t2-s
++          - arm,arm1156t2f-s
++          - arm,arm1176jzf
++          - arm,arm1176jz-s
++          - arm,arm1176jzf-s
++          - arm,arm11mpcore
++          - arm,armv8 # Only for s/w models
++          - arm,cortex-a5
++          - arm,cortex-a7
++          - arm,cortex-a8
++          - arm,cortex-a9
++          - arm,cortex-a12
++          - arm,cortex-a15
++          - arm,cortex-a17
++          - arm,cortex-a53
++          - arm,cortex-a57
++          - arm,cortex-a72
++          - arm,cortex-a73
++          - arm,cortex-m0
++          - arm,cortex-m0+
++          - arm,cortex-m1
++          - arm,cortex-m3
++          - arm,cortex-m4
++          - arm,cortex-r4
++          - arm,cortex-r5
++          - arm,cortex-r7
++          - brcm,brahma-b15
++          - brcm,brahma-b53
++          - brcm,vulcan
++          - cavium,thunder
++          - cavium,thunder2
++          - faraday,fa526
++          - intel,sa110
++          - intel,sa1100
++          - marvell,feroceon
++          - marvell,mohawk
++          - marvell,pj4a
++          - marvell,pj4b
++          - marvell,sheeva-v5
++          - marvell,sheeva-v7
++          - nvidia,tegra132-denver
++          - nvidia,tegra186-denver
++          - nvidia,tegra194-carmel
++          - qcom,krait
++          - qcom,kryo
++          - qcom,kryo385
++          - qcom,scorpion
++
++  enable-method:
++    allOf:
++      - $ref: '/schemas/types.yaml#/definitions/string'
++      - oneOf:
++        # On ARM v8 64-bit this property is required
++        - enum:
++            - psci
++            - spin-table
++        # On ARM 32-bit systems this property is optional
++        - enum:
++            - actions,s500-smp
++            - allwinner,sun6i-a31
++            - allwinner,sun8i-a23
++            - allwinner,sun9i-a80-smp
++            - allwinner,sun8i-a83t-smp
++            - amlogic,meson8-smp
++            - amlogic,meson8b-smp
++            - arm,realview-smp
++            - brcm,bcm11351-cpu-method
++            - brcm,bcm23550
++            - brcm,bcm2836-smp
++            - brcm,bcm63138
++            - brcm,bcm-nsp-smp
++            - brcm,brahma-b15
++            - marvell,armada-375-smp
++            - marvell,armada-380-smp
++            - marvell,armada-390-smp
++            - marvell,armada-xp-smp
++            - marvell,98dx3236-smp
++            - mediatek,mt6589-smp
++            - mediatek,mt81xx-tz-smp
++            - qcom,gcc-msm8660
++            - qcom,kpss-acc-v1
++            - qcom,kpss-acc-v2
++            - renesas,apmu
++            - renesas,r9a06g032-smp
++            - rockchip,rk3036-smp
++            - rockchip,rk3066-smp
++            - socionext,milbeaut-m10v-smp
++            - ste,dbx500-smp
++
++  cpu-release-addr:
++    $ref: '/schemas/types.yaml#/definitions/uint64'
++
++    description:
++      Required for systems that have an "enable-method"
++        property value of "spin-table".
++      On ARM v8 64-bit systems must be a two cell
++        property identifying a 64-bit zero-initialised
++        memory location.
++
++  cpu-idle-states:
++    $ref: '/schemas/types.yaml#/definitions/phandle-array'
++    description: |
++      List of phandles to idle state nodes supported
++      by this cpu (see ./idle-states.txt).
++
++  capacity-dmips-mhz:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description:
++      u32 value representing CPU capacity (see ./cpu-capacity.txt) in
++      DMIPS/MHz, relative to highest capacity-dmips-mhz
++      in the system.
++
++  dynamic-power-coefficient:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description:
++      A u32 value that represents the running time dynamic
++      power coefficient in units of uW/MHz/V^2. The
++      coefficient can either be calculated from power
++      measurements or derived by analysis.
++
++      The dynamic power consumption of the CPU  is
++      proportional to the square of the Voltage (V) and
++      the clock frequency (f). The coefficient is used to
++      calculate the dynamic power as below -
++
++      Pdyn = dynamic-power-coefficient * V^2 * f
++
++      where voltage is in V, frequency is in MHz.
++
++  qcom,saw:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: |
++      Specifies the SAW* node associated with this CPU.
++
++      Required for systems that have an "enable-method" property
++      value of "qcom,kpss-acc-v1" or "qcom,kpss-acc-v2"
++
++      * arm/msm/qcom,saw2.txt
++
++  qcom,acc:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: |
++      Specifies the ACC* node associated with this CPU.
++
++      Required for systems that have an "enable-method" property
++      value of "qcom,kpss-acc-v1" or "qcom,kpss-acc-v2"
++
++      * arm/msm/qcom,kpss-acc.txt
++
++  rockchip,pmu:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: |
++      Specifies the syscon node controlling the cpu core power domains.
++
++      Optional for systems that have an "enable-method"
++      property value of "rockchip,rk3066-smp"
++      While optional, it is the preferred way to get access to
++      the cpu-core power-domains.
+ 
+ required:
+-  - '#address-cells'
+-  - '#size-cells'
++  - device_type
++  - reg
++  - compatible
++
++dependencies:
++  rockchip,pmu: [enable-method]
+ 
  examples:
    - |
-     // Example 1: SiFive Freedom U540G Development Kit
 -- 
 2.20.1
