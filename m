@@ -1,46 +1,78 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH 1/5] MAINTAINERS: add ADIS IMU driver library entry
-Date: Thu, 27 Jun 2019 13:26:50 +0000
-Message-ID: <0e47b26902a7fc41cb4bc633633b6b9426853da7.camel@analog.com>
-References: <20190625131328.11883-1-alexandru.ardelean@analog.com>
-         <20190626193247.09006ac4@archlinux>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] Immutable branch between MFD, Clk, GPIO, Power, Regulator
+ and RTC due for the v5.3 merge window
+Date: Thu, 27 Jun 2019 14:30:27 +0100
+Message-ID: <20190627133027.GC2000@dell>
+References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190626193247.09006ac4@archlinux>
-Content-Language: en-US
-Content-ID: <686CC9F63A84C94FBE8D98D8F4ADB3EC@analog.com>
+Content-Disposition: inline
+In-Reply-To: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "jic23@jic23.retrosnub.co.uk" <jic23@jic23.retrosnub.co.uk>
-Cc: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA2LTI2IGF0IDE5OjMyICswMTAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
-Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBUdWUsIDI1IEp1biAyMDE5IDE2OjEzOjI0ICswMzAw
-DQo+IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+IHdy
-b3RlOg0KPiANCj4gPiBUaGlzIGNoYW5nZSBhZGRzIHRoZSBBRElTIGRyaXZlciBsaWJyYXJ5IHRv
-IHRoZSBNQUlOVEFJTkVSUyBsaXN0LCBhbmQgYWRkcw0KPiA+IG15c2VsZiBhcyB0aGUgY3VycmVu
-dCBtYWludGFpbmVyIG9mIHRoaXMgbGlicmFyeS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBB
-bGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiBIaSBB
-bGV4YW5kcnUsDQo+IA0KPiBHaXZlbiB0aGlzIG9ubHkgaGFzIGEgdGFuZ2VudGlhbCByZWxhdGlv
-bnNoaXAgdG8gdGhlIHJlc3Qgb2YgdGhlIHBhdGNoZXMNCj4gSSdsbCBwaWNrIHVwIG5vdy4NCj4g
-DQo+IE1vcmUgZ2VuZXJhbGx5IHRoaXMgc2VyaWVzIGlzIGNvbXBsZXggZW5vdWdoIGEgY292ZXIg
-bGV0dGVyIHdvdWxkIGhhdmUNCj4gYmVlbiBnb29kICsgNS81IGlzbid0IGFueXdoZXJlIHRoYXQg
-SSBjYW4gZmluZD8NCg0KVGhhdCBpcyBhIGJpdCB3ZWlyZC4NCkkgZ3Vlc3Mgb3VyIG1haWwgc2Vy
-dmVyIHdlbnQgYSBsaXR0bGUgYnVzdCB3aGVuIHNlbmRpbmcgdGhlIHNlcmllcyBhbmQgZHJvcHBl
-ZCB0aGUgc2VyaWVzLg0KDQpTb3JyeSBhYm91dCB0aGF0Lg0KQWxleA0KDQo+IA0KPiANCj4gVGhh
-bmtzLA0KPiANCj4gSm9uYXRoYW4NCj4gDQo+ID4gLS0tDQo+ID4gIE1BSU5UQUlORVJTIHwgNyAr
-KysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBk
-aWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUw0KPiA+IGluZGV4IDFlYjk3MTYw
-OGFjNC4uNTQ0ZTIzNzUzZTk2IDEwMDY0NA0KPiA+IC0tLSBhL01BSU5UQUlORVJTDQo+ID4gKysr
-IGIvTUFJTlRBSU5FUlMNCj4gPiBAQCAtOTMwLDYgKzkzMCwxMyBAQCBTOglTdXBwb3J0ZWQNCj4g
-PiAgRjoJZHJpdmVycy9tdXgvYWRnczE0MDguYw0KPiA+ICBGOglEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbXV4L2FkaSxhZGdzMTQwOC50eHQNCj4gPiAgDQo+ID4gK0FOQUxPRyBE
-RVZJQ0VTIElOQyBBRElTIERSSVZFUiBMSUJSQVJZDQo+ID4gK006CUFsZXhhbmRydSBBcmRlbGVh
-biA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+ID4gK1M6CVN1cHBvcnRlZA0KPiA+
-ICtMOglsaW51eC1paW9Admdlci5rZXJuZWwub3JnDQo+ID4gK0Y6CWluY2x1ZGUvbGludXgvaWlv
-L2ltdS9hZGlzLmgNCj4gPiArRjoJZHJpdmVycy9paW8vaW11L2FkaXMuYw0KPiA+ICsNCj4gPiAg
-QU5BTE9HIERFVklDRVMgSU5DIEFEUDUwNjEgRFJJVkVSDQo+ID4gIE06CVN0ZWZhbiBQb3BhIDxz
-dGVmYW4ucG9wYUBhbmFsb2cuY29tPg0KPiA+ICBMOglsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmcN
-Cg==
+Enjoy!
+
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-clk-gpio-power-regulator-rtc-v5.3
+
+for you to fetch changes up to f8c7f7ddd8ef0855d06cff5d1cc7713b556006a7:
+
+  power: supply: Initial support for ROHM BD70528 PMIC charger block (2019-06-27 10:57:24 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD, Clk, GPIO, Power, Regulator and RTC due for the v5.3 merge window
+
+----------------------------------------------------------------
+Matti Vaittinen (7):
+      mfd: regulator: clk: Split rohm-bd718x7.h
+      mfd: bd70528: Support ROHM bd70528 PMIC core
+      clk: bd718x7: Support ROHM BD70528 clk block
+      dt-bindings: mfd: Document first ROHM BD70528 bindings
+      gpio: Initial support for ROHM bd70528 GPIO block
+      rtc: bd70528: Initial support for ROHM bd70528 RTC
+      power: supply: Initial support for ROHM BD70528 PMIC charger block
+
+ .../devicetree/bindings/mfd/rohm,bd70528-pmic.txt  | 102 +++
+ drivers/clk/Kconfig                                |   6 +-
+ drivers/clk/clk-bd718x7.c                          |  24 +-
+ drivers/gpio/Kconfig                               |  11 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-bd70528.c                        | 232 +++++++
+ drivers/mfd/Kconfig                                |  17 +
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/rohm-bd70528.c                         | 316 +++++++++
+ drivers/mfd/rohm-bd718x7.c                         |  23 +-
+ drivers/power/supply/Kconfig                       |   9 +
+ drivers/power/supply/Makefile                      |   1 +
+ drivers/power/supply/bd70528-charger.c             | 743 +++++++++++++++++++++
+ drivers/regulator/bd718x7-regulator.c              |  25 +-
+ drivers/rtc/Kconfig                                |   8 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-bd70528.c                          | 500 ++++++++++++++
+ include/linux/mfd/rohm-bd70528.h                   | 408 +++++++++++
+ include/linux/mfd/rohm-bd718x7.h                   |  22 +-
+ include/linux/mfd/rohm-generic.h                   |  20 +
+ 20 files changed, 2425 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+ create mode 100644 drivers/gpio/gpio-bd70528.c
+ create mode 100644 drivers/mfd/rohm-bd70528.c
+ create mode 100644 drivers/power/supply/bd70528-charger.c
+ create mode 100644 drivers/rtc/rtc-bd70528.c
+ create mode 100644 include/linux/mfd/rohm-bd70528.h
+ create mode 100644 include/linux/mfd/rohm-generic.h
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
