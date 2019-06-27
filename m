@@ -1,137 +1,27 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V11 03/12] PCI: dwc: Perform dbi regs write lock towards
- the end
-Date: Thu, 27 Jun 2019 21:03:08 +0530
-Message-ID: <ecae46b4-54cc-7f4d-5a86-908431fd472a@nvidia.com>
-References: <20190624091505.1711-1-vidyas@nvidia.com>
- <20190624091505.1711-4-vidyas@nvidia.com>
- <20190627145800.GD3782@e121166-lin.cambridge.arm.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v4 01/13] dt-bindings: net: Add YAML schemas for the
+ generic Ethernet options
+Date: Thu, 27 Jun 2019 17:37:41 +0200
+Message-ID: <20190627153741.GL27733@lunn.ch>
+References: <cover.e80da8845680a45c2e07d5f17280fdba84555b8a.1561649505.git-series.maxime.ripard@bootlin.com>
+ <bbda9a50acace27f2fa79af71723e7d3b0111bc4.1561649505.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627145800.GD3782@e121166-lin.cambridge.arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <bbda9a50acace27f2fa79af71723e7d3b0111bc4.1561649505.git-series.maxime.ripard@bootlin.com>
+Sender: netdev-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6/27/2019 8:28 PM, Lorenzo Pieralisi wrote:
-> On Mon, Jun 24, 2019 at 02:44:56PM +0530, Vidya Sagar wrote:
->> Remove multiple write enable and disable sequences of dbi registers as
->> Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
->> DBI write-lock enable bit thereby not allowing any further writes to BAR-0
->> register in config space to take place. Hence enabling write permission at
->> the start of function and disabling the same only towards the end.
+On Thu, Jun 27, 2019 at 05:31:43PM +0200, Maxime Ripard wrote:
+> The Ethernet controllers have a good number of generic options that can be
+> needed in a device tree. Add a YAML schemas for those.
 > 
-> I do not understand what this patch does, I would like to rephrase
-> the commit log in a way that is easier to parse.
-> 
-> In particular I do not get what you mean in relation to BAR-0, I am
-> confused, please clarify.
-> 
-> Lorenzo
-Well, some of the Synopsys DesignWare core's DBI registers are protected with a lock
-without which, they are read-only by default. Existing code in dw_pcie_setup_rc() API
-tries to unlock and lock multiple times whenever it wants to update those write-protected
-registers. This patch attempts to unlock all such write-protected registers for writing
-once in the beginning of the function and lock them back towards the end.
-As far as BAR-0 register (which is at offset 0x10 in DBI space... nothing but the
-config space) in Tegra194 is concerned, it is one of those registers to which
-writes are protected. I could have added unlock/lock pair around accessing this register,
-but that would bloat this API with one more pair of unlock/lock, instead I chose to remove
-unlock/lock pairs for all protected registers and have unlock in the beginning and lock
-towards the end.
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
--Vidya Sagar
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-> 
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Reviewed-by: Thierry Reding <treding@nvidia.com>
->> Acked-by: Jingoo Han <jingoohan1@gmail.com>
->> ---
->> Changes since [v10]:
->> * None
->>
->> Changes since [v9]:
->> * None
->>
->> Changes since [v8]:
->> * None
->>
->> Changes since [v7]:
->> * None
->>
->> Changes since [v6]:
->> * None
->>
->> Changes since [v5]:
->> * Moved write enable to the beginning of the API and write disable to the end
->>
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * None
->>
->> Changes since [v1]:
->> * None
->>
->>   drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
->>   1 file changed, 8 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->> index f93252d0da5b..d3156446ff27 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->> @@ -628,6 +628,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->>   	u32 val, ctrl, num_ctrls;
->>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>   
->> +	/*
->> +	 * Enable DBI read-only registers for writing/updating configuration.
->> +	 * Write permission gets disabled towards the end of this function.
->> +	 */
->> +	dw_pcie_dbi_ro_wr_en(pci);
->> +
->>   	dw_pcie_setup(pci);
->>   
->>   	if (!pp->ops->msi_host_init) {
->> @@ -650,12 +656,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->>   	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
->>   
->>   	/* Setup interrupt pins */
->> -	dw_pcie_dbi_ro_wr_en(pci);
->>   	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
->>   	val &= 0xffff00ff;
->>   	val |= 0x00000100;
->>   	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
->> -	dw_pcie_dbi_ro_wr_dis(pci);
->>   
->>   	/* Setup bus numbers */
->>   	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
->> @@ -687,15 +691,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->>   
->>   	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
->>   
->> -	/* Enable write permission for the DBI read-only register */
->> -	dw_pcie_dbi_ro_wr_en(pci);
->>   	/* Program correct class for RC */
->>   	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
->> -	/* Better disable write permission right after the update */
->> -	dw_pcie_dbi_ro_wr_dis(pci);
->>   
->>   	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
->>   	val |= PORT_LOGIC_SPEED_CHANGE;
->>   	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
->> +
->> +	dw_pcie_dbi_ro_wr_dis(pci);
->>   }
->>   EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
->> -- 
->> 2.17.1
->>
+    Andrew
