@@ -1,78 +1,67 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [GIT PULL] Immutable branch between MFD, Clk, GPIO, Power, Regulator
- and RTC due for the v5.3 merge window
-Date: Thu, 27 Jun 2019 14:30:27 +0100
-Message-ID: <20190627133027.GC2000@dell>
-References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH 2/5] drivers: spi: core: Add optional stall delay
+ between cs_change transfers
+Date: Thu, 27 Jun 2019 13:29:15 +0000
+Message-ID: <4233221bfa727965e1d46ce327d1bfd29b0c8aaf.camel@analog.com>
+References: <20190625131328.11883-1-alexandru.ardelean@analog.com>
+         <20190625131328.11883-2-alexandru.ardelean@analog.com>
+         <20190626193438.7248d0a9@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20190626193438.7248d0a9@archlinux>
+Content-Language: en-US
+Content-ID: <E313F6E9F41E714FA458A9E2FD3E21A4@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
+To: "jic23@jic23.retrosnub.co.uk" <jic23@jic23.retrosnub.co.uk>
+Cc: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Enjoy!
-
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-clk-gpio-power-regulator-rtc-v5.3
-
-for you to fetch changes up to f8c7f7ddd8ef0855d06cff5d1cc7713b556006a7:
-
-  power: supply: Initial support for ROHM BD70528 PMIC charger block (2019-06-27 10:57:24 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD, Clk, GPIO, Power, Regulator and RTC due for the v5.3 merge window
-
-----------------------------------------------------------------
-Matti Vaittinen (7):
-      mfd: regulator: clk: Split rohm-bd718x7.h
-      mfd: bd70528: Support ROHM bd70528 PMIC core
-      clk: bd718x7: Support ROHM BD70528 clk block
-      dt-bindings: mfd: Document first ROHM BD70528 bindings
-      gpio: Initial support for ROHM bd70528 GPIO block
-      rtc: bd70528: Initial support for ROHM bd70528 RTC
-      power: supply: Initial support for ROHM BD70528 PMIC charger block
-
- .../devicetree/bindings/mfd/rohm,bd70528-pmic.txt  | 102 +++
- drivers/clk/Kconfig                                |   6 +-
- drivers/clk/clk-bd718x7.c                          |  24 +-
- drivers/gpio/Kconfig                               |  11 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-bd70528.c                        | 232 +++++++
- drivers/mfd/Kconfig                                |  17 +
- drivers/mfd/Makefile                               |   2 +
- drivers/mfd/rohm-bd70528.c                         | 316 +++++++++
- drivers/mfd/rohm-bd718x7.c                         |  23 +-
- drivers/power/supply/Kconfig                       |   9 +
- drivers/power/supply/Makefile                      |   1 +
- drivers/power/supply/bd70528-charger.c             | 743 +++++++++++++++++++++
- drivers/regulator/bd718x7-regulator.c              |  25 +-
- drivers/rtc/Kconfig                                |   8 +
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-bd70528.c                          | 500 ++++++++++++++
- include/linux/mfd/rohm-bd70528.h                   | 408 +++++++++++
- include/linux/mfd/rohm-bd718x7.h                   |  22 +-
- include/linux/mfd/rohm-generic.h                   |  20 +
- 20 files changed, 2425 insertions(+), 46 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
- create mode 100644 drivers/gpio/gpio-bd70528.c
- create mode 100644 drivers/mfd/rohm-bd70528.c
- create mode 100644 drivers/power/supply/bd70528-charger.c
- create mode 100644 drivers/rtc/rtc-bd70528.c
- create mode 100644 include/linux/mfd/rohm-bd70528.h
- create mode 100644 include/linux/mfd/rohm-generic.h
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+T24gV2VkLCAyMDE5LTA2LTI2IGF0IDE5OjM0ICswMTAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
+Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBUdWUsIDI1IEp1biAyMDE5IDE2OjEzOjI1ICswMzAw
+DQo+IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+IHdy
+b3RlOg0KPiANCj4gPiBTb21lIGRldmljZXMgbGlrZSB0aGUgQURJUzE2NDYwIElNVSByZXF1aXJl
+IGEgc3RhbGwgcGVyaW9kIGJldHdlZW4NCj4gPiB0cmFuc2ZlcnMsIGkuZS4gYmV0d2VlbiB3aGVu
+IHRoZSBDUyBpcyBkZS1hc3NlcnRlZCBhbmQgcmUtYXNzZXJ0ZWQuIFRoZQ0KPiA+IGRlZmF1bHQg
+dmFsdWUgb2YgMTB1cyBpcyBub3QgZW5vdWdoLiBUaGlzIGNoYW5nZSBtYWtlcyB0aGUgZGVsYXkN
+Cj4gPiBjb25maWd1cmFibGUgZm9yIHdoZW4gdGhlIG5leHQgQ1MgY2hhbmdlIGdvZXMgYWN0aXZl
+Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1pY2hhZWwgSGVubmVyaWNoIDxtaWNoYWVsLmhl
+bm5lcmljaEBhbmFsb2cuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRydSBBcmRlbGVh
+biA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+IA0KPiBHZW5lcmFsIHByaW5jaXBs
+ZSBzZWVtcyBmaW5lIHRvIG1lLCB0aG91Z2ggbmFtaW5nIG1heSBuZWVkIHNvbWUgd29yay4NCj4g
+DQo+IGNzX2xvd190aW1lIG9yIHNvbWV0aGluZyBtb3JlIHNwZWNpZmljIHRoYW4gc3RhbGwgcGVy
+aGFwcz8NCg0KSSBhZ3JlZSB0aGUgbmFtaW5nIGNvdWxkIGRvIHNvbWUgd29yay4NCkl0IHdhcyBv
+bmUgb2YgdGhlIGl0ZW1zIFtpbiB0aGlzIHNlcmllc10gZm9yIHdoaWNoIEkgd2FzIGV4cGVjdGlu
+ZyBhIGJpdCBvZiBhIGRpc2N1c3Npb24uDQoNClRoYW5rcw0KQWxleA0KDQo+IA0KPiArQ0MgTWFy
+ay4NCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvc3BpL3NwaS5jICAgICAgIHwgMyArKy0NCj4g
+PiAgaW5jbHVkZS9saW51eC9zcGkvc3BpLmggfCAzICsrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQs
+IDUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL3NwaS9zcGkuYyBiL2RyaXZlcnMvc3BpL3NwaS5jDQo+ID4gaW5kZXggNWU3NTk0NGFk
+NWQxLi43MzlkZTAxMThlZTEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zcGkvc3BpLmMNCj4g
+PiArKysgYi9kcml2ZXJzL3NwaS9zcGkuYw0KPiA+IEBAIC0xMTYzLDcgKzExNjMsOCBAQCBzdGF0
+aWMgaW50IHNwaV90cmFuc2Zlcl9vbmVfbWVzc2FnZShzdHJ1Y3Qgc3BpX2NvbnRyb2xsZXIgKmN0
+bHIsDQo+ID4gIAkJCQlrZWVwX2NzID0gdHJ1ZTsNCj4gPiAgCQkJfSBlbHNlIHsNCj4gPiAgCQkJ
+CXNwaV9zZXRfY3MobXNnLT5zcGksIGZhbHNlKTsNCj4gPiAtCQkJCXVkZWxheSgxMCk7DQo+ID4g
+KwkJCQl1ZGVsYXkoeGZlci0+Y3NfY2hhbmdlX3N0YWxsX2RlbGF5X3VzID8NCj4gPiArCQkJCSAg
+ICAgICB4ZmVyLT5jc19jaGFuZ2Vfc3RhbGxfZGVsYXlfdXMgOiAxMCk7DQo+ID4gIAkJCQlzcGlf
+c2V0X2NzKG1zZy0+c3BpLCB0cnVlKTsNCj4gPiAgCQkJfQ0KPiA+ICAJCX0NCj4gPiBkaWZmIC0t
+Z2l0IGEvaW5jbHVkZS9saW51eC9zcGkvc3BpLmggYi9pbmNsdWRlL2xpbnV4L3NwaS9zcGkuaA0K
+PiA+IGluZGV4IDA1M2FiZDIyYWQzMS4uZDIzYWRkM2I0NzkwIDEwMDY0NA0KPiA+IC0tLSBhL2lu
+Y2x1ZGUvbGludXgvc3BpL3NwaS5oDQo+ID4gKysrIGIvaW5jbHVkZS9saW51eC9zcGkvc3BpLmgN
+Cj4gPiBAQCAtNzM0LDYgKzczNCw4IEBAIGV4dGVybiB2b2lkIHNwaV9yZXNfcmVsZWFzZShzdHJ1
+Y3Qgc3BpX2NvbnRyb2xsZXIgKmN0bHIsDQo+ID4gICAqICAgICAgdHJhbnNmZXIuIElmIDAgdGhl
+IGRlZmF1bHQgKGZyb20gQHNwaV9kZXZpY2UpIGlzIHVzZWQuDQo+ID4gICAqIEBiaXRzX3Blcl93
+b3JkOiBzZWxlY3QgYSBiaXRzX3Blcl93b3JkIG90aGVyIHRoYW4gdGhlIGRldmljZSBkZWZhdWx0
+DQo+ID4gICAqICAgICAgZm9yIHRoaXMgdHJhbnNmZXIuIElmIDAgdGhlIGRlZmF1bHQgKGZyb20g
+QHNwaV9kZXZpY2UpIGlzIHVzZWQuDQo+ID4gKyAqIEBjc19jaGFuZ2Vfc3RhbGxfZGVsYXlfdXM6
+IG1pY3Jvc2Vjb25kcyB0byBkZWxheSBiZXR3ZWVuIGNzX2NoYW5nZQ0KPiA+ICsgKiAJdHJhbnNm
+ZXJzLg0KPiA+ICAgKiBAY3NfY2hhbmdlOiBhZmZlY3RzIGNoaXBzZWxlY3QgYWZ0ZXIgdGhpcyB0
+cmFuc2ZlciBjb21wbGV0ZXMNCj4gPiAgICogQGRlbGF5X3VzZWNzOiBtaWNyb3NlY29uZHMgdG8g
+ZGVsYXkgYWZ0ZXIgdGhpcyB0cmFuc2ZlciBiZWZvcmUNCj4gPiAgICoJKG9wdGlvbmFsbHkpIGNo
+YW5naW5nIHRoZSBjaGlwc2VsZWN0IHN0YXR1cywgdGhlbiBzdGFydGluZw0KPiA+IEBAIC04MjMs
+NiArODI1LDcgQEAgc3RydWN0IHNwaV90cmFuc2ZlciB7DQo+ID4gICNkZWZpbmUJU1BJX05CSVRT
+X1FVQUQJCTB4MDQgLyogNGJpdHMgdHJhbnNmZXIgKi8NCj4gPiAgCXU4CQliaXRzX3Blcl93b3Jk
+Ow0KPiA+ICAJdTgJCXdvcmRfZGVsYXlfdXNlY3M7DQo+ID4gKwl1OAkJY3NfY2hhbmdlX3N0YWxs
+X2RlbGF5X3VzOw0KPiA+ICAJdTE2CQlkZWxheV91c2VjczsNCj4gPiAgCXUzMgkJc3BlZWRfaHo7
+DQo+ID4gIAl1MTYJCXdvcmRfZGVsYXk7DQo=
