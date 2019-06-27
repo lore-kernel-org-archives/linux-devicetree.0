@@ -1,59 +1,115 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v5 05/26] leds: core: Add support for composing LED class
- device names
-Date: Thu, 27 Jun 2019 20:28:06 +0200
-Message-ID: <7b038be0-274d-54f7-46f4-3dbe346169b8@gmail.com>
-References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
- <20190609190803.14815-6-jacek.anaszewski@gmail.com>
- <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
- <b65ba5ea-4b79-8245-bddb-3ecf1424892f@kaa.org.ua>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v4 0/2] Use NVMEM as reboot-mode write interface
+Date: Thu, 27 Jun 2019 20:33:30 +0200
+Message-ID: <20190627183330.aole6zumw3l2vyet@earth.universe>
+References: <20190515104658.25535-1-nandor.han@vaisala.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oelnsnnwwn2ytluu"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b65ba5ea-4b79-8245-bddb-3ecf1424892f@kaa.org.ua>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190515104658.25535-1-nandor.han@vaisala.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oleh Kravchenko <oleg@kaa.org.ua>, linux-leds@vger.kernel.org, pavel@ucw.cz, dmurphy@ti.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com, linux@roeck-us.net, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
+To: Han Nandor <nandor.han@vaisala.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Oleh,
 
-On 6/26/19 10:07 PM, Oleh Kravchenko wrote:
-> Hello Jacek,
-> so after this patch will be merged.
-> 
-> There will be a way to define custom function name by DeviceTree?
+--oelnsnnwwn2ytluu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes. We standardize LED functions just to avoid spreading many similarly
-looking function names with the same semantics.
+Hi,
 
-We don't enforce using new function definitions in any way.
-It is possible to assign whatever you want to the DT label property
-(however now deprecated) or to the new DT function property.
+On Wed, May 15, 2019 at 10:47:14AM +0000, Han Nandor wrote:
+> Description
+> -----------
+> Extend the reboot mode driver to use a NVMEM cell as writing interface.
+>=20
+> Testing
+> -------
+> The testing is done by configuring DT from a custom board.
+> The NVMEM cell is configured in an RTC non-volatile memory.
+> Kernel: 4.14.60 (the patchset was rebased on kernel master)
+>=20
+> DT configurations:
+> `
+> ...
+> reboot-mode-nvmem@0 {
+>     compatible =3D "simple-mfd";
+>     reboot-mode {
+>         compatible =3D "nvmem-reboot-mode";
+>         nvmem-cells =3D <&reboot_mode>;
+>         nvmem-cell-names =3D "reboot-mode";
+>=20
+>         mode-test       =3D <0x21969147>;
+>     };
+> };
+> ...
+> reboot_mode: nvmem_reboot_mode@0 {
+>         reg =3D <0x00 0x4>;
+> };
+> ...
+> `
+>=20
+> 1. Reboot the system using the command `reboot test`
+>=20
+> 2. Verify that kernel logs show that reboot was done in mode `test`:
+> PASS
+> `[  413.957172] reboot: Restarting system with command 'test' `
+>=20
+> 3. Stop in U-Boot and verify that mode `test` magic value is present
+> in RTCs non-volatile memory: PASS
+>=20
+> Kernel: 5.1.0-rc3
+>=20
+> 1. Configure `arch/arm/configs/imx_v6_v7_defconfig` to contain=20
+> `CONFIG_NVMEM_REBOOT_MODE=3Dy`
+> 2. Verify that Kernel compiles successful: PASS
+> `
+> make ARCH=3Darm CROSS_COMPILE=3Darm-linux-gnu- imx_v6_v7_defconfig zImage
+> ...
+> CC      drivers/power/reset/nvmem-reboot-mode.o
+> ...
+> Kernel: arch/arm/boot/zImage is ready
+> `
+> Changes since v1:
+> -----------------
+>  - split the documentation on a separate patch
+>  - add a missing header
+>=20
+> Changes since v2:
+> ----------------
+>  - change the module license to GPL since GPL v2 is deprecated
+>=20
+> Changes since v3:
+> ----------------
+>  - documentation updated according to the comments
 
-It will be however preferable to use standard LED_FUNCTION definitions
-for new mainline bindings and dts files. Of course, as documentation
-states, it will be possible to propose new ones if none of existing
-fit for given application. This is only an initial set.
+Thanks, queued. Please fix your git/mail setup, I had to fix the
+line endings (\r\n -> \n) to apply this.
 
-> 26.06.19 22:05, Jacek Anaszewski пише:
->> Gentle reminder.
->>
->> Pavel, Dan - any conclusions?
->>
->> This patch is the main part of the proposed changes,
->> so it would be good to spot any remaining issues.
->>
->> What needs a consensus is also a new
->> Documentation/leds/led-functions.txt file I introduce
->> in the patch 26/26.
->>
->> Best regards,
->> Jacek Anaszewski
-> 
+-- Sebastian
 
--- 
-Best regards,
-Jacek Anaszewski
+--oelnsnnwwn2ytluu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0VC/oACgkQ2O7X88g7
++poTJRAAk2T33ox4H9f695WRdSpVuZjgdJfRsyNVYrMVpd0NwDgt5CfSFtpQ7Lub
+c5BDpY/LMnOH6HbcQipgW343roX4QpYhz6kwbbk2XSdfam8uuchgMtNDQqwDFNY3
+zQ9PMWNKK0eECbnJqa6E825/KQPrvXHQsu0D5irtD5DtPXBizr43yfhRv2EEACBa
+fnMU1XSOVVgvhWk/jpFD+mbfmVGct9YYG40yxj6migvNd9Im9soIXP6bjhQieuue
+5heq3SNkCSJzAV0yw0JHHDqQq/6zChB4gqv6B1yQ9mRKY6s3Ejnkug29HCXipuZI
+r1RO+U9p56PD36JW43JbECAGyz7zqnb13mcNXFBULDkjgURDOXuOWZVA1Ot2HDq2
+qva4h5F/hhYc5D9o/nJ220+D+jxDXu7P9qVg1IUEXweojoWSZEJu62nnEjgVQYnE
+r/AIsvZE7z3o8DfgnLpM1vq5rQKasOPN58rJOCB7yC993eIZob8IPl3c/D7llkSj
+JIGb4Kg/vP7NtCHES7x87p37RTsih7pCBrfOvPt8369s7BkqRcmLTH8a5vm4TREa
+y2jztX0f+n/qaGz1GkCqZ4+s1hOLOjyhX+f6ViFSNQUvkTuy9kgVZDeIn2hCbNA4
+qlJI30TEH2cu+Hk8Bxc0vegYjCLtdB+C4l+MmUy+wRDx3SEryiU=
+=8+eb
+-----END PGP SIGNATURE-----
+
+--oelnsnnwwn2ytluu--
