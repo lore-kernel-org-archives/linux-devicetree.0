@@ -1,8 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 04/19] phy: mvebu-cp110-comphy: List already supported
- Ethernet modes
-Date: Thu, 27 Jun 2019 11:50:49 +0200
-Message-ID: <20190627095104.22529-5-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 05/19] phy: mvebu-cp110-comphy: Add RXAUI support
+Date: Thu, 27 Jun 2019 11:50:50 +0200
+Message-ID: <20190627095104.22529-6-miquel.raynal@bootlin.com>
 References: <20190627095104.22529-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,27 +21,66 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, the driver supports setting lanes to 1000BASEX, 2500BASEX,
-10GKR. Complete the COMPHY modes list by adding two (already
-supported) cases for lane 4.
+From: Grzegorz Jaszczyk <jaz@semihalf.com>
 
+Add support for RXAUI mode by adding an entry in the COMPHY modes list.
+
+There is no user for this mode yet so we can enforce an up-to-date
+firmware and return an error otherwise without breaking anywone.
+
+Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+[miquel.raynal@bootlin.com: adapt the content to the mainline driver]
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-index ed643323f4c5..db935a19b360 100644
+index db935a19b360..0dbda2eea5b6 100644
 --- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
 +++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-@@ -197,6 +197,8 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
+@@ -157,6 +157,7 @@
+ 
+ #define COMPHY_FW_MODE_SGMII		0x2 /* SGMII 1G */
+ #define COMPHY_FW_MODE_HS_SGMII		0x3 /* SGMII 2.5G */
++#define COMPHY_FW_MODE_RXAUI		0x7
+ #define COMPHY_FW_MODE_XFI		0x8 /* SFI: 0x9 (is treated like XFI) */
+ 
+ struct mvebu_comphy_conf {
+@@ -188,18 +189,22 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
+ 	/* lane 2 */
+ 	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+ 	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
++	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
+ 	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_10GKR, 0x1, COMPHY_FW_MODE_XFI),
+ 	/* lane 3 */
+ 	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
+ 	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
++	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
+ 	/* lane 4 */
+ 	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
  	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
  	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_10GKR, 0x2, COMPHY_FW_MODE_XFI),
++	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
  	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
-+	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_2500BASEX, -1, COMPHY_FW_MODE_HS_SGMII),
-+	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_10GKR, -1, COMPHY_FW_MODE_XFI),
+ 	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_2500BASEX, -1, COMPHY_FW_MODE_HS_SGMII),
+ 	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_10GKR, -1, COMPHY_FW_MODE_XFI),
  	/* lane 5 */
++	MVEBU_COMPHY_CONF(5, 1, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
  	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
  	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
+ };
+@@ -611,6 +616,11 @@ static int mvebu_comphy_power_on(struct phy *phy)
+ 	switch (lane->mode) {
+ 	case PHY_MODE_ETHERNET:
+ 		switch (lane->submode) {
++		case PHY_INTERFACE_MODE_RXAUI:
++			dev_dbg(priv->dev, "set lane %d to RXAUI mode\n",
++				lane->id);
++			fw_speed = 0;
++			break;
+ 		case PHY_INTERFACE_MODE_SGMII:
+ 			dev_dbg(priv->dev, "set lane %d to 1000BASE-X mode\n",
+ 				lane->id);
 -- 
 2.19.1
