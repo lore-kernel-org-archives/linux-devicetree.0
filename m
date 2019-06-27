@@ -1,114 +1,65 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH RESEND V2 1/3] clocksource/drivers/sysctr: Add optional
- clock-frequency property
-Date: Thu, 27 Jun 2019 12:27:37 +0200
-Message-ID: <f29a9a4b-8922-c8b5-f197-d33853f6341e@linaro.org>
-References: <20190623123850.22584-1-Anson.Huang@nxp.com>
- <55abafbd-c010-32b5-6d76-26040830d5b0@linaro.org>
- <DB3PR0402MB3916AB9F2260B0E46CCDDEC0F5E20@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <9c017ba9-ac6b-480b-d1f3-120289343101@linaro.org>
- <DB3PR0402MB3916ED4AB17B6DDD2248DD44F5FD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <8f8aa6e0-5f31-8047-14b5-0e1f65316453@linaro.org>
- <DB3PR0402MB39162DB95FA958AC1425BFFDF5FD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Ashish Kumar <Ashish.Kumar@nxp.com>
+Subject: [Patch v2] drivers: mtd: spi-nor: Add flash property for mt25qu512a
+ and mt35xu02g
+Date: Thu, 27 Jun 2019 15:58:03 +0530
+Message-ID: <1561631283-30937-1-git-send-email-Ashish.Kumar@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB39162DB95FA958AC1425BFFDF5FD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.
-Cc: dl-linux-imx <linux-imx@nxp.com>, Arnd Bergmann <arnd.bergmann@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: bbrezillon@kernel.org, Kuldeep Singh <kuldeep.singh@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>, broonie@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+From: Ashish Kumar <ashish.kumar@nxp.com>
 
-Hi Anson,
+mt25qu512a is rebranded after its spinoff from STM, so it is
+different only in term of extended jedec ID, initial JEDEC id
+is same as that of n25q512a.In order to avoid any confussion 
+with respect to name new entry is added.
+This flash is tested for Single I/O mode on LS1046FRWY although
+it does support QUAD I/O.
 
-On 27/06/2019 10:11, Anson Huang wrote:
-> Hi, Daniel
-> 
->> On 27/06/2019 02:43, Anson Huang wrote:
->>> Hi, Daniel
->>>
->>>> On 26/06/2019 03:42, Anson Huang wrote:
->>>>> Hi, Daniel
->>>>>
->>>>>> On 23/06/2019 14:38, Anson.Huang@nxp.com wrote:
->>>>>>> From: Anson Huang <Anson.Huang@nxp.com>
->>>>>>>
->>>>>>> Systems which use platform driver model for clock driver require
->>>>>>> the clock frequency to be supplied via device tree when system
->>>>>>> counter driver is enabled.
->>>>>>>
->>>>>>> This is necessary as in the platform driver model the of_clk
->>>>>>> operations do not work correctly because system counter driver is
->>>>>>> initialized in early phase of system boot up, and clock driver
->>>>>>> using platform driver model is NOT ready at that time, it will
->>>>>>> cause system counter driver initialization failed.
->>>>>>>
->>>>>>> Add the optinal clock-frequency to the device tree bindings of the
->>>>>>> NXP system counter, so the frequency can be handed in and the
->>>>>>> of_clk operations can be skipped.
->>>>>>
->>>>>> Isn't it possible to create a fixed-clock and refer to it? So no
->>>>>> need to create a specific action before calling timer_of_init() ?
->>>>>>
->>>>>
->>>>> As the clock must be ready before the TIMER_OF_DECLARE, so adding a
->>>>> CLK_OF_DECLARE_DRIVER in clock driver to ONLY register a fixed-clock?
->>>>> The system counter's frequency are different on different platforms,
->>>>> so adding fixed clock in system counter driver is NOT a good idea,
->>>>> ONLY the DT node or the clock driver can create this fixed clock
->>>>> according to
->>>> platforms, can you advise where to create this fixed clock is better?
->>>>
->>>> Can you point me to a DT with the "nxp,sysctr-timer" ?
->>>
->>> The DT node of system counter is new added in 3/3 of this patch
->>> series, also can be found from below link:
->>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatc
->>>
->> hwork.kernel.org%2Fpatch%2F11011703%2F&amp;data=02%7C01%7Canson.
->> huang%
->>>
->> 40nxp.com%7C8b9519ecceb346712be808d6fad675e4%7C686ea1d3bc2b4c6f
->> a92cd99
->>>
->> c5c301635%7C0%7C0%7C636972196338405582&amp;sdata=sOQQzDFxoCqe
->> VuHFuYPHh
->>> F8Bdj2Zu9WS7Go%2FV9lrWa8%3D&amp;reserved=0
->>
->> Sorry, I was unclear. I meant a patch with the timer defined using a clock as
->> defined currently in the binding (no clock-frequency).
-> 
-> OK, for i.MX8MM, we use clocks, check below patch series:
-> 
-> https://patchwork.kernel.org/patch/11008519/
-> 
-> code piece as below:
-> 
-> +			system_counter: timer@306a0000 {
-> +				compatible = "nxp,sysctr-timer";
-> +				reg = <0x306a0000 0x30000>;
-> +				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clk IMX8MM_CLK_SYS_CTR>;
-> +				clock-names = "per";
-> +			};
+mt35xu02g is Octal flash supporting Single I/O and QCTAL I/O
+and has been tested on LS1028ARDB
 
-Thanks,
+Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
+---
+V2:
+Re-work based on review comments from Vignesh R
 
-The fixed-clock can help to keep the code and the DT definition for the
-timer untouched as the 'clocks' above will refer to it. But that means
-we describe a fake clock. So it is up to you to decide if you want to
-stick the clock-frequency or use a fixed-clock.
+ drivers/mtd/spi-nor/spi-nor.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-
-
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index 73172d7..34e33a7 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -1880,6 +1880,7 @@ static const struct flash_info spi_nor_ids[] = {
+ 	{ "n25q512ax3",  INFO(0x20ba20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
+ 	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+ 	{ "n25q00a",     INFO(0x20bb21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
++	{ "mt25qu512a", INFO6(0x20bb20, 0x104400, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_4B_OPCODES) },
+ 	{ "mt25qu02g",   INFO(0x20bb22, 0, 64 * 1024, 4096, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+ 
+ 	/* Micron */
+@@ -1888,6 +1889,7 @@ static const struct flash_info spi_nor_ids[] = {
+ 			SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
+ 			SPI_NOR_4B_OPCODES)
+ 	},
++	{ "mt35xu02g",   INFO(0x2c5b1c, 0, 128 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ | SPI_NOR_4B_OPCODES) },
+ 
+ 	/* PMC */
+ 	{ "pm25lv512",   INFO(0,        0, 32 * 1024,    2, SECT_4K_PMC) },
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.7.4
