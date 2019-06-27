@@ -1,72 +1,107 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: I2C filtering (was Re: [PATCH v2 6/9] dt-bindings: i2c: at91:
- add binding for enable-ana-filt)
-Date: Thu, 27 Jun 2019 15:34:40 +0200
-Message-ID: <20190627133440.GA7158@ninjato>
-References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
- <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
- <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
- <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
- <20190625093156.GF5690@piout.net>
- <20190625095533.GC1688@kunai>
- <20190627132200.GK3692@piout.net>
- <eb2d87b7-437c-53ee-a1ca-37c4d3fadea6@microchip.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH RFC 2/4] OPP: Add and export helper to set bandwidth
+Date: Thu, 27 Jun 2019 19:04:22 +0530
+Message-ID: <20190627133424.4980-3-sibis@codeaurora.org>
+References: <20190627133424.4980-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <eb2d87b7-437c-53ee-a1ca-37c4d3fadea6@microchip.com>
+In-Reply-To: <20190627133424.4980-1-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen.Hristev@microchip.com
-Cc: alexandre.belloni@bootlin.com, peda@axentia.se, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, pierre-yves.mordret@st.com
+To: viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org
+Cc: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Add and export 'dev_pm_opp_set_bw' to set the bandwidth
+levels associated with an OPP for a given frequency.
 
---7AUc2qLy4jB3hD7Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ drivers/opp/core.c     | 46 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pm_opp.h |  6 ++++++
+ 2 files changed, 52 insertions(+)
 
-
-> > Apart from enabling the filter there is indeed one configuration
-> > setting, the maximum pulse width of spikes to be suppressed by the input
-> > filter.
-
-Yup, this is what I anticipated.
-
-> This is a number 0 to 7 (3 bits) that represents the width of the spike=
-=20
-> in periph clock cycles.
-
-For a generic binding, we would need some time-value as a parameter and
-convert it to clock cycles in the driver then, I'd think.
-
-> I am looking to see what is PADFCFG , as it's related to the PAD analog=
-=20
-> filter configuration. It may be unused by the filter.
-
-Thanks!
-
-
---7AUc2qLy4jB3hD7Z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0UxewACgkQFA3kzBSg
-KbbBxw/+PKlsndFyCPTuBvbsZv6QYFNcJSE6IMOwxnfLjInOoY8cAl/2uc55yh8K
-uVXgbOdp9bQEtjjgva8oMOZdT+8N6EOqm+Bjqu2Nw44UsQ6HQXUM+LJU9J35Me4T
-USjBCsZL+3rf9SUBq4xDSUa05wBuKN0ZC1Mss55kkBD/R4ULrd9VoVx0rpSe6oAF
-/XQeBDsWhqDG15zoZysXgQ/he7kLCGgtPf+dz0vA80JefsflXEyrr3Al9rggVP/F
-gK3+4UqBE8YLn0Iepd0HKsk7z3Qs7uLfjZex7fbd9Ul81JCN2yHn4PFIuV+NJf86
-C7Nh7zYojp41vxBF1llxMvm+2E4z23KkQ/SKmTqOshOxxEcYH2OdfvuWPyLBctHr
-Ex3IKFo/wESvBs12NPz1AAC/EadHG6elpaHNkdNaGjWMA4eIchDF+vaVXVsr34gT
-FYSfwVLHx4WZEKBzF+jWds5EBUbNWhSF0+e5vBOkL6BsGJpU5PTgxuvbO3L6jqCj
-nbCIkxFFM+pJCcwnb1eaDG9I9IUb1962hciz4tjFWMLog+QJdtWrwSk+az1237Jc
-0okdeuwS1ztxn84GLBuELSkDizc0GlYEJbz0+ICd2ZLXXFRwytpC/b3Sj/QgGOWM
-GNZtPtRGoadH2jxHySVRG+j9veFm1US51dR4b25SHUzlWyAR62A=
-=tCqi
------END PGP SIGNATURE-----
-
---7AUc2qLy4jB3hD7Z--
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index c85c04dc2c7de..78f42960860d1 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -746,6 +746,52 @@ static int _set_required_opps(struct device *dev,
+ 	return ret;
+ }
+ 
++/**
++ * dev_pm_opp_set_bw() - Configures OPP bandwidth levels
++ * @dev:	device for which we do this operation
++ * @freq:	bandwidth values to set with matching 'freq'
++ *
++ * This configures the bandwidth to the levels specified
++ * by the OPP corresponding to the given frequency.
++ *
++ * Return: 0 on success or a negative error value.
++ */
++int dev_pm_opp_set_bw(struct device *dev, unsigned long freq)
++{
++	struct opp_table *opp_table;
++	struct dev_pm_opp *opp;
++	int ret = 0;
++	int i;
++
++	opp = dev_pm_opp_find_freq_exact(dev, freq, true);
++	if (IS_ERR(opp))
++		return PTR_ERR(opp);
++
++	opp_table = _find_opp_table(dev);
++	if (IS_ERR(opp_table)) {
++		dev_err(dev, "%s: device opp table doesn't exist\n", __func__);
++		ret = PTR_ERR(opp_table);
++		goto put_opp;
++	}
++
++	if (IS_ERR_OR_NULL(opp_table->paths)) {
++		ret = -ENODEV;
++		goto put_opp_table;
++	}
++
++	for (i = 0; i < opp_table->path_count; i++) {
++		ret = icc_set_bw(opp_table->paths[i], opp->bandwidth[i].avg,
++				 opp->bandwidth[i].peak);
++	}
++
++put_opp_table:
++	dev_pm_opp_put_opp_table(opp_table);
++put_opp:
++	dev_pm_opp_put(opp);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(dev_pm_opp_set_bw);
++
+ /**
+  * dev_pm_opp_set_rate() - Configure new OPP based on frequency
+  * @dev:	 device for which we do this operation
+diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+index a17c462974851..1cdc2d0a2b20e 100644
+--- a/include/linux/pm_opp.h
++++ b/include/linux/pm_opp.h
+@@ -152,6 +152,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names
+ void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
+ int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
+ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
++int dev_pm_opp_set_bw(struct device *dev, unsigned long freq);
+ int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask);
+ int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
+ void dev_pm_opp_remove_table(struct device *dev);
+@@ -336,6 +337,11 @@ static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long target_f
+ 	return -ENOTSUPP;
+ }
+ 
++static inline int dev_pm_opp_set_bw(struct device *dev, unsigned long freq)
++{
++	return -ENOTSUPP;
++}
++
+ static inline int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask)
+ {
+ 	return -ENOTSUPP;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
