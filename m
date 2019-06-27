@@ -1,58 +1,65 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH RESEND V2 1/3] clocksource/drivers/sysctr: Add optional
- clock-frequency property
-Date: Thu, 27 Jun 2019 13:11:55 +0000
-Message-ID: <DB3PR0402MB3916D17328CF69C09C74A3D8F5FD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190623123850.22584-1-Anson.Huang@nxp.com>
- <bb362db6-9c50-5d2c-349a-4097dea0449f@linaro.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: I2C filtering (was Re: [PATCH v2 6/9] dt-bindings: i2c: at91:
+ add binding for enable-ana-filt)
+Date: Thu, 27 Jun 2019 15:22:00 +0200
+Message-ID: <20190627132200.GK3692@piout.net>
+References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
+ <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
+ <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
+ <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
+ <20190625093156.GF5690@piout.net>
+ <20190625095533.GC1688@kunai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bb362db6-9c50-5d2c-349a-4097dea0449f@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190625095533.GC1688@kunai>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.i
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Eugen.Hristev@microchip.com, peda@axentia.se, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIERhbmllbA0KDQo+IE9uIDIzLzA2LzIwMTkgMTQ6MzgsIEFuc29uLkh1YW5nQG54cC5jb20g
-d3JvdGU6DQo+ID4gRnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4N
-Cj4gPiBTeXN0ZW1zIHdoaWNoIHVzZSBwbGF0Zm9ybSBkcml2ZXIgbW9kZWwgZm9yIGNsb2NrIGRy
-aXZlciByZXF1aXJlIHRoZQ0KPiA+IGNsb2NrIGZyZXF1ZW5jeSB0byBiZSBzdXBwbGllZCB2aWEg
-ZGV2aWNlIHRyZWUgd2hlbiBzeXN0ZW0gY291bnRlcg0KPiA+IGRyaXZlciBpcyBlbmFibGVkLg0K
-PiA+DQo+ID4gVGhpcyBpcyBuZWNlc3NhcnkgYXMgaW4gdGhlIHBsYXRmb3JtIGRyaXZlciBtb2Rl
-bCB0aGUgb2ZfY2xrDQo+ID4gb3BlcmF0aW9ucyBkbyBub3Qgd29yayBjb3JyZWN0bHkgYmVjYXVz
-ZSBzeXN0ZW0gY291bnRlciBkcml2ZXIgaXMNCj4gPiBpbml0aWFsaXplZCBpbiBlYXJseSBwaGFz
-ZSBvZiBzeXN0ZW0gYm9vdCB1cCwgYW5kIGNsb2NrIGRyaXZlciB1c2luZw0KPiA+IHBsYXRmb3Jt
-IGRyaXZlciBtb2RlbCBpcyBOT1QgcmVhZHkgYXQgdGhhdCB0aW1lLCBpdCB3aWxsIGNhdXNlIHN5
-c3RlbQ0KPiA+IGNvdW50ZXIgZHJpdmVyIGluaXRpYWxpemF0aW9uIGZhaWxlZC4NCj4gPg0KPiA+
-IEFkZCB0aGUgb3B0aW5hbCBjbG9jay1mcmVxdWVuY3kgdG8gdGhlIGRldmljZSB0cmVlIGJpbmRp
-bmdzIG9mIHRoZSBOWFANCj4gPiBzeXN0ZW0gY291bnRlciwgc28gdGhlIGZyZXF1ZW5jeSBjYW4g
-YmUgaGFuZGVkIGluIGFuZCB0aGUgb2ZfY2xrDQo+ID4gb3BlcmF0aW9ucyBjYW4gYmUgc2tpcHBl
-ZC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAu
-Y29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZXMgc2luY2UgVjE6DQo+ID4gCS0gaW1wcm92ZSBjb21t
-aXQgbG9nLCBubyBjb250ZW50IGNoYW5nZS4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL254cCxzeXNjdHItdGltZXIudHh0IHwgNg0KPiA+ICsr
-KysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZm
-IC0tZ2l0DQo+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbnhw
-LHN5c2N0ci10aW1lci50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy90aW1lci9ueHAsc3lzY3RyLXRpbWVyLnR4dA0KPiA+IGluZGV4IGQ1NzY1OTkuLmM5OTA3YTAg
-MTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVy
-L254cCxzeXNjdHItdGltZXIudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3RpbWVyL254cCxzeXNjdHItdGltZXIudHh0DQo+ID4gQEAgLTE0LDYgKzE0LDEx
-IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gIC0gY2xvY2tzIDogCSAgICBTcGVjaWZpZXMg
-dGhlIGNvdW50ZXIgY2xvY2suDQo+ID4gIC0gY2xvY2stbmFtZXM6IAkgICAgU3BlY2lmaWVzIHRo
-ZSBjbG9jaydzIG5hbWUgb2YgdGhpcyBtb2R1bGUNCj4gPg0KPiA+ICtPcHRpb25hbCBwcm9wZXJ0
-aWVzOg0KPiA+ICsNCj4gPiArLSBjbG9jay1mcmVxdWVuY3kgOiBTcGVjaWZpZXMgc3lzdGVtIGNv
-dW50ZXIgY2xvY2sgZnJlcXVlbmN5IGFuZCBpbmRpY2F0ZXMNCj4gc3lzdGVtDQo+ID4gKwkJICAg
-IGNvdW50ZXIgZHJpdmVyIHRvIHNraXAgY2xvY2sgb3BlcmF0aW9ucy4NCj4gPiArDQo+IA0KPiBT
-aG91bGRuJ3QgaXQgYmUgcmVxdWlyZWQgYW5kIG11dHVhbGx5IGV4Y2x1c2l2ZSB3aXRoIGNsb2Nr
-cy9jbG9jay1uYW1lcz8NCj4NClllcywgbWFrZSBzZW5zZSwgSSBldmVyIHRob3VnaHQgYWJvdXQg
-aXQgd2hlbiBkb2luZyB0aGlzIHBhdGNoLCBidXQgZXZlbnR1YWxseSBJIHBpY2tlZA0KdGhlIG9w
-dGlvbmFsLi4ud2lsbCBmaXggaXQgaW4gbmV4dCB2ZXJzaW9uLg0KDQpUaGFua3MsDQpBbnNvbg0K
-DQo+ID4gIEV4YW1wbGU6DQo+ID4NCj4gPiAgCXN5c3RlbV9jb3VudGVyOiB0aW1lckAzMDZhMDAw
-MCB7DQo+ID4gQEAgLTIyLDQgKzI3LDUgQEAgRXhhbXBsZToNCj4gPiAgCQljbG9ja3MgPSA8JmNs
-a184bT47DQo+ID4gIAkJY2xvY2stbmFtZXMgPSAicGVyIjsNCj4gPiAgCQlpbnRlcnJ1cHRzID0g
-PEdJQ19TUEkgNDcgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKwkJY2xvY2stZnJlcXVlbmN5
-ID0gPDgzMzMzMzM+Ow0KPiA+ICAJfTsNCj4gPg0KPiANCj4gDQoNCg==
+On 25/06/2019 11:55:33+0200, Wolfram Sang wrote:
+> On Tue, Jun 25, 2019 at 11:31:56AM +0200, Alexandre Belloni wrote:
+> > On 25/06/2019 09:14:13+0000, Eugen.Hristev@microchip.com wrote:
+> > > > Perhaps
+> > > > 
+> > > > 	microchip,digital-filter;
+> > > > 	microchip,analog-filter;
+> > > > 
+> > > > ?
+> > > 
+> > > Hi Peter,
+> > > 
+> > > Thanks for reviewing. The name of the property does not matter much to 
+> > > me, and we have properties prefixed with vendor, and some are not.
+> > > 
+> > > @Alexandre Belloni: which name you think it's best ?
+> > > 
+> > 
+> > I'm not sure, it depends on whether Wolfram thinks it is generic enough
+> > to be used without a vendor prefix.
+> 
+> I could imagine that we design a generic property for filters. The ones
+> above make me wonder, though, because they are bool. I'd think you can
+> configure the filters in some way, too?
+> 
+
+Apart from enabling the filter there is indeed one configuration
+setting, the maximum pulse width of spikes to be suppressed by the input
+filter.
+
+> I never used such filtering, so I am unaware of the parameters needed /
+> suitable. Quick grepping through I2C master drivers reveals that
+> i2c-stm32f7.c also handles filters, but only with default values. Maybe
+> DT configuration would be benefitial to that driver, too?
+> 
+> Adding some people to CC.
+> 
+
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
