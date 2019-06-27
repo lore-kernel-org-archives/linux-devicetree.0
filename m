@@ -1,7 +1,7 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v9 04/12] mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
-Date: Thu, 27 Jun 2019 14:19:50 +0800
-Message-ID: <20190627061958.9488-5-bibby.hsieh@mediatek.com>
+Subject: [PATCH v9 10/12] soc: mediatek: cmdq: add polling function
+Date: Thu, 27 Jun 2019 14:19:56 +0800
+Message-ID: <20190627061958.9488-11-bibby.hsieh@mediatek.com>
 References: <20190627061958.9488-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,68 +12,92 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.
 Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-The interrupt mask and thread number has positive correlation,
-so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
-it by thread number.
+add polling function in cmdq helper functions
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/soc/mediatek/mtk-cmdq-helper.c   | 28 ++++++++++++++++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
+ include/linux/soc/mediatek/mtk-cmdq.h    | 15 +++++++++++++
+ 3 files changed, 44 insertions(+)
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 00d5219094e5..8fddd26288e8 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -18,7 +18,6 @@
- #include <linux/of_device.h>
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index 0886c4967ca4..70ad4d806fac 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -220,6 +220,34 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_clear_event);
  
- #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
--#define CMDQ_IRQ_MASK			0xffff
- #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
- 
- #define CMDQ_CURR_IRQ_STATUS		0x10
-@@ -72,6 +71,7 @@ struct cmdq {
- 	void __iomem		*base;
- 	u32			irq;
- 	u32			thread_nr;
-+	u32			irq_mask;
- 	struct cmdq_thread	*thread;
- 	struct clk		*clock;
- 	bool			suspended;
-@@ -285,11 +285,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
- 	unsigned long irq_status, flags = 0L;
- 	int bit;
- 
--	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
--	if (!(irq_status ^ CMDQ_IRQ_MASK))
-+	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
-+	if (!(irq_status ^ cmdq->irq_mask))
- 		return IRQ_NONE;
- 
--	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
-+	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
- 		struct cmdq_thread *thread = &cmdq->thread[bit];
- 
- 		spin_lock_irqsave(&thread->chan->lock, flags);
-@@ -473,6 +473,9 @@ static int cmdq_probe(struct platform_device *pdev)
- 		dev_err(dev, "failed to get irq\n");
- 		return -EINVAL;
- 	}
++int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
++		  u16 offset, u32 value, u32 mask)
++{
++	struct cmdq_instruction *inst;
 +
-+	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
-+	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
- 	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
- 			       "mtk_cmdq", cmdq);
- 	if (err < 0) {
-@@ -489,7 +492,6 @@ static int cmdq_probe(struct platform_device *pdev)
- 		return PTR_ERR(cmdq->clock);
- 	}
++	if (mask != 0xffffffff) {
++		inst = cmdq_pkt_append_command(pkt);
++		if (!inst)
++			return -ENOMEM;
++
++		inst->op = CMDQ_CODE_MASK;
++		inst->value = ~mask;
++		offset = offset | 0x1;
++	}
++
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_POLL;
++	inst->value = value;
++	inst->offset = offset;
++	inst->subsys = subsys;
++
++	return 0;
++}
++EXPORT_SYMBOL(cmdq_pkt_poll);
++
+ static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+ {
+ 	struct cmdq_instruction *inst;
+diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+index c8adedefaf42..9e3502945bc1 100644
+--- a/include/linux/mailbox/mtk-cmdq-mailbox.h
++++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+@@ -46,6 +46,7 @@
+ enum cmdq_code {
+ 	CMDQ_CODE_MASK = 0x02,
+ 	CMDQ_CODE_WRITE = 0x04,
++	CMDQ_CODE_POLL = 0x08,
+ 	CMDQ_CODE_JUMP = 0x10,
+ 	CMDQ_CODE_WFE = 0x20,
+ 	CMDQ_CODE_EOC = 0x40,
+diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+index 9618debb9ceb..a345870a6d10 100644
+--- a/include/linux/soc/mediatek/mtk-cmdq.h
++++ b/include/linux/soc/mediatek/mtk-cmdq.h
+@@ -99,6 +99,21 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+  */
+ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
  
--	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
- 	cmdq->mbox.dev = dev;
- 	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
- 					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
++/**
++ * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
++ *		     execute an instruction that wait for a specified hardware
++ *		     register to check for the value. All GCE hardware
++ *		     threads will be blocked by this instruction.
++ * @pkt:	the CMDQ packet
++ * @subsys:	the CMDQ sub system code
++ * @offset:	register offset from CMDQ sub system
++ * @value:	the specified target register value
++ * @mask:	the specified target register mask
++ *
++ * Return: 0 for success; else the error code is returned
++ */
++int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
++		  u16 offset, u32 value, u32 mask);
+ /**
+  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+  *                          packet and call back at the end of done packet
 -- 
 2.18.0
