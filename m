@@ -1,53 +1,39 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: I2C filtering (was Re: [PATCH v2 6/9] dt-bindings: i2c: at91: add
- binding for enable-ana-filt)
-Date: Thu, 27 Jun 2019 13:31:39 +0000
-Message-ID: <eb2d87b7-437c-53ee-a1ca-37c4d3fadea6@microchip.com>
-References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
- <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
- <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
- <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
- <20190625093156.GF5690@piout.net> <20190625095533.GC1688@kunai>
- <20190627132200.GK3692@piout.net>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH RFC 0/4] DDR/L3 Scaling support on SDM845 SoCs
+Date: Thu, 27 Jun 2019 19:04:20 +0530
+Message-ID: <20190627133424.4980-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627132200.GK3692@piout.net>
-Content-Language: en-US
-Content-ID: <20927CEDF033F540A4940D155C88D127@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, wsa@the-dreams.de
-Cc: peda@axentia.se, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, pierre-yves.mordret@st.com
+To: viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org
+Cc: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDI3LjA2LjIwMTkgMTY6MjIsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBFeHRl
-cm5hbCBFLU1haWwNCj4gDQo+IA0KPiBPbiAyNS8wNi8yMDE5IDExOjU1OjMzKzAyMDAsIFdvbGZy
-YW0gU2FuZyB3cm90ZToNCj4+IE9uIFR1ZSwgSnVuIDI1LCAyMDE5IGF0IDExOjMxOjU2QU0gKzAy
-MDAsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPj4+IE9uIDI1LzA2LzIwMTkgMDk6MTQ6MTMr
-MDAwMCwgRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIHdyb3RlOg0KPj4+Pj4gUGVyaGFwcw0K
-Pj4+Pj4NCj4+Pj4+IAltaWNyb2NoaXAsZGlnaXRhbC1maWx0ZXI7DQo+Pj4+PiAJbWljcm9jaGlw
-LGFuYWxvZy1maWx0ZXI7DQo+Pj4+Pg0KPj4+Pj4gPw0KPj4+Pg0KPj4+PiBIaSBQZXRlciwNCj4+
-Pj4NCj4+Pj4gVGhhbmtzIGZvciByZXZpZXdpbmcuIFRoZSBuYW1lIG9mIHRoZSBwcm9wZXJ0eSBk
-b2VzIG5vdCBtYXR0ZXIgbXVjaCB0bw0KPj4+PiBtZSwgYW5kIHdlIGhhdmUgcHJvcGVydGllcyBw
-cmVmaXhlZCB3aXRoIHZlbmRvciwgYW5kIHNvbWUgYXJlIG5vdC4NCj4+Pj4NCj4+Pj4gQEFsZXhh
-bmRyZSBCZWxsb25pOiB3aGljaCBuYW1lIHlvdSB0aGluayBpdCdzIGJlc3QgPw0KPj4+Pg0KPj4+
-DQo+Pj4gSSdtIG5vdCBzdXJlLCBpdCBkZXBlbmRzIG9uIHdoZXRoZXIgV29sZnJhbSB0aGlua3Mg
-aXQgaXMgZ2VuZXJpYyBlbm91Z2gNCj4+PiB0byBiZSB1c2VkIHdpdGhvdXQgYSB2ZW5kb3IgcHJl
-Zml4Lg0KPj4NCj4+IEkgY291bGQgaW1hZ2luZSB0aGF0IHdlIGRlc2lnbiBhIGdlbmVyaWMgcHJv
-cGVydHkgZm9yIGZpbHRlcnMuIFRoZSBvbmVzDQo+PiBhYm92ZSBtYWtlIG1lIHdvbmRlciwgdGhv
-dWdoLCBiZWNhdXNlIHRoZXkgYXJlIGJvb2wuIEknZCB0aGluayB5b3UgY2FuDQo+PiBjb25maWd1
-cmUgdGhlIGZpbHRlcnMgaW4gc29tZSB3YXksIHRvbz8NCj4+DQo+IA0KPiBBcGFydCBmcm9tIGVu
-YWJsaW5nIHRoZSBmaWx0ZXIgdGhlcmUgaXMgaW5kZWVkIG9uZSBjb25maWd1cmF0aW9uDQo+IHNl
-dHRpbmcsIHRoZSBtYXhpbXVtIHB1bHNlIHdpZHRoIG9mIHNwaWtlcyB0byBiZSBzdXBwcmVzc2Vk
-IGJ5IHRoZSBpbnB1dA0KPiBmaWx0ZXIuDQoNCkhlbGxvLA0KDQpUaGlzIGlzIGEgbnVtYmVyIDAg
-dG8gNyAoMyBiaXRzKSB0aGF0IHJlcHJlc2VudHMgdGhlIHdpZHRoIG9mIHRoZSBzcGlrZSANCmlu
-IHBlcmlwaCBjbG9jayBjeWNsZXMuDQpJIGFtIGxvb2tpbmcgdG8gc2VlIHdoYXQgaXMgUEFERkNG
-RyAsIGFzIGl0J3MgcmVsYXRlZCB0byB0aGUgUEFEIGFuYWxvZyANCmZpbHRlciBjb25maWd1cmF0
-aW9uLiBJdCBtYXkgYmUgdW51c2VkIGJ5IHRoZSBmaWx0ZXIuDQoNCkV1Z2VuDQoNCj4gDQo+PiBJ
-IG5ldmVyIHVzZWQgc3VjaCBmaWx0ZXJpbmcsIHNvIEkgYW0gdW5hd2FyZSBvZiB0aGUgcGFyYW1l
-dGVycyBuZWVkZWQgLw0KPj4gc3VpdGFibGUuIFF1aWNrIGdyZXBwaW5nIHRocm91Z2ggSTJDIG1h
-c3RlciBkcml2ZXJzIHJldmVhbHMgdGhhdA0KPj4gaTJjLXN0bTMyZjcuYyBhbHNvIGhhbmRsZXMg
-ZmlsdGVycywgYnV0IG9ubHkgd2l0aCBkZWZhdWx0IHZhbHVlcy4gTWF5YmUNCj4+IERUIGNvbmZp
-Z3VyYXRpb24gd291bGQgYmUgYmVuZWZpdGlhbCB0byB0aGF0IGRyaXZlciwgdG9vPw0KPj4NCj4+
-IEFkZGluZyBzb21lIHBlb3BsZSB0byBDQy4NCj4+DQo+IA0KPiANCj4gDQo=
+This RFC series aims to extend cpu based scaling support to L3/DDR on
+SDM845 SoCs. The patch series depends on "Introduce OPP bandwidth bindings"
+series (https://patchwork.kernel.org/cover/10912993/). A part of the
+series will still be applicable if we decide to go ahead with the proposal
+from Saravana as well so I decided to post this out.
+
+v2:
+* Incorporated Viresh's comments from:
+[1]https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
+[2]https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+
+
+Sibi Sankar (4):
+  OPP: Add and export helper to update voltage
+  OPP: Add and export helper to set bandwidth
+  cpufreq: qcom: Update the bandwidth levels on frequency change
+  arm64: dts: qcom: sdm845: Add cpu OPP tables
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 343 +++++++++++++++++++++++++++
+ drivers/cpufreq/qcom-cpufreq-hw.c    |  77 +++++-
+ drivers/opp/core.c                   |  98 ++++++++
+ include/linux/pm_opp.h               |  16 ++
+ 4 files changed, 532 insertions(+), 2 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
