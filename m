@@ -1,43 +1,57 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 37/95] dt-bindings: can: mcp251x: add mcp25625 support
-Date: Wed, 26 Jun 2019 20:29:22 -0400
-Message-ID: <20190627003021.19867-37-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 46/95] ARM: dts: am335x phytec boards: Fix cd-gpios active level
+Date: Wed, 26 Jun 2019 20:29:31 -0400
+Message-ID: <20190627003021.19867-46-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Sean Nyekjaer <sean@geanix.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Teresa Remmet <t.remmet@phytec.de>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Nyekjaer <sean@geanix.com>
+From: Teresa Remmet <t.remmet@phytec.de>
 
-[ Upstream commit 0df82dcd55832a99363ab7f9fab954fcacdac3ae ]
+[ Upstream commit 8a0098c05a272c9a68f6885e09755755b612459c ]
 
-Fully compatible with mcp2515, the mcp25625 have integrated transceiver.
+Active level of the mmc1 cd gpio needs to be low instead of high.
+Fix PCM-953 and phyBOARD-WEGA.
 
-This patch add the mcp25625 to the device tree bindings documentation.
-
-Signed-off-by: Sean Nyekjaer <sean@geanix.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Teresa Remmet <t.remmet@phytec.de>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/am335x-pcm-953.dtsi | 2 +-
+ arch/arm/boot/dts/am335x-wega.dtsi    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
-index 188c8bd4eb67..5a0111d4de58 100644
---- a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
-+++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
-@@ -4,6 +4,7 @@ Required properties:
-  - compatible: Should be one of the following:
-    - "microchip,mcp2510" for MCP2510.
-    - "microchip,mcp2515" for MCP2515.
-+   - "microchip,mcp25625" for MCP25625.
-  - reg: SPI chip select.
-  - clocks: The clock feeding the CAN controller.
-  - interrupts: Should contain IRQ line for the CAN controller.
+diff --git a/arch/arm/boot/dts/am335x-pcm-953.dtsi b/arch/arm/boot/dts/am335x-pcm-953.dtsi
+index 1ec8e0d80191..572fbd254690 100644
+--- a/arch/arm/boot/dts/am335x-pcm-953.dtsi
++++ b/arch/arm/boot/dts/am335x-pcm-953.dtsi
+@@ -197,7 +197,7 @@
+ 	bus-width = <4>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+-	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
++	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/am335x-wega.dtsi b/arch/arm/boot/dts/am335x-wega.dtsi
+index 8ce541739b24..83e4fe595e37 100644
+--- a/arch/arm/boot/dts/am335x-wega.dtsi
++++ b/arch/arm/boot/dts/am335x-wega.dtsi
+@@ -157,7 +157,7 @@
+ 	bus-width = <4>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+-	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
++	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.20.1
