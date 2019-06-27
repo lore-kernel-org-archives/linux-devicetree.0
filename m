@@ -2,21 +2,21 @@ Return-Path: <sboyd@kernel.org>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190502122657.15577-2-jonas.gorski@gmail.com>
-References: <20190502122657.15577-1-jonas.gorski@gmail.com> <20190502122657.15577-2-jonas.gorski@gmail.com>
+In-Reply-To: <20190627085517.17587-1-ckeepax@opensource.cirrus.com>
+References: <20190627085517.17587-1-ckeepax@opensource.cirrus.com>
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 1/3] devicetree: document the BCM63XX gated clock bindings
-Date: Thu, 27 Jun 2019 13:36:57 -0700
-Message-Id: <20190627203658.500AA20665@mail.kernel.org>
-To: Jonas Gorski <jonas.gorski@gmail.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-mips@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Kevin Cernekee <cernekee@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>
+Subject: Re: [PATCH] clk: lochnagar: Update DT binding doc to include the primary SPDIF MCLK
+Date: Thu, 27 Jun 2019 14:17:33 -0700
+Message-Id: <20190627211733.BAF71208CB@mail.kernel.org>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>, mturquette@baylibre.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, patches@opensource.cirrus.com
 List-ID: <devicetree@vger.kernel.org>
 
-Quoting Jonas Gorski (2019-05-02 05:26:55)
-> Add binding documentation for the gated clock controller found on MIPS
-> based BCM63XX SoCs.
+Quoting Charles Keepax (2019-06-27 01:55:17)
+> This clock was missed when the binding was initially merged but is
+> supported by the driver, so add it to the binding document.
 >=20
-> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 > ---
 
 Applied to clk-next
