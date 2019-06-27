@@ -1,101 +1,109 @@
-From: Brian Dodge <bdodge09@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: backlight: fix vendor prefix for
- ArcticSand arcxcnn driver bindings
-Date: Wed, 26 Jun 2019 10:59:55 -0400
-Message-ID: <CAFaGBPmF2gDNEy_Ok_Ky9GR7XEyVUdhG=BYGXEMCN1Tq2eHo6g@mail.gmail.com>
-References: <1561435529-7835-1-git-send-email-bdodge09@gmail.com>
- <1561435529-7835-2-git-send-email-bdodge09@gmail.com>
- <20190625085534.xf2ullyju3ewbgik@holly.lan>
- <CAFaGBPnH=75=wJRM4EX9MYR8MSehEa2_hBEOsqo-DZvD6c6f_A@mail.gmail.com>
- <20190626105614.ujmryi7qou2ra7aq@holly.lan>
- <20190626145624.GC22348@xo-6d-61-c0.localdomain>
+From: Qii Wang <qii.wang@mediatek.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: i3c: Document MediaTek I3C master
+ bindings
+Date: Thu, 27 Jun 2019 15:25:27 +0800
+Message-ID: <1561620327.12217.27.camel@mhfsdcap03>
+References: <1561527388-4829-1-git-send-email-qii.wang@mediatek.com>
+         <1561527388-4829-2-git-send-email-qii.wang@mediatek.com>
+         <20190626182339.0c6301a2@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2112663020=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190626145624.GC22348@xo-6d-61-c0.localdomain>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190626182339.0c6301a2@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: bbrezillon@kernel.org, matthias.bgg@gmail.com, linux-i3c@lists.infradead.org, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, liguo.zhang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
---===============2112663020==
-Content-Type: multipart/alternative; boundary="00000000000016bf57058c3b4dba"
+On Wed, 2019-06-26 at 18:23 +0200, Boris Brezillon wrote:
+> On Wed, 26 Jun 2019 13:36:27 +0800
+> Qii Wang <qii.wang@mediatek.com> wrote:
+> 
+> > Document MediaTek I3C master DT bindings.
+> > 
+> > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   47 ++++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> > new file mode 100644
+> > index 0000000..3fd4f17
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> > @@ -0,0 +1,47 @@
+> > +Bindings for MediaTek I3C master block
+> > +=====================================
+> > +
+> > +Required properties:
+> > +--------------------
+> > +- compatible: shall be "mediatek,i3c-master"
+> > +- reg: physical base address of the controller and apdma base, length of
+> > +  memory mapped region.
+> > +- reg-names: should be "main" for controller and "dma" for apdma.
+> > +- interrupts: interrupt number to the cpu.
+> 
+> Depending on the interrupt controller, each interrupt cell might
+> contain more than just the interrupt number.
+> 
 
---00000000000016bf57058c3b4dba
-Content-Type: text/plain; charset="UTF-8"
+ok, I will modify it as "the interrupt line connected to this I3C
+master"
 
-Is there a standard way to format to-be-deprecated items in the bindings?
+> > +- clocks: clock name from clock manager.
+> 
+> This property does not contain clock names but clk references.
+> 
 
+ok, I will modify it as "shall reference the i3c and apdma clocks"
 
-On Wed, Jun 26, 2019, 10:56 AM Pavel Machek <pavel@ucw.cz> wrote:
+> > +- clock-names: must include "main" and "dma".
+> > +
+> > +Mandatory properties defined by the generic binding (see
+> > +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> > +
+> > +- #address-cells: shall be set to 3
+> > +- #size-cells: shall be set to 0
+> > +
+> > +Optional properties defined by the generic binding (see
+> > +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> > +
+> > +- i2c-scl-hz
+> > +- i3c-scl-hz
+> > +
+> > +I3C device connected on the bus follow the generic description (see
+> > +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
+> > +
+> > +Example:
+> > +
+> > +	i3c0: i3c@1100d000 {
+> > +		compatible = "mediatek,i3c-master";
+> > +		reg = <0x1100d000 0x100>,
+> > +		      <0x11000300 0x80>;
+> > +		reg-names = "main", "dma";
+> > +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks = <&i3c0_ck>, <&ap_dma_ck>;
+> > +		clock-names = "main", "dma";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		i2c-scl-hz = <100000>;
+> > +
+> > +		nunchuk: nunchuk@52 {
+> > +			compatible = "nintendo,nunchuk";
+> > +			reg = <0x52 0x80000010 0>;
+> 
+> reg is wrong here, should be
+> 
+> 			reg = <0x52 0x0 0x10>;
+> 
+> While at it, can you send a patch to fix the example in the cadence
+> binding doc?
+> 
 
-> On Wed 2019-06-26 11:56:14, Daniel Thompson wrote:
-> > On Tue, Jun 25, 2019 at 07:44:06AM -0400, Brian Dodge wrote:
-> > > I would like to deprecate the old prefix in the future after
-> communicating
-> > > with all chip customers, which is why the old prefix is not documented
-> in
-> > > the new bindings.
-> >
-> > Deprecation is fine (by me at least) it's just that I'm not sure that
-> > removing the documentation for the deprecated bindings is the right way
-> > to do it. What is the prior art here?
->
-> I believe we should keep the docs.
->
->                                                                 Pavel
->
+ok, I will do it. Thanks for your review.
 
---00000000000016bf57058c3b4dba
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"auto">Is there a standard way to format to-be-deprecated items =
-in the bindings?<div dir=3D"auto"><br></div></div><br><div class=3D"gmail_q=
-uote"><div dir=3D"ltr" class=3D"gmail_attr">On Wed, Jun 26, 2019, 10:56 AM =
-Pavel Machek &lt;<a href=3D"mailto:pavel@ucw.cz">pavel@ucw.cz</a>&gt; wrote=
-:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;bor=
-der-left:1px #ccc solid;padding-left:1ex">On Wed 2019-06-26 11:56:14, Danie=
-l Thompson wrote:<br>
-&gt; On Tue, Jun 25, 2019 at 07:44:06AM -0400, Brian Dodge wrote:<br>
-&gt; &gt; I would like to deprecate the old prefix in the future after comm=
-unicating<br>
-&gt; &gt; with all chip customers, which is why the old prefix is not docum=
-ented in<br>
-&gt; &gt; the new bindings.<br>
-&gt; <br>
-&gt; Deprecation is fine (by me at least) it&#39;s just that I&#39;m not su=
-re that<br>
-&gt; removing the documentation for the deprecated bindings is the right wa=
-y<br>
-&gt; to do it. What is the prior art here?<br>
-<br>
-I believe we should keep the docs.<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 Pavel<br>
-</blockquote></div>
-
---00000000000016bf57058c3b4dba--
-
---===============2112663020==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============2112663020==--
+> > +		};
+> > +	};
+> 
