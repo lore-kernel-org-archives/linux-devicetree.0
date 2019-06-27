@@ -1,15 +1,13 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 14/19] dt-bindings: pci: add PHY properties to Armada 7K/8K
- controller bindings
-Date: Thu, 27 Jun 2019 14:25:00 +0200
-Message-ID: <20190627122505.25774-2-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 13/19] dt-bindings: phy: Add Marvell COMPHY clocks
+Date: Thu, 27 Jun 2019 14:24:59 +0200
+Message-ID: <20190627122505.25774-1-miquel.raynal@bootlin.com>
 References: <20190627095104.22529-1-miquel.raynal@bootlin.com>
- <20190627122505.25774-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190627122505.25774-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20190627095104.22529-1-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,28 +21,41 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Armada CP110 PCIe controller can have a PHY (for configuring SERDES
-lanes). Describe these two properties in the bindings.
+Marvell CP110 COMPHY block is fed by 3 clocks. Describe each of them in the
+bindings.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- Documentation/devicetree/bindings/pci/pci-armada8k.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../devicetree/bindings/phy/phy-mvebu-comphy.txt       | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/pci-armada8k.txt b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-index 9e3fc15e1af8..a373a80524db 100644
---- a/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-+++ b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-@@ -17,6 +17,10 @@ Required properties:
-    name must be "core" for the first clock and "reg" for the second
-    one
+diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt b/Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
+index cf2cd86db267..8c60e6985950 100644
+--- a/Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
++++ b/Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
+@@ -25,6 +25,13 @@ Required properties:
+ - #address-cells: should be 1.
+ - #size-cells: should be 0.
  
-+Optional properties:
-+- phys: phandle to the PHY node (generic PHY bindings).
-+- phy-names: names of the PHYs.
++Optional properlties:
 +
- Example:
++- clocks: pointers to the reference clocks for this device (CP110 only),
++          consequently: MG clock, MG Core clock, AXI clock.
++- clock-names: names of used clocks for CP110 only, must be :
++               "mg_clk", "mg_core_clk" and "axi_clk".
++
+ A sub-node is required for each comphy lane provided by the comphy.
  
- 	pcie@f2600000 {
+ Required properties (child nodes):
+@@ -39,6 +46,9 @@ Examples:
+ 		compatible = "marvell,comphy-cp110";
+ 		reg = <0x120000 0x6000>;
+ 		marvell,system-controller = <&cpm_syscon0>;
++		clocks = <&CP110_LABEL(clk) 1 5>, <&CP110_LABEL(clk) 1 6>,
++			 <&CP110_LABEL(clk) 1 18>;
++		clock-names = "mg_clk", "mg_core_clk", "axi_clk";
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
 -- 
 2.19.1
