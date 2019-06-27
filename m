@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 01/19] phy: mvebu-cp110-comphy: Add clocks support
-Date: Thu, 27 Jun 2019 11:50:46 +0200
-Message-ID: <20190627095104.22529-2-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 03/19] phy: mvebu-cp110-comphy: Add SMC call support
+Date: Thu, 27 Jun 2019 11:50:48 +0200
+Message-ID: <20190627095104.22529-4-miquel.raynal@bootlin.com>
 References: <20190627095104.22529-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,170 +21,347 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-There is no public clock tree that implies such dependencies between
-the MG/MG-core/AXI clocks and the COMPHY IP but accessing the COMPHY
-registers while one of the three clocks are disabled stalls the CPU.
+From: Grzegorz Jaszczyk <jaz@semihalf.com>
 
-This happens if, for instance, the COMPHY driver probe is deferred
-(eg. the USB Vbus regulator driver is not yet visible). The MVPP2
-driver which also needs these clocks (among others) will
-prepare/enable the clocks, then be deferred, and disable/unprepare
-them. Next COMPHY lane to be configured would produce an infinite
-stall.
+Keep the exact same list of supported configurations but first try to
+use the firmware's implementation. If it fails, try the legacy method:
+Linux implementation.
 
+Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+[miquel.raynal@bootlin.com: adapt the content to the mainline driver]
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 91 ++++++++++++++++++--
- 1 file changed, 86 insertions(+), 5 deletions(-)
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 226 ++++++++++++++++---
+ 1 file changed, 190 insertions(+), 36 deletions(-)
 
 diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-index d98e0451f6a1..c3a178747f54 100644
+index 7c70376f8d12..ed643323f4c5 100644
 --- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
 +++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
 @@ -5,6 +5,7 @@
   * Antoine Tenart <antoine.tenart@free-electrons.com>
   */
  
-+#include <linux/clk.h>
++#include <linux/arm-smccc.h>
+ #include <linux/clk.h>
  #include <linux/io.h>
  #include <linux/iopoll.h>
- #include <linux/mfd/syscon.h>
-@@ -160,6 +161,9 @@ struct mvebu_comphy_priv {
- 	void __iomem *base;
- 	struct regmap *regmap;
- 	struct device *dev;
-+	struct clk *mg_domain_clk;
-+	struct clk *mg_core_clk;
-+	struct clk *axi_clk;
+@@ -116,45 +117,89 @@
+ #define MVEBU_COMPHY_LANES	6
+ #define MVEBU_COMPHY_PORTS	3
+ 
++#define COMPHY_SIP_POWER_ON	0x82000001
++#define COMPHY_SIP_POWER_OFF	0x82000002
++#define COMPHY_FW_NOT_SUPPORTED	(-1)
++
++/*
++ * A lane is described by the following bitfields:
++ * [ 1- 0]: COMPHY polarity invertion
++ * [ 2- 7]: COMPHY speed
++ * [ 5-11]: COMPHY port index
++ * [12-16]: COMPHY mode
++ * [17]: Clock source
++ */
++#define COMPHY_FW_POL_OFFSET	0
++#define COMPHY_FW_POL_MASK	GENMASK(1, 0)
++#define COMPHY_FW_SPEED_OFFSET	2
++#define COMPHY_FW_SPEED_MASK	GENMASK(7, 2)
++#define COMPHY_FW_SPEED_MAX	COMPHY_FW_SPEED_MASK
++#define COMPHY_FW_SPEED_1250	0
++#define COMPHY_FW_SPEED_3125	2
++#define COMPHY_FW_SPEED_5000	3
++#define COMPHY_FW_SPEED_103125	6
++#define COMPHY_FW_PORT_OFFSET	8
++#define COMPHY_FW_PORT_MASK	GENMASK(11, 8)
++#define COMPHY_FW_MODE_OFFSET	12
++#define COMPHY_FW_MODE_MASK	GENMASK(16, 12)
++
++#define COMPHY_FW_PARAM_FULL(mode, port, speed, pol)			\
++	((((pol) << COMPHY_FW_POL_OFFSET) & COMPHY_FW_POL_MASK) |	\
++	 (((mode) << COMPHY_FW_MODE_OFFSET) & COMPHY_FW_MODE_MASK) |	\
++	 (((port) << COMPHY_FW_PORT_OFFSET) & COMPHY_FW_PORT_MASK) |	\
++	 (((speed) << COMPHY_FW_SPEED_OFFSET) & COMPHY_FW_SPEED_MASK))
++
++#define COMPHY_FW_PARAM(mode, port)					\
++	COMPHY_FW_PARAM_FULL(mode, port, 0, 0)
++
++#define COMPHY_FW_PARAM_ETH(mode, port, speed)				\
++	COMPHY_FW_PARAM_FULL(mode, port, speed, 0)
++
++#define COMPHY_FW_MODE_SGMII		0x2 /* SGMII 1G */
++#define COMPHY_FW_MODE_HS_SGMII		0x3 /* SGMII 2.5G */
++#define COMPHY_FW_MODE_XFI		0x8 /* SFI: 0x9 (is treated like XFI) */
++
+ struct mvebu_comphy_conf {
+ 	enum phy_mode mode;
+ 	int submode;
+ 	unsigned lane;
+ 	unsigned port;
+ 	u32 mux;
++	u32 fw_mode;
+ };
+ 
+-#define MVEBU_COMPHY_CONF(_lane, _port, _submode, _mux)	\
++#define MVEBU_COMPHY_CONF(_lane, _port, _submode, _mux, _fw)	\
+ 	{						\
+ 		.lane = _lane,				\
+ 		.port = _port,				\
+ 		.mode = PHY_MODE_ETHERNET,		\
+ 		.submode = _submode,			\
+ 		.mux = _mux,				\
++		.fw_mode = _fw,				\
+ 	}
+ 
+ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
+ 	/* lane 0 */
+-	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_SGMII, 0x1),
+-	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_2500BASEX, 0x1),
++	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
++	MVEBU_COMPHY_CONF(0, 1, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
+ 	/* lane 1 */
+-	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_SGMII, 0x1),
+-	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1),
++	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
++	MVEBU_COMPHY_CONF(1, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
+ 	/* lane 2 */
+-	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_SGMII, 0x1),
+-	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_2500BASEX, 0x1),
+-	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_10GKR, 0x1),
++	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
++	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
++	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_10GKR, 0x1, COMPHY_FW_MODE_XFI),
+ 	/* lane 3 */
+-	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_SGMII, 0x2),
+-	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_2500BASEX, 0x2),
++	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
++	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
+ 	/* lane 4 */
+-	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_SGMII, 0x2),
+-	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_2500BASEX, 0x2),
+-	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_10GKR, 0x2),
+-	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1),
++	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
++	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
++	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_10GKR, 0x2, COMPHY_FW_MODE_XFI),
++	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+ 	/* lane 5 */
+-	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_SGMII, 0x1),
+-	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1),
++	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
++	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
+ };
+ 
+ struct mvebu_comphy_priv {
+@@ -164,6 +209,7 @@ struct mvebu_comphy_priv {
+ 	struct clk *mg_domain_clk;
+ 	struct clk *mg_core_clk;
+ 	struct clk *axi_clk;
++	unsigned long cp_phys;
  };
  
  struct mvebu_comphy_lane {
-@@ -585,12 +589,72 @@ static struct phy *mvebu_comphy_xlate(struct device *dev,
- 	return phy;
- }
+@@ -174,8 +220,18 @@ struct mvebu_comphy_lane {
+ 	int port;
+ };
  
-+static int mvebu_comphy_init_clks(struct mvebu_comphy_priv *priv)
+-static int mvebu_comphy_get_mux(int lane, int port,
+-				enum phy_mode mode, int submode)
++static int mvebu_comphy_smc(unsigned long function, unsigned long phys,
++			    unsigned long lane, unsigned long mode)
 +{
-+	int ret;
++	struct arm_smccc_res res;
 +
-+	priv->mg_domain_clk = devm_clk_get(priv->dev, "mg_clk");
-+	if (IS_ERR(priv->mg_domain_clk))
-+		return PTR_ERR(priv->mg_domain_clk);
++	arm_smccc_smc(function, phys, lane, mode, 0, 0, 0, 0, &res);
 +
-+	ret = clk_prepare_enable(priv->mg_domain_clk);
-+	if (ret < 0)
-+		return ret;
-+
-+	priv->mg_core_clk = devm_clk_get(priv->dev, "mg_core_clk");
-+	if (IS_ERR(priv->mg_core_clk)) {
-+		ret = PTR_ERR(priv->mg_core_clk);
-+		goto dis_mg_domain_clk;
-+	}
-+
-+	ret = clk_prepare_enable(priv->mg_core_clk);
-+	if (ret < 0)
-+		goto dis_mg_domain_clk;
-+
-+	priv->axi_clk = devm_clk_get(priv->dev, "axi_clk");
-+	if (IS_ERR(priv->axi_clk)) {
-+		ret = PTR_ERR(priv->axi_clk);
-+		goto dis_mg_core_clk;
-+	}
-+
-+	ret = clk_prepare_enable(priv->axi_clk);
-+	if (ret < 0)
-+		goto dis_mg_core_clk;
-+
-+	return 0;
-+
-+dis_mg_core_clk:
-+	clk_disable_unprepare(priv->mg_core_clk);
-+
-+dis_mg_domain_clk:
-+	clk_disable_unprepare(priv->mg_domain_clk);
-+
-+	priv->mg_domain_clk = NULL;
-+	priv->mg_core_clk = NULL;
-+	priv->axi_clk = NULL;
-+
-+	return ret;
-+};
-+
-+static void mvebu_comphy_disable_unprepare_clks(struct mvebu_comphy_priv *priv)
-+{
-+	if (priv->axi_clk)
-+		clk_disable_unprepare(priv->axi_clk);
-+
-+	if (priv->mg_core_clk)
-+		clk_disable_unprepare(priv->mg_core_clk);
-+
-+	if (priv->mg_domain_clk)
-+		clk_disable_unprepare(priv->mg_domain_clk);
++	return res.a0;
 +}
 +
- static int mvebu_comphy_probe(struct platform_device *pdev)
++static int mvebu_comphy_get_mode(bool fw_mode, int lane, int port,
++				 enum phy_mode mode, int submode)
  {
- 	struct mvebu_comphy_priv *priv;
- 	struct phy_provider *provider;
- 	struct device_node *child;
- 	struct resource *res;
+ 	int i, n = ARRAY_SIZE(mvebu_comphy_cp110_modes);
+ 
+@@ -194,7 +250,22 @@ static int mvebu_comphy_get_mux(int lane, int port,
+ 	if (i == n)
+ 		return -EINVAL;
+ 
+-	return mvebu_comphy_cp110_modes[i].mux;
++	if (fw_mode)
++		return mvebu_comphy_cp110_modes[i].fw_mode;
++	else
++		return mvebu_comphy_cp110_modes[i].mux;
++}
++
++static inline int mvebu_comphy_get_mux(int lane, int port,
++				       enum phy_mode mode, int submode)
++{
++	return mvebu_comphy_get_mode(false, lane, port, mode, submode);
++}
++
++static inline int mvebu_comphy_get_fw_mode(int lane, int port,
++					   enum phy_mode mode, int submode)
++{
++	return mvebu_comphy_get_mode(true, lane, port, mode, submode);
+ }
+ 
+ static void mvebu_comphy_ethernet_init_reset(struct mvebu_comphy_lane *lane)
+@@ -480,7 +551,7 @@ static int mvebu_comphy_set_mode_10gkr(struct phy *phy)
+ 	return mvebu_comphy_init_plls(lane);
+ }
+ 
+-static int mvebu_comphy_power_on(struct phy *phy)
++static int mvebu_comphy_power_on_legacy(struct phy *phy)
+ {
+ 	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
+ 	struct mvebu_comphy_priv *priv = lane->priv;
+@@ -521,6 +592,68 @@ static int mvebu_comphy_power_on(struct phy *phy)
+ 	return ret;
+ }
+ 
++static int mvebu_comphy_power_on(struct phy *phy)
++{
++	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
++	struct mvebu_comphy_priv *priv = lane->priv;
++	int fw_mode, fw_speed;
++	u32 fw_param = 0;
++	int ret;
++
++	fw_mode = mvebu_comphy_get_fw_mode(lane->id, lane->port,
++					   lane->mode, lane->submode);
++	if (fw_mode < 0)
++		goto try_legacy;
++
++	/* Try SMC flow first */
++	switch (lane->mode) {
++	case PHY_MODE_ETHERNET:
++		switch (lane->submode) {
++		case PHY_INTERFACE_MODE_SGMII:
++			dev_dbg(priv->dev, "set lane %d to 1000BASE-X mode\n",
++				lane->id);
++			fw_speed = COMPHY_FW_SPEED_1250;
++			break;
++		case PHY_INTERFACE_MODE_2500BASEX:
++			dev_dbg(priv->dev, "set lane %d to 2500BASE-X mode\n",
++				lane->id);
++			fw_speed = COMPHY_FW_SPEED_3125;
++			break;
++		case PHY_INTERFACE_MODE_10GKR:
++			dev_dbg(priv->dev, "set lane %d to 10G-KR mode\n",
++				lane->id);
++			fw_speed = COMPHY_FW_SPEED_103125;
++			break;
++		default:
++			dev_err(priv->dev, "unsupported Ethernet mode (%d)\n",
++				lane->submode);
++			return -ENOTSUPP;
++		}
++		fw_param = COMPHY_FW_PARAM_ETH(fw_mode, lane->port, fw_speed);
++		break;
++	default:
++		dev_err(priv->dev, "unsupported PHY mode (%d)\n", lane->mode);
++		return -ENOTSUPP;
++	}
++
++	ret = mvebu_comphy_smc(COMPHY_SIP_POWER_ON, priv->cp_phys, lane->id,
++			       fw_param);
++	if (!ret)
++		return ret;
++
++	if (ret == COMPHY_FW_NOT_SUPPORTED)
++		dev_err(priv->dev,
++			"unsupported SMC call, try updating your firmware\n");
++
++	dev_warn(priv->dev,
++		 "Firmware could not configure PHY %d with mode %d (ret: %d), trying legacy method\n",
++		 ret, lane->id, lane->mode);
++
++try_legacy:
++	/* Fallback to Linux's implementation */
++	return mvebu_comphy_power_on_legacy(phy);
++}
++
+ static int mvebu_comphy_set_mode(struct phy *phy,
+ 				 enum phy_mode mode, int submode)
+ {
+@@ -532,7 +665,7 @@ static int mvebu_comphy_set_mode(struct phy *phy,
+ 	if (submode == PHY_INTERFACE_MODE_1000BASEX)
+ 		submode = PHY_INTERFACE_MODE_SGMII;
+ 
+-	if (mvebu_comphy_get_mux(lane->id, lane->port, mode, submode) < 0)
++	if (mvebu_comphy_get_fw_mode(lane->id, lane->port, mode, submode) < 0)
+ 		return -EINVAL;
+ 
+ 	lane->mode = mode;
+@@ -540,27 +673,42 @@ static int mvebu_comphy_set_mode(struct phy *phy,
+ 	return 0;
+ }
+ 
++static int mvebu_comphy_power_off_legacy(struct phy *phy)
++{
++	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
++	struct mvebu_comphy_priv *priv = lane->priv;
++	u32 val;
++
++	val = readl(priv->base + MVEBU_COMPHY_SERDES_CFG1(lane->id));
++	val &= ~(MVEBU_COMPHY_SERDES_CFG1_RESET |
++		 MVEBU_COMPHY_SERDES_CFG1_CORE_RESET |
++		 MVEBU_COMPHY_SERDES_CFG1_RF_RESET);
++	writel(val, priv->base + MVEBU_COMPHY_SERDES_CFG1(lane->id));
++
++	regmap_read(priv->regmap, MVEBU_COMPHY_SELECTOR, &val);
++	val &= ~(0xf << MVEBU_COMPHY_SELECTOR_PHY(lane->id));
++	regmap_write(priv->regmap, MVEBU_COMPHY_SELECTOR, val);
++
++	regmap_read(priv->regmap, MVEBU_COMPHY_PIPE_SELECTOR, &val);
++	val &= ~(0xf << MVEBU_COMPHY_PIPE_SELECTOR_PIPE(lane->id));
++	regmap_write(priv->regmap, MVEBU_COMPHY_PIPE_SELECTOR, val);
++
++	return 0;
++}
++
+ static int mvebu_comphy_power_off(struct phy *phy)
+ {
+ 	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
+ 	struct mvebu_comphy_priv *priv = lane->priv;
+-	u32 val;
 +	int ret;
  
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -607,10 +671,17 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
+-	val = readl(priv->base + MVEBU_COMPHY_SERDES_CFG1(lane->id));
+-	val &= ~(MVEBU_COMPHY_SERDES_CFG1_RESET |
+-		 MVEBU_COMPHY_SERDES_CFG1_CORE_RESET |
+-		 MVEBU_COMPHY_SERDES_CFG1_RF_RESET);
+-	writel(val, priv->base + MVEBU_COMPHY_SERDES_CFG1(lane->id));
++	ret = mvebu_comphy_smc(COMPHY_SIP_POWER_OFF, priv->cp_phys,
++			       lane->id, 0);
++	if (!ret)
++		return ret;
+ 
+-	regmap_read(priv->regmap, MVEBU_COMPHY_SELECTOR, &val);
+-	val &= ~(0xf << MVEBU_COMPHY_SELECTOR_PHY(lane->id));
+-	regmap_write(priv->regmap, MVEBU_COMPHY_SELECTOR, val);
+-
+-	regmap_read(priv->regmap, MVEBU_COMPHY_PIPE_SELECTOR, &val);
+-	val &= ~(0xf << MVEBU_COMPHY_PIPE_SELECTOR_PIPE(lane->id));
+-	regmap_write(priv->regmap, MVEBU_COMPHY_PIPE_SELECTOR, val);
+-
+-	return 0;
++	/* Fallback to Linux's implementation */
++	return mvebu_comphy_power_off_legacy(phy);
+ }
+ 
+ static const struct phy_ops mvebu_comphy_ops = {
+@@ -679,6 +827,12 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		dev_warn(&pdev->dev, "cannot initialize clocks\n");
  
 +	/*
-+	 * Ignore error if clocks have not been initialized properly for DT
-+	 * compatibility reasons.
++	 * Hack to retrieve a physical offset relative to this CP that will be
++	 * given to the firmware
 +	 */
-+	ret = mvebu_comphy_init_clks(priv);
-+	if (ret)
-+		dev_warn(&pdev->dev, "cannot initialize clocks\n");
++	priv->cp_phys = res->start;
 +
  	for_each_available_child_of_node(pdev->dev.of_node, child) {
  		struct mvebu_comphy_lane *lane;
  		struct phy *phy;
--		int ret;
- 		u32 val;
- 
- 		ret = of_property_read_u32(child, "reg", &val);
-@@ -626,12 +697,16 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
- 		}
- 
- 		lane = devm_kzalloc(&pdev->dev, sizeof(*lane), GFP_KERNEL);
--		if (!lane)
--			return -ENOMEM;
-+		if (!lane) {
-+			ret = -ENOMEM;
-+			goto disable_clks;
-+		}
- 
- 		phy = devm_phy_create(&pdev->dev, child, &mvebu_comphy_ops);
--		if (IS_ERR(phy))
--			return PTR_ERR(phy);
-+		if (IS_ERR(phy)) {
-+			ret = PTR_ERR(phy);
-+			goto disable_clks;
-+		}
- 
- 		lane->priv = priv;
- 		lane->mode = PHY_MODE_INVALID;
-@@ -649,7 +724,13 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
- 	dev_set_drvdata(&pdev->dev, priv);
- 	provider = devm_of_phy_provider_register(&pdev->dev,
- 						 mvebu_comphy_xlate);
-+
- 	return PTR_ERR_OR_ZERO(provider);
-+
-+disable_clks:
-+	mvebu_comphy_disable_unprepare_clks(priv);
-+
-+	return ret;
- }
- 
- static const struct of_device_id mvebu_comphy_of_match_table[] = {
 -- 
 2.19.1
