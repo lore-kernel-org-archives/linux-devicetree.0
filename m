@@ -1,116 +1,78 @@
-From: Andreas Fenkart <afenkart@gmail.com>
-Subject: Re: regression: nand/spi flashes listed in reversed order after "ARM:
- dts: at91: Switch to the new NAND bindings"
-Date: Thu, 27 Jun 2019 12:44:08 +0200
-Message-ID: <CALtMJEBEo8u0YSqqAbRY0YwnuzCByAuQ8YKt8FrPzhoJpW_YCg@mail.gmail.com>
-References: <CALtMJEBpxc+oN1Uf03F0oG-smHZazeeptE=BRX7tPpixnAgFrw@mail.gmail.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using
+ devicetree
+Date: Thu, 27 Jun 2019 19:58:17 +0900
+Message-ID: <20190627195817.211ab4bea422f37e539e47e8@kernel.org>
+References: <156113387975.28344.16009584175308192243.stgit@devnote2>
+        <CAL_JsqJOc+tkFEGcc+KN0RE8Xjg_i9icPWZ37Ynk_9sR2X1Uwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <CALtMJEBpxc+oN1Uf03F0oG-smHZazeeptE=BRX7tPpixnAgFrw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
-Cc: alexandre.belloni@free-electrons.com, "Michonski,
- Krzysztof" <krzysztof.michonski@digitalstrom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJOc+tkFEGcc+KN0RE8Xjg_i9icPWZ37Ynk_9sR2X1Uwg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Frank Rowand <frowand.list@gmail.com>, Tom Zanussi <tom.zanussi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-fyi,
+Hi Rob,
 
-actually straight forward when also dumping the attributes:
-udevadm info -a /dev/mtd0
+On Wed, 26 Jun 2019 15:58:50 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
 
-here my rules
-SUBSYSTEM=="mtd", ATTR{type}=="nand", ACTION=="add", SYMLINK+="mtd/%s{name}"
-SUBSYSTEM=="mtd", ATTR{type}=="nor", ACTION=="add" SYMLINK+="mtd/spi"
+> On Fri, Jun 21, 2019 at 10:18 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > Here is an RFC series of patches to add boot-time tracing using
+> > devicetree.
+> >
+> > Currently, kernel support boot-time tracing using kernel command-line
+> > parameters. But that is very limited because of limited expressions
+> > and limited length of command line. Recently, useful features like
+> > histogram, synthetic events, etc. are being added to ftrace, but it is
+> > clear that we can not expand command-line options to support these
+> > features.
+> >
+> > Hoever, I've found that there is a devicetree which can pass more
+> > structured commands to kernel at boot time :) The devicetree is usually
+> > used for dscribing hardware configuration, but I think we can expand it
+> > for software configuration too (e.g. AOSP and OPTEE already introduced
+> > firmware node.) Also, grub and qemu already supports loading devicetree,
+> > so we can use it not only on embedded devices but also on x86 PC too.
+> 
+> Do the x86 versions of grub, qemu, EFI, any other bootloader actually
+> enable DT support? I didn't think so. Certainly, an x86 kernel doesn't
+> normally (other than OLPC and ce4100) have a defined way to even pass
+> a dtb from the bootloader to the kernel and the kernel doesn't
+> unflatten the dtb.
 
-/andi
+Sorry, the grub part, I just found this entry. I need to check this
+can work on x86 too.
 
-Am Mi., 26. Juni 2019 um 11:36 Uhr schrieb Andreas Fenkart <afenkart@gmail.com>:
->
-> After this patch, which is of course much appreciated:
->
-> 1004a2977bdc7566bca87c565541c3232ed467c4
-> Refs: v4.12-rc1-7-g1004a2977bdc
-> Author:     Boris Brezillon <boris.brezillon@free-electrons.com>
-> AuthorDate: Tue May 30 11:20:53 2017 +0200
-> Commit:     Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> CommitDate: Wed May 31 11:55:41 2017 +0200
->
->     ARM: dts: at91: Switch to the new NAND bindings
->
->     Use the new EBI/NAND bindings to declare NAND chips and remove old NAND
->     nodes along the way.
->
->     Note that we keep using old bindings in at91rm9200.dtsi because this
->     SoC is not supported by the EBI driver.
->
-> The listing and indexing of my mtd devices changed:
->
-> root@after:~# cat /proc/mtd
-> dev:    size   erasesize  name
-> mtd0: 00080000 00010000 "spi32766.0"
-> ...
-> mtd4: 32000000 00080000 "rootfs"
-> mtd5: 0bc00000 00080000 "config"
->
-> root@before:~# cat /proc/mtd
-> dev:    size   erasesize  name
-> ...
-> mtd3: 32000000 00080000 "rootfs"
-> mtd4: 0bc00000 00080000 "config"
-> mtd5: 00080000 00010000 "spi32766.0"
->
->
-> I assume sorting the mtd listing in a specific order is not supported
-> nor desired by the mtd maintainers. So I'm not argueing about that.
->
-> But since the index of rootfs device is hard-coded in the cmdline, the
-> fw-utils config file and a custom script to backup/retrieve
-> configuration, this is causing me some problems.
->
-> The nand is partitioned, the spi is not:
-> mtdparts=mtdparts=atmel_nand:2M(foo),2M(bar),32M(baz),800M(rootfs),-(config)
->
-> While the bootargs can be fixed easily by using the human readable
-> name (ubi.mtd=rootfs). I can't retrieve that human readable name from
-> udev alone, nor can I build something from major/minor alone, since
-> the major is the same for nand/spi flash.
->
-> root@before:/etc/udev/rules.d# udevadm info /dev/mtd3
-> P: /devices/platform/ahb/40000000.nand/mtd/mtd3
-> N: mtd3
-> E: DEVNAME=/dev/mtd3
-> E: DEVPATH=/devices/platform/ahb/40000000.nand/mtd/mtd3
-> E: DEVTYPE=mtd
-> E: MAJOR=90
-> E: MINOR=6
->
-> root@dSS:/etc/udev/rules.d# udevadm info /dev/mtd5
-> P: /devices/platform/ahb/ahb:apb/fffc8000.spi/spi_master/spi32766/spi32766.0/mtd/mtd5
-> N: mtd5
-> E: DEVNAME=/dev/mtd5
-> E: DEVPATH=/devices/platform/ahb/ahb:apb/fffc8000.spi/spi_master/spi32766/spi32766.0/mtd/mtd5
-> E: DEVTYPE=mtd
-> E: MAJOR=90
-> E: MINOR=10
-> E: OF_COMPATIBLE_0=st,m25p40
-> E: OF_COMPATIBLE_N=1
-> E: OF_FULLNAME=/ahb/apb/spi@fffc8000/m25p40@0
-> E: OF_NAME=m25p40
-> E: SUBSYSTEM=mtd
->
-> What is the preferred to make the rootfs agnostic of a particular mtd
-> listing order
+https://www.gnu.org/software/grub/manual/grub/html_node/devicetree.html
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Anyway, I've tested this series on qemu-x86 with --dtb option.
+The kernel boot with ACPI and DT (hardware drivers seem initialized
+by ACPI), and it seems unflatten the dtb correctly.
+
+> 
+> For arm64, the bootloader to kernel interface is DT even for ACPI
+> based systems. So unlike Frank, I'm not completely against DT being
+> the interface, but it's hardly universal across architectures and
+> something like this should be. Neither making DT the universal kernel
+> boot interface nor creating some new channel as Frank suggested seems
+> like an easy task.
+
+I don't want it making this for all architectures but an option for
+architecutres which supports DT already...
+
+Thank you,
+
+
+> 
+> Rob
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
