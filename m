@@ -1,7 +1,7 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH RFC 2/4] OPP: Add and export helper to set bandwidth
-Date: Thu, 27 Jun 2019 19:04:22 +0530
-Message-ID: <20190627133424.4980-3-sibis@codeaurora.org>
+Subject: [PATCH RFC 3/4] cpufreq: qcom: Update the bandwidth levels on frequency change
+Date: Thu, 27 Jun 2019 19:04:23 +0530
+Message-ID: <20190627133424.4980-4-sibis@codeaurora.org>
 References: <20190627133424.4980-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,96 +12,180 @@ To: viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.o
 Cc: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add and export 'dev_pm_opp_set_bw' to set the bandwidth
-levels associated with an OPP for a given frequency.
+Add support to parse and update optional OPP tables attached to the
+cpu nodes when the OPP bandwidth values are populated to enable
+scaling of DDR/L3 bandwidth levels with frequency change.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- drivers/opp/core.c     | 46 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/pm_opp.h |  6 ++++++
- 2 files changed, 52 insertions(+)
+ drivers/cpufreq/qcom-cpufreq-hw.c | 77 ++++++++++++++++++++++++++++++-
+ 1 file changed, 75 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index c85c04dc2c7de..78f42960860d1 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -746,6 +746,52 @@ static int _set_required_opps(struct device *dev,
+diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+index 4b0b50403901b..eacc75fac9b00 100644
+--- a/drivers/cpufreq/qcom-cpufreq-hw.c
++++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+@@ -6,6 +6,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/cpufreq.h>
+ #include <linux/init.h>
++#include <linux/interconnect.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
+@@ -30,13 +31,41 @@
+ static unsigned long cpu_hw_rate, xo_rate;
+ static struct platform_device *global_pdev;
+ 
++static int qcom_cpufreq_set_bw(struct cpufreq_policy *policy,
++			       unsigned long freq_khz)
++{
++	struct device *dev;
++
++	dev = get_cpu_device(policy->cpu);
++	if (!dev)
++		return -ENODEV;
++
++	return dev_pm_opp_set_bw(dev, freq_khz * 1000);
++}
++
++static int qcom_cpufreq_update_opp(struct device *cpu_dev,
++				   unsigned long freq_khz,
++				   unsigned long volt)
++{
++	unsigned long freq_hz = freq_khz * 1000;
++
++	if (dev_pm_opp_update_voltage(cpu_dev, freq_hz, volt))
++		return dev_pm_opp_add(cpu_dev, freq_hz, volt);
++
++	/* Enable the opp after voltage update*/
++	return dev_pm_opp_enable(cpu_dev, freq_hz);
++}
++
+ static int qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
+ 					unsigned int index)
+ {
+ 	void __iomem *perf_state_reg = policy->driver_data;
++	u32 freq = policy->freq_table[index].frequency;
+ 
+ 	writel_relaxed(index, perf_state_reg);
+ 
++	qcom_cpufreq_set_bw(policy, freq);
++
+ 	return 0;
+ }
+ 
+@@ -79,13 +108,29 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+ {
+ 	u32 data, src, lval, i, core_count, prev_cc = 0, prev_freq = 0, freq;
+ 	u32 volt;
++	u64 rate;
+ 	unsigned int max_cores = cpumask_weight(policy->cpus);
+ 	struct cpufreq_frequency_table	*table;
++	struct device_node *opp_table_np, *np;
++	int ret;
+ 
+ 	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
+ 	if (!table)
+ 		return -ENOMEM;
+ 
++	ret = dev_pm_opp_of_add_table(cpu_dev);
++	if (!ret) {
++		/* Disable all opps and cross-validate against LUT */
++		opp_table_np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
++		for_each_available_child_of_node(opp_table_np, np) {
++			ret = of_property_read_u64(np, "opp-hz", &rate);
++			dev_pm_opp_disable(cpu_dev, rate);
++		}
++		of_node_put(opp_table_np);
++	} else {
++		dev_err(cpu_dev, "Couldn't add OPP table from dt\n");
++	}
++
+ 	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+ 		data = readl_relaxed(base + REG_FREQ_LUT +
+ 				      i * LUT_ROW_SIZE);
+@@ -104,7 +149,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+ 
+ 		if (freq != prev_freq && core_count == max_cores) {
+ 			table[i].frequency = freq;
+-			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
++			qcom_cpufreq_update_opp(cpu_dev, freq, volt);
+ 			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
+ 				freq, core_count);
+ 		} else {
+@@ -125,7 +170,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+ 			if (prev_cc != max_cores) {
+ 				prev->frequency = prev_freq;
+ 				prev->flags = CPUFREQ_BOOST_FREQ;
+-				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
++				qcom_cpufreq_update_opp(cpu_dev, prev_freq,
++							volt);
+ 			}
+ 
+ 			break;
+@@ -168,6 +214,7 @@ static void qcom_get_related_cpus(int index, struct cpumask *m)
+ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+ {
+ 	struct device *dev = &global_pdev->dev;
++	struct opp_table *opp_table = NULL;
+ 	struct of_phandle_args args;
+ 	struct device_node *cpu_np;
+ 	struct device *cpu_dev;
+@@ -202,6 +249,8 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+ 	if (!base)
+ 		return -ENOMEM;
+ 
++	opp_table = dev_pm_opp_set_paths(cpu_dev);
++
+ 	/* HW should be in enabled state to proceed */
+ 	if (!(readl_relaxed(base + REG_ENABLE) & 0x1)) {
+ 		dev_err(dev, "Domain-%d cpufreq hardware not enabled\n", index);
+@@ -237,6 +286,8 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+ 
+ 	return 0;
+ error:
++	if (opp_table)
++		dev_pm_opp_put_paths(opp_table);
+ 	devm_iounmap(dev, base);
  	return ret;
  }
+@@ -275,6 +326,8 @@ static struct cpufreq_driver cpufreq_qcom_hw_driver = {
  
-+/**
-+ * dev_pm_opp_set_bw() - Configures OPP bandwidth levels
-+ * @dev:	device for which we do this operation
-+ * @freq:	bandwidth values to set with matching 'freq'
-+ *
-+ * This configures the bandwidth to the levels specified
-+ * by the OPP corresponding to the given frequency.
-+ *
-+ * Return: 0 on success or a negative error value.
-+ */
-+int dev_pm_opp_set_bw(struct device *dev, unsigned long freq)
-+{
-+	struct opp_table *opp_table;
-+	struct dev_pm_opp *opp;
-+	int ret = 0;
-+	int i;
-+
-+	opp = dev_pm_opp_find_freq_exact(dev, freq, true);
-+	if (IS_ERR(opp))
-+		return PTR_ERR(opp);
-+
-+	opp_table = _find_opp_table(dev);
-+	if (IS_ERR(opp_table)) {
-+		dev_err(dev, "%s: device opp table doesn't exist\n", __func__);
-+		ret = PTR_ERR(opp_table);
-+		goto put_opp;
-+	}
-+
-+	if (IS_ERR_OR_NULL(opp_table->paths)) {
-+		ret = -ENODEV;
-+		goto put_opp_table;
-+	}
-+
-+	for (i = 0; i < opp_table->path_count; i++) {
-+		ret = icc_set_bw(opp_table->paths[i], opp->bandwidth[i].avg,
-+				 opp->bandwidth[i].peak);
-+	}
-+
-+put_opp_table:
-+	dev_pm_opp_put_opp_table(opp_table);
-+put_opp:
-+	dev_pm_opp_put(opp);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(dev_pm_opp_set_bw);
-+
- /**
-  * dev_pm_opp_set_rate() - Configure new OPP based on frequency
-  * @dev:	 device for which we do this operation
-diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index a17c462974851..1cdc2d0a2b20e 100644
---- a/include/linux/pm_opp.h
-+++ b/include/linux/pm_opp.h
-@@ -152,6 +152,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names
- void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
- int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
- int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
-+int dev_pm_opp_set_bw(struct device *dev, unsigned long freq);
- int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask);
- int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
- void dev_pm_opp_remove_table(struct device *dev);
-@@ -336,6 +337,11 @@ static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long target_f
- 	return -ENOTSUPP;
- }
- 
-+static inline int dev_pm_opp_set_bw(struct device *dev, unsigned long freq)
-+{
-+	return -ENOTSUPP;
-+}
-+
- static inline int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask)
+ static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
  {
- 	return -ENOTSUPP;
++	struct opp_table *opp_table = NULL;
++	struct device *cpu_dev;
+ 	struct clk *clk;
+ 	int ret;
+ 
+@@ -294,6 +347,26 @@ static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
+ 
+ 	global_pdev = pdev;
+ 
++	/* Check for optional interconnect paths on CPU0 */
++	cpu_dev = get_cpu_device(0);
++	if (!cpu_dev) {
++		dev_err(&pdev->dev, "failed to get cpu0 device\n");
++		return -ENODEV;
++	}
++
++	opp_table = dev_pm_opp_set_paths(cpu_dev);
++	if (IS_ERR(opp_table)) {
++		ret = PTR_ERR(opp_table);
++		if (ret == -EPROBE_DEFER) {
++			dev_dbg(&pdev->dev, "defer icc set paths: %d\n", ret);
++			return ret;
++		}
++		dev_err(&pdev->dev, "set paths failed ddr/l3 scaling off: %d\n",
++			ret);
++	} else {
++		dev_pm_opp_put_paths(opp_table);
++	}
++
+ 	ret = cpufreq_register_driver(&cpufreq_qcom_hw_driver);
+ 	if (ret)
+ 		dev_err(&pdev->dev, "CPUFreq HW driver failed to register\n");
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
