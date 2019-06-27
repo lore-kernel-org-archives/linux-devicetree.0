@@ -1,194 +1,85 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 19/19] arm64: dts: marvell: Convert 7k/8k usb-phy
- properties to phy-supply
-Date: Thu, 27 Jun 2019 14:25:05 +0200
-Message-ID: <20190627122505.25774-7-miquel.raynal@bootlin.com>
-References: <20190627095104.22529-1-miquel.raynal@bootlin.com>
- <20190627122505.25774-1-miquel.raynal@bootlin.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH RESEND V2 2/3] clocksource: imx-sysctr: Make timer work
+ with clock driver using platform driver model
+Date: Thu, 27 Jun 2019 14:36:27 +0200
+Message-ID: <41ab1a50-f431-ec73-8444-11ecca1412d8@linaro.org>
+References: <20190623123850.22584-1-Anson.Huang@nxp.com>
+ <20190623123850.22584-2-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190627122505.25774-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190623123850.22584-2-Anson.Huang@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson.Huang@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, abel.vesa@nxp.com, ccaione@baylibre.com, angus@akkea.ca, andrew.smirnov@gmail.com, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Update Aramda 7k/8k DTs to use the phy-supply property of the (recent)
-generic PHY framework instead of the (legacy) usb-phy preperty. Both
-enable the supply when the PHY is enabled.
+On 23/06/2019 14:38, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> On some i.MX8M platforms, clock driver uses platform driver
+> model and it is NOT ready during timer initialization phase,
+> the clock operations will fail and system counter driver will
+> fail too. As all the i.MX8M platforms' system counter clock
+> are from OSC which is always enabled, so it is no need to enable
+> clock for system counter driver, the ONLY thing is to pass
+> clock frequence to driver.
+> 
+> To make system counter driver work for upper scenario, add an
+> option of skipping of_clk operation for system counter driver,
+> an optional property "clock-frequency" is introduced to pass
+> the frequency value to system counter driver and indicate driver
+> to skip of_clk operations.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- improve commit log, no content change.
+> ---
+>  drivers/clocksource/timer-imx-sysctr.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
+> index fd7d680..8ff3d7e 100644
+> --- a/drivers/clocksource/timer-imx-sysctr.c
+> +++ b/drivers/clocksource/timer-imx-sysctr.c
+> @@ -129,6 +129,14 @@ static void __init sysctr_clockevent_init(void)
+>  static int __init sysctr_timer_init(struct device_node *np)
+>  {
+>  	int ret = 0;
+> +	u32 rate;
+> +
+> +	if (!of_property_read_u32(np, "clock-frequency",
+> +				  &rate)) {
+> +		to_sysctr.of_clk.rate = rate;
+> +		to_sysctr.of_clk.period = DIV_ROUND_UP(rate, HZ);
+> +		to_sysctr.flags &= ~TIMER_OF_CLOCK;
+> +	}
 
-The COMPHY nodes only provide SERDES lanes configuration. The power
-supply that is represented by the phy-supply property is just a
-regulator wired to the USB connector, hence the creation of connector
-nodes as child of the COMPHY nodes and the supply attached to it.
+Please take the opportunity to add the TIMER_OF_CLOCK_FREQUENCY flag in
+timer-of and the corresponding code above.
 
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- .../arm64/boot/dts/marvell/armada-7040-db.dts | 26 ++++++++++---------
- .../marvell/armada-8040-clearfog-gt-8k.dts    | 13 +++++-----
- .../arm64/boot/dts/marvell/armada-8040-db.dts | 13 +++++-----
- .../boot/dts/marvell/armada-8040-mcbin.dtsi   | 13 +++++-----
- 4 files changed, 35 insertions(+), 30 deletions(-)
+Then check the clock-frequency presence and add TIMER_OF_CLOCK or
+TIMER_OF_CLOCK_FREQUENCY flag to the timer-of structure.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-7040-db.dts b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-index e169800cf3f1..b478063ab0b4 100644
---- a/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-@@ -45,16 +45,6 @@
- 		enable-active-high;
- 		gpio = <&expander0 1 GPIO_ACTIVE_HIGH>;
- 	};
--
--	cp0_usb3_0_phy: cp0-usb3-0-phy {
--		compatible = "usb-nop-xceiv";
--		vcc-supply = <&cp0_reg_usb3_0_vbus>;
--	};
--
--	cp0_usb3_1_phy: cp0-usb3-1-phy {
--		compatible = "usb-nop-xceiv";
--		vcc-supply = <&cp0_reg_usb3_1_vbus>;
--	};
- };
- 
- &i2c0 {
-@@ -200,15 +190,27 @@
- 	};
- };
- 
-+&cp0_comphy1 {
-+	cp0_usbh0_con: connector {
-+		compatible = "usb-a-connector";
-+		phy-supply = <&cp0_reg_usb3_0_vbus>;
-+	};
-+};
-+
- &cp0_usb3_0 {
--	usb-phy = <&cp0_usb3_0_phy>;
- 	phys = <&cp0_comphy1 0>;
- 	phy-names = "cp0-usb3h0-comphy";
- 	status = "okay";
- };
- 
-+&cp0_comphy4 {
-+	cp0_usbh1_con: connector {
-+		compatible = "usb-a-connector";
-+		phy-supply = <&cp0_reg_usb3_1_vbus>;
-+	};
-+};
-+
- &cp0_usb3_1 {
--	usb-phy = <&cp0_usb3_1_phy>;
- 	phys = <&cp0_comphy4 1>;
- 	phy-names = "cp0-usb3h1-comphy";
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-index 078ea1748b60..2ae847a42258 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-@@ -51,11 +51,6 @@
- 		status = "okay";
- 	};
- 
--	usb3h0_phy: usb3_phy0 {
--		compatible = "usb-nop-xceiv";
--		vcc-supply = <&v_5v0_usb3_hst_vbus>;
--	};
--
- 	sfp_cp0_eth0: sfp-cp0-eth0 {
- 		compatible = "sff,sfp";
- 		i2c-bus = <&cp0_i2c1>;
-@@ -473,8 +468,14 @@
- 	};
- };
- 
-+&cp1_comphy2 {
-+	cp1_usbh0_con: connector {
-+		compatible = "usb-a-connector";
-+		phy-supply = <&v_5v0_usb3_hst_vbus>;
-+	};
-+};
-+
- &cp1_usb3_0 {
--	usb-phy = <&usb3h0_phy>;
- 	phys = <&cp1_comphy2 0>;
- 	phy-names = "cp1-usb3h0-comphy";
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-index a8db6b449f0e..77057628f507 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-@@ -52,11 +52,6 @@
- 		vcc-supply = <&cp0_reg_usb3_0_vbus>;
- 	};
- 
--	cp0_usb3_1_phy: cp0-usb3-1-phy {
--		compatible = "usb-nop-xceiv";
--		vcc-supply = <&cp0_reg_usb3_1_vbus>;
--	};
--
- 	cp1_reg_usb3_0_vbus: cp1-usb3-0-vbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "cp1-usb3h0-vbus";
-@@ -167,9 +162,15 @@
- 	status = "okay";
- };
- 
-+&cp0_comphy4 {
-+	cp0_usbh1_con: connector {
-+		compatible = "usb-a-connector";
-+		phy-supply = <&cp0_reg_usb3_1_vbus>;
-+	};
-+};
-+
- /* CON10 on CP0 expansion */
- &cp0_usb3_1 {
--	usb-phy = <&cp0_usb3_1_phy>;
- 	phys = <&cp0_comphy4 1>;
- 	phy-names = "cp0-usb3h1-comphy";
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-index 9f9d36541ccb..fada138b8b26 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-@@ -61,11 +61,6 @@
- 		status = "okay";
- 	};
- 
--	usb3h0_phy: usb3_phy0 {
--		compatible = "usb-nop-xceiv";
--		vcc-supply = <&v_5v0_usb3_hst_vbus>;
--	};
--
- 	sfp_eth0: sfp-eth0 {
- 		/* CON15,16 - CPM lane 4 */
- 		compatible = "sff,sfp";
-@@ -358,9 +353,15 @@
- 	};
- };
- 
-+&cp1_comphy2 {
-+	cp1_usbh0_con: connector {
-+		compatible = "usb-a-connector";
-+		phy-supply = <&v_5v0_usb3_hst_vbus>;
-+	};
-+};
-+
- &cp1_usb3_0 {
- 	/* CPS Lane 2 - CON7 */
--	usb-phy = <&usb3h0_phy>;
- 	phys = <&cp1_comphy2 0>;
- 	phy-names = "cp1-usb3h0-comphy";
- 	status = "okay";
+eg:
+
+    to_sysctr.flags |= of_find_property(np, "clock-frequency", NULL) ?
+		TIMER_OF_CLOCK_FREQUENCY : TIMER_OF_CLOCK;
+	
+
+
+
+>  	ret = timer_of_init(np, &to_sysctr);
+>  	if (ret)
+> 
+
+
 -- 
-2.19.1
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
