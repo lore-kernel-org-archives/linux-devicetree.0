@@ -1,101 +1,25 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] dt-bindings: Add silabs,si5341
-Date: Thu, 27 Jun 2019 13:54:26 -0700
-Message-ID: <20190627205427.5C3482075E@mail.kernel.org>
-References: <20190424090216.18417-1-mike.looijmans@topic.nl> <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com> <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl> <155632584222.168659.9675557812377718927@swboyd.mtv.corp.google.com> <cd52a35b-d289-24e1-70db-9d63fd9f6448@topic.nl> <155658342800.168659.4922821141203707564@swboyd.mtv.corp.google.com> <c7f5184f-f484-e8ad-33ae-36b0da061113@topic.nl> <20190626212409.9C0E6208E3@mail.kernel.org> <61fae574-2cea-cbdc-bc8a-3cc34c681d01@topic.nl>
+Subject: Re: [PATCH v3] dt-bindings: clock: Add silabs,si5341
+Date: Thu, 27 Jun 2019 13:57:02 -0700
+Message-ID: <20190627205703.0DAF22075E@mail.kernel.org>
+References: <20190424090216.18417-1-mike.looijmans@topic.nl> <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com> <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl> <155632584222.168659.9675557812377718927@swboyd.mtv.corp.google.com> <cd52a35b-d289-24e1-70db-9d63fd9f6448@topic.nl> <20190507140413.28335-1-mike.looijmans@topic.nl> <20190513203146.GA24085@bogus> <20190517132020.31081-1-mike.looijmans@topic.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <61fae574-2cea-cbdc-bc8a-3cc34c681d01@topic.nl>
+In-Reply-To: <20190517132020.31081-1-mike.looijmans@topic.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Looijmans <mike.looijmans@topic.nl>
-Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Mike Looijmans (2019-06-27 04:38:16)
-> On 26-06-19 23:24, Stephen Boyd wrote:
-> > Sorry, I'm getting through my inbox pile and saw this one.
-> >=20
-> > Quoting Mike Looijmans (2019-04-30 22:46:55)
-> >> On 30-04-19 02:17, Stephen Boyd wrote:
-> >>>
-> >>> Why can't that driver call clk_prepare_enable()? Is there some sort of
-> >>> assumption that this clk will always be enabled and not have a driver
-> >>> that configures the rate and gates/ungates it?
-> >>
-> >> Not only clk_prepare_enable(), but the driver could also call clk_set_=
-rate()
-> >> and clk_set_parent() and the likes, but it doesn't, so that's why ther=
-e is
-> >> "assigned-clocks" right?
-> >>
-> >> There are multiple scenario's, similar to why regulators also have pro=
-perties
-> >> like these.
-> >>
-> >> - The clock is related to hardware that the kernel is not aware of.
-> >> - The clock is for a driver that isn't aware of its clock requirements=
-. It
-> >> might be an extra clock for an FPGA implemented controller that mimics
-> >> existing hardware.
-> >=20
-> > Are these hypothetical scenarios or actual scenarios you need to
-> > support?
+Quoting Mike Looijmans (2019-05-17 06:20:20)
+> Adds the devicetree bindings for the Si5341 and Si5340 chips from
+> Silicon Labs. These are multiple-input multiple-output clock
+> synthesizers.
 >=20
-> Actual scenario's.
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 >=20
-> Clocks are required for FPGA logic, and a some of those do not involve=20
-> software drivers at all.
->=20
-> The GTR transceivers on the Xilinx ZynqMP chips use these clocks for SATA=
- and=20
-> PCIe, but the driver implementation from Xilinx for these is far from mat=
-ure,=20
-> for example it passes the clock frequency as a PHY parameter and isn't ev=
-en=20
-> aware of the clk framework at the moment. Xilinx hasn't even attempted=20
-> submitting this 3 year old driver to mainline.
+> ---
 
-I think they may have submitted the "fixed rate from PHY parameter"
-support. I merged it because I suspected it would help in those rare
-cases where an MMIO register is used to express information about the
-configuration and the bootloader does nothing to help create a fixed
-rate clk in DT.
-
-> >=20
-> > To put it another way, I'm looking to describe how the board is designed
-> > and to indicate that certain clks are always enabled at power on or are
-> > enabled by the bootloader. Configuration has it's place too, just that
-> > configuration is a oneshot sort of thing that never needs to change at
-> > runtime.
-> >=20
->=20
-> I can see where you going with this, and yes, we definitely should promot=
-e=20
-> that drivers should take care of their clock (enable) requirements.
->=20
-> For the case of 'clock-critical', that would serve the purpose quite well=
-=20
-> indeed. It does add the risk of people sprinkling that all over the devic=
-etree.
->=20
-> Short term, I guess the best thing to do here is to remove the "always-on=
-"=20
-> property from my patch.
-
-Ok. Will you resend or should I look at the latest binding patch and
-remove always-on? I don't see it there so maybe everything is fine.
-
->=20
-> I'll put the "clock-critical" idea on my list of generic clock patches to=
-=20
-> sneak in on other budgets, it'll be right behind "allow sub-1Hz or fracti=
-onal=20
-> clock rate accuracy" (yes I actually have a use case for that) and "allow=
-=20
-> frequencies over 4GHz" (the 14GHz clock in the Si5341 luckily isn't avail=
-able=20
-> on the outside so I can cheat)...
-
-Ok. Good to know it's not as high a priority as these other things.
+Applied to clk-next
