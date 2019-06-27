@@ -1,85 +1,44 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH RESEND V2 2/3] clocksource: imx-sysctr: Make timer work
- with clock driver using platform driver model
-Date: Thu, 27 Jun 2019 14:36:27 +0200
-Message-ID: <41ab1a50-f431-ec73-8444-11ecca1412d8@linaro.org>
-References: <20190623123850.22584-1-Anson.Huang@nxp.com>
- <20190623123850.22584-2-Anson.Huang@nxp.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: Update DWC3 modules on RK3399 SoCs
+Date: Thu, 27 Jun 2019 14:42:46 +0200
+Message-ID: <1960228.jn0vabPeDx@phil>
+References: <20190613162745.12195-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190623123850.22584-2-Anson.Huang@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190613162745.12195-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de, abel.vesa@nxp.com, ccaione@baylibre.com, angus@akkea.ca, andrew.smirnov@gmail.com, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Linux-imx@nxp.com
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: devicetree@vger.kernel.org, Collabora Kernel ML <kernel@collabora.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Vicente Bergas <vicencb@gmail.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Tony Xie <tony.xie@rock-chips.com>, Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 23/06/2019 14:38, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
+Am Donnerstag, 13. Juni 2019, 18:27:45 CEST schrieb Enric Balletbo i Serra:
+> As per binding documentation [1], the DWC3 core should have the "ref",
+> "bus_early" and "suspend" clocks. As explained in the binding, those
+> clocks are required for new platforms but not for existing platforms
+> before commit fe8abf332b8f ("usb: dwc3: support clocks and resets for
+> DWC3 core").
 > 
-> On some i.MX8M platforms, clock driver uses platform driver
-> model and it is NOT ready during timer initialization phase,
-> the clock operations will fail and system counter driver will
-> fail too. As all the i.MX8M platforms' system counter clock
-> are from OSC which is always enabled, so it is no need to enable
-> clock for system counter driver, the ONLY thing is to pass
-> clock frequence to driver.
+> However, as those clocks are really treated as required, this ends with
+> having some annoying messages when the "rockchip,rk3399-dwc3" is used:
 > 
-> To make system counter driver work for upper scenario, add an
-> option of skipping of_clk operation for system counter driver,
-> an optional property "clock-frequency" is introduced to pass
-> the frequency value to system counter driver and indicate driver
-> to skip of_clk operations.
+> [    1.724107] dwc3 fe800000.dwc3: Failed to get clk 'ref': -2
+> [    1.731893] dwc3 fe900000.dwc3: Failed to get clk 'ref': -2
+> [    2.495937] dwc3 fe800000.dwc3: Failed to get clk 'ref': -2
+> [    2.647239] dwc3 fe900000.dwc3: Failed to get clk 'ref': -2
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
-> 	- improve commit log, no content change.
-> ---
->  drivers/clocksource/timer-imx-sysctr.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> In order to remove those annoying messages, update the DWC3 hardware
+> module node and add all the required clocks. With this change, both, the
+> glue node and the DWC3 core node, have the clocks defined, but that's
+> not really a problem and there isn't a side effect on do this. So, we
+> can get rid of the annoying get clk error messages.
 > 
-> diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
-> index fd7d680..8ff3d7e 100644
-> --- a/drivers/clocksource/timer-imx-sysctr.c
-> +++ b/drivers/clocksource/timer-imx-sysctr.c
-> @@ -129,6 +129,14 @@ static void __init sysctr_clockevent_init(void)
->  static int __init sysctr_timer_init(struct device_node *np)
->  {
->  	int ret = 0;
-> +	u32 rate;
-> +
-> +	if (!of_property_read_u32(np, "clock-frequency",
-> +				  &rate)) {
-> +		to_sysctr.of_clk.rate = rate;
-> +		to_sysctr.of_clk.period = DIV_ROUND_UP(rate, HZ);
-> +		to_sysctr.flags &= ~TIMER_OF_CLOCK;
-> +	}
-
-Please take the opportunity to add the TIMER_OF_CLOCK_FREQUENCY flag in
-timer-of and the corresponding code above.
-
-Then check the clock-frequency presence and add TIMER_OF_CLOCK or
-TIMER_OF_CLOCK_FREQUENCY flag to the timer-of structure.
-
-eg:
-
-    to_sysctr.flags |= of_find_property(np, "clock-frequency", NULL) ?
-		TIMER_OF_CLOCK_FREQUENCY : TIMER_OF_CLOCK;
-	
-
-
-
->  	ret = timer_of_init(np, &to_sysctr);
->  	if (ret)
+> [1] Documentation/devicetree/bindings/usb/dwc3.txt
 > 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
+applied for 5.3
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks
+Heiko
