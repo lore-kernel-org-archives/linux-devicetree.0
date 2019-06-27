@@ -1,72 +1,49 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add missing space for
- cooling-cells property
-Date: Thu, 27 Jun 2019 23:43:05 +0530
-Message-ID: <CAP245DVTcQ5DXiSHWud42tOXFXAy7LFkqGsfUDoY0cm+7wQCBA@mail.gmail.com>
-References: <20190627140215.29353-1-niklas.cassel@linaro.org>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv5 0/2] coresight: Do not default to CPU0 for missing CPU phandle
+Date: Thu, 27 Jun 2019 23:45:27 +0530
+Message-ID: <cover.1561659046.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627140215.29353-1-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 7:32 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
->
-> There should be a space both before and after the equal sign.
-> Add a missing space for the cooling cells property.
->
-> Fixes: f48cee3239a1 ("arm64: dts: qcom: qcs404: Add thermal zones for each sensor")
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+In case of missing CPU phandle, the affinity is set default to
+CPU0 which is not a correct assumption. Fix this in coresight
+platform to set affinity to invalid and abort the probe in drivers.
+Also update the dt-bindings accordingly.
 
-Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
+v5:
+ * Separate out the dt-bindings patch.
 
-> ---
->  arch/arm64/boot/dts/qcom/qcs404.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> index 01a51f381850..3d0789775009 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -35,7 +35,7 @@
->                         enable-method = "psci";
->                         cpu-idle-states = <&CPU_SLEEP_0>;
->                         next-level-cache = <&L2_0>;
-> -                       #cooling-cells= <2>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 CPU1: cpu@101 {
-> @@ -45,7 +45,7 @@
->                         enable-method = "psci";
->                         cpu-idle-states = <&CPU_SLEEP_0>;
->                         next-level-cache = <&L2_0>;
-> -                       #cooling-cells= <2>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 CPU2: cpu@102 {
-> @@ -55,7 +55,7 @@
->                         enable-method = "psci";
->                         cpu-idle-states = <&CPU_SLEEP_0>;
->                         next-level-cache = <&L2_0>;
-> -                       #cooling-cells= <2>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 CPU3: cpu@103 {
-> @@ -65,7 +65,7 @@
->                         enable-method = "psci";
->                         cpu-idle-states = <&CPU_SLEEP_0>;
->                         next-level-cache = <&L2_0>;
-> -                       #cooling-cells= <2>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 L2_0: l2-cache {
-> --
-> 2.21.0
->
+v4:
+ * Fix return for !CONFIG_ACPI and !CONFIG_OF.
+
+v3:
+ * Addressed review comments from Suzuki and updated
+   acpi_coresight_get_cpu.
+ * Removed patch 2 which had invalid check for online
+   cpus.
+
+v2:
+ * Addressed review comments from Suzuki and Mathieu.
+ * Allows the probe of etm and cpu-debug to abort earlier
+   in case of unavailability of respective cpus.
+
+Sai Prakash Ranjan (2):
+  dt-bindings: coresight: Change CPU phandle to required property
+  coresight: Do not default to CPU0 for missing CPU phandle
+
+ .../bindings/arm/coresight-cpu-debug.txt      |  4 ++--
+ .../devicetree/bindings/arm/coresight.txt     |  8 +++++---
+ .../hwtracing/coresight/coresight-cpu-debug.c |  3 +++
+ drivers/hwtracing/coresight/coresight-etm3x.c |  3 +++
+ drivers/hwtracing/coresight/coresight-etm4x.c |  3 +++
+ .../hwtracing/coresight/coresight-platform.c  | 20 +++++++++----------
+ 6 files changed, 26 insertions(+), 15 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
