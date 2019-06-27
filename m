@@ -1,34 +1,81 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 00/13] net: Add generic and Allwinner YAML bindings
-Date: Thu, 27 Jun 2019 13:17:40 -0600
-Message-ID: <CAL_JsqJ9VtRv6QKuPO9kXst61ndG1UNBnx8qMkkv879GG7JTXg@mail.gmail.com>
-References: <cover.e80da8845680a45c2e07d5f17280fdba84555b8a.1561649505.git-series.maxime.ripard@bootlin.com>
- <20190627.102256.1839462093915893704.davem@davemloft.net>
+From: Eddie James <eajames@linux.ibm.com>
+Subject: Re: [PATCH v3 1/8] dt-bindings: soc: Add Aspeed XDMA engine binding
+ documentation
+Date: Thu, 27 Jun 2019 14:19:47 -0500
+Message-ID: <c8d80e9a-6fa9-aa57-3b5f-e20b20dd0f66@linux.ibm.com>
+References: <1559153408-31190-1-git-send-email-eajames@linux.ibm.com>
+ <1559153408-31190-2-git-send-email-eajames@linux.ibm.com>
+ <58b74556-cbf0-4da2-9392-4c4ac40ad760@www.fastmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190627.102256.1839462093915893704.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <58b74556-cbf0-4da2-9392-4c4ac40ad760@www.fastmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 11:22 AM David Miller <davem@davemloft.net> wrote:
->
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
-> Date: Thu, 27 Jun 2019 17:31:42 +0200
->
-> > This is an attempt at getting the main generic DT bindings for the ethernet
-> > (and related) devices, and convert some DT bindings for the Allwinner DTs
-> > to YAML as well.
-> >
-> > This should provide some DT validation coverage.
->
-> I don't think this should go via my tree as it's all DT stuff.
 
-That's fine. I can take it. There's one conflict with commit
-79b647a0c0d5 ("dt-bindings: net: document new usxgmii phy mode"), but
-that's easy enough to handle. Any other changes to the binding docs
-will need to go thru me this cycle.
+On 5/30/19 12:30 AM, Andrew Jeffery wrote:
+>
+> On Thu, 30 May 2019, at 03:40, Eddie James wrote:
+>> Document the bindings.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
+>>   .../devicetree/bindings/soc/aspeed/xdma.txt        | 23 ++++++++++++++++++++++
+>>   1 file changed, 23 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+>> b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+>> new file mode 100644
+>> index 0000000..85e82ea
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+>> @@ -0,0 +1,23 @@
+>> +* Device tree bindings for the Aspeed XDMA Engine
+>> +
+>> +The XDMA Engine embedded in the AST2500 SOC can perform automatic DMA
+>> +operations over PCI between the AST2500 (acting as a BMC) and a host
+>> processor.
+>> +
+>> +Required properties:
+>> +
+>> + - compatible		"aspeed,ast2500-xdma"
+>> + - reg			contains the offset and length of the memory region
+>> +			assigned to the XDMA registers
+>> + - resets		reset specifier for the syscon reset associated with
+>> +			the XDMA engine
+>> + - interrupts		the interrupt associated with the XDMA engine on this
+>> +			platform
+> The indentation is quite distracting. If you rev the series can you fix it?
 
-Rob
+
+I think the diff is throwing it off; it all lines up when applied.
+
+Thanks,
+
+Eddie
+
+
+>
+> Otherwise,
+>
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+>
+>> +
+>> +Example:
+>> +
+>> +    xdma@1e6e7000 {
+>> +        compatible = "aspeed,ast2500-xdma";
+>> +        reg = <0x1e6e7000 0x100>;
+>> +        resets = <&syscon ASPEED_RESET_XDMA>;
+>> +        interrupts = <6>;
+>> +    };
+>> -- 
+>> 1.8.3.1
+>>
+>>
