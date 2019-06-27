@@ -1,44 +1,33 @@
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v5 3/4] dt-bindings: clk: at91: add bindings for SAM9X60's slow clock controller
-Date: Thu, 27 Jun 2019 17:47:20 +0300
-Message-ID: <1561646841-7663-4-git-send-email-claudiu.beznea@microchip.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 0/4] add slow clock support for SAM9X60
+Date: Thu, 27 Jun 2019 07:57:37 -0700
+Message-ID: <20190627145738.42BD52086D@mail.kernel.org>
 References: <1561646841-7663-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1561646841-7663-1-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com
+To: alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com, mark.rutland@arm.com, mturquette@baylibre.com, nicolas.ferre@microchip.com, robh+dt@kernel.org
 Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings for SAM9X60's slow clock controller.
+Quoting Claudiu Beznea (2019-06-27 07:47:17)
+> Hi,
+>=20
+> This series add slow clock support for SAM9X60. Apart from previous IPs, =
+this
+> one uses different offsets in control register for different functionalit=
+ies.
+> The series adapt current driver to work for all IPs using per IP
+> configurations initialized at probe.
+>=20
+> Stephen,
+>=20
+> I send a new version of this since I'm not seeing the patches on clk-next
+> and I though you may had issues with the previous version of this series.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/clock/at91-clock.txt | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
-index b520280e33ff..13f45db3b66d 100644
---- a/Documentation/devicetree/bindings/clock/at91-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
-@@ -9,10 +9,11 @@ Slow Clock controller:
- Required properties:
- - compatible : shall be one of the following:
- 	"atmel,at91sam9x5-sckc",
--	"atmel,sama5d3-sckc" or
--	"atmel,sama5d4-sckc":
-+	"atmel,sama5d3-sckc",
-+	"atmel,sama5d4-sckc" or
-+	"microchip,sam9x60-sckc":
- 		at91 SCKC (Slow Clock Controller)
--- #clock-cells : shall be 0.
-+- #clock-cells : shall be 1 for "microchip,sam9x60-sckc" otherwise shall be 0.
- - clocks : shall be the input parent clock phandle for the clock.
- 
- Optional properties:
--- 
-2.7.4
+Ok thanks. I see that you've fixed it to send plain text. Great! But I
+already applied the other patches so I'll just keep what I had. Should
+be pushed out to clk-next today.
