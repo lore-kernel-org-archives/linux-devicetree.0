@@ -1,7 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 15/19] arm64: dts: marvell: Add CP110 COMPHY clocks
-Date: Thu, 27 Jun 2019 14:25:01 +0200
-Message-ID: <20190627122505.25774-3-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 14/19] dt-bindings: pci: add PHY properties to Armada 7K/8K
+ controller bindings
+Date: Thu, 27 Jun 2019 14:25:00 +0200
+Message-ID: <20190627122505.25774-2-miquel.raynal@bootlin.com>
 References: <20190627095104.22529-1-miquel.raynal@bootlin.com>
  <20190627122505.25774-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
@@ -22,26 +23,28 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Declare the three clocks feeding the COMPHY block.
+Armada CP110 PCIe controller can have a PHY (for configuring SERDES
+lanes). Describe these two properties in the bindings.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/pci/pci-armada8k.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-index 4d6e4a097f72..404b6ac82aa0 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-@@ -133,6 +133,9 @@
- 			compatible = "marvell,comphy-cp110";
- 			reg = <0x120000 0x6000>;
- 			marvell,system-controller = <&CP110_LABEL(syscon0)>;
-+			clocks = <&CP110_LABEL(clk) 1 5>, <&CP110_LABEL(clk) 1 6>,
-+				 <&CP110_LABEL(clk) 1 18>;
-+			clock-names = "mg_clk", "mg_core_clk", "axi_clk";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+diff --git a/Documentation/devicetree/bindings/pci/pci-armada8k.txt b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
+index 9e3fc15e1af8..a373a80524db 100644
+--- a/Documentation/devicetree/bindings/pci/pci-armada8k.txt
++++ b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
+@@ -17,6 +17,10 @@ Required properties:
+    name must be "core" for the first clock and "reg" for the second
+    one
  
++Optional properties:
++- phys: phandle to the PHY node (generic PHY bindings).
++- phy-names: names of the PHYs.
++
+ Example:
+ 
+ 	pcie@f2600000 {
 -- 
 2.19.1
