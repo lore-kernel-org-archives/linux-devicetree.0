@@ -1,52 +1,64 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 21/95] ARM: dts: Drop bogus CLKSEL for timer12 on dra7
-Date: Wed, 26 Jun 2019 20:29:06 -0400
-Message-ID: <20190627003021.19867-21-sashal@kernel.org>
-References: <20190627003021.19867-1-sashal@kernel.org>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v7 1/7] Documentation: DT: arm: add support for sockets
+ defining package boundaries
+Date: Wed, 26 Jun 2019 17:31:37 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1906261724000.23534@viisi.sifive.com>
+References: <20190617185920.29581-1-atish.patra@wdc.com> <20190617185920.29581-2-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tero Kristo <t-kristo@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190617185920.29581-2-atish.patra@wdc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>, Atish Patra <atish.patra@wdc.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Richard
 List-Id: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+Hi Sudeep, Atish,
 
-[ Upstream commit 34f61de87017aff3c8306280d196dddb1e168a88 ]
+On Mon, 17 Jun 2019, Atish Patra wrote:
 
-There is no CLKSEL for timer12 on dra7 unlike for timer1. This
-causes issues on booting the device that Tomi noticed if
-DEBUG_SLAB is enabled and the clkctrl clock does not properly
-handle non-existing clock. Let's drop the bogus CLKSEL clock,
-the clkctrl clock handling gets fixed separately.
+> From: Sudeep Holla <sudeep.holla@arm.com>
+> 
+> The current ARM DT topology description provides the operating system
+> with a topological view of the system that is based on leaf nodes
+> representing either cores or threads (in an SMT system) and a
+> hierarchical set of cluster nodes that creates a hierarchical topology
+> view of how those cores and threads are grouped.
+> 
+> However this hierarchical representation of clusters does not allow to
+> describe what topology level actually represents the physical package or
+> the socket boundary, which is a key piece of information to be used by
+> an operating system to optimize resource allocation and scheduling.
+> 
+> Lets add a new "socket" node type in the cpu-map node to describe the
+> same.
+> 
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Fixes: 4ed0dfe3cf39 ("ARM: dts: dra7: Move l4 child devices to probe them with ti-sysc")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/dra7-l4.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+This one doesn't apply cleanly here on top of v5.2-rc2, Linus's master 
+branch, and next-20190626.  The reject file is below.  Am I missing 
+a patch?
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index 73f5c050f586..17f0d8e93622 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -4450,8 +4450,6 @@
- 			timer12: timer@0 {
- 				compatible = "ti,omap5430-timer";
- 				reg = <0x0 0x80>;
--				clocks = <&wkupaon_clkctrl DRA7_WKUPAON_TIMER12_CLKCTRL 24>;
--				clock-names = "fck";
- 				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
- 				ti,timer-alwon;
- 				ti,timer-secure;
--- 
-2.20.1
+
+- Paul
+
+--- Documentation/devicetree/bindings/arm/topology.txt
++++ Documentation/devicetree/bindings/arm/topology.txt
+@@ -185,13 +206,15 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
+ 4 - Example dts
+ ===========================================
+ 
+-Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters):
++Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters in a single
++physical socket):
+ 
+ cpus {
+ 	#size-cells = <0>;
+ 	#address-cells = <2>;
+ 
+ 	cpu-map {
++		socket0 {
+ 			cluster0 {
+ 				cluster0 {
+ 					core0 {
