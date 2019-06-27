@@ -1,35 +1,88 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: Re: [PATCH 0/8] pinctrl: aspeed: Preparation for AST2600
-Date: Thu, 27 Jun 2019 10:38:44 +0930
-Message-ID: <fa54f9a1-481e-4146-a4c2-7c43cf9a26e8@www.fastmail.com>
-References: <20190626071430.28556-1-andrew@aj.id.au>
- <CACRpkdboxjMmeb8feffyG5JJ7fGPR6hqC8sc+XV5We3TC__LXg@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v4 4/5] Documentation: devicetree: add PPMU events
+ description
+Date: Thu, 27 Jun 2019 10:11:43 +0900
+Message-ID: <99a47066-3713-77fa-4afb-6f2f17a2721a@samsung.com>
+References: <CGME20190605091304eucas1p21e0717cafa17a14de569f1773cc7abe5@eucas1p2.samsung.com>
+        <20190605091236.24263-1-l.luba@partner.samsung.com>
+        <20190605091236.24263-5-l.luba@partner.samsung.com>
+        <CAGTfZH2kTNWtx=Jp1UJaLN50Qxbq+Q9ThV4vhQ240QbOy1TRMQ@mail.gmail.com>
+        <7498059d-95f7-e154-cf49-bcbc8ee6fdb9@partner.samsung.com>
+        <CAJKOXPc6304D=HNQnrvhBH6qKxhkf=VQ2Gg6Q2FMP2hYOTYSDQ@mail.gmail.com>
+        <776f58c2-a05c-8fa8-c7f5-458dc17926f6@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdboxjMmeb8feffyG5JJ7fGPR6hqC8sc+XV5We3TC__LXg@mail.gmail.com>
+In-Reply-To: <776f58c2-a05c-8fa8-c7f5-458dc17926f6@partner.samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Lukasz Luba <l.luba@partner.samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: cwchoi00@gmail.com, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, robh+dt@kernel.org, mark.rutland@arm.com, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Lukasz,
 
-
-On Wed, 26 Jun 2019, at 17:25, Linus Walleij wrote:
-> On Wed, Jun 26, 2019 at 9:15 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+On 19. 6. 26. 오후 11:17, Lukasz Luba wrote:
+> Hi Krzysztof,
 > 
-> > The ASPEED AST2600 is in the pipeline, and we have enough information to start
-> > preparing to upstream support for it. This series lays some ground work;
-> > splitting the bindings and dicing the implementation up a little further to
-> > facilitate differences between the 2600 and previous SoC generations.
+> On 6/26/19 4:03 PM, Krzysztof Kozlowski wrote:
+>> On Wed, 26 Jun 2019 at 15:58, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>>
+>>> Hi Chanwoo,
+>>>
+>>> On 6/26/19 10:23 AM, Chanwoo Choi wrote:
+>>>> Hi Lukasz,
+>>>>
+>>>> 2019년 6월 5일 (수) 18:14, Lukasz Luba <l.luba@partner.samsung.com
+>>>> <mailto:l.luba@partner.samsung.com>>님이 작성:
+>>>>
+>>>>      Extend the documenation by events description with new 'event-data-type'
+>>>>      field. Add example how the event might be defined in DT.
+>>>>
+>>>>      Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com
+>>>>      <mailto:l.luba@partner.samsung.com>>
+>>>>      Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com
+>>>>      <mailto:cw00.choi@samsung.com>>
+>>>>      ---
+>>>>        .../bindings/devfreq/event/exynos-ppmu.txt    | 26 +++++++++++++++++--
+>>>>        1 file changed, 24 insertions(+), 2 deletions(-)
+>>>>
+>>>>
+>>>>
+>>>> Acked-by: Chanwoo Choi <cw00.choi@samsung.com
+>>>
+>>> Thank you for the ACKs for this a 2/5 patch.
+>>> Do you think the v4 could be merged now?
+>>
+>> I think you have all necessary acks. I can take the DTS patch (5/5)
+>> although probably for next merge window as I just sent one.
+> There was one patch 3/5
+> https://protect2.fireeye.com/url?k=82dd0d0cbe2abd04.82dc8643-d13ecd7e5f989b8d&u=https://lkml.org/lkml/2019/6/5/215
+> which was waiting ACK or I missed the email somehow.
+
+When I was in vacation, your patches are removed on my email account
+because of the email expiration. So, I replied with my Ack through
+gmail account on mobile phone. But, there are some problem. My reply
+didn't arrive the mailing list.
+
+I have no any way to reply about this at company. After leaving one's
+office, I'll reply with Ack again at home.
+
 > 
-> All looks good to me, but Rob should have a glance at the DT bindings
-> and YAML syntax before I proceed to apply them.
+> Regards,
+> Lukasz
+> 
+>>
+>> Best regards,
+>> Krzysztof
+>>
+>>
+> 
+> 
 
-Thanks for the quick review. Rob's responded, looks like I'll need to send a v2 at
-least. Might need a hand sorting out describing generic pinctrl dt bits (subnodes
-with function and group properties).
 
-Cheers,
-
-Andrew
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
