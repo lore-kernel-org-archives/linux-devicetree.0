@@ -1,65 +1,78 @@
-From: Ashish Kumar <Ashish.Kumar@nxp.com>
-Subject: [Patch v2] drivers: mtd: spi-nor: Add flash property for mt25qu512a
- and mt35xu02g
-Date: Thu, 27 Jun 2019 15:58:03 +0530
-Message-ID: <1561631283-30937-1-git-send-email-Ashish.Kumar@nxp.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v4 4/5] Documentation: devicetree: add PPMU events
+ description
+Date: Thu, 27 Jun 2019 12:31:08 +0200
+Message-ID: <3fdba210-2ca1-9fe3-c886-25d1d13bb133@partner.samsung.com>
+References: <CGME20190605091304eucas1p21e0717cafa17a14de569f1773cc7abe5@eucas1p2.samsung.com>
+        <20190605091236.24263-1-l.luba@partner.samsung.com>
+        <20190605091236.24263-5-l.luba@partner.samsung.com>
+        <CAGTfZH2kTNWtx=Jp1UJaLN50Qxbq+Q9ThV4vhQ240QbOy1TRMQ@mail.gmail.com>
+        <7498059d-95f7-e154-cf49-bcbc8ee6fdb9@partner.samsung.com>
+        <CAJKOXPc6304D=HNQnrvhBH6qKxhkf=VQ2Gg6Q2FMP2hYOTYSDQ@mail.gmail.com>
+        <776f58c2-a05c-8fa8-c7f5-458dc17926f6@partner.samsung.com>
+        <99a47066-3713-77fa-4afb-6f2f17a2721a@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: bbrezillon@kernel.org, Kuldeep Singh <kuldeep.singh@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>, broonie@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <99a47066-3713-77fa-4afb-6f2f17a2721a@samsung.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, cwchoi00@gmail.com
+Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, robh+dt@kernel.org, mark.rutland@arm.com, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Ashish Kumar <ashish.kumar@nxp.com>
+Hi Chanwoo,
 
-mt25qu512a is rebranded after its spinoff from STM, so it is
-different only in term of extended jedec ID, initial JEDEC id
-is same as that of n25q512a.In order to avoid any confussion 
-with respect to name new entry is added.
-This flash is tested for Single I/O mode on LS1046FRWY although
-it does support QUAD I/O.
-
-mt35xu02g is Octal flash supporting Single I/O and QCTAL I/O
-and has been tested on LS1028ARDB
-
-Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
-Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
----
-V2:
-Re-work based on review comments from Vignesh R
-
- drivers/mtd/spi-nor/spi-nor.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 73172d7..34e33a7 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -1880,6 +1880,7 @@ static const struct flash_info spi_nor_ids[] = {
- 	{ "n25q512ax3",  INFO(0x20ba20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
- 	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
- 	{ "n25q00a",     INFO(0x20bb21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
-+	{ "mt25qu512a", INFO6(0x20bb20, 0x104400, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_4B_OPCODES) },
- 	{ "mt25qu02g",   INFO(0x20bb22, 0, 64 * 1024, 4096, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
- 
- 	/* Micron */
-@@ -1888,6 +1889,7 @@ static const struct flash_info spi_nor_ids[] = {
- 			SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
- 			SPI_NOR_4B_OPCODES)
- 	},
-+	{ "mt35xu02g",   INFO(0x2c5b1c, 0, 128 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ | SPI_NOR_4B_OPCODES) },
- 
- 	/* PMC */
- 	{ "pm25lv512",   INFO(0,        0, 32 * 1024,    2, SECT_4K_PMC) },
--- 
-2.7.4
+On 6/27/19 3:11 AM, Chanwoo Choi wrote:
+> Hi Lukasz,
+> 
+> On 19. 6. 26. 오후 11:17, Lukasz Luba wrote:
+>> Hi Krzysztof,
+>>
+>> On 6/26/19 4:03 PM, Krzysztof Kozlowski wrote:
+>>> On Wed, 26 Jun 2019 at 15:58, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>>>
+>>>> Hi Chanwoo,
+>>>>
+>>>> On 6/26/19 10:23 AM, Chanwoo Choi wrote:
+>>>>> Hi Lukasz,
+>>>>>
+>>>>> 2019년 6월 5일 (수) 18:14, Lukasz Luba <l.luba@partner.samsung.com
+>>>>> <mailto:l.luba@partner.samsung.com>>님이 작성:
+>>>>>
+>>>>>       Extend the documenation by events description with new 'event-data-type'
+>>>>>       field. Add example how the event might be defined in DT.
+>>>>>
+>>>>>       Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com
+>>>>>       <mailto:l.luba@partner.samsung.com>>
+>>>>>       Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com
+>>>>>       <mailto:cw00.choi@samsung.com>>
+>>>>>       ---
+>>>>>         .../bindings/devfreq/event/exynos-ppmu.txt    | 26 +++++++++++++++++--
+>>>>>         1 file changed, 24 insertions(+), 2 deletions(-)
+>>>>>
+>>>>>
+>>>>>
+>>>>> Acked-by: Chanwoo Choi <cw00.choi@samsung.com
+>>>>
+>>>> Thank you for the ACKs for this a 2/5 patch.
+>>>> Do you think the v4 could be merged now?
+>>>
+>>> I think you have all necessary acks. I can take the DTS patch (5/5)
+>>> although probably for next merge window as I just sent one.
+>> There was one patch 3/5
+>> https://protect2.fireeye.com/url?k=82dd0d0cbe2abd04.82dc8643-d13ecd7e5f989b8d&u=https://lkml.org/lkml/2019/6/5/215
+>> which was waiting ACK or I missed the email somehow.
+> 
+> When I was in vacation, your patches are removed on my email account
+> because of the email expiration. So, I replied with my Ack through
+> gmail account on mobile phone. But, there are some problem. My reply
+> didn't arrive the mailing list.
+> 
+> I have no any way to reply about this at company. After leaving one's
+> office, I'll reply with Ack again at home.
+> 
+OK, no worries, it is not an emergency issue.
+Regards,
+Lukasz
