@@ -1,103 +1,69 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH V11 01/12] PCI: Add #defines for some of PCIe spec r4.0
- features
-Date: Thu, 27 Jun 2019 15:38:37 +0100
-Message-ID: <20190627143837.GC3782@e121166-lin.cambridge.arm.com>
-References: <20190624091505.1711-1-vidyas@nvidia.com>
- <20190624091505.1711-2-vidyas@nvidia.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v5 0/4] add slow clock support for SAM9X60
+Date: Thu, 27 Jun 2019 17:47:17 +0300
+Message-ID: <1561646841-7663-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190624091505.1711-2-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 02:44:54PM +0530, Vidya Sagar wrote:
-> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
-> features.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Reviewed-by: Thierry Reding <treding@nvidia.com>
-> ---
-> Changes since [v10]:
-> * None
-> 
-> Changes since [v9]:
-> * None
-> 
-> Changes since [v8]:
-> * None
-> 
-> Changes since [v7]:
-> * None
-> 
-> Changes since [v6]:
-> * None
-> 
-> Changes since [v5]:
-> * None
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * None
-> 
-> Changes since [v2]:
-> * Updated commit message and description to explicitly mention that defines are
->   added only for some of the features and not all.
-> 
-> Changes since [v1]:
-> * None
-> 
->  include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
+Hi,
 
-I need Bjorn's ACK to merge this patch.
+This series add slow clock support for SAM9X60. Apart from previous IPs, this
+one uses different offsets in control register for different functionalities.
+The series adapt current driver to work for all IPs using per IP
+configurations initialized at probe.
 
-Lorenzo
+Stephen,
 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index f28e562d7ca8..1c79f6a097d2 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -713,7 +713,9 @@
->  #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
->  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
->  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
-> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
-> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
-> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
-> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
->  
->  #define PCI_EXT_CAP_DSN_SIZEOF	12
->  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-> @@ -1053,4 +1055,22 @@
->  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
->  #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
->  
-> +/* Data Link Feature */
-> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
-> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
-> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
-> +#define PCI_DLF_STS		0x08	/* Status Register */
-> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
-> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
-> +
-> +/* Physical Layer 16.0 GT/s */
-> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
-> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
-> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
-> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
-> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
-> +
->  #endif /* LINUX_PCI_REGS_H */
-> -- 
-> 2.17.1
-> 
+I send a new version of this since I'm not seeing the patches on clk-next
+and I though you may had issues with the previous version of this series.
+
+Thank you,
+Claudiu Beznea
+
+Changes in v5:
+- get rid of Content-Transfer-Encoding: base64
+- collect Ack-by tag
+
+Changes in v4:
+- remove macros which were used to access IP specific bits for control
+  register
+- collect Acked-by, Reviewed-by tags
+
+Changes in v3:
+- add patch 1/1 that remove bypass code in the code specific to SAMA5D4
+  (there is no bypass support on SAMA5D4)
+- adapt review comments
+- register clock with of_clk_hw_onecell_get to emphasize that this IP has
+  2 output clocks MD_SLKC and TD_SLCK (I considered not necessary to
+  introduce new constants to be shared b/w driver and DT bindings; if
+  you consider otherwise, let me know)
+- adapt dt-binding patch with clock-cells changes (thus didn't introduced
+  Reviewed-by tag)
+- renamed struct clk_slow_offsets to struct clk_slow_bits and the
+  corresponding instances of it
+
+Changes in v2:
+- split patch 1/1 from v1 in 2 patches: one adding register bit offsets
+  support (patch 1/3 from this series), one adding support for SAM9X60
+  (patch 2/3 from this series)
+- fix compatible string from "microchip,at91sam9x60-sckc" to
+  "microchip,sam9x60-sckc"
+
+Claudiu Beznea (4):
+  clk: at91: sckc: sama5d4 has no bypass support
+  clk: at91: sckc: add support to specify registers bit offsets
+  dt-bindings: clk: at91: add bindings for SAM9X60's slow clock
+    controller
+  clk: at91: sckc: add support for SAM9X60
+
+ .../devicetree/bindings/clock/at91-clock.txt       |   7 +-
+ drivers/clk/at91/sckc.c                            | 173 ++++++++++++++++-----
+ 2 files changed, 139 insertions(+), 41 deletions(-)
+
+-- 
+2.7.4
