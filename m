@@ -1,211 +1,85 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v12 04/13] mfd: Add Ingenic TCU driver
-Date: Thu, 27 Jun 2019 07:58:08 +0100
-Message-ID: <20190627065808.GY21119@dell>
-References: <20190521145141.9813-1-paul@crapouillou.net>
- <20190521145141.9813-5-paul@crapouillou.net>
- <20190626131850.GW21119@dell>
- <1561557350.1872.0@crapouillou.net>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
+ wait-for-safe logic
+Date: Thu, 27 Jun 2019 12:35:02 +0530
+Message-ID: <CAFp+6iGvUd6QhmEO0rSSXAZnYt3x_5G0HuGUJYZ203W1_ER+=w@mail.gmail.com>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-4-vivek.gautam@codeaurora.org> <20190614040520.GK22737@tuxbook-pro>
+ <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org> <20190618175218.GH4270@fuggles.cambridge.arm.com>
+ <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com>
+ <20190624170348.7dncuc5qezqeyvq2@willie-the-truck> <CAFp+6iF0TQtAy2JFXk6zjX5GpjeLFesqPZV6ezbDXmc85yvMEA@mail.gmail.com>
+ <20190625133924.fqq3y7p3i3fqem5p@willie-the-truck> <CAFp+6iH-KzX7x1j8AAuKJcOP6v=fyP-yLvaeeE_Ly3oueu_ngg@mail.gmail.com>
+ <20190626144844.key3n6ueb6skgkp4@willie-the-truck>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1561557350.1872.0@crapouillou.net>
+In-Reply-To: <20190626144844.key3n6ueb6skgkp4@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+To: Will Deacon <will@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, robh+dt <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Rob Clark <robdclark@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 26 Jun 2019, Paul Cercueil wrote:
-> Le mer. 26 juin 2019 à 15:18, Lee Jones <lee.jones@linaro.org> a écrit :
-> > On Tue, 21 May 2019, Paul Cercueil wrote:
-> > 
-> > >  This driver will provide a regmap that can be retrieved very early
-> > > in
-> > >  the boot process through the API function ingenic_tcu_get_regmap().
-> > > 
-> > >  Additionally, it will call devm_of_platform_populate() so that all
-> > > the
-> > >  children devices will be probed.
-> > > 
-> > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > >  ---
-> > > 
-> > >  Notes:
-> > >      v12: New patch
-> > > 
-> > >   drivers/mfd/Kconfig             |   8 +++
-> > >   drivers/mfd/Makefile            |   1 +
-> > >   drivers/mfd/ingenic-tcu.c       | 113
-> > > ++++++++++++++++++++++++++++++++
-> > >   include/linux/mfd/ingenic-tcu.h |   8 +++
-> > >   4 files changed, 130 insertions(+)
-> > >   create mode 100644 drivers/mfd/ingenic-tcu.c
+On Wed, Jun 26, 2019 at 8:18 PM Will Deacon <will@kernel.org> wrote:
+>
+> On Wed, Jun 26, 2019 at 12:03:02PM +0530, Vivek Gautam wrote:
+> > On Tue, Jun 25, 2019 at 7:09 PM Will Deacon <will@kernel.org> wrote:
+> > >
+> > > On Tue, Jun 25, 2019 at 12:34:56PM +0530, Vivek Gautam wrote:
+> > > > On Mon, Jun 24, 2019 at 10:33 PM Will Deacon <will@kernel.org> wrote:
+> > > > > Instead, I think this needs to be part of a separate file that is maintained
+> > > > > by you, which follows on from the work that Krishna is doing for nvidia
+> > > > > built on top of Robin's prototype patches:
+> > > > >
+> > > > > http://linux-arm.org/git?p=linux-rm.git;a=shortlog;h=refs/heads/iommu/smmu-impl
+> > > >
+> > > > Looking at this branch quickly, it seem there can be separate implementation
+> > > > level configuration file that can be added.
+> > > > But will this also handle separate page table ops when required in future.
+> > >
+> > > Nothing's set in stone, but having the implementation-specific code
+> > > constrain the page-table format (especially wrt quirks) sounds reasonable to
+> > > me. I'm currently waiting for Krishna to respin the nvidia changes [1] on
+> > > top of this so that we can see how well the abstractions are holding up.
+> >
+> > Sure. Would you want me to try Robin's branch and take out the qualcomm
+> > related stuff to its own implementation? Or, would you like me to respin this
+> > series so that you can take it in to enable SDM845 boards such as, MTP
+> > and dragonboard to have a sane build - debian, etc. so people benefit
+> > out of it.
+>
+> I can't take this series without Acks on the firmware calling changes, and I
+> plan to send my 5.3 patches to Joerg at the end of the week so they get some
+> time in -next. In which case, I think it may be worth you having a play with
+> the branch above so we can get a better idea of any additional smmu_impl hooks
+> you may need.
 
-[...]
+Cool. I will play around with it and get something tangible and meaningful.
 
-> > >  +static struct regmap * __init ingenic_tcu_create_regmap(struct
-> > > device_node *np)
-> > >  +{
-> > >  +	struct resource res;
-> > >  +	void __iomem *base;
-> > >  +	struct regmap *map;
-> > >  +
-> > >  +	if (!of_match_node(ingenic_tcu_of_match, np))
-> > >  +		return ERR_PTR(-EINVAL);
+>
+> > Qualcomm stuff is lying in qcom-smmu and arm-smmu and may take some
+> > time to stub out the implementation related details.
+>
+> Not sure I follow you here. Are you talking about qcom_iommu.c?
 
-Drop this check.
+That's right. The qcom_iommu.c solved a different issue of secure context bank
+allocations, when Rob forked out this driver and reused some of the
+arm-smmu.c stuff.
 
-> > >  +	base = of_io_request_and_map(np, 0, "TCU");
-> > >  +	if (IS_ERR(base))
-> > >  +		return ERR_PTR(PTR_ERR(base));
-> > >  +
-> > >  +	map = regmap_init_mmio(NULL, base, &ingenic_tcu_regmap_config);
-> > >  +	if (IS_ERR(map))
-> > >  +		goto err_iounmap;
+We will take a look at that once we start adding the qcom implementation.
 
-Place this inside probe().
+Thanks
+Vivek
 
-> > >  +	return map;
-> > >  +
-> > >  +err_iounmap:
-> > >  +	iounmap(base);
-> > >  +	of_address_to_resource(np, 0, &res);
-> > >  +	release_mem_region(res.start, resource_size(&res));
-> > >  +
-> > >  +	return map;
-> > >  +}
-> > 
-> > Why does this need to be set-up earlier than probe()?
-> 
-> See the explanation below.
+>
+> Will
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
-I think the answer is, it doesn't.
 
-> > >  +static int __init ingenic_tcu_probe(struct platform_device *pdev)
-> > >  +{
-> > >  +	struct regmap *map = ingenic_tcu_get_regmap(pdev->dev.of_node);
-> > >  +
-> > >  +	platform_set_drvdata(pdev, map);
-> > >  +
-> > >  +	regmap_attach_dev(&pdev->dev, map, &ingenic_tcu_regmap_config);
-> > >  +
-> > >  +	return devm_of_platform_populate(&pdev->dev);
-> > >  +}
-> > >  +
-> > >  +static struct platform_driver ingenic_tcu_driver = {
-> > >  +	.driver = {
-> > >  +		.name = "ingenic-tcu",
-> > >  +		.of_match_table = ingenic_tcu_of_match,
-> > >  +	},
-> > >  +};
-> > >  +
-> > >  +static int __init ingenic_tcu_platform_init(void)
-> > >  +{
-> > >  +	return platform_driver_probe(&ingenic_tcu_driver,
-> > >  +				     ingenic_tcu_probe);
-> > 
-> > What?  Why?
-> 
-> The device driver probed here will populate the children devices,
-> which will be able to retrieve the pointer to the regmap through
-> device_get_regmap(dev->parent).
-
-I've never heard of this call.  Where is it?
-
-> The children devices are normal platform drivers that can be probed
-> the normal way. These are the PWM driver, the watchdog driver, and the
-> OST (OS Timer) clocksource driver, all part of the same hardware block
-> (the Timer/Counter Unit or TCU).
-
-If they are normal devices, then there is no need to roll your own
-regmap-getter implementation like this.
-
-> > >  +}
-> > >  +subsys_initcall(ingenic_tcu_platform_init);
-> > >  +
-> > >  +struct regmap * __init ingenic_tcu_get_regmap(struct device_node
-> > > *np)
-> > >  +{
-> > >  +	if (!tcu_regmap)
-> > >  +		tcu_regmap = ingenic_tcu_create_regmap(np);
-> > >  +
-> > >  +	return tcu_regmap;
-> > >  +}
-> > 
-> > This makes me pretty uncomfortable.
-> > 
-> > What calls it?
-> 
-> The TCU IRQ driver (patch [06/13]), clocks driver (patch [05/13]), and the
-> non-OST clocksource driver (patch [07/13]) all probe very early in the boot
-> process, and share the same devicetree node. They call this function to get
-> a pointer to the regmap.
-
-Horrible!
-
-Instead, you should send it through platform_set_drvdata() and collect
-it in the child drivers with platform_get_drvdata(dev->parent).
-
-> > >  +bool ingenic_tcu_pwm_can_use_chn(struct device *dev, unsigned int
-> > > channel)
-> > >  +{
-> > >  +	const struct ingenic_soc_info *soc =
-> > > device_get_match_data(dev->parent);
-> > >  +
-> > >  +	/* Enable all TCU channels for PWM use by default except channels
-> > > 0/1 */
-> > >  +	u32 pwm_channels_mask = GENMASK(soc->num_channels - 1, 2);
-> > >  +
-> > >  +	device_property_read_u32(dev->parent, "ingenic,pwm-channels-mask",
-> > >  +				 &pwm_channels_mask);
-
-Doesn't this call overwrite the previous assignment above?
-
-> > >  +	return !!(pwm_channels_mask & BIT(channel));
-> > >  +}
-> > >  +EXPORT_SYMBOL_GPL(ingenic_tcu_pwm_can_use_chn);
-
-Where is this called from?
-
-I think this needs a review by the DT guys.
-
-> > >  diff --git a/include/linux/mfd/ingenic-tcu.h
-> > > b/include/linux/mfd/ingenic-tcu.h
-> > >  index 2083fa20821d..21df23916cd2 100644
-> > >  --- a/include/linux/mfd/ingenic-tcu.h
-> > >  +++ b/include/linux/mfd/ingenic-tcu.h
-> > >  @@ -6,6 +6,11 @@
-> > >   #define __LINUX_MFD_INGENIC_TCU_H_
-> > > 
-> > >   #include <linux/bitops.h>
-> > >  +#include <linux/init.h>
-> > >  +
-> > >  +struct device;
-> > >  +struct device_node;
-> > >  +struct regmap;
-> > > 
-> > >   #define TCU_REG_WDT_TDR		0x00
-> > >   #define TCU_REG_WDT_TCER	0x04
-> > >  @@ -53,4 +58,7 @@
-> > >   #define TCU_REG_TCNTc(c)	(TCU_REG_TCNT0 + ((c) *
-> > > TCU_CHANNEL_STRIDE))
-> > >   #define TCU_REG_TCSRc(c)	(TCU_REG_TCSR0 + ((c) *
-> > > TCU_CHANNEL_STRIDE))
-> > > 
-> > >  +struct regmap * __init ingenic_tcu_get_regmap(struct device_node
-> > > *np);
-> > >  +bool ingenic_tcu_pwm_can_use_chn(struct device *dev, unsigned int
-> > > channel);
-> > >  +
-> > >   #endif /* __LINUX_MFD_INGENIC_TCU_H_ */
-> > 
-> 
-> 
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
