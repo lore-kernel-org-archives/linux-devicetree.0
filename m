@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v4 07/13] dt-bindings: net: sun4i-mdio: Convert the binding to a schemas
-Date: Thu, 27 Jun 2019 17:31:49 +0200
-Message-ID: <ad9a748f0876a63142803c80287148589ab37677.1561649505.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v4 06/13] dt-bindings: net: sun4i-emac: Convert the binding to a schemas
+Date: Thu, 27 Jun 2019 17:31:48 +0200
+Message-ID: <17888196fc36afc540bd497e041f0151431ddf21.1561649505.git-series.maxime.ripard@bootlin.com>
 References: <cover.e80da8845680a45c2e07d5f17280fdba84555b8a.1561649505.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,87 +12,72 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Switch our Allwinner A10 MDIO controller binding to a YAML schema to enable
+Switch our Allwinner A10 EMAC controller binding to a YAML schema to enable
 the DT validation.
 
 Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- Documentation/devicetree/bindings/net/allwinner,sun4i-mdio.txt      | 27 ---------------------------
- 2 files changed, 70 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml
- delete mode 100644 Documentation/devicetree/bindings/net/allwinner,sun4i-mdio.txt
+ Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt      | 19 -------------------
+ 2 files changed, 55 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
 
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
 new file mode 100644
-index 000000000000..df24d9d969f7
+index 000000000000..2ff9e605cd26
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml
-@@ -0,0 +1,70 @@
++++ b/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+@@ -0,0 +1,55 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/net/allwinner,sun4i-a10-mdio.yaml#
++$id: http://devicetree.org/schemas/net/allwinner,sun4i-a10-emac.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Allwinner A10 MDIO Controller Device Tree Bindings
++title: Allwinner A10 EMAC Ethernet Controller Device Tree Bindings
++
++allOf:
++  - $ref: "ethernet-controller.yaml#"
 +
 +maintainers:
 +  - Chen-Yu Tsai <wens@csie.org>
 +  - Maxime Ripard <maxime.ripard@bootlin.com>
 +
-+allOf:
-+  - $ref: "mdio.yaml#"
-+
-+# Select every compatible, including the deprecated ones. This way, we
-+# will be able to report a warning when we have that compatible, since
-+# we will validate the node thanks to the select, but won't report it
-+# as a valid value in the compatible property description
-+select:
-+  properties:
-+    compatible:
-+      enum:
-+        - allwinner,sun4i-a10-mdio
-+
-+        # Deprecated
-+        - allwinner,sun4i-mdio
-+
-+  required:
-+    - compatible
-+
 +properties:
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
 +  compatible:
-+    const: allwinner,sun4i-a10-mdio
++    const: allwinner,sun4i-a10-emac
 +
 +  reg:
 +    maxItems: 1
 +
-+  phy-supply:
-+    description: PHY regulator
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  allwinner,sram:
++    description: Phandle to the device SRAM
++    $ref: /schemas/types.yaml#/definitions/phandle-array
 +
 +required:
 +  - compatible
 +  - reg
++  - interrupts
++  - clocks
++  - phy-handle
++  - allwinner,sram
 +
 +examples:
 +  - |
-+    mdio@1c0b080 {
-+        compatible = "allwinner,sun4i-a10-mdio";
-+        reg = <0x01c0b080 0x14>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        phy-supply = <&reg_emac_3v3>;
-+
-+        phy0: ethernet-phy@0 {
-+            reg = <0>;
-+        };
++    emac: ethernet@1c0b000 {
++        compatible = "allwinner,sun4i-a10-emac";
++        reg = <0x01c0b000 0x1000>;
++        interrupts = <55>;
++        clocks = <&ahb_gates 17>;
++        phy = <&phy0>;
 +    };
 +
 +# FIXME: We should set it, but it would report all the generic
@@ -100,38 +85,30 @@ index 000000000000..df24d9d969f7
 +# additionalProperties: false
 +
 +...
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-mdio.txt b/Documentation/devicetree/bindings/net/allwinner,sun4i-mdio.txt
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt b/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
 deleted file mode 100644
-index ab5b8613b0ef..000000000000
---- a/Documentation/devicetree/bindings/net/allwinner,sun4i-mdio.txt
+index e98118aef5f6..000000000000
+--- a/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
 +++ /dev/null
-@@ -1,27 +0,0 @@
--* Allwinner A10 MDIO Ethernet Controller interface
+@@ -1,19 +0,0 @@
+-* Allwinner EMAC ethernet controller
 -
 -Required properties:
--- compatible: should be "allwinner,sun4i-a10-mdio"
--              (Deprecated: "allwinner,sun4i-mdio").
+-- compatible: should be "allwinner,sun4i-a10-emac" (Deprecated:
+-              "allwinner,sun4i-emac")
 -- reg: address and length of the register set for the device.
+-- interrupts: interrupt for the device
+-- phy: see ethernet.txt file in the same directory.
+-- clocks: A phandle to the reference clock for this device
 -
--Optional properties:
--- phy-supply: phandle to a regulator if the PHY needs one
+-Example:
 -
--Example at the SoC level:
--mdio@1c0b080 {
--	compatible = "allwinner,sun4i-a10-mdio";
--	reg = <0x01c0b080 0x14>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--};
--
--And at the board level:
--
--mdio@1c0b080 {
--	phy-supply = <&reg_emac_3v3>;
--
--	phy0: ethernet-phy@0 {
--		reg = <0>;
--	};
+-emac: ethernet@1c0b000 {
+-       compatible = "allwinner,sun4i-a10-emac";
+-       reg = <0x01c0b000 0x1000>;
+-       interrupts = <55>;
+-       clocks = <&ahb_gates 17>;
+-       phy = <&phy0>;
 -};
 -- 
 git-series 0.9.1
