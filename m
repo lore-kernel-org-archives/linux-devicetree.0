@@ -1,46 +1,40 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH] ARM: dts: stm32: activate dma for qspi on stm32mp157
-Date: Thu, 27 Jun 2019 14:09:05 +0200
-Message-ID: <1561637345-31441-1-git-send-email-ludovic.Barre@st.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 0/2] ASoC: soc-core: update dai_link init
+Date: Thu, 27 Jun 2019 14:13:48 +0200
+Message-ID: <20190627121350.21027-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+My initial goal with this patchset was to allow a dai_link to have no
+no platform component, instead of having dummy by default.
 
-This patch activates dma for qspi on stm32mp157.
+However, when rebasing, I discovered that Kuninori Morimoto had recently
+done that in a different way :)
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+I am still submitting my change since it should allow multiple platform
+components on a dai_link, which is one of the FIXME note in soc-core.
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 2afeee6..205ea1d 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -1074,6 +1074,9 @@
- 			reg = <0x58003000 0x1000>, <0x70000000 0x10000000>;
- 			reg-names = "qspi", "qspi_mm";
- 			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
-+			dmas = <&mdma1 22 0x10 0x100002 0x0 0x0>,
-+			       <&mdma1 22 0x10 0x100008 0x0 0x0>;
-+			dma-names = "tx", "rx";
- 			clocks = <&rcc QSPI_K>;
- 			resets = <&rcc QSPI_R>;
- 			status = "disabled";
+I have also added a check on the codecs component availability to align
+on what was done for platforms and cpus
+
+Change since v1 [0]:
+* Fix registartion typo
+* Rename dlc variable to codec/platform
+
+[0]: https://lkml.kernel.org/r/20190626133617.25959-1-jbrunet@baylibre.com
+
+Jerome Brunet (2):
+  ASoC: soc-core: defer card registration if codec component is missing
+  ASoC: soc-core: support dai_link with platforms_num != 1
+
+ include/sound/soc.h  |  6 ++++
+ sound/soc/soc-core.c | 67 +++++++++++++++++++++-----------------------
+ 2 files changed, 38 insertions(+), 35 deletions(-)
+
 -- 
-2.7.4
+2.21.0
