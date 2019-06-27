@@ -1,135 +1,97 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv5 2/2] coresight: Do not default to CPU0 for missing CPU phandle
-Date: Thu, 27 Jun 2019 23:45:29 +0530
-Message-ID: <1a6616f9f41b560963e86e24d533c5b2c3f05179.1561659046.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1561659046.git.saiprakash.ranjan@codeaurora.org>
+From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
+Date: Thu, 27 Jun 2019 11:16:35 -0700
+Message-ID: <20190627181636.5EA752064A@mail.kernel.org>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-2-brendanhiggins@google.com>
+ <20190620001526.93426218BE@mail.kernel.org>
+ <CAFd5g46Jhxsz6_VXHEVYvTeDRwwzgKpr=aUWLL5b3S4kUukb8g@mail.gmail.com>
+ <20190626034100.B238520883@mail.kernel.org>
+ <CAFd5g46zHAupdUh3wDuqPJti2M+_=oje_5weFe7AVLQfkDDM6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1561659046.git.saiprakash.ranjan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAFd5g46zHAupdUh3wDuqPJti2M+_=oje_5weFe7AVLQfkDDM6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuah <shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, David Rientjes <rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kbuild <linux-kbuild-u79uwXL29TasMV2rI37PzA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Coresight platform support assumes that a missing "cpu" phandle
-defaults to CPU0. This could be problematic and unnecessarily binds
-components to CPU0, where they may not be. In coresight etm and
-cpu-debug drivers, abort the probe for such cases.
+Quoting Brendan Higgins (2019-06-26 16:00:40)
+> On Tue, Jun 25, 2019 at 8:41 PM Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> 
+> > scenario like below, but where it is a problem. There could be three
+> > CPUs, or even one CPU and three threads if you want to describe the
+> > extra thread scenario.
+> >
+> > Here's my scenario where it isn't needed:
+> >
+> >     CPU0                                      CPU1
+> >     ----                                      ----
+> >     kunit_run_test(&test)
+> >                                               test_case_func()
+> >                                                 ....
+> >                                               [mock hardirq]
+> >                                                 kunit_set_success(&test)
+> >                                               [hardirq ends]
+> >                                                 ...
+> >                                                 complete(&test_done)
+> >       wait_for_completion(&test_done)
+> >       kunit_get_success(&test)
+> >
+> > We don't need to care about having locking here because success or
+> > failure only happens in one place and it's synchronized with the
+> > completion.
+> 
+> Here is the scenario I am concerned about:
+> 
+> CPU0                      CPU1                       CPU2
+> ----                      ----                       ----
+> kunit_run_test(&test)
+>                           test_case_func()
+>                             ....
+>                             schedule_work(foo_func)
+>                           [mock hardirq]             foo_func()
+>                             ...                        ...
+>                             kunit_set_success(false)   kunit_set_success(false)
+>                           [hardirq ends]               ...
+>                             ...
+>                             complete(&test_done)
+>   wait_for_completion(...)
+>   kunit_get_success(&test)
+> 
+> In my scenario, since both CPU1 and CPU2 update the success status of
+> the test simultaneously, even though they are setting it to the same
+> value. If my understanding is correct, this could result in a
+> write-tear on some architectures in some circumstances. I suppose we
+> could just make it an atomic boolean, but I figured locking is also
+> fine, and generally preferred.
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- .../hwtracing/coresight/coresight-cpu-debug.c |  3 +++
- drivers/hwtracing/coresight/coresight-etm3x.c |  3 +++
- drivers/hwtracing/coresight/coresight-etm4x.c |  3 +++
- .../hwtracing/coresight/coresight-platform.c  | 20 +++++++++----------
- 4 files changed, 19 insertions(+), 10 deletions(-)
+This is what we have WRITE_ONCE() and READ_ONCE() for. Maybe you could
+just use that in the getter and setters and remove the lock if it isn't
+used for anything else.
 
-diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-index 07a1367c733f..58bfd6319f65 100644
---- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-+++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-@@ -579,6 +579,9 @@ static int debug_probe(struct amba_device *adev, const struct amba_id *id)
- 		return -ENOMEM;
- 
- 	drvdata->cpu = coresight_get_cpu(dev);
-+	if (drvdata->cpu < 0)
-+		return drvdata->cpu;
-+
- 	if (per_cpu(debug_drvdata, drvdata->cpu)) {
- 		dev_err(dev, "CPU%d drvdata has already been initialized\n",
- 			drvdata->cpu);
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
-index 225c2982e4fe..e2cb6873c3f2 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x.c
-@@ -816,6 +816,9 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
- 	}
- 
- 	drvdata->cpu = coresight_get_cpu(dev);
-+	if (drvdata->cpu < 0)
-+		return drvdata->cpu;
-+
- 	desc.name  = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
- 	if (!desc.name)
- 		return -ENOMEM;
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 7fe266194ab5..7bcac8896fc1 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -1101,6 +1101,9 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
- 	spin_lock_init(&drvdata->spinlock);
- 
- 	drvdata->cpu = coresight_get_cpu(dev);
-+	if (drvdata->cpu < 0)
-+		return drvdata->cpu;
-+
- 	desc.name = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
- 	if (!desc.name)
- 		return -ENOMEM;
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index 3c5ceda8db24..cf580ffbc27c 100644
---- a/drivers/hwtracing/coresight/coresight-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -159,16 +159,16 @@ static int of_coresight_get_cpu(struct device *dev)
- 	struct device_node *dn;
- 
- 	if (!dev->of_node)
--		return 0;
-+		return -ENODEV;
-+
- 	dn = of_parse_phandle(dev->of_node, "cpu", 0);
--	/* Affinity defaults to CPU0 */
- 	if (!dn)
--		return 0;
-+		return -ENODEV;
-+
- 	cpu = of_cpu_node_to_id(dn);
- 	of_node_put(dn);
- 
--	/* Affinity to CPU0 if no cpu nodes are found */
--	return (cpu < 0) ? 0 : cpu;
-+	return cpu;
- }
- 
- /*
-@@ -310,7 +310,7 @@ of_get_coresight_platform_data(struct device *dev,
- 
- static inline int of_coresight_get_cpu(struct device *dev)
- {
--	return 0;
-+	return -ENODEV;
- }
- #endif
- 
-@@ -734,14 +734,14 @@ static int acpi_coresight_get_cpu(struct device *dev)
- 	struct acpi_device *adev = ACPI_COMPANION(dev);
- 
- 	if (!adev)
--		return 0;
-+		return -ENODEV;
- 	status = acpi_get_parent(adev->handle, &cpu_handle);
- 	if (ACPI_FAILURE(status))
--		return 0;
-+		return -ENODEV;
- 
- 	cpu = acpi_handle_to_logical_cpuid(cpu_handle);
- 	if (cpu >= nr_cpu_ids)
--		return 0;
-+		return -ENODEV;
- 	return cpu;
- }
- 
-@@ -769,7 +769,7 @@ acpi_get_coresight_platform_data(struct device *dev,
- 
- static inline int acpi_coresight_get_cpu(struct device *dev)
- {
--	return 0;
-+	return -ENODEV;
- }
- #endif
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+It may also be a good idea to have a kunit_fail_test() API that fails
+the test passed in with a WRITE_ONCE(false). Otherwise, the test is
+assumed successful and it isn't even possible for a test to change the
+state from failure to success due to a logical error because the API
+isn't available. Then we don't really need to have a generic
+kunit_set_success() function at all. We could have a kunit_test_failed()
+function too that replaces the kunit_get_success() function. That would
+read better in an if condition.
+
+> 
+> Also, to be clear, I am onboard with dropping then IRQ stuff for now.
+> I am fine moving to a mutex for the time being.
+> 
+
+Ok.
