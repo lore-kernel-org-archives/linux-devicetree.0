@@ -1,7 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 10/19] phy: mvebu-cp110-comphy: Cosmetic change in a helper
-Date: Thu, 27 Jun 2019 11:50:55 +0200
-Message-ID: <20190627095104.22529-11-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 12/19] phy: mvebu-cp110-comphy: Update comment about
+ powering off all lanes at boot
+Date: Thu, 27 Jun 2019 11:50:57 +0200
+Message-ID: <20190627095104.22529-13-miquel.raynal@bootlin.com>
 References: <20190627095104.22529-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,53 +22,35 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Before adding more logic, simplify a bit the writing of the
-mvebu_comphy_get_mode() helper by using a pointer instead of
-referencing a configuration with the entire table name.
+Now that all COMPHY modes are supported by the driver, update the
+comment stating that mvebu_comphy_power_off() should be called for
+each lane. This is still wrong because for compatibility reasons, it
+might break users running an old firmware (the driver only uses SMC
+calls for SATA, USB and PCIe configuration, there is no code in Linux
+to fallback on in these cases.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-index 6f8ae72fb9a9..fa222cf8f47b 100644
+index 3fb5517a6d30..36b2056eac99 100644
 --- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
 +++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-@@ -265,16 +265,18 @@ static int mvebu_comphy_get_mode(bool fw_mode, int lane, int port,
- 				 enum phy_mode mode, int submode)
- {
- 	int i, n = ARRAY_SIZE(mvebu_comphy_cp110_modes);
-+	const struct mvebu_comphy_conf *conf;
+@@ -941,9 +941,11 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
+ 		phy_set_drvdata(phy, lane);
  
- 	/* Unused PHY mux value is 0x0 */
- 	if (mode == PHY_MODE_INVALID)
- 		return 0;
- 
- 	for (i = 0; i < n; i++) {
--		if (mvebu_comphy_cp110_modes[i].lane == lane &&
--		    mvebu_comphy_cp110_modes[i].port == port &&
--		    mvebu_comphy_cp110_modes[i].mode == mode &&
--		    mvebu_comphy_cp110_modes[i].submode == submode)
-+		conf = &mvebu_comphy_cp110_modes[i];
-+		if (conf->lane == lane &&
-+		    conf->port == port &&
-+		    conf->mode == mode &&
-+		    conf->submode == submode)
- 			break;
+ 		/*
+-		 * Once all modes are supported in this driver we should call
++		 * All modes are supported in this driver so we could call
+ 		 * mvebu_comphy_power_off(phy) here to avoid relying on the
+-		 * bootloader/firmware configuration.
++		 * bootloader/firmware configuration, but for compatibility
++		 * reasons we cannot de-configure the COMPHY without being sure
++		 * that the firmware is up-to-date and fully-featured.
+ 		 */
  	}
  
-@@ -282,9 +284,9 @@ static int mvebu_comphy_get_mode(bool fw_mode, int lane, int port,
- 		return -EINVAL;
- 
- 	if (fw_mode)
--		return mvebu_comphy_cp110_modes[i].fw_mode;
-+		return conf->fw_mode;
- 	else
--		return mvebu_comphy_cp110_modes[i].mux;
-+		return conf->mux;
- }
- 
- static inline int mvebu_comphy_get_mux(int lane, int port,
 -- 
 2.19.1
