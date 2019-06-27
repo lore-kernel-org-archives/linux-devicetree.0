@@ -1,73 +1,59 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v3 2/3] reset: qcom-pon: Add support for gen2 pon
-Date: Thu, 27 Jun 2019 20:23:51 +0200
-Message-ID: <20190627182351.hkzfg2xtrdeijb4v@earth.universe>
-References: <20190614231451.45998-1-john.stultz@linaro.org>
- <20190614231451.45998-2-john.stultz@linaro.org>
- <20190616185637.GE31088@tuxbook-pro>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v5 05/26] leds: core: Add support for composing LED class
+ device names
+Date: Thu, 27 Jun 2019 20:28:06 +0200
+Message-ID: <7b038be0-274d-54f7-46f4-3dbe346169b8@gmail.com>
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+ <20190609190803.14815-6-jacek.anaszewski@gmail.com>
+ <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
+ <b65ba5ea-4b79-8245-bddb-3ecf1424892f@kaa.org.ua>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="krkyqiyijqfvwquy"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190616185637.GE31088@tuxbook-pro>
+In-Reply-To: <b65ba5ea-4b79-8245-bddb-3ecf1424892f@kaa.org.ua>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: John Stultz <john.stultz@linaro.org>, lkml <linux-kernel@vger.kernel.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Amit Pundir <amit.pundir@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+To: Oleh Kravchenko <oleg@kaa.org.ua>, linux-leds@vger.kernel.org, pavel@ucw.cz, dmurphy@ti.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com, linux@roeck-us.net, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Oleh,
 
---krkyqiyijqfvwquy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 6/26/19 10:07 PM, Oleh Kravchenko wrote:
+> Hello Jacek,
+> so after this patch will be merged.
+> 
+> There will be a way to define custom function name by DeviceTree?
 
-Hi,
+Yes. We standardize LED functions just to avoid spreading many similarly
+looking function names with the same semantics.
 
-On Sun, Jun 16, 2019 at 11:56:37AM -0700, Bjorn Andersson wrote:
-> On Fri 14 Jun 16:14 PDT 2019, John Stultz wrote:
->=20
-> > Add support for gen2 pon register so "reboot bootloader" can
-> > work on pixel3 and db845.
-> >=20
-> > Cc: Andy Gross <agross@kernel.org>
-> > Cc: David Brown <david.brown@linaro.org>
-> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Cc: Amit Pundir <amit.pundir@linaro.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Sebastian Reichel <sre@kernel.org>
-> > Cc: linux-arm-msm@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> >=20
->=20
-> Sebastian, please take the first two patches through your tree and we'll
-> pick the dts patch through arm-soc.
+We don't enforce using new function definitions in any way.
+It is possible to assign whatever you want to the DT label property
+(however now deprecated) or to the new DT function property.
 
-Done.
+It will be however preferable to use standard LED_FUNCTION definitions
+for new mainline bindings and dts files. Of course, as documentation
+states, it will be possible to propose new ones if none of existing
+fit for given application. This is only an initial set.
 
--- Sebastian
+> 26.06.19 22:05, Jacek Anaszewski пише:
+>> Gentle reminder.
+>>
+>> Pavel, Dan - any conclusions?
+>>
+>> This patch is the main part of the proposed changes,
+>> so it would be good to spot any remaining issues.
+>>
+>> What needs a consensus is also a new
+>> Documentation/leds/led-functions.txt file I introduce
+>> in the patch 26/26.
+>>
+>> Best regards,
+>> Jacek Anaszewski
+> 
 
---krkyqiyijqfvwquy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0VCbQACgkQ2O7X88g7
-+ppyNg/7BfW4RlYs2Mbp6/IMpbcPouG/tAxSmwpbNSiZs8NA9y87/m0/E0+cqaaC
-mvkLsfFXmt1cug4z7wskcBPe8ipUnwONkzA/ZttNhIJKIT7mU/VR7kaV7kmdzfXd
-j1jtJknW5MuxJoC6/Xv78lBOZd1cStlY2xrAxInbPmaos9xS83sY853XgOgGOOR4
-yrn5fS1Utsf6Ws5fU/eXZnkoOYbc6OmSRh8uJhnTzTTkSS4TJCSmgv7P72bA5vPv
-3rXWjyA7Oqwv1k5qiuMldNRctQPMN7k6/ZfWuqbZJ71c6BoiD/2fVTus1rCq1Np8
-qO49NDOXAlIk9vKMN0j5jsLHFjU2FG2cuEPp3+vkRXq/7716c2AICosKilw01tf5
-/jg/u7+QqhCYxyj0AQlBo80rituoKOA0nOcMCIyS4bvEQFVOpPR9PJoL4Nh0tzwS
-zTs9iiOSby5lFsKFV9i8UsEMlxwotmHUu+ffolsfi3V6941fVTbFgAllLN5Gl6sl
-f3px93C0UMbyn3d3bz2+jLwMaU6yVObQZ4uH7VhR/8II583A2ZHP1kgY7K/PmJWx
-H672IKsoNpRnns242WUqvAVP6BiGBw+Dv5cvwzKFHSA6iBeFqdP3HSby4i1Xrj8O
-idypzibFCOeQlTypDrbhhc3TCQr6lRBuGm5hCGflZFHTduXotKQ=
-=8aBk
------END PGP SIGNATURE-----
-
---krkyqiyijqfvwquy--
+-- 
+Best regards,
+Jacek Anaszewski
