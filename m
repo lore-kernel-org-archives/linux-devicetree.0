@@ -1,220 +1,71 @@
-From: Jitao Shi <jitao.shi@mediatek.com>
-Subject: [v5 6/7] drm/mediatek: change the dsi phytiming calculate method
-Date: Thu, 27 Jun 2019 16:01:14 +0800
-Message-ID: <20190627080116.40264-7-jitao.shi@mediatek.com>
-References: <20190627080116.40264-1-jitao.shi@mediatek.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH RESEND V2 1/3] clocksource/drivers/sysctr: Add optional
+ clock-frequency property
+Date: Thu, 27 Jun 2019 10:07:08 +0200
+Message-ID: <8f8aa6e0-5f31-8047-14b5-0e1f65316453@linaro.org>
+References: <20190623123850.22584-1-Anson.Huang@nxp.com>
+ <55abafbd-c010-32b5-6d76-26040830d5b0@linaro.org>
+ <DB3PR0402MB3916AB9F2260B0E46CCDDEC0F5E20@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <9c017ba9-ac6b-480b-d1f3-120289343101@linaro.org>
+ <DB3PR0402MB3916ED4AB17B6DDD2248DD44F5FD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627080116.40264-1-jitao.shi@mediatek.com>
+In-Reply-To: <DB3PR0402MB3916ED4AB17B6DDD2248DD44F5FD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com, ck.hu@mediate
+To: Anson Huang <anson.huang@nxp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Change the method of frame rate calc which can get more accurate
-frame rate.
+On 27/06/2019 02:43, Anson Huang wrote:
+> Hi, Daniel
+> 
+>> On 26/06/2019 03:42, Anson Huang wrote:
+>>> Hi, Daniel
+>>>
+>>>> On 23/06/2019 14:38, Anson.Huang@nxp.com wrote:
+>>>>> From: Anson Huang <Anson.Huang@nxp.com>
+>>>>>
+>>>>> Systems which use platform driver model for clock driver require the
+>>>>> clock frequency to be supplied via device tree when system counter
+>>>>> driver is enabled.
+>>>>>
+>>>>> This is necessary as in the platform driver model the of_clk
+>>>>> operations do not work correctly because system counter driver is
+>>>>> initialized in early phase of system boot up, and clock driver using
+>>>>> platform driver model is NOT ready at that time, it will cause
+>>>>> system counter driver initialization failed.
+>>>>>
+>>>>> Add the optinal clock-frequency to the device tree bindings of the
+>>>>> NXP system counter, so the frequency can be handed in and the of_clk
+>>>>> operations can be skipped.
+>>>>
+>>>> Isn't it possible to create a fixed-clock and refer to it? So no need
+>>>> to create a specific action before calling timer_of_init() ?
+>>>>
+>>>
+>>> As the clock must be ready before the TIMER_OF_DECLARE, so adding a
+>>> CLK_OF_DECLARE_DRIVER in clock driver to ONLY register a fixed-clock?
+>>> The system counter's frequency are different on different platforms,
+>>> so adding fixed clock in system counter driver is NOT a good idea,
+>>> ONLY the DT node or the clock driver can create this fixed clock according to
+>> platforms, can you advise where to create this fixed clock is better?
+>>
+>> Can you point me to a DT with the "nxp,sysctr-timer" ?
+> 
+> The DT node of system counter is new added in 3/3 of this patch series, also can be found
+> from below link:
+> https://patchwork.kernel.org/patch/11011703/
 
-data rate = pixel_clock * bit_per_pixel / lanes
-Adjust hfp_wc to adapt the additional phy_data
+Sorry, I was unclear. I meant a patch with the timer defined using a
+clock as defined currently in the binding (no clock-frequency).
 
-if MIPI_DSI_MODE_VIDEO_BURST
-	hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12 - 6;
-else
-	hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12;
 
-Note:
-//(2: 1 for sync, 1 for phy idle)
-data_phy_cycles = T_hs_exit + T_lpx + T_hs_prepare + T_hs_zero + 2;
-
-bpp: bit per pixel
-
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Tested-by: Ryan Case <ryandcase@chromium.org>
-Reviewed-by: CK Hu <ck.hu@mediatek.com
----
- drivers/gpu/drm/mediatek/mtk_dsi.c | 117 ++++++++++++++++++++---------
- 1 file changed, 80 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 1621e8cdacc2..cefdcb1509cb 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -144,12 +144,6 @@
- #define DATA_0				(0xff << 16)
- #define DATA_1				(0xff << 24)
- 
--#define T_LPX		5
--#define T_HS_PREP	6
--#define T_HS_TRAIL	8
--#define T_HS_EXIT	7
--#define T_HS_ZERO	10
--
- #define NS_TO_CYCLE(n, c)    ((n) / (c) + (((n) % (c)) ? 1 : 0))
- 
- #define MTK_DSI_HOST_IS_READ(type) \
-@@ -158,6 +152,25 @@
- 	(type == MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM) || \
- 	(type == MIPI_DSI_DCS_READ))
- 
-+struct mtk_phy_timing {
-+	u32 lpx;
-+	u32 da_hs_prepare;
-+	u32 da_hs_zero;
-+	u32 da_hs_trail;
-+
-+	u32 ta_go;
-+	u32 ta_sure;
-+	u32 ta_get;
-+	u32 da_hs_exit;
-+
-+	u32 clk_hs_zero;
-+	u32 clk_hs_trail;
-+
-+	u32 clk_hs_prepare;
-+	u32 clk_hs_post;
-+	u32 clk_hs_exit;
-+};
-+
- struct phy;
- 
- struct mtk_dsi_driver_data {
-@@ -188,6 +201,7 @@ struct mtk_dsi {
- 	enum mipi_dsi_pixel_format format;
- 	unsigned int lanes;
- 	struct videomode vm;
-+	struct mtk_phy_timing phy_timing;
- 	int refcount;
- 	bool enabled;
- 	u32 irq_data;
-@@ -221,17 +235,36 @@ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
- {
- 	u32 timcon0, timcon1, timcon2, timcon3;
- 	u32 ui, cycle_time;
-+	struct mtk_phy_timing *timing = &dsi->phy_timing;
-+
-+	ui = 1000000000 / dsi->data_rate;
-+	cycle_time = div_u64(8000000000ULL, dsi->data_rate);
-+
-+	timing->lpx = NS_TO_CYCLE(60, cycle_time);
-+	timing->da_hs_prepare = NS_TO_CYCLE(40 + 5 * ui, cycle_time);
-+	timing->da_hs_zero = NS_TO_CYCLE(110 + 6 * ui, cycle_time);
-+	timing->da_hs_trail = NS_TO_CYCLE(80 + 4 * ui, cycle_time);
- 
--	ui = 1000 / dsi->data_rate + 0x01;
--	cycle_time = 8000 / dsi->data_rate + 0x01;
-+	timing->ta_go = 4 * timing->lpx;
-+	timing->ta_sure = 3 * timing->lpx / 2;
-+	timing->ta_get = 5 * timing->lpx;
-+	timing->da_hs_exit = 2 * timing->lpx;
- 
--	timcon0 = T_LPX | T_HS_PREP << 8 | T_HS_ZERO << 16 | T_HS_TRAIL << 24;
--	timcon1 = 4 * T_LPX | (3 * T_LPX / 2) << 8 | 5 * T_LPX << 16 |
--		  T_HS_EXIT << 24;
--	timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
--		  (NS_TO_CYCLE(0x150, cycle_time) << 16);
--	timcon3 = NS_TO_CYCLE(0x40, cycle_time) | (2 * T_LPX) << 16 |
--		  NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8;
-+	timing->clk_hs_zero = NS_TO_CYCLE(336, cycle_time);
-+	timing->clk_hs_trail = NS_TO_CYCLE(100, cycle_time) + 10;
-+
-+	timing->clk_hs_prepare = NS_TO_CYCLE(64, cycle_time);
-+	timing->clk_hs_post = NS_TO_CYCLE(80 + 52 * ui, cycle_time);
-+	timing->clk_hs_exit = 2 * timing->lpx;
-+
-+	timcon0 = timing->lpx | timing->da_hs_prepare << 8 |
-+		  timing->da_hs_zero << 16 | timing->da_hs_trail << 24;
-+	timcon1 = timing->ta_go | timing->ta_sure << 8 |
-+		  timing->ta_get << 16 | timing->da_hs_exit << 24;
-+	timcon2 = 1 << 8 | timing->clk_hs_zero << 16 |
-+		  timing->clk_hs_trail << 24;
-+	timcon3 = timing->clk_hs_prepare | timing->clk_hs_post << 8 |
-+		  timing->clk_hs_exit << 16;
- 
- 	writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
- 	writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
-@@ -418,7 +451,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
- 	u32 horizontal_sync_active_byte;
- 	u32 horizontal_backporch_byte;
- 	u32 horizontal_frontporch_byte;
--	u32 dsi_tmp_buf_bpp;
-+	u32 dsi_tmp_buf_bpp, data_phy_cycles;
-+	struct mtk_phy_timing *timing = &dsi->phy_timing;
- 
- 	struct videomode *vm = &dsi->vm;
- 
-@@ -445,7 +479,34 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
- 		horizontal_backporch_byte = ((vm->hback_porch + vm->hsync_len) *
- 			dsi_tmp_buf_bpp - 10);
- 
--	horizontal_frontporch_byte = (vm->hfront_porch * dsi_tmp_buf_bpp - 12);
-+	data_phy_cycles = timing->lpx + timing->da_hs_prepare +
-+				  timing->da_hs_zero + timing->da_hs_exit + 2;
-+
-+	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
-+		if (vm->hfront_porch * dsi_tmp_buf_bpp >
-+		    data_phy_cycles * dsi->lanes + 18) {
-+			horizontal_frontporch_byte = vm->hfront_porch *
-+						     dsi_tmp_buf_bpp -
-+						     data_phy_cycles *
-+						     dsi->lanes - 18;
-+		} else {
-+			DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
-+			horizontal_frontporch_byte = vm->hfront_porch *
-+						     dsi_tmp_buf_bpp;
-+		}
-+	} else {
-+		if (vm->hfront_porch * dsi_tmp_buf_bpp >
-+		    data_phy_cycles * dsi->lanes + 12) {
-+			horizontal_frontporch_byte = vm->hfront_porch *
-+						     dsi_tmp_buf_bpp -
-+						     data_phy_cycles *
-+						     dsi->lanes - 12;
-+		} else {
-+			DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
-+			horizontal_frontporch_byte = vm->hfront_porch *
-+						     dsi_tmp_buf_bpp;
-+		}
-+	}
- 
- 	writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
- 	writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
-@@ -545,8 +606,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
- {
- 	struct device *dev = dsi->->host.dev;
- 	int ret;
--	u64 pixel_clock, total_bits;
--	u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
-+	u32 bit_per_pixel;
- 
- 	if (++dsi->refcount != 1)
- 		return 0;
-@@ -565,24 +625,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
- 		break;
- 	}
- 
--	/**
--	 * htotal_time = htotal * byte_per_pixel / num_lanes
--	 * overhead_time = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
--	 * mipi_ratio = (htotal_time + overhead_time) / htotal_time
--	 * data_rate = pixel_clock * bit_per_pixel * mipi_ratio / num_lanes;
--	 */
--	pixel_clock = dsi->vm.pixelclock;
--	htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
--			dsi->vm.hsync_len;
--	htotal_bits = htotal * bit_per_pixel;
--
--	overhead_cycles = T_LPX + T_HS_PREP + T_HS_ZERO + T_HS_TRAIL +
--			T_HS_EXIT;
--	overhead_bits = overhead_cycles * dsi->lanes * 8;
--	total_bits = htotal_bits + overhead_bits;
--
--	dsi->data_rate = DIV_ROUND_UP_ULL(pixel_clock * total_bits,
--					  htotal * dsi->lanes);
-+	dsi->data_rate = DIV_ROUND_UP_ULL(dsi->vm.pixelclock * bit_per_pixel, dsi->lanes);
- 
- 	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
- 	if (ret < 0) {
 -- 
-2.21.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
