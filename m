@@ -1,97 +1,47 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/2] arm64: dts: imx8mq: Correct OPP table according to
+Subject: RE: [PATCH 2/2] arm64: dts: imx8mm: Correct OPP table according to
  latest datasheet
-Date: Fri, 28 Jun 2019 06:16:00 +0000
-Message-ID: <DB3PR0402MB39161C60DC780B693933F9EAF5FC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Date: Fri, 28 Jun 2019 06:17:02 +0000
+Message-ID: <DB3PR0402MB39167143DD42C6A76B2A2A7BF5FC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 References: <20190628032800.8428-1-Anson.Huang@nxp.com>
- <VI1PR04MB50553915C0D978A8019BDC5CEEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+ <20190628032800.8428-2-Anson.Huang@nxp.com>
+ <VI1PR04MB50555399D8A3E4890D8C91E6EEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR04MB50553915C0D978A8019BDC5CEEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <VI1PR04MB50555399D8A3E4890D8C91E6EEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "angus@akkea.ca" <angus@akkea.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kern>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Leonard
-
-> -----Original Message-----
-> From: Leonard Crestez
-> Sent: Friday, June 28, 2019 1:59 PM
-> To: Anson Huang <anson.huang@nxp.com>; shawnguo@kernel.org; Jacky
-> Bai <ping.bai@nxp.com>; l.stach@pengutronix.de
-> Cc: robh+dt@kernel.org; mark.rutland@arm.com; s.hauer@pengutronix.de;
-> kernel@pengutronix.de; festevam@gmail.com; viresh.kumar@linaro.org;
-> Daniel Baluta <daniel.baluta@nxp.com>; Abel Vesa <abel.vesa@nxp.com>;
-> andrew.smirnov@gmail.com; ccaione@baylibre.com; angus@akkea.ca;
-> agx@sigxcpu.org; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; dl-linux-imx
-> <linux-imx@nxp.com>
-> Subject: Re: [PATCH 1/2] arm64: dts: imx8mq: Correct OPP table according to
-> latest datasheet
-> 
-> On 28.06.2019 06:37, Anson.Huang@nxp.com wrote:
-> > From: Anson Huang <Anson.Huang@nxp.com>
-> >
-> > According to latest datasheet (Rev.1, 10/2018) from below links, in
-> > the consumer datasheet, 1.5GHz is mentioned as highest opp but depends
-> > on speed grading fuse, and in the industrial datasheet, 1.3GHz is
-> > mentioned as highest opp but depends on speed grading fuse. 1.5GHz and
-> > 1.3GHz opp use same voltage, so no need for consumer part to support
-> > 1.3GHz opp, with same voltage, CPU should run at highest frequency in
-> > order to go into idle as quick as possible, this can save power.
-> 
-> I looked at the same datasheets and it's not clear to me that 1.3 Ghz should
-> be disallowed for consumer parts. Power consumption increases with both
-> voltage and frequency so having two OPPs with same voltage does make
-> sense.
-
-The consumer part datasheet does NOT mention 1.3GHz at all, so consumer part ONLY
-support 1GHz/1.5GHz, and industrial part ONLY support 800MHz/1.3GHz, this is what
-we did in our internal tree and NPI release, so better to make them aligned, otherwise,
-we have to change it when kernel upgrade.
-
-And normally, with same voltage, i.MX SoCs always run at highest frequency, so it is better
-to keep the rule, otherwise customer may ask, how about using same voltage to run at 1.2GHz or
-1.1GHz?
-
-> 
-> >   			opp-hz = /bits/ 64 <1300000000>;
-> >   			opp-microvolt = <1000000>;
-> > -			opp-supported-hw = <0xc>, <0x7>;
-> > +			/* Industrial only but rely on speed grading */
-> > +			opp-supported-hw = <0xc>, <0x4>;
-> 
-> Comment is false, you're explicitly excluding consumer parts via the second
-> element.
-
-Yes, that is what I meant to do, as we no need to support 1.3GHz for consumer
-part, with 1.0V, consumer part can run up to 1.5GHz.
-
-> 
-> >   			opp-hz = /bits/ 64 <1500000000>;
-> >   			opp-microvolt = <1000000>;
-> >   			/* Consumer only but rely on speed grading */
-> > -			opp-supported-hw = <0x8>, <0x7>;
-> > +			opp-supported-hw = <0x8>, <0x3>;
-> 
-> If you don't want to rely on the fact that only consumer parts should be
-> fused for 1.5 Ghz then please delete the comment.
-
-Don't quite understand, 1.5GHz is indeed consumer ONLY, but if the consumer
-part is fused to 1GHz, then 1.5GHz is also NOT available, so it also rely on speed
-grading. So keep the comment there is OK?
-
-Thanks,
-Anson.
+SGksIExlb25hcmQNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMZW9u
+YXJkIENyZXN0ZXoNCj4gU2VudDogRnJpZGF5LCBKdW5lIDI4LCAyMDE5IDI6MDEgUE0NCj4gVG86
+IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgSmFja3kgQmFpIDxwaW5nLmJhaUBu
+eHAuY29tPjsNCj4gbC5zdGFjaEBwZW5ndXRyb25peC5kZQ0KPiBDYzogcm9iaCtkdEBrZXJuZWwu
+b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsNCj4gcy5oYXVl
+ckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5j
+b207DQo+IHZpcmVzaC5rdW1hckBsaW5hcm8ub3JnOyBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFs
+dXRhQG54cC5jb20+OyBBYmVsDQo+IFZlc2EgPGFiZWwudmVzYUBueHAuY29tPjsgYW5kcmV3LnNt
+aXJub3ZAZ21haWwuY29tOw0KPiBjY2Fpb25lQGJheWxpYnJlLmNvbTsgYW5ndXNAYWtrZWEuY2E7
+IGFneEBzaWd4Y3B1Lm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggMi8yXSBhcm02NDogZHRzOiBpbXg4bW06IENvcnJlY3QgT1BQIHRhYmxlIGFjY29yZGlu
+ZyB0bw0KPiBsYXRlc3QgZGF0YXNoZWV0DQo+IA0KPiBPbiAyOC4wNi4yMDE5IDA2OjM3LCBBbnNv
+bi5IdWFuZ0BueHAuY29tIHdyb3RlOg0KPiANCj4gPiBBY2NvcmRpbmcgdG8gbGF0ZXN0IGRhdGFz
+aGVldCAoUmV2LjAuMiwgMDQvMjAxOSkgZnJvbSBiZWxvdyBsaW5rcywNCj4gPiAxLjhHSHogaXMg
+T05MWSBhdmFpbGFibGUgZm9yIGNvbnN1bWVyIHBhcnQsIHNvIHRoZSBtYXJrZXQgc2VnbWVudCBi
+aXRzDQo+ID4gZm9yIDEuOEdIeiBvcHAgc2hvdWxkIE9OTFkgYXZhaWxhYmxlIGZvciBjb25zdW1l
+ciBwYXJ0IGFjY29yZGluZ2x5Lg0KPiA+DQo+ID4gICAJCQlvcHAtaHogPSAvYml0cy8gNjQgPDE4
+MDAwMDAwMDA+Ow0KPiA+ICAgCQkJb3BwLW1pY3Jvdm9sdCA9IDwxMDAwMDAwPjsNCj4gPiAgIAkJ
+CS8qIENvbnN1bWVyIG9ubHkgYnV0IHJlbHkgb24gc3BlZWQgZ3JhZGluZyAqLw0KPiA+IC0JCQlv
+cHAtc3VwcG9ydGVkLWh3ID0gPDB4OD4sIDwweDc+Ow0KPiA+ICsJCQlvcHAtc3VwcG9ydGVkLWh3
+ID0gPDB4OD4sIDwweDM+Ow0KPiANCj4gT25seSBjb25zdW1lciBwYXJ0cyBzaG91bGQgYmUgZnVz
+ZWQgZm9yIHRoaXMgaGlnaGVzdCBPUFAuIElmIHlvdSBkb24ndCB3YW50DQo+IHRvIHJlbHkgb24g
+dGhpcyB0aGVuIG1heWJlIGFsc28gZGVsZXRlIHRoZSBjb21tZW50IGFib3ZlPw0KDQpBcyBJIHJl
+cGxpZWQgaW4gcHJldmlvdXMgaS5NWDhNUSBwYXRjaCwgaWYgdGhlIGNvbW1lbnRzIG1ha2UgcmVh
+ZGVyIGNvbmZ1c2VkLA0Kc2hvdWxkIHdlIGp1c3QgcmVtb3ZlIGFsbCB0aG9zZSBjb21tZW50cz8N
+Cg0KVGhhbmtzLA0KQW5zb24uDQoNCj4gDQo+IC0tDQo+IFJlZ2FyZHMsDQo+IGxlb25hcmQNCg==
