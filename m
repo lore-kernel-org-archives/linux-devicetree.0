@@ -1,89 +1,265 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/2] arm64: dts: imx8mq: Correct OPP table according to
- latest datasheet
-Date: Fri, 28 Jun 2019 06:59:22 +0000
-Message-ID: <DB3PR0402MB39166309D463520DE5C129C8F5FC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190628032800.8428-1-Anson.Huang@nxp.com>
- <VI1PR04MB50553915C0D978A8019BDC5CEEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
- <DB3PR0402MB39161C60DC780B693933F9EAF5FC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <VI1PR04MB505542FB866BC18A27D22B90EEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v4 1/2] mtd: rawnand: Add Macronix Raw NAND controller
+Date: Fri, 28 Jun 2019 09:18:36 +0200
+Message-ID: <20190628091836.3148d450@xps13>
+References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw>
+        <1561443056-13766-2-git-send-email-masonccyang@mxic.com.tw>
+        <20190627193635.29abff43@xps13>
+        <OFDDC43C05.7B4092B5-ON48258427.001EE57E-48258427.002122D1@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB505542FB866BC18A27D22B90EEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <OFDDC43C05.7B4092B5-ON48258427.001EE57E-48258427.002122D1@mxic.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
-Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kern>
+To: masonccyang@mxic.com.tw
+Cc: anders.roxell@linaro.org, bbrezillon@kernel.org, broonie@kernel.org, christophe.kerello@st.com, computersforpeace@gmail.com, devicetree@vger.kernel.org, dwmw2@infradead.org, jianxin.pan@amlogic.com, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, marek.vasut@gmail.com, paul@crapouillou.net, paul.burton@mips.com, richard@nod.at, stefan@agner.ch, vigneshr@ti.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVvbmFyZCBDcmVzdGV6
-DQo+IFNlbnQ6IEZyaWRheSwgSnVuZSAyOCwgMjAxOSAyOjQ1IFBNDQo+IFRvOiBBbnNvbiBIdWFu
-ZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT47DQo+
-IGwuc3RhY2hAcGVuZ3V0cm9uaXguZGUNCj4gQ2M6IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHJvYmgr
-ZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHMuaGF1ZXJAcGVuZ3V0cm9u
-aXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOw0KPiB2aXJl
-c2gua3VtYXJAbGluYXJvLm9yZzsgRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29t
-PjsgQWJlbA0KPiBWZXNhIDxhYmVsLnZlc2FAbnhwLmNvbT47IGFuZHJldy5zbWlybm92QGdtYWls
-LmNvbTsNCj4gY2NhaW9uZUBiYXlsaWJyZS5jb207IGFuZ3VzQGFra2VhLmNhOyBhZ3hAc2lneGNw
-dS5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1s
-aW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0g
-YXJtNjQ6IGR0czogaW14OG1xOiBDb3JyZWN0IE9QUCB0YWJsZSBhY2NvcmRpbmcgdG8NCj4gbGF0
-ZXN0IGRhdGFzaGVldA0KPiANCj4gT24gNi8yOC8yMDE5IDk6MTYgQU0sIEFuc29uIEh1YW5nIHdy
-b3RlOg0KPiA+PiBGcm9tOiBMZW9uYXJkIENyZXN0ZXoNCj4gPj4+IEZyb206IEFuc29uIEh1YW5n
-IDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+Pj4NCj4gPj4+IEFjY29yZGluZyB0byBsYXRlc3Qg
-ZGF0YXNoZWV0IChSZXYuMSwgMTAvMjAxOCkgZnJvbSBiZWxvdyBsaW5rcywgaW4NCj4gPj4+IHRo
-ZSBjb25zdW1lciBkYXRhc2hlZXQsIDEuNUdIeiBpcyBtZW50aW9uZWQgYXMgaGlnaGVzdCBvcHAg
-YnV0DQo+ID4+PiBkZXBlbmRzIG9uIHNwZWVkIGdyYWRpbmcgZnVzZSwgYW5kIGluIHRoZSBpbmR1
-c3RyaWFsIGRhdGFzaGVldCwNCj4gPj4+IDEuM0dIeiBpcyBtZW50aW9uZWQgYXMgaGlnaGVzdCBv
-cHAgYnV0IGRlcGVuZHMgb24gc3BlZWQgZ3JhZGluZw0KPiA+Pj4gZnVzZS4gMS41R0h6IGFuZCAx
-LjNHSHogb3BwIHVzZSBzYW1lIHZvbHRhZ2UsIHNvIG5vIG5lZWQgZm9yDQo+ID4+PiBjb25zdW1l
-ciBwYXJ0IHRvIHN1cHBvcnQgMS4zR0h6IG9wcCwgd2l0aCBzYW1lIHZvbHRhZ2UsIENQVSBzaG91
-bGQNCj4gPj4+IHJ1biBhdCBoaWdoZXN0IGZyZXF1ZW5jeSBpbiBvcmRlciB0byBnbyBpbnRvIGlk
-bGUgYXMgcXVpY2sgYXMgcG9zc2libGUsIHRoaXMNCj4gY2FuIHNhdmUgcG93ZXIuDQo+ID4+DQo+
-ID4+IEkgbG9va2VkIGF0IHRoZSBzYW1lIGRhdGFzaGVldHMgYW5kIGl0J3Mgbm90IGNsZWFyIHRv
-IG1lIHRoYXQgMS4zIEdoeg0KPiA+PiBzaG91bGQgYmUgZGlzYWxsb3dlZCBmb3IgY29uc3VtZXIg
-cGFydHMuIFBvd2VyIGNvbnN1bXB0aW9uIGluY3JlYXNlcw0KPiA+PiB3aXRoIGJvdGggdm9sdGFn
-ZSBhbmQgZnJlcXVlbmN5IHNvIGhhdmluZyB0d28gT1BQcyB3aXRoIHNhbWUgdm9sdGFnZQ0KPiA+
-PiBkb2VzIG1ha2Ugc2Vuc2UuDQo+ID4NCj4gPiBUaGUgY29uc3VtZXIgcGFydCBkYXRhc2hlZXQg
-ZG9lcyBOT1QgbWVudGlvbiAxLjNHSHogYXQgYWxsLCBzbw0KPiA+IGNvbnN1bWVyIHBhcnQgT05M
-WSBzdXBwb3J0IDFHSHovMS41R0h6LCBhbmQgaW5kdXN0cmlhbCBwYXJ0IE9OTFkNCj4gPiBzdXBw
-b3J0IDgwME1Iei8xLjNHSHosIHRoaXMgaXMgd2hhdCB3ZSBkaWQgaW4gb3VyIGludGVybmFsIHRy
-ZWUgYW5kDQo+ID4gTlBJIHJlbGVhc2UsIHNvIGJldHRlciB0byBtYWtlIHRoZW0gYWxpZ25lZCwg
-b3RoZXJ3aXNlLCB3ZSBoYXZlIHRvIGNoYW5nZQ0KPiBpdCB3aGVuIGtlcm5lbCB1cGdyYWRlLg0K
-PiANCj4gRGF0YXNoZWV0IHNlZW1zIGFtYmlndW91czogaXQgbWVudGlvbnMgIm1heCBmcmVxIGZv
-ciB2b2x0IiBzbyBteQ0KPiB1bmRlcnN0YW5kaW5nIGlzIHRoYXQgYW55IGxvd2VyIGZyZXFzIHNo
-b3VsZCBhbHNvIHdvcmsgYXQgdGhhdCB2b2x0YWdlLg0KPiANCj4gVGhpcyBhbHNvIHNlZW1zIHRv
-IGJlIHRoZSB1bmRlcnN0YW5kaW5nIGJlaGluZCBjb21taXQgOGNmZDgxM2M3MzA3DQo+ICgiYXJt
-NjQ6IGR0czogaW14OG1xOiBmaXggaGlnaGVyIENQVSBvcGVyYXRpbmcgcG9pbnQiKSBieSBMdWNh
-cy4gDQo+IA0KPiBPbiBkYXRhc2hlZXQgcGFnZSA3IGl0IG1lbnRpb25zIHRoYXQgcHJvZHVjdCBj
-b2RlIGNhbiBoYXZlICJKWiIgb3IgIkhaIg0KPiBmb3IgMS4zR2h6IG9yIDEuNUdoei4gQXJlIHlv
-dSBzYXlpbmcgdGhhdCBvbmx5IGluZHVzdHJpYWwgcGFydHMgY2FuIGJlICJKWiI/DQoNCklmIHRh
-a2UgYSBsb29rIGF0IHBhZ2UgNiB0YWJsZTIsIGluZHVzdHJpYWwgZGF0YXNoZWV0IE9OTFkgaGFz
-ICJIWiIsIGFuZCBjb25zdW1lcg0KRGF0YXNoZWV0IE9OTFkgaGFzICJKWiIuIEFuZCB5ZXMsIHRo
-YXQgaXMgbXkgdW5kZXJzdGFuZGluZy4NCg0KQW5kIGNvbnNpZGVyaW5nIG91ciBydWxlLCBJIGRv
-bid0IHRoaW5rIGlzIGJlbmVmaXQgZm9yIGNvbnN1bWVyIHBhcnQgdG8gcnVuIDEuM0dIei4NCg0K
-PiANCj4gPj4+ICAgIAkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8MTUwMDAwMDAwMD47DQo+ID4+PiAg
-ICAJCQlvcHAtbWljcm92b2x0ID0gPDEwMDAwMDA+Ow0KPiA+Pj4gICAgCQkJLyogQ29uc3VtZXIg
-b25seSBidXQgcmVseSBvbiBzcGVlZCBncmFkaW5nICovDQo+ID4+PiAtCQkJb3BwLXN1cHBvcnRl
-ZC1odyA9IDwweDg+LCA8MHg3PjsNCj4gPj4+ICsJCQlvcHAtc3VwcG9ydGVkLWh3ID0gPDB4OD4s
-IDwweDM+Ow0KPiA+Pg0KPiA+PiBJZiB5b3UgZG9uJ3Qgd2FudCB0byByZWx5IG9uIHRoZSBmYWN0
-IHRoYXQgb25seSBjb25zdW1lciBwYXJ0cyBzaG91bGQNCj4gPj4gYmUgZnVzZWQgZm9yIDEuNSBH
-aHogdGhlbiBwbGVhc2UgZGVsZXRlIHRoZSBjb21tZW50Lg0KPiA+DQo+ID4gRG9uJ3QgcXVpdGUg
-dW5kZXJzdGFuZCwgMS41R0h6IGlzIGluZGVlZCBjb25zdW1lciBPTkxZLCBidXQgaWYgdGhlDQo+
-ID4gY29uc3VtZXIgcGFydCBpcyBmdXNlZCB0byAxR0h6LCB0aGVuIDEuNUdIeiBpcyBhbHNvIE5P
-VCBhdmFpbGFibGUsIHNvDQo+ID4gaXQgYWxzbyByZWx5IG9uIHNwZWVkIGdyYWRpbmcuIFNvIGtl
-ZXAgdGhlIGNvbW1lbnQgdGhlcmUgaXMgT0s/DQo+IA0KPiBXaGF0IEkgbWVhbnQgd2l0aCB0aGF0
-IGNvbW1lbnQgaXMgdGhhdCAxLjVHaHogaXMgb25seSBtZW50aW9uZWQgZm9yDQo+IGNvbnN1bWVy
-IHBhcnRzIGJ1dCBpbnN0ZWFkIG9mIGV4cGxpY2l0bHkgYmFubmluZyBpdCBvbiBpbmR1c3RyaWFs
-IHBhcnRzIHdlIHJlbHkNCj4gb24gTUZHIG5ldmVyIGZ1c2luZyBpbmR1c3RyaWFsIHBhcnRzIGZv
-ciAxLjVHaHouDQo+IA0KPiBOb3cgeW91J3JlIGV4cGxpY2l0bHkgYmFubmluZyBpdCBvbiBpbmR1
-c3RyaWFsIHBhcnRzLg0KDQpZZXMsIGluZHVzdHJpYWwgcGFydHMgbmV2ZXIgc3VwcG9ydCB1cCB0
-byAxLjVHSHosIHNvIGV4cGxpY2l0bHkgYmFubmluZyBpdCBpcyBqdXN0IE9LLg0KVGhlIHNwZWVk
-IGdyYWRpbmcgZnVzZSBhbmQgbWFya2V0IHNlZ21lbnQgZnVzZSBhcmUgYWN0dWFsbHkgaGFzIHNv
-bWUgb3ZlcmxhcCwNCndlIGJldHRlciB0byBpbXBsZW1lbnQgYm90aCBvZiB0aGVtLg0KDQo+IA0K
-PiBUaGlzIGNvbW1lbnQgaXMgaW5kZWVkIGNvbmZ1c2luZyBzbyBiZXR0ZXIgdG8ganVzdCByZW1v
-dmUgYWxsIGluc3RhbmNlcy4NCg0KSSBhZ3JlZSB0byByZW1vdmUgdGhvc2UgY29tbWVudHMsIG5v
-IG5lZWQgdG8gbGV0IGl0IGludHJvZHVjZSBhbnkgY29uZnVzaW9uLg0KDQpBbnNvbi4NCg==
+Hi masonccyang@mxic.com.tw,
+
+masonccyang@mxic.com.tw wrote on Fri, 28 Jun 2019 14:01:55 +0800:
+
+> Hi Miquel,
+> 
+> 
+> > > Add a driver for Macronix raw NAND controller.  
+> > 
+> > Could you pass userspace major MTD tests and can you attach/mount/edit
+> > a UBI/UBIFS storage?  
+> 
+> mtd_debug passed and using dd utility to read and write 
+> with md5sum checking passed.
+
+Please don't use dd, use nanddump/nandwrite/flasherase/nandbiterrs and
+run the other tests from the mtd-utils test suite (available in
+Buildroot for instance).
+
+> 
+> UBI/UBIFS testing is not yet. will do it.
+> 
+> 
+> > > +static int mxic_nfc_clk_enable(struct mxic_nand_ctlr *nfc)
+> > > +{
+> > > +   int ret;
+> > > +
+> > > +   ret = clk_prepare_enable(nfc->send_clk);
+> > > +   if (ret)
+> > > +      return ret;
+> > > +
+> > > +   ret = clk_prepare_enable(nfc->send_dly_clk);
+> > > +   if (ret)
+> > > +      goto err_send_dly_clk;  
+> > 
+> > I'm not sure why you only enable 2 out of 3 clocks and also why ou
+> > handle two of them here (which is great, I prefer having a separate
+> > helper for that) and the other one elsewhere?
+> >   
+> 
+> send_clk and send_dly_clk are device domain clocks.
+> 
+> send_clk is clock without phase delay to ps_clk, used for sending device
+> signals except for SIO[7:0].
+> send_dly_clk is clock with phase delay to ps_clk, used for sending 
+> SIO[7:0]
+> 
+> ps_clk is system domain clock and it's a source clock of send_clk and 
+> send_dly_clk.
+
+And why is that explaining the fact that you configure them in
+different places? You can explain this with a nice comment at the top
+of the function, but I would rather prefer that you handle all three
+clocks in one go if possible.
+
+> 
+> > > +
+> > > +   return ret;
+> > > +
+> > > +err_send_dly_clk:
+> > > +   clk_disable_unprepare(nfc->send_clk);
+> > > +
+> > > +   return ret;
+> > > +}
+> > > +
+> > > +static void mxic_nfc_clk_disable(struct mxic_nand_ctlr *nfc)
+> > > +{
+> > > +   clk_disable_unprepare(nfc->send_clk);
+> > > +   clk_disable_unprepare(nfc->send_dly_clk);
+> > > +}
+> > > +
+> > > +static void mxic_nfc_set_input_delay(struct mxic_nand_ctlr *nfc, u8   
+> idly_code)
+> > > +{
+> > > +   writel(IDLY_CODE_VAL(0, idly_code) |
+> > > +          IDLY_CODE_VAL(1, idly_code) |
+> > > +          IDLY_CODE_VAL(2, idly_code) |
+> > > +          IDLY_CODE_VAL(3, idly_code),
+> > > +          nfc->regs + IDLY_CODE(0));
+> > > +   writel(IDLY_CODE_VAL(4, idly_code) |
+> > > +          IDLY_CODE_VAL(5, idly_code) |
+> > > +          IDLY_CODE_VAL(6, idly_code) |
+> > > +          IDLY_CODE_VAL(7, idly_code),
+> > > +          nfc->regs + IDLY_CODE(1));
+> > > +}
+> > > +
+> > > +static int mxic_nfc_clk_setup(struct mxic_nand_ctlr *nfc, unsigned   
+> long freq)
+> > > +{
+> > > +   int ret;
+> > > +
+> > > +   ret = clk_set_rate(nfc->send_clk, freq);
+> > > +   if (ret)
+> > > +      return ret;
+> > > +
+> > > +   ret = clk_set_rate(nfc->send_dly_clk, freq);
+> > > +   if (ret)
+> > > +      return ret;
+> > > +
+> > > +   /*
+> > > +    * A constant delay range from 0x0 ~ 0x1F for input delay,
+> > > +    * the unit is 78 ps, the max input delay is 2.418 ns.
+> > > +    */
+> > > +   mxic_nfc_set_input_delay(nfc, 0xf);
+> > > +
+> > > +   /*
+> > > +    * Phase degree = 360 * freq * output-delay
+> > > +    * where output-delay is a constant value 1 ns in FPGA.  
+> > 
+> > Will it always be in FPGA?  
+> 
+> yes.
+> 
+> >   
+> > > +    *
+> > > +    * Get Phase degree = 360 * freq * 1 ns
+> > > +    *                  = 360 * freq * 1 sec / 1000000000
+> > > +    *                  = 9 * freq / 25000000
+> > > +    */
+> > > +   ret = clk_set_phase(nfc->send_dly_clk, 9 * freq / 25000000);
+> > > +   if (ret)
+> > > +      return ret;
+> > > +
+> > > +   return 0;
+> > > +}
+> > > +
+> > > +static int mxic_nfc_set_freq(struct mxic_nand_ctlr *nfc, unsigned   
+> long freq)
+> > > +{
+> > > +   int ret;
+> > > +
+> > > +   if (freq > MXIC_NFC_MAX_CLK_HZ)
+> > > +      freq = MXIC_NFC_MAX_CLK_HZ;
+> > > +
+> > > +   mxic_nfc_clk_disable(nfc);
+> > > +   ret = mxic_nfc_clk_setup(nfc, freq);
+> > > +   if (ret)
+> > > +      return ret;
+> > > +
+> > > +   ret = mxic_nfc_clk_enable(nfc);
+> > > +   if (ret)
+> > > +      return ret;
+> > > +
+> > > +   return 0;
+> > > +}
+> > > +
+> > > +static void mxic_nfc_hw_init(struct mxic_nand_ctlr *nfc)
+> > > +{
+> > > +   writel(DATA_STROB_EDO_EN, nfc->regs + DATA_STROB);
+> > > +   writel(HC_CFG_NIO(8) | HC_CFG_TYPE(1, HC_CFG_TYPE_RAW_NAND) |
+> > > +          HC_CFG_SLV_ACT(0) | HC_CFG_MAN_CS_EN |
+> > > +          HC_CFG_IDLE_SIO_LVL(1), nfc->regs + HC_CFG);
+> > > +   writel(INT_STS_ALL, nfc->regs + INT_STS_EN);
+> > > +   writel(0x0, nfc->regs + ONFI_DIN_CNT(0));
+> > > +   writel(0, nfc->regs + LRD_CFG);
+> > > +   writel(0, nfc->regs + LRD_CTRL);
+> > > +   writel(0x0, nfc->regs + HC_EN);
+> > > +
+> > > +   /* Default 10 MHz to setup tRC_min/tWC_min:100 ns */
+> > > +   mxic_nfc_set_freq(nfc, 10000000);
+> > > +}
+> > > +
+> > > +static void mxic_nfc_cs_enable(struct mxic_nand_ctlr *nfc)
+> > > +{
+> > > +   writel(readl(nfc->regs + HC_CFG) | HC_CFG_MAN_CS_EN,
+> > > +          nfc->regs + HC_CFG);
+> > > +   writel(HC_CFG_MAN_CS_ASSERT | readl(nfc->regs + HC_CFG),
+> > > +          nfc->regs + HC_CFG);  
+> > 
+> > So you can drive only one CS with this controller?  
+> 
+> yes,
+> 
+> >   
+> > > +}
+> > > +
+> > > +static void mxic_nfc_cs_disable(struct mxic_nand_ctlr *nfc)
+> > > +{
+> > > +   writel(~HC_CFG_MAN_CS_ASSERT & readl(nfc->regs + HC_CFG),
+> > > +          nfc->regs + HC_CFG);
+> > > +}
+> > > +
+> > > +static int  mxic_nfc_wait_ready(struct nand_chip *chip)
+> > > +{
+> > > +   struct mxic_nand_ctlr *nfc = nand_get_controller_data(chip);
+> > > +   u32 sts;
+> > > +
+> > > +   return readl_poll_timeout(nfc->regs + INT_STS, sts,
+> > > +              sts & INT_RDY_PIN, 0, USEC_PER_SEC);
+> > > +}
+> > > +
+> > > +static int mxic_nfc_data_xfer(struct mxic_nand_ctlr *nfc, const void   
+> *txbuf,
+> > > +               void *rxbuf, unsigned int len)
+> > > +{
+> > > +   unsigned int pos = 0;
+> > > +
+> > > +   while (pos < len) {
+> > > +      unsigned int nbytes = len - pos;
+> > > +      u32 data = 0xffffffff;
+> > > +      u32 sts;
+> > > +      int ret;
+> > > +
+> > > +      if (nbytes > 4)
+> > > +         nbytes = 4;
+> > > +
+> > > +      if (txbuf)
+> > > +         memcpy(&data, txbuf + pos, nbytes);
+> > > +
+> > > +      ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
+> > > +                sts & INT_TX_EMPTY, 0, USEC_PER_SEC);
+> > > +      if (ret)
+> > > +         return ret;
+> > > +
+> > > +      writel(data, nfc->regs + TXD(nbytes % 4));
+> > > +
+> > > +      if (rxbuf) {
+> > > +         ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
+> > > +                   sts & INT_TX_EMPTY, 0,
+> > > +                   USEC_PER_SEC);
+> > > +         if (ret)
+> > > +            return ret;
+> > > +
+> > > +         ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
+> > > +                   sts & INT_RX_NOT_EMPTY, 0,
+> > > +                   USEC_PER_SEC);
+> > > +         if (ret)
+> > > +            return ret;
+> > > +
+> > > +         data = readl(nfc->regs + RXD);
+> > > +         data >>= (8 * (4 - nbytes));
+> > > +         memcpy(rxbuf + pos, &data, nbytes);
+> > > +         WARN_ON(readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY);
+> > > +      } else {
+> > > +         readl(nfc->regs + RXD);
+> > > +      }
+> > > +      WARN_ON(readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY);  
+> > 
+> > WARN_ON() is maybe a bit overkill here?  
+> 
+> should I remove it ?
+
+I would stick to regular dev_warn.
+
+
+Thanks,
+Miquèl
