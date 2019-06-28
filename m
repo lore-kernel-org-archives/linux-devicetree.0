@@ -1,137 +1,89 @@
-From: masonccyang@mxic.com.tw
-Subject: Re: [PATCH v4 2/2] dt-bindings: mtd: Document Macronix raw NAND
- controller bindings
-Date: Fri, 28 Jun 2019 14:48:02 +0800
-Message-ID: <OFFBD1710A.54AC467B-ON48258427.0023FCA3-48258427.00255B71@mxic.com.tw>
-References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw>	<1561443056-13766-3-git-send-email-masonccyang@mxic.com.tw>
- <20190627192609.0965f6d5@xps13>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 1/2] arm64: dts: imx8mq: Correct OPP table according to
+ latest datasheet
+Date: Fri, 28 Jun 2019 06:59:22 +0000
+Message-ID: <DB3PR0402MB39166309D463520DE5C129C8F5FC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190628032800.8428-1-Anson.Huang@nxp.com>
+ <VI1PR04MB50553915C0D978A8019BDC5CEEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39161C60DC780B693933F9EAF5FC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <VI1PR04MB505542FB866BC18A27D22B90EEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20190627192609.0965f6d5@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: devicetree@vger.kernel.org, christophe.kerello@st.com, vigneshr@ti.com, jianxin.pan@amlogic.com, bbrezillon@kernel.org, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, stefan@agner.ch, paul@crapouillou.net, marek.vasut@gmail.com, paul.burton@mips.com, broonie@kernel.org, linux-mtd@lists.infradead.org, richard@nod.at, anders.roxell@linaro.org, liang.yang@amlogic.com, computersforpeace@gmail.com, dwmw2@infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <VI1PR04MB505542FB866BC18A27D22B90EEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kern>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi Miquel,
-
-> > Document the bindings used by the Macronix raw NAND controller.
-> > 
-> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > ---
-> >  .../devicetree/bindings/mtd/mxic-nand.txt          | 26 
-++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >  create mode 100644 
-Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/
-> Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> > new file mode 100644
-> > index 0000000..3d198e4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> > @@ -0,0 +1,26 @@
-> > +Macronix Raw NAND Controller Device Tree Bindings
-> > +-------------------------------------------------
-> > +
-> > +Required properties:
-> > +- compatible: should be "mxic,raw-nand-ctlr"
-> 
-> I would prefer "macronix,nand-controller"
-
-okay, will patch it.
-
-> 
-> > +- reg: should contain 1 entrie for the registers
-> 
->                            entry
-> 
-> > +- reg-names: should contain "regs"
-> 
-> Not sure you need that?
-
-for a base address of ctlr registers.
-
-> 
-> > +- interrupts: interrupt line connected to this NAND controller
-> > +- clock-names: should contain "ps_clk", "send_clk" and "send_dly_clk"
-> > +- clocks: should contain 3 entries for the "ps_clk", "send_clk" and
-> > +    "send_dly_clk" clocks
-> 
-> s/entries/phandles/ ?
-
-?
-as I know that kernel views the phandle values as device tree structure
-information instead of device tree data and thus does not store them as
-properties.
-
-
-> 
-> > +
-> > +Example:
-> > +
-> > +   nand: mxic-nfc@43c30000 {
-> > +      compatible = "mxic,raw-nand-ctlr";
-> > +      reg = <0x43c30000 0x10000>;
-> > +      reg-names = "regs";
-> > +      clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-> > +      clock-names = "send_clk", "send_dly_clk", "ps_clk";
-> > +
-> > +      nand-ecc-mode = "soft";
-> > +      nand-ecc-algo = "bch";
-> > +      nand-ecc-step-size = <512>;
-> > +      nand-ecc-strength = <8>;
-> 
-> The last 4 lines are probably not needed.
-
-okay, will remove them.
-
-thanks for your review.
-best regards,
-Mason
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVvbmFyZCBDcmVzdGV6
+DQo+IFNlbnQ6IEZyaWRheSwgSnVuZSAyOCwgMjAxOSAyOjQ1IFBNDQo+IFRvOiBBbnNvbiBIdWFu
+ZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT47DQo+
+IGwuc3RhY2hAcGVuZ3V0cm9uaXguZGUNCj4gQ2M6IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHJvYmgr
+ZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHMuaGF1ZXJAcGVuZ3V0cm9u
+aXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOw0KPiB2aXJl
+c2gua3VtYXJAbGluYXJvLm9yZzsgRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29t
+PjsgQWJlbA0KPiBWZXNhIDxhYmVsLnZlc2FAbnhwLmNvbT47IGFuZHJldy5zbWlybm92QGdtYWls
+LmNvbTsNCj4gY2NhaW9uZUBiYXlsaWJyZS5jb207IGFuZ3VzQGFra2VhLmNhOyBhZ3hAc2lneGNw
+dS5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1s
+aW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0g
+YXJtNjQ6IGR0czogaW14OG1xOiBDb3JyZWN0IE9QUCB0YWJsZSBhY2NvcmRpbmcgdG8NCj4gbGF0
+ZXN0IGRhdGFzaGVldA0KPiANCj4gT24gNi8yOC8yMDE5IDk6MTYgQU0sIEFuc29uIEh1YW5nIHdy
+b3RlOg0KPiA+PiBGcm9tOiBMZW9uYXJkIENyZXN0ZXoNCj4gPj4+IEZyb206IEFuc29uIEh1YW5n
+IDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+Pj4NCj4gPj4+IEFjY29yZGluZyB0byBsYXRlc3Qg
+ZGF0YXNoZWV0IChSZXYuMSwgMTAvMjAxOCkgZnJvbSBiZWxvdyBsaW5rcywgaW4NCj4gPj4+IHRo
+ZSBjb25zdW1lciBkYXRhc2hlZXQsIDEuNUdIeiBpcyBtZW50aW9uZWQgYXMgaGlnaGVzdCBvcHAg
+YnV0DQo+ID4+PiBkZXBlbmRzIG9uIHNwZWVkIGdyYWRpbmcgZnVzZSwgYW5kIGluIHRoZSBpbmR1
+c3RyaWFsIGRhdGFzaGVldCwNCj4gPj4+IDEuM0dIeiBpcyBtZW50aW9uZWQgYXMgaGlnaGVzdCBv
+cHAgYnV0IGRlcGVuZHMgb24gc3BlZWQgZ3JhZGluZw0KPiA+Pj4gZnVzZS4gMS41R0h6IGFuZCAx
+LjNHSHogb3BwIHVzZSBzYW1lIHZvbHRhZ2UsIHNvIG5vIG5lZWQgZm9yDQo+ID4+PiBjb25zdW1l
+ciBwYXJ0IHRvIHN1cHBvcnQgMS4zR0h6IG9wcCwgd2l0aCBzYW1lIHZvbHRhZ2UsIENQVSBzaG91
+bGQNCj4gPj4+IHJ1biBhdCBoaWdoZXN0IGZyZXF1ZW5jeSBpbiBvcmRlciB0byBnbyBpbnRvIGlk
+bGUgYXMgcXVpY2sgYXMgcG9zc2libGUsIHRoaXMNCj4gY2FuIHNhdmUgcG93ZXIuDQo+ID4+DQo+
+ID4+IEkgbG9va2VkIGF0IHRoZSBzYW1lIGRhdGFzaGVldHMgYW5kIGl0J3Mgbm90IGNsZWFyIHRv
+IG1lIHRoYXQgMS4zIEdoeg0KPiA+PiBzaG91bGQgYmUgZGlzYWxsb3dlZCBmb3IgY29uc3VtZXIg
+cGFydHMuIFBvd2VyIGNvbnN1bXB0aW9uIGluY3JlYXNlcw0KPiA+PiB3aXRoIGJvdGggdm9sdGFn
+ZSBhbmQgZnJlcXVlbmN5IHNvIGhhdmluZyB0d28gT1BQcyB3aXRoIHNhbWUgdm9sdGFnZQ0KPiA+
+PiBkb2VzIG1ha2Ugc2Vuc2UuDQo+ID4NCj4gPiBUaGUgY29uc3VtZXIgcGFydCBkYXRhc2hlZXQg
+ZG9lcyBOT1QgbWVudGlvbiAxLjNHSHogYXQgYWxsLCBzbw0KPiA+IGNvbnN1bWVyIHBhcnQgT05M
+WSBzdXBwb3J0IDFHSHovMS41R0h6LCBhbmQgaW5kdXN0cmlhbCBwYXJ0IE9OTFkNCj4gPiBzdXBw
+b3J0IDgwME1Iei8xLjNHSHosIHRoaXMgaXMgd2hhdCB3ZSBkaWQgaW4gb3VyIGludGVybmFsIHRy
+ZWUgYW5kDQo+ID4gTlBJIHJlbGVhc2UsIHNvIGJldHRlciB0byBtYWtlIHRoZW0gYWxpZ25lZCwg
+b3RoZXJ3aXNlLCB3ZSBoYXZlIHRvIGNoYW5nZQ0KPiBpdCB3aGVuIGtlcm5lbCB1cGdyYWRlLg0K
+PiANCj4gRGF0YXNoZWV0IHNlZW1zIGFtYmlndW91czogaXQgbWVudGlvbnMgIm1heCBmcmVxIGZv
+ciB2b2x0IiBzbyBteQ0KPiB1bmRlcnN0YW5kaW5nIGlzIHRoYXQgYW55IGxvd2VyIGZyZXFzIHNo
+b3VsZCBhbHNvIHdvcmsgYXQgdGhhdCB2b2x0YWdlLg0KPiANCj4gVGhpcyBhbHNvIHNlZW1zIHRv
+IGJlIHRoZSB1bmRlcnN0YW5kaW5nIGJlaGluZCBjb21taXQgOGNmZDgxM2M3MzA3DQo+ICgiYXJt
+NjQ6IGR0czogaW14OG1xOiBmaXggaGlnaGVyIENQVSBvcGVyYXRpbmcgcG9pbnQiKSBieSBMdWNh
+cy4gDQo+IA0KPiBPbiBkYXRhc2hlZXQgcGFnZSA3IGl0IG1lbnRpb25zIHRoYXQgcHJvZHVjdCBj
+b2RlIGNhbiBoYXZlICJKWiIgb3IgIkhaIg0KPiBmb3IgMS4zR2h6IG9yIDEuNUdoei4gQXJlIHlv
+dSBzYXlpbmcgdGhhdCBvbmx5IGluZHVzdHJpYWwgcGFydHMgY2FuIGJlICJKWiI/DQoNCklmIHRh
+a2UgYSBsb29rIGF0IHBhZ2UgNiB0YWJsZTIsIGluZHVzdHJpYWwgZGF0YXNoZWV0IE9OTFkgaGFz
+ICJIWiIsIGFuZCBjb25zdW1lcg0KRGF0YXNoZWV0IE9OTFkgaGFzICJKWiIuIEFuZCB5ZXMsIHRo
+YXQgaXMgbXkgdW5kZXJzdGFuZGluZy4NCg0KQW5kIGNvbnNpZGVyaW5nIG91ciBydWxlLCBJIGRv
+bid0IHRoaW5rIGlzIGJlbmVmaXQgZm9yIGNvbnN1bWVyIHBhcnQgdG8gcnVuIDEuM0dIei4NCg0K
+PiANCj4gPj4+ICAgIAkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8MTUwMDAwMDAwMD47DQo+ID4+PiAg
+ICAJCQlvcHAtbWljcm92b2x0ID0gPDEwMDAwMDA+Ow0KPiA+Pj4gICAgCQkJLyogQ29uc3VtZXIg
+b25seSBidXQgcmVseSBvbiBzcGVlZCBncmFkaW5nICovDQo+ID4+PiAtCQkJb3BwLXN1cHBvcnRl
+ZC1odyA9IDwweDg+LCA8MHg3PjsNCj4gPj4+ICsJCQlvcHAtc3VwcG9ydGVkLWh3ID0gPDB4OD4s
+IDwweDM+Ow0KPiA+Pg0KPiA+PiBJZiB5b3UgZG9uJ3Qgd2FudCB0byByZWx5IG9uIHRoZSBmYWN0
+IHRoYXQgb25seSBjb25zdW1lciBwYXJ0cyBzaG91bGQNCj4gPj4gYmUgZnVzZWQgZm9yIDEuNSBH
+aHogdGhlbiBwbGVhc2UgZGVsZXRlIHRoZSBjb21tZW50Lg0KPiA+DQo+ID4gRG9uJ3QgcXVpdGUg
+dW5kZXJzdGFuZCwgMS41R0h6IGlzIGluZGVlZCBjb25zdW1lciBPTkxZLCBidXQgaWYgdGhlDQo+
+ID4gY29uc3VtZXIgcGFydCBpcyBmdXNlZCB0byAxR0h6LCB0aGVuIDEuNUdIeiBpcyBhbHNvIE5P
+VCBhdmFpbGFibGUsIHNvDQo+ID4gaXQgYWxzbyByZWx5IG9uIHNwZWVkIGdyYWRpbmcuIFNvIGtl
+ZXAgdGhlIGNvbW1lbnQgdGhlcmUgaXMgT0s/DQo+IA0KPiBXaGF0IEkgbWVhbnQgd2l0aCB0aGF0
+IGNvbW1lbnQgaXMgdGhhdCAxLjVHaHogaXMgb25seSBtZW50aW9uZWQgZm9yDQo+IGNvbnN1bWVy
+IHBhcnRzIGJ1dCBpbnN0ZWFkIG9mIGV4cGxpY2l0bHkgYmFubmluZyBpdCBvbiBpbmR1c3RyaWFs
+IHBhcnRzIHdlIHJlbHkNCj4gb24gTUZHIG5ldmVyIGZ1c2luZyBpbmR1c3RyaWFsIHBhcnRzIGZv
+ciAxLjVHaHouDQo+IA0KPiBOb3cgeW91J3JlIGV4cGxpY2l0bHkgYmFubmluZyBpdCBvbiBpbmR1
+c3RyaWFsIHBhcnRzLg0KDQpZZXMsIGluZHVzdHJpYWwgcGFydHMgbmV2ZXIgc3VwcG9ydCB1cCB0
+byAxLjVHSHosIHNvIGV4cGxpY2l0bHkgYmFubmluZyBpdCBpcyBqdXN0IE9LLg0KVGhlIHNwZWVk
+IGdyYWRpbmcgZnVzZSBhbmQgbWFya2V0IHNlZ21lbnQgZnVzZSBhcmUgYWN0dWFsbHkgaGFzIHNv
+bWUgb3ZlcmxhcCwNCndlIGJldHRlciB0byBpbXBsZW1lbnQgYm90aCBvZiB0aGVtLg0KDQo+IA0K
+PiBUaGlzIGNvbW1lbnQgaXMgaW5kZWVkIGNvbmZ1c2luZyBzbyBiZXR0ZXIgdG8ganVzdCByZW1v
+dmUgYWxsIGluc3RhbmNlcy4NCg0KSSBhZ3JlZSB0byByZW1vdmUgdGhvc2UgY29tbWVudHMsIG5v
+IG5lZWQgdG8gbGV0IGl0IGludHJvZHVjZSBhbnkgY29uZnVzaW9uLg0KDQpBbnNvbi4NCg==
