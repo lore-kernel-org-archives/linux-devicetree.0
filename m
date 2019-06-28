@@ -1,61 +1,129 @@
 From: Keerthy <j-keerthy@ti.com>
-Subject: [RESEND PATCH 00/10] crypto: k3: Add sa2ul driver
-Date: Fri, 28 Jun 2019 09:57:35 +0530
-Message-ID: <20190628042745.28455-1-j-keerthy@ti.com>
+Subject: [RESEND PATCH 03/10] crypto: sa2ul: Add AES ECB Mode support
+Date: Fri, 28 Jun 2019 09:57:38 +0530
+Message-ID: <20190628042745.28455-4-j-keerthy@ti.com>
+References: <20190628042745.28455-1-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190628042745.28455-1-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org
-Cc: nm@ti.com, devicetree@vger.kernel.org, j-keerthy@ti.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, j-keerthy@ti.com, linux-crypto@vger.kernel.org, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHNlcmllcyBhZGRzIENyeXB0byBoYXJkd2FyZSBhY2NlbGVyYXRvciBzdXBwb3J0IGZvciBT
-QTJVTC4KU0EyVUwgc3RhbmRzIGZvciBzZWN1cml0eSBhY2NlbGVyYXRvciB1bHRyYSBsaXRlLgoK
-VGhlIFNlY3VyaXR5IEFjY2VsZXJhdG9yIChTQTJfVUwpIHN1YnN5c3RlbSBwcm92aWRlcyBoYXJk
-d2FyZQpjcnlwdG9ncmFwaGljIGFjY2VsZXJhdGlvbiBmb3IgdGhlIGZvbGxvd2luZyB1c2UgY2Fz
-ZXM6CuKAoiBFbmNyeXB0aW9uIGFuZCBhdXRoZW50aWNhdGlvbiBmb3Igc2VjdXJlIGJvb3QK4oCi
-IEVuY3J5cHRpb24gYW5kIGF1dGhlbnRpY2F0aW9uIG9mIGNvbnRlbnQgaW4gYXBwbGljYXRpb25z
-CiAgcmVxdWlyaW5nIERSTSAoZGlnaXRhbCByaWdodHMgbWFuYWdlbWVudCkgYW5kCiAgY29udGVu
-dC9hc3NldCBwcm90ZWN0aW9uClRoZSBkZXZpY2UgaW5jbHVkZXMgb25lIGluc3RhbnRpYXRpb24g
-b2YgU0EyX1VMIG5hbWVkIFNBMl9VTDAKClNBMlVMIG5lZWRzIG9uIHR4IGNoYW5uZWwgYW5kIGEg
-cGFpciBvZiByeCBkbWEgY2hhbm5lbHMuCgpUaGlzIHNlcmllcyBoYXMgZGVwZW5kZW5jeSBvbiBV
-RE1BIHNlcmllcy4gSGVuY2UgaXMgYmFzZWQgb24gdG9wIG9mOgoKaHR0cHM6Ly9wYXRjaHdvcmsu
-a2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LWRtYWVuZ2luZS9saXN0Lz9zZXJpZXM9MTE0MTA1CgpU
-aGUgYWJvdmUgc2VyaWVzIGFkZHMgY291cGxlIG9mIGRtYWVuZ2luZSBBUElzIHRoYXQgYXJlIHVz
-ZWQKYnkgdGhlIHNhMnVsIGRyaXZlci4gSGVuY2UgdGhlcmUgaXMgYSBoYXJkIGRlcGVuZGVuY3kg
-b24gdGhlCmFib3ZlIHNlcmllcy4KClJlc2VuZGluZyB3aXRoIGxpbnV4LWNyeXB0byBsaXN0IGlu
-IENjLgoKS2VlcnRoeSAoMTApOgogIGR0LWJpbmRpbmdzOiBjcnlwdG86IGszOiBBZGQgc2EydWwg
-YmluZGluZ3MgZG9jdW1lbnRhdGlvbgogIGNyeXB0bzogc2EydWw6IEFkZCBjcnlwdG8gZHJpdmVy
-CiAgY3J5cHRvOiBzYTJ1bDogQWRkIEFFUyBFQ0IgTW9kZSBzdXBwb3J0CiAgY3J5cHRvOiBzYTJ1
-bDogQWRkIGFlYWQgc3VwcG9ydCBmb3IgaG1hYyhzaGExKWNiYyhhZXMpIGFsZ29yaXRobQogIGNy
-eXB0bzogc2hhMjU2X2dlbmVyaWM6IEV4cG9ydCB0aGUgVHJhbnNmb3JtIGZ1bmN0aW9uCiAgY3J5
-cHRvOiBzYTJ1bDogQWRkIGhtYWMoc2hhMjU2KWNiYyhhZXMpIEFFQUQgQWxnbyBzdXBwb3J0CiAg
-Y3J5cHRvOiBzYTJ1bDogQWRkIGhtYWMoc2hhMSkgSE1BQyBhbGdvcml0aG0gc3VwcG9ydAogIGNy
-eXB0bzogc2EydWw6IEFkZCBobWFjKHNoYTI1NikgSE1BQyBhbGdvcml0aG0gc3VwcG9ydAogIHNh
-MnVsOiBBZGQgM0RFUyBFQ0IgJiBDQkMgTW9kZSBzdXBwb3J0CiAgYXJtNjQ6IGR0czogazMtYW02
-OiBBZGQgY3J5cHRvIGFjY2VsYXJhdG9yIG5vZGUKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9j
-cnlwdG8vc2EydWwudHh0ICAgICAgfCAgIDQ3ICsKIGFyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMt
-YW02NS1tYWluLmR0c2kgICAgICB8ICAgMzMgKwogY3J5cHRvL3NoYTI1Nl9nZW5lcmljLmMgICAg
-ICAgICAgICAgICAgICAgICAgIHwgICAgMyArLQogZHJpdmVycy9jcnlwdG8vS2NvbmZpZyAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgICAxNyArCiBkcml2ZXJzL2NyeXB0by9NYWtlZmlsZSAgICAg
-ICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGRyaXZlcnMvY3J5cHRvL3NhMnVsLmMgICAgICAg
-ICAgICAgICAgICAgICAgICB8IDIyMzIgKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvY3J5cHRv
-L3NhMnVsLmggICAgICAgICAgICAgICAgICAgICAgICB8ICAzODQgKysrCiBpbmNsdWRlL2NyeXB0
-by9zaGEuaCAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKIDggZmlsZXMgY2hhbmdl
-ZCwgMjcxNyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NyeXB0by9zYTJ1bC50eHQKIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2NyeXB0by9zYTJ1bC5jCiBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9jcnlwdG8vc2EydWwuaAoKLS0gCjIuMTcuMQoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Add support for AES algorithm in ECB Mode. Data encryption modes
+are supported via MCE engine (programmable mode control engine).
+ECB (Electronic code book) is a mode of operation for a block cipher,
+with the characteristic that each possible block of plaintext has a
+defined corresponding ciphertext value and vice versa. In other words,
+the same plaintext value will always result in the same ciphertext value.
+
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+---
+ drivers/crypto/sa2ul.c | 76 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+
+diff --git a/drivers/crypto/sa2ul.c b/drivers/crypto/sa2ul.c
+index 64bdf6b2b879..a17c1f66c5c1 100644
+--- a/drivers/crypto/sa2ul.c
++++ b/drivers/crypto/sa2ul.c
+@@ -178,6 +178,38 @@ static u8 mci_cbc_dec_array[3][MODE_CONTROL_BYTES] = {
+ 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
+ };
+ 
++/*
++ * Mode Control Instructions for various Key lengths 128, 192, 256
++ * For ECB (Electronic Code Book) mode for encryption
++ */
++static u8 mci_ecb_enc_array[3][27] = {
++	{	0x21, 0x00, 0x00, 0x80, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
++	{	0x21, 0x00, 0x00, 0x84, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
++	{	0x21, 0x00, 0x00, 0x88, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
++};
++
++/*
++ * Mode Control Instructions for various Key lengths 128, 192, 256
++ * For ECB (Electronic Code Book) mode for decryption
++ */
++static u8 mci_ecb_dec_array[3][27] = {
++	{	0x31, 0x00, 0x00, 0x80, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
++	{	0x31, 0x00, 0x00, 0x84, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
++	{	0x31, 0x00, 0x00, 0x88, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
++};
++
+ /*
+  * Perform 16 byte or 128 bit swizzling
+  * The SA2UL Expects the security context to
+@@ -746,6 +778,26 @@ static int sa_aes_cbc_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
+ 	return sa_aes_setkey(tfm, key, keylen, ad);
+ }
+ 
++static int sa_aes_ecb_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
++			     unsigned int keylen)
++{
++	struct algo_data *ad = kzalloc(sizeof(*ad), GFP_KERNEL);
++	/* Convert the key size (16/24/32) to the key size index (0/1/2) */
++	int key_idx = (keylen >> 3) - 2;
++
++	ad->enc_eng.eng_id = SA_ENG_ID_EM1;
++	ad->enc_eng.sc_size = SA_CTX_ENC_TYPE1_SZ;
++	ad->auth_eng.eng_id = SA_ENG_ID_NONE;
++	ad->auth_eng.sc_size = 0;
++	ad->mci_enc = mci_ecb_enc_array[key_idx];
++	ad->mci_dec = mci_ecb_dec_array[key_idx];
++	ad->inv_key = true;
++	ad->ealg_id = SA_EALG_ID_AES_ECB;
++	ad->aalg_id = SA_AALG_ID_NONE;
++
++	return sa_aes_setkey(tfm, key, keylen, ad);
++}
++
+ static void sa_aes_dma_in_callback(void *data)
+ {
+ 	struct sa_rx_data *rxd = (struct sa_rx_data *)data;
+@@ -940,6 +992,30 @@ static struct sa_alg_tmpl sa_algs[] = {
+ 					}
+ 			}
+ 	},
++	{	.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
++		.alg.crypto = {
++			.cra_name = "ecb(aes)",
++			.cra_driver_name = "ecb-aes-sa2ul",
++			.cra_priority = 30000,
++			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
++					CRYPTO_ALG_KERN_DRIVER_ONLY |
++				CRYPTO_ALG_ASYNC | CRYPTO_ALG_NEED_FALLBACK,
++			.cra_blocksize = AES_BLOCK_SIZE,
++			.cra_ctxsize = sizeof(struct sa_tfm_ctx),
++			.cra_alignmask = 0,
++			.cra_type = &crypto_ablkcipher_type,
++			.cra_module = THIS_MODULE,
++			.cra_init = sa_aes_cra_init,
++			.cra_exit = sa_aes_cra_exit,
++			.cra_u.ablkcipher = {
++				.min_keysize    = AES_MIN_KEY_SIZE,
++				.max_keysize    = AES_MAX_KEY_SIZE,
++				.setkey		= sa_aes_ecb_setkey,
++				.encrypt	= sa_aes_cbc_encrypt,
++				.decrypt	= sa_aes_cbc_decrypt,
++			}
++		}
++	},
+ };
+ 
+ /* Register the algorithms in crypto framework */
+-- 
+2.17.1
