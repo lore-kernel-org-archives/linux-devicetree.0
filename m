@@ -1,34 +1,22 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: stm32-qspi: remove signal sensitive on completion" to
- the spi tree
-Date: Fri, 28 Jun 2019 17:56:33 +0100 (BST)
-Message-ID: <20190628165633.E5C44440046@finisterre.sirena.org.uk>
-References: <1561621439-7305-2-git-send-email-ludovic.Barre@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1561621439-7305-2-git-send-email-ludovic.Barre@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ludovic Barre <ludovic.barre@st.com>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Boris Brezillon <bbrezillon@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Subject: Applied "ASoC: meson: axg-card: remove useless check on codec" to the asoc tree
+Date: Fri, 28 Jun 2019 17:56:28 +0100 (BST)
+Message-ID: <20190628165628.0CCBA44004B@finisterre.sirena.org.uk>
+References: <20190628081708.22039-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190628081708.22039-1-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: alsa-devel@alsa-project.org, Dan Carpenter <dan.carpenter@oracle.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   spi: stm32-qspi: remove signal sensitive on completion
+   ASoC: meson: axg-card: remove useless check on codec
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -49,48 +37,34 @@ to this mail.
 Thanks,
 Mark
 
->From 775c4c0032c408b8a57a3fc2695eeda101da003a Mon Sep 17 00:00:00 2001
-From: Ludovic Barre <ludovic.barre@st.com>
-Date: Thu, 27 Jun 2019 09:43:59 +0200
-Subject: [PATCH] spi: stm32-qspi: remove signal sensitive on completion
+>From 8fc22fa4b2cd983e4c542d1841b3d2212ad18ed4 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Fri, 28 Jun 2019 10:17:08 +0200
+Subject: [PATCH] ASoC: meson: axg-card: remove useless check on codec
 
-On umount step a sigkill signal is set (without user specific
-action), due to sigkill signal the completion will be interrupted and
-the data transfer can't be finished if a sync is needed.
+While checking cpus before dereferencing the pointer is required, it is
+not necessary for codecs. 'codec' can't possibly be NULL in the loop
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-stm32-qspi.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ sound/soc/meson/axg-card.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index 42f8e3c6aa1f..0b07182f5660 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -245,12 +245,8 @@ static int stm32_qspi_tx_dma(struct stm32_qspi *qspi,
- 	writel_relaxed(cr | CR_DMAEN, qspi->io_base + QSPI_CR);
+diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
+index 70bb0cbad233..14a8321744da 100644
+--- a/sound/soc/meson/axg-card.c
++++ b/sound/soc/meson/axg-card.c
+@@ -118,8 +118,7 @@ static void axg_card_clean_references(struct axg_card *priv)
+ 			if (link->cpus)
+ 				of_node_put(link->cpus->of_node);
+ 			for_each_link_codecs(link, j, codec)
+-				if (codec)
+-					of_node_put(codec->of_node);
++				of_node_put(codec->of_node);
+ 		}
+ 	}
  
- 	t_out = sgt.nents * STM32_COMP_TIMEOUT_MS;
--	if (!wait_for_completion_interruptible_timeout(&qspi->dma_completion,
--						       msecs_to_jiffies(t_out)))
--		err = -ETIMEDOUT;
--
--	if (dma_async_is_tx_complete(dma_ch, cookie,
--				     NULL, NULL) != DMA_COMPLETE)
-+	if (!wait_for_completion_timeout(&qspi->dma_completion,
-+					 msecs_to_jiffies(t_out)))
- 		err = -ETIMEDOUT;
- 
- 	if (err)
-@@ -304,7 +300,7 @@ static int stm32_qspi_wait_cmd(struct stm32_qspi *qspi,
- 	cr = readl_relaxed(qspi->io_base + QSPI_CR);
- 	writel_relaxed(cr | CR_TCIE | CR_TEIE, qspi->io_base + QSPI_CR);
- 
--	if (!wait_for_completion_interruptible_timeout(&qspi->data_completion,
-+	if (!wait_for_completion_timeout(&qspi->data_completion,
- 				msecs_to_jiffies(STM32_COMP_TIMEOUT_MS))) {
- 		err = -ETIMEDOUT;
- 	} else {
 -- 
 2.20.1
