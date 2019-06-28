@@ -1,131 +1,97 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [v5 1/7] drm/mediatek: move mipi_dsi_host_register to probe
-Date: Fri, 28 Jun 2019 14:10:59 +0800
-Message-ID: <1561702259.18399.7.camel@mtksdaap41>
-References: <20190627080116.40264-1-jitao.shi@mediatek.com>
- <20190627080116.40264-2-jitao.shi@mediatek.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 1/2] arm64: dts: imx8mq: Correct OPP table according to
+ latest datasheet
+Date: Fri, 28 Jun 2019 06:16:00 +0000
+Message-ID: <DB3PR0402MB39161C60DC780B693933F9EAF5FC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190628032800.8428-1-Anson.Huang@nxp.com>
+ <VI1PR04MB50553915C0D978A8019BDC5CEEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190627080116.40264-2-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, yingjoe.chen@mediatek.com, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sean Paul <seanpaul@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <VI1PR04MB50553915C0D978A8019BDC5CEEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "angus@akkea.ca" <angus@akkea.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEppdGFvOgoKT24gVGh1LCAyMDE5LTA2LTI3IGF0IDE2OjAxICswODAwLCBKaXRhbyBTaGkg
-d3JvdGU6Cj4gRFNJIHBhbmVsIGRyaXZlciBuZWVkIGF0dGFjaCBmdW5jdGlvbiB3aGljaCBpcyBp
-bmN1bGRlIGluCj4gbWlwaV9kc2lfaG9zdF9vcHMuCj4gCj4gSWYgbWlwaV9kc2lfaG9zdF9yZWdp
-c3RlciBpcyBub3QgaW4gcHJvYmUsIGRzaSBwYW5lbCB3aWxsCj4gcHJvYmUgbW9yZSBkZWxheS4K
-PiAKPiBTbyBtb3ZlIHRoZSBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyIHRvIHByb2JlIGZyb20gYmlu
-ZC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRpYXRlay5jb20+
-Cj4gUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+CgpUaGlzIHZlcnNpb24g
-aXMgZGlmZmVyZW50IHRoYW4gdjQsIHNvIHBsZWFzZSByZW1vdmUgcmV2aWV3ZWQtYnkgdGFnIHdo
-ZW4KdGhpcyBwYXRjaCBjaGFuZ2UuIFdoZW4gSSBzZWUgYSByZXZpZXdlZC1ieSB0YWcgb2YgbWlu
-ZSwgSSB3b3VsZCBqdXN0CnNraXAgcmV2aWV3IGl0IGFnYWluIGJlY2F1c2UgSSBhc3N1bWUgdGhp
-cyBwYXRjaCBpcyB0aGUgc2FtZSBhcyBwcmV2aW91cwp2ZXJzaW9uLgoKRm9yIHRoaXMgdmVyc2lv
-biwgSSBnaXZlIHN0aWxsIGdpdmUgaXQgYQoKUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRp
-YXRlay5jb20+Cgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jIHwg
-NTMgKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAzMSBp
-bnNlcnRpb25zKCspLCAyMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHNpLmMKPiBpbmRleCBiMDBlYjJkMmUwODYuLjU5NWIzYjA0N2M3YiAxMDA2NDQKPiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kc2kuYwo+IEBAIC01MjgsNyArNTI4LDcgQEAgc3RhdGljIHMzMiBtdGtf
-ZHNpX3N3aXRjaF90b19jbWRfbW9kZShzdHJ1Y3QgbXRrX2RzaSAqZHNpLCB1OCBpcnFfZmxhZywg
-dTMyIHQpCj4gIAo+ICBzdGF0aWMgaW50IG10a19kc2lfcG93ZXJvbihzdHJ1Y3QgbXRrX2RzaSAq
-ZHNpKQo+ICB7Cj4gLQlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBkc2ktPmRldjsKPiArCXN0cnVjdCBk
-ZXZpY2UgKmRldiA9IGRzaS0+LT5ob3N0LmRldjsKPiAgCWludCByZXQ7Cj4gIAl1NjQgcGl4ZWxf
-Y2xvY2ssIHRvdGFsX2JpdHM7Cj4gIAl1MzIgaHRvdGFsLCBodG90YWxfYml0cywgYml0X3Blcl9w
-aXhlbCwgb3ZlcmhlYWRfY3ljbGVzLCBvdmVyaGVhZF9iaXRzOwo+IEBAIC0xMDQ1LDEyICsxMDQ1
-LDYgQEAgc3RhdGljIGludCBtdGtfZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3Qg
-ZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4gIAkJcmV0dXJuIHJldDsKPiAgCX0KPiAgCj4g
-LQlyZXQgPSBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKCZkc2ktPmhvc3QpOwo+IC0JaWYgKHJldCA8
-IDApIHsKPiAtCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byByZWdpc3RlciBEU0kgaG9zdDogJWRc
-biIsIHJldCk7Cj4gLQkJZ290byBlcnJfZGRwX2NvbXBfdW5yZWdpc3RlcjsKPiAtCX0KPiAtCj4g
-IAlyZXQgPSBtdGtfZHNpX2NyZWF0ZV9jb25uX2VuYyhkcm0sIGRzaSk7Cj4gIAlpZiAocmV0KSB7
-Cj4gIAkJRFJNX0VSUk9SKCJFbmNvZGVyIGNyZWF0ZSBmYWlsZWQgd2l0aCAlZFxuIiwgcmV0KTsK
-PiBAQCAtMTA2MCw4ICsxMDU0LDYgQEAgc3RhdGljIGludCBtdGtfZHNpX2JpbmQoc3RydWN0IGRl
-dmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4gIAlyZXR1cm4g
-MDsKPiAgCj4gIGVycl91bnJlZ2lzdGVyOgo+IC0JbWlwaV9kc2lfaG9zdF91bnJlZ2lzdGVyKCZk
-c2ktPmhvc3QpOwo+IC1lcnJfZGRwX2NvbXBfdW5yZWdpc3RlcjoKPiAgCW10a19kZHBfY29tcF91
-bnJlZ2lzdGVyKGRybSwgJmRzaS0+ZGRwX2NvbXApOwo+ICAJcmV0dXJuIHJldDsKPiAgfQo+IEBA
-IC0xMDczLDcgKzEwNjUsNiBAQCBzdGF0aWMgdm9pZCBtdGtfZHNpX3VuYmluZChzdHJ1Y3QgZGV2
-aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKPiAgCXN0cnVjdCBtdGtfZHNpICpkc2kg
-PSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPiAgCj4gIAltdGtfZHNpX2Rlc3Ryb3lfY29ubl9lbmMo
-ZHNpKTsKPiAtCW1pcGlfZHNpX2hvc3RfdW5yZWdpc3RlcigmZHNpLT5ob3N0KTsKPiAgCW10a19k
-ZHBfY29tcF91bnJlZ2lzdGVyKGRybSwgJmRzaS0+ZGRwX2NvbXApOwo+ICB9Cj4gIAo+IEBAIC0x
-MDk3LDMxICsxMDg4LDM2IEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9wcm9iZShzdHJ1Y3QgcGxhdGZv
-cm1fZGV2aWNlICpwZGV2KQo+ICAKPiAgCWRzaS0+aG9zdC5vcHMgPSAmbXRrX2RzaV9vcHM7Cj4g
-IAlkc2ktPmhvc3QuZGV2ID0gZGV2Owo+ICsJcmV0ID0gbWlwaV9kc2lfaG9zdF9yZWdpc3Rlcigm
-ZHNpLT5ob3N0KTsKPiArCWlmIChyZXQgPCAwKSB7Cj4gKwkJZGV2X2VycihkZXYsICJmYWlsZWQg
-dG8gcmVnaXN0ZXIgRFNJIGhvc3Q6ICVkXG4iLCByZXQpOwo+ICsJCXJldHVybiByZXQ7Cj4gKwl9
-Cj4gIAo+ICAJcmV0ID0gZHJtX29mX2ZpbmRfcGFuZWxfb3JfYnJpZGdlKGRldi0+b2Zfbm9kZSwg
-MCwgMCwKPiAgCQkJCQkgICZkc2ktPnBhbmVsLCAmZHNpLT5icmlkZ2UpOwo+ICAJaWYgKHJldCkK
-PiAtCQlyZXR1cm4gcmV0Owo+ICsJCWdvdG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKPiAgCj4gIAlk
-c2ktPmVuZ2luZV9jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAiZW5naW5lIik7Cj4gIAlpZiAoSVNf
-RVJSKGRzaS0+ZW5naW5lX2NsaykpIHsKPiAgCQlyZXQgPSBQVFJfRVJSKGRzaS0+ZW5naW5lX2Ns
-ayk7Cj4gIAkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0IGVuZ2luZSBjbG9jazogJWRcbiIs
-IHJldCk7Cj4gLQkJcmV0dXJuIHJldDsKPiArCQlnb3RvIGVycl91bnJlZ2lzdGVyX2hvc3Q7Cj4g
-IAl9Cj4gIAo+ICAJZHNpLT5kaWdpdGFsX2NsayA9IGRldm1fY2xrX2dldChkZXYsICJkaWdpdGFs
-Iik7Cj4gIAlpZiAoSVNfRVJSKGRzaS0+ZGlnaXRhbF9jbGspKSB7Cj4gIAkJcmV0ID0gUFRSX0VS
-Uihkc2ktPmRpZ2l0YWxfY2xrKTsKPiAgCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBnZXQgZGln
-aXRhbCBjbG9jazogJWRcbiIsIHJldCk7Cj4gLQkJcmV0dXJuIHJldDsKPiArCQlnb3RvIGVycl91
-bnJlZ2lzdGVyX2hvc3Q7Cj4gIAl9Cj4gIAo+ICAJZHNpLT5oc19jbGsgPSBkZXZtX2Nsa19nZXQo
-ZGV2LCAiaHMiKTsKPiAgCWlmIChJU19FUlIoZHNpLT5oc19jbGspKSB7Cj4gIAkJcmV0ID0gUFRS
-X0VSUihkc2ktPmhzX2Nsayk7Cj4gIAkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0IGhzIGNs
-b2NrOiAlZFxuIiwgcmV0KTsKPiAtCQlyZXR1cm4gcmV0Owo+ICsJCWdvdG8gZXJyX3VucmVnaXN0
-ZXJfaG9zdDsKPiAgCX0KPiAgCj4gIAlyZWdzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYs
-IElPUkVTT1VSQ0VfTUVNLCAwKTsKPiBAQCAtMTEyOSwzMyArMTEyNSwzNSBAQCBzdGF0aWMgaW50
-IG10a19kc2lfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCWlmIChJU19F
-UlIoZHNpLT5yZWdzKSkgewo+ICAJCXJldCA9IFBUUl9FUlIoZHNpLT5yZWdzKTsKPiAgCQlkZXZf
-ZXJyKGRldiwgIkZhaWxlZCB0byBpb3JlbWFwIG1lbW9yeTogJWRcbiIsIHJldCk7Cj4gLQkJcmV0
-dXJuIHJldDsKPiArCQlnb3RvIGVycl91bnJlZ2lzdGVyX2hvc3Q7Cj4gIAl9Cj4gIAo+ICAJZHNp
-LT5waHkgPSBkZXZtX3BoeV9nZXQoZGV2LCAiZHBoeSIpOwo+ICAJaWYgKElTX0VSUihkc2ktPnBo
-eSkpIHsKPiAgCQlyZXQgPSBQVFJfRVJSKGRzaS0+cGh5KTsKPiAgCQlkZXZfZXJyKGRldiwgIkZh
-aWxlZCB0byBnZXQgTUlQSS1EUEhZOiAlZFxuIiwgcmV0KTsKPiAtCQlyZXR1cm4gcmV0Owo+ICsJ
-CWdvdG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKPiAgCX0KPiAgCj4gIAljb21wX2lkID0gbXRrX2Rk
-cF9jb21wX2dldF9pZChkZXYtPm9mX25vZGUsIE1US19EU0kpOwo+ICAJaWYgKGNvbXBfaWQgPCAw
-KSB7Cj4gIAkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gaWRlbnRpZnkgYnkgYWxpYXM6ICVkXG4i
-LCBjb21wX2lkKTsKPiAtCQlyZXR1cm4gY29tcF9pZDsKPiArCQlyZXQgPSBjb21wX2lkOwo+ICsJ
-CWdvdG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKPiAgCX0KPiAgCj4gIAlyZXQgPSBtdGtfZGRwX2Nv
-bXBfaW5pdChkZXYsIGRldi0+b2Zfbm9kZSwgJmRzaS0+ZGRwX2NvbXAsIGNvbXBfaWQsCj4gIAkJ
-CQkmbXRrX2RzaV9mdW5jcyk7Cj4gIAlpZiAocmV0KSB7Cj4gIAkJZGV2X2VycihkZXYsICJGYWls
-ZWQgdG8gaW5pdGlhbGl6ZSBjb21wb25lbnQ6ICVkXG4iLCByZXQpOwo+IC0JCXJldHVybiByZXQ7
-Cj4gKwkJZ290byBlcnJfdW5yZWdpc3Rlcl9ob3N0Owo+ICAJfQo+ICAKPiAgCWlycV9udW0gPSBw
-bGF0Zm9ybV9nZXRfaXJxKHBkZXYsIDApOwo+ICAJaWYgKGlycV9udW0gPCAwKSB7Cj4gLQkJZGV2
-X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIHJlcXVlc3QgZHNpIGlycSByZXNvdXJjZVxuIik7
-Cj4gLQkJcmV0dXJuIC1FUFJPQkVfREVGRVI7Cj4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFp
-bGVkIHRvIGdldCBkc2kgaXJxX251bTogJWRcbiIsIGlycV9udW0pOwo+ICsJCXJldCA9IGlycV9u
-dW07Cj4gKwkJZ290byBlcnJfdW5yZWdpc3Rlcl9ob3N0Owo+ICAJfQo+ICAKPiAgCWlycV9zZXRf
-c3RhdHVzX2ZsYWdzKGlycV9udW0sIElSUV9UWVBFX0xFVkVMX0xPVyk7Cj4gQEAgLTExNjMsMTQg
-KzExNjEsMjQgQEAgc3RhdGljIGludCBtdGtfZHNpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
-Y2UgKnBkZXYpCj4gIAkJCSAgICAgICBJUlFGX1RSSUdHRVJfTE9XLCBkZXZfbmFtZSgmcGRldi0+
-ZGV2KSwgZHNpKTsKPiAgCWlmIChyZXQpIHsKPiAgCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWls
-ZWQgdG8gcmVxdWVzdCBtZWRpYXRlayBkc2kgaXJxXG4iKTsKPiAtCQlyZXR1cm4gLUVQUk9CRV9E
-RUZFUjsKPiArCQlnb3RvIGVycl91bnJlZ2lzdGVyX2hvc3Q7Cj4gIAl9Cj4gIAo+ICAJaW5pdF93
-YWl0cXVldWVfaGVhZCgmZHNpLT5pcnFfd2FpdF9xdWV1ZSk7Cj4gIAo+ICAJcGxhdGZvcm1fc2V0
-X2RydmRhdGEocGRldiwgZHNpKTsKPiAgCj4gLQlyZXR1cm4gY29tcG9uZW50X2FkZCgmcGRldi0+
-ZGV2LCAmbXRrX2RzaV9jb21wb25lbnRfb3BzKTsKPiArCXJldCA9IGNvbXBvbmVudF9hZGQoJnBk
-ZXYtPmRldiwgJm10a19kc2lfY29tcG9uZW50X29wcyk7Cj4gKwlpZiAocmV0KSB7Cj4gKwkJZGV2
-X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGFkZCBjb21wb25lbnQ6ICVkXG4iLCByZXQpOwo+
-ICsJCWdvdG8gZXJyX3VucmVnaXN0ZXJfaG9zdDsKPiArCX0KPiArCj4gKwlyZXR1cm4gMDsKPiAr
-Cj4gK2Vycl91bnJlZ2lzdGVyX2hvc3Q6Cj4gKwltaXBpX2RzaV9ob3N0X3VucmVnaXN0ZXIoJmRz
-aS0+aG9zdCk7Cj4gKwlyZXR1cm4gcmV0Owo+ICB9Cj4gIAo+ICBzdGF0aWMgaW50IG10a19kc2lf
-cmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gQEAgLTExNzksNiArMTE4Nyw3
-IEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikKPiAgCj4gIAltdGtfb3V0cHV0X2RzaV9kaXNhYmxlKGRzaSk7Cj4gIAljb21wb25lbnRfZGVs
-KCZwZGV2LT5kZXYsICZtdGtfZHNpX2NvbXBvbmVudF9vcHMpOwo+ICsJbWlwaV9kc2lfaG9zdF91
-bnJlZ2lzdGVyKCZkc2ktPmhvc3QpOwo+ICAKPiAgCXJldHVybiAwOwo+ICB9CgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Hi, Leonard
+
+> -----Original Message-----
+> From: Leonard Crestez
+> Sent: Friday, June 28, 2019 1:59 PM
+> To: Anson Huang <anson.huang@nxp.com>; shawnguo@kernel.org; Jacky
+> Bai <ping.bai@nxp.com>; l.stach@pengutronix.de
+> Cc: robh+dt@kernel.org; mark.rutland@arm.com; s.hauer@pengutronix.de;
+> kernel@pengutronix.de; festevam@gmail.com; viresh.kumar@linaro.org;
+> Daniel Baluta <daniel.baluta@nxp.com>; Abel Vesa <abel.vesa@nxp.com>;
+> andrew.smirnov@gmail.com; ccaione@baylibre.com; angus@akkea.ca;
+> agx@sigxcpu.org; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; dl-linux-imx
+> <linux-imx@nxp.com>
+> Subject: Re: [PATCH 1/2] arm64: dts: imx8mq: Correct OPP table according to
+> latest datasheet
+> 
+> On 28.06.2019 06:37, Anson.Huang@nxp.com wrote:
+> > From: Anson Huang <Anson.Huang@nxp.com>
+> >
+> > According to latest datasheet (Rev.1, 10/2018) from below links, in
+> > the consumer datasheet, 1.5GHz is mentioned as highest opp but depends
+> > on speed grading fuse, and in the industrial datasheet, 1.3GHz is
+> > mentioned as highest opp but depends on speed grading fuse. 1.5GHz and
+> > 1.3GHz opp use same voltage, so no need for consumer part to support
+> > 1.3GHz opp, with same voltage, CPU should run at highest frequency in
+> > order to go into idle as quick as possible, this can save power.
+> 
+> I looked at the same datasheets and it's not clear to me that 1.3 Ghz should
+> be disallowed for consumer parts. Power consumption increases with both
+> voltage and frequency so having two OPPs with same voltage does make
+> sense.
+
+The consumer part datasheet does NOT mention 1.3GHz at all, so consumer part ONLY
+support 1GHz/1.5GHz, and industrial part ONLY support 800MHz/1.3GHz, this is what
+we did in our internal tree and NPI release, so better to make them aligned, otherwise,
+we have to change it when kernel upgrade.
+
+And normally, with same voltage, i.MX SoCs always run at highest frequency, so it is better
+to keep the rule, otherwise customer may ask, how about using same voltage to run at 1.2GHz or
+1.1GHz?
+
+> 
+> >   			opp-hz = /bits/ 64 <1300000000>;
+> >   			opp-microvolt = <1000000>;
+> > -			opp-supported-hw = <0xc>, <0x7>;
+> > +			/* Industrial only but rely on speed grading */
+> > +			opp-supported-hw = <0xc>, <0x4>;
+> 
+> Comment is false, you're explicitly excluding consumer parts via the second
+> element.
+
+Yes, that is what I meant to do, as we no need to support 1.3GHz for consumer
+part, with 1.0V, consumer part can run up to 1.5GHz.
+
+> 
+> >   			opp-hz = /bits/ 64 <1500000000>;
+> >   			opp-microvolt = <1000000>;
+> >   			/* Consumer only but rely on speed grading */
+> > -			opp-supported-hw = <0x8>, <0x7>;
+> > +			opp-supported-hw = <0x8>, <0x3>;
+> 
+> If you don't want to rely on the fact that only consumer parts should be
+> fused for 1.5 Ghz then please delete the comment.
+
+Don't quite understand, 1.5GHz is indeed consumer ONLY, but if the consumer
+part is fused to 1GHz, then 1.5GHz is also NOT available, so it also rely on speed
+grading. So keep the comment there is OK?
+
+Thanks,
+Anson.
