@@ -1,81 +1,36 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv5 10/20] PCI: mobiveil: Fix the INTx process errors
-Date: Fri, 28 Jun 2019 18:05:52 +0100
-Message-ID: <20190628170552.GD21829@e121166-lin.cambridge.arm.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v5 0/7] drm/panel: simple: Add mode support to devicetree
+Date: Fri, 28 Jun 2019 19:13:42 +0200
+Message-ID: <20190628171342.GA2238@ravnborg.org>
+References: <20190401171724.215780-1-dianders@chromium.org>
+ <20190626130007.GE23428@ravnborg.org>
+ <CAD=FV=U4UU8q+CS76uuuGUP=EVnE6+BTUf8U=j7uwfczNgkrZw@mail.gmail.com>
+ <CAD=FV=Vi2C7s2oWBDD0n+HK=_SuBYhRM9saMK-y6Qa0+k-g17w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <CAD=FV=Vi2C7s2oWBDD0n+HK=_SuBYhRM9saMK-y6Qa0+k-g17w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Viresh Kumar <viresh.kumar@linaro.org>, Brian Norris <briannorris@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Boris Brezillon <boris.brezillon@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Enric =?iso-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>, Ezequiel Garcia <eze>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 08:36:12AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> In the loop block, there is not code to update the loop key,
-> this patch updates the loop key by re-read the INTx status
-> register.
-> 
-> This patch also add the clearing of the handled INTx status.
+Hi Doug.
 
-This is two bugs and that requires two patches, each of them fixing a
-specific issue.
+> Sam: Oh!  I hadn't noticed that you've been added as a panel
+> maintainer in commit ef0db94f94a0 ("MAINTAINERS: Add Sam as reviewer
+> for drm/panel").  Does that mean you are able to provide some advice
+> for how to land this series?
+Reviewer only, not maintainer....
 
-So split the patch into two and repost it.
+It is on my TODO list for the weekend to go through the patch set in
+details and provide feedback. I have read them before, but I miss to do
+a more detailed read through.
 
-Lorenzo
+But I cannot apply this unless Thierry or one of the DRM maintainers
+ack it.
+We simply need someone with a better general knowledge of DRM to ack it
+than I have.
 
-> Note: Need MV to test this fix.
-> 
-> Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> ---
-> V5:
->  - Corrected and retouched the subject and changelog.
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 4ba458474e42..78e575e71f4d 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
->  	/* Handle INTx */
->  	if (intr_status & PAB_INTP_INTX_MASK) {
->  		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-> +		shifted_status &= PAB_INTP_INTX_MASK;
->  		shifted_status >>= PAB_INTX_START;
->  		do {
->  			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-> @@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
->  					dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
->  							    bit);
->  
-> -				/* clear interrupt */
-> -				csr_writel(pcie,
-> -					   shifted_status << PAB_INTX_START,
-> +				/* clear interrupt handled */
-> +				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
->  					   PAB_INTP_AMBA_MISC_STAT);
->  			}
-> -		} while ((shifted_status >> PAB_INTX_START) != 0);
-> +
-> +			shifted_status = csr_readl(pcie,
-> +						   PAB_INTP_AMBA_MISC_STAT);
-> +			shifted_status &= PAB_INTP_INTX_MASK;
-> +			shifted_status >>= PAB_INTX_START;
-> +		} while (shifted_status != 0);
->  	}
->  
->  	/* read extra MSI status register */
-> -- 
-> 2.17.1
-> 
+	Sam
