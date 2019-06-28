@@ -1,26 +1,110 @@
 From: Jianjun Wang <jianjun.wang@mediatek.com>
-Subject: [v2,0/2] PCI: mediatek: Add support for MT7629
-Date: Fri, 28 Jun 2019 15:34:23 +0800
-Message-ID: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+Subject: [v2,2/2] PCI: mediatek: Add controller support for MT7629
+Date: Fri, 28 Jun 2019 15:34:25 +0800
+Message-ID: <20190628073425.25165-3-jianjun.wang@mediatek.com>
+References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Ryder Lee <ryder.lee@mediatek.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, youlin.pei@mediatek.com, jianjun.wang@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, jianjun.wang@mediatek.com, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-These series patches modify pcie-mediatek.c and dt-bindings compatible
-string to support MT7629 PCIe host.
+MT7629 is an ARM platform SoC which has the same PCIe IP with MT7622.
 
-Jianjun Wang (2):
-  dt-bindings: PCI: Add support for MT7629
-  PCI: mediatek: Add controller support for MT7629
+The HW default value of its Device ID is invalid, fix its Device ID to
+match the hardware implementation.
 
- .../devicetree/bindings/pci/mediatek-pcie.txt  |  1 +
- drivers/pci/controller/pcie-mediatek.c         | 18 ++++++++++++++++++
- include/linux/pci_ids.h                        |  1 +
- 3 files changed, 20 insertions(+)
+Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+---
+ drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
+ include/linux/pci_ids.h                |  1 +
+ 2 files changed, 19 insertions(+)
 
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 80601e1b939e..e5e6740b635d 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -73,6 +73,7 @@
+ #define PCIE_MSI_VECTOR		0x0c0
+ 
+ #define PCIE_CONF_VEND_ID	0x100
++#define PCIE_CONF_DEVICE_ID	0x102
+ #define PCIE_CONF_CLASS_ID	0x106
+ 
+ #define PCIE_INT_MASK		0x420
+@@ -141,12 +142,16 @@ struct mtk_pcie_port;
+ /**
+  * struct mtk_pcie_soc - differentiate between host generations
+  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
++ * @need_fix_device_id: whether this host's Device ID needed to be fixed or not
++ * @device_id: Device ID which this host need to be fixed
+  * @ops: pointer to configuration access functions
+  * @startup: pointer to controller setting functions
+  * @setup_irq: pointer to initialize IRQ functions
+  */
+ struct mtk_pcie_soc {
+ 	bool need_fix_class_id;
++	bool need_fix_device_id;
++	unsigned int device_id;
+ 	struct pci_ops *ops;
+ 	int (*startup)(struct mtk_pcie_port *port);
+ 	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+@@ -696,6 +701,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+ 		writew(val, port->base + PCIE_CONF_CLASS_ID);
+ 	}
+ 
++	if (soc->need_fix_device_id)
++		writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
++
+ 	/* 100ms timeout value should be enough for Gen1/2 training */
+ 	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+ 				 !!(val & PCIE_PORT_LINKUP_V2), 20,
+@@ -1216,11 +1224,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
+ 	.setup_irq = mtk_pcie_setup_irq,
+ };
+ 
++static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
++	.need_fix_class_id = true,
++	.need_fix_device_id = true,
++	.device_id = PCI_DEVICE_ID_MEDIATEK_7629,
++	.ops = &mtk_pcie_ops_v2,
++	.startup = mtk_pcie_startup_port_v2,
++	.setup_irq = mtk_pcie_setup_irq,
++};
++
+ static const struct of_device_id mtk_pcie_ids[] = {
+ 	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
+ 	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
+ 	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
+ 	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
++	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
+ 	{},
+ };
+ 
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 70e86148cb1e..aa32962759b2 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2131,6 +2131,7 @@
+ #define PCI_VENDOR_ID_MYRICOM		0x14c1
+ 
+ #define PCI_VENDOR_ID_MEDIATEK		0x14c3
++#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
+ 
+ #define PCI_VENDOR_ID_TITAN		0x14D2
+ #define PCI_DEVICE_ID_TITAN_010L	0x8001
 -- 
 2.18.0
