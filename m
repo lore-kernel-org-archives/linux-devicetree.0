@@ -1,65 +1,39 @@
 From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5/9] docs: fix some broken references due to txt->rst renames
-Date: Fri, 28 Jun 2019 09:12:27 -0300
-Message-ID: <5ebb42791ebe353c346b44d6bd8f2c03d61d1115.1561723736.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 4/9] dt: leds-lm36274.txt: fix a broken reference to ti-lmu.txt
+Date: Fri, 28 Jun 2019 09:12:26 -0300
+Message-ID: <6ac637e0394adfdc95bfc45dad6bfc7bf631fca3.1561723736.git.mchehab+samsung@kernel.org>
 References: <cover.1561723736.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1561723736.git.mchehab+samsung@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ajay Gupta <ajayg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@ffwll.ch>, intel-gfx@lists.freedesktop.org, Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@infradead.org>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Rodrigo Vivi <rodrigo.vivi@intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-i2c@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlcmUgYXJlIHRocmVlIGxlZnQtb3ZlcnMgZnJvbSB0aGUgcmVjZW50IGZpbGUgcmVuYW1lcywK
-cHJvYmFibHkgZHVlIHRvIHNvbWUgb3RoZXIgY29uZmxpY3RpbmcgcGF0Y2guCgpGaXggdGhlbS4K
-ClNpZ25lZC1vZmYtYnk6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bWNoZWhhYitzYW1zdW5nQGtl
-cm5lbC5vcmc+CkFja2VkLWJ5OiBXb2xmcmFtIFNhbmcgPHdzYUB0aGUtZHJlYW1zLmRlPgpBY2tl
-ZC1ieTogRGFuaWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KLS0tCiBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2lkbGUtc3RhdGVzLnR4dCB8IDIgKy0KIGRy
-aXZlcnMvZ3B1L2RybS9pOTE1L2ludGVsX3J1bnRpbWVfcG0uaCAgICAgICAgICAgICAgIHwgMiAr
-LQogZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1udmlkaWEtZ3B1LmMgICAgICAgICAgICAgICAgICAg
-fCAyICstCiAzIGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkK
-CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2lkbGUt
-c3RhdGVzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vaWRsZS1z
-dGF0ZXMudHh0CmluZGV4IDNiZGJlNjc1YjllNi4uZDhkOWFhNzE2N2U4IDEwMDY0NAotLS0gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2lkbGUtc3RhdGVzLnR4dAorKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2lkbGUtc3RhdGVzLnR4dApA
-QCAtNzAzLDQgKzcwMyw0IEBAIGNwdXMgewogICAgIGh0dHBzOi8vd3d3LmRldmljZXRyZWUub3Jn
-L3NwZWNpZmljYXRpb25zLwogCiBbNl0gQVJNIExpbnV4IEtlcm5lbCBkb2N1bWVudGF0aW9uIC0g
-Qm9vdGluZyBBQXJjaDY0IExpbnV4Ci0gICAgRG9jdW1lbnRhdGlvbi9hcm02NC9ib290aW5nLnR4
-dAorICAgIERvY3VtZW50YXRpb24vYXJtNjQvYm9vdGluZy5yc3QKZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9pOTE1L2ludGVsX3J1bnRpbWVfcG0uaCBiL2RyaXZlcnMvZ3B1L2RybS9pOTE1
-L2ludGVsX3J1bnRpbWVfcG0uaAppbmRleCA0NzNjNDg1MGMwMWQuLjJlZThmOTUyMmUwNSAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2k5MTUvaW50ZWxfcnVudGltZV9wbS5oCisrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9pOTE1L2ludGVsX3J1bnRpbWVfcG0uaApAQCAtNDUsNyArNDUsNyBAQCBl
-bnVtIGk5MTVfZHJtX3N1c3BlbmRfbW9kZSB7CiAgKiB0byBiZSBkaXNhYmxlZC4gVGhpcyBzaG91
-bGRuJ3QgaGFwcGVuIGFuZCB3ZSdsbCBwcmludCBzb21lIGVycm9yIG1lc3NhZ2VzIGluCiAgKiBj
-YXNlIGl0IGhhcHBlbnMuCiAgKgotICogRm9yIG1vcmUsIHJlYWQgdGhlIERvY3VtZW50YXRpb24v
-cG93ZXIvcnVudGltZV9wbS50eHQuCisgKiBGb3IgbW9yZSwgcmVhZCB0aGUgRG9jdW1lbnRhdGlv
-bi9wb3dlci9ydW50aW1lX3BtLnJzdC4KICAqLwogc3RydWN0IGludGVsX3J1bnRpbWVfcG0gewog
-CWF0b21pY190IHdha2VyZWZfY291bnQ7CmRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9idXNzZXMv
-aTJjLW52aWRpYS1ncHUuYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbnZpZGlhLWdwdS5jCmlu
-ZGV4IGNmYzc2YjVkZTcyNi4uNWExMjM1ZmQ4NmJiIDEwMDY0NAotLS0gYS9kcml2ZXJzL2kyYy9i
-dXNzZXMvaTJjLW52aWRpYS1ncHUuYworKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW52aWRp
-YS1ncHUuYwpAQCAtMzY0LDcgKzM2NCw3IEBAIHN0YXRpYyB2b2lkIGdwdV9pMmNfcmVtb3ZlKHN0
-cnVjdCBwY2lfZGV2ICpwZGV2KQogLyoKICAqIFdlIG5lZWQgZ3B1X2kyY19zdXNwZW5kKCkgZXZl
-biBpZiBpdCBpcyBzdHViLCBmb3IgcnVudGltZSBwbSB0byB3b3JrCiAgKiBjb3JyZWN0bHkuIFdp
-dGhvdXQgaXQsIGxzcGNpIHNob3dzIHJ1bnRpbWUgcG0gc3RhdHVzIGFzICJEMCIgZm9yIHRoZSBj
-YXJkLgotICogRG9jdW1lbnRhdGlvbi9wb3dlci9wY2kudHh0IGFsc28gaW5zaXN0cyBmb3IgZHJp
-dmVyIHRvIHByb3ZpZGUgdGhpcy4KKyAqIERvY3VtZW50YXRpb24vcG93ZXIvcGNpLnJzdCBhbHNv
-IGluc2lzdHMgZm9yIGRyaXZlciB0byBwcm92aWRlIHRoaXMuCiAgKi8KIHN0YXRpYyBfX21heWJl
-X3VudXNlZCBpbnQgZ3B1X2kyY19zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikKIHsKLS0gCjIu
-MjEuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+There's a typo there:
+	ti_lmu.txt -> ti-lmu.txt
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/devicetree/bindings/leds/leds-lm36274.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm36274.txt b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
+index 456a589c65f0..39c230d59a4d 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lm36274.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
+@@ -6,7 +6,7 @@ up to 29V total output voltage. The 11-bit LED current is programmable via
+ the I2C bus and/or controlled via a logic level PWM input from 60 uA to 30 mA.
+ 
+ Parent device properties are documented in
+-Documentation/devicetree/bindings/mfd/ti_lmu.txt
++Documentation/devicetree/bindings/mfd/ti-lmu.txt
+ 
+ Regulator properties are documented in
+ Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
+-- 
+2.21.0
