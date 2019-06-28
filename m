@@ -1,42 +1,114 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH 2/2] arm64: dts: imx8mm: Correct OPP table according to latest datasheet
-Date: Fri, 28 Jun 2019 11:28:00 +0800
-Message-ID: <20190628032800.8428-2-Anson.Huang@nxp.com>
-References: <20190628032800.8428-1-Anson.Huang@nxp.com>
+Subject: [PATCH V3 1/5] clocksource: timer-of: Support getting clock frequency from DT
+Date: Fri, 28 Jun 2019 11:30:37 +0800
+Message-ID: <20190628033041.8513-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190628032800.8428-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, ping.bai@nxp.com, daniel.baluta@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca, agx@sigxcpu.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-According to latest datasheet (Rev.0.2, 04/2019) from below links,
-1.8GHz is ONLY available for consumer part, so the market segment
-bits for 1.8GHz opp should ONLY available for consumer part accordingly.
+More and more platforms use platform driver model for clock driver,
+so the clock driver is NOT ready during timer initialization phase,
+it will cause timer initialization failed.
 
-https://www.nxp.com/docs/en/data-sheet/IMX8MMIEC.pdf
-https://www.nxp.com/docs/en/data-sheet/IMX8MMCEC.pdf
+To support those platforms with upper scenario, introducing a new
+flag TIMER_OF_CLOCK_FREQUENCY which is mutually exclusive with
+TIMER_OF_CLOCK flag to support getting timer clock frequency from
+DT, then of_clk operations can be skipped.
 
-Fixes: f403a26c865b (arm64: dts: imx8mm: Add cpu speed grading and all OPPs)
+User needs to select either TIMER_OF_CLOCK_FREQUENCY or TIMER_OF_CLOCK
+flag if want to use timer-of driver to initialize the clock rate,
+and the corresponding clock name or property name needs to be specified.
+
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+New patch:
+	- Add new flag of TIMER_OF_CLOCK_FREQUENCY, mutually exclusive with TIMER_OF_CLOCK, to support
+	  getting clock frequency from DT directly;
+	- Add prop_name to of_timer_clk structure, if using TIMER_OF_CLOCK_FREQUENCY flag, user needs
+	  to pass the property name for timer-of driver to get clock frequency from DT, this is to avoid
+	  the couple of timer-of driver and DT, so timer-of driver does NOT use a fixed property name.
+---
+ drivers/clocksource/timer-of.c | 23 +++++++++++++++++++++++
+ drivers/clocksource/timer-of.h |  8 +++++---
+ 2 files changed, 28 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index c38813d..ab0d135 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -135,7 +135,7 @@
- 			opp-hz = /bits/ 64 <1800000000>;
- 			opp-microvolt = <1000000>;
- 			/* Consumer only but rely on speed grading */
--			opp-supported-hw = <0x8>, <0x7>;
-+			opp-supported-hw = <0x8>, <0x3>;
- 			clock-latency-ns = <150000>;
- 		};
- 	};
+diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
+index 8054228..c91a8b6 100644
+--- a/drivers/clocksource/timer-of.c
++++ b/drivers/clocksource/timer-of.c
+@@ -161,6 +161,21 @@ static __init int timer_of_base_init(struct device_node *np,
+ 	return 0;
+ }
+ 
++static __init int timer_of_clk_frequency_init(struct device_node *np,
++					      struct of_timer_clk *of_clk)
++{
++	int ret;
++	u32 rate;
++
++	ret = of_property_read_u32(np, of_clk->prop_name, &rate);
++	if (!ret) {
++		of_clk->rate = rate;
++		of_clk->period = DIV_ROUND_UP(rate, HZ);
++	}
++
++	return ret;
++}
++
+ int __init timer_of_init(struct device_node *np, struct timer_of *to)
+ {
+ 	int ret = -EINVAL;
+@@ -178,6 +193,11 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
+ 		if (ret)
+ 			goto out_fail;
+ 		flags |= TIMER_OF_CLOCK;
++	} else if (to->flags & TIMER_OF_CLOCK_FREQUENCY) {
++		ret = timer_of_clk_frequency_init(np, &to->of_clk);
++		if (ret)
++			goto out_fail;
++		flags |= TIMER_OF_CLOCK_FREQUENCY;
+ 	}
+ 
+ 	if (to->flags & TIMER_OF_IRQ) {
+@@ -201,6 +221,9 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
+ 	if (flags & TIMER_OF_CLOCK)
+ 		timer_of_clk_exit(&to->of_clk);
+ 
++	if (flags & TIMER_OF_CLOCK_FREQUENCY)
++		to->of_clk.rate = 0;
++
+ 	if (flags & TIMER_OF_BASE)
+ 		timer_of_base_exit(&to->of_base);
+ 	return ret;
+diff --git a/drivers/clocksource/timer-of.h b/drivers/clocksource/timer-of.h
+index a5478f3..f1a083e 100644
+--- a/drivers/clocksource/timer-of.h
++++ b/drivers/clocksource/timer-of.h
+@@ -4,9 +4,10 @@
+ 
+ #include <linux/clockchips.h>
+ 
+-#define TIMER_OF_BASE	0x1
+-#define TIMER_OF_CLOCK	0x2
+-#define TIMER_OF_IRQ	0x4
++#define TIMER_OF_BASE			0x1
++#define TIMER_OF_CLOCK			0x2
++#define TIMER_OF_IRQ			0x4
++#define TIMER_OF_CLOCK_FREQUENCY	0x8
+ 
+ struct of_timer_irq {
+ 	int irq;
+@@ -26,6 +27,7 @@ struct of_timer_base {
+ struct of_timer_clk {
+ 	struct clk *clk;
+ 	const char *name;
++	const char *prop_name;
+ 	int index;
+ 	unsigned long rate;
+ 	unsigned long period;
 -- 
 2.7.4
