@@ -1,1172 +1,683 @@
-From: Oshri Alkoby <oshrialkoby85@gmail.com>
-Subject: [PATCH v2 2/2] char: tpm: add new driver for tpm i2c ptp
-Date: Fri, 28 Jun 2019 18:13:27 +0300
-Message-ID: <20190628151327.206818-3-oshrialkoby85@gmail.com>
-References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
+From: Eddie James <eajames@linux.ibm.com>
+Subject: Re: [PATCH v3 2/8] drivers/soc: Add Aspeed XDMA Engine Driver
+Date: Fri, 28 Jun 2019 10:43:49 -0500
+Message-ID: <a769e83c-782b-12e9-bef8-49f9af9b1b9e@linux.ibm.com>
+References: <1559153408-31190-1-git-send-email-eajames@linux.ibm.com>
+ <1559153408-31190-3-git-send-email-eajames@linux.ibm.com>
+ <20190531033117.GG17772@u40b0340c692b58f6553c.ant.amazon.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190628151327.206818-1-oshrialkoby85@gmail.com>
+In-Reply-To: <20190531033117.GG17772@u40b0340c692b58f6553c.ant.amazon.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org, oshrialkoby85@gmail.com, oshri.alkoby@nuvoton.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, gcwilson@us.ibm.com, kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com, dan.morav@nuvoton.com, tomer.maimon@nuvoton.com
+To: Eduardo Valentin <eduval@amazon.com>
+Cc: linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Oshri Alkoby <oshrialkoby85@gmail.com>
----
- drivers/char/tpm/Kconfig       |   22 +
- drivers/char/tpm/Makefile      |    1 +
- drivers/char/tpm/tpm_i2c_ptp.c | 1099 ++++++++++++++++++++++++++++++++
- 3 files changed, 1122 insertions(+)
- create mode 100644 drivers/char/tpm/tpm_i2c_ptp.c
 
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 88a3c06fc153..ea4138145191 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -97,6 +97,28 @@ config TCG_TIS_I2C_NUVOTON
- 	  To compile this driver as a module, choose M here; the module
- 	  will be called tpm_i2c_nuvoton.
- 
-+config TCG_TIS_I2C_PTP
-+	tristate "TPM Interface Specification 1.2/2.0 Interface (I2C - PTP)"
-+	depends on I2C
-+	select CRC_CCITT
-+	---help---
-+	  If you have a TPM security chip with an I2C interface that impelements
-+	  the TPM I2C interface protocol defined by the PTP say Yes and it will be
-+	  accessible from within Linux.
-+	  To compile this driver as a module, choose M here; the module
-+	  will be called tpm_i2c_ptp.
-+
-+config TCG_TIS_I2C_PTP_MAX_SIZE
-+	prompt "Max I2C Buffer Size"
-+	depends on TCG_TIS_I2C_PTP
-+	int
-+	default 32
-+	help
-+	  Set the maximal I2C buffer size. This will alter the default value. A
-+	  different size can be set by using a module parameter (i2c_max_size)
-+	  as well. If no parameter is provided when loading, this is the value
-+	  that will be used.
-+
- config TCG_NSC
- 	tristate "National Semiconductor TPM Interface"
- 	depends on X86
-diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-index a01c4cab902a..d736f22205cb 100644
---- a/drivers/char/tpm/Makefile
-+++ b/drivers/char/tpm/Makefile
-@@ -25,6 +25,7 @@ obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
- obj-$(CONFIG_TCG_TIS_I2C_ATMEL) += tpm_i2c_atmel.o
- obj-$(CONFIG_TCG_TIS_I2C_INFINEON) += tpm_i2c_infineon.o
- obj-$(CONFIG_TCG_TIS_I2C_NUVOTON) += tpm_i2c_nuvoton.o
-+obj-$(CONFIG_TCG_TIS_I2C_PTP) += tpm_i2c_ptp.o
- obj-$(CONFIG_TCG_NSC) += tpm_nsc.o
- obj-$(CONFIG_TCG_ATMEL) += tpm_atmel.o
- obj-$(CONFIG_TCG_INFINEON) += tpm_infineon.o
-diff --git a/drivers/char/tpm/tpm_i2c_ptp.c b/drivers/char/tpm/tpm_i2c_ptp.c
-new file mode 100644
-index 000000000000..cc1065b79c2d
---- /dev/null
-+++ b/drivers/char/tpm/tpm_i2c_ptp.c
-@@ -0,0 +1,1099 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2014-2019 Nuvoton Technology corporation
-+ *
-+ * TPM I2C PTP
-+ *
-+ * TPM I2C Device Driver Interface for devices that implement the TPM I2C
-+ * Interface defined by TCG PC Client Platform TPM Profile (PTP) Specification
-+ * Revision 01.03 v22 at www.trustedcomputinggroup.org
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/moduleparam.h>
-+#include <linux/slab.h>
-+#include <linux/interrupt.h>
-+#include <linux/wait.h>
-+#include <linux/i2c.h>
-+#include <linux/freezer.h>
-+#include <linux/of_device.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
-+#include <linux/crc-ccitt.h>
-+#include "tpm.h"
-+
-+/* I2C interface offsets */
-+#define TPM_LOC_SEL                     0x00
-+#define TPM_ACCESS                      0x04
-+#define TPM_INT_ENABLE                  0x08
-+#define TPM_INT_STATUS                  0x10
-+#define TPM_INT_CAPABILITY              0x14
-+#define TPM_STS                         0x18
-+#define TPM_STS_BURST_COUNT             0x19
-+#define TPM_DATA_FIFO                   0x24
-+#define TPM_I2C_INTERFACE_CAPABILITY    0x30
-+#define TPM_I2C_DEVICE_ADDRESS          0x38
-+#define TPM_DATA_CSUM_ENABLE            0x40
-+#define TPM_DATA_CSUM                   0x44
-+#define TPM_VID_DID                     0x48
-+#define TPM_RID                         0x4C
-+
-+ /* max. command/response length */
-+#define TPM_I2C_BUFSIZE                 2048
-+
-+/* I2C bus device maximum buffer size w/o counting I2C address or command */
-+#define TPM_I2C_MAX_BUF_SIZE            32
-+
-+#define TPM_I2C_MAX_RETRY_CNT           5
-+#define TPM_I2C_RETRY_DELAY_SHORT_US    (2 * 1000)
-+#define TPM_I2C_RETRY_DELAY_LONG_US     (10 * 1000)
-+#define TPM_I2C_DELAY_RANGE_US          300
-+
-+#define OF_IS_TPM2 ((void *)1)
-+#define I2C_IS_TPM2 1
-+
-+struct tpm_tis_data {
-+	u16 manufacturer_id;
-+	int locality;
-+	int irq;
-+	bool irq_tested;
-+	unsigned int flags;
-+	wait_queue_head_t int_queue;
-+	wait_queue_head_t read_queue;
-+	const struct tpm_tis_phy_ops *phy_ops;
-+	unsigned int intrs;
-+	unsigned short rng_quality;
-+};
-+
-+#define MAX_COUNT               3
-+#define SLEEP_DURATION_LOW      55
-+#define SLEEP_DURATION_HI       65
-+
-+static int iic_tpm_read(struct i2c_client *client, u8 addr, u8 *buffer,
-+			size_t len)
-+{
-+	struct i2c_msg msg1 = {
-+		.addr = client->addr,
-+		.len = 1,
-+		.buf = &addr
-+	};
-+	struct i2c_msg msg2 = {
-+		.addr = client->addr,
-+		.flags = I2C_M_RD,
-+		.len = len,
-+		.buf = buffer
-+	};
-+	int rc = 0;
-+	int count;
-+
-+	if (!client->adapter->algo->master_xfer)
-+		return -EOPNOTSUPP;
-+	i2c_lock_bus(client->adapter, I2C_LOCK_ROOT_ADAPTER);
-+	for (count = 0; count < MAX_COUNT; count++) {
-+		rc = __i2c_transfer(client->adapter, &msg1, 1);
-+		if (rc > 0)
-+			break;	/* break here to skip sleep */
-+		usleep_range(SLEEP_DURATION_LOW, SLEEP_DURATION_HI);
-+	}
-+	if (rc <= 0)
-+		goto out;
-+	for (count = 0; count < MAX_COUNT; count++) {
-+		rc = __i2c_transfer(client->adapter, &msg2, 1);
-+		if (rc > 0)
-+			break;
-+		usleep_range(SLEEP_DURATION_LOW, SLEEP_DURATION_HI);
-+	}
-+out:
-+	i2c_unlock_bus(client->adapter, I2C_LOCK_ROOT_ADAPTER);
-+	usleep_range(SLEEP_DURATION_LOW, SLEEP_DURATION_HI);
-+	if (rc <= 0)
-+		return -EIO;
-+	return len;
-+}
-+
-+static u8 tpm_dev_buf[TPM_I2C_BUFSIZE + sizeof(u8)]; /* max buff size + addr */
-+
-+#ifdef CONFIG_TCG_TIS_I2C_PTP_MAX_SIZE
-+	static int i2c_max_size = CONFIG_TCG_TIS_I2C_PTP_MAX_SIZE;
-+#else
-+	static int i2c_max_size = TPM_I2C_MAX_BUF_SIZE;
-+#endif
-+module_param(i2c_max_size, int, 0660);
-+
-+static int iic_tpm_write_generic(struct i2c_client *client,
-+				 u8 addr, u8 *buffer, size_t len,
-+				 unsigned int sleep_low,
-+				 unsigned int sleep_hi, u8 max_count)
-+{
-+	int rc = -EIO;
-+	int count;
-+	struct i2c_msg msg1 = {
-+		.addr = client->addr,
-+		.len = len + 1,
-+		.buf = tpm_dev_buf
-+	};
-+
-+	if (len > TPM_BUFSIZE)
-+		return -EINVAL;
-+	if (!client->adapter->algo->master_xfer)
-+		return -EOPNOTSUPP;
-+	i2c_lock_bus(client->adapter, I2C_LOCK_ROOT_ADAPTER);
-+	tpm_dev_buf[0] = addr;
-+	memcpy(&tpm_dev_buf[1], buffer, len);
-+	for (count = 0; count < max_count; count++) {
-+		rc = __i2c_transfer(client->adapter, &msg1, 1);
-+		if (rc > 0)
-+			break;
-+		usleep_range(sleep_low, sleep_hi);
-+	}
-+	i2c_unlock_bus(client->adapter, I2C_LOCK_ROOT_ADAPTER);
-+	usleep_range(SLEEP_DURATION_LOW, SLEEP_DURATION_HI);
-+	if (rc <= 0)
-+		return -EIO;
-+	return 0;
-+}
-+
-+static s32 i2c_ptp_read_buf(struct i2c_client *client, u8 offset, size_t size,
-+			    u8 *data)
-+{
-+	s32 status;
-+
-+	status = iic_tpm_read(client, offset, data, size);
-+	dev_dbg(&client->dev,
-+		"%s(offset=%u size=%zu data=%*ph) -> sts=%d\n", __func__,
-+		offset, size, (int)size, data, status);
-+	return status;
-+}
-+
-+static s32 i2c_ptp_write_buf(struct i2c_client *client, u8 offset, size_t size,
-+			     u8 *data)
-+{
-+	s32 status;
-+
-+	status = iic_tpm_write_generic(client, offset, data, size,
-+				       SLEEP_DURATION_LOW, SLEEP_DURATION_HI,
-+				       MAX_COUNT);
-+	dev_dbg(&client->dev,
-+		"%s(offset=%u size=%zu data=%*ph) -> sts=%d\n", __func__,
-+		offset, size, (int)size, data, status);
-+
-+	return status;
-+}
-+
-+#define TPM_INT_DATA_AVAIL		(BIT(0))
-+#define TPM_INT_STS_VALID		(BIT(1))
-+#define TPM_INT_LOC_CHANGED		(BIT(2))
-+#define TPM_INT_CMD_READY		(BIT(7))
-+#define TPM_INT_GLOBAL			(BIT(31))
-+
-+#define TPM_INT_TO_ACTIVATE		(TPM_INT_DATA_AVAIL)
-+
-+static bool wait_for_tpm_stat_cond(struct tpm_chip *chip, u8 mask,
-+				   bool check_cancel, bool *canceled)
-+{
-+	u8 status = chip->ops->status(chip);
-+
-+	*canceled = false;
-+	if (status != 0xff && (status & mask) == mask)
-+		return true;
-+	if (check_cancel && chip->ops->req_canceled(chip, status)) {
-+		*canceled = true;
-+		return true;
-+	}
-+	return false;
-+}
-+
-+int i2c_ptp_wait_for_tpm_stat_l(struct tpm_chip *chip, u8 mask,
-+				unsigned long timeout, wait_queue_head_t *queue,
-+				bool check_cancel)
-+{
-+	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
-+	unsigned long stop, start, long_delay;
-+	long rc;
-+	u8 status;
-+	bool canceled = false;
-+	unsigned int cur_intrs;
-+
-+	start = jiffies;
-+	stop = start + timeout;
-+	long_delay = start + usecs_to_jiffies(TPM_I2C_RETRY_DELAY_LONG_US);
-+
-+	if (queue && chip->flags & TPM_CHIP_FLAG_IRQ) {
-+again:
-+		cur_intrs = priv->intrs;
-+		timeout = stop - jiffies;
-+		if ((long)timeout <= 0)
-+			return -ETIME;
-+
-+		enable_irq(priv->irq);
-+		rc = wait_event_interruptible_timeout(*queue,
-+						      ((cur_intrs != priv->intrs) &&
-+						      wait_for_tpm_stat_cond(chip, mask, check_cancel, &canceled)),
-+						      timeout);
-+		if (rc > 0) {
-+			if (canceled)
-+				return -ECANCELED;
-+			return 0;
-+		}
-+		if (rc == -ERESTARTSYS && freezing(current)) {
-+			clear_thread_flag(TIF_SIGPENDING);
-+			goto again;
-+		}
-+	} else {
-+		do {
-+			status = chip->ops->status(chip);
-+			if (status != 0xff && (status & mask) == mask)
-+				return 0;
-+
-+			if (time_before(jiffies, long_delay))
-+				usleep_range(TPM_I2C_RETRY_DELAY_SHORT_US,
-+					     TPM_I2C_RETRY_DELAY_SHORT_US
-+					     + TPM_I2C_DELAY_RANGE_US);
-+			else
-+				usleep_range(TPM_I2C_RETRY_DELAY_LONG_US,
-+					     TPM_I2C_RETRY_DELAY_LONG_US
-+					     + TPM_I2C_DELAY_RANGE_US);
-+
-+		} while (time_before(jiffies, stop));
-+	}
-+	return -ETIME;
-+}
-+
-+/* wrapper of wait_for_tpm_stat, since we can't do the int processing during
-+ * the int_handler in I2C, here we do it after the int_handler is done and
-+ * wait_for_tpm_stat retruns
-+ */
-+static int i2c_ptp_wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
-+				     unsigned long timeout,
-+				     wait_queue_head_t *queue,
-+				     bool check_cancel)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	u32 intsts;
-+	int rc;
-+
-+	rc = i2c_ptp_wait_for_tpm_stat_l(chip, mask, timeout, queue,
-+					 check_cancel);
-+	if (rc < 0)
-+		return rc;
-+
-+	if (chip->flags & TPM_CHIP_FLAG_IRQ) {
-+		rc = i2c_ptp_read_buf(client, TPM_INT_STATUS, 4, (u8 *)&intsts);
-+		if (rc < 0) {
-+			dev_err(&chip->dev,
-+				"%s() fail to read TPM_INT_STATUS\n", __func__);
-+			return -EIO;
-+		}
-+
-+		/* Clear interrupts handled */
-+		rc = i2c_ptp_write_buf(client, TPM_INT_STATUS, 4,
-+				       (u8 *)&intsts);
-+		if (rc < 0) {
-+			dev_err(&chip->dev,
-+				"%s() fail to clear int status\n", __func__);
-+			return -EIO;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+#define TPM_ACCESS_REQUEST_USE		(BIT(1))
-+#define TPM_ACCESS_REQUEST_PENDING	(BIT(2))
-+#define TPM_ACCESS_ACTIVE_LOCALITY	(BIT(5))
-+#define TPM_ACCESS_VALID_STS		(BIT(7))
-+
-+/* Before we attempt to access the TPM we must see that the valid bit is set.
-+ * The specification says that this bit is 0 at reset and remains 0 until the
-+ * 'TPM has gone through its self test and initialization and has established
-+ * correct values in the other bits.'
-+ */
-+static int wait_startup(struct tpm_chip *chip, int l)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	unsigned long stop = jiffies + chip->timeout_a;
-+
-+	do {
-+		int rc;
-+		u8 access;
-+
-+		rc = i2c_ptp_read_buf(client, TPM_ACCESS, 1, &access);
-+		if (rc < 0)
-+			return rc;
-+
-+		if (access != 0xff && (access & TPM_ACCESS_VALID_STS) != 0)
-+			return 0;
-+		tpm_msleep(TPM_TIMEOUT);
-+	} while (time_before(jiffies, stop));
-+	return -1;
-+}
-+
-+static bool i2c_ptp_check_locality(struct tpm_chip *chip, int l)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
-+	int rc;
-+	u8 access;
-+	u8 data;
-+
-+	data = (u8)l;
-+	rc = i2c_ptp_write_buf(client, TPM_LOC_SEL, 1, &data);
-+	if (rc < 0)
-+		return false;
-+
-+	rc = i2c_ptp_read_buf(client, TPM_ACCESS, 1, &access);
-+	if (rc < 0)
-+		return false;
-+
-+	if ((access & (TPM_ACCESS_ACTIVE_LOCALITY | TPM_ACCESS_VALID_STS)) ==
-+	    (TPM_ACCESS_ACTIVE_LOCALITY | TPM_ACCESS_VALID_STS)) {
-+		priv->locality = l;
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+static bool i2c_ptp_locality_inactive(struct tpm_chip *chip, int l)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	int rc;
-+	u8 access;
-+	u8 data;
-+
-+	data = (u8)l;
-+	rc = i2c_ptp_write_buf(client, TPM_LOC_SEL, 1, &data);
-+	if (rc < 0)
-+		return false;
-+
-+	rc = i2c_ptp_read_buf(client, TPM_ACCESS, 1, &access);
-+	if (rc < 0)
-+		return false;
-+
-+	if ((access & (TPM_ACCESS_VALID_STS | TPM_ACCESS_ACTIVE_LOCALITY))
-+	    == TPM_ACCESS_VALID_STS)
-+		return true;
-+
-+	return false;
-+}
-+
-+static int i2c_ptp_release_locality(struct tpm_chip *chip, int l)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	unsigned long stop;
-+	int rc;
-+	u8 data;
-+
-+	if (i2c_ptp_locality_inactive(chip, l))
-+		return 0;
-+
-+	data = TPM_ACCESS_ACTIVE_LOCALITY;
-+	rc = i2c_ptp_write_buf(client, TPM_ACCESS, 1, &data);
-+	if (rc < 0)
-+		return rc;
-+
-+	stop = jiffies + chip->timeout_a;
-+	do {
-+		if (i2c_ptp_locality_inactive(chip, l))
-+			return 0;
-+
-+		tpm_msleep(TPM_TIMEOUT);
-+	} while (time_before(jiffies, stop));
-+
-+	return -1;
-+}
-+
-+static int i2c_ptp_request_locality(struct tpm_chip *chip, int l)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	unsigned long stop;
-+	int rc;
-+	u8 data;
-+
-+	if (i2c_ptp_check_locality(chip, l))
-+		return l;
-+
-+	data = TPM_ACCESS_REQUEST_USE;
-+	rc = i2c_ptp_write_buf(client, TPM_ACCESS, 1, &data);
-+	if (rc < 0)
-+		return rc;
-+
-+	stop = jiffies + chip->timeout_a;
-+
-+	do {
-+		if (i2c_ptp_check_locality(chip, l))
-+			return l;
-+
-+		rc = i2c_ptp_write_buf(client, TPM_ACCESS, 1, &data);
-+		if (rc < 0)
-+			return rc;
-+
-+		tpm_msleep(TPM_TIMEOUT);
-+	} while (time_before(jiffies, stop));
-+
-+	return -1;
-+}
-+
-+#define TPM_STS_RESPONSE_RETRY (BIT(1))
-+#define TPM_STS_SELFTEST_DONE  (BIT(2))
-+#define TPM_STS_EXPECT         (BIT(3))
-+#define TPM_STS_DATA_AVAIL     (BIT(4))
-+#define TPM_STS_GO             (BIT(5))
-+#define TPM_STS_COMMAND_READY  (BIT(6))
-+#define TPM_STS_VALID          (BIT(7))
-+#define TPM_STS_COMMAND_CANCEL (BIT(24))
-+
-+/* bit1...bit0 reads always 0 */
-+#define TPM_STS_ERR_VAL        (BIT(0) | BIT(1))
-+
-+/* read TPM_STS register */
-+static u8 i2c_ptp_status(struct tpm_chip *chip)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	int rc;
-+	u8 status;
-+
-+	rc = i2c_ptp_read_buf(client, TPM_STS, 1, &status);
-+	if (rc < 0)
-+		return 0;
-+
-+	return status;
-+}
-+
-+/* write commandReady to TPM_STS register */
-+static void i2c_ptp_ready(struct tpm_chip *chip)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	u8 data;
-+
-+	data = TPM_STS_COMMAND_READY;
-+	i2c_ptp_write_buf(client, TPM_STS, 1, &data);
-+}
-+
-+/* read Burst Count */
-+static int i2c_ptp_get_burstcount(struct tpm_chip *chip)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	unsigned long stop;
-+	int burstcnt = 0, rc;
-+
-+	/* wait for burstcount */
-+	stop = jiffies + chip->timeout_a;
-+
-+	do {
-+		rc = i2c_ptp_read_buf(client, TPM_STS_BURST_COUNT, 2,
-+				      (u8 *)&burstcnt);
-+		if (rc < 0)
-+			return rc;
-+
-+		if (burstcnt)
-+			return burstcnt;
-+
-+		usleep_range(TPM_TIMEOUT_USECS_MIN, TPM_TIMEOUT_USECS_MAX);
-+	} while (time_before(jiffies, stop));
-+
-+	return -EBUSY;
-+}
-+
-+/* write commandCancel to TPM_STS register */
-+static void i2c_ptp_cancel(struct tpm_chip *chip)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	u32 data;
-+
-+	data = TPM_STS_COMMAND_CANCEL;
-+	i2c_ptp_write_buf(client, TPM_STS, 4, (u8 *)&data);
-+}
-+
-+/* enable checksum */
-+static int i2c_ptp_enable_csum(struct tpm_chip *chip)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	s32 rc;
-+	u8 data = 1;
-+
-+	/* Enable CSUM */
-+	rc = i2c_ptp_write_buf(client, TPM_DATA_CSUM_ENABLE, 1, &data);
-+	if (rc < 0) {
-+		dev_err(&chip->dev,
-+			"%s() fail to read to TPM_DATA_CSUM_ENABLE: %d\n",
-+			__func__, rc);
-+		return rc;
-+	}
-+	return 0;
-+}
-+
-+/* Caclculate crc16 of the buffer and compares it to TPM_DATA_CSUM */
-+static int i2c_ptp_check_crc(struct tpm_chip *chip, u8 *buf, size_t len)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	s32 status;
-+	u16 tpm_csum = 0;
-+	u16 crc = 0;
-+
-+	crc = crc_ccitt(crc, buf, len);
-+	crc = be16_to_cpu(crc);
-+	status = i2c_ptp_read_buf(client, TPM_DATA_CSUM, 2, (u8 *)&tpm_csum);
-+	if (status <= 0) {
-+		dev_err(&chip->dev, "%s() fail to read to TPM_DATA_CSUM: %d\n",
-+			__func__, status);
-+		return -EIO;
-+	}
-+
-+	if (tpm_csum != crc) {
-+		dev_err(&chip->dev, "%s() bad data csum\n", __func__);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int i2c_ptp_recv_data(struct tpm_chip *chip, u8 *buf, size_t count)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	int size = 0, burstcnt, rc, bytes2read = count;
-+	bool paramsize_flag = false;
-+
-+	while (size < bytes2read) {
-+		burstcnt = i2c_ptp_get_burstcount(chip);
-+		if (burstcnt <= 0)
-+			return burstcnt;
-+
-+		burstcnt = min_t(int, (bytes2read - size), burstcnt);
-+		rc = i2c_ptp_read_buf(client, TPM_DATA_FIFO, burstcnt,
-+				      buf + size);
-+		if (rc < 0)
-+			return rc;
-+
-+		size += burstcnt;
-+
-+		if (size >= 6 && !paramsize_flag) {
-+			bytes2read = be32_to_cpu(*(__be32 *)(buf + 2));
-+			paramsize_flag = true;
-+		}
-+	}
-+
-+	return size;
-+}
-+
-+static int i2c_ptp_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	int size = 0;
-+	int status, retries;
-+
-+	if (count < TPM_HEADER_SIZE) {
-+		status = -EIO;
-+		goto out;
-+	}
-+
-+	for (retries = 0; retries < TPM_I2C_MAX_RETRY_CNT; retries++) {
-+		size = 0;
-+
-+		if (retries > 0) {
-+			/* if this is not the first trial, set responseRetry */
-+			u8 data = TPM_STS_RESPONSE_RETRY;
-+
-+			i2c_ptp_write_buf(client, TPM_STS, 1, &data);
-+		}
-+
-+		status = i2c_ptp_wait_for_tpm_stat(chip,
-+						   (TPM_STS_DATA_AVAIL | TPM_STS_VALID),
-+						   chip->timeout_b, NULL,
-+						   false);
-+		if (status < 0)
-+			return status;
-+
-+		size = i2c_ptp_recv_data(chip, buf, TPM_HEADER_SIZE);
-+		if (size < TPM_HEADER_SIZE)
-+			continue;
-+
-+		status = i2c_ptp_wait_for_tpm_stat(chip, TPM_STS_VALID,
-+						   chip->timeout_a, NULL,
-+						   false);
-+		if (status < 0)
-+			continue;
-+
-+		/* check CRC */
-+		status = i2c_ptp_check_crc(chip, buf, size);
-+		if (status < 0)
-+			continue;
-+
-+		status = size;
-+		break;
-+	}
-+
-+out:
-+	i2c_ptp_ready(chip);
-+	return status;
-+}
-+
-+/*
-+ * If interrupts are used (signaled by an irq set in the vendor structure)
-+ * tpm.c can skip polling for the data to be available as the interrupt is
-+ * waited for here
-+ */
-+static int i2c_ptp_send_data(struct tpm_chip *chip, u8 *buf, size_t len)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	int rc, status, burstcnt, retries;
-+	size_t count = 0, bytes2send;
-+	u32 ordinal = be32_to_cpu(*((__be32 *)(buf + 6)));
-+	u32 intmask;
-+
-+	/* When NPCT7XX FU Mode command or startup (when TPM I2C may be has
-+	 * been reset), wait for STS_VALID and re-initialize I2C regs
-+	 */
-+	if (ordinal == 0x20000201 || ordinal == 0x144) {
-+		// wait for I2C to be ready
-+		if (wait_startup(chip, 0) != 0)
-+			return -ENODEV;
-+
-+		rc = i2c_ptp_enable_csum(chip);
-+		if (rc < 0) {
-+			dev_err(&chip->dev, "%s() fail to enable checksum\n",
-+				__func__);
-+			return rc;
-+		}
-+
-+		// in interrupt mode re-eanble and clear the interrupts
-+		if (chip->flags & TPM_CHIP_FLAG_IRQ) {
-+			intmask = (TPM_INT_TO_ACTIVATE | TPM_INT_GLOBAL);
-+			i2c_ptp_write_buf(client, TPM_INT_ENABLE, 4,
-+					  (u8 *)&intmask);
-+			i2c_ptp_write_buf(client, TPM_INT_STATUS, 4,
-+					  (u8 *)&intmask);
-+		}
-+	}
-+
-+	for (retries = 0; retries < TPM_I2C_MAX_RETRY_CNT; retries++) {
-+		count = 0;
-+		rc = -1;
-+
-+		if (retries > 0) {
-+			/* if this is not the first trial, abort the command */
-+			i2c_ptp_ready(chip);
-+		}
-+
-+		status = i2c_ptp_status(chip);
-+		if ((status & TPM_STS_COMMAND_READY) == 0) {
-+			i2c_ptp_ready(chip);
-+			if (i2c_ptp_wait_for_tpm_stat
-+			    (chip, TPM_STS_COMMAND_READY, chip->timeout_b,
-+			     NULL, false) < 0) {
-+				rc = -ETIME;
-+				continue;
-+			}
-+		}
-+
-+		while (count < len) {
-+			burstcnt = i2c_ptp_get_burstcount(chip);
-+			if (burstcnt < 0) {
-+				dev_err(&chip->dev, "Unable to read burstcount\n");
-+				rc = burstcnt;
-+				break;
-+			}
-+
-+			bytes2send = min_t(int, i2c_max_size, burstcnt);
-+			bytes2send = min_t(int, bytes2send, (len - count));
-+			rc = i2c_ptp_write_buf(client, TPM_DATA_FIFO,
-+					       bytes2send, buf + count);
-+			if (rc < 0)
-+				break;
-+
-+			count += bytes2send;
-+		}
-+
-+		if (rc < 0)
-+			continue;
-+
-+		if (i2c_ptp_wait_for_tpm_stat(chip, TPM_STS_VALID,
-+					      chip->timeout_a, NULL,
-+					      false) < 0) {
-+			rc = -ETIME;
-+			continue;
-+		}
-+
-+		/* check CRC */
-+		rc = i2c_ptp_check_crc(chip, buf, len);
-+		if (rc < 0)
-+			continue;
-+
-+		return 0;
-+	}
-+
-+	i2c_ptp_ready(chip);
-+	return rc;
-+}
-+
-+static void disable_interrupts(struct tpm_chip *chip)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
-+	u32 intmask;
-+	int rc;
-+
-+	rc = i2c_ptp_read_buf(client, TPM_INT_ENABLE, 4, (u8 *)&intmask);
-+	if (rc < 0)
-+		intmask = 0;
-+
-+	intmask &= ~TPM_INT_GLOBAL;
-+	rc = i2c_ptp_write_buf(client, TPM_INT_ENABLE, 4, (u8 *)&intmask);
-+	if (rc < 0)
-+		dev_err(&chip->dev, "%s() fail to write TPM_INT_ENABLE\n",
-+			__func__);
-+
-+	devm_free_irq(chip->dev.parent, priv->irq, chip);
-+	priv->irq = 0;
-+	chip->flags &= ~TPM_CHIP_FLAG_IRQ;
-+}
-+
-+/*
-+ * If interrupts are used (signaled by an irq set in the vendor structure)
-+ * tpm.c can skip polling for the data to be available as the interrupt is
-+ * waited for here
-+ */
-+static int i2c_ptp_send_main(struct tpm_chip *chip, u8 *buf, size_t len)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
-+	int rc;
-+	u32 ordinal;
-+	unsigned long dur;
-+	u8 data;
-+
-+	rc = i2c_ptp_send_data(chip, buf, len);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* go and do it */
-+	data = TPM_STS_GO;
-+	rc = i2c_ptp_write_buf(client, TPM_STS, 1, &data);
-+	if (rc < 0)
-+		goto out_err;
-+
-+	ordinal = be32_to_cpu(*((__be32 *)(buf + 6)));
-+
-+	dur = tpm_calc_ordinal_duration(chip, ordinal);
-+	if (i2c_ptp_wait_for_tpm_stat
-+	    (chip, TPM_STS_DATA_AVAIL | TPM_STS_VALID, dur,
-+	     &priv->int_queue, false) < 0) {
-+		rc = -ETIME;
-+		goto out_err;
-+	}
-+
-+	return 0;
-+out_err:
-+	i2c_ptp_ready(chip);
-+	return rc;
-+}
-+
-+static int i2c_ptp_send(struct tpm_chip *chip, u8 *buf, size_t len)
-+{
-+	int rc, irq;
-+	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
-+
-+	if (!(chip->flags & TPM_CHIP_FLAG_IRQ) || priv->irq_tested)
-+		return i2c_ptp_send_main(chip, buf, len);
-+
-+	/* Verify receipt of the expected IRQ */
-+	irq = priv->irq;
-+	chip->flags &= ~TPM_CHIP_FLAG_IRQ;
-+	rc = i2c_ptp_send_main(chip, buf, len);
-+	priv->irq = irq;
-+	chip->flags |= TPM_CHIP_FLAG_IRQ;
-+	if (!priv->irq_tested)
-+		tpm_msleep(1);
-+	if (!priv->irq_tested)
-+		disable_interrupts(chip);
-+	priv->irq_tested = true;
-+	return rc;
-+}
-+
-+static bool i2c_ptp_req_canceled(struct tpm_chip *chip, u8 status)
-+{
-+	return (status == TPM_STS_COMMAND_READY);
-+}
-+
-+/* The only purpose for the handler is to signal to any waiting threads that
-+ * the interrupt is currently being asserted. The driver does not do any
-+ * processing triggered by interrupts, and the chip provides no way to mask at
-+ * the source (plus that would be slow over I2C). Run the IRQ as a one-shot,
-+ * this means it cannot be shared. The processing of the interrupt status
-+ * is done in i2c_ptp_wait_for_tpm_stat
-+ */
-+static irqreturn_t i2c_ptp_int_handler(int dummy, void *dev_id)
-+{
-+	struct tpm_chip *chip = dev_id;
-+	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
-+
-+	priv->irq_tested = true;
-+	priv->intrs++;
-+	wake_up_interruptible(&priv->int_queue);
-+	disable_irq_nosync(priv->irq);
-+	return IRQ_HANDLED;
-+}
-+
-+static int i2c_ptp_gen_interrupt(struct tpm_chip *chip)
-+{
-+	const char *desc = "attempting to generate an interrupt";
-+	u32 cap2;
-+
-+	return tpm2_get_tpm_pt(chip, 0x100, &cap2, desc);
-+}
-+
-+/* Register the IRQ and issue a command that will cause an interrupt. If an
-+ * irq is seen then leave the chip setup for IRQ operation, otherwise reverse
-+ * everything and leave in polling mode. Returns 0 on success.
-+ */
-+static int i2c_ptp_probe_irq_single(struct tpm_chip *chip, u32 intmask,
-+				    int flags, int irq)
-+{
-+	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-+	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
-+	int rc;
-+	u32 int_support;
-+
-+	if (devm_request_irq(chip->dev.parent, irq, i2c_ptp_int_handler, flags,
-+			     dev_name(&chip->dev), chip) != 0) {
-+		dev_info(&chip->dev, "Unable to request irq: %d for probe\n",
-+			 irq);
-+		return -1;
-+	}
-+	priv->irq = irq;
-+
-+	chip->flags |= TPM_CHIP_FLAG_IRQ;
-+
-+	/* check what are the interrupts that the TPM supports */
-+	rc = i2c_ptp_read_buf(client, TPM_INT_CAPABILITY, 4, (u8 *)
-+			   &int_support);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* Clear all existing */
-+	rc = i2c_ptp_write_buf(client, TPM_INT_STATUS, 4, (u8 *)&int_support);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* Turn on */
-+	int_support &= TPM_INT_TO_ACTIVATE;
-+	int_support |= TPM_INT_GLOBAL;
-+	rc = i2c_ptp_write_buf(client, TPM_INT_ENABLE, 4, (u8 *)&int_support);
-+	if (rc < 0)
-+		return rc;
-+
-+	priv->irq_tested = false;
-+
-+	/* Generate an interrupt by having the core call through to
-+	 * i2c_ptp_send
-+	 */
-+	rc = i2c_ptp_gen_interrupt(chip);
-+	if (rc < 0)
-+		return rc;
-+
-+	return 0;
-+}
-+
-+static int i2c_ptp_remove(struct i2c_client *client)
-+{
-+	u32 interrupt;
-+	int rc;
-+
-+	rc = i2c_ptp_read_buf(client, TPM_INT_ENABLE, 4, (u8 *)&interrupt);
-+	if (rc < 0)
-+		interrupt = 0;
-+
-+	// Clear and disable interrupts
-+	interrupt &= ~TPM_INT_GLOBAL;
-+	rc = i2c_ptp_write_buf(client, TPM_INT_STATUS, 4, (u8 *)&interrupt);
-+	rc = i2c_ptp_write_buf(client, TPM_INT_ENABLE, 4, (u8 *)&interrupt);
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(i2c_ptp_remove);
-+
-+static const struct tpm_class_ops tpm_i2c = {
-+	.flags = TPM_OPS_AUTO_STARTUP,
-+	.status = i2c_ptp_status,
-+	.recv = i2c_ptp_recv,
-+	.send = i2c_ptp_send,
-+	.cancel = i2c_ptp_cancel,
-+	.req_complete_mask = TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+	.req_complete_val = TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+	.req_canceled = i2c_ptp_req_canceled,
-+	.request_locality = i2c_ptp_request_locality,
-+	.relinquish_locality = i2c_ptp_release_locality,
-+};
-+
-+int i2c_ptp_core_init(struct i2c_client *client, struct tpm_tis_data *priv,
-+		      int irq, const struct tpm_tis_phy_ops *phy_ops,
-+		      acpi_handle acpi_dev_handle)
-+{
-+	u32 vendor;
-+	u32 intmask;
-+	u8 rid;
-+	int rc;
-+	struct tpm_chip *chip;
-+	struct device *dev = &client->dev;
-+
-+	chip = tpmm_chip_alloc(dev, &tpm_i2c);
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+
-+	chip->hwrng.quality = priv->rng_quality;
-+
-+	/* Maximum timeouts */
-+	chip->timeout_a = msecs_to_jiffies(TPM2_TIMEOUT_A);
-+	chip->timeout_b = msecs_to_jiffies(TPM2_TIMEOUT_B);
-+	chip->timeout_c = msecs_to_jiffies(TPM2_TIMEOUT_C);
-+	chip->timeout_d = msecs_to_jiffies(TPM2_TIMEOUT_D);
-+	priv->phy_ops = phy_ops;
-+	priv->intrs = 0;
-+	dev_set_drvdata(&chip->dev, priv);
-+
-+	if (wait_startup(chip, 0) != 0) {
-+		rc = -ENODEV;
-+		goto out_err;
-+	}
-+
-+	/* Take control of the TPM's interrupt hardware and shut it off */
-+	rc = i2c_ptp_read_buf(client, TPM_INT_ENABLE, 4, (u8 *)&intmask);
-+	if (rc < 0)
-+		goto out_err;
-+
-+	intmask = TPM_INT_TO_ACTIVATE;	// global should be off now
-+	i2c_ptp_write_buf(client, TPM_INT_ENABLE, 4, (u8 *)&intmask);
-+
-+	rc = i2c_ptp_enable_csum(chip);
-+	if (rc < 0) {
-+		dev_err(&chip->dev, "%s() fail to enable checksum\n", __func__);
-+		rc = -ENODEV;
-+		goto out_err;
-+	}
-+
-+	rc = tpm_chip_start(chip);
-+	if (rc)
-+		goto out_err;
-+
-+	rc = tpm2_probe(chip);
-+	if (rc)
-+		goto out_err;
-+
-+	rc = i2c_ptp_read_buf(client, TPM_VID_DID, 4, (u8 *)&vendor);
-+	if (rc < 0)
-+		goto out_err;
-+
-+	priv->manufacturer_id = vendor;
-+
-+	rc = i2c_ptp_read_buf(client, TPM_RID, 1, &rid);
-+	if (rc < 0)
-+		goto out_err;
-+
-+	dev_info(dev, "%s TPM (device-id 0x%X, rev-id %d)\n",
-+		 (chip->flags & TPM_CHIP_FLAG_TPM2) ? "2.0" : "1.2",
-+		 vendor >> 16, rid);
-+
-+	/* INTERRUPT Setup */
-+	init_waitqueue_head(&priv->int_queue);
-+	if (irq != -1) {
-+		/* Before doing irq testing issue a command to the TPM in polling mode
-+		 * to make sure it works. May as well use that command to set the
-+		 * proper timeouts for the driver.
-+		 */
-+		if (tpm_get_timeouts(chip)) {
-+			dev_err(dev, "Could not get TPM timeouts and durations\n");
-+			rc = -ENODEV;
-+			goto out_err;
-+		}
-+
-+		i2c_ptp_probe_irq_single(chip, intmask,	IRQF_TRIGGER_LOW, irq);
-+		if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
-+			dev_err(&chip->dev, FW_BUG
-+				"TPM interrupt not working, polling instead\n");
-+	}
-+
-+	rc = tpm_chip_register(chip);
-+	if (rc)
-+		goto out_err;
-+
-+	return 0;
-+
-+out_err:
-+	i2c_ptp_remove(client);
-+
-+	return rc;
-+}
-+
-+static int i2c_ptp_probe(struct i2c_client *client,
-+			 const struct i2c_device_id *id)
-+{
-+	int irq = -1, gpio;
-+	struct tpm_tis_data *priv;
-+
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
-+		return -ENODEV;
-+
-+	priv = devm_kzalloc(&client->dev, sizeof(struct tpm_tis_data),
-+			    GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	if (i2c_max_size < 1)
-+		i2c_max_size = CONFIG_TCG_TIS_I2C_PTP_MAX_SIZE;
-+
-+	// Get interrupt from board device
-+	if (client->irq) {
-+		irq = client->irq;
-+		goto out;
-+	}
-+
-+	// If IRQ doesn't exists, get GPIO from device tree
-+	gpio = of_get_named_gpio(client->dev.of_node, "tpm-pirq", 0);
-+	if (gpio < 0) {
-+		dev_err(&client->dev, "Failed to retrieve tpm-pirq\n");
-+		goto out;
-+	}
-+
-+	// GPIO request and configuration
-+	if (devm_gpio_request_one(&client->dev, gpio, GPIOF_IN, "TPM PIRQ")) {
-+		dev_err(&client->dev, "Failed to request tpm-pirq pin\n");
-+		goto out;
-+	}
-+
-+	irq = gpio_to_irq(gpio);
-+
-+out:
-+	return i2c_ptp_core_init(client, priv, irq, NULL, 0);
-+}
-+
-+static const struct of_device_id of_i2c_ptp_match[] = {
-+	{.compatible = "tcg,tpm_i2c_ptp", .data = OF_IS_TPM2},
-+	{},
-+};
-+
-+static const struct i2c_device_id i2c_ptp_id[] = {
-+	{"tpm_i2c_ptp"},
-+	{"tpm2_i2c_ptp", .driver_data = I2C_IS_TPM2},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, i2c_ptp_id);
-+
-+static SIMPLE_DEV_PM_OPS(i2c_ptp_pm_ops, tpm_pm_suspend, tpm_pm_resume);
-+
-+static struct i2c_driver i2c_ptp_driver = {
-+	.id_table = i2c_ptp_id,
-+	.probe = i2c_ptp_probe,
-+	.remove = i2c_ptp_remove,
-+	.driver = {
-+		.name = "tpm_i2c_ptp",
-+		.pm = &i2c_ptp_pm_ops,
-+		.of_match_table = of_match_ptr(of_i2c_ptp_match),
-+	},
-+};
-+module_i2c_driver(i2c_ptp_driver);
-+
-+MODULE_AUTHOR("Oshri Alkoby (oshri.alkoby@nuvoton.com)");
-+MODULE_DESCRIPTION("TPM I2C Driver");
-+MODULE_VERSION("2.1.3");
-+MODULE_LICENSE("GPL");
--- 
-2.18.0
+On 5/30/19 10:31 PM, Eduardo Valentin wrote:
+> On Wed, May 29, 2019 at 01:10:02PM -0500, Eddie James wrote:
+>> The XDMA engine embedded in the AST2500 SOC performs PCI DMA operations
+>> between the SOC (acting as a BMC) and a host processor in a server.
+>>
+>> This commit adds a driver to control the XDMA engine and adds functions
+>> to initialize the hardware and memory and start DMA operations.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
+>>   MAINTAINERS                      |  10 +
+>>   drivers/soc/aspeed/Kconfig       |   8 +
+>>   drivers/soc/aspeed/Makefile      |   1 +
+>>   drivers/soc/aspeed/aspeed-xdma.c | 520 +++++++++++++++++++++++++++++++++++++++
+>>   include/uapi/linux/aspeed-xdma.h |  26 ++
+>>   5 files changed, 565 insertions(+)
+>>   create mode 100644 drivers/soc/aspeed/aspeed-xdma.c
+>>   create mode 100644 include/uapi/linux/aspeed-xdma.h
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 7e09dda..84e2b62 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -2584,6 +2584,16 @@ S:	Maintained
+>>   F:	drivers/media/platform/aspeed-video.c
+>>   F:	Documentation/devicetree/bindings/media/aspeed-video.txt
+>>   
+>> +ASPEED XDMA ENGINE DRIVER
+>> +M:	Eddie James <eajames@linux.ibm.com>
+>> +L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
+>> +L:	linux-kernel@vger.kernel.org
+>> +S:	Maintained
+>> +F:	Documentation/devicetree/bindings/misc/aspeed,xdma.txt
+>> +F:	Documentation/ABI/testing/sysfs-devices-platform-aspeed-xdma
+>> +F:	drivers/soc/aspeed/aspeed-xdma.c
+>> +F:	include/uapi/linux/aspeed-xdma.h
+>> +
+>>   ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
+>>   M:	Corentin Chary <corentin.chary@gmail.com>
+>>   L:	acpi4asus-user@lists.sourceforge.net
+>> diff --git a/drivers/soc/aspeed/Kconfig b/drivers/soc/aspeed/Kconfig
+>> index 323e177..8b08310 100644
+>> --- a/drivers/soc/aspeed/Kconfig
+>> +++ b/drivers/soc/aspeed/Kconfig
+>> @@ -29,4 +29,12 @@ config ASPEED_P2A_CTRL
+>>   	  ioctl()s, the driver also provides an interface for userspace mappings to
+>>   	  a pre-defined region.
+>>   
+>> +config ASPEED_XDMA
+>> +	tristate "Aspeed XDMA Engine Driver"
+>> +	depends on SOC_ASPEED && REGMAP && MFD_SYSCON && HAS_DMA
+>> +	help
+>> +	  Enable support for the Aspeed XDMA Engine found on the Aspeed AST2500
+>> +	  SOC. The XDMA engine can perform automatic PCI DMA operations between
+>> +	  the AST2500 (acting as a BMC) and a host processor.
+>> +
+>>   endmenu
+>> diff --git a/drivers/soc/aspeed/Makefile b/drivers/soc/aspeed/Makefile
+>> index b64be47..977b046 100644
+>> --- a/drivers/soc/aspeed/Makefile
+>> +++ b/drivers/soc/aspeed/Makefile
+>> @@ -2,3 +2,4 @@
+>>   obj-$(CONFIG_ASPEED_LPC_CTRL)	+= aspeed-lpc-ctrl.o
+>>   obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
+>>   obj-$(CONFIG_ASPEED_P2A_CTRL)	+= aspeed-p2a-ctrl.o
+>> +obj-$(CONFIG_ASPEED_XDMA)	+= aspeed-xdma.o
+>> diff --git a/drivers/soc/aspeed/aspeed-xdma.c b/drivers/soc/aspeed/aspeed-xdma.c
+>> new file mode 100644
+>> index 0000000..3dc0ce4
+>> --- /dev/null
+>> +++ b/drivers/soc/aspeed/aspeed-xdma.c
+>> @@ -0,0 +1,520 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +// Copyright IBM Corp 2019
+>> +
+>> +#include <linux/aspeed-xdma.h>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/debugfs.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/device.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/fs.h>
+>> +#include <linux/genalloc.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/jiffies.h>
+>> +#include <linux/list.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/miscdevice.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/of_reserved_mem.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/poll.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/reset.h>
+>> +#include <linux/string.h>
+>> +#include <linux/uaccess.h>
+>> +#include <linux/wait.h>
+>> +
+>> +#define DEVICE_NAME			"aspeed-xdma"
+>> +
+>> +#define SCU_STRAP			0x070
+>> +#define  SCU_STRAP_VGA_MEM		GENMASK(3, 2)
+>> +
+>> +#define SCU_PCIE_CONF			0x180
+>> +#define  SCU_PCIE_CONF_VGA_EN		BIT(0)
+>> +#define  SCU_PCIE_CONF_VGA_EN_MMIO	BIT(1)
+>> +#define  SCU_PCIE_CONF_VGA_EN_LPC	BIT(2)
+>> +#define  SCU_PCIE_CONF_VGA_EN_MSI	BIT(3)
+>> +#define  SCU_PCIE_CONF_VGA_EN_MCTP	BIT(4)
+>> +#define  SCU_PCIE_CONF_VGA_EN_IRQ	BIT(5)
+>> +#define  SCU_PCIE_CONF_VGA_EN_DMA	BIT(6)
+>> +#define  SCU_PCIE_CONF_BMC_EN		BIT(8)
+>> +#define  SCU_PCIE_CONF_BMC_EN_MMIO	BIT(9)
+>> +#define  SCU_PCIE_CONF_BMC_EN_MSI	BIT(11)
+>> +#define  SCU_PCIE_CONF_BMC_EN_MCTP	BIT(12)
+>> +#define  SCU_PCIE_CONF_BMC_EN_IRQ	BIT(13)
+>> +#define  SCU_PCIE_CONF_BMC_EN_DMA	BIT(14)
+>> +#define  SCU_PCIE_CONF_RSVD		GENMASK(19, 18)
+>> +
+>> +#define SDMC_CONF			0x004
+>> +#define  SDMC_CONF_MEM			GENMASK(1, 0)
+>> +#define SDMC_REMAP			0x008
+>> +#define  SDMC_REMAP_MAGIC		GENMASK(17, 16)
+>> +
+>> +#define XDMA_CMD_SIZE			4
+>> +#define XDMA_CMDQ_SIZE			PAGE_SIZE
+>> +#define XDMA_BYTE_ALIGN			16
+>> +#define XDMA_MAX_LINE_SIZE		BIT(10)
+>> +#define XDMA_NUM_CMDS			\
+>> +	(XDMA_CMDQ_SIZE / sizeof(struct aspeed_xdma_cmd))
+>> +#define XDMA_NUM_DEBUGFS_REGS		6
+>> +
+>> +#define XDMA_CMD_BMC_CHECK		BIT(0)
+>> +#define XDMA_CMD_BMC_ADDR		GENMASK(29, 4)
+>> +#define XDMA_CMD_BMC_DIR_US		BIT(31)
+>> +
+>> +#define XDMA_CMD_COMM1_HI_HOST_PITCH	GENMASK(14, 3)
+>> +#define XDMA_CMD_COMM1_HI_BMC_PITCH	GENMASK(30, 19)
+>> +
+>> +#define XDMA_CMD_CONF_CHECK		BIT(1)
+>> +#define XDMA_CMD_CONF_LINE_SIZE		GENMASK(14, 4)
+>> +#define XDMA_CMD_CONF_IRQ_BMC		BIT(15)
+>> +#define XDMA_CMD_CONF_NUM_LINES		GENMASK(27, 16)
+>> +#define XDMA_CMD_CONF_IRQ		BIT(31)
+>> +
+>> +#define XDMA_CMD_ID_UPDIR		GENMASK(17, 16)
+>> +#define  XDMA_CMD_ID_UPDIR_BMC		0
+>> +#define  XDMA_CMD_ID_UPDIR_HOST		1
+>> +#define  XDMA_CMD_ID_UPDIR_VGA		2
+>> +
+>> +#define XDMA_DS_PCIE_REQ_SIZE_128	0
+>> +#define XDMA_DS_PCIE_REQ_SIZE_256	1
+>> +#define XDMA_DS_PCIE_REQ_SIZE_512	2
+>> +#define XDMA_DS_PCIE_REQ_SIZE_1K	3
+>> +#define XDMA_DS_PCIE_REQ_SIZE_2K	4
+>> +#define XDMA_DS_PCIE_REQ_SIZE_4K	5
+>> +
+>> +#define XDMA_BMC_CMD_QUEUE_ADDR		0x10
+>> +#define XDMA_BMC_CMD_QUEUE_ENDP		0x14
+>> +#define XDMA_BMC_CMD_QUEUE_WRITEP	0x18
+>> +#define XDMA_BMC_CMD_QUEUE_READP	0x1c
+>> +#define  XDMA_BMC_CMD_QUEUE_READP_MAGIC	0xee882266
+>> +#define XDMA_CTRL			0x20
+>> +#define  XDMA_CTRL_US_COMP		BIT(4)
+>> +#define  XDMA_CTRL_DS_COMP		BIT(5)
+>> +#define  XDMA_CTRL_DS_DIRTY		BIT(6)
+>> +#define  XDMA_CTRL_DS_PCIE_REQ_SIZE	GENMASK(19, 17)
+>> +#define  XDMA_CTRL_DS_DATA_TIMEOUT	BIT(28)
+>> +#define  XDMA_CTRL_DS_CHECK_ID		BIT(29)
+>> +#define XDMA_STATUS			0x24
+>> +#define  XDMA_STATUS_US_COMP		BIT(4)
+>> +#define  XDMA_STATUS_DS_COMP		BIT(5)
+>> +
+>> +enum {
+>> +	XDMA_IN_PRG,
+>> +	XDMA_UPSTREAM,
+>> +};
+>> +
+>> +struct aspeed_xdma_cmd {
+>> +	u32 host_addr_lo;
+>> +	u32 host_addr_hi;
+>> +	u32 bmc_addr;
+>> +	u32 comm1_hi;
+>> +	u32 conf;
+>> +	u32 id;
+>> +	u32 resv0;
+>> +	u32 resv1;
+>> +};
+>> +
+>> +struct aspeed_xdma_client;
+>> +
+>> +struct aspeed_xdma {
+>> +	struct device *dev;
+>> +	void __iomem *base;
+>> +	struct regmap *scu;
+>> +	struct reset_control *reset;
+>> +
+>> +	unsigned long flags;
+> interesting.. why do we need a long size flags field when we just toggle two bits?
+>  From a quick glance, looks like we use this to check for XDMA_IN_PRG and XDMA_UPSTREAM only..
+
+
+That's correct. More flags could be added in the future. Are you worried 
+about memory space?
+
+
+>
+>> +	unsigned int cmd_idx;
+>> +	wait_queue_head_t wait;
+>> +	struct aspeed_xdma_client *current_client;
+>> +
+>> +	u32 vga_phys;
+>> +	u32 vga_size;
+>> +	dma_addr_t vga_dma;
+>> +	void *cmdq;
+>> +	void *vga_virt;
+>> +	dma_addr_t cmdq_vga_phys;
+>> +	void *cmdq_vga_virt;
+>> +	struct gen_pool *vga_pool;
+>> +};
+>> +
+>> +struct aspeed_xdma_client {
+>> +	struct aspeed_xdma *ctx;
+>> +
+>> +	unsigned long flags;
+> same
+>
+>> +	void *virt;
+>> +	dma_addr_t phys;
+>> +	u32 size;
+>> +};
+>> +
+>> +static const u32 aspeed_xdma_bmc_pcie_conf = SCU_PCIE_CONF_BMC_EN |
+>> +	SCU_PCIE_CONF_BMC_EN_MSI | SCU_PCIE_CONF_BMC_EN_MCTP |
+>> +	SCU_PCIE_CONF_BMC_EN_IRQ | SCU_PCIE_CONF_BMC_EN_DMA |
+>> +	SCU_PCIE_CONF_RSVD;
+>> +
+>> +static const u32 aspeed_xdma_vga_pcie_conf = SCU_PCIE_CONF_VGA_EN |
+>> +	SCU_PCIE_CONF_VGA_EN_MSI | SCU_PCIE_CONF_VGA_EN_MCTP |
+>> +	SCU_PCIE_CONF_VGA_EN_IRQ | SCU_PCIE_CONF_VGA_EN_DMA |
+>> +	SCU_PCIE_CONF_RSVD;
+>> +
+>> +static void aspeed_scu_pcie_write(struct aspeed_xdma *ctx, u32 conf)
+>> +{
+>> +	u32 v = 0;
+>> +
+>> +	regmap_write(ctx->scu, SCU_PCIE_CONF, conf);
+>> +	regmap_read(ctx->scu, SCU_PCIE_CONF, &v);
+>> +
+>> +	dev_dbg(ctx->dev, "write scu pcie_conf[%08x]\n", v);
+>> +}
+>> +
+>> +static u32 aspeed_xdma_reg_read(struct aspeed_xdma *ctx, u32 reg)
+>> +{
+>> +	u32 v = readl(ctx->base + reg);
+>> +
+>> +	dev_dbg(ctx->dev, "read %02x[%08x]\n", reg, v);
+>> +	return v;
+>> +}
+>> +
+>> +static void aspeed_xdma_reg_write(struct aspeed_xdma *ctx, u32 reg, u32 val)
+>> +{
+>> +	writel(val, ctx->base + reg);
+>> +	dev_dbg(ctx->dev, "write %02x[%08x]\n", reg, readl(ctx->base + reg));
+>> +}
+>> +
+>> +static void aspeed_xdma_init_eng(struct aspeed_xdma *ctx)
+>> +{
+>> +	const u32 ctrl = XDMA_CTRL_US_COMP | XDMA_CTRL_DS_COMP |
+>> +		XDMA_CTRL_DS_DIRTY | FIELD_PREP(XDMA_CTRL_DS_PCIE_REQ_SIZE,
+>> +						XDMA_DS_PCIE_REQ_SIZE_256) |
+>> +		XDMA_CTRL_DS_DATA_TIMEOUT | XDMA_CTRL_DS_CHECK_ID;
+>> +
+>> +	aspeed_xdma_reg_write(ctx, XDMA_BMC_CMD_QUEUE_ENDP,
+>> +			      XDMA_CMD_SIZE * XDMA_NUM_CMDS);
+>> +	aspeed_xdma_reg_write(ctx, XDMA_BMC_CMD_QUEUE_READP,
+>> +			      XDMA_BMC_CMD_QUEUE_READP_MAGIC);
+>> +	aspeed_xdma_reg_write(ctx, XDMA_BMC_CMD_QUEUE_WRITEP, 0);
+>> +	aspeed_xdma_reg_write(ctx, XDMA_CTRL, ctrl);
+>> +
+>> +	aspeed_xdma_reg_write(ctx, XDMA_BMC_CMD_QUEUE_ADDR,
+>> +			      ctx->cmdq_vga_phys);
+>> +
+>> +	ctx->cmd_idx = 0;
+>> +	ctx->flags = 0;
+>> +}
+>> +
+>> +static void aspeed_xdma_reset(struct aspeed_xdma *ctx)
+>> +{
+>> +	reset_control_assert(ctx->reset);
+>> +
+>> +	msleep(10);
+>> +
+>> +	reset_control_deassert(ctx->reset);
+>> +
+>> +	msleep(10);
+> Why 10ms?
+
+
+I will add a comment. It's from the specification.
+
+
+>
+>> +
+>> +	aspeed_xdma_init_eng(ctx);
+>> +}
+>> +
+>> +static void aspeed_xdma_start(struct aspeed_xdma *ctx,
+>> +			      struct aspeed_xdma_op *op, u32 bmc_addr)
+>> +{
+>> +	u32 conf = XDMA_CMD_CONF_CHECK | XDMA_CMD_CONF_IRQ_BMC |
+>> +		XDMA_CMD_CONF_IRQ;
+>> +	unsigned int line_size = op->len / XDMA_BYTE_ALIGN;
+>> +	unsigned int num_lines = 1;
+>> +	unsigned int nidx = (ctx->cmd_idx + 1) % XDMA_NUM_CMDS;
+>> +	unsigned int pitch = 1;
+>> +	struct aspeed_xdma_cmd *cmd =
+>> +		&(((struct aspeed_xdma_cmd *)ctx->cmdq)[ctx->cmd_idx]);
+>> +
+>> +	if (line_size > XDMA_MAX_LINE_SIZE) {
+>> +		unsigned int rem;
+>> +		unsigned int total;
+>> +
+>> +		num_lines = line_size / XDMA_MAX_LINE_SIZE;
+>> +		total = XDMA_MAX_LINE_SIZE * num_lines;
+>> +		rem = line_size - total;
+>> +		line_size = XDMA_MAX_LINE_SIZE;
+>> +		pitch = line_size;
+>> +
+>> +		if (rem) {
+>> +			unsigned int offs = total * XDMA_BYTE_ALIGN;
+>> +			u32 r_bmc_addr = bmc_addr + offs;
+>> +			u64 r_host_addr = op->host_addr + (u64)offs;
+>> +			struct aspeed_xdma_cmd *r_cmd =
+>> +				&(((struct aspeed_xdma_cmd *)ctx->cmdq)[nidx]);
+>> +
+>> +			r_cmd->host_addr_lo =
+>> +				(u32)(r_host_addr & 0xFFFFFFFFULL);
+>> +			r_cmd->host_addr_hi = (u32)(r_host_addr >> 32ULL);
+>> +			r_cmd->bmc_addr = (r_bmc_addr & XDMA_CMD_BMC_ADDR) |
+>> +				XDMA_CMD_BMC_CHECK |
+>> +				(op->upstream ? XDMA_CMD_BMC_DIR_US : 0);
+>> +			r_cmd->conf = conf |
+>> +				FIELD_PREP(XDMA_CMD_CONF_LINE_SIZE, rem) |
+>> +				FIELD_PREP(XDMA_CMD_CONF_NUM_LINES, 1);
+>> +			r_cmd->comm1_hi =
+>> +				FIELD_PREP(XDMA_CMD_COMM1_HI_HOST_PITCH, 1) |
+>> +				FIELD_PREP(XDMA_CMD_COMM1_HI_BMC_PITCH, 1);
+>> +
+>> +			/* do not trigger IRQ for first command */
+>> +			conf = XDMA_CMD_CONF_CHECK;
+>> +
+>> +			nidx = (nidx + 1) % XDMA_NUM_CMDS;
+>> +		}
+>> +
+>> +		/* undocumented formula to get required number of lines */
+>> +		num_lines = (num_lines * 2) - 1;
+>> +	}
+>> +
+>> +	/* ctrl == 0 indicates engine hasn't started properly; restart it */
+>> +	if (!aspeed_xdma_reg_read(ctx, XDMA_CTRL))
+>> +		aspeed_xdma_reset(ctx);
+>> +
+>> +	cmd->host_addr_lo = (u32)(op->host_addr & 0xFFFFFFFFULL);
+>> +	cmd->host_addr_hi = (u32)(op->host_addr >> 32ULL);
+>> +	cmd->bmc_addr = (bmc_addr & XDMA_CMD_BMC_ADDR) | XDMA_CMD_BMC_CHECK |
+>> +		(op->upstream ? XDMA_CMD_BMC_DIR_US : 0);
+>> +	cmd->conf = conf |
+>> +		FIELD_PREP(XDMA_CMD_CONF_LINE_SIZE, line_size) |
+>> +		FIELD_PREP(XDMA_CMD_CONF_NUM_LINES, num_lines);
+>> +	cmd->comm1_hi = FIELD_PREP(XDMA_CMD_COMM1_HI_HOST_PITCH, pitch) |
+>> +			FIELD_PREP(XDMA_CMD_COMM1_HI_BMC_PITCH, pitch);
+>> +
+>> +	memcpy(ctx->cmdq_vga_virt, ctx->cmdq, XDMA_CMDQ_SIZE);
+>> +
+>> +	if (op->upstream)
+>> +		set_bit(XDMA_UPSTREAM, &ctx->flags);
+>> +	else
+>> +		clear_bit(XDMA_UPSTREAM, &ctx->flags);
+>> +
+>> +	set_bit(XDMA_IN_PRG, &ctx->flags);
+>> +
+>> +	aspeed_xdma_reg_write(ctx, XDMA_BMC_CMD_QUEUE_WRITEP,
+>> +			      nidx * XDMA_CMD_SIZE);
+>> +	ctx->cmd_idx = nidx;
+>> +}
+>> +
+>> +static void aspeed_xdma_done(struct aspeed_xdma *ctx)
+>> +{
+>> +	if (ctx->current_client) {
+>> +		clear_bit(XDMA_IN_PRG, &ctx->current_client->flags);
+>> +
+>> +		ctx->current_client = NULL;
+>> +	}
+>> +
+>> +	clear_bit(XDMA_IN_PRG, &ctx->flags);
+>> +	wake_up_interruptible_all(&ctx->wait);
+>> +}
+>> +
+>> +static irqreturn_t aspeed_xdma_irq(int irq, void *arg)
+>> +{
+>> +	struct aspeed_xdma *ctx = arg;
+>> +	u32 status = aspeed_xdma_reg_read(ctx, XDMA_STATUS);
+>> +
+>> +	if (status & XDMA_STATUS_US_COMP) {
+>> +		if (test_bit(XDMA_UPSTREAM, &ctx->flags))
+>> +			aspeed_xdma_done(ctx);
+>> +	}
+>> +
+>> +	if (status & XDMA_STATUS_DS_COMP) {
+>> +		if (!test_bit(XDMA_UPSTREAM, &ctx->flags))
+>> +			aspeed_xdma_done(ctx);
+>> +	}
+>> +
+>> +	aspeed_xdma_reg_write(ctx, XDMA_STATUS, status);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static int aspeed_xdma_init_mem(struct aspeed_xdma *ctx)
+>> +{
+>> +	int rc;
+>> +	u32 scu_conf = 0;
+>> +	u32 mem_size = 0x20000000;
+>> +	const u32 mem_sizes[4] = { 0x8000000, 0x10000000, 0x20000000,
+>> +				   0x40000000 };
+>> +	const u32 vga_sizes[4] = { 0x800000, 0x1000000, 0x2000000, 0x4000000 };
+>> +	void __iomem *sdmc_base = ioremap(0x1e6e0000, 0x100);
+>> +
+> Should these come from fw specification? Say device tree mem reserved nodes?
+
+
+I'm not sure. I quite like finding it dynamically here rather than 
+having to specify a new memory node in every system that will use the 
+driver. In addition it's a little bit awkward to get the physical 
+address from the reserved memory subsystem; we don't actually need to 
+grab the reserved memory for this device, it's already reserved by the 
+CPU/VGA. What do you think?
+
+
+Thanks for the review!
+
+Eddie
+
+
+>
+>> +	aspeed_scu_pcie_write(ctx, aspeed_xdma_vga_pcie_conf);
+>> +
+>> +	regmap_read(ctx->scu, SCU_STRAP, &scu_conf);
+>> +	ctx->vga_size = vga_sizes[FIELD_GET(SCU_STRAP_VGA_MEM, scu_conf)];
+>> +
+>> +	if (sdmc_base) {
+>> +		u32 sdmc = readl(sdmc_base + SDMC_CONF);
+>> +		u32 remap = readl(sdmc_base + SDMC_REMAP);
+>> +
+>> +		remap |= SDMC_REMAP_MAGIC;
+>> +		writel(remap, sdmc_base + SDMC_REMAP);
+>> +		remap = readl(sdmc_base + SDMC_REMAP);
+>> +
+>> +		mem_size = mem_sizes[sdmc & SDMC_CONF_MEM];
+>> +		iounmap(sdmc_base);
+>> +	}
+>> +
+>> +	ctx->vga_phys = (mem_size - ctx->vga_size) + 0x80000000;
+>> +
+>> +	ctx->cmdq = devm_kzalloc(ctx->dev, XDMA_CMDQ_SIZE, GFP_KERNEL);
+>> +	if (!ctx->cmdq) {
+>> +		dev_err(ctx->dev, "Failed to allocate command queue.\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	rc = dma_set_mask_and_coherent(ctx->dev, DMA_BIT_MASK(32));
+>> +	if (rc) {
+>> +		dev_err(ctx->dev, "Failed to set DMA mask: %d.\n", rc);
+>> +		return rc;
+>> +	}
+>> +
+>> +	rc = dma_declare_coherent_memory(ctx->dev, ctx->vga_phys,
+>> +					 ctx->vga_phys, ctx->vga_size);
+>> +	if (rc) {
+>> +		dev_err(ctx->dev, "Failed to declare coherent memory: %d.\n",
+>> +			rc);
+>> +		return rc;
+>> +	}
+>> +
+>> +	ctx->vga_virt = dma_alloc_coherent(ctx->dev, ctx->vga_size,
+>> +					   &ctx->vga_dma, GFP_KERNEL);
+>> +	if (!ctx->vga_virt) {
+>> +		dev_err(ctx->dev, "Failed to allocate DMA.\n");
+>> +		rc = -ENOMEM;
+>> +		goto err_dma;
+>> +	}
+>> +
+>> +	rc = gen_pool_add_virt(ctx->vga_pool, (unsigned long)ctx->vga_virt,
+>> +			       ctx->vga_phys, ctx->vga_size, -1);
+>> +	if (rc) {
+>> +		dev_err(ctx->dev, "Failed to add memory to genalloc pool.\n");
+>> +		goto err_genalloc;
+>> +	}
+>> +
+>> +	ctx->cmdq_vga_virt = gen_pool_dma_alloc(ctx->vga_pool, XDMA_CMDQ_SIZE,
+>> +						&ctx->cmdq_vga_phys);
+>> +	if (!ctx->cmdq_vga_virt) {
+>> +		dev_err(ctx->dev, "Failed to genalloc cmdq.\n");
+>> +		rc = -ENOMEM;
+>> +		goto err_genalloc;
+>> +	}
+>> +
+>> +	dev_dbg(ctx->dev, "VGA mapped at phys[%08x], size[%08x].\n",
+>> +		ctx->vga_phys, ctx->vga_size);
+>> +
+>> +	return 0;
+>> +
+>> +err_dma:
+>> +	dma_release_declared_memory(ctx->dev);
+>> +
+>> +err_genalloc:
+>> +	dma_free_coherent(ctx->dev, ctx->vga_size, ctx->vga_virt,
+>> +			  ctx->vga_dma);
+>> +	return rc;
+>> +}
+>> +
+>> +static int aspeed_xdma_probe(struct platform_device *pdev)
+>> +{
+>> +	int irq;
+>> +	int rc;
+>> +	struct resource *res;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct aspeed_xdma *ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+>> +
+>> +	if (!ctx)
+>> +		return -ENOMEM;
+>> +
+>> +	ctx->dev = dev;
+>> +	platform_set_drvdata(pdev, ctx);
+>> +	init_waitqueue_head(&ctx->wait);
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	ctx->base = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(ctx->base)) {
+>> +		dev_err(dev, "Unable to ioremap registers.\n");
+>> +		return PTR_ERR(ctx->base);
+>> +	}
+>> +
+>> +	irq = irq_of_parse_and_map(dev->of_node, 0);
+>> +	if (!irq) {
+>> +		dev_err(dev, "Unable to find IRQ.\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	rc = devm_request_irq(dev, irq, aspeed_xdma_irq, IRQF_SHARED,
+>> +			      DEVICE_NAME, ctx);
+>> +	if (rc < 0) {
+>> +		dev_err(dev, "Unable to request IRQ %d.\n", irq);
+>> +		return rc;
+>> +	}
+>> +
+>> +	ctx->scu = syscon_regmap_lookup_by_compatible("aspeed,ast2500-scu");
+>> +	if (IS_ERR(ctx->scu)) {
+>> +		dev_err(ctx->dev, "Unable to grab SCU regs.\n");
+>> +		return PTR_ERR(ctx->scu);
+>> +	}
+>> +
+>> +	ctx->reset = devm_reset_control_get_exclusive(dev, NULL);
+>> +	if (IS_ERR(ctx->reset)) {
+>> +		dev_err(dev, "Unable to request reset control.\n");
+>> +		return PTR_ERR(ctx->reset);
+>> +	}
+>> +
+>> +	ctx->vga_pool = devm_gen_pool_create(dev, ilog2(PAGE_SIZE), -1, NULL);
+>> +	if (!ctx->vga_pool) {
+>> +		dev_err(dev, "Unable to setup genalloc pool.\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	reset_control_deassert(ctx->reset);
+>> +
+>> +	msleep(10);
+> Why 10ms again? :-)
+>
+>> +
+>> +	rc = aspeed_xdma_init_mem(ctx);
+>> +	if (rc) {
+>> +		reset_control_assert(ctx->reset);
+>> +		return rc;
+>> +	}
+>> +
+>> +	aspeed_xdma_init_eng(ctx);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int aspeed_xdma_remove(struct platform_device *pdev)
+>> +{
+>> +	struct aspeed_xdma *ctx = platform_get_drvdata(pdev);
+>> +
+>> +	gen_pool_free(ctx->vga_pool, (unsigned long)ctx->cmdq_vga_virt,
+>> +		      XDMA_CMDQ_SIZE);
+>> +	dma_free_coherent(ctx->dev, ctx->vga_size, ctx->vga_virt,
+>> +			  ctx->vga_dma);
+>> +	dma_release_declared_memory(ctx->dev);
+>> +	reset_control_assert(ctx->reset);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id aspeed_xdma_match[] = {
+>> +	{ .compatible = "aspeed,ast2500-xdma" },
+>> +	{ },
+>> +};
+>> +
+>> +static struct platform_driver aspeed_xdma_driver = {
+>> +	.probe = aspeed_xdma_probe,
+>> +	.remove = aspeed_xdma_remove,
+>> +	.driver = {
+>> +		.name = DEVICE_NAME,
+>> +		.of_match_table = aspeed_xdma_match,
+>> +	},
+>> +};
+>> +
+>> +module_platform_driver(aspeed_xdma_driver);
+>> +
+>> +MODULE_AUTHOR("Eddie James");
+>> +MODULE_DESCRIPTION("Aspeed XDMA Engine Driver");
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/include/uapi/linux/aspeed-xdma.h b/include/uapi/linux/aspeed-xdma.h
+>> new file mode 100644
+>> index 0000000..998459e
+>> --- /dev/null
+>> +++ b/include/uapi/linux/aspeed-xdma.h
+>> @@ -0,0 +1,26 @@
+>> +/* SPDX-License-Identifier: GPL-2.0+ */
+>> +/* Copyright IBM Corp 2019 */
+>> +
+>> +#ifndef _UAPI_LINUX_ASPEED_XDMA_H_
+>> +#define _UAPI_LINUX_ASPEED_XDMA_H_
+>> +
+>> +#include <linux/types.h>
+>> +
+>> +/*
+>> + * aspeed_xdma_op
+>> + *
+>> + * host_addr: the DMA address on the host side, typically configured by PCI
+>> + *            subsystem
+>> + *
+>> + * len: the size of the transfer in bytes; it should be a multiple of 16 bytes
+>> + *
+>> + * upstream: boolean indicating the direction of the DMA operation; upstream
+>> + *           means a transfer from the BMC to the host
+>> + */
+>> +struct aspeed_xdma_op {
+>> +	__u64 host_addr;
+>> +	__u32 len;
+>> +	__u32 upstream;
+>> +};
+>> +
+>> +#endif /* _UAPI_LINUX_ASPEED_XDMA_H_ */
+>> -- 
+>> 1.8.3.1
+>>
