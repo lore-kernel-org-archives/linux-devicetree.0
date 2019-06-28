@@ -1,73 +1,115 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [v5 2/3] drm/mediatek: separate mipi_tx to different file
-Date: Fri, 28 Jun 2019 10:02:51 +0800
-Message-ID: <1561687371.29330.11.camel@mtksdaap41>
-References: <20190627025901.28418-1-jitao.shi@mediatek.com>
- <20190627025901.28418-3-jitao.shi@mediatek.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V5 00/18] SC7 entry and exit support for Tegra210
+Date: Thu, 27 Jun 2019 19:12:34 -0700
+Message-ID: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190627025901.28418-3-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, yingjoe.chen@mediatek.com, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sean Paul <seanpaul@chromium.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIEppdGFvOgoKT24gVGh1LCAyMDE5LTA2LTI3IGF0IDEwOjU5ICswODAwLCBKaXRhbyBTaGkg
-d3JvdGU6Cj4gRGlmZmVyZW50IElDIGhhcyBkaWZmZXJlbnQgbWlwaV90eCBzZXR0aW5nIG9mIGRz
-aS4KPiBUaGlzIHBhdGNoIHNlcGFyYXRlcyB0aGUgbWlwaV90eCBoYXJkd2FyZSByZWxhdGUgcGFy
-dCBmb3IgbXQ4MTczLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1l
-ZGlhdGVrLmNvbT4KPiBSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KPiAt
-LS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgIHwgICAx
-ICsKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmMgICAgICAgIHwgMzQz
-ICsrLS0tLS0tLS0tLS0tLS0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX21pcGlf
-dHguaCAgICAgICAgfCAgNDkgKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbXQ4
-MTczX21pcGlfdHguYyB8IDI4OSArKysrKysrKysrKysrKysKPiAgNCBmaWxlcyBjaGFuZ2VkLCAz
-NjMgaW5zZXJ0aW9ucygrKSwgMzE5IGRlbGV0aW9ucygtKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmgKPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbXQ4MTczX21pcGlfdHguYwo+IAoKW3Nu
-aXBdCgo+IEBAIC0zOTEsMTAgKzEwMSw4IEBAIHN0YXRpYyBpbnQgbXRrX21pcGlfdHhfcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZw
-ZGV2LT5kZXY7Cj4gIAlzdHJ1Y3QgbXRrX21pcGlfdHggKm1pcGlfdHg7Cj4gIAlzdHJ1Y3QgcmVz
-b3VyY2UgKm1lbTsKPiAtCXN0cnVjdCBjbGsgKnJlZl9jbGs7Cj4gIAljb25zdCBjaGFyICpyZWZf
-Y2xrX25hbWU7Cj4gIAlzdHJ1Y3QgY2xrX2luaXRfZGF0YSBjbGtfaW5pdCA9IHsKPiAtCQkub3Bz
-ID0gJm10a19taXBpX3R4X3BsbF9vcHMsCj4gIAkJLm51bV9wYXJlbnRzID0gMSwKPiAgCQkucGFy
-ZW50X25hbWVzID0gKGNvbnN0IGNoYXIgKiBjb25zdCAqKSZyZWZfY2xrX25hbWUsCj4gIAkJLmZs
-YWdzID0gQ0xLX1NFVF9SQVRFX0dBVEUsCj4gQEAgLTQwOCw2ICsxMTYsNyBAQCBzdGF0aWMgaW50
-IG10a19taXBpX3R4X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIAkJcmV0
-dXJuIC1FTk9NRU07Cj4gIAo+ICAJbWlwaV90eC0+ZHJpdmVyX2RhdGEgPSBvZl9kZXZpY2VfZ2V0
-X21hdGNoX2RhdGEoZGV2KTsKPiArCj4gIAltZW0gPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRl
-diwgSU9SRVNPVVJDRV9NRU0sIDApOwo+ICAJbWlwaV90eC0+cmVncyA9IGRldm1faW9yZW1hcF9y
-ZXNvdXJjZShkZXYsIG1lbSk7Cj4gIAlpZiAoSVNfRVJSKG1pcGlfdHgtPnJlZ3MpKSB7Cj4gQEAg
-LTQxNiwxMyArMTI1LDE0IEBAIHN0YXRpYyBpbnQgbXRrX21pcGlfdHhfcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikKPiAgCQlyZXR1cm4gcmV0Owo+ICAJfQo+ICAKPiAtCXJlZl9j
-bGsgPSBkZXZtX2Nsa19nZXQoZGV2LCBOVUxMKTsKPiAtCWlmIChJU19FUlIocmVmX2NsaykpIHsK
-PiAtCQlyZXQgPSBQVFJfRVJSKHJlZl9jbGspOwo+ICsJbWlwaV90eC0+cmVmX2NsayA9IGRldm1f
-Y2xrX2dldChkZXYsIE5VTEwpOwoKSSB0aGluayB5b3UgbmVlZCBub3QgdG8ga2VlcCByZWZfY2xr
-IGluIGRyaXZlciBwcml2YXRlIGRhdGEgYmVjYXVzZSB5b3UKd291bGQgbm90IHVzZSBpdCBhbnkg
-bW9yZS4KClJlZ2FyZHMsCkNLCgo+ICsJaWYgKElTX0VSUihtaXBpX3R4LT5yZWZfY2xrKSkgewo+
-ICsJCXJldCA9IFBUUl9FUlIobWlwaV90eC0+cmVmX2Nsayk7Cj4gIAkJZGV2X2VycihkZXYsICJG
-YWlsZWQgdG8gZ2V0IHJlZmVyZW5jZSBjbG9jazogJWRcbiIsIHJldCk7Cj4gIAkJcmV0dXJuIHJl
-dDsKPiAgCX0KPiAtCXJlZl9jbGtfbmFtZSA9IF9fY2xrX2dldF9uYW1lKHJlZl9jbGspOwo+ICsK
-PiArCXJlZl9jbGtfbmFtZSA9IF9fY2xrX2dldF9uYW1lKG1pcGlfdHgtPnJlZl9jbGspOwo+ICAK
-PiAgCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKGRldi0+b2Zfbm9kZSwgImNsb2NrLW91
-dHB1dC1uYW1lcyIsCj4gIAkJCQkgICAgICAmY2xrX2luaXQubmFtZSk7Cj4gQEAgLTQzMSw2ICsx
-NDEsOCBAQCBzdGF0aWMgaW50IG10a19taXBpX3R4X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
-Y2UgKnBkZXYpCj4gIAkJcmV0dXJuIHJldDsKPiAgCX0KPiAgCj4gKwljbGtfaW5pdC5vcHMgPSBt
-aXBpX3R4LT5kcml2ZXJfZGF0YS0+bWlwaV90eF9jbGtfb3BzOwo+ICsKPiAgCW1pcGlfdHgtPnBs
-bF9ody5pbml0ID0gJmNsa19pbml0Owo+ICAJbWlwaV90eC0+cGxsID0gZGV2bV9jbGtfcmVnaXN0
-ZXIoZGV2LCAmbWlwaV90eC0+cGxsX2h3KTsKPiAgCWlmIChJU19FUlIobWlwaV90eC0+cGxsKSkg
-ewo+IEBAIC00NjUsMjAgKzE3NywxMiBAQCBzdGF0aWMgaW50IG10a19taXBpX3R4X3JlbW92ZShz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAJcmV0dXJuIDA7Cj4gIH0KPiAgCgoKCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+This patch series includes Tegra210 deepsleep support with RTC alarm
+wake event.
+
+This series also includes save and restore of PLLs, clocks, OSC contexts
+for deepsleep exit to normal operation.
+
+This patch series doesn't support 100% suspend/resume to allow fully
+functional state upon resume and we are working on some more drivers suspend
+and resume implementations.
+
+[V5]: Changes between V4 & V5 are
+	- V4 feedback fixes
+
+[V4]: Changes between V3 & V4 are
+	- V3 feedback fixes
+	- Removed park bits clear for EMMC pads in pinctrl-tegra driver
+	  function tegra_pinctrl_clear_parked_bits as based on V3 feedback
+	  parked_bit is updated to parked_bitmask to use with DRV_PINGROUP
+	  as well and thierry posted patch series for this.
+	- Implemented all peripheral clocks save and restore through their
+	  corresponding clk_ops save_context and restore_context and removed
+	  all direct registers store and restore in clk-tegra210 driver.
+	- Created separate patch for fence_delay update during PLLU init based
+	  on V3 feedback.
+	- Added more comments in tegra210_clk_resume regarding dfll restore
+	  sequence and its dependency on peripheral clocks restore.
+
+[V3]: Changes between V2 & V3 are
+	- V2 feedback fixes
+	- GPIO restore should happen prior to Pinctrl restore to prevent
+	  glitch on GPIO lines. So using resume_noirq for gpio tegra to allow
+	  gpio resume prior to pinctrl resume.
+	- Implemented save_context and restore_context callbacks for clock
+	  plls, pll outs and dividers in corresponding drivers.
+	  Note: Peripheral clocks and clock enable and reset need to be in
+	  Tegra210 clock suspend/resume as they need to be in proper sequence
+	  w.r.t DFLL resume for restoring CPU clock.
+	- Removed gpio-tegra changes for hierarchical support to have PMC as
+	  parent to GPIOs for GPIO wake event support. Thierry is working on
+	  gpiolib for some cleanup before adding hierarchical support. So
+	  holding on to GPIO wake support for now.
+
+[V2] : V1 feedback fixes
+	Patch 0002: This version still using syscore. Thierry suggest not to
+	use syscore and waiting on suggestion from Linux Walleij for any better
+	way of storing current state of pins before suspend entry and restoring
+	them on resume at very early stage. So left this the same way as V1 and
+	will address once I get more feedback on this.
+	Also need to findout and implement proper way of forcing resume order
+	between pinctrl and gpio driver.
+
+[V1]:	Tegra210 SC7 entry and exit thru RTC wake and Power button GPIO wake
+	using hierarchical IRQ with PMC as parent to GPIO.
+
+
+
+
+Sowjanya Komatineni (18):
+  irqchip: tegra: do not disable COP IRQ during suspend
+  pinctrl: tegra: add suspend and resume support
+  clk: tegra: save and restore divider rate
+  clk: tegra: pllout: save and restore pllout context
+  clk: tegra: pll: save and restore pll context
+  clk: tegra: save and restore CPU and System clocks context
+  clk: tegra: support for saving and restoring OSC context
+  clk: tegra: add suspend resume support for DFLL
+  clk: tegra: add save and restore context support for peripheral clocks
+  clk: tegra210: use fence_udelay during PLLU init
+  clk: tegra210: support for Tegra210 clocks suspend and resume
+  soc/tegra: pmc: allow support for more tegra wake
+  soc/tegra: pmc: add pmc wake support for tegra210
+  arm64: tegra: enable wake from deep sleep on RTC alarm.
+  soc/tegra: pmc: configure core power request polarity
+  soc/tegra: pmc: configure deep sleep control settings
+  arm64: dts: tegra210-p2180: Jetson TX1 SC7 timings
+  arm64: dts: tegra210-p2180: Jetson nano SC7 timings
+
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi     |   7 +
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts |   7 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   5 +-
+ drivers/clk/tegra/clk-dfll.c                       |  78 ++++++++++++
+ drivers/clk/tegra/clk-dfll.h                       |   2 +
+ drivers/clk/tegra/clk-divider.c                    |  23 ++++
+ drivers/clk/tegra/clk-periph-fixed.c               |  31 +++++
+ drivers/clk/tegra/clk-periph-gate.c                |  34 +++++
+ drivers/clk/tegra/clk-periph.c                     |  43 +++++++
+ drivers/clk/tegra/clk-pll-out.c                    |  28 ++++
+ drivers/clk/tegra/clk-pll.c                        | 121 +++++++++++++-----
+ drivers/clk/tegra/clk-sdmmc-mux.c                  |  30 +++++
+ drivers/clk/tegra/clk-tegra-fixed.c                |  14 ++
+ drivers/clk/tegra/clk-tegra-super-gen4.c           |   4 -
+ drivers/clk/tegra/clk-tegra210.c                   | 128 +++++++++++++++++--
+ drivers/clk/tegra/clk.c                            |  94 ++++++++++++++
+ drivers/clk/tegra/clk.h                            |  45 ++++++-
+ drivers/irqchip/irq-tegra.c                        |  20 ++-
+ drivers/pinctrl/tegra/pinctrl-tegra.c              |  52 ++++++++
+ drivers/pinctrl/tegra/pinctrl-tegra.h              |   3 +
+ drivers/pinctrl/tegra/pinctrl-tegra210.c           |   1 +
+ drivers/soc/tegra/pmc.c                            | 141 ++++++++++++++++++++-
+ 22 files changed, 858 insertions(+), 53 deletions(-)
+
+-- 
+2.7.4
