@@ -1,7 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH V3 4/5] arm64: dts: imx8mq: Add system counter node
-Date: Fri, 28 Jun 2019 11:30:40 +0800
-Message-ID: <20190628033041.8513-4-Anson.Huang@nxp.com>
+Subject: [PATCH V3 5/5] arm64: dts: imx8mm: Add system counter node
+Date: Fri, 28 Jun 2019 11:30:41 +0800
+Message-ID: <20190628033041.8513-5-Anson.Huang@nxp.com>
 References: <20190628033041.8513-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190628033041.8513-1-Anson.Huang@nxp.com>
@@ -12,21 +12,25 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Add i.MX8MQ system counter node to enable timer-imx-sysctr
+Add i.MX8MM system counter node to enable timer-imx-sysctr
 broadcast timer driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-No changes.
+New patch:
+	- As i.MX8MM clock driver will be soon moved to using platform driver model, so the patch
+	  series I sent out for i.MX8MM system counter driver support will need rework accordingly,
+	  so I add the i.MX8MM DT support in this patch series, it uses same method as i.MX8MQ's
+	  system counter driver.
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index b1114a6..bea53bc 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -636,6 +636,14 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 63f4731..aa985a0 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -528,6 +528,14 @@
  				#pwm-cells = <2>;
  				status = "disabled";
  			};
@@ -36,10 +40,10 @@ index b1114a6..bea53bc 100644
 +				reg = <0x306a0000 0x30000>;
 +				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
 +					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				clock-frequency = <8333333>;
++				clock-frequency = <8000000>;
 +			};
  		};
  
- 		bus@30800000 { /* AIPS3 */
+ 		aips3: bus@30800000 {
 -- 
 2.7.4
