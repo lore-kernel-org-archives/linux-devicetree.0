@@ -1,77 +1,289 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCHv3 2/2] PCI: layerscape: Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
-Date: Fri, 28 Jun 2019 09:38:26 +0800
-Message-ID: <20190628013826.4705-2-xiaowei.bao@nxp.com>
-References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [v5 3/3] drm/mediatek: add mipi_tx driver for mt8183
+Date: Fri, 28 Jun 2019 09:52:17 +0800
+Message-ID: <1561686737.29330.6.camel@mtksdaap41>
+References: <20190627025901.28418-1-jitao.shi@mediatek.com>
+         <20190627025901.28418-4-jitao.shi@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190628013826.4705-1-xiaowei.bao@nxp.com>
+In-Reply-To: <20190627025901.28418-4-jitao.shi@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, pombredanne@nexb.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-media
 List-Id: devicetree@vger.kernel.org
 
-Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately.
+Hi, Jitao:
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
----
-v2:
- - No change.
-v3:
- - modify the commit message.
+On Thu, 2019-06-27 at 10:59 +0800, Jitao Shi wrote:
+> This patch add mt8183 mipi_tx driver.
+> And also support other chips that use the same binding and driver.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/Makefile             |   1 +
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        |   2 +
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |   1 +
+>  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 181 ++++++++++++++++++
+>  4 files changed, 185 insertions(+)
+>  create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> 
+> diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
+> index 2c8de1f5a5ee..8067a4be8311 100644
+> --- a/drivers/gpu/drm/mediatek/Makefile
+> +++ b/drivers/gpu/drm/mediatek/Makefile
+> @@ -13,6 +13,7 @@ mediatek-drm-y := mtk_disp_color.o \
+>  		  mtk_dsi.o \
+>  		  mtk_mipi_tx.o \
+>  		  mtk_mt8173_mipi_tx.o \
+> +		  mtk_mt8183_mipi_tx.o \
+>  		  mtk_dpi.o
+>  
+>  obj-$(CONFIG_DRM_MEDIATEK) += mediatek-drm.o
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> index cdc68b88cefd..ab0fbfba5572 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> @@ -182,6 +182,8 @@ static const struct of_device_id mtk_mipi_tx_match[] = {
+>  	  .data = &mt2701_mipitx_data },
+>  	{ .compatible = "mediatek,mt8173-mipi-tx",
+>  	  .data = &mt8173_mipitx_data },
+> +	{ .compatible = "mediatek,mt8183-mipi-tx",
+> +	  .data = &mt8183_mipitx_data },
+>  	{ },
+>  };
+>  
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+> index 660726924992..3fd24563952e 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+> @@ -45,5 +45,6 @@ unsigned long mtk_mipi_tx_pll_recalc_rate(struct clk_hw *hw,
+>  
+>  extern const struct mtk_mipitx_data mt2701_mipitx_data;
+>  extern const struct mtk_mipitx_data mt8173_mipitx_data;
+> +extern const struct mtk_mipitx_data mt8183_mipitx_data;
+>  
+>  #endif
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> new file mode 100644
+> index 000000000000..7758bc95555c
+> --- /dev/null
+> +++ b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> @@ -0,0 +1,181 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: jitao.shi <jitao.shi@mediatek.com>
+> + */
+> +
+> +#include "mtk_mipi_tx.h"
+> +
+> +#define MIPITX_LANE_CON		0x000c
+> +#define RG_DSI_CPHY_T1DRV_EN		BIT(0)
+> +#define RG_DSI_ANA_CK_SEL		BIT(1)
+> +#define RG_DSI_PHY_CK_SEL		BIT(2)
+> +#define RG_DSI_CPHY_EN			BIT(3)
+> +#define RG_DSI_PHYCK_INV_EN		BIT(4)
+> +#define RG_DSI_PWR04_EN			BIT(5)
+> +#define RG_DSI_BG_LPF_EN		BIT(6)
+> +#define RG_DSI_BG_CORE_EN		BIT(7)
+> +#define RG_DSI_PAD_TIEL_SEL		BIT(8)
+> +
+> +#define MIPITX_PLL_PWR	0x0028
+> +#define MIPITX_PLL_CON0	0x002c
+> +#define MIPITX_PLL_CON1	0x0030
+> +#define MIPITX_PLL_CON2	0x0034
+> +#define MIPITX_PLL_CON3	0x0038
+> +#define MIPITX_PLL_CON4	0x003c
+> +#define RG_DSI_PLL_IBIAS		(3 << 10)
+> +
+> +#define MIPITX_D2_SW_CTL_EN	0x0144
+> +#define MIPITX_D0_SW_CTL_EN	0x0244
+> +#define MIPITX_CK_CKMODE_EN	0x0328
+> +#define DSI_CK_CKMODE_EN		BIT(0)
+> +#define MIPITX_CK_SW_CTL_EN	0x0344
+> +#define MIPITX_D1_SW_CTL_EN	0x0444
+> +#define MIPITX_D3_SW_CTL_EN	0x0544
+> +#define DSI_SW_CTL_EN			BIT(0)
+> +#define AD_DSI_PLL_SDM_PWR_ON		BIT(0)
+> +#define AD_DSI_PLL_SDM_ISO_EN		BIT(1)
+> +
+> +#define RG_DSI_PLL_EN			BIT(4)
+> +#define RG_DSI_PLL_POSDIV		(0x7 << 8)
+> +
+> +static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
+> +{
+> +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+> +	int ret = 0;
+> +
+> +	ret = clk_prepare(mipi_tx->ref_clk);
 
- drivers/pci/controller/dwc/Kconfig  |   20 ++++++++++++++++++--
- drivers/pci/controller/dwc/Makefile |    3 ++-
- 2 files changed, 20 insertions(+), 3 deletions(-)
+In mtk_mipi_tx_power_on(), it calls
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index a6ce1ee..a41ccf5 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -131,13 +131,29 @@ config PCI_KEYSTONE_EP
- 	  DesignWare core functions to implement the driver.
- 
- config PCI_LAYERSCAPE
--	bool "Freescale Layerscape PCIe controller"
-+	bool "Freescale Layerscape PCIe controller - Host mode"
- 	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select MFD_SYSCON
- 	select PCIE_DW_HOST
- 	help
--	  Say Y here if you want PCIe controller support on Layerscape SoCs.
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Host mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
-+
-+config PCI_LAYERSCAPE_EP
-+	bool "Freescale Layerscape PCIe controller - Endpoint mode"
-+	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-+	depends on PCI_ENDPOINT
-+	select PCIE_DW_EP
-+	help
-+	  Say Y here if you want to enable PCIe controller support on Layerscape
-+	  SoCs to work in Endpoint mode.
-+	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-+	  determines which PCIe controller works in EP mode and which PCIe
-+	  controller works in RC mode.
- 
- config PCI_HISI
- 	depends on OF && (ARM64 || COMPILE_TEST)
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index b085dfd..824fde7 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -8,7 +8,8 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
- obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
- obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
- obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
--obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
-+obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
-+obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
--- 
-1.7.1
+clk_prepare_enable(mipi_tx->pll);
+
+This function break into
+
+clk_prepare(mipi_tx->pll);
+
+and
+
+clk_enable(mipi_tx->pll);
+
+
+In clk_prepare(), it would finally call into clk_core_prepare() [1], and
+you could see
+
+		ret = clk_core_prepare(core->parent);
+
+		if (core->ops->prepare)
+			ret = core->ops->prepare(core->hw);
+
+This mean, before this clock is prepare, ccf would prepare its parent
+clock, so you need not to prepare parent clock in this clock's prepare
+callback function.
+
+[1]
+https://elixir.bootlin.com/linux/v5.2-rc6/source/drivers/clk/clk.c#L836
+
+> +	if (ret < 0)
+> +		dev_err(mipi_tx->dev,
+> +			"can't prepare mipi_tx ref_clk %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int mtk_mipi_tx_pll_enable(struct clk_hw *hw)
+> +{
+> +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+> +	unsigned int txdiv, txdiv0;
+> +	u64 pcw;
+> +	int ret;
+> +
+> +	dev_dbg(mipi_tx->dev, "enable: %u bps\n", mipi_tx->data_rate);
+> +
+> +	if (mipi_tx->data_rate >= 2000000000) {
+> +		txdiv = 1;
+> +		txdiv0 = 0;
+> +	} else if (mipi_tx->data_rate >= 1000000000) {
+> +		txdiv = 2;
+> +		txdiv0 = 1;
+> +	} else if (mipi_tx->data_rate >= 500000000) {
+> +		txdiv = 4;
+> +		txdiv0 = 2;
+> +	} else if (mipi_tx->data_rate > 250000000) {
+> +		txdiv = 8;
+> +		txdiv0 = 3;
+> +	} else if (mipi_tx->data_rate >= 125000000) {
+> +		txdiv = 16;
+> +		txdiv0 = 4;
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = clk_enable(mipi_tx->ref_clk);
+
+Ditto.
+
+Regards,
+CK
+
+> +	if (ret < 0) {
+> +		dev_err(mipi_tx->dev,
+> +			"can't enable mipi_tx ref_clk %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON4, RG_DSI_PLL_IBIAS);
+> +
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
+> +	udelay(1);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
+> +	pcw = div_u64(((u64)mipi_tx->data_rate * txdiv) << 24, 26000000);
+> +	writel(pcw, mipi_tx->regs + MIPITX_PLL_CON0);
+> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_POSDIV,
+> +				txdiv0 << 8);
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
+> +
+> +	return 0;
+> +}
+> +
+> +static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
+> +{
+> +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+> +
+> +	clk_unprepare(mipi_tx->ref_clk);
+> +}
+> +
+> +static void mtk_mipi_tx_pll_disable(struct clk_hw *hw)
+> +{
+> +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+> +
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
+> +
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
+> +	clk_disable(mipi_tx->ref_clk);
+> +}
+> +
+> +static long mtk_mipi_tx_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+> +				       unsigned long *prate)
+> +{
+> +	return clamp_val(rate, 50000000, 1600000000);
+> +}
+> +
+> +static const struct clk_ops mtk_mipi_tx_pll_ops = {
+> +	.prepare = mtk_mipi_tx_pll_prepare,
+> +	.enable = mtk_mipi_tx_pll_enable,
+> +	.unprepare = mtk_mipi_tx_pll_unprepare,
+> +	.disable = mtk_mipi_tx_pll_disable,
+> +	.round_rate = mtk_mipi_tx_pll_round_rate,
+> +	.set_rate = mtk_mipi_tx_pll_set_rate,
+> +	.recalc_rate = mtk_mipi_tx_pll_recalc_rate,
+> +};
+> +
+> +static void mtk_mipi_tx_power_on_signal(struct phy *phy)
+> +{
+> +	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
+> +
+> +	/* BG_LPF_EN / BG_CORE_EN */
+> +	writel(RG_DSI_PAD_TIEL_SEL | RG_DSI_BG_CORE_EN,
+> +	       mipi_tx->regs + MIPITX_LANE_CON);
+> +	usleep_range(30, 100);
+> +	writel(RG_DSI_BG_CORE_EN | RG_DSI_BG_LPF_EN,
+> +	       mipi_tx->regs + MIPITX_LANE_CON);
+> +
+> +	/* Switch OFF each Lane */
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D0_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D1_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D2_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D3_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_CK_SW_CTL_EN, DSI_SW_CTL_EN);
+> +
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_CKMODE_EN, DSI_CK_CKMODE_EN);
+> +}
+> +
+> +static void mtk_mipi_tx_power_off_signal(struct phy *phy)
+> +{
+> +	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
+> +
+> +	/* Switch ON each Lane */
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D0_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D1_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D2_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D3_SW_CTL_EN, DSI_SW_CTL_EN);
+> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_SW_CTL_EN, DSI_SW_CTL_EN);
+> +
+> +	writel(RG_DSI_PAD_TIEL_SEL | RG_DSI_BG_CORE_EN,
+> +	       mipi_tx->regs + MIPITX_LANE_CON);
+> +	writel(RG_DSI_PAD_TIEL_SEL, mipi_tx->regs + MIPITX_LANE_CON);
+> +}
+> +
+> +const struct mtk_mipitx_data mt8183_mipitx_data = {
+> +	.mipi_tx_clk_ops = &mtk_mipi_tx_pll_ops,
+> +	.mipi_tx_enable_signal = mtk_mipi_tx_power_on_signal,
+> +	.mipi_tx_disable_signal = mtk_mipi_tx_power_off_signal,
+> +};
+> +
