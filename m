@@ -1,136 +1,106 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [RESEND PATCH 02/10] crypto: sa2ul: Add crypto driver
-Date: Fri, 28 Jun 2019 10:54:36 +0530
-Message-ID: <e86c6c6b-116d-f065-52a4-9b4d2951d100@ti.com>
+From: Eric Biggers <ebiggers@kernel.org>
+Subject: Re: [RESEND PATCH 00/10] crypto: k3: Add sa2ul driver
+Date: Thu, 27 Jun 2019 22:25:44 -0700
+Message-ID: <20190628052544.GH673@sol.localdomain>
 References: <20190628042745.28455-1-j-keerthy@ti.com>
- <20190628042745.28455-3-j-keerthy@ti.com>
- <20190628050756.GD673@sol.localdomain>
+ <20190628045318.GC673@sol.localdomain>
+ <7ca64e49-6e1f-c74e-4d8e-0e08607fe5c5@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190628050756.GD673@sol.localdomain>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <7ca64e49-6e1f-c74e-4d8e-0e08607fe5c5@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Biggers <ebiggers@kernel.org>
+To: keerthy <j-keerthy@ti.com>
 Cc: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, linux-crypto@vger.kernel.org, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 28/06/19 10:37 AM, Eric Biggers wrote:
-> On Fri, Jun 28, 2019 at 09:57:37AM +0530, Keerthy wrote:
->> The Security Accelerator (SA2_UL) subsystem provides hardware
->> cryptographic acceleration for the following use cases:
->> • Encryption and authentication for secure boot
->> • Encryption and authentication of content in applications
->>    requiring DRM (digital rights management) and
->>    content/asset protection
->> The device includes one instantiation of SA2_UL named SA2_UL0
->>
->> SA2_UL supports the following cryptographic industry standards to enable data authentication, data
->> integrity and data confidentiality.
->>
->> Crypto function library for software acceleration
->> o AES operation
->> o 3DES operation
->> o SHA1 operation
->> o MD5 operation
->> o SHA2 – 224, 256, 384, 512 operation
->>
->> Authentication supported via following hardware cores
->> o SHA1
->> o MD5
->> o SHA2 -224
->> o SHA2-256
->> o SHA2-384
->> o SHA2-512
+On Fri, Jun 28, 2019 at 10:44:26AM +0530, keerthy wrote:
 > 
-> What about HMAC?
 > 
-> Your actual driver only exposes HMAC-SHA*, not SHA* anything.
+> On 6/28/2019 10:23 AM, Eric Biggers wrote:
+> > Hi Keerthy,
+> > 
+> > On Fri, Jun 28, 2019 at 09:57:35AM +0530, Keerthy wrote:
+> > > The series adds Crypto hardware accelerator support for SA2UL.
+> > > SA2UL stands for security accelerator ultra lite.
+> > > 
+> > > The Security Accelerator (SA2_UL) subsystem provides hardware
+> > > cryptographic acceleration for the following use cases:
+> > > • Encryption and authentication for secure boot
+> > > • Encryption and authentication of content in applications
+> > >    requiring DRM (digital rights management) and
+> > >    content/asset protection
+> > > The device includes one instantiation of SA2_UL named SA2_UL0
+> > > 
+> > > SA2UL needs on tx channel and a pair of rx dma channels.
+> > > 
+> > > This series has dependency on UDMA series. Hence is based on top of:
+> > > 
+> > > https://patchwork.kernel.org/project/linux-dmaengine/list/?series=114105
+> > > 
+> > > The above series adds couple of dmaengine APIs that are used
+> > > by the sa2ul driver. Hence there is a hard dependency on the
+> > > above series.
+> > > 
+> > > Resending with linux-crypto list in Cc.
+> > > 
+> > > Keerthy (10):
+> > >    dt-bindings: crypto: k3: Add sa2ul bindings documentation
+> > >    crypto: sa2ul: Add crypto driver
+> > >    crypto: sa2ul: Add AES ECB Mode support
+> > >    crypto: sa2ul: Add aead support for hmac(sha1)cbc(aes) algorithm
+> > >    crypto: sha256_generic: Export the Transform function
+> > >    crypto: sa2ul: Add hmac(sha256)cbc(aes) AEAD Algo support
+> > >    crypto: sa2ul: Add hmac(sha1) HMAC algorithm support
+> > >    crypto: sa2ul: Add hmac(sha256) HMAC algorithm support
+> > >    sa2ul: Add 3DES ECB & CBC Mode support
+> > >    arm64: dts: k3-am6: Add crypto accelarator node
+> > > 
+> > >   .../devicetree/bindings/crypto/sa2ul.txt      |   47 +
+> > >   arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |   33 +
+> > >   crypto/sha256_generic.c                       |    3 +-
+> > >   drivers/crypto/Kconfig                        |   17 +
+> > >   drivers/crypto/Makefile                       |    1 +
+> > >   drivers/crypto/sa2ul.c                        | 2232 +++++++++++++++++
+> > >   drivers/crypto/sa2ul.h                        |  384 +++
+> > >   include/crypto/sha.h                          |    1 +
+> > >   8 files changed, 2717 insertions(+), 1 deletion(-)
+> > >   create mode 100644 Documentation/devicetree/bindings/crypto/sa2ul.txt
+> > >   create mode 100644 drivers/crypto/sa2ul.c
+> > >   create mode 100644 drivers/crypto/sa2ul.h
+> > 
+> > Did you run the crypto self-tests on this driver?  i.e. boot a kernel with
+> > 
+> > 	# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+> > 	CONFIG_DEBUG_KERNEL=y
+> > 	CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
+> > 
+> > What are the results?
 > 
-> What does the hardware actually support?
+> Eric,
+> 
+> Thanks for your response. I did try with that. All test cases
+> were passing on 4.19 kernel before the testmgr revamp.
+> 
 
-Hardware supports both SHA and HMAC-SHA
+That's surprising, since your driver doesn't implement update() for hashing, so
+it should have been failing at least the HMAC tests.  Are you sure you really
+ran the tests?
 
-> 
->> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
->> index 603413f28fa3..b9a3fa026c74 100644
->> --- a/drivers/crypto/Kconfig
->> +++ b/drivers/crypto/Kconfig
->> @@ -785,4 +785,21 @@ config CRYPTO_DEV_CCREE
->>   
->>   source "drivers/crypto/hisilicon/Kconfig"
->>   
->> +config CRYPTO_DEV_SA2UL
->> +	tristate "Support for TI security accelerator"
->> +	depends on ARCH_K3 || COMPILE_TEST
->> +	select ARM64_CRYPTO
->> +	select CRYPTO_AES
->> +	select CRYPTO_AES_ARM64
->> +	select CRYPTO_SHA1
->> +	select CRYPTO_MD5
->> +	select CRYPTO_ALGAPI
->> +	select CRYPTO_AUTHENC
->> +	select HW_RANDOM
->> +	default m if ARCH_K3
->> +	help
->> +	  Keystone devices include a security accelerator engine that may be
->> +	  used for crypto offload.  Select this if you want to use hardware
->> +	  acceleration for cryptographic algorithms on these devices.
-> 
-> This shouldn't be enabled by default.  Note that arm64 defconfig sets ARCH_K3 as
-> well as lots of other ARCH_* options, so clearly just because ARCH_K3 is set
-> doesn't mean the kernel is being built specifically for your platform.
+> Currently few of the test cases do fail. For ex: Appending
+> the last ivlen bytes of cipher text as the IV.
 
-okay. I will remove that.
-
-> 
->> +/*
->> + * Mode Control Instructions for various Key lengths 128, 192, 256
->> + * For CBC (Cipher Block Chaining) mode for encryption
->> + */
->> +static u8 mci_cbc_enc_array[3][MODE_CONTROL_BYTES] = {
->> +	{	0x21, 0x00, 0x00, 0x18, 0x88, 0x0a, 0xaa, 0x4b, 0x7e, 0x00,
->> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
->> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
->> +	{	0x21, 0x00, 0x00, 0x18, 0x88, 0x4a, 0xaa, 0x4b, 0x7e, 0x00,
->> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
->> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
->> +	{	0x21, 0x00, 0x00, 0x18, 0x88, 0x8a, 0xaa, 0x4b, 0x7e, 0x00,
->> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
->> +		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
->> +};
-> 
-> Use 'const' for static constants.
-
-Okay
+Well, these need to be fixed.
 
 > 
->> +static int sa_aes_cbc_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
->> +			     unsigned int keylen)
->> +{
->> +	struct algo_data *ad = kzalloc(sizeof(*ad), GFP_KERNEL);
+> > 
+> > Also, this patchset does not compile for me.
 > 
-> Need to check from error for all memory allocations.
-> 
->> +static struct sa_alg_tmpl sa_algs[] = {
->> +	{.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
-> 
-> ablkcipher API is deprecated.  Use skcipher instead.
+> This has dependency on UDMA series:
+> https://patchwork.kernel.org/cover/10930969/
 
-Okay
+I had that applied.
 
-> 
-> (To be clear, these are just a few things I happened to notice from very quickly
-> skimming through this patch.  I don't have time to do a proper review of random
-> drivers.)
-
-I will incorporate the comments in v2.
-
-Thanks for your quick review.
-
-> 
-> - Eric
-> 
+- Eric
