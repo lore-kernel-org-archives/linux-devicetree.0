@@ -1,48 +1,30 @@
-Return-Path: <SRS0=tmaH=UQ=nvidia.com=mmaddireddy@kernel.org>
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [PATCH V5 19/27] PCI: tegra: Change PRSNT_SENSE IRQ log to debug
-Date: Mon, 17 Jun 2019 23:09:44 +0530
-Message-ID: <20190617173952.29363-20-mmaddireddy@nvidia.com>
-In-Reply-To: <20190617173952.29363-1-mmaddireddy@nvidia.com>
-References: <20190617173952.29363-1-mmaddireddy@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: thierry.reding@gmail.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, lorenzo.pieralisi@arm.com, vidyas@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Return-Path: <SRS0=7p7P=U3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from anchovy2.45ru.net.au ([203.30.46.146]:51431 "EHLO
+        anchovy2.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbfF1DZz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Jun 2019 23:25:55 -0400
+From: Phil Reid <preid@electromag.com.au>
+Subject: [PATCH v2 0/2] clk: clk-cdce925: Add regulator support
+Date: Fri, 28 Jun 2019 11:19:08 +0800
+Message-Id: <1561691950-42154-1-git-send-email-preid@electromag.com.au>
+Sender: devicetree-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-PRSNT_MAP bit field is programmed to update the slot present status.
-PRSNT_SENSE IRQ is triggered when this bit field is programmed, which is
-not an error. Add a new if condition to trap PRSNT_SENSE code and print it
-with debug log level.
+The cdce925 power supplies could be controllable on some platforms.
+Enable them before communicating with the cdce925.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V5: No change
+Changes from V1
+- Add devicetree updates
 
-V4: No change
 
-V3: Correct typos in commit log
+Phil Reid (2):
+  dt-bindings: clock: cdce925: Add regulator documentation
+  clk: clk-cdce925: Add regulator support
 
-V2: If-else to switch-case conversion patch is dropped, this patch is
-rebased to stay with if-else statements
+ .../devicetree/bindings/clock/ti,cdce925.txt       |  4 +++
+ drivers/clk/clk-cdce925.c                          | 34 ++++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
 
- drivers/pci/controller/pci-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index a746d963ca36..73d5a8841405 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -864,7 +864,7 @@ static irqreturn_t tegra_pcie_isr(int irq, void *arg)
- 	 * do not pollute kernel log with master abort reports since they
- 	 * happen a lot during enumeration
- 	 */
--	if (code == AFI_INTR_MASTER_ABORT)
-+	if (code == AFI_INTR_MASTER_ABORT || code == AFI_INTR_PE_PRSNT_SENSE)
- 		dev_dbg(dev, "%s, signature: %08x\n", err_msg[code], signature);
- 	else
- 		dev_err(dev, "%s, signature: %08x\n", err_msg[code], signature);
 -- 
-2.17.1
+1.8.3.1
