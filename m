@@ -1,49 +1,26 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH V3 5/5] arm64: dts: imx8mm: Add system counter node
-Date: Fri, 28 Jun 2019 11:30:41 +0800
-Message-ID: <20190628033041.8513-5-Anson.Huang@nxp.com>
-References: <20190628033041.8513-1-Anson.Huang@nxp.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH 00/10] crypto: k3: Add sa2ul driver
+Date: Fri, 28 Jun 2019 12:19:39 +0800
+Message-ID: <20190628041939.7yduk77x62twath6@gondor.apana.org.au>
+References: <20190618120843.18777-1-j-keerthy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190628033041.8513-1-Anson.Huang@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20190618120843.18777-1-j-keerthy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Linux-imx@nxp.com
+To: Keerthy <j-keerthy@ti.com>
+Cc: davem@davemloft.net, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On Tue, Jun 18, 2019 at 05:38:33PM +0530, Keerthy wrote:
+> The series adds Crypto hardware accelerator support for SA2UL.
+> SA2UL stands for security accelerator ultra lite.
 
-Add i.MX8MM system counter node to enable timer-imx-sysctr
-broadcast timer driver.
+Please cc linux-crypto@vger.kernel.org.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-New patch:
-	- As i.MX8MM clock driver will be soon moved to using platform driver model, so the patch
-	  series I sent out for i.MX8MM system counter driver support will need rework accordingly,
-	  so I add the i.MX8MM DT support in this patch series, it uses same method as i.MX8MQ's
-	  system counter driver.
----
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 63f4731..aa985a0 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -528,6 +528,14 @@
- 				#pwm-cells = <2>;
- 				status = "disabled";
- 			};
-+
-+			system_counter: timer@306a0000 {
-+				compatible = "nxp,sysctr-timer";
-+				reg = <0x306a0000 0x30000>;
-+				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				clock-frequency = <8000000>;
-+			};
- 		};
- 
- 		aips3: bus@30800000 {
+Thanks,
 -- 
-2.7.4
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
