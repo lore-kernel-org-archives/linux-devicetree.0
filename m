@@ -1,210 +1,51 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: arm: fsl: Add DSP IPC binding support
-Date: Fri, 28 Jun 2019 13:24:53 +0300
-Message-ID: <CAEnQRZCLUKxWD31bMS_Smc-dj0W0qWz7YsO6txftWX9nm9R_6Q@mail.gmail.com>
-References: <20190614081650.11880-1-daniel.baluta@nxp.com> <20190614081650.11880-3-daniel.baluta@nxp.com>
- <CAL_JsqJKgMB1PNA33gmFju4AQTc2WaSBoOGQExVaGd9LZRmk_g@mail.gmail.com>
- <CAEnQRZBNA4ndSL1vMStHemYkzt9TxqjgdWWjqFwnBFQ+ha+egA@mail.gmail.com>
- <CAL_JsqJQRbuWKgON+ukZ3GRwyq8SvTZ=PRGwMhQjAxKPSP-Fkw@mail.gmail.com>
- <CAEnQRZCjp9dUt0JTjhN0CnV0+Xzc+q1EHCnJn_TNOQoUWZBTsg@mail.gmail.com> <CAL_Jsq+rWn+vVfBGdAB23Xu0RaFV1HwSdBbfj9F4M3W1EUo9_A@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 0/2] extcon: Add fsa9480 extcon driver
+Date: Fri, 28 Jun 2019 11:28:11 +0100
+Message-ID: <CACRpkdYD7Z7XX9wXFtBehJG_4NCt=m_MNsR5cESPRnO3tomKmQ@mail.gmail.com>
+References: <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+rWn+vVfBGdAB23Xu0RaFV1HwSdBbfj9F4M3W1EUo9_A@mail.gmail.com>
+In-Reply-To: <20190621111352.22976-1-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "S.j. Wang" <shengjiu.wang@nxp.com>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>
+To: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Donggeun Kim <dg77.kim@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 6:59 PM Rob Herring <robh+dt@kernel.org> wrote:
+On Fri, Jun 21, 2019 at 12:14 PM Pawe=C5=82 Chmiel
+<pawel.mikolaj.chmiel@gmail.com> wrote:
+
+> This small patchset adds support for Fairchild Semiconductor FSA9480
+> microUSB switch.
 >
-> On Thu, Jun 27, 2019 at 1:40 AM Daniel Baluta <daniel.baluta@gmail.com> w=
-rote:
-> >
-> > <snip>
-> >
-> > > > > > +  mboxes:
-> > > > > > +    description:
-> > > > > > +      List of phandle of 2 MU channels for TXDB, 2 MU channels=
- for RXDB
-> > > > > > +      (see mailbox/fsl,mu.txt)
-> > > > > > +    maxItems: 1
-> > > > >
-> > > > > Should be 4?
-> > > >
-> > > > Actually is just a list with 1 item. I think is the terminology:
-> > > >
-> > > > You can have an example here of the mboxes defined for SCU.
-> > > > https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/f=
-reescale/imx8qxp.dtsi#L123
-> > >
-> > > mboxes =3D <&lsio_mu1 0 0
-> > > &lsio_mu1 0 1
-> > > &lsio_mu1 0 2
-> > > &lsio_mu1 0 3
-> > > &lsio_mu1 1 0
-> > > &lsio_mu1 1 1
-> > > &lsio_mu1 1 2
-> > > &lsio_mu1 1 3
-> > > &lsio_mu1 3 3>;
-> > >
-> > > Logically, this is 9 entries and each entry is 3 cells ( or phandle
-> > > plus 2 cells). More below...
-> >
-> > Ok..
-> >
-> > >
-> > > > > > +
-> > > > > > +  mbox-names
-> > >
-> > > Also, missing a ':' here. This won't build. Make sure you build this
-> > > (make dt_binding_check). See
-> > > Documentation/devicetree/writing-schemas.md.
-> > >
-> > Fixed in v2. Awesome!
-> >
-> > I thought that Documentation/devicetree/bindings/dsp/fsl,dsp_ipc.yaml
-> > is purely decorative and used as an example. But it's actually the sche=
-ma for
-> > the newly yaml dts, right?
+> It has been tested on Samsung Galaxy S and Samsung Fascinate 4G,
+> but it can be found also on other Samsung Aries (s5pv210) based devices.
 >
-> Yes, that's the point. Enforcing that dts files contain what the
-> binding docs say.
->
-> >
-> > Used make dt_binding_check everything looks OK now.
-> >
-> > > > > > +    description:
-> > > > > > +      Mailboxes names
-> > > > > > +    allOf:
-> > > > > > +      - $ref: "/schemas/types.yaml#/definitions/string"
-> > > > >
-> > > > > No need for this, '*-names' already has a defined type.
-> > > > So, should I remove the above two lines ?
-> > >
-> > > Actually, all 4. There's no need to describe what 'mbox-names' is.
-> > >
-> > > > > > +      - enum: [ "txdb0", "txdb1", "rxdb0", "rxdb1" ]
-> > > > >
-> > > > > Should be an 'items' list with 4 entries?
-> > > >
-> > > > Let me better read the yaml spec. But "items" list indeed sounds be=
-tter.
-> > >
-> > > What you should end up with is:
-> > >
-> > > items:
-> > >   - const: txdb0
-> > >   - const: txdb1
-> > >   - const: rxdb0
-> > >   - const: rxdb1
-> > >
-> > > This is saying you have 4 strings in the listed order. The enum you
-> > > had would be a single string of one of the 4 values.
-> > >
-> > I see! Thanks.
-> >
-> > > > > > +required:
-> > > > > > +  - compatible
-> > > > > > +  - mboxes
-> > > > > > +  - mbox-names
-> > > > >
-> > > > > This seems incomplete. How does one boot the DSP? Load firmware? =
-No
-> > > > > resources that Linux has to manage. Shared memory?
-> > > >
-> > > > This is only the IPC mailboxes used by DSP to communicate with Linu=
-x. The
-> > > > loading of the firmware, the resources needed to be managed by Linu=
-x, etc
-> > > > are part of the DSP node.
-> > >
-> > > You should just add the mailboxes to the DSP node then. I suppose you
-> > > didn't because you want 2 drivers? If so, that's the OS's problem and
-> > > not part of DT. A Linux driver can instantiate devices for other
-> > > drivers.
-> >
-> > Yes, I want the DSP IPC driver to be separated. And then the SOF Linux
-> > driver that needs
-> > to communicate with DSP just gets a handle to DSP IPC driver and does
-> > the communication.
-> >
-> > dts relevant nodes look like this now:
-> >
-> > =C2=BB       dsp_ipc: dsp_ipc {
-> > =C2=BB       =C2=BB       compatible =3D "fsl,imx8qxp-dsp";
-> > =C2=BB       =C2=BB       mbox-names =3D "txdb0", "txdb1",
-> > =C2=BB       =C2=BB       =C2=BB            "rxdb0", "rxdb1";
-> > =C2=BB       =C2=BB       mboxes =3D <&lsio_mu13 2 0>,
-> > =C2=BB       =C2=BB       =C2=BB        <&lsio_mu13 2 1>,
-> > =C2=BB       =C2=BB       =C2=BB        <&lsio_mu13 3 0>,
-> > =C2=BB       =C2=BB       =C2=BB        <&lsio_mu13 3 1>;
-> > =C2=BB       };
-> >
-> > =C2=BB       adma_dsp: dsp@596e8000 {
-> > =C2=BB       =C2=BB       compatible =3D "fsl,imx8qxp-sof-dsp";
-> > =C2=BB       =C2=BB       reg =3D <0x596e8000 0x88000>;
-> > =C2=BB       =C2=BB       reserved-region =3D <&dsp_reserved>;
-> > =C2=BB       =C2=BB       ipc =3D <&dsp_ipc>;
-> > =C2=BB       };
-> >
-> > Your suggeston would be to have something like this:
-> >
-> > =C2=BB       adma_dsp: dsp@596e8000 {
-> > =C2=BB       =C2=BB       compatible =3D "fsl,imx8qxp-sof-dsp";
-> > =C2=BB       =C2=BB       reg =3D <0x596e8000 0x88000>;
-> > =C2=BB       =C2=BB       reserved-region =3D <&dsp_reserved>;
-> > =C2=BB                mbox-names =3D "txdb0", "txdb1",
-> > =C2=BB       =C2=BB       =C2=BB            "rxdb0", "rxdb1";
-> > =C2=BB       =C2=BB       mboxes =3D <&lsio_mu13 2 0>,
-> > =C2=BB       =C2=BB       =C2=BB        <&lsio_mu13 2 1>,
-> > =C2=BB       =C2=BB       =C2=BB        <&lsio_mu13 3 0>,
-> > =C2=BB       =C2=BB       =C2=BB        <&lsio_mu13 3 1>;
-> > =C2=BB       };
-> >
-> > Not sure exactly how to instantiate IPC DSP driver then.
->
-> DT is not the only way to instantiate drivers. A driver can create a
-> platform device itself which will then instantiate a 2nd driver.
->
-> Presumably the DSP needs to be booted, resources enabled, and firmware
-> loaded before IPC will work. The DSP driver controlling the lifetime
-> of the IPC driver is the right way to manage the dependencies.
+> Tomasz Figa (2):
+>   dt-bindings: extcon: Add support for fsa9480 switch
+>   extcon: Add fsa9480 extcon driver
 
-I see your point. This way I will resolve the dependency problem. So far
-SOF driver was probed before IPC driver and I needed to return -EPROBE_DEFF=
-ER.
+This is surely an important driver since almost all elder Samsung
+mobiles use this kind of switch. So
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-The "sad" part is that SOF driver also needs in the same way the
-System Controller
-Firmware driver to be probed.
+This driver I see is already sent to Greg for inclusion in the next kernel.
+I just wonder if you guys are even aware of this driver for the same
+hardware added by Donggeun Kim in 2011:
+drivers/misc/fsa9480.c
 
-But the SC driver is already accepted with an interface that looks
-like my old approach.
+That said I am all for pulling in this new driver because it is surely
+better and supports device tree.
 
-https://elixir.bootlin.com/linux/v5.2-rc6/source/drivers/firmware/imx/imx-s=
-cu.c#L93
+But can we please also send Greg a patch to delete the old driver
+so we don't have two of them now?
 
-Oh, well.
->
-> >
-> > I already have prepared v2 with most of your feedback incorporated,
-> > but not this latest
-> > change with moving mboxes inside dsp driver.
-> >
-> > More than that I have followed the model of SCFW IPC and having to
-> > different approach
-> > for similar IPC mechanism is a little bit confusing.
->
-> SC is system controller? Maybe I missed it, but I don't think system
-> controllers usually have 2 nodes. You only have the communications
-> interface exposed as the SC provides services to Linux and Linux
-> doesn't manage the SC resources.
+The old driver have no in-tree users so it can be deleted without
+side effects. Out-of-tree users can certainly adapt to the new
+extcon driver.
 
-Yes, SC is the system controller.
+If you want I can send a deletion patch for the misc driver?
 
-https://elixir.bootlin.com/linux/v5.2-rc6/source/drivers/firmware/imx/imx-s=
-cu.c
-
-I see your point of only have 1 node and I will implement it like that.
+Yours,
+Linus Walleij
