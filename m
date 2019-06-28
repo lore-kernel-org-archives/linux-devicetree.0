@@ -1,47 +1,47 @@
-Return-Path: <robherring2@gmail.com>
-Date: Fri, 14 Jun 2019 13:56:23 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 07/10] dt-bindings: input: touchscreen: stmpe: add axes
- inversion and swap
-Message-ID: <20190614195623.GA5499@bogus>
-References: <20190527160736.30569-1-leif.middelschulte@klsmartin.com>
- <20190527161938.31871-1-leif.middelschulte@klsmartin.com>
- <20190527161938.31871-3-leif.middelschulte@klsmartin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527161938.31871-3-leif.middelschulte@klsmartin.com>
-To: Leif Middelschulte <leif.middelschulte@klsmartin.com>
-Cc: dmitry.torokhov@gmail.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, mark.rutland@arm.com
+Return-Path: <SRS0=7p7P=U3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from anchovy1.45ru.net.au ([203.30.46.145]:34258 "EHLO
+        anchovy1.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbfF1DZz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Jun 2019 23:25:55 -0400
+From: Phil Reid <preid@electromag.com.au>
+Subject: [PATCH v2 1/2] dt-bindings: clock: cdce925: Add regulator documentation
+Date: Fri, 28 Jun 2019 11:19:09 +0800
+Message-Id: <1561691950-42154-2-git-send-email-preid@electromag.com.au>
+In-Reply-To: <1561691950-42154-1-git-send-email-preid@electromag.com.au>
+References: <1561691950-42154-1-git-send-email-preid@electromag.com.au>
+Sender: devicetree-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, May 27, 2019 at 06:19:35PM +0200, Leif Middelschulte wrote:
-> This driver too supports coordinate inversion on X,Y axes and
-> axes swapping via the common properties defined in touchscreen.txt
-> 
-> Signed-off-by: Leif Middelschulte <leif.middelschulte@klsmartin.com>
-> ---
->  Documentation/devicetree/bindings/input/touchscreen/stmpe.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-> index aee1abf06ddb..09d2d4f288cc 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-> @@ -42,6 +42,10 @@ Optional properties:
->  				The given window also affects the value range (limits) set
->  				within the input subsystem which, in turn, affects
->  				the input resolution calculation on both axes.
-> +- touchscreen-inverted-x: X axis is inverted (boolean)
-> +- touchscreen-inverted-y: Y axis is inverted (boolean)
-> +- touchscreen-swapped-x-y: X and Y axis are swapped (boolean)
-> +				Swapping is done after inverting the axis
+The cdce925 has two separate supply pins. Document the bindings
+for them.
 
-Just reference common definition.
+Signed-off-by: Phil Reid <preid@electromag.com.au>
+---
+ Documentation/devicetree/bindings/clock/ti,cdce925.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
->  - touchscreen-x-mm	: horizontal length in mm of the touchscreen. It affects
->  				the input resolution calculation on the horizontal axis.
->  - touchscreen-y-mm	: vertical length in mm of the touchscreen. It affects
-> -- 
-> 2.21.0
-> 
+diff --git a/Documentation/devicetree/bindings/clock/ti,cdce925.txt b/Documentation/devicetree/bindings/clock/ti,cdce925.txt
+index 0d01f2d..26544c8 100644
+--- a/Documentation/devicetree/bindings/clock/ti,cdce925.txt
++++ b/Documentation/devicetree/bindings/clock/ti,cdce925.txt
+@@ -24,6 +24,8 @@ Required properties:
+ Optional properties:
+  - xtal-load-pf: Crystal load-capacitor value to fine-tune performance on a
+                  board, or to compensate for external influences.
++- vdd-supply: A regulator node for Vdd
++- vddout-supply: A regulator node for Vddout
+ 
+ For all PLL1, PLL2, ... an optional child node can be used to specify spread
+ spectrum clocking parameters for a board.
+@@ -41,6 +43,8 @@ Example:
+ 		clocks = <&xtal_27Mhz>;
+ 		#clock-cells = <1>;
+ 		xtal-load-pf = <5>;
++		vdd-supply = <&1v8-reg>;
++		vddout-supply = <&3v3-reg>;
+ 		/* PLL options to get SSC 1% centered */
+ 		PLL2 {
+ 			spread-spectrum = <4>;
+-- 
+1.8.3.1
