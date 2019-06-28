@@ -1,32 +1,61 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 0/3] riscv: add SOC_SIFIVE config for SiFive specific
- resource
-Date: Thu, 27 Jun 2019 20:10:59 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1906272006410.3867@viisi.sifive.com>
-References: <1560799790-20287-1-git-send-email-lollivier@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+From: Anson.Huang@nxp.com
+Subject: [PATCH 1/2] arm64: dts: imx8mq: Correct OPP table according to latest datasheet
+Date: Fri, 28 Jun 2019 11:27:59 +0800
+Message-ID: <20190628032800.8428-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560799790-20287-1-git-send-email-lollivier@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Loys Ollivier <lollivier@baylibre.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, ping.bai@nxp.com, daniel.baluta@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca, agx@sigxcpu.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Loys,
+From: Anson Huang <Anson.Huang@nxp.com>
 
-On Mon, 17 Jun 2019, Loys Ollivier wrote:
+According to latest datasheet (Rev.1, 10/2018) from below links,
+in the consumer datasheet, 1.5GHz is mentioned as highest opp but
+depends on speed grading fuse, and in the industrial datasheet,
+1.3GHz is mentioned as highest opp but depends on speed grading
+fuse. 1.5GHz and 1.3GHz opp use same voltage, so no need for
+consumer part to support 1.3GHz opp, with same voltage, CPU should
+run at highest frequency in order to go into idle as quick as
+possible, this can save power.
 
-> Following is a patch series that adds a SOC_SIFIVE config.
-> The purpose of this config is to group all the code specific to the SiFive
-> architecture such as device tree and platform drivers.
-> 
-> The initial thought/discussion came from [0].
-> 
-> [0] https://lore.kernel.org/linux-riscv/20190602080500.31700-1-paul.walmsley@sifive.com/
+That means for consumer part, 1GHz/1.5GHz are supported, for
+industrial part, 800MHz/1.3GHz are supported, and then check the
+speed grading fuse to limit the highest CPU frequency further.
+Correct the market segment bits in opp table to make them work
+according to datasheets.
 
-Thanks for giving us a good start here.  Queued for v5.3 with Palmer's 
-Reviewed-by:s.
+https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQIEC.pdf
+https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQCEC.pdf
 
+Fixes: 12629c5c3749 ("arm64: dts: imx8mq: Add cpu speed grading and all OPPs")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-- Paul
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 9d99191..bea53bc 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -169,7 +169,8 @@
+ 		opp-1300000000 {
+ 			opp-hz = /bits/ 64 <1300000000>;
+ 			opp-microvolt = <1000000>;
+-			opp-supported-hw = <0xc>, <0x7>;
++			/* Industrial only but rely on speed grading */
++			opp-supported-hw = <0xc>, <0x4>;
+ 			clock-latency-ns = <150000>;
+ 		};
+ 
+@@ -177,7 +178,7 @@
+ 			opp-hz = /bits/ 64 <1500000000>;
+ 			opp-microvolt = <1000000>;
+ 			/* Consumer only but rely on speed grading */
+-			opp-supported-hw = <0x8>, <0x7>;
++			opp-supported-hw = <0x8>, <0x3>;
+ 			clock-latency-ns = <150000>;
+ 		};
+ 	};
+-- 
+2.7.4
