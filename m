@@ -1,10 +1,11 @@
 From: Keerthy <j-keerthy@ti.com>
-Subject: [RESEND PATCH 03/10] crypto: sa2ul: Add AES ECB Mode support
-Date: Fri, 28 Jun 2019 09:57:38 +0530
-Message-ID: <20190628042745.28455-4-j-keerthy@ti.com>
+Subject: [RESEND PATCH 01/10] dt-bindings: crypto: k3: Add sa2ul bindings documentation
+Date: Fri, 28 Jun 2019 09:57:36 +0530
+Message-ID: <20190628042745.28455-2-j-keerthy@ti.com>
 References: <20190628042745.28455-1-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190628042745.28455-1-j-keerthy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -12,118 +13,77 @@ To: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, j-keerthy@ti.com, linux-crypto@vger.kernel.org, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add support for AES algorithm in ECB Mode. Data encryption modes
-are supported via MCE engine (programmable mode control engine).
-ECB (Electronic code book) is a mode of operation for a block cipher,
-with the characteristic that each possible block of plaintext has a
-defined corresponding ciphertext value and vice versa. In other words,
-the same plaintext value will always result in the same ciphertext value.
+The series adds Crypto hardware accelerator support for SA2UL.
+SA2UL stands for security accelerator ultra lite.
+
+The Security Accelerator (SA2_UL) subsystem provides hardware
+cryptographic acceleration for the following use cases:
+• Encryption and authentication for secure boot
+• Encryption and authentication of content in applications
+  requiring DRM (digital rights management) and
+  content/asset protection
+The device includes one instantiation of SA2_UL named SA2_UL0
+
+SA2UL needs on tx channel and a pair of rx dma channels.
 
 Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- drivers/crypto/sa2ul.c | 76 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
+ .../devicetree/bindings/crypto/sa2ul.txt      | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/sa2ul.txt
 
-diff --git a/drivers/crypto/sa2ul.c b/drivers/crypto/sa2ul.c
-index 64bdf6b2b879..a17c1f66c5c1 100644
---- a/drivers/crypto/sa2ul.c
-+++ b/drivers/crypto/sa2ul.c
-@@ -178,6 +178,38 @@ static u8 mci_cbc_dec_array[3][MODE_CONTROL_BYTES] = {
- 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
- };
- 
-+/*
-+ * Mode Control Instructions for various Key lengths 128, 192, 256
-+ * For ECB (Electronic Code Book) mode for encryption
-+ */
-+static u8 mci_ecb_enc_array[3][27] = {
-+	{	0x21, 0x00, 0x00, 0x80, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
-+	{	0x21, 0x00, 0x00, 0x84, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
-+	{	0x21, 0x00, 0x00, 0x88, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
+diff --git a/Documentation/devicetree/bindings/crypto/sa2ul.txt b/Documentation/devicetree/bindings/crypto/sa2ul.txt
+new file mode 100644
+index 000000000000..81cc039673b4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/sa2ul.txt
+@@ -0,0 +1,47 @@
++K3 SoC SA2UL crypto module
++
++Required properties:
++
++- compatible : Should be:
++  - "ti,sa2ul-crypto"
++- reg : Offset and length of the register set for the module
++
++- dmas: DMA specifiers for tx and rx dma. sa2ul needs one tx channel
++	and 2 rx channels. First rx channel for < 256 bytes and
++	the other one for >=256 bytes. See the DMA client binding,
++        Documentation/devicetree/bindings/dma/dma.txt
++- dma-names: DMA request names has to have one tx and 2 rx names
++	corresponding to dmas abive.
++- ti,psil-config* - UDMA PSIL native Peripheral using packet mode.
++	SA2UL must have EPIB(Extended protocal information block)
++	and PSDATA(protocol specific data) properties.
++
++Example AM654 SA2UL:
++crypto: crypto@4E00000 {
++	compatible = "ti,sa2ul-crypto";
++	reg = <0x0 0x4E00000 0x0 0x1200>;
++	ti,psil-base = <0x4000>;
++
++	dmas = <&main_udmap &crypto 0 UDMA_DIR_TX>,
++		<&main_udmap &crypto 0 UDMA_DIR_RX>,
++		<&main_udmap &crypto 1 UDMA_DIR_RX>;
++	dma-names = "tx", "rx1", "rx2";
++
++	ti,psil-config0 {
++		linux,udma-mode = <UDMA_PKT_MODE>;
++		ti,needs-epib;
++		ti,psd-size = <64>;
++	};
++
++	ti,psil-config1 {
++		linux,udma-mode = <UDMA_PKT_MODE>;
++		ti,needs-epib;
++		ti,psd-size = <64>;
++	};
++
++	ti,psil-config2 {
++		linux,udma-mode = <UDMA_PKT_MODE>;
++		ti,needs-epib;
++		ti,psd-size = <64>;
++	};
 +};
-+
-+/*
-+ * Mode Control Instructions for various Key lengths 128, 192, 256
-+ * For ECB (Electronic Code Book) mode for decryption
-+ */
-+static u8 mci_ecb_dec_array[3][27] = {
-+	{	0x31, 0x00, 0x00, 0x80, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
-+	{	0x31, 0x00, 0x00, 0x84, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
-+	{	0x31, 0x00, 0x00, 0x88, 0x8a, 0x04, 0xb7, 0x90, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	},
-+};
-+
- /*
-  * Perform 16 byte or 128 bit swizzling
-  * The SA2UL Expects the security context to
-@@ -746,6 +778,26 @@ static int sa_aes_cbc_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
- 	return sa_aes_setkey(tfm, key, keylen, ad);
- }
- 
-+static int sa_aes_ecb_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
-+			     unsigned int keylen)
-+{
-+	struct algo_data *ad = kzalloc(sizeof(*ad), GFP_KERNEL);
-+	/* Convert the key size (16/24/32) to the key size index (0/1/2) */
-+	int key_idx = (keylen >> 3) - 2;
-+
-+	ad->enc_eng.eng_id = SA_ENG_ID_EM1;
-+	ad->enc_eng.sc_size = SA_CTX_ENC_TYPE1_SZ;
-+	ad->auth_eng.eng_id = SA_ENG_ID_NONE;
-+	ad->auth_eng.sc_size = 0;
-+	ad->mci_enc = mci_ecb_enc_array[key_idx];
-+	ad->mci_dec = mci_ecb_dec_array[key_idx];
-+	ad->inv_key = true;
-+	ad->ealg_id = SA_EALG_ID_AES_ECB;
-+	ad->aalg_id = SA_AALG_ID_NONE;
-+
-+	return sa_aes_setkey(tfm, key, keylen, ad);
-+}
-+
- static void sa_aes_dma_in_callback(void *data)
- {
- 	struct sa_rx_data *rxd = (struct sa_rx_data *)data;
-@@ -940,6 +992,30 @@ static struct sa_alg_tmpl sa_algs[] = {
- 					}
- 			}
- 	},
-+	{	.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
-+		.alg.crypto = {
-+			.cra_name = "ecb(aes)",
-+			.cra_driver_name = "ecb-aes-sa2ul",
-+			.cra_priority = 30000,
-+			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
-+					CRYPTO_ALG_KERN_DRIVER_ONLY |
-+				CRYPTO_ALG_ASYNC | CRYPTO_ALG_NEED_FALLBACK,
-+			.cra_blocksize = AES_BLOCK_SIZE,
-+			.cra_ctxsize = sizeof(struct sa_tfm_ctx),
-+			.cra_alignmask = 0,
-+			.cra_type = &crypto_ablkcipher_type,
-+			.cra_module = THIS_MODULE,
-+			.cra_init = sa_aes_cra_init,
-+			.cra_exit = sa_aes_cra_exit,
-+			.cra_u.ablkcipher = {
-+				.min_keysize    = AES_MIN_KEY_SIZE,
-+				.max_keysize    = AES_MAX_KEY_SIZE,
-+				.setkey		= sa_aes_ecb_setkey,
-+				.encrypt	= sa_aes_cbc_encrypt,
-+				.decrypt	= sa_aes_cbc_decrypt,
-+			}
-+		}
-+	},
- };
- 
- /* Register the algorithms in crypto framework */
 -- 
 2.17.1
