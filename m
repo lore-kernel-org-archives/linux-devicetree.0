@@ -1,58 +1,60 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v4 1/2] mtd: rawnand: Add Macronix Raw NAND controller
-Date: Fri, 28 Jun 2019 10:44:23 +0200
-Message-ID: <20190628104423.5eb3058a@xps13>
-References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw>
-        <1561443056-13766-2-git-send-email-masonccyang@mxic.com.tw>
-        <20190627193635.29abff43@xps13>
-        <OFDDC43C05.7B4092B5-ON48258427.001EE57E-48258427.002122D1@mxic.com.tw>
-        <20190628091836.3148d450@xps13>
-        <OF2EDB7089.FAD92F61-ON48258427.002D122A-48258427.002ECEF3@mxic.com.tw>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 05/26] leds: core: Add support for composing LED class
+ device names
+Date: Fri, 28 Jun 2019 09:46:14 +0100
+Message-ID: <CACRpkdYdqKZVKSaQB0THi=iZcRT04EKX2-85__Hw1f53o8vsuw@mail.gmail.com>
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com> <20190609190803.14815-6-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <OF2EDB7089.FAD92F61-ON48258427.002D122A-48258427.002ECEF3@mxic.com.tw>
+In-Reply-To: <20190609190803.14815-6-jacek.anaszewski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: masonccyang@mxic.com.tw
-Cc: anders.roxell@linaro.org, bbrezillon@kernel.org, broonie@kernel.org, christophe.kerello@st.com, computersforpeace@gmail.com, devicetree@vger.kernel.org, dwmw2@infradead.org, jianxin.pan@amlogic.com, juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, marek.vasut@gmail.com, paul@crapouillou.net, paul.burton@mips.com, richard@nod.at, stefan@agner.ch, vigneshr@ti.com
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>, Dmitry Torokhov <dtor@google.com>, Guenter Roeck <linux@roeck-us.net>, Dan Murphy <dmurphy@ti.com>, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mason,
+On Sun, Jun 9, 2019 at 8:08 PM Jacek Anaszewski
+<jacek.anaszewski@gmail.com> wrote:
 
-masonccyang@mxic.com.tw wrote on Fri, 28 Jun 2019 16:31:16 +0800:
+> Add generic support for composing LED class device name. The newly
+> introduced led_compose_name() function composes device name according
+> to either <color:function> or <devicename:color:function> pattern,
+> depending on the configuration of initialization data.
+>
+> Backward compatibility with in-driver hard-coded LED class device
+> names is assured thanks to the default_label and devicename properties
+> of newly introduced struct led_init_data.
+>
+> In case none of the aforementioned properties was found, then, for OF
+> nodes, the node name is adopted for LED class device name.
+>
+> At the occassion of amending the Documentation/leds/leds-class.txt
+> unify spelling: colour -> color.
+>
+> Alongside these changes added is a new tool - tools/leds/get_led_device_info.sh.
+> The tool allows retrieving details of a LED class device's parent device,
+> which proves that using vendor or product name for devicename part
+> of LED name doesn't convey any added value since that information had been
+> already available in sysfs. The script performs also basic validation
+> of a LED class device name.
+>
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Simon Shields <simon@lineageos.org>
 
-> Hi Miquel,
-> 
-> > >   
-> > > > > Add a driver for Macronix raw NAND controller.   
-> > > > 
-> > > > Could you pass userspace major MTD tests and can you   
-> attach/mount/edit
-> > > > a UBI/UBIFS storage?   
-> > > 
-> > > mtd_debug passed and using dd utility to read and write 
-> > > with md5sum checking passed.  
-> > 
-> > Please don't use dd, use nanddump/nandwrite/flasherase/nandbiterrs and
-> > run the other tests from the mtd-utils test suite (available in
-> > Buildroot for instance).
-> >   
-> 
-> Got it.
-> 
-> But may I know why 'dd' utility is not preferences ?
-> I generate a random data file and write to Flash by
-> using dd with bs=page size and read data back from Flash.
-> Checking data by md5sum.
+This is good progress on trying to bring order in chaos.
 
-Because dd works on block devices. MTD devices are way different. You
-cannot write to OOB with dd. You cannot erase before write with dd. And
-dd does not know about bad blocks. Please simply avoid using dd.
+A problem with LEDs is that it invites bikeshedding because it is too
+relateable.
 
-> The write and read testing data size is easily adjustable.
+So by the motto "rough consensus and running code":
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-So are the MTD utils.
-
-Thanks,
-Miquèl
+Yours,
+Linus Walleij
