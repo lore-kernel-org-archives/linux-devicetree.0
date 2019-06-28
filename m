@@ -1,55 +1,100 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 03/13] dt-bindings: net: Add a YAML schemas for the
- generic MDIO options
-Date: Fri, 28 Jun 2019 15:45:53 +0200
-Message-ID: <20190628134553.l445r5idtejwlryl@flea>
-References: <cover.e80da8845680a45c2e07d5f17280fdba84555b8a.1561649505.git-series.maxime.ripard@bootlin.com>
- <e99ff7377a0d3d140cf62200fd9d62c108dac24e.1561649505.git-series.maxime.ripard@bootlin.com>
- <CAL_JsqKQoj6x-8cMxp2PFQLcu93aitGO2wALDYaH2h72cPSyfg@mail.gmail.com>
- <20190627155708.myxychzngc3trxhc@flea>
- <CAL_JsqLhUP62vP=RY8Bn_0X92hFphbk_gLqi4K48us56Gxw7tA@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
+ Host
+Date: Fri, 28 Jun 2019 17:13:26 +0300
+Message-ID: <20190628141326.swgl3kg4fj5pmlqx@valkosipuli.retiisi.org.uk>
+References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+ <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zjmpquddmsmyw3nm"
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLhUP62vP=RY8Bn_0X92hFphbk_gLqi4K48us56Gxw7tA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+In-Reply-To: <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc: mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, robh@kernel.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Joao.Pinto@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Luis,
 
---zjmpquddmsmyw3nm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for the patchset.
 
-On Thu, Jun 27, 2019 at 10:06:57AM -0600, Rob Herring wrote:
-> On Thu, Jun 27, 2019 at 9:57 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > +
-> > > > +        reset-gpios = <&gpio2 5 1>;
-> > > > +        reset-delay-us = <2>;
-> > > > +
-> > > > +        ethphy0: ethernet-phy@1 {
-> > > > +            reg = <1>;
-> > >
-> > > Need a child node schema to validate the unit-address and reg property.
-> >
-> > This should be already covered by the ethernet-phy.yaml schemas
-> > earlier in this series.
->
-> Partially, yes.
->
-> > Were you expecting something else?
->
-> That would not prevent having a child node such as 'foo {};'  or
-> 'foo@bad {};'. It would also not check valid nodes named something
-> other than 'ethernet-phy'.
+On Tue, Jun 11, 2019 at 09:20:50PM +0200, Luis Oliveira wrote:
+> From: Luis Oliveira <lolivei@synopsys.com>
+> 
+> Add bindings for Synopsys DesignWare MIPI CSI-2 host.
+> 
+> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+> ---
+> Changelog
+> v3-v4
+> - remove "plat" from the block name @rob @laurent
+> - remove "phy-names" when single-entry @rob
+> - remove "snps,output-type" -> went to the driver config @laurent
+> 
+>  .../devicetree/bindings/media/snps,dw-csi.txt      | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/snps,dw-csi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/snps,dw-csi.txt b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
+> new file mode 100644
+> index 0000000..613b7f9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
+> @@ -0,0 +1,41 @@
+> +Synopsys DesignWare CSI-2 Host controller
+> +
+> +Description
+> +-----------
+> +
+> +This HW block is used to receive image coming from an MIPI CSI-2 compatible
+> +camera.
+> +
+> +Required properties:
+> +- compatible		: shall be "snps,dw-csi"
+> +- reg			: physical base address and size of the device memory
+> +			  mapped registers;
+> +- interrupts		: DW CSI-2 Host interrupts
+> +- phys			: List of one PHY specifier (as defined in
+> +			  Documentation/devicetree/bindings/phy/phy-bindings.txt).
+> +			  This PHY is a MIPI DPHY working in RX mode.
+> +- resets		: Reference to a reset controller (optional)
+> +
+> +The per-board settings:
+> + - port sub-node describing a single endpoint connected to the camera as
+> +   described in video-interfaces.txt[1].
 
-Right, but listing the nodes won't either, since we can't enable
-additionalProperties in that schema. So any node that wouldn't match
-ethernet-phy@.* wouldn't be validated, but wouldn't generate a warning
-either.
+Which endpoint properties in video-interfaces.txt are relevant for the
+hardware? Which values may they have?
 
-Maxime
---zjmpquddmsmyw3nm--
+> +
+> +Example:
+> +
+> +	csi2: csi2@3000 {
+> +		compatible = "snps,dw-csi";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = < 0x03000 0x7FF>;
+
+reg = <0x03000 0x7FF>;
+
+> +		phys = <&mipi_dphy_rx>;
+> +		resets = <&dw_rst 1>;
+> +		interrupts = <2>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+
+You can drop "@0" and the reg property.
+
+> +			csi_ep1: endpoint {
+> +				remote-endpoint = <&camera_1>;
+> +				data-lanes = <1 2>;
+> +			};
+> +		};
+> +	};
+
+-- 
+Kind regards,
+
+Sakari Ailus
