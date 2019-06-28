@@ -1,31 +1,61 @@
 From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH 00/10] crypto: k3: Add sa2ul driver
-Date: Fri, 28 Jun 2019 09:51:05 +0530
-Message-ID: <df7aab2c-bc4d-1390-4cbb-550873f33705@ti.com>
-References: <20190618120843.18777-1-j-keerthy@ti.com>
- <20190628041939.7yduk77x62twath6@gondor.apana.org.au>
+Subject: [RESEND PATCH 00/10] crypto: k3: Add sa2ul driver
+Date: Fri, 28 Jun 2019 09:57:35 +0530
+Message-ID: <20190628042745.28455-1-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190628041939.7yduk77x62twath6@gondor.apana.org.au>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: davem@davemloft.net, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, nm@ti.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org
+Cc: nm@ti.com, devicetree@vger.kernel.org, j-keerthy@ti.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 28/06/19 9:49 AM, Herbert Xu wrote:
-> On Tue, Jun 18, 2019 at 05:38:33PM +0530, Keerthy wrote:
->> The series adds Crypto hardware accelerator support for SA2UL.
->> SA2UL stands for security accelerator ultra lite.
-> 
-> Please cc linux-crypto@vger.kernel.org.
-
-Okay. I will do that.
-
-> 
-> Thanks,
-> 
+VGhlIHNlcmllcyBhZGRzIENyeXB0byBoYXJkd2FyZSBhY2NlbGVyYXRvciBzdXBwb3J0IGZvciBT
+QTJVTC4KU0EyVUwgc3RhbmRzIGZvciBzZWN1cml0eSBhY2NlbGVyYXRvciB1bHRyYSBsaXRlLgoK
+VGhlIFNlY3VyaXR5IEFjY2VsZXJhdG9yIChTQTJfVUwpIHN1YnN5c3RlbSBwcm92aWRlcyBoYXJk
+d2FyZQpjcnlwdG9ncmFwaGljIGFjY2VsZXJhdGlvbiBmb3IgdGhlIGZvbGxvd2luZyB1c2UgY2Fz
+ZXM6CuKAoiBFbmNyeXB0aW9uIGFuZCBhdXRoZW50aWNhdGlvbiBmb3Igc2VjdXJlIGJvb3QK4oCi
+IEVuY3J5cHRpb24gYW5kIGF1dGhlbnRpY2F0aW9uIG9mIGNvbnRlbnQgaW4gYXBwbGljYXRpb25z
+CiAgcmVxdWlyaW5nIERSTSAoZGlnaXRhbCByaWdodHMgbWFuYWdlbWVudCkgYW5kCiAgY29udGVu
+dC9hc3NldCBwcm90ZWN0aW9uClRoZSBkZXZpY2UgaW5jbHVkZXMgb25lIGluc3RhbnRpYXRpb24g
+b2YgU0EyX1VMIG5hbWVkIFNBMl9VTDAKClNBMlVMIG5lZWRzIG9uIHR4IGNoYW5uZWwgYW5kIGEg
+cGFpciBvZiByeCBkbWEgY2hhbm5lbHMuCgpUaGlzIHNlcmllcyBoYXMgZGVwZW5kZW5jeSBvbiBV
+RE1BIHNlcmllcy4gSGVuY2UgaXMgYmFzZWQgb24gdG9wIG9mOgoKaHR0cHM6Ly9wYXRjaHdvcmsu
+a2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LWRtYWVuZ2luZS9saXN0Lz9zZXJpZXM9MTE0MTA1CgpU
+aGUgYWJvdmUgc2VyaWVzIGFkZHMgY291cGxlIG9mIGRtYWVuZ2luZSBBUElzIHRoYXQgYXJlIHVz
+ZWQKYnkgdGhlIHNhMnVsIGRyaXZlci4gSGVuY2UgdGhlcmUgaXMgYSBoYXJkIGRlcGVuZGVuY3kg
+b24gdGhlCmFib3ZlIHNlcmllcy4KClJlc2VuZGluZyB3aXRoIGxpbnV4LWNyeXB0byBsaXN0IGlu
+IENjLgoKS2VlcnRoeSAoMTApOgogIGR0LWJpbmRpbmdzOiBjcnlwdG86IGszOiBBZGQgc2EydWwg
+YmluZGluZ3MgZG9jdW1lbnRhdGlvbgogIGNyeXB0bzogc2EydWw6IEFkZCBjcnlwdG8gZHJpdmVy
+CiAgY3J5cHRvOiBzYTJ1bDogQWRkIEFFUyBFQ0IgTW9kZSBzdXBwb3J0CiAgY3J5cHRvOiBzYTJ1
+bDogQWRkIGFlYWQgc3VwcG9ydCBmb3IgaG1hYyhzaGExKWNiYyhhZXMpIGFsZ29yaXRobQogIGNy
+eXB0bzogc2hhMjU2X2dlbmVyaWM6IEV4cG9ydCB0aGUgVHJhbnNmb3JtIGZ1bmN0aW9uCiAgY3J5
+cHRvOiBzYTJ1bDogQWRkIGhtYWMoc2hhMjU2KWNiYyhhZXMpIEFFQUQgQWxnbyBzdXBwb3J0CiAg
+Y3J5cHRvOiBzYTJ1bDogQWRkIGhtYWMoc2hhMSkgSE1BQyBhbGdvcml0aG0gc3VwcG9ydAogIGNy
+eXB0bzogc2EydWw6IEFkZCBobWFjKHNoYTI1NikgSE1BQyBhbGdvcml0aG0gc3VwcG9ydAogIHNh
+MnVsOiBBZGQgM0RFUyBFQ0IgJiBDQkMgTW9kZSBzdXBwb3J0CiAgYXJtNjQ6IGR0czogazMtYW02
+OiBBZGQgY3J5cHRvIGFjY2VsYXJhdG9yIG5vZGUKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9j
+cnlwdG8vc2EydWwudHh0ICAgICAgfCAgIDQ3ICsKIGFyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMt
+YW02NS1tYWluLmR0c2kgICAgICB8ICAgMzMgKwogY3J5cHRvL3NoYTI1Nl9nZW5lcmljLmMgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICAgMyArLQogZHJpdmVycy9jcnlwdG8vS2NvbmZpZyAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICAxNyArCiBkcml2ZXJzL2NyeXB0by9NYWtlZmlsZSAgICAg
+ICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGRyaXZlcnMvY3J5cHRvL3NhMnVsLmMgICAgICAg
+ICAgICAgICAgICAgICAgICB8IDIyMzIgKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvY3J5cHRv
+L3NhMnVsLmggICAgICAgICAgICAgICAgICAgICAgICB8ICAzODQgKysrCiBpbmNsdWRlL2NyeXB0
+by9zaGEuaCAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKIDggZmlsZXMgY2hhbmdl
+ZCwgMjcxNyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NyeXB0by9zYTJ1bC50eHQKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2NyeXB0by9zYTJ1bC5jCiBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9jcnlwdG8vc2EydWwuaAoKLS0gCjIuMTcuMQoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
