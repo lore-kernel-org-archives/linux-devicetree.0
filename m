@@ -1,33 +1,88 @@
-From: Nandor Han <nandor.han@vaisala.com>
-Subject: Re: [PATCH v4 0/2] Use NVMEM as reboot-mode write interface
-Date: Fri, 28 Jun 2019 07:49:11 +0300
-Message-ID: <75db3e6e-cf95-cdd0-7446-380a686992d2@vaisala.com>
-References: <20190515104658.25535-1-nandor.han@vaisala.com>
- <20190627183330.aole6zumw3l2vyet@earth.universe>
+From: Eric Biggers <ebiggers@kernel.org>
+Subject: Re: [RESEND PATCH 02/10] crypto: sa2ul: Add crypto driver
+Date: Thu, 27 Jun 2019 22:07:56 -0700
+Message-ID: <20190628050756.GD673@sol.localdomain>
+References: <20190628042745.28455-1-j-keerthy@ti.com>
+ <20190628042745.28455-3-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627183330.aole6zumw3l2vyet@earth.universe>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190628042745.28455-3-j-keerthy@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: nm@ti.com, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, linux-kernel@vger.kernel.org, t-kristo@ti.com, robh+dt@kernel.org, linux-crypto@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
->> Changes since v3:
->> ----------------
->>   - documentation updated according to the comments
-> 
-> Thanks, queued. Please fix your git/mail setup, I had to fix the
-> line endings (\r\n -> \n) to apply this.
-> 
-> -- Sebastian
-> 
-
-Ok. Thanks Sebastian.
-
---
-Nandor
+T24gRnJpLCBKdW4gMjgsIDIwMTkgYXQgMDk6NTc6MzdBTSArMDUzMCwgS2VlcnRoeSB3cm90ZToK
+PiBUaGUgU2VjdXJpdHkgQWNjZWxlcmF0b3IgKFNBMl9VTCkgc3Vic3lzdGVtIHByb3ZpZGVzIGhh
+cmR3YXJlCj4gY3J5cHRvZ3JhcGhpYyBhY2NlbGVyYXRpb24gZm9yIHRoZSBmb2xsb3dpbmcgdXNl
+IGNhc2VzOgo+IOKAoiBFbmNyeXB0aW9uIGFuZCBhdXRoZW50aWNhdGlvbiBmb3Igc2VjdXJlIGJv
+b3QKPiDigKIgRW5jcnlwdGlvbiBhbmQgYXV0aGVudGljYXRpb24gb2YgY29udGVudCBpbiBhcHBs
+aWNhdGlvbnMKPiAgIHJlcXVpcmluZyBEUk0gKGRpZ2l0YWwgcmlnaHRzIG1hbmFnZW1lbnQpIGFu
+ZAo+ICAgY29udGVudC9hc3NldCBwcm90ZWN0aW9uCj4gVGhlIGRldmljZSBpbmNsdWRlcyBvbmUg
+aW5zdGFudGlhdGlvbiBvZiBTQTJfVUwgbmFtZWQgU0EyX1VMMAo+IAo+IFNBMl9VTCBzdXBwb3J0
+cyB0aGUgZm9sbG93aW5nIGNyeXB0b2dyYXBoaWMgaW5kdXN0cnkgc3RhbmRhcmRzIHRvIGVuYWJs
+ZSBkYXRhIGF1dGhlbnRpY2F0aW9uLCBkYXRhCj4gaW50ZWdyaXR5IGFuZCBkYXRhIGNvbmZpZGVu
+dGlhbGl0eS4KPiAKPiBDcnlwdG8gZnVuY3Rpb24gbGlicmFyeSBmb3Igc29mdHdhcmUgYWNjZWxl
+cmF0aW9uCj4gbyBBRVMgb3BlcmF0aW9uCj4gbyAzREVTIG9wZXJhdGlvbgo+IG8gU0hBMSBvcGVy
+YXRpb24KPiBvIE1ENSBvcGVyYXRpb24KPiBvIFNIQTIg4oCTIDIyNCwgMjU2LCAzODQsIDUxMiBv
+cGVyYXRpb24KPiAKPiBBdXRoZW50aWNhdGlvbiBzdXBwb3J0ZWQgdmlhIGZvbGxvd2luZyBoYXJk
+d2FyZSBjb3Jlcwo+IG8gU0hBMQo+IG8gTUQ1Cj4gbyBTSEEyIC0yMjQKPiBvIFNIQTItMjU2Cj4g
+byBTSEEyLTM4NAo+IG8gU0hBMi01MTIKCldoYXQgYWJvdXQgSE1BQz8gIAoKWW91ciBhY3R1YWwg
+ZHJpdmVyIG9ubHkgZXhwb3NlcyBITUFDLVNIQSosIG5vdCBTSEEqIGFueXRoaW5nLgoKV2hhdCBk
+b2VzIHRoZSBoYXJkd2FyZSBhY3R1YWxseSBzdXBwb3J0PwoKPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9jcnlwdG8vS2NvbmZpZyBiL2RyaXZlcnMvY3J5cHRvL0tjb25maWcKPiBpbmRleCA2MDM0MTNm
+MjhmYTMuLmI5YTNmYTAyNmM3NCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2NyeXB0by9LY29uZmln
+Cj4gKysrIGIvZHJpdmVycy9jcnlwdG8vS2NvbmZpZwo+IEBAIC03ODUsNCArNzg1LDIxIEBAIGNv
+bmZpZyBDUllQVE9fREVWX0NDUkVFCj4gIAo+ICBzb3VyY2UgImRyaXZlcnMvY3J5cHRvL2hpc2ls
+aWNvbi9LY29uZmlnIgo+ICAKPiArY29uZmlnIENSWVBUT19ERVZfU0EyVUwKPiArCXRyaXN0YXRl
+ICJTdXBwb3J0IGZvciBUSSBzZWN1cml0eSBhY2NlbGVyYXRvciIKPiArCWRlcGVuZHMgb24gQVJD
+SF9LMyB8fCBDT01QSUxFX1RFU1QKPiArCXNlbGVjdCBBUk02NF9DUllQVE8KPiArCXNlbGVjdCBD
+UllQVE9fQUVTCj4gKwlzZWxlY3QgQ1JZUFRPX0FFU19BUk02NAo+ICsJc2VsZWN0IENSWVBUT19T
+SEExCj4gKwlzZWxlY3QgQ1JZUFRPX01ENQo+ICsJc2VsZWN0IENSWVBUT19BTEdBUEkKPiArCXNl
+bGVjdCBDUllQVE9fQVVUSEVOQwo+ICsJc2VsZWN0IEhXX1JBTkRPTQo+ICsJZGVmYXVsdCBtIGlm
+IEFSQ0hfSzMKPiArCWhlbHAKPiArCSAgS2V5c3RvbmUgZGV2aWNlcyBpbmNsdWRlIGEgc2VjdXJp
+dHkgYWNjZWxlcmF0b3IgZW5naW5lIHRoYXQgbWF5IGJlCj4gKwkgIHVzZWQgZm9yIGNyeXB0byBv
+ZmZsb2FkLiAgU2VsZWN0IHRoaXMgaWYgeW91IHdhbnQgdG8gdXNlIGhhcmR3YXJlCj4gKwkgIGFj
+Y2VsZXJhdGlvbiBmb3IgY3J5cHRvZ3JhcGhpYyBhbGdvcml0aG1zIG9uIHRoZXNlIGRldmljZXMu
+CgpUaGlzIHNob3VsZG4ndCBiZSBlbmFibGVkIGJ5IGRlZmF1bHQuICBOb3RlIHRoYXQgYXJtNjQg
+ZGVmY29uZmlnIHNldHMgQVJDSF9LMyBhcwp3ZWxsIGFzIGxvdHMgb2Ygb3RoZXIgQVJDSF8qIG9w
+dGlvbnMsIHNvIGNsZWFybHkganVzdCBiZWNhdXNlIEFSQ0hfSzMgaXMgc2V0CmRvZXNuJ3QgbWVh
+biB0aGUga2VybmVsIGlzIGJlaW5nIGJ1aWx0IHNwZWNpZmljYWxseSBmb3IgeW91ciBwbGF0Zm9y
+bS4KCj4gKy8qCj4gKyAqIE1vZGUgQ29udHJvbCBJbnN0cnVjdGlvbnMgZm9yIHZhcmlvdXMgS2V5
+IGxlbmd0aHMgMTI4LCAxOTIsIDI1Ngo+ICsgKiBGb3IgQ0JDIChDaXBoZXIgQmxvY2sgQ2hhaW5p
+bmcpIG1vZGUgZm9yIGVuY3J5cHRpb24KPiArICovCj4gK3N0YXRpYyB1OCBtY2lfY2JjX2VuY19h
+cnJheVszXVtNT0RFX0NPTlRST0xfQllURVNdID0gewo+ICsJewkweDIxLCAweDAwLCAweDAwLCAw
+eDE4LCAweDg4LCAweDBhLCAweGFhLCAweDRiLCAweDdlLCAweDAwLAo+ICsJCTB4MDAsIDB4MDAs
+IDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsCj4gKwkJMHgw
+MCwgMHgwMCwgMHgwMCwgMHgwMCwgMHgwMCwgMHgwMCwgMHgwMAl9LAo+ICsJewkweDIxLCAweDAw
+LCAweDAwLCAweDE4LCAweDg4LCAweDRhLCAweGFhLCAweDRiLCAweDdlLCAweDAwLAo+ICsJCTB4
+MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAs
+Cj4gKwkJMHgwMCwgMHgwMCwgMHgwMCwgMHgwMCwgMHgwMCwgMHgwMCwgMHgwMAl9LAo+ICsJewkw
+eDIxLCAweDAwLCAweDAwLCAweDE4LCAweDg4LCAweDhhLCAweGFhLCAweDRiLCAweDdlLCAweDAw
+LAo+ICsJCTB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4
+MDAsIDB4MDAsCj4gKwkJMHgwMCwgMHgwMCwgMHgwMCwgMHgwMCwgMHgwMCwgMHgwMCwgMHgwMAl9
+LAo+ICt9OwoKVXNlICdjb25zdCcgZm9yIHN0YXRpYyBjb25zdGFudHMuCgo+ICtzdGF0aWMgaW50
+IHNhX2Flc19jYmNfc2V0a2V5KHN0cnVjdCBjcnlwdG9fYWJsa2NpcGhlciAqdGZtLCBjb25zdCB1
+OCAqa2V5LAo+ICsJCQkgICAgIHVuc2lnbmVkIGludCBrZXlsZW4pCj4gK3sKPiArCXN0cnVjdCBh
+bGdvX2RhdGEgKmFkID0ga3phbGxvYyhzaXplb2YoKmFkKSwgR0ZQX0tFUk5FTCk7CgpOZWVkIHRv
+IGNoZWNrIGZyb20gZXJyb3IgZm9yIGFsbCBtZW1vcnkgYWxsb2NhdGlvbnMuCgo+ICtzdGF0aWMg
+c3RydWN0IHNhX2FsZ190bXBsIHNhX2FsZ3NbXSA9IHsKPiArCXsudHlwZSA9IENSWVBUT19BTEdf
+VFlQRV9BQkxLQ0lQSEVSLAoKYWJsa2NpcGhlciBBUEkgaXMgZGVwcmVjYXRlZC4gIFVzZSBza2Np
+cGhlciBpbnN0ZWFkLgoKKFRvIGJlIGNsZWFyLCB0aGVzZSBhcmUganVzdCBhIGZldyB0aGluZ3Mg
+SSBoYXBwZW5lZCB0byBub3RpY2UgZnJvbSB2ZXJ5IHF1aWNrbHkKc2tpbW1pbmcgdGhyb3VnaCB0
+aGlzIHBhdGNoLiAgSSBkb24ndCBoYXZlIHRpbWUgdG8gZG8gYSBwcm9wZXIgcmV2aWV3IG9mIHJh
+bmRvbQpkcml2ZXJzLikKCi0gRXJpYwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
