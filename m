@@ -1,35 +1,55 @@
-Return-Path: <SRS0=a8hg=UV=huawei.com=wangkefeng.wang@kernel.org>
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: [PATCH] dt-bindings: 83xx-512x-pci: Drop cell-index property
-Date: Sat, 22 Jun 2019 11:45:57 +0800
-Message-ID: <20190622034557.196097-1-wangkefeng.wang@huawei.com>
+Return-Path: <SRS0=7p7P=U3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.missinglinkelectronics.com ([94.130.14.54]:54308 "EHLO
+        smtp.missinglinkelectronics.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726558AbfF1NEN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Jun 2019 09:04:13 -0400
+Message-ID: <a1af77a8b6d6832f888e6a55f5732982.squirrel@mail.missinglinkelectronics.com>
+Date: Fri, 28 Jun 2019 14:57:50 +0200
+Subject: [PATCH] dt-bindings: ASoC: tlv320aic32x4: Fix property name
+From: "David Epping" <david.epping@missinglinkelectronics.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>, Kumar Gala <galak@kernel.crashing.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Sender: devicetree-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, trivial@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-28eac2b74cc7 ("powerpc/fsl: Remove cell-index from PCI nodes"),
-and for now it is still not used, drop it from doc.
+From: David Epping <david.epping@missinglinkelectronics.com>
 
-Cc: Kumar Gala <galak@kernel.crashing.org>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+dt-bindings: ASoC: tlv320aic32x4: Fix property name
+
+The 'supply' string is a suffix to the actual supply name, not a prefix.
+Also extend the example section with required supply properties.
+
+Signed-off-by: David Epping <david.epping@missinglinkelectronics.com>
 ---
- Documentation/devicetree/bindings/pci/83xx-512x-pci.txt | 1 -
- 1 file changed, 1 deletion(-)
+ Documentation/devicetree/bindings/sound/tlv320aic32x4.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/83xx-512x-pci.txt b/Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
-index b9165b72473c..3abeecf4983f 100644
---- a/Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
-@@ -9,7 +9,6 @@ Freescale 83xx and 512x SOCs include the same PCI bridge core.
- 
- Example (MPC8313ERDB)
- 	pci0: pci@e0008500 {
--		cell-index = <1>;
- 		interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
- 		interrupt-map = <
- 				/* IDSEL 0x0E -mini PCI */
+diff --git a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
+b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
+index ca75890..439eaf7 100644
+--- a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
++++ b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
+@@ -7,7 +7,7 @@ Required properties:
+        "ti,tlv320aic32x4" TLV320AIC3204
+        "ti,tlv320aic32x6" TLV320AIC3206, TLV320AIC3256
+  - reg: I2C slave address
+- - supply-*: Required supply regulators are:
++ - *-supply: Required supply regulators are:
+     "iov" - digital IO power supply
+     "ldoin" - LDO power supply
+     "dv" - Digital core power supply
+@@ -31,6 +31,8 @@ codec: tlv320aic32x4@18 {
+        reg = <0x18>;
+        clocks = <&clks 201>;
+        clock-names = "mclk";
++       iov-supply = <&reg_3v3>;
++       ldoin-supply = <&reg_3v3>;
+        aic32x4-gpio-func= <
+                        0xff /* AIC32X4_MFPX_DEFAULT_VALUE */
+                        0xff /* AIC32X4_MFPX_DEFAULT_VALUE */
 -- 
-2.20.1
+2.7.4
