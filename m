@@ -1,45 +1,96 @@
 From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [RESEND PATCH 05/10] crypto: sha256_generic: Export the Transform
- function
-Date: Fri, 28 Jun 2019 10:57:39 +0530
-Message-ID: <7ddfdddc-38ba-a435-f688-4d0e29c0513c@ti.com>
+Subject: Re: [RESEND PATCH 00/10] crypto: k3: Add sa2ul driver
+Date: Fri, 28 Jun 2019 11:01:44 +0530
+Message-ID: <17f6aab0-653f-cdb9-37ed-53d0429e3e5d@ti.com>
 References: <20190628042745.28455-1-j-keerthy@ti.com>
- <20190628042745.28455-6-j-keerthy@ti.com>
- <20190628050944.GE673@sol.localdomain>
+ <20190628045318.GC673@sol.localdomain>
+ <7ca64e49-6e1f-c74e-4d8e-0e08607fe5c5@ti.com>
+ <20190628052544.GH673@sol.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190628050944.GE673@sol.localdomain>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190628052544.GH673@sol.localdomain>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Eric Biggers <ebiggers@kernel.org>
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, linux-crypto@vger.kernel.org, nm@ti.com
+Cc: nm@ti.com, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, linux-kernel@vger.kernel.org, t-kristo@ti.com, robh+dt@kernel.org, linux-crypto@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 28/06/19 10:39 AM, Eric Biggers wrote:
-> On Fri, Jun 28, 2019 at 09:57:40AM +0530, Keerthy wrote:
->> The transform function can be used as is by other crypto
->> drivers that need to transform the 256 bit key using cpu.
->> Hence export it.
-> 
-> What is this supposed to mean?  SHA-256 is an unkeyed hash function.
-
-HMAC-SHA256 my bad.
-
-> 
-> Also, you need to actually explain why this is needed.  If your hardware
-> supports SHA-256, why do you need to use the C sha256_transform()?
-
-Hardware supports only HMAC from pre-computed inner and outer digests is 
-supported, i.e. the host must carry out initial preparation stage to
-generate intermediate hash state for both inner pad and outer pad.
-
-Hence the need to export the transform function. I will add it in the 
-commit message.
-
-> 
-> - Eric
-> 
+CgpPbiAyOC8wNi8xOSAxMDo1NSBBTSwgRXJpYyBCaWdnZXJzIHdyb3RlOgo+IE9uIEZyaSwgSnVu
+IDI4LCAyMDE5IGF0IDEwOjQ0OjI2QU0gKzA1MzAsIGtlZXJ0aHkgd3JvdGU6Cj4+Cj4+Cj4+IE9u
+IDYvMjgvMjAxOSAxMDoyMyBBTSwgRXJpYyBCaWdnZXJzIHdyb3RlOgo+Pj4gSGkgS2VlcnRoeSwK
+Pj4+Cj4+PiBPbiBGcmksIEp1biAyOCwgMjAxOSBhdCAwOTo1NzozNUFNICswNTMwLCBLZWVydGh5
+IHdyb3RlOgo+Pj4+IFRoZSBzZXJpZXMgYWRkcyBDcnlwdG8gaGFyZHdhcmUgYWNjZWxlcmF0b3Ig
+c3VwcG9ydCBmb3IgU0EyVUwuCj4+Pj4gU0EyVUwgc3RhbmRzIGZvciBzZWN1cml0eSBhY2NlbGVy
+YXRvciB1bHRyYSBsaXRlLgo+Pj4+Cj4+Pj4gVGhlIFNlY3VyaXR5IEFjY2VsZXJhdG9yIChTQTJf
+VUwpIHN1YnN5c3RlbSBwcm92aWRlcyBoYXJkd2FyZQo+Pj4+IGNyeXB0b2dyYXBoaWMgYWNjZWxl
+cmF0aW9uIGZvciB0aGUgZm9sbG93aW5nIHVzZSBjYXNlczoKPj4+PiDigKIgRW5jcnlwdGlvbiBh
+bmQgYXV0aGVudGljYXRpb24gZm9yIHNlY3VyZSBib290Cj4+Pj4g4oCiIEVuY3J5cHRpb24gYW5k
+IGF1dGhlbnRpY2F0aW9uIG9mIGNvbnRlbnQgaW4gYXBwbGljYXRpb25zCj4+Pj4gICAgIHJlcXVp
+cmluZyBEUk0gKGRpZ2l0YWwgcmlnaHRzIG1hbmFnZW1lbnQpIGFuZAo+Pj4+ICAgICBjb250ZW50
+L2Fzc2V0IHByb3RlY3Rpb24KPj4+PiBUaGUgZGV2aWNlIGluY2x1ZGVzIG9uZSBpbnN0YW50aWF0
+aW9uIG9mIFNBMl9VTCBuYW1lZCBTQTJfVUwwCj4+Pj4KPj4+PiBTQTJVTCBuZWVkcyBvbiB0eCBj
+aGFubmVsIGFuZCBhIHBhaXIgb2YgcnggZG1hIGNoYW5uZWxzLgo+Pj4+Cj4+Pj4gVGhpcyBzZXJp
+ZXMgaGFzIGRlcGVuZGVuY3kgb24gVURNQSBzZXJpZXMuIEhlbmNlIGlzIGJhc2VkIG9uIHRvcCBv
+ZjoKPj4+Pgo+Pj4+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcHJvamVjdC9saW51eC1k
+bWFlbmdpbmUvbGlzdC8/c2VyaWVzPTExNDEwNQo+Pj4+Cj4+Pj4gVGhlIGFib3ZlIHNlcmllcyBh
+ZGRzIGNvdXBsZSBvZiBkbWFlbmdpbmUgQVBJcyB0aGF0IGFyZSB1c2VkCj4+Pj4gYnkgdGhlIHNh
+MnVsIGRyaXZlci4gSGVuY2UgdGhlcmUgaXMgYSBoYXJkIGRlcGVuZGVuY3kgb24gdGhlCj4+Pj4g
+YWJvdmUgc2VyaWVzLgo+Pj4+Cj4+Pj4gUmVzZW5kaW5nIHdpdGggbGludXgtY3J5cHRvIGxpc3Qg
+aW4gQ2MuCj4+Pj4KPj4+PiBLZWVydGh5ICgxMCk6Cj4+Pj4gICAgIGR0LWJpbmRpbmdzOiBjcnlw
+dG86IGszOiBBZGQgc2EydWwgYmluZGluZ3MgZG9jdW1lbnRhdGlvbgo+Pj4+ICAgICBjcnlwdG86
+IHNhMnVsOiBBZGQgY3J5cHRvIGRyaXZlcgo+Pj4+ICAgICBjcnlwdG86IHNhMnVsOiBBZGQgQUVT
+IEVDQiBNb2RlIHN1cHBvcnQKPj4+PiAgICAgY3J5cHRvOiBzYTJ1bDogQWRkIGFlYWQgc3VwcG9y
+dCBmb3IgaG1hYyhzaGExKWNiYyhhZXMpIGFsZ29yaXRobQo+Pj4+ICAgICBjcnlwdG86IHNoYTI1
+Nl9nZW5lcmljOiBFeHBvcnQgdGhlIFRyYW5zZm9ybSBmdW5jdGlvbgo+Pj4+ICAgICBjcnlwdG86
+IHNhMnVsOiBBZGQgaG1hYyhzaGEyNTYpY2JjKGFlcykgQUVBRCBBbGdvIHN1cHBvcnQKPj4+PiAg
+ICAgY3J5cHRvOiBzYTJ1bDogQWRkIGhtYWMoc2hhMSkgSE1BQyBhbGdvcml0aG0gc3VwcG9ydAo+
+Pj4+ICAgICBjcnlwdG86IHNhMnVsOiBBZGQgaG1hYyhzaGEyNTYpIEhNQUMgYWxnb3JpdGhtIHN1
+cHBvcnQKPj4+PiAgICAgc2EydWw6IEFkZCAzREVTIEVDQiAmIENCQyBNb2RlIHN1cHBvcnQKPj4+
+PiAgICAgYXJtNjQ6IGR0czogazMtYW02OiBBZGQgY3J5cHRvIGFjY2VsYXJhdG9yIG5vZGUKPj4+
+Pgo+Pj4+ICAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NyeXB0by9zYTJ1bC50eHQgICAgICB8
+ICAgNDcgKwo+Pj4+ICAgIGFyY2gvYXJtNjQvYm9vdC9kdHMvdGkvazMtYW02NS1tYWluLmR0c2kg
+ICAgICB8ICAgMzMgKwo+Pj4+ICAgIGNyeXB0by9zaGEyNTZfZ2VuZXJpYy5jICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAgIDMgKy0KPj4+PiAgICBkcml2ZXJzL2NyeXB0by9LY29uZmlnICAgICAg
+ICAgICAgICAgICAgICAgICAgfCAgIDE3ICsKPj4+PiAgICBkcml2ZXJzL2NyeXB0by9NYWtlZmls
+ZSAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKPj4+PiAgICBkcml2ZXJzL2NyeXB0by9z
+YTJ1bC5jICAgICAgICAgICAgICAgICAgICAgICAgfCAyMjMyICsrKysrKysrKysrKysrKysrCj4+
+Pj4gICAgZHJpdmVycy9jcnlwdG8vc2EydWwuaCAgICAgICAgICAgICAgICAgICAgICAgIHwgIDM4
+NCArKysKPj4+PiAgICBpbmNsdWRlL2NyeXB0by9zaGEuaCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgICAxICsKPj4+PiAgICA4IGZpbGVzIGNoYW5nZWQsIDI3MTcgaW5zZXJ0aW9ucygrKSwg
+MSBkZWxldGlvbigtKQo+Pj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvY3J5cHRvL3NhMnVsLnR4dAo+Pj4+ICAgIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBkcml2ZXJzL2NyeXB0by9zYTJ1bC5jCj4+Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
+aXZlcnMvY3J5cHRvL3NhMnVsLmgKPj4+Cj4+PiBEaWQgeW91IHJ1biB0aGUgY3J5cHRvIHNlbGYt
+dGVzdHMgb24gdGhpcyBkcml2ZXI/ICBpLmUuIGJvb3QgYSBrZXJuZWwgd2l0aAo+Pj4KPj4+IAkj
+IENPTkZJR19DUllQVE9fTUFOQUdFUl9ESVNBQkxFX1RFU1RTIGlzIG5vdCBzZXQKPj4+IAlDT05G
+SUdfREVCVUdfS0VSTkVMPXkKPj4+IAlDT05GSUdfQ1JZUFRPX01BTkFHRVJfRVhUUkFfVEVTVFM9
+eQo+Pj4KPj4+IFdoYXQgYXJlIHRoZSByZXN1bHRzPwo+Pgo+PiBFcmljLAo+Pgo+PiBUaGFua3Mg
+Zm9yIHlvdXIgcmVzcG9uc2UuIEkgZGlkIHRyeSB3aXRoIHRoYXQuIEFsbCB0ZXN0IGNhc2VzCj4+
+IHdlcmUgcGFzc2luZyBvbiA0LjE5IGtlcm5lbCBiZWZvcmUgdGhlIHRlc3RtZ3IgcmV2YW1wLgo+
+Pgo+IAo+IFRoYXQncyBzdXJwcmlzaW5nLCBzaW5jZSB5b3VyIGRyaXZlciBkb2Vzbid0IGltcGxl
+bWVudCB1cGRhdGUoKSBmb3IgaGFzaGluZywgc28KPiBpdCBzaG91bGQgaGF2ZSBiZWVuIGZhaWxp
+bmcgYXQgbGVhc3QgdGhlIEhNQUMgdGVzdHMuICBBcmUgeW91IHN1cmUgeW91IHJlYWxseQo+IHJh
+biB0aGUgdGVzdHM/CgpZZXMgcGFydGlhbCB1cGRhdGUgd2FzIHRoZSBmYWlsaW5nIGNhc2UuCgo+
+IAo+PiBDdXJyZW50bHkgZmV3IG9mIHRoZSB0ZXN0IGNhc2VzIGRvIGZhaWwuIEZvciBleDogQXBw
+ZW5kaW5nCj4+IHRoZSBsYXN0IGl2bGVuIGJ5dGVzIG9mIGNpcGhlciB0ZXh0IGFzIHRoZSBJVi4K
+PiAKPiBXZWxsLCB0aGVzZSBuZWVkIHRvIGJlIGZpeGVkLgoKT2theS4gU28gcGFzc2luZyBhbGwg
+dGhlIGNyeXB0byBtYW5hZ2VyIHRlc3QgY2FzZXMgc2VlbXMgdG8gYmUgdGhlIApwcmVyZXF1aXNp
+dGUuIEkgd2lsbCB3b3JrIG9uIHRoZW0uCgoKPiAKPj4KPj4+Cj4+PiBBbHNvLCB0aGlzIHBhdGNo
+c2V0IGRvZXMgbm90IGNvbXBpbGUgZm9yIG1lLgo+Pgo+PiBUaGlzIGhhcyBkZXBlbmRlbmN5IG9u
+IFVETUEgc2VyaWVzOgo+PiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL2NvdmVyLzEwOTMw
+OTY5Lwo+IAo+IEkgaGFkIHRoYXQgYXBwbGllZC4KCk9rYXkuIEkgd2lsbCBjaGVjayBpZiB0aGVy
+ZSB3ZXJlIGFkZGl0aW9uYWwgcGF0Y2hlcyB0aGF0IHdlcmUgbmVlZGVkLgoKVGhhbmtzLApLZWVy
+dGh5Cgo+IAo+IC0gRXJpYwo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
