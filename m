@@ -1,85 +1,33 @@
-From: Eric Biggers <ebiggers@kernel.org>
-Subject: Re: [RESEND PATCH 00/10] crypto: k3: Add sa2ul driver
-Date: Thu, 27 Jun 2019 21:53:18 -0700
-Message-ID: <20190628045318.GC673@sol.localdomain>
-References: <20190628042745.28455-1-j-keerthy@ti.com>
+From: Nandor Han <nandor.han@vaisala.com>
+Subject: Re: [PATCH v4 0/2] Use NVMEM as reboot-mode write interface
+Date: Fri, 28 Jun 2019 07:49:11 +0300
+Message-ID: <75db3e6e-cf95-cdd0-7446-380a686992d2@vaisala.com>
+References: <20190515104658.25535-1-nandor.han@vaisala.com>
+ <20190627183330.aole6zumw3l2vyet@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190628042745.28455-1-j-keerthy@ti.com>
+In-Reply-To: <20190627183330.aole6zumw3l2vyet@earth.universe>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, linux-crypto@vger.kernel.org, nm@ti.com
+To: Sebastian Reichel <sre@kernel.org>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Keerthy,
+Hi,
 
-On Fri, Jun 28, 2019 at 09:57:35AM +0530, Keerthy wrote:
-> The series adds Crypto hardware accelerator support for SA2UL.
-> SA2UL stands for security accelerator ultra lite.
+>> Changes since v3:
+>> ----------------
+>>   - documentation updated according to the comments
 > 
-> The Security Accelerator (SA2_UL) subsystem provides hardware
-> cryptographic acceleration for the following use cases:
-> • Encryption and authentication for secure boot
-> • Encryption and authentication of content in applications
->   requiring DRM (digital rights management) and
->   content/asset protection
-> The device includes one instantiation of SA2_UL named SA2_UL0
+> Thanks, queued. Please fix your git/mail setup, I had to fix the
+> line endings (\r\n -> \n) to apply this.
 > 
-> SA2UL needs on tx channel and a pair of rx dma channels.
+> -- Sebastian
 > 
-> This series has dependency on UDMA series. Hence is based on top of:
-> 
-> https://patchwork.kernel.org/project/linux-dmaengine/list/?series=114105
-> 
-> The above series adds couple of dmaengine APIs that are used
-> by the sa2ul driver. Hence there is a hard dependency on the
-> above series.
-> 
-> Resending with linux-crypto list in Cc.
-> 
-> Keerthy (10):
->   dt-bindings: crypto: k3: Add sa2ul bindings documentation
->   crypto: sa2ul: Add crypto driver
->   crypto: sa2ul: Add AES ECB Mode support
->   crypto: sa2ul: Add aead support for hmac(sha1)cbc(aes) algorithm
->   crypto: sha256_generic: Export the Transform function
->   crypto: sa2ul: Add hmac(sha256)cbc(aes) AEAD Algo support
->   crypto: sa2ul: Add hmac(sha1) HMAC algorithm support
->   crypto: sa2ul: Add hmac(sha256) HMAC algorithm support
->   sa2ul: Add 3DES ECB & CBC Mode support
->   arm64: dts: k3-am6: Add crypto accelarator node
-> 
->  .../devicetree/bindings/crypto/sa2ul.txt      |   47 +
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |   33 +
->  crypto/sha256_generic.c                       |    3 +-
->  drivers/crypto/Kconfig                        |   17 +
->  drivers/crypto/Makefile                       |    1 +
->  drivers/crypto/sa2ul.c                        | 2232 +++++++++++++++++
->  drivers/crypto/sa2ul.h                        |  384 +++
->  include/crypto/sha.h                          |    1 +
->  8 files changed, 2717 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/crypto/sa2ul.txt
->  create mode 100644 drivers/crypto/sa2ul.c
->  create mode 100644 drivers/crypto/sa2ul.h
 
-Did you run the crypto self-tests on this driver?  i.e. boot a kernel with
+Ok. Thanks Sebastian.
 
-	# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
-	CONFIG_DEBUG_KERNEL=y
-	CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
-
-What are the results?
-
-Also, this patchset does not compile for me.
-
-Error: arch/arm64/boot/dts/ti/k3-am65-main.dtsi:103.33-34 syntax error
-FATAL ERROR: Unable to parse input tree
-  DTC     arch/arm64/boot/dts/nvidia/tegra210-p2571.dtb
-make[2]: *** [scripts/Makefile.lib:294: arch/arm64/boot/dts/ti/k3-am654-base-board.dtb] Error 1
-make[1]: *** [scripts/Makefile.build:489: arch/arm64/boot/dts/ti] Error 2
-make[1]: *** Waiting for unfinished jobs....
-
-- Eric
+--
+Nandor
