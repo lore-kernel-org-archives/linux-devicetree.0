@@ -1,100 +1,58 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
- Host
-Date: Fri, 28 Jun 2019 17:13:26 +0300
-Message-ID: <20190628141326.swgl3kg4fj5pmlqx@valkosipuli.retiisi.org.uk>
-References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
- <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v8 0/5] MTD: Add Initial Hyperbus support
+Date: Fri, 28 Jun 2019 20:05:43 +0530
+Message-ID: <89b4b00a-0564-2b69-4324-d2554f69e9bf@ti.com>
+References: <20190625075746.10439-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
+In-Reply-To: <20190625075746.10439-1-vigneshr@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Cc: mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, robh@kernel.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Joao.Pinto@synopsys.com
+To: Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Tokunori Ikegami <ikegami.t@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Luis,
+Hi,
 
-Thank you for the patchset.
-
-On Tue, Jun 11, 2019 at 09:20:50PM +0200, Luis Oliveira wrote:
-> From: Luis Oliveira <lolivei@synopsys.com>
+On 25-Jun-19 1:27 PM, Vignesh Raghavendra wrote:
+[...]
+> Vignesh Raghavendra (5):
+>   mtd: cfi_cmdset_0002: Add support for polling status register
+>   dt-bindings: mtd: Add binding documentation for HyperFlash
+>   mtd: Add support for HyperBus memory devices
+>   dt-bindings: mtd: Add bindings for TI's AM654 HyperBus memory
+>     controller
+>   mtd: hyperbus: Add driver for TI's HyperBus memory controller
 > 
-> Add bindings for Synopsys DesignWare MIPI CSI-2 host.
+
+
+Fixed comments on patch 3/5 locally and series applied to
+https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
+branch mtd/next.
+
+Regards
+Vignesh
+
+>  .../bindings/mtd/cypress,hyperflash.txt       |  13 ++
+>  .../devicetree/bindings/mtd/ti,am654-hbmc.txt |  51 ++++++
+>  MAINTAINERS                                   |   8 +
+>  drivers/mtd/Kconfig                           |   2 +
+>  drivers/mtd/Makefile                          |   1 +
+>  drivers/mtd/chips/cfi_cmdset_0002.c           | 130 +++++++++++++--
+>  drivers/mtd/hyperbus/Kconfig                  |  23 +++
+>  drivers/mtd/hyperbus/Makefile                 |   4 +
+>  drivers/mtd/hyperbus/hbmc-am654.c             | 141 ++++++++++++++++
+>  drivers/mtd/hyperbus/hyperbus-core.c          | 154 ++++++++++++++++++
+>  include/linux/mtd/cfi.h                       |   7 +
+>  include/linux/mtd/hyperbus.h                  |  86 ++++++++++
+>  12 files changed, 603 insertions(+), 17 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
+>  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+>  create mode 100644 drivers/mtd/hyperbus/Kconfig
+>  create mode 100644 drivers/mtd/hyperbus/Makefile
+>  create mode 100644 drivers/mtd/hyperbus/hbmc-am654.c
+>  create mode 100644 drivers/mtd/hyperbus/hyperbus-core.c
+>  create mode 100644 include/linux/mtd/hyperbus.h
 > 
-> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-> ---
-> Changelog
-> v3-v4
-> - remove "plat" from the block name @rob @laurent
-> - remove "phy-names" when single-entry @rob
-> - remove "snps,output-type" -> went to the driver config @laurent
-> 
->  .../devicetree/bindings/media/snps,dw-csi.txt      | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/snps,dw-csi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/snps,dw-csi.txt b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
-> new file mode 100644
-> index 0000000..613b7f9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
-> @@ -0,0 +1,41 @@
-> +Synopsys DesignWare CSI-2 Host controller
-> +
-> +Description
-> +-----------
-> +
-> +This HW block is used to receive image coming from an MIPI CSI-2 compatible
-> +camera.
-> +
-> +Required properties:
-> +- compatible		: shall be "snps,dw-csi"
-> +- reg			: physical base address and size of the device memory
-> +			  mapped registers;
-> +- interrupts		: DW CSI-2 Host interrupts
-> +- phys			: List of one PHY specifier (as defined in
-> +			  Documentation/devicetree/bindings/phy/phy-bindings.txt).
-> +			  This PHY is a MIPI DPHY working in RX mode.
-> +- resets		: Reference to a reset controller (optional)
-> +
-> +The per-board settings:
-> + - port sub-node describing a single endpoint connected to the camera as
-> +   described in video-interfaces.txt[1].
-
-Which endpoint properties in video-interfaces.txt are relevant for the
-hardware? Which values may they have?
-
-> +
-> +Example:
-> +
-> +	csi2: csi2@3000 {
-> +		compatible = "snps,dw-csi";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = < 0x03000 0x7FF>;
-
-reg = <0x03000 0x7FF>;
-
-> +		phys = <&mipi_dphy_rx>;
-> +		resets = <&dw_rst 1>;
-> +		interrupts = <2>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-
-You can drop "@0" and the reg property.
-
-> +			csi_ep1: endpoint {
-> +				remote-endpoint = <&camera_1>;
-> +				data-lanes = <1 2>;
-> +			};
-> +		};
-> +	};
-
--- 
-Kind regards,
-
-Sakari Ailus
