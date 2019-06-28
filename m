@@ -1,79 +1,74 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: [PATCH V5 07/18] clk: tegra: Support for saving and restoring OSC context
-Date: Thu, 27 Jun 2019 19:12:41 -0700
-Message-ID: <1561687972-19319-8-git-send-email-skomatineni@nvidia.com>
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: [PATCH v2 0/3] Solve postboot supplier cleanup and optimize probe ordering
+Date: Thu, 27 Jun 2019 19:21:59 -0700
+Message-ID: <20190628022202.118166-1-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for storing OSC clock frequency and the
-drive-strength during OSC clock init and creates an API to restore
-OSC control register value from the saved context.
+Add device-links to track functional dependencies between devices
+after they are created (but before they are probed) by looking at
+their common DT bindings like clocks, interconnects, etc.
 
-This API is invoked by Tegra210 clock driver during system resume
-to restore the  OSC clock settings.
+Having functional dependencies automatically added before the devices
+are probed, provides the following benefits:
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/clk/tegra/clk-tegra-fixed.c | 14 ++++++++++++++
- drivers/clk/tegra/clk.h             |  1 +
- 2 files changed, 15 insertions(+)
+- Optimizes device probe order and avoids the useless work of
+  attempting probes of devices that will not probe successfully
+  (because their suppliers aren't present or haven't probed yet).
 
-diff --git a/drivers/clk/tegra/clk-tegra-fixed.c b/drivers/clk/tegra/clk-tegra-fixed.c
-index 8d91b2b191cf..e8df0ccbffd0 100644
---- a/drivers/clk/tegra/clk-tegra-fixed.c
-+++ b/drivers/clk/tegra/clk-tegra-fixed.c
-@@ -17,7 +17,10 @@
- #define OSC_CTRL			0x50
- #define OSC_CTRL_OSC_FREQ_SHIFT		28
- #define OSC_CTRL_PLL_REF_DIV_SHIFT	26
-+#define OSC_CTRL_MASK			(0x3f2 |	\
-+					(0xf << OSC_CTRL_OSC_FREQ_SHIFT))
- 
-+static u32 osc_ctrl_ctx;
- int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
- 			      unsigned long *input_freqs, unsigned int num,
- 			      unsigned int clk_m_div, unsigned long *osc_freq,
-@@ -29,6 +32,7 @@ int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
- 	unsigned osc_idx;
- 
- 	val = readl_relaxed(clk_base + OSC_CTRL);
-+	osc_ctrl_ctx = val & OSC_CTRL_MASK;
- 	osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
- 
- 	if (osc_idx < num)
-@@ -96,3 +100,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk *tegra_clks)
- 		*dt_clk = clk;
- 	}
- }
-+
-+void tegra_clk_osc_resume(void __iomem *clk_base)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
-+	val |= osc_ctrl_ctx;
-+	writel_relaxed(val, clk_base + OSC_CTRL);
-+	fence_udelay(2, clk_base);
-+}
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index c66b0a73bb01..a687ed6127b6 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -863,6 +863,7 @@ void tegra_cclkg_burst_policy_save_context(void);
- void tegra_cclkg_burst_policy_restore_context(void);
- void tegra_sclk_cclklp_burst_policy_save_context(void);
- void tegra_sclk_cpulp_burst_policy_restore_context(void);
-+void tegra_clk_osc_resume(void __iomem *clk_base);
- 
- /* Combined read fence with delay */
- #define fence_udelay(delay, reg)	\
+  For example, in a commonly available mobile SoC, registering just
+  one consumer device's driver at an initcall level earlier than the
+  supplier device's driver causes 11 failed probe attempts before the
+  consumer device probes successfully. This was with a kernel with all
+  the drivers statically compiled in. This problem gets a lot worse if
+  all the drivers are loaded as modules without direct symbol
+  dependencies.
+
+- Supplier devices like clock providers, interconnect providers, etc
+  need to keep the resources they provide active and at a particular
+  state(s) during boot up even if their current set of consumers don't
+  request the resource to be active. This is because the rest of the
+  consumers might not have probed yet and turning off the resource
+  before all the consumers have probed could lead to a hang or
+  undesired user experience.
+
+  Some frameworks (Eg: regulator) handle this today by turning off
+  "unused" resources at late_initcall_sync and hoping all the devices
+  have probed by then. This is not a valid assumption for systems with
+  loadable modules. Other frameworks (Eg: clock) just don't handle
+  this due to the lack of a clear signal for when they can turn off
+  resources. This leads to downstream hacks to handle cases like this
+  that can easily be solved in the upstream kernel.
+
+  By linking devices before they are probed, we give suppliers a clear
+  count of the number of dependent consumers. Once all of the
+  consumers are active, the suppliers can turn off the unused
+  resources without making assumptions about the number of consumers.
+
+By default we just add device-links to track "driver presence" (probe
+succeeded) of the supplier device. If any other functionality provided
+by device-links are needed, it is left to the consumer/supplier
+devices to change the link when they probe.
+
+Saravana Kannan (3):
+  driver core: Add device links support for pending links to suppliers
+  of/platform: Add functional dependency link from DT bindings
+  driver core: Add sync_state driver/bus callback
+
+ drivers/base/core.c    | 106 +++++++++++++++++++++++++++++++++++++++++
+ drivers/of/Kconfig     |   9 ++++
+ drivers/of/platform.c  |  82 +++++++++++++++++++++++++++++++
+ include/linux/device.h |  24 ++++++++++
+ 4 files changed, 221 insertions(+)
+
 -- 
-2.7.4
+v1 -> v2
+- Drop patch to speed up of_find_device_by_node()
+- Drop depends-on property and use existing bindings
+
+2.22.0.410.gd8fdbe21b5-goog
