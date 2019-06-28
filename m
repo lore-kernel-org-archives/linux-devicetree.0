@@ -1,44 +1,52 @@
-From: Angus Ainslie <angus@akkea.ca>
-Subject: Re: [PATCH 2/2] arm64: dts: imx8mq-librem5: Enable MIPI D-PHY
-Date: Fri, 28 Jun 2019 08:43:31 -0600
-Message-ID: <b533e051f4f9b89fed8917954d328c7c@www.akkea.ca>
-References: <cover.1561451144.git.agx@sigxcpu.org>
- <d9a2076bd4231398bd131483db8b05a7e5d56d8b.1561451144.git.agx@sigxcpu.org>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCHv6 RESEND] dt-bindings: cadence-quadspi: add options reset property
+Date: Fri, 28 Jun 2019 10:02:45 -0500
+Message-ID: <20190628150245.23785-1-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d9a2076bd4231398bd131483db8b05a7e5d56d8b.1561451144.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pavel Machek <pavel@ucw.cz>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: dinguyen@kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, Tudor.Ambarus@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On 2019-06-25 02:27, Guido Günther wrote:
-> This enables the Mixel MIPI D-PHY on the Librem 5 devkit
-> 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+The QSPI module can have an optional reset signals that will hold the
+module in a reset state.
 
-Acked-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+v6: no change
+v5: document reset-names
+v4: no change
+v3: created base on review comments
+v2: did not exist
+v1: did not exist
+---
+ Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> index 93b3830e5406..83c965773a29 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> @@ -174,6 +174,10 @@
->  	assigned-clock-rates = <786432000>, <722534400>;
->  };
-> 
-> +&dphy {
-> +	status = "okay";
-> +};
-> +
->  &fec1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_fec1>;
+diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+index 4345c3a6f530..945be7d5b236 100644
+--- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
++++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+@@ -35,6 +35,9 @@ custom properties:
+ 		  (qspi_n_ss_out).
+ - cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
+                   and first bit transfer.
++- resets	: Must contain an entry for each entry in reset-names.
++		  See ../reset/reset.txt for details.
++- reset-names	: Must include either "qspi" and/or "qspi-ocp".
+ 
+ Example:
+ 
+@@ -50,6 +53,8 @@ Example:
+ 		cdns,fifo-depth = <128>;
+ 		cdns,fifo-width = <4>;
+ 		cdns,trigger-address = <0x00000000>;
++		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
++		reset-names = "qspi", "qspi-ocp";
+ 
+ 		flash0: n25q00@0 {
+ 			...
+-- 
+2.20.0
