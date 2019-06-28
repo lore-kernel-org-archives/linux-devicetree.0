@@ -1,53 +1,47 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 03/13] dt-bindings: net: Add a YAML schemas for the
- generic MDIO options
-Date: Fri, 28 Jun 2019 12:17:15 -0600
-Message-ID: <CAL_Jsq+OCN6Mbcc0ztheVc7OS2SF12h-=t_7ZGrcqj93x4m08Q@mail.gmail.com>
-References: <cover.e80da8845680a45c2e07d5f17280fdba84555b8a.1561649505.git-series.maxime.ripard@bootlin.com>
- <e99ff7377a0d3d140cf62200fd9d62c108dac24e.1561649505.git-series.maxime.ripard@bootlin.com>
- <CAL_JsqKQoj6x-8cMxp2PFQLcu93aitGO2wALDYaH2h72cPSyfg@mail.gmail.com>
- <20190627155708.myxychzngc3trxhc@flea> <CAL_JsqLhUP62vP=RY8Bn_0X92hFphbk_gLqi4K48us56Gxw7tA@mail.gmail.com>
- <20190628134553.l445r5idtejwlryl@flea>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: backlight: lm3630a: correct schema validation
+Date: Fri, 28 Jun 2019 13:22:38 -0600
+Message-ID: <20190628192238.GA8617@bogus>
+References: <20190520085846.22320-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190628134553.l445r5idtejwlryl@flea>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190520085846.22320-1-masneyb@onstation.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Masney <masneyb@onstation.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, jonathan@marek.ca, b.zolnierkie@samsung.com, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, linux-leds@vger.kernel.org, dmurphy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 7:46 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Thu, Jun 27, 2019 at 10:06:57AM -0600, Rob Herring wrote:
-> > On Thu, Jun 27, 2019 at 9:57 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > +
-> > > > > +        reset-gpios = <&gpio2 5 1>;
-> > > > > +        reset-delay-us = <2>;
-> > > > > +
-> > > > > +        ethphy0: ethernet-phy@1 {
-> > > > > +            reg = <1>;
-> > > >
-> > > > Need a child node schema to validate the unit-address and reg property.
-> > >
-> > > This should be already covered by the ethernet-phy.yaml schemas
-> > > earlier in this series.
-> >
-> > Partially, yes.
-> >
-> > > Were you expecting something else?
-> >
-> > That would not prevent having a child node such as 'foo {};'  or
-> > 'foo@bad {};'. It would also not check valid nodes named something
-> > other than 'ethernet-phy'.
->
-> Right, but listing the nodes won't either, since we can't enable
-> additionalProperties in that schema. So any node that wouldn't match
-> ethernet-phy@.* wouldn't be validated, but wouldn't generate a warning
-> either.
-
-Perhaps I wasn't clear, but it was missing or incorrect 'reg' property
-and unit-address format checks that I was thinking about. Just like we
-have for SPI.
-
-Rob
+T24gTW9uLCAyMCBNYXkgMjAxOSAwNDo1ODo0NiAtMDQwMCwgQnJpYW4gTWFzbmV5IHdyb3RlOgo+
+IFRoZSAnI2FkZHJlc3MtY2VsbHMnIGFuZCAnI3NpemUtY2VsbHMnIHByb3BlcnRpZXMgd2VyZSBu
+b3QgZGVmaW5lZCBpbgo+IHRoZSBsbTM2MzBhIGJpbmRpbmdzIGFuZCB3b3VsZCBjYXVzZSB0aGUg
+Zm9sbG93aW5nIGVycm9yIHdoZW4KPiBhdHRlbXB0aW5nIHRvIHZhbGlkYXRlIHRoZSBleGFtcGxl
+cyBhZ2FpbnN0IHRoZSBzY2hlbWE6Cj4gCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2xlZHMvYmFja2xpZ2h0L2xtMzYzMGEtYmFja2xpZ2h0LmV4YW1wbGUuZHQueWFtbDoKPiAn
+I2FkZHJlc3MtY2VsbHMnLCAnI3NpemUtY2VsbHMnIGRvIG5vdCBtYXRjaCBhbnkgb2YgdGhlIHJl
+Z2V4ZXM6Cj4gJ15sZWRAWzAxXSQnLCAncGluY3RybC1bMC05XSsnCj4gCj4gQ29ycmVjdCB0aGlz
+IGJ5IGFkZGluZyB0aG9zZSB0d28gcHJvcGVydGllcy4KPiAKPiBXaGlsZSB3ZSdyZSBoZXJlLCBt
+b3ZlIHRoZSB0aSxsaW5lYXItbWFwcGluZy1tb2RlIHByb3BlcnR5IHRvIHRoZQo+IGxlZEBbMDFd
+IGNoaWxkIG5vZGVzIHRvIGNvcnJlY3QgdGhlIGZvbGxvd2luZyB2YWxpZGF0aW9uIGVycm9yOgo+
+IAo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9sbTM2
+MzBhLWJhY2tsaWdodC5leGFtcGxlLmR0LnlhbWw6Cj4gbGVkQDA6ICd0aSxsaW5lYXItbWFwcGlu
+Zy1tb2RlJyBkb2VzIG5vdCBtYXRjaCBhbnkgb2YgdGhlIHJlZ2V4ZXM6Cj4gJ3BpbmN0cmwtWzAt
+OV0rJwo+IAo+IEZpeGVzOiAzMmZjYjc1YzY2YTAgKCJkdC1iaW5kaW5nczogYmFja2xpZ2h0OiBB
+ZGQgbG0zNjMwYSBiaW5kaW5ncyIpCj4gU2lnbmVkLW9mZi1ieTogQnJpYW4gTWFzbmV5IDxtYXNu
+ZXliQG9uc3RhdGlvbi5vcmc+Cj4gUmVwb3J0ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtl
+cm5lbC5vcmc+Cj4gLS0tCj4gIC4uLi9sZWRzL2JhY2tsaWdodC9sbTM2MzBhLWJhY2tsaWdodC55
+YW1sICAgICB8IDIwICsrKysrKysrKysrKystLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDE0IGlu
+c2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4gCgpBcHBsaWVkLCB0aGFua3MuCgpSb2IKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
