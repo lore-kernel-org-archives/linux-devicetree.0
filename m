@@ -1,81 +1,137 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mq: Correct OPP table according to
- latest datasheet
-Date: Fri, 28 Jun 2019 06:45:07 +0000
-Message-ID: <VI1PR04MB505542FB866BC18A27D22B90EEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
-References: <20190628032800.8428-1-Anson.Huang@nxp.com>
- <VI1PR04MB50553915C0D978A8019BDC5CEEFC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
- <DB3PR0402MB39161C60DC780B693933F9EAF5FC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: masonccyang@mxic.com.tw
+Subject: Re: [PATCH v4 2/2] dt-bindings: mtd: Document Macronix raw NAND
+ controller bindings
+Date: Fri, 28 Jun 2019 14:48:02 +0800
+Message-ID: <OFFBD1710A.54AC467B-ON48258427.0023FCA3-48258427.00255B71@mxic.com.tw>
+References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw>	<1561443056-13766-3-git-send-email-masonccyang@mxic.com.tw>
+ <20190627192609.0965f6d5@xps13>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
-Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kern>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20190627192609.0965f6d5@xps13>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: devicetree@vger.kernel.org, christophe.kerello@st.com, vigneshr@ti.com, jianxin.pan@amlogic.com, bbrezillon@kernel.org, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, stefan@agner.ch, paul@crapouillou.net, marek.vasut@gmail.com, paul.burton@mips.com, broonie@kernel.org, linux-mtd@lists.infradead.org, richard@nod.at, anders.roxell@linaro.org, liang.yang@amlogic.com, computersforpeace@gmail.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/28/2019 9:16 AM, Anson Huang wrote:=0A=
->> From: Leonard Crestez=0A=
->>> From: Anson Huang <Anson.Huang@nxp.com>=0A=
->>>=0A=
->>> According to latest datasheet (Rev.1, 10/2018) from below links, in=0A=
->>> the consumer datasheet, 1.5GHz is mentioned as highest opp but depends=
-=0A=
->>> on speed grading fuse, and in the industrial datasheet, 1.3GHz is=0A=
->>> mentioned as highest opp but depends on speed grading fuse. 1.5GHz and=
-=0A=
->>> 1.3GHz opp use same voltage, so no need for consumer part to support=0A=
->>> 1.3GHz opp, with same voltage, CPU should run at highest frequency in=
-=0A=
->>> order to go into idle as quick as possible, this can save power.=0A=
->>=0A=
->> I looked at the same datasheets and it's not clear to me that 1.3 Ghz sh=
-ould=0A=
->> be disallowed for consumer parts. Power consumption increases with both=
-=0A=
->> voltage and frequency so having two OPPs with same voltage does make=0A=
->> sense.=0A=
-> =0A=
-> The consumer part datasheet does NOT mention 1.3GHz at all, so consumer p=
-art ONLY=0A=
-> support 1GHz/1.5GHz, and industrial part ONLY support 800MHz/1.3GHz, this=
- is what=0A=
-> we did in our internal tree and NPI release, so better to make them align=
-ed, otherwise,=0A=
-> we have to change it when kernel upgrade.=0A=
-=0A=
-Datasheet seems ambiguous: it mentions "max freq for volt" so my =0A=
-understanding is that any lower freqs should also work at that voltage.=0A=
-=0A=
-This also seems to be the understanding behind commit 8cfd813c7307 =0A=
-("arm64: dts: imx8mq: fix higher CPU operating point") by Lucas.=0A=
-=0A=
-On datasheet page 7 it mentions that product code can have "JZ" or "HZ" =0A=
-for 1.3Ghz or 1.5Ghz. Are you saying that only industrial parts can be "JZ"=
-?=0A=
-=0A=
->>>    			opp-hz =3D /bits/ 64 <1500000000>;=0A=
->>>    			opp-microvolt =3D <1000000>;=0A=
->>>    			/* Consumer only but rely on speed grading */=0A=
->>> -			opp-supported-hw =3D <0x8>, <0x7>;=0A=
->>> +			opp-supported-hw =3D <0x8>, <0x3>;=0A=
->>=0A=
->> If you don't want to rely on the fact that only consumer parts should be=
-=0A=
->> fused for 1.5 Ghz then please delete the comment.=0A=
-> =0A=
-> Don't quite understand, 1.5GHz is indeed consumer ONLY, but if the consum=
-er=0A=
-> part is fused to 1GHz, then 1.5GHz is also NOT available, so it also rely=
- on speed=0A=
-> grading. So keep the comment there is OK?=0A=
-=0A=
-What I meant with that comment is that 1.5Ghz is only mentioned for =0A=
-consumer parts but instead of explicitly banning it on industrial parts =0A=
-we rely on MFG never fusing industrial parts for 1.5Ghz.=0A=
-=0A=
-Now you're explicitly banning it on industrial parts.=0A=
-=0A=
-This comment is indeed confusing so better to just remove all instances.=0A=
+
+Hi Miquel,
+
+> > Document the bindings used by the Macronix raw NAND controller.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > ---
+> >  .../devicetree/bindings/mtd/mxic-nand.txt          | 26 
+++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> >  create mode 100644 
+Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/
+> Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > new file mode 100644
+> > index 0000000..3d198e4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > @@ -0,0 +1,26 @@
+> > +Macronix Raw NAND Controller Device Tree Bindings
+> > +-------------------------------------------------
+> > +
+> > +Required properties:
+> > +- compatible: should be "mxic,raw-nand-ctlr"
+> 
+> I would prefer "macronix,nand-controller"
+
+okay, will patch it.
+
+> 
+> > +- reg: should contain 1 entrie for the registers
+> 
+>                            entry
+> 
+> > +- reg-names: should contain "regs"
+> 
+> Not sure you need that?
+
+for a base address of ctlr registers.
+
+> 
+> > +- interrupts: interrupt line connected to this NAND controller
+> > +- clock-names: should contain "ps_clk", "send_clk" and "send_dly_clk"
+> > +- clocks: should contain 3 entries for the "ps_clk", "send_clk" and
+> > +    "send_dly_clk" clocks
+> 
+> s/entries/phandles/ ?
+
+?
+as I know that kernel views the phandle values as device tree structure
+information instead of device tree data and thus does not store them as
+properties.
+
+
+> 
+> > +
+> > +Example:
+> > +
+> > +   nand: mxic-nfc@43c30000 {
+> > +      compatible = "mxic,raw-nand-ctlr";
+> > +      reg = <0x43c30000 0x10000>;
+> > +      reg-names = "regs";
+> > +      clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
+> > +      clock-names = "send_clk", "send_dly_clk", "ps_clk";
+> > +
+> > +      nand-ecc-mode = "soft";
+> > +      nand-ecc-algo = "bch";
+> > +      nand-ecc-step-size = <512>;
+> > +      nand-ecc-strength = <8>;
+> 
+> The last 4 lines are probably not needed.
+
+okay, will remove them.
+
+thanks for your review.
+best regards,
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
