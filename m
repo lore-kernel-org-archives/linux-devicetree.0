@@ -1,153 +1,180 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH RFC 3/4] cpufreq: qcom: Update the bandwidth levels on
- frequency change
-Date: Fri, 28 Jun 2019 13:55:49 +0530
-Message-ID: <aaf49cd8-bc0c-672f-2a20-67382e06461c@codeaurora.org>
-References: <20190627133424.4980-1-sibis@codeaurora.org>
- <20190627133424.4980-4-sibis@codeaurora.org>
+From: masonccyang@mxic.com.tw
+Subject: Re: [PATCH v4 1/2] mtd: rawnand: Add Macronix Raw NAND controller
+Date: Fri, 28 Jun 2019 16:31:16 +0800
+Message-ID: <OF2EDB7089.FAD92F61-ON48258427.002D122A-48258427.002ECEF3@mxic.com.tw>
+References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw>	<1561443056-13766-2-git-send-email-masonccyang@mxic.com.tw>
+ <20190627193635.29abff43@xps13>	<OFDDC43C05.7B4092B5-ON48258427.001EE57E-48258427.002122D1@mxic.com.tw>
+ <20190628091836.3148d450@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627133424.4980-4-sibis@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>, viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org
-Cc: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, saravanak@google.com
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20190628091836.3148d450@xps13>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: devicetree@vger.kernel.org, christophe.kerello@st.com, vigneshr@ti.com, jianxin.pan@amlogic.com, bbrezillon@kernel.org, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, stefan@agner.ch, paul@crapouillou.net, marek.vasut@gmail.com, paul.burton@mips.com, broonie@kernel.org, linux-mtd@lists.infradead.org, richard@nod.at, anders.roxell@linaro.org, liang.yang@amlogic.com, computersforpeace@gmail.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 6/27/2019 7:04 PM, Sibi Sankar wrote:
-> Add support to parse and update optional OPP tables attached to the
-> cpu nodes when the OPP bandwidth values are populated to enable
-> scaling of DDR/L3 bandwidth levels with frequency change.
+Hi Miquel,
+
+> > 
+> > > > Add a driver for Macronix raw NAND controller. 
+> > > 
+> > > Could you pass userspace major MTD tests and can you 
+attach/mount/edit
+> > > a UBI/UBIFS storage? 
+> > 
+> > mtd_debug passed and using dd utility to read and write 
+> > with md5sum checking passed.
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
-[]...
-
->   
-> @@ -79,13 +108,29 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->   {
->   	u32 data, src, lval, i, core_count, prev_cc = 0, prev_freq = 0, freq;
->   	u32 volt;
-> +	u64 rate;
->   	unsigned int max_cores = cpumask_weight(policy->cpus);
->   	struct cpufreq_frequency_table	*table;
-> +	struct device_node *opp_table_np, *np;
-> +	int ret;
->   
->   	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
->   	if (!table)
->   		return -ENOMEM;
->   
-> +	ret = dev_pm_opp_of_add_table(cpu_dev);
-> +	if (!ret) {
-> +		/* Disable all opps and cross-validate against LUT */
-> +		opp_table_np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
-> +		for_each_available_child_of_node(opp_table_np, np) {
-> +			ret = of_property_read_u64(np, "opp-hz", &rate);
-> +			dev_pm_opp_disable(cpu_dev, rate);
-> +		}
-> +		of_node_put(opp_table_np);
-> +	} else {
-> +		dev_err(cpu_dev, "Couldn't add OPP table from dt\n");
-
-The changelog seems to suggest specifying OPP tables in DT is optional,
-but here we seem to error out if the tables are missing.
-
-> +	}
-> +
->   	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
->   		data = readl_relaxed(base + REG_FREQ_LUT +
->   				      i * LUT_ROW_SIZE);
-> @@ -104,7 +149,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->   
->   		if (freq != prev_freq && core_count == max_cores) {
->   			table[i].frequency = freq;
-> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
-> +			qcom_cpufreq_update_opp(cpu_dev, freq, volt);
->   			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
->   				freq, core_count);
->   		} else {
-> @@ -125,7 +170,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->   			if (prev_cc != max_cores) {
->   				prev->frequency = prev_freq;
->   				prev->flags = CPUFREQ_BOOST_FREQ;
-> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
-> +				qcom_cpufreq_update_opp(cpu_dev, prev_freq,
-> +							volt);
->   			}
->   
->   			break;
-> @@ -168,6 +214,7 @@ static void qcom_get_related_cpus(int index, struct cpumask *m)
->   static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->   {
->   	struct device *dev = &global_pdev->dev;
-> +	struct opp_table *opp_table = NULL;
->   	struct of_phandle_args args;
->   	struct device_node *cpu_np;
->   	struct device *cpu_dev;
-> @@ -202,6 +249,8 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->   	if (!base)
->   		return -ENOMEM;
->   
-> +	opp_table = dev_pm_opp_set_paths(cpu_dev);
-> +
->   	/* HW should be in enabled state to proceed */
->   	if (!(readl_relaxed(base + REG_ENABLE) & 0x1)) {
->   		dev_err(dev, "Domain-%d cpufreq hardware not enabled\n", index);
-> @@ -237,6 +286,8 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->   
->   	return 0;
->   error:
-> +	if (opp_table)
-> +		dev_pm_opp_put_paths(opp_table);
->   	devm_iounmap(dev, base);
->   	return ret;
->   }
-> @@ -275,6 +326,8 @@ static struct cpufreq_driver cpufreq_qcom_hw_driver = {
->   
->   static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
->   {
-> +	struct opp_table *opp_table = NULL;
-> +	struct device *cpu_dev;
->   	struct clk *clk;
->   	int ret;
->   
-> @@ -294,6 +347,26 @@ static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
->   
->   	global_pdev = pdev;
->   
-> +	/* Check for optional interconnect paths on CPU0 */
-> +	cpu_dev = get_cpu_device(0);
-> +	if (!cpu_dev) {
-> +		dev_err(&pdev->dev, "failed to get cpu0 device\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	opp_table = dev_pm_opp_set_paths(cpu_dev);
-> +	if (IS_ERR(opp_table)) {
-> +		ret = PTR_ERR(opp_table);
-> +		if (ret == -EPROBE_DEFER) {
-> +			dev_dbg(&pdev->dev, "defer icc set paths: %d\n", ret);
-> +			return ret;
-> +		}
-> +		dev_err(&pdev->dev, "set paths failed ddr/l3 scaling off: %d\n",
-> +			ret);
-
-Here again, the interconnect paths don't seem to be optional as the comment
-above suggests.
-
-> +	} else {
-> +		dev_pm_opp_put_paths(opp_table);
-> +	}
-> +
->   	ret = cpufreq_register_driver(&cpufreq_qcom_hw_driver);
->   	if (ret)
->   		dev_err(&pdev->dev, "CPUFreq HW driver failed to register\n");
+> Please don't use dd, use nanddump/nandwrite/flasherase/nandbiterrs and
+> run the other tests from the mtd-utils test suite (available in
+> Buildroot for instance).
 > 
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Got it.
+
+But may I know why 'dd' utility is not preferences ?
+I generate a random data file and write to Flash by
+using dd with bs=page size and read data back from Flash.
+Checking data by md5sum.
+The write and read testing data size is easily adjustable.
+
+
+> > 
+> > > > +static int mxic_nfc_clk_enable(struct mxic_nand_ctlr *nfc)
+> > > > +{
+> > > > +   int ret;
+> > > > +
+> > > > +   ret = clk_prepare_enable(nfc->send_clk);
+> > > > +   if (ret)
+> > > > +      return ret;
+> > > > +
+> > > > +   ret = clk_prepare_enable(nfc->send_dly_clk);
+> > > > +   if (ret)
+> > > > +      goto err_send_dly_clk; 
+> > > 
+> > > I'm not sure why you only enable 2 out of 3 clocks and also why ou
+> > > handle two of them here (which is great, I prefer having a separate
+> > > helper for that) and the other one elsewhere?
+> > > 
+> > 
+> > send_clk and send_dly_clk are device domain clocks.
+> > 
+> > send_clk is clock without phase delay to ps_clk, used for sending 
+device
+> > signals except for SIO[7:0].
+> > send_dly_clk is clock with phase delay to ps_clk, used for sending 
+> > SIO[7:0]
+> > 
+> > ps_clk is system domain clock and it's a source clock of send_clk and 
+> > send_dly_clk.
+> 
+> And why is that explaining the fact that you configure them in
+> different places? You can explain this with a nice comment at the top
+> of the function, but I would rather prefer that you handle all three
+> clocks in one go if possible.
+> 
+
+okay, will patch it.
+
+> > > > +static int mxic_nfc_data_xfer(struct mxic_nand_ctlr *nfc, const 
+void 
+> > *txbuf,
+> > > > +               void *rxbuf, unsigned int len)
+> > > > +{
+> > > > +   unsigned int pos = 0;
+> > > > +
+> > > > +   while (pos < len) {
+> > > > +      unsigned int nbytes = len - pos;
+> > > > +      u32 data = 0xffffffff;
+> > > > +      u32 sts;
+> > > > +      int ret;
+> > > > +
+> > > > +      if (nbytes > 4)
+> > > > +         nbytes = 4;
+> > > > +
+> > > > +      if (txbuf)
+> > > > +         memcpy(&data, txbuf + pos, nbytes);
+> > > > +
+> > > > +      ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
+> > > > +                sts & INT_TX_EMPTY, 0, USEC_PER_SEC);
+> > > > +      if (ret)
+> > > > +         return ret;
+> > > > +
+> > > > +      writel(data, nfc->regs + TXD(nbytes % 4));
+> > > > +
+> > > > +      if (rxbuf) {
+> > > > +         ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
+> > > > +                   sts & INT_TX_EMPTY, 0,
+> > > > +                   USEC_PER_SEC);
+> > > > +         if (ret)
+> > > > +            return ret;
+> > > > +
+> > > > +         ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
+> > > > +                   sts & INT_RX_NOT_EMPTY, 0,
+> > > > +                   USEC_PER_SEC);
+> > > > +         if (ret)
+> > > > +            return ret;
+> > > > +
+> > > > +         data = readl(nfc->regs + RXD);
+> > > > +         data >>= (8 * (4 - nbytes));
+> > > > +         memcpy(rxbuf + pos, &data, nbytes);
+> > > > +         WARN_ON(readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY);
+> > > > +      } else {
+> > > > +         readl(nfc->regs + RXD);
+> > > > +      }
+> > > > +      WARN_ON(readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY); 
+> > > 
+> > > WARN_ON() is maybe a bit overkill here? 
+> > 
+> > should I remove it ?
+> 
+> I would stick to regular dev_warn.
+
+Got it, will patch it.
+
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
