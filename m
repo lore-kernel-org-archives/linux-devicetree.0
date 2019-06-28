@@ -1,111 +1,58 @@
-Return-Path: <SRS0=xUMM=UN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:16049 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfFNHrT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Jun 2019 03:47:19 -0400
-From: JC Kuo <jckuo@nvidia.com>
-Subject: [PATCH 1/8] clk: tegra: Add PLLE HW power sequencer control
-Date: Fri, 14 Jun 2019 15:46:49 +0800
-Message-ID: <20190614074652.21960-2-jckuo@nvidia.com>
-In-Reply-To: <20190614074652.21960-1-jckuo@nvidia.com>
-References: <20190614074652.21960-1-jckuo@nvidia.com>
+Return-Path: <SRS0=E1nX=U3=mentor.com=Harish_Kandiga@kernel.org>
+From: Harish Jenny K N <harish_kandiga@mentor.com>
+Subject: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
+Date: Fri, 28 Jun 2019 15:00:50 +0530
+Message-ID: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, pdeschrijver@nvidia.com, afrid@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com, JC Kuo <jckuo@nvidia.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Harish Jenny K N <harish_kandiga@mentor.com>, Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
 List-ID: <devicetree@vger.kernel.org>
 
-PLLE hardware power sequencer has to be enabled after PEX/SATA
-UPHY PLL's sequencers are enabled.
+Document the device tree binding for the inverter gpio
+controller to configure the polarity of the gpio pins
+used by the consumers.
 
-tegra210_plle_hw_sequence_start() for XUSB PADCTL driver to enable
-PLLE hardware sequencer at proper time.
-
-tegra210_plle_hw_sequence_is_enabled() for XUSB PADCTL driver to
-check whether PLLE hardware sequencer has been enabled or not.
-
-Signed-off-by: JC Kuo <jckuo@nvidia.com>
+Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
 ---
- drivers/clk/tegra/clk-tegra210.c | 45 ++++++++++++++++++++++++++++++++
- include/linux/clk/tegra.h        |  2 ++
- 2 files changed, 47 insertions(+)
+ .../devicetree/bindings/gpio/gpio-inverter.txt     | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-inverter.txt
 
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index e1ba62d2b1a0..14d330669f36 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -398,6 +398,14 @@ static const char *mux_pllmcp_clkm[] = {
- #define PLLRE_BASE_DEFAULT_MASK		0x1c000000
- #define PLLRE_MISC0_WRITE_MASK		0x67ffffff
- 
-+/* PLLE */
-+#define PLLE_MISC_IDDQ_SW_CTRL		(1 << 14)
-+#define PLLE_AUX_USE_LOCKDET		(1 << 3)
-+#define PLLE_AUX_SS_SEQ_INCLUDE		(1 << 31)
-+#define PLLE_AUX_ENABLE_SWCTL		(1 << 4)
-+#define PLLE_AUX_SS_SWCTL		(1 << 6)
-+#define PLLE_AUX_SEQ_ENABLE		(1 << 24)
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-inverter.txt b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+new file mode 100644
+index 0000000..8bb6b2e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-inverter.txt
+@@ -0,0 +1,29 @@
++GPIO-INVERTER
++======
++This binding defines the gpio-inverter. The gpio-inverter is a driver that
++allows to properly describe the gpio polarities on the hardware.
 +
- /* PLLX */
- #define PLLX_USE_DYN_RAMP		1
- #define PLLX_BASE_LOCK			(1 << 27)
-@@ -484,6 +492,43 @@ static const char *mux_pllmcp_clkm[] = {
- #define PLLU_MISC0_WRITE_MASK		0xbfffffff
- #define PLLU_MISC1_WRITE_MASK		0x00000007
- 
-+bool tegra210_plle_hw_sequence_is_enabled(void)
-+{
-+	u32 val;
++Please refer to gpio.txt for generic information regarding GPIO bindings.
 +
-+	val = readl_relaxed(clk_base + PLLE_AUX);
-+	if (val & PLLE_AUX_SEQ_ENABLE)
-+		return true;
++Required properties:
++- compatible : "gpio-inverter".
++- gpio-controller: Marks the port as GPIO controller.
++- #gpio-cells: One. This is the pin number.
++- inverted-gpios: Array of GPIO pins required from consumers, whose polarity
++  has to be inverted in the driver.
++Note: gpio flag should be set as GPIO_ACTIVE_HIGH. Using GPIO_ACTICE_LOW will
++cause double inversion.
 +
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(tegra210_plle_hw_sequence_is_enabled);
++Optional properties:
++- gpio-line-names: Refer to gpio.txt for details regarding this property.
 +
-+void tegra210_plle_hw_sequence_start(void)
-+{
-+	u32 val;
++Example:
 +
-+	if (tegra210_plle_hw_sequence_is_enabled())
-+		return;
-+
-+	val = readl_relaxed(clk_base + PLLE_MISC0);
-+	val &= ~PLLE_MISC_IDDQ_SW_CTRL;
-+	writel_relaxed(val, clk_base + PLLE_MISC0);
-+
-+	val = readl_relaxed(clk_base + PLLE_AUX);
-+	val |= (PLLE_AUX_USE_LOCKDET | PLLE_AUX_SS_SEQ_INCLUDE);
-+	val &= ~(PLLE_AUX_ENABLE_SWCTL | PLLE_AUX_SS_SWCTL);
-+	writel_relaxed(val, clk_base + PLLE_AUX);
-+
-+	fence_udelay(1, clk_base);
-+
-+	val |= PLLE_AUX_SEQ_ENABLE;
-+	writel_relaxed(val, clk_base + PLLE_AUX);
-+
-+	fence_udelay(1, clk_base);
-+}
-+EXPORT_SYMBOL_GPL(tegra210_plle_hw_sequence_start);
-+
- void tegra210_xusb_pll_hw_control_enable(void)
- {
- 	u32 val;
-diff --git a/include/linux/clk/tegra.h b/include/linux/clk/tegra.h
-index b8aef62cc3f5..07b6d6145c95 100644
---- a/include/linux/clk/tegra.h
-+++ b/include/linux/clk/tegra.h
-@@ -110,6 +110,8 @@ static inline void tegra_cpu_clock_resume(void)
- }
- #endif
- 
-+extern void tegra210_plle_hw_sequence_start(void);
-+extern bool tegra210_plle_hw_sequence_is_enabled(void);
- extern void tegra210_xusb_pll_hw_control_enable(void);
- extern void tegra210_xusb_pll_hw_sequence_start(void);
- extern void tegra210_sata_pll_hw_control_enable(void);
--- 
-2.17.1
++gpio_inv: gpio-inv {
++	compatible = "gpio-inverter";
++	gpio-controller;
++	#gpio-cells = <1>;
++	inverted-gpios = <&gpio5 24 GPIO_ACTIVE_HIGH>,
++	<&gpio7 0 GPIO_ACTIVE_HIGH>, <&gpio7 1 GPIO_ACTIVE_HIGH>;
++	gpio-line-names = "JTAG_DNL_EN", "lvds-pwrdwn", "lcd-on";
++};
+--
+2.7.4
