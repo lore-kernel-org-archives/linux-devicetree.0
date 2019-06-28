@@ -1,64 +1,96 @@
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: Re: [PATCH v6 2/3] fdt: add support for rng-seed
-Date: Fri, 28 Jun 2019 19:23:45 +0800
-Message-ID: <CAJMQK-g_9bDHJgKr-qKpQ6HwombB+6Asg_z3r6nv+pC4q4j-Aw@mail.gmail.com>
-References: <20190612043258.166048-1-hsinyi@chromium.org> <20190612043258.166048-3-hsinyi@chromium.org>
- <20190628093529.GB36437@lakrids.cambridge.arm.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
+ MSI_FLAG_MULTI_PCI_MSI
+Date: Fri, 28 Jun 2019 12:35:55 +0100
+Message-ID: <20190628113555.GA21829@e121166-lin.cambridge.arm.com>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-5-Zhiqiang.Hou@nxp.com>
+ <20190611165935.GA22836@redmoon>
+ <AM0PR04MB67383023B81AEB33DAF9C35584EC0@AM0PR04MB6738.eurprd04.prod.outlook.com>
+ <20190612130813.GA15747@redmoon>
+ <AM0PR04MB6738B93C7F1B5BE433753CF584E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
+ <20190617093337.GD18020@e121166-lin.cambridge.arm.com>
+ <AM6PR04MB67425792524FBA1C773F137984EB0@AM6PR04MB6742.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190628093529.GB36437@lakrids.cambridge.arm.com>
+Content-Disposition: inline
+In-Reply-To: <AM6PR04MB67425792524FBA1C773F137984EB0@AM6PR04MB6742.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@chromium.org>
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 5:35 PM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Wed, Jun 12, 2019 at 12:33:00PM +0800, Hsin-Yi Wang wrote:
-> > Introducing a chosen node, rng-seed, which is an entropy that can be
-> > passed to kernel called very early to increase initial device
-> > randomness. Bootloader should provide this entropy and the value is
-> > read from /chosen/rng-seed in DT.
->
-> Could you please elaborate on this?
->
-> * What is this initial entropy used by, and why is this important? I
->   assume that devices which can populate this will have a HW RNG that
->   the kernel will eventually make use of.
-There are a few discussions here[0]. We basically want to add more
-randomness for stack canary when device just boot and not much device
-randomness was added.
-[0] https://lore.kernel.org/patchwork/patch/1070974/#1268553
+On Mon, Jun 17, 2019 at 10:34:35AM +0000, Z.q. Hou wrote:
 
-On Thu, May 9, 2019 at 1:00 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> This early added entropy is also going to be used for stack canary. At
-> the time it's created there's not be much entropy (before
-> boot_init_stack_canary(), there's only add_latent_entropy() and
-> command_line).
-> On arm64, there is a single canary for all tasks. If RNG is weak or
-> the seed can be read, it might be easier to figure out the canary.
+[...]
 
-With newer compilers[1] there will be a per-task canary on arm64[2],
-which will improve this situation, but many architectures lack a
-per-task canary, unfortunately. I've also recently rearranged the RNG
-initialization[3] which should also help with better entropy mixing.
-But each of these are kind of band-aids against not having sufficient
-initial entropy, which leaves the canary potentially exposed.
+> > There is nothing obvious. Write what you are fixing in the commit log and I will
+> > apply the patch, I won't write the commit log for you. Anyone should be able
+> > to understand why a patch was needed by reading the commit log, it is as
+> > important as writing the code itself.
+> 
+> With the flag MSI_FLAG_MULTI_PCI_MSI, when the Endpoint allocates
+> multiple MSI, it will trigger the "WARN_ON(nr_irqs != 1);" in
+> mobiveil_irq_msi_domain_alloc(), this is the issue this patch want to
+> fix. 
 
--Kees
+And that's wrong. Marc explained why this controller does not support
+Multi MSI and that's what should go in the commit log, triggering
+a WARN_ON is the least of the problems (and the WARN_ON can even
+be removed after this patch is applied), if it was used as a bandaid
+to prevent allocating Multi MSI it is even more broken.
 
-[1] https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;h=359c1bf35e3109d2f3882980b47a5eae46123259
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0a1213fa7432778b71a1c0166bf56660a3aab030
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/tytso/random.git/commit/?h=dev&id=d55535232c3dbde9a523a9d10d68670f5fe5dec3
->
-> * How much entropy is necessary or sufficient?
-64 bytes should be enough. But depends on how much bootloader can provide.
->
-> * Why is the DT the right mechanism for this?
-EFI based systems can inject randomness in early boot. This is aimed
-to support DT based systems to also have this feature.
+Lorenzo
 
-https://github.com/torvalds/linux/commit/636259880a7e7d3446a707dddebc799da94bdd0b#diff-3ded2fe21b37c6f3e86c2a8418507714
-
-Thanks
+> Thanks,
+> Zhiqiang
+> 
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> > > Thanks,
+> > > Zhiqiang
+> > >
+> > > >
+> > > > Lorenzo
+> > > >
+> > > > > Subbu, did you test with Endpoint supporting multi MSI?
+> > > > >
+> > > > > Thanks,
+> > > > > Zhiqiang
+> > > > >
+> > > > > >
+> > > > > > Thanks,
+> > > > > > Lorenzo
+> > > > > >
+> > > > > > > Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
+> > > > > > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > > > > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > > > > > > ---
+> > > > > > > V5:
+> > > > > > >  - Corrected the subject.
+> > > > > > >
+> > > > > > >  drivers/pci/controller/pcie-mobiveil.c | 2 +-
+> > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
+> > > > > > > b/drivers/pci/controller/pcie-mobiveil.c
+> > > > > > > index 563210e731d3..a0dd337c6214 100644
+> > > > > > > --- a/drivers/pci/controller/pcie-mobiveil.c
+> > > > > > > +++ b/drivers/pci/controller/pcie-mobiveil.c
+> > > > > > > @@ -703,7 +703,7 @@ static struct irq_chip
+> > > > > > > mobiveil_msi_irq_chip = {
+> > > > > > >
+> > > > > > >  static struct msi_domain_info mobiveil_msi_domain_info = {
+> > > > > > >  	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS |
+> > > > > > MSI_FLAG_USE_DEF_CHIP_OPS |
+> > > > > > > -		   MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
+> > > > > > > +		   MSI_FLAG_PCI_MSIX),
+> > > > > > >  	.chip	= &mobiveil_msi_irq_chip,
+> > > > > > >  };
+> > > > > > >
+> > > > > > > --
+> > > > > > > 2.17.1
+> > > > > > >
