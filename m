@@ -1,22 +1,22 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: soc-core: support dai_link with platforms_num != 1" to the asoc tree
-Date: Fri, 28 Jun 2019 17:56:28 +0100 (BST)
-Message-ID: <20190628165628.26843440046@finisterre.sirena.org.uk>
-References: <20190627121350.21027-3-jbrunet@baylibre.com>
+Subject: Applied "dt-bindings: spi: stm32-qspi: add dma properties" to the spi tree
+Date: Fri, 28 Jun 2019 17:56:34 +0100 (BST)
+Message-ID: <20190628165634.0A62C440049@finisterre.sirena.org.uk>
+References: <1561621439-7305-1-git-send-email-ludovic.Barre@st.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627121350.21027-3-jbrunet@baylibre.com>
+In-Reply-To: <1561621439-7305-1-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+To: Ludovic Barre <ludovic.barre@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>, Boris Brezillon <bbrezillon@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Marek Vasut <marek.vasut@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: soc-core: support dai_link with platforms_num != 1
+   dt-bindings: spi: stm32-qspi: add dma properties
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,162 +37,35 @@ to this mail.
 Thanks,
 Mark
 
->From 34614739988ad60c3493da66dd856002ee93edf9 Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 27 Jun 2019 14:13:50 +0200
-Subject: [PATCH] ASoC: soc-core: support dai_link with platforms_num != 1
+>From cae86eac98cd90934f94072028c362550338e084 Mon Sep 17 00:00:00 2001
+From: Ludovic Barre <ludovic.barre@st.com>
+Date: Thu, 27 Jun 2019 09:43:58 +0200
+Subject: [PATCH] dt-bindings: spi: stm32-qspi: add dma properties
 
-Add support platforms_num != 1 in dai_link. Initially, the main purpose of
-this change was to make the platform optional in the dai_link, instead of
-inserting the dummy platform driver.
+This patch adds description of dma properties (optional).
 
-This particular case had just been solved by Kuninori Morimoto with
-commit 1d7689892878 ("ASoC: soc-core: allow no Platform on dai_link").
-
-However, this change may still be useful for those who need multiple
-platform components on a single dai_link (it solves one of the FIXME
-note in soc-core)
-
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- include/sound/soc.h  |  6 +++++
- sound/soc/soc-core.c | 59 ++++++++++++++++++--------------------------
- 2 files changed, 30 insertions(+), 35 deletions(-)
+ Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 64405cdab8bb..4e8071269639 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -997,6 +997,12 @@ struct snd_soc_dai_link {
- 	     ((i) < link->num_codecs) && ((codec) = &link->codecs[i]);	\
- 	     (i)++)
+diff --git a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+index adeeb63e84b9..bfc038b9478d 100644
+--- a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+@@ -19,8 +19,11 @@ Required properties:
+ - reg: chip-Select number (QSPI controller may connect 2 flashes)
+ - spi-max-frequency: max frequency of spi bus
  
-+#define for_each_link_platforms(link, i, platform)			\
-+	for ((i) = 0;							\
-+	     ((i) < link->num_platforms) &&				\
-+	     ((platform) = &link->platforms[i]);			\
-+	     (i)++)
-+
- /*
-  * Sample 1 : Single CPU/Codec/Platform
-  *
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index b5f3c09311c3..b9061cd8d787 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -896,7 +896,7 @@ static int soc_bind_dai_link(struct snd_soc_card *card,
- 	struct snd_soc_dai_link *dai_link)
- {
- 	struct snd_soc_pcm_runtime *rtd;
--	struct snd_soc_dai_link_component *codecs;
-+	struct snd_soc_dai_link_component *codec, *platform;
- 	struct snd_soc_component *component;
- 	int i;
+-Optional property:
++Optional properties:
+ - spi-rx-bus-width: see ./spi-bus.txt for the description
++- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
++Documentation/devicetree/bindings/dma/dma.txt.
++- dma-names: DMA request names should include "tx" and "rx" if present.
  
-@@ -926,13 +926,14 @@ static int soc_bind_dai_link(struct snd_soc_card *card,
- 
- 	/* Find CODEC from registered CODECs */
- 	rtd->num_codecs = dai_link->num_codecs;
--	for_each_link_codecs(dai_link, i, codecs) {
--		rtd->codec_dais[i] = snd_soc_find_dai(codecs);
-+	for_each_link_codecs(dai_link, i, codec) {
-+		rtd->codec_dais[i] = snd_soc_find_dai(codec);
- 		if (!rtd->codec_dais[i]) {
- 			dev_info(card->dev, "ASoC: CODEC DAI %s not registered\n",
--				 codecs->dai_name);
-+				 codec->dai_name);
- 			goto _err_defer;
- 		}
-+
- 		snd_soc_rtdcom_add(rtd, rtd->codec_dais[i]->component);
- 	}
- 
-@@ -940,12 +941,13 @@ static int soc_bind_dai_link(struct snd_soc_card *card,
- 	rtd->codec_dai = rtd->codec_dais[0];
- 
- 	/* Find PLATFORM from registered PLATFORMs */
--	for_each_component(component) {
--		if (!snd_soc_is_matching_component(dai_link->platforms,
--						   component))
--			continue;
-+	for_each_link_platforms(dai_link, i, platform) {
-+		for_each_component(component) {
-+			if (!snd_soc_is_matching_component(platform, component))
-+				continue;
- 
--		snd_soc_rtdcom_add(rtd, component);
-+			snd_soc_rtdcom_add(rtd, component);
-+		}
- 	}
- 
- 	soc_add_pcm_runtime(card, rtd);
-@@ -1058,15 +1060,14 @@ static int soc_init_dai_link(struct snd_soc_card *card,
- 			     struct snd_soc_dai_link *link)
- {
- 	int i;
--	struct snd_soc_dai_link_component *codec;
-+	struct snd_soc_dai_link_component *codec, *platform;
- 
- 	for_each_link_codecs(link, i, codec) {
- 		/*
- 		 * Codec must be specified by 1 of name or OF node,
- 		 * not both or neither.
- 		 */
--		if (!!codec->name ==
--		    !!codec->of_node) {
-+		if (!!codec->name == !!codec->of_node) {
- 			dev_err(card->dev, "ASoC: Neither/both codec name/of_node are set for %s\n",
- 				link->name);
- 			return -EINVAL;
-@@ -1087,36 +1088,24 @@ static int soc_init_dai_link(struct snd_soc_card *card,
- 			return -EPROBE_DEFER;
- 	}
- 
--	/*
--	 * Platform may be specified by either name or OF node,
--	 * or no Platform.
--	 *
--	 * FIXME
--	 *
--	 * We need multi-platform support
--	 */
--	if (link->num_platforms > 0) {
--
--		if (link->num_platforms > 1) {
--			dev_err(card->dev,
--				"ASoC: multi platform is not yet supported %s\n",
--				link->name);
--			return -EINVAL;
--		}
--
--		if (link->platforms->name && link->platforms->of_node) {
-+	for_each_link_platforms(link, i, platform) {
-+		/*
-+		 * Platform may be specified by either name or OF node, but it
-+		 * can be left unspecified, then no components will be inserted
-+		 * in the rtdcom list
-+		 */
-+		if (!!platform->name == !!platform->of_node) {
- 			dev_err(card->dev,
--				"ASoC: Both platform name/of_node are set for %s\n",
-+				"ASoC: Neither/both platform name/of_node are set for %s\n",
- 				link->name);
- 			return -EINVAL;
- 		}
- 
- 		/*
--		 * Defer card registartion if platform dai component is not
--		 * added to component list.
-+		 * Defer card registration if platform component is not added to
-+		 * component list.
- 		 */
--		if ((link->platforms->of_node || link->platforms->name) &&
--		    !soc_find_component(link->platforms))
-+		if (!soc_find_component(platform))
- 			return -EPROBE_DEFER;
- 	}
+ Example:
  
 -- 
 2.20.1
