@@ -1,58 +1,53 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v8 0/5] MTD: Add Initial Hyperbus support
-Date: Fri, 28 Jun 2019 20:05:43 +0530
-Message-ID: <89b4b00a-0564-2b69-4324-d2554f69e9bf@ti.com>
-References: <20190625075746.10439-1-vigneshr@ti.com>
+From: Angus Ainslie <angus@akkea.ca>
+Subject: Re: [PATCH 1/2] arm64: dts: imx8mq: Add MIPI D-PHY
+Date: Fri, 28 Jun 2019 08:43:05 -0600
+Message-ID: <dd48a5d849c8ddffa3c980a22777833f@www.akkea.ca>
+References: <cover.1561451144.git.agx@sigxcpu.org>
+ <613eef8ee6fd427a2fb5eb91865e71f3ee6bded6.1561451144.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625075746.10439-1-vigneshr@ti.com>
-Content-Language: en-US
+In-Reply-To: <613eef8ee6fd427a2fb5eb91865e71f3ee6bded6.1561451144.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Tokunori Ikegami <ikegami.t@gmail.com>
+To: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pavel Machek <pavel@ucw.cz>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 25-Jun-19 1:27 PM, Vignesh Raghavendra wrote:
-[...]
-> Vignesh Raghavendra (5):
->   mtd: cfi_cmdset_0002: Add support for polling status register
->   dt-bindings: mtd: Add binding documentation for HyperFlash
->   mtd: Add support for HyperBus memory devices
->   dt-bindings: mtd: Add bindings for TI's AM654 HyperBus memory
->     controller
->   mtd: hyperbus: Add driver for TI's HyperBus memory controller
+On 2019-06-25 02:27, Guido Günther wrote:
+> Add a node for the Mixel MIPI D-PHY, "disabled" by default.
 > 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
 
+Acked-by: Angus Ainslie (Purism) <angus@akkea.ca>
 
-Fixed comments on patch 3/5 locally and series applied to
-https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
-branch mtd/next.
-
-Regards
-Vignesh
-
->  .../bindings/mtd/cypress,hyperflash.txt       |  13 ++
->  .../devicetree/bindings/mtd/ti,am654-hbmc.txt |  51 ++++++
->  MAINTAINERS                                   |   8 +
->  drivers/mtd/Kconfig                           |   2 +
->  drivers/mtd/Makefile                          |   1 +
->  drivers/mtd/chips/cfi_cmdset_0002.c           | 130 +++++++++++++--
->  drivers/mtd/hyperbus/Kconfig                  |  23 +++
->  drivers/mtd/hyperbus/Makefile                 |   4 +
->  drivers/mtd/hyperbus/hbmc-am654.c             | 141 ++++++++++++++++
->  drivers/mtd/hyperbus/hyperbus-core.c          | 154 ++++++++++++++++++
->  include/linux/mtd/cfi.h                       |   7 +
->  include/linux/mtd/hyperbus.h                  |  86 ++++++++++
->  12 files changed, 603 insertions(+), 17 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
->  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
->  create mode 100644 drivers/mtd/hyperbus/Kconfig
->  create mode 100644 drivers/mtd/hyperbus/Makefile
->  create mode 100644 drivers/mtd/hyperbus/hbmc-am654.c
->  create mode 100644 drivers/mtd/hyperbus/hyperbus-core.c
->  create mode 100644 include/linux/mtd/hyperbus.h
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index d09b808eff87..891ee7578c2d 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -728,6 +728,19 @@
+>  				status = "disabled";
+>  			};
+> 
+> +			dphy: dphy@30a00300 {
+> +				compatible = "fsl,imx8mq-mipi-dphy";
+> +				reg = <0x30a00300 0x100>;
+> +				clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
+> +				clock-names = "phy_ref";
+> +				assigned-clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
+> +				assigned-clock-parents = <&clk IMX8MQ_VIDEO_PLL1_OUT>;
+> +				assigned-clock-rates = <24000000>;
+> +				#phy-cells = <0>;
+> +				power-domains = <&pgc_mipi>;
+> +				status = "disabled";
+> +			};
+> +
+>  			i2c1: i2c@30a20000 {
+>  				compatible = "fsl,imx8mq-i2c", "fsl,imx21-i2c";
+>  				reg = <0x30a20000 0x10000>;
