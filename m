@@ -1,63 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: mtd: sunxi-nand: Drop 'maxItems' from child
- 'reg' property
-Date: Fri, 28 Jun 2019 13:35:25 -0600
-Message-ID: <20190628193525.7785-1-robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: arm: Limit cpus schema to only check Arm
+ 'cpu' nodes
+Date: Fri, 28 Jun 2019 14:32:15 -0600
+Message-ID: <CAL_Jsq+Ej15JfU_Mx0g+Hkpz6+1CnMem507RPgUgW7CB0U8hCA@mail.gmail.com>
+References: <20190627000044.12739-1-robh@kernel.org> <alpine.DEB.2.21.9999.1906261759390.29311@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Vignesh Raghavendra <vigneshr@ti.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.21.9999.1906261759390.29311@viisi.sifive.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Mixing 'maxItems' and scalar properties doesn't make much sense, so drop
-'maxItems' as a single item is implied.
+On Wed, Jun 26, 2019 at 7:02 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+> On Wed, 26 Jun 2019, Rob Herring wrote:
+>
+> > Matching on the 'cpus' node was a bad choice because the schema is
+> > incorrectly applied to non-Arm cpus nodes. As we now have a common cpus
+> > schema which checks the general structure, it is also redundant to do so
+> > in the Arm CPU schema.
+> >
+> > The downside is one could conceivably mix different architecture's cpu
+> > nodes or have typos in the compatible string. The latter problem pretty
+> > much exists for every schema.
+>
+> The RISC-V patch applies cleanly, but this one doesn't apply here on
+> either master or next-20190626.  Is there a different base commit?
 
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-I'll take this in the DT tree if that's okay.
+Ugg, sorry. I had another commit colliding with this in my tree. I've
+fixed it now and it's in my dt/next branch.
 
 Rob
-
- .../devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml        | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml b/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-index fbd4da3684fc..e5a411518be1 100644
---- a/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-+++ b/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
-@@ -57,7 +57,6 @@ patternProperties:
-   "^nand@[a-f0-9]+$":
-     properties:
-       reg:
--        maxItems: 1
-         minimum: 0
-         maximum: 7
- 
--- 
-2.20.1
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
