@@ -1,101 +1,64 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345
- bridge on Teres-I
-Date: Fri, 28 Jun 2019 12:39:32 +0200
-Message-ID: <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
-References: <20190604122150.29D6468B05@newverein.lst.de>
-        <20190604122308.98D4868B20@newverein.lst.de>
-        <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
-        <20190605101317.GA9345@lst.de> <20190605120237.ekmytfxcwbjaqy3x@flea>
-        <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
-        <20190607062802.m5wslx3imiqooq5a@flea>
-        <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
-        <20190607094030.GA12373@lst.de>
-        <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
-        <20190612152022.c3cfhp4cauhzhfyr@flea>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: Re: [PATCH v6 2/3] fdt: add support for rng-seed
+Date: Fri, 28 Jun 2019 19:23:45 +0800
+Message-ID: <CAJMQK-g_9bDHJgKr-qKpQ6HwombB+6Asg_z3r6nv+pC4q4j-Aw@mail.gmail.com>
+References: <20190612043258.166048-1-hsinyi@chromium.org> <20190612043258.166048-3-hsinyi@chromium.org>
+ <20190628093529.GB36437@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190612152022.c3cfhp4cauhzhfyr@flea>
-Content-Language: en-US
+In-Reply-To: <20190628093529.GB36437@lakrids.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Torsten Duwe <duwe@lst.de>, Harald Geyer <harald@ccbib.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-It seems I have missed your response.
-
-On 12.06.2019 17:20, Maxime Ripard wrote:
->> I am not sure if I understand whole discussion here, but I also do not
->> understand whole edp-connector thing.
-> The context is this one:
-> https://patchwork.freedesktop.org/patch/257352/?series=51182&rev=1
-> https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1
-> https://patchwork.freedesktop.org/patch/286468/?series=56776&rev=2
+On Fri, Jun 28, 2019 at 5:35 PM Mark Rutland <mark.rutland@arm.com> wrote:
 >
-> TL;DR: This bridge is being used on ARM laptops that can come with
-> different eDP panels. Some of these panels require a regulator to be
-> enabled for the panel to work, and this is obviously something that
-> should be in the DT.
+> On Wed, Jun 12, 2019 at 12:33:00PM +0800, Hsin-Yi Wang wrote:
+> > Introducing a chosen node, rng-seed, which is an entropy that can be
+> > passed to kernel called very early to increase initial device
+> > randomness. Bootloader should provide this entropy and the value is
+> > read from /chosen/rng-seed in DT.
 >
-> However, we can't really describe the panel itself, since the vendor
-> uses several of them and just relies on the eDP bus to do its job at
-> retrieving the EDIDs. A generic panel isn't really working either
-> since that would mean having a generic behaviour for all the panels
-> connected to that bus, which isn't there either.
+> Could you please elaborate on this?
 >
-> The connector allows to expose this nicely.
+> * What is this initial entropy used by, and why is this important? I
+>   assume that devices which can populate this will have a HW RNG that
+>   the kernel will eventually make use of.
+There are a few discussions here[0]. We basically want to add more
+randomness for stack canary when device just boot and not much device
+randomness was added.
+[0] https://lore.kernel.org/patchwork/patch/1070974/#1268553
 
+On Thu, May 9, 2019 at 1:00 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> This early added entropy is also going to be used for stack canary. At
+> the time it's created there's not be much entropy (before
+> boot_init_stack_canary(), there's only add_latent_entropy() and
+> command_line).
+> On arm64, there is a single canary for all tasks. If RNG is weak or
+> the seed can be read, it might be easier to figure out the canary.
 
-As VESA presentation says[1] eDP is based on DP but is much more
-flexible, it is up to integrator (!!!) how the connection, power
-up/down, initialization sequence should be performed. Trying to cover
-every such case in edp-connector seems to me similar to panel-simple
-attempt failure. Moreover there is no such thing as physical standard
-eDP connector. Till now I though DT connector should describe physical
-connector on the device, now I am lost, are there some DT bindings
-guidelines about definition of a connector?
+With newer compilers[1] there will be a per-task canary on arm64[2],
+which will improve this situation, but many architectures lack a
+per-task canary, unfortunately. I've also recently rearranged the RNG
+initialization[3] which should also help with better entropy mixing.
+But each of these are kind of band-aids against not having sufficient
+initial entropy, which leaves the canary potentially exposed.
 
-Maybe instead of edp-connector one would introduce integrator's specific
-connector, for example with compatible "olimex,teres-edp-connector"
-which should follow edp abstract connector rules? This will be at least
-consistent with below presentation[1] - eDP requirements depends on
-integrator. Then if olimex has standard way of dealing with panels
-present in olimex/teres platforms the driver would then create
-drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
-Anyway it still looks fishy for me :), maybe because I am not
-familiarized with details of these platforms.
+-Kees
 
-[1]: https://www.vesa.org/wp-content/uploads/2010/12/DisplayPort-DevCon-Presentation-eDP-Dec-2010-v3.pdf
-
-
+[1] https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;h=359c1bf35e3109d2f3882980b47a5eae46123259
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0a1213fa7432778b71a1c0166bf56660a3aab030
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/tytso/random.git/commit/?h=dev&id=d55535232c3dbde9a523a9d10d68670f5fe5dec3
 >
->> According to VESA[1] eDP is "Internal display interface" - there is no
->> external connector for eDP, the way it is connected is integrator's
->> decision, but it is fixed - ie end user do not plug/unplug it.
-> I'm not sure if you mean DRM or DT connector here though. In DRM,
-> we're doing this all the time for panels. I'm literaly typing this
-> from a laptop that has a screen with an eDP connector.
-
-
-VESA describes only hardware, but since DT also describes hardware I
-guess it should be similar.
-
-
-Regards
-
-Andrzej
-
-
-
-
+> * How much entropy is necessary or sufficient?
+64 bytes should be enough. But depends on how much bootloader can provide.
 >
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> * Why is the DT the right mechanism for this?
+EFI based systems can inject randomness in early boot. This is aimed
+to support DT based systems to also have this feature.
+
+https://github.com/torvalds/linux/commit/636259880a7e7d3446a707dddebc799da94bdd0b#diff-3ded2fe21b37c6f3e86c2a8418507714
+
+Thanks
