@@ -1,52 +1,40 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCHv6 RESEND] dt-bindings: cadence-quadspi: add options reset property
-Date: Fri, 28 Jun 2019 10:02:45 -0500
-Message-ID: <20190628150245.23785-1-dinguyen@kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Oshri Alkoby <oshrialkoby85@gmail.com>
+Subject: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
+Date: Fri, 28 Jun 2019 18:13:25 +0300
+Message-ID: <20190628151327.206818-1-oshrialkoby85@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dinguyen@kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, Tudor.Ambarus@microchip.com
+To: robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org, oshrialkoby85@gmail.com, oshri.alkoby@nuvoton.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, gcwilson@us.ibm.com, kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com, dan.morav@nuvoton.com, tomer.maimon@nuvoton.com
 List-Id: devicetree@vger.kernel.org
 
-The QSPI module can have an optional reset signals that will hold the
-module in a reset state.
+This patch set adds support for TPM devices that implement the I2C
+interface defined by TCG PTP specification:
+https://trustedcomputinggroup.org/wp-content/uploads/TCG_PC_Client_Platform_TPM_Profile_PTP_2.0_r1.03_v22.pdf
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
-v6: no change
-v5: document reset-names
-v4: no change
-v3: created base on review comments
-v2: did not exist
-v1: did not exist
----
- Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+The driver was tested on Raspberry-Pie 3, using Nuvoton NPCT75X TPM.
 
-diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-index 4345c3a6f530..945be7d5b236 100644
---- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-+++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-@@ -35,6 +35,9 @@ custom properties:
- 		  (qspi_n_ss_out).
- - cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
-                   and first bit transfer.
-+- resets	: Must contain an entry for each entry in reset-names.
-+		  See ../reset/reset.txt for details.
-+- reset-names	: Must include either "qspi" and/or "qspi-ocp".
- 
- Example:
- 
-@@ -50,6 +53,8 @@ Example:
- 		cdns,fifo-depth = <128>;
- 		cdns,fifo-width = <4>;
- 		cdns,trigger-address = <0x00000000>;
-+		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
-+		reset-names = "qspi", "qspi-ocp";
- 
- 		flash0: n25q00@0 {
- 			...
+changes
+-------
+
+v2:
+- Extended device tree binding description
+
+v1:
+- Initial version
+
+Oshri Alkoby (2):
+  dt-bindings: tpm: add the TPM I2C PTP device tree binding
+    documentation
+  char: tpm: add new driver for tpm i2c ptp
+
+ .../bindings/security/tpm/tpm-i2c-ptp.txt     |   24 +
+ drivers/char/tpm/Kconfig                      |   22 +
+ drivers/char/tpm/Makefile                     |    1 +
+ drivers/char/tpm/tpm_i2c_ptp.c                | 1099 +++++++++++++++++
+ 4 files changed, 1146 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-i2c-ptp.txt
+ create mode 100644 drivers/char/tpm/tpm_i2c_ptp.c
+
 -- 
-2.20.0
+2.18.0
