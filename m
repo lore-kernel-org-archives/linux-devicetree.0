@@ -1,14 +1,15 @@
 From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH RFC 1/4] OPP: Add and export helper to update voltage
-Date: Fri, 28 Jun 2019 13:50:45 +0530
-Message-ID: <a4e6bc37-9b45-16a6-f2d1-05df498f18b8@codeaurora.org>
+Subject: Re: [PATCH RFC 3/4] cpufreq: qcom: Update the bandwidth levels on
+ frequency change
+Date: Fri, 28 Jun 2019 13:55:49 +0530
+Message-ID: <aaf49cd8-bc0c-672f-2a20-67382e06461c@codeaurora.org>
 References: <20190627133424.4980-1-sibis@codeaurora.org>
- <20190627133424.4980-2-sibis@codeaurora.org>
+ <20190627133424.4980-4-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627133424.4980-2-sibis@codeaurora.org>
+In-Reply-To: <20190627133424.4980-4-sibis@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sibi Sankar <sibis@codeaurora.org>, viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org
@@ -16,119 +17,135 @@ Cc: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@
 List-Id: devicetree@vger.kernel.org
 
 
-
 On 6/27/2019 7:04 PM, Sibi Sankar wrote:
-> Add and export 'dev_pm_opp_update_voltage' to find and update voltage
-> of an opp for a given frequency. This will be useful to update the opps
-> with voltages read back from firmware.
+> Add support to parse and update optional OPP tables attached to the
+> cpu nodes when the OPP bandwidth values are populated to enable
+> scaling of DDR/L3 bandwidth levels with frequency change.
 > 
 > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->   drivers/opp/core.c     | 52 ++++++++++++++++++++++++++++++++++++++++++
->   include/linux/pm_opp.h | 10 ++++++++
->   2 files changed, 62 insertions(+)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 68551d6366e6b..c85c04dc2c7de 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -2197,6 +2197,58 @@ int dev_pm_opp_disable(struct device *dev, unsigned long freq)
->   }
->   EXPORT_SYMBOL_GPL(dev_pm_opp_disable);
+[]...
+
 >   
-> +/**
-> + * dev_pm_opp_update_voltage() - Find and update voltage
-> + * @dev:	device for which we do this operation
-> + * @freq:	OPP frequency to update voltage
-> + * @u_volt:	voltage requested for this opp
-> + *
-> + * Find and update voltage of a disabled opp corresponding to the given
-> + * frequency. This is useful only for devices with single power supply.
-> + *
-> + * Return: 0 if no modification was done OR modification was
-> + * successful or a negative error value.
-> + */
-> +int dev_pm_opp_update_voltage(struct device *dev, unsigned long freq,
-> +			      unsigned long u_volt)
-> +{
-> +	struct dev_pm_opp *opp = ERR_PTR(-ENODEV);
-> +	struct opp_table *opp_table;
-> +	unsigned long tol;
-> +	int ret = 0;
-> +
-> +	opp = dev_pm_opp_find_freq_exact(dev, freq, false);
-> +	if (IS_ERR(opp))
-> +		return PTR_ERR(opp);
-> +
-> +	/* Find the opp_table */
-> +	opp_table = _find_opp_table(dev);
+> @@ -79,13 +108,29 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+>   {
+>   	u32 data, src, lval, i, core_count, prev_cc = 0, prev_freq = 0, freq;
+>   	u32 volt;
+> +	u64 rate;
+>   	unsigned int max_cores = cpumask_weight(policy->cpus);
+>   	struct cpufreq_frequency_table	*table;
+> +	struct device_node *opp_table_np, *np;
+> +	int ret;
+>   
+>   	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
+>   	if (!table)
+>   		return -ENOMEM;
+>   
+> +	ret = dev_pm_opp_of_add_table(cpu_dev);
+> +	if (!ret) {
+> +		/* Disable all opps and cross-validate against LUT */
+> +		opp_table_np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
+> +		for_each_available_child_of_node(opp_table_np, np) {
+> +			ret = of_property_read_u64(np, "opp-hz", &rate);
+> +			dev_pm_opp_disable(cpu_dev, rate);
+> +		}
+> +		of_node_put(opp_table_np);
+> +	} else {
+> +		dev_err(cpu_dev, "Couldn't add OPP table from dt\n");
 
-maybe you should look for the opp_table first and then the
-opp? otherwise this check seems pretty redundant given the
-above call would have failed if the opp table did not exist.
+The changelog seems to suggest specifying OPP tables in DT is optional,
+but here we seem to error out if the tables are missing.
 
-> +	if (IS_ERR(opp_table)) {
-> +		ret = PTR_ERR(opp_table);
-> +		dev_err(dev, "%s: OPP table not found (%d)\n", __func__, ret);
-> +		goto put_opp;
 > +	}
 > +
-> +	mutex_lock(&opp_table->lock);
-> +
-> +	/* update only if the opp is disabled */
-> +	if (opp->available)
-> +		goto unlock;
-
-should this throw a warning/error to indicate someone tried to
-update this at a wrong time? and perhaps return an error instead of
-success.
-
-> +
-> +	tol = u_volt * opp_table->voltage_tolerance_v1 / 100;
-> +	opp->supplies[0].u_volt_min = u_volt - tol;
-> +	opp->supplies[0].u_volt = u_volt;
-> +	opp->supplies[0].u_volt_min = u_volt + tol;
-> +
-> +unlock:
-> +	mutex_unlock(&opp_table->lock);
-> +	dev_pm_opp_put_opp_table(opp_table);
-> +put_opp:
-> +	dev_pm_opp_put(opp);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_opp_update_voltage);
-> +
->   /**
->    * dev_pm_opp_register_notifier() - Register OPP notifier for the device
->    * @dev:	Device for which notifier needs to be registered
-> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-> index 87fa09d93d8c2..a17c462974851 100644
-> --- a/include/linux/pm_opp.h
-> +++ b/include/linux/pm_opp.h
-> @@ -130,6 +130,9 @@ int dev_pm_opp_enable(struct device *dev, unsigned long freq);
+>   	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+>   		data = readl_relaxed(base + REG_FREQ_LUT +
+>   				      i * LUT_ROW_SIZE);
+> @@ -104,7 +149,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
 >   
->   int dev_pm_opp_disable(struct device *dev, unsigned long freq);
+>   		if (freq != prev_freq && core_count == max_cores) {
+>   			table[i].frequency = freq;
+> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
+> +			qcom_cpufreq_update_opp(cpu_dev, freq, volt);
+>   			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
+>   				freq, core_count);
+>   		} else {
+> @@ -125,7 +170,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+>   			if (prev_cc != max_cores) {
+>   				prev->frequency = prev_freq;
+>   				prev->flags = CPUFREQ_BOOST_FREQ;
+> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
+> +				qcom_cpufreq_update_opp(cpu_dev, prev_freq,
+> +							volt);
+>   			}
 >   
-> +int dev_pm_opp_update_voltage(struct device *dev, unsigned long freq,
-> +			      unsigned long u_volt);
-> +
->   int dev_pm_opp_register_notifier(struct device *dev, struct notifier_block *nb);
->   int dev_pm_opp_unregister_notifier(struct device *dev, struct notifier_block *nb);
->   
-> @@ -261,6 +264,13 @@ static inline int dev_pm_opp_disable(struct device *dev, unsigned long freq)
->   	return 0;
->   }
->   
-> +static inline int dev_pm_opp_update_voltage(struct device *dev,
-> +					    unsigned long freq,
-> +					    unsigned long u_volt)
-> +{
-> +	return 0;
-> +}
-> +
->   static inline int dev_pm_opp_register_notifier(struct device *dev, struct notifier_block *nb)
+>   			break;
+> @@ -168,6 +214,7 @@ static void qcom_get_related_cpus(int index, struct cpumask *m)
+>   static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
 >   {
->   	return -ENOTSUPP;
+>   	struct device *dev = &global_pdev->dev;
+> +	struct opp_table *opp_table = NULL;
+>   	struct of_phandle_args args;
+>   	struct device_node *cpu_np;
+>   	struct device *cpu_dev;
+> @@ -202,6 +249,8 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+>   	if (!base)
+>   		return -ENOMEM;
+>   
+> +	opp_table = dev_pm_opp_set_paths(cpu_dev);
+> +
+>   	/* HW should be in enabled state to proceed */
+>   	if (!(readl_relaxed(base + REG_ENABLE) & 0x1)) {
+>   		dev_err(dev, "Domain-%d cpufreq hardware not enabled\n", index);
+> @@ -237,6 +286,8 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+>   
+>   	return 0;
+>   error:
+> +	if (opp_table)
+> +		dev_pm_opp_put_paths(opp_table);
+>   	devm_iounmap(dev, base);
+>   	return ret;
+>   }
+> @@ -275,6 +326,8 @@ static struct cpufreq_driver cpufreq_qcom_hw_driver = {
+>   
+>   static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
+>   {
+> +	struct opp_table *opp_table = NULL;
+> +	struct device *cpu_dev;
+>   	struct clk *clk;
+>   	int ret;
+>   
+> @@ -294,6 +347,26 @@ static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
+>   
+>   	global_pdev = pdev;
+>   
+> +	/* Check for optional interconnect paths on CPU0 */
+> +	cpu_dev = get_cpu_device(0);
+> +	if (!cpu_dev) {
+> +		dev_err(&pdev->dev, "failed to get cpu0 device\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	opp_table = dev_pm_opp_set_paths(cpu_dev);
+> +	if (IS_ERR(opp_table)) {
+> +		ret = PTR_ERR(opp_table);
+> +		if (ret == -EPROBE_DEFER) {
+> +			dev_dbg(&pdev->dev, "defer icc set paths: %d\n", ret);
+> +			return ret;
+> +		}
+> +		dev_err(&pdev->dev, "set paths failed ddr/l3 scaling off: %d\n",
+> +			ret);
+
+Here again, the interconnect paths don't seem to be optional as the comment
+above suggests.
+
+> +	} else {
+> +		dev_pm_opp_put_paths(opp_table);
+> +	}
+> +
+>   	ret = cpufreq_register_driver(&cpufreq_qcom_hw_driver);
+>   	if (ret)
+>   		dev_err(&pdev->dev, "CPUFreq HW driver failed to register\n");
 > 
 
 -- 
