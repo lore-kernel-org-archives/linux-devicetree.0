@@ -1,473 +1,136 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 2/3] iio: adc: stm32-adc: add analog switches supply
- control
-Date: Fri, 28 Jun 2019 10:17:36 +0200
-Message-ID: <d541c501-2995-95e3-4ed1-d919287aa2f2@st.com>
-References: <1560324276-681-1-git-send-email-fabrice.gasnier@st.com>
- <1560324276-681-3-git-send-email-fabrice.gasnier@st.com>
- <20190616160732.124a1eb9@archlinux>
- <f1d4b47a-5910-53fe-5d63-d51da429dacd@st.com>
- <5ea9f65d-2feb-1ec5-1ca1-0cfd2964f160@st.com>
- <20190622120510.2215e8cc@archlinux>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH RFC 1/4] OPP: Add and export helper to update voltage
+Date: Fri, 28 Jun 2019 13:50:45 +0530
+Message-ID: <a4e6bc37-9b45-16a6-f2d1-05df498f18b8@codeaurora.org>
+References: <20190627133424.4980-1-sibis@codeaurora.org>
+ <20190627133424.4980-2-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190622120510.2215e8cc@archlinux>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190627133424.4980-2-sibis@codeaurora.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>, viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org
+Cc: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, saravanak@google.com
 List-Id: devicetree@vger.kernel.org
 
-On 6/22/19 1:05 PM, Jonathan Cameron wrote:
-> On Wed, 19 Jun 2019 14:38:42 +0200
-> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+
+
+On 6/27/2019 7:04 PM, Sibi Sankar wrote:
+> Add and export 'dev_pm_opp_update_voltage' to find and update voltage
+> of an opp for a given frequency. This will be useful to update the opps
+> with voltages read back from firmware.
 > 
->> On 6/17/19 2:43 PM, Fabrice Gasnier wrote:
->>> On 6/16/19 5:07 PM, Jonathan Cameron wrote:  
->>>> On Wed, 12 Jun 2019 09:24:35 +0200
->>>> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
->>>>  
->>>>> On stm32h7 and stm32mp1, the ADC inputs are multiplexed with analog
->>>>> switches which have reduced performances when their supply is below 2.7V
->>>>> (vdda by default):
->>>>> - vdd supply can be selected if above 2.7V by setting ANASWVDD syscfg bit
->>>>>   (STM32MP1 only).
->>>>> - Voltage booster can be used, to get full ADC performances by setting
->>>>>   BOOSTE/EN_BOOSTER syscfg bit (increases power consumption).
->>>>>
->>>>> Make this optional, since this is a trade-off between analog performance
->>>>> and power consumption.
->>>>>
->>>>> Note: STM32H7 syscfg has a set and clear register for "BOOSTE" control.
->>>>> STM32MP1 has separate set and clear registers pair to control EN_BOOSTER
->>>>> and ANASWVDD bits.
->>>>>
->>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>  
->>>>
->>>> A few minor bits inline, but mostly seems fine to me.
->>>>
->>>> Jonathan
->>>>  
->>>>> ---
->>>>>  drivers/iio/adc/stm32-adc-core.c | 232 ++++++++++++++++++++++++++++++++++++++-
->>>>>  1 file changed, 230 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
->>>>> index 2327ec1..9d41b16 100644
->>>>> --- a/drivers/iio/adc/stm32-adc-core.c
->>>>> +++ b/drivers/iio/adc/stm32-adc-core.c
->>>>> @@ -14,9 +14,11 @@
->>>>>  #include <linux/irqchip/chained_irq.h>
->>>>>  #include <linux/irqdesc.h>
->>>>>  #include <linux/irqdomain.h>
->>>>> +#include <linux/mfd/syscon.h>
->>>>>  #include <linux/module.h>
->>>>>  #include <linux/of_device.h>
->>>>>  #include <linux/pm_runtime.h>
->>>>> +#include <linux/regmap.h>
->>>>>  #include <linux/regulator/consumer.h>
->>>>>  #include <linux/slab.h>
->>>>>  
->>>>> @@ -51,6 +53,20 @@
->>>>>  
->>>>>  #define STM32_ADC_CORE_SLEEP_DELAY_MS	2000
->>>>>  
->>>>> +/* SYSCFG registers */
->>>>> +#define STM32H7_SYSCFG_PMCR		0x04
->>>>> +#define STM32MP1_SYSCFG_PMCSETR		0x04
->>>>> +#define STM32MP1_SYSCFG_PMCCLRR		0x44
->>>>> +
->>>>> +/* SYSCFG bit fields */
->>>>> +#define STM32H7_SYSCFG_BOOSTE_MASK	BIT(8)
->>>>> +#define STM32MP1_SYSCFG_ANASWVDD_MASK	BIT(9)
->>>>> +
->>>>> +/* SYSCFG capability flags */
->>>>> +#define HAS_VBOOSTER		BIT(0)
->>>>> +#define HAS_ANASWVDD		BIT(1)
->>>>> +#define HAS_CLEAR_REG		BIT(2)
->>>>> +
->>>>>  /**
->>>>>   * stm32_adc_common_regs - stm32 common registers, compatible dependent data
->>>>>   * @csr:	common status register offset
->>>>> @@ -58,6 +74,11 @@
->>>>>   * @eoc1:	adc1 end of conversion flag in @csr
->>>>>   * @eoc2:	adc2 end of conversion flag in @csr
->>>>>   * @eoc3:	adc3 end of conversion flag in @csr
->>>>> + * @has_syscfg: SYSCFG capability flags
->>>>> + * @pmcr:	SYSCFG_PMCSETR/SYSCFG_PMCR register offset
->>>>> + * @pmcc:	SYSCFG_PMCCLRR clear register offset
->>>>> + * @booste_msk:	SYSCFG BOOSTE / EN_BOOSTER bitmask in PMCR & PMCCLRR
->>>>> + * @anaswvdd_msk: SYSCFG ANASWVDD bitmask in PMCR & PMCCLRR
->>>>>   */
->>>>>  struct stm32_adc_common_regs {
->>>>>  	u32 csr;
->>>>> @@ -65,6 +86,11 @@ struct stm32_adc_common_regs {
->>>>>  	u32 eoc1_msk;
->>>>>  	u32 eoc2_msk;
->>>>>  	u32 eoc3_msk;
->>>>> +	unsigned int has_syscfg;
->>>>> +	u32 pmcr;
->>>>> +	u32 pmcc;
->>>>> +	u32 booste_msk;
->>>>> +	u32 anaswvdd_msk;
->>>>>  };
->>>>>  
->>>>>  struct stm32_adc_priv;
->>>>> @@ -87,20 +113,26 @@ struct stm32_adc_priv_cfg {
->>>>>   * @domain:		irq domain reference
->>>>>   * @aclk:		clock reference for the analog circuitry
->>>>>   * @bclk:		bus clock common for all ADCs, depends on part used
->>>>> + * @vdd:		vdd supply reference
->>>>> + * @vdda:		vdda supply reference
->>>>>   * @vref:		regulator reference
->>>>>   * @cfg:		compatible configuration data
->>>>>   * @common:		common data for all ADC instances
->>>>>   * @ccr_bak:		backup CCR in low power mode
->>>>> + * @syscfg:		reference to syscon, system control registers
->>>>>   */
->>>>>  struct stm32_adc_priv {
->>>>>  	int				irq[STM32_ADC_MAX_ADCS];
->>>>>  	struct irq_domain		*domain;
->>>>>  	struct clk			*aclk;
->>>>>  	struct clk			*bclk;
->>>>> +	struct regulator		*vdd;
->>>>> +	struct regulator		*vdda;
->>>>>  	struct regulator		*vref;
->>>>>  	const struct stm32_adc_priv_cfg	*cfg;
->>>>>  	struct stm32_adc_common		common;
->>>>>  	u32				ccr_bak;
->>>>> +	struct regmap			*syscfg;
->>>>>  };
->>>>>  
->>>>>  static struct stm32_adc_priv *to_stm32_adc_priv(struct stm32_adc_common *com)
->>>>> @@ -284,6 +316,22 @@ static const struct stm32_adc_common_regs stm32h7_adc_common_regs = {
->>>>>  	.ccr = STM32H7_ADC_CCR,
->>>>>  	.eoc1_msk = STM32H7_EOC_MST,
->>>>>  	.eoc2_msk = STM32H7_EOC_SLV,
->>>>> +	.has_syscfg = HAS_VBOOSTER,
->>>>> +	.pmcr = STM32H7_SYSCFG_PMCR,
->>>>> +	.booste_msk = STM32H7_SYSCFG_BOOSTE_MASK,
->>>>> +};
->>>>> +
->>>>> +/* STM32MP1 common registers definitions */
->>>>> +static const struct stm32_adc_common_regs stm32mp1_adc_common_regs = {
->>>>> +	.csr = STM32H7_ADC_CSR,
->>>>> +	.ccr = STM32H7_ADC_CCR,
->>>>> +	.eoc1_msk = STM32H7_EOC_MST,
->>>>> +	.eoc2_msk = STM32H7_EOC_SLV,
->>>>> +	.has_syscfg =  HAS_VBOOSTER | HAS_ANASWVDD | HAS_CLEAR_REG,  
->>>>
->>>> Extra space after =  
->>>
->>> Hi Jonathan,
->>>
->>> Oops, I'll fix it in v2.
->>>   
->>>>
->>>>  
->>>>> +	.pmcr = STM32MP1_SYSCFG_PMCSETR,
->>>>> +	.pmcc = STM32MP1_SYSCFG_PMCCLRR,
->>>>> +	.booste_msk = STM32H7_SYSCFG_BOOSTE_MASK,
->>>>> +	.anaswvdd_msk = STM32MP1_SYSCFG_ANASWVDD_MASK,
->>>>>  };
->>>>>  
->>>>>  /* ADC common interrupt for all instances */
->>>>> @@ -388,16 +436,145 @@ static void stm32_adc_irq_remove(struct platform_device *pdev,
->>>>>  	}
->>>>>  }
->>>>>  
->>>>> +static int stm32_adc_core_switches_supply_en(struct device *dev)
->>>>> +{
->>>>> +	struct stm32_adc_common *common = dev_get_drvdata(dev);
->>>>> +	struct stm32_adc_priv *priv = to_stm32_adc_priv(common);
->>>>> +	const struct stm32_adc_common_regs *regs = priv->cfg->regs;
->>>>> +	int ret, vdda, vdd = 0;
->>>>> +	u32 mask, clrmask, setmask = 0;
->>>>> +
->>>>> +	/*
->>>>> +	 * On STM32H7 and STM32MP1, the ADC inputs are multiplexed with analog
->>>>> +	 * switches (via PCSEL) which have reduced performances when their
->>>>> +	 * supply is below 2.7V (vdda by default):
->>>>> +	 * - Voltage booster can be used, to get full ADC performances
->>>>> +	 *   (increases power consumption).
->>>>> +	 * - Vdd can be used to supply them, if above 2.7V (STM32MP1 only).
->>>>> +	 *
->>>>> +	 * This is optional, as this is a trade-off between analog performance
->>>>> +	 * and power consumption.
->>>>> +	 */
->>>>> +	if (!regs->has_syscfg || !priv->vdda || !priv->syscfg) {
->>>>> +		dev_dbg(dev, "Not configuring analog switches\n");
->>>>> +		return 0;
->>>>> +	}
->>>>> +
->>>>> +	ret = regulator_enable(priv->vdda);
->>>>> +	if (ret < 0) {
->>>>> +		dev_err(dev, "vdda enable failed %d\n", ret);
->>>>> +		return ret;
->>>>> +	}
->>>>> +
->>>>> +	ret = regulator_get_voltage(priv->vdda);
->>>>> +	if (ret < 0) {
->>>>> +		dev_err(dev, "vdda get voltage failed %d\n", ret);
->>>>> +		goto vdda_dis;
->>>>> +	}
->>>>> +	vdda = ret;
->>>>> +  
->>>> We only need to do the following block if vdaa is too low.  Should probably
->>>> not turn on vdd if there is not chance we are going to use it?  
->>>
->>> You're right, then I probably need to move the regulator_get_voltage()
->>> call at probe time, to avoid enabling it for nothing at runtime. (e.g.
->>> to figure out it's not going to be used).
->>> In fact, vdd is used also for other things on the platform (I/Os, other
->>> supplies...), and is marked "always-on" in the device tree. But I
->>> understand your point.
->>>
->>> I'll rework this and send a v2.  
->>
->> Hi Jonathan,
->>
->> When reworking this part, I figured out the vdda should be described as
->> required supply for the STM32 ADC. So I pushed out a fix series to
->> address this "Add missing vdda-supply to STM32 ADC". I'll resume v2 of
->> this series that has some dependencies on the fix series .
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>   drivers/opp/core.c     | 52 ++++++++++++++++++++++++++++++++++++++++++
+>   include/linux/pm_opp.h | 10 ++++++++
+>   2 files changed, 62 insertions(+)
 > 
-> Cool. Given timing  I'm taking fixes and new stuff through the togreg
-> branch anyway at the moment so dependencies on fixes are easier than
-> normal for the next week or so ;)
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 68551d6366e6b..c85c04dc2c7de 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -2197,6 +2197,58 @@ int dev_pm_opp_disable(struct device *dev, unsigned long freq)
+>   }
+>   EXPORT_SYMBOL_GPL(dev_pm_opp_disable);
+>   
+> +/**
+> + * dev_pm_opp_update_voltage() - Find and update voltage
+> + * @dev:	device for which we do this operation
+> + * @freq:	OPP frequency to update voltage
+> + * @u_volt:	voltage requested for this opp
+> + *
+> + * Find and update voltage of a disabled opp corresponding to the given
+> + * frequency. This is useful only for devices with single power supply.
+> + *
+> + * Return: 0 if no modification was done OR modification was
+> + * successful or a negative error value.
+> + */
+> +int dev_pm_opp_update_voltage(struct device *dev, unsigned long freq,
+> +			      unsigned long u_volt)
+> +{
+> +	struct dev_pm_opp *opp = ERR_PTR(-ENODEV);
+> +	struct opp_table *opp_table;
+> +	unsigned long tol;
+> +	int ret = 0;
+> +
+> +	opp = dev_pm_opp_find_freq_exact(dev, freq, false);
+> +	if (IS_ERR(opp))
+> +		return PTR_ERR(opp);
+> +
+> +	/* Find the opp_table */
+> +	opp_table = _find_opp_table(dev);
 
-Hi Jonathan
+maybe you should look for the opp_table first and then the
+opp? otherwise this check seems pretty redundant given the
+above call would have failed if the opp table did not exist.
 
-I did some additional changes at my end. Just for reference, you can see
-"regulator: add support for the STM32 ADC booster" series here:
-https://lkml.org/lkml/2019/6/28/188
+> +	if (IS_ERR(opp_table)) {
+> +		ret = PTR_ERR(opp_table);
+> +		dev_err(dev, "%s: OPP table not found (%d)\n", __func__, ret);
+> +		goto put_opp;
+> +	}
+> +
+> +	mutex_lock(&opp_table->lock);
+> +
+> +	/* update only if the opp is disabled */
+> +	if (opp->available)
+> +		goto unlock;
 
-I think the proper way to handle the booster is to have it fully
-described as a regulator (that's one). This will also simplify handling
-it here.
+should this throw a warning/error to indicate someone tried to
+update this at a wrong time? and perhaps return an error instead of
+success.
 
-I'll resume this series once the regulator series has been discussed.
-
-Many thanks,
-Best regards,
-Fabrice
-
+> +
+> +	tol = u_volt * opp_table->voltage_tolerance_v1 / 100;
+> +	opp->supplies[0].u_volt_min = u_volt - tol;
+> +	opp->supplies[0].u_volt = u_volt;
+> +	opp->supplies[0].u_volt_min = u_volt + tol;
+> +
+> +unlock:
+> +	mutex_unlock(&opp_table->lock);
+> +	dev_pm_opp_put_opp_table(opp_table);
+> +put_opp:
+> +	dev_pm_opp_put(opp);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_opp_update_voltage);
+> +
+>   /**
+>    * dev_pm_opp_register_notifier() - Register OPP notifier for the device
+>    * @dev:	Device for which notifier needs to be registered
+> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+> index 87fa09d93d8c2..a17c462974851 100644
+> --- a/include/linux/pm_opp.h
+> +++ b/include/linux/pm_opp.h
+> @@ -130,6 +130,9 @@ int dev_pm_opp_enable(struct device *dev, unsigned long freq);
+>   
+>   int dev_pm_opp_disable(struct device *dev, unsigned long freq);
+>   
+> +int dev_pm_opp_update_voltage(struct device *dev, unsigned long freq,
+> +			      unsigned long u_volt);
+> +
+>   int dev_pm_opp_register_notifier(struct device *dev, struct notifier_block *nb);
+>   int dev_pm_opp_unregister_notifier(struct device *dev, struct notifier_block *nb);
+>   
+> @@ -261,6 +264,13 @@ static inline int dev_pm_opp_disable(struct device *dev, unsigned long freq)
+>   	return 0;
+>   }
+>   
+> +static inline int dev_pm_opp_update_voltage(struct device *dev,
+> +					    unsigned long freq,
+> +					    unsigned long u_volt)
+> +{
+> +	return 0;
+> +}
+> +
+>   static inline int dev_pm_opp_register_notifier(struct device *dev, struct notifier_block *nb)
+>   {
+>   	return -ENOTSUPP;
 > 
-> Jonathan
-> 
->>
->> Thanks
->> Best Regards,
->> Fabrice
->>
->>>
->>> Thanks,
->>> Fabrice
->>>   
->>>>  
->>>>> +	if (priv->vdd && regs->has_syscfg & HAS_ANASWVDD) {
->>>>> +		ret = regulator_enable(priv->vdd);
->>>>> +		if (ret < 0) {
->>>>> +			dev_err(dev, "vdd enable failed %d\n", ret);
->>>>> +			goto vdda_dis;
->>>>> +		}
->>>>> +
->>>>> +		ret = regulator_get_voltage(priv->vdd);
->>>>> +		if (ret < 0) {
->>>>> +			dev_err(dev, "vdd get voltage failed %d\n", ret);
->>>>> +			goto vdd_dis;
->>>>> +		}
->>>>> +		vdd = ret;
->>>>> +	}
->>>>> +
->>>>> +	/*
->>>>> +	 * Recommended settings for ANASWVDD and EN_BOOSTER:
->>>>> +	 * - vdda < 2.7V but vdd > 2.7V: ANASWVDD = 1, EN_BOOSTER = 0 (stm32mp1)
->>>>> +	 * - vdda < 2.7V and vdd < 2.7V: ANASWVDD = 0, EN_BOOSTER = 1
->>>>> +	 * - vdda >= 2.7V:               ANASWVDD = 0, EN_BOOSTER = 0 (default)
->>>>> +	 */
->>>>> +	if (vdda < 2700000) {
->>>>> +		if (vdd > 2700000) {
->>>>> +			dev_dbg(dev, "analog switches supplied by vdd\n");
->>>>> +			setmask = regs->anaswvdd_msk;
->>>>> +			clrmask = regs->booste_msk;
->>>>> +		} else {
->>>>> +			dev_dbg(dev, "Enabling voltage booster\n");
->>>>> +			setmask = regs->booste_msk;
->>>>> +			clrmask = regs->anaswvdd_msk;
->>>>> +		}
->>>>> +	} else {
->>>>> +		dev_dbg(dev, "analog switches supplied by vdda\n");
->>>>> +		clrmask = regs->booste_msk | regs->anaswvdd_msk;
->>>>> +	}
->>>>> +
->>>>> +	mask = regs->booste_msk | regs->anaswvdd_msk;
->>>>> +	if (regs->has_syscfg & HAS_CLEAR_REG) {
->>>>> +		ret = regmap_write(priv->syscfg, regs->pmcc, clrmask);
->>>>> +		if (ret) {
->>>>> +			dev_err(dev, "syscfg clear failed, %d\n", ret);
->>>>> +			goto vdd_dis;
->>>>> +		}
->>>>> +		mask = setmask;
->>>>> +	}
->>>>> +
->>>>> +	ret = regmap_update_bits(priv->syscfg, regs->pmcr, mask, setmask);
->>>>> +	if (ret) {
->>>>> +		dev_err(dev, "syscfg update failed, %d\n", ret);
->>>>> +		goto vdd_dis;
->>>>> +	}
->>>>> +
->>>>> +	/* Booster voltage can take up to 50 us to stabilize */
->>>>> +	if (setmask & regs->booste_msk)
->>>>> +		usleep_range(50, 100);
->>>>> +
->>>>> +	return ret;
->>>>> +
->>>>> +vdd_dis:
->>>>> +	if (priv->vdd && (regs->has_syscfg & HAS_ANASWVDD))
->>>>> +		regulator_disable(priv->vdd);
->>>>> +vdda_dis:
->>>>> +	regulator_disable(priv->vdda);
->>>>> +
->>>>> +	return ret;
->>>>> +}
->>>>> +
->>>>> +static void stm32_adc_core_switches_supply_dis(struct device *dev)
->>>>> +{
->>>>> +	struct stm32_adc_common *common = dev_get_drvdata(dev);
->>>>> +	struct stm32_adc_priv *priv = to_stm32_adc_priv(common);
->>>>> +	const struct stm32_adc_common_regs *regs = priv->cfg->regs;
->>>>> +	u32 mask = regs->booste_msk | regs->anaswvdd_msk;
->>>>> +
->>>>> +	if (!regs->has_syscfg || !priv->vdda || !priv->syscfg)
->>>>> +		return;
->>>>> +
->>>>> +	if (regs->has_syscfg & HAS_CLEAR_REG)
->>>>> +		regmap_write(priv->syscfg, regs->pmcc, mask);
->>>>> +	else
->>>>> +		regmap_update_bits(priv->syscfg, regs->pmcr, mask, 0);
->>>>> +
->>>>> +	if (priv->vdd && (regs->has_syscfg & HAS_ANASWVDD))
->>>>> +		regulator_disable(priv->vdd);
->>>>> +
->>>>> +	regulator_disable(priv->vdda);
->>>>> +}
->>>>> +
->>>>>  static int stm32_adc_core_hw_start(struct device *dev)
->>>>>  {
->>>>>  	struct stm32_adc_common *common = dev_get_drvdata(dev);
->>>>>  	struct stm32_adc_priv *priv = to_stm32_adc_priv(common);
->>>>>  	int ret;
->>>>>  
->>>>> +	ret = stm32_adc_core_switches_supply_en(dev);
->>>>> +	if (ret < 0)
->>>>> +		return ret;
->>>>> +
->>>>>  	ret = regulator_enable(priv->vref);
->>>>>  	if (ret < 0) {
->>>>>  		dev_err(dev, "vref enable failed\n");
->>>>> -		return ret;
->>>>> +		goto err_switches_disable;
->>>>>  	}
->>>>>  
->>>>>  	if (priv->bclk) {
->>>>> @@ -425,6 +602,8 @@ static int stm32_adc_core_hw_start(struct device *dev)
->>>>>  		clk_disable_unprepare(priv->bclk);
->>>>>  err_regulator_disable:
->>>>>  	regulator_disable(priv->vref);
->>>>> +err_switches_disable:
->>>>> +	stm32_adc_core_switches_supply_dis(dev);
->>>>>  
->>>>>  	return ret;
->>>>>  }
->>>>> @@ -441,6 +620,24 @@ static void stm32_adc_core_hw_stop(struct device *dev)
->>>>>  	if (priv->bclk)
->>>>>  		clk_disable_unprepare(priv->bclk);
->>>>>  	regulator_disable(priv->vref);
->>>>> +	stm32_adc_core_switches_supply_dis(dev);
->>>>> +}
->>>>> +
->>>>> +static int stm32_adc_core_syscfg_probe(struct device_node *np,
->>>>> +				       struct stm32_adc_priv *priv)
->>>>> +{
->>>>> +	if (!priv->cfg->regs->has_syscfg)
->>>>> +		return 0;
->>>>> +
->>>>> +	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
->>>>> +	if (IS_ERR(priv->syscfg)) {
->>>>> +		/* Optional */
->>>>> +		if (PTR_ERR(priv->syscfg) != -ENODEV)
->>>>> +			return PTR_ERR(priv->syscfg);
->>>>> +		priv->syscfg = NULL;
->>>>> +	}
->>>>> +
->>>>> +	return 0;
->>>>>  }
->>>>>  
->>>>>  static int stm32_adc_probe(struct platform_device *pdev)
->>>>> @@ -475,6 +672,30 @@ static int stm32_adc_probe(struct platform_device *pdev)
->>>>>  		return ret;
->>>>>  	}
->>>>>  
->>>>> +	priv->vdda = devm_regulator_get_optional(&pdev->dev, "vdda");
->>>>> +	if (IS_ERR(priv->vdda)) {
->>>>> +		ret = PTR_ERR(priv->vdda);
->>>>> +		if (ret != -ENODEV) {
->>>>> +			if (ret != -EPROBE_DEFER)
->>>>> +				dev_err(&pdev->dev, "vdda get failed, %d\n",
->>>>> +					ret);
->>>>> +			return ret;
->>>>> +		}
->>>>> +		priv->vdda = NULL;
->>>>> +	}
->>>>> +
->>>>> +	priv->vdd = devm_regulator_get_optional(&pdev->dev, "vdd");
->>>>> +	if (IS_ERR(priv->vdd)) {
->>>>> +		ret = PTR_ERR(priv->vdd);
->>>>> +		if (ret != -ENODEV) {
->>>>> +			if (ret != -EPROBE_DEFER)
->>>>> +				dev_err(&pdev->dev, "vdd get failed, %d\n",
->>>>> +					ret);
->>>>> +			return ret;
->>>>> +		}
->>>>> +		priv->vdd = NULL;
->>>>> +	}
->>>>> +
->>>>>  	priv->aclk = devm_clk_get(&pdev->dev, "adc");
->>>>>  	if (IS_ERR(priv->aclk)) {
->>>>>  		ret = PTR_ERR(priv->aclk);
->>>>> @@ -495,6 +716,13 @@ static int stm32_adc_probe(struct platform_device *pdev)
->>>>>  		priv->bclk = NULL;
->>>>>  	}
->>>>>  
->>>>> +	ret = stm32_adc_core_syscfg_probe(np, priv);
->>>>> +	if (ret) {
->>>>> +		if (ret != -EPROBE_DEFER)
->>>>> +			dev_err(&pdev->dev, "Can't probe syscfg: %d\n", ret);
->>>>> +		return ret;
->>>>> +	}
->>>>> +
->>>>>  	pm_runtime_get_noresume(dev);
->>>>>  	pm_runtime_set_active(dev);
->>>>>  	pm_runtime_set_autosuspend_delay(dev, STM32_ADC_CORE_SLEEP_DELAY_MS);
->>>>> @@ -595,7 +823,7 @@ static const struct stm32_adc_priv_cfg stm32h7_adc_priv_cfg = {
->>>>>  };
->>>>>  
->>>>>  static const struct stm32_adc_priv_cfg stm32mp1_adc_priv_cfg = {
->>>>> -	.regs = &stm32h7_adc_common_regs,
->>>>> +	.regs = &stm32mp1_adc_common_regs,
->>>>>  	.clk_sel = stm32h7_adc_clk_sel,
->>>>>  	.max_clk_rate_hz = 40000000,
->>>>>  };  
->>>>  
-> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
