@@ -1,70 +1,113 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 0/3] Add HwSpinlock support for TI K3 SoCs
-Date: Sat, 29 Jun 2019 11:57:42 -0700
-Message-ID: <20190629185742.GC23094@builder>
-References: <20190531021321.14025-1-s-anna@ti.com>
- <90211f72-7ce4-94e5-aef7-bbe14266dfbb@ti.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V5 08/18] clk: tegra: Add suspend resume support for DFLL
+Date: Sun, 30 Jun 2019 00:45:39 +0300
+Message-ID: <e641e95e-57e5-4654-c951-a3b63d3b37c4@gmail.com>
+References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+ <1561687972-19319-9-git-send-email-skomatineni@nvidia.com>
+ <594adc1e-4345-33ae-c79f-ad6f00964587@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <90211f72-7ce4-94e5-aef7-bbe14266dfbb@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-remoteproc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <594adc1e-4345-33ae-c79f-ad6f00964587@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 24 Jun 13:38 PDT 2019, Suman Anna wrote:
-
-> Hi Bjorn,
+29.06.2019 16:28, Dmitry Osipenko пишет:
+> 28.06.2019 5:12, Sowjanya Komatineni пишет:
+>> This patch creates APIs for supporting Tegra210 clock driver to
+>> perform DFLL suspend and resume operation.
+>>
+>> During suspend, DFLL mode is saved and on resume Tegra210 clock driver
+>> invokes DFLL resume API to re-initialize DFLL to enable target device
+>> clock in open loop mode or closed loop mode.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>  drivers/clk/tegra/clk-dfll.c | 78 ++++++++++++++++++++++++++++++++++++++++++++
+>>  drivers/clk/tegra/clk-dfll.h |  2 ++
+>>  2 files changed, 80 insertions(+)
+>>
+>> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
+>> index f8688c2ddf1a..a1f37cf99b00 100644
+>> --- a/drivers/clk/tegra/clk-dfll.c
+>> +++ b/drivers/clk/tegra/clk-dfll.c
+>> @@ -277,6 +277,7 @@ struct tegra_dfll {
+>>  	unsigned long			dvco_rate_min;
+>>  
+>>  	enum dfll_ctrl_mode		mode;
+>> +	enum dfll_ctrl_mode		resume_mode;
+>>  	enum dfll_tune_range		tune_range;
+>>  	struct dentry			*debugfs_dir;
+>>  	struct clk_hw			dfll_clk_hw;
+>> @@ -1864,6 +1865,83 @@ static int dfll_fetch_common_params(struct tegra_dfll *td)
+>>  }
+>>  
+>>  /*
+>> + * tegra_dfll_suspend
+>> + * @pdev: DFLL instance
+>> + *
+>> + * dfll controls clock/voltage to other devices, including CPU. Therefore,
+>> + * dfll driver pm suspend callback does not stop cl-dvfs operations.
+>> + */
+>> +void tegra_dfll_suspend(struct platform_device *pdev)
+>> +{
+>> +	struct tegra_dfll *td = dev_get_drvdata(&pdev->dev);
+>> +
+>> +	if (!td)
+>> +		return;
+>> +
+>> +	if (td->mode <= DFLL_DISABLED)
+>> +		return;
+>> +
+>> +	td->resume_mode = td->mode;
+>> +	switch (td->mode) {
+>> +	case DFLL_CLOSED_LOOP:
+>> +		dfll_set_mode(td, DFLL_CLOSED_LOOP);
+>> +		dfll_set_frequency_request(td, &td->last_req);
+>> +
+>> +		dfll_unlock(td);
+>> +		break;
+>> +	default:
+>> +		break;
+>> +	}
+>> +}
+>> +
+>> +/**
+>> + * tegra_dfll_resume - reprogram the DFLL after context-loss
+>> + * @pdev: DFLL instance
+>> + *
+>> + * Re-initialize and enable target device clock in open loop mode. Called
+>> + * directly from SoC clock resume syscore operation. Closed loop will be
+>> + * re-entered in platform syscore ops as well after CPU clock source is
+>> + * switched to DFLL in open loop.
+>> + */
+>> +void tegra_dfll_resume(struct platform_device *pdev, bool on_dfll)
+>> +{
+>> +	struct tegra_dfll *td = dev_get_drvdata(&pdev->dev);
+>> +
+>> +	if (!td)
+>> +		return;
+>> +
+>> +	if (on_dfll) {
+>> +		if (td->resume_mode == DFLL_CLOSED_LOOP)
+>> +			dfll_lock(td);
+>> +		td->resume_mode = DFLL_DISABLED;
+>> +		return;
+>> +	}
+>> +
+>> +	reset_control_deassert(td->dvco_rst);
+>> +
+>> +	pm_runtime_get(td->dev);
 > 
-
-Hi Suman,
-
-> On 5/30/19 9:13 PM, Suman Anna wrote:
-> > Hi Bjorn,
-> > 
-> > The following series adds the support for the HwSpinlock IP present
-> > on the newer TI K3 AM65x and J721E SoCs. The first 2 patches are
-> > related to the K3 support, and the last patch is a minor debug related
-> > trace to see the number of locks registered on each SoC.
-> > 
-> > I will be posting the DT nodes once the binding is acked.
+> pm_runtime_get_sync()?
 > 
-> If you do not have any comments, can you please pick up this series for
-> 5.3 merge window?
-> 
+> Otherwise looks like you're risking a lot here because pm_runtime_get() is an
+> asynchronous request.
 
-I was waiting for Rob's ack on the dt change, but as it's just a minor
-modification I've merged the series.
-
-Thanks,
-Bjorn
-
-> Thanks,
-> Suman
-> 
-> > 
-> > regards
-> > Suman
-> > 
-> > Suman Anna (3):
-> >   dt-bindings: hwlock: Update OMAP binding for TI K3 SoCs
-> >   hwspinlock/omap: Add support for TI K3 SoCs
-> >   hwspinlock/omap: Add a trace during probe
-> > 
-> >  .../bindings/hwlock/omap-hwspinlock.txt       | 25 +++++++++++++++----
-> >  drivers/hwspinlock/Kconfig                    |  2 +-
-> >  drivers/hwspinlock/omap_hwspinlock.c          |  4 +++
-> >  3 files changed, 25 insertions(+), 6 deletions(-)
-> > 
-> 
+It looks like DFLL driver should be masked as IRQ-safe using pm_runtime_irq_safe()
+and then the synchronous resume could be used..
