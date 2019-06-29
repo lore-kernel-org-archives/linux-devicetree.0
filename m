@@ -1,71 +1,37 @@
-Return-Path: <SRS0=0nt1=UZ=oracle.com=dan.carpenter@kernel.org>
-Date: Wed, 26 Jun 2019 13:07:27 +0300
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [bug report] scripts/dtc: Update to upstream version
- v1.5.0-23-g87963ee20693
-Message-ID: <20190626100727.GC3242@mwanda>
+Return-Path: <SRS0=waX1=U4=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:35036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726895AbfF2KOH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 29 Jun 2019 06:14:07 -0400
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: [PATCH 2/2] dt-bindings: iio: imu: st_lsm6dsx: add lsm6ds3tr-c device bindings
+Date: Sat, 29 Jun 2019 12:13:54 +0200
+Message-Id: <89edf867d6abb738527889040f030036173fd5b8.1561802767.git.lorenzo@kernel.org>
+In-Reply-To: <cover.1561802767.git.lorenzo@kernel.org>
+References: <cover.1561802767.git.lorenzo@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-To: robh@kernel.org
-Cc: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: jic23@kernel.org
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, lorenzo.bianconi@redhat.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hello Rob Herring,
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+---
+ Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-The patch 9bb9c6a110ea: "scripts/dtc: Update to upstream version
-v1.5.0-23-g87963ee20693" from Jun 12, 2019, leads to the following
-static checker warning:
-
-	./scripts/dtc/libfdt/fdt_addresses.c:74 fdt_appendprop_addrrange()
-	warn: integer overflow (literal): u32max + 1
-
-./scripts/dtc/libfdt/fdt_addresses.c
-    54  /* This function assumes that [address|size]_cells is 1 or 2 */
-    55  int fdt_appendprop_addrrange(void *fdt, int parent, int nodeoffset,
-    56                               const char *name, uint64_t addr, uint64_t size)
-    57  {
-    58          int addr_cells, size_cells, ret;
-    59          uint8_t data[sizeof(fdt64_t) * 2], *prop;
-    60  
-    61          ret = fdt_address_cells(fdt, parent);
-    62          if (ret < 0)
-    63                  return ret;
-    64          addr_cells = ret;
-    65  
-    66          ret = fdt_size_cells(fdt, parent);
-    67          if (ret < 0)
-    68                  return ret;
-    69          size_cells = ret;
-    70  
-    71          /* check validity of address */
-    72          prop = data;
-    73          if (addr_cells == 1) {
-    74                  if ((addr > UINT32_MAX) || ((UINT32_MAX + 1 - addr) < size))
-                                                     ^^^^^^^^^^^^^^
-UINT32_MAX + 1 is just zero.
-
-    75                          return -FDT_ERR_BADVALUE;
-    76  
-    77                  fdt32_st(prop, (uint32_t)addr);
-    78          } else if (addr_cells == 2) {
-    79                  fdt64_st(prop, addr);
-    80          } else {
-    81                  return -FDT_ERR_BADNCELLS;
-    82          }
-    83  
-    84          /* check validity of size */
-    85          prop += addr_cells * sizeof(fdt32_t);
-    86          if (size_cells == 1) {
-    87                  if (size > UINT32_MAX)
-    88                          return -FDT_ERR_BADVALUE;
-    89  
-    90                  fdt32_st(prop, (uint32_t)size);
-    91          } else if (size_cells == 2) {
-    92                  fdt64_st(prop, size);
-    93          } else {
-    94                  return -FDT_ERR_BADNCELLS;
-    95          }
-
-regards,
-dan carpenter
+diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+index efec9ece034a..92b48f242356 100644
+--- a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
++++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+@@ -11,6 +11,7 @@ Required properties:
+   "st,asm330lhh"
+   "st,lsm6dsox"
+   "st,lsm6dsr"
++  "st,lsm6ds3tr-c"
+ - reg: i2c address of the sensor / spi cs line
+ 
+ Optional properties:
+-- 
+2.21.0
