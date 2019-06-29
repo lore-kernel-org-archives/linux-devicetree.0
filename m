@@ -1,11 +1,13 @@
 From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v8 10/21] iommu/mediatek: Refine protect memory definition
-Date: Sat, 29 Jun 2019 10:39:44 +0800
-Message-ID: <1561775995-24963-11-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v8 11/21] iommu/mediatek: Move reset_axi into plat_data
+Date: Sat, 29 Jun 2019 10:39:45 +0800
+Message-ID: <1561775995-24963-12-git-send-email-yong.wu@mediatek.com>
+References: <1561775995-24963-11-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1561775995-24963-11-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
 	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
@@ -19,51 +21,56 @@ To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugge
 Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The protect memory setting is a little different in the different SoCs.
-In the register REG_MMU_CTRL_REG(0x110), the TF_PROT(translation fault
-protect) shift bit is normally 4 while it shift 5 bits only in the
-mt8173. This patch delete the complex MACRO and use a common if-else
-instead.
+In mt8173 and mt8183, 0x48 is REG_MMU_STANDARD_AXI_MODE while it is
+REG_MMU_CTRL in the other SoCs, and the bits meaning is completely
+different with the REG_MMU_STANDARD_AXI_MODE.
+
+This patch moves this property to plat_data, it's also a preparing
+patch for mt8183.
 
 Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Reviewed-by: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iommu/mtk_iommu.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/iommu/mtk_iommu.c | 4 ++--
+ drivers/iommu/mtk_iommu.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index a915c25..4f8a2cb 100644
+index 4f8a2cb..1f9f307 100644
 --- a/drivers/iommu/mtk_iommu.c
 +++ b/drivers/iommu/mtk_iommu.c
-@@ -52,12 +52,9 @@
- #define REG_MMU_DCM_DIS				0x050
- 
- #define REG_MMU_CTRL_REG			0x110
-+#define F_MMU_TF_PROT_TO_PROGRAM_ADDR		(2 << 4)
- #define F_MMU_PREFETCH_RT_REPLACE_MOD		BIT(4)
--#define F_MMU_TF_PROTECT_SEL_SHIFT(data) \
--	((data)->plat_data->m4u_plat == M4U_MT2712 ? 4 : 5)
--/* It's named by F_MMU_TF_PROT_SEL in mt2712. */
--#define F_MMU_TF_PROTECT_SEL(prot, data) \
--	(((prot) & 0x3) << F_MMU_TF_PROTECT_SEL_SHIFT(data))
-+#define F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173	(2 << 5)
- 
- #define REG_MMU_IVRP_PADDR			0x114
- 
-@@ -537,9 +534,11 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
- 		return ret;
+@@ -575,8 +575,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
  	}
+ 	writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
  
--	regval = F_MMU_TF_PROTECT_SEL(2, data);
- 	if (data->plat_data->m4u_plat == M4U_MT8173)
--		regval |= F_MMU_PREFETCH_RT_REPLACE_MOD;
-+		regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
-+			 F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173;
-+	else
-+		regval = F_MMU_TF_PROT_TO_PROGRAM_ADDR;
- 	writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
+-	/* It's MISC control register whose default value is ok except mt8173.*/
+-	if (data->plat_data->m4u_plat == M4U_MT8173)
++	if (data->plat_data->reset_axi)
+ 		writel_relaxed(0, data->base + REG_MMU_STANDARD_AXI_MODE);
  
- 	regval = F_L2_MULIT_HIT_EN |
+ 	if (devm_request_irq(data->dev, data->irq, mtk_iommu_isr, 0,
+@@ -772,6 +771,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+ 	.m4u_plat     = M4U_MT8173,
+ 	.has_4gb_mode = true,
+ 	.has_bclk     = true,
++	.reset_axi    = true,
+ 	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
+ };
+ 
+diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+index 61fd5d6..55d73c1 100644
+--- a/drivers/iommu/mtk_iommu.h
++++ b/drivers/iommu/mtk_iommu.h
+@@ -46,7 +46,7 @@ struct mtk_iommu_plat_data {
+ 
+ 	/* HW will use the EMI clock if there isn't the "bclk". */
+ 	bool                has_bclk;
+-
++	bool                reset_axi;
+ 	unsigned char       larbid_remap[MTK_LARB_NR_MAX];
+ };
+ 
 -- 
 1.9.1
