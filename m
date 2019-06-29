@@ -1,53 +1,64 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] ARM: dts: exynos: Adjust buck[78] regulators to supported values on Arndale Octa
-Date: Sat, 29 Jun 2019 13:47:39 +0200
-Message-ID: <20190629114739.11702-2-krzk@kernel.org>
-References: <20190629114739.11702-1-krzk@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
+Date: Sat, 29 Jun 2019 15:38:20 +0300
+Message-ID: <fbfb2167-d0b3-b66a-d1ba-378c877817ed@gmail.com>
+References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+ <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
+ <0409f478-e425-4e7f-5fff-8c3a94f47ee8@gmail.com>
+ <ca8199af-43db-c878-a93f-66c275acf864@gmail.com>
+ <99403cb1-aaef-4dd4-68a0-67864ca7ce6c@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190629114739.11702-1-krzk@kernel.org>
+In-Reply-To: <99403cb1-aaef-4dd4-68a0-67864ca7ce6c@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Anand Moon <linux.amoon@gmail.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The datasheet of S2MPS11 PMIC is slightly non-consistent in buck[78]
-voltage regulators values.
+29.06.2019 2:00, Sowjanya Komatineni пишет:
+> 
+> On 6/28/19 5:05 AM, Dmitry Osipenko wrote:
+>> 28.06.2019 14:56, Dmitry Osipenko пишет:
+>>> 28.06.2019 5:12, Sowjanya Komatineni пишет:
+>>>> This patch adds support for Tegra pinctrl driver suspend and resume.
+>>>>
+>>>> During suspend, context of all pinctrl registers are stored and
+>>>> on resume they are all restored to have all the pinmux and pad
+>>>> configuration for normal operation.
+>>>>
+>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>   int tegra_pinctrl_probe(struct platform_device *pdev,
+>>>>               const struct tegra_pinctrl_soc_data *soc_data);
+>>>>   #endif
+>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c
+>>>> b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+>>>> index 0b56ad5c9c1c..edd3f4606cdb 100644
+>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
+>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+>>>> @@ -1571,6 +1571,7 @@ static struct platform_driver tegra210_pinctrl_driver = {
+>>>>       .driver = {
+>>>>           .name = "tegra210-pinctrl",
+>>>>           .of_match_table = tegra210_pinctrl_of_match,
+>>>> +        .pm = &tegra_pinctrl_pm,
+>>>>       },
+>>>>       .probe = tegra210_pinctrl_probe,
+>>>>   };
+>>>>
+>>> Could you please address my comments in the next revision if there will be one?
+>>>
+>> Also, what about adding ".pm' for other Tegras? I'm sure Jon could test them for you.
+> 
+> This series is for Tegra210 SC7 entry/exit along with clocks and pinctrl suspend
+> resume needed for Tegra210 basic sc7 entry and exit.
+> 
+> This includes pinctrl, pmc changes, clock-tegra210 driver changes all w.r.t Tegra210
+> platforms specific.
+> 
+> Suspend/resume support for other Tegras will be in separate patch series.
 
-1. The voltage tables for configuring their registers mention range of
-   voltages: 0.750 V to 3.55 V,
-2. The constrains in electrical specifications say output voltage range
-   to be different (buck7: 1.2 V to 1.5 V, buck8: 1.8 V to 2.1 V).
-
-Adjust the ranges to match the electrical specifications to stay on the
-safe side.  Anyway these regulators stay at default value so this should
-not have effect.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos5420-arndale-octa.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-index ac7f2fa0ba22..592d7b45ecc8 100644
---- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-+++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-@@ -723,15 +723,15 @@
- 
- 			buck7_reg: BUCK7 {
- 				regulator-name = "VIN_LLDO_1V4";
--				regulator-min-microvolt = <800000>;
-+				regulator-min-microvolt = <1200000>;
- 				regulator-max-microvolt = <1500000>;
- 				regulator-always-on;
- 			};
- 
- 			buck8_reg: BUCK8 {
- 				regulator-name = "VIN_MLDO_2V0";
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <2000000>;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <2100000>;
- 				regulator-always-on;
- 			};
- 
--- 
-2.17.1
+Okay, fair enough.
