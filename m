@@ -1,120 +1,202 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v5 2/7] drm/panel: simple: Add ability to override
- typical timing
-Date: Sat, 29 Jun 2019 01:49:46 +0200
-Message-ID: <20190628234946.GB1189@mithrandir>
-References: <20190401171724.215780-1-dianders@chromium.org>
- <20190401171724.215780-3-dianders@chromium.org>
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH v2 2/3] of/platform: Add functional dependency link from
+ DT bindings
+Date: Fri, 28 Jun 2019 17:55:04 -0700
+Message-ID: <d97de5ef-68a3-795f-2532-24da8cd2d130@codeaurora.org>
+References: <20190628022202.118166-1-saravanak@google.com>
+ <20190628022202.118166-3-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1960720911=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190401171724.215780-3-dianders@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>, Enric =?utf-8?B?QmFsbGV0YsOy?= <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190628022202.118166-3-saravanak@google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
+Hello Saravana,
 
---===============1960720911==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="NDin8bjvE/0mNLFQ"
-Content-Disposition: inline
+On 6/27/19 7:22 PM, Saravana Kannan wrote:
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 04ad312fd85b..8d690fa0f47c 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -61,6 +61,72 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
+>  EXPORT_SYMBOL(of_find_device_by_node);
+>  
+>  #ifdef CONFIG_OF_ADDRESS
+> +static int of_link_binding(struct device *dev, char *binding, char *cell)
+> +{
+> +	struct of_phandle_args sup_args;
+> +	struct platform_device *sup_dev;
+> +	unsigned int i = 0, links = 0;
+> +	u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+> +
+> +	while (!of_parse_phandle_with_args(dev->of_node, binding, cell, i,
+> +					   &sup_args)) {
+> +		i++;
+> +		sup_dev = of_find_device_by_node(sup_args.np);
+> +		if (!sup_dev)
+> +			continue;
+
+This check means that a required dependency link between a consumer and
+supplier will not be added in the case that the consumer device is created
+before the supply device.  If the supplier device is created and
+immediately bound to its driver after late_initcall_sync(), then it is
+possible for the sync_state() callback of the supplier to be called before
+the consumer gets a chance to probe since its link was never captured.
+
+of_platform_default_populate() below will only create devices for the
+first level DT nodes directly under "/".  Suppliers DT nodes can exist as
+second level nodes under a first level bus node (e.g. I2C, SPMI, RPMh,
+etc).  Thus, it is quite likely that not all supplier devices will have
+been created when device_link_check_waiting_consumers() is called.
+
+As far as I can tell, this effectively breaks the sync_state()
+functionality (and thus proxy un-voting built on top of it) when using
+kernel modules for both the supplier and consumer drivers which are probed
+after late_initcall_sync().  I'm not sure how this can be avoided given
+that the linking is done between devices in the process of sequentially
+adding devices.  Perhaps linking between device nodes instead of devices
+might be able to overcome this issue.
 
 
---NDin8bjvE/0mNLFQ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +		if (device_link_add(dev, &sup_dev->dev, dl_flags))
+> +			links++;
+> +		put_device(&sup_dev->dev);
+> +	}
+> +	if (links < i)
+> +		return -ENODEV;
+> +	return 0;
+> +}
+> +
+> +/*
+> + * List of bindings and their cell names (use NULL if no cell names) from which
+> + * device links need to be created.
+> + */
+> +static char *link_bindings[] = {
+> +#ifdef CONFIG_OF_DEVLINKS
+> +	"clocks", "#clock-cells",
+> +	"interconnects", "#interconnect-cells",
+> +#endif
+> +};
 
-On Mon, Apr 01, 2019 at 10:17:19AM -0700, Douglas Anderson wrote:
-> From: Sean Paul <seanpaul@chromium.org>
->=20
-> This patch adds the ability to override the typical display timing for a
-> given panel. This is useful for devices which have timing constraints
-> that do not apply across the entire display driver (eg: to avoid
-> crosstalk between panel and digitizer on certain laptops). The rules are
-> as follows:
->=20
-> - panel must not specify fixed mode (since the override mode will
->   either be the same as the fixed mode, or we'll be unable to
->   check the bounds of the overried)
-> - panel must specify at least one display_timing range which will be
->   used to ensure the override mode fits within its bounds
->=20
-> Changes in v2:
->  - Parse the full display-timings node (using the native-mode) (Rob)
-> Changes in v3:
->  - No longer parse display-timings subnode, use panel-timing (Rob)
-> Changes in v4:
->  - Don't add mode from timing if override was specified (Thierry)
->  - Add warning if timing and fixed mode was specified (Thierry)
->  - Don't add fixed mode if timing was specified (Thierry)
->  - Refactor/rename a bit to avoid extra indentation from "if" tests
->  - i should be unsigned (Thierry)
->  - Add annoying WARN_ONs for some cases (Thierry)
->  - Simplify 'No display_timing found' handling (Thierry)
->  - Rename to panel_simple_parse_override_mode() (Thierry)
-> Changes in v5:
->  - Added Heiko's Tested-by
->=20
-> Cc: Doug Anderson <dianders@chromium.org>
-> Cc: Eric Anholt <eric@anholt.net>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: St=C3=A9phane Marchesin <marcheu@chromium.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Tested-by: Heiko Stuebner <heiko@sntech.de>
-> ---
->=20
->  drivers/gpu/drm/panel/panel-simple.c | 109 +++++++++++++++++++++++++--
->  1 file changed, 104 insertions(+), 5 deletions(-)
+This list and helper function above are missing support for regulator
+<arbitrary-consumer-name>-supply properties.  We require this support on
+QTI boards in order to handle regulator proxy un-voting when booting with
+kernel modules.  Are you planning to add this support in a follow-on
+version of this patch or in an additional patch?
 
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
+Note that handling regulator supply properties will be very challenging
+for at least these reasons:
 
---NDin8bjvE/0mNLFQ
-Content-Type: application/pgp-signature; name="signature.asc"
+1. There is not a consistent DT property name used for regulator supplies.
 
------BEGIN PGP SIGNATURE-----
+2. The device node referenced in a regulator supply phandle is usually not
+the device node which correspond to the device pointer for the supplier.
+This is because a single regulator supplier device node (which will have
+an associated device pointer) typically has a subnode for each of the
+regulators it supports.  Consumers then use phandles for the subnodes.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Wp5oACgkQ3SOs138+
-s6HkOA//aJRj++gDyHqyv+35Dnz1qJOb04MLQT25wHlW53LhiXm6APFDfKgu6GY1
-jEhdqsfBT7y0c+yM8SQRwJx44H4QN8YbkqpH0jFsvLli7S8oalKWtu6ti1nRv1XB
-oW2oTzn340rTKD1zeqQL1A26GF7G3COyKIOBhW+yHNAGA4gqi3XMi3RwKP0tLYWa
-1zpI7ZMQw8kwprzPZZbsEnfRYj1R5YUfBO1252HaixMStJbJGj5vfhKFE2H7wTJv
-zCz0JlxX6kepkO7aHmrwOWHYgnvrcCaphJy8YBWMhsBRN7UdOlLjjcBtvqGidKbc
-5bBZucu8NOKSBVKP9V7HlWgQjoCI4uPXSJ+Z9G+NemzcqFtLOYAgGezKiTVjnw1T
-AvEbEQ2ed9MPm2Yt93ozVgR0fvTqeJu0t5ybGaVhUXqevtek7HTCDbCiY+oFLBGs
-ubaXXPCJaYls415YuHWxeIOBuyuyAkSihPy9JB2SZ5jZbXgRiXFrppGI+/zcTklX
-InfVw9QwQMMHay+FhcnET0HkWiD47kvEnVBmaeHoMEnYKrE3p1IVZMXlzQsLqefL
-ADaFGSl0UIS5kyS6yB/b82C2XkyuyFqG40ohDu3qpa2ShzY7iovd1rJBRFmI22/3
-05j4j/3dS0eGTqoVVM1zpmdAaIvHaw7GbVjIEsd0BtG+51TIhW4=
-=P4R1
------END PGP SIGNATURE-----
+3. The specification of parent supplies for regulators frequently results
+in *-supply properties in a node pointing to child subnodes of that node.
+ See [1] for an example.  Special care would need to be taken to avoid
+trying to mark a regulator supplier as a supplier to itself as well as to
+avoid blocking its own probing due to an unlinked supply dependency.
 
---NDin8bjvE/0mNLFQ--
+4. Not all DT properties of the form "*-supply" are regulator supplies.
+(Note, this case has been discussed, but I was not able to locate an
+example of it.)
 
---===============1960720911==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Clocks also have a problem.  A recent patch [2] allows clock provider
+parent clocks to be specified via DT.  This could lead to cases of
+circular "clocks" property dependencies where there are two clock supplier
+devices A and B with A having some clocks with B clock parents along with
+B having some clocks with A clock parents.  If "clocks" properties are
+followed, then neither device would ever be able to probe.
 
---===============1960720911==--
+This does not present a problem without this patch series because the
+clock framework supports late binding of parents specifically to avoid
+issues with clocks not registering in perfectly topological order of
+parent dependencies.
+
+
+> +
+> +static int of_link_to_suppliers(struct device *dev)
+> +{
+> +	unsigned int i = 0;
+> +	bool done = true;
+> +
+> +	if (unlikely(!dev->of_node))
+> +		return 0;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(link_bindings) / 2; i++)
+> +		if (of_link_binding(dev, link_bindings[i * 2],
+> +					link_bindings[i * 2 + 1]))
+> +			done = false;
+> +
+> +	if (!done)
+> +		return -ENODEV;
+> +	return 0;
+> +}
+> +
+> +static void link_waiting_consumers_func(struct work_struct *work)
+> +{
+> +	device_link_check_waiting_consumers(of_link_to_suppliers);
+> +}
+> +static DECLARE_WORK(link_waiting_consumers_work, link_waiting_consumers_func);
+> +
+> +static bool link_waiting_consumers_enable;
+> +static void link_waiting_consumers_trigger(void)
+> +{
+> +	if (!link_waiting_consumers_enable)
+> +		return;
+> +
+> +	schedule_work(&link_waiting_consumers_work);
+> +}
+> +
+>  /*
+>   * The following routines scan a subtree and registers a device for
+>   * each applicable node.
+> @@ -192,10 +258,13 @@ static struct platform_device *of_platform_device_create_pdata(
+>  	dev->dev.platform_data = platform_data;
+>  	of_msi_configure(&dev->dev, dev->dev.of_node);
+>  
+> +	if (of_link_to_suppliers(&dev->dev))
+> +		device_link_wait_for_supplier(&dev->dev);
+>  	if (of_device_add(dev) != 0) {
+>  		platform_device_put(dev);
+>  		goto err_clear_flag;
+>  	}
+> +	link_waiting_consumers_trigger();
+>  
+>  	return dev;
+>  
+> @@ -541,6 +610,10 @@ static int __init of_platform_default_populate_init(void)
+>  	/* Populate everything else. */
+>  	of_platform_default_populate(NULL, NULL, NULL);
+>  
+> +	/* Make the device-links between suppliers and consumers */
+> +	link_waiting_consumers_enable = true;
+> +	device_link_check_waiting_consumers(of_link_to_suppliers);
+> +
+>  	return 0;
+>  }
+>  arch_initcall_sync(of_platform_default_populate_init);
+> 
+
+Thanks,
+David
+
+[1]:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845-mtp.dts?h=v5.2-rc5#n73
+
+[2]:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fc0c209c147f35ed2648adda09db39fcad89e334
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
