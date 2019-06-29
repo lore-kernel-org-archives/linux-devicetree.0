@@ -1,37 +1,91 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v1] arm: dts: mediatek: add basic support for MT7629 SoC
-Date: Sat, 29 Jun 2019 23:58:16 +0800
-Message-ID: <1561823896.29227.0.camel@mtkswgap22>
-References: <a8ca0018ac8a4c5f61a7a1efc9dc5dccd768628b.1552449524.git.ryder.lee@mediatek.com>
-         <7hy31lp9q5.fsf@baylibre.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
+Date: Sat, 29 Jun 2019 18:58:43 +0300
+Message-ID: <822867d6-4a4d-5f68-9b21-84a20d73c589@gmail.com>
+References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+ <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
+ <a262cbb3-845c-3ad1-16cc-375a24b9f7e9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7hy31lp9q5.fsf@baylibre.com>
+In-Reply-To: <a262cbb3-845c-3ad1-16cc-375a24b9f7e9@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: ryder.lee@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Steven Liu <steven.liu@mediatek.com>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-06-28 at 16:32 -0700, Kevin Hilman wrote:
-> <ryder.lee@kernel.org> writes:
+29.06.2019 18:46, Dmitry Osipenko пишет:
+> 28.06.2019 5:12, Sowjanya Komatineni пишет:
+>> This patch adds support for Tegra pinctrl driver suspend and resume.
+>>
+>> During suspend, context of all pinctrl registers are stored and
+>> on resume they are all restored to have all the pinmux and pad
+>> configuration for normal operation.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>  drivers/pinctrl/tegra/pinctrl-tegra.c    | 52 ++++++++++++++++++++++++++++++++
+>>  drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
+>>  drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
+>>  3 files changed, 56 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> index 34596b246578..e7c0a1011cba 100644
+>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> @@ -621,6 +621,43 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>  	}
+>>  }
+>>  
+>> +static int tegra_pinctrl_suspend(struct device *dev)
+>> +{
+>> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
+>> +	u32 *backup_regs = pmx->backup_regs;
+>> +	u32 *regs;
+>> +	unsigned int i, j;
+>> +
+>> +	for (i = 0; i < pmx->nbanks; i++) {
+>> +		regs = pmx->regs[i];
+>> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+>> +			*backup_regs++ = readl(regs++);
+>> +	}
+>> +
+>> +	return pinctrl_force_sleep(pmx->pctl);
+>> +}
+>> +
+>> +static int tegra_pinctrl_resume(struct device *dev)
+>> +{
+>> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
+>> +	u32 *backup_regs = pmx->backup_regs;
+>> +	u32 *regs;
+>> +	unsigned int i, j;
+>> +
+>> +	for (i = 0; i < pmx->nbanks; i++) {
+>> +		regs = pmx->regs[i];
+>> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+>> +			writel(*backup_regs++, regs++);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +const struct dev_pm_ops tegra_pinctrl_pm = {
+>> +	.suspend = &tegra_pinctrl_suspend,
+>> +	.resume = &tegra_pinctrl_resume
+>> +};
 > 
-> > From: Ryder Lee <ryder.lee@mediatek.com>
-> >
-> > This adds basic support for MT7629 reference board.
-> >
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Hm, so this are the generic platform-driver suspend-resume OPS here, which is very
+> nice! But.. shouldn't pinctrl be resumed before the CLK driver (which is syscore_ops
+> in this version of the series)? .. Given that "clock" function may need to be
+> selected for some of the pins.
 > 
-> Just noticing this is not upstream yet.
-> 
-> I did a basic boot test to ramdisk on the mt7629-rfb board donated for
-> kernelCI (thanks MediaTek!) and it boots just fine.
-> 
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
-> 
-> Kevin
 
-Thanks. I'll post v3 with some fixups soon.
+Oh, also what about GPIO-pinctrl suspend resume ordering .. is it okay that pinctrl
+will be resumed after GPIO? Shouldn't a proper pin-muxing be selected at first?
 
-Ryder
+This also looks to me very unsafe in a context of older Tegras which are initializing
+the static muxing very early during of the boot, otherwise things won't work well for
+the drivers.
