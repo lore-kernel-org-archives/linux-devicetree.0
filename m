@@ -1,184 +1,79 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: [PATCH v8 21/21] iommu/mediatek: Switch to SPDX license identifier
-Date: Sat, 29 Jun 2019 10:39:55 +0800
-Message-ID: <1561775995-24963-22-git-send-email-yong.wu@mediatek.com>
-References: <1561775995-24963-11-git-send-email-yong.wu@mediatek.com>
+From: Hanjun Guo <guohanjun@huawei.com>
+Subject: Re: [PATCH v8 3/7] cpu-topology: Move cpu topology code to common
+ code.
+Date: Sat, 29 Jun 2019 11:48:18 +0800
+Message-ID: <5bcd9594-b2c1-7706-aabb-154198019b29@huawei.com>
+References: <20190627195302.28300-1-atish.patra@wdc.com>
+ <20190627195302.28300-4-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561775995-24963-11-git-send-email-yong.wu@mediatek.com>
+In-Reply-To: <20190627195302.28300-4-atish.patra@wdc.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, yong.wu@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
+To: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Johan Hovold <johan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Peter Zijlstra (Int
 List-Id: devicetree@vger.kernel.org
 
-Switch to SPDX license identifier for MediaTek iommu/smi and their
-header files.
+On 2019/6/28 3:52, Atish Patra wrote:
+> Both RISC-V & ARM64 are using cpu-map device tree to describe
+> their cpu topology. It's better to move the relevant code to
+> a common place instead of duplicate code.
+> 
+> To: Will Deacon <will.deacon@arm.com>
+> To: Catalin Marinas <catalin.marinas@arm.com>
 
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- drivers/iommu/mtk_iommu.c                     | 10 +---------
- drivers/iommu/mtk_iommu.h                     | 10 +---------
- drivers/iommu/mtk_iommu_v1.c                  | 10 +---------
- drivers/memory/mtk-smi.c                      | 10 +---------
- include/dt-bindings/memory/mt2701-larb-port.h | 10 +---------
- include/dt-bindings/memory/mt8173-larb-port.h | 10 +---------
- include/soc/mediatek/smi.h                    | 10 +---------
- 7 files changed, 7 insertions(+), 63 deletions(-)
+Using Cc: is better.
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 4212221..f013b55 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -1,15 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Yong Wu <yong.wu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #include <linux/memblock.h>
- #include <linux/bug.h>
-diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index dda74f1..d5dd07f 100644
---- a/drivers/iommu/mtk_iommu.h
-+++ b/drivers/iommu/mtk_iommu.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Honghui Zhang <honghui.zhang@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #ifndef _MTK_IOMMU_H_
-diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
-index ba0408b..55013ba 100644
---- a/drivers/iommu/mtk_iommu_v1.c
-+++ b/drivers/iommu/mtk_iommu_v1.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * IOMMU API for MTK architected m4u v1 implementations
-  *
-@@ -5,15 +6,6 @@
-  * Author: Honghui Zhang <honghui.zhang@mediatek.com>
-  *
-  * Based on driver/iommu/mtk_iommu.c
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #include <linux/memblock.h>
- #include <linux/bug.h>
-diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-index 0e310d5..b754460 100644
---- a/drivers/memory/mtk-smi.c
-+++ b/drivers/memory/mtk-smi.c
-@@ -1,15 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Yong Wu <yong.wu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #include <linux/clk.h>
- #include <linux/component.h>
-diff --git a/include/dt-bindings/memory/mt2701-larb-port.h b/include/dt-bindings/memory/mt2701-larb-port.h
-index 6764d74..c511f0f 100644
---- a/include/dt-bindings/memory/mt2701-larb-port.h
-+++ b/include/dt-bindings/memory/mt2701-larb-port.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015 MediaTek Inc.
-  * Author: Honghui Zhang <honghui.zhang@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #ifndef _MT2701_LARB_PORT_H_
-diff --git a/include/dt-bindings/memory/mt8173-larb-port.h b/include/dt-bindings/memory/mt8173-larb-port.h
-index 111b4b0..a62bfeb 100644
---- a/include/dt-bindings/memory/mt8173-larb-port.h
-+++ b/include/dt-bindings/memory/mt8173-larb-port.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Yong Wu <yong.wu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #ifndef __DTS_IOMMU_PORT_MT8173_H
- #define __DTS_IOMMU_PORT_MT8173_H
-diff --git a/include/soc/mediatek/smi.h b/include/soc/mediatek/smi.h
-index baad22f..11074c6 100644
---- a/include/soc/mediatek/smi.h
-+++ b/include/soc/mediatek/smi.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Yong Wu <yong.wu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #ifndef MTK_IOMMU_SMI_H
- #define MTK_IOMMU_SMI_H
--- 
-1.9.1
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> [Tested on QDF2400]
+> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> [Tested on Juno and other embedded platforms.]
+> Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> Acked-by: Will Deacon <will.deacon@arm.com>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  arch/arm64/include/asm/topology.h |  23 ---
+>  arch/arm64/kernel/topology.c      | 303 +-----------------------------
+>  drivers/base/arch_topology.c      | 296 +++++++++++++++++++++++++++++
+>  include/linux/arch_topology.h     |  28 +++
+>  include/linux/topology.h          |   1 +
+>  5 files changed, 329 insertions(+), 322 deletions(-)
+
+Tested on Kunpeng920 ARM64 server, works good,
+
+# lscpu
+Architecture:        aarch64
+Byte Order:          Little Endian
+CPU(s):              96
+On-line CPU(s) list: 0-95
+Thread(s) per core:  1
+Core(s) per socket:  48
+Socket(s):           2
+NUMA node(s):        4
+Vendor ID:           0x48
+Model:               0
+Stepping:            0x1
+CPU max MHz:         2600.0000
+CPU min MHz:         260.0000
+BogoMIPS:            200.00
+L1d cache:           64K
+L1i cache:           64K
+L2 cache:            512K
+L3 cache:            32768K
+NUMA node0 CPU(s):   0-23
+NUMA node1 CPU(s):   24-47
+NUMA node2 CPU(s):   48-71
+NUMA node3 CPU(s):   72-95
+Flags:               fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+
+Tested-by: Hanjun Guo <guohanjun@huawei.com>
+
+For the ACPI code,
+
+Acked-by: Hanjun Guo <guohanjun@huawei.com>
+
+Thanks
+Hanjun
