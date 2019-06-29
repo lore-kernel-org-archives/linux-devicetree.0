@@ -1,28 +1,24 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 9 Jul 2019 16:50:53 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: 83xx-512x-pci: Drop cell-index property
-Message-ID: <20190709225053.GA12654@bogus>
-References: <20190622034557.196097-1-wangkefeng.wang@huawei.com>
+Return-Path: <SRS0=gSIt=VA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from [180.210.201.54] ([180.210.201.54]:59906 "EHLO UNKNOWN"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727058AbfGCWKO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jul 2019 18:10:14 -0400
+Received: from localhost (localhost [IPv6:::1])
+        by UNKNOWN (Postfix) with SMTP id 32F7B65626
+        for <devicetree@vger.kernel.org>; Sat, 29 Jun 2019 15:22:13 +0800 (SGT)
+From: devicetree@vger.kernel.org
+Reply-To: demexinruslan+yHu0MrZxlD@gmail.com
+Subject: =?utf-8?B?0JrQu9C40LXQvdGC0YHQutC40LUg0LHQsNC30YshIEVt?=
+        =?utf-8?B?YWlsOiBwcm9kYXdlekBhcm15c3B5LmNvbSDQo9C30L3Q?=
+        =?utf-8?B?sNC50YLQtSDQv9C+0LTRgNC+0LHQvdC10LUh?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190622034557.196097-1-wangkefeng.wang@huawei.com>
-To: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Kumar Gala <galak@kernel.crashing.org>
+Content-Type: text/plain; charset="utf-8";
+Content-Transfer-Encoding: base64
+Message-Id: <20190629072214.32F7B65626@UNKNOWN>
+Date: Sat, 29 Jun 2019 15:22:13 +0800 (SGT)
+Sender: devicetree-owner@vger.kernel.org
+To: im5Kk93nZzdevicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat, 22 Jun 2019 11:45:57 +0800, Kefeng Wang wrote:
-> 28eac2b74cc7 ("powerpc/fsl: Remove cell-index from PCI nodes"),
-> and for now it is still not used, drop it from doc.
-> 
-> Cc: Kumar Gala <galak@kernel.crashing.org>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  Documentation/devicetree/bindings/pci/83xx-512x-pci.txt | 1 -
->  1 file changed, 1 deletion(-)
-> 
-
-Applied, thanks.
-
-Rob
+0JrQu9C40LXQvdGC0YHQutC40LUg0LHQsNC30YshIEVtYWlsOiBwcm9kYXdlekBhcm15c3B5LmNv
+bSDQo9C30L3QsNC50YLQtSDQv9C+0LTRgNC+0LHQvdC10LUhDQo=
