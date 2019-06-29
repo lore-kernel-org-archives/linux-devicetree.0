@@ -1,97 +1,70 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
-Date: Sat, 29 Jun 2019 19:28:13 +0300
-Message-ID: <b7bfe578-69d3-bbe6-9613-bf5e98359703@gmail.com>
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
- <a262cbb3-845c-3ad1-16cc-375a24b9f7e9@gmail.com>
- <822867d6-4a4d-5f68-9b21-84a20d73c589@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 0/3] Add HwSpinlock support for TI K3 SoCs
+Date: Sat, 29 Jun 2019 11:57:42 -0700
+Message-ID: <20190629185742.GC23094@builder>
+References: <20190531021321.14025-1-s-anna@ti.com>
+ <90211f72-7ce4-94e5-aef7-bbe14266dfbb@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <822867d6-4a4d-5f68-9b21-84a20d73c589@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <90211f72-7ce4-94e5-aef7-bbe14266dfbb@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suman Anna <s-anna@ti.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-remoteproc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-29.06.2019 18:58, Dmitry Osipenko пишет:
-> 29.06.2019 18:46, Dmitry Osipenko пишет:
->> 28.06.2019 5:12, Sowjanya Komatineni пишет:
->>> This patch adds support for Tegra pinctrl driver suspend and resume.
->>>
->>> During suspend, context of all pinctrl registers are stored and
->>> on resume they are all restored to have all the pinmux and pad
->>> configuration for normal operation.
->>>
->>> Acked-by: Thierry Reding <treding@nvidia.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>  drivers/pinctrl/tegra/pinctrl-tegra.c    | 52 ++++++++++++++++++++++++++++++++
->>>  drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
->>>  drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
->>>  3 files changed, 56 insertions(+)
->>>
->>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> index 34596b246578..e7c0a1011cba 100644
->>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> @@ -621,6 +621,43 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>>  	}
->>>  }
->>>  
->>> +static int tegra_pinctrl_suspend(struct device *dev)
->>> +{
->>> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
->>> +	u32 *backup_regs = pmx->backup_regs;
->>> +	u32 *regs;
->>> +	unsigned int i, j;
->>> +
->>> +	for (i = 0; i < pmx->nbanks; i++) {
->>> +		regs = pmx->regs[i];
->>> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
->>> +			*backup_regs++ = readl(regs++);
->>> +	}
->>> +
->>> +	return pinctrl_force_sleep(pmx->pctl);
->>> +}
->>> +
->>> +static int tegra_pinctrl_resume(struct device *dev)
->>> +{
->>> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
->>> +	u32 *backup_regs = pmx->backup_regs;
->>> +	u32 *regs;
->>> +	unsigned int i, j;
->>> +
->>> +	for (i = 0; i < pmx->nbanks; i++) {
->>> +		regs = pmx->regs[i];
->>> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
->>> +			writel(*backup_regs++, regs++);
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +const struct dev_pm_ops tegra_pinctrl_pm = {
->>> +	.suspend = &tegra_pinctrl_suspend,
->>> +	.resume = &tegra_pinctrl_resume
->>> +};
->>
->> Hm, so this are the generic platform-driver suspend-resume OPS here, which is very
->> nice! But.. shouldn't pinctrl be resumed before the CLK driver (which is syscore_ops
->> in this version of the series)? .. Given that "clock" function may need to be
->> selected for some of the pins.
->>
-> 
-> Oh, also what about GPIO-pinctrl suspend resume ordering .. is it okay that pinctrl
-> will be resumed after GPIO? Shouldn't a proper pin-muxing be selected at first?
-> 
-> This also looks to me very unsafe in a context of older Tegras which are initializing
-> the static muxing very early during of the boot, otherwise things won't work well for
-> the drivers.
+On Mon 24 Jun 13:38 PDT 2019, Suman Anna wrote:
+
+> Hi Bjorn,
 > 
 
-Although, scratch what I wrote about older Tegras. We are probing pinctl driver very
-early, hence it should suspend last and resume first. Should be okay.
+Hi Suman,
+
+> On 5/30/19 9:13 PM, Suman Anna wrote:
+> > Hi Bjorn,
+> > 
+> > The following series adds the support for the HwSpinlock IP present
+> > on the newer TI K3 AM65x and J721E SoCs. The first 2 patches are
+> > related to the K3 support, and the last patch is a minor debug related
+> > trace to see the number of locks registered on each SoC.
+> > 
+> > I will be posting the DT nodes once the binding is acked.
+> 
+> If you do not have any comments, can you please pick up this series for
+> 5.3 merge window?
+> 
+
+I was waiting for Rob's ack on the dt change, but as it's just a minor
+modification I've merged the series.
+
+Thanks,
+Bjorn
+
+> Thanks,
+> Suman
+> 
+> > 
+> > regards
+> > Suman
+> > 
+> > Suman Anna (3):
+> >   dt-bindings: hwlock: Update OMAP binding for TI K3 SoCs
+> >   hwspinlock/omap: Add support for TI K3 SoCs
+> >   hwspinlock/omap: Add a trace during probe
+> > 
+> >  .../bindings/hwlock/omap-hwspinlock.txt       | 25 +++++++++++++++----
+> >  drivers/hwspinlock/Kconfig                    |  2 +-
+> >  drivers/hwspinlock/omap_hwspinlock.c          |  4 +++
+> >  3 files changed, 25 insertions(+), 6 deletions(-)
+> > 
+> 
