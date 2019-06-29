@@ -1,7 +1,7 @@
 From: Yong Wu <yong.wu@mediatek.com>
-Subject: [PATCH v8 05/21] iommu/mediatek: Fix iova_to_phys PA start for 4GB mode
-Date: Sat, 29 Jun 2019 10:09:11 +0800
-Message-ID: <1561774167-24141-6-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v8 06/21] iommu/io-pgtable-arm-v7s: Add paddr_to_iopte and iopte_to_paddr helpers
+Date: Sat, 29 Jun 2019 10:09:12 +0800
+Message-ID: <1561774167-24141-7-git-send-email-yong.wu@mediatek.com>
 References: <1561774167-24141-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,57 +12,134 @@ To: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, R
 Cc: Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, yong.wu@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-In the 4GB mode, the physical address is remapped,
+Add two helper functions: paddr_to_iopte and iopte_to_paddr.
 
-Here is the detailed remap relationship.
-CPU PA         ->    HW PA
-0x4000_0000          0x1_4000_0000 (Add bit32)
-0x8000_0000          0x1_8000_0000 ...
-0xc000_0000          0x1_c000_0000 ...
-0x1_0000_0000        0x1_0000_0000 (No change)
-
-The PA in the iova_to_phys that is got from v7s always is u32, But
-from the CPU point of view, PA should add BIT(32) when PA < 0x4000_0000.
-
-Fixes: 30e2fccf9512 ("iommu/mediatek: Enlarge the validate PA range
-for 4GB mode")
 Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Evan Green <evgreen@chromium.org>
 ---
- drivers/iommu/mtk_iommu.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/iommu/io-pgtable-arm-v7s.c | 45 ++++++++++++++++++++++++++++----------
+ 1 file changed, 33 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 1ddb2b7..fefc2e0 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -115,6 +115,19 @@ struct mtk_iommu_domain {
+diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
+index 9a8a887..94c38db 100644
+--- a/drivers/iommu/io-pgtable-arm-v7s.c
++++ b/drivers/iommu/io-pgtable-arm-v7s.c
+@@ -180,18 +180,38 @@ struct arm_v7s_io_pgtable {
+ 	spinlock_t		split_lock;
+ };
  
- static const struct iommu_ops mtk_iommu_ops;
- 
-+/*
-+ * In M4U 4GB mode, the physical address is remapped as below:
-+ *  CPU PA         ->   M4U HW PA
-+ *  0x4000_0000         0x1_4000_0000 (Add bit32)
-+ *  0x8000_0000         0x1_8000_0000 ...
-+ *  0xc000_0000         0x1_c000_0000 ...
-+ *  0x1_0000_0000       0x1_0000_0000 (No change)
-+ *
-+ * The PA in the iova_to_phys that is got from v7s always is u32, But from
-+ * the CPU point of view, PA should add BIT(32) when PA < 0x4000_0000.
-+ */
-+#define MTK_IOMMU_4GB_MODE_REMAP_BASE	 0x40000000
++static bool arm_v7s_pte_is_cont(arm_v7s_iopte pte, int lvl);
 +
- static LIST_HEAD(m4ulist);	/* List all the M4U HWs */
+ static dma_addr_t __arm_v7s_dma_addr(void *pages)
+ {
+ 	return (dma_addr_t)virt_to_phys(pages);
+ }
  
- #define for_each_m4u(data)	list_for_each_entry(data, &m4ulist, list)
-@@ -409,7 +422,7 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
- 	pa = dom->iop->iova_to_phys(dom->iop, iova);
- 	spin_unlock_irqrestore(&dom->pgtlock, flags);
+-static arm_v7s_iopte *iopte_deref(arm_v7s_iopte pte, int lvl)
++static arm_v7s_iopte paddr_to_iopte(phys_addr_t paddr, int lvl,
++				    struct io_pgtable_cfg *cfg)
+ {
++	return paddr & ARM_V7S_LVL_MASK(lvl);
++}
++
++static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
++				  struct io_pgtable_cfg *cfg)
++{
++	arm_v7s_iopte mask;
++
+ 	if (ARM_V7S_PTE_IS_TABLE(pte, lvl))
+-		pte &= ARM_V7S_TABLE_MASK;
++		mask = ARM_V7S_TABLE_MASK;
++	else if (arm_v7s_pte_is_cont(pte, lvl))
++		mask = ARM_V7S_LVL_MASK(lvl) * ARM_V7S_CONT_PAGES;
+ 	else
+-		pte &= ARM_V7S_LVL_MASK(lvl);
+-	return phys_to_virt(pte);
++		mask = ARM_V7S_LVL_MASK(lvl);
++
++	return pte & mask;
++}
++
++static arm_v7s_iopte *iopte_deref(arm_v7s_iopte pte, int lvl,
++				  struct arm_v7s_io_pgtable *data)
++{
++	return phys_to_virt(iopte_to_paddr(pte, lvl, &data->iop.cfg));
+ }
  
--	if (data->enable_4GB)
-+	if (data->enable_4GB && pa < MTK_IOMMU_4GB_MODE_REMAP_BASE)
- 		pa |= BIT_ULL(32);
+ static void *__arm_v7s_alloc_table(int lvl, gfp_t gfp,
+@@ -407,7 +427,7 @@ static int arm_v7s_init_pte(struct arm_v7s_io_pgtable *data,
+ 	if (num_entries > 1)
+ 		pte = arm_v7s_pte_to_cont(pte, lvl);
  
- 	return pa;
+-	pte |= paddr & ARM_V7S_LVL_MASK(lvl);
++	pte |= paddr_to_iopte(paddr, lvl, cfg);
+ 
+ 	__arm_v7s_set_pte(ptep, pte, num_entries, cfg);
+ 	return 0;
+@@ -473,7 +493,7 @@ static int __arm_v7s_map(struct arm_v7s_io_pgtable *data, unsigned long iova,
+ 	}
+ 
+ 	if (ARM_V7S_PTE_IS_TABLE(pte, lvl)) {
+-		cptep = iopte_deref(pte, lvl);
++		cptep = iopte_deref(pte, lvl, data);
+ 	} else if (pte) {
+ 		/* We require an unmap first */
+ 		WARN_ON(!selftest_running);
+@@ -523,7 +543,8 @@ static void arm_v7s_free_pgtable(struct io_pgtable *iop)
+ 		arm_v7s_iopte pte = data->pgd[i];
+ 
+ 		if (ARM_V7S_PTE_IS_TABLE(pte, 1))
+-			__arm_v7s_free_table(iopte_deref(pte, 1), 2, data);
++			__arm_v7s_free_table(iopte_deref(pte, 1, data),
++					     2, data);
+ 	}
+ 	__arm_v7s_free_table(data->pgd, 1, data);
+ 	kmem_cache_destroy(data->l2_tables);
+@@ -593,7 +614,7 @@ static size_t arm_v7s_split_blk_unmap(struct arm_v7s_io_pgtable *data,
+ 		if (!ARM_V7S_PTE_IS_TABLE(pte, 1))
+ 			return 0;
+ 
+-		tablep = iopte_deref(pte, 1);
++		tablep = iopte_deref(pte, 1, data);
+ 		return __arm_v7s_unmap(data, iova, size, 2, tablep);
+ 	}
+ 
+@@ -652,7 +673,7 @@ static size_t __arm_v7s_unmap(struct arm_v7s_io_pgtable *data,
+ 				io_pgtable_tlb_add_flush(iop, iova, blk_size,
+ 					ARM_V7S_BLOCK_SIZE(lvl + 1), false);
+ 				io_pgtable_tlb_sync(iop);
+-				ptep = iopte_deref(pte[i], lvl);
++				ptep = iopte_deref(pte[i], lvl, data);
+ 				__arm_v7s_free_table(ptep, lvl + 1, data);
+ 			} else if (iop->cfg.quirks & IO_PGTABLE_QUIRK_NON_STRICT) {
+ 				/*
+@@ -677,7 +698,7 @@ static size_t __arm_v7s_unmap(struct arm_v7s_io_pgtable *data,
+ 	}
+ 
+ 	/* Keep on walkin' */
+-	ptep = iopte_deref(pte[0], lvl);
++	ptep = iopte_deref(pte[0], lvl, data);
+ 	return __arm_v7s_unmap(data, iova, size, lvl + 1, ptep);
+ }
+ 
+@@ -703,7 +724,7 @@ static phys_addr_t arm_v7s_iova_to_phys(struct io_pgtable_ops *ops,
+ 	do {
+ 		ptep += ARM_V7S_LVL_IDX(iova, ++lvl);
+ 		pte = READ_ONCE(*ptep);
+-		ptep = iopte_deref(pte, lvl);
++		ptep = iopte_deref(pte, lvl, data);
+ 	} while (ARM_V7S_PTE_IS_TABLE(pte, lvl));
+ 
+ 	if (!ARM_V7S_PTE_IS_VALID(pte))
+@@ -712,7 +733,7 @@ static phys_addr_t arm_v7s_iova_to_phys(struct io_pgtable_ops *ops,
+ 	mask = ARM_V7S_LVL_MASK(lvl);
+ 	if (arm_v7s_pte_is_cont(pte, lvl))
+ 		mask *= ARM_V7S_CONT_PAGES;
+-	return (pte & mask) | (iova & ~mask);
++	return iopte_to_paddr(pte, lvl, &data->iop.cfg) | (iova & ~mask);
+ }
+ 
+ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
 -- 
 1.9.1
