@@ -1,113 +1,72 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V5 08/18] clk: tegra: Add suspend resume support for DFLL
-Date: Sun, 30 Jun 2019 00:45:39 +0300
-Message-ID: <e641e95e-57e5-4654-c951-a3b63d3b37c4@gmail.com>
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-9-git-send-email-skomatineni@nvidia.com>
- <594adc1e-4345-33ae-c79f-ad6f00964587@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 0/8] stm32 m4 remoteproc on STM32MP157c
+Date: Sat, 29 Jun 2019 21:03:22 -0700
+Message-ID: <20190630040322.GH23094@builder>
+References: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <594adc1e-4345-33ae-c79f-ad6f00964587@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Fabien Dessenne <fabien.dessenne@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-29.06.2019 16:28, Dmitry Osipenko пишет:
-> 28.06.2019 5:12, Sowjanya Komatineni пишет:
->> This patch creates APIs for supporting Tegra210 clock driver to
->> perform DFLL suspend and resume operation.
->>
->> During suspend, DFLL mode is saved and on resume Tegra210 clock driver
->> invokes DFLL resume API to re-initialize DFLL to enable target device
->> clock in open loop mode or closed loop mode.
->>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/clk/tegra/clk-dfll.c | 78 ++++++++++++++++++++++++++++++++++++++++++++
->>  drivers/clk/tegra/clk-dfll.h |  2 ++
->>  2 files changed, 80 insertions(+)
->>
->> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
->> index f8688c2ddf1a..a1f37cf99b00 100644
->> --- a/drivers/clk/tegra/clk-dfll.c
->> +++ b/drivers/clk/tegra/clk-dfll.c
->> @@ -277,6 +277,7 @@ struct tegra_dfll {
->>  	unsigned long			dvco_rate_min;
->>  
->>  	enum dfll_ctrl_mode		mode;
->> +	enum dfll_ctrl_mode		resume_mode;
->>  	enum dfll_tune_range		tune_range;
->>  	struct dentry			*debugfs_dir;
->>  	struct clk_hw			dfll_clk_hw;
->> @@ -1864,6 +1865,83 @@ static int dfll_fetch_common_params(struct tegra_dfll *td)
->>  }
->>  
->>  /*
->> + * tegra_dfll_suspend
->> + * @pdev: DFLL instance
->> + *
->> + * dfll controls clock/voltage to other devices, including CPU. Therefore,
->> + * dfll driver pm suspend callback does not stop cl-dvfs operations.
->> + */
->> +void tegra_dfll_suspend(struct platform_device *pdev)
->> +{
->> +	struct tegra_dfll *td = dev_get_drvdata(&pdev->dev);
->> +
->> +	if (!td)
->> +		return;
->> +
->> +	if (td->mode <= DFLL_DISABLED)
->> +		return;
->> +
->> +	td->resume_mode = td->mode;
->> +	switch (td->mode) {
->> +	case DFLL_CLOSED_LOOP:
->> +		dfll_set_mode(td, DFLL_CLOSED_LOOP);
->> +		dfll_set_frequency_request(td, &td->last_req);
->> +
->> +		dfll_unlock(td);
->> +		break;
->> +	default:
->> +		break;
->> +	}
->> +}
->> +
->> +/**
->> + * tegra_dfll_resume - reprogram the DFLL after context-loss
->> + * @pdev: DFLL instance
->> + *
->> + * Re-initialize and enable target device clock in open loop mode. Called
->> + * directly from SoC clock resume syscore operation. Closed loop will be
->> + * re-entered in platform syscore ops as well after CPU clock source is
->> + * switched to DFLL in open loop.
->> + */
->> +void tegra_dfll_resume(struct platform_device *pdev, bool on_dfll)
->> +{
->> +	struct tegra_dfll *td = dev_get_drvdata(&pdev->dev);
->> +
->> +	if (!td)
->> +		return;
->> +
->> +	if (on_dfll) {
->> +		if (td->resume_mode == DFLL_CLOSED_LOOP)
->> +			dfll_lock(td);
->> +		td->resume_mode = DFLL_DISABLED;
->> +		return;
->> +	}
->> +
->> +	reset_control_deassert(td->dvco_rst);
->> +
->> +	pm_runtime_get(td->dev);
-> 
-> pm_runtime_get_sync()?
-> 
-> Otherwise looks like you're risking a lot here because pm_runtime_get() is an
-> asynchronous request.
+On Tue 14 May 01:26 PDT 2019, Fabien Dessenne wrote:
 
-It looks like DFLL driver should be masked as IRQ-safe using pm_runtime_irq_safe()
-and then the synchronous resume could be used..
+> STMicrolectronics STM32MP157 MPU are based on a Dual Arm Cortex-A7 core and a
+> Cortex-M4.
+> This patchset adds the support of the stm32_rproc driver allowing to control
+> the M4 remote processor.
+> 
+
+Applied patches 1 through 3, with a few fixes of compile warnings on
+data types in dev_dbg, in patch 3.
+
+Thanks,
+Bjorn
+
+> Changes since v3:
+> -Replaced "st,auto_boot" with "st,auto-boot"
+> -Update m4 reg values and align with unit-address
+> 
+> Changes since v2:
+> - Clarified "reg" description
+> - Change m4 unit adress to 38000000
+> - Renamed "auto_boot" in "st,auto-boot"
+> 
+> Changes since v1:
+> - Gave details about the memory mapping (in bindings).
+> - Used 'dma-ranges' instead of 'ranges'.
+> - Updated the 'compatible' property.
+> - Remove the 'recovery', 'reset-names' and 'interrupt-names' properties.
+> - Clarified why / when mailboxes are optional.
+> 
+> Fabien Dessenne (8):
+>   dt-bindings: stm32: add bindings for ML-AHB interconnect
+>   dt-bindings: remoteproc: add bindings for stm32 remote processor
+>     driver
+>   remoteproc: stm32: add an ST stm32_rproc driver
+>   ARM: dts: stm32: add m4 remoteproc support on STM32MP157c
+>   ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
+>   ARM: dts: stm32: enable m4 coprocessor support on STM32MP157c-ed1
+>   ARM: dts: stm32: declare copro reserved memories on STM32MP157a-dk1
+>   ARM: dts: stm32: enable m4 coprocessor support on STM32MP157a-dk1
+> 
+>  .../devicetree/bindings/arm/stm32/mlahb.txt        |  37 ++
+>  .../devicetree/bindings/remoteproc/stm32-rproc.txt |  63 +++
+>  arch/arm/boot/dts/stm32mp157a-dk1.dts              |  52 ++
+>  arch/arm/boot/dts/stm32mp157c-ed1.dts              |  52 ++
+>  arch/arm/boot/dts/stm32mp157c.dtsi                 |  20 +
+>  drivers/remoteproc/Kconfig                         |  15 +
+>  drivers/remoteproc/Makefile                        |   1 +
+>  drivers/remoteproc/stm32_rproc.c                   | 628 +++++++++++++++++++++
+>  8 files changed, 868 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+>  create mode 100644 drivers/remoteproc/stm32_rproc.c
+> 
+> -- 
+> 2.7.4
+> 
