@@ -1,125 +1,183 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] drm+dt+efi: support devices with
- multiple possible panels
-Date: Sun, 30 Jun 2019 14:35:04 -0700
-Message-ID: <CAF6AEGtA=xB6QCAZK0oiv4DVd3VvVX-f=C_+23tW2fBqyfLqbw@mail.gmail.com>
-References: <20190630203614.5290-1-robdclark@gmail.com>
- <20190630204723.GH7043@pendragon.ideasonboard.com>
- <CAF6AEGvA-wVyC4jJC-nZU-pdVH=KYtye9twDgup-Nq0C_+wtvQ@mail.gmail.com>
- <20190630211520.GI7043@pendragon.ideasonboard.com>
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: [PATCH v9 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
+ Subsystem driver
+Date: Sun, 30 Jun 2019 23:45:00 +0200
+Message-ID: <b51bdf5d-4002-5ec6-d687-b97b4f8bbd78@lucaceresoli.net>
+References: <1560247809-117978-1-git-send-email-vishal.sagar@xilinx.com>
+ <1560247809-117978-3-git-send-email-vishal.sagar@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20190630211520.GI7043-N3hz7ZxfLydczECFQUw77jytWr6r+dGw0E9HWUfgJXw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Rob Clark <robdclark-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, aarch64-laptops-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1560247809-117978-3-git-send-email-vishal.sagar@xilinx.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vishal Sagar <vishal.sagar@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, laurent.pinchart@ideasonboard.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>, Sandip Kothari <sandipk@xilinx.com>, Jacopo Mondi <jacopo@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBKdW4gMzAsIDIwMTkgYXQgMjoxNSBQTSBMYXVyZW50IFBpbmNoYXJ0CjxsYXVyZW50
-LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+IHdyb3RlOgo+Cj4gSGkgUm9iLAo+Cj4gT24gU3Vu
-LCBKdW4gMzAsIDIwMTkgYXQgMDI6MDU6MjFQTSAtMDcwMCwgUm9iIENsYXJrIHdyb3RlOgo+ID4g
-T24gU3VuLCBKdW4gMzAsIDIwMTkgYXQgMTo0NyBQTSBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+
-ID4gPiBPbiBTdW4sIEp1biAzMCwgMjAxOSBhdCAwMTozNjowNFBNIC0wNzAwLCBSb2IgQ2xhcmsg
-d3JvdGU6Cj4gPiA+ID4gRnJvbTogUm9iIENsYXJrIDxyb2JkY2xhcmtAY2hyb21pdW0ub3JnPgo+
-ID4gPiA+Cj4gPiA+ID4gTm93IHRoYXQgd2UgY2FuIGRlYWwgZ3JhY2VmdWxseSB3aXRoIGJvb3Rs
-b2FkZXIgKGZpcm13YXJlKSBpbml0aWFsaXplZAo+ID4gPiA+IGRpc3BsYXkgb24gYWFyY2g2NCBs
-YXB0b3BzWzFdLCB0aGUgbmV4dCBzdGVwIGlzIHRvIGRlYWwgd2l0aCB0aGUgZmFjdAo+ID4gPiA+
-IHRoYXQgdGhlIHNhbWUgbW9kZWwgb2YgbGFwdG9wIGNhbiBoYXZlIG9uZSBvZiBtdWx0aXBsZSBk
-aWZmZXJlbnQgcGFuZWxzLgo+ID4gPiA+IChGb3IgdGhlIHlvZ2EgYzYzMCB0aGF0IEkgaGF2ZSwg
-SSBrbm93IG9mIGF0IGxlYXN0IHR3byBwb3NzaWJsZSBwYW5lbHMsCj4gPiA+ID4gdGhlcmUgbWln
-aHQgYmUgYSB0aGlyZC4pCj4gPiA+Cj4gPiA+IEkgaGF2ZSB0byBhc2sgdGhlIG9idmlvdXMgcXVl
-c3Rpb246IHdoeSBkb2Vzbid0IHRoZSBib290IGxvYWRlciBqdXN0Cj4gPiA+IHBhc3MgYSBjb3Jy
-ZWN0IERUIHRvIExpbnV4ID8gVGhlcmUncyBubyBwb2ludCBpbiBwYXNzaW5nIGEgbGlzdCBvZgo+
-ID4gPiBwYW5lbHMgdGhhdCBhcmUgbm90IHRoZXJlLCB0aGlzIHNlZW1zIHF1aXRlIGEgYmlnIGhh
-Y2sgdG8gbWUuIEEgcHJvcGVyCj4gPiA+IGJvb3QgbG9hZGVyIHNob3VsZCBjb25zdHJ1Y3QgdGhl
-IERUIGJhc2VkIG9uIGhhcmR3YXJlIGRldGVjdGlvbi4KPiA+Cj4gPiBIaSBMYXVyZW50LAo+ID4K
-PiA+IEFjdHVhbGx5IHRoZSBib290bG9hZGVyIG9uIHRoZXNlIGRldmljZXMgaXMgcGFzc2luZyAq
-bm8qIGR0ICh0aGV5IGJvb3QKPiA+IEFDUEksIHdlIGFyZSBsb2FkaW5nIGR0YiBmcm9tIGdydWIg
-Y3VycmVudGx5KQo+Cj4gQWgsIHRoZSBicm9rZW4gcHJvbWlzZXMgb2YgQUNQSSBvbiBBUk02NC4g
-SSB3b25kZXIgaG93IGxvbmcgaXQgd2lsbCB0YWtlCj4gYmVmb3JlIGEgcHVibGljIGFja25vd2xl
-ZGdlbWVudCB0aGF0IGl0IHdhcyBhIGJhZCBpZGVhLiBCYWQgaWRlYXMgaGFwcGVuCj4gYW5kIGNh
-biBiZSBmb3JnaXZlbiwgYnV0IHN0dWJib3JuZXNzIGluIGNsYWltaW5nIGl0IHdhcyB0aGUgcmln
-aHQKPiBkZWNpc2lvbiBpcyBhbm90aGVyIHN0b3J5Lgo+Cj4gKE5vdCB0aGF0IHlvdSBjYW4gYmUg
-YmxhbWVkIGZvciB0aGlzIG9mIGNvdXJzZSA6LSkpCgpUbyBiZSBmYWlyLCBJIHRoaW5rIHRoZSBv
-bmx5IGJsYW1lIGhlcmUgaXMgdGhhdCBNUyBsZXQgcWNvbSBnZXQgYXdheQp3aXRoIHNvbWUgdGhp
-bmdzIGluIHRoZWlyIEFDUEkgYW5kIFVFRkkgaW1wbGVtZW50YXRpb24uLiAgSSB0aGluawp3ZSds
-bCBuZWVkIHRvIHNoaWZ0IHRvIEFDUEkgZXZlbnR1YWxseSBmb3IgdGhlc2UgbGFwdG9wcywgaW4g
-b3JkZXIgdG8Ka2VlcCB1cC4gIERUIGlzbid0IGEgdGhpbmcgdGhhdCB3b3VsZCBzY2FsZSB3aXRo
-IHRoZSB2b2x1bWUgb2YgeDg2CmxhcHRvcHMgdGhhdCBleGlzdCwgYW5kIGlmIGFhcmNoNjQgbGFw
-dG9wcyBnZXQgdGhlcmUgdG9vLCB3ZSdsbCBuZWVkCkFDUEkuICBMZXRzIGZhY2UgaXQsIHRoZSAj
-IG9mIGRpZmZlcmVudCBkdCBkZXZpY2VzIHN1cHBvcnRlZCB1cHN0cmVhbQppcyBhIGRyb3AgaW4g
-dGhlIGJ1Y2tldCBjb21wYXJlZCB0byBudW1iZXIgb2YgKmFjdHVhbGx5IHBoeXNpY2FsbHkKZGlm
-ZmVyZW50KiB4ODYgZGV2aWNlcyBzdXBwb3J0ZWQgYnkgdXBzdHJlYW0uICAoQW5kIEkgZG9uJ3Qg
-bWVhbgppbmRpdmlkdWFsIG1vZGVscyBvZiBsYXB0b3BzLCBidXQgZGlmZmVyZW50IHByb2R1Y3Rp
-b24gcnVucyB3aGVyZSB0aGV5CnBpY2tlZCBhIGRpZmZlcmVudCBwYW5lbCBvciB0cmFja3BhZCBv
-ciB3aGF0ZXZlci4pCgpCdXQgd2UgaGF2ZSBhIGxvdCBvZiB1cHN0cmVhbSB3b3JrIHRvIGdldCB0
-aGVyZSB0byBzdXBwb3J0IGhvdyBBQ1BJCndvcmtzIG9uIHRoZXNlIHRoaW5nczoKCiAqIFRoZSBu
-ZXcgUGxhdGZvcm0gRXh0ZW5zaW9uIFBsdWdpbiAoUEVQKSBtb2RlbCBmb3IgZGV2aWNlIHBvd2Vy
-CiAgIGNvbnRyb2wKICogdW50YW5nbGluZyBkcm0gYnJpZGdlIGhvb2t1cCBmcm9tIERUCiAqIHVu
-dGFuZ2xpbmcgZHJtIHBhbmVsIGhvb2sgZnJvbSBEVAogKiBmaWd1cmluZyBvdXQgaG93IHRvIGRl
-YWwgd2l0aCBtaXMtbWF0Y2hlcyBiZXR3ZWVuIGR0IGRldmljZQogICBtb2RlbCBhbmQgQUNQSSBk
-ZXZpY2UgbW9kZWwKClRoZXJlIGlzIHNvbWUgZWFybHkgd29yayBmb3IgQUNQSSBzdXBwb3J0IGZv
-ciB0aGVzZSBkZXZpY2VzLCBidXQKcmVhbGlzdGljYWxseSBJIHRoaW5rIGl0IGlzIGdvaW5nIHRv
-IHRha2UgYSBiZXR0ZXIgcGFydCBvZiBhIHllYXIgdG8KZ2V0IHRoZXJlLiAgVW50aWwgdGhlbiB3
-ZSByZWx5IG9uIERULgoKVGhhdCBpc24ndCB0byBzYXkgbXkgcHJvcG9zYWwgZG9lc24ndCBtYWtl
-IGEgdG9uIG9mIHNlbnNlLiAgV2UgYWxzbwpuZWVkIHRvIHNvbHZlIHRoaXMgcHJvYmxlbSBmb3Ig
-RFQgYmFzZWQgZGV2aWNlcywgYW5kIEkgdGhpbmsKL2Nob3Nlbi9wYW5lbC1pZCBtYWtlcyBhICp0
-b24qIG9mIHNlbnNlIGZvciB0aG9zZSBkZXZpY2VzLgoKPiA+IEkgdGhpbmsgbm9ybWFsbHkgYSBk
-ZXZpY2UgYnVpbHQgdy8gZHQgaW4gbWluZCB3b3VsZCBwb3B1bGF0ZQo+ID4gL2Nob3Nlbi9wYW5l
-bC1pZCBkaXJlY3RseSAocmF0aGVyIHRoYW4gdGhlIHdheSBpdCBpcyBjdXJyZW50bHkKPiA+IHBv
-cHVsYXRlZCBiYXNlZCBvbiByZWFkaW5nIGFuIGVmaSB2YXJpYWJsZSBwcmlvciB0byBFeGl0Qm9v
-dFNlcnZpY2VzKS4KPiA+IEJ1dCB0aGF0IGlzIGNvbnNpZGVyYWJseSBlYXNpZXIgYXNrIHRoYW4g
-aGF2aW5nIGl0IHJlLXdyaXRlIG9mX2dyYXBoCj4gPiBiaW5kaW5ncy4gRWl0aGVyIHdheSwgd2Ug
-YXJlbid0IGluIGNvbnRyb2wgb2YgdGhlIGJvb3Rsb2FkZXIgb24gdGhlc2UKPiA+IGRldmljZXMs
-Cj4KPiBJZiB5b3UgY2FuJ3QgY29udHJvbCB0aGUgaW5pdGlhbCBib290IGxvYWRlciwgdGhlbiBJ
-IHNlZSB0d28gb3B0aW9ucywKPiBub25lIG9mIHdoaWNoIHlvdSB3aWxsIGxpa2UgSSdtIGFmcmFp
-ZC4KPgo+IC0gQXMgeW91IHBhc3MgdGhlIERUIHRvIExpbnV4IGZyb20gZ3J1YiwgdGhlcmUncyB5
-b3VyIGludGVybWVkaWF0ZSBib290Cj4gICBsb2FkZXIgd2hlcmUgeW91IGNhbiBjb25zdHJ1Y3Qg
-YSB2YWxpZCBEVC4KCm5vdCByZWFsbHkgYSBzb2x1dGlvbiB0aGF0IGlzIGdvaW5nIHRvIHNjYWxl
-Cgo+IC0gSWYgdGhlIEFDUEkgY3VsdCBuZWVkcyB0byBiZSB2ZW5lcmF0ZWQsIHRoZW4gZHJpdmVy
-cyBzaG91bGQgYmUKPiAgIGNvbnZlcnRlZCB0byBzdXBwb3J0IEFDUEkgd2l0aG91dCB0aGUgbmVl
-ZCBmb3IgRFQuCgp3ZSdyZSB3b3JraW5nIG9uIGl0Cgo+IEEgcG9zc2libGUgYSBtaWRkbGVncm91
-bmQgY291bGQgYmUgYSBwbGF0Zm9ybSBkcml2ZXIgKGluCj4gZHJpdmVycy9maXJtd2FyZS9lZmkv
-ID8gaW4gZHJpdmVycy9wbGF0Zm9ybS8gPykgdGhhdCB3aWxsIHBhdGNoIHRoZSBEVAo+IHRvIGlu
-c3RhbnRpYXRlIHRoZSByaWdodCBwYW5lbCBiYXNlZCBvbiB0aGUgaW5mb3JtYXRpb24gcmV0cmll
-dmVkIGZyb20KPiB0aGUgYm9vdCBsb2FkZXIuIFdlIHdpbGwgbmVlZCBzb21ldGhpbmcgc2ltaWxh
-ciBmb3IgdGhlIEludGVsIElQVTMKPiBjYW1lcmEgZHJpdmVyLCBhcyBJbnRlbCBkZWNpZGVkIHRv
-IGNvbWUgdXAgd2l0aCB0d28gZGlmZmVyZW50IEFDUEkKPiAiYmluZGluZ3MiLCBvbmUgZm9yIFdp
-bmRvd3MgYW5kIG9uZSBmb3IgQ2hyb21lIE9TLCBsZWF2aW5nIFdpbmRvd3MKPiBtYWNoaW5lIGlt
-cG9zc2libGUgdG8gaGFuZGxlIGZyb20gYSBrZXJuZWwgZHJpdmVyIGR1ZSB0byByZXF1aXJlZAo+
-IGluZm9ybWF0aW9uIGJlaW5nIGhhcmRjb2RlZCBpbiBXaW5kb3dzIGRyaXZlcnMgc2hpcHBlZCBi
-eSBJbnRlbC4gVGhpcyBpcwo+IHRodXMgYW4gb3B0aW9uIHRoYXQgbWF5ICh1bmZvcnR1bmF0ZWx5
-KSBuZWVkIHRvIGJlY29tZSBtb3JlIHdpZGVzcHJlYWQKPiBmb3IgQUNQSS1iYXNlZCBzeXN0ZW1z
-LgoKYWdhaW4sIGEga2VybmVsIChvciBib290bG9hZGVyKSBzaWRlIG1hc3NpdmVseSBpbnRydXNp
-dmUgcmUtd3JpdGUgdGhlCmR0IGFwcHJvYWNoIGlzbid0IGdvaW5nIHRvIHNjYWxlLiAgSWYgeW91
-IGtlZXAgaXQgc2ltcGxlLCBpZS4KL2Nob3Nlbi9wYW5lbC1pZCBJIGNhbiBzZWUgYSBwb3NzaWJp
-bGl0eSB0byBtb3ZlIG15IHBhdGNoIGZyb20KZHJpdmVycy9maXJtd2FyZS9lZmkgaW50byBhbiBl
-YXJsaWVyIHN0YWdlLiAgQnV0IGlmIGl0IGhhcyB0byByZS13cml0ZQpncmFwaCwgdGhhdCBmYWxs
-cyBhcGFydCBhcyBzb29uIGFzIGEgbmV3IGRldmljZSBjb21lcyBhbG9uZyB3aXRoIGEKZGlmZmVy
-ZW50IGJyaWRnZSwgb3IgcGVyaGFwcyBzb21lIHZlbmRvciBkZWNpZGVzIHRvIHVzZSBkc2kgZGly
-ZWN0bHkKYW5kIGZvcmVnbyB0aGUgYnJpZGdlLgoKdXN1YWxseSAoZnJvbSB3aGF0IEkndmUgc2Vl
-biBzbyBmYXIpIHRoZXJlIGFyZSBhIGZldyBncGlvcyB0byBwcm9iZSB0bwpkZWNpZGUgd2hpY2gg
-cGFuZWwgeW91IGhhdmUuICBTbyBhZnRlciBhIGZldyBsaW5lcyBvZiBncGlvIGJhbmdpbmcgeW91
-CmNhbiBlaXRoZXIgYXNrIGZ3IGVuZ2luZWVycyB0byBzZXQgYXBwcm9wcmlhdGUgbm9kZSBpbiBj
-aG9zZW4uLiBvcgpyZS13cml0ZSBvZl9ncmFwaCBiaW5kaW5ncy4gIEkgdGhpbmsgdGhlIGZvcm1l
-ciBoYXMgYSBjaGFuY2Ugb2YKZ2FpbmluZyB0cmFjdGlvbiBvbiBhbmRyb2lkIGRldmljZXMuLiBs
-YXR0ZXIgbm90IHNvIG11Y2guICBZb3UgYXJlCnJlYWxseSBtYWtpbmcgdG9vIGJpZyBvZiBhbiBh
-c2sgZm9yIGZ3IGVuZ2luZWVycyA7LSkKCj4gPiBzbyBpdCBpcyBhIG1hdHRlciBvZiBjb21pbmcg
-dXAgd2l0aCBzb21ldGhpbmcgdGhhdCB3b3JrcyBvbiBhY3R1YWwgaHcKPiA+IHRoYXQgd2UgZG9u
-J3QgbGlrZSByYXRoZXIgdGhhbiBpZGVhbGl6ZWQgaHcgdGhhdCB3ZSBkb24ndCBoYXZlIDstKQo+
-Cj4gVGhhdCBkb2Vzbid0IGhvd2V2ZXIganVzdGlmeSBub3QgZ29pbmcgZm9yIHRoZSBiZXN0IHNv
-bHV0aW9uIHdlIGNhbgo+IGFjaGlldmUuIFdoYXQgZG8geW91IGxpa2UgYmVzdCBpbiB0aGUgYWJv
-dmUgPyA6LSkKCkkgd2FudCBhIHNvbHV0aW9uIHRoYXQgaXMgYWNoaWV2YWJsZSA7LSkKCkJSLAot
-UgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJl
-bm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
+Hi Vishal,
+
+a few questions below about the SLBF error management.
+
+On 11/06/19 12:10, Vishal Sagar wrote:
+> The Xilinx MIPI CSI-2 Rx Subsystem soft IP is used to capture images
+> from MIPI CSI-2 camera sensors and output AXI4-Stream video data ready
+> for image processing. Please refer to PG232 for details.
+> 
+> The driver is used to set the number of active lanes, if enabled
+> in hardware. The CSI2 Rx controller filters out all packets except for
+> the packets with data type fixed in hardware. RAW8 packets are always
+> allowed to pass through.
+> 
+> It is also used to setup and handle interrupts and enable the core. It
+> logs all the events in respective counters between streaming on and off.
+> 
+> The driver supports only the video format bridge enabled configuration.
+> Some data types like YUV 422 10bpc, RAW16, RAW20 are supported when the
+> CSI v2.0 feature is enabled in design. When the VCX feature is enabled,
+> the maximum number of virtual channels becomes 16 from 4.
+> 
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+
+...
+
+> --- /dev/null
+> +++ b/drivers/media/platform/xilinx/xilinx-csi2rxss.c
+
+...
+> +/**
+> + * xcsi2rxss_irq_handler - Interrupt handler for CSI-2
+> + * @irq: IRQ number
+> + * @dev_id: Pointer to device state
+> + *
+> + * In the interrupt handler, a list of event counters are updated for
+> + * corresponding interrupts. This is useful to get status / debug.
+> + *
+> + * In case of stream line buffer full condition, the IP is reset, stopped and
+> + * an event is raised.
+> + *
+> + * Return: IRQ_HANDLED after handling interrupts
+> + *         IRQ_NONE is no interrupts
+> + */
+> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)dev_id;
+> +	struct xcsi2rxss_core *core = &state->core;
+> +	u32 status;
+> +
+> +	status = xcsi2rxss_read(core, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
+> +	dev_dbg_ratelimited(core->dev, "interrupt status = 0x%08x\n", status);
+> +
+> +	if (!status)
+> +		return IRQ_NONE;
+> +
+> +	/* Received a short packet */
+> +	if (status & XCSI_ISR_SPFIFONE) {
+> +		dev_dbg_ratelimited(core->dev, "Short packet = 0x%08x\n",
+> +				    xcsi2rxss_read(core, XCSI_SPKTR_OFFSET));
+> +	}
+> +
+> +	/* Short packet FIFO overflow */
+> +	if (status & XCSI_ISR_SPFIFOF)
+> +		dev_alert_ratelimited(core->dev, "Short packet FIFO overflowed\n");
+> +
+> +	/*
+> +	 * Stream line buffer full
+> +	 * This means there is a backpressure from downstream IP
+> +	 */
+> +	if (status & XCSI_ISR_SLBF) {
+> +		dev_alert_ratelimited(core->dev, "Stream Line Buffer Full!\n");
+> +		if (core->rst_gpio) {
+> +			gpiod_set_value(core->rst_gpio, 1);
+> +			/* minimum 40 dphy_clk_200M cycles */
+> +			ndelay(250);
+> +			gpiod_set_value(core->rst_gpio, 0);
+> +		}
+> +		xcsi2rxss_stop_stream(state);
+
+I've been hit by the dreadful "Stream Line Buffer Full" error, getting
+the CSI-2 RX completely stuck in SLBF and not transmitting any frames
+sporadically after glitches in the incoming MIPI stream. And I found
+that adding xcsi2rxss_start_stream() here just after
+xcsi2rxss_stop_stream() allows to continue the stream with almost no
+interruption and without userspace intervention.
+
+Do you think this is a reliable solution, or does it have side-effects I
+didn't encounter? Note I'm not using pm nor the ctrls, so register
+writes are limited to the enable/disable code paths.
+
+Does video_aresetn also reset registers?
+
+BTW in my code I also moved xcsi2rxss_stop_stream() before the if
+(core->rst_gpio) {}. There is no strong reason for this, I didn't
+observe any functional difference, it just looks
+more logical to me to stop the IP before resetting it.
+
+...
+
+> +static int xcsi2rxss_probe(struct platform_device *pdev)
+> +{
+> +	struct v4l2_subdev *subdev;
+> +	struct xcsi2rxss_state *xcsi2rxss;
+> +	struct xcsi2rxss_core *core;
+> +	struct resource *res;
+> +	int ret, num_ctrls, i;
+> +
+> +	xcsi2rxss = devm_kzalloc(&pdev->dev, sizeof(*xcsi2rxss), GFP_KERNEL);
+> +	if (!xcsi2rxss)
+> +		return -ENOMEM;
+> +
+> +	core = &xcsi2rxss->core;
+> +	core->dev = &pdev->dev;
+> +
+> +	core->clks = devm_kmemdup(core->dev, xcsi2rxss_clks,
+> +				  sizeof(xcsi2rxss_clks), GFP_KERNEL);
+> +	if (!core->clks)
+> +		return -ENOMEM;
+> +
+> +	/* Reset GPIO */
+> +	core->rst_gpio = devm_gpiod_get_optional(core->dev, "reset",
+> +						 GPIOD_OUT_HIGH);
+
+Is GPIOD_OUT_HIGH correct? video_aresetn is active low.
+
+> +	if (IS_ERR(core->rst_gpio)) {
+> +		if (PTR_ERR(core->rst_gpio) != -EPROBE_DEFER)
+> +			dev_err(core->dev, "Video Reset GPIO not setup in DT");
+> +		return PTR_ERR(core->rst_gpio);
+> +	}
+> +
+> +	mutex_init(&xcsi2rxss->lock);
+> +
+> +	ret = xcsi2rxss_parse_of(xcsi2rxss);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	core->iomem = devm_ioremap_resource(core->dev, res);
+> +	if (IS_ERR(core->iomem))
+> +		return PTR_ERR(core->iomem);
+> +
+> +	core->num_clks = ARRAY_SIZE(xcsi2rxss_clks);
+> +
+> +	ret = clk_bulk_get(core->dev, core->num_clks, core->clks);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_bulk_prepare_enable(core->num_clks, core->clks);
+> +	if (ret)
+> +		goto err_clk_put;
+> +
+> +	if (xcsi2rxss->core.rst_gpio) {
+> +		gpiod_set_value_cansleep(xcsi2rxss->core.rst_gpio, 1);
+> +		/* minimum of 40 dphy_clk_200M cycles */
+> +		usleep_range(1, 2);
+> +		gpiod_set_value_cansleep(xcsi2rxss->core.rst_gpio, 0);
+> +	}
+
+"xcsi2rxss->core" -> "core" in these lines.
+
+Thanks,
+-- 
+Luca
