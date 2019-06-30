@@ -1,51 +1,113 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH 0/4] drm+dt+efi: support devices with multiple possible panels
-Date: Sun, 30 Jun 2019 14:05:21 -0700
-Message-ID: <CAF6AEGvA-wVyC4jJC-nZU-pdVH=KYtye9twDgup-Nq0C_+wtvQ@mail.gmail.com>
-References: <20190630203614.5290-1-robdclark@gmail.com> <20190630204723.GH7043@pendragon.ideasonboard.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v6 03/15] memory: tegra20-emc: Adapt for clock driver changes
+Date: Mon,  1 Jul 2019 00:00:07 +0300
+Message-ID: <20190630210019.26914-4-digetx@gmail.com>
+References: <20190630210019.26914-1-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190630204723.GH7043@pendragon.ideasonboard.com>
+In-Reply-To: <20190630210019.26914-1-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, freedreno <freedreno@lists.freedesktop.org>, aarch64-laptops@lists.linaro.org, Rob Clark <robdclark@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Julien Thierry <julien.thierry@arm.com>, "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" <linux-efi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>, Steve Capper <steve.capper@arm.com>, Will Deacon <will@kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 30, 2019 at 1:47 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Rob,
->
-> Thank you for the patch.
->
-> On Sun, Jun 30, 2019 at 01:36:04PM -0700, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > Now that we can deal gracefully with bootloader (firmware) initialized
-> > display on aarch64 laptops[1], the next step is to deal with the fact
-> > that the same model of laptop can have one of multiple different panels.
-> > (For the yoga c630 that I have, I know of at least two possible panels,
-> > there might be a third.)
->
-> I have to ask the obvious question: why doesn't the boot loader just
-> pass a correct DT to Linux ? There's no point in passing a list of
-> panels that are not there, this seems quite a big hack to me. A proper
-> boot loader should construct the DT based on hardware detection.
+Now Terga20 and Tegra30 EMC drivers should provide clock-rounding
+functionality using the new Tegra-CLK driver API.
 
-Hi Laurent,
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/memory/tegra/tegra20-emc.c | 50 ++++++++++++++++++++++++++++--
+ 1 file changed, 48 insertions(+), 2 deletions(-)
 
-Actually the bootloader on these devices is passing *no* dt (they boot
-ACPI, we are loading dtb from grub currently)
-
-I think normally a device built w/ dt in mind would populate
-/chosen/panel-id directly (rather than the way it is currently
-populated based on reading an efi variable prior to ExitBootServices).
-But that is considerably easier ask than having it re-write of_graph
-bindings.  Either way, we aren't in control of the bootloader on these
-devices, so it is a matter of coming up with something that works on
-actual hw that we don't like rather than idealized hw that we don't
-have ;-)
-
-BR,
--R
+diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
+index da8fa592b071..b519f02b0ee9 100644
+--- a/drivers/memory/tegra/tegra20-emc.c
++++ b/drivers/memory/tegra/tegra20-emc.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/clk.h>
++#include <linux/clk/tegra.h>
+ #include <linux/completion.h>
+ #include <linux/err.h>
+ #include <linux/interrupt.h>
+@@ -421,6 +422,44 @@ static int emc_setup_hw(struct tegra_emc *emc)
+ 	return 0;
+ }
+ 
++static long emc_round_rate(unsigned long rate,
++			   unsigned long min_rate,
++			   unsigned long max_rate,
++			   void *arg)
++{
++	struct emc_timing *timing = NULL;
++	struct tegra_emc *emc = arg;
++	unsigned int i;
++
++	min_rate = min(min_rate, emc->timings[emc->num_timings - 1].rate);
++
++	for (i = 0; i < emc->num_timings; i++) {
++		if (emc->timings[i].rate < rate && i != emc->num_timings - 1)
++			continue;
++
++		if (emc->timings[i].rate > max_rate) {
++			i = max(i, 1u) - 1;
++
++			if (emc->timings[i].rate < min_rate)
++				break;
++		}
++
++		if (emc->timings[i].rate < min_rate)
++			continue;
++
++		timing = &emc->timings[i];
++		break;
++	}
++
++	if (!timing) {
++		dev_err(emc->dev, "no timing for rate %lu min %lu max %lu\n",
++			rate, min_rate, max_rate);
++		return -EINVAL;
++	}
++
++	return timing->rate;
++}
++
+ static int tegra_emc_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np;
+@@ -477,21 +516,28 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
++	tegra20_clk_set_emc_round_callback(emc_round_rate, emc);
++
+ 	emc->clk = devm_clk_get(&pdev->dev, "emc");
+ 	if (IS_ERR(emc->clk)) {
+ 		err = PTR_ERR(emc->clk);
+ 		dev_err(&pdev->dev, "failed to get emc clock: %d\n", err);
+-		return err;
++		goto unset_cb;
+ 	}
+ 
+ 	err = clk_notifier_register(emc->clk, &emc->clk_nb);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "failed to register clk notifier: %d\n",
+ 			err);
+-		return err;
++		goto unset_cb;
+ 	}
+ 
+ 	return 0;
++
++unset_cb:
++	tegra20_clk_set_emc_round_callback(NULL, NULL);
++
++	return err;
+ }
+ 
+ static const struct of_device_id tegra_emc_of_match[] = {
+-- 
+2.22.0
