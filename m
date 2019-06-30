@@ -1,93 +1,92 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v8 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
-Date: Sun, 30 Jun 2019 00:18:59 -0700
-Message-ID: <20190630071859.GD91171@dtor-ws>
-References: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
- <20190621145312.38688-1-jeffrey.l.hugo@gmail.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v5 1/7] dt-bindings: Add panel-timing subnode to
+ simple-panel
+Date: Sun, 30 Jun 2019 22:02:59 +0200
+Message-ID: <20190630200259.GA15102@ravnborg.org>
+References: <20190401171724.215780-1-dianders@chromium.org>
+ <20190401171724.215780-2-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20190621145312.38688-1-jeffrey.l.hugo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: benjamin.tissoires@redhat.com, jikos@kernel.org, hdegoede@redhat.com, bjorn.andersson@linaro.org, agross@kernel.org, lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190401171724.215780-2-dianders@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@collabora.com>, Enric =?iso-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>, =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>, Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 07:53:12AM -0700, Jeffrey Hugo wrote:
-> There needs to be coordination between hid-quirks and the elan_i2c driver
-> about which devices are handled by what drivers.  Currently, both use
-> whitelists, which results in valid devices being unhandled by default,
-> when they should not be rejected by hid-quirks.  This is quickly becoming
-> an issue.
-> 
-> Since elan_i2c has a maintained whitelist of what devices it will handle,
-> which is now in a header file that hid-quirks can access, use that to
-> implement a blacklist in hid-quirks so that only the devices that need to
-> be handled by elan_i2c get rejected by hid-quirks, and everything else is
-> handled by default.
-> 
-> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-
-Applied, thank you.
-
-> ---
->  drivers/hid/hid-quirks.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> index e5ca6fe2ca57..48ed4caf0ebc 100644
-> --- a/drivers/hid/hid-quirks.c
-> +++ b/drivers/hid/hid-quirks.c
-> @@ -16,6 +16,7 @@
->  #include <linux/export.h>
->  #include <linux/slab.h>
->  #include <linux/mutex.h>
-> +#include <linux/input/elan-i2c-ids.h>
->  
->  #include "hid-ids.h"
->  
-> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
->  
->  bool hid_ignore(struct hid_device *hdev)
->  {
-> +	int i;
-> +
->  	if (hdev->quirks & HID_QUIRK_NO_IGNORE)
->  		return false;
->  	if (hdev->quirks & HID_QUIRK_IGNORE)
-> @@ -978,18 +981,15 @@ bool hid_ignore(struct hid_device *hdev)
->  		break;
->  	case USB_VENDOR_ID_ELAN:
->  		/*
-> -		 * Many Elan devices have a product id of 0x0401 and are handled
-> -		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
-> -		 * is not (and cannot be) handled by that driver ->
-> -		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
-> +		 * Blacklist of everything that gets handled by the elan_i2c
-> +		 * input driver.  This avoids disabling valid touchpads and
-> +		 * other ELAN devices.
->  		 */
-> -		if (hdev->product == 0x0401 &&
-> -		    strncmp(hdev->name, "ELAN0800", 8) != 0)
-> -			return true;
-> -		/* Same with product id 0x0400 */
-> -		if (hdev->product == 0x0400 &&
-> -		    strncmp(hdev->name, "QTEC0001", 8) != 0)
-> -			return true;
-> +		if ((hdev->product == 0x0401 || hdev->product == 0x0400))
-> +			for (i = 0; strlen(elan_acpi_id[i].id); ++i)
-> +				if (!strncmp(hdev->name, elan_acpi_id[i].id,
-> +					     strlen(elan_acpi_id[i].id)))
-> +					return true;
->  		break;
->  	}
->  
-> -- 
-> 2.17.1
-> 
-
--- 
-Dmitry
+SGkgRG91Z2xhcy4KClNvbWUgbG9uZyBvdmVyZHVlIHJldmlldyBmZWVkYmFjay4KCk9uIE1vbiwg
+QXByIDAxLCAyMDE5IGF0IDEwOjE3OjE4QU0gLTA3MDAsIERvdWdsYXMgQW5kZXJzb24gd3JvdGU6
+Cj4gRnJvbTogU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+Cj4gCj4gVGhpcyBwYXRj
+aCBhZGRzIGEgbmV3IHN1Ym5vZGUgdG8gc2ltcGxlLXBhbmVsIGFsbG93aW5nIHVzIHRvIG92ZXJy
+aWRlCj4gdGhlIHR5cGljYWwgdGltaW5nIGV4cHJlc3NlZCBpbiB0aGUgcGFuZWwncyBkaXNwbGF5
+X3RpbWluZy4KPiAKPiBDaGFuZ2VzIGluIHYyOgo+ICAtIFNwbGl0IG91dCB0aGUgYmluZGluZyBp
+bnRvIGEgbmV3IHBhdGNoIChSb2IpCj4gIC0gZGlzcGxheS10aW1pbmdzIGlzIGEgbmV3IHNlY3Rp
+b24gKFJvYikKPiAgLSBVc2UgdGhlIGZ1bGwgZGlzcGxheS10aW1pbmdzIHN1Ym5vZGUgaW5zdGVh
+ZCBvZiBwaWNraW5nIHRoZSB0aW1pbmcKPiAgICBvdXQgKFJvYi9UaGllcnJ5KQo+IENoYW5nZXMg
+aW4gdjM6Cj4gIC0gR28gYmFjayB0byB1c2luZyB0aGUgdGltaW5nIHN1Ym5vZGUgZGlyZWN0bHks
+IGJ1dCByZW5hbWUgdG8KPiAgICBwYW5lbC10aW1pbmcgKFJvYikKPiBDaGFuZ2VzIGluIHY0Ogo+
+ICAtIFNpbXBsaWZ5IGRlc2MuIGZvciB3aGVuIG92ZXJyaWRlIHNob3VsZCBiZSB1c2VkIChUaGll
+cnJ5L0xhdXJlbnQpCj4gIC0gUmVtb3ZlZCBSb2IgSCByZXZpZXcgc2luY2UgaXQncyBiZWVuIGEg
+eWVhciBhbmQgd29yZGluZyBjaGFuZ2VkCj4gQ2hhbmdlcyBpbiB2NToKPiAgLSBSZW1vdmVkIGJp
+dCBhYm91dCBPUyBtYXkgaWdub3JlIChSb2IvRXplcXVpZWwpCj4gCj4gQ2M6IERvdWcgQW5kZXJz
+b24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KPiBDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
+Lm5ldD4KPiBDYzogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiBDYzogSmVmZnkg
+Q2hlbiA8amVmZnkuY2hlbkByb2NrLWNoaXBzLmNvbT4KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgr
+ZHRAa2VybmVsLm9yZz4KPiBDYzogU3TDqXBoYW5lIE1hcmNoZXNpbiA8bWFyY2hldUBjaHJvbWl1
+bS5vcmc+Cj4gQ2M6IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+Cj4g
+Q2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKPiBDYzogbGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IFNp
+Z25lZC1vZmYtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPgo+IFNpZ25lZC1v
+ZmYtYnk6IERvdWdsYXMgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KPiAtLS0KPiAK
+PiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dCAgIHwgMjIgKysr
+KysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKQo+IAo+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
+YW5lbC9zaW1wbGUtcGFuZWwudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dAo+IGluZGV4IGIyYjg3MmM3MTBmMi4uOTM4
+ODIyNjhjMGI5IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0Cj4gQEAgLTE1
+LDYgKzE1LDE2IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gICAgKGhvdCBwbHVnIGRldGVjdCkg
+c2lnbmFsLCBidXQgdGhlIHNpZ25hbCBpc24ndCBob29rZWQgdXAgc28gd2Ugc2hvdWxkCj4gICAg
+aGFyZGNvZGUgdGhlIG1heCBkZWxheSBmcm9tIHRoZSBwYW5lbCBzcGVjIHdoZW4gcG93ZXJpbmcg
+dXAgdGhlIHBhbmVsLgo+ICAKPiArcGFuZWwtdGltaW5nIHN1Ym5vZGUKPiArLS0tLS0tLS0tLS0t
+LS0tLS0tLS0KPiArCj4gK1RoaXMgb3B0aW9uYWwgc3Vibm9kZSBpcyBmb3IgZGV2aWNlcyB3aGlj
+aCByZXF1aXJlIGEgbW9kZSBkaWZmZXJpbmcKPiArZnJvbSB0aGUgcGFuZWwncyAidHlwaWNhbCIg
+ZGlzcGxheSB0aW1pbmcuCk1leWJlIGFkZCBoZXJlIHRoYXQgaXQgaXMgZXhwZWN0ZWQgdGhhdCB0
+aGUgcGFuZWwgaGFzIGluY2x1ZGVkIHRpbWluZwppbiB0aGUgZHJpdmVyIGl0c2VsZiwgYW5kIG5v
+dCBhcyBwYXJ0IG9mIERULgpTbyB3aGF0IGlzIHNwZWNpZmllZCBoZXJlIGlzIGEgbW9yZSBwcmVj
+aXNlIHZhcmlhbnQsIHdpdGhpbiB0aGUgbGltaXRzCm9mIHdoYXQgaXMgc3BlY2lmaWVkIGZvciB0
+aGUgcGFuZWwuCgo+ICsKPiArRm9ybWF0IGluZm9ybWF0aW9uIG9uIHRoZSBwYW5lbC10aW1pbmcg
+c3Vibm9kZSBjYW4gYmUgZm91bmQgaW4KPiArZGlzcGxheS10aW1pbmcudHh0LgpkaXNwbGF5LXRp
+bWluZyBkZWZpbmVzIG90aW9uYWwgcHJvcGVydGllczoKaHN5bmMtYWN0aXZlLCBwaXhlbGNsay1h
+Y3RpdmUsIGRvdWJsZXNjYW4gZXRjLgpJdCBpcyBub3QgZnJvbSB0aGUgYWJvdmUgb2J2aW91cyB3
+aGljaCBwcm9wZXJ0aWVzIGZyb20gZGlzcGxheS10aW1pbmdzCnRoYXQgY2FuIGJlIHNwZWNpZmll
+ZCBmb3IgYSBwYW5lbC10aW1pbmcgc3ViLW5vZGUuCk1heWJlIGJlY2F1c2UgdGhleSBjYW4gYWxs
+IGJlIHNwZWNpZmllZD8KCkRpc3BsYXktdGltaW5nIGFsbG93cyB0aW1pbmdzIHRvIGJlIHNwZWNp
+ZmllZCBhcyBhIHJhbmdlLgpJZiBpdCBpcyBhbHNvIE9LIHRvIHNwZWNpZnkgYSByYW5nZSBmb3Ig
+cGFubGUtdGltaW5nIHRoZW4gZXZlcnl0aGlnbiBpcwpmaW5lLiBCdXQgaWYgdGhlIHBhbmVsLXRp
+bWlnbiBzdWJub2RlIGRvIG5vdCBhbGxvdyByYW5nZXMgdGhpcyBuZWVkcyB0bwpiZSBzcGVjaWZp
+ZWQuCgo+ICsKPiArCj4gIEV4YW1wbGU6Cj4gIAo+ICAJcGFuZWw6IHBhbmVsIHsKPiBAQCAtMjUs
+NCArMzUsMTYgQEAgRXhhbXBsZToKPiAgCQllbmFibGUtZ3Bpb3MgPSA8JmdwaW8gOTAgMD47Cj4g
+IAo+ICAJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKPiArCj4gKwkJcGFuZWwtdGltaW5nIHsK
+PiArCQkJY2xvY2stZnJlcXVlbmN5ID0gPDI2NjYwNDcyMD47Cj4gKwkJCWhhY3RpdmUgPSA8MjQw
+MD47Cj4gKwkJCWhmcm9udC1wb3JjaCA9IDw0OD47Cj4gKwkJCWhiYWNrLXBvcmNoID0gPDg0PjsK
+PiArCQkJaHN5bmMtbGVuID0gPDMyPjsKPiArCQkJdmFjdGl2ZSA9IDwxNjAwPjsKPiArCQkJdmZy
+b250LXBvcmNoID0gPDM+Owo+ICsJCQl2YmFjay1wb3JjaCA9IDwxMjA+Owo+ICsJCQl2c3luYy1s
+ZW4gPSA8MTA+Owo+ICsJCX07Cj4gIAl9Owo+IC0tIAo+IDIuMjEuMC4zOTIuZ2Y4ZjY3ODcxNTll
+LWdvb2cKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+Xwo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
