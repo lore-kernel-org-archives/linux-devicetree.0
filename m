@@ -1,72 +1,48 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 0/8] stm32 m4 remoteproc on STM32MP157c
-Date: Sat, 29 Jun 2019 21:03:22 -0700
-Message-ID: <20190630040322.GH23094@builder>
-References: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v8 1/5] Input: elan_i2c: Export the device id whitelist
+Date: Sun, 30 Jun 2019 00:18:49 -0700
+Message-ID: <20190630071849.GC91171@dtor-ws>
+References: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
+ <20190621145042.38637-1-jeffrey.l.hugo@gmail.com>
+ <20190623062000.GB204275@dtor-ws>
+ <CAOCk7Nr4+Sj9U=qAZTEhPGgZNrZ1VVvNtuUg-9vQzp15xFdCUw@mail.gmail.com>
+ <CAO-hwJLEDCbMud6dCfvXzwDfauAgfOZmQwkmELEF2e6-4Oe6=g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <CAO-hwJLEDCbMud6dCfvXzwDfauAgfOZmQwkmELEF2e6-4Oe6=g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien Dessenne <fabien.dessenne@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, Jiri Kosina <jikos@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 14 May 01:26 PDT 2019, Fabien Dessenne wrote:
+On Thu, Jun 27, 2019 at 04:29:29PM +0200, Benjamin Tissoires wrote:
+> On Thu, Jun 27, 2019 at 4:02 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> >
+> > On Sun, Jun 23, 2019 at 12:20 AM Dmitry Torokhov
+> > <dmitry.torokhov@gmail.com> wrote:
+> > >
+> > > On Fri, Jun 21, 2019 at 07:50:42AM -0700, Jeffrey Hugo wrote:
+> > > > Elan_i2c and hid-quirks work in conjunction to decide which devices each
+> > > > driver will handle.  Elan_i2c has a whitelist of devices that should be
+> > > > consumed by hid-quirks so that there is one master list of devices to
+> > > > handoff between the drivers.  Put the ids in a header file so that
+> > > > hid-quirks can consume it instead of duplicating the list.
+> > > >
+> > > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > >
+> > > Benjamin, are you happy with this version?
+> >
+> > Benjamin, ping?
+> > Sorry to be a bother, but I'm still anxious to get this queued for 5.3.
+> 
+> Ooops, yeah, sorry I missed Dmitry's email.
+> 
+> Fine by me:
+> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-> STMicrolectronics STM32MP157 MPU are based on a Dual Arm Cortex-A7 core and a
-> Cortex-M4.
-> This patchset adds the support of the stm32_rproc driver allowing to control
-> the M4 remote processor.
-> 
+Applied, thank you.
 
-Applied patches 1 through 3, with a few fixes of compile warnings on
-data types in dev_dbg, in patch 3.
-
-Thanks,
-Bjorn
-
-> Changes since v3:
-> -Replaced "st,auto_boot" with "st,auto-boot"
-> -Update m4 reg values and align with unit-address
-> 
-> Changes since v2:
-> - Clarified "reg" description
-> - Change m4 unit adress to 38000000
-> - Renamed "auto_boot" in "st,auto-boot"
-> 
-> Changes since v1:
-> - Gave details about the memory mapping (in bindings).
-> - Used 'dma-ranges' instead of 'ranges'.
-> - Updated the 'compatible' property.
-> - Remove the 'recovery', 'reset-names' and 'interrupt-names' properties.
-> - Clarified why / when mailboxes are optional.
-> 
-> Fabien Dessenne (8):
->   dt-bindings: stm32: add bindings for ML-AHB interconnect
->   dt-bindings: remoteproc: add bindings for stm32 remote processor
->     driver
->   remoteproc: stm32: add an ST stm32_rproc driver
->   ARM: dts: stm32: add m4 remoteproc support on STM32MP157c
->   ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
->   ARM: dts: stm32: enable m4 coprocessor support on STM32MP157c-ed1
->   ARM: dts: stm32: declare copro reserved memories on STM32MP157a-dk1
->   ARM: dts: stm32: enable m4 coprocessor support on STM32MP157a-dk1
-> 
->  .../devicetree/bindings/arm/stm32/mlahb.txt        |  37 ++
->  .../devicetree/bindings/remoteproc/stm32-rproc.txt |  63 +++
->  arch/arm/boot/dts/stm32mp157a-dk1.dts              |  52 ++
->  arch/arm/boot/dts/stm32mp157c-ed1.dts              |  52 ++
->  arch/arm/boot/dts/stm32mp157c.dtsi                 |  20 +
->  drivers/remoteproc/Kconfig                         |  15 +
->  drivers/remoteproc/Makefile                        |   1 +
->  drivers/remoteproc/stm32_rproc.c                   | 628 +++++++++++++++++++++
->  8 files changed, 868 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
->  create mode 100644 drivers/remoteproc/stm32_rproc.c
-> 
-> -- 
-> 2.7.4
-> 
+-- 
+Dmitry
