@@ -1,113 +1,82 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v6 03/15] memory: tegra20-emc: Adapt for clock driver changes
-Date: Mon,  1 Jul 2019 00:00:07 +0300
-Message-ID: <20190630210019.26914-4-digetx@gmail.com>
-References: <20190630210019.26914-1-digetx@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 0/4] drm+dt+efi: support devices with multiple possible
+ panels
+Date: Mon, 1 Jul 2019 00:15:20 +0300
+Message-ID: <20190630211520.GI7043@pendragon.ideasonboard.com>
+References: <20190630203614.5290-1-robdclark@gmail.com>
+ <20190630204723.GH7043@pendragon.ideasonboard.com>
+ <CAF6AEGvA-wVyC4jJC-nZU-pdVH=KYtye9twDgup-Nq0C_+wtvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190630210019.26914-1-digetx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGvA-wVyC4jJC-nZU-pdVH=KYtye9twDgup-Nq0C_+wtvQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: Rob Clark <robdclark@chromium.org>, aarch64-laptops@lists.linaro.org, "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" <linux-efi@vger.kernel.org>, Will Deacon <will@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Julien Thierry <julien.thierry@arm.com>, open list <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, freedreno <freedreno@lists.freedesktop.org>, Ingo Molnar <mingo@kernel.org>, Steve Capper <steve.capper@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Now Terga20 and Tegra30 EMC drivers should provide clock-rounding
-functionality using the new Tegra-CLK driver API.
-
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/memory/tegra/tegra20-emc.c | 50 ++++++++++++++++++++++++++++--
- 1 file changed, 48 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index da8fa592b071..b519f02b0ee9 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/clk/tegra.h>
- #include <linux/completion.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
-@@ -421,6 +422,44 @@ static int emc_setup_hw(struct tegra_emc *emc)
- 	return 0;
- }
- 
-+static long emc_round_rate(unsigned long rate,
-+			   unsigned long min_rate,
-+			   unsigned long max_rate,
-+			   void *arg)
-+{
-+	struct emc_timing *timing = NULL;
-+	struct tegra_emc *emc = arg;
-+	unsigned int i;
-+
-+	min_rate = min(min_rate, emc->timings[emc->num_timings - 1].rate);
-+
-+	for (i = 0; i < emc->num_timings; i++) {
-+		if (emc->timings[i].rate < rate && i != emc->num_timings - 1)
-+			continue;
-+
-+		if (emc->timings[i].rate > max_rate) {
-+			i = max(i, 1u) - 1;
-+
-+			if (emc->timings[i].rate < min_rate)
-+				break;
-+		}
-+
-+		if (emc->timings[i].rate < min_rate)
-+			continue;
-+
-+		timing = &emc->timings[i];
-+		break;
-+	}
-+
-+	if (!timing) {
-+		dev_err(emc->dev, "no timing for rate %lu min %lu max %lu\n",
-+			rate, min_rate, max_rate);
-+		return -EINVAL;
-+	}
-+
-+	return timing->rate;
-+}
-+
- static int tegra_emc_probe(struct platform_device *pdev)
- {
- 	struct device_node *np;
-@@ -477,21 +516,28 @@ static int tegra_emc_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
-+	tegra20_clk_set_emc_round_callback(emc_round_rate, emc);
-+
- 	emc->clk = devm_clk_get(&pdev->dev, "emc");
- 	if (IS_ERR(emc->clk)) {
- 		err = PTR_ERR(emc->clk);
- 		dev_err(&pdev->dev, "failed to get emc clock: %d\n", err);
--		return err;
-+		goto unset_cb;
- 	}
- 
- 	err = clk_notifier_register(emc->clk, &emc->clk_nb);
- 	if (err) {
- 		dev_err(&pdev->dev, "failed to register clk notifier: %d\n",
- 			err);
--		return err;
-+		goto unset_cb;
- 	}
- 
- 	return 0;
-+
-+unset_cb:
-+	tegra20_clk_set_emc_round_callback(NULL, NULL);
-+
-+	return err;
- }
- 
- static const struct of_device_id tegra_emc_of_match[] = {
--- 
-2.22.0
+SGkgUm9iLAoKT24gU3VuLCBKdW4gMzAsIDIwMTkgYXQgMDI6MDU6MjFQTSAtMDcwMCwgUm9iIENs
+YXJrIHdyb3RlOgo+IE9uIFN1biwgSnVuIDMwLCAyMDE5IGF0IDE6NDcgUE0gTGF1cmVudCBQaW5j
+aGFydCB3cm90ZToKPiA+IE9uIFN1biwgSnVuIDMwLCAyMDE5IGF0IDAxOjM2OjA0UE0gLTA3MDAs
+IFJvYiBDbGFyayB3cm90ZToKPiA+ID4gRnJvbTogUm9iIENsYXJrIDxyb2JkY2xhcmtAY2hyb21p
+dW0ub3JnPgo+ID4gPgo+ID4gPiBOb3cgdGhhdCB3ZSBjYW4gZGVhbCBncmFjZWZ1bGx5IHdpdGgg
+Ym9vdGxvYWRlciAoZmlybXdhcmUpIGluaXRpYWxpemVkCj4gPiA+IGRpc3BsYXkgb24gYWFyY2g2
+NCBsYXB0b3BzWzFdLCB0aGUgbmV4dCBzdGVwIGlzIHRvIGRlYWwgd2l0aCB0aGUgZmFjdAo+ID4g
+PiB0aGF0IHRoZSBzYW1lIG1vZGVsIG9mIGxhcHRvcCBjYW4gaGF2ZSBvbmUgb2YgbXVsdGlwbGUg
+ZGlmZmVyZW50IHBhbmVscy4KPiA+ID4gKEZvciB0aGUgeW9nYSBjNjMwIHRoYXQgSSBoYXZlLCBJ
+IGtub3cgb2YgYXQgbGVhc3QgdHdvIHBvc3NpYmxlIHBhbmVscywKPiA+ID4gdGhlcmUgbWlnaHQg
+YmUgYSB0aGlyZC4pCj4gPgo+ID4gSSBoYXZlIHRvIGFzayB0aGUgb2J2aW91cyBxdWVzdGlvbjog
+d2h5IGRvZXNuJ3QgdGhlIGJvb3QgbG9hZGVyIGp1c3QKPiA+IHBhc3MgYSBjb3JyZWN0IERUIHRv
+IExpbnV4ID8gVGhlcmUncyBubyBwb2ludCBpbiBwYXNzaW5nIGEgbGlzdCBvZgo+ID4gcGFuZWxz
+IHRoYXQgYXJlIG5vdCB0aGVyZSwgdGhpcyBzZWVtcyBxdWl0ZSBhIGJpZyBoYWNrIHRvIG1lLiBB
+IHByb3Blcgo+ID4gYm9vdCBsb2FkZXIgc2hvdWxkIGNvbnN0cnVjdCB0aGUgRFQgYmFzZWQgb24g
+aGFyZHdhcmUgZGV0ZWN0aW9uLgo+IAo+IEhpIExhdXJlbnQsCj4gCj4gQWN0dWFsbHkgdGhlIGJv
+b3Rsb2FkZXIgb24gdGhlc2UgZGV2aWNlcyBpcyBwYXNzaW5nICpubyogZHQgKHRoZXkgYm9vdAo+
+IEFDUEksIHdlIGFyZSBsb2FkaW5nIGR0YiBmcm9tIGdydWIgY3VycmVudGx5KQoKQWgsIHRoZSBi
+cm9rZW4gcHJvbWlzZXMgb2YgQUNQSSBvbiBBUk02NC4gSSB3b25kZXIgaG93IGxvbmcgaXQgd2ls
+bCB0YWtlCmJlZm9yZSBhIHB1YmxpYyBhY2tub3dsZWRnZW1lbnQgdGhhdCBpdCB3YXMgYSBiYWQg
+aWRlYS4gQmFkIGlkZWFzIGhhcHBlbgphbmQgY2FuIGJlIGZvcmdpdmVuLCBidXQgc3R1YmJvcm5l
+c3MgaW4gY2xhaW1pbmcgaXQgd2FzIHRoZSByaWdodApkZWNpc2lvbiBpcyBhbm90aGVyIHN0b3J5
+LgoKKE5vdCB0aGF0IHlvdSBjYW4gYmUgYmxhbWVkIGZvciB0aGlzIG9mIGNvdXJzZSA6LSkpCgo+
+IEkgdGhpbmsgbm9ybWFsbHkgYSBkZXZpY2UgYnVpbHQgdy8gZHQgaW4gbWluZCB3b3VsZCBwb3B1
+bGF0ZQo+IC9jaG9zZW4vcGFuZWwtaWQgZGlyZWN0bHkgKHJhdGhlciB0aGFuIHRoZSB3YXkgaXQg
+aXMgY3VycmVudGx5Cj4gcG9wdWxhdGVkIGJhc2VkIG9uIHJlYWRpbmcgYW4gZWZpIHZhcmlhYmxl
+IHByaW9yIHRvIEV4aXRCb290U2VydmljZXMpLgo+IEJ1dCB0aGF0IGlzIGNvbnNpZGVyYWJseSBl
+YXNpZXIgYXNrIHRoYW4gaGF2aW5nIGl0IHJlLXdyaXRlIG9mX2dyYXBoCj4gYmluZGluZ3MuIEVp
+dGhlciB3YXksIHdlIGFyZW4ndCBpbiBjb250cm9sIG9mIHRoZSBib290bG9hZGVyIG9uIHRoZXNl
+Cj4gZGV2aWNlcywKCklmIHlvdSBjYW4ndCBjb250cm9sIHRoZSBpbml0aWFsIGJvb3QgbG9hZGVy
+LCB0aGVuIEkgc2VlIHR3byBvcHRpb25zLApub25lIG9mIHdoaWNoIHlvdSB3aWxsIGxpa2UgSSdt
+IGFmcmFpZC4KCi0gQXMgeW91IHBhc3MgdGhlIERUIHRvIExpbnV4IGZyb20gZ3J1YiwgdGhlcmUn
+cyB5b3VyIGludGVybWVkaWF0ZSBib290CiAgbG9hZGVyIHdoZXJlIHlvdSBjYW4gY29uc3RydWN0
+IGEgdmFsaWQgRFQuCgotIElmIHRoZSBBQ1BJIGN1bHQgbmVlZHMgdG8gYmUgdmVuZXJhdGVkLCB0
+aGVuIGRyaXZlcnMgc2hvdWxkIGJlCiAgY29udmVydGVkIHRvIHN1cHBvcnQgQUNQSSB3aXRob3V0
+IHRoZSBuZWVkIGZvciBEVC4KCkEgcG9zc2libGUgYSBtaWRkbGVncm91bmQgY291bGQgYmUgYSBw
+bGF0Zm9ybSBkcml2ZXIgKGluCmRyaXZlcnMvZmlybXdhcmUvZWZpLyA/IGluIGRyaXZlcnMvcGxh
+dGZvcm0vID8pIHRoYXQgd2lsbCBwYXRjaCB0aGUgRFQKdG8gaW5zdGFudGlhdGUgdGhlIHJpZ2h0
+IHBhbmVsIGJhc2VkIG9uIHRoZSBpbmZvcm1hdGlvbiByZXRyaWV2ZWQgZnJvbQp0aGUgYm9vdCBs
+b2FkZXIuIFdlIHdpbGwgbmVlZCBzb21ldGhpbmcgc2ltaWxhciBmb3IgdGhlIEludGVsIElQVTMK
+Y2FtZXJhIGRyaXZlciwgYXMgSW50ZWwgZGVjaWRlZCB0byBjb21lIHVwIHdpdGggdHdvIGRpZmZl
+cmVudCBBQ1BJCiJiaW5kaW5ncyIsIG9uZSBmb3IgV2luZG93cyBhbmQgb25lIGZvciBDaHJvbWUg
+T1MsIGxlYXZpbmcgV2luZG93cwptYWNoaW5lIGltcG9zc2libGUgdG8gaGFuZGxlIGZyb20gYSBr
+ZXJuZWwgZHJpdmVyIGR1ZSB0byByZXF1aXJlZAppbmZvcm1hdGlvbiBiZWluZyBoYXJkY29kZWQg
+aW4gV2luZG93cyBkcml2ZXJzIHNoaXBwZWQgYnkgSW50ZWwuIFRoaXMgaXMKdGh1cyBhbiBvcHRp
+b24gdGhhdCBtYXkgKHVuZm9ydHVuYXRlbHkpIG5lZWQgdG8gYmVjb21lIG1vcmUgd2lkZXNwcmVh
+ZApmb3IgQUNQSS1iYXNlZCBzeXN0ZW1zLgoKPiBzbyBpdCBpcyBhIG1hdHRlciBvZiBjb21pbmcg
+dXAgd2l0aCBzb21ldGhpbmcgdGhhdCB3b3JrcyBvbiBhY3R1YWwgaHcKPiB0aGF0IHdlIGRvbid0
+IGxpa2UgcmF0aGVyIHRoYW4gaWRlYWxpemVkIGh3IHRoYXQgd2UgZG9uJ3QgaGF2ZSA7LSkKClRo
+YXQgZG9lc24ndCBob3dldmVyIGp1c3RpZnkgbm90IGdvaW5nIGZvciB0aGUgYmVzdCBzb2x1dGlv
+biB3ZSBjYW4KYWNoaWV2ZS4gV2hhdCBkbyB5b3UgbGlrZSBiZXN0IGluIHRoZSBhYm92ZSA/IDot
+KQoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
