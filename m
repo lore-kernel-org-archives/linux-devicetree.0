@@ -1,143 +1,39 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v14 09/13] MIPS: jz4740: Add DTS nodes for the TCU drivers
-Date: Mon,  1 Jul 2019 17:14:06 +0200
-Message-ID: <20190701151410.23127-10-paul@crapouillou.net>
-References: <20190701151410.23127-1-paul@crapouillou.net>
+From: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [PATCH 2/4] devicetree: Update led binding
+Date: Mon, 1 Jul 2019 17:14:21 +0200
+Message-ID: <20190701151423.30768-3-jjhiblot@ti.com>
+References: <20190701151423.30768-1-jjhiblot@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701151410.23127-1-paul@crapouillou.net>
+In-Reply-To: <20190701151423.30768-1-jjhiblot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
+To: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com
+Cc: dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, Jean-Jacques Hiblot <jjhiblot@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DTS nodes for the JZ4780, JZ4770 and JZ4740 devicetree files.
+Update the led binding to describe the possibility to add a "compatible"
+option to create a child-device, user of the LED.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
+Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc: devicetree@vger.kernel.org
 ---
+ Documentation/devicetree/bindings/leds/common.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Notes:
-    v5: New patch
-    
-    v6: Fix register lengths in watchdog/pwm nodes
-    
-    v7: No change
-    
-    v8: - Fix wrong start address for PWM node
-    	- Add system timer and clocksource sub-nodes
-    
-    v9: Drop timer and clocksource sub-nodes
-    
-    v10-v11: No change
-    
-    v12: Drop PWM/watchdog/OST sub-nodes, for now.
-    
-    v13-v14: No change
-
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 22 ++++++++++++++++++++++
- arch/mips/boot/dts/ingenic/jz4770.dtsi | 21 +++++++++++++++++++++
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 21 +++++++++++++++++++++
- 3 files changed, 64 insertions(+)
-
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 2beb78a62b7d..807d9702d4cf 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -53,6 +53,28 @@
- 		clock-names = "rtc";
- 	};
+diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+index 70876ac11367..2f7882528d97 100644
+--- a/Documentation/devicetree/bindings/leds/common.txt
++++ b/Documentation/devicetree/bindings/leds/common.txt
+@@ -11,6 +11,9 @@ have to be tightly coupled with the LED device binding. They are represented
+ by child nodes of the parent LED device binding.
  
-+	tcu: timer@10002000 {
-+		compatible = "ingenic,jz4740-tcu";
-+		reg = <0x10002000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10002000 0x1000>;
-+
-+		#clock-cells = <1>;
-+
-+		clocks = <&cgu JZ4740_CLK_RTC
-+			  &cgu JZ4740_CLK_EXT
-+			  &cgu JZ4740_CLK_PCLK
-+			  &cgu JZ4740_CLK_TCU>;
-+		clock-names = "rtc", "ext", "pclk", "tcu";
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <23 22 21>;
-+	};
-+
- 	rtc_dev: rtc@10003000 {
- 		compatible = "ingenic,jz4740-rtc";
- 		reg = <0x10003000 0x40>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-index 49ede6c14ff3..70932fd90902 100644
---- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-@@ -46,6 +46,27 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	tcu: timer@10002000 {
-+		compatible = "ingenic,jz4770-tcu";
-+		reg = <0x10002000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10002000 0x1000>;
-+
-+		#clock-cells = <1>;
-+
-+		clocks = <&cgu JZ4770_CLK_RTC
-+			  &cgu JZ4770_CLK_EXT
-+			  &cgu JZ4770_CLK_PCLK>;
-+		clock-names = "rtc", "ext", "pclk";
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <27 26 25>;
-+	};
-+
- 	pinctrl: pin-controller@10010000 {
- 		compatible = "ingenic,jz4770-pinctrl";
- 		reg = <0x10010000 0x600>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index b03cdec56de9..495082ce7fc5 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -46,6 +46,27 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	tcu: timer@10002000 {
-+		compatible = "ingenic,jz4770-tcu";
-+		reg = <0x10002000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10002000 0x1000>;
-+
-+		#clock-cells = <1>;
-+
-+		clocks = <&cgu JZ4780_CLK_RTCLK
-+			  &cgu JZ4780_CLK_EXCLK
-+			  &cgu JZ4780_CLK_PCLK>;
-+		clock-names = "rtc", "ext", "pclk";
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <27 26 25>;
-+	};
-+
- 	rtc_dev: rtc@10003000 {
- 		compatible = "ingenic,jz4780-rtc";
- 		reg = <0x10003000 0x4c>;
+ Optional properties for child nodes:
++- compatible : driver name for a child-device. This child-device is the user
++               of the LED. It is created when the LED is registered and
++	       destroyed when the LED is unregistered.
+ - led-sources : List of device current outputs the LED is connected to. The
+ 		outputs are identified by the numbers that must be defined
+ 		in the LED device binding documentation.
 -- 
-2.21.0.593.g511ec345e18
+2.17.1
