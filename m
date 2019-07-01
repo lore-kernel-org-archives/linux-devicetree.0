@@ -1,259 +1,108 @@
-From: Oliver Graute <oliver.graute@gmail.com>
-Subject: [PATCHv2 2/2] arm64: dts: add basic DTS for imx8qm-rom7720-a1 board
-Date: Mon,  1 Jul 2019 13:42:46 +0200
-Message-ID: <20190701114253.1538-3-oliver.graute@kococonnector.com>
-References: <20190701114253.1538-1-oliver.graute@kococonnector.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345
+ bridge on Teres-I
+Date: Mon, 1 Jul 2019 14:27:51 +0200
+Message-ID: <64471471-5b4d-3c1f-a0e3-e02ee78ca23c@samsung.com>
+References: <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
+        <20190605101317.GA9345@lst.de> <20190605120237.ekmytfxcwbjaqy3x@flea>
+        <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
+        <20190607062802.m5wslx3imiqooq5a@flea>
+        <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
+        <20190607094030.GA12373@lst.de>
+        <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
+        <20190612152022.c3cfhp4cauhzhfyr@flea>
+        <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
+        <20190701095842.fvganvycce2cy7jn@flea>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701114253.1538-1-oliver.graute@kococonnector.com>
+In-Reply-To: <20190701095842.fvganvycce2cy7jn@flea>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: aisheng.dong@nxp.com
-Cc: sboyd@kernel.org, mturquette@baylibre.com, Oliver Graute <oliver.graute@kococonnector.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Li Yang <leoyang.li@nxp.com>, Sriram Dash <sriram.dash@nxp.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Vabhav Sharma <vabhav.sharma@nxp.com>, Pankaj Bansal <pankaj.bansal@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Torsten Duwe <duwe@lst.de>, Harald Geyer <harald@ccbib.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add basic dts support for a Advantech iMX8QM Qseven Board
+On 01.07.2019 11:58, Maxime Ripard wrote:
+> Hi!
+>
+> On Fri, Jun 28, 2019 at 12:39:32PM +0200, Andrzej Hajda wrote:
+>> On 12.06.2019 17:20, Maxime Ripard wrote:
+>>>> I am not sure if I understand whole discussion here, but I also do not
+>>>> understand whole edp-connector thing.
+>>> The context is this one:
+>>> https://patchwork.freedesktop.org/patch/257352/?series=51182&rev=1
+>>> https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1
+>>> https://patchwork.freedesktop.org/patch/286468/?series=56776&rev=2
+>>>
+>>> TL;DR: This bridge is being used on ARM laptops that can come with
+>>> different eDP panels. Some of these panels require a regulator to be
+>>> enabled for the panel to work, and this is obviously something that
+>>> should be in the DT.
+>>>
+>>> However, we can't really describe the panel itself, since the vendor
+>>> uses several of them and just relies on the eDP bus to do its job at
+>>> retrieving the EDIDs. A generic panel isn't really working either
+>>> since that would mean having a generic behaviour for all the panels
+>>> connected to that bus, which isn't there either.
+>>>
+>>> The connector allows to expose this nicely.
+>> As VESA presentation says[1] eDP is based on DP but is much more
+>> flexible, it is up to integrator (!!!) how the connection, power
+>> up/down, initialization sequence should be performed. Trying to cover
+>> every such case in edp-connector seems to me similar to panel-simple
+>> attempt failure. Moreover there is no such thing as physical standard
+>> eDP connector. Till now I though DT connector should describe physical
+>> connector on the device, now I am lost, are there some DT bindings
+>> guidelines about definition of a connector?
+> This might be semantics but I guess we're in some kind of grey area?
+>
+> Like, for eDP, if it's soldered I guess we could say that there's no
+> connector. But what happens if for some other board, that signal is
+> routed through a ribbon?
+>
+> You could argue that there's no physical connector in both cases, or
+> that there's one in both, or one for the ribbon and no connector for
+> the one soldered in.
 
-Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
----
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../boot/dts/freescale/imx8qm-rom7720-a1.dts  | 221 ++++++++++++++++++
- 2 files changed, 222 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index b8e5e3bd72c5..b013715c5be1 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -23,3 +23,4 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8qm-rom7720-a1.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts b/arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
-new file mode 100644
-index 000000000000..229853f4097b
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
-@@ -0,0 +1,221 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/dts-v1/;
-+
-+#include "imx8qm.dtsi"
-+
-+/ {
-+	model = "Advantech iMX8QM Qseven series";
-+	compatible = "fsl,imx8qm";
-+
-+	board {
-+		compatible = "proc-board";
-+		board-type = "ROM-7720_A1";
-+		board-cpu  = "iMX8QM";
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyLP0,115200 earlycon=lpuart32,0x5a060000,115200";
-+		stdout-path = &dma_lpuart0;
-+	};
-+
-+	cpus {
-+		/delete-node/ cpu-map;
-+		/delete-node/ cpu@100;
-+		/delete-node/ cpu@101;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000 0 0x40000000>;
-+	};
-+
-+	reg_usdhc2_vmmc: usdhc2_vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "sw-3p3-sd1";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio4 7 GPIO_ACTIVE_HIGH>;
-+		off-on-delay = <3000>;
-+		enable-active-high;
-+	};
-+};
-+
-+&dma_lpuart0 { /* console */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart0>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	phy-mode = "rgmii-txid";
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	fsl,rgmii_rxc_dly;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <4>;
-+			at803x,eee-disabled;
-+			at803x,vddio-1p8v;
-+		};
-+	};
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-+	bus-width = <8>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio5 22 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&gpio5 21 GPIO_ACTIVE_HIGH>;
-+	vmmc-supply = <&reg_usdhc2_vmmc>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_hog_1: hoggrp-1 {
-+		fsl,pins = <
-+			IMX8QM_USB_SS3_TC0_LSIO_GPIO4_IO03	  0x06000048
-+		>;
-+	};
-+
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			IMX8QM_COMP_CTL_GPIO_1V8_3V3_ENET_ENETB_PAD	0x000014a0
-+			IMX8QM_ENET0_MDC_CONN_ENET0_MDC			0x06000020
-+			IMX8QM_ENET0_MDIO_CONN_ENET0_MDIO		0x06000020
-+			IMX8QM_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL	0x00000060
-+			IMX8QM_ENET0_RGMII_TXC_CONN_ENET0_RGMII_TXC	0x00000060
-+			IMX8QM_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0	0x00000060
-+			IMX8QM_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1	0x00000060
-+			IMX8QM_ENET0_RGMII_TXD2_CONN_ENET0_RGMII_TXD2	0x00000060
-+			IMX8QM_ENET0_RGMII_TXD3_CONN_ENET0_RGMII_TXD3	0x00000060
-+			IMX8QM_ENET0_RGMII_RXC_CONN_ENET0_RGMII_RXC	0x00000060
-+			IMX8QM_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL	0x00000060
-+			IMX8QM_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0	0x00000060
-+			IMX8QM_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1	0x00000060
-+			IMX8QM_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2	0x00000060
-+			IMX8QM_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3	0x00000060
-+		>;
-+	};
-+
-+	pinctrl_lpuart0: lpuart0grp {
-+		fsl,pins = <
-+			IMX8QM_UART0_RX_DMA_UART0_RX		0x06000020
-+			IMX8QM_UART0_TX_DMA_UART0_TX		0x06000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK		0x06000041
-+			IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD		0x00000021
-+			IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0	0x00000021
-+			IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1	0x00000021
-+			IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2	0x00000021
-+			IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3	0x00000021
-+			IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4	0x00000021
-+			IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5	0x00000021
-+			IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6	0x00000021
-+			IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7	0x00000021
-+			IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE	0x00000041
-+			IMX8QM_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x00000021
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-+		fsl,pins = <
-+			IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK		0x06000040
-+			IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD		0x00000020
-+			IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0	0x00000020
-+			IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1	0x00000020
-+			IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2	0x00000020
-+			IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3	0x00000020
-+			IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4	0x00000020
-+			IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5	0x00000020
-+			IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6	0x00000020
-+			IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7	0x00000020
-+			IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE	0x00000040
-+			IMX8QM_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x00000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-+		fsl,pins = <
-+			IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK		0x06000040
-+				IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD		0x00000020
-+			IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0	0x00000020
-+			IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1	0x00000020
-+			IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2	0x00000020
-+			IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3	0x00000020
-+			IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4	0x00000020
-+			IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5	0x00000020
-+			IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6	0x00000020
-+			IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7	0x00000020
-+			IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE	0x00000040
-+			IMX8QM_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x00000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_gpio: usdhc2grpgpio {
-+		fsl,pins = <
-+			IMX8QM_USDHC1_DATA6_LSIO_GPIO5_IO21	0x00000021
-+			IMX8QM_USDHC1_DATA7_LSIO_GPIO5_IO22	0x00000021
-+			IMX8QM_USDHC1_RESET_B_LSIO_GPIO4_IO07	0x00000021
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK	0x06000041
-+			IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD	0x00000021
-+			IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000021
-+			IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000021
-+			IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000021
-+			IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000021
-+			IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000021
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-+		fsl,pins = <
-+			IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK	0x06000040
-+			IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD	0x00000020
-+			IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000020
-+			IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000020
-+			IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000020
-+			IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000020
-+			IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-+		fsl,pins = <
-+			IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK	0x06000040
-+			IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD	0x00000020
-+			IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000020
-+			IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000020
-+			IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000020
-+			IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000020
-+			IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000020
-+		>;
-+	};
-+};
--- 
-2.17.1
+This is not about ribbon vs soldering. It is about usage: this
+connection is static across the whole life of the device (except
+exceptional things: repair, non-standard usage, etc).
+
+And "the real connector" is (at least for me) something where end-user
+can connect/disconnect different things: USB, HDMI, ethernet, etc. And
+obviously to be functional it should be somehow standardized. So even if
+there could be some grey area, I do not see it here.
+
+
+>
+>> Maybe instead of edp-connector one would introduce integrator's specific
+>> connector, for example with compatible "olimex,teres-edp-connector"
+>> which should follow edp abstract connector rules? This will be at least
+>> consistent with below presentation[1] - eDP requirements depends on
+>> integrator. Then if olimex has standard way of dealing with panels
+>> present in olimex/teres platforms the driver would then create
+>> drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
+>> Anyway it still looks fishy for me :), maybe because I am not
+>> familiarized with details of these platforms.
+> That makes sense yes
+
+
+And what if some panel can be used with this pseudo-connecter and in
+some different hw directly? Code duplication? DT overlays?
+
+
+Regards
+
+Andrzej
+
+
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
