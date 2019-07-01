@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v14 08/13] clk: jz4740: Add TCU clock
-Date: Mon,  1 Jul 2019 17:14:05 +0200
-Message-ID: <20190701151410.23127-9-paul@crapouillou.net>
+Subject: [PATCH v14 10/13] MIPS: qi_lb60: Reduce system timer and clocksource to 750 kHz
+Date: Mon,  1 Jul 2019 17:14:07 +0200
+Message-ID: <20190701151410.23127-11-paul@crapouillou.net>
 References: <20190701151410.23127-1-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,55 +9,48 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190701151410.23127-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>, Rob Herring <robh@kernel.org>
+Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-Add the missing TCU clock to the list of clocks supplied by the CGU for
-the JZ4740 SoC.
+The default clock (12 MHz) is too fast for the system timer, which fails
+to report time accurately.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
 Tested-by: Artur Rojek <contact@artur-rojek.eu>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
 
 Notes:
     v5: New patch
     
-    v6-v14: No change
+    v6: Remove ingenic,clocksource-channel property
+    
+    v7-v14: No change
 
- drivers/clk/ingenic/jz4740-cgu.c       | 6 ++++++
- include/dt-bindings/clock/jz4740-cgu.h | 1 +
- 2 files changed, 7 insertions(+)
+ arch/mips/boot/dts/ingenic/qi_lb60.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
-index c77f4e1506dc..176d911b5839 100644
---- a/drivers/clk/ingenic/jz4740-cgu.c
-+++ b/drivers/clk/ingenic/jz4740-cgu.c
-@@ -203,6 +203,12 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
- 		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
- 		.gate = { CGU_REG_CLKGR, 5 },
- 	},
-+
-+	[JZ4740_CLK_TCU] = {
-+		"tcu", CGU_CLK_GATE,
-+		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 1 },
-+	},
+diff --git a/arch/mips/boot/dts/ingenic/qi_lb60.dts b/arch/mips/boot/dts/ingenic/qi_lb60.dts
+index 76aaf8982554..01b8c917cb33 100644
+--- a/arch/mips/boot/dts/ingenic/qi_lb60.dts
++++ b/arch/mips/boot/dts/ingenic/qi_lb60.dts
+@@ -2,6 +2,7 @@
+ /dts-v1/;
+ 
+ #include "jz4740.dtsi"
++#include <dt-bindings/clock/ingenic,tcu.h>
+ 
+ / {
+ 	compatible = "qi,lb60", "ingenic,jz4740";
+@@ -31,3 +32,9 @@
+ 		bias-disable;
+ 	};
  };
- 
- static void __init jz4740_cgu_init(struct device_node *np)
-diff --git a/include/dt-bindings/clock/jz4740-cgu.h b/include/dt-bindings/clock/jz4740-cgu.h
-index 6ed83f926ae7..e82d77028581 100644
---- a/include/dt-bindings/clock/jz4740-cgu.h
-+++ b/include/dt-bindings/clock/jz4740-cgu.h
-@@ -34,5 +34,6 @@
- #define JZ4740_CLK_ADC		19
- #define JZ4740_CLK_I2C		20
- #define JZ4740_CLK_AIC		21
-+#define JZ4740_CLK_TCU		22
- 
- #endif /* __DT_BINDINGS_CLOCK_JZ4740_CGU_H__ */
++
++&tcu {
++	/* 750 kHz for the system timer and clocksource */
++	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>;
++	assigned-clock-rates = <750000>, <750000>;
++};
 -- 
 2.21.0.593.g511ec345e18
