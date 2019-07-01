@@ -1,40 +1,33 @@
-From: Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH v4 7/8] ARM: dts: aspeed: Add XDMA Engine
-Date: Mon,  1 Jul 2019 14:53:58 -0500
-Message-ID: <1562010839-1113-8-git-send-email-eajames@linux.ibm.com>
-References: <1562010839-1113-1-git-send-email-eajames@linux.ibm.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 2/3] net: phy: realtek: Enable accessing RTL8211E
+ extension pages
+Date: Mon, 1 Jul 2019 22:02:48 +0200
+Message-ID: <20190701200248.GJ30468@lunn.ch>
+References: <20190701195225.120808-1-mka@chromium.org>
+ <20190701195225.120808-2-mka@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562010839-1113-1-git-send-email-eajames@linux.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20190701195225.120808-2-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-aspeed@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, joel@jms.id.au, eduval@amazon.com, Eddie James <eajames@linux.ibm.com>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a node for the XDMA engine with all the necessary information.
+On Mon, Jul 01, 2019 at 12:52:24PM -0700, Matthias Kaehlcke wrote:
+> The RTL8211E has extension pages, which can be accessed after
+> selecting a page through a custom method. Add a function to
+> modify bits in a register of an extension page and a few
+> helpers for dealing with ext pages.
+> 
+> rtl8211e_modify_ext_paged() and rtl821e_restore_page() are
+> inspired by their counterparts phy_modify_paged() and
+> phy_restore_page().
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- arch/arm/boot/dts/aspeed-g5.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Hi Matthias
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 5b1ca26..bfc8328 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -243,6 +243,14 @@
- 				interrupts = <0x19>;
- 			};
- 
-+			xdma: xdma@1e6e7000 {
-+				compatible = "aspeed,ast2500-xdma";
-+				reg = <0x1e6e7000 0x100>;
-+				resets = <&syscon ASPEED_RESET_XDMA>;
-+				interrupts = <6>;
-+				status = "disabled";
-+			};
-+
- 			adc: adc@1e6e9000 {
- 				compatible = "aspeed,ast2500-adc";
- 				reg = <0x1e6e9000 0xb0>;
--- 
-1.8.3.1
+While an extended page is selected, what happens to the normal
+registers in the range 0-0x1c? Are they still accessible?
+
+	  Andrew
