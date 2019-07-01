@@ -1,108 +1,131 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345
- bridge on Teres-I
-Date: Mon, 1 Jul 2019 14:27:51 +0200
-Message-ID: <64471471-5b4d-3c1f-a0e3-e02ee78ca23c@samsung.com>
-References: <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
-        <20190605101317.GA9345@lst.de> <20190605120237.ekmytfxcwbjaqy3x@flea>
-        <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
-        <20190607062802.m5wslx3imiqooq5a@flea>
-        <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
-        <20190607094030.GA12373@lst.de>
-        <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
-        <20190612152022.c3cfhp4cauhzhfyr@flea>
-        <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
-        <20190701095842.fvganvycce2cy7jn@flea>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: [PATCH V12 00/12] Add Tegra194 PCIe support
+Date: Mon, 1 Jul 2019 18:09:58 +0530
+Message-ID: <20190701124010.7484-1-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701095842.fvganvycce2cy7jn@flea>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Torsten Duwe <duwe@lst.de>, Harald Geyer <harald@ccbib.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
+Cc: digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 01.07.2019 11:58, Maxime Ripard wrote:
-> Hi!
->
-> On Fri, Jun 28, 2019 at 12:39:32PM +0200, Andrzej Hajda wrote:
->> On 12.06.2019 17:20, Maxime Ripard wrote:
->>>> I am not sure if I understand whole discussion here, but I also do not
->>>> understand whole edp-connector thing.
->>> The context is this one:
->>> https://patchwork.freedesktop.org/patch/257352/?series=51182&rev=1
->>> https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1
->>> https://patchwork.freedesktop.org/patch/286468/?series=56776&rev=2
->>>
->>> TL;DR: This bridge is being used on ARM laptops that can come with
->>> different eDP panels. Some of these panels require a regulator to be
->>> enabled for the panel to work, and this is obviously something that
->>> should be in the DT.
->>>
->>> However, we can't really describe the panel itself, since the vendor
->>> uses several of them and just relies on the eDP bus to do its job at
->>> retrieving the EDIDs. A generic panel isn't really working either
->>> since that would mean having a generic behaviour for all the panels
->>> connected to that bus, which isn't there either.
->>>
->>> The connector allows to expose this nicely.
->> As VESA presentation says[1] eDP is based on DP but is much more
->> flexible, it is up to integrator (!!!) how the connection, power
->> up/down, initialization sequence should be performed. Trying to cover
->> every such case in edp-connector seems to me similar to panel-simple
->> attempt failure. Moreover there is no such thing as physical standard
->> eDP connector. Till now I though DT connector should describe physical
->> connector on the device, now I am lost, are there some DT bindings
->> guidelines about definition of a connector?
-> This might be semantics but I guess we're in some kind of grey area?
->
-> Like, for eDP, if it's soldered I guess we could say that there's no
-> connector. But what happens if for some other board, that signal is
-> routed through a ribbon?
->
-> You could argue that there's no physical connector in both cases, or
-> that there's one in both, or one for the ribbon and no connector for
-> the one soldered in.
+Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+to PCIe controller
+This patch series
+- Adds support for P2U PHY driver
+- Adds support for PCIe host controller
+- Adds device tree nodes each PCIe controllers
+- Enables nodes applicable to p2972-0000 platform
+- Adds helper APIs in Designware core driver to get capability regs offset
+- Adds defines for new feature registers of PCIe spec revision 4
+- Makes changes in DesignWare core driver to get Tegra194 PCIe working
 
+Testing done on P2972-0000 platform
+- Able to get PCIe link up with on-board Marvel eSATA controller
+- Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+- Able to do data transfers with both SATA drives and NVMe cards
 
-This is not about ribbon vs soldering. It is about usage: this
-connection is static across the whole life of the device (except
-exceptional things: repair, non-standard usage, etc).
+Note
+- Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
+  It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
+  disabled in this patch series. A future patch series would enable this.
+- This series is based on top of the following series
+  Jisheng's patches to add support to .remove() in Designware sub-system
+  https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+  (Update: Jisheng's patches are now accepted and applied for v5.2)
+  My patches made on top of Jisheng's patches to export various symbols
+  http://patchwork.ozlabs.org/project/linux-pci/list/?series=115671
+  (Update: My above patch series is accepted and applied for v5.3)
 
-And "the real connector" is (at least for me) something where end-user
-can connect/disconnect different things: USB, HDMI, ethernet, etc. And
-obviously to be functional it should be somehow standardized. So even if
-there could be some grey area, I do not see it here.
+Changes since [v11]:
+* Modified the commit message of patch-3 in this series to address review
+  comments from Lorenzo
 
+Changes since [v10]:
+* Removed device-tree patches from the series as they are applied to relevant
+  Tegra specific trees by Thierry Reding.
+* Included older Tegra chips to extend quirk that disables MSI interrupt being
+  used for Tegra PCIe root ports.
+* Addressed review comments in P2U driver file.
 
->
->> Maybe instead of edp-connector one would introduce integrator's specific
->> connector, for example with compatible "olimex,teres-edp-connector"
->> which should follow edp abstract connector rules? This will be at least
->> consistent with below presentation[1] - eDP requirements depends on
->> integrator. Then if olimex has standard way of dealing with panels
->> present in olimex/teres platforms the driver would then create
->> drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
->> Anyway it still looks fishy for me :), maybe because I am not
->> familiarized with details of these platforms.
-> That makes sense yes
+Changes since [v9]:
+* Used _relaxed() versions of readl() & writel()
 
+Changes since [v8]:
+* Made the drivers dependent on ARCH_TEGRA_194_SOC directly
+* Addressed review comments from Dmitry
 
-And what if some panel can be used with this pseudo-connecter and in
-some different hw directly? Code duplication? DT overlays?
+Changes since [v7]:
+* Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p2u.c
+* Addressed review comments from Thierry and Rob
 
+Changes since [v6]:
+* Took care of review comments from Rob
+* Added a quirk to disable MSI for root ports
+* Removed using pcie_pme_disable_msi() API in host controller driver
 
-Regards
+Changes since [v5]:
+* Removed patch that exports pcie_bus_config symbol
+* Took care of review comments from Thierry and Rob
 
-Andrzej
+Changes since [v4]:
+* Removed redundant APIs in pcie-designware-ep.c file after moving them
+  to pcie-designware.c file based on Bjorn's review comments
 
+Changes since [v3]:
+* Rebased on top of linux-next top of the tree
+* Addressed Gustavo's comments and added his Ack for some of the changes.
 
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Changes since [v2]:
+* Addressed review comments from Thierry
+
+Changes since [v1]:
+* Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
+* Added more patches in v2 series
+
+Vidya Sagar (12):
+  PCI: Add #defines for some of PCIe spec r4.0 features
+  PCI: Disable MSI for Tegra root ports
+  PCI: dwc: Perform dbi regs write lock towards the end
+  PCI: dwc: Move config space capability search API
+  PCI: dwc: Add ext config space capability search API
+  dt-bindings: PCI: designware: Add binding for CDM register check
+  PCI: dwc: Add support to enable CDM register check
+  dt-bindings: Add PCIe supports-clkreq property
+  dt-bindings: PCI: tegra: Add device tree support for Tegra194
+  dt-bindings: PHY: P2U: Add Tegra194 P2U block
+  phy: tegra: Add PCIe PIPE2UPHY support
+  PCI: tegra: Add Tegra194 PCIe support
+
+ .../bindings/pci/designware-pcie.txt          |    5 +
+ .../bindings/pci/nvidia,tegra194-pcie.txt     |  155 ++
+ Documentation/devicetree/bindings/pci/pci.txt |    5 +
+ .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
+ drivers/pci/controller/dwc/Kconfig            |   10 +
+ drivers/pci/controller/dwc/Makefile           |    1 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
+ .../pci/controller/dwc/pcie-designware-host.c |   14 +-
+ drivers/pci/controller/dwc/pcie-designware.c  |   87 +
+ drivers/pci/controller/dwc/pcie-designware.h  |   12 +
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 1635 +++++++++++++++++
+ drivers/pci/quirks.c                          |   53 +
+ drivers/phy/tegra/Kconfig                     |    7 +
+ drivers/phy/tegra/Makefile                    |    1 +
+ drivers/phy/tegra/phy-tegra194-p2u.c          |  120 ++
+ include/uapi/linux/pci_regs.h                 |   22 +-
+ 16 files changed, 2150 insertions(+), 42 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+ create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
+
+-- 
+2.17.1
