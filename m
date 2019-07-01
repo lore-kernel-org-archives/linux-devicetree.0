@@ -1,38 +1,33 @@
-Return-Path: <SRS0=WEMd=VA=vergenet.net=horms@kernel.org>
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH v2 2/2] dt-bindings: usb: renesas_gen3: Rename bindings documentation file
-Date: Wed,  3 Jul 2019 10:35:14 +0200
-Message-Id: <20190703083514.32385-3-horms+renesas@verge.net.au>
-In-Reply-To: <20190703083514.32385-1-horms+renesas@verge.net.au>
-References: <20190703083514.32385-1-horms+renesas@verge.net.au>
+Return-Path: <SRS0=OASA=U6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.planimolde.pt ([62.48.184.67]:39155 "EHLO
+        mail.planimolde.pt" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727662AbfGAK5S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jul 2019 06:57:18 -0400
+Date: Mon, 1 Jul 2019 12:50:57 +0200
+From: Peter Wong <info@planimolde.pt>
+Reply-To: Peter Wong <pw178483@gmail.com>
+Message-ID: <14225325.31876.1561978257909.JavaMail.cash@mail.planimolde.pt>
+Subject: =?Cp1252?Q?Investitionsm=F6glichkeit?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Simon Horman <horms+renesas@verge.net.au>
+Content-Type: text/plain; charset="Cp1252"
+Content-Transfer-Encoding: 8BIT
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-For consistency with the naming of (most) other documentation files for DT
-bindings for Renesas IP blocks rename the Renesas USB3.0 peripheral
-documentation file from renesas-gen3.txt to renesas,usb3-peri.txt
+Sch�ne Gr��e,
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Bitte finden Sie den Inhalt dieser Mail sehr vertraulich und legal. Ich hei�e Peter Wong und arbeite mit einer Bank hier in Hongkong zusammen. 
+Ich habe mich entschlossen, mit Ihnen Kontakt aufzunehmen, um in jedes lukrative Gesch�ft in Ihrem Land investieren zu k�nnen. Ich bin bereit, 
+Ihnen 40% des Anlageergebnisses als Gesch�ftspartner anzubieten.
 
----
-v2
-* Accumulate review tags
-* Use renesas,usb3-peri.txt as new filename as suggested by Shimoda-san
----
- .../devicetree/bindings/usb/{renesas_usb3.txt => renesas,usb3-peri.txt}   | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/usb/{renesas_usb3.txt => renesas,usb3-peri.txt} (100%)
+Wir bieten auch ein schnelles Darlehen zu niedrigen Zinss�tzen an, ohne dass Sicherheiten erforderlich sind. Bei Interesse antworten Sie bitte auf 
+meine private E-Mail: pw178484@gmail.com
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/usb/renesas_usb3.txt
-rename to Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt
--- 
-2.11.0
+Mit freundlichen Gr��en: Peter Wong
+
+
+
+
+----------------------------------------------------
+This email was sent by the shareware version of Postman Professional.
