@@ -1,33 +1,116 @@
-Return-Path: <SRS0=ps6a=V2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-io1-f42.google.com ([209.85.166.42]:39625 "EHLO
-        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfG2Ib2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2019 04:31:28 -0400
-Received: by mail-io1-f42.google.com with SMTP id f4so118191359ioh.6
-        for <devicetree@vger.kernel.org>; Mon, 29 Jul 2019 01:31:28 -0700 (PDT)
-MIME-Version: 1.0
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 29 Jul 2019 10:31:17 +0200
-Message-ID: <CAMRc=Mc_9=3xYWrrn=naQgFprgLA4wkNJQE1niSiYiACi5XFiw@mail.gmail.com>
-Subject: DT yaml bindings: handling of complicated compatible property
-Content-Type: text/plain; charset="UTF-8"
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>
+Return-Path: <SRS0=mNx5=U6=gmail.com=akinobu.mita@kernel.org>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v5 3/4] nvme: support DT thermal zone device
+Date: Mon,  1 Jul 2019 23:12:33 +0900
+Message-Id: <1561990354-4084-4-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1561990354-4084-1-git-send-email-akinobu.mita@gmail.com>
+References: <1561990354-4084-1-git-send-email-akinobu.mita@gmail.com>
+To: linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Rob Herring <robh@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Minwoo Im <minwoo.im.dev@gmail.com>, Kenneth Heitke <kenneth.heitke@intel.com>, Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello,
+In addition to the standard thermal zone device, this adds support for
+registering the DT thermal zone device.
 
-I decided to attempt to convert the DT binding for AT24 EEPROM driver
-to yaml and am not sure on how to handle the compatible property with
-a lot of options.
+If there is a device tree thermal zone node with the nvme temperature
+sensor, the standard thermal zone device is not created.
+Because we don't need two thermal zone devices for the same sensor.
 
-In at24 we support 23 models and 8 vendors (184 vendor,model
-combinations) plus 5 exceptions (with model names not following the
-general convention).
+Cc: Rob Herring <robh@kernel.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Keith Busch <kbusch@kernel.org>
+Cc: Jens Axboe <axboe@fb.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Minwoo Im <minwoo.im.dev@gmail.com>
+Cc: Kenneth Heitke <kenneth.heitke@intel.com>
+Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+---
+* v5
+- split the DT thermal zone support into separate patch
+- don't register both standard and DT thermal zone
 
-Do I simply use the oneOf specifier and list all possible options? Or
-is there a better approach.
+ drivers/nvme/host/nvme.h    |  1 +
+ drivers/nvme/host/thermal.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-Best regards,
-Bartosz Golaszewski
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 49dd59ec..d501567 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -159,6 +159,7 @@ struct nvme_fault_inject {
+ struct nvme_tz {
+ 	struct thermal_zone_params params;
+ 	struct thermal_zone_device *dev;
++	struct thermal_zone_device *of_dev;
+ 	unsigned int sensor;
+ };
+ 
+diff --git a/drivers/nvme/host/thermal.c b/drivers/nvme/host/thermal.c
+index c3608f6..431aeb4 100644
+--- a/drivers/nvme/host/thermal.c
++++ b/drivers/nvme/host/thermal.c
+@@ -150,6 +150,11 @@ static struct thermal_zone_device_ops nvme_tz_ops = {
+ 	.set_trip_temp = nvme_tz_set_trip_temp,
+ };
+ 
++static struct thermal_zone_of_device_ops nvme_tz_of_ops = {
++	.get_temp = nvme_tz_of_get_temp,
++	.set_trip_temp = nvme_tz_of_set_trip_temp,
++};
++
+ static const struct thermal_zone_params nvme_tz_params = {
+ 	.governor_name = "user_space",
+ 	.no_hwmon = true,
+@@ -164,6 +169,36 @@ static int nvme_thermal_zone_register(struct nvme_ctrl *ctrl,
+ 	int ret;
+ 
+ 	tz->sensor = sensor;
++
++	tzdev = thermal_zone_of_sensor_register(ctrl->dev, sensor, tz,
++						&nvme_tz_of_ops);
++	if (!IS_ERR(tzdev)) {
++		int trip_temp;
++
++		ret = tzdev->ops->get_trip_temp(tzdev, 0, &trip_temp);
++		if (ret) {
++			dev_err(ctrl->device,
++				"Failed to get trip temp: %d\n", ret);
++			return ret;
++		}
++
++		ret = tzdev->ops->set_trip_temp(tzdev, 0, trip_temp);
++		if (ret) {
++			dev_err(ctrl->device,
++				"Failed to set trip temp: %d\n", ret);
++			return ret;
++		}
++
++		tz->of_dev = tzdev;
++
++		return 0;
++	}
++
++	if (PTR_ERR(tzdev) != -ENODEV)
++		dev_warn(ctrl->device,
++			 "Failed to register thermal zone of sensor %d: %ld\n",
++			 sensor, PTR_ERR(tzdev));
++
+ 	tz->params = nvme_tz_params;
+ 	snprintf(name, sizeof(name), "nvme%d_temp%u", ctrl->instance, sensor);
+ 
+@@ -286,6 +321,9 @@ void nvme_thermal_zones_unregister(struct nvme_ctrl *ctrl)
+ 			tz->dev = NULL;
+ 		}
+ 
++		thermal_zone_of_sensor_unregister(ctrl->dev, tz->of_dev);
++		tz->of_dev = NULL;
++
+ 		__clear_bit(i, ctrl->tz_enabled);
+ 	}
+ }
+-- 
+2.7.4
