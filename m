@@ -1,209 +1,73 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v14 13/13] MIPS: jz4740: Drop obsolete code
-Date: Mon,  1 Jul 2019 17:14:10 +0200
-Message-ID: <20190701151410.23127-14-paul@crapouillou.net>
-References: <20190701151410.23127-1-paul@crapouillou.net>
+From: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [PATCH 4/4] devicetree: Add led-backlight binding
+Date: Mon, 1 Jul 2019 17:14:23 +0200
+Message-ID: <20190701151423.30768-5-jjhiblot@ti.com>
+References: <20190701151423.30768-1-jjhiblot@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701151410.23127-1-paul@crapouillou.net>
+In-Reply-To: <20190701151423.30768-1-jjhiblot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
+To: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com
+Cc: dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, Jean-Jacques Hiblot <jjhiblot@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The old clocksource/timer platform code is now obsoleted by the newly
-introduced TCU drivers.
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
+Add DT binding for led-backlight.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc: devicetree@vger.kernel.org
 ---
+ .../video/backlight/led-backlight.txt         | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/led-backlight.txt
 
-Notes:
-    v5: New patch
-    
-    v6-v11: No change
-    
-    v12: Only remove clocksource code. The rest will eventually be
-    	 removed in a future patchset when the PWM/watchdog drivers
-    	 are updated.
-    
-    v13-v14: No change
-
- arch/mips/jz4740/time.c | 154 +---------------------------------------
- 1 file changed, 2 insertions(+), 152 deletions(-)
-
-diff --git a/arch/mips/jz4740/time.c b/arch/mips/jz4740/time.c
-index a3260c754e65..5476899f0882 100644
---- a/arch/mips/jz4740/time.c
-+++ b/arch/mips/jz4740/time.c
-@@ -4,164 +4,14 @@
-  *  JZ4740 platform time support
-  */
- 
--#include <linux/clk.h>
- #include <linux/clk-provider.h>
--#include <linux/interrupt.h>
--#include <linux/kernel.h>
--#include <linux/time.h>
-+#include <linux/clocksource.h>
- 
--#include <linux/clockchips.h>
--#include <linux/sched_clock.h>
--
--#include <asm/mach-jz4740/clock.h>
--#include <asm/mach-jz4740/irq.h>
- #include <asm/mach-jz4740/timer.h>
--#include <asm/time.h>
--
--#include "clock.h"
--
--#define TIMER_CLOCKEVENT 0
--#define TIMER_CLOCKSOURCE 1
--
--static uint16_t jz4740_jiffies_per_tick;
--
--static u64 jz4740_clocksource_read(struct clocksource *cs)
--{
--	return jz4740_timer_get_count(TIMER_CLOCKSOURCE);
--}
--
--static struct clocksource jz4740_clocksource = {
--	.name = "jz4740-timer",
--	.rating = 200,
--	.read = jz4740_clocksource_read,
--	.mask = CLOCKSOURCE_MASK(16),
--	.flags = CLOCK_SOURCE_IS_CONTINUOUS,
--};
--
--static u64 notrace jz4740_read_sched_clock(void)
--{
--	return jz4740_timer_get_count(TIMER_CLOCKSOURCE);
--}
--
--static irqreturn_t jz4740_clockevent_irq(int irq, void *devid)
--{
--	struct clock_event_device *cd = devid;
--
--	jz4740_timer_ack_full(TIMER_CLOCKEVENT);
--
--	if (!clockevent_state_periodic(cd))
--		jz4740_timer_disable(TIMER_CLOCKEVENT);
--
--	cd->event_handler(cd);
--
--	return IRQ_HANDLED;
--}
--
--static int jz4740_clockevent_set_periodic(struct clock_event_device *evt)
--{
--	jz4740_timer_set_count(TIMER_CLOCKEVENT, 0);
--	jz4740_timer_set_period(TIMER_CLOCKEVENT, jz4740_jiffies_per_tick);
--	jz4740_timer_irq_full_enable(TIMER_CLOCKEVENT);
--	jz4740_timer_enable(TIMER_CLOCKEVENT);
--
--	return 0;
--}
--
--static int jz4740_clockevent_resume(struct clock_event_device *evt)
--{
--	jz4740_timer_irq_full_enable(TIMER_CLOCKEVENT);
--	jz4740_timer_enable(TIMER_CLOCKEVENT);
--
--	return 0;
--}
--
--static int jz4740_clockevent_shutdown(struct clock_event_device *evt)
--{
--	jz4740_timer_disable(TIMER_CLOCKEVENT);
--
--	return 0;
--}
--
--static int jz4740_clockevent_set_next(unsigned long evt,
--	struct clock_event_device *cd)
--{
--	jz4740_timer_set_count(TIMER_CLOCKEVENT, 0);
--	jz4740_timer_set_period(TIMER_CLOCKEVENT, evt);
--	jz4740_timer_enable(TIMER_CLOCKEVENT);
--
--	return 0;
--}
--
--static struct clock_event_device jz4740_clockevent = {
--	.name = "jz4740-timer",
--	.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT,
--	.set_next_event = jz4740_clockevent_set_next,
--	.set_state_shutdown = jz4740_clockevent_shutdown,
--	.set_state_periodic = jz4740_clockevent_set_periodic,
--	.set_state_oneshot = jz4740_clockevent_shutdown,
--	.tick_resume = jz4740_clockevent_resume,
--	.rating = 200,
--#ifdef CONFIG_MACH_JZ4740
--	.irq = JZ4740_IRQ_TCU0,
--#endif
--#if defined(CONFIG_MACH_JZ4770) || defined(CONFIG_MACH_JZ4780)
--	.irq = JZ4780_IRQ_TCU2,
--#endif
--};
--
--static struct irqaction timer_irqaction = {
--	.handler	= jz4740_clockevent_irq,
--	.flags		= IRQF_PERCPU | IRQF_TIMER,
--	.name		= "jz4740-timerirq",
--	.dev_id		= &jz4740_clockevent,
--};
- 
- void __init plat_time_init(void)
- {
--	int ret;
--	uint32_t clk_rate;
--	uint16_t ctrl;
--	struct clk *ext_clk;
--
- 	of_clk_init(NULL);
- 	jz4740_timer_init();
--
--	ext_clk = clk_get(NULL, "ext");
--	if (IS_ERR(ext_clk))
--		panic("unable to get ext clock");
--	clk_rate = clk_get_rate(ext_clk) >> 4;
--	clk_put(ext_clk);
--
--	jz4740_jiffies_per_tick = DIV_ROUND_CLOSEST(clk_rate, HZ);
--
--	clockevent_set_clock(&jz4740_clockevent, clk_rate);
--	jz4740_clockevent.min_delta_ns = clockevent_delta2ns(100, &jz4740_clockevent);
--	jz4740_clockevent.min_delta_ticks = 100;
--	jz4740_clockevent.max_delta_ns = clockevent_delta2ns(0xffff, &jz4740_clockevent);
--	jz4740_clockevent.max_delta_ticks = 0xffff;
--	jz4740_clockevent.cpumask = cpumask_of(0);
--
--	clockevents_register_device(&jz4740_clockevent);
--
--	ret = clocksource_register_hz(&jz4740_clocksource, clk_rate);
--
--	if (ret)
--		printk(KERN_ERR "Failed to register clocksource: %d\n", ret);
--
--	sched_clock_register(jz4740_read_sched_clock, 16, clk_rate);
--
--	setup_irq(jz4740_clockevent.irq, &timer_irqaction);
--
--	ctrl = JZ_TIMER_CTRL_PRESCALE_16 | JZ_TIMER_CTRL_SRC_EXT;
--
--	jz4740_timer_set_ctrl(TIMER_CLOCKEVENT, ctrl);
--	jz4740_timer_set_ctrl(TIMER_CLOCKSOURCE, ctrl);
--
--	jz4740_timer_set_period(TIMER_CLOCKEVENT, jz4740_jiffies_per_tick);
--	jz4740_timer_irq_full_enable(TIMER_CLOCKEVENT);
--
--	jz4740_timer_set_period(TIMER_CLOCKSOURCE, 0xffff);
--
--	jz4740_timer_enable(TIMER_CLOCKEVENT);
--	jz4740_timer_enable(TIMER_CLOCKSOURCE);
-+	timer_probe();
- }
+diff --git a/Documentation/devicetree/bindings/video/backlight/led-backlight.txt b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
+new file mode 100644
+index 000000000000..216cd52d624a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
+@@ -0,0 +1,39 @@
++led-backlight bindings
++
++The node of the backlight driver IS the node of the LED.
++
++Required properties:
++  - compatible: "led-backlight"
++  - brightness-levels: Array of distinct LED brightness levels. These
++      are in the range from 0 to 255, passed to the LED class driver.
++  - default-brightness-level: the default brightness level (index into the
++      array defined by the "brightness-levels" property)
++
++Optional properties:
++  - power-supply: regulator for supply voltage
++  - enable-gpios: contains a single GPIO specifier for the GPIO which enables
++                  and disables the backlight (see GPIO binding[0])
++
++[0]: Documentation/devicetree/bindings/gpio/gpio.txt
++
++Example:
++
++led_ctrl {
++	red_led@1 {
++	        label = "red";
++		reg = <1>;
++	}
++
++	backlight_led@2 {
++		function = LED_FUNCTION_BACKLIGHT;
++		reg = <2>;
++
++		compatible = "led-backlight";
++
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		default-brightness-level = <6>;
++
++		power-supply = <&vdd_bl_reg>;
++		enable-gpios = <&gpio 58 0>;
++	};
++};
 -- 
-2.21.0.593.g511ec345e18
+2.17.1
