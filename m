@@ -1,80 +1,119 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 3/4] net: dsa: vsc73xx: add support for parallel mode
-Date: Mon, 1 Jul 2019 09:45:10 -0700
-Message-ID: <b7afaf2e-ca4e-2795-658d-2f0289203833@gmail.com>
-References: <20190701152723.624-1-paweldembicki@gmail.com>
- <20190701152723.624-3-paweldembicki@gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v5 1/7] dt-bindings: Add panel-timing subnode to
+ simple-panel
+Date: Mon, 1 Jul 2019 09:59:46 -0700
+Message-ID: <CAD=FV=V3eiBXP4Z5KMxD=-csV5EAD9cY4MzuAOtMyphpDmW+_A@mail.gmail.com>
+References: <20190401171724.215780-1-dianders@chromium.org>
+ <20190401171724.215780-2-dianders@chromium.org>
+ <20190630200259.GA15102@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701152723.624-3-paweldembicki@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Dembicki <paweldembicki@gmail.com>
-Cc: linus.walleij@linaro.org, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190630200259.GA15102@ravnborg.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Jeffy Chen <jeffy.chen@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, Boris Brezillon <boris.brezillon@collabora.com>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Ezequiel Garcia <ezequiel@collabora.com>, Matthias Kaehlcke <mka@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 7/1/19 8:27 AM, Pawel Dembicki wrote:
-> This patch add platform part of vsc73xx driver.
-> It allows to use chip connected by PI interface.
-> 
-> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-> ---
-
-[snip]
-
-> +	struct vsc73xx_platform *vsc_platform = vsc->priv;
-> +	u32 offset;
-> +
-> +	if (!vsc73xx_is_addr_valid(block, subblock))
-> +		return -EINVAL;
-> +
-> +	offset = vsc73xx_make_addr(block, subblock, reg);
-> +
-> +	mutex_lock(&vsc->lock);
-> +		iowrite32be(val, vsc_platform->base_addr + offset);
-> +	mutex_unlock(&vsc->lock);
-
-Similar question from Andrew, why is the locking done in the platform
-layer, should not that be done in the core I/O operation instead?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int vsc73xx_platform_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct vsc73xx_platform *vsc_platform;
-> +	struct resource *res = NULL;
-> +	int ret;
-> +
-> +	vsc_platform = devm_kzalloc(dev, sizeof(*vsc_platform), GFP_KERNEL);
-> +	if (!vsc_platform)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, vsc_platform);
-> +	vsc_platform->pdev = pdev;
-> +	vsc_platform->vsc.dev = dev;
-> +	vsc_platform->vsc.priv = vsc_platform;
-> +	vsc_platform->vsc.ops = &vsc73xx_platform_ops;
-> +
-> +	/* obtain I/O memory space */
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		dev_err(&pdev->dev, "cannot obtain I/O memory space\n");
-> +		ret = -ENXIO;
-> +		return ret;
-> +	}
-> +
-> +	vsc_platform->base_addr = devm_ioremap_resource(&pdev->dev, res);
-
-devm_ioremap_resource takes care of checking that the resource pointer
-is valid, no need to do that here.
-
-> +	if (!vsc_platform->base_addr) {
-
-if (IS_ERR(vsc_platform->base_addr))
--- 
-Florian
+SGksCgpPbiBTdW4sIEp1biAzMCwgMjAxOSBhdCAxOjAzIFBNIFNhbSBSYXZuYm9yZyA8c2FtQHJh
+dm5ib3JnLm9yZz4gd3JvdGU6Cj4KPiBIaSBEb3VnbGFzLgo+Cj4gU29tZSBsb25nIG92ZXJkdWUg
+cmV2aWV3IGZlZWRiYWNrLgo+Cj4gT24gTW9uLCBBcHIgMDEsIDIwMTkgYXQgMTA6MTc6MThBTSAt
+MDcwMCwgRG91Z2xhcyBBbmRlcnNvbiB3cm90ZToKPiA+IEZyb206IFNlYW4gUGF1bCA8c2VhbnBh
+dWxAY2hyb21pdW0ub3JnPgo+ID4KPiA+IFRoaXMgcGF0Y2ggYWRkcyBhIG5ldyBzdWJub2RlIHRv
+IHNpbXBsZS1wYW5lbCBhbGxvd2luZyB1cyB0byBvdmVycmlkZQo+ID4gdGhlIHR5cGljYWwgdGlt
+aW5nIGV4cHJlc3NlZCBpbiB0aGUgcGFuZWwncyBkaXNwbGF5X3RpbWluZy4KPiA+Cj4gPiBDaGFu
+Z2VzIGluIHYyOgo+ID4gIC0gU3BsaXQgb3V0IHRoZSBiaW5kaW5nIGludG8gYSBuZXcgcGF0Y2gg
+KFJvYikKPiA+ICAtIGRpc3BsYXktdGltaW5ncyBpcyBhIG5ldyBzZWN0aW9uIChSb2IpCj4gPiAg
+LSBVc2UgdGhlIGZ1bGwgZGlzcGxheS10aW1pbmdzIHN1Ym5vZGUgaW5zdGVhZCBvZiBwaWNraW5n
+IHRoZSB0aW1pbmcKPiA+ICAgIG91dCAoUm9iL1RoaWVycnkpCj4gPiBDaGFuZ2VzIGluIHYzOgo+
+ID4gIC0gR28gYmFjayB0byB1c2luZyB0aGUgdGltaW5nIHN1Ym5vZGUgZGlyZWN0bHksIGJ1dCBy
+ZW5hbWUgdG8KPiA+ICAgIHBhbmVsLXRpbWluZyAoUm9iKQo+ID4gQ2hhbmdlcyBpbiB2NDoKPiA+
+ICAtIFNpbXBsaWZ5IGRlc2MuIGZvciB3aGVuIG92ZXJyaWRlIHNob3VsZCBiZSB1c2VkIChUaGll
+cnJ5L0xhdXJlbnQpCj4gPiAgLSBSZW1vdmVkIFJvYiBIIHJldmlldyBzaW5jZSBpdCdzIGJlZW4g
+YSB5ZWFyIGFuZCB3b3JkaW5nIGNoYW5nZWQKPiA+IENoYW5nZXMgaW4gdjU6Cj4gPiAgLSBSZW1v
+dmVkIGJpdCBhYm91dCBPUyBtYXkgaWdub3JlIChSb2IvRXplcXVpZWwpCj4gPgo+ID4gQ2M6IERv
+dWcgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KPiA+IENjOiBFcmljIEFuaG9sdCA8
+ZXJpY0BhbmhvbHQubmV0Pgo+ID4gQ2M6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+
+Cj4gPiBDYzogSmVmZnkgQ2hlbiA8amVmZnkuY2hlbkByb2NrLWNoaXBzLmNvbT4KPiA+IENjOiBS
+b2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPgo+ID4gQ2M6IFN0w6lwaGFuZSBNYXJjaGVz
+aW4gPG1hcmNoZXVAY2hyb21pdW0ub3JnPgo+ID4gQ2M6IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5
+LnJlZGluZ0BnbWFpbC5jb20+Cj4gPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiA+
+IENjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gPiBDYzogbGludXgtcm9ja2No
+aXBAbGlzdHMuaW5mcmFkZWFkLm9yZwo+ID4gU2lnbmVkLW9mZi1ieTogU2VhbiBQYXVsIDxzZWFu
+cGF1bEBjaHJvbWl1bS5vcmc+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBEb3VnbGFzIEFuZGVyc29uIDxk
+aWFuZGVyc0BjaHJvbWl1bS5vcmc+Cj4gPiAtLS0KPiA+Cj4gPiAgLi4uL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dCAgIHwgMjIgKysrKysrKysrKysrKysrKysrKwo+ID4g
+IDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspCj4gPgo+ID4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5l
+bC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9z
+aW1wbGUtcGFuZWwudHh0Cj4gPiBpbmRleCBiMmI4NzJjNzEwZjIuLjkzODgyMjY4YzBiOSAxMDA2
+NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Bh
+bmVsL3NpbXBsZS1wYW5lbC50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQKPiA+IEBAIC0xNSw2ICsxNSwx
+NiBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gICAgKGhvdCBwbHVnIGRldGVjdCkgc2lnbmFs
+LCBidXQgdGhlIHNpZ25hbCBpc24ndCBob29rZWQgdXAgc28gd2Ugc2hvdWxkCj4gPiAgICBoYXJk
+Y29kZSB0aGUgbWF4IGRlbGF5IGZyb20gdGhlIHBhbmVsIHNwZWMgd2hlbiBwb3dlcmluZyB1cCB0
+aGUgcGFuZWwuCj4gPgo+ID4gK3BhbmVsLXRpbWluZyBzdWJub2RlCj4gPiArLS0tLS0tLS0tLS0t
+LS0tLS0tLS0KPiA+ICsKPiA+ICtUaGlzIG9wdGlvbmFsIHN1Ym5vZGUgaXMgZm9yIGRldmljZXMg
+d2hpY2ggcmVxdWlyZSBhIG1vZGUgZGlmZmVyaW5nCj4gPiArZnJvbSB0aGUgcGFuZWwncyAidHlw
+aWNhbCIgZGlzcGxheSB0aW1pbmcuCj4gTWV5YmUgYWRkIGhlcmUgdGhhdCBpdCBpcyBleHBlY3Rl
+ZCB0aGF0IHRoZSBwYW5lbCBoYXMgaW5jbHVkZWQgdGltaW5nCj4gaW4gdGhlIGRyaXZlciBpdHNl
+bGYsIGFuZCBub3QgYXMgcGFydCBvZiBEVC4KPiBTbyB3aGF0IGlzIHNwZWNpZmllZCBoZXJlIGlz
+IGEgbW9yZSBwcmVjaXNlIHZhcmlhbnQsIHdpdGhpbiB0aGUgbGltaXRzCj4gb2Ygd2hhdCBpcyBz
+cGVjaWZpZWQgZm9yIHRoZSBwYW5lbC4KClNlZSBkaXNjdXNzaW9ucyBwcmV2aW91cyB2ZXJzaW9u
+cyBvZiB0aGlzIHBhdGNoLiAgU3BlY2lmaWNhbGx5IHlvdSBjYW4Kc2VlIHY0IGF0IDxodHRwczov
+L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwODc1NTA1Lz4gYW5kIHYzCihwb3N0ZWQgYnkg
+U2VhbikgYXQgPGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAyMDc1OTEvPi4K
+ClNwZWNpZmljYWxseTogQWNjb3JkaW5nIHRvIFJvYiBIIGl0IGlzIGdlbmVyYWxseSBub3QgcmVx
+dWlyZWQgdG8KdmFsaWRhdGUgd2hhdCdzIGluIGRldmljZSB0cmVlLS1pdCBjYW4gYmUganVzdCBi
+bGluZGx5IGFwcGxpZWQuICBUaHVzCnRoZSBiaW5kaW5ncyBzaG91bGRuJ3QgcmVhbGx5IHNheSBh
+bnl0aGluZyBhYm91dCB0cnlpbmcgdG8gcmVjb25jaWxlCndpdGggdGhlIGRyaXZlciAoZXNwZWNp
+YWxseSBzaW5jZSB0aGF0J3MgaGVhdmlseSByZWx5aW5nIG9uIHRoZQpjdXJyZW50IGRyaXZlciBp
+bXBsZW1lbnRhdGlvbikuCgpBdCB0aGUgbW9tZW50IHRoZSBkcml2ZXIgc3RpbGwgZG9lcyB2YWxp
+ZGF0ZSB0aGluZ3MgYW5kIHdlIGNvdWxkCmRpc2N1c3MgcmVtb3ZpbmcgdGhhdCBpbiBhIGZ1dHVy
+ZSBwYXRjaHNldCBpZiBpdCB3YXMgZGVlbWVkIGltcG9ydGFudAovIGRlc2lyYWJsZS4KCgo+ID4g
+K0Zvcm1hdCBpbmZvcm1hdGlvbiBvbiB0aGUgcGFuZWwtdGltaW5nIHN1Ym5vZGUgY2FuIGJlIGZv
+dW5kIGluCj4gPiArZGlzcGxheS10aW1pbmcudHh0Lgo+IGRpc3BsYXktdGltaW5nIGRlZmluZXMg
+b3Rpb25hbCBwcm9wZXJ0aWVzOgo+IGhzeW5jLWFjdGl2ZSwgcGl4ZWxjbGstYWN0aXZlLCBkb3Vi
+bGVzY2FuIGV0Yy4KPiBJdCBpcyBub3QgZnJvbSB0aGUgYWJvdmUgb2J2aW91cyB3aGljaCBwcm9w
+ZXJ0aWVzIGZyb20gZGlzcGxheS10aW1pbmdzCj4gdGhhdCBjYW4gYmUgc3BlY2lmaWVkIGZvciBh
+IHBhbmVsLXRpbWluZyBzdWItbm9kZS4KPiBNYXliZSBiZWNhdXNlIHRoZXkgY2FuIGFsbCBiZSBz
+cGVjaWZpZWQ/Cj4KPiBEaXNwbGF5LXRpbWluZyBhbGxvd3MgdGltaW5ncyB0byBiZSBzcGVjaWZp
+ZWQgYXMgYSByYW5nZS4KPiBJZiBpdCBpcyBhbHNvIE9LIHRvIHNwZWNpZnkgYSByYW5nZSBmb3Ig
+cGFubGUtdGltaW5nIHRoZW4gZXZlcnl0aGlnbiBpcwo+IGZpbmUuIEJ1dCBpZiB0aGUgcGFuZWwt
+dGltaWduIHN1Ym5vZGUgZG8gbm90IGFsbG93IHJhbmdlcyB0aGlzIG5lZWRzIHRvCj4gYmUgc3Bl
+Y2lmaWVkLgoKT25lIHRoaW5nIHRvIHRoaW5rIGFib3V0IGhlcmUgaXMgdGhhdCB0aGUgYmluZGlu
+Z3MgYXJlIGEgYml0IGRpdm9yY2VkCmZyb20gdGhlIHJlYWwgd29ybGQuICBTcGVjaWZpY2FsbHkg
+dGhlIGJpbmRpbmdzIHNob3VsZCBkZXNjcmliZQpoYXJkd2FyZSAvIHdoYXQncyBwb3NzaWJsZSBh
+bmQgaXQncyBPSyBmb3IgYmluZGluZ3MgdG8gZGVzY3JpYmUgdGhpbmdzCnRoYXQgYXJlbid0IHll
+dCBzdXBwb3J0ZWQgaW4gY29kZS4gIFlvdSd2ZSBnb3R0YSBiZSByZWFsbHkgY2FyZWZ1bApoZXJl
+LCBvZiBjb3Vyc2UsIGJlY2F1c2UgaXQncyBlYXN5IHRvIHdyaXRlIHJpZGljdWxvdXMgYmluZGlu
+Z3MgaWYKdGhlcmUgaXMgbm8gaW1wbGVtZW50YXRpb24gYmFja2luZyB0aGVtIHVwLCBidXQgaW4g
+Z2VuZXJhbCB0aGF0J3MKc3VwcG9zZWQgdG8gYmUgdGhlIGlkZWEuCgpIZXJlIGl0IHNlZW1zIGxp
+a2UgaXQgc2hvdWxkIGJlIHBvc3NpYmxlIHRvIHNwZWNpZnkgdGltaW5ncyBhcyBhIHJhbmdlCmFu
+ZCB0aGF0IHdvdWxkIGJlIGEgc2Vuc2libGUgdGhpbmcgdG8gZG8uICAuLi5hbmQgd2UncmUgYWxy
+ZWFkeSB1c2luZwpleGlzdGluZyBjb2RlIHRvIHBhcnNlIHRoaXMgbm9kZSwgc3BlY2lmaWNhbGx5
+Cm9mX2dldF9kaXNwbGF5X3RpbWluZygpLiAgSWYgc2ltcGxlLXBhbmVsIGNhbid0ICh5ZXQpIGhh
+bmRsZQpyZWNvbmNpbGluZyByYW5nZXMgc3BlY2lmaWVkIGluIERUIHRoZW4gcHJlc3VtYWJseSB3
+ZSBzaG91bGRuJ3QgcmVseQpvbiB0aGF0IHlldC4gIC4uLmJ1dCBpZiBpdCBiZWNvbWVzIHVzZWZ1
+bCB0aGVuIHdlIGNhbiBhZGQgaXQgbGF0ZXIuCi4uLmJ1dCBpdCdzIE9LIHRvIGFscmVhZHkgaGF2
+ZSBpdCBpbiB0aGUgYmluZGluZ3MuCgpEaWQgdGhhdCBtYWtlIHNlbnNlPyAgSWYgSSdtIG1pc3Vu
+ZGVyc3RhbmRpbmcgc29tZXRoaW5nIGFib3V0IHRoZQpzaXR1YXRpb24gdGhlbiBwbGVhc2UgeWVs
+bCEgIDotKQoKSSB3aWxsIGFsc28gbm90ZSB0aGF0IHBlcmhhcHMgd2Ugc2hvdWxkbid0IG5pdC1w
+aWNrIHRvbyBtdWNoIGFzIHBlcgpSb2IncyBjb21tZW50IGluIHRoZSBjb3ZlciBsZXR0ZXIgWzFd
+IG9mIHY1IG9mIHRoZSBzZXJpZXMuClNwZWNpZmljYWxseSBoZSBzYWlkIHRoaXMgYmluZGluZyBp
+cyBnb2luZyBhd2F5IGFueXdheS4KClN1bW1hcnk6IEkgdGhpbmsgSSBoYXZlIG5vIGFjdGlvbnMg
+aGVyZSBhbmQgdGhpcyBjb3VsZCBnbyB0byBkcm0tbWlzYwp3aXRoIFRoZWlycnkncyBBY2sgcGx1
+cyBvdGhlciB0YWdzLgoKClsxXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvY292
+ZXIvMTA1NzAzOC8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
