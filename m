@@ -1,111 +1,106 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V11 01/12] PCI: Add #defines for some of PCIe spec r4.0
- features
-Date: Mon, 1 Jul 2019 18:12:20 +0530
-Message-ID: <04eb3a58-d9c3-d0ed-97a0-ef249b0df7b9@nvidia.com>
-References: <20190624091505.1711-1-vidyas@nvidia.com>
- <20190624091505.1711-2-vidyas@nvidia.com>
- <20190627143837.GC3782@e121166-lin.cambridge.arm.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCHv7 1/3] dt-bindings: i2c: document bindings for
+ i2c-slave-mqueue
+Date: Mon, 1 Jul 2019 14:43:48 +0200
+Message-ID: <20190701124348.GB4399@kunai>
+References: <20190605164651.15991-1-eduval@amazon.com>
+ <20190605164651.15991-2-eduval@amazon.com>
+ <20190611231425.GA29500@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627143837.GC3782@e121166-lin.cambridge.arm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190611231425.GA29500@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, bhelgaas@google.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Rob Herring <robh@kernel.org>
+Cc: Eduardo Valentin <eduval@amazon.com>, Haiyue Wang <haiyue.wang@linux.intel.com>, jarkko.nikula@linux.intel.com, andriy.shevchenko@intel.com, brendanhiggins@google.com, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/27/2019 8:08 PM, Lorenzo Pieralisi wrote:
-> On Mon, Jun 24, 2019 at 02:44:54PM +0530, Vidya Sagar wrote:
->> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
->> features.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Reviewed-by: Thierry Reding <treding@nvidia.com>
->> ---
->> Changes since [v10]:
->> * None
->>
->> Changes since [v9]:
->> * None
->>
->> Changes since [v8]:
->> * None
->>
->> Changes since [v7]:
->> * None
->>
->> Changes since [v6]:
->> * None
->>
->> Changes since [v5]:
->> * None
->>
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * Updated commit message and description to explicitly mention that defines are
->>    added only for some of the features and not all.
->>
->> Changes since [v1]:
->> * None
->>
->>   include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
->>   1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> I need Bjorn's ACK to merge this patch.
-I sent V12 patches out for review.
-Bjorn, please provide ACK for V12 version of this change.
 
--Vidya Sagar
+--ftEhullJWpWg/VHq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Lorenzo
-> 
->> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
->> index f28e562d7ca8..1c79f6a097d2 100644
->> --- a/include/uapi/linux/pci_regs.h
->> +++ b/include/uapi/linux/pci_regs.h
->> @@ -713,7 +713,9 @@
->>   #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
->>   #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
->>   #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
->> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
->> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
->> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
->> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
->>   
->>   #define PCI_EXT_CAP_DSN_SIZEOF	12
->>   #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
->> @@ -1053,4 +1055,22 @@
->>   #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
->>   #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
->>   
->> +/* Data Link Feature */
->> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
->> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
->> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
->> +#define PCI_DLF_STS		0x08	/* Status Register */
->> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
->> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
->> +
->> +/* Physical Layer 16.0 GT/s */
->> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
->> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
->> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
->> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
->> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
->> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
->> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
->> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
->> +
->>   #endif /* LINUX_PCI_REGS_H */
->> -- 
->> 2.17.1
->>
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +Device Tree for I2C slave message queue backend
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +Some protocols over I2C/SMBus are designed for bi-directional transfer=
+ring
+> > +messages by using I2C Master Write protocol. This requires that both s=
+ides
+> > +of the communication have slave addresses.
+>=20
+> So the address 0x10 in the example below is the address of the I2C=20
+> controller?
+
+Yes.
+
+> > +This I2C slave mqueue (message queue) is used to receive and queue
+> > +messages from the remote i2c intelligent device; and it will add the t=
+arget
+> > +slave address (with R/W# bit is always 0) into the message at the firs=
+t byte.
+> > +
+> > +Links
+> > +----
+> > +`Intelligent Platform Management Bus
+> > +Communications Protocol Specification
+> > +<https://www.intel.com/content/dam/www/public/us/en/documents/product-=
+briefs/ipmp-spec-v1.0.pdf>`_
+> > +
+> > +`Management Component Transport Protocol (MCTP)
+> > +SMBus/I2C Transport Binding Specification
+> > +<https://www.dmtf.org/sites/default/files/standards/documents/DSP0237_=
+1.1.0.pdf>`_
+> > +
+> > +Required Properties:
+> > +- compatible		: should be "i2c-slave-mqueue"
+>=20
+> There is no mention of mqueue (or queue) in these specs. Where does that=
+=20
+> come from? Perhaps something more closely matching the protocol would be=
+=20
+> better name.
+>=20
+> > +- reg			: slave address
+> > +
+> > +Example:
+> > +
+> > +i2c {
+>=20
+> Would there be other slaves?=20
+>=20
+> The common binding states 'multi-master' property should be present.=20
+>=20
+> I need a more complete example.
+
+Ack. Either that or a bit more explanation, e.g. if sending
+packets is planned from userspace?
+
+
+--ftEhullJWpWg/VHq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0aAAQACgkQFA3kzBSg
+KbZ/QBAAkSzIqB/uGF/Tr9iNOztFzpvwsxxTiilAetN7QxstgOe3e4oHtQkZ8AEP
+/gqs+gGHoUip0F/0BEuG0CHeoRAx0zM86ZxK4vIWQUpbQIzGgdjZvR1Z0ktPOIQW
+7FoNRcwKDadsEowvrMefwHs8fR4Z1qWAgxUEd7BkBFSQPu/SxguQII6xbk3wtoj5
+iJmYb+X9z9Hv/IjsfDdGh6ExEg+8qFXGftw4ObFD755QjqmoqXwDMiTgv0JRqkHz
+tiMZDoSLLYcSwHZ4t2wjAbnX3Ar05svdZCEnpELpV67QXQLlZqJ3CG+rMER6iadh
+EI4u6h9LCBG6yM5dW1M9P6c3d50pZ4l9nz0YpeH0yDihX7t91S1h5hNQ6P9n+om1
+pR3bcAln7p1TZnM+J4vNezxquA9JfizlPgtcjFyfQiaHAySN6qgQyGfrlhS7rl8P
+DBRSKiFbAbzdZAva9YGBI8Mx7exoWTqxseantcRcyuj6hpeiFPekqJOClAdMOEAJ
+OdVKP6csDLiD9teNyX264VZt0c8yr9C3a/LMSKB2xsGpm+y1bX/EkQBp/P7pt4oO
+g9tuc2KQHfnbRBUJuxX1IBHKTT7IX6eopW1JgwAczMRV6hZ0CyhxS/vcqrRcdEm/
+pOVOvz54R9FPmIey6auWqetueEXs1kXYuVwtn2f7KSRUIj7AYfQ=
+=OoKw
+-----END PGP SIGNATURE-----
+
+--ftEhullJWpWg/VHq--
