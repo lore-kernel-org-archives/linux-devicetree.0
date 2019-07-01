@@ -1,39 +1,75 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH V2 1/2] arm64: dts: imx8mm: Correct OPP table according to
- latest datasheet
-Date: Mon, 1 Jul 2019 13:20:49 +0000
-Message-ID: <VI1PR04MB5055B324BD963A50698A0AA9EEF90@VI1PR04MB5055.eurprd04.prod.outlook.com>
-References: <20190629102157.8026-1-Anson.Huang@nxp.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 1/3] mmc: sdhci-sprd: Add start_signal_voltage_switch ops
+Date: Mon, 1 Jul 2019 16:31:18 +0300
+Message-ID: <09a99609-9126-1df5-5ec4-bffe65daeca6@intel.com>
+References: <cover.1561094029.git.baolin.wang@linaro.org>
+ <89fb15e88f33a3c1ce7b5eefa9414a20c984c579.1561094029.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <89fb15e88f33a3c1ce7b5eefa9414a20c984c579.1561094029.git.baolin.wang@linaro.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <anson.huang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jacky Bai <ping.bai@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "angus@akkea.ca" <angus@akkea.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>, ulf.hansson@linaro.org, zhang.lyra@gmail.com, orsonzhai@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: vincent.guittot@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/29/2019 1:31 PM, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
+On 21/06/19 9:12 AM, Baolin Wang wrote:
+> For Spreadtrum SD host controller, we can not use standard SD registers
+> to change and detect the I/O voltage signals, since our voltage regulator
+> for I/O is fixed in hardware, and no signals were connected to the SD
+> controller. Thus add Spreadtrum specific voltage switch ops to change
+> voltage instead of using standard SD host registers.
 > 
-> According to latest datasheet (Rev.0.2, 04/2019) from below links,
-> 1.8GHz is ONLY available for consumer part, so the market segment
-> bits for 1.8GHz opp should ONLY available for consumer part accordingly.
->  > Fixes: f403a26c865b (arm64: dts: imx8mm: Add cpu speed grading and 
-all OPPs)
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 
-For both:
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-The vendor tree goes through a lot of testing so switching to the exact 
-speed grading interpretation from there does make sense.
+> ---
+>  drivers/mmc/host/sdhci-sprd.c |   24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+> index 024c3c5..8b23c88 100644
+> --- a/drivers/mmc/host/sdhci-sprd.c
+> +++ b/drivers/mmc/host/sdhci-sprd.c
+> @@ -403,6 +403,22 @@ static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>  	sdhci_request(mmc, mrq);
+>  }
+>  
+> +static int sdhci_sprd_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
+> +{
+> +	int ret;
+> +
+> +	if (!IS_ERR(mmc->supply.vqmmc)) {
+> +		ret = mmc_regulator_set_vqmmc(mmc, ios);
+> +		if (ret) {
+> +			pr_err("%s: Switching signalling voltage failed\n",
+> +			       mmc_hostname(mmc));
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void sdhci_sprd_hs400_enhanced_strobe(struct mmc_host *mmc,
+>  					     struct mmc_ios *ios)
+>  {
+> @@ -470,6 +486,14 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
+>  	host->mmc_host_ops.request = sdhci_sprd_request;
+>  	host->mmc_host_ops.hs400_enhanced_strobe =
+>  		sdhci_sprd_hs400_enhanced_strobe;
+> +	/*
+> +	 * We can not use the standard ops to change and detect the voltage
+> +	 * signal for Spreadtrum SD host controller, since our voltage regulator
+> +	 * for I/O is fixed in hardware, that means we do not need control
+> +	 * the standard SD host controller to change the I/O voltage.
+> +	 */
+> +	host->mmc_host_ops.start_signal_voltage_switch =
+> +		sdhci_sprd_voltage_switch;
+>  
+>  	host->mmc->caps = MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED |
+>  		MMC_CAP_ERASE | MMC_CAP_CMD23;
+> 
