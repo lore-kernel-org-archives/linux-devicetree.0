@@ -1,46 +1,100 @@
-Return-Path: <SRS0=cIVi=VA=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 7/7] dt-bindings: usb: ehci: Fix example warnings
-Date: Wed,  3 Jul 2019 11:55:13 +0200
-Message-Id: <20190703095513.12340-7-maxime.ripard@bootlin.com>
-In-Reply-To: <20190703095513.12340-1-maxime.ripard@bootlin.com>
-References: <20190703095513.12340-1-maxime.ripard@bootlin.com>
+Return-Path: <SRS0=13XV=U6=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V3 1/5] clocksource: timer-of: Support getting clock
+ frequency from DT
+Date: Mon, 1 Jul 2019 09:04:14 +0000
+Message-ID: 
+ <DB3PR0402MB3916A54972EE7887FCB18A23F5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190628033041.8513-1-Anson.Huang@nxp.com>
+ <17a7bde4-e5e0-a746-52a5-1075ce263152@linaro.org>
+In-Reply-To: <17a7bde4-e5e0-a746-52a5-1075ce263152@linaro.org>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The example of the EHCI binding generates a bunch of warnings now that the
-examples are validated too.
-
-Most notably, phy-names isn't used at all, and the node name should be USB.
-
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- Documentation/devicetree/bindings/usb/generic-ehci.yaml | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/generic-ehci.yaml b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-index d3b4f6415920..059f6ef1ad4a 100644
---- a/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-+++ b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-@@ -74,7 +74,7 @@ additionalProperties: false
- 
- examples:
-   - |
--    ehci@e0000300 {
-+    usb@e0000300 {
-         compatible = "ibm,usb-ehci-440epx", "generic-ehci";
-         interrupt-parent = <&UIC0>;
-         interrupts = <0x1a 4>;
-@@ -89,7 +89,6 @@ examples:
-         interrupts = <39>;
-         clocks = <&ahb_gates 1>;
-         phys = <&usbphy 1>;
--        phy-names = "usb";
-     };
- 
- ...
--- 
-2.21.0
+SGksIERhbmllbA0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMS81XSBjbG9ja3NvdXJjZTog
+dGltZXItb2Y6IFN1cHBvcnQgZ2V0dGluZyBjbG9jaw0KPiBmcmVxdWVuY3kgZnJvbSBEVA0KPiAN
+Cj4gDQo+IEhpIEFuc29uLA0KPiANCj4gdGhhbmtzIGZvciB0YWtpbmcgY2FyZSBvZiBhZGRpbmcg
+dGhlIGNsb2NrLWZyZXF1ZW5jeSBoYW5kbGluZyBpbiB0aGUgdGltZXItb2YuDQoNClN1cmUuDQoN
+Cj4gDQo+IE9uIDI4LzA2LzIwMTkgMDU6MzAsIEFuc29uLkh1YW5nQG54cC5jb20gd3JvdGU6DQo+
+ID4gRnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4NCj4gPiBNb3Jl
+IGFuZCBtb3JlIHBsYXRmb3JtcyB1c2UgcGxhdGZvcm0gZHJpdmVyIG1vZGVsIGZvciBjbG9jayBk
+cml2ZXIsIHNvDQo+ID4gdGhlIGNsb2NrIGRyaXZlciBpcyBOT1QgcmVhZHkgZHVyaW5nIHRpbWVy
+IGluaXRpYWxpemF0aW9uIHBoYXNlLCBpdA0KPiA+IHdpbGwgY2F1c2UgdGltZXIgaW5pdGlhbGl6
+YXRpb24gZmFpbGVkLg0KPiA+DQo+ID4gVG8gc3VwcG9ydCB0aG9zZSBwbGF0Zm9ybXMgd2l0aCB1
+cHBlciBzY2VuYXJpbywgaW50cm9kdWNpbmcgYSBuZXcgZmxhZw0KPiA+IFRJTUVSX09GX0NMT0NL
+X0ZSRVFVRU5DWSB3aGljaCBpcyBtdXR1YWxseSBleGNsdXNpdmUgd2l0aA0KPiA+IFRJTUVSX09G
+X0NMT0NLIGZsYWcgdG8gc3VwcG9ydCBnZXR0aW5nIHRpbWVyIGNsb2NrIGZyZXF1ZW5jeSBmcm9t
+IERULA0KPiA+IHRoZW4gb2ZfY2xrIG9wZXJhdGlvbnMgY2FuIGJlIHNraXBwZWQuDQo+ID4NCj4g
+PiBVc2VyIG5lZWRzIHRvIHNlbGVjdCBlaXRoZXIgVElNRVJfT0ZfQ0xPQ0tfRlJFUVVFTkNZIG9y
+DQo+IFRJTUVSX09GX0NMT0NLDQo+ID4gZmxhZyBpZiB3YW50IHRvIHVzZSB0aW1lci1vZiBkcml2
+ZXIgdG8gaW5pdGlhbGl6ZSB0aGUgY2xvY2sgcmF0ZSwgYW5kDQo+ID4gdGhlIGNvcnJlc3BvbmRp
+bmcgY2xvY2sgbmFtZSBvciBwcm9wZXJ0eSBuYW1lIG5lZWRzIHRvIGJlIHNwZWNpZmllZC4NCj4g
+Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0K
+PiA+IC0tLQ0KPiA+IE5ldyBwYXRjaDoNCj4gPiAJLSBBZGQgbmV3IGZsYWcgb2YgVElNRVJfT0Zf
+Q0xPQ0tfRlJFUVVFTkNZLCBtdXR1YWxseSBleGNsdXNpdmUNCj4gd2l0aCBUSU1FUl9PRl9DTE9D
+SywgdG8gc3VwcG9ydA0KPiA+IAkgIGdldHRpbmcgY2xvY2sgZnJlcXVlbmN5IGZyb20gRFQgZGly
+ZWN0bHk7DQo+ID4gCS0gQWRkIHByb3BfbmFtZSB0byBvZl90aW1lcl9jbGsgc3RydWN0dXJlLCBp
+ZiB1c2luZw0KPiBUSU1FUl9PRl9DTE9DS19GUkVRVUVOQ1kgZmxhZywgdXNlciBuZWVkcw0KPiA+
+IAkgIHRvIHBhc3MgdGhlIHByb3BlcnR5IG5hbWUgZm9yIHRpbWVyLW9mIGRyaXZlciB0byBnZXQg
+Y2xvY2sgZnJlcXVlbmN5DQo+IGZyb20gRFQsIHRoaXMgaXMgdG8gYXZvaWQNCj4gPiAJICB0aGUg
+Y291cGxlIG9mIHRpbWVyLW9mIGRyaXZlciBhbmQgRFQsIHNvIHRpbWVyLW9mIGRyaXZlciBkb2Vz
+IE5PVA0KPiB1c2UgYSBmaXhlZCBwcm9wZXJ0eSBuYW1lLg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJz
+L2Nsb2Nrc291cmNlL3RpbWVyLW9mLmMgfCAyMyArKysrKysrKysrKysrKysrKysrKysrKw0KPiA+
+IGRyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItb2YuaCB8ICA4ICsrKysrLS0tDQo+ID4gIDIgZmls
+ZXMgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLW9mLmMNCj4gPiBiL2RyaXZlcnMv
+Y2xvY2tzb3VyY2UvdGltZXItb2YuYyBpbmRleCA4MDU0MjI4Li5jOTFhOGI2IDEwMDY0NA0KPiA+
+IC0tLSBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItb2YuYw0KPiA+ICsrKyBiL2RyaXZlcnMv
+Y2xvY2tzb3VyY2UvdGltZXItb2YuYw0KPiA+IEBAIC0xNjEsNiArMTYxLDIxIEBAIHN0YXRpYyBf
+X2luaXQgaW50IHRpbWVyX29mX2Jhc2VfaW5pdChzdHJ1Y3QNCj4gZGV2aWNlX25vZGUgKm5wLA0K
+PiA+ICAJcmV0dXJuIDA7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0aWMgX19pbml0IGludCB0aW1l
+cl9vZl9jbGtfZnJlcXVlbmN5X2luaXQoc3RydWN0IGRldmljZV9ub2RlICpucCwNCj4gPiArCQkJ
+CQkgICAgICBzdHJ1Y3Qgb2ZfdGltZXJfY2xrICpvZl9jbGspIHsNCj4gPiArCWludCByZXQ7DQo+
+ID4gKwl1MzIgcmF0ZTsNCj4gPiArDQo+ID4gKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihu
+cCwgb2ZfY2xrLT5wcm9wX25hbWUsICZyYXRlKTsNCj4gPiArCWlmICghcmV0KSB7DQo+ID4gKwkJ
+b2ZfY2xrLT5yYXRlID0gcmF0ZTsNCj4gPiArCQlvZl9jbGstPnBlcmlvZCA9IERJVl9ST1VORF9V
+UChyYXRlLCBIWik7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmV0dXJuIHJldDsNCj4gPiArfQ0K
+PiA+ICsNCj4gPiAgaW50IF9faW5pdCB0aW1lcl9vZl9pbml0KHN0cnVjdCBkZXZpY2Vfbm9kZSAq
+bnAsIHN0cnVjdCB0aW1lcl9vZiAqdG8pDQo+ID4gew0KPiA+ICAJaW50IHJldCA9IC1FSU5WQUw7
+DQo+ID4gQEAgLTE3OCw2ICsxOTMsMTEgQEAgaW50IF9faW5pdCB0aW1lcl9vZl9pbml0KHN0cnVj
+dCBkZXZpY2Vfbm9kZSAqbnAsDQo+IHN0cnVjdCB0aW1lcl9vZiAqdG8pDQo+ID4gIAkJaWYgKHJl
+dCkNCj4gPiAgCQkJZ290byBvdXRfZmFpbDsNCj4gPiAgCQlmbGFncyB8PSBUSU1FUl9PRl9DTE9D
+SzsNCj4gPiArCX0gZWxzZSBpZiAodG8tPmZsYWdzICYgVElNRVJfT0ZfQ0xPQ0tfRlJFUVVFTkNZ
+KSB7DQo+ID4gKwkJcmV0ID0gdGltZXJfb2ZfY2xrX2ZyZXF1ZW5jeV9pbml0KG5wLCAmdG8tPm9m
+X2Nsayk7DQo+ID4gKwkJaWYgKHJldCkNCj4gPiArCQkJZ290byBvdXRfZmFpbDsNCj4gPiArCQlm
+bGFncyB8PSBUSU1FUl9PRl9DTE9DS19GUkVRVUVOQ1k7DQo+ID4gIAl9DQo+IA0KPiAvKiBQcmUt
+Y29uZGl0aW9uICovDQo+IA0KPiBpZiAodG8tPmZsYWdzICYgKFRJTUVSX09GX0NMT0NLIHwgVElN
+RVJfT0ZfQ0xPQ0tfRlJFUVVFTkNZKSkNCj4gCXJldHVybiAtRUlOVkFMOw0KPiANCj4gWyAuLi4g
+XQ0KPiANCj4gaWYgKHRvLT5mbGFncyAmIFRJTUVSX09GX0NMT0NLKSB7DQo+IH0NCj4gDQo+IGlm
+ICh0by0+ZmxhZ3MgJiBUSU1FUl9PRl9DTE9DS19GUkVRVUVOQ1kpIHsgfQ0KPiANCg0KQWgsIG1h
+a2Ugc2Vuc2UsIHRoZXkgYXJlIGV4Y2x1c2l2ZSwgd2lsbCBhZGQgaXQgaW4gbmV4dCB2ZXJzaW9u
+Lg0KDQo+ID4gIAlpZiAodG8tPmZsYWdzICYgVElNRVJfT0ZfSVJRKSB7DQo+ID4gQEAgLTIwMSw2
+ICsyMjEsOSBAQCBpbnQgX19pbml0IHRpbWVyX29mX2luaXQoc3RydWN0IGRldmljZV9ub2RlICpu
+cCwNCj4gc3RydWN0IHRpbWVyX29mICp0bykNCj4gPiAgCWlmIChmbGFncyAmIFRJTUVSX09GX0NM
+T0NLKQ0KPiA+ICAJCXRpbWVyX29mX2Nsa19leGl0KCZ0by0+b2ZfY2xrKTsNCj4gPg0KPiA+ICsJ
+aWYgKGZsYWdzICYgVElNRVJfT0ZfQ0xPQ0tfRlJFUVVFTkNZKQ0KPiA+ICsJCXRvLT5vZl9jbGsu
+cmF0ZSA9IDA7DQo+ID4gKw0KPiA+ICAJaWYgKGZsYWdzICYgVElNRVJfT0ZfQkFTRSkNCj4gPiAg
+CQl0aW1lcl9vZl9iYXNlX2V4aXQoJnRvLT5vZl9iYXNlKTsNCj4gPiAgCXJldHVybiByZXQ7DQo+
+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItb2YuaA0KPiA+IGIvZHJp
+dmVycy9jbG9ja3NvdXJjZS90aW1lci1vZi5oIGluZGV4IGE1NDc4ZjMuLmYxYTA4M2UgMTAwNjQ0
+DQo+ID4gLS0tIGEvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1vZi5oDQo+ID4gKysrIGIvZHJp
+dmVycy9jbG9ja3NvdXJjZS90aW1lci1vZi5oDQo+ID4gQEAgLTQsOSArNCwxMCBAQA0KPiA+DQo+
+ID4gICNpbmNsdWRlIDxsaW51eC9jbG9ja2NoaXBzLmg+DQo+ID4NCj4gPiAtI2RlZmluZSBUSU1F
+Ul9PRl9CQVNFCTB4MQ0KPiA+IC0jZGVmaW5lIFRJTUVSX09GX0NMT0NLCTB4Mg0KPiA+IC0jZGVm
+aW5lIFRJTUVSX09GX0lSUQkweDQNCj4gPiArI2RlZmluZSBUSU1FUl9PRl9CQVNFCQkJMHgxDQo+
+ID4gKyNkZWZpbmUgVElNRVJfT0ZfQ0xPQ0sJCQkweDINCj4gPiArI2RlZmluZSBUSU1FUl9PRl9J
+UlEJCQkweDQNCj4gPiArI2RlZmluZSBUSU1FUl9PRl9DTE9DS19GUkVRVUVOQ1kJMHg4DQo+ID4N
+Cj4gPiAgc3RydWN0IG9mX3RpbWVyX2lycSB7DQo+ID4gIAlpbnQgaXJxOw0KPiA+IEBAIC0yNiw2
+ICsyNyw3IEBAIHN0cnVjdCBvZl90aW1lcl9iYXNlIHsgIHN0cnVjdCBvZl90aW1lcl9jbGsgew0K
+PiA+ICAJc3RydWN0IGNsayAqY2xrOw0KPiA+ICAJY29uc3QgY2hhciAqbmFtZTsNCj4gPiArCWNv
+bnN0IGNoYXIgKnByb3BfbmFtZTsNCj4gDQo+IEZvciB0aGUgbW9tZW50LCBrZWVwIGl0IGhhcmRj
+b2RlZCB3aXRoICJjbG9jay1mcmVxdWVuY3kiIGRpcmVjdGx5IGluIHRoZQ0KPiBmdW5jdGlvbi4N
+Cg0KT0ssIHRoZW4gSSB3aWxsIE5PVCBhZGQgYW55IGR0LWJpbmRpbmcgZm9yIHRoaXMgcHJvcGVy
+dHkuIFRoZSByZWFzb24gdG8gdXNlIHByb3BfbmFtZQ0KaW5zdGVhZCBvZiBoYXJkY29kZSBpcyBJ
+IGRvbid0IHdhbnQgdG8gY3JlYXRlIGEgYmluZGluZyBkb2MganVzdCBmb3IgdGhpcyBwcm9wZXJ0
+eS4NCg0KVGhhbmtzLA0KQW5zb24uIA0KDQo=
