@@ -1,52 +1,259 @@
 From: Oliver Graute <oliver.graute@gmail.com>
-Subject: [PATCHv2 1/2] arm64: add gpio4 and gpio5 to basic DTS for i.MX8MQ
-Date: Mon,  1 Jul 2019 13:42:45 +0200
-Message-ID: <20190701114253.1538-2-oliver.graute@kococonnector.com>
+Subject: [PATCHv2 2/2] arm64: dts: add basic DTS for imx8qm-rom7720-a1 board
+Date: Mon,  1 Jul 2019 13:42:46 +0200
+Message-ID: <20190701114253.1538-3-oliver.graute@kococonnector.com>
 References: <20190701114253.1538-1-oliver.graute@kococonnector.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190701114253.1538-1-oliver.graute@kococonnector.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: aisheng.dong@nxp.com
-Cc: sboyd@kernel.org, mturquette@baylibre.com, Oliver Graute <oliver.graute@kococonnector.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Li Yang <leoyang.li@nxp.com>, Sriram Dash <sriram.dash@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Anson Huang <anson.huang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: sboyd@kernel.org, mturquette@baylibre.com, Oliver Graute <oliver.graute@kococonnector.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Li Yang <leoyang.li@nxp.com>, Sriram Dash <sriram.dash@nxp.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Vabhav Sharma <vabhav.sharma@nxp.com>, Pankaj Bansal <pankaj.bansal@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel
 List-Id: devicetree@vger.kernel.org
 
-add gpio4 to imx8qm.dtsi
-add gpio5 to imx8qm.dtsi
+Add basic dts support for a Advantech iMX8QM Qseven Board
 
 Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
 ---
- arch/arm64/boot/dts/freescale/imx8qm.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../boot/dts/freescale/imx8qm-rom7720-a1.dts  | 221 ++++++++++++++++++
+ 2 files changed, 222 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm.dtsi b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-index 526cbbddc202..fe4c584625cf 100644
---- a/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-@@ -121,6 +121,25 @@
- 		interrupt-parent = <&gic>;
- 	};
- 
-+	gpio4: gpio@5d0c0000 {
-+		compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
-+		reg = <0x0 0x5d0c0000 0x0 0x10000>;
-+		interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+};
-+	gpio5: gpio@5d0d0000 {
-+		compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
-+		reg = <0x0 0x5d0d0000 0x0 0x10000>;
-+		interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-+		 gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index b8e5e3bd72c5..b013715c5be1 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -23,3 +23,4 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
++dtb-$(CONFIG_ARCH_MXC) += imx8qm-rom7720-a1.dtb
+diff --git a/arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts b/arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
+new file mode 100644
+index 000000000000..229853f4097b
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
+@@ -0,0 +1,221 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/dts-v1/;
++
++#include "imx8qm.dtsi"
++
++/ {
++	model = "Advantech iMX8QM Qseven series";
++	compatible = "fsl,imx8qm";
++
++	board {
++		compatible = "proc-board";
++		board-type = "ROM-7720_A1";
++		board-cpu  = "iMX8QM";
++	};
++
++	chosen {
++		bootargs = "console=ttyLP0,115200 earlycon=lpuart32,0x5a060000,115200";
++		stdout-path = &dma_lpuart0;
++	};
++
++	cpus {
++		/delete-node/ cpu-map;
++		/delete-node/ cpu@100;
++		/delete-node/ cpu@101;
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x00000000 0x80000000 0 0x40000000>;
++	};
++
++	reg_usdhc2_vmmc: usdhc2_vmmc {
++		compatible = "regulator-fixed";
++		regulator-name = "sw-3p3-sd1";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio4 7 GPIO_ACTIVE_HIGH>;
++		off-on-delay = <3000>;
++		enable-active-high;
++	};
 +};
 +
- 	pmu {
- 		compatible = "arm,armv8-pmuv3";
- 		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
++&dma_lpuart0 { /* console */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_lpuart0>;
++	status = "okay";
++};
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
++	phy-mode = "rgmii-txid";
++	phy-handle = <&ethphy0>;
++	fsl,magic-packet;
++	fsl,rgmii_rxc_dly;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <4>;
++			at803x,eee-disabled;
++			at803x,vddio-1p8v;
++		};
++	};
++};
++
++&usdhc1 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
++	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
++	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
++	bus-width = <4>;
++	cd-gpios = <&gpio5 22 GPIO_ACTIVE_LOW>;
++	wp-gpios = <&gpio5 21 GPIO_ACTIVE_HIGH>;
++	vmmc-supply = <&reg_usdhc2_vmmc>;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl_hog_1: hoggrp-1 {
++		fsl,pins = <
++			IMX8QM_USB_SS3_TC0_LSIO_GPIO4_IO03	  0x06000048
++		>;
++	};
++
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			IMX8QM_COMP_CTL_GPIO_1V8_3V3_ENET_ENETB_PAD	0x000014a0
++			IMX8QM_ENET0_MDC_CONN_ENET0_MDC			0x06000020
++			IMX8QM_ENET0_MDIO_CONN_ENET0_MDIO		0x06000020
++			IMX8QM_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL	0x00000060
++			IMX8QM_ENET0_RGMII_TXC_CONN_ENET0_RGMII_TXC	0x00000060
++			IMX8QM_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0	0x00000060
++			IMX8QM_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1	0x00000060
++			IMX8QM_ENET0_RGMII_TXD2_CONN_ENET0_RGMII_TXD2	0x00000060
++			IMX8QM_ENET0_RGMII_TXD3_CONN_ENET0_RGMII_TXD3	0x00000060
++			IMX8QM_ENET0_RGMII_RXC_CONN_ENET0_RGMII_RXC	0x00000060
++			IMX8QM_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL	0x00000060
++			IMX8QM_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0	0x00000060
++			IMX8QM_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1	0x00000060
++			IMX8QM_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2	0x00000060
++			IMX8QM_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3	0x00000060
++		>;
++	};
++
++	pinctrl_lpuart0: lpuart0grp {
++		fsl,pins = <
++			IMX8QM_UART0_RX_DMA_UART0_RX		0x06000020
++			IMX8QM_UART0_TX_DMA_UART0_TX		0x06000020
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK		0x06000041
++			IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD		0x00000021
++			IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0	0x00000021
++			IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1	0x00000021
++			IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2	0x00000021
++			IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3	0x00000021
++			IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4	0x00000021
++			IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5	0x00000021
++			IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6	0x00000021
++			IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7	0x00000021
++			IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE	0x00000041
++			IMX8QM_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x00000021
++		>;
++	};
++
++	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
++		fsl,pins = <
++			IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK		0x06000040
++			IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD		0x00000020
++			IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0	0x00000020
++			IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1	0x00000020
++			IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2	0x00000020
++			IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3	0x00000020
++			IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4	0x00000020
++			IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5	0x00000020
++			IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6	0x00000020
++			IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7	0x00000020
++			IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE	0x00000040
++			IMX8QM_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x00000020
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
++		fsl,pins = <
++			IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK		0x06000040
++				IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD		0x00000020
++			IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0	0x00000020
++			IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1	0x00000020
++			IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2	0x00000020
++			IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3	0x00000020
++			IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4	0x00000020
++			IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5	0x00000020
++			IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6	0x00000020
++			IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7	0x00000020
++			IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE	0x00000040
++			IMX8QM_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x00000020
++		>;
++	};
++
++	pinctrl_usdhc2_gpio: usdhc2grpgpio {
++		fsl,pins = <
++			IMX8QM_USDHC1_DATA6_LSIO_GPIO5_IO21	0x00000021
++			IMX8QM_USDHC1_DATA7_LSIO_GPIO5_IO22	0x00000021
++			IMX8QM_USDHC1_RESET_B_LSIO_GPIO4_IO07	0x00000021
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK	0x06000041
++			IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD	0x00000021
++			IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000021
++			IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000021
++			IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000021
++			IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000021
++			IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000021
++		>;
++	};
++
++	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
++		fsl,pins = <
++			IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK	0x06000040
++			IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD	0x00000020
++			IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000020
++			IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000020
++			IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000020
++			IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000020
++			IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000020
++		>;
++	};
++
++	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
++		fsl,pins = <
++			IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK	0x06000040
++			IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD	0x00000020
++			IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000020
++			IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000020
++			IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000020
++			IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000020
++			IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000020
++		>;
++	};
++};
 -- 
 2.17.1
