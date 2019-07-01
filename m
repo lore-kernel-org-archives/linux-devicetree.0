@@ -1,39 +1,67 @@
-From: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH 2/4] devicetree: Update led binding
-Date: Mon, 1 Jul 2019 17:14:21 +0200
-Message-ID: <20190701151423.30768-3-jjhiblot@ti.com>
-References: <20190701151423.30768-1-jjhiblot@ti.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v14 12/13] MIPS: GCW0: Reduce system timer and clocksource to 750 kHz
+Date: Mon,  1 Jul 2019 17:14:09 +0200
+Message-ID: <20190701151410.23127-13-paul@crapouillou.net>
+References: <20190701151410.23127-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701151423.30768-1-jjhiblot@ti.com>
+In-Reply-To: <20190701151410.23127-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com
-Cc: dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, Jean-Jacques Hiblot <jjhiblot@ti.com>, devicetree@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-Update the led binding to describe the possibility to add a "compatible"
-option to create a child-device, user of the LED.
+The default clock (12 MHz) is too fast for the system timer.
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
- Documentation/devicetree/bindings/leds/common.txt | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-index 70876ac11367..2f7882528d97 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -11,6 +11,9 @@ have to be tightly coupled with the LED device binding. They are represented
- by child nodes of the parent LED device binding.
+Notes:
+    v8: New patch
+    
+    v9: Don't configure clock timer1, as the OS Timer is used as
+    	clocksource on this SoC
+    
+    v10: Revert back to v8 bahaviour. Let the user choose what
+    	 clocksource should be used.
+    
+    v11: No change
+    
+    v12: Move clocksource to channel 2, as channel 1 is used as PWM
+    	 for the backlight.
+    
+    v13-v14: No change
+
+ arch/mips/boot/dts/ingenic/gcw0.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/mips/boot/dts/ingenic/gcw0.dts b/arch/mips/boot/dts/ingenic/gcw0.dts
+index 35f0291e8d38..f58d239c2058 100644
+--- a/arch/mips/boot/dts/ingenic/gcw0.dts
++++ b/arch/mips/boot/dts/ingenic/gcw0.dts
+@@ -2,6 +2,7 @@
+ /dts-v1/;
  
- Optional properties for child nodes:
-+- compatible : driver name for a child-device. This child-device is the user
-+               of the LED. It is created when the LED is registered and
-+	       destroyed when the LED is unregistered.
- - led-sources : List of device current outputs the LED is connected to. The
- 		outputs are identified by the numbers that must be defined
- 		in the LED device binding documentation.
+ #include "jz4770.dtsi"
++#include <dt-bindings/clock/ingenic,tcu.h>
+ 
+ / {
+ 	compatible = "gcw,zero", "ingenic,jz4770";
+@@ -60,3 +61,12 @@
+ 	/* The WiFi module is connected to the UHC. */
+ 	status = "okay";
+ };
++
++&tcu {
++	/* 750 kHz for the system timer and clocksource */
++	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER2>;
++	assigned-clock-rates = <750000>, <750000>;
++
++	/* PWM1 is in use, so reserve channel #2 for the clocksource */
++	ingenic,pwm-channels-mask = <0xfa>;
++};
 -- 
-2.17.1
+2.21.0.593.g511ec345e18
