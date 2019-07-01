@@ -1,53 +1,35 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [RFC PATCH 3/5] soundwire: add module_sdw_driver helper macro
-Date: Mon, 1 Jul 2019 11:53:04 +0530
-Message-ID: <20190701062304.GL2911@vkoul-mobl>
-References: <20190611104043.22181-1-srinivas.kandagatla@linaro.org>
- <20190611104043.22181-4-srinivas.kandagatla@linaro.org>
+From: <qii.wang@mediatek.com>
+Subject: [PATCH] dt-bindings: i3c: cdns: Use correct cells for I2C device
+Date: Mon, 1 Jul 2019 14:42:02 +0800
+Message-ID: <1561963322-11513-1-git-send-email-qii.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190611104043.22181-4-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, bgoswami@quicinc.com
+To: bbrezillon@kernel.org
+Cc: robh+dt@kernel.org, linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, qii.wang@mediatek.com, matthias.bgg@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 11-06-19, 11:40, Srinivas Kandagatla wrote:
-> This Helper macro is for SoundWire drivers which do not do anything special in
-> module init/exit. This eliminates a lot of boilerplate. Each module may only
-> use this macro once, and calling it replaces module_init() and module_exit()
+From: Qii Wang <qii.wang@mediatek.com>
 
-Applied, thanks
+I2C device reg should be "reg = <0x52 0x0 0x10>;"
 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  include/linux/soundwire/sdw_type.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/include/linux/soundwire/sdw_type.h b/include/linux/soundwire/sdw_type.h
-> index 9c756b5a0dfe..aaa7f4267c14 100644
-> --- a/include/linux/soundwire/sdw_type.h
-> +++ b/include/linux/soundwire/sdw_type.h
-> @@ -16,4 +16,15 @@ void sdw_unregister_driver(struct sdw_driver *drv);
->  
->  int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size);
->  
-> +/**
-> + * module_sdw_driver() - Helper macro for registering a Soundwire driver
-> + * @__sdw_driver: soundwire slave driver struct
-> + *
-> + * Helper macro for Soundwire drivers which do not do anything special in
-> + * module init/exit. This eliminates a lot of boilerplate. Each module may only
-> + * use this macro once, and calling it replaces module_init() and module_exit()
-> + */
-> +#define module_sdw_driver(__sdw_driver) \
-> +	module_driver(__sdw_driver, sdw_register_driver, \
-> +			sdw_unregister_driver)
->  #endif /* __SOUNDWIRE_TYPES_H */
-> -- 
-> 2.21.0
+Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+---
+ .../devicetree/bindings/i3c/cdns,i3c-master.txt    |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt b/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
+index 69da211..1cf6182 100644
+--- a/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
++++ b/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
+@@ -38,6 +38,6 @@ Example:
+ 
+ 		nunchuk: nunchuk@52 {
+ 			compatible = "nintendo,nunchuk";
+-			reg = <0x52 0x80000010 0>;
++			reg = <0x52 0x0 0x10>;
+ 		};
+ 	};
 -- 
-~Vinod
+1.7.9.5
