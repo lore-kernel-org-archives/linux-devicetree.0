@@ -1,222 +1,88 @@
-Return-Path: <SRS0=DyW0=VN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387484AbfGPJoE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:44:04 -0400
-Date: Tue, 16 Jul 2019 11:43:58 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCHv2 1/3] iio: imu: st_lsm6sdx: move register definitions to
- sensor_settings struct
-Message-ID: <20190716094358.GC13440@localhost.localdomain>
-References: <20190716093325.7683-1-martin.kepplinger@puri.sm>
+Return-Path: <SRS0=YAHn=U6=zonque.org=daniel@kernel.org>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH 1/2] device-tree: iio: add bindings documentation for NXP PCT2075
+Date: Mon,  1 Jul 2019 20:01:57 +0200
+Message-Id: <20190701180158.9463-1-daniel@zonque.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ncSAzJYg3Aa9+CRW"
-Content-Disposition: inline
-In-Reply-To: <20190716093325.7683-1-martin.kepplinger@puri.sm>
-Sender: devicetree-owner@vger.kernel.org
-To: Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc: lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+To: jic23@kernel.org, lars@metafoo.de
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
+This documentens the bindings for the NXP PCT2075 temperature sensor
+driver.
 
---ncSAzJYg3Aa9+CRW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+---
+ .../bindings/iio/temperature/pct2075.txt      | 60 +++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/temperature/pct2075.txt
 
-> Move some register definitions to the per-device array of struct
-> st_lsm6dsx_sensor_settings in order to simplify adding new sensor
-> devices to the driver.
->=20
-> Also, remove completely unused register definitions.
->=20
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> ---
->=20
-
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-
->=20
-> This is already based on Lorenzo's recent changes:
-> https://lore.kernel.org/linux-iio/853f216a-7814-cb79-180b-078ac5e8a359@pu=
-ri.sm/T/#u
-> https://lore.kernel.org/linux-iio/501b0db9-63cb-905c-c09b-682eb73f1ff3@pu=
-ri.sm/T/#u
->=20
-> revision history:
-> v2: improve variable names, thanks Lorenzo
->=20
-> thanks
->                        martin
->=20
->=20
->=20
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
->  2 files changed, 28 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st=
-_lsm6dsx/st_lsm6dsx.h
-> index ab1c66615d67..3c47f5d27d30 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> @@ -198,6 +198,9 @@ struct st_lsm6dsx_ext_dev_settings {
->  /**
->   * struct st_lsm6dsx_settings - ST IMU sensor settings
->   * @wai: Sensor WhoAmI default value.
-> + * @int1_addr: Control Register address for INT1
-> + * @int2_addr: Control Register address for INT2
-> + * @reset_addr: register address for reset/reboot
->   * @max_fifo_size: Sensor max fifo length in FIFO words.
->   * @id: List of hw id/device name supported by the driver configuration.
->   * @odr_table: Hw sensors odr table (Hz + val).
-> @@ -210,6 +213,9 @@ struct st_lsm6dsx_ext_dev_settings {
->   */
->  struct st_lsm6dsx_settings {
->  	u8 wai;
-> +	u8 int1_addr;
-> +	u8 int2_addr;
-> +	u8 reset_addr;
->  	u16 max_fifo_size;
->  	struct {
->  		enum st_lsm6dsx_hw_id hw_id;
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/i=
-mu/st_lsm6dsx/st_lsm6dsx_core.c
-> index 9aa109428a52..e0d2149625cc 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> @@ -49,17 +49,12 @@
-> =20
->  #include "st_lsm6dsx.h"
-> =20
-> -#define ST_LSM6DSX_REG_INT1_ADDR		0x0d
-> -#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
->  #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
->  #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
-> -#define ST_LSM6DSX_REG_RESET_ADDR		0x12
->  #define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
->  #define ST_LSM6DSX_REG_BOOT_MASK		BIT(7)
->  #define ST_LSM6DSX_REG_BDU_ADDR			0x12
->  #define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
-> -#define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
-> -#define ST_LSM6DSX_REG_INT2_ON_INT1_MASK	BIT(5)
-> =20
->  #define ST_LSM6DSX_REG_ACC_OUT_X_L_ADDR		0x28
->  #define ST_LSM6DSX_REG_ACC_OUT_Y_L_ADDR		0x2a
-> @@ -72,6 +67,9 @@
->  static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] =3D=
- {
->  	{
->  		.wai =3D 0x69,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 1365,
->  		.id =3D {
->  			{
-> @@ -170,6 +168,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x69,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 682,
->  		.id =3D {
->  			{
-> @@ -268,6 +269,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x6a,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 682,
->  		.id =3D {
->  			{
-> @@ -375,6 +379,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x6c,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 512,
->  		.id =3D {
->  			{
-> @@ -494,6 +501,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x6b,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 512,
->  		.id =3D {
->  			{
-> @@ -584,6 +594,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x6b,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 512,
->  		.id =3D {
->  			{
-> @@ -1117,10 +1130,10 @@ static int st_lsm6dsx_get_drdy_reg(struct st_lsm6=
-dsx_hw *hw, u8 *drdy_reg)
-> =20
->  	switch (drdy_pin) {
->  	case 1:
-> -		*drdy_reg =3D ST_LSM6DSX_REG_INT1_ADDR;
-> +		*drdy_reg =3D hw->settings->int1_addr;
->  		break;
->  	case 2:
-> -		*drdy_reg =3D ST_LSM6DSX_REG_INT2_ADDR;
-> +		*drdy_reg =3D hw->settings->int2_addr;
->  		break;
->  	default:
->  		dev_err(hw->dev, "unsupported data ready pin\n");
-> @@ -1220,7 +1233,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx=
-_hw *hw)
->  	int err;
-> =20
->  	/* device sw reset */
-> -	err =3D regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
-> +	err =3D regmap_update_bits(hw->regmap, hw->settings->reset_addr,
->  				 ST_LSM6DSX_REG_RESET_MASK,
->  				 FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
->  	if (err < 0)
-> @@ -1229,7 +1242,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx=
-_hw *hw)
->  	msleep(50);
-> =20
->  	/* reload trimming parameter */
-> -	err =3D regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
-> +	err =3D regmap_update_bits(hw->regmap, hw->settings->reset_addr,
->  				 ST_LSM6DSX_REG_BOOT_MASK,
->  				 FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
->  	if (err < 0)
-> --=20
-> 2.20.1
->=20
-
---ncSAzJYg3Aa9+CRW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXS2cWwAKCRA6cBh0uS2t
-rPCiAP9ZSYRWVjF/NQsyE0/XMhEB+B/jKxlgh2QWGQNVwt3ZbAD/VnSyeT+Vdboh
-oVhejxk+BT5WBkrA7hnTjCo6ZI+yPgY=
-=YeZb
------END PGP SIGNATURE-----
-
---ncSAzJYg3Aa9+CRW--
+diff --git a/Documentation/devicetree/bindings/iio/temperature/pct2075.txt b/Documentation/devicetree/bindings/iio/temperature/pct2075.txt
+new file mode 100644
+index 000000000000..dc5d3e991ab0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/temperature/pct2075.txt
+@@ -0,0 +1,60 @@
++* NXP PCT2075 - I2C connected digital temperature sensor
++
++Link to datasheet: https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf
++
++Required properties:
++
++ - compatible:	Should be "nxp,pct2075"
++ - reg:		The I2C address of the sensor
++		(controllable via A[0,1,2] pins)
++
++Addressing pins can be tied high, low or left floating, allowing for up to
++27 different I2C addresses, depending on the package.
++
++Optional properties:
++
++ - vcc-supply:		A regulator node that is connected to the Vcc pin
++			(2.7V - 5.5V). If specified, the regulator will be
++			enabled at probe time and disabled when the driver
++			is removed.
++
++ - nxp,os-fault-queue:	Specifies the number of faults that must occur
++			consecutively to activate the OS output pin.
++			Valid numbers are 1 (default), 2, 4 and 6.
++
++ - nxp,os-active-high:	Specifies that the OS pin should be in active-high
++			mode. By default, it is active-low.
++
++ - nxp,os-mode-interrupt: Configures the device to operate the OS pin
++			  as an interrupt rather than a comparator. Please
++			  refer to the datasheet for information about the
++			  differences.
++
++ - nxp,sample-period-ms: Configures the sample period of the device in
++			 milliseconds. Valid values are multiples of 100
++			 up to 3100.
++
++ - nxp,overtemperature-shutdown-millicelsius:
++			Configures the temperature threshold at which the
++			device shuts down, in milli-celcius.
++			Values are given as signed integer and are valid
++			in the range from -55000 up to +125000.
++
++ - nxp,hysteresis-millicelsius:
++			Configures the temperature threshold for OS pin
++			operation, in milli-celcius.
++			Values are given as signed integer and are valid
++			in the range from -55000 up to +125000.
++
++Example:
++
++pct2075@48 {
++	compatible = "nxp,pct2075";
++	reg = <0x48>; /* A0, A1, A2 = low */
++	nxp,os-active-high;
++	nxp,os-mode-interrupt;
++	nxp,sample-period-ms = <1000>;
++	nxp,overtemperature-shutdown-millicelsius = <110000>;
++	nxp,hysteresis-millicelsius = <(-10000)>;
++};
++
+-- 
+2.21.0
