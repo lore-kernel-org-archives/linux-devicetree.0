@@ -1,126 +1,85 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 3/3] mmc: sdhci-sprd: Add pin control support for voltage
- switch
-Date: Mon, 1 Jul 2019 16:31:25 +0300
-Message-ID: <bc6ae189-ca6b-5447-907e-41ec05b2926c@intel.com>
-References: <cover.1561094029.git.baolin.wang@linaro.org>
- <db6d2b2d6170fd2409916c5c41b857f4bc587a15.1561094029.git.baolin.wang@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: chosen: document panel-id binding
+Date: Mon, 1 Jul 2019 08:03:20 -0600
+Message-ID: <CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg@mail.gmail.com>
+References: <20190630203614.5290-1-robdclark@gmail.com>
+ <20190630203614.5290-2-robdclark@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <db6d2b2d6170fd2409916c5c41b857f4bc587a15.1561094029.git.baolin.wang@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>, ulf.hansson@linaro.org, zhang.lyra@gmail.com, orsonzhai@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: vincent.guittot@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190630203614.5290-2-robdclark@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: Rob Clark <robdclark@chromium.org>, Mark Rutland <mark.rutland@arm.com>, aarch64-laptops@lists.linaro.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, freedreno <freedreno@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21/06/19 9:12 AM, Baolin Wang wrote:
-> For Spreadtrum SD card voltage switching, besides regulator setting,
-> it also need switch related pin's state to output corresponding voltage.
-> 
-> This patch adds pin control operation to support voltage switch.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/sdhci-sprd.c |   54 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-> index 8b23c88..6ee340a 100644
-> --- a/drivers/mmc/host/sdhci-sprd.c
-> +++ b/drivers/mmc/host/sdhci-sprd.c
-> @@ -12,6 +12,7 @@
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/of_gpio.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/regulator/consumer.h>
-> @@ -72,6 +73,9 @@ struct sdhci_sprd_host {
->  	struct clk *clk_sdio;
->  	struct clk *clk_enable;
->  	struct clk *clk_2x_enable;
-> +	struct pinctrl *pinctrl;
-> +	struct pinctrl_state *pins_uhs;
-> +	struct pinctrl_state *pins_default;
->  	u32 base_rate;
->  	int flags; /* backup of host attribute */
->  	u32 phy_delay[MMC_TIMING_MMC_HS400 + 2];
-> @@ -405,6 +409,8 @@ static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
->  
->  static int sdhci_sprd_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
->  {
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
->  	int ret;
->  
->  	if (!IS_ERR(mmc->supply.vqmmc)) {
-> @@ -416,6 +422,37 @@ static int sdhci_sprd_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
->  		}
->  	}
->  
-> +	if (IS_ERR(sprd_host->pinctrl))
-> +		return 0;
-> +
-> +	switch (ios->signal_voltage) {
-> +	case MMC_SIGNAL_VOLTAGE_180:
-> +		ret = pinctrl_select_state(sprd_host->pinctrl,
-> +					   sprd_host->pins_uhs);
-> +		if (ret) {
-> +			pr_err("%s: failed to select uhs pin state\n",
-> +			       mmc_hostname(mmc));
-> +			return ret;
-> +		}
-> +		break;
-> +
-> +	default:
-> +		/* fall-through */
-> +	case MMC_SIGNAL_VOLTAGE_330:
-> +		ret = pinctrl_select_state(sprd_host->pinctrl,
-> +					   sprd_host->pins_default);
-> +		if (ret) {
-> +			pr_err("%s: failed to select default pin state\n",
-> +			       mmc_hostname(mmc));
-> +			return ret;
-> +		}
-> +		break;
-> +	}
-> +
-> +	/* Wait for 300 ~ 500 us for pin state stable */
-> +	usleep_range(300, 500);
-> +	sdhci_reset(host, SDHCI_RESET_CMD | SDHCI_RESET_DATA);
-> +
->  	return 0;
->  }
->  
-> @@ -504,6 +541,23 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
->  	sprd_host = TO_SPRD_HOST(host);
->  	sdhci_sprd_phy_param_parse(sprd_host, pdev->dev.of_node);
->  
-> +	sprd_host->pinctrl = devm_pinctrl_get(&pdev->dev);
-> +	if (!IS_ERR(sprd_host->pinctrl)) {
-> +		sprd_host->pins_uhs =
-> +			pinctrl_lookup_state(sprd_host->pinctrl, "state_uhs");
-> +		if (IS_ERR(sprd_host->pins_uhs)) {
-> +			ret = PTR_ERR(sprd_host->pins_uhs);
-> +			goto pltfm_free;
-> +		}
-> +
-> +		sprd_host->pins_default =
-> +			pinctrl_lookup_state(sprd_host->pinctrl, "default");
-> +		if (IS_ERR(sprd_host->pins_default)) {
-> +			ret = PTR_ERR(sprd_host->pins_default);
-> +			goto pltfm_free;
-> +		}
-> +	}
-> +
->  	clk = devm_clk_get(&pdev->dev, "sdio");
->  	if (IS_ERR(clk)) {
->  		ret = PTR_ERR(clk);
-> 
+T24gU3VuLCBKdW4gMzAsIDIwMTkgYXQgMjozNiBQTSBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFp
+bC5jb20+IHdyb3RlOgo+Cj4gRnJvbTogUm9iIENsYXJrIDxyb2JkY2xhcmtAY2hyb21pdW0ub3Jn
+Pgo+Cj4gVGhlIHBhbmVsLWlkIHByb3BlcnR5IGluIGNob3NlbiBjYW4gYmUgdXNlZCB0byBjb21t
+dW5pY2F0ZSB3aGljaCBwYW5lbCwKPiBvZiBtdWx0aXBsZSBwb3NzaWJpbGl0aWVzLCBpcyBpbnN0
+YWxsZWQuCj4KPiBTaWduZWQtb2ZmLWJ5OiBSb2IgQ2xhcmsgPHJvYmRjbGFya0BjaHJvbWl1bS5v
+cmc+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jaG9zZW4udHh0
+IHwgNjkgKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDY5IGluc2VydGlv
+bnMoKykKCkkgbmVlZCB0byB1cGRhdGUgdGhpcyBmaWxlIHRvIHNheSBpdCdzIG1vdmVkIHRvIHRo
+ZSBzY2hlbWEgcmVwb3NpdG9yeS4uLgoKQnV0IEkgZG9uJ3QgdGhpbmsgdGhhdCB3aWxsIG1hdHRl
+ci4uLgoKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2No
+b3Nlbi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2hvc2VuLnR4dAo+
+IGluZGV4IDQ1ZTc5MTcyYTY0Ni4uZDUwMmU2NDg5YjhiIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jaG9zZW4udHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nob3Nlbi50eHQKPiBAQCAtNjgsNiArNjgsNzUgQEAgb24g
+UG93ZXJQQyAic3Rkb3V0IiBpZiAic3Rkb3V0LXBhdGgiIGlzIG5vdCBmb3VuZC4gIEhvd2V2ZXIs
+IHRoZQo+ICAibGludXgsc3Rkb3V0LXBhdGgiIGFuZCAic3Rkb3V0IiBwcm9wZXJ0aWVzIGFyZSBk
+ZXByZWNhdGVkLiBOZXcgcGxhdGZvcm1zCj4gIHNob3VsZCBvbmx5IHVzZSB0aGUgInN0ZG91dC1w
+YXRoIiBwcm9wZXJ0eS4KPgo+ICtwYW5lbC1pZAo+ICstLS0tLS0tLQo+ICsKPiArRm9yIGRldmlj
+ZXMgdGhhdCBoYXZlIG11bHRpcGxlIHBvc3NpYmxlIGRpc3BsYXkgcGFuZWxzIChtdWx0aS1zb3Vy
+Y2luZyB0aGUKPiArZGlzcGxheSBwYW5lbHMgaXMgY29tbW9uIG9uIGxhcHRvcHMsIHBob25lcywg
+dGFibGV0cyksIHRoaXMgYWxsb3dzIHRoZQo+ICtib290bG9hZGVyIHRvIGNvbW11bmljYXRlIHdo
+aWNoIHBhbmVsIGlzIGluc3RhbGxlZCwgZS5nLgoKSG93IGRvZXMgdGhlIGJvb3Rsb2FkZXIgZmln
+dXJlIG91dCB3aGljaCBwYW5lbD8gV2h5IGNhbid0IHRoZSBrZXJuZWwKZG8gdGhlIHNhbWUgdGhp
+bmc/Cgo+ICsKPiArLyB7Cj4gKyAgICAgICBjaG9zZW4gewo+ICsgICAgICAgICAgICAgICBwYW5l
+bC1pZCA9IDwweGM0PjsKPiArICAgICAgIH07Cj4gKwo+ICsgICAgICAgaXZvX3BhbmVsIHsKPiAr
+ICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJpdm8sbTEzM253ZjQtcjAiOwo+ICsgICAgICAg
+ICAgICAgICBwb3dlci1zdXBwbHkgPSA8JnZsY21fM3YzPjsKPiArICAgICAgICAgICAgICAgbm8t
+aHBkOwo+ICsKPiArICAgICAgICAgICAgICAgcG9ydHMgewo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIHBvcnQgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaXZvX3BhbmVsX2lu
+X2VkcDogZW5kcG9pbnQgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICByZW1vdGUtZW5kcG9pbnQgPSA8JnNuNjVkc2k4Nl9vdXRfaXZvPjsKPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAg
+ICAgICAgICAgICAgfTsKPiArICAgICAgIH07Cj4gKwo+ICsgICAgICAgYm9lX3BhbmVsIHsKPiAr
+ICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJib2UsbnYxMzNmaG0tbjYxIjsKCkJvdGggcGFu
+ZWxzIGFyZSBnb2luZyB0byBwcm9iZS4gU28gdGhlIGJvb3Rsb2FkZXIgbmVlZHMgdG8gZGlzYWJs
+ZSB0aGUKbm90IHBvcHVsYXRlZCBwYW5lbCBzZXR0aW5nICdzdGF0dXMnIChvciBkZWxldGUgdGhl
+IG5vZGUpLiBJZiB5b3UgZG8KdGhhdCwgZG8geW91IGV2ZW4gbmVlZCAncGFuZWwtaWQnPwoKPiAr
+ICAgICAgICAgICAgICAgcG93ZXItc3VwcGx5ID0gPCZ2bGNtXzN2Mz47Cj4gKyAgICAgICAgICAg
+ICAgIG5vLWhwZDsKPiArCj4gKyAgICAgICAgICAgICAgIHBvcnRzIHsKPiArICAgICAgICAgICAg
+ICAgICAgICAgICBwb3J0IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJvZV9w
+YW5lbF9pbl9lZHA6IGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZzbjY1ZHNpODZfb3V0X2JvZT47Cj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07
+Cj4gKyAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICB9Owo+ICsKPiArICAgICAgIGRpc3BsYXlf
+b3JfYnJpZGdlX2RldmljZSB7Cj4gKwo+ICsgICAgICAgICAgICAgICBwb3J0cyB7Cj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAg
+IC4uLgo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICBwb3J0QDAgewo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsKPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHJlZyA9IDwwPjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBlbmRwb2ludEBjNCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHJlZyA9IDwweGM0PjsKCldoYXQgZG9lcyB0aGlzIG51bWJlciByZXByZXNlbnQ/IEl0
+IGlzIHN1cHBvc2VkIHRvIGJlIGRlZmluZWQgYnkgdGhlCmRpc3BsYXlfb3JfYnJpZGdlX2Rldmlj
+ZSwgbm90IGEgc3BlY2lmaWMgcGFuZWwuCgpXZSBhbHNvIG5lZWQgdG8gY29uc2lkZXIgaG93IHRo
+ZSBEU0kgY2FzZSB3aXRoIHBhbmVscyBhcyBjaGlsZHJlbiBvZgp0aGUgRFNJIGNvbnRyb2xsZXIg
+d291bGQgd29yayBhbmQgaG93IHRoaXMgd291bGQgd29yayB3aXRoIG11bHRpcGxlCmRpc3BsYXlz
+IGVhY2ggaGF2aW5nIG11bHRpcGxlIHBhbmVsIG9wdGlvbnMuCgpSb2IKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
