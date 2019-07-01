@@ -1,35 +1,152 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v2 3/4] ARM: multi_v7_defconfig: enable STM32 booster regulator
-Date: Mon, 1 Jul 2019 10:14:24 +0200
-Message-ID: <1561968865-22037-4-git-send-email-fabrice.gasnier@st.com>
-References: <1561968865-22037-1-git-send-email-fabrice.gasnier@st.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V3 1/5] clocksource: timer-of: Support getting clock
+ frequency from DT
+Date: Mon, 1 Jul 2019 10:58:21 +0200
+Message-ID: <17a7bde4-e5e0-a746-52a5-1075ce263152@linaro.org>
+References: <20190628033041.8513-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561968865-22037-1-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <20190628033041.8513-1-Anson.Huang@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com
-Cc: mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, devicetree@vger.kernel.org
+To: Anson.Huang@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-This enables the driver for STM32 booster regulator found on stm32mp1.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Hi Anson,
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 6b748f2..230e7e0 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -568,6 +568,7 @@ CONFIG_REGULATOR_RK808=y
- CONFIG_REGULATOR_RN5T618=y
- CONFIG_REGULATOR_S2MPS11=y
- CONFIG_REGULATOR_S5M8767=y
-+CONFIG_REGULATOR_STM32_BOOSTER=m
- CONFIG_REGULATOR_STM32_VREFBUF=m
- CONFIG_REGULATOR_STPMIC1=y
- CONFIG_REGULATOR_TI_ABB=y
+thanks for taking care of adding the clock-frequency handling in the
+timer-of.
+
+On 28/06/2019 05:30, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> More and more platforms use platform driver model for clock driver,
+> so the clock driver is NOT ready during timer initialization phase,
+> it will cause timer initialization failed.
+> 
+> To support those platforms with upper scenario, introducing a new
+> flag TIMER_OF_CLOCK_FREQUENCY which is mutually exclusive with
+> TIMER_OF_CLOCK flag to support getting timer clock frequency from
+> DT, then of_clk operations can be skipped.
+> 
+> User needs to select either TIMER_OF_CLOCK_FREQUENCY or TIMER_OF_CLOCK
+> flag if want to use timer-of driver to initialize the clock rate,
+> and the corresponding clock name or property name needs to be specified.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> New patch:
+> 	- Add new flag of TIMER_OF_CLOCK_FREQUENCY, mutually exclusive with TIMER_OF_CLOCK, to support
+> 	  getting clock frequency from DT directly;
+> 	- Add prop_name to of_timer_clk structure, if using TIMER_OF_CLOCK_FREQUENCY flag, user needs
+> 	  to pass the property name for timer-of driver to get clock frequency from DT, this is to avoid
+> 	  the couple of timer-of driver and DT, so timer-of driver does NOT use a fixed property name.
+> ---
+>  drivers/clocksource/timer-of.c | 23 +++++++++++++++++++++++
+>  drivers/clocksource/timer-of.h |  8 +++++---
+>  2 files changed, 28 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
+> index 8054228..c91a8b6 100644
+> --- a/drivers/clocksource/timer-of.c
+> +++ b/drivers/clocksource/timer-of.c
+> @@ -161,6 +161,21 @@ static __init int timer_of_base_init(struct device_node *np,
+>  	return 0;
+>  }
+>  
+> +static __init int timer_of_clk_frequency_init(struct device_node *np,
+> +					      struct of_timer_clk *of_clk)
+> +{
+> +	int ret;
+> +	u32 rate;
+> +
+> +	ret = of_property_read_u32(np, of_clk->prop_name, &rate);
+> +	if (!ret) {
+> +		of_clk->rate = rate;
+> +		of_clk->period = DIV_ROUND_UP(rate, HZ);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  int __init timer_of_init(struct device_node *np, struct timer_of *to)
+>  {
+>  	int ret = -EINVAL;
+> @@ -178,6 +193,11 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
+>  		if (ret)
+>  			goto out_fail;
+>  		flags |= TIMER_OF_CLOCK;
+> +	} else if (to->flags & TIMER_OF_CLOCK_FREQUENCY) {
+> +		ret = timer_of_clk_frequency_init(np, &to->of_clk);
+> +		if (ret)
+> +			goto out_fail;
+> +		flags |= TIMER_OF_CLOCK_FREQUENCY;
+>  	}
+
+/* Pre-condition */
+
+if (to->flags & (TIMER_OF_CLOCK | TIMER_OF_CLOCK_FREQUENCY))
+	return -EINVAL;
+
+[ ... ]
+
+if (to->flags & TIMER_OF_CLOCK) {
+}
+
+if (to->flags & TIMER_OF_CLOCK_FREQUENCY) {
+}
+
+>  	if (to->flags & TIMER_OF_IRQ) {
+> @@ -201,6 +221,9 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
+>  	if (flags & TIMER_OF_CLOCK)
+>  		timer_of_clk_exit(&to->of_clk);
+>  
+> +	if (flags & TIMER_OF_CLOCK_FREQUENCY)
+> +		to->of_clk.rate = 0;
+> +
+>  	if (flags & TIMER_OF_BASE)
+>  		timer_of_base_exit(&to->of_base);
+>  	return ret;
+> diff --git a/drivers/clocksource/timer-of.h b/drivers/clocksource/timer-of.h
+> index a5478f3..f1a083e 100644
+> --- a/drivers/clocksource/timer-of.h
+> +++ b/drivers/clocksource/timer-of.h
+> @@ -4,9 +4,10 @@
+>  
+>  #include <linux/clockchips.h>
+>  
+> -#define TIMER_OF_BASE	0x1
+> -#define TIMER_OF_CLOCK	0x2
+> -#define TIMER_OF_IRQ	0x4
+> +#define TIMER_OF_BASE			0x1
+> +#define TIMER_OF_CLOCK			0x2
+> +#define TIMER_OF_IRQ			0x4
+> +#define TIMER_OF_CLOCK_FREQUENCY	0x8
+>  
+>  struct of_timer_irq {
+>  	int irq;
+> @@ -26,6 +27,7 @@ struct of_timer_base {
+>  struct of_timer_clk {
+>  	struct clk *clk;
+>  	const char *name;
+> +	const char *prop_name;
+
+For the moment, keep it hardcoded with "clock-frequency" directly in the
+function.
+
+>  	int index;
+>  	unsigned long rate;
+>  	unsigned long period;
+> 
+
+
 -- 
-2.7.4
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
