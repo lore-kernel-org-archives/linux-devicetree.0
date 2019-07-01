@@ -1,112 +1,100 @@
-From: dhar@codeaurora.org
-Subject: Re: drm/msm/dpu: Correct dpu encoder spinlock initialization
-Date: Mon, 01 Jul 2019 15:59:13 +0530
-Message-ID: <ea91c2c49d73af79bd6eea93a6d00a5a@codeaurora.org>
-References: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
- <efade579f7ba59585b88ecb367422e5c@codeaurora.org>
- <d61d7805b4ac0ec45309bf5b65841262@codeaurora.org>
- <627144af54459a203f1583d2ad9b390c@codeaurora.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RFC 02/11] dt-bindings: power: amlogic, meson-gx-pwrc: Add SM1 bindings
+Date: Mon,  1 Jul 2019 12:46:56 +0200
+Message-ID: <20190701104705.18271-3-narmstrong@baylibre.com>
+References: <20190701104705.18271-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <627144af54459a203f1583d2ad9b390c@codeaurora.org>
+In-Reply-To: <20190701104705.18271-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeykumar Sankaran <jsanka@codeaurora.org>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org, jshekhar@codeaurora.org
+To: jbrunet@baylibre.com, khilman@baylibre.com, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-06-26 03:10, Jeykumar Sankaran wrote:
-> On 2019-06-24 22:44, dhar@codeaurora.org wrote:
->> On 2019-06-25 03:56, Jeykumar Sankaran wrote:
->>> On 2019-06-23 23:27, Shubhashree Dhar wrote:
->>>> dpu encoder spinlock should be initialized during dpu encoder
->>>> init instead of dpu encoder setup which is part of commit.
->>>> There are chances that vblank control uses the uninitialized
->>>> spinlock if not initialized during encoder init.
->>> Not much can be done if someone is performing a vblank operation
->>> before encoder_setup is done.
->>> Can you point to the path where this lock is acquired before
->>> the encoder_setup?
->>> 
->>> Thanks
->>> Jeykumar S.
->>>> 
->> 
->> When running some dp usecase, we are hitting this callstack.
->> 
->> Process kworker/u16:8 (pid: 215, stack limit = 0x00000000df9dd930)
->> Call trace:
->>  spin_dump+0x84/0x8c
->>  spin_dump+0x0/0x8c
->>  do_raw_spin_lock+0x80/0xb0
->>  _raw_spin_lock_irqsave+0x34/0x44
->>  dpu_encoder_toggle_vblank_for_crtc+0x8c/0xe8
->>  dpu_crtc_vblank+0x168/0x1a0
->>  dpu_kms_enable_vblank+0[   11.648998]  vblank_ctrl_worker+0x3c/0x60
->>  process_one_work+0x16c/0x2d8
->>  worker_thread+0x1d8/0x2b0
->>  kthread+0x124/0x134
->> 
->> Looks like vblank is getting enabled earlier causing this issue and we
->> are using the spinlock without initializing it.
->> 
->> Thanks,
->> Shubhashree
->> 
-> DP calls into set_encoder_mode during hotplug before even notifying the
-> u/s. Can you trace out the original caller of this stack?
-> 
-> Even though the patch is harmless, I am not entirely convinced to move 
-> this
-> initialization. Any call which acquires the lock before encoder_setup
-> will be a no-op since there will not be any physical encoder to work 
-> with.
-> 
-> Thanks and Regards,
-> Jeykumar S.
-> 
->>>> Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
->>>> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
->>>> ---
->>>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
->>>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>> 
->>>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>> index 5f085b5..22938c7 100644
->>>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>> @@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device *dev, 
->>>> struct
->>>> drm_encoder *enc,
->>>>  	if (ret)
->>>>  		goto fail;
->>>> 
->>>> -	spin_lock_init(&dpu_enc->enc_spinlock);
->>>> -
->>>>  	atomic_set(&dpu_enc->frame_done_timeout, 0);
->>>>  	timer_setup(&dpu_enc->frame_done_timer,
->>>>  			dpu_encoder_frame_done_timeout, 0);
->>>> @@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct
->>>> drm_device *dev,
->>>> 
->>>>  	drm_encoder_helper_add(&dpu_enc->base, &dpu_encoder_helper_funcs);
->>>> 
->>>> +	spin_lock_init(&dpu_enc->enc_spinlock);
->>>>  	dpu_enc->enabled = false;
->>>> 
->>>>  	return &dpu_enc->base;
+Add bindings for the Amlogic SM1 Power control:
+- the VPU power control compatible
+- the general-purpose power controller, controlling the USB, PCIe, NNA and
+  GE2D power domains.
 
-In dpu_crtc_vblank(), we are looping through all the encoders in the 
-present mode_config: 
-https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c#L1082
-and hence calling dpu_encoder_toggle_vblank_for_crtc() for all the 
-encoders. But in dpu_encoder_toggle_vblank_for_crtc(), after acquiring 
-the spinlock, we will do a early return for
-the encoders which are not currently assigned to our crtc: 
-https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c#L1318.
-Since the encoder_setup for the secondary encoder(dp encoder in this 
-case) is not called until dp hotplug, we are hitting kernel panic while 
-acquiring the lock.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../bindings/power/amlogic,meson-gx-pwrc.txt  | 35 +++++++++++++++++++
+ include/dt-bindings/power/meson-sm1-power.h   | 15 ++++++++
+ 2 files changed, 50 insertions(+)
+ create mode 100644 include/dt-bindings/power/meson-sm1-power.h
+
+diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt b/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
+index 0fdc3dd1125e..f0a1e20555bf 100644
+--- a/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
++++ b/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
+@@ -19,6 +19,7 @@ Required properties:
+ - compatible: should be one of the following :
+ 	- "amlogic,meson-gx-pwrc-vpu" for the Meson GX SoCs
+ 	- "amlogic,meson-g12a-pwrc-vpu" for the Meson G12A SoCs
++	- "amlogic,meson-sm1-pwrc-vpu" for the Meson SM1 SoCs
+ - #power-domain-cells: should be 0
+ - amlogic,hhi-sysctrl: phandle to the HHI sysctrl node
+ - resets: phandles to the reset lines needed for this power demain sequence
+@@ -60,4 +61,38 @@ ao_sysctrl: sys-ctrl@0 {
+ 	};
+ };
+ 
++General Purpose Power Controller
++--------------------------------
+ 
++The Amlogic SM1 SoCs embeds a General Purpose Power Controller used
++to control the power domain for, at least, the USB PHYs and PCIe
++peripherals.
++
++
++Device Tree Bindings:
++---------------------
++
++Required properties:
++- compatible: should be one of the following :
++	- "amlogic,meson-sm1-pwrc" for the Meson SM1 SoCs
++- #power-domain-cells: should be 0
++- amlogic,hhi-sysctrl: phandle to the HHI sysctrl node
++
++Parent node should have the following properties :
++- compatible: "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd"
++- reg: base address and size of the AO system control register space.
++
++
++Example:
++-------
++
++ao_sysctrl: sys-ctrl@0 {
++	compatible = "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd";
++	reg =  <0x0 0x0 0x0 0x100>;
++
++	pwrc: power-controller {
++		compatible = "amlogic,meson-sm1-pwrc";
++		#power-domain-cells = <1>;
++		amlogic,hhi-sysctrl = <&hhi>;
++	};
++};
+diff --git a/include/dt-bindings/power/meson-sm1-power.h b/include/dt-bindings/power/meson-sm1-power.h
+new file mode 100644
+index 000000000000..30e17e4a478e
+--- /dev/null
++++ b/include/dt-bindings/power/meson-sm1-power.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
++/*
++ * Copyright (c) 2019 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#ifndef _DT_BINDINGS_MESON_SM1_POWER_H
++#define _DT_BINDINGS_MESON_SM1_POWER_H
++
++#define PWRC_SM1_NNA_ID		0
++#define PWRC_SM1_USB_ID		1
++#define PWRC_SM1_PCIE_ID	2
++#define PWRC_SM1_GE2D_ID	3
++
++#endif
+-- 
+2.21.0
