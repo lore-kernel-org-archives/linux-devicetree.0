@@ -1,215 +1,97 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [RFC,v3 5/9] media: platform: Add Mediatek ISP P1 V4L2 control
-Date: Mon, 1 Jul 2019 14:50:53 +0900
-Message-ID: <20190701055053.GA137710@chromium.org>
-References: <jungo.lin@mediatek.com>
- <20190611035344.29814-1-jungo.lin@mediatek.com>
- <20190611035344.29814-6-jungo.lin@mediatek.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [RFC PATCH 1/5] dt-bindings: soundwire: add slave bindings
+Date: Mon, 1 Jul 2019 11:41:55 +0530
+Message-ID: <20190701061155.GJ2911@vkoul-mobl>
+References: <20190611104043.22181-1-srinivas.kandagatla@linaro.org>
+ <20190611104043.22181-2-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190611035344.29814-6-jungo.lin@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jungo Lin <jungo.lin@mediatek.com>
-Cc: devicetree@vger.kernel.org, sean.cheng@mediatek.com, frederic.chen@mediatek.com, rynn.wu@mediatek.com, srv_heupstream@mediatek.com, robh@kernel.org, ryan.yu@mediatek.com, frankie.chiu@mediatek.com, hverkuil@xs4all.nl, ddavenport@chromium.org, sj.huang@mediatek.com, linux-mediatek@lists.infradead.org, laurent.pinchart@ideasonboard.com, matthias.bgg@gmail.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+In-Reply-To: <20190611104043.22181-2-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, bgoswami@quicinc.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jungo,
-
-On Tue, Jun 11, 2019 at 11:53:40AM +0800, Jungo Lin wrote:
-> Reserved Mediatek ISP P1 V4L2 control number with 16.
-> Moreover, add two V4L2 controls for ISP P1 user space
-> usage.
+On 11-06-19, 11:40, Srinivas Kandagatla wrote:
+> This patch adds bindings for Soundwire Slave devices which includes how
+> SoundWire enumeration address is represented in SoundWire slave device
+> tree nodes.
 > 
-> 1. V4L2_CID_MTK_GET_BIN_INFO
-> - Provide the image output width & height in case
-> camera binning mode is enabled.
-
-Could you explain with a bit more details what these binned width and height
-would mean? How would they relate to the video CAPTURE node width and height?
-Isn't this something that should be rather exposed as an appropriate
-selection rectangle, instead of custom controls?
-
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../devicetree/bindings/soundwire/bus.txt     | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soundwire/bus.txt
 > 
-> 2. V4L2_CID_MTK_RAW_PATH
-> - Export the path control of the main stream to user space.
-> One is pure raw and the other is processing raw.
-> The default value is 0 which outputs the pure raw bayer image
-> from sesnor, without image processing in ISP HW.
+> diff --git a/Documentation/devicetree/bindings/soundwire/bus.txt b/Documentation/devicetree/bindings/soundwire/bus.txt
+> new file mode 100644
+> index 000000000000..19a672b0d528
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soundwire/bus.txt
 
-Is it just effectively a full processing bypass? The driver seems to only
-update the related configuration when the streaming starts. Can it be
-controlled per-frame?
+The bindings are for slave right and the file is bus.txt?
 
-Generally this sounds more like something that should be modelled using the
-media topology, similar to the example below.
-
-/----------------\   /-------------------\   /--------------\
-|                |---|                   |   |              |
-| Capture Subdev |   | Processing Subdev |-o-| CAPTURE node |
-|                |-\ |                   | | |              |
-\----------------/ | \-------------------/ | \--------------/
-                   |                       |
-                   \-----------------------/
-
-Then the userspace can select whether it wants the image from the capture
-interface directly or procesed by the ISP by configuring the media links
-appropriately.
-
-The current limitation of this model is that it can't be easily configured
-per-frame, as media configurations are not included in the requests yet.
-
-[snip]
-
-> +static int handle_ctrl_get_bin_info(struct v4l2_ctrl *ctrl, int is_width)
-> +{
-> +	struct mtk_cam_dev *cam_dev = ctrl->priv;
-> +	struct v4l2_format *fmt;
+> @@ -0,0 +1,48 @@
+> +SoundWire bus bindings.
 > +
-> +	fmt = &cam_dev->vdev_nodes[MTK_CAM_P1_MAIN_STREAM_OUT].vdev_fmt;
+> +SoundWire is a 2-pin multi-drop interface with data and clock line.
+> +It facilitates development of low cost, efficient, high performance systems.
 > +
-> +	dev_dbg(&cam_dev->pdev->dev, "Get bin info w*h:%d*%d is_width:%d",
-> +		fmt->fmt.pix_mp.width, fmt->fmt.pix_mp.height, is_width);
+> +SoundWire controller bindings are very much specific to vendor.
 > +
-> +	if (is_width)
-> +		ctrl->val = fmt->fmt.pix_mp.width;
-> +	else
-> +		ctrl->val = fmt->fmt.pix_mp.height;
+> +Child nodes(SLAVE devices):
+> +Every SoundWire controller node can contain zero or more child nodes
+> +representing slave devices on the bus. Every SoundWire slave device is
+> +uniquely determined by the enumeration address containing 5 fields:
+> +SoundWire Version, Instance ID, Manufacturer ID, Part ID and Class ID
+> +for a device. Addition to below required properties, child nodes can
+> +have device specific bindings.
+> +
+> +Required property for SoundWire child node if it is present:
+> +- compatible:	 "sdwVER,MFD,PID,CID". The textual representation of
+> +		  SoundWire Enumeration address comprising SoundWire
+> +		  Version, Manufacturer ID, Part ID and Class ID,
+> +		  shall be in lower-case hexadecimal with leading
+> +		  zeroes suppressed.
+> +		  Version number '0x10' represents SoundWire 1.0
+> +		  Version number '0x11' represents SoundWire 1.1
+> +		  ex: "sdw10,0217,2010,0"
 
-This seems to contradict to what the comment in the header says, because it just
-always returns the video node format and doesn't seem to care about whether
-binning is enabled or not.
+any reason why we want to code version number and not say sdw,1.0,...
+and so on?
 
 > +
-> +	return 0;
-> +}
-> +
-> +static int handle_ctrl_get_process_raw(struct v4l2_ctrl *ctrl)
-> +{
-> +	struct mtk_cam_dev *cam_dev = ctrl->priv;
-> +	struct isp_p1_device *p1_dev = get_p1_device(&cam_dev->pdev->dev);
-> +
-> +	ctrl->val = (p1_dev->isp_ctx.isp_raw_path == ISP_PROCESS_RAW_PATH);
-> +
-> +	dev_dbg(&cam_dev->pdev->dev, "Get process raw:%d", ctrl->val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int handle_ctrl_set_process_raw(struct v4l2_ctrl *ctrl)
-> +{
-> +	struct mtk_cam_dev *cam_dev = ctrl->priv;
-> +	struct isp_p1_device *p1_dev = get_p1_device(&cam_dev->pdev->dev);
-> +
-> +	p1_dev->isp_ctx.isp_raw_path = (ctrl->val) ?
-> +		ISP_PROCESS_RAW_PATH : ISP_PURE_RAW_PATH;
-> +	dev_dbg(&cam_dev->pdev->dev, "Set process raw:%d", ctrl->val);
-> +	return 0;
-> +}
-> +
-> +static int mtk_cam_dev_g_ctrl(struct v4l2_ctrl *ctrl)
+> +- sdw-instance-id: Should be ('Instance ID') from SoundWire
+> +		  Enumeration Address. Instance ID is for the cases
+> +		  where multiple Devices of the same type or Class
+> +		  are attached to the bus.
 
-This is g_volatile_ctrl not, g_ctrl.
+instance id is part of the 48bit device id, so wont it make sense to add
+that to compatible as well?
 
-> +{
-> +	switch (ctrl->id) {
-> +	case V4L2_CID_MTK_PROCESSING_RAW:
-> +		handle_ctrl_get_process_raw(ctrl);
-> +		break;
-
-No need to provide getters for non-volatile controls. The
-framework manages them.
-
-> +	case V4L2_CID_MTK_GET_BIN_WIDTH:
-> +		handle_ctrl_get_bin_info(ctrl, 1);
-> +		break;
-> +	case V4L2_CID_MTK_GET_BIN_HEIGTH:
-> +		handle_ctrl_get_bin_info(ctrl, 0);
-
-It's trivial to get the value, so there isn't much benefit in having a
-function to do so, especially if one needs something like a is_width
-argument that further complicates the code.
-
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
 > +
-> +static int mtk_cam_dev_s_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +	switch (ctrl->id) {
-> +	case V4L2_CID_MTK_PROCESSING_RAW:
-> +		return handle_ctrl_set_process_raw(ctrl);
-
-Same as above. The operation is too trivial to deserve a function.
-
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
+> +SoundWire example for Qualcomm's SoundWire controller:
 > +
-> +static const struct v4l2_ctrl_ops mtk_cam_dev_ctrl_ops = {
-> +	.g_volatile_ctrl = mtk_cam_dev_g_ctrl,
-> +	.s_ctrl = mtk_cam_dev_s_ctrl,
+> +soundwire@c2d0000 {
+> +	compatible = "qcom,soundwire-v1.5.0"
+> +	reg = <0x0c2d0000 0x2000>;
+> +
+> +	spkr_left:wsa8810-left{
+> +		compatible = "sdw10,0217,2010,0";
+> +		sdw-instance-id = <1>;
+> +		...
+> +	};
+> +
+> +	spkr_right:wsa8810-right{
+> +		compatible = "sdw10,0217,2010,0";
+> +		sdw-instance-id = <2>;
+> +		...
+> +	};
 > +};
-> +
-> +struct v4l2_ctrl_config mtk_cam_controls[] = {
-> +	{
-> +	.ops = &mtk_cam_dev_ctrl_ops,
-> +	.id = V4L2_CID_MTK_PROCESSING_RAW,
-> +	.name = "MTK CAM PROCESSING RAW",
-> +	.type = V4L2_CTRL_TYPE_BOOLEAN,
-> +	.min = 0,
-> +	.max = 1,
-> +	.step = 1,
-> +	.def = 1,
-> +	},
-> +	{
-> +	.ops = &mtk_cam_dev_ctrl_ops,
-> +	.id = V4L2_CID_MTK_GET_BIN_WIDTH,
-> +	.name = "MTK CAM GET BIN WIDTH",
-> +	.type = V4L2_CTRL_TYPE_INTEGER,
-> +	.min = IMG_MIN_WIDTH,
-> +	.max = IMG_MAX_WIDTH,
-> +	.step = 1,
-> +	.def = IMG_MAX_WIDTH,
-> +	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_VOLATILE,
-> +	},
-> +	{
-> +	.ops = &mtk_cam_dev_ctrl_ops,
-> +	.id = V4L2_CID_MTK_GET_BIN_HEIGTH,
-> +	.name = "MTK CAM GET BIN HEIGHT",
-> +	.type = V4L2_CTRL_TYPE_INTEGER,
-> +	.min = IMG_MIN_HEIGHT,
-> +	.max = IMG_MAX_HEIGHT,
-> +	.step = 1,
-> +	.def = IMG_MAX_HEIGHT,
-> +	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_VOLATILE,
-> +	},
-> +};
-> +
-> +int mtk_cam_ctrl_init(struct mtk_cam_dev *cam_dev,
-> +		      struct v4l2_ctrl_handler *hdl)
-> +{
-> +	unsigned int i;
-> +
-> +	/* Initialized HW controls, allow V4L2_CID_MTK_CAM_MAX ctrls */
-> +	v4l2_ctrl_handler_init(hdl, V4L2_CID_MTK_CAM_MAX);
-> +	if (hdl->error) {
+> -- 
+> 2.21.0
 
-This should be checked at the end, after all the controls are added.
-
-Best regards,
-Tomasz
+-- 
+~Vinod
