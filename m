@@ -1,121 +1,204 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCHv7 2/3] i2c: slave-mqueue: add a slave backend to receive
- and queue messages
-Date: Mon, 1 Jul 2019 14:56:19 +0200
-Message-ID: <20190701125619.GC4399@kunai>
-References: <20190605164651.15991-1-eduval@amazon.com>
- <20190605164651.15991-3-eduval@amazon.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XMCwj5IQnwKtuyBG"
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v11 0/9] Exynos5 Dynamic Memory Controller driver
+Date: Mon,  1 Jul 2019 15:11:29 +0200
+Message-ID: <20190701131138.22666-1-l.luba@partner.samsung.com>
+References: <CGME20190701131149eucas1p1911af36ecdd9efc6b00039b67d810721@eucas1p1.samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190605164651.15991-3-eduval@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <eduval@amazon.com>
-Cc: Haiyue Wang <haiyue.wang@linux.intel.com>, jarkko.nikula@linux.intel.com, andriy.shevchenko@intel.com, brendanhiggins@google.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com, Lukasz Luba <l.luba@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
---XMCwj5IQnwKtuyBG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is v11 which introduces minor changes. The patch set adds support of
+Dynamic Memory Controller for Exynos5422 SoC.
+The driver supports Dynamic Voltage and Frequency Scaling
+for the DMC and DRAM. It also provides needed timings for different
+speed operations of the DRAM memory.
+There is also new generic code in of_memory and headers which allows to parse
+LPDDR3 memories defined in device-tree.
 
-Hi Eduardo,
+The patch set has been cut to land mainline quickly and the dependency
+on PPMU patches are removed (which was in v7). It implies that the debugging
+code which was presenting details about traffic on the AXI slots has been
+removed. It will be added when this driver got mainline and the PPMU code
+got mainline. Also DT dependency of PPMU header has been removed.
 
-thanks for stepping up and pushing this further!
+changes:
+v11:
+- added code during probe in clocks init which disables 2 paths to PHY,
+  which should be done in the bootloader but some of them missed it.
+- removed unused macros and changed into BIT(x) sets.
+- changed 'selects' in Kconfig into 'depends on', added COMPILE_TEST
+  and moved in alphabetical order entry in MAINTAINERS file
+- it is based on Samsung clk development tree 'for-next' where there are 3
+  patches with Exynos5422 clocks (they are skipped here)
+- skipped PATCH v10 09/13 with new PPMU events, since it is in devfreq tree
+  'for-next' now
+- caution: possible conflict with 'next-20190621' or newer due to a patch
+  in there, which moves include/memory/jedec_ddr.h into drivers/memory/;
+  my changes: '[PATCH 3/9] drivers: memory: extend of_memory by LPDDR3 support'
+v10 [5]:
+- added disabling counters and cleaning clocks in probe when it fails
+- added Reviewed-by for dt-bindings: memory-controllers from Rob
+- based on v5.2-rc4 tag
+v9 [4]:
+- disable bpll instead of spll clocks in the remove path
+- safely disable 'bypass' clocks when error was captured
+- removed unused clocks and related code
+- changed code to make 'if' statement clean as Krzysztof suggested
+- removed cloks from dt-binding and DT
+- minor fix for clocks to read the state for DIV with NOCACHE
+- removed spaces in #define and put tabs
+- removed duplicated entry for OPPs phandle in dt-binding
+- collected ACKs
+- based on v5.2-rc3 tag
+v8 [3]:
+- removed chipID dependency, as Krzysztof suggested and drop the whole checking
+  code in the driver (which also Marek suggested offline) (it might be needed
+  in future when other configuration would be supported). It also avoids
+  a misunderstandings and simplifies the documentation.
+- reordered clock IDs in 1st patch to keep the old IDs and add the new clocks
+  at the end as Chanwoo suggested (added also his ACK there)
+- in patch 6 (dt-bindings) added explicit clocks and names in the right order
+  needed for the driver
+- added proper address for the memory node in the documentation and in the DT
+  (lpddr3-timings@0 -> @80000000)
+- fixed wrong reg offset for pause feature
+- removed debug code which shows AXI slots traffic and removed DT ppmu events
+- in the driver code usage of 'dev', 'pdev->dev' has been aligned
+- manipulating clocks has been aligned as Krzysztof suggested, now it enables
+  only two clocks (and disables) and enables/disables the 'bypass' clocks
+  on demand
+- added comments in the documentation why there is a need of clock registers
+  to be accessed via syscon regmap
+- added proper link to Documentation/devicetree/bindings/ddr/lpddr3.txt
+  in dt-bindings for memory controller doc
+- removed unneeded prints when there was a deferred probe or during remove
+- added 'syscon' also to exynos5420-clock node as Krzysztof suggested
+- from 2nd patch removed blank line and added Acked-by: Chanwoo Choi
+- collecting ACKs, which makes the clock related 3 patches
+  ready to be merged (4 ACKs),
+- patches 4,5 got 'Reviewed-by' from Rob
+- it is now based on v5.2-rc3 tag
+v7 [2]:
+- added using regmap in chipid registers and clock registers
+- in DT added "syscon" to compatible field in clock and chipid
+- added two addition clocks in clocks definition file which were there
+  in first implementation but now are grouped and commented properly
+  (CLK_DOUT_PCLK_DREX0, CLK_DOUT_PCLK_DREX1)
+- the BPLL ratio table now is set for Exynos 5422 and 5800 and not for 5420
+- in DMC driver, changed code macro which generates functions for setup events
+  into normal three functions as Krzysztof suggested
+- moved 'clock_prepare_enable()' calls into the same function where 'disable'
+  were called
+- changed 'timing_reg' static variables into static const
+- in DMC driver: the proper device_node *np_ddr is now put correctly
+- in DMC driver: removed code related to counters_enabled
+- mapped only 0x100 from DREX registers
+- in DT memory node there is now 'reg' as Rob suggested instead of 'max-freq'
+- in Documentation/devicetree/bindings/lpddr2 renamed into 'ddr' and the lpdd3*
+  files landed there.
+- cleaned the commit subject and message as Rob suggested for the patch 4/10 in v6
+- added doxygen comments to exported functions in of_memory file
+- cleaned minor issues like: missing space, 2 empty lines, in the doc JESD209-2 ->
+  JESD209-3C, removed 'status = "okay"' from the doc file, etc
+- based on v5.1 (+ PPMU patches from [1])
+v6:
+- driver code has been converted to use generic code which parses DT memory
+  definition in drivers/memory/of_memory.c
+- extended of_memory by LPDDR3 support (there was LPDDR2 made by TI)
+- extended jedec_lpddr.h by the needed structures for LPDDR3 (AC timings)
+- driver file moved to proper directory, where other memory controllers
+  live, which is in this case drivers/memory/samsung/
+- driver code now uses regmap_{read|write} to access registers for pausing
+  and changing timings set, as suggested by Chanwoo
+- DT contains simple definition of memory device, similar to LPDDR2 made by TI
+- driver code generates the needed timings for registered OPPs, based on
+  memory description in DT
+- patch 1 contains Rob's ACK,
+- simplified memory bandwidth calculation
+- added debug information files with timings, raw counters and statistics
+- updated dt-bindings files accordingly
+- based on v5.1-rc5 (+ PPMU patches from [1])
+v5:
+- removed unneeded wrapper functions i.e. for regulator_set_voltage
+- removed unused defines
+- removed direct access to clock register base and used CCF for
+  pause and timing set usage
+- switched to OPP comming from DT according to Chanowoo's comments
+- switched to timings comming from DT, added parsing function
+- extended dt-binding with description of OPPs and timings
+- according to Rob Herring comment, moved dt-binding file before driver code
+  in the patch set.
+- rebased on top of v5.0
+v4:
+- removed unneeded DPLL and G3D clocks IDs
+- changed names of parent clocks for mout_mx_mspll_ccore_phy_p
+  and added one more parent: mout_sclk_epll
+- removed 933Mhz and 138MHz from the BPLL ratio table
+v3:
+- in DTS align to proper indent the clocks and clock-names entries
+v2:
+- changed file name exynos5-dmc.c -> exynos5422-dmc.c
+  and related entries in other files
+- changed dt-binding file name
+- changed config entry to CONFIG_ARM_EXYNOS5422_DMC_DEVFREQ
+- removed sysfs and print info messages (print only one line)
+- removed function exynos5_read_chip_info and compact code
+- changed dt-binding patch and move it up in the patch set
+- new entries in MAINTAINERS are added with the driver c code
+- clean-up in DTS file: renamed nodes to 'ppmu' and 'memory-controller',
+  entries moved to suggested location (before nocp nodes or after),
+  moved according to alfabetical order, compacted clocks names with right indent.
 
-On Wed, Jun 05, 2019 at 09:46:50AM -0700, Eduardo Valentin wrote:
-> From: Haiyue Wang <haiyue.wang@linux.intel.com>
->=20
-> Some protocols over I2C are designed for bi-directional transferring
-> messages by using I2C Master Write protocol. Like the MCTP (Management
-> Component Transport Protocol) and IPMB (Intelligent Platform Management
-> Bus), they both require that the userspace can receive messages from
-> I2C dirvers under slave mode.
->=20
-> This new slave mqueue backend is used to receive and queue messages, it
-> will exposes these messages to userspace by sysfs bin file.
+Regards,
+Lukasz Luba
 
-So, this is a read-only bin file. Sending is done via the standard
-i2c-dev driver? Or not needed at all?
-
-Regarding, IPMB, how does this related to the recently merged IPMB slave
-driver?
-
-http://patchwork.ozlabs.org/patch/1113278/
-
->=20
-> Note: DT interface and a couple of minor fixes here and there
-> by Eduardo, so I kept the original authorship here.
->=20
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Cc: linux-i2c@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Haiyue Wang <haiyue.wang@linux.intel.com>
-> Signed-off-by: Eduardo Valentin <eduval@amazon.com>
-
-> +I2C SLAVE MQUEUE DRIVER
-> +M:	Eduardo Valentin <eduval@amazon.com>
-
-Cool, thanks!
-
-> +config I2C_SLAVE_MQUEUE_MESSAGE_SIZE
-> +	int "The message size of I2C mqueue slave"
-> +	depends on I2C_SLAVE_MQUEUE
-> +	default 120
-> +
-> +config I2C_SLAVE_MQUEUE_QUEUE_SIZE
-> +	int "The queue size of I2C mqueue slave"
-> +	depends on I2C_SLAVE_MQUEUE
-> +	default 32
-> +	help
-> +	  This number MUST be power of 2.
-
-I am not happy with this being a Kconfig option. Best would be a
-per-instance configuration, so we could have differently sized mqueues
-at runtime. I could think of another sysfs-file like
-"mqueue-slave-config" which would appear after writing to 'new_device'.
-And only after writing to 'mqueue-slave-config', the bin file to read
-=66rom would show up. But it is just a quick brainstorming, maybe you have
-a better idea?
-
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2017 - 2018, Intel Corporation.
-
-A short description what this driver does would be nice.
-
-Rest looks decent from a glimpse. I haven't looked into the gory details
-yet, though, because I want to get the high level things straight first.
-
-Kind regards,
-
-   Wolfram
+[1] https://lkml.org/lkml/2019/4/19/158
+[2] https://lkml.org/lkml/2019/5/6/829
+[3] https://lkml.org/lkml/2019/6/5/687
+[4] https://lkml.org/lkml/2019/6/7/488
+[5] https://lkml.org/lkml/2019/6/14/296
 
 
---XMCwj5IQnwKtuyBG
-Content-Type: application/pgp-signature; name="signature.asc"
+Lukasz Luba (9):
+  dt-bindings: ddr: rename lpddr2 directory
+  dt-bindings: ddr: add LPDDR3 memories
+  drivers: memory: extend of_memory by LPDDR3 support
+  dt-bindings: memory-controllers: add Exynos5422 DMC device description
+  drivers: memory: add DMC driver for Exynos5422
+  ARM: dts: exynos: add chipid label and syscon compatible
+  ARM: dts: exynos: add syscon to clock compatible
+  ARM: dts: exynos: add DMC device for exynos5422
+  ARM: exynos_defconfig: enable DMC driver
 
------BEGIN PGP SIGNATURE-----
+ .../{lpddr2 => ddr}/lpddr2-timings.txt        |    0
+ .../bindings/{lpddr2 => ddr}/lpddr2.txt       |    2 +-
+ .../bindings/ddr/lpddr3-timings.txt           |   58 +
+ .../devicetree/bindings/ddr/lpddr3.txt        |   97 ++
+ .../memory-controllers/exynos5422-dmc.txt     |   73 +
+ MAINTAINERS                                   |    8 +
+ arch/arm/boot/dts/exynos5.dtsi                |    4 +-
+ arch/arm/boot/dts/exynos5420.dtsi             |   73 +-
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  116 ++
+ arch/arm/boot/dts/exynos5800.dtsi             |    2 +-
+ arch/arm/configs/exynos_defconfig             |    2 +
+ drivers/memory/of_memory.c                    |  149 ++
+ drivers/memory/of_memory.h                    |   18 +
+ drivers/memory/samsung/Kconfig                |   13 +
+ drivers/memory/samsung/Makefile               |    1 +
+ drivers/memory/samsung/exynos5422-dmc.c       | 1257 +++++++++++++++++
+ include/memory/jedec_ddr.h                    |   61 +
+ 17 files changed, 1929 insertions(+), 5 deletions(-)
+ rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2-timings.txt (100%)
+ rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2.txt (96%)
+ create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
+ create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+ create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0aAvIACgkQFA3kzBSg
-KbZHHBAAhj0zApTWfO1ifL64ykk+MUyKkgwwOboj5C4k8bbUZIapXHN0VaWbceJD
-icCv9zkojTLNkUf1f1RTdiY/gFZvpIsLOAuWLhrLZi/2BhUi82BVzuqo/KO6LQc/
-I6DDCHohHYX4CgqGNCou81bir0LZ9QEBUp8QzEWKmnbcE0IVQmnT18HHXUW6D7Qn
-qiKB8kuZGLv6M/AjBlrfhkKphafmk27PMN3dL1W2n/6SqKYdTUwPKM05W2FiP0ZR
-pWIPpcsWcQSeRUw+uEqpkohZbNgv67crjjFQAofm7bVCgxMVI8SwZ1qHZWAJtMgX
-d2ySWt0cwDpoTD795j0LR1txKOVZ/4ZdXMFTQUKyofEZacfkLOUQjK33HywAnlz8
-6Uw6WIbfhgYOJhGqzXUZmZD/QQhM2VpFqx5/5H/kjNInlHlz4F80Oacyt6D2oVT5
-WHnM37F48jdBqFXEkQtRX6ZPnuX4+mXMqHzoM/6yjo41xY+Ed44MI2g/nmde22lf
-B+46ujovmiE48YPw7bJOhXLOHAqbML4ZCTa58s4lzpCN4QgtVv7VWw/xfyOgP0mx
-jLZWX0M5oIyFlyo3D2jUZmSISRDLoy+OHndWSz6qgf6XWJfUU82bi/y9zz5Y5yLu
-f0lYrIUzrF1k5OWpxSYaFUzaPZB2RVb9CkvZau68B3i35eF+e+0=
-=eaxR
------END PGP SIGNATURE-----
-
---XMCwj5IQnwKtuyBG--
+-- 
+2.17.1
