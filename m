@@ -1,7 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH V4 3/5] clocksource: imx-sysctr: Make timer work with clock driver using platform driver model
-Date: Mon,  1 Jul 2019 17:38:24 +0800
-Message-ID: <20190701093826.5472-3-Anson.Huang@nxp.com>
+Subject: [PATCH V4 5/5] arm64: dts: imx8mm: Add system counter node
+Date: Mon,  1 Jul 2019 17:38:26 +0800
+Message-ID: <20190701093826.5472-5-Anson.Huang@nxp.com>
 References: <20190701093826.5472-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190701093826.5472-1-Anson.Huang@nxp.com>
@@ -12,50 +12,34 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-On some i.MX8M platforms, clock driver uses platform driver
-model and it is NOT ready during timer initialization phase,
-the clock operations will fail and system counter driver will
-fail too. As all the i.MX8M platforms' system counter clock
-are from OSC which is always enabled, so it is no need to enable
-clock for system counter driver, the ONLY thing is to pass
-clock frequence to driver.
-
-To make system counter driver work for upper scenario, if DT's
-system counter node has property "clock-frequency" present,
-setting TIMER_OF_CLOCK_FREQUENCY flag to indicate timer-of driver
-to get clock frequency from DT directly instead of of_clk operation
-via clk APIs.
+Add i.MX8MM system counter node to enable timer-imx-sysctr
+broadcast timer driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changes since V3:
-	- remove the .prop_name initialization acording to timer-of changes in V4.
+No changes.
 ---
- drivers/clocksource/timer-imx-sysctr.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
-index fd7d680..b82a549 100644
---- a/drivers/clocksource/timer-imx-sysctr.c
-+++ b/drivers/clocksource/timer-imx-sysctr.c
-@@ -98,7 +98,7 @@ static irqreturn_t sysctr_timer_interrupt(int irq, void *dev_id)
- }
- 
- static struct timer_of to_sysctr = {
--	.flags = TIMER_OF_IRQ | TIMER_OF_CLOCK | TIMER_OF_BASE,
-+	.flags = TIMER_OF_IRQ | TIMER_OF_BASE,
- 	.clkevt = {
- 		.name			= "i.MX system counter timer",
- 		.features		= CLOCK_EVT_FEAT_ONESHOT |
-@@ -130,6 +130,9 @@ static int __init sysctr_timer_init(struct device_node *np)
- {
- 	int ret = 0;
- 
-+	to_sysctr.flags |= of_find_property(np, "clock-frequency", NULL) ?
-+			   TIMER_OF_CLOCK_FREQUENCY : TIMER_OF_CLOCK;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 9d3bb35..ea15457 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -527,6 +527,14 @@
+ 				#pwm-cells = <2>;
+ 				status = "disabled";
+ 			};
 +
- 	ret = timer_of_init(np, &to_sysctr);
- 	if (ret)
- 		return ret;
++			system_counter: timer@306a0000 {
++				compatible = "nxp,sysctr-timer";
++				reg = <0x306a0000 0x30000>;
++				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++				clock-frequency = <8000000>;
++			};
+ 		};
+ 
+ 		aips3: bus@30800000 {
 -- 
 2.7.4
