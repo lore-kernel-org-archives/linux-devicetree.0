@@ -1,22 +1,24 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
+From: Atish Patra <Atish.Patra@wdc.com>
 Subject: Re: [PATCH v8 0/7] Unify CPU topology across ARM & RISC-V
-Date: Mon, 1 Jul 2019 11:44:27 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1907011143520.3867@viisi.sifive.com>
+Date: Mon, 1 Jul 2019 18:51:42 +0000
+Message-ID: <5f31cb3c576bdbd89665614582af66d04ece8f29.camel@wdc.com>
 References: <20190627195302.28300-1-atish.patra@wdc.com>
+         <alpine.DEB.2.21.9999.1907011143520.3867@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627195302.28300-1-atish.patra@wdc.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1907011143520.3867@viisi.sifive.com>
+Content-Language: en-US
+Content-ID: <D7966FEDC0A0FA4DAA6BF6422A399875@namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: linux-kernel@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Johan Hovold <johan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob
+To: "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "davem@davemloft.net" <davem@davemloft.net>, "palmer@sifive.com" <palmer@sifive.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "jeremy.linton@arm.com" <jeremy.linton@arm.com>, "mingo@kernel.org" <mingo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "morten.rasmussen@arm.com" <morten.rasmussen@arm.com>, "ottosabart@seberm.com" <otto>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi Atish
-
-Looks like patches 1, 6, and 7 are missing your Signed-off-by:.  Can I add 
-those?
-
-
-- Paul
+T24gTW9uLCAyMDE5LTA3LTAxIGF0IDExOjQ0IC0wNzAwLCBQYXVsIFdhbG1zbGV5IHdyb3RlOg0K
+PiBIaSBBdGlzaA0KPiANCj4gTG9va3MgbGlrZSBwYXRjaGVzIDEsIDYsIGFuZCA3IGFyZSBtaXNz
+aW5nIHlvdXIgU2lnbmVkLW9mZi1ieTouICBDYW4NCj4gSSBhZGQgDQo+IHRob3NlPw0KPiANClN1
+cmUuIA0KDQpJcyBpdCBhIGNvbW1vbiBwcmFjdGljZSB0byBhZGQgIlNpZ25lZC1vZmYtYnk6IiB0
+aGUgc2VuZGVyIGV2ZW4gaWYgdGhlDQpzZW5kZXIgaGFzIG5vdCB0b3VjaGVkIHRoZSBwYXRjaCBh
+dCBhbGw/DQoNClJlZ2FyZHMsDQpBdGlzaA0KPiANCj4gLSBQYXVsDQoNCg==
