@@ -1,120 +1,156 @@
-Return-Path: <mhiramat@kernel.org>
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [RFC PATCH v2 13/15] tracing: of: Add cpumask property support
-Date: Mon, 15 Jul 2019 14:13:27 +0900
-Message-Id: <156316760712.23477.13986980388044489506.stgit@devnote2>
-In-Reply-To: <156316746861.23477.5815110570539190650.stgit@devnote2>
-References: <156316746861.23477.5815110570539190650.stgit@devnote2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-To: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Tim Bird <Tim.Bird@sony.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Date: Mon, 1 Jul 2019 09:11:02 -0600
+References: <20190630203614.5290-1-robdclark@gmail.com>
+	<20190630203614.5290-2-robdclark@gmail.com>
+	<CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg@mail.gmail.com>
+	<CAF6AEGvRXZAannGisHjsaW4Pg3v2ma5WHK2phqg8TaF53pR8XQ@mail.gmail.com>
+In-Reply-To: <CAF6AEGvRXZAannGisHjsaW4Pg3v2ma5WHK2phqg8TaF53pR8XQ@mail.gmail.com>
+Message-ID: <CAL_JsqKYpWM2VCGYCpFmUFYYrMcDesa+bQ6HweKrtgfEs1_YEg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: chosen: document panel-id binding
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, freedreno <freedreno@lists.freedesktop.org>, aarch64-laptops@lists.linaro.org, Rob Clark <robdclark@chromium.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add cpumask property for tracing. Note that this property accepts
-a string cpumask, not a digit number.
+On Mon, Jul 1, 2019 at 8:42 AM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Mon, Jul 1, 2019 at 7:03 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Sun, Jun 30, 2019 at 2:36 PM Rob Clark <robdclark@gmail.com> wrote:
+> > >
+> > > From: Rob Clark <robdclark@chromium.org>
+> > >
+> > > The panel-id property in chosen can be used to communicate which panel,
+> > > of multiple possibilities, is installed.
+> > >
+> > > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/chosen.txt | 69 ++++++++++++++++++++
+> > >  1 file changed, 69 insertions(+)
+> >
+> > I need to update this file to say it's moved to the schema repository...
+> >
+> > But I don't think that will matter...
+> >
+> > > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> > > index 45e79172a646..d502e6489b8b 100644
+> > > --- a/Documentation/devicetree/bindings/chosen.txt
+> > > +++ b/Documentation/devicetree/bindings/chosen.txt
+> > > @@ -68,6 +68,75 @@ on PowerPC "stdout" if "stdout-path" is not found.  However, the
+> > >  "linux,stdout-path" and "stdout" properties are deprecated. New platforms
+> > >  should only use the "stdout-path" property.
+> > >
+> > > +panel-id
+> > > +--------
+> > > +
+> > > +For devices that have multiple possible display panels (multi-sourcing the
+> > > +display panels is common on laptops, phones, tablets), this allows the
+> > > +bootloader to communicate which panel is installed, e.g.
+> >
+> > How does the bootloader figure out which panel? Why can't the kernel
+> > do the same thing?
+>
+> see jhugo's response, he has I guess more access to the bootloader than I
+>
+> > > +
+> > > +/ {
+> > > +       chosen {
+> > > +               panel-id = <0xc4>;
+> > > +       };
+> > > +
+> > > +       ivo_panel {
+> > > +               compatible = "ivo,m133nwf4-r0";
+> > > +               power-supply = <&vlcm_3v3>;
+> > > +               no-hpd;
+> > > +
+> > > +               ports {
+> > > +                       port {
+> > > +                               ivo_panel_in_edp: endpoint {
+> > > +                                       remote-endpoint = <&sn65dsi86_out_ivo>;
+> > > +                               };
+> > > +                       };
+> > > +               };
+> > > +       };
+> > > +
+> > > +       boe_panel {
+> > > +               compatible = "boe,nv133fhm-n61";
+> >
+> > Both panels are going to probe. So the bootloader needs to disable the
+> > not populated panel setting 'status' (or delete the node). If you do
+> > that, do you even need 'panel-id'?
+>
+> I don't think we can rely on bootloader knowing a thing about DT on
+> these devices..
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- kernel/trace/trace.c    |   41 ++++++++++++++++++++++++++++-------------
- kernel/trace/trace_of.c |   14 ++++++++++++++
- 2 files changed, 42 insertions(+), 13 deletions(-)
+But libstub 
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6f50c58a3ad4..251d9de14b12 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4437,20 +4437,12 @@ tracing_cpumask_read(struct file *filp, char __user *ubuf,
- 	return count;
- }
- 
--static ssize_t
--tracing_cpumask_write(struct file *filp, const char __user *ubuf,
--		      size_t count, loff_t *ppos)
-+int tracing_set_cpumask(struct trace_array *tr, cpumask_var_t tracing_cpumask_new)
- {
--	struct trace_array *tr = file_inode(filp)->i_private;
--	cpumask_var_t tracing_cpumask_new;
--	int err, cpu;
--
--	if (!alloc_cpumask_var(&tracing_cpumask_new, GFP_KERNEL))
--		return -ENOMEM;
-+	int cpu;
- 
--	err = cpumask_parse_user(ubuf, count, tracing_cpumask_new);
--	if (err)
--		goto err_unlock;
-+	if (!tr)
-+		return -EINVAL;
- 
- 	local_irq_disable();
- 	arch_spin_lock(&tr->max_lock);
-@@ -4474,11 +4466,34 @@ tracing_cpumask_write(struct file *filp, const char __user *ubuf,
- 	local_irq_enable();
- 
- 	cpumask_copy(tr->tracing_cpumask, tracing_cpumask_new);
-+
-+	return 0;
-+}
-+
-+static ssize_t
-+tracing_cpumask_write(struct file *filp, const char __user *ubuf,
-+		      size_t count, loff_t *ppos)
-+{
-+	struct trace_array *tr = file_inode(filp)->i_private;
-+	cpumask_var_t tracing_cpumask_new;
-+	int err;
-+
-+	if (!alloc_cpumask_var(&tracing_cpumask_new, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	err = cpumask_parse_user(ubuf, count, tracing_cpumask_new);
-+	if (err)
-+		goto err_free;
-+
-+	err = tracing_set_cpumask(tr, tracing_cpumask_new);
-+	if (err)
-+		goto err_free;
-+
- 	free_cpumask_var(tracing_cpumask_new);
- 
- 	return count;
- 
--err_unlock:
-+err_free:
- 	free_cpumask_var(tracing_cpumask_new);
- 
- 	return err;
-diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
-index 7fe81c25dc59..14d6c9a8fd81 100644
---- a/kernel/trace/trace_of.c
-+++ b/kernel/trace/trace_of.c
-@@ -22,6 +22,8 @@ extern void __init trace_init_tracepoint_printk(void);
- extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
- 					  unsigned long size, int cpu_id);
- extern struct trace_array *trace_array_create(const char *name);
-+extern int tracing_set_cpumask(struct trace_array *tr,
-+			       cpumask_var_t tracing_cpumask_new);
- 
- static void __init
- trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
-@@ -59,6 +61,18 @@ trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
- 			pr_err("Failed to resize trace buffer to %d KB\n",
- 				v >> 10);
- 	}
-+
-+	err = of_property_read_string(node, "cpumask", &p);
-+	if (!err) {
-+		cpumask_var_t new_mask;
-+
-+		if (alloc_cpumask_var(&new_mask, GFP_KERNEL)) {
-+			if (cpumask_parse(p, new_mask) < 0 ||
-+			    tracing_set_cpumask(tr, new_mask) < 0)
-+				pr_err("Failed to set new CPU mask %s\n", p);
-+			free_cpumask_var(new_mask);
-+		}
-+	}
- }
- 
- static void __init
+> OTOH I don't really think it is a big problem for both panels to
+> probe.  But I suppose it might be possible to have something somewhere
+> in the kernel that realizes and disables the unused panels.
+
+For starters, the refcount for regulator(s) would be off.
+
+What does DRM do when multiple panels show up?
+
+> > > +               power-supply = <&vlcm_3v3>;
+> > > +               no-hpd;
+> > > +
+> > > +               ports {
+> > > +                       port {
+> > > +                               boe_panel_in_edp: endpoint {
+> > > +                                       remote-endpoint = <&sn65dsi86_out_boe>;
+> > > +                               };
+> > > +                       };
+> > > +               };
+> > > +       };
+> > > +
+> > > +       display_or_bridge_device {
+> > > +
+> > > +               ports {
+> > > +                       #address-cells = <1>;
+> > > +                       #size-cells = <0>;
+> > > +
+> > > +                       ...
+> > > +
+> > > +                       port@0 {
+> > > +                               #address-cells = <1>;
+> > > +                               #size-cells = <0>;
+> > > +                               reg = <0>;
+> > > +
+> > > +                               endpoint@c4 {
+> > > +                                       reg = <0xc4>;
+> >
+> > What does this number represent? It is supposed to be defined by the
+> > display_or_bridge_device, not a specific panel.
+>
+> it matches /chosen/panel-id.. in this case I'm not sure how the
+> panel-id's are assigned, but for our purposes all that matters is that
+> they are assigned.
+>
+> > We also need to consider how the DSI case with panels as children of
+> > the DSI controller would work and how this would work with multiple
+> > displays each having multiple panel options.
+>
+> In the non-bridge case (panel hooked directly to dsi controller), the
+> dsi controller could use the same ports {} mechanism.
+
+Perhaps, but that's not what we do today and I don't think that's necessary. We can have multiple panels as child nodes. However, we'd probably have colliding addresses (reg) and only 1 should be enabled.
+
+> For multiple displays, we could extend, I suppose, /chosen/panel-id to
+> be an array of id's indexed by display.  I think this is the type of
+> extension we could do later when the use-case comes up.  Just having
+> this solved upstream for single display would already be a huge
+> advancement.  (You don't want to look at how this is solved downstream
+> for android phones.)
+
+Then you need some way to define which display is which index. Given this touches 
+
+> Btw, if you are curious how this works on windows/ACPI, the ACPI
+> tables have entries for each of the panels.  The kernel is expected to
+> take the panel-id from that EFI variable that jhugo mentioned, and
+> pass it to a _ROM method which returns the appropriate panel table.
+> (Not entirely sure how the orchestrate reading the EFI variable early,
+> since it does not appear to be available after ExitBootServices)
+
+I do think the entire picture needs to be spelled out including how any display handoff is handled. I guess EFI FB is used here? My initial thought is just add a panel id property to each panel node and then the kernel w
