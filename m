@@ -1,123 +1,98 @@
 From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 2/3] net: phy: realtek: Enable accessing RTL8211E
- extension pages
-Date: Mon, 1 Jul 2019 22:43:12 +0200
-Message-ID: <d2386f7d-b4bc-d983-1b83-cc2aa4aec38b@gmail.com>
+Subject: Re: [PATCH 3/3] net: phy: realtek: Support SSC for the RTL8211E
+Date: Mon, 1 Jul 2019 22:49:45 +0200
+Message-ID: <8adbb2b8-6747-b876-f85d-75e54f1978cb@gmail.com>
 References: <20190701195225.120808-1-mka@chromium.org>
- <20190701195225.120808-2-mka@chromium.org>
+ <20190701195225.120808-3-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190701195225.120808-2-mka@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190701195225.120808-3-mka@chromium.org>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Matthias Kaehlcke <mka@chromium.org>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
 On 01.07.2019 21:52, Matthias Kaehlcke wrote:
-> The RTL8211E has extension pages, which can be accessed after
-> selecting a page through a custom method. Add a function to
-> modify bits in a register of an extension page and a few
-> helpers for dealing with ext pages.
-> 
-> rtl8211e_modify_ext_paged() and rtl821e_restore_page() are
-> inspired by their counterparts phy_modify_paged() and
-> phy_restore_page().
+> By default Spread-Spectrum Clocking (SSC) is disabled on the RTL8211E.
+> Enable it if the device tree property 'realtek,enable-ssc' exists.
 > 
 > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
-> This code might be applicable to other Realtek PHYs, but I don't
-> have access to the datasheets to confirm it, so for now it's just
-> for the RTL8211E.
-> 
-This extended page mechanism exists on a number of older Realtek
-PHY's. For most extended pages however Realtek releases no public
-documentation.
-Considering that we use these helpers in one place only,  I don't
-really see a need for them.
-
->  drivers/net/phy/realtek.c | 61 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
+>  drivers/net/phy/realtek.c | 27 ++++++++++++++++++++++++---
+>  1 file changed, 24 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-> index a669945eb829..dfc2e20ef335 100644
+> index dfc2e20ef335..b617169ccc8c 100644
 > --- a/drivers/net/phy/realtek.c
 > +++ b/drivers/net/phy/realtek.c
-> @@ -26,6 +26,9 @@
->  #define RTL821x_EXT_PAGE_SELECT			0x1e
->  #define RTL821x_PAGE_SELECT			0x1f
+> @@ -9,8 +9,10 @@
+>   * Copyright (c) 2004 Freescale Semiconductor, Inc.
+>   */
+>  #include <linux/bitops.h>
+> -#include <linux/phy.h>
+> +#include <linux/device.h>
+> +#include <linux/of.h>
+>  #include <linux/module.h>
+> +#include <linux/phy.h>
 >  
-> +#define RTL8211E_EXT_PAGE			7
-> +#define RTL8211E_EPAGSR				0x1e
-> +
+>  #define RTL821x_PHYSR				0x11
+>  #define RTL821x_PHYSR_DUPLEX			BIT(13)
+> @@ -28,6 +30,8 @@
+>  
+>  #define RTL8211E_EXT_PAGE			7
+>  #define RTL8211E_EPAGSR				0x1e
+> +#define RTL8211E_SCR				0x1a
+> +#define RTL8211E_SCR_DISABLE_RXC_SSC		BIT(2)
+>  
 >  #define RTL8211F_INSR				0x1d
 >  
->  #define RTL8211F_TX_DELAY			BIT(8)
-> @@ -53,6 +56,64 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
->  	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
+> @@ -87,8 +91,8 @@ static int rtl821e_restore_page(struct phy_device *phydev, int oldpage, int ret)
+>  	return ret;
 >  }
 >  
-> +static int rtl821e_select_ext_page(struct phy_device *phydev, int page)
+> -static int __maybe_unused rtl8211e_modify_ext_paged(struct phy_device *phydev,
+> -				    int page, u32 regnum, u16 mask, u16 set)
+> +static int rtl8211e_modify_ext_paged(struct phy_device *phydev, int page,
+> +				     u32 regnum, u16 mask, u16 set)
+>  {
+>  	int ret = 0;
+>  	int oldpage;
+> @@ -114,6 +118,22 @@ static int __maybe_unused rtl8211e_modify_ext_paged(struct phy_device *phydev,
+>  	return rtl821e_restore_page(phydev, oldpage, ret);
+>  }
+>  
+> +static int rtl8211e_probe(struct phy_device *phydev)
 > +{
-> +	int rc;
+> +	struct device *dev = &phydev->mdio.dev;
+> +	int err;
 > +
-> +	rc = phy_write(phydev, RTL821x_PAGE_SELECT, RTL8211E_EXT_PAGE);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return phy_write(phydev, RTL8211E_EPAGSR, page);
-> +}
-> +
-> +static int rtl821e_restore_page(struct phy_device *phydev, int oldpage, int ret)
-> +{
-> +	int r;
-> +
-> +	if (oldpage >= 0) {
-> +		r = phy_write(phydev, RTL821x_PAGE_SELECT, oldpage);
-> +
-> +		/* Propagate the operation return code if the page write
-> +		 * was successful.
-> +		 */
-> +		if (ret >= 0 && r < 0)
-> +			ret = r;
-> +	} else {
-> +		/* Propagate the page selection error code */
-> +		ret = oldpage;
+> +	if (of_property_read_bool(dev->of_node, "realtek,enable-ssc")) {
+> +		err = rtl8211e_modify_ext_paged(phydev, 0xa0, RTL8211E_SCR,
+> +						RTL8211E_SCR_DISABLE_RXC_SSC,
+> +						0);
+> +		if (err)
+> +			dev_err(dev, "failed to enable SSC on RXC: %d\n", err);
 > +	}
 > +
-> +	return ret;
-> +}
-> +
-> +static int __maybe_unused rtl8211e_modify_ext_paged(struct phy_device *phydev,
-> +				    int page, u32 regnum, u16 mask, u16 set)
-> +{
-> +	int ret = 0;
-> +	int oldpage;
-> +	int new;
-> +
-> +	oldpage = phy_read(phydev, RTL821x_PAGE_SELECT);
-> +	if (oldpage < 0)
-> +		goto out;
-> +
-> +	ret = rtl821e_select_ext_page(phydev, page);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = phy_read(phydev, regnum);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	new = (ret & ~mask) | set;
-> +	if (new != ret)
-> +		ret = phy_write(phydev, regnum, new);
-> +
-> +out:
-> +	return rtl821e_restore_page(phydev, oldpage, ret);
+> +	return 0;
 > +}
 > +
 >  static int rtl8201_ack_interrupt(struct phy_device *phydev)
 >  {
 >  	int err;
+> @@ -372,6 +392,7 @@ static struct phy_driver realtek_drvs[] = {
+>  		.config_init	= &rtl8211e_config_init,
+>  		.ack_interrupt	= &rtl821x_ack_interrupt,
+>  		.config_intr	= &rtl8211e_config_intr,
+> +		.probe          = rtl8211e_probe,
+
+I'm not sure whether this setting survives soft reset and power-down.
+Maybe it should be better applied in the config_init callback.
+
+>  		.suspend	= genphy_suspend,
+>  		.resume		= genphy_resume,
+>  		.read_page	= rtl821x_read_page,
 > 
