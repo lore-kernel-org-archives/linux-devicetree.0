@@ -1,56 +1,84 @@
 From: Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH v2 05/11] dt-bindings: mmc: arasan: Update Documentation for the input clock
-Date: Mon,  1 Jul 2019 10:59:45 +0530
-Message-ID: <1561958991-21935-6-git-send-email-manish.narani@xilinx.com>
-References: <1561958991-21935-1-git-send-email-manish.narani@xilinx.com>
+Subject: [PATCH v2] arm64: zynqmp: Add ZynqMP SDHCI compatible string
+Date: Mon,  1 Jul 2019 11:07:32 +0530
+Message-ID: <1561959452-22915-1-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561958991-21935-1-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, michal.simek@xilinx.com, adrian.hunter@intel.com, christoph.muellner@theobroma-systems.com, philipp.tomsich@theobroma-systems.com, viresh.kumar@linaro.org, scott.branden@broadcom.com, ayaka@soulik.info, kernel@esmil.dk, tony.xie@rock-chips.com, rajan.vaja@xilinx.com, jolly.shah@xilinx.com, nava.manne@xilinx.com, mdf@kernel.org, manish.narani@xilinx.com, olof@lixom.net
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+To: robh+dt@kernel.org, michal.simek@xilinx.com, mark.rutland@arm.com, manish.narani@xilinx.com, sudeep.holla@arm.com, rrichter@cavium.com, gregory.clement@bootlin.com, amit.kucheria@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for an optional input clock which is essentially used
-in sampling the input data coming from the card.
+Add the new compatible string for ZynqMP SD Host Controller for its use
+in the Arasan SDHCI driver for some of the ZynqMP specific operations.
+Add required properties for the same.
 
 Signed-off-by: Manish Narani <manish.narani@xilinx.com>
 ---
- Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+This patch depends on the below series of patches:
+https://lkml.org/lkml/2019/7/1/25
 
-diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-index 15c6397..7c79496 100644
---- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-@@ -23,10 +23,10 @@ Required Properties:
-   - reg: From mmc bindings: Register location and length.
-   - clocks: From clock bindings: Handles to clock inputs.
-   - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
--		 Apart from these two there is one more optional clock which
--		 is "clk_sdcard". This clock represents output clock from
--		 controller and card. This must be specified when #clock-cells
--		 is specified.
-+		 Apart from these two there are two more optional clocks which
-+		 are "clk_sdcard" and "clk_sample". These two clocks represent
-+		 output and input clocks between controller and card. These
-+		 must be specified when #clock-cells is specified.
-   - interrupts: Interrupt specifier
+Changes in v2:
+	- Added clock-names for SD card clocks for getting clocks in the driver
+---
+ arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi |  4 ++--
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi     | 14 ++++++++++----
+ 2 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi
+index 306ad21..24c04a1 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi
+@@ -177,11 +177,11 @@
+ };
  
- Required Properties for "arasan,sdhci-5.1":
-@@ -40,9 +40,9 @@ Optional Properties:
-   - clock-output-names: If specified, this will be the name of the card clock
-     which will be exposed by this device.  Required if #clock-cells is
-     specified.
--  - #clock-cells: If specified this should be the value <0>. With this
--    property in place we will export one clock representing the Card
--    Clock. This clock is expected to be consumed by our PHY. You must also
-+  - #clock-cells: If specified this should be the value <0> or <1>. With this
-+    property in place we will export one or two clocks representing the Card
-+    Clock. These clocks are expected to be consumed by our PHY. You must also
-     specify
-   - xlnx,fails-without-test-cd: when present, the controller doesn't work when
-     the CD line is not connected properly, and the line is not connected
+ &sdhci0 {
+-	clocks = <&clk200 &clk200>;
++	clocks = <&clk200>, <&clk200>, <&sdhci0 0>, <&sdhci0 1>;
+ };
+ 
+ &sdhci1 {
+-	clocks = <&clk200 &clk200>;
++	clocks = <&clk200>, <&clk200>, <&sdhci1 0>, <&sdhci1 1>;
+ };
+ 
+ &spi0 {
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index 9aa6734..4c21346 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -493,21 +493,27 @@
+ 		};
+ 
+ 		sdhci0: mmc@ff160000 {
+-			compatible = "arasan,sdhci-8.9a";
++			compatible = "xlnx,zynqmp-8.9a", "arasan,sdhci-8.9a";
+ 			status = "disabled";
+ 			interrupt-parent = <&gic>;
+ 			interrupts = <0 48 4>;
+ 			reg = <0x0 0xff160000 0x0 0x1000>;
+-			clock-names = "clk_xin", "clk_ahb";
++			clock-names = "clk_xin", "clk_ahb",
++				      "clk_sdcard", "clk_sample";
++			#clock-cells = <1>;
++			clock-output-names = "clk_out_sd0", "clk_in_sd0";
+ 		};
+ 
+ 		sdhci1: mmc@ff170000 {
+-			compatible = "arasan,sdhci-8.9a";
++			compatible = "xlnx,zynqmp-8.9a", "arasan,sdhci-8.9a";
+ 			status = "disabled";
+ 			interrupt-parent = <&gic>;
+ 			interrupts = <0 49 4>;
+ 			reg = <0x0 0xff170000 0x0 0x1000>;
+-			clock-names = "clk_xin", "clk_ahb";
++			clock-names = "clk_xin", "clk_ahb",
++				      "clk_sdcard", "clk_sample";
++			#clock-cells = <1>;
++			clock-output-names = "clk_out_sd1", "clk_in_sd1";
+ 		};
+ 
+ 		smmu: smmu@fd800000 {
 -- 
 2.1.1
