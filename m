@@ -1,105 +1,92 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Date: Mon, 1 Jul 2019 11:58:42 +0200
-Message-ID: <20190701095842.fvganvycce2cy7jn@flea>
-References: <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
- <20190605101317.GA9345@lst.de>
- <20190605120237.ekmytfxcwbjaqy3x@flea>
- <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
- <20190607062802.m5wslx3imiqooq5a@flea>
- <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
- <20190607094030.GA12373@lst.de>
- <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
- <20190612152022.c3cfhp4cauhzhfyr@flea>
- <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
+ MSI_FLAG_MULTI_PCI_MSI
+Date: Mon, 1 Jul 2019 10:07:51 +0000
+Message-ID: <DB8PR04MB67471CA3A4E8D76F2E0DC49484F90@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-5-Zhiqiang.Hou@nxp.com>
+ <20190611165935.GA22836@redmoon>
+ <AM0PR04MB67383023B81AEB33DAF9C35584EC0@AM0PR04MB6738.eurprd04.prod.outlook.com>
+ <20190612130813.GA15747@redmoon>
+ <AM0PR04MB6738B93C7F1B5BE433753CF584E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
+ <20190617093337.GD18020@e121166-lin.cambridge.arm.com>
+ <AM6PR04MB67425792524FBA1C773F137984EB0@AM6PR04MB6742.eurprd04.prod.outlook.com>
+ <20190628113555.GA21829@e121166-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rwl7bnhaabkczsql"
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
+In-Reply-To: <20190628113555.GA21829@e121166-lin.cambridge.arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Torsten Duwe <duwe@lst.de>, Harald Geyer <harald@ccbib.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
---rwl7bnhaabkczsql
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi!
-
-On Fri, Jun 28, 2019 at 12:39:32PM +0200, Andrzej Hajda wrote:
-> On 12.06.2019 17:20, Maxime Ripard wrote:
-> >> I am not sure if I understand whole discussion here, but I also do not
-> >> understand whole edp-connector thing.
-> > The context is this one:
-> > https://patchwork.freedesktop.org/patch/257352/?series=51182&rev=1
-> > https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1
-> > https://patchwork.freedesktop.org/patch/286468/?series=56776&rev=2
-> >
-> > TL;DR: This bridge is being used on ARM laptops that can come with
-> > different eDP panels. Some of these panels require a regulator to be
-> > enabled for the panel to work, and this is obviously something that
-> > should be in the DT.
-> >
-> > However, we can't really describe the panel itself, since the vendor
-> > uses several of them and just relies on the eDP bus to do its job at
-> > retrieving the EDIDs. A generic panel isn't really working either
-> > since that would mean having a generic behaviour for all the panels
-> > connected to that bus, which isn't there either.
-> >
-> > The connector allows to expose this nicely.
->
-> As VESA presentation says[1] eDP is based on DP but is much more
-> flexible, it is up to integrator (!!!) how the connection, power
-> up/down, initialization sequence should be performed. Trying to cover
-> every such case in edp-connector seems to me similar to panel-simple
-> attempt failure. Moreover there is no such thing as physical standard
-> eDP connector. Till now I though DT connector should describe physical
-> connector on the device, now I am lost, are there some DT bindings
-> guidelines about definition of a connector?
-
-This might be semantics but I guess we're in some kind of grey area?
-
-Like, for eDP, if it's soldered I guess we could say that there's no
-connector. But what happens if for some other board, that signal is
-routed through a ribbon?
-
-You could argue that there's no physical connector in both cases, or
-that there's one in both, or one for the ribbon and no connector for
-the one soldered in.
-
-> Maybe instead of edp-connector one would introduce integrator's specific
-> connector, for example with compatible "olimex,teres-edp-connector"
-> which should follow edp abstract connector rules? This will be at least
-> consistent with below presentation[1] - eDP requirements depends on
-> integrator. Then if olimex has standard way of dealing with panels
-> present in olimex/teres platforms the driver would then create
-> drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
-> Anyway it still looks fishy for me :), maybe because I am not
-> familiarized with details of these platforms.
-
-That makes sense yes
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---rwl7bnhaabkczsql
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRnZUgAKCRDj7w1vZxhR
-xQ/8AQCtFPO8zhV4+U5EfDXkE+JHOXvpVHx/qJISWs88VLbjXAD+PhSV9xHUBgZC
-Wga4ICpNkMVIAA056iwnPqJ5wScM6Qc=
-=ijEm
------END PGP SIGNATURE-----
-
---rwl7bnhaabkczsql--
+SGkgTG9yZW56bywNCg0KVGhhbmtzIGEgbG90IGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3Jlbnpv
+LnBpZXJhbGlzaUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo21MIyOMjVIDE5OjM2DQo+IFRvOiBa
+LnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBiaGVs
+Z2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29t
+Ow0KPiBsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBM
+ZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT47IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOyB3
+aWxsLmRlYWNvbkBhcm0uY29tOw0KPiBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBN
+LmguIExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47DQo+IFhpYW93ZWkgQmFvIDx4aWFvd2Vp
+LmJhb0BueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjUgMDQvMjBdIFBDSTogbW9iaXZl
+aWw6IFJlbW92ZSB0aGUgZmxhZw0KPiBNU0lfRkxBR19NVUxUSV9QQ0lfTVNJDQo+IA0KPiBPbiBN
+b24sIEp1biAxNywgMjAxOSBhdCAxMDozNDozNUFNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4g
+DQo+IFsuLi5dDQo+IA0KPiA+ID4gVGhlcmUgaXMgbm90aGluZyBvYnZpb3VzLiBXcml0ZSB3aGF0
+IHlvdSBhcmUgZml4aW5nIGluIHRoZSBjb21taXQNCj4gPiA+IGxvZyBhbmQgSSB3aWxsIGFwcGx5
+IHRoZSBwYXRjaCwgSSB3b24ndCB3cml0ZSB0aGUgY29tbWl0IGxvZyBmb3INCj4gPiA+IHlvdS4g
+QW55b25lIHNob3VsZCBiZSBhYmxlIHRvIHVuZGVyc3RhbmQgd2h5IGEgcGF0Y2ggd2FzIG5lZWRl
+ZCBieQ0KPiA+ID4gcmVhZGluZyB0aGUgY29tbWl0IGxvZywgaXQgaXMgYXMgaW1wb3J0YW50IGFz
+IHdyaXRpbmcgdGhlIGNvZGUgaXRzZWxmLg0KPiA+DQo+ID4gV2l0aCB0aGUgZmxhZyBNU0lfRkxB
+R19NVUxUSV9QQ0lfTVNJLCB3aGVuIHRoZSBFbmRwb2ludCBhbGxvY2F0ZXMNCj4gPiBtdWx0aXBs
+ZSBNU0ksIGl0IHdpbGwgdHJpZ2dlciB0aGUgIldBUk5fT04obnJfaXJxcyAhPSAxKTsiIGluDQo+
+ID4gbW9iaXZlaWxfaXJxX21zaV9kb21haW5fYWxsb2MoKSwgdGhpcyBpcyB0aGUgaXNzdWUgdGhp
+cyBwYXRjaCB3YW50IHRvDQo+ID4gZml4Lg0KPiANCj4gQW5kIHRoYXQncyB3cm9uZy4gTWFyYyBl
+eHBsYWluZWQgd2h5IHRoaXMgY29udHJvbGxlciBkb2VzIG5vdCBzdXBwb3J0IE11bHRpDQo+IE1T
+SSBhbmQgdGhhdCdzIHdoYXQgc2hvdWxkIGdvIGluIHRoZSBjb21taXQgbG9nLCB0cmlnZ2VyaW5n
+IGEgV0FSTl9PTiBpcw0KPiB0aGUgbGVhc3Qgb2YgdGhlIHByb2JsZW1zIChhbmQgdGhlIFdBUk5f
+T04gY2FuIGV2ZW4gYmUgcmVtb3ZlZCBhZnRlcg0KPiB0aGlzIHBhdGNoIGlzIGFwcGxpZWQpLCBp
+ZiBpdCB3YXMgdXNlZCBhcyBhIGJhbmRhaWQgdG8gcHJldmVudCBhbGxvY2F0aW5nIE11bHRpDQo+
+IE1TSSBpdCBpcyBldmVuIG1vcmUgYnJva2VuLg0KPg0KDQpZZXMsIEkgYWdyZWUsIHRoZSByb290
+IGNhdXNlIGlzIGhhcmR3YXJlIGxpbWl0YXRpb24sIGlzIHRoZSBmb2xsb3dpbmcgY2hhbmdlbG9n
+DQphY2NlcHRhYmxlPw0KDQpDaGFuZ2Vsb2c6DQpUaGUgTW9iaXZlaWwgaW50ZXJuYWwgTVNJIGNv
+bnRyb2xsZXIgdXNlcyBzZXBhcmF0ZSB0YXJnZXQgYWRkcmVzcyBwZXIgTVNJLA0Kc28sIGl0IGlz
+IHVuYWJsZSB0byBzdXBwb3J0IE11bHRpcGxlIE1TSSBmZWF0dXJlLCB3aGljaCByZXF1aXJlcyB0
+aGUgc2FtZQ0KdGFyZ2V0IGFkZHJlc3MgYW5kIGluY3JlbWVudGFsIE1TSV9EQVRBIHZhbHVlcy4g
+VGhpcyBwYXRjaCBpcyB0byByZW1vdmUNCnRoZSBmbGFnIE1TSV9GTEFHX01VTFRJX1BDSV9NU0ku
+DQoNClRoYW5rcywNClpoaXFpYW5nDQogDQo+IExvcmVuem8NCj4gDQo+ID4gVGhhbmtzLA0KPiA+
+IFpoaXFpYW5nDQo+ID4NCj4gPiA+DQo+ID4gPiBUaGFua3MsDQo+ID4gPiBMb3JlbnpvDQo+ID4g
+Pg0KPiA+ID4gPiBUaGFua3MsDQo+ID4gPiA+IFpoaXFpYW5nDQo+ID4gPiA+DQo+ID4gPiA+ID4N
+Cj4gPiA+ID4gPiBMb3JlbnpvDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFN1YmJ1LCBkaWQgeW91
+IHRlc3Qgd2l0aCBFbmRwb2ludCBzdXBwb3J0aW5nIG11bHRpIE1TST8NCj4gPiA+ID4gPiA+DQo+
+ID4gPiA+ID4gPiBUaGFua3MsDQo+ID4gPiA+ID4gPiBaaGlxaWFuZw0KPiA+ID4gPiA+ID4NCj4g
+PiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gVGhhbmtzLA0KPiA+ID4gPiA+ID4gPiBMb3Jlbnpv
+DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gRml4ZXM6IDFlOTEzZTU4MzM1ZiAoIlBD
+STogbW9iaXZlaWw6IEFkZCBNU0kgc3VwcG9ydCIpDQo+ID4gPiA+ID4gPiA+ID4gU2lnbmVkLW9m
+Zi1ieTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiA+ID4gPiA+ID4g
+PiBSZXZpZXdlZC1ieTogTWluZ2h1YW4gTGlhbiA8TWluZ2h1YW4uTGlhbkBueHAuY29tPg0KPiA+
+ID4gPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ID4gPiA+IFY1Og0KPiA+ID4gPiA+ID4gPiA+ICAt
+IENvcnJlY3RlZCB0aGUgc3ViamVjdC4NCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+
+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYyB8IDIgKy0NCj4gPiA+ID4g
+PiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+
+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kv
+Y29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4gPiA+ID4gPiA+ID4gPiBiL2RyaXZlcnMvcGNp
+L2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gPiA+ID4gPiA+ID4gaW5kZXggNTYzMjEw
+ZTczMWQzLi5hMGRkMzM3YzYyMTQgMTAwNjQ0DQo+ID4gPiA+ID4gPiA+ID4gLS0tIGEvZHJpdmVy
+cy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4gPiA+ID4gPiA+ID4gPiArKysgYi9k
+cml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+ID4gPiA+ID4gPiA+IEBA
+IC03MDMsNyArNzAzLDcgQEAgc3RhdGljIHN0cnVjdCBpcnFfY2hpcA0KPiA+ID4gPiA+ID4gPiA+
+IG1vYml2ZWlsX21zaV9pcnFfY2hpcCA9IHsNCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
+PiA+ICBzdGF0aWMgc3RydWN0IG1zaV9kb21haW5faW5mbyBtb2JpdmVpbF9tc2lfZG9tYWluX2lu
+Zm8gPSB7DQo+ID4gPiA+ID4gPiA+ID4gIAkuZmxhZ3MJPSAoTVNJX0ZMQUdfVVNFX0RFRl9ET01f
+T1BTIHwNCj4gPiA+ID4gPiA+ID4gTVNJX0ZMQUdfVVNFX0RFRl9DSElQX09QUyB8DQo+ID4gPiA+
+ID4gPiA+ID4gLQkJICAgTVNJX0ZMQUdfTVVMVElfUENJX01TSSB8IE1TSV9GTEFHX1BDSV9NU0lY
+KSwNCj4gPiA+ID4gPiA+ID4gPiArCQkgICBNU0lfRkxBR19QQ0lfTVNJWCksDQo+ID4gPiA+ID4g
+PiA+ID4gIAkuY2hpcAk9ICZtb2JpdmVpbF9tc2lfaXJxX2NoaXAsDQo+ID4gPiA+ID4gPiA+ID4g
+IH07DQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiAtLQ0KPiA+ID4gPiA+ID4gPiA+
+IDIuMTcuMQ0KPiA+ID4gPiA+ID4gPiA+DQo=
