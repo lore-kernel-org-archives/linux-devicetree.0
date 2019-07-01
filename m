@@ -1,155 +1,135 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [v5 6/7] drm/mediatek: change the dsi phytiming calculate method
-Date: Mon, 1 Jul 2019 09:43:07 +0800
-Message-ID: <1561945387.17120.4.camel@mtksdaap41>
-References: <20190627080116.40264-1-jitao.shi@mediatek.com>
- <20190627080116.40264-7-jitao.shi@mediatek.com>
+Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for
+ mmsys clocks
+Date: Mon, 1 Jul 2019 11:55:18 +0800
+Message-ID: <1561953318.25914.9.camel@mtksdaap41>
+References: <20181116125449.23581-1-matthias.bgg@kernel.org>
+ <20181116125449.23581-9-matthias.bgg@kernel.org>
+ <20181116231522.GA18006@bogus>
+ <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
+ <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
+ <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
+ <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
+ <154356023767.88331.18401188808548429052@swboyd.mtv.corp.google.com>
+ <a229bfc7-683f-5b0d-7b71-54f934de6214@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190627080116.40264-7-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, yingjoe.chen@mediatek.com, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Ryan Case <ryandcase@chromium.org>, Sean Paul <seanpaul@chromiu>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a229bfc7-683f-5b0d-7b71-54f934de6214@suse.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <mbrugger@suse.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Wang <Sean.Wang@mediatek.com>, "moderated list:ARM/FREESCALE IMX /
+ MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Sean Wang <sean.wang@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, Philipp Zabel <p.zabel@pengutronix.de>, "matthias.bgg@kernel.org" <matthias.bgg@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-clk <linux-clk@vger.kernel.org>, Ulrich
 List-Id: devicetree@vger.kernel.org
 
-SGksIEppdGFvOgoKT24gVGh1LCAyMDE5LTA2LTI3IGF0IDE2OjAxICswODAwLCBKaXRhbyBTaGkg
-d3JvdGU6Cj4gQ2hhbmdlIHRoZSBtZXRob2Qgb2YgZnJhbWUgcmF0ZSBjYWxjIHdoaWNoIGNhbiBn
-ZXQgbW9yZSBhY2N1cmF0ZQo+IGZyYW1lIHJhdGUuCj4gCj4gZGF0YSByYXRlID0gcGl4ZWxfY2xv
-Y2sgKiBiaXRfcGVyX3BpeGVsIC8gbGFuZXMKPiBBZGp1c3QgaGZwX3djIHRvIGFkYXB0IHRoZSBh
-ZGRpdGlvbmFsIHBoeV9kYXRhCj4gCj4gaWYgTUlQSV9EU0lfTU9ERV9WSURFT19CVVJTVAo+IAlo
-ZnBfd2MgPSBoZnAgKiBicHAgLSBkYXRhX3BoeV9jeWNsZXMgKiBsYW5lcyAtIDEyIC0gNjsKPiBl
-bHNlCj4gCWhmcF93YyA9IGhmcCAqIGJwcCAtIGRhdGFfcGh5X2N5Y2xlcyAqIGxhbmVzIC0gMTI7
-Cj4gCj4gTm90ZToKPiAvLygyOiAxIGZvciBzeW5jLCAxIGZvciBwaHkgaWRsZSkKPiBkYXRhX3Bo
-eV9jeWNsZXMgPSBUX2hzX2V4aXQgKyBUX2xweCArIFRfaHNfcHJlcGFyZSArIFRfaHNfemVybyAr
-IDI7Cj4gCj4gYnBwOiBiaXQgcGVyIHBpeGVsCj4gCj4gU2lnbmVkLW9mZi1ieTogSml0YW8gU2hp
-IDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPgo+IFRlc3RlZC1ieTogUnlhbiBDYXNlIDxyeWFuZGNh
-c2VAY2hyb21pdW0ub3JnPgo+IFJldmlld2VkLWJ5OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29t
-PgoKVGhpcyB2ZXJzaW9uIGlzIGRpZmZlcmVudCB0aGFuIHByZXZpb3VzIHZlcnNpb24sIHNvIHlv
-dSBzaG91bGQgcmVtb3ZlClJldmlld2VkLWJ5IHRhZy4gRm9yIHRoaXMgdmVyc2lvbiwgSSBzdGls
-bCBnaXZlIHlvdSBhCgpSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KCj4g
-LS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgfCAxMTcgKysrKysrKysr
-KysrKysrKysrKystLS0tLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDgwIGluc2VydGlvbnMoKyks
-IDM3IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYwo+IGluZGV4
-IDE2MjFlOGNkYWNjMi4uY2VmZGNiMTUwOWNiIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHNpLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RzaS5jCj4gQEAgLTE0NCwxMiArMTQ0LDYgQEAKPiAgI2RlZmluZSBEQVRBXzAJCQkJKDB4ZmYg
-PDwgMTYpCj4gICNkZWZpbmUgREFUQV8xCQkJCSgweGZmIDw8IDI0KQo+ICAKPiAtI2RlZmluZSBU
-X0xQWAkJNQo+IC0jZGVmaW5lIFRfSFNfUFJFUAk2Cj4gLSNkZWZpbmUgVF9IU19UUkFJTAk4Cj4g
-LSNkZWZpbmUgVF9IU19FWElUCTcKPiAtI2RlZmluZSBUX0hTX1pFUk8JMTAKPiAtCj4gICNkZWZp
-bmUgTlNfVE9fQ1lDTEUobiwgYykgICAgKChuKSAvIChjKSArICgoKG4pICUgKGMpKSA/IDEgOiAw
-KSkKPiAgCj4gICNkZWZpbmUgTVRLX0RTSV9IT1NUX0lTX1JFQUQodHlwZSkgXAo+IEBAIC0xNTgs
-NiArMTUyLDI1IEBACj4gIAkodHlwZSA9PSBNSVBJX0RTSV9HRU5FUklDX1JFQURfUkVRVUVTVF8y
-X1BBUkFNKSB8fCBcCj4gIAkodHlwZSA9PSBNSVBJX0RTSV9EQ1NfUkVBRCkpCj4gIAo+ICtzdHJ1
-Y3QgbXRrX3BoeV90aW1pbmcgewo+ICsJdTMyIGxweDsKPiArCXUzMiBkYV9oc19wcmVwYXJlOwo+
-ICsJdTMyIGRhX2hzX3plcm87Cj4gKwl1MzIgZGFfaHNfdHJhaWw7Cj4gKwo+ICsJdTMyIHRhX2dv
-Owo+ICsJdTMyIHRhX3N1cmU7Cj4gKwl1MzIgdGFfZ2V0Owo+ICsJdTMyIGRhX2hzX2V4aXQ7Cj4g
-Kwo+ICsJdTMyIGNsa19oc196ZXJvOwo+ICsJdTMyIGNsa19oc190cmFpbDsKPiArCj4gKwl1MzIg
-Y2xrX2hzX3ByZXBhcmU7Cj4gKwl1MzIgY2xrX2hzX3Bvc3Q7Cj4gKwl1MzIgY2xrX2hzX2V4aXQ7
-Cj4gK307Cj4gKwo+ICBzdHJ1Y3QgcGh5Owo+ICAKPiAgc3RydWN0IG10a19kc2lfZHJpdmVyX2Rh
-dGEgewo+IEBAIC0xODgsNiArMjAxLDcgQEAgc3RydWN0IG10a19kc2kgewo+ICAJZW51bSBtaXBp
-X2RzaV9waXhlbF9mb3JtYXQgZm9ybWF0Owo+ICAJdW5zaWduZWQgaW50IGxhbmVzOwo+ICAJc3Ry
-dWN0IHZpZGVvbW9kZSB2bTsKPiArCXN0cnVjdCBtdGtfcGh5X3RpbWluZyBwaHlfdGltaW5nOwo+
-ICAJaW50IHJlZmNvdW50Owo+ICAJYm9vbCBlbmFibGVkOwo+ICAJdTMyIGlycV9kYXRhOwo+IEBA
-IC0yMjEsMTcgKzIzNSwzNiBAQCBzdGF0aWMgdm9pZCBtdGtfZHNpX3BoeV90aW1jb25maWcoc3Ry
-dWN0IG10a19kc2kgKmRzaSkKPiAgewo+ICAJdTMyIHRpbWNvbjAsIHRpbWNvbjEsIHRpbWNvbjIs
-IHRpbWNvbjM7Cj4gIAl1MzIgdWksIGN5Y2xlX3RpbWU7Cj4gKwlzdHJ1Y3QgbXRrX3BoeV90aW1p
-bmcgKnRpbWluZyA9ICZkc2ktPnBoeV90aW1pbmc7Cj4gKwo+ICsJdWkgPSAxMDAwMDAwMDAwIC8g
-ZHNpLT5kYXRhX3JhdGU7Cj4gKwljeWNsZV90aW1lID0gZGl2X3U2NCg4MDAwMDAwMDAwVUxMLCBk
-c2ktPmRhdGFfcmF0ZSk7Cj4gKwo+ICsJdGltaW5nLT5scHggPSBOU19UT19DWUNMRSg2MCwgY3lj
-bGVfdGltZSk7Cj4gKwl0aW1pbmctPmRhX2hzX3ByZXBhcmUgPSBOU19UT19DWUNMRSg0MCArIDUg
-KiB1aSwgY3ljbGVfdGltZSk7Cj4gKwl0aW1pbmctPmRhX2hzX3plcm8gPSBOU19UT19DWUNMRSgx
-MTAgKyA2ICogdWksIGN5Y2xlX3RpbWUpOwo+ICsJdGltaW5nLT5kYV9oc190cmFpbCA9IE5TX1RP
-X0NZQ0xFKDgwICsgNCAqIHVpLCBjeWNsZV90aW1lKTsKPiAgCj4gLQl1aSA9IDEwMDAgLyBkc2kt
-PmRhdGFfcmF0ZSArIDB4MDE7Cj4gLQljeWNsZV90aW1lID0gODAwMCAvIGRzaS0+ZGF0YV9yYXRl
-ICsgMHgwMTsKPiArCXRpbWluZy0+dGFfZ28gPSA0ICogdGltaW5nLT5scHg7Cj4gKwl0aW1pbmct
-PnRhX3N1cmUgPSAzICogdGltaW5nLT5scHggLyAyOwo+ICsJdGltaW5nLT50YV9nZXQgPSA1ICog
-dGltaW5nLT5scHg7Cj4gKwl0aW1pbmctPmRhX2hzX2V4aXQgPSAyICogdGltaW5nLT5scHg7Cj4g
-IAo+IC0JdGltY29uMCA9IFRfTFBYIHwgVF9IU19QUkVQIDw8IDggfCBUX0hTX1pFUk8gPDwgMTYg
-fCBUX0hTX1RSQUlMIDw8IDI0Owo+IC0JdGltY29uMSA9IDQgKiBUX0xQWCB8ICgzICogVF9MUFgg
-LyAyKSA8PCA4IHwgNSAqIFRfTFBYIDw8IDE2IHwKPiAtCQkgIFRfSFNfRVhJVCA8PCAyNDsKPiAt
-CXRpbWNvbjIgPSAoKE5TX1RPX0NZQ0xFKDB4NjQsIGN5Y2xlX3RpbWUpICsgMHhhKSA8PCAyNCkg
-fAo+IC0JCSAgKE5TX1RPX0NZQ0xFKDB4MTUwLCBjeWNsZV90aW1lKSA8PCAxNik7Cj4gLQl0aW1j
-b24zID0gTlNfVE9fQ1lDTEUoMHg0MCwgY3ljbGVfdGltZSkgfCAoMiAqIFRfTFBYKSA8PCAxNiB8
-Cj4gLQkJICBOU19UT19DWUNMRSg4MCArIDUyICogdWksIGN5Y2xlX3RpbWUpIDw8IDg7Cj4gKwl0
-aW1pbmctPmNsa19oc196ZXJvID0gTlNfVE9fQ1lDTEUoMzM2LCBjeWNsZV90aW1lKTsKPiArCXRp
-bWluZy0+Y2xrX2hzX3RyYWlsID0gTlNfVE9fQ1lDTEUoMTAwLCBjeWNsZV90aW1lKSArIDEwOwo+
-ICsKPiArCXRpbWluZy0+Y2xrX2hzX3ByZXBhcmUgPSBOU19UT19DWUNMRSg2NCwgY3ljbGVfdGlt
-ZSk7Cj4gKwl0aW1pbmctPmNsa19oc19wb3N0ID0gTlNfVE9fQ1lDTEUoODAgKyA1MiAqIHVpLCBj
-eWNsZV90aW1lKTsKPiArCXRpbWluZy0+Y2xrX2hzX2V4aXQgPSAyICogdGltaW5nLT5scHg7Cj4g
-Kwo+ICsJdGltY29uMCA9IHRpbWluZy0+bHB4IHwgdGltaW5nLT5kYV9oc19wcmVwYXJlIDw8IDgg
-fAo+ICsJCSAgdGltaW5nLT5kYV9oc196ZXJvIDw8IDE2IHwgdGltaW5nLT5kYV9oc190cmFpbCA8
-PCAyNDsKPiArCXRpbWNvbjEgPSB0aW1pbmctPnRhX2dvIHwgdGltaW5nLT50YV9zdXJlIDw8IDgg
-fAo+ICsJCSAgdGltaW5nLT50YV9nZXQgPDwgMTYgfCB0aW1pbmctPmRhX2hzX2V4aXQgPDwgMjQ7
-Cj4gKwl0aW1jb24yID0gMSA8PCA4IHwgdGltaW5nLT5jbGtfaHNfemVybyA8PCAxNiB8Cj4gKwkJ
-ICB0aW1pbmctPmNsa19oc190cmFpbCA8PCAyNDsKPiArCXRpbWNvbjMgPSB0aW1pbmctPmNsa19o
-c19wcmVwYXJlIHwgdGltaW5nLT5jbGtfaHNfcG9zdCA8PCA4IHwKPiArCQkgIHRpbWluZy0+Y2xr
-X2hzX2V4aXQgPDwgMTY7Cj4gIAo+ICAJd3JpdGVsKHRpbWNvbjAsIGRzaS0+cmVncyArIERTSV9Q
-SFlfVElNRUNPTjApOwo+ICAJd3JpdGVsKHRpbWNvbjEsIGRzaS0+cmVncyArIERTSV9QSFlfVElN
-RUNPTjEpOwo+IEBAIC00MTgsNyArNDUxLDggQEAgc3RhdGljIHZvaWQgbXRrX2RzaV9jb25maWdf
-dmRvX3RpbWluZyhzdHJ1Y3QgbXRrX2RzaSAqZHNpKQo+ICAJdTMyIGhvcml6b250YWxfc3luY19h
-Y3RpdmVfYnl0ZTsKPiAgCXUzMiBob3Jpem9udGFsX2JhY2twb3JjaF9ieXRlOwo+ICAJdTMyIGhv
-cml6b250YWxfZnJvbnRwb3JjaF9ieXRlOwo+IC0JdTMyIGRzaV90bXBfYnVmX2JwcDsKPiArCXUz
-MiBkc2lfdG1wX2J1Zl9icHAsIGRhdGFfcGh5X2N5Y2xlczsKPiArCXN0cnVjdCBtdGtfcGh5X3Rp
-bWluZyAqdGltaW5nID0gJmRzaS0+cGh5X3RpbWluZzsKPiAgCj4gIAlzdHJ1Y3QgdmlkZW9tb2Rl
-ICp2bSA9ICZkc2ktPnZtOwo+ICAKPiBAQCAtNDQ1LDcgKzQ3OSwzNCBAQCBzdGF0aWMgdm9pZCBt
-dGtfZHNpX2NvbmZpZ192ZG9fdGltaW5nKHN0cnVjdCBtdGtfZHNpICpkc2kpCj4gIAkJaG9yaXpv
-bnRhbF9iYWNrcG9yY2hfYnl0ZSA9ICgodm0tPmhiYWNrX3BvcmNoICsgdm0tPmhzeW5jX2xlbikg
-Kgo+ICAJCQlkc2lfdG1wX2J1Zl9icHAgLSAxMCk7Cj4gIAo+IC0JaG9yaXpvbnRhbF9mcm9udHBv
-cmNoX2J5dGUgPSAodm0tPmhmcm9udF9wb3JjaCAqIGRzaV90bXBfYnVmX2JwcCAtIDEyKTsKPiAr
-CWRhdGFfcGh5X2N5Y2xlcyA9IHRpbWluZy0+bHB4ICsgdGltaW5nLT5kYV9oc19wcmVwYXJlICsK
-PiArCQkJCSAgdGltaW5nLT5kYV9oc196ZXJvICsgdGltaW5nLT5kYV9oc19leGl0ICsgMjsKPiAr
-Cj4gKwlpZiAoZHNpLT5tb2RlX2ZsYWdzICYgTUlQSV9EU0lfTU9ERV9WSURFT19CVVJTVCkgewo+
-ICsJCWlmICh2bS0+aGZyb250X3BvcmNoICogZHNpX3RtcF9idWZfYnBwID4KPiArCQkgICAgZGF0
-YV9waHlfY3ljbGVzICogZHNpLT5sYW5lcyArIDE4KSB7Cj4gKwkJCWhvcml6b250YWxfZnJvbnRw
-b3JjaF9ieXRlID0gdm0tPmhmcm9udF9wb3JjaCAqCj4gKwkJCQkJCSAgICAgZHNpX3RtcF9idWZf
-YnBwIC0KPiArCQkJCQkJICAgICBkYXRhX3BoeV9jeWNsZXMgKgo+ICsJCQkJCQkgICAgIGRzaS0+
-bGFuZXMgLSAxODsKPiArCQl9IGVsc2Ugewo+ICsJCQlEUk1fV0FSTigiSEZQIGxlc3MgdGhhbiBk
-LXBoeSwgRlBTIHdpbGwgdW5kZXIgNjBIelxuIik7Cj4gKwkJCWhvcml6b250YWxfZnJvbnRwb3Jj
-aF9ieXRlID0gdm0tPmhmcm9udF9wb3JjaCAqCj4gKwkJCQkJCSAgICAgZHNpX3RtcF9idWZfYnBw
-Owo+ICsJCX0KPiArCX0gZWxzZSB7Cj4gKwkJaWYgKHZtLT5oZnJvbnRfcG9yY2ggKiBkc2lfdG1w
-X2J1Zl9icHAgPgo+ICsJCSAgICBkYXRhX3BoeV9jeWNsZXMgKiBkc2ktPmxhbmVzICsgMTIpIHsK
-PiArCQkJaG9yaXpvbnRhbF9mcm9udHBvcmNoX2J5dGUgPSB2bS0+aGZyb250X3BvcmNoICoKPiAr
-CQkJCQkJICAgICBkc2lfdG1wX2J1Zl9icHAgLQo+ICsJCQkJCQkgICAgIGRhdGFfcGh5X2N5Y2xl
-cyAqCj4gKwkJCQkJCSAgICAgZHNpLT5sYW5lcyAtIDEyOwo+ICsJCX0gZWxzZSB7Cj4gKwkJCURS
-TV9XQVJOKCJIRlAgbGVzcyB0aGFuIGQtcGh5LCBGUFMgd2lsbCB1bmRlciA2MEh6XG4iKTsKPiAr
-CQkJaG9yaXpvbnRhbF9mcm9udHBvcmNoX2J5dGUgPSB2bS0+aGZyb250X3BvcmNoICoKPiArCQkJ
-CQkJICAgICBkc2lfdG1wX2J1Zl9icHA7Cj4gKwkJfQo+ICsJfQo+ICAKPiAgCXdyaXRlbChob3Jp
-em9udGFsX3N5bmNfYWN0aXZlX2J5dGUsIGRzaS0+cmVncyArIERTSV9IU0FfV0MpOwo+ICAJd3Jp
-dGVsKGhvcml6b250YWxfYmFja3BvcmNoX2J5dGUsIGRzaS0+cmVncyArIERTSV9IQlBfV0MpOwo+
-IEBAIC01NDUsOCArNjA2LDcgQEAgc3RhdGljIGludCBtdGtfZHNpX3Bvd2Vyb24oc3RydWN0IG10
-a19kc2kgKmRzaSkKPiAgewo+ICAJc3RydWN0IGRldmljZSAqZGV2ID0gZHNpLT4tPmhvc3QuZGV2
-Owo+ICAJaW50IHJldDsKPiAtCXU2NCBwaXhlbF9jbG9jaywgdG90YWxfYml0czsKPiAtCXUzMiBo
-dG90YWwsIGh0b3RhbF9iaXRzLCBiaXRfcGVyX3BpeGVsLCBvdmVyaGVhZF9jeWNsZXMsIG92ZXJo
-ZWFkX2JpdHM7Cj4gKwl1MzIgYml0X3Blcl9waXhlbDsKPiAgCj4gIAlpZiAoKytkc2ktPnJlZmNv
-dW50ICE9IDEpCj4gIAkJcmV0dXJuIDA7Cj4gQEAgLTU2NSwyNCArNjI1LDcgQEAgc3RhdGljIGlu
-dCBtdGtfZHNpX3Bvd2Vyb24oc3RydWN0IG10a19kc2kgKmRzaSkKPiAgCQlicmVhazsKPiAgCX0K
-PiAgCj4gLQkvKioKPiAtCSAqIGh0b3RhbF90aW1lID0gaHRvdGFsICogYnl0ZV9wZXJfcGl4ZWwg
-LyBudW1fbGFuZXMKPiAtCSAqIG92ZXJoZWFkX3RpbWUgPSBscHggKyBoc19wcmVwYXJlICsgaHNf
-emVybyArIGhzX3RyYWlsICsgaHNfZXhpdAo+IC0JICogbWlwaV9yYXRpbyA9IChodG90YWxfdGlt
-ZSArIG92ZXJoZWFkX3RpbWUpIC8gaHRvdGFsX3RpbWUKPiAtCSAqIGRhdGFfcmF0ZSA9IHBpeGVs
-X2Nsb2NrICogYml0X3Blcl9waXhlbCAqIG1pcGlfcmF0aW8gLyBudW1fbGFuZXM7Cj4gLQkgKi8K
-PiAtCXBpeGVsX2Nsb2NrID0gZHNpLT52bS5waXhlbGNsb2NrOwo+IC0JaHRvdGFsID0gZHNpLT52
-bS5oYWN0aXZlICsgZHNpLT52bS5oYmFja19wb3JjaCArIGRzaS0+dm0uaGZyb250X3BvcmNoICsK
-PiAtCQkJZHNpLT52bS5oc3luY19sZW47Cj4gLQlodG90YWxfYml0cyA9IGh0b3RhbCAqIGJpdF9w
-ZXJfcGl4ZWw7Cj4gLQo+IC0Jb3ZlcmhlYWRfY3ljbGVzID0gVF9MUFggKyBUX0hTX1BSRVAgKyBU
-X0hTX1pFUk8gKyBUX0hTX1RSQUlMICsKPiAtCQkJVF9IU19FWElUOwo+IC0Jb3ZlcmhlYWRfYml0
-cyA9IG92ZXJoZWFkX2N5Y2xlcyAqIGRzaS0+bGFuZXMgKiA4Owo+IC0JdG90YWxfYml0cyA9IGh0
-b3RhbF9iaXRzICsgb3ZlcmhlYWRfYml0czsKPiAtCj4gLQlkc2ktPmRhdGFfcmF0ZSA9IERJVl9S
-T1VORF9VUF9VTEwocGl4ZWxfY2xvY2sgKiB0b3RhbF9iaXRzLAo+IC0JCQkJCSAgaHRvdGFsICog
-ZHNpLT5sYW5lcyk7Cj4gKwlkc2ktPmRhdGFfcmF0ZSA9IERJVl9ST1VORF9VUF9VTEwoZHNpLT52
-bS5waXhlbGNsb2NrICogYml0X3Blcl9waXhlbCwgZHNpLT5sYW5lcyk7Cj4gIAo+ICAJcmV0ID0g
-Y2xrX3NldF9yYXRlKGRzaS0+aHNfY2xrLCBkc2ktPmRhdGFfcmF0ZSk7Cj4gIAlpZiAocmV0IDwg
-MCkgewoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Hi, Matthias:
+
+On Fri, 2018-11-30 at 16:59 +0800, Matthias Brugger wrote:
+> 
+> On 30/11/2018 07:43, Stephen Boyd wrote:
+> > Quoting Matthias Brugger (2018-11-21 09:09:52)
+> >>
+> >>
+> >> On 21/11/2018 17:46, Stephen Boyd wrote:
+> >>> Quoting Rob Herring (2018-11-19 11:15:16)
+> >>>> On Sun, Nov 18, 2018 at 11:12 AM Matthias Brugger
+> >>>> <matthias.bgg@gmail.com> wrote:
+> >>>>> On 11/17/18 12:15 AM, Rob Herring wrote:
+> >>>>>> On Fri, Nov 16, 2018 at 01:54:45PM +0100, matthias.bgg@kernel.org wrote:
+> >>>>>>> -    #clock-cells = <1>;
+> >>>>>>> +
+> >>>>>>> +    mmsys_clk: clock-controller@14000000 {
+> >>>>>>> +            compatible = "mediatek,mt2712-mmsys-clk";
+> >>>>>>> +            #clock-cells = <1>;
+> >>>>>>
+> >>>>>> This goes against the general direction of not defining separate nodes
+> >>>>>> for providers with no resources.
+> >>>>>>
+> >>>>>> Why do you need this and what does it buy if you have to continue to
+> >>>>>> support the existing chips?
+> >>>>>>
+> >>>>>
+> >>>>> It would show explicitly that the mmsys block is used to probe two
+> >>>>> drivers, one for the gpu and one for the clocks. Otherwise that is
+> >>>>> hidden in the drm driver code. I think it is cleaner to describe that in
+> >>>>> the device tree.
+> >>>>
+> >>>> No, that's maybe cleaner for the driver implementation in the Linux
+> >>>> kernel. What about other OS's or when Linux drivers and subsystems
+> >>>> needs change? Cleaner for DT is design bindings that reflect the h/w.
+> >>>> Hardware is sometimes just messy.
+> >>>>
+> >>>
+> >>> I agree. I fail to see what this patch series is doing besides changing
+> >>> driver probe and device creation methods and making a backwards
+> >>> incompatible change to DT. Is there any other benefit here?
+> >>>
+> >>
+> >> You are referring whole series?
+> >> Citing the cover letter:
+> >> "MMSYS in Mediatek SoCs has some registers to control clock gates (which is
+> >> used in the clk driver) and some registers to set the routing and enable
+> >> the differnet (sic!) blocks of the display subsystem.
+> >>
+> >> Up to now both drivers, clock and drm are probed with the same device tree
+> >> compatible. But only the first driver get probed, which in effect breaks
+> >> graphics on mt8173 and mt2701.
+> > 
+> > Ouch!
+> > 
+> 
+> Yes :)
+> 
+> >>
+> >> This patch uses a platform device registration in the DRM driver, which
+> >> will trigger the probe of the corresponding clock driver. It was tested on the
+> >> bananapi-r2 and the Acer R13 Chromebook."
+> > 
+> > Alright, please don't add nodes in DT just to make device drivers probe.
+> > Instead, register clks from the drm driver or create a child platform
+> > device for the clk bits purely in the drm driver and have that probe the
+> > associated clk driver from there.
+> > 
+> 
+> I'll make the other SoCs probe via a child platform device from the drm driver,
+> as already done in 2/12 and 3/12.
+
+This series have been pending for half an year, would you keep going on
+this series? If you're busy, I could complete this series, but I need to
+know what you have plan to do.
+
+I guess that 1/12 ~ 5/12 is for MT2701/MT8173 and that patches meet this
+discussion. 6/12 ~ 12/12 is for MT2712/MT6797 but that patches does not
+meet this discussion. So the unfinished work is to make MT2712/MT6797 to
+align MT2701/MT8173, is this right?
+
+Regards,
+CK
+
+> 
+> Regards,
+> Matthias
+> 
+> >>
+> >> DT is broken right now, because two drivers rely on the same node, which gets
+> >> consumed just once. The new DT introduced does not break anything because it is
+> >> only used for boards that: "[..] are not available to the general public
+> >> (mt2712e) or only have the mmsys clock driver part implemented (mt6797)."
+> > 
+> > Ok, so backwards compatibility is irrelevant then. Sounds fine to me.
+> > 
+> > 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
