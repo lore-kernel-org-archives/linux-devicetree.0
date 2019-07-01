@@ -1,14 +1,14 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/4] net: dsa: Change DT bindings for Vitesse VSC73xx
- switches
-Date: Mon, 1 Jul 2019 09:44:49 -0700
-Message-ID: <45ff597a-5090-3874-b43d-5b5f45d2d2f6@gmail.com>
+Subject: Re: [PATCH 3/4] net: dsa: vsc73xx: add support for parallel mode
+Date: Mon, 1 Jul 2019 09:45:10 -0700
+Message-ID: <b7afaf2e-ca4e-2795-658d-2f0289203833@gmail.com>
 References: <20190701152723.624-1-paweldembicki@gmail.com>
+ <20190701152723.624-3-paweldembicki@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701152723.624-1-paweldembicki@gmail.com>
+In-Reply-To: <20190701152723.624-3-paweldembicki@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Pawel Dembicki <paweldembicki@gmail.com>
@@ -16,52 +16,65 @@ Cc: linus.walleij@linaro.org, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivi
 List-Id: devicetree@vger.kernel.org
 
 On 7/1/19 8:27 AM, Pawel Dembicki wrote:
-> This commit document changes after split vsc73xx driver into core and
-> spi part. The change of DT bindings is required for support the same
-> vsc73xx chip, which need PI bus to communicate with CPU. It also
-> introduce how to use vsc73xx platform driver.
+> This patch add platform part of vsc73xx driver.
+> It allows to use chip connected by PI interface.
 > 
 > Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 > ---
->  .../bindings/net/dsa/vitesse,vsc73xx.txt      | 74 ++++++++++++++++---
->  1 file changed, 64 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-> index ed4710c40641..c6a4cd85891c 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-> +++ b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-> @@ -2,8 +2,8 @@ Vitesse VSC73xx Switches
->  ========================
->  
->  This defines device tree bindings for the Vitesse VSC73xx switch chips.
-> -The Vitesse company has been acquired by Microsemi and Microsemi in turn
-> -acquired by Microchip but retains this vendor branding.
-> +The Vitesse company has been acquired by Microsemi and Microsemi has
-> +been acquired Microchip but retains this vendor branding.
->  
->  The currently supported switch chips are:
->  Vitesse VSC7385 SparX-G5 5+1-port Integrated Gigabit Ethernet Switch
-> @@ -11,16 +11,26 @@ Vitesse VSC7388 SparX-G8 8-port Integrated Gigabit Ethernet Switch
->  Vitesse VSC7395 SparX-G5e 5+1-port Integrated Gigabit Ethernet Switch
->  Vitesse VSC7398 SparX-G8e 8-port Integrated Gigabit Ethernet Switch
->  
-> -The device tree node is an SPI device so it must reside inside a SPI bus
-> -device tree node, see spi/spi-bus.txt
-> +This switch could have two different management interface.
-> +
-> +If SPI interface is used, the device tree node is an SPI device so it must
-> +reside inside a SPI bus device tree node, see spi/spi-bus.txt
-> +
-> +If Platform driver is used, the device tree node is an platform device so it
-> +must reside inside a platform bus device tree node.
 
-That should not be required because the device remains the same and how
-it connects to the host is entirely described by the Device Tree topology.
+[snip]
 
-Take b53 for instance which supports MDIO and SPI by default, and
-optionally memory mapped and SRAB (indirect memory map) accesses, they
-all have the same compatible strings. Whether the switches will appear
-as spi_device, platform_device, or something else is entirely based on
-how the Device Tree is laid out.
+> +	struct vsc73xx_platform *vsc_platform = vsc->priv;
+> +	u32 offset;
+> +
+> +	if (!vsc73xx_is_addr_valid(block, subblock))
+> +		return -EINVAL;
+> +
+> +	offset = vsc73xx_make_addr(block, subblock, reg);
+> +
+> +	mutex_lock(&vsc->lock);
+> +		iowrite32be(val, vsc_platform->base_addr + offset);
+> +	mutex_unlock(&vsc->lock);
+
+Similar question from Andrew, why is the locking done in the platform
+layer, should not that be done in the core I/O operation instead?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int vsc73xx_platform_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct vsc73xx_platform *vsc_platform;
+> +	struct resource *res = NULL;
+> +	int ret;
+> +
+> +	vsc_platform = devm_kzalloc(dev, sizeof(*vsc_platform), GFP_KERNEL);
+> +	if (!vsc_platform)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, vsc_platform);
+> +	vsc_platform->pdev = pdev;
+> +	vsc_platform->vsc.dev = dev;
+> +	vsc_platform->vsc.priv = vsc_platform;
+> +	vsc_platform->vsc.ops = &vsc73xx_platform_ops;
+> +
+> +	/* obtain I/O memory space */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "cannot obtain I/O memory space\n");
+> +		ret = -ENXIO;
+> +		return ret;
+> +	}
+> +
+> +	vsc_platform->base_addr = devm_ioremap_resource(&pdev->dev, res);
+
+devm_ioremap_resource takes care of checking that the resource pointer
+is valid, no need to do that here.
+
+> +	if (!vsc_platform->base_addr) {
+
+if (IS_ERR(vsc_platform->base_addr))
 -- 
 Florian
