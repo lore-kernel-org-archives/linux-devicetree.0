@@ -1,35 +1,74 @@
-From: <qii.wang@mediatek.com>
-Subject: [PATCH] dt-bindings: i3c: cdns: Use correct cells for I2C device
-Date: Mon, 1 Jul 2019 14:42:02 +0800
-Message-ID: <1561963322-11513-1-git-send-email-qii.wang@mediatek.com>
+From: Brian Dodge <bdodge09@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: backlight: fix vendor prefix for ArcticSand
+ arcxcnn driver bindings
+Date: Sun, 30 Jun 2019 20:28:14 -0400
+Message-ID: <1561940895-15837-2-git-send-email-bdodge09@gmail.com>
+References: <1561940895-15837-1-git-send-email-bdodge09@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bbrezillon@kernel.org
-Cc: robh+dt@kernel.org, linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, qii.wang@mediatek.com, matthias.bgg@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1561940895-15837-1-git-send-email-bdodge09@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, Brian Dodge <bdodge09@gmail.com>, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Qii Wang <qii.wang@mediatek.com>
-
-I2C device reg should be "reg = <0x52 0x0 0x10>;"
-
-Signed-off-by: Qii Wang <qii.wang@mediatek.com>
----
- .../devicetree/bindings/i3c/cdns,i3c-master.txt    |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt b/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
-index 69da211..1cf6182 100644
---- a/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
-+++ b/Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
-@@ -38,6 +38,6 @@ Example:
- 
- 		nunchuk: nunchuk@52 {
- 			compatible = "nintendo,nunchuk";
--			reg = <0x52 0x80000010 0>;
-+			reg = <0x52 0x0 0x10>;
- 		};
- 	};
--- 
-1.7.9.5
+VGhlIHZlbmRvci1wcmVmaXhlcy50eHQgZmlsZSBwcm9wZXJseSByZWZlcnMgdG8gQXJjdGljU2Fu
+ZAphcyBhcmN0aWMgYnV0IHRoZSBkcml2ZXIgYmluZGluZ3MgaW1wcm9wZXJseSBhYmJyZXZpYXRl
+ZCB0aGUKcHJlZml4IHRvIGFyYy4gVGhpcyB3YXMgYSBtaXN0YWtlIGluIHRoZSBvcmlnaW5hbCBw
+YXRjaC4gVGhpcwpwYXRjaCBhZGRzICJhcmN0aWMiIGFuZCByZXRhaW5zICJhcmMiIChkZXByZWNh
+dGVkKSBiaW5kaW5ncwoKU2lnbmVkLW9mZi1ieTogQnJpYW4gRG9kZ2UgPGJkb2RnZTA5QGdtYWls
+LmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvYXJjeGNubl9ibC50eHQgICAg
+ICAgICB8IDMxICsrKysrKysrKysrKysrKy0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAyMSBpbnNl
+cnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvYXJjeGNubl9ibC50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvYXJjeGNubl9ibC50eHQK
+aW5kZXggMjMwYWJkZS4uNGQ5ODM5NCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5fYmwudHh0CisrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4dApA
+QCAtMSw4ICsxLDEzIEBACi1CaW5kaW5nIGZvciBBcmN0aWNTYW5kIGFyYzJjMDYwOCBMRUQgZHJp
+dmVyCitCaW5kaW5nIGZvciBBcmN0aWNTYW5kIGFyYyBmYW1pbHkgTEVEIGRyaXZlcnMKIAogUmVx
+dWlyZWQgcHJvcGVydGllczoKLS0gY29tcGF0aWJsZToJCXNob3VsZCBiZSAiYXJjLGFyYzJjMDYw
+OCIKLS0gcmVnOgkJCXNsYXZlIGFkZHJlc3MKKy0gY29tcGF0aWJsZTogb25lIG9mCisJImFyY3Rp
+YyxhcmMxYzA2MDgiCisJImFyY3RpYyxhcmMyYzA2MDgiCisJImFyY3RpYyxhcmMzYzA4NDUiCisJ
+ImFyYyxhcmMyYzA2MDgiIChkZXByZWNhdGVkKQorCistIHJlZzoJCXNsYXZlIGFkZHJlc3MKIAog
+T3B0aW9uYWwgcHJvcGVydGllczoKIC0gZGVmYXVsdC1icmlnaHRuZXNzOglicmlnaHRuZXNzIHZh
+bHVlIG9uIGJvb3QsIHZhbHVlIGZyb206IDAtNDA5NQpAQCAtMTEsMTkgKzE2LDI1IEBAIE9wdGlv
+bmFsIHByb3BlcnRpZXM6CiAtIGxlZC1zb3VyY2VzOgkJTGlzdCBvZiBlbmFibGVkIGNoYW5uZWxz
+IGZyb20gMCB0byA1LgogCQkJU2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9s
+ZWRzL2NvbW1vbi50eHQKIAotLSBhcmMsbGVkLWNvbmZpZy0wOglzZXR0aW5nIGZvciByZWdpc3Rl
+ciBJTEVEX0NPTkZJR18wCi0tIGFyYyxsZWQtY29uZmlnLTE6CXNldHRpbmcgZm9yIHJlZ2lzdGVy
+IElMRURfQ09ORklHXzEKLS0gYXJjLGRpbS1mcmVxOgkJUFdNIG1vZGUgZnJlcXVlbmNlIHNldHRp
+bmcgKGJpdHMgWzM6MF0gdXNlZCkKLS0gYXJjLGNvbXAtY29uZmlnOglzZXR0aW5nIGZvciByZWdp
+c3RlciBDT05GSUdfQ09NUAotLSBhcmMsZmlsdGVyLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0
+ZXIgRklMVEVSX0NPTkZJRwotLSBhcmMsdHJpbS1jb25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVy
+IElNQVhUVU5FCistIGFyY3RpYyxsZWQtY29uZmlnLTA6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElM
+RURfQ09ORklHXzAKKy0gYXJjdGljLGxlZC1jb25maWctMToJc2V0dGluZyBmb3IgcmVnaXN0ZXIg
+SUxFRF9DT05GSUdfMQorLSBhcmN0aWMsZGltLWZyZXE6CVBXTSBtb2RlIGZyZXF1ZW5jZSBzZXR0
+aW5nIChiaXRzIFszOjBdIHVzZWQpCistIGFyY3RpYyxjb21wLWNvbmZpZzoJc2V0dGluZyBmb3Ig
+cmVnaXN0ZXIgQ09ORklHX0NPTVAKKy0gYXJjdGljLGZpbHRlci1jb25maWc6CXNldHRpbmcgZm9y
+IHJlZ2lzdGVyIEZJTFRFUl9DT05GSUcKKy0gYXJjdGljLHRyaW0tY29uZmlnOglzZXR0aW5nIGZv
+ciByZWdpc3RlciBJTUFYVFVORQorLSBhcmMsbGVkLWNvbmZpZy0wOglzZXR0aW5nIGZvciByZWdp
+c3RlciBJTEVEX0NPTkZJR18wIChkZXByZWNhdGVkKQorLSBhcmMsbGVkLWNvbmZpZy0xOglzZXR0
+aW5nIGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18xIChkZXByZWNhdGVkKQorLSBhcmMsZGltLWZy
+ZXE6CQlQV00gbW9kZSBmcmVxdWVuY2Ugc2V0dGluZyAoYml0cyBbMzowXSB1c2VkKSAoZGVwcmVj
+YXRlZCkKKy0gYXJjLGNvbXAtY29uZmlnOglzZXR0aW5nIGZvciByZWdpc3RlciBDT05GSUdfQ09N
+UCAoZGVwcmVjYXRlZCkKKy0gYXJjLGZpbHRlci1jb25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVy
+IEZJTFRFUl9DT05GSUcgKGRlcHJlY2F0ZWQpCistIGFyYyx0cmltLWNvbmZpZzoJc2V0dGluZyBm
+b3IgcmVnaXN0ZXIgSU1BWFRVTkUgKGRlcHJlY2F0ZWQpCiAKIE5vdGU6IE9wdGlvbmFsIHByb3Bl
+cnRpZXMgbm90IHNwZWNpZmllZCB3aWxsIGRlZmF1bHQgdG8gdmFsdWVzIGluIElDIEVQUk9NCiAK
+IEV4YW1wbGU6CiAKIGFyYzJjMDYwOEAzMCB7Ci0JY29tcGF0aWJsZSA9ICJhcmMsYXJjMmMwNjA4
+IjsKKwljb21wYXRpYmxlID0gImFyY3RpYyxhcmMyYzA2MDgiOwogCXJlZyA9IDwweDMwPjsKIAlk
+ZWZhdWx0LWJyaWdodG5lc3MgPSA8NTAwPjsKIAlsYWJlbCA9ICJsY2QtYmFja2xpZ2h0IjsKLS0g
+CjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
