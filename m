@@ -1,73 +1,65 @@
-From: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH 4/4] devicetree: Add led-backlight binding
-Date: Mon, 1 Jul 2019 17:14:23 +0200
-Message-ID: <20190701151423.30768-5-jjhiblot@ti.com>
-References: <20190701151423.30768-1-jjhiblot@ti.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v14 11/13] MIPS: CI20: Reduce system timer and clocksource to 3 MHz
+Date: Mon,  1 Jul 2019 17:14:08 +0200
+Message-ID: <20190701151410.23127-12-paul@crapouillou.net>
+References: <20190701151410.23127-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701151423.30768-1-jjhiblot@ti.com>
+In-Reply-To: <20190701151410.23127-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com
-Cc: dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, Jean-Jacques Hiblot <jjhiblot@ti.com>, devicetree@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+The default clock (48 MHz) is too fast for the system timer.
 
-Add DT binding for led-backlight.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
- .../video/backlight/led-backlight.txt         | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/led-backlight.txt
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/led-backlight.txt b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
-new file mode 100644
-index 000000000000..216cd52d624a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
-@@ -0,0 +1,39 @@
-+led-backlight bindings
+Notes:
+    v5: New patch
+    
+    v6: Set also the rate for the clocksource channel's clock
+    
+    v7: No change
+    
+    v8: No change
+    
+    v9: Don't configure clock timer1, as the OS Timer is used as
+    	clocksource on this SoC
+    
+    v10: Revert back to v8 bahaviour. Let the user choose what
+    	 clocksource should be used.
+    
+    v11-v14: No change
+
+ arch/mips/boot/dts/ingenic/ci20.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 4f7b1fa31cf5..2e9952311ecd 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -2,6 +2,7 @@
+ /dts-v1/;
+ 
+ #include "jz4780.dtsi"
++#include <dt-bindings/clock/ingenic,tcu.h>
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+@@ -238,3 +239,9 @@
+ 		bias-disable;
+ 	};
+ };
 +
-+The node of the backlight driver IS the node of the LED.
-+
-+Required properties:
-+  - compatible: "led-backlight"
-+  - brightness-levels: Array of distinct LED brightness levels. These
-+      are in the range from 0 to 255, passed to the LED class driver.
-+  - default-brightness-level: the default brightness level (index into the
-+      array defined by the "brightness-levels" property)
-+
-+Optional properties:
-+  - power-supply: regulator for supply voltage
-+  - enable-gpios: contains a single GPIO specifier for the GPIO which enables
-+                  and disables the backlight (see GPIO binding[0])
-+
-+[0]: Documentation/devicetree/bindings/gpio/gpio.txt
-+
-+Example:
-+
-+led_ctrl {
-+	red_led@1 {
-+	        label = "red";
-+		reg = <1>;
-+	}
-+
-+	backlight_led@2 {
-+		function = LED_FUNCTION_BACKLIGHT;
-+		reg = <2>;
-+
-+		compatible = "led-backlight";
-+
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+
-+		power-supply = <&vdd_bl_reg>;
-+		enable-gpios = <&gpio 58 0>;
-+	};
++&tcu {
++	/* 3 MHz for the system timer and clocksource */
++	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>;
++	assigned-clock-rates = <3000000>, <3000000>;
 +};
 -- 
-2.17.1
+2.21.0.593.g511ec345e18
