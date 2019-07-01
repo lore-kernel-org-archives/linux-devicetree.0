@@ -1,113 +1,145 @@
-From: Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: chosen: document panel-id
- binding
-Date: Mon, 1 Jul 2019 08:28:45 -0600
-Message-ID: <a8af7d1d-f0f4-ae5c-b06b-5a8ec1debd7e@codeaurora.org>
-References: <20190630203614.5290-1-robdclark@gmail.com>
- <20190630203614.5290-2-robdclark@gmail.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: chosen: document panel-id binding
+Date: Mon, 1 Jul 2019 07:41:52 -0700
+Message-ID: <CAF6AEGvRXZAannGisHjsaW4Pg3v2ma5WHK2phqg8TaF53pR8XQ@mail.gmail.com>
+References: <20190630203614.5290-1-robdclark@gmail.com> <20190630203614.5290-2-robdclark@gmail.com>
  <CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Clark <robdclark-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, aarch64-laptops-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKMULJJ9CERRBpqd7Y2dtovEJ6jcDKy6J4yR6rAdjibUg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, freedreno <freedreno@lists.freedesktop.org>, aarch64-laptops@lists.linaro.org, Rob Clark <robdclark@chromium.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gNy8xLzIwMTkgODowMyBBTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gU3VuLCBKdW4gMzAs
-IDIwMTkgYXQgMjozNiBQTSBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+IHdyb3RlOgo+
-Pgo+PiBGcm9tOiBSb2IgQ2xhcmsgPHJvYmRjbGFya0BjaHJvbWl1bS5vcmc+Cj4+Cj4+IFRoZSBw
-YW5lbC1pZCBwcm9wZXJ0eSBpbiBjaG9zZW4gY2FuIGJlIHVzZWQgdG8gY29tbXVuaWNhdGUgd2hp
-Y2ggcGFuZWwsCj4+IG9mIG11bHRpcGxlIHBvc3NpYmlsaXRpZXMsIGlzIGluc3RhbGxlZC4KPj4K
-Pj4gU2lnbmVkLW9mZi1ieTogUm9iIENsYXJrIDxyb2JkY2xhcmtAY2hyb21pdW0ub3JnPgo+PiAt
-LS0KPj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2hvc2VuLnR4dCB8IDY5
-ICsrKysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDY5IGluc2VydGlvbnMo
-KykKPiAKPiBJIG5lZWQgdG8gdXBkYXRlIHRoaXMgZmlsZSB0byBzYXkgaXQncyBtb3ZlZCB0byB0
-aGUgc2NoZW1hIHJlcG9zaXRvcnkuLi4KPiAKPiBCdXQgSSBkb24ndCB0aGluayB0aGF0IHdpbGwg
-bWF0dGVyLi4uCj4gCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvY2hvc2VuLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jaG9z
-ZW4udHh0Cj4+IGluZGV4IDQ1ZTc5MTcyYTY0Ni4uZDUwMmU2NDg5YjhiIDEwMDY0NAo+PiAtLS0g
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2hvc2VuLnR4dAo+PiArKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2hvc2VuLnR4dAo+PiBAQCAtNjgsNiAr
-NjgsNzUgQEAgb24gUG93ZXJQQyAic3Rkb3V0IiBpZiAic3Rkb3V0LXBhdGgiIGlzIG5vdCBmb3Vu
-ZC4gIEhvd2V2ZXIsIHRoZQo+PiAgICJsaW51eCxzdGRvdXQtcGF0aCIgYW5kICJzdGRvdXQiIHBy
-b3BlcnRpZXMgYXJlIGRlcHJlY2F0ZWQuIE5ldyBwbGF0Zm9ybXMKPj4gICBzaG91bGQgb25seSB1
-c2UgdGhlICJzdGRvdXQtcGF0aCIgcHJvcGVydHkuCj4+Cj4+ICtwYW5lbC1pZAo+PiArLS0tLS0t
-LS0KPj4gKwo+PiArRm9yIGRldmljZXMgdGhhdCBoYXZlIG11bHRpcGxlIHBvc3NpYmxlIGRpc3Bs
-YXkgcGFuZWxzIChtdWx0aS1zb3VyY2luZyB0aGUKPj4gK2Rpc3BsYXkgcGFuZWxzIGlzIGNvbW1v
-biBvbiBsYXB0b3BzLCBwaG9uZXMsIHRhYmxldHMpLCB0aGlzIGFsbG93cyB0aGUKPj4gK2Jvb3Rs
-b2FkZXIgdG8gY29tbXVuaWNhdGUgd2hpY2ggcGFuZWwgaXMgaW5zdGFsbGVkLCBlLmcuCj4gCj4g
-SG93IGRvZXMgdGhlIGJvb3Rsb2FkZXIgZmlndXJlIG91dCB3aGljaCBwYW5lbD8gV2h5IGNhbid0
-IHRoZSBrZXJuZWwKPiBkbyB0aGUgc2FtZSB0aGluZz8KCkl0cyBwbGF0Zm9ybSBzcGVjaWZpYy4g
-IEluIHRoZSBkZXZpY2VzIHRoYXQgUm9iIENsYXJrIHNlZW1zIGludGVyZXN0ZWQKaW4sIHRoZXJl
-IGFyZSBtdWx0aXBsZSBtZWNoYW5pc21zIGluIHBsYWNlIC0gcmVhZCBhIGdwaW8sIGVuYWJsZSB0
-aGUKRFNJIGFuZCBzZW5kIGEgc3BlY2lmaWMgY29tbWFuZCB0byB0aGUgcGFuZWwgY29udHJvbGxl
-ciBhc2tpbmcgZm9yIGl0cwpwYW5lbCBpZCwgb3IgcmVhZCBzb21lIGVmdXNlcy4KClRoZSBlZnVz
-ZXMgbWF5IG5vdCBiZSBhY2Nlc3NpYmxlIGJ5IExpbnV4LgoKVGhlIERTSSBzb2x1dGlvbiBpcyBw
-cm9ibGVtYXRpYyBiZWNhdXNlIGl0IGNhdXNlcyBhIGNoaWNrZW4gYW5kIGVnZwpzaXR1YXRpb24g
-d2hlcmUgbGludXggbmVlZHMgdGhlIERUIHRvIHByb2JlIHRoZSBEU0kgZHJpdmVyIHRvIHF1ZXJ5
-CnRoZSBwYW5lbCwgaW4gb3JkZXIgdG8gZWRpdCB0aGUgRFQgdG8gcHJvYmUgRFNJL3BhbmVsLgoK
-SW4gdGhlIHN5c3RlbXMgUm9iIENsYXJrIGlzIGludGVyZXN0ZWQgaW4sIHRoZSBGVyBhbHJlYWR5
-IHByb3ZpZGVzIGEKc3BlY2lmaWMgRUZJIHZhcmlhYmxlIHdpdGggdGhlIHBhbmVsIGlkIGVuY29k
-ZWQgaW4gaXQgZm9yIEhMT1MgdG8gdXNlCihhbHRob3VnaCB0aGlzIGlzIGJyb2tlbiBvbiBzb21l
-IG9mIHRoZSBkZXZpY2VzKSwgYnV0IHRoaXMgaXMgYQpzcGVjaWZpYyB2ZW5kb3IncyBzb2x1dGlv
-bi4KClRoZSBGVy9ib290bG9hZGVyIGhhcyBwcm9iYWJseSBhbHJlYWR5IGZpZ3VyZWQgb3V0IHRo
-ZSBwYW5lbCBkZXRhaWxzCmFuZCBicm91Z2h0IHVwIHRoZSBkaXNwbGF5IGZvciBhIGJvb3Qgc3Bs
-YXNoLCBiaW9zIG1lbnUsIGV0Yy4gIEknbSBub3QKc3VyZSBpdCBtYWtlcyBhIGxvdCBvZiBzZW5z
-ZSB0byBkZWZpbmUgTiBtZWNoYW5pc21zIGZvciBsaW51eCB0bwpmaWd1cmUgb3V0IHRoZSBzYW1l
-IGFjcm9zcyBldmVyeSBwbGF0Zm9ybS92ZW5kb3IuCgo+IAo+PiArCj4+ICsvIHsKPj4gKyAgICAg
-ICBjaG9zZW4gewo+PiArICAgICAgICAgICAgICAgcGFuZWwtaWQgPSA8MHhjND47Cj4+ICsgICAg
-ICAgfTsKPj4gKwo+PiArICAgICAgIGl2b19wYW5lbCB7Cj4+ICsgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gIml2byxtMTMzbndmNC1yMCI7Cj4+ICsgICAgICAgICAgICAgICBwb3dlci1zdXBw
-bHkgPSA8JnZsY21fM3YzPjsKPj4gKyAgICAgICAgICAgICAgIG5vLWhwZDsKPj4gKwo+PiArICAg
-ICAgICAgICAgICAgcG9ydHMgewo+PiArICAgICAgICAgICAgICAgICAgICAgICBwb3J0IHsKPj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpdm9fcGFuZWxfaW5fZWRwOiBlbmRwb2lu
-dCB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5k
-cG9pbnQgPSA8JnNuNjVkc2k4Nl9vdXRfaXZvPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB9Owo+PiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+PiArICAgICAgICAgICAg
-ICAgfTsKPj4gKyAgICAgICB9Owo+PiArCj4+ICsgICAgICAgYm9lX3BhbmVsIHsKPj4gKyAgICAg
-ICAgICAgICAgIGNvbXBhdGlibGUgPSAiYm9lLG52MTMzZmhtLW42MSI7Cj4gCj4gQm90aCBwYW5l
-bHMgYXJlIGdvaW5nIHRvIHByb2JlLiBTbyB0aGUgYm9vdGxvYWRlciBuZWVkcyB0byBkaXNhYmxl
-IHRoZQo+IG5vdCBwb3B1bGF0ZWQgcGFuZWwgc2V0dGluZyAnc3RhdHVzJyAob3IgZGVsZXRlIHRo
-ZSBub2RlKS4gSWYgeW91IGRvCj4gdGhhdCwgZG8geW91IGV2ZW4gbmVlZCAncGFuZWwtaWQnPwo+
-IAo+PiArICAgICAgICAgICAgICAgcG93ZXItc3VwcGx5ID0gPCZ2bGNtXzN2Mz47Cj4+ICsgICAg
-ICAgICAgICAgICBuby1ocGQ7Cj4+ICsKPj4gKyAgICAgICAgICAgICAgIHBvcnRzIHsKPj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgcG9ydCB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgYm9lX3BhbmVsX2luX2VkcDogZW5kcG9pbnQgewo+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZzbjY1ZHNpODZfb3V0X2Jv
-ZT47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgfTsKPj4gKyAgICAgICAgICAgICAgIH07Cj4+ICsgICAgICAgfTsKPj4gKwo+
-PiArICAgICAgIGRpc3BsYXlfb3JfYnJpZGdlX2RldmljZSB7Cj4+ICsKPj4gKyAgICAgICAgICAg
-ICAgIHBvcnRzIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8
-MT47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+PiArCj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgIC4uLgo+PiArCj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIHBvcnRAMCB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2Vs
-bHMgPSA8MD47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDA+Owo+
-PiArCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZW5kcG9pbnRAYzQgewo+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4YzQ+Owo+IAo+
-IFdoYXQgZG9lcyB0aGlzIG51bWJlciByZXByZXNlbnQ/IEl0IGlzIHN1cHBvc2VkIHRvIGJlIGRl
-ZmluZWQgYnkgdGhlCj4gZGlzcGxheV9vcl9icmlkZ2VfZGV2aWNlLCBub3QgYSBzcGVjaWZpYyBw
-YW5lbC4KCkl0cyB0aGUgc3BlY2lmaWMgRlcvYm9vdGxvYWRlciBkZWZpbmVkIHBhbmVsIGlkLCB0
-aGF0IG1hdGNoZXMgdGhlCmFib3ZlIGRlZmluZWQgcGFuZWwtaWQgcHJvcGVydHkuCgo+IAo+IFdl
-IGFsc28gbmVlZCB0byBjb25zaWRlciBob3cgdGhlIERTSSBjYXNlIHdpdGggcGFuZWxzIGFzIGNo
-aWxkcmVuIG9mCj4gdGhlIERTSSBjb250cm9sbGVyIHdvdWxkIHdvcmsgYW5kIGhvdyB0aGlzIHdv
-dWxkIHdvcmsgd2l0aCBtdWx0aXBsZQo+IGRpc3BsYXlzIGVhY2ggaGF2aW5nIG11bHRpcGxlIHBh
-bmVsIG9wdGlvbnMuCj4gCj4gUm9iCj4gCgoKLS0gCkplZmZyZXkgSHVnbwpRdWFsY29tbSBEYXRh
-Y2VudGVyIFRlY2hub2xvZ2llcyBhcyBhbiBhZmZpbGlhdGUgb2YgUXVhbGNvbW0gClRlY2hub2xv
-Z2llcywgSW5jLgpRdWFsY29tbSBUZWNobm9sb2dpZXMsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhl
-CkNvZGUgQXVyb3JhIEZvcnVtLCBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9q
-ZWN0LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVl
-ZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
+On Mon, Jul 1, 2019 at 7:03 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Sun, Jun 30, 2019 at 2:36 PM Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > The panel-id property in chosen can be used to communicate which panel,
+> > of multiple possibilities, is installed.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  Documentation/devicetree/bindings/chosen.txt | 69 ++++++++++++++++++++
+> >  1 file changed, 69 insertions(+)
+>
+> I need to update this file to say it's moved to the schema repository...
+>
+> But I don't think that will matter...
+>
+> > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> > index 45e79172a646..d502e6489b8b 100644
+> > --- a/Documentation/devicetree/bindings/chosen.txt
+> > +++ b/Documentation/devicetree/bindings/chosen.txt
+> > @@ -68,6 +68,75 @@ on PowerPC "stdout" if "stdout-path" is not found.  However, the
+> >  "linux,stdout-path" and "stdout" properties are deprecated. New platforms
+> >  should only use the "stdout-path" property.
+> >
+> > +panel-id
+> > +--------
+> > +
+> > +For devices that have multiple possible display panels (multi-sourcing the
+> > +display panels is common on laptops, phones, tablets), this allows the
+> > +bootloader to communicate which panel is installed, e.g.
+>
+> How does the bootloader figure out which panel? Why can't the kernel
+> do the same thing?
+
+see jhugo's response, he has I guess more access to the bootloader than I
+
+> > +
+> > +/ {
+> > +       chosen {
+> > +               panel-id = <0xc4>;
+> > +       };
+> > +
+> > +       ivo_panel {
+> > +               compatible = "ivo,m133nwf4-r0";
+> > +               power-supply = <&vlcm_3v3>;
+> > +               no-hpd;
+> > +
+> > +               ports {
+> > +                       port {
+> > +                               ivo_panel_in_edp: endpoint {
+> > +                                       remote-endpoint = <&sn65dsi86_out_ivo>;
+> > +                               };
+> > +                       };
+> > +               };
+> > +       };
+> > +
+> > +       boe_panel {
+> > +               compatible = "boe,nv133fhm-n61";
+>
+> Both panels are going to probe. So the bootloader needs to disable the
+> not populated panel setting 'status' (or delete the node). If you do
+> that, do you even need 'panel-id'?
+
+I don't think we can rely on bootloader knowing a thing about DT on
+these devices..
+
+OTOH I don't really think it is a big problem for both panels to
+probe.  But I suppose it might be possible to have something somewhere
+in the kernel that realizes and disables the unused panels.
+
+> > +               power-supply = <&vlcm_3v3>;
+> > +               no-hpd;
+> > +
+> > +               ports {
+> > +                       port {
+> > +                               boe_panel_in_edp: endpoint {
+> > +                                       remote-endpoint = <&sn65dsi86_out_boe>;
+> > +                               };
+> > +                       };
+> > +               };
+> > +       };
+> > +
+> > +       display_or_bridge_device {
+> > +
+> > +               ports {
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +
+> > +                       ...
+> > +
+> > +                       port@0 {
+> > +                               #address-cells = <1>;
+> > +                               #size-cells = <0>;
+> > +                               reg = <0>;
+> > +
+> > +                               endpoint@c4 {
+> > +                                       reg = <0xc4>;
+>
+> What does this number represent? It is supposed to be defined by the
+> display_or_bridge_device, not a specific panel.
+
+it matches /chosen/panel-id.. in this case I'm not sure how the
+panel-id's are assigned, but for our purposes all that matters is that
+they are assigned.
+
+> We also need to consider how the DSI case with panels as children of
+> the DSI controller would work and how this would work with multiple
+> displays each having multiple panel options.
+
+In the non-bridge case (panel hooked directly to dsi controller), the
+dsi controller could use the same ports {} mechanism.
+
+For multiple displays, we could extend, I suppose, /chosen/panel-id to
+be an array of id's indexed by display.  I think this is the type of
+extension we could do later when the use-case comes up.  Just having
+this solved upstream for single display would already be a huge
+advancement.  (You don't want to look at how this is solved downstream
+for android phones.)
+
+Btw, if you are curious how this works on windows/ACPI, the ACPI
+tables have entries for each of the panels.  The kernel is expected to
+take the panel-id from that EFI variable that jhugo mentioned, and
+pass it to a _ROM method which returns the appropriate panel table.
+(Not entirely sure how the orchestrate reading the EFI variable early,
+since it does not appear to be available after ExitBootServices)
+
+BR,
+-R
