@@ -1,79 +1,103 @@
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v10 04/12] mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
-Date: Mon, 1 Jul 2019 15:48:34 +0800
-Message-ID: <20190701074842.15401-5-bibby.hsieh@mediatek.com>
-References: <20190701074842.15401-1-bibby.hsieh@mediatek.com>
+From: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v10 00/12] support gce on mt8183 platform
+Date: Mon, 1 Jul 2019 15:48:30 +0800
+Message-ID: <20190701074842.15401-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701074842.15401-1-bibby.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Houlong Wei <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ginny.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The interrupt mask and thread number has positive correlation,
-so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
-it by thread number.
+Changes since v8 and v9:
+ - change the error return code in cmdq_dev_get_client_reg()
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
----
- drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+Changes since v7:
+ - remove the memory allocation out of cmdq_dev_get_client_reg()
+ - rebase onto 5.2-rc1
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 00d5219094e5..8fddd26288e8 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -18,7 +18,6 @@
- #include <linux/of_device.h>
- 
- #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
--#define CMDQ_IRQ_MASK			0xffff
- #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
- 
- #define CMDQ_CURR_IRQ_STATUS		0x10
-@@ -72,6 +71,7 @@ struct cmdq {
- 	void __iomem		*base;
- 	u32			irq;
- 	u32			thread_nr;
-+	u32			irq_mask;
- 	struct cmdq_thread	*thread;
- 	struct clk		*clock;
- 	bool			suspended;
-@@ -285,11 +285,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
- 	unsigned long irq_status, flags = 0L;
- 	int bit;
- 
--	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
--	if (!(irq_status ^ CMDQ_IRQ_MASK))
-+	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
-+	if (!(irq_status ^ cmdq->irq_mask))
- 		return IRQ_NONE;
- 
--	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
-+	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
- 		struct cmdq_thread *thread = &cmdq->thread[bit];
- 
- 		spin_lock_irqsave(&thread->chan->lock, flags);
-@@ -473,6 +473,9 @@ static int cmdq_probe(struct platform_device *pdev)
- 		dev_err(dev, "failed to get irq\n");
- 		return -EINVAL;
- 	}
-+
-+	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
-+	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
- 	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
- 			       "mtk_cmdq", cmdq);
- 	if (err < 0) {
-@@ -489,7 +492,6 @@ static int cmdq_probe(struct platform_device *pdev)
- 		return PTR_ERR(cmdq->clock);
- 	}
- 
--	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
- 	cmdq->mbox.dev = dev;
- 	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
- 					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
+Changes since v6:
+ - remove cmdq_dev_get_event function and gce event property
+ - separate some changes to indepentent patch
+ - change the binding document related to gce-client-reg property
+
+Changes since v5:
+ - fix typo
+ - remove gce-event-name form the dt-binding
+ - add reasons in commit message
+
+Changes since v4:
+ - refine the architecture of the packet encoder function
+ - refine the gce enevt property
+ - change the patch's title
+
+Changes since v3:
+ - fix a typo in dt-binding and dtsi
+ - cast the return value to right format
+
+Changes since v2:
+ - according to CK's review comment, change the property name and
+   refine the parameter
+ - change the patch's title
+ - remove unused property from dt-binding and dts
+
+Changes since v1:
+ - add prefix "cmdq" in the commit subject
+ - add dt-binding document for get event and subsys function
+ - add fix up tag in fixup patch
+ - fix up some coding style (alignment)
+
+MTK will support gce function on mt8183 platform.
+  dt-binding: gce: add gce header file for mt8183
+  mailbox: mediatek: cmdq: support mt8183 gce function
+  arm64: dts: add gce node for mt8183
+
+Besides above patches, we refine gce driver on those patches.
+  soc: mediatek: cmdq: reorder the parameter
+  soc: mediatek: cmdq: change the type of input parameter
+  mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
+  soc: mediatek: cmdq: clear the event in cmdq initial flow
+
+In order to enhance the convenience of gce usage, we add new helper functions and refine the method of instruction combining.
+  dt-binding: gce: remove thread-num property
+  dt-binding: gce: add binding for gce client reg property
+  soc: mediatek: cmdq: define the instruction struct
+  soc: mediatek: cmdq: add polling function
+  soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
+
+Bibby Hsieh (12):
+  dt-binding: gce: remove thread-num property
+  dt-binding: gce: add gce header file for mt8183
+  dt-binding: gce: add binding for gce client reg property
+  mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
+  mailbox: mediatek: cmdq: support mt8183 gce function
+  soc: mediatek: cmdq: clear the event in cmdq initial flow
+  soc: mediatek: cmdq: reorder the parameter
+  soc: mediatek: cmdq: change the type of input parameter
+  soc: mediatek: cmdq: define the instruction struct
+  soc: mediatek: cmdq: add polling function
+  soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
+  arm64: dts: add gce node for mt8183
+
+ .../devicetree/bindings/mailbox/mtk-gce.txt   |  25 ++-
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  11 ++
+ drivers/mailbox/mtk-cmdq-mailbox.c            |  18 +-
+ drivers/soc/mediatek/mtk-cmdq-helper.c        | 169 +++++++++++++----
+ include/dt-bindings/gce/mt8183-gce.h          | 177 ++++++++++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h      |   5 +
+ include/linux/soc/mediatek/mtk-cmdq.h         |  53 +++++-
+ 7 files changed, 397 insertions(+), 61 deletions(-)
+ create mode 100644 include/dt-bindings/gce/mt8183-gce.h
+
 -- 
 2.18.0
