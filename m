@@ -1,35 +1,34 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC 05/11] dt-bindings: soc: amlogic: clk-measure: Add SM1 compatible
-Date: Mon,  1 Jul 2019 12:46:59 +0200
-Message-ID: <20190701104705.18271-6-narmstrong@baylibre.com>
-References: <20190701104705.18271-1-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Oliver Graute <oliver.graute@gmail.com>
+Subject: [PATCHv2 0/2] arm64: dts: add basic DTS for imx8qm-rom7720 board
+Date: Mon,  1 Jul 2019 13:42:44 +0200
+Message-ID: <20190701114253.1538-1-oliver.graute@kococonnector.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701104705.18271-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jbrunet@baylibre.com, khilman@baylibre.com, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
+To: aisheng.dong@nxp.com
+Cc: sboyd@kernel.org, mturquette@baylibre.com, Oliver Graute <oliver.graute@kococonnector.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Li Yang <leoyang.li@nxp.com>, Sriram Dash <sriram.dash@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, Pankaj Bansal <pankaj.bansal@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-k
 List-Id: devicetree@vger.kernel.org
 
-Add the Amlogic SM1 Compatible for the clk-measurer IP.
+This patchset is ontop of Aisheng Dongs clock driver changes for the imx8qm
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt | 1 +
- 1 file changed, 1 insertion(+)
+https://patchwork.kernel.org/cover/10824537/
 
-diff --git a/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
-index 6bf6b43f8dd8..3dd563cec794 100644
---- a/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
-+++ b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
-@@ -11,6 +11,7 @@ Required properties:
- 			"amlogic,meson8b-clk-measure" for Meson8b SoCs
- 			"amlogic,meson-axg-clk-measure" for AXG SoCs
- 			"amlogic,meson-g12a-clk-measure" for G12a SoCs
-+			"amlogic,meson-sm1-clk-measure" for SM1 SoCs
- - reg: base address and size of the Clock Measurer register space.
- 
- Example:
+This patchset is based on next-20190222
+
+I need information about the status of the integration of the imx8qm clock
+driver into mainline. Is this ongoing?
+
+I need some hints why the imx8qm-rom7720 do NOT boot with the following
+changes. It stops at "Starting kernel ..."
+
+Oliver Graute (2):
+  arm64: add gpio4 and gpio5 to basic DTS for i.MX8MQ
+  arm64: dts: add basic DTS for imx8qm-rom7720-a1 board
+
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../boot/dts/freescale/imx8qm-rom7720-a1.dts  | 221 ++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8qm.dtsi     |  19 ++
+ 3 files changed, 241 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
+
 -- 
-2.21.0
+2.17.1
