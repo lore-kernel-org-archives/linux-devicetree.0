@@ -1,20 +1,20 @@
-From: Andrew Lunn <andrew@lunn.ch>
+From: Matthias Kaehlcke <mka@chromium.org>
 Subject: Re: [PATCH 2/3] net: phy: realtek: Enable accessing RTL8211E
  extension pages
-Date: Mon, 1 Jul 2019 23:09:02 +0200
-Message-ID: <20190701210902.GL30468@lunn.ch>
+Date: Mon, 1 Jul 2019 14:21:49 -0700
+Message-ID: <20190701212149.GA250418@google.com>
 References: <20190701195225.120808-1-mka@chromium.org>
  <20190701195225.120808-2-mka@chromium.org>
  <20190701200248.GJ30468@lunn.ch>
  <35db1bff-f48e-5372-06b7-3140cb7cbb71@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
 In-Reply-To: <35db1bff-f48e-5372-06b7-3140cb7cbb71@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Matthias Kaehlcke <mka@chromium.org>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Jul 01, 2019 at 10:37:16PM +0200, Heiner Kallweit wrote:
@@ -36,7 +36,6 @@ On Mon, Jul 01, 2019 at 10:37:16PM +0200, Heiner Kallweit wrote:
 > > 
 > AFAIK: no
 
-This it would be better to make use of the core paged access support,
-so that locking is done correctly.
-
-   Andrew
+>From my observations it looks like registers 0x00 to 0x0f are still
+accessible, but not the ones above. IIUC 0x00-0x0f are standard
+registers, the others are vendor specific.
