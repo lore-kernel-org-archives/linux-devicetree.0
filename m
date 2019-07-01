@@ -1,65 +1,49 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v14 01/13] dt-bindings: ingenic: Add DT bindings for TCU clocks
-Date: Mon,  1 Jul 2019 17:13:58 +0200
-Message-ID: <20190701151410.23127-2-paul@crapouillou.net>
-References: <20190701151410.23127-1-paul@crapouillou.net>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 2/4] devicetree: Update led binding
+Date: Mon, 1 Jul 2019 10:20:57 -0500
+Message-ID: <837afe49-18f3-722e-aa63-7d47d3a8bea0@ti.com>
+References: <20190701151423.30768-1-jjhiblot@ti.com>
+ <20190701151423.30768-3-jjhiblot@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701151410.23127-1-paul@crapouillou.net>
+In-Reply-To: <20190701151423.30768-3-jjhiblot@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mathieu Malaterre <malat@debian.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>, Rob Herring <robh@kernel.org>
+To: Jean-Jacques Hiblot <jjhiblot@ti.com>, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This header provides clock numbers for the ingenic,tcu
-DT binding.
+JJ
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
----
+On 7/1/19 10:14 AM, Jean-Jacques Hiblot wrote:
+> Update the led binding to describe the possibility to add a "compatible"
+> option to create a child-device, user of the LED.
+>
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>   Documentation/devicetree/bindings/leds/common.txt | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 70876ac11367..2f7882528d97 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -11,6 +11,9 @@ have to be tightly coupled with the LED device binding. They are represented
+>   by child nodes of the parent LED device binding.
+>   
+>   Optional properties for child nodes:
+> +- compatible : driver name for a child-device. This child-device is the user
+> +               of the LED. It is created when the LED is registered and
+> +	       destroyed when the LED is unregistered.
 
-Notes:
-    v2: Use SPDX identifier for the license
-    
-    v3/v4: No change
-    
-    v5: s/JZ47*_/TCU_/ and dropped *_CLK_LAST defines
-    
-    v6-v14: No change
+Can you update the example to show usage?
 
- include/dt-bindings/clock/ingenic,tcu.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 include/dt-bindings/clock/ingenic,tcu.h
+Dan
 
-diff --git a/include/dt-bindings/clock/ingenic,tcu.h b/include/dt-bindings/clock/ingenic,tcu.h
-new file mode 100644
-index 000000000000..d569650a7945
---- /dev/null
-+++ b/include/dt-bindings/clock/ingenic,tcu.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * This header provides clock numbers for the ingenic,tcu DT binding.
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_INGENIC_TCU_H__
-+#define __DT_BINDINGS_CLOCK_INGENIC_TCU_H__
-+
-+#define TCU_CLK_TIMER0	0
-+#define TCU_CLK_TIMER1	1
-+#define TCU_CLK_TIMER2	2
-+#define TCU_CLK_TIMER3	3
-+#define TCU_CLK_TIMER4	4
-+#define TCU_CLK_TIMER5	5
-+#define TCU_CLK_TIMER6	6
-+#define TCU_CLK_TIMER7	7
-+#define TCU_CLK_WDT	8
-+#define TCU_CLK_OST	9
-+
-+#endif /* __DT_BINDINGS_CLOCK_INGENIC_TCU_H__ */
--- 
-2.21.0.593.g511ec345e18
+
+>   - led-sources : List of device current outputs the LED is connected to. The
+>   		outputs are identified by the numbers that must be defined
+>   		in the LED device binding documentation.
