@@ -1,126 +1,45 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH RESEND V4 1/5] clocksource: timer-of: Support getting clock
- frequency from DT
-Date: Tue,  2 Jul 2019 15:55:09 +0800
-Message-ID: <20190702075513.17451-1-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH RESEND V4 5/5] arm64: dts: imx8mm: Add system counter node
+Date: Tue,  2 Jul 2019 15:55:13 +0800
+Message-ID: <20190702075513.17451-5-Anson.Huang@nxp.com>
+References: <20190702075513.17451-1-Anson.Huang@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190702075513.17451-1-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-More and more platforms use platform driver model for clock driver,
-so the clock driver is NOT ready during timer initialization phase,
-it will cause timer initialization failed.
-
-To support those platforms with upper scenario, introducing a new
-flag TIMER_OF_CLOCK_FREQUENCY which is mutually exclusive with
-TIMER_OF_CLOCK flag to support getting timer clock frequency from
-DT's timer node, the property name should be "clock-frequency",
-then of_clk operations can be skipped.
-
-User needs to select either TIMER_OF_CLOCK_FREQUENCY or TIMER_OF_CLOCK
-flag if want to use timer-of driver to initialize the clock rate.
+Add i.MX8MM system counter node to enable timer-imx-sysctr
+broadcast timer driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changes since V3:
-	- use hardcoded "clock-frequency" instead of adding new variable prop_name;
-	- add pre-condition check for TIMER_OF_CLOCK and TIMER_OF_CLOCK_FREQUENCY, they MUST be exclusive.
+No changes.
 ---
- drivers/clocksource/timer-of.c | 29 +++++++++++++++++++++++++++++
- drivers/clocksource/timer-of.h |  7 ++++---
- 2 files changed, 33 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
-index 8054228..858f684 100644
---- a/drivers/clocksource/timer-of.c
-+++ b/drivers/clocksource/timer-of.c
-@@ -161,11 +161,30 @@ static __init int timer_of_base_init(struct device_node *np,
- 	return 0;
- }
- 
-+static __init int timer_of_clk_frequency_init(struct device_node *np,
-+					      struct of_timer_clk *of_clk)
-+{
-+	int ret;
-+	u32 rate;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index b726712..b11fc5e 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -532,6 +532,14 @@
+ 				#pwm-cells = <2>;
+ 				status = "disabled";
+ 			};
 +
-+	ret = of_property_read_u32(np, "clock-frequency", &rate);
-+	if (!ret) {
-+		of_clk->rate = rate;
-+		of_clk->period = DIV_ROUND_UP(rate, HZ);
-+	}
-+
-+	return ret;
-+}
-+
- int __init timer_of_init(struct device_node *np, struct timer_of *to)
- {
-+	unsigned long clock_flags = TIMER_OF_CLOCK | TIMER_OF_CLOCK_FREQUENCY;
- 	int ret = -EINVAL;
- 	int flags = 0;
++			system_counter: timer@306a0000 {
++				compatible = "nxp,sysctr-timer";
++				reg = <0x306a0000 0x30000>;
++				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++				clock-frequency = <8000000>;
++			};
+ 		};
  
-+	if ((to->flags & clock_flags) == clock_flags)
-+		return ret;
-+
- 	if (to->flags & TIMER_OF_BASE) {
- 		ret = timer_of_base_init(np, &to->of_base);
- 		if (ret)
-@@ -180,6 +199,13 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
- 		flags |= TIMER_OF_CLOCK;
- 	}
- 
-+	if (to->flags & TIMER_OF_CLOCK_FREQUENCY) {
-+		ret = timer_of_clk_frequency_init(np, &to->of_clk);
-+		if (ret)
-+			goto out_fail;
-+		flags |= TIMER_OF_CLOCK_FREQUENCY;
-+	}
-+
- 	if (to->flags & TIMER_OF_IRQ) {
- 		ret = timer_of_irq_init(np, &to->of_irq);
- 		if (ret)
-@@ -201,6 +227,9 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
- 	if (flags & TIMER_OF_CLOCK)
- 		timer_of_clk_exit(&to->of_clk);
- 
-+	if (flags & TIMER_OF_CLOCK_FREQUENCY)
-+		to->of_clk.rate = 0;
-+
- 	if (flags & TIMER_OF_BASE)
- 		timer_of_base_exit(&to->of_base);
- 	return ret;
-diff --git a/drivers/clocksource/timer-of.h b/drivers/clocksource/timer-of.h
-index a5478f3..a08e108 100644
---- a/drivers/clocksource/timer-of.h
-+++ b/drivers/clocksource/timer-of.h
-@@ -4,9 +4,10 @@
- 
- #include <linux/clockchips.h>
- 
--#define TIMER_OF_BASE	0x1
--#define TIMER_OF_CLOCK	0x2
--#define TIMER_OF_IRQ	0x4
-+#define TIMER_OF_BASE			0x1
-+#define TIMER_OF_CLOCK			0x2
-+#define TIMER_OF_IRQ			0x4
-+#define TIMER_OF_CLOCK_FREQUENCY	0x8
- 
- struct of_timer_irq {
- 	int irq;
+ 		aips3: bus@30800000 {
 -- 
 2.7.4
