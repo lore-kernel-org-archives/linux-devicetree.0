@@ -1,210 +1,174 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v3 4/4] driver core: Add edit_links() callback for drivers
-Date: Mon,  1 Jul 2019 17:48:11 -0700
-Message-ID: <20190702004811.136450-5-saravanak@google.com>
-References: <20190702004811.136450-1-saravanak@google.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 2/4] of/platform: Add functional dependency link from
+ DT bindings
+Date: Mon, 1 Jul 2019 19:31:47 -0600
+Message-ID: <CAL_JsqLdvDpKB=iV6x3eTr2F4zY0bxU-Wjb+JeMjj5rdnRc-OQ@mail.gmail.com>
+References: <20190702004811.136450-1-saravanak@google.com> <20190702004811.136450-3-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702004811.136450-1-saravanak@google.com>
+In-Reply-To: <20190702004811.136450-3-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
+To: Saravana Kannan <saravanak@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-The driver core/bus adding dependencies by default makes sure that
-suppliers don't sync the hardware state with software state before all the
-consumers have their drivers loaded (if they are modules) and are probed.
+On Mon, Jul 1, 2019 at 6:48 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> Add device-links after the devices are created (but before they are
+> probed) by looking at common DT bindings like clocks and
+> interconnects.
+>
+> Automatically adding device-links for functional dependencies at the
+> framework level provides the following benefits:
+>
+> - Optimizes device probe order and avoids the useless work of
+>   attempting probes of devices that will not probe successfully
+>   (because their suppliers aren't present or haven't probed yet).
+>
+>   For example, in a commonly available mobile SoC, registering just
+>   one consumer device's driver at an initcall level earlier than the
+>   supplier device's driver causes 11 failed probe attempts before the
+>   consumer device probes successfully. This was with a kernel with all
+>   the drivers statically compiled in. This problem gets a lot worse if
+>   all the drivers are loaded as modules without direct symbol
+>   dependencies.
+>
+> - Supplier devices like clock providers, interconnect providers, etc
+>   need to keep the resources they provide active and at a particular
+>   state(s) during boot up even if their current set of consumers don't
+>   request the resource to be active. This is because the rest of the
+>   consumers might not have probed yet and turning off the resource
+>   before all the consumers have probed could lead to a hang or
+>   undesired user experience.
+>
+>   Some frameworks (Eg: regulator) handle this today by turning off
+>   "unused" resources at late_initcall_sync and hoping all the devices
+>   have probed by then. This is not a valid assumption for systems with
+>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>   this due to the lack of a clear signal for when they can turn off
+>   resources. This leads to downstream hacks to handle cases like this
+>   that can easily be solved in the upstream kernel.
+>
+>   By linking devices before they are probed, we give suppliers a clear
+>   count of the number of dependent consumers. Once all of the
+>   consumers are active, the suppliers can turn off the unused
+>   resources without making assumptions about the number of consumers.
+>
+> By default we just add device-links to track "driver presence" (probe
+> succeeded) of the supplier device. If any other functionality provided
+> by device-links are needed, it is left to the consumer/supplier
+> devices to change the link when they probe.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/of/Kconfig    |  9 ++++++++
+>  drivers/of/platform.c | 52 +++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 61 insertions(+)
+>
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index 37c2ccbefecd..7c7fa7394b4c 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -103,4 +103,13 @@ config OF_OVERLAY
+>  config OF_NUMA
+>         bool
+>
+> +config OF_DEVLINKS
 
-However, when the bus incorrectly adds dependencies that it shouldn't have
-added, the devices might never probe.
+I'd prefer this not be a config option. After all, we want one kernel
+build that works for all platforms.
 
-For example, if device-C is a consumer of device-S and they have phandles
-to each other in DT, the following could happen:
+A kernel command line option to disable might be useful for debugging.
 
-1.  Device-S get added first.
-2.  The bus add_links() callback will (incorrectly) try to link it as
-    a consumer of device-C.
-3.  Since device-C isn't present, device-S will be put in
-    "waiting-for-supplier" list.
-4.  Device-C gets added next.
-5.  All devices in "waiting-for-supplier" list are retried for linking.
-6.  Device-S gets linked as consumer to Device-C.
-7.  The bus add_links() callback will (correctly) try to link it as
-    a consumer of device-S.
-8.  This isn't allowed because it would create a cyclic device links.
+> +       bool "Device links from DT bindings"
+> +       help
+> +         Common DT bindings like clocks, interconnects, etc represent a
+> +         consumer device's dependency on suppliers devices. This option
+> +         creates device links from these common bindings so that consumers are
+> +         probed only after all their suppliers are active and suppliers can
+> +         tell when all their consumers are active.
+> +
+>  endif # OF
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 04ad312fd85b..a53717168aca 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -61,6 +61,57 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
+>  EXPORT_SYMBOL(of_find_device_by_node);
+>
+>  #ifdef CONFIG_OF_ADDRESS
+> +static int of_link_binding(struct device *dev, char *binding, char *cell)
 
-So neither devices will get probed since the supplier is dependent on a
-consumer that'll never probe (because it can't get resources from the
-supplier).
+Under CONFIG_OF_ADDRESS seems like a strange location.
 
-Without this patch, things stay in this broken state. However, with this
-patch, the execution will continue like this:
+> +{
+> +       struct of_phandle_args sup_args;
+> +       struct platform_device *sup_dev;
+> +       unsigned int i = 0, links = 0;
+> +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+> +
+> +       while (!of_parse_phandle_with_args(dev->of_node, binding, cell, i,
+> +                                          &sup_args)) {
+> +               i++;
+> +               sup_dev = of_find_device_by_node(sup_args.np);
+> +               if (!sup_dev)
+> +                       continue;
+> +               if (device_link_add(dev, &sup_dev->dev, dl_flags))
+> +                       links++;
+> +               put_device(&sup_dev->dev);
+> +       }
+> +       if (links < i)
+> +               return -ENODEV;
+> +       return 0;
+> +}
+> +
+> +/*
+> + * List of bindings and their cell names (use NULL if no cell names) from which
+> + * device links need to be created.
+> + */
+> +static char *link_bindings[] = {
 
-9.  Device-C's driver is loaded.
-10. Device-C's driver removes Device-S as a consumer of Device-C.
-11. Device-C's driver adds Device-C as a consumer of Device-S.
-12. Device-S probes.
-13. Device-S sync_state() isn't called because Device-C hasn't probed yet.
-14. Device-C probes.
-15. Device-S's sync_state() callback is called.
+const
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/base/core.c    | 24 ++++++++++++++++++++++--
- drivers/base/dd.c      | 29 +++++++++++++++++++++++++++++
- include/linux/device.h | 18 ++++++++++++++++++
- 3 files changed, 69 insertions(+), 2 deletions(-)
+> +#ifdef CONFIG_OF_DEVLINKS
+> +       "clocks", "#clock-cells",
+> +       "interconnects", "#interconnect-cells",
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 8b8b812d26f1..dce97b5f3536 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -423,6 +423,19 @@ static void device_link_wait_for_supplier(struct device *consumer)
- 	mutex_unlock(&wfs_lock);
- }
- 
-+/**
-+ * device_link_remove_from_wfs - Unmark device as waiting for supplier
-+ * @consumer: Consumer device
-+ *
-+ * Unmark the consumer device as waiting for suppliers to become available.
-+ */
-+void device_link_remove_from_wfs(struct device *consumer)
-+{
-+	mutex_lock(&wfs_lock);
-+	list_del_init(&consumer->links.needs_suppliers);
-+	mutex_unlock(&wfs_lock);
-+}
-+
- /**
-  * device_link_check_waiting_consumers - Try to unmark waiting consumers
-  *
-@@ -440,12 +453,19 @@ static void device_link_wait_for_supplier(struct device *consumer)
- static void device_link_check_waiting_consumers(void)
- {
- 	struct device *dev, *tmp;
-+	int ret;
- 
- 	mutex_lock(&wfs_lock);
- 	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
--				 links.needs_suppliers)
--		if (!dev->bus->add_links(dev))
-+				 links.needs_suppliers) {
-+		ret = 0;
-+		if (dev->has_edit_links)
-+			ret = driver_edit_links(dev);
-+		else if (dev->bus->add_links)
-+			ret = dev->bus->add_links(dev);
-+		if (!ret)
- 			list_del_init(&dev->links.needs_suppliers);
-+	}
- 	mutex_unlock(&wfs_lock);
- }
- 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 0df9b4461766..842fc7b704f9 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -659,6 +659,12 @@ int driver_probe_device(struct device_driver *drv, struct device *dev)
- 	pr_debug("bus: '%s': %s: matched device %s with driver %s\n",
- 		 drv->bus->name, __func__, dev_name(dev), drv->name);
- 
-+	if (drv->edit_links) {
-+		if (drv->edit_links(dev))
-+			dev->has_edit_links = true;
-+		else
-+			device_link_remove_from_wfs(dev);
-+	}
- 	pm_runtime_get_suppliers(dev);
- 	if (dev->parent)
- 		pm_runtime_get_sync(dev->parent);
-@@ -747,6 +753,29 @@ struct device_attach_data {
- 	bool have_async;
- };
- 
-+static int __driver_edit_links(struct device_driver *drv, void *data)
-+{
-+	struct device *dev = data;
-+
-+	if (!drv->edit_links)
-+		return 0;
-+
-+	if (driver_match_device(drv, dev) <= 0)
-+		return 0;
-+
-+	return drv->edit_links(dev);
-+}
-+
-+int driver_edit_links(struct device *dev)
-+{
-+	int ret;
-+
-+	device_lock(dev);
-+	ret = bus_for_each_drv(dev->bus, NULL, dev, __driver_edit_links);
-+	device_unlock(dev);
-+	return ret;
-+}
-+
- static int __device_attach_driver(struct device_driver *drv, void *_data)
- {
- 	struct device_attach_data *data = _data;
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 4a0db34ae650..d3c9e70052d8 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -262,6 +262,20 @@ enum probe_type {
-  * @probe_type:	Type of the probe (synchronous or asynchronous) to use.
-  * @of_match_table: The open firmware table.
-  * @acpi_match_table: The ACPI match table.
-+ * @edit_links:	Called to allow a matched driver to edit the device links the
-+ *		bus might have added incorrectly. This will be useful to handle
-+ *		cases where the bus incorrectly adds functional dependencies
-+ *		that aren't true or tries to create cyclic dependencies. But
-+ *		doesn't correctly handle functional dependencies that are
-+ *		missed by the bus as the supplier's sync_state might get to
-+ *		execute before the driver for a missing consumer is loaded and
-+ *		gets to edit the device links for the consumer.
-+ *
-+ *		This function might be called multiple times after a new device
-+ *		is added.  The function is expected to create all the device
-+ *		links for the new device and return 0 if it was completed
-+ *		successfully or return an error if it needs to be reattempted
-+ *		in the future.
-  * @probe:	Called to query the existence of a specific device,
-  *		whether this driver can work with it, and bind the driver
-  *		to a specific device.
-@@ -308,6 +322,7 @@ struct device_driver {
- 	const struct of_device_id	*of_match_table;
- 	const struct acpi_device_id	*acpi_match_table;
- 
-+	int (*edit_links)(struct device *dev);
- 	int (*probe) (struct device *dev);
- 	void (*sync_state)(struct device *dev);
- 	int (*remove) (struct device *dev);
-@@ -1082,6 +1097,7 @@ struct device {
- 	bool			offline:1;
- 	bool			of_node_reused:1;
- 	bool			state_synced:1;
-+	bool			has_edit_links:1;
- #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
-@@ -1331,6 +1347,7 @@ extern int  __must_check device_attach(struct device *dev);
- extern int __must_check driver_attach(struct device_driver *drv);
- extern void device_initial_probe(struct device *dev);
- extern int __must_check device_reprobe(struct device *dev);
-+extern int driver_edit_links(struct device *dev);
- 
- extern bool device_is_bound(struct device *dev);
- 
-@@ -1423,6 +1440,7 @@ void device_link_del(struct device_link *link);
- void device_link_remove(void *consumer, struct device *supplier);
- int device_links_supplier_sync_state(struct device *dev, void *data);
- void device_links_supplier_sync_state_enable(void);
-+void device_link_remove_from_wfs(struct device *consumer);
- 
- #ifndef dev_fmt
- #define dev_fmt(fmt) fmt
--- 
-2.22.0.410.gd8fdbe21b5-goog
+Planning to add others?
+
+> +#endif
+> +};
+> +
+> +static int of_link_to_suppliers(struct device *dev)
+> +{
+> +       unsigned int i = 0;
+> +       bool done = true;
+> +
+> +       if (unlikely(!dev->of_node))
+> +               return 0;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(link_bindings) / 2; i++)
+> +               if (of_link_binding(dev, link_bindings[i * 2],
+> +                                       link_bindings[i * 2 + 1]))
+> +                       done = false;
+> +
+> +       if (!done)
+> +               return -ENODEV;
+> +       return 0;
+> +}
+> +
+>  /*
+>   * The following routines scan a subtree and registers a device for
+>   * each applicable node.
+> @@ -524,6 +575,7 @@ static int __init of_platform_default_populate_init(void)
+>         if (!of_have_populated_dt())
+>                 return -ENODEV;
+>
+> +       platform_bus_type.add_links = of_link_to_suppliers;
+>         /*
+>          * Handle certain compatibles explicitly, since we don't want to create
+>          * platform_devices for every node in /reserved-memory with a
+> --
+> 2.22.0.410.gd8fdbe21b5-goog
+>
