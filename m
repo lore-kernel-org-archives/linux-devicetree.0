@@ -1,70 +1,167 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH 4/4] devicetree: Add led-backlight binding
-Date: Tue, 2 Jul 2019 10:58:49 +0100
-Message-ID: <20190702095849.fxlmiqcioihsi3zk@holly.lan>
-References: <20190701151423.30768-1-jjhiblot@ti.com>
- <20190701151423.30768-5-jjhiblot@ti.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH 1/3] add doc and MAINTAINERS for poweroff
+Date: Tue, 2 Jul 2019 18:00:15 +0800
+Message-ID: <1562061615.29303.2.camel@mtkswgap22>
+References: <20190702094045.3652-1-frank-w@public-files.de>
+ <20190702094045.3652-2-frank-w@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190701151423.30768-5-jjhiblot@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jingoohan1@gmail.com, tomi.valkeinen@ti.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, linux-leds@vger.kernel.org, dmurphy@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190702094045.3652-2-frank-w@public-files.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frank Wunderlich <frank-w@public-files.de>, Sean Wang <Sean.Wang@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Josef Friedl <josef.friedl@speed.at>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdWwgMDEsIDIwMTkgYXQgMDU6MTQ6MjNQTSArMDIwMCwgSmVhbi1KYWNxdWVzIEhp
-YmxvdCB3cm90ZToKPiBGcm9tOiBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29t
-Pgo+IAo+IEFkZCBEVCBiaW5kaW5nIGZvciBsZWQtYmFja2xpZ2h0LgoKSSB0aGluayB0aGUgcGF0
-Y2hzZXQgaXMgaW4gdGhlIHdyb25nIG9yZGVyOyB0aGUgRFQgYmluZGluZ3MKZG9jdW1lbnRhdGlv
-biBzaG91bGQgYXBwZWFyICpiZWZvcmUqIHRoZSBiaW5kaW5nIGlzCmltcGxlbWVudGVkIChhbW91
-bmcgb3RoZXIgdGhpbmdzIHRoaXMgcHJldmVudCB0cmFuc2llbnQgY2hlY2twYXRjaAp3YXJuaW5n
-cyBhcyB0aGUgcGF0Y2hzZXQgaXMgYXBwbGllZCkuCgoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBUb21p
-IFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEplYW4t
-SmFjcXVlcyBIaWJsb3QgPGpqaGlibG90QHRpLmNvbT4KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtl
-cm5lbC5vcmcKPiAtLS0KPiAgLi4uL3ZpZGVvL2JhY2tsaWdodC9sZWQtYmFja2xpZ2h0LnR4dCAg
-ICAgICAgIHwgMzkgKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzkgaW5z
-ZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3ZpZGVvL2JhY2tsaWdodC9sZWQtYmFja2xpZ2h0LnR4dAo+IAo+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYmFja2xpZ2h0L2xl
-ZC1iYWNrbGlnaHQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVv
-L2JhY2tsaWdodC9sZWQtYmFja2xpZ2h0LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5k
-ZXggMDAwMDAwMDAwMDAwLi4yMTZjZDUyZDYyNGEKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JhY2tsaWdodC9sZWQtYmFja2xp
-Z2h0LnR4dAo+IEBAIC0wLDAgKzEsMzkgQEAKPiArbGVkLWJhY2tsaWdodCBiaW5kaW5ncwo+ICsK
-PiArVGhlIG5vZGUgb2YgdGhlIGJhY2tsaWdodCBkcml2ZXIgSVMgdGhlIG5vZGUgb2YgdGhlIExF
-RC4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKyAgLSBjb21wYXRpYmxlOiAibGVkLWJh
-Y2tsaWdodCIKPiArICAtIGJyaWdodG5lc3MtbGV2ZWxzOiBBcnJheSBvZiBkaXN0aW5jdCBMRUQg
-YnJpZ2h0bmVzcyBsZXZlbHMuIFRoZXNlCj4gKyAgICAgIGFyZSBpbiB0aGUgcmFuZ2UgZnJvbSAw
-IHRvIDI1NSwgcGFzc2VkIHRvIHRoZSBMRUQgY2xhc3MgZHJpdmVyLgo+ICsgIC0gZGVmYXVsdC1i
-cmlnaHRuZXNzLWxldmVsOiB0aGUgZGVmYXVsdCBicmlnaHRuZXNzIGxldmVsIChpbmRleCBpbnRv
-IHRoZQo+ICsgICAgICBhcnJheSBkZWZpbmVkIGJ5IHRoZSAiYnJpZ2h0bmVzcy1sZXZlbHMiIHBy
-b3BlcnR5KQoKSSB0aGluayBicmlnaHRuZXNzLWxldmVscyBhbmQgZGVmYXVsdC1icmlnaHRuZXNz
-LWxldmVsIGNvdWxkIGJlCm9wdGlvbmFsIHByb3BlcnRpZXMgc2luY2UgYSBkZWZhdWx0IDE6MSBt
-YXBwaW5nIHNlZW1zIHJlYXNvbmFibGUgZ2l2ZW4KaG93IGNvbnN0cmFpbmVkIHRoZSBMRUQgYnJp
-Z2h0bmVzcyB2YWx1ZXMgYXJlLgoKCkRhbmllbC4KCgo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGll
-czoKPiArICAtIHBvd2VyLXN1cHBseTogcmVndWxhdG9yIGZvciBzdXBwbHkgdm9sdGFnZQo+ICsg
-IC0gZW5hYmxlLWdwaW9zOiBjb250YWlucyBhIHNpbmdsZSBHUElPIHNwZWNpZmllciBmb3IgdGhl
-IEdQSU8gd2hpY2ggZW5hYmxlcwo+ICsgICAgICAgICAgICAgICAgICBhbmQgZGlzYWJsZXMgdGhl
-IGJhY2tsaWdodCAoc2VlIEdQSU8gYmluZGluZ1swXSkKPiArCj4gK1swXTogRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vZ3Bpby50eHQKPiArCj4gK0V4YW1wbGU6Cj4gKwo+
-ICtsZWRfY3RybCB7Cj4gKwlyZWRfbGVkQDEgewo+ICsJICAgICAgICBsYWJlbCA9ICJyZWQiOwo+
-ICsJCXJlZyA9IDwxPjsKPiArCX0KPiArCj4gKwliYWNrbGlnaHRfbGVkQDIgewo+ICsJCWZ1bmN0
-aW9uID0gTEVEX0ZVTkNUSU9OX0JBQ0tMSUdIVDsKPiArCQlyZWcgPSA8Mj47Cj4gKwo+ICsJCWNv
-bXBhdGlibGUgPSAibGVkLWJhY2tsaWdodCI7Cj4gKwo+ICsJCWJyaWdodG5lc3MtbGV2ZWxzID0g
-PDAgNCA4IDE2IDMyIDY0IDEyOCAyNTU+Owo+ICsJCWRlZmF1bHQtYnJpZ2h0bmVzcy1sZXZlbCA9
-IDw2PjsKPiArCj4gKwkJcG93ZXItc3VwcGx5ID0gPCZ2ZGRfYmxfcmVnPjsKPiArCQllbmFibGUt
-Z3Bpb3MgPSA8JmdwaW8gNTggMD47Cj4gKwl9Owo+ICt9Owo+IC0tIAo+IDIuMTcuMQo+IApfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
++Sean
+
+On Tue, 2019-07-02 at 11:40 +0200, Frank Wunderlich wrote:
+> From: Josef Friedl <josef.friedl@speed.at>
+> 
+> poweroff for BPI-R2
+> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> 
+> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+> ---
+>  .../devicetree/bindings/mfd/mt6397.txt        | 10 ++++++-
+>  .../bindings/power/reset/mt6323-poweroff.txt  | 20 +++++++++++++
+>  .../devicetree/bindings/rtc/rtc-mt6397.txt    | 29 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 ++++
+>  4 files changed, 64 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> index 0ebd08af777d..44acb9827716 100644
+> --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> @@ -8,6 +8,7 @@ MT6397/MT6323 is a multifunction device with the following sub modules:
+>  - Clock
+>  - LED
+>  - Keys
+> +- Power controller
+> 
+>  It is interfaced to host controller using SPI interface by a proprietary hardware
+>  called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwrap.
+> @@ -22,8 +23,10 @@ compatible: "mediatek,mt6397" or "mediatek,mt6323"
+>  Optional subnodes:
+> 
+>  - rtc
+> -	Required properties:
+> +	Required properties: Should be one of follows
+> +		- compatible: "mediatek,mt6323-rtc"
+>  		- compatible: "mediatek,mt6397-rtc"
+> +	For details, see Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+>  - regulators
+>  	Required properties:
+>  		- compatible: "mediatek,mt6397-regulator"
+> @@ -46,6 +49,11 @@ Optional subnodes:
+>  		- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
+>  	see Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+> 
+> +- power-controller
+> +	Required properties:
+> +		- compatible: "mediatek,mt6323-pwrc"
+> +	For details, see Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+> +
+>  Example:
+>  	pwrap: pwrap@1000f000 {
+>  		compatible = "mediatek,mt8135-pwrap";
+> diff --git a/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+> new file mode 100644
+> index 000000000000..933f0c48e887
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+> @@ -0,0 +1,20 @@
+> +Device Tree Bindings for Power Controller on MediaTek PMIC
+> +
+> +The power controller which could be found on PMIC is responsible for externally
+> +powering off or on the remote MediaTek SoC through the circuit BBPU.
+> +
+> +Required properties:
+> +- compatible: Should be one of follows
+> +       "mediatek,mt6323-pwrc": for MT6323 PMIC
+> +
+> +Example:
+> +
+> +       pmic {
+> +               compatible = "mediatek,mt6323";
+> +
+> +               ...
+> +
+> +               power-controller {
+> +                       compatible = "mediatek,mt6323-pwrc";
+> +               };
+> +       }
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> new file mode 100644
+> index 000000000000..ebd1cf80dcc8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> @@ -0,0 +1,29 @@
+> +Device-Tree bindings for MediaTek PMIC based RTC
+> +
+> +MediaTek PMIC based RTC is an independent function of MediaTek PMIC that works
+> +as a type of multi-function device (MFD). The RTC can be configured and set up
+> +with PMIC wrapper bus which is a common resource shared with the other
+> +functions found on the same PMIC.
+> +
+> +For MediaTek PMIC MFD bindings, see:
+> +Documentation/devicetree/bindings/mfd/mt6397.txt
+> +
+> +For MediaTek PMIC wrapper bus bindings, see:
+> +Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> +
+> +Required properties:
+> +- compatible: Should be one of follows
+> +       "mediatek,mt6323-rtc": for MT6323 PMIC
+> +       "mediatek,mt6397-rtc": for MT6397 PMIC
+> +
+> +Example:
+> +
+> +       pmic {
+> +               compatible = "mediatek,mt6323";
+> +
+> +               ...
+> +
+> +               rtc {
+> +                       compatible = "mediatek,mt6323-rtc";
+> +               };
+> +       };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 01a52fc964da..ec6ff342aa3c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9920,6 +9920,12 @@ S:	Maintained
+>  F:	drivers/net/dsa/mt7530.*
+>  F:	net/dsa/tag_mtk.c
+> 
+> +MEDIATEK BOARD LEVEL SHUTDOWN DRIVERS
+> +M:	Sean Wang <sean.wang@mediatek.com>
+> +L:	linux-pm@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+
+It's odd that there's no Sean's SOB tag in the series but add him in the
+entry.
+
+>  MEDIATEK JPEG DRIVER
+>  M:	Rick Chang <rick.chang@mediatek.com>
+>  M:	Bin Liu <bin.liu@mediatek.com>
+> --
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
