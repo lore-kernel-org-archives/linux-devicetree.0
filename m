@@ -1,99 +1,158 @@
-From: Olivier Moysan <olivier.moysan@st.com>
-Subject: [PATCH 3/3] drm/bridge: sii902x: make audio mclk optional
-Date: Tue, 2 Jul 2019 17:47:06 +0200
-Message-ID: <1562082426-14876-4-git-send-email-olivier.moysan@st.com>
-References: <1562082426-14876-1-git-send-email-olivier.moysan@st.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [RFC PATCH 0/2] Support for TI Page-based Address Translator
+Date: Tue, 2 Jul 2019 16:49:31 +0100
+Message-ID: <f706bfe0-fdf6-afdd-fea7-13b78b16cdee@arm.com>
+References: <20190607193523.25700-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562082426-14876-1-git-send-email-olivier.moysan@st.com>
+In-Reply-To: <20190607193523.25700-1-afd@ti.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: a.hajda@samsung.com, narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, benjamin.gaignard@st.com, alexandre.torgue@st.com, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, olivier.moysan@st.com, jsarha@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Joerg Roedel <joro@8bytes.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Tero Kristo <t-kristo@ti.com>, William Mills <wmills@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sumit Semwal <sumit.semwal@linaro.org>, John Stultz <john.stultz@linaro.org>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The master clock on i2s bus is not mandatory,
-as sii902X internal PLL can be used instead.
-Make use of mclk optional.
+On 07/06/2019 20:35, Andrew F. Davis wrote:
+> Hello all,
+> 
+> So I've got a new IP on our new SoC I'm looking to make use of and would
+> like some help figuring out what framework best matches its function. The
+> IP is called a "Page-based Address Translator" or PAT. A PAT instance
+> (there are 5 of these things on our J721e device[0]) is basically a
+> really simple IOMMU sitting on the interconnect between the device bus
+> and what is effectively our northbridge called
+> MSMC (DRAM/SRAM/L3-Cache/Coherency controller).
+> 
+> Simplified it looks about like this:
+> 
+>           CPUs
+>            |
+> DRAM --- MSMC --- SRAM/L3
+>            |
+>          NAVSS - (PATs)
+>            |
+>    --- Device Bus ---------
+>   |      |      |          |
+> Device  Device  Device   etc..
+> 
+> Each PAT has a set a window in high memory (about 0x48_0000_0000 area)
+> for which any transaction with an address targeting its window will be
+> routed into that PAT. The PAT then does a simple calculation based on
+> the how far into the window the address is and the current page size,
+> does a lookup to an internally held table of translations, then sends the
+> transaction back out on the interconnect with a new address. Usually this
+> address should be towards somewhere in DRAM, but can be some other device
+> or even back into PAT (I'm not sure there is a valid use-case for this
+> but just a point of interest).
+> 
+> My gut reaction is that this is an IOMMU which belongs in the IOMMU
+> subsystem. But there are a couple oddities that make me less sure it is
+> really suitable for the IOMMU framework. First it doesn't sit in front of
+> any devices, it sits in front of *all* devices, this means we would have
+> every device claim it as an IOMMU parent, even though many devices also
+> have a traditional IOMMU connected. Second, there is only a limited
+> window of address space per PAT, this means we will get fragmentation and
+> allocation failures on occasion, in this way it looks to me more like AGP
+> GART. Third, the window is in high-memory, so unlike some IOMMU devices
+> which can be used to allow DMA to high-mem from low-mem only devices, PAT
+> can't be used for that. Lastly it doesn't provide any isolation, if the
+> access does not target the PAT window it is not used (that is not to say
+> we don't have isolation, just that it is taken care of by other parts of
+> the interconnect).
+> 
+> This means, to me, that PAT has one main purpose: making
+> physically-contiguous views of scattered pages in system memory for DMA.
+> But it does that really well, the whole translation table is held in a
+> PAT-internal SRAM giving 1 bus cycle latency and at full bus bandwidth.
+> 
+> So what are my options here, is IOMMU the right way to go or not?
 
-Fixes: ff5781634c41 ("drm/bridge: sii902x: Implement HDMI audio support")
+FWIW, that sounds almost exactly like my (vague) understanding of other 
+GARTs, and as such should be pretty well manageable via the IOMMU API - 
+we already have tegra-gart, for example. The aperture contention issue 
+could certainly be mitigated by letting the firmware claim it's only 
+associated with the display and any other devices which really need it.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- drivers/gpu/drm/bridge/sii902x.c | 39 +++++++++++++++++++++++----------------
- 1 file changed, 23 insertions(+), 16 deletions(-)
+A further interesting avenue of investigation - now that Christoph's 
+recent work has made it much more possible - would be a second set of 
+IOMMU DMA ops tailored for "GART-like" domains where force_aperture=0, 
+which could behave as dma-direct wherever possible and only use IOMMU 
+remaps when absolutely necessary.
 
-diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-index 36acc256e67e..a08bd9fdc046 100644
---- a/drivers/gpu/drm/bridge/sii902x.c
-+++ b/drivers/gpu/drm/bridge/sii902x.c
-@@ -562,19 +562,21 @@ static int sii902x_audio_hw_params(struct device *dev, void *data,
- 		}
- 	}
- 
--	ret = clk_prepare_enable(sii902x->audio.mclk);
--	if (ret) {
--		dev_err(dev, "Enabling mclk failed: %d\n", ret);
--		return ret;
--	}
-+	if (sii902x->audio.mclk) {
-+		ret = clk_prepare_enable(sii902x->audio.mclk);
-+		if (ret) {
-+			dev_err(dev, "Enabling mclk failed: %d\n", ret);
-+			return ret;
-+		}
- 
--	mclk_rate = clk_get_rate(sii902x->audio.mclk);
-+		mclk_rate = clk_get_rate(sii902x->audio.mclk);
- 
--	ret = sii902x_select_mclk_div(&i2s_config_reg, params->sample_rate,
--				      mclk_rate);
--	if (mclk_rate != ret * params->sample_rate)
--		dev_dbg(dev, "Inaccurate reference clock (%ld/%d != %u)\n",
--			mclk_rate, ret, params->sample_rate);
-+		ret = sii902x_select_mclk_div(&i2s_config_reg,
-+					      params->sample_rate, mclk_rate);
-+		if (mclk_rate != ret * params->sample_rate)
-+			dev_dbg(dev, "Inaccurate reference clock (%ld/%d != %u)\n",
-+				mclk_rate, ret, params->sample_rate);
-+	}
- 
- 	mutex_lock(&sii902x->mutex);
- 
-@@ -640,7 +642,8 @@ static int sii902x_audio_hw_params(struct device *dev, void *data,
- 	mutex_unlock(&sii902x->mutex);
- 
- 	if (ret) {
--		clk_disable_unprepare(sii902x->audio.mclk);
-+		if (sii902x->audio.mclk)
-+			clk_disable_unprepare(sii902x->audio.mclk);
- 		dev_err(dev, "%s: hdmi audio enable failed: %d\n", __func__,
- 			ret);
- 	}
-@@ -659,7 +662,8 @@ static void sii902x_audio_shutdown(struct device *dev, void *data)
- 
- 	mutex_unlock(&sii902x->mutex);
- 
--	clk_disable_unprepare(sii902x->audio.mclk);
-+	if (sii902x->audio.mclk)
-+		clk_disable_unprepare(sii902x->audio.mclk);
- }
- 
- int sii902x_audio_digital_mute(struct device *dev, void *data, bool enable)
-@@ -752,9 +756,12 @@ static int sii902x_audio_codec_init(struct sii902x *sii902x,
- 
- 	sii902x->audio.mclk = devm_clk_get(dev, "mclk");
- 	if (IS_ERR(sii902x->audio.mclk)) {
--		dev_err(dev, "%s: No clock (audio mclk) found: %ld\n",
--			__func__, PTR_ERR(sii902x->audio.mclk));
--		return 0;
-+		if (PTR_ERR(sii902x->audio.mclk) != -ENOENT) {
-+			dev_err(dev, "%s: No clock (audio mclk) found: %ld\n",
-+				__func__, PTR_ERR(sii902x->audio.mclk));
-+			return PTR_ERR(sii902x->audio.mclk);
-+		}
-+		sii902x->audio.mclk = NULL;
- 	}
- 
- 	sii902x->audio.pdev = platform_device_register_data(
--- 
-2.7.4
+Robin.
+
+> Looking around the kernel I also see the char dev ARP/GART interface
+> which looks like a good fit, but also looks quite dated and my guess
+> deprecated at this point. Moving right along..
+> 
+> Another thing I saw is we have the support upstream of the DMM device[1]
+> available in some OMAPx/AM57x SoCs. I'm a little more familiar with this
+> device. The DMM is a bundle of IPs and in fact one of them is called
+> "PAT" and it even does basically the same thing this incarnation of "PAT"
+> does. It's upstream integration design is a bit questionable
+> unfortunately, the DMM support was integrated into the OMAPDRM display
+> driver, which does make some sense then given its support for rotation
+> (using TILER IP contained in DMM). The issue with this was that the
+> DMM/TILER/PAT IP was not part of the our display IP, but instead out at
+> the end of the shared device bus, inside the external memory controller.
+> Like this new PAT this meant that any IP that could make use of it, but
+> only the display framework could actually provide buffers backed by it.
+> This meant, for instance, if we wanted to decode some video buffer using
+> our video decoder we would have to allocate from DRM framework then pass
+> that over to the V4L2 system. This doesn't make much sense and required
+> the user-space to know about this odd situation and allocate from the
+> right spot or else have to use up valuable CMA space or waste memory with
+> dedicated carveouts.
+> 
+> Another idea would be to have this as a special central allocator
+> (exposed through DMA-BUF heaps[2] or ION) that would give out normal
+> system memory as a DMA-BUF but remap it with PAT if a device that only
+> supports contiguous memory tries to attach/map that DMA-BUF.
+> 
+> One last option would be to allow user-space to choose to make the buffer
+> contiguous when it needs. That's what the driver in this series allows.
+> We expose a remapping device, user-space passes it a non-contiguous
+> DMA-BUF handle and it passes a contiguous one back. Simple as that.
+> 
+> So how do we use this, lets take Android for example, we don't know at
+> allocation time if a rendering buffer will end up going back into the GPU
+> for further processing, or if it will be consumed directly by the display.
+> This is a problem for us as our GPU can work with non-contiguous buffers
+> but our display cannot, so any buffers that could possibly go to the
+> display at some point currently needs to be allocated as contiguous from
+> the start, this leads to a lot of unneeded use of carveout/CMA memory.
+> With this driver on the other hand, we allocate regular non-contiguous
+> system memory (again using DMA-BUF heaps, but ION could work here too),
+> then only when a buffer is about to be sent to the display we pass the
+> handle to this DMA-BUF to our driver here and take the handle it gives
+> back and pass that to the display instead.
+> 
+> As said, it is probably not the ideal solution but it does work and was
+> used for some early testing of the IP.
+> 
+> Well, sorry for the wall of text.
+> Any and all suggestions very welcome and appreciated.
+> 
+> Thanks,
+> Andrew
+> 
+> [0] http://www.ti.com/lit/pdf/spruil1
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
+> [2] https://lkml.org/lkml/2019/6/6/1211
+> 
+> Andrew F. Davis (2):
+>    dt-bindings: soc: ti: Add TI PAT bindings
+>    soc: ti: Add Support for the TI Page-based Address Translator (PAT)
+> 
+>   .../devicetree/bindings/misc/ti,pat.txt       |  34 ++
+>   drivers/soc/ti/Kconfig                        |   9 +
+>   drivers/soc/ti/Makefile                       |   1 +
+>   drivers/soc/ti/ti-pat.c                       | 569 ++++++++++++++++++
+>   include/uapi/linux/ti-pat.h                   |  44 ++
+>   5 files changed, 657 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/misc/ti,pat.txt
+>   create mode 100644 drivers/soc/ti/ti-pat.c
+>   create mode 100644 include/uapi/linux/ti-pat.h
+> 
