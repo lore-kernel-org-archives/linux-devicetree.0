@@ -1,41 +1,52 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 0/3] ipinctrl: qcom: Add support for SM8150
-Date: Tue,  2 Jul 2019 16:20:42 +0530
-Message-ID: <20190702105045.27646-1-vkoul@kernel.org>
+Subject: [PATCH v2 1/3] dt-bindings: pinctrl: qcom: Document missing gpio nodes
+Date: Tue,  2 Jul 2019 16:20:43 +0530
+Message-ID: <20190702105045.27646-2-vkoul@kernel.org>
+References: <20190702105045.27646-1-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190702105045.27646-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds binding and driver for SM8150 pinctrl block. Also fixes one
-binding missing gpio node for msm8998.
+The bindings for msm8998-pinctrl was missing gpio-ranges and
+gpio-reserved-ranges, so document them as well
 
-Changes since v2:
- - Order the function names and squash functions
- - document gpio-ranges and gpio-reserved-ranges
- - change ufs reset to be after gpios
- - fix pin58 having qdss_cti twice
- - remove .owner
- - Add one patch for missing gpio nodes
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ .../bindings/pinctrl/qcom,msm8998-pinctrl.txt          | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Prasad Sodagudi (2):
-  dt-bindings: pinctrl: qcom: Add SM8150 pinctrl binding
-  pinctrl: qcom: Add SM8150 pinctrl driver
-
-Vinod Koul (1):
-  dt-bindings: pinctrl: qcom: Document missing gpio nodes
-
- .../bindings/pinctrl/qcom,msm8998-pinctrl.txt |   10 +
- .../bindings/pinctrl/qcom,sm8150-pinctrl.txt  |  190 ++
- drivers/pinctrl/qcom/Kconfig                  |    9 +
- drivers/pinctrl/qcom/Makefile                 |    1 +
- drivers/pinctrl/qcom/pinctrl-sm8150.c         | 1548 +++++++++++++++++
- 5 files changed, 1758 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8150-pinctrl.txt
- create mode 100644 drivers/pinctrl/qcom/pinctrl-sm8150.c
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
+index e70c79bbbc5b..280af41eb86e 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
+@@ -40,6 +40,14 @@ MSM8998 platform.
+ 	Definition: must be 2. Specifying the pin number and flags, as defined
+ 		    in <dt-bindings/gpio/gpio.h>
+ 
++- gpio-ranges:
++	Usage: required
++	Definition:  see ../gpio/gpio.txt
++
++- gpio-reserved-ranges:
++	Usage: optional
++	Definition: see ../gpio/gpio.txt
++
+ Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+ a general description of GPIO and interrupt bindings.
+ 
+@@ -175,6 +183,8 @@ Example:
+ 		interrupts = <0 208 0>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		gpio-ranges = <&tlmm 0 0 175>;
++		gpio-reserved-ranges = <0 4>, <81 4>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 
 -- 
 2.20.1
