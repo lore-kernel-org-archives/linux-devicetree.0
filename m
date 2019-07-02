@@ -1,7 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH RESEND V4 5/5] arm64: dts: imx8mm: Add system counter node
-Date: Tue,  2 Jul 2019 15:55:13 +0800
-Message-ID: <20190702075513.17451-5-Anson.Huang@nxp.com>
+Subject: [PATCH RESEND V4 4/5] arm64: dts: imx8mq: Add system counter node
+Date: Tue,  2 Jul 2019 15:55:12 +0800
+Message-ID: <20190702075513.17451-4-Anson.Huang@nxp.com>
 References: <20190702075513.17451-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190702075513.17451-1-Anson.Huang@nxp.com>
@@ -12,21 +12,21 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Add i.MX8MM system counter node to enable timer-imx-sysctr
+Add i.MX8MQ system counter node to enable timer-imx-sysctr
 broadcast timer driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 No changes.
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index b726712..b11fc5e 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -532,6 +532,14 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 50931da..3187428 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -639,6 +639,14 @@
  				#pwm-cells = <2>;
  				status = "disabled";
  			};
@@ -36,10 +36,10 @@ index b726712..b11fc5e 100644
 +				reg = <0x306a0000 0x30000>;
 +				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
 +					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				clock-frequency = <8000000>;
++				clock-frequency = <8333333>;
 +			};
  		};
  
- 		aips3: bus@30800000 {
+ 		bus@30800000 { /* AIPS3 */
 -- 
 2.7.4
