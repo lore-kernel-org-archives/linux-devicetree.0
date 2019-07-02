@@ -1,92 +1,142 @@
-Return-Path: <SRS0=5/KV=U7=chromium.org=pihsun@kernel.org>
-From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: [PATCH v12 1/5] dt-bindings: Add a binding for Mediatek SCP
-Date: Tue,  2 Jul 2019 14:05:24 +0800
-Message-Id: <20190702060546.222934-2-pihsun@chromium.org>
-In-Reply-To: <20190702060546.222934-1-pihsun@chromium.org>
-References: <20190702060546.222934-1-pihsun@chromium.org>
+Return-Path: <SRS0=jObF=U7=nxp.com=ping.bai@kernel.org>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: [RESEND PATCH 3/3] arm64: dts: freescale: Add power domain nodes for
+ i.mx8mm
+Date: Tue, 2 Jul 2019 10:03:52 +0000
+Message-ID: <20190702100832.29718-4-ping.bai@nxp.com>
+References: <20190702100832.29718-1-ping.bai@nxp.com>
+In-Reply-To: <20190702100832.29718-1-ping.bai@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <59EEF88A35FB0041A690F06EAA9D1AA4@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR REMOTEPROC SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Erin Lo <erin.lo@mediatek.com>
+Add the power domain nodes for i.MX8MM.
 
-Add a DT binding documentation of SCP for the
-MT8183 SoC from Mediatek.
-
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jacky Bai <ping.bai@nxp.com>
 ---
-Changes from v11, v10, v9, v8, v7, v6:
- - No change.
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 103 ++++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
 
-Changes from v5:
- - Remove dependency on CONFIG_RPMSG_MTK_SCP.
-
-Changes from v4:
- - Add detail of more properties.
- - Document the usage of mtk,rpmsg-name in subnode from the new design.
-
-Changes from v3:
- - No change.
-
-Changes from v2:
- - No change. I realized that for this patch series, there's no need to
-   add anything under the mt8183-scp node (neither the mt8183-rpmsg or
-   the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
-   directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
-   created by SCP name service.
-
-Changes from v1:
- - No change.
----
- .../bindings/remoteproc/mtk,scp.txt           | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-
-diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-new file mode 100644
-index 000000000000..3ba668bab14b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-@@ -0,0 +1,36 @@
-+Mediatek SCP Bindings
-+----------------------------------------
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dt=
+s/freescale/imx8mm.dtsi
+index 232a7412755a..850ca6a7ac66 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -181,6 +181,109 @@
+ 		interrupt-affinity =3D <&A53_0>, <&A53_1>, <&A53_2>, <&A53_3>;
+ 	};
+=20
++	power-domains {
++		compatible =3D "simple-bus";
++		/* HSIO SS */
++		hsiomix_pd: hsiomix-pd {
++			compatible =3D "fsl,imx8m-pm-domain";
++			#power-domain-cells =3D <0>;
++			domain-index =3D <0>;
++			domain-name =3D "hsiomix";
++			clocks =3D <&clk IMX8MM_CLK_USB1_CTRL_ROOT>;
++		};
 +
-+This binding provides support for ARM Cortex M4 Co-processor found on some
-+Mediatek SoCs.
++		pcie_pd: pcie-pd {
++			compatible =3D "fsl,imx8m-pm-domain";
++			#power-domain-cells =3D <0>;
++			domain-index =3D <1>;
++			domain-name =3D "pcie";
++			parent-domains =3D <&hsiomix_pd>;
++		};
 +
-+Required properties:
-+- compatible		Should be "mediatek,mt8183-scp"
-+- reg			Should contain the address ranges for the two memory
-+			regions, SRAM and CFG.
-+- reg-names		Contains the corresponding names for the two memory
-+			regions. These should be named "sram" & "cfg".
-+- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
-+- clock-names		Contains the corresponding name for the clock. This
-+			should be named "main".
++		usb_otg1_pd: usbotg1-pd {
++			compatible =3D "fsl,imx8m-pm-domain";
++			#power-domain-cells =3D <0>;
++			domain-index =3D <2>;
++			domain-name =3D "usb_otg1";
++			parent-domains =3D <&hsiomix_pd>;
++		};
 +
-+Subnodes
-+--------
++		usb_otg2_pd: usbotg2-pd {
++			compatible =3D "fsl,imx8m-pm-domain";
++			#power-domain-cells =3D <0>;
++			domain-index =3D <3>;
++			domain-name =3D "usb_otg2";
++			parent-domains =3D <&hsiomix_pd>;
++		};
 +
-+Subnodes of the SCP represent rpmsg devices. The names of the devices are not
-+important. The properties of these nodes are defined by the individual bindings
-+for the rpmsg devices - but must contain the following property:
++		/* GPU SS */
++		gpumix_pd: gpumix-pd {
++			compatible =3D "fsl,imx8m-pm-domain";
++			#power-domain-cells =3D <0>;
++			domain-index =3D <4>;
++			domain-name =3D "gpumix";
++			clocks =3D <&clk IMX8MM_CLK_GPU_BUS_ROOT>,
++				 <&clk IMX8MM_CLK_GPU_AHB>,
++				 <&clk IMX8MM_CLK_GPU2D_ROOT>,
++				 <&clk IMX8MM_CLK_GPU3D_ROOT>;
++		};
 +
-+- mtk,rpmsg-name	Contains the name for the rpmsg device. Used to match
-+			the subnode to rpmsg device announced by SCP.
++		/* VPU SS */
++		vpumix_pd: vpumix-pd {
++			compatible =3D "fsl,imx8m-pm-domain";
++			#power-domain-cells =3D <0>;
++			domain-index =3D <5>;
++			domain-name =3D "vpumix";
++			clocks =3D <&clk IMX8MM_CLK_VPU_DEC_ROOT>;
++		};
 +
-+Example:
++		vpu_g1_pd: vpug1-pd {
++			compatible =3D "fsl,imx8m-pm-domain";
++			#power-domain-cells =3D <0>;
++			domain-index =3D <6>;
++			domain-name =3D "vpu_g1";
++			parent-domains =3D <&vpumix_pd>;
++			clocks =3D <&clk IMX8MM_CLK_VPU_G1_ROOT>;
++		};
 +
-+	scp: scp@10500000 {
-+		compatible = "mediatek,mt8183-scp";
-+		reg = <0 0x10500000 0 0x80000>,
-+		      <0 0x105c0000 0 0x5000>;
-+		reg-names = "sram", "cfg";
-+		clocks = <&infracfg CLK_INFRA_SCPSYS>;
-+		clock-names = "main";
++		vpu_g2_pd: vpug2-pd {
++			compatible =3D "fsl,imx8m-pm-domain";
++			#power-domain-cells =3D <0>;
++			domain-index =3D <7>;
++			domain-name =3D "vpu_g2";
++			parent-domains =3D <&vpumix_pd>;
++			clocks =3D <&clk IMX8MM_CLK_VPU_G2_ROOT>;
++		};
++
++		vpu_h1_pd: vpuh1-pd {
++			compatible =3D "fsl,imx8m-pm-domain";
++			#power-domain-cells =3D <0>;
++			domain-index =3D <8>;
++			domain-name =3D "vpu_h1";
++			parent-domains =3D <&vpumix_pd>;
++			clocks =3D <&clk IMX8MM_CLK_VPU_H1_ROOT>;
++		};
++
++		/* DISP SS */
++		dispmix_pd: dispmix-pd {
++			compatible =3D "fsl,imx8m-pm-domain";
++			#power-domain-cells =3D <0>;
++			domain-index =3D <9>;
++			domain-name =3D "dispmix";
++			clocks =3D <&clk IMX8MM_CLK_DISP_ROOT>,
++				 <&clk IMX8MM_CLK_DISP_AXI_ROOT>,
++				 <&clk IMX8MM_CLK_DISP_APB_ROOT>;
++		};
++
++		mipi_pd: mipi-pd {
++			compatible =3D "fsl,imx8m-pm-domain";
++			#power-domain-cells =3D <0>;
++			domain-index =3D <10>;
++			domain-name =3D "mipi";
++			parent-domains =3D <&dispmix_pd>;
++		};
 +	};
--- 
-2.22.0.410.gd8fdbe21b5-goog
++
+ 	timer {
+ 		compatible =3D "arm,armv8-timer";
+ 		interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)=
+>, /* Physical Secure */
+--=20
+2.21.0
