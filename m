@@ -1,73 +1,134 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH RESEND V4 3/5] clocksource: imx-sysctr: Make timer work with
- clock driver using platform driver model
-Date: Tue,  2 Jul 2019 15:55:11 +0800
-Message-ID: <20190702075513.17451-3-Anson.Huang@nxp.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH RESEND V4 1/5] clocksource: timer-of: Support getting
+ clock frequency from DT
+Date: Tue, 2 Jul 2019 10:06:44 +0200
+Message-ID: <c7ff76e5-d73d-e71e-c3f4-445bdd2c5b93@linaro.org>
 References: <20190702075513.17451-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190702075513.17451-1-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson.Huang@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+Hi Anson,
 
-On some i.MX8M platforms, clock driver uses platform driver
-model and it is NOT ready during timer initialization phase,
-the clock operations will fail and system counter driver will
-fail too. As all the i.MX8M platforms' system counter clock
-are from OSC which is always enabled, so it is no need to enable
-clock for system counter driver, the ONLY thing is to pass
-clock frequence to driver.
+why did you resend the series?
 
-To make system counter driver work for upper scenario, if DT's
-system counter node has property "clock-frequency" present,
-setting TIMER_OF_CLOCK_FREQUENCY flag to indicate timer-of driver
-to get clock frequency from DT directly instead of of_clk operation
-via clk APIs.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V3:
-	- remove the .prop_name initialization acording to timer-of changes in V4.
----
- drivers/clocksource/timer-imx-sysctr.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On 02/07/2019 09:55, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> More and more platforms use platform driver model for clock driver,
+> so the clock driver is NOT ready during timer initialization phase,
+> it will cause timer initialization failed.
+> 
+> To support those platforms with upper scenario, introducing a new
+> flag TIMER_OF_CLOCK_FREQUENCY which is mutually exclusive with
+> TIMER_OF_CLOCK flag to support getting timer clock frequency from
+> DT's timer node, the property name should be "clock-frequency",
+> then of_clk operations can be skipped.
+> 
+> User needs to select either TIMER_OF_CLOCK_FREQUENCY or TIMER_OF_CLOCK
+> flag if want to use timer-of driver to initialize the clock rate.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V3:
+> 	- use hardcoded "clock-frequency" instead of adding new variable prop_name;
+> 	- add pre-condition check for TIMER_OF_CLOCK and TIMER_OF_CLOCK_FREQUENCY, they MUST be exclusive.
+> ---
+>  drivers/clocksource/timer-of.c | 29 +++++++++++++++++++++++++++++
+>  drivers/clocksource/timer-of.h |  7 ++++---
+>  2 files changed, 33 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
+> index 8054228..858f684 100644
+> --- a/drivers/clocksource/timer-of.c
+> +++ b/drivers/clocksource/timer-of.c
+> @@ -161,11 +161,30 @@ static __init int timer_of_base_init(struct device_node *np,
+>  	return 0;
+>  }
+>  
+> +static __init int timer_of_clk_frequency_init(struct device_node *np,
+> +					      struct of_timer_clk *of_clk)
+> +{
+> +	int ret;
+> +	u32 rate;
+> +
+> +	ret = of_property_read_u32(np, "clock-frequency", &rate);
+> +	if (!ret) {
+> +		of_clk->rate = rate;
+> +		of_clk->period = DIV_ROUND_UP(rate, HZ);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  int __init timer_of_init(struct device_node *np, struct timer_of *to)
+>  {
+> +	unsigned long clock_flags = TIMER_OF_CLOCK | TIMER_OF_CLOCK_FREQUENCY;
+>  	int ret = -EINVAL;
+>  	int flags = 0;
+>  
+> +	if ((to->flags & clock_flags) == clock_flags)
+> +		return ret;
+> +
+>  	if (to->flags & TIMER_OF_BASE) {
+>  		ret = timer_of_base_init(np, &to->of_base);
+>  		if (ret)
+> @@ -180,6 +199,13 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
+>  		flags |= TIMER_OF_CLOCK;
+>  	}
+>  
+> +	if (to->flags & TIMER_OF_CLOCK_FREQUENCY) {
+> +		ret = timer_of_clk_frequency_init(np, &to->of_clk);
+> +		if (ret)
+> +			goto out_fail;
+> +		flags |= TIMER_OF_CLOCK_FREQUENCY;
+> +	}
+> +
+>  	if (to->flags & TIMER_OF_IRQ) {
+>  		ret = timer_of_irq_init(np, &to->of_irq);
+>  		if (ret)
+> @@ -201,6 +227,9 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
+>  	if (flags & TIMER_OF_CLOCK)
+>  		timer_of_clk_exit(&to->of_clk);
+>  
+> +	if (flags & TIMER_OF_CLOCK_FREQUENCY)
+> +		to->of_clk.rate = 0;
+> +
+>  	if (flags & TIMER_OF_BASE)
+>  		timer_of_base_exit(&to->of_base);
+>  	return ret;
+> diff --git a/drivers/clocksource/timer-of.h b/drivers/clocksource/timer-of.h
+> index a5478f3..a08e108 100644
+> --- a/drivers/clocksource/timer-of.h
+> +++ b/drivers/clocksource/timer-of.h
+> @@ -4,9 +4,10 @@
+>  
+>  #include <linux/clockchips.h>
+>  
+> -#define TIMER_OF_BASE	0x1
+> -#define TIMER_OF_CLOCK	0x2
+> -#define TIMER_OF_IRQ	0x4
+> +#define TIMER_OF_BASE			0x1
+> +#define TIMER_OF_CLOCK			0x2
+> +#define TIMER_OF_IRQ			0x4
+> +#define TIMER_OF_CLOCK_FREQUENCY	0x8
+>  
+>  struct of_timer_irq {
+>  	int irq;
+> 
 
-diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
-index fd7d680..b82a549 100644
---- a/drivers/clocksource/timer-imx-sysctr.c
-+++ b/drivers/clocksource/timer-imx-sysctr.c
-@@ -98,7 +98,7 @@ static irqreturn_t sysctr_timer_interrupt(int irq, void *dev_id)
- }
- 
- static struct timer_of to_sysctr = {
--	.flags = TIMER_OF_IRQ | TIMER_OF_CLOCK | TIMER_OF_BASE,
-+	.flags = TIMER_OF_IRQ | TIMER_OF_BASE,
- 	.clkevt = {
- 		.name			= "i.MX system counter timer",
- 		.features		= CLOCK_EVT_FEAT_ONESHOT |
-@@ -130,6 +130,9 @@ static int __init sysctr_timer_init(struct device_node *np)
- {
- 	int ret = 0;
- 
-+	to_sysctr.flags |= of_find_property(np, "clock-frequency", NULL) ?
-+			   TIMER_OF_CLOCK_FREQUENCY : TIMER_OF_CLOCK;
-+
- 	ret = timer_of_init(np, &to_sysctr);
- 	if (ret)
- 		return ret;
+
 -- 
-2.7.4
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
