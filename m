@@ -1,95 +1,70 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [RFC PATCH 1/5] dt-bindings: soundwire: add slave bindings
-Date: Tue, 2 Jul 2019 15:15:10 +0530
-Message-ID: <20190702094510.GO2911@vkoul-mobl>
-References: <20190611104043.22181-1-srinivas.kandagatla@linaro.org>
- <20190611104043.22181-2-srinivas.kandagatla@linaro.org>
- <20190701061155.GJ2911@vkoul-mobl>
- <ce1e445e-3254-1308-8752-2cb56a7e0cc6@linaro.org>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH 4/4] devicetree: Add led-backlight binding
+Date: Tue, 2 Jul 2019 10:58:49 +0100
+Message-ID: <20190702095849.fxlmiqcioihsi3zk@holly.lan>
+References: <20190701151423.30768-1-jjhiblot@ti.com>
+ <20190701151423.30768-5-jjhiblot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <ce1e445e-3254-1308-8752-2cb56a7e0cc6@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, bgoswami@quicinc.com
+In-Reply-To: <20190701151423.30768-5-jjhiblot@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jingoohan1@gmail.com, tomi.valkeinen@ti.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, lee.jones@linaro.org, linux-leds@vger.kernel.org, dmurphy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 02-07-19, 09:22, Srinivas Kandagatla wrote:
-> Thanks Vinod for taking time to review,
-> 
-> On 01/07/2019 07:11, Vinod Koul wrote:
-> > On 11-06-19, 11:40, Srinivas Kandagatla wrote:
-> > > This patch adds bindings for Soundwire Slave devices which includes how
-> > > SoundWire enumeration address is represented in SoundWire slave device
-> > > tree nodes.
-> > > 
-> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > ---
-> > >   .../devicetree/bindings/soundwire/bus.txt     | 48 +++++++++++++++++++
-> > >   1 file changed, 48 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/soundwire/bus.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/soundwire/bus.txt b/Documentation/devicetree/bindings/soundwire/bus.txt
-> > > new file mode 100644
-> > > index 000000000000..19a672b0d528
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/soundwire/bus.txt
-> > 
-> > The bindings are for slave right and the file is bus.txt?
-> 
-> I tried to follow what I have done for SLIMBus.
-> Do you prefer them to be documented in slave.txt?
-
-Would that not be better :) We should have a master.txt for bus things
-
-> > > @@ -0,0 +1,48 @@
-> > > +SoundWire bus bindings.
-> > > +
-> > > +SoundWire is a 2-pin multi-drop interface with data and clock line.
-> > > +It facilitates development of low cost, efficient, high performance systems.
-> > > +
-> > > +SoundWire controller bindings are very much specific to vendor.
-> > > +
-> > > +Child nodes(SLAVE devices):
-> > > +Every SoundWire controller node can contain zero or more child nodes
-> > > +representing slave devices on the bus. Every SoundWire slave device is
-> > > +uniquely determined by the enumeration address containing 5 fields:
-> > > +SoundWire Version, Instance ID, Manufacturer ID, Part ID and Class ID
-> > > +for a device. Addition to below required properties, child nodes can
-> > > +have device specific bindings.
-> > > +
-> > > +Required property for SoundWire child node if it is present:
-> > > +- compatible:	 "sdwVER,MFD,PID,CID". The textual representation of
-> > > +		  SoundWire Enumeration address comprising SoundWire
-> > > +		  Version, Manufacturer ID, Part ID and Class ID,
-> > > +		  shall be in lower-case hexadecimal with leading
-> > > +		  zeroes suppressed.
-> > > +		  Version number '0x10' represents SoundWire 1.0
-> > > +		  Version number '0x11' represents SoundWire 1.1
-> > > +		  ex: "sdw10,0217,2010,0"
-> > 
-> > any reason why we want to code version number and not say sdw,1.0,...
-> > and so on?
-> 
-> For consistency reasons, as other info in hex.
-> 
-> > 
-> > > +
-> > > +- sdw-instance-id: Should be ('Instance ID') from SoundWire
-> > > +		  Enumeration Address. Instance ID is for the cases
-> > > +		  where multiple Devices of the same type or Class
-> > > +		  are attached to the bus.
-> > 
-> > instance id is part of the 48bit device id, so wont it make sense to add
-> > that to compatible as well?
-> > 
-> So we could have multiple instance of same IP, so adding this to compatible
-> string does not make sense! As driver has to list all the possible
-> compatible strings.
-
-Yes that makes sense.
-
--- 
-~Vinod
+T24gTW9uLCBKdWwgMDEsIDIwMTkgYXQgMDU6MTQ6MjNQTSArMDIwMCwgSmVhbi1KYWNxdWVzIEhp
+YmxvdCB3cm90ZToKPiBGcm9tOiBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29t
+Pgo+IAo+IEFkZCBEVCBiaW5kaW5nIGZvciBsZWQtYmFja2xpZ2h0LgoKSSB0aGluayB0aGUgcGF0
+Y2hzZXQgaXMgaW4gdGhlIHdyb25nIG9yZGVyOyB0aGUgRFQgYmluZGluZ3MKZG9jdW1lbnRhdGlv
+biBzaG91bGQgYXBwZWFyICpiZWZvcmUqIHRoZSBiaW5kaW5nIGlzCmltcGxlbWVudGVkIChhbW91
+bmcgb3RoZXIgdGhpbmdzIHRoaXMgcHJldmVudCB0cmFuc2llbnQgY2hlY2twYXRjaAp3YXJuaW5n
+cyBhcyB0aGUgcGF0Y2hzZXQgaXMgYXBwbGllZCkuCgoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBUb21p
+IFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEplYW4t
+SmFjcXVlcyBIaWJsb3QgPGpqaGlibG90QHRpLmNvbT4KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmcKPiAtLS0KPiAgLi4uL3ZpZGVvL2JhY2tsaWdodC9sZWQtYmFja2xpZ2h0LnR4dCAg
+ICAgICAgIHwgMzkgKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzkgaW5z
+ZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3ZpZGVvL2JhY2tsaWdodC9sZWQtYmFja2xpZ2h0LnR4dAo+IAo+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYmFja2xpZ2h0L2xl
+ZC1iYWNrbGlnaHQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVv
+L2JhY2tsaWdodC9sZWQtYmFja2xpZ2h0LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5k
+ZXggMDAwMDAwMDAwMDAwLi4yMTZjZDUyZDYyNGEKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JhY2tsaWdodC9sZWQtYmFja2xp
+Z2h0LnR4dAo+IEBAIC0wLDAgKzEsMzkgQEAKPiArbGVkLWJhY2tsaWdodCBiaW5kaW5ncwo+ICsK
+PiArVGhlIG5vZGUgb2YgdGhlIGJhY2tsaWdodCBkcml2ZXIgSVMgdGhlIG5vZGUgb2YgdGhlIExF
+RC4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKyAgLSBjb21wYXRpYmxlOiAibGVkLWJh
+Y2tsaWdodCIKPiArICAtIGJyaWdodG5lc3MtbGV2ZWxzOiBBcnJheSBvZiBkaXN0aW5jdCBMRUQg
+YnJpZ2h0bmVzcyBsZXZlbHMuIFRoZXNlCj4gKyAgICAgIGFyZSBpbiB0aGUgcmFuZ2UgZnJvbSAw
+IHRvIDI1NSwgcGFzc2VkIHRvIHRoZSBMRUQgY2xhc3MgZHJpdmVyLgo+ICsgIC0gZGVmYXVsdC1i
+cmlnaHRuZXNzLWxldmVsOiB0aGUgZGVmYXVsdCBicmlnaHRuZXNzIGxldmVsIChpbmRleCBpbnRv
+IHRoZQo+ICsgICAgICBhcnJheSBkZWZpbmVkIGJ5IHRoZSAiYnJpZ2h0bmVzcy1sZXZlbHMiIHBy
+b3BlcnR5KQoKSSB0aGluayBicmlnaHRuZXNzLWxldmVscyBhbmQgZGVmYXVsdC1icmlnaHRuZXNz
+LWxldmVsIGNvdWxkIGJlCm9wdGlvbmFsIHByb3BlcnRpZXMgc2luY2UgYSBkZWZhdWx0IDE6MSBt
+YXBwaW5nIHNlZW1zIHJlYXNvbmFibGUgZ2l2ZW4KaG93IGNvbnN0cmFpbmVkIHRoZSBMRUQgYnJp
+Z2h0bmVzcyB2YWx1ZXMgYXJlLgoKCkRhbmllbC4KCgo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGll
+czoKPiArICAtIHBvd2VyLXN1cHBseTogcmVndWxhdG9yIGZvciBzdXBwbHkgdm9sdGFnZQo+ICsg
+IC0gZW5hYmxlLWdwaW9zOiBjb250YWlucyBhIHNpbmdsZSBHUElPIHNwZWNpZmllciBmb3IgdGhl
+IEdQSU8gd2hpY2ggZW5hYmxlcwo+ICsgICAgICAgICAgICAgICAgICBhbmQgZGlzYWJsZXMgdGhl
+IGJhY2tsaWdodCAoc2VlIEdQSU8gYmluZGluZ1swXSkKPiArCj4gK1swXTogRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vZ3Bpby50eHQKPiArCj4gK0V4YW1wbGU6Cj4gKwo+
+ICtsZWRfY3RybCB7Cj4gKwlyZWRfbGVkQDEgewo+ICsJICAgICAgICBsYWJlbCA9ICJyZWQiOwo+
+ICsJCXJlZyA9IDwxPjsKPiArCX0KPiArCj4gKwliYWNrbGlnaHRfbGVkQDIgewo+ICsJCWZ1bmN0
+aW9uID0gTEVEX0ZVTkNUSU9OX0JBQ0tMSUdIVDsKPiArCQlyZWcgPSA8Mj47Cj4gKwo+ICsJCWNv
+bXBhdGlibGUgPSAibGVkLWJhY2tsaWdodCI7Cj4gKwo+ICsJCWJyaWdodG5lc3MtbGV2ZWxzID0g
+PDAgNCA4IDE2IDMyIDY0IDEyOCAyNTU+Owo+ICsJCWRlZmF1bHQtYnJpZ2h0bmVzcy1sZXZlbCA9
+IDw2PjsKPiArCj4gKwkJcG93ZXItc3VwcGx5ID0gPCZ2ZGRfYmxfcmVnPjsKPiArCQllbmFibGUt
+Z3Bpb3MgPSA8JmdwaW8gNTggMD47Cj4gKwl9Owo+ICt9Owo+IC0tIAo+IDIuMTcuMQo+IApfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
