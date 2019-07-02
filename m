@@ -1,50 +1,267 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH RESEND V4 1/5] clocksource: timer-of: Support getting
- clock frequency from DT
-Date: Tue, 2 Jul 2019 09:10:07 +0000
-Message-ID: <DB3PR0402MB3916D80505D5C5CBA82348B3F5F80__14943.7582631194$1562058628$gmane$org@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190702075513.17451-1-Anson.Huang@nxp.com>
- <c7ff76e5-d73d-e71e-c3f4-445bdd2c5b93@linaro.org>
- <DB3PR0402MB39166F04BAF9BA9D6C75B3A8F5F80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <0540a255-93e5-d68f-5bf5-31f9043fb3ad@linaro.org>
+From: <michael.kao@mediatek.com>
+Subject: [PATCH] thermal: mediatek: add suspend/resume callback
+Date: Tue, 2 Jul 2019 17:16:25 +0800
+Message-ID: <1562058985-27538-1-git-send-email-michael.kao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <0540a255-93e5-d68f-5bf5-31f9043fb3ad@linaro.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devi>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Louis Yu <louis.yu@mediatek.com>, Michael Kao <michael.kao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIERhbmllbA0KDQo+IE9uIDAyLzA3LzIwMTkgMTE6MDMsIEFuc29uIEh1YW5nIHdyb3RlOg0K
-PiA+IEhpLCBEYW5pZWwNCj4gPg0KPiA+PiBIaSBBbnNvbiwNCj4gPj4NCj4gPj4gd2h5IGRpZCB5
-b3UgcmVzZW5kIHRoZSBzZXJpZXM/DQo+ID4NCj4gPiBQcmV2aW91cyBwYXRjaCBzZXJpZXMgaGFz
-IGJ1aWxkIHdhcm5pbmcgYW5kIEkgZGlkIE5PVCBub3RpY2UsIHNvcnJ5DQo+ID4gZm9yIHRoYXQs
-DQo+ID4NCj4gPiBkcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLW9mLmM6IEluIGZ1bmN0aW9uIOKA
-mHRpbWVyX29mX2luaXTigJk6DQo+ID4gZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1vZi5jOjE4
-NTozMDogd2FybmluZzogc3VnZ2VzdCBwYXJlbnRoZXNlcw0KPiBhcm91bmQgY29tcGFyaXNvbiBp
-biBvcGVyYW5kIG9mIOKAmCbigJkgWy1XcGFyZW50aGVzZXNdDQo+ID4gICBpZiAodG8tPmZsYWdz
-ICYgY2xvY2tfZmxhZ3MgPT0gY2xvY2tfZmxhZ3MpDQo+ID4gICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgXg0KPiA+DQo+ID4gc28gSSByZXNlbmQgdGhlIHBhdGNoIHNlcmllcyB3aXRoIGJl
-bG93LCBzb3JyeSBmb3IgbWlzc2luZyBtZW50aW9uIG9mIHRoZQ0KPiBjaGFuZ2VzIGluIHJlc2Vu
-dCBwYXRjaCBzZXJpZXMuDQo+ID4NCj4gPiAgKwlpZiAoKHRvLT5mbGFncyAmIGNsb2NrX2ZsYWdz
-KSA9PSBjbG9ja19mbGFncykNCj4gPg0KPiA+IFNvcnJ5IGZvciBtYWlsIHN0b3JtLi4uDQo+IA0K
-PiBObyBwcm9ibGVtIGF0IGFsbCwgSSBwcmVmZXIgdGhpcyBjYXVnaHQgYW5kIGZpeGVkIGVhcmx5
-IDopDQo+IA0KPiBOZXh0IHRpbWUganVzdCBzZW5kIGEgVjUgYmVjYXVzZSAncmVzZW5kJyBtZWFu
-cyB0aGVyZSBpcyBubyBjaGFuZ2UgYnV0DQo+IHRoZXJlIHdhcyBhIHByb2JsZW0gd2l0aCB0aGUg
-ZW1haWwgKGNvdWxkIGJlIGFsc28gaW50ZXJwcmV0ZWQgYXMgYSBnZW50bGUNCj4gcGluZykuDQoN
-Ck9LLCB3aWxsIGtlZXAgaXQgaW4gbWluZCwgdGhhbmtzIGZvciBzaGFyaW5nIHVzZWZ1bCBleHBl
-cmllbmNlIQ0KDQpUaGFua3MsDQpBbnNvbg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+From: Louis Yu <louis.yu@mediatek.com>
+
+Add suspend/resume callback to disable/enable Mediatek thermal sensor
+respectively. Since thermal power domain is off in suspend, thermal driver
+needs re-initialization during resume.
+
+Signed-off-by: Louis Yu <louis.yu@mediatek.com>
+Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+---
+This patch series base on these patches [1][2][3].
+
+[1]thermal: mediatek: mt8183: fix bank number settings (https://patchwork.kernel.org/patch/10938817/)
+[2]thermal: mediatek: add another get_temp ops for thermal sensors (https://patchwork.kernel.org/patch/10938829/)
+[3]thermal: mediatek: use spinlock to protect PTPCORESEL (https://patchwork.kernel.org/patch/10938841/)
+
+ drivers/thermal/mtk_thermal.c | 134 +++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 125 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+index 3d01153..61d4114 100644
+--- a/drivers/thermal/mtk_thermal.c
++++ b/drivers/thermal/mtk_thermal.c
+@@ -30,6 +30,7 @@
+ #include <linux/thermal.h>
+ #include <linux/reset.h>
+ #include <linux/types.h>
++#include <linux/iopoll.h>
+ 
+ /* AUXADC Registers */
+ #define AUXADC_CON1_SET_V	0x008
+@@ -39,6 +40,8 @@
+ 
+ #define APMIXED_SYS_TS_CON1	0x604
+ 
++#define APMIXED_SYS_TS_CON1_BUFFER_OFF	0x30
++
+ /* Thermal Controller Registers */
+ #define TEMP_MONCTL0		0x000
+ #define TEMP_MONCTL1		0x004
+@@ -46,6 +49,7 @@
+ #define TEMP_MONIDET0		0x014
+ #define TEMP_MONIDET1		0x018
+ #define TEMP_MSRCTL0		0x038
++#define TEMP_MSRCTL1		0x03c
+ #define TEMP_AHBPOLL		0x040
+ #define TEMP_AHBTO		0x044
+ #define TEMP_ADCPNP0		0x048
+@@ -95,6 +99,9 @@
+ #define TEMP_ADCVALIDMASK_VALID_HIGH		BIT(5)
+ #define TEMP_ADCVALIDMASK_VALID_POS(bit)	(bit)
+ 
++#define TEMP_MSRCTL1_BUS_STA	(BIT(0) | BIT(7))
++#define TEMP_MSRCTL1_SENSING_POINTS_PAUSE	0x10E
++
+ /* MT8173 thermal sensors */
+ #define MT8173_TS1	0
+ #define MT8173_TS2	1
+@@ -266,6 +273,10 @@ struct mtk_thermal_data {
+ struct mtk_thermal {
+ 	struct device *dev;
+ 	void __iomem *thermal_base;
++	void __iomem *apmixed_base;
++	void __iomem *auxadc_base;
++	u64 apmixed_phys_base;
++	u64 auxadc_phys_base;
+ 
+ 	struct clk *clk_peri_therm;
+ 	struct clk *clk_auxadc;
+@@ -795,6 +806,42 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
+ 	mtk_thermal_put_bank(bank);
+ }
+ 
++static int mtk_thermal_disable_sensing(struct mtk_thermal *mt, int num)
++{
++	struct mtk_thermal_bank *bank = &mt->banks[num];
++	u32 val;
++	unsigned long timeout;
++	void __iomem *addr;
++	int ret = 0;
++
++	bank->id = num;
++	bank->mt = mt;
++
++	mtk_thermal_get_bank(bank);
++
++	val = readl(mt->thermal_base + TEMP_MSRCTL1);
++	/* pause periodic temperature measurement for sensing points */
++	writel(val | TEMP_MSRCTL1_SENSING_POINTS_PAUSE,
++	       mt->thermal_base + TEMP_MSRCTL1);
++
++	/* wait until temperature measurement bus idle */
++	timeout = jiffies + HZ;
++	addr = mt->thermal_base + TEMP_MSRCTL1;
++
++	ret = readl_poll_timeout(addr, val, (val & TEMP_MSRCTL1_BUS_STA) == 0x0,
++				 0, timeout);
++	if (ret < 0)
++		goto out;
++
++	/* disable periodic temperature meausrement on sensing points */
++	writel(0x0, mt->thermal_base + TEMP_MONCTL0);
++
++out:
++	mtk_thermal_put_bank(bank);
++
++	return ret;
++}
++
+ static u64 of_get_phys_base(struct device_node *np)
+ {
+ 	u64 size64;
+@@ -917,7 +964,6 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+ 	struct device_node *auxadc, *apmixedsys, *np = pdev->dev.of_node;
+ 	struct mtk_thermal *mt;
+ 	struct resource *res;
+-	u64 auxadc_phys_base, apmixed_phys_base;
+ 	struct thermal_zone_device *tzdev;
+ 	struct mtk_thermal_zone *tz;
+ 
+@@ -954,11 +1000,11 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	auxadc_phys_base = of_get_phys_base(auxadc);
++	mt->auxadc_phys_base = of_get_phys_base(auxadc);
+ 
+ 	of_node_put(auxadc);
+ 
+-	if (auxadc_phys_base == OF_BAD_ADDR) {
++	if (mt->auxadc_phys_base == OF_BAD_ADDR) {
+ 		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
+ 		return -EINVAL;
+ 	}
+@@ -969,11 +1015,12 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	apmixed_phys_base = of_get_phys_base(apmixedsys);
++	mt->apmixed_phys_base = of_get_phys_base(apmixedsys);
++	mt->apmixed_base = of_iomap(apmixedsys, 0);
+ 
+ 	of_node_put(apmixedsys);
+ 
+-	if (apmixed_phys_base == OF_BAD_ADDR) {
++	if (mt->apmixed_phys_base == OF_BAD_ADDR) {
+ 		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
+ 		return -EINVAL;
+ 	}
+@@ -985,19 +1032,19 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+ 	ret = clk_prepare_enable(mt->clk_auxadc);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n", ret);
+-		return ret;
++		goto err_disable_clk_auxadc;
+ 	}
+ 
+ 	ret = clk_prepare_enable(mt->clk_peri_therm);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Can't enable peri clk: %d\n", ret);
+-		goto err_disable_clk_auxadc;
++		goto err_disable_clk_peri_therm;
+ 	}
+ 
+ 	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
+ 		for (i = 0; i < mt->conf->num_banks; i++)
+-			mtk_thermal_init_bank(mt, i, apmixed_phys_base,
+-					      auxadc_phys_base, ctrl_id);
++			mtk_thermal_init_bank(mt, i, mt->apmixed_phys_base,
++					      mt->auxadc_phys_base, ctrl_id);
+ 
+ 	platform_set_drvdata(pdev, mt);
+ 
+@@ -1041,11 +1088,80 @@ static int mtk_thermal_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int __maybe_unused mtk_thermal_suspend(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct mtk_thermal *mt = platform_get_drvdata(pdev);
++	int i, ret;
++
++	for (i = 0; i < mt->conf->num_banks; i++) {
++		ret = mtk_thermal_disable_sensing(mt, i);
++		if (ret)
++			goto out;
++	}
++
++	/* disable buffer */
++	writel(readl(mt->apmixed_base + APMIXED_SYS_TS_CON1) |
++	       APMIXED_SYS_TS_CON1_BUFFER_OFF,
++	       mt->apmixed_base + APMIXED_SYS_TS_CON1);
++
++	clk_disable_unprepare(mt->clk_peri_therm);
++	clk_disable_unprepare(mt->clk_auxadc);
++
++	return 0;
++
++out:
++	dev_err(&pdev->dev, "Failed to wait until bus idle\n");
++
++	return ret;
++}
++
++static int __maybe_unused mtk_thermal_resume(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct mtk_thermal *mt = platform_get_drvdata(pdev);
++	int i, ret, ctrl_id;
++
++	ret = device_reset(&pdev->dev);
++	if (ret)
++		return ret;
++
++	ret = clk_prepare_enable(mt->clk_auxadc);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n", ret);
++		goto err_disable_clk_auxadc;
++	}
++
++	ret = clk_prepare_enable(mt->clk_peri_therm);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't enable peri clk: %d\n", ret);
++		goto err_disable_clk_peri_therm;
++	}
++
++	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
++		for (i = 0; i < mt->conf->num_banks; i++)
++			mtk_thermal_init_bank(mt, i, mt->apmixed_phys_base,
++					      mt->auxadc_phys_base, ctrl_id);
++
++	return 0;
++
++err_disable_clk_peri_therm:
++	clk_disable_unprepare(mt->clk_peri_therm);
++err_disable_clk_auxadc:
++	clk_disable_unprepare(mt->clk_auxadc);
++
++	return ret;
++}
++
++static SIMPLE_DEV_PM_OPS(mtk_thermal_pm_ops,
++			 mtk_thermal_suspend, mtk_thermal_resume);
++
+ static struct platform_driver mtk_thermal_driver = {
+ 	.probe = mtk_thermal_probe,
+ 	.remove = mtk_thermal_remove,
+ 	.driver = {
+ 		.name = "mtk-thermal",
++		.pm = &mtk_thermal_pm_ops,
+ 		.of_match_table = mtk_thermal_of_match,
+ 	},
+ };
+-- 
+1.9.1
