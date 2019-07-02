@@ -1,127 +1,135 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
-Date: Tue, 2 Jul 2019 20:53:00 +0300
-Message-ID: <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
-References: <20190625075746.10439-1-vigneshr@ti.com>
- <20190625075746.10439-4-vigneshr@ti.com>
+From: Jeykumar Sankaran <jsanka@codeaurora.org>
+Subject: Re: drm/msm/dpu: Correct dpu encoder spinlock initialization
+Date: Tue, 02 Jul 2019 11:21:20 -0700
+Message-ID: <f9a7786cce817c7d1a646b052ba1a679@codeaurora.org>
+References: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
+ <efade579f7ba59585b88ecb367422e5c@codeaurora.org>
+ <d61d7805b4ac0ec45309bf5b65841262@codeaurora.org>
+ <627144af54459a203f1583d2ad9b390c@codeaurora.org>
+ <ea91c2c49d73af79bd6eea93a6d00a5a@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190625075746.10439-4-vigneshr@ti.com>
-Content-Language: en-MW
+In-Reply-To: <ea91c2c49d73af79bd6eea93a6d00a5a@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh Raghavendra <vigneshr@ti.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Tokunori Ikegami <ikegami.t@gmail.com>
+To: dhar@codeaurora.org
+Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org, jshekhar@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On 2019-07-01 03:29, dhar@codeaurora.org wrote:
+> On 2019-06-26 03:10, Jeykumar Sankaran wrote:
+>> On 2019-06-24 22:44, dhar@codeaurora.org wrote:
+>>> On 2019-06-25 03:56, Jeykumar Sankaran wrote:
+>>>> On 2019-06-23 23:27, Shubhashree Dhar wrote:
+>>>>> dpu encoder spinlock should be initialized during dpu encoder
+>>>>> init instead of dpu encoder setup which is part of commit.
+>>>>> There are chances that vblank control uses the uninitialized
+>>>>> spinlock if not initialized during encoder init.
+>>>> Not much can be done if someone is performing a vblank operation
+>>>> before encoder_setup is done.
+>>>> Can you point to the path where this lock is acquired before
+>>>> the encoder_setup?
+>>>> 
+>>>> Thanks
+>>>> Jeykumar S.
+>>>>> 
+>>> 
+>>> When running some dp usecase, we are hitting this callstack.
+>>> 
+>>> Process kworker/u16:8 (pid: 215, stack limit = 0x00000000df9dd930)
+>>> Call trace:
+>>>  spin_dump+0x84/0x8c
+>>>  spin_dump+0x0/0x8c
+>>>  do_raw_spin_lock+0x80/0xb0
+>>>  _raw_spin_lock_irqsave+0x34/0x44
+>>>  dpu_encoder_toggle_vblank_for_crtc+0x8c/0xe8
+>>>  dpu_crtc_vblank+0x168/0x1a0
+>>>  dpu_kms_enable_vblank+0[   11.648998]  vblank_ctrl_worker+0x3c/0x60
+>>>  process_one_work+0x16c/0x2d8
+>>>  worker_thread+0x1d8/0x2b0
+>>>  kthread+0x124/0x134
+>>> 
+>>> Looks like vblank is getting enabled earlier causing this issue and 
+>>> we
+>>> are using the spinlock without initializing it.
+>>> 
+>>> Thanks,
+>>> Shubhashree
+>>> 
+>> DP calls into set_encoder_mode during hotplug before even notifying 
+>> the
+>> u/s. Can you trace out the original caller of this stack?
+>> 
+>> Even though the patch is harmless, I am not entirely convinced to move 
+>> this
+>> initialization. Any call which acquires the lock before encoder_setup
+>> will be a no-op since there will not be any physical encoder to work 
+>> with.
+>> 
+>> Thanks and Regards,
+>> Jeykumar S.
+>> 
+>>>>> Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
+>>>>> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+>>>>> ---
+>>>>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
+>>>>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>>>> 
+>>>>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>>>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>>>> index 5f085b5..22938c7 100644
+>>>>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>>>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>>>> @@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device *dev, 
+>>>>> struct
+>>>>> drm_encoder *enc,
+>>>>>  	if (ret)
+>>>>>  		goto fail;
+>>>>> 
+>>>>> -	spin_lock_init(&dpu_enc->enc_spinlock);
+>>>>> -
+>>>>>  	atomic_set(&dpu_enc->frame_done_timeout, 0);
+>>>>>  	timer_setup(&dpu_enc->frame_done_timer,
+>>>>>  			dpu_encoder_frame_done_timeout, 0);
+>>>>> @@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct
+>>>>> drm_device *dev,
+>>>>> 
+>>>>>  	drm_encoder_helper_add(&dpu_enc->base, 
+>>>>> &dpu_encoder_helper_funcs);
+>>>>> 
+>>>>> +	spin_lock_init(&dpu_enc->enc_spinlock);
+>>>>>  	dpu_enc->enabled = false;
+>>>>> 
+>>>>>  	return &dpu_enc->base;
+> 
+> In dpu_crtc_vblank(), we are looping through all the encoders in the
+> present mode_config:
+> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu
+> 1/dpu_crtc.c#L1082
+> and hence calling dpu_encoder_toggle_vblank_for_crtc() for all the
+> encoders. But in dpu_encoder_toggle_vblank_for_crtc(), after acquiring
+> the spinlock, we will do a early return for
+> the encoders which are not currently assigned to our crtc:
+> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu
+> 1/dpu_encoder.c#L1318.
+> Since the encoder_setup for the secondary encoder(dp encoder in this
+> case) is not called until dp hotplug, we are hitting kernel panic
+> while acquiring the lock.
+This is the sequence in which the events are expected to happen:
 
-On 06/25/2019 10:57 AM, Vignesh Raghavendra wrote:
+1) DP connector is instantiated with an inactive state
+2) Hot plug on DP
+3) DP connector is activated
+4) User space attaches a CRTC to the activated connector
+5) CRTC is enabled
+6) CRTC_VBLANK_ON is called
+7) dpu_crtc_vblank is called.
 
-> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
-> Bus interface between a host system master and one or more slave
-> interfaces. HyperBus is used to connect microprocessor, microcontroller,
-> or ASIC devices with random access NOR flash memory (called HyperFlash)
-> or self refresh DRAM (called HyperRAM).
-> 
-> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
-> signal and either Single-ended clock(3.0V parts) or Differential clock
-> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
-> At bus level, it follows a separate protocol described in HyperBus
-> specification[1].
-> 
-> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
-> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
-> its equivalent to x16 parallel NOR flash with respect to bits per clock
-> cycle. But HyperBus operates at >166MHz frequencies.
-> HyperRAM provides direct random read/write access to flash memory
-> array.
-> 
-> But, HyperBus memory controllers seem to abstract implementation details
-> and expose a simple MMIO interface to access connected flash.
-> 
-> Add support for registering HyperFlash devices with MTD framework. MTD
-> maps framework along with CFI chip support framework are used to support
-> communicating with flash.
-> 
-> Framework is modelled along the lines of spi-nor framework. HyperBus
-> memory controller (HBMC) drivers calls hyperbus_register_device() to
-> register a single HyperFlash device. HyperFlash core parses MMIO access
-> information from DT, sets up the map_info struct, probes CFI flash and
-> registers it with MTD framework.
-> 
-> Some HBMC masters need calibration/training sequence[3] to be carried
-> out, in order for DLL inside the controller to lock, by reading a known
-> string/pattern. This is done by repeatedly reading CFI Query
-> Identification String. Calibration needs to be done before trying to detect
-> flash as part of CFI flash probe.
-> 
-> HyperRAM is not supported at the moment.
-> 
-> HyperBus specification can be found at[1]
-> HyperFlash datasheet can be found at[2]
-> 
-> [1] https://www.cypress.com/file/213356/download
-> [2] https://www.cypress.com/file/213346/download
-> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->     Table 12-5741. HyperFlash Access Sequence
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-[...]
+So can you help tracing out why dpu_crtc_vblank is called when the 
+connector
+is not activated yet (no hotplug)?
 
-   I have at least created my HyperBus driver and unfortunately I'm having serious
-issues with the design of the support core (see below)...
-
-[...]
-> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
-> new file mode 100644
-> index 000000000000..63a9e64895bc
-> --- /dev/null
-> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
-> @@ -0,0 +1,154 @@
-[...]
-> +int hyperbus_register_device(struct hyperbus_device *hbdev)
-> +{
-> +	const struct hyperbus_ops *ops;
-> +	struct hyperbus_ctlr *ctlr;
-> +	struct device_node *np;
-> +	struct map_info *map;
-> +	struct resource res;
-> +	struct device *dev;
-> +	int ret;
-> +
-> +	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
-> +		pr_err("hyperbus: please fill all the necessary fields!\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	np = hbdev->np;
-> +	ctlr = hbdev->ctlr;
-> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
-> +		return -ENODEV;
-> +
-> +	hbdev->memtype = HYPERFLASH;
-> +
-> +	ret = of_address_to_resource(np, 0, &res);
-
-   Hm, I doubt that the HB devices are wholly mapped into memory space, that seems
-like a property of the HB controller. In my case, the flash device in the DT has
-only single-cell "reg" prop (equal to the chip select #). Then this function returns 
--EINVAL and the registration fails. Also, in my case such mapping is R/O, not R/W.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev = ctlr->dev;
-> +	map = &hbdev->map;
-> +	map->size = resource_size(&res);
-> +	map->virt = devm_ioremap_resource(dev, &res);
-> +	if (IS_ERR(map->virt))
-> +		return PTR_ERR(map->virt);
-
-   Again, I doubt that this should be done here, and not in the HB controller driver...
-
-[...]
-
-MBR, Sergei
+-- 
+Jeykumar S
