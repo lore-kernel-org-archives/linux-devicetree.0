@@ -1,47 +1,74 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 3/4] phy: enable compile-testing for the Lantiq PHY drivers
-Date: Tue,  2 Jul 2019 22:35:22 +0200
-Message-ID: <20190702203523.2412-4-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: phy: add binding for the Lantiq VRX200
+ and ARX300 PCIe PHYs
+Date: Wed, 3 Jul 2019 01:37:26 +0200
+Message-ID: <CAFBinCCaK5USb062tywd54y=6B0jTFsx1-k7NMfqvjmS7+5LgA@mail.gmail.com>
 References: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
+ <20190702203523.2412-2-martin.blumenstingl@googlemail.com> <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, john@phrozen.org, kishon@ti.com, robh+dt@kernel.org
-Cc: linux-kernel@vger.kernel.org, hauke@hauke-m.de, paul.burton@mips.com, ralf@linux-mips.org, mark.rutland@arm.com, ms@dev.tdt.de, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Mark Rutland <mark.rutland@arm.com>, Martin Schiller <ms@dev.tdt.de>
 List-Id: devicetree@vger.kernel.org
 
-Unconditionally include the lantiq subdirectory in the phy Makefile.
+Hi Rob,
 
-All drivers in there have their dependencies maintained. One of these
-(optional) dependencies is COMPILE_TEST, however this can only be
-evaluated when Kconfig scans the lantiq subdirectory.
+On Wed, Jul 3, 2019 at 1:34 AM Rob Herring <robh+dt@kernel.org> wrote:
+[...]
+> > +  lantiq,rcu:
+> > +    maxItems: 1
+> > +    description: phandle to the RCU syscon
+>
+> You need to define the type (and drop maxItems):
+>
+> $ref: /schemas/types.yaml#/definitions/phandle
+thank you for this hint - the examples I used didn't have it
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/phy/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > +
+> > +  lantiq,rcu-endian-offset:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: the offset of the endian registers for this PHY instance in the RCU syscon
+> > +
+> > +  lantiq,rcu-big-endian-mask:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: the mask to set the PDI (PHY) registers for this PHY instance to big endian
+> > +
+> > +required:
+> > +  - "#phy-cells"
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - clock-names
+> > +  - resets
+> > +  - reset-names
+> > +  - lantiq,rcu
+> > +  - lantiq,rcu-endian-offset
+> > +  - lantiq,rcu-big-endian-mask
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    pcie0_phy: phy@106800 {
+> > +        compatible = "lantiq,vrx200-pcie-phy";
+> > +        reg = <0x106800 0x100>;
+> > +        lantiq,rcu = <&rcu0>;
+> > +        lantiq,rcu-endian-offset = <0x4c>;
+> > +        lantiq,rcu-big-endian-mask = <0x80>; /* bit 7 */
+> > +        big-endian;
+>
+> The example will fail to validate because big-endian is not listed as
+> a property and you have 'additionalProperties: false'. So you have to
+> either list big-endian or drop additionalProperties.
+good catch, thank you.
+I'll add big-endian and little-endian as allowed (but optional) properties
 
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 0d9fddc498a6..c96a1afc95bd 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -10,7 +10,6 @@ obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
- obj-$(CONFIG_ARCH_SUNXI)		+= allwinner/
- obj-$(CONFIG_ARCH_MESON)		+= amlogic/
--obj-$(CONFIG_LANTIQ)			+= lantiq/
- obj-$(CONFIG_ARCH_MEDIATEK)		+= mediatek/
- obj-$(CONFIG_ARCH_RENESAS)		+= renesas/
- obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
-@@ -19,6 +18,7 @@ obj-y					+= broadcom/	\
- 					   cadence/	\
- 					   freescale/	\
- 					   hisilicon/	\
-+					   lantiq/	\
- 					   marvell/	\
- 					   motorola/	\
- 					   mscc/	\
--- 
-2.22.0
+> Note that the examples are validated against the schema in linux-next now.
+I tested this with yesterday's linux-next tree and it didn't fail for me
+do you have any hint how I can run this validation myself?
+
+
+Martin
