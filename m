@@ -1,185 +1,115 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/3] add doc and MAINTAINERS for poweroff
-Date: Wed, 3 Jul 2019 09:22:11 +0200
-Message-ID: <fbabe719-1e7d-8ac0-8d7b-adbc52d368f0@gmail.com>
-References: <20190702094045.3652-1-frank-w@public-files.de>
- <20190702094045.3652-2-frank-w@public-files.de>
+From: Brian Dodge <bdodge09@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: backlight: fix vendor prefix for
+ ArcticSand arcxcnn driver bindings
+Date: Tue, 2 Jul 2019 07:21:29 -0400
+Message-ID: <9ffed46f-c878-e415-cad0-cbe64efb9885@gmail.com>
+References: <1561940895-15837-1-git-send-email-bdodge09@gmail.com>
+ <1561940895-15837-2-git-send-email-bdodge09@gmail.com>
+ <20190702092617.c4wn3dmg5orrquyj@holly.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702094045.3652-2-frank-w@public-files.de>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190702092617.c4wn3dmg5orrquyj@holly.lan>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Josef Friedl <josef.friedl@speed.at>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: devicetree@vger.kernel.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/07/2019 11:40, Frank Wunderlich wrote:
-> From: Josef Friedl <josef.friedl@speed.at>
-> 
-> poweroff for BPI-R2
-> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-> 
-> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-> =2D--
-
-Please provide a proper commit message. Also subject should be adjusted. Just
-have a look into the git log to see what prefix you should use.
-
-What's =2D-- ?
-
-
->  .../devicetree/bindings/mfd/mt6397.txt        | 10 ++++++-
->  .../bindings/power/reset/mt6323-poweroff.txt  | 20 +++++++++++++
->  .../devicetree/bindings/rtc/rtc-mt6397.txt    | 29 +++++++++++++++++++
->  MAINTAINERS                                   |  6 ++++
->  4 files changed, 64 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-p=
-> oweroff.txt
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentat=
-> ion/devicetree/bindings/mfd/mt6397.txt
-> index 0ebd08af777d..44acb9827716 100644
-> =2D-- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> @@ -8,6 +8,7 @@ MT6397/MT6323 is a multifunction device with the following=
->  sub modules:
->  - Clock
->  - LED
->  - Keys
-> +- Power controller
-> 
->  It is interfaced to host controller using SPI interface by a proprietary =
-> hardware
->  called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwra=
-> p.
-
-It seems you have some problems with enconding or word wrapping by your email
-setting. please check that.
-
-> @@ -22,8 +23,10 @@ compatible: "mediatek,mt6397" or "mediatek,mt6323"
->  Optional subnodes:
-> 
->  - rtc
-> -	Required properties:
-> +	Required properties: Should be one of follows
-> +		- compatible: "mediatek,mt6323-rtc"
->  		- compatible: "mediatek,mt6397-rtc"
-> +	For details, see Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
->  - regulators
->  	Required properties:
->  		- compatible: "mediatek,mt6397-regulator"
-> @@ -46,6 +49,11 @@ Optional subnodes:
->  		- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
->  	see Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
-> 
-> +- power-controller
-> +	Required properties:
-> +		- compatible: "mediatek,mt6323-pwrc"
-> +	For details, see Documentation/devicetree/bindings/power/reset/mt6323-po=
-> weroff.txt
-> +
->  Example:
->  	pwrap: pwrap@1000f000 {
->  		compatible =3D "mediatek,mt8135-pwrap";
-> diff --git a/Documentation/devicetree/bindings/power/reset/mt6323-poweroff=
-> .txt b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-> new file mode 100644
-> index 000000000000..933f0c48e887
-> =2D-- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-> @@ -0,0 +1,20 @@
-> +Device Tree Bindings for Power Controller on MediaTek PMIC
-> +
-> +The power controller which could be found on PMIC is responsible for exte=
-> rnally
-> +powering off or on the remote MediaTek SoC through the circuit BBPU.
-> +
-> +Required properties:
-> +- compatible: Should be one of follows
-> +       "mediatek,mt6323-pwrc": for MT6323 PMIC
-> +
-> +Example:
-> +
-> +       pmic {
-> +               compatible =3D "mediatek,mt6323";
-> +
-> +               ...
-> +
-> +               power-controller {
-> +                       compatible =3D "mediatek,mt6323-pwrc";
-> +               };
-> +       }
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt b/Docume=
-> ntation/devicetree/bindings/rtc/rtc-mt6397.txt
-> new file mode 100644
-> index 000000000000..ebd1cf80dcc8
-> =2D-- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-> @@ -0,0 +1,29 @@
-> +Device-Tree bindings for MediaTek PMIC based RTC
-> +
-> +MediaTek PMIC based RTC is an independent function of MediaTek PMIC that =
-> works
-> +as a type of multi-function device (MFD). The RTC can be configured and s=
-> et up
-> +with PMIC wrapper bus which is a common resource shared with the other
-> +functions found on the same PMIC.
-> +
-> +For MediaTek PMIC MFD bindings, see:
-> +Documentation/devicetree/bindings/mfd/mt6397.txt
-> +
-> +For MediaTek PMIC wrapper bus bindings, see:
-> +Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-
-In the end there is no difference between the mt6397 rtc and the mt7622-rtc,
-right? Please rename the binding document of mt7622 and add the compatible
-there. No need to add a new file.
-
-> +
-> +Required properties:
-> +- compatible: Should be one of follows
-> +       "mediatek,mt6323-rtc": for MT6323 PMIC
-> +       "mediatek,mt6397-rtc": for MT6397 PMIC
-> +
-> +Example:
-> +
-> +       pmic {
-> +               compatible =3D "mediatek,mt6323";
-> +
-> +               ...
-> +
-> +               rtc {
-> +                       compatible =3D "mediatek,mt6323-rtc";
-> +               };
-> +       };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 01a52fc964da..ec6ff342aa3c 100644
-> =2D-- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9920,6 +9920,12 @@ S:	Maintained
->  F:	drivers/net/dsa/mt7530.*
->  F:	net/dsa/tag_mtk.c
-> 
-> +MEDIATEK BOARD LEVEL SHUTDOWN DRIVERS
-> +M:	Sean Wang <sean.wang@mediatek.com>
-> +L:	linux-pm@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-> +
->  MEDIATEK JPEG DRIVER
->  M:	Rick Chang <rick.chang@mediatek.com>
->  M:	Bin Liu <bin.liu@mediatek.com>
-> =2D-
-> 2.17.1
-
-Maintainers entries are normally a seperate patch.
-
-Regards,
-Matthias
-
-> 
+Ck9uIDcvMi8xOSA1OjI2IEFNLCBEYW5pZWwgVGhvbXBzb24gd3JvdGU6Cj4+IFtQQVRDSCAxLzJd
+IGR0LWJpbmRpbmdzOiBiYWNrbGlnaHQ6IGZpeCB2ZW5kb3IgcHJlZml4IGZvcgo+PiBBcmN0aWNT
+YW5kIGFyY3hjbm4gZHJpdmVyIGJpbmRpbmdzCj4gVGhlICJ2MiIgaXMgbm9ybWFsbHkgYXBwbGll
+ZCB0byB0aGUgd2hvbGUgcGF0Y2hzZXQgKGlmIHlvdQo+IHByZXBhcmUgdGhlIHBhdGNoc2V0IHVz
+aW5nIGdpdCBmb3JtYXQtcGF0Y2ggdGhlbiB5b3UgY2FuIHVzZQo+IHRoZSAtLXN1YmplY3QtcHJl
+Zml4IGFyZ3VtZW50IGZvciB0aGF0KS4KU29ycnkgYW5kIG5vdGVkCj4KPiBPbiBTdW4sIEp1biAz
+MCwgMjAxOSBhdCAwODoyODoxNFBNIC0wNDAwLCBCcmlhbiBEb2RnZSB3cm90ZToKPj4gVGhlIHZl
+bmRvci1wcmVmaXhlcy50eHQgZmlsZSBwcm9wZXJseSByZWZlcnMgdG8gQXJjdGljU2FuZAo+PiBh
+cyBhcmN0aWMgYnV0IHRoZSBkcml2ZXIgYmluZGluZ3MgaW1wcm9wZXJseSBhYmJyZXZpYXRlZCB0
+aGUKPj4gcHJlZml4IHRvIGFyYy4gVGhpcyB3YXMgYSBtaXN0YWtlIGluIHRoZSBvcmlnaW5hbCBw
+YXRjaC4gVGhpcwo+PiBwYXRjaCBhZGRzICJhcmN0aWMiIGFuZCByZXRhaW5zICJhcmMiIChkZXBy
+ZWNhdGVkKSBiaW5kaW5ncwo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBCcmlhbiBEb2RnZSA8YmRvZGdl
+MDlAZ21haWwuY29tPgo+PiAtLS0KPj4gICAuLi4vYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvYXJj
+eGNubl9ibC50eHQgICAgICAgICB8IDMxICsrKysrKysrKysrKysrKy0tLS0tLS0KPj4gICAxIGZp
+bGUgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQv
+YXJjeGNubl9ibC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9i
+YWNrbGlnaHQvYXJjeGNubl9ibC50eHQKPj4gaW5kZXggMjMwYWJkZS4uNGQ5ODM5NCAxMDA2NDQK
+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0
+L2FyY3hjbm5fYmwudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9sZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4dAo+PiBAQCAtMSw4ICsxLDEzIEBACj4+IC1C
+aW5kaW5nIGZvciBBcmN0aWNTYW5kIGFyYzJjMDYwOCBMRUQgZHJpdmVyCj4+ICtCaW5kaW5nIGZv
+ciBBcmN0aWNTYW5kIGFyYyBmYW1pbHkgTEVEIGRyaXZlcnMKPj4gICAKPj4gICBSZXF1aXJlZCBw
+cm9wZXJ0aWVzOgo+PiAtLSBjb21wYXRpYmxlOgkJc2hvdWxkIGJlICJhcmMsYXJjMmMwNjA4Igo+
+PiAtLSByZWc6CQkJc2xhdmUgYWRkcmVzcwo+PiArLSBjb21wYXRpYmxlOiBvbmUgb2YKPj4gKwki
+YXJjdGljLGFyYzFjMDYwOCIKPj4gKwkiYXJjdGljLGFyYzJjMDYwOCIKPj4gKwkiYXJjdGljLGFy
+YzNjMDg0NSIKPj4gKwkiYXJjLGFyYzJjMDYwOCIgKGRlcHJlY2F0ZWQpCj4gTm90aGluZyB3cm9u
+ZyB3aXRoIGFkZGluZyBjb21wYXRpYmxlIHN0cmluZ3MgZm9yIGFyYzEgYW5kIGFyYzMgYnV0IEkK
+PiB3b3VsZCBleHBlY3QgaXQgdG8gYmUgbWVudGlvbmVkIGluIHRoZSBkZXNjcmlwdGlvbiB0byBy
+ZWFzc3VyZSByZXZpZXdlcnMKPiB0aGF0IHRoZSByaWdodCBkZXB0aCBvZiB0aG91Z2h0IGhhcyBi
+ZWVuIGFwcGxpZWQgU29tZXRoaW5nIGxpa2UgIkFsc28gYWRkZWQKPiBjb21wYXRpYmxlIHN0cmlu
+Z3MgZm9yIG90aGVyIGZhbWlseSBtZW1iZXJzLCBhbGwgdGhlIGV4aXN0aW5nIG9wdGlvbmFsCj4g
+cHJvcGVydGllcyB3b3JrIHRoZSBzYW1lIHdheSBmb3IgdGhlIG5ldyBkZXZpY2VzLiIgKGlmIHlv
+dSBhZ3JlZSB0aGF0IGl0Cj4gaXMgdHJ1ZSkgaXMgZ29vZCB0byBzaG93IHlvdSB3ZXJlIHBheWlu
+ZyBwcm9wZXIgYXR0ZW50aW9uIQo+Cj4gSG93ZXZlciB0aGlzIGRvZXMgcGVyaGFwcyB2ZXJnZSBh
+IGxpdHRsZSB0b3dhcmRzIG5pdHBpY2tpbmcgc28gbWF5YmUKPiB3YWl0IHRvIHNlZSB3aGF0IHRo
+ZSBEVCBmb2xrcyBzYXkuIEZyb20gbXkgcG9pbnQgb2YgdmlldzoKPiBBY2tlZC1ieTogRGFuaWVs
+IFRob21wc29uIDxkYW5pZWwudGhvbXBzb25AbGluYXJvLm9yZz4KPgo+Cj4gRGFuaWVsLgoKR29v
+ZCBwb2ludC4gSSBkaWQgYWN0dWFsbHkgdGhpbmsgYWJvdXQgdGhpcyBhIGJpdC4gVGhlICpvbmx5
+KiBjaGlwIAphdmFpbGFibGUgYXQgdGhlIHRpbWUgb2YgdGhlIG9yaWdpbmFsIGRyaXZlciB3YXMg
+dGhlIGFyYzJjMDYwOCBhbmQgdGhhdCAKaXMgdGhlIGNoaXAgdGhhdCBpcyBjdXJyZW50bHkgaW4g
+dXNlIGluIHRoZSBTYW1zdW5nIENocm9tZWJvb2sgUGx1cywgYW5kIAp0aGUgb25seSB1c2UgSSBr
+bm93IG9mIHVzaW5nIHRoZSAiYXJjIiBwcmVmaXguIFRoZXJlIHdpbGwgYmUgbm8gcmVhc29uIAp0
+byBldmVyIHN1cHBvcnQgImFyYyxhcmMxLi4iIG9yICJhcmMsYXJjMy4uLiIgaW4gdGhlIGJpbmRp
+bmdzIGZvciBwYXN0IApvciBmdXR1cmUgdXNlLgoKVGhlIG5ldyB0d28gY2hpcHMgYXJlIGp1c3Qg
+YmFzaWNhbGx5IHN1cHBvcnRlZCBieSB0aGlzIGRyaXZlci4gVGhlcmUgaXMgCm1vcmUgZnVuY3Rp
+b25hbGl0eSB0byB0aGVtIHdoaWNoIHdpbGwgYmUgZW5hYmxlZCBpbiBteSBuZXh0IHBhdGNoLiBJ
+IAp3YW50ZWQgdG8gc2VwYXJhdGUgdGhlIG1vdmUgdG8gImFyY3RpYyIgZnJvbSB0aGUgbW92ZSB0
+byBmdWxseSBzdXBwb3J0IAp0aGUgb3RoZXIgY2hpcHMgZm9yIGNsYXJpdHkgKHlvdSBndXlzIGFy
+ZSBhbGwgcmlnaHRseSBwaWNreSEpIEkgZGlkIHB1dCAKdGhlIG5ldyBjaGlwIGJpbmRpbmdzIGlu
+IHRoZSBkcml2ZXIvYmluZGluZ3MgaW4gdGhpcyBwYXRjaCB0aG91Z2ggc28gSSAKY291bGQgdGVz
+dCB0aGlzIHBhdGNoIGFnYWluc3QgdGhlIGFjdHVhbCBoL3cgaW5zdGFuY2VzOiBJIGhhdmUgdGhy
+ZWUgCmJvYXJkcywgb25lIHdpdGggZWFjaCBjaGlwIHR5cGUgYW5kIGVhY2ggaGFzIGEgZHRiIHdp
+dGggdGhlICJhcmN0aWMsLi4iIAp0eXBlIGJpbmRpbmcgb25ib2FyZC4KCj4+ICsKPj4gKy0gcmVn
+OgkJc2xhdmUgYWRkcmVzcwo+PiAgIAo+PiAgIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICAgLSBk
+ZWZhdWx0LWJyaWdodG5lc3M6CWJyaWdodG5lc3MgdmFsdWUgb24gYm9vdCwgdmFsdWUgZnJvbTog
+MC00MDk1Cj4+IEBAIC0xMSwxOSArMTYsMjUgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4gICAt
+IGxlZC1zb3VyY2VzOgkJTGlzdCBvZiBlbmFibGVkIGNoYW5uZWxzIGZyb20gMCB0byA1Lgo+PiAg
+IAkJCVNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9jb21tb24udHh0
+Cj4+ICAgCj4+IC0tIGFyYyxsZWQtY29uZmlnLTA6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElMRURf
+Q09ORklHXzAKPj4gLS0gYXJjLGxlZC1jb25maWctMToJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSUxF
+RF9DT05GSUdfMQo+PiAtLSBhcmMsZGltLWZyZXE6CQlQV00gbW9kZSBmcmVxdWVuY2Ugc2V0dGlu
+ZyAoYml0cyBbMzowXSB1c2VkKQo+PiAtLSBhcmMsY29tcC1jb25maWc6CXNldHRpbmcgZm9yIHJl
+Z2lzdGVyIENPTkZJR19DT01QCj4+IC0tIGFyYyxmaWx0ZXItY29uZmlnOglzZXR0aW5nIGZvciBy
+ZWdpc3RlciBGSUxURVJfQ09ORklHCj4+IC0tIGFyYyx0cmltLWNvbmZpZzoJc2V0dGluZyBmb3Ig
+cmVnaXN0ZXIgSU1BWFRVTkUKPj4gKy0gYXJjdGljLGxlZC1jb25maWctMDoJc2V0dGluZyBmb3Ig
+cmVnaXN0ZXIgSUxFRF9DT05GSUdfMAo+PiArLSBhcmN0aWMsbGVkLWNvbmZpZy0xOglzZXR0aW5n
+IGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18xCj4+ICstIGFyY3RpYyxkaW0tZnJlcToJUFdNIG1v
+ZGUgZnJlcXVlbmNlIHNldHRpbmcgKGJpdHMgWzM6MF0gdXNlZCkKPj4gKy0gYXJjdGljLGNvbXAt
+Y29uZmlnOglzZXR0aW5nIGZvciByZWdpc3RlciBDT05GSUdfQ09NUAo+PiArLSBhcmN0aWMsZmls
+dGVyLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgRklMVEVSX0NPTkZJRwo+PiArLSBhcmN0
+aWMsdHJpbS1jb25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElNQVhUVU5FCj4+ICstIGFyYyxs
+ZWQtY29uZmlnLTA6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElMRURfQ09ORklHXzAgKGRlcHJlY2F0
+ZWQpCj4+ICstIGFyYyxsZWQtY29uZmlnLTE6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElMRURfQ09O
+RklHXzEgKGRlcHJlY2F0ZWQpCj4+ICstIGFyYyxkaW0tZnJlcToJCVBXTSBtb2RlIGZyZXF1ZW5j
+ZSBzZXR0aW5nIChiaXRzIFszOjBdIHVzZWQpIChkZXByZWNhdGVkKQo+PiArLSBhcmMsY29tcC1j
+b25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIENPTkZJR19DT01QIChkZXByZWNhdGVkKQo+PiAr
+LSBhcmMsZmlsdGVyLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgRklMVEVSX0NPTkZJRyAo
+ZGVwcmVjYXRlZCkKPj4gKy0gYXJjLHRyaW0tY29uZmlnOglzZXR0aW5nIGZvciByZWdpc3RlciBJ
+TUFYVFVORSAoZGVwcmVjYXRlZCkKPj4gICAKPj4gICBOb3RlOiBPcHRpb25hbCBwcm9wZXJ0aWVz
+IG5vdCBzcGVjaWZpZWQgd2lsbCBkZWZhdWx0IHRvIHZhbHVlcyBpbiBJQyBFUFJPTQo+PiAgIAo+
+PiAgIEV4YW1wbGU6Cj4+ICAgCj4+ICAgYXJjMmMwNjA4QDMwIHsKPj4gLQljb21wYXRpYmxlID0g
+ImFyYyxhcmMyYzA2MDgiOwo+PiArCWNvbXBhdGlibGUgPSAiYXJjdGljLGFyYzJjMDYwOCI7Cj4+
+ICAgCXJlZyA9IDwweDMwPjsKPj4gICAJZGVmYXVsdC1icmlnaHRuZXNzID0gPDUwMD47Cj4+ICAg
+CWxhYmVsID0gImxjZC1iYWNrbGlnaHQiOwo+PiAtLSAKPj4gMi43LjQKPj4KX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
