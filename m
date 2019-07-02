@@ -1,132 +1,73 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: backlight: fix vendor prefix for
- ArcticSand arcxcnn driver bindings
-Date: Tue, 2 Jul 2019 14:11:48 +0100
-Message-ID: <20190702131148.unb3pfthxvacfwn3@holly.lan>
-References: <1561940895-15837-1-git-send-email-bdodge09@gmail.com>
- <1561940895-15837-2-git-send-email-bdodge09@gmail.com>
- <20190702092617.c4wn3dmg5orrquyj@holly.lan>
- <9ffed46f-c878-e415-cad0-cbe64efb9885@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <9ffed46f-c878-e415-cad0-cbe64efb9885@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Dodge <bdodge09@gmail.com>
-Cc: devicetree@vger.kernel.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
+From: Andra Danciu <andradanciu1997@gmail.com>
+Subject: [PATCH v2] arm64: dts: imx8mq: Add sai3 and sai6 nodes
+Date: Tue,  2 Jul 2019 16:11:55 +0300
+Message-ID: <20190702131155.18170-1-andradanciu1997@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, Anson.Huang@nxp.com, andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com, agx@sigxcpu.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMDIsIDIwMTkgYXQgMDc6MjE6MjlBTSAtMDQwMCwgQnJpYW4gRG9kZ2Ugd3Jv
-dGU6Cj4gCj4gT24gNy8yLzE5IDU6MjYgQU0sIERhbmllbCBUaG9tcHNvbiB3cm90ZToKPiA+ID4g
-W1BBVENIIDEvMl0gZHQtYmluZGluZ3M6IGJhY2tsaWdodDogZml4IHZlbmRvciBwcmVmaXggZm9y
-Cj4gPiA+IEFyY3RpY1NhbmQgYXJjeGNubiBkcml2ZXIgYmluZGluZ3MKPiA+IFRoZSAidjIiIGlz
-IG5vcm1hbGx5IGFwcGxpZWQgdG8gdGhlIHdob2xlIHBhdGNoc2V0IChpZiB5b3UKPiA+IHByZXBh
-cmUgdGhlIHBhdGNoc2V0IHVzaW5nIGdpdCBmb3JtYXQtcGF0Y2ggdGhlbiB5b3UgY2FuIHVzZQo+
-ID4gdGhlIC0tc3ViamVjdC1wcmVmaXggYXJndW1lbnQgZm9yIHRoYXQpLgo+IFNvcnJ5IGFuZCBu
-b3RlZAo+ID4gCj4gPiBPbiBTdW4sIEp1biAzMCwgMjAxOSBhdCAwODoyODoxNFBNIC0wNDAwLCBC
-cmlhbiBEb2RnZSB3cm90ZToKPiA+ID4gVGhlIHZlbmRvci1wcmVmaXhlcy50eHQgZmlsZSBwcm9w
-ZXJseSByZWZlcnMgdG8gQXJjdGljU2FuZAo+ID4gPiBhcyBhcmN0aWMgYnV0IHRoZSBkcml2ZXIg
-YmluZGluZ3MgaW1wcm9wZXJseSBhYmJyZXZpYXRlZCB0aGUKPiA+ID4gcHJlZml4IHRvIGFyYy4g
-VGhpcyB3YXMgYSBtaXN0YWtlIGluIHRoZSBvcmlnaW5hbCBwYXRjaC4gVGhpcwo+ID4gPiBwYXRj
-aCBhZGRzICJhcmN0aWMiIGFuZCByZXRhaW5zICJhcmMiIChkZXByZWNhdGVkKSBiaW5kaW5ncwo+
-ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogQnJpYW4gRG9kZ2UgPGJkb2RnZTA5QGdtYWlsLmNv
-bT4KPiA+ID4gLS0tCj4gPiA+ICAgLi4uL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5f
-YmwudHh0ICAgICAgICAgfCAzMSArKysrKysrKysrKysrKystLS0tLS0tCj4gPiA+ICAgMSBmaWxl
-IGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQo+ID4gPiAKPiA+ID4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2ts
-aWdodC9hcmN4Y25uX2JsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9s
-ZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4dAo+ID4gPiBpbmRleCAyMzBhYmRlLi40ZDk4Mzk0
-IDEwMDY0NAo+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVk
-cy9iYWNrbGlnaHQvYXJjeGNubl9ibC50eHQKPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5fYmwudHh0Cj4gPiA+IEBAIC0x
-LDggKzEsMTMgQEAKPiA+ID4gLUJpbmRpbmcgZm9yIEFyY3RpY1NhbmQgYXJjMmMwNjA4IExFRCBk
-cml2ZXIKPiA+ID4gK0JpbmRpbmcgZm9yIEFyY3RpY1NhbmQgYXJjIGZhbWlseSBMRUQgZHJpdmVy
-cwo+ID4gPiAgIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiA+IC0tIGNvbXBhdGlibGU6CQlzaG91
-bGQgYmUgImFyYyxhcmMyYzA2MDgiCj4gPiA+IC0tIHJlZzoJCQlzbGF2ZSBhZGRyZXNzCj4gPiA+
-ICstIGNvbXBhdGlibGU6IG9uZSBvZgo+ID4gPiArCSJhcmN0aWMsYXJjMWMwNjA4Igo+ID4gPiAr
-CSJhcmN0aWMsYXJjMmMwNjA4Igo+ID4gPiArCSJhcmN0aWMsYXJjM2MwODQ1Igo+ID4gPiArCSJh
-cmMsYXJjMmMwNjA4IiAoZGVwcmVjYXRlZCkKPiA+IE5vdGhpbmcgd3Jvbmcgd2l0aCBhZGRpbmcg
-Y29tcGF0aWJsZSBzdHJpbmdzIGZvciBhcmMxIGFuZCBhcmMzIGJ1dCBJCj4gPiB3b3VsZCBleHBl
-Y3QgaXQgdG8gYmUgbWVudGlvbmVkIGluIHRoZSBkZXNjcmlwdGlvbiB0byByZWFzc3VyZSByZXZp
-ZXdlcnMKPiA+IHRoYXQgdGhlIHJpZ2h0IGRlcHRoIG9mIHRob3VnaHQgaGFzIGJlZW4gYXBwbGll
-ZCBTb21ldGhpbmcgbGlrZSAiQWxzbyBhZGRlZAo+ID4gY29tcGF0aWJsZSBzdHJpbmdzIGZvciBv
-dGhlciBmYW1pbHkgbWVtYmVycywgYWxsIHRoZSBleGlzdGluZyBvcHRpb25hbAo+ID4gcHJvcGVy
-dGllcyB3b3JrIHRoZSBzYW1lIHdheSBmb3IgdGhlIG5ldyBkZXZpY2VzLiIgKGlmIHlvdSBhZ3Jl
-ZSB0aGF0IGl0Cj4gPiBpcyB0cnVlKSBpcyBnb29kIHRvIHNob3cgeW91IHdlcmUgcGF5aW5nIHBy
-b3BlciBhdHRlbnRpb24hCj4gPiAKPiA+IEhvd2V2ZXIgdGhpcyBkb2VzIHBlcmhhcHMgdmVyZ2Ug
-YSBsaXR0bGUgdG93YXJkcyBuaXRwaWNraW5nIHNvIG1heWJlCj4gPiB3YWl0IHRvIHNlZSB3aGF0
-IHRoZSBEVCBmb2xrcyBzYXkuIEZyb20gbXkgcG9pbnQgb2YgdmlldzoKPiA+IEFja2VkLWJ5OiBE
-YW5pZWwgVGhvbXBzb24gPGRhbmllbC50aG9tcHNvbkBsaW5hcm8ub3JnPgo+ID4gCj4gPiAKPiA+
-IERhbmllbC4KPiAKPiBHb29kIHBvaW50LiBJIGRpZCBhY3R1YWxseSB0aGluayBhYm91dCB0aGlz
-IGEgYml0LiBUaGUgKm9ubHkqIGNoaXAgYXZhaWxhYmxlCj4gYXQgdGhlIHRpbWUgb2YgdGhlIG9y
-aWdpbmFsIGRyaXZlciB3YXMgdGhlIGFyYzJjMDYwOCBhbmQgdGhhdCBpcyB0aGUgY2hpcAo+IHRo
-YXQgaXMgY3VycmVudGx5IGluIHVzZSBpbiB0aGUgU2Ftc3VuZyBDaHJvbWVib29rIFBsdXMsIGFu
-ZCB0aGUgb25seSB1c2UgSQo+IGtub3cgb2YgdXNpbmcgdGhlICJhcmMiIHByZWZpeC4gVGhlcmUg
-d2lsbCBiZSBubyByZWFzb24gdG8gZXZlciBzdXBwb3J0Cj4gImFyYyxhcmMxLi4iIG9yICJhcmMs
-YXJjMy4uLiIgaW4gdGhlIGJpbmRpbmdzIGZvciBwYXN0IG9yIGZ1dHVyZSB1c2UuCj4gCj4gVGhl
-IG5ldyB0d28gY2hpcHMgYXJlIGp1c3QgYmFzaWNhbGx5IHN1cHBvcnRlZCBieSB0aGlzIGRyaXZl
-ci4gVGhlcmUgaXMgbW9yZQo+IGZ1bmN0aW9uYWxpdHkgdG8gdGhlbSB3aGljaCB3aWxsIGJlIGVu
-YWJsZWQgaW4gbXkgbmV4dCBwYXRjaC4gSSB3YW50ZWQgdG8KPiBzZXBhcmF0ZSB0aGUgbW92ZSB0
-byAiYXJjdGljIiBmcm9tIHRoZSBtb3ZlIHRvIGZ1bGx5IHN1cHBvcnQgdGhlIG90aGVyIGNoaXBz
-Cj4gZm9yIGNsYXJpdHkgKHlvdSBndXlzIGFyZSBhbGwgcmlnaHRseSBwaWNreSEpIEkgZGlkIHB1
-dCB0aGUgbmV3IGNoaXAKPiBiaW5kaW5ncyBpbiB0aGUgZHJpdmVyL2JpbmRpbmdzIGluIHRoaXMg
-cGF0Y2ggdGhvdWdoIHNvIEkgY291bGQgdGVzdCB0aGlzCj4gcGF0Y2ggYWdhaW5zdCB0aGUgYWN0
-dWFsIGgvdyBpbnN0YW5jZXM6IEkgaGF2ZSB0aHJlZSBib2FyZHMsIG9uZSB3aXRoIGVhY2gKPiBj
-aGlwIHR5cGUgYW5kIGVhY2ggaGFzIGEgZHRiIHdpdGggdGhlICJhcmN0aWMsLi4iIHR5cGUgYmlu
-ZGluZyBvbmJvYXJkLgoKSSB0aGluayB5b3UgaGF2ZSBtaXN1bmRlcnN0b29kLiBJJ3ZlIGdvdCBu
-byBwcm9ibGVtIHdpdGggcmVuYW1pbmcgdGhlCnByb3BlcnRpZXMgYXMgd2VsbC4KCldoYXQgSSB3
-YXMgYnJpbmdpbmcgdXAgaXMgdGhhdCB5b3UgaGF2ZSBleHRlbmRlZCB0aGUgc2NvcGUgb2YgdGhl
-CmJpbmRpbmdzIHRvIGNvdmVyIHRoZSBhcmMxIGFuZCBhcmMzIGRldmljZXMuIEl0IHdvdWxkIGJl
-IGdvb2QgZm9yIHlvdQp0byBleHBsaWNpdGx5IGNvbmZpcm0gdGhhdCB0aGUgZXhpc3RpbmcgcHJv
-cGVydGllcyBhbGwgc3RpbGwgYXBwbHkKdG8gYXJjMSBhbmQgYXJjMyBkZXZpY2VzLCBhbmQgdGhh
-dCBubyBuZXcgcHJvcGVydGllcyBhcmUgbmVlZGVkIHRvCm1vZGVsIHRoZW0gcHJvcGVybHkuCgpB
-cyBpdCBoYXBwZW5zIEkgKmRpZCogZ2xhbmNlIGF0IHlvdXIgb2xkIGFyYzEvYXJjMyBwYXRjaCB0
-byBjaGVjayBpdCBmb3IKbXlzZWxmIGJlZm9yZSBJIG9mZmVyZWQgeW91IHRoZSBBY2tlZC1ieSBh
-bmQgZGlkbid0IHNlZSBhbnl0aGluZyB0aGF0Cm9mZmVuZGVkIG1lLiBIb3dldmVyIGEgZ29vZCBw
-YXRjaCBkZXNjcmlwdGlvbiB3b3VsZCBoYXZlIHNwYXJlZCBtZSB0aGF0CndvcmsuLi4KCgpEYW5p
-ZWwuCgoKPiAKPiA+ID4gKwo+ID4gPiArLSByZWc6CQlzbGF2ZSBhZGRyZXNzCj4gPiA+ICAgT3B0
-aW9uYWwgcHJvcGVydGllczoKPiA+ID4gICAtIGRlZmF1bHQtYnJpZ2h0bmVzczoJYnJpZ2h0bmVz
-cyB2YWx1ZSBvbiBib290LCB2YWx1ZSBmcm9tOiAwLTQwOTUKPiA+ID4gQEAgLTExLDE5ICsxNiwy
-NSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gPiAgIC0gbGVkLXNvdXJjZXM6CQlMaXN0IG9m
-IGVuYWJsZWQgY2hhbm5lbHMgZnJvbSAwIHRvIDUuCj4gPiA+ICAgCQkJU2VlIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2NvbW1vbi50eHQKPiA+ID4gLS0gYXJjLGxlZC1j
-b25maWctMDoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSUxFRF9DT05GSUdfMAo+ID4gPiAtLSBhcmMs
-bGVkLWNvbmZpZy0xOglzZXR0aW5nIGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18xCj4gPiA+IC0t
-IGFyYyxkaW0tZnJlcToJCVBXTSBtb2RlIGZyZXF1ZW5jZSBzZXR0aW5nIChiaXRzIFszOjBdIHVz
-ZWQpCj4gPiA+IC0tIGFyYyxjb21wLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgQ09ORklH
-X0NPTVAKPiA+ID4gLS0gYXJjLGZpbHRlci1jb25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIEZJ
-TFRFUl9DT05GSUcKPiA+ID4gLS0gYXJjLHRyaW0tY29uZmlnOglzZXR0aW5nIGZvciByZWdpc3Rl
-ciBJTUFYVFVORQo+ID4gPiArLSBhcmN0aWMsbGVkLWNvbmZpZy0wOglzZXR0aW5nIGZvciByZWdp
-c3RlciBJTEVEX0NPTkZJR18wCj4gPiA+ICstIGFyY3RpYyxsZWQtY29uZmlnLTE6CXNldHRpbmcg
-Zm9yIHJlZ2lzdGVyIElMRURfQ09ORklHXzEKPiA+ID4gKy0gYXJjdGljLGRpbS1mcmVxOglQV00g
-bW9kZSBmcmVxdWVuY2Ugc2V0dGluZyAoYml0cyBbMzowXSB1c2VkKQo+ID4gPiArLSBhcmN0aWMs
-Y29tcC1jb25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIENPTkZJR19DT01QCj4gPiA+ICstIGFy
-Y3RpYyxmaWx0ZXItY29uZmlnOglzZXR0aW5nIGZvciByZWdpc3RlciBGSUxURVJfQ09ORklHCj4g
-PiA+ICstIGFyY3RpYyx0cmltLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSU1BWFRVTkUK
-PiA+ID4gKy0gYXJjLGxlZC1jb25maWctMDoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSUxFRF9DT05G
-SUdfMCAoZGVwcmVjYXRlZCkKPiA+ID4gKy0gYXJjLGxlZC1jb25maWctMToJc2V0dGluZyBmb3Ig
-cmVnaXN0ZXIgSUxFRF9DT05GSUdfMSAoZGVwcmVjYXRlZCkKPiA+ID4gKy0gYXJjLGRpbS1mcmVx
-OgkJUFdNIG1vZGUgZnJlcXVlbmNlIHNldHRpbmcgKGJpdHMgWzM6MF0gdXNlZCkgKGRlcHJlY2F0
-ZWQpCj4gPiA+ICstIGFyYyxjb21wLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgQ09ORklH
-X0NPTVAgKGRlcHJlY2F0ZWQpCj4gPiA+ICstIGFyYyxmaWx0ZXItY29uZmlnOglzZXR0aW5nIGZv
-ciByZWdpc3RlciBGSUxURVJfQ09ORklHIChkZXByZWNhdGVkKQo+ID4gPiArLSBhcmMsdHJpbS1j
-b25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElNQVhUVU5FIChkZXByZWNhdGVkKQo+ID4gPiAg
-IE5vdGU6IE9wdGlvbmFsIHByb3BlcnRpZXMgbm90IHNwZWNpZmllZCB3aWxsIGRlZmF1bHQgdG8g
-dmFsdWVzIGluIElDIEVQUk9NCj4gPiA+ICAgRXhhbXBsZToKPiA+ID4gICBhcmMyYzA2MDhAMzAg
-ewo+ID4gPiAtCWNvbXBhdGlibGUgPSAiYXJjLGFyYzJjMDYwOCI7Cj4gPiA+ICsJY29tcGF0aWJs
-ZSA9ICJhcmN0aWMsYXJjMmMwNjA4IjsKPiA+ID4gICAJcmVnID0gPDB4MzA+Owo+ID4gPiAgIAlk
-ZWZhdWx0LWJyaWdodG5lc3MgPSA8NTAwPjsKPiA+ID4gICAJbGFiZWwgPSAibGNkLWJhY2tsaWdo
-dCI7Cj4gPiA+IC0tIAo+ID4gPiAyLjcuNAo+ID4gPiAKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVs
+SAI3 and SAI6 nodes are used to connect to an external codec.
+They have 1 Tx and 1 Rx dataline.
+
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+---
+Changes since v1:
+	- Added sai3 node because we need it to enable audio on pico-pi-8m
+	- Added commit description
+
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index d09b808eff87..2d489c5cdc26 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -278,6 +278,20 @@
+ 			#size-cells = <1>;
+ 			ranges = <0x30000000 0x30000000 0x400000>;
+ 
++			sai6: sai@30030000 {
++				compatible = "fsl,imx8mq-sai",
++					"fsl,imx6sx-sai";
++				reg = <0x30030000 0x10000>;
++				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MQ_CLK_SAI6_IPG>,
++					<&clk IMX8MQ_CLK_SAI6_ROOT>,
++					<&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
++				clock-names = "bus", "mclk1", "mclk2", "mclk3";
++				dmas = <&sdma2 4 24 0>, <&sdma2 5 24 0>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
++
+ 			gpio1: gpio@30200000 {
+ 				compatible = "fsl,imx8mq-gpio", "fsl,imx35-gpio";
+ 				reg = <0x30200000 0x10000>;
+@@ -728,6 +742,22 @@
+ 				status = "disabled";
+ 			};
+ 
++			sai3: sai@308c0000 {
++				compatible = "fsl,imx8mq-sai",
++					     "fsl,imx6sx-sai";
++				reg = <0x308c0000 0x10000>;
++				interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MQ_CLK_SAI3_IPG>,
++					<&clk IMX8MQ_CLK_DUMMY>,
++					<&clk IMX8MQ_CLK_SAI3_ROOT>,
++					<&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
++				clock-names = "bus", "mclk1", "mclk2", "mclk3";
++				dmas = <&sdma1 12 24 0>, <&sdma1 13 24 0>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
++
++
+ 			i2c1: i2c@30a20000 {
+ 				compatible = "fsl,imx8mq-i2c", "fsl,imx21-i2c";
+ 				reg = <0x30a20000 0x10000>;
+-- 
+2.11.0
