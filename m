@@ -1,73 +1,76 @@
 MIME-Version: 1.0
-Date: Wed, 10 Jul 2019 09:55:39 -0600
-References: <1561115855-4186-1-git-send-email-open.sudheer@gmail.com>
-	<1561115855-4186-6-git-send-email-open.sudheer@gmail.com>
-In-Reply-To: <1561115855-4186-6-git-send-email-open.sudheer@gmail.com>
-Message-ID: <CAL_JsqKTKrPWJcajC9DB2pY4BBM3NFu00s0S0xx9aAZmcrtFqw@mail.gmail.com>
-Subject: Re: [patch 5/5] Documentation: DT bindings AST2500 DMA UART driver
+Date: Tue, 2 Jul 2019 07:30:57 -0600
+References: <156113387975.28344.16009584175308192243.stgit@devnote2>
+	<CAL_JsqJOc+tkFEGcc+KN0RE8Xjg_i9icPWZ37Ynk_9sR2X1Uwg@mail.gmail.com>
+	<20190627195817.211ab4bea422f37e539e47e8@kernel.org>
+	<20190702184730.b0247eb780ffa48d40a61a81@kernel.org>
+In-Reply-To: <20190702184730.b0247eb780ffa48d40a61a81@kernel.org>
+Message-ID: <CAL_JsqKmfQVOCpg8pg5kpSCMWJmmJPEfSbBn=4FWqvv8geVnEQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using devicetree
 From: Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-To: "sudheer.v" <open.sudheer@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, ShivahShankar Shakarnarayan rao <shivahshankar.shankarnarayanrao@aspeedtech.com>, shivahshankar@gmail.com, Sudheer V <sudheer.veliseti@aspeedtech.com>, sudheer veliseti <sudheer.open@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Frank Rowand <frowand.list@gmail.com>, Tom Zanussi <tom.zanussi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+On Tue, Jul 2, 2019 at 3:47 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> Hello,
+>
+> On Thu, 27 Jun 2019 19:58:17 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> > Hi Rob,
+> >
+> > On Wed, 26 Jun 2019 15:58:50 -0600
+> > Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > > On Fri, Jun 21, 2019 at 10:18 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > Here is an RFC series of patches to add boot-time tracing using
+> > > > devicetree.
+> > > >
+> > > > Currently, kernel support boot-time tracing using kernel command-line
+> > > > parameters. But that is very limited because of limited expressions
+> > > > and limited length of command line. Recently, useful features like
+> > > > histogram, synthetic events, etc. are being added to ftrace, but it is
+> > > > clear that we can not expand command-line options to support these
+> > > > features.
+> > > >
+> > > > Hoever, I've found that there is a devicetree which can pass more
+> > > > structured commands to kernel at boot time :) The devicetree is usually
+> > > > used for dscribing hardware configuration, but I think we can expand it
+> > > > for software configuration too (e.g. AOSP and OPTEE already introduced
+> > > > firmware node.) Also, grub and qemu already supports loading devicetree,
+> > > > so we can use it not only on embedded devices but also on x86 PC too.
+> > >
+> > > Do the x86 versions of grub, qemu, EFI, any other bootloader actually
+> > > enable DT support? I didn't think so. Certainly, an x86 kernel doesn't
+> > > normally (other than OLPC and ce4100) have a defined way to even pass
+> > > a dtb from the bootloader to the kernel and the kernel doesn't
+> > > unflatten the dtb.
+> >
+> > Sorry, the grub part, I just found this entry. I need to check this
+> > can work on x86 too.
+>
+> I've confirmed that grub-x86 doesn't support devicetree option. I tried
+> to add it, and tested it.
+>
+> https://github.com/mhiramat/grub/commit/644c35bfd2d18c772cc353b74215344f8264923a
+>
+> This works if there is ACPI, if it includes /chosen/linux,ftrace node only.
+> (Anyway, we don't need other nodes on x86)
+>
+> At this moment, grub doesn't support DT overlay, so on arm/arm64 user must
+> decompile DTB, add linux,ftrace node for tracing and compile it again.
+> But if it supports overlay, I think we can give an overlay for tracer setting
+> on boot up, that will be handy on arm/arm64 too. :)
 
-On Fri, Jun 21, 2019 at 5:16 AM sudheer.v <open.sudheer@gmail.com> wrote:
+
 >
-> From: sudheer veliseti <sudheer.open@gmail.com>
+> Thank you,
 >
-> Signed-off-by: sudheer veliseti <sudheer.open@gmail.com>
-> ---
->  .../bindings/serial/ast2500-dma-uart.txt      | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
->
-> diff --git a/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt b/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
-> new file mode 100644
-> index 000000000000..6f01ddecba56
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
-> @@ -0,0 +1,40 @@
-> +
-> +node for DMA controller:
-> +                       ast_uart_sdma: uart_sdma@1e79e000 {
-> +                               compatible = "aspeed,ast-uart-sdma";
-> +                               reg = <0x1e79e000 0x400>;
-> +                               interrupts = <50>;
-> +                               status = "disabled";
-> +                       };
-> +this node  doesn't binds with any driver.
-> +DMA controller is handled as a separate SW layer,and is included in the same driver.
-> +This DMA controller node is included in DT just for Register base and interrupt details
-> +
-> +
-> +
-> +node for DMA-UART :
-> +
-> +
-> +Required properties:
-> +
-> +- compatible: "aspeed,ast-sdma-uart"
-> +- reg: The base address of the UART register bank
-> +- interrupts: should contain interrupt specifier.
-> +- clocks: Clock driving the hardware;
-> +- pinctrl-0 : list of pinconfigurations
-> +- dma-channel: channel of DMA-controller which is used
-> +
-> +Example:
-> +
-> +                 dma_uart1: dma_uart1@1e783000{
-> +                          compatible = "aspeed,ast-sdma-uart";
-> +                          reg = <0x1e783000 0x1000>;
-> +                          reg-shift = <2>;
-> +                          interrupts = <9>;
-> +                          clocks = <&syscon ASPEED_CLK_GATE_UART1CLK>;
-> +                          dma-channel = <0>;
-> +                          no-loopback-test;
-> +                          pinctrl-names = "default";
-> +                          pinctrl-0 = <&pinctrl_txd1_default &pinctrl_rxd1_default>;
-> +                          status = "disabled";
-> +                       };
 > --
-> 2.17.1
->
+> Masami Hiramatsu <mhiramat@kernel.org>
