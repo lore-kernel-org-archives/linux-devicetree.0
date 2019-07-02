@@ -1,950 +1,132 @@
-From: Andra Danciu <andradanciu1997@gmail.com>
-Subject: Re: [PATCH] ARM64: dts: freescale: add wand-pi-8m dtb
-Date: Tue, 2 Jul 2019 16:10:21 +0300
-Message-ID: <CAJNLGsz9SGZV-+Si+6zyg91k3FebE2AwydwqTZb_ZLziwitLNw@mail.gmail.com>
-References: <20190702130239.17864-1-andradanciu1997@gmail.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: backlight: fix vendor prefix for
+ ArcticSand arcxcnn driver bindings
+Date: Tue, 2 Jul 2019 14:11:48 +0100
+Message-ID: <20190702131148.unb3pfthxvacfwn3@holly.lan>
+References: <1561940895-15837-1-git-send-email-bdodge09@gmail.com>
+ <1561940895-15837-2-git-send-email-bdodge09@gmail.com>
+ <20190702092617.c4wn3dmg5orrquyj@holly.lan>
+ <9ffed46f-c878-e415-cad0-cbe64efb9885@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702130239.17864-1-andradanciu1997@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-imx@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, Anson.Huang@nxp.com, andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com, agx@sigxcpu.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <9ffed46f-c878-e415-cad0-cbe64efb9885@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Dodge <bdodge09@gmail.com>
+Cc: devicetree@vger.kernel.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Please ignore this. Sent the wrong patch!
-
-=C3=8En mar., 2 iul. 2019 la 16:02, Andra Danciu <andradanciu1997@gmail.com=
-> a scris:
->
-> From: Richard Hu <richard.hu@technexion.com>
->
-> Add dtb for WAND-PI-8M board.
-> ---
->  arch/arm64/boot/dts/freescale/Makefile       |   3 +-
->  arch/arm64/boot/dts/freescale/wand-pi-8m.dts | 780 +++++++++++++++++++++=
-++++++
->  2 files changed, 782 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/boot/dts/freescale/wand-pi-8m.dts
->
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts=
-/freescale/Makefile
-> index 7a9dae6c43f5..308bbb1caa60 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -51,7 +51,8 @@ dtb-$(CONFIG_ARCH_FSL_IMX8MQ) +=3D fsl-imx8mq-ddr3l-arm=
-2.dtb \
->                                  fsl-imx8mq-evk-dual-display.dtb \
->                                  fsl-imx8mq-evk-ak4497.dtb \
->                                  fsl-imx8mq-evk-audio-tdm.dtb \
-> -                                fsl-imx8mq-evk-drm.dtb
-> +                                fsl-imx8mq-evk-drm.dtb \
-> +                                wand-pi-8m.dtb
->
->  always         :=3D $(dtb-y)
->  subdir-y       :=3D $(dts-dirs)
-> diff --git a/arch/arm64/boot/dts/freescale/wand-pi-8m.dts b/arch/arm64/bo=
-ot/dts/freescale/wand-pi-8m.dts
-> new file mode 100644
-> index 000000000000..cc1d55ee88e2
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/wand-pi-8m.dts
-> @@ -0,0 +1,780 @@
-> +/*
-> + * Copyright 2018 Wandboard, Org.
-> + * Copyright 2017 NXP
-> + *
-> + * Author: Richard Hu <hakahu@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "fsl-imx8mq.dtsi"
-> +
-> +/ {
-> +       model =3D "WAND-PI-8M";
-> +       compatible =3D "wand,imx8mq-wand-pi", "fsl,imx8mq";
-> +
-> +       chosen {
-> +               bootargs =3D "console=3Dttymxc0,115200 earlycon=3Dec_imx6=
-q,0x30860000,115200";
-> +               stdout-path =3D &uart1;
-> +       };
-> +
-> +       regulators {
-> +               compatible =3D "simple-bus";
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +
-> +               reg_usdhc2_vmmc: usdhc2_vmmc {
-> +                       compatible =3D "regulator-fixed";
-> +                       regulator-name =3D "VSD_3V3";
-> +                       regulator-min-microvolt =3D <3300000>;
-> +                       regulator-max-microvolt =3D <3300000>;
-> +                       gpio =3D <&gpio2 19 GPIO_ACTIVE_HIGH>;
-> +                       enable-active-high;
-> +               };
-> +
-> +               reg_gpio_dvfs: regulator-gpio {
-> +                       compatible =3D "regulator-gpio";
-> +                       pinctrl-names =3D "default";
-> +                       pinctrl-0 =3D <&pinctrl_dvfs>;
-> +                       regulator-min-microvolt =3D <900000>;
-> +                       regulator-max-microvolt =3D <1000000>;
-> +                       regulator-name =3D "gpio_dvfs";
-> +                       regulator-type =3D "voltage";
-> +                       gpios =3D <&gpio1 13 GPIO_ACTIVE_HIGH>;
-> +                       states =3D <900000 0x1 1000000 0x0>;
-> +               };
-> +       };
-> +
-> +       modem_reset: modem-reset {
-> +               compatible =3D "gpio-reset";
-> +               reset-gpios =3D <&gpio3 5 GPIO_ACTIVE_LOW>;
-> +               reset-delay-us =3D <2000>;
-> +               reset-post-delay-ms =3D <40>;
-> +               #reset-cells =3D <0>;
-> +       };
-> +
-> +       wm8524: wm8524 {
-> +               compatible =3D "wlf,wm8524";
-> +               clocks =3D <&clk IMX8MQ_CLK_SAI2_ROOT>;
-> +               clock-names =3D "mclk";
-> +               wlf,mute-gpios =3D <&gpio1 8 GPIO_ACTIVE_LOW>;
-> +       };
-> +
-> +       sound-wm8524 {
-> +               compatible =3D "fsl,imx-audio-wm8524";
-> +               model =3D "wm8524-audio";
-> +               audio-cpu =3D <&sai2>;
-> +               audio-codec =3D <&wm8524>;
-> +               audio-routing =3D
-> +                       "Line Out Jack", "LINEVOUTL",
-> +                       "Line Out Jack", "LINEVOUTR";
-> +       };
-> +
-> +       sound-hdmi {
-> +               compatible =3D "fsl,imx-audio-cdnhdmi";
-> +               model =3D "imx-audio-hdmi";
-> +               audio-cpu =3D <&sai4>;
-> +               protocol =3D <1>;
-> +       };
-> +
-> +       sound-spdif {
-> +               compatible =3D "fsl,imx-audio-spdif";
-> +               model =3D "imx-spdif";
-> +               spdif-controller =3D <&spdif1>;
-> +               spdif-out;
-> +               spdif-in;
-> +       };
-> +
-> +       sound-hdmi-arc {
-> +               compatible =3D "fsl,imx-audio-spdif";
-> +               model =3D "imx-hdmi-arc";
-> +               spdif-controller =3D <&spdif2>;
-> +               spdif-in;
-> +       };
-> +};
-> +
-> +&clk {
-> +       assigned-clocks =3D <&clk IMX8MQ_AUDIO_PLL1>;
-> +       assigned-clock-rates =3D <786432000>;
-> +};
-> +
-> +&iomuxc {
-> +       pinctrl-names =3D "default";
-> +
-> +       wand-pi-8m {
-> +               pinctrl_csi1: csi1grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3        =
-       0x19
-> +                               MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6        =
-       0x19
-> +                               MX8MQ_IOMUXC_GPIO1_IO15_CCMSRCGPCMIX_CLKO=
-2      0x59
-> +                       >;
-> +               };
-> +               pinctrl_csi2: csi2grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_GPIO1_IO05_GPIO1_IO5        =
-       0x19
-> +                               MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6        =
-       0x19
-> +                               MX8MQ_IOMUXC_GPIO1_IO15_CCMSRCGPCMIX_CLKO=
-2      0x59
-> +                       >;
-> +               };
-> +
-> +               pinctrl_fec1: fec1grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC         0=
-x3
-> +                               MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO       0=
-x23
-> +                               MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3   0=
-x1f
-> +                               MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2   0=
-x1f
-> +                               MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1   0=
-x1f
-> +                               MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0   0=
-x1f
-> +                               MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3   0=
-x91
-> +                               MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2   0=
-x91
-> +                               MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1   0=
-x91
-> +                               MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0   0=
-x91
-> +                               MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC   0=
-x1f
-> +                               MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC   0=
-x91
-> +                               MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_C=
-TL     0x91
-> +                               MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_C=
-TL     0x1f
-> +                               MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9       0=
-x19
-> +                       >;
-> +               };
-> +
-> +               pinctrl_i2c1: i2c1grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL           =
-       0x4000007f
-> +                               MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA           =
-       0x4000007f
-> +                       >;
-> +               };
-> +
-> +               pinctrl_i2c2: i2c2grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_I2C2_SCL_I2C2_SCL           =
-       0x4000007f
-> +                               MX8MQ_IOMUXC_I2C2_SDA_I2C2_SDA           =
-       0x4000007f
-> +                       >;
-> +               };
-> +
-> +
-> +               pinctrl_pcie0: pcie0grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_I2C4_SCL_GPIO5_IO20        0=
-x16
-> +                               MX8MQ_IOMUXC_UART4_TXD_GPIO5_IO29       0=
-x16
-> +                               MX8MQ_IOMUXC_UART4_RXD_GPIO5_IO28       0=
-x16
-> +                       >;
-> +               };
-> +
-> +               pinctrl_pcie1: pcie1grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_I2C4_SDA_GPIO5_IO21        0=
-x16
-> +                               MX8MQ_IOMUXC_ECSPI2_SCLK_GPIO5_IO10     0=
-x16
-> +                               MX8MQ_IOMUXC_ECSPI2_MISO_GPIO5_IO12     0=
-x16
-> +                       >;
-> +               };
-> +
-> +               pinctrl_dvfs: dvfsgrp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_GPIO1_IO13_GPIO1_IO13      0=
-x16
-> +                       >;
-> +               };
-> +
-> +               pinctrl_qspi: qspigrp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_NAND_ALE_QSPI_A_SCLK       0=
-x82
-> +                               MX8MQ_IOMUXC_NAND_CE0_B_QSPI_A_SS0_B    0=
-x82
-> +                               MX8MQ_IOMUXC_NAND_DATA00_QSPI_A_DATA0   0=
-x82
-> +                               MX8MQ_IOMUXC_NAND_DATA01_QSPI_A_DATA1   0=
-x82
-> +                               MX8MQ_IOMUXC_NAND_DATA02_QSPI_A_DATA2   0=
-x82
-> +                               MX8MQ_IOMUXC_NAND_DATA03_QSPI_A_DATA3   0=
-x82
-> +
-> +                       >;
-> +               };
-> +
-> +               pinctrl_typec: typecgrp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_NAND_RE_B_GPIO3_IO15       0=
-x16
-> +                               MX8MQ_IOMUXC_NAND_CE2_B_GPIO3_IO3       0=
-x17059
-> +                       >;
-> +               };
-> +
-> +               pinctrl_uart1: uart1grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX      =
-       0x49
-> +                               MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX      =
-       0x49
-> +                       >;
-> +               };
-> +
-> +               pinctrl_uart3: uart3grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_UART3_TXD_UART3_DCE_TX      =
-       0x49
-> +                               MX8MQ_IOMUXC_UART3_RXD_UART3_DCE_RX      =
-       0x49
-> +                               MX8MQ_IOMUXC_ECSPI1_MISO_UART3_DCE_CTS_B =
-       0x49
-> +                               MX8MQ_IOMUXC_ECSPI1_SS0_UART3_DCE_RTS_B  =
-       0x49
-> +                               MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5          =
-       0x19
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc1: usdhc1grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK          =
-       0x83
-> +                               MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD          =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0      =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1      =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2      =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3      =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4      =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5      =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6      =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7      =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE    =
-       0x83
-> +                               MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B  =
-       0xc1
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK          =
-       0x85
-> +                               MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD          =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0      =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1      =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2      =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3      =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4      =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5      =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6      =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7      =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE    =
-       0x85
-> +                               MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B  =
-       0xc1
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK          =
-       0x87
-> +                               MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD          =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0      =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1      =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2      =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3      =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4      =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5      =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6      =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7      =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE    =
-       0x87
-> +                               MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B  =
-       0xc1
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc2_gpio: usdhc2grpgpio {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12        0=
-x41
-> +                               MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19     0=
-x41
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc2: usdhc2grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK          =
-       0x83
-> +                               MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD          =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0      =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1      =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2      =
-       0xc3
-> +                               MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3      =
-       0xc3
-> +                               MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT   =
-       0xc1
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK          =
-       0x85
-> +                               MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD          =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0      =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1      =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2      =
-       0xc5
-> +                               MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3      =
-       0xc5
-> +                               MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT   =
-       0xc1
-> +                       >;
-> +               };
-> +
-> +               pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK          =
-       0x87
-> +                               MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD          =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0      =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1      =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2      =
-       0xc7
-> +                               MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3      =
-       0xc7
-> +                               MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT   =
-       0xc1
-> +                       >;
-> +               };
-> +
-> +               pinctrl_sai2: sai2grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_SAI2_TXFS_SAI2_TX_SYNC     0=
-xd6
-> +                               MX8MQ_IOMUXC_SAI2_TXC_SAI2_TX_BCLK      0=
-xd6
-> +                               MX8MQ_IOMUXC_SAI2_MCLK_SAI2_MCLK        0=
-xd6
-> +                               MX8MQ_IOMUXC_SAI2_TXD0_SAI2_TX_DATA0    0=
-xd6
-> +                               MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8       0=
-xd6
-> +                       >;
-> +               };
-> +
-> +               pinctrl_spdif1: spdif1grp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_SPDIF_TX_SPDIF1_OUT        0=
-xd6
-> +                               MX8MQ_IOMUXC_SPDIF_RX_SPDIF1_IN         0=
-xd6
-> +                       >;
-> +               };
-> +
-> +               pinctrl_wdog: wdoggrp {
-> +                       fsl,pins =3D <
-> +                               MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B 0xc6
-> +                       >;
-> +               };
-> +       };
-> +};
-> +
-> +&fec1 {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_fec1>;
-> +       phy-mode =3D "rgmii-id";
-> +       phy-handle =3D <&ethphy0>;
-> +       fsl,magic-packet;
-> +       status =3D "okay";
-> +
-> +       mdio {
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +
-> +               ethphy0: ethernet-phy@0 {
-> +                       compatible =3D "ethernet-phy-ieee802.3-c22";
-> +                       reg =3D <0>;
-> +                       at803x,led-act-blind-workaround;
-> +                       at803x,eee-disabled;
-> +               };
-> +       };
-> +};
-> +
-> +&i2c1 {
-> +       clock-frequency =3D <100000>;
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_i2c1>;
-> +       status =3D "okay";
-> +
-> +       pmic: pfuze100@08 {
-> +               compatible =3D "fsl,pfuze100";
-> +               reg =3D <0x08>;
-> +
-> +               regulators {
-> +                       sw1a_reg: sw1ab {
-> +                               regulator-min-microvolt =3D <300000>;
-> +                               regulator-max-microvolt =3D <1875000>;
-> +                       };
-> +
-> +                       sw1c_reg: sw1c {
-> +                               regulator-min-microvolt =3D <300000>;
-> +                               regulator-max-microvolt =3D <1875000>;
-> +                       };
-> +
-> +                       sw2_reg: sw2 {
-> +                               regulator-min-microvolt =3D <800000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       sw3a_reg: sw3ab {
-> +                               regulator-min-microvolt =3D <400000>;
-> +                               regulator-max-microvolt =3D <1975000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       sw4_reg: sw4 {
-> +                               regulator-min-microvolt =3D <800000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       swbst_reg: swbst {
-> +                               regulator-min-microvolt =3D <5000000>;
-> +                               regulator-max-microvolt =3D <5150000>;
-> +                       };
-> +
-> +                       snvs_reg: vsnvs {
-> +                               regulator-min-microvolt =3D <1000000>;
-> +                               regulator-max-microvolt =3D <3000000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vref_reg: vrefddr {
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vgen1_reg: vgen1 {
-> +                               regulator-min-microvolt =3D <800000>;
-> +                               regulator-max-microvolt =3D <1550000>;
-> +                       };
-> +
-> +                       vgen2_reg: vgen2 {
-> +                               regulator-min-microvolt =3D <800000>;
-> +                               regulator-max-microvolt =3D <1550000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vgen3_reg: vgen3 {
-> +                               regulator-min-microvolt =3D <1800000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vgen4_reg: vgen4 {
-> +                               regulator-min-microvolt =3D <1800000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vgen5_reg: vgen5 {
-> +                               regulator-min-microvolt =3D <1800000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vgen6_reg: vgen6 {
-> +                               regulator-min-microvolt =3D <1800000>;
-> +                               regulator-max-microvolt =3D <3300000>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       typec_ptn5100: ptn5110@50 {
-> +               compatible =3D "usb,tcpci";
-> +               pinctrl-names =3D "default";
-> +               pinctrl-0 =3D <&pinctrl_typec>;
-> +               reg =3D <0x50>;
-> +               interrupt-parent =3D <&gpio3>;
-> +               interrupts =3D <3 8>;
-> +               ss-sel-gpios =3D <&gpio3 15 GPIO_ACTIVE_HIGH>;
-> +               src-pdos =3D <0x380190c8>;
-> +               snk-pdos =3D <0x380190c8 0x3802d0c8>;
-> +               max-snk-mv =3D <9000>;
-> +               max-snk-ma =3D <1000>;
-> +               op-snk-mw =3D <9000>;
-> +               port-type =3D "drp";
-> +               default-role =3D "sink";
-> +       };
-> +
-> +       ov5640_mipi: ov5640_mipi@3c {
-> +               compatible =3D "ovti,ov5640_mipi";
-> +               reg =3D <0x3c>;
-> +               status =3D "okay";
-> +               pinctrl-names =3D "default";
-> +               pinctrl-0 =3D <&pinctrl_csi1>;
-> +               clocks =3D <&clk IMX8MQ_CLK_CLKO2_DIV>;
-> +               clock-names =3D "csi_mclk";
-> +               assigned-clocks =3D <&clk IMX8MQ_CLK_CLKO2_SRC>,
-> +                                 <&clk IMX8MQ_CLK_CLKO2_DIV>;
-> +               assigned-clock-parents =3D <&clk IMX8MQ_SYS2_PLL_200M>;
-> +               assigned-clock-rates =3D <0>, <20000000>;
-> +               csi_id =3D <0>;
-> +               pwn-gpios =3D <&gpio1 3 GPIO_ACTIVE_HIGH>;
-> +               rst-gpios =3D <&gpio1 6 GPIO_ACTIVE_HIGH>;
-> +               mclk =3D <20000000>;
-> +               mclk_source =3D <0>;
-> +               port {
-> +                       ov5640_mipi1_ep: endpoint {
-> +                               remote-endpoint =3D <&mipi1_sensor_ep>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       ov5640_mipi2: ov5640_mipi2@3c {
-> +               compatible =3D "ovti,ov5640_mipi";
-> +               reg =3D <0x3c>;
-> +               status =3D "disabled";
-> +               pinctrl-names =3D "default";
-> +               pinctrl-0 =3D <&pinctrl_csi2>;
-> +               clocks =3D <&clk IMX8MQ_CLK_CLKO2_DIV>;
-> +               clock-names =3D "csi_mclk";
-> +               assigned-clocks =3D <&clk IMX8MQ_CLK_CLKO2_SRC>,
-> +                                 <&clk IMX8MQ_CLK_CLKO2_DIV>;
-> +               assigned-clock-parents =3D <&clk IMX8MQ_SYS2_PLL_200M>;
-> +               assigned-clock-rates =3D <0>, <20000000>;
-> +               csi_id =3D <0>;
-> +               pwn-gpios =3D <&gpio1 5 GPIO_ACTIVE_HIGH>;
-> +               rst-gpios =3D <&gpio1 6 GPIO_ACTIVE_HIGH>;
-> +               mclk =3D <20000000>;
-> +               mclk_source =3D <0>;
-> +               port {
-> +                       ov5640_mipi2_ep: endpoint {
-> +                               remote-endpoint =3D <&mipi2_sensor_ep>;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&i2c2 {
-> +       clock-frequency =3D <100000>;
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_i2c2>;
-> +       status =3D "disabled";
-> +};
-> +
-> +&pcie0{
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_pcie0>;
-> +       clkreq-gpio =3D <&gpio5 20 GPIO_ACTIVE_LOW>;
-> +       disable-gpio =3D <&gpio5 29 GPIO_ACTIVE_LOW>;
-> +       reset-gpio =3D <&gpio5 28 GPIO_ACTIVE_LOW>;
-> +       ext_osc =3D <1>;
-> +       hard-wired =3D <1>;
-> +       status =3D "okay";
-> +};
-> +
-> +&pcie1{
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_pcie1>;
-> +       clkreq-gpio =3D <&gpio5 21 GPIO_ACTIVE_LOW>;
-> +       disable-gpio =3D <&gpio5 10 GPIO_ACTIVE_LOW>;
-> +       reset-gpio =3D <&gpio5 12 GPIO_ACTIVE_LOW>;
-> +       ext_osc =3D <1>;
-> +       status =3D "okay";
-> +};
-> +
-> +&uart1 { /* console */
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_uart1>;
-> +       assigned-clocks =3D <&clk IMX8MQ_CLK_UART1_SRC>;
-> +       assigned-clock-parents =3D <&clk IMX8MQ_CLK_25M>;
-> +       status =3D "okay";
-> +};
-> +
-> +&qspi {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_qspi>;
-> +       status =3D "okay";
-> +
-> +       flash0: n25q256a@0 {
-> +               reg =3D <0>;
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <1>;
-> +               compatible =3D "micron,n25q256a";
-> +               spi-max-frequency =3D <29000000>;
-> +               spi-nor,ddr-quad-read-dummy =3D <6>;
-> +       };
-> +};
-> +
-> +&uart3 { /* BT */
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_uart3>;
-> +       assigned-clocks =3D <&clk IMX8MQ_CLK_UART3_SRC>;
-> +       assigned-clock-parents =3D <&clk IMX8MQ_SYS1_PLL_80M>;
-> +       fsl,uart-has-rtscts;
-> +       resets =3D <&modem_reset>;
-> +       status =3D "okay";
-> +};
-> +
-> +&usdhc1 {
-> +       pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
-> +       pinctrl-0 =3D <&pinctrl_usdhc1>;
-> +       pinctrl-1 =3D <&pinctrl_usdhc1_100mhz>;
-> +       pinctrl-2 =3D <&pinctrl_usdhc1_200mhz>;
-> +       bus-width =3D <8>;
-> +       non-removable;
-> +       status =3D "okay";
-> +};
-> +
-> +&usdhc2 {
-> +       pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
-> +       pinctrl-0 =3D <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-> +       pinctrl-1 =3D <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-> +       pinctrl-2 =3D <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-> +       bus-width =3D <4>;
-> +       cd-gpios =3D <&gpio2 12 GPIO_ACTIVE_LOW>;
-> +       vmmc-supply =3D <&reg_usdhc2_vmmc>;
-> +       status =3D "okay";
-> +};
-> +
-> +&usb3_phy0 {
-> +       status =3D "okay";
-> +};
-> +
-> +&usb3_0 {
-> +       status =3D "okay";
-> +};
-> +
-> +&usb_dwc3_0 {
-> +       status =3D "okay";
-> +       extcon =3D <&typec_ptn5100>;
-> +       dr_mode =3D "otg";
-> +};
-> +
-> +&usb3_phy1 {
-> +       status =3D "okay";
-> +};
-> +
-> +&usb3_1 {
-> +       status =3D "okay";
-> +};
-> +
-> +&usb_dwc3_1 {
-> +       status =3D "okay";
-> +       dr_mode =3D "host";
-> +};
-> +
-> +&sai2 {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_sai2>;
-> +       assigned-clocks =3D <&clk IMX8MQ_CLK_SAI2_SRC>,
-> +                       <&clk IMX8MQ_CLK_SAI2_DIV>;
-> +       assigned-clock-parents =3D <&clk IMX8MQ_AUDIO_PLL1_OUT>;
-> +       assigned-clock-rates =3D <0>, <24576000>;
-> +       status =3D "okay";
-> +};
-> +
-> +&sai4 {
-> +       assigned-clocks =3D <&clk IMX8MQ_CLK_SAI4_SRC>,
-> +                       <&clk IMX8MQ_CLK_SAI4_DIV>;
-> +       assigned-clock-parents =3D <&clk IMX8MQ_AUDIO_PLL1_OUT>;
-> +       assigned-clock-rates =3D <0>, <24576000>;
-> +       status =3D "okay";
-> +};
-> +
-> +&spdif1 {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_spdif1>;
-> +       assigned-clocks =3D <&clk IMX8MQ_CLK_SPDIF1_SRC>,
-> +                       <&clk IMX8MQ_CLK_SPDIF1_DIV>;
-> +       assigned-clock-parents =3D <&clk IMX8MQ_AUDIO_PLL1_OUT>;
-> +       assigned-clock-rates =3D <0>, <24576000>;
-> +       status =3D "okay";
-> +};
-> +
-> +&spdif2 {
-> +       assigned-clocks =3D <&clk IMX8MQ_CLK_SPDIF2_SRC>,
-> +                       <&clk IMX8MQ_CLK_SPDIF2_DIV>;
-> +       assigned-clock-parents =3D <&clk IMX8MQ_AUDIO_PLL1_OUT>;
-> +       assigned-clock-rates =3D <0>, <24576000>;
-> +       status =3D "okay";
-> +};
-> +
-> +&gpu_pd {
-> +       power-supply =3D <&sw1a_reg>;
-> +};
-> +
-> +&vpu_pd {
-> +       power-supply =3D <&sw1c_reg>;
-> +};
-> +
-> +&gpu {
-> +       status =3D "okay";
-> +};
-> +
-> +&vpu {
-> +       status =3D "okay";
-> +};
-> +
-> +&wdog1 {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_wdog>;
-> +       fsl,ext-reset-output;
-> +       status =3D "okay";
-> +};
-> +
-> +&mu {
-> +       status =3D "okay";
-> +};
-> +
-> +&rpmsg{
-> +       /*
-> +        * 64K for one rpmsg instance:
-> +        * --0xb8000000~0xb800ffff: pingpong
-> +        */
-> +       vdev-nums =3D <1>;
-> +       reg =3D <0x0 0xb8000000 0x0 0x10000>;
-> +       status =3D "okay";
-> +};
-> +
-> +&A53_0 {
-> +       operating-points =3D <
-> +               /* kHz    uV */
-> +               1500000 1000000
-> +               1300000 1000000
-> +               1000000 900000
-> +               800000  900000
-> +       >;
-> +       dc-supply =3D <&reg_gpio_dvfs>;
-> +};
-> +
-> +&dcss {
-> +       status =3D "okay";
-> +
-> +       disp-dev =3D "hdmi_disp";
-> +};
-> +
-> +&hdmi {
-> +       status =3D "okay";
-> +};
-> +
-> +&hdmi_cec {
-> +       status =3D "okay";
-> +};
-> +
-> +&csi1_bridge {
-> +       fsl,mipi-mode;
-> +       fsl,two-8bit-sensor-mode;
-> +       status =3D "okay";
-> +
-> +       port {
-> +               csi1_ep: endpoint {
-> +                       remote-endpoint =3D <&csi1_mipi_ep>;
-> +               };
-> +       };
-> +};
-> +
-> +&csi2_bridge {
-> +       fsl,mipi-mode;
-> +       fsl,two-8bit-sensor-mode;
-> +       status =3D "disabled";
-> +
-> +       port {
-> +               csi2_ep: endpoint {
-> +                       remote-endpoint =3D <&csi2_mipi_ep>;
-> +               };
-> +       };
-> +};
-> +
-> +&mipi_csi_1 {
-> +       #address-cells =3D <1>;
-> +       #size-cells =3D <0>;
-> +       status =3D "okay";
-> +       port {
-> +               mipi1_sensor_ep: endpoint1 {
-> +                       remote-endpoint =3D <&ov5640_mipi1_ep>;
-> +                       data-lanes =3D <1 2>;
-> +               };
-> +
-> +               csi1_mipi_ep: endpoint2 {
-> +                       remote-endpoint =3D <&csi1_ep>;
-> +               };
-> +       };
-> +};
-> +
-> +&mipi_csi_2 {
-> +       #address-cells =3D <1>;
-> +       #size-cells =3D <0>;
-> +       status =3D "disabled";
-> +       port {
-> +               mipi2_sensor_ep: endpoint1 {
-> +                       remote-endpoint =3D <&ov5640_mipi2_ep>;
-> +                       data-lanes =3D <1 2>;
-> +               };
-> +
-> +               csi2_mipi_ep: endpoint2 {
-> +                       remote-endpoint =3D <&csi2_ep>;
-> +               };
-> +       };
-> +};
-> --
-> 2.11.0
->
+T24gVHVlLCBKdWwgMDIsIDIwMTkgYXQgMDc6MjE6MjlBTSAtMDQwMCwgQnJpYW4gRG9kZ2Ugd3Jv
+dGU6Cj4gCj4gT24gNy8yLzE5IDU6MjYgQU0sIERhbmllbCBUaG9tcHNvbiB3cm90ZToKPiA+ID4g
+W1BBVENIIDEvMl0gZHQtYmluZGluZ3M6IGJhY2tsaWdodDogZml4IHZlbmRvciBwcmVmaXggZm9y
+Cj4gPiA+IEFyY3RpY1NhbmQgYXJjeGNubiBkcml2ZXIgYmluZGluZ3MKPiA+IFRoZSAidjIiIGlz
+IG5vcm1hbGx5IGFwcGxpZWQgdG8gdGhlIHdob2xlIHBhdGNoc2V0IChpZiB5b3UKPiA+IHByZXBh
+cmUgdGhlIHBhdGNoc2V0IHVzaW5nIGdpdCBmb3JtYXQtcGF0Y2ggdGhlbiB5b3UgY2FuIHVzZQo+
+ID4gdGhlIC0tc3ViamVjdC1wcmVmaXggYXJndW1lbnQgZm9yIHRoYXQpLgo+IFNvcnJ5IGFuZCBu
+b3RlZAo+ID4gCj4gPiBPbiBTdW4sIEp1biAzMCwgMjAxOSBhdCAwODoyODoxNFBNIC0wNDAwLCBC
+cmlhbiBEb2RnZSB3cm90ZToKPiA+ID4gVGhlIHZlbmRvci1wcmVmaXhlcy50eHQgZmlsZSBwcm9w
+ZXJseSByZWZlcnMgdG8gQXJjdGljU2FuZAo+ID4gPiBhcyBhcmN0aWMgYnV0IHRoZSBkcml2ZXIg
+YmluZGluZ3MgaW1wcm9wZXJseSBhYmJyZXZpYXRlZCB0aGUKPiA+ID4gcHJlZml4IHRvIGFyYy4g
+VGhpcyB3YXMgYSBtaXN0YWtlIGluIHRoZSBvcmlnaW5hbCBwYXRjaC4gVGhpcwo+ID4gPiBwYXRj
+aCBhZGRzICJhcmN0aWMiIGFuZCByZXRhaW5zICJhcmMiIChkZXByZWNhdGVkKSBiaW5kaW5ncwo+
+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogQnJpYW4gRG9kZ2UgPGJkb2RnZTA5QGdtYWlsLmNv
+bT4KPiA+ID4gLS0tCj4gPiA+ICAgLi4uL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5f
+YmwudHh0ICAgICAgICAgfCAzMSArKysrKysrKysrKysrKystLS0tLS0tCj4gPiA+ICAgMSBmaWxl
+IGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQo+ID4gPiAKPiA+ID4g
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2ts
+aWdodC9hcmN4Y25uX2JsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9s
+ZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4dAo+ID4gPiBpbmRleCAyMzBhYmRlLi40ZDk4Mzk0
+IDEwMDY0NAo+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVk
+cy9iYWNrbGlnaHQvYXJjeGNubl9ibC50eHQKPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5fYmwudHh0Cj4gPiA+IEBAIC0x
+LDggKzEsMTMgQEAKPiA+ID4gLUJpbmRpbmcgZm9yIEFyY3RpY1NhbmQgYXJjMmMwNjA4IExFRCBk
+cml2ZXIKPiA+ID4gK0JpbmRpbmcgZm9yIEFyY3RpY1NhbmQgYXJjIGZhbWlseSBMRUQgZHJpdmVy
+cwo+ID4gPiAgIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiA+IC0tIGNvbXBhdGlibGU6CQlzaG91
+bGQgYmUgImFyYyxhcmMyYzA2MDgiCj4gPiA+IC0tIHJlZzoJCQlzbGF2ZSBhZGRyZXNzCj4gPiA+
+ICstIGNvbXBhdGlibGU6IG9uZSBvZgo+ID4gPiArCSJhcmN0aWMsYXJjMWMwNjA4Igo+ID4gPiAr
+CSJhcmN0aWMsYXJjMmMwNjA4Igo+ID4gPiArCSJhcmN0aWMsYXJjM2MwODQ1Igo+ID4gPiArCSJh
+cmMsYXJjMmMwNjA4IiAoZGVwcmVjYXRlZCkKPiA+IE5vdGhpbmcgd3Jvbmcgd2l0aCBhZGRpbmcg
+Y29tcGF0aWJsZSBzdHJpbmdzIGZvciBhcmMxIGFuZCBhcmMzIGJ1dCBJCj4gPiB3b3VsZCBleHBl
+Y3QgaXQgdG8gYmUgbWVudGlvbmVkIGluIHRoZSBkZXNjcmlwdGlvbiB0byByZWFzc3VyZSByZXZp
+ZXdlcnMKPiA+IHRoYXQgdGhlIHJpZ2h0IGRlcHRoIG9mIHRob3VnaHQgaGFzIGJlZW4gYXBwbGll
+ZCBTb21ldGhpbmcgbGlrZSAiQWxzbyBhZGRlZAo+ID4gY29tcGF0aWJsZSBzdHJpbmdzIGZvciBv
+dGhlciBmYW1pbHkgbWVtYmVycywgYWxsIHRoZSBleGlzdGluZyBvcHRpb25hbAo+ID4gcHJvcGVy
+dGllcyB3b3JrIHRoZSBzYW1lIHdheSBmb3IgdGhlIG5ldyBkZXZpY2VzLiIgKGlmIHlvdSBhZ3Jl
+ZSB0aGF0IGl0Cj4gPiBpcyB0cnVlKSBpcyBnb29kIHRvIHNob3cgeW91IHdlcmUgcGF5aW5nIHBy
+b3BlciBhdHRlbnRpb24hCj4gPiAKPiA+IEhvd2V2ZXIgdGhpcyBkb2VzIHBlcmhhcHMgdmVyZ2Ug
+YSBsaXR0bGUgdG93YXJkcyBuaXRwaWNraW5nIHNvIG1heWJlCj4gPiB3YWl0IHRvIHNlZSB3aGF0
+IHRoZSBEVCBmb2xrcyBzYXkuIEZyb20gbXkgcG9pbnQgb2YgdmlldzoKPiA+IEFja2VkLWJ5OiBE
+YW5pZWwgVGhvbXBzb24gPGRhbmllbC50aG9tcHNvbkBsaW5hcm8ub3JnPgo+ID4gCj4gPiAKPiA+
+IERhbmllbC4KPiAKPiBHb29kIHBvaW50LiBJIGRpZCBhY3R1YWxseSB0aGluayBhYm91dCB0aGlz
+IGEgYml0LiBUaGUgKm9ubHkqIGNoaXAgYXZhaWxhYmxlCj4gYXQgdGhlIHRpbWUgb2YgdGhlIG9y
+aWdpbmFsIGRyaXZlciB3YXMgdGhlIGFyYzJjMDYwOCBhbmQgdGhhdCBpcyB0aGUgY2hpcAo+IHRo
+YXQgaXMgY3VycmVudGx5IGluIHVzZSBpbiB0aGUgU2Ftc3VuZyBDaHJvbWVib29rIFBsdXMsIGFu
+ZCB0aGUgb25seSB1c2UgSQo+IGtub3cgb2YgdXNpbmcgdGhlICJhcmMiIHByZWZpeC4gVGhlcmUg
+d2lsbCBiZSBubyByZWFzb24gdG8gZXZlciBzdXBwb3J0Cj4gImFyYyxhcmMxLi4iIG9yICJhcmMs
+YXJjMy4uLiIgaW4gdGhlIGJpbmRpbmdzIGZvciBwYXN0IG9yIGZ1dHVyZSB1c2UuCj4gCj4gVGhl
+IG5ldyB0d28gY2hpcHMgYXJlIGp1c3QgYmFzaWNhbGx5IHN1cHBvcnRlZCBieSB0aGlzIGRyaXZl
+ci4gVGhlcmUgaXMgbW9yZQo+IGZ1bmN0aW9uYWxpdHkgdG8gdGhlbSB3aGljaCB3aWxsIGJlIGVu
+YWJsZWQgaW4gbXkgbmV4dCBwYXRjaC4gSSB3YW50ZWQgdG8KPiBzZXBhcmF0ZSB0aGUgbW92ZSB0
+byAiYXJjdGljIiBmcm9tIHRoZSBtb3ZlIHRvIGZ1bGx5IHN1cHBvcnQgdGhlIG90aGVyIGNoaXBz
+Cj4gZm9yIGNsYXJpdHkgKHlvdSBndXlzIGFyZSBhbGwgcmlnaHRseSBwaWNreSEpIEkgZGlkIHB1
+dCB0aGUgbmV3IGNoaXAKPiBiaW5kaW5ncyBpbiB0aGUgZHJpdmVyL2JpbmRpbmdzIGluIHRoaXMg
+cGF0Y2ggdGhvdWdoIHNvIEkgY291bGQgdGVzdCB0aGlzCj4gcGF0Y2ggYWdhaW5zdCB0aGUgYWN0
+dWFsIGgvdyBpbnN0YW5jZXM6IEkgaGF2ZSB0aHJlZSBib2FyZHMsIG9uZSB3aXRoIGVhY2gKPiBj
+aGlwIHR5cGUgYW5kIGVhY2ggaGFzIGEgZHRiIHdpdGggdGhlICJhcmN0aWMsLi4iIHR5cGUgYmlu
+ZGluZyBvbmJvYXJkLgoKSSB0aGluayB5b3UgaGF2ZSBtaXN1bmRlcnN0b29kLiBJJ3ZlIGdvdCBu
+byBwcm9ibGVtIHdpdGggcmVuYW1pbmcgdGhlCnByb3BlcnRpZXMgYXMgd2VsbC4KCldoYXQgSSB3
+YXMgYnJpbmdpbmcgdXAgaXMgdGhhdCB5b3UgaGF2ZSBleHRlbmRlZCB0aGUgc2NvcGUgb2YgdGhl
+CmJpbmRpbmdzIHRvIGNvdmVyIHRoZSBhcmMxIGFuZCBhcmMzIGRldmljZXMuIEl0IHdvdWxkIGJl
+IGdvb2QgZm9yIHlvdQp0byBleHBsaWNpdGx5IGNvbmZpcm0gdGhhdCB0aGUgZXhpc3RpbmcgcHJv
+cGVydGllcyBhbGwgc3RpbGwgYXBwbHkKdG8gYXJjMSBhbmQgYXJjMyBkZXZpY2VzLCBhbmQgdGhh
+dCBubyBuZXcgcHJvcGVydGllcyBhcmUgbmVlZGVkIHRvCm1vZGVsIHRoZW0gcHJvcGVybHkuCgpB
+cyBpdCBoYXBwZW5zIEkgKmRpZCogZ2xhbmNlIGF0IHlvdXIgb2xkIGFyYzEvYXJjMyBwYXRjaCB0
+byBjaGVjayBpdCBmb3IKbXlzZWxmIGJlZm9yZSBJIG9mZmVyZWQgeW91IHRoZSBBY2tlZC1ieSBh
+bmQgZGlkbid0IHNlZSBhbnl0aGluZyB0aGF0Cm9mZmVuZGVkIG1lLiBIb3dldmVyIGEgZ29vZCBw
+YXRjaCBkZXNjcmlwdGlvbiB3b3VsZCBoYXZlIHNwYXJlZCBtZSB0aGF0CndvcmsuLi4KCgpEYW5p
+ZWwuCgoKPiAKPiA+ID4gKwo+ID4gPiArLSByZWc6CQlzbGF2ZSBhZGRyZXNzCj4gPiA+ICAgT3B0
+aW9uYWwgcHJvcGVydGllczoKPiA+ID4gICAtIGRlZmF1bHQtYnJpZ2h0bmVzczoJYnJpZ2h0bmVz
+cyB2YWx1ZSBvbiBib290LCB2YWx1ZSBmcm9tOiAwLTQwOTUKPiA+ID4gQEAgLTExLDE5ICsxNiwy
+NSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gPiAgIC0gbGVkLXNvdXJjZXM6CQlMaXN0IG9m
+IGVuYWJsZWQgY2hhbm5lbHMgZnJvbSAwIHRvIDUuCj4gPiA+ICAgCQkJU2VlIERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2NvbW1vbi50eHQKPiA+ID4gLS0gYXJjLGxlZC1j
+b25maWctMDoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSUxFRF9DT05GSUdfMAo+ID4gPiAtLSBhcmMs
+bGVkLWNvbmZpZy0xOglzZXR0aW5nIGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18xCj4gPiA+IC0t
+IGFyYyxkaW0tZnJlcToJCVBXTSBtb2RlIGZyZXF1ZW5jZSBzZXR0aW5nIChiaXRzIFszOjBdIHVz
+ZWQpCj4gPiA+IC0tIGFyYyxjb21wLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgQ09ORklH
+X0NPTVAKPiA+ID4gLS0gYXJjLGZpbHRlci1jb25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIEZJ
+TFRFUl9DT05GSUcKPiA+ID4gLS0gYXJjLHRyaW0tY29uZmlnOglzZXR0aW5nIGZvciByZWdpc3Rl
+ciBJTUFYVFVORQo+ID4gPiArLSBhcmN0aWMsbGVkLWNvbmZpZy0wOglzZXR0aW5nIGZvciByZWdp
+c3RlciBJTEVEX0NPTkZJR18wCj4gPiA+ICstIGFyY3RpYyxsZWQtY29uZmlnLTE6CXNldHRpbmcg
+Zm9yIHJlZ2lzdGVyIElMRURfQ09ORklHXzEKPiA+ID4gKy0gYXJjdGljLGRpbS1mcmVxOglQV00g
+bW9kZSBmcmVxdWVuY2Ugc2V0dGluZyAoYml0cyBbMzowXSB1c2VkKQo+ID4gPiArLSBhcmN0aWMs
+Y29tcC1jb25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIENPTkZJR19DT01QCj4gPiA+ICstIGFy
+Y3RpYyxmaWx0ZXItY29uZmlnOglzZXR0aW5nIGZvciByZWdpc3RlciBGSUxURVJfQ09ORklHCj4g
+PiA+ICstIGFyY3RpYyx0cmltLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSU1BWFRVTkUK
+PiA+ID4gKy0gYXJjLGxlZC1jb25maWctMDoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSUxFRF9DT05G
+SUdfMCAoZGVwcmVjYXRlZCkKPiA+ID4gKy0gYXJjLGxlZC1jb25maWctMToJc2V0dGluZyBmb3Ig
+cmVnaXN0ZXIgSUxFRF9DT05GSUdfMSAoZGVwcmVjYXRlZCkKPiA+ID4gKy0gYXJjLGRpbS1mcmVx
+OgkJUFdNIG1vZGUgZnJlcXVlbmNlIHNldHRpbmcgKGJpdHMgWzM6MF0gdXNlZCkgKGRlcHJlY2F0
+ZWQpCj4gPiA+ICstIGFyYyxjb21wLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgQ09ORklH
+X0NPTVAgKGRlcHJlY2F0ZWQpCj4gPiA+ICstIGFyYyxmaWx0ZXItY29uZmlnOglzZXR0aW5nIGZv
+ciByZWdpc3RlciBGSUxURVJfQ09ORklHIChkZXByZWNhdGVkKQo+ID4gPiArLSBhcmMsdHJpbS1j
+b25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElNQVhUVU5FIChkZXByZWNhdGVkKQo+ID4gPiAg
+IE5vdGU6IE9wdGlvbmFsIHByb3BlcnRpZXMgbm90IHNwZWNpZmllZCB3aWxsIGRlZmF1bHQgdG8g
+dmFsdWVzIGluIElDIEVQUk9NCj4gPiA+ICAgRXhhbXBsZToKPiA+ID4gICBhcmMyYzA2MDhAMzAg
+ewo+ID4gPiAtCWNvbXBhdGlibGUgPSAiYXJjLGFyYzJjMDYwOCI7Cj4gPiA+ICsJY29tcGF0aWJs
+ZSA9ICJhcmN0aWMsYXJjMmMwNjA4IjsKPiA+ID4gICAJcmVnID0gPDB4MzA+Owo+ID4gPiAgIAlk
+ZWZhdWx0LWJyaWdodG5lc3MgPSA8NTAwPjsKPiA+ID4gICAJbGFiZWwgPSAibGNkLWJhY2tsaWdo
+dCI7Cj4gPiA+IC0tIAo+ID4gPiAyLjcuNAo+ID4gPiAKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVs
