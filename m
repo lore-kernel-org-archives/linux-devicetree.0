@@ -1,102 +1,80 @@
-From: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: Re: [PATCH 4/4] devicetree: Add led-backlight binding
-Date: Tue, 2 Jul 2019 13:11:58 +0200
-Message-ID: <0a2c7f84-ea1f-cab2-c812-b5cefed1f517@ti.com>
-References: <20190701151423.30768-1-jjhiblot@ti.com>
- <20190701151423.30768-5-jjhiblot@ti.com>
- <20190702095849.fxlmiqcioihsi3zk@holly.lan>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] dt-binding: mmc: rename tmio_mmc.txt to
+ renesas,sdhi.txt
+Date: Tue, 2 Jul 2019 13:24:34 +0200
+Message-ID: <20190702112434.ll3btya7fepkb5tn@verge.net.au>
+References: <20190624070345.20373-1-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702095849.fxlmiqcioihsi3zk@holly.lan>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190624070345.20373-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, jingoohan1@gmail.com, dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, devicetree@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Simon Horman <simon.horman@netronome.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Daniel,
+On Mon, Jun 24, 2019 at 04:03:45PM +0900, Masahiro Yamada wrote:
+> As commit b6147490e6aa ("mmc: tmio: split core functionality, DMA and
+> MFD glue") said, these MMC controllers use the IP from Panasonic.
+> 
+> TMIO (Toshiba Mobile IO) MMC was the first upstreamed user of this IP.
+> The common driver code was split and expanded as 'tmio-mmc-core', then
+> it became historical misnomer since 'tmio' is not the name of this IP.
+> 
+> In the discussion [1], we decide to keep this name as-is at least in
+> Linux driver level because renaming everything is a big churn.
+> 
+> However, DT should not be oriented to a particular project even though
+> it is mainly developed in Linux communities.
+> 
+> This is the misfortune only in Linux. Let's stop exporting it to other
+> projects, where there is no good reason to call this hardware "TMIO".
+> Rename the file to renesas,sdhi.txt. In fact, all the information in
+> this file is specific to the Renesas platform.
+> 
+> This commit also removes the first paragraph entirely. The DT-binding
+> should describe the hardware. It is strange to talk about Linux driver
+> internals such as how the drivers are probed, how platform data are
+> handed off, etc.
+> 
+> [1] https://www.spinics.net/lists/linux-mmc/msg46952.html
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-On 02/07/2019 11:58, Daniel Thompson wrote:
-> On Mon, Jul 01, 2019 at 05:14:23PM +0200, Jean-Jacques Hiblot wrote:
->> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
->>
->> Add DT binding for led-backlight.
-> I think the patchset is in the wrong order; the DT bindings
-> documentation should appear *before* the binding is
-> implemented (amoung other things this prevent transient checkpatch
-> warnings as the patchset is applied).
->
-ok
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
->> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->> Cc: devicetree@vger.kernel.org
->> ---
->>   .../video/backlight/led-backlight.txt         | 39 +++++++++++++++++++
->>   1 file changed, 39 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/video/backlight/led-backlight.txt
->>
->> diff --git a/Documentation/devicetree/bindings/video/backlight/led-backlight.txt b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
->> new file mode 100644
->> index 000000000000..216cd52d624a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
->> @@ -0,0 +1,39 @@
->> +led-backlight bindings
->> +
->> +The node of the backlight driver IS the node of the LED.
->> +
->> +Required properties:
->> +  - compatible: "led-backlight"
->> +  - brightness-levels: Array of distinct LED brightness levels. These
->> +      are in the range from 0 to 255, passed to the LED class driver.
->> +  - default-brightness-level: the default brightness level (index into the
->> +      array defined by the "brightness-levels" property)
-> I think brightness-levels and default-brightness-level could be
-> optional properties since a default 1:1 mapping seems reasonable given
-> how constrained the LED brightness values are.
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-That is probably a good idea. Expect it in v2
-
-Thanks,
-
-JJ
-
->
->
-> Daniel.
->
->
->> +
->> +Optional properties:
->> +  - power-supply: regulator for supply voltage
->> +  - enable-gpios: contains a single GPIO specifier for the GPIO which enables
->> +                  and disables the backlight (see GPIO binding[0])
->> +
->> +[0]: Documentation/devicetree/bindings/gpio/gpio.txt
->> +
->> +Example:
->> +
->> +led_ctrl {
->> +	red_led@1 {
->> +	        label = "red";
->> +		reg = <1>;
->> +	}
->> +
->> +	backlight_led@2 {
->> +		function = LED_FUNCTION_BACKLIGHT;
->> +		reg = <2>;
->> +
->> +		compatible = "led-backlight";
->> +
->> +		brightness-levels = <0 4 8 16 32 64 128 255>;
->> +		default-brightness-level = <6>;
->> +
->> +		power-supply = <&vdd_bl_reg>;
->> +		enable-gpios = <&gpio 58 0>;
->> +	};
->> +};
->> -- 
->> 2.17.1
->>
+> ---
+> 
+> Changes in v2:
+>  - Rename to renesas,sdhi.txt instead of renesas_sdhi.txt
+> 
+>  .../bindings/mmc/{tmio_mmc.txt => renesas,sdhi.txt}   | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+>  rename Documentation/devicetree/bindings/mmc/{tmio_mmc.txt => renesas,sdhi.txt} (87%)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
+> similarity index 87%
+> rename from Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> rename to Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
+> index 2b4f17ca9087..dd08d038a65c 100644
+> --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
+> @@ -1,13 +1,4 @@
+> -* Toshiba Mobile IO SD/MMC controller
+> -
+> -The tmio-mmc driver doesn't probe its devices actively, instead its binding to
+> -devices is managed by either MFD drivers or by the sh_mobile_sdhi platform
+> -driver. Those drivers supply the tmio-mmc driver with platform data, that either
+> -describe hardware capabilities, known to them, or are obtained by them from
+> -their own platform data or from their DT information. In the latter case all
+> -compulsory and any optional properties, common to all SD/MMC drivers, as
+> -described in mmc.txt, can be used. Additionally the following tmio_mmc-specific
+> -optional bindings can be used.
+> +* Renesas SDHI SD/MMC controller
+>  
+>  Required properties:
+>  - compatible: should contain one or more of the following:
+> -- 
+> 2.17.1
+> 
