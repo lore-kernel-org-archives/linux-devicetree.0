@@ -1,134 +1,60 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH RESEND V4 1/5] clocksource: timer-of: Support getting
- clock frequency from DT
-Date: Tue, 2 Jul 2019 10:06:44 +0200
-Message-ID: <c7ff76e5-d73d-e71e-c3f4-445bdd2c5b93@linaro.org>
-References: <20190702075513.17451-1-Anson.Huang@nxp.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 0/6] ASoC: Add support to WCD9340/WCD9341 codec
+Date: Tue,  2 Jul 2019 09:09:14 +0100
+Message-ID: <20190702080920.22623-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702075513.17451-1-Anson.Huang@nxp.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca, agx@sigxcpu.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Linux-imx@nxp.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: robh+dt@kernel.org, broonie@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, vkoul@kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, srini@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+This patchset adds support to Qualcomm WCD9340/WCD9341 Codec which
+is a standalone Hi-Fi audio codec IC.
+This codec supports both I2S/I2C and SLIMbus audio interfaces.
+On slimbus interface it supports two data lanes; 16 Tx ports
+and 8 Rx ports. It has Five DACs and seven dedicated interpolators,
+Multibutton headset control (MBHC), Active noise cancellation,
+Sidetone paths, MAD (mic activity detection) and codec processing engine.
+It supports Class-H differential earpiece out and stereo single
+ended headphones out.
+This codec also has integrated SoundWire controller.
+Patchset for this is already sent for review at
+https://lwn.net/Articles/790651/
+    
+This patchset has been tested on SDM845 based DragonBoard DB845c with WSA881x
+smart speaker amplifiers via soundwire and 4 DMICs.
 
-why did you resend the series?
+Thanks,
+srini
 
+Srinivas Kandagatla (6):
+  ASoC: dt-bindings: add dt bindings for WCD9340/WCD9341 audio codec
+  ASoC: wcd934x: add support to wcd9340/wcd9341 codec
+  ASoC: wcd934x: add basic controls
+  ASoC: wcd934x: add playback dapm widgets
+  ASoC: wcd934x: add capture dapm widgets
+  ASoC: wcd934x: add audio routings
 
-On 02/07/2019 09:55, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> More and more platforms use platform driver model for clock driver,
-> so the clock driver is NOT ready during timer initialization phase,
-> it will cause timer initialization failed.
-> 
-> To support those platforms with upper scenario, introducing a new
-> flag TIMER_OF_CLOCK_FREQUENCY which is mutually exclusive with
-> TIMER_OF_CLOCK flag to support getting timer clock frequency from
-> DT's timer node, the property name should be "clock-frequency",
-> then of_clk operations can be skipped.
-> 
-> User needs to select either TIMER_OF_CLOCK_FREQUENCY or TIMER_OF_CLOCK
-> flag if want to use timer-of driver to initialize the clock rate.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V3:
-> 	- use hardcoded "clock-frequency" instead of adding new variable prop_name;
-> 	- add pre-condition check for TIMER_OF_CLOCK and TIMER_OF_CLOCK_FREQUENCY, they MUST be exclusive.
-> ---
->  drivers/clocksource/timer-of.c | 29 +++++++++++++++++++++++++++++
->  drivers/clocksource/timer-of.h |  7 ++++---
->  2 files changed, 33 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
-> index 8054228..858f684 100644
-> --- a/drivers/clocksource/timer-of.c
-> +++ b/drivers/clocksource/timer-of.c
-> @@ -161,11 +161,30 @@ static __init int timer_of_base_init(struct device_node *np,
->  	return 0;
->  }
->  
-> +static __init int timer_of_clk_frequency_init(struct device_node *np,
-> +					      struct of_timer_clk *of_clk)
-> +{
-> +	int ret;
-> +	u32 rate;
-> +
-> +	ret = of_property_read_u32(np, "clock-frequency", &rate);
-> +	if (!ret) {
-> +		of_clk->rate = rate;
-> +		of_clk->period = DIV_ROUND_UP(rate, HZ);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  int __init timer_of_init(struct device_node *np, struct timer_of *to)
->  {
-> +	unsigned long clock_flags = TIMER_OF_CLOCK | TIMER_OF_CLOCK_FREQUENCY;
->  	int ret = -EINVAL;
->  	int flags = 0;
->  
-> +	if ((to->flags & clock_flags) == clock_flags)
-> +		return ret;
-> +
->  	if (to->flags & TIMER_OF_BASE) {
->  		ret = timer_of_base_init(np, &to->of_base);
->  		if (ret)
-> @@ -180,6 +199,13 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
->  		flags |= TIMER_OF_CLOCK;
->  	}
->  
-> +	if (to->flags & TIMER_OF_CLOCK_FREQUENCY) {
-> +		ret = timer_of_clk_frequency_init(np, &to->of_clk);
-> +		if (ret)
-> +			goto out_fail;
-> +		flags |= TIMER_OF_CLOCK_FREQUENCY;
-> +	}
-> +
->  	if (to->flags & TIMER_OF_IRQ) {
->  		ret = timer_of_irq_init(np, &to->of_irq);
->  		if (ret)
-> @@ -201,6 +227,9 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
->  	if (flags & TIMER_OF_CLOCK)
->  		timer_of_clk_exit(&to->of_clk);
->  
-> +	if (flags & TIMER_OF_CLOCK_FREQUENCY)
-> +		to->of_clk.rate = 0;
-> +
->  	if (flags & TIMER_OF_BASE)
->  		timer_of_base_exit(&to->of_base);
->  	return ret;
-> diff --git a/drivers/clocksource/timer-of.h b/drivers/clocksource/timer-of.h
-> index a5478f3..a08e108 100644
-> --- a/drivers/clocksource/timer-of.h
-> +++ b/drivers/clocksource/timer-of.h
-> @@ -4,9 +4,10 @@
->  
->  #include <linux/clockchips.h>
->  
-> -#define TIMER_OF_BASE	0x1
-> -#define TIMER_OF_CLOCK	0x2
-> -#define TIMER_OF_IRQ	0x4
-> +#define TIMER_OF_BASE			0x1
-> +#define TIMER_OF_CLOCK			0x2
-> +#define TIMER_OF_IRQ			0x4
-> +#define TIMER_OF_CLOCK_FREQUENCY	0x8
->  
->  struct of_timer_irq {
->  	int irq;
-> 
-
+ .../bindings/sound/qcom,wcd934x.txt           |  188 +
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wcd934x.c                    | 5979 +++++++++++++++++
+ sound/soc/codecs/wcd934x.h                    |  426 ++
+ 5 files changed, 6605 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.txt
+ create mode 100644 sound/soc/codecs/wcd934x.c
+ create mode 100644 sound/soc/codecs/wcd934x.h
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.21.0
