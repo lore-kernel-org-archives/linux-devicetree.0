@@ -1,7 +1,7 @@
 From: Pawel Laszczak <pawell@cadence.com>
-Subject: [PATCH v8 1/6] dt-bindings: add binding for USBSS-DRD controller.
-Date: Tue, 2 Jul 2019 14:37:57 +0100
-Message-ID: <1562074682-31579-2-git-send-email-pawell@cadence.com>
+Subject: [PATCH v8 3/6] usb:gadget Patch simplify usb_decode_set_clear_feature function.
+Date: Tue, 2 Jul 2019 14:37:59 +0100
+Message-ID: <1562074682-31579-4-git-send-email-pawell@cadence.com>
 References: <1562074682-31579-1-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,66 +12,120 @@ To: devicetree@vger.kernel.org
 Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, jpawar@cadence.com, kurahul@cadence.com, aniljoy@cadence.com, Pawel Laszczak <pawell@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch aim at documenting USB related dt-bindings for the
-Cadence USBSS-DRD controller.
+Patch adds usb_decode_test_mode and usb_decode_device_feature functions,
+which allow to make more readable and simplify the
+usb_decode_set_clear_feature function.
 
 Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/usb/cdns-usb3.txt     | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
+ drivers/usb/gadget/debug.c | 89 ++++++++++++++++++--------------------
+ 1 file changed, 43 insertions(+), 46 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/cdns-usb3.txt b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
-new file mode 100644
-index 000000000000..b7dc606d37b5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
-@@ -0,0 +1,45 @@
-+Binding for the Cadence USBSS-DRD controller
+diff --git a/drivers/usb/gadget/debug.c b/drivers/usb/gadget/debug.c
+index d5a469bc67a3..60a9f70a0904 100644
+--- a/drivers/usb/gadget/debug.c
++++ b/drivers/usb/gadget/debug.c
+@@ -30,58 +30,55 @@ static void usb_decode_get_status(__u8 bRequestType, __u16 wIndex,
+ 	}
+ }
+ 
+-static void usb_decode_set_clear_feature(__u8 bRequestType, __u8 bRequest,
+-					 __u16 wValue, __u16 wIndex,
+-					 char *str, size_t size)
++static const char *usb_decode_device_feature(u16 wValue)
++{
++	switch (wValue) {
++	case USB_DEVICE_SELF_POWERED:
++		return "Self Powered";
++	case USB_DEVICE_REMOTE_WAKEUP:
++		return "Remote Wakeup";
++	case USB_DEVICE_TEST_MODE:
++		return "Test Mode";
++	case USB_DEVICE_U1_ENABLE:
++		return "U1 Enable";
++	case USB_DEVICE_U2_ENABLE:
++		return "U2 Enable";
++	case USB_DEVICE_LTM_ENABLE:
++		return "LTM Enable";
++	default:
++		return "UNKNOWN";
++	}
++}
 +
-+Required properties:
-+ - reg: Physical base address and size of the controller's register areas.
-+	 Controller has 3 different regions:
-+	 - HOST registers area
-+	 - DEVICE registers area
-+	 - OTG/DRD registers area
-+ - reg-names - register memory area names:
-+	"xhci" - for HOST registers space
-+	"dev" - for DEVICE registers space
-+	"otg" - for OTG/DRD registers space
-+ - compatible: Should contain: "cdns,usb3"
-+ - interrupts: Interrupts used by cdns3 controller:
-+	"host" - interrupt used by XHCI driver.
-+	"peripheral" - interrupt used by device driver
-+	"otg" - interrupt used by DRD/OTG  part of driver
++static const char *usb_decode_test_mode(u16 wIndex)
++{
++	switch (wIndex) {
++	case TEST_J:
++		return ": TEST_J";
++	case TEST_K:
++		return ": TEST_K";
++	case TEST_SE0_NAK:
++		return ": TEST_SE0_NAK";
++	case TEST_PACKET:
++		return ": TEST_PACKET";
++	case TEST_FORCE_EN:
++		return ": TEST_FORCE_EN";
++	default:
++		return ": UNKNOWN";
++	}
++}
 +
-+Optional properties:
-+ - maximum-speed : valid arguments are "super-speed", "high-speed" and
-+                   "full-speed"; refer to usb/generic.txt
-+ - dr_mode: Should be one of "host", "peripheral" or "otg".
-+ - phys: reference to the USB PHY
-+ - phy-names: from the *Generic PHY* bindings;
-+	Supported names are:
-+	- cdns3,usb2-phy
-+	- cdns3,usb3-phy
-+
-+ - cdns,on-chip-buff-size : size of memory intended as internal memory for endpoints
-+	buffers expressed in KB
-+
-+Example:
-+	usb@f3000000 {
-+		compatible = "cdns,usb3";
-+		interrupts = <GIC_USB_IRQ 7 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_USB_IRQ  8 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "host", "peripheral", "otg";
-+		reg = <0xf3000000 0x10000>,	/* memory area for HOST registers */
-+			<0xf3010000 0x10000>,	/* memory area for DEVICE registers */
-+			<0xf3020000 0x10000>;	/* memory area for OTG/DRD registers */
-+		reg-names = "xhci", "dev", "otg";
-+		phys = <&usb2_phy>, <&usb3_phy>;
-+		phy-names = "cdns3,usb2-phy", "cnds3,usb3-phy";
-+	};
++static void usb_decode_set_clear_feature(__u8 bRequestType,
++					 __u8 bRequest, __u16 wValue,
++					 __u16 wIndex, char *str, size_t size)
+ {
+ 	switch (bRequestType & USB_RECIP_MASK) {
+ 	case USB_RECIP_DEVICE:
+ 		snprintf(str, size, "%s Device Feature(%s%s)",
+ 			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
+-			 ({char *s;
+-				switch (wValue) {
+-				case USB_DEVICE_SELF_POWERED:
+-					s = "Self Powered";
+-					break;
+-				case USB_DEVICE_REMOTE_WAKEUP:
+-					s = "Remote Wakeup";
+-					break;
+-				case USB_DEVICE_TEST_MODE:
+-					s = "Test Mode";
+-					break;
+-				case USB_DEVICE_U1_ENABLE:
+-					s = "U1 Enable";
+-					break;
+-				case USB_DEVICE_U2_ENABLE:
+-					s = "U2 Enable";
+-					break;
+-				case USB_DEVICE_LTM_ENABLE:
+-					s = "LTM Enable";
+-					break;
+-				default:
+-					s = "UNKNOWN";
+-				} s; }),
++			 usb_decode_device_feature(wValue),
+ 			 wValue == USB_DEVICE_TEST_MODE ?
+-			 ({ char *s;
+-				switch (wIndex) {
+-				case TEST_J:
+-					s = ": TEST_J";
+-					break;
+-				case TEST_K:
+-					s = ": TEST_K";
+-					break;
+-				case TEST_SE0_NAK:
+-					s = ": TEST_SE0_NAK";
+-					break;
+-				case TEST_PACKET:
+-					s = ": TEST_PACKET";
+-					break;
+-				case TEST_FORCE_EN:
+-					s = ": TEST_FORCE_EN";
+-					break;
+-				default:
+-					s = ": UNKNOWN";
+-				} s; }) : "");
++			 usb_decode_test_mode(wIndex) : "");
+ 		break;
+ 	case USB_RECIP_INTERFACE:
+ 		snprintf(str, size, "%s Interface Feature(%s)",
 -- 
 2.17.1
