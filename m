@@ -1,53 +1,69 @@
-From: =?iso-8859-1?Q?Jan_Kundr=E1t?= <jan.kundrat@cesnet.cz>
-Subject: Re: [PATCH v1] tty: serial: max310x: Add optional reset gpio
-Date: Tue, 02 Jul 2019 16:44:20 +0200
-Message-ID: <d9ac1295-e780-409d-b7de-b4c2db586e58@cesnet.cz>
-References: <20190614141112.29962-1-mylene.josserand@bootlin.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH] clk: imx8: Add DSP related clocks
+Date: Tue,  2 Jul 2019 18:20:07 +0300
+Message-ID: <20190702152007.12190-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614141112.29962-1-mylene.josserand@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Myl=E8ne_Josserand?= <mylene.josserand@bootlin.com>
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: mark.rutland@arm.com, aisheng.dong@nxp.com, shengjiu.wang@nxp.com, devicetree@vger.kernel.org, sboyd@kernel.org, Daniel Baluta <daniel.baluta@nxp.com>, mturquette@baylibre.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, weiyongjun1@huawei.com, linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On p=C3=A1tek 14. =C4=8Dervna 2019 16:11:12 CEST, Myl=C3=A8ne Josserand wrote=
-:
-> --- a/Documentation/devicetree/bindings/serial/maxim,max310x.txt
-> +++ b/Documentation/devicetree/bindings/serial/maxim,max310x.txt
-> @@ -15,6 +15,7 @@ Required properties:
->    "osc" if an external clock source is used.
-> =20
->  Optional properties:
-> +- reset-gpios: Gpio to use for reset.
+i.MX8QXP contains Hifi4 DSP. There are four clocks
+associated with DSP:
+  * dsp_lpcg_core_clk
+  * dsp_lpcg_ipg_clk
+  * dsp_lpcg_adb_aclk
+  * ocram_lpcg_ipg_clk
 
-"GPIO", not "Gpio", for consistency.
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+---
+ drivers/clk/imx/clk-imx8qxp-lpcg.c     | 5 +++++
+ include/dt-bindings/clock/imx8-clock.h | 6 +++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
->  =09if (spi->dev.of_node) {
-> +=09=09struct gpio_desc *reset_gpio;
->  =09=09const struct of_device_id *of_id =3D
->  =09=09=09of_match_device(max310x_dt_ids, &spi->dev);
->  =09=09if (!of_id)
->  =09=09=09return -ENODEV;
-> =20
->  =09=09devtype =3D (struct max310x_devtype *)of_id->data;
-> +=09=09reset_gpio =3D devm_gpiod_get_optional(&spi->dev, "reset",
-> +=09=09=09=09=09=09     GPIOD_OUT_HIGH);
-> +=09=09if (IS_ERR(reset_gpio))
-> +=09=09=09return PTR_ERR(reset_gpio);
-> +=09=09gpiod_set_value_cansleep(reset_gpio, 0);
->  =09} else {
-
-The RST signal is active-low on the chip, but the code initializes the=20
-output to GPIOD_OUT_HIGH. Are you perhaps relying on a DT binding setting=20
-an ACTIVE_LOW flag on the reset GPIO lane? This should be documented.
-
-Assuming that this polarity inversion works, the code first asserts the=20
-reset, then it performs no explicit waiting, and then it clears the RST=20
-signal. I checked MAX14830's datasheet, and there's no minimal reset=20
-duration, so perhaps this is safe, but it looks a bit odd to me.
-
-With kind regards,
-Jan
+diff --git a/drivers/clk/imx/clk-imx8qxp-lpcg.c b/drivers/clk/imx/clk-imx8qxp-lpcg.c
+index fb6edf1b8aa2..c0aff7ca6374 100644
+--- a/drivers/clk/imx/clk-imx8qxp-lpcg.c
++++ b/drivers/clk/imx/clk-imx8qxp-lpcg.c
+@@ -72,6 +72,11 @@ static const struct imx8qxp_lpcg_data imx8qxp_lpcg_adma[] = {
+ 	{ IMX_ADMA_LPCG_I2C2_CLK, "i2c2_lpcg_clk", "i2c2_clk", 0, ADMA_LPI2C_2_LPCG, 0, 0, },
+ 	{ IMX_ADMA_LPCG_I2C3_IPG_CLK, "i2c3_lpcg_ipg_clk", "dma_ipg_clk_root", 0, ADMA_LPI2C_3_LPCG, 16, 0, },
+ 	{ IMX_ADMA_LPCG_I2C3_CLK, "i2c3_lpcg_clk", "i2c3_clk", 0, ADMA_LPI2C_3_LPCG, 0, 0, },
++
++	{ IMX_ADMA_LPCG_DSP_CORE_CLK, "dsp_lpcg_core_clk", "dma_ipg_clk_root", 0, ADMA_HIFI_LPCG, 28, 0, },
++	{ IMX_ADMA_LPCG_DSP_IPG_CLK, "dsp_lpcg_ipg_clk", "dma_ipg_clk_root", 0, ADMA_HIFI_LPCG, 20, 0, },
++	{ IMX_ADMA_LPCG_DSP_ADB_CLK, "dsp_lpcg_adb_clk", "dma_ipg_clk_root", 0, ADMA_HIFI_LPCG, 16, 0, },
++	{ IMX_ADMA_LPCG_OCRAM_IPG_CLK, "ocram_lpcg_ipg_clk", "dma_ipg_clk_root", 0, ADMA_OCRAM_LPCG, 16, 0, },
+ };
+ 
+ static const struct imx8qxp_ss_lpcg imx8qxp_ss_adma = {
+diff --git a/include/dt-bindings/clock/imx8-clock.h b/include/dt-bindings/clock/imx8-clock.h
+index 4236818e3be5..673a8c662340 100644
+--- a/include/dt-bindings/clock/imx8-clock.h
++++ b/include/dt-bindings/clock/imx8-clock.h
+@@ -283,7 +283,11 @@
+ #define IMX_ADMA_LPCG_PWM_IPG_CLK			38
+ #define IMX_ADMA_LPCG_LCD_PIX_CLK			39
+ #define IMX_ADMA_LPCG_LCD_APB_CLK			40
++#define IMX_ADMA_LPCG_DSP_ADB_CLK			41
++#define IMX_ADMA_LPCG_DSP_IPG_CLK			42
++#define IMX_ADMA_LPCG_DSP_CORE_CLK			43
++#define IMX_ADMA_LPCG_OCRAM_IPG_CLK			44
+ 
+-#define IMX_ADMA_LPCG_CLK_END				41
++#define IMX_ADMA_LPCG_CLK_END				45
+ 
+ #endif /* __DT_BINDINGS_CLOCK_IMX_H */
+-- 
+2.17.1
