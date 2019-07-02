@@ -1,90 +1,142 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v3 4/4] driver core: Add edit_links() callback for drivers
-Date: Mon, 1 Jul 2019 20:40:50 -0700
-Message-ID: <CAGETcx8_rXX+PJUq6JqMVquejg_T9rrbCCCP62p4XtSbV2EUYw@mail.gmail.com>
-References: <20190702004811.136450-1-saravanak@google.com> <20190702004811.136450-5-saravanak@google.com>
- <CAL_JsqKAn2uD4DC2wqJtkqLTFJ54yG_qaQjgfg=YrQfSEhJw+g@mail.gmail.com>
+From: Manish Narani <MNARANI@xilinx.com>
+Subject: RE: [PATCH v2 09/11] firmware: xilinx: Add SDIO Tap Delay APIs
+Date: Tue, 2 Jul 2019 05:03:35 +0000
+Message-ID: <MN2PR02MB6029CA4163882081D7B8C255C1F80@MN2PR02MB6029.namprd02.prod.outlook.com>
+References: <1561958991-21935-1-git-send-email-manish.narani@xilinx.com>
+ <1561958991-21935-10-git-send-email-manish.narani@xilinx.com>
+ <BYAPR02MB599224BA6280EDF56870E1D8B8F90@BYAPR02MB5992.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKAn2uD4DC2wqJtkqLTFJ54yG_qaQjgfg=YrQfSEhJw+g@mail.gmail.com>
+In-Reply-To: <BYAPR02MB599224BA6280EDF56870E1D8B8F90@BYAPR02MB5992.namprd02.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>
+To: Jolly Shah <JOLLYS@xilinx.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heiko@sntech.de" <heiko@sntech.de>, Michal Simek <michals@xilinx.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "christoph.muellner@theobroma-systems.com" <christoph.muellner@theobroma-systems.com>, "philipp.tomsich@theobroma-systems.com" <philipp.tomsich@theobroma-systems.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "scott.branden@broadcom.com" <scott.branden@broadcom.com>, "ayaka@soulik.info" <ayaka@soulik.info>, "kernel@esmil.dk" <kernel@esmil.dk>, "tony.xie@rock-chips.com" <tony.xie@rock-chips.com>, Rajan Vaja <RAJANV@xilinx.com>, Nava
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 6:46 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Jul 1, 2019 at 6:48 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > The driver core/bus adding dependencies by default makes sure that
-> > suppliers don't sync the hardware state with software state before all the
-> > consumers have their drivers loaded (if they are modules) and are probed.
-> >
-> > However, when the bus incorrectly adds dependencies that it shouldn't have
-> > added, the devices might never probe.
-> >
-> > For example, if device-C is a consumer of device-S and they have phandles
-> > to each other in DT, the following could happen:
-> >
-> > 1.  Device-S get added first.
-> > 2.  The bus add_links() callback will (incorrectly) try to link it as
-> >     a consumer of device-C.
-> > 3.  Since device-C isn't present, device-S will be put in
-> >     "waiting-for-supplier" list.
-> > 4.  Device-C gets added next.
-> > 5.  All devices in "waiting-for-supplier" list are retried for linking.
-> > 6.  Device-S gets linked as consumer to Device-C.
-> > 7.  The bus add_links() callback will (correctly) try to link it as
-> >     a consumer of device-S.
-> > 8.  This isn't allowed because it would create a cyclic device links.
-> >
-> > So neither devices will get probed since the supplier is dependent on a
-> > consumer that'll never probe (because it can't get resources from the
-> > supplier).
-> >
-> > Without this patch, things stay in this broken state. However, with this
-> > patch, the execution will continue like this:
-> >
-> > 9.  Device-C's driver is loaded.
-> > 10. Device-C's driver removes Device-S as a consumer of Device-C.
-> > 11. Device-C's driver adds Device-C as a consumer of Device-S.
-> > 12. Device-S probes.
-> > 13. Device-S sync_state() isn't called because Device-C hasn't probed yet.
-> > 14. Device-C probes.
-> > 15. Device-S's sync_state() callback is called.
->
-> We already have some DT unittests around platform devices. It would be
-> nice to extend them to demonstrate this problem. Could be a follow-up
-> patch though.
->
-> In the case a driver hasn't been updated, couldn't the driver core
-> just remove all the links of C to S and S to C so that progress can be
-> made and we retain the status quo of what we have today?
+Hi Jolly,
 
-The problem is knowing which of those links to delete and when.
 
-If a link between S and C fails, how do we know and keep track of
-which of the other 100 links in the system are causing a cycle? It can
-get unwieldy real quick. We could delete all the links to fall back to
-status quo, but how do we tell at what point in time we can delete
-them all?
+> -----Original Message-----
+> From: Jolly Shah
+> Sent: Monday, July 1, 2019 11:36 PM
+> To: Manish Narani <MNARANI@xilinx.com>; ulf.hansson@linaro.org;
+> robh+dt@kernel.org; mark.rutland@arm.com; heiko@sntech.de; Michal Simek
+> <michals@xilinx.com>; adrian.hunter@intel.com;
+> christoph.muellner@theobroma-systems.com; philipp.tomsich@theobroma-
+> systems.com; viresh.kumar@linaro.org; scott.branden@broadcom.com;
+> ayaka@soulik.info; kernel@esmil.dk; tony.xie@rock-chips.com; Rajan Vaja
+> <RAJANV@xilinx.com>; Nava kishore Manne <navam@xilinx.com>;
+> mdf@kernel.org; Manish Narani <MNARANI@xilinx.com>; olof@lixom.net
+> Cc: linux-mmc@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> rockchip@lists.infradead.org
+> Subject: RE: [PATCH v2 09/11] firmware: xilinx: Add SDIO Tap Delay APIs
+>=20
+> Hi Manish,
+>=20
+> > -----Original Message-----
+> > From: Manish Narani <manish.narani@xilinx.com>
+> > Sent: Sunday, June 30, 2019 10:30 PM
+> > To: ulf.hansson@linaro.org; robh+dt@kernel.org; mark.rutland@arm.com;
+> > heiko@sntech.de; Michal Simek <michals@xilinx.com>;
+> > adrian.hunter@intel.com; christoph.muellner@theobroma-systems.com;
+> > philipp.tomsich@theobroma-systems.com; viresh.kumar@linaro.org;
+> > scott.branden@broadcom.com; ayaka@soulik.info; kernel@esmil.dk;
+> > tony.xie@rock-chips.com; Rajan Vaja <RAJANV@xilinx.com>; Jolly Shah
+> > <JOLLYS@xilinx.com>; Nava kishore Manne <navam@xilinx.com>;
+> > mdf@kernel.org; Manish Narani <MNARANI@xilinx.com>; olof@lixom.net
+> > Cc: linux-mmc@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> > rockchip@lists.infradead.org
+> > Subject: [PATCH v2 09/11] firmware: xilinx: Add SDIO Tap Delay APIs
+> >
+> > Add APIs for setting SDIO Tap Delays on ZynqMP platform.
+> >
+> > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> > ---
+> >  drivers/firmware/xilinx/zynqmp.c     | 48
+> > ++++++++++++++++++++++++++++++++++++
+> >  include/linux/firmware/xlnx-zynqmp.h | 15 ++++++++++-
+> >  2 files changed, 62 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/firmware/xilinx/zynqmp.c
+> b/drivers/firmware/xilinx/zynqmp.c
+> > index fd3d837..b81f1be 100644
+> > --- a/drivers/firmware/xilinx/zynqmp.c
+> > +++ b/drivers/firmware/xilinx/zynqmp.c
+> > @@ -664,6 +664,52 @@ static int zynqmp_pm_set_requirement(const u32
+> > node, const u32 capabilities,
+> >  				   qos, ack, NULL);
+> >  }
+> >
+> > +/**
+> > + * zynqmp_pm_sdio_out_setphase() - PM call to set clock output delays =
+for
+> SD
+> > + * @device_id:		Device ID of the SD controller
+> > + * @tap_delay:		Tap Delay value for output clock
+> > + *
+> > + * This API function is to be used for setting the clock output delays=
+ for SD
+> > + * clock.
+> > + *
+> > + * Return: Returns status, either success or error+reason
+> > + */
+> > +static int zynqmp_pm_sdio_out_setphase(u32 device_id, u8 tap_delay)
+> > +{
+> > +	u32 node_id =3D (!device_id) ? NODE_SD_0 : NODE_SD_1;
+> > +	int ret;
+> > +
+> > +	ret =3D zynqmp_pm_ioctl(node_id, IOCTL_SET_SD_TAPDELAY,
+> > +			      PM_TAPDELAY_OUTPUT, tap_delay, NULL);
+> > +	if (ret)
+> > +		pr_err("Error setting Output Tap Delay\n");
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +/**
+> > + * zynqmp_pm_sdio_in_setphase() - PM call to set clock input delays fo=
+r SD
+> > + * @device_id:		Device ID of the SD controller
+> > + * @tap_delay:		Tap Delay value for input clock
+> > + *
+> > + * This API function is to be used for setting the clock input delays =
+for SD
+> > + * clock.
+> > + *
+> > + * Return: Returns status, either success or error+reason
+> > + */
+> > +static int zynqmp_pm_sdio_in_setphase(u32 device_id, u8 tap_delay)
+> > +{
+> > +	u32 node_id =3D (!device_id) ? NODE_SD_0 : NODE_SD_1;
+> > +	int ret;
+> > +
+> > +	ret =3D zynqmp_pm_ioctl(node_id, IOCTL_SET_SD_TAPDELAY,
+> > +			      PM_TAPDELAY_INPUT, tap_delay, NULL);
+> > +	if (ret)
+> > +		pr_err("Error setting Input Tap Delay\n");
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  static const struct zynqmp_eemi_ops eemi_ops =3D {
+> >  	.get_api_version =3D zynqmp_pm_get_api_version,
+> >  	.get_chipid =3D zynqmp_pm_get_chipid,
+> > @@ -687,6 +733,8 @@ static const struct zynqmp_eemi_ops eemi_ops =3D {
+> >  	.set_requirement =3D zynqmp_pm_set_requirement,
+> >  	.fpga_load =3D zynqmp_pm_fpga_load,
+> >  	.fpga_get_status =3D zynqmp_pm_fpga_get_status,
+> > +	.sdio_out_setphase =3D zynqmp_pm_sdio_out_setphase,
+> > +	.sdio_in_setphase =3D zynqmp_pm_sdio_in_setphase,
+>=20
+> Are these eemi APIs? You are using ioctl eemi api to set the delay.
 
-> That would
-> lessen the chances of breaking platforms and reduce the immediate need
-> to fix them.
+Yes, I am making these eemi APIs and calling ioctl API from these. This is =
+to make the SD driver code more readable.
 
-Which is why I think we need to have a commandline/config option to
-turn this series on. Keep in mind that once this patch is merged, the
-API for the supplier drivers would be the same whether the feature is
-enabled or not. They just fallback to status quo behavior (do their
-stuff in late_initcall_sync() like they do today).
-
-This patch series has a huge impact on the behavior and I don't think
-there's a sound reason to force it on everyone right away. This is
-something that needs incremental changes to bring in more and more
-platforms/drivers into the new scheme. At a minimum Qualcomm seems
-pretty interested in using this to solve their "when do I change/turn
-off this clock/interconnect after boot?" question.
-
--Saravana
+Thanks,
+Manish
