@@ -1,72 +1,76 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 0/3] RK3288 Gamma LUT
-Date: Tue, 2 Jul 2019 13:14:24 -0700
-Message-ID: <CAD=FV=UK3bpyvvFQtsvUtWHun_bfxb25R0bLyg=WJz+yHz5kvg@mail.gmail.com>
-References: <20190621211346.1324-1-ezequiel@collabora.com>
- <3c68bf286d8b75ac339df0eab43d276667e073c2.camel@collabora.com>
+From: Luis Chamberlain <mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 07/18] kunit: test: add initial tests
+Date: Tue, 2 Jul 2019 20:57:12 +0000
+Message-ID: <20190702205712.GS19023@42.do-not-panic.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-8-brendanhiggins@google.com>
+ <20190625232249.GS19023@42.do-not-panic.com>
+ <CAFd5g46mnd=a0OqFCx0hOHX+DxW+5yA2LXH5Q0gEg8yUZK=4FA@mail.gmail.com>
+ <CAFd5g46=7OQDREdLDTiMgVWq-Xj2zfOw8cRhPJEihSbO89MDyA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <3c68bf286d8b75ac339df0eab43d276667e073c2.camel@collabora.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ezequiel Garcia <ezequiel@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Boris Brezillon <boris.brezillon@collabora.com>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, kernel@collabora.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAFd5g46=7OQDREdLDTiMgVWq-Xj2zfOw8cRhPJEihSbO89MDyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuah <shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, David Rientjes <rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kbuild <linux-kbuild-u79uwXL29TasMV2rI37PzA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUdWUsIEp1bCAyLCAyMDE5IGF0IDQ6MjYgQU0gRXplcXVpZWwgR2FyY2lhIDxlemVx
-dWllbEBjb2xsYWJvcmEuY29tPiB3cm90ZToKPgo+IEhpIEhlaWtvLAo+Cj4gT24gRnJpLCAyMDE5
-LTA2LTIxIGF0IDE4OjEzIC0wMzAwLCBFemVxdWllbCBHYXJjaWEgd3JvdGU6Cj4gPiBMZXQncyBz
-dXBwb3J0IEdhbW1hIExVVCBjb25maWd1cmF0aW9uIG9uIFJLMzI4OCBTb0NzLgo+ID4KPiA+IElu
-IG9yZGVyIHRvIGRvIHNvLCB0aGlzIHNlcmllcyBhZGRzIGEgbmV3IGFuZCBvcHRpb25hbAo+ID4g
-YWRkcmVzcyByZXNvdXJjZS4KPiA+Cj4gPiBBIHNlcGFyYXRlIGFkZHJlc3MgcmVzb3VyY2UgaXMg
-cmVxdWlyZWQgYmVjYXVzZSBvbiB0aGlzIFJLMzI4OCwKPiA+IHRoZSBMVVQgYWRkcmVzcyBpcyBh
-ZnRlciB0aGUgTU1VIGFkZHJlc3MsIHdoaWNoIGlzIHJlcXVlc3RlZAo+ID4gYnkgdGhlIGlvbW11
-IGRyaXZlci4gVGhpcyBwcmV2ZW50cyB0aGUgRFJNIGRyaXZlcgo+ID4gZnJvbSByZXF1ZXN0aW5n
-IGFuIGVudGlyZSByZWdpc3RlciBzcGFjZS4KPiA+Cj4gPiBUaGUgY3VycmVudCBpbXBsZW1lbnRh
-dGlvbiB3b3JrcyBmb3IgUkdCIDEwLWJpdCB0YWJsZXMsIGFzIHRoYXQKPiA+IGlzIHdoYXQgc2Vl
-bXMgdG8gd29yayBvbiBSSzMyODguCj4gPgo+ID4gVGhpcyBoYXMgYmVlbiB0ZXN0ZWQgb24gYSBS
-b2NrMiBTcXVhcmUgYm9hcmQsIHVzaW5nCj4gPiBhIGhhY2tlZCAnbW9kZXRlc3QnIHRvb2wsIHdp
-dGggbGVnYWN5IGFuZCBhdG9taWMgQVBJcy4KPiA+Cj4gPiBUaGFua3MsCj4gPiBFemUKPiA+Cj4g
-PiBDaGFuZ2VzIGZyb20gdjE6Cj4gPiAqIGRyb3AgZXhwbGljaXQgbGluZWFyIExVVCBhZnRlciBm
-aW5kaW5nIGEgcHJvcGVyCj4gPiAgIHdheSB0byBkaXNhYmxlIGdhbW1hIGNvcnJlY3Rpb24uCj4g
-PiAqIGF2b2lkIHNldHRpbmcgZ2FtbWEgaXMgdGhlIENSVEMgaXMgbm90IGFjdGl2ZS4KPiA+ICog
-cy9pbnQvdW5zaWduZWQgaW50IGFzIHN1Z2dlc3RlZCBieSBKYWNvcG8uCj4gPiAqIG9ubHkgZW5h
-YmxlIGNvbG9yIG1hbmFnZW1lbnQgYW5kIHNldCBnYW1tYSBzaXplCj4gPiAgIGlmIGdhbW1hIExV
-VCBpcyBzdXBwb3J0ZWQsIHN1Z2dlc3RlZCBieSBEb3VnLgo+ID4gKiBkcm9wIHRoZSByZWctbmFt
-ZXMgdXNhZ2UsIGFuZCBpbnN0ZWFkIGp1c3QgdXNlIGluZGV4ZWQgcmVnCj4gPiAgIHNwZWNpZmll
-cnMsIHN1Z2dlc3RlZCBieSBEb3VnLgo+ID4KPiA+IENoYW5nZXMgZnJvbSBSRkM6Cj4gPiAqIFJl
-cXVlc3QgKGFuIG9wdGlvbmFsKSBhZGRyZXNzIHJlc291cmNlIGZvciB0aGUgTFVULgo+ID4gKiBB
-ZGQgZGV2aWNldHJlZSBjaGFuZ2VzLgo+ID4gKiBEcm9wIHN1cHBvcnQgZm9yIFJLMzM5OSwgd2hp
-Y2ggZG9lc24ndCBzZWVtIHRvIHdvcmsKPiA+ICAgb3V0IG9mIHRoZSBib3ggYW5kIG5lZWRzIG1v
-cmUgcmVzZWFyY2guCj4gPiAqIFN1cHBvcnQgcGFzcy10aHJ1IHNldHRpbmcgd2hlbiBHQU1NQV9M
-VVQgaXMgTlVMTC4KPiA+ICogQWRkIGEgY2hlY2sgZm9yIHRoZSBnYW1tYSBzaXplLCBhcyBzdWdn
-ZXN0ZWQgYnkgSWxpYS4KPiA+ICogTW92ZSBnYW1tYSBzZXR0aW5nIHRvIGF0b21pY19jb21taXRf
-dGFpbCwgYXMgcG9pbnRlZAo+ID4gICBvdXQgYnkgSmFjb3BvL0xhdXJlbnQsIGlzIHRoZSBjb3Jy
-ZWN0IHdheS4KPiA+Cj4gPiBFemVxdWllbCBHYXJjaWEgKDMpOgo+ID4gICBkdC1iaW5kaW5nczog
-ZGlzcGxheTogcm9ja2NoaXA6IGRvY3VtZW50IFZPUCBnYW1tYSBMVVQgYWRkcmVzcwo+ID4gICBk
-cm0vcm9ja2NoaXA6IEFkZCBvcHRpb25hbCBzdXBwb3J0IGZvciBDUlRDIGdhbW1hIExVVAo+ID4g
-ICBBUk06IGR0czogcm9ja2NoaXA6IEFkZCBSSzMyODggVk9QIGdhbW1hIExVVCBhZGRyZXNzCj4g
-Pgo+ID4gIC4uLi9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXZvcC50eHQgICAgICAgICB8ICAg
-NiArLQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC5kdHNpICAgICAgICAgICAgICAgICB8
-ICAgNCArLQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZmIuYyAg
-ICB8ICAgMyArCj4gPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3Au
-YyAgIHwgMTE0ICsrKysrKysrKysrKysrKysrKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
-cC9yb2NrY2hpcF9kcm1fdm9wLmggICB8ICAgNyArKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9yb2Nr
-Y2hpcC9yb2NrY2hpcF92b3BfcmVnLmMgICB8ICAgMiArCj4gPiAgNiBmaWxlcyBjaGFuZ2VkLCAx
-MzMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCkkgd2lsbCBub3RlIHRoYXQgSSBjYW4g
-Y29uZmlybSB0aGF0IHRoZSAiZ2FtbWFfdGVzdCIgYXBwIHByZXNlbnQgb24KQ2hyb21lIE9TIGNh
-biBiZSBzaG93biB0byB3b3JrIHdpdGggdGhpcyBzZXJpZXMsIGJvdGggb24gZURQIGFuZCBIRE1J
-LgpJIHNlZSBhIG5pY2Ugc2hpbnkgUkdCIHBhdHRlcm4gb24gdGhlIHNjcmVlbi4gIFRodXM6CgpU
-ZXN0ZWQtYnk6IERvdWdsYXMgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On Tue, Jul 02, 2019 at 10:52:50AM -0700, Brendan Higgins wrote:
+> On Wed, Jun 26, 2019 at 12:53 AM Brendan Higgins
+> <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> >
+> > On Tue, Jun 25, 2019 at 4:22 PM Luis Chamberlain <mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > >
+> > > On Mon, Jun 17, 2019 at 01:26:02AM -0700, Brendan Higgins wrote:
+> > > > diff --git a/kunit/example-test.c b/kunit/example-test.c
+> > > > new file mode 100644
+> > > > index 0000000000000..f44b8ece488bb
+> > > > --- /dev/null
+> > > > +++ b/kunit/example-test.c
+> > >
+> > > <-- snip -->
+> > >
+> > > > +/*
+> > > > + * This defines a suite or grouping of tests.
+> > > > + *
+> > > > + * Test cases are defined as belonging to the suite by adding them to
+> > > > + * `kunit_cases`.
+> > > > + *
+> > > > + * Often it is desirable to run some function which will set up things which
+> > > > + * will be used by every test; this is accomplished with an `init` function
+> > > > + * which runs before each test case is invoked. Similarly, an `exit` function
+> > > > + * may be specified which runs after every test case and can be used to for
+> > > > + * cleanup. For clarity, running tests in a test module would behave as follows:
+> > > > + *
+> > >
+> > > To be clear this is not the kernel module init, but rather the kunit
+> > > module init. I think using kmodule would make this clearer to a reader.
+> >
+> > Seems reasonable. Will fix in next revision.
+> >
+> > > > + * module.init(test);
+> > > > + * module.test_case[0](test);
+> > > > + * module.exit(test);
+> > > > + * module.init(test);
+> > > > + * module.test_case[1](test);
+> > > > + * module.exit(test);
+> > > > + * ...;
+> > > > + */
+> 
+> Do you think it might be clearer yet to rename `struct kunit_module
+> *module;` to `struct kunit_suite *suite;`?
+
+Yes. Definitely. Or struct kunit_test. Up to you.
+
+  Luis
