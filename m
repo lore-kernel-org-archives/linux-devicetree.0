@@ -1,267 +1,95 @@
-From: <michael.kao@mediatek.com>
-Subject: [PATCH] thermal: mediatek: add suspend/resume callback
-Date: Tue, 2 Jul 2019 17:16:25 +0800
-Message-ID: <1562058985-27538-1-git-send-email-michael.kao@mediatek.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: backlight: fix vendor prefix for
+ ArcticSand arcxcnn driver bindings
+Date: Tue, 2 Jul 2019 10:26:17 +0100
+Message-ID: <20190702092617.c4wn3dmg5orrquyj@holly.lan>
+References: <1561940895-15837-1-git-send-email-bdodge09@gmail.com>
+ <1561940895-15837-2-git-send-email-bdodge09@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Louis Yu <louis.yu@mediatek.com>, Michael Kao <michael.kao@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1561940895-15837-2-git-send-email-bdodge09@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Dodge <bdodge09@gmail.com>
+Cc: devicetree@vger.kernel.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Louis Yu <louis.yu@mediatek.com>
-
-Add suspend/resume callback to disable/enable Mediatek thermal sensor
-respectively. Since thermal power domain is off in suspend, thermal driver
-needs re-initialization during resume.
-
-Signed-off-by: Louis Yu <louis.yu@mediatek.com>
-Signed-off-by: Michael Kao <michael.kao@mediatek.com>
----
-This patch series base on these patches [1][2][3].
-
-[1]thermal: mediatek: mt8183: fix bank number settings (https://patchwork.kernel.org/patch/10938817/)
-[2]thermal: mediatek: add another get_temp ops for thermal sensors (https://patchwork.kernel.org/patch/10938829/)
-[3]thermal: mediatek: use spinlock to protect PTPCORESEL (https://patchwork.kernel.org/patch/10938841/)
-
- drivers/thermal/mtk_thermal.c | 134 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 125 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-index 3d01153..61d4114 100644
---- a/drivers/thermal/mtk_thermal.c
-+++ b/drivers/thermal/mtk_thermal.c
-@@ -30,6 +30,7 @@
- #include <linux/thermal.h>
- #include <linux/reset.h>
- #include <linux/types.h>
-+#include <linux/iopoll.h>
- 
- /* AUXADC Registers */
- #define AUXADC_CON1_SET_V	0x008
-@@ -39,6 +40,8 @@
- 
- #define APMIXED_SYS_TS_CON1	0x604
- 
-+#define APMIXED_SYS_TS_CON1_BUFFER_OFF	0x30
-+
- /* Thermal Controller Registers */
- #define TEMP_MONCTL0		0x000
- #define TEMP_MONCTL1		0x004
-@@ -46,6 +49,7 @@
- #define TEMP_MONIDET0		0x014
- #define TEMP_MONIDET1		0x018
- #define TEMP_MSRCTL0		0x038
-+#define TEMP_MSRCTL1		0x03c
- #define TEMP_AHBPOLL		0x040
- #define TEMP_AHBTO		0x044
- #define TEMP_ADCPNP0		0x048
-@@ -95,6 +99,9 @@
- #define TEMP_ADCVALIDMASK_VALID_HIGH		BIT(5)
- #define TEMP_ADCVALIDMASK_VALID_POS(bit)	(bit)
- 
-+#define TEMP_MSRCTL1_BUS_STA	(BIT(0) | BIT(7))
-+#define TEMP_MSRCTL1_SENSING_POINTS_PAUSE	0x10E
-+
- /* MT8173 thermal sensors */
- #define MT8173_TS1	0
- #define MT8173_TS2	1
-@@ -266,6 +273,10 @@ struct mtk_thermal_data {
- struct mtk_thermal {
- 	struct device *dev;
- 	void __iomem *thermal_base;
-+	void __iomem *apmixed_base;
-+	void __iomem *auxadc_base;
-+	u64 apmixed_phys_base;
-+	u64 auxadc_phys_base;
- 
- 	struct clk *clk_peri_therm;
- 	struct clk *clk_auxadc;
-@@ -795,6 +806,42 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
- 	mtk_thermal_put_bank(bank);
- }
- 
-+static int mtk_thermal_disable_sensing(struct mtk_thermal *mt, int num)
-+{
-+	struct mtk_thermal_bank *bank = &mt->banks[num];
-+	u32 val;
-+	unsigned long timeout;
-+	void __iomem *addr;
-+	int ret = 0;
-+
-+	bank->id = num;
-+	bank->mt = mt;
-+
-+	mtk_thermal_get_bank(bank);
-+
-+	val = readl(mt->thermal_base + TEMP_MSRCTL1);
-+	/* pause periodic temperature measurement for sensing points */
-+	writel(val | TEMP_MSRCTL1_SENSING_POINTS_PAUSE,
-+	       mt->thermal_base + TEMP_MSRCTL1);
-+
-+	/* wait until temperature measurement bus idle */
-+	timeout = jiffies + HZ;
-+	addr = mt->thermal_base + TEMP_MSRCTL1;
-+
-+	ret = readl_poll_timeout(addr, val, (val & TEMP_MSRCTL1_BUS_STA) == 0x0,
-+				 0, timeout);
-+	if (ret < 0)
-+		goto out;
-+
-+	/* disable periodic temperature meausrement on sensing points */
-+	writel(0x0, mt->thermal_base + TEMP_MONCTL0);
-+
-+out:
-+	mtk_thermal_put_bank(bank);
-+
-+	return ret;
-+}
-+
- static u64 of_get_phys_base(struct device_node *np)
- {
- 	u64 size64;
-@@ -917,7 +964,6 @@ static int mtk_thermal_probe(struct platform_device *pdev)
- 	struct device_node *auxadc, *apmixedsys, *np = pdev->dev.of_node;
- 	struct mtk_thermal *mt;
- 	struct resource *res;
--	u64 auxadc_phys_base, apmixed_phys_base;
- 	struct thermal_zone_device *tzdev;
- 	struct mtk_thermal_zone *tz;
- 
-@@ -954,11 +1000,11 @@ static int mtk_thermal_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	auxadc_phys_base = of_get_phys_base(auxadc);
-+	mt->auxadc_phys_base = of_get_phys_base(auxadc);
- 
- 	of_node_put(auxadc);
- 
--	if (auxadc_phys_base == OF_BAD_ADDR) {
-+	if (mt->auxadc_phys_base == OF_BAD_ADDR) {
- 		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
- 		return -EINVAL;
- 	}
-@@ -969,11 +1015,12 @@ static int mtk_thermal_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	apmixed_phys_base = of_get_phys_base(apmixedsys);
-+	mt->apmixed_phys_base = of_get_phys_base(apmixedsys);
-+	mt->apmixed_base = of_iomap(apmixedsys, 0);
- 
- 	of_node_put(apmixedsys);
- 
--	if (apmixed_phys_base == OF_BAD_ADDR) {
-+	if (mt->apmixed_phys_base == OF_BAD_ADDR) {
- 		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
- 		return -EINVAL;
- 	}
-@@ -985,19 +1032,19 @@ static int mtk_thermal_probe(struct platform_device *pdev)
- 	ret = clk_prepare_enable(mt->clk_auxadc);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n", ret);
--		return ret;
-+		goto err_disable_clk_auxadc;
- 	}
- 
- 	ret = clk_prepare_enable(mt->clk_peri_therm);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Can't enable peri clk: %d\n", ret);
--		goto err_disable_clk_auxadc;
-+		goto err_disable_clk_peri_therm;
- 	}
- 
- 	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
- 		for (i = 0; i < mt->conf->num_banks; i++)
--			mtk_thermal_init_bank(mt, i, apmixed_phys_base,
--					      auxadc_phys_base, ctrl_id);
-+			mtk_thermal_init_bank(mt, i, mt->apmixed_phys_base,
-+					      mt->auxadc_phys_base, ctrl_id);
- 
- 	platform_set_drvdata(pdev, mt);
- 
-@@ -1041,11 +1088,80 @@ static int mtk_thermal_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int __maybe_unused mtk_thermal_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct mtk_thermal *mt = platform_get_drvdata(pdev);
-+	int i, ret;
-+
-+	for (i = 0; i < mt->conf->num_banks; i++) {
-+		ret = mtk_thermal_disable_sensing(mt, i);
-+		if (ret)
-+			goto out;
-+	}
-+
-+	/* disable buffer */
-+	writel(readl(mt->apmixed_base + APMIXED_SYS_TS_CON1) |
-+	       APMIXED_SYS_TS_CON1_BUFFER_OFF,
-+	       mt->apmixed_base + APMIXED_SYS_TS_CON1);
-+
-+	clk_disable_unprepare(mt->clk_peri_therm);
-+	clk_disable_unprepare(mt->clk_auxadc);
-+
-+	return 0;
-+
-+out:
-+	dev_err(&pdev->dev, "Failed to wait until bus idle\n");
-+
-+	return ret;
-+}
-+
-+static int __maybe_unused mtk_thermal_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct mtk_thermal *mt = platform_get_drvdata(pdev);
-+	int i, ret, ctrl_id;
-+
-+	ret = device_reset(&pdev->dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(mt->clk_auxadc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n", ret);
-+		goto err_disable_clk_auxadc;
-+	}
-+
-+	ret = clk_prepare_enable(mt->clk_peri_therm);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Can't enable peri clk: %d\n", ret);
-+		goto err_disable_clk_peri_therm;
-+	}
-+
-+	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
-+		for (i = 0; i < mt->conf->num_banks; i++)
-+			mtk_thermal_init_bank(mt, i, mt->apmixed_phys_base,
-+					      mt->auxadc_phys_base, ctrl_id);
-+
-+	return 0;
-+
-+err_disable_clk_peri_therm:
-+	clk_disable_unprepare(mt->clk_peri_therm);
-+err_disable_clk_auxadc:
-+	clk_disable_unprepare(mt->clk_auxadc);
-+
-+	return ret;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(mtk_thermal_pm_ops,
-+			 mtk_thermal_suspend, mtk_thermal_resume);
-+
- static struct platform_driver mtk_thermal_driver = {
- 	.probe = mtk_thermal_probe,
- 	.remove = mtk_thermal_remove,
- 	.driver = {
- 		.name = "mtk-thermal",
-+		.pm = &mtk_thermal_pm_ops,
- 		.of_match_table = mtk_thermal_of_match,
- 	},
- };
--- 
-1.9.1
+PiBbUEFUQ0ggMS8yXSBkdC1iaW5kaW5nczogYmFja2xpZ2h0OiBmaXggdmVuZG9yIHByZWZpeCBm
+b3IKPiBBcmN0aWNTYW5kIGFyY3hjbm4gZHJpdmVyIGJpbmRpbmdzCgpUaGUgInYyIiBpcyBub3Jt
+YWxseSBhcHBsaWVkIHRvIHRoZSB3aG9sZSBwYXRjaHNldCAoaWYgeW91CnByZXBhcmUgdGhlIHBh
+dGNoc2V0IHVzaW5nIGdpdCBmb3JtYXQtcGF0Y2ggdGhlbiB5b3UgY2FuIHVzZQp0aGUgLS1zdWJq
+ZWN0LXByZWZpeCBhcmd1bWVudCBmb3IgdGhhdCkuCgoKT24gU3VuLCBKdW4gMzAsIDIwMTkgYXQg
+MDg6Mjg6MTRQTSAtMDQwMCwgQnJpYW4gRG9kZ2Ugd3JvdGU6Cj4gVGhlIHZlbmRvci1wcmVmaXhl
+cy50eHQgZmlsZSBwcm9wZXJseSByZWZlcnMgdG8gQXJjdGljU2FuZAo+IGFzIGFyY3RpYyBidXQg
+dGhlIGRyaXZlciBiaW5kaW5ncyBpbXByb3Blcmx5IGFiYnJldmlhdGVkIHRoZQo+IHByZWZpeCB0
+byBhcmMuIFRoaXMgd2FzIGEgbWlzdGFrZSBpbiB0aGUgb3JpZ2luYWwgcGF0Y2guIFRoaXMKPiBw
+YXRjaCBhZGRzICJhcmN0aWMiIGFuZCByZXRhaW5zICJhcmMiIChkZXByZWNhdGVkKSBiaW5kaW5n
+cwo+IAo+IFNpZ25lZC1vZmYtYnk6IEJyaWFuIERvZGdlIDxiZG9kZ2UwOUBnbWFpbC5jb20+Cj4g
+LS0tCj4gIC4uLi9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4dCAgICAgICAg
+IHwgMzEgKysrKysrKysrKysrKysrLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMjEgaW5zZXJ0
+aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4dCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4
+dAo+IGluZGV4IDIzMGFiZGUuLjRkOTgzOTQgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5fYmwudHh0Cj4gKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5f
+YmwudHh0Cj4gQEAgLTEsOCArMSwxMyBAQAo+IC1CaW5kaW5nIGZvciBBcmN0aWNTYW5kIGFyYzJj
+MDYwOCBMRUQgZHJpdmVyCj4gK0JpbmRpbmcgZm9yIEFyY3RpY1NhbmQgYXJjIGZhbWlseSBMRUQg
+ZHJpdmVycwo+ICAKPiAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAtLSBjb21wYXRpYmxlOgkJc2hv
+dWxkIGJlICJhcmMsYXJjMmMwNjA4Igo+IC0tIHJlZzoJCQlzbGF2ZSBhZGRyZXNzCj4gKy0gY29t
+cGF0aWJsZTogb25lIG9mCj4gKwkiYXJjdGljLGFyYzFjMDYwOCIKPiArCSJhcmN0aWMsYXJjMmMw
+NjA4Igo+ICsJImFyY3RpYyxhcmMzYzA4NDUiCj4gKwkiYXJjLGFyYzJjMDYwOCIgKGRlcHJlY2F0
+ZWQpCgpOb3RoaW5nIHdyb25nIHdpdGggYWRkaW5nIGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgYXJj
+MSBhbmQgYXJjMyBidXQgSQp3b3VsZCBleHBlY3QgaXQgdG8gYmUgbWVudGlvbmVkIGluIHRoZSBk
+ZXNjcmlwdGlvbiB0byByZWFzc3VyZSByZXZpZXdlcnMKdGhhdCB0aGUgcmlnaHQgZGVwdGggb2Yg
+dGhvdWdodCBoYXMgYmVlbiBhcHBsaWVkIFNvbWV0aGluZyBsaWtlICJBbHNvIGFkZGVkCmNvbXBh
+dGlibGUgc3RyaW5ncyBmb3Igb3RoZXIgZmFtaWx5IG1lbWJlcnMsIGFsbCB0aGUgZXhpc3Rpbmcg
+b3B0aW9uYWwKcHJvcGVydGllcyB3b3JrIHRoZSBzYW1lIHdheSBmb3IgdGhlIG5ldyBkZXZpY2Vz
+LiIgKGlmIHlvdSBhZ3JlZSB0aGF0IGl0CmlzIHRydWUpIGlzIGdvb2QgdG8gc2hvdyB5b3Ugd2Vy
+ZSBwYXlpbmcgcHJvcGVyIGF0dGVudGlvbiEKCkhvd2V2ZXIgdGhpcyBkb2VzIHBlcmhhcHMgdmVy
+Z2UgYSBsaXR0bGUgdG93YXJkcyBuaXRwaWNraW5nIHNvIG1heWJlCndhaXQgdG8gc2VlIHdoYXQg
+dGhlIERUIGZvbGtzIHNheS4gRnJvbSBteSBwb2ludCBvZiB2aWV3OgpBY2tlZC1ieTogRGFuaWVs
+IFRob21wc29uIDxkYW5pZWwudGhvbXBzb25AbGluYXJvLm9yZz4KCgpEYW5pZWwuCgoKPiArCj4g
+Ky0gcmVnOgkJc2xhdmUgYWRkcmVzcwo+ICAKPiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgLSBk
+ZWZhdWx0LWJyaWdodG5lc3M6CWJyaWdodG5lc3MgdmFsdWUgb24gYm9vdCwgdmFsdWUgZnJvbTog
+MC00MDk1Cj4gQEAgLTExLDE5ICsxNiwyNSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAtIGxl
+ZC1zb3VyY2VzOgkJTGlzdCBvZiBlbmFibGVkIGNoYW5uZWxzIGZyb20gMCB0byA1Lgo+ICAJCQlT
+ZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvY29tbW9uLnR4dAo+ICAK
+PiAtLSBhcmMsbGVkLWNvbmZpZy0wOglzZXR0aW5nIGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18w
+Cj4gLS0gYXJjLGxlZC1jb25maWctMToJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSUxFRF9DT05GSUdf
+MQo+IC0tIGFyYyxkaW0tZnJlcToJCVBXTSBtb2RlIGZyZXF1ZW5jZSBzZXR0aW5nIChiaXRzIFsz
+OjBdIHVzZWQpCj4gLS0gYXJjLGNvbXAtY29uZmlnOglzZXR0aW5nIGZvciByZWdpc3RlciBDT05G
+SUdfQ09NUAo+IC0tIGFyYyxmaWx0ZXItY29uZmlnOglzZXR0aW5nIGZvciByZWdpc3RlciBGSUxU
+RVJfQ09ORklHCj4gLS0gYXJjLHRyaW0tY29uZmlnOglzZXR0aW5nIGZvciByZWdpc3RlciBJTUFY
+VFVORQo+ICstIGFyY3RpYyxsZWQtY29uZmlnLTA6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElMRURf
+Q09ORklHXzAKPiArLSBhcmN0aWMsbGVkLWNvbmZpZy0xOglzZXR0aW5nIGZvciByZWdpc3RlciBJ
+TEVEX0NPTkZJR18xCj4gKy0gYXJjdGljLGRpbS1mcmVxOglQV00gbW9kZSBmcmVxdWVuY2Ugc2V0
+dGluZyAoYml0cyBbMzowXSB1c2VkKQo+ICstIGFyY3RpYyxjb21wLWNvbmZpZzoJc2V0dGluZyBm
+b3IgcmVnaXN0ZXIgQ09ORklHX0NPTVAKPiArLSBhcmN0aWMsZmlsdGVyLWNvbmZpZzoJc2V0dGlu
+ZyBmb3IgcmVnaXN0ZXIgRklMVEVSX0NPTkZJRwo+ICstIGFyY3RpYyx0cmltLWNvbmZpZzoJc2V0
+dGluZyBmb3IgcmVnaXN0ZXIgSU1BWFRVTkUKPiArLSBhcmMsbGVkLWNvbmZpZy0wOglzZXR0aW5n
+IGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18wIChkZXByZWNhdGVkKQo+ICstIGFyYyxsZWQtY29u
+ZmlnLTE6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElMRURfQ09ORklHXzEgKGRlcHJlY2F0ZWQpCj4g
+Ky0gYXJjLGRpbS1mcmVxOgkJUFdNIG1vZGUgZnJlcXVlbmNlIHNldHRpbmcgKGJpdHMgWzM6MF0g
+dXNlZCkgKGRlcHJlY2F0ZWQpCj4gKy0gYXJjLGNvbXAtY29uZmlnOglzZXR0aW5nIGZvciByZWdp
+c3RlciBDT05GSUdfQ09NUCAoZGVwcmVjYXRlZCkKPiArLSBhcmMsZmlsdGVyLWNvbmZpZzoJc2V0
+dGluZyBmb3IgcmVnaXN0ZXIgRklMVEVSX0NPTkZJRyAoZGVwcmVjYXRlZCkKPiArLSBhcmMsdHJp
+bS1jb25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElNQVhUVU5FIChkZXByZWNhdGVkKQo+ICAK
+PiAgTm90ZTogT3B0aW9uYWwgcHJvcGVydGllcyBub3Qgc3BlY2lmaWVkIHdpbGwgZGVmYXVsdCB0
+byB2YWx1ZXMgaW4gSUMgRVBST00KPiAgCj4gIEV4YW1wbGU6Cj4gIAo+ICBhcmMyYzA2MDhAMzAg
+ewo+IC0JY29tcGF0aWJsZSA9ICJhcmMsYXJjMmMwNjA4IjsKPiArCWNvbXBhdGlibGUgPSAiYXJj
+dGljLGFyYzJjMDYwOCI7Cj4gIAlyZWcgPSA8MHgzMD47Cj4gIAlkZWZhdWx0LWJyaWdodG5lc3Mg
+PSA8NTAwPjsKPiAgCWxhYmVsID0gImxjZC1iYWNrbGlnaHQiOwo+IC0tIAo+IDIuNy40Cj4gCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
