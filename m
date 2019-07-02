@@ -1,62 +1,113 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add sai6 node
-Date: Tue, 2 Jul 2019 15:40:23 +0300
-Message-ID: <CAEnQRZBtAOzuF0L1iKKTRdR_A5skbnZFb=B1io8f_pdHcnvbyg@mail.gmail.com>
-References: <20190702114102.1254-1-andradanciu1997@gmail.com> <20190702114542.2eoc6nm2kyhode43@fsr-ub1664-175>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] drm+dt+efi: support devices with
+ multiple possible panels
+Date: Tue, 2 Jul 2019 05:50:36 -0700
+Message-ID: <CAF6AEGv8EJPmje_8bpK8LmLdLFkOSQVJOg_CTS7C_HwVB6i9eQ@mail.gmail.com>
+References: <20190630203614.5290-1-robdclark@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702114542.2eoc6nm2kyhode43@fsr-ub1664-175>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>
-Cc: Andra Danciu <andradanciu1997@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Anson Huang <anson.huang@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>linux-
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20190630203614.5290-1-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Rob Clark <robdclark-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, aarch64-laptops-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 2:46 PM Abel Vesa <abel.vesa@nxp.com> wrote:
->
-> On 19-07-02 14:41:02, Andra Danciu wrote:
->
-> Missing commit message here. Please add one.
-
-Agree. Also, please add SAI3. As you noticed our pico pi board has
-pins exposed on for SAI2/SAI3.
-
-As for the description you can say:
-
-SAI3/6 supports up to 2-channels TX (1 dataline) and 2-channels RX (1 dataline).
-
->
-> > Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> > Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > index d09b808eff87..1ff664523f56 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > @@ -278,6 +278,20 @@
-> >                       #size-cells = <1>;
-> >                       ranges = <0x30000000 0x30000000 0x400000>;
-> >
-> > +                     sai6: sai@30030000 {
-> > +                             compatible = "fsl,imx8mq-sai",
-> > +                                     "fsl,imx6sx-sai";
-> > +                             reg = <0x30030000 0x10000>;
-> > +                             interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-> > +                             clocks = <&clk IMX8MQ_CLK_SAI6_IPG>,
-> > +                                     <&clk IMX8MQ_CLK_SAI6_ROOT>,
-> > +                                     <&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
-> > +                             clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> > +                             dmas = <&sdma2 4 24 0>, <&sdma2 5 24 0>;
-> > +                             dma-names = "rx", "tx";
-> > +                             status = "disabled";
-> > +                     };
-> > +
-> >                       gpio1: gpio@30200000 {
-> >                               compatible = "fsl,imx8mq-gpio", "fsl,imx35-gpio";
-> >                               reg = <0x30200000 0x10000>;
-> > --
-> > 2.11.0
-> >
+T24gU3VuLCBKdW4gMzAsIDIwMTkgYXQgMTozNiBQTSBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFp
+bC5jb20+IHdyb3RlOgo+Cj4gRnJvbTogUm9iIENsYXJrIDxyb2JkY2xhcmtAY2hyb21pdW0ub3Jn
+Pgo+Cj4gTm93IHRoYXQgd2UgY2FuIGRlYWwgZ3JhY2VmdWxseSB3aXRoIGJvb3Rsb2FkZXIgKGZp
+cm13YXJlKSBpbml0aWFsaXplZAo+IGRpc3BsYXkgb24gYWFyY2g2NCBsYXB0b3BzWzFdLCB0aGUg
+bmV4dCBzdGVwIGlzIHRvIGRlYWwgd2l0aCB0aGUgZmFjdAo+IHRoYXQgdGhlIHNhbWUgbW9kZWwg
+b2YgbGFwdG9wIGNhbiBoYXZlIG9uZSBvZiBtdWx0aXBsZSBkaWZmZXJlbnQgcGFuZWxzLgo+IChG
+b3IgdGhlIHlvZ2EgYzYzMCB0aGF0IEkgaGF2ZSwgSSBrbm93IG9mIGF0IGxlYXN0IHR3byBwb3Nz
+aWJsZSBwYW5lbHMsCj4gdGhlcmUgbWlnaHQgYmUgYSB0aGlyZC4pCj4KPiBUaGlzIGlzIGFjdHVh
+bGx5IGEgc2NlbmFyaW8gdGhhdCBjb21lcyB1cCBmcmVxdWVudGx5IGluIHBob25lcyBhbmQKPiB0
+YWJsZXRzIGFzIHdlbGwsIHNvIGl0IGlzIHVzZWZ1bCB0byBoYXZlIGFuIHVwc3RyZWFtIHNvbHV0
+aW9uIGZvciB0aGlzLgo+Cj4gVGhlIGJhc2ljIGlkZWEgaXMgdG8gYWRkIGEgJ3BhbmVsLWlkJyBw
+cm9wZXJ0eSBpbiBkdCBjaG9zZW4gbm9kZSwgYW5kCj4gdXNlIHRoYXQgdG8gcGljayB0aGUgZW5k
+cG9pbnQgd2UgbG9vayBhdCB3aGVuIGxvYWRpbmcgdGhlIHBhbmVsIGRyaXZlciwKPiBlLmcuCj4K
+PiAvIHsKPiAgICAgICAgIGNob3NlbiB7Cj4gICAgICAgICAgICAgICAgIHBhbmVsLWlkID0gPDB4
+YzQ+Owo+ICAgICAgICAgfTsKPgo+ICAgICAgICAgaXZvX3BhbmVsIHsKPiAgICAgICAgICAgICAg
+ICAgY29tcGF0aWJsZSA9ICJpdm8sbTEzM253ZjQtcjAiOwo+ICAgICAgICAgICAgICAgICBwb3dl
+ci1zdXBwbHkgPSA8JnZsY21fM3YzPjsKPiAgICAgICAgICAgICAgICAgbm8taHBkOwo+Cj4gICAg
+ICAgICAgICAgICAgIHBvcnRzIHsKPiAgICAgICAgICAgICAgICAgICAgICAgICBwb3J0IHsKPiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGl2b19wYW5lbF9pbl9lZHA6IGVuZHBvaW50
+IHsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBv
+aW50ID0gPCZzbjY1ZHNpODZfb3V0X2l2bz47Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB9Owo+ICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAgICAgICAgIH07
+Cj4gICAgICAgICB9Owo+Cj4gICAgICAgICBib2VfcGFuZWwgewo+ICAgICAgICAgICAgICAgICBj
+b21wYXRpYmxlID0gImJvZSxudjEzM2ZobS1uNjEiOwo+ICAgICAgICAgICAgICAgICBwb3dlci1z
+dXBwbHkgPSA8JnZsY21fM3YzPjsKPiAgICAgICAgICAgICAgICAgbm8taHBkOwo+Cj4gICAgICAg
+ICAgICAgICAgIHBvcnRzIHsKPiAgICAgICAgICAgICAgICAgICAgICAgICBwb3J0IHsKPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJvZV9wYW5lbF9pbl9lZHA6IGVuZHBvaW50IHsK
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50
+ID0gPCZzbjY1ZHNpODZfb3V0X2JvZT47Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB9Owo+ICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAgICAgICAgIH07Cj4g
+ICAgICAgICB9Owo+Cj4gICAgICAgICBzbjY1ZHNpODY6IGJyaWRnZUAyYyB7Cj4gICAgICAgICAg
+ICAgICAgIGNvbXBhdGlibGUgPSAidGksc242NWRzaTg2IjsKPgo+ICAgICAgICAgICAgICAgICAu
+Li4KPgo+ICAgICAgICAgICAgICAgICBwb3J0cyB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAg
+I2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gICAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2Vs
+bHMgPSA8MD47Cj4KPiAgICAgICAgICAgICAgICAgICAgICAgICAuLi4KPgo+ICAgICAgICAgICAg
+ICAgICAgICAgICAgIHBvcnRAMSB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAj
+YWRkcmVzcy1jZWxscyA9IDwxPjsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNz
+aXplLWNlbGxzID0gPDA+Owo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
+PDE+Owo+Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBlbmRwb2ludEBjNCB7Cj4g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweGM0PjsKPiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0g
+PCZib2VfcGFuZWxfaW5fZWRwPjsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07
+Cj4KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVuZHBvaW50QGM1IHsKPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4YzU+Owo+ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jml2
+b19wYW5lbF9pbl9lZHA+Owo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiAg
+ICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAg
+fQo+IH07Cj4KCkp1c3QgdG8gcHV0IG91dCBhbiBhbHRlcm5hdGl2ZSBpZGVhIGZvciBob3cgdG8g
+aGFuZGxlIHRoaXMgaW4gRFQKKHNpbmNlIExhdXJlbnQgc2VlbWVkIHVuaGFwcHkgd2l0aCB0aGUg
+aWRlYSBvZiB1c2luZyBlbmRwb2ludHMgdG8KZGVzY3JpYmUgbXVsdGlwbGUgY29ubmVjdGlvbnMg
+YmV0d2VlbiBwb3J0cyB0aGF0ICptaWdodCogZXhpc3QuCgpUaGlzIGFwcHJvYWNoIHdvdWxkIHJl
+cXVpcmUgb2ZfZHJtX2ZpbmRfcGFuZWwoKSB0byBjaGVjayB0aGUKZGV2aWNlX25vZGUgdG8gc2Vl
+IGlmIGl0IGlzIGEgc3BlY2lhbCAicGFuZWwtc2VsZWN0IiB0aGluZy4gIChJIHRoaW5rCndlIGNv
+dWxkIHVzZSBkZXZpY2Vfbm9kZTo6ZGF0YSB0byByZWNvdmVyIHRoZSBhY3R1YWwgc2VsZWN0ZWQg
+cGFuZWwuKQoKT24gdGhlIHBsdXMgc2lkZSwgaXQgd291bGQgd29yayBmb3IgY2FzZXMgdGhhdCBh
+cmVuJ3QgdXNpbmcgb2ZfZ3JhcGgKdG8gY29ubmVjdCBkaXNwbGF5L2JyaWRnZSB0byBwYW5lbCwg
+c28gaXQgd291bGQgYmUgcHJldHR5IG11Y2gKdHJhbnNwYXJlbnQgdG8gZHJpdmVycyBhbmQgYnJp
+ZGdlcy4KCkFuZCBJIGd1ZXNzIGl0IGNvdWxkIGJlIGV4dGVuZGVkIHRvIGNhc2VzIHdoZXJlIGdw
+aW8ncyBhcmUgdXNlZCB0bwpkZXRlY3Qgd2hpY2ggcGFuZWwgaXMgYXR0YWNoZWQuLiAgbm90IHN1
+cmUgaG93IGZhciBkb3duIHRoYXQgcm9hZCBJCndhbnQgdG8gZ28sIGFzIGpodWdvIG1lbnRpb25l
+ZCBlbHNld2hlcmUgb24gdGhpcyBwYXRjaHNldCwgaW4gc29tZQpjYXNlcyBkc2kgaXMgdXNlZCB0
+byBzZWxlY3QgKHdoaWNoIGNvdWxkIGJlIHByb2JsZW1hdGljIHRvIGRvIGZyb20Ka2VybmVsIGlm
+IGRpc3BsYXkgaXMgYWxyZWFkeSBhY3RpdmUgaW4gdmlkZW8gbW9kZSBzY2Fub3V0KSwgb3IgZWZ1
+c2VzCndoaWNoIGFyZW4ndCBhY2Nlc3NpYmxlIGZyb20ga2VybmVsLgoKCiAgICBjaG9zZW4gewog
+ICAgICAgIHBhbmVsLWlkID0gPDB4YzQ+OwogICAgfTsKCiAgICBwYW5lbF9zZWxlY3QgewogICAg
+ICAgIGNvbXBhdGlibGUgPSAibGludXgscGFuZWwtc2VsZWN0IjsKICAgICAgICAjYWRkcmVzcy1j
+ZWxscyA9IDwxPjsKICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsKCiAgICAgICAgYm9lX3BhbmVs
+IHsKICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJib2UsbnYxMzNmaG0tbjYxIjsKICAgICAgICAg
+ICAgcmVnID0gPDB4YzQ+OwogICAgICAgICAgICBwb3dlci1zdXBwbHkgPSA8JnZsY21fM3YzPjsK
+ICAgICAgICAgICAgbm8taHBkOwogICAgICAgIH07CgogICAgICAgIGl2b19wYW5lbCB7CiAgICAg
+ICAgICAgIGNvbXBhdGlibGUgPSAiaXZvLG0xMzNud2Y0LXIwIjsKICAgICAgICAgICAgcmVnID0g
+PDB4YzU+OwogICAgICAgICAgICBwb3dlci1zdXBwbHkgPSA8JnZsY21fM3YzPjsKICAgICAgICAg
+ICAgbm8taHBkOwogICAgICAgIH07CgogICAgICAgIHBvcnRzIHsKICAgICAgICAgICAgcG9ydCB7
+CiAgICAgICAgICAgICAgICBwYW5lbF9pbl9lZHA6IGVuZHBvaW50IHsKICAgICAgICAgICAgICAg
+ICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JnNuNjVkc2k4Nl9vdXQ+OwogICAgICAgICAgICAgICAg
+fTsKICAgICAgICAgICAgfTsKICAgICAgICB9OwogICAgfTsKCiAgICBkc2lfY29udHJvbGxlcl9v
+cl9icmlkZ2UgewogICAgICAgIC4uLgogICAgICAgIHBvcnRzIHsKICAgICAgICAgICAgLi4uCiAg
+ICAgICAgICAgIHBvcnRAMSB7CiAgICAgICAgICAgICAgICByZWcgPSA8MT47CiAgICAgICAgICAg
+ICAgICBzbjY1ZHNpODZfb3V0OiBlbmRwb2ludCB7CiAgICAgICAgICAgICAgICAgICAgcmVtb3Rl
+LWVuZHBvaW50ID0gPCZwYW5lbF9pbl9lZHA+OwogICAgICAgICAgICAgICAgfTsKICAgICAgICAg
+ICAgfTsKICAgICAgICB9OwogICAgfTsKClBlcnNvbmFsbHkgSSBmaW5kIG15IG9yaWdpbmFsIHBy
+b3Bvc2FsIG1vcmUgbmF0dXJhbCAod2hpY2ggaXMgd2h5IEkKd2VudCB3aXRoIGl0LCB0aGlzIHNl
+Y29uZCBpZGVhIGlzIG1vcmUgc2ltaWxhciB0byB3aGF0IEkgaW5pdGlhbGx5IGhhZAppbiBtaW5k
+IGJlZm9yZSBsb29raW5nIGF0IG9mX2dyYXBoKS4gIEFuZCBpdCBzZWVtcyB0byBiZSBhIGJpdCB3
+ZWlyZAp0byBoYXZlIGEgcGFuZWxfc2VsZWN0IHRoaW5nIHdoaWNoIGlzbid0IHJlYWxseSBoYXJk
+d2FyZS4KCkJSLAotUgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJl
+bm8=
