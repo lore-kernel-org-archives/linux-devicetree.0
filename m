@@ -1,111 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/6] ASoC: wcd934x: add support to
-	wcd9340/wcd9341 codec
-Date: Tue, 2 Jul 2019 17:57:53 +0100
-Message-ID: <20190702165753.GQ2793@sirena.org.uk>
-References: <20190702080920.22623-1-srinivas.kandagatla@linaro.org>
- <20190702080920.22623-3-srinivas.kandagatla@linaro.org>
- <20190702144411.GP2793@sirena.org.uk>
- <2e2a32dd-3dca-5391-1bfa-ab1c1f420e3a@linaro.org>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v5 07/18] kunit: test: add initial tests
+Date: Tue, 2 Jul 2019 10:52:50 -0700
+Message-ID: <CAFd5g46=7OQDREdLDTiMgVWq-Xj2zfOw8cRhPJEihSbO89MDyA@mail.gmail.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-8-brendanhiggins@google.com> <20190625232249.GS19023@42.do-not-panic.com>
+ <CAFd5g46mnd=a0OqFCx0hOHX+DxW+5yA2LXH5Q0gEg8yUZK=4FA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8069063826626723802=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <2e2a32dd-3dca-5391-1bfa-ab1c1f420e3a@linaro.org>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, vkoul@kernel.org, robh+dt@kernel.org, srini@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFd5g46mnd=a0OqFCx0hOHX+DxW+5yA2LXH5Q0gEg8yUZK=4FA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-ks>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jun 26, 2019 at 12:53 AM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> On Tue, Jun 25, 2019 at 4:22 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> >
+> > On Mon, Jun 17, 2019 at 01:26:02AM -0700, Brendan Higgins wrote:
+> > > diff --git a/kunit/example-test.c b/kunit/example-test.c
+> > > new file mode 100644
+> > > index 0000000000000..f44b8ece488bb
+> > > --- /dev/null
+> > > +++ b/kunit/example-test.c
+> >
+> > <-- snip -->
+> >
+> > > +/*
+> > > + * This defines a suite or grouping of tests.
+> > > + *
+> > > + * Test cases are defined as belonging to the suite by adding them to
+> > > + * `kunit_cases`.
+> > > + *
+> > > + * Often it is desirable to run some function which will set up things which
+> > > + * will be used by every test; this is accomplished with an `init` function
+> > > + * which runs before each test case is invoked. Similarly, an `exit` function
+> > > + * may be specified which runs after every test case and can be used to for
+> > > + * cleanup. For clarity, running tests in a test module would behave as follows:
+> > > + *
+> >
+> > To be clear this is not the kernel module init, but rather the kunit
+> > module init. I think using kmodule would make this clearer to a reader.
+>
+> Seems reasonable. Will fix in next revision.
+>
+> > > + * module.init(test);
+> > > + * module.test_case[0](test);
+> > > + * module.exit(test);
+> > > + * module.init(test);
+> > > + * module.test_case[1](test);
+> > > + * module.exit(test);
+> > > + * ...;
+> > > + */
 
---===============8069063826626723802==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="aX6oBa4COn3eIhlv"
-Content-Disposition: inline
-
-
---aX6oBa4COn3eIhlv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jul 02, 2019 at 05:37:01PM +0100, Srinivas Kandagatla wrote:
-> On 02/07/2019 15:44, Mark Brown wrote:
-> > On Tue, Jul 02, 2019 at 09:09:16AM +0100, Srinivas Kandagatla wrote:
-
-> > > +	for (i = 0; i < ARRAY_SIZE(cpr_defaults); i++) {
-> > > +		regmap_bulk_write(data->regmap,
-> > > +				  WCD934X_CODEC_CPR_WR_DATA_0,
-> > > +				(u8 *)&cpr_defaults[i].wr_data, 4);
-> > > +		regmap_bulk_write(data->regmap,
-> > > +				  WCD934X_CODEC_CPR_WR_ADDR_0,
-> > > +				(u8 *)&cpr_defaults[i].wr_addr, 4);
-
-> > What is "cpr" and should you be using a regmap patch here?  Why
-> > is this not with the other default updates?  You've got loads of
-> > random undocumented sequences like this all through the driver,
-> > are they patches or are they things that should be controllable
-> > by the user?
-
-> It makes sense to have a single default map here, I will do the in next
-> version. And regarding user controllable, I will go thru the list once
-> again in detail and remove user controllable registers.
-
-What is a "default map"?  In terms of user controllable stuff
-it's not just a question of if things are currently user
-controllable but also if they should be user controllable.
-
-> > > +	return of_platform_populate(wcd->dev->of_node, NULL, NULL, wcd->dev);
-
-> > Why are we doing this?
-
-> I will not be using MFD in this instance as most of the resources like
-> interrupts, pins, clks, SoundWire are modeled as proper drivers with
-> their respective subsystems.
-
-This is a driver for a single device, you should be able to
-instantiate things without requiring binding through DT (and
-hence support non-DT systems such as those using ACPI).
-
-> This gives a advantage of reusing those drivers like SoundWire, pinctrl
-> on other Qualcomm IPs as well!
-> Also I did not wanted to have a custom functions or hooks in the
-> drivers, so platform bus made much sense for me to use here, which can
-> take care of bringing up and tearing down the devices with proper parent
-> child relationship.
-> This will instantiate all the child devices like pinctrl, SoundWire
-> Controller and so on.
-
-Just create platform devices like normal...
-
---aX6oBa4COn3eIhlv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0bjQ8ACgkQJNaLcl1U
-h9BMJAf+IEFPxTtA+36N+leLsbcLLmWvHD7CHxl9ksLO5f3LYWTOeeedAUSProjR
-07HQiUbOsyuyYycS7SEHjQE/qwKJl5yk339Wg7pcIRxcQxnth8usDcmez9lOjXjt
-AhOaC8oJWuPdKN/8mp5DzI2W06fvdfgZqZfwk1I4RspAHZXEJvPx2c62b7lBp5s7
-Mg8eDoNa66UNOW4DanR3eho1uySOVcJwulzMnrIraqzxr9SeFVlXzFwOuRVtiKO5
-s2ub2bfO/4Vt5Tt9OyglfRBRPmj1rL8oI8FECK0V2ZxWWnZHwZ15xPVip9NfYxaD
-tVfh6acECVYUb1rsvtWresmJQZGlug==
-=CKlN
------END PGP SIGNATURE-----
-
---aX6oBa4COn3eIhlv--
-
---===============8069063826626723802==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8069063826626723802==--
+Do you think it might be clearer yet to rename `struct kunit_module
+*module;` to `struct kunit_suite *suite;`?
