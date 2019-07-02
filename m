@@ -1,76 +1,166 @@
-From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: Re: [PATCH v2 0/3] RK3288 Gamma LUT
-Date: Tue, 02 Jul 2019 08:26:22 -0300
-Message-ID: <3c68bf286d8b75ac339df0eab43d276667e073c2.camel@collabora.com>
-References: <20190621211346.1324-1-ezequiel@collabora.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
+Date: Tue, 2 Jul 2019 11:33:06 +0000
+Message-ID: <20190702113305.zo2w5xkfhsfpwrx7@fsr-ub1664-175>
+References: <20190610121346.15779-1-abel.vesa@nxp.com>
+ <d217a9d2-fc60-e057-6775-116542e39e8d@posteo.de>
+ <20190628085417.vezkoizip75yjjpl@fsr-ub1664-175>
+ <a6ea252e-cfd4-0816-e688-3d792e956711@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190621211346.1324-1-ezequiel@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc: dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Douglas Anderson <dianders@chromium.org>, Jacopo Mondi <jacopo@jmondi.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a6ea252e-cfd4-0816-e688-3d792e956711@posteo.de>
+Content-Language: en-US
+Content-ID: <7C35434DD3C7F845B1D816C8CEB645CB@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Kepplinger <martink@posteo.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jacky Bai <ping.bai@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Marc Zyngier <marc.zyngier@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Abel Vesa <abelvesa@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+On 19-07-02 08:47:19, Martin Kepplinger wrote:
+> On 28.06.19 10:54, Abel Vesa wrote:
+> > On 19-06-23 13:47:26, Martin Kepplinger wrote:
+> >> On 10.06.19 14:13, Abel Vesa wrote:
+> >>> This is another alternative for the RFC:
+> >>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2019%2F3%2F27%2F545&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7Ccfc582f9977d479b7dda08d6feb9258a%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636976468485275045&amp;sdata=L%2Byn29%2FBS3KMjm9eCPBTZBTl30PmZywSjIj11bMQw5c%3D&amp;reserved=0
+> >>>
+> >>> This new workaround proposal is a little bit more hacky but more contained
+> >>> since everything is done within the irq-imx-gpcv2 driver.
+> >>>
+> >>> Basically, it 'hijacks' the registered gic_raise_softirq __smp_cross_call
+> >>> handler and registers instead a wrapper which calls in the 'hijacked' 
+> >>> handler, after that calling into EL3 which will take care of the actual
+> >>> wake up. This time, instead of expanding the PSCI ABI, we use a new vendor SIP.
+> >>>
+> >>> I also have the patches ready for TF-A but I'll hold on to them until I see if
+> >>> this has a chance of getting in.
+> >>
+> >> Let's leave out of the picture for now, how generally applicable and
+> >> mergable your changes are. I'd like to reproduce what you do and test
+> >> cpuidle on imx8mq:
+> >>
+> >> When applying your changes here and the corresponding ATF changes (
+> >> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Fabelvesa%2Farm-trusted-firmware%2Ftree%2Fimx8mq-err11171&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7Ccfc582f9977d479b7dda08d6feb9258a%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636976468485275045&amp;sdata=VT3duSl70DNxcY8Ev4FFrHlWoOjkcckeM8BgxrSkr8A%3D&amp;reserved=0 if
+> >> I got that right) I don't yet see any difference in the SoC heating up
+> >> under zero load. __cpu_do_idle() is called about every 1ms (without your
+> >> changes, that was even more often but I'm not yet sure if that means
+> >> anything).
+> > 
+> > You will most probably not see any change in the SoC temp since the cpuidle
+> > only touches the A53s. There are way many more IPs in the SoC that could
+> > heat it up. If you want some real numbers you'll have to measure the power
+> > consumtion on VDD_ARM rail. If you don't want to go through that much trouble
+> > you can use the idlestat tool to measure the times each A53 speends in cpu-sleep
+> > state.
+> > 
+> >>
+> >> What I also see is that I get about 10x more "arch_timer" (int.3, GICv3)
+> >> interrupts than without your changes.
+> 
+> 
+> thanks for getting back at me here. This is run on the imx8mq
+> librem5-devkit with your wakeup-workaround applied. Typical measurements
+> under zero load look like this:
+> 
+> sudo idlestat --trace -f /tmp/mytrace -t 10 -p -c -w
+> Log is 10.000395 secs long with 31194 events
+> ------------------------------------------------------------------------
+> | C-state  |  min   |  max    |  avg    |  total | hits | over | under |
+> ------------------------------------------------------------------------
+> | clusterA                                                             |
+> ------------------------------------------------------------------------
+> |     WFI |   14us |  3.99ms |  3.90ms |   9.93s | 2543 |    0 |     0 |
+> ------------------------------------------------------------------------
+> |          cpu0                                                        |
+> ------------------------------------------------------------------------
+> |     WFI |   14us |  3.99ms |  3.89ms |   9.96s | 2561 |    0 |     0 |
+> ------------------------------------------------------------------------
+> ...
+> 
 
-On Fri, 2019-06-21 at 18:13 -0300, Ezequiel Garcia wrote:
-> Let's support Gamma LUT configuration on RK3288 SoCs.
-> 
-> In order to do so, this series adds a new and optional
-> address resource.
->     
-> A separate address resource is required because on this RK3288,
-> the LUT address is after the MMU address, which is requested
-> by the iommu driver. This prevents the DRM driver
-> from requesting an entire register space.
-> 
-> The current implementation works for RGB 10-bit tables, as that
-> is what seems to work on RK3288.
-> 
-> This has been tested on a Rock2 Square board, using
-> a hacked 'modetest' tool, with legacy and atomic APIs. 
-> 
-> Thanks,
-> Eze
-> 
-> Changes from v1:
-> * drop explicit linear LUT after finding a proper
->   way to disable gamma correction.
-> * avoid setting gamma is the CRTC is not active.
-> * s/int/unsigned int as suggested by Jacopo.
-> * only enable color management and set gamma size
->   if gamma LUT is supported, suggested by Doug.
-> * drop the reg-names usage, and instead just use indexed reg
->   specifiers, suggested by Doug.
-> 
-> Changes from RFC:
-> * Request (an optional) address resource for the LUT.
-> * Add devicetree changes.
-> * Drop support for RK3399, which doesn't seem to work
->   out of the box and needs more research.
-> * Support pass-thru setting when GAMMA_LUT is NULL.
-> * Add a check for the gamma size, as suggested by Ilia.
-> * Move gamma setting to atomic_commit_tail, as pointed
->   out by Jacopo/Laurent, is the correct way.
-> 
-> Ezequiel Garcia (3):
->   dt-bindings: display: rockchip: document VOP gamma LUT address
->   drm/rockchip: Add optional support for CRTC gamma LUT
->   ARM: dts: rockchip: Add RK3288 VOP gamma LUT address
-> 
->  .../display/rockchip/rockchip-vop.txt         |   6 +-
->  arch/arm/boot/dts/rk3288.dtsi                 |   4 +-
->  drivers/gpu/drm/rockchip/rockchip_drm_fb.c    |   3 +
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.c   | 114 ++++++++++++++++++
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.h   |   7 ++
->  drivers/gpu/drm/rockchip/rockchip_vop_reg.c   |   2 +
->  6 files changed, 133 insertions(+), 3 deletions(-)
-> 
+I don't see the cpu-sleep state at all in your idlestat log. Maybe the cpuidle
+isn't enabled. Or probably the workaround itself is not applied. You'll have
+to look into that.
 
-Any other feedback on this series? If you are happy with the approach now,
-I am wondering if you can take it or if it's way too late.
+Here is how it looks like with the workaround enabled:
 
-Thanks,
-Eze
+Log is 10.001685 secs long with 1175 events
+--------------------------------------------------------------------------------
+| C-state  |   min    |   max    |   avg    |   total  | hits  |  over | under |
+--------------------------------------------------------------------------------
+| clusterA                                                                     |
+--------------------------------------------------------------------------------
+|      WFI |      2us |  50.04ms |  29.63ms |    9.99s |   337 |     0 |     0 |
+--------------------------------------------------------------------------------
+|             cpu0                                                             |
+--------------------------------------------------------------------------------
+|      WFI |     11us |  50.04ms |  40.44ms |    9.62s |   238 |     0 |   219 |
+| cpu-sleep |    537us |  50.58ms |  14.11ms | 366.94ms |    26 |     7 |     0 |
+--------------------------------------------------------------------------------
+|             cpu1                                                             |
+--------------------------------------------------------------------------------
+|      WFI |     11us | 539.04ms |  93.20ms |    5.78s |    62 |     0 |    38 |
+| cpu-sleep |    536us | 607.90ms | 183.38ms |    4.22s |    23 |    12 |     0 |
+--------------------------------------------------------------------------------
+|             cpu2                                                             |
+--------------------------------------------------------------------------------
+|      WFI |     41us | 265.99ms |  17.51ms | 332.66ms |    19 |     0 |    11 |
+| cpu-sleep |    568us |    6.56s |    1.38s |    9.67s |     7 |     2 |     0 |
+--------------------------------------------------------------------------------
+|             cpu3                                                             |
+--------------------------------------------------------------------------------
+|      WFI |   7.94ms | 881.50ms | 367.81ms |    1.10s |     3 |     0 |     3 |
+| cpu-sleep |    549us |    2.02s | 808.72ms |    8.90s |    11 |     1 |     0 |
+--------------------------------------------------------------------------------
+
+You can see that the cpu2 was once for 6.56 seconds (out of 10s) in cpu-sleep.
+
+> 
+> with IRQs coming in:
+> 
+> -------------------------------------------------------
+> | IRQ |       Name      |  Count  |  early  |  late   |
+> -------------------------------------------------------
+> |             cpu0                                    |
+> -------------------------------------------------------
+> | IPI | Reschedulin     |      11 |       0 |       0 |
+> | 3   | arch_timer      |    2505 |       0 |       0 |
+> | 41  | 30be0000.ethern |      11 |       0 |       0 |
+> | 36  | mmc0            |       6 |       0 |       0 |
+> | 33  | 30a20000.i2c    |      12 |       0 |       0 |
+> | 40  | 30be0000.ethern |       1 |       0 |       0 |
+> | 43  | 38000000.gpu    |       2 |       0 |       0 |
+> | 208 | dcss_drm        |      12 |       0 |       0 |
+> | 207 | dcss_ctxld      |       2 |       0 |       0 |
+> -------------------------------------------------------
+> |             cpu1                                    |
+> -------------------------------------------------------
+> | IPI | Reschedulin     |      13 |       0 |       0 |
+> | 3   | arch_timer      |    2500 |       0 |       0 |
+> | IPI | Functio         |       1 |       0 |       0 |
+> ...
+> 
+> 
+> So we seem to spend most of the time in C1/WFI. As mentioned,
+> "arch_timer" wakes up the cpu often.
+> 
+> Why is that? Do these measurements look like what you would expect them
+> to be?
+> 
+> (I'm not sure how much sense it makes to come up with something to
+> compare these to)
+> 
+> thanks a lot,
+> 
+>                                 martin
+> 
+> 
