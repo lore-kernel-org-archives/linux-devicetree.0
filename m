@@ -1,65 +1,93 @@
-Return-Path: <SRS0=Gmaq=V3=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V2 4/4] thermal: qoriq: Add clock operations
-Date: Tue, 30 Jul 2019 03:00:41 +0000
-Message-ID: 
- <DB3PR0402MB39161F938C25012015B9739CF5DC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190729083915.4855-1-Anson.Huang@nxp.com>
- <20190729083915.4855-4-Anson.Huang@nxp.com>
- <CAOMZO5AgP0BrHyFKz78rsEz1XQMgSNzMmtTV6Q+GYtCGBiFMEQ@mail.gmail.com>
-In-Reply-To: 
- <CAOMZO5AgP0BrHyFKz78rsEz1XQMgSNzMmtTV6Q+GYtCGBiFMEQ@mail.gmail.com>
+Return-Path: <SRS0=J/Os=U7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr50089.outbound.protection.outlook.com ([40.107.5.89]:33765
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727126AbfGBKDk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 2 Jul 2019 06:03:40 -0400
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: [RESEND PATCH 0/3] Add power domain driver support for imx8m family
+Date: Tue, 2 Jul 2019 10:03:35 +0000
+Message-ID: <20190702100832.29718-1-ping.bai@nxp.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <766968F6F8A0DD4BA88B3A7E38BF3337@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "rui.zhang" <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, linux-kernel" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Sender: devicetree-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-SGksIEZhYmlvDQoNCj4gT24gTW9uLCBKdWwgMjksIDIwMTkgYXQgNjowNCBBTSA8QW5zb24uSHVh
-bmdAbnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVh
-bmdAbnhwLmNvbT4NCj4gPg0KPiA+IFNvbWUgcGxhdGZvcm1zIGxpa2UgaS5NWDhNUSBoYXMgY2xv
-Y2sgY29udHJvbCBmb3IgdGhpcyBtb2R1bGUsIG5lZWQgdG8NCj4gPiBhZGQgY2xvY2sgb3BlcmF0
-aW9ucyB0byBtYWtlIHN1cmUgdGhlIGRyaXZlciBpcyB3b3JraW5nIHByb3Blcmx5Lg0KPiANCj4g
-SSBoYXZlbid0IHNlZW4gdGhpcyBzZXJpZXMgZWFybGllciwgYW5kIEkgaGF2ZSBzZW50IGEgc2lt
-aWxhciBwYXRjaCBmb3IgR3VpZG8gdG8NCj4gdGVzdC4NCj4gDQo+IFNpbmNlIHRoaXMgcGF0Y2gg
-c29sdmVzIGEgaGFuZyBwcm9ibGVtLCBJIHdvdWxkIHN1Z2dlc3QgdGhhdCB0aGlzIG9uZQ0KPiBi
-ZWNvbWVzIHRoZSBmaXJzdCBvZiB0aGUgc2VyaWVzLg0KDQpEb25lIGluIFYzLg0KDQo+IA0KPiBB
-bHNvLCB0aGUgImNsazogaW14OG1xOiBSZW1vdmUgQ0xLX0lTX0NSSVRJQ0FMIGZsYWcgZm9yDQo+
-IElNWDhNUV9DTEtfVE1VX1JPT1QiIHNob3VsZCBvbmx5IGJlIGFwcGxpZWQgYWZ0ZXIgdGhpcyBv
-bmUgaW4gb3JkZXIgdG8NCj4gYXZvaWQgdGhlIGhhbmcuDQoNClNoYXduIGFscmVhZHkgYXBwbGll
-ZCB0aGUgcGF0Y2gsIGFuZCBBYmVsIGhhcyB0aGUgQUhCIGNsb2NrIHBhdGNoIHRvIGZpeCB0aGF0
-LA0Kc28ganVzdCB3YWl0IGZvciB0aGUgQUhCIGNsb2NrIHBhdGNoIGluIGluc3RlYWQgb2YgcmV2
-ZXJ0IHRoZSBUTVUgY2xvY2sgcGF0Y2g/IA0KDQo+IA0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
-QW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEd1aWRv
-IEfDvG50aGVyIDxhZ3hAc2lneGNwdS5vcmc+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBzaW5jZSBW
-MToNCj4gPiAgICAgICAgIC0gdXNlIGRldm1fY2xrX2dldF9vcHRpb25hbCgpIGluc3RlYWQgb2Yg
-ZGV2bV9jbGtfZ2V0KCkuDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvdGhlcm1hbC9xb3JpcV90aGVy
-bWFsLmMgfCAyMSArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIx
-IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3RoZXJtYWwvcW9y
-aXFfdGhlcm1hbC5jDQo+ID4gYi9kcml2ZXJzL3RoZXJtYWwvcW9yaXFfdGhlcm1hbC5jIGluZGV4
-IDJiMmY3OWIuLjBhZTQ1YzAgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy90aGVybWFsL3Fvcmlx
-X3RoZXJtYWwuYw0KPiA+ICsrKyBiL2RyaXZlcnMvdGhlcm1hbC9xb3JpcV90aGVybWFsLmMNCj4g
-PiBAQCAtMiw2ICsyLDcgQEANCj4gPiAgLy8NCj4gPiAgLy8gQ29weXJpZ2h0IDIwMTYgRnJlZXNj
-YWxlIFNlbWljb25kdWN0b3IsIEluYy4NCj4gPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvY2xrLmg+
-DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3Bs
-YXRmb3JtX2RldmljZS5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvZXJyLmg+DQo+ID4gQEAgLTcy
-LDYgKzczLDcgQEAgc3RydWN0IHFvcmlxX3NlbnNvciB7DQo+ID4NCj4gPiAgc3RydWN0IHFvcmlx
-X3RtdV9kYXRhIHsNCj4gPiAgICAgICAgIHN0cnVjdCBxb3JpcV90bXVfcmVncyBfX2lvbWVtICpy
-ZWdzOw0KPiA+ICsgICAgICAgc3RydWN0IGNsayAqY2xrOw0KPiA+ICAgICAgICAgYm9vbCBsaXR0
-bGVfZW5kaWFuOw0KPiA+ICAgICAgICAgc3RydWN0IHFvcmlxX3NlbnNvciAgICAgKnNlbnNvcltT
-SVRFU19NQVhdOw0KPiA+ICB9Ow0KPiA+IEBAIC0yMDgsNiArMjEwLDE2IEBAIHN0YXRpYyBpbnQg
-cW9yaXFfdG11X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gKnBkZXYpDQo+ID4gICAg
-ICAgICAgICAgICAgIHJldHVybiBQVFJfRVJSKGRhdGEtPnJlZ3MpOw0KPiA+ICAgICAgICAgfQ0K
-PiA+DQo+ID4gKyAgICAgICBkYXRhLT5jbGsgPSBkZXZtX2Nsa19nZXRfb3B0aW9uYWwoJnBkZXYt
-PmRldiwgTlVMTCk7DQo+ID4gKyAgICAgICBpZiAoSVNfRVJSKGRhdGEtPmNsaykpDQo+ID4gKyAg
-ICAgICAgICAgICAgIHJldHVybiBQVFJfRVJSKGRhdGEtPmNsayk7DQo+ID4gKw0KPiA+ICsgICAg
-ICAgcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGRhdGEtPmNsayk7DQo+ID4gKyAgICAgICBpZiAo
-cmV0KSB7DQo+ID4gKyAgICAgICAgICAgICAgIGRldl9lcnIoJnBkZXYtPmRldiwgIkZhaWxlZCB0
-byBlbmFibGUgY2xvY2tcbiIpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+
-ICsgICAgICAgfQ0KPiA+ICsNCj4gPiAgICAgICAgIHFvcmlxX3RtdV9pbml0X2RldmljZShkYXRh
-KTsgICAgLyogVE1VIGluaXRpYWxpemF0aW9uICovDQo+ID4NCj4gPiAgICAgICAgIHJldCA9IHFv
-cmlxX3RtdV9jYWxpYnJhdGlvbihwZGV2KTsgICAgICAvKiBUTVUgY2FsaWJyYXRpb24gKi8NCj4g
-DQo+IEluIGNhc2Ugb2YgZmFpbHVyZSB0aGUgVE1VIGNsb2NrIHNob3VsZCBiZSBkaXNhYmxlZCBp
-biB0aGUgZXJyb3IgcGF0aC4NCg0KRG9uZSBpbiBWMy4NCg0KVGhhbmtzLA0KQW5zb24uDQo=
+I just resend this patchset again to let us rethink & find out a quick way =
+enable
+the power domain support in mainline to help other modules upstream.
+
+The GPC module is used for system power management for CPU core & periphera=
+l's
+power domain. For the whole i.MX8M family, different SOC has different powe=
+r
+domain design. Some power domains need special on/off flow(need to access t=
+he
+register out of the GPC module).
+
+It makes us hard to reuse the GPCv2 driver to cover all the different power
+up sequence. Each time a new SOC is added, we must modify the GPCv2 power d=
+omain
+driver to make it resuable for it. We need to add a lot of code for each ne=
+w chip.
+We need to access the SRC & SS's GPR in GPCv2 power domain driver, it is
+burden to maintain the GPCv2 power domain driver. For example, in the futur=
+e
+i.MX8MP, there are ~20 power domains, some of the power domain need some sp=
+ecial
+handling only for this specific chip, same situation on i.MX8MM & i.MX8MN.
+
+THis patchset add a more generic power domain driver that give us the possi=
+bility
+to use one driver to cover the whole i.MX8M family power domain in kernel s=
+ide.
+kernel side driver don't need to handle the power domain difference time to=
+ time.
+All the power domain on/off sequence can be abstracted & handled in TF-A si=
+de.
+it can simplify the power domain handling in kernel side. All the power dom=
+ain
+details can be hiden to TF-A side. TF-A image is SOC specific, we don't nee=
+d
+to care more about the one image principle.
+
+I know some guys suggest to use SCMI to implement the power domains, but it=
+ is
+a long way, need more time to investigate. especially, for the current SCMI=
+ power
+domain, it can not meet all our requirement for power domain management. On=
+ i.MX8M,
+some of the power domain on/off need to handle clock and external regulator=
+s, it is
+not a generic handling for other SOC vendors, I think.
+
+Additonally, the SiP Service Calls provide interfaces to SoC implementation=
+ specific
+services on this platform. For example, Secure platform initialization, con=
+figuration
+and some power control. I don't think it can not be used for specific SOC.
+
+Jacky Bai (3):
+  dt-bindings: power: Add power domain binding for i.mx8m family
+  soc: imx: Add power domain driver support for i.mx8m family
+  arm64: dts: freescale: Add power domain nodes for i.mx8mm
+
+ .../bindings/power/fsl,imx8m-genpd.txt        |  46 ++++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 103 ++++++++
+ drivers/soc/imx/Kconfig                       |   6 +
+ drivers/soc/imx/Makefile                      |   1 +
+ drivers/soc/imx/imx8m_pm_domains.c            | 224 ++++++++++++++++++
+ include/soc/imx/imx_sip.h                     |  12 +
+ 6 files changed, 392 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/fsl,imx8m-genpd=
+.txt
+ create mode 100644 drivers/soc/imx/imx8m_pm_domains.c
+ create mode 100644 include/soc/imx/imx_sip.h
+
+--=20
+2.21.0
