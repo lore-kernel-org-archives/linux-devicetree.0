@@ -1,118 +1,138 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v3 6/6] interconnect: Add OPP table support for interconnects
-Date: Tue,  2 Jul 2019 18:10:20 -0700
-Message-ID: <20190703011020.151615-7-saravanak@google.com>
-References: <20190703011020.151615-1-saravanak@google.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/4] dt-bindings: phy: add binding for the Lantiq VRX200 and ARX300 PCIe PHYs
+Date: Tue,  2 Jul 2019 22:35:20 +0200
+Message-ID: <20190702203523.2412-2-martin.blumenstingl@googlemail.com>
+References: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703011020.151615-1-saravanak@google.com>
+In-Reply-To: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Saravana Kannan <saravanak@google.com>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, john@phrozen.org, kishon@ti.com, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, hauke@hauke-m.de, paul.burton@mips.com, ralf@linux-mips.org, mark.rutland@arm.com, ms@dev.tdt.de, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Interconnect paths can have different performance points. Now that OPP
-framework supports bandwidth OPP tables, add OPP table support for
-interconnects.
+Add the bindings for the PCIe PHY on Lantiq VRX200 and ARX300 SoCs.
+The IP block contains settings for the PHY and a PLL.
+The PLL mode is configurable through a dedicated #phy-cell in .dts.
 
-Devices can use the interconnect-opp-table DT property to specify OPP
-tables for interconnect paths. And the driver can obtain the OPP table for
-an interconnect path by calling icc_get_opp_table().
-
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/interconnect/core.c  | 27 ++++++++++++++++++++++++++-
- include/linux/interconnect.h |  7 +++++++
- 2 files changed, 33 insertions(+), 1 deletion(-)
+ .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  | 87 +++++++++++++++++++
+ .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  | 11 +++
+ 2 files changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+ create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 871eb4bc4efc..881bac80bc1e 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -47,6 +47,7 @@ struct icc_req {
-  */
- struct icc_path {
- 	size_t num_nodes;
-+	struct opp_table *opp_table;
- 	struct icc_req reqs[];
- };
- 
-@@ -313,7 +314,7 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
- {
- 	struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
- 	struct icc_node *src_node, *dst_node;
--	struct device_node *np = NULL;
-+	struct device_node *np = NULL, *opp_node;
- 	struct of_phandle_args src_args, dst_args;
- 	int idx = 0;
- 	int ret;
-@@ -381,10 +382,34 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
- 		dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
- 	mutex_unlock(&icc_lock);
- 
-+	opp_node = of_parse_phandle(np, "interconnect-opp-table", idx);
-+	if (opp_node) {
-+		path->opp_table = dev_pm_opp_of_find_table_from_node(opp_node);
-+		of_node_put(opp_node);
-+	}
+diff --git a/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+new file mode 100644
+index 000000000000..b7b222e772d0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/lantiq,vrx200-pcie-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
++title: Lantiq VRX200 and ARX300 PCIe PHY Device Tree Bindings
 +
- 	return path;
- }
- EXPORT_SYMBOL_GPL(of_icc_get);
- 
-+/**
-+ * icc_get_opp_table() - Get the OPP table that corresponds to a path
-+ * @path: reference to the path returned by icc_get()
-+ *
-+ * This function will return the OPP table that corresponds to a path handle.
-+ * If the interconnect API is disabled, NULL is returned and the consumer
-+ * drivers will still build. Drivers are free to handle this specifically, but
-+ * they don't have to.
-+ *
-+ * Return: opp_table pointer on success. NULL is returned when the API is
-+ * disabled or the OPP table is missing.
++maintainers:
++  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++    description: selects the PHY mode as defined in <dt-bindings/phy/phy-lantiq-vrx200-pcie.h>
++
++  compatible:
++    enum:
++      - lantiq,vrx200-pcie-phy
++      - lantiq,arx300-pcie-phy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: PHY module clock
++      - description: PDI register clock
++
++  clock-names:
++    items:
++      - const: phy
++      - const: pdi
++
++  resets:
++    items:
++      - description: exclusive PHY reset line
++      - description: shared reset line between the PCIe PHY and PCIe controller
++
++  resets-names:
++    items:
++      - const: phy
++      - const: pcie
++
++  lantiq,rcu:
++    maxItems: 1
++    description: phandle to the RCU syscon
++
++  lantiq,rcu-endian-offset:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: the offset of the endian registers for this PHY instance in the RCU syscon
++
++  lantiq,rcu-big-endian-mask:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: the mask to set the PDI (PHY) registers for this PHY instance to big endian
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - lantiq,rcu
++  - lantiq,rcu-endian-offset
++  - lantiq,rcu-big-endian-mask
++
++additionalProperties: false
++
++examples:
++  - |
++    pcie0_phy: phy@106800 {
++        compatible = "lantiq,vrx200-pcie-phy";
++        reg = <0x106800 0x100>;
++        lantiq,rcu = <&rcu0>;
++        lantiq,rcu-endian-offset = <0x4c>;
++        lantiq,rcu-big-endian-mask = <0x80>; /* bit 7 */
++        big-endian;
++        clocks = <&pmu PCIE_PHY>, <&pmu PCIE_PHY_PDI>;
++        clock-names = "phy", "pdi";
++        resets = <&reset0 12 24>, <&reset0 22 22>;
++        reset-names = "phy", "pcie";
++        #phy-cells = <1>;
++    };
++
++...
+diff --git a/include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h b/include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
+new file mode 100644
+index 000000000000..95a7896356d6
+--- /dev/null
++++ b/include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 + */
-+struct opp_table *icc_get_opp_table(struct icc_path *path)
-+{
-+	return path->opp_table;
-+}
 +
- /**
-  * icc_set_bw() - set bandwidth constraints on an interconnect path
-  * @path: reference to the path returned by icc_get()
-diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-index dc25864755ba..0c0bc55f0e89 100644
---- a/include/linux/interconnect.h
-+++ b/include/linux/interconnect.h
-@@ -9,6 +9,7 @@
- 
- #include <linux/mutex.h>
- #include <linux/types.h>
-+#include <linux/pm_opp.h>
- 
- /* macros for converting to icc units */
- #define Bps_to_icc(x)	((x) / 1000)
-@@ -28,6 +29,7 @@ struct device;
- struct icc_path *icc_get(struct device *dev, const int src_id,
- 			 const int dst_id);
- struct icc_path *of_icc_get(struct device *dev, const char *name);
-+struct opp_table *icc_get_opp_table(struct icc_path *path);
- void icc_put(struct icc_path *path);
- int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
- 
-@@ -49,6 +51,11 @@ static inline void icc_put(struct icc_path *path)
- {
- }
- 
-+static inline struct opp_table *icc_get_opp_table(struct icc_path *path)
-+{
-+	return NULL;
-+}
-+
- static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
- {
- 	return 0;
++#define LANTIQ_PCIE_PHY_MODE_25MHZ		0
++#define LANTIQ_PCIE_PHY_MODE_25MHZ_SSC		1
++#define LANTIQ_PCIE_PHY_MODE_36MHZ		2
++#define LANTIQ_PCIE_PHY_MODE_36MHZ_SSC		3
++#define LANTIQ_PCIE_PHY_MODE_100MHZ		4
++#define LANTIQ_PCIE_PHY_MODE_100MHZ_SSC		5
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.22.0
