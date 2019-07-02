@@ -1,95 +1,56 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v3 0/4] Solve postboot supplier cleanup and optimize probe ordering
-Date: Tue, 2 Jul 2019 17:59:54 -0700
-Message-ID: <CAGETcx--+3BNjYZ6cgirNr_uZjU0464UHSUcaVHh_uTO2yWTCQ@mail.gmail.com>
-References: <20190702004811.136450-1-saravanak@google.com> <7900c670-5b3a-f950-dec9-70d98d94a84f@codeaurora.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/4] Lantiq VRX200/ARX300 PCIe PHY driver
+Date: Tue,  2 Jul 2019 22:35:19 +0200
+Message-ID: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7900c670-5b3a-f950-dec9-70d98d94a84f@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
+To: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, john@phrozen.org, kishon@ti.com, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, hauke@hauke-m.de, paul.burton@mips.com, ralf@linux-mips.org, mark.rutland@arm.com, ms@dev.tdt.de, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 5:03 PM David Collins <collinsd@codeaurora.org> wrote:
->
-> Hello Saravana,
->
-> On 7/1/19 5:48 PM, Saravana Kannan wrote:
-> ...
-> > TODO:
-> > - For the case of consumer child sub-nodes being added by a parent
-> >   device after late_initcall_sync we might be able to address that by
-> >   recursively parsing all child nodes and adding all their suppliers as
-> >   suppliers of the parent node too. The parent probe will add the
-> >   children before its probe is completed and that will prevent the
-> >   supplier's sync_state from being executed before the children are
-> >   probed.
-> >
-> > But I'll write that part once I see how this series is received.
->
-> I don't think that this scheme will work in all cases.  It can also lead
-> to probing deadlock.
->
-> Here is an example:
->
-> Three DT devices (top level A with subnodes B and C):
-> /A
-> /A/B
-> /A/C
-> C is a consumer of B.
->
-> When device A is created, a search of its subnodes will find the link from
-> C to B.  Since device B hasn't been created yet, of_link_to_suppliers()
-> will fail and add A to the wait_for_suppliers list.  This will cause the
-> probe of A to fail with -EPROBE_DEFER (thanks to the check in
-> device_links_check_suppliers()).  As a result device B will not be created
-> and device A will never probe.
->
-> You could try to resolve this situation by detecting the cycle and *not*
-> adding A to the wait_for_suppliers list.  However, that would get us back
-> to the problem we had before.  A would be allowed to probe which would
-> then result in devices being added for B and C.  If the device for B is
-> added before C, then it would be allowed to immediately probe and
-> (assuming this all takes place after late_initcall_sync thanks to modules)
-> its sync_state() callback would be called since no consumer devices are
-> linked to B.
->
-> Please note that to change this example from theoretical to practical,
-> replace "A" with apps_rsc, "B" with pmi8998-rpmh-regulators, and "C" with
-> pm8998-rpmh-regulators in [1].
+Various Lantiq (now Intel) SoCs contain one or more PCIe controllers
+and PHYs.
+This adds a driver for the PCIe PHYs found on the Lantiq VRX200 and
+ARX300 SoCs. GRX390 should also be supported as far as I can tell,
+but I don't have any of these devices to further verify that.
 
-Interesting use case.
+I have tested this PCIe PHY driver with the out-of-tree PCIe controller
+driver in OpenWrt: [0]
 
-First, to clarify my TODO: I was initially thinking of the recursive
-"up-heritance" of suppliers from child to parent to handle cases where
-the supplier is a device from some other top level device (or its
-child). My thinking has evolved a bit on that. I think the parent
-needs to inherit only from it's immediate children and not its
-grandchildren (the child is responsible for handling grandchildren
-suppliers). I'll also have to make sure I don't try to create a link
-from a parent device to one of its child device nodes (should be easy
-to check).
+dependencies for this series:
+none
 
-Anyway, going back to your case, for dependencies between child nodes
-of a parent, can't the parent just populate them in the right order?
-You can loop through the children and add them in multiple stages.
+patches 1-3 should go through the PHY tree
+patch 4 should go through the mips tree
 
-I'll continue to think if I can come up with anything nicer on the
-drivers, but even if we can't come up with anything better, we can
-still make sync_state() work.
+I am aware that this series is too late for the v5.3 development cycle.
+Getting review comments is still appreciated so this can be queued early
+in the v5.4 development cycle.
 
-Cheers,
-Saravana
 
->
-> Take care,
-> David
->
-> [1]
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845-mtp.dts?h=v5.2-rc7#n55
->
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+[0] https://github.com/xdarklight/openwrt/commits/lantiq-mainline-pcie-phy-20190702
+
+
+Martin Blumenstingl (4):
+  dt-bindings: phy: add binding for the Lantiq VRX200 and ARX300 PCIe
+    PHYs
+  phy: lantiq: vrx200-pcie: add a driver for the Lantiq VRX200 PCIe PHY
+  phy: enable compile-testing for the Lantiq PHY drivers
+  MIPS: lantiq: update the clock alias' for the mainline PCIe PHY driver
+
+ .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  |  87 +++
+ arch/mips/lantiq/xway/sysctrl.c               |  16 +-
+ drivers/phy/Makefile                          |   2 +-
+ drivers/phy/lantiq/Kconfig                    |  11 +
+ drivers/phy/lantiq/Makefile                   |   1 +
+ drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c   | 495 ++++++++++++++++++
+ .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  |  11 +
+ 7 files changed, 614 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+ create mode 100644 drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
+ create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
+
+-- 
+2.22.0
