@@ -1,135 +1,111 @@
-From: Jeykumar Sankaran <jsanka@codeaurora.org>
-Subject: Re: drm/msm/dpu: Correct dpu encoder spinlock initialization
-Date: Tue, 02 Jul 2019 11:21:20 -0700
-Message-ID: <f9a7786cce817c7d1a646b052ba1a679@codeaurora.org>
+From: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: drm/msm/dpu: Correct dpu encoder spinlock
+ initialization
+Date: Tue, 02 Jul 2019 12:15:22 -0700
+Message-ID: <87b59fd6d89f4096243770edefc5e97b@codeaurora.org>
 References: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
  <efade579f7ba59585b88ecb367422e5c@codeaurora.org>
  <d61d7805b4ac0ec45309bf5b65841262@codeaurora.org>
  <627144af54459a203f1583d2ad9b390c@codeaurora.org>
  <ea91c2c49d73af79bd6eea93a6d00a5a@codeaurora.org>
+ <f9a7786cce817c7d1a646b052ba1a679@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ea91c2c49d73af79bd6eea93a6d00a5a@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dhar@codeaurora.org
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org, jshekhar@codeaurora.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <f9a7786cce817c7d1a646b052ba1a679-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2019-07-01 03:29, dhar@codeaurora.org wrote:
-> On 2019-06-26 03:10, Jeykumar Sankaran wrote:
->> On 2019-06-24 22:44, dhar@codeaurora.org wrote:
->>> On 2019-06-25 03:56, Jeykumar Sankaran wrote:
->>>> On 2019-06-23 23:27, Shubhashree Dhar wrote:
->>>>> dpu encoder spinlock should be initialized during dpu encoder
->>>>> init instead of dpu encoder setup which is part of commit.
->>>>> There are chances that vblank control uses the uninitialized
->>>>> spinlock if not initialized during encoder init.
->>>> Not much can be done if someone is performing a vblank operation
->>>> before encoder_setup is done.
->>>> Can you point to the path where this lock is acquired before
->>>> the encoder_setup?
->>>> 
->>>> Thanks
->>>> Jeykumar S.
->>>>> 
->>> 
->>> When running some dp usecase, we are hitting this callstack.
->>> 
->>> Process kworker/u16:8 (pid: 215, stack limit = 0x00000000df9dd930)
->>> Call trace:
->>>  spin_dump+0x84/0x8c
->>>  spin_dump+0x0/0x8c
->>>  do_raw_spin_lock+0x80/0xb0
->>>  _raw_spin_lock_irqsave+0x34/0x44
->>>  dpu_encoder_toggle_vblank_for_crtc+0x8c/0xe8
->>>  dpu_crtc_vblank+0x168/0x1a0
->>>  dpu_kms_enable_vblank+0[   11.648998]  vblank_ctrl_worker+0x3c/0x60
->>>  process_one_work+0x16c/0x2d8
->>>  worker_thread+0x1d8/0x2b0
->>>  kthread+0x124/0x134
->>> 
->>> Looks like vblank is getting enabled earlier causing this issue and 
->>> we
->>> are using the spinlock without initializing it.
->>> 
->>> Thanks,
->>> Shubhashree
->>> 
->> DP calls into set_encoder_mode during hotplug before even notifying 
->> the
->> u/s. Can you trace out the original caller of this stack?
->> 
->> Even though the patch is harmless, I am not entirely convinced to move 
->> this
->> initialization. Any call which acquires the lock before encoder_setup
->> will be a no-op since there will not be any physical encoder to work 
->> with.
->> 
->> Thanks and Regards,
->> Jeykumar S.
->> 
->>>>> Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
->>>>> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
->>>>> ---
->>>>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
->>>>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>>> 
->>>>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>>> index 5f085b5..22938c7 100644
->>>>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>>> @@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device *dev, 
->>>>> struct
->>>>> drm_encoder *enc,
->>>>>  	if (ret)
->>>>>  		goto fail;
->>>>> 
->>>>> -	spin_lock_init(&dpu_enc->enc_spinlock);
->>>>> -
->>>>>  	atomic_set(&dpu_enc->frame_done_timeout, 0);
->>>>>  	timer_setup(&dpu_enc->frame_done_timer,
->>>>>  			dpu_encoder_frame_done_timeout, 0);
->>>>> @@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct
->>>>> drm_device *dev,
->>>>> 
->>>>>  	drm_encoder_helper_add(&dpu_enc->base, 
->>>>> &dpu_encoder_helper_funcs);
->>>>> 
->>>>> +	spin_lock_init(&dpu_enc->enc_spinlock);
->>>>>  	dpu_enc->enabled = false;
->>>>> 
->>>>>  	return &dpu_enc->base;
-> 
-> In dpu_crtc_vblank(), we are looping through all the encoders in the
-> present mode_config:
-> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu
-> 1/dpu_crtc.c#L1082
-> and hence calling dpu_encoder_toggle_vblank_for_crtc() for all the
-> encoders. But in dpu_encoder_toggle_vblank_for_crtc(), after acquiring
-> the spinlock, we will do a early return for
-> the encoders which are not currently assigned to our crtc:
-> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu
-> 1/dpu_encoder.c#L1318.
-> Since the encoder_setup for the secondary encoder(dp encoder in this
-> case) is not called until dp hotplug, we are hitting kernel panic
-> while acquiring the lock.
-This is the sequence in which the events are expected to happen:
-
-1) DP connector is instantiated with an inactive state
-2) Hot plug on DP
-3) DP connector is activated
-4) User space attaches a CRTC to the activated connector
-5) CRTC is enabled
-6) CRTC_VBLANK_ON is called
-7) dpu_crtc_vblank is called.
-
-So can you help tracing out why dpu_crtc_vblank is called when the 
-connector
-is not activated yet (no hotplug)?
-
--- 
-Jeykumar S
+T24gMjAxOS0wNy0wMiAxMToyMSwgSmV5a3VtYXIgU2Fua2FyYW4gd3JvdGU6Cj4gT24gMjAxOS0w
+Ny0wMSAwMzoyOSwgZGhhckBjb2RlYXVyb3JhLm9yZyB3cm90ZToKPj4gT24gMjAxOS0wNi0yNiAw
+MzoxMCwgSmV5a3VtYXIgU2Fua2FyYW4gd3JvdGU6Cj4+PiBPbiAyMDE5LTA2LTI0IDIyOjQ0LCBk
+aGFyQGNvZGVhdXJvcmEub3JnIHdyb3RlOgo+Pj4+IE9uIDIwMTktMDYtMjUgMDM6NTYsIEpleWt1
+bWFyIFNhbmthcmFuIHdyb3RlOgo+Pj4+PiBPbiAyMDE5LTA2LTIzIDIzOjI3LCBTaHViaGFzaHJl
+ZSBEaGFyIHdyb3RlOgo+Pj4+Pj4gZHB1IGVuY29kZXIgc3BpbmxvY2sgc2hvdWxkIGJlIGluaXRp
+YWxpemVkIGR1cmluZyBkcHUgZW5jb2Rlcgo+Pj4+Pj4gaW5pdCBpbnN0ZWFkIG9mIGRwdSBlbmNv
+ZGVyIHNldHVwIHdoaWNoIGlzIHBhcnQgb2YgY29tbWl0Lgo+Pj4+Pj4gVGhlcmUgYXJlIGNoYW5j
+ZXMgdGhhdCB2YmxhbmsgY29udHJvbCB1c2VzIHRoZSB1bmluaXRpYWxpemVkCj4+Pj4+PiBzcGlu
+bG9jayBpZiBub3QgaW5pdGlhbGl6ZWQgZHVyaW5nIGVuY29kZXIgaW5pdC4KPj4+Pj4gTm90IG11
+Y2ggY2FuIGJlIGRvbmUgaWYgc29tZW9uZSBpcyBwZXJmb3JtaW5nIGEgdmJsYW5rIG9wZXJhdGlv
+bgo+Pj4+PiBiZWZvcmUgZW5jb2Rlcl9zZXR1cCBpcyBkb25lLgo+Pj4+PiBDYW4geW91IHBvaW50
+IHRvIHRoZSBwYXRoIHdoZXJlIHRoaXMgbG9jayBpcyBhY3F1aXJlZCBiZWZvcmUKPj4+Pj4gdGhl
+IGVuY29kZXJfc2V0dXA/Cj4+Pj4+IAo+Pj4+PiBUaGFua3MKPj4+Pj4gSmV5a3VtYXIgUy4KPj4+
+Pj4+IAo+Pj4+IAo+Pj4+IFdoZW4gcnVubmluZyBzb21lIGRwIHVzZWNhc2UsIHdlIGFyZSBoaXR0
+aW5nIHRoaXMgY2FsbHN0YWNrLgo+Pj4+IAo+Pj4+IFByb2Nlc3Mga3dvcmtlci91MTY6OCAocGlk
+OiAyMTUsIHN0YWNrIGxpbWl0ID0gMHgwMDAwMDAwMGRmOWRkOTMwKQo+Pj4+IENhbGwgdHJhY2U6
+Cj4+Pj4gIHNwaW5fZHVtcCsweDg0LzB4OGMKPj4+PiAgc3Bpbl9kdW1wKzB4MC8weDhjCj4+Pj4g
+IGRvX3Jhd19zcGluX2xvY2srMHg4MC8weGIwCj4+Pj4gIF9yYXdfc3Bpbl9sb2NrX2lycXNhdmUr
+MHgzNC8weDQ0Cj4+Pj4gIGRwdV9lbmNvZGVyX3RvZ2dsZV92YmxhbmtfZm9yX2NydGMrMHg4Yy8w
+eGU4Cj4+Pj4gIGRwdV9jcnRjX3ZibGFuaysweDE2OC8weDFhMAo+Pj4+ICBkcHVfa21zX2VuYWJs
+ZV92YmxhbmsrMFsgICAxMS42NDg5OThdICB2YmxhbmtfY3RybF93b3JrZXIrMHgzYy8weDYwCj4+
+Pj4gIHByb2Nlc3Nfb25lX3dvcmsrMHgxNmMvMHgyZDgKPj4+PiAgd29ya2VyX3RocmVhZCsweDFk
+OC8weDJiMAo+Pj4+ICBrdGhyZWFkKzB4MTI0LzB4MTM0Cj4+Pj4gCj4+Pj4gTG9va3MgbGlrZSB2
+YmxhbmsgaXMgZ2V0dGluZyBlbmFibGVkIGVhcmxpZXIgY2F1c2luZyB0aGlzIGlzc3VlIGFuZCAK
+Pj4+PiB3ZQo+Pj4+IGFyZSB1c2luZyB0aGUgc3BpbmxvY2sgd2l0aG91dCBpbml0aWFsaXppbmcg
+aXQuCj4+Pj4gCj4+Pj4gVGhhbmtzLAo+Pj4+IFNodWJoYXNocmVlCj4+Pj4gCj4+PiBEUCBjYWxs
+cyBpbnRvIHNldF9lbmNvZGVyX21vZGUgZHVyaW5nIGhvdHBsdWcgYmVmb3JlIGV2ZW4gbm90aWZ5
+aW5nIAo+Pj4gdGhlCj4+PiB1L3MuIENhbiB5b3UgdHJhY2Ugb3V0IHRoZSBvcmlnaW5hbCBjYWxs
+ZXIgb2YgdGhpcyBzdGFjaz8KPj4+IAo+Pj4gRXZlbiB0aG91Z2ggdGhlIHBhdGNoIGlzIGhhcm1s
+ZXNzLCBJIGFtIG5vdCBlbnRpcmVseSBjb252aW5jZWQgdG8gCj4+PiBtb3ZlIHRoaXMKPj4+IGlu
+aXRpYWxpemF0aW9uLiBBbnkgY2FsbCB3aGljaCBhY3F1aXJlcyB0aGUgbG9jayBiZWZvcmUgZW5j
+b2Rlcl9zZXR1cAo+Pj4gd2lsbCBiZSBhIG5vLW9wIHNpbmNlIHRoZXJlIHdpbGwgbm90IGJlIGFu
+eSBwaHlzaWNhbCBlbmNvZGVyIHRvIHdvcmsgCj4+PiB3aXRoLgo+Pj4gCj4+PiBUaGFua3MgYW5k
+IFJlZ2FyZHMsCj4+PiBKZXlrdW1hciBTLgo+Pj4gCj4+Pj4+PiBDaGFuZ2UtSWQ6IEk1YTE4Yjk1
+ZmE0NzM5N2M4MzRhMjY2YjIyYWJmMzNhNTE3YjAzYTRlCj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBT
+aHViaGFzaHJlZSBEaGFyIDxkaGFyQGNvZGVhdXJvcmEub3JnPgo+Pj4+Pj4gLS0tCj4+Pj4+PiAg
+ZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2VuY29kZXIuYyB8IDMgKy0tCj4+Pj4+
+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAyIGRlbGV0aW9ucygtKQo+Pj4+Pj4g
+Cj4+Pj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2Vu
+Y29kZXIuYwo+Pj4+Pj4gYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfZW5jb2Rl
+ci5jCj4+Pj4+PiBpbmRleCA1ZjA4NWI1Li4yMjkzOGM3IDEwMDY0NAo+Pj4+Pj4gLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2VuY29kZXIuYwo+Pj4+Pj4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2VuY29kZXIuYwo+Pj4+Pj4gQEAgLTIxOTUs
+OCArMjE5NSw2IEBAIGludCBkcHVfZW5jb2Rlcl9zZXR1cChzdHJ1Y3QgZHJtX2RldmljZSAKPj4+
+Pj4+ICpkZXYsIHN0cnVjdAo+Pj4+Pj4gZHJtX2VuY29kZXIgKmVuYywKPj4+Pj4+ICAJaWYgKHJl
+dCkKPj4+Pj4+ICAJCWdvdG8gZmFpbDsKPj4+Pj4+IAo+Pj4+Pj4gLQlzcGluX2xvY2tfaW5pdCgm
+ZHB1X2VuYy0+ZW5jX3NwaW5sb2NrKTsKPj4+Pj4+IC0KPj4+Pj4+ICAJYXRvbWljX3NldCgmZHB1
+X2VuYy0+ZnJhbWVfZG9uZV90aW1lb3V0LCAwKTsKPj4+Pj4+ICAJdGltZXJfc2V0dXAoJmRwdV9l
+bmMtPmZyYW1lX2RvbmVfdGltZXIsCj4+Pj4+PiAgCQkJZHB1X2VuY29kZXJfZnJhbWVfZG9uZV90
+aW1lb3V0LCAwKTsKPj4+Pj4+IEBAIC0yMjUwLDYgKzIyNDgsNyBAQCBzdHJ1Y3QgZHJtX2VuY29k
+ZXIgKmRwdV9lbmNvZGVyX2luaXQoc3RydWN0Cj4+Pj4+PiBkcm1fZGV2aWNlICpkZXYsCj4+Pj4+
+PiAKPj4+Pj4+ICAJZHJtX2VuY29kZXJfaGVscGVyX2FkZCgmZHB1X2VuYy0+YmFzZSwgCj4+Pj4+
+PiAmZHB1X2VuY29kZXJfaGVscGVyX2Z1bmNzKTsKPj4+Pj4+IAo+Pj4+Pj4gKwlzcGluX2xvY2tf
+aW5pdCgmZHB1X2VuYy0+ZW5jX3NwaW5sb2NrKTsKPj4+Pj4+ICAJZHB1X2VuYy0+ZW5hYmxlZCA9
+IGZhbHNlOwo+Pj4+Pj4gCj4+Pj4+PiAgCXJldHVybiAmZHB1X2VuYy0+YmFzZTsKPj4gCj4+IElu
+IGRwdV9jcnRjX3ZibGFuaygpLCB3ZSBhcmUgbG9vcGluZyB0aHJvdWdoIGFsbCB0aGUgZW5jb2Rl
+cnMgaW4gdGhlCj4+IHByZXNlbnQgbW9kZV9jb25maWc6Cj4+IGh0dHBzOi8vZ2l0aHViLmNvbS90
+b3J2YWxkcy9saW51eC9ibG9iL21hc3Rlci9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1Cj4+
+IDEvZHB1X2NydGMuYyNMMTA4Mgo+PiBhbmQgaGVuY2UgY2FsbGluZyBkcHVfZW5jb2Rlcl90b2dn
+bGVfdmJsYW5rX2Zvcl9jcnRjKCkgZm9yIGFsbCB0aGUKPj4gZW5jb2RlcnMuIEJ1dCBpbiBkcHVf
+ZW5jb2Rlcl90b2dnbGVfdmJsYW5rX2Zvcl9jcnRjKCksIGFmdGVyIGFjcXVpcmluZwo+PiB0aGUg
+c3BpbmxvY2ssIHdlIHdpbGwgZG8gYSBlYXJseSByZXR1cm4gZm9yCj4+IHRoZSBlbmNvZGVycyB3
+aGljaCBhcmUgbm90IGN1cnJlbnRseSBhc3NpZ25lZCB0byBvdXIgY3J0YzoKPj4gaHR0cHM6Ly9n
+aXRodWIuY29tL3RvcnZhbGRzL2xpbnV4L2Jsb2IvbWFzdGVyL2RyaXZlcnMvZ3B1L2RybS9tc20v
+ZGlzcC9kcHUKPj4gMS9kcHVfZW5jb2Rlci5jI0wxMzE4Lgo+PiBTaW5jZSB0aGUgZW5jb2Rlcl9z
+ZXR1cCBmb3IgdGhlIHNlY29uZGFyeSBlbmNvZGVyKGRwIGVuY29kZXIgaW4gdGhpcwo+PiBjYXNl
+KSBpcyBub3QgY2FsbGVkIHVudGlsIGRwIGhvdHBsdWcsIHdlIGFyZSBoaXR0aW5nIGtlcm5lbCBw
+YW5pYwo+PiB3aGlsZSBhY3F1aXJpbmcgdGhlIGxvY2suCj4gVGhpcyBpcyB0aGUgc2VxdWVuY2Ug
+aW4gd2hpY2ggdGhlIGV2ZW50cyBhcmUgZXhwZWN0ZWQgdG8gaGFwcGVuOgo+IAo+IDEpIERQIGNv
+bm5lY3RvciBpcyBpbnN0YW50aWF0ZWQgd2l0aCBhbiBpbmFjdGl2ZSBzdGF0ZQo+IDIpIEhvdCBw
+bHVnIG9uIERQCj4gMykgRFAgY29ubmVjdG9yIGlzIGFjdGl2YXRlZAo+IDQpIFVzZXIgc3BhY2Ug
+YXR0YWNoZXMgYSBDUlRDIHRvIHRoZSBhY3RpdmF0ZWQgY29ubmVjdG9yCj4gNSkgQ1JUQyBpcyBl
+bmFibGVkCj4gNikgQ1JUQ19WQkxBTktfT04gaXMgY2FsbGVkCj4gNykgZHB1X2NydGNfdmJsYW5r
+IGlzIGNhbGxlZC4KPiAKPiBTbyBjYW4geW91IGhlbHAgdHJhY2luZyBvdXQgd2h5IGRwdV9jcnRj
+X3ZibGFuayBpcyBjYWxsZWQgd2hlbiB0aGUgCj4gY29ubmVjdG9yCj4gaXMgbm90IGFjdGl2YXRl
+ZCB5ZXQgKG5vIGhvdHBsdWcpPwoKT3Zlcmxvb2tlZCB0aGUgbG9vcCB3aGljaCBpdGVyYXRlcyB0
+aHJvdWdoICphbGwqIHRoZSBlbmNvZGVycyAKaXJyZXNwZWN0aXZlIG9mIHRoZWlyCmFjdGl2YXRl
+ZCBzdGF0dXMuCgpSZXZpZXdlZC1ieTogSmV5a3VtYXIgU2Fua2FyYW4gPGpzYW5rYUBjb2RlYXVy
+b3JhLm9yZz4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubw==
