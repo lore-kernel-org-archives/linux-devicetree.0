@@ -1,57 +1,90 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 2/3] net: phy: realtek: Enable accessing RTL8211E
- extension pages
-Date: Tue, 2 Jul 2019 08:07:57 +0200
-Message-ID: <bdacdf76-8eae-e865-9c00-8e70a12ad303@gmail.com>
-References: <20190701195225.120808-1-mka@chromium.org>
- <20190701195225.120808-2-mka@chromium.org> <20190701200248.GJ30468@lunn.ch>
- <35db1bff-f48e-5372-06b7-3140cb7cbb71@gmail.com>
- <20190701210902.GL30468@lunn.ch> <20190702000925.GD250418@google.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
+Subject: [PATCH v12 5/5] arm64: dts: mt8183: add scp node
+Date: Tue,  2 Jul 2019 14:05:28 +0800
+Message-ID: <20190702060546.222934-6-pihsun@chromium.org>
+References: <20190702060546.222934-1-pihsun@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702000925.GD250418@google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>, Andrew Lunn <andrew@lunn.ch>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190702060546.222934-1-pihsun@chromium.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Erin Lo <erin.lo@mediatek.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Pi-Hsun Shih <pihsun@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02.07.2019 02:09, Matthias Kaehlcke wrote:
-> On Mon, Jul 01, 2019 at 11:09:02PM +0200, Andrew Lunn wrote:
->> On Mon, Jul 01, 2019 at 10:37:16PM +0200, Heiner Kallweit wrote:
->>> On 01.07.2019 22:02, Andrew Lunn wrote:
->>>> On Mon, Jul 01, 2019 at 12:52:24PM -0700, Matthias Kaehlcke wrote:
->>>>> The RTL8211E has extension pages, which can be accessed after
->>>>> selecting a page through a custom method. Add a function to
->>>>> modify bits in a register of an extension page and a few
->>>>> helpers for dealing with ext pages.
->>>>>
->>>>> rtl8211e_modify_ext_paged() and rtl821e_restore_page() are
->>>>> inspired by their counterparts phy_modify_paged() and
->>>>> phy_restore_page().
->>>>
->>>> Hi Matthias
->>>>
->>>> While an extended page is selected, what happens to the normal
->>>> registers in the range 0-0x1c? Are they still accessible?
->>>>
->>> AFAIK: no
->>
->> This it would be better to make use of the core paged access support,
->> so that locking is done correctly.
-> 
-> Do I understand correctly that this would involve assigning
-> .read/write_page and use phy_select_page() and phy_restore_page()?
-> 
-> Besides the benefit of locking this would also result in less code and
-> we could get rid of the custom _restore_page().
-> 
-Interestingly certain Realtek PHY's (incl. RTL8211E) support two paging
-mechanisms.
+From: Eddie Huang <eddie.huang@mediatek.com>
 
-1. Normal paging (set reg 0x1f to page number) - set by core paging
-2. Extended pages (set reg 0x1f to 7, and reg 0x1e to ext. page number)
+Add scp node to mt8183 and mt8183-evb
 
-Newer Realtek PHY's use normal paging only.
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+---
+Changes from v11, v10:
+ - No change.
+
+Changes from v9:
+ - Remove extra reserve-memory-vpu_share node.
+
+Changes from v8:
+ - New patch.
+---
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 11 +++++++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 12 ++++++++++++
+ 2 files changed, 23 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+index d8e555cbb5d3..e46e34ce3159 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+@@ -24,6 +24,17 @@
+ 	chosen {
+ 		stdout-path = "serial0:921600n8";
+ 	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		scp_mem_reserved: scp_mem_region {
++			compatible = "shared-dma-pool";
++			reg = <0 0x50000000 0 0x2900000>;
++			no-map;
++		};
++	};
+ };
+ 
+ &auxadc {
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index c2749c4631bc..133146b52904 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -254,6 +254,18 @@
+ 			clock-names = "spi", "wrap";
+ 		};
+ 
++		scp: scp@10500000 {
++			compatible = "mediatek,mt8183-scp";
++			reg = <0 0x10500000 0 0x80000>,
++			      <0 0x105c0000 0 0x5000>;
++			reg-names = "sram", "cfg";
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_SCPSYS>;
++			clock-names = "main";
++			memory-region = <&scp_mem_reserved>;
++			status = "disabled";
++		};
++
+ 		auxadc: auxadc@11001000 {
+ 			compatible = "mediatek,mt8183-auxadc",
+ 				     "mediatek,mt8173-auxadc";
+-- 
+2.22.0.410.gd8fdbe21b5-goog
