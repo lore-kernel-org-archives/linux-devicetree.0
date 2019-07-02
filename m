@@ -1,75 +1,95 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using
- devicetree
-Date: Tue, 2 Jul 2019 18:47:30 +0900
-Message-ID: <20190702184730.b0247eb780ffa48d40a61a81@kernel.org>
-References: <156113387975.28344.16009584175308192243.stgit@devnote2>
-        <CAL_JsqJOc+tkFEGcc+KN0RE8Xjg_i9icPWZ37Ynk_9sR2X1Uwg@mail.gmail.com>
-        <20190627195817.211ab4bea422f37e539e47e8@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [RFC PATCH 1/5] dt-bindings: soundwire: add slave bindings
+Date: Tue, 2 Jul 2019 15:15:10 +0530
+Message-ID: <20190702094510.GO2911@vkoul-mobl>
+References: <20190611104043.22181-1-srinivas.kandagatla@linaro.org>
+ <20190611104043.22181-2-srinivas.kandagatla@linaro.org>
+ <20190701061155.GJ2911@vkoul-mobl>
+ <ce1e445e-3254-1308-8752-2cb56a7e0cc6@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627195817.211ab4bea422f37e539e47e8@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <ce1e445e-3254-1308-8752-2cb56a7e0cc6@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Frank Rowand <frowand.list@gmail.com>, Tom Zanussi <tom.zanussi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, bgoswami@quicinc.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Thu, 27 Jun 2019 19:58:17 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> Hi Rob,
+On 02-07-19, 09:22, Srinivas Kandagatla wrote:
+> Thanks Vinod for taking time to review,
 > 
-> On Wed, 26 Jun 2019 15:58:50 -0600
-> Rob Herring <robh+dt@kernel.org> wrote:
-> 
-> > On Fri, Jun 21, 2019 at 10:18 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > Here is an RFC series of patches to add boot-time tracing using
-> > > devicetree.
-> > >
-> > > Currently, kernel support boot-time tracing using kernel command-line
-> > > parameters. But that is very limited because of limited expressions
-> > > and limited length of command line. Recently, useful features like
-> > > histogram, synthetic events, etc. are being added to ftrace, but it is
-> > > clear that we can not expand command-line options to support these
-> > > features.
-> > >
-> > > Hoever, I've found that there is a devicetree which can pass more
-> > > structured commands to kernel at boot time :) The devicetree is usually
-> > > used for dscribing hardware configuration, but I think we can expand it
-> > > for software configuration too (e.g. AOSP and OPTEE already introduced
-> > > firmware node.) Also, grub and qemu already supports loading devicetree,
-> > > so we can use it not only on embedded devices but also on x86 PC too.
+> On 01/07/2019 07:11, Vinod Koul wrote:
+> > On 11-06-19, 11:40, Srinivas Kandagatla wrote:
+> > > This patch adds bindings for Soundwire Slave devices which includes how
+> > > SoundWire enumeration address is represented in SoundWire slave device
+> > > tree nodes.
+> > > 
+> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > > ---
+> > >   .../devicetree/bindings/soundwire/bus.txt     | 48 +++++++++++++++++++
+> > >   1 file changed, 48 insertions(+)
+> > >   create mode 100644 Documentation/devicetree/bindings/soundwire/bus.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/soundwire/bus.txt b/Documentation/devicetree/bindings/soundwire/bus.txt
+> > > new file mode 100644
+> > > index 000000000000..19a672b0d528
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/soundwire/bus.txt
 > > 
-> > Do the x86 versions of grub, qemu, EFI, any other bootloader actually
-> > enable DT support? I didn't think so. Certainly, an x86 kernel doesn't
-> > normally (other than OLPC and ce4100) have a defined way to even pass
-> > a dtb from the bootloader to the kernel and the kernel doesn't
-> > unflatten the dtb.
+> > The bindings are for slave right and the file is bus.txt?
 > 
-> Sorry, the grub part, I just found this entry. I need to check this
-> can work on x86 too.
+> I tried to follow what I have done for SLIMBus.
+> Do you prefer them to be documented in slave.txt?
 
-I've confirmed that grub-x86 doesn't support devicetree option. I tried
-to add it, and tested it.
+Would that not be better :) We should have a master.txt for bus things
 
-https://github.com/mhiramat/grub/commit/644c35bfd2d18c772cc353b74215344f8264923a
+> > > @@ -0,0 +1,48 @@
+> > > +SoundWire bus bindings.
+> > > +
+> > > +SoundWire is a 2-pin multi-drop interface with data and clock line.
+> > > +It facilitates development of low cost, efficient, high performance systems.
+> > > +
+> > > +SoundWire controller bindings are very much specific to vendor.
+> > > +
+> > > +Child nodes(SLAVE devices):
+> > > +Every SoundWire controller node can contain zero or more child nodes
+> > > +representing slave devices on the bus. Every SoundWire slave device is
+> > > +uniquely determined by the enumeration address containing 5 fields:
+> > > +SoundWire Version, Instance ID, Manufacturer ID, Part ID and Class ID
+> > > +for a device. Addition to below required properties, child nodes can
+> > > +have device specific bindings.
+> > > +
+> > > +Required property for SoundWire child node if it is present:
+> > > +- compatible:	 "sdwVER,MFD,PID,CID". The textual representation of
+> > > +		  SoundWire Enumeration address comprising SoundWire
+> > > +		  Version, Manufacturer ID, Part ID and Class ID,
+> > > +		  shall be in lower-case hexadecimal with leading
+> > > +		  zeroes suppressed.
+> > > +		  Version number '0x10' represents SoundWire 1.0
+> > > +		  Version number '0x11' represents SoundWire 1.1
+> > > +		  ex: "sdw10,0217,2010,0"
+> > 
+> > any reason why we want to code version number and not say sdw,1.0,...
+> > and so on?
+> 
+> For consistency reasons, as other info in hex.
+> 
+> > 
+> > > +
+> > > +- sdw-instance-id: Should be ('Instance ID') from SoundWire
+> > > +		  Enumeration Address. Instance ID is for the cases
+> > > +		  where multiple Devices of the same type or Class
+> > > +		  are attached to the bus.
+> > 
+> > instance id is part of the 48bit device id, so wont it make sense to add
+> > that to compatible as well?
+> > 
+> So we could have multiple instance of same IP, so adding this to compatible
+> string does not make sense! As driver has to list all the possible
+> compatible strings.
 
-This works if there is ACPI, if it includes /chosen/linux,ftrace node only.
-(Anyway, we don't need other nodes on x86)
-
-At this moment, grub doesn't support DT overlay, so on arm/arm64 user must
-decompile DTB, add linux,ftrace node for tracing and compile it again.
-But if it supports overlay, I think we can give an overlay for tracer setting
-on boot up, that will be handy on arm/arm64 too. :)
-
-Thank you,
+Yes that makes sense.
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+~Vinod
