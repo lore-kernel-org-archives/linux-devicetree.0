@@ -1,94 +1,84 @@
-Return-Path: <SRS0=2u/C=VA=nxp.com=ping.bai@kernel.org>
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [RESEND PATCH 2/3] soc: imx: Add power domain driver support for
+Return-Path: <SRS0=An4t=U7=arm.com=sudeep.holla@kernel.org>
+Date: Tue, 2 Jul 2019 12:06:53 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RESEND PATCH 2/3] soc: imx: Add power domain driver support for
  i.mx8m family
-Date: Wed, 3 Jul 2019 01:15:07 +0000
-Message-ID: 
- <DB7PR04MB517878DA360BD39B82DF1AD487FB0@DB7PR04MB5178.eurprd04.prod.outlook.com>
+Message-ID: <20190702110653.GA7329@e107155-lin>
 References: <20190702100832.29718-1-ping.bai@nxp.com>
- <20190702100832.29718-3-ping.bai@nxp.com> <20190702110653.GA7329@e107155-lin>
-In-Reply-To: <20190702110653.GA7329@e107155-lin>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <20190702100832.29718-3-ping.bai@nxp.com>
 MIME-Version: 1.0
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702100832.29718-3-ping.bai@nxp.com>
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Sudeep Holla <sudeep.holla@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdWRlZXAgSG9sbGEgW21haWx0
-bzpzdWRlZXAuaG9sbGFAYXJtLmNvbV0NCj4gU2VudDogVHVlc2RheSwgSnVseSAyLCAyMDE5IDc6
-MDcgUE0NCj4gVG86IEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT4NCj4gQ2M6IHJvYmgrZHRA
-a2VybmVsLm9yZzsgbC5zdGFjaEBwZW5ndXRyb25peC5kZTsgc2hhd25ndW9Aa2VybmVsLm9yZzsN
-Cj4gZmVzdGV2YW1AZ21haWwuY29tOyBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBu
-eHAuY29tPjsgQWlzaGVuZw0KPiBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IFBlbmcgRmFu
-IDxwZW5nLmZhbkBueHAuY29tPjsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxp
-bnV4LWlteCA8bGludXgtaW14QG54cC5jb20+Ow0KPiBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IFN1
-ZGVlcCBIb2xsYSA8c3VkZWVwLmhvbGxhQGFybS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUkVTRU5E
-IFBBVENIIDIvM10gc29jOiBpbXg6IEFkZCBwb3dlciBkb21haW4gZHJpdmVyIHN1cHBvcnQNCj4g
-Zm9yIGkubXg4bSBmYW1pbHkNCj4gDQo+IE9uIFR1ZSwgSnVsIDAyLCAyMDE5IGF0IDEwOjAzOjQ2
-QU0gKzAwMDAsIEphY2t5IEJhaSB3cm90ZToNCj4gPiBUaGUgaS5NWDhNIGZhbWlseSBpcyBhIHNl
-dCBvZiBOWFAgcHJvZHVjdCBmb2N1cyBvbiBkZWxpdmVyaW5nIHRoZQ0KPiA+IGxhdGVzdCBhbmQg
-Z3JlYXRlc3QgdmlkZW8gYW5kIGF1ZGlvIGV4cGVyaWVuY2UgY29tYmluaW5nDQo+ID4gc3RhdGUt
-b2YtdGhlLWFydCBtZWRpYS1zcGVjaWZpYyBmZWF0dXJlcyB3aXRoIGhpZ2gtcGVyZm9ybWFuY2UN
-Cj4gPiBwcm9jZXNzaW5nIHdoaWxlIG9wdGltaXplZCBmb3IgbG93ZXN0IHBvd2VyIGNvbnN1bXB0
-aW9uLg0KPiA+DQo+ID4gaS5NWDhNUSwgaS5NWDhNTSwgaS5NWDhNTiwgZXZlbiB0aGUgZnVydHVy
-ZSBpLk1YOE1QIGFyZSBhbGwgYmVsb25nIHRvDQo+ID4gdGhpcyBmYW1pbHkuIEEgR1BDIG1vZHVs
-ZSBpcyB1c2VkIHRvIG1hbmFnZSBhbGwgdGhlIFBVIHBvd2VyIGRvbWFpbg0KPiA+IG9uL29mZi4g
-QnV0IHRoZSBzaXR1YXRpb24gaXMgdGhhdCB0aGUgbnVtYmVyIG9mIHBvd2VyIGRvbWFpbnMgJiB0
-aGUNCj4gPiBwb3dlciB1cCBzZXF1ZW5jZSBoYXMgc2lnbmlmaWNhdGUgZGlmZmVyZW5jZSBvbiB0
-aG9zZSBTb0NzLiBFdmVuIG9uDQo+ID4gdGhlIHNhbWUgU29DLiBUaGUgcG93ZXIgdXAgc2VxdWVu
-Y2Ugc3RpbGwgaGFzIGJpZyBkaWZmZXJlbmNlLiBJdCBtYWtlcw0KPiA+IHVzIGhhcmQgdG8gcmV1
-c2UgdGhlIEdQQ3YyIGRyaXZlciB0byBjb3ZlciB0aGUgd2hvbGUgaS5NWDhNIGZhbWlseS4NCj4g
-PiBFYWNoIHRpbWUgYSBuZXcgU29DIGlzIHN1cHBvcnRlZCBpbiB0aGUgbWFpbmxpbmUga2VybmVs
-LCB3ZSBuZWVkIHRvDQo+ID4gbW9kaWZ5IHRoZSBHUEN2MiBkcml2ZXIgdG8gc3VwcG9ydCBpdC4g
-V2UgbmVlZCB0byBhZGQgb3IgbW9kaWZ5DQo+ID4gaHVuZHJlZCBsaW5lcyBvZiBjb2RlIGluIHdv
-cnN0IGNhc2UuDQo+ID4gSXQgaXMgYSBiYWQgcHJhY3RpY2UgZm9yIHRoZSBkcml2ZXIgbWFpbnRh
-aW5hYmlsaXR5Lg0KPiA+DQo+ID4gVGhpcyBkcml2ZXIgYWRkIGEgbW9yZSBnZW5lcmljIHBvd2Vy
-IGRvbWFpbiBkcml2ZXIgdGhhdCB0aGUgYWN0dWFsDQo+ID4gcG93ZXIgb24vb2ZmIGlzIGRvbmUg
-YnkgVEYtQSBjb2RlLiB0aGUgYWJzdHJhY3Rpb24gZ2l2ZSB1cyB0aGUNCj4gPiBwb3NzaWJpbGl0
-eSB0aGF0IHVzaW5nIG9uZSBkcml2ZXIgdG8gY292ZXIgdGhlIHdob2xlIGkuTVg4TSBmYW1pbHkg
-aW4NCj4gPiBrZXJuZWwgc2lkZS4NCj4gPg0KPiANCj4gVEYtQSBoYXMgU0NNSSBzdXBwb3J0LCB3
-aHkgY2FuJ3QgdGhhdCBiZSB1c2VkIGFzIGFic3RyYWN0aW9uIGluc3RlYWQgb2YNCj4gaW52ZW50
-aW5nIG5ldy4gUGVuZyBGYW4gaGFzIGJlZW4gd29ya2luZyB0byBnZXQgU01DIG1haWxib3guDQo+
-IA0KPiBVbmxlc3MgeW91IGdpdmUgbWUgc3Ryb25nIHJlYXNvbnMgZm9yIG5vdCBhYmxlIHRvIHB1
-cnN1ZSB0aGF0IHBhdGgsIE5BQ0sgZm9yDQo+IHRoaXMgcGF0Y2guIEkgaGF2ZSB0b2xkIHRoaXMg
-aW4gdGhlIHJlY2VudCBwYXN0Lg0KPiANCg0KRm9yIHNvbWUgb2YgdGhlIHBvd2VyIGRvbWFpbnMs
-IHdlIG5lZWQgdG8gaGFuZGxlIHRoZSBleHRlcm5hbCByZWd1bGF0b3IuDQpJbiBjdXJyZW50IFND
-TUkgcG93ZXIgZG9tYWluIGRyaXZlciwgdGhlcmUgaXMgbm90IHN1Y2ggc3VwcG9ydC4gSWYgd2Ug
-dXNlDQp0aGUgU0NNSSBwb3dlciBkb21haW4gZHJpdmVyLCBob3cgdG8gaGFuZGxlIHJlZ3VsYXRv
-ciBvbi9vZmYsIGluIFRGLUE/DQpjdXJyZW50bHksIGFsbCB0aGUgcmVndWxhdG9yIGlzIG1hbmFn
-ZWQgYnkga2VybmVsIHNpZGUuIG1vc3Qgb2YgdGhlIHJlZ3VsYXRvcg0KaXMgY29udHJvbGxlZCBi
-eSBJMkMgYnVzLiBBY2Nlc3NpbmcgdGhlIEkyQyBmcm9tIGtlcm5lbCAmIFRGLUEgYm90aCBpcyBu
-b3QgZmVhc2libGUuDQppZiByZWd1bGF0b3IgbmVlZCB0byBiZSBoYW5kbGVkIGluIFRGLUEsIEkg
-YW0gbm90IHN1cmUgaWYgaXQgaXMgbmVjZXNzYXJ5IHRvIGV4dGVuZCB0aGUNClNDTUkgc3BlYyB0
-byBpbmNsdWRlIGEgcmVndWxhdG9yIHByb3RvY29sLg0KDQpBbm90aGVyIGNvbmNlcm4gaXMgdGhh
-dCBtb3ZpbmcgYWxsIGN1cnJlbnRseSBpbXBsZW1lbnRhdGlvbiB0byBTQ01JIGNvbXBhdGlibGUg
-aXMNCmEgaHVnZSB3b3JrLCB3YWl0aW5nIGZvciBTQ01JIGltcGxlbWVudGF0aW9uIHJlYWR5IHdp
-bGwgYmxvY2sgb3RoZXIgcGVyaXBoZXJhbHMNCnVwc3RyZWFtIGZvciBhIHZlcnkgbG9uZyB0aW1l
-Lg0KDQpBbnl3YXksIGlmIGN1cnJlbnQgaW1wbGVtZW50YXRpb24gY2FuIE5PVCBiZSBhY2NlcHRl
-ZCwgd2UgY2FuIHRyeSB0byBzd2l0Y2ggU0NNSQ0KaW1wbGVtZW50YXRpb24uDQoNCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBKYWNreSBCYWkgPHBpbmcuYmFpQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGRy
-aXZlcnMvc29jL2lteC9LY29uZmlnICAgICAgICAgICAgfCAgIDYgKw0KPiA+ICBkcml2ZXJzL3Nv
-Yy9pbXgvTWFrZWZpbGUgICAgICAgICAgIHwgICAxICsNCj4gPiAgZHJpdmVycy9zb2MvaW14L2lt
-eDhtX3BtX2RvbWFpbnMuYyB8IDIyNA0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0K
-PiA+ICBpbmNsdWRlL3NvYy9pbXgvaW14X3NpcC5oICAgICAgICAgIHwgIDEyICsrDQo+ID4gIDQg
-ZmlsZXMgY2hhbmdlZCwgMjQzIGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGRyaXZlcnMvc29jL2lteC9pbXg4bV9wbV9kb21haW5zLmMNCj4gPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGluY2x1ZGUvc29jL2lteC9pbXhfc2lwLmgNCj4gDQo+IFsuLi5dDQo+IA0KPiA+ICsNCj4g
-PiArCW11dGV4X2xvY2soJmdwY19wZF9tdXRleCk7DQo+ID4gKwlhcm1fc21jY2Nfc21jKElNWF9T
-SVBfR1BDLCBJTVhfU0lQX0NPTkZJR19HUENfUE1fRE9NQUlOLA0KPiBkb21haW4tPmRvbWFpbl9p
-bmRleCwNCj4gPiArCQkgICAgICBQRF9TVEFURV9PTiwgMCwgMCwgMCwgMCwgJnJlcyk7DQo+ID4g
-KwltdXRleF91bmxvY2soJmdwY19wZF9tdXRleCk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+
-ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgaW14OG1fcGRfcG93ZXJfb2ZmKHN0cnVjdCBn
-ZW5lcmljX3BtX2RvbWFpbiAqZ2VucGQpIHsNCj4gPiArCXN0cnVjdCBpbXg4bV9wbV9kb21haW4g
-KmRvbWFpbiA9IHRvX2lteDhtX3BtX2RvbWFpbihnZW5wZCk7DQo+ID4gKwlzdHJ1Y3QgYXJtX3Nt
-Y2NjX3JlcyByZXM7DQo+ID4gKwlpbnQgaW5kZXgsIHJldCA9IDA7DQo+ID4gKw0KPiA+ICsJbXV0
-ZXhfbG9jaygmZ3BjX3BkX211dGV4KTsNCj4gPiArCWFybV9zbWNjY19zbWMoSU1YX1NJUF9HUEMs
-IElNWF9TSVBfQ09ORklHX0dQQ19QTV9ET01BSU4sDQo+IGRvbWFpbi0+ZG9tYWluX2luZGV4LA0K
-PiA+ICsJCSAgICAgIFBEX1NUQVRFX09GRiwgMCwgMCwgMCwgMCwgJnJlcyk7DQo+IA0KPiBIb3cg
-YmlnIGlzIHRoaXMgSU1YIFNNQyBTSVAgPyBJIGtlZXAgc2VlaW5nIHRoYXQgaXQncyBldmVyIGdy
-b3dpbmcuDQo+IEkgZG9uJ3Qgd2FudCB0byBzZWUgdGhpcyBmb3IgYW55IGZ1dHVyZSBwcm9kdWN0
-cyBhcyB0aGV5IHNlZW0gdG8gYmUgZGVzaWduZWQNCj4gIk9OIFRIRSBHTyIgYXMgYW5kIHdoZW4g
-bmVlZGVkIHJhdGhlciB0aGFuIGNvbXBsZXRlbHkgdGhvdWdodCB0aHJvdWdoLg0KPiANCj4gLS0N
-Cj4gUmVnYXJkcywNCj4gU3VkZWVwDQo=
+On Tue, Jul 02, 2019 at 10:03:46AM +0000, Jacky Bai wrote:
+> The i.MX8M family is a set of NXP product focus on delivering
+> the latest and greatest video and audio experience combining
+> state-of-the-art media-specific features with high-performance
+> processing while optimized for lowest power consumption.
+> 
+> i.MX8MQ, i.MX8MM, i.MX8MN, even the furture i.MX8MP are all
+> belong to this family. A GPC module is used to manage all the
+> PU power domain on/off. But the situation is that the number of
+> power domains & the power up sequence has significate difference
+> on those SoCs. Even on the same SoC. The power up sequence still
+> has big difference. It makes us hard to reuse the GPCv2 driver to
+> cover the whole i.MX8M family. Each time a new SoC is supported in
+> the mainline kernel, we need to modify the GPCv2 driver to support
+> it. We need to add or modify hundred lines of code in worst case.
+> It is a bad practice for the driver maintainability.
+> 
+> This driver add a more generic power domain driver that the actual
+> power on/off is done by TF-A code. the abstraction give us the
+> possibility that using one driver to cover the whole i.MX8M family
+> in kernel side.
+>
+
+TF-A has SCMI support, why can't that be used as abstraction instead
+of inventing new. Peng Fan has been working to get SMC mailbox.
+
+Unless you give me strong reasons for not able to pursue that path,
+NACK for this patch. I have told this in the recent past.
+
+> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+> ---
+>  drivers/soc/imx/Kconfig            |   6 +
+>  drivers/soc/imx/Makefile           |   1 +
+>  drivers/soc/imx/imx8m_pm_domains.c | 224 +++++++++++++++++++++++++++++
+>  include/soc/imx/imx_sip.h          |  12 ++
+>  4 files changed, 243 insertions(+)
+>  create mode 100644 drivers/soc/imx/imx8m_pm_domains.c
+>  create mode 100644 include/soc/imx/imx_sip.h
+
+[...]
+
+> +
+> +	mutex_lock(&gpc_pd_mutex);
+> +	arm_smccc_smc(IMX_SIP_GPC, IMX_SIP_CONFIG_GPC_PM_DOMAIN, domain->domain_index,
+> +		      PD_STATE_ON, 0, 0, 0, 0, &res);
+> +	mutex_unlock(&gpc_pd_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx8m_pd_power_off(struct generic_pm_domain *genpd)
+> +{
+> +	struct imx8m_pm_domain *domain = to_imx8m_pm_domain(genpd);
+> +	struct arm_smccc_res res;
+> +	int index, ret = 0;
+> +
+> +	mutex_lock(&gpc_pd_mutex);
+> +	arm_smccc_smc(IMX_SIP_GPC, IMX_SIP_CONFIG_GPC_PM_DOMAIN, domain->domain_index,
+> +		      PD_STATE_OFF, 0, 0, 0, 0, &res);
+
+How big is this IMX SMC SIP ? I keep seeing that it's ever growing.
+I don't want to see this for any future products as they seem to be
+designed "ON THE GO" as and when needed rather than completely thought
+through.
+
+--
+Regards,
+Sudeep
