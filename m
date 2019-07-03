@@ -1,126 +1,54 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v3 6/6] interconnect: Add OPP table support for interconnects
-Date: Wed, 3 Jul 2019 08:45:21 +0200
-Message-ID: <CAKfTPtCJFaEfvu3Dnp9WSxQEwSfY=VS+xsoQ+4P+vg7_WL0BAQ@mail.gmail.com>
-References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-7-saravanak@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v5 0/2] Add Macronix raw NAND controller driver
+Date: Wed,  3 Jul 2019 15:15:42 +0800
+Message-ID: <1562138144-2212-1-git-send-email-masonccyang@mxic.com.tw>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703011020.151615-7-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, kernel-team@android.com, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: miquel.raynal@bootlin.com, marek.vasut@gmail.com, bbrezillon@kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, vigneshr@ti.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, juliensu@mxic.com.tw, paul.burton@mips.com, liang.yang@amlogic.com, lee.jones@linaro.org, masonccyang@mxic.com.tw, anders.roxell@linaro.org, christophe.kerello@st.com, paul@crapouillou.net, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 3 Jul 2019 at 03:10, Saravana Kannan <saravanak@google.com> wrote:
->
-> Interconnect paths can have different performance points. Now that OPP
-> framework supports bandwidth OPP tables, add OPP table support for
-> interconnects.
->
-> Devices can use the interconnect-opp-table DT property to specify OPP
-> tables for interconnect paths. And the driver can obtain the OPP table for
-> an interconnect path by calling icc_get_opp_table().
+Hi,
 
-The opp table of a path must come from the aggregation of OPP tables
-of the interconnect providers. So such kind of OPP table should be at
-provider level but not at path level.
+v5 patch including:
+1. compatible rename to "macronix,nand-controller"
+2. handle three clock in one
+3. other minor patches
 
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/interconnect/core.c  | 27 ++++++++++++++++++++++++++-
->  include/linux/interconnect.h |  7 +++++++
->  2 files changed, 33 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index 871eb4bc4efc..881bac80bc1e 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -47,6 +47,7 @@ struct icc_req {
->   */
->  struct icc_path {
->         size_t num_nodes;
-> +       struct opp_table *opp_table;
->         struct icc_req reqs[];
->  };
->
-> @@ -313,7 +314,7 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
->  {
->         struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
->         struct icc_node *src_node, *dst_node;
-> -       struct device_node *np = NULL;
-> +       struct device_node *np = NULL, *opp_node;
->         struct of_phandle_args src_args, dst_args;
->         int idx = 0;
->         int ret;
-> @@ -381,10 +382,34 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
->                 dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
->         mutex_unlock(&icc_lock);
->
-> +       opp_node = of_parse_phandle(np, "interconnect-opp-table", idx);
-> +       if (opp_node) {
-> +               path->opp_table = dev_pm_opp_of_find_table_from_node(opp_node);
-> +               of_node_put(opp_node);
-> +       }
-> +
-> +
->         return path;
->  }
->  EXPORT_SYMBOL_GPL(of_icc_get);
->
-> +/**
-> + * icc_get_opp_table() - Get the OPP table that corresponds to a path
-> + * @path: reference to the path returned by icc_get()
-> + *
-> + * This function will return the OPP table that corresponds to a path handle.
-> + * If the interconnect API is disabled, NULL is returned and the consumer
-> + * drivers will still build. Drivers are free to handle this specifically, but
-> + * they don't have to.
-> + *
-> + * Return: opp_table pointer on success. NULL is returned when the API is
-> + * disabled or the OPP table is missing.
-> + */
-> +struct opp_table *icc_get_opp_table(struct icc_path *path)
-> +{
-> +       return path->opp_table;
-> +}
-> +
->  /**
->   * icc_set_bw() - set bandwidth constraints on an interconnect path
->   * @path: reference to the path returned by icc_get()
-> diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-> index dc25864755ba..0c0bc55f0e89 100644
-> --- a/include/linux/interconnect.h
-> +++ b/include/linux/interconnect.h
-> @@ -9,6 +9,7 @@
->
->  #include <linux/mutex.h>
->  #include <linux/types.h>
-> +#include <linux/pm_opp.h>
->
->  /* macros for converting to icc units */
->  #define Bps_to_icc(x)  ((x) / 1000)
-> @@ -28,6 +29,7 @@ struct device;
->  struct icc_path *icc_get(struct device *dev, const int src_id,
->                          const int dst_id);
->  struct icc_path *of_icc_get(struct device *dev, const char *name);
-> +struct opp_table *icc_get_opp_table(struct icc_path *path);
->  void icc_put(struct icc_path *path);
->  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
->
-> @@ -49,6 +51,11 @@ static inline void icc_put(struct icc_path *path)
->  {
->  }
->
-> +static inline struct opp_table *icc_get_opp_table(struct icc_path *path)
-> +{
-> +       return NULL;
-> +}
-> +
->  static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
->  {
->         return 0;
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+v4 patch back to only raw NAND controller driver instead of MFD,
+raw NAND and SPI driver. This is based on MFD maintainer, Lee Jones
+comments:
+MFD is for registering child devices of chips which offer genuine
+cross-subsystem functionality.
+It is not designed for mode selecting, or as a place to shove shared code 
+just because a better location doesn't appear to exist. 
+
+v3 patch is to rename the title of SPI controller driver.
+"Patch Macronix SPI controller driver according to MX25F0A MFD driver"
+
+v2s patches is to support Macronix MX25F0A MFD driver 
+for raw nand and spi controller which is separated 
+form previous patchset:
+
+https://patchwork.kernel.org/patch/10874679/
+
+thanks for your review.
+
+best regards,
+Mason
+
+
+Mason Yang (2):
+  mtd: rawnand: Add Macronix raw NAND controller
+  dt-bindings: mtd: Document Macronix raw NAND controller bindings
+
+ .../devicetree/bindings/mtd/mxic-nand.txt          |  20 +
+ drivers/mtd/nand/raw/Kconfig                       |   6 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/mxic_nand.c                   | 557 +++++++++++++++++++++
+ 4 files changed, 584 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
+ create mode 100644 drivers/mtd/nand/raw/mxic_nand.c
+
+-- 
+1.9.1
