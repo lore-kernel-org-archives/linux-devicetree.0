@@ -1,45 +1,63 @@
-From: Oliver Graute <oliver.graute@gmail.com>
-Subject: Re: [PATCHv3 0/2] Variscite DART-6UL SoM support
-Date: Wed, 3 Jul 2019 18:46:00 +0200
-Message-ID: <20190703164600.GA9261@ripley>
-References: <1559839624-12286-1-git-send-email-oliver.graute@gmail.com>
- <20190613013830.GC20747@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Frank Wunderlich <frank-w@public-files.de>
+Subject: [PATCH v2 7/7] arm: dts: mt6323: add keys, power-controller, rtc and codec
+Date: Wed,  3 Jul 2019 18:48:22 +0200
+Message-ID: <20190703164822.17924-8-frank-w@public-files.de>
+References: <20190703164822.17924-1-frank-w@public-files.de>
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190613013830.GC20747@dragon>
+In-Reply-To: <20190703164822.17924-1-frank-w@public-files.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, narmstrong@baylibre.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Allison Randal <allison@lohutok.net>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gr>
+Cc: Josef Friedl <josef.friedl@speed.at>, Frank Wunderlich <frank-w@public-files.de>
 List-Id: devicetree@vger.kernel.org
 
-On 13/06/19, Shawn Guo wrote:
-> On Thu, Jun 06, 2019 at 06:47:00PM +0200, Oliver Graute wrote:
-> > Need feedback to the following patches which adds support for a DART-6UL Board
-> > 
-> > Product Page: https://www.variscite.com/product/evaluation-kits/dart-6ul-kits
-> > 
-> > Oliver Graute (2):
-> >   ARM: dts: imx6ul: Add Variscite DART-6UL SoM support
-> >   ARM: dts: Add support for i.MX6 UltraLite DART Variscite Customboard
-> 
-> It's already v3?  I did not find previous versions.  What's changed
-> since previous versions?
+From: Josef Friedl <josef.friedl@speed.at>
 
-The first two version you can find here. I splitted board and SoM part
-according Neils and Fabios comments.
+support poweroff and power-related keys on bpi-r2
 
-v1
-https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=59259
+Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+=2D--
+ arch/arm/boot/dts/mt6323.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-v2 
-https://patchwork.kernel.org/patch/10748361/
-
-Please review the latest version v4:
-
-https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=137257
-
-Thx for your time and patience.
-
-Oliver
+diff --git a/arch/arm/boot/dts/mt6323.dtsi b/arch/arm/boot/dts/mt6323.dtsi
+index ba397407c1dd..7fda40ab5fe8 100644
+=2D-- a/arch/arm/boot/dts/mt6323.dtsi
++++ b/arch/arm/boot/dts/mt6323.dtsi
+@@ -238,5 +238,32 @@
+ 				regulator-enable-ramp-delay =3D <216>;
+ 			};
+ 		};
++
++		mt6323keys: mt6323keys {
++			compatible =3D "mediatek,mt6323-keys";
++			mediatek,long-press-mode =3D <1>;
++			power-off-time-sec =3D <0>;
++
++			power {
++				linux,keycodes =3D <116>;
++				wakeup-source;
++			};
++
++			home {
++				linux,keycodes =3D <114>;
++			};
++		};
++
++		codec: mt6397codec {
++			compatible =3D "mediatek,mt6397-codec";
++		};
++
++		power-controller {
++			compatible =3D "mediatek,mt6323-pwrc";
++		};
++
++		rtc {
++			compatible =3D "mediatek,mt6323-rtc";
++		};
+ 	};
+ };
+=2D-
+2.17.1
