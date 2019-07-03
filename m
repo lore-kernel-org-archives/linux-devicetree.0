@@ -1,12 +1,12 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 22/25] ARM: dts: axp223: Switch to use SPDX identifier
-Date: Wed,  3 Jul 2019 18:16:06 +0530
-Message-ID: <20190703124609.21435-23-jagan@amarulasolutions.com>
+Subject: [PATCH 23/25] ARM: dts: axp22x: Switch to use SPDX identifier
+Date: Wed,  3 Jul 2019 18:16:07 +0530
+Message-ID: <20190703124609.21435-24-jagan@amarulasolutions.com>
 References: <20190703124609.21435-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB7WH6LUAKGQE4BT72AI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBAOI6LUAKGQEN5H6W6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190703124609.21435-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,7 +20,7 @@ Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk
 List-Id: devicetree@vger.kernel.org
 
 Adopt the SPDX license identifier headers to ease license
-compliance management on axp223.dtsi.
+compliance management on axp22x.dtsi.
 
 While the text specifies "of the GPL or the X11 license"
 but the actual license text matches the MIT license as
@@ -30,19 +30,19 @@ specified at [0]
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- arch/arm/boot/dts/axp223.dtsi | 39 +----------------------------------
+ arch/arm/boot/dts/axp22x.dtsi | 39 +----------------------------------
  1 file changed, 1 insertion(+), 38 deletions(-)
 
-diff --git a/arch/arm/boot/dts/axp223.dtsi b/arch/arm/boot/dts/axp223.dtsi
-index b91b6c1278c7..77e8e26f1314 100644
---- a/arch/arm/boot/dts/axp223.dtsi
-+++ b/arch/arm/boot/dts/axp223.dtsi
+diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
+index 65a07a67aca9..900317df05ff 100644
+--- a/arch/arm/boot/dts/axp22x.dtsi
++++ b/arch/arm/boot/dts/axp22x.dtsi
 @@ -1,45 +1,8 @@
 +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
  /*
-  * Copyright 2016 Free Electrons
+  * Copyright 2015 Chen-Yu Tsai
   *
-  * Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+  * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 - *
 - * This file is dual-licensed: you can use it either under the terms
 - * of the GPL or the X11 license, at your option. Note that this dual
