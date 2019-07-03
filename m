@@ -1,12 +1,12 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 20/25] ARM: dts: axp152: Switch to use SPDX identifier
-Date: Wed,  3 Jul 2019 18:16:04 +0530
-Message-ID: <20190703124609.21435-21-jagan@amarulasolutions.com>
+Subject: [PATCH 21/25] ARM: dts: axp209: Switch to use SPDX identifier
+Date: Wed,  3 Jul 2019 18:16:05 +0530
+Message-ID: <20190703124609.21435-22-jagan@amarulasolutions.com>
 References: <20190703124609.21435-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB6GH6LUAKGQEQXIQOQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB66H6LUAKGQEF7W4FWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190703124609.21435-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,7 +20,7 @@ Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk
 List-Id: devicetree@vger.kernel.org
 
 Adopt the SPDX license identifier headers to ease license
-compliance management on axp152.dtsi.
+compliance management on axp209.dtsi.
 
 While the text specifies "of the GPL or the X11 license"
 but the actual license text matches the MIT license as
@@ -30,13 +30,13 @@ specified at [0]
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- arch/arm/boot/dts/axp152.dtsi | 39 +----------------------------------
+ arch/arm/boot/dts/axp209.dtsi | 39 +----------------------------------
  1 file changed, 1 insertion(+), 38 deletions(-)
 
-diff --git a/arch/arm/boot/dts/axp152.dtsi b/arch/arm/boot/dts/axp152.dtsi
-index f90ad6c64a07..4122aaf49e21 100644
---- a/arch/arm/boot/dts/axp152.dtsi
-+++ b/arch/arm/boot/dts/axp152.dtsi
+diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
+index 0d9ff12bdf28..9e05606cafcf 100644
+--- a/arch/arm/boot/dts/axp209.dtsi
++++ b/arch/arm/boot/dts/axp209.dtsi
 @@ -1,45 +1,8 @@
 +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
  /*
@@ -83,6 +83,6 @@ index f90ad6c64a07..4122aaf49e21 100644
 - *     OTHER DEALINGS IN THE SOFTWARE.
   */
  
- &axp152 {
+ /*
 -- 
 2.18.0.321.gffc6fa0e3
