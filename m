@@ -1,102 +1,58 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v2 4/7] net: phy: realtek: Enable accessing RTL8211E
- extension pages
-Date: Wed, 3 Jul 2019 23:01:09 +0200
-Message-ID: <98326ec2-6e90-fd3a-32f5-cf0db26c31a9@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: net: Add bindings for Realtek PHYs
+Date: Wed, 3 Jul 2019 15:11:11 -0600
+Message-ID: <CAL_JsqJdBAMPc1sZJfL7V9cxGgCb4GWwRokwJDmac5L2AO2-wg@mail.gmail.com>
 References: <20190703193724.246854-1-mka@chromium.org>
- <20190703193724.246854-4-mka@chromium.org>
- <dd7a569b-41e4-5925-88fc-227e69c82f67@gmail.com>
- <20190703203650.GF250418@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703203650.GF250418@google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190703193724.246854-1-mka@chromium.org>
+Sender: netdev-owner@vger.kernel.org
 To: Matthias Kaehlcke <mka@chromium.org>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+Cc: "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03.07.2019 22:36, Matthias Kaehlcke wrote:
-> On Wed, Jul 03, 2019 at 10:12:12PM +0200, Heiner Kallweit wrote:
->> On 03.07.2019 21:37, Matthias Kaehlcke wrote:
->>> The RTL8211E has extension pages, which can be accessed after
->>> selecting a page through a custom method. Add a function to
->>> modify bits in a register of an extension page and a helper for
->>> selecting an ext page.
->>>
->>> rtl8211e_modify_ext_paged() is inspired by its counterpart
->>> phy_modify_paged().
->>>
->>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->>> ---
->>> Changes in v2:
->>> - assign .read/write_page handlers for RTL8211E
->>
->> Maybe this was planned, but it's not part of the patch.
-> 
-> Oops, it was definitely there when I tested ... I guess this got
-> somehow lost when changing the patch order and resolving minor
-> conflicts, seems like I only build tested after that :/
-> 
-RTL8211E also supports normal pages (reg 0x1f = page).
-See e.g. rtl8168e_2_hw_phy_config in the r8169 driver, this network
-chip has an integrated RTL8211E PHY. There settings on page 3 and 5
-are done.
-Therefore I would prefer to use .read/write_page for normal paging
-in all Realtek PHY drivers. Means the code here would remain as it
-is and just the changelog would need to be fixed.
+On Wed, Jul 3, 2019 at 1:37 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> Add the 'realtek,eee-led-mode-disable' property to disable EEE
+> LED mode on Realtek PHYs that support it.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in v2:
+> - document 'realtek,eee-led-mode-disable' instead of
+>   'realtek,enable-ssc' in the initial version
+> ---
+>  .../devicetree/bindings/net/realtek.txt       | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/realtek.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
+> new file mode 100644
+> index 000000000000..63f7002fa704
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/realtek.txt
+> @@ -0,0 +1,19 @@
+> +Realtek PHY properties.
+> +
+> +This document describes properties of Realtek PHYs.
+> +
+> +Optional properties:
+> +- realtek,eee-led-mode-disable: Disable EEE LED mode on this port.
+> +
+> +Example:
+> +
+> +mdio0 {
+> +       compatible = "snps,dwmac-mdio";
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +
+> +       ethphy: ethernet-phy@1 {
+> +               reg = <1>;
+> +               realtek,eee-led-mode-disable;
 
+I think if we're going to have custom properties for phys, we should
+have a compatible string to at least validate whether the custom
+properties are even valid for the node.
 
->>> - use phy_select_page() and phy_restore_page(), get rid of
->>>   rtl8211e_restore_page()
->>> - s/rtl821e_select_ext_page/rtl8211e_select_ext_page/
->>> - updated commit message
->>> ---
->>>  drivers/net/phy/realtek.c | 42 +++++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 42 insertions(+)
->>>
->>> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
->>> index eb815cbe1e72..9cd6241e2a6d 100644
->>> --- a/drivers/net/phy/realtek.c
->>> +++ b/drivers/net/phy/realtek.c
->>> @@ -27,6 +27,9 @@
->>>  #define RTL821x_EXT_PAGE_SELECT			0x1e
->>>  #define RTL821x_PAGE_SELECT			0x1f
->>>  
->>> +#define RTL8211E_EXT_PAGE			7
->>> +#define RTL8211E_EPAGSR				0x1e
->>> +
->>>  /* RTL8211E page 5 */
->>>  #define RTL8211E_EEE_LED_MODE1			0x05
->>>  #define RTL8211E_EEE_LED_MODE2			0x06
->>> @@ -58,6 +61,44 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
->>>  	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
->>>  }
->>>  
->>> +static int rtl8211e_select_ext_page(struct phy_device *phydev, int page)
->>> +{
->>> +	int ret, oldpage;
->>> +
->>> +	oldpage = phy_select_page(phydev, RTL8211E_EXT_PAGE);
->>> +	if (oldpage < 0)
->>> +		return oldpage;
->>> +
->>> +	ret = __phy_write(phydev, RTL8211E_EPAGSR, page);
->>> +	if (ret)
->>> +		return phy_restore_page(phydev, page, ret);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int __maybe_unused rtl8211e_modify_ext_paged(struct phy_device *phydev,
->>> +				    int page, u32 regnum, u16 mask, u16 set)
->>
->> This __maybe_unused isn't too nice as you use the function in a subsequent patch.
-> 
-> It's needed to avoid a compiler warning (unless we don't care about
-> that for an interim version), the attribute is removed again in the
-> next patch.
-> 
-OK
+Rob
