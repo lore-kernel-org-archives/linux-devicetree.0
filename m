@@ -1,38 +1,91 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2 1/7] dt-bindings: net: Add bindings for Realtek PHYs
-Date: Wed, 3 Jul 2019 15:08:43 -0700
-Message-ID: <20190703220843.GJ250418@google.com>
-References: <20190703193724.246854-1-mka@chromium.org>
- <CAL_JsqJdBAMPc1sZJfL7V9cxGgCb4GWwRokwJDmac5L2AO2-wg@mail.gmail.com>
- <20190703213327.GH18473@lunn.ch>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v3 0/4] Solve postboot supplier cleanup and optimize probe ordering
+Date: Wed, 3 Jul 2019 15:26:46 -0700
+Message-ID: <CAGETcx_by9aShONfSAR8rfhC69nBzeEhrZSHhOb7HuUBeCu=JA@mail.gmail.com>
+References: <20190702004811.136450-1-saravanak@google.com> <7900c670-5b3a-f950-dec9-70d98d94a84f@codeaurora.org>
+ <CAGETcx--+3BNjYZ6cgirNr_uZjU0464UHSUcaVHh_uTO2yWTCQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190703213327.GH18473@lunn.ch>
+In-Reply-To: <CAGETcx--+3BNjYZ6cgirNr_uZjU0464UHSUcaVHh_uTO2yWTCQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
+To: David Collins <collinsd@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 11:33:27PM +0200, Andrew Lunn wrote:
-> > I think if we're going to have custom properties for phys, we should
-> > have a compatible string to at least validate whether the custom
-> > properties are even valid for the node.
-> 
-> Hi Rob
-> 
-> What happens with other enumerable busses where a compatible string is
-> not used?
-> 
-> The Ethernet PHY subsystem will ignore the compatible string and load
-> the driver which fits the enumeration data. Using the compatible
-> string only to get the right YAML validator seems wrong. I would
-> prefer adding some other property with a clear name indicates its is
-> selecting the validator, and has nothing to do with loading the
-> correct driver. And it can then be used as well for USB and PCI
-> devices etc.
+On Tue, Jul 2, 2019 at 5:59 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Tue, Jul 2, 2019 at 5:03 PM David Collins <collinsd@codeaurora.org> wrote:
+> >
+> > Hello Saravana,
+> >
+> > On 7/1/19 5:48 PM, Saravana Kannan wrote:
+> > ...
+> > > TODO:
+> > > - For the case of consumer child sub-nodes being added by a parent
+> > >   device after late_initcall_sync we might be able to address that by
+> > >   recursively parsing all child nodes and adding all their suppliers as
+> > >   suppliers of the parent node too. The parent probe will add the
+> > >   children before its probe is completed and that will prevent the
+> > >   supplier's sync_state from being executed before the children are
+> > >   probed.
+> > >
+> > > But I'll write that part once I see how this series is received.
+> >
+> > I don't think that this scheme will work in all cases.  It can also lead
+> > to probing deadlock.
+> >
+> > Here is an example:
+> >
+> > Three DT devices (top level A with subnodes B and C):
+> > /A
+> > /A/B
+> > /A/C
+> > C is a consumer of B.
+> >
+> > When device A is created, a search of its subnodes will find the link from
+> > C to B.  Since device B hasn't been created yet, of_link_to_suppliers()
+> > will fail and add A to the wait_for_suppliers list.  This will cause the
+> > probe of A to fail with -EPROBE_DEFER (thanks to the check in
+> > device_links_check_suppliers()).  As a result device B will not be created
+> > and device A will never probe.
+> >
+> > You could try to resolve this situation by detecting the cycle and *not*
+> > adding A to the wait_for_suppliers list.  However, that would get us back
+> > to the problem we had before.  A would be allowed to probe which would
+> > then result in devices being added for B and C.  If the device for B is
+> > added before C, then it would be allowed to immediately probe and
+> > (assuming this all takes place after late_initcall_sync thanks to modules)
+> > its sync_state() callback would be called since no consumer devices are
+> > linked to B.
+> >
+> > Please note that to change this example from theoretical to practical,
+> > replace "A" with apps_rsc, "B" with pmi8998-rpmh-regulators, and "C" with
+> > pm8998-rpmh-regulators in [1].
+>
+> Interesting use case.
+>
+> First, to clarify my TODO: I was initially thinking of the recursive
+> "up-heritance" of suppliers from child to parent to handle cases where
+> the supplier is a device from some other top level device (or its
+> child). My thinking has evolved a bit on that. I think the parent
+> needs to inherit only from it's immediate children and not its
+> grandchildren (the child is responsible for handling grandchildren
+> suppliers). I'll also have to make sure I don't try to create a link
+> from a parent device to one of its child device nodes (should be easy
+> to check).
+>
+> Anyway, going back to your case, for dependencies between child nodes
+> of a parent, can't the parent just populate them in the right order?
+> You can loop through the children and add them in multiple stages.
+>
+> I'll continue to think if I can come up with anything nicer on the
+> drivers, but even if we can't come up with anything better, we can
+> still make sync_state() work.
 
-I also have doubts whether a compatible string is the right answer
-here. It's not needed/used by the subsystem, but would it be a
-required property because it's needed for validation?
+There's actually a much better way to handle this case where you won't
+have to handle ordering on the driver side. I just need to add one or
+two patches to my patch series. I'll send that out sometime next week.
+
+
+-Saravana
