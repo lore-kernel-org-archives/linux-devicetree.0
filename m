@@ -1,115 +1,563 @@
-From: Brian Dodge <bdodge09@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: backlight: fix vendor prefix for
- ArcticSand arcxcnn driver bindings
-Date: Tue, 2 Jul 2019 07:21:29 -0400
-Message-ID: <9ffed46f-c878-e415-cad0-cbe64efb9885@gmail.com>
-References: <1561940895-15837-1-git-send-email-bdodge09@gmail.com>
- <1561940895-15837-2-git-send-email-bdodge09@gmail.com>
- <20190702092617.c4wn3dmg5orrquyj@holly.lan>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 3/3] add driver and MAINTAINERS for poweroff
+Date: Wed, 3 Jul 2019 09:26:56 +0200
+Message-ID: <c1358da0-60a4-49dd-71a8-77e90178c9c9@gmail.com>
+References: <20190702094045.3652-1-frank-w@public-files.de>
+ <20190702094045.3652-4-frank-w@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190702092617.c4wn3dmg5orrquyj@holly.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190702094045.3652-4-frank-w@public-files.de>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: devicetree@vger.kernel.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wunderlich <frank-w@public-files.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Josef Friedl <josef.friedl@speed.at>
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDcvMi8xOSA1OjI2IEFNLCBEYW5pZWwgVGhvbXBzb24gd3JvdGU6Cj4+IFtQQVRDSCAxLzJd
-IGR0LWJpbmRpbmdzOiBiYWNrbGlnaHQ6IGZpeCB2ZW5kb3IgcHJlZml4IGZvcgo+PiBBcmN0aWNT
-YW5kIGFyY3hjbm4gZHJpdmVyIGJpbmRpbmdzCj4gVGhlICJ2MiIgaXMgbm9ybWFsbHkgYXBwbGll
-ZCB0byB0aGUgd2hvbGUgcGF0Y2hzZXQgKGlmIHlvdQo+IHByZXBhcmUgdGhlIHBhdGNoc2V0IHVz
-aW5nIGdpdCBmb3JtYXQtcGF0Y2ggdGhlbiB5b3UgY2FuIHVzZQo+IHRoZSAtLXN1YmplY3QtcHJl
-Zml4IGFyZ3VtZW50IGZvciB0aGF0KS4KU29ycnkgYW5kIG5vdGVkCj4KPiBPbiBTdW4sIEp1biAz
-MCwgMjAxOSBhdCAwODoyODoxNFBNIC0wNDAwLCBCcmlhbiBEb2RnZSB3cm90ZToKPj4gVGhlIHZl
-bmRvci1wcmVmaXhlcy50eHQgZmlsZSBwcm9wZXJseSByZWZlcnMgdG8gQXJjdGljU2FuZAo+PiBh
-cyBhcmN0aWMgYnV0IHRoZSBkcml2ZXIgYmluZGluZ3MgaW1wcm9wZXJseSBhYmJyZXZpYXRlZCB0
-aGUKPj4gcHJlZml4IHRvIGFyYy4gVGhpcyB3YXMgYSBtaXN0YWtlIGluIHRoZSBvcmlnaW5hbCBw
-YXRjaC4gVGhpcwo+PiBwYXRjaCBhZGRzICJhcmN0aWMiIGFuZCByZXRhaW5zICJhcmMiIChkZXBy
-ZWNhdGVkKSBiaW5kaW5ncwo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBCcmlhbiBEb2RnZSA8YmRvZGdl
-MDlAZ21haWwuY29tPgo+PiAtLS0KPj4gICAuLi4vYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvYXJj
-eGNubl9ibC50eHQgICAgICAgICB8IDMxICsrKysrKysrKysrKysrKy0tLS0tLS0KPj4gICAxIGZp
-bGUgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQv
-YXJjeGNubl9ibC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9i
-YWNrbGlnaHQvYXJjeGNubl9ibC50eHQKPj4gaW5kZXggMjMwYWJkZS4uNGQ5ODM5NCAxMDA2NDQK
-Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0
-L2FyY3hjbm5fYmwudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9sZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4dAo+PiBAQCAtMSw4ICsxLDEzIEBACj4+IC1C
-aW5kaW5nIGZvciBBcmN0aWNTYW5kIGFyYzJjMDYwOCBMRUQgZHJpdmVyCj4+ICtCaW5kaW5nIGZv
-ciBBcmN0aWNTYW5kIGFyYyBmYW1pbHkgTEVEIGRyaXZlcnMKPj4gICAKPj4gICBSZXF1aXJlZCBw
-cm9wZXJ0aWVzOgo+PiAtLSBjb21wYXRpYmxlOgkJc2hvdWxkIGJlICJhcmMsYXJjMmMwNjA4Igo+
-PiAtLSByZWc6CQkJc2xhdmUgYWRkcmVzcwo+PiArLSBjb21wYXRpYmxlOiBvbmUgb2YKPj4gKwki
-YXJjdGljLGFyYzFjMDYwOCIKPj4gKwkiYXJjdGljLGFyYzJjMDYwOCIKPj4gKwkiYXJjdGljLGFy
-YzNjMDg0NSIKPj4gKwkiYXJjLGFyYzJjMDYwOCIgKGRlcHJlY2F0ZWQpCj4gTm90aGluZyB3cm9u
-ZyB3aXRoIGFkZGluZyBjb21wYXRpYmxlIHN0cmluZ3MgZm9yIGFyYzEgYW5kIGFyYzMgYnV0IEkK
-PiB3b3VsZCBleHBlY3QgaXQgdG8gYmUgbWVudGlvbmVkIGluIHRoZSBkZXNjcmlwdGlvbiB0byBy
-ZWFzc3VyZSByZXZpZXdlcnMKPiB0aGF0IHRoZSByaWdodCBkZXB0aCBvZiB0aG91Z2h0IGhhcyBi
-ZWVuIGFwcGxpZWQgU29tZXRoaW5nIGxpa2UgIkFsc28gYWRkZWQKPiBjb21wYXRpYmxlIHN0cmlu
-Z3MgZm9yIG90aGVyIGZhbWlseSBtZW1iZXJzLCBhbGwgdGhlIGV4aXN0aW5nIG9wdGlvbmFsCj4g
-cHJvcGVydGllcyB3b3JrIHRoZSBzYW1lIHdheSBmb3IgdGhlIG5ldyBkZXZpY2VzLiIgKGlmIHlv
-dSBhZ3JlZSB0aGF0IGl0Cj4gaXMgdHJ1ZSkgaXMgZ29vZCB0byBzaG93IHlvdSB3ZXJlIHBheWlu
-ZyBwcm9wZXIgYXR0ZW50aW9uIQo+Cj4gSG93ZXZlciB0aGlzIGRvZXMgcGVyaGFwcyB2ZXJnZSBh
-IGxpdHRsZSB0b3dhcmRzIG5pdHBpY2tpbmcgc28gbWF5YmUKPiB3YWl0IHRvIHNlZSB3aGF0IHRo
-ZSBEVCBmb2xrcyBzYXkuIEZyb20gbXkgcG9pbnQgb2YgdmlldzoKPiBBY2tlZC1ieTogRGFuaWVs
-IFRob21wc29uIDxkYW5pZWwudGhvbXBzb25AbGluYXJvLm9yZz4KPgo+Cj4gRGFuaWVsLgoKR29v
-ZCBwb2ludC4gSSBkaWQgYWN0dWFsbHkgdGhpbmsgYWJvdXQgdGhpcyBhIGJpdC4gVGhlICpvbmx5
-KiBjaGlwIAphdmFpbGFibGUgYXQgdGhlIHRpbWUgb2YgdGhlIG9yaWdpbmFsIGRyaXZlciB3YXMg
-dGhlIGFyYzJjMDYwOCBhbmQgdGhhdCAKaXMgdGhlIGNoaXAgdGhhdCBpcyBjdXJyZW50bHkgaW4g
-dXNlIGluIHRoZSBTYW1zdW5nIENocm9tZWJvb2sgUGx1cywgYW5kIAp0aGUgb25seSB1c2UgSSBr
-bm93IG9mIHVzaW5nIHRoZSAiYXJjIiBwcmVmaXguIFRoZXJlIHdpbGwgYmUgbm8gcmVhc29uIAp0
-byBldmVyIHN1cHBvcnQgImFyYyxhcmMxLi4iIG9yICJhcmMsYXJjMy4uLiIgaW4gdGhlIGJpbmRp
-bmdzIGZvciBwYXN0IApvciBmdXR1cmUgdXNlLgoKVGhlIG5ldyB0d28gY2hpcHMgYXJlIGp1c3Qg
-YmFzaWNhbGx5IHN1cHBvcnRlZCBieSB0aGlzIGRyaXZlci4gVGhlcmUgaXMgCm1vcmUgZnVuY3Rp
-b25hbGl0eSB0byB0aGVtIHdoaWNoIHdpbGwgYmUgZW5hYmxlZCBpbiBteSBuZXh0IHBhdGNoLiBJ
-IAp3YW50ZWQgdG8gc2VwYXJhdGUgdGhlIG1vdmUgdG8gImFyY3RpYyIgZnJvbSB0aGUgbW92ZSB0
-byBmdWxseSBzdXBwb3J0IAp0aGUgb3RoZXIgY2hpcHMgZm9yIGNsYXJpdHkgKHlvdSBndXlzIGFy
-ZSBhbGwgcmlnaHRseSBwaWNreSEpIEkgZGlkIHB1dCAKdGhlIG5ldyBjaGlwIGJpbmRpbmdzIGlu
-IHRoZSBkcml2ZXIvYmluZGluZ3MgaW4gdGhpcyBwYXRjaCB0aG91Z2ggc28gSSAKY291bGQgdGVz
-dCB0aGlzIHBhdGNoIGFnYWluc3QgdGhlIGFjdHVhbCBoL3cgaW5zdGFuY2VzOiBJIGhhdmUgdGhy
-ZWUgCmJvYXJkcywgb25lIHdpdGggZWFjaCBjaGlwIHR5cGUgYW5kIGVhY2ggaGFzIGEgZHRiIHdp
-dGggdGhlICJhcmN0aWMsLi4iIAp0eXBlIGJpbmRpbmcgb25ib2FyZC4KCj4+ICsKPj4gKy0gcmVn
-OgkJc2xhdmUgYWRkcmVzcwo+PiAgIAo+PiAgIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICAgLSBk
-ZWZhdWx0LWJyaWdodG5lc3M6CWJyaWdodG5lc3MgdmFsdWUgb24gYm9vdCwgdmFsdWUgZnJvbTog
-MC00MDk1Cj4+IEBAIC0xMSwxOSArMTYsMjUgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4gICAt
-IGxlZC1zb3VyY2VzOgkJTGlzdCBvZiBlbmFibGVkIGNoYW5uZWxzIGZyb20gMCB0byA1Lgo+PiAg
-IAkJCVNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9jb21tb24udHh0
-Cj4+ICAgCj4+IC0tIGFyYyxsZWQtY29uZmlnLTA6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElMRURf
-Q09ORklHXzAKPj4gLS0gYXJjLGxlZC1jb25maWctMToJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSUxF
-RF9DT05GSUdfMQo+PiAtLSBhcmMsZGltLWZyZXE6CQlQV00gbW9kZSBmcmVxdWVuY2Ugc2V0dGlu
-ZyAoYml0cyBbMzowXSB1c2VkKQo+PiAtLSBhcmMsY29tcC1jb25maWc6CXNldHRpbmcgZm9yIHJl
-Z2lzdGVyIENPTkZJR19DT01QCj4+IC0tIGFyYyxmaWx0ZXItY29uZmlnOglzZXR0aW5nIGZvciBy
-ZWdpc3RlciBGSUxURVJfQ09ORklHCj4+IC0tIGFyYyx0cmltLWNvbmZpZzoJc2V0dGluZyBmb3Ig
-cmVnaXN0ZXIgSU1BWFRVTkUKPj4gKy0gYXJjdGljLGxlZC1jb25maWctMDoJc2V0dGluZyBmb3Ig
-cmVnaXN0ZXIgSUxFRF9DT05GSUdfMAo+PiArLSBhcmN0aWMsbGVkLWNvbmZpZy0xOglzZXR0aW5n
-IGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18xCj4+ICstIGFyY3RpYyxkaW0tZnJlcToJUFdNIG1v
-ZGUgZnJlcXVlbmNlIHNldHRpbmcgKGJpdHMgWzM6MF0gdXNlZCkKPj4gKy0gYXJjdGljLGNvbXAt
-Y29uZmlnOglzZXR0aW5nIGZvciByZWdpc3RlciBDT05GSUdfQ09NUAo+PiArLSBhcmN0aWMsZmls
-dGVyLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgRklMVEVSX0NPTkZJRwo+PiArLSBhcmN0
-aWMsdHJpbS1jb25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElNQVhUVU5FCj4+ICstIGFyYyxs
-ZWQtY29uZmlnLTA6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElMRURfQ09ORklHXzAgKGRlcHJlY2F0
-ZWQpCj4+ICstIGFyYyxsZWQtY29uZmlnLTE6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElMRURfQ09O
-RklHXzEgKGRlcHJlY2F0ZWQpCj4+ICstIGFyYyxkaW0tZnJlcToJCVBXTSBtb2RlIGZyZXF1ZW5j
-ZSBzZXR0aW5nIChiaXRzIFszOjBdIHVzZWQpIChkZXByZWNhdGVkKQo+PiArLSBhcmMsY29tcC1j
-b25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIENPTkZJR19DT01QIChkZXByZWNhdGVkKQo+PiAr
-LSBhcmMsZmlsdGVyLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgRklMVEVSX0NPTkZJRyAo
-ZGVwcmVjYXRlZCkKPj4gKy0gYXJjLHRyaW0tY29uZmlnOglzZXR0aW5nIGZvciByZWdpc3RlciBJ
-TUFYVFVORSAoZGVwcmVjYXRlZCkKPj4gICAKPj4gICBOb3RlOiBPcHRpb25hbCBwcm9wZXJ0aWVz
-IG5vdCBzcGVjaWZpZWQgd2lsbCBkZWZhdWx0IHRvIHZhbHVlcyBpbiBJQyBFUFJPTQo+PiAgIAo+
-PiAgIEV4YW1wbGU6Cj4+ICAgCj4+ICAgYXJjMmMwNjA4QDMwIHsKPj4gLQljb21wYXRpYmxlID0g
-ImFyYyxhcmMyYzA2MDgiOwo+PiArCWNvbXBhdGlibGUgPSAiYXJjdGljLGFyYzJjMDYwOCI7Cj4+
-ICAgCXJlZyA9IDwweDMwPjsKPj4gICAJZGVmYXVsdC1icmlnaHRuZXNzID0gPDUwMD47Cj4+ICAg
-CWxhYmVsID0gImxjZC1iYWNrbGlnaHQiOwo+PiAtLSAKPj4gMi43LjQKPj4KX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+
+On 02/07/2019 11:40, Frank Wunderlich wrote:
+> From: Josef Friedl <josef.friedl@speed.at>
+> 
+> poweroff for BPI-R2
+> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> 
+> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+
+Fix the commit message. MAINTAINERS get normally send a independent patch.
+Split patches between RTC and PWRC.
+
+> =2D--
+>  MAINTAINERS                           |   1 +
+>  drivers/mfd/mt6397-core.c             |  40 +++++++---
+>  drivers/power/reset/Kconfig           |  10 +++
+>  drivers/power/reset/Makefile          |   1 +
+>  drivers/power/reset/mt6323-poweroff.c |  97 +++++++++++++++++++++++
+>  drivers/rtc/rtc-mt6397.c              | 110 ++++++--------------------
+>  include/linux/mfd/mt6397/core.h       |   2 +
+>  include/linux/mfd/mt6397/rtc.h        |  71 +++++++++++++++++
+>  8 files changed, 234 insertions(+), 98 deletions(-)
+>  create mode 100644 drivers/power/reset/mt6323-poweroff.c
+>  create mode 100644 include/linux/mfd/mt6397/rtc.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ec6ff342aa3c..31c1e882b7d2 100644
+> =2D-- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9925,6 +9925,7 @@ M:	Sean Wang <sean.wang@mediatek.com>
+>  L:	linux-pm@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+> +F:	drivers/power/reset/mt6323-poweroff.c
+> 
+>  MEDIATEK JPEG DRIVER
+>  M:	Rick Chang <rick.chang@mediatek.com>
+> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> index 337bcccdb914..a4abce00f156 100644
+> =2D-- a/drivers/mfd/mt6397-core.c
+> +++ b/drivers/mfd/mt6397-core.c
+> @@ -1,10 +1,11 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /*
+> - * Copyright (c) 2014 MediaTek Inc.
+> + * Copyright (c) 2014-2018 MediaTek Inc.
+>   * Author: Flora Fu, MediaTek
+>   */
+> 
+>  #include <linux/interrupt.h>
+> +#include <linux/ioport.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+> @@ -15,24 +16,27 @@
+>  #include <linux/mfd/mt6397/registers.h>
+>  #include <linux/mfd/mt6323/registers.h>
+> 
+> +#define MT6323_RTC_BASE		0x8000
+> +#define MT6323_RTC_SIZE		0x40
+> +
+>  #define MT6397_RTC_BASE		0xe000
+>  #define MT6397_RTC_SIZE		0x3e
+> 
+> +#define MT6323_PWRC_BASE	0x8000
+> +#define MT6323_PWRC_SIZE	0x40
+> +
+>  #define MT6323_CID_CODE		0x23
+>  #define MT6391_CID_CODE		0x91
+>  #define MT6397_CID_CODE		0x97
+> 
+> +static const struct resource mt6323_rtc_resources[] =3D {
+> +	DEFINE_RES_MEM(MT6323_RTC_BASE, MT6323_RTC_SIZE),
+> +	DEFINE_RES_IRQ(MT6323_IRQ_STATUS_RTC),
+> +};
+> +
+>  static const struct resource mt6397_rtc_resources[] =3D {
+> -	{
+> -		.start =3D MT6397_RTC_BASE,
+> -		.end   =3D MT6397_RTC_BASE + MT6397_RTC_SIZE,
+> -		.flags =3D IORESOURCE_MEM,
+> -	},
+> -	{
+> -		.start =3D MT6397_IRQ_RTC,
+> -		.end   =3D MT6397_IRQ_RTC,
+> -		.flags =3D IORESOURCE_IRQ,
+> -	},
+> +	DEFINE_RES_MEM(MT6397_RTC_BASE, MT6397_RTC_SIZE),
+> +	DEFINE_RES_IRQ(MT6397_IRQ_RTC),
+
+If not a new patch it should be stated in the commit message at least.
+
+>  };
+> 
+>  static const struct resource mt6323_keys_resources[] =3D {
+> @@ -45,8 +49,17 @@ static const struct resource mt6397_keys_resources[] =
+> =3D {
+>  	DEFINE_RES_IRQ(MT6397_IRQ_HOMEKEY),
+>  };
+> 
+> +static const struct resource mt6323_pwrc_resources[] =3D {
+> +	DEFINE_RES_MEM(MT6323_PWRC_BASE, MT6323_PWRC_SIZE),
+> +};
+> +
+>  static const struct mfd_cell mt6323_devs[] =3D {
+>  	{
+> +		.name =3D "mt6323-rtc",
+> +		.num_resources =3D ARRAY_SIZE(mt6323_rtc_resources),
+> +		.resources =3D mt6323_rtc_resources,
+> +		.of_compatible =3D "mediatek,mt6323-rtc",
+> +	}, {
+>  		.name =3D "mt6323-regulator",
+>  		.of_compatible =3D "mediatek,mt6323-regulator"
+>  	}, {
+> @@ -57,6 +70,11 @@ static const struct mfd_cell mt6323_devs[] =3D {
+>  		.num_resources =3D ARRAY_SIZE(mt6323_keys_resources),
+>  		.resources =3D mt6323_keys_resources,
+>  		.of_compatible =3D "mediatek,mt6323-keys"
+> +	}, {
+> +		.name =3D "mt6323-pwrc",
+> +		.num_resources =3D ARRAY_SIZE(mt6323_pwrc_resources),
+> +		.resources =3D mt6323_pwrc_resources,
+> +		.of_compatible =3D "mediatek,mt6323-pwrc"
+>  	},
+>  };
+> 
+> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> index 980951dff834..492678e22088 100644
+> =2D-- a/drivers/power/reset/Kconfig
+> +++ b/drivers/power/reset/Kconfig
+> @@ -140,6 +140,16 @@ config POWER_RESET_LTC2952
+>  	  This driver supports an external powerdown trigger and board power
+>  	  down via the LTC2952. Bindings are made in the device tree.
+> 
+> +config POWER_RESET_MT6323
+> +       bool "MediaTek MT6323 power-off driver"
+> +       depends on MFD_MT6397
+> +       help
+> +         The power-off driver is responsible for externally shutdown down
+> +         the power of a remote MediaTek SoC MT6323 is connected to throug=
+> h
+> +         controlling a tiny circuit BBPU inside MT6323 RTC.
+> +
+> +         Say Y if you have a board where MT6323 could be found.
+> +
+>  config POWER_RESET_QNAP
+>  	bool "QNAP power-off driver"
+>  	depends on OF_GPIO && PLAT_ORION
+> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+> index 0aebee954ac1..94eaceb01d66 100644
+> =2D-- a/drivers/power/reset/Makefile
+> +++ b/drivers/power/reset/Makefile
+> @@ -11,6 +11,7 @@ obj-$(CONFIG_POWER_RESET_GPIO) +=3D gpio-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_GPIO_RESTART) +=3D gpio-restart.o
+>  obj-$(CONFIG_POWER_RESET_HISI) +=3D hisi-reboot.o
+>  obj-$(CONFIG_POWER_RESET_MSM) +=3D msm-poweroff.o
+> +obj-$(CONFIG_POWER_RESET_MT6323) +=3D mt6323-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_QCOM_PON) +=3D qcom-pon.o
+>  obj-$(CONFIG_POWER_RESET_OCELOT_RESET) +=3D ocelot-reset.o
+>  obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) +=3D piix4-poweroff.o
+> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/m=
+> t6323-poweroff.c
+> new file mode 100644
+> index 000000000000..1caf43d9e46d
+> =2D-- /dev/null
+> +++ b/drivers/power/reset/mt6323-poweroff.c
+> @@ -0,0 +1,97 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Power off through MediaTek PMIC
+> + *
+> + * Copyright (C) 2018 MediaTek Inc.
+> + *
+> + * Author: Sean Wang <sean.wang@mediatek.com>
+> + *
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/mt6397/core.h>
+> +#include <linux/mfd/mt6397/rtc.h>
+> +
+> +struct mt6323_pwrc {
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +	u32 base;
+> +};
+> +
+> +static struct mt6323_pwrc *mt_pwrc;
+> +
+> +static void mt6323_do_pwroff(void)
+> +{
+> +	struct mt6323_pwrc *pwrc =3D mt_pwrc;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
+> +	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
+> +
+> +	ret =3D regmap_read_poll_timeout(pwrc->regmap,
+> +					pwrc->base + RTC_BBPU, val,
+> +					!(val & RTC_BBPU_CBUSY),
+> +					MTK_RTC_POLL_DELAY_US,
+> +					MTK_RTC_POLL_TIMEOUT);
+> +	if (ret)
+> +		dev_err(pwrc->dev, "failed to write BBPU: %d\n", ret);
+> +
+> +	/* Wait some time until system down, otherwise, notice with a warn */
+> +	mdelay(1000);
+> +
+> +	WARN_ONCE(1, "Unable to power off system\n");
+> +}
+> +
+> +static int mt6323_pwrc_probe(struct platform_device *pdev)
+> +{
+> +	struct mt6397_chip *mt6397_chip =3D dev_get_drvdata(pdev->dev.parent);
+> +	struct mt6323_pwrc *pwrc;
+> +	struct resource *res;
+> +
+> +	pwrc =3D devm_kzalloc(&pdev->dev, sizeof(*pwrc), GFP_KERNEL);
+> +	if (!pwrc)
+> +		return -ENOMEM;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pwrc->base =3D res->start;
+> +	pwrc->regmap =3D mt6397_chip->regmap;
+> +	pwrc->dev =3D &pdev->dev;
+> +	mt_pwrc =3D pwrc;
+> +
+> +	pm_power_off =3D &mt6323_do_pwroff;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mt6323_pwrc_remove(struct platform_device *pdev)
+> +{
+> +	if (pm_power_off =3D=3D &mt6323_do_pwroff)
+> +		pm_power_off =3D NULL;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id mt6323_pwrc_dt_match[] =3D {
+> +	{ .compatible =3D "mediatek,mt6323-pwrc" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, mt6323_pwrc_dt_match);
+> +
+> +static struct platform_driver mt6323_pwrc_driver =3D {
+> +	.probe          =3D mt6323_pwrc_probe,
+> +	.remove         =3D mt6323_pwrc_remove,
+> +	.driver         =3D {
+> +		.name   =3D "mt6323-pwrc",
+> +		.of_match_table =3D mt6323_pwrc_dt_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(mt6323_pwrc_driver);
+> +
+> +MODULE_DESCRIPTION("Poweroff driver for MT6323 PMIC");
+> +MODULE_AUTHOR("Sean Wang <sean.wang@mediatek.com>");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index b46ed4dc7015..e5ddf0d0b6f1 100644
+> =2D-- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -4,69 +4,19 @@
+>  * Author: Tianping.Fang <tianping.fang@mediatek.com>
+>  */
+> 
+> -#include <linux/delay.h>
+> -#include <linux/init.h>
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/mt6397/core.h>
+>  #include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/rtc.h>
+> -#include <linux/irqdomain.h>
+> -#include <linux/platform_device.h>
+> -#include <linux/of_address.h>
+> -#include <linux/of_irq.h>
+> -#include <linux/io.h>
+> -#include <linux/mfd/mt6397/core.h>
+> -
+> -#define RTC_BBPU		0x0000
+> -#define RTC_BBPU_CBUSY		BIT(6)
+> -
+> -#define RTC_WRTGR		0x003c
+> -
+> -#define RTC_IRQ_STA		0x0002
+> -#define RTC_IRQ_STA_AL		BIT(0)
+> -#define RTC_IRQ_STA_LP		BIT(3)
+> -
+> -#define RTC_IRQ_EN		0x0004
+> -#define RTC_IRQ_EN_AL		BIT(0)
+> -#define RTC_IRQ_EN_ONESHOT	BIT(2)
+> -#define RTC_IRQ_EN_LP		BIT(3)
+> -#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
+> -
+> -#define RTC_AL_MASK		0x0008
+> -#define RTC_AL_MASK_DOW		BIT(4)
+> -
+> -#define RTC_TC_SEC		0x000a
+> -/* Min, Hour, Dom... register offset to RTC_TC_SEC */
+> -#define RTC_OFFSET_SEC		0
+> -#define RTC_OFFSET_MIN		1
+> -#define RTC_OFFSET_HOUR		2
+> -#define RTC_OFFSET_DOM		3
+> -#define RTC_OFFSET_DOW		4
+> -#define RTC_OFFSET_MTH		5
+> -#define RTC_OFFSET_YEAR		6
+> -#define RTC_OFFSET_COUNT	7
+> -
+> -#define RTC_AL_SEC		0x0018
+> -
+> -#define RTC_PDN2		0x002e
+> -#define RTC_PDN2_PWRON_ALARM	BIT(4)
+> -
+> -#define RTC_MIN_YEAR		1968
+> -#define RTC_BASE_YEAR		1900
+> -#define RTC_NUM_YEARS		128
+> -#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
+> -
+> -struct mt6397_rtc {
+> -	struct device		*dev;
+> -	struct rtc_device	*rtc_dev;
+> -	struct mutex		lock;
+> -	struct regmap		*regmap;
+> -	int			irq;
+> -	u32			addr_base;
+> -};
+> +#include <linux/mfd/mt6397/rtc.h>
+> +#include <linux/mod_devicetable.h>
+> 
+>  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  {
+> -	unsigned long timeout =3D jiffies + HZ;
+>  	int ret;
+>  	u32 data;
+> 
+> @@ -74,19 +24,13 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rt=
+> c)
+>  	if (ret < 0)
+>  		return ret;
+> 
+> -	while (1) {
+> -		ret =3D regmap_read(rtc->regmap, rtc->addr_base + RTC_BBPU,
+> -				  &data);
+> -		if (ret < 0)
+> -			break;
+> -		if (!(data & RTC_BBPU_CBUSY))
+> -			break;
+> -		if (time_after(jiffies, timeout)) {
+> -			ret =3D -ETIMEDOUT;
+> -			break;
+> -		}
+> -		cpu_relax();
+> -	}
+> +	ret =3D regmap_read_poll_timeout(rtc->regmap,
+> +					rtc->addr_base + RTC_BBPU, data,
+> +					!(data & RTC_BBPU_CBUSY),
+> +					MTK_RTC_POLL_DELAY_US,
+> +					MTK_RTC_POLL_TIMEOUT);
+> +	if (ret < 0)
+> +		dev_err(rtc->dev, "failed to write WRTGE: %d\n", ret);
+
+write? this is a read of RTC_BBPU not WRTGE.
+
+> 
+>  	return ret;
+>  }
+> @@ -324,14 +268,11 @@ static int mtk_rtc_probe(struct platform_device *pde=
+> v)
+> 
+>  	platform_set_drvdata(pdev, rtc);
+> 
+> -	rtc->rtc_dev =3D devm_rtc_allocate_device(rtc->dev);
+> -	if (IS_ERR(rtc->rtc_dev))
+> -		return PTR_ERR(rtc->rtc_dev);
+> +	ret =3D devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
+> +					mtk_rtc_irq_handler_thread,
+> +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> +					"mt6397-rtc", rtc);
+> 
+> -	ret =3D request_threaded_irq(rtc->irq, NULL,
+> -				   mtk_rtc_irq_handler_thread,
+> -				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> -				   "mt6397-rtc", rtc);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
+>  			rtc->irq, ret);
+> @@ -340,6 +281,10 @@ static int mtk_rtc_probe(struct platform_device *pdev=
+> )
+> 
+>  	device_init_wakeup(&pdev->dev, 1);
+> 
+> +	rtc->rtc_dev =3D devm_rtc_allocate_device(&pdev->dev);
+> +	if (IS_ERR(rtc->rtc_dev))
+> +		return PTR_ERR(rtc->rtc_dev);
+> +
+>  	rtc->rtc_dev->ops =3D &mtk_rtc_ops;
+> 
+>  	ret =3D rtc_register_device(rtc->rtc_dev);
+> @@ -355,15 +300,6 @@ static int mtk_rtc_probe(struct platform_device *pdev=
+> )
+>  	return ret;
+>  }
+> 
+> -static int mtk_rtc_remove(struct platform_device *pdev)
+> -{
+> -	struct mt6397_rtc *rtc =3D platform_get_drvdata(pdev);
+> -
+> -	free_irq(rtc->irq, rtc);
+> -
+> -	return 0;
+> -}
+> -
+
+I think the use of devm irq allocation should go into an independent patch.
+
+>  #ifdef CONFIG_PM_SLEEP
+>  static int mt6397_rtc_suspend(struct device *dev)
+>  {
+> @@ -390,6 +326,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_sus=
+> pend,
+>  			mt6397_rtc_resume);
+> 
+>  static const struct of_device_id mt6397_rtc_of_match[] =3D {
+> +	{ .compatible =3D "mediatek,mt6323-rtc", },
+>  	{ .compatible =3D "mediatek,mt6397-rtc", },
+>  	{ }
+>  };
+> @@ -402,7 +339,6 @@ static struct platform_driver mtk_rtc_driver =3D {
+>  		.pm =3D &mt6397_pm_ops,
+>  	},
+>  	.probe	=3D mtk_rtc_probe,
+> -	.remove =3D mtk_rtc_remove,
+>  };
+> 
+>  module_platform_driver(mtk_rtc_driver);
+> diff --git a/include/linux/mfd/mt6397/core.h b/include/linux/mfd/mt6397/co=
+> re.h
+> index 25a95e72179b..652da61e3711 100644
+> =2D-- a/include/linux/mfd/mt6397/core.h
+> +++ b/include/linux/mfd/mt6397/core.h
+> @@ -7,6 +7,8 @@
+>  #ifndef __MFD_MT6397_CORE_H__
+>  #define __MFD_MT6397_CORE_H__
+> 
+> +#include <linux/mutex.h>
+> +
+>  enum mt6397_irq_numbers {
+>  	MT6397_IRQ_SPKL_AB =3D 0,
+>  	MT6397_IRQ_SPKR_AB,
+> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc=
+> .h
+> new file mode 100644
+> index 000000000000..b702c29e8c74
+> =2D-- /dev/null
+> +++ b/include/linux/mfd/mt6397/rtc.h
+> @@ -0,0 +1,71 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2014-2018 MediaTek Inc.
+> + *
+> + * Author: Tianping.Fang <tianping.fang@mediatek.com>
+> + *        Sean Wang <sean.wang@mediatek.com>
+
+You are the author of this file, aren't you?
+Regards,
+Matthias
+
+> + */
+> +
+> +#ifndef _LINUX_MFD_MT6397_RTC_H_
+> +#define _LINUX_MFD_MT6397_RTC_H_
+> +
+> +#include <linux/jiffies.h>
+> +#include <linux/mutex.h>
+> +#include <linux/regmap.h>
+> +#include <linux/rtc.h>
+> +
+> +#define RTC_BBPU               0x0000
+> +#define RTC_BBPU_CBUSY         BIT(6)
+> +#define RTC_BBPU_KEY            (0x43 << 8)
+> +
+> +#define RTC_WRTGR              0x003c
+> +
+> +#define RTC_IRQ_STA            0x0002
+> +#define RTC_IRQ_STA_AL         BIT(0)
+> +#define RTC_IRQ_STA_LP         BIT(3)
+> +
+> +#define RTC_IRQ_EN             0x0004
+> +#define RTC_IRQ_EN_AL          BIT(0)
+> +#define RTC_IRQ_EN_ONESHOT     BIT(2)
+> +#define RTC_IRQ_EN_LP          BIT(3)
+> +#define RTC_IRQ_EN_ONESHOT_AL  (RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
+> +
+> +#define RTC_AL_MASK            0x0008
+> +#define RTC_AL_MASK_DOW                BIT(4)
+> +
+> +#define RTC_TC_SEC             0x000a
+> +/* Min, Hour, Dom... register offset to RTC_TC_SEC */
+> +#define RTC_OFFSET_SEC         0
+> +#define RTC_OFFSET_MIN         1
+> +#define RTC_OFFSET_HOUR                2
+> +#define RTC_OFFSET_DOM         3
+> +#define RTC_OFFSET_DOW         4
+> +#define RTC_OFFSET_MTH         5
+> +#define RTC_OFFSET_YEAR                6
+> +#define RTC_OFFSET_COUNT       7
+> +
+> +#define RTC_AL_SEC             0x0018
+> +
+> +#define RTC_PDN2               0x002e
+> +#define RTC_PDN2_PWRON_ALARM   BIT(4)
+> +
+> +#define RTC_MIN_YEAR           1968
+> +#define RTC_BASE_YEAR          1900
+> +#define RTC_NUM_YEARS          128
+> +#define RTC_MIN_YEAR_OFFSET    (RTC_MIN_YEAR - RTC_BASE_YEAR)
+> +
+> +#define MTK_RTC_POLL_DELAY_US  10
+> +#define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
+> +
+> +struct mt6397_rtc {
+> +	struct device           *dev;
+> +	struct rtc_device       *rtc_dev;
+> +
+> +	/* Protect register access from multiple tasks */
+> +	struct mutex            lock;
+> +	struct regmap           *regmap;
+> +	int                     irq;
+> +	u32                     addr_base;
+> +};
+> +
+> +#endif /* _LINUX_MFD_MT6397_RTC_H_ */
+> =2D-
+> 2.17.1
+> 
