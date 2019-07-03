@@ -1,80 +1,65 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH 01/25] arm64: dts: allwinner: Switch A64 dts(i) to use
- SPDX identifier
-Date: Wed, 3 Jul 2019 19:52:27 +0530
-Message-ID: <CAMty3ZDyx_RSkU=OndsvzS5reOzab0DBkrarSeHt+-gtsdyKuQ@mail.gmail.com>
-References: <20190703124609.21435-1-jagan@amarulasolutions.com>
- <20190703124609.21435-2-jagan@amarulasolutions.com> <20190703132838.nhewz5wzsijl65s5@flea>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [PATCH v2 02/17] dt-bindings: soc: qcom: add IPA bindings
+Date: Wed, 3 Jul 2019 10:09:01 -0500
+Message-ID: <76c1db4f-20b7-4b4b-541c-aa8baa12e7cc@linaro.org>
+References: <20190531035348.7194-1-elder@linaro.org>
+ <20190531035348.7194-3-elder@linaro.org>
+ <CAL_JsqLFk3=YN+V=RVxq9xWQTrPA9_0zW+eFrdXkGkCnM_sBkA@mail.gmail.com>
+ <bcb7f599-3c22-da27-c92b-4c1903a5ea06@ieee.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703132838.nhewz5wzsijl65s5@flea>
+In-Reply-To: <bcb7f599-3c22-da27-c92b-4c1903a5ea06@ieee.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula <linux-amarula@amarulasolutions.com>
+To: Alex Elder <elder@ieee.org>, Rob Herring <robh+dt@kernel.org>
+Cc: David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Ben Chan <benchan@google.com>, Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org, syadagir@codeaurora.org, subashab@codeaurora.org, abhishek.esse@gmail.com, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 6:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Wed, Jul 03, 2019 at 06:15:45PM +0530, Jagan Teki wrote:
-> > Adopt the SPDX license identifier headers to ease license
-> > compliance management on Allwinner A64 dts(i) files.
-> >
-> > While the text specifies "of the GPL or the X11 license"
-> > but the actual license text matches the MIT license as
-> > specified at [0]
-> >
-> > [0] https://spdx.org/licenses/MIT.html
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 39 +------------------
-> >  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 39 +------------------
-> >  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 39 +------------------
-> >  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 39 +------------------
-> >  .../dts/allwinner/sun50i-a64-pine64-plus.dts  | 39 +------------------
-> >  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 39 +------------------
-> >  .../allwinner/sun50i-a64-sopine-baseboard.dts | 39 +------------------
-> >  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi | 39 +------------------
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 +------------------
-> >  9 files changed, 9 insertions(+), 342 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-> > index 208373efee49..efdd84c362b0 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-> > @@ -1,43 +1,6 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
->
-> You say that this is a GPL2 only license
->
-> >  /*
-> >   * Copyright (c) 2016 ARM Ltd.
-> > - *
-> > - * This file is dual-licensed: you can use it either under the terms
-> > - * of the GPL or the X11 license, at your option. Note that this dual
-> > - * licensing only applies to this file, and not this project as a
-> > - * whole.
-> > - *
-> > - *  a) This library is free software; you can redistribute it and/or
-> > - *     modify it under the terms of the GNU General Public License as
-> > - *     published by the Free Software Foundation; either version 2 of the
-> > - *     License, or (at your option) any later version.
->
-> While this is GPL2 or later.
+On 6/10/19 9:11 PM, Alex Elder wrote:
+> On 6/10/19 5:08 PM, Rob Herring wrote:
+>> On Thu, May 30, 2019 at 9:53 PM Alex Elder <elder@linaro.org> wrote:
+>>>
+>>> Add the binding definitions for the "qcom,ipa" device tree node.
+>>>
+>>> Signed-off-by: Alex Elder <elder@linaro.org>
+>>> ---
+>>>  .../devicetree/bindings/net/qcom,ipa.yaml     | 180 ++++++++++++++++++
+>>>  1 file changed, 180 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+>>> new file mode 100644
+>>> index 000000000000..0037fc278a61
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+>>> @@ -0,0 +1,180 @@
+>>> +# SPDX-License-Identifier: GPL-2.0
+>>
+>> New bindings are preferred to be dual GPL-2.0 and BSD-2-Clause. But
+>> that's really a decision for the submitter.
+> 
+> Thanks Rob.  I'll ask Qualcomm if there's any problem
+> with doing that; I presume not.  If I re-submit this
+> with dual copyright, I will include your Reviewed-by
+> despite the change, OK?
 
-Yes, this is where I was confused with compared to existing
-architectures. It seems like it is a call from author of the file or
-make GPL-2.0 for generic purpose [1], not really sure.
+FYI I have the go-ahead to use dual GPL-2.0 and BSD-2-Clause
+bindings on this, and will mark it that way whenever I next
+post this code for review.
 
->
-> Also, I'm not sure why we need 25 patches to do that. Can't you just
-> send one (there's no even need to separate arm and arm64, since we
-> will do only a single PR from now as opposed to what we were doing
-> before).
+I will also be updating other Qualcomm bindings to have a
+dual copyright (in a separate series).  We'll want to
+get an ack from appropriate Code Aurora developers on
+those (I'll provide more detail at the time those get
+posted).
 
-Just to make a clear conversion possible with individual SoC + boards
-files, I did based on existing arch's does. np, if require I can send
-it in single patch.
+					-Alex
 
-[1] https://patchwork.kernel.org/patch/10963113/
+> 					-Alex
+> 
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>
+> 
