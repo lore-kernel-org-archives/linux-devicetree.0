@@ -1,72 +1,176 @@
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: [PATCH v7 3/3] arm64: kexec_file: add rng-seed support
-Date: Wed,  3 Jul 2019 12:01:39 +0800
-Message-ID: <20190703040135.169843-4-hsinyi@chromium.org>
-References: <20190703040135.169843-1-hsinyi@chromium.org>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
+Date: Wed, 3 Jul 2019 10:11:07 +0530
+Message-ID: <5009c418-a051-a42a-f78a-360f7230dd2b@ti.com>
+References: <20190625075746.10439-1-vigneshr@ti.com>
+ <20190625075746.10439-4-vigneshr@ti.com>
+ <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703040135.169843-1-hsinyi@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, Hsin-Yi Wang <hsinyi@chromium.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Tokunori Ikegami <ikegami.t@gmail.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Adding "rng-seed" to dtb. It's fine to add this property if original
-fdt doesn't contain it. Since original seed will be wiped after
-read, so use a default size 128 bytes here.
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
-change log v6->v7:
-* Use stack for rng_seed to avoid allocation failing.
----
- arch/arm64/kernel/machine_kexec_file.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 58871333737a..81b5baad97aa 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -27,6 +27,8 @@
- #define FDT_PROP_INITRD_END	"linux,initrd-end"
- #define FDT_PROP_BOOTARGS	"bootargs"
- #define FDT_PROP_KASLR_SEED	"kaslr-seed"
-+#define FDT_PROP_RNG_SEED	"rng-seed"
-+#define RNG_SEED_SIZE		128
- 
- const struct kexec_file_ops * const kexec_file_loaders[] = {
- 	&kexec_image_ops,
-@@ -102,6 +104,19 @@ static int setup_dtb(struct kimage *image,
- 				FDT_PROP_KASLR_SEED);
- 	}
- 
-+	/* add rng-seed */
-+	if (rng_is_initialized()) {
-+		u8 rng_seed[RNG_SEED_SIZE];
-+		get_random_bytes(rng_seed, RNG_SEED_SIZE);
-+		ret = fdt_setprop(dtb, off, FDT_PROP_RNG_SEED, rng_seed,
-+				RNG_SEED_SIZE);
-+		if (ret)
-+			goto out;
-+	} else {
-+		pr_notice("RNG is not initialised: omitting \"%s\" property\n",
-+				FDT_PROP_RNG_SEED);
-+	}
+On 02/07/19 11:23 PM, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 06/25/2019 10:57 AM, Vignesh Raghavendra wrote:
+> 
+>> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
+>> Bus interface between a host system master and one or more slave
+>> interfaces. HyperBus is used to connect microprocessor, microcontroller,
+>> or ASIC devices with random access NOR flash memory (called HyperFlash)
+>> or self refresh DRAM (called HyperRAM).
+>>
+>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+>> signal and either Single-ended clock(3.0V parts) or Differential clock
+>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+>> At bus level, it follows a separate protocol described in HyperBus
+>> specification[1].
+>>
+>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+>> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
+>> its equivalent to x16 parallel NOR flash with respect to bits per clock
+>> cycle. But HyperBus operates at >166MHz frequencies.
+>> HyperRAM provides direct random read/write access to flash memory
+>> array.
+>>
+>> But, HyperBus memory controllers seem to abstract implementation details
+>> and expose a simple MMIO interface to access connected flash.
+>>
+>> Add support for registering HyperFlash devices with MTD framework. MTD
+>> maps framework along with CFI chip support framework are used to support
+>> communicating with flash.
+>>
+>> Framework is modelled along the lines of spi-nor framework. HyperBus
+>> memory controller (HBMC) drivers calls hyperbus_register_device() to
+>> register a single HyperFlash device. HyperFlash core parses MMIO access
+>> information from DT, sets up the map_info struct, probes CFI flash and
+>> registers it with MTD framework.
+>>
+>> Some HBMC masters need calibration/training sequence[3] to be carried
+>> out, in order for DLL inside the controller to lock, by reading a known
+>> string/pattern. This is done by repeatedly reading CFI Query
+>> Identification String. Calibration needs to be done before trying to detect
+>> flash as part of CFI flash probe.
+>>
+>> HyperRAM is not supported at the moment.
+>>
+>> HyperBus specification can be found at[1]
+>> HyperFlash datasheet can be found at[2]
+>>
+>> [1] https://www.cypress.com/file/213356/download
+>> [2] https://www.cypress.com/file/213346/download
+>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>>     Table 12-5741. HyperFlash Access Sequence
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> [...]
+> 
+>    I have at least created my HyperBus driver and unfortunately I'm having serious
+> issues with the design of the support core (see below)...
+> 
+> [...]
+>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+>> new file mode 100644
+>> index 000000000000..63a9e64895bc
+>> --- /dev/null
+>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
+>> @@ -0,0 +1,154 @@
+> [...]
+>> +int hyperbus_register_device(struct hyperbus_device *hbdev)
+>> +{
+>> +	const struct hyperbus_ops *ops;
+>> +	struct hyperbus_ctlr *ctlr;
+>> +	struct device_node *np;
+>> +	struct map_info *map;
+>> +	struct resource res;
+>> +	struct device *dev;
+>> +	int ret;
+>> +
+>> +	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
+>> +		pr_err("hyperbus: please fill all the necessary fields!\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	np = hbdev->np;
+>> +	ctlr = hbdev->ctlr;
+>> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
+>> +		return -ENODEV;
+>> +
+>> +	hbdev->memtype = HYPERFLASH;
+>> +
+>> +	ret = of_address_to_resource(np, 0, &res);
+> 
+>    Hm, I doubt that the HB devices are wholly mapped into memory space, that seems
+> like a property of the HB controller. In my case, the flash device in the DT has
+> only single-cell "reg" prop (equal to the chip select #). Then this function returns 
+> -EINVAL and the registration fails. Also, in my case such mapping is R/O, not R/W.
+> 
+
+You could declare R/O MMIO region in controla and set up a translation using ranges
+from slave's reg CS based reg mapping like:
+
++	hbmc: hyperbus@47034000 {
++		compatible = "ti,am654-hbmc";
++		reg = <0x0 0x47034000 0x0 0x100>,
++			<0x5 0x00000000 0x1 0x0000000>;
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
++			 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
 +
- out:
- 	if (ret)
- 		return (ret == -FDT_ERR_NOSPACE) ? -ENOMEM : -EINVAL;
-@@ -110,7 +125,8 @@ static int setup_dtb(struct kimage *image,
- }
- 
- /*
-- * More space needed so that we can add initrd, bootargs and kaslr-seed.
-+ * More space needed so that we can add initrd, bootargs, kaslr-seed, and
-+ * rng-seed.
-  */
- #define DTB_EXTRA_SPACE 0x1000
- 
++		/* Slave flash node */
++		flash@0,0 {
++			compatible = "cypress,hyperflash", "cfi-flash";
++			reg = <0x0 0x0 0x4000000>;
++		};
++	};
+
+If you use just CS# how would you handle CS to MMIO region mapping? 
+Does both CS use the same MMIO base for reads?
+
+
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	dev = ctlr->dev;
+>> +	map = &hbdev->map;
+>> +	map->size = resource_size(&res);
+>> +	map->virt = devm_ioremap_resource(dev, &res);
+>> +	if (IS_ERR(map->virt))
+>> +		return PTR_ERR(map->virt);
+> 
+>    Again, I doubt that this should be done here, and not in the HB controller driver...
+
+If multiple CS use same MMIO base, then I can make this part of code non fatal
+when reg entry is a single cell and introduce notion of CS like SPI
+
+> 
+> [...]
+> 
+> MBR, Sergei
+> 
+
 -- 
-2.20.1
+Regards
+Vignesh
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
