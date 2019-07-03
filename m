@@ -1,86 +1,49 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] ASoC: meson: axg-tdm-formatter: add reset
-Date: Wed,  3 Jul 2019 14:07:49 +0200
-Message-ID: <20190703120749.32341-3-jbrunet@baylibre.com>
-References: <20190703120749.32341-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v2] arm64: dts: imx8mm: Init rates and parents configs for clocks
+Date: Wed,  3 Jul 2019 15:08:22 +0300
+Message-ID: <1562155702-29809-1-git-send-email-abel.vesa@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703120749.32341-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the optional reset line handling which is present on the new SoC
-families, such as the g12a. Triggering this reset is not critical but
-it helps solve a channel shift issue on the g12a.
+Add the initial configuration for clocks that need default parent and rate
+setting. This is based on the vendor tree clock provider parents and rates
+configuration except this is doing the setup in dts rather than using clock
+consumer API in a clock provider driver.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- sound/soc/meson/axg-tdm-formatter.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
 
-diff --git a/sound/soc/meson/axg-tdm-formatter.c b/sound/soc/meson/axg-tdm-formatter.c
-index 0c6cce5c5773..2e498201139f 100644
---- a/sound/soc/meson/axg-tdm-formatter.c
-+++ b/sound/soc/meson/axg-tdm-formatter.c
-@@ -7,6 +7,7 @@
- #include <linux/module.h>
- #include <linux/of_platform.h>
- #include <linux/regmap.h>
-+#include <linux/reset.h>
- #include <sound/soc.h>
+Changes since v1:
+ - removed the PCIE, CSI and DISP clocks parent setting since
+   that should be done from their driver.
+
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 232a741..ba2034d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -451,6 +451,17 @@
+ 					 <&clk_ext3>, <&clk_ext4>;
+ 				clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
+ 					      "clk_ext3", "clk_ext4";
++				assigned-clocks = <&clk IMX8MM_CLK_NOC>,
++						<&clk IMX8MM_CLK_AUDIO_AHB>,
++						<&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
++						<&clk IMX8MM_SYS_PLL3>,
++						<&clk IMX8MM_VIDEO_PLL1>;
++				assigned-clock-parents = <&clk IMX8MM_SYS_PLL3_OUT>,
++							 <&clk IMX8MM_SYS_PLL1_800M>;
++				assigned-clock-rates = <0>,
++							<400000000>,
++							<750000000>,
++							<594000000>;
+ 			};
  
- #include "axg-tdm-formatter.h"
-@@ -20,6 +21,7 @@ struct axg_tdm_formatter {
- 	struct clk *lrclk;
- 	struct clk *sclk_sel;
- 	struct clk *lrclk_sel;
-+	struct reset_control *reset;
- 	bool enabled;
- 	struct regmap *map;
- };
-@@ -75,6 +77,24 @@ static int axg_tdm_formatter_enable(struct axg_tdm_formatter *formatter)
- 	if (formatter->enabled)
- 		return 0;
- 
-+	/*
-+	 * On the g12a (and possibly other SoCs), when a stream using
-+	 * multiple lanes is restarted, it will sometimes not start
-+	 * from the first lane, but randomly from another used one.
-+	 * The result is an unexpected and random channel shift.
-+	 *
-+	 * The hypothesis is that an HW counter is not properly reset
-+	 * and the formatter simply starts on the lane it stopped
-+	 * before. Unfortunately, there does not seems to be a way to
-+	 * reset this through the registers of the block.
-+	 *
-+	 * However, the g12a has indenpendent reset lines for each audio
-+	 * devices. Using this reset before each start solves the issue.
-+	 */
-+	ret = reset_control_reset(formatter->reset);
-+	if (ret)
-+		return ret;
-+
- 	/*
- 	 * If sclk is inverted, invert it back and provide the inversion
- 	 * required by the formatter
-@@ -306,6 +326,15 @@ int axg_tdm_formatter_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	/* Formatter dedicated reset line */
-+	formatter->reset = reset_control_get_optional_exclusive(dev, NULL);
-+	if (IS_ERR(formatter->reset)) {
-+		ret = PTR_ERR(formatter->reset);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get reset: %d\n", ret);
-+		return ret;
-+	}
-+
- 	return devm_snd_soc_register_component(dev, drv->component_drv,
- 					       NULL, 0);
- }
+ 			src: reset-controller@30390000 {
 -- 
-2.21.0
+2.7.4
