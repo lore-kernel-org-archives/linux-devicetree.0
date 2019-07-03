@@ -1,64 +1,83 @@
-From: Hongwei Zhang <hongweiz@ami.com>
-Subject: [linux,dev-5.1 v1] dt-bindings: gpio: aspeed: Add SGPIO support
-Date: Wed, 3 Jul 2019 16:01:09 -0400
-Message-ID: <1562184069-22332-1-git-send-email-hongweiz@ami.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCHv5 1/2] dt-bindings: coresight: Change CPU phandle to
+ required property
+Date: Wed, 3 Jul 2019 14:02:52 -0600
+Message-ID: <CANLsYkxvh+qUDvqG45o7qh61Noq=a=BJ4-p68ipdzxYt6n5bNA@mail.gmail.com>
+References: <cover.1561659046.git.saiprakash.ranjan@codeaurora.org> <2afedb941294af7ba0658496b4aca3759a4e43ff.1561659046.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2afedb941294af7ba0658496b4aca3759a4e43ff.1561659046.git.saiprakash.ranjan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Hongwei Zhang <hongweiz@ami.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings to support SGPIO on AST2400 or AST2500.
+Hi Greg,
 
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
----
- .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+On Thu, 27 Jun 2019 at 12:15, Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Do not assume the affinity to CPU0 if cpu phandle is omitted.
+> Update the DT binding rules to reflect the same by changing it
+> to a required property.
+>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-new file mode 100644
-index 0000000..f5fc6ef
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-@@ -0,0 +1,36 @@
-+Aspeed SGPIO controller Device Tree Bindings
-+-------------------------------------------
-+
-+Required properties:
-+- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-+
-+- #gpio-cells 		: Should be two
-+			  - First cell is the GPIO line number
-+			  - Second cell is used to specify optional
-+			    parameters (unused)
-+
-+- reg			: Address and length of the register set for the device
-+- gpio-controller	: Marks the device node as a GPIO controller.
-+- interrupts		: Interrupt specifier (see interrupt bindings for
-+			  details)
-+- interrupt-controller	: Mark the GPIO controller as an interrupt-controller
-+
-+Optional properties:
-+
-+- clocks                : A phandle to the clock to use for debounce timings
-+
-+The sgpio and interrupt properties are further described in their respective
-+bindings documentation:
-+
-+- Documentation/devicetree/bindings/sgpio/gpio.txt
-+- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+  Example:
-+	sgpio@1e780200 {
-+		#gpio-cells = <2>;
-+		compatible = "aspeed,ast2500-sgpio";
-+		gpio-controller;
-+		interrupts = <40>;
-+		reg = <0x1e780200 0x0100>;
-+		interrupt-controller;
-+	};
--- 
-2.7.4
+I'm all good with this patch - can you pick this up for the coming
+merge window?  If not I'll simply keep it in my tree for 5.4.
+
+Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+> ---
+>  .../devicetree/bindings/arm/coresight-cpu-debug.txt       | 4 ++--
+>  Documentation/devicetree/bindings/arm/coresight.txt       | 8 +++++---
+>  2 files changed, 7 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+> index 298291211ea4..f1de3247c1b7 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
+> @@ -26,8 +26,8 @@ Required properties:
+>                 processor core is clocked by the internal CPU clock, so it
+>                 is enabled with CPU clock by default.
+>
+> -- cpu : the CPU phandle the debug module is affined to. When omitted
+> -       the module is considered to belong to CPU0.
+> +- cpu : the CPU phandle the debug module is affined to. Do not assume it
+> +        to default to CPU0 if omitted.
+>
+>  Optional properties:
+>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index 8a88ddebc1a2..fcc3bacfd8bc 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -59,6 +59,11 @@ its hardware characteristcs.
+>
+>         * port or ports: see "Graph bindings for Coresight" below.
+>
+> +* Additional required property for Embedded Trace Macrocell (version 3.x and
+> +  version 4.x):
+> +       * cpu: the cpu phandle this ETM/PTM is affined to. Do not
+> +         assume it to default to CPU0 if omitted.
+> +
+>  * Additional required properties for System Trace Macrocells (STM):
+>         * reg: along with the physical base address and length of the register
+>           set as described above, another entry is required to describe the
+> @@ -87,9 +92,6 @@ its hardware characteristcs.
+>         * arm,cp14: must be present if the system accesses ETM/PTM management
+>           registers via co-processor 14.
+>
+> -       * cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
+> -         source is considered to belong to CPU0.
+> -
+>  * Optional property for TMC:
+>
+>         * arm,buffer-size: size of contiguous buffer space for TMC ETR
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
