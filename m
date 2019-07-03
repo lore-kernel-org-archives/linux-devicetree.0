@@ -1,62 +1,71 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [patch v3 1/5] AST2500 DMA UART driver
-Date: Thu, 04 Jul 2019 09:04:55 +1000
-Message-ID: <c8b5e295c34aaf8b3d8b03aeaa980c88d870443a.camel@kernel.crashing.org>
-References: <1561459476-14268-1-git-send-email-open.sudheer@gmail.com>
-         <1561459476-14268-2-git-send-email-open.sudheer@gmail.com>
-         <20190703174926.GA12813@kroah.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
+ configure LED mode
+Date: Wed, 3 Jul 2019 16:23:31 -0700
+Message-ID: <20190703232331.GL250418@google.com>
+References: <20190703193724.246854-1-mka@chromium.org>
+ <20190703193724.246854-6-mka@chromium.org>
+ <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703174926.GA12813@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>, "sudheer.v" <open.sudheer@gmail.com>
-Cc: jslaby@suse.com, joel@jms.id.au, andrew@aj.id.au, robh+dt@kernel.org, mark.rutland@arm.com, shivahshankar.shankarnarayanrao@aspeedtech.com, shivahshankar@gmail.com, sudheer.veliseti@aspeedtech.com, sudheer veliseti <sudheer.open@gmail.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-07-03 at 19:49 +0200, Greg KH wrote:
+Hi Florian,
+
+On Wed, Jul 03, 2019 at 02:37:47PM -0700, Florian Fainelli wrote:
+> On 7/3/19 12:37 PM, Matthias Kaehlcke wrote:
+> > The LED behavior of some Realtek PHYs is configurable. Add the
+> > property 'realtek,led-modes' to specify the configuration of the
+> > LEDs.
+> > 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > Changes in v2:
+> > - patch added to the series
+> > ---
+> >  .../devicetree/bindings/net/realtek.txt         |  9 +++++++++
+> >  include/dt-bindings/net/realtek.h               | 17 +++++++++++++++++
+> >  2 files changed, 26 insertions(+)
+> >  create mode 100644 include/dt-bindings/net/realtek.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
+> > index 71d386c78269..40b0d6f9ee21 100644
+> > --- a/Documentation/devicetree/bindings/net/realtek.txt
+> > +++ b/Documentation/devicetree/bindings/net/realtek.txt
+> > @@ -9,6 +9,12 @@ Optional properties:
+> >  
+> >  	SSC is only available on some Realtek PHYs (e.g. RTL8211E).
+> >  
+> > +- realtek,led-modes: LED mode configuration.
 > > +
-> > +     if (tx_sts & UART_SDMA0_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA0_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[0]));
-> > +     } else if (tx_sts & UART_SDMA1_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA1_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[1]));
-> > +     } else if (tx_sts & UART_SDMA2_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA2_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[2]));
-> > +     } else if (tx_sts & UART_SDMA3_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA3_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[3]));
-> > +     } else if (tx_sts & UART_SDMA4_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA4_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[4]));
-> > +     } else if (tx_sts & UART_SDMA5_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA5_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[5]));
-> > +     } else if (tx_sts & UART_SDMA6_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA6_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[6]));
-> > +     } else if (tx_sts & UART_SDMA7_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA7_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[7]));
-> > +     } else if (tx_sts & UART_SDMA8_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA8_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[8]));
-> > +     } else if (tx_sts & UART_SDMA9_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA9_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[9]));
-> > +     } else if (tx_sts & UART_SDMA10_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA10_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[10]));
-> > +     } else if (tx_sts & UART_SDMA11_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA11_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[11]));
-> > +     } else {
-> > +     }
+> > +	A 0..3 element vector, with each element configuring the operating
+> > +	mode of an LED. Omitted LEDs are turned off. Allowed values are
+> > +	defined in "include/dt-bindings/net/realtek.h".
+> 
+> This should probably be made more general and we should define LED modes
+> that makes sense regardless of the PHY device, introduce a set of
+> generic functions for validating and then add new function pointer for
+> setting the LED configuration to the PHY driver. This would allow to be
+> more future proof where each PHY driver could expose standard LEDs class
+> devices to user-space, and it would also allow facilities like: ethtool
+> -p to plug into that.
+> 
+> Right now, each driver invents its own way of configuring LEDs, that
+> does not scale, and there is not really a good reason for that other
+> than reviewing drivers in isolation and therefore making it harder to
+> extract the commonality. Yes, I realize that since you are the latest
+> person submitting something in that area, you are being selected :)
 
-Also this should be a for () loop...
-
-Cheers,
-Ben.
+I see the merit of your proposal to come up with a generic mechanism
+to configure Ethernet LEDs, however I can't justify spending much of
+my work time on this. If it is deemed useful I'm happy to send another
+version of the current patchset that addresses the reviewer's comments,
+but if the implementation of a generic LED configuration interface is
+a requirement I will have to abandon at least the LED configuration
+part of this series.
