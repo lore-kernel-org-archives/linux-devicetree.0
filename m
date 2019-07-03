@@ -1,47 +1,149 @@
-From: Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH 3/3] iio: light: stk3310: Add device tree support
-Date: Wed,  3 Jul 2019 20:05:59 +0200
-Message-ID: <20190703180604.9840-3-luca@z3ntu.xyz>
-References: <20190703180604.9840-1-luca@z3ntu.xyz>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
+Date: Wed, 3 Jul 2019 21:14:01 +0300
+Message-ID: <8e870356-90ba-4762-b1fd-8a13ce6ebcc8@cogentembedded.com>
+References: <20190625075746.10439-1-vigneshr@ti.com>
+ <20190625075746.10439-4-vigneshr@ti.com>
+ <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
+ <5009c418-a051-a42a-f78a-360f7230dd2b@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703180604.9840-1-luca@z3ntu.xyz>
+In-Reply-To: <5009c418-a051-a42a-f78a-360f7230dd2b@ti.com>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Luca Weiss <luca@z3ntu.xyz>, Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Vivek Unune <npcomplete13@gmail.com>, Hannes Schmelzer <hannes.schmelzer@br-automation.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Allison Randal <allison@lohutok.net>, Martijn Braam <martijn@brixit.nl>, devicetree@vger.kernel.or
+To: Vignesh Raghavendra <vigneshr@ti.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Tokunori Ikegami <ikegami.t@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for the stk33xx family of ambient light sensors.
+Hello!
 
-Tested-by: Martijn Braam <martijn@brixit.nl>
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- drivers/iio/light/stk3310.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 07/03/2019 07:41 AM, Vignesh Raghavendra wrote:
 
-diff --git a/drivers/iio/light/stk3310.c b/drivers/iio/light/stk3310.c
-index b955183edfe8..185c24a75ae6 100644
---- a/drivers/iio/light/stk3310.c
-+++ b/drivers/iio/light/stk3310.c
-@@ -679,9 +679,18 @@ static const struct acpi_device_id stk3310_acpi_id[] = {
- 
- MODULE_DEVICE_TABLE(acpi, stk3310_acpi_id);
- 
-+static const struct of_device_id stk3310_of_match[] = {
-+	{ .compatible = "sensortek,stk3310", },
-+	{ .compatible = "sensortek,stk3311", },
-+	{ .compatible = "sensortek,stk3335", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, stk3310_of_match);
-+
- static struct i2c_driver stk3310_driver = {
- 	.driver = {
- 		.name = "stk3310",
-+		.of_match_table = stk3310_of_match,
- 		.pm = STK3310_PM_OPS,
- 		.acpi_match_table = ACPI_PTR(stk3310_acpi_id),
- 	},
--- 
-2.22.0
+>>> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
+>>> Bus interface between a host system master and one or more slave
+>>> interfaces. HyperBus is used to connect microprocessor, microcontroller,
+>>> or ASIC devices with random access NOR flash memory (called HyperFlash)
+>>> or self refresh DRAM (called HyperRAM).
+>>>
+>>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+>>> signal and either Single-ended clock(3.0V parts) or Differential clock
+>>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+>>> At bus level, it follows a separate protocol described in HyperBus
+>>> specification[1].
+>>>
+>>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+>>> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
+>>> its equivalent to x16 parallel NOR flash with respect to bits per clock
+>>> cycle. But HyperBus operates at >166MHz frequencies.
+>>> HyperRAM provides direct random read/write access to flash memory
+>>> array.
+>>>
+>>> But, HyperBus memory controllers seem to abstract implementation details
+>>> and expose a simple MMIO interface to access connected flash.
+>>>
+>>> Add support for registering HyperFlash devices with MTD framework. MTD
+>>> maps framework along with CFI chip support framework are used to support
+>>> communicating with flash.
+>>>
+>>> Framework is modelled along the lines of spi-nor framework. HyperBus
+>>> memory controller (HBMC) drivers calls hyperbus_register_device() to
+>>> register a single HyperFlash device. HyperFlash core parses MMIO access
+>>> information from DT, sets up the map_info struct, probes CFI flash and
+>>> registers it with MTD framework.
+>>>
+>>> Some HBMC masters need calibration/training sequence[3] to be carried
+>>> out, in order for DLL inside the controller to lock, by reading a known
+>>> string/pattern. This is done by repeatedly reading CFI Query
+>>> Identification String. Calibration needs to be done before trying to detect
+>>> flash as part of CFI flash probe.
+>>>
+>>> HyperRAM is not supported at the moment.
+>>>
+>>> HyperBus specification can be found at[1]
+>>> HyperFlash datasheet can be found at[2]
+>>>
+>>> [1] https://www.cypress.com/file/213356/download
+>>> [2] https://www.cypress.com/file/213346/download
+>>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>>>     Table 12-5741. HyperFlash Access Sequence
+>>>
+>>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> [...]
+>>
+>>    I have at least created my HyperBus driver and unfortunately I'm having serious
+
+   At last. :-)
+
+>> issues with the design of the support core (see below)...
+>>
+>> [...]
+>>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+>>> new file mode 100644
+>>> index 000000000000..63a9e64895bc
+>>> --- /dev/null
+>>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
+>>> @@ -0,0 +1,154 @@
+>> [...]
+>>> +int hyperbus_register_device(struct hyperbus_device *hbdev)
+>>> +{
+>>> +	const struct hyperbus_ops *ops;
+>>> +	struct hyperbus_ctlr *ctlr;
+>>> +	struct device_node *np;
+>>> +	struct map_info *map;
+>>> +	struct resource res;
+>>> +	struct device *dev;
+>>> +	int ret;
+>>> +
+>>> +	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
+>>> +		pr_err("hyperbus: please fill all the necessary fields!\n");
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	np = hbdev->np;
+>>> +	ctlr = hbdev->ctlr;
+>>> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
+>>> +		return -ENODEV;
+>>> +
+>>> +	hbdev->memtype = HYPERFLASH;
+>>> +
+>>> +	ret = of_address_to_resource(np, 0, &res);
+>>
+>>    Hm, I doubt that the HB devices are wholly mapped into memory space, that seems
+>> like a property of the HB controller. In my case, the flash device in the DT has
+>> only single-cell "reg" prop (equal to the chip select #). Then this function returns 
+>> -EINVAL and the registration fails. Also, in my case such mapping is R/O, not R/W.
+>>
+> 
+> You could declare R/O MMIO region in controla and set up a translation using ranges
+> from slave's reg CS based reg mapping like:
+
+   No, not all HB controllers work the same (simple) way as yours. In case of RPC-IF,
+the direct read map is a 64 MiB window into a possibly larger flash chip, it has a
+register supplying address bits 25:31...
+
+> +	hbmc: hyperbus@47034000 {
+> +		compatible = "ti,am654-hbmc";
+> +		reg = <0x0 0x47034000 0x0 0x100>,
+> +			<0x5 0x00000000 0x1 0x0000000>;
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
+> +			 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
+> +
+> +		/* Slave flash node */
+> +		flash@0,0 {
+> +			compatible = "cypress,hyperflash", "cfi-flash";
+> +			reg = <0x0 0x0 0x4000000>;
+> +		};
+> +	};
+> 
+> If you use just CS# how would you handle CS to MMIO region mapping? 
+> Does both CS use the same MMIO base for reads?
+
+   The RPC-IF HF mode only has a single CS signal.
+
+[...]
+
+MBR, Sergei
