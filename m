@@ -1,104 +1,89 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH v3] arm64: dts: imx8mq: Add sai3 and sai6 nodes
-Date: Wed, 3 Jul 2019 16:25:10 +0300
-Message-ID: <CAEnQRZCoOyyZVs0=BjXB5=wYe3XW9GOF9JvwjhSU9BsChh08uA@mail.gmail.com>
-References: <20190702132353.18632-1-andradanciu1997@gmail.com>
- <9ea5109f8645c3f27a9e350c5f9b2d4c@www.akkea.ca> <CAEnQRZDCpPju7xBBY9=e0dWt=A9c3t3g88pEw+teoZmmOiiKXQ@mail.gmail.com>
- <9e196ce51eac9ce9c327198c4a2911a8@www.akkea.ca>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 01/25] arm64: dts: allwinner: Switch A64
+ dts(i) to use SPDX identifier
+Date: Wed, 3 Jul 2019 15:28:38 +0200
+Message-ID: <20190703132838.nhewz5wzsijl65s5@flea>
+References: <20190703124609.21435-1-jagan@amarulasolutions.com>
+ <20190703124609.21435-2-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9e196ce51eac9ce9c327198c4a2911a8@www.akkea.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Angus Ainslie <angus@akkea.ca>
-Cc: Andra Danciu <andradanciu1997@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, andrew.smirnov@gmail.com, Carlo Caione <ccaione@baylibre.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ai23iijsoaamk652"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCW36LUAKGQEMJICICY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190703124609.21435-2-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 4:12 PM Angus Ainslie <angus@akkea.ca> wrote:
+
+--ai23iijsoaamk652
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Wed, Jul 03, 2019 at 06:15:45PM +0530, Jagan Teki wrote:
+> Adopt the SPDX license identifier headers to ease license
+> compliance management on Allwinner A64 dts(i) files.
 >
-> Hi Daniel,
+> While the text specifies "of the GPL or the X11 license"
+> but the actual license text matches the MIT license as
+> specified at [0]
 >
-> On 2019-07-03 07:10, Daniel Baluta wrote:
-> > On Wed, Jul 3, 2019 at 4:01 PM Angus Ainslie <angus@akkea.ca> wrote:
-> >>
-> >> Hi Andra,
-> >>
-> >> I tried this out on linux-next and I'm not able to record or play
-> >> sound.
-> >>
-> >> I also added the sai2 entry to test out our devkit and get a PCM
-> >> timeout
-> >> with that.
-> >
-> > Hi Angus,
-> >
-> > There are still lots of SAI patches that need to be upstream. Me and
-> > Andra
-> > will be working on that over this summer.
-> >
-> >>
-> >> On 2019-07-02 07:23, Andra Danciu wrote:
-> >> > SAI3 and SAI6 nodes are used to connect to an external codec.
-> >> > They have 1 Tx and 1 Rx dataline.
-> >> >
-> >> > Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> >> > Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-> >> > ---
-> >> > Changes since v2:
-> >> >       - removed multiple new lines
-> >> >
-> >> > Changes since v1:
-> >> >       - Added sai3 node because we need it to enable audio on pico-pi-8m
-> >> >       - Added commit description
-> >> >
-> >> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 29
-> >> > +++++++++++++++++++++++++++++
-> >> >  1 file changed, 29 insertions(+)
-> >> >
-> >> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> >> > b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> >> > index d09b808eff87..736cf81b695e 100644
-> >> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> >> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> >> > @@ -278,6 +278,20 @@
-> >> >                       #size-cells = <1>;
-> >> >                       ranges = <0x30000000 0x30000000 0x400000>;
-> >> >
-> >> > +                     sai6: sai@30030000 {
-> >> > +                             compatible = "fsl,imx8mq-sai",
-> >>
-> >> I don't find this compatible string in sound/soc/fsl/fsl_sai.c. Aren't
-> >> the registers at a different offset from "fsl,imx6sx-sai".
-> >
-> > Yes, you are right on this. We are trying to slowly push all our
-> > internal-tree
-> > patches to mainline. Obviously, with started with low hanging fruits,
-> > DTS
-> > nodes and small SAI fixes.
-> >
-> > Soon, we will start to send patches for SAI IP ipgrade for imx8.
-> >
-> >>
-> >> How is this supposed to work ?
-> >>
-> >
-> > For the moment it won't work unless we will upstream all our SAI
-> > internal patches.
-> > But we will get there hopefully this summer.
-> >
+> [0] https://spdx.org/licenses/MIT.html
 >
-> Shouldn't a working driver be upstream before enabling it in the
-> devicetree ?
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+>  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-pine64-plus.dts  | 39 +------------------
+>  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 39 +------------------
+>  .../allwinner/sun50i-a64-sopine-baseboard.dts | 39 +------------------
+>  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi | 39 +------------------
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 +------------------
+>  9 files changed, 9 insertions(+), 342 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> index 208373efee49..efdd84c362b0 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> @@ -1,43 +1,6 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 
-I see your point here and maybe your suggestion is the ideal
-way to do things.
+You say that this is a GPL2 only license
 
-Anyhow, I don't see a problem with adding the node in dts
-because CONFIG_FSL_SAI is not set in the default config.
+>  /*
+>   * Copyright (c) 2016 ARM Ltd.
+> - *
+> - * This file is dual-licensed: you can use it either under the terms
+> - * of the GPL or the X11 license, at your option. Note that this dual
+> - * licensing only applies to this file, and not this project as a
+> - * whole.
+> - *
+> - *  a) This library is free software; you can redistribute it and/or
+> - *     modify it under the terms of the GNU General Public License as
+> - *     published by the Free Software Foundation; either version 2 of the
+> - *     License, or (at your option) any later version.
 
-We try to speedup the upstreaming process giving the fact
-that SAI patches will go through audio maintainer's tree and
-the DTS patches will most likely go through Shawn's tree.
+While this is GPL2 or later.
 
-thanks,
-Daniel.
+Also, I'm not sure why we need 25 patches to do that. Can't you just
+send one (there's no even need to separate arm and arm64, since we
+will do only a single PR from now as opposed to what we were doing
+before).
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--ai23iijsoaamk652--
