@@ -1,55 +1,35 @@
-Return-Path: <SRS0=gSIt=VA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39126 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfGCMCO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jul 2019 08:02:14 -0400
-Date: Wed, 3 Jul 2019 13:02:11 +0100
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] dt-bindings: ASoC: tlv320aic32x4: Fix property name
-Message-ID: <20190703120211.GW2793@sirena.org.uk>
-References: <a1af77a8b6d6832f888e6a55f5732982.squirrel@mail.missinglinkelectronics.com>
+Return-Path: <SRS0=WEMd=VA=vergenet.net=horms@kernel.org>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH v2 0/2] dt-bindings: usb: renease_{usbhs,gen3} Rename bindings documentation files
+Date: Wed,  3 Jul 2019 10:35:12 +0200
+Message-Id: <20190703083514.32385-1-horms+renesas@verge.net.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="FmwJltL8yKUx7YXQ"
-Content-Disposition: inline
-In-Reply-To: <a1af77a8b6d6832f888e6a55f5732982.squirrel@mail.missinglinkelectronics.com>
-Sender: devicetree-owner@vger.kernel.org
-To: David Epping <david.epping@missinglinkelectronics.com>
-Cc: devicetree@vger.kernel.org, trivial@kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
+Hi,
 
---FmwJltL8yKUx7YXQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For consistency with the naming of (most) other documentation files for DT
+bindings for Renesas IP blocks rename the Renesas USBHS and USB 3.0
+peripheral documentation files.
 
-On Fri, Jun 28, 2019 at 02:57:50PM +0200, David Epping wrote:
-> From: David Epping <david.epping@missinglinkelectronics.com>
->=20
-> dt-bindings: ASoC: tlv320aic32x4: Fix property name
->=20
-> The 'supply' string is a suffix to the actual supply name, not a prefix.
-> Also extend the example section with required supply properties.
+Changes since v1
+* Accumulate review tags
+* Use renesas,usb3-peri.txt as new filename for renesas_gen3,
+  as suggested by Shimoda-san
 
-This doesn't apply against current code, please check and resend.
+Simon Horman (2):
+  dt-bindings: usb: renesas_usbhs: Rename bindings documentation file
+  dt-bindings: usb: renesas_gen3: Rename bindings documentation file
 
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
+ .../devicetree/bindings/usb/{renesas_usb3.txt => renesas,usb3-peri.txt}   | 0
+ .../devicetree/bindings/usb/{renesas_usbhs.txt => renesas,usbhs.txt}      | 0
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/usb/{renesas_usb3.txt => renesas,usb3-peri.txt} (100%)
+ rename Documentation/devicetree/bindings/usb/{renesas_usbhs.txt => renesas,usbhs.txt} (100%)
 
---FmwJltL8yKUx7YXQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0cmUIACgkQJNaLcl1U
-h9Bh8wf/Q/DIcXAFBhDzQeByWtuCLjHtWs5ACiWJEb46vUSQ7d0j7zgBOZYgQAr4
-I4lzBV+vA/27UlkmC/+zdfC9zu4fR94dkH6zZA4MLAq6WW5BPUKLTvmsZ5R8+FXS
-Eenr/PpdA5/yWGSojfBpLU8tYnQbNWm2hzRqhfkygcI/IXT42LwaWD1PgcT77pzS
-UiGNnTUE5yso5+P9Tvo8RgpYHYeqWYFM/cVengNB1Bi6skH1bOFd6KnbPknMEXVt
-m6KGwyicBj5Y3YqZs5DIN5Tsp1+5NmbxkYUbc8kUih1L2AVHtgyqBTSmpujhFtI5
-PFwIIeLfxuPEb1Nd8TDDNW1vcrqCMA==
-=2HLO
------END PGP SIGNATURE-----
-
---FmwJltL8yKUx7YXQ--
+-- 
+2.11.0
