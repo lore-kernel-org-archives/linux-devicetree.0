@@ -1,85 +1,37 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH v3] arm64: dts: imx8mq: Add sai3 and sai6 nodes
-Date: Wed, 3 Jul 2019 09:27:56 +0300
-Message-ID: <CAEnQRZDO4FzsC-MZGsxd=7dxSc0dRGcMjWW-W9T2TF7C1iD9NA@mail.gmail.com>
-References: <20190702132353.18632-1-andradanciu1997@gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
+Date: Wed, 3 Jul 2019 12:06:32 +0530
+Message-ID: <20190703063632.hl2lipcoeehplyxq@vireshk-i7>
+References: <20190703011020.151615-1-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702132353.18632-1-andradanciu1997@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190703011020.151615-1-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andra Danciu <andradanciu1997@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, andrew.smirnov@gmail.com, "Angus Ainslie (Purism)" <angus@akkea.ca>, Carlo Caione <ccaione@baylibre.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 4:25 PM Andra Danciu <andradanciu1997@gmail.com> wrote:
->
-> SAI3 and SAI6 nodes are used to connect to an external codec.
-> They have 1 Tx and 1 Rx dataline.
->
-> Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+On 02-07-19, 18:10, Saravana Kannan wrote:
+> Interconnects and interconnect paths quantify their performance levels in
+> terms of bandwidth and not in terms of frequency. So similar to how we have
+> frequency based OPP tables in DT and in the OPP framework, we need
+> bandwidth OPP table support in the OPP framework and in DT. Since there can
+> be more than one interconnect path used by a device, we also need a way to
+> assign a bandwidth OPP table to an interconnect path.
+> 
+> This patch series:
+> - Adds opp-peak-KBps and opp-avg-KBps properties to OPP DT bindings
+> - Adds interconnect-opp-table property to interconnect DT bindings
+> - Adds OPP helper functions for bandwidth OPP tables
+> - Adds icc_get_opp_table() to get the OPP table for an interconnect path
+> 
+> So with the DT bindings added in this patch series, the DT for a GPU
+> that does bandwidth voting from GPU to Cache and GPU to DDR would look
+> something like this:
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+And what changed since V2 ?
 
-> ---
-> Changes since v2:
->         - removed multiple new lines
->
-> Changes since v1:
->         - Added sai3 node because we need it to enable audio on pico-pi-8m
->         - Added commit description
->
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index d09b808eff87..736cf81b695e 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -278,6 +278,20 @@
->                         #size-cells = <1>;
->                         ranges = <0x30000000 0x30000000 0x400000>;
->
-> +                       sai6: sai@30030000 {
-> +                               compatible = "fsl,imx8mq-sai",
-> +                                       "fsl,imx6sx-sai";
-> +                               reg = <0x30030000 0x10000>;
-> +                               interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-> +                               clocks = <&clk IMX8MQ_CLK_SAI6_IPG>,
-> +                                       <&clk IMX8MQ_CLK_SAI6_ROOT>,
-> +                                       <&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
-> +                               clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +                               dmas = <&sdma2 4 24 0>, <&sdma2 5 24 0>;
-> +                               dma-names = "rx", "tx";
-> +                               status = "disabled";
-> +                       };
-> +
->                         gpio1: gpio@30200000 {
->                                 compatible = "fsl,imx8mq-gpio", "fsl,imx35-gpio";
->                                 reg = <0x30200000 0x10000>;
-> @@ -728,6 +742,21 @@
->                                 status = "disabled";
->                         };
->
-> +                       sai3: sai@308c0000 {
-> +                               compatible = "fsl,imx8mq-sai",
-> +                                            "fsl,imx6sx-sai";
-> +                               reg = <0x308c0000 0x10000>;
-> +                               interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-> +                               clocks = <&clk IMX8MQ_CLK_SAI3_IPG>,
-> +                                       <&clk IMX8MQ_CLK_DUMMY>,
-> +                                       <&clk IMX8MQ_CLK_SAI3_ROOT>,
-> +                                       <&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
-> +                               clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +                               dmas = <&sdma1 12 24 0>, <&sdma1 13 24 0>;
-> +                               dma-names = "rx", "tx";
-> +                               status = "disabled";
-> +                       };
-> +
->                         i2c1: i2c@30a20000 {
->                                 compatible = "fsl,imx8mq-i2c", "fsl,imx21-i2c";
->                                 reg = <0x30a20000 0x10000>;
-> --
-> 2.11.0
->
+-- 
+viresh
