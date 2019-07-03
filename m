@@ -1,95 +1,36 @@
-From: masonccyang@mxic.com.tw
-Subject: Re: [PATCH v4 1/2] mtd: rawnand: Add Macronix Raw NAND controller
-Date: Wed, 3 Jul 2019 11:03:21 +0800
-Message-ID: <OF041E283A.13DCC1D9-ON4825842C.000C9C7C-4825842C.0010C960@mxic.com.tw>
-References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw>	<1561443056-13766-2-git-send-email-masonccyang@mxic.com.tw>
- <20190627193635.29abff43@xps13>
+From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 0/3] Move voltage regulator config to driver private data
+Date: Wed,  3 Jul 2019 09:27:08 +0530
+Message-ID: <20190703035711.25592-1-govinds@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20190627193635.29abff43@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: devicetree@vger.kernel.org, christophe.kerello@st.com, vigneshr@ti.com, jianxin.pan@amlogic.com, bbrezillon@kernel.org, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, stefan@agner.ch, paul@crapouillou.net, marek.vasut@gmail.com, paul.burton@mips.com, broonie@kernel.org, linux-mtd@lists.infradead.org, richard@nod.at, anders.roxell@linaro.org, liang.yang@amlogic.com, computersforpeace@gmail.com, dwmw2@infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+WCN3990 voltage regulator config is varying b/w different MSM platforms ex: SDM845/
+QCS404. In order to have scalable config, move regulator config to driver
+private data.
 
-Hi Miquel,
+Tested HW: WCN3990(SDM845/QCS404)
+Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
 
-> > Add a driver for Macronix raw NAND controller.
-> 
-> Could you pass userspace major MTD tests and can you attach/mount/edit
-> a UBI/UBIFS storage?
+Govind Singh (3):
+  dt: bindings: update compatible dt properties for WCN3990 wifi node
+  ath10k: Move regulator config to driver private data
+  arm64: dts: qcom: qcs404: Modify wifi dt node for SDM845/QCS404
+    devices
 
-The other userspace MTD tests are passed.
+ .../bindings/net/wireless/qcom,ath10k.txt     |  2 +
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi      |  3 ++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  2 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  2 +-
+ drivers/net/wireless/ath/ath10k/snoc.c        | 38 +++++++++++++++----
+ drivers/net/wireless/ath/ath10k/snoc.h        | 23 ++++++-----
+ 6 files changed, 51 insertions(+), 19 deletions(-)
 
-nandwrite, nanddump and nandtest.
-i.e.,
-zynq> ./nandtest -k /dev/mtd1
-ECC corrections: 0
-ECC failures   : 0
-Bad blocks     : 0
-BBT blocks     : 0
-00100000: writing...random: crng init done
-005c0000: checking...
-Finished pass 1 successfully
-zynq>
-
-
-UBI/UBI-FS test is also passed.
-i.e.,
-UBI/UBIFS storage test on mtd2 as example
-1. ubiformat /dev/mtd2
-2. ubiattach /dev/ubi_ctrl -m 2
-3. ubimkvol /dev/ubi0 -N ubifs -m
-4. mknod -m 777 /dev/ubi0 c 244 0
-5. mount -t ubifs ubi0_0 /mnt/ubifs
-6. copy a file to /mnt/ubifs
-7. sync and power off - on cycle
-8. ubiattach & mount /mnt/ubifs
-9. read file and compare it with md5sum
-
-thanks & best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
