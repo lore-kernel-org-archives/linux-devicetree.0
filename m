@@ -1,88 +1,98 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 25/25] ARM: dts: axp81x: Switch to use SPDX identifier
-Date: Wed,  3 Jul 2019 18:16:09 +0530
-Message-ID: <20190703124609.21435-26-jagan@amarulasolutions.com>
-References: <20190703124609.21435-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Angus Ainslie <angus@akkea.ca>
+Subject: Re: [PATCH v3] arm64: dts: imx8mq: Add sai3 and sai6 nodes
+Date: Wed, 03 Jul 2019 07:00:46 -0600
+Message-ID: <9ea5109f8645c3f27a9e350c5f9b2d4c@www.akkea.ca>
+References: <20190702132353.18632-1-andradanciu1997@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBCGI6LUAKGQEREXPVBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190703124609.21435-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190702132353.18632-1-andradanciu1997@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andra Danciu <andradanciu1997@gmail.com>
+Cc: shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, Anson.Huang@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, agx@sigxcpu.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adopt the SPDX license identifier headers to ease license
-compliance management on axp81x.dtsi.
+Hi Andra,
 
-While the text specifies "of the GPL or the X11 license"
-but the actual license text matches the MIT license as
-specified at [0]
+I tried this out on linux-next and I'm not able to record or play sound.
 
-[0] https://spdx.org/licenses/MIT.html
+I also added the sai2 entry to test out our devkit and get a PCM timeout 
+with that.
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- arch/arm/boot/dts/axp81x.dtsi | 39 +----------------------------------
- 1 file changed, 1 insertion(+), 38 deletions(-)
+On 2019-07-02 07:23, Andra Danciu wrote:
+> SAI3 and SAI6 nodes are used to connect to an external codec.
+> They have 1 Tx and 1 Rx dataline.
+> 
+> Cc: Daniel Baluta <daniel.baluta@nxp.com>
+> Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+> ---
+> Changes since v2:
+> 	- removed multiple new lines
+> 
+> Changes since v1:
+> 	- Added sai3 node because we need it to enable audio on pico-pi-8m
+> 	- Added commit description
+> 
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 29 
+> +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index d09b808eff87..736cf81b695e 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -278,6 +278,20 @@
+>  			#size-cells = <1>;
+>  			ranges = <0x30000000 0x30000000 0x400000>;
+> 
+> +			sai6: sai@30030000 {
+> +				compatible = "fsl,imx8mq-sai",
 
-diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
-index 1dfeeceabf4c..83649e75f86d 100644
---- a/arch/arm/boot/dts/axp81x.dtsi
-+++ b/arch/arm/boot/dts/axp81x.dtsi
-@@ -1,45 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
- /*
-  * Copyright 2017 Chen-Yu Tsai
-  *
-  * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- /* AXP813/818 Integrated Power Management Chip */
--- 
-2.18.0.321.gffc6fa0e3
+I don't find this compatible string in sound/soc/fsl/fsl_sai.c. Aren't 
+the registers at a different offset from "fsl,imx6sx-sai".
+
+How is this supposed to work ?
+
+Thanks
+Angus
+
+> +					"fsl,imx6sx-sai";
+> +				reg = <0x30030000 0x10000>;
+> +				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk IMX8MQ_CLK_SAI6_IPG>,
+> +					<&clk IMX8MQ_CLK_SAI6_ROOT>,
+> +					<&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
+> +				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +				dmas = <&sdma2 4 24 0>, <&sdma2 5 24 0>;
+> +				dma-names = "rx", "tx";
+> +				status = "disabled";
+> +			};
+> +
+>  			gpio1: gpio@30200000 {
+>  				compatible = "fsl,imx8mq-gpio", "fsl,imx35-gpio";
+>  				reg = <0x30200000 0x10000>;
+> @@ -728,6 +742,21 @@
+>  				status = "disabled";
+>  			};
+> 
+> +			sai3: sai@308c0000 {
+> +				compatible = "fsl,imx8mq-sai",
+> +					     "fsl,imx6sx-sai";
+> +				reg = <0x308c0000 0x10000>;
+> +				interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk IMX8MQ_CLK_SAI3_IPG>,
+> +					<&clk IMX8MQ_CLK_DUMMY>,
+> +					<&clk IMX8MQ_CLK_SAI3_ROOT>,
+> +					<&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
+> +				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +				dmas = <&sdma1 12 24 0>, <&sdma1 13 24 0>;
+> +				dma-names = "rx", "tx";
+> +				status = "disabled";
+> +			};
+> +
+>  			i2c1: i2c@30a20000 {
+>  				compatible = "fsl,imx8mq-i2c", "fsl,imx21-i2c";
+>  				reg = <0x30a20000 0x10000>;
