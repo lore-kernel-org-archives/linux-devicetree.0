@@ -1,7 +1,7 @@
 From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to configure LED mode
-Date: Wed,  3 Jul 2019 12:37:23 -0700
-Message-ID: <20190703193724.246854-6-mka@chromium.org>
+Subject: [PATCH v2 5/7] net: phy: realtek: Support SSC for the RTL8211E
+Date: Wed,  3 Jul 2019 12:37:22 -0700
+Message-ID: <20190703193724.246854-5-mka@chromium.org>
 References: <20190703193724.246854-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,68 +12,67 @@ To: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, 
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-The LED behavior of some Realtek PHYs is configurable. Add the
-property 'realtek,led-modes' to specify the configuration of the
-LEDs.
+By default Spread-Spectrum Clocking (SSC) is disabled on the RTL8211E.
+Enable it if the device tree property 'realtek,enable-ssc' exists.
 
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
 Changes in v2:
-- patch added to the series
+- enable SSC in config_init() instead of probe()
+- fixed error check after enabling SSC
 ---
- .../devicetree/bindings/net/realtek.txt         |  9 +++++++++
- include/dt-bindings/net/realtek.h               | 17 +++++++++++++++++
- 2 files changed, 26 insertions(+)
- create mode 100644 include/dt-bindings/net/realtek.h
+ drivers/net/phy/realtek.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
-index 71d386c78269..40b0d6f9ee21 100644
---- a/Documentation/devicetree/bindings/net/realtek.txt
-+++ b/Documentation/devicetree/bindings/net/realtek.txt
-@@ -9,6 +9,12 @@ Optional properties:
+diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+index 9cd6241e2a6d..45fee4612031 100644
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -9,6 +9,7 @@
+  * Copyright (c) 2004 Freescale Semiconductor, Inc.
+  */
+ #include <linux/bitops.h>
++#include <linux/device.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/phy.h>
+@@ -34,6 +35,10 @@
+ #define RTL8211E_EEE_LED_MODE1			0x05
+ #define RTL8211E_EEE_LED_MODE2			0x06
  
- 	SSC is only available on some Realtek PHYs (e.g. RTL8211E).
++/* RTL8211E extension page 160 */
++#define RTL8211E_SCR				0x1a
++#define RTL8211E_SCR_DISABLE_RXC_SSC		BIT(2)
++
+ #define RTL8211F_INSR				0x1d
  
-+- realtek,led-modes: LED mode configuration.
-+
-+	A 0..3 element vector, with each element configuring the operating
-+	mode of an LED. Omitted LEDs are turned off. Allowed values are
-+	defined in "include/dt-bindings/net/realtek.h".
-+
- Example:
+ #define RTL8211F_TX_DELAY			BIT(8)
+@@ -76,8 +81,8 @@ static int rtl8211e_select_ext_page(struct phy_device *phydev, int page)
+ 	return 0;
+ }
  
- mdio0 {
-@@ -20,5 +26,8 @@ mdio0 {
- 		reg = <1>;
- 		realtek,eee-led-mode-disable;
- 		realtek,enable-ssc;
-+		realtek,led-modes = <RTL8211E_LINK_ACTIVITY
-+				     RTL8211E_LINK_100
-+				     RTL8211E_LINK_1000>;
- 	};
- };
-diff --git a/include/dt-bindings/net/realtek.h b/include/dt-bindings/net/realtek.h
-new file mode 100644
-index 000000000000..8d64f58d58f8
---- /dev/null
-+++ b/include/dt-bindings/net/realtek.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _DT_BINDINGS_REALTEK_H
-+#define _DT_BINDINGS_REALTEK_H
+-static int __maybe_unused rtl8211e_modify_ext_paged(struct phy_device *phydev,
+-				    int page, u32 regnum, u16 mask, u16 set)
++static int rtl8211e_modify_ext_paged(struct phy_device *phydev, int page,
++				     u32 regnum, u16 mask, u16 set)
+ {
+ 	int ret = 0;
+ 	int oldpage;
+@@ -122,6 +127,15 @@ static int rtl8211e_disable_eee_led_mode(struct phy_device *phydev)
+ static int rtl8211e_config_init(struct phy_device *phydev)
+ {
+ 	struct device *dev = &phydev->mdio.dev;
++	int ret;
 +
-+/* LED modes for RTL8211E PHY */
-+
-+#define RTL8211E_LINK_10		1
-+#define RTL8211E_LINK_100		2
-+#define RTL8211E_LINK_1000		4
-+#define RTL8211E_LINK_10_100		3
-+#define RTL8211E_LINK_10_1000		5
-+#define RTL8211E_LINK_100_1000		6
-+#define RTL8211E_LINK_10_100_1000	7
-+
-+#define RTL8211E_LINK_ACTIVITY		(1 << 16)
-+
-+#endif
++	if (of_property_read_bool(dev->of_node, "realtek,enable-ssc")) {
++		ret = rtl8211e_modify_ext_paged(phydev, 0xa0, RTL8211E_SCR,
++						RTL8211E_SCR_DISABLE_RXC_SSC,
++						0);
++		if (ret < 0)
++			dev_err(dev, "failed to enable SSC on RXC: %d\n", ret);
++	}
+ 
+ 	if (of_property_read_bool(dev->of_node, "realtek,eee-led-mode-disable"))
+ 		rtl8211e_disable_eee_led_mode(phydev);
 -- 
 2.22.0.410.gd8fdbe21b5-goog
