@@ -1,54 +1,53 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: Aw: Re: [PATCH 3/3] add driver and MAINTAINERS for poweroff
-Date: Wed, 3 Jul 2019 13:54:41 +0200
-Message-ID: <61f579d7-f415-481f-6f34-1534f0805dc1@gmail.com>
-References: <20190702094045.3652-1-frank-w@public-files.de>
- <20190702094045.3652-4-frank-w@public-files.de>
- <c1358da0-60a4-49dd-71a8-77e90178c9c9@gmail.com>
- <trinity-ca99ab22-eda4-42dd-b6eb-8e4bb5c99165-1562143878858@3c-app-gmx-bs07>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v2] arm64: dts: imx8mq: Init rates and parents configs for clocks
+Date: Wed,  3 Jul 2019 15:01:51 +0300
+Message-ID: <1562155311-24696-1-git-send-email-abel.vesa@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <trinity-ca99ab22-eda4-42dd-b6eb-8e4bb5c99165-1562143878858@3c-app-gmx-bs07>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Josef Friedl <josef.friedl@speed.at>, Sean Wang <sean.wang@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>
+To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Sascha Hauer <kernel@pengutronix.de>
+Cc: NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+Add the initial configuration for clocks that need default parent and rate
+setting. This is based on the vendor tree clock provider parents and rates
+configuration except this is doing the setup in dts rather then using clock
+consumer API in a clock provider driver.
 
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
 
-On 03/07/2019 10:51, Frank Wunderlich wrote:
-> Hi Mathias
-> 
-> thank you for first look on this. Patchseries is originally from Josef Friedl i got some time ago for getting poweroff working on bananapi r2. There it works and maybe on another devices too.
-> 
-> drivers/rtc/rtc-mt6397.c and drivers/rtc/rtc-mt7622.c look very differently on a diff (you've commented in part 1/3)
-> 
-> maybe code is compatible but i have not the knowledge to compare this...maybe sean (sorry, that i missed you) or ryder can say a word about the compatibility.
-> 
+Changes since v1:
+ - removed the PCIE and CSI clocks parent setting since
+   that should be done from their driver, as suggested
+   by Leonard.
 
-My fault, I didn't got that right. So you are just improving the code of the RTC
-driver. Which is great, but as already said, do this in a separate patch. :)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Regards,
-Matthias
-
->> Fix the commit message. MAINTAINERS get normally send a independent patch.
->> Split patches between RTC and PWRC.
->> If not a new patch it should be stated in the commit message at least.
-> 
-> i will try to split this
-> 
->>> + * Author: Tianping.Fang <tianping.fang@mediatek.com>
->>> + *        Sean Wang <sean.wang@mediatek.com>
->>
->> You are the author of this file, aren't you?
-> 
-> no, afaik these is code taken from rtc-mt6397.c and put in a separate header-file to use it in multiple c-files.
-> 
-> sidenote on encoding/word-wrap. i use only "git sendemail" which afaik calls sendmail (no other mta like thunderbird or similar) on ubuntu 18.4....curently have no idea how to fix this...have searched before, but not yet found anything. if you have an idea please give me a hint.
-> 
-> regards Frank
-> 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index d09b808..c286f20 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -489,6 +489,20 @@
+ 				clock-names = "ckil", "osc_25m", "osc_27m",
+ 				              "clk_ext1", "clk_ext2",
+ 				              "clk_ext3", "clk_ext4";
++				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1>,
++					<&clk IMX8MQ_CLK_AHB>,
++					<&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
++					<&clk IMX8MQ_CLK_AUDIO_AHB>,
++					<&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
++					<&clk IMX8MQ_CLK_NOC>;
++				assigned-clock-parents = <0>,
++						<&clk IMX8MQ_SYS1_PLL_133M>,
++						<&clk IMX8MQ_SYS1_PLL_266M>,
++						<&clk IMX8MQ_SYS2_PLL_500M>,
++						<&clk IMX8MQ_CLK_27M>,
++						<&clk IMX8MQ_SYS1_PLL_800M>;
++				assigned-clock-rates = <593999999>;
++
+ 			};
+ 
+ 			src: reset-controller@30390000 {
+-- 
+2.7.4
