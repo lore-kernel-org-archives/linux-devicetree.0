@@ -1,120 +1,74 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v6 07/15] dt-bindings: memory: tegra30: Convert to
- Tegra124 YAML
-Date: Wed, 3 Jul 2019 17:05:12 +0300
-Message-ID: <7d24fa15-0bd0-2ae6-7951-36826956a24f@gmail.com>
-References: <20190630210019.26914-1-digetx@gmail.com>
- <20190630210019.26914-8-digetx@gmail.com>
- <CAL_JsqJq5iwQcbUixMWK819OTof8DzrZ3UMhByc1pTAFTdwnjg@mail.gmail.com>
- <ba299725-b65b-ce7d-6376-a26918cc985b@gmail.com>
- <d98f16ee-ac43-8f1e-d324-d6e2cfccf3c8@gmail.com>
- <CAL_Jsq+-cuqVf60MbaNTz3jCUQkEpU8EgUe1xyOzHLsM5zjjEg@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv5 03/20] PCI: mobiveil: Correct the returned error number
+Date: Wed, 3 Jul 2019 15:17:15 +0100
+Message-ID: <20190703141715.GB26804@e121166-lin.cambridge.arm.com>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-4-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+-cuqVf60MbaNTz3jCUQkEpU8EgUe1xyOzHLsM5zjjEg@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190412083635.33626-4-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-03.07.2019 16:22, Rob Herring пишет:
-> On Tue, Jul 2, 2019 at 6:48 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> 01.07.2019 22:30, Dmitry Osipenko пишет:
->>> 01.07.2019 22:11, Rob Herring пишет:
->>>> On Sun, Jun 30, 2019 at 3:04 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->>>>>
->>>>
->>>> "Convert" implies you delete the old binding doc.
->>>
->>> Yes, unfortunately the deletion got lost by accident after rebase and it was already
->>> too late when I noticed that. Will be fixed in the next revision.
->>>
->>>>> The Tegra30 binding will actually differ from the Tegra124 a tad, in
->>>>> particular the EMEM configuration description. Hence rename the binding
->>>>> to Tegra124 during of the conversion to YAML.
->>>>>
->>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>> ---
->>>>>  .../nvidia,tegra124-mc.yaml                   | 149 ++++++++++++++++++
->>>>>  1 file changed, 149 insertions(+)
->>>>>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
->>>>> new file mode 100644
->>>>> index 000000000000..d18242510295
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
->>>>> @@ -0,0 +1,149 @@
->>>>> +# SPDX-License-Identifier: (GPL-2.0)
->>>>> +%YAML 1.2
->>>>> +---
->>>>> +$id: http://devicetree.org/schemas/memory-controllers/nvidia,tegra124-mc.yaml#
->>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>> +
->>>>> +title:
->>>>> +  NVIDIA Tegra124 SoC Memory Controller
->>>>> +
->>>>> +maintainers:
->>>>> +  - Jon Hunter <jonathanh@nvidia.com>
->>>>> +  - Thierry Reding <thierry.reding@gmail.com>
->>>>> +
->>>>> +description: |
->>>>> +  Tegra124 SoC features a hybrid 2x32-bit / 1x64-bit memory controller.
->>>>> +  These are interleaved to provide high performance with the load shared across
->>>>> +  two memory channels. The Tegra124 Memory Controller handles memory requests
->>>>> +  from internal clients and arbitrates among them to allocate memory bandwidth
->>>>> +  for DDR3L and LPDDR3 SDRAMs.
->>>>> +
->>>>> +properties:
->>>>> +  compatible:
->>>>> +    const: nvidia,tegra124-mc
->>>>> +
->>>>> +  reg:
->>>>> +    maxItems: 1
->>>>> +    description:
->>>>> +      Physical base address.
->>>>> +
->>>>> +  clocks:
->>>>> +    maxItems: 1
->>>>> +    description:
->>>>> +      Memory Controller clock.
->>>>> +
->>>>> +  clock-names:
->>>>> +    items:
->>>>> +      - const: mc
->>>>> +
->>>>> +  interrupts:
->>>>> +    maxItems: 1
->>>>> +    description:
->>>>> +      Memory Controller interrupt.
->>>>> +
->>>>> +  "#reset-cells":
->>>>> +    const: 1
->>>>> +
->>>>> +  "#iommu-cells":
->>>>> +    const: 1
->>>>> +
->>>>> +patternProperties:
->>>>> +  ".*":
->>>>
->>>> Please define a node name or pattern for node names.
->>>
->>> There was no pattern specified in the original binding. But I guess the existing
->>> upstream device-trees could be used as the source for the pattern.
->>
->> Actually it looks like the use of explicit pattern is not really a good idea because
->> device-tree could have node named in a way that it doesn't match the pattern and hence
->> dtbs_check silently skips the non-matching nodes. Is there any way to express that
->> non-matching nodes shall be rejected?
+On Fri, Apr 12, 2019 at 08:35:30AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> additionalProperties: false
-> 
-> It's not ideal because you have to list all properties and can't
-> combine multiple schema, but that's getting addressed in json-schema
-> draft8. That shouldn't matter for you in this case though.
+> This patch corrects the returned error number by convention,
+> and removes an unnecessary error check.
 
-Works like a charm! Thank you very much.
+Two distinct changes, two patches, please split and repost.
+
+Lorenzo
+
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> ---
+> V5:
+>  - Corrected and retouched the subject and changelog.
+> 
+>  drivers/pci/controller/pcie-mobiveil.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index b87471f08a40..563210e731d3 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -819,7 +819,7 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
+>  
+>  	if (!pcie->intx_domain) {
+>  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+> -		return -ENODEV;
+> +		return -ENOMEM;
+>  	}
+>  
+>  	raw_spin_lock_init(&pcie->intx_mask_lock);
+> @@ -845,11 +845,9 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  	/* allocate the PCIe port */
+>  	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+>  	if (!bridge)
+> -		return -ENODEV;
+> +		return -ENOMEM;
+>  
+>  	pcie = pci_host_bridge_priv(bridge);
+> -	if (!pcie)
+> -		return -ENOMEM;
+>  
+>  	pcie->pdev = pdev;
+>  
+> @@ -866,7 +864,7 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  						    &pcie->resources, &iobase);
+>  	if (ret) {
+>  		dev_err(dev, "Getting bridge resources failed\n");
+> -		return -ENOMEM;
+> +		return ret;
+>  	}
+>  
+>  	/*
+> -- 
+> 2.17.1
+> 
