@@ -1,110 +1,41 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2 2/7] net: phy: realtek: Allow disabling RTL8211E EEE
- LED mode
-Date: Wed, 3 Jul 2019 13:32:04 -0700
-Message-ID: <20190703203204.GE250418@google.com>
-References: <20190703193724.246854-1-mka@chromium.org>
- <20190703193724.246854-2-mka@chromium.org>
- <743dda1b-532d-175f-1f87-5d80ba4a2e94@gmail.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
+Date: Wed, 3 Jul 2019 13:35:44 -0700
+Message-ID: <CAGETcx9Dhzt9-Ys-8hLtoZ9RYWMWa59H5yismUJDWmJ3Kq-smQ@mail.gmail.com>
+References: <20190703011020.151615-1-saravanak@google.com> <20190703063632.hl2lipcoeehplyxq@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <743dda1b-532d-175f-1f87-5d80ba4a2e94@gmail.com>
+In-Reply-To: <20190703063632.hl2lipcoeehplyxq@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, evgreen@chromium.org, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jul 2, 2019 at 11:36 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 02-07-19, 18:10, Saravana Kannan wrote:
+> > Interconnects and interconnect paths quantify their performance levels in
+> > terms of bandwidth and not in terms of frequency. So similar to how we have
+> > frequency based OPP tables in DT and in the OPP framework, we need
+> > bandwidth OPP table support in the OPP framework and in DT. Since there can
+> > be more than one interconnect path used by a device, we also need a way to
+> > assign a bandwidth OPP table to an interconnect path.
+> >
+> > This patch series:
+> > - Adds opp-peak-KBps and opp-avg-KBps properties to OPP DT bindings
+> > - Adds interconnect-opp-table property to interconnect DT bindings
+> > - Adds OPP helper functions for bandwidth OPP tables
+> > - Adds icc_get_opp_table() to get the OPP table for an interconnect path
+> >
+> > So with the DT bindings added in this patch series, the DT for a GPU
+> > that does bandwidth voting from GPU to Cache and GPU to DDR would look
+> > something like this:
+>
+> And what changed since V2 ?
 
-On Wed, Jul 03, 2019 at 10:09:39PM +0200, Heiner Kallweit wrote:
-> On 03.07.2019 21:37, Matthias Kaehlcke wrote:
-> > EEE LED mode is enabled by default on the RTL8211E. Disable it when
-> > the device tree property 'realtek,eee-led-mode-disable' exists.
-> > 
-> > The magic values to disable EEE LED mode were taken from the RTL8211E
-> > datasheet, unfortunately they are not further documented.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> > Changes in v2:
-> > - patch added to the series
-> > ---
-> >  drivers/net/phy/realtek.c | 37 ++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 36 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-> > index a669945eb829..eb815cbe1e72 100644
-> > --- a/drivers/net/phy/realtek.c
-> > +++ b/drivers/net/phy/realtek.c
-> > @@ -9,8 +9,9 @@
-> >   * Copyright (c) 2004 Freescale Semiconductor, Inc.
-> >   */
-> >  #include <linux/bitops.h>
-> > -#include <linux/phy.h>
-> >  #include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/phy.h>
-> >  
-> >  #define RTL821x_PHYSR				0x11
-> >  #define RTL821x_PHYSR_DUPLEX			BIT(13)
-> > @@ -26,6 +27,10 @@
-> >  #define RTL821x_EXT_PAGE_SELECT			0x1e
-> >  #define RTL821x_PAGE_SELECT			0x1f
-> >  
-> > +/* RTL8211E page 5 */
-> > +#define RTL8211E_EEE_LED_MODE1			0x05
-> > +#define RTL8211E_EEE_LED_MODE2			0x06
-> > +
-> >  #define RTL8211F_INSR				0x1d
-> >  
-> >  #define RTL8211F_TX_DELAY			BIT(8)
-> > @@ -53,6 +58,35 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
-> >  	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
-> >  }
-> >  
-> > +static int rtl8211e_disable_eee_led_mode(struct phy_device *phydev)
-> > +{
-> 
-> You define return type int but AFAICS the return value is never used,
-> also in subsequent patches.
+Sorry, forgot to put that in. I just dropped a lot of patches that
+weren't relevant to the idea of BW OPPs and tying them to
+interconnects.
 
-ok, I'll change it to void
-
-> > +	int ret = 0;
-> > +	int oldpage;
-> > +
-> > +	oldpage = phy_select_page(phydev, 5);
-> > +	if (oldpage < 0)
-> > +		goto out;
-> > +
-> > +	/* write magic values to disable EEE LED mode */
-> > +	ret = __phy_write(phydev, RTL8211E_EEE_LED_MODE1, 0x8b82);
-> > +	if (ret)
-> > +		goto out;
-> > +
-> > +	ret = __phy_write(phydev, RTL8211E_EEE_LED_MODE2, 0x052b);
-> > +
-> > +out:
-> > +	return phy_restore_page(phydev, oldpage, ret);
-> > +}
-> > +
-> > +static int rtl8211e_config_init(struct phy_device *phydev)
-> > +{
-> > +	struct device *dev = &phydev->mdio.dev;
-> > +
-> > +	if (of_property_read_bool(dev->of_node, "realtek,eee-led-mode-disable"))
-> > +		rtl8211e_disable_eee_led_mode(phydev);
-> > +
-> > +	return 0;
-> > +}
-> 
-> I suppose checkpatch complains about the missing empty line.
-> You add it in a later patch, in case of a v3 you could fix that.
-
-Actually checkpatch does not complain, I'll fix it in v3.
-
-Thanks
-
-Matthias
+-Saravana
