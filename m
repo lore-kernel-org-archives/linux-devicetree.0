@@ -1,176 +1,92 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
-Date: Wed, 3 Jul 2019 10:11:07 +0530
-Message-ID: <5009c418-a051-a42a-f78a-360f7230dd2b@ti.com>
-References: <20190625075746.10439-1-vigneshr@ti.com>
- <20190625075746.10439-4-vigneshr@ti.com>
- <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] Revert "ARM: dts: rockchip: add startup delay to
+ rk3288-veyron panel-regulators"
+Date: Tue, 2 Jul 2019 21:54:58 -0700
+Message-ID: <CAD=FV=UhNfhVG422=huthFSptoV4FXED=xPtArO2KkyNb1U3Xw@mail.gmail.com>
+References: <20190620182056.61552-1-dianders@chromium.org> <CAD=FV=Wi21Emjg7CpCJfSRiKr_EisR20UO1tbPjAeJzdJNbSVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Tokunori Ikegami <ikegami.t@gmail.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=Wi21Emjg7CpCJfSRiKr_EisR20UO1tbPjAeJzdJNbSVw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+
+On Thu, Jun 20, 2019 at 1:31 PM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Thu, Jun 20, 2019 at 11:21 AM Douglas Anderson <dianders@chromium.org> wrote:
+> >
+> > This reverts commit 1f45e8c6d0161f044d679f242fe7514e2625af4a.
+> >
+> > This 100 ms mystery delay is not on downstream kernels and no longer
+> > seems needed on upstream kernels either [1].  Presumably something in the
+> > meantime has made things better.  A few possibilities for patches that
+> > have landed in the meantime that could have made this better are
+> > commit 3157694d8c7f ("pwm-backlight: Add support for PWM delays
+> > proprieties."), commit 5fb5caee92ba ("pwm-backlight: Enable/disable
+> > the PWM before/after LCD enable toggle."), and commit 6d5922dd0d60
+> > ("ARM: dts: rockchip: set PWM delay backlight settings for Veyron")
+> >
+> > Let's revert and get our 100 ms back.
+> >
+> > [1] https://lkml.kernel.org/r/2226970.BAPq4liE1j@diego
+> >
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> >  arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 1 -
+> >  arch/arm/boot/dts/rk3288-veyron-jerry.dts  | 1 -
+> >  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 1 -
+> >  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 1 -
+> >  4 files changed, 4 deletions(-)
+>
+> Maybe wait before applying.  I've been running reboot tests now with
+> this patch applied (among others) and with enough reboots I managed to
+> see:
+>
+> [    5.682418] rockchip-dp ff970000.dp: eDP link training failed (-5)
+>
+> I'll see if I can confirm that it's this patch and why things are
+> different compared to downstream.
+
+OK, I finally got back to this and confirmed:
+
+1. The above error is actually somewhat harmless.  The eDP failure
+will be retried automatically despite the scary message.  Specifically
+see the loop in analogix_dp_bridge_enable().  I confirmed that after
+seeing the error the screen came up just fine (I looked at the screen
+in two actual instances but I believe it's pretty much always fine).
+
+2. I haven't seen any evidence that the eDP link training happens any
+more often with this revert in place.  Specifically, I see the same
+message in the logs (at what appears to be the same rate) with or
+without this revert.
+
+3. Probably the link-training failures here are the same ones we
+debugged for PSR for rk3399-gru-kevin that we fixed by making the eDP
+PCLK rate exactly 24 MHz.  See <https://crrev.com/c/433393> for
+details.  On rk3399-gru-kevin it was super important to resolve the
+root cause of these errors because we had PSR (which meant we were
+constantly taking to the eDP controller).  On rk3288-veyron devices
+with no PSR the retry should be a fine solution and it doesn't seem
+like a good idea to fully rejigger our clock plan to fix the root
+cause.
 
 
-On 02/07/19 11:23 PM, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 06/25/2019 10:57 AM, Vignesh Raghavendra wrote:
-> 
->> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
->> Bus interface between a host system master and one or more slave
->> interfaces. HyperBus is used to connect microprocessor, microcontroller,
->> or ASIC devices with random access NOR flash memory (called HyperFlash)
->> or self refresh DRAM (called HyperRAM).
->>
->> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
->> signal and either Single-ended clock(3.0V parts) or Differential clock
->> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
->> At bus level, it follows a separate protocol described in HyperBus
->> specification[1].
->>
->> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
->> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
->> its equivalent to x16 parallel NOR flash with respect to bits per clock
->> cycle. But HyperBus operates at >166MHz frequencies.
->> HyperRAM provides direct random read/write access to flash memory
->> array.
->>
->> But, HyperBus memory controllers seem to abstract implementation details
->> and expose a simple MMIO interface to access connected flash.
->>
->> Add support for registering HyperFlash devices with MTD framework. MTD
->> maps framework along with CFI chip support framework are used to support
->> communicating with flash.
->>
->> Framework is modelled along the lines of spi-nor framework. HyperBus
->> memory controller (HBMC) drivers calls hyperbus_register_device() to
->> register a single HyperFlash device. HyperFlash core parses MMIO access
->> information from DT, sets up the map_info struct, probes CFI flash and
->> registers it with MTD framework.
->>
->> Some HBMC masters need calibration/training sequence[3] to be carried
->> out, in order for DLL inside the controller to lock, by reading a known
->> string/pattern. This is done by repeatedly reading CFI Query
->> Identification String. Calibration needs to be done before trying to detect
->> flash as part of CFI flash probe.
->>
->> HyperRAM is not supported at the moment.
->>
->> HyperBus specification can be found at[1]
->> HyperFlash datasheet can be found at[2]
->>
->> [1] https://www.cypress.com/file/213356/download
->> [2] https://www.cypress.com/file/213346/download
->> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->>     Table 12-5741. HyperFlash Access Sequence
->>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> [...]
-> 
->    I have at least created my HyperBus driver and unfortunately I'm having serious
-> issues with the design of the support core (see below)...
-> 
-> [...]
->> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
->> new file mode 100644
->> index 000000000000..63a9e64895bc
->> --- /dev/null
->> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
->> @@ -0,0 +1,154 @@
-> [...]
->> +int hyperbus_register_device(struct hyperbus_device *hbdev)
->> +{
->> +	const struct hyperbus_ops *ops;
->> +	struct hyperbus_ctlr *ctlr;
->> +	struct device_node *np;
->> +	struct map_info *map;
->> +	struct resource res;
->> +	struct device *dev;
->> +	int ret;
->> +
->> +	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
->> +		pr_err("hyperbus: please fill all the necessary fields!\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	np = hbdev->np;
->> +	ctlr = hbdev->ctlr;
->> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
->> +		return -ENODEV;
->> +
->> +	hbdev->memtype = HYPERFLASH;
->> +
->> +	ret = of_address_to_resource(np, 0, &res);
-> 
->    Hm, I doubt that the HB devices are wholly mapped into memory space, that seems
-> like a property of the HB controller. In my case, the flash device in the DT has
-> only single-cell "reg" prop (equal to the chip select #). Then this function returns 
-> -EINVAL and the registration fails. Also, in my case such mapping is R/O, not R/W.
-> 
-
-You could declare R/O MMIO region in controla and set up a translation using ranges
-from slave's reg CS based reg mapping like:
-
-+	hbmc: hyperbus@47034000 {
-+		compatible = "ti,am654-hbmc";
-+		reg = <0x0 0x47034000 0x0 0x100>,
-+			<0x5 0x00000000 0x1 0x0000000>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
-+			 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
-+
-+		/* Slave flash node */
-+		flash@0,0 {
-+			compatible = "cypress,hyperflash", "cfi-flash";
-+			reg = <0x0 0x0 0x4000000>;
-+		};
-+	};
-
-If you use just CS# how would you handle CS to MMIO region mapping? 
-Does both CS use the same MMIO base for reads?
+NOTE: I saw _one_ case on rk3288-veyron-minnie where the screen looked
+wonky at bootup and I saw the eDP link training error in the logs.
+That's what originally made me cautious.  I haven't been able to
+reproduce this, but presumably I just got super unlucky in that one
+case.  I've left devices rebooting all day at work and haven't seen
+the wonky screen since then.
 
 
->> +	if (ret)
->> +		return ret;
->> +
->> +	dev = ctlr->dev;
->> +	map = &hbdev->map;
->> +	map->size = resource_size(&res);
->> +	map->virt = devm_ioremap_resource(dev, &res);
->> +	if (IS_ERR(map->virt))
->> +		return PTR_ERR(map->virt);
-> 
->    Again, I doubt that this should be done here, and not in the HB controller driver...
+Summary: I think this revert is just fine.
 
-If multiple CS use same MMIO base, then I can make this part of code non fatal
-when reg entry is a single cell and introduce notion of CS like SPI
 
-> 
-> [...]
-> 
-> MBR, Sergei
-> 
-
--- 
-Regards
-Vignesh
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-Doug
