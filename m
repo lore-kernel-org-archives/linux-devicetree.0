@@ -1,53 +1,67 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v2] arm64: dts: imx8mq: Init rates and parents configs for clocks
-Date: Wed,  3 Jul 2019 15:01:51 +0300
-Message-ID: <1562155311-24696-1-git-send-email-abel.vesa@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Sascha Hauer <kernel@pengutronix.de>
-Cc: NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 2/6] ASoC: wcd934x: add support to
+	wcd9340/wcd9341 codec
+Date: Wed, 3 Jul 2019 13:06:25 +0100
+Message-ID: <8edd8bc6-4b32-7f7e-2521-d7038a4ffb8d@linaro.org>
+References: <20190702080920.22623-1-srinivas.kandagatla@linaro.org>
+ <20190702080920.22623-3-srinivas.kandagatla@linaro.org>
+ <20190702144411.GP2793@sirena.org.uk>
+ <2e2a32dd-3dca-5391-1bfa-ab1c1f420e3a@linaro.org>
+ <20190702165753.GQ2793@sirena.org.uk>
+ <0a9a994c-5a88-539f-3af0-76754b9b58d1@linaro.org>
+ <20190703115243.GV2793@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190703115243.GV2793@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, vkoul@kernel.org, robh+dt@kernel.org, srini@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the initial configuration for clocks that need default parent and rate
-setting. This is based on the vendor tree clock provider parents and rates
-configuration except this is doing the setup in dts rather then using clock
-consumer API in a clock provider driver.
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
----
 
-Changes since v1:
- - removed the PCIE and CSI clocks parent setting since
-   that should be done from their driver, as suggested
-   by Leonard.
+On 03/07/2019 12:52, Mark Brown wrote:
+> On Wed, Jul 03, 2019 at 09:49:37AM +0100, Srinivas Kandagatla wrote:
+>> On 02/07/2019 17:57, Mark Brown wrote:
+> 
+>>> This is a driver for a single device, you should be able to
+>>> instantiate things without requiring binding through DT (and
+>>> hence support non-DT systems such as those using ACPI).
+> 
+>> My view point atleast from hw side was that Codec is Parent which is
+>> encompassing these different blocks and bus interface. DT representation
+>> clearly showed that relationship between the parent and child devices.
+>> Binding it through DT will make sure that resources are ready before
+>> they are instantiated.
+> 
+>> All the child devices also have some machine/board specific properties
+>> and dependency on resources from parent like regmap, clks, and bus.
+> 
+>> In ACPI case, am not 100% sure how these will be represented inline with
+>> hw representation.
+> 
+>> Are you suggesting to use MFD here?
+> 
+> I'm saying that you should be using a MFD here like all the other
+> CODECs with multiple functions and that you shouldn't have
+> compatible strings in DT for the subfunctions since you already
+> know they'll be there simply from enumerating the chip as a whole
+> and how exactly they are divided up is a function of how Linux
+> currently has subsystems, not of the hardware.
+> 
+Got it!, thanks for the input, I will change that in v2.
 
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index d09b808..c286f20 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -489,6 +489,20 @@
- 				clock-names = "ckil", "osc_25m", "osc_27m",
- 				              "clk_ext1", "clk_ext2",
- 				              "clk_ext3", "clk_ext4";
-+				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1>,
-+					<&clk IMX8MQ_CLK_AHB>,
-+					<&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
-+					<&clk IMX8MQ_CLK_AUDIO_AHB>,
-+					<&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
-+					<&clk IMX8MQ_CLK_NOC>;
-+				assigned-clock-parents = <0>,
-+						<&clk IMX8MQ_SYS1_PLL_133M>,
-+						<&clk IMX8MQ_SYS1_PLL_266M>,
-+						<&clk IMX8MQ_SYS2_PLL_500M>,
-+						<&clk IMX8MQ_CLK_27M>,
-+						<&clk IMX8MQ_SYS1_PLL_800M>;
-+				assigned-clock-rates = <593999999>;
-+
- 			};
- 
- 			src: reset-controller@30390000 {
--- 
-2.7.4
+
+--srin
