@@ -1,7 +1,7 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v3 3/6] OPP: Add helper function for bandwidth OPP tables
-Date: Tue,  2 Jul 2019 18:10:17 -0700
-Message-ID: <20190703011020.151615-4-saravanak@google.com>
+Subject: [PATCH v3 4/6] OPP: Add API to find an OPP table from its DT node
+Date: Tue,  2 Jul 2019 18:10:18 -0700
+Message-ID: <20190703011020.151615-5-saravanak@google.com>
 References: <20190703011020.151615-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,146 +12,104 @@ To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
 Cc: Saravana Kannan <saravanak@google.com>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The frequency OPP tables have helper functions to search for entries in the
-table based on frequency and get the frequency values for a given (or
-suspend) OPP entry.
-
-Add similar helper functions for bandwidth OPP tables to search for entries
-in the table based on peak bandwidth and to get the peak and average
-bandwidth for a given (or suspend) OPP entry.
+This allows finding a device's OPP table (when it has multiple) from a
+phandle to the OPP table in DT.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/opp/core.c     | 51 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/pm_opp.h | 19 ++++++++++++++++
- 2 files changed, 70 insertions(+)
+ drivers/opp/of.c       | 42 ++++++++++++++++++++++++++++++++++--------
+ include/linux/pm_opp.h |  7 +++++++
+ 2 files changed, 41 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 0e7703fe733f..0168862579f1 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -130,6 +130,29 @@ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
+diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+index 54fa70ed2adc..34c51905f56d 100644
+--- a/drivers/opp/of.c
++++ b/drivers/opp/of.c
+@@ -42,14 +42,9 @@ struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev)
  }
- EXPORT_SYMBOL_GPL(dev_pm_opp_get_freq);
+ EXPORT_SYMBOL_GPL(dev_pm_opp_of_get_opp_desc_node);
+ 
+-struct opp_table *_managed_opp(struct device *dev, int index)
++struct opp_table *_find_opp_table_from_node(struct device_node *np)
+ {
+ 	struct opp_table *opp_table, *managed_table = NULL;
+-	struct device_node *np;
+-
+-	np = _opp_of_get_opp_desc_node(dev->of_node, index);
+-	if (!np)
+-		return NULL;
+ 
+ 	list_for_each_entry(opp_table, &opp_tables, node) {
+ 		if (opp_table->np == np) {
+@@ -69,11 +64,42 @@ struct opp_table *_managed_opp(struct device *dev, int index)
+ 		}
+ 	}
+ 
+-	of_node_put(np);
+-
+ 	return managed_table;
+ }
  
 +/**
-+ * dev_pm_opp_get_bw() - Gets the bandwidth corresponding to an available opp
-+ * @opp:	opp for which frequency has to be returned for
-+ * @avg_bw:	Pointer where the corresponding average bandwidth is stored.
-+ *		Can be NULL.
++ * dev_pm_opp_of_find_table_from_node() - Find OPP table from its DT node
++ * @np: DT node used for finding the OPP table
 + *
-+ * Return: Peak bandwidth in KBps corresponding to the opp, else
-+ * return 0
-+ */
-+unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *avg_bw)
-+{
-+	if (IS_ERR_OR_NULL(opp) || !opp->available) {
-+		pr_err("%s: Invalid parameters\n", __func__);
-+		return 0;
-+	}
-+
-+	if (avg_bw)
-+		*avg_bw = opp->avg_bw;
-+
-+	return opp->rate;
-+}
-+EXPORT_SYMBOL_GPL(dev_pm_opp_get_bw);
-+
- /**
-  * dev_pm_opp_get_level() - Gets the level corresponding to an available opp
-  * @opp:	opp for which level value has to be returned for
-@@ -302,6 +325,34 @@ unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_freq);
- 
-+/**
-+ * dev_pm_opp_get_suspend_opp_bw() - Get peak bandwidth of suspend opp in KBps
-+ * @dev:	device for which we do this operation
-+ * @avg_bw:	Pointer where the corresponding average bandwidth is stored.
-+ *		Can be NULL.
++ * Return: OPP table corresponding to the DT node, else NULL on failure.
 + *
-+ * Return: This function returns the peak bandwidth of the OPP marked as
-+ * suspend_opp if one is available, else returns 0;
++ * The caller needs to put the node with of_node_put() after using it.
 + */
-+unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-+					    unsigned long *avg_bw)
++struct opp_table *dev_pm_opp_of_find_table_from_node(struct device_node *np)
 +{
 +	struct opp_table *opp_table;
-+	unsigned long peak_bw = 0;
 +
-+	opp_table = _find_opp_table(dev);
-+	if (IS_ERR(opp_table))
-+		return 0;
-+
-+	if (opp_table->suspend_opp && opp_table->suspend_opp->available)
-+		peak_bw = dev_pm_opp_get_bw(opp_table->suspend_opp, avg_bw);
-+
-+	dev_pm_opp_put_opp_table(opp_table);
-+
-+	return peak_bw;
++	mutex_lock(&opp_table_lock);
++	opp_table = _find_opp_table_from_node(np);
++	mutex_unlock(&opp_table_lock);
++	return opp_table;
 +}
-+EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_bw);
++EXPORT_SYMBOL_GPL(dev_pm_opp_of_find_table_from_node);
 +
- int _get_opp_count(struct opp_table *opp_table)
- {
- 	struct dev_pm_opp *opp;
++struct opp_table *_managed_opp(struct device *dev, int index)
++{
++	struct device_node *np;
++	struct opp_table *opp_table;
++
++	np = _opp_of_get_opp_desc_node(dev->of_node, index);
++	if (!np)
++		return NULL;
++
++	opp_table = _find_opp_table_from_node(np);
++	of_node_put(np);
++	return opp_table;
++}
++
+ /* The caller must call dev_pm_opp_put() after the OPP is used */
+ static struct dev_pm_opp *_find_opp_of_np(struct opp_table *opp_table,
+ 					  struct device_node *opp_np)
 diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index b150fe97ce5a..d4d79ac0b5b2 100644
+index d4d79ac0b5b2..d80c59bcd50b 100644
 --- a/include/linux/pm_opp.h
 +++ b/include/linux/pm_opp.h
-@@ -85,6 +85,7 @@ void dev_pm_opp_put_opp_table(struct opp_table *opp_table);
- unsigned long dev_pm_opp_get_voltage(struct dev_pm_opp *opp);
- 
- unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp);
-+unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *avg_bw);
- 
- unsigned int dev_pm_opp_get_level(struct dev_pm_opp *opp);
- 
-@@ -95,6 +96,8 @@ unsigned long dev_pm_opp_get_max_clock_latency(struct device *dev);
- unsigned long dev_pm_opp_get_max_volt_latency(struct device *dev);
- unsigned long dev_pm_opp_get_max_transition_latency(struct device *dev);
- unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev);
-+unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-+					    unsigned long *avg_bw);
- 
- struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
- 					      unsigned long freq,
-@@ -161,6 +164,11 @@ static inline unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
- {
- 	return 0;
- }
-+static inline unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp,
-+					      unsigned long *avg_bw)
-+{
-+	return 0;
-+}
- 
- static inline unsigned int dev_pm_opp_get_level(struct dev_pm_opp *opp)
- {
-@@ -197,6 +205,12 @@ static inline unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
- 	return 0;
+@@ -359,6 +359,7 @@ int dev_pm_opp_of_cpumask_add_table(const struct cpumask *cpumask);
+ void dev_pm_opp_of_cpumask_remove_table(const struct cpumask *cpumask);
+ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
+ struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev);
++struct opp_table *dev_pm_opp_of_find_table_from_node(struct device_node *np);
+ struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp);
+ int of_get_required_opp_performance_state(struct device_node *np, int index);
+ void dev_pm_opp_of_register_em(struct cpumask *cpus);
+@@ -396,6 +397,12 @@ static inline struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device
+ 	return NULL;
  }
  
-+static inline unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-+							  unsigned long *avg_bw)
++static inline struct opp_table *dev_pm_opp_of_find_table_from_node(
++							struct device_node *np)
 +{
-+	return 0;
++	return NULL;
 +}
 +
- static inline struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
- 					unsigned long freq, bool available)
+ static inline struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp)
  {
-@@ -332,6 +346,11 @@ static inline void dev_pm_opp_cpumask_remove_table(const struct cpumask *cpumask
- 
- #endif		/* CONFIG_PM_OPP */
- 
-+#define dev_pm_opp_find_peak_bw_exact	dev_pm_opp_find_freq_exact
-+#define dev_pm_opp_find_peak_bw_floor	dev_pm_opp_find_freq_floor
-+#define dev_pm_opp_find_peak_bw_ceil_by_volt dev_pm_opp_find_freq_ceil_by_volt
-+#define dev_pm_opp_find_peak_bw_ceil	dev_pm_opp_find_freq_ceil
-+
- #if defined(CONFIG_PM_OPP) && defined(CONFIG_OF)
- int dev_pm_opp_of_add_table(struct device *dev);
- int dev_pm_opp_of_add_table_indexed(struct device *dev, int index);
+ 	return NULL;
 -- 
 2.22.0.410.gd8fdbe21b5-goog
