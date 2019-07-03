@@ -1,45 +1,33 @@
-From: Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v7 14/14] MAINTAINERS: add entry for Rockchip ISP1 driver
-Date: Wed,  3 Jul 2019 16:09:10 -0300
-Message-ID: <20190703190910.32633-15-helen.koike@collabora.com>
-References: <20190703190910.32633-1-helen.koike@collabora.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [patch v3 1/5] AST2500 DMA UART driver
+Date: Wed, 03 Jul 2019 12:16:01 -0700
+Message-ID: <2f19693f2f720dcc037465d4ae517fb846c7eb4f.camel@perches.com>
+References: <1561459476-14268-1-git-send-email-open.sudheer@gmail.com>
+         <1561459476-14268-2-git-send-email-open.sudheer@gmail.com>
+         <20190703174926.GA12813@kroah.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703190910.32633-1-helen.koike@collabora.com>
+In-Reply-To: <20190703174926.GA12813@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com, Helen Koike <helen.koike@collabora.com>, "David S. Miller" <davem@davemloft.net>, "Paul E. McKenney" <paulmck@linux.ibm.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>
+To: Greg KH <gregkh@linuxfoundation.org>, "sudheer.v" <open.sudheer@gmail.com>
+Cc: jslaby@suse.com, joel@jms.id.au, andrew@aj.id.au, benh@kernel.crashing.org, robh+dt@kernel.org, mark.rutland@arm.com, shivahshankar.shankarnarayanrao@aspeedtech.com, shivahshankar@gmail.com, sudheer.veliseti@aspeedtech.com, sudheer veliseti <sudheer.open@gmail.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add MAINTAINERS entry for the rockchip isp1 driver.
+On Wed, 2019-07-03 at 19:49 +0200, Greg KH wrote:
+> On Tue, Jun 25, 2019 at 04:14:32PM +0530, sudheer.v wrote:
+> > +#define UART_TX_R_POINT(x) (0x40 + (x * 0x20))
+> > +#define UART_TX_W_POINT(x) (0x44 + (x * 0x20))
+> > +#define UART_TX_SDMA_ADDR(x) (0x48 + (x * 0x20))
+> > +#define UART_RX_R_POINT(x) (0x50 + (x * 0x20))
+> > +#define UART_RX_W_POINT(x) (0x54 + (x * 0x20))
+> > +#define UART_RX_SDMA_ADDR(x) (0x58 + (x * 0x20))
+> 
+> Please use a tab to line these up.
 
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
----
+Also x should be surrounded by parentheses
 
-Changes in v7: None
+#define UART_TX_R_POINT(x)	(0x40 + ((x) * 0x20))
 
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 866969b36a13..47c8f17b0b1f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13518,6 +13518,14 @@ F:	drivers/hid/hid-roccat*
- F:	include/linux/hid-roccat*
- F:	Documentation/ABI/*/sysfs-driver-hid-roccat*
- 
-+ROCKCHIP ISP V1 DRIVER
-+M:	Helen Koike <helen.koike@collabora.com>
-+L:	linux-media@vger.kernel.org
-+S:	Maintained
-+F:	drivers/media/platform/rockchip/isp1/
-+F:	Documentation/devicetree/bindings/media/rockchip-isp1.txt
-+F:	Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
-+
- ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
- M:	Jacob chen <jacob2.chen@rock-chips.com>
- L:	linux-media@vger.kernel.org
--- 
-2.20.1
+etc...
