@@ -1,112 +1,59 @@
-From: Pawel Dembicki <paweldembicki@gmail.com>
-Subject: [PATCH v2 1/4] net: dsa: Change DT bindings for Vitesse VSC73xx switches
-Date: Wed,  3 Jul 2019 10:57:56 +0200
-Message-ID: <20190703085757.1027-1-paweldembicki@gmail.com>
-References: <20190701152723.624-1-paweldembicki@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: phy: add binding for the Lantiq VRX200
+ and ARX300 PCIe PHYs
+Date: Wed, 3 Jul 2019 10:58:41 +0200
+Message-ID: <CAFBinCCWzLyhzVcqHR0RY9+cSqDZ3EdJEim8SP4Mr2Q3M=OKTg@mail.gmail.com>
+References: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
+ <20190702203523.2412-2-martin.blumenstingl@googlemail.com> <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701152723.624-1-paweldembicki@gmail.com>
+In-Reply-To: <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: paweldembicki@gmail.com, linus.walleij@linaro.org, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Mark Rutland <mark.rutland@arm.com>, Martin Schiller <ms@dev.tdt.de>
 List-Id: devicetree@vger.kernel.org
 
-This commit introduce how to use vsc73xx platform driver.
+Hi Rob,
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
----
-Changes in v2:
-- Drop -spi and -platform suffix
-- Change commit message
+On Wed, Jul 3, 2019 at 1:34 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Jul 2, 2019 at 2:35 PM Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+> >
+> > Add the bindings for the PCIe PHY on Lantiq VRX200 and ARX300 SoCs.
+> > The IP block contains settings for the PHY and a PLL.
+> > The PLL mode is configurable through a dedicated #phy-cell in .dts.
+> >
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+> >  .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  | 87 +++++++++++++++++++
+> >  .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  | 11 +++
+> >  2 files changed, 98 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+> >  create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+> > new file mode 100644
+> > index 000000000000..b7b222e772d0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+> > @@ -0,0 +1,87 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+>
+> The preference is (GPL-2.0 OR BSD-2-Clause) for new bindings.
+to make sure I understand this correctly:
+the license is then only valid for the bindings - is it fine if the
+driver uses GPL-2.0-only?
 
- .../bindings/net/dsa/vitesse,vsc73xx.txt      | 57 +++++++++++++++++--
- 1 file changed, 53 insertions(+), 4 deletions(-)
+I don't have any datasheet for these SoCs so all my knowledge is based
+on the GPL-2.0-only driver from the Lantiq board support package
+(called "UGW").
+the .yaml file is 100% my own work so I'm fine with having GPL-2.0 OR
+BSD-2-Clause
+however, that still has to be compatible with my driver, which I chose
+to be GPL-2.0-only because that's the license from the Lantiq board
+support package
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-index ed4710c40641..c55e0148657d 100644
---- a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-@@ -2,8 +2,8 @@ Vitesse VSC73xx Switches
- ========================
- 
- This defines device tree bindings for the Vitesse VSC73xx switch chips.
--The Vitesse company has been acquired by Microsemi and Microsemi in turn
--acquired by Microchip but retains this vendor branding.
-+The Vitesse company has been acquired by Microsemi and Microsemi has
-+been acquired Microchip but retains this vendor branding.
- 
- The currently supported switch chips are:
- Vitesse VSC7385 SparX-G5 5+1-port Integrated Gigabit Ethernet Switch
-@@ -11,8 +11,13 @@ Vitesse VSC7388 SparX-G8 8-port Integrated Gigabit Ethernet Switch
- Vitesse VSC7395 SparX-G5e 5+1-port Integrated Gigabit Ethernet Switch
- Vitesse VSC7398 SparX-G8e 8-port Integrated Gigabit Ethernet Switch
- 
--The device tree node is an SPI device so it must reside inside a SPI bus
--device tree node, see spi/spi-bus.txt
-+This switch could have two different management interface.
-+
-+If SPI interface is used, the device tree node is an SPI device so it must
-+reside inside a SPI bus device tree node, see spi/spi-bus.txt
-+
-+If Platform driver is used, the device tree node is an platform device so it
-+must reside inside a platform bus device tree node.
- 
- Required properties:
- 
-@@ -38,6 +43,7 @@ and subnodes of DSA switches.
- 
- Examples:
- 
-+SPI:
- switch@0 {
- 	compatible = "vitesse,vsc7395";
- 	reg = <0>;
-@@ -79,3 +85,46 @@ switch@0 {
- 		};
- 	};
- };
-+
-+Platform:
-+switch@2,0 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "vitesse,vsc7385";
-+	reg = <0x2 0x0 0x20000>;
-+	reset-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			label = "lan1";
-+		};
-+		port@1 {
-+			reg = <1>;
-+			label = "lan2";
-+		};
-+		port@2 {
-+			reg = <2>;
-+			label = "lan3";
-+		};
-+		port@3 {
-+			reg = <3>;
-+			label = "lan4";
-+		};
-+		vsc: port@6 {
-+			reg = <6>;
-+			label = "cpu";
-+			ethernet = <&enet0>;
-+			phy-mode = "rgmii";
-+			fixed-link {
-+				speed = <1000>;
-+				full-duplex;
-+				pause;
-+			};
-+		};
-+	};
-+
-+};
--- 
-2.20.1
+
+Martin
