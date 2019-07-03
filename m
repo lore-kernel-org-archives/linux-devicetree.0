@@ -1,102 +1,117 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
- configure LED mode
-Date: Wed, 3 Jul 2019 14:37:47 -0700
-Message-ID: <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
-References: <20190703193724.246854-1-mka@chromium.org>
- <20190703193724.246854-6-mka@chromium.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v5 05/26] leds: core: Add support for composing LED class
+ device names
+Date: Thu, 4 Jul 2019 00:00:43 +0200
+Message-ID: <20190703220043.GA876@amd>
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+ <20190609190803.14815-6-jacek.anaszewski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703193724.246854-6-mka@chromium.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190609190803.14815-6-jacek.anaszewski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com, linux@roeck-us.net, dmurphy@ti.com, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/3/19 12:37 PM, Matthias Kaehlcke wrote:
-> The LED behavior of some Realtek PHYs is configurable. Add the
-> property 'realtek,led-modes' to specify the configuration of the
-> LEDs.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Changes in v2:
-> - patch added to the series
-> ---
->  .../devicetree/bindings/net/realtek.txt         |  9 +++++++++
->  include/dt-bindings/net/realtek.h               | 17 +++++++++++++++++
->  2 files changed, 26 insertions(+)
->  create mode 100644 include/dt-bindings/net/realtek.h
-> 
-> diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
-> index 71d386c78269..40b0d6f9ee21 100644
-> --- a/Documentation/devicetree/bindings/net/realtek.txt
-> +++ b/Documentation/devicetree/bindings/net/realtek.txt
-> @@ -9,6 +9,12 @@ Optional properties:
->  
->  	SSC is only available on some Realtek PHYs (e.g. RTL8211E).
->  
-> +- realtek,led-modes: LED mode configuration.
-> +
-> +	A 0..3 element vector, with each element configuring the operating
-> +	mode of an LED. Omitted LEDs are turned off. Allowed values are
-> +	defined in "include/dt-bindings/net/realtek.h".
 
-This should probably be made more general and we should define LED modes
-that makes sense regardless of the PHY device, introduce a set of
-generic functions for validating and then add new function pointer for
-setting the LED configuration to the PHY driver. This would allow to be
-more future proof where each PHY driver could expose standard LEDs class
-devices to user-space, and it would also allow facilities like: ethtool
--p to plug into that.
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Right now, each driver invents its own way of configuring LEDs, that
-does not scale, and there is not really a good reason for that other
-than reviewing drivers in isolation and therefore making it harder to
-extract the commonality. Yes, I realize that since you are the latest
-person submitting something in that area, you are being selected :)
+Hi!
 
-> +
->  Example:
->  
->  mdio0 {
-> @@ -20,5 +26,8 @@ mdio0 {
->  		reg = <1>;
->  		realtek,eee-led-mode-disable;
->  		realtek,enable-ssc;
-> +		realtek,led-modes = <RTL8211E_LINK_ACTIVITY
-> +				     RTL8211E_LINK_100
-> +				     RTL8211E_LINK_1000>;
->  	};
->  };
-> diff --git a/include/dt-bindings/net/realtek.h b/include/dt-bindings/net/realtek.h
-> new file mode 100644
-> index 000000000000..8d64f58d58f8
-> --- /dev/null
-> +++ b/include/dt-bindings/net/realtek.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _DT_BINDINGS_REALTEK_H
-> +#define _DT_BINDINGS_REALTEK_H
-> +
-> +/* LED modes for RTL8211E PHY */
-> +
-> +#define RTL8211E_LINK_10		1
-> +#define RTL8211E_LINK_100		2
-> +#define RTL8211E_LINK_1000		4
-> +#define RTL8211E_LINK_10_100		3
-> +#define RTL8211E_LINK_10_1000		5
-> +#define RTL8211E_LINK_100_1000		6
-> +#define RTL8211E_LINK_10_100_1000	7
-> +
-> +#define RTL8211E_LINK_ACTIVITY		(1 << 16)
-> +
-> +#endif
-> 
+Sorry for the delay.
+
+> @@ -27,6 +29,18 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
+>  LIST_HEAD(leds_list);
+>  EXPORT_SYMBOL_GPL(leds_list);
+> =20
+> +const char *led_colors[LED_COLOR_ID_MAX] =3D {
+
+const char * const , if we want to play that game?
 
 
--- 
-Florian
+> +	[LED_COLOR_ID_WHITE] =3D "white",
+> +	[LED_COLOR_ID_RED] =3D "red",
+> +	[LED_COLOR_ID_GREEN] =3D "green",
+> +	[LED_COLOR_ID_BLUE] =3D "blue",
+> +	[LED_COLOR_ID_AMBER] =3D "amber",
+> +	[LED_COLOR_ID_VIOLET] =3D "violet",
+> +	[LED_COLOR_ID_YELLOW] =3D "yellow",
+> +	[LED_COLOR_ID_IR] =3D "ir",
+> +};
+> +EXPORT_SYMBOL_GPL(led_colors);
+> +
+
+> +	if (fwnode_property_present(fwnode, "label")) {
+> +		ret =3D fwnode_property_read_string(fwnode, "label", &props->label);
+> +		if (ret)
+> +			dev_err(dev, "Error parsing \'label\' property (%d)\n", ret);
+> +		return;
+
+I don't think you need to escape ' with \.
+
+> +	if (fwnode_property_present(fwnode, "function")) {
+> +		ret =3D fwnode_property_read_string(fwnode, "function", &props->functi=
+on);
+> +		if (ret) {
+> +			dev_err(dev,
+> +				"Error parsing \'function\' property (%d)\n",
+> +				ret);
+> +		}
+> +	} else {
+> +		return;
+> +	}
+
+> +
+> +	if (fwnode_property_present(fwnode, "function-enumerator")) {
+
+I'd do if (!fwnode_property_present()) return; in both occasions, to
+save an indentation level; but that's nitpicking.
+
+> +	if (props.label) {
+> +		/*
+> +		 * If init_data.devicename is NULL, then it indicates that
+> +		 * DT label should be used as-is for LED class device name.
+> +		 * Otherwise the label is prepended with devicename to compose
+> +		 * the final LED class device name.
+> +		 */
+> +		if (!devicename) {
+> +			strncpy(led_classdev_name, props.label,
+> +				LED_MAX_NAME_SIZE);
+> +		} else {
+> +			snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
+> +				 devicename, props.label);
+> +		}
+
+Unlike snprintf(), strncpy() does not guarantee NULL termination.
+
+I did not check the shell script.
+
+With that fixed,
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0dJYsACgkQMOfwapXb+vIsIQCdHeXyY51Wi7XK3/jnfTSCSYyv
+OasAoKFj4QE6Bn6SkRH40Pkbh0DKIheX
+=vR+B
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
