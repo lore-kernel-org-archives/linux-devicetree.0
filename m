@@ -1,58 +1,61 @@
 From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: imx8mm: Init rates and parents configs for clocks
-Date: Wed, 3 Jul 2019 16:05:02 +0300
-Message-ID: <CAEnQRZAje+i1i0Nj2-SgAkdpdEq3-NyOLOt4mxfC_ayd2aD=Bg@mail.gmail.com>
-References: <1562155702-29809-1-git-send-email-abel.vesa@nxp.com>
+Subject: Re: [PATCH v2] arm64: dts: imx8mq: Init rates and parents configs for clocks
+Date: Wed, 3 Jul 2019 16:05:49 +0300
+Message-ID: <CAEnQRZBK7EYVhbGpFeC79HxU=h0OcXU_SSeaMWbp+Qk=rf=14g@mail.gmail.com>
+References: <1562155311-24696-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562155702-29809-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1562155311-24696-1-git-send-email-abel.vesa@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Abel Vesa <abel.vesa@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Daniel Baluta <daniel.baluta@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 3:10 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+On Wed, Jul 3, 2019 at 3:03 PM Abel Vesa <abel.vesa@nxp.com> wrote:
 >
 > Add the initial configuration for clocks that need default parent and rate
 > setting. This is based on the vendor tree clock provider parents and rates
-> configuration except this is doing the setup in dts rather than using clock
+> configuration except this is doing the setup in dts rather then using clock
 > consumer API in a clock provider driver.
 >
 > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 
-Thanks Abel, this helps audio.  For audio clk:
-
+For audio related clock:
 Acked-by: Daniel Baluta <daniel.baluta@nxp.com>
 
 > ---
 >
 > Changes since v1:
->  - removed the PCIE, CSI and DISP clocks parent setting since
->    that should be done from their driver.
+>  - removed the PCIE and CSI clocks parent setting since
+>    that should be done from their driver, as suggested
+>    by Leonard.
 >
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index 232a741..ba2034d 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -451,6 +451,17 @@
->                                          <&clk_ext3>, <&clk_ext4>;
->                                 clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index d09b808..c286f20 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -489,6 +489,20 @@
+>                                 clock-names = "ckil", "osc_25m", "osc_27m",
+>                                               "clk_ext1", "clk_ext2",
 >                                               "clk_ext3", "clk_ext4";
-> +                               assigned-clocks = <&clk IMX8MM_CLK_NOC>,
-> +                                               <&clk IMX8MM_CLK_AUDIO_AHB>,
-> +                                               <&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
-> +                                               <&clk IMX8MM_SYS_PLL3>,
-> +                                               <&clk IMX8MM_VIDEO_PLL1>;
-> +                               assigned-clock-parents = <&clk IMX8MM_SYS_PLL3_OUT>,
-> +                                                        <&clk IMX8MM_SYS_PLL1_800M>;
-> +                               assigned-clock-rates = <0>,
-> +                                                       <400000000>,
-> +                                                       <750000000>,
-> +                                                       <594000000>;
+> +                               assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1>,
+> +                                       <&clk IMX8MQ_CLK_AHB>,
+> +                                       <&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
+> +                                       <&clk IMX8MQ_CLK_AUDIO_AHB>,
+> +                                       <&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
+> +                                       <&clk IMX8MQ_CLK_NOC>;
+> +                               assigned-clock-parents = <0>,
+> +                                               <&clk IMX8MQ_SYS1_PLL_133M>,
+> +                                               <&clk IMX8MQ_SYS1_PLL_266M>,
+> +                                               <&clk IMX8MQ_SYS2_PLL_500M>,
+> +                                               <&clk IMX8MQ_CLK_27M>,
+> +                                               <&clk IMX8MQ_SYS1_PLL_800M>;
+> +                               assigned-clock-rates = <593999999>;
+> +
 >                         };
 >
 >                         src: reset-controller@30390000 {
