@@ -1,7 +1,7 @@
 From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v2 1/7] docs: dt-bindings: add poweroff
-Date: Wed,  3 Jul 2019 18:48:16 +0200
-Message-ID: <20190703164822.17924-2-frank-w@public-files.de>
+Subject: [PATCH v2 2/7] rtc: mt6397: move some common definitions into rtc.h
+Date: Wed,  3 Jul 2019 18:48:17 +0200
+Message-ID: <20190703164822.17924-3-frank-w@public-files.de>
 References: <20190703164822.17924-1-frank-w@public-files.de>
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -13,126 +13,158 @@ List-Id: devicetree@vger.kernel.org
 
 From: Josef Friedl <josef.friedl@speed.at>
 
-add documentation for pmic, rtc and power/reset devicetree bindings
-
 Suggested-by: Frank Wunderlich <frank-w@public-files.de>
 Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 =2D--
- .../devicetree/bindings/mfd/mt6397.txt        | 10 ++++++-
- .../bindings/power/reset/mt6323-poweroff.txt  | 20 +++++++++++++
- .../devicetree/bindings/rtc/rtc-mt6397.txt    | 29 +++++++++++++++++++
- 3 files changed, 58 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-p=
-oweroff.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+ drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
+ include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 72 insertions(+), 54 deletions(-)
+ create mode 100644 include/linux/mfd/mt6397/rtc.h
 
-diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentat=
-ion/devicetree/bindings/mfd/mt6397.txt
-index 0ebd08af777d..44acb9827716 100644
-=2D-- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-+++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-@@ -8,6 +8,7 @@ MT6397/MT6323 is a multifunction device with the following=
- sub modules:
- - Clock
- - LED
- - Keys
-+- Power controller
+diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+index b46ed4dc7015..c08ee5edf865 100644
+=2D-- a/drivers/rtc/rtc-mt6397.c
++++ b/drivers/rtc/rtc-mt6397.c
+@@ -9,60 +9,7 @@
+ #include <linux/module.h>
+ #include <linux/regmap.h>
+ #include <linux/rtc.h>
+-#include <linux/irqdomain.h>
+-#include <linux/platform_device.h>
+-#include <linux/of_address.h>
+-#include <linux/of_irq.h>
+-#include <linux/io.h>
+-#include <linux/mfd/mt6397/core.h>
+-
+-#define RTC_BBPU		0x0000
+-#define RTC_BBPU_CBUSY		BIT(6)
+-
+-#define RTC_WRTGR		0x003c
+-
+-#define RTC_IRQ_STA		0x0002
+-#define RTC_IRQ_STA_AL		BIT(0)
+-#define RTC_IRQ_STA_LP		BIT(3)
+-
+-#define RTC_IRQ_EN		0x0004
+-#define RTC_IRQ_EN_AL		BIT(0)
+-#define RTC_IRQ_EN_ONESHOT	BIT(2)
+-#define RTC_IRQ_EN_LP		BIT(3)
+-#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
+-
+-#define RTC_AL_MASK		0x0008
+-#define RTC_AL_MASK_DOW		BIT(4)
+-
+-#define RTC_TC_SEC		0x000a
+-/* Min, Hour, Dom... register offset to RTC_TC_SEC */
+-#define RTC_OFFSET_SEC		0
+-#define RTC_OFFSET_MIN		1
+-#define RTC_OFFSET_HOUR		2
+-#define RTC_OFFSET_DOM		3
+-#define RTC_OFFSET_DOW		4
+-#define RTC_OFFSET_MTH		5
+-#define RTC_OFFSET_YEAR		6
+-#define RTC_OFFSET_COUNT	7
+-
+-#define RTC_AL_SEC		0x0018
+-
+-#define RTC_PDN2		0x002e
+-#define RTC_PDN2_PWRON_ALARM	BIT(4)
+-
+-#define RTC_MIN_YEAR		1968
+-#define RTC_BASE_YEAR		1900
+-#define RTC_NUM_YEARS		128
+-#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
+-
+-struct mt6397_rtc {
+-	struct device		*dev;
+-	struct rtc_device	*rtc_dev;
+-	struct mutex		lock;
+-	struct regmap		*regmap;
+-	int			irq;
+-	u32			addr_base;
+-};
++#include <linux/mfd/mt6397/rtc.h>
 
- It is interfaced to host controller using SPI interface by a proprietary =
-hardware
- called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwra=
-p.
-@@ -22,8 +23,10 @@ compatible: "mediatek,mt6397" or "mediatek,mt6323"
- Optional subnodes:
-
- - rtc
--	Required properties:
-+	Required properties: Should be one of follows
-+		- compatible: "mediatek,mt6323-rtc"
- 		- compatible: "mediatek,mt6397-rtc"
-+	For details, see Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
- - regulators
- 	Required properties:
- 		- compatible: "mediatek,mt6397-regulator"
-@@ -46,6 +49,11 @@ Optional subnodes:
- 		- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
- 	see Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
-
-+- power-controller
-+	Required properties:
-+		- compatible: "mediatek,mt6323-pwrc"
-+	For details, see Documentation/devicetree/bindings/power/reset/mt6323-po=
-weroff.txt
-+
- Example:
- 	pwrap: pwrap@1000f000 {
- 		compatible =3D "mediatek,mt8135-pwrap";
-diff --git a/Documentation/devicetree/bindings/power/reset/mt6323-poweroff=
-.txt b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+ {
+diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc=
+.h
 new file mode 100644
-index 000000000000..933f0c48e887
+index 000000000000..b702c29e8c74
 =2D-- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-@@ -0,0 +1,20 @@
-+Device Tree Bindings for Power Controller on MediaTek PMIC
++++ b/include/linux/mfd/mt6397/rtc.h
+@@ -0,0 +1,71 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2014-2018 MediaTek Inc.
++ *
++ * Author: Tianping.Fang <tianping.fang@mediatek.com>
++ *        Sean Wang <sean.wang@mediatek.com>
++ */
 +
-+The power controller which could be found on PMIC is responsible for exte=
-rnally
-+powering off or on the remote MediaTek SoC through the circuit BBPU.
++#ifndef _LINUX_MFD_MT6397_RTC_H_
++#define _LINUX_MFD_MT6397_RTC_H_
 +
-+Required properties:
-+- compatible: Should be one of follows
-+       "mediatek,mt6323-pwrc": for MT6323 PMIC
++#include <linux/jiffies.h>
++#include <linux/mutex.h>
++#include <linux/regmap.h>
++#include <linux/rtc.h>
 +
-+Example:
++#define RTC_BBPU               0x0000
++#define RTC_BBPU_CBUSY         BIT(6)
++#define RTC_BBPU_KEY            (0x43 << 8)
 +
-+       pmic {
-+               compatible =3D "mediatek,mt6323";
++#define RTC_WRTGR              0x003c
 +
-+               ...
++#define RTC_IRQ_STA            0x0002
++#define RTC_IRQ_STA_AL         BIT(0)
++#define RTC_IRQ_STA_LP         BIT(3)
 +
-+               power-controller {
-+                       compatible =3D "mediatek,mt6323-pwrc";
-+               };
-+       }
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt b/Docume=
-ntation/devicetree/bindings/rtc/rtc-mt6397.txt
-new file mode 100644
-index 000000000000..ebd1cf80dcc8
-=2D-- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-@@ -0,0 +1,29 @@
-+Device-Tree bindings for MediaTek PMIC based RTC
++#define RTC_IRQ_EN             0x0004
++#define RTC_IRQ_EN_AL          BIT(0)
++#define RTC_IRQ_EN_ONESHOT     BIT(2)
++#define RTC_IRQ_EN_LP          BIT(3)
++#define RTC_IRQ_EN_ONESHOT_AL  (RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
 +
-+MediaTek PMIC based RTC is an independent function of MediaTek PMIC that =
-works
-+as a type of multi-function device (MFD). The RTC can be configured and s=
-et up
-+with PMIC wrapper bus which is a common resource shared with the other
-+functions found on the same PMIC.
++#define RTC_AL_MASK            0x0008
++#define RTC_AL_MASK_DOW                BIT(4)
 +
-+For MediaTek PMIC MFD bindings, see:
-+Documentation/devicetree/bindings/mfd/mt6397.txt
++#define RTC_TC_SEC             0x000a
++/* Min, Hour, Dom... register offset to RTC_TC_SEC */
++#define RTC_OFFSET_SEC         0
++#define RTC_OFFSET_MIN         1
++#define RTC_OFFSET_HOUR                2
++#define RTC_OFFSET_DOM         3
++#define RTC_OFFSET_DOW         4
++#define RTC_OFFSET_MTH         5
++#define RTC_OFFSET_YEAR                6
++#define RTC_OFFSET_COUNT       7
 +
-+For MediaTek PMIC wrapper bus bindings, see:
-+Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
++#define RTC_AL_SEC             0x0018
 +
-+Required properties:
-+- compatible: Should be one of follows
-+       "mediatek,mt6323-rtc": for MT6323 PMIC
-+       "mediatek,mt6397-rtc": for MT6397 PMIC
++#define RTC_PDN2               0x002e
++#define RTC_PDN2_PWRON_ALARM   BIT(4)
 +
-+Example:
++#define RTC_MIN_YEAR           1968
++#define RTC_BASE_YEAR          1900
++#define RTC_NUM_YEARS          128
++#define RTC_MIN_YEAR_OFFSET    (RTC_MIN_YEAR - RTC_BASE_YEAR)
 +
-+       pmic {
-+               compatible =3D "mediatek,mt6323";
++#define MTK_RTC_POLL_DELAY_US  10
++#define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
 +
-+               ...
++struct mt6397_rtc {
++	struct device           *dev;
++	struct rtc_device       *rtc_dev;
 +
-+               rtc {
-+                       compatible =3D "mediatek,mt6323-rtc";
-+               };
-+       };
++	/* Protect register access from multiple tasks */
++	struct mutex            lock;
++	struct regmap           *regmap;
++	int                     irq;
++	u32                     addr_base;
++};
++
++#endif /* _LINUX_MFD_MT6397_RTC_H_ */
 =2D-
 2.17.1
