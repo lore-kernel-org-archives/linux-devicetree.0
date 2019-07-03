@@ -1,24 +1,27 @@
-Return-Path: <SRS0=GwrK=VF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from [81.144.230.116] ([81.144.230.116]:37920 "EHLO nrm.chariot"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728860AbfGHSQJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jul 2019 14:16:09 -0400
-Received: from localhost (localhost [IPv6:::1])
-        by nrm.chariot (Postfix) with SMTP id 600A44BB706
-        for <devicetree@vger.kernel.org>; Mon,  8 Jul 2019 14:54:51 +0100 (BST)
-From: devicetree@vger.kernel.org
-Reply-To: prodawez@armyspy.com
-Subject: =?utf-8?B?0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1ISDQktCw0YEg?=
-        =?utf-8?B?0LjQvdGC0LXRgNC10YHRg9GO0YIg0LrQu9C40LXQvdGC?=
-        =?utf-8?B?0YHQutC40LUg0LHQsNC30Ysg0LTQsNC90L3Ri9GFPw==?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8";
-Content-Transfer-Encoding: base64
-Message-Id: <20190708135451.600A44BB706@nrm.chariot>
-Date: Mon,  8 Jul 2019 14:54:51 +0100 (BST)
-Sender: devicetree-owner@vger.kernel.org
-To: RvzBdevicetree@vger.kernel.org
+Date: Wed, 3 Jul 2019 13:29:28 -0600
+References: <20190703095513.12340-1-maxime.ripard@bootlin.com>
+In-Reply-To: <20190703095513.12340-1-maxime.ripard@bootlin.com>
+Message-ID: <CAL_JsqJPojy3y5yMwEpE0y131SqbjPx9KetgmyfFdAb=d_Oebw@mail.gmail.com>
+Subject: Re: [PATCH 1/7] dt-bindings: net: mdio: Add a nodename pattern
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1ISDQktCw0YEg0LjQvdGC0LXRgNC10YHRg9GO0YIg0LrQ
-u9C40LXQvdGC0YHQutC40LUg0LHQsNC30Ysg0LTQsNC90L3Ri9GFPw0K
+On Wed, Jul 3, 2019 at 3:55 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> The node name of an MDIO controller should be MDIO. Let's add a rule for
+> this.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/net/mdio.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
+
+Series applied. Thanks.
+
+BTW, just some errors with Broadcom boards with the mdio schema.
+
+Rob
