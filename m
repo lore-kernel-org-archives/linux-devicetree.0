@@ -1,7 +1,7 @@
 From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 2/3] ath10k: Move regulator config to driver private data
-Date: Wed,  3 Jul 2019 09:27:10 +0530
-Message-ID: <20190703035711.25592-3-govinds@codeaurora.org>
+Subject: [PATCH 3/3] arm64: dts: qcom: qcs404: Modify wifi dt node for SDM845/QCS404 devices
+Date: Wed,  3 Jul 2019 09:27:11 +0530
+Message-ID: <20190703035711.25592-4-govinds@codeaurora.org>
 References: <20190703035711.25592-1-govinds@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,146 +12,58 @@ To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-WCN3990 Regulator config is varying b/w different MSM platforms.
-In order to have scalable config, move regulator config to driver
-private data.
+Modify the compatible string of wifi node for SDM845/QCS404 devices.
+Add wifi regulators in qcs404 dt node for proxy vote. Proxy votes are
+required for handling driver recovery scenarios to prevent
+un-clocked register access during driver recovery.
 
 Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- drivers/net/wireless/ath/ath10k/snoc.c | 38 +++++++++++++++++++++-----
- drivers/net/wireless/ath/ath10k/snoc.h | 23 +++++++++-------
- 2 files changed, 44 insertions(+), 17 deletions(-)
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 3 +++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi     | 2 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi     | 2 +-
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
-index ca1186ec4129..bd7d97924fe0 100644
---- a/drivers/net/wireless/ath/ath10k/snoc.c
-+++ b/drivers/net/wireless/ath/ath10k/snoc.c
-@@ -36,13 +36,20 @@ static char *const ce_name[] = {
- 	"WLAN_CE_11",
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+index 50b3589c7f15..ff81b9c5b057 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -190,6 +190,9 @@
+ 
+ &wifi {
+ 	status = "okay";
++	vdd-0.8-cx-mx-supply = <&vreg_l2_1p275>;
++	vdd-1.8-xo-supply = <&vreg_l5_1p8>;
++	vdd-1.3-rfa-supply = <&vreg_l1_1p3>;
  };
  
--static struct ath10k_vreg_info vreg_cfg[] = {
-+static struct ath10k_vreg_info sdm845_reg_cfg[] = {
- 	{NULL, "vdd-0.8-cx-mx", 800000, 850000, 0, 0, false},
- 	{NULL, "vdd-1.8-xo", 1800000, 1850000, 0, 0, false},
- 	{NULL, "vdd-1.3-rfa", 1300000, 1350000, 0, 0, false},
- 	{NULL, "vdd-3.3-ch0", 3300000, 3350000, 0, 0, false},
- };
+ /* PINCTRL - additions to nodes defined in qcs404.dtsi */
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index e8fd26633d57..d9e2173cd3e9 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -480,7 +480,7 @@
+ 		};
  
-+static struct ath10k_vreg_info qcs40x_reg_cfg[] = {
-+	{NULL, "vdd-0.8-cx-mx", 1224000, 1224000, 0, 0, false},
-+	{NULL, "vdd-1.8-xo", 1800000, 1850000, 0, 0, false},
-+	{NULL, "vdd-1.3-rfa", 1300000, 1350000, 0, 0, false},
-+	{NULL, "vdd-3.3-ch0", 3300000, 3350000, 0, 0, false},
-+};
-+
- static struct ath10k_clk_info clk_cfg[] = {
- 	{NULL, "cxo_ref_clk_pin", 0, false},
- };
-@@ -54,10 +61,20 @@ static void ath10k_snoc_htt_rx_cb(struct ath10k_ce_pipe *ce_state);
- static void ath10k_snoc_htt_htc_rx_cb(struct ath10k_ce_pipe *ce_state);
- static void ath10k_snoc_pktlog_rx_cb(struct ath10k_ce_pipe *ce_state);
+ 		wifi: wifi@a000000 {
+-			compatible = "qcom,wcn3990-wifi";
++			compatible = "qcom,qcs40x-wcn39xx-wifi";
+ 			reg = <0xa000000 0x800000>;
+ 			reg-names = "membase";
+ 			memory-region = <&wlan_msa_mem>;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 5308f1671824..fdb5fcd814f4 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2235,7 +2235,7 @@
+ 		};
  
--static const struct ath10k_snoc_drv_priv drv_priv = {
-+static const struct ath10k_snoc_drv_priv sdm845_wcn39xx_drv_priv = {
-+	.hw_rev = ATH10K_HW_WCN3990,
-+	.dma_mask = DMA_BIT_MASK(35),
-+	.msa_size = 0x100000,
-+	.vreg_cfg = sdm845_reg_cfg,
-+	.vreg_count = ARRAY_SIZE(sdm845_reg_cfg),
-+};
-+
-+static const struct ath10k_snoc_drv_priv qcs40x_wcn39xx_drv_priv = {
- 	.hw_rev = ATH10K_HW_WCN3990,
- 	.dma_mask = DMA_BIT_MASK(35),
- 	.msa_size = 0x100000,
-+	.vreg_cfg = qcs40x_reg_cfg,
-+	.vreg_count =  ARRAY_SIZE(qcs40x_reg_cfg),
- };
- 
- #define WCN3990_SRC_WR_IDX_OFFSET 0x3C
-@@ -1465,7 +1482,7 @@ static int ath10k_snoc_vreg_on(struct ath10k *ar)
- 	int ret = 0;
- 	int i;
- 
--	for (i = 0; i < ARRAY_SIZE(vreg_cfg); i++) {
-+	for (i = 0; i < ar_snoc->vreg_count; i++) {
- 		vreg_info = &ar_snoc->vreg[i];
- 
- 		if (!vreg_info->reg)
-@@ -1498,7 +1515,7 @@ static int ath10k_snoc_vreg_off(struct ath10k *ar)
- 	int ret = 0;
- 	int i;
- 
--	for (i = ARRAY_SIZE(vreg_cfg) - 1; i >= 0; i--) {
-+	for (i = ar_snoc->vreg_count - 1; i >= 0; i--) {
- 		vreg_info = &ar_snoc->vreg[i];
- 
- 		if (!vreg_info->reg)
-@@ -1616,7 +1633,13 @@ static int ath10k_hw_power_off(struct ath10k *ar)
- 
- static const struct of_device_id ath10k_snoc_dt_match[] = {
- 	{ .compatible = "qcom,wcn3990-wifi",
--	 .data = &drv_priv,
-+	 .data = &sdm845_wcn39xx_drv_priv,
-+	},
-+	{ .compatible = "qcom,sdm845-wcn39xx-wifi",
-+	 .data = &sdm845_wcn39xx_drv_priv,
-+	},
-+	{ .compatible = "qcom,qcs40x-wcn39xx-wifi",
-+	 .data = &qcs40x_wcn39xx_drv_priv,
- 	},
- 	{ }
- };
-@@ -1680,8 +1703,9 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
- 		goto err_release_resource;
- 	}
- 
--	ar_snoc->vreg = vreg_cfg;
--	for (i = 0; i < ARRAY_SIZE(vreg_cfg); i++) {
-+	ar_snoc->vreg = drv_data->vreg_cfg;
-+	ar_snoc->vreg_count = drv_data->vreg_count;
-+	for (i = 0; i < ar_snoc->vreg_count; i++) {
- 		ret = ath10k_get_vreg_info(ar, dev, &ar_snoc->vreg[i]);
- 		if (ret)
- 			goto err_free_irq;
-diff --git a/drivers/net/wireless/ath/ath10k/snoc.h b/drivers/net/wireless/ath/ath10k/snoc.h
-index d62f53501fbb..0bdada11985c 100644
---- a/drivers/net/wireless/ath/ath10k/snoc.h
-+++ b/drivers/net/wireless/ath/ath10k/snoc.h
-@@ -10,10 +10,22 @@
- #include "ce.h"
- #include "qmi.h"
- 
-+struct ath10k_vreg_info {
-+	struct regulator *reg;
-+	const char *name;
-+	u32 min_v;
-+	u32 max_v;
-+	u32 load_ua;
-+	unsigned long settle_delay;
-+	bool required;
-+};
-+
- struct ath10k_snoc_drv_priv {
- 	enum ath10k_hw_rev hw_rev;
- 	u64 dma_mask;
- 	u32 msa_size;
-+	struct ath10k_vreg_info *vreg_cfg;
-+	u8 vreg_count;
- };
- 
- struct snoc_state {
-@@ -42,16 +54,6 @@ struct ath10k_snoc_ce_irq {
- 	u32 irq_line;
- };
- 
--struct ath10k_vreg_info {
--	struct regulator *reg;
--	const char *name;
--	u32 min_v;
--	u32 max_v;
--	u32 load_ua;
--	unsigned long settle_delay;
--	bool required;
--};
+ 		wifi: wifi@18800000 {
+-			compatible = "qcom,wcn3990-wifi";
++			compatible = "qcom,sdm845-wcn39xx-wifi";
+ 			status = "disabled";
+ 			reg = <0 0x18800000 0 0x800000>;
+ 			reg-names = "membase";
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
