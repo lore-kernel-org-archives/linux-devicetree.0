@@ -1,305 +1,102 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum
- rate for PLL_MIPI
-Date: Wed, 3 Jul 2019 13:49:33 +0200
-Message-ID: <20190703114933.u3x4ej3v7ocewvif@flea>
-References: <20190129151348.mh27btttsqcmeban@flea>
- <CAMty3ZAjAoti8Zu80c=OyCA+u-jtQnkidsKSNz_c2OaRswqc3w@mail.gmail.com>
- <20190201143102.rcvrxstc365mezvx@flea>
- <CAMty3ZC3_+z1upH4Y08R1z=Uq1C=OpWETNrBO8nGRoHhuNrHSA@mail.gmail.com>
- <20190605064933.6bmskkxzzgn35xz7@flea>
- <CAMty3ZCCP=oCqm5=49BsjwoxdDETgBfU_5g8fQ=bz=iWApV0tw@mail.gmail.com>
- <20190614142406.ybdiqfppo5mc5bgq@flea>
- <CAMty3ZB45cHx3WeXnywBh2_UA_bTmFs6yBTqLWA1BNf4fQtVvQ@mail.gmail.com>
- <20190625144930.5hegt6bkzqzykjid@flea>
- <CAMty3ZCmj0Rz7MMhLqihsvLQi+1CHf0fAoJQ4QN65xB-bwxaJw@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/6] ASoC: wcd934x: add support to
+	wcd9340/wcd9341 codec
+Date: Wed, 3 Jul 2019 12:52:43 +0100
+Message-ID: <20190703115243.GV2793@sirena.org.uk>
+References: <20190702080920.22623-1-srinivas.kandagatla@linaro.org>
+ <20190702080920.22623-3-srinivas.kandagatla@linaro.org>
+ <20190702144411.GP2793@sirena.org.uk>
+ <2e2a32dd-3dca-5391-1bfa-ab1c1f420e3a@linaro.org>
+ <20190702165753.GQ2793@sirena.org.uk>
+ <0a9a994c-5a88-539f-3af0-76754b9b58d1@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="o6glxbmwab2ugpxc"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUVM6LUAKGQEPOXSNNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZCmj0Rz7MMhLqihsvLQi+1CHf0fAoJQ4QN65xB-bwxaJw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============3997232494059942947=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <0a9a994c-5a88-539f-3af0-76754b9b58d1@linaro.org>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, vkoul@kernel.org, robh+dt@kernel.org, srini@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---o6glxbmwab2ugpxc
-Content-Type: text/plain; charset="UTF-8"
+--===============3997232494059942947==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="VpY0yS1BYpNZumir"
 Content-Disposition: inline
 
-On Tue, Jun 25, 2019 at 09:00:36PM +0530, Jagan Teki wrote:
-> On Tue, Jun 25, 2019 at 8:19 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Thu, Jun 20, 2019 at 11:57:44PM +0530, Jagan Teki wrote:
-> > > On Fri, Jun 14, 2019 at 7:54 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > >
-> > > > On Wed, Jun 05, 2019 at 01:03:16PM +0530, Jagan Teki wrote:
-> > > > > On Wed, Jun 5, 2019 at 12:19 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > > > >
-> > > > > > Hi,
-> > > > > >
-> > > > > > I've reordered the mail a bit to work on chunks
-> > > > > >
-> > > > > > On Fri, May 24, 2019 at 03:37:42PM +0530, Jagan Teki wrote:
-> > > > > > > > I wish it was in your commit log in the first place, instead of having
-> > > > > > > > to exchange multiple mails over this.
-> > > > > > > >
-> > > > > > > > However, I don't think that's quite true, and it might be a bug in
-> > > > > > > > Allwinner's implementation (or rather something quite confusing).
-> > > > > > > >
-> > > > > > > > You're right that the lcd_rate and pll_rate seem to be generated from
-> > > > > > > > the pixel clock, and it indeed looks like the ratio between the pixel
-> > > > > > > > clock and the TCON dotclock is defined through the number of bits per
-> > > > > > > > lanes.
-> > > > > > > >
-> > > > > > > > However, in this case, dsi_rate is actually the same than lcd_rate,
-> > > > > > > > since pll_rate is going to be divided by dsi_div:
-> > > > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L791
-> > > > > > > >
-> > > > > > > > Since lcd_div is 1, it also means that in this case, dsi_rate ==
-> > > > > > > > dclk_rate.
-> > > > > > > >
-> > > > > > > > The DSI module clock however, is always set to 148.5 MHz. Indeed, if
-> > > > > > > > we look at:
-> > > > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L804
-> > > > > > > >
-> > > > > > > > We can see that the rate in clk_info is used if it's different than
-> > > > > > > > 0. This is filled by disp_al_lcd_get_clk_info, which, in the case of a
-> > > > > > > > DSI panel, will hardcode it to 148.5 MHz:
-> > > > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L164
-> > > > > > >
-> > > > > > > Let me explain, something more.
-> > > > > > >
-> > > > > > > According to bsp there are clk_info.tcon_div which I will explain below.
-> > > > > > > clk_info.dsi_div which is dynamic and it depends on bpp/lanes, so it
-> > > > > > > is 6 for 24bpp and 4 lanes devices.
-> > > > > > >
-> > > > > > > PLL rate here depends on dsi_div (not tcon_div)
-> > > > > > >
-> > > > > > > Code here
-> > > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L784
-> > > > > > >
-> > > > > > > is computing the actual set rate, which depends on dsi_rate.
-> > > > > > >
-> > > > > > > lcd_rate = dclk_rate * clk_info.dsi_div;
-> > > > > > > dsi_rate = pll_rate / clk_info.dsi_div;
-> > > > > > >
-> > > > > > > Say if the dclk_rate 148MHz then the dsi_rate is 888MHz which set rate
-> > > > > > > for above link you mentioned.
-> > > > > > >
-> > > > > > > Here are the evidence with some prints.
-> > > > > > >
-> > > > > > > https://gist.github.com/openedev/9bae2d87d2fcc06b999fe48c998b7043
-> > > > > > > https://gist.github.com/openedev/700de2e3701b2bf3ad1aa0f0fa862c9a
-> > > > > >
-> > > > > > Ok, so we agree up to this point, and the prints confirm that the
-> > > > > > analysis above is the right one.
-> > > > > >
-> > > > > > > > So, the DSI clock is set to this here:
-> > > > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L805
-> > > > > >
-> > > > > > Your patch doesn't address that, so let's leave that one alone.
-> > > > >
-> > > > > Basically this is final pll set rate when sun4i_dotclock.c called the
-> > > > > desired rate with ccu_nkm.c so it ended the final rate with parent as
-> > > > > Line 8 of
-> > > > > https://gist.github.com/openedev/700de2e3701b2bf3ad1aa0f0fa862c9a
-> > > >
-> > > > If that's important to the driver, it should be set explicitly then,
-> > > > and not work by accident.
-> > > >
-> > > > > > > > The TCON *module* clock (the one in the clock controller) has been set
-> > > > > > > > to lcd_rate (so the pixel clock times the number of bits per lane) here:
-> > > > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L800
-> > > > > > > >
-> > > > > > > > And the PLL has been set to the same rate here:
-> > > > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L794
-> > > > > > > >
-> > > > > > > > Let's take a step back now: that function we were looking at,
-> > > > > > > > lcd_clk_config, is called by lcd_clk_enable, which is in turn called
-> > > > > > > > by disp_lcd_enable here:
-> > > > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L1328
-> > > > > > > >
-> > > > > > > > The next function being called is disp_al_lcd_cfg, and that function
-> > > > > > > > will hardcode the TCON dotclock divider to 4, here:
-> > > > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L240
-> > > > > > >
-> > > > > > > tcon_div from BSP point-of-view of there are two variants
-> > > > > > > 00) clk_info.tcon_div which is 4 and same is set the divider position
-> > > > > > > in SUN4I_TCON0_DCLK_REG (like above link refer)
-> > > > > > > 01) tcon_div which is 4 and used for edge timings computation
-> > > > > > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L12
-> > > > > > >
-> > > > > > > The real reason for 01) is again 4 is they set the divider to 4 in 00)
-> > > > > > > which is technically wrong because the dividers which used during
-> > > > > > > dotclock in above (dsi_div) should be used here as well. Since there
-> > > > > > > is no dynamic way of doing this BSP hard-coding these values.
-> > > > > > >
-> > > > > > > Patches 5,6,7 on this series doing this
-> > > > > > > https://patchwork.freedesktop.org/series/60847/
-> > > > > > >
-> > > > > > > Hope this explanation helps?
-> > > > > >
-> > > > > > It doesn't.
-> > > > > >
-> > > > > > The clock tree is this one:
-> > > > > >
-> > > > > > PLL(s) -> TCON module clock -> TCON dotclock.
-> > > > > >
-> > > > > > The links I mentioned above show that the clock set to lcd_rate is the
-> > > > > > TCON module clocks (and it should be the one taking the bpp and lanes
-> > > > > > into account), while the TCON dotclock uses a fixed divider of 4.
-> > > > >
-> > > > > Sorry, I can argue much other-than giving some code snips, according to [1]
-> > > > >
-> > > > > 00) Line 785, 786 with dclk_rate 148000000
-> > > > >
-> > > > > lcd_rate = dclk_rate * clk_info.dsi_div;
-> > > > > pll_rate = lcd_rate * clk_info.lcd_div;
-> > > > >
-> > > > > Since dsi_div is 6 (bpp/lanes), lcd_div 1
-> > > > >
-> > > > > lcd_rate = 888000000, pll_rate = 888000000
-> > > > >
-> > > > > 01)  Line 801, 804 are final rates computed as per clock driver (say
-> > > > > ccu_nkm in mainline)
-> > > > >
-> > > > > lcd_rate_set=891000000
-> > > > >
-> > > > > As per your comments if it would be 4 then the desired numbers are
-> > > > > would be 592000000 not 888000000.
-> > > > >
-> > > > > This is what I'm trying to say in all mails, and same as verified with
-> > > > > 2-lanes devices as well where the dsi_div is 12 so the final rate is
-> > > > > 290MHz * 12
-> > > >
-> > > > In the code you sent, you're forcing a divider on the internal TCON
-> > > > clock, while that one is fixed in the BSP.
-> > > >
-> > > > There's indeed the bpp / lanes divider, but it's used in the *parent*
-> > > > clock of the one you're changing.
-> > > >
-> > > > And the dsi0_clk clock you pointed out in the code snippet is yet
-> > > > another clock, the MIPI DSI module clock.
-> > >
-> > > Correct, look like I refereed wrong reference in the above mail. sorry
-> > > for the noise.
-> > >
-> > > Actually I'm trying to explain about pll_rate here which indeed
-> > > depends on dsi.div
-> > > https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L786
-> > >
-> > > lcd_rate = dclk_rate * clk_info.dsi_div;
-> > > pll_rate = lcd_rate * clk_info.lcd_div;
-> > >
-> > > Say
-> > >
-> > > 1) For 148MHz dclk_rate with dsi_div is 6 (24/4) lcd_div is 1 which
-> > > resulting pll_rate is 888MHz.
-> > >
-> > > 2) For 30MHz dclk_rate with 4 lane and 24 RGB the resulting pll_rate is 180MHz
-> > >
-> > > 3) For 27.5MHz dclk_rate with 2 lane and 24 RGB the resulting pll_rate is 330MHz
-> > >
-> > > Here is the few more logs in code, for case 2)
-> > >
-> > > [    1.920441] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 30000000
-> > > [    1.920505] ideal = 180000000, rounded = 178200000
-> > > [    1.920509] sun4i_dclk_round_rate: div = 6 rate = 29700000
-> > > [    1.920514] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 30000000
-> > > [    1.920532] ideal = 180000000, rounded = 178200000
-> > > [    1.920535] sun4i_dclk_round_rate: div = 6 rate = 29700000
-> > > [    1.920572] sun4i_dclk_recalc_rate: val = 1, rate = 178200000
-> > > [    1.920576] sun4i_dclk_recalc_rate: val = 1, rate = 178200000
-> > > [    1.920597] rate = 178200000
-> > > [    1.920599] parent_rate = 297000000
-> > > [    1.920602] reg = 0x90c00000
-> > > [    1.920605] _nkm.n = 3, nkm->n.offset = 0x1, nkm->n.shift = 8
-> > > [    1.920609] _nkm.k = 2, nkm->k.offset = 0x1, nkm->k.shift = 4
-> > > [    1.920612] _nkm.m = 10, nkm->m.offset = 0x1, nkm->m.shift = 0
-> > > [    1.920958] sun4i_dclk_set_rate div 6
-> > > [    1.920966] sun4i_dclk_recalc_rate: val = 6, rate = 29700000
-> > >
-> > > and clk_summary:
-> > >
-> > >     pll-video0                        1        1        1   297000000
-> > >         0     0  50000
-> > >        hdmi                           0        0        0   297000000
-> > >         0     0  50000
-> > >        tcon1                          0        0        0   297000000
-> > >         0     0  50000
-> > >        pll-mipi                       1        1        1   178200000
-> > >         0     0  50000
-> > >           tcon0                       2        2        1   178200000
-> > >         0     0  50000
-> > >              tcon-pixel-clock         1        1        1    29700000
-> > >         0     0  50000
-> > >        pll-video0-2x                  0        0        0   594000000
-> > >         0     0  50000
-> >
-> > This discussion is going nowhere. I'm telling you that your patch
-> > doesn't apply the divider you want on the proper clock, and you're
-> > replying that indeed, you're applying it on the wrong clock.
-> >
-> > It might work by accident in your case, but the board I have here
-> > clearly indicates otherwise, so there's two possible way out here:
-> >
-> >   - Either you apply that divider to the TCON *module* clock, and not
-> >     the dclk
-> >
-> >   - Or you point to somewhere in the allwinner code where the bpp /
-> >     lanes divider is used for the dclk divider.
->
-> I don't know how to proceed further on this, as you say it might work
-> in accident but I have tested this in A33, A64 and R40 with 4
-> different DSI panels and one DSI-RGB bridge. All of them do use
-> PLL_MIPI (pll_rate) and it indeed depends on bpp/lanes
->
-> 4-lane, 24-bit: Novatek NT35596 panel
-> 4-lane, 24-bit: Feiyang, FY07024di26a30d panel
-> 4-lane, 24-bit: Bananapi-s070wv20 panel
-> 2-lane, 24-bit: Techstar,ts8550b panel
->
-> and
->
-> 4-lane, 24-bit, ICN6211 DSI-to-RGB bridge panel
->
-> All above listed panels and bridges are working as per BSP and do
-> follow bpp/lanes and for DIVIDER 4 no panel is working.
 
-Look. I'm not saying that there's no issue, I'm saying that your
-patch, applied to the clock you're applying it to, doesn't make sense
-and isn't what the BSP does.
+--VpY0yS1BYpNZumir
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-You can keep on arguing that your patch is perfect as is, but the fact
-that there's regressions proves otherwise.
+On Wed, Jul 03, 2019 at 09:49:37AM +0100, Srinivas Kandagatla wrote:
+> On 02/07/2019 17:57, Mark Brown wrote:
 
-> The panels/bridges I have has tested in BSP and as you mentioned in
-> another mail, your panel is not tested in BSP - this is the only
-> difference. I did much reverse-engineering on PLL_MIPI clocking in BSP
-> so I'm afraid what can I do next on this, If you want to look further
-> on BSP I would suggest to verify on pll_rate side. If you feel
-> anything I'm missing please let me know.
+> > This is a driver for a single device, you should be able to
+> > instantiate things without requiring binding through DT (and
+> > hence support non-DT systems such as those using ACPI).
 
-I already told you how we can make some progress in the mail you
-quoted, but you chose to ignore that.
+> My view point atleast from hw side was that Codec is Parent which is
+> encompassing these different blocks and bus interface. DT representation
+> clearly showed that relationship between the parent and child devices.
+> Binding it through DT will make sure that resources are ready before
+> they are instantiated.
 
-Until there's been some progress on either points mentionned above,
-I'm just going to stop answering on this topic.
+> All the child devices also have some machine/board specific properties
+> and dependency on resources from parent like regmap, clks, and bus.
 
-Maxime
+> In ACPI case, am not 100% sure how these will be represented inline with
+> hw representation.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---o6glxbmwab2ugpxc--
+> Are you suggesting to use MFD here?
+
+I'm saying that you should be using a MFD here like all the other
+CODECs with multiple functions and that you shouldn't have
+compatible strings in DT for the subfunctions since you already
+know they'll be there simply from enumerating the chip as a whole
+and how exactly they are divided up is a function of how Linux
+currently has subsystems, not of the hardware.
+
+> > > This will instantiate all the child devices like pinctrl, SoundWire
+> > > Controller and so on.
+
+> > Just create platform devices like normal...
+
+> These are already modeled as platform devices, except the fact that
+> these are children of Codec device.
+
+No, you've got them as DT nodes.
+
+--VpY0yS1BYpNZumir
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0clwoACgkQJNaLcl1U
+h9ASZQf/Wax09z9q+yldgDqXtel9Fw1TmqbiQeU45IngtUaP/G3c4hKXjszf9tIu
+D0+ip3V72iegmlnXKInzv+9+sB+l0gQb8g4PYBF4p1HPmXNao/FuZnKhbJSKvEAz
+HjwLM80oUApbivHyMNycr48s3Yaix4tC5aeSolBGjGFAMQ++bD2Sblgfbd1M0K1T
+YweS+5UStw/IboNQtKyl/TXaCTjjq7wtFUVUIfPZcazxlWBd278nApbuEwAqTbkU
+wKvLgwQOaQIkAEMu4okXOUVwognAoNWs2Hfg8vJRTB5NMl4EvkSs55/agXXS0+mW
+onDPn2hPaqk8Bj5oR5ymS7NFkR+cGw==
+=d0xq
+-----END PGP SIGNATURE-----
+
+--VpY0yS1BYpNZumir--
+
+--===============3997232494059942947==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3997232494059942947==--
