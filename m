@@ -1,72 +1,107 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH v3 0/4] Solve postboot supplier cleanup and optimize probe
- ordering
-Date: Tue, 2 Jul 2019 17:03:49 -0700
-Message-ID: <7900c670-5b3a-f950-dec9-70d98d94a84f@codeaurora.org>
-References: <20190702004811.136450-1-saravanak@google.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v6 07/15] dt-bindings: memory: tegra30: Convert to
+ Tegra124 YAML
+Date: Wed, 3 Jul 2019 03:48:46 +0300
+Message-ID: <d98f16ee-ac43-8f1e-d324-d6e2cfccf3c8@gmail.com>
+References: <20190630210019.26914-1-digetx@gmail.com>
+ <20190630210019.26914-8-digetx@gmail.com>
+ <CAL_JsqJq5iwQcbUixMWK819OTof8DzrZ3UMhByc1pTAFTdwnjg@mail.gmail.com>
+ <ba299725-b65b-ce7d-6376-a26918cc985b@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702004811.136450-1-saravanak@google.com>
+In-Reply-To: <ba299725-b65b-ce7d-6376-a26918cc985b@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Saravana,
-
-On 7/1/19 5:48 PM, Saravana Kannan wrote:
-...
-> TODO:
-> - For the case of consumer child sub-nodes being added by a parent
->   device after late_initcall_sync we might be able to address that by
->   recursively parsing all child nodes and adding all their suppliers as
->   suppliers of the parent node too. The parent probe will add the
->   children before its probe is completed and that will prevent the
->   supplier's sync_state from being executed before the children are
->   probed.
+01.07.2019 22:30, Dmitry Osipenko пишет:
+> 01.07.2019 22:11, Rob Herring пишет:
+>> On Sun, Jun 30, 2019 at 3:04 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>
+>>
+>> "Convert" implies you delete the old binding doc.
 > 
-> But I'll write that part once I see how this series is received.
+> Yes, unfortunately the deletion got lost by accident after rebase and it was already
+> too late when I noticed that. Will be fixed in the next revision.
+> 
+>>> The Tegra30 binding will actually differ from the Tegra124 a tad, in
+>>> particular the EMEM configuration description. Hence rename the binding
+>>> to Tegra124 during of the conversion to YAML.
+>>>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>  .../nvidia,tegra124-mc.yaml                   | 149 ++++++++++++++++++
+>>>  1 file changed, 149 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
+>>> new file mode 100644
+>>> index 000000000000..d18242510295
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
+>>> @@ -0,0 +1,149 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/memory-controllers/nvidia,tegra124-mc.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title:
+>>> +  NVIDIA Tegra124 SoC Memory Controller
+>>> +
+>>> +maintainers:
+>>> +  - Jon Hunter <jonathanh@nvidia.com>
+>>> +  - Thierry Reding <thierry.reding@gmail.com>
+>>> +
+>>> +description: |
+>>> +  Tegra124 SoC features a hybrid 2x32-bit / 1x64-bit memory controller.
+>>> +  These are interleaved to provide high performance with the load shared across
+>>> +  two memory channels. The Tegra124 Memory Controller handles memory requests
+>>> +  from internal clients and arbitrates among them to allocate memory bandwidth
+>>> +  for DDR3L and LPDDR3 SDRAMs.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    const: nvidia,tegra124-mc
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +    description:
+>>> +      Physical base address.
+>>> +
+>>> +  clocks:
+>>> +    maxItems: 1
+>>> +    description:
+>>> +      Memory Controller clock.
+>>> +
+>>> +  clock-names:
+>>> +    items:
+>>> +      - const: mc
+>>> +
+>>> +  interrupts:
+>>> +    maxItems: 1
+>>> +    description:
+>>> +      Memory Controller interrupt.
+>>> +
+>>> +  "#reset-cells":
+>>> +    const: 1
+>>> +
+>>> +  "#iommu-cells":
+>>> +    const: 1
+>>> +
+>>> +patternProperties:
+>>> +  ".*":
+>>
+>> Please define a node name or pattern for node names.
+> 
+> There was no pattern specified in the original binding. But I guess the existing
+> upstream device-trees could be used as the source for the pattern.
 
-I don't think that this scheme will work in all cases.  It can also lead
-to probing deadlock.
-
-Here is an example:
-
-Three DT devices (top level A with subnodes B and C):
-/A
-/A/B
-/A/C
-C is a consumer of B.
-
-When device A is created, a search of its subnodes will find the link from
-C to B.  Since device B hasn't been created yet, of_link_to_suppliers()
-will fail and add A to the wait_for_suppliers list.  This will cause the
-probe of A to fail with -EPROBE_DEFER (thanks to the check in
-device_links_check_suppliers()).  As a result device B will not be created
-and device A will never probe.
-
-You could try to resolve this situation by detecting the cycle and *not*
-adding A to the wait_for_suppliers list.  However, that would get us back
-to the problem we had before.  A would be allowed to probe which would
-then result in devices being added for B and C.  If the device for B is
-added before C, then it would be allowed to immediately probe and
-(assuming this all takes place after late_initcall_sync thanks to modules)
-its sync_state() callback would be called since no consumer devices are
-linked to B.
-
-Please note that to change this example from theoretical to practical,
-replace "A" with apps_rsc, "B" with pmi8998-rpmh-regulators, and "C" with
-pm8998-rpmh-regulators in [1].
-
-Take care,
-David
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845-mtp.dts?h=v5.2-rc7#n55
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Actually it looks like the use of explicit pattern is not really a good idea because
+device-tree could have node named in a way that it doesn't match the pattern and hence
+dtbs_check silently skips the non-matching nodes. Is there any way to express that
+non-matching nodes shall be rejected?
