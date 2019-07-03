@@ -1,33 +1,52 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [patch v3 1/5] AST2500 DMA UART driver
-Date: Wed, 03 Jul 2019 12:16:01 -0700
-Message-ID: <2f19693f2f720dcc037465d4ae517fb846c7eb4f.camel@perches.com>
-References: <1561459476-14268-1-git-send-email-open.sudheer@gmail.com>
-         <1561459476-14268-2-git-send-email-open.sudheer@gmail.com>
-         <20190703174926.GA12813@kroah.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v2 1/7] dt-bindings: net: Add bindings for Realtek PHYs
+Date: Wed,  3 Jul 2019 12:37:18 -0700
+Message-ID: <20190703193724.246854-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703174926.GA12813@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>, "sudheer.v" <open.sudheer@gmail.com>
-Cc: jslaby@suse.com, joel@jms.id.au, andrew@aj.id.au, benh@kernel.crashing.org, robh+dt@kernel.org, mark.rutland@arm.com, shivahshankar.shankarnarayanrao@aspeedtech.com, shivahshankar@gmail.com, sudheer.veliseti@aspeedtech.com, sudheer veliseti <sudheer.open@gmail.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+To: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-07-03 at 19:49 +0200, Greg KH wrote:
-> On Tue, Jun 25, 2019 at 04:14:32PM +0530, sudheer.v wrote:
-> > +#define UART_TX_R_POINT(x) (0x40 + (x * 0x20))
-> > +#define UART_TX_W_POINT(x) (0x44 + (x * 0x20))
-> > +#define UART_TX_SDMA_ADDR(x) (0x48 + (x * 0x20))
-> > +#define UART_RX_R_POINT(x) (0x50 + (x * 0x20))
-> > +#define UART_RX_W_POINT(x) (0x54 + (x * 0x20))
-> > +#define UART_RX_SDMA_ADDR(x) (0x58 + (x * 0x20))
-> 
-> Please use a tab to line these up.
+Add the 'realtek,eee-led-mode-disable' property to disable EEE
+LED mode on Realtek PHYs that support it.
 
-Also x should be surrounded by parentheses
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Changes in v2:
+- document 'realtek,eee-led-mode-disable' instead of
+  'realtek,enable-ssc' in the initial version
+---
+ .../devicetree/bindings/net/realtek.txt       | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/realtek.txt
 
-#define UART_TX_R_POINT(x)	(0x40 + ((x) * 0x20))
-
-etc...
+diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
+new file mode 100644
+index 000000000000..63f7002fa704
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/realtek.txt
+@@ -0,0 +1,19 @@
++Realtek PHY properties.
++
++This document describes properties of Realtek PHYs.
++
++Optional properties:
++- realtek,eee-led-mode-disable: Disable EEE LED mode on this port.
++
++Example:
++
++mdio0 {
++	compatible = "snps,dwmac-mdio";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	ethphy: ethernet-phy@1 {
++		reg = <1>;
++		realtek,eee-led-mode-disable;
++	};
++};
+-- 
+2.22.0.410.gd8fdbe21b5-goog
