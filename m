@@ -1,54 +1,45 @@
-From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v2 0/7] implement poweroff for mt6323/6397
-Date: Wed,  3 Jul 2019 18:48:15 +0200
-Message-ID: <20190703164822.17924-1-frank-w@public-files.de>
-Content-Transfer-Encoding: quoted-printable
+From: Pawel Dembicki <paweldembicki@gmail.com>
+Subject: [PATCH v2 0/4] net: dsa: Add Vitesse VSC73xx parallel mode
+Date: Wed,  3 Jul 2019 19:19:20 +0200
+Message-ID: <20190703171924.31801-1-paweldembicki@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Allison Randal <allison@lohutok.net>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gr>
-Cc: Frank Wunderlich <frank-w@public-files.de>
+Cc: Pawel Dembicki <paweldembicki@gmail.com>, linus.walleij@linaro.org, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-mainline-driver does not support mt6323
+Main goal of this patch series is to add support for parallel bus in
+Vitesse VSC73xx switches. Existing driver supports only SPI mode.
 
-this series adds mt6323 to mt6397-rtc-driver and implement
-power-controller on it.
+Second change is needed for devices in unmanaged state.
 
-with this poweroff is working on bananapi-r2
+V2:
+- drop changes in compatible strings
+- make changes less invasive
+- drop mutex in platform part and move mutex from core to spi part
+- fix indentation 
+- fix devm_ioremap_resource result check
+- add cover letter 
 
-Original Patch from Josef Friedl
+Pawel Dembicki (4):
+  net: dsa: Change DT bindings for Vitesse VSC73xx switches
+  net: dsa: vsc73xx: Split vsc73xx driver
+  net: dsa: vsc73xx: add support for parallel mode
+  net: dsa: vsc73xx: Assert reset if iCPU is enabled
 
-changes since v1:
-	- splitted into functional parts
-	- more infos about changes
+ .../bindings/net/dsa/vitesse,vsc73xx.txt      |  57 ++++-
+ drivers/net/dsa/Kconfig                       |  19 +-
+ drivers/net/dsa/Makefile                      |   4 +-
+ ...tesse-vsc73xx.c => vitesse-vsc73xx-core.c} | 206 +++---------------
+ drivers/net/dsa/vitesse-vsc73xx-platform.c    | 160 ++++++++++++++
+ drivers/net/dsa/vitesse-vsc73xx-spi.c         | 203 +++++++++++++++++
+ drivers/net/dsa/vitesse-vsc73xx.h             |  29 +++
+ 7 files changed, 493 insertions(+), 185 deletions(-)
+ rename drivers/net/dsa/{vitesse-vsc73xx.c => vitesse-vsc73xx-core.c} (90%)
+ create mode 100644 drivers/net/dsa/vitesse-vsc73xx-platform.c
+ create mode 100644 drivers/net/dsa/vitesse-vsc73xx-spi.c
+ create mode 100644 drivers/net/dsa/vitesse-vsc73xx.h
 
-Josef Friedl (7):
-  docs: dt-bindings: add poweroff
-  rtc: mt6397: move some common definitions into rtc.h
-  rtc: mt6397: improvements of rtc driver
-  mfd: mt6323: some improvements of mt6397-core
-  power: reset: add driver for mt6323 poweroff
-  MAINTAINERS: add Mediatek shutdown drivers
-  arm: dts: mt6323: add keys, power-controller, rtc and codec
-
- .../devicetree/bindings/mfd/mt6397.txt        |  10 +-
- .../bindings/power/reset/mt6323-poweroff.txt  |  20 ++++
- .../devicetree/bindings/rtc/rtc-mt6397.txt    |  29 +++++
- MAINTAINERS                                   |   7 ++
- arch/arm/boot/dts/mt6323.dtsi                 |  27 +++++
- drivers/mfd/mt6397-core.c                     |  40 +++++--
- drivers/power/reset/Kconfig                   |  10 ++
- drivers/power/reset/Makefile                  |   1 +
- drivers/power/reset/mt6323-poweroff.c         |  97 +++++++++++++++
- drivers/rtc/rtc-mt6397.c                      | 110 ++++--------------
- include/linux/mfd/mt6397/core.h               |   2 +
- include/linux/mfd/mt6397/rtc.h                |  71 +++++++++++
- 12 files changed, 325 insertions(+), 99 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-p=
-oweroff.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
- create mode 100644 drivers/power/reset/mt6323-poweroff.c
- create mode 100644 include/linux/mfd/mt6397/rtc.h
-
-=2D-
-2.17.1
+-- 
+2.20.1
