@@ -1,7 +1,7 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v3 4/6] OPP: Add API to find an OPP table from its DT node
-Date: Tue,  2 Jul 2019 18:10:18 -0700
-Message-ID: <20190703011020.151615-5-saravanak@google.com>
+Subject: [PATCH v3 5/6] dt-bindings: interconnect: Add interconnect-opp-table property
+Date: Tue,  2 Jul 2019 18:10:19 -0700
+Message-ID: <20190703011020.151615-6-saravanak@google.com>
 References: <20190703011020.151615-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,104 +12,36 @@ To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
 Cc: Saravana Kannan <saravanak@google.com>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This allows finding a device's OPP table (when it has multiple) from a
-phandle to the OPP table in DT.
+Add support for listing bandwidth OPP tables for each interconnect path
+listed using the interconnects property.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/opp/of.c       | 42 ++++++++++++++++++++++++++++++++++--------
- include/linux/pm_opp.h |  7 +++++++
- 2 files changed, 41 insertions(+), 8 deletions(-)
+ .../devicetree/bindings/interconnect/interconnect.txt     | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 54fa70ed2adc..34c51905f56d 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -42,14 +42,9 @@ struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_of_get_opp_desc_node);
+diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+index 6f5d23a605b7..fc5b75b76a2c 100644
+--- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
++++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+@@ -55,10 +55,18 @@ interconnect-names : List of interconnect path name strings sorted in the same
+ 			 * dma-mem: Path from the device to the main memory of
+ 			            the system
  
--struct opp_table *_managed_opp(struct device *dev, int index)
-+struct opp_table *_find_opp_table_from_node(struct device_node *np)
- {
- 	struct opp_table *opp_table, *managed_table = NULL;
--	struct device_node *np;
--
--	np = _opp_of_get_opp_desc_node(dev->of_node, index);
--	if (!np)
--		return NULL;
++interconnect-opp-table: List of phandles to OPP tables (bandwidth OPP tables)
++			that specify the OPPs for the interconnect paths listed
++			in the interconnects property. This property can only
++			point to OPP tables that belong to the device and are
++			listed in the device's operating-points-v2 property.
++
+ Example:
  
- 	list_for_each_entry(opp_table, &opp_tables, node) {
- 		if (opp_table->np == np) {
-@@ -69,11 +64,42 @@ struct opp_table *_managed_opp(struct device *dev, int index)
- 		}
- 	}
- 
--	of_node_put(np);
--
- 	return managed_table;
- }
- 
-+/**
-+ * dev_pm_opp_of_find_table_from_node() - Find OPP table from its DT node
-+ * @np: DT node used for finding the OPP table
-+ *
-+ * Return: OPP table corresponding to the DT node, else NULL on failure.
-+ *
-+ * The caller needs to put the node with of_node_put() after using it.
-+ */
-+struct opp_table *dev_pm_opp_of_find_table_from_node(struct device_node *np)
-+{
-+	struct opp_table *opp_table;
-+
-+	mutex_lock(&opp_table_lock);
-+	opp_table = _find_opp_table_from_node(np);
-+	mutex_unlock(&opp_table_lock);
-+	return opp_table;
-+}
-+EXPORT_SYMBOL_GPL(dev_pm_opp_of_find_table_from_node);
-+
-+struct opp_table *_managed_opp(struct device *dev, int index)
-+{
-+	struct device_node *np;
-+	struct opp_table *opp_table;
-+
-+	np = _opp_of_get_opp_desc_node(dev->of_node, index);
-+	if (!np)
-+		return NULL;
-+
-+	opp_table = _find_opp_table_from_node(np);
-+	of_node_put(np);
-+	return opp_table;
-+}
-+
- /* The caller must call dev_pm_opp_put() after the OPP is used */
- static struct dev_pm_opp *_find_opp_of_np(struct opp_table *opp_table,
- 					  struct device_node *opp_np)
-diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index d4d79ac0b5b2..d80c59bcd50b 100644
---- a/include/linux/pm_opp.h
-+++ b/include/linux/pm_opp.h
-@@ -359,6 +359,7 @@ int dev_pm_opp_of_cpumask_add_table(const struct cpumask *cpumask);
- void dev_pm_opp_of_cpumask_remove_table(const struct cpumask *cpumask);
- int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
- struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev);
-+struct opp_table *dev_pm_opp_of_find_table_from_node(struct device_node *np);
- struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp);
- int of_get_required_opp_performance_state(struct device_node *np, int index);
- void dev_pm_opp_of_register_em(struct cpumask *cpus);
-@@ -396,6 +397,12 @@ static inline struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device
- 	return NULL;
- }
- 
-+static inline struct opp_table *dev_pm_opp_of_find_table_from_node(
-+							struct device_node *np)
-+{
-+	return NULL;
-+}
-+
- static inline struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp)
- {
- 	return NULL;
+ 	sdhci@7864000 {
++		operating-points-v2 = <&sdhc_opp_table>, <&sdhc_mem_opp_table>;
+ 		...
+ 		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
+ 		interconnect-names = "sdhc-mem";
++		interconnect-opp-table = <&sdhc_mem_opp_table>;
+ 	};
 -- 
 2.22.0.410.gd8fdbe21b5-goog
