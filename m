@@ -1,8 +1,8 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Subject: Re: [PATCHv5 02/20] PCI: mobiveil: Format the code without
  functionality change
-Date: Wed, 3 Jul 2019 16:10:21 +0100
-Message-ID: <20190703151021.GC26804@e121166-lin.cambridge.arm.com>
+Date: Wed, 3 Jul 2019 16:19:05 +0100
+Message-ID: <20190703151905.GD26804@e121166-lin.cambridge.arm.com>
 References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
  <20190412083635.33626-3-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
@@ -29,15 +29,23 @@ On Fri, Apr 12, 2019 at 08:35:24AM +0000, Z.q. Hou wrote:
 >  drivers/pci/controller/pcie-mobiveil.c | 261 +++++++++++++------------
 >  1 file changed, 137 insertions(+), 124 deletions(-)
 
-Again, I will drop this patch. You tend to do multiple changes
-in one single patch, I understand this patch is just
-reformatting/renaming variables but at least I would separate
-indentation changes from changes where eg you add local variables.
+Ok, dropping this patch means that everything else should be
+rebased. So what I am going to do:
 
-At least try to group the changes you are making instead of mixing
-them all up.
+- I will publish a branch (pci/mobiveil) where I added the patches
+  that are ready to be merged with commit logs rewritten; this patch
+  is part of it but in the final version it must be split as requested.
+- You have to split this patch and the other patches I requested
+  you to split but do NOT modify the patches with my commit logs
+  rewritten in pci/mobiveil, it took me time to rewrite them.
 
-Thanks,
+If you can manage to rebase patches on pci/mobiveil on top
+of v5.2-rc1, send them separately so that I can merge them
+as a base for the subsequent patches to be applied.
+
+If you have any questions please ask, do not post patches
+if there is something that is not clear.
+
 Lorenzo
 
 > diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
