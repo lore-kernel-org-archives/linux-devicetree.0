@@ -1,102 +1,54 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/6] ASoC: wcd934x: add support to
-	wcd9340/wcd9341 codec
-Date: Wed, 3 Jul 2019 12:52:43 +0100
-Message-ID: <20190703115243.GV2793@sirena.org.uk>
-References: <20190702080920.22623-1-srinivas.kandagatla@linaro.org>
- <20190702080920.22623-3-srinivas.kandagatla@linaro.org>
- <20190702144411.GP2793@sirena.org.uk>
- <2e2a32dd-3dca-5391-1bfa-ab1c1f420e3a@linaro.org>
- <20190702165753.GQ2793@sirena.org.uk>
- <0a9a994c-5a88-539f-3af0-76754b9b58d1@linaro.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: Aw: Re: [PATCH 3/3] add driver and MAINTAINERS for poweroff
+Date: Wed, 3 Jul 2019 13:54:41 +0200
+Message-ID: <61f579d7-f415-481f-6f34-1534f0805dc1@gmail.com>
+References: <20190702094045.3652-1-frank-w@public-files.de>
+ <20190702094045.3652-4-frank-w@public-files.de>
+ <c1358da0-60a4-49dd-71a8-77e90178c9c9@gmail.com>
+ <trinity-ca99ab22-eda4-42dd-b6eb-8e4bb5c99165-1562143878858@3c-app-gmx-bs07>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3997232494059942947=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <0a9a994c-5a88-539f-3af0-76754b9b58d1@linaro.org>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, vkoul@kernel.org, robh+dt@kernel.org, srini@kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <trinity-ca99ab22-eda4-42dd-b6eb-8e4bb5c99165-1562143878858@3c-app-gmx-bs07>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wunderlich <frank-w@public-files.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Josef Friedl <josef.friedl@speed.at>, Sean Wang <sean.wang@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 
---===============3997232494059942947==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="VpY0yS1BYpNZumir"
-Content-Disposition: inline
 
+On 03/07/2019 10:51, Frank Wunderlich wrote:
+> Hi Mathias
+> 
+> thank you for first look on this. Patchseries is originally from Josef Friedl i got some time ago for getting poweroff working on bananapi r2. There it works and maybe on another devices too.
+> 
+> drivers/rtc/rtc-mt6397.c and drivers/rtc/rtc-mt7622.c look very differently on a diff (you've commented in part 1/3)
+> 
+> maybe code is compatible but i have not the knowledge to compare this...maybe sean (sorry, that i missed you) or ryder can say a word about the compatibility.
+> 
 
---VpY0yS1BYpNZumir
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+My fault, I didn't got that right. So you are just improving the code of the RTC
+driver. Which is great, but as already said, do this in a separate patch. :)
 
-On Wed, Jul 03, 2019 at 09:49:37AM +0100, Srinivas Kandagatla wrote:
-> On 02/07/2019 17:57, Mark Brown wrote:
+Regards,
+Matthias
 
-> > This is a driver for a single device, you should be able to
-> > instantiate things without requiring binding through DT (and
-> > hence support non-DT systems such as those using ACPI).
-
-> My view point atleast from hw side was that Codec is Parent which is
-> encompassing these different blocks and bus interface. DT representation
-> clearly showed that relationship between the parent and child devices.
-> Binding it through DT will make sure that resources are ready before
-> they are instantiated.
-
-> All the child devices also have some machine/board specific properties
-> and dependency on resources from parent like regmap, clks, and bus.
-
-> In ACPI case, am not 100% sure how these will be represented inline with
-> hw representation.
-
-> Are you suggesting to use MFD here?
-
-I'm saying that you should be using a MFD here like all the other
-CODECs with multiple functions and that you shouldn't have
-compatible strings in DT for the subfunctions since you already
-know they'll be there simply from enumerating the chip as a whole
-and how exactly they are divided up is a function of how Linux
-currently has subsystems, not of the hardware.
-
-> > > This will instantiate all the child devices like pinctrl, SoundWire
-> > > Controller and so on.
-
-> > Just create platform devices like normal...
-
-> These are already modeled as platform devices, except the fact that
-> these are children of Codec device.
-
-No, you've got them as DT nodes.
-
---VpY0yS1BYpNZumir
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0clwoACgkQJNaLcl1U
-h9ASZQf/Wax09z9q+yldgDqXtel9Fw1TmqbiQeU45IngtUaP/G3c4hKXjszf9tIu
-D0+ip3V72iegmlnXKInzv+9+sB+l0gQb8g4PYBF4p1HPmXNao/FuZnKhbJSKvEAz
-HjwLM80oUApbivHyMNycr48s3Yaix4tC5aeSolBGjGFAMQ++bD2Sblgfbd1M0K1T
-YweS+5UStw/IboNQtKyl/TXaCTjjq7wtFUVUIfPZcazxlWBd278nApbuEwAqTbkU
-wKvLgwQOaQIkAEMu4okXOUVwognAoNWs2Hfg8vJRTB5NMl4EvkSs55/agXXS0+mW
-onDPn2hPaqk8Bj5oR5ymS7NFkR+cGw==
-=d0xq
------END PGP SIGNATURE-----
-
---VpY0yS1BYpNZumir--
-
---===============3997232494059942947==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3997232494059942947==--
+>> Fix the commit message. MAINTAINERS get normally send a independent patch.
+>> Split patches between RTC and PWRC.
+>> If not a new patch it should be stated in the commit message at least.
+> 
+> i will try to split this
+> 
+>>> + * Author: Tianping.Fang <tianping.fang@mediatek.com>
+>>> + *        Sean Wang <sean.wang@mediatek.com>
+>>
+>> You are the author of this file, aren't you?
+> 
+> no, afaik these is code taken from rtc-mt6397.c and put in a separate header-file to use it in multiple c-files.
+> 
+> sidenote on encoding/word-wrap. i use only "git sendemail" which afaik calls sendmail (no other mta like thunderbird or similar) on ubuntu 18.4....curently have no idea how to fix this...have searched before, but not yet found anything. if you have an idea please give me a hint.
+> 
+> regards Frank
+> 
