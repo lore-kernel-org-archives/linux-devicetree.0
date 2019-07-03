@@ -1,92 +1,75 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] Revert "ARM: dts: rockchip: add startup delay to
- rk3288-veyron panel-regulators"
-Date: Tue, 2 Jul 2019 21:54:58 -0700
-Message-ID: <CAD=FV=UhNfhVG422=huthFSptoV4FXED=xPtArO2KkyNb1U3Xw@mail.gmail.com>
-References: <20190620182056.61552-1-dianders@chromium.org> <CAD=FV=Wi21Emjg7CpCJfSRiKr_EisR20UO1tbPjAeJzdJNbSVw@mail.gmail.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: [PATCH] of/fdt: Make sure no-map does not remove already reserved regions
+Date: Wed,  3 Jul 2019 13:08:27 +0800
+Message-ID: <20190703050827.173284-1-drinkcat@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=Wi21Emjg7CpCJfSRiKr_EisR20UO1tbPjAeJzdJNbSVw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>, Stephen Boyd <swboyd@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+If the device tree is incorrectly configured, and attempts to
+define a "no-map" reserved memory that overlaps with the kernel
+data/code, the kernel would crash quickly after boot, with no
+obvious clue about the nature of the issue.
 
-On Thu, Jun 20, 2019 at 1:31 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Thu, Jun 20, 2019 at 11:21 AM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > This reverts commit 1f45e8c6d0161f044d679f242fe7514e2625af4a.
-> >
-> > This 100 ms mystery delay is not on downstream kernels and no longer
-> > seems needed on upstream kernels either [1].  Presumably something in the
-> > meantime has made things better.  A few possibilities for patches that
-> > have landed in the meantime that could have made this better are
-> > commit 3157694d8c7f ("pwm-backlight: Add support for PWM delays
-> > proprieties."), commit 5fb5caee92ba ("pwm-backlight: Enable/disable
-> > the PWM before/after LCD enable toggle."), and commit 6d5922dd0d60
-> > ("ARM: dts: rockchip: set PWM delay backlight settings for Veyron")
-> >
-> > Let's revert and get our 100 ms back.
-> >
-> > [1] https://lkml.kernel.org/r/2226970.BAPq4liE1j@diego
-> >
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> >  arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 1 -
-> >  arch/arm/boot/dts/rk3288-veyron-jerry.dts  | 1 -
-> >  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 1 -
-> >  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 1 -
-> >  4 files changed, 4 deletions(-)
->
-> Maybe wait before applying.  I've been running reboot tests now with
-> this patch applied (among others) and with enough reboots I managed to
-> see:
->
-> [    5.682418] rockchip-dp ff970000.dp: eDP link training failed (-5)
->
-> I'll see if I can confirm that it's this patch and why things are
-> different compared to downstream.
+For example, this would happen if we have the kernel mapped at
+these addresses (from /proc/iomem):
+40000000-41ffffff : System RAM
+  40080000-40dfffff : Kernel code
+  40e00000-411fffff : reserved
+  41200000-413e0fff : Kernel data
 
-OK, I finally got back to this and confirmed:
+And we declare a no-map shared-dma-pool region at a fixed address
+within that range:
+mem_reserved: mem_region {
+	compatible = "shared-dma-pool";
+	reg = <0 0x40000000 0 0x01A00000>;
+	no-map;
+};
 
-1. The above error is actually somewhat harmless.  The eDP failure
-will be retried automatically despite the scary message.  Specifically
-see the loop in analogix_dp_bridge_enable().  I confirmed that after
-seeing the error the screen came up just fine (I looked at the screen
-in two actual instances but I believe it's pretty much always fine).
+To fix this, when removing memory regions at early boot (which is
+what "no-map" regions do), we need to make sure that the memory
+is not already reserved. If we do, __reserved_mem_reserve_reg
+will throw an error:
+[    0.000000] OF: fdt: Reserved memory: failed to reserve memory
+   for node 'mem_region': base 0x0000000040000000, size 26 MiB
+and the code that will try to use the region should also fail,
+later on.
 
-2. I haven't seen any evidence that the eDP link training happens any
-more often with this revert in place.  Specifically, I see the same
-message in the logs (at what appears to be the same rate) with or
-without this revert.
+We do not do anything for non-"no-map" regions, as memblock
+explicitly allows reserved regions to overlap, and the commit
+that this fixes removed the check for that precise reason.
 
-3. Probably the link-training failures here are the same ones we
-debugged for PSR for rk3399-gru-kevin that we fixed by making the eDP
-PCLK rate exactly 24 MHz.  See <https://crrev.com/c/433393> for
-details.  On rk3399-gru-kevin it was super important to resolve the
-root cause of these errors because we had PSR (which meant we were
-constantly taking to the eDP controller).  On rk3288-veyron devices
-with no PSR the retry should be a fine solution and it doesn't seem
-like a good idea to fully rejigger our clock plan to fix the root
-cause.
+Fixes: 094cb98179f19b7 ("of/fdt: memblock_reserve /memreserve/ regions in the case of partial overlap")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+---
+ drivers/of/fdt.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-
-NOTE: I saw _one_ case on rk3288-veyron-minnie where the screen looked
-wonky at bootup and I saw the eDP link training error in the logs.
-That's what originally made me cautious.  I haven't been able to
-reproduce this, but presumably I just got super unlucky in that one
-case.  I've left devices rebooting all day at work and haven't seen
-the wonky screen since then.
-
-
-Summary: I think this revert is just fine.
-
-
--Doug
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index cd17dc62a71980a..a1ded43fc332d0c 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1138,8 +1138,16 @@ int __init __weak early_init_dt_mark_hotplug_memory_arch(u64 base, u64 size)
+ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+ 					phys_addr_t size, bool nomap)
+ {
+-	if (nomap)
++	if (nomap) {
++		/*
++		 * If the memory is already reserved (by another region), we
++		 * should not allow it to be removed altogether.
++		 */
++		if (memblock_is_region_reserved(base, size))
++			return -EBUSY;
++
+ 		return memblock_remove(base, size);
++	}
+ 	return memblock_reserve(base, size);
+ }
+ 
+-- 
+2.22.0.410.gd8fdbe21b5-goog
