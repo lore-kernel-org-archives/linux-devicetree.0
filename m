@@ -1,174 +1,113 @@
-Return-Path: <SRS0=6UxY=VC=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V5 3/8] phy: tegra: xusb: Add vbus override support on Tegra210
-Date: Fri, 5 Jul 2019 17:11:46 +0530
-Message-ID: <1562326911-26855-4-git-send-email-nkristam@nvidia.com>
-In-Reply-To: <1562326911-26855-1-git-send-email-nkristam@nvidia.com>
-References: <1562326911-26855-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <SRS0=cIVi=VA=bootlin.com=maxime.ripard@kernel.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH 6/7] dt-bindings: net: Use phy-mode instead of phy-connection-type
+Date: Wed,  3 Jul 2019 11:55:12 +0200
+Message-Id: <20190703095513.12340-6-maxime.ripard@bootlin.com>
+In-Reply-To: <20190703095513.12340-1-maxime.ripard@bootlin.com>
+References: <20190703095513.12340-1-maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+Content-Transfer-Encoding: 8bit
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Tegra XUSB device control driver needs to control vbus override
-during its operations, add API for the support.
+When adding support for the DWMAC (and derivatives) bindings,
+phy-connection-type was required, even though the previous binding required
+the equivalent phy-mode.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Let's fix this by using phy-mode as we should have.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/phy/tegra/xusb-tegra210.c | 57 +++++++++++++++++++++++++++++++++++++++
- drivers/phy/tegra/xusb.c          | 22 +++++++++++++++
- drivers/phy/tegra/xusb.h          |  2 ++
- include/linux/phy/tegra/xusb.h    |  4 ++-
- 4 files changed, 84 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml | 4 ++--
+ .../bindings/net/allwinner,sun8i-a83t-emac.yaml           | 8 ++++----
+ Documentation/devicetree/bindings/net/snps,dwmac.yaml     | 4 ++--
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
-index 8c31f03..9e6f14b 100644
---- a/drivers/phy/tegra/xusb-tegra210.c
-+++ b/drivers/phy/tegra/xusb-tegra210.c
-@@ -65,6 +65,10 @@
- #define XUSB_PADCTL_USB3_PAD_MUX_PCIE_IDDQ_DISABLE(x) (1 << (1 + (x)))
- #define XUSB_PADCTL_USB3_PAD_MUX_SATA_IDDQ_DISABLE(x) (1 << (8 + (x)))
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+index 4b45798f0e68..06b1cc8bea14 100644
+--- a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
++++ b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+@@ -44,7 +44,7 @@ required:
+   - interrupt-names
+   - clocks
+   - clock-names
+-  - phy-connection-type
++  - phy-mode
  
-+#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL0(x) (0x080 + (x) * 0x40)
-+#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIP (1 << 18)
-+#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIN (1 << 22)
-+
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(x) (0x084 + (x) * 0x40)
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT 7
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK 0x3
-@@ -227,6 +231,12 @@
- #define XUSB_PADCTL_UPHY_USB3_PADX_ECTL6(x) (0xa74 + (x) * 0x40)
- #define XUSB_PADCTL_UPHY_USB3_PAD_ECTL6_RX_EQ_CTRL_H_VAL 0xfcf01368
+ examples:
+   - |
+@@ -55,7 +55,7 @@ examples:
+         interrupt-names = "macirq";
+         clocks = <&ahb_gates 49>, <&gmac_tx>;
+         clock-names = "stmmaceth", "allwinner_gmac_tx";
+-        phy-connection-type = "mii";
++        phy-mode = "mii";
+     };
  
-+#define XUSB_PADCTL_USB2_VBUS_ID 0xc60
-+#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON (1 << 14)
-+#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT 18
-+#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK 0xf
-+#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_FLOATING 8
-+
- struct tegra210_xusb_fuse_calibration {
- 	u32 hs_curr_level[4];
- 	u32 hs_term_range_adj;
-@@ -2016,6 +2026,51 @@ static const struct tegra_xusb_port_ops tegra210_usb3_port_ops = {
- 	.map = tegra210_usb3_port_map,
- };
+ # FIXME: We should set it, but it would report all the generic
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+index 6f68c7f5fc34..d4084c149768 100644
+--- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
++++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+@@ -52,8 +52,8 @@ required:
+   - clock-names
+   - resets
+   - reset-names
+-  - phy-connection-type
+   - phy-handle
++  - phy-mode
+   - syscon
  
-+static int tegra210_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
-+					      bool status)
-+{
-+	u32 value;
-+
-+	dev_dbg(padctl->dev, "%s vbus override\n", status ? "set" : "clear");
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_VBUS_ID);
-+
-+	if (status) {
-+		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
-+		value &= ~(XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK <<
-+			   XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT);
-+		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_FLOATING <<
-+			 XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT;
-+	} else
-+		value &= ~XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
-+
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_VBUS_ID);
-+
-+	return 0;
-+}
-+
-+static int tegra210_utmi_port_reset(struct phy *phy)
-+{
-+	struct tegra_xusb_padctl *padctl;
-+	struct tegra_xusb_lane *lane;
-+	u32 value;
-+
-+	lane = phy_get_drvdata(phy);
-+	padctl = lane->pad->padctl;
-+
-+	value = padctl_readl(padctl,
-+		     XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL0(lane->index));
-+
-+	if ((value & XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIP) ||
-+	    (value & XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIN)) {
-+		tegra210_xusb_padctl_vbus_override(padctl, false);
-+		tegra210_xusb_padctl_vbus_override(padctl, true);
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
- static int
- tegra210_xusb_read_fuse_calibration(struct tegra210_xusb_fuse_calibration *fuse)
- {
-@@ -2078,6 +2133,8 @@ static const struct tegra_xusb_padctl_ops tegra210_xusb_padctl_ops = {
- 	.remove = tegra210_xusb_padctl_remove,
- 	.usb3_set_lfps_detect = tegra210_usb3_set_lfps_detect,
- 	.hsic_set_idle = tegra210_hsic_set_idle,
-+	.vbus_override = tegra210_xusb_padctl_vbus_override,
-+	.utmi_port_reset = tegra210_utmi_port_reset,
- };
+ allOf:
+@@ -198,7 +198,7 @@ examples:
+         clock-names = "stmmaceth";
  
- static const char * const tegra210_xusb_padctl_supply_names[] = {
-diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-index b4b217e..bf4b008 100644
---- a/drivers/phy/tegra/xusb.c
-+++ b/drivers/phy/tegra/xusb.c
-@@ -1121,6 +1121,28 @@ int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padctl,
- }
- EXPORT_SYMBOL_GPL(tegra_xusb_padctl_usb3_set_lfps_detect);
+         phy-handle = <&int_mii_phy>;
+-        phy-connection-type = "mii";
++        phy-mode = "mii";
+         allwinner,leds-active-low;
  
-+int tegra_xusb_padctl_set_vbus_override(struct tegra_xusb_padctl *padctl,
-+							bool val)
-+{
-+	if (padctl->soc->ops->vbus_override)
-+		return padctl->soc->ops->vbus_override(padctl, val);
-+
-+	return -ENOTSUPP;
-+}
-+EXPORT_SYMBOL_GPL(tegra_xusb_padctl_set_vbus_override);
-+
-+int tegra_phy_xusb_utmi_port_reset(struct phy *phy)
-+{
-+	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
-+	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
-+
-+	if (padctl->soc->ops->utmi_port_reset)
-+		return padctl->soc->ops->utmi_port_reset(phy);
-+
-+	return -ENOTSUPP;
-+}
-+EXPORT_SYMBOL_GPL(tegra_phy_xusb_utmi_port_reset);
-+
- MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
- MODULE_DESCRIPTION("Tegra XUSB Pad Controller driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
-index bd91832..da94fcc 100644
---- a/drivers/phy/tegra/xusb.h
-+++ b/drivers/phy/tegra/xusb.h
-@@ -373,6 +373,8 @@ struct tegra_xusb_padctl_ops {
- 			     unsigned int index, bool idle);
- 	int (*usb3_set_lfps_detect)(struct tegra_xusb_padctl *padctl,
- 				    unsigned int index, bool enable);
-+	int (*vbus_override)(struct tegra_xusb_padctl *padctl, bool set);
-+	int (*utmi_port_reset)(struct phy *phy);
- };
+         mdio1: mdio {
+@@ -249,7 +249,7 @@ examples:
+         clock-names = "stmmaceth";
  
- struct tegra_xusb_padctl_soc {
-diff --git a/include/linux/phy/tegra/xusb.h b/include/linux/phy/tegra/xusb.h
-index ee59562..1235865 100644
---- a/include/linux/phy/tegra/xusb.h
-+++ b/include/linux/phy/tegra/xusb.h
-@@ -18,5 +18,7 @@ int tegra_xusb_padctl_hsic_set_idle(struct tegra_xusb_padctl *padctl,
- 				    unsigned int port, bool idle);
- int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padctl,
- 					   unsigned int port, bool enable);
--
-+int tegra_xusb_padctl_set_vbus_override(struct tegra_xusb_padctl *padctl,
-+					bool val);
-+int tegra_phy_xusb_utmi_port_reset(struct phy *phy);
- #endif /* PHY_TEGRA_XUSB_H */
+         phy-handle = <&ext_rgmii_phy>;
+-        phy-connection-type = "rgmii";
++        phy-mode = "rgmii";
+         allwinner,leds-active-low;
+ 
+         mdio2: mdio {
+@@ -301,7 +301,7 @@ examples:
+         clocks = <&ccu 27>;
+         clock-names = "stmmaceth";
+         phy-handle = <&ext_rgmii_phy1>;
+-        phy-connection-type = "rgmii";
++        phy-mode = "rgmii";
+ 
+         mdio {
+             compatible = "snps,dwmac-mdio";
+diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+index 658726c620be..76fea2be66ac 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+@@ -261,7 +261,7 @@ required:
+   - reg
+   - interrupts
+   - interrupt-names
+-  - phy-connection-type
++  - phy-mode
+ 
+ dependencies:
+   snps,reset-active-low: ["snps,reset-gpio"]
+@@ -384,7 +384,7 @@ examples:
+         interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
+         mac-address = [000000000000]; /* Filled in by U-Boot */
+         max-frame-size = <3800>;
+-        phy-connection-type = "gmii";
++        phy-mode = "gmii";
+         snps,multicast-filter-bins = <256>;
+         snps,perfect-filter-entries = <128>;
+         rx-fifo-depth = <16384>;
 -- 
-2.7.4
+2.21.0
