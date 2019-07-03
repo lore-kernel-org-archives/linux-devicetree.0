@@ -1,37 +1,126 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
-Date: Wed, 3 Jul 2019 12:06:32 +0530
-Message-ID: <20190703063632.hl2lipcoeehplyxq@vireshk-i7>
-References: <20190703011020.151615-1-saravanak@google.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v3 6/6] interconnect: Add OPP table support for interconnects
+Date: Wed, 3 Jul 2019 08:45:21 +0200
+Message-ID: <CAKfTPtCJFaEfvu3Dnp9WSxQEwSfY=VS+xsoQ+4P+vg7_WL0BAQ@mail.gmail.com>
+References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-7-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190703011020.151615-1-saravanak@google.com>
+In-Reply-To: <20190703011020.151615-7-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Saravana Kannan <saravanak@google.com>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, kernel-team@android.com, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02-07-19, 18:10, Saravana Kannan wrote:
-> Interconnects and interconnect paths quantify their performance levels in
-> terms of bandwidth and not in terms of frequency. So similar to how we have
-> frequency based OPP tables in DT and in the OPP framework, we need
-> bandwidth OPP table support in the OPP framework and in DT. Since there can
-> be more than one interconnect path used by a device, we also need a way to
-> assign a bandwidth OPP table to an interconnect path.
-> 
-> This patch series:
-> - Adds opp-peak-KBps and opp-avg-KBps properties to OPP DT bindings
-> - Adds interconnect-opp-table property to interconnect DT bindings
-> - Adds OPP helper functions for bandwidth OPP tables
-> - Adds icc_get_opp_table() to get the OPP table for an interconnect path
-> 
-> So with the DT bindings added in this patch series, the DT for a GPU
-> that does bandwidth voting from GPU to Cache and GPU to DDR would look
-> something like this:
+On Wed, 3 Jul 2019 at 03:10, Saravana Kannan <saravanak@google.com> wrote:
+>
+> Interconnect paths can have different performance points. Now that OPP
+> framework supports bandwidth OPP tables, add OPP table support for
+> interconnects.
+>
+> Devices can use the interconnect-opp-table DT property to specify OPP
+> tables for interconnect paths. And the driver can obtain the OPP table for
+> an interconnect path by calling icc_get_opp_table().
 
-And what changed since V2 ?
+The opp table of a path must come from the aggregation of OPP tables
+of the interconnect providers. So such kind of OPP table should be at
+provider level but not at path level.
 
--- 
-viresh
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/interconnect/core.c  | 27 ++++++++++++++++++++++++++-
+>  include/linux/interconnect.h |  7 +++++++
+>  2 files changed, 33 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index 871eb4bc4efc..881bac80bc1e 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -47,6 +47,7 @@ struct icc_req {
+>   */
+>  struct icc_path {
+>         size_t num_nodes;
+> +       struct opp_table *opp_table;
+>         struct icc_req reqs[];
+>  };
+>
+> @@ -313,7 +314,7 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
+>  {
+>         struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
+>         struct icc_node *src_node, *dst_node;
+> -       struct device_node *np = NULL;
+> +       struct device_node *np = NULL, *opp_node;
+>         struct of_phandle_args src_args, dst_args;
+>         int idx = 0;
+>         int ret;
+> @@ -381,10 +382,34 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
+>                 dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
+>         mutex_unlock(&icc_lock);
+>
+> +       opp_node = of_parse_phandle(np, "interconnect-opp-table", idx);
+> +       if (opp_node) {
+> +               path->opp_table = dev_pm_opp_of_find_table_from_node(opp_node);
+> +               of_node_put(opp_node);
+> +       }
+> +
+> +
+>         return path;
+>  }
+>  EXPORT_SYMBOL_GPL(of_icc_get);
+>
+> +/**
+> + * icc_get_opp_table() - Get the OPP table that corresponds to a path
+> + * @path: reference to the path returned by icc_get()
+> + *
+> + * This function will return the OPP table that corresponds to a path handle.
+> + * If the interconnect API is disabled, NULL is returned and the consumer
+> + * drivers will still build. Drivers are free to handle this specifically, but
+> + * they don't have to.
+> + *
+> + * Return: opp_table pointer on success. NULL is returned when the API is
+> + * disabled or the OPP table is missing.
+> + */
+> +struct opp_table *icc_get_opp_table(struct icc_path *path)
+> +{
+> +       return path->opp_table;
+> +}
+> +
+>  /**
+>   * icc_set_bw() - set bandwidth constraints on an interconnect path
+>   * @path: reference to the path returned by icc_get()
+> diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+> index dc25864755ba..0c0bc55f0e89 100644
+> --- a/include/linux/interconnect.h
+> +++ b/include/linux/interconnect.h
+> @@ -9,6 +9,7 @@
+>
+>  #include <linux/mutex.h>
+>  #include <linux/types.h>
+> +#include <linux/pm_opp.h>
+>
+>  /* macros for converting to icc units */
+>  #define Bps_to_icc(x)  ((x) / 1000)
+> @@ -28,6 +29,7 @@ struct device;
+>  struct icc_path *icc_get(struct device *dev, const int src_id,
+>                          const int dst_id);
+>  struct icc_path *of_icc_get(struct device *dev, const char *name);
+> +struct opp_table *icc_get_opp_table(struct icc_path *path);
+>  void icc_put(struct icc_path *path);
+>  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
+>
+> @@ -49,6 +51,11 @@ static inline void icc_put(struct icc_path *path)
+>  {
+>  }
+>
+> +static inline struct opp_table *icc_get_opp_table(struct icc_path *path)
+> +{
+> +       return NULL;
+> +}
+> +
+>  static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+>  {
+>         return 0;
+> --
+> 2.22.0.410.gd8fdbe21b5-goog
+>
