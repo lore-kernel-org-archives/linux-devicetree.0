@@ -1,74 +1,80 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv5 03/20] PCI: mobiveil: Correct the returned error number
-Date: Wed, 3 Jul 2019 15:17:15 +0100
-Message-ID: <20190703141715.GB26804@e121166-lin.cambridge.arm.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-4-Zhiqiang.Hou@nxp.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH 01/25] arm64: dts: allwinner: Switch A64 dts(i) to use
+ SPDX identifier
+Date: Wed, 3 Jul 2019 19:52:27 +0530
+Message-ID: <CAMty3ZDyx_RSkU=OndsvzS5reOzab0DBkrarSeHt+-gtsdyKuQ@mail.gmail.com>
+References: <20190703124609.21435-1-jagan@amarulasolutions.com>
+ <20190703124609.21435-2-jagan@amarulasolutions.com> <20190703132838.nhewz5wzsijl65s5@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190412083635.33626-4-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20190703132838.nhewz5wzsijl65s5@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula <linux-amarula@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 08:35:30AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> This patch corrects the returned error number by convention,
-> and removes an unnecessary error check.
+On Wed, Jul 3, 2019 at 6:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Wed, Jul 03, 2019 at 06:15:45PM +0530, Jagan Teki wrote:
+> > Adopt the SPDX license identifier headers to ease license
+> > compliance management on Allwinner A64 dts(i) files.
+> >
+> > While the text specifies "of the GPL or the X11 license"
+> > but the actual license text matches the MIT license as
+> > specified at [0]
+> >
+> > [0] https://spdx.org/licenses/MIT.html
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> >  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 39 +------------------
+> >  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 39 +------------------
+> >  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 39 +------------------
+> >  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 39 +------------------
+> >  .../dts/allwinner/sun50i-a64-pine64-plus.dts  | 39 +------------------
+> >  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 39 +------------------
+> >  .../allwinner/sun50i-a64-sopine-baseboard.dts | 39 +------------------
+> >  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi | 39 +------------------
+> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 +------------------
+> >  9 files changed, 9 insertions(+), 342 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> > index 208373efee49..efdd84c362b0 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> > @@ -1,43 +1,6 @@
+> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+>
+> You say that this is a GPL2 only license
+>
+> >  /*
+> >   * Copyright (c) 2016 ARM Ltd.
+> > - *
+> > - * This file is dual-licensed: you can use it either under the terms
+> > - * of the GPL or the X11 license, at your option. Note that this dual
+> > - * licensing only applies to this file, and not this project as a
+> > - * whole.
+> > - *
+> > - *  a) This library is free software; you can redistribute it and/or
+> > - *     modify it under the terms of the GNU General Public License as
+> > - *     published by the Free Software Foundation; either version 2 of the
+> > - *     License, or (at your option) any later version.
+>
+> While this is GPL2 or later.
 
-Two distinct changes, two patches, please split and repost.
+Yes, this is where I was confused with compared to existing
+architectures. It seems like it is a call from author of the file or
+make GPL-2.0 for generic purpose [1], not really sure.
 
-Lorenzo
+>
+> Also, I'm not sure why we need 25 patches to do that. Can't you just
+> send one (there's no even need to separate arm and arm64, since we
+> will do only a single PR from now as opposed to what we were doing
+> before).
 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> ---
-> V5:
->  - Corrected and retouched the subject and changelog.
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index b87471f08a40..563210e731d3 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -819,7 +819,7 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
->  
->  	if (!pcie->intx_domain) {
->  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-> -		return -ENODEV;
-> +		return -ENOMEM;
->  	}
->  
->  	raw_spin_lock_init(&pcie->intx_mask_lock);
-> @@ -845,11 +845,9 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
->  	/* allocate the PCIe port */
->  	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
->  	if (!bridge)
-> -		return -ENODEV;
-> +		return -ENOMEM;
->  
->  	pcie = pci_host_bridge_priv(bridge);
-> -	if (!pcie)
-> -		return -ENOMEM;
->  
->  	pcie->pdev = pdev;
->  
-> @@ -866,7 +864,7 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
->  						    &pcie->resources, &iobase);
->  	if (ret) {
->  		dev_err(dev, "Getting bridge resources failed\n");
-> -		return -ENOMEM;
-> +		return ret;
->  	}
->  
->  	/*
-> -- 
-> 2.17.1
-> 
+Just to make a clear conversion possible with individual SoC + boards
+files, I did based on existing arch's does. np, if require I can send
+it in single patch.
+
+[1] https://patchwork.kernel.org/patch/10963113/
