@@ -1,75 +1,85 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: [PATCH] of/fdt: Make sure no-map does not remove already reserved regions
-Date: Wed,  3 Jul 2019 13:08:27 +0800
-Message-ID: <20190703050827.173284-1-drinkcat@chromium.org>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH v3] arm64: dts: imx8mq: Add sai3 and sai6 nodes
+Date: Wed, 3 Jul 2019 09:27:56 +0300
+Message-ID: <CAEnQRZDO4FzsC-MZGsxd=7dxSc0dRGcMjWW-W9T2TF7C1iD9NA@mail.gmail.com>
+References: <20190702132353.18632-1-andradanciu1997@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190702132353.18632-1-andradanciu1997@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>, Stephen Boyd <swboyd@chromium.org>
+To: Andra Danciu <andradanciu1997@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, andrew.smirnov@gmail.com, "Angus Ainslie (Purism)" <angus@akkea.ca>, Carlo Caione <ccaione@baylibre.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-If the device tree is incorrectly configured, and attempts to
-define a "no-map" reserved memory that overlaps with the kernel
-data/code, the kernel would crash quickly after boot, with no
-obvious clue about the nature of the issue.
+On Tue, Jul 2, 2019 at 4:25 PM Andra Danciu <andradanciu1997@gmail.com> wrote:
+>
+> SAI3 and SAI6 nodes are used to connect to an external codec.
+> They have 1 Tx and 1 Rx dataline.
+>
+> Cc: Daniel Baluta <daniel.baluta@nxp.com>
+> Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
 
-For example, this would happen if we have the kernel mapped at
-these addresses (from /proc/iomem):
-40000000-41ffffff : System RAM
-  40080000-40dfffff : Kernel code
-  40e00000-411fffff : reserved
-  41200000-413e0fff : Kernel data
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-And we declare a no-map shared-dma-pool region at a fixed address
-within that range:
-mem_reserved: mem_region {
-	compatible = "shared-dma-pool";
-	reg = <0 0x40000000 0 0x01A00000>;
-	no-map;
-};
-
-To fix this, when removing memory regions at early boot (which is
-what "no-map" regions do), we need to make sure that the memory
-is not already reserved. If we do, __reserved_mem_reserve_reg
-will throw an error:
-[    0.000000] OF: fdt: Reserved memory: failed to reserve memory
-   for node 'mem_region': base 0x0000000040000000, size 26 MiB
-and the code that will try to use the region should also fail,
-later on.
-
-We do not do anything for non-"no-map" regions, as memblock
-explicitly allows reserved regions to overlap, and the commit
-that this fixes removed the check for that precise reason.
-
-Fixes: 094cb98179f19b7 ("of/fdt: memblock_reserve /memreserve/ regions in the case of partial overlap")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
----
- drivers/of/fdt.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index cd17dc62a71980a..a1ded43fc332d0c 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1138,8 +1138,16 @@ int __init __weak early_init_dt_mark_hotplug_memory_arch(u64 base, u64 size)
- int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
- 					phys_addr_t size, bool nomap)
- {
--	if (nomap)
-+	if (nomap) {
-+		/*
-+		 * If the memory is already reserved (by another region), we
-+		 * should not allow it to be removed altogether.
-+		 */
-+		if (memblock_is_region_reserved(base, size))
-+			return -EBUSY;
-+
- 		return memblock_remove(base, size);
-+	}
- 	return memblock_reserve(base, size);
- }
- 
--- 
-2.22.0.410.gd8fdbe21b5-goog
+> ---
+> Changes since v2:
+>         - removed multiple new lines
+>
+> Changes since v1:
+>         - Added sai3 node because we need it to enable audio on pico-pi-8m
+>         - Added commit description
+>
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index d09b808eff87..736cf81b695e 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -278,6 +278,20 @@
+>                         #size-cells = <1>;
+>                         ranges = <0x30000000 0x30000000 0x400000>;
+>
+> +                       sai6: sai@30030000 {
+> +                               compatible = "fsl,imx8mq-sai",
+> +                                       "fsl,imx6sx-sai";
+> +                               reg = <0x30030000 0x10000>;
+> +                               interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+> +                               clocks = <&clk IMX8MQ_CLK_SAI6_IPG>,
+> +                                       <&clk IMX8MQ_CLK_SAI6_ROOT>,
+> +                                       <&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
+> +                               clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +                               dmas = <&sdma2 4 24 0>, <&sdma2 5 24 0>;
+> +                               dma-names = "rx", "tx";
+> +                               status = "disabled";
+> +                       };
+> +
+>                         gpio1: gpio@30200000 {
+>                                 compatible = "fsl,imx8mq-gpio", "fsl,imx35-gpio";
+>                                 reg = <0x30200000 0x10000>;
+> @@ -728,6 +742,21 @@
+>                                 status = "disabled";
+>                         };
+>
+> +                       sai3: sai@308c0000 {
+> +                               compatible = "fsl,imx8mq-sai",
+> +                                            "fsl,imx6sx-sai";
+> +                               reg = <0x308c0000 0x10000>;
+> +                               interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+> +                               clocks = <&clk IMX8MQ_CLK_SAI3_IPG>,
+> +                                       <&clk IMX8MQ_CLK_DUMMY>,
+> +                                       <&clk IMX8MQ_CLK_SAI3_ROOT>,
+> +                                       <&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
+> +                               clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +                               dmas = <&sdma1 12 24 0>, <&sdma1 13 24 0>;
+> +                               dma-names = "rx", "tx";
+> +                               status = "disabled";
+> +                       };
+> +
+>                         i2c1: i2c@30a20000 {
+>                                 compatible = "fsl,imx8mq-i2c", "fsl,imx21-i2c";
+>                                 reg = <0x30a20000 0x10000>;
+> --
+> 2.11.0
+>
