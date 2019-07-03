@@ -1,49 +1,28 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v2] arm64: dts: imx8mm: Init rates and parents configs for clocks
-Date: Wed,  3 Jul 2019 15:08:22 +0300
-Message-ID: <1562155702-29809-1-git-send-email-abel.vesa@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/4] net: dsa: Change DT bindings for Vitesse VSC73xx switches
+Date: Wed, 3 Jul 2019 14:41:26 +0200
+Message-ID: <CACRpkdabQbVosWjD22E6pM8t3gu8c=5qNMEtRsp2HLV0PJ9nYg@mail.gmail.com>
+References: <20190701152723.624-1-paweldembicki@gmail.com> <20190703085757.1027-1-paweldembicki@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190703085757.1027-1-paweldembicki@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>
+To: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the initial configuration for clocks that need default parent and rate
-setting. This is based on the vendor tree clock provider parents and rates
-configuration except this is doing the setup in dts rather than using clock
-consumer API in a clock provider driver.
+On Wed, Jul 3, 2019 at 10:58 AM Pawel Dembicki <paweldembicki@gmail.com> wrote:
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
----
+> This commit introduce how to use vsc73xx platform driver.
+>
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> ---
+> Changes in v2:
+> - Drop -spi and -platform suffix
+> - Change commit message
 
-Changes since v1:
- - removed the PCIE, CSI and DISP clocks parent setting since
-   that should be done from their driver.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 232a741..ba2034d 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -451,6 +451,17 @@
- 					 <&clk_ext3>, <&clk_ext4>;
- 				clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
- 					      "clk_ext3", "clk_ext4";
-+				assigned-clocks = <&clk IMX8MM_CLK_NOC>,
-+						<&clk IMX8MM_CLK_AUDIO_AHB>,
-+						<&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
-+						<&clk IMX8MM_SYS_PLL3>,
-+						<&clk IMX8MM_VIDEO_PLL1>;
-+				assigned-clock-parents = <&clk IMX8MM_SYS_PLL3_OUT>,
-+							 <&clk IMX8MM_SYS_PLL1_800M>;
-+				assigned-clock-rates = <0>,
-+							<400000000>,
-+							<750000000>,
-+							<594000000>;
- 			};
- 
- 			src: reset-controller@30390000 {
--- 
-2.7.4
+Yours,
+Linus Walleij
