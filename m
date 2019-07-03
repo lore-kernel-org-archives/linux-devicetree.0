@@ -1,7 +1,7 @@
 From: Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v7 10/14] dt-bindings: Document the Rockchip ISP1 bindings
-Date: Wed,  3 Jul 2019 16:09:06 -0300
-Message-ID: <20190703190910.32633-11-helen.koike@collabora.com>
+Subject: [PATCH v7 12/14] arm64: dts: rockchip: add isp0 node for rk3399
+Date: Wed,  3 Jul 2019 16:09:08 -0300
+Message-ID: <20190703190910.32633-13-helen.koike@collabora.com>
 References: <20190703190910.32633-1-helen.koike@collabora.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,70 +9,35 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190703190910.32633-1-helen.koike@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rockchip@lists.infradead.org
-Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com, Rob Herring <robh@kernel.org>, Helen Koike <helen.koike@collabora.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com, Helen Koike <helen.koike@collabora.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Tony Xie <tony.xie@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jacob Chen <jacob2.chen@rock-chips.com>
+From: Shunqian Zheng <zhengsq@rock-chips.com>
 
-Add DT bindings documentation for Rockchip ISP1
+rk3399 have two ISP, but we havn't test isp1, so just add isp0 at present.
 
+Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
 Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 [update for upstream]
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
 ---
 
 Changes in v7:
-- update document with new design and tested example
+- add phy properties
+- add ports
 
- .../bindings/media/rockchip-isp1.txt          | 71 +++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 25 ++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/rockchip-isp1.txt b/Documentation/devicetree/bindings/media/rockchip-isp1.txt
-new file mode 100644
-index 000000000000..a97fef0f189f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/rockchip-isp1.txt
-@@ -0,0 +1,71 @@
-+Rockchip SoC Image Signal Processing unit v1
-+----------------------------------------------
-+
-+Rockchip ISP1 is the Camera interface for the Rockchip series of SoCs
-+which contains image processing, scaling, and compression funcitons.
-+
-+Required properties:
-+- compatible: value should be one of the following
-+	"rockchip,rk3288-cif-isp";
-+	"rockchip,rk3399-cif-isp";
-+- reg : offset and length of the register set for the device.
-+- interrupts: should contain ISP interrupt.
-+- clocks: phandle to the required clocks.
-+- clock-names: required clock name.
-+- iommus: required a iommu node.
-+- phys: the phandle for the PHY port
-+- phy-names: must contain "dphy"
-+
-+port node
-+-------------------
-+
-+The device node should contain one 'ports' child node, with children 'port'
-+with child 'endpoint'.
-+nodes, according to the bindings defined in Documentation/devicetree/bindings/
-+media/video-interfaces.txt.
-+
-+- endpoint(mipi):
-+	- remote-endpoint: Connecting to Rockchip MIPI-DPHY,
-+		which is defined in rockchip-mipi-dphy.txt.
-+
-+The port node must contain at least one endpoint, either parallel or mipi.
-+It could have multiple endpoints, but please note the hardware don't support
-+two sensors work at a time, they are supposed to work asynchronously.
-+
-+Device node example
-+-------------------
-+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 153305e8c465..e7cf52e4b0ec 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1701,6 +1701,31 @@
+ 		status = "disabled";
+ 	};
+ 
 +	isp0: isp0@ff910000 {
 +		compatible = "rockchip,rk3399-cif-isp";
 +		reg = <0x0 0xff910000 0x0 0x4000>;
@@ -85,7 +50,7 @@ index 000000000000..a97fef0f189f
 +			      "hclk_isp", "hclk_isp_wrap";
 +		power-domains = <&power RK3399_PD_ISP0>;
 +		iommus = <&isp0_mmu>;
-+		phys = <&dphy>;
++		phys = <&mipi_dphy_rx0>;
 +		phy-names = "dphy";
 +
 +		ports {
@@ -93,19 +58,13 @@ index 000000000000..a97fef0f189f
 +			#size-cells = <0>;
 +
 +			port@0 {
-+				mipi_in_wcam: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&wcam_out>;
-+					data-lanes = <1 2>;
-+				};
-+
-+				mipi_in_ucam: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&ucam_out>;
-+					data-lanes = <1>;
-+				};
++				reg = <0>;
 +			};
 +		};
 +	};
++
+ 	isp0_mmu: iommu@ff914000 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
 -- 
 2.20.1
