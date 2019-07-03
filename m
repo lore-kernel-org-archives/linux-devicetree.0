@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 09/13] ARM: dts: imx6ul: fix PWM[1-4] interrupts
-Date: Tue,  2 Jul 2019 22:18:10 -0400
-Message-ID: <20190703021814.18385-9-sashal@kernel.org>
-References: <20190703021814.18385-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 7/8] ARM: dts: imx6ul: fix PWM[1-4] interrupts
+Date: Tue,  2 Jul 2019 22:18:46 -0400
+Message-ID: <20190703021847.18542-7-sashal@kernel.org>
+References: <20190703021847.18542-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703021814.18385-1-sashal@kernel.org>
+In-Reply-To: <20190703021847.18542-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
@@ -30,10 +30,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 036aeba4f02c..49f4bdc0d864 100644
+index 7839300fe46b..200d9082caa4 100644
 --- a/arch/arm/boot/dts/imx6ul.dtsi
 +++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -342,7 +342,7 @@
+@@ -332,7 +332,7 @@
  			pwm1: pwm@02080000 {
  				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
  				reg = <0x02080000 0x4000>;
@@ -42,7 +42,7 @@ index 036aeba4f02c..49f4bdc0d864 100644
  				clocks = <&clks IMX6UL_CLK_PWM1>,
  					 <&clks IMX6UL_CLK_PWM1>;
  				clock-names = "ipg", "per";
-@@ -353,7 +353,7 @@
+@@ -343,7 +343,7 @@
  			pwm2: pwm@02084000 {
  				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
  				reg = <0x02084000 0x4000>;
@@ -51,7 +51,7 @@ index 036aeba4f02c..49f4bdc0d864 100644
  				clocks = <&clks IMX6UL_CLK_PWM2>,
  					 <&clks IMX6UL_CLK_PWM2>;
  				clock-names = "ipg", "per";
-@@ -364,7 +364,7 @@
+@@ -354,7 +354,7 @@
  			pwm3: pwm@02088000 {
  				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
  				reg = <0x02088000 0x4000>;
@@ -60,7 +60,7 @@ index 036aeba4f02c..49f4bdc0d864 100644
  				clocks = <&clks IMX6UL_CLK_PWM3>,
  					 <&clks IMX6UL_CLK_PWM3>;
  				clock-names = "ipg", "per";
-@@ -375,7 +375,7 @@
+@@ -365,7 +365,7 @@
  			pwm4: pwm@0208c000 {
  				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
  				reg = <0x0208c000 0x4000>;
