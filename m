@@ -1,7 +1,7 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor binding
-Date: Thu,  4 Jul 2019 00:32:28 +0530
-Message-ID: <20190703190230.12392-2-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 3/3] MAINTAINERS: Add entry for IMX290 CMOS image sensor driver
+Date: Thu,  4 Jul 2019 00:32:30 +0530
+Message-ID: <20190703190230.12392-4-manivannan.sadhasivam@linaro.org>
 References: <20190703190230.12392-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190703190230.12392-1-manivannan.sadhasivam@linaro.org>
@@ -10,70 +10,31 @@ To: mchehab@kernel.org, robh+dt@kernel.org
 Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding for IMX290 CMOS image sensor.
+Add MAINTAINERS entry for Sony IMX290 CMOS image sensor driver.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-new file mode 100644
-index 000000000000..7535b5b5b24b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-@@ -0,0 +1,51 @@
-+* Sony IMX290 1/2.8-Inch CMOS Image Sensor
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d0ed735994a5..27e4c1f57b61 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14669,6 +14669,14 @@ S:	Maintained
+ F:	drivers/media/i2c/imx274.c
+ F:	Documentation/devicetree/bindings/media/i2c/imx274.txt
+ 
++SONY IMX290 SENSOR DRIVER
++M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
++L:	linux-media@vger.kernel.org
++T:	git git://linuxtv.org/media_tree.git
++S:	Maintained
++F:	drivers/media/i2c/imx290.c
++F:	Documentation/devicetree/bindings/media/i2c/imx290.txt
 +
-+The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
-+Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
-+interfaces. The sensor output is available via CMOS logic parallel SDR output,
-+Low voltage LVDS DDR output and CSI-2 serial data output.
-+
-+Required Properties:
-+- compatible: Should be "sony,imx290"
-+- reg: I2C bus address of the device
-+- clocks: Reference to the xclk clock.
-+- clock-names: Should be "xclk".
-+- clock-frequency: Frequency of the xclk clock.
-+- vdddo-supply: Sensor digital IO regulator.
-+- vdda-supply: Sensor analog regulator.
-+- vddd-supply: Sensor digital core regulator.
-+
-+Optional Properties:
-+- reset-gpios: Sensor reset GPIO
-+
-+The imx290 device node should contain one 'port' child node with
-+an 'endpoint' subnode. For further reading on port node refer to
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+	&i2c1 {
-+		...
-+		imx290: imx290@1a {
-+			compatible = "sony,imx290";
-+			reg = <0x1a>;
-+
-+			reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&camera_rear_default>;
-+
-+			clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
-+			clock-names = "xclk";
-+			clock-frequency = <37125000>;
-+
-+			vdddo-supply = <&camera_vdddo_1v8>;
-+			vdda-supply = <&camera_vdda_2v8>;
-+			vddd-supply = <&camera_vddd_1v5>;
-+
-+			port {
-+				imx290_ep: endpoint {
-+					clock-lanes = <1>;
-+					data-lanes = <0 2 3 4>;
-+					remote-endpoint = <&csiphy0_ep>;
-+				};
-+			};
-+		};
+ SONY IMX319 SENSOR DRIVER
+ M:	Bingbu Cao <bingbu.cao@intel.com>
+ L:	linux-media@vger.kernel.org
 -- 
 2.17.1
