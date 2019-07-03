@@ -1,88 +1,46 @@
-Return-Path: <SRS0=YAHn=U6=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 1/2] device-tree: iio: add bindings documentation for NXP PCT2075
-Date: Mon,  1 Jul 2019 20:01:57 +0200
-Message-Id: <20190701180158.9463-1-daniel@zonque.org>
+Return-Path: <SRS0=cIVi=VA=bootlin.com=maxime.ripard@kernel.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH 7/7] dt-bindings: usb: ehci: Fix example warnings
+Date: Wed,  3 Jul 2019 11:55:13 +0200
+Message-Id: <20190703095513.12340-7-maxime.ripard@bootlin.com>
+In-Reply-To: <20190703095513.12340-1-maxime.ripard@bootlin.com>
+References: <20190703095513.12340-1-maxime.ripard@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: jic23@kernel.org, lars@metafoo.de
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Daniel Mack <daniel@zonque.org>
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This documentens the bindings for the NXP PCT2075 temperature sensor
-driver.
+The example of the EHCI binding generates a bunch of warnings now that the
+examples are validated too.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Most notably, phy-names isn't used at all, and the node name should be USB.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- .../bindings/iio/temperature/pct2075.txt      | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/temperature/pct2075.txt
+ Documentation/devicetree/bindings/usb/generic-ehci.yaml | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/temperature/pct2075.txt b/Documentation/devicetree/bindings/iio/temperature/pct2075.txt
-new file mode 100644
-index 000000000000..dc5d3e991ab0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/temperature/pct2075.txt
-@@ -0,0 +1,60 @@
-+* NXP PCT2075 - I2C connected digital temperature sensor
-+
-+Link to datasheet: https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf
-+
-+Required properties:
-+
-+ - compatible:	Should be "nxp,pct2075"
-+ - reg:		The I2C address of the sensor
-+		(controllable via A[0,1,2] pins)
-+
-+Addressing pins can be tied high, low or left floating, allowing for up to
-+27 different I2C addresses, depending on the package.
-+
-+Optional properties:
-+
-+ - vcc-supply:		A regulator node that is connected to the Vcc pin
-+			(2.7V - 5.5V). If specified, the regulator will be
-+			enabled at probe time and disabled when the driver
-+			is removed.
-+
-+ - nxp,os-fault-queue:	Specifies the number of faults that must occur
-+			consecutively to activate the OS output pin.
-+			Valid numbers are 1 (default), 2, 4 and 6.
-+
-+ - nxp,os-active-high:	Specifies that the OS pin should be in active-high
-+			mode. By default, it is active-low.
-+
-+ - nxp,os-mode-interrupt: Configures the device to operate the OS pin
-+			  as an interrupt rather than a comparator. Please
-+			  refer to the datasheet for information about the
-+			  differences.
-+
-+ - nxp,sample-period-ms: Configures the sample period of the device in
-+			 milliseconds. Valid values are multiples of 100
-+			 up to 3100.
-+
-+ - nxp,overtemperature-shutdown-millicelsius:
-+			Configures the temperature threshold at which the
-+			device shuts down, in milli-celcius.
-+			Values are given as signed integer and are valid
-+			in the range from -55000 up to +125000.
-+
-+ - nxp,hysteresis-millicelsius:
-+			Configures the temperature threshold for OS pin
-+			operation, in milli-celcius.
-+			Values are given as signed integer and are valid
-+			in the range from -55000 up to +125000.
-+
-+Example:
-+
-+pct2075@48 {
-+	compatible = "nxp,pct2075";
-+	reg = <0x48>; /* A0, A1, A2 = low */
-+	nxp,os-active-high;
-+	nxp,os-mode-interrupt;
-+	nxp,sample-period-ms = <1000>;
-+	nxp,overtemperature-shutdown-millicelsius = <110000>;
-+	nxp,hysteresis-millicelsius = <(-10000)>;
-+};
-+
+diff --git a/Documentation/devicetree/bindings/usb/generic-ehci.yaml b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
+index d3b4f6415920..059f6ef1ad4a 100644
+--- a/Documentation/devicetree/bindings/usb/generic-ehci.yaml
++++ b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
+@@ -74,7 +74,7 @@ additionalProperties: false
+ 
+ examples:
+   - |
+-    ehci@e0000300 {
++    usb@e0000300 {
+         compatible = "ibm,usb-ehci-440epx", "generic-ehci";
+         interrupt-parent = <&UIC0>;
+         interrupts = <0x1a 4>;
+@@ -89,7 +89,6 @@ examples:
+         interrupts = <39>;
+         clocks = <&ahb_gates 1>;
+         phys = <&usbphy 1>;
+-        phy-names = "usb";
+     };
+ 
+ ...
 -- 
 2.21.0
