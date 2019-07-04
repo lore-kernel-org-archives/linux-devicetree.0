@@ -1,58 +1,34 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH V3 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
-Date: Thu, 04 Jul 2019 12:16:03 +0200
-Message-ID: <1562235363.6641.10.camel@pengutronix.de>
-References: <20190704094416.4757-1-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH] arm64: dts: imx8mq: Default parents for PCIE1 clocks
+Date: Thu,  4 Jul 2019 13:24:24 +0300
+Message-ID: <1562235864-12953-1-git-send-email-abel.vesa@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190704094416.4757-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, ping.bai@nxp.com, daniel.baluta@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Sascha Hauer <kernel@pengutronix.de>
+Cc: NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+Set default parents for PCIE1_CTRL and PCIE1_PHY clocks.
 
-On Thu, 2019-07-04 at 17:44 +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> i.MX8MM can reuse i.MX8MQ's reset driver, update the compatible
-> property and related info to support i.MX8MM.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V2:
-> 	- Add separate line for i.MX8MM in case anything different later for i.MX8MM.
-> ---
->  Documentation/devicetree/bindings/reset/fsl,imx7-src.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> index 13e0951..c2489e4 100644
-> --- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> @@ -8,6 +8,7 @@ Required properties:
->  - compatible:
->  	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
->  	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
-> +	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
->  - reg: should be register base and length as documented in the
->    datasheet
->  - interrupts: Should contain SRC interrupt
-> @@ -46,5 +47,6 @@ Example:
->  
->  
->  For list of all valid reset indices see
-> -<dt-bindings/reset/imx7-reset.h> for i.MX7 and
-> -<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ
-> +<dt-bindings/reset/imx7-reset.h> for i.MX7,
-> +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
-> +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-The last line is misleading, as that file contains reset indices that
-are invalid for i.MX8MM.
-
-regards
-Philipp
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+index e3df9b8..23bf85f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+@@ -235,6 +235,10 @@
+ 		 <&clk IMX8MQ_CLK_PCIE1_PHY>,
+ 		 <&pcie0_refclk>;
+ 	clock-names = "pcie", "pcie_aux", "pcie_phy", "pcie_bus";
++	assigned-clocks = <&clk IMX8MQ_CLK_PCIE1_CTRL>,
++			  <&clk IMX8MQ_CLK_PCIE1_PHY>;
++	assigned-clock-parents = <&clk IMX8MQ_SYS2_PLL_250M>,
++				 <&clk IMX8MQ_SYS2_PLL_100M>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.7.4
