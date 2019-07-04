@@ -1,51 +1,74 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH 1/3] perf/imx_ddr: Add MODULE_DEVICE_TABLE
-Date: Thu,  4 Jul 2019 11:53:20 +0300
-Message-ID: <6e88abe2ed5f361469cbb8ccccd4586036fc2fa2.1562230183.git.leonard.crestez@nxp.com>
-References: <cover.1562230183.git.leonard.crestez@nxp.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/2] reset: imx7: Add support for i.MX8MM SoC
+Date: Thu, 04 Jul 2019 10:54:04 +0200
+Message-ID: <1562230444.6641.2.camel@pengutronix.de>
+References: <20190701093944.5540-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1562230183.git.leonard.crestez@nxp.com>
-In-Reply-To: <cover.1562230183.git.leonard.crestez@nxp.com>
-References: <cover.1562230183.git.leonard.crestez@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Will Deacon <will@kernel.org>, Frank Li <Frank.li@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190701093944.5540-1-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson.Huang@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-This is required for automatic probing when driver is built as a module.
+Hi Anson,
 
-Fixes: 9a66d36cc7ac ("drivers/perf: imx_ddr: Add DDR performance counter support to perf")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
----
- drivers/perf/fsl_imx8_ddr_perf.c | 1 +
- 1 file changed, 1 insertion(+)
+On Mon, 2019-07-01 at 17:39 +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> i.MX8MM SoC has a subset of i.MX8MQ IP block variant, it can reuse
+> the i.MX8MQ reset controller driver and just skip those non-existing
+> IP blocks, add support for i.MX8MM SoC reset control.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/reset/reset-imx7.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
+> index 3ecd770..941131f 100644
+> --- a/drivers/reset/reset-imx7.c
+> +++ b/drivers/reset/reset-imx7.c
+> @@ -207,6 +207,26 @@ static int imx8mq_reset_set(struct reset_controller_dev *rcdev,
+>  	const unsigned int bit = imx7src->signals[id].bit;
+>  	unsigned int value = assert ? bit : 0;
+>  
+> +	if (of_machine_is_compatible("fsl,imx8mm")) {
 
-diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index 63fe21600072..0e3310dbb145 100644
---- a/drivers/perf/fsl_imx8_ddr_perf.c
-+++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -45,10 +45,11 @@ static DEFINE_IDA(ddr_ida);
- static const struct of_device_id imx_ddr_pmu_dt_ids[] = {
- 	{ .compatible = "fsl,imx8-ddr-pmu",},
- 	{ .compatible = "fsl,imx8m-ddr-pmu",},
- 	{ /* sentinel */ }
- };
-+MODULE_DEVICE_TABLE(of, imx_ddr_pmu_dt_ids);
- 
- struct ddr_pmu {
- 	struct pmu pmu;
- 	void __iomem *base;
- 	unsigned int cpu;
--- 
-2.17.1
+This should be checked once during probe, not in every reset_set, if
+this check has to be made at all. On i.MX8MM these unused reset controls
+are not going to be hooked up via phandle, so this function should never
+be called with the values that are filtered out here anyway.
+And in case somebody makes an error in the device tree, does writing 1
+to the reserved bits on i.MX8MM have any negative side effects at all?
+Or are these bits just not hooked up? If this is no problem, I assume
+this patch is not needed at all.
+
+The correct way to protect against DT writers hooking up the non-
+existing reset lines would be to replace rcdev.of_xlate with a version
+that returns -EINVAL for them on i.MX8MM. Also in that case I'd check
+the reset-controller compatible, not the machine compatible.
+
+> +		switch (id) {
+> +		case IMX8MQ_RESET_HDMI_PHY_APB_RESET:
+> +		case IMX8MQ_RESET_PCIEPHY2: /* fallthrough */
+> +		case IMX8MQ_RESET_PCIEPHY2_PERST: /* fallthrough */
+> +		case IMX8MQ_RESET_PCIE2_CTRL_APPS_EN: /* fallthrough */
+> +		case IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF: /* fallthrough */
+> +		case IMX8MQ_RESET_MIPI_CSI1_CORE_RESET: /* fallthrough */
+> +		case IMX8MQ_RESET_MIPI_CSI1_PHY_REF_RESET: /* fallthrough */
+> +		case IMX8MQ_RESET_MIPI_CSI1_ESC_RESET: /* fallthrough */
+> +		case IMX8MQ_RESET_MIPI_CSI2_CORE_RESET: /* fallthrough */
+> +		case IMX8MQ_RESET_MIPI_CSI2_PHY_REF_RESET: /* fallthrough */
+> +		case IMX8MQ_RESET_MIPI_CSI2_ESC_RESET: /* fallthrough */
+> +		case IMX8MQ_RESET_DDRC2_PHY_RESET: /* fallthrough */
+> +		case IMX8MQ_RESET_DDRC2_CORE_RESET: /* fallthrough */
+> +		case IMX8MQ_RESET_DDRC2_PRST: /* fallthrough */
+
+I think it would make sense to add IMX8MM_RESET_* defines for all but
+these, to avoid confusion when reading the imx8mm.dtsi
+
+regards
+Philipp
