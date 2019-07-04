@@ -1,195 +1,185 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v4 2/2] EDAC: add EDAC driver for DMC520
-Date: Thu, 4 Jul 2019 18:38:11 +0100
-Message-ID: <d82e6187-4a3d-1dc2-298a-0748ef0a7136@arm.com>
-References: <BN6PR04MB11075E9070EE1A263E099A7386E60@BN6PR04MB1107.namprd04.prod.outlook.com>
- <65439e51-5356-ae93-dffb-5a87279f6c8b@arm.com>
- <BN6PR04MB1107E018F29465B68EE708C786FA0@BN6PR04MB1107.namprd04.prod.outlook.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
+Date: Fri, 5 Jul 2019 00:05:58 +0530
+Message-ID: <45f0beda-08a6-5db7-a8f1-a63b6e879b81@ti.com>
+References: <20190625075746.10439-1-vigneshr@ti.com>
+ <20190625075746.10439-4-vigneshr@ti.com>
+ <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
+ <5009c418-a051-a42a-f78a-360f7230dd2b@ti.com>
+ <8e870356-90ba-4762-b1fd-8a13ce6ebcc8@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BN6PR04MB1107E018F29465B68EE708C786FA0@BN6PR04MB1107.namprd04.prod.outlook.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lei Wang <leiwang_git@outlook.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "bp@alien8.de" <bp@alien8.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, "ruizhao@microsoft.com" <ruizhao@microsoft.com>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <8e870356-90ba-4762-b1fd-8a13ce6ebcc8@cogentembedded.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Tokunori Ikegami <ikegami.t@gmail.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 04/07/2019 01:16, Lei Wang wrote:
->> #include <linux/spinlock.h> ?
->>
->> It's best to keep this list sorted, it makes it easier for the maintainer to resolve
->> conflicts when header files get split/moved-around.
+
+On 03-Jul-19 11:44 PM, Sergei Shtylyov wrote:
+> Hello!
 > 
-> It builds fine in our distro. The header seems to have been inherited 
-> from some other header files.
-
-Heh, you can't rely on this! Someone will disturb the header-soup, and inexplicably your
-driver will stop building. If your using a thing, you need to include the headers that
-define it.
-
-
->>> +#define DMC520_BUS_WIDTH	8  /* Data bus width is 64bits/8Bytes */
-
->> Can you point me to where this comes from in the datasheet[0]?
->> I see it talk in "1.3 Features" of "either a 32-bit wide data SDRAM interface or a 64-bit
->> wide data SDRAM interface".
->>
->> If this is a choice that was made on your platform it needs to be described in the DT.
->>
->> (I may be confused between SDRAM/DDR/DRAM, as 2.3.3. "PHY interface" seems to describe one
->> connecting to the other.)
-
-( a bit more reading shows these are all terms for pretty much the same thing )
-
-
-> I didn't find a configuration for bus width from the dmc520 doc. I 
-> search online and it seems like more than one places state 64-bit as 
-> DDR's data bus width, e.g. this one 
-> (https://en.wikipedia.org/wiki/DDR_SDRAM) mentions "DDR memory bus width 
-> per channel is 64 bits (72 for ECC memory)." So I took it as a define 
-> here for 8 bytes.
-
-Ooer. Your platform might not be the same as wikipedia's!
->From the datasheet it looks like this is configurable for DMC520, if so we shouldn't
-hard-code the value in the driver...
-
-~ (more datasheet digging) ~
-
-Bingo: 'format_control' can be read in all states and has a 'memory_width' field that
-indicates if the PHY is connected to a 'x32 DDR device' or 'x64 DDR device'. (I'm guessing
-those double bit values are for address + data)
-
-This probably affects the 'grain' too.
-
-
->>> +static void dmc520_handle_dram_ecc_errors(struct mem_ctl_info *mci,
->>> +					  bool is_ce)
->>> +{
->>> +	struct ecc_error_info info;
->>> +	struct dmc520_edac *edac;
->>> +	u32 cnt;
->>> +	char message[EDAC_MSG_BUF_SIZE];
->>> +	unsigned long flags;
->>> +
->>> +	edac = mci->pvt_info;
->>> +	dmc520_get_dram_ecc_error_info(edac, is_ce, &info);
->>> +
->>> +	cnt = dmc520_get_dram_ecc_error_count(edac, is_ce);
->>> +
->>> +	if (cnt > 0) {
->>> +		snprintf(message, ARRAY_SIZE(message),
->>> +			 "rank:%d bank:%d row:%d col:%d",
->>> +			 info.rank, info.bank,
->>> +			 info.row, info.col);
->>> +
->>> +		spin_lock_irqsave(&edac->ecc_lock, flags);
->> irqsave/irqrestore is overkill as this function is only called from an interrupt handler.
->> There is no way for this to be called with interrupts unmasked.
-
-> Still feel spin_lock_irqsave and spin_unlock_irqstore are the safest. If 
-> a processor is on isr for interrupt line 1 and calls 
-> dmc520_handle_dram_ecc_errors, only line 1 is disabled and and other 
-> lines can still interrupt calling dmc520_handle_dram_ecc_errors again. 
-
-But not on the same CPU, (which is the problem the irqsave helpers solve).
-
-When the CPU takes an interrupt the hardware sets a status bit to prevent this CPU taking
-any other interrupt. On armv8, this is PSTATE.I, its set automatically by the hardware. If
-CPUs didn't do this, you could never guarantee that any interrupt would ever be handled.
-
-You are right a second interrupt may occur, but it can't interrupt this CPU until it
-returns from the Interrupt, or clears the status bit. If the second interrupt is taken at
-the same time its because it was routed to a different CPU. A regular spin_lock() stops
-any problems here, the second CPU has to wait for the first CPU to release the lock.
-
-spin_lock_irqsave() is for a more complicated problem. If you used the spinlock in process
-context, (e.g. your probe function), as well as interrupt context, then its possible the
-interrupt is taken while the lock is held in process context on the same CPU. This causes
-your interrupt handler to wait forever for the lock. The irqsave helpers stop this by
-masking interrupts when taking the lock, so that this 'same CPU' sequence can't happen.
-
-Because you don't take the lock in process context, you don't need the irqsave variants.
-
-
->>> +	for (intr_index = 0; intr_index < nintr; ++intr_index) {
->>> +		if (edac->interrupt_mask_all & edac->interrupt_masks[intr_index]) {
->>> +			edac_printk(KERN_ERR, EDAC_MC,
->>> +				"interrupt-config error: "
->>> +				"element %d's interrupt mask %d has overlap.\n",
->>> +				intr_index, edac->interrupt_masks[intr_index]);
->>> +			goto err_free_mc;
->>> +		}
->>> +
->>> +		edac->interrupt_mask_all |= edac->interrupt_masks[intr_index];
->>> +	}
-
->> Ah, so the driver doesn't support overlapping masks... but wasn't this the reason for
->> describing the interrupts with these masks in the first place?
->> (It looks like the DT-folk want this as named interrupts)
->>
->> lore.kernel.org/r/BYAPR21MB1319BC4D079B918AB038A4D590010@BYAPR21MB1319.namprd21.prod.outlook.com
->>
->> Would this driver support the configuration you gave there?
-
-> The interrupt line to mask mapping is to solve how to flexibly adapting 
-> to possible hardware implementations. dmc520 supports multiple 
-> interrupts (3.3.169 interrupt_control). And these interrupts may have 
-> different ways to be wired to physical interrupt lines. As in the above 
-> link, in this particular brcm implementation:
+> On 07/03/2019 07:41 AM, Vignesh Raghavendra wrote:
 > 
-> Line 841: source dram_ecc_errc_int
-> Line 843: source dram_ecc_errd_int
-> Line 839: source dram_ecc_errc_int and dram_ecc_errd_int
+>>>> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
+>>>> Bus interface between a host system master and one or more slave
+>>>> interfaces. HyperBus is used to connect microprocessor, microcontroller,
+>>>> or ASIC devices with random access NOR flash memory (called HyperFlash)
+>>>> or self refresh DRAM (called HyperRAM).
+>>>>
+>>>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+>>>> signal and either Single-ended clock(3.0V parts) or Differential clock
+>>>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+>>>> At bus level, it follows a separate protocol described in HyperBus
+>>>> specification[1].
+>>>>
+>>>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+>>>> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
+>>>> its equivalent to x16 parallel NOR flash with respect to bits per clock
+>>>> cycle. But HyperBus operates at >166MHz frequencies.
+>>>> HyperRAM provides direct random read/write access to flash memory
+>>>> array.
+>>>>
+>>>> But, HyperBus memory controllers seem to abstract implementation details
+>>>> and expose a simple MMIO interface to access connected flash.
+>>>>
+>>>> Add support for registering HyperFlash devices with MTD framework. MTD
+>>>> maps framework along with CFI chip support framework are used to support
+>>>> communicating with flash.
+>>>>
+>>>> Framework is modelled along the lines of spi-nor framework. HyperBus
+>>>> memory controller (HBMC) drivers calls hyperbus_register_device() to
+>>>> register a single HyperFlash device. HyperFlash core parses MMIO access
+>>>> information from DT, sets up the map_info struct, probes CFI flash and
+>>>> registers it with MTD framework.
+>>>>
+>>>> Some HBMC masters need calibration/training sequence[3] to be carried
+>>>> out, in order for DLL inside the controller to lock, by reading a known
+>>>> string/pattern. This is done by repeatedly reading CFI Query
+>>>> Identification String. Calibration needs to be done before trying to detect
+>>>> flash as part of CFI flash probe.
+>>>>
+>>>> HyperRAM is not supported at the moment.
+>>>>
+>>>> HyperBus specification can be found at[1]
+>>>> HyperFlash datasheet can be found at[2]
+>>>>
+>>>> [1] https://www.cypress.com/file/213356/download
+>>>> [2] https://www.cypress.com/file/213346/download
+>>>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>>>>     Table 12-5741. HyperFlash Access Sequence
+>>>>
+>>>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>>> [...]
+>>>
+>>>    I have at least created my HyperBus driver and unfortunately I'm having serious
 > 
-> Two straightforward possibilities for implementing ecc counts for ce/ue: 
-> 1. We chose to use the single source line. 2. It's possible to implement 
-> using the combined-source line too. Our implementation would support 
-> either of these cases.
+>    At last. :-)
 > 
-> Of course there might be other possibilities that involve overlapping, 
-> such as including all above 3 interrupt lines into the DT. But this 
-> unlikely is of any real value of use. Our implementation does not 
-> support this case.
 
-Right, so the driver does support this, but not at the same time as independant interrupts.
+So, I guess driver works for limited memory size?
 
-
->> With the bool/enum and interrupt-disabling things fixed:
->> Reviewed-by: James Morse <james.morse@arm.com>
+>>> issues with the design of the support core (see below)...
+>>>
+>>> [...]
+>>>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+>>>> new file mode 100644
+>>>> index 000000000000..63a9e64895bc
+>>>> --- /dev/null
+>>>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
+>>>> @@ -0,0 +1,154 @@
+>>> [...]
+>>>> +int hyperbus_register_device(struct hyperbus_device *hbdev)
+>>>> +{
+>>>> +	const struct hyperbus_ops *ops;
+>>>> +	struct hyperbus_ctlr *ctlr;
+>>>> +	struct device_node *np;
+>>>> +	struct map_info *map;
+>>>> +	struct resource res;
+>>>> +	struct device *dev;
+>>>> +	int ret;
+>>>> +
+>>>> +	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
+>>>> +		pr_err("hyperbus: please fill all the necessary fields!\n");
+>>>> +		return -EINVAL;
+>>>> +	}
+>>>> +
+>>>> +	np = hbdev->np;
+>>>> +	ctlr = hbdev->ctlr;
+>>>> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	hbdev->memtype = HYPERFLASH;
+>>>> +
+>>>> +	ret = of_address_to_resource(np, 0, &res);
+>>>
+>>>    Hm, I doubt that the HB devices are wholly mapped into memory space, that seems
+>>> like a property of the HB controller. In my case, the flash device in the DT has
+>>> only single-cell "reg" prop (equal to the chip select #). Then this function returns 
+>>> -EINVAL and the registration fails. Also, in my case such mapping is R/O, not R/W.
+>>>
 >>
-> New to the upstreaming review process. Does this last comment mean we're 
-> closer? :)
+>> You could declare R/O MMIO region in controla and set up a translation using ranges
+>> from slave's reg CS based reg mapping like:
+> 
+>    No, not all HB controllers work the same (simple) way as yours. In case of RPC-IF,
+> the direct read map is a 64 MiB window into a possibly larger flash chip, it has a
+> register supplying address bits 25:31...
 
-Heh, yes. This translates as: If you post a subsequent version with those two issues
-fixed, please include that Reviewed-by tag next to your Signed-off-by.
+Okay, this limitation was not made clear earlier. I thought RPC-IF also
+supported MMIO accesses for all reads
 
-{
-If you could also summarise the changes you make next to the diffstat, it allows people
-who have given tags to only look at the bits you changed, (instead of playing spot the
-difference).
+I will look into changes needed to support HB controllers that don't
+have MMIO interface next week.
 
-As an example:
-https://lore.kernel.org/r/20190521172139.21277-3-julien.grall@arm.com
+Regards
+Vignesh
 
-git knows to discard the changes-between-versions and diffstat bits when the patch is
-applied, they don't end up in the log.
-}
+> 
+>> +	hbmc: hyperbus@47034000 {
+>> +		compatible = "ti,am654-hbmc";
+>> +		reg = <0x0 0x47034000 0x0 0x100>,
+>> +			<0x5 0x00000000 0x1 0x0000000>;
+>> +		#address-cells = <2>;
+>> +		#size-cells = <1>;
+>> +		ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
+>> +			 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
+>> +
+>> +		/* Slave flash node */
+>> +		flash@0,0 {
+>> +			compatible = "cypress,hyperflash", "cfi-flash";
+>> +			reg = <0x0 0x0 0x4000000>;
+>> +		};
+>> +	};
+>>
+>> If you use just CS# how would you handle CS to MMIO region mapping? 
+>> Does both CS use the same MMIO base for reads?
+> 
+>    The RPC-IF HF mode only has a single CS signal.
+> 
 
-What happens next? Your series gets more review and collects tags. This will include the
-maintainers of each tree you're touching either giving tags, or queueing the series. From
-there it sits in linux-next until the next merge-window, when the maintainer will send a
-pull-request to Linus. Eventually it ends up in the release-candidates, and finally a
-released kernel.
+I see...
 
+> [...]
+> 
+> MBR, Sergei
+> 
 
-(N.B: your mail is still coming base64 encoded, so its very unlikely the maintainer can
-pick it up.)
+Regards
+Vignesh
 
-
-Thanks,
-
-James
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
