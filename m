@@ -1,32 +1,39 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH RFC 7/7] arm64: dts: renesas: salvator-common: add gpio property into pwm1
-Date: Mon,  8 Jul 2019 18:07:48 +0900
-Message-Id: <1562576868-8124-8-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-To: linus.walleij@linaro.org, geert+renesas@glider.be, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=6nRC=VB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9182 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbfGDNxu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jul 2019 09:53:50 -0400
+Subject: Re: [PATCH 6/8] phy: tegra: xusb: t210: support wake and sleepwalk
+References: <20190614074824.22023-1-jckuo@nvidia.com>
+ <20190614074824.22023-2-jckuo@nvidia.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <70ba0026-1e93-61ef-bec8-c10963870b4f@nvidia.com>
+Date: Thu, 4 Jul 2019 14:53:44 +0100
+MIME-Version: 1.0
+In-Reply-To: <20190614074824.22023-2-jckuo@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: JC Kuo <jckuo@nvidia.com>, gregkh@linuxfoundation.org, thierry.reding@gmail.com, pdeschrijver@nvidia.com, afrid@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds a specific gpio property to output duty zero.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- arch/arm64/boot/dts/renesas/salvator-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+On 14/06/2019 08:48, JC Kuo wrote:
+> This commit implements Tegra210 XUSB PADCTL wake and sleepwalk
+> routines.
 
-diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-index 5c2c847..5b68fb6 100644
---- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-@@ -727,6 +727,7 @@
- &pwm1 {
- 	pinctrl-0 = <&pwm1_pins>;
- 	pinctrl-names = "default";
-+	renesas,duty-zero-gpios = <&gpio2 7 GPIO_ACTIVE_HIGH>;
- 
- 	status = "okay";
- };
+This patch does not apply cleanly. I am not sure how this was generated
+but appears to come from windows (with ^M end of line character). Please
+fix this.
+
+Alot of these enable/disble functions looks very similar; programming
+the same registers just with different bits. Maybe worth considering
+consolidating these functions.
+
+Cheers
+Jon
+
 -- 
-2.7.4
+nvpublic
