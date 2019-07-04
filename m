@@ -1,94 +1,58 @@
-From: fugang.duan@nxp.com
-Subject: [PATCH arm64/dts 1/1] arm64: dts: imx8qxp: add lpuart baud clock
-Date: Thu,  4 Jul 2019 18:04:43 +0800
-Message-ID: <20190704100443.10957-1-fugang.duan@nxp.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH V3 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
+Date: Thu, 04 Jul 2019 12:16:03 +0200
+Message-ID: <1562235363.6641.10.camel@pengutronix.de>
+References: <20190704094416.4757-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: festevam@gmail.com, shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, daniel.baluta@gmail.com, fugang.duan@nxp.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190704094416.4757-1-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson.Huang@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, ping.bai@nxp.com, daniel.baluta@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+Hi Anson,
 
-Add imx8qxp lpuart baud clock.
+On Thu, 2019-07-04 at 17:44 +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> i.MX8MM can reuse i.MX8MQ's reset driver, update the compatible
+> property and related info to support i.MX8MM.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V2:
+> 	- Add separate line for i.MX8MM in case anything different later for i.MX8MM.
+> ---
+>  Documentation/devicetree/bindings/reset/fsl,imx7-src.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> index 13e0951..c2489e4 100644
+> --- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> @@ -8,6 +8,7 @@ Required properties:
+>  - compatible:
+>  	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
+>  	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
+> +	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
+>  - reg: should be register base and length as documented in the
+>    datasheet
+>  - interrupts: Should contain SRC interrupt
+> @@ -46,5 +47,6 @@ Example:
+>  
+>  
+>  For list of all valid reset indices see
+> -<dt-bindings/reset/imx7-reset.h> for i.MX7 and
+> -<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ
+> +<dt-bindings/reset/imx7-reset.h> for i.MX7,
+> +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
+> +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM
 
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+The last line is misleading, as that file contains reset indices that
+are invalid for i.MX8MM.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index 05fa0b7..4402b2e 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -30,6 +30,9 @@
- 		mmc2 = &usdhc3;
- 		mu1 = &lsio_mu1;
- 		serial0 = &adma_lpuart0;
-+		serial1 = &adma_lpuart1;
-+		serial2 = &adma_lpuart2;
-+		serial3 = &adma_lpuart3;
- 	};
- 
- 	cpus {
-@@ -209,8 +212,9 @@
- 			reg = <0x5a060000 0x1000>;
- 			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-parent = <&gic>;
--			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART0_BAUD_CLK>;
--			clock-names = "ipg";
-+			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART0_IPG_CLK>,
-+				 <&adma_lpcg IMX_ADMA_LPCG_UART0_BAUD_CLK>;
-+			clock-names = "ipg", "baud";
- 			power-domains = <&pd IMX_SC_R_UART_0>;
- 			status = "disabled";
- 		};
-@@ -220,8 +224,9 @@
- 			reg = <0x5a070000 0x1000>;
- 			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-parent = <&gic>;
--			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART1_BAUD_CLK>;
--			clock-names = "ipg";
-+			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART1_IPG_CLK>,
-+				 <&adma_lpcg IMX_ADMA_LPCG_UART1_BAUD_CLK>;
-+			clock-names = "ipg", "baud";
- 			power-domains = <&pd IMX_SC_R_UART_1>;
- 			status = "disabled";
- 		};
-@@ -231,8 +236,9 @@
- 			reg = <0x5a080000 0x1000>;
- 			interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-parent = <&gic>;
--			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART2_BAUD_CLK>;
--			clock-names = "ipg";
-+			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART2_IPG_CLK>,
-+				 <&adma_lpcg IMX_ADMA_LPCG_UART2_BAUD_CLK>;
-+			clock-names = "ipg", "baud";
- 			power-domains = <&pd IMX_SC_R_UART_2>;
- 			status = "disabled";
- 		};
-@@ -242,8 +248,9 @@
- 			reg = <0x5a090000 0x1000>;
- 			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-parent = <&gic>;
--			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART3_BAUD_CLK>;
--			clock-names = "ipg";
-+			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART3_IPG_CLK>,
-+				 <&adma_lpcg IMX_ADMA_LPCG_UART3_BAUD_CLK>;
-+			clock-names = "ipg", "baud";
- 			power-domains = <&pd IMX_SC_R_UART_3>;
- 			status = "disabled";
- 		};
--- 
-2.7.4
+regards
+Philipp
