@@ -1,48 +1,95 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 4/4] net: dsa: vsc73xx: Assert reset if iCPU is enabled
-Date: Thu, 4 Jul 2019 13:27:18 -0700
-Message-ID: <bee690ca-64c2-c974-1658-92b986bb1b04@gmail.com>
-References: <20190703171924.31801-1-paweldembicki@gmail.com>
- <20190703171924.31801-5-paweldembicki@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 3/7] rtc: mt6397: improvements of rtc driver
+Date: Thu, 4 Jul 2019 22:43:36 +0200
+Message-ID: <20190704204336.GJ3692@piout.net>
+References: <20190703164822.17924-1-frank-w@public-files.de>
+ <20190703164822.17924-4-frank-w@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190703171924.31801-5-paweldembicki@gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Pawel Dembicki <paweldembicki@gmail.com>
-Cc: linus.walleij@linaro.org, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190703164822.17924-4-frank-w@public-files.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wunderlich <frank-w@public-files.de>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Allison Randal <allison@lohutok.net>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 7/3/2019 10:19 AM, Pawel Dembicki wrote:
-> Driver allow to use devices with disabled iCPU only.
+On 03/07/2019 18:48:18+0200, Frank Wunderlich wrote:
+> @@ -271,14 +268,11 @@ static int mtk_rtc_probe(struct platform_device *pdev)
 > 
-> Some devices have pre-initialised iCPU by bootloader.
-> That state make switch unmanaged. This patch force reset
-> if device is in unmanaged state. In the result chip lost
-> internal firmware from RAM and it can be managed.
+>  	platform_set_drvdata(pdev, rtc);
 > 
-> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-> ---
+> -	rtc->rtc_dev = devm_rtc_allocate_device(rtc->dev);
+> -	if (IS_ERR(rtc->rtc_dev))
+> -		return PTR_ERR(rtc->rtc_dev);
+> +	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
+> +					mtk_rtc_irq_handler_thread,
+> +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> +					"mt6397-rtc", rtc);
+> 
 
-[snip]
+This change may lead to a crash and the allocation was intentionally
+placed before the irq request.
 
-> @@ -1158,6 +1143,19 @@ int vsc73xx_probe(struct vsc73xx *vsc)
->  		msleep(20);
->  
->  	ret = vsc73xx_detect(vsc);
-> +	if (ret == -EAGAIN) {
-> +		dev_err(vsc->dev,
-> +			"Chip seams to be out of control. Assert reset and try again.\n");
-> +		gpiod_set_value_cansleep(vsc->reset, 1);
+> -	ret = request_threaded_irq(rtc->irq, NULL,
+> -				   mtk_rtc_irq_handler_thread,
+> -				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> -				   "mt6397-rtc", rtc);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
+>  			rtc->irq, ret);
+> @@ -287,6 +281,10 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+> 
+>  	device_init_wakeup(&pdev->dev, 1);
+> 
+> +	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
+> +	if (IS_ERR(rtc->rtc_dev))
+> +		return PTR_ERR(rtc->rtc_dev);
+> +
+>  	rtc->rtc_dev->ops = &mtk_rtc_ops;
+> 
+>  	ret = rtc_register_device(rtc->rtc_dev);
+> @@ -302,15 +300,6 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+> 
+> -static int mtk_rtc_remove(struct platform_device *pdev)
+> -{
+> -	struct mt6397_rtc *rtc = platform_get_drvdata(pdev);
+> -
+> -	free_irq(rtc->irq, rtc);
+> -
+> -	return 0;
+> -}
+> -
+>  #ifdef CONFIG_PM_SLEEP
+>  static int mt6397_rtc_suspend(struct device *dev)
+>  {
+> @@ -337,6 +326,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
+>  			mt6397_rtc_resume);
+> 
+>  static const struct of_device_id mt6397_rtc_of_match[] = {
+> +	{ .compatible = "mediatek,mt6323-rtc", },
 
-s/seams/seems/
+Unrelated change, this is not an improvement and must be accompanied by
+a documentation change.
 
-With that fixed:
+>  	{ .compatible = "mediatek,mt6397-rtc", },
+>  	{ }
+>  };
+> @@ -349,7 +339,6 @@ static struct platform_driver mtk_rtc_driver = {
+>  		.pm = &mt6397_pm_ops,
+>  	},
+>  	.probe	= mtk_rtc_probe,
+> -	.remove = mtk_rtc_remove,
+>  };
+> 
+>  module_platform_driver(mtk_rtc_driver);
+> --
+> 2.17.1
+> 
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Florian
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
