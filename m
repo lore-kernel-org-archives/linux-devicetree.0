@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 4/4] MIPS: lantiq: update the clock alias' for the mainline PCIe PHY driver
-Date: Thu,  4 Jul 2019 14:23:19 +0200
-Message-ID: <20190704122319.8983-5-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 1/4] dt-bindings: phy: add binding for the Lantiq VRX200 and ARX300 PCIe PHYs
+Date: Thu,  4 Jul 2019 14:23:16 +0200
+Message-ID: <20190704122319.8983-2-martin.blumenstingl@googlemail.com>
 References: <20190704122319.8983-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,69 +12,135 @@ To: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, john@phrozen.org, ki
 Cc: linux-kernel@vger.kernel.org, hauke@hauke-m.de, paul.burton@mips.com, ralf@linux-mips.org, mark.rutland@arm.com, ms@dev.tdt.de, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-The mainline PCIe PHY driver has it's own devicetree node. Update the
-clock alias so the mainline driver finds the clocks.
-
-The first PCIe PHY is located at 0x1f106800 and exists on VRX200, ARX300
-and GRX390.
-The second PCIe PHY is located at 0x1f700400 and exists on ARX300 and
-GRX390.
-The third PCIe PHY is located at 0x1f106a00 and exists onl on GRX390.
-Lantiq's board support package (called "UGW") names these registers
-"PDI".
+Add the bindings for the PCIe PHY on Lantiq VRX200 and ARX300 SoCs.
+The IP block contains settings for the PHY and a PLL.
+The PLL mode is configurable through a dedicated #phy-cell in .dts.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/mips/lantiq/xway/sysctrl.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  | 95 +++++++++++++++++++
+ .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  | 11 +++
+ 2 files changed, 106 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+ create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
 
-diff --git a/arch/mips/lantiq/xway/sysctrl.c b/arch/mips/lantiq/xway/sysctrl.c
-index b4323b2214e2..156a95ac5c72 100644
---- a/arch/mips/lantiq/xway/sysctrl.c
-+++ b/arch/mips/lantiq/xway/sysctrl.c
-@@ -468,14 +468,14 @@ void __init ltq_soc_init(void)
- 		clkdev_add_pmu("1f203018.usb2-phy", "phy", 1, 2, PMU_ANALOG_USB0_P);
- 		clkdev_add_pmu("1f203034.usb2-phy", "phy", 1, 2, PMU_ANALOG_USB1_P);
- 		/* rc 0 */
--		clkdev_add_pmu("1d900000.pcie", "phy", 1, 2, PMU_ANALOG_PCIE0_P);
-+		clkdev_add_pmu("1f106800.phy", "phy", 1, 2, PMU_ANALOG_PCIE0_P);
- 		clkdev_add_pmu("1d900000.pcie", "msi", 1, 1, PMU1_PCIE_MSI);
--		clkdev_add_pmu("1d900000.pcie", "pdi", 1, 1, PMU1_PCIE_PDI);
-+		clkdev_add_pmu("1f106800.phy", "pdi", 1, 1, PMU1_PCIE_PDI);
- 		clkdev_add_pmu("1d900000.pcie", "ctl", 1, 1, PMU1_PCIE_CTL);
- 		/* rc 1 */
--		clkdev_add_pmu("19000000.pcie", "phy", 1, 2, PMU_ANALOG_PCIE1_P);
-+		clkdev_add_pmu("1f700400.phy", "phy", 1, 2, PMU_ANALOG_PCIE1_P);
- 		clkdev_add_pmu("19000000.pcie", "msi", 1, 1, PMU1_PCIE1_MSI);
--		clkdev_add_pmu("19000000.pcie", "pdi", 1, 1, PMU1_PCIE1_PDI);
-+		clkdev_add_pmu("1f700400.phy", "pdi", 1, 1, PMU1_PCIE1_PDI);
- 		clkdev_add_pmu("19000000.pcie", "ctl", 1, 1, PMU1_PCIE1_CTL);
- 	}
- 
-@@ -499,9 +499,9 @@ void __init ltq_soc_init(void)
- 		clkdev_add_pmu("1e101000.usb", "otg", 1, 0, PMU_USB0);
- 		clkdev_add_pmu("1e106000.usb", "otg", 1, 0, PMU_USB1);
- 		/* rc 2 */
--		clkdev_add_pmu("1a800000.pcie", "phy", 1, 2, PMU_ANALOG_PCIE2_P);
-+		clkdev_add_pmu("1f106a00.pcie", "phy", 1, 2, PMU_ANALOG_PCIE2_P);
- 		clkdev_add_pmu("1a800000.pcie", "msi", 1, 1, PMU1_PCIE2_MSI);
--		clkdev_add_pmu("1a800000.pcie", "pdi", 1, 1, PMU1_PCIE2_PDI);
-+		clkdev_add_pmu("1f106a00.pcie", "pdi", 1, 1, PMU1_PCIE2_PDI);
- 		clkdev_add_pmu("1a800000.pcie", "ctl", 1, 1, PMU1_PCIE2_CTL);
- 		clkdev_add_pmu("1e10b308.eth", NULL, 0, 0, PMU_SWITCH | PMU_PPE_DP);
- 		clkdev_add_pmu("1da00000.usif", "NULL", 1, 0, PMU_USIF);
-@@ -526,10 +526,10 @@ void __init ltq_soc_init(void)
- 		clkdev_add_pmu("1e101000.usb", "otg", 1, 0, PMU_USB0 | PMU_AHBM);
- 		clkdev_add_pmu("1f203034.usb2-phy", "phy", 1, 0, PMU_USB1_P);
- 		clkdev_add_pmu("1e106000.usb", "otg", 1, 0, PMU_USB1 | PMU_AHBM);
--		clkdev_add_pmu("1d900000.pcie", "phy", 1, 1, PMU1_PCIE_PHY);
-+		clkdev_add_pmu("1f106800.phy", "phy", 1, 1, PMU1_PCIE_PHY);
- 		clkdev_add_pmu("1d900000.pcie", "bus", 1, 0, PMU_PCIE_CLK);
- 		clkdev_add_pmu("1d900000.pcie", "msi", 1, 1, PMU1_PCIE_MSI);
--		clkdev_add_pmu("1d900000.pcie", "pdi", 1, 1, PMU1_PCIE_PDI);
-+		clkdev_add_pmu("1f106800.phy", "pdi", 1, 1, PMU1_PCIE_PDI);
- 		clkdev_add_pmu("1d900000.pcie", "ctl", 1, 1, PMU1_PCIE_CTL);
- 		clkdev_add_pmu(NULL, "ahb", 1, 0, PMU_AHBM | PMU_AHBS);
- 
+diff --git a/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+new file mode 100644
+index 000000000000..8a56a8526cef
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+@@ -0,0 +1,95 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/lantiq,vrx200-pcie-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Lantiq VRX200 and ARX300 PCIe PHY Device Tree Bindings
++
++maintainers:
++  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++    description: selects the PHY mode as defined in <dt-bindings/phy/phy-lantiq-vrx200-pcie.h>
++
++  compatible:
++    enum:
++      - lantiq,vrx200-pcie-phy
++      - lantiq,arx300-pcie-phy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: PHY module clock
++      - description: PDI register clock
++
++  clock-names:
++    items:
++      - const: phy
++      - const: pdi
++
++  resets:
++    items:
++      - description: exclusive PHY reset line
++      - description: shared reset line between the PCIe PHY and PCIe controller
++
++  resets-names:
++    items:
++      - const: phy
++      - const: pcie
++
++  lantiq,rcu:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: phandle to the RCU syscon
++
++  lantiq,rcu-endian-offset:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: the offset of the endian registers for this PHY instance in the RCU syscon
++
++  lantiq,rcu-big-endian-mask:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: the mask to set the PDI (PHY) registers for this PHY instance to big endian
++
++  big-endian:
++    description: Configures the PDI (PHY) registers in big-endian mode
++    type: boolean
++
++  little-endian:
++    description: Configures the PDI (PHY) registers in big-endian mode
++    type: boolean
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - lantiq,rcu
++  - lantiq,rcu-endian-offset
++  - lantiq,rcu-big-endian-mask
++
++additionalProperties: false
++
++examples:
++  - |
++    pcie0_phy: phy@106800 {
++        compatible = "lantiq,vrx200-pcie-phy";
++        reg = <0x106800 0x100>;
++        lantiq,rcu = <&rcu0>;
++        lantiq,rcu-endian-offset = <0x4c>;
++        lantiq,rcu-big-endian-mask = <0x80>; /* bit 7 */
++        big-endian;
++        clocks = <&pmu 32>, <&pmu 36>;
++        clock-names = "phy", "pdi";
++        resets = <&reset0 12 24>, <&reset0 22 22>;
++        reset-names = "phy", "pcie";
++        #phy-cells = <1>;
++    };
++
++...
+diff --git a/include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h b/include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
+new file mode 100644
+index 000000000000..95a7896356d6
+--- /dev/null
++++ b/include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++ */
++
++#define LANTIQ_PCIE_PHY_MODE_25MHZ		0
++#define LANTIQ_PCIE_PHY_MODE_25MHZ_SSC		1
++#define LANTIQ_PCIE_PHY_MODE_36MHZ		2
++#define LANTIQ_PCIE_PHY_MODE_36MHZ_SSC		3
++#define LANTIQ_PCIE_PHY_MODE_100MHZ		4
++#define LANTIQ_PCIE_PHY_MODE_100MHZ_SSC		5
 -- 
 2.22.0
