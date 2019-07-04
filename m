@@ -1,14 +1,16 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2] pinctrl: msm8998: Squash TSIF pins together
-Date: Thu, 4 Jul 2019 09:35:27 -0700
-Message-ID: <20190704163527.GJ12249@tuxbook-pro>
-References: <503b2ae8-ead6-70cd-7b21-ce5f5166a23a@free.fr>
+From: =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Subject: Re: [PATCH v7 02/14] media: doc: add document for rkisp1 meta buffer
+ format
+Date: Thu, 4 Jul 2019 14:01:50 -0300
+Message-ID: <73414230-8e9a-a1f3-c121-fdd5b87cb5b2@collabora.com>
+References: <20190703190910.32633-1-helen.koike@collabora.com>
+ <20190703190910.32633-3-helen.koike@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <503b2ae8-ead6-70cd-7b21-ce5f5166a23a@free.fr>
+In-Reply-To: <20190703190910.32633-3-helen.koike@collabora.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,219 +20,78 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc: DT <devicetree@vger.kernel.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, MSM <linux-arm-msm@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Jonathan Neusch?fer <j.neuschaefer@gmx.net>, gpio <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Helen Koike <helen.koike@collabora.com>, linux-rockchip@lists.infradead.org
+Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, kernel@collabora.com, heiko@sntech.de, Jacob Chen <jacob-chen@rock-chips.com>, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, Yong Zhi <yong.zhi@intel.com>, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, zhengsq@rock-chips.com, mchehab@kernel.org, ezequiel@collabora.com, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 04 Jul 01:57 PDT 2019, Marc Gonzalez wrote:
-
-> TSIF is the Transport Stream Interface.
-> First, rename tsif1 to tsif0, and tsif2 to tsif1.
-> Then squash all 5 tsif0 pins into a single function.
-> Same for tsif1.
-> 
-> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-
-Thanks for the respin Marc.
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> ---
-> Changes from v1:
-> - Reword commit message for clarity (hopefully)
-> - Drop unrelated change in qcom,msm8998-pinctrl.txt
-> - CC DT
-> ---
->  .../bindings/pinctrl/qcom,msm8998-pinctrl.txt |  5 +-
->  drivers/pinctrl/qcom/pinctrl-msm8998.c        | 76 +++++--------------
->  2 files changed, 20 insertions(+), 61 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
-> index 00174f08ba1d..18e3f3d3e3c5 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8998-pinctrl.txt
-> @@ -124,9 +124,8 @@ to specify in a pin configuration subnode:
->  		    qlink_request, qua_mi2s, sd_card, sd_write, sdc40, sdc41,
->  		    sdc42, sdc43, sdc4_clk, sdc4_cmd, sec_mi2s, sp_cmu,
->  		    spkr_i2s, ssbi1, ssc_irq, ter_mi2s, tgu_ch0, tgu_ch1,
-> -		    tsense_pwm1, tsense_pwm2, tsif1_clk, tsif1_data, tsif1_en,
-> -		    tsif1_error, tsif1_sync, tsif2_clk, tsif2_data, tsif2_en,
-> -		    tsif2_error, tsif2_sync, uim1_clk, uim1_data, uim1_present,
-> +		    tsense_pwm1, tsense_pwm2, tsif0, tsif1,
-> +		    uim1_clk, uim1_data, uim1_present,
->  		    uim1_reset, uim2_clk, uim2_data, uim2_present, uim2_reset,
->  		    uim_batt, usb_phy, vfr_1, vsense_clkout, vsense_data0,
->  		    vsense_data1, vsense_mode, wlan1_adc0, wlan1_adc1,
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm8998.c b/drivers/pinctrl/qcom/pinctrl-msm8998.c
-> index 00d7b94bc3f1..a05f41fe2706 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm8998.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm8998.c
-> @@ -581,16 +581,8 @@ enum msm8998_functions {
->  	msm_mux_tgu_ch1,
->  	msm_mux_tsense_pwm1,
->  	msm_mux_tsense_pwm2,
-> -	msm_mux_tsif1_clk,
-> -	msm_mux_tsif1_data,
-> -	msm_mux_tsif1_en,
-> -	msm_mux_tsif1_error,
-> -	msm_mux_tsif1_sync,
-> -	msm_mux_tsif2_clk,
-> -	msm_mux_tsif2_data,
-> -	msm_mux_tsif2_en,
-> -	msm_mux_tsif2_error,
-> -	msm_mux_tsif2_sync,
-> +	msm_mux_tsif0,
-> +	msm_mux_tsif1,
->  	msm_mux_uim1_clk,
->  	msm_mux_uim1_data,
->  	msm_mux_uim1_present,
-> @@ -692,9 +684,6 @@ static const char * const atest_usb13_groups[] = {
->  static const char * const bimc_dte1_groups[] = {
->  	"gpio8", "gpio10",
->  };
-> -static const char * const tsif1_sync_groups[] = {
-> -	"gpio9",
-> -};
->  static const char * const wlan1_adc0_groups[] = {
->  	"gpio9",
->  };
-> @@ -863,9 +852,6 @@ static const char * const lpass_slimbus_groups[] = {
->  static const char * const sd_write_groups[] = {
->  	"gpio40",
->  };
-> -static const char * const tsif1_error_groups[] = {
-> -	"gpio40",
-> -};
->  static const char * const blsp_spi6_groups[] = {
->  	"gpio41", "gpio42", "gpio43", "gpio44",
->  };
-> @@ -1048,11 +1034,8 @@ static const char * const blsp_uim2_b_groups[] = {
->  static const char * const blsp_i2c5_groups[] = {
->  	"gpio87", "gpio88",
->  };
-> -static const char * const tsif1_clk_groups[] = {
-> -	"gpio89",
-> -};
-> -static const char * const tsif1_en_groups[] = {
-> -	"gpio90",
-> +static const char * const tsif0_groups[] = {
-> +	"gpio9", "gpio40", "gpio89", "gpio90", "gpio91",
->  };
->  static const char * const mdp_vsync0_groups[] = {
->  	"gpio90",
-> @@ -1075,17 +1058,14 @@ static const char * const tgu_ch0_groups[] = {
->  static const char * const qdss_cti1_b_groups[] = {
->  	"gpio90", "gpio91",
->  };
-> -static const char * const tsif1_data_groups[] = {
-> -	"gpio91",
-> -};
->  static const char * const sdc4_cmd_groups[] = {
->  	"gpio91",
->  };
->  static const char * const tgu_ch1_groups[] = {
->  	"gpio91",
->  };
-> -static const char * const tsif2_error_groups[] = {
-> -	"gpio92",
-> +static const char * const tsif1_groups[] = {
-> +	"gpio92", "gpio93", "gpio94", "gpio95", "gpio96",
->  };
->  static const char * const sdc43_groups[] = {
->  	"gpio92",
-> @@ -1093,30 +1073,18 @@ static const char * const sdc43_groups[] = {
->  static const char * const vfr_1_groups[] = {
->  	"gpio92",
->  };
-> -static const char * const tsif2_clk_groups[] = {
-> -	"gpio93",
-> -};
->  static const char * const sdc4_clk_groups[] = {
->  	"gpio93",
->  };
-> -static const char * const tsif2_en_groups[] = {
-> -	"gpio94",
-> -};
->  static const char * const sdc42_groups[] = {
->  	"gpio94",
->  };
->  static const char * const sd_card_groups[] = {
->  	"gpio95",
->  };
-> -static const char * const tsif2_data_groups[] = {
-> -	"gpio95",
-> -};
->  static const char * const sdc41_groups[] = {
->  	"gpio95",
->  };
-> -static const char * const tsif2_sync_groups[] = {
-> -	"gpio96",
-> -};
->  static const char * const sdc40_groups[] = {
->  	"gpio96",
->  };
-> @@ -1355,16 +1323,8 @@ static const struct msm_function msm8998_functions[] = {
->  	FUNCTION(tgu_ch1),
->  	FUNCTION(tsense_pwm1),
->  	FUNCTION(tsense_pwm2),
-> -	FUNCTION(tsif1_clk),
-> -	FUNCTION(tsif1_data),
-> -	FUNCTION(tsif1_en),
-> -	FUNCTION(tsif1_error),
-> -	FUNCTION(tsif1_sync),
-> -	FUNCTION(tsif2_clk),
-> -	FUNCTION(tsif2_data),
-> -	FUNCTION(tsif2_en),
-> -	FUNCTION(tsif2_error),
-> -	FUNCTION(tsif2_sync),
-> +	FUNCTION(tsif0),
-> +	FUNCTION(tsif1),
->  	FUNCTION(uim1_clk),
->  	FUNCTION(uim1_data),
->  	FUNCTION(uim1_present),
-> @@ -1396,7 +1356,7 @@ static const struct msm_pingroup msm8998_groups[] = {
->  	PINGROUP(6, WEST, blsp_spi8, blsp_uart8_a, blsp_i2c8, _, _, _, _, _, _),
->  	PINGROUP(7, WEST, blsp_spi8, blsp_uart8_a, blsp_i2c8, ddr_bist, _, atest_tsens2, atest_usb1, _, _),
->  	PINGROUP(8, EAST, blsp_spi4, blsp_uart1_b, blsp_uim1_b, _, ddr_bist, _, wlan1_adc1, atest_usb13, bimc_dte1),
-> -	PINGROUP(9, EAST, blsp_spi4, blsp_uart1_b, blsp_uim1_b, tsif1_sync, ddr_bist, _, wlan1_adc0, atest_usb12, bimc_dte0),
-> +	PINGROUP(9, EAST, blsp_spi4, blsp_uart1_b, blsp_uim1_b, tsif0, ddr_bist, _, wlan1_adc0, atest_usb12, bimc_dte0),
->  	PINGROUP(10, EAST, mdp_vsync_a, blsp_spi4, blsp_uart1_b, blsp_i2c4, ddr_bist, atest_gpsadc1, wlan2_adc1, atest_usb11, bimc_dte1),
->  	PINGROUP(11, EAST, mdp_vsync_a, edp_lcd, blsp_spi4, blsp_uart1_b, blsp_i2c4, dbg_out, atest_gpsadc0, wlan2_adc0, atest_usb10),
->  	PINGROUP(12, EAST, mdp_vsync, m_voc, _, _, _, _, _, _, _),
-> @@ -1427,7 +1387,7 @@ static const struct msm_pingroup msm8998_groups[] = {
->  	PINGROUP(37, NORTH, agera_pll, _, _, _, _, _, _, _, _),
->  	PINGROUP(38, WEST, usb_phy, _, _, _, _, _, _, _, _),
->  	PINGROUP(39, WEST, lpass_slimbus, _, _, _, _, _, _, _, _),
-> -	PINGROUP(40, EAST, sd_write, tsif1_error, _, _, _, _, _, _, _),
-> +	PINGROUP(40, EAST, sd_write, tsif0, _, _, _, _, _, _, _),
->  	PINGROUP(41, EAST, blsp_spi6, blsp_uart3_b, blsp_uim3_b, _, qdss, _, _, _, _),
->  	PINGROUP(42, EAST, blsp_spi6, blsp_uart3_b, blsp_uim3_b, _, qdss, _, _, _, _),
->  	PINGROUP(43, EAST, blsp_spi6, blsp_uart3_b, blsp_i2c6, _, qdss, _, _, _, _),
-> @@ -1476,14 +1436,14 @@ static const struct msm_pingroup msm8998_groups[] = {
->  	PINGROUP(86, EAST, blsp_spi5, blsp_uart2_b, blsp_uim2_b, _, _, _, _, _, _),
->  	PINGROUP(87, EAST, blsp_spi5, blsp_uart2_b, blsp_i2c5, _, _, _, _, _, _),
->  	PINGROUP(88, EAST, blsp_spi5, blsp_uart2_b, blsp_i2c5, _, _, _, _, _, _),
-> -	PINGROUP(89, EAST, tsif1_clk, phase_flag, _, _, _, _, _, _, _),
-> -	PINGROUP(90, EAST, tsif1_en, mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, blsp1_spi, tgu_ch0, qdss_cti1_b, _),
-> -	PINGROUP(91, EAST, tsif1_data, sdc4_cmd, tgu_ch1, phase_flag, qdss_cti1_b, _, _, _, _),
-> -	PINGROUP(92, EAST, tsif2_error, sdc43, vfr_1, phase_flag, _, _, _, _, _),
-> -	PINGROUP(93, EAST, tsif2_clk, sdc4_clk, _, qdss, _, _, _, _, _),
-> -	PINGROUP(94, EAST, tsif2_en, sdc42, _, _, _, _, _, _, _),
-> -	PINGROUP(95, EAST, tsif2_data, sdc41, _, _, _, _, _, _, _),
-> -	PINGROUP(96, EAST, tsif2_sync, sdc40, phase_flag, _, _, _, _, _, _),
-> +	PINGROUP(89, EAST, tsif0, phase_flag, _, _, _, _, _, _, _),
-> +	PINGROUP(90, EAST, tsif0, mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, blsp1_spi, tgu_ch0, qdss_cti1_b, _),
-> +	PINGROUP(91, EAST, tsif0, sdc4_cmd, tgu_ch1, phase_flag, qdss_cti1_b, _, _, _, _),
-> +	PINGROUP(92, EAST, tsif1, sdc43, vfr_1, phase_flag, _, _, _, _, _),
-> +	PINGROUP(93, EAST, tsif1, sdc4_clk, _, qdss, _, _, _, _, _),
-> +	PINGROUP(94, EAST, tsif1, sdc42, _, _, _, _, _, _, _),
-> +	PINGROUP(95, EAST, tsif1, sdc41, _, _, _, _, _, _, _),
-> +	PINGROUP(96, EAST, tsif1, sdc40, phase_flag, _, _, _, _, _, _),
->  	PINGROUP(97, WEST, _, mdp_vsync_b, ldo_en, _, _, _, _, _, _),
->  	PINGROUP(98, WEST, _, mdp_vsync_b, ldo_update, _, _, _, _, _, _),
->  	PINGROUP(99, WEST, _, _, _, _, _, _, _, _, _),
-> -- 
-> 2.17.1
+SGVsbG8gSGVsZW4sCgpPbiA3LzMvMTkgNDowOCBQTSwgSGVsZW4gS29pa2Ugd3JvdGU6Cj4gRnJv
+bTogSmFjb2IgQ2hlbiA8amFjb2IyLmNoZW5Acm9jay1jaGlwcy5jb20+Cj4KPiBUaGlzIGNvbW1p
+dCBhZGQgZG9jdW1lbnQgZm9yIHJraXNwMSBtZXRhIGJ1ZmZlciBmb3JtYXQKPgo+IFNpZ25lZC1v
+ZmYtYnk6IEphY29iIENoZW4gPGphY29iLWNoZW5Acm9jay1jaGlwcy5jb20+Cj4gQWNrZWQtYnk6
+IEhhbnMgVmVya3VpbCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4KPiBbdXBkYXRlIGZvciB1cHN0
+cmVhbV0KPiBTaWduZWQtb2ZmLWJ5OiBIZWxlbiBLb2lrZSA8aGVsZW4ua29pa2VAY29sbGFib3Jh
+LmNvbT4KPgo+IC0tLQo+Cj4gQ2hhbmdlcyBpbiB2NzoKPiAtIHMvY29ycmVzcG9uZC9jb3JyZXNw
+b25kaW5nCj4gLSBzL3VzZS91c2VzCj4gLSBzL2RvY3VlbW50L2RvY3VtZW50Cj4KPiAgRG9jdW1l
+bnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9tZXRhLWZvcm1hdHMucnN0IHwgIDIgKysKPiAgLi4uL3Vh
+cGkvdjRsL3BpeGZtdC1tZXRhLXJraXNwMS1wYXJhbXMucnN0ICAgIHwgMjAgKysrKysrKysrKysr
+KysrKysrKwo+ICAuLi4vdWFwaS92NGwvcGl4Zm10LW1ldGEtcmtpc3AxLXN0YXQucnN0ICAgICAg
+fCAxOCArKysrKysrKysrKysrKysrKwo+ICAzIGZpbGVzIGNoYW5nZWQsIDQwIGluc2VydGlvbnMo
+KykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vbWVkaWEvdWFwaS92NGwvcGl4
+Zm10LW1ldGEtcmtpc3AxLXBhcmFtcy5yc3QKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
+YXRpb24vbWVkaWEvdWFwaS92NGwvcGl4Zm10LW1ldGEtcmtpc3AxLXN0YXQucnN0Cj4KPiBkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9tZXRhLWZvcm1hdHMucnN0IGIv
+RG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9tZXRhLWZvcm1hdHMucnN0Cj4gaW5kZXggYjEw
+Y2E5ZWUzOTY4Li41ZGU2MjFmZWEzY2MgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9tZWRp
+YS91YXBpL3Y0bC9tZXRhLWZvcm1hdHMucnN0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9tZWRpYS91
+YXBpL3Y0bC9tZXRhLWZvcm1hdHMucnN0Cj4gQEAgLTI0LDMgKzI0LDUgQEAgVGhlc2UgZm9ybWF0
+cyBhcmUgdXNlZCBmb3IgdGhlIDpyZWY6YG1ldGFkYXRhYCBpbnRlcmZhY2Ugb25seS4KPiAgICAg
+IHBpeGZtdC1tZXRhLXV2Ywo+ICAgICAgcGl4Zm10LW1ldGEtdnNwMS1oZ28KPiAgICAgIHBpeGZt
+dC1tZXRhLXZzcDEtaGd0Cj4gKyAgICBwaXhmbXQtbWV0YS1ya2lzcDEtcGFyYW1zCj4gKyAgICBw
+aXhmbXQtbWV0YS1ya2lzcDEtc3RhdAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL21lZGlh
+L3VhcGkvdjRsL3BpeGZtdC1tZXRhLXJraXNwMS1wYXJhbXMucnN0IGIvRG9jdW1lbnRhdGlvbi9t
+ZWRpYS91YXBpL3Y0bC9waXhmbXQtbWV0YS1ya2lzcDEtcGFyYW1zLnJzdAo+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi42MWI4MTMzMWY4MjAKPiAtLS0gL2Rldi9u
+dWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9waXhmbXQtbWV0YS1ya2lz
+cDEtcGFyYW1zLnJzdAo+IEBAIC0wLDAgKzEsMjAgQEAKWW91IGNhbiBhZGQgYSBsaWNlbnNlIGlu
+Zm9ybWF0aW9uIGhlcmUsIGxpa2UgdGhpczoKLi4gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQ
+TC0yLjAKPiArLi4gLSotIGNvZGluZzogdXRmLTg7IG1vZGU6IHJzdCAtKi0KSSBiZWxpZXZlIGl0
+J3Mgbm90IGEgZ29vZCBpZGVhIHRvIGluY2x1ZGUgRW1hY3MgY29uZmlndXJhdGlvbiBpbiB0aGUK
+c291cmNlIFsxXS4KPiArCj4gKy4uIF92NGwyLW1ldGEtZm10LXJraXNwMS1wYXJhbXM6Cj4gKwo+
+ICsqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqCj4gK1Y0TDJfTUVUQV9GTVRfUktfSVNQ
+MV9QQVJBTVMKPiArKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKgpUaGVyZSdzIDMgZXh0
+cmEgYCpgLCBrZWVwIHRoZSBsZW5ndGggb2YgbWFya3MganVzdCBhcyB0aGUgbGVuZ3RoIG9mIHRo
+ZQp0ZXh0LgpBbHNvLCBmb3IgdGl0bGVzLCB5b3Ugc2hvdWxkIHVzZSBgPWAgWzJdIGluc3RlYWQg
+b2YgYCpgLCBsaWtlIHRoaXM6Cj09PT09ClRpdGxlCj09PT09Cj4gKwo+ICtSb2NrY2hpcCBJU1Ax
+IFBhcmFtZXRlcnMgRGF0YQo+ICsKPiArRGVzY3JpcHRpb24KPiArPT09PT09PT09PT0KPiArCj4g
+K1RoaXMgZm9ybWF0IGRlc2NyaWJlcyBpbnB1dCBwYXJhbWV0ZXJzIGZvciB0aGUgUm9ja2NoaXAg
+SVNQMS4KPiArCj4gK0l0IHVzZXMgYy1zdHJ1Y3QgOmM6dHlwZTpgcmtpc3AxX2lzcF9wYXJhbXNf
+Y2ZnYCwgd2hpY2ggaXMgZGVmaW5lZCBpbgo+ICt0aGUgYGBsaW51eC9ya2lzcDEtY29uZmlnLmhg
+YCBoZWFkZXIgZmlsZSwgc2VlIGl0IGZvciBkZXRhaWxzLgpTaW5jZSB0aGUgc3RydWN0IGlzIGFs
+cmVhZHkgdXNpbmcga2VybmVsLWRvYyBzeW50YXgsIHlvdSBjYW4gaW5jbHVkaW5nCmluIHRoaXMg
+ZmlsZSB1c2luZyBzb21ldGhpbmcgbGlrZSB0aGlzOgouLiBrZXJuZWwtZG9jOjogaW5jbHVkZS91
+YXBpL2xpbnV4L3JraXNwMS1jb25maWcuaArCoMKgIDpmdW5jdGlvbnM6IHJraXNwMV9pc3BfcGFy
+YW1zX2NmZwo+ICsKPiArVGhlIHBhcmFtZXRlcnMgY29uc2lzdCBvZiBtdWx0aXBsZSBtb2R1bGVz
+Lgo+ICtUaGUgbW9kdWxlIHdvbid0IGJlIHVwZGF0ZWQgaWYgdGhlIGNvcnJlc3BvbmRpbmcgYml0
+IHdhcyBub3Qgc2V0IGluIG1vZHVsZV8qX3VwZGF0ZS4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9tZWRpYS91YXBpL3Y0bC9waXhmbXQtbWV0YS1ya2lzcDEtc3RhdC5yc3QgYi9Eb2N1bWVu
+dGF0aW9uL21lZGlhL3VhcGkvdjRsL3BpeGZtdC1tZXRhLXJraXNwMS1zdGF0LnJzdAo+IG5ldyBm
+aWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi41NDk2ZTFkNDIyNzMKPiAtLS0g
+L2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9waXhmbXQtbWV0
+YS1ya2lzcDEtc3RhdC5yc3QKVGhlIHByZXZpb3VzIGZlZWRiYWNrIGFsc28gYXBwbGllcyB0byB0
+aGlzIGZpbGUuCj4gQEAgLTAsMCArMSwxOCBAQAo+ICsuLiAtKi0gY29kaW5nOiB1dGYtODsgbW9k
+ZTogcnN0IC0qLQo+ICsKPiArLi4gX3Y0bDItbWV0YS1mbXQtcmtpc3AxLXN0YXQ6Cj4gKwo+ICsq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqCj4gK1Y0TDJfTUVUQV9GTVRfUktfSVNQMV9T
+VEFUXzNBCj4gKyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioKPiArCj4gK1JvY2tjaGlw
+IElTUDEgU3RhdGlzdGljcyBEYXRhCj4gKwo+ICtEZXNjcmlwdGlvbgo+ICs9PT09PT09PT09PQo+
+ICsKPiArVGhpcyBmb3JtYXQgZGVzY3JpYmVzIGltYWdlIGNvbG9yIHN0YXRpc3RpY3MgaW5mb3Jt
+YXRpb24gZ2VuZXJhdGVkIGJ5IHRoZSBSb2NrY2hpcAo+ICtJU1AxLgo+ICsKPiArSXQgdXNlcyBj
+LXN0cnVjdCA6Yzp0eXBlOmBya2lzcDFfc3RhdF9idWZmZXJgLCB3aGljaCBpcyBkZWZpbmVkIGlu
+Cj4gK3RoZSBgYGxpbnV4L2NpZmlzcF9zdGF0LmhgYCBoZWFkZXIgZmlsZSwgc2VlIGl0IGZvciBk
+ZXRhaWxzLgpSZWdhcmRzLArCoMKgwqAgQW5kcsOpCgpbMV0KaHR0cHM6Ly93d3cua2VybmVsLm9y
+Zy9kb2MvaHRtbC9sYXRlc3QvcHJvY2Vzcy9jb2Rpbmctc3R5bGUuaHRtbCNlZGl0b3ItbW9kZWxp
+bmVzLWFuZC1vdGhlci1jcnVmdApbMl0KaHR0cHM6Ly93d3cua2VybmVsLm9yZy9kb2MvaHRtbC9s
+YXRlc3QvZG9jLWd1aWRlL3NwaGlueC5odG1sI3NwZWNpZmljLWd1aWRlbGluZXMtZm9yLXRoZS1r
+ZXJuZWwtZG9jdW1lbnRhdGlvbgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
