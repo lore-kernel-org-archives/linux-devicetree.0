@@ -1,230 +1,133 @@
-From: Pawel Dembicki <paweldembicki@gmail.com>
-Subject: [PATCH v3 3/4] net: dsa: vsc73xx: add support for parallel mode
-Date: Fri,  5 Jul 2019 00:29:06 +0200
-Message-ID: <20190704222907.2888-4-paweldembicki@gmail.com>
-References: <20190704222907.2888-1-paweldembicki@gmail.com>
+From: Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+Date: Fri, 5 Jul 2019 02:32:09 +0300
+Message-ID: <CA+h21hqGtA5ou7a3wjSuHxa_4fXk4GZohTAxnUdfLZjV3nq5Eg@mail.gmail.com>
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+ <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
+ <20190621164940.GL31306@lunn.ch> <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+ <20190624115558.GA5690@piout.net> <20190624142625.GR31306@lunn.ch>
+ <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
+ <20190624162431.GX31306@lunn.ch> <20190624182614.GC5690@piout.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190704222907.2888-1-paweldembicki@gmail.com>
+In-Reply-To: <20190624182614.GC5690@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pawel Dembicki <paweldembicki@gmail.com>, linus.walleij@linaro.org, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, "Allan W. Nielsen" <allan.nielsen@microchip.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add platform part of vsc73xx driver.
-It allows to use chip connected to a parallel memory bus and work in
-memory-mapped I/O mode. (aka PI bus in chip manual)
+On Tue, 25 Jun 2019 at 00:23, Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> On 24/06/2019 18:24:31+0200, Andrew Lunn wrote:
+> > On Mon, Jun 24, 2019 at 05:23:45PM +0200, Allan W. Nielsen wrote:
+> > > Hi Andrew,
+> > >
+> > > The 06/24/2019 16:26, Andrew Lunn wrote:
+> > > > > > Yeah, there are 2 ethernet controller ports (managed by the enetc driver)
+> > > > > > connected inside the SoC via SGMII links to 2 of the switch ports, one of
+> > > > > > these switch ports can be configured as CPU port (with follow-up patches).
+> > > > > >
+> > > > > > This configuration may look prettier on DSA, but the main restriction here
+> > > > > > is that the entire functionality is provided by the ocelot driver which is a
+> > > > > > switchdev driver.  I don't think it would be a good idea to copy-paste code
+> > > > > > from ocelot to a separate dsa driver.
+> > > > > >
+> > > > >
+> > > > > We should probably make the ocelot driver a DSA driver then...
+> > > > An important part of DSA is being able to direct frames out specific
+> > > > ports when they ingress via the CPU port. Does the silicon support
+> > > > this? At the moment, i think it is using polled IO.
+> > >
+> > > That is supported, it requires a bit of initial configuration of the Chip, but
+> > > nothing big (I believe this configuration is part of Claudiu's change-set).
+> > >
+> > > But how do you envision this done?
+> > >
+> > > - Let the existing SwitchDev driver and the DSA driver use a set of common
+> > >   functions.
+> > > - Convert the existing Ocelot driver from SwitchDev to DSA
+> > > - Fork (copy) the existing driver of Ocelot, and modify it as needed for the
+> > >   Felix driver
+> > >
+> > > My guess is the first one, but I would like to understand what you have in mind.
+> >
+> > I don't know the various architectures the switch is used in. But it
+> > does seem like a core library, and then a switchdev wrapper for Ocelot
+> > and a DSA wrapper for Felix would make sense.
+>
+> Ocelot could also be used in a DSA setting where one port can be
+> connected to an external MAC and be used to inject/extract frames
+> to/from any other ports. In that case, the IFH would serve as the DSA
+> tag.
+>
+>
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-By default device is working in big endian mode.
+Hi everyone,
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/net/dsa/Kconfig                    |   9 ++
- drivers/net/dsa/Makefile                   |   1 +
- drivers/net/dsa/vitesse-vsc73xx-platform.c | 164 +++++++++++++++++++++
- 3 files changed, 174 insertions(+)
- create mode 100644 drivers/net/dsa/vitesse-vsc73xx-platform.c
+Thank you for the nice discussion.
+I've been talking off-list to Claudiu and Alexandru about switchdev vs
+DSA for the Felix/Ocelot switches.
+My initial reaction was the same as Andrew's - there's a CPU-facing
+Ethernet MAC with some vendor-defined injection and extraction
+headers? Sounds like DSA.
+But then we discussed about what DSA for Felix/Ocelot would look like.
+Here are some points to consider:
+- DSA is typically used for discrete switches, switchdev is typically
+used for embedded ones. As far as I understand from Allan's message,
+Ocelot is really an entire switching SoC that's running Linux inside
+(on the MIPS CPU) with a switchdev driver. There is no (mainline?)
+driver that would control the Ocelot SoC from a higher-level Linux
+system. The latter would (maybe) fit DSA more.
+- The D in DSA is for cascaded switches. Apart from the absence of
+such a "Ocelot SoC" driver (which maybe can be written, I don't know),
+I think the switching core itself has some fundamental limitations
+that make a DSA implementation questionable:
+    1. The switch has a single port which can apply these vendor tags.
+Also the injection header is different than the extraction header. See
+more at #4.
+    2. The switch will tag all frames that go upstream on this port
+towards the CPU, no matter what source port they came from. It can't
+be told "hey, don't add a tag for frames coming from this
+downstream-facing port, because it's a DSA port and not front-panel,
+so there's another switch underneath you who already added a tag to
+the frame". So frames that arrive at the CPU through an array of N
+cascaded Felix/Ocelot switches will need to be peeled off, one by one,
+by N vendor tags.
+    3. The extraction header does not contain a field for the "switch
+id", only for the "source port". This means that if you want to figure
+out the switch id, you really *need* to make a topology out of those
+stacked vendor tags and figure out which switch it was by counting the
+tags. It also means that you can only have Felix/Ocelot in a linear
+topology.
+    4. The switch cannot parse its own vendor tags. This is a big one,
+because it means that for an autonomously forwarded frame which
+transits two cascaded switches but doesn't reach the CPU, there is no
+one in the path who's going to consume the vendor tag. So the frame
+will exit the other front-panel port with extra bytes in it.
 
-diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
-index 4ab2aa09e2e4..cf9dbd15dd2d 100644
---- a/drivers/net/dsa/Kconfig
-+++ b/drivers/net/dsa/Kconfig
-@@ -116,4 +116,13 @@ config NET_DSA_VITESSE_VSC73XX_SPI
- 	---help---
- 	  This enables support for the Vitesse VSC7385, VSC7388, VSC7395
- 	  and VSC7398 SparX integrated ethernet switches in SPI managed mode.
-+
-+config NET_DSA_VITESSE_VSC73XX_PLATFORM
-+	tristate "Vitesse VSC7385/7388/7395/7398 Platform mode support"
-+	depends on HAS_IOMEM
-+	select NET_DSA_VITESSE_VSC73XX
-+	---help---
-+	  This enables support for the Vitesse VSC7385, VSC7388, VSC7395
-+	  and VSC7398 SparX integrated ethernet switches, connected over
-+	  a CPU-attached address bus and work in memory-mapped I/O mode.
- endmenu
-diff --git a/drivers/net/dsa/Makefile b/drivers/net/dsa/Makefile
-index 117bf78be211..d5e4c668ac03 100644
---- a/drivers/net/dsa/Makefile
-+++ b/drivers/net/dsa/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_NET_DSA_SMSC_LAN9303) += lan9303-core.o
- obj-$(CONFIG_NET_DSA_SMSC_LAN9303_I2C) += lan9303_i2c.o
- obj-$(CONFIG_NET_DSA_SMSC_LAN9303_MDIO) += lan9303_mdio.o
- obj-$(CONFIG_NET_DSA_VITESSE_VSC73XX) += vitesse-vsc73xx-core.o
-+obj-$(CONFIG_NET_DSA_VITESSE_VSC73XX_PLATFORM) += vitesse-vsc73xx-platform.o
- obj-$(CONFIG_NET_DSA_VITESSE_VSC73XX_SPI) += vitesse-vsc73xx-spi.o
- obj-y				+= b53/
- obj-y				+= microchip/
-diff --git a/drivers/net/dsa/vitesse-vsc73xx-platform.c b/drivers/net/dsa/vitesse-vsc73xx-platform.c
-new file mode 100644
-index 000000000000..0541785f9fee
---- /dev/null
-+++ b/drivers/net/dsa/vitesse-vsc73xx-platform.c
-@@ -0,0 +1,164 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* DSA driver for:
-+ * Vitesse VSC7385 SparX-G5 5+1-port Integrated Gigabit Ethernet Switch
-+ * Vitesse VSC7388 SparX-G8 8-port Integrated Gigabit Ethernet Switch
-+ * Vitesse VSC7395 SparX-G5e 5+1-port Integrated Gigabit Ethernet Switch
-+ * Vitesse VSC7398 SparX-G8e 8-port Integrated Gigabit Ethernet Switch
-+ *
-+ * This driver takes control of the switch chip connected over CPU-attached
-+ * address bus and configures it to route packages around when connected to
-+ * a CPU port.
-+ *
-+ * Copyright (C) 2019 Pawel Dembicki <paweldembicki@gmail.com>
-+ * Based on vitesse-vsc-spi.c by:
-+ * Copyright (C) 2018 Linus Wallej <linus.walleij@linaro.org>
-+ * Includes portions of code from the firmware uploader by:
-+ * Copyright (C) 2009 Gabor Juhos <juhosg@openwrt.org>
-+ */
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#include "vitesse-vsc73xx.h"
-+
-+#define VSC73XX_CMD_PLATFORM_BLOCK_SHIFT		14
-+#define VSC73XX_CMD_PLATFORM_BLOCK_MASK			0x7
-+#define VSC73XX_CMD_PLATFORM_SUBBLOCK_SHIFT		10
-+#define VSC73XX_CMD_PLATFORM_SUBBLOCK_MASK		0xf
-+#define VSC73XX_CMD_PLATFORM_REGISTER_SHIFT		2
-+
-+/**
-+ * struct vsc73xx_platform - VSC73xx Platform state container
-+ */
-+struct vsc73xx_platform {
-+	struct platform_device	*pdev;
-+	void __iomem		*base_addr;
-+	struct vsc73xx		vsc;
-+};
-+
-+static const struct vsc73xx_ops vsc73xx_platform_ops;
-+
-+static u32 vsc73xx_make_addr(u8 block, u8 subblock, u8 reg)
-+{
-+	u32 ret;
-+
-+	ret = (block & VSC73XX_CMD_PLATFORM_BLOCK_MASK)
-+	    << VSC73XX_CMD_PLATFORM_BLOCK_SHIFT;
-+	ret |= (subblock & VSC73XX_CMD_PLATFORM_SUBBLOCK_MASK)
-+	    << VSC73XX_CMD_PLATFORM_SUBBLOCK_SHIFT;
-+	ret |= reg << VSC73XX_CMD_PLATFORM_REGISTER_SHIFT;
-+
-+	return ret;
-+}
-+
-+static int vsc73xx_platform_read(struct vsc73xx *vsc, u8 block, u8 subblock,
-+				 u8 reg, u32 *val)
-+{
-+	struct vsc73xx_platform *vsc_platform = vsc->priv;
-+	u32 offset;
-+
-+	if (!vsc73xx_is_addr_valid(block, subblock))
-+		return -EINVAL;
-+
-+	offset = vsc73xx_make_addr(block, subblock, reg);
-+	/* By default vsc73xx running in big-endian mode.
-+	 * (See "Register Addressing" section 5.5.3 in the VSC7385 manual.)
-+	 */
-+	*val = ioread32be(vsc_platform->base_addr + offset);
-+
-+	return 0;
-+}
-+
-+static int vsc73xx_platform_write(struct vsc73xx *vsc, u8 block, u8 subblock,
-+				  u8 reg, u32 val)
-+{
-+	struct vsc73xx_platform *vsc_platform = vsc->priv;
-+	u32 offset;
-+
-+	if (!vsc73xx_is_addr_valid(block, subblock))
-+		return -EINVAL;
-+
-+	offset = vsc73xx_make_addr(block, subblock, reg);
-+	iowrite32be(val, vsc_platform->base_addr + offset);
-+
-+	return 0;
-+}
-+
-+static int vsc73xx_platform_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct vsc73xx_platform *vsc_platform;
-+	struct resource *res = NULL;
-+	int ret;
-+
-+	vsc_platform = devm_kzalloc(dev, sizeof(*vsc_platform), GFP_KERNEL);
-+	if (!vsc_platform)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, vsc_platform);
-+	vsc_platform->pdev = pdev;
-+	vsc_platform->vsc.dev = dev;
-+	vsc_platform->vsc.priv = vsc_platform;
-+	vsc_platform->vsc.ops = &vsc73xx_platform_ops;
-+
-+	/* obtain I/O memory space */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "cannot obtain I/O memory space\n");
-+		ret = -ENXIO;
-+		return ret;
-+	}
-+
-+	vsc_platform->base_addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(vsc_platform->base_addr)) {
-+		dev_err(&pdev->dev, "cannot request I/O memory space\n");
-+		ret = -ENXIO;
-+		return ret;
-+	}
-+
-+	return vsc73xx_probe(&vsc_platform->vsc);
-+}
-+
-+static int vsc73xx_platform_remove(struct platform_device *pdev)
-+{
-+	struct vsc73xx_platform *vsc_platform = platform_get_drvdata(pdev);
-+
-+	return vsc73xx_remove(&vsc_platform->vsc);
-+}
-+
-+static const struct vsc73xx_ops vsc73xx_platform_ops = {
-+	.read = vsc73xx_platform_read,
-+	.write = vsc73xx_platform_write,
-+};
-+
-+static const struct of_device_id vsc73xx_of_match[] = {
-+	{
-+		.compatible = "vitesse,vsc7385",
-+	},
-+	{
-+		.compatible = "vitesse,vsc7388",
-+	},
-+	{
-+		.compatible = "vitesse,vsc7395",
-+	},
-+	{
-+		.compatible = "vitesse,vsc7398",
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, vsc73xx_of_match);
-+
-+static struct platform_driver vsc73xx_platform_driver = {
-+	.probe = vsc73xx_platform_probe,
-+	.remove = vsc73xx_platform_remove,
-+	.driver = {
-+		.name = "vsc73xx-platform",
-+		.of_match_table = vsc73xx_of_match,
-+	},
-+};
-+module_platform_driver(vsc73xx_platform_driver);
-+
-+MODULE_AUTHOR("Pawel Dembicki <paweldembicki@gmail.com>");
-+MODULE_DESCRIPTION("Vitesse VSC7385/7388/7395/7398 Platform driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.20.1
+Ok, let's say that all of the above limitations have one thing in
+common - the vendor tags aren't really thought out with DSA-like
+setups in mind. In theory it's possible to not use the native tags and
+instead implement a dsa_8021q tagger for it. But then, RX timestamps
+for PTP are also transmitted to the CPU through this vendor header,
+and losing PTP is a big no-no.
+
+So my conclusion is that DSA for Felix/Ocelot doesn't make a lot of
+sense if the whole purpose is to hide the CPU-facing netdev.
+In a cascaded setup, these switches could only sit at the top of tree,
+and ironically, they'd be better modeled as a switchdev DSA master
+port than part of the DSA tree itself. Put these switches anywhere
+else in the tree and they're just troublemakers.
+As for the LS1028A, I think that connecting this embedded switch via
+two Ethernet MACs is just poorly thought out design, but that doesn't
+mean DSA is going to help it in any way other than perhaps cosmetic.
+
+Regards,
+-Vladimir
