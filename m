@@ -1,37 +1,56 @@
-From: fugang.duan@nxp.com
-Subject: [PATCH RESEND 1/1] dt-bindings: serial: lpuart: add the clock requirement for imx8qxp
-Date: Thu,  4 Jul 2019 21:43:55 +0800
-Message-ID: <20190704134355.2402-1-fugang.duan@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: gregkh@linuxfoundation.org, festevam@gmail.com, daniel.baluta@gmail.com, fugang.duan@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: [PATCH 1/2] ARM: dts: opos6uldev: use OF graph to describe the display
+Date: Thu,  4 Jul 2019 16:23:23 +0200
+Message-ID: <20190704142324.17675-1-sebastien.szymanski@armadeus.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
-
-Add the baud clock requirement for imx8qxp.
-
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
----
- Documentation/devicetree/bindings/serial/fsl-lpuart.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
-index 21483ba..3495eee 100644
---- a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
-+++ b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
-@@ -13,7 +13,10 @@ Required properties:
- - reg : Address and length of the register set for the device
- - interrupts : Should contain uart interrupt
- - clocks : phandle + clock specifier pairs, one for each entry in clock-names
--- clock-names : should contain: "ipg" - the uart clock
-+- clock-names : For vf610/ls1021a/imx7ulp, "ipg" clock is for uart bus/baud
-+  clock. For imx8qxp lpuart, "ipg" clock is bus clock that is used to access
-+  lpuart controller registers, it also requires "baud" clock for module to
-+  receive/transmit data.
- 
- Optional properties:
- - dmas: A list of two dma specifiers, one for each entry in dma-names.
--- 
-2.7.4
+VG8gbWFrZSB1c2Ugb2YgdGhlIG5ldyBlTENESUYgRFJNIGRyaXZlciBPRiBncmFwaCBkZXNjcmlw
+dGlvbiBpcwpyZXF1aXJlZC4gRGVzY3JpYmUgdGhlIGRpc3BsYXkgdXNpbmcgT0YgZ3JhcGggbm9k
+ZXMuCgpSZXZpZXdlZC1ieTogRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPgpTaWdu
+ZWQtb2ZmLWJ5OiBTw6liYXN0aWVuIFN6eW1hbnNraSA8c2ViYXN0aWVuLnN6eW1hbnNraUBhcm1h
+ZGV1cy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLW9wb3M2dWxkZXYuZHRzIHwg
+MzcgKysrKysrKysrKystLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlv
+bnMoKyksIDIxIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDZ1bC1vcG9zNnVsZGV2LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC1vcG9zNnVsZGV2
+LmR0cwppbmRleCAwZTU5ZWU1N2ZkNTUuLjhlY2RiOWFkMmIyZSAxMDA2NDQKLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvaW14NnVsLW9wb3M2dWxkZXYuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L2lteDZ1bC1vcG9zNnVsZGV2LmR0cwpAQCAtNTYsNyArNTYsNyBAQAogCQlzdGRvdXQtcGF0aCA9
+ICZ1YXJ0MTsKIAl9OwogCi0JYmFja2xpZ2h0IHsKKwliYWNrbGlnaHQ6IGJhY2tsaWdodCB7CiAJ
+CWNvbXBhdGlibGUgPSAicHdtLWJhY2tsaWdodCI7CiAJCXB3bXMgPSA8JnB3bTMgMCAxOTEwMDA+
+OwogCQlicmlnaHRuZXNzLWxldmVscyA9IDwwIDQgOCAxNiAzMiA2NCAxMjggMjU1PjsKQEAgLTk3
+LDYgKzk3LDE4IEBACiAJCWdwaW9zID0gPCZncGlvNSAxIEdQSU9fQUNUSVZFX0hJR0g+OwogCX07
+CiAKKwlwYW5lbDogcGFuZWwgeworCQljb21wYXRpYmxlID0gImFybWFkZXVzLHN0MDcwMC1hZGFw
+dCI7CisJCXBvd2VyLXN1cHBseSA9IDwmcmVnXzN2Mz47CisJCWJhY2tsaWdodCA9IDwmYmFja2xp
+Z2h0PjsKKworCQlwb3J0IHsKKwkJCXBhbmVsX2luOiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVu
+ZHBvaW50ID0gPCZsY2RpZl9vdXQ+OworCQkJfTsKKwkJfTsKKwl9OworCiAJcmVnXzV2OiByZWd1
+bGF0b3ItNXYgewogCQljb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7CiAJCXJlZ3VsYXRv
+ci1uYW1lID0gIjVWIjsKQEAgLTE4MiwyOCArMTk0LDExIEBACiAmbGNkaWYgewogCXBpbmN0cmwt
+bmFtZXMgPSAiZGVmYXVsdCI7CiAJcGluY3RybC0wID0gPCZwaW5jdHJsX2xjZGlmPjsKLQlkaXNw
+bGF5ID0gPCZkaXNwbGF5MD47Ci0JbGNkLXN1cHBseSA9IDwmcmVnXzN2Mz47CiAJc3RhdHVzID0g
+Im9rYXkiOwogCi0JZGlzcGxheTA6IGRpc3BsYXkwIHsKLQkJYml0cy1wZXItcGl4ZWwgPSA8MzI+
+OwotCQlidXMtd2lkdGggPSA8MTg+OwotCi0JCWRpc3BsYXktdGltaW5ncyB7Ci0JCQl0aW1pbmcw
+OiB0aW1pbmcwIHsKLQkJCQljbG9jay1mcmVxdWVuY3kgPSA8MzMwMDAwMzM+OwotCQkJCWhhY3Rp
+dmUgPSA8ODAwPjsKLQkJCQl2YWN0aXZlID0gPDQ4MD47Ci0JCQkJaGJhY2stcG9yY2ggPSA8OTY+
+OwotCQkJCWhmcm9udC1wb3JjaCA9IDw5Nj47Ci0JCQkJdmJhY2stcG9yY2ggPSA8MjA+OwotCQkJ
+CXZmcm9udC1wb3JjaCA9IDwyMT47Ci0JCQkJaHN5bmMtbGVuID0gPDY0PjsKLQkJCQl2c3luYy1s
+ZW4gPSA8ND47Ci0JCQkJZGUtYWN0aXZlID0gPDE+OwotCQkJCXBpeGVsY2xrLWFjdGl2ZSA9IDww
+PjsKLQkJCX07CisJcG9ydCB7CisJCWxjZGlmX291dDogZW5kcG9pbnQgeworCQkJcmVtb3RlLWVu
+ZHBvaW50ID0gPCZwYW5lbF9pbj47CiAJCX07CiAJfTsKIH07Ci0tIAoyLjIxLjAKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
