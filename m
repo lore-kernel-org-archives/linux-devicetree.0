@@ -1,72 +1,34 @@
-From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: [PATCH 1/1] ARM: dts: imx6ul: fix clock frequency property name of
- I2C buses
-Date: Thu,  4 Jul 2019 13:00:53 +0200
-Message-ID: <20190704110053.19028-1-sebastien.szymanski@armadeus.com>
+From: "Frank Wunderlich" <frank-w-SipyoOjXbOMoAHOVJHB0wA@public.gmane.org>
+Subject: Aw: Re: [PATCH v2 5/7] power: reset: add driver for mt6323 poweroff
+Date: Thu, 4 Jul 2019 13:06:31 +0200
+Message-ID: <trinity-03acdbbe-a94a-439c-a65c-88c9e23a0ae7-1562238391586@3c-app-gmx-bs27>
+References: <20190703164822.17924-1-frank-w@public-files.de>
+ <20190703164822.17924-6-frank-w@public-files.de>
+ <1562234589.19751.16.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1562234589.19751.16.camel@mhfsdcap03>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Fontana <rfontana-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Paul E . McKenney" <paulmck-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ran Bi <ran.bi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Allison Randal <allison-wcfNWazeolPR7s880joybQ@public.gmane.org>, Alessandro Zummo <a.z>
 List-Id: devicetree@vger.kernel.org
 
-QSBmZXcgYm9hcmRzIHNldCBjbG9jayBmcmVxdWVuY3kgb2YgdGhlaXIgSTJDIGJ1c2VzIHdpdGgK
-ImNsb2NrX2ZyZXF1ZW5jeSIgcHJvcGVydHkuIFRoZSByaWdodCBwcm9wZXJ0eSBpcyAiY2xvY2st
-ZnJlcXVlbmN5Ii4KClNpZ25lZC1vZmYtYnk6IFPDqWJhc3RpZW4gU3p5bWFuc2tpIDxzZWJhc3Rp
-ZW4uc3p5bWFuc2tpQGFybWFkZXVzLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwt
-MTR4MTQtZXZrLmR0c2kgIHwgMiArLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLWdlYW0uZHRz
-ICAgICAgICB8IDIgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC1pc2lvdC5kdHNpICAgICAg
-fCAyICstCiBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwtcGljby1ob2JiaXQuZHRzIHwgMiArLQog
-YXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXBpY28tcGkuZHRzICAgICB8IDQgKystLQogNSBmaWxl
-cyBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLTE0eDE0LWV2ay5kdHNpIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvaW14NnVsLTE0eDE0LWV2ay5kdHNpCmluZGV4IDkyMDdkNWQwNzFmMS4uZDU1NmY3YzU0MWNl
-IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwtMTR4MTQtZXZrLmR0c2kKKysr
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLTE0eDE0LWV2ay5kdHNpCkBAIC0xMTIsNyArMTEy
-LDcgQEAKIH07CiAKICZpMmMyIHsKLQljbG9ja19mcmVxdWVuY3kgPSA8MTAwMDAwPjsKKwljbG9j
-ay1mcmVxdWVuY3kgPSA8MTAwMDAwPjsKIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwogCXBp
-bmN0cmwtMCA9IDwmcGluY3RybF9pMmMyPjsKIAlzdGF0dXMgPSAib2theSI7CmRpZmYgLS1naXQg
-YS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwtZ2VhbS5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9p
-bXg2dWwtZ2VhbS5kdHMKaW5kZXggYmM3N2YyNmEyZjFkLi42MTU3YTA1OGZlZWMgMTAwNjQ0Ci0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC1nZWFtLmR0cworKysgYi9hcmNoL2FybS9ib290
-L2R0cy9pbXg2dWwtZ2VhbS5kdHMKQEAgLTE1Niw3ICsxNTYsNyBAQAogfTsKIAogJmkyYzIgewot
-CWNsb2NrX2ZyZXF1ZW5jeSA9IDwxMDAwMDA+OworCWNsb2NrLWZyZXF1ZW5jeSA9IDwxMDAwMDA+
-OwogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CiAJcGluY3RybC0wID0gPCZwaW5jdHJsX2ky
-YzI+OwogCXN0YXR1cyA9ICJva2F5IjsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
-eDZ1bC1pc2lvdC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLWlzaW90LmR0c2kKaW5k
-ZXggMjEzZTgwMmJmMzVjLi4yM2U2ZTJlN2FjZTkgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDZ1bC1pc2lvdC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC1pc2lv
-dC5kdHNpCkBAIC0xNDgsNyArMTQ4LDcgQEAKIH07CiAKICZpMmMyIHsKLQljbG9ja19mcmVxdWVu
-Y3kgPSA8MTAwMDAwPjsKKwljbG9jay1mcmVxdWVuY3kgPSA8MTAwMDAwPjsKIAlwaW5jdHJsLW5h
-bWVzID0gImRlZmF1bHQiOwogCXBpbmN0cmwtMCA9IDwmcGluY3RybF9pMmMyPjsKIAlzdGF0dXMg
-PSAib2theSI7CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwtcGljby1ob2Ji
-aXQuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXBpY28taG9iYml0LmR0cwppbmRleCAz
-OWVlZWRkYWMzOWUuLjA5ZjdmZmE5YWQ4YyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnVsLXBpY28taG9iYml0LmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwtcGlj
-by1ob2JiaXQuZHRzCkBAIC00Myw3ICs0Myw3IEBACiB9OwogCiAmaTJjMiB7Ci0JY2xvY2tfZnJl
-cXVlbmN5ID0gPDEwMDAwMD47CisJY2xvY2stZnJlcXVlbmN5ID0gPDEwMDAwMD47CiAJcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsKIAlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfaTJjMj47CiAJc3Rh
-dHVzID0gIm9rYXkiOwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXBpY28t
-cGkuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXBpY28tcGkuZHRzCmluZGV4IGRlMDcz
-NTdiMjdmYy4uNmNkN2Q1ODc3ZDIwIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2
-dWwtcGljby1waS5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLXBpY28tcGkuZHRz
-CkBAIC00Myw3ICs0Myw3IEBACiB9OwogCiAmaTJjMiB7Ci0JY2xvY2tfZnJlcXVlbmN5ID0gPDEw
-MDAwMD47CisJY2xvY2stZnJlcXVlbmN5ID0gPDEwMDAwMD47CiAJcGluY3RybC1uYW1lcyA9ICJk
-ZWZhdWx0IjsKIAlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfaTJjMj47CiAJc3RhdHVzID0gIm9rYXki
-OwpAQCAtNTgsNyArNTgsNyBAQAogfTsKIAogJmkyYzMgewotCWNsb2NrX2ZyZXF1ZW5jeSA9IDwx
-MDAwMDA+OworCWNsb2NrLWZyZXF1ZW5jeSA9IDwxMDAwMDA+OwogCXBpbmN0cmwtbmFtZXMgPSAi
-ZGVmYXVsdCI7CiAJcGluY3RybC0wID0gPCZwaW5jdHJsX2kyYzM+OwogCXN0YXR1cyA9ICJva2F5
-IjsKLS0gCjIuMjEuMAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LWFybS1rZXJuZWwK
+> Gesendet: Donnerstag, 04. Juli 2019 um 12:03 Uhr
+> Von: "Ran Bi" <ran.bi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+> We had implement MT8173 poweroff function in arm-trusted-firmware's PSCI
+> plat_system_off() function. MT8173 SoC is using PMIC MT6397. (Ref:
+> https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/mediatek/mt8173/plat_pm.c and https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/mediatek/mt8173/drivers/rtc) Do you think it's better to implement poweroff function into arm-trusted-firmware compared to hijack pm_poweroff() function in Kernel? Right now, we are doing the upstream of other PMIC chip like MT6358's poweroff function in arm-trusted-firmware too.
+
+ATF imho only used for arm64, my board is 32bit armv7 and i (currently) do not boot up with ATF
+
+regards Frank
