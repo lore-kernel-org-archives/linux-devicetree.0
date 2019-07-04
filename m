@@ -1,151 +1,105 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for
- mmsys clocks
-Date: Thu, 4 Jul 2019 11:08:46 +0200
-Message-ID: <84d1c444-d6cb-9537-1bf5-b4e736443239@gmail.com>
-References: <20181116125449.23581-1-matthias.bgg@kernel.org>
- <20181116125449.23581-9-matthias.bgg@kernel.org>
- <20181116231522.GA18006@bogus>
- <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
- <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
- <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
- <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
- <154356023767.88331.18401188808548429052@swboyd.mtv.corp.google.com>
- <a229bfc7-683f-5b0d-7b71-54f934de6214@suse.com>
- <1561953318.25914.9.camel@mtksdaap41>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 1/2] reset: imx7: Add support for i.MX8MM SoC
+Date: Thu, 4 Jul 2019 09:09:18 +0000
+Message-ID: <DB3PR0402MB3916D53E9BD277C2152F7261F5FA0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190701093944.5540-1-Anson.Huang@nxp.com>
+ <1562230444.6641.2.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561953318.25914.9.camel@mtksdaap41>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1562230444.6641.2.camel@pengutronix.de>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>, Matthias Brugger <mbrugger@suse.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Wang <sean.wang@kernel.org>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Sean Wang <Sean.Wang@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Randy Dunlap <rdunlap@infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, "matthias.bgg@kernel.org" <matthias.bgg@kernel.org>"linux-mediatek@lists.infradead.org" <linux->
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi CK-Hu,
+Hi, Philipp
 
-On 01/07/2019 05:55, CK Hu wrote:
-> Hi, Matthias:
+> On Mon, 2019-07-01 at 17:39 +0800, Anson.Huang@nxp.com wrote:
+> > From: Anson Huang <Anson.Huang@nxp.com>
+> >
+> > i.MX8MM SoC has a subset of i.MX8MQ IP block variant, it can reuse the
+> > i.MX8MQ reset controller driver and just skip those non-existing IP
+> > blocks, add support for i.MX8MM SoC reset control.
+> >
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> >  drivers/reset/reset-imx7.c | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> >
+> > diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
+> > index 3ecd770..941131f 100644
+> > --- a/drivers/reset/reset-imx7.c
+> > +++ b/drivers/reset/reset-imx7.c
+> > @@ -207,6 +207,26 @@ static int imx8mq_reset_set(struct
+> reset_controller_dev *rcdev,
+> >  	const unsigned int bit = imx7src->signals[id].bit;
+> >  	unsigned int value = assert ? bit : 0;
+> >
+> > +	if (of_machine_is_compatible("fsl,imx8mm")) {
 > 
-> On Fri, 2018-11-30 at 16:59 +0800, Matthias Brugger wrote:
->>
->> On 30/11/2018 07:43, Stephen Boyd wrote:
->>> Quoting Matthias Brugger (2018-11-21 09:09:52)
->>>>
->>>>
->>>> On 21/11/2018 17:46, Stephen Boyd wrote:
->>>>> Quoting Rob Herring (2018-11-19 11:15:16)
->>>>>> On Sun, Nov 18, 2018 at 11:12 AM Matthias Brugger
->>>>>> <matthias.bgg@gmail.com> wrote:
->>>>>>> On 11/17/18 12:15 AM, Rob Herring wrote:
->>>>>>>> On Fri, Nov 16, 2018 at 01:54:45PM +0100, matthias.bgg@kernel.org wrote:
->>>>>>>>> -    #clock-cells = <1>;
->>>>>>>>> +
->>>>>>>>> +    mmsys_clk: clock-controller@14000000 {
->>>>>>>>> +            compatible = "mediatek,mt2712-mmsys-clk";
->>>>>>>>> +            #clock-cells = <1>;
->>>>>>>>
->>>>>>>> This goes against the general direction of not defining separate nodes
->>>>>>>> for providers with no resources.
->>>>>>>>
->>>>>>>> Why do you need this and what does it buy if you have to continue to
->>>>>>>> support the existing chips?
->>>>>>>>
->>>>>>>
->>>>>>> It would show explicitly that the mmsys block is used to probe two
->>>>>>> drivers, one for the gpu and one for the clocks. Otherwise that is
->>>>>>> hidden in the drm driver code. I think it is cleaner to describe that in
->>>>>>> the device tree.
->>>>>>
->>>>>> No, that's maybe cleaner for the driver implementation in the Linux
->>>>>> kernel. What about other OS's or when Linux drivers and subsystems
->>>>>> needs change? Cleaner for DT is design bindings that reflect the h/w.
->>>>>> Hardware is sometimes just messy.
->>>>>>
->>>>>
->>>>> I agree. I fail to see what this patch series is doing besides changing
->>>>> driver probe and device creation methods and making a backwards
->>>>> incompatible change to DT. Is there any other benefit here?
->>>>>
->>>>
->>>> You are referring whole series?
->>>> Citing the cover letter:
->>>> "MMSYS in Mediatek SoCs has some registers to control clock gates (which is
->>>> used in the clk driver) and some registers to set the routing and enable
->>>> the differnet (sic!) blocks of the display subsystem.
->>>>
->>>> Up to now both drivers, clock and drm are probed with the same device tree
->>>> compatible. But only the first driver get probed, which in effect breaks
->>>> graphics on mt8173 and mt2701.
->>>
->>> Ouch!
->>>
->>
->> Yes :)
->>
->>>>
->>>> This patch uses a platform device registration in the DRM driver, which
->>>> will trigger the probe of the corresponding clock driver. It was tested on the
->>>> bananapi-r2 and the Acer R13 Chromebook."
->>>
->>> Alright, please don't add nodes in DT just to make device drivers probe.
->>> Instead, register clks from the drm driver or create a child platform
->>> device for the clk bits purely in the drm driver and have that probe the
->>> associated clk driver from there.
->>>
->>
->> I'll make the other SoCs probe via a child platform device from the drm driver,
->> as already done in 2/12 and 3/12.
-> 
-> This series have been pending for half an year, would you keep going on
-> this series? If you're busy, I could complete this series, but I need to
-> know what you have plan to do.
-> 
+> This should be checked once during probe, not in every reset_set, if this
+> check has to be made at all. On i.MX8MM these unused reset controls are
+> not going to be hooked up via phandle, so this function should never be
+> called with the values that are filtered out here anyway.
+> And in case somebody makes an error in the device tree, does writing 1 to
+> the reserved bits on i.MX8MM have any negative side effects at all?
+> Or are these bits just not hooked up? If this is no problem, I assume this
+> patch is not needed at all.
 
-You are right, it took far too long for me to respond with a new version of the
-series. The problem I face is, that I use my mt8173 based chromebook for
-testing. It needs some downstream patches and broke somewhere between my last
-email and a few month ago. I wasn't able to get serial console to work, which
-made things even more complicated. Anyway, long story short, I got sidetracked
-with other stuff and didn't send a new version.
+I just tried it on i.MX8MM, read/write to the reserved registers looks like OK,
+so this patch can be ignored, although accessing reserved registers is NOT good,
+but the user should have correct settings in DT, there will be no access for these
+reserved registers.
 
-If you have time to work on this, I'd happy to see things being pushed forward
-by you :)
+So, let's just ignore this patch, adding the fallback compatible should be good for
+i.MX8MM to reuse this driver.
 
-> I guess that 1/12 ~ 5/12 is for MT2701/MT8173 and that patches meet this
-> discussion. 6/12 ~ 12/12 is for MT2712/MT6797 but that patches does not
-> meet this discussion. So the unfinished work is to make MT2712/MT6797 to
-> align MT2701/MT8173, is this right?
-
-After re-reading the emails I think the missing part is, to probe the clocks
-from the DRM driver instead of adding a new devicetree binding for them.
-
-Regards,
-Matthias
+Thanks,
+Anson 
 
 > 
-> Regards,
-> CK
+> The correct way to protect against DT writers hooking up the non- existing
+> reset lines would be to replace rcdev.of_xlate with a version that returns -
+> EINVAL for them on i.MX8MM. Also in that case I'd check the reset-controller
+> compatible, not the machine compatible.
 > 
->>
->> Regards,
->> Matthias
->>
->>>>
->>>> DT is broken right now, because two drivers rely on the same node, which gets
->>>> consumed just once. The new DT introduced does not break anything because it is
->>>> only used for boards that: "[..] are not available to the general public
->>>> (mt2712e) or only have the mmsys clock driver part implemented (mt6797)."
->>>
->>> Ok, so backwards compatibility is irrelevant then. Sounds fine to me.
->>>
->>>
->>
->> _______________________________________________
->> Linux-mediatek mailing list
->> Linux-mediatek@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> > +		switch (id) {
+> > +		case IMX8MQ_RESET_HDMI_PHY_APB_RESET:
+> > +		case IMX8MQ_RESET_PCIEPHY2: /* fallthrough */
+> > +		case IMX8MQ_RESET_PCIEPHY2_PERST: /* fallthrough */
+> > +		case IMX8MQ_RESET_PCIE2_CTRL_APPS_EN: /* fallthrough
+> */
+> > +		case IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF: /*
+> fallthrough */
+> > +		case IMX8MQ_RESET_MIPI_CSI1_CORE_RESET: /* fallthrough
+> */
+> > +		case IMX8MQ_RESET_MIPI_CSI1_PHY_REF_RESET: /*
+> fallthrough */
+> > +		case IMX8MQ_RESET_MIPI_CSI1_ESC_RESET: /* fallthrough
+> */
+> > +		case IMX8MQ_RESET_MIPI_CSI2_CORE_RESET: /* fallthrough
+> */
+> > +		case IMX8MQ_RESET_MIPI_CSI2_PHY_REF_RESET: /*
+> fallthrough */
+> > +		case IMX8MQ_RESET_MIPI_CSI2_ESC_RESET: /* fallthrough
+> */
+> > +		case IMX8MQ_RESET_DDRC2_PHY_RESET: /* fallthrough */
+> > +		case IMX8MQ_RESET_DDRC2_CORE_RESET: /* fallthrough */
+> > +		case IMX8MQ_RESET_DDRC2_PRST: /* fallthrough */
 > 
+> I think it would make sense to add IMX8MM_RESET_* defines for all but
+> these, to avoid confusion when reading the imx8mm.dtsi
 > 
+> regards
+> Philipp
