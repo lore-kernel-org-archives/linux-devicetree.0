@@ -1,95 +1,38 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 3/7] rtc: mt6397: improvements of rtc driver
-Date: Thu, 4 Jul 2019 22:43:36 +0200
-Message-ID: <20190704204336.GJ3692@piout.net>
-References: <20190703164822.17924-1-frank-w@public-files.de>
- <20190703164822.17924-4-frank-w@public-files.de>
+From: =?UTF-8?Q?Pawe=C5=82_Dembicki?= <paweldembicki@gmail.com>
+Subject: Re: [PATCH v2 4/4] net: dsa: vsc73xx: Assert reset if iCPU is enabled
+Date: Thu, 4 Jul 2019 23:57:19 +0200
+Message-ID: <CAJN1Kkydjopnd8tZ+RgRUNXW1k6ygFGaaFZvCzB+RDp1K6KFFg@mail.gmail.com>
+References: <20190703171924.31801-1-paweldembicki@gmail.com>
+ <20190703171924.31801-5-paweldembicki@gmail.com> <CACRpkdYsA5437Sb8J539AJ=cYtnO2MiD7w7V_Emrmk8dNKbaEQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190703164822.17924-4-frank-w@public-files.de>
+In-Reply-To: <CACRpkdYsA5437Sb8J539AJ=cYtnO2MiD7w7V_Emrmk8dNKbaEQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Allison Randal <allison@lohutok.net>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/07/2019 18:48:18+0200, Frank Wunderlich wrote:
-> @@ -271,14 +268,11 @@ static int mtk_rtc_probe(struct platform_device *pdev)
-> 
->  	platform_set_drvdata(pdev, rtc);
-> 
-> -	rtc->rtc_dev = devm_rtc_allocate_device(rtc->dev);
-> -	if (IS_ERR(rtc->rtc_dev))
-> -		return PTR_ERR(rtc->rtc_dev);
-> +	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
-> +					mtk_rtc_irq_handler_thread,
-> +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-> +					"mt6397-rtc", rtc);
-> 
+On 4/7/19 09:22 Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> My devices do not have direct access to the reset line so I
+> can't assert reset no matter how I try, if it works for you, the
+> code is certainly better like this.
+>
 
-This change may lead to a crash and the allocation was intentionally
-placed before the irq request.
+In P2020RDB, VSC7385 reset is connected to GPIO. U-boot put binary
+file to iCPU and make VSC7385 unmanaged.
+However reset flush internal memory and iCPU stop.
+In this case bootlog looks like that:
 
-> -	ret = request_threaded_irq(rtc->irq, NULL,
-> -				   mtk_rtc_irq_handler_thread,
-> -				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-> -				   "mt6397-rtc", rtc);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
->  			rtc->irq, ret);
-> @@ -287,6 +281,10 @@ static int mtk_rtc_probe(struct platform_device *pdev)
-> 
->  	device_init_wakeup(&pdev->dev, 1);
-> 
-> +	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-> +	if (IS_ERR(rtc->rtc_dev))
-> +		return PTR_ERR(rtc->rtc_dev);
-> +
->  	rtc->rtc_dev->ops = &mtk_rtc_ops;
-> 
->  	ret = rtc_register_device(rtc->rtc_dev);
-> @@ -302,15 +300,6 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	return ret;
->  }
-> 
-> -static int mtk_rtc_remove(struct platform_device *pdev)
-> -{
-> -	struct mt6397_rtc *rtc = platform_get_drvdata(pdev);
-> -
-> -	free_irq(rtc->irq, rtc);
-> -
-> -	return 0;
-> -}
-> -
->  #ifdef CONFIG_PM_SLEEP
->  static int mt6397_rtc_suspend(struct device *dev)
->  {
-> @@ -337,6 +326,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
->  			mt6397_rtc_resume);
-> 
->  static const struct of_device_id mt6397_rtc_of_match[] = {
-> +	{ .compatible = "mediatek,mt6323-rtc", },
+[    2.989047] vsc73xx-platform ffb00000.switch: VSC7385 (rev: 2) switch found
+[    2.996192] vsc73xx-platform ffb00000.switch: iCPU enabled boots
+from PI/SI, no external memory
+[    3.005057] vsc73xx-platform ffb00000.switch: Chip seems to be out
+of control. Assert reset and try again.
+[    3.045034] vsc73xx-platform ffb00000.switch: VSC7385 (rev: 2) switch found
+[    3.052171] vsc73xx-platform ffb00000.switch: iCPU disabled, no
+external memory
 
-Unrelated change, this is not an improvement and must be accompanied by
-a documentation change.
-
->  	{ .compatible = "mediatek,mt6397-rtc", },
->  	{ }
->  };
-> @@ -349,7 +339,6 @@ static struct platform_driver mtk_rtc_driver = {
->  		.pm = &mt6397_pm_ops,
->  	},
->  	.probe	= mtk_rtc_probe,
-> -	.remove = mtk_rtc_remove,
->  };
-> 
->  module_platform_driver(mtk_rtc_driver);
-> --
-> 2.17.1
-> 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Best Regards,
+Pawel Dembicki
