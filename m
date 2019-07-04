@@ -1,24 +1,57 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
-Date: Thu, 04 Jul 2019 11:43:55 +0300
-Message-ID: <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
-References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
+From: <dongchun.zhu@mediatek.com>
+Subject: [RFC,V2,0/2] media: add support for OV02A10 sensor
+Date: Thu, 4 Jul 2019 16:46:49 +0800
+Message-ID: <20190704084651.3105-1-dongchun.zhu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190628151327.206818-1-oshrialkoby85@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oshri Alkoby <oshrialkoby85@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org, oshri.alkoby@nuvoton.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, gcwilson@us.ibm.com, kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com, dan.morav@nuvoton.com, tomer.maimon@nuvoton.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, sakari.ailus@linux.intel.com, --to=drinkcat@chromium.org, tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com
+Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, sj.huang@mediatek.com, linux-mediatek@lists.infradead.org, dongchun.zhu@mediatek.com, louis.kuo@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-06-28 at 18:13 +0300, Oshri Alkoby wrote:
+From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 
-The long descriptions are still missing. Please take the time and write
-a proper commit messages that clearly tell what the patch does.
+Hello,
 
-Check out tpm_tis_core.c and tpm_tis_spi.c. TPM TIS driver implements
-that spec so you should only implement a new physical layer.
+This patch adds driver and bindings for Omnivision's OV02A10 2 megapixel CMOS 1/5" sensor,
+which has a single MIPI lane interface and output format of 10-bit Raw.
 
-/Jarkko
+The driver is implemented wth V4L2 framework.
+1. Async registered as a V4L2 I2C sub-device.
+2. A media entity that can provide several source pads and sink pads to link with other device like Seninf, ISP one after another
+   to create a default overall camera topology, image frame or meta-data from sensor can flow through particular path to output
+   preview or capture image or 3A info.
+
+Mainly changes of v2 are addressing the comments from Nicolas, Bingbu, Sakari, Rob,
+including,
+ - Put dt binding before driver in series
+ - Add MAINTAINERS entries
+ - Squash the MAINTAINERS entry and Kconfig to driver patch
+ - Add rotation support for driver
+ - Fix other reviewed issues in v1
+
+Dongchun Zhu (2):
+  media: dt-bindings: media: i2c: Add bindings for OV02A10
+  media: i2c: Add Omnivision OV02A10 camera sensor driver
+
+ .../devicetree/bindings/media/i2c/ov02a10.txt      |   43 +
+ MAINTAINERS                                        |    8 +
+ drivers/media/i2c/Kconfig                          |   12 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/ov02a10.c                        | 1017 ++++++++++++++++++++
+ 5 files changed, 1081 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+ create mode 100644 drivers/media/i2c/ov02a10.c
+
+-- 
+2.9.2
