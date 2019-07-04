@@ -1,105 +1,190 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/2] reset: imx7: Add support for i.MX8MM SoC
-Date: Thu, 4 Jul 2019 09:09:18 +0000
-Message-ID: <DB3PR0402MB3916D53E9BD277C2152F7261F5FA0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190701093944.5540-1-Anson.Huang@nxp.com>
- <1562230444.6641.2.camel@pengutronix.de>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 2/7] rtc: mt6397: move some common definitions into
+ rtc.h
+Date: Thu, 4 Jul 2019 11:11:03 +0200
+Message-ID: <62a4c4ce-7ab3-2f9d-a85e-be92340724a9@gmail.com>
+References: <20190703164822.17924-1-frank-w@public-files.de>
+ <20190703164822.17924-3-frank-w@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1562230444.6641.2.camel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190703164822.17924-3-frank-w@public-files.de>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wunderlich <frank-w@public-files.de>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Allison Randal <allison@lohutok.net>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg
+Cc: Josef Friedl <josef.friedl@speed.at>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Philipp
 
-> On Mon, 2019-07-01 at 17:39 +0800, Anson.Huang@nxp.com wrote:
-> > From: Anson Huang <Anson.Huang@nxp.com>
-> >
-> > i.MX8MM SoC has a subset of i.MX8MQ IP block variant, it can reuse the
-> > i.MX8MQ reset controller driver and just skip those non-existing IP
-> > blocks, add support for i.MX8MM SoC reset control.
-> >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> >  drivers/reset/reset-imx7.c | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >
-> > diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
-> > index 3ecd770..941131f 100644
-> > --- a/drivers/reset/reset-imx7.c
-> > +++ b/drivers/reset/reset-imx7.c
-> > @@ -207,6 +207,26 @@ static int imx8mq_reset_set(struct
-> reset_controller_dev *rcdev,
-> >  	const unsigned int bit = imx7src->signals[id].bit;
-> >  	unsigned int value = assert ? bit : 0;
-> >
-> > +	if (of_machine_is_compatible("fsl,imx8mm")) {
-> 
-> This should be checked once during probe, not in every reset_set, if this
-> check has to be made at all. On i.MX8MM these unused reset controls are
-> not going to be hooked up via phandle, so this function should never be
-> called with the values that are filtered out here anyway.
-> And in case somebody makes an error in the device tree, does writing 1 to
-> the reserved bits on i.MX8MM have any negative side effects at all?
-> Or are these bits just not hooked up? If this is no problem, I assume this
-> patch is not needed at all.
 
-I just tried it on i.MX8MM, read/write to the reserved registers looks like OK,
-so this patch can be ignored, although accessing reserved registers is NOT good,
-but the user should have correct settings in DT, there will be no access for these
-reserved registers.
+On 03/07/2019 18:48, Frank Wunderlich wrote:
+> From: Josef Friedl <josef.friedl@speed.at>
+>
 
-So, let's just ignore this patch, adding the fallback compatible should be good for
-i.MX8MM to reuse this driver.
+Still missing commit message. Describe here why you need to do that.
 
-Thanks,
-Anson 
 
+> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> =2D--
+
+Please check your email setting as discussed offline. Otherwise your patches
+won't get accepted.
+
+Regards,
+Matthias
+
+>  drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
+>  include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 72 insertions(+), 54 deletions(-)
+>  create mode 100644 include/linux/mfd/mt6397/rtc.h
 > 
-> The correct way to protect against DT writers hooking up the non- existing
-> reset lines would be to replace rcdev.of_xlate with a version that returns -
-> EINVAL for them on i.MX8MM. Also in that case I'd check the reset-controller
-> compatible, not the machine compatible.
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index b46ed4dc7015..c08ee5edf865 100644
+> =2D-- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -9,60 +9,7 @@
+>  #include <linux/module.h>
+>  #include <linux/regmap.h>
+>  #include <linux/rtc.h>
+> -#include <linux/irqdomain.h>
+> -#include <linux/platform_device.h>
+> -#include <linux/of_address.h>
+> -#include <linux/of_irq.h>
+> -#include <linux/io.h>
+> -#include <linux/mfd/mt6397/core.h>
+> -
+> -#define RTC_BBPU		0x0000
+> -#define RTC_BBPU_CBUSY		BIT(6)
+> -
+> -#define RTC_WRTGR		0x003c
+> -
+> -#define RTC_IRQ_STA		0x0002
+> -#define RTC_IRQ_STA_AL		BIT(0)
+> -#define RTC_IRQ_STA_LP		BIT(3)
+> -
+> -#define RTC_IRQ_EN		0x0004
+> -#define RTC_IRQ_EN_AL		BIT(0)
+> -#define RTC_IRQ_EN_ONESHOT	BIT(2)
+> -#define RTC_IRQ_EN_LP		BIT(3)
+> -#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
+> -
+> -#define RTC_AL_MASK		0x0008
+> -#define RTC_AL_MASK_DOW		BIT(4)
+> -
+> -#define RTC_TC_SEC		0x000a
+> -/* Min, Hour, Dom... register offset to RTC_TC_SEC */
+> -#define RTC_OFFSET_SEC		0
+> -#define RTC_OFFSET_MIN		1
+> -#define RTC_OFFSET_HOUR		2
+> -#define RTC_OFFSET_DOM		3
+> -#define RTC_OFFSET_DOW		4
+> -#define RTC_OFFSET_MTH		5
+> -#define RTC_OFFSET_YEAR		6
+> -#define RTC_OFFSET_COUNT	7
+> -
+> -#define RTC_AL_SEC		0x0018
+> -
+> -#define RTC_PDN2		0x002e
+> -#define RTC_PDN2_PWRON_ALARM	BIT(4)
+> -
+> -#define RTC_MIN_YEAR		1968
+> -#define RTC_BASE_YEAR		1900
+> -#define RTC_NUM_YEARS		128
+> -#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
+> -
+> -struct mt6397_rtc {
+> -	struct device		*dev;
+> -	struct rtc_device	*rtc_dev;
+> -	struct mutex		lock;
+> -	struct regmap		*regmap;
+> -	int			irq;
+> -	u32			addr_base;
+> -};
+> +#include <linux/mfd/mt6397/rtc.h>
 > 
-> > +		switch (id) {
-> > +		case IMX8MQ_RESET_HDMI_PHY_APB_RESET:
-> > +		case IMX8MQ_RESET_PCIEPHY2: /* fallthrough */
-> > +		case IMX8MQ_RESET_PCIEPHY2_PERST: /* fallthrough */
-> > +		case IMX8MQ_RESET_PCIE2_CTRL_APPS_EN: /* fallthrough
-> */
-> > +		case IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF: /*
-> fallthrough */
-> > +		case IMX8MQ_RESET_MIPI_CSI1_CORE_RESET: /* fallthrough
-> */
-> > +		case IMX8MQ_RESET_MIPI_CSI1_PHY_REF_RESET: /*
-> fallthrough */
-> > +		case IMX8MQ_RESET_MIPI_CSI1_ESC_RESET: /* fallthrough
-> */
-> > +		case IMX8MQ_RESET_MIPI_CSI2_CORE_RESET: /* fallthrough
-> */
-> > +		case IMX8MQ_RESET_MIPI_CSI2_PHY_REF_RESET: /*
-> fallthrough */
-> > +		case IMX8MQ_RESET_MIPI_CSI2_ESC_RESET: /* fallthrough
-> */
-> > +		case IMX8MQ_RESET_DDRC2_PHY_RESET: /* fallthrough */
-> > +		case IMX8MQ_RESET_DDRC2_CORE_RESET: /* fallthrough */
-> > +		case IMX8MQ_RESET_DDRC2_PRST: /* fallthrough */
+>  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  {
+> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc=
+> .h
+> new file mode 100644
+> index 000000000000..b702c29e8c74
+> =2D-- /dev/null
+> +++ b/include/linux/mfd/mt6397/rtc.h
+> @@ -0,0 +1,71 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2014-2018 MediaTek Inc.
+> + *
+> + * Author: Tianping.Fang <tianping.fang@mediatek.com>
+> + *        Sean Wang <sean.wang@mediatek.com>
+> + */
+> +
+> +#ifndef _LINUX_MFD_MT6397_RTC_H_
+> +#define _LINUX_MFD_MT6397_RTC_H_
+> +
+> +#include <linux/jiffies.h>
+> +#include <linux/mutex.h>
+> +#include <linux/regmap.h>
+> +#include <linux/rtc.h>
+> +
+> +#define RTC_BBPU               0x0000
+> +#define RTC_BBPU_CBUSY         BIT(6)
+> +#define RTC_BBPU_KEY            (0x43 << 8)
+> +
+> +#define RTC_WRTGR              0x003c
+> +
+> +#define RTC_IRQ_STA            0x0002
+> +#define RTC_IRQ_STA_AL         BIT(0)
+> +#define RTC_IRQ_STA_LP         BIT(3)
+> +
+> +#define RTC_IRQ_EN             0x0004
+> +#define RTC_IRQ_EN_AL          BIT(0)
+> +#define RTC_IRQ_EN_ONESHOT     BIT(2)
+> +#define RTC_IRQ_EN_LP          BIT(3)
+> +#define RTC_IRQ_EN_ONESHOT_AL  (RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
+> +
+> +#define RTC_AL_MASK            0x0008
+> +#define RTC_AL_MASK_DOW                BIT(4)
+> +
+> +#define RTC_TC_SEC             0x000a
+> +/* Min, Hour, Dom... register offset to RTC_TC_SEC */
+> +#define RTC_OFFSET_SEC         0
+> +#define RTC_OFFSET_MIN         1
+> +#define RTC_OFFSET_HOUR                2
+> +#define RTC_OFFSET_DOM         3
+> +#define RTC_OFFSET_DOW         4
+> +#define RTC_OFFSET_MTH         5
+> +#define RTC_OFFSET_YEAR                6
+> +#define RTC_OFFSET_COUNT       7
+> +
+> +#define RTC_AL_SEC             0x0018
+> +
+> +#define RTC_PDN2               0x002e
+> +#define RTC_PDN2_PWRON_ALARM   BIT(4)
+> +
+> +#define RTC_MIN_YEAR           1968
+> +#define RTC_BASE_YEAR          1900
+> +#define RTC_NUM_YEARS          128
+> +#define RTC_MIN_YEAR_OFFSET    (RTC_MIN_YEAR - RTC_BASE_YEAR)
+> +
+> +#define MTK_RTC_POLL_DELAY_US  10
+> +#define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
+> +
+> +struct mt6397_rtc {
+> +	struct device           *dev;
+> +	struct rtc_device       *rtc_dev;
+> +
+> +	/* Protect register access from multiple tasks */
+> +	struct mutex            lock;
+> +	struct regmap           *regmap;
+> +	int                     irq;
+> +	u32                     addr_base;
+> +};
+> +
+> +#endif /* _LINUX_MFD_MT6397_RTC_H_ */
+> =2D-
+> 2.17.1
 > 
-> I think it would make sense to add IMX8MM_RESET_* defines for all but
-> these, to avoid confusion when reading the imx8mm.dtsi
-> 
-> regards
-> Philipp
