@@ -1,112 +1,40 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH 4/8] iommu/arm-smmu-v3: Add support for Substream IDs
-Date: Thu, 4 Jul 2019 10:33:52 +0100
-Message-ID: <104a20b7-ebb1-1569-3f6b-94438b9dbf76@arm.com>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-5-jean-philippe.brucker@arm.com>
- <20190626180025.g4clm6qnbbna65de@willie-the-truck>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Anson.Huang@nxp.com
+Subject: [PATCH V2 2/2] arm64: dts: imx8mm: Add "fsl,imx8mq-src" as src's fallback compatible
+Date: Thu,  4 Jul 2019 17:26:00 +0800
+Message-ID: <20190704092600.38015-2-Anson.Huang@nxp.com>
+References: <20190704092600.38015-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190626180025.g4clm6qnbbna65de@willie-the-truck>
-Content-Language: en-US
+In-Reply-To: <20190704092600.38015-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jacob.jun.pan@linux.intel.com, joro@8bytes.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, eric.auger@redhat.com, iommu@lists.linux-foundation.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org
+To: p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, ping.bai@nxp.com, daniel.baluta@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On 26/06/2019 19:00, Will Deacon wrote:
-> On Mon, Jun 10, 2019 at 07:47:10PM +0100, Jean-Philippe Brucker wrote:
->> At the moment, the SMMUv3 driver implements only one stage-1 or stage-2
->> page directory per device. However SMMUv3 allows more than one address
->> space for some devices, by providing multiple stage-1 page directories. In
->> addition to the Stream ID (SID), that identifies a device, we can now have
->> Substream IDs (SSID) identifying an address space. In PCIe, SID is called
->> Requester ID (RID) and SSID is called Process Address-Space ID (PASID).
->>
->> Prepare the driver for SSID support, by adding context descriptor tables
->> in STEs (previously a single static context descriptor). A complete
->> stage-1 walk is now performed like this by the SMMU:
->>
->>       Stream tables          Ctx. tables          Page tables
->>         +--------+   ,------->+-------+   ,------->+-------+
->>         :        :   |        :       :   |        :       :
->>         +--------+   |        +-------+   |        +-------+
->>    SID->|  STE   |---'  SSID->|  CD   |---'  IOVA->|  PTE  |--> IPA
->>         +--------+            +-------+            +-------+
->>         :        :            :       :            :       :
->>         +--------+            +-------+            +-------+
->>
->> Implement a single level of context descriptor table for now, but as with
->> stream and page tables, an SSID can be split to index multiple levels of
->> tables.
->>
->> In all stream table entries, we set S1DSS=SSID0 mode, making translations
->> without an SSID use context descriptor 0. Although it would be possible by
->> setting S1DSS=BYPASS, we don't currently support SSID when user selects
->> iommu.passthrough.
-> 
-> I don't understand your comment here: iommu.passthrough works just as it did
-> before, right, since we set bypass in the STE config field so S1DSS is not
-> relevant?
+From: Anson Huang <Anson.Huang@nxp.com>
 
-Yes the comment is wrong, or at least unclear. It isn't well defined how
-SSID is supposed to work with iommu.passthrough, but I guess keeping the
-same behavior as non-PASID DMA is what we want (any PASID-tagged DMA
-also bypasses the SMMU.)
+i.MX8MM can reuse i.MX8MQ's src driver, add "fsl,imx8mq-src" as
+src's fallback compatible to enable it.
 
-In the comment I was referring to another possibility, supporting SVA
-and auxiliary domains even when iommu.passthrough is set. That would
-require allocating context tables and setting S1DSS=BYPASS. But I don't
-think it's a feature anyone needs at the moment.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+No changes.
+---
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> I also notice that SSID0 causes transactions with SSID==0 to
-> abort. Is a PASID of 0 reserved, so this doesn't matter?
-
-Yes, PASID 0 is reserved, we start allocation at 1
-
-> 
->> @@ -1062,33 +1143,90 @@ static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
->>  	return val;
->>  }
->>  
->> -static void arm_smmu_write_ctx_desc(struct arm_smmu_device *smmu,
->> -				    struct arm_smmu_s1_cfg *cfg)
->> +static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
->> +				   int ssid, struct arm_smmu_ctx_desc *cd)
->>  {
->>  	u64 val;
->> +	bool cd_live;
->> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
->> +	__le64 *cdptr = arm_smmu_get_cd_ptr(&smmu_domain->s1_cfg, ssid);
->>  
->>  	/*
->> -	 * We don't need to issue any invalidation here, as we'll invalidate
->> -	 * the STE when installing the new entry anyway.
->> +	 * This function handles the following cases:
->> +	 *
->> +	 * (1) Install primary CD, for normal DMA traffic (SSID = 0).
->> +	 * (2) Install a secondary CD, for SID+SSID traffic.
->> +	 * (3) Update ASID of a CD. Atomically write the first 64 bits of the
->> +	 *     CD, then invalidate the old entry and mappings.
->> +	 * (4) Remove a secondary CD.
->>  	 */
->> -	val = arm_smmu_cpu_tcr_to_cd(cfg->cd.tcr) |
->> +
->> +	if (!cdptr)
->> +		return -ENOMEM;
->> +
->> +	val = le64_to_cpu(cdptr[0]);
->> +	cd_live = !!(val & CTXDESC_CD_0_V);
->> +
->> +	if (!cd) { /* (4) */
->> +		cdptr[0] = 0;
-> 
-> Should we be using WRITE_ONCE here? (although I notice we don't seem to
-> bother for STEs either...)
-
-Sure, that's safer
-
-Thanks,
-Jean
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 172bb6f..1870c89 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -520,7 +520,7 @@
+ 			};
+ 
+ 			src: reset-controller@30390000 {
+-				compatible = "fsl,imx8mm-src", "syscon";
++				compatible = "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon";
+ 				reg = <0x30390000 0x10000>;
+ 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+ 				#reset-cells = <1>;
+-- 
+2.7.4
