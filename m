@@ -1,44 +1,52 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 3/7] rtc: mt6397: improvements of rtc driver
-Date: Thu, 4 Jul 2019 11:13:51 +0200
-Message-ID: <24975910-cb06-7faf-998f-def23ca0891f@gmail.com>
-References: <20190703164822.17924-1-frank-w@public-files.de>
- <20190703164822.17924-4-frank-w@public-files.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 2/2] arm64: dts: imx8mm: Add "fsl,imx8mq-src" as src's
+ fallback compatible
+Date: Thu, 04 Jul 2019 11:15:30 +0200
+Message-ID: <1562231730.6641.4.camel@pengutronix.de>
+References: <20190701093944.5540-1-Anson.Huang@nxp.com>
+         <20190701093944.5540-2-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703164822.17924-4-frank-w@public-files.de>
-Content-Language: en-US
+In-Reply-To: <20190701093944.5540-2-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Allison Randal <allison@lohutok.net>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg
-Cc: Josef Friedl <josef.friedl@speed.at>
+To: Anson.Huang@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Anson,
 
-
-On 03/07/2019 18:48, Frank Wunderlich wrote:
-> From: Josef Friedl <josef.friedl@speed.at>
+On Mon, 2019-07-01 at 17:39 +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
 > 
-> - use regmap_read_poll_timeout to drop while-loop
-> - use devm-api to drop remove-callback
-> - add new compatible for mt6323
->
-
-It's up to the maintainer but I don't like patches doing clean-ups together with
-adding support for new HW, although it's a trivial one here.
-
-
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> =2D--
->  drivers/rtc/rtc-mt6397.c | 55 ++++++++++++++++------------------------
->  1 file changed, 22 insertions(+), 33 deletions(-)
+> i.MX8MM can reuse i.MX8MQ's src driver, add "fsl,imx8mq-src" as
+> src's fallback compatible to enable it.
 > 
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index c08ee5edf865..e5ddf0d0b6f1 100644
-> =2D-- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -4,16 +4,19 @@
->  * Author: Tianping.Fang <tianping.fang@mediatek.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> index f0ac027..ea15457 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> @@ -471,7 +471,7 @@
+>  			};
+>  
+>  			src: reset-controller@30390000 {
+> -				compatible = "fsl,imx8mm-src", "syscon";
+> +				compatible = "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon";
+>  				reg = <0x30390000 0x10000>;
+>  				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+>  				#reset-cells = <1>;
 
-Missing in the CC list.
+Please also update the compatible property documentation in
+Documentation/devicetree/bindings/reset/fsl,imx7-src.txt.
+With that,
+
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+regards
+Philipp
