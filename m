@@ -1,97 +1,124 @@
 From: =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Subject: Re: [PATCH v7 02/14] media: doc: add document for rkisp1 meta buffer
- format
-Date: Thu, 4 Jul 2019 14:01:50 -0300
-Message-ID: <73414230-8e9a-a1f3-c121-fdd5b87cb5b2@collabora.com>
+Subject: Re: [PATCH v7 10/14] dt-bindings: Document the Rockchip ISP1 bindings
+Date: Thu, 4 Jul 2019 14:03:45 -0300
+Message-ID: <b475739c-a460-612e-bc4c-57dc7ce18a67@collabora.com>
 References: <20190703190910.32633-1-helen.koike@collabora.com>
- <20190703190910.32633-3-helen.koike@collabora.com>
+ <20190703190910.32633-11-helen.koike@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190703190910.32633-3-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190703190910.32633-11-helen.koike@collabora.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Helen Koike <helen.koike@collabora.com>, linux-rockchip@lists.infradead.org
-Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, kernel@collabora.com, heiko@sntech.de, Jacob Chen <jacob-chen@rock-chips.com>, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, Yong Zhi <yong.zhi@intel.com>, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, zhengsq@rock-chips.com, mchehab@kernel.org, ezequiel@collabora.com, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gSGVsZW4sCgpPbiA3LzMvMTkgNDowOCBQTSwgSGVsZW4gS29pa2Ugd3JvdGU6Cj4gRnJv
-bTogSmFjb2IgQ2hlbiA8amFjb2IyLmNoZW5Acm9jay1jaGlwcy5jb20+Cj4KPiBUaGlzIGNvbW1p
-dCBhZGQgZG9jdW1lbnQgZm9yIHJraXNwMSBtZXRhIGJ1ZmZlciBmb3JtYXQKPgo+IFNpZ25lZC1v
-ZmYtYnk6IEphY29iIENoZW4gPGphY29iLWNoZW5Acm9jay1jaGlwcy5jb20+Cj4gQWNrZWQtYnk6
-IEhhbnMgVmVya3VpbCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4KPiBbdXBkYXRlIGZvciB1cHN0
-cmVhbV0KPiBTaWduZWQtb2ZmLWJ5OiBIZWxlbiBLb2lrZSA8aGVsZW4ua29pa2VAY29sbGFib3Jh
-LmNvbT4KPgo+IC0tLQo+Cj4gQ2hhbmdlcyBpbiB2NzoKPiAtIHMvY29ycmVzcG9uZC9jb3JyZXNw
-b25kaW5nCj4gLSBzL3VzZS91c2VzCj4gLSBzL2RvY3VlbW50L2RvY3VtZW50Cj4KPiAgRG9jdW1l
-bnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9tZXRhLWZvcm1hdHMucnN0IHwgIDIgKysKPiAgLi4uL3Vh
-cGkvdjRsL3BpeGZtdC1tZXRhLXJraXNwMS1wYXJhbXMucnN0ICAgIHwgMjAgKysrKysrKysrKysr
-KysrKysrKwo+ICAuLi4vdWFwaS92NGwvcGl4Zm10LW1ldGEtcmtpc3AxLXN0YXQucnN0ICAgICAg
-fCAxOCArKysrKysrKysrKysrKysrKwo+ICAzIGZpbGVzIGNoYW5nZWQsIDQwIGluc2VydGlvbnMo
-KykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vbWVkaWEvdWFwaS92NGwvcGl4
-Zm10LW1ldGEtcmtpc3AxLXBhcmFtcy5yc3QKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
-YXRpb24vbWVkaWEvdWFwaS92NGwvcGl4Zm10LW1ldGEtcmtpc3AxLXN0YXQucnN0Cj4KPiBkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9tZXRhLWZvcm1hdHMucnN0IGIv
-RG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9tZXRhLWZvcm1hdHMucnN0Cj4gaW5kZXggYjEw
-Y2E5ZWUzOTY4Li41ZGU2MjFmZWEzY2MgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9tZWRp
-YS91YXBpL3Y0bC9tZXRhLWZvcm1hdHMucnN0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9tZWRpYS91
-YXBpL3Y0bC9tZXRhLWZvcm1hdHMucnN0Cj4gQEAgLTI0LDMgKzI0LDUgQEAgVGhlc2UgZm9ybWF0
-cyBhcmUgdXNlZCBmb3IgdGhlIDpyZWY6YG1ldGFkYXRhYCBpbnRlcmZhY2Ugb25seS4KPiAgICAg
-IHBpeGZtdC1tZXRhLXV2Ywo+ICAgICAgcGl4Zm10LW1ldGEtdnNwMS1oZ28KPiAgICAgIHBpeGZt
-dC1tZXRhLXZzcDEtaGd0Cj4gKyAgICBwaXhmbXQtbWV0YS1ya2lzcDEtcGFyYW1zCj4gKyAgICBw
-aXhmbXQtbWV0YS1ya2lzcDEtc3RhdAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL21lZGlh
-L3VhcGkvdjRsL3BpeGZtdC1tZXRhLXJraXNwMS1wYXJhbXMucnN0IGIvRG9jdW1lbnRhdGlvbi9t
-ZWRpYS91YXBpL3Y0bC9waXhmbXQtbWV0YS1ya2lzcDEtcGFyYW1zLnJzdAo+IG5ldyBmaWxlIG1v
-ZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi42MWI4MTMzMWY4MjAKPiAtLS0gL2Rldi9u
-dWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9waXhmbXQtbWV0YS1ya2lz
-cDEtcGFyYW1zLnJzdAo+IEBAIC0wLDAgKzEsMjAgQEAKWW91IGNhbiBhZGQgYSBsaWNlbnNlIGlu
-Zm9ybWF0aW9uIGhlcmUsIGxpa2UgdGhpczoKLi4gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQ
-TC0yLjAKPiArLi4gLSotIGNvZGluZzogdXRmLTg7IG1vZGU6IHJzdCAtKi0KSSBiZWxpZXZlIGl0
-J3Mgbm90IGEgZ29vZCBpZGVhIHRvIGluY2x1ZGUgRW1hY3MgY29uZmlndXJhdGlvbiBpbiB0aGUK
-c291cmNlIFsxXS4KPiArCj4gKy4uIF92NGwyLW1ldGEtZm10LXJraXNwMS1wYXJhbXM6Cj4gKwo+
-ICsqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqCj4gK1Y0TDJfTUVUQV9GTVRfUktfSVNQ
-MV9QQVJBTVMKPiArKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKgpUaGVyZSdzIDMgZXh0
-cmEgYCpgLCBrZWVwIHRoZSBsZW5ndGggb2YgbWFya3MganVzdCBhcyB0aGUgbGVuZ3RoIG9mIHRo
-ZQp0ZXh0LgpBbHNvLCBmb3IgdGl0bGVzLCB5b3Ugc2hvdWxkIHVzZSBgPWAgWzJdIGluc3RlYWQg
-b2YgYCpgLCBsaWtlIHRoaXM6Cj09PT09ClRpdGxlCj09PT09Cj4gKwo+ICtSb2NrY2hpcCBJU1Ax
-IFBhcmFtZXRlcnMgRGF0YQo+ICsKPiArRGVzY3JpcHRpb24KPiArPT09PT09PT09PT0KPiArCj4g
-K1RoaXMgZm9ybWF0IGRlc2NyaWJlcyBpbnB1dCBwYXJhbWV0ZXJzIGZvciB0aGUgUm9ja2NoaXAg
-SVNQMS4KPiArCj4gK0l0IHVzZXMgYy1zdHJ1Y3QgOmM6dHlwZTpgcmtpc3AxX2lzcF9wYXJhbXNf
-Y2ZnYCwgd2hpY2ggaXMgZGVmaW5lZCBpbgo+ICt0aGUgYGBsaW51eC9ya2lzcDEtY29uZmlnLmhg
-YCBoZWFkZXIgZmlsZSwgc2VlIGl0IGZvciBkZXRhaWxzLgpTaW5jZSB0aGUgc3RydWN0IGlzIGFs
-cmVhZHkgdXNpbmcga2VybmVsLWRvYyBzeW50YXgsIHlvdSBjYW4gaW5jbHVkaW5nCmluIHRoaXMg
-ZmlsZSB1c2luZyBzb21ldGhpbmcgbGlrZSB0aGlzOgouLiBrZXJuZWwtZG9jOjogaW5jbHVkZS91
-YXBpL2xpbnV4L3JraXNwMS1jb25maWcuaArCoMKgIDpmdW5jdGlvbnM6IHJraXNwMV9pc3BfcGFy
-YW1zX2NmZwo+ICsKPiArVGhlIHBhcmFtZXRlcnMgY29uc2lzdCBvZiBtdWx0aXBsZSBtb2R1bGVz
-Lgo+ICtUaGUgbW9kdWxlIHdvbid0IGJlIHVwZGF0ZWQgaWYgdGhlIGNvcnJlc3BvbmRpbmcgYml0
-IHdhcyBub3Qgc2V0IGluIG1vZHVsZV8qX3VwZGF0ZS4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9tZWRpYS91YXBpL3Y0bC9waXhmbXQtbWV0YS1ya2lzcDEtc3RhdC5yc3QgYi9Eb2N1bWVu
-dGF0aW9uL21lZGlhL3VhcGkvdjRsL3BpeGZtdC1tZXRhLXJraXNwMS1zdGF0LnJzdAo+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi41NDk2ZTFkNDIyNzMKPiAtLS0g
-L2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9tZWRpYS91YXBpL3Y0bC9waXhmbXQtbWV0
-YS1ya2lzcDEtc3RhdC5yc3QKVGhlIHByZXZpb3VzIGZlZWRiYWNrIGFsc28gYXBwbGllcyB0byB0
-aGlzIGZpbGUuCj4gQEAgLTAsMCArMSwxOCBAQAo+ICsuLiAtKi0gY29kaW5nOiB1dGYtODsgbW9k
-ZTogcnN0IC0qLQo+ICsKPiArLi4gX3Y0bDItbWV0YS1mbXQtcmtpc3AxLXN0YXQ6Cj4gKwo+ICsq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqCj4gK1Y0TDJfTUVUQV9GTVRfUktfSVNQMV9T
-VEFUXzNBCj4gKyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioKPiArCj4gK1JvY2tjaGlw
-IElTUDEgU3RhdGlzdGljcyBEYXRhCj4gKwo+ICtEZXNjcmlwdGlvbgo+ICs9PT09PT09PT09PQo+
-ICsKPiArVGhpcyBmb3JtYXQgZGVzY3JpYmVzIGltYWdlIGNvbG9yIHN0YXRpc3RpY3MgaW5mb3Jt
-YXRpb24gZ2VuZXJhdGVkIGJ5IHRoZSBSb2NrY2hpcAo+ICtJU1AxLgo+ICsKPiArSXQgdXNlcyBj
-LXN0cnVjdCA6Yzp0eXBlOmBya2lzcDFfc3RhdF9idWZmZXJgLCB3aGljaCBpcyBkZWZpbmVkIGlu
-Cj4gK3RoZSBgYGxpbnV4L2NpZmlzcF9zdGF0LmhgYCBoZWFkZXIgZmlsZSwgc2VlIGl0IGZvciBk
-ZXRhaWxzLgpSZWdhcmRzLArCoMKgwqAgQW5kcsOpCgpbMV0KaHR0cHM6Ly93d3cua2VybmVsLm9y
-Zy9kb2MvaHRtbC9sYXRlc3QvcHJvY2Vzcy9jb2Rpbmctc3R5bGUuaHRtbCNlZGl0b3ItbW9kZWxp
-bmVzLWFuZC1vdGhlci1jcnVmdApbMl0KaHR0cHM6Ly93d3cua2VybmVsLm9yZy9kb2MvaHRtbC9s
-YXRlc3QvZG9jLWd1aWRlL3NwaGlueC5odG1sI3NwZWNpZmljLWd1aWRlbGluZXMtZm9yLXRoZS1r
-ZXJuZWwtZG9jdW1lbnRhdGlvbgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hello Helen,
+
+On 7/3/19 4:09 PM, Helen Koike wrote:
+> From: Jacob Chen <jacob2.chen@rock-chips.com>
+>
+> Add DT bindings documentation for Rockchip ISP1
+>
+> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> [update for upstream]
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+>
+> ---
+>
+> Changes in v7:
+> - update document with new design and tested example
+>
+>  .../bindings/media/rockchip-isp1.txt          | 71 +++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/rockchip-isp1.txt b/Documentation/devicetree/bindings/media/rockchip-isp1.txt
+> new file mode 100644
+> index 000000000000..a97fef0f189f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/rockchip-isp1.txt
+> @@ -0,0 +1,71 @@
+> +Rockchip SoC Image Signal Processing unit v1
+> +----------------------------------------------
+> +
+> +Rockchip ISP1 is the Camera interface for the Rockchip series of SoCs
+> +which contains image processing, scaling, and compression funcitons.
+> +
+> +Required properties:
+> +- compatible: value should be one of the following
+> +	"rockchip,rk3288-cif-isp";
+> +	"rockchip,rk3399-cif-isp";
+> +- reg : offset and length of the register set for the device.
+> +- interrupts: should contain ISP interrupt.
+> +- clocks: phandle to the required clocks.
+> +- clock-names: required clock name.
+> +- iommus: required a iommu node.
+> +- phys: the phandle for the PHY port
+> +- phy-names: must contain "dphy"
+> +
+> +port node
+> +-------------------
+I would remove those extra `---`, and keep as:
+...node
+...----
+
+The same applies for the title.
+
+Thanks,
+    André
+
+> +
+> +The device node should contain one 'ports' child node, with children 'port'
+> +with child 'endpoint'.
+> +nodes, according to the bindings defined in Documentation/devicetree/bindings/
+> +media/video-interfaces.txt.
+> +
+> +- endpoint(mipi):
+> +	- remote-endpoint: Connecting to Rockchip MIPI-DPHY,
+> +		which is defined in rockchip-mipi-dphy.txt.
+> +
+> +The port node must contain at least one endpoint, either parallel or mipi.
+> +It could have multiple endpoints, but please note the hardware don't support
+> +two sensors work at a time, they are supposed to work asynchronously.
+> +
+> +Device node example
+> +-------------------
+> +
+> +	isp0: isp0@ff910000 {
+> +		compatible = "rockchip,rk3399-cif-isp";
+> +		reg = <0x0 0xff910000 0x0 0x4000>;
+> +		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		clocks = <&cru SCLK_ISP0>,
+> +			 <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
+> +			 <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
+> +		clock-names = "clk_isp",
+> +			      "aclk_isp", "aclk_isp_wrap",
+> +			      "hclk_isp", "hclk_isp_wrap";
+> +		power-domains = <&power RK3399_PD_ISP0>;
+> +		iommus = <&isp0_mmu>;
+> +		phys = <&dphy>;
+> +		phy-names = "dphy";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				mipi_in_wcam: endpoint@0 {
+> +					reg = <0>;
+> +					remote-endpoint = <&wcam_out>;
+> +					data-lanes = <1 2>;
+> +				};
+> +
+> +				mipi_in_ucam: endpoint@1 {
+> +					reg = <1>;
+> +					remote-endpoint = <&ucam_out>;
+> +					data-lanes = <1>;
+> +				};
+> +			};
+> +		};
+> +	};
