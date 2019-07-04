@@ -1,39 +1,75 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH v6 18/18] MAINTAINERS: add proc sysctl KUnit test to PROC
- SYSCTL section
-Date: Wed,  3 Jul 2019 17:36:15 -0700
-Message-ID: <20190704003615.204860-19-brendanhiggins@google.com>
-References: <20190704003615.204860-1-brendanhiggins@google.com>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCHv5 00/20] PCI: mobiveil: fixes for Mobiveil PCIe Host
+ Bridge IP driver
+Date: Thu, 4 Jul 2019 02:36:17 +0000
+Message-ID: <DB8PR04MB6747061D1DBE0AD88267390284FA0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190703103319.GA26804@e121166-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190704003615.204860-1-brendanhiggins@google.com>
+In-Reply-To: <20190703103319.GA26804@e121166-lin.cambridge.arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add entry for the new proc sysctl KUnit test to the PROC SYSCTL section.
-
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 856a7c4f7dcf2..7b4dcae2526c6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12727,6 +12727,7 @@ S:	Maintained
- F:	fs/proc/proc_sysctl.c
- F:	include/linux/sysctl.h
- F:	kernel/sysctl.c
-+F:	kernel/sysctl-test.c
- F:	tools/testing/selftests/sysctl/
- 
- PS3 NETWORK SUPPORT
--- 
-2.22.0.410.gd8fdbe21b5-goog
+SGkgTG9yZW56bywNCg0KVGhhbmtzIGEgbG90IGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3Jlbnpv
+LnBpZXJhbGlzaUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo31MIzyNUgMTg6MzMNCj4gVG86IFou
+cS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxn
+YWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207
+DQo+IGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExl
+byBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPjsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdp
+bGwuZGVhY29uQGFybS5jb207DQo+IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0u
+aC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsNCj4gWGlhb3dlaSBCYW8gPHhpYW93ZWku
+YmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NSAwMC8yMF0gUENJOiBtb2JpdmVp
+bDogZml4ZXMgZm9yIE1vYml2ZWlsIFBDSWUgSG9zdA0KPiBCcmlkZ2UgSVAgZHJpdmVyDQo+IA0K
+PiBPbiBGcmksIEFwciAxMiwgMjAxOSBhdCAwODozNToxMUFNICswMDAwLCBaLnEuIEhvdSB3cm90
+ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+
+ID4gVGhpcyBwYXRjaCBzZXQgaXMgdG8gYWRkIGZpeGVzIGZvciBNb2JpdmVpbCBQQ0llIEhvc3Qg
+ZHJpdmVyLg0KPiA+IEFuZCB0aGVzZSBwYXRjaGVzIGFyZSBzcGxpdGVkIGZyb20gdGhlIHRocmVh
+ZCBiZWxvdzoNCj4gPg0KPiBodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxv
+b2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnBhdGNoDQo+ID4NCj4gd29yay5vemxhYnMub3JnJTJG
+cHJvamVjdCUyRmxpbnV4LXBjaSUyRmxpc3QlMkYlM0ZzZXJpZXMlM0Q5NjQxNyZhbQ0KPiBwO2QN
+Cj4gPg0KPiBhdGE9MDIlN0MwMSU3Q3poaXFpYW5nLmhvdSU0MG54cC5jb20lN0MwZDMyMTY1Mjc0
+YmY0YzY3OGI0ODA4ZA0KPiA2ZmZhMWU0Mg0KPiA+DQo+IGYlN0M2ODZlYTFkM2JjMmI0YzZmYTky
+Y2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2OTc3NDY4MTcyNzINCj4gMjQ3MSZhbXA7DQo+ID4N
+Cj4gc2RhdGE9UkxnZnlOUkJJUmVQdUxGVENRZTRSUVlsZWVYRGV2d3RWTjRJNlpGa1MxcyUzRCZh
+bXA7cmVzZXJ2DQo+IGVkPTANCj4gPg0KPiA+IEhvdSBaaGlxaWFuZyAoMjApOg0KPiA+ICAgUENJ
+OiBtb2JpdmVpbDogVW5pZnkgcmVnaXN0ZXIgYWNjZXNzb3JzDQo+ID4gICBQQ0k6IG1vYml2ZWls
+OiBGb3JtYXQgdGhlIGNvZGUgd2l0aG91dCBmdW5jdGlvbmFsaXR5IGNoYW5nZQ0KPiA+ICAgUENJ
+OiBtb2JpdmVpbDogQ29ycmVjdCB0aGUgcmV0dXJuZWQgZXJyb3IgbnVtYmVyDQo+ID4gICBQQ0k6
+IG1vYml2ZWlsOiBSZW1vdmUgdGhlIGZsYWcgTVNJX0ZMQUdfTVVMVElfUENJX01TSQ0KPiA+ICAg
+UENJOiBtb2JpdmVpbDogQ29ycmVjdCBQQ0kgYmFzZSBhZGRyZXNzIGluIE1FTS9JTyBvdXRib3Vu
+ZCB3aW5kb3dzDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBSZXBsYWNlIHRoZSByZXNvdXJjZSBsaXN0
+IGl0ZXJhdGlvbiBmdW5jdGlvbg0KPiA+ICAgUENJOiBtb2JpdmVpbDogVXNlIFdJTl9OVU1fMCBl
+eHBsaWNpdGx5IGZvciBDRkcgb3V0Ym91bmQgd2luZG93DQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBV
+c2UgdGhlIDFzdCBpbmJvdW5kIHdpbmRvdyBmb3IgTUVNIGluYm91bmQNCj4gdHJhbnNhY3Rpb25z
+DQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBDb3JyZWN0IGluYm91bmQvb3V0Ym91bmQgd2luZG93IHNl
+dHVwIHJvdXRpbmVzDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBGaXggdGhlIElOVHggcHJvY2VzcyBl
+cnJvcnMNCj4gPiAgIFBDSTogbW9iaXZlaWw6IENvcnJlY3QgdGhlIGZpeHVwIG9mIENsYXNzIENv
+ZGUgZmllbGQNCj4gPiAgIFBDSTogbW9iaXZlaWw6IE1vdmUgdGhlIGxpbmsgdXAgd2FpdGluZyBv
+dXQgb2YgbW9iaXZlaWxfaG9zdF9pbml0KCkNCj4gPiAgIFBDSTogbW9iaXZlaWw6IE1vdmUgSVJR
+IGNoYWluZWQgaGFuZGxlciBzZXR1cCBvdXQgb2YgRFQgcGFyc2UNCj4gPiAgIFBDSTogbW9iaXZl
+aWw6IEluaXRpYWxpemUgUHJpbWFyeS9TZWNvbmRhcnkvU3Vib3JkaW5hdGUgYnVzIG51bWJlcnMN
+Cj4gPiAgIFBDSTogbW9iaXZlaWw6IEZpeCB0aGUgY2hlY2tpbmcgb2YgdmFsaWQgZGV2aWNlDQo+
+ID4gICBQQ0k6IG1vYml2ZWlsOiBBZGQgbGluayB1cCBjb25kaXRpb24gY2hlY2sNCj4gPiAgIFBD
+STogbW9iaXZlaWw6IENvbXBsZXRlIGluaXRpYWxpemF0aW9uIG9mIGhvc3QgZXZlbiBpZiBubyBQ
+Q0llIGxpbmsNCj4gPiAgIFBDSTogbW9iaXZlaWw6IERpc2FibGUgSUIgYW5kIE9CIHdpbmRvd3Mg
+c2V0IGJ5IGJvb3Rsb2FkZXINCj4gPiAgIFBDSTogbW9iaXZlaWw6IEFkZCA4LWJpdCBhbmQgMTYt
+Yml0IHJlZ2lzdGVyIGFjY2Vzc29ycw0KPiA+ICAgZHQtYmluZGluZ3M6IFBDSTogbW9iaXZlaWw6
+IENoYW5nZSBncGlvX3NsYXZlIGFuZCBhcGJfY3NyIHRvDQo+ID4gb3B0aW9uYWwNCj4gPg0KPiA+
+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbW9iaXZlaWwtcGNpZS50eHQgfCAgIDIgKw0K
+PiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYyAgICAgICAgfCA1Nzgg
+KysrKysrKysrKystLS0tLS0tDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMzY4IGluc2VydGlvbnMo
+KyksIDIxMiBkZWxldGlvbnMoLSkNCj4gDQo+IEkgYW0gcHV0dGluZyB0b2dldGhlciBhIGJyYW5j
+aCB3aXRoIHRoZSBwYXRjaGVzIEkgd291bGQgbGlrZSB0byBxdWV1ZSwgZm9yDQo+IHRoZSBvbmVz
+IEkgcmVxdWVzdGVkIHRvIHNwbGl0IHBsZWFzZSB3YWl0IGZvciBtZSwgSSB3aWxsIHB1Ymxpc2gg
+dGhlIGJyYW5jaCBhbmQNCj4gd2lsbCBhc2sgeW91IHRvIHJlYmFzZSBvbiB0b3Agb2YgaXQuDQo+
+DQoNCk9rLCB3aWxsIHNwbGl0IHRoZW0gYW5kIHJlYmFzZSBvbiB0aGUgbmV3IGJyYW5jaC4NCg0K
+VGhhbmtzLA0KWmhpcWlhbmcNCiANCj4gTG9yZW56bw0K
