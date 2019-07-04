@@ -1,38 +1,48 @@
-From: =?UTF-8?Q?Pawe=C5=82_Dembicki?= <paweldembicki@gmail.com>
-Subject: Re: [PATCH v2 4/4] net: dsa: vsc73xx: Assert reset if iCPU is enabled
-Date: Thu, 4 Jul 2019 23:57:19 +0200
-Message-ID: <CAJN1Kkydjopnd8tZ+RgRUNXW1k6ygFGaaFZvCzB+RDp1K6KFFg@mail.gmail.com>
-References: <20190703171924.31801-1-paweldembicki@gmail.com>
- <20190703171924.31801-5-paweldembicki@gmail.com> <CACRpkdYsA5437Sb8J539AJ=cYtnO2MiD7w7V_Emrmk8dNKbaEQ@mail.gmail.com>
+From: Pawel Dembicki <paweldembicki@gmail.com>
+Subject: [PATCH v3 0/4] net: dsa: Add Vitesse VSC73xx parallel mode
+Date: Fri,  5 Jul 2019 00:29:03 +0200
+Message-ID: <20190704222907.2888-1-paweldembicki@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYsA5437Sb8J539AJ=cYtnO2MiD7w7V_Emrmk8dNKbaEQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Pawel Dembicki <paweldembicki@gmail.com>, linus.walleij@linaro.org, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/7/19 09:22 Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> My devices do not have direct access to the reset line so I
-> can't assert reset no matter how I try, if it works for you, the
-> code is certainly better like this.
->
+Main goal of this patch series is to add support for CPU attached parallel
+bus in Vitesse VSC73xx switches. Existing driver supports only SPI mode.
 
-In P2020RDB, VSC7385 reset is connected to GPIO. U-boot put binary
-file to iCPU and make VSC7385 unmanaged.
-However reset flush internal memory and iCPU stop.
-In this case bootlog looks like that:
+Second change is needed for devices in unmanaged state.
 
-[    2.989047] vsc73xx-platform ffb00000.switch: VSC7385 (rev: 2) switch found
-[    2.996192] vsc73xx-platform ffb00000.switch: iCPU enabled boots
-from PI/SI, no external memory
-[    3.005057] vsc73xx-platform ffb00000.switch: Chip seems to be out
-of control. Assert reset and try again.
-[    3.045034] vsc73xx-platform ffb00000.switch: VSC7385 (rev: 2) switch found
-[    3.052171] vsc73xx-platform ffb00000.switch: iCPU disabled, no
-external memory
+V3:
+- fix commit messages and descriptions about memory-mapped I/O mode
 
-Best Regards,
-Pawel Dembicki
+V2:
+- drop changes in compatible strings
+- make changes less invasive
+- drop mutex in platform part and move mutex from core to spi part
+- fix indentation 
+- fix devm_ioremap_resource result check
+- add cover letter 
+
+Pawel Dembicki (4):
+  net: dsa: Change DT bindings for Vitesse VSC73xx switches
+  net: dsa: vsc73xx: Split vsc73xx driver
+  net: dsa: vsc73xx: add support for parallel mode
+  net: dsa: vsc73xx: Assert reset if iCPU is enabled
+
+ .../bindings/net/dsa/vitesse,vsc73xx.txt      |  58 ++++-
+ drivers/net/dsa/Kconfig                       |  20 +-
+ drivers/net/dsa/Makefile                      |   4 +-
+ ...tesse-vsc73xx.c => vitesse-vsc73xx-core.c} | 206 +++---------------
+ drivers/net/dsa/vitesse-vsc73xx-platform.c    | 164 ++++++++++++++
+ drivers/net/dsa/vitesse-vsc73xx-spi.c         | 203 +++++++++++++++++
+ drivers/net/dsa/vitesse-vsc73xx.h             |  29 +++
+ 7 files changed, 499 insertions(+), 185 deletions(-)
+ rename drivers/net/dsa/{vitesse-vsc73xx.c => vitesse-vsc73xx-core.c} (90%)
+ create mode 100644 drivers/net/dsa/vitesse-vsc73xx-platform.c
+ create mode 100644 drivers/net/dsa/vitesse-vsc73xx-spi.c
+ create mode 100644 drivers/net/dsa/vitesse-vsc73xx.h
+
+-- 
+2.20.1
