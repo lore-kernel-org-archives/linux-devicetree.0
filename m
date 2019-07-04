@@ -1,58 +1,63 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH 2/3] dt-bindings: display: sii902x: Change audio mclk
- binding
-Date: Thu, 4 Jul 2019 11:25:25 +0300
-Message-ID: <85c5d6a8-95d9-d4c0-fb33-4a774caf0b5e@ti.com>
-References: <1562082426-14876-1-git-send-email-olivier.moysan@st.com>
- <1562082426-14876-3-git-send-email-olivier.moysan@st.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v5 2/2] dt-bindings: mtd: Document Macronix raw NAND
+ controller bindings
+Date: Thu, 4 Jul 2019 11:29:01 +0300
+Message-ID: <93e86083-7f8a-402d-db4b-26263719be25@cogentembedded.com>
+References: <1562138144-2212-1-git-send-email-masonccyang@mxic.com.tw>
+ <1562138144-2212-3-git-send-email-masonccyang@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1562082426-14876-3-git-send-email-olivier.moysan@st.com>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Olivier Moysan <olivier.moysan@st.com>, a.hajda@samsung.com, narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, benjamin.gaignard@st.com, alexandre.torgue@st.com, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1562138144-2212-3-git-send-email-masonccyang@mxic.com.tw>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mason Yang <masonccyang@mxic.com.tw>, miquel.raynal@bootlin.com, marek.vasut@gmail.com, bbrezillon@kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, vigneshr@ti.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, anders.roxell@linaro.org, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org, paul@crapouillou.net, paul.burton@mips.com, liang.yang@amlogic.com, linux-mtd@lists.infradead.org, christophe.kerello@st.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDIvMDcvMjAxOSAxODo0NywgT2xpdmllciBNb3lzYW4gd3JvdGU6Cj4gQXMgc3RhdGVkIGlu
-IFNpTDkwMjIvMjQgZGF0YXNoZWV0LCBtYXN0ZXIgY2xvY2sgaXMgbm90IHJlcXVpcmVkIGZvciBJ
-MlMuCj4gTWFrZSBtY2xrIHByb3BlcnR5IG9wdGlvbmFsIGluIERUIGJpbmRpbmdzLgo+IAo+IEZp
-eGVzOiAzZjE4MDIxZjQzYTMgKCJkdC1iaW5kaW5nczogZGlzcGxheTogc2lpOTAyeDogQWRkIEhE
-TUkgYXVkaW8gYmluZGluZ3MiKQo+IAo+IFNpZ25lZC1vZmYtYnk6IE9saXZpZXIgTW95c2FuIDxv
-bGl2aWVyLm1veXNhbkBzdC5jb20+CgpMb29raW5nIHRoZSBzcGVjcyBhZ2FpbiBpdCBsb29rcyBs
-aWtlIHRoZSBtY2xrIGlzIHJlcXVyZWQgZm9yIHNpaTkwMjAsCmJ1dCBub3QgZm9yIHNpaTkwMjIg
-YW5kIHNpaTkwMjQuCgpTbyBJIGd1ZXNzIGl0IGlzIGZpbmUgdG8gYWNjZXB0IHRoZSBjb25maWd1
-cmF0aW9ucyB3aXRob3V0IHRoZSBtY2xrLgoKUmV2aWV3ZWQtYnk6IEp5cmkgU2FyaGEgPGpzYXJo
-YUB0aS5jb20+Cgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9icmlkZ2Uvc2lpOTAyeC50eHQgfCA1ICsrLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGlu
-c2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAo+
-IGluZGV4IDJkZjQ0YjdkMzgyMS4uNmUxNGUwODdjMGQwIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5MDJ4LnR4dAo+ICsr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9zaWk5
-MDJ4LnR4dAo+IEBAIC0yNiw5ICsyNiw4IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gIAktIGNs
-b2NrczogcGhhbmRsZSBhbmQgY2xvY2sgc3BlY2lmaWVyIGZvciBlYWNoIGNsb2NrIGxpc3RlZCBp
-bgo+ICAgICAgICAgICAgIHRoZSBjbG9jay1uYW1lcyBwcm9wZXJ0eQo+ICAJLSBjbG9jay1uYW1l
-czogIm1jbGsiCj4gLQkgICBEZXNjcmliZXMgU0lJOTAyeCBNQ0xLIGlucHV0LiBNQ0xLIGlzIHVz
-ZWQgdG8gcHJvZHVjZQo+IC0JICAgSERNSSBhdWRpbyBDVFMgdmFsdWVzLiBUaGlzIHByb3BlcnR5
-IGlzIHJlcXVpcmVkIGlmCj4gLQkgICAiI3NvdW5kLWRhaS1jZWxscyItcHJvcGVydHkgaXMgcHJl
-c2VudC4gVGhpcyBwcm9wZXJ0eSBmb2xsb3dzCj4gKwkgICBEZXNjcmliZXMgU0lJOTAyeCBNQ0xL
-IGlucHV0LiBNQ0xLIGNhbiBiZSB1c2VkIHRvIHByb2R1Y2UKPiArCSAgIEhETUkgYXVkaW8gQ1RT
-IHZhbHVlcy4gVGhpcyBwcm9wZXJ0eSBmb2xsb3dzCj4gIAkgICBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0Cj4gIAkgICBjb25zdW1lciBi
-aW5kaW5nLgo+ICAKPiAKCgotLSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2th
-bGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIx
-LTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Hello!
+
+On 03.07.2019 10:15, Mason Yang wrote:
+
+> Document the bindings used by the Macronix raw NAND controller.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> ---
+>   Documentation/devicetree/bindings/mtd/mxic-nand.txt | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> new file mode 100644
+> index 0000000..ddd7660
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> @@ -0,0 +1,20 @@
+> +Macronix Raw NAND Controller Device Tree Bindings
+> +-------------------------------------------------
+> +
+> +Required properties:
+> +- compatible: should be "macronix,nand-controller"
+> +- reg: should contain 1 entrie for the registers
+> +- interrupts: interrupt line connected to this raw NAND controller
+> +- clock-names: should contain "ps_clk", "send_clk" and "send_dly_clk"
+> +- clocks: should contain 3 phandles for the "ps_clk", "send_clk" and
+> +	 "send_dly_clk" clocks
+> +
+> +Example:
+> +
+> +	nand: mxic-nfc@43c30000 {
+
+    The node names should be generic, and the DT spec 0.2 (section 2.2.2) even 
+has documented "nand-controller", please rename.
+
+> +		compatible = "macronix,nand-controller";
+> +		reg = <0x43c30000 0x10000>;
+> +		reg-names = "regs";
+> +		clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
+> +		clock-names = "send_clk", "send_dly_clk", "ps_clk";
+> +	};
+> 
+
+MBR, Sergei
