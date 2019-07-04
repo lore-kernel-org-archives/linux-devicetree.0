@@ -1,40 +1,84 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH V3 2/2] arm64: dts: imx8mm: Add "fsl,imx8mq-src" as src's fallback compatible
-Date: Thu,  4 Jul 2019 17:44:16 +0800
-Message-ID: <20190704094416.4757-2-Anson.Huang@nxp.com>
-References: <20190704094416.4757-1-Anson.Huang@nxp.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: i3c: Document MediaTek I3C master
+ bindings
+Date: Thu, 4 Jul 2019 12:00:29 +0200
+Message-ID: <20190704120029.4cc6d151@collabora.com>
+References: <1561527388-4829-1-git-send-email-qii.wang@mediatek.com>
+        <1561527388-4829-2-git-send-email-qii.wang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190704094416.4757-1-Anson.Huang@nxp.com>
+In-Reply-To: <1561527388-4829-2-git-send-email-qii.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, ping.bai@nxp.com, daniel.baluta@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Qii Wang <qii.wang@mediatek.com>
+Cc: bbrezillon@kernel.org, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, gregkh@linuxfoundation.org, xinping.qian@mediatek.com, linux-kernel@vger.kernel.org, liguo.zhang@mediatek.com, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-i3c@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On Wed, 26 Jun 2019 13:36:27 +0800
+Qii Wang <qii.wang@mediatek.com> wrote:
 
-i.MX8MM can reuse i.MX8MQ's src driver, add "fsl,imx8mq-src" as
-src's fallback compatible to enable it.
+> Document MediaTek I3C master DT bindings.
+> 
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
----
-No changes.
----
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You forgot to Cc the DT maintainers/ML.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 172bb6f..1870c89 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -520,7 +520,7 @@
- 			};
- 
- 			src: reset-controller@30390000 {
--				compatible = "fsl,imx8mm-src", "syscon";
-+				compatible = "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon";
- 				reg = <0x30390000 0x10000>;
- 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
- 				#reset-cells = <1>;
--- 
-2.7.4
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> ---
+>  .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   47 ++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> new file mode 100644
+> index 0000000..3fd4f17
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> @@ -0,0 +1,47 @@
+> +Bindings for MediaTek I3C master block
+> +=====================================
+> +
+> +Required properties:
+> +--------------------
+> +- compatible: shall be "mediatek,i3c-master"
+> +- reg: physical base address of the controller and apdma base, length of
+> +  memory mapped region.
+> +- reg-names: should be "main" for controller and "dma" for apdma.
+> +- interrupts: interrupt number to the cpu.
+> +- clocks: clock name from clock manager.
+> +- clock-names: must include "main" and "dma".
+> +
+> +Mandatory properties defined by the generic binding (see
+> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> +
+> +- #address-cells: shall be set to 3
+> +- #size-cells: shall be set to 0
+> +
+> +Optional properties defined by the generic binding (see
+> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> +
+> +- i2c-scl-hz
+> +- i3c-scl-hz
+> +
+> +I3C device connected on the bus follow the generic description (see
+> +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
+> +
+> +Example:
+> +
+> +	i3c0: i3c@1100d000 {
+> +		compatible = "mediatek,i3c-master";
+> +		reg = <0x1100d000 0x100>,
+> +		      <0x11000300 0x80>;
+> +		reg-names = "main", "dma";
+> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&i3c0_ck>, <&ap_dma_ck>;
+> +		clock-names = "main", "dma";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		i2c-scl-hz = <100000>;
+> +
+> +		nunchuk: nunchuk@52 {
+> +			compatible = "nintendo,nunchuk";
+> +			reg = <0x52 0x80000010 0>;
+> +		};
+> +	};
