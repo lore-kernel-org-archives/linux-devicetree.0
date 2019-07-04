@@ -1,63 +1,84 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v5 2/2] dt-bindings: mtd: Document Macronix raw NAND
- controller bindings
-Date: Thu, 4 Jul 2019 11:29:01 +0300
-Message-ID: <93e86083-7f8a-402d-db4b-26263719be25@cogentembedded.com>
-References: <1562138144-2212-1-git-send-email-masonccyang@mxic.com.tw>
- <1562138144-2212-3-git-send-email-masonccyang@mxic.com.tw>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH 3/3] drm/bridge: sii902x: make audio mclk optional
+Date: Thu, 4 Jul 2019 11:29:26 +0300
+Message-ID: <ac3cee7b-900a-45f6-b722-062e1d8b39d0@ti.com>
+References: <1562082426-14876-1-git-send-email-olivier.moysan@st.com>
+ <1562082426-14876-4-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562138144-2212-3-git-send-email-masonccyang@mxic.com.tw>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mason Yang <masonccyang@mxic.com.tw>, miquel.raynal@bootlin.com, marek.vasut@gmail.com, bbrezillon@kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, vigneshr@ti.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, anders.roxell@linaro.org, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org, paul@crapouillou.net, paul.burton@mips.com, liang.yang@amlogic.com, linux-mtd@lists.infradead.org, christophe.kerello@st.com, lee.jones@linaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1562082426-14876-4-git-send-email-olivier.moysan@st.com>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Olivier Moysan <olivier.moysan@st.com>, a.hajda@samsung.com, narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, benjamin.gaignard@st.com, alexandre.torgue@st.com, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 03.07.2019 10:15, Mason Yang wrote:
-
-> Document the bindings used by the Macronix raw NAND controller.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->   Documentation/devicetree/bindings/mtd/mxic-nand.txt | 20 ++++++++++++++++++++
->   1 file changed, 20 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> new file mode 100644
-> index 0000000..ddd7660
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> @@ -0,0 +1,20 @@
-> +Macronix Raw NAND Controller Device Tree Bindings
-> +-------------------------------------------------
-> +
-> +Required properties:
-> +- compatible: should be "macronix,nand-controller"
-> +- reg: should contain 1 entrie for the registers
-> +- interrupts: interrupt line connected to this raw NAND controller
-> +- clock-names: should contain "ps_clk", "send_clk" and "send_dly_clk"
-> +- clocks: should contain 3 phandles for the "ps_clk", "send_clk" and
-> +	 "send_dly_clk" clocks
-> +
-> +Example:
-> +
-> +	nand: mxic-nfc@43c30000 {
-
-    The node names should be generic, and the DT spec 0.2 (section 2.2.2) even 
-has documented "nand-controller", please rename.
-
-> +		compatible = "macronix,nand-controller";
-> +		reg = <0x43c30000 0x10000>;
-> +		reg-names = "regs";
-> +		clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-> +		clock-names = "send_clk", "send_dly_clk", "ps_clk";
-> +	};
-> 
-
-MBR, Sergei
+T24gMDIvMDcvMjAxOSAxODo0NywgT2xpdmllciBNb3lzYW4gd3JvdGU6Cj4gVGhlIG1hc3RlciBj
+bG9jayBvbiBpMnMgYnVzIGlzIG5vdCBtYW5kYXRvcnksCj4gYXMgc2lpOTAyWCBpbnRlcm5hbCBQ
+TEwgY2FuIGJlIHVzZWQgaW5zdGVhZC4KPiBNYWtlIHVzZSBvZiBtY2xrIG9wdGlvbmFsLgo+IAo+
+IEZpeGVzOiBmZjU3ODE2MzRjNDEgKCJkcm0vYnJpZGdlOiBzaWk5MDJ4OiBJbXBsZW1lbnQgSERN
+SSBhdWRpbyBzdXBwb3J0IikKPiAKPiBTaWduZWQtb2ZmLWJ5OiBPbGl2aWVyIE1veXNhbiA8b2xp
+dmllci5tb3lzYW5Ac3QuY29tPgoKUmV2aWV3ZWQtYnk6IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5j
+b20+Cgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYyB8IDM5ICsrKysr
+KysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMjMg
+aW5zZXJ0aW9ucygrKSwgMTYgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4
+LmMKPiBpbmRleCAzNmFjYzI1NmU2N2UuLmEwOGJkOWZkYzA0NiAxMDA2NDQKPiAtLS0gYS9kcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlk
+Z2Uvc2lpOTAyeC5jCj4gQEAgLTU2MiwxOSArNTYyLDIxIEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9h
+dWRpb19od19wYXJhbXMoc3RydWN0IGRldmljZSAqZGV2LCB2b2lkICpkYXRhLAo+ICAJCX0KPiAg
+CX0KPiAgCj4gLQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoc2lpOTAyeC0+YXVkaW8ubWNsayk7
+Cj4gLQlpZiAocmV0KSB7Cj4gLQkJZGV2X2VycihkZXYsICJFbmFibGluZyBtY2xrIGZhaWxlZDog
+JWRcbiIsIHJldCk7Cj4gLQkJcmV0dXJuIHJldDsKPiAtCX0KPiArCWlmIChzaWk5MDJ4LT5hdWRp
+by5tY2xrKSB7Cj4gKwkJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHNpaTkwMngtPmF1ZGlvLm1j
+bGspOwo+ICsJCWlmIChyZXQpIHsKPiArCQkJZGV2X2VycihkZXYsICJFbmFibGluZyBtY2xrIGZh
+aWxlZDogJWRcbiIsIHJldCk7Cj4gKwkJCXJldHVybiByZXQ7Cj4gKwkJfQo+ICAKPiAtCW1jbGtf
+cmF0ZSA9IGNsa19nZXRfcmF0ZShzaWk5MDJ4LT5hdWRpby5tY2xrKTsKPiArCQltY2xrX3JhdGUg
+PSBjbGtfZ2V0X3JhdGUoc2lpOTAyeC0+YXVkaW8ubWNsayk7Cj4gIAo+IC0JcmV0ID0gc2lpOTAy
+eF9zZWxlY3RfbWNsa19kaXYoJmkyc19jb25maWdfcmVnLCBwYXJhbXMtPnNhbXBsZV9yYXRlLAo+
+IC0JCQkJICAgICAgbWNsa19yYXRlKTsKPiAtCWlmIChtY2xrX3JhdGUgIT0gcmV0ICogcGFyYW1z
+LT5zYW1wbGVfcmF0ZSkKPiAtCQlkZXZfZGJnKGRldiwgIkluYWNjdXJhdGUgcmVmZXJlbmNlIGNs
+b2NrICglbGQvJWQgIT0gJXUpXG4iLAo+IC0JCQltY2xrX3JhdGUsIHJldCwgcGFyYW1zLT5zYW1w
+bGVfcmF0ZSk7Cj4gKwkJcmV0ID0gc2lpOTAyeF9zZWxlY3RfbWNsa19kaXYoJmkyc19jb25maWdf
+cmVnLAo+ICsJCQkJCSAgICAgIHBhcmFtcy0+c2FtcGxlX3JhdGUsIG1jbGtfcmF0ZSk7Cj4gKwkJ
+aWYgKG1jbGtfcmF0ZSAhPSByZXQgKiBwYXJhbXMtPnNhbXBsZV9yYXRlKQo+ICsJCQlkZXZfZGJn
+KGRldiwgIkluYWNjdXJhdGUgcmVmZXJlbmNlIGNsb2NrICglbGQvJWQgIT0gJXUpXG4iLAo+ICsJ
+CQkJbWNsa19yYXRlLCByZXQsIHBhcmFtcy0+c2FtcGxlX3JhdGUpOwo+ICsJfQo+ICAKPiAgCW11
+dGV4X2xvY2soJnNpaTkwMngtPm11dGV4KTsKPiAgCj4gQEAgLTY0MCw3ICs2NDIsOCBAQCBzdGF0
+aWMgaW50IHNpaTkwMnhfYXVkaW9faHdfcGFyYW1zKHN0cnVjdCBkZXZpY2UgKmRldiwgdm9pZCAq
+ZGF0YSwKPiAgCW11dGV4X3VubG9jaygmc2lpOTAyeC0+bXV0ZXgpOwo+ICAKPiAgCWlmIChyZXQp
+IHsKPiAtCQljbGtfZGlzYWJsZV91bnByZXBhcmUoc2lpOTAyeC0+YXVkaW8ubWNsayk7Cj4gKwkJ
+aWYgKHNpaTkwMngtPmF1ZGlvLm1jbGspCj4gKwkJCWNsa19kaXNhYmxlX3VucHJlcGFyZShzaWk5
+MDJ4LT5hdWRpby5tY2xrKTsKPiAgCQlkZXZfZXJyKGRldiwgIiVzOiBoZG1pIGF1ZGlvIGVuYWJs
+ZSBmYWlsZWQ6ICVkXG4iLCBfX2Z1bmNfXywKPiAgCQkJcmV0KTsKPiAgCX0KPiBAQCAtNjU5LDcg
+KzY2Miw4IEBAIHN0YXRpYyB2b2lkIHNpaTkwMnhfYXVkaW9fc2h1dGRvd24oc3RydWN0IGRldmlj
+ZSAqZGV2LCB2b2lkICpkYXRhKQo+ICAKPiAgCW11dGV4X3VubG9jaygmc2lpOTAyeC0+bXV0ZXgp
+Owo+ICAKPiAtCWNsa19kaXNhYmxlX3VucHJlcGFyZShzaWk5MDJ4LT5hdWRpby5tY2xrKTsKPiAr
+CWlmIChzaWk5MDJ4LT5hdWRpby5tY2xrKQo+ICsJCWNsa19kaXNhYmxlX3VucHJlcGFyZShzaWk5
+MDJ4LT5hdWRpby5tY2xrKTsKPiAgfQo+ICAKPiAgaW50IHNpaTkwMnhfYXVkaW9fZGlnaXRhbF9t
+dXRlKHN0cnVjdCBkZXZpY2UgKmRldiwgdm9pZCAqZGF0YSwgYm9vbCBlbmFibGUpCj4gQEAgLTc1
+Miw5ICs3NTYsMTIgQEAgc3RhdGljIGludCBzaWk5MDJ4X2F1ZGlvX2NvZGVjX2luaXQoc3RydWN0
+IHNpaTkwMnggKnNpaTkwMngsCj4gIAo+ICAJc2lpOTAyeC0+YXVkaW8ubWNsayA9IGRldm1fY2xr
+X2dldChkZXYsICJtY2xrIik7Cj4gIAlpZiAoSVNfRVJSKHNpaTkwMngtPmF1ZGlvLm1jbGspKSB7
+Cj4gLQkJZGV2X2VycihkZXYsICIlczogTm8gY2xvY2sgKGF1ZGlvIG1jbGspIGZvdW5kOiAlbGRc
+biIsCj4gLQkJCV9fZnVuY19fLCBQVFJfRVJSKHNpaTkwMngtPmF1ZGlvLm1jbGspKTsKPiAtCQly
+ZXR1cm4gMDsKPiArCQlpZiAoUFRSX0VSUihzaWk5MDJ4LT5hdWRpby5tY2xrKSAhPSAtRU5PRU5U
+KSB7Cj4gKwkJCWRldl9lcnIoZGV2LCAiJXM6IE5vIGNsb2NrIChhdWRpbyBtY2xrKSBmb3VuZDog
+JWxkXG4iLAo+ICsJCQkJX19mdW5jX18sIFBUUl9FUlIoc2lpOTAyeC0+YXVkaW8ubWNsaykpOwo+
+ICsJCQlyZXR1cm4gUFRSX0VSUihzaWk5MDJ4LT5hdWRpby5tY2xrKTsKPiArCQl9Cj4gKwkJc2lp
+OTAyeC0+YXVkaW8ubWNsayA9IE5VTEw7Cj4gIAl9Cj4gIAo+ICAJc2lpOTAyeC0+YXVkaW8ucGRl
+diA9IHBsYXRmb3JtX2RldmljZV9yZWdpc3Rlcl9kYXRhKAo+IAoKCi0tIApUZXhhcyBJbnN0cnVt
+ZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4KWS10dW5u
+dXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
