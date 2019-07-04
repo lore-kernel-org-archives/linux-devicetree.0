@@ -1,26 +1,37 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 5/7] power: reset: add driver for mt6323 poweroff
-Date: Thu, 4 Jul 2019 11:15:47 +0200
-Message-ID: <d162c95d-773e-f364-0e06-07f67c5b0cbc@gmail.com>
-References: <20190703164822.17924-1-frank-w@public-files.de>
- <20190703164822.17924-6-frank-w@public-files.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Anson.Huang@nxp.com
+Subject: [PATCH 0/4] Add support for i.MX8MM thermal sensor driver
+Date: Thu,  4 Jul 2019 17:13:09 +0800
+Message-ID: <20190704091313.9516-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703164822.17924-6-frank-w@public-files.de>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Allison Randal <allison@lohutok.net>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg
-Cc: Josef Friedl <josef.friedl@speed.at>
+To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will@kernel.org, leonard.crestez@nxp.com, daniel.baluta@nxp.com, ping.bai@nxp.com, olof@lixom.net, maxime.ripard@bootlin.com, jagan@amarulasolutions.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, enric.balletbo@collabora.com, marcin.juszkiewicz@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
+From: Anson Huang <Anson.Huang@nxp.com>
 
+i.MX8MM has a thermal monitor unit (TMU) inside, it ONLY has one sensor
+for CPU, add support for temperature reading for CPU, cpu cooling is
+also added.
 
-On 03/07/2019 18:48, Frank Wunderlich wrote:
-> From: Josef Friedl <josef.friedl@speed.at>
-> 
-> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+This patch series is based on below i.MX SCU thermal patch series:
+https://patchwork.kernel.org/patch/11000821/
 
-Why is there a Signed-off-by from Josef for this patch but not for the others?
+Anson Huang (4):
+  dt-bindings: thermal: imx8mm-thermal: Add binding doc for i.MX8MM
+  thermal: imx8mm: Add support for i.MX8MM thermal monitoring unit
+  arm64: defconfig: Enable CONFIG_IMX8MM_THERMAL as module
+  arm64: dts: imx8mm: Add thermal zone support
+
+ .../devicetree/bindings/thermal/imx8mm-thermal.txt |  15 +++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi          |  43 +++++++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/thermal/Kconfig                            |  10 ++
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/imx8mm_thermal.c                   | 134 +++++++++++++++++++++
+ 6 files changed, 204 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+ create mode 100644 drivers/thermal/imx8mm_thermal.c
+
+-- 
+2.7.4
