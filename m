@@ -1,11 +1,15 @@
 From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH 0/3] Enable imx ddr perfmon on imx8m
-Date: Thu,  4 Jul 2019 11:53:19 +0300
-Message-ID: <cover.1562230183.git.leonard.crestez@nxp.com>
+Subject: [PATCH 1/3] perf/imx_ddr: Add MODULE_DEVICE_TABLE
+Date: Thu,  4 Jul 2019 11:53:20 +0300
+Message-ID: <6e88abe2ed5f361469cbb8ccccd4586036fc2fa2.1562230183.git.leonard.crestez@nxp.com>
+References: <cover.1562230183.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1562230183.git.leonard.crestez@nxp.com>
+In-Reply-To: <cover.1562230183.git.leonard.crestez@nxp.com>
+References: <cover.1562230183.git.leonard.crestez@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,21 +23,29 @@ To: Shawn Guo <shawnguo@kernel.org>, Will Deacon <will@kernel.org>, Frank Li <Fr
 Cc: Mark Rutland <mark.rutland@arm.com>, Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Driver was upstreamed for imx8qxp and it seems to work on imx8mq/imx8mm
-without changes.
+This is required for automatic probing when driver is built as a module.
 
-Add soc-specific compat strings in case we find minor differences later.
+Fixes: 9a66d36cc7ac ("drivers/perf: imx_ddr: Add DDR performance counter support to perf")
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+---
+ drivers/perf/fsl_imx8_ddr_perf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Leonard Crestez (3):
-  perf/imx_ddr: Add MODULE_DEVICE_TABLE
-  arm64: dts: imx8m: Add ddr-pmu nodes
-  arm64: defconfig: Build imx8 ddr pmu as module
-
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 7 +++++++
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 7 +++++++
- arch/arm64/configs/defconfig              | 1 +
- drivers/perf/fsl_imx8_ddr_perf.c          | 1 +
- 4 files changed, 16 insertions(+)
-
+diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+index 63fe21600072..0e3310dbb145 100644
+--- a/drivers/perf/fsl_imx8_ddr_perf.c
++++ b/drivers/perf/fsl_imx8_ddr_perf.c
+@@ -45,10 +45,11 @@ static DEFINE_IDA(ddr_ida);
+ static const struct of_device_id imx_ddr_pmu_dt_ids[] = {
+ 	{ .compatible = "fsl,imx8-ddr-pmu",},
+ 	{ .compatible = "fsl,imx8m-ddr-pmu",},
+ 	{ /* sentinel */ }
+ };
++MODULE_DEVICE_TABLE(of, imx_ddr_pmu_dt_ids);
+ 
+ struct ddr_pmu {
+ 	struct pmu pmu;
+ 	void __iomem *base;
+ 	unsigned int cpu;
 -- 
 2.17.1
