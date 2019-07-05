@@ -1,131 +1,49 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: [PATCH v9 3/6] usb:gadget Patch simplify usb_decode_set_clear_feature function.
-Date: Fri, 5 Jul 2019 11:57:15 +0100
-Message-ID: <1562324238-16655-4-git-send-email-pawell@cadence.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
+Date: Fri, 05 Jul 2019 14:15:37 +0300
+Message-ID: <2e2e646c3fae87307a149ee06e9fd4a7e493830d.camel@linux.intel.com>
+References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
+         <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
+         <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562324238-16655-1-git-send-email-pawell@cadence.com>
+In-Reply-To: <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, jpawar@cadence.com, kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
+To: Alexander Steffen <Alexander.Steffen@infineon.com>, Oshri Alkoby <oshrialkoby85@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org, oshri.alkoby@nuvoton.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, gcwilson@us.ibm.com, kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com, dan.morav@nuvoton.com, tomer.maimon@nuvoton.com
 List-Id: devicetree@vger.kernel.org
 
-Patch adds usb_decode_test_mode and usb_decode_device_feature functions,
-which allow to make more readable and simplify the
-usb_decode_set_clear_feature function.
+On Thu, 2019-07-04 at 13:29 +0200, Alexander Steffen wrote:
+> On 04.07.2019 10:43, Jarkko Sakkinen wrote:
+> > Check out tpm_tis_core.c and tpm_tis_spi.c. TPM TIS driver implements
+> > that spec so you should only implement a new physical layer.
+> 
+> I had the same thought. Unfortunately, the I2C-TIS specification 
+> introduces two relevant changes compared to tpm_tis/tpm_tis_spi:
 
-Signed-off-by: Pawel Laszczak <pawell@cadence.com>
----
- drivers/usb/common/debug.c | 89 ++++++++++++++++++--------------------
- 1 file changed, 43 insertions(+), 46 deletions(-)
+I doubt that there was any comparison made.
 
-diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
-index d5a469bc67a3..60a9f70a0904 100644
---- a/drivers/usb/common/debug.c
-+++ b/drivers/usb/common/debug.c
-@@ -30,58 +30,55 @@ static void usb_decode_get_status(__u8 bRequestType, __u16 wIndex,
- 	}
- }
- 
--static void usb_decode_set_clear_feature(__u8 bRequestType, __u8 bRequest,
--					 __u16 wValue, __u16 wIndex,
--					 char *str, size_t size)
-+static const char *usb_decode_device_feature(u16 wValue)
-+{
-+	switch (wValue) {
-+	case USB_DEVICE_SELF_POWERED:
-+		return "Self Powered";
-+	case USB_DEVICE_REMOTE_WAKEUP:
-+		return "Remote Wakeup";
-+	case USB_DEVICE_TEST_MODE:
-+		return "Test Mode";
-+	case USB_DEVICE_U1_ENABLE:
-+		return "U1 Enable";
-+	case USB_DEVICE_U2_ENABLE:
-+		return "U2 Enable";
-+	case USB_DEVICE_LTM_ENABLE:
-+		return "LTM Enable";
-+	default:
-+		return "UNKNOWN";
-+	}
-+}
-+
-+static const char *usb_decode_test_mode(u16 wIndex)
-+{
-+	switch (wIndex) {
-+	case TEST_J:
-+		return ": TEST_J";
-+	case TEST_K:
-+		return ": TEST_K";
-+	case TEST_SE0_NAK:
-+		return ": TEST_SE0_NAK";
-+	case TEST_PACKET:
-+		return ": TEST_PACKET";
-+	case TEST_FORCE_EN:
-+		return ": TEST_FORCE_EN";
-+	default:
-+		return ": UNKNOWN";
-+	}
-+}
-+
-+static void usb_decode_set_clear_feature(__u8 bRequestType,
-+					 __u8 bRequest, __u16 wValue,
-+					 __u16 wIndex, char *str, size_t size)
- {
- 	switch (bRequestType & USB_RECIP_MASK) {
- 	case USB_RECIP_DEVICE:
- 		snprintf(str, size, "%s Device Feature(%s%s)",
- 			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
--			 ({char *s;
--				switch (wValue) {
--				case USB_DEVICE_SELF_POWERED:
--					s = "Self Powered";
--					break;
--				case USB_DEVICE_REMOTE_WAKEUP:
--					s = "Remote Wakeup";
--					break;
--				case USB_DEVICE_TEST_MODE:
--					s = "Test Mode";
--					break;
--				case USB_DEVICE_U1_ENABLE:
--					s = "U1 Enable";
--					break;
--				case USB_DEVICE_U2_ENABLE:
--					s = "U2 Enable";
--					break;
--				case USB_DEVICE_LTM_ENABLE:
--					s = "LTM Enable";
--					break;
--				default:
--					s = "UNKNOWN";
--				} s; }),
-+			 usb_decode_device_feature(wValue),
- 			 wValue == USB_DEVICE_TEST_MODE ?
--			 ({ char *s;
--				switch (wIndex) {
--				case TEST_J:
--					s = ": TEST_J";
--					break;
--				case TEST_K:
--					s = ": TEST_K";
--					break;
--				case TEST_SE0_NAK:
--					s = ": TEST_SE0_NAK";
--					break;
--				case TEST_PACKET:
--					s = ": TEST_PACKET";
--					break;
--				case TEST_FORCE_EN:
--					s = ": TEST_FORCE_EN";
--					break;
--				default:
--					s = ": UNKNOWN";
--				} s; }) : "");
-+			 usb_decode_test_mode(wIndex) : "");
- 		break;
- 	case USB_RECIP_INTERFACE:
- 		snprintf(str, size, "%s Interface Feature(%s)",
--- 
-2.17.1
+> 1. Locality is not encoded into register addresses anymore, but stored 
+> in a separate register.
+> 2. Several register addresses have changed (but still contain compatible 
+> contents).
+> 
+> I'd still prefer not to duplicate all the high-level logic from 
+> tpm_tis_core. But this will probably mean to introduce some new 
+> interfaces between tpm_tis_core and the physical layers.
+
+Agreed. Some plumbing needs to be done in tpm_tis_core to make it work
+for this. We definitely do not want to duplicate code that has been
+field tested for years.
+
+> Also, shouldn't the new driver be called tpm_tis_i2c, to group it with 
+> all the other (TIS) drivers, that implement a vendor-independent 
+> protocol? With tpm_i2c_ptp users might assume that ptp is just another 
+> vendor.
+
+Yes, absolutely. I guess the driver has been done without looking at
+what already exist in the TPM kernel stack.
+
+/Jarkko
