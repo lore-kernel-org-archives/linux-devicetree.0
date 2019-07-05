@@ -1,49 +1,35 @@
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv6 02/28] PCI: mobiveil: Remove the flag MSI_FLAG_MULTI_PCI_MSI
-Date: Fri,  5 Jul 2019 17:56:30 +0800
-Message-ID: <20190705095656.19191-3-Zhiqiang.Hou@nxp.com>
-References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 4/4] devicetree: Add led-backlight binding
+Date: Fri, 5 Jul 2019 12:11:51 +0200
+Message-ID: <20190705101151.kmyvccbjitfqe4fv@devuan>
+References: <20190701151423.30768-1-jjhiblot@ti.com>
+ <20190701151423.30768-5-jjhiblot@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20190701151423.30768-5-jjhiblot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, l.subrahmanya@mobiveil.co.in, shawnguo@kernel.org, leoyang.li@nxp.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+To: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc: jacek.anaszewski@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Mobiveil internal MSI controller requires separate target addresses,
-one per MSI vector; this is clearly incompatible with the Multiple MSI
-feature, which requires the same target address for all vectors
-requested by an endpoint (ie the Message Address field in the MSI
-Capability structure), so the multi MSI feature is clearly not
-supported by the host controller driver.
+Hi!
 
-Remove the flag MSI_FLAG_MULTI_PCI_MSI and with it multi MSI support,
-fixing the misconfiguration.
+> Add DT binding for led-backlight.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> Cc: devicetree@vger.kernel.org
+> ---
 
-Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-[lorenzo.pieralisi@arm.com: commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
----
-V6:
- - Rebased the patch, no functional change.
+> +Required properties:
+> +  - compatible: "led-backlight"
+> +  - brightness-levels: Array of distinct LED brightness levels. These
+> +      are in the range from 0 to 255, passed to the LED class driver.
 
- drivers/pci/controller/pcie-mobiveil.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index d55c7e7..e581902 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -692,7 +692,7 @@ static int mobiveil_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
- 
- static struct msi_domain_info mobiveil_msi_domain_info = {
- 	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
--		MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-+		   MSI_FLAG_PCI_MSIX),
- 	.chip	= &mobiveil_msi_irq_chip,
- };
- 
+These days, we support more (or less) than 256 brightness levels for LED.
+									Pavel
 -- 
-1.7.1
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
