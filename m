@@ -1,118 +1,204 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Date: Fri, 5 Jul 2019 16:15:55 +0200
-Message-ID: <20190705141555.GB4428@lunn.ch>
-References: <20190621164940.GL31306@lunn.ch>
- <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
- <20190624115558.GA5690@piout.net>
- <20190624142625.GR31306@lunn.ch>
- <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
- <20190624162431.GX31306@lunn.ch>
- <20190624182614.GC5690@piout.net>
- <CA+h21hqGtA5ou7a3wjSuHxa_4fXk4GZohTAxnUdfLZjV3nq5Eg@mail.gmail.com>
- <20190705044945.GA30115@lunn.ch>
- <CA+h21hqU1H1PefBWKjnsmkMsLhx0p0HJTsp-UYrSgmVnsfqULA@mail.gmail.com>
+From: Jungo Lin <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC,v3 9/9] media: platform: Add Mediatek ISP P1 shared memory
+ device
+Date: Fri, 5 Jul 2019 13:44:31 +0800
+Message-ID: <1562305471.1212.58.camel@mtksdccf07>
+References: <jungo.lin@mediatek.com>
+ <20190611035344.29814-1-jungo.lin@mediatek.com>
+ <20190611035344.29814-10-jungo.lin@mediatek.com>
+ <20190701072532.GB137710@chromium.org>
+ <1562297618.1212.46.camel@mtksdccf07>
+ <CAAFQd5BaTQ-Q7gsE0X+d4_81OZq9WHaCYkmALt7_4A1JFo=_8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+h21hqU1H1PefBWKjnsmkMsLhx0p0HJTsp-UYrSgmVnsfqULA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, "Allan W. Nielsen" <allan.nielsen@microchip.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAAFQd5BaTQ-Q7gsE0X+d4_81OZq9WHaCYkmALt7_4A1JFo=_8g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <sean.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <rynn.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ryan Yu =?UTF-8?Q?=28=E4=BD=99=E5=AD=9F=E4=BF=AE=29?= <ryan.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Frankie Chiu =?UTF-8?Q?=28=E9=82=B1=E6=96=87=E5=87=B1=29?= <frankie.chiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "moderated
+ list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, ddavenport-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Frederic Chen =?UTF-8?Q?=28=E9=99=B3=E4=BF=8A=E5=85=83=29?= <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs//PtFMR13I2A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Let me see if I get your point.
-> The D is optional, and the S is optional. So what's left? :)
-
-A collection of interfaces.
-
-switchdev and by extension DSA is all about using hardware as an
-accelerator. Linux can do switching in software. It can do routing in
-software, it can do bonding in software, etc. switchdev gives you an
-API to offload this to hardware. And if the hardware or the driver
-does not support it, linux will just keep on doing it in software.
-
-Once you get the idea it is just an accelerator, the rest falls into
-place. Why there are no new configuration tools, why we expect network
-daemons to just work, why users don't need to learn anything new. It
-is all just linux networking as normal.
-
-> Also, there's a big difference between "the hardware can't do it" and
-> "the driver doesn't implement it". If I follow your argument, would
-> you write a DSA driver for a device that doesn't do L2 switching?
-
-Sure i would. Such a device is a port multiplexor. The user sees the
-user ports as linux interfaces. They can use those interfaces just
-like any other linux interfaces. Configure them using iproute2, add
-them to bridges, run bonding, etc. All just linux as normal.
-
-> Along that same line, what benefit does the DSA model bring to a
-> switch that can't do cascading, compared to switchdev? I'm asking this
-> as a user, not as a developer.
-
-DSA builds on top of switchdev. switchdev gives you an API to offload
-things which are happening in software to the hardware. It is the glue
-which allows you to configure the accelerator.
-
-There is also a common pattern for some switches. They connect a
-switch port MAC to a host port MAC, so that frames can be passed from
-the CPU to the switch. This pattern is common enough that
-infrastructure has been put in place to support this model. That
-infrastructure is DSA.
-
-But that is mostly about details for the driver writer. From the users
-perspective, you have a bunch of interfaces which you just use as
-normal, and some stuff can get accelerated by the hardware. We don't
-want the user to have to known about, or do anything, with the host
-port or the switch port it is connected to. DSA very nearly takes care
-of everything to do with those two. The only thing you need to do is
-configure the master interface up. Then things just work as a bunch of
-Linux interfaces.
-
-Now think about a pure switchdev switch, with a port connected to the
-host. The model breaks down. How do you use that link to the switch?
-It is just a plane link. You would not have tagging in operation. So
-you cannot send frames out specific ports. In order to do that, you
-need to add vlans, and configure the switch to map vlans to ports,
-etc. You also then have two linux interfaces representing one
-port. The pure switchdev interface, and the VLAN interface. That is
-going to confuse the user. You SNMP agent is not just going to
-work. You get the statistics from the pure switchdev interface, but
-the IP configuration from the vlan interface? How do you bridge two
-ports together? You need to put the same VLAN on two interfaces. Where
-as the DSA model you just use linux as normal and create a bridge, add
-the two interfaces, and then the stack transparently offloads it to
-the accelerator. How does STP work?
-
-Using DSA without using the D means switch ports just work as linux
-interfaces.
-
+Hi, Tomasz:
+On Fri, 2019-07-05 at 13:22 +0900, Tomasz Figa wrote:
+> Hi Jungo,
 > 
-> > > So my conclusion is that DSA for Felix/Ocelot doesn't make a lot of
-> > > sense if the whole purpose is to hide the CPU-facing netdev.
+> On Fri, Jul 5, 2019 at 12:33 PM Jungo Lin <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 > >
-> > You actually convinced me the exact opposite. You described the
-> > headers which are needed to implement DSA. The switch sounds like it
-> > can do what DSA requires. So DSA is the correct model.
+> > Hi Tomasz,
 > >
-> >      Andrew
+> > On Mon, 2019-07-01 at 16:25 +0900, Tomasz Figa wrote:
+> > > Hi Jungo,
+> > >
+> > > On Tue, Jun 11, 2019 at 11:53:44AM +0800, Jungo Lin wrote:
+> > > > The purpose of this child device is to provide shared
+> > > > memory management for exchanging tuning data between co-processor
+> > > > and the Pass 1 unit of the camera ISP system, including cache
+> > > > buffer handling.
+> > > >
+> > >
+> > > Looks like we haven't really progressed on getting this replaced with
+> > > something that doesn't require so much custom code. Let me propose something
+> > > better then.
+> > >
+> > > We already have a reserved memory mode in DT. If it has a compatible string
+> > > of "shared-dma-pool", it would be registered in the coherent DMA framework
+> > > [1]. That would make it available for consumer devices to look-up.
+> > >
+> > > Now if we add a "memory-region" property to the SCP device node and point it
+> > > to our reserved memory node, the SCP driver could look it up and hook to the
+> > > DMA mapping API using of_reserved_mem_device_init_by_idx[2].
+> > >
+> > > That basically makes any dma_alloc_*(), dma_map_*(), etc. calls on the SCP
+> > > struct device use the coherent DMA ops, which operate on the assigned memory
+> > > pool. With that, the P1 driver could just directly use those calls to
+> > > manage the memory, without any custom code.
+> > >
+> > > There is an example how this setup works in the s5p-mfc driver[3], but it
+> > > needs to be noted that it creates child nodes, because it can have more than
+> > > 1 DMA port, which may need its own memory pool. In our case, we wouldn't
+> > > need child nodes and could just use the SCP device directly.
+> > >
+> > > [1] https://elixir.bootlin.com/linux/v5.2-rc7/source/kernel/dma/coherent.c#L345
+> > > [2] https://elixir.bootlin.com/linux/v5.2-rc7/source/drivers/of/of_reserved_mem.c#L312
+> > > [3] https://elixir.bootlin.com/linux/v5.2-rc7/source/drivers/media/platform/s5p-mfc/s5p_mfc.c#L1075
+> > >
+> > > Let me also post some specific comments below, in case we end up still
+> > > needing any of the code.
+> > >
+> >
+> > Thanks your suggestions.
+> >
+> > After applying your suggestion in SCP device driver, we could remove
+> > mtk_cam-smem.h/c. Currently, we use dma_alloc_coherent with SCP device
+> > to get SCP address. We could touch the buffer with this SCP address in
+> > SCP processor.
+> >
+> > After that, we use dma_map_page_attrs with P1 device which supports
+> > IOMMU domain to get IOVA address. For this address, we will assign
+> > it to our ISP HW device to proceed.
+> >
+> > Below is the snippet for ISP P1 compose buffer initialization.
+> >
+> >         ptr = dma_alloc_coherent(p1_dev->cam_dev.smem_dev,
+> >                                  MAX_COMPOSER_SIZE, &addr, GFP_KERNEL);
+> >         if (!ptr) {
+> >                 dev_err(dev, "failed to allocate compose memory\n");
+> >                 return -ENOMEM;
+> >         }
+> >         isp_ctx->scp_mem_pa = addr;
 > 
-> Somebody actually asked, with the intention of building a board, if
-> it's possible to cascade the LS1028A embedded switch (Felix) with
-> discrete SJA1105 devices - Felix being at the top of the switch tree.
+> addr contains a DMA address, not a physical address. Could we call it
+> scp_mem_dma instead?
+> 
 
-Florian has done something very similar. He used a Broadcom SoC with
-an in built SF2 switch, and an external B53 roboswitch connected to
-one of the SF2 ports. But in that setup, the master interface for the
-b53 is a slave port of the SF2. Configure everything in device tree,
-bring up the SoC master interface, then the SF2 port acting as a
-master interface for the B53, and everything just worked. You have a
-bunch of Linux interfaces you can just use as normal.
+Ok, we will rename this.
 
-This is not using D in DSA. It is two instances of DSA. But because
-the model is that you get normal linux interfaces, it just works. I
-don't see why you cannot do the same with a LS1028A and a SJA1105.
+> >         dev_dbg(dev, "scp addr:%pad\n", &addr);
+> >
+> >         /* get iova address */
+> >         addr = dma_map_page_attrs(dev, phys_to_page(addr), 0,
+> 
+> addr is a DMA address, so phys_to_page() can't be called on it. The
+> simplest thing here would be to use dma_map_single() with ptr as the
+> CPU address expected.
+> 
 
-    Andrew
+Got it. We will revise to use dma_map_single() with ptr.
+
+> >                                   MAX_COMPOSER_SIZE, DMA_BIDIRECTIONAL,
+> >                                   DMA_ATTR_SKIP_CPU_SYNC);
+> >         if (dma_mapping_error(dev, addr)) {
+> >                 isp_ctx->scp_mem_pa = 0;
+> 
+> We also need to free the allocated memory.
+> 
+
+Ok, we will add the dma_unmap_single to free the allocated memory.
+
+> >                 dev_err(dev, "Failed to map scp iova\n");
+> >                 return -ENOMEM;
+> >         }
+> >         isp_ctx->scp_mem_iova = addr;
+> >
+> > Moreover, we have another meta input buffer usage.
+> > For this kind of buffer, it will be allocated by V4L2 framework
+> > with dma_alloc_coherent with SCP device. In order to get IOVA,
+> > we will add dma_map_page_attrs in vb2_ops' buf_init function.
+> > In buf_cleanup function, we will call dma_unmap_page_attrs function.
+> 
+> As per above, we don't have access to the struct page we want to map.
+> We probably want to get the CPU VA using vb2_plane_vaddr() and call
+> dma_map_single() instead.
+> 
+
+Got it. We will revise this to use dma_map_single() with CPU VA which is
+got from vb2_plane_vaddr() function.
+
+> >
+> > Based on these current implementation, do you think it is correct?
+> > If we got any wrong, please let us know.
+> >
+> > Btw, we also DMA_ATTR_NO_KERNEL_MAPPING DMA attribte to
+> > avoid dma_sync_sg_for_device. Othewise, it will hit the KE.
+> > Maybe we could not get the correct sg_table.
+> > Do you think it is a bug and need to fix?
+> 
+> I think DMA_ATTR_NO_KERNEL_MAPPING is good to have for all the buffers
+> that don't need to be accessed from the kernel anyway, to avoid
+> unnecessary kernel mapping operations. However, for coherent memory
+> pool, it doesn't change anything, because the memory always has a
+> kernel mapping. We also need the kernel virtual address for
+> dma_map_single(). Also the flag doesn't eliminate the need to do the
+> sync, e.g. if the userspace accesses the buffer.
+> 
+> Could you give me more information about the failure you're seeing?
+> Where is the dma_sync_sg_for_device() called from? Where do you get
+> the sgtable from?
+> 
+> Best regards,
+> Tomasz
+
+Sorry. I forgot provide one information related to this issue.
+Here is the call stack of panic KE if we enable DMA_ATTR_NON_CONSISTENT
+DMA flag. Maybe we should not enable this flag for coherent memory pool.
+
+[Function]
+vb2_dc_alloc
+
+[Code]
+	if (!(buf->attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
+	    (buf->attrs & DMA_ATTR_NON_CONSISTENT))
+		buf->dma_sgt = vb2_dc_get_base_sgt(buf);
+
+[KE]
+[   59.234326] pstate: 80000005 (Nzcv daif -PAN -UAO)
+[   59.234935] pc : __clean_dcache_area_poc+0x20/0x38
+[   59.235537] lr : __swiotlb_sync_sg_for_device+0x74/0x9c
+[   59.249430] Call trace:
+[   59.249742]  __clean_dcache_area_poc+0x20/0x38
+[   59.250303]  vb2_dc_prepare+0x5c/0x6c
+[   59.250763]  __buf_prepare+0x790/0x8a4
+[   59.251234]  vb2_req_prepare+0x38/0x68
+[   59.251707]  vb2_request_validate+0x40/0x9c
+[   59.252235]  media_request_ioctl+0x124/0x2a4
+[   59.252774]  __arm64_compat_sys_ioctl+0xf4/0x25c
+[   59.253356]  el0_svc_common+0xa4/0x154
+[   59.253828]  el0_svc_compat_handler+0x2c/0x38
+[   59.254377]  el0_svc_compat+0x8/0x18
+[   59.254827] Code: 9ac32042 8b010001 d1000443 8a230000 (d50b7a20)
+[   59.255592] ---[ end trace eb37ebade032c2fc ]---
+[   59.256173] Kernel panic - not syncing: Fatal exception
+
+Thanks,
+
+Jungo
