@@ -1,97 +1,54 @@
-Return-Path: <SRS0=pYfm=VC=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 3/3] arm64: dts: renesas: hihope-common: Add WLAN support
-Date: Fri,  5 Jul 2019 11:15:20 +0100
-Message-Id: <1562321720-18735-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1562321720-18735-1-git-send-email-biju.das@bp.renesas.com>
-References: <1562321720-18735-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=WMI5=VC=the-dreams.de=wsa@kernel.org>
+Date: Fri, 5 Jul 2019 20:32:58 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/2] dt-bindings: i2c: mv64xxx: Fix the example compatible
+Message-ID: <20190705183257.GE4717@kunai>
+References: <20190703095338.11266-1-maxime.ripard@bootlin.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Q8BnQc91gJZX4vDc"
+Content-Disposition: inline
+In-Reply-To: <20190703095338.11266-1-maxime.ripard@bootlin.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables WLAN support for the HiHope RZ/G2[MN] boards.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/hihope-common.dtsi | 45 ++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+--Q8BnQc91gJZX4vDc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/renesas/hihope-common.dtsi b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-index fdeb4d2..52d61c9 100644
---- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-@@ -54,6 +54,13 @@
- 		led3 {
- 			gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
- 		};
-+
-+		wlan_active_led {
-+			label = "yellow:wlan";
-+			gpios = <&gpio7  1 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "phy0tx";
-+			default-state = "off";
-+		};
- 	};
- 
- 	reg_1p8v: regulator0 {
-@@ -98,6 +105,17 @@
- 			  1800000 0>;
- 	};
- 
-+	wlan_en_reg: regulator-wlan_en {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wlan-en-regulator";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		startup-delay-us = <70000>;
-+
-+		gpio = <&gpio_expander 1 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
- 	x302_clk: x302-clock {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
-@@ -242,6 +260,12 @@
- 		power-source = <1800>;
- 	};
- 
-+	sdhi2_pins: sd2 {
-+		groups = "sdhi2_data4", "sdhi2_ctrl";
-+		function = "sdhi2";
-+		power-source = <1800>;
-+	};
-+
- 	sdhi3_pins: sd3 {
- 		groups = "sdhi3_data8", "sdhi3_ctrl", "sdhi3_ds";
- 		function = "sdhi3";
-@@ -301,6 +325,27 @@
- 	status = "okay";
- };
- 
-+&sdhi2 {
-+	status = "okay";
-+	pinctrl-0 = <&sdhi2_pins>;
-+	pinctrl-names = "default";
-+
-+	vmmc-supply = <&wlan_en_reg>;
-+	bus-width = <4>;
-+	non-removable;
-+	cap-power-off-card;
-+	keep-power-in-suspend;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1837";
-+		reg = <2>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+};
-+
- &sdhi3 {
- 	pinctrl-0 = <&sdhi3_pins>;
- 	pinctrl-1 = <&sdhi3_pins>;
--- 
-2.7.4
+On Wed, Jul 03, 2019 at 11:53:37AM +0200, Maxime Ripard wrote:
+> One example has a compatible that isn't a valid combination according to
+> the binding, and now that the examples are validated as well, this
+> generates a warning.
+>=20
+> Let's fix this.
+>=20
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+Applied to for-next, thanks!
+
+
+--Q8BnQc91gJZX4vDc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0fl9kACgkQFA3kzBSg
+KbZ/Zg/9H9neW53cvp7kWX6WeLflgcdGPzNI4l7r3Jlj3jZRa/a3edZJH6PRNoGD
+VPkSaMkOIVdGUXE5SNMcGovDzDkHI0Aam7Pim/nFakcec1dQ44kW6EANZjycCfRr
+k1K/2bHLtDAZNDVGvYQNyVidZqMlaXE5o9rrx87Tn+8FxFrr5gqzpyFocEZ2xntX
+aJrh774Lm6Tse1orW2+lpm+PwSjDlaTsWxLsgdlZKLa6KZ60k94mgmqcXbFUmmj/
+knQG/d9JvXjq9POjgesSnD1Aj3TRM/exE+Wi2oQ0C6OT8FAtPNSmHzx/KU3XFjQh
+1X9f2R3Nxg7oqjpTSOrI7N/NFhxCfg9LmQahJWQYCuPY5jAXZgh0a6RCbeYDOb6y
+IF5n4p3+ItA3a9rWjt5oUGwYRClfWQuHUqqb485mAb9vAohWAgX8fD9FTC4rf7Fp
+LEsNPg8GzvjmWjObCTtFGKK5OS/cFskOyjU1STkXDWYjIi4EmSvqq9Ed4dmUJW/Q
+PmmInLLVx2v1qFwSWdCaxPMPzn/+wQkDzZrQe9b1L5DAHb02kpOD52/EPBTL1ioF
+tA5XvzztBVE38QugLF753wfi33htXRPGhuRj8qTBdaWq9/hSfV5/KYKQSZCOTkka
+O/hz+ElP0EANE2gbJPLohWHJgkuNk+DoDDudMqExNyuxgIuYS5Q=
+=SqsJ
+-----END PGP SIGNATURE-----
+
+--Q8BnQc91gJZX4vDc--
