@@ -1,12 +1,14 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH 1/6] thermal: qoriq: Use devm_platform_ioremap_resource()
- instead of of_iomap()
-Date: Fri,  5 Jul 2019 12:56:07 +0800
-Message-ID: <20190705045612.27665-1-Anson.Huang@nxp.com>
+Subject: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+ IMX8MQ_CLK_TMU_ROOT
+Date: Fri,  5 Jul 2019 12:56:11 +0800
+Message-ID: <20190705045612.27665-5-Anson.Huang@nxp.com>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190705045612.27665-1-Anson.Huang@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,64 +24,27 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Use devm_platform_ioremap_resource() instead of of_iomap() to
-save the iounmap() call in error handle path;
+IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
+should manage this clock, so no need to have CLK_IS_CRITICAL flag
+set.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/thermal/qoriq_thermal.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/clk/imx/clk-imx8mq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 7b36493..c7c7de2 100644
---- a/drivers/thermal/qoriq_thermal.c
-+++ b/drivers/thermal/qoriq_thermal.c
-@@ -202,32 +202,27 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
- 
- 	data->little_endian = of_property_read_bool(np, "little-endian");
- 
--	data->regs = of_iomap(np, 0);
--	if (!data->regs) {
-+	data->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(data->regs)) {
- 		dev_err(&pdev->dev, "Failed to get memory region\n");
--		ret = -ENODEV;
--		goto err_iomap;
-+		return PTR_ERR(data->regs);
- 	}
- 
- 	qoriq_tmu_init_device(data);	/* TMU initialization */
- 
- 	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
- 	if (ret < 0)
--		goto err_tmu;
-+		goto err;
- 
- 	ret = qoriq_tmu_register_tmu_zone(pdev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to register sensors\n");
--		ret = -ENODEV;
--		goto err_iomap;
-+		goto err;
- 	}
- 
- 	return 0;
- 
--err_tmu:
--	iounmap(data->regs);
--
--err_iomap:
-+err:
- 	platform_set_drvdata(pdev, NULL);
- 
- 	return ret;
-@@ -240,7 +235,6 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
- 	/* Disable monitoring */
- 	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
- 
--	iounmap(data->regs);
- 	platform_set_drvdata(pdev, NULL);
- 
- 	return 0;
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index d407a07..91de69a 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -539,7 +539,7 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MQ_CLK_DISP_AXI_ROOT]  = imx_clk_gate2_shared2("disp_axi_root_clk", "disp_axi", base + 0x45d0, 0, &share_count_dcss);
+ 	clks[IMX8MQ_CLK_DISP_APB_ROOT]  = imx_clk_gate2_shared2("disp_apb_root_clk", "disp_apb", base + 0x45d0, 0, &share_count_dcss);
+ 	clks[IMX8MQ_CLK_DISP_RTRM_ROOT] = imx_clk_gate2_shared2("disp_rtrm_root_clk", "disp_rtrm", base + 0x45d0, 0, &share_count_dcss);
+-	clks[IMX8MQ_CLK_TMU_ROOT] = imx_clk_gate4_flags("tmu_root_clk", "ipg_root", base + 0x4620, 0, CLK_IS_CRITICAL);
++	clks[IMX8MQ_CLK_TMU_ROOT] = imx_clk_gate4("tmu_root_clk", "ipg_root", base + 0x4620, 0);
+ 	clks[IMX8MQ_CLK_VPU_DEC_ROOT] = imx_clk_gate2_flags("vpu_dec_root_clk", "vpu_bus", base + 0x4630, 0, CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE);
+ 	clks[IMX8MQ_CLK_CSI1_ROOT] = imx_clk_gate4("csi1_root_clk", "csi1_core", base + 0x4650, 0);
+ 	clks[IMX8MQ_CLK_CSI2_ROOT] = imx_clk_gate4("csi2_root_clk", "csi2_core", base + 0x4660, 0);
 -- 
 2.7.4
