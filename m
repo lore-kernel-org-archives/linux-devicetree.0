@@ -1,7 +1,7 @@
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv6 11/28] PCI: mobiveil: Fix devfn check in mobiveil_pcie_valid_device()
-Date: Fri,  5 Jul 2019 17:56:39 +0800
-Message-ID: <20190705095656.19191-12-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv6 17/28] PCI: mobiveil: Remove an unnecessary return value check
+Date: Fri,  5 Jul 2019 17:56:45 +0800
+Message-ID: <20190705095656.19191-18-Zhiqiang.Hou@nxp.com>
 References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
@@ -10,36 +10,33 @@ To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@
 Cc: Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Current check for devfn number in mobiveil_pci_valid_device() is
-wrong in that it flags as invalid functions present in PCI device 0
-in the root bus while it is perfectly valid to access all functions
-in PCI device 0 in the root bus.
+The memory of private structure has been allocated together with the
+pci_host_bridge structure in function devm_pci_alloc_host_bridge().
+So it is unnecessary to check the return value when get the private
+structure pointer.
 
-Update the check in mobiveil_pci_valid_device() to fix the issue.
-
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 ---
 V6:
- - Rebased the patch, no functional change.
+ - Splited from #3 of v5 patches, no functional change.
 
- drivers/pci/controller/pcie-mobiveil.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index 8f56130..c9bf565 100644
+index 51cbe53..ddc20d3 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -283,7 +283,7 @@ static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
- 	 * Do not read more than one device on the bus directly
- 	 * attached to RC
- 	 */
--	if ((bus->primary == pcie->root_bus_nr) && (devfn > 0))
-+	if ((bus->primary == pcie->root_bus_nr) && (PCI_SLOT(devfn) > 0))
- 		return false;
+@@ -851,8 +851,6 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
- 	return true;
+ 	pcie = pci_host_bridge_priv(bridge);
+-	if (!pcie)
+-		return -ENOMEM;
+ 
+ 	pcie->pdev = pdev;
+ 
 -- 
 1.7.1
