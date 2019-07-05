@@ -1,17 +1,23 @@
-MIME-Version: 1.0
-Date: Fri, 5 Jul 2019 10:22:10 -0600
-References: <20190703095338.11266-1-maxime.ripard@bootlin.com>
-In-Reply-To: <20190703095338.11266-1-maxime.ripard@bootlin.com>
-Message-ID: <CAL_JsqLej_OAetF35vG7eraN5BheLu9fkit8Fw7NS0Ckx_HvZQ@mail.gmail.com>
+Return-Path: <SRS0=cI+x=VC=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:51568 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726921AbfGELBL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jul 2019 07:01:11 -0400
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 Subject: Re: [PATCH 1/2] dt-bindings: i2c: mv64xxx: Fix the example compatible
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Gregory Clement <gregory.clement@bootlin.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org
+In-Reply-To: <20190703095338.11266-1-maxime.ripard@bootlin.com>
+References: <20190703095338.11266-1-maxime.ripard@bootlin.com>
+Date: Fri, 05 Jul 2019 12:34:12 +0200
+Message-ID: <87k1cwg47v.fsf@FE-laptop>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Jul 3, 2019 at 3:53 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
+Maxime Ripard <maxime.ripard@bootlin.com> writes:
+
 > One example has a compatible that isn't a valid combination according to
 > the binding, and now that the examples are validated as well, this
 > generates a warning.
@@ -19,8 +25,36 @@ On Wed, Jul 3, 2019 at 3:53 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > Let's fix this.
 >
 > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+
+Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+
+Thanks,
+
+Gregory
+
 > ---
 >  Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+> index 9a5654ef5670..001f2b7abad0 100644
+> --- a/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+> +++ b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+> @@ -105,7 +105,7 @@ examples:
+>  
+>    - |
+>      i2c@11000 {
+> -        compatible = "marvell,mv78230-i2c", "marvell,mv64xxx-i2c";
+> +        compatible = "marvell,mv78230-i2c";
+>          reg = <0x11000 0x100>;
+>          interrupts = <29>;
+>          clock-frequency = <100000>;
+> -- 
+> 2.21.0
+>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
