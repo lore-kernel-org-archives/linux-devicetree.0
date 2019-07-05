@@ -1,90 +1,39 @@
-From: Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Date: Fri, 5 Jul 2019 12:08:45 +0300
-Message-ID: <CA+h21hqU1H1PefBWKjnsmkMsLhx0p0HJTsp-UYrSgmVnsfqULA@mail.gmail.com>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
- <20190621164940.GL31306@lunn.ch> <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
- <20190624115558.GA5690@piout.net> <20190624142625.GR31306@lunn.ch>
- <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
- <20190624162431.GX31306@lunn.ch> <20190624182614.GC5690@piout.net>
- <CA+h21hqGtA5ou7a3wjSuHxa_4fXk4GZohTAxnUdfLZjV3nq5Eg@mail.gmail.com> <20190705044945.GA30115@lunn.ch>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 2/2] backlight: arcxcnn: add "arctic" vendor prefix
+Date: Fri, 5 Jul 2019 11:37:42 +0200
+Message-ID: <20190705093742.gqj3bkipzcuu46q5@devuan>
+References: <1561940895-15837-1-git-send-email-bdodge09@gmail.com>
+ <1561940895-15837-3-git-send-email-bdodge09@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190705044945.GA30115@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, "Allan W. Nielsen" <allan.nielsen@microchip.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1561940895-15837-3-git-send-email-bdodge09@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Dodge <bdodge09@gmail.com>
+Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
-
-On Fri, 5 Jul 2019 at 07:49, Andrew Lunn <andrew@lunn.ch> wrote:
->
-> Hi Vladimir
->
-> > - DSA is typically used for discrete switches, switchdev is typically
-> > used for embedded ones.
->
-> Typically DSA is for discrete switches, but not exclusively. The
-> b53/SF2 is embedded in a number of Broadcom SoCs. So this is no
-> different to Ocelot, except ARM vs MIPS. Also, i would disagree that
-> switchdev is used for embedded ones. Mellonex devices are discrete, on
-> a PCIe bus. I believe Netronome devices are also discrete PCIe
-> devices. In fact, i think ocelot is the only embedded switchdev
-> switch.
->
-> So embedded vs discrete plays no role here at all.
->
-
-drivers/staging/fsl-dpaa2/ethsw/ is another example of switchdev
-driver for an embedded switch.
-I would give it to you that the sample size is probably too small to
-say 'typically', but my point was that in order to support cascaded
-switches it makes more sense for those to be discrete.
-
-> > - The D in DSA is for cascaded switches. Apart from the absence of
-> > such a "Ocelot SoC" driver (which maybe can be written, I don't know),
-> > I think the switching core itself has some fundamental limitations
-> > that make a DSA implementation questionable:
->
-> There is no requirement to implement D in DSA. In fact, only Marvell
-> does. None of the other switches do. And you will also find that most
-> boards with a Marvell switch use a single device. D in DSA is totally
-> optional. In fact, DSA is built from the ground up that nearly
-> everything is optional. Take a look at mv88e6060, as an example. It
-> implements nearly nothing. It cannot even offload a bridge to the
-> switch.
->
-
-Let me see if I get your point.
-The D is optional, and the S is optional. So what's left? :)
-Also, there's a big difference between "the hardware can't do it" and
-"the driver doesn't implement it". If I follow your argument, would
-you write a DSA driver for a device that doesn't do L2 switching?
-Along that same line, what benefit does the DSA model bring to a
-switch that can't do cascading, compared to switchdev? I'm asking this
-as a user, not as a developer.
-
-> > So my conclusion is that DSA for Felix/Ocelot doesn't make a lot of
-> > sense if the whole purpose is to hide the CPU-facing netdev.
->
-> You actually convinced me the exact opposite. You described the
-> headers which are needed to implement DSA. The switch sounds like it
-> can do what DSA requires. So DSA is the correct model.
->
->      Andrew
-
-Somebody actually asked, with the intention of building a board, if
-it's possible to cascade the LS1028A embedded switch (Felix) with
-discrete SJA1105 devices - Felix being at the top of the switch tree.
-Does the DSA model support heterogeneous setups (parsing stacked
-headers)? I can't tell if that's how EDSA tags work. With switchdev
-for Felix there wouldn't be any problem - it just wouldn't be part of
-the DSA tree and its own driver would remove its tags before DSA would
-look at the rest.
-
-Regards,
--Vladimir
+T24gU3VuIDIwMTktMDYtMzAgMjA6Mjg6MTUsIEJyaWFuIERvZGdlIHdyb3RlOgo+IFRoZSBvcmln
+aW5hbCBwYXRjaCBhZGRpbmcgdGhpcyBkcml2ZXIgYW5kIERUIGJpbmRpbmdzIGltcHJvcGVybHkK
+PiB1c2VkICJhcmMiIGFzIHRoZSB2ZW5kb3ItcHJlZml4LiBUaGlzIGFkZHMgImFyY3RpYyIgd2hp
+Y2ggaXMgdGhlCj4gcHJvcGVyIHByZWZpeCBhbmQgcmV0YWlucyAiYXJjIiB0byBhbGxvdyBleGlz
+dGluZyB1c2VycyBvZiB0aGUKPiAiYXJjIiBwcmVmaXggdG8gdXBkYXRlIHRvIG5ldyBrZXJuZWxz
+LiBUaGVyZSBpcyBhdCBsZWFzdCBvbmUKPiAoU2Ftc3VuZyBDaHJvbWVib29rIFBsdXMpCj4gCj4g
+U2lnbmVkLW9mZi1ieTogQnJpYW4gRG9kZ2UgPGJkb2RnZTA5QGdtYWlsLmNvbT4KPiBBY2tlZC1i
+eTogRGFuaWVsIFRob21wc29uIDxkYW5pZWwudGhvbXBzb25AbGluYXJvLm9yZz4KCmFjay4KCi0t
+IAooZW5nbGlzaCkgaHR0cDovL3d3dy5saXZlam91cm5hbC5jb20vfnBhdmVsbWFjaGVrCihjZXNr
+eSwgcGljdHVyZXMpIGh0dHA6Ly9hdHJleS5rYXJsaW4ubWZmLmN1bmkuY3ovfnBhdmVsL3BpY3R1
+cmUvaG9yc2VzL2Jsb2cuaHRtbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWw=
