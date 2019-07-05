@@ -1,112 +1,93 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH] remove the initrd resource in /proc/iomem as theinitrdhas
- freed the reserved memblock.
-Date: Fri, 5 Jul 2019 11:51:00 +0100
-Message-ID: <d25eadb8-266f-6b95-d375-1c2db2144e5f@arm.com>
-References: <201907031942125390348@zte.com.cn>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [RFC PATCH 6/9] dt-bindings: opp: Add qcom-opp bindings with
+ properties needed for CPR
+Date: Fri, 5 Jul 2019 12:56:01 +0200
+Message-ID: <20190705105601.GA22327@centauri>
+References: <20190404050931.9812-1-niklas.cassel@linaro.org>
+ <20190404050931.9812-7-niklas.cassel@linaro.org>
+ <20190409092352.joayvxyo77e6lehl@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201907031942125390348@zte.com.cn>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <20190409092352.joayvxyo77e6lehl@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: huang.junhua@zte.com.cn
-Cc: wang.yi59@zte.com.cn, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, rppt@linux.vnet.ibm.com, f.fainelli@gmail.com, logang@deltatee.com, robin.murphy@arm.com, ghackmann@android.com, hannes@cmpxchg.org, david@redhat.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn, jiang.xuexin@zte.com.cn, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Apr 09, 2019 at 02:53:52PM +0530, Viresh Kumar wrote:
+> On 04-04-19, 07:09, Niklas Cassel wrote:
+> > Add qcom-opp bindings with properties needed for Core Power Reduction (CPR).
+> > 
+> > CPR is included in a great variety of Qualcomm SoC, e.g. msm8916 and msm8996,
+> > and was first introduced in msm8974.
+> > 
+> > Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > ---
+> >  .../devicetree/bindings/opp/qcom-opp.txt      | 24 +++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/opp/qcom-opp.txt b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+> > new file mode 100644
+> > index 000000000000..d24280467db7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+> > @@ -0,0 +1,24 @@
+> > +Qualcomm OPP bindings to describe OPP nodes
+> > +
+> > +The bindings are based on top of the operating-points-v2 bindings
+> > +described in Documentation/devicetree/bindings/opp/opp.txt
+> > +Additional properties are described below.
+> > +
+> > +* OPP Table Node
+> > +
+> > +Required properties:
+> > +- compatible: Allow OPPs to express their compatibility. It should be:
+> > +  "operating-points-v2-qcom-level"
+> > +
+> > +* OPP Node
+> > +
+> > +Optional properties:
+> > +- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. Even
+> > +  though a power domain doesn't need a opp-hz, there can be devices in the
+> > +  power domain that need to know the highest supported frequency for each
+> > +  corner/level (e.g. CPR), in order to properly initialize the hardware.
+> > +
+> > +- qcom,opp-fuse-level: A positive value representing the fuse corner/level
+> > +  associated with this OPP node. Sometimes several corners/levels shares
+> > +  a certain fuse corner/level. A fuse corner/level contains e.g. ref uV,
+> > +  min uV, and max uV.
+> 
+> I know we discussed this sometime back and so you implemented it this way.
+> 
+> Looking at the implementation of the CPR driver, I now wonder if that was a good
+> choice. Technically a single domain can manage many devices, a big and a little
+> CPU for example and then we will have different highest frequencies for both of
+> them. How will we configure the CPR hardware in such a case ? Isn't the
+> programming per-device ?
 
-(CC: +devicetree list:
-memreserving the initrd, which linux then frees causes a zombie memreserve in all future
-kexec'd kernels)
+Hello Viresh,
 
-On 03/07/2019 12:42, huang.junhua@zte.com.cn wrote:
->>>> On 02/07/2019 11:34, Yi Wang wrote:
->>>>> From: Junhua Huang <huang.junhua@zte.com.cn>
->>>>> The 'commit 50d7ba36b916 ("arm64: export memblock_reserve()d regions via /proc/iomem")'
->>>>> show the reserved memblock in /proc/iomem. But the initrd's reserved memblock
->>>>> will be freed in free_initrd_mem(), which executes after the reserve_memblock_reserved_regions().
->>>>> So there are some incorrect information shown in /proc/iomem. e.g.:
->>>>> 80000000-bbdfffff : System RAM
->>>>>   80080000-813effff : Kernel code
->>>>>   813f0000-8156ffff : reserved
->>>>>   81570000-817fcfff : Kernel data
->>>>>   83400000-83ffffff : reserved
->>>>>   90000000-90004fff : reserved
->>>>>   b0000000-b2618fff : reserved
->>>>>   b8c00000-bbbfffff : reserved
->>>>> In this case, the range from b0000000 to b2618fff is reserved for initrd, which should be
->>>>> clean from the resource tree after it was freed.
->>>>
->>>> (There was some discussion about this over-estimate on the list, but it didn't make it
->>>> into the commit message.) I think a reserved->free change is fine. If user-space thinks
->>>> its still reserved nothing bad happens.
->>
->>>>> As kexec-tool will collect the iomem reserved info 
->>>>> and use it in second kernel, which causes error message generated a second time.
->>
->>>> What error message?
->>
->>> Sorry, it's my mistake. The kexec-tool could not use iomem reserved info in the second kernel.
->>> The error message I mean is that the initrd reserved memblock region will be shown in 
->>> second kernel /proc/iomem. But this message comes from the dtb's memreserve node, 
->>> not the first kernel /proc/iomem.
->>
->> This doesn't sound right.
->> Is kexec-tool spraying anything reserved in /proc/iomem into the DT as memreserve?
+I just posted this RFC as a real patch series:
+https://patchwork.kernel.org/project/linux-arm-msm/list/?series=142447
 
-> No, it isn't. The kexec-tool could not spray resserved info to DT as memreserve.
+Note that I disregarded your review comment above, because
+this patch series only adds support for CPRv2, which is used
+in e.g. msm8916 and qcs404.
+There does not exist any QCOM SoC with CPRv2 for big little.
 
-(well, it generates the second DT, and it has the reserved /proc/iomem entries on hand)
+For big little, there is CPRv3, which is very different from CPRv2.
+CPRv3 will require new and more complex DT bindings.
 
-
-> After we started the kernel from uboot, the /sys/firmware/fdt in this kernel has been add some infos,
-> incluing the dtb memreserve and ramdisk memreserve info.
-
-Aha! Ugh.
-arm64_memblock_init() memblock_reserves() this, as does fdt_init_reserved_mem().
-But then we memblock_free() it in free_initrd_mem().
-
-
-> And then we use this fdt as the kexec dtb, and the second kernel would read 
-> the memreserve node and reserve the memblock.
-
-> So we can see the first kernel initrd reserved info from the second kernel /proc/iomem.
-
-[...]
-
-> This phenomenon is not caused by first kernel /proc/iomem or kexec, but dtb.
-
-Right, so the options are:
-
-(1) Delete the memreserve node from the DT when we free the initrd. I don't think this is
-the sort of thing the kernel should be doing.
-
-(2) Memreserving the initramfs implies 'keepinitrd' on the commandline. The DT has told us
-to "exclude reserved memory from normal usage". If the bootloader didn't mean for us to
-reserve this memory forever, it should drop the memreserve.
-
-(3) kexec-tools determines this memreserve is no longer needed and removes it from the new
-DT. It has the details to do this: /sys/firmware/fdt will show the physical addresses of
-the initramfs. With your patch /proc/iomem will show that this region is regular memory.
-(not covered by any reserved type). This is safe with older kernels.
+Right now we don't even have plans to upstream a driver for CPRv3.
+Part of the reason is that CPR, for newer QCOM SoCs like sdm845,
+is now performed automatically by the Operating State Manager (OSM),
+for which we already have a kernel driver: drivers/cpufreq/qcom-cpufreq-hw.c
 
 
-My preference is 2 then 3.
-
-[...]
-
-> I agree. The kexec-tool will use the second-level reserved info to avoid the load address 
-> conflict with the important thing, It is true that if the image load address kexec-tools set 
-> would belong to other important thing, something would go wrong. 
-> So I think we need clean the initrd reserved info from /proc/iomem, it is useless.
-
-If we've freed the memory and we can update that file, sure.
-I think at the time of that patch the assumption was only the arch code does
-memblock_reserve() early, so we never need to update /proc/iomem.
-
-
-Thanks,
-
-James
+Kind regards,
+Niklas
