@@ -1,25 +1,84 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 01/10] net: hisilicon: Add support for HI13X1 to
- hip04_eth
-Date: Fri, 05 Jul 2019 11:58:53 -0700 (PDT)
-Message-ID: <20190705.115853.1015836042100076787.davem@davemloft.net>
-References: <1562307028-103555-1-git-send-email-xiaojiangfeng@huawei.com>
+From: Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH v6 01/18] kunit: test: add KUnit test runner core
+Date: Fri, 5 Jul 2019 20:15:05 +0000
+Message-ID: <20190705201505.GA19023@42.do-not-panic.com>
+References: <20190704003615.204860-1-brendanhiggins@google.com>
+ <20190704003615.204860-2-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562307028-103555-1-git-send-email-xiaojiangfeng@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <20190704003615.204860-2-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: xiaojiangfeng@huawei.com
-Cc: yisen.zhuang@huawei.com, salil.mehta@huawei.com, dingtianhong@huawei.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leeyou.li@huawei.com, xiekunxun@huawei.com, jianping.liu@huawei.com, nixiaoming@huawei.com
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerma
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jul 03, 2019 at 05:35:58PM -0700, Brendan Higgins wrote:
+> Add core facilities for defining unit tests; this provides a common way
+> to define test cases, functions that execute code which is under test
+> and determine whether the code under test behaves as expected; this also
+> provides a way to group together related test cases in test suites (here
+> we call them test_modules).
+> 
+> Just define test cases and how to execute them for now; setting
+> expectations on code will be defined later.
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-You must always provide a proper "[PATCH 00/NN]" header posting for
-a patch series which describes at a high level what the patch series
-is doing, how it is doing it, and why it is doing it this way.
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 
-I am tossing this patch series from patchwork, please resubmit this
-entire series properly.
+But a nitpick below, I think that can be fixed later with a follow up
+patch.
 
-Thank you.
+> +/**
+> + * struct kunit - represents a running instance of a test.
+> + * @priv: for user to store arbitrary data. Commonly used to pass data created
+> + * in the init function (see &struct kunit_suite).
+> + *
+> + * Used to store information about the current context under which the test is
+> + * running. Most of this data is private and should only be accessed indirectly
+> + * via public functions; the one exception is @priv which can be used by the
+> + * test writer to store arbitrary data.
+> + *
+> + * A brief note on locking:
+> + *
+> + * First off, we need to lock because in certain cases a user may want to use an
+> + * expectation in a thread other than the thread that the test case is running
+> + * in.
+
+This as a prefix to the struct without a lock seems odd. It would be
+clearer I think if you'd explain here what locking mechanism we decided
+to use and why it suffices today.
+
+> +/**
+> + * suite_test() - used to register a &struct kunit_suite with KUnit.
+
+You mean kunit_test_suite()?
+
+> + * @suite: a statically allocated &struct kunit_suite.
+> + *
+> + * Registers @suite with the test framework. See &struct kunit_suite for more
+> + * information.
+> + *
+> + * NOTE: Currently KUnit tests are all run as late_initcalls; this means that
+> + * they cannot test anything where tests must run at a different init phase. One
+> + * significant restriction resulting from this is that KUnit cannot reliably
+> + * test anything that is initialize in the late_init phase.
+                            initialize prior to the late init phase.
+
+
+That is, this is useless to test things running early.
+
+> + *
+> + * TODO(brendanhiggins@google.com): Don't run all KUnit tests as late_initcalls.
+> + * I have some future work planned to dispatch all KUnit tests from the same
+> + * place, and at the very least to do so after everything else is definitely
+> + * initialized.
+
+TODOs are odd to be adding to documentation, this is just not common
+place practice. The NOTE should suffice for you.
+
+  Luis
