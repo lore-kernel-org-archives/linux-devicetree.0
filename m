@@ -1,7 +1,7 @@
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv6 26/28] PCI: mobiveil: Move PCIe PIO enablement out of inbound window routine
-Date: Fri,  5 Jul 2019 17:56:54 +0800
-Message-ID: <20190705095656.19191-27-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv6 27/28] PCI: mobiveil: Fix infinite-loop in the INTx process
+Date: Fri,  5 Jul 2019 17:56:55 +0800
+Message-ID: <20190705095656.19191-28-Zhiqiang.Hou@nxp.com>
 References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
@@ -10,44 +10,54 @@ To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@
 Cc: Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Move the PCIe PIO master enablement to function mobiveil_host_init().
+In the loop block, there is not code to update the loop key,
+this patch updates the loop key by re-read the INTx status
+register.
 
+Note: Need MV to test this fix.
+
+Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Acked-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+Tested-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
 ---
 V6:
- - Splited from #9 of v5 patches, no functional change.
+ - Splited from #10 of v5 patches, no functional change.
 
- drivers/pci/controller/pcie-mobiveil.c |    9 +++++----
- 1 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c |   12 +++++++++---
+ 1 files changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index aeba37c..f35d14b 100644
+index f35d14b..a5549cf 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -469,10 +469,6 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
- 		return;
+@@ -359,8 +359,9 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 
+ 	/* Handle INTx */
+ 	if (intr_status & PAB_INTP_INTX_MASK) {
+-		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT) >>
+-					   PAB_INTX_START;
++		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
++		shifted_status &= PAB_INTP_INTX_MASK;
++		shifted_status >>= PAB_INTX_START;
+ 		do {
+ 			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
+ 				virq = irq_find_mapping(pcie->intx_domain,
+@@ -376,7 +377,12 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 					   shifted_status << PAB_INTX_START,
+ 					   PAB_INTP_AMBA_MISC_STAT);
+ 			}
+-		} while ((shifted_status >> PAB_INTX_START) != 0);
++
++			shifted_status = csr_readl(pcie,
++						   PAB_INTP_AMBA_MISC_STAT);
++			shifted_status &= PAB_INTP_INTX_MASK;
++			shifted_status >>= PAB_INTX_START;
++		} while (shifted_status != 0);
  	}
  
--	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
--	value |= 1 << PIO_ENABLE_SHIFT;
--	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
--
- 	value = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
- 	value &= ~(AMAP_CTRL_TYPE_MASK << AMAP_CTRL_TYPE_SHIFT | WIN_SIZE_MASK);
- 	value |= type << AMAP_CTRL_TYPE_SHIFT | 1 << AMAP_CTRL_EN_SHIFT |
-@@ -610,6 +606,11 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 	value |= APIO_EN_MASK;
- 	csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
- 
-+	/* Enable PCIe PIO master */
-+	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
-+	value |= 1 << PIO_ENABLE_SHIFT;
-+	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
-+
- 	/*
- 	 * we'll program one outbound window for config reads and
- 	 * another default inbound window for all the upstream traffic
+ 	/* read extra MSI status register */
 -- 
 1.7.1
