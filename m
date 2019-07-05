@@ -1,86 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 03/13] dt-bindings: display: Convert armadeus,st0700-adapt panel to DT schema
-Date: Fri,  5 Jul 2019 10:42:11 -0600
-Message-ID: <20190705164221.4462-4-robh@kernel.org>
-References: <20190705164221.4462-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 0/2] Add Sharp panel option for Lenovo Miix 630
+Date: Fri,  5 Jul 2019 09:54:50 -0700
+Message-ID: <20190705165450.329-1-jeffrey.l.hugo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190705164221.4462-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie, daniel@ffwll.ch, bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert the armadeus,st0700-adapt panel binding to DT schema.
+The Lenovo Miix 630 laptop can be found with one of two panels - a BOE
+or Sharp option.  This likely provides options during manufacturing.
 
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../display/panel/armadeus,st0700-adapt.txt   |  9 -----
- .../display/panel/armadeus,st0700-adapt.yaml  | 33 +++++++++++++++++++
- 2 files changed, 33 insertions(+), 9 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml
+These panels connect via eDP, however they sit behind a DSI to eDP
+bridge on the laptop, so they can easily be handled by the existing
+simple panel code.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
-deleted file mode 100644
-index a30d63db3c8f..000000000000
---- a/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
-+++ /dev/null
-@@ -1,9 +0,0 @@
--Armadeus ST0700 Adapt. A Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT with
--an adapter board.
--
--Required properties:
--- compatible: "armadeus,st0700-adapt"
--- power-supply: see panel-common.txt
--
--Optional properties:
--- backlight: see panel-common.txt
-diff --git a/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml
-new file mode 100644
-index 000000000000..a6ade47066b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml
-@@ -0,0 +1,33 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/armadeus,st0700-adapt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Armadeus ST0700 Adapter
-+
-+description:
-+  A Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT with an adapter board.
-+
-+maintainers:
-+  - '"Sébastien Szymanski" <sebastien.szymanski@armadeus.com>'
-+  - Thierry Reding <thierry.reding@gmail.com>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: armadeus,st0700-adapt
-+
-+  power-supply: true
-+  backlight: true
-+  port: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - power-supply
-+
-+...
+This series adds support for the Sharp option.
+
+Jeffrey Hugo (2):
+  dt-bindings: panel: Add Sharp LD-D5116Z01B
+  drm/panel: simple: Add support for Sharp LD-D5116Z01B panel
+
+ .../display/panel/sharp,ld-d5116z01b.txt      | 27 +++++++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c          | 26 ++++++++++++++++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
+
 -- 
-2.20.1
+2.17.1
