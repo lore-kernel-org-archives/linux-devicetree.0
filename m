@@ -1,7 +1,7 @@
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv6 03/28] PCI: mobiveil: Fix PCI base address in MEM/IO outbound windows
-Date: Fri,  5 Jul 2019 17:56:31 +0800
-Message-ID: <20190705095656.19191-4-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv6 04/28] PCI: mobiveil: Update the resource list traversal function
+Date: Fri,  5 Jul 2019 17:56:32 +0800
+Message-ID: <20190705095656.19191-5-Zhiqiang.Hou@nxp.com>
 References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
@@ -10,14 +10,13 @@ To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@
 Cc: Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The outbound memory windows PCI base addresses should be taken
-from the 'ranges' property of DT node to setup MEM/IO outbound
-windows decoding correctly instead of being hardcoded to zero.
+Code that executes the resource list traversal does not need to
+delete any node therefore using the *_safe() API version is
+useless.
 
-Update the code to retrieve the PCI base address for each range
-and use it to program the outbound windows address decoders
+Replace function resource_list_for_each_entry_safe() with the
+resource_list_for_each_entry() counterpart.
 
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
@@ -26,24 +25,30 @@ Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 V6:
  - Rebased the patch, no functional change.
 
- drivers/pci/controller/pcie-mobiveil.c |    5 +++--
- 1 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index e581902..53df317 100644
+index 53df317..c359654 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -621,8 +621,9 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 		if (type) {
- 			/* configure outbound translation window */
- 			program_ob_windows(pcie, pcie->ob_wins_configured,
--				win->res->start, 0, type,
--				resource_size(win->res));
-+					   win->res->start,
-+					   win->res->start - win->offset,
-+					   type, resource_size(win->res));
- 		}
- 	}
+@@ -562,7 +562,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ {
+ 	u32 value, pab_ctrl, type = 0;
+ 	int err;
+-	struct resource_entry *win, *tmp;
++	struct resource_entry *win;
  
+ 	err = mobiveil_bringup_link(pcie);
+ 	if (err) {
+@@ -612,7 +612,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 	program_ib_windows(pcie, WIN_NUM_1, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+ 
+ 	/* Get the I/O and memory ranges from DT */
+-	resource_list_for_each_entry_safe(win, tmp, &pcie->resources) {
++	resource_list_for_each_entry(win, &pcie->resources) {
+ 		type = 0;
+ 		if (resource_type(win->res) == IORESOURCE_MEM)
+ 			type = MEM_WINDOW_TYPE;
 -- 
 1.7.1
