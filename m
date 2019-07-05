@@ -1,22 +1,52 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v2 1/9] mmc: sdhci-sprd: Check the enable clock's return
- value correctly
-Date: Fri, 5 Jul 2019 15:29:08 -0700
-Message-ID: <CAOesGMjdnQuLdvphBDM3xmH6o+Nca8+65mw8-EajV0Eb_8MS5w@mail.gmail.com>
-References: <cover.1559635435.git.baolin.wang@linaro.org> <15AEA3314E88B01E.21242@linux.kernel.org>
+From: santosh.shilimkar@oracle.com
+Subject: Re: [RESEND PATCH next v2 0/6] ARM: keystone: update dt and enable
+ cpts support
+Date: Fri, 5 Jul 2019 16:48:49 -0700
+Message-ID: <2ef8b34e-7a6e-b3e4-90e0-c4e7f16c2e99@oracle.com>
+References: <20190705151247.30422-1-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <15AEA3314E88B01E.21242@linux.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: patchwork-soc+owner@linux.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Lyra Zhang <zhang.lyra@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Baolin Wang <baolin.wang@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-mmc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190705151247.30422-1-grygorii.strashko@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 3:25 PM Olof Johansson via Linux.Kernel.Org
-<olof=lixom.net@linux.kernel.org> wrote:
+On 7/5/19 8:12 AM, Grygorii Strashko wrote:
+> Hi Santosh,
+> 
+> This series is set of platform changes required to enable NETCP CPTS reference
+> clock selection and final patch to enable CPTS for Keystone 66AK2E/L/HK SoCs.
+> 
+> Those patches were posted already [1] together with driver's changes, so this
+> is re-send of DT/platform specific changes only, as driver's changes have
+> been merged already.
+> 
+> Patches 1-5: CPTS DT nodes update for TI Keystone 2 66AK2HK/E/L SoCs.
+> Patch 6: enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs.
+> 
+> [1] https://patchwork.kernel.org/cover/10980037/
+> 
+> Grygorii Strashko (6):
+>    ARM: dts: keystone-clocks: add input fixed clocks
+>    ARM: dts: k2e-clocks: add input ext. fixed clocks tsipclka/b
+>    ARM: dts: k2e-netcp: add cpts refclk_mux node
+>    ARM: dts: k2hk-netcp: add cpts refclk_mux node
+>    ARM: dts: k2l-netcp: add cpts refclk_mux node
+>    ARM: configs: keystone: enable cpts
+> 
+Will add these for 5.4 queue. Thanks !!
 
-Hmm, well, that didn't work like I expected to. Sorry for the noise.
-
-
--Olof
+Regards,
+Santosh
