@@ -1,8 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
- IMX8MQ_CLK_TMU_ROOT
-Date: Fri,  5 Jul 2019 12:56:11 +0800
-Message-ID: <20190705045612.27665-5-Anson.Huang@nxp.com>
+Subject: [PATCH 3/6] dt-bindings: thermal: qoriq: Add optional clocks property
+Date: Fri,  5 Jul 2019 12:56:09 +0800
+Message-ID: <20190705045612.27665-3-Anson.Huang@nxp.com>
 References: <20190705045612.27665-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,27 +23,25 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
-should manage this clock, so no need to have CLK_IS_CRITICAL flag
-set.
+Some platforms have clock control for TMU, add optional
+clocks property to the binding doc.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/clk/imx/clk-imx8mq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-index d407a07..91de69a 100644
---- a/drivers/clk/imx/clk-imx8mq.c
-+++ b/drivers/clk/imx/clk-imx8mq.c
-@@ -539,7 +539,7 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
- 	clks[IMX8MQ_CLK_DISP_AXI_ROOT]  = imx_clk_gate2_shared2("disp_axi_root_clk", "disp_axi", base + 0x45d0, 0, &share_count_dcss);
- 	clks[IMX8MQ_CLK_DISP_APB_ROOT]  = imx_clk_gate2_shared2("disp_apb_root_clk", "disp_apb", base + 0x45d0, 0, &share_count_dcss);
- 	clks[IMX8MQ_CLK_DISP_RTRM_ROOT] = imx_clk_gate2_shared2("disp_rtrm_root_clk", "disp_rtrm", base + 0x45d0, 0, &share_count_dcss);
--	clks[IMX8MQ_CLK_TMU_ROOT] = imx_clk_gate4_flags("tmu_root_clk", "ipg_root", base + 0x4620, 0, CLK_IS_CRITICAL);
-+	clks[IMX8MQ_CLK_TMU_ROOT] = imx_clk_gate4("tmu_root_clk", "ipg_root", base + 0x4620, 0);
- 	clks[IMX8MQ_CLK_VPU_DEC_ROOT] = imx_clk_gate2_flags("vpu_dec_root_clk", "vpu_bus", base + 0x4630, 0, CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE);
- 	clks[IMX8MQ_CLK_CSI1_ROOT] = imx_clk_gate4("csi1_root_clk", "csi1_core", base + 0x4650, 0);
- 	clks[IMX8MQ_CLK_CSI2_ROOT] = imx_clk_gate4("csi2_root_clk", "csi2_core", base + 0x4660, 0);
+diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+index 04cbb90..28f2cba 100644
+--- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+@@ -23,6 +23,7 @@ Required properties:
+ Optional property:
+ - little-endian : If present, the TMU registers are little endian. If absent,
+ 	the default is big endian.
++- clocks : the clock for clocking the TMU silicon.
+ 
+ Example:
+ 
 -- 
 2.7.4
