@@ -1,8 +1,8 @@
 Return-Path: <SRS0=6UxY=VC=nvidia.com=nkristam@kernel.org>
 From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V5 8/8] arm64: defconfig: Enable tegra XUDC driver
-Date: Fri, 5 Jul 2019 17:11:51 +0530
-Message-ID: <1562326911-26855-9-git-send-email-nkristam@nvidia.com>
+Subject: [Patch V5 5/8] arm64: tegra: Add xudc node for Tegra210
+Date: Fri, 5 Jul 2019 17:11:48 +0530
+Message-ID: <1562326911-26855-6-git-send-email-nkristam@nvidia.com>
 In-Reply-To: <1562326911-26855-1-git-send-email-nkristam@nvidia.com>
 References: <1562326911-26855-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
@@ -11,24 +11,44 @@ To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jona
 Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable support for Nvidia XUSB device mode controller driver.
+Tegra210 has one XUSB device mode controller, which can be operated
+HS and SS modes. Add DT support for XUSB device mode controller.
 
 Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Reviewed-by: JC Kuo <jckuo@nvidia.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 0e58ef0..9ee581c 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -592,6 +592,7 @@ CONFIG_USB_ULPI=y
- CONFIG_USB_GADGET=y
- CONFIG_USB_RENESAS_USBHS_UDC=m
- CONFIG_USB_RENESAS_USB3=m
-+CONFIG_USB_TEGRA_XUDC=m
- CONFIG_TYPEC=m
- CONFIG_TYPEC_HD3SS3220=m
- CONFIG_MMC=y
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index 6597531..26188ac 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -1203,6 +1203,25 @@
+ 		status = "disabled";
+ 	};
+ 
++	xudc@700d0000 {
++		compatible = "nvidia,tegra210-xudc";
++		reg = <0x0 0x700d0000 0x0 0x8000>,
++		      <0x0 0x700d8000 0x0 0x1000>,
++		      <0x0 0x700d9000 0x0 0x1000>;
++		reg-names = "base", "fpci", "ipfs";
++		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>,
++			 <&tegra_car TEGRA210_CLK_XUSB_SS>,
++			 <&tegra_car TEGRA210_CLK_XUSB_SSP_SRC>,
++			 <&tegra_car TEGRA210_CLK_XUSB_HS_SRC>,
++			 <&tegra_car TEGRA210_CLK_XUSB_FS_SRC>;
++		clock-names = "dev", "ss", "ss_src", "hs_src", "fs_src";
++		power-domains = <&pd_xusbdev>, <&pd_xusbss>;
++		power-domain-names = "dev", "ss";
++		nvidia,xusb-padctl = <&padctl>;
++		status = "disabled";
++	};
++
+ 	mipi: mipi@700e3000 {
+ 		compatible = "nvidia,tegra210-mipi";
+ 		reg = <0x0 0x700e3000 0x0 0x100>;
 -- 
 2.7.4
