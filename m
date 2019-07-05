@@ -1,13 +1,12 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH 4/6] thermal: qoriq: Add clock operations
-Date: Fri,  5 Jul 2019 12:56:10 +0800
-Message-ID: <20190705045612.27665-4-Anson.Huang@nxp.com>
-References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+Subject: [PATCH 1/6] thermal: qoriq: Use devm_platform_ioremap_resource()
+ instead of of_iomap()
+Date: Fri,  5 Jul 2019 12:56:07 +0800
+Message-ID: <20190705045612.27665-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190705045612.27665-1-Anson.Huang@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,85 +22,64 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Some platforms like i.MX8MQ has clock control for this module,
-need to add clock operations to make sure the driver is working
-properly.
+Use devm_platform_ioremap_resource() instead of of_iomap() to
+save the iounmap() call in error handle path;
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/thermal/qoriq_thermal.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/thermal/qoriq_thermal.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 2b2f79b..0813c1b 100644
+index 7b36493..c7c7de2 100644
 --- a/drivers/thermal/qoriq_thermal.c
 +++ b/drivers/thermal/qoriq_thermal.c
-@@ -2,6 +2,7 @@
- //
- // Copyright 2016 Freescale Semiconductor, Inc.
+@@ -202,32 +202,27 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
  
-+#include <linux/clk.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/err.h>
-@@ -72,6 +73,7 @@ struct qoriq_sensor {
+ 	data->little_endian = of_property_read_bool(np, "little-endian");
  
- struct qoriq_tmu_data {
- 	struct qoriq_tmu_regs __iomem *regs;
-+	struct clk *clk;
- 	bool little_endian;
- 	struct qoriq_sensor	*sensor[SITES_MAX];
- };
-@@ -208,6 +210,19 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
- 		return PTR_ERR(data->regs);
+-	data->regs = of_iomap(np, 0);
+-	if (!data->regs) {
++	data->regs = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(data->regs)) {
+ 		dev_err(&pdev->dev, "Failed to get memory region\n");
+-		ret = -ENODEV;
+-		goto err_iomap;
++		return PTR_ERR(data->regs);
  	}
  
-+	data->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(data->clk)) {
-+		if (PTR_ERR(data->clk) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		data->clk = NULL;
-+	}
-+
-+	ret = clk_prepare_enable(data->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to enable clock\n");
-+		return ret;
-+	}
-+
  	qoriq_tmu_init_device(data);	/* TMU initialization */
  
  	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
-@@ -235,6 +250,8 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
+ 	if (ret < 0)
+-		goto err_tmu;
++		goto err;
+ 
+ 	ret = qoriq_tmu_register_tmu_zone(pdev);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Failed to register sensors\n");
+-		ret = -ENODEV;
+-		goto err_iomap;
++		goto err;
+ 	}
+ 
+ 	return 0;
+ 
+-err_tmu:
+-	iounmap(data->regs);
+-
+-err_iomap:
++err:
+ 	platform_set_drvdata(pdev, NULL);
+ 
+ 	return ret;
+@@ -240,7 +235,6 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
  	/* Disable monitoring */
  	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
  
-+	clk_disable_unprepare(data->clk);
-+
+-	iounmap(data->regs);
  	platform_set_drvdata(pdev, NULL);
  
  	return 0;
-@@ -250,14 +267,21 @@ static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
- 	tmr &= ~TMR_ME;
- 	tmu_write(data, tmr, &data->regs->tmr);
- 
-+	clk_disable_unprepare(data->clk);
-+
- 	return 0;
- }
- 
- static int __maybe_unused qoriq_tmu_resume(struct device *dev)
- {
- 	u32 tmr;
-+	int ret;
- 	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
- 
-+	ret = clk_prepare_enable(data->clk);
-+	if (ret)
-+		return ret;
-+
- 	/* Enable monitoring */
- 	tmr = tmu_read(data, &data->regs->tmr);
- 	tmr |= TMR_ME;
 -- 
 2.7.4
