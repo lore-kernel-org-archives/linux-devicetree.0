@@ -1,64 +1,112 @@
-From: Matthias Brugger <mbrugger@suse.com>
-Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for
- mmsys clocks
-Date: Fri, 5 Jul 2019 10:13:17 +0000
-Message-ID: <acd26dd8-7933-7ef5-0ba2-be8a7aa5ef99@suse.com>
-References: <20181116125449.23581-1-matthias.bgg@kernel.org>
- <20181116125449.23581-9-matthias.bgg@kernel.org>
- <20181116231522.GA18006@bogus>
- <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
- <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
- <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
- <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
- <154356023767.88331.18401188808548429052@swboyd.mtv.corp.google.com>
- <a229bfc7-683f-5b0d-7b71-54f934de6214@suse.com>
- <1561953318.25914.9.camel@mtksdaap41>
- <84d1c444-d6cb-9537-1bf5-b4e736443239@gmail.com>
- <100944512.353257.1562254420397@webmail.strato.com>
- <1562290530.10428.6.camel@mtksdaap41>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH] remove the initrd resource in /proc/iomem as theinitrdhas
+ freed the reserved memblock.
+Date: Fri, 5 Jul 2019 11:51:00 +0100
+Message-ID: <d25eadb8-266f-6b95-d375-1c2db2144e5f@arm.com>
+References: <201907031942125390348@zte.com.cn>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562290530.10428.6.camel@mtksdaap41>
-Content-Language: en-US
-Content-ID: <9AF2F788BE05D147BD5CCEB781B442D7@namprd18.prod.outlook.com>
+In-Reply-To: <201907031942125390348@zte.com.cn>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>, Ulrich Hecht <uli@fpond.eu>
-Cc: Mark Rutland <mark.rutland@arm.com>, MichaelTurquette <mturquette@baylibre.com>, Chen-Yu Tsai <wens@csie.org>, Matthias Brugger <matthias.bgg@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, LaurentPinchart <laurent.pinchart@ideasonboard.com>, RandyDunlap <rdunlap@infradead.org>, "matthias.bgg@kernel.org" <matthias.bgg@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Sean Wang <sean.wang@kernel.org>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, "moderated list:ARM/FREESCALE IMX /MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sean Wang <Sean.Wang@mediatek.com>, Philipp Zabel <p.zabel@pengutr>
+To: huang.junhua@zte.com.cn
+Cc: wang.yi59@zte.com.cn, catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, rppt@linux.vnet.ibm.com, f.fainelli@gmail.com, logang@deltatee.com, robin.murphy@arm.com, ghackmann@android.com, hannes@cmpxchg.org, david@redhat.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn, jiang.xuexin@zte.com.cn, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA1LzA3LzIwMTkgMDM6MzUsIENLIEh1IHdyb3RlOg0KPiBIaSwgVWxpOg0KPiANCj4g
-T24gVGh1LCAyMDE5LTA3LTA0IGF0IDE3OjMzICswMjAwLCBVbHJpY2ggSGVjaHQgd3JvdGU6DQo+
-Pj4gT24gSnVseSA0LCAyMDE5IGF0IDExOjA4IEFNIE1hdHRoaWFzIEJydWdnZXIgPG1hdHRoaWFz
-LmJnZ0BnbWFpbC5jb20+IHdyb3RlOg0KPj4+IFlvdSBhcmUgcmlnaHQsIGl0IHRvb2sgZmFyIHRv
-byBsb25nIGZvciBtZSB0byByZXNwb25kIHdpdGggYSBuZXcgdmVyc2lvbiBvZiB0aGUNCj4+PiBz
-ZXJpZXMuIFRoZSBwcm9ibGVtIEkgZmFjZSBpcywgdGhhdCBJIHVzZSBteSBtdDgxNzMgYmFzZWQg
-Y2hyb21lYm9vayBmb3INCj4+PiB0ZXN0aW5nLiBJdCBuZWVkcyBzb21lIGRvd25zdHJlYW0gcGF0
-Y2hlcyBhbmQgYnJva2Ugc29tZXdoZXJlIGJldHdlZW4gbXkgbGFzdA0KPj4+IGVtYWlsIGFuZCBh
-IGZldyBtb250aCBhZ28uDQo+Pg0KPj4gSWYgdGhhdCBDaHJvbWVib29rIGlzIGFuIEFjZXIgUjEz
-IGFuZCB5b3UgbmVlZCBhIHdvcmtpbmcga2VybmVsLCB5b3UgbWF5IHdhbnQgdG8gaGF2ZSBhIGxv
-b2sgYXQgaHR0cHM6Ly9naXRodWIuY29tL3VsaS9rZXJuZWwvdHJlZS9lbG0td29ya2luZy01LjIg
-Lg0KPiANCj4gVGhhbmtzIGZvciB5b3VyIHNhbXBsZSBjb2RlLCBhbmQgeW91ciBpbXBsZW1lbnRh
-dGlvbiBpcyBkaWZmZXJlbnQgdGhhbg0KPiBNYXR0aGlhcycgdmVyc2lvbi4gSW4geW91ciB2ZXJz
-aW9uLCBtbXN5cyBpcyBhIHNpbmdsZSBkZXZpY2Ugd2hpY2ggaGFzDQo+IGNsb2NrIGZ1bmN0aW9u
-IGFuZCBkaXNwbGF5IGZ1bmN0aW9uLCB0aGUgY2xvY2sgZnVuY3Rpb24gaXMgcGxhY2VkIGluDQo+
-IGNsb2NrIGRyaXZlciBmb2xkZXIgYW5kIGRpc3BsYXkgZnVuY3Rpb24gaXMgcGxhY2VkIGluIGRy
-bSBkcml2ZXIgZm9sZGVyLg0KPiBJbiBNYXR0aGlhcycgdmVyc2lvbiwgY2xvY2sgZnVuY3Rpb24g
-aXMgYSBzdWIgZGV2aWNlIG9mIG1tc3lzLiBJJ3ZlIG5vDQo+IGlkZWEgb2Ygd2hpY2ggb25lIGlz
-IGJldHRlci4gSSB3b3VsZCBnZXQgbW9yZSBpbmZvcm1hdGlvbiB0byBtYWtlIGJldHRlcg0KPiBk
-ZWNpc2lvbi4NCj4gDQoNCkZyb20gdGhlIGRpc2N1c3Npb24gd2UgaGFkIGhlcmUgYW5kIHRoZSBs
-YXN0IGNvbW1lbnRzIGZyb20gU3RlcGhlbiBJIHRoaW4gd2hhdA0Kd2Ugc2hvdWxkIGRvIGlzOg0K
-LSBjcmVhdGUgYSBwbGF0Zm9ybSBkcml2ZXIgZm9yIHRoZSBtbXN5cyBjbG9jayBwYXJ0LCBpbiB0
-aGUgZHJpdmVycy9jbGsvbWVkaWF0ZWsvLi4uDQotIHRoZSBEUk0gZHJpdmVyIGNyZWF0ZXMgYSBw
-bGF0Zm9ybSBkZXZpY2Ugd2hpY2ggd2lsbCBwcm9iZSB0aGUgY2xvY2sgZHJpdmVyLg0KDQpUaGlz
-IHdheSB5b3Ugd29uJ3QgbmVlZCB0byBjaGFuZ2UgYW55IGNvbXBhdGlibGUuDQoNCllvdSB3aWxs
-IGhhdmUgdG8gcmUtcmVhZCB0aGUgZGlzY3Vzc2lvbnMgaW4gdGhlIGRpZmZlcmVudCB2ZXJzaW9u
-cyBvZiB0aGlzIHNlcmllcy4NCk15IGZpcnN0IGFwcHJvYWNoIHdhcyB0byB1c2EgYSBtZmQgZHJp
-dmVyIGZvciBtbXN5cywgd2hpY2ggd2FzIHJlamVjdGVkLg0KVGhlIGxhc3QgYXBwcm9hY2ggd2Fz
-IHRvIGNyZWF0ZSBhIERUUyBzdWIgbm9kZSwgYWxzbyByZWplY3RlZCA6KQ0KDQpSZWdhcmRzLA0K
-TWF0dGhpYXMNCg0KPiBSZWdhcmRzLA0KPiBDSw0KPiANCj4+DQo+PiBDVQ0KPj4gVWxpDQo+Pg0K
-Pj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4+IExp
-bnV4LW1lZGlhdGVrIG1haWxpbmcgbGlzdA0KPj4gTGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFk
-ZWFkLm9yZw0KPj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1tZWRpYXRlaw0KPiANCj4gDQo+IA0K
+Hi,
+
+(CC: +devicetree list:
+memreserving the initrd, which linux then frees causes a zombie memreserve in all future
+kexec'd kernels)
+
+On 03/07/2019 12:42, huang.junhua@zte.com.cn wrote:
+>>>> On 02/07/2019 11:34, Yi Wang wrote:
+>>>>> From: Junhua Huang <huang.junhua@zte.com.cn>
+>>>>> The 'commit 50d7ba36b916 ("arm64: export memblock_reserve()d regions via /proc/iomem")'
+>>>>> show the reserved memblock in /proc/iomem. But the initrd's reserved memblock
+>>>>> will be freed in free_initrd_mem(), which executes after the reserve_memblock_reserved_regions().
+>>>>> So there are some incorrect information shown in /proc/iomem. e.g.:
+>>>>> 80000000-bbdfffff : System RAM
+>>>>>   80080000-813effff : Kernel code
+>>>>>   813f0000-8156ffff : reserved
+>>>>>   81570000-817fcfff : Kernel data
+>>>>>   83400000-83ffffff : reserved
+>>>>>   90000000-90004fff : reserved
+>>>>>   b0000000-b2618fff : reserved
+>>>>>   b8c00000-bbbfffff : reserved
+>>>>> In this case, the range from b0000000 to b2618fff is reserved for initrd, which should be
+>>>>> clean from the resource tree after it was freed.
+>>>>
+>>>> (There was some discussion about this over-estimate on the list, but it didn't make it
+>>>> into the commit message.) I think a reserved->free change is fine. If user-space thinks
+>>>> its still reserved nothing bad happens.
+>>
+>>>>> As kexec-tool will collect the iomem reserved info 
+>>>>> and use it in second kernel, which causes error message generated a second time.
+>>
+>>>> What error message?
+>>
+>>> Sorry, it's my mistake. The kexec-tool could not use iomem reserved info in the second kernel.
+>>> The error message I mean is that the initrd reserved memblock region will be shown in 
+>>> second kernel /proc/iomem. But this message comes from the dtb's memreserve node, 
+>>> not the first kernel /proc/iomem.
+>>
+>> This doesn't sound right.
+>> Is kexec-tool spraying anything reserved in /proc/iomem into the DT as memreserve?
+
+> No, it isn't. The kexec-tool could not spray resserved info to DT as memreserve.
+
+(well, it generates the second DT, and it has the reserved /proc/iomem entries on hand)
+
+
+> After we started the kernel from uboot, the /sys/firmware/fdt in this kernel has been add some infos,
+> incluing the dtb memreserve and ramdisk memreserve info.
+
+Aha! Ugh.
+arm64_memblock_init() memblock_reserves() this, as does fdt_init_reserved_mem().
+But then we memblock_free() it in free_initrd_mem().
+
+
+> And then we use this fdt as the kexec dtb, and the second kernel would read 
+> the memreserve node and reserve the memblock.
+
+> So we can see the first kernel initrd reserved info from the second kernel /proc/iomem.
+
+[...]
+
+> This phenomenon is not caused by first kernel /proc/iomem or kexec, but dtb.
+
+Right, so the options are:
+
+(1) Delete the memreserve node from the DT when we free the initrd. I don't think this is
+the sort of thing the kernel should be doing.
+
+(2) Memreserving the initramfs implies 'keepinitrd' on the commandline. The DT has told us
+to "exclude reserved memory from normal usage". If the bootloader didn't mean for us to
+reserve this memory forever, it should drop the memreserve.
+
+(3) kexec-tools determines this memreserve is no longer needed and removes it from the new
+DT. It has the details to do this: /sys/firmware/fdt will show the physical addresses of
+the initramfs. With your patch /proc/iomem will show that this region is regular memory.
+(not covered by any reserved type). This is safe with older kernels.
+
+
+My preference is 2 then 3.
+
+[...]
+
+> I agree. The kexec-tool will use the second-level reserved info to avoid the load address 
+> conflict with the important thing, It is true that if the image load address kexec-tools set 
+> would belong to other important thing, something would go wrong. 
+> So I think we need clean the initrd reserved info from /proc/iomem, it is useless.
+
+If we've freed the memory and we can update that file, sure.
+I think at the time of that patch the assumption was only the arch code does
+memblock_reserve() early, so we never need to update /proc/iomem.
+
+
+Thanks,
+
+James
