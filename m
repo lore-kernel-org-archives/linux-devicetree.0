@@ -1,7 +1,7 @@
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv6 07/28] PCI: mobiveil: Fix the Class Code field
-Date: Fri,  5 Jul 2019 17:56:35 +0800
-Message-ID: <20190705095656.19191-8-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv6 02/28] PCI: mobiveil: Remove the flag MSI_FLAG_MULTI_PCI_MSI
+Date: Fri,  5 Jul 2019 17:56:30 +0800
+Message-ID: <20190705095656.19191-3-Zhiqiang.Hou@nxp.com>
 References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
@@ -10,49 +10,40 @@ To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@
 Cc: Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix up the Class Code field in PCI configuration space and set it to
-PCI_CLASS_BRIDGE_PCI.
+The Mobiveil internal MSI controller requires separate target addresses,
+one per MSI vector; this is clearly incompatible with the Multiple MSI
+feature, which requires the same target address for all vectors
+requested by an endpoint (ie the Message Address field in the MSI
+Capability structure), so the multi MSI feature is clearly not
+supported by the host controller driver.
 
-Move the Class Code fixup to function mobiveil_host_init() where
-it belongs.
+Remove the flag MSI_FLAG_MULTI_PCI_MSI and with it multi MSI support,
+fixing the misconfiguration.
 
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
+Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 ---
 V6:
  - Rebased the patch, no functional change.
 
- drivers/pci/controller/pcie-mobiveil.c |    9 ++++++---
- 1 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index 8272183..9e08061 100644
+index d55c7e7..e581902 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -626,6 +626,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 		}
- 	}
+@@ -692,7 +692,7 @@ static int mobiveil_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
  
-+	/* fixup for PCIe class register */
-+	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
-+	value &= 0xff;
-+	value |= (PCI_CLASS_BRIDGE_PCI << 16);
-+	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
-+
- 	/* setup MSI hardware registers */
- 	mobiveil_pcie_enable_msi(pcie);
+ static struct msi_domain_info mobiveil_msi_domain_info = {
+ 	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+-		MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
++		   MSI_FLAG_PCI_MSIX),
+ 	.chip	= &mobiveil_msi_irq_chip,
+ };
  
-@@ -866,9 +872,6 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
- 		goto error;
- 	}
- 
--	/* fixup for PCIe class register */
--	csr_writel(pcie, 0x060402ab, PAB_INTP_AXI_PIO_CLASS);
--
- 	/* initialize the IRQ domains */
- 	ret = mobiveil_pcie_init_irq_domain(pcie);
- 	if (ret) {
 -- 
 1.7.1
