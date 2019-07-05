@@ -1,39 +1,34 @@
-Return-Path: <SRS0=6nRC=VB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9182 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbfGDNxu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jul 2019 09:53:50 -0400
-Subject: Re: [PATCH 6/8] phy: tegra: xusb: t210: support wake and sleepwalk
-References: <20190614074824.22023-1-jckuo@nvidia.com>
- <20190614074824.22023-2-jckuo@nvidia.com>
-From: Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <70ba0026-1e93-61ef-bec8-c10963870b4f@nvidia.com>
-Date: Thu, 4 Jul 2019 14:53:44 +0100
+Return-Path: <SRS0=6UxY=VC=nvidia.com=nkristam@kernel.org>
+From: Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [Patch V5 8/8] arm64: defconfig: Enable tegra XUDC driver
+Date: Fri, 5 Jul 2019 17:11:51 +0530
+Message-ID: <1562326911-26855-9-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <1562326911-26855-1-git-send-email-nkristam@nvidia.com>
+References: <1562326911-26855-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20190614074824.22023-2-jckuo@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: JC Kuo <jckuo@nvidia.com>, gregkh@linuxfoundation.org, thierry.reding@gmail.com, pdeschrijver@nvidia.com, afrid@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
+Content-Type: text/plain
+To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
+Enable support for Nvidia XUSB device mode controller driver.
 
-On 14/06/2019 08:48, JC Kuo wrote:
-> This commit implements Tegra210 XUSB PADCTL wake and sleepwalk
-> routines.
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-This patch does not apply cleanly. I am not sure how this was generated
-but appears to come from windows (with ^M end of line character). Please
-fix this.
-
-Alot of these enable/disble functions looks very similar; programming
-the same registers just with different bits. Maybe worth considering
-consolidating these functions.
-
-Cheers
-Jon
-
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 0e58ef0..9ee581c 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -592,6 +592,7 @@ CONFIG_USB_ULPI=y
+ CONFIG_USB_GADGET=y
+ CONFIG_USB_RENESAS_USBHS_UDC=m
+ CONFIG_USB_RENESAS_USB3=m
++CONFIG_USB_TEGRA_XUDC=m
+ CONFIG_TYPEC=m
+ CONFIG_TYPEC_HD3SS3220=m
+ CONFIG_MMC=y
 -- 
-nvpublic
+2.7.4
