@@ -1,84 +1,68 @@
+Return-Path: <SRS0=6UxY=VC=nvidia.com=nkristam@kernel.org>
+From: Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [Patch V5 6/8] arm64: tegra: Enable xudc on Jetson TX1
+Date: Fri, 5 Jul 2019 17:11:49 +0530
+Message-ID: <1562326911-26855-7-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <1562326911-26855-1-git-send-email-nkristam@nvidia.com>
+References: <1562326911-26855-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-Date: Tue, 23 Jul 2019 08:29:55 -0600
-References: <20190628042745.28455-1-j-keerthy@ti.com>
-	<20190628042745.28455-2-j-keerthy@ti.com>
-	<20190722182945.GA24685@bogus>
-	<b8712fe4-4590-fdda-8a24-bf0f135ad567@ti.com>
-In-Reply-To: <b8712fe4-4590-fdda-8a24-bf0f135ad567@ti.com>
-Message-ID: <CAL_JsqKXcRFrOf6qdhu74xeRq4PZLJmTgFbbV0PRre8E8uM0BA@mail.gmail.com>
-Subject: Re: [RESEND PATCH 01/10] dt-bindings: crypto: k3: Add sa2ul bindings documentation
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To: Keerthy <j-keerthy@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain
+To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jul 22, 2019 at 10:10 PM Keerthy <j-keerthy@ti.com> wrote:
->
->
->
-> On 22/07/19 11:59 PM, Rob Herring wrote:
-> > On Fri, Jun 28, 2019 at 09:57:36AM +0530, Keerthy wrote:
-> >> The series adds Crypto hardware accelerator support for SA2UL.
-> >> SA2UL stands for security accelerator ultra lite.
-> >>
-> >> The Security Accelerator (SA2_UL) subsystem provides hardware
-> >> cryptographic acceleration for the following use cases:
-> >> =E2=80=A2 Encryption and authentication for secure boot
-> >> =E2=80=A2 Encryption and authentication of content in applications
-> >>    requiring DRM (digital rights management) and
-> >>    content/asset protection
-> >> The device includes one instantiation of SA2_UL named SA2_UL0
-> >>
-> >> SA2UL needs on tx channel and a pair of rx dma channels.
-> >>
-> >> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> >> ---
-> >>   .../devicetree/bindings/crypto/sa2ul.txt      | 47 +++++++++++++++++=
-++
-> >>   1 file changed, 47 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/crypto/sa2ul.tx=
-t
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/crypto/sa2ul.txt b/Docu=
-mentation/devicetree/bindings/crypto/sa2ul.txt
-> >> new file mode 100644
-> >> index 000000000000..81cc039673b4
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/crypto/sa2ul.txt
-> >> @@ -0,0 +1,47 @@
-> >> +K3 SoC SA2UL crypto module
-> >> +
-> >> +Required properties:
-> >> +
-> >> +- compatible : Should be:
-> >> +  - "ti,sa2ul-crypto"
-> >
-> > Needs to be SoC specific.
->
-> okay
->
-> >
-> >> +- reg : Offset and length of the register set for the module
-> >> +
-> >> +- dmas: DMA specifiers for tx and rx dma. sa2ul needs one tx channel
-> >> +    and 2 rx channels. First rx channel for < 256 bytes and
-> >> +    the other one for >=3D256 bytes. See the DMA client binding,
-> >> +        Documentation/devicetree/bindings/dma/dma.txt
-> >> +- dma-names: DMA request names has to have one tx and 2 rx names
-> >> +    corresponding to dmas abive.
-> >> +- ti,psil-config* - UDMA PSIL native Peripheral using packet mode.
-> >> +    SA2UL must have EPIB(Extended protocal information block)
-> >> +    and PSDATA(protocol specific data) properties.
-> >
-> > If ti,needs-epib is required, then why do you need to specify it in DT?
-> > In any case, this all seems like channel config info that should be par=
-t
-> > of the #dma-cells.
->
-> ti,needs-epib is the udma client(Here sa2ul) conveying the udma layer.
-> Not every udma client needs epib.
+Enable XUSB device mode driver for USB0 slot on Jetson TX1.
 
-Right, but if sa2ul always needs it, then it can be implied and set by the =
-driver.
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Reviewed-by: JC Kuo <jckuo@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 29 ++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+index a7dc319..f3f3704 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+@@ -1483,6 +1483,21 @@
+ 		vmmc-supply = <&vdd_3v3_sd>;
+ 	};
+ 
++	xudc@700d0000 {
++		status = "okay";
++		phys = <&{/padctl@7009f000/pads/usb2/lanes/usb2-0}>;
++		phy-names = "usb2";
++		avddio-usb-supply = <&vdd_3v3_sys>;
++		hvdd-usb-supply = <&vdd_1v8>;
++		usb-role-switch;
++
++		port {
++			usb_role_switch: endpoint@0 {
++				remote-endpoint = <&usb_b_conn_ep>;
++			};
++		};
++	};
++
+ 	regulators {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -1641,4 +1656,18 @@
+ 			linux,code = <KEY_VOLUMEUP>;
+ 		};
+ 	};
++
++	usb_type_b: connector {
++		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
++		label = "micro-USB";
++		type = "micro";
++		vbus-gpio = <&gpio TEGRA_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
++
++		port {
++			usb_b_conn_ep: endpoint@0 {
++				remote-endpoint = <&usb_role_switch>;
++			};
++		};
++	};
++
+ };
+-- 
+2.7.4
