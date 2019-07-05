@@ -1,99 +1,49 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v9 2/6] usb:gadget Separated decoding functions from dwc3
- driver.
-Date: Fri, 5 Jul 2019 12:03:40 +0000
-Message-ID: <BYAPR07MB47096E7B9383A300856A76D7DDF50@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com>
- <1562324238-16655-3-git-send-email-pawell@cadence.com>
- <20190705112724.GA4294@kroah.com>
- <BYAPR07MB4709AAF54E7C58B51FC26D20DDF50@BYAPR07MB4709.namprd07.prod.outlook.com>
- <20190705114911.GA31190@kroah.com>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH 1/3] drm/bridge: sii902x: fix missing reference to mclk
+ clock
+Date: Fri, 5 Jul 2019 12:24:02 +0000
+Message-ID: <39d9bf8f-a906-7f69-582d-b2996e600c0f@st.com>
+References: <1562082426-14876-1-git-send-email-olivier.moysan@st.com>
+ <1562082426-14876-2-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190705114911.GA31190@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1562082426-14876-2-git-send-email-olivier.moysan@st.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+Content-ID: <DDC1C03DC92D944FA408C2A9B6DAE01F@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Olivier MOYSAN <olivier.moysan@st.com>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "narmstrong@baylibre.com" <narmstrong@baylibre.com>, "Laurent.pinchart@ideasonboard.com" <Laurent.pinchart@ideasonboard.com>, "jonas@kwiboo.se" <jonas@kwiboo.se>, "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>, "airlied@linux.ie" <airlied@linux.ie>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "jsarha@ti.com" <jsarha@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm>
 List-Id: devicetree@vger.kernel.org
 
->
->
->On Fri, Jul 05, 2019 at 11:39:57AM +0000, Pawel Laszczak wrote:
->>
->> >On Fri, Jul 05, 2019 at 11:57:14AM +0100, Pawel Laszczak wrote:
->> >> Patch moves some decoding functions from driver/usb/dwc3/debug.h driv=
-er
->> >> to driver/usb/gadget/debug.c file. These moved functions include:
->> >>     dwc3_decode_get_status
->> >>     dwc3_decode_set_clear_feature
->> >>     dwc3_decode_set_address
->> >>     dwc3_decode_get_set_descriptor
->> >>     dwc3_decode_get_configuration
->> >>     dwc3_decode_set_configuration
->> >>     dwc3_decode_get_intf
->> >>     dwc3_decode_set_intf
->> >>     dwc3_decode_synch_frame
->> >>     dwc3_decode_set_sel
->> >>     dwc3_decode_set_isoch_delay
->> >>     dwc3_decode_ctrl
->> >>
->> >> These functions are used also in inroduced cdns3 driver.
->> >>
->> >> All functions prefixes were changed from dwc3 to usb.
->> >> Also, function's parameters has been extended according to the name
->> >> of fields in standard SETUP packet.
->> >> Additionally, patch adds usb_decode_ctrl function to
->> >> include/linux/usb/gadget.h file.
->> >
->> >No it does not :(
->>
->> I've forgot about this :(
->>
->> It should be include/linux/usb/ch.9.h
->>
->> >
->> >> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->> >> ---
->> >>  drivers/usb/common/Makefile |   5 +
->> >>  drivers/usb/common/debug.c  | 268 ++++++++++++++++++++++++++++++++++=
-++
->> >>  drivers/usb/dwc3/debug.h    | 252 ---------------------------------
->> >>  drivers/usb/dwc3/trace.h    |   2 +-
->> >>  include/linux/usb/ch9.h     |  25 ++++
->> >>  5 files changed, 299 insertions(+), 253 deletions(-)
->> >>  create mode 100644 drivers/usb/common/debug.c
->> >>
->> >> diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefil=
-e
->> >> index 0a7c45e85481..cdc66b59a6f0 100644
->> >> --- a/drivers/usb/common/Makefile
->> >> +++ b/drivers/usb/common/Makefile
->> >> @@ -5,6 +5,11 @@
->> >>
->> >>  obj-$(CONFIG_USB_COMMON)	  +=3D usb-common.o
->> >>  usb-common-y			  +=3D common.o
->> >> +
->> >> +ifneq ($(CONFIG_TRACING),)
->> >> +	usb-common-y		  +=3D debug.o
->> >> +endif
->> >
->> >So only enable this if tracing is not emabled?  Or if enabled?  I'm
->> >confused, isn't there an easier way to write this?
->>
->> It's checks if CONFIG_TRACING is enable.
->> It's a common way checking if option is enabled in usb subsystem.
->
->Why not just write this as:
->	usb-common-$(CONFIG_TRACING)	+=3D debug.o
->?
-
-Ok, I will do this in this way.
-
-Thanks.
->
->thanks,
->
->greg k-h
+SGkgT2xpdmllciwNCmFuZCBtYW55IHRoYW5rcyBmb3IgeW91ciBwYXRjaC4NCkkgZG8gbm90IHNl
+ZSBob3cgYXVkaW8gY291bGQgd29yayB3aXRob3V0IHlvdXIgcGF0Y2gsIHNvOg0KUmV2aWV3ZWQt
+Ynk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3JudUBzdC5jb20+DQpQaGlsaXBwZSA6LSkN
+Cg0KT24gNy8yLzE5IDU6NDcgUE0sIE9saXZpZXIgTW95c2FuIHdyb3RlOg0KPiBBZGQgZGV2bV9j
+bGtfZ2V0IGNhbGwgdG8gcmV0cmlldmUgcmVmZXJlbmNlIHRvIG1hc3RlciBjbG9jay4NCj4gDQo+
+IEZpeGVzOiBmZjU3ODE2MzRjNDEgKCJkcm0vYnJpZGdlOiBzaWk5MDJ4OiBJbXBsZW1lbnQgSERN
+SSBhdWRpbyBzdXBwb3J0IikNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE9saXZpZXIgTW95c2FuIDxv
+bGl2aWVyLm1veXNhbkBzdC5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
+c2lpOTAyeC5jIHwgMSArDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+IA0K
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMgYi9kcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYw0KPiBpbmRleCBkZDdhYTQ2NmIyODAuLjM2YWNjMjU2
+ZTY3ZSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMNCj4g
+KysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMNCj4gQEAgLTc1MCw2ICs3NTAs
+NyBAQCBzdGF0aWMgaW50IHNpaTkwMnhfYXVkaW9fY29kZWNfaW5pdChzdHJ1Y3Qgc2lpOTAyeCAq
+c2lpOTAyeCwNCj4gICAJCXNpaTkwMngtPmF1ZGlvLmkyc19maWZvX3NlcXVlbmNlW2ldIHw9IGF1
+ZGlvX2ZpZm9faWRbaV0gfA0KPiAgIAkJCWkyc19sYW5lX2lkW2xhbmVzW2ldXSB8CVNJSTkwMlhf
+VFBJX0kyU19GSUZPX0VOQUJMRTsNCj4gICANCj4gKwlzaWk5MDJ4LT5hdWRpby5tY2xrID0gZGV2
+bV9jbGtfZ2V0KGRldiwgIm1jbGsiKTsNCj4gICAJaWYgKElTX0VSUihzaWk5MDJ4LT5hdWRpby5t
+Y2xrKSkgew0KPiAgIAkJZGV2X2VycihkZXYsICIlczogTm8gY2xvY2sgKGF1ZGlvIG1jbGspIGZv
+dW5kOiAlbGRcbiIsDQo+ICAgCQkJX19mdW5jX18sIFBUUl9FUlIoc2lpOTAyeC0+YXVkaW8ubWNs
+aykpOw0KPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
