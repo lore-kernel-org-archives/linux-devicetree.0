@@ -1,7 +1,7 @@
 From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [RESEND PATCH next v2 4/6] ARM: dts: k2hk-netcp: add cpts refclk_mux node
-Date: Fri, 5 Jul 2019 18:12:45 +0300
-Message-ID: <20190705151247.30422-5-grygorii.strashko@ti.com>
+Subject: [RESEND PATCH next v2 5/6] ARM: dts: k2l-netcp: add cpts refclk_mux node
+Date: Fri, 5 Jul 2019 18:12:46 +0300
+Message-ID: <20190705151247.30422-6-grygorii.strashko@ti.com>
 References: <20190705151247.30422-1-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,28 +12,28 @@ To: Santosh Shilimkar <ssantosh@kernel.org>
 Cc: Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-KeyStone 66AK2H/K 1G Ethernet Switch Subsystems, can control an external
+KeyStone 66AK2L 1G Ethernet Switch Subsystems, can control an external
 multiplexer that selects one of up to 32 clocks for time sync reference
 (RFTCLK) clock. This feature can be configured through CPTS_RFTCLK_SEL
 register (offset: x08) in CPTS module and modelled as multiplexer clock.
 
 Hence, add cpts-refclk-mux clock node which allows to mux one of SYSCLK2,
-SYSCLK3, TIMI0, TIMI1, TSREFCLK clocks as CPTS reference clock [1] and
-group all CPTS properties under "cpts" subnode.
+SYSCLK3, TIMI0, TIMI1, TSREFCLK clocks as CPTS
+reference clock [1] and group all CPTS properties under "cpts" subnode.
 
-[1] http://www.ti.com/lit/gpn/66ak2h14
+[1] http://www.ti.com/lit/gpn/66ak2l06
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- arch/arm/boot/dts/keystone-k2hk-netcp.dtsi | 20 ++++++++++++++++++--
+ arch/arm/boot/dts/keystone-k2l-netcp.dtsi | 20 ++++++++++++++++++--
  1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
-index e203145acbea..d5a6c1f5633c 100644
---- a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
-@@ -152,8 +152,8 @@ netcp: netcp@2000000 {
+diff --git a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
+index a2e47bad3307..c1f982604145 100644
+--- a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
++++ b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
+@@ -134,8 +134,8 @@ netcp: netcp@26000000 {
  	/* NetCP address range */
- 	ranges  = <0 0x2000000 0x100000>;
+ 	ranges = <0 0x26000000 0x1000000>;
  
 -	clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
 -	clock-names = "pa_clk", "ethss_clk", "cpts";
@@ -41,9 +41,9 @@ index e203145acbea..d5a6c1f5633c 100644
 +	clock-names = "pa_clk", "ethss_clk";
  	dma-coherent;
  
- 	ti,navigator-dmas = <&dma_gbe 22>,
-@@ -175,6 +175,22 @@ netcp: netcp@2000000 {
- 			tx-queue = <648>;
+ 	ti,navigator-dmas = <&dma_gbe 0>,
+@@ -155,6 +155,22 @@ netcp: netcp@26000000 {
+ 			tx-queue = <896>;
  			tx-channel = "nettx";
  
 +			cpts {
