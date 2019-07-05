@@ -1,41 +1,50 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH 03/13] dt-bindings: cpufreq: qcom-nvmem: Make speedbin related properties optional
-Date: Fri,  5 Jul 2019 11:57:14 +0200
-Message-ID: <20190705095726.21433-4-niklas.cassel@linaro.org>
-References: <20190705095726.21433-1-niklas.cassel@linaro.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv6 00/28] PCI: mobiveil: fixes for Mobiveil PCIe Host Bridge IP driver
+Date: Fri,  5 Jul 2019 17:56:28 +0800
+Message-ID: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190705095726.21433-1-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, l.subrahmanya@mobiveil.co.in, shawnguo@kernel.org, leoyang.li@nxp.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Not all Qualcomm platforms need to care about the speedbin efuse,
-nor the value blown into the speedbin efuse.
-Therefore, make the nvmem-cells and opp-supported-hw properties
-optional.
+This patch set is to add fixes for Mobiveil PCIe Host driver.
+Splited #2, #3, #9 and #10 of v5 patches.
 
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Hou Zhiqiang (28):
+  PCI: mobiveil: Unify register accessors
+  PCI: mobiveil: Remove the flag MSI_FLAG_MULTI_PCI_MSI
+  PCI: mobiveil: Fix PCI base address in MEM/IO outbound windows
+  PCI: mobiveil: Update the resource list traversal function
+  PCI: mobiveil: Use WIN_NUM_0 explicitly for CFG outbound window
+  PCI: mobiveil: Use the 1st inbound window for MEM inbound
+    transactions
+  PCI: mobiveil: Fix the Class Code field
+  PCI: mobiveil: Move the link up waiting out of mobiveil_host_init()
+  PCI: mobiveil: Move IRQ chained handler setup out of DT parse
+  PCI: mobiveil: Initialize Primary/Secondary/Subordinate bus numbers
+  PCI: mobiveil: Fix devfn check in mobiveil_pcie_valid_device()
+  dt-bindings: PCI: mobiveil: Change gpio_slave and apb_csr to optional
+  PCI: mobiveil: Reformat the code for readability
+  PCI: mobiveil: Make the register updating more readable
+  PCI: mobiveil: Revise the MEM/IO outbound window initialization
+  PCI: mobiveil: Fix the returned error number
+  PCI: mobiveil: Remove an unnecessary return value check
+  PCI: mobiveil: Remove redundant var definitions and register read
+    operations
+  PCI: mobiveil: Fix the valid check for inbound and outbound window
+  PCI: mobiveil: Add the statistic of initialized inbound windows
+  PCI: mobiveil: Clear the target fields before updating the register
+  PCI: mobiveil: Mask out the lower 10-bit hardcode window size
+  PCI: mobiveil: Add upper 32-bit CPU base address setup in outbound
+    window
+  PCI: mobiveil: Add upper 32-bit PCI base address setup in inbound
+    window
+  PCI: mobiveil: Fix the CPU base address setup in inbound window
+  PCI: mobiveil: Move PCIe PIO enablement out of inbound window routine
+  PCI: mobiveil: Fix infinite-loop in the INTx process
+  PCI: mobiveil: Fix the potential INTx missing problem
 
-diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-index 198441e80ba8..c5ea8b90e35d 100644
---- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-+++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-@@ -20,6 +20,10 @@ In 'cpus' nodes:
- In 'operating-points-v2' table:
- - compatible: Should be
- 	- 'operating-points-v2-kryo-cpu' for apq8096 and msm8996.
-+
-+Optional properties:
-+--------------------
-+In 'operating-points-v2' table:
- - nvmem-cells: A phandle pointing to a nvmem-cells node representing the
- 		efuse registers that has information about the
- 		speedbin that is used to select the right frequency/voltage
--- 
-2.21.0
+ .../devicetree/bindings/pci/mobiveil-pcie.txt      |    2 +
+ drivers/pci/controller/pcie-mobiveil.c             |  529 ++++++++++++--------
+ 2 files changed, 318 insertions(+), 213 deletions(-)
