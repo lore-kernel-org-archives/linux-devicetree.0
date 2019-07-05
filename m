@@ -1,95 +1,104 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 12/13] dt-bindings: display: Convert mitsubishi,
- aa121td01 panel to DT schema
-Date: Fri,  5 Jul 2019 10:42:20 -0600
-Message-ID: <20190705164221.4462-13-robh@kernel.org>
-References: <20190705164221.4462-1-robh@kernel.org>
+Subject: [PATCH v3 00/13] Conversion of panel bindings to DT schema
+Date: Fri,  5 Jul 2019 10:42:08 -0600
+Message-ID: <20190705164221.4462-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190705164221.4462-1-robh@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Q29udmVydCB0aGUgbWl0c3ViaXNoaSxhYTEyMXRkMDEgTFZEUyBwYW5lbCBiaW5kaW5nIHRvIERU
-IHNjaGVtYS4KCkNjOiBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgpD
-YzogU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcub3JnPgpDYzogTGF1cmVudCBQaW5jaGFydCA8
-bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgpSZXZpZXdlZC1ieTogTWF4aW1lIFJp
-cGFyZCA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT4KU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJp
-bmcgPHJvYmhAa2VybmVsLm9yZz4KLS0tCiAuLi4vZGlzcGxheS9wYW5lbC9taXRzdWJpc2hpLGFh
-MTIxdGQwMS50eHQgICAgfCA0NyAtLS0tLS0tLS0tLS0KIC4uLi9kaXNwbGF5L3BhbmVsL21pdHN1
-YmlzaGksYWExMjF0ZDAxLnlhbWwgICB8IDc0ICsrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMg
-Y2hhbmdlZCwgNzQgaW5zZXJ0aW9ucygrKSwgNDcgZGVsZXRpb25zKC0pCiBkZWxldGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbWl0
-c3ViaXNoaSxhYTEyMXRkMDEudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbWl0c3ViaXNoaSxhYTEyMXRkMDEueWFt
-bAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3BhbmVsL21pdHN1YmlzaGksYWExMjF0ZDAxLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL21pdHN1YmlzaGksYWExMjF0ZDAxLnR4dApkZWxldGVk
-IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggZDZlMTA5NzUwNGZlLi4wMDAwMDAwMDAwMDAKLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbWl0c3ViaXNo
-aSxhYTEyMXRkMDEudHh0CisrKyAvZGV2L251bGwKQEAgLTEsNDcgKzAsMCBAQAotTWl0c3ViaXNo
-aSBBQTEyMVREMDEgTFZEUyBEaXNwbGF5IFBhbmVsCi09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT0KLQotVGhlIEFBMTIxVEQwMSBpcyBhIDEyLjEiIFdYR0EgVEZULUxDRCBk
-aXNwbGF5IHBhbmVsLgotCi1UaGVzZSBEVCBiaW5kaW5ncyBmb2xsb3cgdGhlIExWRFMgcGFuZWwg
-YmluZGluZ3MgZGVmaW5lZCBpbiBwYW5lbC1sdmRzLnR4dAotd2l0aCB0aGUgZm9sbG93aW5nIGRl
-dmljZS1zcGVjaWZpYyBwcm9wZXJ0aWVzLgotCi0KLVJlcXVpcmVkIHByb3BlcnRpZXM6Ci0KLS0g
-Y29tcGF0aWJsZTogU2hhbGwgY29udGFpbiAibWl0c3ViaXNoaSxhYTEyMXRkMDEiIGFuZCAicGFu
-ZWwtbHZkcyIsIGluIHRoYXQKLSAgb3JkZXIuCi0tIHZjYy1zdXBwbHk6IFJlZmVyZW5jZSB0byB0
-aGUgcmVndWxhdG9yIHBvd2VyaW5nIHRoZSBwYW5lbCBWQ0MgcGlucy4KLQotCi1FeGFtcGxlCi0t
-LS0tLS0tCi0KLXBhbmVsIHsKLQljb21wYXRpYmxlID0gIm1pdHN1YmlzaGksYWExMjF0ZDAxIiwg
-InBhbmVsLWx2ZHMiOwotCXZjYy1zdXBwbHkgPSA8JnZjY18zdjM+OwotCi0Jd2lkdGgtbW0gPSA8
-MjYxPjsKLQloZWlnaHQtbW0gPSA8MTYzPjsKLQotCWRhdGEtbWFwcGluZyA9ICJqZWlkYS0yNCI7
-Ci0KLQlwYW5lbC10aW1pbmcgewotCQkvKiAxMjgweDgwMCBANjBIeiAqLwotCQljbG9jay1mcmVx
-dWVuY3kgPSA8NzEwMDAwMDA+OwotCQloYWN0aXZlID0gPDEyODA+OwotCQl2YWN0aXZlID0gPDgw
-MD47Ci0JCWhzeW5jLWxlbiA9IDw3MD47Ci0JCWhmcm9udC1wb3JjaCA9IDwyMD47Ci0JCWhiYWNr
-LXBvcmNoID0gPDcwPjsKLQkJdnN5bmMtbGVuID0gPDU+OwotCQl2ZnJvbnQtcG9yY2ggPSA8Mz47
-Ci0JCXZiYWNrLXBvcmNoID0gPDE1PjsKLQl9OwotCi0JcG9ydCB7Ci0JCXBhbmVsX2luOiBlbmRw
-b2ludCB7Ci0JCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHNfZW5jb2Rlcj47Ci0JCX07Ci0JfTsK
-LX07CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9wYW5lbC9taXRzdWJpc2hpLGFhMTIxdGQwMS55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbWl0c3ViaXNoaSxhYTEyMXRkMDEueWFtbApuZXcg
-ZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjk3N2M1MGE4NWI2NwotLS0gL2Rl
-di9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Bh
-bmVsL21pdHN1YmlzaGksYWExMjF0ZDAxLnlhbWwKQEAgLTAsMCArMSw3NCBAQAorIyBTUERYLUxp
-Y2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAorJVlBTUwgMS4yCistLS0KKyRpZDogaHR0cDovL2Rl
-dmljZXRyZWUub3JnL3NjaGVtYXMvZGlzcGxheS9wYW5lbC9taXRzdWJpc2hpLGFhMTIxdGQwMS55
-YW1sIworJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlh
-bWwjCisKK3RpdGxlOiBNaXRzdWJpc2hpIEFBMTIxVEQwMSAxMi4xIiBXWEdBIExWRFMgRGlzcGxh
-eSBQYW5lbAorCittYWludGFpbmVyczoKKyAgLSBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBp
-bmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+CisgIC0gVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVk
-aW5nQGdtYWlsLmNvbT4KKworYWxsT2Y6CisgIC0gJHJlZjogbHZkcy55YW1sIworCitwcm9wZXJ0
-aWVzOgorICBjb21wYXRpYmxlOgorICAgIGl0ZW1zOgorICAgICAgLSBjb25zdDogbWl0c3ViaXNo
-aSxhYTEyMXRkMDEKKyAgICAgIC0ge30gIyBwYW5lbC1sdmRzLCBidXQgbm90IGxpc3RlZCBoZXJl
-IHRvIGF2b2lkIGZhbHNlIHNlbGVjdAorCisgIHZjYy1zdXBwbHk6CisgICAgZGVzY3JpcHRpb246
-IFJlZmVyZW5jZSB0byB0aGUgcmVndWxhdG9yIHBvd2VyaW5nIHRoZSBwYW5lbCBWQ0MgcGlucy4K
-KworICBkYXRhLW1hcHBpbmc6CisgICAgY29uc3Q6IGplaWRhLTI0CisKKyAgd2lkdGgtbW06Cisg
-ICAgY29uc3Q6IDI2MQorCisgIGhlaWdodC1tbToKKyAgICBjb25zdDogMTYzCisKKyAgcGFuZWwt
-dGltaW5nOiB0cnVlCisgIHBvcnQ6IHRydWUKKworYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNl
-CisKK3JlcXVpcmVkOgorICAtIGNvbXBhdGlibGUKKyAgLSB2Y2Mtc3VwcGx5CisKK2V4YW1wbGVz
-OgorICAtIHwrCisgICAgcGFuZWwgeworICAgICAgY29tcGF0aWJsZSA9ICJtaXRzdWJpc2hpLGFh
-MTIxdGQwMSIsICJwYW5lbC1sdmRzIjsKKyAgICAgIHZjYy1zdXBwbHkgPSA8JnZjY18zdjM+Owor
-CisgICAgICB3aWR0aC1tbSA9IDwyNjE+OworICAgICAgaGVpZ2h0LW1tID0gPDE2Mz47CisKKyAg
-ICAgIGRhdGEtbWFwcGluZyA9ICJqZWlkYS0yNCI7CisKKyAgICAgIHBhbmVsLXRpbWluZyB7Cisg
-ICAgICAgIC8qIDEyODB4ODAwIEA2MEh6ICovCisgICAgICAgIGNsb2NrLWZyZXF1ZW5jeSA9IDw3
-MTAwMDAwMD47CisgICAgICAgIGhhY3RpdmUgPSA8MTI4MD47CisgICAgICAgIHZhY3RpdmUgPSA8
-ODAwPjsKKyAgICAgICAgaHN5bmMtbGVuID0gPDcwPjsKKyAgICAgICAgaGZyb250LXBvcmNoID0g
-PDIwPjsKKyAgICAgICAgaGJhY2stcG9yY2ggPSA8NzA+OworICAgICAgICB2c3luYy1sZW4gPSA8
-NT47CisgICAgICAgIHZmcm9udC1wb3JjaCA9IDwzPjsKKyAgICAgICAgdmJhY2stcG9yY2ggPSA8
-MTU+OworICAgICAgfTsKKworICAgICAgcG9ydCB7CisgICAgICAgIHBhbmVsX2luOiBlbmRwb2lu
-dCB7CisgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzX2VuY29kZXI+OworICAgICAg
-ICB9OworICAgICAgfTsKKyAgICB9OworCisuLi4KLS0gCjIuMjAuMQoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+This series converts the common panel bindings to DT schema format. 
+Besides the conversion of common panel properties, a few panel bindings 
+are converted here as well. These are all the ones with references to 
+panel-common.txt or panel-lvds.txt.
+
+I'll apply the series to drm-misc. One patch from v2 already got applied 
+without its dependency.
+
+v3:
+- Consistently list all used properties and add 'additionalProperties: 
+  false'
+
+Rob
+
+Rob Herring (13):
+  dt-bindings: display: Convert common panel bindings to DT schema
+  dt-bindings: display: Convert ampire,am-480272h3tmqw-t01h panel to DT
+    schema
+  dt-bindings: display: Convert armadeus,st0700-adapt panel to DT schema
+  dt-bindings: display: Convert bananapi,s070wv20-ct16 panel to DT
+    schema
+  dt-bindings: display: Convert dlc,dlc0700yzg-1 panel to DT schema
+  dt-bindings: display: Convert pda,91-00156-a0 panel to DT schema
+  dt-bindings: display: Convert raspberrypi,7inch-touchscreen panel to
+    DT schema
+  dt-bindings: display: Convert tfc,s9700rtwv43tr-01b panel to DT schema
+  dt-bindings: display: Convert panel-lvds to DT schema
+  dt-bindings: display: Convert innolux,ee101ia-01 panel to DT schema
+  dt-bindings: display: Convert mitsubishi,aa104xd12 panel to DT schema
+  dt-bindings: display: Convert mitsubishi,aa121td01 panel to DT schema
+  dt-bindings: display: Convert sgd,gktw70sdae4se panel to DT schema
+
+ .../panel/ampire,am-480272h3tmqw-t01h.txt     |  26 ---
+ .../panel/ampire,am-480272h3tmqw-t01h.yaml    |  42 +++++
+ .../display/panel/arm,versatile-tft-panel.txt |   2 +-
+ .../display/panel/armadeus,st0700-adapt.txt   |   9 --
+ .../display/panel/armadeus,st0700-adapt.yaml  |  33 ++++
+ .../display/panel/bananapi,s070wv20-ct16.txt  |  12 --
+ .../display/panel/bananapi,s070wv20-ct16.yaml |  31 ++++
+ .../display/panel/dlc,dlc0700yzg-1.txt        |  13 --
+ .../display/panel/dlc,dlc0700yzg-1.yaml       |  31 ++++
+ .../display/panel/innolux,ee101ia-01d.txt     |   7 -
+ .../display/panel/innolux,ee101ia-01d.yaml    |  31 ++++
+ .../bindings/display/panel/lvds.yaml          | 107 +++++++++++++
+ .../display/panel/mitsubishi,aa104xd12.txt    |  47 ------
+ .../display/panel/mitsubishi,aa104xd12.yaml   |  75 +++++++++
+ .../display/panel/mitsubishi,aa121td01.txt    |  47 ------
+ .../display/panel/mitsubishi,aa121td01.yaml   |  74 +++++++++
+ .../bindings/display/panel/panel-common.txt   | 101 ------------
+ .../bindings/display/panel/panel-common.yaml  | 149 ++++++++++++++++++
+ .../bindings/display/panel/panel-lvds.txt     | 121 --------------
+ .../bindings/display/panel/panel.txt          |   4 -
+ .../display/panel/pda,91-00156-a0.txt         |  14 --
+ .../display/panel/pda,91-00156-a0.yaml        |  31 ++++
+ .../panel/raspberrypi,7inch-touchscreen.txt   |  49 ------
+ .../panel/raspberrypi,7inch-touchscreen.yaml  |  71 +++++++++
+ .../display/panel/sgd,gktw70sdae4se.txt       |  41 -----
+ .../display/panel/sgd,gktw70sdae4se.yaml      |  68 ++++++++
+ .../bindings/display/panel/simple-panel.txt   |  29 +---
+ .../display/panel/tfc,s9700rtwv43tr-01b.txt   |  15 --
+ .../display/panel/tfc,s9700rtwv43tr-01b.yaml  |  33 ++++
+ 29 files changed, 778 insertions(+), 535 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/panel/lvds.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/panel-common.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/panel-common.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/panel.txt
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/pda,91-00156-a0.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/pda,91-00156-a0.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.yaml
+
+-- 
+2.20.1
