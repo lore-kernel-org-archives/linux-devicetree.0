@@ -1,107 +1,57 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V12 01/12] PCI: Add #defines for some of PCIe spec r4.0
- features
-Date: Fri, 5 Jul 2019 19:16:22 +0530
-Message-ID: <66d8af45-66f5-b597-0ea8-39e8662df5e6@nvidia.com>
-References: <20190701124010.7484-1-vidyas@nvidia.com>
- <20190701124010.7484-2-vidyas@nvidia.com>
+From: Bin Meng <bmeng.cn@gmail.com>
+Subject: Re: [PATCH] riscv: dts: fu540-c000: Add "status" property to cpu node
+Date: Fri, 5 Jul 2019 13:11:01 +0800
+Message-ID: <CAEUhbmWdLoRU1QGVZtwmymtYyQw43UMR8WDB17rJRmvXGbuBTg@mail.gmail.com>
+References: <1562298766-25066-1-git-send-email-bmeng.cn@gmail.com>
+ <MN2PR04MB60611BD1B89E3D76ABFBE94A8DF50@MN2PR04MB6061.namprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190701124010.7484-2-vidyas@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com
-Cc: lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <MN2PR04MB60611BD1B89E3D76ABFBE94A8DF50@MN2PR04MB6061.namprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Anup Patel <Anup.Patel@wdc.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, Yash Shah <yash.shah@sifive.com>, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv <linux-riscv@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/1/2019 6:09 PM, Vidya Sagar wrote:
-Bjorn,
-Can you please provide Ack for this patch?
+On Fri, Jul 5, 2019 at 11:59 AM Anup Patel <Anup.Patel@wdc.com> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: linux-riscv <linux-riscv-bounces@lists.infradead.org> On Behalf Of Bin
+> > Meng
+> > Sent: Friday, July 5, 2019 9:23 AM
+> > To: linux-riscv <linux-riscv@lists.infradead.org>; devicetree
+> > <devicetree@vger.kernel.org>; Rob Herring <robh+dt@kernel.org>; Mark
+> > Rutland <mark.rutland@arm.com>; Albert Ou <aou@eecs.berkeley.edu>;
+> > Paul Walmsley <paul.walmsley@sifive.com>; Palmer Dabbelt
+> > <palmer@sifive.com>; Yash Shah <yash.shah@sifive.com>
+> > Subject: [PATCH] riscv: dts: fu540-c000: Add "status" property to cpu node
+> >
+> > Per device tree spec, the "status" property property shall be present for
+> > nodes representing CPUs in a SMP configuration. This property is currently
+> > missing in cpu 1/2/3/4 node in the fu540-c000.dtsi.
+>
+> We don't need explicit "status = okay" for SOC internal devices
+> (such as PLIC, INTC, etc) which are always enabled by default.
+>
 
-Thanks,
-Vidya Sagar
+Yes, that's fine because those device bindings do not require them.
 
-> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
-> features.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Reviewed-by: Thierry Reding <treding@nvidia.com>
-> ---
-> Changes since [v11]:
-> * None
-> 
-> Changes since [v10]:
-> * None
-> 
-> Changes since [v9]:
-> * None
-> 
-> Changes since [v8]:
-> * None
-> 
-> Changes since [v7]:
-> * None
-> 
-> Changes since [v6]:
-> * None
-> 
-> Changes since [v5]:
-> * None
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * None
-> 
-> Changes since [v2]:
-> * Updated commit message and description to explicitly mention that defines are
->    added only for some of the features and not all.
-> 
-> Changes since [v1]:
-> * None
-> 
->   include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
->   1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index f28e562d7ca8..1c79f6a097d2 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -713,7 +713,9 @@
->   #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
->   #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
->   #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
-> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
-> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
-> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
-> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
->   
->   #define PCI_EXT_CAP_DSN_SIZEOF	12
->   #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-> @@ -1053,4 +1055,22 @@
->   #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
->   #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
->   
-> +/* Data Link Feature */
-> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
-> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
-> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
-> +#define PCI_DLF_STS		0x08	/* Status Register */
-> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
-> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
-> +
-> +/* Physical Layer 16.0 GT/s */
-> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
-> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
-> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
-> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
-> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
-> +
->   #endif /* LINUX_PCI_REGS_H */
-> 
+> Absence of "status" DT prop is treated as enabled by default.
+>
+
+But per current device tree spec, "status" in cpu node is mandatory.
+(spec uses "shall"). Missing it is a spec violation.
+
+Regards,
+Bin
