@@ -1,9 +1,10 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 04/13] dt-bindings: display: Convert bananapi,s070wv20-ct16 panel to DT schema
-Date: Fri,  5 Jul 2019 10:42:12 -0600
-Message-ID: <20190705164221.4462-5-robh@kernel.org>
+Subject: [PATCH v3 03/13] dt-bindings: display: Convert armadeus,st0700-adapt panel to DT schema
+Date: Fri,  5 Jul 2019 10:42:11 -0600
+Message-ID: <20190705164221.4462-4-robh@kernel.org>
 References: <20190705164221.4462-1-robh@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190705164221.4462-1-robh@kernel.org>
@@ -12,56 +13,55 @@ To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert the bananapi,s070wv20-ct16 panel binding to DT schema.
+Convert the armadeus,st0700-adapt panel binding to DT schema.
 
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: dri-devel@lists.freedesktop.org
 Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../display/panel/bananapi,s070wv20-ct16.txt  | 12 -------
- .../display/panel/bananapi,s070wv20-ct16.yaml | 31 +++++++++++++++++++
- 2 files changed, 31 insertions(+), 12 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml
+ .../display/panel/armadeus,st0700-adapt.txt   |  9 -----
+ .../display/panel/armadeus,st0700-adapt.yaml  | 33 +++++++++++++++++++
+ 2 files changed, 33 insertions(+), 9 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
 deleted file mode 100644
-index 35bc0c839f49..000000000000
---- a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+index a30d63db3c8f..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
 +++ /dev/null
-@@ -1,12 +0,0 @@
--Banana Pi 7" (S070WV20-CT16) TFT LCD Panel
+@@ -1,9 +0,0 @@
+-Armadeus ST0700 Adapt. A Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT with
+-an adapter board.
 -
 -Required properties:
--- compatible: should be "bananapi,s070wv20-ct16"
--- power-supply: see ./panel-common.txt
+-- compatible: "armadeus,st0700-adapt"
+-- power-supply: see panel-common.txt
 -
 -Optional properties:
--- enable-gpios: see ./simple-panel.txt
--- backlight: see ./simple-panel.txt
--
--This binding is compatible with the simple-panel binding, which is specified
--in ./simple-panel.txt.
-diff --git a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml
+-- backlight: see panel-common.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml
 new file mode 100644
-index 000000000000..bbf127fb28f7
+index 000000000000..a6ade47066b3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml
-@@ -0,0 +1,31 @@
++++ b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml
+@@ -0,0 +1,33 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/panel/bananapi,s070wv20-ct16.yaml#
++$id: http://devicetree.org/schemas/display/panel/armadeus,st0700-adapt.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Banana Pi 7" (S070WV20-CT16) TFT LCD Panel
++title: Armadeus ST0700 Adapter
++
++description:
++  A Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT with an adapter board.
 +
 +maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
++  - '"Sébastien Szymanski" <sebastien.szymanski@armadeus.com>'
 +  - Thierry Reding <thierry.reding@gmail.com>
 +
 +allOf:
@@ -69,11 +69,10 @@ index 000000000000..bbf127fb28f7
 +
 +properties:
 +  compatible:
-+    const: bananapi,s070wv20-ct16
++    const: armadeus,st0700-adapt
 +
 +  power-supply: true
 +  backlight: true
-+  enable-gpios: true
 +  port: true
 +
 +additionalProperties: false
