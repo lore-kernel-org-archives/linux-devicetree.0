@@ -1,82 +1,64 @@
 From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH 00/13] Add support for QCOM Core Power Reduction
-Date: Fri,  5 Jul 2019 11:57:11 +0200
-Message-ID: <20190705095726.21433-1-niklas.cassel@linaro.org>
+Subject: [PATCH 01/13] dt-bindings: cpufreq: Re-organise kryo cpufreq to use it for other nvmem based qcom socs
+Date: Fri,  5 Jul 2019 11:57:12 +0200
+Message-ID: <20190705095726.21433-2-niklas.cassel@linaro.org>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190705095726.21433-1-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Ilia Lin <ilia.lin@kernel.org>, Andy Gross <agross@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Sricharan R <sricharan@codeaurora.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for Core Power Reduction (CPR), a form of
-Adaptive Voltage Scaling (AVS), found on certain Qualcomm SoCs.
+From: Sricharan R <sricharan@codeaurora.org>
 
-This series is based on top of the qcs404 cpufreq patch series that
-hasn't landed yet:
-https://patchwork.kernel.org/project/linux-arm-msm/list/?series=137809
+The kryo cpufreq driver reads the nvmem cell and uses that data to
+populate the opps. There are other qcom cpufreq socs like krait which
+does similar thing. Except for the interpretation of the read data,
+rest of the driver is same for both the cases. So pull the common things
+out for reuse.
 
-CPR is a technology that reduces core power on a CPU or on other device.
-It reads voltage settings from efuses (that have been written in
-production), it uses these voltage settings as initial values, for each
-OPP.
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+[niklas.cassel@linaro.org: split dt-binding into a separate patch and
+do not rename the compatible string.]
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+---
+Changes since RFC:
+-Made DT bindings a separate patch.
+-Keep the original compatible string, since renaming it breaks DT
+backwards compatibility.
 
-After moving to a certain OPP, CPR monitors dynamic factors such as
-temperature, etc. and adjusts the voltage for that frequency accordingly
-to save power and meet silicon characteristic requirements.
+ .../opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt}   | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+ rename Documentation/devicetree/bindings/opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} (98%)
 
-This driver has been developed together with Jorge Ramirez-Ortiz, and
-is based on an RFC by Stephen Boyd[1], which in turn is based on work
-by others on codeaurora.org[2].
-
-[1] https://lkml.org/lkml/2015/9/18/833
-[2] https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/regulator/cpr-regulator.c?h=msm-3.10
-
-Jorge Ramirez-Ortiz (1):
-  cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
-
-Niklas Cassel (10):
-  dt-bindings: cpufreq: qcom-nvmem: Make speedbin related properties
-    optional
-  cpufreq: qcom: Refactor the driver to make it easier to extend
-  dt-bindings: cpufreq: qcom-nvmem: Support pstates provided by a power
-    domain
-  cpufreq: qcom: Add support for qcs404 on nvmem driver
-  dt-bindings: opp: Add qcom-opp bindings with properties needed for CPR
-  dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
-  power: avs: Add support for CPR (Core Power Reduction)
-  arm64: dts: qcom: qcs404: Add CPR and populate OPP table
-  arm64: defconfig: enable CONFIG_QCOM_CPR
-  arm64: defconfig: enable CONFIG_ARM_QCOM_CPUFREQ_NVMEM
-
-Sricharan R (2):
-  dt-bindings: cpufreq: Re-organise kryo cpufreq to use it for other
-    nvmem based qcom socs
-  cpufreq: qcom: Re-organise kryo cpufreq to use it for other nvmem
-    based qcom socs
-
- ...ryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} |  125 +-
- .../devicetree/bindings/opp/qcom-opp.txt      |   19 +
- .../bindings/power/avs/qcom,cpr.txt           |  193 ++
- MAINTAINERS                                   |   13 +-
- arch/arm64/boot/dts/qcom/qcs404.dtsi          |  145 +-
- arch/arm64/configs/defconfig                  |    2 +
- drivers/cpufreq/Kconfig.arm                   |    4 +-
- drivers/cpufreq/Makefile                      |    2 +-
- drivers/cpufreq/cpufreq-dt-platdev.c          |    1 +
- drivers/cpufreq/qcom-cpufreq-kryo.c           |  249 ---
- drivers/cpufreq/qcom-cpufreq-nvmem.c          |  351 ++++
- drivers/power/avs/Kconfig                     |   15 +
- drivers/power/avs/Makefile                    |    1 +
- drivers/power/avs/qcom-cpr.c                  | 1839 +++++++++++++++++
- 14 files changed, 2692 insertions(+), 267 deletions(-)
- rename Documentation/devicetree/bindings/opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} (87%)
- create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
- create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
- delete mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
- create mode 100644 drivers/cpufreq/qcom-cpufreq-nvmem.c
- create mode 100644 drivers/power/avs/qcom-cpr.c
-
+diff --git a/Documentation/devicetree/bindings/opp/kryo-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+similarity index 98%
+rename from Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
+rename to Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+index c2127b96805a..198441e80ba8 100644
+--- a/Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
++++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+@@ -1,13 +1,13 @@
+-Qualcomm Technologies, Inc. KRYO CPUFreq and OPP bindings
++Qualcomm Technologies, Inc. NVMEM CPUFreq and OPP bindings
+ ===================================
+ 
+-In Certain Qualcomm Technologies, Inc. SoCs like apq8096 and msm8996
+-that have KRYO processors, the CPU ferequencies subset and voltage value
+-of each OPP varies based on the silicon variant in use.
++In Certain Qualcomm Technologies, Inc. SoCs like apq8096 and msm8996,
++the CPU frequencies subset and voltage value of each OPP varies based on
++the silicon variant in use.
+ Qualcomm Technologies, Inc. Process Voltage Scaling Tables
+ defines the voltage and frequency value based on the msm-id in SMEM
+ and speedbin blown in the efuse combination.
+-The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
++The qcom-cpufreq-nvmem driver reads the msm-id and efuse value from the SoC
+ to provide the OPP framework with required information (existing HW bitmap).
+ This is used to determine the voltage and frequency value for each OPP of
+ operating-points-v2 table when it is parsed by the OPP framework.
 -- 
 2.21.0
