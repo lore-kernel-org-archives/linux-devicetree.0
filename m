@@ -1,7 +1,7 @@
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv6 05/28] PCI: mobiveil: Use WIN_NUM_0 explicitly for CFG outbound window
-Date: Fri,  5 Jul 2019 17:56:33 +0800
-Message-ID: <20190705095656.19191-6-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv6 08/28] PCI: mobiveil: Move the link up waiting out of mobiveil_host_init()
+Date: Fri,  5 Jul 2019 17:56:36 +0800
+Message-ID: <20190705095656.19191-9-Zhiqiang.Hou@nxp.com>
 References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
@@ -10,37 +10,60 @@ To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@
 Cc: Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-As the .map_bus() use the WIN_NUM_0 for CFG transactions,
-it is appropriate to pass WIN_NUM_0 explicitly when initializing
-the CFG outbound window rather than implicitly relying on the
-ob_wins_configure counter.
+The host initializing sequence does not depend on PCIe link up,
+so move it to the plac just before the enumeration.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 ---
 V6:
  - Rebased the patch, no functional change.
 
- drivers/pci/controller/pcie-mobiveil.c |    5 ++---
- 1 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c |   15 +++++++--------
+ 1 files changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index c359654..0f41c23 100644
+index 9e08061..8f92f05 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -604,9 +604,8 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 	 */
+@@ -561,15 +561,8 @@ static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
+ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ {
+ 	u32 value, pab_ctrl, type = 0;
+-	int err;
+ 	struct resource_entry *win;
  
- 	/* config outbound translation window */
--	program_ob_windows(pcie, pcie->ob_wins_configured,
--			pcie->ob_io_res->start, 0, CFG_WINDOW_TYPE,
--			resource_size(pcie->ob_io_res));
-+	program_ob_windows(pcie, WIN_NUM_0, pcie->ob_io_res->start, 0,
-+			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+-	err = mobiveil_bringup_link(pcie);
+-	if (err) {
+-		dev_info(&pcie->pdev->dev, "link bring-up failed\n");
+-		return err;
+-	}
+-
+ 	/*
+ 	 * program Bus Master Enable Bit in Command Register in PAB Config
+ 	 * Space
+@@ -635,7 +628,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 	/* setup MSI hardware registers */
+ 	mobiveil_pcie_enable_msi(pcie);
  
- 	/* memory inbound translation window */
- 	program_ib_windows(pcie, WIN_NUM_1, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+-	return err;
++	return 0;
+ }
+ 
+ static void mobiveil_mask_intx_irq(struct irq_data *data)
+@@ -892,6 +885,12 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+ 	bridge->map_irq = of_irq_parse_and_map_pci;
+ 	bridge->swizzle_irq = pci_common_swizzle;
+ 
++	ret = mobiveil_bringup_link(pcie);
++	if (ret) {
++		dev_info(dev, "link bring-up failed\n");
++		goto error;
++	}
++
+ 	/* setup the kernel resources for the newly added PCIe root bus */
+ 	ret = pci_scan_root_bus_bridge(bridge);
+ 	if (ret)
 -- 
 1.7.1
