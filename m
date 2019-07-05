@@ -1,41 +1,81 @@
-From: Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH v6 18/18] MAINTAINERS: add proc sysctl KUnit test to PROC
- SYSCTL section
-Date: Fri, 5 Jul 2019 20:48:10 +0000
-Message-ID: <20190705204810.GE19023@42.do-not-panic.com>
-References: <20190704003615.204860-1-brendanhiggins@google.com>
- <20190704003615.204860-19-brendanhiggins@google.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: Re: [PATCH v2 3/7] rtc: mt6397: improvements of rtc driver
+Date: Fri, 5 Jul 2019 23:24:48 +0200
+Message-ID: <20190705212448.GB12409@piout.net>
+References: <20190703164822.17924-1-frank-w@public-files.de>
+ <20190703164822.17924-4-frank-w@public-files.de>
+ <20190704204336.GJ3692@piout.net>
+ <trinity-7b1977bd-252b-4482-b708-cf704a9d3da1-1562340946396@3c-app-gmx-bs68>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190704003615.204860-19-brendanhiggins@google.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: pmladek@suse.com, linux-doc@vger.kernel.org, peterz@infradead.org, amir73il@gmail.com, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, yamada.masahiro@socionext.com, mpe@ellerman.id.au, linux-kselftest@vger.kernel.org, shuah@kernel.org, linux-nvdimm@lists.01.org, frowand.list@gmail.com, knut.omang@oracle.com, kieran.bingham@ideasonboard.com, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, jpoimboe@redhat.com, kunit-dev@googlegroups.com, tytso@mit.edu, richard@nod.at, sboyd@kernel.org, gregkh@linuxfoundation.org, rdunlap@infradead.org, linux-kernel@vger.kernel.org, keescook@google.com, linux-fsdevel@vger.kernel.org, logang@deltatee.com, khilman@baylibre.co
+In-Reply-To: <trinity-7b1977bd-252b-4482-b708-cf704a9d3da1-1562340946396@3c-app-gmx-bs68>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wunderlich <frank-w@public-files.de>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Allison Randal <allison@lohutok.net>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdWwgMDMsIDIwMTkgYXQgMDU6MzY6MTVQTSAtMDcwMCwgQnJlbmRhbiBIaWdnaW5z
-IHdyb3RlOgo+IEFkZCBlbnRyeSBmb3IgdGhlIG5ldyBwcm9jIHN5c2N0bCBLVW5pdCB0ZXN0IHRv
-IHRoZSBQUk9DIFNZU0NUTCBzZWN0aW9uLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEJyZW5kYW4gSGln
-Z2lucyA8YnJlbmRhbmhpZ2dpbnNAZ29vZ2xlLmNvbT4KPiBSZXZpZXdlZC1ieTogR3JlZyBLcm9h
-aC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4KPiBSZXZpZXdlZC1ieTogTG9n
-YW4gR3VudGhvcnBlIDxsb2dhbmdAZGVsdGF0ZWUuY29tPgo+IEFja2VkLWJ5OiBMdWlzIENoYW1i
-ZXJsYWluIDxtY2dyb2ZAa2VybmVsLm9yZz4KCkNvbWUgdG8gdGhpbmsgb2YgaXQsIEknZCB3ZWxj
-b21lIEl1cmlpIHRvIGJlIGFkZGVkIGFzIGEgbWFpbnRhaW5lciwKd2l0aCB0aGUgaG9wZSBJdXJp
-aSB3b3VsZCBiZSB1cCB0byByZXZpZXcgb25seSB0aGUga3VuaXQgY2hhbmdlcy4gT2YKY291cnNl
-IGlmIEl1cmlpIHdvdWxkIGJlIHVwIHRvIGFsc28gaGVscCByZXZpZXcgZnV0dXJlIHByb2MgY2hh
-bmdlcywKZXZlbiBiZXR0ZXIuIDMgcGFpciBvZiBleWViYWxscyBpcyBiZXR0ZXIgdGhhbiAyIHBh
-aXJzLgoKICBMdWlzCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bA==
+On 05/07/2019 17:35:46+0200, Frank Wunderlich wrote:
+> Hi Alexander,
+> 
+> thank you for the Review
+> 
+> > Gesendet: Donnerstag, 04. Juli 2019 um 22:43 Uhr
+> > Von: "Alexandre Belloni" <alexandre.belloni@bootlin.com>
+> > > -	rtc->rtc_dev = devm_rtc_allocate_device(rtc->dev);
+> > > -	if (IS_ERR(rtc->rtc_dev))
+> > > -		return PTR_ERR(rtc->rtc_dev);
+> > > +	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
+> > > +					mtk_rtc_irq_handler_thread,
+> > > +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> > > +					"mt6397-rtc", rtc);
+> > >
+> >
+> > This change may lead to a crash and the allocation was intentionally
+> > placed before the irq request.
+> 
+> i got no crash till now, but i will try to move the allocation before irq-request
+> 
+
+Let's say the RTC has been used to start your platform, then the irq
+handler will be called as soon as the irq is requested, leading to a
+null pointer dereference.
+
+> > > -	ret = request_threaded_irq(rtc->irq, NULL,
+> > > -				   mtk_rtc_irq_handler_thread,
+> > > -				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> > > -				   "mt6397-rtc", rtc);
+> > >  	if (ret) {
+> > >  		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
+> > >  			rtc->irq, ret);
+> > > @@ -287,6 +281,10 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+> > >
+> > >  	device_init_wakeup(&pdev->dev, 1);
+> > >
+> > > +	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
+> > > +	if (IS_ERR(rtc->rtc_dev))
+> > > +		return PTR_ERR(rtc->rtc_dev);
+> > > +
+> > >  	rtc->rtc_dev->ops = &mtk_rtc_ops;
+> 
+> 
+> > >  static const struct of_device_id mt6397_rtc_of_match[] = {
+> > > +	{ .compatible = "mediatek,mt6323-rtc", },
+> >
+> > Unrelated change, this is not an improvement and must be accompanied by
+> > a documentation change.
+> 
+> documentation is changed in 1/7 defining this compatible. i called it improvement because existing driver now supports another chip
+> 
+
+Yes and IIRC, I did comment that the rtc change also had to be separated
+from 1/7.
+
+Also, I really doubt this new compatible is necessary at all as you
+could simply directly use mediatek,mt6397-rtc.
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
