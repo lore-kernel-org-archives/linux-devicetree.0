@@ -1,103 +1,79 @@
-Return-Path: <SRS0=mNx5=U6=gmail.com=akinobu.mita@kernel.org>
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v5 0/4] nvme: add thermal zone devices
-Date: Mon,  1 Jul 2019 23:12:30 +0900
-Message-Id: <1561990354-4084-1-git-send-email-akinobu.mita@gmail.com>
-To: linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Rob Herring <robh@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Minwoo Im <minwoo.im.dev@gmail.com>, Kenneth Heitke <kenneth.heitke@intel.com>, Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Return-Path: <SRS0=6UxY=VC=nvidia.com=nkristam@kernel.org>
+From: Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [Patch V5 1/8] phy: tegra: xusb: Add XUSB dual mode support on Tegra210
+Date: Fri, 5 Jul 2019 17:11:44 +0530
+Message-ID: <1562326911-26855-2-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <1562326911-26855-1-git-send-email-nkristam@nvidia.com>
+References: <1562326911-26855-1-git-send-email-nkristam@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The NVMe controller reports up to nine temperature values in the SMART /
-Health log page (the composite temperature and temperature sensor 1 through
-temperature sensor 8).
-The temperature threshold feature (Feature Identifier 04h) configures the
-asynchronous event request command to complete when the temperature is
-crossed its corresponding temperature threshold.
+Configure the port capabilities based on usb_dr_mode settings.
 
-This provides these temperatures and thresholds via thermal zone devices.
+Based on work by JC Kuo <jckuo@nvidia.com>.
 
-The main purpose of this is to turn on a fan when overheated without
-polling the device for the smart log that could prevent the lower power
-state transitions.
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Reviewed-by: JC Kuo <jckuo@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/phy/tegra/xusb-tegra210.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-In addition to the standard thermal zone device, this adds support for
-registering the DT thermal zone device.
-
-* v5
-- remove 'Export get and set features' patch as it has been merged in -next
-- split the DT thermal zone support into separate patch
-- round up temperature when writing trip point
-- add DT binding documentation
-- don't register both standard and DT thermal zone
-- use thermal_zone_device_update() instead of thermal_notify_framework()
-
-* v4
-- add thermal.c to hold thermal zone related code
-- add 'use_thermal_zone' module parameter
-- add CONFIG_THERMAL_WRITABLE_TRIPS dependency
-- add comment about the return value of nvme_thermal_zones_register()
-- support DT thermal zone device.
-- use bitmap to iterate over implemented sensors
-
-* v3
-- Change the type name of thermal zone devices from 'nvme_temp<sensor>' to
-  'nvme<instance>_temp<sensor>'
-- Pass a NULL to the status argument of nvme_set_feature()
-- Change the name of symbolic link from 'nvme_temp<sensor>' to 'temp<sensor>'
-- Don't make it fatal error if the device provides a response
-- Don't register thermal zone for composite temperature if smart log reports
-  zero value
-- Move the thermal zones registration and unregistration into the core module.
-
-* v2
-- s/correspoinding/corresponding/ typo in commit log
-- Borrowed nvme_get_features() from Keith's patch
-- Temperature threshold notification is splitted into another patch
-- Change the data type of 'sensor' to unsigned
-- Add BUILD_BUG_ON for the array size of tzdev member in nvme_ctrl
-- Add WARN_ON_ONCE for paranoid checks
-- Fix off-by-one error in nvme_get_temp
-- Validate 'sensor' where the value is actually used
-- Define and utilize two enums related to the temperature threshold feature
-- Remove hysteresis value for this trip point and don't utilize the under
-  temperature threshold
-- Print error message for thermal_zone_device_register() failure
-- Add function comments for nvme_thermal_zones_{,un}register
-- Suppress non-fatal errors from nvme_thermal_zones_register()
-- Add comment about implemented temperature sensors 
-- Instead of creating a new 'thermal_work', append async smart event's
-  action to the existing async_event_work
-- Add comment for tzdev member in nvme_ctrl
-- Call nvme_thermal_zones_unregister() earlier than the last reference
-  release
-
-Akinobu Mita (4):
-  nvme: add thermal zone devices
-  dt-bindings: thermal: nvme: Add binding documentation
-  nvme: support DT thermal zone device
-  nvme: notify thermal framework when temperature threshold events occur
-
- Documentation/devicetree/bindings/thermal/nvme.txt |  56 ++++
- drivers/nvme/host/Kconfig                          |   1 +
- drivers/nvme/host/Makefile                         |   1 +
- drivers/nvme/host/core.c                           |  19 ++
- drivers/nvme/host/nvme.h                           |  40 +++
- drivers/nvme/host/thermal.c                        | 343 +++++++++++++++++++++
- include/linux/nvme.h                               |  12 +
- 7 files changed, 472 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/nvme.txt
- create mode 100644 drivers/nvme/host/thermal.c
-
-Cc: Rob Herring <robh@kernel.org>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Keith Busch <kbusch@kernel.org>
-Cc: Jens Axboe <axboe@fb.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Minwoo Im <minwoo.im.dev@gmail.com>
-Cc: Kenneth Heitke <kenneth.heitke@intel.com>
-Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
+index 0c0df68..0351c4a 100644
+--- a/drivers/phy/tegra/xusb-tegra210.c
++++ b/drivers/phy/tegra/xusb-tegra210.c
+@@ -39,7 +39,10 @@
+ #define XUSB_PADCTL_USB2_PAD_MUX_USB2_BIAS_PAD_XUSB 0x1
+ 
+ #define XUSB_PADCTL_USB2_PORT_CAP 0x008
++#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DISABLED(x) (0x0 << ((x) * 4))
+ #define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(x) (0x1 << ((x) * 4))
++#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DEVICE(x) (0x2 << ((x) * 4))
++#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_OTG(x) (0x3 << ((x) * 4))
+ #define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_MASK(x) (0x3 << ((x) * 4))
+ 
+ #define XUSB_PADCTL_SS_PORT_MAP 0x014
+@@ -64,6 +67,7 @@
+ #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(x) (0x084 + (x) * 0x40)
+ #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT 7
+ #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK 0x3
++#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL 0x1
+ #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18 (1 << 6)
+ 
+ #define XUSB_PADCTL_USB2_OTG_PADX_CTL0(x) (0x088 + (x) * 0x40)
+@@ -957,7 +961,14 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
+ 
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_PORT_CAP);
+ 	value &= ~XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_MASK(index);
+-	value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(index);
++	if (port->mode == USB_DR_MODE_UNKNOWN)
++		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DISABLED(index);
++	else if (port->mode == USB_DR_MODE_PERIPHERAL)
++		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DEVICE(index);
++	else if (port->mode == USB_DR_MODE_HOST)
++		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(index);
++	else if (port->mode == USB_DR_MODE_OTG)
++		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_OTG(index);
+ 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_PORT_CAP);
+ 
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
+@@ -989,7 +1000,12 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
+ 			     XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+ 	value &= ~(XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK <<
+ 		   XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT);
+-	value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
++	if (port->mode == USB_DR_MODE_HOST)
++		value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
++	else
++		value |=
++		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL <<
++		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT;
+ 	padctl_writel(padctl, value,
+ 		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+ 
 -- 
 2.7.4
