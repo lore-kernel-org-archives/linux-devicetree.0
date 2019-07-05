@@ -1,78 +1,66 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/7] dt-bindings: net: Add bindings for Realtek PHYs
-Date: Fri, 5 Jul 2019 11:07:29 -0600
-Message-ID: <CAL_Jsq+bS5qAGhFa0q5sjOaajokDoO-5yc23MkrrCE=Y-jt=ZQ@mail.gmail.com>
-References: <20190703193724.246854-1-mka@chromium.org> <CAL_JsqJdBAMPc1sZJfL7V9cxGgCb4GWwRokwJDmac5L2AO2-wg@mail.gmail.com>
- <20190703213327.GH18473@lunn.ch> <CAL_Jsq+dqz7n0_+Y5R4772-rh=9x=k20A69hnDwxH3OyZXQneQ@mail.gmail.com>
- <20190705162926.GM18473@lunn.ch>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for Sharp
+ LD-D5116Z01B panel
+Date: Fri, 5 Jul 2019 19:20:58 +0200
+Message-ID: <20190705172058.GA2788@ravnborg.org>
+References: <20190705165450.329-1-jeffrey.l.hugo@gmail.com>
+ <20190705165755.515-1-jeffrey.l.hugo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190705162926.GM18473@lunn.ch>
+Content-Disposition: inline
+In-Reply-To: <20190705165755.515-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Matthias Kaehlcke <mka@chromium.org>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 10:29 AM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Fri, Jul 05, 2019 at 10:17:16AM -0600, Rob Herring wrote:
-> > On Wed, Jul 3, 2019 at 3:33 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> > >
-> > > > I think if we're going to have custom properties for phys, we should
-> > > > have a compatible string to at least validate whether the custom
-> > > > properties are even valid for the node.
-> > >
-> > > Hi Rob
-> > >
-> > > What happens with other enumerable busses where a compatible string is
-> > > not used?
-> >
-> > We usually have a compatible. USB and PCI both do. Sometimes it is a
-> > defined format based on VID/PID.
->
-> Hi Rob
->
-> Is it defined what to do with this compatible? Just totally ignore it?
-> Validate it against the hardware and warning if it is wrong? Force
-> load the driver that implements the compatible, even thought bus
-> enumeration says it is the wrong driver?
+Hi Jeffrey.
 
-The short answer is either the problems get fixed or if DTs exist and
-need to be supported which are wrong then the OS deals with the
-problem to make things work as desired (see PowerMac code).
+Patch looks good, but there is a few fields that are not initialized.
+Did you forget them, or are they not needed?
 
-If the ethernet phy subsystem wants to ignore compatible, that is totally fine.
+On Fri, Jul 05, 2019 at 09:57:55AM -0700, Jeffrey Hugo wrote:
+> The Sharp LD-D5116Z01B is a 12.3" eDP panel with a 1920X1280 resolution.
+> 
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 5a93c4edf1e4..e6f578667324 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -2354,6 +2354,29 @@ static const struct panel_desc samsung_ltn140at29_301 = {
+>  	},
+>  };
+>  
+> +static const struct drm_display_mode sharp_ld_d5116z01b_mode = {
+> +	.clock = 168480,
+> +	.hdisplay = 1920,
+> +	.hsync_start = 1920 + 48,
+> +	.hsync_end = 1920 + 48 + 32,
+> +	.htotal = 1920 + 48 + 32 + 80,
+> +	.vdisplay = 1280,
+> +	.vsync_start = 1280 + 3,
+> +	.vsync_end = 1280 + 3 + 10,
+> +	.vtotal = 1280 + 3 + 10 + 57,
+> +	.vrefresh = 60,
+> +};
+No .flags? Is it not needed for an eDP panel?
 
-> > > The Ethernet PHY subsystem will ignore the compatible string and load
-> > > the driver which fits the enumeration data. Using the compatible
-> > > string only to get the right YAML validator seems wrong. I would
-> > > prefer adding some other property with a clear name indicates its is
-> > > selecting the validator, and has nothing to do with loading the
-> > > correct driver. And it can then be used as well for USB and PCI
-> > > devices etc.
-> >
-> > Just because Linux happens to not use compatible really has nothing to
-> > do with whether or not the nodes should have a compatible. What does
-> > FreeBSD want? U-boot?
-> >
-> > I don't follow how adding a validate property would help. It would
-> > need to be 'validate-node-as-a-realtek-phy'.
->
-> This makes it clear it is all about validating the DT, and nothing
-> about the actual running hardware. What i don't really want to see is
-> the poorly defined situation that DT contains a compatible string, but
-> we have no idea what it is actually used for. See the question above.
+> +
+> +static const struct panel_desc sharp_ld_d5116z01b = {
+> +	.modes = &sharp_ld_d5116z01b_mode,
+> +	.num_modes = 1,
+> +	.bpc = 8,
+> +	.size = {
+> +		.width = 260,
+> +		.height = 120,
+> +	},
+> +};
+No .bus_format?
+No .bus_flags?
 
-What's poorly defined are the current bindings, type definitions of
-properties, and what properties are valid or not in specific nodes. If
-we only had to better define the rules around compatible use or
-mismatches, we'd be a lot better off.
-
-I'm not going to add properties solely for validation when we already
-have a well defined, 15 year+ pattern for defining what a node
-contains that practically every other subsystem and node uses. I guess
-we just won't worry about validating ethernet phy nodes beyond some
-basic checks.
-
-Rob
+	Sam
