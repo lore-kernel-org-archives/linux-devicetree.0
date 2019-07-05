@@ -1,7 +1,7 @@
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv6 27/28] PCI: mobiveil: Fix infinite-loop in the INTx process
-Date: Fri,  5 Jul 2019 17:56:55 +0800
-Message-ID: <20190705095656.19191-28-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv6 25/28] PCI: mobiveil: Fix the CPU base address setup in inbound window
+Date: Fri,  5 Jul 2019 17:56:53 +0800
+Message-ID: <20190705095656.19191-26-Zhiqiang.Hou@nxp.com>
 References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
@@ -10,54 +10,65 @@ To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@
 Cc: Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-In the loop block, there is not code to update the loop key,
-this patch updates the loop key by re-read the INTx status
-register.
-
-Note: Need MV to test this fix.
+In function program_ib_windows(), currently it use the parameter
+'pci_addr' to initialize both CPU base address and PCI base address
+of the inbound window, it is not correct, and another problem is
+the upper 32-bit CPU address is not initialized. So, this patch
+adds an new parameter 'u64 cpu_addr' for the CPU base address
+setup and adds upper 32-bit CPU base address initialization.
 
 Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Acked-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Tested-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
 ---
 V6:
- - Splited from #10 of v5 patches, no functional change.
+ - Splited from #9 of v5 patches, no functional change.
 
- drivers/pci/controller/pcie-mobiveil.c |   12 +++++++++---
- 1 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c |   10 +++++++---
+ 1 files changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index f35d14b..a5549cf 100644
+index 75494f0..aeba37c 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -359,8 +359,9 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+@@ -88,6 +88,7 @@
+ #define  AMAP_CTRL_TYPE_MASK		3
  
- 	/* Handle INTx */
- 	if (intr_status & PAB_INTP_INTX_MASK) {
--		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT) >>
--					   PAB_INTX_START;
-+		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-+		shifted_status &= PAB_INTP_INTX_MASK;
-+		shifted_status >>= PAB_INTX_START;
- 		do {
- 			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
- 				virq = irq_find_mapping(pcie->intx_domain,
-@@ -376,7 +377,12 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
- 					   shifted_status << PAB_INTX_START,
- 					   PAB_INTP_AMBA_MISC_STAT);
- 			}
--		} while ((shifted_status >> PAB_INTX_START) != 0);
-+
-+			shifted_status = csr_readl(pcie,
-+						   PAB_INTP_AMBA_MISC_STAT);
-+			shifted_status &= PAB_INTP_INTX_MASK;
-+			shifted_status >>= PAB_INTX_START;
-+		} while (shifted_status != 0);
- 	}
+ #define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_EXT_REG_ADDR(0xbef0, win)
++#define PAB_EXT_PEX_AMAP_AXI_WIN(win)	PAB_EXT_REG_ADDR(0xb4a0, win)
+ #define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x4ba4, win)
+ #define PAB_PEX_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR(0x4ba8, win)
+ #define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x4bac, win)
+@@ -457,7 +458,7 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+ }
  
- 	/* read extra MSI status register */
+ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+-			       u64 pci_addr, u32 type, u64 size)
++			       u64 cpu_addr, u64 pci_addr, u32 type, u64 size)
+ {
+ 	u32 value;
+ 	u64 size64 = ~(size - 1);
+@@ -481,7 +482,10 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+ 	csr_writel(pcie, upper_32_bits(size64),
+ 		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
+ 
+-	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
++	csr_writel(pcie, lower_32_bits(cpu_addr),
++		   PAB_PEX_AMAP_AXI_WIN(win_num));
++	csr_writel(pcie, upper_32_bits(cpu_addr),
++		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
+ 
+ 	csr_writel(pcie, lower_32_bits(pci_addr),
+ 		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
+@@ -618,7 +622,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+ 
+ 	/* memory inbound translation window */
+-	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
++	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+ 
+ 	/* Get the I/O and memory ranges from DT */
+ 	resource_list_for_each_entry(win, &pcie->resources) {
 -- 
 1.7.1
