@@ -1,7 +1,7 @@
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv6 10/28] PCI: mobiveil: Initialize Primary/Secondary/Subordinate bus numbers
-Date: Fri,  5 Jul 2019 17:56:38 +0800
-Message-ID: <20190705095656.19191-11-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv6 11/28] PCI: mobiveil: Fix devfn check in mobiveil_pcie_valid_device()
+Date: Fri,  5 Jul 2019 17:56:39 +0800
+Message-ID: <20190705095656.19191-12-Zhiqiang.Hou@nxp.com>
 References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
@@ -10,39 +10,36 @@ To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@
 Cc: Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The reset value of Primary, Secondary and Subordinate bus numbers is
-zero which is a broken setup.
+Current check for devfn number in mobiveil_pci_valid_device() is
+wrong in that it flags as invalid functions present in PCI device 0
+in the root bus while it is perfectly valid to access all functions
+in PCI device 0 in the root bus.
 
-Program a sensible default value for Primary/Secondary/Subordinate
-bus numbers.
+Update the check in mobiveil_pci_valid_device() to fix the issue.
 
+Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 ---
 V6:
  - Rebased the patch, no functional change.
 
- drivers/pci/controller/pcie-mobiveil.c |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index cdf15cc..8f56130 100644
+index 8f56130..c9bf565 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -561,6 +561,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 	u32 value, pab_ctrl, type = 0;
- 	struct resource_entry *win;
+@@ -283,7 +283,7 @@ static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
+ 	 * Do not read more than one device on the bus directly
+ 	 * attached to RC
+ 	 */
+-	if ((bus->primary == pcie->root_bus_nr) && (devfn > 0))
++	if ((bus->primary == pcie->root_bus_nr) && (PCI_SLOT(devfn) > 0))
+ 		return false;
  
-+	/* setup bus numbers */
-+	value = csr_readl(pcie, PCI_PRIMARY_BUS);
-+	value &= 0xff000000;
-+	value |= 0x00ff0100;
-+	csr_writel(pcie, value, PCI_PRIMARY_BUS);
-+
- 	/*
- 	 * program Bus Master Enable Bit in Command Register in PAB Config
- 	 * Space
+ 	return true;
 -- 
 1.7.1
