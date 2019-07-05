@@ -1,87 +1,72 @@
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: RE: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Date: Fri, 5 Jul 2019 08:37:30 +0000
-Message-ID: <VI1PR04MB4880DEA9D7836A68E0EE141396F50@VI1PR04MB4880.eurprd04.prod.outlook.com>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
- <20190621164940.GL31306@lunn.ch>
- <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
- <20190624115558.GA5690@piout.net> <20190624142625.GR31306@lunn.ch>
- <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
- <20190624162431.GX31306@lunn.ch> <20190624182614.GC5690@piout.net>
- <CA+h21hqGtA5ou7a3wjSuHxa_4fXk4GZohTAxnUdfLZjV3nq5Eg@mail.gmail.com>
- <20190705044945.GA30115@lunn.ch>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V3 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
+Date: Fri, 5 Jul 2019 08:45:49 +0000
+Message-ID: <DB3PR0402MB391618C464533111AB8DAEDCF5F50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190704094416.4757-1-Anson.Huang@nxp.com>
+         <1562235363.6641.10.camel@pengutronix.de>
+         <DB3PR0402MB39167B9A3CFAE6D8798B3CAEF5F50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <1562313748.4291.3.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190705044945.GA30115@lunn.ch>
+In-Reply-To: <1562313748.4291.3.camel@pengutronix.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, "Allan W. Nielsen" <allan.nielsen@microchip.com>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
->-----Original Message-----
->From: Andrew Lunn <andrew@lunn.ch>
->Sent: Friday, July 5, 2019 7:50 AM
->To: Vladimir Oltean <olteanv@gmail.com>
->Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>; Allan W. Nielsen
-><allan.nielsen@microchip.com>; Claudiu Manoil <claudiu.manoil@nxp.com>;
->David S . Miller <davem@davemloft.net>; devicetree@vger.kernel.org;
->netdev@vger.kernel.org; Alexandru Marginean
-><alexandru.marginean@nxp.com>; linux-kernel@vger.kernel.org;
->UNGLinuxDriver@microchip.com; Allan Nielsen
-><Allan.Nielsen@microsemi.com>; Rob Herring <robh+dt@kernel.org>; linux-
->arm-kernel@lists.infradead.org
->Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix swit=
-ch port
->DT node
->
->Hi Vladimir
->
->> - DSA is typically used for discrete switches, switchdev is typically
->> used for embedded ones.
->
->Typically DSA is for discrete switches, but not exclusively. The
->b53/SF2 is embedded in a number of Broadcom SoCs. So this is no
->different to Ocelot, except ARM vs MIPS. Also, i would disagree that
->switchdev is used for embedded ones. Mellonex devices are discrete, on
->a PCIe bus. I believe Netronome devices are also discrete PCIe
->devices. In fact, i think ocelot is the only embedded switchdev
->switch.
->
->So embedded vs discrete plays no role here at all.
->
->> - The D in DSA is for cascaded switches. Apart from the absence of
->> such a "Ocelot SoC" driver (which maybe can be written, I don't know),
->> I think the switching core itself has some fundamental limitations
->> that make a DSA implementation questionable:
->
->There is no requirement to implement D in DSA. In fact, only Marvell
->does. None of the other switches do. And you will also find that most
->boards with a Marvell switch use a single device. D in DSA is totally
->optional. In fact, DSA is built from the ground up that nearly
->everything is optional. Take a look at mv88e6060, as an example. It
->implements nearly nothing. It cannot even offload a bridge to the
->switch.
->
-
-Nice discussion, again, but there's a missing point that has not been
-brought up yet.  We actually intend to support the following hardware
-configuration: a single PCI device consisting of the Microsemi's switch cor=
-e
-and our DMA rings.
-The hardware supports this configuration into a single PCI function (PF),=20
-with a unique PCI function id (0xe111), so that the same driver has access =
-to=20
-both switch registers and DMA rings connected to the CPU port.  This device
-would qualify  as a  switchdev device, and we can simply reuse the existing
-ocelot code for the switch core part.  The initial patch set was the first =
-step in
-supporting the switch core on our platform, we just need to add the support
-for the DMA rings part, to make it a complete switchdev solution.
-
-Thanks,
-Claudiu
+SGksIFBoaWxpcHANCg0KPiBPbiBGcmksIDIwMTktMDctMDUgYXQgMDA6MjYgKzAwMDAsIEFuc29u
+IEh1YW5nIHdyb3RlOg0KPiA+IEhpLCBQaGlsaXBwDQo+ID4NCj4gPiA+IE9uIFRodSwgMjAxOS0w
+Ny0wNCBhdCAxNzo0NCArMDgwMCwgQW5zb24uSHVhbmdAbnhwLmNvbSB3cm90ZToNCj4gPiA+ID4g
+RnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gPiA+DQo+ID4gPiA+
+IGkuTVg4TU0gY2FuIHJldXNlIGkuTVg4TVEncyByZXNldCBkcml2ZXIsIHVwZGF0ZSB0aGUgY29t
+cGF0aWJsZQ0KPiA+ID4gPiBwcm9wZXJ0eSBhbmQgcmVsYXRlZCBpbmZvIHRvIHN1cHBvcnQgaS5N
+WDhNTS4NCj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29u
+Lkh1YW5nQG54cC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiBDaGFuZ2VzIHNpbmNlIFYyOg0K
+PiA+ID4gPiAJLSBBZGQgc2VwYXJhdGUgbGluZSBmb3IgaS5NWDhNTSBpbiBjYXNlIGFueXRoaW5n
+IGRpZmZlcmVudCBsYXRlcg0KPiA+ID4gPiBmb3INCj4gPiA+DQo+ID4gPiBpLk1YOE1NLg0KPiA+
+ID4gPiAtLS0NCj4gPiA+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNl
+dC9mc2wsaW14Ny1zcmMudHh0IHwgNg0KPiA+ID4gPiArKysrLS0NCj4gPiA+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4gPiA+DQo+ID4gPiA+
+IGRpZmYgLS1naXQNCj4gPiA+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cmVzZXQvZnNsLGlteDctc3JjLnR4dA0KPiA+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9yZXNldC9mc2wsaW14Ny1zcmMudHh0DQo+ID4gPiA+IGluZGV4IDEzZTA5NTEu
+LmMyNDg5ZTQgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9yZXNldC9mc2wsaW14Ny1zcmMudHh0DQo+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNldC9mc2wsaW14Ny1zcmMudHh0DQo+ID4gPiA+IEBA
+IC04LDYgKzgsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiAgLSBjb21wYXRpYmxl
+Og0KPiA+ID4gPiAgCS0gRm9yIGkuTVg3IFNvQ3Mgc2hvdWxkIGJlICJmc2wsaW14N2Qtc3JjIiwg
+InN5c2NvbiINCj4gPiA+ID4gIAktIEZvciBpLk1YOE1RIFNvQ3Mgc2hvdWxkIGJlICJmc2wsaW14
+OG1xLXNyYyIsICJzeXNjb24iDQo+ID4gPiA+ICsJLSBGb3IgaS5NWDhNTSBTb0NzIHNob3VsZCBi
+ZSAiZnNsLGlteDhtbS1zcmMiLCAiZnNsLGlteDhtcS1zcmMiLA0KPiA+ID4NCj4gPiA+ICJzeXNj
+b24iDQo+ID4gPiA+ICAtIHJlZzogc2hvdWxkIGJlIHJlZ2lzdGVyIGJhc2UgYW5kIGxlbmd0aCBh
+cyBkb2N1bWVudGVkIGluIHRoZQ0KPiA+ID4gPiAgICBkYXRhc2hlZXQNCj4gPiA+ID4gIC0gaW50
+ZXJydXB0czogU2hvdWxkIGNvbnRhaW4gU1JDIGludGVycnVwdCBAQCAtNDYsNSArNDcsNiBAQCBF
+eGFtcGxlOg0KPiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiAgRm9yIGxpc3Qgb2YgYWxsIHZhbGlk
+IHJlc2V0IGluZGljZXMgc2VlDQo+ID4gPiA+IC08ZHQtYmluZGluZ3MvcmVzZXQvaW14Ny1yZXNl
+dC5oPiBmb3IgaS5NWDcgYW5kDQo+ID4gPiA+IC08ZHQtYmluZGluZ3MvcmVzZXQvaW14OG1xLXJl
+c2V0Lmg+IGZvciBpLk1YOE1RDQo+ID4gPiA+ICs8ZHQtYmluZGluZ3MvcmVzZXQvaW14Ny1yZXNl
+dC5oPiBmb3IgaS5NWDcsDQo+ID4gPiA+ICs8ZHQtYmluZGluZ3MvcmVzZXQvaW14OG1xLXJlc2V0
+Lmg+IGZvciBpLk1YOE1RIGFuZA0KPiA+ID4gPiArPGR0LWJpbmRpbmdzL3Jlc2V0L2lteDhtcS1y
+ZXNldC5oPiBmb3IgaS5NWDhNTQ0KPiA+ID4NCj4gPiA+IFRoZSBsYXN0IGxpbmUgaXMgbWlzbGVh
+ZGluZywgYXMgdGhhdCBmaWxlIGNvbnRhaW5zIHJlc2V0IGluZGljZXMNCj4gPiA+IHRoYXQgYXJl
+IGludmFsaWQgZm9yIGkuTVg4TU0uDQo+ID4NCj4gPiBXaGF0IGlzIHlvdXIgc3VnZ2VzdGlvbiBh
+Ym91dCB0aGlzIGxpbmU/DQo+IA0KPiBJIHdvdWxkIHByZWZlciB0byBhZGQgYW4gaW14OG1tLXJl
+c2V0Lmggd2l0aCBvbmx5IHRoZSBleGlzdGluZyByZXNldCBiaXRzLA0KPiB1c2luZyB0aGUgSU1Y
+OE1NX1JFU0VUXyBwcmVmaXguwqBUaGF0IHdvdWxkIG1ha2UgaXQgZWFzeSB0byBzcG90IGVycm9y
+cyBpbg0KPiB0aGUgZHRzaSAoYW55dGhpbmcgc3RhcnRpbmcgd2l0aCBJTVg4TVFfIGlzIHBvdGVu
+dGlhbGx5IHdyb25nKS4NCj4gDQo+ID4gSnVzdCBOT1QgY2hhbmdlIGl0Pw0KPiANCj4gVGhlIGNo
+YW5nZSBpcyBnb29kIGluIHByaW5jaXBsZS4gSXQganVzdCBzaG91bGQgcG9pbnQgdG8gYW4gaW14
+OG1tLSByZXNldC5oIHdpdGgNCj4gb25seSB0aGUgZXhpc3RpbmcgcmVzZXRzIG9uIGkuTVg4TU0s
+IG9yIGlteDhtcS1yZXNldC5oIHNob3VsZCBiZSBtb2RpZmllZCB0bw0KPiBhY3R1YWxseSBtYWtl
+IGNsZWFyIHdoaWNoIHJlc2V0cyBhcmUgdmFsaWQgb24gaS5NWDhNTS4NCj4gDQo+ID4gT3IgYWRk
+aW5nIGEgbmV3IGZpbGXCoGlteDhtbS1yZXNldC5oIGJ1dCBzdGlsbCB1c2UgdGhlIElNWDhNUV9S
+RVNFVF8gYXMNCj4gPiBwcmVmaXggPw0KPiANCj4gSSBkb24ndCB0aGluayB5b3Ugc2hvdWxkIHJl
+ZGVmaW5lIHRoZSBzYW1lIG1hY3JvcyBpbiBpbXg4bW0tcmVzZXQuaC4gSW4gdGhpcw0KPiBjYXNl
+IHVzaW5nIElNWDhNTV9SRVNFVF8gd291bGQgYmUgYmV0dGVyLg0KPiANCj4gPiBPciBrZWVwIHdo
+YXQgSSBjaGFuZ2VkLCBidXQgYWRkaW5nIHNvbWUgY29tbWVudHMgaW4gdGhvc2UgbWFjcm9zIHRo
+YXQNCj4gPiBpLk1YOE1NIGRvZXMgTk9UIHN1cHBvcnQ/DQo+IA0KPiBUaGF0IHdvdWxkIGJlIGFj
+Y2VwdGFibGUgYXMgd2VsbC4NCg0KSSB3aWxsIGdvIHRoaXMgd2F5LCB0aGFua3MgZm9yIHN1Z2dl
+c3Rpb24uDQoNCkFuc29uLg0KDQo+IA0KPiByZWdhcmRzDQo+IFBoaWxpcHANCg==
