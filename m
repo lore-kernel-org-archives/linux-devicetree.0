@@ -1,7 +1,8 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH 3/6] dt-bindings: thermal: qoriq: Add optional clocks property
-Date: Fri,  5 Jul 2019 12:56:09 +0800
-Message-ID: <20190705045612.27665-3-Anson.Huang@nxp.com>
+Subject: [PATCH 2/6] thermal: qoriq: Use __maybe_unused instead of #if
+ CONFIG_PM_SLEEP
+Date: Fri,  5 Jul 2019 12:56:08 +0800
+Message-ID: <20190705045612.27665-2-Anson.Huang@nxp.com>
 References: <20190705045612.27665-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,25 +24,44 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Some platforms have clock control for TMU, add optional
-clocks property to the binding doc.
+Use __maybe_unused for power management related functions
+instead of #if CONFIG_PM_SLEEP to simply the code.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/thermal/qoriq_thermal.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-index 04cbb90..28f2cba 100644
---- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-@@ -23,6 +23,7 @@ Required properties:
- Optional property:
- - little-endian : If present, the TMU registers are little endian. If absent,
- 	the default is big endian.
-+- clocks : the clock for clocking the TMU silicon.
+diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+index c7c7de2..2b2f79b 100644
+--- a/drivers/thermal/qoriq_thermal.c
++++ b/drivers/thermal/qoriq_thermal.c
+@@ -240,8 +240,7 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
- Example:
+-#ifdef CONFIG_PM_SLEEP
+-static int qoriq_tmu_suspend(struct device *dev)
++static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
+ {
+ 	u32 tmr;
+ 	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
+@@ -254,7 +253,7 @@ static int qoriq_tmu_suspend(struct device *dev)
+ 	return 0;
+ }
  
+-static int qoriq_tmu_resume(struct device *dev)
++static int __maybe_unused qoriq_tmu_resume(struct device *dev)
+ {
+ 	u32 tmr;
+ 	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
+@@ -266,7 +265,6 @@ static int qoriq_tmu_resume(struct device *dev)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ static SIMPLE_DEV_PM_OPS(qoriq_tmu_pm_ops,
+ 			 qoriq_tmu_suspend, qoriq_tmu_resume);
 -- 
 2.7.4
