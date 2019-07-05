@@ -1,81 +1,22 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: Re: [PATCH v2 3/7] rtc: mt6397: improvements of rtc driver
-Date: Fri, 5 Jul 2019 23:24:48 +0200
-Message-ID: <20190705212448.GB12409@piout.net>
-References: <20190703164822.17924-1-frank-w@public-files.de>
- <20190703164822.17924-4-frank-w@public-files.de>
- <20190704204336.GJ3692@piout.net>
- <trinity-7b1977bd-252b-4482-b708-cf704a9d3da1-1562340946396@3c-app-gmx-bs68>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v2 1/9] mmc: sdhci-sprd: Check the enable clock's return
+ value correctly
+Date: Fri, 5 Jul 2019 15:29:08 -0700
+Message-ID: <CAOesGMjdnQuLdvphBDM3xmH6o+Nca8+65mw8-EajV0Eb_8MS5w@mail.gmail.com>
+References: <cover.1559635435.git.baolin.wang@linaro.org> <15AEA3314E88B01E.21242@linux.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <trinity-7b1977bd-252b-4482-b708-cf704a9d3da1-1562340946396@3c-app-gmx-bs68>
+In-Reply-To: <15AEA3314E88B01E.21242@linux.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Allison Randal <allison@lohutok.net>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel>
+To: patchwork-soc+owner@linux.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Lyra Zhang <zhang.lyra@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Baolin Wang <baolin.wang@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-mmc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2019 17:35:46+0200, Frank Wunderlich wrote:
-> Hi Alexander,
-> 
-> thank you for the Review
-> 
-> > Gesendet: Donnerstag, 04. Juli 2019 um 22:43 Uhr
-> > Von: "Alexandre Belloni" <alexandre.belloni@bootlin.com>
-> > > -	rtc->rtc_dev = devm_rtc_allocate_device(rtc->dev);
-> > > -	if (IS_ERR(rtc->rtc_dev))
-> > > -		return PTR_ERR(rtc->rtc_dev);
-> > > +	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
-> > > +					mtk_rtc_irq_handler_thread,
-> > > +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-> > > +					"mt6397-rtc", rtc);
-> > >
-> >
-> > This change may lead to a crash and the allocation was intentionally
-> > placed before the irq request.
-> 
-> i got no crash till now, but i will try to move the allocation before irq-request
-> 
+On Fri, Jul 5, 2019 at 3:25 PM Olof Johansson via Linux.Kernel.Org
+<olof=lixom.net@linux.kernel.org> wrote:
 
-Let's say the RTC has been used to start your platform, then the irq
-handler will be called as soon as the irq is requested, leading to a
-null pointer dereference.
+Hmm, well, that didn't work like I expected to. Sorry for the noise.
 
-> > > -	ret = request_threaded_irq(rtc->irq, NULL,
-> > > -				   mtk_rtc_irq_handler_thread,
-> > > -				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-> > > -				   "mt6397-rtc", rtc);
-> > >  	if (ret) {
-> > >  		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
-> > >  			rtc->irq, ret);
-> > > @@ -287,6 +281,10 @@ static int mtk_rtc_probe(struct platform_device *pdev)
-> > >
-> > >  	device_init_wakeup(&pdev->dev, 1);
-> > >
-> > > +	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-> > > +	if (IS_ERR(rtc->rtc_dev))
-> > > +		return PTR_ERR(rtc->rtc_dev);
-> > > +
-> > >  	rtc->rtc_dev->ops = &mtk_rtc_ops;
-> 
-> 
-> > >  static const struct of_device_id mt6397_rtc_of_match[] = {
-> > > +	{ .compatible = "mediatek,mt6323-rtc", },
-> >
-> > Unrelated change, this is not an improvement and must be accompanied by
-> > a documentation change.
-> 
-> documentation is changed in 1/7 defining this compatible. i called it improvement because existing driver now supports another chip
-> 
 
-Yes and IIRC, I did comment that the rtc change also had to be separated
-from 1/7.
-
-Also, I really doubt this new compatible is necessary at all as you
-could simply directly use mediatek,mt6397-rtc.
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-Olof
