@@ -1,98 +1,60 @@
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Subject: [PATCH 10/10] net: hisilicon: Add an tx_desc to adapt HI13X1_GMAC
-Date: Fri, 5 Jul 2019 14:12:42 +0800
-Message-ID: <1562307162-103916-1-git-send-email-xiaojiangfeng@huawei.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+ IMX8MQ_CLK_TMU_ROOT
+Date: Fri, 5 Jul 2019 07:01:08 +0000
+Message-ID: <20190705070107.xsxvnh7b36w4q4c6@fsr-ub1664-175>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+ <20190705045612.27665-5-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190705045612.27665-5-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-ID: <F7A714F4FD2FF54F9AF66368F4FEFA79@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: yisen.zhuang@huawei.com, salil.mehta@huawei.com, dingtianhong@huawei.com, xiaojiangfeng@huawei.com
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leeyou.li@huawei.com, xiekunxun@huawei.com, jianping.liu@huawei.com, nixiaoming@huawei.com
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "angus@akkea.ca" <angus@akkea.ca>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, Leonard Crestez <leonard.c>
 List-Id: devicetree@vger.kernel.org
 
-HI13X1 changed the offsets and bitmaps for tx_desc
-registers in the same peripheral device on different
-models of the hip04_eth.
+On 19-07-05 12:56:11, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+>=20
+> IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
+> should manage this clock, so no need to have CLK_IS_CRITICAL flag
+> set.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
----
- drivers/net/ethernet/hisilicon/hip04_eth.c | 34 +++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 780fc46..6256357 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -76,8 +76,15 @@
- /* TX descriptor config */
- #define TX_FREE_MEM			BIT(0)
- #define TX_READ_ALLOC_L3		BIT(1)
--#define TX_FINISH_CACHE_INV		BIT(2)
-+#if defined(CONFIG_HI13X1_GMAC)
-+#define TX_CLEAR_WB			BIT(7)
-+#define TX_RELEASE_TO_PPE		BIT(4)
-+#define TX_FINISH_CACHE_INV		BIT(6)
-+#define TX_POOL_SHIFT			16
-+#else
- #define TX_CLEAR_WB			BIT(4)
-+#define TX_FINISH_CACHE_INV		BIT(2)
-+#endif
- #define TX_L3_CHECKSUM			BIT(5)
- #define TX_LOOP_BACK			BIT(11)
- 
-@@ -124,6 +131,7 @@
- /* buf unit size is cache_line_size, which is 64, so the shift is 6 */
- #define PPE_BUF_SIZE_SHIFT		6
- #define PPE_TX_BUF_HOLD			BIT(31)
-+#define CACHE_LINE_MASK			0x3F
- #else
- #define PPE_CFG_QOS_VMID_GRP_SHIFT	8
- #define PPE_CFG_RX_CTRL_ALIGN_SHIFT	11
-@@ -163,11 +171,22 @@
- #define HIP04_MIN_TX_COALESCE_FRAMES	100
- 
- struct tx_desc {
-+#if defined(CONFIG_HI13X1_GMAC)
-+	u32 reserved1[2];
-+	u32 send_addr;
-+	u16 send_size;
-+	u16 data_offset;
-+	u32 reserved2[7];
-+	u32 cfg;
-+	u32 wb_addr;
-+	u32 reserved3[3];
-+#else
- 	u32 send_addr;
- 	u32 send_size;
- 	u32 next_addr;
- 	u32 cfg;
- 	u32 wb_addr;
-+#endif
- } __aligned(64);
- 
- struct rx_desc {
-@@ -505,11 +524,20 @@ static void hip04_start_tx_timer(struct hip04_priv *priv)
- 
- 	priv->tx_skb[tx_head] = skb;
- 	priv->tx_phys[tx_head] = phys;
--	desc->send_addr = (__force u32)cpu_to_be32(phys);
-+
- 	desc->send_size = (__force u32)cpu_to_be32(skb->len);
-+#if defined(CONFIG_HI13X1_GMAC)
-+	desc->cfg = (__force u32)cpu_to_be32(TX_CLEAR_WB | TX_FINISH_CACHE_INV
-+		| TX_RELEASE_TO_PPE | priv->port << TX_POOL_SHIFT);
-+	desc->data_offset = (__force u32)cpu_to_be32(phys & CACHE_LINE_MASK);
-+	desc->send_addr =  (__force u32)cpu_to_be32(phys & ~CACHE_LINE_MASK);
-+#else
- 	desc->cfg = (__force u32)cpu_to_be32(TX_CLEAR_WB | TX_FINISH_CACHE_INV);
-+	desc->send_addr = (__force u32)cpu_to_be32(phys);
-+#endif
- 	phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
--	desc->wb_addr = (__force u32)cpu_to_be32(phys);
-+	desc->wb_addr = (__force u32)cpu_to_be32(phys +
-+		offsetof(struct tx_desc, send_addr));
- 	skb_tx_timestamp(skb);
- 
- 	hip04_set_xmit_desc(priv, phys);
--- 
-1.8.5.6
+> ---
+>  drivers/clk/imx/clk-imx8mq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+> index d407a07..91de69a 100644
+> --- a/drivers/clk/imx/clk-imx8mq.c
+> +++ b/drivers/clk/imx/clk-imx8mq.c
+> @@ -539,7 +539,7 @@ static int imx8mq_clocks_probe(struct platform_device=
+ *pdev)
+>  	clks[IMX8MQ_CLK_DISP_AXI_ROOT]  =3D imx_clk_gate2_shared2("disp_axi_roo=
+t_clk", "disp_axi", base + 0x45d0, 0, &share_count_dcss);
+>  	clks[IMX8MQ_CLK_DISP_APB_ROOT]  =3D imx_clk_gate2_shared2("disp_apb_roo=
+t_clk", "disp_apb", base + 0x45d0, 0, &share_count_dcss);
+>  	clks[IMX8MQ_CLK_DISP_RTRM_ROOT] =3D imx_clk_gate2_shared2("disp_rtrm_ro=
+ot_clk", "disp_rtrm", base + 0x45d0, 0, &share_count_dcss);
+> -	clks[IMX8MQ_CLK_TMU_ROOT] =3D imx_clk_gate4_flags("tmu_root_clk", "ipg_=
+root", base + 0x4620, 0, CLK_IS_CRITICAL);
+> +	clks[IMX8MQ_CLK_TMU_ROOT] =3D imx_clk_gate4("tmu_root_clk", "ipg_root",=
+ base + 0x4620, 0);
+>  	clks[IMX8MQ_CLK_VPU_DEC_ROOT] =3D imx_clk_gate2_flags("vpu_dec_root_clk=
+", "vpu_bus", base + 0x4630, 0, CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE=
+);
+>  	clks[IMX8MQ_CLK_CSI1_ROOT] =3D imx_clk_gate4("csi1_root_clk", "csi1_cor=
+e", base + 0x4650, 0);
+>  	clks[IMX8MQ_CLK_CSI2_ROOT] =3D imx_clk_gate4("csi2_root_clk", "csi2_cor=
+e", base + 0x4660, 0);
+> --=20
+> 2.7.4
+> =
