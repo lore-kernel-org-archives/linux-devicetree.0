@@ -1,72 +1,47 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v9 2/6] usb:gadget Separated decoding functions from dwc3
- driver.
-Date: Fri, 5 Jul 2019 13:27:24 +0200
-Message-ID: <20190705112724.GA4294@kroah.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com>
- <1562324238-16655-3-git-send-email-pawell@cadence.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
+Date: Fri, 05 Jul 2019 14:28:07 +0300
+Message-ID: <45603af2fc8374a90ef9e81a67083395cc9c7190.camel@linux.intel.com>
+References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
+         <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
+         <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com>
+         <CAM9mBwJC2QD5-gV1eJUDzC2Fnnugr-oCZCoaH2sT_7ktFDkS-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1562324238-16655-3-git-send-email-pawell@cadence.com>
+In-Reply-To: <CAM9mBwJC2QD5-gV1eJUDzC2Fnnugr-oCZCoaH2sT_7ktFDkS-Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>
-Cc: devicetree@vger.kernel.org, felipe.balbi@linux.intel.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, jpawar@cadence.com, kurahul@cadence.com
+To: Oshri Alkobi <oshrialkoby85@gmail.com>, Alexander Steffen <Alexander.Steffen@infineon.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org, oshri.alkoby@nuvoton.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, gcwilson@us.ibm.com, kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com, dan.morav@nuvoton.com, tomer.maimon@nuvoton.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 11:57:14AM +0100, Pawel Laszczak wrote:
-> Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
-> to driver/usb/gadget/debug.c file. These moved functions include:
->     dwc3_decode_get_status
->     dwc3_decode_set_clear_feature
->     dwc3_decode_set_address
->     dwc3_decode_get_set_descriptor
->     dwc3_decode_get_configuration
->     dwc3_decode_set_configuration
->     dwc3_decode_get_intf
->     dwc3_decode_set_intf
->     dwc3_decode_synch_frame
->     dwc3_decode_set_sel
->     dwc3_decode_set_isoch_delay
->     dwc3_decode_ctrl
-> 
-> These functions are used also in inroduced cdns3 driver.
-> 
-> All functions prefixes were changed from dwc3 to usb.
-> Also, function's parameters has been extended according to the name
-> of fields in standard SETUP packet.
-> Additionally, patch adds usb_decode_ctrl function to
-> include/linux/usb/gadget.h file.
+On Thu, 2019-07-04 at 12:48 -0500, Oshri Alkobi wrote:
+> Alex, Jarkko, thank you very much for your feedbacks!
 
-No it does not :(
+Please configure your email client to use plain text.
 
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> ---
->  drivers/usb/common/Makefile |   5 +
->  drivers/usb/common/debug.c  | 268 ++++++++++++++++++++++++++++++++++++
->  drivers/usb/dwc3/debug.h    | 252 ---------------------------------
->  drivers/usb/dwc3/trace.h    |   2 +-
->  include/linux/usb/ch9.h     |  25 ++++
->  5 files changed, 299 insertions(+), 253 deletions(-)
->  create mode 100644 drivers/usb/common/debug.c
-> 
-> diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
-> index 0a7c45e85481..cdc66b59a6f0 100644
-> --- a/drivers/usb/common/Makefile
-> +++ b/drivers/usb/common/Makefile
-> @@ -5,6 +5,11 @@
->  
->  obj-$(CONFIG_USB_COMMON)	  += usb-common.o
->  usb-common-y			  += common.o
-> +
-> +ifneq ($(CONFIG_TRACING),)
-> +	usb-common-y		  += debug.o
-> +endif
+> I totally agree, there are some duplications that can be common, indeed it
+> will require some work in tpm_tis_core.
+> Since I believe it is not going to happen soon, I would suggest to examine
+> what duplications can currently be dropped from the new driver, so the kernel
+> will support the PTP I2C interface in the meantime.
+> I will appreciate getting ideas about any tpm_tis_core logic that currently
+> can be used as is by the new drive.
 
-So only enable this if tracing is not emabled?  Or if enabled?  I'm
-confused, isn't there an easier way to write this?
+I rather wait for a solution that integrates with our mature stack for
+TIS (or these days FIFO) than integrate something half-baked. If you
+want something in, please do right things right.
 
-thanks,
+What you are proposing would mean maintaining duplicate stacks forever.
 
-greg k-h
+> Since the TIS is an old specification that mostly defines FIFO for TPM1.2 I
+> would say the name tpm_tis_i2c does not completely reflect its goal. However
+> we really don't have any problem with any name that the group will agree on.
+> Does tpm_ptp_i2c sound better than the current name?
+
+Absolutely not going to use that name. The naming convention is what
+it is for other drivers that are adapt tpm_tis_core to different HW
+interfaces.
+
+/Jarkko
