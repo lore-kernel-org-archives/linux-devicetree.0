@@ -1,40 +1,31 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/7] dt-bindings: net: Add bindings for Realtek PHYs
-Date: Fri, 5 Jul 2019 10:18:24 -0600
-Message-ID: <CAL_Jsq+9RhjxwX9Z6U269u2Mki__P0GMiZo9HsqpMFKtdveNZw@mail.gmail.com>
-References: <20190703193724.246854-1-mka@chromium.org> <CAL_JsqJdBAMPc1sZJfL7V9cxGgCb4GWwRokwJDmac5L2AO2-wg@mail.gmail.com>
- <20190703213327.GH18473@lunn.ch> <20190703220843.GJ250418@google.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: phy: add binding for the Lantiq
+ VRX200 and ARX300 PCIe PHYs
+Date: Fri, 5 Jul 2019 10:20:43 -0600
+Message-ID: <CAL_JsqJ7iA2kPBPLxkUVYXojqB7Hv69Nv4z3qaQveH24b45Jug@mail.gmail.com>
+References: <20190704122319.8983-1-martin.blumenstingl@googlemail.com> <20190704122319.8983-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703220843.GJ250418@google.com>
+In-Reply-To: <20190704122319.8983-2-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Mark Rutland <mark.rutland@arm.com>, Martin Schiller <ms@dev.tdt.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 4:08 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+On Thu, Jul 4, 2019 at 6:23 AM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
 >
-> On Wed, Jul 03, 2019 at 11:33:27PM +0200, Andrew Lunn wrote:
-> > > I think if we're going to have custom properties for phys, we should
-> > > have a compatible string to at least validate whether the custom
-> > > properties are even valid for the node.
-> >
-> > Hi Rob
-> >
-> > What happens with other enumerable busses where a compatible string is
-> > not used?
-> >
-> > The Ethernet PHY subsystem will ignore the compatible string and load
-> > the driver which fits the enumeration data. Using the compatible
-> > string only to get the right YAML validator seems wrong. I would
-> > prefer adding some other property with a clear name indicates its is
-> > selecting the validator, and has nothing to do with loading the
-> > correct driver. And it can then be used as well for USB and PCI
-> > devices etc.
+> Add the bindings for the PCIe PHY on Lantiq VRX200 and ARX300 SoCs.
+> The IP block contains settings for the PHY and a PLL.
+> The PLL mode is configurable through a dedicated #phy-cell in .dts.
 >
-> I also have doubts whether a compatible string is the right answer
-> here. It's not needed/used by the subsystem, but would it be a
-> required property because it's needed for validation?
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  | 95 +++++++++++++++++++
+>  .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  | 11 +++
+>  2 files changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+>  create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
 
-It could be required only for phy's with vendor specific properties.
+Reviewed-by: Rob Herring <robh@kernel.org>
