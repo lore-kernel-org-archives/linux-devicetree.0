@@ -1,36 +1,46 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [RESEND PATCH next v2 6/6] ARM: configs: keystone: enable cpts
-Date: Fri, 5 Jul 2019 18:12:47 +0300
-Message-ID: <20190705151247.30422-7-grygorii.strashko@ti.com>
-References: <20190705151247.30422-1-grygorii.strashko@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/5] Add Bitmain BM1880 clock driver
+Date: Fri,  5 Jul 2019 20:44:35 +0530
+Message-ID: <20190705151440.20844-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190705151247.30422-1-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>
+To: sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, fisher.cheng@bitmain.com, alec.lin@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable CPTS support which is present in Network Coprocessor Gigabit
-Ethernet (GbE) Switch Subsystem.
+Hello,
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm/configs/keystone_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+This patchset adds common clock driver for Bitmain BM1880 SoC clock
+controller. The clock controller consists of gate, divider, mux
+and pll clocks with different compositions. Hence, the driver uses
+composite clock structure in place where multiple clocking units are
+combined together.
 
-diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
-index 72fee57aad2f..0b2281407ecf 100644
---- a/arch/arm/configs/keystone_defconfig
-+++ b/arch/arm/configs/keystone_defconfig
-@@ -136,6 +136,7 @@ CONFIG_BLK_DEV_SD=y
- CONFIG_NETDEVICES=y
- CONFIG_TI_KEYSTONE_NETCP=y
- CONFIG_TI_KEYSTONE_NETCP_ETHSS=y
-+CONFIG_TI_CPTS=y
- CONFIG_MARVELL_PHY=y
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
+This patchset also removes UART fixed clock and sources clocks from clock
+controller for Sophon Edge board where the driver has been validated.
+
+Thanks,
+Mani
+
+Manivannan Sadhasivam (5):
+  dt-bindings: clock: Add Bitmain BM1880 SoC clock controller binding
+  arm64: dts: bitmain: Add clock controller support for BM1880 SoC
+  arm64: dts: bitmain: Source common clock for UART controllers
+  clk: Add driver for Bitmain BM1880 SoC clock controller
+  MAINTAINERS: Add entry for Bitmain BM1880 SoC clock driver
+
+ .../bindings/clock/bitmain,bm1880-clk.txt     |  47 +
+ MAINTAINERS                                   |   2 +
+ .../boot/dts/bitmain/bm1880-sophon-edge.dts   |   9 -
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi       |  27 +
+ drivers/clk/Kconfig                           |   6 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/clk-bm1880.c                      | 947 ++++++++++++++++++
+ include/dt-bindings/clock/bm1880-clock.h      |  82 ++
+ 8 files changed, 1112 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.txt
+ create mode 100644 drivers/clk/clk-bm1880.c
+ create mode 100644 include/dt-bindings/clock/bm1880-clock.h
+
 -- 
 2.17.1
