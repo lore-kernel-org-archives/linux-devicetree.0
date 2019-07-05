@@ -1,67 +1,44 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH 2/6] thermal: qoriq: Use __maybe_unused instead of #if
- CONFIG_PM_SLEEP
-Date: Fri,  5 Jul 2019 12:56:08 +0800
-Message-ID: <20190705045612.27665-2-Anson.Huang@nxp.com>
-References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [RESEND PATCH next v2 0/6] ARM: keystone: update dt and enable cpts support
+Date: Fri, 5 Jul 2019 18:12:41 +0300
+Message-ID: <20190705151247.30422-1-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190705045612.27665-1-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com, agx@sigxcpu.org, leonard.crestez@nxp.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Cc: Linux-imx@nxp.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+Hi Santosh,
 
-Use __maybe_unused for power management related functions
-instead of #if CONFIG_PM_SLEEP to simply the code.
+This series is set of platform changes required to enable NETCP CPTS reference
+clock selection and final patch to enable CPTS for Keystone 66AK2E/L/HK SoCs.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/thermal/qoriq_thermal.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Those patches were posted already [1] together with driver's changes, so this
+is re-send of DT/platform specific changes only, as driver's changes have
+been merged already.
 
-diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index c7c7de2..2b2f79b 100644
---- a/drivers/thermal/qoriq_thermal.c
-+++ b/drivers/thermal/qoriq_thermal.c
-@@ -240,8 +240,7 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int qoriq_tmu_suspend(struct device *dev)
-+static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
- {
- 	u32 tmr;
- 	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
-@@ -254,7 +253,7 @@ static int qoriq_tmu_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int qoriq_tmu_resume(struct device *dev)
-+static int __maybe_unused qoriq_tmu_resume(struct device *dev)
- {
- 	u32 tmr;
- 	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
-@@ -266,7 +265,6 @@ static int qoriq_tmu_resume(struct device *dev)
- 
- 	return 0;
- }
--#endif
- 
- static SIMPLE_DEV_PM_OPS(qoriq_tmu_pm_ops,
- 			 qoriq_tmu_suspend, qoriq_tmu_resume);
+Patches 1-5: CPTS DT nodes update for TI Keystone 2 66AK2HK/E/L SoCs.
+Patch 6: enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs.
+
+[1] https://patchwork.kernel.org/cover/10980037/
+
+Grygorii Strashko (6):
+  ARM: dts: keystone-clocks: add input fixed clocks
+  ARM: dts: k2e-clocks: add input ext. fixed clocks tsipclka/b
+  ARM: dts: k2e-netcp: add cpts refclk_mux node
+  ARM: dts: k2hk-netcp: add cpts refclk_mux node
+  ARM: dts: k2l-netcp: add cpts refclk_mux node
+  ARM: configs: keystone: enable cpts
+
+ arch/arm/boot/dts/keystone-clocks.dtsi     | 27 ++++++++++++++++++++++
+ arch/arm/boot/dts/keystone-k2e-clocks.dtsi | 20 ++++++++++++++++
+ arch/arm/boot/dts/keystone-k2e-netcp.dtsi  | 21 +++++++++++++++--
+ arch/arm/boot/dts/keystone-k2hk-netcp.dtsi | 20 ++++++++++++++--
+ arch/arm/boot/dts/keystone-k2l-netcp.dtsi  | 20 ++++++++++++++--
+ arch/arm/configs/keystone_defconfig        |  1 +
+ 6 files changed, 103 insertions(+), 6 deletions(-)
+
 -- 
-2.7.4
+2.17.1
