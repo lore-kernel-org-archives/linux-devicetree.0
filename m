@@ -1,7 +1,7 @@
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv6 28/28] PCI: mobiveil: Fix the potential INTx missing problem
-Date: Fri,  5 Jul 2019 17:56:56 +0800
-Message-ID: <20190705095656.19191-29-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv6 26/28] PCI: mobiveil: Move PCIe PIO enablement out of inbound window routine
+Date: Fri,  5 Jul 2019 17:56:54 +0800
+Message-ID: <20190705095656.19191-27-Zhiqiang.Hou@nxp.com>
 References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
@@ -10,39 +10,44 @@ To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@
 Cc: Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The current INTx process is clear all the recorded INTx after
-each one of the recorded INTx handled, this can result in
-potential INTx missing. This patch change it to only clear the
-handled INTx status.
+Move the PCIe PIO master enablement to function mobiveil_host_init().
 
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Acked-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Tested-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
 ---
 V6:
- - Splited from #10 of v5 patches, no functional change.
+ - Splited from #9 of v5 patches, no functional change.
 
- drivers/pci/controller/pcie-mobiveil.c |    5 ++---
- 1 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c |    9 +++++----
+ 1 files changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index a5549cf..3ab7d2e 100644
+index aeba37c..f35d14b 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -372,9 +372,8 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
- 					dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
- 							    bit);
+@@ -469,10 +469,6 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+ 		return;
+ 	}
  
--				/* clear interrupt */
--				csr_writel(pcie,
--					   shifted_status << PAB_INTX_START,
-+				/* clear interrupt handled */
-+				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
- 					   PAB_INTP_AMBA_MISC_STAT);
- 			}
+-	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
+-	value |= 1 << PIO_ENABLE_SHIFT;
+-	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
+-
+ 	value = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
+ 	value &= ~(AMAP_CTRL_TYPE_MASK << AMAP_CTRL_TYPE_SHIFT | WIN_SIZE_MASK);
+ 	value |= type << AMAP_CTRL_TYPE_SHIFT | 1 << AMAP_CTRL_EN_SHIFT |
+@@ -610,6 +606,11 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 	value |= APIO_EN_MASK;
+ 	csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
  
++	/* Enable PCIe PIO master */
++	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
++	value |= 1 << PIO_ENABLE_SHIFT;
++	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
++
+ 	/*
+ 	 * we'll program one outbound window for config reads and
+ 	 * another default inbound window for all the upstream traffic
 -- 
 1.7.1
