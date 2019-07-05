@@ -1,61 +1,98 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 1/7] dt-bindings: net: Add bindings for Realtek PHYs
-Date: Fri, 5 Jul 2019 18:29:26 +0200
-Message-ID: <20190705162926.GM18473@lunn.ch>
-References: <20190703193724.246854-1-mka@chromium.org>
- <CAL_JsqJdBAMPc1sZJfL7V9cxGgCb4GWwRokwJDmac5L2AO2-wg@mail.gmail.com>
- <20190703213327.GH18473@lunn.ch>
- <CAL_Jsq+dqz7n0_+Y5R4772-rh=9x=k20A69hnDwxH3OyZXQneQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 07/13] dt-bindings: display: Convert raspberrypi,
+ 7inch-touchscreen panel to DT schema
+Date: Fri,  5 Jul 2019 10:42:15 -0600
+Message-ID: <20190705164221.4462-8-robh@kernel.org>
+References: <20190705164221.4462-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+dqz7n0_+Y5R4772-rh=9x=k20A69hnDwxH3OyZXQneQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190705164221.4462-1-robh@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 10:17:16AM -0600, Rob Herring wrote:
-> On Wed, Jul 3, 2019 at 3:33 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > > I think if we're going to have custom properties for phys, we should
-> > > have a compatible string to at least validate whether the custom
-> > > properties are even valid for the node.
-> >
-> > Hi Rob
-> >
-> > What happens with other enumerable busses where a compatible string is
-> > not used?
-> 
-> We usually have a compatible. USB and PCI both do. Sometimes it is a
-> defined format based on VID/PID.
-
-Hi Rob
-
-Is it defined what to do with this compatible? Just totally ignore it?
-Validate it against the hardware and warning if it is wrong? Force
-load the driver that implements the compatible, even thought bus
-enumeration says it is the wrong driver?
-
-> > The Ethernet PHY subsystem will ignore the compatible string and load
-> > the driver which fits the enumeration data. Using the compatible
-> > string only to get the right YAML validator seems wrong. I would
-> > prefer adding some other property with a clear name indicates its is
-> > selecting the validator, and has nothing to do with loading the
-> > correct driver. And it can then be used as well for USB and PCI
-> > devices etc.
-> 
-> Just because Linux happens to not use compatible really has nothing to
-> do with whether or not the nodes should have a compatible. What does
-> FreeBSD want? U-boot?
-> 
-> I don't follow how adding a validate property would help. It would
-> need to be 'validate-node-as-a-realtek-phy'.
-
-This makes it clear it is all about validating the DT, and nothing
-about the actual running hardware. What i don't really want to see is
-the poorly defined situation that DT contains a compatible string, but
-we have no idea what it is actually used for. See the question above.
-
-     Andrew
+Q29udmVydCB0aGUgcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4gcGFuZWwgYmluZGluZyB0
+byBEVCBzY2hlbWEuCgpDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KQ2M6IFRoaWVy
+cnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+CkNjOiBTYW0gUmF2bmJvcmcgPHNh
+bUByYXZuYm9yZy5vcmc+CkNjOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlk
+ZWFzb25ib2FyZC5jb20+CkNjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnClJldmll
+d2VkLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPgpTaWduZWQt
+b2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0KIC4uLi9wYW5lbC9yYXNw
+YmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi50eHQgICB8IDQ5IC0tLS0tLS0tLS0tLS0KIC4uLi9w
+YW5lbC9yYXNwYmVycnlwaSw3aW5jaC10b3VjaHNjcmVlbi55YW1sICB8IDcxICsrKysrKysrKysr
+KysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgNzEgaW5zZXJ0aW9ucygrKSwgNDkgZGVsZXRpb25z
+KC0pCiBkZWxldGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4udHh0CiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4ueWFtbAoKZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Jhc3BiZXJyeXBpLDdp
+bmNoLXRvdWNoc2NyZWVuLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLnR4dApkZWxldGVkIGZp
+bGUgbW9kZSAxMDA2NDQKaW5kZXggZTllMTljMDU5MjYwLi4wMDAwMDAwMDAwMDAKLS0tIGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmFzcGJlcnJ5cGks
+N2luY2gtdG91Y2hzY3JlZW4udHh0CisrKyAvZGV2L251bGwKQEAgLTEsNDkgKzAsMCBAQAotVGhp
+cyBiaW5kaW5nIGNvdmVycyB0aGUgb2ZmaWNpYWwgNyIgKDgwMHg0ODApIFJhc3BiZXJyeSBQaSB0
+b3VjaHNjcmVlbgotcGFuZWwuCi0KLVRoaXMgRFNJIHBhbmVsIGNvbnRhaW5zOgotCi0tIFRDMzU4
+NzYyIERTSS0+RFBJIGJyaWRnZQotLSBBdG1lbCBtaWNyb2NvbnRyb2xsZXIgb24gSTJDIGZvciBw
+b3dlciBzZXF1ZW5jaW5nIHRoZSBEU0kgYnJpZGdlIGFuZAotICBjb250cm9sbGluZyBiYWNrbGln
+aHQKLS0gVG91Y2hzY3JlZW4gY29udHJvbGxlciBvbiBJMkMgZm9yIHRvdWNoIGlucHV0Ci0KLWFu
+ZCB0aGlzIGJpbmRpbmcgY292ZXJzIHRoZSBEU0kgZGlzcGxheSBwYXJ0cyBidXQgbm90IGl0cyB0
+b3VjaCBpbnB1dC4KLQotUmVxdWlyZWQgcHJvcGVydGllczoKLS0gY29tcGF0aWJsZToJTXVzdCBi
+ZSAicmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwiCi0tIHJlZzoJCU11c3QgYmUg
+IjQ1IgotLSBwb3J0OgkJU2VlIHBhbmVsLWNvbW1vbi50eHQKLQotRXhhbXBsZToKLQotZHNpMTog
+ZHNpQDdlNzAwMDAwIHsKLQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKLQkjc2l6ZS1jZWxscyA9IDww
+PjsKLQk8Li4uPgotCi0JcG9ydCB7Ci0JCWRzaV9vdXRfcG9ydDogZW5kcG9pbnQgewotCQkJcmVt
+b3RlLWVuZHBvaW50ID0gPCZwYW5lbF9kc2lfcG9ydD47Ci0JCX07Ci0JfTsKLX07Ci0KLWkyY19k
+c2k6IGkyYyB7Ci0JY29tcGF0aWJsZSA9ICJpMmMtZ3BpbyI7Ci0JI2FkZHJlc3MtY2VsbHMgPSA8
+MT47Ci0JI3NpemUtY2VsbHMgPSA8MD47Ci0JZ3Bpb3MgPSA8JmdwaW8gMjggMAotCQkgJmdwaW8g
+MjkgMD47Ci0KLQlsY2RANDUgewotCQljb21wYXRpYmxlID0gInJhc3BiZXJyeXBpLDdpbmNoLXRv
+dWNoc2NyZWVuLXBhbmVsIjsKLQkJcmVnID0gPDB4NDU+OwotCi0JCXBvcnQgewotCQkJcGFuZWxf
+ZHNpX3BvcnQ6IGVuZHBvaW50IHsKLQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXRfcG9y
+dD47Ci0JCQl9OwotCQl9OwotCX07Ci19OwpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3Jl
+ZW4ueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
+L3Jhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLnlhbWwKbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+aW5kZXggMDAwMDAwMDAwMDAwLi4yMmEwODNmN2JjOGUKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9yYXNwYmVycnlwaSw3
+aW5jaC10b3VjaHNjcmVlbi55YW1sCkBAIC0wLDAgKzEsNzEgQEAKKyMgU1BEWC1MaWNlbnNlLUlk
+ZW50aWZpZXI6IEdQTC0yLjAKKyVZQU1MIDEuMgorLS0tCiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVl
+Lm9yZy9zY2hlbWFzL2Rpc3BsYXkvcGFuZWwvcmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4u
+eWFtbCMKKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55
+YW1sIworCit0aXRsZTogVGhlIG9mZmljaWFsIDciICg4MDB4NDgwKSBSYXNwYmVycnkgUGkgdG91
+Y2hzY3JlZW4KKworbWFpbnRhaW5lcnM6CisgIC0gRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5l
+dD4KKyAgLSBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgorCitkZXNj
+cmlwdGlvbjogfCsKKyAgVGhpcyBEU0kgcGFuZWwgY29udGFpbnM6CisKKyAgLSBUQzM1ODc2MiBE
+U0ktPkRQSSBicmlkZ2UKKyAgLSBBdG1lbCBtaWNyb2NvbnRyb2xsZXIgb24gSTJDIGZvciBwb3dl
+ciBzZXF1ZW5jaW5nIHRoZSBEU0kgYnJpZGdlIGFuZAorICAgIGNvbnRyb2xsaW5nIGJhY2tsaWdo
+dAorICAtIFRvdWNoc2NyZWVuIGNvbnRyb2xsZXIgb24gSTJDIGZvciB0b3VjaCBpbnB1dAorCisg
+IGFuZCB0aGlzIGJpbmRpbmcgY292ZXJzIHRoZSBEU0kgZGlzcGxheSBwYXJ0cyBidXQgbm90IGl0
+cyB0b3VjaCBpbnB1dC4KKworcHJvcGVydGllczoKKyAgY29tcGF0aWJsZToKKyAgICBjb25zdDog
+cmFzcGJlcnJ5cGksN2luY2gtdG91Y2hzY3JlZW4tcGFuZWwKKworICByZWc6CisgICAgY29uc3Q6
+IDB4NDUKKworICBwb3J0OiB0cnVlCisKK3JlcXVpcmVkOgorICAtIGNvbXBhdGlibGUKKyAgLSBy
+ZWcKKyAgLSBwb3J0CisKK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQorCitleGFtcGxlczoK
+KyAgLSB8KworICAgIGRzaTE6IGRzaSB7CisgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKKyAg
+ICAgICNzaXplLWNlbGxzID0gPDA+OworCisgICAgICBwb3J0IHsKKyAgICAgICAgZHNpX291dF9w
+b3J0OiBlbmRwb2ludCB7CisgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9kc2lf
+cG9ydD47CisgICAgICAgIH07CisgICAgICB9OworICAgIH07CisKKyAgICBpMmNfZHNpOiBpMmMg
+eworICAgICAgY29tcGF0aWJsZSA9ICJpMmMtZ3BpbyI7CisgICAgICAjYWRkcmVzcy1jZWxscyA9
+IDwxPjsKKyAgICAgICNzaXplLWNlbGxzID0gPDA+OworICAgICAgc2NsLWdwaW9zID0gPCZncGlv
+IDI4IDA+OworICAgICAgc2RhLWdwaW9zID0gPCZncGlvIDI5IDA+OworCisgICAgICBsY2RANDUg
+eworICAgICAgICBjb21wYXRpYmxlID0gInJhc3BiZXJyeXBpLDdpbmNoLXRvdWNoc2NyZWVuLXBh
+bmVsIjsKKyAgICAgICAgcmVnID0gPDB4NDU+OworCisgICAgICAgIHBvcnQgeworICAgICAgICAg
+IHBhbmVsX2RzaV9wb3J0OiBlbmRwb2ludCB7CisgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQg
+PSA8JmRzaV9vdXRfcG9ydD47CisgICAgICAgICAgfTsKKyAgICAgICAgfTsKKyAgICAgIH07Cisg
+ICAgfTsKKworLi4uCi0tIAoyLjIwLjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbA==
