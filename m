@@ -1,35 +1,36 @@
 From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v6 2/2] dt-bindings: net: bluetooth: Add device property
- firmware-name for QCA6174
-Date: Sat, 6 Jul 2019 12:56:17 +0200
-Message-ID: <9245C22A-E0B7-437E-BD73-8A25033660C2@holtmann.org>
-References: <1557919203-11055-1-git-send-email-rjliao@codeaurora.org>
- <1559814055-13872-1-git-send-email-rjliao@codeaurora.org>
+Subject: Re: [PATCH v1 0/4] add boot-gpios and clock property to btmtkuart
+Date: Sat, 6 Jul 2019 13:01:08 +0200
+Message-ID: <1E60D580-3D91-4AF0-8CCC-4576C54D2258@holtmann.org>
+References: <1559437457-26766-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
 Content-Type: text/plain;
         charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559814055-13872-1-git-send-email-rjliao@codeaurora.org>
+In-Reply-To: <1559437457-26766-1-git-send-email-sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rocky Liao <rjliao@codeaurora.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, Johan Hedberg <johan.hedberg@gmail.com>, thierry.escande@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org, c-hbandi@codeaurora.org
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, Johan Hedberg <johan.hedberg@gmail.com>, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rocky,
+Hi Sean,
 
-> This patch adds an optional device property "firmware-name" to allow the
-> driver to load customized nvm firmware file based on this property.
+> Update dt-binding and the corresponding implmentation of boot-gpios and clock
+> property to btmtkuart.
 > 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
-> Changes in v6:
->  * Added read firmware-name property for both QCA6174 and WCN399X
-> ---
-> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 4 ++++
-> 1 file changed, 4 insertions(+)
+> Sean Wang (4):
+>  dt-bindings: net: bluetooth: add boot-gpios property to UART-based
+>    device
+>  dt-bindings: net: bluetooth: add clock property to UART-based device
+>  Bluetooth: btmtkuart: add an implementation for boot-gpios property
+>  Bluetooth: btmtkuart: add an implementation for clock osc property
+> 
+> .../bindings/net/mediatek-bluetooth.txt       | 17 +++++++
+> drivers/bluetooth/btmtkuart.c                 | 51 +++++++++++++++----
+> 2 files changed, 58 insertions(+), 10 deletions(-)
 
-patch has been applied to bluetooth-next tree.
+all four patches have been applied to bluetooth-next tree.
 
 Regards
 
