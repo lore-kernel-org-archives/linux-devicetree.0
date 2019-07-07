@@ -1,57 +1,60 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: Re: Re: [PATCH v2 3/7] rtc: mt6397: improvements of rtc driver
-Date: Sat, 6 Jul 2019 22:04:20 +0200
-Message-ID: <20190706200420.GE12409@piout.net>
-References: <20190703164822.17924-1-frank-w@public-files.de>
- <20190703164822.17924-4-frank-w@public-files.de>
- <20190704204336.GJ3692@piout.net>
- <trinity-7b1977bd-252b-4482-b708-cf704a9d3da1-1562340946396@3c-app-gmx-bs68>
- <20190705212448.GB12409@piout.net>
- <trinity-a4e5f99f-00bc-4e90-9a48-64dbc6ba9c08-1562429720701@3c-app-gmx-bs42>
+From: Hanna Hawa <hhhawa@amazon.com>
+Subject: [PATCH v2 0/4] Add support for Amazon's Annapurna Labs EDAC for L1/L2
+Date: Sun, 7 Jul 2019 14:57:34 +0300
+Message-ID: <1562500658-14717-1-git-send-email-hhhawa@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <trinity-a4e5f99f-00bc-4e90-9a48-64dbc6ba9c08-1562429720701@3c-app-gmx-bs42>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Allison Randal <allison@lohutok.net>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel>
+To: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com
+Cc: dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, hhhawa@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2019 18:15:20+0200, Frank Wunderlich wrote:
-> > Gesendet: Freitag, 05. Juli 2019 um 23:24 Uhr
-> > Von: "Alexandre Belloni" <alexandre.belloni@bootlin.com>
-> 
-> > Let's say the RTC has been used to start your platform, then the irq
-> > handler will be called as soon as the irq is requested, leading to a
-> > null pointer dereference.
-> 
-> i cannot test this with my platform, but i have changed it in my repo
-> 
-> https://github.com/frank-w/BPI-R2-4.14/commits/5.2-poweroff-mainline
-> 
-> > Yes and IIRC, I did comment that the rtc change also had to be separated
-> > from 1/7.
-> 
-> also this is put in separate commit, can you take a look before i post v3?
-> 
-> > Also, I really doubt this new compatible is necessary at all as you
-> > could simply directly use mediatek,mt6397-rtc.
-> 
-> imho this can confuse because the wrong chip-name is used in dts
-> 
+This series adds L1 and L2 caches support for error detection and
+correction for Amazon's Annapurna Labs SoCs.
+Alpine SoCs support L1 and L2 single bit correction and two bits detection
+capability based on ARM implementation.
 
-This is not true, we do that all the time and the immediate benefit of
-using the mt6397 compatible is that then there is no need to
-synchronize between subsystems. If you want to be absolutely
-conservative, you could use
+Changes since v1:
+-----------------
+- Split into two drivers
+- Get cpu-mask according to l2-cache handler from devicetree
+- Remove parameter casting
+- Use GENMASK() in bit mask
+- Use FIELD_GET()
+- Update define description PLRU_RAM -> PF_RAM
+- Use sys_reg() and read_sysreg_s()
+- Remove all write/read wrappers
+- Check fatal field to set if the error correctable or not
+- Remove un-relevant information from error prints.
+- Update smp_call_function_single() call function to wait
+- remove usage of get_online_cpus/put_online_cpus
+- Use on_each_cpu() and smp_call_function_any() instead of loop with for_each_cpu.
+- use buffer for error prints and pass to edac API
+- Remove edac_op_state set
+- Add for loop to report on repeated errors of the same type
+- Fix error name of the TLB to be L2_TLB as written in ARM TRM
+- Minor change in Kconfig
+- Minor changes in commit message
 
-compatible = "mediatek,mt6323-rtc", "mediatek,mt6397-rtc";
+Hanna Hawa (4):
+  dt-bindings: EDAC: Add Amazon's Annapurna Labs L1 EDAC
+  edac: Add support for Amazon's Annapurna Labs L1 EDAC
+  dt-bindings: EDAC: Add Amazon's Annapurna Labs L2 EDAC
+  edac: Add support for Amazon's Annapurna Labs L2 EDAC
 
-in your DT.
-
+ .../devicetree/bindings/edac/amazon,al-l1-edac.txt |  14 ++
+ .../devicetree/bindings/edac/amazon,al-l2-edac.txt |  20 +++
+ MAINTAINERS                                        |  12 ++
+ drivers/edac/Kconfig                               |  16 ++
+ drivers/edac/Makefile                              |   2 +
+ drivers/edac/al_l1_edac.c                          | 154 +++++++++++++++++
+ drivers/edac/al_l2_edac.c                          | 185 +++++++++++++++++++++
+ 7 files changed, 403 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
+ create mode 100644 drivers/edac/al_l1_edac.c
+ create mode 100644 drivers/edac/al_l2_edac.c
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.7.4
