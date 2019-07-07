@@ -1,84 +1,150 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 1/6] dt-bindings: interrupt-controller: Document RTD129x
-Date: Sun, 7 Jul 2019 20:10:59 +0100
-Message-ID: <20190707201059.0e86dc71@why>
-References: <20190707132246.GB13340@arks.localdomain>
+From: Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+Date: Mon, 8 Jul 2019 00:00:01 +0300
+Message-ID: <CA+h21hqGEf4hoeBQ-cSGsiOWUD7bVX4=NWcJjwdYHOVonangAw@mail.gmail.com>
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+ <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
+ <20190621164940.GL31306@lunn.ch> <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+ <20190624115558.GA5690@piout.net> <20190624142625.GR31306@lunn.ch>
+ <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
+ <20190624162431.GX31306@lunn.ch> <20190624182614.GC5690@piout.net>
+ <CA+h21hqGtA5ou7a3wjSuHxa_4fXk4GZohTAxnUdfLZjV3nq5Eg@mail.gmail.com>
+ <20190705044945.GA30115@lunn.ch> <CA+h21hqU1H1PefBWKjnsmkMsLhx0p0HJTsp-UYrSgmVnsfqULA@mail.gmail.com>
+ <c60df66a-b3c9-1445-36c6-cad7c6b75550@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190707132246.GB13340@arks.localdomain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aleix Roca Nonell <kernelrocks@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c60df66a-b3c9-1445-36c6-cad7c6b75550@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, "Allan W. Nielsen" <allan.nielsen@microchip.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Allan Nielsen <Allan.Nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 7 Jul 2019 15:22:46 +0200
-Aleix Roca Nonell <kernelrocks@gmail.com> wrote:
+On Fri, 5 Jul 2019 at 19:03, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 7/5/2019 2:08 AM, Vladimir Oltean wrote:
+> > Hi Andrew,
+> >
+> > On Fri, 5 Jul 2019 at 07:49, Andrew Lunn <andrew@lunn.ch> wrote:
+> >>
+> >> Hi Vladimir
+> >>
+> >>> - DSA is typically used for discrete switches, switchdev is typically
+> >>> used for embedded ones.
+> >>
+> >> Typically DSA is for discrete switches, but not exclusively. The
+> >> b53/SF2 is embedded in a number of Broadcom SoCs. So this is no
+> >> different to Ocelot, except ARM vs MIPS. Also, i would disagree that
+> >> switchdev is used for embedded ones. Mellonex devices are discrete, on
+> >> a PCIe bus. I believe Netronome devices are also discrete PCIe
+> >> devices. In fact, i think ocelot is the only embedded switchdev
+> >> switch.
+> >>
+> >> So embedded vs discrete plays no role here at all.
+> >>
+> >
+> > drivers/staging/fsl-dpaa2/ethsw/ is another example of switchdev
+> > driver for an embedded switch.
+> > I would give it to you that the sample size is probably too small to
+> > say 'typically', but my point was that in order to support cascaded
+> > switches it makes more sense for those to be discrete.
+> >
+> >>> - The D in DSA is for cascaded switches. Apart from the absence of
+> >>> such a "Ocelot SoC" driver (which maybe can be written, I don't know),
+> >>> I think the switching core itself has some fundamental limitations
+> >>> that make a DSA implementation questionable:
+> >>
+> >> There is no requirement to implement D in DSA. In fact, only Marvell
+> >> does. None of the other switches do. And you will also find that most
+> >> boards with a Marvell switch use a single device. D in DSA is totally
+> >> optional. In fact, DSA is built from the ground up that nearly
+> >> everything is optional. Take a look at mv88e6060, as an example. It
+> >> implements nearly nothing. It cannot even offload a bridge to the
+> >> switch.
+> >>
+> >
+> > Let me see if I get your point.
+> > The D is optional, and the S is optional. So what's left? :)
+> > Also, there's a big difference between "the hardware can't do it" and
+> > "the driver doesn't implement it". If I follow your argument, would
+> > you write a DSA driver for a device that doesn't do L2 switching?
+> > Along that same line, what benefit does the DSA model bring to a
+> > switch that can't do cascading, compared to switchdev? I'm asking this
+> > as a user, not as a developer.
+>
+> As an user, I don't think there are compelling arguments to either
+> switchdev or DSA because the end result is the same: network devices
+> that can offload "stuff". As a developer though, there is much less code
+> to write with DSA than with switchdev to get your HW live.
+>
+> >
+> >>> So my conclusion is that DSA for Felix/Ocelot doesn't make a lot of
+> >>> sense if the whole purpose is to hide the CPU-facing netdev.
+> >>
+> >> You actually convinced me the exact opposite. You described the
+> >> headers which are needed to implement DSA. The switch sounds like it
+> >> can do what DSA requires. So DSA is the correct model.
+> >>
+> >>      Andrew
+> >
+> > Somebody actually asked, with the intention of building a board, if
+> > it's possible to cascade the LS1028A embedded switch (Felix) with
+> > discrete SJA1105 devices - Felix being at the top of the switch tree.
+> > Does the DSA model support heterogeneous setups (parsing stacked
+> > headers)? I can't tell if that's how EDSA tags work. With switchdev
+> > for Felix there wouldn't be any problem - it just wouldn't be part of
+> > the DSA tree and its own driver would remove its tags before DSA would
+> > look at the rest.
+>
+> DSA not does not make any particular assumptions about how the stacking
+> is done actually because each slave network device is expected to
+> provided standard Ethernet frames to the network stack. How you get to
+> that point is entirely specific to what the hardware can do.
+>
+> You do what Andrew described about one of my setup (bcm_sf2 w/ tagging
+> enabled and b53 w/o tagging, see more below why [1]]) and both being
+> discrete switch trees, with the master netdev of the b53 being a slave
+> netdev provided by bcm_sf2. If your tagging protocol supports it you can
+> make them part of the same DSA switch tree and just have them have
+> different switch identifiers, that is what Marvell switches do and it
+> works just great. In your case, I suppose you could even use double VLAN
+> tagging to get such cascading to work, that would limit you to a two
+> level of cascading, unless you invent something custom.
+>
+> [1]: The original Broadcom tag format introduced with BCM5325/5365 did
+> support cascading in the same way that Marvell did where a switch
+> identifier can be added in addition to a port number within the tag. The
+> newest Broadcom tag that was introduced with 5395 and newer dropped
+> support for the switch identifier and the switch will "terminate" the
+> first (from start of Ethernet frame) tag that it receives. This is the
+> reason why we need to disable tagging on the outermost B53 device that
+> we are connected to. This means those network devices are mainly
+> configuration endpoints and not passing data (DSA_TAG_PROTO_NONE),
+> though we could use DSA_TAG_PROTO_8021Q and resolve that now.
+> --
+> Florian
 
-> Add binding for Realtek RTD129x interrupt controller.
-> 
-> Signed-off-by: Aleix Roca Nonell <kernelrocks@gmail.com>
-> ---
->  .../realtek,rtd129x-intc.txt                  | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/realtek,rtd129x-intc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd129x-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd129x-intc.txt
-> new file mode 100644
-> index 000000000000..3ebb7c02afe5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd129x-intc.txt
-> @@ -0,0 +1,24 @@
-> +Realtek RTD129x IRQ Interrupt Controller
-> +=======================================
-> +
-> +Required properties:
-> +
-> +- compatible           :  Should be one of the following:
-> +                          - "realtek,rtd129x-intc-misc"
-> +                          - "realtek,rtd129x-intc-iso"
+Thanks to both of you for sharing this trick, I don't think it's
+written "in the books".
+Given that you can choose the boundaries of a DSA tree at will
+depending on what suits the setup best (and e.g. turn a DSA link pair
+into a master and a CPU port pair which gains back introspection into
+that port's ethtool counters etc), I guess DSA doesn't really offer
+anything that raw switchdev drivers can't do (by reimplementing part
+of it), just that it's is more idiomatic for Ethernet-connected
+switches?
+If so, it's a bit strange that switchdev and DSA are not in fact
+unified, because as it is it creates false dichotomies. What about the
+other way around? What are the features that raw switchdev drivers
+(nfp, rocker, mlxsw) need that DSA can't offer them without breaking
+the general model? (apart from access to the raw ndo_start_xmit and a
+NAPI context for rcv)
+As for DSA being easier on the driver writer, I totally get that, but
+I think it isn't that much of an argument when the switchdev driver is
+already said and done, as in this case :)
 
-What does 'iso' mean in this context?
-
-> +- reg                  :  Specifies the address of the ISR, IER and Unmask
-> +                          register in couples of "address length".
-
-Are these registers actually interleaved with other stuff? What else it
-in between?
-
-> +- interrupts           :  Specifies the interrupt line which is mux'ed.
-> +- interrupt-controller :  Presence indicates the node as interrupt controller.
-> +- #interrupt-cells     :  Shall be 1. See common bindings in interrupt.txt.
-
-So I guess this is level only, with an unspecified polarity? No edge
-interrupts?
-
-> +
-> +
-> +Example:
-> +
-> +	interrupt-controller@98007000 {
-> +		compatible = "realtek,rtd129x-iso-irq-mux";
-
-It'd be good if the the example matched the rest of the documentation.
-
-> +		reg = <0x98007000 0x4 0x98007040 0x4 0x98007004 0x4>;
-> +		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +	};
-
-Thanks,
-
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+Regards,
+-Vladimir
