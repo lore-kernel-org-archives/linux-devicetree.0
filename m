@@ -1,60 +1,62 @@
 From: Aleix Roca Nonell <kernelrocks@gmail.com>
-Subject: [PATCH 0/6] Add Banana Pi BPI-W2 basic support
-Date: Sun, 7 Jul 2019 15:22:23 +0200
-Message-ID: <20190707132223.GA13340@arks.localdomain>
+Subject: [PATCH 1/6] dt-bindings: interrupt-controller: Document RTD129x
+Date: Sun, 7 Jul 2019 15:22:46 +0200
+Message-ID: <20190707132246.GB13340@arks.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds minimum support to boot a Banana Pi BPI-W2. This
-board serial interface is muxed through a custom Realtek driver not
-currently in mainline. Without the driver, it is only possible to
-initialize a bootconsole, but init cannot be run. The datasheet of the
-board's RTD1296 SoC is not publicly available and the procedure to
-interface the interrupt controller registers is not completely known
-yet, however, it works.
+Add binding for Realtek RTD129x interrupt controller.
 
-This patch is based on the official BPI-W2 downstream kernel driver [1]
-and the last attempt of Andreas Färber [2] to support such driver.
-
-Please, note that the board still requires a slightly modified version
-of the downstreamed Realtek U-Boot to launch the Linux Kernel, which
-essentially removes the need for some dts nodes not included in this
-patch and reallocates u-boot before loading the kernel to avoid
-overriding U-Boot code.
-
-[1] - https://github.com/BPI-SINOVOIP/BPI-W2-bsp
-[2] - https://patchwork.kernel.org/patch/10011891
-
-Aleix Roca Nonell (6):
-  dt-bindings: interrupt-controller: Document RTD129x
-  irqchip: Add Realtek RTD129x intc driver
-  arm64: dts: realtek: Move rtd1295 memreserve areas from the generic
-    rtd129x to its specific dtsi
-  arm64: dts: realtek: Add realtek intc to RTD129x
-  dt-bindings: arm: Document RTD1296
-  arm64: dts: realtek: Add bpi-w2 board support and its RTD1296 SoC
-
- .../devicetree/bindings/arm/realtek.txt       |  13 +
- .../realtek,rtd129x-intc.txt                  |  24 ++
- arch/arm64/boot/dts/realtek/Makefile          |   1 +
- arch/arm64/boot/dts/realtek/rtd1295.dtsi      |   3 +
- .../dts/realtek/rtd1296-bananapi-bpi-w2.dts   |  27 ++
- arch/arm64/boot/dts/realtek/rtd1296.dtsi      |  77 ++++
- arch/arm64/boot/dts/realtek/rtd129x.dtsi      |  12 +-
- drivers/irqchip/Makefile                      |   1 +
- drivers/irqchip/irq-rtd129x.c                 | 371 ++++++++++++++++++
- 9 files changed, 527 insertions(+), 2 deletions(-)
+Signed-off-by: Aleix Roca Nonell <kernelrocks@gmail.com>
+---
+ .../realtek,rtd129x-intc.txt                  | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/realtek,rtd129x-intc.txt
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1296-bananapi-bpi-w2.dts
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1296.dtsi
- create mode 100644 drivers/irqchip/irq-rtd129x.c
 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd129x-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd129x-intc.txt
+new file mode 100644
+index 000000000000..3ebb7c02afe5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd129x-intc.txt
+@@ -0,0 +1,24 @@
++Realtek RTD129x IRQ Interrupt Controller
++=======================================
++
++Required properties:
++
++- compatible           :  Should be one of the following:
++                          - "realtek,rtd129x-intc-misc"
++                          - "realtek,rtd129x-intc-iso"
++- reg                  :  Specifies the address of the ISR, IER and Unmask
++                          register in couples of "address length".
++- interrupts           :  Specifies the interrupt line which is mux'ed.
++- interrupt-controller :  Presence indicates the node as interrupt controller.
++- #interrupt-cells     :  Shall be 1. See common bindings in interrupt.txt.
++
++
++Example:
++
++	interrupt-controller@98007000 {
++		compatible = "realtek,rtd129x-iso-irq-mux";
++		reg = <0x98007000 0x4 0x98007040 0x4 0x98007004 0x4>;
++		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
 -- 
 2.21.0
