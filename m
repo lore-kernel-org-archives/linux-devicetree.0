@@ -1,153 +1,168 @@
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Mon, 08 Jul 2019 14:15:42 +0300
-Message-ID: <874l3wn5ep.fsf@linux.intel.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-6-git-send-email-pawell@cadence.com> <87r274lmqk.fsf@linux.intel.com> <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com> <87a7dpm442.fsf@linux.intel.com> <BYAPR07MB4709E5BA041BBDDB70E69F62DDF60@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [RFC PATCH V2 5/6] remoteproc/mediatek: add SCP's shared dma pool
+ support for mt8183
+Date: Mon, 8 Jul 2019 19:04:59 +0800
+Message-ID: <20190708110500.7242-6-frederic.chen@mediatek.com>
+References: <20190708110500.7242-1-frederic.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB4709E5BA041BBDDB70E69F62DDF60@BYAPR07MB4709.namprd07.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190708110500.7242-1-frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Allan.Yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, christie.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+From: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
+This patch uses of_reserved_mem_device_init_by_idx() to hook the
+scp device to DMA mapping API to provide a shared dma pool of
+SCP DMA buffers for SCP's client such as DIP and ISP Pass 1
+drivers.
 
-Hi,
+Signed-off-by: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/remoteproc/mtk_scp.c | 54 ++++++++++++++++++++++--------------
+ 1 file changed, 33 insertions(+), 21 deletions(-)
 
-Pawel Laszczak <pawell@cadence.com> writes:
-> Please look at the changes in drivers/usb/common/common.c file.=20
-> I'm going to add it as next patch to next version.
->=20=20
->
->>Pawel Laszczak <pawell@cadence.com> writes:
->>>>> +void cdns3_role_stop(struct cdns3 *cdns)
->>
->>>>> +static const char *const cdns3_mode[] =3D {
->>>>> +	[USB_DR_MODE_UNKNOWN]		=3D "unknown",
->>>>> +	[USB_DR_MODE_OTG]		=3D "otg",
->>>>> +	[USB_DR_MODE_HOST]		=3D "host",
->>>>> +	[USB_DR_MODE_PERIPHERAL]	=3D "device",
->>>>> +};
->>>>
->>>>don't we have a generic version of this under usb/common ?
->>>>
->>> Yes, there is a similar array, but it is defined also as static
->>> and there is no function for converting value to string.
->>> There is only function for converting string to value.
->>
->>right. You can add the missing interface generically instead of
->>duplicating the enumeration.
->>
->>> There is also:
->>> [USB_DR_MODE_UNKNOWN]		=3D "",
->>> Instead of:
->>> [USB_DR_MODE_UNKNOWN]		=3D "unknown",
->>>
->>> So, for USB_DR_MODE_UNKNOWN user will not see anything information.
->>
->>But that's what "unknown" means :-) We don't know the information.
->>
->
-> ////// start
-> commit 607754c60fabc43408f4f2de82d3560c72870787 (HEAD)
-> Author: Pawel Laszczak <pawell@cadence.com>
-> Date:   Mon Jul 8 12:53:47 2019 +0200
->
->     usb:common  Added usb_get_dr_mode_from_string and usb_dr_mode_to_stri=
-ng.
-
-This would read better as:
-
-      usb: common: Add usb_get_dr_mode_from_string and usb_dr_mode_to_strin=
-g.
-
->
->     Patch introduces new function usb_dr_mode_to_string for converting du=
-al role
->     mod to string and removes static from usb_dr_mode_to_string definitio=
-n.
->
->     Both changes have made to avoid duplication of code by cdns3 driver.
->
-> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> index 18f5dcf58b0d..ab59954deff8 100644
-> --- a/drivers/usb/common/common.c
-> +++ b/drivers/usb/common/common.c
-> @@ -118,13 +118,20 @@ static const char *const usb_dr_modes[] =3D {
->         [USB_DR_MODE_OTG]               =3D "otg",
->  };
->
-> -static enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
-> +/**
-> + * usb_get_dr_mode_from_string - Convert string to dual role mode.
-> + * @str: Pointer to the given string
-> + *
-> + * The function gets string and returns the correspondig enum usb_dr_mod=
-e.
-> + */
-> +enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
->  {
->         int ret;
->
->         ret =3D match_string(usb_dr_modes, ARRAY_SIZE(usb_dr_modes), str);
->         return (ret < 0) ? USB_DR_MODE_UNKNOWN : ret;
->  }
-> +EXPORT_SYMBOL_GPL(usb_get_dr_mode_from_string);
->
->  enum usb_dr_mode usb_get_dr_mode(struct device *dev)
->  {
-> @@ -139,6 +146,21 @@ enum usb_dr_mode usb_get_dr_mode(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(usb_get_dr_mode);
->
-> +/**
-> + * usb_dr_mode_to_string - Convert dual role mode to stringi.
-
-s/stringi/string
-
-> + * @dr_mode: Pointer to the given dual role mode
-> + *
-> + * The function gets enum usb_dr_mode, and returns the correspondig stri=
-ng.
-> + */
-> +const *char usb_dr_mode_to_string(const enum usb_dr_mode dr_mode)
-> +{
-> +       if (dr_mode > USB_DR_MODE_UNKNOWN || dr_mode <=3D USB_DR_MODE_PER=
-IPHERAL)
-> +               return usb_dr_modes[dr_mode];
-> +
-> +       return usb_dr_modes[USB_DR_MODE_UNKNOWN];
-> +}
-> +EXPORT_SYMBOL_GPL(usb_dr_mode_to_string);
-
-missing prototype in a header file.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0jJd4ACgkQzL64meEa
-mQb97A/9Hr4c2WZCaadxHiinggvMFi2lLiT1SA8SJHF0rmBdR2bcFHuzEI+TfiAG
-Mj+gtOn30UcnuFrbUcx/3fuca98a/5qsAxBaZK2EIEjx/+9nLt4myJhtYxVy+2eE
-MDtAED95JbLTTUiG79QsnuzJMx0FvxwOXiurZM3wsQ6+lQgBl4Y3Blhaj0IL9H6L
-AojjsFeRzeb2hjZnAESGWPDb3I0CW71Niei3IPh4zpijtNNNllcA2TZRSDIr9PZI
-8LhUtsuCPn1kopHVyf91wO3+uAIGpw4NjxIl76shwT+cmAFnfU9KiWGiz7JPe0Z0
-wxwEcYFwTisfe2/8uIg3iuExi2bg6NMAI8w/VG/sbx6RiYg9nSRpIf2vZwwNWMHo
-Ezr1U/jfsnJ/o5NNbHRg04r/cdSmQrLfD72IjAwZfI5z+QJlXOX0FmtuQbOqu3ba
-NM1a65Viae2/DQRwO9wd9WNGOFg6PgP0B7ZFXAd0XdC+tOuw/pSwN9tQJwrDliLJ
-rKf5qwxc3C7KLSttcf7wxpir5CxOd5LFereBR7KZdTbWXkq/aHP0LSOBc2fLO31N
-0ZgoyPPXApzm8jayvYYZ9qSph3I+7Iu5XvenMi90HrFuZCuTRxAVPWaM3nkKEbRf
-QqvLPB/9qqiaIB0lXMb0fC8uzXDg4+UoP6lRqLRxVPvrVVyHiJc=
-=xS1w
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
+index 4c093dec52b9..0cffe4b63dba 100644
+--- a/drivers/remoteproc/mtk_scp.c
++++ b/drivers/remoteproc/mtk_scp.c
+@@ -4,12 +4,14 @@
+ 
+ #include <asm/barrier.h>
+ #include <linux/clk.h>
++#include <linux/dma-mapping.h>
+ #include <linux/err.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
+ #include <linux/of_platform.h>
++#include <linux/of_reserved_mem.h>
+ #include <linux/platform_data/mtk_scp.h>
+ #include <linux/platform_device.h>
+ #include <linux/remoteproc.h>
+@@ -487,29 +489,29 @@ EXPORT_SYMBOL_GPL(scp_get_reserve_mem_size);
+ 
+ static int scp_map_memory_region(struct mtk_scp *scp)
+ {
+-	struct device_node *node;
+-	struct resource r;
+-	int ret;
++	int ret, id;
+ 
+-	node = of_parse_phandle(scp->dev->of_node, "memory-region", 0);
+-	if (!node) {
+-		dev_err(scp->dev, "no memory-region specified\n");
+-		return -EINVAL;
++	ret = of_reserved_mem_device_init_by_idx(scp->dev, scp->dev->of_node,
++						 0);
++	if (ret) {
++		dev_err(scp->dev,
++			"%s:of_reserved_mem_device_init_by_idx(0) failed:(%d)",
++			__func__, ret);
++		return -ENOMEM;
+ 	}
+ 
+-	ret = of_address_to_resource(node, 0, &r);
+-	if (ret)
+-		return ret;
++	/* Pre-allocate the working buffers */
++	scp->dram_size = MAX_CODE_SIZE;
++	for (id = 0; id < SCP_NUMS_MEM_ID; id++)
++		scp->dram_size += scp_reserve_mblock[id].size;
+ 
+-	scp->phys_addr = r.start;
+-	scp->dram_size = resource_size(&r);
+-	scp->cpu_addr =
+-		devm_ioremap_wc(scp->dev, scp->phys_addr, scp->dram_size);
++	scp->cpu_addr = dma_alloc_coherent(scp->dev, scp->dram_size,
++					   &scp->phys_addr, GFP_KERNEL);
+ 
+ 	if (!scp->cpu_addr) {
+-		dev_err(scp->dev, "unable to map memory region: %pa+%zx\n",
+-			&r.start, scp->dram_size);
+-		return -EBUSY;
++		dev_err(scp->dev, "unable to pre-allocate memory for SCP: %zx\n",
++			scp->dram_size);
++		return -ENOMEM;
+ 	}
+ 
+ #if SCP_RESERVED_MEM
+@@ -519,6 +521,13 @@ static int scp_map_memory_region(struct mtk_scp *scp)
+ 	return 0;
+ }
+ 
++static void scp_unmap_memory_region(struct mtk_scp *scp)
++{
++	dma_free_coherent(scp->dev, scp->dram_size, scp->cpu_addr,
++			  scp->phys_addr);
++	of_reserved_mem_device_release(scp->dev);
++}
++
+ static struct mtk_rpmsg_info mtk_scp_rpmsg_info = {
+ 	.send_ipi = scp_ipi_send,
+ 	.register_ipi = scp_ipi_register,
+@@ -594,20 +603,20 @@ static int scp_probe(struct platform_device *pdev)
+ 	if (IS_ERR(scp->clk)) {
+ 		dev_err(dev, "Failed to get clock\n");
+ 		ret = PTR_ERR(scp->clk);
+-		goto free_rproc;
++		goto release_dev_mem;
+ 	}
+ 
+ 	ret = clk_prepare_enable(scp->clk);
+ 	if (ret) {
+ 		dev_err(dev, "failed to enable clocks\n");
+-		goto free_rproc;
++		goto release_dev_mem;
+ 	}
+ 
+ 	ret = scp_ipi_init(scp);
+ 	clk_disable_unprepare(scp->clk);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to init ipi\n");
+-		goto free_rproc;
++		goto release_dev_mem;
+ 	}
+ 
+ 	/* register SCP initialization IPI */
+@@ -617,7 +626,7 @@ static int scp_probe(struct platform_device *pdev)
+ 			       scp);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to register IPI_SCP_INIT\n");
+-		goto free_rproc;
++		goto release_dev_mem;
+ 	}
+ 
+ 	mutex_init(&scp->lock);
+@@ -645,6 +654,8 @@ static int scp_probe(struct platform_device *pdev)
+ remove_subdev:
+ 	scp_remove_rpmsg_subdev(scp);
+ 	mutex_destroy(&scp->lock);
++release_dev_mem:
++	scp_unmap_memory_region(scp);
+ free_rproc:
+ 	rproc_free(rproc);
+ 
+@@ -658,6 +669,7 @@ static int scp_remove(struct platform_device *pdev)
+ 	scp_remove_rpmsg_subdev(scp);
+ 	rproc_del(scp->rproc);
+ 	rproc_free(scp->rproc);
++	scp_unmap_memory_region(scp);
+ 
+ 	return 0;
+ }
+-- 
+2.18.0
