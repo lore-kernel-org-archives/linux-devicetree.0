@@ -1,8 +1,8 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v4 7/8] of/platform: Sanity check DT bindings before creating
- device links
-Date: Mon,  8 Jul 2019 15:56:23 -0700
-Message-ID: <20190708225624.119973-8-saravanak@google.com>
+Subject: [PATCH v4 8/8] of/platform: Create device links for all
+ child-supplier depencencies
+Date: Mon,  8 Jul 2019 15:56:24 -0700
+Message-ID: <20190708225624.119973-9-saravanak@google.com>
 References: <20190708225624.119973-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -13,50 +13,123 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg 
 Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-If a common DT binding is pointing to a child DT node of a particular
-parent DT node, don't add device links for such DT references. This is
-because, by definition, a child node can't be a functional dependency for
-the parent node.
+A parent device can have child devices that it adds when it probes. But
+this probing of the parent device can happen way after kernel init is done
+-- for example, when the parent device's driver is loaded as a module.
+
+In such cases, if the child devices depend on a supplier in the system, we
+need to make sure the supplier gets the sync_state() callback only after
+these child devices are added and probed.
+
+To achieve this, when creating device links for a device by looking at its
+DT node, don't just look at DT references at the top node level. Look at DT
+references in all the descendant nodes too and create device links from the
+ancestor device to all these supplier devices.
+
+This way, when the parent device probes and adds child devices, the child
+devices can then create their own device links to the suppliers and further
+delay the supplier's sync_state() callback to after the child devices are
+probed.
+
+Example:
+In this illustration, -> denotes DT references and indentation
+represents child status.
+
+Device node A
+	Device node B -> D
+	Device node C -> B, D
+
+Device node D
+
+Assume all these devices have their drivers loaded as modules.
+
+Without this patch, this is the sequence of events:
+1. D is added.
+2. A is added.
+3. Device D probes.
+4. Device D gets its sync_state() callback.
+5. Device B and C might malfunction because their resources got
+   altered/turned off before they can make active requests for them.
+
+With this patch, this is the sequence of events:
+1. D is added.
+2. A is added and creates device links to D.
+3. Device link from A to B is not added because A is a parent of B.
+4. Device D probes.
+5. Device D does not get it's sync_state() callback because consumer A
+   hasn't probed yet.
+5. Device A probes.
+5. a. Devices B and C are added.
+5. b. Device links from B and C to D are added.
+5. c. Device A's probe completes.
+6. Device D does not get it's sync_state() callback because consumer A
+   has probed but consumers B and C haven't probed yet.
+7. Device B and C probe.
+8. Device D gets it's sync_state() callback because all its consumers
+   have probed.
+9. None of the devices malfunction.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/of/platform.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/of/platform.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index dba962a0ee50..98414ba53b1f 100644
+index 98414ba53b1f..85796a09464c 100644
 --- a/drivers/of/platform.c
 +++ b/drivers/of/platform.c
-@@ -512,6 +512,19 @@ int of_platform_default_populate(struct device_node *root,
+@@ -525,16 +525,26 @@ bool of_link_is_valid(struct device_node *con, struct device_node *sup)
+ 	return true;
  }
- EXPORT_SYMBOL_GPL(of_platform_default_populate);
  
-+bool of_link_is_valid(struct device_node *con, struct device_node *sup)
-+{
-+	of_node_get(sup);
-+	while (sup) {
-+		if (sup == con) {
-+			of_node_put(sup);
-+			return false;
-+		}
-+		sup = of_get_next_parent(sup);
-+	}
-+	return true;
-+}
-+
- static int of_link_binding(struct device *dev,
+-static int of_link_binding(struct device *dev,
++static int of_link_binding(struct device *dev, struct device_node *con_np,
  			   const char *binding, const char *cell)
  {
-@@ -522,6 +535,10 @@ static int of_link_binding(struct device *dev,
+ 	struct of_phandle_args sup_args;
++	struct device_node *child;
+ 	struct platform_device *sup_dev;
+ 	unsigned int i = 0, links = 0;
+ 	u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
++	bool done = true;
  
- 	while (!of_parse_phandle_with_args(dev->of_node, binding, cell, i,
+-	while (!of_parse_phandle_with_args(dev->of_node, binding, cell, i,
++	while (!of_parse_phandle_with_args(con_np, binding, cell, i,
  					   &sup_args)) {
-+		if (!of_link_is_valid(dev->of_node, sup_args.np)) {
-+			of_node_put(sup_args.np);
-+			continue;
-+		}
- 		i++;
- 		sup_dev = of_find_device_by_node(sup_args.np);
- 		of_node_put(sup_args.np);
++		/*
++		 * This check needs to be done against dev->of_node (and not
++		 * con_np) due to the recursive calls for the child DT nodes.
++		 * Since all the device links for the child DT nodes are also
++		 * created against the parent device, we need to check for
++		 * validity against the parent DT node and not just the child
++		 * DT nodes.
++		 */
+ 		if (!of_link_is_valid(dev->of_node, sup_args.np)) {
+ 			of_node_put(sup_args.np);
+ 			continue;
+@@ -548,7 +558,12 @@ static int of_link_binding(struct device *dev,
+ 			links++;
+ 		put_device(&sup_dev->dev);
+ 	}
+-	if (links < i)
++
++	for_each_child_of_node(con_np, child)
++		if (of_link_binding(dev, child, binding, cell))
++			done = false;
++
++	if (links < i || !done)
+ 		return -ENODEV;
+ 	return 0;
+ }
+@@ -576,7 +591,8 @@ static int of_link_to_suppliers(struct device *dev)
+ 		return 0;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(link_bindings) / 2; i++)
+-		if (of_link_binding(dev, link_bindings[i * 2],
++		if (of_link_binding(dev, dev->of_node,
++					link_bindings[i * 2],
+ 					link_bindings[i * 2 + 1]))
+ 			done = false;
+ 
 -- 
 2.22.0.410.gd8fdbe21b5-goog
