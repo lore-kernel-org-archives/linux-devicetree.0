@@ -1,113 +1,36 @@
-Return-Path: <SRS0=cIVi=VA=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 6/7] dt-bindings: net: Use phy-mode instead of phy-connection-type
-Date: Wed,  3 Jul 2019 11:55:12 +0200
-Message-Id: <20190703095513.12340-6-maxime.ripard@bootlin.com>
-In-Reply-To: <20190703095513.12340-1-maxime.ripard@bootlin.com>
-References: <20190703095513.12340-1-maxime.ripard@bootlin.com>
+Return-Path: <SRS0=caN8=VF=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
+References: <1560513214-28031-1-git-send-email-fabrizio.castro@bp.renesas.com> <1560513214-28031-5-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1560513214-28031-5-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 8 Jul 2019 14:57:39 +0200
+Message-ID: <CAMuHMdUTWztD05c+p-jgrfDSqa4JxCRdJR=wE5bCgOg+gzo56w@mail.gmail.com>
+Subject: Re: [PATCH 4/6] arm64: dts: renesas: r8a774a1: Add missing
+ assigned-clocks for CAN[01]
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-When adding support for the DWMAC (and derivatives) bindings,
-phy-connection-type was required, even though the previous binding required
-the equivalent phy-mode.
+On Fri, Jun 14, 2019 at 1:54 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Define "assigned-clocks" and "assigned-clock-rates" properties
+> for CAN[01] DT nodes, as required by the dt-bindings.
+>
+> Fixes: eccc40002972 ("arm64: dts: renesas: r8a774a1: Add clkp2 clock to CAN nodes")
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-Let's fix this by using phy-mode as we should have.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I.e. applied and queued for v5.4.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- .../devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml | 4 ++--
- .../bindings/net/allwinner,sun8i-a83t-emac.yaml           | 8 ++++----
- Documentation/devicetree/bindings/net/snps,dwmac.yaml     | 4 ++--
- 3 files changed, 8 insertions(+), 8 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
-index 4b45798f0e68..06b1cc8bea14 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
-@@ -44,7 +44,7 @@ required:
-   - interrupt-names
-   - clocks
-   - clock-names
--  - phy-connection-type
-+  - phy-mode
- 
- examples:
-   - |
-@@ -55,7 +55,7 @@ examples:
-         interrupt-names = "macirq";
-         clocks = <&ahb_gates 49>, <&gmac_tx>;
-         clock-names = "stmmaceth", "allwinner_gmac_tx";
--        phy-connection-type = "mii";
-+        phy-mode = "mii";
-     };
- 
- # FIXME: We should set it, but it would report all the generic
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-index 6f68c7f5fc34..d4084c149768 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-@@ -52,8 +52,8 @@ required:
-   - clock-names
-   - resets
-   - reset-names
--  - phy-connection-type
-   - phy-handle
-+  - phy-mode
-   - syscon
- 
- allOf:
-@@ -198,7 +198,7 @@ examples:
-         clock-names = "stmmaceth";
- 
-         phy-handle = <&int_mii_phy>;
--        phy-connection-type = "mii";
-+        phy-mode = "mii";
-         allwinner,leds-active-low;
- 
-         mdio1: mdio {
-@@ -249,7 +249,7 @@ examples:
-         clock-names = "stmmaceth";
- 
-         phy-handle = <&ext_rgmii_phy>;
--        phy-connection-type = "rgmii";
-+        phy-mode = "rgmii";
-         allwinner,leds-active-low;
- 
-         mdio2: mdio {
-@@ -301,7 +301,7 @@ examples:
-         clocks = <&ccu 27>;
-         clock-names = "stmmaceth";
-         phy-handle = <&ext_rgmii_phy1>;
--        phy-connection-type = "rgmii";
-+        phy-mode = "rgmii";
- 
-         mdio {
-             compatible = "snps,dwmac-mdio";
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index 658726c620be..76fea2be66ac 100644
---- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -261,7 +261,7 @@ required:
-   - reg
-   - interrupts
-   - interrupt-names
--  - phy-connection-type
-+  - phy-mode
- 
- dependencies:
-   snps,reset-active-low: ["snps,reset-gpio"]
-@@ -384,7 +384,7 @@ examples:
-         interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
-         mac-address = [000000000000]; /* Filled in by U-Boot */
-         max-frame-size = <3800>;
--        phy-connection-type = "gmii";
-+        phy-mode = "gmii";
-         snps,multicast-filter-bins = <256>;
-         snps,perfect-filter-entries = <128>;
-         rx-fifo-depth = <16384>;
+                        Geert
+
 -- 
-2.21.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
