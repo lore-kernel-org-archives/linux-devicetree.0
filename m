@@ -1,74 +1,234 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv6 00/28] PCI: mobiveil: fixes for Mobiveil PCIe Host
- Bridge IP driver
-Date: Mon, 8 Jul 2019 12:35:03 +0100
-Message-ID: <20190708113503.GA21942@e121166-lin.cambridge.arm.com>
-References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Mon, 8 Jul 2019 11:45:47 +0000
+Message-ID: <BYAPR07MB47097C3C2A2BBA2AA63C65DEDDF60@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1562324238-16655-1-git-send-email-pawell@cadence.com>
+ <1562324238-16655-6-git-send-email-pawell@cadence.com>
+ <87r274lmqk.fsf@linux.intel.com>
+ <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <87a7dpm442.fsf@linux.intel.com>
+ <BYAPR07MB4709E5BA041BBDDB70E69F62DDF60@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <874l3wn5ep.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <874l3wn5ep.fsf@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, l.subrahmanya@mobiveil.co.in, shawnguo@kernel.org, leoyang.li@nxp.com, catalin.marinas@arm.com, will.deacon@arm.com, Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com
+To: Felipe Balbi <felipe.balbi@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 05:56:28PM +0800, Hou Zhiqiang wrote:
-> This patch set is to add fixes for Mobiveil PCIe Host driver.
-> Splited #2, #3, #9 and #10 of v5 patches.
-> 
-> Hou Zhiqiang (28):
->   PCI: mobiveil: Unify register accessors
->   PCI: mobiveil: Remove the flag MSI_FLAG_MULTI_PCI_MSI
->   PCI: mobiveil: Fix PCI base address in MEM/IO outbound windows
->   PCI: mobiveil: Update the resource list traversal function
->   PCI: mobiveil: Use WIN_NUM_0 explicitly for CFG outbound window
->   PCI: mobiveil: Use the 1st inbound window for MEM inbound
->     transactions
->   PCI: mobiveil: Fix the Class Code field
->   PCI: mobiveil: Move the link up waiting out of mobiveil_host_init()
->   PCI: mobiveil: Move IRQ chained handler setup out of DT parse
->   PCI: mobiveil: Initialize Primary/Secondary/Subordinate bus numbers
->   PCI: mobiveil: Fix devfn check in mobiveil_pcie_valid_device()
->   dt-bindings: PCI: mobiveil: Change gpio_slave and apb_csr to optional
->   PCI: mobiveil: Reformat the code for readability
->   PCI: mobiveil: Make the register updating more readable
->   PCI: mobiveil: Revise the MEM/IO outbound window initialization
->   PCI: mobiveil: Fix the returned error number
->   PCI: mobiveil: Remove an unnecessary return value check
->   PCI: mobiveil: Remove redundant var definitions and register read
->     operations
->   PCI: mobiveil: Fix the valid check for inbound and outbound window
->   PCI: mobiveil: Add the statistic of initialized inbound windows
->   PCI: mobiveil: Clear the target fields before updating the register
->   PCI: mobiveil: Mask out the lower 10-bit hardcode window size
->   PCI: mobiveil: Add upper 32-bit CPU base address setup in outbound
->     window
->   PCI: mobiveil: Add upper 32-bit PCI base address setup in inbound
->     window
->   PCI: mobiveil: Fix the CPU base address setup in inbound window
->   PCI: mobiveil: Move PCIe PIO enablement out of inbound window routine
->   PCI: mobiveil: Fix infinite-loop in the INTx process
->   PCI: mobiveil: Fix the potential INTx missing problem
-> 
->  .../devicetree/bindings/pci/mobiveil-pcie.txt      |    2 +
->  drivers/pci/controller/pcie-mobiveil.c             |  529 ++++++++++++--------
->  2 files changed, 318 insertions(+), 213 deletions(-)
-> 
+>
+>Hi,
+>
+>Pawel Laszczak <pawell@cadence.com> writes:
+>> Please look at the changes in drivers/usb/common/common.c file.
+>> I'm going to add it as next patch to next version.
+>>
+>>
+>>>Pawel Laszczak <pawell@cadence.com> writes:
+>>>>>> +void cdns3_role_stop(struct cdns3 *cdns)
+>>>
+>>>>>> +static const char *const cdns3_mode[] =3D {
+>>>>>> +	[USB_DR_MODE_UNKNOWN]		=3D "unknown",
+>>>>>> +	[USB_DR_MODE_OTG]		=3D "otg",
+>>>>>> +	[USB_DR_MODE_HOST]		=3D "host",
+>>>>>> +	[USB_DR_MODE_PERIPHERAL]	=3D "device",
+>>>>>> +};
+>>>>>
+>>>>>don't we have a generic version of this under usb/common ?
+>>>>>
+>>>> Yes, there is a similar array, but it is defined also as static
+>>>> and there is no function for converting value to string.
+>>>> There is only function for converting string to value.
+>>>
+>>>right. You can add the missing interface generically instead of
+>>>duplicating the enumeration.
+>>>
+>>>> There is also:
+>>>> [USB_DR_MODE_UNKNOWN]		=3D "",
+>>>> Instead of:
+>>>> [USB_DR_MODE_UNKNOWN]		=3D "unknown",
+>>>>
+>>>> So, for USB_DR_MODE_UNKNOWN user will not see anything information.
+>>>
+>>>But that's what "unknown" means :-) We don't know the information.
+>>>
+>>
+>> ////// start
+>> commit 607754c60fabc43408f4f2de82d3560c72870787 (HEAD)
+>> Author: Pawel Laszczak <pawell@cadence.com>
+>> Date:   Mon Jul 8 12:53:47 2019 +0200
+>>
+>>     usb:common  Added usb_get_dr_mode_from_string and usb_dr_mode_to_str=
+ing.
+>
+>This would read better as:
+>
+>      usb: common: Add usb_get_dr_mode_from_string and usb_dr_mode_to_stri=
+ng.
+>
+>>
+>>     Patch introduces new function usb_dr_mode_to_string for converting d=
+ual role
+>>     mod to string and removes static from usb_dr_mode_to_string definiti=
+on.
+>>
+>>     Both changes have made to avoid duplication of code by cdns3 driver.
+>>
+>> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+>> index 18f5dcf58b0d..ab59954deff8 100644
+>> --- a/drivers/usb/common/common.c
+>> +++ b/drivers/usb/common/common.c
+>> @@ -118,13 +118,20 @@ static const char *const usb_dr_modes[] =3D {
+>>         [USB_DR_MODE_OTG]               =3D "otg",
+>>  };
+>>
+>> -static enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
+>> +/**
+>> + * usb_get_dr_mode_from_string - Convert string to dual role mode.
+>> + * @str: Pointer to the given string
+>> + *
+>> + * The function gets string and returns the correspondig enum usb_dr_mo=
+de.
+>> + */
+>> +enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
+>>  {
+>>         int ret;
+>>
+>>         ret =3D match_string(usb_dr_modes, ARRAY_SIZE(usb_dr_modes), str=
+);
+>>         return (ret < 0) ? USB_DR_MODE_UNKNOWN : ret;
+>>  }
+>> +EXPORT_SYMBOL_GPL(usb_get_dr_mode_from_string);
+>>
+>>  enum usb_dr_mode usb_get_dr_mode(struct device *dev)
+>>  {
+>> @@ -139,6 +146,21 @@ enum usb_dr_mode usb_get_dr_mode(struct device *dev=
+)
+>>  }
+>>  EXPORT_SYMBOL_GPL(usb_get_dr_mode);
+>>
+>> +/**
+>> + * usb_dr_mode_to_string - Convert dual role mode to stringi.
+>
+>s/stringi/string
+>
+>> + * @dr_mode: Pointer to the given dual role mode
+>> + *
+>> + * The function gets enum usb_dr_mode, and returns the correspondig str=
+ing.
+>> + */
+>> +const *char usb_dr_mode_to_string(const enum usb_dr_mode dr_mode)
+>> +{
+>> +       if (dr_mode > USB_DR_MODE_UNKNOWN || dr_mode <=3D USB_DR_MODE_PE=
+RIPHERAL)
+>> +               return usb_dr_modes[dr_mode];
+>> +
+>> +       return usb_dr_modes[USB_DR_MODE_UNKNOWN];
+>> +}
+>> +EXPORT_SYMBOL_GPL(usb_dr_mode_to_string);
+>
+>missing prototype in a header file.
+>
 
-OK, I rewrote most of commit logs, dropped patch 25 since I do not
-understand the commit log, pushed to pci/mobiveil tentatively for
-v5.3.
+The prototype was added , but not all text was past. Sorry for that. =20
 
-Having said that, you should improve commit logs writing it took
-me too much time to check them all and rewrite them.
+Fixed version:  with your changes.
 
-Never ever again post a massive series like this mixing refactoring
-fixes and clean-ups it was painful to review/rebase, please split
-patch series into small chunks to make my life much easier.
+///// v2 corrected=20
+commit 4553d48dd0500085d90c8280e28714072279c3dd (HEAD)
+Author: Pawel Laszczak <pawell@cadence.com>
+Date:   Mon Jul 8 12:53:47 2019 +0200
 
-Please check my pci/mobiveil branch and report back if something
-is not in order.
+    usb: common: Add usb_get_dr_mode_from_string and usb_dr_mode_to_string.
 
-Lorenzo
+    Patch introduces new function usb_dr_mode_to_string for converting dual=
+ role
+    mod to string and removes static from usb_dr_mode_to_string definition.
+
+    Both changes have made to avoid duplication of code by cdns3 driver.
+
+diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+index 18f5dcf58b0d..76634b8e92db 100644
+--- a/drivers/usb/common/common.c
++++ b/drivers/usb/common/common.c
+@@ -118,13 +118,20 @@ static const char *const usb_dr_modes[] =3D {
+        [USB_DR_MODE_OTG]               =3D "otg",
+ };
+
+-static enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
++/**
++ * usb_get_dr_mode_from_string - Convert string to dual role mode.
++ * @str: Pointer to the given string
++ *
++ * The function gets string and returns the correspondig enum usb_dr_mode.
++ */
++enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
+ {
+        int ret;
+
+        ret =3D match_string(usb_dr_modes, ARRAY_SIZE(usb_dr_modes), str);
+        return (ret < 0) ? USB_DR_MODE_UNKNOWN : ret;
+ }
++EXPORT_SYMBOL_GPL(usb_get_dr_mode_from_string);
+
+ enum usb_dr_mode usb_get_dr_mode(struct device *dev)
+ {
+@@ -139,6 +146,21 @@ enum usb_dr_mode usb_get_dr_mode(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(usb_get_dr_mode);
+
++/**
++ * usb_dr_mode_to_string - Convert dual role mode to string.
++ * @dr_mode: Pointer to the given dual role mode
++ *
++ * The function gets enum usb_dr_mode, and returns the correspondig string=
+.
++ */
++const char *usb_dr_mode_to_string(const enum usb_dr_mode dr_mode)
++{
++       if (dr_mode > USB_DR_MODE_UNKNOWN || dr_mode <=3D USB_DR_MODE_PERIP=
+HERAL)
++               return usb_dr_modes[dr_mode];
++
++       return usb_dr_modes[USB_DR_MODE_UNKNOWN];
++}
++EXPORT_SYMBOL_GPL(usb_dr_mode_to_string);
++
+ #ifdef CONFIG_OF
+ /**
+  * of_usb_get_dr_mode_by_phy - Get dual role mode for the controller devic=
+e
+diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
+index 69f1b6328532..c156817672c4 100644
+--- a/include/linux/usb/otg.h
++++ b/include/linux/usb/otg.h
+@@ -129,4 +129,20 @@ enum usb_dr_mode {
+  */
+ extern enum usb_dr_mode usb_get_dr_mode(struct device *dev);
+
++/**
++ * usb_get_dr_mode_from_string - Convert string to dual role mode.
++ * @str: Pointer to the given string
++ *
++ * The function gets string and returns the correspondig enum usb_dr_mode.
++ */
++extern enum usb_dr_mode usb_get_dr_mode_from_string(const char *str);
++
++/**
++ * usb_dr_mode_to_string - Convert dual role mode to string.
++ * @dr_mode: Pointer to the given dual role mode
++ *
++ * The function gets enum usb_dr_mode, and returns the correspondig string=
+.
++ */
++extern const char *usb_dr_mode_to_string(const enum usb_dr_mode dr_mode);
++
+ #endif /* __LINUX_USB_OTG_H */
+
+////////////////
+>--
+>balbi
