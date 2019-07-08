@@ -1,13 +1,13 @@
 From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v2 1/2] dt-bindings: panel: Add Sharp LD-D5116Z01B
-Date: Mon,  8 Jul 2019 09:57:53 -0700
-Message-ID: <20190708165753.46275-1-jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v2 2/2] drm/panel: simple: Add support for Sharp LD-D5116Z01B panel
+Date: Mon,  8 Jul 2019 09:58:11 -0700
+Message-ID: <20190708165811.46370-1-jeffrey.l.hugo@gmail.com>
 References: <20190708165647.46224-1-jeffrey.l.hugo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190708165647.46224-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie, daniel@ffwll.ch
-Cc: bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To: thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie, daniel@ffwll.ch
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 The Sharp LD-D5116Z01B is a 12.3" eDP panel with a 1920X1280 resolution.
@@ -15,41 +15,55 @@ The Sharp LD-D5116Z01B is a 12.3" eDP panel with a 1920X1280 resolution.
 Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 ---
- .../display/panel/sharp,ld-d5116z01b.txt      | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
+ drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt b/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
-new file mode 100644
-index 000000000000..fd9cf39bde77
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
-@@ -0,0 +1,26 @@
-+Sharp LD-D5116Z01B 12.3" WUXGA+ eDP panel
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 5a93c4edf1e4..a8808b13c370 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2354,6 +2354,32 @@ static const struct panel_desc samsung_ltn140at29_301 = {
+ 	},
+ };
+ 
++static const struct drm_display_mode sharp_ld_d5116z01b_mode = {
++	.clock = 168480,
++	.hdisplay = 1920,
++	.hsync_start = 1920 + 48,
++	.hsync_end = 1920 + 48 + 32,
++	.htotal = 1920 + 48 + 32 + 80,
++	.vdisplay = 1280,
++	.vsync_start = 1280 + 3,
++	.vsync_end = 1280 + 3 + 10,
++	.vtotal = 1280 + 3 + 10 + 57,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
++};
 +
-+Required properties:
-+- compatible: should be "sharp,ld-d5116z01b"
-+- power-supply: regulator to provide the VCC supply voltage (3.3 volts)
++static const struct panel_desc sharp_ld_d5116z01b = {
++	.modes = &sharp_ld_d5116z01b_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 260,
++		.height = 120,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_DATA_MSB_TO_LSB,
++};
 +
-+This binding is compatible with the simple-panel binding.
-+
-+The device node can contain one 'port' child node with one child
-+'endpoint' node, according to the bindings defined in [1]. This
-+node should describe panel's video bus.
-+
-+[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+Example:
-+
-+	panel: panel {
-+		compatible = "sharp,ld-d5116z01b";
-+		power-supply = <&vlcd_3v3>;
-+
-+		port {
-+			panel_ep: endpoint {
-+				remote-endpoint = <&bridge_out_ep>;
-+			};
-+		};
-+	};
+ static const struct drm_display_mode sharp_lq035q7db03_mode = {
+ 	.clock = 5500,
+ 	.hdisplay = 240,
+@@ -3002,6 +3028,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "samsung,ltn140at29-301",
+ 		.data = &samsung_ltn140at29_301,
++	}, {
++		.compatible = "sharp,ld-d5116z01b",
++		.data = &sharp_ld_d5116z01b,
+ 	}, {
+ 		.compatible = "sharp,lq035q7db03",
+ 		.data = &sharp_lq035q7db03,
 -- 
 2.17.1
