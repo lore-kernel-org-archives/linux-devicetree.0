@@ -1,51 +1,29 @@
-Return-Path: <SRS0=Pqyd=VG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:49169 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfGILBP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jul 2019 07:01:15 -0400
-Date: Tue, 9 Jul 2019 13:02:24 +0200
-From: Jacopo Mondi <jacopo@jmondi.org>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 8 Jul 2019 15:17:11 -0600
+From: Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH v2 1/2] media: dt-bindings: add bindings for Toshiba
  TC358746
-Message-ID: <20190709110224.5t5u3cjo32hdxamj@uno.localdomain>
+Message-ID: <20190708211711.GA20542@bogus>
 References: <20190619152838.25079-1-m.felsch@pengutronix.de>
  <20190619152838.25079-2-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="n2wq3z4hrph3varn"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20190619152838.25079-2-m.felsch@pengutronix.de>
-Sender: devicetree-owner@vger.kernel.org
 To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: sakari.ailus@linux.intel.com, mchehab@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, graphics@pengutronix.de, linux-media@vger.kernel.org
+Cc: sakari.ailus@linux.intel.com, mchehab@kernel.org, Jacopo Mondi <jacopo@jmondi.org>, devicetree@vger.kernel.org, graphics@pengutronix.de, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
-
-
---n2wq3z4hrph3varn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Marco,
 
 On Wed, Jun 19, 2019 at 05:28:37PM +0200, Marco Felsch wrote:
 > Add corresponding dt-bindings for the Toshiba tc358746 device and update
 > the MAINTAINERS file too.
->
+> 
 > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-
-With Rob's blessing, I'm glad I didn't take you off-road with my
-comments on v1 :)
-
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks
-   j
-
 > ---
 > Hi Rob,
->
+> 
 > I droped your reviewed-by tag since there where several changes.
->
+> 
 > Changes
 > v2:
 >  - use the Documentation/devicetree/bindings/media/ti,omap3isp.txt
@@ -61,12 +39,17 @@ Thanks
 >  - Adapt the example
 >  - squash v1 patch-3 and patch-1
 >  - set status to Maintained
->
+> 
 >  .../bindings/media/i2c/toshiba,tc358746.txt   | 95 +++++++++++++++++++
 >  MAINTAINERS                                   |  7 ++
 >  2 files changed, 102 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
->
+
+One nit below, otherwise:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> 
 > diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,tc358746.txt
 > new file mode 100644
 > index 000000000000..e79b45ee050e
@@ -134,6 +117,9 @@ Thanks
 > +
 > +&i2c {
 > +	csi-bridge@0e {
+
+csi-bridge@e
+
 > +		reg = <0x0e>;
 > +		compatible = "toshiba,tc358746";
 > +		pinctrl-names = "default";
@@ -175,7 +161,7 @@ Thanks
 > @@ -15955,6 +15955,13 @@ S:	Maintained
 >  F:	drivers/media/i2c/tc358743*
 >  F:	include/media/i2c/tc358743.h
->
+>  
 > +TOSHIBA TC358746 DRIVER
 > +M:	Marco Felsch <kernel@pengutronix.de>
 > +L:	linux-media@vger.kernel.org
@@ -186,28 +172,6 @@ Thanks
 >  TOSHIBA WMI HOTKEYS DRIVER
 >  M:	Azael Avalos <coproscefalo@gmail.com>
 >  L:	platform-driver-x86@vger.kernel.org
-> --
+> -- 
 > 2.20.1
->
-
---n2wq3z4hrph3varn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0kdEAACgkQcjQGjxah
-VjyYpw/+L+jKiXBjvFnXk6yr37nxzWzDrk4dfkGl2uNSJUE9hxxFGOo7f4xmvzMM
-sI9NZ/M5xK34Ul7QYW0tGWm/qoBuGxFDLG98yvqJ+Uf1VLUWn9IpcwceW4eKR3op
-fXJiYR9IJZA3A87ZyCQHIEnzAGmdTi0laTVfeCGm+VqrV9/tk5dCudvaKUWX8j3g
-yUO4kM0gVpuLwu+vw4nuXOX13qwayh4vt7EZ1okr9NNc1M6o4WNo5nuD91srzzeY
-CFJ7llSnH/+i5UIr6tErTGYqmDTCxup29cBb7RJze328NDVRRPUbL+XSEIvDMPJ7
-qwXMBOCyVcvS8M3xQmsc29LWFFfg70w9cpKH391cerZK5RYvgDjz//1mFYLpL1UE
-jS87CSuG8Gd39txIc9scj/4JorlDKBjFKlznErXObSFKzSRFdtMBuDEF91CjOPfK
-WX4hW5bALvi81OOjqgA8/HayKhKYn31VRkymh9rQWcJt8pdV6vfeG0AHdA8wo9ki
-h51Y90i4FhqnIbaOZeAsBcSh/atgQU4/twyaF9WfXXxIXz55jfpJHy+3K1NkD3Um
-egHk+b05JtrLMtPz/JgWrcVLvH4+4DJPjhTNHDx+Gbeq7Tf/oN/JrlnKPkNCqNiO
-E9qrpbMhXcvEFLirxx7I9oVtOiwEyS8FjZFql003IN8ohoBznEA=
-=/9pu
------END PGP SIGNATURE-----
-
---n2wq3z4hrph3varn--
+> 
