@@ -1,209 +1,70 @@
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Mon, 08 Jul 2019 09:29:01 +0300
-Message-ID: <87a7dpm442.fsf@linux.intel.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-6-git-send-email-pawell@cadence.com> <87r274lmqk.fsf@linux.intel.com> <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Ilia Lin <ilia.lin@kernel.org>
+Subject: Re: [PATCH 01/13] dt-bindings: cpufreq: Re-organise kryo cpufreq to
+ use it for other nvmem based qcom socs
+Date: Mon, 8 Jul 2019 09:28:18 +0300
+Message-ID: <CA+5LGR1-WqtrjbL9VLATuuEyxSDEhh9VZ0cLDmZnFoHdXd43Nw@mail.gmail.com>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org> <20190705095726.21433-2-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com>
+In-Reply-To: <20190705095726.21433-2-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Ilia Lin <ilia.lin@kernel.org>, Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Sricharan R <sricharan@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Ilia Lin <ilia.lin@kernel.org>
 
-
-Hi,
-
-Pawel Laszczak <pawell@cadence.com> writes:
->>> +void cdns3_role_stop(struct cdns3 *cdns)
->>
->>not static? Why is it so that _start() is static but _stop() is not?
->>Looks fishy
+On Fri, Jul 5, 2019 at 12:57 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
 >
-> This function is used in cdns3_role_stop in debugfs.c file so it can't
-> be static.
-
-it's still super fishy. Why don't you need _start() from debugfs.c? In
-any case, the role framework would remove the need for any of this, I
-suppose.
-
->>> +static int cdns3_idle_role_start(struct cdns3 *cnds)
->>> +{	/* Hold PHY in RESET */
->>
->>huh?
->>
->>> +	return 0;
->>> +}
->>> +
->>> +static void cdns3_idle_role_stop(struct cdns3 *cnds)
->>> +{
->>> +	/* Program Lane swap and bring PHY out of RESET */
->>
->>double huh?
->>
+> From: Sricharan R <sricharan@codeaurora.org>
 >
-> These functions were added for consistency with FSM described in controll=
-er specification.=20
-> Yes, I know that you don't like empty functions :), but it could be helpf=
-ul in
-> understanding how this controller work.
-
-frankly, it really doesn't. An empty function doesn't really help IMHO.
-
->>> +static const char *const cdns3_mode[] =3D {
->>> +	[USB_DR_MODE_UNKNOWN]		=3D "unknown",
->>> +	[USB_DR_MODE_OTG]		=3D "otg",
->>> +	[USB_DR_MODE_HOST]		=3D "host",
->>> +	[USB_DR_MODE_PERIPHERAL]	=3D "device",
->>> +};
->>
->>don't we have a generic version of this under usb/common ?
->>
-> Yes, there is a similar array, but it is defined also as static=20
-> and there is no function for converting value to string.=20
-> There is only function for converting string to value.
-
-right. You can add the missing interface generically instead of
-duplicating the enumeration.
-
-> There is also:=20=20
-> [USB_DR_MODE_UNKNOWN]		=3D "",
-> Instead of:=20
-> [USB_DR_MODE_UNKNOWN]		=3D "unknown",
+> The kryo cpufreq driver reads the nvmem cell and uses that data to
+> populate the opps. There are other qcom cpufreq socs like krait which
+> does similar thing. Except for the interpretation of the read data,
+> rest of the driver is same for both the cases. So pull the common things
+> out for reuse.
 >
-> So, for USB_DR_MODE_UNKNOWN user will not see anything information.
-
-But that's what "unknown" means :-) We don't know the information.
-
->>> +static irqreturn_t cdns3_drd_irq(int irq, void *data)
->>> +{
->>> +	irqreturn_t ret =3D IRQ_NONE;
->>> +	struct cdns3 *cdns =3D data;
->>> +	u32 reg;
->>> +
->>> +	if (cdns->dr_mode !=3D USB_DR_MODE_OTG)
->>> +		return ret;
->>> +
->>> +	reg =3D readl(&cdns->otg_regs->ivect);
->>> +
->>> +	if (!reg)
->>> +		return ret;
->>> +
->>> +	if (reg & OTGIEN_ID_CHANGE_INT) {
->>> +		dev_dbg(cdns->dev, "OTG IRQ: new ID: %d\n",
->>> +			cdns3_get_id(cdns));
->>> +
->>> +		ret =3D IRQ_HANDLED;
->>> +	}
->>> +
->>> +	if (reg & (OTGIEN_VBUSVALID_RISE_INT | OTGIEN_VBUSVALID_FALL_INT)) {
->>> +		dev_dbg(cdns->dev, "OTG IRQ: new VBUS: %d\n",
->>> +			cdns3_get_vbus(cdns));
->>> +
->>> +		ret =3D IRQ_HANDLED;
->>> +	}
->>> +
->>> +	if (ret =3D=3D IRQ_HANDLED)
->>> +		queue_work(system_freezable_wq, &cdns->role_switch_wq);
->>> +
->>> +	writel(~0, &cdns->otg_regs->ivect);
->>> +	return ret;
->>> +}
->>
->>seems like you could use threaded irq to avoid this workqueue.
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> [niklas.cassel@linaro.org: split dt-binding into a separate patch and
+> do not rename the compatible string.]
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> ---
+> Changes since RFC:
+> -Made DT bindings a separate patch.
+> -Keep the original compatible string, since renaming it breaks DT
+> backwards compatibility.
 >
+>  .../opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt}   | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>  rename Documentation/devicetree/bindings/opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} (98%)
 >
-> This function is also called in cdns3_mode_write (debugfs.c file),
-> therefor after changing it to threaded irq I will still need workqueue.=20
-
-Why? debugfs writes are not atomic. They run in process context, right?
-Just don't disable interrupts while running this and you should be fine.
-
->>> +	cdns->desired_dr_mode =3D cdns->dr_mode;
->>> +	cdns->current_dr_mode =3D USB_DR_MODE_UNKNOWN;
->>> +
->>> +	ret =3D devm_request_threaded_irq(cdns->dev, cdns->otg_irq,
->>> +					cdns3_drd_irq,
->>> +					NULL, IRQF_SHARED,
->>
->>if you don't have a threaded handler, you should set IRQF_ONESHOT. I
->>would prefer if you implement a threaded handler that doesn't require
->>IRQF_ONESHOT, though.
->>
+> diff --git a/Documentation/devicetree/bindings/opp/kryo-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> similarity index 98%
+> rename from Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
+> rename to Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> index c2127b96805a..198441e80ba8 100644
+> --- a/Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
+> +++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> @@ -1,13 +1,13 @@
+> -Qualcomm Technologies, Inc. KRYO CPUFreq and OPP bindings
+> +Qualcomm Technologies, Inc. NVMEM CPUFreq and OPP bindings
+>  ===================================
 >
-> IRQF_ONESHOT can be used  only in threaded handled.=20
-> "
->  * IRQF_ONESHOT - Interrupt is not reenabled after the hardirq handler fi=
-nished.
->  *                Used by threaded interrupts which need to keep the
->  *                irq line disabled until the threaded handler has been r=
-un.
-> "
-
-so?
-
->>> +	} else {
->>> +		struct usb_request *request;
->>> +
->>> +		if (priv_dev->eps[index]->flags & EP_WEDGE) {
->>> +			cdns3_select_ep(priv_dev, 0x00);
->>> +			return 0;
->>> +		}
->>> +
->>> +		cdns3_dbg(priv_ep->cdns3_dev, "Clear Stalled endpoint %s\n",
->>> +			  priv_ep->name);
->>
->>why do you need your own wrapper around dev_dbg()? This looks quite unnec=
-essary.
+> -In Certain Qualcomm Technologies, Inc. SoCs like apq8096 and msm8996
+> -that have KRYO processors, the CPU ferequencies subset and voltage value
+> -of each OPP varies based on the silicon variant in use.
+> +In Certain Qualcomm Technologies, Inc. SoCs like apq8096 and msm8996,
+> +the CPU frequencies subset and voltage value of each OPP varies based on
+> +the silicon variant in use.
+>  Qualcomm Technologies, Inc. Process Voltage Scaling Tables
+>  defines the voltage and frequency value based on the msm-id in SMEM
+>  and speedbin blown in the efuse combination.
+> -The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
+> +The qcom-cpufreq-nvmem driver reads the msm-id and efuse value from the SoC
+>  to provide the OPP framework with required information (existing HW bitmap).
+>  This is used to determine the voltage and frequency value for each OPP of
+>  operating-points-v2 table when it is parsed by the OPP framework.
+> --
+> 2.21.0
 >
-> It's generic function used for adding message to trace.log.  It's not wra=
-pper to dev_dbg=20
->
-> void cdns3_dbg(struct cdns3_device *priv_dev, const char *fmt, ...)
-> {
-> 	struct va_format vaf;
-> 	va_list args;
->
-> 	va_start(args, fmt);
-> 	vaf.fmt =3D fmt;
-> 	vaf.va =3D &args;
-> 	trace_cdns3_log(priv_dev, &vaf);
-> 	va_end(args);
-> }
-
-oh. Don't do it like that. Add a proper trace event that actually
-decodes the information you want. These random messages will give you
-trouble in the future. I had this sort of construct in dwc3 for a while
-and it became clear that it's a bad idea. It's best to have trace events
-that decode information coming from the HW. That way your trace logs
-have a "predictable" shape/format and you can easily find problem areas.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0i4q8ACgkQzL64meEa
-mQbupxAAoD9jP3fUR7sr+ju1et+756dRsmCz7XHRrOZ9P3xUMg34BanHMCMQ+mbv
-80xqcplc95kH8ZEujbDdv863UNdUdvTRdtS6arMAT0OAwayXJPIA38zI7iFkIlkW
-UupgYUSNJydp9IUGUE7VzvcaAPmULCFfJA3oorUTVSZb9+YTkLnZGmoBrZY7viEi
-Q1gS/Kv74vJMaSQNdYoTyhNNWguoWPn3spfzRpf49DwIzoe5f3LFoff2BT1wFh3B
-cFsB3n8hu9+4TR8SCCQtvyXHqws70B7ePXaOltIdGPvjJLgniHxDbMyDbvqPwv4d
-SUIdqcx2NORh5u1Q1SB/XuR08Q73CsjdQnxdOp1AV3qLA6J8sOPV/WuXPuqxkFmv
-vwjWsqaT9VX0iCbY5p8FTwKJ7qlLCmLVnMbDTyGl8lQqofRb/4s/zUf5IPqDEwHu
-9sg+srJere77OybK48AkBTwfoNLqYrgFauQNVXSqEiIfOp/RuXoXhJNXoA/fcVOw
-KTOrwLikCHvwzX2g7Hs+j6efx5EvzJ9UhYrvO3KIPs2THgZvSt+/exsgT4x8DI5E
-sMqNVpHuHCMZ6r0/cG51O82AamnmNq/gxZKIuhxj14wnBDkvX8Ytjzj/7lftwF9G
-URecaNSnwLSjhHRc/KTDIKbSzaDyIwfKbDzONwIGThB3DvwKNbk=
-=KpNf
------END PGP SIGNATURE-----
---=-=-=--
