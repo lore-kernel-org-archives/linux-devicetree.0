@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v4, 17/33] drm/mediatek: add component OVL_2L1
-Date: Tue, 9 Jul 2019 06:33:57 +0800
-Message-ID: <1562625253-29254-18-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v4, 25/33] drm/mediatek: add clock property check before get it
+Date: Tue, 9 Jul 2019 06:34:05 +0800
+Message-ID: <1562625253-29254-26-git-send-email-yongqiang.niu@mediatek.com>
 References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,38 +14,33 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add component OVL_2L1
+This patch add clock property check before get it
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 1 +
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index bcbf673..1aa4224 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -268,6 +268,7 @@ struct mtk_ddp_comp_match {
- 	[DDP_COMPONENT_OVL0]	= { MTK_DISP_OVL,	0, NULL },
- 	[DDP_COMPONENT_OVL1]	= { MTK_DISP_OVL,	1, NULL },
- 	[DDP_COMPONENT_OVL_2L0]	= { MTK_DISP_OVL_2L,	0, NULL },
-+	[DDP_COMPONENT_OVL_2L1]	= { MTK_DISP_OVL_2L,	1, NULL },
- 	[DDP_COMPONENT_PWM0]	= { MTK_DISP_PWM,	0, NULL },
- 	[DDP_COMPONENT_PWM1]	= { MTK_DISP_PWM,	1, NULL },
- 	[DDP_COMPONENT_PWM2]	= { MTK_DISP_PWM,	2, NULL },
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-index 8f586d0..8ac9f62 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-@@ -60,6 +60,7 @@ enum mtk_ddp_comp_id {
- 	DDP_COMPONENT_OD1,
- 	DDP_COMPONENT_OVL0,
- 	DDP_COMPONENT_OVL_2L0,
-+	DDP_COMPONENT_OVL_2L1,
- 	DDP_COMPONENT_OVL1,
- 	DDP_COMPONENT_PWM0,
- 	DDP_COMPONENT_PWM1,
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index c57e7ab..a9d3e27 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -668,10 +668,12 @@ static int mtk_ddp_probe(struct platform_device *pdev)
+ 	for (i = 0; i < 10; i++)
+ 		ddp->mutex[i].id = i;
+ 
+-	ddp->clk = devm_clk_get(dev, NULL);
+-	if (IS_ERR(ddp->clk)) {
+-		dev_err(dev, "Failed to get clock\n");
+-		return PTR_ERR(ddp->clk);
++	if (of_find_property(dev->of_node, "clocks", &i)) {
++		ddp->clk = devm_clk_get(dev, NULL);
++		if (IS_ERR(ddp->clk)) {
++			dev_err(dev, "Failed to get clock\n");
++			return PTR_ERR(ddp->clk);
++		}
+ 	}
+ 
+ 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 -- 
 1.8.1.1.dirty
