@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v4, 05/33] dt-bindings: mediatek: add RDMA1 description for mt8183 display
-Date: Tue, 9 Jul 2019 06:33:45 +0800
-Message-ID: <1562625253-29254-6-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v4, 08/33] drm/mediatek: add mutex mod into ddp private data
+Date: Tue, 9 Jul 2019 06:33:48 +0800
+Message-ID: <1562625253-29254-9-git-send-email-yongqiang.niu@mediatek.com>
 References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,24 +14,117 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add RDMA1 description for mt8183 display
+except mutex mod, mutex mod reg,mutex sof reg,
+and mutex sof id will be ddp private data
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 41 +++++++++++++++++++++++++---------
+ 1 file changed, 30 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-index afd3c90..bb9274a 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-@@ -30,6 +30,7 @@ Required properties (all function blocks):
- 	"mediatek,<chip>-disp-ovl"   		- overlay (4 layers, blending, csc)
- 	"mediatek,<chip>-disp-ovl-2l"           - overlay (2 layers, blending, csc)
- 	"mediatek,<chip>-disp-rdma"  		- read DMA / line buffer
-+	"mediatek,<chip>-disp-rdma1"            - function is same with RDMA, fifo size is different
- 	"mediatek,<chip>-disp-wdma"  		- write DMA
- 	"mediatek,<chip>-disp-ccorr"            - color correction
- 	"mediatek,<chip>-disp-color" 		- color processor
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index 579ce28..412b82f 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -147,12 +147,16 @@ struct mtk_disp_mutex {
+ 	bool claimed;
+ };
+ 
++struct mtk_ddp_data {
++	const unsigned int *mutex_mod;
++};
++
+ struct mtk_ddp {
+ 	struct device			*dev;
+ 	struct clk			*clk;
+ 	void __iomem			*regs;
+ 	struct mtk_disp_mutex		mutex[10];
+-	const unsigned int		*mutex_mod;
++	const struct mtk_ddp_data	*data;
+ };
+ 
+ static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+@@ -202,6 +206,18 @@ struct mtk_ddp {
+ 	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
+ };
+ 
++static const struct mtk_ddp_data mt2701_ddp_driver_data = {
++	.mutex_mod = mt2701_mutex_mod,
++};
++
++static const struct mtk_ddp_data mt2712_ddp_driver_data = {
++	.mutex_mod = mt2712_mutex_mod,
++};
++
++static const struct mtk_ddp_data mt8173_ddp_driver_data = {
++	.mutex_mod = mt8173_mutex_mod,
++};
++
+ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+ 				    enum mtk_ddp_comp_id next,
+ 				    unsigned int *addr)
+@@ -464,15 +480,15 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+ 		reg = MUTEX_SOF_DPI1;
+ 		break;
+ 	default:
+-		if (ddp->mutex_mod[id] < 32) {
++		if (ddp->data->mutex_mod[id] < 32) {
+ 			offset = DISP_REG_MUTEX_MOD(mutex->id);
+ 			reg = readl_relaxed(ddp->regs + offset);
+-			reg |= 1 << ddp->mutex_mod[id];
++			reg |= 1 << ddp->data->mutex_mod[id];
+ 			writel_relaxed(reg, ddp->regs + offset);
+ 		} else {
+ 			offset = DISP_REG_MUTEX_MOD2(mutex->id);
+ 			reg = readl_relaxed(ddp->regs + offset);
+-			reg |= 1 << (ddp->mutex_mod[id] - 32);
++			reg |= 1 << (ddp->data->mutex_mod[id] - 32);
+ 			writel_relaxed(reg, ddp->regs + offset);
+ 		}
+ 		return;
+@@ -502,15 +518,15 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+ 			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
+ 		break;
+ 	default:
+-		if (ddp->mutex_mod[id] < 32) {
++		if (ddp->data->mutex_mod[id] < 32) {
+ 			offset = DISP_REG_MUTEX_MOD(mutex->id);
+ 			reg = readl_relaxed(ddp->regs + offset);
+-			reg &= ~(1 << ddp->mutex_mod[id]);
++			reg &= ~(1 << ddp->data->mutex_mod[id]);
+ 			writel_relaxed(reg, ddp->regs + offset);
+ 		} else {
+ 			offset = DISP_REG_MUTEX_MOD2(mutex->id);
+ 			reg = readl_relaxed(ddp->regs + offset);
+-			reg &= ~(1 << (ddp->mutex_mod[id] - 32));
++			reg &= ~(1 << (ddp->data->mutex_mod[id] - 32));
+ 			writel_relaxed(reg, ddp->regs + offset);
+ 		}
+ 		break;
+@@ -585,7 +601,7 @@ static int mtk_ddp_probe(struct platform_device *pdev)
+ 		return PTR_ERR(ddp->regs);
+ 	}
+ 
+-	ddp->mutex_mod = of_device_get_match_data(dev);
++	ddp->data = of_device_get_match_data(dev);
+ 
+ 	platform_set_drvdata(pdev, ddp);
+ 
+@@ -598,9 +614,12 @@ static int mtk_ddp_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id ddp_driver_dt_match[] = {
+-	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
+-	{ .compatible = "mediatek,mt2712-disp-mutex", .data = mt2712_mutex_mod},
+-	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
++	{ .compatible = "mediatek,mt2701-disp-mutex",
++	  .data = &mt2701_ddp_driver_data},
++	{ .compatible = "mediatek,mt2712-disp-mutex",
++	  .data = &mt2712_ddp_driver_data},
++	{ .compatible = "mediatek,mt8173-disp-mutex",
++	  .data = &mt8173_ddp_driver_data},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ddp_driver_dt_match);
 -- 
 1.8.1.1.dirty
