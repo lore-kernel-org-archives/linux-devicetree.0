@@ -1,7 +1,7 @@
 From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v3 3/7] dt-bindings: net: realtek: Add property to enable SSC
-Date: Mon,  8 Jul 2019 12:24:55 -0700
-Message-ID: <20190708192459.187984-4-mka@chromium.org>
+Subject: [PATCH v3 5/7] net: phy: realtek: Support SSC for the RTL8211E
+Date: Mon,  8 Jul 2019 12:24:57 -0700
+Message-ID: <20190708192459.187984-6-mka@chromium.org>
 References: <20190708192459.187984-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,42 +12,64 @@ To: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, 
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the 'realtek,enable-ssc' property to enable Spread Spectrum
-Clocking (SSC) on Realtek PHYs that support it.
+By default Spread-Spectrum Clocking (SSC) is disabled on the RTL8211E.
+Enable it if the device tree property 'realtek,enable-ssc' exists.
 
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
+TODO: DT validation
+
 Changes in v3:
-- changed wording for supported PHY models
+- use phydev_err() instead of dev_err()
 
 Changes in v2:
-- patch added to the series (kind of, it already existed, but now
-  the binding is created by another patch)
+- enable SSC in config_init() instead of probe()
+- fixed error check after enabling SSC
 ---
- Documentation/devicetree/bindings/net/realtek.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/phy/realtek.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
-index db0333f23fec..af2824664f08 100644
---- a/Documentation/devicetree/bindings/net/realtek.txt
-+++ b/Documentation/devicetree/bindings/net/realtek.txt
-@@ -15,6 +15,10 @@ Optional properties:
+diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+index fa11ae5ebd91..5854412403b5 100644
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -9,6 +9,7 @@
+  * Copyright (c) 2004 Freescale Semiconductor, Inc.
+  */
+ #include <linux/bitops.h>
++#include <linux/device.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/phy.h>
+@@ -33,6 +34,10 @@
+ #define RTL8211E_EEE_LED_MODE1			0x05
+ #define RTL8211E_EEE_LED_MODE2			0x06
  
-   Only supported for "realtek,rtl8211e".
- 
-+- realtek,enable-ssc : Enable Spread Spectrum Clocking (SSC) on this port.
++/* RTL8211E extension page 160 */
++#define RTL8211E_SCR				0x1a
++#define RTL8211E_SCR_DISABLE_RXC_SSC		BIT(2)
 +
-+  Only supported for "realtek,rtl8211e".
+ #define RTL8211F_INSR				0x1d
+ 
+ #define RTL8211F_TX_DELAY			BIT(8)
+@@ -250,8 +255,18 @@ static int rtl8211f_config_init(struct phy_device *phydev)
+ static int rtl8211e_config_init(struct phy_device *phydev)
+ {
+ 	struct device *dev = &phydev->mdio.dev;
++	int ret;
+ 	u16 val;
+ 
++	if (of_property_read_bool(dev->of_node, "realtek,enable-ssc")) {
++		ret = rtl8211e_modify_ext_paged(phydev, 0xa0, RTL8211E_SCR,
++						RTL8211E_SCR_DISABLE_RXC_SSC,
++						0);
++		if (ret < 0)
++			phydev_err(phydev, "failed to enable SSC on RXC: %d\n",
++				   ret);
++	}
 +
+ 	if (of_property_read_bool(dev->of_node, "realtek,eee-led-mode-disable"))
+ 		rtl8211e_disable_eee_led_mode(phydev);
  
- Example:
- 
-@@ -27,5 +31,6 @@ mdio0 {
- 		compatible = "realtek,rtl8211e";
- 		reg = <1>;
- 		realtek,eee-led-mode-disable;
-+		realtek,enable-ssc;
- 	};
- };
 -- 
 2.22.0.410.gd8fdbe21b5-goog
