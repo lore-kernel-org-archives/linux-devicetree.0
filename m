@@ -1,234 +1,38 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Mon, 8 Jul 2019 11:45:47 +0000
-Message-ID: <BYAPR07MB47097C3C2A2BBA2AA63C65DEDDF60@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com>
- <1562324238-16655-6-git-send-email-pawell@cadence.com>
- <87r274lmqk.fsf@linux.intel.com>
- <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com>
- <87a7dpm442.fsf@linux.intel.com>
- <BYAPR07MB4709E5BA041BBDDB70E69F62DDF60@BYAPR07MB4709.namprd07.prod.outlook.com>
- <874l3wn5ep.fsf@linux.intel.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 0/3] Optimize voltage switch for the SD controller
+Date: Mon, 8 Jul 2019 13:55:40 +0200
+Message-ID: <CAPDyKFqQmYpP7i5gG8D0hVaE=UhK4+9zs3jgMxfyOLw0vjqM8Q@mail.gmail.com>
+References: <cover.1561094029.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <874l3wn5ep.fsf@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <cover.1561094029.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <felipe.balbi@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 21 Jun 2019 at 08:12, Baolin Wang <baolin.wang@linaro.org> wrote:
 >
->Hi,
+> This patch set is used to optimize voltage switch for the
+> Spreadtrum SD host controller.
 >
->Pawel Laszczak <pawell@cadence.com> writes:
->> Please look at the changes in drivers/usb/common/common.c file.
->> I'm going to add it as next patch to next version.
->>
->>
->>>Pawel Laszczak <pawell@cadence.com> writes:
->>>>>> +void cdns3_role_stop(struct cdns3 *cdns)
->>>
->>>>>> +static const char *const cdns3_mode[] =3D {
->>>>>> +	[USB_DR_MODE_UNKNOWN]		=3D "unknown",
->>>>>> +	[USB_DR_MODE_OTG]		=3D "otg",
->>>>>> +	[USB_DR_MODE_HOST]		=3D "host",
->>>>>> +	[USB_DR_MODE_PERIPHERAL]	=3D "device",
->>>>>> +};
->>>>>
->>>>>don't we have a generic version of this under usb/common ?
->>>>>
->>>> Yes, there is a similar array, but it is defined also as static
->>>> and there is no function for converting value to string.
->>>> There is only function for converting string to value.
->>>
->>>right. You can add the missing interface generically instead of
->>>duplicating the enumeration.
->>>
->>>> There is also:
->>>> [USB_DR_MODE_UNKNOWN]		=3D "",
->>>> Instead of:
->>>> [USB_DR_MODE_UNKNOWN]		=3D "unknown",
->>>>
->>>> So, for USB_DR_MODE_UNKNOWN user will not see anything information.
->>>
->>>But that's what "unknown" means :-) We don't know the information.
->>>
->>
->> ////// start
->> commit 607754c60fabc43408f4f2de82d3560c72870787 (HEAD)
->> Author: Pawel Laszczak <pawell@cadence.com>
->> Date:   Mon Jul 8 12:53:47 2019 +0200
->>
->>     usb:common  Added usb_get_dr_mode_from_string and usb_dr_mode_to_str=
-ing.
+> Any comments are welcome. Thanks.
 >
->This would read better as:
+> Baolin Wang (3):
+>   mmc: sdhci-sprd: Add start_signal_voltage_switch ops
+>   dt-bindings: mmc: sprd: Add pinctrl support
+>   mmc: sdhci-sprd: Add pin control support for voltage switch
 >
->      usb: common: Add usb_get_dr_mode_from_string and usb_dr_mode_to_stri=
-ng.
+>  .../devicetree/bindings/mmc/sdhci-sprd.txt         |    7 ++
+>  drivers/mmc/host/sdhci-sprd.c                      |   78 ++++++++++++++++++++
+>  2 files changed, 85 insertions(+)
 >
->>
->>     Patch introduces new function usb_dr_mode_to_string for converting d=
-ual role
->>     mod to string and removes static from usb_dr_mode_to_string definiti=
-on.
->>
->>     Both changes have made to avoid duplication of code by cdns3 driver.
->>
->> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
->> index 18f5dcf58b0d..ab59954deff8 100644
->> --- a/drivers/usb/common/common.c
->> +++ b/drivers/usb/common/common.c
->> @@ -118,13 +118,20 @@ static const char *const usb_dr_modes[] =3D {
->>         [USB_DR_MODE_OTG]               =3D "otg",
->>  };
->>
->> -static enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
->> +/**
->> + * usb_get_dr_mode_from_string - Convert string to dual role mode.
->> + * @str: Pointer to the given string
->> + *
->> + * The function gets string and returns the correspondig enum usb_dr_mo=
-de.
->> + */
->> +enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
->>  {
->>         int ret;
->>
->>         ret =3D match_string(usb_dr_modes, ARRAY_SIZE(usb_dr_modes), str=
-);
->>         return (ret < 0) ? USB_DR_MODE_UNKNOWN : ret;
->>  }
->> +EXPORT_SYMBOL_GPL(usb_get_dr_mode_from_string);
->>
->>  enum usb_dr_mode usb_get_dr_mode(struct device *dev)
->>  {
->> @@ -139,6 +146,21 @@ enum usb_dr_mode usb_get_dr_mode(struct device *dev=
-)
->>  }
->>  EXPORT_SYMBOL_GPL(usb_get_dr_mode);
->>
->> +/**
->> + * usb_dr_mode_to_string - Convert dual role mode to stringi.
->
->s/stringi/string
->
->> + * @dr_mode: Pointer to the given dual role mode
->> + *
->> + * The function gets enum usb_dr_mode, and returns the correspondig str=
-ing.
->> + */
->> +const *char usb_dr_mode_to_string(const enum usb_dr_mode dr_mode)
->> +{
->> +       if (dr_mode > USB_DR_MODE_UNKNOWN || dr_mode <=3D USB_DR_MODE_PE=
-RIPHERAL)
->> +               return usb_dr_modes[dr_mode];
->> +
->> +       return usb_dr_modes[USB_DR_MODE_UNKNOWN];
->> +}
->> +EXPORT_SYMBOL_GPL(usb_dr_mode_to_string);
->
->missing prototype in a header file.
+> --
+> 1.7.9.5
 >
 
-The prototype was added , but not all text was past. Sorry for that. =20
+Applied for next, thanks!
 
-Fixed version:  with your changes.
-
-///// v2 corrected=20
-commit 4553d48dd0500085d90c8280e28714072279c3dd (HEAD)
-Author: Pawel Laszczak <pawell@cadence.com>
-Date:   Mon Jul 8 12:53:47 2019 +0200
-
-    usb: common: Add usb_get_dr_mode_from_string and usb_dr_mode_to_string.
-
-    Patch introduces new function usb_dr_mode_to_string for converting dual=
- role
-    mod to string and removes static from usb_dr_mode_to_string definition.
-
-    Both changes have made to avoid duplication of code by cdns3 driver.
-
-diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-index 18f5dcf58b0d..76634b8e92db 100644
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -118,13 +118,20 @@ static const char *const usb_dr_modes[] =3D {
-        [USB_DR_MODE_OTG]               =3D "otg",
- };
-
--static enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
-+/**
-+ * usb_get_dr_mode_from_string - Convert string to dual role mode.
-+ * @str: Pointer to the given string
-+ *
-+ * The function gets string and returns the correspondig enum usb_dr_mode.
-+ */
-+enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
- {
-        int ret;
-
-        ret =3D match_string(usb_dr_modes, ARRAY_SIZE(usb_dr_modes), str);
-        return (ret < 0) ? USB_DR_MODE_UNKNOWN : ret;
- }
-+EXPORT_SYMBOL_GPL(usb_get_dr_mode_from_string);
-
- enum usb_dr_mode usb_get_dr_mode(struct device *dev)
- {
-@@ -139,6 +146,21 @@ enum usb_dr_mode usb_get_dr_mode(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(usb_get_dr_mode);
-
-+/**
-+ * usb_dr_mode_to_string - Convert dual role mode to string.
-+ * @dr_mode: Pointer to the given dual role mode
-+ *
-+ * The function gets enum usb_dr_mode, and returns the correspondig string=
-.
-+ */
-+const char *usb_dr_mode_to_string(const enum usb_dr_mode dr_mode)
-+{
-+       if (dr_mode > USB_DR_MODE_UNKNOWN || dr_mode <=3D USB_DR_MODE_PERIP=
-HERAL)
-+               return usb_dr_modes[dr_mode];
-+
-+       return usb_dr_modes[USB_DR_MODE_UNKNOWN];
-+}
-+EXPORT_SYMBOL_GPL(usb_dr_mode_to_string);
-+
- #ifdef CONFIG_OF
- /**
-  * of_usb_get_dr_mode_by_phy - Get dual role mode for the controller devic=
-e
-diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
-index 69f1b6328532..c156817672c4 100644
---- a/include/linux/usb/otg.h
-+++ b/include/linux/usb/otg.h
-@@ -129,4 +129,20 @@ enum usb_dr_mode {
-  */
- extern enum usb_dr_mode usb_get_dr_mode(struct device *dev);
-
-+/**
-+ * usb_get_dr_mode_from_string - Convert string to dual role mode.
-+ * @str: Pointer to the given string
-+ *
-+ * The function gets string and returns the correspondig enum usb_dr_mode.
-+ */
-+extern enum usb_dr_mode usb_get_dr_mode_from_string(const char *str);
-+
-+/**
-+ * usb_dr_mode_to_string - Convert dual role mode to string.
-+ * @dr_mode: Pointer to the given dual role mode
-+ *
-+ * The function gets enum usb_dr_mode, and returns the correspondig string=
-.
-+ */
-+extern const char *usb_dr_mode_to_string(const enum usb_dr_mode dr_mode);
-+
- #endif /* __LINUX_USB_OTG_H */
-
-////////////////
->--
->balbi
+Kind regards
+Uffe
