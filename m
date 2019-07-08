@@ -1,8 +1,7 @@
 From: <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [RFC PATCH V2 6/6] media: platform: mtk-mdp3: Add struct tuning_addr
- to identify user tuning data
-Date: Mon, 8 Jul 2019 19:05:00 +0800
-Message-ID: <20190708110500.7242-7-frederic.chen@mediatek.com>
+Subject: [RFC PATCH V2 2/6] dts: arm64: mt8183: Add DIP nodes
+Date: Mon, 8 Jul 2019 19:04:56 +0800
+Message-ID: <20190708110500.7242-3-frederic.chen@mediatek.com>
 References: <20190708110500.7242-1-frederic.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,40 +23,43 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-We added a struct tuning_addr which contains a field "present"
-so that the driver can tell the firmware if we have user tuning
-dataor not.
+This patch adds nodes for Digital Image Processing (DIP). DIP is
+embedded in Mediatek SoCs and works with the co-processor to
+adjust image content according to tuning input data. It also
+provides image format conversion, resizing, and rotation
+features.
 
 Signed-off-by: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/media/platform/mtk-mdp3/mtk-img-ipi.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/media/platform/mtk-mdp3/mtk-img-ipi.h b/drivers/media/platform/mtk-mdp3/mtk-img-ipi.h
-index 9fabe7e8b71d..0944fe911d97 100644
---- a/drivers/media/platform/mtk-mdp3/mtk-img-ipi.h
-+++ b/drivers/media/platform/mtk-mdp3/mtk-img-ipi.h
-@@ -38,6 +38,12 @@ struct img_addr {
- 	u32	iova;	/* Used by IOMMU HW access */
- } __attribute__ ((__packed__));
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 0f2646c9eb65..d7b0fb8230f0 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -513,6 +513,22 @@
+ 			#clock-cells = <1>;
+ 		};
  
-+struct tuning_addr {
-+	u32	present;
-+	u32	pa;	/* Used by CM4 access */
-+	u32	iova;	/* Used by IOMMU HW access */
-+} __attribute__ ((__packed__));
++		dip: dip@15022000 {
++			compatible = "mediatek,mt8183-dip";
++			mediatek,larb = <&larb5>;
++			mediatek,mdp3 = <&mdp_rdma0>;
++			mediatek,scp = <&scp>;
++			iommus = <&iommu M4U_PORT_CAM_IMGI>;
++			reg = <0 0x15022000 0 0x6000>;
++			interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_LOW>;
++			clocks =
++					<&imgsys CLK_IMG_LARB5>,
++					<&imgsys CLK_IMG_DIP>;
++			clock-names =
++					"larb5",
++					"dip";
++		};
 +
- struct img_sw_addr {
- 	u64	va;	/* Used by APMCU access */
- 	u32	pa;	/* Used by CM4 access */
-@@ -105,7 +111,7 @@ struct img_ipi_frameparam {
- 	u64		drv_data;
- 	struct img_input	inputs[IMG_MAX_HW_INPUTS];
- 	struct img_output	outputs[IMG_MAX_HW_OUTPUTS];
--	struct img_addr		tuning_data;
-+	struct tuning_addr	tuning_data;
- 	struct img_addr		subfrm_data;
- 	struct img_sw_addr	config_data;
- 	struct img_sw_addr  self_data;
+ 		vdecsys: syscon@16000000 {
+ 			compatible = "mediatek,mt8183-vdecsys", "syscon";
+ 			reg = <0 0x16000000 0 0x1000>;
 -- 
 2.18.0
