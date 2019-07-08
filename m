@@ -1,65 +1,73 @@
 From: Sam Ravnborg <sam@ravnborg.org>
 Subject: Re: [PATCH v5 2/7] drm/panel: simple: Add ability to override
  typical timing
-Date: Mon, 8 Jul 2019 19:50:08 +0200
-Message-ID: <20190708175007.GA3511@ravnborg.org>
+Date: Mon, 8 Jul 2019 19:56:06 +0200
+Message-ID: <20190708175606.GB3511@ravnborg.org>
 References: <20190401171724.215780-1-dianders@chromium.org>
  <20190401171724.215780-3-dianders@chromium.org>
  <20190630202246.GB15102@ravnborg.org>
- <CAD=FV=V_wTD1xpkXRe-z2HsZ8QXKq7jmq8CsfhMnFxi-5XDJjw@mail.gmail.com>
+ <20190630205514.GA17046@ravnborg.org>
+ <CAD=FV=WH4kmhQA0kbKcAUx=oOeqTZiQOFCXYpVWwq+mG7Y7ofA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=V_wTD1xpkXRe-z2HsZ8QXKq7jmq8CsfhMnFxi-5XDJjw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAD=FV=WH4kmhQA0kbKcAUx=oOeqTZiQOFCXYpVWwq+mG7Y7ofA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Doug Anderson <dianders@chromium.org>
 Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Jeffy Chen <jeffy.chen@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, Boris Brezillon <boris.brezillon@collabora.com>, Enric =?iso-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>, =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>, Ezequiel Garcia <ezequiel@collabora.com>, Matthias Kaehlcke <mka@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRG91Z2guCgpPbiBNb24sIEp1bCAwMSwgMjAxOSBhdCAwOTozOToyNEFNIC0wNzAwLCBEb3Vn
-IEFuZGVyc29uIHdyb3RlOgo+IEhpLAo+IAo+IE9uIFN1biwgSnVuIDMwLCAyMDE5IGF0IDE6MjIg
-UE0gU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcub3JnPiB3cm90ZToKPiA+Cj4gPiA+IEBAIC05
-MSw2ICs5Miw4IEBAIHN0cnVjdCBwYW5lbF9zaW1wbGUgewo+ID4gPiAgICAgICBzdHJ1Y3QgaTJj
-X2FkYXB0ZXIgKmRkYzsKPiA+ID4KPiA+ID4gICAgICAgc3RydWN0IGdwaW9fZGVzYyAqZW5hYmxl
-X2dwaW87Cj4gPiA+ICsKPiA+ID4gKyAgICAgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgb3ZlcnJp
-ZGVfbW9kZTsKPiA+IEkgZmFpbCB0byBzZWUgd2hlcmUgdGhpcyBwb2l0ZXIgaXMgYXNzaWduZWQu
-Cj4gCj4gSW4gcGFuZWxfc2ltcGxlX3BhcnNlX292ZXJyaWRlX21vZGUoKS4gIFNwZWNpZmljYWxs
-eToKPiAKPiBkcm1fZGlzcGxheV9tb2RlX2Zyb21fdmlkZW9tb2RlKCZ2bSwgJnBhbmVsLT5vdmVy
-cmlkZV9tb2RlKTsKClRoZSBhYm92ZSBjb2RlLXNuaXBwZXQgaXMgb25seSBjYWxsZWQgaW4gdGhl
-IHBhbmVsIGhhcyBzcGVjaWZpZWQgZGlzcGxheQp0aW1pbmdzIHVzaW5nIGRpc3BsYXlfdGltaW5n
-cyAtIGl0IGlzIG5vdCBjYWxsZWQgd2hlbiBkaXNwbGF5X21vZGUgaXMKdXNlZC4KU28gb3ZlcnJp
-ZGVfbW9kZSBpcyBvbmx5IGFzc2lnbmVkIGluIHNvbWUgY2FzZXMgYW5kIG5vdCBhbGwgY2FzZXMu
-ClRoaXMgbmVlZHMgdG8gYmUgZml4ZWQgc28gd2UgZG8gbm90IHJlZmVyZW5jZSBvdmVycmlkZV9t
-b2RlIHVubGVzcwppdCBpcyBzZXQuCgo+IAo+IAo+ID4gQEAgLTE1Miw2ICsxNjIsNDQgQEAgc3Rh
-dGljIGludCBwYW5lbF9zaW1wbGVfZ2V0X2ZpeGVkX21vZGVzKHN0cnVjdCBwYW5lbF9zaW1wbGUg
-KnBhbmVsKQo+ID4gPiAgICAgICAgICAgICAgIG51bSsrOwo+ID4gPiAgICAgICB9Cj4gPiA+Cj4g
-PiA+ICsgICAgIHJldHVybiBudW07Cj4gPiA+ICt9Cj4gPiA+ICsKPiA+ID4gK3N0YXRpYyBpbnQg
-cGFuZWxfc2ltcGxlX2dldF9ub25fZWRpZF9tb2RlcyhzdHJ1Y3QgcGFuZWxfc2ltcGxlICpwYW5l
-bCkKPiA+ID4gK3sKPiA+ID4gKyAgICAgc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciA9
-IHBhbmVsLT5iYXNlLmNvbm5lY3RvcjsKPiA+ID4gKyAgICAgc3RydWN0IGRybV9kZXZpY2UgKmRy
-bSA9IHBhbmVsLT5iYXNlLmRybTsKPiA+ID4gKyAgICAgc3RydWN0IGRybV9kaXNwbGF5X21vZGUg
-Km1vZGU7Cj4gPiA+ICsgICAgIGJvb2wgaGFzX292ZXJyaWRlID0gcGFuZWwtPm92ZXJyaWRlX21v
-ZGUudHlwZTsKPiA+IFRoaXMgbG9va3Mgc3VzcGljaW91cy4KPiA+IHBhbmVsLT5vdmVycmlkZV9t
-b2RlLnR5cGUgaXMgYW4gdW5zaWduZWQgaW50IHRoYXQgbWF5IGhhdmUgYSBudW1iZXIgb2YKPiA+
-IGJpdHMgc2V0Lgo+ID4gU28gdGhlIGFib3ZlIGNvZGUgaW1wbGljaXRseSBjb252ZXJ0IGEgLnR5
-cGUgIT0gMCB0byBhIHRydWUuCj4gPiBUaGlzIGNhbiBiZSBleHByZXNzZWQgaW4gYSBtdWNoIG1v
-cmUgcmVhZGVyIGZyaWVuZGx5IHdheS4KPiAKPiBZb3Ugd291bGQgc3VnZ2VzdCB0aGF0IEkgYWRk
-IGEgYm9vbGVhbiBmaWVsZCB0byBhIHN0cnVjdHVyZSB0bwo+IGluZGljYXRlIHdoZXRoZXIgYW4g
-b3ZlcnJpZGUgbW9kZSBpcyBwcmVzZW50PwpBIHNpbXBsZSAgYm9vbCBoYXNfb3ZlcnJpZGUgPSBw
-YW5lbC0+b3ZlcnJpZGVfbW9kZS50eXBlICE9IDA7CndvdWxkIGRvIHRoZSB0cmljayBoZXJlLgpU
-aGVuIHRoZXJlIGlzIG5vIGhpZGRlbiBjb252ZXJzaW9uIGZyb20gaW50IHRvIGEgYm9vbC4KCkJ1
-dCBhcyBvdmVycmlkZV9tb2RlIGNhbiBiZSBOVUxMIHNvbWV0aGluZyBtb3JlIG5lZWRzIHRvIGJl
-IGRvbmUuCgoJU2FtCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bA==
+On Mon, Jul 01, 2019 at 09:39:06AM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Sun, Jun 30, 2019 at 1:55 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> >
+> > Hi Douglas.
+> >
+> > > > +
+> > > > +   /* Only add timings if override was not there or failed to validate */
+> > > > +   if (num == 0 && panel->desc->num_timings)
+> > > > +           num = panel_simple_get_timings_modes(panel);
+> > > > +
+> > > > +   /*
+> > > > +    * Only add fixed modes if timings/override added no mode.
+> > >
+> > > This part I fail to understand.
+> > > If we have a panel where we in panel-simple have specified the timings,
+> > > and done so using display_timing so with proper {min, typ, max} then it
+> > > should be perfectly legal to specify a more precise variant in the DT
+> > > file.
+> > > Or what did I miss here?
+> >
+> > Got it now.
+> > If display_mode is used for timings this is what you call "fixed mode".
+> > Hmm, if I got confused someone else may also be confused by this naming.
+> 
+> The name "fixed mode" comes from the old code, though I guess in the
+> old code it used to refer to a mode that came from either the
+> display_timing or the display_mode.
+> 
+> How about if I call it "panel_simple_get_from_fixed_display_mode"?
+> ...or if you have another suggestion feel free to chime in.
+What we really want to distingush here is the use of display_mode
+and display_timings (if I got the names right).
+That display_mode specify a fixed timing and display_timing specify
+a valid range is something in the semantics of the two types.
+So naming that refer to display_mode versus display_timing will make the
+code simpler to understand. and then a nice comment that when
+display_mode
+is used one looses the possibility to use override_mode.
+That would be fine to have in the struct in the driver.
+
+> NOTE: Since this feedback is minor and this patch has been outstanding
+> for a while (and is blocking other work), I am assuming that the best
+> path forward is for Heiko to land this patch with Thierry's Ack and
+> I'll send a follow-up.  Please yell if you disagree.
+Let's give the patches a spin more as we have passed the possibility for
+the current merge window.
+
+I am on vacation at the moment and thus slow in responses, but will be back
+at the home office next week and will be more responsive again.
+
+	Sam - who is enjoying the alps in Austria
