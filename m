@@ -1,24 +1,24 @@
-Return-Path: <SRS0=gSIt=VA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from [180.210.201.54] ([180.210.201.54]:59906 "EHLO UNKNOWN"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727058AbfGCWKO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Jul 2019 18:10:14 -0400
-Received: from localhost (localhost [IPv6:::1])
-        by UNKNOWN (Postfix) with SMTP id 32F7B65626
-        for <devicetree@vger.kernel.org>; Sat, 29 Jun 2019 15:22:13 +0800 (SGT)
+Return-Path: <SRS0=Pqyd=VG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from 51-15-166-107.rev.poneytelecom.eu ([51.15.166.107]:34063 "EHLO
+        sd-126045.dedibox.fr" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfGICqJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jul 2019 22:46:09 -0400
+Received: from 51-15-166-107.rev.poneytelecom.eu (localhost [IPv6:::1])
+        by sd-126045.dedibox.fr (Postfix) with SMTP id E4F491D69386
+        for <devicetree@vger.kernel.org>; Mon,  8 Jul 2019 21:40:23 +0200 (CEST)
 From: devicetree@vger.kernel.org
-Reply-To: demexinruslan+yHu0MrZxlD@gmail.com
-Subject: =?utf-8?B?0JrQu9C40LXQvdGC0YHQutC40LUg0LHQsNC30YshIEVt?=
-        =?utf-8?B?YWlsOiBwcm9kYXdlekBhcm15c3B5LmNvbSDQo9C30L3Q?=
-        =?utf-8?B?sNC50YLQtSDQv9C+0LTRgNC+0LHQvdC10LUh?=
+Reply-To: prodawez@armyspy.com
+Subject: =?utf-8?B?0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1ISDQktCw0YEg?=
+        =?utf-8?B?0LjQvdGC0LXRgNC10YHRg9GO0YIg0LrQu9C40LXQvdGC?=
+        =?utf-8?B?0YHQutC40LUg0LHQsNC30Ysg0LTQsNC90L3Ri9GFPw==?=
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8";
 Content-Transfer-Encoding: base64
-Message-Id: <20190629072214.32F7B65626@UNKNOWN>
-Date: Sat, 29 Jun 2019 15:22:13 +0800 (SGT)
+Message-Id: <20190708194023.E4F491D69386@sd-126045.dedibox.fr>
+Date: Mon,  8 Jul 2019 21:40:23 +0200 (CEST)
 Sender: devicetree-owner@vger.kernel.org
-To: im5Kk93nZzdevicetree@vger.kernel.org
+To: wWZFQudevicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-0JrQu9C40LXQvdGC0YHQutC40LUg0LHQsNC30YshIEVtYWlsOiBwcm9kYXdlekBhcm15c3B5LmNv
-bSDQo9C30L3QsNC50YLQtSDQv9C+0LTRgNC+0LHQvdC10LUhDQo=
+0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1ISDQktCw0YEg0LjQvdGC0LXRgNC10YHRg9GO0YIg0LrQ
+u9C40LXQvdGC0YHQutC40LUg0LHQsNC30Ysg0LTQsNC90L3Ri9GFPw0K
