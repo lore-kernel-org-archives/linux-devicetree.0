@@ -1,84 +1,102 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2] dt-binding: mmc: rename tmio_mmc.txt to renesas,sdhi.txt
-Date: Mon, 8 Jul 2019 13:55:44 +0200
-Message-ID: <CAPDyKFoBaYH+Rqn1heyUEJL-V=dm4dvx4JD31SK+uSS4vXiLXw@mail.gmail.com>
-References: <20190624070345.20373-1-yamada.masahiro@socionext.com>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Mon, 08 Jul 2019 14:59:11 +0300
+Message-ID: <874l3whh4g.fsf@linux.intel.com>
+References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-6-git-send-email-pawell@cadence.com> <87r274lmqk.fsf@linux.intel.com> <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com> <87a7dpm442.fsf@linux.intel.com> <BYAPR07MB4709E5BA041BBDDB70E69F62DDF60@BYAPR07MB4709.namprd07.prod.outlook.com> <874l3wn5ep.fsf@linux.intel.com> <BYAPR07MB47097C3C2A2BBA2AA63C65DEDDF60@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190624070345.20373-1-yamada.masahiro@socionext.com>
+In-Reply-To: <BYAPR07MB47097C3C2A2BBA2AA63C65DEDDF60@BYAPR07MB4709.namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Simon Horman <simon.horman@netronome.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Jun 2019 at 09:04, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> As commit b6147490e6aa ("mmc: tmio: split core functionality, DMA and
-> MFD glue") said, these MMC controllers use the IP from Panasonic.
->
-> TMIO (Toshiba Mobile IO) MMC was the first upstreamed user of this IP.
-> The common driver code was split and expanded as 'tmio-mmc-core', then
-> it became historical misnomer since 'tmio' is not the name of this IP.
->
-> In the discussion [1], we decide to keep this name as-is at least in
-> Linux driver level because renaming everything is a big churn.
->
-> However, DT should not be oriented to a particular project even though
-> it is mainly developed in Linux communities.
->
-> This is the misfortune only in Linux. Let's stop exporting it to other
-> projects, where there is no good reason to call this hardware "TMIO".
-> Rename the file to renesas,sdhi.txt. In fact, all the information in
-> this file is specific to the Renesas platform.
->
-> This commit also removes the first paragraph entirely. The DT-binding
-> should describe the hardware. It is strange to talk about Linux driver
-> internals such as how the drivers are probed, how platform data are
-> handed off, etc.
->
-> [1] https://www.spinics.net/lists/linux-mmc/msg46952.html
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-Applied for next, thanks!
-
-Kind regards
-Uffe
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-> ---
+(please send it as a formal patch from now on)
+
+Hi,
+
+Pawel Laszczak <pawell@cadence.com> writes:
+> The prototype was added , but not all text was past. Sorry for that.=20=20
 >
-> Changes in v2:
->  - Rename to renesas,sdhi.txt instead of renesas_sdhi.txt
+> Fixed version:  with your changes.
 >
->  .../bindings/mmc/{tmio_mmc.txt => renesas,sdhi.txt}   | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
->  rename Documentation/devicetree/bindings/mmc/{tmio_mmc.txt => renesas,sdhi.txt} (87%)
+> ///// v2 corrected=20
+> commit 4553d48dd0500085d90c8280e28714072279c3dd (HEAD)
+> Author: Pawel Laszczak <pawell@cadence.com>
+> Date:   Mon Jul 8 12:53:47 2019 +0200
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
-> similarity index 87%
-> rename from Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> rename to Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
-> index 2b4f17ca9087..dd08d038a65c 100644
-> --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
-> @@ -1,13 +1,4 @@
-> -* Toshiba Mobile IO SD/MMC controller
-> -
-> -The tmio-mmc driver doesn't probe its devices actively, instead its binding to
-> -devices is managed by either MFD drivers or by the sh_mobile_sdhi platform
-> -driver. Those drivers supply the tmio-mmc driver with platform data, that either
-> -describe hardware capabilities, known to them, or are obtained by them from
-> -their own platform data or from their DT information. In the latter case all
-> -compulsory and any optional properties, common to all SD/MMC drivers, as
-> -described in mmc.txt, can be used. Additionally the following tmio_mmc-specific
-> -optional bindings can be used.
-> +* Renesas SDHI SD/MMC controller
+>     usb: common: Add usb_get_dr_mode_from_string and usb_dr_mode_to_strin=
+g.
 >
->  Required properties:
->  - compatible: should contain one or more of the following:
-> --
-> 2.17.1
+>     Patch introduces new function usb_dr_mode_to_string for converting du=
+al role
+>     mod to string and removes static from usb_dr_mode_to_string definitio=
+n.
 >
+>     Both changes have made to avoid duplication of code by cdns3 driver.
+
+missing Signed-off-by
+
+> diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
+> index 69f1b6328532..c156817672c4 100644
+> --- a/include/linux/usb/otg.h
+> +++ b/include/linux/usb/otg.h
+> @@ -129,4 +129,20 @@ enum usb_dr_mode {
+>   */
+>  extern enum usb_dr_mode usb_get_dr_mode(struct device *dev);
+>
+> +/**
+> + * usb_get_dr_mode_from_string - Convert string to dual role mode.
+> + * @str: Pointer to the given string
+> + *
+> + * The function gets string and returns the correspondig enum usb_dr_mod=
+e.
+> + */
+
+why duplicate the documentation? Perhaps put it only in the header,
+otherwise we will need to update two locations whenever these functions
+change.
+
+> +extern enum usb_dr_mode usb_get_dr_mode_from_string(const char *str);
+> +
+> +/**
+> + * usb_dr_mode_to_string - Convert dual role mode to string.
+> + * @dr_mode: Pointer to the given dual role mode
+> + *
+> + * The function gets enum usb_dr_mode, and returns the correspondig stri=
+ng.
+> + */
+> +extern const char *usb_dr_mode_to_string(const enum usb_dr_mode dr_mode);
+
+Don't you need a stub for builds when CONFIG_USB_COMMON=3Dn?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0jMA8ACgkQzL64meEa
+mQaUFg//QWlWyc/qxvrzfDBRMXPr5QDNjbUZHa9wXB+i7lbjwfD6zeSDQ/+lBsKD
+9acBMn7YWt/2yFkosxGcKfC9f+hsUG+6guZip1R/PzZhewlGN5Sp5U1ewwudX6ou
+UjBKHgejELNxQw0pt0L++ZKtdFZVVU3RMtqSVtVWV1dDAYjqFX1oc3xD1a4Y8tyC
+Zi5pp4OelMEAKJ0sFAMxsbGia5NVm9svKw+sNJHusfQebGQ9rFuLT3MVY0+0WQFH
+2JeSLT0ov0z5xOYEYTg0yK41VnhCzmCnXjAnYsmq54xrrtguZJu1tI85Fo+G1TsX
+zMuFy7jjdDjVB6xCpORokR5Z64ZzuIAa2Vp8KxXkc6kCzsKQtx9EFuMXewMqdKHe
+6tIUbXJm+/syBd8AXKrChLPmycs6rXyD1UB3Y5Du+546nGMK1RnJXWf4BKCG6tYS
+KyMJy0ZPTOBV0RaJ+3VgMyoWD4wo5PHIcuGu/laBfUyoigbaLwOOQwkIEHh3LJA2
+0Do23Glk5n9HxeB70/dvi3TUbaTdbDsI1rKlLnbKrBbSlXS+F5mnp+7yRkA6kGIc
+zh+f3CIVxSTRSeG+NGI0CfGGPFwP/BkjyvCja+jhzSvFl0wl+wIK0JNOx/x49NdS
+8yzttpCKWZQuKruRQKTUJ/Hwlo54Mry/y+Kt5Rj0tXEK+zBthF0=
+=cRnm
+-----END PGP SIGNATURE-----
+--=-=-=--
