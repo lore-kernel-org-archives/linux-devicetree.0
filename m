@@ -1,106 +1,105 @@
-Return-Path: <SRS0=dsAE=VX=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:57876 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfGZJXo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2019 05:23:44 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v5 1/7] clk: qcom: Add WCSS gcc clock control for QCS404
-Date: Fri, 26 Jul 2019 14:53:26 +0530
-Message-Id: <20190726092332.25202-2-govinds@codeaurora.org>
-In-Reply-To: <20190726092332.25202-1-govinds@codeaurora.org>
-References: <20190726092332.25202-1-govinds@codeaurora.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: andy.gross@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH RFC 6/7] pwm: rcar: Add gpio support to output duty zero
+Date: Mon,  8 Jul 2019 18:07:47 +0900
+Message-Id: <1562576868-8124-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To: linus.walleij@linaro.org, geert+renesas@glider.be, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for the WCSS QDSP gcc clock control used on qcs404
-based devices. This would allow wcss remoteproc driver to control
-the required gcc clocks to bring the subsystem out of reset.
+The R-Car SoCs PWM Timer cannot output duty zero. So, this patch
+adds gpio support to output it.
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/clk/qcom/gcc-qcs404.c               | 30 +++++++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-qcs404.h |  3 +++
- 2 files changed, 33 insertions(+)
+ drivers/pwm/pwm-rcar.c | 36 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
-index 29cf464dd2c8..e12c04c09a6a 100644
---- a/drivers/clk/qcom/gcc-qcs404.c
-+++ b/drivers/clk/qcom/gcc-qcs404.c
-@@ -2604,6 +2604,32 @@ static struct clk_branch gcc_usb_hs_system_clk = {
- 	},
+diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
+index c8cd43f..1c19a8b 100644
+--- a/drivers/pwm/pwm-rcar.c
++++ b/drivers/pwm/pwm-rcar.c
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/err.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/io.h>
+ #include <linux/log2.h>
+ #include <linux/math64.h>
+@@ -38,6 +39,7 @@ struct rcar_pwm_chip {
+ 	struct pwm_chip chip;
+ 	void __iomem *base;
+ 	struct clk *clk;
++	struct gpio_desc *gpio;
  };
  
-+static struct clk_branch gcc_wdsp_q6ss_ahbs_clk = {
-+	.halt_reg = 0x1e004,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x1e004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_wdsp_q6ss_ahbs_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
+ static inline struct rcar_pwm_chip *to_rcar_pwm_chip(struct pwm_chip *chip)
+@@ -119,8 +121,11 @@ static int rcar_pwm_set_counter(struct rcar_pwm_chip *rp, int div, int duty_ns,
+ 	ph = tmp & RCAR_PWMCNT_PH0_MASK;
+ 
+ 	/* Avoid prohibited setting */
+-	if (cyc == 0 || ph == 0)
++	if (cyc == 0)
+ 		return -EINVAL;
++	/* Try to use GPIO to output duty zero */
++	if (ph == 0)
++		return -EAGAIN;
+ 
+ 	rcar_pwm_write(rp, cyc | ph, RCAR_PWMCNT);
+ 
+@@ -157,6 +162,28 @@ static void rcar_pwm_disable(struct rcar_pwm_chip *rp)
+ 	rcar_pwm_update(rp, RCAR_PWMCR_EN0, 0, RCAR_PWMCR);
+ }
+ 
++static int rcar_pwm_gpiod_get(struct rcar_pwm_chip *rp)
++{
++	if (rp->gpio)
++		return 0;
 +
-+static struct clk_branch gcc_wdsp_q6ss_axim_clk = {
-+	.halt_reg = 0x1e008,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x1e008,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_wdsp_q6ss_axim_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++	rp->gpio = gpiod_get(rp->chip.dev, "renesas,duty-zero", GPIOD_OUT_LOW);
++	if (!IS_ERR(rp->gpio))
++		return 0;
 +
- static struct clk_hw *gcc_qcs404_hws[] = {
- 	&cxo.hw,
- };
-@@ -2749,6 +2775,9 @@ static struct clk_regmap *gcc_qcs404_clocks[] = {
- 	[GCC_QDSS_DAP_CLK] = &gcc_qdss_dap_clk.clkr,
- 	[GCC_DCC_CLK] = &gcc_dcc_clk.clkr,
- 	[GCC_DCC_XO_CLK] = &gcc_dcc_xo_clk.clkr,
-+	[GCC_WCSS_Q6_AHB_CLK] = &gcc_wdsp_q6ss_ahbs_clk.clkr,
-+	[GCC_WCSS_Q6_AXIM_CLK] =  &gcc_wdsp_q6ss_axim_clk.clkr,
++	rp->gpio = NULL;
++	return -EINVAL;
++}
 +
- };
++static void rcar_pwm_gpiod_put(struct rcar_pwm_chip *rp)
++{
++	if (!rp->gpio)
++		return;
++
++	gpiod_put(rp->gpio);
++	rp->gpio = NULL;
++}
++
+ static int rcar_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			  struct pwm_state *state)
+ {
+@@ -171,6 +198,7 @@ static int rcar_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
  
- static const struct qcom_reset_map gcc_qcs404_resets[] = {
-@@ -2774,6 +2803,7 @@ static const struct qcom_reset_map gcc_qcs404_resets[] = {
- 	[GCC_PCIE_0_SLEEP_ARES] = { 0x3e040, 1 },
- 	[GCC_PCIE_0_PIPE_ARES] = { 0x3e040, 0 },
- 	[GCC_EMAC_BCR] = { 0x4e000 },
-+	[GCC_WDSP_RESTART] = {0x19000},
- };
+ 	if (!state->enabled) {
+ 		rcar_pwm_disable(rp);
++		rcar_pwm_gpiod_put(rp);
+ 		return 0;
+ 	}
  
- static const struct regmap_config gcc_qcs404_regmap_config = {
-diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-index 2cd62c98561f..bc3051543347 100644
---- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
-+++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-@@ -146,6 +146,8 @@
- #define GCC_MDP_TBU_CLK					138
- #define GCC_QDSS_DAP_CLK				139
- #define GCC_DCC_XO_CLK					140
-+#define GCC_WCSS_Q6_AHB_CLK				141
-+#define GCC_WCSS_Q6_AXIM_CLK				142
- #define GCC_CDSP_CFG_AHB_CLK				143
- #define GCC_BIMC_CDSP_CLK				144
- #define GCC_CDSP_TBU_CLK				145
-@@ -173,5 +175,6 @@
- #define GCC_PCIE_0_CORE_STICKY_ARES			19
- #define GCC_PCIE_0_SLEEP_ARES				20
- #define GCC_PCIE_0_PIPE_ARES				21
-+#define GCC_WDSP_RESTART				22
+@@ -187,8 +215,12 @@ static int rcar_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	/* The SYNC should be set to 0 even if rcar_pwm_set_counter failed */
+ 	rcar_pwm_update(rp, RCAR_PWMCR_SYNC, 0, RCAR_PWMCR);
  
- #endif
+-	if (!ret)
++	if (!ret) {
+ 		ret = rcar_pwm_enable(rp);
++		rcar_pwm_gpiod_put(rp);
++	} else if (ret == -EAGAIN) {
++		ret = rcar_pwm_gpiod_get(rp);
++	}
+ 
+ 	return ret;
+ }
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
