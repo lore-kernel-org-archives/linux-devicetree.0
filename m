@@ -1,58 +1,59 @@
-From: Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH 2/8] dt-bindings: document PASID property for IOMMU
- masters
-Date: Mon, 8 Jul 2019 09:58:30 +0200
-Message-ID: <4a90dc21-e727-b2f6-1353-cb08babf0ec2@redhat.com>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-3-jean-philippe.brucker@arm.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
+Date: Mon, 8 Jul 2019 13:55:11 +0530
+Message-ID: <20190708082511.py7gnjbqyp7bnhqx@vireshk-i7>
+References: <20190704061403.8249-1-Anson.Huang@nxp.com>
+ <20190704061403.8249-2-Anson.Huang@nxp.com>
+ <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190610184714.6786-3-jean-philippe.brucker@arm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, will.deacon@arm.com
-Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, robin.murphy@arm.com, jacob.jun.pan@linux.intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean,
-
-On 6/10/19 8:47 PM, Jean-Philippe Brucker wrote:
-> On Arm systems, some platform devices behind an SMMU may support the PASID
-> feature, which offers multiple address space. Let the firmware tell us
-> when a device supports PASID.
+On 04-07-19, 07:49, Leonard Crestez wrote:
+> On 7/4/2019 9:23 AM, Anson.Huang@nxp.com wrote:
+> > From: Anson Huang <Anson.Huang@nxp.com>
+> > 
+> > Assign highest OPP as suspend OPP to reduce suspend/resume
+> > latency on i.MX8MM.
+> > 
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> >   arch/arm64/boot/dts/freescale/imx8mm.dtsi | 1 +
+> >   1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> > index b11fc5e..3a62407 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> > @@ -136,6 +136,7 @@
+> >   			opp-microvolt = <1000000>;
+> >   			opp-supported-hw = <0x8>, <0x3>;
+> >   			clock-latency-ns = <150000>;
+> > +			opp-suspend;
+> >   		};
+> >   	};
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> ---
-> Previous discussion on this patch last year:
-> https://patchwork.ozlabs.org/patch/872275/
-> I split PASID and stall definitions, keeping only PASID here.
-> ---
->  Documentation/devicetree/bindings/iommu/iommu.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
-> index 5a8b4624defc..3c36334e4f94 100644
-> --- a/Documentation/devicetree/bindings/iommu/iommu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/iommu.txt
-> @@ -86,6 +86,12 @@ have a means to turn off translation. But it is invalid in such cases to
->  disable the IOMMU's device tree node in the first place because it would
->  prevent any driver from properly setting up the translations.
->  
-> +Optional properties:
-> +--------------------
-> +- pasid-num-bits: Some masters support multiple address spaces for DMA, by
-> +  tagging DMA transactions with an address space identifier. By default,
-> +  this is 0, which means that the device only has one address space.
-> +
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> What if the highest OPP is unavailable due to speed grading?
 
-Thanks
+What does this exactly mean ? How is the OPP made unavailable in your
+case ?
 
-Eric
->  
->  Notes:
->  ======
+What will dev_pm_opp_get_suspend_opp_freq() return in this case ?
+
+> Ideally we 
+> should find a way to suspend at the highest *supported* OPP.
 > 
+> Maybe the opp-suspend marking could be assigned from imx-cpufreq-dt 
+> driver code?
+
+Sorry for jumping in late, the latest patch from Anson drew my
+attention to this topic :)
+
+-- 
+viresh
