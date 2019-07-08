@@ -1,60 +1,143 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
-Date: Mon, 8 Jul 2019 07:54:03 +0000
-Message-ID: <DB3PR0402MB391651E56C147B1BD13727C5F5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190704061403.8249-1-Anson.Huang@nxp.com>
- <20190704061403.8249-2-Anson.Huang@nxp.com>
- <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
- <DB3PR0402MB39165D27F23501EE358DE607F5FA0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Martin Kepplinger <martink@posteo.de>
+Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
+Date: Mon, 8 Jul 2019 09:54:14 +0200
+Message-ID: <9bf3c0d4-7a15-90a0-fbe9-336b855faf81@posteo.de>
+References: <20190610121346.15779-1-abel.vesa@nxp.com>
+ <d217a9d2-fc60-e057-6775-116542e39e8d@posteo.de>
+ <20190628085417.vezkoizip75yjjpl@fsr-ub1664-175>
+ <a6ea252e-cfd4-0816-e688-3d792e956711@posteo.de>
+ <20190702113305.zo2w5xkfhsfpwrx7@fsr-ub1664-175>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB39165D27F23501EE358DE607F5FA0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <20190702113305.zo2w5xkfhsfpwrx7@fsr-ub1664-175>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger
+To: Abel Vesa <abel.vesa@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jacky Bai <ping.bai@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Marc Zyngier <marc.zyngier@arm.com>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Abel Vesa <abelvesa@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pen>
 List-Id: devicetree@vger.kernel.org
 
-SGksIExlb25hcmQNCg0KPiA+IE9uIDcvNC8yMDE5IDk6MjMgQU0sIEFuc29uLkh1YW5nQG54cC5j
-b20gd3JvdGU6DQo+ID4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4N
-Cj4gPiA+DQo+ID4gPiBBc3NpZ24gaGlnaGVzdCBPUFAgYXMgc3VzcGVuZCBPUFAgdG8gcmVkdWNl
-IHN1c3BlbmQvcmVzdW1lIGxhdGVuY3kNCj4gPiA+IG9uIGkuTVg4TU0uDQo+ID4gPg0KPiA+ID4g
-U2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gPiAt
-LS0NCj4gPiA+ICAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kgfCAx
-ICsNCj4gPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4gPg0KPiA+ID4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpDQo+
-ID4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpDQo+ID4gPiBp
-bmRleCBiMTFmYzVlLi4zYTYyNDA3IDEwMDY0NA0KPiA+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290
-L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kNCj4gPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpDQo+ID4gPiBAQCAtMTM2LDYgKzEzNiw3IEBADQo+ID4g
-PiAgIAkJCW9wcC1taWNyb3ZvbHQgPSA8MTAwMDAwMD47DQo+ID4gPiAgIAkJCW9wcC1zdXBwb3J0
-ZWQtaHcgPSA8MHg4PiwgPDB4Mz47DQo+ID4gPiAgIAkJCWNsb2NrLWxhdGVuY3ktbnMgPSA8MTUw
-MDAwPjsNCj4gPiA+ICsJCQlvcHAtc3VzcGVuZDsNCj4gPiA+ICAgCQl9Ow0KPiA+ID4gICAJfTsN
-Cj4gPg0KPiA+IFdoYXQgaWYgdGhlIGhpZ2hlc3QgT1BQIGlzIHVuYXZhaWxhYmxlIGR1ZSB0byBz
-cGVlZCBncmFkaW5nPyBJZGVhbGx5DQo+ID4gd2Ugc2hvdWxkIGZpbmQgYSB3YXkgdG8gc3VzcGVu
-ZCBhdCB0aGUgaGlnaGVzdCAqc3VwcG9ydGVkKiBPUFAuDQo+ID4NCj4gPiBNYXliZSB0aGUgb3Bw
-LXN1c3BlbmQgbWFya2luZyBjb3VsZCBiZSBhc3NpZ25lZCBmcm9tIGlteC1jcHVmcmVxLWR0DQo+
-ID4gZHJpdmVyIGNvZGU/DQo+IA0KPiBZZXMsIHRoaXMgaXMgYWxzbyBteSBjb25jZXJuLCB0aGUg
-Y3VycmVudCBPUFAgZHJpdmVyIGRvZXMgTk9UIGhhbmRsZSBpdCB3ZWxsLA0KPiBhbmQgSSB3YXMg
-dGhpbmtpbmcgdG8gYXNzaWduZSBpdCBmcm9tIGlteC1jcHVmcmVxLWR0IGRyaXZlciwgMSBvcHRp
-b24gaXMgdG8NCj4gcnVudGltZSBhZGQgInN1c3BlbmQtb3BwIiBwcm9wZXJ0eSBpbnRvIERUIE9Q
-UCBub2RlIGFmdGVyIHBhcnNpbmcgdGhlDQo+IHNwZWVkIGdyYWRpbmcgZnVzZSBhbmQgT1BQIHRh
-YmxlLCBidXQgSSBkbyBOT1QgbGlrZSB0aGF0IHZlcnkgbXVjaCwgYXMgd2UNCj4gbmVlZCB0byBt
-YW51YWxseSBjcmVhdGUgYSBwcm9wZXJ0eSwgdGhlIG90aGVyIG9wdGlvbiBpcyB0byBjaGFuZ2Ug
-Y3B1IGZyZXENCj4gcG9saWN5IGluc2lkZSBpbXgtY3B1ZnJlcS1kdCBkcml2ZXIgaW4gc3VzcGVu
-ZC9yZXN1bWUgY2FsbGJhY2s/IFdoaWNoIG9uZQ0KPiBkbyB5b3UgcHJlZmVyPw0KDQpBZnRlciBs
-b29raW5nIHRocm91Z2ggdGhlIGNwdWZyZXEgZHJpdmVyLCBJIHRoaW5rIHdlIGNhbiB1c2UgYmVs
-b3cgbGF0ZSBpbml0IGZ1bmN0aW9uDQp0byBhc3NpZ24gdGhlIHN1c3BlbmRfZnJlcSwgdGhlbiBu
-byBuZWVkIHRvIGFkZCAib3BwLXN1c3BlbmQgIiBpbiBEVCwgYW5kIHRoZSBmcmVxDQpnZXQgZnJv
-bSBjcHVmcmVxX3F1aWNrX2dldF9tYXgoKSBpcyBhbHJlYWR5IHRoZSBtYXggc3VwcG9ydGVkIGZy
-ZXEgY29uc2lkZXJpbmcgdGhlDQpzcGVlZCBncmFkaW5nIGFuZCBtYXJrZXQgc2VnbWVudCBmdXNl
-IHNldHRpbmdzLCBwbGVhc2UgaWdub3JlIHRoZXNlIDIgcGF0Y2hlcywgSSB3aWxsDQpzZW5kIG91
-dCBhIGlteC1jcHVmcmVxLWR0LmMgcGF0Y2ggd2l0aCBiZWxvdyBjaGFuZ2UgdG8gc3VwcG9ydCBh
-bGwgU29DcyB3aXRoIGlteC1jcHVmcmVxLWR0DQpkcml2ZXIuDQoNCitzdGF0aWMgaW50IF9faW5p
-dCBpbXhfY3B1ZnJlcV9kdF9zZXR1cF9zdXNwZW5kX29wcCh2b2lkKQ0KK3sNCisgICAgICAgc3Ry
-dWN0IGNwdWZyZXFfcG9saWN5ICpwb2xpY3kgPSBjcHVmcmVxX2NwdV9nZXQoMCk7DQorDQorICAg
-ICAgIHBvbGljeS0+c3VzcGVuZF9mcmVxID0gY3B1ZnJlcV9xdWlja19nZXRfbWF4KDApOw0KKw0K
-KyAgICAgICByZXR1cm4gMDsNCit9DQorbGF0ZV9pbml0Y2FsbChpbXhfY3B1ZnJlcV9kdF9zZXR1
-cF9zdXNwZW5kX29wcCk7DQoNCkFuc29uLg0KDQo=
+On 02.07.19 13:33, Abel Vesa wrote:
+> On 19-07-02 08:47:19, Martin Kepplinger wrote:
+>> On 28.06.19 10:54, Abel Vesa wrote:
+>>> On 19-06-23 13:47:26, Martin Kepplinger wrote:
+>>>> On 10.06.19 14:13, Abel Vesa wrote:
+>>>>> This is another alternative for the RFC:
+>>>>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2019%2F3%2F27%2F545&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7Ccfc582f9977d479b7dda08d6feb9258a%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636976468485275045&amp;sdata=L%2Byn29%2FBS3KMjm9eCPBTZBTl30PmZywSjIj11bMQw5c%3D&amp;reserved=0
+>>>>>
+>>>>> This new workaround proposal is a little bit more hacky but more contained
+>>>>> since everything is done within the irq-imx-gpcv2 driver.
+>>>>>
+>>>>> Basically, it 'hijacks' the registered gic_raise_softirq __smp_cross_call
+>>>>> handler and registers instead a wrapper which calls in the 'hijacked' 
+>>>>> handler, after that calling into EL3 which will take care of the actual
+>>>>> wake up. This time, instead of expanding the PSCI ABI, we use a new vendor SIP.
+>>>>>
+>>>>> I also have the patches ready for TF-A but I'll hold on to them until I see if
+>>>>> this has a chance of getting in.
+>>>>
+>>>> Let's leave out of the picture for now, how generally applicable and
+>>>> mergable your changes are. I'd like to reproduce what you do and test
+>>>> cpuidle on imx8mq:
+>>>>
+>>>> When applying your changes here and the corresponding ATF changes (
+>>>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Fabelvesa%2Farm-trusted-firmware%2Ftree%2Fimx8mq-err11171&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7Ccfc582f9977d479b7dda08d6feb9258a%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636976468485275045&amp;sdata=VT3duSl70DNxcY8Ev4FFrHlWoOjkcckeM8BgxrSkr8A%3D&amp;reserved=0 if
+>>>> I got that right) I don't yet see any difference in the SoC heating up
+>>>> under zero load. __cpu_do_idle() is called about every 1ms (without your
+>>>> changes, that was even more often but I'm not yet sure if that means
+>>>> anything).
+>>>
+>>> You will most probably not see any change in the SoC temp since the cpuidle
+>>> only touches the A53s. There are way many more IPs in the SoC that could
+>>> heat it up. If you want some real numbers you'll have to measure the power
+>>> consumtion on VDD_ARM rail. If you don't want to go through that much trouble
+>>> you can use the idlestat tool to measure the times each A53 speends in cpu-sleep
+>>> state.
+>>>
+>>>>
+>>>> What I also see is that I get about 10x more "arch_timer" (int.3, GICv3)
+>>>> interrupts than without your changes.
+>>
+>>
+>> thanks for getting back at me here. This is run on the imx8mq
+>> librem5-devkit with your wakeup-workaround applied. Typical measurements
+>> under zero load look like this:
+>>
+>> sudo idlestat --trace -f /tmp/mytrace -t 10 -p -c -w
+>> Log is 10.000395 secs long with 31194 events
+>> ------------------------------------------------------------------------
+>> | C-state  |  min   |  max    |  avg    |  total | hits | over | under |
+>> ------------------------------------------------------------------------
+>> | clusterA                                                             |
+>> ------------------------------------------------------------------------
+>> |     WFI |   14us |  3.99ms |  3.90ms |   9.93s | 2543 |    0 |     0 |
+>> ------------------------------------------------------------------------
+>> |          cpu0                                                        |
+>> ------------------------------------------------------------------------
+>> |     WFI |   14us |  3.99ms |  3.89ms |   9.96s | 2561 |    0 |     0 |
+>> ------------------------------------------------------------------------
+>> ...
+>>
+> 
+> I don't see the cpu-sleep state at all in your idlestat log. Maybe the cpuidle
+> isn't enabled. Or probably the workaround itself is not applied. You'll have
+> to look into that.
+> 
+> Here is how it looks like with the workaround enabled:
+> 
+> Log is 10.001685 secs long with 1175 events
+> --------------------------------------------------------------------------------
+> | C-state  |   min    |   max    |   avg    |   total  | hits  |  over | under |
+> --------------------------------------------------------------------------------
+> | clusterA                                                                     |
+> --------------------------------------------------------------------------------
+> |      WFI |      2us |  50.04ms |  29.63ms |    9.99s |   337 |     0 |     0 |
+> --------------------------------------------------------------------------------
+> |             cpu0                                                             |
+> --------------------------------------------------------------------------------
+> |      WFI |     11us |  50.04ms |  40.44ms |    9.62s |   238 |     0 |   219 |
+> | cpu-sleep |    537us |  50.58ms |  14.11ms | 366.94ms |    26 |     7 |     0 |
+> --------------------------------------------------------------------------------
+> |             cpu1                                                             |
+> --------------------------------------------------------------------------------
+> |      WFI |     11us | 539.04ms |  93.20ms |    5.78s |    62 |     0 |    38 |
+> | cpu-sleep |    536us | 607.90ms | 183.38ms |    4.22s |    23 |    12 |     0 |
+> --------------------------------------------------------------------------------
+> |             cpu2                                                             |
+> --------------------------------------------------------------------------------
+> |      WFI |     41us | 265.99ms |  17.51ms | 332.66ms |    19 |     0 |    11 |
+> | cpu-sleep |    568us |    6.56s |    1.38s |    9.67s |     7 |     2 |     0 |
+> --------------------------------------------------------------------------------
+> |             cpu3                                                             |
+> --------------------------------------------------------------------------------
+> |      WFI |   7.94ms | 881.50ms | 367.81ms |    1.10s |     3 |     0 |     3 |
+> | cpu-sleep |    549us |    2.02s | 808.72ms |    8.90s |    11 |     1 |     0 |
+> --------------------------------------------------------------------------------
+> 
+> You can see that the cpu2 was once for 6.56 seconds (out of 10s) in cpu-sleep.
+> 
+
+So I run this ATF tree
+https://github.com/abelvesa/arm-trusted-firmware/tree/imx8mq-err11171
+and, on top of "v5.2-rc7" I have your commits
+("irqchip: irq-imx-gpcv2: Add workaround for i.MX8MQ ERR11171") and
+("arm64: dts: imx8mq: Add idle states and gpcv2 wake_request broken
+property") applied.
+
+Then simply enabled CONFIG_ARM_CPUIDLE.
+
+(I also use the "imx-cpufreq-dt" driver, but this should be unrelated here).
+
+I do see the possible cpuidle states:
+/sys/devices/system/cpu/cpu0/cpuidle$ cat state*/name
+
+WFI
+
+cpu-sleep
+
+but idlestat doesn't see it or it is (thus) never used. Do you know a
+needed change I might be missing?
+
+thanks again,
+                                martin
