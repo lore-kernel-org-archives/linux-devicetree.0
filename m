@@ -1,37 +1,62 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/6] dt-bindings: can: rcar_can: Complete documentation
- for RZ/G2[EM]
-Date: Mon, 8 Jul 2019 14:56:35 +0200
-Message-ID: <CAMuHMdWULgX2E2CzEkp1_0_hab6YYk5kuuSdEVEOJN_X9OAKNw@mail.gmail.com>
-References: <1560513214-28031-1-git-send-email-fabrizio.castro@bp.renesas.com> <1560513214-28031-3-git-send-email-fabrizio.castro@bp.renesas.com>
+From: k.konieczny@partner.samsung.com
+Subject: [PATCH 1/3] opp: core: add regulators enable and disable
+Date: Mon,  8 Jul 2019 16:11:38 +0200
+Message-ID: <20190708141140.24379-2-k.konieczny@partner.samsung.com>
+References: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
+        <CGME20190708141159eucas1p1751506975ff96a436e14940916623722@eucas1p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1560513214-28031-3-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org, netdev <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: k.konieczny@partner.samsung.com
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 1:53 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> Add missing RZ/G2[EM] CANFD clock specific documentation.
->
-> Fixes: 868b7c0f43e6 ("dt-bindings: can: rcar_can: Add r8a774a1 support")
-> Fixes: 0c11e7d0f51c ("dt-bindings: can: rcar_can: Add r8a774c0 support")
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-I.e. applied and queued for v5.4.
+Add enable regulators to dev_pm_opp_set_regulators() and disable
+regulators to dev_pm_opp_put_regulators(). This prepares for
+converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
 
-Gr{oetje,eeting}s,
+Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+---
+ drivers/opp/core.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-                        Geert
-
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 0e7703fe733f..947cac452854 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -1580,8 +1580,19 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+ 	if (ret)
+ 		goto free_regulators;
+ 
++	for (i = 0; i < opp_table->regulator_count; i++) {
++		ret = regulator_enable(opp_table->regulators[i]);
++		if (ret < 0)
++			goto disable;
++	}
++
+ 	return opp_table;
+ 
++disable:
++	while (i != 0)
++		regulator_disable(opp_table->regulators[--i]);
++
++	i = opp_table->regulator_count;
+ free_regulators:
+ 	while (i != 0)
+ 		regulator_put(opp_table->regulators[--i]);
+@@ -1609,6 +1620,8 @@ void dev_pm_opp_put_regulators(struct opp_table *opp_table)
+ 
+ 	/* Make sure there are no concurrent readers while updating opp_table */
+ 	WARN_ON(!list_empty(&opp_table->opp_list));
++	for (i = opp_table->regulator_count - 1; i >= 0; i--)
++		regulator_disable(opp_table->regulators[i]);
+ 
+ 	for (i = opp_table->regulator_count - 1; i >= 0; i--)
+ 		regulator_put(opp_table->regulators[i]);
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.22.0
