@@ -1,64 +1,60 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
-Date: Mon, 8 Jul 2019 14:19:57 +0530
-Message-ID: <20190708084957.waiwdun327pgvfv4@vireshk-i7>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
+Date: Mon, 8 Jul 2019 08:54:19 +0000
+Message-ID: <DB3PR0402MB39164E2F386181255ED37F45F5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 References: <20190704061403.8249-1-Anson.Huang@nxp.com>
  <20190704061403.8249-2-Anson.Huang@nxp.com>
  <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
  <20190708082511.py7gnjbqyp7bnhqx@vireshk-i7>
  <DB3PR0402MB391622133CD116FDE26A4F9AF5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190708084957.waiwdun327pgvfv4@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB391622133CD116FDE26A4F9AF5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <20190708084957.waiwdun327pgvfv4@vireshk-i7>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
 Cc: Leonard Crestez <leonard.crestez@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kern>
 List-Id: devicetree@vger.kernel.org
 
-On 08-07-19, 08:43, Anson Huang wrote:
-> Hi, Viresh
-> 
-> > On 04-07-19, 07:49, Leonard Crestez wrote:
-> > > On 7/4/2019 9:23 AM, Anson.Huang@nxp.com wrote:
-> > > > From: Anson Huang <Anson.Huang@nxp.com>
-> > > >
-> > > > Assign highest OPP as suspend OPP to reduce suspend/resume latency
-> > > > on i.MX8MM.
-> > > >
-> > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > > ---
-> > > >   arch/arm64/boot/dts/freescale/imx8mm.dtsi | 1 +
-> > > >   1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > > > b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > > > index b11fc5e..3a62407 100644
-> > > > --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > > > +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > > > @@ -136,6 +136,7 @@
-> > > >   			opp-microvolt = <1000000>;
-> > > >   			opp-supported-hw = <0x8>, <0x3>;
-> > > >   			clock-latency-ns = <150000>;
-> > > > +			opp-suspend;
-> > > >   		};
-> > > >   	};
-> > >
-> > > What if the highest OPP is unavailable due to speed grading?
-> > 
-> > What does this exactly mean ? How is the OPP made unavailable in your
-> > case ?
-> 
-> That is because in i.MX8M series SoCs, the speed grading and market segment
-> fuses settings could affect the OPP defined in DT, in a word, all possible OPPs
-> are defined in DT, but each parts could ONLY select some of them to be working
-> OPPs, so if the "opp-suspend" is added for 1 OPP in DT, if the part's speed grading or
-> market segment fuse settings make that OPP as unavailable,  then that "opp-suspend"
-> is NOT working at all.
-
-How is this selection done ? You using some OPP helper or something
-else ?
-
--- 
-viresh
+SGksIFZpcmVzaA0KDQo+IE9uIDA4LTA3LTE5LCAwODo0MywgQW5zb24gSHVhbmcgd3JvdGU6DQo+
+ID4gSGksIFZpcmVzaA0KPiA+DQo+ID4gPiBPbiAwNC0wNy0xOSwgMDc6NDksIExlb25hcmQgQ3Jl
+c3RleiB3cm90ZToNCj4gPiA+ID4gT24gNy80LzIwMTkgOToyMyBBTSwgQW5zb24uSHVhbmdAbnhw
+LmNvbSB3cm90ZToNCj4gPiA+ID4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhw
+LmNvbT4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEFzc2lnbiBoaWdoZXN0IE9QUCBhcyBzdXNwZW5k
+IE9QUCB0byByZWR1Y2Ugc3VzcGVuZC9yZXN1bWUNCj4gPiA+ID4gPiBsYXRlbmN5IG9uIGkuTVg4
+TU0uDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5z
+b24uSHVhbmdAbnhwLmNvbT4NCj4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiAgIGFyY2gvYXJtNjQv
+Ym9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpIHwgMSArDQo+ID4gPiA+ID4gICAxIGZpbGUg
+Y2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRzaQ0KPiA+ID4gPiA+IGIv
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kNCj4gPiA+ID4gPiBpbmRl
+eCBiMTFmYzVlLi4zYTYyNDA3IDEwMDY0NA0KPiA+ID4gPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpDQo+ID4gPiA+ID4gKysrIGIvYXJjaC9hcm02NC9i
+b290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kNCj4gPiA+ID4gPiBAQCAtMTM2LDYgKzEzNiw3
+IEBADQo+ID4gPiA+ID4gICAJCQlvcHAtbWljcm92b2x0ID0gPDEwMDAwMDA+Ow0KPiA+ID4gPiA+
+ICAgCQkJb3BwLXN1cHBvcnRlZC1odyA9IDwweDg+LCA8MHgzPjsNCj4gPiA+ID4gPiAgIAkJCWNs
+b2NrLWxhdGVuY3ktbnMgPSA8MTUwMDAwPjsNCj4gPiA+ID4gPiArCQkJb3BwLXN1c3BlbmQ7DQo+
+ID4gPiA+ID4gICAJCX07DQo+ID4gPiA+ID4gICAJfTsNCj4gPiA+ID4NCj4gPiA+ID4gV2hhdCBp
+ZiB0aGUgaGlnaGVzdCBPUFAgaXMgdW5hdmFpbGFibGUgZHVlIHRvIHNwZWVkIGdyYWRpbmc/DQo+
+ID4gPg0KPiA+ID4gV2hhdCBkb2VzIHRoaXMgZXhhY3RseSBtZWFuID8gSG93IGlzIHRoZSBPUFAg
+bWFkZSB1bmF2YWlsYWJsZSBpbg0KPiA+ID4geW91ciBjYXNlID8NCj4gPg0KPiA+IFRoYXQgaXMg
+YmVjYXVzZSBpbiBpLk1YOE0gc2VyaWVzIFNvQ3MsIHRoZSBzcGVlZCBncmFkaW5nIGFuZCBtYXJr
+ZXQNCj4gPiBzZWdtZW50IGZ1c2VzIHNldHRpbmdzIGNvdWxkIGFmZmVjdCB0aGUgT1BQIGRlZmlu
+ZWQgaW4gRFQsIGluIGEgd29yZCwNCj4gPiBhbGwgcG9zc2libGUgT1BQcyBhcmUgZGVmaW5lZCBp
+biBEVCwgYnV0IGVhY2ggcGFydHMgY291bGQgT05MWSBzZWxlY3QNCj4gPiBzb21lIG9mIHRoZW0g
+dG8gYmUgd29ya2luZyBPUFBzLCBzbyBpZiB0aGUgIm9wcC1zdXNwZW5kIiBpcyBhZGRlZCBmb3IN
+Cj4gPiAxIE9QUCBpbiBEVCwgaWYgdGhlIHBhcnQncyBzcGVlZCBncmFkaW5nIG9yIG1hcmtldCBz
+ZWdtZW50IGZ1c2Ugc2V0dGluZ3MNCj4gbWFrZSB0aGF0IE9QUCBhcyB1bmF2YWlsYWJsZSwgIHRo
+ZW4gdGhhdCAib3BwLXN1c3BlbmQiDQo+ID4gaXMgTk9UIHdvcmtpbmcgYXQgYWxsLg0KPiANCj4g
+SG93IGlzIHRoaXMgc2VsZWN0aW9uIGRvbmUgPyBZb3UgdXNpbmcgc29tZSBPUFAgaGVscGVyIG9y
+IHNvbWV0aGluZyBlbHNlID8NCg0KRWFjaCBPUFAgaGFzICJvcHAtc3VwcG9ydGVkLWh3IiBwcm9w
+ZXJ0eSBhcyBiZWxvdywgdGhlIGZpcnN0IHZhbHVlIG5lZWRzIHRvIGJlDQpjaGVja2VkIHdpdGgg
+c3BlZWQgZ3JhZGluZyBmdXNlLCBhbmQgdGhlIHNlY29uZCBvbmUgbmVlZHMgdG8gYmUgY2hlY2tl
+ZCB3aXRoDQptYXJrZXQgc2VnbWVudCBmdXNlLCBPTkxZIGJvdGggb2YgdGhlbSBwYXNzZWQsIHRo
+ZW4gdGhpcyBPUFAgaXMgc3VwcG9ydGVkLiBJdA0KY2FsbHMgZGV2X3BtX29wcF9zZXRfc3VwcG9y
+dGVkX2h3KCkgdG8gdGVsbCBPUFAgZnJhbWV3b3JrIHRvIHBhcnNlIHRoZSBPUFANCnRhYmxlLCB0
+aGlzIGlzIG15IHVuZGVyc3RhbmRpbmcuDQoNCm9wcC1zdXBwb3J0ZWQtaHcgPSA8MHg4PiwgPDB4
+Mz47DQoNCnRoYW5rcywNCkFuc29uDQoNCg==
