@@ -1,126 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/6] dt-bindings: usb: musb: Add support for MediaTek
- musb controller
-Date: Mon, 8 Jul 2019 16:30:35 -0600
-Message-ID: <20190708223035.GA7005@bogus>
-References: <1559648359-6569-1-git-send-email-min.guo@mediatek.com>
- <1559648359-6569-2-git-send-email-min.guo@mediatek.com>
+From: <yongqiang.niu@mediatek.com>
+Subject: [PATCH v4, 00/33] add drm support for MT8183
+Date: Tue, 9 Jul 2019 06:33:40 +0800
+Message-ID: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1559648359-6569-2-git-send-email-min.guo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: min.guo@mediatek.com
-Cc: Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, tony@atomide.com, hdegoede@redhat.com
+To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Yongqiang Niu <yongqiang.niu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 07:39:14PM +0800, min.guo@mediatek.com wrote:
-> From: Min Guo <min.guo@mediatek.com>
-> 
-> This adds support for MediaTek musb controller in
-> host, peripheral and otg mode.
-> 
-> Signed-off-by: Min Guo <min.guo@mediatek.com>
-> ---
-> changes in v6:
-> 1. Modify usb connector child node
-> 
-> changes in v5:
-> suggested by Rob:
-> 1. Modify compatible as 
-> - compatible : should be one of:
->                "mediatek,mt-2701"
+From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-No, should be: mediatek,mt2701-musb
+This series are based on 5.2-rc1 and provid 27 patch
+to support mediatek SOC MT8183
 
->                ...
->                followed by "mediatek,mtk-musb"
-> 2. Add usb connector child node
-> 
-> changes in v4:
-> suggested by Sergei:
-> 1. String alignment
-> 
-> changes in v3:
-> 1. no changes
-> 
-> changes in v2:
-> suggested by Bin:
-> 1. Modify DRC to DRD
-> suggested by Rob:
-> 2. Drop the "<soc-model>-musb" in compatible
-> 3. Remove phy-names
-> 4. Add space after comma in clock-names
-> ---
->  .../devicetree/bindings/usb/mediatek,musb.txt      | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> new file mode 100644
-> index 0000000..7434299
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> @@ -0,0 +1,55 @@
-> +MediaTek musb DRD/OTG controller
-> +-------------------------------------------
-> +
-> +Required properties:
-> + - compatible      : should be one of:
-> +                     "mediatek,mt-2701"
-> +                     ...
-> +                     followed by "mediatek,mtk-musb"
-> + - reg             : specifies physical base address and size of
-> +                     the registers
-> + - interrupts      : interrupt used by musb controller
-> + - interrupt-names : must be "mc"
-> + - phys            : PHY specifier for the OTG phy
-> + - dr_mode         : should be one of "host", "peripheral" or "otg",
-> +                     refer to usb/generic.txt
-> + - clocks          : a list of phandle + clock-specifier pairs, one for
-> +                     each entry in clock-names
-> + - clock-names     : must contain "main", "mcu", "univpll"
-> +                     for clocks of controller
-> +
-> +Optional properties:
-> + - power-domains   : a phandle to USB power domain node to control USB's
-> +                     MTCMOS
-> +
-> +Required child nodes:
-> + usb connector node as defined in bindings/connector/usb-connector.txt
-> +Optional properties:
-> + - id-gpios        : input GPIO for USB ID pin.
-> + - vbus-gpios      : input GPIO for USB VBUS pin.
-> + - vbus-supply     : reference to the VBUS regulator, needed when supports
-> +                     dual-role mode
-> +
-> +Example:
-> +
-> +usb2: usb@11200000 {
-> +	compatible = "mediatek,mt2701-musb",
-> +		     "mediatek,mtk-musb";
-> +	reg = <0 0x11200000 0 0x1000>;
-> +	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-> +	interrupt-names = "mc";
-> +	phys = <&u2port2 PHY_TYPE_USB2>;
-> +	dr_mode = "otg";
-> +	clocks = <&pericfg CLK_PERI_USB0>,
-> +		 <&pericfg CLK_PERI_USB0_MCU>,
-> +		 <&pericfg CLK_PERI_USB_SLV>;
-> +	clock-names = "main","mcu","univpll";
-> +	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-> +	connector{
-> +		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
+Change since v3
+- fix reviewed issue in v3
+- fix type error in v3
+- fix conflict with iommu patch
 
-linux,typeb-conn-gpio is not an accepted compatible string.
+Yongqiang Niu (33):
+  dt-bindings: mediatek: add binding for mt8183 display
+  dt-bindings: mediatek: add ovl_2l description for mt8183 display
+  dt-bindings: mediatek: add ccorr description for mt8183 display
+  dt-bindings: mediatek: add dither description for mt8183 display
+  dt-bindings: mediatek: add RDMA1 description for mt8183 display
+  dt-bindings: mediatek: add mutex description for mt8183 display
+  arm64: dts: add display nodes for mt8183
+  drm/mediatek: add mutex mod into ddp private data
+  drm/mediatek: add mutex mod register offset into ddp private data
+  drm/mediatek: add mutex sof into ddp private data
+  drm/mediatek: add mutex sof register offset into ddp private data
+  drm/mediatek: split DISP_REG_CONFIG_DSI_SEL setting into another use
+    case
+  drm/mediatek: add mmsys private data for ddp path config
+  drm/mediatek: move rdma sout from mtk_ddp_mout_en into
+    mtk_ddp_sout_sel
+  drm/mediatek: add ddp component CCORR
+  drm/mediatek: add commponent OVL_2L0
+  drm/mediatek: add component OVL_2L1
+  drm/mediatek: add component DITHER
+  drm/mediatek: add gmc_bits for ovl private data
+  drm/medaitek: add layer_nr for ovl private data
+  drm/mediatek: add function to background color input select for
+    ovl/ovl_2l direct link
+  drm/mediatek: add background color input select function for
+    ovl/ovl_2l
+  drm/mediatek: add ovl0/ovl_2l0 usecase
+  drm/mediatek: distinguish ovl and ovl_2l by layer_nr
+  drm/mediatek: add clock property check before get it
+  drm/mediatek: add connection from OVL0 to OVL_2L0
+  drm/mediatek: add connection from RDMA0 to COLOR0
+  drm/mediatek: add connection from RDMA1 to DSI0
+  drm/mediatek: add connection from OVL_2L0 to RDMA0
+  drm/mediatek: add connection from OVL_2L1 to RDMA1
+  drm/mediatek: add connection from DITHER0 to DSI0
+  drm/mediatek: add connection from RDMA0 to DSI0
+  drm/mediatek: add support for mediatek SOC MT8183
 
-> +		label = "micro-USB";
-> +		type = "micro";
-> +		id-gpios = <&pio 44 GPIO_ACTIVE_HIGH>;
-> +		vbus-supply = <&usb_vbus>;
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
+ .../bindings/display/mediatek/mediatek,disp.txt    |  31 +-
+ .../bindings/display/mediatek/mediatek,display.txt |  21 ++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi           | 109 ++++++
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  79 +++-
+ drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  12 +
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |  42 ++-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 410 ++++++++++++++++-----
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.h             |   6 +
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        |  67 ++++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  21 ++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  50 +++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   3 +
+ 12 files changed, 730 insertions(+), 121 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,display.txt
+
+-- 
+1.8.1.1.dirty
