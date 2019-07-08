@@ -1,49 +1,92 @@
-From: <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4,
- 03/33] dt-bindings: mediatek: add ccorr description for mt8183 display
-Date: Tue, 9 Jul 2019 06:33:43 +0800
-Message-ID: <1562625253-29254-4-git-send-email-yongqiang.niu@mediatek.com>
+From: <yongqiang.niu@mediatek.com>
+Subject: [PATCH v4, 22/33] drm/mediatek: add background color input select function for ovl/ovl_2l
+Date: Tue, 9 Jul 2019 06:34:02 +0800
+Message-ID: <1562625253-29254-23-git-send-email-yongqiang.niu@mediatek.com>
 References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1562625253-29254-1-git-send-email-yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob
- Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yongqiang Niu <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Yongqiang Niu <yongqiang.niu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Yongqiang Niu <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-Update device tree binding documention for the display subsystem for
-Mediatek MT8183 SOCs
+This patch add background color input select function for ovl/ovl_2l
 
-Signed-off-by: Yongqiang Niu <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+ovl include 4 DRAM layer and 1 background color layer
+ovl_2l include 4 DRAM layer and 1 background color layer
+DRAM layer frame buffer data from render hardware, GPU for example.
+backgournd color layer is embed in ovl/ovl_2l, we can only set
+it color, but not support DRAM frame buffer.
+
+for ovl0->ovl0_2l direct link usecase,
+we need set ovl0_2l background color intput select from ovl0
+if render send DRAM buffer layer number <=4, all these layer read
+by ovl.
+layer0 is at the bottom of all layers.
+layer3 is at the top of all layers.
+if render send DRAM buffer layer numbfer >=4 && <=6
+ovl0 read layer0~3
+ovl0_2l read layer4~5
+layer5 is at the top ot all these layers.
+
+the decision of how to setting ovl0/ovl0_2l read these layer data
+is controlled in mtk crtc, which will be another patch
+
+Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-index 8c4700f..cf5fb08 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-@@ -31,6 +31,7 @@ Required properties (all function blocks):
- 	"mediatek,<chip>-disp-ovl-2l"           - overlay (2 layers, blending, csc)
- 	"mediatek,<chip>-disp-rdma"  		- read DMA / line buffer
- 	"mediatek,<chip>-disp-wdma"  		- write DMA
-+	"mediatek,<chip>-disp-ccorr"            - color correction
- 	"mediatek,<chip>-disp-color" 		- color processor
- 	"mediatek,<chip>-disp-aal"   		- adaptive ambient light controller
- 	"mediatek,<chip>-disp-gamma" 		- gamma correction
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index a0ab760..8ca4965 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -27,6 +27,8 @@
+ #define DISP_REG_OVL_EN				0x000c
+ #define DISP_REG_OVL_RST			0x0014
+ #define DISP_REG_OVL_ROI_SIZE			0x0020
++#define DISP_REG_OVL_DATAPATH_CON		0x0024
++#define OVL_BGCLR_SEL_IN				BIT(2)
+ #define DISP_REG_OVL_ROI_BGCLR			0x0028
+ #define DISP_REG_OVL_SRC_CON			0x002c
+ #define DISP_REG_OVL_CON(n)			(0x0030 + 0x20 * (n))
+@@ -245,6 +247,24 @@ static void mtk_ovl_layer_config(struct mtk_ddp_comp *comp, unsigned int idx,
+ 		mtk_ovl_layer_on(comp, idx);
+ }
+ 
++static void mtk_ovl_bgclr_in_on(struct mtk_ddp_comp *comp)
++{
++	unsigned int reg;
++
++	reg = readl(comp->regs + DISP_REG_OVL_DATAPATH_CON);
++	reg = reg | OVL_BGCLR_SEL_IN;
++	writel(reg, comp->regs + DISP_REG_OVL_DATAPATH_CON);
++}
++
++static void mtk_ovl_bgclr_in_off(struct mtk_ddp_comp *comp)
++{
++	unsigned int reg;
++
++	reg = readl(comp->regs + DISP_REG_OVL_DATAPATH_CON);
++	reg = reg & ~OVL_BGCLR_SEL_IN;
++	writel(reg, comp->regs + DISP_REG_OVL_DATAPATH_CON);
++}
++
+ static const struct mtk_ddp_comp_funcs mtk_disp_ovl_funcs = {
+ 	.config = mtk_ovl_config,
+ 	.start = mtk_ovl_start,
+@@ -255,6 +275,8 @@ static void mtk_ovl_layer_config(struct mtk_ddp_comp *comp, unsigned int idx,
+ 	.layer_on = mtk_ovl_layer_on,
+ 	.layer_off = mtk_ovl_layer_off,
+ 	.layer_config = mtk_ovl_layer_config,
++	.bgclr_in_on = mtk_ovl_bgclr_in_on,
++	.bgclr_in_off = mtk_ovl_bgclr_in_off,
+ };
+ 
+ static int mtk_disp_ovl_bind(struct device *dev, struct device *master,
 -- 
 1.8.1.1.dirty
