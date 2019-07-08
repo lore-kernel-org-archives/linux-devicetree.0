@@ -1,50 +1,137 @@
-From: <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4,
- 04/33] dt-bindings: mediatek: add dither description for mt8183
- display
-Date: Tue, 9 Jul 2019 06:33:44 +0800
-Message-ID: <1562625253-29254-5-git-send-email-yongqiang.niu@mediatek.com>
+From: <yongqiang.niu@mediatek.com>
+Subject: [PATCH v4, 10/33] drm/mediatek: add mutex sof into ddp private data
+Date: Tue, 9 Jul 2019 06:33:50 +0800
+Message-ID: <1562625253-29254-11-git-send-email-yongqiang.niu@mediatek.com>
 References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1562625253-29254-1-git-send-email-yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob
- Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yongqiang Niu <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Yongqiang Niu <yongqiang.niu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Yongqiang Niu <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-Update device tree binding documention for the display subsystem for
-Mediatek MT8183 SOCs
+mutex sof will be ddp private data
 
-Signed-off-by: Yongqiang Niu <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 43 +++++++++++++++++++++++++++-------
+ 1 file changed, 35 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-index cf5fb08..afd3c90 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-@@ -33,6 +33,7 @@ Required properties (all function blocks):
- 	"mediatek,<chip>-disp-wdma"  		- write DMA
- 	"mediatek,<chip>-disp-ccorr"            - color correction
- 	"mediatek,<chip>-disp-color" 		- color processor
-+	"mediatek,<chip>-disp-dither"           - dither
- 	"mediatek,<chip>-disp-aal"   		- adaptive ambient light controller
- 	"mediatek,<chip>-disp-gamma" 		- gamma correction
- 	"mediatek,<chip>-disp-merge" 		- merge streams from two RDMA sources
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index 8bde2cf..ab396ee 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -149,8 +149,19 @@ struct mtk_disp_mutex {
+ 	bool claimed;
+ };
+ 
++enum mtk_ddp_mutex_sof_id {
++	DDP_MUTEX_SOF_SINGLE_MODE,
++	DDP_MUTEX_SOF_DSI0,
++	DDP_MUTEX_SOF_DSI1,
++	DDP_MUTEX_SOF_DPI0,
++	DDP_MUTEX_SOF_DPI1,
++	DDP_MUTEX_SOF_DSI2,
++	DDP_MUTEX_SOF_DSI3,
++};
++
+ struct mtk_ddp_data {
+ 	const unsigned int *mutex_mod;
++	const unsigned int *mutex_sof;
+ 	const unsigned int mutex_mod_reg;
+ };
+ 
+@@ -209,18 +220,31 @@ struct mtk_ddp {
+ 	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
+ };
+ 
++static const unsigned int mt2712_mutex_sof[DDP_MUTEX_SOF_DSI3 + 1] = {
++	[DDP_MUTEX_SOF_SINGLE_MODE] = MUTEX_SOF_SINGLE_MODE,
++	[DDP_MUTEX_SOF_DSI0] = MUTEX_SOF_DSI0,
++	[DDP_MUTEX_SOF_DSI1] = MUTEX_SOF_DSI1,
++	[DDP_MUTEX_SOF_DPI0] = MUTEX_SOF_DPI0,
++	[DDP_MUTEX_SOF_DPI1] = MUTEX_SOF_DPI1,
++	[DDP_MUTEX_SOF_DSI2] = MUTEX_SOF_DSI2,
++	[DDP_MUTEX_SOF_DSI3] = MUTEX_SOF_DSI3,
++};
++
+ static const struct mtk_ddp_data mt2701_ddp_driver_data = {
+ 	.mutex_mod = mt2701_mutex_mod,
++	.mutex_sof = mt2712_mutex_sof,
+ 	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+ };
+ 
+ static const struct mtk_ddp_data mt2712_ddp_driver_data = {
+ 	.mutex_mod = mt2712_mutex_mod,
++	.mutex_sof = mt2712_mutex_sof,
+ 	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+ };
+ 
+ static const struct mtk_ddp_data mt8173_ddp_driver_data = {
+ 	.mutex_mod = mt8173_mutex_mod,
++	.mutex_sof = mt2712_mutex_sof,
+ 	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+ };
+ 
+@@ -462,28 +486,29 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+ 	struct mtk_ddp *ddp = container_of(mutex, struct mtk_ddp,
+ 					   mutex[mutex->id]);
+ 	unsigned int reg;
++	unsigned int sof_id;
+ 	unsigned int offset;
+ 
+ 	WARN_ON(&ddp->mutex[mutex->id] != mutex);
+ 
+ 	switch (id) {
+ 	case DDP_COMPONENT_DSI0:
+-		reg = MUTEX_SOF_DSI0;
++		sof_id = DDP_MUTEX_SOF_DSI0;
+ 		break;
+ 	case DDP_COMPONENT_DSI1:
+-		reg = MUTEX_SOF_DSI0;
++		sof_id = DDP_MUTEX_SOF_DSI0;
+ 		break;
+ 	case DDP_COMPONENT_DSI2:
+-		reg = MUTEX_SOF_DSI2;
++		sof_id = DDP_MUTEX_SOF_DSI2;
+ 		break;
+ 	case DDP_COMPONENT_DSI3:
+-		reg = MUTEX_SOF_DSI3;
++		sof_id = DDP_MUTEX_SOF_DSI3;
+ 		break;
+ 	case DDP_COMPONENT_DPI0:
+-		reg = MUTEX_SOF_DPI0;
++		sof_id = DDP_MUTEX_SOF_DPI0;
+ 		break;
+ 	case DDP_COMPONENT_DPI1:
+-		reg = MUTEX_SOF_DPI1;
++		sof_id = DDP_MUTEX_SOF_DPI1;
+ 		break;
+ 	default:
+ 		if (ddp->data->mutex_mod[id] < 32) {
+@@ -501,7 +526,8 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+ 		return;
+ 	}
+ 
+-	writel_relaxed(reg, ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
++	writel_relaxed(ddp->data->mutex_sof[sof_id],
++		       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
+ }
+ 
+ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+@@ -522,7 +548,8 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+ 	case DDP_COMPONENT_DPI0:
+ 	case DDP_COMPONENT_DPI1:
+ 		writel_relaxed(MUTEX_SOF_SINGLE_MODE,
+-			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
++			       ddp->regs +
++			       DISP_REG_MUTEX_SOF(mutex->id));
+ 		break;
+ 	default:
+ 		if (ddp->data->mutex_mod[id] < 32) {
 -- 
 1.8.1.1.dirty
