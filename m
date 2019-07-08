@@ -1,68 +1,49 @@
-From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v4, 20/33] drm/medaitek: add layer_nr for ovl private data
-Date: Tue, 9 Jul 2019 06:34:00 +0800
-Message-ID: <1562625253-29254-21-git-send-email-yongqiang.niu@mediatek.com>
+From: <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4,
+ 03/33] dt-bindings: mediatek: add ccorr description for mt8183 display
+Date: Tue, 9 Jul 2019 06:33:43 +0800
+Message-ID: <1562625253-29254-4-git-send-email-yongqiang.niu@mediatek.com>
 References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Yongqiang Niu <yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1562625253-29254-1-git-send-email-yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob
+ Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yongqiang Niu <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+From: Yongqiang Niu <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-This patch add layer_nr for ovl private data
-ovl_2l almost same with with ovl hardware, except the
-layer number for ovl_2l is 2 and ovl is 4.
-this patch is a preparation for ovl-2l and
-ovl share the same driver.
+Update device tree binding documention for the display subsystem for
+Mediatek MT8183 SOCs
 
-Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Yongqiang Niu <yongqiang.niu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index afb313c..a0ab760 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -60,6 +60,7 @@
- struct mtk_disp_ovl_data {
- 	unsigned int addr;
- 	unsigned int gmc_bits;
-+	unsigned int layer_nr;
- 	bool fmt_rgb565_is_0;
- };
- 
-@@ -137,7 +138,9 @@ static void mtk_ovl_config(struct mtk_ddp_comp *comp, unsigned int w,
- 
- static unsigned int mtk_ovl_layer_nr(struct mtk_ddp_comp *comp)
- {
--	return 4;
-+	struct mtk_disp_ovl *ovl = comp_to_ovl(comp);
-+
-+	return ovl->data->layer_nr;
- }
- 
- static void mtk_ovl_layer_on(struct mtk_ddp_comp *comp, unsigned int idx)
-@@ -342,12 +345,14 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
- static const struct mtk_disp_ovl_data mt2701_ovl_driver_data = {
- 	.addr = DISP_REG_OVL_ADDR_MT2701,
- 	.gmc_bits = 8,
-+	.layer_nr = 4,
- 	.fmt_rgb565_is_0 = false,
- };
- 
- static const struct mtk_disp_ovl_data mt8173_ovl_driver_data = {
- 	.addr = DISP_REG_OVL_ADDR_MT8173,
- 	.gmc_bits = 8,
-+	.layer_nr = 4,
- 	.fmt_rgb565_is_0 = true,
- };
- 
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+index 8c4700f..cf5fb08 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+@@ -31,6 +31,7 @@ Required properties (all function blocks):
+ 	"mediatek,<chip>-disp-ovl-2l"           - overlay (2 layers, blending, csc)
+ 	"mediatek,<chip>-disp-rdma"  		- read DMA / line buffer
+ 	"mediatek,<chip>-disp-wdma"  		- write DMA
++	"mediatek,<chip>-disp-ccorr"            - color correction
+ 	"mediatek,<chip>-disp-color" 		- color processor
+ 	"mediatek,<chip>-disp-aal"   		- adaptive ambient light controller
+ 	"mediatek,<chip>-disp-gamma" 		- gamma correction
 -- 
 1.8.1.1.dirty
