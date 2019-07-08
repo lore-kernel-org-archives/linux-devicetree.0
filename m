@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v4, 11/33] drm/mediatek: add mutex sof register offset into ddp private data
-Date: Tue, 9 Jul 2019 06:33:51 +0800
-Message-ID: <1562625253-29254-12-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v4, 12/33] drm/mediatek: split DISP_REG_CONFIG_DSI_SEL setting into another use case
+Date: Tue, 9 Jul 2019 06:33:52 +0800
+Message-ID: <1562625253-29254-13-git-send-email-yongqiang.niu@mediatek.com>
 References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,81 +14,32 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-mutex sof register offset will be private data of ddp
+Here is two modifition in this patch:
+1.bls->dpi0 and rdma1->dsi are differen usecase,
+Split DISP_REG_CONFIG_DSI_SEL setting into anther usecase
+2.remove DISP_REG_CONFIG_DPI_SEL setting, DPI_SEL_IN_BLS is 0 and
+this is same with hardware defautl setting,
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index ab396ee..d015c1a 100644
+index d015c1a..47b3e35 100644
 --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
 +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -42,12 +42,13 @@
- #define DISP_REG_CONFIG_DPI_SEL			0x064
- 
- #define MT2701_DISP_MUTEX0_MOD0			0x2c
-+#define MT2701_DISP_MUTEX0_SOF0			0x30
- 
- #define DISP_REG_MUTEX_EN(n)			(0x20 + 0x20 * (n))
- #define DISP_REG_MUTEX(n)			(0x24 + 0x20 * (n))
- #define DISP_REG_MUTEX_RST(n)			(0x28 + 0x20 * (n))
- #define DISP_REG_MUTEX_MOD(mutex_mod_reg, n)	(mutex_mod_reg + 0x20 * (n))
--#define DISP_REG_MUTEX_SOF(n)			(0x30 + 0x20 * (n))
-+#define DISP_REG_MUTEX_SOF(mutex_sof_reg, n)	(mutex_sof_reg + 0x20 * (n))
- #define DISP_REG_MUTEX_MOD2(n)			(0x34 + 0x20 * (n))
- 
- #define INT_MUTEX				BIT(1)
-@@ -163,6 +164,7 @@ struct mtk_ddp_data {
- 	const unsigned int *mutex_mod;
- 	const unsigned int *mutex_sof;
- 	const unsigned int mutex_mod_reg;
-+	const unsigned int mutex_sof_reg;
- };
- 
- struct mtk_ddp {
-@@ -234,18 +236,21 @@ struct mtk_ddp {
- 	.mutex_mod = mt2701_mutex_mod,
- 	.mutex_sof = mt2712_mutex_sof,
- 	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-+	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
- };
- 
- static const struct mtk_ddp_data mt2712_ddp_driver_data = {
- 	.mutex_mod = mt2712_mutex_mod,
- 	.mutex_sof = mt2712_mutex_sof,
- 	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-+	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
- };
- 
- static const struct mtk_ddp_data mt8173_ddp_driver_data = {
- 	.mutex_mod = mt8173_mutex_mod,
- 	.mutex_sof = mt2712_mutex_sof,
- 	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-+	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
- };
- 
- static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
-@@ -527,7 +532,8 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+@@ -400,10 +400,9 @@ static void mtk_ddp_sout_sel(void __iomem *config_regs,
+ 	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
+ 		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
+ 			       config_regs + DISP_REG_CONFIG_OUT_SEL);
++	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
+ 		writel_relaxed(DSI_SEL_IN_RDMA,
+ 			       config_regs + DISP_REG_CONFIG_DSI_SEL);
+-		writel_relaxed(DPI_SEL_IN_BLS,
+-			       config_regs + DISP_REG_CONFIG_DPI_SEL);
  	}
- 
- 	writel_relaxed(ddp->data->mutex_sof[sof_id],
--		       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
-+		       ddp->regs +
-+		       DISP_REG_MUTEX_SOF(ddp->data->mutex_sof_reg, mutex->id));
  }
  
- void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
-@@ -549,7 +555,8 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
- 	case DDP_COMPONENT_DPI1:
- 		writel_relaxed(MUTEX_SOF_SINGLE_MODE,
- 			       ddp->regs +
--			       DISP_REG_MUTEX_SOF(mutex->id));
-+			       DISP_REG_MUTEX_SOF(ddp->data->mutex_sof_reg,
-+						  mutex->id));
- 		break;
- 	default:
- 		if (ddp->data->mutex_mod[id] < 32) {
 -- 
 1.8.1.1.dirty
