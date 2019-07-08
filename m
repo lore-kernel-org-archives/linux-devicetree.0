@@ -1,48 +1,80 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH v7 18/18] MAINTAINERS: add proc sysctl KUnit test to PROC
- SYSCTL section
-Date: Mon,  8 Jul 2019 23:30:23 -0700
-Message-ID: <20190709063023.251446-19-brendanhiggins@google.com>
-References: <20190709063023.251446-1-brendanhiggins@google.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: backlight: fix vendor prefix for
+ ArcticSand arcxcnn driver bindings
+Date: Mon, 8 Jul 2019 13:02:09 -0500
+Message-ID: <f2cf7c51-4857-30bd-a096-b1ce5ff01bd5@ti.com>
+References: <1561940895-15837-1-git-send-email-bdodge09@gmail.com>
+ <1561940895-15837-2-git-send-email-bdodge09@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190709063023.251446-1-brendanhiggins@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>, Iurii Zaikin <yzaikin@google.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1561940895-15837-2-git-send-email-bdodge09@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Dodge <bdodge09@gmail.com>, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add entry for the new proc sysctl KUnit test to the PROC SYSCTL section,
-and add Iurii as a maintainer.
-
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Cc: Iurii Zaikin <yzaikin@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 48d04d180a988..f8204c75114da 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12721,12 +12721,14 @@ F:	Documentation/filesystems/proc.txt
- PROC SYSCTL
- M:	Luis Chamberlain <mcgrof@kernel.org>
- M:	Kees Cook <keescook@chromium.org>
-+M:	Iurii Zaikin <yzaikin@google.com>
- L:	linux-kernel@vger.kernel.org
- L:	linux-fsdevel@vger.kernel.org
- S:	Maintained
- F:	fs/proc/proc_sysctl.c
- F:	include/linux/sysctl.h
- F:	kernel/sysctl.c
-+F:	kernel/sysctl-test.c
- F:	tools/testing/selftests/sysctl/
- 
- PS3 NETWORK SUPPORT
--- 
-2.22.0.410.gd8fdbe21b5-goog
+QnJpYW4KCk9uIDYvMzAvMTkgNzoyOCBQTSwgQnJpYW4gRG9kZ2Ugd3JvdGU6Cj4gVGhlIHZlbmRv
+ci1wcmVmaXhlcy50eHQgZmlsZSBwcm9wZXJseSByZWZlcnMgdG8gQXJjdGljU2FuZAo+IGFzIGFy
+Y3RpYyBidXQgdGhlIGRyaXZlciBiaW5kaW5ncyBpbXByb3Blcmx5IGFiYnJldmlhdGVkIHRoZQo+
+IHByZWZpeCB0byBhcmMuIFRoaXMgd2FzIGEgbWlzdGFrZSBpbiB0aGUgb3JpZ2luYWwgcGF0Y2gu
+IFRoaXMKPiBwYXRjaCBhZGRzICJhcmN0aWMiIGFuZCByZXRhaW5zICJhcmMiIChkZXByZWNhdGVk
+KSBiaW5kaW5ncwo+Cj4gU2lnbmVkLW9mZi1ieTogQnJpYW4gRG9kZ2UgPGJkb2RnZTA5QGdtYWls
+LmNvbT4KPiAtLS0KPiAgIC4uLi9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4
+dCAgICAgICAgIHwgMzEgKysrKysrKysrKysrKysrLS0tLS0tLQo+ICAgMSBmaWxlIGNoYW5nZWQs
+IDIxIGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9hcmN4Y25uX2JsLnR4
+dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9hcmN4
+Y25uX2JsLnR4dAo+IGluZGV4IDIzMGFiZGUuLjRkOTgzOTQgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L2FyY3hjbm5fYmwudHh0
+Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0
+L2FyY3hjbm5fYmwudHh0Cj4gQEAgLTEsOCArMSwxMyBAQAo+IC1CaW5kaW5nIGZvciBBcmN0aWNT
+YW5kIGFyYzJjMDYwOCBMRUQgZHJpdmVyCj4gK0JpbmRpbmcgZm9yIEFyY3RpY1NhbmQgYXJjIGZh
+bWlseSBMRUQgZHJpdmVycwo+ICAgCj4gICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IC0tIGNvbXBh
+dGlibGU6CQlzaG91bGQgYmUgImFyYyxhcmMyYzA2MDgiCj4gLS0gcmVnOgkJCXNsYXZlIGFkZHJl
+c3MKPiArLSBjb21wYXRpYmxlOiBvbmUgb2YKPiArCSJhcmN0aWMsYXJjMWMwNjA4Igo+ICsJImFy
+Y3RpYyxhcmMyYzA2MDgiCj4gKwkiYXJjdGljLGFyYzNjMDg0NSIKPiArCSJhcmMsYXJjMmMwNjA4
+IiAoZGVwcmVjYXRlZCkKPiArCj4gKy0gcmVnOgkJc2xhdmUgYWRkcmVzcwo+ICAgCj4gICBPcHRp
+b25hbCBwcm9wZXJ0aWVzOgo+ICAgLSBkZWZhdWx0LWJyaWdodG5lc3M6CWJyaWdodG5lc3MgdmFs
+dWUgb24gYm9vdCwgdmFsdWUgZnJvbTogMC00MDk1Cj4gQEAgLTExLDE5ICsxNiwyNSBAQCBPcHRp
+b25hbCBwcm9wZXJ0aWVzOgo+ICAgLSBsZWQtc291cmNlczoJCUxpc3Qgb2YgZW5hYmxlZCBjaGFu
+bmVscyBmcm9tIDAgdG8gNS4KPiAgIAkJCVNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbGVkcy9jb21tb24udHh0Cj4gICAKPiAtLSBhcmMsbGVkLWNvbmZpZy0wOglzZXR0aW5n
+IGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18wCj4gLS0gYXJjLGxlZC1jb25maWctMToJc2V0dGlu
+ZyBmb3IgcmVnaXN0ZXIgSUxFRF9DT05GSUdfMQo+IC0tIGFyYyxkaW0tZnJlcToJCVBXTSBtb2Rl
+IGZyZXF1ZW5jZSBzZXR0aW5nIChiaXRzIFszOjBdIHVzZWQpCj4gLS0gYXJjLGNvbXAtY29uZmln
+OglzZXR0aW5nIGZvciByZWdpc3RlciBDT05GSUdfQ09NUAo+IC0tIGFyYyxmaWx0ZXItY29uZmln
+OglzZXR0aW5nIGZvciByZWdpc3RlciBGSUxURVJfQ09ORklHCj4gLS0gYXJjLHRyaW0tY29uZmln
+OglzZXR0aW5nIGZvciByZWdpc3RlciBJTUFYVFVORQo+ICstIGFyY3RpYyxsZWQtY29uZmlnLTA6
+CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElMRURfQ09ORklHXzAKPiArLSBhcmN0aWMsbGVkLWNvbmZp
+Zy0xOglzZXR0aW5nIGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18xCj4gKy0gYXJjdGljLGRpbS1m
+cmVxOglQV00gbW9kZSBmcmVxdWVuY2Ugc2V0dGluZyAoYml0cyBbMzowXSB1c2VkKQo+ICstIGFy
+Y3RpYyxjb21wLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgQ09ORklHX0NPTVAKPiArLSBh
+cmN0aWMsZmlsdGVyLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgRklMVEVSX0NPTkZJRwo+
+ICstIGFyY3RpYyx0cmltLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgSU1BWFRVTkUKPiAr
+LSBhcmMsbGVkLWNvbmZpZy0wOglzZXR0aW5nIGZvciByZWdpc3RlciBJTEVEX0NPTkZJR18wIChk
+ZXByZWNhdGVkKQo+ICstIGFyYyxsZWQtY29uZmlnLTE6CXNldHRpbmcgZm9yIHJlZ2lzdGVyIElM
+RURfQ09ORklHXzEgKGRlcHJlY2F0ZWQpCj4gKy0gYXJjLGRpbS1mcmVxOgkJUFdNIG1vZGUgZnJl
+cXVlbmNlIHNldHRpbmcgKGJpdHMgWzM6MF0gdXNlZCkgKGRlcHJlY2F0ZWQpCj4gKy0gYXJjLGNv
+bXAtY29uZmlnOglzZXR0aW5nIGZvciByZWdpc3RlciBDT05GSUdfQ09NUCAoZGVwcmVjYXRlZCkK
+PiArLSBhcmMsZmlsdGVyLWNvbmZpZzoJc2V0dGluZyBmb3IgcmVnaXN0ZXIgRklMVEVSX0NPTkZJ
+RyAoZGVwcmVjYXRlZCkKPiArLSBhcmMsdHJpbS1jb25maWc6CXNldHRpbmcgZm9yIHJlZ2lzdGVy
+IElNQVhUVU5FIChkZXByZWNhdGVkKQo+ICAgCj4gICBOb3RlOiBPcHRpb25hbCBwcm9wZXJ0aWVz
+IG5vdCBzcGVjaWZpZWQgd2lsbCBkZWZhdWx0IHRvIHZhbHVlcyBpbiBJQyBFUFJPTQo+ICAgCj4g
+ICBFeGFtcGxlOgo+ICAgCj4gICBhcmMyYzA2MDhAMzAgewo+IC0JY29tcGF0aWJsZSA9ICJhcmMs
+YXJjMmMwNjA4IjsKPiArCWNvbXBhdGlibGUgPSAiYXJjdGljLGFyYzJjMDYwOCI7Cj4gICAJcmVn
+ID0gPDB4MzA+Owo+ICAgCWRlZmF1bHQtYnJpZ2h0bmVzcyA9IDw1MDA+Owo+ICAgCWxhYmVsID0g
+ImxjZC1iYWNrbGlnaHQiOwoKClJldmlld2VkLWJ5OiBEYW4gTXVycGh5IDxkbXVycGh5QHRpLmNv
+bT4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
