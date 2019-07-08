@@ -1,94 +1,42 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v6 01/18] kunit: test: add KUnit test runner core
-Date: Mon, 8 Jul 2019 13:40:26 -0700
-Message-ID: <CAFd5g44XV0zDpNgyDPSFMq86kSvwGb_WjhxzK=AoDMjwXD5CgQ@mail.gmail.com>
-References: <20190704003615.204860-1-brendanhiggins@google.com>
- <20190704003615.204860-2-brendanhiggins@google.com>
- <20190705201505.GA19023@42.do-not-panic.com>
- <CAFd5g45cF9rYc8YupnCgd=7xz_yW+_TMp_L+cSFUBW7d9njnVQ@mail.gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 1/7] dt-bindings: net: Add bindings for Realtek PHYs
+Date: Mon, 8 Jul 2019 23:13:48 +0200
+Message-ID: <20190708211348.GA17857@lunn.ch>
+References: <20190708192459.187984-1-mka@chromium.org>
+ <20190708192459.187984-2-mka@chromium.org>
+ <20190708194615.GH9027@lunn.ch>
+ <20190708200136.GM250418@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAFd5g45cF9rYc8YupnCgd=7xz_yW+_TMp_L+cSFUBW7d9njnVQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, shuah <shuah@kernel.org>, linux-nvdimm <linux-nvdimm@lists.01.org>, Frank Rowand <frowand.list@gmail.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>, "Bird,
- Timothy" <Tim.Bird>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190708200136.GM250418@google.com>
+Sender: netdev-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdWwgOCwgMjAxOSBhdCAxMTowOCBBTSBCcmVuZGFuIEhpZ2dpbnMKPGJyZW5kYW5o
-aWdnaW5zQGdvb2dsZS5jb20+IHdyb3RlOgo+Cj4gT24gRnJpLCBKdWwgNSwgMjAxOSBhdCAxOjE1
-IFBNIEx1aXMgQ2hhbWJlcmxhaW4gPG1jZ3JvZkBrZXJuZWwub3JnPiB3cm90ZToKPiA+Cj4gPiBP
-biBXZWQsIEp1bCAwMywgMjAxOSBhdCAwNTozNTo1OFBNIC0wNzAwLCBCcmVuZGFuIEhpZ2dpbnMg
-d3JvdGU6Cj4gPiA+IEFkZCBjb3JlIGZhY2lsaXRpZXMgZm9yIGRlZmluaW5nIHVuaXQgdGVzdHM7
-IHRoaXMgcHJvdmlkZXMgYSBjb21tb24gd2F5Cj4gPiA+IHRvIGRlZmluZSB0ZXN0IGNhc2VzLCBm
-dW5jdGlvbnMgdGhhdCBleGVjdXRlIGNvZGUgd2hpY2ggaXMgdW5kZXIgdGVzdAo+ID4gPiBhbmQg
-ZGV0ZXJtaW5lIHdoZXRoZXIgdGhlIGNvZGUgdW5kZXIgdGVzdCBiZWhhdmVzIGFzIGV4cGVjdGVk
-OyB0aGlzIGFsc28KPiA+ID4gcHJvdmlkZXMgYSB3YXkgdG8gZ3JvdXAgdG9nZXRoZXIgcmVsYXRl
-ZCB0ZXN0IGNhc2VzIGluIHRlc3Qgc3VpdGVzIChoZXJlCj4gPiA+IHdlIGNhbGwgdGhlbSB0ZXN0
-X21vZHVsZXMpLgo+ID4gPgo+ID4gPiBKdXN0IGRlZmluZSB0ZXN0IGNhc2VzIGFuZCBob3cgdG8g
-ZXhlY3V0ZSB0aGVtIGZvciBub3c7IHNldHRpbmcKPiA+ID4gZXhwZWN0YXRpb25zIG9uIGNvZGUg
-d2lsbCBiZSBkZWZpbmVkIGxhdGVyLgo+ID4gPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBCcmVuZGFu
-IEhpZ2dpbnMgPGJyZW5kYW5oaWdnaW5zQGdvb2dsZS5jb20+Cj4gPiA+IFJldmlld2VkLWJ5OiBH
-cmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPgo+ID4gPiBSZXZp
-ZXdlZC1ieTogTG9nYW4gR3VudGhvcnBlIDxsb2dhbmdAZGVsdGF0ZWUuY29tPgo+ID4KPiA+IFJl
-dmlld2VkLWJ5OiBMdWlzIENoYW1iZXJsYWluIDxtY2dyb2ZAa2VybmVsLm9yZz4KPiA+Cj4gPiBC
-dXQgYSBuaXRwaWNrIGJlbG93LCBJIHRoaW5rIHRoYXQgY2FuIGJlIGZpeGVkIGxhdGVyIHdpdGgg
-YSBmb2xsb3cgdXAKPiA+IHBhdGNoLgo+ID4KPiA+ID4gKy8qKgo+ID4gPiArICogc3RydWN0IGt1
-bml0IC0gcmVwcmVzZW50cyBhIHJ1bm5pbmcgaW5zdGFuY2Ugb2YgYSB0ZXN0Lgo+ID4gPiArICog
-QHByaXY6IGZvciB1c2VyIHRvIHN0b3JlIGFyYml0cmFyeSBkYXRhLiBDb21tb25seSB1c2VkIHRv
-IHBhc3MgZGF0YSBjcmVhdGVkCj4gPiA+ICsgKiBpbiB0aGUgaW5pdCBmdW5jdGlvbiAoc2VlICZz
-dHJ1Y3Qga3VuaXRfc3VpdGUpLgo+ID4gPiArICoKPiA+ID4gKyAqIFVzZWQgdG8gc3RvcmUgaW5m
-b3JtYXRpb24gYWJvdXQgdGhlIGN1cnJlbnQgY29udGV4dCB1bmRlciB3aGljaCB0aGUgdGVzdCBp
-cwo+ID4gPiArICogcnVubmluZy4gTW9zdCBvZiB0aGlzIGRhdGEgaXMgcHJpdmF0ZSBhbmQgc2hv
-dWxkIG9ubHkgYmUgYWNjZXNzZWQgaW5kaXJlY3RseQo+ID4gPiArICogdmlhIHB1YmxpYyBmdW5j
-dGlvbnM7IHRoZSBvbmUgZXhjZXB0aW9uIGlzIEBwcml2IHdoaWNoIGNhbiBiZSB1c2VkIGJ5IHRo
-ZQo+ID4gPiArICogdGVzdCB3cml0ZXIgdG8gc3RvcmUgYXJiaXRyYXJ5IGRhdGEuCj4gPiA+ICsg
-Kgo+ID4gPiArICogQSBicmllZiBub3RlIG9uIGxvY2tpbmc6Cj4gPiA+ICsgKgo+ID4gPiArICog
-Rmlyc3Qgb2ZmLCB3ZSBuZWVkIHRvIGxvY2sgYmVjYXVzZSBpbiBjZXJ0YWluIGNhc2VzIGEgdXNl
-ciBtYXkgd2FudCB0byB1c2UgYW4KPiA+ID4gKyAqIGV4cGVjdGF0aW9uIGluIGEgdGhyZWFkIG90
-aGVyIHRoYW4gdGhlIHRocmVhZCB0aGF0IHRoZSB0ZXN0IGNhc2UgaXMgcnVubmluZwo+ID4gPiAr
-ICogaW4uCj4gPgo+ID4gVGhpcyBhcyBhIHByZWZpeCB0byB0aGUgc3RydWN0IHdpdGhvdXQgYSBs
-b2NrIHNlZW1zIG9kZC4gSXQgd291bGQgYmUKPiA+IGNsZWFyZXIgSSB0aGluayBpZiB5b3UnZCBl
-eHBsYWluIGhlcmUgd2hhdCBsb2NraW5nIG1lY2hhbmlzbSB3ZSBkZWNpZGVkCj4gPiB0byB1c2Ug
-YW5kIHdoeSBpdCBzdWZmaWNlcyB0b2RheS4KPgo+IFdob29wcywgc29ycnkgdGhpcyBzaG91bGQg
-aGF2ZSBiZWVuIGluIHRoZSBuZXh0IHBhdGNoLiBXaWxsIGZpeC4KCkVyci4ubm8sIHRoaXMgc2hv
-dWxkbid0IGJlIGhlcmUgYXQgYWxsLiBTb3JyeSBhYm91dCB0aGF0LiBJIGp1c3QgbmVlZAp0byBy
-ZXdyaXRlIHRoZSBjb21tZW50LgoKPiA+ID4gKy8qKgo+ID4gPiArICogc3VpdGVfdGVzdCgpIC0g
-dXNlZCB0byByZWdpc3RlciBhICZzdHJ1Y3Qga3VuaXRfc3VpdGUgd2l0aCBLVW5pdC4KPiA+Cj4g
-PiBZb3UgbWVhbiBrdW5pdF90ZXN0X3N1aXRlKCk/Cj4KPiBZZXAsIHNvcnJ5IGFib3V0IHRoYXQu
-IFdpbGwgZml4Lgo+Cj4gPiA+ICsgKiBAc3VpdGU6IGEgc3RhdGljYWxseSBhbGxvY2F0ZWQgJnN0
-cnVjdCBrdW5pdF9zdWl0ZS4KPiA+ID4gKyAqCj4gPiA+ICsgKiBSZWdpc3RlcnMgQHN1aXRlIHdp
-dGggdGhlIHRlc3QgZnJhbWV3b3JrLiBTZWUgJnN0cnVjdCBrdW5pdF9zdWl0ZSBmb3IgbW9yZQo+
-ID4gPiArICogaW5mb3JtYXRpb24uCj4gPiA+ICsgKgo+ID4gPiArICogTk9URTogQ3VycmVudGx5
-IEtVbml0IHRlc3RzIGFyZSBhbGwgcnVuIGFzIGxhdGVfaW5pdGNhbGxzOyB0aGlzIG1lYW5zIHRo
-YXQKPiA+ID4gKyAqIHRoZXkgY2Fubm90IHRlc3QgYW55dGhpbmcgd2hlcmUgdGVzdHMgbXVzdCBy
-dW4gYXQgYSBkaWZmZXJlbnQgaW5pdCBwaGFzZS4gT25lCj4gPiA+ICsgKiBzaWduaWZpY2FudCBy
-ZXN0cmljdGlvbiByZXN1bHRpbmcgZnJvbSB0aGlzIGlzIHRoYXQgS1VuaXQgY2Fubm90IHJlbGlh
-Ymx5Cj4gPiA+ICsgKiB0ZXN0IGFueXRoaW5nIHRoYXQgaXMgaW5pdGlhbGl6ZSBpbiB0aGUgbGF0
-ZV9pbml0IHBoYXNlLgo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIGluaXRpYWxpemUg
-cHJpb3IgdG8gdGhlIGxhdGUgaW5pdCBwaGFzZS4KPiA+Cj4gPgo+ID4gVGhhdCBpcywgdGhpcyBp
-cyB1c2VsZXNzIHRvIHRlc3QgdGhpbmdzIHJ1bm5pbmcgZWFybHkuCj4KPiBZZWFoLCBJIGNhbiBh
-ZGQgdGhhdCBwaHJhc2luZyBpbi4KPgo+ID4gPiArICoKPiA+ID4gKyAqIFRPRE8oYnJlbmRhbmhp
-Z2dpbnNAZ29vZ2xlLmNvbSk6IERvbid0IHJ1biBhbGwgS1VuaXQgdGVzdHMgYXMgbGF0ZV9pbml0
-Y2FsbHMuCj4gPiA+ICsgKiBJIGhhdmUgc29tZSBmdXR1cmUgd29yayBwbGFubmVkIHRvIGRpc3Bh
-dGNoIGFsbCBLVW5pdCB0ZXN0cyBmcm9tIHRoZSBzYW1lCj4gPiA+ICsgKiBwbGFjZSwgYW5kIGF0
-IHRoZSB2ZXJ5IGxlYXN0IHRvIGRvIHNvIGFmdGVyIGV2ZXJ5dGhpbmcgZWxzZSBpcyBkZWZpbml0
-ZWx5Cj4gPiA+ICsgKiBpbml0aWFsaXplZC4KPiA+Cj4gPiBUT0RPcyBhcmUgb2RkIHRvIGJlIGFk
-ZGluZyB0byBkb2N1bWVudGF0aW9uLCB0aGlzIGlzIGp1c3Qgbm90IGNvbW1vbgo+ID4gcGxhY2Ug
-cHJhY3RpY2UuIFRoZSBOT1RFIHNob3VsZCBzdWZmaWNlIGZvciB5b3UuCj4KPiBCZWNhdXNlIGl0
-IGlzIGEga2VybmVsIGRvYz8gV291bGQgeW91IHVzdWFsbHkgbWFrZSBhIHNlcGFyYXRlCj4gbm9u
-LWtlcm5lbCBkb2MgY29tbWVudCBmb3IgYSBUT0RPPyBJIGd1ZXNzIHRoYXQgbWFrZXMgc2Vuc2Uu
-Cj4KPiBUaGFua3MhCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bA==
+On Mon, Jul 08, 2019 at 01:01:36PM -0700, Matthias Kaehlcke wrote:
+> On Mon, Jul 08, 2019 at 09:46:15PM +0200, Andrew Lunn wrote:
+> > On Mon, Jul 08, 2019 at 12:24:53PM -0700, Matthias Kaehlcke wrote:
+> > > Add the 'realtek,eee-led-mode-disable' property to disable EEE
+> > > LED mode on Realtek PHYs that support it.
+> > > 
+> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > ---
+> > > TODO: adapt PHY core to deal with optional compatible strings
+> > 
+> > Yes. Does this even work at the moment? I would expect
+> > of_mdiobus_child_is_phy() to return false, indicating the device is
+> > not actually a PHY.
+> 
+> Indeed, it currently doesn't work atm. I found that removing the check
+> for dev->of_node in of_mdiobus_link_mdiodev() helps, but I imagine
+> doing (only) this might have undesired side-effects.
+
+O.K.
+
+Please put RFC in patches like this which don't actually work and so
+should not be merged. We don't want David accidentally merging them!
+
+       Andrew
