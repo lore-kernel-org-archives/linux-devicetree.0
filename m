@@ -1,59 +1,60 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
-Date: Mon, 8 Jul 2019 13:55:11 +0530
-Message-ID: <20190708082511.py7gnjbqyp7bnhqx@vireshk-i7>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
+Date: Mon, 8 Jul 2019 08:43:31 +0000
+Message-ID: <DB3PR0402MB391622133CD116FDE26A4F9AF5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 References: <20190704061403.8249-1-Anson.Huang@nxp.com>
  <20190704061403.8249-2-Anson.Huang@nxp.com>
  <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
+ <20190708082511.py7gnjbqyp7bnhqx@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
+In-Reply-To: <20190708082511.py7gnjbqyp7bnhqx@vireshk-i7>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists>
+To: Viresh Kumar <viresh.kumar@linaro.org>, Leonard Crestez <leonard.crestez@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger
 List-Id: devicetree@vger.kernel.org
 
-On 04-07-19, 07:49, Leonard Crestez wrote:
-> On 7/4/2019 9:23 AM, Anson.Huang@nxp.com wrote:
-> > From: Anson Huang <Anson.Huang@nxp.com>
-> > 
-> > Assign highest OPP as suspend OPP to reduce suspend/resume
-> > latency on i.MX8MM.
-> > 
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> >   arch/arm64/boot/dts/freescale/imx8mm.dtsi | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > index b11fc5e..3a62407 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > @@ -136,6 +136,7 @@
-> >   			opp-microvolt = <1000000>;
-> >   			opp-supported-hw = <0x8>, <0x3>;
-> >   			clock-latency-ns = <150000>;
-> > +			opp-suspend;
-> >   		};
-> >   	};
-> 
-> What if the highest OPP is unavailable due to speed grading?
-
-What does this exactly mean ? How is the OPP made unavailable in your
-case ?
-
-What will dev_pm_opp_get_suspend_opp_freq() return in this case ?
-
-> Ideally we 
-> should find a way to suspend at the highest *supported* OPP.
-> 
-> Maybe the opp-suspend marking could be assigned from imx-cpufreq-dt 
-> driver code?
-
-Sorry for jumping in late, the latest patch from Anson drew my
-attention to this topic :)
-
--- 
-viresh
+SGksIFZpcmVzaA0KDQo+IE9uIDA0LTA3LTE5LCAwNzo0OSwgTGVvbmFyZCBDcmVzdGV6IHdyb3Rl
+Og0KPiA+IE9uIDcvNC8yMDE5IDk6MjMgQU0sIEFuc29uLkh1YW5nQG54cC5jb20gd3JvdGU6DQo+
+ID4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiA+DQo+ID4g
+PiBBc3NpZ24gaGlnaGVzdCBPUFAgYXMgc3VzcGVuZCBPUFAgdG8gcmVkdWNlIHN1c3BlbmQvcmVz
+dW1lIGxhdGVuY3kNCj4gPiA+IG9uIGkuTVg4TU0uDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1i
+eTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gPiAtLS0NCj4gPiA+ICAg
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kgfCAxICsNCj4gPiA+ICAg
+MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4gPg0KPiA+ID4gZGlmZiAtLWdpdCBh
+L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpDQo+ID4gPiBiL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpDQo+ID4gPiBpbmRleCBiMTFmYzVl
+Li4zYTYyNDA3IDEwMDY0NA0KPiA+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
+bGUvaW14OG1tLmR0c2kNCj4gPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
+L2lteDhtbS5kdHNpDQo+ID4gPiBAQCAtMTM2LDYgKzEzNiw3IEBADQo+ID4gPiAgIAkJCW9wcC1t
+aWNyb3ZvbHQgPSA8MTAwMDAwMD47DQo+ID4gPiAgIAkJCW9wcC1zdXBwb3J0ZWQtaHcgPSA8MHg4
+PiwgPDB4Mz47DQo+ID4gPiAgIAkJCWNsb2NrLWxhdGVuY3ktbnMgPSA8MTUwMDAwPjsNCj4gPiA+
+ICsJCQlvcHAtc3VzcGVuZDsNCj4gPiA+ICAgCQl9Ow0KPiA+ID4gICAJfTsNCj4gPg0KPiA+IFdo
+YXQgaWYgdGhlIGhpZ2hlc3QgT1BQIGlzIHVuYXZhaWxhYmxlIGR1ZSB0byBzcGVlZCBncmFkaW5n
+Pw0KPiANCj4gV2hhdCBkb2VzIHRoaXMgZXhhY3RseSBtZWFuID8gSG93IGlzIHRoZSBPUFAgbWFk
+ZSB1bmF2YWlsYWJsZSBpbiB5b3VyDQo+IGNhc2UgPw0KDQpUaGF0IGlzIGJlY2F1c2UgaW4gaS5N
+WDhNIHNlcmllcyBTb0NzLCB0aGUgc3BlZWQgZ3JhZGluZyBhbmQgbWFya2V0IHNlZ21lbnQNCmZ1
+c2VzIHNldHRpbmdzIGNvdWxkIGFmZmVjdCB0aGUgT1BQIGRlZmluZWQgaW4gRFQsIGluIGEgd29y
+ZCwgYWxsIHBvc3NpYmxlIE9QUHMNCmFyZSBkZWZpbmVkIGluIERULCBidXQgZWFjaCBwYXJ0cyBj
+b3VsZCBPTkxZIHNlbGVjdCBzb21lIG9mIHRoZW0gdG8gYmUgd29ya2luZw0KT1BQcywgc28gaWYg
+dGhlICJvcHAtc3VzcGVuZCIgaXMgYWRkZWQgZm9yIDEgT1BQIGluIERULCBpZiB0aGUgcGFydCdz
+IHNwZWVkIGdyYWRpbmcgb3INCm1hcmtldCBzZWdtZW50IGZ1c2Ugc2V0dGluZ3MgbWFrZSB0aGF0
+IE9QUCBhcyB1bmF2YWlsYWJsZSwgIHRoZW4gdGhhdCAib3BwLXN1c3BlbmQiDQppcyBOT1Qgd29y
+a2luZyBhdCBhbGwuDQoNCj4gDQo+IFdoYXQgd2lsbCBkZXZfcG1fb3BwX2dldF9zdXNwZW5kX29w
+cF9mcmVxKCkgcmV0dXJuIGluIHRoaXMgY2FzZSA/DQoNCklmIHRoZSBPUFAgY29udGFpbnMgIm9w
+cC1zdXNwZW5kIiBwcm9wZXJ0eSBpcyBOT1Qgc3VwcG9ydGVkIGJ5IHRoZSBIVywgdGhlbiB0aGVy
+ZSB3aWxsDQpiZSBubyBzdXNwZW5kIE9QUCBkZWZpbmVkLCBzbyBpdCB3aWxsIHJldHVybiAwLiBU
+aGUgX29wcF9pc19zdXBwb3J0ZWQoKSBwYXJzZXMgdGhlIG9wcC1zdXBwb3J0ZWQtaHcNCmJlZm9y
+ZSBvcHAtc3VzcGVuZC4NCg0KPiANCj4gPiBJZGVhbGx5IHdlDQo+ID4gc2hvdWxkIGZpbmQgYSB3
+YXkgdG8gc3VzcGVuZCBhdCB0aGUgaGlnaGVzdCAqc3VwcG9ydGVkKiBPUFAuDQo+ID4NCj4gPiBN
+YXliZSB0aGUgb3BwLXN1c3BlbmQgbWFya2luZyBjb3VsZCBiZSBhc3NpZ25lZCBmcm9tIGlteC1j
+cHVmcmVxLWR0DQo+ID4gZHJpdmVyIGNvZGU/DQoNCkkgZXZlciB0cmllZCB0aGF0LCBnbyB0aHJv
+dWdoIHRoZSBPUFAgdGFibGUgYW5kIGNoZWNrIHRoZSBmdXNlIHNldHRpbmdzLCB0aGVuIHJ1bnRp
+bWUgYWRkICJvcHAtc3VzcGVuZCINCnRvIHRoZSBvcHAgdGFibGUsIGJ1dCB1bmZvcnR1bmF0ZWx5
+LCB0aGUgIiBzdHJ1Y3Qgb3BwX3RhYmxlICIgaXMgTk9UIG9wZW5lZCB0byBiZSB1c2VkLCBpdCBp
+cyBhIHByaXZhdGUNCnN0cnVjdHVyZT8NCg0KPiANCj4gU29ycnkgZm9yIGp1bXBpbmcgaW4gbGF0
+ZSwgdGhlIGxhdGVzdCBwYXRjaCBmcm9tIEFuc29uIGRyZXcgbXkgYXR0ZW50aW9uIHRvDQo+IHRo
+aXMgdG9waWMgOikNCg0KVGhhdCBpcyBPS/CfmIoNCg0KVGhhbmtzLA0KQW5zb24uDQoNCg==
