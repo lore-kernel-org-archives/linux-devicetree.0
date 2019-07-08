@@ -1,73 +1,94 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v5 2/7] drm/panel: simple: Add ability to override
- typical timing
-Date: Mon, 8 Jul 2019 19:56:06 +0200
-Message-ID: <20190708175606.GB3511@ravnborg.org>
-References: <20190401171724.215780-1-dianders@chromium.org>
- <20190401171724.215780-3-dianders@chromium.org>
- <20190630202246.GB15102@ravnborg.org>
- <20190630205514.GA17046@ravnborg.org>
- <CAD=FV=WH4kmhQA0kbKcAUx=oOeqTZiQOFCXYpVWwq+mG7Y7ofA@mail.gmail.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v6 01/18] kunit: test: add KUnit test runner core
+Date: Mon, 8 Jul 2019 11:08:27 -0700
+Message-ID: <CAFd5g45cF9rYc8YupnCgd=7xz_yW+_TMp_L+cSFUBW7d9njnVQ@mail.gmail.com>
+References: <20190704003615.204860-1-brendanhiggins@google.com>
+ <20190704003615.204860-2-brendanhiggins@google.com> <20190705201505.GA19023@42.do-not-panic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WH4kmhQA0kbKcAUx=oOeqTZiQOFCXYpVWwq+mG7Y7ofA@mail.gmail.com>
+In-Reply-To: <20190705201505.GA19023@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Jeffy Chen <jeffy.chen@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, Boris Brezillon <boris.brezillon@collabora.com>, Enric =?iso-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>, =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>, Ezequiel Garcia <ezequiel@collabora.com>, Matthias Kaehlcke <mka@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-ks>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 09:39:06AM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Sun, Jun 30, 2019 at 1:55 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+On Fri, Jul 5, 2019 at 1:15 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Wed, Jul 03, 2019 at 05:35:58PM -0700, Brendan Higgins wrote:
+> > Add core facilities for defining unit tests; this provides a common way
+> > to define test cases, functions that execute code which is under test
+> > and determine whether the code under test behaves as expected; this also
+> > provides a way to group together related test cases in test suites (here
+> > we call them test_modules).
 > >
-> > Hi Douglas.
+> > Just define test cases and how to execute them for now; setting
+> > expectations on code will be defined later.
 > >
-> > > > +
-> > > > +   /* Only add timings if override was not there or failed to validate */
-> > > > +   if (num == 0 && panel->desc->num_timings)
-> > > > +           num = panel_simple_get_timings_modes(panel);
-> > > > +
-> > > > +   /*
-> > > > +    * Only add fixed modes if timings/override added no mode.
-> > >
-> > > This part I fail to understand.
-> > > If we have a panel where we in panel-simple have specified the timings,
-> > > and done so using display_timing so with proper {min, typ, max} then it
-> > > should be perfectly legal to specify a more precise variant in the DT
-> > > file.
-> > > Or what did I miss here?
-> >
-> > Got it now.
-> > If display_mode is used for timings this is what you call "fixed mode".
-> > Hmm, if I got confused someone else may also be confused by this naming.
-> 
-> The name "fixed mode" comes from the old code, though I guess in the
-> old code it used to refer to a mode that came from either the
-> display_timing or the display_mode.
-> 
-> How about if I call it "panel_simple_get_from_fixed_display_mode"?
-> ...or if you have another suggestion feel free to chime in.
-What we really want to distingush here is the use of display_mode
-and display_timings (if I got the names right).
-That display_mode specify a fixed timing and display_timing specify
-a valid range is something in the semantics of the two types.
-So naming that refer to display_mode versus display_timing will make the
-code simpler to understand. and then a nice comment that when
-display_mode
-is used one looses the possibility to use override_mode.
-That would be fine to have in the struct in the driver.
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+>
+> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+>
+> But a nitpick below, I think that can be fixed later with a follow up
+> patch.
+>
+> > +/**
+> > + * struct kunit - represents a running instance of a test.
+> > + * @priv: for user to store arbitrary data. Commonly used to pass data created
+> > + * in the init function (see &struct kunit_suite).
+> > + *
+> > + * Used to store information about the current context under which the test is
+> > + * running. Most of this data is private and should only be accessed indirectly
+> > + * via public functions; the one exception is @priv which can be used by the
+> > + * test writer to store arbitrary data.
+> > + *
+> > + * A brief note on locking:
+> > + *
+> > + * First off, we need to lock because in certain cases a user may want to use an
+> > + * expectation in a thread other than the thread that the test case is running
+> > + * in.
+>
+> This as a prefix to the struct without a lock seems odd. It would be
+> clearer I think if you'd explain here what locking mechanism we decided
+> to use and why it suffices today.
 
-> NOTE: Since this feedback is minor and this patch has been outstanding
-> for a while (and is blocking other work), I am assuming that the best
-> path forward is for Heiko to land this patch with Thierry's Ack and
-> I'll send a follow-up.  Please yell if you disagree.
-Let's give the patches a spin more as we have passed the possibility for
-the current merge window.
+Whoops, sorry this should have been in the next patch. Will fix.
 
-I am on vacation at the moment and thus slow in responses, but will be back
-at the home office next week and will be more responsive again.
+> > +/**
+> > + * suite_test() - used to register a &struct kunit_suite with KUnit.
+>
+> You mean kunit_test_suite()?
 
-	Sam - who is enjoying the alps in Austria
+Yep, sorry about that. Will fix.
+
+> > + * @suite: a statically allocated &struct kunit_suite.
+> > + *
+> > + * Registers @suite with the test framework. See &struct kunit_suite for more
+> > + * information.
+> > + *
+> > + * NOTE: Currently KUnit tests are all run as late_initcalls; this means that
+> > + * they cannot test anything where tests must run at a different init phase. One
+> > + * significant restriction resulting from this is that KUnit cannot reliably
+> > + * test anything that is initialize in the late_init phase.
+>                             initialize prior to the late init phase.
+>
+>
+> That is, this is useless to test things running early.
+
+Yeah, I can add that phrasing in.
+
+> > + *
+> > + * TODO(brendanhiggins@google.com): Don't run all KUnit tests as late_initcalls.
+> > + * I have some future work planned to dispatch all KUnit tests from the same
+> > + * place, and at the very least to do so after everything else is definitely
+> > + * initialized.
+>
+> TODOs are odd to be adding to documentation, this is just not common
+> place practice. The NOTE should suffice for you.
+
+Because it is a kernel doc? Would you usually make a separate
+non-kernel doc comment for a TODO? I guess that makes sense.
+
+Thanks!
