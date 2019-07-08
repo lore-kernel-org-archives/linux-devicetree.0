@@ -1,24 +1,73 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] media: dt-bindings: rockchip: Document RK3328 VPU binding
-Date: Mon, 8 Jul 2019 15:22:43 -0600
-Message-ID: <20190708212243.GA18200@bogus>
-References: <VI1PR03MB4206A833FF54A3235571896CAC1F0@VI1PR03MB4206.eurprd03.prod.outlook.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: add DT bindings for Milbeaut SD
+ controller
+Date: Mon, 8 Jul 2019 15:26:30 -0600
+Message-ID: <20190708212630.GA20487@bogus>
+References: <1559208131-426-1-git-send-email-orito.takao@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <VI1PR03MB4206A833FF54A3235571896CAC1F0@VI1PR03MB4206.eurprd03.prod.outlook.com>
+In-Reply-To: <1559208131-426-1-git-send-email-orito.takao@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Ezequiel Garcia <ezequiel@collabora.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Jonas Karlman <jonas@kwiboo.se>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Takao Orito <orito.takao@socionext.com>
+Cc: ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 May 2019 10:54:27 +0000, Jonas Karlman wrote:
-> Update devicetree binding documentation for Rockchip VPU on RK3328.
+On Thu, May 30, 2019 at 06:22:11PM +0900, Takao Orito wrote:
+> Add the device-tree binding documentation for Milbeaut SDHCI driver.
 > 
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> Signed-off-by: Takao Orito <orito.takao@socionext.com>
 > ---
->  .../devicetree/bindings/media/rockchip-vpu.txt | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/mmc/sdhci-milbeaut.txt     | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt b/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+> new file mode 100644
+> index 0000000..6063116
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+> @@ -0,0 +1,32 @@
+> +* SOCIONEXT Milbeaut SDHCI controller
+> +
+> +This file documents differences between the core properties in mmc.txt
+> +and the properties used by the sdhci_milbeaut driver.
+> +
+> +Required properties:
+> +- compatible: "socionext,milbeaut-m10v-sdhci-3.0"
+> +- clocks: Must contain an entry for each entry in clock-names. It is a
+> +  list of phandles and clock-specifier pairs.
+> +  See ../clocks/clock-bindings.txt for details.
+> +- clock-names: Should contain the following two entries:
+> +	"iface" - clock used for sdhci interface
+> +	"core"  - core clock for sdhci controller
+> +- vmmc-supply: a phandle of a fixed GPIO regulator
+
+Being a fixed GPIO regulator is board specific and outside the scope of 
+the binding. Otherwise,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +
+> +Optional properties:
+> +- fujitsu,cmd-dat-delay-select: boolean property indicating that this host
+> +  requires the CMD_DAT_DELAY control to be enabled.
+> +
+> +Example:
+> +	sdhci3: mmc@1b010000 {
+> +		compatible = "socionext,milbeaut-m10v-sdhci-3.0";
+> +		reg = <0x1b010000 0x10000>;
+> +		interrupts = <0 265 0x4>;
+> +		voltage-ranges = <3300 3300>;
+> +		bus-width = <4>;
+> +		clocks = <&clk 7>, <&ahb_clk>;
+> +		clock-names = "core", "iface";
+> +		cap-sdio-irq;
+> +		vmmc-supply = <&vcc_sdhci3>;
+> +		fujitsu,cmd-dat-delay-select;
+> +	};
+> -- 
+> 1.9.1
+> 
+> 
