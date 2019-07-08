@@ -1,87 +1,83 @@
-From: <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/2] media: i2c: dw9768: Add DT support and MAINTAINERS entry
-Date: Mon, 8 Jul 2019 18:06:40 +0800
-Message-ID: <20190708100641.2702-2-dongchun.zhu@mediatek.com>
-References: <20190708100641.2702-1-dongchun.zhu@mediatek.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] mmc: remove another TMIO MMC variant usdhi6rol0.c
+Date: Mon, 8 Jul 2019 12:21:52 +0200
+Message-ID: <CAPDyKFqdRO9VeTrG7-nSU-oMB=HenCB3GO4GS0sN=KHnLYDCtw@mail.gmail.com>
+References: <20190621060511.29609-1-yamada.masahiro@socionext.com>
+ <CAK7LNASGVbkGgu7psy4DfCxmr-AxSQ3fmGJ=aDAiuSkJ5hrDwA@mail.gmail.com>
+ <20190621105025.GA2987@kunai> <CADnJP=sg1Kp=TAvUD-ofQje9Y6mWWE_ZnQM_eB85uw3z6PHrVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1786172833897680797=="
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190708100641.2702-1-dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bingbu.cao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, shengnan.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, louis.kuo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CADnJP=sg1Kp=TAvUD-ofQje9Y6mWWE_ZnQM_eB85uw3z6PHrVQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars Persson <lists@bofh.nu>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-mmc <linux-mmc@vger.kernel.org>, Rabin Vincent <rabin.vincent@axis.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
---===============1786172833897680797==
-Content-Type: text/plain; charset="y"
-Content-Transfer-Encoding: 8bit
+On Mon, 24 Jun 2019 at 09:04, Lars Persson <lists@bofh.nu> wrote:
+>
+> On Fri, Jun 21, 2019 at 12:50 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+> >
+> > Hi,
+> >
+> > On Fri, Jun 21, 2019 at 03:16:11PM +0900, Masahiro Yamada wrote:
+> > > (Added Lars Persson, Guennadi Liakhovetski)
+> > >
+> > > On Fri, Jun 21, 2019 at 3:06 PM Masahiro Yamada
+> > > <yamada.masahiro@socionext.com> wrote:
+> > >
+> > > This needs Ack from Renesas.
+> > > But, I do not know if TMIO folks are sure about this driver, though.
+> > > (If they had been sure about it, they should not have duplicated the driver
+> > > in the first place.)
+> >
+> > ... and from the original mail:
+> >
+> > > Delete this driver now. Please re-implement it based on tmio_mmc_core.c
+> > > if needed.
+> >
+> > I was never happy with this driver existing, yet I never knew which HW
+> > platform needed this, so I didn't touch it. But I'd like to see it go in
+> > favor of merging with the TMIO code base.
+> >
+> > >
+> > > Perhaps, some code snippets in this driver might be useful for cleaning
+> > > tmio_mmc. It will stay in git history forever, and you can dig for it
+> > > whenever you need it.
+> > >
+> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >
+> > I double checked there is no user in the current tree. I also searched
+> > the web and did not find any out-of-tree user or even a reference of it.
+> >
+> > So, for now:
+> >
+> > Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> >
+> > But this seriously needs an Ack from Shimoda-san or Morimoto-san. And
+> > maybe Guennadi has remarks, too?
+> >
+>
+> So let me tell you the real use of this driver.
+>
+> It is used by Axis Communications in our Artpec-6 chips that will be
+> around for at least 5 years in active development at our side. The SoC
+> is upstreamed, but the upstreaming effort was side-tracked before the
+> usdhi6rol0 was added to the devicetree.
+>
+> I do agree with you guys that we should not keep two drivers for the
+> same IP so there should be an effort to unify the drivers. In the mean
+> time, we can make the connection with Axis more explicit by assigning
+> us as maintainer and pushing the device tree entries.
 
-From: Dongchun Zhu <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To me, this sounds like a reasonable good plan. Although, we need a
+formal maintainer rather than just a company name.
 
-Add the Devicetree binding documentation and MAINTAINERS entry for dw9768.
+If you or anybody at Axis can send a patch for MAINTAINERS, that would
+serve as commitment that I would be happy with.
 
-Signed-off-by: Dongchun Zhu <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt | 9 +++++++++
- MAINTAINERS                                                     | 7 +++++++
- 2 files changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt
+Additionally, of course, the sooner we can get things moving on
+converting usdhi6rol0 into using the tmio family driver, the better.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt
-new file mode 100644
-index 0000000..94b8ec3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt
-@@ -0,0 +1,9 @@
-+Dongwoon Anatech DW9768 camera voice coil lens driver
-+
-+DW9768 is a 10-bit DAC with current sink capability. It is intended
-+for driving voice coil lenses in camera modules.
-+
-+Mandatory properties:
-+
-+- compatible: "dongwoon,dw9768"
-+- reg: I²C slave address
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5cfbea4..8f6ac93 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4872,6 +4872,13 @@ S:	Maintained
- F:	drivers/media/i2c/dw9714.c
- F:	Documentation/devicetree/bindings/media/i2c/dongwoon,dw9714.txt
- 
-+DONGWOON DW9768 LENS VOICE COIL DRIVER
-+M:	Dongchun Zhu <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt
-+
- DONGWOON DW9807 LENS VOICE COIL DRIVER
- M:	Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
- L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
--- 
-2.9.2
-
-
-
---===============1786172833897680797==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Linux-mediatek mailing list
-Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-mediatek
-
---===============1786172833897680797==--
+Kind regards
+Uffe
