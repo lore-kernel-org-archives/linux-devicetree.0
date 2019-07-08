@@ -1,12 +1,11 @@
 Return-Path: <SRS0=caN8=VF=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-References: <1560513214-28031-1-git-send-email-fabrizio.castro@bp.renesas.com> <1560513214-28031-4-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1560513214-28031-4-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1560513214-28031-1-git-send-email-fabrizio.castro@bp.renesas.com> <1560513214-28031-6-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1560513214-28031-6-git-send-email-fabrizio.castro@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 8 Jul 2019 14:57:19 +0200
-Message-ID: <CAMuHMdXXd4_Vk5zH5TOYUuA7-LjCtMqFWbC2is1DCJ7TzXvOUA@mail.gmail.com>
-Subject: Re: [PATCH 3/6] arm64: dts: renesas: r8a774c0: Add missing
- assigned-clocks for CAN[01]
+Date: Mon, 8 Jul 2019 15:01:29 +0200
+Message-ID: <CAMuHMdVR8WP=8G8ZYmdd675jvx0nyh2iramyFqCuR-v6a_QF0g@mail.gmail.com>
+Subject: Re: [PATCH 5/6] arm64: dts: renesas: r8a774a1: Add CANFD support
 Content-Type: text/plain; charset="UTF-8"
 To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
@@ -14,10 +13,8 @@ List-ID: <devicetree@vger.kernel.org>
 
 On Fri, Jun 14, 2019 at 1:54 PM Fabrizio Castro
 <fabrizio.castro@bp.renesas.com> wrote:
-> Define "assigned-clocks" and "assigned-clock-rates" properties
-> for CAN[01] DT nodes, as required by the dt-bindings.
+> Add CANFD support to the SoC specific dtsi.
 >
-> Fixes: 036bc85c1d06 ("arm64: dts: renesas: r8a774c0: Add clkp2 clock to CAN nodes")
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
