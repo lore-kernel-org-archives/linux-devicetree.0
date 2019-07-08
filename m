@@ -1,52 +1,53 @@
-Return-Path: <SRS0=m1i9=VH=flex--brendanhiggins.bounces.google.com=3vJAlXQ4KBGMCSFOEBOIJHHJOTHPPHMF.DPNSPCILFSOFM.PSH@kernel.org>
-Date: Wed, 10 Jul 2019 00:14:56 -0700
-In-Reply-To: <20190710071508.173491-1-brendanhiggins@google.com>
-Message-Id: <20190710071508.173491-7-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20190710071508.173491-1-brendanhiggins@google.com>
-Subject: [PATCH v8 06/18] kbuild: enable building KUnit
-From: Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
-To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>, Michal Marek <michal.lkml@markovi.net>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH RFC 0/7] treewide: modify sh-pfc and add support pwm duty zero
+Date: Mon,  8 Jul 2019 18:07:41 +0900
+Message-Id: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To: linus.walleij@linaro.org, geert+renesas@glider.be, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-KUnit is a new unit testing framework for the kernel and when used is
-built into the kernel as a part of it. Add KUnit to the root Kconfig and
-Makefile to allow it to be actually built.
+This patch series modifies pinctrl/sh-pfc and pwm drivers. Since the R-Car
+SoCs PWM Timer cannot output duty zero, the Salvator-X[S] board cannot
+output max_brightness. This patch series can support it.
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
----
- Kconfig  | 2 ++
- Makefile | 2 ++
- 2 files changed, 4 insertions(+)
+I'm not sure whether pinctrl subsystem and sh-pfc driver allows
+to change the pin configuration automatically by .gpio_disable_free(),
+so that I marked "RFC" on this patch series.
 
-diff --git a/Kconfig b/Kconfig
-index 48a80beab6853..10428501edb78 100644
---- a/Kconfig
-+++ b/Kconfig
-@@ -30,3 +30,5 @@ source "crypto/Kconfig"
- source "lib/Kconfig"
- 
- source "lib/Kconfig.debug"
-+
-+source "kunit/Kconfig"
-diff --git a/Makefile b/Makefile
-index 3e4868a6498b2..0ce1a8a2b6fec 100644
---- a/Makefile
-+++ b/Makefile
-@@ -993,6 +993,8 @@ PHONY += prepare0
- ifeq ($(KBUILD_EXTMOD),)
- core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
- 
-+core-$(CONFIG_KUNIT) += kunit/
-+
- vmlinux-dirs	:= $(patsubst %/,%,$(filter %/, $(init-y) $(init-m) \
- 		     $(core-y) $(core-m) $(drivers-y) $(drivers-m) \
- 		     $(net-y) $(net-m) $(libs-y) $(libs-m) $(virt-y)))
+< log file >
+ # cd /sys/class/backlight/backlight
+ # echo 1 > brightness
+ # cat /sys/kernel/debug/pinctrl/e60060000.pin-controller-sh-pfc/pinmux-pins |\
+   grep -w 71
+ pin 71 (GP_2_7): e6e31000.pwm (GPIO UNCLAIMED) function pwm1 group pwm1_a
+
+ # echo 6 > brightness
+ # cat /sys/kernel/debug/pinctrl/e60060000.pin-controller-sh-pfc/pinmux-pins |\
+   grep -w 71
+ pin 71 (GP_2_7): e6e31000.pwm e6052000.gpio:459 function pwm1 group pwm1_a
+
+ # echo 1 > brightness
+ # cat /sys/kernel/debug/pinctrl/e60060000.pin-controller-sh-pfc/pinmux-pins |\
+   grep -w 71
+ pin 71 (GP_2_7): e6e31000.pwm (GPIO UNCLAIMED) function pwm1 group pwm1_a
+
+
+Yoshihiro Shimoda (7):
+  pinctrl: sh-pfc: add new flags into struct sh_pfc_pin_config
+  pinctrl: sh-pfc: remove incomplete flag "cfg->type"
+  pinctrl: sh-pfc: Rollback to mux if requires when the gpio is freed
+  dt-bindings: pwm: rcar: Add specific gpios property to output duty
+    zero
+  pwm: rcar: remove a redundant condition in rcar_pwm_apply()
+  pwm: rcar: Add gpio support to output duty zero
+  arm64: dts: renesas: salvator-common: add gpio property into pwm1
+
+ .../devicetree/bindings/pwm/renesas,pwm-rcar.txt   |  3 ++
+ arch/arm64/boot/dts/renesas/salvator-common.dtsi   |  1 +
+ drivers/pinctrl/sh-pfc/pinctrl.c                   | 44 +++++++++++-----------
+ drivers/pwm/pwm-rcar.c                             | 36 +++++++++++++++++-
+ 4 files changed, 60 insertions(+), 24 deletions(-)
+
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.7.4
