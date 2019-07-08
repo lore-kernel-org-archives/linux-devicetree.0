@@ -1,32 +1,48 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] net: hisilicon: Add an tx_desc to adapt HI13X1_GMAC
-Date: Mon, 08 Jul 2019 11:18:33 -0700 (PDT)
-Message-ID: <20190708.111833.1002341757593028886.davem@davemloft.net>
-References: <1562307003-103516-1-git-send-email-xiaojiangfeng@huawei.com>
-        <20190707.221805.2104668553072088371.davem@davemloft.net>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 17/60] dt-bindings: Add legacy 'toppoly' vendor prefix
+Date: Mon, 8 Jul 2019 13:00:35 -0600
+Message-ID: <CAL_JsqLJy=UCeQ_Ex7tFh2OjtitNFVjT4v=PDZSbseva+ZrGDQ@mail.gmail.com>
+References: <20190707180852.5512-1-laurent.pinchart@ideasonboard.com>
+ <20190707181937.6250-1-laurent.pinchart@ideasonboard.com>
+ <20190707181937.6250-14-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190707.221805.2104668553072088371.davem@davemloft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: xiaojiangfeng@huawei.com
-Cc: yisen.zhuang@huawei.com, salil.mehta@huawei.com, dingtianhong@huawei.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leeyou.li@huawei.com, xiekunxun@huawei.com, jianping.liu@huawei.com, nixiaoming@huawei.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190707181937.6250-14-laurent.pinchart@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Sebastian Reichel <sebastian.reichel@collabora.com>, dri-devel <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sean Paul <sean@poorly.run>
 List-Id: devicetree@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
-Date: Sun, 07 Jul 2019 22:18:05 -0700 (PDT)
-
-> From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-> Date: Fri, 5 Jul 2019 14:10:03 +0800
-> 
->> HI13X1 changed the offsets and bitmaps for tx_desc
->> registers in the same peripheral device on different
->> models of the hip04_eth.
->> 
->> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-> 
-> Applied.
-
-Actually I didn't apply this because I can't see that HI13X1_GMAC
-kconfig knob anywhere in the tree at all.
+T24gU3VuLCBKdWwgNywgMjAxOSBhdCAxMjoyNSBQTSBMYXVyZW50IFBpbmNoYXJ0CjxsYXVyZW50
+LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+IHdyb3RlOgo+Cj4gVGhlICd0b3Bwb2x5JyB2ZW5k
+b3IgcHJlZml4IGlzIGluIHVzZSBhbmQgcmVmZXJzIHRvIFRQTywgd2hvc2UgRFQgdmVuZG9yCj4g
+cHJlZml4IGlzIGFscmVhZHkgZGVmaW5lZCBhcyAndHBvJy4gQWRkICd0b3Bwb2x5JyBhcyBhbiBh
+bHRlcm5hdGl2ZSBhbmQKPiBkb2N1bWVudCBpdCBhcyBsZWdhY3kuCj4KPiBTaWduZWQtb2ZmLWJ5
+OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cj4g
+LS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMu
+eWFtbCB8IDIgKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMu
+eWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMu
+eWFtbAo+IGluZGV4IDI1MTQ0NjNmMmM2My4uZDc4NTI3ZWI4MjU0IDEwMDY0NAo+IC0tLSBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMueWFtbAo+ICsr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMueWFt
+bAo+IEBAIC04NjcsNiArODY3LDggQEAgcGF0dGVyblByb3BlcnRpZXM6Cj4gICAgICBkZXNjcmlw
+dGlvbjogVGVjb24gTWljcm9wcm9jZXNzb3IgVGVjaG5vbG9naWVzLCBMTEMuCj4gICAgIl50b3Bl
+ZXQsLioiOgo+ICAgICAgZGVzY3JpcHRpb246IFRvcGVldAo+ICsgICJedG9wcG9seSwuKiI6Cj4g
+KyAgICBkZXNjcmlwdGlvbjogVFBPIChsZWdhY3kgcHJlZml4LCBzZWUgJ3RwbycpCgpBZGQgJ2Rl
+cHJlY2F0ZWQ6IHRydWUnIGFsc28uIFRoYXQncyBhIG5ldyBwcm9wZXJ0eSBpbiBqc29uLXNjaGVt
+YQpkcmFmdDguIEl0J3Mgbm90IHVzZWQgZm9yIGFueXRoaW5nIHlldCBvdGhlciB0aGFuIGRvY3Vt
+ZW50YXRpb24uCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVs
