@@ -1,91 +1,264 @@
-From: Josef Lusticky <josef@lusticky.cz>
-Subject: [PATCH v2 1/2] dt-bindings: panel: Add parallel RGB mode for Ilitek
- ILI9341 panels
-Date: Mon,  8 Jul 2019 16:56:17 +0200
-Message-ID: <20190708145618.26031-2-josef@lusticky.cz>
-References: <20190304125033.28841-1-josef@lusticky.cz>
- <20190708145618.26031-1-josef@lusticky.cz>
+From: Auger Eric <eric.auger@redhat.com>
+Subject: Re: [PATCH 5/8] iommu/arm-smmu-v3: Add second level of context
+ descriptor table
+Date: Mon, 8 Jul 2019 17:13:05 +0200
+Message-ID: <3e69caf7-4e8a-4bce-7a89-51e21a0134b1@redhat.com>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+ <20190610184714.6786-6-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190708145618.26031-1-josef@lusticky.cz>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: sam@ravnborg.org, robh@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: airlied@linux.ie, thierry.reding@gmail.com, Josef Lusticky <josef@lusticky.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190610184714.6786-6-jean-philippe.brucker@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, will.deacon@arm.com
+Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, robin.murphy@arm.com, jacob.jun.pan@linux.intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SUxJOTM0MSBzdXBwb3J0cyBib3RoIFNQSSBpbnB1dCBtb2RlIGFuZCBwYXJhbGxlbCBSR0IgaW5w
-dXQgbW9kZS4KVGhpcyBjb21taXQgYWRkcyBwYXJhbGxlbCBSR0IgaW5wdXQgbW9kZSBiaW5kaW5n
-cy4KClNpZ25lZC1vZmYtYnk6IEpvc2VmIEx1c3RpY2t5IDxqb3NlZkBsdXN0aWNreS5jej4KLS0t
-CiAuLi4vYmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxpOTM0MS50eHQgICAgICAgfCA2NyArKysr
-KysrKysrKysrKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwgNTYgaW5zZXJ0aW9ucygrKSwgMTEgZGVs
-ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEudHh0CmluZGV4IDE2OWIzMmU0ZWU0ZS4uNjI5
-ZjM4YTFkMGNkIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9pbGl0ZWssaWxpOTM0MS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEudHh0CkBAIC0xLDI3ICsxLDcyIEBACiBJ
-bGl0ZWsgSUxJOTM0MSBkaXNwbGF5IHBhbmVscwogCi1UaGlzIGJpbmRpbmcgaXMgZm9yIGRpc3Bs
-YXkgcGFuZWxzIHVzaW5nIGFuIElsaXRlayBJTEk5MzQxIGNvbnRyb2xsZXIgaW4gU1BJCi1tb2Rl
-LgorVGhpcyBiaW5kaW5nIGlzIGZvciBkaXNwbGF5IHBhbmVscyB1c2luZyBhbiBJbGl0ZWsgSUxJ
-OTM0MSBjb250cm9sbGVyLgorVGhlIGRpc3BsYXkgcGFuZWxzIGFyZSBzdXBwb3J0ZWQgaW4gdGhl
-IGZvbGxvd2luZyBncmFwaGljYWwgaW5wdXQgbW9kZXM6CistIFNQSSBpbnB1dCBtb2RlCisJTUlQ
-SS1EQkkgVHlwZSAzIE9wdGlvbiAxIG9yIE9wdGlvbiAzIGlzIHVzZWQgdG8gdHJhbnNmZXIKKwlj
-b21tYW5kcyBhbmQgZ3JhcGhpY2FsIGRhdGEKKy0gcGFyYWxsZWwgUkdCIGlucHV0IG1vZGUKKwlN
-SVBJLURCSSBUeXBlIDMgT3B0aW9uIDEgb3IgT3B0aW9uIDMgaXMgdXNlZCBmb3IgY29tbWFuZHMK
-KwlNSVBJLURQSSAxOC1iaXQgcGFyYWxsZWwgUkdCIGNvbm5lY3Rpb24gaXMgdXNlZCB0byB0cmFu
-c2ZlcgorCWdyYXBoaWNhbCBkYXRhCiAKLVJlcXVpcmVkIHByb3BlcnRpZXM6Ci0tIGNvbXBhdGli
-bGU6CSJhZGFmcnVpdCx5eDI0MHF2MjkiLCAiaWxpdGVrLGlsaTkzNDEiCi0tIGRjLWdwaW9zOglE
-L0MgcGluCi0tIHJlc2V0LWdwaW9zOglSZXNldCBwaW4KKworU1BJIGlucHV0IG1vZGU6CiAKIFRo
-ZSBub2RlIGZvciB0aGlzIGRyaXZlciBtdXN0IGJlIGEgY2hpbGQgbm9kZSBvZiBhIFNQSSBjb250
-cm9sbGVyLCBoZW5jZQotYWxsIG1hbmRhdG9yeSBwcm9wZXJ0aWVzIGRlc2NyaWJlZCBpbiAuLi9z
-cGkvc3BpLWJ1cy50eHQgbXVzdCBiZSBzcGVjaWZpZWQuCithbGwgbWFuZGF0b3J5IHByb3BlcnRp
-ZXMgZGVzY3JpYmVkIGluIHNwaS9zcGktYnVzLnR4dCBtdXN0IGJlIHNwZWNpZmllZC4KKworUmVx
-dWlyZWQgcHJvcGVydGllcyBpbiBTUEkgaW5wdXQgbW9kZToKKy0gY29tcGF0aWJsZTogICAiYWRh
-ZnJ1aXQseXgyNDBxdjI5IiwgImlsaXRlayxpbGk5MzQxIgorLSBiYWNrbGlnaHQ6ICAgIHBoYW5k
-bGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCisKK09wdGlv
-bmFsIHByb3BlcnRpZXMgaW4gU1BJIGlucHV0IG1vZGU6CistIHJvdGF0aW9uOiAgICAgcGFuZWwg
-cm90YXRpb24gaW4gZGVncmVlcyBjb3VudGVyIGNsb2Nrd2lzZSAoMCw5MCwxODAsMjcwKQorLSBk
-Yy1ncGlvczogICAgIEdQSU8gc3BlYyBmb3IgdGhlIEQvQyBwaW4sIHNlZSBncGlvL2dwaW8udHh0
-CistIHJlc2V0LWdwaW9zOiAgR1BJTyBzcGVjIGZvciB0aGUgcmVzZXQgcGluLCBzZWUgZ3Bpby9n
-cGlvLnR4dAorCisKK1BhcmFsbGVsIFJHQiBpbnB1dCBtb2RlOgorCitUaGUgbm9kZSBmb3IgdGhp
-cyBkcml2ZXIgbXVzdCBiZSBhIGNoaWxkIG5vZGUgb2YgYSBTUEkgY29udHJvbGxlciwgaGVuY2UK
-K2FsbCBtYW5kYXRvcnkgcHJvcGVydGllcyBkZXNjcmliZWQgaW4gc3BpL3NwaS1idXMudHh0IG11
-c3QgYmUgc3BlY2lmaWVkLgorCitSZXF1aXJlZCBwcm9wZXJ0aWVzIGluIHBhcmFsbGVsIFJHQiBp
-bnB1dCBtb2RlOgorLSBjb21wYXRpYmxlOiAgICJkaXNwbGF5dGVjaCxkdDAyNGN0ZnQiLCAiaWxp
-dGVrLGlsaTkzNDEiCistIGJhY2tsaWdodDogICAgcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRl
-dmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKKworT3B0aW9uYWwgcHJvcGVydGllcyBpbiBwYXJh
-bGxlbCBSR0IgaW5wdXQgbW9kZToKKy0gZGMtZ3Bpb3M6ICAgICBHUElPIHNwZWMgZm9yIHRoZSBE
-L0MgcGluLCBzZWUgZ3Bpby9ncGlvLnR4dAorLSByZXNldC1ncGlvczogIEdQSU8gc3BlYyBmb3Ig
-dGhlIHJlc2V0IHBpbiwgc2VlIGdwaW8vZ3Bpby50eHQKIAotT3B0aW9uYWwgcHJvcGVydGllczoK
-LS0gcm90YXRpb246CXBhbmVsIHJvdGF0aW9uIGluIGRlZ3JlZXMgY291bnRlciBjbG9ja3dpc2Ug
-KDAsOTAsMTgwLDI3MCkKLS0gYmFja2xpZ2h0OglwaGFuZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2
-aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAorSW4gcGFyYWxsZWwgUkdCIGlucHV0IG1vZGUsCit0
-aGUgZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdpdGggb25l
-IGNoaWxkCisnZW5kcG9pbnQnIG5vZGUsIGFjY29yZGluZyB0byB0aGUgYmluZGluZ3MgZGVmaW5l
-ZCBpbgorbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuIFRoaXMgbm9kZSBzaG91bGQgZGVzY3Jp
-YmUgcGFuZWwncyB2aWRlbyBidXMuCiAKLUV4YW1wbGU6CisKK0V4YW1wbGUgaW4gU1BJIGlucHV0
-IG1vZGU6CiAJZGlzcGxheUAwewogCQljb21wYXRpYmxlID0gImFkYWZydWl0LHl4MjQwcXYyOSIs
-ICJpbGl0ZWssaWxpOTM0MSI7CiAJCXJlZyA9IDwwPjsKIAkJc3BpLW1heC1mcmVxdWVuY3kgPSA8
-MzIwMDAwMDA+OwogCQlkYy1ncGlvcyA9IDwmZ3BpbzAgOSBHUElPX0FDVElWRV9ISUdIPjsKIAkJ
-cmVzZXQtZ3Bpb3MgPSA8JmdwaW8wIDggR1BJT19BQ1RJVkVfSElHSD47CisJCWJhY2tsaWdodCA9
-IDwmYmFja2xpZ2h0PjsKIAkJcm90YXRpb24gPSA8MjcwPjsKKwl9OworCitFeGFtcGxlIGluIHBh
-cmFsbGVsIFJHQiBpbnB1dCBtb2RlOgorCXBhbmVsQHsKKwkJY29tcGF0aWJsZSA9ICJkaXNwbGF5
-dGVjaCxkdDAyNGN0ZnQiLCAiaWxpdGVrLGlsaTkzNDEiOworCQlyZWcgPSA8MD47CisJCXNwaS1t
-YXgtZnJlcXVlbmN5ID0gPDMyMDAwMDAwPjsKKwkJZGMtZ3Bpb3MgPSA8JmdwaW8wIDkgR1BJT19B
-Q1RJVkVfSElHSD47CisJCXJlc2V0LWdwaW9zID0gPCZncGlvMCA4IEdQSU9fQUNUSVZFX0hJR0g+
-OwogCQliYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47CisJCXBvcnQgeworCQkJcGFuZWxfaW46IGVu
-ZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRpc3BsYXlfb3V0PjsKKwkJCX07CisJ
-CX07CiAJfTsKLS0gCjIuMjAuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVs
+Hi Jean,
+
+On 6/10/19 8:47 PM, Jean-Philippe Brucker wrote:
+> The SMMU can support up to 20 bits of SSID. Add a second level of page
+> tables to accommodate this. Devices that support more than 1024 SSIDs now
+> have a table of 1024 L1 entries (8kB), pointing to tables of 1024 context
+> descriptors (64kB), allocated on demand.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 136 +++++++++++++++++++++++++++++++++---
+>  1 file changed, 128 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index d90eb604b65d..326b71793336 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -216,6 +216,8 @@
+>  
+>  #define STRTAB_STE_0_S1FMT		GENMASK_ULL(5, 4)
+>  #define STRTAB_STE_0_S1FMT_LINEAR	0
+> +#define STRTAB_STE_0_S1FMT_4K_L2	1
+As you only use 64kB L2, I guess you can remove the 4K define?
+> +#define STRTAB_STE_0_S1FMT_64K_L2	2
+>  #define STRTAB_STE_0_S1CTXPTR_MASK	GENMASK_ULL(51, 6)
+>  #define STRTAB_STE_0_S1CDMAX		GENMASK_ULL(63, 59)
+>  
+> @@ -255,6 +257,18 @@
+>  
+>  #define STRTAB_STE_3_S2TTB_MASK		GENMASK_ULL(51, 4)
+>  
+> +/*
+> + * Linear: when less than 1024 SSIDs are supported
+> + * 2lvl: at most 1024 L1 entrie,
+entries
+> + *      1024 lazy entries per table.
+> + */
+> +#define CTXDESC_SPLIT			10
+> +#define CTXDESC_NUM_L2_ENTRIES		(1 << CTXDESC_SPLIT)
+> +
+> +#define CTXDESC_L1_DESC_DWORD		1
+> +#define CTXDESC_L1_DESC_VALID		1
+> +#define CTXDESC_L1_DESC_L2PTR_MASK	GENMASK_ULL(51, 12)
+> +
+>  /* Context descriptor (stage-1 only) */
+>  #define CTXDESC_CD_DWORDS		8
+>  #define CTXDESC_CD_0_TCR_T0SZ		GENMASK_ULL(5, 0)
+> @@ -530,7 +544,10 @@ struct arm_smmu_ctx_desc {
+>  struct arm_smmu_s1_cfg {
+>  	u8				s1fmt;
+>  	u8				s1cdmax;
+> -	struct arm_smmu_cd_table	table;
+> +	struct arm_smmu_cd_table	*tables;
+> +	size_t				num_tables;
+> +	__le64				*l1ptr;
+> +	dma_addr_t			l1ptr_dma;
+>  
+>  	/* Context descriptor 0, when substreams are disabled or s1dss = 0b10 */
+>  	struct arm_smmu_ctx_desc	cd;
+> @@ -1118,12 +1135,51 @@ static void arm_smmu_free_cd_leaf_table(struct arm_smmu_device *smmu,
+>  {
+>  	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
+>  
+> +	if (!table->ptr)
+> +		return;
+>  	dmam_free_coherent(smmu->dev, size, table->ptr, table->ptr_dma);
+>  }
+>  
+> -static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_s1_cfg *cfg, u32 ssid)
+> +static void arm_smmu_write_cd_l1_desc(__le64 *dst,
+> +				      struct arm_smmu_cd_table *table)
+>  {
+> -	return cfg->table.ptr + ssid * CTXDESC_CD_DWORDS;
+> +	u64 val = (table->ptr_dma & CTXDESC_L1_DESC_L2PTR_MASK) |
+> +		  CTXDESC_L1_DESC_VALID;
+> +
+> +	*dst = cpu_to_le64(val);
+> +}
+> +
+> +static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_domain *smmu_domain,
+> +				   u32 ssid)> +{
+> +	unsigned int idx;
+> +	struct arm_smmu_cd_table *table;
+> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
+> +	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+> +
+> +	if (cfg->s1fmt == STRTAB_STE_0_S1FMT_LINEAR) {
+> +		table = &cfg->tables[0];
+> +		idx = ssid;
+> +	} else {
+> +		idx = ssid >> CTXDESC_SPLIT;
+> +		if (idx >= cfg->num_tables)
+> +			return NULL;
+> +
+> +		table = &cfg->tables[idx];
+> +		if (!table->ptr) {
+> +			__le64 *l1ptr = cfg->l1ptr + idx * CTXDESC_L1_DESC_DWORD;
+> +
+> +			if (arm_smmu_alloc_cd_leaf_table(smmu, table,
+> +							 CTXDESC_NUM_L2_ENTRIES))
+> +				return NULL;
+> +
+> +			arm_smmu_write_cd_l1_desc(l1ptr, table);
+> +			/* An invalid L1 entry is allowed to be cached */
+> +			arm_smmu_sync_cd(smmu_domain, ssid, false);
+> +		}
+> +		idx = ssid & (CTXDESC_NUM_L2_ENTRIES - 1);
+> +	}
+> +	return table->ptr + idx * CTXDESC_CD_DWORDS;
+>  }
+>  
+>  static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
+> @@ -1149,7 +1205,7 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+>  	u64 val;
+>  	bool cd_live;
+>  	struct arm_smmu_device *smmu = smmu_domain->smmu;
+> -	__le64 *cdptr = arm_smmu_get_cd_ptr(&smmu_domain->s1_cfg, ssid);
+> +	__le64 *cdptr = arm_smmu_get_cd_ptr(smmu_domain, ssid);
+>  
+>  	/*
+>  	 * This function handles the following cases:
+> @@ -1213,20 +1269,81 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+>  static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain,
+>  				    struct arm_smmu_master *master)
+>  {
+> +	int ret;
+> +	size_t size = 0;
+> +	size_t max_contexts, num_leaf_entries;
+>  	struct arm_smmu_device *smmu = smmu_domain->smmu;
+>  	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+>  
+>  	cfg->s1fmt = STRTAB_STE_0_S1FMT_LINEAR;
+>  	cfg->s1cdmax = master->ssid_bits;
+> -	return arm_smmu_alloc_cd_leaf_table(smmu, &cfg->table, 1 << cfg->s1cdmax);
+> +
+> +	max_contexts = 1 << cfg->s1cdmax;
+> +	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB) ||
+> +	    max_contexts <= CTXDESC_NUM_L2_ENTRIES) {
+> +		cfg->s1fmt = STRTAB_STE_0_S1FMT_LINEAR;
+> +		cfg->num_tables = 1;
+> +		num_leaf_entries = max_contexts;
+> +	} else {
+> +		cfg->s1fmt = STRTAB_STE_0_S1FMT_64K_L2;
+> +		/*
+> +		 * SSID[S1CDmax-1:10] indexes 1st-level table, SSID[9:0] indexes
+> +		 * 2nd-level
+> +		 */
+> +		cfg->num_tables = max_contexts / CTXDESC_NUM_L2_ENTRIES;
+> +
+> +		size = cfg->num_tables * (CTXDESC_L1_DESC_DWORD << 3);
+> +		cfg->l1ptr = dmam_alloc_coherent(smmu->dev, size,
+> +						 &cfg->l1ptr_dma,
+> +						 GFP_KERNEL | __GFP_ZERO);
+> +		if (!cfg->l1ptr) {
+> +			dev_warn(smmu->dev, "failed to allocate L1 context table\n");
+> +			return -ENOMEM;
+> +		}
+> +
+> +		num_leaf_entries = CTXDESC_NUM_L2_ENTRIES;
+> +	}
+> +
+> +	cfg->tables = devm_kzalloc(smmu->dev, sizeof(struct arm_smmu_cd_table) *
+> +				   cfg->num_tables, GFP_KERNEL);
+> +	if (!cfg->tables)
+> +		return -ENOMEM;
+goto err_free_l1
+> +
+> +	ret = arm_smmu_alloc_cd_leaf_table(smmu, &cfg->tables[0], num_leaf_entries);
+don't you want to do that only in linear case. In 2-level mode, I
+understand arm_smmu_get_cd_ptr() will do the job.
+
+> +	if (ret)
+> +		goto err_free_l1;
+> +
+> +	if (cfg->l1ptr)
+> +		arm_smmu_write_cd_l1_desc(cfg->l1ptr, &cfg->tables[0]);
+that stuff could be removed as well? By the way I can see that
+arm_smmu_get_cd_ptr() does a arm_smmu_sync_cd after. wouldn't it be
+needed here as well?
+> +
+> +	return 0;
+> +
+> +err_free_l1:
+> +	if (cfg->l1ptr)
+> +		dmam_free_coherent(smmu->dev, size, cfg->l1ptr, cfg->l1ptr_dma);
+> +	devm_kfree(smmu->dev, cfg->tables);
+> +	return ret;
+>  }
+>  
+>  static void arm_smmu_free_cd_tables(struct arm_smmu_domain *smmu_domain)
+>  {
+> +	int i;
+>  	struct arm_smmu_device *smmu = smmu_domain->smmu;
+>  	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+> +	size_t num_leaf_entries = 1 << cfg->s1cdmax;
+> +	struct arm_smmu_cd_table *table = cfg->tables;
+> +
+> +	if (cfg->l1ptr) {
+> +		size_t size = cfg->num_tables * (CTXDESC_L1_DESC_DWORD << 3);
+>  
+> -	arm_smmu_free_cd_leaf_table(smmu, &cfg->table, 1 << cfg->s1cdmax);
+> +		dmam_free_coherent(smmu->dev, size, cfg->l1ptr,
+> +				   cfg->l1ptr_dma);
+> +		num_leaf_entries = CTXDESC_NUM_L2_ENTRIES;
+> +	}
+> +
+> +	for (i = 0; i < cfg->num_tables; i++, table++)
+> +		arm_smmu_free_cd_leaf_table(smmu, table, num_leaf_entries);
+> +	devm_kfree(smmu->dev, cfg->tables);
+>  }
+>  
+>  /* Stream table manipulation functions */
+> @@ -1346,6 +1463,9 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
+>  	}
+>  
+>  	if (s1_cfg) {
+> +		dma_addr_t ptr_dma = s1_cfg->l1ptr ? s1_cfg->l1ptr_dma :
+> +			             s1_cfg->tables[0].ptr_dma;
+> +
+>  		BUG_ON(ste_live);
+>  		dst[1] = cpu_to_le64(
+>  			 FIELD_PREP(STRTAB_STE_1_S1DSS, STRTAB_STE_1_S1DSS_SSID0) |
+> @@ -1358,7 +1478,7 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
+>  		   !(smmu->features & ARM_SMMU_FEAT_STALL_FORCE))
+>  			dst[1] |= cpu_to_le64(STRTAB_STE_1_S1STALLD);
+>  
+> -		val |= (s1_cfg->table.ptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
+> +		val |= (ptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
+>  			FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_S1_TRANS) |
+>  			FIELD_PREP(STRTAB_STE_0_S1CDMAX, s1_cfg->s1cdmax) |
+>  			FIELD_PREP(STRTAB_STE_0_S1FMT, s1_cfg->s1fmt);
+> @@ -1815,7 +1935,7 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
+>  	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
+>  		struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+>  
+> -		if (cfg->table.ptr) {
+> +		if (cfg->tables) {
+>  			arm_smmu_free_cd_tables(smmu_domain);
+>  			arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
+I don't get why the arm_smmu_bitmap_free is dependent on cfg->tables.
+
+Thanks
+
+Eric
+>  		}
+> 
