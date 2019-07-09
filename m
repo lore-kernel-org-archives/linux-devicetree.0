@@ -1,62 +1,101 @@
-From: =?big5?B?R2VvcmdlIEh1bmcgKKx4qb63cSk=?= <George.Hung@quantatw.com>
-Subject: RE: [PATCH 5.2 v2 2/2] dt-binding: edac: add NPCM ECC documentation
-Date: Tue, 9 Jul 2019 09:48:59 +0000
-Message-ID: <0c90f9376c0e425c9a226379f7e5bfad@quantatw.com>
-References: <20190605141253.38554-1-ghung.quanta@gmail.com>
- <20190605141253.38554-2-ghung.quanta@gmail.com>
- <20190709014058.GA30269@bogus>
+From: Luis de Oliveira <Luis.Oliveira@synopsys.com>
+Subject: RE: [PATCH V2 2/2] dt-bindings: Document the DesignWare IP reset
+ bindings
+Date: Tue, 9 Jul 2019 10:33:18 +0000
+Message-ID: <MN2PR12MB371095ABA70D43398ABF982CCBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
+References: <1559835388-2578-1-git-send-email-luis.oliveira@synopsys.com>
+ <1559835388-2578-3-git-send-email-luis.oliveira@synopsys.com>
+ <20190709015220.GA18239@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190709014058.GA30269@bogus>
-Content-Language: zh-TW
+In-Reply-To: <20190709015220.GA18239@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, George Hung <ghung.quanta@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Tali Perry <tali.perry1@gmail.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "wak@google.com" <wak@google.com>, "benjaminfair@google.com" <benjaminfair@google.com>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, "tomer.maimon@nuvoton.com" <tomer.maimon@nuvoton.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Avi.Fishman@nuvoton.com" <Avi.Fishman@nuvoton.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-edac <linux-edac@vger.kernel.org>, Patrick Venture <venture@google.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>, Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc: "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogb3BlbmJt
-Yw0KPiBbbWFpbHRvOm9wZW5ibWMtYm91bmNlcytnZW9yZ2UuaHVuZz1xdWFudGF0dy5jb21AbGlz
-dHMub3psYWJzLm9yZ10gT24NCj4gQmVoYWxmIE9mIFJvYiBIZXJyaW5nDQo+IFNlbnQ6IFR1ZXNk
-YXksIEp1bHkgMDksIDIwMTkgOTo0MSBBTQ0KPiBUbzogR2VvcmdlIEh1bmcNCj4gQ2M6IE1hcmsg
-UnV0bGFuZDsgTGludXMgV2FsbGVpajsgVGFsaSBQZXJyeTsgcGF1bG1ja0BsaW51eC5pYm0uY29t
-Ow0KPiB3YWtAZ29vZ2xlLmNvbTsgYmVuamFtaW5mYWlyQGdvb2dsZS5jb207IG9wZW5ibWNAbGlz
-dHMub3psYWJzLm9yZzsNCj4gdG9tZXIubWFpbW9uQG51dm90b24uY29tOyBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZzsgQm9yaXNsYXYgUGV0a292Ow0KPiBBdmkuRmlzaG1hbkBudXZvdG9uLmNv
-bTsgSm9uYXRoYW4gQ2FtZXJvbjsgTWF1cm8gQ2FydmFsaG8gQ2hlaGFiOw0KPiBsaW51eC1lZGFj
-OyBQYXRyaWNrIFZlbnR1cmU7IE5pY29sYXMgRmVycmU7IGxpbnV4LWtlcm5lbDsgSmFtZXMgTW9y
-c2U7IEdyZWcNCj4gS3JvYWgtSGFydG1hbjsgZGF2ZW1AZGF2ZW1sb2Z0Lm5ldA0KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIDUuMiB2MiAyLzJdIGR0LWJpbmRpbmc6IGVkYWM6IGFkZCBOUENNIEVDQw0K
-PiBkb2N1bWVudGF0aW9uDQo+IA0KPiBPbiBXZWQsIEp1biAwNSwgMjAxOSBhdCAxMDoxMjo1M1BN
-ICswODAwLCBHZW9yZ2UgSHVuZyB3cm90ZToNCj4gPiBBZGQgZGV2aWNlIHRyZWUgZG9jdW1lbnRh
-dGlvbiBmb3IgTnV2b3RvbiBCTUMgRUNDDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBHZW9yZ2Ug
-SHVuZyA8Z2h1bmcucXVhbnRhQGdtYWlsLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2JpbmRpbmdz
-L2VkYWMvbnBjbTd4eC1zZHJhbS1lZGFjLnR4dCAgICAgICAgfCAxNw0KPiArKysrKysrKysrKysr
-KysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9u
-cGNtN3h4LXNkcmFtLWVkYWMudHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9ucGNtN3h4LXNkcmFtLWVkYWMudHh0DQo+
-ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9ucGNtN3h4LXNkcmFt
-LWVkYWMudHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAw
-MDAuLmRkNGRhYzU5YTViZA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9ucGNtN3h4LXNkcmFtLWVkYWMudHh0DQo+ID4g
-QEAgLTAsMCArMSwxNyBAQA0KPiA+ICtOdXZvdG9uIE5QQ003eHggU29DIEVEQUMgZGV2aWNlIGRy
-aXZlcg0KPiA+ICsNCj4gPiArVGhlIE51dm90b24gTlBDTTd4eCBTb0Mgc3VwcG9ydHMgRERSNCBt
-ZW1vcnkgd2l0aC93aXRob3V0IEVDQyBhbmQNCj4gdGhlDQo+ID4gK2RyaXZlciB1c2VzIHRoZSBF
-REFDIGZyYW1ld29yayB0byBpbXBsZW1lbnQgdGhlIEVDQyBkZXRlY3Rpb24gYW5kDQo+IGNvcnJ0
-ZWN0aW9uLg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21wYXRp
-YmxlOglzaG91bGQgYmUgIm51dm90b24sbnBjbTd4eC1zZHJhbS1lZGFjIg0KPiANCj4gSXMgdGhp
-cyBmb3IgdGhlIHdob2xlIFNEUkFNIGNvbnRyb2xsZXIgb3IganVzdCBFQ0MgcmVsYXRlZCByZWdp
-c3RlcnM/DQo+IEluIHRoZSBmb3JtZXIgY2FzZSwgdGhlIG5hbWluZyBzaG91bGQganVzdCByZWZs
-ZWN0IHRoZSBibG9jayBuYW1lIGFuZCBub3QgYQ0KPiBMaW51eCB0ZXJtLg0KDQpTb3JyeSBmb3Ig
-Y29uZnVzZWQgbmFtaW5nLCB0aGUgYWRkcmVzcyBzcGFjZSBpcyBmb3IgdGhlIHdob2xlIG1lbW9y
-eSBjb250cm9sbGVyIHJlZ2lzdGVycyBpbmRlZWQsDQpidXQgdGhlIGRyaXZlciBvbmx5IHVzZXMg
-dGhlIEVDQyByZWxhdGVkIHJlZ2lzdGVycy4NClNob3VsZCBJIGNoYW5nZSB0aGUgbmFtZSB0byAi
-bnV2b3RvbixucGNtN3h4LWVkYWMiID8NCg0KPiANCj4gPiArLSByZWc6CQlNZW1vcnkgY29udHJv
-bGxlciByZWdpc3RlciBzZXQgc2hvdWxkIGJlIDwweGYwODI0MDAwDQo+IDB4MTAwMD4NCj4gPiAr
-LSBpbnRlcnJ1cHRzOglzaG91bGQgYmUgTUMgaW50ZXJydXB0ICMyNQ0KPiA+ICsNCj4gPiArRXhh
-bXBsZToNCj4gPiArDQo+ID4gKwltYzogbWVtb3J5LWNvbnRyb2xsZXJAZjA4MjQwMDAgew0KPiA+
-ICsJCWNvbXBhdGlibGUgPSAibnV2b3RvbixucGNtN3h4LXNkcmFtLWVkYWMiOw0KPiA+ICsJCXJl
-ZyA9IDwweGYwODI0MDAwIDB4MTAwMD47DQo+ID4gKwkJaW50ZXJydXB0cyA9IDwwIDI1IDQ+Ow0K
-PiA+ICsJfTsNCj4gPiAtLQ0KPiA+IDIuMjEuMA0KPiA+DQo=
+Hi Rob,
+
+Thank you for the comments,
+
+From: Rob Herring <robh@kernel.org>
+Date: Tue, Jul 09, 2019 at 02:52:20
+
+> On Thu, Jun 06, 2019 at 05:36:28PM +0200, Luis Oliveira wrote:
+> > This adds documentation of device tree bindings for the
+> > DesignWare IP reset controller.
+> >=20
+> > Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
+> > ---
+> > Changelog
+> > - Add active low configuration example
+> > - Fix compatible string in the active high example
+> >=20
+> >  .../devicetree/bindings/reset/snps,dw-reset.txt    | 30 ++++++++++++++=
+++++++++
+> >  1 file changed, 30 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/reset/snps,dw-res=
+et.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/reset/snps,dw-reset.txt =
+b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
+> > new file mode 100644
+> > index 0000000..85f3301
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
+> > @@ -0,0 +1,30 @@
+> > +Synopsys DesignWare Reset controller
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +Please also refer to reset.txt in this directory for common reset
+> > +controller binding usage.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible: should be one of the following.
+> > +	"snps,dw-high-reset" - for active high configuration
+> > +	"snps,dw-low-reset" - for active low configuration
+>=20
+> This is really a standalone block?
+>=20
+> Are there versions of IP?
+>=20
+
+We use this block because is is very simple. The Verilog is autogenerated=20
+after an simple input configuration (APB config, reset pin number, active=20
+high/low, etc) so it does not need versioning.
+We use it in almost all our testchips and prototyping, and it is a=20
+standalone block.
+
+> > +
+> > +- reg: physical base address of the controller and length of memory ma=
+pped
+> > +	region.
+> > +
+> > +- #reset-cells: must be 1.
+> > +
+> > +example:
+> > +
+> > +	dw_rst_1: reset-controller@0000 {
+> > +		  compatible =3D "snps,dw-high-reset";
+> > +	 	  reg =3D <0x0000 0x4>;
+> > +		  #reset-cells =3D <1>;
+> > +	};
+> > +
+> > +	dw_rst_2: reset-controller@1000 {i
+> > +		  compatible =3D "snps,dw-low-reset";
+> > +		  reg =3D <0x1000 0x8>;
+> > +		  #reset-cells =3D <1>;
+> > +	};
+> > --=20
+> > 2.7.4
+> >=20
+
+Thank you Rob,
+
+Luis
