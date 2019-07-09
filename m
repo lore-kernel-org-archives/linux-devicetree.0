@@ -1,14 +1,11 @@
 From: Stefan Riedmueller <s.riedmueller@phytec.de>
-Subject: [PATCH 01/10] ARM: dts: imx6ul: phyboard-segin: Rename dts to PHYTEC
- name scheme
-Date: Tue, 9 Jul 2019 09:19:18 +0200
-Message-ID: <1562656767-273566-2-git-send-email-s.riedmueller@phytec.de>
-References: <1562656767-273566-1-git-send-email-s.riedmueller@phytec.de>
+Subject: [PATCH 00/10] Add further support for PHYTEC phyBOARD-Segin
+Date: Tue, 9 Jul 2019 09:19:17 +0200
+Message-ID: <1562656767-273566-1-git-send-email-s.riedmueller@phytec.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1562656767-273566-1-git-send-email-s.riedmueller@phytec.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,97 +19,50 @@ To: shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org, mark.rutlan
 Cc: devicetree@vger.kernel.org, martyn.welch@collabora.com, linux-kernel@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use the same name scheme for the phyBOARD-Segin and the phyCORE-i.MX
-6UL as is used for the PHYTEC phyBOARD-Mira and phyCORE-i.MX 6.
+This patchstack adjusts the already existing naming for the PHYTEC
+phyBOARD-Segin to the PHYTEC naming scheme that is already used with the
+phyCORE-i.MX 6 and the phyBOARD-Mira.
 
-This is only a cosmetic change and there is no functional change
-intended.
+Furthermore it introduces some small fixes and adds support for the PHYTEC
+phyCORE-i.MX 6ULL which also comes with the phyBORAD-Segin. It comes in a
+full featured option with either NAND flash or eMMC and a low cost option
+only with NAND flash.
 
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
----
- arch/arm/boot/dts/Makefile                                        | 2 +-
- .../{imx6ul-phytec-pcl063.dtsi => imx6ul-phytec-phycore-som.dtsi} | 2 +-
- ...tec-phyboard-segin-full.dts => imx6ul-phytec-segin-ff-rdk.dts} | 8 ++++----
- ...ytec-peb-eval-01.dtsi => imx6ul-phytec-segin-peb-eval-01.dtsi} | 0
- ...imx6ul-phytec-phyboard-segin.dtsi => imx6ul-phytec-segin.dtsi} | 2 +-
- 5 files changed, 7 insertions(+), 7 deletions(-)
- rename arch/arm/boot/dts/{imx6ul-phytec-pcl063.dtsi => imx6ul-phytec-phycore-som.dtsi} (98%)
- rename arch/arm/boot/dts/{imx6ul-phytec-phyboard-segin-full.dts => imx6ul-phytec-segin-ff-rdk.dts} (84%)
- rename arch/arm/boot/dts/{imx6ul-phytec-peb-eval-01.dtsi => imx6ul-phytec-segin-peb-eval-01.dtsi} (100%)
- rename arch/arm/boot/dts/{imx6ul-phytec-phyboard-segin.dtsi => imx6ul-phytec-segin.dtsi} (99%)
+Stefan Riedmueller (10):
+  ARM: dts: imx6ul: phyboard-segin: Rename dts to PHYTEC name scheme
+  ARM: dts: imx6ul: segin: Add boot media to dts filename
+  ARM: dts: imx6ul: segin: Reduce eth drive strength
+  ARM: dts: imx6ul: segin: Fix LED naming for phyCORE and PEB-EVAL-01
+  ARM: dts: imx6ul: segin: Make FEC and ethphy configurable in dts
+  ARM: dts: imx6ul: segin: Only enable NAND if it is populated
+  ARM: dts: imx6ul: phycore: Add eMMC at usdhc2
+  ARM: dts: imx6ul: segin: Move ECSPI interface to board include file
+  ARM: dts: imx6ul: segin: Move machine include to dts files
+  ARM: dts: imx6ull: Add support for PHYTEC phyBOARD-Segin with i.MX
+    6ULL
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index dab2914fa293..e1924b06f3cb 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -573,7 +573,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-opos6uldev.dtb \
- 	imx6ul-pico-hobbit.dtb \
- 	imx6ul-pico-pi.dtb \
--	imx6ul-phytec-phyboard-segin-full.dtb \
-+	imx6ul-phytec-segin-ff-rdk.dtb \
- 	imx6ul-tx6ul-0010.dtb \
- 	imx6ul-tx6ul-0011.dtb \
- 	imx6ul-tx6ul-mainboard.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-phytec-pcl063.dtsi b/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi
-similarity index 98%
-rename from arch/arm/boot/dts/imx6ul-phytec-pcl063.dtsi
-rename to arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi
-index fc2997449b49..bff13d0eb064 100644
---- a/arch/arm/boot/dts/imx6ul-phytec-pcl063.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi
-@@ -10,7 +10,7 @@
- #include "imx6ul.dtsi"
- 
- / {
--	model = "Phytec phyCORE i.MX6 UltraLite";
-+	model = "PHYTEC phyCORE-i.MX6 UltraLite";
- 	compatible = "phytec,imx6ul-pcl063", "fsl,imx6ul";
- 
- 	chosen {
-diff --git a/arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts b/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk.dts
-similarity index 84%
-rename from arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts
-rename to arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk.dts
-index b6a1407a9d44..1e59183a2f7c 100644
---- a/arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts
-+++ b/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk.dts
-@@ -5,12 +5,12 @@
-  */
- 
- /dts-v1/;
--#include "imx6ul-phytec-pcl063.dtsi"
--#include "imx6ul-phytec-phyboard-segin.dtsi"
--#include "imx6ul-phytec-peb-eval-01.dtsi"
-+#include "imx6ul-phytec-phycore-som.dtsi"
-+#include "imx6ul-phytec-segin.dtsi"
-+#include "imx6ul-phytec-segin-peb-eval-01.dtsi"
- 
- / {
--	model = "Phytec phyBOARD-Segin i.MX6 UltraLite Full Featured";
-+	model = "PHYTEC phyBOARD-Segin i.MX6 UltraLite Full Featured";
- 	compatible = "phytec,imx6ul-pbacd10", "phytec,imx6ul-pcl063", "fsl,imx6ul";
- };
- 
-diff --git a/arch/arm/boot/dts/imx6ul-phytec-peb-eval-01.dtsi b/arch/arm/boot/dts/imx6ul-phytec-segin-peb-eval-01.dtsi
-similarity index 100%
-rename from arch/arm/boot/dts/imx6ul-phytec-peb-eval-01.dtsi
-rename to arch/arm/boot/dts/imx6ul-phytec-segin-peb-eval-01.dtsi
-diff --git a/arch/arm/boot/dts/imx6ul-phytec-phyboard-segin.dtsi b/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi
-similarity index 99%
-rename from arch/arm/boot/dts/imx6ul-phytec-phyboard-segin.dtsi
-rename to arch/arm/boot/dts/imx6ul-phytec-segin.dtsi
-index 7bf439a77d2c..78425c3290a1 100644
---- a/arch/arm/boot/dts/imx6ul-phytec-phyboard-segin.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi
-@@ -5,7 +5,7 @@
-  */
- 
- / {
--	model = "Phytec phyBOARD-Segin i.MX6 UltraLite";
-+	model = "PHYTEC phyBOARD-Segin i.MX6 UltraLite";
- 	compatible = "phytec,imx6ul-pbacd-10", "phytec,imx6ul-pcl063", "fsl,imx6ul";
- 
- 	aliases {
+ arch/arm/boot/dts/Makefile                         |  5 +-
+ ...-pcl063.dtsi => imx6ul-phytec-phycore-som.dtsi} | 51 ++++++++----
+ ...ull.dts => imx6ul-phytec-segin-ff-rdk-nand.dts} | 42 +++++-----
+ ...1.dtsi => imx6ul-phytec-segin-peb-eval-01.dtsi} | 16 ++--
+ ...hyboard-segin.dtsi => imx6ul-phytec-segin.dtsi} | 31 ++++++--
+ arch/arm/boot/dts/imx6ull-phytec-phycore-som.dtsi  | 24 ++++++
+ .../boot/dts/imx6ull-phytec-segin-ff-rdk-emmc.dts  | 93 ++++++++++++++++++++++
+ .../boot/dts/imx6ull-phytec-segin-ff-rdk-nand.dts  | 93 ++++++++++++++++++++++
+ .../boot/dts/imx6ull-phytec-segin-lc-rdk-nand.dts  | 45 +++++++++++
+ .../boot/dts/imx6ull-phytec-segin-peb-eval-01.dtsi | 19 +++++
+ arch/arm/boot/dts/imx6ull-phytec-segin.dtsi        | 38 +++++++++
+ 11 files changed, 409 insertions(+), 48 deletions(-)
+ rename arch/arm/boot/dts/{imx6ul-phytec-pcl063.dtsi => imx6ul-phytec-phycore-som.dtsi} (72%)
+ rename arch/arm/boot/dts/{imx6ul-phytec-phyboard-segin-full.dts => imx6ul-phytec-segin-ff-rdk-nand.dts} (51%)
+ rename arch/arm/boot/dts/{imx6ul-phytec-peb-eval-01.dtsi => imx6ul-phytec-segin-peb-eval-01.dtsi} (84%)
+ rename arch/arm/boot/dts/{imx6ul-phytec-phyboard-segin.dtsi => imx6ul-phytec-segin.dtsi} (91%)
+ create mode 100644 arch/arm/boot/dts/imx6ull-phytec-phycore-som.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6ull-phytec-segin-ff-rdk-emmc.dts
+ create mode 100644 arch/arm/boot/dts/imx6ull-phytec-segin-ff-rdk-nand.dts
+ create mode 100644 arch/arm/boot/dts/imx6ull-phytec-segin-lc-rdk-nand.dts
+ create mode 100644 arch/arm/boot/dts/imx6ull-phytec-segin-peb-eval-01.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6ull-phytec-segin.dtsi
+
 -- 
 2.7.4
