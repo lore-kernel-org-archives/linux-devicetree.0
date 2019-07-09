@@ -1,70 +1,125 @@
-From: Luis de Oliveira <Luis.Oliveira@synopsys.com>
-Subject: RE: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
- Host
-Date: Tue, 9 Jul 2019 17:08:51 +0000
-Message-ID: <MN2PR12MB3710465D7065DAF1F2D45C45CBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
-References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
- <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
- <ae0ffeca-9305-b5a2-3480-da623d15ce67@microchip.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH] dt-bindings: arm: Convert RDA Micro board/soc bindings
+ to json-schema
+Date: Tue, 9 Jul 2019 22:45:08 +0530
+Message-ID: <20190709171508.GA10127@Mani-XPS-13-9360>
+References: <20190618212229.32302-4-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ae0ffeca-9305-b5a2-3480-da623d15ce67@microchip.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>, "Luis.Oliveira@synopsys.com" <Luis.Oliveira@synopsys.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kishon@ti.com" <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190618212229.32302-4-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRXVnZW4sDQoNCg0KRnJvbTogRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIDxFdWdlbi5I
-cmlzdGV2QG1pY3JvY2hpcC5jb20+DQpEYXRlOiBUdWUsIEp1bCAwOSwgMjAxOSBhdCAxNTozMzo1
-MA0KDQo+IA0KPiANCj4gT24gMTEuMDYuMjAxOSAyMjoyMCwgTHVpcyBPbGl2ZWlyYSB3cm90ZToN
-Cj4gPiBGcm9tOiBMdWlzIE9saXZlaXJhIDxsb2xpdmVpQHN5bm9wc3lzLmNvbT4NCj4gPiANCj4g
-PiBBZGQgYmluZGluZ3MgZm9yIFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSSBDU0ktMiBob3N0Lg0K
-PiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEx1aXMgT2xpdmVpcmEgPGxvbGl2ZWlAc3lub3BzeXMu
-Y29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZWxvZw0KPiA+IHYzLXY0DQo+ID4gLSByZW1vdmUgInBs
-YXQiIGZyb20gdGhlIGJsb2NrIG5hbWUgQHJvYiBAbGF1cmVudA0KPiA+IC0gcmVtb3ZlICJwaHkt
-bmFtZXMiIHdoZW4gc2luZ2xlLWVudHJ5IEByb2INCj4gPiAtIHJlbW92ZSAic25wcyxvdXRwdXQt
-dHlwZSIgLT4gd2VudCB0byB0aGUgZHJpdmVyIGNvbmZpZyBAbGF1cmVudA0KPiA+IA0KPiA+ICAg
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvc25wcyxkdy1jc2kudHh0ICAgICAgfCA0MSAr
-KysrKysrKysrKysrKysrKysrKysrDQo+ID4gICAxIGZpbGUgY2hhbmdlZCwgNDEgaW5zZXJ0aW9u
-cygrKQ0KPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS50eHQNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3NucHMsZHctY3NpLnR4dCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS50eHQNCj4g
-PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjYxM2I3ZjkNCj4gPiAt
-LS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L21lZGlhL3NucHMsZHctY3NpLnR4dA0KPiA+IEBAIC0wLDAgKzEsNDEgQEANCj4gPiArU3lub3Bz
-eXMgRGVzaWduV2FyZSBDU0ktMiBIb3N0IGNvbnRyb2xsZXINCj4gPiArDQo+ID4gK0Rlc2NyaXB0
-aW9uDQo+ID4gKy0tLS0tLS0tLS0tDQo+ID4gKw0KPiA+ICtUaGlzIEhXIGJsb2NrIGlzIHVzZWQg
-dG8gcmVjZWl2ZSBpbWFnZSBjb21pbmcgZnJvbSBhbiBNSVBJIENTSS0yIGNvbXBhdGlibGUNCj4g
-PiArY2FtZXJhLg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21w
-YXRpYmxlCQk6IHNoYWxsIGJlICJzbnBzLGR3LWNzaSINCj4gPiArLSByZWcJCQk6IHBoeXNpY2Fs
-IGJhc2UgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgZGV2aWNlIG1lbW9yeQ0KPiA+ICsJCQkgIG1h
-cHBlZCByZWdpc3RlcnM7DQo+ID4gKy0gaW50ZXJydXB0cwkJOiBEVyBDU0ktMiBIb3N0IGludGVy
-cnVwdHMNCj4gPiArLSBwaHlzCQkJOiBMaXN0IG9mIG9uZSBQSFkgc3BlY2lmaWVyIChhcyBkZWZp
-bmVkIGluDQo+ID4gKwkJCSAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9w
-aHktYmluZGluZ3MudHh0KS4NCj4gPiArCQkJICBUaGlzIFBIWSBpcyBhIE1JUEkgRFBIWSB3b3Jr
-aW5nIGluIFJYIG1vZGUuDQo+ID4gKy0gcmVzZXRzCQk6IFJlZmVyZW5jZSB0byBhIHJlc2V0IGNv
-bnRyb2xsZXIgKG9wdGlvbmFsKQ0KPiA+ICsNCj4gPiArVGhlIHBlci1ib2FyZCBzZXR0aW5nczoN
-Cj4gPiArIC0gcG9ydCBzdWItbm9kZSBkZXNjcmliaW5nIGEgc2luZ2xlIGVuZHBvaW50IGNvbm5l
-Y3RlZCB0byB0aGUgY2FtZXJhIGFzDQo+ID4gKyAgIGRlc2NyaWJlZCBpbiB2aWRlby1pbnRlcmZh
-Y2VzLnR4dFsxXS4NCj4gPiArDQo+ID4gK0V4YW1wbGU6DQo+ID4gKw0KPiA+ICsJY3NpMjogY3Np
-MkAzMDAwIHsNCj4gPiArCQljb21wYXRpYmxlID0gInNucHMsZHctY3NpIjsNCj4gPiArCQkjYWRk
-cmVzcy1jZWxscyA9IDwxPjsNCj4gPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiArCQlyZWcg
-PSA8IDB4MDMwMDAgMHg3RkY+Ow0KPiA+ICsJCXBoeXMgPSA8Jm1pcGlfZHBoeV9yeD47DQo+ID4g
-KwkJcmVzZXRzID0gPCZkd19yc3QgMT47DQo+ID4gKwkJaW50ZXJydXB0cyA9IDwyPjsNCj4gPiAr
-DQo+ID4gKwkJcG9ydEAwIHsNCj4gPiArCQkJcmVnID0gPDA+Ow0KPiA+ICsJCQljc2lfZXAxOiBl
-bmRwb2ludCB7DQo+ID4gKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmNhbWVyYV8xPjsNCj4gPiAr
-CQkJCWRhdGEtbGFuZXMgPSA8MSAyPjsNCj4gPiArCQkJfTsNCj4gDQo+IEhlbGxvIEx1aXMsDQo+
-IA0KPiBXaGljaCBpcyB0aGUgb3V0cHV0IHBvcnQgKGVuZHBvaW50KSA6IGhvdyB0byBjb25uZWN0
-IHRoZSBvdXRwdXQgb2YgDQo+IGNzaTJob3N0IHRvIGFub3RoZXIgbm9kZSA/DQo+IEkgbWVhbiwg
-dGhlIHNlY29uZCBwb3J0IG9mIHRoaXMgYmxvY2ssIG9yLCBob3cgaXMgdGhlIGRhdGEgdGFrZW4g
-ZnJvbSANCj4gY3NpMmhvc3QgPw0KPiANCg0KSSB1bmRlcnN0YW5kIHlvdXIgcXVlc3Rpb24sIEkg
-dGhpbmsgeW91IGd1ZXNzZWQgdGhpcyBpcyBub3QgdGhlIGNvbXBsZXRlIA0KcGlwZWxpbmUgKEkg
-aGF2ZSBhIHRvcCBkcml2ZXIgdGhhdCBpbnRlcmFjdHMgd2l0aCB0aGlzIG9uZSkuDQpJIHdhcyBu
-b3QgcGxhbm5pbmcgdG8gc3VibWl0IGl0LCBkbyB5b3UgdGhpbmsgSSBzaG91bGQ/DQoNClRoZSBi
-ZWhhdmlvciBpcyB2ZXJ5IHNpbWlsYXIgd2l0aCB0aGlzIG9uZSANCi4vZHJpdmVycy9tZWRpYS9w
-bGF0Zm9ybS9leHlub3M0LWlzL21lZGlhLWRldi5jDQoNCg0KPiBUaGFua3MsDQo+IA0KPiBFdWdl
-bg0KPiANCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4gPiANCg0KVGhhbmtzLA0KTHVpcw0K
+Hi Rob,
+
+On Tue, Jun 18, 2019 at 03:22:28PM -0600, Rob Herring wrote:
+> Convert RDA Micro SoC bindings to DT schema format using json-schema.
+> =
+
+> Cc: "Andreas F=E4rber" <afaerber@suse.de>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Andreas, Update the license on this one too to dual licensed if you =
+
+> want.
+
+I'm fine with GPL-2.0. Since there isn't any other RDA specific patches
+in my tree, you want to take this patch? Else I have to send the Pull
+Request to ARM SoC folks with this patch alone.
+
+Thanks,
+Mani
+
+> =
+
+>  Documentation/devicetree/bindings/arm/rda.txt | 17 ----------------
+>  .../devicetree/bindings/arm/rda.yaml          | 20 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 21 insertions(+), 18 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/rda.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/rda.yaml
+> =
+
+> diff --git a/Documentation/devicetree/bindings/arm/rda.txt b/Documentatio=
+n/devicetree/bindings/arm/rda.txt
+> deleted file mode 100644
+> index 43c80762c428..000000000000
+> --- a/Documentation/devicetree/bindings/arm/rda.txt
+> +++ /dev/null
+> @@ -1,17 +0,0 @@
+> -RDA Micro platforms device tree bindings
+> -----------------------------------------
+> -
+> -RDA8810PL SoC
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> -
+> -Required root node properties:
+> -
+> - - compatible :  must contain "rda,8810pl"
+> -
+> -
+> -Boards:
+> -
+> -Root node property compatible must contain, depending on board:
+> -
+> - - Orange Pi 2G-IoT: "xunlong,orangepi-2g-iot"
+> - - Orange Pi i96: "xunlong,orangepi-i96"
+> diff --git a/Documentation/devicetree/bindings/arm/rda.yaml b/Documentati=
+on/devicetree/bindings/arm/rda.yaml
+> new file mode 100644
+> index 000000000000..51cec2b63b04
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/rda.yaml
+> @@ -0,0 +1,20 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/rda.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: RDA Micro platforms device tree bindings
+> +
+> +maintainers:
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - xunlong,orangepi-2g-iot     # Orange Pi 2G-IoT
+> +          - xunlong,orangepi-i96        # Orange Pi i96
+> +      - const: rda,8810pl
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2c6f4d15805e..56ee276088eb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2111,7 +2111,7 @@ F:	arch/arm/boot/dts/rda8810pl-*
+>  F:	drivers/clocksource/timer-rda.c
+>  F:	drivers/irqchip/irq-rda-intc.c
+>  F:	drivers/tty/serial/rda-uart.c
+> -F:	Documentation/devicetree/bindings/arm/rda.txt
+> +F:	Documentation/devicetree/bindings/arm/rda.yaml
+>  F:	Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-int=
+c.txt
+>  F:	Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
+>  F:	Documentation/devicetree/bindings/timer/rda,8810pl-timer.txt
+> -- =
+
+> 2.20.1
+> =
