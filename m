@@ -1,41 +1,39 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
-Date: Tue, 9 Jul 2019 10:15:04 +0530
-Message-ID: <20190709044504.gyljwwnxdt5niur5@vireshk-i7>
-References: <20190704061403.8249-1-Anson.Huang@nxp.com>
- <20190704061403.8249-2-Anson.Huang@nxp.com>
- <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
- <20190708082511.py7gnjbqyp7bnhqx@vireshk-i7>
- <DB3PR0402MB391622133CD116FDE26A4F9AF5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190708084957.waiwdun327pgvfv4@vireshk-i7>
- <DB3PR0402MB39164E2F386181255ED37F45F5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH V5 net-next 4/6] dt-bindings: ptp: Introduce MII time
+ stamping devices.
+Date: Mon, 8 Jul 2019 22:11:24 -0700
+Message-ID: <20190709051124.vf2au5htyhghk4yx@localhost>
+References: <cover.1559281985.git.richardcochran@gmail.com>
+ <d786656435c64160d50014beb3d3d9d1aaf6f22d.1559281985.git.richardcochran@gmail.com>
+ <20190708213837.GA28934@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB39164E2F386181255ED37F45F5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: Leonard Crestez <leonard.crestez@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kern>
+In-Reply-To: <20190708213837.GA28934@bogus>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: netdev@vger.kernel.org, David Miller <davem@davemloft.net>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08-07-19, 08:54, Anson Huang wrote:
-> Each OPP has "opp-supported-hw" property as below, the first value needs to be
-> checked with speed grading fuse, and the second one needs to be checked with
-> market segment fuse, ONLY both of them passed, then this OPP is supported. It
-> calls dev_pm_opp_set_supported_hw() to tell OPP framework to parse the OPP
-> table, this is my understanding.
+On Mon, Jul 08, 2019 at 03:38:37PM -0600, Rob Herring wrote:
+> > +Required properties of the control node:
+> > +
+> > +- compatible:		"ines,ptp-ctrl"
 > 
-> opp-supported-hw = <0x8>, <0x3>;
+> This is an IP block that gets integrated into SoCs?
 
-Right, so that's what I was expecting.
+It is an IP block implemented in an FPGA (like the zync or the socfpga).
 
-One thing we can do is change the binding of OPP core a bit to allow
-multiple OPP nodes to contain the "opp-suspend" property and select
-the one finally with the highest frequency. That would be a better as
-a generic solution IMO.
+> It's not very 
+> specific given that there could be different versions of the IP block 
+> and SoC vendors can integrate various versions of the IP block in their 
+> own unique (i.e. buggy) way.
 
-And then a small OPP core patch will fix it.
+There is a version register where both the interface and FPGA are
+versioned.  The driver doesn't presently do anything with that field,
+but if newer interfaces appear, then the driver can deal with that
+without any DT help.
 
--- 
-viresh
+Thanks,
+Richard
