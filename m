@@ -1,106 +1,63 @@
-From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: Re: [RFC PATCH V2 4/4] platform: mtk-isp: Add Mediatek FD driver
-Date: Tue, 9 Jul 2019 12:56:08 +0200
-Message-ID: <eb3bb92d-5d44-0d45-2e90-abcdb96f595d@metux.net>
-References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
- <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
+From: "Hawa, Hanna" <hhhawa@amazon.com>
+Subject: Re: [PATCH v2 2/4] edac: Add support for Amazon's Annapurna Labs L1
+ EDAC
+Date: Tue, 9 Jul 2019 14:01:03 +0300
+Message-ID: <45e9ac35-9ffc-8f5f-cbdb-f85453227363@amazon.com>
+References: <1562500658-14717-1-git-send-email-hhhawa@amazon.com>
+ <1562500658-14717-3-git-send-email-hhhawa@amazon.com>
+ <20190709173229.0000135f@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190709173229.0000135f@huawei.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
-Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, po-yang.huang@mediatek.com, suleiman@chromium.org, sj.huang@mediatek.com, jungo.lin@mediatek.com, shik@chromium.org, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09.07.19 10:41, Jerry-ch Chen wrote:
-
-Hi,
 
 
-> diff --git a/drivers/media/platform/mtk-isp/fd/mtk_fd.h b/drivers/media/platform/mtk-isp/fd/mtk_fd.h
-> new file mode 100644
-> index 0000000..289999b
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/fd/mtk_fd.h
-> @@ -0,0 +1,157 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +//
-> +// Copyright (c) 2018 MediaTek Inc.
-> +
-> +#ifndef __MTK_FD_HW_H__
-> +#define __MTK_FD_HW_H__
-> +
-> +#include <linux/io.h>
-> +#include <linux/types.h>
-> +#include <linux/platform_device.h>
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-device.h>
-> +#include <media/videobuf2-v4l2.h>
-> +
-> +#define MTK_FD_OUTPUT_MIN_WIDTH			26U
-> +#define MTK_FD_OUTPUT_MIN_HEIGHT		26U
-> +#define MTK_FD_OUTPUT_MAX_WIDTH			640U
-> +#define MTK_FD_OUTPUT_MAX_HEIGHT		480U
-> +
-> +/* Control the user defined image widths and heights
-> + * to be scaled and performed face detection in FD HW.
-> + * MTK FD support up to 14 user defined image sizes to perform face detection.
-> + */
-> +#define V4L2_CID_MTK_FD_SCALE_IMG_WIDTH		(V4L2_CID_USER_MTK_FD_BASE + 1)
-> +#define V4L2_CID_MTK_FD_SCALE_IMG_HEIGHT	(V4L2_CID_USER_MTK_FD_BASE + 2)
+On 7/9/2019 12:32 PM, Jonathan Cameron wrote:
+>> Signed-off-by: Hanna Hawa<hhhawa@amazon.com>
+> A quick drive by review as I was feeling curious.
+> 
+> Just a couple of trivial queries and observation on the fact it
+> might be useful to add a few devm managed functions to cut down
+> on edac driver boilerplate.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+>> +#define ARM_CA57_CPUMERRSR_VALID		GENMASK(31, 31)
+> For a single bit it's common to use BIT(31) rather than GENMASK to make
+> it explicit.
 
-I've got a *really* bad feeling about introducing chip specific
-uapi stuff. (by the way: uapi stuff belongs into include/uapi/...)
+Will fix.
 
-Maybe you could tell us what that's *really* about, so we can find some
-standard / chip-independent api for these things. That's one of the
-major point of the kernel: hardware abstraction.
+> 
+> 
+>> +	edac_dev->mod_name = dev_name(dev);
+> I'd admit I'm not that familiar with edac, but seems odd that a
+> module name field would have the dev_name.
 
-> +#define ENABLE_FD				0x111
-> +#define FD_HW_ENABLE				0x4
-> +#define FD_INT_EN				0x15c
-> +#define FD_INT					0x168
-> +#define FD_RESULT				0x178
-> +#define FD_IRQ_MASK				0x001
-> +
-> +#define RS_MAX_BUF_SIZE				2288788
-> +#define FD_MAX_SPEEDUP				7
-> +#define FD_MAX_POSE_VAL				0xfffffffffffffff
-> +#define FD_DEF_POSE_VAL				0x3ff
-> +#define MAX_FD_SEL_NUM				1026
+Will fix when I got more inputs.
 
-If that file is supposed to be included by anything beyond the driver
-itself, we need proper prefixing. (same for anything else in here)
+> 
+>> +	edac_device_free_ctl_info(edac_dev);
+> More a passing observation than a suggestion for this driver, but if there was
+> ever a place where it looked like a couple of devm_ allocation functions would
+> be useful, this is it;)
+> 
+> edac_dev = devm_device_alloc_ctrl_info(dev, ...)
+> ...
+> devm_edac_device_add_device(dev, ...)
 
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index 3dcfc61..eae876e 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -192,6 +192,10 @@ enum v4l2_colorfx {
->   * We reserve 16 controls for this driver. */
->  #define V4L2_CID_USER_IMX_BASE			(V4L2_CID_USER_BASE + 0x10b0)
->  
-> +/* The base for the mediatek FD driver controls */
-> +/* We reserve 16 controls for this driver. */
-> +#define V4L2_CID_USER_MTK_FD_BASE		(V4L2_CID_USER_BASE + 0x10d0)
+I agree.
+I can implement the devm_* functions in separate patches as this is not 
+related to my patches (and not to delay this patches).
 
-Why only the base, but not the actual IDs in uapi ?
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> 
+> 
