@@ -1,59 +1,127 @@
-From: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
-Subject: [RFC PATCH V2 2/4] dts: arm64: mt8183: Add FD nodes
-Date: Tue, 9 Jul 2019 16:41:10 +0800
-Message-ID: <1562661672-22439-3-git-send-email-Jerry-Ch.chen@mediatek.com>
-References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Date: Tue, 9 Jul 2019 10:55:32 +0200
+Message-ID: <20190709085532.cdqv7whuesrjs64c@flea>
+References: <20190605120237.ekmytfxcwbjaqy3x@flea>
+ <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
+ <20190607062802.m5wslx3imiqooq5a@flea>
+ <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
+ <20190607094030.GA12373@lst.de>
+ <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
+ <20190612152022.c3cfhp4cauhzhfyr@flea>
+ <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
+ <20190701095842.fvganvycce2cy7jn@flea>
+ <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chromium.org, matthias.bgg@gmail.com, mchehab@kernel.org
-Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, po-yang.huang@mediatek.com, suleiman@chromium.org, Jerry-ch Chen <jerry-ch.chen@mediatek.com>, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0671666576=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Sean Paul <seanpaul@chromium.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Torsten Duwe <duwe@lst.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Thierry Reding <thierry.reding@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
 
-This patch adds nodes for Face Detection (FD) unit. FD is embedded
-in Mediatek SoCs and works with the co-processor to perform face
-detection on the input data and image and output detected face result.
+--===============0671666576==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ejhhd7l2mldty4ew"
+Content-Disposition: inline
 
-Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index c3a516e..7c234a0 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -432,6 +432,18 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		fd: fd@1502b000 {
-+			compatible = "mediatek,mt8183-fd";
-+			mediatek,scp = <&scp>;
-+			iommus = <&iommu M4U_PORT_CAM_FDVT_RP>,
-+				 <&iommu M4U_PORT_CAM_FDVT_WR>,
-+				 <&iommu M4U_PORT_CAM_FDVT_RB>;
-+			reg = <0 0x1502b000 0 0x1000>;
-+			interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&imgsys CLK_IMG_FDVT>;
-+			clock-names = "FD_CLK_IMG_FD";
-+		};
-+
- 		vdecsys: syscon@16000000 {
- 			compatible = "mediatek,mt8183-vdecsys", "syscon";
- 			reg = <0 0x16000000 0 0x1000>;
--- 
-1.9.1
+--ejhhd7l2mldty4ew
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Jul 08, 2019 at 05:49:21PM -0700, Vasily Khoruzhick wrote:
+> > > Maybe instead of edp-connector one would introduce integrator's specific
+> > > connector, for example with compatible "olimex,teres-edp-connector"
+> > > which should follow edp abstract connector rules? This will be at least
+> > > consistent with below presentation[1] - eDP requirements depends on
+> > > integrator. Then if olimex has standard way of dealing with panels
+> > > present in olimex/teres platforms the driver would then create
+> > > drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
+> > > Anyway it still looks fishy for me :), maybe because I am not
+> > > familiarized with details of these platforms.
+> >
+> > That makes sense yes
+>
+> Actually, it makes no sense at all. Current implementation for anx6345
+> driver works fine as is with any panel specified assuming panel delays
+> are long enough for connected panel. It just doesn't use panel timings
+> from the driver. Creating a platform driver for connector itself looks
+> redundant since it can't be reused, it doesn't describe actual
+> hardware and it's just defeats purpose of DT by introducing
+> board-specific code.
+
+I'm not sure where you got the idea that the purpose of DT is to not
+have any board-specific code.
+
+It's perfectly fine to have some, that's even why there's a compatible
+assigned to each and every board.
+
+What the DT is about is allowing us to have a generic behaviour that
+we can detect: we can have a given behaviour for a given board, and a
+separate one for another one, and this will be evaluated at runtime.
+
+This is *exactly* what this is about: we can have a compatible that
+sets a given, more specific, behaviour (olimex,teres-edp-connector)
+while saying that this is compatible with the generic behaviour
+(edp-connector). That way, any OS will know what quirk to apply if
+needed, and if not that it can use the generic behaviour.
+
+And we could create a generic driver, for the generic behaviour if
+needed.
+
+> There's another issue: if we introduce edp-connector we'll have to
+> specify power up delays somewhere (in dts? or in platform driver?), so
+> edp-connector doesn't really solve the issue of multiple panels with
+> same motherboard.
+
+And that's what that compatible is about :)
+
+> I'd say DT overlays should be preferred solution here, not another
+> connector binding.
+
+Overlays are a way to apply a device tree dynamically. It's orthogonal
+to the binding.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ejhhd7l2mldty4ew
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXSRWhAAKCRDj7w1vZxhR
+xX17AP9m55K0q2PlhGjTg96EP4qSaUJ3PeJP4YHnC9hGYGMuWwD9HbDHJHhrb3wn
+zWBH9y7+q3si+oAQDJcL8eGh17MSBgc=
+=IVjC
+-----END PGP SIGNATURE-----
+
+--ejhhd7l2mldty4ew--
+
+--===============0671666576==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============0671666576==--
