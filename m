@@ -1,52 +1,58 @@
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Subject: Re: [PATCH v2 05/10] net: hisilicon: HI13X1_GMAX need dreq reset at
- first
-Date: Tue, 9 Jul 2019 21:48:56 +0800
-Message-ID: <101b8c68-75f5-00a7-9845-e59c0467768c@huawei.com>
-References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
- <1562643071-46811-6-git-send-email-xiaojiangfeng@huawei.com>
- <890c48d1-76b8-5aea-e175-aa7d9967acd2@cogentembedded.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/5] drivers: spi: core: Add optional stall delay between
+ cs_change transfers
+Date: Tue, 9 Jul 2019 15:12:28 +0100
+Message-ID: <20190709141228.GC14859@sirena.co.uk>
+References: <20190625131328.11883-1-alexandru.ardelean@analog.com>
+ <20190625131328.11883-2-alexandru.ardelean@analog.com>
+ <20190626193438.7248d0a9@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="m51xatjYGsM+13rf"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <890c48d1-76b8-5aea-e175-aa7d9967acd2@cogentembedded.com>
+Content-Disposition: inline
+In-Reply-To: <20190626193438.7248d0a9@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, davem@davemloft.net, robh+dt@kernel.org, yisen.zhuang@huawei.com, salil.mehta@huawei.com, mark.rutland@arm.com, dingtianhong@huawei.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leeyou.li@huawei.com, nixiaoming@huawei.com, jianping.liu@huawei.com, xiekunxun@huawei.com
+To: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>, linux-iio@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Hennerich <michael.hennerich@analog.com>
 List-Id: devicetree@vger.kernel.org
 
 
+--m51xatjYGsM+13rf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2019/7/9 17:35, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 09.07.2019 6:31, Jiangfeng Xiao wrote:
-> 
->> HI13X1_GMAC delete request for soft reset at first,
->> otherwise, the subsequent initialization will not
->> take effect.
->>
->> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
->> ---
->>   drivers/net/ethernet/hisilicon/hip04_eth.c | 24 ++++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>
->> diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
->> index fe61b01..19d8cfd 100644
->> --- a/drivers/net/ethernet/hisilicon/hip04_eth.c
->> +++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-> [...]
->> @@ -853,6 +867,15 @@ static int hip04_mac_probe(struct platform_device *pdev)
->>           goto init_fail;
->>       }
->>   +#if defined(CONFIG_HI13X1_GMAC)
->> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->> +    priv->sysctrl_base = devm_ioremap_resource(d, res);
-> 
->    There's devm_platform_ioremap_resource() now.
+On Wed, Jun 26, 2019 at 07:34:38PM +0100, Jonathan Cameron wrote:
+> On Tue, 25 Jun 2019 16:13:25 +0300
+> Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+>=20
+> > Some devices like the ADIS16460 IMU require a stall period between
+> > transfers, i.e. between when the CS is de-asserted and re-asserted. The
+> > default value of 10us is not enough. This change makes the delay
+> > configurable for when the next CS change goes active.
 
-Thank you for your review, Great issue, which makes my code more concise.
+This looks like cs_change_delay.
 
-I will fix it in v3. Or submit a patch to modify it separately, if maintainer
-applies this patch series.
+As documented in SubmittingPatches please send patches to the=20
+maintainers for the code you would like to change.  The normal kernel
+workflow is that people apply patches from their inboxes, if they aren't
+copied they are likely to not see the patch at all and it is much more
+difficult to apply patches.
+
+--m51xatjYGsM+13rf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0koMsACgkQJNaLcl1U
+h9DKIAf/ZSDNvbMm/N+6RjKfnFdQwjyhpG6CS03BFIGfNvdDiHDfcIUOccR8kUSS
+hWzTKI/7f4jlLyaWXinkVc59G60+IS1+DbO8o2PCAQ3Fpciz5/c6F7BQrLy42Xal
+/icTrnVX0d/70ss5a7YT5yj67O7bItcRvbUuT8bDzHIIVzNWmXc8hMZYMTSB14DV
+fLs8tnfbR0SK4zjd2smCFHGieZBZquTeBjF2ZQlA0YS232MyNNBJCtmW52KUfbVn
+gBukHDwh9QkCJEAdFHknAMmcYPgBF0FXnBkMwhXKeCW9PAxHXK/PC+nqvanw4dmi
+ZVeeGKO4caaGNXi5unWwFznO4RwCFQ==
+=xlH7
+-----END PGP SIGNATURE-----
+
+--m51xatjYGsM+13rf--
