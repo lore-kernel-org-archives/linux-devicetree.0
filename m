@@ -1,52 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] dt-bindings: usb: mtk-xhci: add an optional xhci_ck
- clock
-Date: Tue, 9 Jul 2019 08:22:35 -0600
-Message-ID: <20190709142235.GA11951@bogus>
-References: <5e06482a0be15476c7b5825f155accf98275afa8.1560246390.git.chunfeng.yun@mediatek.com>
- <9b6ad8dee142d73b56d653ecb7475c4ed28e5eb8.1560246390.git.chunfeng.yun@mediatek.com>
+Subject: Re: [RESEND, PATCH v4 2/2] dt-bindings: cpufreq: Document
+ allwinner,sun50i-h6-operating-points
+Date: Tue, 9 Jul 2019 08:31:53 -0600
+Message-ID: <20190709143153.GA30638@bogus>
+References: <20190612162816.31713-1-tiny.windzz@gmail.com>
+ <20190612162816.31713-3-tiny.windzz@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9b6ad8dee142d73b56d653ecb7475c4ed28e5eb8.1560246390.git.chunfeng.yun@mediatek.com>
+In-Reply-To: <20190612162816.31713-3-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Jumin Li <jumin.li@mediatek.com>
+Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 01:55:19PM +0800, Chunfeng Yun wrote:
-> Add a new optional clock xhci_ck
+On Wed, 12 Jun 2019 12:28:16 -0400, Yangtao Li wrote:
+> Allwinner Process Voltage Scaling Tables defines the voltage and
+> frequency value based on the speedbin blown in the efuse combination.
+> The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+> provide the OPP framework with required information.
+> This is used to determine the voltage and frequency value for each
+> OPP of operating-points-v2 table when it is parsed by the OPP framework.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> The "allwinner,sun50i-h6-operating-points" DT extends the
+> "operating-points-v2"
+> with following parameters:
+> - nvmem-cells (NVMEM area containig the speedbin information)
+> - opp-microvolt-<name>: voltage in micro Volts.
+>   At runtime, the platform can pick a <name> and matching
+>   opp-microvolt-<name> property.
+>                         HW:             <name>:
+>                         sun50i-h6      speed0 speed1 speed2
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 > ---
->  Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 ++++++++++++++++++
+>  1 file changed, 167 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-> index 266c2d917a28..91c0704b586b 100644
-> --- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-> @@ -29,6 +29,7 @@ Required properties:
->  	"sys_ck": controller clock used by normal mode,
->  	the following ones are optional:
->  	"ref_ck": reference clock used by low power mode etc,
-> +	"xhci_ck": controller clock,
->  	"mcu_ck": mcu_bus clock for register access,
->  	"dma_ck": dma_bus clock for data transfer by DMA
 
-A new clock should go at the end to stay backwards compatible.
-
->  
-> @@ -100,7 +101,7 @@ Required properties:
->   - clocks : a list of phandle + clock-specifier pairs, one for each
->  	entry in clock-names
->   - clock-names : must contain "sys_ck", and the following ones are optional:
-> -	"ref_ck", "mcu_ck" and "dma_ck"
-> +	"ref_ck", "xhci_ck", "mcu_ck" and "dma_ck"
->  
->  Optional properties:
->   - vbus-supply : reference to the VBUS regulator;
-> -- 
-> 2.21.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
