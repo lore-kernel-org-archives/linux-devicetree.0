@@ -1,38 +1,103 @@
-Return-Path: <SRS0=kqCD=VI=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.bugwerft.de ([46.23.86.59]:35042 "EHLO mail.bugwerft.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbfGKMpP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:45:15 -0400
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 1/2] device-tree: bindinds: add NXP PCT2075 as compatible device to LM75
-Date: Thu, 11 Jul 2019 14:45:03 +0200
-Message-Id: <20190711124504.7580-1-daniel@zonque.org>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 9 Jul 2019 08:25:55 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 08/10] media: dt-bindings: Document i.MX8MQ and
+ i.MX8MM VPU bindings
+Message-ID: <20190709142555.GA14360@bogus>
+References: <20190612093915.18973-1-p.zabel@pengutronix.de>
+ <20190612093915.18973-9-p.zabel@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-hwmon@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612093915.18973-9-p.zabel@pengutronix.de>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Boris Brezillon <boris.brezillon@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, Nicolas Dufresne <nicolas@ndufresne.ca>, Jonas Karlman <jonas@kwiboo.se>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-The PCT2075 is compatible to other chips that are already handled by
-the LM75 driver.
+On Wed, Jun 12, 2019 at 11:39:13AM +0200, Philipp Zabel wrote:
+> Add devicetree binding documentation for the Hantro G1/G2 VPU on i.MX8MQ
+> and for the Hantro G1/G2/H1 VPU on i.MX8MM.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  .../devicetree/bindings/media/imx8m-vpu.txt   | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/imx8m-vpu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/imx8m-vpu.txt b/Documentation/devicetree/bindings/media/imx8m-vpu.txt
+> new file mode 100644
+> index 000000000000..659bd28dd002
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/imx8m-vpu.txt
+> @@ -0,0 +1,56 @@
+> +device-tree bindings for Hantro G1/G2/H1 VPU codecs implemented on i.MX8M SoCs
+> +
+> +Required properties:
+> +- compatible: value should be one of the following
+> +		"nxp,imx8mq-vpu",
+> +		"nxp,imx8mm-vpu";
+> +- regs: VPU core and control block register ranges
+> +- reg-names: should be
+> +		"g1", "g2", "ctrl" on i.MX8MQ,
+> +		"g1", "g2", "h1", "ctrl" on i.MX8MM.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- Documentation/devicetree/bindings/hwmon/lm75.txt | 1 +
- 1 file changed, 1 insertion(+)
+Would be nicer to put h1 at the end, so the indexes don't change.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
-index 12d8cf7cf592..bfb22b249708 100644
---- a/Documentation/devicetree/bindings/hwmon/lm75.txt
-+++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
-@@ -15,6 +15,7 @@ Required properties:
- 		"maxim,max31725",
- 		"maxim,max31726",
- 		"maxim,mcp980x",
-+		"nxp,pct2075",
- 		"st,stds75",
- 		"st,stlm75",
- 		"microchip,tcn75",
--- 
-2.21.0
+> +- interrupts: encoding and decoding interrupt specifiers
+> +- interrupt-names: should be
+> +		"g1", "g2" on i.MX8MQ,
+> +		"g1", "g2", "h1" on i.MX8MM.
+> +- clocks: phandle to VPU core clocks and bus clock
+> +- clock-names: should be
+> +		"g1", "g2", "bus" on i.MX8MQ,
+> +		"g1", "g2", "h1", "bus" on i.MX8MM.
+
+Here too.
+
+> +- power-domains: phandle to power domain node
+> +
+> +Examples:
+> +
+> +	vpu: vpu@38300000 {
+
+video-codec@...
+
+> +		compatible = "nxp,imx8mq-vpu";
+> +		reg = <0x38300000 0x10000>,
+> +		      <0x38310000 0x10000>,
+> +		      <0x38320000 0x10000>;
+> +		reg-names = "g1", "g2", "ctrl";
+> +		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "g1", "g2";
+> +		clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
+> +			 <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
+> +			 <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
+> +		clock-names = "g1", "g2", "bus";
+> +		power-domains = <&pgc_vpu>;
+> +	};
+> +
+> +	vpu: vpu@38300000 {
+
+Are 2 examples really necessary?
+
+> +		compatible = "nxp,imx8mm-vpu";
+> +		reg = <0x38300000 0x10000>,
+> +		      <0x38310000 0x10000>,
+> +		      <0x38320000 0x10000>;
+> +		      <0x38330000 0x10000>;
+> +		reg-names = "g1", "g2", "h1", "ctrl";
+> +		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +			     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "g1", "g2", "h1";
+> +		clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
+> +			 <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
+> +			 <&clk IMX8MQ_CLK_VPU_H1_ROOT>,
+> +			 <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
+> +		clock-names = "g1", "g2", "h1", "bus";
+> +		power-domains = <&pgc_vpu>;
+> +	};
+> -- 
+> 2.20.1
+> 
