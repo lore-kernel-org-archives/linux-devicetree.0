@@ -1,47 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi: Add ls2080a
- compatibility string to bindings
-Date: Tue, 9 Jul 2019 14:08:37 -0600
-Message-ID: <20190709200837.GA7806@bogus>
-References: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
- <1560942714-13330-2-git-send-email-Ashish.Kumar@nxp.com>
+Subject: Re: [PATCH v6 1/6] dt-bindings: ap806: add the cluster clock node in
+ the syscon file
+Date: Tue, 9 Jul 2019 14:10:49 -0600
+Message-ID: <20190709201049.GA8692@bogus>
+References: <20190619141539.16884-1-gregory.clement@bootlin.com>
+ <20190619141539.16884-2-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1560942714-13330-2-git-send-email-Ashish.Kumar@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ashish Kumar <Ashish.Kumar@nxp.com>
-Cc: devicetree@vger.kernel.org, bbrezillon@kernel.org, Kuldeep Singh <kuldeep.singh@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>, broonie@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190619141539.16884-2-gregory.clement@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Jun 2019 16:41:53 +0530, Ashish Kumar wrote:
-> There are 2 version of QSPI-IP, according to which controller registers sets
-> can be big endian or little endian.There are some other minor changes like
-> RX fifo depth etc.
+On Wed, Jun 19, 2019 at 04:15:34PM +0200, Gregory CLEMENT wrote:
+> Document the device tree binding for the cluster clock controllers found
+> in the Armada 7K/8K SoCs.
 > 
-> The big endian version uses driver compatible "fsl,ls1021a-qspi" and
-> little endian version uses driver compatible "fsl,ls2080a-qspi"
-> 
-> Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
-> Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 > ---
-> v3:
-> Rebase to top
-> v2: 
-> Convert to patch series and rebasing done on top of tree
+>  .../arm/marvell/ap806-system-controller.txt   | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 > 
->  Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+> index 7b8b8eb0191f..4a3bb9c12312 100644
+> --- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+> +++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+> @@ -143,3 +143,28 @@ ap_syscon1: system-controller@6f8000 {
+>  		#thermal-sensor-cells = <1>;
+>  	};
+>  };
+> +
+> +Cluster clocks:
+> +---------------
+> +
+> +Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
+> +cluster contain up to 2 CPUs running at the same frequency.
+> +
+> +Required properties:
+> +- compatible: must be  "marvell,ap806-cpu-clock";
+> +- #clock-cells : should be set to 1.
+> +- clocks : shall be the input parents clock phandle for the clock.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+How many clocks?
+
+> +- reg: register range associated with the cluster clocks
+> +
+> +
+> +ap_syscon1: system-controller@6f8000 {
+> +	compatible = "marvell,armada-ap806-syscon1", "syscon", "simple-mfd";
+> +	reg = <0x6f8000 0x1000>;
+> +
+> +	cpu_clk: clock-cpu@0 {
+
+Should be '...@274'
+
+> +		compatible = "marvell,ap806-cpu-clock";
+> +		clocks = <&ap_clk 0>, <&ap_clk 1>;
+> +		#clock-cells = <1>;
+> +		reg = <0x274 0xa30>;
+> +	};
+> +};
+> -- 
+> 2.20.1
+> 
