@@ -1,151 +1,139 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC mailbox
-Date: Tue, 9 Jul 2019 07:31:01 -0600
-Message-ID: <CAL_JsqK+YK0mNiNK_wuoGcor6aKVx-hQYy_awc2AQg9jQe6iVQ@mail.gmail.com>
-References: <20190603083005.4304-1-peng.fan@nxp.com> <20190603083005.4304-2-peng.fan@nxp.com>
- <20190708221947.GA13552@bogus> <AM0PR04MB44816C38C43A3C8E09E8FFF588F10@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH V12 01/12] PCI: Add #defines for some of PCIe spec r4.0
+ features
+Date: Tue, 9 Jul 2019 19:08:46 +0530
+Message-ID: <841a79fa-24ff-8710-456a-44f081230d8f@nvidia.com>
+References: <20190701124010.7484-1-vidyas@nvidia.com>
+ <20190701124010.7484-2-vidyas@nvidia.com>
+ <66d8af45-66f5-b597-0ea8-39e8662df5e6@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM0PR04MB44816C38C43A3C8E09E8FFF588F10@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <66d8af45-66f5-b597-0ea8-39e8662df5e6@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>
+To: bhelgaas@google.com
+Cc: lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 7:40 PM Peng Fan <peng.fan@nxp.com> wrote:
->
-> Hi Rob,
->
-> > Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
-> > mailbox
-> >
-> > On Mon, Jun 03, 2019 at 04:30:04PM +0800, peng.fan@nxp.com wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > The ARM SMC mailbox binding describes a firmware interface to trigger
-> > > actions in software layers running in the EL2 or EL3 exception levels.
-> > > The term "ARM" here relates to the SMC instruction as part of the ARM
-> > > instruction set, not as a standard endorsed by ARM Ltd.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >
-> > > V2:
-> > > Introduce interrupts as a property.
-> > >
-> > > V1:
-> > > arm,func-ids is still kept as an optional property, because there is
-> > > no defined SMC funciton id passed from SCMI. So in my test, I still
-> > > use arm,func-ids for ARM SIP service.
-> > >
-> > >  .../devicetree/bindings/mailbox/arm-smc.txt        | 101
-> > +++++++++++++++++++++
-> > >  1 file changed, 101 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > new file mode 100644
-> > > index 000000000000..401887118c09
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > > @@ -0,0 +1,101 @@
-> > > +ARM SMC Mailbox Interface
-> > > +=========================
-> > > +
-> > > +This mailbox uses the ARM smc (secure monitor call) instruction to
-> > > +trigger a mailbox-connected activity in firmware, executing on the
-> > > +very same core as the caller. By nature this operation is synchronous
-> > > +and this mailbox provides no way for asynchronous messages to be
-> > > +delivered the other way round, from firmware to the OS, but
-> > > +asynchronous notification could also be supported. However the value
-> > > +of r0/w0/x0 the firmware returns after the smc call is delivered as a
-> > > +received message to the mailbox framework, so a synchronous
-> > > +communication can be established, for a asynchronous notification, no
-> > > +value will be returned. The exact meaning of both the action the
-> > > +mailbox triggers as well as the return value is defined by their users and is
-> > not subject to this binding.
-> > > +
-> > > +One use case of this mailbox is the SCMI interface, which uses shared
-> > > +memory to transfer commands and parameters, and a mailbox to trigger
-> > > +a function call. This allows SoCs without a separate management
-> > > +processor (or when such a processor is not available or used) to use
-> > > +this standardized interface anyway.
-> > > +
-> > > +This binding describes no hardware, but establishes a firmware interface.
-> > > +Upon receiving an SMC using one of the described SMC function
-> > > +identifiers, the firmware is expected to trigger some mailbox connected
-> > functionality.
-> > > +The communication follows the ARM SMC calling convention[1].
-> > > +Firmware expects an SMC function identifier in r0 or w0. The
-> > > +supported identifiers are passed from consumers, or listed in the the
-> > > +arm,func-ids properties as described below. The firmware can return
-> > > +one value in the first SMC result register, it is expected to be an
-> > > +error value, which shall be propagated to the mailbox client.
-> > > +
-> > > +Any core which supports the SMC or HVC instruction can be used, as
-> > > +long as a firmware component running in EL3 or EL2 is handling these calls.
-> > > +
-> > > +Mailbox Device Node:
-> > > +====================
-> > > +
-> > > +This node is expected to be a child of the /firmware node.
-> > > +
-> > > +Required properties:
-> > > +--------------------
-> > > +- compatible:              Shall be "arm,smc-mbox"
-> > > +- #mbox-cells              Shall be 1 - the index of the channel needed.
-> > > +- arm,num-chans            The number of channels supported.
-> > > +- method:          A string, either:
-> > > +                   "hvc": if the driver shall use an HVC call, or
-> > > +                   "smc": if the driver shall use an SMC call.
-> > > +
-> > > +Optional properties:
-> > > +- arm,func-ids             An array of 32-bit values specifying the function
-> > > +                   IDs used by each mailbox channel. Those function IDs
-> > > +                   follow the ARM SMC calling convention standard [1].
-> > > +                   There is one identifier per channel and the number
-> > > +                   of supported channels is determined by the length
-> > > +                   of this array.
-> > > +- interrupts               SPI interrupts may be listed for notification,
-> > > +                   each channel should use a dedicated interrupt
-> > > +                   line.
-> > > +
-> > > +Example:
-> > > +--------
-> > > +
-> > > +   sram@910000 {
-> > > +           compatible = "mmio-sram";
-> > > +           reg = <0x0 0x93f000 0x0 0x1000>;
-> > > +           #address-cells = <1>;
-> > > +           #size-cells = <1>;
-> > > +           ranges = <0 0x0 0x93f000 0x1000>;
-> > > +
-> > > +           cpu_scp_lpri: scp-shmem@0 {
-> > > +                   compatible = "arm,scmi-shmem";
-> > > +                   reg = <0x0 0x200>;
-> > > +           };
-> > > +
-> > > +           cpu_scp_hpri: scp-shmem@200 {
-> > > +                   compatible = "arm,scmi-shmem";
-> > > +                   reg = <0x200 0x200>;
-> > > +           };
-> > > +   };
-> > > +
-> > > +   smc_mbox: mailbox {
-> >
-> > This should be a child of 'firmware' node at least and really a child of the
-> > firmware component that implements the feature.
->
-> I checked other mbox driver, including the mbox used by ti sci, mbox used by
-> i.MX8QXP. both mbox dts node not a child a firmware node,
+On 7/5/2019 7:16 PM, Vidya Sagar wrote:
+Bjorn,
+Apologies for pinging again about this.
+Can you please provide Ack for this change so that Lorenzo can pick up this=
+ series?
 
-Because those are actual h/w blocks and not implemented in firmware calls?
+Thanks,
+Vidya Sagar
 
-> I am not sure why put mbox node into a child a firmware node here.
-
-If it is an interface provided by firmware, then it goes under /firmware.
-
-Rob
+> On 7/1/2019 6:09 PM, Vidya Sagar wrote:
+> Bjorn,
+> Can you please provide Ack for this patch?
+>=20
+> Thanks,
+> Vidya Sagar
+>=20
+>> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
+>> features.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Reviewed-by: Thierry Reding <treding@nvidia.com>
+>> ---
+>> Changes since [v11]:
+>> * None
+>>
+>> Changes since [v10]:
+>> * None
+>>
+>> Changes since [v9]:
+>> * None
+>>
+>> Changes since [v8]:
+>> * None
+>>
+>> Changes since [v7]:
+>> * None
+>>
+>> Changes since [v6]:
+>> * None
+>>
+>> Changes since [v5]:
+>> * None
+>>
+>> Changes since [v4]:
+>> * None
+>>
+>> Changes since [v3]:
+>> * None
+>>
+>> Changes since [v2]:
+>> * Updated commit message and description to explicitly mention that defi=
+nes are
+>> =C2=A0=C2=A0 added only for some of the features and not all.
+>>
+>> Changes since [v1]:
+>> * None
+>>
+>> =C2=A0 include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
+>> =C2=A0 1 file changed, 21 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs=
+.h
+>> index f28e562d7ca8..1c79f6a097d2 100644
+>> --- a/include/uapi/linux/pci_regs.h
+>> +++ b/include/uapi/linux/pci_regs.h
+>> @@ -713,7 +713,9 @@
+>> =C2=A0 #define PCI_EXT_CAP_ID_DPC=C2=A0=C2=A0=C2=A0 0x1D=C2=A0=C2=A0=C2=
+=A0 /* Downstream Port Containment */
+>> =C2=A0 #define PCI_EXT_CAP_ID_L1SS=C2=A0=C2=A0=C2=A0 0x1E=C2=A0=C2=A0=C2=
+=A0 /* L1 PM Substates */
+>> =C2=A0 #define PCI_EXT_CAP_ID_PTM=C2=A0=C2=A0=C2=A0 0x1F=C2=A0=C2=A0=C2=
+=A0 /* Precision Time Measurement */
+>> -#define PCI_EXT_CAP_ID_MAX=C2=A0=C2=A0=C2=A0 PCI_EXT_CAP_ID_PTM
+>> +#define PCI_EXT_CAP_ID_DLF=C2=A0=C2=A0=C2=A0 0x25=C2=A0=C2=A0=C2=A0 /* =
+Data Link Feature */
+>> +#define PCI_EXT_CAP_ID_PL=C2=A0=C2=A0=C2=A0 0x26=C2=A0=C2=A0=C2=A0 /* P=
+hysical Layer 16.0 GT/s */
+>> +#define PCI_EXT_CAP_ID_MAX=C2=A0=C2=A0=C2=A0 PCI_EXT_CAP_ID_PL
+>> =C2=A0 #define PCI_EXT_CAP_DSN_SIZEOF=C2=A0=C2=A0=C2=A0 12
+>> =C2=A0 #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+>> @@ -1053,4 +1055,22 @@
+>> =C2=A0 #define=C2=A0 PCI_L1SS_CTL1_LTR_L12_TH_SCALE=C2=A0=C2=A0=C2=A0 0x=
+e0000000=C2=A0 /* LTR_L1.2_THRESHOLD_Scale */
+>> =C2=A0 #define PCI_L1SS_CTL2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=
+x0c=C2=A0=C2=A0=C2=A0 /* Control 2 Register */
+>> +/* Data Link Feature */
+>> +#define PCI_DLF_CAP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x04=C2=
+=A0=C2=A0=C2=A0 /* Capabilities Register */
+>> +#define=C2=A0 PCI_DLF_LOCAL_DLF_SUP_MASK=C2=A0=C2=A0=C2=A0 0x007fffff=
+=C2=A0 /* Local Data Link Feature Supported */
+>> +#define=C2=A0 PCI_DLF_EXCHANGE_ENABLE=C2=A0=C2=A0=C2=A0 0x80000000=C2=
+=A0 /* Data Link Feature Exchange Enable */
+>> +#define PCI_DLF_STS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x08=C2=
+=A0=C2=A0=C2=A0 /* Status Register */
+>> +#define=C2=A0 PCI_DLF_REMOTE_DLF_SUP_MASK=C2=A0=C2=A0=C2=A0 0x007fffff=
+=C2=A0 /* Remote Data Link Feature Supported */
+>> +#define=C2=A0 PCI_DLF_REMOTE_DLF_SUP_VALID=C2=A0=C2=A0=C2=A0 0x80000000=
+=C2=A0 /* Remote Data Link Feature Support Valid */
+>> +
+>> +/* Physical Layer 16.0 GT/s */
+>> +#define PCI_PL_16GT_CAP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x04=
+=C2=A0=C2=A0=C2=A0 /* Capabilities Register */
+>> +#define PCI_PL_16GT_CTRL=C2=A0=C2=A0=C2=A0 0x08=C2=A0=C2=A0=C2=A0 /* Co=
+ntrol Register */
+>> +#define PCI_PL_16GT_STS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0c=
+=C2=A0=C2=A0=C2=A0 /* Status Register */
+>> +#define PCI_PL_16GT_LDPM_STS=C2=A0=C2=A0=C2=A0 0x10=C2=A0=C2=A0=C2=A0 /=
+* Local Data Parity Mismatch Status Register */
+>> +#define PCI_PL_16GT_FRDPM_STS=C2=A0=C2=A0=C2=A0 0x14=C2=A0=C2=A0=C2=A0 =
+/* First Retimer Data Parity Mismatch Status Register */
+>> +#define PCI_PL_16GT_SRDPM_STS=C2=A0=C2=A0=C2=A0 0x18=C2=A0=C2=A0=C2=A0 =
+/* Second Retimer Data Parity Mismatch Status Register */
+>> +#define PCI_PL_16GT_RSVD=C2=A0=C2=A0=C2=A0 0x1C=C2=A0=C2=A0=C2=A0 /* Re=
+served */
+>> +#define PCI_PL_16GT_LE_CTRL=C2=A0=C2=A0=C2=A0 0x20=C2=A0=C2=A0=C2=A0 /*=
+ Lane Equalization Control Register */
+>> +
+>> =C2=A0 #endif /* LINUX_PCI_REGS_H */
+>>
+>=20
