@@ -1,28 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: clock: imx8mm: Add system counter clock
-Date: Tue, 9 Jul 2019 14:18:20 -0600
-Message-ID: <20190709201820.GA25832@bogus>
-References: <20190621070720.12395-1-Anson.Huang@nxp.com>
- <20190621070720.12395-2-Anson.Huang@nxp.com>
+Subject: Re: [Patch v3 2/2] dt-bindings: spi: spi-fsl-qspi: Add bindings of
+ ls1088a and ls1012a
+Date: Tue, 9 Jul 2019 14:08:57 -0600
+Message-ID: <20190709200857.GA8477@bogus>
+References: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
+ <1560942714-13330-3-git-send-email-Ashish.Kumar@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190621070720.12395-2-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com
-Cc: catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, leonard.crestez@nxp.com, aisheng.dong@nxp.com, ping.bai@nxp.com, daniel.baluta@nxp.com, peng.fan@nxp.com, abel.vesa@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com
+In-Reply-To: <1560942714-13330-3-git-send-email-Ashish.Kumar@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ashish Kumar <Ashish.Kumar@nxp.com>
+Cc: devicetree@vger.kernel.org, bbrezillon@kernel.org, Kuldeep Singh <kuldeep.singh@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>, broonie@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Jun 2019 15:07:18 +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> Add i.MX8MM system counter clock macro definition.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Wed, 19 Jun 2019 16:41:54 +0530, Ashish Kumar wrote:
+> Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+> Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
 > ---
->  include/dt-bindings/clock/imx8mm-clock.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> v3:
+> Rebase to top
+> v2: 
+> Convert to patch series and rebasing done on top of tree
+> 
+>  Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
