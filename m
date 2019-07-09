@@ -1,58 +1,42 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 17/60] dt-bindings: Add legacy 'toppoly' vendor prefix
-Date: Mon, 8 Jul 2019 19:35:12 -0600
-Message-ID: <CAL_JsqJ0ABZ_Qg_uHoZJU6krV7VB5rwyYWhcFoxDVhiYFpPS5Q@mail.gmail.com>
-References: <20190707180852.5512-1-laurent.pinchart@ideasonboard.com>
- <20190707181937.6250-1-laurent.pinchart@ideasonboard.com>
- <20190707181937.6250-14-laurent.pinchart@ideasonboard.com>
- <CAL_JsqLJy=UCeQ_Ex7tFh2OjtitNFVjT4v=PDZSbseva+ZrGDQ@mail.gmail.com>
- <20190709010004.GD4819@pendragon.ideasonboard.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3, 02/27] dt-bindings: mediatek: add ovl_2l description
+ for mt8183 display
+Date: Mon, 8 Jul 2019 19:37:17 -0600
+Message-ID: <20190709013717.GA26173@bogus>
+References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1559734986-7379-3-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190709010004.GD4819@pendragon.ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Sebastian Reichel <sebastian.reichel@collabora.com>, dri-devel <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1559734986-7379-3-git-send-email-yongqiang.niu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: yongqiang.niu@mediatek.com
+Cc: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdWwgOCwgMjAxOSBhdCA3OjAwIFBNIExhdXJlbnQgUGluY2hhcnQKPGxhdXJlbnQu
-cGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6Cj4KPiBIaSBSb2IsCj4KPiBPbiBNb24s
-IEp1bCAwOCwgMjAxOSBhdCAwMTowMDozNVBNIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToKPiA+
-IE9uIFN1biwgSnVsIDcsIDIwMTkgYXQgMTI6MjUgUE0gTGF1cmVudCBQaW5jaGFydCB3cm90ZToK
-PiA+ID4KPiA+ID4gVGhlICd0b3Bwb2x5JyB2ZW5kb3IgcHJlZml4IGlzIGluIHVzZSBhbmQgcmVm
-ZXJzIHRvIFRQTywgd2hvc2UgRFQgdmVuZG9yCj4gPiA+IHByZWZpeCBpcyBhbHJlYWR5IGRlZmlu
-ZWQgYXMgJ3RwbycuIEFkZCAndG9wcG9seScgYXMgYW4gYWx0ZXJuYXRpdmUgYW5kCj4gPiA+IGRv
-Y3VtZW50IGl0IGFzIGxlZ2FjeS4KPiA+ID4KPiA+ID4gU2lnbmVkLW9mZi1ieTogTGF1cmVudCBQ
-aW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+ID4gPiAtLS0KPiA+
-ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMueWFt
-bCB8IDIgKysKPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKPiA+ID4KPiA+
-ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3It
-cHJlZml4ZXMueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3It
-cHJlZml4ZXMueWFtbAo+ID4gPiBpbmRleCAyNTE0NDYzZjJjNjMuLmQ3ODUyN2ViODI1NCAxMDA2
-NDQKPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1w
-cmVmaXhlcy55YW1sCj4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy92ZW5kb3ItcHJlZml4ZXMueWFtbAo+ID4gPiBAQCAtODY3LDYgKzg2Nyw4IEBAIHBhdHRlcm5Q
-cm9wZXJ0aWVzOgo+ID4gPiAgICAgIGRlc2NyaXB0aW9uOiBUZWNvbiBNaWNyb3Byb2Nlc3NvciBU
-ZWNobm9sb2dpZXMsIExMQy4KPiA+ID4gICAgIl50b3BlZXQsLioiOgo+ID4gPiAgICAgIGRlc2Ny
-aXB0aW9uOiBUb3BlZXQKPiA+ID4gKyAgIl50b3Bwb2x5LC4qIjoKPiA+ID4gKyAgICBkZXNjcmlw
-dGlvbjogVFBPIChsZWdhY3kgcHJlZml4LCBzZWUgJ3RwbycpCj4gPgo+ID4gQWRkICdkZXByZWNh
-dGVkOiB0cnVlJyBhbHNvLiBUaGF0J3MgYSBuZXcgcHJvcGVydHkgaW4ganNvbi1zY2hlbWEKPiA+
-IGRyYWZ0OC4gSXQncyBub3QgdXNlZCBmb3IgYW55dGhpbmcgeWV0IG90aGVyIHRoYW4gZG9jdW1l
-bnRhdGlvbi4KPgo+IFRoYW5rIHlvdSBmb3IgdGhlIHBvaW50ZXIuCj4KPiBCeSB0aGUgd2F5IHRo
-aXMgc2VyaWVzIGNvbmZsaWN0cyB3aXRoIHlvdXIgcGF0Y2hlcyB0aGF0IG1vdmUgYWxsIHBhbmVs
-Cj4gYmluZGluZ3MgdG8geWFtbC4gSSdsbCByZWJhc2UgaXQgb24gdG9wIGlmIHlvdXJzIGdldHMg
-bWVyZ2VkIGZpcnN0LgoKSSBjb21taXR0ZWQgdGhlIHNlcmllcyB0b2RheSwgYnV0IEkgZG9uJ3Qg
-c2VlIHdoYXQgY29uZmxpY3RzIHRob3VnaC4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWw=
+On Wed, Jun 05, 2019 at 07:42:41PM +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> Update device tree binding documention for the display subsystem for
+> Mediatek MT8183 SOCs
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> index 70770fe..2418c56 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> @@ -28,6 +28,7 @@ Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt.
+>  Required properties (all function blocks):
+>  - compatible: "mediatek,<chip>-disp-<function>", one of
+>  	"mediatek,<chip>-disp-ovl"   		- overlay (4 layers, blending, csc)
+> +	"mediatek,<chip>-disp-ovl-2l"           - overlay (2 layers, blending, csc)
+
+Does a single chip have a mixture of this block doing 2 and 4 layers? If 
+not, the <chip> part implies 2 vs. 4 layers.
+
+Rob
