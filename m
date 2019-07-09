@@ -1,76 +1,82 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: Remove unused compatible strings
-Date: Tue, 9 Jul 2019 09:46:37 -0600
-Message-ID: <CAL_JsqJKqhnt1a7vhF+4RA53dSNUaB==8Tmcida3z63nDSZGKA@mail.gmail.com>
-References: <20190607154410.10633-1-paul@crapouillou.net> <20190607154410.10633-2-paul@crapouillou.net>
- <20190709020425.GA7984@bogus> <1562642299.1834.0@crapouillou.net>
+Subject: Re: [PATCH 5.2 v2 2/2] dt-binding: edac: add NPCM ECC documentation
+Date: Tue, 9 Jul 2019 09:48:14 -0600
+Message-ID: <CAL_JsqKf+Z9XJJvqcOw-0L-BLCt_Yv-qv-eu+zhoNFnk8rH8Og@mail.gmail.com>
+References: <20190605141253.38554-1-ghung.quanta@gmail.com>
+ <20190605141253.38554-2-ghung.quanta@gmail.com> <20190709014058.GA30269@bogus>
+ <0c90f9376c0e425c9a226379f7e5bfad@quantatw.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562642299.1834.0@crapouillou.net>
+In-Reply-To: <0c90f9376c0e425c9a226379f7e5bfad@quantatw.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, od@zcrc.me, Linux PWM List <linux-pwm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?B?R2VvcmdlIEh1bmcgKOa0quW/oOaVrCk=?= <George.Hung@quantatw.com>
+Cc: George Hung <ghung.quanta@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Tali Perry <tali.perry1@gmail.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "wak@google.com" <wak@google.com>, "benjaminfair@google.com" <benjaminfair@google.com>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, "tomer.maimon@nuvoton.com" <tomer.maimon@nuvoton.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Avi.Fishman@nuvoton.com" <Avi.Fishman@nuvoton.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-edac <linux-edac@vger.kernel.org>, Patrick Venture <venture@google.com>, Nicolas Ferre <nicolas.ferre@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 9:18 PM Paul Cercueil <paul@crapouillou.net> wrote:
+On Tue, Jul 9, 2019 at 3:50 AM George Hung (=E6=B4=AA=E5=BF=A0=E6=95=AC)
+<George.Hung@quantatw.com> wrote:
+>
+> Hi Rob,
 >
 >
->
-> Le lun. 8 juil. 2019 =C3=A0 22:04, Rob Herring <robh@kernel.org> a =C3=A9=
-crit :
-> > On Fri, Jun 07, 2019 at 05:44:05PM +0200, Paul Cercueil wrote:
-> >>  Right now none of the Ingenic-based boards probe this driver from
-> >>  devicetree. This driver defined three compatible strings for the
-> >> exact
-> >>  same behaviour. Before these strings are used, we can remove two of
-> >>  them.
-> >>
-> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> >>  ---
-> >>
-> >>  Notes:
-> >>      v2: Rebase on v5.2-rc3
-> >>
-> >>   Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt | 5
-> >> +----
-> >>   1 file changed, 1 insertion(+), 4 deletions(-)
-> >>
-> >>  diff --git
-> >> a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> >> b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> >>  index 7d9d3f90641b..493bec80d59b 100644
-> >>  --- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> >>  +++ b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> >>  @@ -2,10 +2,7 @@ Ingenic JZ47xx PWM Controller
-> >>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-> >>
-> >>   Required properties:
-> >>  -- compatible: One of:
-> >>  -  * "ingenic,jz4740-pwm"
-> >>  -  * "ingenic,jz4770-pwm"
-> >>  -  * "ingenic,jz4780-pwm"
-> >>  +- compatible: Should be "ingenic,jz4740-pwm"
+> > -----Original Message-----
+> > From: openbmc
+> > [mailto:openbmc-bounces+george.hung=3Dquantatw.com@lists.ozlabs.org] On
+> > Behalf Of Rob Herring
+> > Sent: Tuesday, July 09, 2019 9:41 AM
+> > To: George Hung
+> > Cc: Mark Rutland; Linus Walleij; Tali Perry; paulmck@linux.ibm.com;
+> > wak@google.com; benjaminfair@google.com; openbmc@lists.ozlabs.org;
+> > tomer.maimon@nuvoton.com; devicetree@vger.kernel.org; Borislav Petkov;
+> > Avi.Fishman@nuvoton.com; Jonathan Cameron; Mauro Carvalho Chehab;
+> > linux-edac; Patrick Venture; Nicolas Ferre; linux-kernel; James Morse; =
+Greg
+> > Kroah-Hartman; davem@davemloft.net
+> > Subject: Re: [PATCH 5.2 v2 2/2] dt-binding: edac: add NPCM ECC
+> > documentation
 > >
-> > Are you sure all 3 chips are exactly the same features and bugs?
+> > On Wed, Jun 05, 2019 at 10:12:53PM +0800, George Hung wrote:
+> > > Add device tree documentation for Nuvoton BMC ECC
+> > >
+> > > Signed-off-by: George Hung <ghung.quanta@gmail.com>
+> > > ---
+> > >  .../bindings/edac/npcm7xx-sdram-edac.txt        | 17
+> > +++++++++++++++++
+> > >  1 file changed, 17 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
+> > > b/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
+> > > new file mode 100644
+> > > index 000000000000..dd4dac59a5bd
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
+> > > @@ -0,0 +1,17 @@
+> > > +Nuvoton NPCM7xx SoC EDAC device driver
+> > > +
+> > > +The Nuvoton NPCM7xx SoC supports DDR4 memory with/without ECC and
+> > the
+> > > +driver uses the EDAC framework to implement the ECC detection and
+> > corrtection.
+> > > +
+> > > +Required properties:
+> > > +- compatible:      should be "nuvoton,npcm7xx-sdram-edac"
+> >
+> > Is this for the whole SDRAM controller or just ECC related registers?
+> > In the former case, the naming should just reflect the block name and n=
+ot a
+> > Linux term.
 >
-> The hardware on these chips have tiny differences, but the current
-> driver code works on all the SoCs.
->
->
-> > The correct thing to do here generally is the 4770 and 4780 would also
-> > have ingenic,jz4740-pwm as a fallback compatible. Then the driver can
-> > match on that until you find some difference and can use the more
-> > specific compatible.
->
-> Why not just update the devicetree with the new compatible string when
-> a difference is found?
+> Sorry for confused naming, the address space is for the whole memory cont=
+roller registers indeed,
+> but the driver only uses the ECC related registers.
+> Should I change the name to "nuvoton,npcm7xx-edac" ?
 
-Because dtb's should be part of the firmware/bootloader and can be
-updated independently. Maybe you don't care on your platform, but
-that's the preferred model for DT and what we follow. DTs live in the
-kernel tree for convenience, but are independent from the kernel.
+No, you should drop the 'edac' part. The DT describes the h/w, not
+what one driver (currently) uses.
 
 Rob
