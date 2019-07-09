@@ -1,60 +1,100 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
- Host
-Date: Tue, 9 Jul 2019 14:33:50 +0000
-Message-ID: <ae0ffeca-9305-b5a2-3480-da623d15ce67@microchip.com>
-References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
- <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext
+ Milbeaut HDMAC bindings
+Date: Tue, 9 Jul 2019 08:34:37 -0600
+Message-ID: <20190709143437.GA30850@bogus>
+References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
+ <20190613005237.1996-1-jassisinghbrar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
-Content-Language: en-US
-Content-ID: <3BE40FD76FF0294F9215FEEF22FB1FC9@namprd11.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20190613005237.1996-1-jassisinghbrar@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luis.Oliveira@synopsys.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, robh@kernel.org, Nicolas.Ferre@microchip.com, paulmck@linux.ibm.com, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Joao.Pinto@synopsys.com
+To: jassisinghbrar@gmail.com
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, mark.rutland@arm.com, orito.takao@socionext.com, masami.hiramatsu@linaro.org, kasai.kazuhiro@socionext.com, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDExLjA2LjIwMTkgMjI6MjAsIEx1aXMgT2xpdmVpcmEgd3JvdGU6DQo+IEZyb206IEx1
-aXMgT2xpdmVpcmEgPGxvbGl2ZWlAc3lub3BzeXMuY29tPg0KPiANCj4gQWRkIGJpbmRpbmdzIGZv
-ciBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgQ1NJLTIgaG9zdC4NCj4gDQo+IFNpZ25lZC1vZmYt
-Ynk6IEx1aXMgT2xpdmVpcmEgPGxvbGl2ZWlAc3lub3BzeXMuY29tPg0KPiAtLS0NCj4gQ2hhbmdl
-bG9nDQo+IHYzLXY0DQo+IC0gcmVtb3ZlICJwbGF0IiBmcm9tIHRoZSBibG9jayBuYW1lIEByb2Ig
-QGxhdXJlbnQNCj4gLSByZW1vdmUgInBoeS1uYW1lcyIgd2hlbiBzaW5nbGUtZW50cnkgQHJvYg0K
-PiAtIHJlbW92ZSAic25wcyxvdXRwdXQtdHlwZSIgLT4gd2VudCB0byB0aGUgZHJpdmVyIGNvbmZp
-ZyBAbGF1cmVudA0KPiANCj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3
-LWNzaS50eHQgICAgICB8IDQxICsrKysrKysrKysrKysrKysrKysrKysNCj4gICAxIGZpbGUgY2hh
-bmdlZCwgNDEgaW5zZXJ0aW9ucygrKQ0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvc25wcyxkdy1jc2kudHh0DQo+IA0KPiBkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3NucHMsZHct
-Y3NpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3
-LWNzaS50eHQNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMC4uNjEzYjdm
-OQ0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9tZWRpYS9zbnBzLGR3LWNzaS50eHQNCj4gQEAgLTAsMCArMSw0MSBAQA0KPiArU3lub3Bz
-eXMgRGVzaWduV2FyZSBDU0ktMiBIb3N0IGNvbnRyb2xsZXINCj4gKw0KPiArRGVzY3JpcHRpb24N
-Cj4gKy0tLS0tLS0tLS0tDQo+ICsNCj4gK1RoaXMgSFcgYmxvY2sgaXMgdXNlZCB0byByZWNlaXZl
-IGltYWdlIGNvbWluZyBmcm9tIGFuIE1JUEkgQ1NJLTIgY29tcGF0aWJsZQ0KPiArY2FtZXJhLg0K
-PiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiArLSBjb21wYXRpYmxlCQk6IHNoYWxsIGJl
-ICJzbnBzLGR3LWNzaSINCj4gKy0gcmVnCQkJOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIHNp
-emUgb2YgdGhlIGRldmljZSBtZW1vcnkNCj4gKwkJCSAgbWFwcGVkIHJlZ2lzdGVyczsNCj4gKy0g
-aW50ZXJydXB0cwkJOiBEVyBDU0ktMiBIb3N0IGludGVycnVwdHMNCj4gKy0gcGh5cwkJCTogTGlz
-dCBvZiBvbmUgUEhZIHNwZWNpZmllciAoYXMgZGVmaW5lZCBpbg0KPiArCQkJICBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1iaW5kaW5ncy50eHQpLg0KPiArCQkJICBU
-aGlzIFBIWSBpcyBhIE1JUEkgRFBIWSB3b3JraW5nIGluIFJYIG1vZGUuDQo+ICstIHJlc2V0cwkJ
-OiBSZWZlcmVuY2UgdG8gYSByZXNldCBjb250cm9sbGVyIChvcHRpb25hbCkNCj4gKw0KPiArVGhl
-IHBlci1ib2FyZCBzZXR0aW5nczoNCj4gKyAtIHBvcnQgc3ViLW5vZGUgZGVzY3JpYmluZyBhIHNp
-bmdsZSBlbmRwb2ludCBjb25uZWN0ZWQgdG8gdGhlIGNhbWVyYSBhcw0KPiArICAgZGVzY3JpYmVk
-IGluIHZpZGVvLWludGVyZmFjZXMudHh0WzFdLg0KPiArDQo+ICtFeGFtcGxlOg0KPiArDQo+ICsJ
-Y3NpMjogY3NpMkAzMDAwIHsNCj4gKwkJY29tcGF0aWJsZSA9ICJzbnBzLGR3LWNzaSI7DQo+ICsJ
-CSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gKwkJcmVn
-ID0gPCAweDAzMDAwIDB4N0ZGPjsNCj4gKwkJcGh5cyA9IDwmbWlwaV9kcGh5X3J4PjsNCj4gKwkJ
-cmVzZXRzID0gPCZkd19yc3QgMT47DQo+ICsJCWludGVycnVwdHMgPSA8Mj47DQo+ICsNCj4gKwkJ
-cG9ydEAwIHsNCj4gKwkJCXJlZyA9IDwwPjsNCj4gKwkJCWNzaV9lcDE6IGVuZHBvaW50IHsNCj4g
-KwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmNhbWVyYV8xPjsNCj4gKwkJCQlkYXRhLWxhbmVzID0g
-PDEgMj47DQo+ICsJCQl9Ow0KDQpIZWxsbyBMdWlzLA0KDQpXaGljaCBpcyB0aGUgb3V0cHV0IHBv
-cnQgKGVuZHBvaW50KSA6IGhvdyB0byBjb25uZWN0IHRoZSBvdXRwdXQgb2YgDQpjc2kyaG9zdCB0
-byBhbm90aGVyIG5vZGUgPw0KSSBtZWFuLCB0aGUgc2Vjb25kIHBvcnQgb2YgdGhpcyBibG9jaywg
-b3IsIGhvdyBpcyB0aGUgZGF0YSB0YWtlbiBmcm9tIA0KY3NpMmhvc3QgPw0KDQpUaGFua3MsDQoN
-CkV1Z2VuDQoNCj4gKwkJfTsNCj4gKwl9Ow0KPiANCg==
+On Wed, Jun 12, 2019 at 07:52:37PM -0500, jassisinghbrar@gmail.com wrote:
+> From: Jassi Brar <jaswinder.singh@linaro.org>
+> 
+> Document the devicetree bindings for Socionext Milbeaut HDMAC
+> controller. Controller has upto 8 floating channels, that need
+> a predefined slave-id to work from a set of slaves.
+> 
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> ---
+>  .../bindings/dma/milbeaut-m10v-hdmac.txt           | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> new file mode 100644
+> index 000000000000..a104fcb9e73d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> @@ -0,0 +1,51 @@
+> +* Milbeaut AHB DMA Controller
+> +
+> +Milbeaut AHB DMA controller has transfer capability bellow.
+> + - memory to memory transfer
+> + - device to memory transfer
+> + - memory to device transfer
+> +
+> +Required property:
+> +- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
+> +- reg:              Should contain DMA registers location and length.
+> +- interrupts:       Should contain all of the per-channel DMA interrupts.
+
+How many?
+
+> +- #dma-cells:       Should be 1. Specify the ID of the slave.
+> +- clocks:           Phandle to the clock used by the HDMAC module.
+> +
+> +
+> +Example:
+> +
+> +	hdmac1: hdmac@1e110000 {
+
+dma-controller@...
+
+> +		compatible = "socionext,milbeaut-m10v-hdmac";
+> +		reg = <0x1e110000 0x10000>;
+> +		interrupts = <0 132 4>,
+> +			     <0 133 4>,
+> +			     <0 134 4>,
+> +			     <0 135 4>,
+> +			     <0 136 4>,
+> +			     <0 137 4>,
+> +			     <0 138 4>,
+> +			     <0 139 4>;
+> +		#dma-cells = <1>;
+> +		clocks = <&dummy_clk>;
+> +	};
+> +
+> +* DMA client
+> +
+> +Clients have to specify the DMA requests with phandles in a list.
+
+Nothing specific to this binding here and the client side is already 
+documented, so drop this section.
+
+> +
+> +Required properties:
+> +- dmas:             List of one or more DMA request specifiers. One DMA request specifier
+> +                    consists of a phandle to the DMA controller followed by the integer
+> +                    specifying the request line.
+> +- dma-names:        List of string identifiers for the DMA requests. For the correct
+> +                    names, have a look at the specific client driver.
+> +
+> +Example:
+> +
+> +	sni_spi1: spi@1e800100 {
+> +		...
+> +		dmas = <&hdmac1 22>, <&hdmac1 21>;
+> +		dma-names = "tx", "rx";
+> +		...
+> +	};
+> -- 
+> 2.17.1
+> 
