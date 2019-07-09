@@ -1,95 +1,214 @@
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Subject: [PATCH v2 05/10] net: hisilicon: HI13X1_GMAX need dreq reset at first
-Date: Tue, 9 Jul 2019 11:31:06 +0800
-Message-ID: <1562643071-46811-6-git-send-email-xiaojiangfeng@huawei.com>
-References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Tue, 9 Jul 2019 04:23:03 +0000
+Message-ID: <BYAPR07MB47094B372CEC6DFD25FC78E1DDF10@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1562324238-16655-1-git-send-email-pawell@cadence.com>
+ <1562324238-16655-6-git-send-email-pawell@cadence.com>
+ <87r274lmqk.fsf@linux.intel.com>
+ <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <87a7dpm442.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
+In-Reply-To: <87a7dpm442.fsf@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, robh+dt@kernel.org, yisen.zhuang@huawei.com, salil.mehta@huawei.com, mark.rutland@arm.com, dingtianhong@huawei.com, xiaojiangfeng@huawei.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leeyou.li@huawei.com, nixiaoming@huawei.com, jianping.liu@huawei.com, xiekunxun@huawei.com
+To: Felipe Balbi <felipe.balbi@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-HI13X1_GMAC delete request for soft reset at first,
-otherwise, the subsequent initialization will not
-take effect.
+>Hi,
+>
+>Pawel Laszczak <pawell@cadence.com> writes:
+>>>> +void cdns3_role_stop(struct cdns3 *cdns)
+>>>
+>>>not static? Why is it so that _start() is static but _stop() is not?
+>>>Looks fishy
+>>
+>> This function is used in cdns3_role_stop in debugfs.c file so it can't
+>> be static.
+>
+>it's still super fishy. Why don't you need _start() from debugfs.c? In
+>any case, the role framework would remove the need for any of this, I
+>suppose.
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
----
- drivers/net/ethernet/hisilicon/hip04_eth.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Yes, I'm going to use the role framework so it will be probably changed.=20
+>
+>>>> +static int cdns3_idle_role_start(struct cdns3 *cnds)
+>>>> +{	/* Hold PHY in RESET */
+>>>
+>>>huh?
+>>>
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static void cdns3_idle_role_stop(struct cdns3 *cnds)
+>>>> +{
+>>>> +	/* Program Lane swap and bring PHY out of RESET */
+>>>
+>>>double huh?
+>>>
+>>
+>> These functions were added for consistency with FSM described in control=
+ler specification.
+>> Yes, I know that you don't like empty functions :), but it could be help=
+ful in
+>> understanding how this controller work.
+>
+>frankly, it really doesn't. An empty function doesn't really help IMHO.
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index fe61b01..19d8cfd 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -16,6 +16,8 @@
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
- 
-+#define SC_PPE_RESET_DREQ		0x026C
-+
- #define PPE_CFG_RX_ADDR			0x100
- #define PPE_CFG_POOL_GRP		0x300
- #define PPE_CFG_RX_BUF_SIZE		0x400
-@@ -61,6 +63,8 @@
- 
- #define PPE_HIS_RX_PKT_CNT		0x804
- 
-+#define RESET_DREQ_ALL			0xffffffff
-+
- /* REG_INTERRUPT */
- #define RCV_INT				BIT(10)
- #define RCV_NOBUF			BIT(8)
-@@ -168,6 +172,9 @@ struct rx_desc {
- 
- struct hip04_priv {
- 	void __iomem *base;
-+#if defined(CONFIG_HI13X1_GMAC)
-+	void __iomem *sysctrl_base;
-+#endif
- 	int phy_mode;
- 	int chan;
- 	unsigned int port;
-@@ -244,6 +251,13 @@ static void hip04_config_port(struct net_device *ndev, u32 speed, u32 duplex)
- 	writel_relaxed(val, priv->base + GE_MODE_CHANGE_REG);
- }
- 
-+static void hip04_reset_dreq(struct hip04_priv *priv)
-+{
-+#if defined(CONFIG_HI13X1_GMAC)
-+	writel_relaxed(RESET_DREQ_ALL, priv->sysctrl_base + SC_PPE_RESET_DREQ);
-+#endif
-+}
-+
- static void hip04_reset_ppe(struct hip04_priv *priv)
- {
- 	u32 val, tmp, timeout = 0;
-@@ -853,6 +867,15 @@ static int hip04_mac_probe(struct platform_device *pdev)
- 		goto init_fail;
- 	}
- 
-+#if defined(CONFIG_HI13X1_GMAC)
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	priv->sysctrl_base = devm_ioremap_resource(d, res);
-+	if (IS_ERR(priv->sysctrl_base)) {
-+		ret = PTR_ERR(priv->sysctrl_base);
-+		goto init_fail;
-+	}
-+#endif
-+
- 	ret = of_parse_phandle_with_fixed_args(node, "port-handle", 2, 0, &arg);
- 	if (ret < 0) {
- 		dev_warn(d, "no port-handle\n");
-@@ -921,6 +944,7 @@ static int hip04_mac_probe(struct platform_device *pdev)
- 	ndev->irq = irq;
- 	netif_napi_add(ndev, &priv->napi, hip04_rx_poll, NAPI_POLL_WEIGHT);
- 
-+	hip04_reset_dreq(priv);
- 	hip04_reset_ppe(priv);
- 	if (priv->phy_mode == PHY_INTERFACE_MODE_MII)
- 		hip04_config_port(ndev, SPEED_100, DUPLEX_FULL);
--- 
-1.8.5.6
+I will change it.
+>
+>>>> +static const char *const cdns3_mode[] =3D {
+>>>> +	[USB_DR_MODE_UNKNOWN]		=3D "unknown",
+>>>> +	[USB_DR_MODE_OTG]		=3D "otg",
+>>>> +	[USB_DR_MODE_HOST]		=3D "host",
+>>>> +	[USB_DR_MODE_PERIPHERAL]	=3D "device",
+>>>> +};
+>>>
+>>>don't we have a generic version of this under usb/common ?
+>>>
+>> Yes, there is a similar array, but it is defined also as static
+>> and there is no function for converting value to string.
+>> There is only function for converting string to value.
+>
+>right. You can add the missing interface generically instead of
+>duplicating the enumeration.
+
+Patch adding such extension has posted.=20
+
+>
+>> There is also:
+>> [USB_DR_MODE_UNKNOWN]		=3D "",
+>> Instead of:
+>> [USB_DR_MODE_UNKNOWN]		=3D "unknown",
+>>
+>> So, for USB_DR_MODE_UNKNOWN user will not see anything information.
+>
+>But that's what "unknown" means :-) We don't know the information.
+>
+>>>> +static irqreturn_t cdns3_drd_irq(int irq, void *data)
+>>>> +{
+>>>> +	irqreturn_t ret =3D IRQ_NONE;
+>>>> +	struct cdns3 *cdns =3D data;
+>>>> +	u32 reg;
+>>>> +
+>>>> +	if (cdns->dr_mode !=3D USB_DR_MODE_OTG)
+>>>> +		return ret;
+>>>> +
+>>>> +	reg =3D readl(&cdns->otg_regs->ivect);
+>>>> +
+>>>> +	if (!reg)
+>>>> +		return ret;
+>>>> +
+>>>> +	if (reg & OTGIEN_ID_CHANGE_INT) {
+>>>> +		dev_dbg(cdns->dev, "OTG IRQ: new ID: %d\n",
+>>>> +			cdns3_get_id(cdns));
+>>>> +
+>>>> +		ret =3D IRQ_HANDLED;
+>>>> +	}
+>>>> +
+>>>> +	if (reg & (OTGIEN_VBUSVALID_RISE_INT | OTGIEN_VBUSVALID_FALL_INT)) {
+>>>> +		dev_dbg(cdns->dev, "OTG IRQ: new VBUS: %d\n",
+>>>> +			cdns3_get_vbus(cdns));
+>>>> +
+>>>> +		ret =3D IRQ_HANDLED;
+>>>> +	}
+>>>> +
+>>>> +	if (ret =3D=3D IRQ_HANDLED)
+>>>> +		queue_work(system_freezable_wq, &cdns->role_switch_wq);
+>>>> +
+>>>> +	writel(~0, &cdns->otg_regs->ivect);
+>>>> +	return ret;
+>>>> +}
+>>>
+>>>seems like you could use threaded irq to avoid this workqueue.
+>>
+>>
+>> This function is also called in cdns3_mode_write (debugfs.c file),
+>> therefor after changing it to threaded irq I will still need workqueue.
+>
+>Why? debugfs writes are not atomic. They run in process context, right?
+>Just don't disable interrupts while running this and you should be fine.
+
+Yes, It should work.=20
+
+>
+>>>> +	cdns->desired_dr_mode =3D cdns->dr_mode;
+>>>> +	cdns->current_dr_mode =3D USB_DR_MODE_UNKNOWN;
+>>>> +
+>>>> +	ret =3D devm_request_threaded_irq(cdns->dev, cdns->otg_irq,
+>>>> +					cdns3_drd_irq,
+>>>> +					NULL, IRQF_SHARED,
+>>>
+>>>if you don't have a threaded handler, you should set IRQF_ONESHOT. I
+>>>would prefer if you implement a threaded handler that doesn't require
+>>>IRQF_ONESHOT, though.
+>>>
+>>
+>> IRQF_ONESHOT can be used  only in threaded handled.
+>> "
+>>  * IRQF_ONESHOT - Interrupt is not reenabled after the hardirq handler f=
+inished.
+>>  *                Used by threaded interrupts which need to keep the
+>>  *                irq line disabled until the threaded handler has been =
+run.
+>> "
+>
+>so?
+
+I don't understand why If I don't have threaded handler why I need IRQF_ONE=
+SHOT.=20
+Why interrupt cannot be reenabled after hardirq handler finished ?
+I do not use threaded handler so this flag seem unnecessary.=20
+
+>
+>>>> +	} else {
+>>>> +		struct usb_request *request;
+>>>> +
+>>>> +		if (priv_dev->eps[index]->flags & EP_WEDGE) {
+>>>> +			cdns3_select_ep(priv_dev, 0x00);
+>>>> +			return 0;
+>>>> +		}
+>>>> +
+>>>> +		cdns3_dbg(priv_ep->cdns3_dev, "Clear Stalled endpoint %s\n",
+>>>> +			  priv_ep->name);
+>>>
+>>>why do you need your own wrapper around dev_dbg()? This looks quite unne=
+cessary.
+>>
+>> It's generic function used for adding message to trace.log.  It's not wr=
+apper to dev_dbg
+>>
+>> void cdns3_dbg(struct cdns3_device *priv_dev, const char *fmt, ...)
+>> {
+>> 	struct va_format vaf;
+>> 	va_list args;
+>>
+>> 	va_start(args, fmt);
+>> 	vaf.fmt =3D fmt;
+>> 	vaf.va =3D &args;
+>> 	trace_cdns3_log(priv_dev, &vaf);
+>> 	va_end(args);
+>> }
+>
+>oh. Don't do it like that. Add a proper trace event that actually
+>decodes the information you want. These random messages will give you
+>trouble in the future. I had this sort of construct in dwc3 for a while
+>and it became clear that it's a bad idea. It's best to have trace events
+>that decode information coming from the HW. That way your trace logs
+>have a "predictable" shape/format and you can easily find problem areas.
+
+Ok , I will change this.
+I used such solution because I didn't want to create to many trace events.=
+=20
+I used it only for rely used messages.=20
+
+Thanks,
+Regards
+Pawel
+
+>
+>--
+>balbi
