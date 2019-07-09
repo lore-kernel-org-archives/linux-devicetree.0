@@ -1,139 +1,42 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V12 01/12] PCI: Add #defines for some of PCIe spec r4.0
- features
-Date: Tue, 9 Jul 2019 19:08:46 +0530
-Message-ID: <841a79fa-24ff-8710-456a-44f081230d8f@nvidia.com>
-References: <20190701124010.7484-1-vidyas@nvidia.com>
- <20190701124010.7484-2-vidyas@nvidia.com>
- <66d8af45-66f5-b597-0ea8-39e8662df5e6@nvidia.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: Re: [PATCH 0/5]Add support for mt2701 JPEG ENC support
+Date: Tue, 9 Jul 2019 15:46:07 +0200
+Message-ID: <79316488-30fd-7ff3-7598-d29f85f663ab@xs4all.nl>
+References: <20190709032103.10291-1-xia.jiang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <66d8af45-66f5-b597-0ea8-39e8662df5e6@nvidia.com>
+In-Reply-To: <20190709032103.10291-1-xia.jiang@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com
-Cc: lorenzo.pieralisi@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Xia Jiang <xia.jiang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rick Chang <rick.chang@mediatek.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 7/5/2019 7:16 PM, Vidya Sagar wrote:
-Bjorn,
-Apologies for pinging again about this.
-Can you please provide Ack for this change so that Lorenzo can pick up this=
- series?
+On 7/9/19 5:20 AM, Xia Jiang wrote:
+> This patchset add support for mt2701 JPEG ENC support.
+> 
+> This is the compliance test result for jpeg dec and enc.
+> 
+> The JPEG dec log:
+> ------------------------------------------------------------
+> v4l2-compliance -d /dev/video0
+> v4l2-compliance SHA: 08fed4d0edb1492b91d9d1054c36fed95c372eaa, 32 bits
 
-Thanks,
-Vidya Sagar
+Hmm, the SHA indicates that you are using an old v4l2-compliance version.
+Please get the latest code from the v4l-utils git repo.
 
-> On 7/1/2019 6:09 PM, Vidya Sagar wrote:
-> Bjorn,
-> Can you please provide Ack for this patch?
->=20
-> Thanks,
-> Vidya Sagar
->=20
->> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
->> features.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Reviewed-by: Thierry Reding <treding@nvidia.com>
->> ---
->> Changes since [v11]:
->> * None
->>
->> Changes since [v10]:
->> * None
->>
->> Changes since [v9]:
->> * None
->>
->> Changes since [v8]:
->> * None
->>
->> Changes since [v7]:
->> * None
->>
->> Changes since [v6]:
->> * None
->>
->> Changes since [v5]:
->> * None
->>
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * Updated commit message and description to explicitly mention that defi=
-nes are
->> =C2=A0=C2=A0 added only for some of the features and not all.
->>
->> Changes since [v1]:
->> * None
->>
->> =C2=A0 include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
->> =C2=A0 1 file changed, 21 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs=
-.h
->> index f28e562d7ca8..1c79f6a097d2 100644
->> --- a/include/uapi/linux/pci_regs.h
->> +++ b/include/uapi/linux/pci_regs.h
->> @@ -713,7 +713,9 @@
->> =C2=A0 #define PCI_EXT_CAP_ID_DPC=C2=A0=C2=A0=C2=A0 0x1D=C2=A0=C2=A0=C2=
-=A0 /* Downstream Port Containment */
->> =C2=A0 #define PCI_EXT_CAP_ID_L1SS=C2=A0=C2=A0=C2=A0 0x1E=C2=A0=C2=A0=C2=
-=A0 /* L1 PM Substates */
->> =C2=A0 #define PCI_EXT_CAP_ID_PTM=C2=A0=C2=A0=C2=A0 0x1F=C2=A0=C2=A0=C2=
-=A0 /* Precision Time Measurement */
->> -#define PCI_EXT_CAP_ID_MAX=C2=A0=C2=A0=C2=A0 PCI_EXT_CAP_ID_PTM
->> +#define PCI_EXT_CAP_ID_DLF=C2=A0=C2=A0=C2=A0 0x25=C2=A0=C2=A0=C2=A0 /* =
-Data Link Feature */
->> +#define PCI_EXT_CAP_ID_PL=C2=A0=C2=A0=C2=A0 0x26=C2=A0=C2=A0=C2=A0 /* P=
-hysical Layer 16.0 GT/s */
->> +#define PCI_EXT_CAP_ID_MAX=C2=A0=C2=A0=C2=A0 PCI_EXT_CAP_ID_PL
->> =C2=A0 #define PCI_EXT_CAP_DSN_SIZEOF=C2=A0=C2=A0=C2=A0 12
->> =C2=A0 #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
->> @@ -1053,4 +1055,22 @@
->> =C2=A0 #define=C2=A0 PCI_L1SS_CTL1_LTR_L12_TH_SCALE=C2=A0=C2=A0=C2=A0 0x=
-e0000000=C2=A0 /* LTR_L1.2_THRESHOLD_Scale */
->> =C2=A0 #define PCI_L1SS_CTL2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=
-x0c=C2=A0=C2=A0=C2=A0 /* Control 2 Register */
->> +/* Data Link Feature */
->> +#define PCI_DLF_CAP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x04=C2=
-=A0=C2=A0=C2=A0 /* Capabilities Register */
->> +#define=C2=A0 PCI_DLF_LOCAL_DLF_SUP_MASK=C2=A0=C2=A0=C2=A0 0x007fffff=
-=C2=A0 /* Local Data Link Feature Supported */
->> +#define=C2=A0 PCI_DLF_EXCHANGE_ENABLE=C2=A0=C2=A0=C2=A0 0x80000000=C2=
-=A0 /* Data Link Feature Exchange Enable */
->> +#define PCI_DLF_STS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x08=C2=
-=A0=C2=A0=C2=A0 /* Status Register */
->> +#define=C2=A0 PCI_DLF_REMOTE_DLF_SUP_MASK=C2=A0=C2=A0=C2=A0 0x007fffff=
-=C2=A0 /* Remote Data Link Feature Supported */
->> +#define=C2=A0 PCI_DLF_REMOTE_DLF_SUP_VALID=C2=A0=C2=A0=C2=A0 0x80000000=
-=C2=A0 /* Remote Data Link Feature Support Valid */
->> +
->> +/* Physical Layer 16.0 GT/s */
->> +#define PCI_PL_16GT_CAP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x04=
-=C2=A0=C2=A0=C2=A0 /* Capabilities Register */
->> +#define PCI_PL_16GT_CTRL=C2=A0=C2=A0=C2=A0 0x08=C2=A0=C2=A0=C2=A0 /* Co=
-ntrol Register */
->> +#define PCI_PL_16GT_STS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0c=
-=C2=A0=C2=A0=C2=A0 /* Status Register */
->> +#define PCI_PL_16GT_LDPM_STS=C2=A0=C2=A0=C2=A0 0x10=C2=A0=C2=A0=C2=A0 /=
-* Local Data Parity Mismatch Status Register */
->> +#define PCI_PL_16GT_FRDPM_STS=C2=A0=C2=A0=C2=A0 0x14=C2=A0=C2=A0=C2=A0 =
-/* First Retimer Data Parity Mismatch Status Register */
->> +#define PCI_PL_16GT_SRDPM_STS=C2=A0=C2=A0=C2=A0 0x18=C2=A0=C2=A0=C2=A0 =
-/* Second Retimer Data Parity Mismatch Status Register */
->> +#define PCI_PL_16GT_RSVD=C2=A0=C2=A0=C2=A0 0x1C=C2=A0=C2=A0=C2=A0 /* Re=
-served */
->> +#define PCI_PL_16GT_LE_CTRL=C2=A0=C2=A0=C2=A0 0x20=C2=A0=C2=A0=C2=A0 /*=
- Lane Equalization Control Register */
->> +
->> =C2=A0 #endif /* LINUX_PCI_REGS_H */
->>
->=20
+<snip>
+
+> Buffer ioctls:
+>                 fail: v4l2-test-buffers.cpp(713): q.create_bufs(node, 1, &fmt) != EINVAL
+
+This should be fixed: this test tries to create a buffer of half the minimum
+size, and the driver doesn't check that it is too small.
+
+Ditto for the encoder.
+
+Regards,
+
+	Hans
