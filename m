@@ -1,97 +1,45 @@
-Return-Path: <SRS0=mNx5=U6=gmail.com=akinobu.mita@kernel.org>
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v5 2/4] dt-bindings: thermal: nvme: Add binding documentation
-Date: Mon,  1 Jul 2019 23:12:32 +0900
-Message-Id: <1561990354-4084-3-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1561990354-4084-1-git-send-email-akinobu.mita@gmail.com>
-References: <1561990354-4084-1-git-send-email-akinobu.mita@gmail.com>
-To: linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Rob Herring <robh@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Minwoo Im <minwoo.im.dev@gmail.com>, Kenneth Heitke <kenneth.heitke@intel.com>, Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 8 Jul 2019 19:56:46 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] clk: qcom: gcc: Add global clock controller driver
+ for SM8150
+Message-ID: <20190709015646.GA30394@bogus>
+References: <20190607101234.30449-1-vkoul@kernel.org>
+ <20190607101234.30449-2-vkoul@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607101234.30449-2-vkoul@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Deepak Katragadda <dkatraga@codeaurora.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add thermal binding documentation for NVMe temperature sensor.
+On Fri, Jun 07, 2019 at 03:42:34PM +0530, Vinod Koul wrote:
+> From: Deepak Katragadda <dkatraga@codeaurora.org>
+> 
+> Add the clocks supported in global clock controller which clock the
+> peripherals like BLSPs, SDCC, USB, MDSS etc. Register all the clocks
+> to the clock framework for the clients to be able to request for them.
+> 
+> Signed-off-by: Deepak Katragadda <dkatraga@codeaurora.org>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> [vkoul: port to upstream and tidy-up]
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,gcc.txt    |    1 +
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Keith Busch <kbusch@kernel.org>
-Cc: Jens Axboe <axboe@fb.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Minwoo Im <minwoo.im.dev@gmail.com>
-Cc: Kenneth Heitke <kenneth.heitke@intel.com>
-Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v5
-- New patch
+>  drivers/clk/qcom/Kconfig                      |    7 +
+>  drivers/clk/qcom/Makefile                     |    1 +
+>  drivers/clk/qcom/gcc-sm8150.c                 | 3649 +++++++++++++++++
 
- Documentation/devicetree/bindings/thermal/nvme.txt | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/nvme.txt
+>  include/dt-bindings/clock/qcom,gcc-sm8150.h   |  243 ++
 
-diff --git a/Documentation/devicetree/bindings/thermal/nvme.txt b/Documentation/devicetree/bindings/thermal/nvme.txt
-new file mode 100644
-index 0000000..60b90de
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/nvme.txt
-@@ -0,0 +1,56 @@
-+Binding for NVMe temperature sensor
-+
-+An NVMe controller reports up to nine temperature values in the SMART / Health
-+log.
-+
-+Required properties:
-+- reg: A five-cell address encoded as (phys.hi phys.mid phys.lo size.hi
-+  size.lo). phys.hi should contain the device's BDF (Bus/Device/Function)
-+  as 0b00000000 bbbbbbbb dddddfff 00000000. The other cells should be zero.
-+  See also Documentation/devicetree/bindings/pci/pci.txt
-+
-+- #thermal-sensor-cells: Must be 1. See ./thermal.txt for a description.
-+  In the thermal-sensors property, the sensor ID 0 for composite temperature,
-+  1 through 8 for NVMe temperature sensor N.
-+
-+Example:
-+
-+&pcie0 {
-+	...
-+	nvme: nvme@0,0 {
-+		reg = <0x0000 0 0 0 0>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+
-+		nvmetemp: nvmetemp {
-+			reg = <0x0000 0 0 0 0>; /* DEVFN = 0x00 (0:0) */
-+			#thermal-sensor-cells = <1>;
-+		};
-+	};
-+};
-+
-+&thermal_zones {
-+	nvme_thermal: nvme {
-+		polling-delay-passive = <2000>; /* milliseconds */
-+		polling-delay = <0>; /* asynchronous event driven */
-+
-+				/* sensor	ID */
-+		thermal-sensors = <&nvmetemp	0>;
-+
-+		trips {
-+			nvme_alert0: nvme_alert0 {
-+				temperature = <80000>; /* millicelsius */
-+				hysteresis = <2000>; /* millicelsius */
-+				type = "passive";
-+			};
-+		};
-+
-+		cooling-maps {
-+			map0 {
-+				trip = <&nvme_alert0>;
-+				cooling-device =
-+				<&fan0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+			};
-+		};
-+	};
-+};
--- 
-2.7.4
+Next time, please split bindings to separate patch. 
+
+For the DT parts,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  5 files changed, 3901 insertions(+)
+>  create mode 100644 drivers/clk/qcom/gcc-sm8150.c
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-sm8150.h
