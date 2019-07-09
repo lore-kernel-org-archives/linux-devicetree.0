@@ -1,31 +1,73 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 08/15] spi: imx: add new i.mx6ul compatible name in
- binding doc
-Date: Mon, 8 Jul 2019 20:17:53 -0600
-Message-ID: <20190709021753.GA8533@bogus>
-References: <20190610081753.11422-1-yibin.gong@nxp.com>
- <20190610081753.11422-9-yibin.gong@nxp.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: interrupt-controller: Amazon's
+ Annapurna Labs FIC
+Date: Mon, 8 Jul 2019 20:23:01 -0600
+Message-ID: <20190709022301.GA8734@bogus>
+References: <1560155683-29584-1-git-send-email-talel@amazon.com>
+ <1560155683-29584-2-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190610081753.11422-9-yibin.gong@nxp.com>
+In-Reply-To: <1560155683-29584-2-git-send-email-talel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: yibin.gong@nxp.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org, festevam@gmail.com, vkoul@kernel.org, dan.j.williams@intel.com, u.kleine-koenig@pengutronix.de, catalin.marinas@arm.com, l.stach@pengutronix.de, will.deacon@arm.com, linux-spi@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+To: Talel Shenhar <talel@amazon.com>
+Cc: nicolas.ferre@microchip.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Jun 2019 16:17:46 +0800, yibin.gong@nxp.com wrote:
-> From: Robin Gong <yibin.gong@nxp.com>
+On Mon, Jun 10, 2019 at 11:34:42AM +0300, Talel Shenhar wrote:
+> Document Amazon's Annapurna Labs Fabric Interrupt Controller SoC binding.
 > 
-> ERR009165 fixed from i.mx6ul, add its compatible name in binding
-> doc.
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
 > ---
->  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../interrupt-controller/amazon,al-fic.txt         | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> new file mode 100644
+> index 0000000..4e82fd5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> @@ -0,0 +1,29 @@
+> +Amazon's Annapurna Labs Fabric Interrupt Controller
+> +
+> +Required properties:
+> +
+> +- compatible: should be "amazon,al-fic"
+> +- reg: physical base address and size of the registers
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #interrupt-cells: must be 2.
+> +  First cell defines the index of the interrupt within the controller.
+> +  Second cell is used to specify the trigger type and must be one of the
+> +  following:
+> +    - bits[3:0] trigger type and level flags
+> +	1 = low-to-high edge triggered
+> +	4 = active high level-sensitive
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+No need to define this here. Reference the standard definition.
+
+> +- interrupt-parent: specifies the parent interrupt controller.
+
+Drop this. It is implied and could be in the parent.
+
+> +- interrupts: describes which input line in the interrupt parent, this
+> +  fic's output is connected to. This field property depends on the parent's
+> +  binding
+> +
+> +Example:
+> +
+> +amazon_fic: interrupt-controller@0xfd8a8500 {
+
+Drop the '0x'
+
+> +	compatible = "amazon,al-fic";
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +	reg = <0x0 0xfd8a8500 0x0 0x1000>;
+> +	interrupt-parent = <&gic>;
+> +	interrupts = <GIC_SPI 0x0 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+> -- 
+> 2.7.4
+> 
