@@ -1,100 +1,43 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
- Host
-Date: Tue, 9 Jul 2019 21:25:00 +0300
-Message-ID: <20190709182500.3x544axnrgy72aje@valkosipuli.retiisi.org.uk>
-References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
- <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
- <20190628141326.swgl3kg4fj5pmlqx@valkosipuli.retiisi.org.uk>
- <MN2PR12MB37109D7AADCE4823CB458CB9CBF60@MN2PR12MB3710.namprd12.prod.outlook.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: arm: Convert RDA Micro board/soc bindings to
+ json-schema
+Date: Tue, 9 Jul 2019 12:29:11 -0600
+Message-ID: <CAL_Jsq+S9FEVq_ikLF2vWS3VkrGueFa8nPnbHhAjThemP+eajA@mail.gmail.com>
+References: <20190618212229.32302-4-robh@kernel.org>
+ <20190709171508.GA10127@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <MN2PR12MB37109D7AADCE4823CB458CB9CBF60@MN2PR12MB3710.namprd12.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luis de Oliveira <Luis.Oliveira@synopsys.com>
-Cc: "mchehab@kernel.org" <mchehab@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kishon@ti.com" <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190709171508.GA10127@Mani-XPS-13-9360>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: devicetree@vger.kernel.org, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Luis,
-
-On Mon, Jul 08, 2019 at 03:21:50PM +0000, Luis de Oliveira wrote:
-> Hi Sakari,
-> 
-> Thank you for your feedback.
-> I have my comments inline.
-> 
-> From: Sakari Ailus <sakari.ailus@iki.fi>
-> Date: Fri, Jun 28, 2019 at 15:13:26
-> 
-> > Hi Luis,
-> > 
-> > Thank you for the patchset.
-> > 
-> > On Tue, Jun 11, 2019 at 09:20:50PM +0200, Luis Oliveira wrote:
-> > > From: Luis Oliveira <lolivei@synopsys.com>
-> > > 
-> > > Add bindings for Synopsys DesignWare MIPI CSI-2 host.
-> > > 
-> > > Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-> > > ---
-> > > Changelog
-> > > v3-v4
-> > > - remove "plat" from the block name @rob @laurent
-> > > - remove "phy-names" when single-entry @rob
-> > > - remove "snps,output-type" -> went to the driver config @laurent
-> > > 
-> > >  .../devicetree/bindings/media/snps,dw-csi.txt      | 41 ++++++++++++++++++++++
-> > >  1 file changed, 41 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/snps,dw-csi.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/snps,dw-csi.txt b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
-> > > new file mode 100644
-> > > index 0000000..613b7f9
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
-> > > @@ -0,0 +1,41 @@
-> > > +Synopsys DesignWare CSI-2 Host controller
-> > > +
-> > > +Description
-> > > +-----------
-> > > +
-> > > +This HW block is used to receive image coming from an MIPI CSI-2 compatible
-> > > +camera.
-> > > +
-> > > +Required properties:
-> > > +- compatible		: shall be "snps,dw-csi"
-> > > +- reg			: physical base address and size of the device memory
-> > > +			  mapped registers;
-> > > +- interrupts		: DW CSI-2 Host interrupts
-> > > +- phys			: List of one PHY specifier (as defined in
-> > > +			  Documentation/devicetree/bindings/phy/phy-bindings.txt).
-> > > +			  This PHY is a MIPI DPHY working in RX mode.
-> > > +- resets		: Reference to a reset controller (optional)
-> > > +
-> > > +The per-board settings:
-> > > + - port sub-node describing a single endpoint connected to the camera as
-> > > +   described in video-interfaces.txt[1].
-> > 
-> > Which endpoint properties in video-interfaces.txt are relevant for the
-> > hardware? Which values may they have?
-> > 
-> 
-> Currently I'm using only two properties "data-lanes" and "bus-width", but 
-> I have plans to add blanking info also.
-> I will add more info.
-
-Isn't blanking defined by what the transmitter seneds? Or do you have
-hardware limitations on the receiver side?
-
-I've only heard of one such case before, and it was a very old parallel
-receiver.
-
-If you have a CSI-2 receiver, bus-width isn't relevant --- it's for paralle
-interfaces only. Please add data-lanes to required endpoint properties.
-
--- 
-Regards,
-
-Sakari Ailus
+T24gVHVlLCBKdWwgOSwgMjAxOSBhdCAxMToxNSBBTSBNYW5pdmFubmFuIFNhZGhhc2l2YW0KPG1h
+bml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8ub3JnPiB3cm90ZToKPgo+IEhpIFJvYiwKPgo+IE9u
+IFR1ZSwgSnVuIDE4LCAyMDE5IGF0IDAzOjIyOjI4UE0gLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3Rl
+Ogo+ID4gQ29udmVydCBSREEgTWljcm8gU29DIGJpbmRpbmdzIHRvIERUIHNjaGVtYSBmb3JtYXQg
+dXNpbmcganNvbi1zY2hlbWEuCj4gPgo+ID4gQ2M6ICJBbmRyZWFzIEbDpHJiZXIiIDxhZmFlcmJl
+ckBzdXNlLmRlPgo+ID4gQ2M6IE1hbml2YW5uYW4gU2FkaGFzaXZhbSA8bWFuaXZhbm5hbi5zYWRo
+YXNpdmFtQGxpbmFyby5vcmc+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBr
+ZXJuZWwub3JnPgo+ID4gLS0tCj4gPiBBbmRyZWFzLCBVcGRhdGUgdGhlIGxpY2Vuc2Ugb24gdGhp
+cyBvbmUgdG9vIHRvIGR1YWwgbGljZW5zZWQgaWYgeW91Cj4gPiB3YW50Lgo+Cj4gSSdtIGZpbmUg
+d2l0aCBHUEwtMi4wLiBTaW5jZSB0aGVyZSBpc24ndCBhbnkgb3RoZXIgUkRBIHNwZWNpZmljIHBh
+dGNoZXMKPiBpbiBteSB0cmVlLCB5b3Ugd2FudCB0byB0YWtlIHRoaXMgcGF0Y2g/IEVsc2UgSSBo
+YXZlIHRvIHNlbmQgdGhlIFB1bGwKPiBSZXF1ZXN0IHRvIEFSTSBTb0MgZm9sa3Mgd2l0aCB0aGlz
+IHBhdGNoIGFsb25lLgoKT2theSwgSSBjYW4gdGFrZSBpdC4gVGhlIHByZWZlcmVuY2UgaXMgYWN0
+dWFsbHkgZHVhbCBsaWNlbnNlZCB3aGljaCBpcwp3aHkgSSBhc2tlZCwgYnV0IHRoYXQgY2FuIGJl
+IGRvbmUgbGF0ZXIuCgpSb2IKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
