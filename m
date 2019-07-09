@@ -1,7 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH V2 3/4] arm64: dts: imx8mq: Add opp-suspend property to OPP table
-Date: Tue,  9 Jul 2019 16:00:14 +0800
-Message-ID: <20190709080015.43442-3-Anson.Huang@nxp.com>
+Subject: [PATCH V2 4/4] arm64: dts: imx8mm: Add opp-suspend property to OPP table
+Date: Tue,  9 Jul 2019 16:00:15 +0800
+Message-ID: <20190709080015.43442-4-Anson.Huang@nxp.com>
 References: <20190709080015.43442-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190709080015.43442-1-Anson.Huang@nxp.com>
@@ -20,38 +20,30 @@ Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 No changes.
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 58f66cb..4ba6a25f 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -156,6 +156,7 @@
- 			/* Industrial only */
- 			opp-supported-hw = <0xf>, <0x4>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 398318b..973f457 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -108,6 +108,7 @@
+ 			opp-microvolt = <850000>;
+ 			opp-supported-hw = <0xe>, <0x7>;
  			clock-latency-ns = <150000>;
 +			opp-suspend;
  		};
  
- 		opp-1000000000 {
-@@ -164,6 +165,7 @@
- 			/* Consumer only */
- 			opp-supported-hw = <0xe>, <0x3>;
+ 		opp-1600000000 {
+@@ -115,6 +116,7 @@
+ 			opp-microvolt = <900000>;
+ 			opp-supported-hw = <0xc>, <0x7>;
  			clock-latency-ns = <150000>;
 +			opp-suspend;
  		};
  
- 		opp-1300000000 {
-@@ -171,6 +173,7 @@
- 			opp-microvolt = <1000000>;
- 			opp-supported-hw = <0xc>, <0x4>;
- 			clock-latency-ns = <150000>;
-+			opp-suspend;
- 		};
- 
- 		opp-1500000000 {
-@@ -178,6 +181,7 @@
+ 		opp-1800000000 {
+@@ -122,6 +124,7 @@
  			opp-microvolt = <1000000>;
  			opp-supported-hw = <0x8>, <0x3>;
  			clock-latency-ns = <150000>;
