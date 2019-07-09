@@ -1,34 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V5 1/5] dt-bindings: imx: Add clock binding doc for
- i.MX8MN
-Date: Tue, 9 Jul 2019 11:05:31 -0600
-Message-ID: <20190709170531.GA19236@bogus>
-References: <20190619055247.35771-1-Anson.Huang@nxp.com>
+From: Luis de Oliveira <Luis.Oliveira@synopsys.com>
+Subject: RE: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
+ Host
+Date: Tue, 9 Jul 2019 17:08:51 +0000
+Message-ID: <MN2PR12MB3710465D7065DAF1F2D45C45CBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
+References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+ <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
+ <ae0ffeca-9305-b5a2-3480-da623d15ce67@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190619055247.35771-1-Anson.Huang@nxp.com>
+In-Reply-To: <ae0ffeca-9305-b5a2-3480-da623d15ce67@microchip.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, maxime.ripard@bootlin.com, olof@lixom.net, horms+renesas@verge.net.au, jagan@amarulasolutions.com, leonard.crestez@nxp.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, enric.balletbo@collabora.com, aisheng.dong@nxp.com, ping.bai@nxp.com, abel.vesa@nxp.com, l.stach@pengutronix.de, peng.fan@nxp.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+To: "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>, "Luis.Oliveira@synopsys.com" <Luis.Oliveira@synopsys.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kishon@ti.com" <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Jun 2019 13:52:43 +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> Add the clock binding doc for i.MX8MN.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
-> No changes.
-> ---
->  .../devicetree/bindings/clock/imx8mn-clock.yaml    | 112 +++++++++++
->  include/dt-bindings/clock/imx8mn-clock.h           | 215 +++++++++++++++++++++
->  2 files changed, 327 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
->  create mode 100644 include/dt-bindings/clock/imx8mn-clock.h
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+SGkgRXVnZW4sDQoNCg0KRnJvbTogRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIDxFdWdlbi5I
+cmlzdGV2QG1pY3JvY2hpcC5jb20+DQpEYXRlOiBUdWUsIEp1bCAwOSwgMjAxOSBhdCAxNTozMzo1
+MA0KDQo+IA0KPiANCj4gT24gMTEuMDYuMjAxOSAyMjoyMCwgTHVpcyBPbGl2ZWlyYSB3cm90ZToN
+Cj4gPiBGcm9tOiBMdWlzIE9saXZlaXJhIDxsb2xpdmVpQHN5bm9wc3lzLmNvbT4NCj4gPiANCj4g
+PiBBZGQgYmluZGluZ3MgZm9yIFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSSBDU0ktMiBob3N0Lg0K
+PiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEx1aXMgT2xpdmVpcmEgPGxvbGl2ZWlAc3lub3BzeXMu
+Y29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZWxvZw0KPiA+IHYzLXY0DQo+ID4gLSByZW1vdmUgInBs
+YXQiIGZyb20gdGhlIGJsb2NrIG5hbWUgQHJvYiBAbGF1cmVudA0KPiA+IC0gcmVtb3ZlICJwaHkt
+bmFtZXMiIHdoZW4gc2luZ2xlLWVudHJ5IEByb2INCj4gPiAtIHJlbW92ZSAic25wcyxvdXRwdXQt
+dHlwZSIgLT4gd2VudCB0byB0aGUgZHJpdmVyIGNvbmZpZyBAbGF1cmVudA0KPiA+IA0KPiA+ICAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvc25wcyxkdy1jc2kudHh0ICAgICAgfCA0MSAr
+KysrKysrKysrKysrKysrKysrKysrDQo+ID4gICAxIGZpbGUgY2hhbmdlZCwgNDEgaW5zZXJ0aW9u
+cygrKQ0KPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS50eHQNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3NucHMsZHctY3NpLnR4dCBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS50eHQNCj4g
+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjYxM2I3ZjkNCj4gPiAt
+LS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21lZGlhL3NucHMsZHctY3NpLnR4dA0KPiA+IEBAIC0wLDAgKzEsNDEgQEANCj4gPiArU3lub3Bz
+eXMgRGVzaWduV2FyZSBDU0ktMiBIb3N0IGNvbnRyb2xsZXINCj4gPiArDQo+ID4gK0Rlc2NyaXB0
+aW9uDQo+ID4gKy0tLS0tLS0tLS0tDQo+ID4gKw0KPiA+ICtUaGlzIEhXIGJsb2NrIGlzIHVzZWQg
+dG8gcmVjZWl2ZSBpbWFnZSBjb21pbmcgZnJvbSBhbiBNSVBJIENTSS0yIGNvbXBhdGlibGUNCj4g
+PiArY2FtZXJhLg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21w
+YXRpYmxlCQk6IHNoYWxsIGJlICJzbnBzLGR3LWNzaSINCj4gPiArLSByZWcJCQk6IHBoeXNpY2Fs
+IGJhc2UgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgZGV2aWNlIG1lbW9yeQ0KPiA+ICsJCQkgIG1h
+cHBlZCByZWdpc3RlcnM7DQo+ID4gKy0gaW50ZXJydXB0cwkJOiBEVyBDU0ktMiBIb3N0IGludGVy
+cnVwdHMNCj4gPiArLSBwaHlzCQkJOiBMaXN0IG9mIG9uZSBQSFkgc3BlY2lmaWVyIChhcyBkZWZp
+bmVkIGluDQo+ID4gKwkJCSAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9w
+aHktYmluZGluZ3MudHh0KS4NCj4gPiArCQkJICBUaGlzIFBIWSBpcyBhIE1JUEkgRFBIWSB3b3Jr
+aW5nIGluIFJYIG1vZGUuDQo+ID4gKy0gcmVzZXRzCQk6IFJlZmVyZW5jZSB0byBhIHJlc2V0IGNv
+bnRyb2xsZXIgKG9wdGlvbmFsKQ0KPiA+ICsNCj4gPiArVGhlIHBlci1ib2FyZCBzZXR0aW5nczoN
+Cj4gPiArIC0gcG9ydCBzdWItbm9kZSBkZXNjcmliaW5nIGEgc2luZ2xlIGVuZHBvaW50IGNvbm5l
+Y3RlZCB0byB0aGUgY2FtZXJhIGFzDQo+ID4gKyAgIGRlc2NyaWJlZCBpbiB2aWRlby1pbnRlcmZh
+Y2VzLnR4dFsxXS4NCj4gPiArDQo+ID4gK0V4YW1wbGU6DQo+ID4gKw0KPiA+ICsJY3NpMjogY3Np
+MkAzMDAwIHsNCj4gPiArCQljb21wYXRpYmxlID0gInNucHMsZHctY3NpIjsNCj4gPiArCQkjYWRk
+cmVzcy1jZWxscyA9IDwxPjsNCj4gPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiArCQlyZWcg
+PSA8IDB4MDMwMDAgMHg3RkY+Ow0KPiA+ICsJCXBoeXMgPSA8Jm1pcGlfZHBoeV9yeD47DQo+ID4g
+KwkJcmVzZXRzID0gPCZkd19yc3QgMT47DQo+ID4gKwkJaW50ZXJydXB0cyA9IDwyPjsNCj4gPiAr
+DQo+ID4gKwkJcG9ydEAwIHsNCj4gPiArCQkJcmVnID0gPDA+Ow0KPiA+ICsJCQljc2lfZXAxOiBl
+bmRwb2ludCB7DQo+ID4gKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmNhbWVyYV8xPjsNCj4gPiAr
+CQkJCWRhdGEtbGFuZXMgPSA8MSAyPjsNCj4gPiArCQkJfTsNCj4gDQo+IEhlbGxvIEx1aXMsDQo+
+IA0KPiBXaGljaCBpcyB0aGUgb3V0cHV0IHBvcnQgKGVuZHBvaW50KSA6IGhvdyB0byBjb25uZWN0
+IHRoZSBvdXRwdXQgb2YgDQo+IGNzaTJob3N0IHRvIGFub3RoZXIgbm9kZSA/DQo+IEkgbWVhbiwg
+dGhlIHNlY29uZCBwb3J0IG9mIHRoaXMgYmxvY2ssIG9yLCBob3cgaXMgdGhlIGRhdGEgdGFrZW4g
+ZnJvbSANCj4gY3NpMmhvc3QgPw0KPiANCg0KSSB1bmRlcnN0YW5kIHlvdXIgcXVlc3Rpb24sIEkg
+dGhpbmsgeW91IGd1ZXNzZWQgdGhpcyBpcyBub3QgdGhlIGNvbXBsZXRlIA0KcGlwZWxpbmUgKEkg
+aGF2ZSBhIHRvcCBkcml2ZXIgdGhhdCBpbnRlcmFjdHMgd2l0aCB0aGlzIG9uZSkuDQpJIHdhcyBu
+b3QgcGxhbm5pbmcgdG8gc3VibWl0IGl0LCBkbyB5b3UgdGhpbmsgSSBzaG91bGQ/DQoNClRoZSBi
+ZWhhdmlvciBpcyB2ZXJ5IHNpbWlsYXIgd2l0aCB0aGlzIG9uZSANCi4vZHJpdmVycy9tZWRpYS9w
+bGF0Zm9ybS9leHlub3M0LWlzL21lZGlhLWRldi5jDQoNCg0KPiBUaGFua3MsDQo+IA0KPiBFdWdl
+bg0KPiANCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4gPiANCg0KVGhhbmtzLA0KTHVpcw0K
