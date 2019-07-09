@@ -1,46 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 02/10] dt-bindings: serial: add optional pinctrl states
-Date: Tue, 9 Jul 2019 08:38:38 -0600
-Message-ID: <20190709143838.GA5665@bogus>
-References: <1560433800-12255-1-git-send-email-erwan.leray@st.com>
- <1560433800-12255-3-git-send-email-erwan.leray@st.com>
+Subject: Re: [PATCH 4/8] dt-bindings: tpm: document properties for cr50
+Date: Tue, 9 Jul 2019 08:41:26 -0600
+Message-ID: <20190709144126.GA12345@bogus>
+References: <20190613180931.65445-1-swboyd@chromium.org>
+ <20190613180931.65445-5-swboyd@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1560433800-12255-3-git-send-email-erwan.leray@st.com>
+In-Reply-To: <20190613180931.65445-5-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Erwan Le Ray <erwan.leray@st.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mark Rutland <mark.rutland@arm.com>, linux-serial@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>, Bich Hemon <bich.hemon@st.com>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, Duncan Laurie <dlaurie@chromium.org>, Guenter Roeck <groeck@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 03:49:52PM +0200, Erwan Le Ray wrote:
-> From: Bich Hemon <bich.hemon@st.com>
+On Thu, Jun 13, 2019 at 11:09:27AM -0700, Stephen Boyd wrote:
+> From: Andrey Pronin <apronin@chromium.org>
 > 
-> Add options for pinctrl states:
-> - "sleep" for low power
-> - "idle" for low power and wakeup capabilities enabled
-> - "no_console_suspend" for enabling console messages in low power
+> Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
+> firmware.
 > 
-> Signed-off-by: Bich Hemon <bich.hemon@st.com>
-> Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+> Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-> index 5ec80c1..64a5ea9 100644
-> --- a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-> +++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-> @@ -13,7 +13,14 @@ Required properties:
->  - clocks: The input clock of the USART instance
->  
->  Optional properties:
-> -- pinctrl: The reference on the pins configuration
-> +- pinctrl-names: Set to "default". An additional "sleep" state can be defined
-> +  to set pins in sleep state when in low power. In case the device is used as
-> +  a wakeup source, "idle" state is defined in order to keep RX pin active.
-> +  For a console device, an optional state "no_console_suspend" can be defined
-> +  to enable console messages during suspend. Typically, "no_console_suspend" and
-> +  "default" states can refer to the same pin configuration.
+> This is a resend of https://lkml.kernel.org/r/1469757314-116169-2-git-send-email-apronin@chromium.org
+> with status removed.
+> 
+>  .../bindings/security/tpm/cr50_spi.txt        | 19 +++++++++++++++++++
 
-no_console_suspend is a linux thing and doesn't belong in DT.
+google,cr50.txt instead.
 
-Rob
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
