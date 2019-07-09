@@ -1,26 +1,69 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 2/4] edac: Add support for Amazon's Annapurna Labs L1
- EDAC
-Date: Tue, 09 Jul 2019 10:59:31 -0700
-Message-ID: <ff4ce6a96a922cff2dd929560b9167207b4899e9.camel@perches.com>
-References: <1562500658-14717-1-git-send-email-hhhawa@amazon.com>
-         <1562500658-14717-3-git-send-email-hhhawa@amazon.com>
-         <20190709173229.0000135f@huawei.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v7 16/18] MAINTAINERS: add entry for KUnit the unit
+ testing framework
+Date: Tue, 9 Jul 2019 11:01:35 -0700
+Message-ID: <CAFd5g4595X8cM919mohQVaShs4dKWzZ_-2RVB=6SH3RdVMwuQw@mail.gmail.com>
+References: <20190709063023.251446-1-brendanhiggins@google.com>
+ <20190709063023.251446-17-brendanhiggins@google.com> <7cc417dd-036f-7dc1-6814-b1fdac810f03@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190709173229.0000135f@huawei.com>
+In-Reply-To: <7cc417dd-036f-7dc1-6814-b1fdac810f03@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Hanna Hawa <hhhawa@amazon.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+To: shuah <shuah@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-07-09 at 17:32 +0800, Jonathan Cameron wrote:
-> On Sun, 7 Jul 2019 14:57:36 +0300
-[]
-> > +#define ARM_CA57_CPUMERRSR_REPEAT		GENMASK(39, 32)
-> > +#define ARM_CA57_CPUMERRSR_OTHER		GENMASK(47, 40)
-> > +#define ARM_CA57_CPUMERRSR_FATAL		GENMASK(63, 63)
+On Tue, Jul 9, 2019 at 7:53 AM shuah <shuah@kernel.org> wrote:
+>
+> On 7/9/19 12:30 AM, Brendan Higgins wrote:
+> > Add myself as maintainer of KUnit, the Linux kernel's unit testing
+> > framework.
+> >
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> > ---
+> >   MAINTAINERS | 11 +++++++++++
+> >   1 file changed, 11 insertions(+)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 677ef41cb012c..48d04d180a988 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -8599,6 +8599,17 @@ S:     Maintained
+> >   F:  tools/testing/selftests/
+> >   F:  Documentation/dev-tools/kselftest*
+> >
+> > +KERNEL UNIT TESTING FRAMEWORK (KUnit)
+> > +M:   Brendan Higgins <brendanhiggins@google.com>
+> > +L:   linux-kselftest@vger.kernel.org
+> > +L:   kunit-dev@googlegroups.com
+> > +W:   https://google.github.io/kunit-docs/third_party/kernel/docs/
+> > +S:   Maintained
+> > +F:   Documentation/dev-tools/kunit/
+> > +F:   include/kunit/
+> > +F:   kunit/
+> > +F:   tools/testing/kunit/
+> > +
+> >   KERNEL USERMODE HELPER
+> >   M:  Luis Chamberlain <mcgrof@kernel.org>
+> >   L:  linux-kernel@vger.kernel.org
+> >
+>
+> Thanks Brendan.
+>
+> I am good with this. I can take KUnit patches through kselftest
+> with your Ack.
 
-GENMASK_ULL
+My acknowledgement? Sure! I thought we already agreed to that.
+
+Also, do we need an ack from Masahiro or Michal for the Kbuild patch
+[PATCH v7 06/18]? And an ack from Josh or Peter for the objtool patch
+[PATCH v7 08/18]?
+
+Greg and Logan gave me a Reviewed-by for the Kbuild patch, so maybe
+that's fine, but I don't have any reviews or acks for the objtool
+patch.
+
+Thanks!
