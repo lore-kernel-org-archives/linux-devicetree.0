@@ -1,116 +1,42 @@
-Return-Path: <SRS0=mNx5=U6=gmail.com=akinobu.mita@kernel.org>
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v5 3/4] nvme: support DT thermal zone device
-Date: Mon,  1 Jul 2019 23:12:33 +0900
-Message-Id: <1561990354-4084-4-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1561990354-4084-1-git-send-email-akinobu.mita@gmail.com>
-References: <1561990354-4084-1-git-send-email-akinobu.mita@gmail.com>
-To: linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Rob Herring <robh@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Minwoo Im <minwoo.im.dev@gmail.com>, Kenneth Heitke <kenneth.heitke@intel.com>, Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 9 Jul 2019 10:23:15 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1
+ to r8a7792
+Message-ID: <20190709162315.GA9309@bogus>
+References: <156076216767.4736.16337667537984218274.sendpatchset@octo>
+ <156076219472.4736.14727682068388338615.sendpatchset@octo>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156076219472.4736.14727682068388338615.sendpatchset@octo>
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-In addition to the standard thermal zone device, this adds support for
-registering the DT thermal zone device.
+On Mon, 17 Jun 2019 18:03:14 +0900, Magnus Damm wrote:
+> From: Magnus Damm <damm+renesas@opensource.se>
+> 
+> This patch adds DT binding documentation for the CMT devices on
+> the R-Car Gen2 V2H (r8a7792) SoC.
+> 
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+> ---
+> 
+>  Documentation/devicetree/bindings/timer/renesas,cmt.txt |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> --- 0004/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+> +++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-06-17 13:35:10.526874153 +0900
+> @@ -35,6 +35,8 @@ Required Properties:
+>      - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
+>      - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
+>      - "renesas,r8a7791-cmt1" for the 48-bit CMT1 device included in r8a7791.
+> +    - "renesas,r8a7792-cmt0" for the 32-bit CMT0 device included in r8a7792.
+> +    - "renesas,r8a7792-cmt1" for the 48-bit CMT1 device included in r8a7792.
+>      - "renesas,r8a7793-cmt0" for the 32-bit CMT0 device included in r8a7793.
+>      - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
+>      - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
+> 
 
-If there is a device tree thermal zone node with the nvme temperature
-sensor, the standard thermal zone device is not created.
-Because we don't need two thermal zone devices for the same sensor.
-
-Cc: Rob Herring <robh@kernel.org>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Keith Busch <kbusch@kernel.org>
-Cc: Jens Axboe <axboe@fb.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Minwoo Im <minwoo.im.dev@gmail.com>
-Cc: Kenneth Heitke <kenneth.heitke@intel.com>
-Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v5
-- split the DT thermal zone support into separate patch
-- don't register both standard and DT thermal zone
-
- drivers/nvme/host/nvme.h    |  1 +
- drivers/nvme/host/thermal.c | 38 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+)
-
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 49dd59ec..d501567 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -159,6 +159,7 @@ struct nvme_fault_inject {
- struct nvme_tz {
- 	struct thermal_zone_params params;
- 	struct thermal_zone_device *dev;
-+	struct thermal_zone_device *of_dev;
- 	unsigned int sensor;
- };
- 
-diff --git a/drivers/nvme/host/thermal.c b/drivers/nvme/host/thermal.c
-index c3608f6..431aeb4 100644
---- a/drivers/nvme/host/thermal.c
-+++ b/drivers/nvme/host/thermal.c
-@@ -150,6 +150,11 @@ static struct thermal_zone_device_ops nvme_tz_ops = {
- 	.set_trip_temp = nvme_tz_set_trip_temp,
- };
- 
-+static struct thermal_zone_of_device_ops nvme_tz_of_ops = {
-+	.get_temp = nvme_tz_of_get_temp,
-+	.set_trip_temp = nvme_tz_of_set_trip_temp,
-+};
-+
- static const struct thermal_zone_params nvme_tz_params = {
- 	.governor_name = "user_space",
- 	.no_hwmon = true,
-@@ -164,6 +169,36 @@ static int nvme_thermal_zone_register(struct nvme_ctrl *ctrl,
- 	int ret;
- 
- 	tz->sensor = sensor;
-+
-+	tzdev = thermal_zone_of_sensor_register(ctrl->dev, sensor, tz,
-+						&nvme_tz_of_ops);
-+	if (!IS_ERR(tzdev)) {
-+		int trip_temp;
-+
-+		ret = tzdev->ops->get_trip_temp(tzdev, 0, &trip_temp);
-+		if (ret) {
-+			dev_err(ctrl->device,
-+				"Failed to get trip temp: %d\n", ret);
-+			return ret;
-+		}
-+
-+		ret = tzdev->ops->set_trip_temp(tzdev, 0, trip_temp);
-+		if (ret) {
-+			dev_err(ctrl->device,
-+				"Failed to set trip temp: %d\n", ret);
-+			return ret;
-+		}
-+
-+		tz->of_dev = tzdev;
-+
-+		return 0;
-+	}
-+
-+	if (PTR_ERR(tzdev) != -ENODEV)
-+		dev_warn(ctrl->device,
-+			 "Failed to register thermal zone of sensor %d: %ld\n",
-+			 sensor, PTR_ERR(tzdev));
-+
- 	tz->params = nvme_tz_params;
- 	snprintf(name, sizeof(name), "nvme%d_temp%u", ctrl->instance, sensor);
- 
-@@ -286,6 +321,9 @@ void nvme_thermal_zones_unregister(struct nvme_ctrl *ctrl)
- 			tz->dev = NULL;
- 		}
- 
-+		thermal_zone_of_sensor_unregister(ctrl->dev, tz->of_dev);
-+		tz->of_dev = NULL;
-+
- 		__clear_bit(i, ctrl->tz_enabled);
- 	}
- }
--- 
-2.7.4
+Reviewed-by: Rob Herring <robh@kernel.org>
