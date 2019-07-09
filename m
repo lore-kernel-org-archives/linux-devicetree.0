@@ -1,26 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/6] dt-bindings: usb: bdc: Update compatible strings
-Date: Tue, 9 Jul 2019 14:14:35 -0600
-Message-ID: <20190709201435.GA18881@bogus>
-References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
- <1561064991-16874-6-git-send-email-alcooperx@gmail.com>
+Subject: Re: [PATCH 2/4] dt-bindings: clock: imx8mm: Add system counter clock
+Date: Tue, 9 Jul 2019 14:18:20 -0600
+Message-ID: <20190709201820.GA25832@bogus>
+References: <20190621070720.12395-1-Anson.Huang@nxp.com>
+ <20190621070720.12395-2-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1561064991-16874-6-git-send-email-alcooperx@gmail.com>
+In-Reply-To: <20190621070720.12395-2-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Anson.Huang@nxp.com
+Cc: catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, leonard.crestez@nxp.com, aisheng.dong@nxp.com, ping.bai@nxp.com, daniel.baluta@nxp.com, peng.fan@nxp.com, abel.vesa@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Jun 2019 17:09:50 -0400, Al Cooper wrote:
-> Remove "brcm,bdc-v0.16" because it was never used on any system.
-> Add "brcm,bdc-udc-v3.1" which exists for any STB system with BDC.
+On Fri, 21 Jun 2019 15:07:18 +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
 > 
-> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> Add i.MX8MM system counter clock macro definition.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  Documentation/devicetree/bindings/usb/brcm,bdc.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  include/dt-bindings/clock/imx8mm-clock.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
