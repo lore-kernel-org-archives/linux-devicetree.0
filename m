@@ -1,53 +1,76 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] scsi: ufs: Allow resetting the UFS device
-Date: Mon, 8 Jul 2019 19:48:32 -0600
-Message-ID: <20190709014832.GA14402@bogus>
-References: <20190606010249.3538-1-bjorn.andersson@linaro.org>
- <20190606010249.3538-3-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH V2 2/2] dt-bindings: Document the DesignWare IP reset
+ bindings
+Date: Mon, 8 Jul 2019 19:52:20 -0600
+Message-ID: <20190709015220.GA18239@bogus>
+References: <1559835388-2578-1-git-send-email-luis.oliveira@synopsys.com>
+ <1559835388-2578-3-git-send-email-luis.oliveira@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190606010249.3538-3-bjorn.andersson@linaro.org>
+In-Reply-To: <1559835388-2578-3-git-send-email-luis.oliveira@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Evan Green <evgreen@chromium.org>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc: p.zabel@pengutronix.de, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Joao.Pinto@synopsys.com, Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 06:02:48PM -0700, Bjorn Andersson wrote:
-> Acquire the device-reset GPIO and toggle this to reset the UFS device
-> during initialization and host reset.
+On Thu, Jun 06, 2019 at 05:36:28PM +0200, Luis Oliveira wrote:
+> This adds documentation of device tree bindings for the
+> DesignWare IP reset controller.
 > 
-> Based on downstream support implemented by Subhash Jadavani
-> <subhashj@codeaurora.org>.
-> 
-> Tested-by: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
 > ---
+> Changelog
+> - Add active low configuration example
+> - Fix compatible string in the active high example
 > 
-> Changes since v1:
-> - Added gpio to DT binding document
-> - Fixed spelling of UFS
+>  .../devicetree/bindings/reset/snps,dw-reset.txt    | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/snps,dw-reset.txt
 > 
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |  2 +
->  drivers/scsi/ufs/ufshcd.c                     | 44 +++++++++++++++++++
->  drivers/scsi/ufs/ufshcd.h                     |  4 ++
->  3 files changed, 50 insertions(+)
+> diff --git a/Documentation/devicetree/bindings/reset/snps,dw-reset.txt b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
+> new file mode 100644
+> index 0000000..85f3301
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
+> @@ -0,0 +1,30 @@
+> +Synopsys DesignWare Reset controller
+> +=======================================
+> +
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
+> +
+> +Required properties:
+> +
+> +- compatible: should be one of the following.
+> +	"snps,dw-high-reset" - for active high configuration
+> +	"snps,dw-low-reset" - for active low configuration
+
+This is really a standalone block?
+
+Are there versions of IP?
+
+> +
+> +- reg: physical base address of the controller and length of memory mapped
+> +	region.
+> +
+> +- #reset-cells: must be 1.
+> +
+> +example:
+> +
+> +	dw_rst_1: reset-controller@0000 {
+> +		  compatible = "snps,dw-high-reset";
+> +	 	  reg = <0x0000 0x4>;
+> +		  #reset-cells = <1>;
+> +	};
+> +
+> +	dw_rst_2: reset-controller@1000 {i
+> +		  compatible = "snps,dw-low-reset";
+> +		  reg = <0x1000 0x8>;
+> +		  #reset-cells = <1>;
+> +	};
+> -- 
+> 2.7.4
 > 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> index a74720486ee2..d562d8b4919c 100644
-> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> @@ -54,6 +54,8 @@ Optional properties:
->  			  PHY reset from the UFS controller.
->  - resets            : reset node register
->  - reset-names       : describe reset node register, the "rst" corresponds to reset the whole UFS IP.
-> +- device-reset-gpios	: A phandle and gpio specifier denoting the GPIO connected
-> +			  to the RESET pin of the UFS memory device.
-
-A sign we should have a child node for the device...
-
-Doesn't using 'reset-gpios' work as I doubt one would have a GPIO reset 
-for the host controller.
-
-Rob
