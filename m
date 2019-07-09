@@ -1,42 +1,91 @@
-Return-Path: <SRS0=7VNh=VW=electromag.com.au=rtresidd@kernel.org>
-From: Richard Tresidder <rtresidd@electromag.com.au>
-Subject: [PATCH 1/1] dt-bindings: power/supply/sbs_sbs-battery: Addition of force_load binding Add device tree binding documentation for addition of force_load boolean value to allow loading a battery during boot even if not present at that time.
-Date: Thu, 25 Jul 2019 14:50:45 +0800
-Message-Id: <1564037445-22936-1-git-send-email-rtresidd@electromag.com.au>
-To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, rtresidd@electromag.com.au, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=9dZr=VG=linux.intel.com=felipe.balbi@kernel.org>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+In-Reply-To: <BYAPR07MB47094B372CEC6DFD25FC78E1DDF10@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-6-git-send-email-pawell@cadence.com> <87r274lmqk.fsf@linux.intel.com> <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com> <87a7dpm442.fsf@linux.intel.com> <BYAPR07MB47094B372CEC6DFD25FC78E1DDF10@BYAPR07MB4709.namprd07.prod.outlook.com>
+Date: Tue, 09 Jul 2019 09:36:57 +0300
+Message-ID: <87pnmj67ee.fsf@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
----
 
-Notes:
-    Add device tree binding documentation for addition of force_load
-    boolean value to allow loading a battery during boot even if not
-    present at that time.
-    Accompanying patch to drivers/power/supply/sbs-battery.c submitted to linux-pm@vger.kernel.org
+Hi,
 
- Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Pawel Laszczak <pawell@cadence.com> writes:
+>>> IRQF_ONESHOT can be used  only in threaded handled.
+>>> "
+>>>  * IRQF_ONESHOT - Interrupt is not reenabled after the hardirq handler finished.
+>>>  *                Used by threaded interrupts which need to keep the
+>>>  *                irq line disabled until the threaded handler has been run.
+>>> "
+>>
+>>so?
+>
+> I don't understand why If I don't have threaded handler why I need IRQF_ONESHOT. 
+> Why interrupt cannot be reenabled after hardirq handler finished ?
+> I do not use threaded handler so this flag seem unnecessary. 
 
-diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-index 4e78e51..187d7bb 100644
---- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-+++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-@@ -15,7 +15,8 @@ Optional properties :
-    after an external change notification.
-  - sbs,battery-detect-gpios : The gpio which signals battery detection and
-    a flag specifying its polarity.
--
-+ - sbs,force-load : Allow loading of a hot-pluggable battery when there is no
-+   GPIO detect available and the module is statically built.
- Example:
- 
- 	battery@b {
-@@ -24,4 +25,5 @@ Example:
- 		sbs,i2c-retry-count = <2>;
- 		sbs,poll-retry-count = <10>;
- 		sbs,battery-detect-gpios = <&gpio-controller 122 1>;
-+		sbs,force-load;
- 	}
+Unless this has changed over the years, it was a requirement from IRQ susbystem.
+
+	/*
+	 * Drivers are often written to work w/o knowledge about the
+	 * underlying irq chip implementation, so a request for a
+	 * threaded irq without a primary hard irq context handler
+	 * requires the ONESHOT flag to be set. Some irq chips like
+	 * MSI based interrupts are per se one shot safe. Check the
+	 * chip flags, so we can avoid the unmask dance at the end of
+	 * the threaded handler for those.
+	 */
+	if (desc->irq_data.chip->flags & IRQCHIP_ONESHOT_SAFE)
+		new->flags &= ~IRQF_ONESHOT;
+
+>>>>> +	} else {
+>>>>> +		struct usb_request *request;
+>>>>> +
+>>>>> +		if (priv_dev->eps[index]->flags & EP_WEDGE) {
+>>>>> +			cdns3_select_ep(priv_dev, 0x00);
+>>>>> +			return 0;
+>>>>> +		}
+>>>>> +
+>>>>> +		cdns3_dbg(priv_ep->cdns3_dev, "Clear Stalled endpoint %s\n",
+>>>>> +			  priv_ep->name);
+>>>>
+>>>>why do you need your own wrapper around dev_dbg()? This looks quite unnecessary.
+>>>
+>>> It's generic function used for adding message to trace.log.  It's not wrapper to dev_dbg
+>>>
+>>> void cdns3_dbg(struct cdns3_device *priv_dev, const char *fmt, ...)
+>>> {
+>>> 	struct va_format vaf;
+>>> 	va_list args;
+>>>
+>>> 	va_start(args, fmt);
+>>> 	vaf.fmt = fmt;
+>>> 	vaf.va = &args;
+>>> 	trace_cdns3_log(priv_dev, &vaf);
+>>> 	va_end(args);
+>>> }
+>>
+>>oh. Don't do it like that. Add a proper trace event that actually
+>>decodes the information you want. These random messages will give you
+>>trouble in the future. I had this sort of construct in dwc3 for a while
+>>and it became clear that it's a bad idea. It's best to have trace events
+>>that decode information coming from the HW. That way your trace logs
+>>have a "predictable" shape/format and you can easily find problem areas.
+>
+> Ok , I will change this.
+> I used such solution because I didn't want to create to many trace events. 
+> I used it only for rely used messages. 
+
+If you have these messages that are *really* needed, then you should add
+a trace event for it. Look at the events we have on dwc3 if you need
+some inspiration. Could also look at the history of our trace events to
+figure out how things changed over time.
+
+cheers
+
 -- 
-1.8.3.1
+balbi
