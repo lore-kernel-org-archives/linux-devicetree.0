@@ -1,53 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/7] ASoC: rockchip: rockchip-max98090: Add node for HDMI
-Date: Tue, 9 Jul 2019 14:01:21 -0600
-Message-ID: <20190709200121.GA19118@bogus>
-References: <20190603043251.226549-1-cychiang@chromium.org>
- <20190603043251.226549-6-cychiang@chromium.org>
+Subject: Re: [PATCHv2] clk: add imx8 clk defines
+Date: Tue, 9 Jul 2019 14:03:00 -0600
+Message-ID: <20190709200300.GA29006@bogus>
+References: <20190619074000.30852-1-oliver.graute@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190603043251.226549-6-cychiang@chromium.org>
+In-Reply-To: <20190619074000.30852-1-oliver.graute@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Cheng-Yi Chiang <cychiang@chromium.org>
-Cc: linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Russell King <rmk+kernel@armlinux.org.uk>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org, dgreid@chromium.org, tzungbi@chromium.org, linux-media@vger.kernel.org, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.inf
+To: Oliver Graute <oliver.graute@gmail.com>
+Cc: sboyd@kernel.org, mturquette@baylibre.com, Oliver Graute <oliver.graute@kococonnector.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 12:32:49PM +0800, Cheng-Yi Chiang wrote:
-> Let user specify HDMI node so machine driver can use it to let codec
-> driver register callback on correct hdmi-notifier.
+On Wed, 19 Jun 2019 09:39:52 +0200, Oliver Graute wrote:
+> From: Oliver Graute <oliver.graute@kococonnector.com>
 > 
-> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> added header defines for imx8qm clock
+> 
+> Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
 > ---
->  Documentation/devicetree/bindings/sound/rockchip-max98090.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  include/dt-bindings/clock/imx8qm-clock.h | 851 +++++++++++++++++++++++
+>  1 file changed, 851 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/imx8qm-clock.h
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/rockchip-max98090.txt b/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
-> index a805aa99ad75..dae57c14864e 100644
-> --- a/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
-> +++ b/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
-> @@ -7,6 +7,7 @@ Required properties:
->    connected to the CODEC
->  - rockchip,audio-codec: The phandle of the MAX98090 audio codec
->  - rockchip,headset-codec: The phandle of Ext chip for jack detection
-> +- rockchip,hdmi: The phandle of HDMI node for HDMI jack detection
->  
->  Example:
->  
-> @@ -16,4 +17,5 @@ sound {
->  	rockchip,i2s-controller = <&i2s>;
->  	rockchip,audio-codec = <&max98090>;
->  	rockchip,headset-codec = <&headsetcodec>;
-> +	rockchip,hdmi= <&hdmi>;
 
-space                ^
-
-With that,
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  };
-> -- 
-> 2.22.0.rc1.257.g3120a18244-goog
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
