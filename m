@@ -1,46 +1,63 @@
-From: Xia Jiang <xia.jiang@mediatek.com>
-Subject: [PATCH 5/5] arm: dts: add jpeg enc device tree node
-Date: Tue, 9 Jul 2019 11:21:03 +0800
-Message-ID: <20190709032103.10291-6-xia.jiang@mediatek.com>
-References: <20190709032103.10291-1-xia.jiang@mediatek.com>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Subject: [PATCH v2 06/10] net: hisilicon: dt-bindings: Add an field of port-handle
+Date: Tue, 9 Jul 2019 11:31:07 +0800
+Message-ID: <1562643071-46811-7-git-send-email-xiaojiangfeng@huawei.com>
+References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190709032103.10291-1-xia.jiang@mediatek.com>
+In-Reply-To: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rick Chang <rick.chang@mediatek.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com, Xia Jiang <xia.jiang@mediatek.com>
+To: davem@davemloft.net, robh+dt@kernel.org, yisen.zhuang@huawei.com, salil.mehta@huawei.com, mark.rutland@arm.com, dingtianhong@huawei.com, xiaojiangfeng@huawei.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leeyou.li@huawei.com, nixiaoming@huawei.com, jianping.liu@huawei.com, xiekunxun@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-add jpeg enc device tree node
+In general, group is the same as the port, but some
+boards specify a special group for better load
+balancing of each processing unit.
 
-Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 ---
- arch/arm/boot/dts/mt2701.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 51e1305c6471..560f27fd9d9e 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -569,6 +569,18 @@
- 			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+index d1df8a0..464c0da 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
++++ b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+@@ -10,6 +10,7 @@ Required properties:
+ 	phandle, specifies a reference to the syscon ppe node
+ 	port, port number connected to the controller
+ 	channel, recv channel start from channel * number (RX_DESC_NUM)
++	group, field in the pkg desc, in general, it is the same as the port.
+ - phy-mode: see ethernet.txt [1].
+ 
+ Optional properties:
+@@ -66,7 +67,7 @@ Example:
+ 		reg = <0x28b0000 0x10000>;
+ 		interrupts = <0 413 4>;
+ 		phy-mode = "mii";
+-		port-handle = <&ppe 31 0>;
++		port-handle = <&ppe 31 0 31>;
  	};
  
-+	jpegenc: jpegenc@1500a000 {
-+		compatible = "mediatek,mt2701-jpgenc", "mediatek,mtk-jpgenc";
-+		reg = <0 0x1500a000 0 0x1000>;
-+		interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
-+		clocks =  <&imgsys CLK_IMG_VENC>;
-+		clock-names = "jpgenc";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
-+		mediatek,larb = <&larb2>;
-+		iommus = <&iommu MT2701_M4U_PORT_JPGENC_RDMA>,
-+			<&iommu MT2701_M4U_PORT_JPGENC_BSDMA>;
-+	};
-+
- 	vdecsys: syscon@16000000 {
- 		compatible = "mediatek,mt2701-vdecsys", "syscon";
- 		reg = <0 0x16000000 0 0x1000>;
+ 	ge0: ethernet@2800000 {
+@@ -74,7 +75,7 @@ Example:
+ 		reg = <0x2800000 0x10000>;
+ 		interrupts = <0 402 4>;
+ 		phy-mode = "sgmii";
+-		port-handle = <&ppe 0 1>;
++		port-handle = <&ppe 0 1 0>;
+ 		phy-handle = <&phy0>;
+ 	};
+ 
+@@ -83,6 +84,6 @@ Example:
+ 		reg = <0x2880000 0x10000>;
+ 		interrupts = <0 410 4>;
+ 		phy-mode = "sgmii";
+-		port-handle = <&ppe 8 2>;
++		port-handle = <&ppe 8 2 8>;
+ 		phy-handle = <&phy1>;
+ 	};
 -- 
-2.18.0
+1.8.5.6
