@@ -1,8 +1,8 @@
 From: Stefan Riedmueller <s.riedmueller@phytec.de>
-Subject: [PATCH 08/10] ARM: dts: imx6ul: segin: Move ECSPI interface to board
- include file
-Date: Tue, 9 Jul 2019 09:19:25 +0200
-Message-ID: <1562656767-273566-9-git-send-email-s.riedmueller@phytec.de>
+Subject: [PATCH 09/10] ARM: dts: imx6ul: segin: Move machine include to dts
+ files
+Date: Tue, 9 Jul 2019 09:19:26 +0200
+Message-ID: <1562656767-273566-10-git-send-email-s.riedmueller@phytec.de>
 References: <1562656767-273566-1-git-send-email-s.riedmueller@phytec.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,78 +22,38 @@ To: shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org, mark.rutlan
 Cc: devicetree@vger.kernel.org, martyn.welch@collabora.com, linux-kernel@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The ECSPI interface is available on the expansion connector of every
-PHYTEC phyBOARD-Segin. Move its definition to the board include file
-for better reuse.
+Move the imx6ul.dtsi include to the dts files so it is easier to reuse
+the SOM dtsi for e.g. an i.MX 6ULL SOM.
 
 Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
 ---
- arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts | 14 --------------
- arch/arm/boot/dts/imx6ul-phytec-segin.dtsi            | 16 ++++++++++++++++
- 2 files changed, 16 insertions(+), 14 deletions(-)
+ arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi      | 1 -
+ arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi
+index 09a313daedb8..92bf91674056 100644
+--- a/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi
++++ b/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi
+@@ -7,7 +7,6 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/pwm/pwm.h>
+-#include "imx6ul.dtsi"
+ 
+ / {
+ 	model = "PHYTEC phyCORE-i.MX6 UltraLite";
 diff --git a/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts b/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts
-index c6ef13685a7c..32d90c67a6f2 100644
+index 32d90c67a6f2..699dfcbf9a60 100644
 --- a/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts
 +++ b/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts
-@@ -28,9 +28,6 @@
- };
+@@ -5,6 +5,7 @@
+  */
  
- &ecspi3 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_ecspi3>;
--	cs-gpios = <&gpio1 20 GPIO_ACTIVE_HIGH>;
- 	status = "okay";
- };
- 
-@@ -93,14 +90,3 @@
- &usdhc1 {
- 	status = "okay";
- };
--
--&iomuxc {
--	pinctrl_ecspi3: ecspi3grp {
--		fsl,pins = <
--			MX6UL_PAD_UART2_RTS_B__ECSPI3_MISO	0x10b0
--			MX6UL_PAD_UART2_CTS_B__ECSPI3_MOSI	0x10b0
--			MX6UL_PAD_UART2_RX_DATA__ECSPI3_SCLK	0x10b0
--			MX6UL_PAD_UART2_TX_DATA__GPIO1_IO20	0x10b0
--		>;
--	};
--};
-diff --git a/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi b/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi
-index 7cd24ec40c36..8d5f8dc6ad58 100644
---- a/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi
-@@ -103,6 +103,13 @@
- 	assigned-clock-rates = <786432000>;
- };
- 
-+&ecspi3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi3>;
-+	cs-gpios = <&gpio1 20 GPIO_ACTIVE_HIGH>;
-+	status = "disabled";
-+};
-+
- &fec2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet2>;
-@@ -225,6 +232,15 @@
- 		>;
- 	};
- 
-+	pinctrl_ecspi3: ecspi3grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART2_RTS_B__ECSPI3_MISO	0x10b0
-+			MX6UL_PAD_UART2_CTS_B__ECSPI3_MOSI	0x10b0
-+			MX6UL_PAD_UART2_RX_DATA__ECSPI3_SCLK	0x10b0
-+			MX6UL_PAD_UART2_TX_DATA__GPIO1_IO20	0x10b0
-+		>;
-+	};
-+
- 	pinctrl_enet2: enet2grp {
- 		fsl,pins = <
- 			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
+ /dts-v1/;
++#include "imx6ul.dtsi"
+ #include "imx6ul-phytec-phycore-som.dtsi"
+ #include "imx6ul-phytec-segin.dtsi"
+ #include "imx6ul-phytec-segin-peb-eval-01.dtsi"
 -- 
 2.7.4
