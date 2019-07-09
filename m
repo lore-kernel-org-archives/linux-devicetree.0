@@ -1,135 +1,93 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: soc: add mtk svs dt-bindings
-Date: Tue, 9 Jul 2019 15:47:11 -0600
-Message-ID: <20190709214711.GA9818@bogus>
-References: <20190621084348.16834-1-roger.lu@mediatek.com>
- <20190621084348.16834-2-roger.lu@mediatek.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: mfd: max8998: Add charger subnode
+ binding
+Date: Tue, 9 Jul 2019 15:58:10 -0600
+Message-ID: <20190709215810.GB26049@bogus>
+References: <20190621115602.17559-1-pawel.mikolaj.chmiel@gmail.com>
+ <20190621115602.17559-3-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190621084348.16834-2-roger.lu@mediatek.com>
+In-Reply-To: <20190621115602.17559-3-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Lu <roger.lu@mediatek.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Nicolas Boichat <drinkcat@google.com>, Stephen Boyd <sboyd@kernel.org>, Fan Chen <fan.chen@mediatek.com>, HenryC Chen <HenryC.Chen@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: sre@kernel.org, lee.jones@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 04:43:47PM +0800, Roger Lu wrote:
-> Document the binding for enabling mtk svs on MediaTek SoC.
+On Fri, Jun 21, 2019 at 01:56:02PM +0200, Paweł Chmiel wrote:
+> This patch adds devicetree bindings documentation for
+> battery charging controller as the subnode of MAX8998 PMIC.
 > 
-> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
 > ---
->  .../devicetree/bindings/power/mtk-svs.txt     | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
+> Changes from v3:
+>   - Property prefix should be maxim, not max8998
+>   - Describe what End of Charge in percent means
 > 
-> diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
-> new file mode 100644
-> index 000000000000..6a71992ef162
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
-> @@ -0,0 +1,88 @@
-> +* Mediatek Smart Voltage Scaling (MTK SVS)
+> Changes from v2:
+>   - Make charge-restart-level-microvolt optional.
+>   - Make charge-timeout-hours optional.
+> 
+> Changes from v1:
+>   - Removed unneeded Fixes tag
+>   - Correct description of all charger values
+>   - Added missing property unit
+> ---
+>  .../devicetree/bindings/mfd/max8998.txt       | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Documentation/devicetree/bindings/mfd/max8998.txt
+> index 5f2f07c09c90..368f787d6079 100644
+> --- a/Documentation/devicetree/bindings/mfd/max8998.txt
+> +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
+> @@ -48,6 +48,25 @@ Additional properties required if max8998,pmic-buck2-dvs-gpio is defined:
+>  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in microvolts
+>    for buck2 regulator that can be selected using dvs gpio.
+>  
+> +Charger: Configuration for battery charging controller should be added
+> +inside a child node named 'charger'.
+> +  Required properties:
+> +  - maxim,end-of-charge-percentage: End of Charge in percent.
+> +    When the charge current in constant-voltage phase drops below
+> +    end-of-charge-percentage of it's start value, charging is terminated.
+> +    If value equals 0, leave it unchanged. Otherwise it should be value
+> +    from 10 to 45 by 5 step.
 > +
-> +This describes the device tree binding for the MTK SVS controller (bank)
-> +which helps provide the optimized CPU/GPU/CCI voltages. This device also
-> +needs thermal data to calculate thermal slope for accurately compensate
-> +the voltages when temperature change.
-> +
-> +Required properties:
-> +- compatible:
-> +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
-> +- reg: Address range of the MTK SVS controller.
-> +- interrupts: IRQ for the MTK SVS controller.
-> +- clocks, clock-names: Clocks needed for the svs controller. required
-> +                       clocks are:
-> +		       "main_clk": Main clock needed for register access
+> +  Optional properties:
+> +  - maxim,charge-restart-threshold: Charge restart threshold in millivolts.
+> +    If property is not present, this will be disabled.
+> +    Valid values are: 0, 100, 150, 200. If the value equals 0, leave it
+> +    unchanged.
 
-'_clk' is redundant and can be dropped.
-
-> +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
-> +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
-> +
-> +Subnodes:
-> +- svs_cpu_little: SVS bank device node of little CPU
-> +  compatible: "mediatek,mt8183-svs-cpu-little"
-> +  operating-points-v2: OPP table hooked by SVS little CPU bank.
-> +		       SVS will optimze this OPP table voltage part.
-> +  vcpu-little-supply: PMIC buck of little CPU
-> +- svs_cpu_big: SVS bank device node of big CPU
-> +  compatible: "mediatek,mt8183-svs-cpu-big"
-> +  operating-points-v2: OPP table hooked by SVS big CPU bank.
-> +		       SVS will optimze this OPP table voltage part.
-> +  vcpu-big-supply: PMIC buck of big CPU
-> +- svs_cci: SVS bank device node of CCI
-> +  compatible: "mediatek,mt8183-svs-cci"
-> +  operating-points-v2: OPP table hooked by SVS CCI bank.
-> +		       SVS will optimze this OPP table voltage part.
-> +  vcci-supply: PMIC buck of CCI
-> +- svs_gpu: SVS bank device node of GPU
-> +  compatible: "mediatek,mt8183-svs-gpu"
-> +  operating-points-v2: OPP table hooked by SVS GPU bank.
-> +		       SVS will optimze this OPP table voltage part.
-> +  vgpu-spply: PMIC buck of GPU
-
-typo
+Needs a unit suffix as defined in property-units.txt.
 
 > +
-> +Example:
+> +  - maxim,charge-timeout: Charge timeout in hours. If property is not
+> +    present, this will be disabled. Valid values are: 0, 5, 6, 7.
+> +    If the value equals 0, leave it unchanged.
+
+Needs a unit suffix as defined in property-units.txt.
+
 > +
-> +	svs: svs@1100b000 {
-> +		compatible = "mediatek,mt8183-svs";
-> +		reg = <0 0x1100b000 0 0x1000>;
-> +		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW 0>;
-> +		clocks = <&infracfg CLK_INFRA_THERM>;
-> +		clock-names = "main_clk";
-> +		nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
-> +		nvmem-cell-names = "svs-calibration-data", "calibration-data";
-> +
-> +		svs_cpu_little: svs_cpu_little {
-> +			compatible = "mediatek,mt8183-svs-cpu-little";
-> +			operating-points-v2 = <&cluster0_opp>;
+>  Regulators: All the regulators of MAX8998 to be instantiated shall be
+>  listed in a child node named 'regulators'. Each regulator is represented
+>  by a child node of the 'regulators' node.
+> @@ -97,6 +116,13 @@ Example:
+>  		max8998,pmic-buck2-dvs-gpio = <&gpx0 0 3 0 0>; /* SET3 */
+>  		max8998,pmic-buck2-dvs-voltage = <1350000>, <1300000>;
+>  
+> +		/* Charger configuration */
+> +		charger {
+> +			maxim,end-of-charge-percentage = <20>;
+> +			maxim,charge-restart-threshold = <100>;
+> +			maxim,charge-timeout = <7>;
 > +		};
 > +
-> +		svs_cpu_big: svs_cpu_big {
-> +			compatible = "mediatek,mt8183-svs-cpu-big";
-> +			operating-points-v2 = <&cluster1_opp>;
-> +		};
-> +
-> +		svs_cci: svs_cci {
-> +			compatible = "mediatek,mt8183-svs-cci";
-> +			operating-points-v2 = <&cci_opp>;
-> +		};
-> +
-> +		svs_gpu: svs_gpu {
-> +			compatible = "mediatek,mt8183-svs-gpu";
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
-> +			operating-points-v2 = <&gpu_opp_table>;
-> +		};
-
-This all looks like redundant data which can be found in the cpu, gpu, 
-etc. nodes. Can't you parse those nodes to get the information?
-
-> +	};
-> +
-> +	&svs_cpu_little {
-> +		vcpu-little-supply = <&mt6358_vproc12_reg>;
-
-Don't split examples like this. Just should one flat example.
-
-> +	};
-> +
-> +	&svs_cpu_big {
-> +		vcpu-big-supply = <&mt6358_vproc11_reg>;
-> +	};
-> +
-> +	&svs_cci {
-> +		vcci-supply = <&mt6358_vproc12_reg>;
-> +	};
-> +
-> +	&svs_gpu {
-> +		vgpu-spply = <&mt6358_vgpu_reg>;
-> +	};
+>  		/* Regulators to instantiate */
+>  		regulators {
+>  			ldo2_reg: LDO2 {
 > -- 
-> 2.18.0
+> 2.17.1
 > 
