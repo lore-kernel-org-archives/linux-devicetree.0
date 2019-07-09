@@ -1,47 +1,42 @@
-Return-Path: <SRS0=NiaE=VG=flex--brendanhiggins.bounces.google.com=3rDUkXQ4KBJc2I5E41E89779EJ7FF7C5.3FDIF28B5IE5C.FI7@kernel.org>
-Date: Mon,  8 Jul 2019 23:30:21 -0700
-In-Reply-To: <20190709063023.251446-1-brendanhiggins@google.com>
-Message-Id: <20190709063023.251446-17-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20190709063023.251446-1-brendanhiggins@google.com>
-Subject: [PATCH v7 16/18] MAINTAINERS: add entry for KUnit the unit testing framework
-From: Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
-To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 9 Jul 2019 10:25:19 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 6/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1
+ to r8a77990
+Message-ID: <20190709162519.GA13108@bogus>
+References: <156076216767.4736.16337667537984218274.sendpatchset@octo>
+ <156076222206.4736.3009593403446400658.sendpatchset@octo>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156076222206.4736.3009593403446400658.sendpatchset@octo>
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add myself as maintainer of KUnit, the Linux kernel's unit testing
-framework.
+On Mon, 17 Jun 2019 18:03:42 +0900, Magnus Damm wrote:
+> From: Magnus Damm <damm+renesas@opensource.se>
+> 
+> This patch adds DT binding documentation for the CMT devices on
+> the R-Car Gen3 E3 (r8a77990) SoC.
+> 
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+> ---
+> 
+>  Documentation/devicetree/bindings/timer/renesas,cmt.txt |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> --- 0010/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+> +++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-06-17 13:58:48.559219302 +0900
+> @@ -51,6 +51,8 @@ Required Properties:
+>      - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
+>      - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
+>      - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
+> +    - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
+> +    - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
+>      - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
+>      - "renesas,sh73a0-cmt1" for the 48-bit CMT1 device included in sh73a0.
+>      - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
+> 
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 677ef41cb012c..48d04d180a988 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8599,6 +8599,17 @@ S:	Maintained
- F:	tools/testing/selftests/
- F:	Documentation/dev-tools/kselftest*
- 
-+KERNEL UNIT TESTING FRAMEWORK (KUnit)
-+M:	Brendan Higgins <brendanhiggins@google.com>
-+L:	linux-kselftest@vger.kernel.org
-+L:	kunit-dev@googlegroups.com
-+W:	https://google.github.io/kunit-docs/third_party/kernel/docs/
-+S:	Maintained
-+F:	Documentation/dev-tools/kunit/
-+F:	include/kunit/
-+F:	kunit/
-+F:	tools/testing/kunit/
-+
- KERNEL USERMODE HELPER
- M:	Luis Chamberlain <mcgrof@kernel.org>
- L:	linux-kernel@vger.kernel.org
--- 
-2.22.0.410.gd8fdbe21b5-goog
+Reviewed-by: Rob Herring <robh@kernel.org>
