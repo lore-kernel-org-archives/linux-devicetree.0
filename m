@@ -1,69 +1,78 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH v2 2/4] edac: Add support for Amazon's Annapurna Labs L1
- EDAC
-Date: Tue, 9 Jul 2019 13:30:56 +0100
-Message-ID: <20190709133056.00001c57@huawei.com>
-References: <1562500658-14717-1-git-send-email-hhhawa@amazon.com>
-        <1562500658-14717-3-git-send-email-hhhawa@amazon.com>
-        <20190709173229.0000135f@huawei.com>
-        <45e9ac35-9ffc-8f5f-cbdb-f85453227363@amazon.com>
+From: Qii Wang <qii.wang@mediatek.com>
+Subject: [PATCH v3 1/2] dt-bindings: i3c: Document MediaTek I3C master bindings
+Date: Tue, 9 Jul 2019 21:09:21 +0800
+Message-ID: <1562677762-24067-2-git-send-email-qii.wang@mediatek.com>
+References: <1562677762-24067-1-git-send-email-qii.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <45e9ac35-9ffc-8f5f-cbdb-f85453227363@amazon.com>
+In-Reply-To: <1562677762-24067-1-git-send-email-qii.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Hawa, Hanna" <hhhawa@amazon.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+To: bbrezillon@kernel.org
+Cc: matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, qii.wang@mediatek.com, liguo.zhang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 9 Jul 2019 14:01:03 +0300
-"Hawa, Hanna" <hhhawa@amazon.com> wrote:
+Document MediaTek I3C master DT bindings.
 
-> On 7/9/2019 12:32 PM, Jonathan Cameron wrote:
-> >> Signed-off-by: Hanna Hawa<hhhawa@amazon.com>  
-> > A quick drive by review as I was feeling curious.
-> > 
-> > Just a couple of trivial queries and observation on the fact it
-> > might be useful to add a few devm managed functions to cut down
-> > on edac driver boilerplate.
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> >   
-> >> +#define ARM_CA57_CPUMERRSR_VALID		GENMASK(31, 31)  
-> > For a single bit it's common to use BIT(31) rather than GENMASK to make
-> > it explicit.  
-> 
-> Will fix.
-> 
-> > 
-> >   
-> >> +	edac_dev->mod_name = dev_name(dev);  
-> > I'd admit I'm not that familiar with edac, but seems odd that a
-> > module name field would have the dev_name.  
-> 
-> Will fix when I got more inputs.
-> 
-> >   
-> >> +	edac_device_free_ctl_info(edac_dev);  
-> > More a passing observation than a suggestion for this driver, but if there was
-> > ever a place where it looked like a couple of devm_ allocation functions would
-> > be useful, this is it;)
-> > 
-> > edac_dev = devm_device_alloc_ctrl_info(dev, ...)
-> > ...
-> > devm_edac_device_add_device(dev, ...)  
-> 
-> I agree.
-> I can implement the devm_* functions in separate patches as this is not 
-> related to my patches (and not to delay this patches).
-> 
+Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+---
+ .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   48 ++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
 
-Great.
-
-Jonathan
-
-> > 
-> >   
+diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+new file mode 100644
+index 0000000..d32eda6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+@@ -0,0 +1,48 @@
++Bindings for MediaTek I3C master block
++=====================================
++
++Required properties:
++--------------------
++- compatible: shall be "mediatek,i3c-master"
++- reg: physical base address of the controller and apdma base, length of
++  memory mapped region.
++- reg-names: shall be "main" for master controller and "dma" for apdma.
++- interrupts: the interrupt line connected to this I3C master.
++- clocks: shall reference the i3c and apdma clocks.
++- clock-names: shall include "main" and "dma".
++
++Mandatory properties defined by the generic binding (see
++Documentation/devicetree/bindings/i3c/i3c.txt for more details):
++
++- #address-cells: shall be set to 3
++- #size-cells: shall be set to 0
++
++Optional properties defined by the generic binding (see
++Documentation/devicetree/bindings/i3c/i3c.txt for more details):
++
++- i2c-scl-hz
++- i3c-scl-hz
++
++I3C device connected on the bus follow the generic description (see
++Documentation/devicetree/bindings/i3c/i3c.txt for more details).
++
++Example:
++
++	i3c0: i3c@1100d000 {
++		compatible = "mediatek,i3c-master";
++		reg = <0x1100d000 0x1000>,
++		      <0x11000300 0x80>;
++		reg-names = "main", "dma";
++		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infracfg CLK_INFRA_I3C0>,
++			 <&infracfg CLK_INFRA_AP_DMA>;
++		clock-names = "main", "dma";
++		#address-cells = <3>;
++		#size-cells = <0>;
++		i2c-scl-hz = <100000>;
++
++		nunchuk: nunchuk@52 {
++			compatible = "nintendo,nunchuk";
++			reg = <0x52 0x0 0x10>;
++		};
++	};
+-- 
+1.7.9.5
