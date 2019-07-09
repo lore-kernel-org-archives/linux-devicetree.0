@@ -1,95 +1,135 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge on Teres-I
-Date: Tue, 09 Jul 2019 16:58:35 +0800
-Message-ID: <72E7C765-3660-413A-8450-94BE4B3D1345@aosc.io>
-References: <20190605120237.ekmytfxcwbjaqy3x@flea> <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at> <20190607062802.m5wslx3imiqooq5a@flea> <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com> <20190607094030.GA12373@lst.de> <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com> <20190612152022.c3cfhp4cauhzhfyr@flea> <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com> <20190701095842.fvganvycce2cy7jn@flea> <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com> <20190709085532.cdqv7whuesrjs64c@flea>
+From: Min Guo <min.guo@mediatek.com>
+Subject: Re: [PATCH v6 1/6] dt-bindings: usb: musb: Add support for MediaTek
+ musb controller
+Date: Tue, 9 Jul 2019 17:10:42 +0800
+Message-ID: <1562663442.17100.8.camel@mhfsdcap03>
+References: <1559648359-6569-1-git-send-email-min.guo@mediatek.com>
+         <1559648359-6569-2-git-send-email-min.guo@mediatek.com>
+         <20190708223035.GA7005@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190709085532.cdqv7whuesrjs64c@flea>
+In-Reply-To: <20190708223035.GA7005@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Sean Paul <seanpaul@chromium.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Torsten Duwe <duwe@lst.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel@ffwll.ch>, Harald Geyer <harald@ccbib.org>, Thierry Reding <thierry.reding@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, arm-linux <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, tony@atomide.com, hdegoede@redhat.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
+On Mon, 2019-07-08 at 16:30 -0600, Rob Herring wrote:
+> On Tue, Jun 04, 2019 at 07:39:14PM +0800, min.guo@mediatek.com wrote:
+> > From: Min Guo <min.guo@mediatek.com>
+> > 
+> > This adds support for MediaTek musb controller in
+> > host, peripheral and otg mode.
+> > 
+> > Signed-off-by: Min Guo <min.guo@mediatek.com>
+> > ---
+> > changes in v6:
+> > 1. Modify usb connector child node
+> > 
+> > changes in v5:
+> > suggested by Rob:
+> > 1. Modify compatible as 
+> > - compatible : should be one of:
+> >                "mediatek,mt-2701"
+> 
+> No, should be: mediatek,mt2701-musb
+OK.
 
+> >                ...
+> >                followed by "mediatek,mtk-musb"
+> > 2. Add usb connector child node
+> > 
+> > changes in v4:
+> > suggested by Sergei:
+> > 1. String alignment
+> > 
+> > changes in v3:
+> > 1. no changes
+> > 
+> > changes in v2:
+> > suggested by Bin:
+> > 1. Modify DRC to DRD
+> > suggested by Rob:
+> > 2. Drop the "<soc-model>-musb" in compatible
+> > 3. Remove phy-names
+> > 4. Add space after comma in clock-names
+> > ---
+> >  .../devicetree/bindings/usb/mediatek,musb.txt      | 55 ++++++++++++++++++++++
+> >  1 file changed, 55 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > new file mode 100644
+> > index 0000000..7434299
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > @@ -0,0 +1,55 @@
+> > +MediaTek musb DRD/OTG controller
+> > +-------------------------------------------
+> > +
+> > +Required properties:
+> > + - compatible      : should be one of:
+> > +                     "mediatek,mt-2701"
+> > +                     ...
+> > +                     followed by "mediatek,mtk-musb"
+> > + - reg             : specifies physical base address and size of
+> > +                     the registers
+> > + - interrupts      : interrupt used by musb controller
+> > + - interrupt-names : must be "mc"
+> > + - phys            : PHY specifier for the OTG phy
+> > + - dr_mode         : should be one of "host", "peripheral" or "otg",
+> > +                     refer to usb/generic.txt
+> > + - clocks          : a list of phandle + clock-specifier pairs, one for
+> > +                     each entry in clock-names
+> > + - clock-names     : must contain "main", "mcu", "univpll"
+> > +                     for clocks of controller
+> > +
+> > +Optional properties:
+> > + - power-domains   : a phandle to USB power domain node to control USB's
+> > +                     MTCMOS
+> > +
+> > +Required child nodes:
+> > + usb connector node as defined in bindings/connector/usb-connector.txt
+> > +Optional properties:
+> > + - id-gpios        : input GPIO for USB ID pin.
+> > + - vbus-gpios      : input GPIO for USB VBUS pin.
+> > + - vbus-supply     : reference to the VBUS regulator, needed when supports
+> > +                     dual-role mode
+> > +
+> > +Example:
+> > +
+> > +usb2: usb@11200000 {
+> > +	compatible = "mediatek,mt2701-musb",
+> > +		     "mediatek,mtk-musb";
+> > +	reg = <0 0x11200000 0 0x1000>;
+> > +	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
+> > +	interrupt-names = "mc";
+> > +	phys = <&u2port2 PHY_TYPE_USB2>;
+> > +	dr_mode = "otg";
+> > +	clocks = <&pericfg CLK_PERI_USB0>,
+> > +		 <&pericfg CLK_PERI_USB0_MCU>,
+> > +		 <&pericfg CLK_PERI_USB_SLV>;
+> > +	clock-names = "main","mcu","univpll";
+> > +	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+> > +	connector{
+> > +		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
+> 
+> linux,typeb-conn-gpio is not an accepted compatible string.
+The compatible depends on connector driver, currently under review.
+https://patchwork.kernel.org/patch/10986245
 
-于 2019年7月9日 GMT+08:00 下午4:55:32, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
->On Mon, Jul 08, 2019 at 05:49:21PM -0700, Vasily Khoruzhick wrote:
->> > > Maybe instead of edp-connector one would introduce integrator's
->specific
->> > > connector, for example with compatible
->"olimex,teres-edp-connector"
->> > > which should follow edp abstract connector rules? This will be at
->least
->> > > consistent with below presentation[1] - eDP requirements depends
->on
->> > > integrator. Then if olimex has standard way of dealing with
->panels
->> > > present in olimex/teres platforms the driver would then create
->> > > drm_panel/drm_connector/drm_bridge(?) according to these rules, I
->guess.
->> > > Anyway it still looks fishy for me :), maybe because I am not
->> > > familiarized with details of these platforms.
->> >
->> > That makes sense yes
->>
->> Actually, it makes no sense at all. Current implementation for
->anx6345
->> driver works fine as is with any panel specified assuming panel
->delays
->> are long enough for connected panel. It just doesn't use panel
->timings
->> from the driver. Creating a platform driver for connector itself
->looks
->> redundant since it can't be reused, it doesn't describe actual
->> hardware and it's just defeats purpose of DT by introducing
->> board-specific code.
->
->I'm not sure where you got the idea that the purpose of DT is to not
->have any board-specific code.
->
->It's perfectly fine to have some, that's even why there's a compatible
->assigned to each and every board.
->
->What the DT is about is allowing us to have a generic behaviour that
->we can detect: we can have a given behaviour for a given board, and a
->separate one for another one, and this will be evaluated at runtime.
->
->This is *exactly* what this is about: we can have a compatible that
->sets a given, more specific, behaviour (olimex,teres-edp-connector)
->while saying that this is compatible with the generic behaviour
->(edp-connector). That way, any OS will know what quirk to apply if
->needed, and if not that it can use the generic behaviour.
->
->And we could create a generic driver, for the generic behaviour if
->needed.
->
->> There's another issue: if we introduce edp-connector we'll have to
->> specify power up delays somewhere (in dts? or in platform driver?),
->so
->> edp-connector doesn't really solve the issue of multiple panels with
->> same motherboard.
->
->And that's what that compatible is about :)
+> > +		label = "micro-USB";
+> > +		type = "micro";
+> > +		id-gpios = <&pio 44 GPIO_ACTIVE_HIGH>;
+> > +		vbus-supply = <&usb_vbus>;
+> > +	};
+> > +};
+> > -- 
+> > 1.9.1
+> > 
 
-Maybe we can introduce a connector w/o any driver just like hdmi-connector?
-
->
->> I'd say DT overlays should be preferred solution here, not another
->> connector binding.
->
->Overlays are a way to apply a device tree dynamically. It's orthogonal
->to the binding.
->
->Maxime
->
->--
->Maxime Ripard, Bootlin
->Embedded Linux and Kernel engineering
->https://bootlin.com
-
--- 
-使用 K-9 Mail 发送自我的Android设备。
+Regards,
+Min.
