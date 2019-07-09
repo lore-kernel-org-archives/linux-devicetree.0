@@ -1,172 +1,40 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
-Date: Tue, 9 Jul 2019 07:55:30 +0000
-Message-ID: <VE1PR04MB6655D052B076C52F7F24A387F1F10@VE1PR04MB6655.eurprd04.prod.outlook.com>
-References: <20171115060459.45375-1-ran.wang_1@nxp.com>
- <87ineb9b5v.fsf@linux.intel.com>
- <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com>
- <87shdfet90.fsf@linux.intel.com>
- <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <87k1eaanjw.fsf@linux.intel.com>
- <AM5PR0402MB2865F3735D808E1BC9F67968F1180@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <87o92wgyqj.fsf@linux.intel.com>
- <VE1PR04MB66557834D3588FC8B558950AF1E00@VE1PR04MB6655.eurprd04.prod.outlook.com>
- <87v9wvsex3.fsf@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Anson.Huang@nxp.com
+Subject: [PATCH V2 1/4] dt-bindings: opp: Support multiple opp-suspend properties
+Date: Tue,  9 Jul 2019 16:00:12 +0800
+Message-ID: <20190709080015.43442-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87v9wvsex3.fsf@linux.intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>
+To: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, p.zabel@pengutronix.de, ping.bai@nxp.com, daniel.baluta@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, angus@akkea.ca, andrew.smirnov@gmail.com, ccaione@baylibre.com, agx@sigxcpu.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+From: Anson Huang <Anson.Huang@nxp.com>
 
-On Monday, June 24, 2019 13:58, Felipe Balbi wrote:
->=20
-> Hi,
->=20
-> Ran Wang <ran.wang_1@nxp.com> writes:
-> >> >> > >> >> >  /* Global Debug Queue/FIFO Space Available Register */
-> >> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
-> >> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
-> >> >> > >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
-> >> >> > >> >> >   * 	3	- Reserved
-> >> >> > >> >> >   * @imod_interval: set the interrupt moderation interval=
- in
-> 250ns
-> >> >> > >> >> >   *                 increments or 0 to disable.
-> >> >> > >> >> > + * @dma_coherent: set if enable dma-coherent.
-> >> >> > >> >>
-> >> >> > >> >> you're not enabling dma coherency, you're enabling cache
-> snooping.
-> >> >> > >> >> And this property should describe that. Also, keep in mind
-> >> >> > >> >> that different devices may want different cache types for
-> >> >> > >> >> each of those fields, so your property would have to be a
-> >> >> > >> >> lot more complex. Something
-> >> >> > like:
-> >> >> > >> >>
-> >> >> > >> >> 	snps,cache-type =3D <foobar "cacheable">, <baz "cacheable"=
->, ...
-> >> >> > >> >>
-> >> >> > >> >> Then driver would have to parse this properly to setup GSBU=
-SCFG0.
-> >> >> > >
-> >> >> > > According to the DesignWare Cores SuperSpeed USB 3.0
-> >> >> > > Controller Databook (v2.60a), it has described Type Bit
-> >> >> > > Assignments for all supported
-> >> >> > master bus type:
-> >> >> > > AHB, AXI3, AXI4 and Native. I found the bit definition are
-> >> >> > > different among
-> >> >> > them.
-> >> >> > > So, for the example you gave above, feel a little bit confused.
-> >> >> > > Did you mean:
-> >> >> > >     snps,cache-type =3D <DATA_RD  "write allocate">, <DESC_RD
-> >> >> > > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read
-> >> >> > > allocate">
-> >> >> >
-> >> >> > yeah, something like that.
-> >> >>
-> >> >> I think DATA_RD  should be a macro, right? So, where I can put its =
-define?
-> >> >> Create a dwc3.h in include/dt-bindings/usb/ ?
-> >> >
-> >> > Could you please give me some advice here? I'd like to prepare next
-> >> > version patch after getting this settled.
-> >> >
-> >> >> Another question about this remain open is: DWC3 data book's Table
-> >> >> 6-5 Cache Type Bit Assignments show that bits definition will
-> >> >> differ per MBUS_TYPEs as
-> >> >> below:
-> >> >> ----------------------------------------------------------------
-> >> >>  MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
-> >> >>  ----------------------------------------------------------------
-> >> >>  AHB      |Cacheable     |Bufferable   |Privilegge |Data
-> >> >>  AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
-> >> >>  AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
-> >> >>  AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
-> >> >>  Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
-> >> >>  ----------------------------------------------------------------
-> >> >>  Note: The AHB, AXI3, AXI4, and PCIe busses use different names
-> >> >> for certain  signals, which have the same meaning:
-> >> >>    Bufferable =3D Posted
-> >> >>    Cacheable =3D Modifiable =3D Snoop (negation of No Snoop)
-> >> >>
-> >> >> For Layerscape SoCs, MBUS_TYPE is AXI3. So I am not sure how to
-> >> >> use snps,cache-type =3D <DATA_RD  "write allocate">, to cover all
-> MBUS_TYPE?
-> >> >> (you can notice that AHB and AXI3's cacheable are on different
-> >> >> bit) Or I just need to handle AXI3 case?
-> >> >
-> >> > Also on this open. Thank you in advance.
-> >>
-> >> You could pass two strings and let the driver process them. Something
-> >> like:
-> >>
-> >> 	snps,cache_type =3D <"data_wr" "write allocate">, <"desc_rd"
-> >> "cacheable">...
-> >>
-> >> And so on. The only thing missing is for the mbus_type to be known by =
-the
-> driver.
-> >> Is that something we can figure out on any of the HWPARAMS registers
-> >> or does it have to be told explicitly?
-> >
-> > I have checked Layerscape Reference manual, HWPARAMS0~8 doesn't
-> > contain mbus_type Info, and I didn't know where have declared it explic=
-itly.
-> >
-> >> Another option would be to pass a string followed by one hex digit for=
- the
-> bits:
-> >>
-> >> 	snps,cache_type =3D <"data_wr" 0x8>, <"desc_rd" 0x2>...;
-> >>
-> >> Then we don't need to describe mbus_type since the bits are what matte=
-rs.
+Update opp-suspend property's description to support multiple
+opp-suspend properties defined in DT, the OPP with highest opp-hz
+and with opp-suspend property present will be used as suspend opp.
 
-For this option, looks like DTC doesn't allow form of <"data_wr" 0x8>, <"de=
-sc_rd" 0x2>...=20
-It will report error when compiling:
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+New patch.
+---
+ Documentation/devicetree/bindings/opp/opp.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-DTC     arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dtb
-Error: arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi:383.23-24 syntax erro=
-r
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:294: recipe for target 'arch/arm64/boot/dts/freescale/=
-fsl-ls1088a-qds.dtb' failed
-make[2]: *** [arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-Error: arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi:383.23-24 syntax erro=
-r
-FATAL ERROR: Unable to parse input tree
-
-One of the solution I can figure out is to use macro to replace "data_wr", =
-like below:
-<DATA_WR 0x8>, <DESC_RD 0x2>...
-
-However, it will require creating file in include/dt-bindings/usb/dwc3.h to
-place macro definitions.
-
-Or may I use:  "data_wr", <0x8>,  "desc_rd",  <0x2>... ?
-
-Thanks & Regards,
-Ran
-
-> > Yes, it's also what we prefer to use, it will be more flexible, I can
-> > add above Table
-> > 6-5 Cache Type Bit Assignments in binding to help user decide which
-> > value they would use.
-> >
-> > I would submit another version of patch for further review, thank you v=
-ery
-> much.
->=20
-> cool, thanks
->=20
-> --
-> balbi
+diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+index 76b6c79..6859227 100644
+--- a/Documentation/devicetree/bindings/opp/opp.txt
++++ b/Documentation/devicetree/bindings/opp/opp.txt
+@@ -140,8 +140,8 @@ Optional properties:
+   frequency for a short duration of time limited by the device's power, current
+   and thermal limits.
+ 
+-- opp-suspend: Marks the OPP to be used during device suspend. Only one OPP in
+-  the table should have this.
++- opp-suspend: Marks the OPP to be used during device suspend. If multiple OPPs
++  in the table have this, the OPP with highest opp-hz will be used.
+ 
+ - opp-supported-hw: This enables us to select only a subset of OPPs from the
+   larger OPP table, based on what version of the hardware we are running on. We
+-- 
+2.7.4
