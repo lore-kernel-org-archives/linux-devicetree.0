@@ -1,27 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: mfd: Add Actions Semi ATC260x PMIC
- binding
-Date: Tue, 9 Jul 2019 10:48:55 -0600
-Message-ID: <20190709164855.GA21383@bogus>
-References: <20190617155011.15376-1-manivannan.sadhasivam@linaro.org>
- <20190617155011.15376-2-manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 5/6] dt-bindings: display: ssd1307fb: Add initialization
+ properties
+Date: Tue, 9 Jul 2019 10:58:09 -0600
+Message-ID: <20190709165809.GA5401@bogus>
+References: <20190618074111.9309-1-marko.kohtala@okoko.fi>
+ <20190618074111.9309-6-marko.kohtala@okoko.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20190617155011.15376-2-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, afaerber@suse.de, linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, devicetree@vger.kernel.org, linus.walleij@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190618074111.9309-6-marko.kohtala@okoko.fi>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Marko Kohtala <marko.kohtala@okoko.fi>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Jun 2019 21:20:08 +0530, Manivannan Sadhasivam wrote:
-> Add devicetree binding for Actions Semi ATC260x PMICs.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../devicetree/bindings/mfd/atc260x.txt       | 162 ++++++++++++++++++
->  1 file changed, 162 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/atc260x.txt
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+T24gVHVlLCAxOCBKdW4gMjAxOSAxMDo0MToxMCArMDMwMCwgTWFya28gS29odGFsYSB3cm90ZToK
+PiBEb2N1bWVudCBuZXcgYmluZGluZ3MgZm9yIGFkYXB0aW5nIHNzZDEzMDdmYiBkcml2ZXIgdG8g
+bmV3IGRpc3BsYXlzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE1hcmtvIEtvaHRhbGEgPG1hcmtvLmtv
+aHRhbGFAb2tva28uZmk+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+c3NkMTMwN2ZiLnR4dCAgICAgICAgICB8IDEwICsrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQs
+IDEwIGluc2VydGlvbnMoKykKPiAKClJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJu
+ZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
