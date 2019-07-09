@@ -1,32 +1,56 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] ARM: bcm47094: add missing #cells for mdio-bus-mux
-Date: Tue,  9 Jul 2019 09:16:30 -0700
-Message-ID: <20190709161630.7963-1-f.fainelli@gmail.com>
-References: <20190703132255.852025-1-arnd@arndb.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 17/28] drivers: Introduce bus_find_device_by_of_node()
+ helper
+Date: Tue, 9 Jul 2019 10:19:22 -0600
+Message-ID: <20190709161922.GA1609@bogus>
+References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+ <1560534863-15115-18-git-send-email-suzuki.poulose@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703132255.852025-1-arnd@arndb.de>
+Content-Disposition: inline
+In-Reply-To: <1560534863-15115-18-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bcm-kernel-feedback-list@broadcom.com, Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <zajec5@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Vivek Unune <npcomplete13@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, suzuki.poulose@arm.com, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Liam Girdwood <lgirdwood@gmail.com>, linux-i2c@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Takashi Iwai <tiwai@suse.com>, Wolfram Sang <wsa@the-dreams.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  3 Jul 2019 15:22:45 +0200, Arnd Bergmann <arnd@arndb.de> wrote:
-> The mdio-bus-mux has no #address-cells/#size-cells property,
-> which causes a few dtc warnings:
+On Fri, 14 Jun 2019 18:54:12 +0100, Suzuki K Poulose wrote:
+> Add a wrapper to bus_find_device() to search for a device
+> by the of_node pointer, reusing the generic match function.
+> Also convert the existing users to make use of the new helper.
 > 
-> arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #address-cells value
-> arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-cells value
-> 
-> Add the normal cell numbers.
-> 
-> Fixes: 2bebdfcdcd0f ("ARM: dts: BCM5301X: Add support for Linksys EA9500")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: devicetree@vger.kernel.org
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-rockchip@lists.infradead.org
+> Cc: linux-spi@vger.kernel.org
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 > ---
+>  drivers/gpu/drm/drm_mipi_dsi.c             |  7 +------
+>  drivers/hwtracing/coresight/of_coresight.c | 11 ++---------
+>  drivers/i2c/i2c-core-of.c                  |  7 +------
+>  drivers/nvmem/core.c                       |  7 +------
+>  drivers/of/of_mdio.c                       |  8 +-------
+>  drivers/of/platform.c                      |  7 +------
+>  drivers/spi/spi.c                          |  9 ++-------
+>  include/linux/device.h                     | 12 ++++++++++++
+>  sound/soc/rockchip/rk3399_gru_sound.c      |  9 ++-------
+>  9 files changed, 23 insertions(+), 54 deletions(-)
+> 
 
-Applied to devicetree/fixes, thanks!
---
-Florian
+Reviewed-by: Rob Herring <robh@kernel.org>
