@@ -1,69 +1,46 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v7 16/18] MAINTAINERS: add entry for KUnit the unit
- testing framework
-Date: Tue, 9 Jul 2019 11:01:35 -0700
-Message-ID: <CAFd5g4595X8cM919mohQVaShs4dKWzZ_-2RVB=6SH3RdVMwuQw@mail.gmail.com>
-References: <20190709063023.251446-1-brendanhiggins@google.com>
- <20190709063023.251446-17-brendanhiggins@google.com> <7cc417dd-036f-7dc1-6814-b1fdac810f03@kernel.org>
+From: Chuanhong Guo <gch981213@gmail.com>
+Subject: [PATCH 0/5] MIPS: ralink: add CPU clock detection for MT7621
+Date: Wed, 10 Jul 2019 02:20:13 +0800
+Message-ID: <20190709182018.23193-1-gch981213@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7cc417dd-036f-7dc1-6814-b1fdac810f03@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shuah <shuah@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
+To: "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, John Crispin <john@phrozen.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>, Chuanhong Guo <gch981213@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 7:53 AM shuah <shuah@kernel.org> wrote:
->
-> On 7/9/19 12:30 AM, Brendan Higgins wrote:
-> > Add myself as maintainer of KUnit, the Linux kernel's unit testing
-> > framework.
-> >
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> > ---
-> >   MAINTAINERS | 11 +++++++++++
-> >   1 file changed, 11 insertions(+)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 677ef41cb012c..48d04d180a988 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -8599,6 +8599,17 @@ S:     Maintained
-> >   F:  tools/testing/selftests/
-> >   F:  Documentation/dev-tools/kselftest*
-> >
-> > +KERNEL UNIT TESTING FRAMEWORK (KUnit)
-> > +M:   Brendan Higgins <brendanhiggins@google.com>
-> > +L:   linux-kselftest@vger.kernel.org
-> > +L:   kunit-dev@googlegroups.com
-> > +W:   https://google.github.io/kunit-docs/third_party/kernel/docs/
-> > +S:   Maintained
-> > +F:   Documentation/dev-tools/kunit/
-> > +F:   include/kunit/
-> > +F:   kunit/
-> > +F:   tools/testing/kunit/
-> > +
-> >   KERNEL USERMODE HELPER
-> >   M:  Luis Chamberlain <mcgrof@kernel.org>
-> >   L:  linux-kernel@vger.kernel.org
-> >
->
-> Thanks Brendan.
->
-> I am good with this. I can take KUnit patches through kselftest
-> with your Ack.
+This patchset ports CPU clock detection for MT7621 from OpenWrt.
 
-My acknowledgement? Sure! I thought we already agreed to that.
+Last time I sent this, I forgot to add an binding include which
+caused a compile error and the patch doesn't stay in linux-next.
 
-Also, do we need an ack from Masahiro or Michal for the Kbuild patch
-[PATCH v7 06/18]? And an ack from Josh or Peter for the objtool patch
-[PATCH v7 08/18]?
+This patchset resent the first two commits and also added binding
+documentation for mt7621-pll and used it in mt7621-dts at
+drivers/staging.
 
-Greg and Logan gave me a Reviewed-by for the Kbuild patch, so maybe
-that's fine, but I don't have any reviews or acks for the objtool
-patch.
+BTW: What should I do with such a patchset that touches multiple
+parts in kernel?
+Is it correct to send the entire patchset to lists of all involved
+subsystems?
 
-Thanks!
+Chuanhong Guo (5):
+  MIPS: ralink: add dt binding header for mt7621-pll
+  MIPS: ralink: fix cpu clock of mt7621 and add dt clk devices
+  dt: bindings: add mt7621-pll dt binding documentation
+  staging: mt7621-dts: add dt nodes for mt7621-pll
+  staging: mt7621-dts: fix register range of memc node in mt7621.dtsi
+
+ .../bindings/clock/mediatek,mt7621-pll.txt    |  19 ++++
+ arch/mips/include/asm/mach-ralink/mt7621.h    |  20 ++++
+ arch/mips/ralink/mt7621.c                     | 102 ++++++++++++------
+ arch/mips/ralink/timer-gic.c                  |   4 +-
+ drivers/staging/mt7621-dts/mt7621.dtsi        |  17 ++-
+ include/dt-bindings/clock/mt7621-clk.h        |  14 +++
+ 6 files changed, 134 insertions(+), 42 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
+ create mode 100644 include/dt-bindings/clock/mt7621-clk.h
+
+-- 
+2.21.0
