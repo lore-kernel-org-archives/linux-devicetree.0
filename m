@@ -1,100 +1,125 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 2/2] backlight: arcxcnn: add "arctic" vendor prefix
-Date: Mon, 8 Jul 2019 13:05:00 -0500
-Message-ID: <c7b8da82-e492-db1e-5a02-e4a36df6a6f2@ti.com>
-References: <1561940895-15837-1-git-send-email-bdodge09@gmail.com>
- <1561940895-15837-3-git-send-email-bdodge09@gmail.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Tue, 9 Jul 2019 07:07:30 +0000
+Message-ID: <BYAPR07MB47092C1E19FD36FB336A55C2DDF10@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1562324238-16655-1-git-send-email-pawell@cadence.com>
+ <1562324238-16655-6-git-send-email-pawell@cadence.com>
+ <87r274lmqk.fsf@linux.intel.com>
+ <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <87a7dpm442.fsf@linux.intel.com>
+ <BYAPR07MB47094B372CEC6DFD25FC78E1DDF10@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <87pnmj67ee.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1561940895-15837-3-git-send-email-bdodge09@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87pnmj67ee.fsf@linux.intel.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Dodge <bdodge09@gmail.com>, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pbacon@psemi.com, lee.jones@linaro.org, linux-leds@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <felipe.balbi@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-QnJpYW4KCk9uIDYvMzAvMTkgNzoyOCBQTSwgQnJpYW4gRG9kZ2Ugd3JvdGU6Cj4gVGhlIG9yaWdp
-bmFsIHBhdGNoIGFkZGluZyB0aGlzIGRyaXZlciBhbmQgRFQgYmluZGluZ3MgaW1wcm9wZXJseQo+
-IHVzZWQgImFyYyIgYXMgdGhlIHZlbmRvci1wcmVmaXguIFRoaXMgYWRkcyAiYXJjdGljIiB3aGlj
-aCBpcyB0aGUKPiBwcm9wZXIgcHJlZml4IGFuZCByZXRhaW5zICJhcmMiIHRvIGFsbG93IGV4aXN0
-aW5nIHVzZXJzIG9mIHRoZQo+ICJhcmMiIHByZWZpeCB0byB1cGRhdGUgdG8gbmV3IGtlcm5lbHMu
-IFRoZXJlIGlzIGF0IGxlYXN0IG9uZQo+IChTYW1zdW5nIENocm9tZWJvb2sgUGx1cykKPgo+IFNp
-Z25lZC1vZmYtYnk6IEJyaWFuIERvZGdlIDxiZG9kZ2UwOUBnbWFpbC5jb20+Cj4gQWNrZWQtYnk6
-IERhbmllbCBUaG9tcHNvbiA8ZGFuaWVsLnRob21wc29uQGxpbmFyby5vcmc+Cj4gLS0tCj4gICBk
-cml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9hcmN4Y25uX2JsLmMgfCA0MSArKysrKysrKysrKysrKysr
-KysrKysrKysrKystLS0tLS0tLS0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCsp
-LCAxMCBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdo
-dC9hcmN4Y25uX2JsLmMgYi9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9hcmN4Y25uX2JsLmMKPiBp
-bmRleCA3YjFjMGEwLi5hNDE5NTU0IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvdmlkZW8vYmFja2xp
-Z2h0L2FyY3hjbm5fYmwuYwo+ICsrKyBiL2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L2FyY3hjbm5f
-YmwuYwo+IEBAIC0xLDkgKzEsOSBAQAo+ICAgLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQ
-TC0yLjAtb25seQo+ICAgLyoKPiAtICogQmFja2xpZ2h0IGRyaXZlciBmb3IgQXJjdGljU2FuZCBB
-UkNfWF9DXzBOXzBOIERldmljZXMKPiArICogQmFja2xpZ2h0IGRyaXZlciBmb3IgcFNlbWkgKGZv
-cm1lcmx5IEFyY3RpY1NhbmQpIEFSQ19YX0NfME5fME4gRGV2aWNlcwo+ICAgICoKPiAtICogQ29w
-eXJpZ2h0IDIwMTYgQXJjdGljU2FuZCwgSW5jLgo+IC0gKiBBdXRob3IgOiBCcmlhbiBEb2RnZSA8
-YmRvZGdlQGFyY3RpY3NhbmQuY29tPgoKSSBrbm93IHlvdSBhcmUgdGhlIG9yaWdpbmFsIGF1dGhv
-ciBmcm9tIEFyY3RpY1NhbmQgYnV0IGRpZCBwU2VtaSAKYWN0dWFsbHkgb3duIHRoZSBjb3B5cmln
-aHQgaW4gMjAxNj8KCkkgZG9uJ3QgdGhpbmsgdGhpcyBpcyBhIGJpZyBpc3N1ZSBqdXN0IHdvbmRl
-cmluZyBpZiB3ZSBzaG91bGQgcmV0YWluIHRoZSAKQXJjdGljU2FuZCBjb3B5cmlnaHQgYXMgd2Vs
-bC4KClByb2JhYmx5IGEgcXVlc3Rpb24gZm9yIHlvdXIgbGVnYWwgZGVwYXJ0bWVudC4KCk90aGVy
-d2lzZQoKUmV2aWV3ZWQtYnk6IERhbiBNdXJwaHkgPGRtdXJwaHlAdGkuY29tPgoKPiArICogQ29w
-eXJpZ2h0IDIwMTYtMjAxOSAgcFNlbWksIEluYy4KPiArICogQXV0aG9yIDogQnJpYW4gRG9kZ2Ug
-PGJkb2RnZUBwc2VtaS5jb20+Cj4gICAgKi8KPiAgIAo+ICAgI2luY2x1ZGUgPGxpbnV4L2JhY2ts
-aWdodC5oPgo+IEBAIC0xOTEsMjcgKzE5MSw0NiBAQCBzdGF0aWMgdm9pZCBhcmN4Y25uX3BhcnNl
-X2R0KHN0cnVjdCBhcmN4Y25uICpscCkKPiAgIAlpZiAocmV0ID09IDApCj4gICAJCWxwLT5wZGF0
-YS0+aW5pdGlhbF9icmlnaHRuZXNzID0gcHJvZ192YWw7Cj4gICAKPiAtCXJldCA9IG9mX3Byb3Bl
-cnR5X3JlYWRfdTMyKG5vZGUsICJhcmMsbGVkLWNvbmZpZy0wIiwgJnByb2dfdmFsKTsKPiArCXJl
-dCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsICJhcmN0aWMsbGVkLWNvbmZpZy0wIiwgJnBy
-b2dfdmFsKTsKPiArCWlmIChyZXQpCj4gKwkJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9k
-ZSwgImFyYyxsZWQtY29uZmlnLTAiLCAmcHJvZ192YWwpOwo+ICsKPiAgIAlpZiAocmV0ID09IDAp
-Cj4gICAJCWxwLT5wZGF0YS0+bGVkX2NvbmZpZ18wID0gKHU4KXByb2dfdmFsOwo+ICAgCj4gLQly
-ZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAiYXJjLGxlZC1jb25maWctMSIsICZwcm9n
-X3ZhbCk7Cj4gKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAiYXJjdGljLGxlZC1j
-b25maWctMSIsICZwcm9nX3ZhbCk7Cj4gKwlpZiAocmV0KQo+ICsJCXJldCA9IG9mX3Byb3BlcnR5
-X3JlYWRfdTMyKG5vZGUsICJhcmMsbGVkLWNvbmZpZy0xIiwgJnByb2dfdmFsKTsKPiArCj4gICAJ
-aWYgKHJldCA9PSAwKQo+ICAgCQlscC0+cGRhdGEtPmxlZF9jb25maWdfMSA9ICh1OClwcm9nX3Zh
-bDsKPiAgIAo+IC0JcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxkaW0tZnJl
-cSIsICZwcm9nX3ZhbCk7Cj4gKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAiYXJj
-dGljLGRpbS1mcmVxIiwgJnByb2dfdmFsKTsKPiArCWlmIChyZXQpCj4gKwkJcmV0ID0gb2ZfcHJv
-cGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxkaW0tZnJlcSIsICZwcm9nX3ZhbCk7Cj4gKwo+ICAg
-CWlmIChyZXQgPT0gMCkKPiAgIAkJbHAtPnBkYXRhLT5kaW1fZnJlcSA9ICh1OClwcm9nX3ZhbDsK
-PiAgIAo+IC0JcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxjb21wLWNvbmZp
-ZyIsICZwcm9nX3ZhbCk7Cj4gKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAiYXJj
-dGljLGNvbXAtY29uZmlnIiwgJnByb2dfdmFsKTsKPiArCWlmIChyZXQpCj4gKwkJcmV0ID0gb2Zf
-cHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxjb21wLWNvbmZpZyIsICZwcm9nX3ZhbCk7Cj4g
-Kwo+ICAgCWlmIChyZXQgPT0gMCkKPiAgIAkJbHAtPnBkYXRhLT5jb21wX2NvbmZpZyA9ICh1OClw
-cm9nX3ZhbDsKPiAgIAo+IC0JcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxm
-aWx0ZXItY29uZmlnIiwgJnByb2dfdmFsKTsKPiArCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMy
-KG5vZGUsICJhcmN0aWMsZmlsdGVyLWNvbmZpZyIsICZwcm9nX3ZhbCk7Cj4gKwlpZiAocmV0KQo+
-ICsJCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsCj4gKwkJCQkiYXJjLGZpbHRlci1j
-b25maWciLCAmcHJvZ192YWwpOwo+ICsKPiAgIAlpZiAocmV0ID09IDApCj4gICAJCWxwLT5wZGF0
-YS0+ZmlsdGVyX2NvbmZpZyA9ICh1OClwcm9nX3ZhbDsKPiAgIAo+IC0JcmV0ID0gb2ZfcHJvcGVy
-dHlfcmVhZF91MzIobm9kZSwgImFyYyx0cmltLWNvbmZpZyIsICZwcm9nX3ZhbCk7Cj4gKwlyZXQg
-PSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAiYXJjdGljLHRyaW0tY29uZmlnIiwgJnByb2df
-dmFsKTsKPiArCWlmIChyZXQpCj4gKwkJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwg
-ImFyYyx0cmltLWNvbmZpZyIsICZwcm9nX3ZhbCk7Cj4gKwo+ICAgCWlmIChyZXQgPT0gMCkKPiAg
-IAkJbHAtPnBkYXRhLT50cmltX2NvbmZpZyA9ICh1OClwcm9nX3ZhbDsKPiAgIAo+IEBAIC0zODEs
-NiArNDAwLDggQEAgc3RhdGljIGludCBhcmN4Y25uX3JlbW92ZShzdHJ1Y3QgaTJjX2NsaWVudCAq
-Y2wpCj4gICB9Cj4gICAKPiAgIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGFyY3hj
-bm5fZHRfaWRzW10gPSB7Cj4gKwl7IC5jb21wYXRpYmxlID0gImFyY3RpYyxhcmMyYzA2MDgiIH0s
-Cj4gKwkvKiBoZXJlIHRvIHJlbWFpbiBjb21wYXRpYmxlIHdpdGggYW4gb2xkZXIgYmluZGluZywg
-ZG8gbm90IHVzZSAqLwo+ICAgCXsgLmNvbXBhdGlibGUgPSAiYXJjLGFyYzJjMDYwOCIgfSwKPiAg
-IAl7IH0KPiAgIH07Cj4gQEAgLTQwNCw1ICs0MjUsNSBAQCBzdGF0aWMgc3RydWN0IGkyY19kcml2
-ZXIgYXJjeGNubl9kcml2ZXIgPSB7Cj4gICBtb2R1bGVfaTJjX2RyaXZlcihhcmN4Y25uX2RyaXZl
-cik7Cj4gICAKPiAgIE1PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsKPiAtTU9EVUxFX0FVVEhPUigi
-QnJpYW4gRG9kZ2UgPGJkb2RnZUBhcmN0aWNzYW5kLmNvbT4iKTsKPiArTU9EVUxFX0FVVEhPUigi
-QnJpYW4gRG9kZ2UgPGJkb2RnZUBwc2VtaS5jb20+Iik7Cj4gICBNT0RVTEVfREVTQ1JJUFRJT04o
-IkFSQ1hDTk4gQmFja2xpZ2h0IGRyaXZlciIpOwpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWw=
+>
+>Hi,
+>
+>Pawel Laszczak <pawell@cadence.com> writes:
+>>>> IRQF_ONESHOT can be used  only in threaded handled.
+>>>> "
+>>>>  * IRQF_ONESHOT - Interrupt is not reenabled after the hardirq handler=
+ finished.
+>>>>  *                Used by threaded interrupts which need to keep the
+>>>>  *                irq line disabled until the threaded handler has bee=
+n run.
+>>>> "
+>>>
+>>>so?
+>>
+>> I don't understand why If I don't have threaded handler why I need IRQF_=
+ONESHOT.
+>> Why interrupt cannot be reenabled after hardirq handler finished ?
+>> I do not use threaded handler so this flag seem unnecessary.
+>
+>Unless this has changed over the years, it was a requirement from IRQ susb=
+ystem.
+>
+>	/*
+>	 * Drivers are often written to work w/o knowledge about the
+>	 * underlying irq chip implementation, so a request for a
+>	 * threaded irq without a primary hard irq context handler
+>	 * requires the ONESHOT flag to be set. Some irq chips like
+>	 * MSI based interrupts are per se one shot safe. Check the
+>	 * chip flags, so we can avoid the unmask dance at the end of
+>	 * the threaded handler for those.
+>	 */
+>	if (desc->irq_data.chip->flags & IRQCHIP_ONESHOT_SAFE)
+>		new->flags &=3D ~IRQF_ONESHOT;
+
+>From description I understand that it should be set when driver uses only=20
+threaded handler without hard irq handler.
+eg.=20
+
+	ret =3D devm_request_threaded_irq(dev, data->usb_id_irq,
+					NULL, int3496_thread_isr,
+					IRQF_SHARED | IRQF_ONESHOT |
+					IRQF_TRIGGER_RISING |
+					IRQF_TRIGGER_FALLING,
+					dev_name(dev), data);
+
+It make sense, we don't have hard irq handler so we can't clear source of i=
+nterrupt.=20
+If we clear it immediately in interrupt controller then the same interrupt =
+could=20
+be raised again, because it was not cleared e.g in controller register.=20
+
+
+>>>>>> +	} else {
+>>>>>> +		struct usb_request *request;
+>>>>>> +
+>>>>>> +		if (priv_dev->eps[index]->flags & EP_WEDGE) {
+>>>>>> +			cdns3_select_ep(priv_dev, 0x00);
+>>>>>> +			return 0;
+>>>>>> +		}
+>>>>>> +
+>>>>>> +		cdns3_dbg(priv_ep->cdns3_dev, "Clear Stalled endpoint %s\n",
+>>>>>> +			  priv_ep->name);
+>>>>>
+>>>>>why do you need your own wrapper around dev_dbg()? This looks quite un=
+necessary.
+>>>>
+>>>> It's generic function used for adding message to trace.log.  It's not =
+wrapper to dev_dbg
+>>>>
+>>>> void cdns3_dbg(struct cdns3_device *priv_dev, const char *fmt, ...)
+>>>> {
+>>>> 	struct va_format vaf;
+>>>> 	va_list args;
+>>>>
+>>>> 	va_start(args, fmt);
+>>>> 	vaf.fmt =3D fmt;
+>>>> 	vaf.va =3D &args;
+>>>> 	trace_cdns3_log(priv_dev, &vaf);
+>>>> 	va_end(args);
+>>>> }
+>>>
+>>>oh. Don't do it like that. Add a proper trace event that actually
+>>>decodes the information you want. These random messages will give you
+>>>trouble in the future. I had this sort of construct in dwc3 for a while
+>>>and it became clear that it's a bad idea. It's best to have trace events
+>>>that decode information coming from the HW. That way your trace logs
+>>>have a "predictable" shape/format and you can easily find problem areas.
+>>
+>> Ok , I will change this.
+>> I used such solution because I didn't want to create to many trace event=
+s.
+>> I used it only for rely used messages.
+>
+>If you have these messages that are *really* needed, then you should add
+>a trace event for it. Look at the events we have on dwc3 if you need
+>some inspiration. Could also look at the history of our trace events to
+>figure out how things changed over time.
+>
+>cheers
+>
+>--
+>balbi
