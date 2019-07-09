@@ -1,63 +1,47 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 9 Jul 2019 10:21:31 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/8] dt-bindings: timer: renesas, cmt: Add CMT0234 to
- sh73a0 and r8a7740
-Message-ID: <20190709162131.GA6037@bogus>
-References: <156076216767.4736.16337667537984218274.sendpatchset@octo>
- <156076217672.4736.6510117188637868943.sendpatchset@octo>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156076217672.4736.6510117188637868943.sendpatchset@octo>
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org
+Return-Path: <SRS0=NiaE=VG=flex--brendanhiggins.bounces.google.com=3rDUkXQ4KBJc2I5E41E89779EJ7FF7C5.3FDIF28B5IE5C.FI7@kernel.org>
+Date: Mon,  8 Jul 2019 23:30:21 -0700
+In-Reply-To: <20190709063023.251446-1-brendanhiggins@google.com>
+Message-Id: <20190709063023.251446-17-brendanhiggins@google.com>
+Mime-Version: 1.0
+References: <20190709063023.251446-1-brendanhiggins@google.com>
+Subject: [PATCH v7 16/18] MAINTAINERS: add entry for KUnit the unit testing framework
+From: Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
+To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, 17 Jun 2019 18:02:56 +0900, Magnus Damm wrote:
-> From: Magnus Damm <damm+renesas@opensource.se>
-> 
-> Document the on-chip CMT devices included in r8a7740 and sh73a0.
-> 
-> Included in this patch is DT binding documentation for 32-bit CMTs
-> CMT0, CMT2, CMT3 and CMT4. They all contain a single channel and are
-> quite similar however some minor differences still exist:
->  - "Counter input clock" (clock input and on-device divider)
->     One example is that RCLK 1/1 is supported by CMT2, CMT3 and CMT4.
->  - "Wakeup request" (supported by CMT0 and CMT2)
-> 
-> Because of this one unique compat string per CMT device is selected.
-> 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> ---
-> 
->  Documentation/devicetree/bindings/timer/renesas,cmt.txt |    8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> --- 0001/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> +++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-06-17 13:26:56.325963995 +0900
-> @@ -22,6 +22,10 @@ Required Properties:
->  
->      - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a73a4.
->      - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a73a4.
-> +    - "renesas,r8a7740-cmt0" for the 32-bit CMT0 device included in r8a7740.
-> +    - "renesas,r8a7740-cmt2" for the 32-bit CMT2 device included in r8a7740.
-> +    - "renesas,r8a7740-cmt3" for the 32-bit CMT3 device included in r8a7740.
-> +    - "renesas,r8a7740-cmt4" for the 32-bit CMT4 device included in r8a7740.
->      - "renesas,r8a7743-cmt0" for the 32-bit CMT0 device included in r8a7743.
->      - "renesas,r8a7743-cmt1" for the 48-bit CMT1 device included in r8a7743.
->      - "renesas,r8a7744-cmt0" for the 32-bit CMT0 device included in r8a7744.
-> @@ -48,6 +52,10 @@ Required Properties:
->      - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
->      - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
->      - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
-> +    - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
-> +    - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
-> +    - "renesas,sh73a0-cmt3" for the 32-bit CMT3 device included in sh73a0.
-> +    - "renesas,sh73a0-cmt4" for the 32-bit CMT4 device included in sh73a0.
->  
->      - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
->  		and RZ/G1.
-> 
+Add myself as maintainer of KUnit, the Linux kernel's unit testing
+framework.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 677ef41cb012c..48d04d180a988 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8599,6 +8599,17 @@ S:	Maintained
+ F:	tools/testing/selftests/
+ F:	Documentation/dev-tools/kselftest*
+ 
++KERNEL UNIT TESTING FRAMEWORK (KUnit)
++M:	Brendan Higgins <brendanhiggins@google.com>
++L:	linux-kselftest@vger.kernel.org
++L:	kunit-dev@googlegroups.com
++W:	https://google.github.io/kunit-docs/third_party/kernel/docs/
++S:	Maintained
++F:	Documentation/dev-tools/kunit/
++F:	include/kunit/
++F:	kunit/
++F:	tools/testing/kunit/
++
+ KERNEL USERMODE HELPER
+ M:	Luis Chamberlain <mcgrof@kernel.org>
+ L:	linux-kernel@vger.kernel.org
+-- 
+2.22.0.410.gd8fdbe21b5-goog
