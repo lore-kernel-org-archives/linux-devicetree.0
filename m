@@ -1,40 +1,98 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [Patch v3 2/2] dt-bindings: spi: spi-fsl-qspi: Add bindings of
- ls1088a and ls1012a
-Date: Tue, 9 Jul 2019 14:08:57 -0600
-Message-ID: <20190709200857.GA8477@bogus>
-References: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
- <1560942714-13330-3-git-send-email-Ashish.Kumar@nxp.com>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Date: Tue, 9 Jul 2019 13:30:18 -0700
+Message-ID: <CA+E=qVdz4vfU3rtTTKjYdM+4UA+=FWheJfWOMaDtFMnWQ1rHbw@mail.gmail.com>
+References: <20190605120237.ekmytfxcwbjaqy3x@flea>
+ <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
+ <20190607062802.m5wslx3imiqooq5a@flea>
+ <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
+ <20190607094030.GA12373@lst.de>
+ <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
+ <20190612152022.c3cfhp4cauhzhfyr@flea>
+ <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
+ <20190701095842.fvganvycce2cy7jn@flea>
+ <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
+ <20190709085532.cdqv7whuesrjs64c@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1560942714-13330-3-git-send-email-Ashish.Kumar@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ashish Kumar <Ashish.Kumar@nxp.com>
-Cc: devicetree@vger.kernel.org, bbrezillon@kernel.org, Kuldeep Singh <kuldeep.singh@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>, broonie@kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190709085532.cdqv7whuesrjs64c@flea>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Sean Paul <seanpaul@chromium.org>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Torsten Duwe <duwe@lst.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Thierry Reding <thierry.reding@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Jun 2019 16:41:54 +0530, Ashish Kumar wrote:
-> Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
-> Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
-> ---
-> v3:
-> Rebase to top
-> v2: 
-> Convert to patch series and rebasing done on top of tree
-> 
->  Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+T24gVHVlLCBKdWwgOSwgMjAxOSBhdCAxOjU1IEFNIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBh
+cmRAYm9vdGxpbi5jb20+IHdyb3RlOgo+Cj4gT24gTW9uLCBKdWwgMDgsIDIwMTkgYXQgMDU6NDk6
+MjFQTSAtMDcwMCwgVmFzaWx5IEtob3J1emhpY2sgd3JvdGU6Cj4gPiA+ID4gTWF5YmUgaW5zdGVh
+ZCBvZiBlZHAtY29ubmVjdG9yIG9uZSB3b3VsZCBpbnRyb2R1Y2UgaW50ZWdyYXRvcidzIHNwZWNp
+ZmljCj4gPiA+ID4gY29ubmVjdG9yLCBmb3IgZXhhbXBsZSB3aXRoIGNvbXBhdGlibGUgIm9saW1l
+eCx0ZXJlcy1lZHAtY29ubmVjdG9yIgo+ID4gPiA+IHdoaWNoIHNob3VsZCBmb2xsb3cgZWRwIGFi
+c3RyYWN0IGNvbm5lY3RvciBydWxlcz8gVGhpcyB3aWxsIGJlIGF0IGxlYXN0Cj4gPiA+ID4gY29u
+c2lzdGVudCB3aXRoIGJlbG93IHByZXNlbnRhdGlvblsxXSAtIGVEUCByZXF1aXJlbWVudHMgZGVw
+ZW5kcyBvbgo+ID4gPiA+IGludGVncmF0b3IuIFRoZW4gaWYgb2xpbWV4IGhhcyBzdGFuZGFyZCB3
+YXkgb2YgZGVhbGluZyB3aXRoIHBhbmVscwo+ID4gPiA+IHByZXNlbnQgaW4gb2xpbWV4L3RlcmVz
+IHBsYXRmb3JtcyB0aGUgZHJpdmVyIHdvdWxkIHRoZW4gY3JlYXRlCj4gPiA+ID4gZHJtX3BhbmVs
+L2RybV9jb25uZWN0b3IvZHJtX2JyaWRnZSg/KSBhY2NvcmRpbmcgdG8gdGhlc2UgcnVsZXMsIEkg
+Z3Vlc3MuCj4gPiA+ID4gQW55d2F5IGl0IHN0aWxsIGxvb2tzIGZpc2h5IGZvciBtZSA6KSwgbWF5
+YmUgYmVjYXVzZSBJIGFtIG5vdAo+ID4gPiA+IGZhbWlsaWFyaXplZCB3aXRoIGRldGFpbHMgb2Yg
+dGhlc2UgcGxhdGZvcm1zLgo+ID4gPgo+ID4gPiBUaGF0IG1ha2VzIHNlbnNlIHllcwo+ID4KPiA+
+IEFjdHVhbGx5LCBpdCBtYWtlcyBubyBzZW5zZSBhdCBhbGwuIEN1cnJlbnQgaW1wbGVtZW50YXRp
+b24gZm9yIGFueDYzNDUKPiA+IGRyaXZlciB3b3JrcyBmaW5lIGFzIGlzIHdpdGggYW55IHBhbmVs
+IHNwZWNpZmllZCBhc3N1bWluZyBwYW5lbCBkZWxheXMKPiA+IGFyZSBsb25nIGVub3VnaCBmb3Ig
+Y29ubmVjdGVkIHBhbmVsLiBJdCBqdXN0IGRvZXNuJ3QgdXNlIHBhbmVsIHRpbWluZ3MKPiA+IGZy
+b20gdGhlIGRyaXZlci4gQ3JlYXRpbmcgYSBwbGF0Zm9ybSBkcml2ZXIgZm9yIGNvbm5lY3RvciBp
+dHNlbGYgbG9va3MKPiA+IHJlZHVuZGFudCBzaW5jZSBpdCBjYW4ndCBiZSByZXVzZWQsIGl0IGRv
+ZXNuJ3QgZGVzY3JpYmUgYWN0dWFsCj4gPiBoYXJkd2FyZSBhbmQgaXQncyBqdXN0IGRlZmVhdHMg
+cHVycG9zZSBvZiBEVCBieSBpbnRyb2R1Y2luZwo+ID4gYm9hcmQtc3BlY2lmaWMgY29kZS4KPgo+
+IEknbSBub3Qgc3VyZSB3aGVyZSB5b3UgZ290IHRoZSBpZGVhIHRoYXQgdGhlIHB1cnBvc2Ugb2Yg
+RFQgaXMgdG8gbm90Cj4gaGF2ZSBhbnkgYm9hcmQtc3BlY2lmaWMgY29kZS4KCkkgYmVsaWV2ZSBE
+VCB3YXMgYW4gYXR0ZW1wdCB0byBtb3ZlIHRvIGRlY2xhcmF0aXZlIGFwcHJvYWNoIGZvcgpkZXNj
+cmliaW5nIGhhcmR3YXJlLiBZZXMsIHdlIGhhdmUgZGlmZmVyZW50IGNvbXBhdGlibGVzIGZvciBk
+aWZmZXJlbnQKZGV2aWNlcyBidXQgdGhleSdyZSBzcGVjaWZpYyB0byBwYXJ0aWN1bGFyIGRldmlj
+ZSByYXRoZXIgdGhhbgpwYXJ0aWN1bGFyIGJvYXJkLiBEZXZpY2UgaW50ZXJjb25uZWN0aW9uIGlz
+IGRlc2NyaWJlZCBpbiBEVCBhbG9uZyB3aXRoCnNvbWUgcHJvcGVydGllcyByYXRoZXIgdGhhbiBp
+biBib2FyZC1zcGVjaWZpYyBDLWZpbGUuIEludHJvZHVjaW5nCmJvYXJkLXNwZWNpZmljIGNvbXBh
+dGlibGUgZm9yIGEgY29ubmVjdG9yIGlzbid0IGxvb2tpbmcgcmlnaHQgdG8gbWUuCgo+IEl0J3Mg
+cGVyZmVjdGx5IGZpbmUgdG8gaGF2ZSBzb21lLCB0aGF0J3MgZXZlbiB3aHkgdGhlcmUncyBhIGNv
+bXBhdGlibGUKPiBhc3NpZ25lZCB0byBlYWNoIGFuZCBldmVyeSBib2FyZC4KPgo+IFdoYXQgdGhl
+IERUIGlzIGFib3V0IGlzIGFsbG93aW5nIHVzIHRvIGhhdmUgYSBnZW5lcmljIGJlaGF2aW91ciB0
+aGF0Cj4gd2UgY2FuIGRldGVjdDogd2UgY2FuIGhhdmUgYSBnaXZlbiBiZWhhdmlvdXIgZm9yIGEg
+Z2l2ZW4gYm9hcmQsIGFuZCBhCj4gc2VwYXJhdGUgb25lIGZvciBhbm90aGVyIG9uZSwgYW5kIHRo
+aXMgd2lsbCBiZSBldmFsdWF0ZWQgYXQgcnVudGltZS4KPgo+IFRoaXMgaXMgKmV4YWN0bHkqIHdo
+YXQgdGhpcyBpcyBhYm91dDogd2UgY2FuIGhhdmUgYSBjb21wYXRpYmxlIHRoYXQKPiBzZXRzIGEg
+Z2l2ZW4sIG1vcmUgc3BlY2lmaWMsIGJlaGF2aW91ciAob2xpbWV4LHRlcmVzLWVkcC1jb25uZWN0
+b3IpCj4gd2hpbGUgc2F5aW5nIHRoYXQgdGhpcyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIGdlbmVy
+aWMgYmVoYXZpb3VyCj4gKGVkcC1jb25uZWN0b3IpLiBUaGF0IHdheSwgYW55IE9TIHdpbGwga25v
+dyB3aGF0IHF1aXJrIHRvIGFwcGx5IGlmCj4gbmVlZGVkLCBhbmQgaWYgbm90IHRoYXQgaXQgY2Fu
+IHVzZSB0aGUgZ2VuZXJpYyBiZWhhdmlvdXIuCj4KPiBBbmQgd2UgY291bGQgY3JlYXRlIGEgZ2Vu
+ZXJpYyBkcml2ZXIsIGZvciB0aGUgZ2VuZXJpYyBiZWhhdmlvdXIgaWYKPiBuZWVkZWQuCj4KPiA+
+IFRoZXJlJ3MgYW5vdGhlciBpc3N1ZTogaWYgd2UgaW50cm9kdWNlIGVkcC1jb25uZWN0b3Igd2Un
+bGwgaGF2ZSB0bwo+ID4gc3BlY2lmeSBwb3dlciB1cCBkZWxheXMgc29tZXdoZXJlIChpbiBkdHM/
+IG9yIGluIHBsYXRmb3JtIGRyaXZlcj8pLCBzbwo+ID4gZWRwLWNvbm5lY3RvciBkb2Vzbid0IHJl
+YWxseSBzb2x2ZSB0aGUgaXNzdWUgb2YgbXVsdGlwbGUgcGFuZWxzIHdpdGgKPiA+IHNhbWUgbW90
+aGVyYm9hcmQuCj4KPiBBbmQgdGhhdCdzIHdoYXQgdGhhdCBjb21wYXRpYmxlIGlzIGFib3V0IDop
+CgpTb3JyeSwgSSBmYWlsIHRvIHNlZSBob3cgaXQgd291bGQgYmUgZGlmZmVyZW50IGZyb20gdXNp
+bmcgZXhpc3RpbmcKcGFuZWxzIGluZnJhc3RydWN0dXJlIGFuZCBkaWZmZXJlbnQgcGFuZWxzIGNv
+bXBhdGlibGVzLiBJIHRoaW5rIFJvYidzCmlkZWEgd2FzIHRvIGludHJvZHVjZSBnZW5lcmljIGVk
+cC1jb25uZWN0b3IuIElmIHdlIGNhbid0IG1ha2UgaXQKZ2VuZXJpYyB0aGVuIGxldCdzIHVzZSBw
+YW5lbCBpbmZyYXN0cnVjdHVyZS4KCj4gPiBJJ2Qgc2F5IERUIG92ZXJsYXlzIHNob3VsZCBiZSBw
+cmVmZXJyZWQgc29sdXRpb24gaGVyZSwgbm90IGFub3RoZXIKPiA+IGNvbm5lY3RvciBiaW5kaW5n
+Lgo+Cj4gT3ZlcmxheXMgYXJlIGEgd2F5IHRvIGFwcGx5IGEgZGV2aWNlIHRyZWUgZHluYW1pY2Fs
+bHkuIEl0J3Mgb3J0aG9nb25hbAo+IHRvIHRoZSBiaW5kaW5nLgoKSXQgaXNuJ3Qgb3J0aG9nb25h
+bCB0byBvcmlnaW5hbCBwcm9ibGVtIHRob3VnaC4KCj4gTWF4aW1lCj4KPiAtLQo+IE1heGltZSBS
+aXBhcmQsIEJvb3RsaW4KPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nCj4g
+aHR0cHM6Ly9ib290bGluLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWw=
