@@ -1,78 +1,37 @@
 From: Qii Wang <qii.wang@mediatek.com>
-Subject: [PATCH v3 1/2] dt-bindings: i3c: Document MediaTek I3C master bindings
-Date: Tue, 9 Jul 2019 21:09:21 +0800
-Message-ID: <1562677762-24067-2-git-send-email-qii.wang@mediatek.com>
-References: <1562677762-24067-1-git-send-email-qii.wang@mediatek.com>
+Subject: [PATCH v3 0/2] Add MediaTek I3C master controller driver
+Date: Tue, 9 Jul 2019 21:09:20 +0800
+Message-ID: <1562677762-24067-1-git-send-email-qii.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562677762-24067-1-git-send-email-qii.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: bbrezillon@kernel.org
 Cc: matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, qii.wang@mediatek.com, liguo.zhang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Document MediaTek I3C master DT bindings.
+This series are based on 5.2-rc1, we provide two patches to
+support MediaTek I3C master controller.
 
-Signed-off-by: Qii Wang <qii.wang@mediatek.com>
----
- .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   48 ++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+Main changes compared to v2:
+--modify the description of clock and interrupt in bindings
+--use correct cells for I2C device in bindings
+
+Main changes compared to v1:
+--remove clock-div, let clock driver handle it
+--let sample_cnt and step_cnt start from two
+
+Qii Wang (2):
+  dt-bindings: i3c: Document MediaTek I3C master bindings
+  i3c: master: Add driver for MediaTek IP
+
+ .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   48 +
+ drivers/i3c/master/Kconfig                         |   10 +
+ drivers/i3c/master/Makefile                        |    1 +
+ drivers/i3c/master/i3c-master-mtk.c                | 1239 ++++++++++++++++++++
+ 4 files changed, 1298 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+ create mode 100644 drivers/i3c/master/i3c-master-mtk.c
 
-diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
-new file mode 100644
-index 0000000..d32eda6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
-@@ -0,0 +1,48 @@
-+Bindings for MediaTek I3C master block
-+=====================================
-+
-+Required properties:
-+--------------------
-+- compatible: shall be "mediatek,i3c-master"
-+- reg: physical base address of the controller and apdma base, length of
-+  memory mapped region.
-+- reg-names: shall be "main" for master controller and "dma" for apdma.
-+- interrupts: the interrupt line connected to this I3C master.
-+- clocks: shall reference the i3c and apdma clocks.
-+- clock-names: shall include "main" and "dma".
-+
-+Mandatory properties defined by the generic binding (see
-+Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-+
-+- #address-cells: shall be set to 3
-+- #size-cells: shall be set to 0
-+
-+Optional properties defined by the generic binding (see
-+Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-+
-+- i2c-scl-hz
-+- i3c-scl-hz
-+
-+I3C device connected on the bus follow the generic description (see
-+Documentation/devicetree/bindings/i3c/i3c.txt for more details).
-+
-+Example:
-+
-+	i3c0: i3c@1100d000 {
-+		compatible = "mediatek,i3c-master";
-+		reg = <0x1100d000 0x1000>,
-+		      <0x11000300 0x80>;
-+		reg-names = "main", "dma";
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&infracfg CLK_INFRA_I3C0>,
-+			 <&infracfg CLK_INFRA_AP_DMA>;
-+		clock-names = "main", "dma";
-+		#address-cells = <3>;
-+		#size-cells = <0>;
-+		i2c-scl-hz = <100000>;
-+
-+		nunchuk: nunchuk@52 {
-+			compatible = "nintendo,nunchuk";
-+			reg = <0x52 0x0 0x10>;
-+		};
-+	};
 -- 
 1.7.9.5
