@@ -1,43 +1,57 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH] ARM: dts: am335x-wega.dtsi: fix wrong card detect pin level
-Date: Tue, 9 Jul 2019 20:32:11 +0200
-Message-ID: <20190709183209.y64keopah5rkismc@arbad>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 5/6] dt-bindings: arm: Document RTD1296
+Date: Tue, 9 Jul 2019 12:40:11 -0600
+Message-ID: <CAL_JsqLsO2MBOXUj3HT6=08VNsH7Ak_iJnxzdSOK3YF5+R387w@mail.gmail.com>
+References: <20190707132339.GF13340@arks.localdomain> <27a3468f-e7b4-e334-5956-8db87d04ff8c@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <27a3468f-e7b4-e334-5956-8db87d04ff8c@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: Aleix Roca Nonell <kernelrocks@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-mmc cards on mmc1 are not detected because of wrong card detect (cd) level.
+On Sun, Jul 7, 2019 at 7:31 AM Andreas F=C3=A4rber <afaerber@suse.de> wrote=
+:
+>
+> Am 07.07.19 um 15:23 schrieb Aleix Roca Nonell:
+> > Add bindings for Relatek RTD1296 SoC. And the Bannana Pi BPI-W2 board.
+>
+> "Realtek", "Banana"
+>
+> >
+> > Signed-off-by: Aleix Roca Nonell <kernelrocks@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/realtek.txt | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/realtek.txt b/Docume=
+ntation/devicetree/bindings/arm/realtek.txt
+> > index 95839e19ae92..78da1004d38c 100644
+> > --- a/Documentation/devicetree/bindings/arm/realtek.txt
+> > +++ b/Documentation/devicetree/bindings/arm/realtek.txt
+> > @@ -20,3 +20,16 @@ Root node property compatible must contain, dependin=
+g on board:
+> >  Example:
+> >
+> >      compatible =3D "zidoo,x9s", "realtek,rtd1295";
+> > +
+> > +
+> > +RTD1296 SoC
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +Required root node properties:
+> > +
+> > + - compatible :  must contain "realtek,rtd1296"
+>
+> I'm pretty sure that I had such a patch on the list already, so this is
+> lacking my authorship.
+>
+> Also, Rob has been working to convert these to YAML, so we should
+> probably complete that first and then add RTD1296 properly.
 
-Change cd from GPIO_ACTIVE_HIGH to GPIO_ACTIVE_LOW.
+I'm just waiting for you to either ack it or apply it.
 
-This is necessary because of commit e63201f19438 ("mmc: omap_hsmmc:
-Delete platform data GPIO CD and WP")
-
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- arch/arm/boot/dts/am335x-wega.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/am335x-wega.dtsi b/arch/arm/boot/dts/am335x-wega.dtsi
-index b7d28a20341f..84581fed3d06 100644
---- a/arch/arm/boot/dts/am335x-wega.dtsi
-+++ b/arch/arm/boot/dts/am335x-wega.dtsi
-@@ -157,7 +157,7 @@
- 	bus-width = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
--	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
- 
--- 
-2.11.0
-
-
--- 
+Rob
