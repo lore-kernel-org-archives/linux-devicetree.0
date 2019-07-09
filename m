@@ -1,61 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: arm: Convert RDA Micro board/soc bindings to
- json-schema
-Date: Tue, 9 Jul 2019 13:02:52 -0600
-Message-ID: <CAL_JsqKWML51A330RXarJaZReiPNeFdCsMbsse3hoNE1pKqc2A@mail.gmail.com>
-References: <20190618212229.32302-4-robh@kernel.org>
- <20190709171508.GA10127@Mani-XPS-13-9360>
- <CAL_Jsq+S9FEVq_ikLF2vWS3VkrGueFa8nPnbHhAjThemP+eajA@mail.gmail.com>
- <CAL_Jsq+=rAafEFq+3pUc3A35aLzf9gtgGzj1aheHzoQ+MSiO1Q@mail.gmail.com>
- <20190709184459.GA11886@Mani-XPS-13-9360>
+Subject: [PATCH] spi: dt-bindings: spi-controller: remove unnecessary 'maxItems: 1' from reg
+Date: Tue,  9 Jul 2019 13:26:31 -0600
+Message-ID: <20190709192631.16394-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190709184459.GA11886@Mani-XPS-13-9360>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: devicetree@vger.kernel.org, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgOSwgMjAxOSBhdCAxMjo0NSBQTSBNYW5pdmFubmFuIFNhZGhhc2l2YW0KPG1h
-bml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8ub3JnPiB3cm90ZToKPgo+IE9uIFR1ZSwgSnVsIDA5
-LCAyMDE5IGF0IDEyOjQxOjE5UE0gLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOgo+ID4gT24gVHVl
-LCBKdWwgOSwgMjAxOSBhdCAxMjoyOSBQTSBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3
-cm90ZToKPiA+ID4KPiA+ID4gT24gVHVlLCBKdWwgOSwgMjAxOSBhdCAxMToxNSBBTSBNYW5pdmFu
-bmFuIFNhZGhhc2l2YW0KPiA+ID4gPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8ub3JnPiB3
-cm90ZToKPiA+ID4gPgo+ID4gPiA+IEhpIFJvYiwKPiA+ID4gPgo+ID4gPiA+IE9uIFR1ZSwgSnVu
-IDE4LCAyMDE5IGF0IDAzOjIyOjI4UE0gLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOgo+ID4gPiA+
-ID4gQ29udmVydCBSREEgTWljcm8gU29DIGJpbmRpbmdzIHRvIERUIHNjaGVtYSBmb3JtYXQgdXNp
-bmcganNvbi1zY2hlbWEuCj4gPiA+ID4gPgo+ID4gPiA+ID4gQ2M6ICJBbmRyZWFzIEbDpHJiZXIi
-IDxhZmFlcmJlckBzdXNlLmRlPgo+ID4gPiA+ID4gQ2M6IE1hbml2YW5uYW4gU2FkaGFzaXZhbSA8
-bWFuaXZhbm5hbi5zYWRoYXNpdmFtQGxpbmFyby5vcmc+Cj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5
-OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+ID4gPiA+ID4gLS0tCj4gPiA+ID4gPiBB
-bmRyZWFzLCBVcGRhdGUgdGhlIGxpY2Vuc2Ugb24gdGhpcyBvbmUgdG9vIHRvIGR1YWwgbGljZW5z
-ZWQgaWYgeW91Cj4gPiA+ID4gPiB3YW50Lgo+ID4gPiA+Cj4gPiA+ID4gSSdtIGZpbmUgd2l0aCBH
-UEwtMi4wLiBTaW5jZSB0aGVyZSBpc24ndCBhbnkgb3RoZXIgUkRBIHNwZWNpZmljIHBhdGNoZXMK
-PiA+ID4gPiBpbiBteSB0cmVlLCB5b3Ugd2FudCB0byB0YWtlIHRoaXMgcGF0Y2g/IEVsc2UgSSBo
-YXZlIHRvIHNlbmQgdGhlIFB1bGwKPiA+ID4gPiBSZXF1ZXN0IHRvIEFSTSBTb0MgZm9sa3Mgd2l0
-aCB0aGlzIHBhdGNoIGFsb25lLgo+ID4gPgo+ID4gPiBPa2F5LCBJIGNhbiB0YWtlIGl0LiBUaGUg
-cHJlZmVyZW5jZSBpcyBhY3R1YWxseSBkdWFsIGxpY2Vuc2VkIHdoaWNoIGlzCj4gPiA+IHdoeSBJ
-IGFza2VkLCBidXQgdGhhdCBjYW4gYmUgZG9uZSBsYXRlci4KPiA+Cj4gPiBBbmQgaXMgdGhhdCBh
-biBhY2sgZnJvbSB5b3U/Cj4KPiBZZXMsIGhlcmUgaXMgdGhlIGZvcm1hbCB0YWc6Cj4KPiBBY2tl
-ZC1ieTogTWFuaXZhbm5hbiBTYWRoYXNpdmFtIDxtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGluYXJv
-Lm9yZz4KPgo+IEFsc28sIEFuZHJlYXMgYXNrZWQgdG8gc3dpdGNoIHRvIER1YWwgbGljZW5zZSBm
-b3IgQWN0aW9ucyBwbGF0Zm9ybSBzaW5jZSBoZQo+IGlzIHRoZSBtYWludGFpbmVyIG9mIGl0LiBC
-dXQgZm9yIFJEQSBoZSBpcyBub3QsIHNvIEkgZG9uJ3QgdGhpbmsgdGhlcmUgd2lsbAo+IGJlIGEg
-Y29uY2VybiBoZXJlIChJJ20gZmluZSB3aXRoIEdQTC0yLjApLgoKSXQncyBhdXRob3JzaGlwIHRo
-YXQgbWF0dGVycyBhbmQgQW5kcmVhcyB3YXMgdGhlIGF1dGhvciBvbiB0aGUKb3JpZ2luYWwgZmls
-ZS4gVGhlIG1haW50YWluZXIgb25seSBoYXMgYSBzYXkgaW4gd2hhdCBsaWNlbnNlIHRoZXknbGwK
-YWNjZXB0LgoKUm9iCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+Mixing array constraints like 'maxItems' and string or integer value
+constraints like 'minimum' don't make sense. Also, with only value
+constraints, it is implied we have a single value. So lets remove
+'maxItems: 1'.
+
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/spi/spi-controller.yaml | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+index 876c0623f322..a02e2fe2bfb2 100644
+--- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+@@ -73,7 +73,6 @@ patternProperties:
+           Compatible of the SPI device.
+ 
+       reg:
+-        maxItems: 1
+         minimum: 0
+         maximum: 256
+         description:
+-- 
+2.20.1
