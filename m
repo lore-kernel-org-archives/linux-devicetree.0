@@ -1,43 +1,60 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND, PATCH v4 2/2] dt-bindings: cpufreq: Document
- allwinner,sun50i-h6-operating-points
-Date: Tue, 9 Jul 2019 08:31:53 -0600
-Message-ID: <20190709143153.GA30638@bogus>
-References: <20190612162816.31713-1-tiny.windzz@gmail.com>
- <20190612162816.31713-3-tiny.windzz@gmail.com>
+From: <Eugen.Hristev@microchip.com>
+Subject: Re: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
+ Host
+Date: Tue, 9 Jul 2019 14:33:50 +0000
+Message-ID: <ae0ffeca-9305-b5a2-3480-da623d15ce67@microchip.com>
+References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+ <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190612162816.31713-3-tiny.windzz@gmail.com>
+In-Reply-To: <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
+Content-Language: en-US
+Content-ID: <3BE40FD76FF0294F9215FEEF22FB1FC9@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+To: Luis.Oliveira@synopsys.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, robh@kernel.org, Nicolas.Ferre@microchip.com, paulmck@linux.ibm.com, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Joao.Pinto@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Jun 2019 12:28:16 -0400, Yangtao Li wrote:
-> Allwinner Process Voltage Scaling Tables defines the voltage and
-> frequency value based on the speedbin blown in the efuse combination.
-> The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> provide the OPP framework with required information.
-> This is used to determine the voltage and frequency value for each
-> OPP of operating-points-v2 table when it is parsed by the OPP framework.
-> 
-> The "allwinner,sun50i-h6-operating-points" DT extends the
-> "operating-points-v2"
-> with following parameters:
-> - nvmem-cells (NVMEM area containig the speedbin information)
-> - opp-microvolt-<name>: voltage in micro Volts.
->   At runtime, the platform can pick a <name> and matching
->   opp-microvolt-<name> property.
->                         HW:             <name>:
->                         sun50i-h6      speed0 speed1 speed2
-> 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 ++++++++++++++++++
->  1 file changed, 167 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+DQoNCk9uIDExLjA2LjIwMTkgMjI6MjAsIEx1aXMgT2xpdmVpcmEgd3JvdGU6DQo+IEZyb206IEx1
+aXMgT2xpdmVpcmEgPGxvbGl2ZWlAc3lub3BzeXMuY29tPg0KPiANCj4gQWRkIGJpbmRpbmdzIGZv
+ciBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgQ1NJLTIgaG9zdC4NCj4gDQo+IFNpZ25lZC1vZmYt
+Ynk6IEx1aXMgT2xpdmVpcmEgPGxvbGl2ZWlAc3lub3BzeXMuY29tPg0KPiAtLS0NCj4gQ2hhbmdl
+bG9nDQo+IHYzLXY0DQo+IC0gcmVtb3ZlICJwbGF0IiBmcm9tIHRoZSBibG9jayBuYW1lIEByb2Ig
+QGxhdXJlbnQNCj4gLSByZW1vdmUgInBoeS1uYW1lcyIgd2hlbiBzaW5nbGUtZW50cnkgQHJvYg0K
+PiAtIHJlbW92ZSAic25wcyxvdXRwdXQtdHlwZSIgLT4gd2VudCB0byB0aGUgZHJpdmVyIGNvbmZp
+ZyBAbGF1cmVudA0KPiANCj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3
+LWNzaS50eHQgICAgICB8IDQxICsrKysrKysrKysrKysrKysrKysrKysNCj4gICAxIGZpbGUgY2hh
+bmdlZCwgNDEgaW5zZXJ0aW9ucygrKQ0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvc25wcyxkdy1jc2kudHh0DQo+IA0KPiBkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3NucHMsZHct
+Y3NpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3
+LWNzaS50eHQNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMC4uNjEzYjdm
+OQ0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9tZWRpYS9zbnBzLGR3LWNzaS50eHQNCj4gQEAgLTAsMCArMSw0MSBAQA0KPiArU3lub3Bz
+eXMgRGVzaWduV2FyZSBDU0ktMiBIb3N0IGNvbnRyb2xsZXINCj4gKw0KPiArRGVzY3JpcHRpb24N
+Cj4gKy0tLS0tLS0tLS0tDQo+ICsNCj4gK1RoaXMgSFcgYmxvY2sgaXMgdXNlZCB0byByZWNlaXZl
+IGltYWdlIGNvbWluZyBmcm9tIGFuIE1JUEkgQ1NJLTIgY29tcGF0aWJsZQ0KPiArY2FtZXJhLg0K
+PiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiArLSBjb21wYXRpYmxlCQk6IHNoYWxsIGJl
+ICJzbnBzLGR3LWNzaSINCj4gKy0gcmVnCQkJOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIHNp
+emUgb2YgdGhlIGRldmljZSBtZW1vcnkNCj4gKwkJCSAgbWFwcGVkIHJlZ2lzdGVyczsNCj4gKy0g
+aW50ZXJydXB0cwkJOiBEVyBDU0ktMiBIb3N0IGludGVycnVwdHMNCj4gKy0gcGh5cwkJCTogTGlz
+dCBvZiBvbmUgUEhZIHNwZWNpZmllciAoYXMgZGVmaW5lZCBpbg0KPiArCQkJICBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1iaW5kaW5ncy50eHQpLg0KPiArCQkJICBU
+aGlzIFBIWSBpcyBhIE1JUEkgRFBIWSB3b3JraW5nIGluIFJYIG1vZGUuDQo+ICstIHJlc2V0cwkJ
+OiBSZWZlcmVuY2UgdG8gYSByZXNldCBjb250cm9sbGVyIChvcHRpb25hbCkNCj4gKw0KPiArVGhl
+IHBlci1ib2FyZCBzZXR0aW5nczoNCj4gKyAtIHBvcnQgc3ViLW5vZGUgZGVzY3JpYmluZyBhIHNp
+bmdsZSBlbmRwb2ludCBjb25uZWN0ZWQgdG8gdGhlIGNhbWVyYSBhcw0KPiArICAgZGVzY3JpYmVk
+IGluIHZpZGVvLWludGVyZmFjZXMudHh0WzFdLg0KPiArDQo+ICtFeGFtcGxlOg0KPiArDQo+ICsJ
+Y3NpMjogY3NpMkAzMDAwIHsNCj4gKwkJY29tcGF0aWJsZSA9ICJzbnBzLGR3LWNzaSI7DQo+ICsJ
+CSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gKwkJcmVn
+ID0gPCAweDAzMDAwIDB4N0ZGPjsNCj4gKwkJcGh5cyA9IDwmbWlwaV9kcGh5X3J4PjsNCj4gKwkJ
+cmVzZXRzID0gPCZkd19yc3QgMT47DQo+ICsJCWludGVycnVwdHMgPSA8Mj47DQo+ICsNCj4gKwkJ
+cG9ydEAwIHsNCj4gKwkJCXJlZyA9IDwwPjsNCj4gKwkJCWNzaV9lcDE6IGVuZHBvaW50IHsNCj4g
+KwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmNhbWVyYV8xPjsNCj4gKwkJCQlkYXRhLWxhbmVzID0g
+PDEgMj47DQo+ICsJCQl9Ow0KDQpIZWxsbyBMdWlzLA0KDQpXaGljaCBpcyB0aGUgb3V0cHV0IHBv
+cnQgKGVuZHBvaW50KSA6IGhvdyB0byBjb25uZWN0IHRoZSBvdXRwdXQgb2YgDQpjc2kyaG9zdCB0
+byBhbm90aGVyIG5vZGUgPw0KSSBtZWFuLCB0aGUgc2Vjb25kIHBvcnQgb2YgdGhpcyBibG9jaywg
+b3IsIGhvdyBpcyB0aGUgZGF0YSB0YWtlbiBmcm9tIA0KY3NpMmhvc3QgPw0KDQpUaGFua3MsDQoN
+CkV1Z2VuDQoNCj4gKwkJfTsNCj4gKwl9Ow0KPiANCg==
