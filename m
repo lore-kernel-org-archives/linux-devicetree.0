@@ -1,7 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH V2 2/4] opp: of: Support multiple suspend OPPs defined in DT
-Date: Tue,  9 Jul 2019 16:00:13 +0800
-Message-ID: <20190709080015.43442-2-Anson.Huang@nxp.com>
+Subject: [PATCH V2 3/4] arm64: dts: imx8mq: Add opp-suspend property to OPP table
+Date: Tue,  9 Jul 2019 16:00:14 +0800
+Message-ID: <20190709080015.43442-3-Anson.Huang@nxp.com>
 References: <20190709080015.43442-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190709080015.43442-1-Anson.Huang@nxp.com>
@@ -12,46 +12,52 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-With property "opp-supported-hw" introduced, the OPP table
-in DT could be a large OPP table and ONLY a subset of OPPs
-are available, based on the version of the hardware running
-on. That introduces restriction of using "opp-suspend"
-property to define the suspend OPP, as we are NOT sure if the
-OPP containing "opp-suspend" property is available for the
-hardware running on, and the of opp core does NOT allow multiple
-suspend OPPs defined in DT OPP table.
-
-To eliminate this restrition, make of opp core allow multiple
-suspend OPPs defined in DT, and pick the OPP with highest rate
-and with "opp-suspend" property present to be suspend OPP, it
-can speed up the suspend/resume process.
+Add opp-suspend property to each OPP, the of opp core will
+select the OPP HW supported and with highest rate to be
+suspend opp, it will speed up the suspend/resume process.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 No changes.
 ---
- drivers/opp/of.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index b313aca..7e8ec6c 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -617,9 +617,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
- 	/* OPP to select on device suspend */
- 	if (of_property_read_bool(np, "opp-suspend")) {
- 		if (opp_table->suspend_opp) {
--			dev_warn(dev, "%s: Multiple suspend OPPs found (%lu %lu)\n",
--				 __func__, opp_table->suspend_opp->rate,
--				 new_opp->rate);
-+			/* Pick the OPP with higher rate as suspend OPP */
-+			if (new_opp->rate > opp_table->suspend_opp->rate) {
-+				opp_table->suspend_opp->suspend = false;
-+				new_opp->suspend = true;
-+				opp_table->suspend_opp = new_opp;
-+			}
- 		} else {
- 			new_opp->suspend = true;
- 			opp_table->suspend_opp = new_opp;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 58f66cb..4ba6a25f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -156,6 +156,7 @@
+ 			/* Industrial only */
+ 			opp-supported-hw = <0xf>, <0x4>;
+ 			clock-latency-ns = <150000>;
++			opp-suspend;
+ 		};
+ 
+ 		opp-1000000000 {
+@@ -164,6 +165,7 @@
+ 			/* Consumer only */
+ 			opp-supported-hw = <0xe>, <0x3>;
+ 			clock-latency-ns = <150000>;
++			opp-suspend;
+ 		};
+ 
+ 		opp-1300000000 {
+@@ -171,6 +173,7 @@
+ 			opp-microvolt = <1000000>;
+ 			opp-supported-hw = <0xc>, <0x4>;
+ 			clock-latency-ns = <150000>;
++			opp-suspend;
+ 		};
+ 
+ 		opp-1500000000 {
+@@ -178,6 +181,7 @@
+ 			opp-microvolt = <1000000>;
+ 			opp-supported-hw = <0x8>, <0x3>;
+ 			clock-latency-ns = <150000>;
++			opp-suspend;
+ 		};
+ 	};
+ 
 -- 
 2.7.4
