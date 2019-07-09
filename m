@@ -1,58 +1,62 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 05/10] net: hisilicon: HI13X1_GMAX need dreq reset at
- first
-Date: Tue, 9 Jul 2019 12:35:57 +0300
-Message-ID: <890c48d1-76b8-5aea-e175-aa7d9967acd2@cogentembedded.com>
-References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
- <1562643071-46811-6-git-send-email-xiaojiangfeng@huawei.com>
+From: =?big5?B?R2VvcmdlIEh1bmcgKKx4qb63cSk=?= <George.Hung@quantatw.com>
+Subject: RE: [PATCH 5.2 v2 2/2] dt-binding: edac: add NPCM ECC documentation
+Date: Tue, 9 Jul 2019 09:48:59 +0000
+Message-ID: <0c90f9376c0e425c9a226379f7e5bfad@quantatw.com>
+References: <20190605141253.38554-1-ghung.quanta@gmail.com>
+ <20190605141253.38554-2-ghung.quanta@gmail.com>
+ <20190709014058.GA30269@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562643071-46811-6-git-send-email-xiaojiangfeng@huawei.com>
-Content-Language: en-US
+In-Reply-To: <20190709014058.GA30269@bogus>
+Content-Language: zh-TW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiangfeng Xiao <xiaojiangfeng@huawei.com>, davem@davemloft.net, robh+dt@kernel.org, yisen.zhuang@huawei.com, salil.mehta@huawei.com, mark.rutland@arm.com, dingtianhong@huawei.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leeyou.li@huawei.com, nixiaoming@huawei.com, jianping.liu@huawei.com, xiekunxun@huawei.com
+To: Rob Herring <robh@kernel.org>, George Hung <ghung.quanta@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Tali Perry <tali.perry1@gmail.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "wak@google.com" <wak@google.com>, "benjaminfair@google.com" <benjaminfair@google.com>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, "tomer.maimon@nuvoton.com" <tomer.maimon@nuvoton.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Avi.Fishman@nuvoton.com" <Avi.Fishman@nuvoton.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-edac <linux-edac@vger.kernel.org>, Patrick Venture <venture@google.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 09.07.2019 6:31, Jiangfeng Xiao wrote:
-
-> HI13X1_GMAC delete request for soft reset at first,
-> otherwise, the subsequent initialization will not
-> take effect.
-> 
-> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-> ---
->   drivers/net/ethernet/hisilicon/hip04_eth.c | 24 ++++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-> index fe61b01..19d8cfd 100644
-> --- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-> +++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-[...]
-> @@ -853,6 +867,15 @@ static int hip04_mac_probe(struct platform_device *pdev)
->   		goto init_fail;
->   	}
->   
-> +#if defined(CONFIG_HI13X1_GMAC)
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	priv->sysctrl_base = devm_ioremap_resource(d, res);
-
-    There's devm_platform_ioremap_resource() now.
-
-> +	if (IS_ERR(priv->sysctrl_base)) {
-> +		ret = PTR_ERR(priv->sysctrl_base);
-> +		goto init_fail;
-> +	}
-> +#endif
-> +
->   	ret = of_parse_phandle_with_fixed_args(node, "port-handle", 2, 0, &arg);
->   	if (ret < 0) {
->   		dev_warn(d, "no port-handle\n");
-[...]
-
-MBR, Sergei
+SGkgUm9iLA0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogb3BlbmJt
+Yw0KPiBbbWFpbHRvOm9wZW5ibWMtYm91bmNlcytnZW9yZ2UuaHVuZz1xdWFudGF0dy5jb21AbGlz
+dHMub3psYWJzLm9yZ10gT24NCj4gQmVoYWxmIE9mIFJvYiBIZXJyaW5nDQo+IFNlbnQ6IFR1ZXNk
+YXksIEp1bHkgMDksIDIwMTkgOTo0MSBBTQ0KPiBUbzogR2VvcmdlIEh1bmcNCj4gQ2M6IE1hcmsg
+UnV0bGFuZDsgTGludXMgV2FsbGVpajsgVGFsaSBQZXJyeTsgcGF1bG1ja0BsaW51eC5pYm0uY29t
+Ow0KPiB3YWtAZ29vZ2xlLmNvbTsgYmVuamFtaW5mYWlyQGdvb2dsZS5jb207IG9wZW5ibWNAbGlz
+dHMub3psYWJzLm9yZzsNCj4gdG9tZXIubWFpbW9uQG51dm90b24uY29tOyBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZzsgQm9yaXNsYXYgUGV0a292Ow0KPiBBdmkuRmlzaG1hbkBudXZvdG9uLmNv
+bTsgSm9uYXRoYW4gQ2FtZXJvbjsgTWF1cm8gQ2FydmFsaG8gQ2hlaGFiOw0KPiBsaW51eC1lZGFj
+OyBQYXRyaWNrIFZlbnR1cmU7IE5pY29sYXMgRmVycmU7IGxpbnV4LWtlcm5lbDsgSmFtZXMgTW9y
+c2U7IEdyZWcNCj4gS3JvYWgtSGFydG1hbjsgZGF2ZW1AZGF2ZW1sb2Z0Lm5ldA0KPiBTdWJqZWN0
+OiBSZTogW1BBVENIIDUuMiB2MiAyLzJdIGR0LWJpbmRpbmc6IGVkYWM6IGFkZCBOUENNIEVDQw0K
+PiBkb2N1bWVudGF0aW9uDQo+IA0KPiBPbiBXZWQsIEp1biAwNSwgMjAxOSBhdCAxMDoxMjo1M1BN
+ICswODAwLCBHZW9yZ2UgSHVuZyB3cm90ZToNCj4gPiBBZGQgZGV2aWNlIHRyZWUgZG9jdW1lbnRh
+dGlvbiBmb3IgTnV2b3RvbiBCTUMgRUNDDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBHZW9yZ2Ug
+SHVuZyA8Z2h1bmcucXVhbnRhQGdtYWlsLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2JpbmRpbmdz
+L2VkYWMvbnBjbTd4eC1zZHJhbS1lZGFjLnR4dCAgICAgICAgfCAxNw0KPiArKysrKysrKysrKysr
+KysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9u
+cGNtN3h4LXNkcmFtLWVkYWMudHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9ucGNtN3h4LXNkcmFtLWVkYWMudHh0DQo+
+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9ucGNtN3h4LXNkcmFt
+LWVkYWMudHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAw
+MDAuLmRkNGRhYzU5YTViZA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9ucGNtN3h4LXNkcmFtLWVkYWMudHh0DQo+ID4g
+QEAgLTAsMCArMSwxNyBAQA0KPiA+ICtOdXZvdG9uIE5QQ003eHggU29DIEVEQUMgZGV2aWNlIGRy
+aXZlcg0KPiA+ICsNCj4gPiArVGhlIE51dm90b24gTlBDTTd4eCBTb0Mgc3VwcG9ydHMgRERSNCBt
+ZW1vcnkgd2l0aC93aXRob3V0IEVDQyBhbmQNCj4gdGhlDQo+ID4gK2RyaXZlciB1c2VzIHRoZSBF
+REFDIGZyYW1ld29yayB0byBpbXBsZW1lbnQgdGhlIEVDQyBkZXRlY3Rpb24gYW5kDQo+IGNvcnJ0
+ZWN0aW9uLg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21wYXRp
+YmxlOglzaG91bGQgYmUgIm51dm90b24sbnBjbTd4eC1zZHJhbS1lZGFjIg0KPiANCj4gSXMgdGhp
+cyBmb3IgdGhlIHdob2xlIFNEUkFNIGNvbnRyb2xsZXIgb3IganVzdCBFQ0MgcmVsYXRlZCByZWdp
+c3RlcnM/DQo+IEluIHRoZSBmb3JtZXIgY2FzZSwgdGhlIG5hbWluZyBzaG91bGQganVzdCByZWZs
+ZWN0IHRoZSBibG9jayBuYW1lIGFuZCBub3QgYQ0KPiBMaW51eCB0ZXJtLg0KDQpTb3JyeSBmb3Ig
+Y29uZnVzZWQgbmFtaW5nLCB0aGUgYWRkcmVzcyBzcGFjZSBpcyBmb3IgdGhlIHdob2xlIG1lbW9y
+eSBjb250cm9sbGVyIHJlZ2lzdGVycyBpbmRlZWQsDQpidXQgdGhlIGRyaXZlciBvbmx5IHVzZXMg
+dGhlIEVDQyByZWxhdGVkIHJlZ2lzdGVycy4NClNob3VsZCBJIGNoYW5nZSB0aGUgbmFtZSB0byAi
+bnV2b3RvbixucGNtN3h4LWVkYWMiID8NCg0KPiANCj4gPiArLSByZWc6CQlNZW1vcnkgY29udHJv
+bGxlciByZWdpc3RlciBzZXQgc2hvdWxkIGJlIDwweGYwODI0MDAwDQo+IDB4MTAwMD4NCj4gPiAr
+LSBpbnRlcnJ1cHRzOglzaG91bGQgYmUgTUMgaW50ZXJydXB0ICMyNQ0KPiA+ICsNCj4gPiArRXhh
+bXBsZToNCj4gPiArDQo+ID4gKwltYzogbWVtb3J5LWNvbnRyb2xsZXJAZjA4MjQwMDAgew0KPiA+
+ICsJCWNvbXBhdGlibGUgPSAibnV2b3RvbixucGNtN3h4LXNkcmFtLWVkYWMiOw0KPiA+ICsJCXJl
+ZyA9IDwweGYwODI0MDAwIDB4MTAwMD47DQo+ID4gKwkJaW50ZXJydXB0cyA9IDwwIDI1IDQ+Ow0K
+PiA+ICsJfTsNCj4gPiAtLQ0KPiA+IDIuMjEuMA0KPiA+DQo=
