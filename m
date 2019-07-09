@@ -1,27 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v14 2/2] dt-bindings: spi: Document Renesas R-Car Gen3
- RPC-IF controller bindings
-Date: Tue, 9 Jul 2019 14:12:17 -0600
-Message-ID: <20190709201217.GA14681@bogus>
-References: <1561023046-20886-1-git-send-email-masonccyang@mxic.com.tw>
- <1561023046-20886-3-git-send-email-masonccyang@mxic.com.tw>
+Subject: Re: [PATCH 5/6] dt-bindings: usb: bdc: Update compatible strings
+Date: Tue, 9 Jul 2019 14:14:35 -0600
+Message-ID: <20190709201435.GA18881@bogus>
+References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
+ <1561064991-16874-6-git-send-email-alcooperx@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1561023046-20886-3-git-send-email-masonccyang@mxic.com.tw>
+In-Reply-To: <1561064991-16874-6-git-send-email-alcooperx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: broonie@kernel.org, marek.vasut@gmail.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, lee.jones@linaro.org, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>, Mason Yang <masonccyang@mxic.com.tw>, miquel.raynal@bootlin.com
+Cc: linux-kernel@vger.kernel.org, Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Jun 2019 17:30:46 +0800, Mason Yang wrote:
-> Dcument the bindings used by the Renesas R-Car Gen3 RPC-IF controller.
+On Thu, 20 Jun 2019 17:09:50 -0400, Al Cooper wrote:
+> Remove "brcm,bdc-v0.16" because it was never used on any system.
+> Add "brcm,bdc-udc-v3.1" which exists for any STB system with BDC.
 > 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
 > ---
->  .../devicetree/bindings/spi/spi-renesas-rpc.txt    | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
+>  Documentation/devicetree/bindings/usb/brcm,bdc.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
