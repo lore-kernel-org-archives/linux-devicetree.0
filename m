@@ -1,7 +1,7 @@
 From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Subject: [PATCH v2 10/10] net: hisilicon: Add an tx_desc to adapt HI13X1_GMAC
-Date: Tue, 9 Jul 2019 11:31:11 +0800
-Message-ID: <1562643071-46811-11-git-send-email-xiaojiangfeng@huawei.com>
+Subject: [PATCH v2 01/10] net: hisilicon: Add support for HI13X1 to hip04_eth
+Date: Tue, 9 Jul 2019 11:31:02 +0800
+Message-ID: <1562643071-46811-2-git-send-email-xiaojiangfeng@huawei.com>
 References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,89 +12,106 @@ To: davem@davemloft.net, robh+dt@kernel.org, yisen.zhuang@huawei.com, salil.meht
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leeyou.li@huawei.com, nixiaoming@huawei.com, jianping.liu@huawei.com, xiekunxun@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-HI13X1 changed the offsets and bitmaps for tx_desc
-registers in the same peripheral device on different
-models of the hip04_eth.
+Extend the hip04_eth driver to support HI13X1_GMAC.
+Enable it with CONFIG_HI13X1_GMAC option.
 
 Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 34 +++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/Kconfig     | 10 ++++++++
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 37 ++++++++++++++++++++++++------
+ 2 files changed, 40 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/net/ethernet/hisilicon/Kconfig b/drivers/net/ethernet/hisilicon/Kconfig
+index a0d780c..3892a20 100644
+--- a/drivers/net/ethernet/hisilicon/Kconfig
++++ b/drivers/net/ethernet/hisilicon/Kconfig
+@@ -46,6 +46,16 @@ config HIP04_ETH
+ 	  If you wish to compile a kernel for a hardware with hisilicon p04 SoC and
+ 	  want to use the internal ethernet then you should answer Y to this.
+ 
++config HI13X1_GMAC
++	bool "Hisilicon HI13X1 Network Device Support"
++	depends on HIP04_ETH
++	help
++	  If you wish to compile a kernel for a hardware with hisilicon hi13x1_gamc
++	  then you should answer Y to this. This makes this driver suitable for use
++	  on certain boards such as the HI13X1.
++
++	  If you are unsure, say N.
++
+ config HNS_MDIO
+ 	tristate
+ 	select PHYLIB
 diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 780fc46..6256357 100644
+index e1f2978..2b5112b 100644
 --- a/drivers/net/ethernet/hisilicon/hip04_eth.c
 +++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -76,8 +76,15 @@
- /* TX descriptor config */
- #define TX_FREE_MEM			BIT(0)
- #define TX_READ_ALLOC_L3		BIT(1)
--#define TX_FINISH_CACHE_INV		BIT(2)
-+#if defined(CONFIG_HI13X1_GMAC)
-+#define TX_CLEAR_WB			BIT(7)
-+#define TX_RELEASE_TO_PPE		BIT(4)
-+#define TX_FINISH_CACHE_INV		BIT(6)
-+#define TX_POOL_SHIFT			16
-+#else
- #define TX_CLEAR_WB			BIT(4)
-+#define TX_FINISH_CACHE_INV		BIT(2)
-+#endif
- #define TX_L3_CHECKSUM			BIT(5)
- #define TX_LOOP_BACK			BIT(11)
- 
-@@ -124,6 +131,7 @@
- /* buf unit size is cache_line_size, which is 64, so the shift is 6 */
- #define PPE_BUF_SIZE_SHIFT		6
- #define PPE_TX_BUF_HOLD			BIT(31)
-+#define CACHE_LINE_MASK			0x3F
- #else
- #define PPE_CFG_QOS_VMID_GRP_SHIFT	8
- #define PPE_CFG_RX_CTRL_ALIGN_SHIFT	11
-@@ -163,11 +171,22 @@
- #define HIP04_MIN_TX_COALESCE_FRAMES	100
- 
- struct tx_desc {
-+#if defined(CONFIG_HI13X1_GMAC)
-+	u32 reserved1[2];
-+	u32 send_addr;
-+	u16 send_size;
-+	u16 data_offset;
-+	u32 reserved2[7];
-+	u32 cfg;
-+	u32 wb_addr;
-+	u32 reserved3[3];
-+#else
- 	u32 send_addr;
- 	u32 send_size;
- 	u32 next_addr;
- 	u32 cfg;
- 	u32 wb_addr;
-+#endif
- } __aligned(64);
- 
- struct rx_desc {
-@@ -505,11 +524,20 @@ static void hip04_start_tx_timer(struct hip04_priv *priv)
- 
- 	priv->tx_skb[tx_head] = skb;
- 	priv->tx_phys[tx_head] = phys;
--	desc->send_addr = (__force u32)cpu_to_be32(phys);
+@@ -33,10 +33,23 @@
+ #define GE_MODE_CHANGE_REG		0x1b4
+ #define GE_RECV_CONTROL_REG		0x1e0
+ #define GE_STATION_MAC_ADDRESS		0x210
+-#define PPE_CFG_CPU_ADD_ADDR		0x580
+-#define PPE_CFG_MAX_FRAME_LEN_REG	0x408
 +
- 	desc->send_size = (__force u32)cpu_to_be32(skb->len);
+ #define PPE_CFG_BUS_CTRL_REG		0x424
+ #define PPE_CFG_RX_CTRL_REG		0x428
++
 +#if defined(CONFIG_HI13X1_GMAC)
-+	desc->cfg = (__force u32)cpu_to_be32(TX_CLEAR_WB | TX_FINISH_CACHE_INV
-+		| TX_RELEASE_TO_PPE | priv->port << TX_POOL_SHIFT);
-+	desc->data_offset = (__force u32)cpu_to_be32(phys & CACHE_LINE_MASK);
-+	desc->send_addr =  (__force u32)cpu_to_be32(phys & ~CACHE_LINE_MASK);
++#define PPE_CFG_CPU_ADD_ADDR		0x6D0
++#define PPE_CFG_MAX_FRAME_LEN_REG	0x500
++#define PPE_CFG_RX_PKT_MODE_REG		0x504
++#define PPE_CFG_QOS_VMID_GEN		0x520
++#define PPE_CFG_RX_PKT_INT		0x740
++#define PPE_INTEN			0x700
++#define PPE_INTSTS			0x708
++#define PPE_RINT			0x704
++#define PPE_CFG_STS_MODE		0x880
 +#else
- 	desc->cfg = (__force u32)cpu_to_be32(TX_CLEAR_WB | TX_FINISH_CACHE_INV);
-+	desc->send_addr = (__force u32)cpu_to_be32(phys);
-+#endif
- 	phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
--	desc->wb_addr = (__force u32)cpu_to_be32(phys);
-+	desc->wb_addr = (__force u32)cpu_to_be32(phys +
-+		offsetof(struct tx_desc, send_addr));
- 	skb_tx_timestamp(skb);
++#define PPE_CFG_CPU_ADD_ADDR		0x580
++#define PPE_CFG_MAX_FRAME_LEN_REG	0x408
+ #define PPE_CFG_RX_PKT_MODE_REG		0x438
+ #define PPE_CFG_QOS_VMID_GEN		0x500
+ #define PPE_CFG_RX_PKT_INT		0x538
+@@ -44,6 +57,8 @@
+ #define PPE_INTSTS			0x608
+ #define PPE_RINT			0x604
+ #define PPE_CFG_STS_MODE		0x700
++#endif /* CONFIG_HI13X1_GMAC */
++
+ #define PPE_HIS_RX_PKT_CNT		0x804
  
- 	hip04_set_xmit_desc(priv, phys);
+ /* REG_INTERRUPT */
+@@ -93,18 +108,26 @@
+ #define GE_RX_PORT_EN			BIT(1)
+ #define GE_TX_PORT_EN			BIT(2)
+ 
+-#define PPE_CFG_STS_RX_PKT_CNT_RC	BIT(12)
+-
+ #define PPE_CFG_RX_PKT_ALIGN		BIT(18)
+-#define PPE_CFG_QOS_VMID_MODE		BIT(14)
++
++#if defined(CONFIG_HI13X1_GMAC)
++#define PPE_CFG_QOS_VMID_GRP_SHIFT	4
++#define PPE_CFG_RX_CTRL_ALIGN_SHIFT	7
++#define PPE_CFG_STS_RX_PKT_CNT_RC	BIT(0)
++#define PPE_CFG_QOS_VMID_MODE		BIT(15)
++#define PPE_CFG_BUS_LOCAL_REL		(BIT(9) | BIT(15) | BIT(19) | BIT(23))
++#else
+ #define PPE_CFG_QOS_VMID_GRP_SHIFT	8
++#define PPE_CFG_RX_CTRL_ALIGN_SHIFT	11
++#define PPE_CFG_STS_RX_PKT_CNT_RC	BIT(12)
++#define PPE_CFG_QOS_VMID_MODE		BIT(14)
++#define PPE_CFG_BUS_LOCAL_REL		BIT(14)
++#endif /* CONFIG_HI13X1_GMAC */
+ 
+ #define PPE_CFG_RX_FIFO_FSFU		BIT(11)
+ #define PPE_CFG_RX_DEPTH_SHIFT		16
+ #define PPE_CFG_RX_START_SHIFT		0
+-#define PPE_CFG_RX_CTRL_ALIGN_SHIFT	11
+ 
+-#define PPE_CFG_BUS_LOCAL_REL		BIT(14)
+ #define PPE_CFG_BUS_BIG_ENDIEN		BIT(0)
+ 
+ #define RX_DESC_NUM			128
 -- 
 1.8.5.6
