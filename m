@@ -1,8 +1,8 @@
 From: Stefan Riedmueller <s.riedmueller@phytec.de>
-Subject: [PATCH 05/10] ARM: dts: imx6ul: segin: Make FEC and ethphy
- configurable in dts
-Date: Tue, 9 Jul 2019 09:19:22 +0200
-Message-ID: <1562656767-273566-6-git-send-email-s.riedmueller@phytec.de>
+Subject: [PATCH 06/10] ARM: dts: imx6ul: segin: Only enable NAND if it is
+ populated
+Date: Tue, 9 Jul 2019 09:19:23 +0200
+Message-ID: <1562656767-273566-7-git-send-email-s.riedmueller@phytec.de>
 References: <1562656767-273566-1-git-send-email-s.riedmueller@phytec.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,97 +22,43 @@ To: shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org, mark.rutlan
 Cc: devicetree@vger.kernel.org, martyn.welch@collabora.com, linux-kernel@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-To disable Ethernet interfaces in case they are not populated
-make the FEC and Ethernet PHY status configurable in the dts files.
-
-Also change the Ethernet PHYs labels to make them correspond to
-the MDIO address.
+The phyCORE-i.MX 6UL/ULL now comes either with NAND flash or eMMC. We
+have to configure the populated memory type in the device tree files. So
+the GPMI node gets disabled by default and only enabled if populated.
 
 Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
 ---
- arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi      |  7 ++++---
- arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts | 12 ++++++++++++
- arch/arm/boot/dts/imx6ul-phytec-segin.dtsi            |  5 +++--
- 3 files changed, 19 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi      | 2 +-
+ arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi
-index 73266b4a889b..fee7a7e938ee 100644
+index fee7a7e938ee..de6ffbb0183c 100644
 --- a/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi
 +++ b/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi
-@@ -42,20 +42,21 @@
+@@ -65,7 +65,7 @@
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet1>;
- 	phy-mode = "rmii";
--	phy-handle = <&ethphy0>;
+ 	pinctrl-0 = <&pinctrl_gpmi_nand>;
+ 	nand-on-flash-bbt;
 -	status = "okay";
-+	phy-handle = <&ethphy1>;
 +	status = "disabled";
- 
- 	mdio: mdio {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		ethphy0: ethernet-phy@1 {
-+		ethphy1: ethernet-phy@1 {
- 			reg = <1>;
- 			interrupt-parent = <&gpio1>;
- 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 			micrel,led-mode = <1>;
- 			clocks = <&clks IMX6UL_CLK_ENET_REF>;
- 			clock-names = "rmii-ref";
-+			status = "disabled";
- 		};
- 	};
  };
+ 
+ &i2c1 {
 diff --git a/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts b/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts
-index dc06029c5701..81a82dd65019 100644
+index 81a82dd65019..c6ef13685a7c 100644
 --- a/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts
 +++ b/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts
-@@ -34,6 +34,18 @@
+@@ -50,6 +50,10 @@
  	status = "okay";
  };
  
-+&ethphy1 {
++&gpmi {
 +	status = "okay";
 +};
 +
-+&ethphy2 {
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	status = "okay";
-+};
-+
- &fec2 {
+ &i2c_rtc {
  	status = "okay";
  };
-diff --git a/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi b/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi
-index 28ba3a4c4c74..7cd24ec40c36 100644
---- a/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi
-@@ -107,7 +107,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet2>;
- 	phy-mode = "rmii";
--	phy-handle = <&ethphy1>;
-+	phy-handle = <&ethphy2>;
- 	status = "disabled";
- };
- 
-@@ -160,11 +160,12 @@
- };
- 
- &mdio {
--	ethphy1: ethernet-phy@2 {
-+	ethphy2: ethernet-phy@2 {
- 		reg = <2>;
- 		micrel,led-mode = <1>;
- 		clocks = <&clks IMX6UL_CLK_ENET2_REF>;
- 		clock-names = "rmii-ref";
-+		status = "disabled";
- 	};
- };
- 
 -- 
 2.7.4
