@@ -1,29 +1,194 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3, 04/27] dt-bindings: mediatek: add dither description
- for mt8183 display
-Date: Mon, 8 Jul 2019 19:37:50 -0600
-Message-ID: <20190709013750.GA30027@bogus>
-References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
- <1559734986-7379-5-git-send-email-yongqiang.niu@mediatek.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
+ mailbox
+Date: Tue, 9 Jul 2019 01:40:41 +0000
+Message-ID: <AM0PR04MB44816C38C43A3C8E09E8FFF588F10@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190603083005.4304-1-peng.fan@nxp.com>
+ <20190603083005.4304-2-peng.fan@nxp.com> <20190708221947.GA13552@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1559734986-7379-5-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <20190708221947.GA13552@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Yongqiang Niu <yongqiang.niu@mediatek.com>
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "van.freenix@gmail.com" <van.freenix@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 5 Jun 2019 19:42:43 +0800, <yongqiang.niu@mediatek.com> wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> Update device tree binding documention for the display subsystem for
-> Mediatek MT8183 SOCs
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Hi Rob,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
+> mailbox
+>=20
+> On Mon, Jun 03, 2019 at 04:30:04PM +0800, peng.fan@nxp.com wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > The ARM SMC mailbox binding describes a firmware interface to trigger
+> > actions in software layers running in the EL2 or EL3 exception levels.
+> > The term "ARM" here relates to the SMC instruction as part of the ARM
+> > instruction set, not as a standard endorsed by ARM Ltd.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >
+> > V2:
+> > Introduce interrupts as a property.
+> >
+> > V1:
+> > arm,func-ids is still kept as an optional property, because there is
+> > no defined SMC funciton id passed from SCMI. So in my test, I still
+> > use arm,func-ids for ARM SIP service.
+> >
+> >  .../devicetree/bindings/mailbox/arm-smc.txt        | 101
+> +++++++++++++++++++++
+> >  1 file changed, 101 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > new file mode 100644
+> > index 000000000000..401887118c09
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > @@ -0,0 +1,101 @@
+> > +ARM SMC Mailbox Interface
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+> > +
+> > +This mailbox uses the ARM smc (secure monitor call) instruction to
+> > +trigger a mailbox-connected activity in firmware, executing on the
+> > +very same core as the caller. By nature this operation is synchronous
+> > +and this mailbox provides no way for asynchronous messages to be
+> > +delivered the other way round, from firmware to the OS, but
+> > +asynchronous notification could also be supported. However the value
+> > +of r0/w0/x0 the firmware returns after the smc call is delivered as a
+> > +received message to the mailbox framework, so a synchronous
+> > +communication can be established, for a asynchronous notification, no
+> > +value will be returned. The exact meaning of both the action the
+> > +mailbox triggers as well as the return value is defined by their users=
+ and is
+> not subject to this binding.
+> > +
+> > +One use case of this mailbox is the SCMI interface, which uses shared
+> > +memory to transfer commands and parameters, and a mailbox to trigger
+> > +a function call. This allows SoCs without a separate management
+> > +processor (or when such a processor is not available or used) to use
+> > +this standardized interface anyway.
+> > +
+> > +This binding describes no hardware, but establishes a firmware interfa=
+ce.
+> > +Upon receiving an SMC using one of the described SMC function
+> > +identifiers, the firmware is expected to trigger some mailbox connecte=
+d
+> functionality.
+> > +The communication follows the ARM SMC calling convention[1].
+> > +Firmware expects an SMC function identifier in r0 or w0. The
+> > +supported identifiers are passed from consumers, or listed in the the
+> > +arm,func-ids properties as described below. The firmware can return
+> > +one value in the first SMC result register, it is expected to be an
+> > +error value, which shall be propagated to the mailbox client.
+> > +
+> > +Any core which supports the SMC or HVC instruction can be used, as
+> > +long as a firmware component running in EL3 or EL2 is handling these c=
+alls.
+> > +
+> > +Mailbox Device Node:
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +This node is expected to be a child of the /firmware node.
+> > +
+> > +Required properties:
+> > +--------------------
+> > +- compatible:		Shall be "arm,smc-mbox"
+> > +- #mbox-cells		Shall be 1 - the index of the channel needed.
+> > +- arm,num-chans		The number of channels supported.
+> > +- method:		A string, either:
+> > +			"hvc": if the driver shall use an HVC call, or
+> > +			"smc": if the driver shall use an SMC call.
+> > +
+> > +Optional properties:
+> > +- arm,func-ids		An array of 32-bit values specifying the function
+> > +			IDs used by each mailbox channel. Those function IDs
+> > +			follow the ARM SMC calling convention standard [1].
+> > +			There is one identifier per channel and the number
+> > +			of supported channels is determined by the length
+> > +			of this array.
+> > +- interrupts		SPI interrupts may be listed for notification,
+> > +			each channel should use a dedicated interrupt
+> > +			line.
+> > +
+> > +Example:
+> > +--------
+> > +
+> > +	sram@910000 {
+> > +		compatible =3D "mmio-sram";
+> > +		reg =3D <0x0 0x93f000 0x0 0x1000>;
+> > +		#address-cells =3D <1>;
+> > +		#size-cells =3D <1>;
+> > +		ranges =3D <0 0x0 0x93f000 0x1000>;
+> > +
+> > +		cpu_scp_lpri: scp-shmem@0 {
+> > +			compatible =3D "arm,scmi-shmem";
+> > +			reg =3D <0x0 0x200>;
+> > +		};
+> > +
+> > +		cpu_scp_hpri: scp-shmem@200 {
+> > +			compatible =3D "arm,scmi-shmem";
+> > +			reg =3D <0x200 0x200>;
+> > +		};
+> > +	};
+> > +
+> > +	smc_mbox: mailbox {
+>=20
+> This should be a child of 'firmware' node at least and really a child of =
+the
+> firmware component that implements the feature.
+
+I checked other mbox driver, including the mbox used by ti sci, mbox used b=
+y
+i.MX8QXP. both mbox dts node not a child a firmware node,
+I am not sure why put mbox node into a child a firmware node here.
+
+Thanks,
+Peng.
+
+>=20
+> > +		#mbox-cells =3D <1>;
+> > +		compatible =3D "arm,smc-mbox";
+> > +		method =3D "smc";
+> > +		arm,num-chans =3D <0x2>;
+> > +		/* Optional */
+> > +		arm,func-ids =3D <0xc20000fe>, <0xc20000ff>;
+> > +	};
+> > +
+> > +	firmware {
+> > +		scmi {
+> > +			compatible =3D "arm,scmi";
+> > +			mboxes =3D <&mailbox 0 &mailbox 1>;
+> > +			mbox-names =3D "tx", "rx";
+> > +			shmem =3D <&cpu_scp_lpri &cpu_scp_hpri>;
+> > +		};
+> > +	};
+> > +
+> > +
+> > +[1]
+> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Finf=
+o
+> >
+> +center.arm.com%2Fhelp%2Findex.jsp%3Ftopic%3D%2Fcom.arm.doc.den002
+> 8a%2
+> >
+> +Findex.html&amp;data=3D02%7C01%7Cpeng.fan%40nxp.com%7Cd8cf8b81b4f
+> b49be5
+> >
+> +97c08d703f26576%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7
+> C63698221
+> >
+> +1931902513&amp;sdata=3DRtHkNN07b%2FuzdJkiu0QujeJ6czrcwOwEI6Y6JW
+> VpPkY%3D
+> > +&amp;reserved=3D0
+> > --
+> > 2.16.4
+> >
