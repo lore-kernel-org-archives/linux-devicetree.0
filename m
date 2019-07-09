@@ -1,39 +1,172 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/3] opp: of: Support multiple suspend OPPs defined in DT
-Date: Tue, 9 Jul 2019 07:54:12 +0000
-Message-ID: <AM6PR0402MB3911CB4D54A71EB69E8E7544F5F10@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <20190709071056.26361-1-Anson.Huang@nxp.com>
- <20190709075119.rg6ktsg7nwdadsmd@vireshk-i7>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
+Date: Tue, 9 Jul 2019 07:55:30 +0000
+Message-ID: <VE1PR04MB6655D052B076C52F7F24A387F1F10@VE1PR04MB6655.eurprd04.prod.outlook.com>
+References: <20171115060459.45375-1-ran.wang_1@nxp.com>
+ <87ineb9b5v.fsf@linux.intel.com>
+ <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com>
+ <87shdfet90.fsf@linux.intel.com>
+ <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <87k1eaanjw.fsf@linux.intel.com>
+ <AM5PR0402MB2865F3735D808E1BC9F67968F1180@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <87o92wgyqj.fsf@linux.intel.com>
+ <VE1PR04MB66557834D3588FC8B558950AF1E00@VE1PR04MB6655.eurprd04.prod.outlook.com>
+ <87v9wvsex3.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190709075119.rg6ktsg7nwdadsmd@vireshk-i7>
+In-Reply-To: <87v9wvsex3.fsf@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "vireshk@kernel.org" <vireshk@kernel.org>, "nm@ti.com" <nm@ti.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, agx@si
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFZpcmVzaA0KDQo+IE9uIDA5LTA3LTE5LCAxNToxMCwgQW5zb24uSHVhbmdAbnhwLmNvbSB3
-cm90ZToNCj4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPg0K
-PiA+IFdpdGggcHJvcGVydHkgIm9wcC1zdXBwb3J0ZWQtaHciIGludHJvZHVjZWQsIHRoZSBPUFAg
-dGFibGUgaW4gRFQgY291bGQNCj4gPiBiZSBhIGxhcmdlIE9QUCB0YWJsZSBhbmQgT05MWSBhIHN1
-YnNldCBvZiBPUFBzIGFyZSBhdmFpbGFibGUsIGJhc2VkIG9uDQo+ID4gdGhlIHZlcnNpb24gb2Yg
-dGhlIGhhcmR3YXJlIHJ1bm5pbmcgb24uIFRoYXQgaW50cm9kdWNlcyByZXN0cmljdGlvbiBvZg0K
-PiA+IHVzaW5nICJvcHAtc3VzcGVuZCINCj4gPiBwcm9wZXJ0eSB0byBkZWZpbmUgdGhlIHN1c3Bl
-bmQgT1BQLCBhcyB3ZSBhcmUgTk9UIHN1cmUgaWYgdGhlIE9QUA0KPiA+IGNvbnRhaW5pbmcgIm9w
-cC1zdXNwZW5kIiBwcm9wZXJ0eSBpcyBhdmFpbGFibGUgZm9yIHRoZSBoYXJkd2FyZQ0KPiA+IHJ1
-bm5pbmcgb24sIGFuZCB0aGUgb2Ygb3BwIGNvcmUgZG9lcyBOT1QgYWxsb3cgbXVsdGlwbGUgc3Vz
-cGVuZCBPUFBzDQo+ID4gZGVmaW5lZCBpbiBEVCBPUFAgdGFibGUuDQo+ID4NCj4gPiBUbyBlbGlt
-aW5hdGUgdGhpcyByZXN0cml0aW9uLCBtYWtlIG9mIG9wcCBjb3JlIGFsbG93IG11bHRpcGxlIHN1
-c3BlbmQNCj4gPiBPUFBzIGRlZmluZWQgaW4gRFQsIGFuZCBwaWNrIHRoZSBPUFAgd2l0aCBoaWdo
-ZXN0IHJhdGUgYW5kIHdpdGgNCj4gPiAib3BwLXN1c3BlbmQiIHByb3BlcnR5IHByZXNlbnQgdG8g
-YmUgc3VzcGVuZCBPUFAsIGl0IGNhbiBzcGVlZCB1cCB0aGUNCj4gPiBzdXNwZW5kL3Jlc3VtZSBw
-cm9jZXNzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5n
-QG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvb3BwL29mLmMgfCA5ICsrKysrKy0tLQ0K
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiAN
-Cj4gUGxlYXNlIHVwZGF0ZSB0aGUgRFQgYmluZGluZ3MgZmlyc3QuDQoNCk9LLCB3aWxsIHNlbmQg
-YSBWMiBjb250YWluaW5nIERUIGJpbmRpbmcgY2hhbmdlcy4NCg0KPiANCj4gRldJVywgYWxsIHRo
-cmVlIHBhdGNoZXMgbG9vayBmaW5lIG90aGVyd2lzZS4NCg0KVGhhbmsgeW91IQ0KDQpBbnNvbi4N
-Cg==
+Hi Felipe,
+
+On Monday, June 24, 2019 13:58, Felipe Balbi wrote:
+>=20
+> Hi,
+>=20
+> Ran Wang <ran.wang_1@nxp.com> writes:
+> >> >> > >> >> >  /* Global Debug Queue/FIFO Space Available Register */
+> >> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
+> >> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
+> >> >> > >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
+> >> >> > >> >> >   * 	3	- Reserved
+> >> >> > >> >> >   * @imod_interval: set the interrupt moderation interval=
+ in
+> 250ns
+> >> >> > >> >> >   *                 increments or 0 to disable.
+> >> >> > >> >> > + * @dma_coherent: set if enable dma-coherent.
+> >> >> > >> >>
+> >> >> > >> >> you're not enabling dma coherency, you're enabling cache
+> snooping.
+> >> >> > >> >> And this property should describe that. Also, keep in mind
+> >> >> > >> >> that different devices may want different cache types for
+> >> >> > >> >> each of those fields, so your property would have to be a
+> >> >> > >> >> lot more complex. Something
+> >> >> > like:
+> >> >> > >> >>
+> >> >> > >> >> 	snps,cache-type =3D <foobar "cacheable">, <baz "cacheable"=
+>, ...
+> >> >> > >> >>
+> >> >> > >> >> Then driver would have to parse this properly to setup GSBU=
+SCFG0.
+> >> >> > >
+> >> >> > > According to the DesignWare Cores SuperSpeed USB 3.0
+> >> >> > > Controller Databook (v2.60a), it has described Type Bit
+> >> >> > > Assignments for all supported
+> >> >> > master bus type:
+> >> >> > > AHB, AXI3, AXI4 and Native. I found the bit definition are
+> >> >> > > different among
+> >> >> > them.
+> >> >> > > So, for the example you gave above, feel a little bit confused.
+> >> >> > > Did you mean:
+> >> >> > >     snps,cache-type =3D <DATA_RD  "write allocate">, <DESC_RD
+> >> >> > > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read
+> >> >> > > allocate">
+> >> >> >
+> >> >> > yeah, something like that.
+> >> >>
+> >> >> I think DATA_RD  should be a macro, right? So, where I can put its =
+define?
+> >> >> Create a dwc3.h in include/dt-bindings/usb/ ?
+> >> >
+> >> > Could you please give me some advice here? I'd like to prepare next
+> >> > version patch after getting this settled.
+> >> >
+> >> >> Another question about this remain open is: DWC3 data book's Table
+> >> >> 6-5 Cache Type Bit Assignments show that bits definition will
+> >> >> differ per MBUS_TYPEs as
+> >> >> below:
+> >> >> ----------------------------------------------------------------
+> >> >>  MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
+> >> >>  ----------------------------------------------------------------
+> >> >>  AHB      |Cacheable     |Bufferable   |Privilegge |Data
+> >> >>  AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
+> >> >>  AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
+> >> >>  AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
+> >> >>  Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
+> >> >>  ----------------------------------------------------------------
+> >> >>  Note: The AHB, AXI3, AXI4, and PCIe busses use different names
+> >> >> for certain  signals, which have the same meaning:
+> >> >>    Bufferable =3D Posted
+> >> >>    Cacheable =3D Modifiable =3D Snoop (negation of No Snoop)
+> >> >>
+> >> >> For Layerscape SoCs, MBUS_TYPE is AXI3. So I am not sure how to
+> >> >> use snps,cache-type =3D <DATA_RD  "write allocate">, to cover all
+> MBUS_TYPE?
+> >> >> (you can notice that AHB and AXI3's cacheable are on different
+> >> >> bit) Or I just need to handle AXI3 case?
+> >> >
+> >> > Also on this open. Thank you in advance.
+> >>
+> >> You could pass two strings and let the driver process them. Something
+> >> like:
+> >>
+> >> 	snps,cache_type =3D <"data_wr" "write allocate">, <"desc_rd"
+> >> "cacheable">...
+> >>
+> >> And so on. The only thing missing is for the mbus_type to be known by =
+the
+> driver.
+> >> Is that something we can figure out on any of the HWPARAMS registers
+> >> or does it have to be told explicitly?
+> >
+> > I have checked Layerscape Reference manual, HWPARAMS0~8 doesn't
+> > contain mbus_type Info, and I didn't know where have declared it explic=
+itly.
+> >
+> >> Another option would be to pass a string followed by one hex digit for=
+ the
+> bits:
+> >>
+> >> 	snps,cache_type =3D <"data_wr" 0x8>, <"desc_rd" 0x2>...;
+> >>
+> >> Then we don't need to describe mbus_type since the bits are what matte=
+rs.
+
+For this option, looks like DTC doesn't allow form of <"data_wr" 0x8>, <"de=
+sc_rd" 0x2>...=20
+It will report error when compiling:
+
+DTC     arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dtb
+Error: arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi:383.23-24 syntax erro=
+r
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:294: recipe for target 'arch/arm64/boot/dts/freescale/=
+fsl-ls1088a-qds.dtb' failed
+make[2]: *** [arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+Error: arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi:383.23-24 syntax erro=
+r
+FATAL ERROR: Unable to parse input tree
+
+One of the solution I can figure out is to use macro to replace "data_wr", =
+like below:
+<DATA_WR 0x8>, <DESC_RD 0x2>...
+
+However, it will require creating file in include/dt-bindings/usb/dwc3.h to
+place macro definitions.
+
+Or may I use:  "data_wr", <0x8>,  "desc_rd",  <0x2>... ?
+
+Thanks & Regards,
+Ran
+
+> > Yes, it's also what we prefer to use, it will be more flexible, I can
+> > add above Table
+> > 6-5 Cache Type Bit Assignments in binding to help user decide which
+> > value they would use.
+> >
+> > I would submit another version of patch for further review, thank you v=
+ery
+> much.
+>=20
+> cool, thanks
+>=20
+> --
+> balbi
