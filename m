@@ -1,58 +1,39 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 1/3] opp: core: add regulators enable and disable
-Date: Tue, 9 Jul 2019 11:10:14 +0530
-Message-ID: <20190709054014.o3g4e6gbovrq3vvn@vireshk-i7>
-References: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
- <CGME20190708141159eucas1p1751506975ff96a436e14940916623722@eucas1p1.samsung.com>
- <20190708141140.24379-2-k.konieczny@partner.samsung.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
+Date: Tue, 9 Jul 2019 05:40:49 +0000
+Message-ID: <AM6PR0402MB3911D4AA40BC328420DD2CA5F5F10@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+References: <20190704061403.8249-1-Anson.Huang@nxp.com>
+ <20190704061403.8249-2-Anson.Huang@nxp.com>
+ <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
+ <20190708082511.py7gnjbqyp7bnhqx@vireshk-i7>
+ <DB3PR0402MB391622133CD116FDE26A4F9AF5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190708084957.waiwdun327pgvfv4@vireshk-i7>
+ <DB3PR0402MB39164E2F386181255ED37F45F5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190709044504.gyljwwnxdt5niur5@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190708141140.24379-2-k.konieczny@partner.samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: k.konieczny@partner.samsung.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190709044504.gyljwwnxdt5niur5@vireshk-i7>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Leonard Crestez <leonard.crestez@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kern>
 List-Id: devicetree@vger.kernel.org
 
-On 08-07-19, 16:11, k.konieczny@partner.samsung.com wrote:
-> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-> 
-> Add enable regulators to dev_pm_opp_set_regulators() and disable
-> regulators to dev_pm_opp_put_regulators(). This prepares for
-> converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
-> 
-> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-> ---
->  drivers/opp/core.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 0e7703fe733f..947cac452854 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -1580,8 +1580,19 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
->  	if (ret)
->  		goto free_regulators;
->  
-> +	for (i = 0; i < opp_table->regulator_count; i++) {
-> +		ret = regulator_enable(opp_table->regulators[i]);
-> +		if (ret < 0)
-> +			goto disable;
-> +	}
-
-I am wondering on why is this really required as this isn't done for
-any other platform, probably because the regulators are enabled by
-bootloader and are always on.
-
--- 
-viresh
+SGksIFZpcmVzaA0KDQo+IE9uIDA4LTA3LTE5LCAwODo1NCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+
+ID4gRWFjaCBPUFAgaGFzICJvcHAtc3VwcG9ydGVkLWh3IiBwcm9wZXJ0eSBhcyBiZWxvdywgdGhl
+IGZpcnN0IHZhbHVlDQo+ID4gbmVlZHMgdG8gYmUgY2hlY2tlZCB3aXRoIHNwZWVkIGdyYWRpbmcg
+ZnVzZSwgYW5kIHRoZSBzZWNvbmQgb25lIG5lZWRzDQo+ID4gdG8gYmUgY2hlY2tlZCB3aXRoIG1h
+cmtldCBzZWdtZW50IGZ1c2UsIE9OTFkgYm90aCBvZiB0aGVtIHBhc3NlZCwgdGhlbg0KPiA+IHRo
+aXMgT1BQIGlzIHN1cHBvcnRlZC4gSXQgY2FsbHMgZGV2X3BtX29wcF9zZXRfc3VwcG9ydGVkX2h3
+KCkgdG8gdGVsbA0KPiA+IE9QUCBmcmFtZXdvcmsgdG8gcGFyc2UgdGhlIE9QUCB0YWJsZSwgdGhp
+cyBpcyBteSB1bmRlcnN0YW5kaW5nLg0KPiA+DQo+ID4gb3BwLXN1cHBvcnRlZC1odyA9IDwweDg+
+LCA8MHgzPjsNCj4gDQo+IFJpZ2h0LCBzbyB0aGF0J3Mgd2hhdCBJIHdhcyBleHBlY3RpbmcuDQo+
+IA0KPiBPbmUgdGhpbmcgd2UgY2FuIGRvIGlzIGNoYW5nZSB0aGUgYmluZGluZyBvZiBPUFAgY29y
+ZSBhIGJpdCB0byBhbGxvdyBtdWx0aXBsZQ0KPiBPUFAgbm9kZXMgdG8gY29udGFpbiB0aGUgIm9w
+cC1zdXNwZW5kIiBwcm9wZXJ0eSBhbmQgc2VsZWN0IHRoZSBvbmUgZmluYWxseQ0KPiB3aXRoIHRo
+ZSBoaWdoZXN0IGZyZXF1ZW5jeS4gVGhhdCB3b3VsZCBiZSBhIGJldHRlciBhcyBhIGdlbmVyaWMg
+c29sdXRpb24gSU1PLg0KPiANCj4gQW5kIHRoZW4gYSBzbWFsbCBPUFAgY29yZSBwYXRjaCB3aWxs
+IGZpeCBpdC4NCg0KTG9va3MgZ29vZCwgSSB3aWxsIHRyeSB0byBnZW5lcmF0ZSBhIHBhdGNoIGZv
+ciBvZiBPUFAgY29yZS4NCg0KVGhhbmtzLA0KQW5zb24NCg==
