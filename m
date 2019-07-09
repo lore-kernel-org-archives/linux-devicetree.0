@@ -1,63 +1,50 @@
 From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Subject: [PATCH v2 06/10] net: hisilicon: dt-bindings: Add an field of port-handle
-Date: Tue, 9 Jul 2019 11:31:07 +0800
-Message-ID: <1562643071-46811-7-git-send-email-xiaojiangfeng@huawei.com>
+Subject: [PATCH v2 09/10] net: hisilicon: Add an rx_desc to adapt HI13X1_GMAC
+Date: Tue, 9 Jul 2019 11:31:10 +0800
+Message-ID: <1562643071-46811-10-git-send-email-xiaojiangfeng@huawei.com>
 References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: davem@davemloft.net, robh+dt@kernel.org, yisen.zhuang@huawei.com, salil.mehta@huawei.com, mark.rutland@arm.com, dingtianhong@huawei.com, xiaojiangfeng@huawei.com
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leeyou.li@huawei.com, nixiaoming@huawei.com, jianping.liu@huawei.com, xiekunxun@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-In general, group is the same as the port, but some
-boards specify a special group for better load
-balancing of each processing unit.
+HI13X1 changed the offsets and bitmaps for rx_desc
+registers in the same peripheral device on different
+models of the hip04_eth.
 
 Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 ---
- Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
-index d1df8a0..464c0da 100644
---- a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
-+++ b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
-@@ -10,6 +10,7 @@ Required properties:
- 	phandle, specifies a reference to the syscon ppe node
- 	port, port number connected to the controller
- 	channel, recv channel start from channel * number (RX_DESC_NUM)
-+	group, field in the pkg desc, in general, it is the same as the port.
- - phy-mode: see ethernet.txt [1].
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index c578934..780fc46 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -171,11 +171,20 @@ struct tx_desc {
+ } __aligned(64);
  
- Optional properties:
-@@ -66,7 +67,7 @@ Example:
- 		reg = <0x28b0000 0x10000>;
- 		interrupts = <0 413 4>;
- 		phy-mode = "mii";
--		port-handle = <&ppe 31 0>;
-+		port-handle = <&ppe 31 0 31>;
- 	};
+ struct rx_desc {
++#if defined(CONFIG_HI13X1_GMAC)
++	u32 reserved1[3];
++	u16 pkt_len;
++	u16 reserved_16;
++	u32 reserved2[6];
++	u32 pkt_err;
++	u32 reserved3[5];
++#else
+ 	u16 reserved_16;
+ 	u16 pkt_len;
+ 	u32 reserve1[3];
+ 	u32 pkt_err;
+ 	u32 reserve2[4];
++#endif
+ };
  
- 	ge0: ethernet@2800000 {
-@@ -74,7 +75,7 @@ Example:
- 		reg = <0x2800000 0x10000>;
- 		interrupts = <0 402 4>;
- 		phy-mode = "sgmii";
--		port-handle = <&ppe 0 1>;
-+		port-handle = <&ppe 0 1 0>;
- 		phy-handle = <&phy0>;
- 	};
- 
-@@ -83,6 +84,6 @@ Example:
- 		reg = <0x2880000 0x10000>;
- 		interrupts = <0 410 4>;
- 		phy-mode = "sgmii";
--		port-handle = <&ppe 8 2>;
-+		port-handle = <&ppe 8 2 8>;
- 		phy-handle = <&phy1>;
- 	};
+ struct hip04_priv {
 -- 
 1.8.5.6
