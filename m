@@ -1,65 +1,43 @@
-From: jun.li@nxp.com
-Subject: [PATCH 2/2] arm64: dts: imx8mq: correct usb controller clocks
-Date: Wed, 10 Jul 2019 19:19:17 +0800
-Message-ID: <20190710111917.6615-2-jun.li@nxp.com>
-References: <20190710111917.6615-1-jun.li@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190710111917.6615-1-jun.li@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, sboyd@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, peter.chen@nxp.com, agx@sigxcpu.org, ping.bai@nxp.com, Anson.Huang@nxp.com, ccaione@baylibre.com, andrew.smirnov@gmail.com, mturquette@baylibre.com, angus@akkea.ca, linux-clk@vger.kernel.org, abel.vesa@nxp.com, devicetree@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, l.stach@pengutronix.de, festevam@gmail.com, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org, jun.li@nxp.com
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [PATCH 1/1] arm64: dts: sdm845: Add device node for Last level cache controller
+Date: Wed, 10 Jul 2019 16:59:24 +0530
+Message-ID: <20190710112924.17724-1-vivek.gautam@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Li Jun <jun.li@nxp.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-The correct clock for "bus_early", "ref", "suspend" should be:
-IMX8MQ_CLK_USB1_CTRL_ROOT, IMX8MQ_CLK_USB_CORE_REF, IMX8MQ_CLK_32K,
-especially we may need the right suspend clock rate to set register
-in controller driver.
+Last level cache (aka. system cache) controller provides control
+over the last level cache present on SDM845. This cache lies after
+the memory noc, right before the DDR.
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index d09b808..a43ddac 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -901,9 +901,9 @@
- 		usb_dwc3_0: usb@38100000 {
- 			compatible = "fsl,imx8mq-dwc3", "snps,dwc3";
- 			reg = <0x38100000 0x10000>;
--			clocks = <&clk IMX8MQ_CLK_USB_BUS>,
-+			clocks = <&clk IMX8MQ_CLK_USB1_CTRL_ROOT>,
- 			         <&clk IMX8MQ_CLK_USB_CORE_REF>,
--			         <&clk IMX8MQ_CLK_USB1_CTRL_ROOT>;
-+				 <&clk IMX8MQ_CLK_32K>;
- 			clock-names = "bus_early", "ref", "suspend";
- 			assigned-clocks = <&clk IMX8MQ_CLK_USB_BUS>,
- 			                  <&clk IMX8MQ_CLK_USB_CORE_REF>;
-@@ -933,9 +933,9 @@
- 		usb_dwc3_1: usb@38200000 {
- 			compatible = "fsl,imx8mq-dwc3", "snps,dwc3";
- 			reg = <0x38200000 0x10000>;
--			clocks = <&clk IMX8MQ_CLK_USB_BUS>,
-+			clocks = <&clk IMX8MQ_CLK_USB2_CTRL_ROOT>,
- 			         <&clk IMX8MQ_CLK_USB_CORE_REF>,
--			         <&clk IMX8MQ_CLK_USB2_CTRL_ROOT>;
-+				 <&clk IMX8MQ_CLK_32K>;
- 			clock-names = "bus_early", "ref", "suspend";
- 			assigned-clocks = <&clk IMX8MQ_CLK_USB_BUS>,
- 			                  <&clk IMX8MQ_CLK_USB_CORE_REF>;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 4babff5f19b5..314241a99290 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1275,6 +1275,13 @@
+ 			};
+ 		};
+ 
++		cache-controller@1100000 {
++			compatible = "qcom,sdm845-llcc";
++			reg = <0 0x1100000 0 0x200000>, <0 0x1300000 0 0x50000>;
++			reg-names = "llcc_base", "llcc_broadcast_base";
++			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		ufs_mem_hc: ufshc@1d84000 {
+ 			compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
+ 				     "jedec,ufs-2.0";
 -- 
-2.7.4
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
