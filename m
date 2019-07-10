@@ -1,73 +1,45 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 11/13] arm64: dts: qcom: qcs404: Add CPR and populate OPP
- table
-Date: Wed, 10 Jul 2019 14:33:03 +0530
-Message-ID: <20190710090303.tb5ue3wq6r7ofyev@vireshk-i7>
-References: <20190705095726.21433-1-niklas.cassel@linaro.org>
- <20190705095726.21433-12-niklas.cassel@linaro.org>
+Subject: Re: [RESEND, PATCH v4 0/2] cpufreq: Add sunxi nvmem based CPU
+ scaling driver
+Date: Wed, 10 Jul 2019 14:45:43 +0530
+Message-ID: <20190710091543.yqcthfgzmxvku5ws@vireshk-i7>
+References: <20190612162816.31713-1-tiny.windzz@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190705095726.21433-12-niklas.cassel@linaro.org>
+In-Reply-To: <20190612162816.31713-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Yangtao Li <tiny.windzz@gmail.com>
+Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05-07-19, 11:57, Niklas Cassel wrote:
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
->  	cpu_opp_table: cpu-opp-table {
-> -		compatible = "operating-points-v2";
-> +		compatible = "operating-points-v2-kryo-cpu";
->  		opp-shared;
->  
->  		opp-1094400000 {
->  			opp-hz = /bits/ 64 <1094400000>;
-> -			opp-microvolt = <1224000 1224000 1224000>;
-> +			required-opps = <&cpr_opp1>;
->  		};
->  		opp-1248000000 {
->  			opp-hz = /bits/ 64 <1248000000>;
-> -			opp-microvolt = <1288000 1288000 1288000>;
-> +			required-opps = <&cpr_opp2>;
->  		};
->  		opp-1401600000 {
->  			opp-hz = /bits/ 64 <1401600000>;
-> -			opp-microvolt = <1384000 1384000 1384000>;
-> +			required-opps = <&cpr_opp3>;
-> +		};
-> +	};
-> +
-> +	cpr_opp_table: cpr-opp-table {
-> +		compatible = "operating-points-v2-qcom-level";
-> +
-> +		cpr_opp1: opp1 {
-> +			opp-level = <1>;
-> +			qcom,opp-fuse-level = <1>;
-> +			opp-hz = /bits/ 64 <1094400000>;
-> +		};
-> +		cpr_opp2: opp2 {
-> +			opp-level = <2>;
-> +			qcom,opp-fuse-level = <2>;
-> +			opp-hz = /bits/ 64 <1248000000>;
-> +		};
-> +		cpr_opp3: opp3 {
-> +			opp-level = <3>;
-> +			qcom,opp-fuse-level = <3>;
-> +			opp-hz = /bits/ 64 <1401600000>;
->  		};
->  	};
+On 12-06-19, 12:28, Yangtao Li wrote:
+> Add sunxi nvmem based CPU scaling driver, refers to qcom-cpufreq-kryo.
+> 
+> Yangtao Li (2):
+>   cpufreq: Add sun50i nvmem based CPU scaling driver
+>   dt-bindings: cpufreq: Document allwinner,sun50i-h6-operating-points
+> 
+>  .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 +++++++++++++
+>  MAINTAINERS                                   |   7 +
+>  drivers/cpufreq/Kconfig.arm                   |  12 +
+>  drivers/cpufreq/Makefile                      |   1 +
+>  drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +
+>  drivers/cpufreq/sun50i-cpufreq-nvmem.c        | 226 ++++++++++++++++++
+>  6 files changed, 415 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+>  create mode 100644 drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> 
+> ---
+> v4:
+> -Remove sunxi_cpufreq_soc_data structure for now.
+> -Convert to less generic name.
+> -Update soc_bin xlate.
 
-- Do we ever have cases more complex than this for this version of CPR ?
+Applied. Thanks.
 
-- What about multiple devices with same CPR table, not big LITTLE
-  CPUs, but other devices like two different type of IO devices ? What
-  will we do with opp-hz in those cases ?
-
-- If there are no such cases, can we live without opp-hz being used
-  here and reverse-engineer the highest frequency by looking directly
-  at CPUs OPP table ? i.e. by looking at required-opps field.
+I will push it only after 5.3-rc1 is released.
 
 -- 
 viresh
