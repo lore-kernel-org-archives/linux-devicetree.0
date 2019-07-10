@@ -1,96 +1,70 @@
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v7 0/6] Add CPU clock support for Armada 7K/8K
-Date: Wed, 10 Jul 2019 15:43:40 +0200
-Message-ID: <20190710134346.30239-1-gregory.clement@bootlin.com>
+Subject: [PATCH v7 1/6] dt-bindings: ap806: add the cluster clock node in the syscon file
+Date: Wed, 10 Jul 2019 15:43:41 +0200
+Message-ID: <20190710134346.30239-2-gregory.clement@bootlin.com>
+References: <20190710134346.30239-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190710134346.30239-1-gregory.clement@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@kernel.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Document the device tree binding for the cluster clock controllers found
+in the Armada 7K/8K SoCs.
 
-This is the seventh version of a series allowing to manage the cpu
-clock for Armada 7K/8K.
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+---
+ .../arm/marvell/ap806-system-controller.txt   | 31 +++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-For these SoCs, the CPUs share the same clock by cluster, so actually
-the clock management is done at cluster level.
-
-As for the other Armada 7K/8K clocks it is possible to have multiple
-AP so here again we need to have unique name: the purpose of the second
-patch is to share a common code which will be used in 3 drivers.
-
-The last 2 patch enable the driver at dt and platform level and will
-be applied through the mvebu subsystem.
-
-Changelog v6->v7:
-
-   - Update binding documentation for the AP clock to mention that
-     they expose reference clocks for the cluster to make distinction
-     with the cluster clocks themselves exposed by the cpu clock.
-
-   - Add precision on the number of parent clock in the binding
-     documentation.
-
-   - Also fix the example by using the reg address in the node name.
-
-Changelog v5->v6:
-
-   - Restraint the reg property for the child node to not overlap the
-     other node.
-   - Give a specific compatible to ap_syscon1.
-
-Changelog v4->v5:
-
- - As requested by the device tree maintainer make the reg property
-   mandatory
-
- - Updated the device tree files accordingly with the new binding
-
-Changelog v3->v4:
- - Rebased on v5.1-rc1
- - Mention in the binding that a reg property can be used to make the
-   device tree maintainer happy in the hope that there will be finally
-   a review on this patch blocking the whole series.
-
-Changelog v2->v3:
- - Add back the first patch documenting the binding
-
-Changelog v1->v2:
- - Header cleanup
- - Use unsigned int instead of it for cluster member of the ap_cpu_clk struct
- - Use clk_hw instead of clk
- - Use regmap_read_poll_timeout
- - Use for_each_of_cpu_node
- - Remove unnecessary WARN_ON()
- - Remove headers from armada_ap_cp_helper.h
- - Few other minor cleanup
-
-Gregory CLEMENT (6):
-  dt-bindings: ap806: add the cluster clock node in the syscon file
-  clk: mvebu: add helper file for Armada AP and CP clocks
-  clk: mvebu: add CPU clock driver for Armada 7K/8K
-  clk: mvebu: ap806: Fix clock name for the cluster
-  arm64: marvell: enable the  Armada 7K/8K CPU clk driver
-  arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
-
- .../arm/marvell/ap806-system-controller.txt   |  31 ++-
- arch/arm64/Kconfig.platforms                  |   1 +
- .../boot/dts/marvell/armada-ap806-quad.dtsi   |   4 +
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi |   7 +
- drivers/clk/mvebu/Kconfig                     |   8 +
- drivers/clk/mvebu/Makefile                    |   2 +
- drivers/clk/mvebu/ap-cpu-clk.c                | 259 ++++++++++++++++++
- drivers/clk/mvebu/ap806-system-controller.c   |  24 +-
- drivers/clk/mvebu/armada_ap_cp_helper.c       |  30 ++
- drivers/clk/mvebu/armada_ap_cp_helper.h       |  11 +
- drivers/clk/mvebu/cp110-system-controller.c   |  32 +--
- 11 files changed, 365 insertions(+), 44 deletions(-)
- create mode 100644 drivers/clk/mvebu/ap-cpu-clk.c
- create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.c
- create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.h
-
+diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+index 7b8b8eb0191f..4f21c1024073 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+@@ -21,8 +21,8 @@ Clocks:
+ The Device Tree node representing the AP806 system controller provides
+ a number of clocks:
+ 
+- - 0: clock of CPU cluster 0
+- - 1: clock of CPU cluster 1
++ - 0: reference clock of CPU cluster 0
++ - 1: reference clock of CPU cluster 1
+  - 2: fixed PLL at 1200 Mhz
+  - 3: MSS clock, derived from the fixed PLL
+ 
+@@ -143,3 +143,30 @@ ap_syscon1: system-controller@6f8000 {
+ 		#thermal-sensor-cells = <1>;
+ 	};
+ };
++
++Cluster clocks:
++---------------
++
++Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
++cluster contain up to 2 CPUs running at the same frequency.
++
++Required properties:
++- compatible: must be  "marvell,ap806-cpu-clock";
++- #clock-cells : should be set to 1.
++
++- clocks : shall be the input parent clock(s) phandle for the clock
++           (one per cluster)
++
++- reg: register range associated with the cluster clocks
++
++ap_syscon1: system-controller@6f8000 {
++	compatible = "marvell,armada-ap806-syscon1", "syscon", "simple-mfd";
++	reg = <0x6f8000 0x1000>;
++
++	cpu_clk: clock-cpu@278 {
++		compatible = "marvell,ap806-cpu-clock";
++		clocks = <&ap_clk 0>, <&ap_clk 1>;
++		#clock-cells = <1>;
++		reg = <0x278 0xa30>;
++	};
++};
 -- 
 2.20.1
