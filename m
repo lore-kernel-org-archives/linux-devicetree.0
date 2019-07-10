@@ -1,61 +1,26 @@
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: Re: [PATCH 1/3] opp: core: add regulators enable and disable
-Date: Wed, 10 Jul 2019 15:52:06 +0200
-Message-ID: <96583e19-f838-efe2-bd75-2f66d1deb0e5@partner.samsung.com>
-References: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
-        <CGME20190708141159eucas1p1751506975ff96a436e14940916623722@eucas1p1.samsung.com>
-        <20190708141140.24379-2-k.konieczny@partner.samsung.com>
-        <20190709054014.o3g4e6gbovrq3vvn@vireshk-i7>
-        <1795603c-686f-dfb5-5982-c836b36dca9c@partner.samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: iio/adc: Add a compatible string for
+ JZ4770 SoC ADC
+Date: Wed, 10 Jul 2019 07:52:54 -0600
+Message-ID: <20190710135254.GA30741@bogus>
+References: <20190623184732.5492-1-contact@artur-rojek.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1795603c-686f-dfb5-5982-c836b36dca9c@partner.samsung.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190623184732.5492-1-contact@artur-rojek.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Maarten ter Huurne <maarten@treewalker.org>, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-
-On 10.07.2019 12:43, Kamil Konieczny wrote:
-> On 09.07.2019 07:40, Viresh Kumar wrote:
->> On 08-07-19, 16:11, k.konieczny@partner.samsung.com wrote:
->>> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
->>>
->>> Add enable regulators to dev_pm_opp_set_regulators() and disable
->>> regulators to dev_pm_opp_put_regulators(). This prepares for
->>> converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
->>>
->>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
->>> ---
->>>  drivers/opp/core.c | 13 +++++++++++++
->>>  1 file changed, 13 insertions(+)
->>>
->>> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
->>> index 0e7703fe733f..947cac452854 100644
->>> --- a/drivers/opp/core.c
->>> +++ b/drivers/opp/core.c
->>> @@ -1580,8 +1580,19 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
->>>  	if (ret)
->>>  		goto free_regulators;
->>>  
->>> +	for (i = 0; i < opp_table->regulator_count; i++) {
->>> +		ret = regulator_enable(opp_table->regulators[i]);
->>> +		if (ret < 0)
->>> +			goto disable;
->>> +	}
->>
->> I am wondering on why is this really required as this isn't done for
->> any other platform, probably because the regulators are enabled by
->> bootloader and are always on.
+On Sun, 23 Jun 2019 20:47:29 +0200, Artur Rojek wrote:
+> Add a compatible string for the ADC controller present on
+> Ingenic JZ4770 SoC.
 > 
-> It is not ABI break, it should work with existing DTBs
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+>  Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Sorry, this answer should go to question by Krzysztof
-
--- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
+Reviewed-by: Rob Herring <robh@kernel.org>
