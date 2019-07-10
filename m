@@ -1,99 +1,157 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv6 00/28] PCI: mobiveil: fixes for Mobiveil PCIe Host
- Bridge IP driver
-Date: Wed, 10 Jul 2019 10:59:54 +0000
-Message-ID: <DB8PR04MB674701F8622A1C46FF0C3D6284F00@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
- <20190708113503.GA21942@e121166-lin.cambridge.arm.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH V13 05/12] PCI: dwc: Add ext config space capability
+ search API
+Date: Wed, 10 Jul 2019 16:57:23 +0530
+Message-ID: <fd1fc10e-47d0-aaac-158d-1c19363ec8d3@nvidia.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-6-vidyas@nvidia.com>
+ <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190708113503.GA21942@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJh
-bGlzaUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo31MI4yNUgMTk6MzUNCj4gVG86IFoucS4gSG91
-IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxnYWFzQGdv
-b2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGwu
-c3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaQ0K
-PiA8bGVveWFuZy5saUBueHAuY29tPjsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVh
-Y29uQGFybS5jb207DQo+IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0uaC4gTGlh
-biA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsNCj4gWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54
-cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NiAwMC8yOF0gUENJOiBtb2JpdmVpbDogZml4
-ZXMgZm9yIE1vYml2ZWlsIFBDSWUgSG9zdA0KPiBCcmlkZ2UgSVAgZHJpdmVyDQo+IA0KPiBPbiBG
-cmksIEp1bCAwNSwgMjAxOSBhdCAwNTo1NjoyOFBNICswODAwLCBIb3UgWmhpcWlhbmcgd3JvdGU6
-DQo+ID4gVGhpcyBwYXRjaCBzZXQgaXMgdG8gYWRkIGZpeGVzIGZvciBNb2JpdmVpbCBQQ0llIEhv
-c3QgZHJpdmVyLg0KPiA+IFNwbGl0ZWQgIzIsICMzLCAjOSBhbmQgIzEwIG9mIHY1IHBhdGNoZXMu
-DQo+ID4NCj4gPiBIb3UgWmhpcWlhbmcgKDI4KToNCj4gPiAgIFBDSTogbW9iaXZlaWw6IFVuaWZ5
-IHJlZ2lzdGVyIGFjY2Vzc29ycw0KPiA+ICAgUENJOiBtb2JpdmVpbDogUmVtb3ZlIHRoZSBmbGFn
-IE1TSV9GTEFHX01VTFRJX1BDSV9NU0kNCj4gPiAgIFBDSTogbW9iaXZlaWw6IEZpeCBQQ0kgYmFz
-ZSBhZGRyZXNzIGluIE1FTS9JTyBvdXRib3VuZCB3aW5kb3dzDQo+ID4gICBQQ0k6IG1vYml2ZWls
-OiBVcGRhdGUgdGhlIHJlc291cmNlIGxpc3QgdHJhdmVyc2FsIGZ1bmN0aW9uDQo+ID4gICBQQ0k6
-IG1vYml2ZWlsOiBVc2UgV0lOX05VTV8wIGV4cGxpY2l0bHkgZm9yIENGRyBvdXRib3VuZCB3aW5k
-b3cNCj4gPiAgIFBDSTogbW9iaXZlaWw6IFVzZSB0aGUgMXN0IGluYm91bmQgd2luZG93IGZvciBN
-RU0gaW5ib3VuZA0KPiA+ICAgICB0cmFuc2FjdGlvbnMNCj4gPiAgIFBDSTogbW9iaXZlaWw6IEZp
-eCB0aGUgQ2xhc3MgQ29kZSBmaWVsZA0KPiA+ICAgUENJOiBtb2JpdmVpbDogTW92ZSB0aGUgbGlu
-ayB1cCB3YWl0aW5nIG91dCBvZiBtb2JpdmVpbF9ob3N0X2luaXQoKQ0KPiA+ICAgUENJOiBtb2Jp
-dmVpbDogTW92ZSBJUlEgY2hhaW5lZCBoYW5kbGVyIHNldHVwIG91dCBvZiBEVCBwYXJzZQ0KPiA+
-ICAgUENJOiBtb2JpdmVpbDogSW5pdGlhbGl6ZSBQcmltYXJ5L1NlY29uZGFyeS9TdWJvcmRpbmF0
-ZSBidXMgbnVtYmVycw0KPiA+ICAgUENJOiBtb2JpdmVpbDogRml4IGRldmZuIGNoZWNrIGluIG1v
-Yml2ZWlsX3BjaWVfdmFsaWRfZGV2aWNlKCkNCj4gPiAgIGR0LWJpbmRpbmdzOiBQQ0k6IG1vYml2
-ZWlsOiBDaGFuZ2UgZ3Bpb19zbGF2ZSBhbmQgYXBiX2NzciB0byBvcHRpb25hbA0KPiA+ICAgUENJ
-OiBtb2JpdmVpbDogUmVmb3JtYXQgdGhlIGNvZGUgZm9yIHJlYWRhYmlsaXR5DQo+ID4gICBQQ0k6
-IG1vYml2ZWlsOiBNYWtlIHRoZSByZWdpc3RlciB1cGRhdGluZyBtb3JlIHJlYWRhYmxlDQo+ID4g
-ICBQQ0k6IG1vYml2ZWlsOiBSZXZpc2UgdGhlIE1FTS9JTyBvdXRib3VuZCB3aW5kb3cgaW5pdGlh
-bGl6YXRpb24NCj4gPiAgIFBDSTogbW9iaXZlaWw6IEZpeCB0aGUgcmV0dXJuZWQgZXJyb3IgbnVt
-YmVyDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBSZW1vdmUgYW4gdW5uZWNlc3NhcnkgcmV0dXJuIHZh
-bHVlIGNoZWNrDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBSZW1vdmUgcmVkdW5kYW50IHZhciBkZWZp
-bml0aW9ucyBhbmQgcmVnaXN0ZXIgcmVhZA0KPiA+ICAgICBvcGVyYXRpb25zDQo+ID4gICBQQ0k6
-IG1vYml2ZWlsOiBGaXggdGhlIHZhbGlkIGNoZWNrIGZvciBpbmJvdW5kIGFuZCBvdXRib3VuZCB3
-aW5kb3cNCj4gPiAgIFBDSTogbW9iaXZlaWw6IEFkZCB0aGUgc3RhdGlzdGljIG9mIGluaXRpYWxp
-emVkIGluYm91bmQgd2luZG93cw0KPiA+ICAgUENJOiBtb2JpdmVpbDogQ2xlYXIgdGhlIHRhcmdl
-dCBmaWVsZHMgYmVmb3JlIHVwZGF0aW5nIHRoZSByZWdpc3Rlcg0KPiA+ICAgUENJOiBtb2JpdmVp
-bDogTWFzayBvdXQgdGhlIGxvd2VyIDEwLWJpdCBoYXJkY29kZSB3aW5kb3cgc2l6ZQ0KPiA+ICAg
-UENJOiBtb2JpdmVpbDogQWRkIHVwcGVyIDMyLWJpdCBDUFUgYmFzZSBhZGRyZXNzIHNldHVwIGlu
-IG91dGJvdW5kDQo+ID4gICAgIHdpbmRvdw0KPiA+ICAgUENJOiBtb2JpdmVpbDogQWRkIHVwcGVy
-IDMyLWJpdCBQQ0kgYmFzZSBhZGRyZXNzIHNldHVwIGluIGluYm91bmQNCj4gPiAgICAgd2luZG93
-DQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBGaXggdGhlIENQVSBiYXNlIGFkZHJlc3Mgc2V0dXAgaW4g
-aW5ib3VuZCB3aW5kb3cNCj4gPiAgIFBDSTogbW9iaXZlaWw6IE1vdmUgUENJZSBQSU8gZW5hYmxl
-bWVudCBvdXQgb2YgaW5ib3VuZCB3aW5kb3cNCj4gcm91dGluZQ0KPiA+ICAgUENJOiBtb2JpdmVp
-bDogRml4IGluZmluaXRlLWxvb3AgaW4gdGhlIElOVHggcHJvY2Vzcw0KPiA+ICAgUENJOiBtb2Jp
-dmVpbDogRml4IHRoZSBwb3RlbnRpYWwgSU5UeCBtaXNzaW5nIHByb2JsZW0NCj4gPg0KPiA+ICAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbW9iaXZlaWwtcGNpZS50eHQgICAgICB8ICAgIDIg
-Kw0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYyAgICAgICAgICAg
-ICB8ICA1MjkNCj4gKysrKysrKysrKysrLS0tLS0tLS0NCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAz
-MTggaW5zZXJ0aW9ucygrKSwgMjEzIGRlbGV0aW9ucygtKQ0KPiA+DQo+IA0KPiBPSywgSSByZXdy
-b3RlIG1vc3Qgb2YgY29tbWl0IGxvZ3MsIGRyb3BwZWQgcGF0Y2ggMjUgc2luY2UgSSBkbyBub3QN
-Cj4gdW5kZXJzdGFuZCB0aGUgY29tbWl0IGxvZywgcHVzaGVkIHRvIHBjaS9tb2JpdmVpbCB0ZW50
-YXRpdmVseSBmb3IgdjUuMy4NCiANClRoZSBwYXRjaCAjMjUgaXMgdG8gZml4IHRoZSB3cm9uZ2x5
-IHByb2dyYW1taW5nIG9mIHRoZSBDUFUgYmFzZSBhZGRyZXNzIG9mDQp0aGUgaW5ib3VuZCB3aW5k
-b3dzLiBUaGUgY3VycmVudCBjb2RlIHNldCB0aGUgQ1BVIGJhc2UgYWRkcmVzcyB3aXRoIHRoZQ0K
-UENJIGJhc2UgYWRkcmVzcyBwYXJhbWV0ZXIgd2hpY2ggaXMgdGhlIGNhbGxlciBwYXNzZWQgdG8g
-c2V0IHRoZSBQQ0kgYmFzZQ0KYWRkcmVzcyBvZiB0aGUgaW5ib3VuZCB3aW5kb3csIGFuZCB0aGUg
-dXBwZXIgMzItYml0IG9mIHRoZSBDUFUgYmFzZSBhZGRyZXNzDQpvZiB0aGUgaW5ib3VuZCB3aW5k
-b3cgaXMgbm90IHNldCBpbiBjdXJyZW50IGNvZGUuDQoNClNvIGl0IG1lYW5zIHRoZSBjdXJyZW50
-IGNvZGUgb25seSBzdXBwb3J0IDE6MSBpbmJvdW5kIHdpbmRvdyBzZXR0aW5nICYgdGhlDQpDUFUg
-YmFzZSBhZGRyZXNzIG11c3QgYmUgPCA0R0IuIEl0IHdvbid0IHdvcmsgaWYgaW4gZnV0dXJlIHNv
-bWVvbmUgY2hhbmdlDQppdCB0byBub24gMToxIG1hcHBpbmcgb3IgdGhlIENQVSBiYXNlIGFkZHJl
-c3Mgb2YgdGhlIGluYm91bmQgd2luZG93ID4gNEdCLg0KDQpTbywgSSB3aWxsIHJlc2VuZCBpdCBz
-ZXBhcmF0ZWx5Lg0KDQo+IEhhdmluZyBzYWlkIHRoYXQsIHlvdSBzaG91bGQgaW1wcm92ZSBjb21t
-aXQgbG9ncyB3cml0aW5nIGl0IHRvb2sgbWUgdG9vDQo+IG11Y2ggdGltZSB0byBjaGVjayB0aGVt
-IGFsbCBhbmQgcmV3cml0ZSB0aGVtLg0KPiANCj4gTmV2ZXIgZXZlciBhZ2FpbiBwb3N0IGEgbWFz
-c2l2ZSBzZXJpZXMgbGlrZSB0aGlzIG1peGluZyByZWZhY3RvcmluZyBmaXhlcyBhbmQNCj4gY2xl
-YW4tdXBzIGl0IHdhcyBwYWluZnVsIHRvIHJldmlldy9yZWJhc2UsIHBsZWFzZSBzcGxpdCBwYXRj
-aCBzZXJpZXMgaW50byBzbWFsbA0KPiBjaHVua3MgdG8gbWFrZSBteSBsaWZlIG11Y2ggZWFzaWVy
-Lg0KDQpJIHVuZGVyc3RhbmQgaXQgaXMgd2Vhcmlzb21lLCBidXQgSSBqdXN0IHdhbnQgdG8gbWFr
-ZSBpdCBiZXR0ZXIgYW5kIGVhc2llciB0bw0KYWRkIG5ldyBkcml2ZXIgZm9yIG90aGVyIGRldmVs
-b3BlcnMuIEkgd2lsbCB0cnkgdG8gbm90IG1peCB0aGUgZGlzdGluY3QgY2hhbmdlcw0Kc28gdGhh
-dCBlYXN5IHRvIG1haW50YWluLg0KVGhhbmsgeW91IHNvIG11Y2ggZm9yIHJlY29tcG9zaW5nIG9m
-IHRoZXNlIGNoYW5nZWxvZ3MuDQogDQo+IFBsZWFzZSBjaGVjayBteSBwY2kvbW9iaXZlaWwgYnJh
-bmNoIGFuZCByZXBvcnQgYmFjayBpZiBzb21ldGhpbmcgaXMgbm90IGluDQo+IG9yZGVyLg0KDQpZ
-ZXMsIGFuZCB0aGFua3MgYWdhaW4uDQoNCkIuUiwNClpoaXFpYW5nDQoNCj4gTG9yZW56bw0K
+On 7/10/2019 4:07 PM, Lorenzo Pieralisi wrote:
+> On Wed, Jul 10, 2019 at 11:52:05AM +0530, Vidya Sagar wrote:
+>> Add extended configuration space capability search API using struct dw_pcie *
+>> pointer
+> 
+> Sentences are terminated with a period and this is v13 not v1, which
+> proves that you do not read the commit logs you write.
+> 
+> I need you guys to understand that I can't rewrite commit logs all
+> the time, I do not want to go as far as not accepting your patches
+> anymore so please do pay attention to commit log details they
+> are as important as the code itself.
+> 
+> https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
+My sincere apologies.
+Since I didn't touch this patch much all through this series, I missed it.
+I'll make a point to not make such mistakes again.
+Do you want me to send a new version fixing it?
+
+Thanks,
+Vidya Sagar
+
+> 
+> Thanks,
+> Lorenzo
+> 
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> ---
+>> V13:
+>> * None
+>>
+>> V12:
+>> * None
+>>
+>> V11:
+>> * None
+>>
+>> V10:
+>> * None
+>>
+>> V9:
+>> * Added Acked-by from Thierry
+>>
+>> V8:
+>> * Changed data types of return and arguments to be inline with data being returned
+>>    and passed.
+>>
+>> V7:
+>> * None
+>>
+>> V6:
+>> * None
+>>
+>> V5:
+>> * None
+>>
+>> V4:
+>> * None
+>>
+>> V3:
+>> * None
+>>
+>> V2:
+>> * This is a new patch in v2 series
+>>
+>>   drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-designware.h |  1 +
+>>   2 files changed, 42 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 7818b4febb08..181449e342f1 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -53,6 +53,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+>>   }
+>>   EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+>>   
+>> +static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+>> +					    u8 cap)
+>> +{
+>> +	u32 header;
+>> +	int ttl;
+>> +	int pos = PCI_CFG_SPACE_SIZE;
+>> +
+>> +	/* minimum 8 bytes per capability */
+>> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+>> +
+>> +	if (start)
+>> +		pos = start;
+>> +
+>> +	header = dw_pcie_readl_dbi(pci, pos);
+>> +	/*
+>> +	 * If we have no capabilities, this is indicated by cap ID,
+>> +	 * cap version and next pointer all being 0.
+>> +	 */
+>> +	if (header == 0)
+>> +		return 0;
+>> +
+>> +	while (ttl-- > 0) {
+>> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+>> +			return pos;
+>> +
+>> +		pos = PCI_EXT_CAP_NEXT(header);
+>> +		if (pos < PCI_CFG_SPACE_SIZE)
+>> +			break;
+>> +
+>> +		header = dw_pcie_readl_dbi(pci, pos);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+>> +{
+>> +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
+>> +}
+>> +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
+>> +
+>>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+>>   {
+>>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index d8c66a6827dc..11c223471416 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -252,6 +252,7 @@ struct dw_pcie {
+>>   		container_of((endpoint), struct dw_pcie, ep)
+>>   
+>>   u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+>> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
+>>   
+>>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
+>> -- 
+>> 2.17.1
+>>
