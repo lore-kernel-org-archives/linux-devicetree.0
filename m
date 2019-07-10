@@ -1,203 +1,246 @@
-MIME-Version: 1.0
-Date: Tue, 2 Jul 2019 07:58:16 -0600
-References: <20190628022202.118166-1-saravanak@google.com>
-	<20190628022202.118166-3-saravanak@google.com>
-	<d97de5ef-68a3-795f-2532-24da8cd2d130@codeaurora.org>
-In-Reply-To: <d97de5ef-68a3-795f-2532-24da8cd2d130@codeaurora.org>
-Message-ID: <CAL_JsqKn2m_2iVzSAWHzzj0gWFR5THE6F8hYh205R2WcqpiR8Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] of/platform: Add functional dependency link from
- DT bindings
-From: Rob Herring <robh+dt@kernel.org>
+Return-Path: <SRS0=N007=VH=flex--brendanhiggins.bounces.google.com=3w5AlXQ4KBGoJZMVLIVPQOOQVaOWWOTM.KWUZWJPSMZVMT.WZO@kernel.org>
+Date: Wed, 10 Jul 2019 00:14:57 -0700
+In-Reply-To: <20190710071508.173491-1-brendanhiggins@google.com>
+Message-Id: <20190710071508.173491-8-brendanhiggins@google.com>
+Mime-Version: 1.0
+References: <20190710071508.173491-1-brendanhiggins@google.com>
+Subject: [PATCH v8 07/18] kunit: test: add initial tests
+From: Brendan Higgins <brendanhiggins@google.com>
 Content-Type: text/plain; charset="UTF-8"
-To: David Collins <collinsd@codeaurora.org>
-Cc: Saravana Kannan <saravanak@google.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
+To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jun 28, 2019 at 6:55 PM David Collins <collinsd@codeaurora.org> wrote:
->
-> Hello Saravana,
->
-> On 6/27/19 7:22 PM, Saravana Kannan wrote:
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > index 04ad312fd85b..8d690fa0f47c 100644
-> > --- a/drivers/of/platform.c
-> > +++ b/drivers/of/platform.c
-> > @@ -61,6 +61,72 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
-> >  EXPORT_SYMBOL(of_find_device_by_node);
-> >
-> >  #ifdef CONFIG_OF_ADDRESS
-> > +static int of_link_binding(struct device *dev, char *binding, char *cell)
-> > +{
-> > +     struct of_phandle_args sup_args;
-> > +     struct platform_device *sup_dev;
-> > +     unsigned int i = 0, links = 0;
-> > +     u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
-> > +
-> > +     while (!of_parse_phandle_with_args(dev->of_node, binding, cell, i,
-> > +                                        &sup_args)) {
-> > +             i++;
-> > +             sup_dev = of_find_device_by_node(sup_args.np);
-> > +             if (!sup_dev)
-> > +                     continue;
->
-> This check means that a required dependency link between a consumer and
-> supplier will not be added in the case that the consumer device is created
-> before the supply device.  If the supplier device is created and
-> immediately bound to its driver after late_initcall_sync(), then it is
-> possible for the sync_state() callback of the supplier to be called before
-> the consumer gets a chance to probe since its link was never captured.
->
-> of_platform_default_populate() below will only create devices for the
-> first level DT nodes directly under "/".  Suppliers DT nodes can exist as
-> second level nodes under a first level bus node (e.g. I2C, SPMI, RPMh,
-> etc).  Thus, it is quite likely that not all supplier devices will have
-> been created when device_link_check_waiting_consumers() is called.
->
-> As far as I can tell, this effectively breaks the sync_state()
-> functionality (and thus proxy un-voting built on top of it) when using
-> kernel modules for both the supplier and consumer drivers which are probed
-> after late_initcall_sync().  I'm not sure how this can be avoided given
-> that the linking is done between devices in the process of sequentially
-> adding devices.  Perhaps linking between device nodes instead of devices
-> might be able to overcome this issue.
->
->
-> > +             if (device_link_add(dev, &sup_dev->dev, dl_flags))
-> > +                     links++;
-> > +             put_device(&sup_dev->dev);
-> > +     }
-> > +     if (links < i)
-> > +             return -ENODEV;
-> > +     return 0;
-> > +}
-> > +
-> > +/*
-> > + * List of bindings and their cell names (use NULL if no cell names) from which
-> > + * device links need to be created.
-> > + */
-> > +static char *link_bindings[] = {
-> > +#ifdef CONFIG_OF_DEVLINKS
-> > +     "clocks", "#clock-cells",
-> > +     "interconnects", "#interconnect-cells",
-> > +#endif
-> > +};
->
-> This list and helper function above are missing support for regulator
-> <arbitrary-consumer-name>-supply properties.  We require this support on
-> QTI boards in order to handle regulator proxy un-voting when booting with
-> kernel modules.  Are you planning to add this support in a follow-on
-> version of this patch or in an additional patch?
->
-> Note that handling regulator supply properties will be very challenging
-> for at least these reasons:
->
-> 1. There is not a consistent DT property name used for regulator supplies.
->
-> 2. The device node referenced in a regulator supply phandle is usually not
-> the device node which correspond to the device pointer for the supplier.
-> This is because a single regulator supplier device node (which will have
-> an associated device pointer) typically has a subnode for each of the
-> regulators it supports.  Consumers then use phandles for the subnodes.
->
-> 3. The specification of parent supplies for regulators frequently results
-> in *-supply properties in a node pointing to child subnodes of that node.
->  See [1] for an example.  Special care would need to be taken to avoid
-> trying to mark a regulator supplier as a supplier to itself as well as to
-> avoid blocking its own probing due to an unlinked supply dependency.
->
-> 4. Not all DT properties of the form "*-supply" are regulator supplies.
-> (Note, this case has been discussed, but I was not able to locate an
-> example of it.)
+Add a test for string stream along with a simpler example.
 
-I don't think this is true. There's a 
->
->
-> Clocks also have a problem.  A recent patch [2] allows clock provider
-> parent clocks to be specified via DT.  This could lead to cases of
-> circular "clocks" property dependencies where there are two clock supplier
-> devices A and B with A having some clocks with B clock parents along with
-> B having some clocks with A clock parents.  If "clocks" properties are
-> followed, then neither device would ever be able to probe.
->
-> This does not present a problem without this patch series because the
-> clock framework supports late binding of parents specifically to avoid
-> issues with clocks not registering in perfectly topological order of
-> parent dependencies.
->
->
-> > +
-> > +static int of_link_to_suppliers(struct device *dev)
-> > +{
-> > +     unsigned int i = 0;
-> > +     bool done = true;
-> > +
-> > +     if (unlikely(!dev->of_node))
-> > +             return 0;
-> > +
-> > +     for (i = 0; i < ARRAY_SIZE(link_bindings) / 2; i++)
-> > +             if (of_link_binding(dev, link_bindings[i * 2],
-> > +                                     link_bindings[i * 2 + 1]))
-> > +                     done = false;
-> > +
-> > +     if (!done)
-> > +             return -ENODEV;
-> > +     return 0;
-> > +}
-> > +
-> > +static void link_waiting_consumers_func(struct work_struct *work)
-> > +{
-> > +     device_link_check_waiting_consumers(of_link_to_suppliers);
-> > +}
-> > +static DECLARE_WORK(link_waiting_consumers_work, link_waiting_consumers_func);
-> > +
-> > +static bool link_waiting_consumers_enable;
-> > +static void link_waiting_consumers_trigger(void)
-> > +{
-> > +     if (!link_waiting_consumers_enable)
-> > +             return;
-> > +
-> > +     schedule_work(&link_waiting_consumers_work);
-> > +}
-> > +
-> >  /*
-> >   * The following routines scan a subtree and registers a device for
-> >   * each applicable node.
-> > @@ -192,10 +258,13 @@ static struct platform_device *of_platform_device_create_pdata(
-> >       dev->dev.platform_data = platform_data;
-> >       of_msi_configure(&dev->dev, dev->dev.of_node);
-> >
-> > +     if (of_link_to_suppliers(&dev->dev))
-> > +             device_link_wait_for_supplier(&dev->dev);
-> >       if (of_device_add(dev) != 0) {
-> >               platform_device_put(dev);
-> >               goto err_clear_flag;
-> >       }
-> > +     link_waiting_consumers_trigger();
-> >
-> >       return dev;
-> >
-> > @@ -541,6 +610,10 @@ static int __init of_platform_default_populate_init(void)
-> >       /* Populate everything else. */
-> >       of_platform_default_populate(NULL, NULL, NULL);
-> >
-> > +     /* Make the device-links between suppliers and consumers */
-> > +     link_waiting_consumers_enable = true;
-> > +     device_link_check_waiting_consumers(of_link_to_suppliers);
-> > +
-> >       return 0;
-> >  }
-> >  arch_initcall_sync(of_platform_default_populate_init);
-> >
->
-> Thanks,
-> David
->
-> [1]:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845-mtp.dts?h=v5.2-rc5#n73
->
-> [2]:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fc0c209c147f35ed2648adda09db39fcad89e334
->
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ kunit/Kconfig              | 21 +++++++++
+ kunit/Makefile             |  4 ++
+ kunit/example-test.c       | 88 ++++++++++++++++++++++++++++++++++++++
+ kunit/string-stream-test.c | 75 ++++++++++++++++++++++++++++++++
+ 4 files changed, 188 insertions(+)
+ create mode 100644 kunit/example-test.c
+ create mode 100644 kunit/string-stream-test.c
+
+diff --git a/kunit/Kconfig b/kunit/Kconfig
+index 330ae83527c23..8541ef95b65ad 100644
+--- a/kunit/Kconfig
++++ b/kunit/Kconfig
+@@ -14,4 +14,25 @@ config KUNIT
+ 	  architectures. For more information, please see
+ 	  Documentation/dev-tools/kunit/.
+ 
++config KUNIT_TEST
++	bool "KUnit test for KUnit"
++	depends on KUNIT
++	help
++	  Enables the unit tests for the KUnit test framework. These tests test
++	  the KUnit test framework itself; the tests are both written using
++	  KUnit and test KUnit. This option should only be enabled for testing
++	  purposes by developers interested in testing that KUnit works as
++	  expected.
++
++config KUNIT_EXAMPLE_TEST
++	bool "Example test for KUnit"
++	depends on KUNIT
++	help
++	  Enables an example unit test that illustrates some of the basic
++	  features of KUnit. This test only exists to help new users understand
++	  what KUnit is and how it is used. Please refer to the example test
++	  itself, kunit/example-test.c, for more information. This option is
++	  intended for curious hackers who would like to understand how to use
++	  KUnit for kernel development.
++
+ endmenu
+diff --git a/kunit/Makefile b/kunit/Makefile
+index 6ddc622ee6b1c..60a9ea6cb4697 100644
+--- a/kunit/Makefile
++++ b/kunit/Makefile
+@@ -1,3 +1,7 @@
+ obj-$(CONFIG_KUNIT) +=			test.o \
+ 					string-stream.o \
+ 					kunit-stream.o
++
++obj-$(CONFIG_KUNIT_TEST) +=		string-stream-test.o
++
++obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	example-test.o
+diff --git a/kunit/example-test.c b/kunit/example-test.c
+new file mode 100644
+index 0000000000000..f64a829aa441f
+--- /dev/null
++++ b/kunit/example-test.c
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Example KUnit test to show how to use KUnit.
++ *
++ * Copyright (C) 2019, Google LLC.
++ * Author: Brendan Higgins <brendanhiggins@google.com>
++ */
++
++#include <kunit/test.h>
++
++/*
++ * This is the most fundamental element of KUnit, the test case. A test case
++ * makes a set EXPECTATIONs and ASSERTIONs about the behavior of some code; if
++ * any expectations or assertions are not met, the test fails; otherwise, the
++ * test passes.
++ *
++ * In KUnit, a test case is just a function with the signature
++ * `void (*)(struct kunit *)`. `struct kunit` is a context object that stores
++ * information about the current test.
++ */
++static void example_simple_test(struct kunit *test)
++{
++	/*
++	 * This is an EXPECTATION; it is how KUnit tests things. When you want
++	 * to test a piece of code, you set some expectations about what the
++	 * code should do. KUnit then runs the test and verifies that the code's
++	 * behavior matched what was expected.
++	 */
++	KUNIT_EXPECT_EQ(test, 1 + 1, 2);
++}
++
++/*
++ * This is run once before each test case, see the comment on
++ * example_test_suite for more information.
++ */
++static int example_test_init(struct kunit *test)
++{
++	kunit_info(test, "initializing\n");
++
++	return 0;
++}
++
++/*
++ * Here we make a list of all the test cases we want to add to the test suite
++ * below.
++ */
++static struct kunit_case example_test_cases[] = {
++	/*
++	 * This is a helper to create a test case object from a test case
++	 * function; its exact function is not important to understand how to
++	 * use KUnit, just know that this is how you associate test cases with a
++	 * test suite.
++	 */
++	KUNIT_CASE(example_simple_test),
++	{}
++};
++
++/*
++ * This defines a suite or grouping of tests.
++ *
++ * Test cases are defined as belonging to the suite by adding them to
++ * `kunit_cases`.
++ *
++ * Often it is desirable to run some function which will set up things which
++ * will be used by every test; this is accomplished with an `init` function
++ * which runs before each test case is invoked. Similarly, an `exit` function
++ * may be specified which runs after every test case and can be used to for
++ * cleanup. For clarity, running tests in a test suite would behave as follows:
++ *
++ * suite.init(test);
++ * suite.test_case[0](test);
++ * suite.exit(test);
++ * suite.init(test);
++ * suite.test_case[1](test);
++ * suite.exit(test);
++ * ...;
++ */
++static struct kunit_suite example_test_suite = {
++	.name = "example",
++	.init = example_test_init,
++	.test_cases = example_test_cases,
++};
++
++/*
++ * This registers the above test suite telling KUnit that this is a suite of
++ * tests that need to be run.
++ */
++kunit_test_suite(example_test_suite);
+diff --git a/kunit/string-stream-test.c b/kunit/string-stream-test.c
+new file mode 100644
+index 0000000000000..b5641b078b8f6
+--- /dev/null
++++ b/kunit/string-stream-test.c
+@@ -0,0 +1,75 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * KUnit test for struct string_stream.
++ *
++ * Copyright (C) 2019, Google LLC.
++ * Author: Brendan Higgins <brendanhiggins@google.com>
++ */
++
++#include <linux/slab.h>
++#include <kunit/test.h>
++#include <kunit/string-stream.h>
++
++static void string_stream_test_empty_on_creation(struct kunit *test)
++{
++	struct string_stream *stream = alloc_string_stream(test);
++
++	KUNIT_EXPECT_TRUE(test, string_stream_is_empty(stream));
++}
++
++static void string_stream_test_not_empty_after_add(struct kunit *test)
++{
++	struct string_stream *stream = alloc_string_stream(test);
++
++	string_stream_add(stream, "Foo");
++
++	KUNIT_EXPECT_FALSE(test, string_stream_is_empty(stream));
++}
++static void string_stream_test_get_string(struct kunit *test)
++{
++	struct string_stream *stream = alloc_string_stream(test);
++	char *output;
++
++	string_stream_add(stream, "Foo");
++	string_stream_add(stream, " %s", "bar");
++
++	output = string_stream_get_string(stream);
++	KUNIT_EXPECT_STREQ(test, output, "Foo bar");
++	kfree(output);
++}
++
++static void string_stream_test_add_and_clear(struct kunit *test)
++{
++	struct string_stream *stream = alloc_string_stream(test);
++	char *output;
++	int i;
++
++	for (i = 0; i < 10; i++)
++		string_stream_add(stream, "A");
++
++	output = string_stream_get_string(stream);
++	KUNIT_EXPECT_STREQ(test, output, "AAAAAAAAAA");
++	KUNIT_EXPECT_EQ(test, stream->length, (size_t)10);
++	KUNIT_EXPECT_FALSE(test, string_stream_is_empty(stream));
++	kfree(output);
++
++	string_stream_clear(stream);
++
++	output = string_stream_get_string(stream);
++	KUNIT_EXPECT_STREQ(test, output, "");
++	KUNIT_EXPECT_TRUE(test, string_stream_is_empty(stream));
++}
++
++static struct kunit_case string_stream_test_cases[] = {
++	KUNIT_CASE(string_stream_test_empty_on_creation),
++	KUNIT_CASE(string_stream_test_not_empty_after_add),
++	KUNIT_CASE(string_stream_test_get_string),
++	KUNIT_CASE(string_stream_test_add_and_clear),
++	{}
++};
++
++static struct kunit_suite string_stream_test_suite = {
++	.name = "string-stream-test",
++	.test_cases = string_stream_test_cases
++};
++kunit_test_suite(string_stream_test_suite);
+-- 
+2.22.0.410.gd8fdbe21b5-goog
