@@ -1,91 +1,73 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH V13 08/12] dt-bindings: Add PCIe supports-clkreq property
-Date: Wed, 10 Jul 2019 16:28:56 +0100
-Message-ID: <20190710152856.GB8781@e121166-lin.cambridge.arm.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
- <20190710062212.1745-9-vidyas@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: dt-bindings: spi-controller: remove unnecessary 'maxItems: 1' from reg" to the spi tree
+Date: Wed, 10 Jul 2019 16:34:53 +0100 (BST)
+Message-ID: <20190710153453.F057BD02D84@fitzroy.sirena.org.uk>
+References: <20190709192631.16394-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190710062212.1745-9-vidyas@nvidia.com>
+In-Reply-To: <20190709192631.16394-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 11:52:08AM +0530, Vidya Sagar wrote:
-> Some host controllers need to know the existence of clkreq signal routing to
-> downstream devices to be able to advertise low power features like ASPM L1
-> substates. Without clkreq signal routing being present, enabling ASPM L1 sub
-> states might lead to downstream devices falling off the bus. Hence a new device
+The patch
 
-You mean "being disconnected from the bus" right ? I will update it.
+   spi: dt-bindings: spi-controller: remove unnecessary 'maxItems: 1' from reg
 
-Lorenzo
+has been applied to the spi tree at
 
-> tree property 'supports-clkreq' is added to make such host controllers
-> aware of clkreq signal routing to downstream devices.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Thierry Reding <treding@nvidia.com>
-> ---
-> V13:
-> * None
-> 
-> V12:
-> * Rebased on top of linux-next top of the tree
-> 
-> V11:
-> * None
-> 
-> V10:
-> * None
-> 
-> V9:
-> * None
-> 
-> V8:
-> * None
-> 
-> V7:
-> * None
-> 
-> V6:
-> * s/Documentation\/devicetree/dt-bindings/ in the subject
-> 
-> V5:
-> * None
-> 
-> V4:
-> * Rebased on top of linux-next top of the tree
-> 
-> V3:
-> * None
-> 
-> V2:
-> * This is a new patch in v2 series
-> 
->  Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> index 2a5d91024059..29bcbd88f457 100644
-> --- a/Documentation/devicetree/bindings/pci/pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> @@ -27,6 +27,11 @@ driver implementation may support the following properties:
->  - reset-gpios:
->     If present this property specifies PERST# GPIO. Host drivers can parse the
->     GPIO and apply fundamental reset to endpoints.
-> +- supports-clkreq:
-> +   If present this property specifies that CLKREQ signal routing exists from
-> +   root port to downstream device and host bridge drivers can do programming
-> +   which depends on CLKREQ signal existence. For example, programming root port
-> +   not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
->  
->  PCI-PCI Bridge properties
->  -------------------------
-> -- 
-> 2.17.1
-> 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 43167bb1f6bb7efa73adc40d2dd700bb6546cc2c Mon Sep 17 00:00:00 2001
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 9 Jul 2019 13:26:31 -0600
+Subject: [PATCH] spi: dt-bindings: spi-controller: remove unnecessary
+ 'maxItems: 1' from reg
+
+Mixing array constraints like 'maxItems' and string or integer value
+constraints like 'minimum' don't make sense. Also, with only value
+constraints, it is implied we have a single value. So lets remove
+'maxItems: 1'.
+
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20190709192631.16394-1-robh@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/spi/spi-controller.yaml | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+index 876c0623f322..a02e2fe2bfb2 100644
+--- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+@@ -73,7 +73,6 @@ patternProperties:
+           Compatible of the SPI device.
+ 
+       reg:
+-        maxItems: 1
+         minimum: 0
+         maximum: 256
+         description:
+-- 
+2.20.1
