@@ -1,7 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH V5 2/5] arm64: Enable TIMER_IMX_SYS_CTR for ARCH_MXC platforms
-Date: Wed, 10 Jul 2019 14:30:53 +0800
-Message-ID: <20190710063056.35689-2-Anson.Huang@nxp.com>
+Subject: [PATCH V5 3/5] arm64: dts: imx8mm: Add system counter node
+Date: Wed, 10 Jul 2019 14:30:54 +0800
+Message-ID: <20190710063056.35689-3-Anson.Huang@nxp.com>
 References: <20190710063056.35689-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190710063056.35689-1-Anson.Huang@nxp.com>
@@ -12,27 +12,37 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-ARCH_MXC platforms needs system counter as broadcast timer
-to support cpuidle, enable it by default.
+Add i.MX8MM system counter node to enable timer-imx-sysctr
+broadcast timer driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-New patch, now that system counter driver lands in main line, we can enable it by default.
+Changes since V4:
+	- update the clock info using fixed clock node;
+	- correct the reg range;
+	- update the interrupt number as the system counter driver ONLY uses 1 irq now.
 ---
- arch/arm64/Kconfig.platforms | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 4778c77..f5e623f 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -173,6 +173,7 @@ config ARCH_MXC
- 	select PM
- 	select PM_GENERIC_DOMAINS
- 	select SOC_BUS
-+	select TIMER_IMX_SYS_CTR
- 	help
- 	  This enables support for the ARMv8 based SoCs in the
- 	  NXP i.MX family.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index b5637f8..8cf7f34 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -560,6 +560,14 @@
+ 				#pwm-cells = <2>;
+ 				status = "disabled";
+ 			};
++
++			system_counter: timer@306a0000 {
++				compatible = "nxp,sysctr-timer";
++				reg = <0x306a0000 0x20000>;
++				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&osc_24m>;
++				clock-names = "per";
++			};
+ 		};
+ 
+ 		aips3: bus@30800000 {
 -- 
 2.7.4
