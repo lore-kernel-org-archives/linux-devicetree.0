@@ -1,42 +1,73 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 9 Jul 2019 10:23:15 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1
- to r8a7792
-Message-ID: <20190709162315.GA9309@bogus>
-References: <156076216767.4736.16337667537984218274.sendpatchset@octo>
- <156076219472.4736.14727682068388338615.sendpatchset@octo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156076219472.4736.14727682068388338615.sendpatchset@octo>
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org
+Date: Wed, 10 Jul 2019 09:55:39 -0600
+References: <1561115855-4186-1-git-send-email-open.sudheer@gmail.com>
+	<1561115855-4186-6-git-send-email-open.sudheer@gmail.com>
+In-Reply-To: <1561115855-4186-6-git-send-email-open.sudheer@gmail.com>
+Message-ID: <CAL_JsqKTKrPWJcajC9DB2pY4BBM3NFu00s0S0xx9aAZmcrtFqw@mail.gmail.com>
+Subject: Re: [patch 5/5] Documentation: DT bindings AST2500 DMA UART driver
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: "sudheer.v" <open.sudheer@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, ShivahShankar Shakarnarayan rao <shivahshankar.shankarnarayanrao@aspeedtech.com>, shivahshankar@gmail.com, Sudheer V <sudheer.veliseti@aspeedtech.com>, sudheer veliseti <sudheer.open@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, 17 Jun 2019 18:03:14 +0900, Magnus Damm wrote:
-> From: Magnus Damm <damm+renesas@opensource.se>
-> 
-> This patch adds DT binding documentation for the CMT devices on
-> the R-Car Gen2 V2H (r8a7792) SoC.
-> 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> ---
-> 
->  Documentation/devicetree/bindings/timer/renesas,cmt.txt |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> --- 0004/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> +++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-06-17 13:35:10.526874153 +0900
-> @@ -35,6 +35,8 @@ Required Properties:
->      - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
->      - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
->      - "renesas,r8a7791-cmt1" for the 48-bit CMT1 device included in r8a7791.
-> +    - "renesas,r8a7792-cmt0" for the 32-bit CMT0 device included in r8a7792.
-> +    - "renesas,r8a7792-cmt1" for the 48-bit CMT1 device included in r8a7792.
->      - "renesas,r8a7793-cmt0" for the 32-bit CMT0 device included in r8a7793.
->      - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
->      - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Fri, Jun 21, 2019 at 5:16 AM sudheer.v <open.sudheer@gmail.com> wrote:
+>
+> From: sudheer veliseti <sudheer.open@gmail.com>
+>
+> Signed-off-by: sudheer veliseti <sudheer.open@gmail.com>
+> ---
+>  .../bindings/serial/ast2500-dma-uart.txt      | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
+>
+> diff --git a/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt b/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
+> new file mode 100644
+> index 000000000000..6f01ddecba56
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/ast2500-dma-uart.txt
+> @@ -0,0 +1,40 @@
+> +
+> +node for DMA controller:
+> +                       ast_uart_sdma: uart_sdma@1e79e000 {
+> +                               compatible = "aspeed,ast-uart-sdma";
+> +                               reg = <0x1e79e000 0x400>;
+> +                               interrupts = <50>;
+> +                               status = "disabled";
+> +                       };
+> +this node  doesn't binds with any driver.
+> +DMA controller is handled as a separate SW layer,and is included in the same driver.
+> +This DMA controller node is included in DT just for Register base and interrupt details
+> +
+> +
+> +
+> +node for DMA-UART :
+> +
+> +
+> +Required properties:
+> +
+> +- compatible: "aspeed,ast-sdma-uart"
+> +- reg: The base address of the UART register bank
+> +- interrupts: should contain interrupt specifier.
+> +- clocks: Clock driving the hardware;
+> +- pinctrl-0 : list of pinconfigurations
+> +- dma-channel: channel of DMA-controller which is used
+> +
+> +Example:
+> +
+> +                 dma_uart1: dma_uart1@1e783000{
+> +                          compatible = "aspeed,ast-sdma-uart";
+> +                          reg = <0x1e783000 0x1000>;
+> +                          reg-shift = <2>;
+> +                          interrupts = <9>;
+> +                          clocks = <&syscon ASPEED_CLK_GATE_UART1CLK>;
+> +                          dma-channel = <0>;
+> +                          no-loopback-test;
+> +                          pinctrl-names = "default";
+> +                          pinctrl-0 = <&pinctrl_txd1_default &pinctrl_rxd1_default>;
+> +                          status = "disabled";
+> +                       };
+> --
+> 2.17.1
+>
