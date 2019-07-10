@@ -1,39 +1,73 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: dts: exynos: add initial data for coupled
- regulators for Exynos5422/5800
-Date: Wed, 10 Jul 2019 11:02:13 +0200
-Message-ID: <CAJKOXPd+KKG4kT6OeE4EZkwdhe3i_XoorJm4B+f7OUi09VOUyg@mail.gmail.com>
-References: <CGME20190708141200eucas1p12bf901a2589efe92b133b357d2cbc57e@eucas1p1.samsung.com>
- <20190708141140.24379-1-k.konieczny@partner.samsung.com> <20190708141140.24379-4-k.konieczny@partner.samsung.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 11/13] arm64: dts: qcom: qcs404: Add CPR and populate OPP
+ table
+Date: Wed, 10 Jul 2019 14:33:03 +0530
+Message-ID: <20190710090303.tb5ue3wq6r7ofyev@vireshk-i7>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
+ <20190705095726.21433-12-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190708141140.24379-4-k.konieczny@partner.samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20190705095726.21433-12-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: k.konieczny@partner.samsung.com
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Jul 2019 at 16:12, <k.konieczny@partner.samsung.com> wrote:
->
-> From: Marek Szyprowski <m.szyprowski@samsung.com>
->
-> Declare Exynos5422/5800 voltage ranges for opp points for big cpu core and
-> bus wcore and couple their voltage supllies as vdd_arm and vdd_int should
-> be in 300mV range.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi             | 34 +++++++++----------
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  4 +++
->  arch/arm/boot/dts/exynos5800-peach-pi.dts     |  4 +++
->  arch/arm/boot/dts/exynos5800.dtsi             | 32 ++++++++---------
->  4 files changed, 41 insertions(+), 33 deletions(-)
+On 05-07-19, 11:57, Niklas Cassel wrote:
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+>  	cpu_opp_table: cpu-opp-table {
+> -		compatible = "operating-points-v2";
+> +		compatible = "operating-points-v2-kryo-cpu";
+>  		opp-shared;
+>  
+>  		opp-1094400000 {
+>  			opp-hz = /bits/ 64 <1094400000>;
+> -			opp-microvolt = <1224000 1224000 1224000>;
+> +			required-opps = <&cpr_opp1>;
+>  		};
+>  		opp-1248000000 {
+>  			opp-hz = /bits/ 64 <1248000000>;
+> -			opp-microvolt = <1288000 1288000 1288000>;
+> +			required-opps = <&cpr_opp2>;
+>  		};
+>  		opp-1401600000 {
+>  			opp-hz = /bits/ 64 <1401600000>;
+> -			opp-microvolt = <1384000 1384000 1384000>;
+> +			required-opps = <&cpr_opp3>;
+> +		};
+> +	};
+> +
+> +	cpr_opp_table: cpr-opp-table {
+> +		compatible = "operating-points-v2-qcom-level";
+> +
+> +		cpr_opp1: opp1 {
+> +			opp-level = <1>;
+> +			qcom,opp-fuse-level = <1>;
+> +			opp-hz = /bits/ 64 <1094400000>;
+> +		};
+> +		cpr_opp2: opp2 {
+> +			opp-level = <2>;
+> +			qcom,opp-fuse-level = <2>;
+> +			opp-hz = /bits/ 64 <1248000000>;
+> +		};
+> +		cpr_opp3: opp3 {
+> +			opp-level = <3>;
+> +			qcom,opp-fuse-level = <3>;
+> +			opp-hz = /bits/ 64 <1401600000>;
+>  		};
+>  	};
 
-Looks good, I assume bisectability is not affected, because of
-dependency on the driver changes I will take it for next next release
-(v5.5). Assuming that driver change goes into v5.4.
+- Do we ever have cases more complex than this for this version of CPR ?
 
-Best regards,
-Krzysztof
+- What about multiple devices with same CPR table, not big LITTLE
+  CPUs, but other devices like two different type of IO devices ? What
+  will we do with opp-hz in those cases ?
+
+- If there are no such cases, can we live without opp-hz being used
+  here and reverse-engineer the highest frequency by looking directly
+  at CPUs OPP table ? i.e. by looking at required-opps field.
+
+-- 
+viresh
