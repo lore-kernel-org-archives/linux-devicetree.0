@@ -1,64 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext
- Milbeaut HDMAC bindings
-Date: Wed, 10 Jul 2019 07:48:40 -0600
-Message-ID: <CAL_JsqKB2tw8NFYgO09RHvYBKJ8uVCktYH36wiPWi0wvH758Eg@mail.gmail.com>
-References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
- <20190613005237.1996-1-jassisinghbrar@gmail.com> <20190709143437.GA30850@bogus>
- <CABb+yY3OsAh3xgX8_vvA7A7mU+FkEj__BQs9CxMvf=eYxRYXyw@mail.gmail.com>
+Subject: Re: [v4 4/6] dt-bindings: phy: Document the Synopsys MIPI DPHY Rx bindings
+Date: Wed, 10 Jul 2019 07:50:30 -0600
+Message-ID: <CAL_JsqJVfcrQBOgMK_iNYOZpEMfWcjS=_j++LPyu7bnLinMpfw@mail.gmail.com>
+References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+ <1560280855-18085-5-git-send-email-luis.oliveira@synopsys.com>
+ <20190709142000.GA995@bogus> <MN2PR12MB371024C55C5B48A91EECE7A0CBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY3OsAh3xgX8_vvA7A7mU+FkEj__BQs9CxMvf=eYxRYXyw@mail.gmail.com>
+In-Reply-To: <MN2PR12MB371024C55C5B48A91EECE7A0CBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vinod <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Takao Orito <orito.takao@socionext.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Luis de Oliveira <Luis.Oliveira@synopsys.com>
+Cc: "mchehab@kernel.org" <mchehab@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kishon@ti.com" <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 10:12 PM Jassi Brar <jassisinghbrar@gmail.com> wrote:
+On Tue, Jul 9, 2019 at 10:29 AM Luis de Oliveira
+<Luis.Oliveira@synopsys.com> wrote:
 >
-> On Tue, Jul 9, 2019 at 9:34 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Wed, Jun 12, 2019 at 07:52:37PM -0500, jassisinghbrar@gmail.com wrote:
-> > > From: Jassi Brar <jaswinder.singh@linaro.org>
+> From: Rob Herring <robh@kernel.org>
+> Date: Tue, Jul 09, 2019 at 15:20:00
+>
+> > On Tue, Jun 11, 2019 at 09:20:53PM +0200, Luis Oliveira wrote:
+> > > Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
+> > > RX mode.
 > > >
-> > > Document the devicetree bindings for Socionext Milbeaut HDMAC
-> > > controller. Controller has upto 8 floating channels, that need
-> > > a predefined slave-id to work from a set of slaves.
-> > >
-> > > Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> > > Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
 > > > ---
-> > >  .../bindings/dma/milbeaut-m10v-hdmac.txt           | 54 +++++++++++++++++++
-> > >  1 file changed, 54 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > > new file mode 100644
-> > > index 000000000000..a104fcb9e73d
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > > @@ -0,0 +1,51 @@
-> > > +* Milbeaut AHB DMA Controller
-> > > +
-> > > +Milbeaut AHB DMA controller has transfer capability bellow.
-> > > + - memory to memory transfer
-> > > + - device to memory transfer
-> > > + - memory to device transfer
-> > > +
-> > > +Required property:
-> > > +- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
-> > > +- reg:              Should contain DMA registers location and length.
-> > > +- interrupts:       Should contain all of the per-channel DMA interrupts.
+> > > Changelog
+> > > v3-v4
+> > > - @Laurent I know I told you I could remove the snps,dphy-frequency on V3 but
+> > >   it is really useful for me here. I removed all other the proprietary
+> > >   properties except this one. Do you still think it must be removed?
+> > > - Frequency units @Rob
 > >
-> > How many?
+> > Frequency units means append '-khz' to the property name. That also
+> > makes the 'frequency' part redundant, so maybe name it more around what
+> > the frequency is. The frequency for what?
 > >
-> Each channel has an IRQ line. And the number of channels is
-> configurable. So instead of having some explicit property like
-> 'dma-channels', we infer that from the number of irqs registered.
+> > Rob
+> >
+>
+> This is the D-PHY high speed frequency configuration that corresponds to
+> the high speed data transfer of the bus.
+> Basically is the transmission speed per lane.
+> Do you think I can use "link-frequencies" (present in
+> video-interfaces.txt) with one frequency?
 
-Yes, I get that. There's still a range that's valid and you need to
-define those constraints. If there's a variable number of channels,
-then that implies different SoCs which should also mean different
-compatible strings.
+Seems reasonable.
 
 Rob
