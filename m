@@ -1,96 +1,96 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: panel: Add parallel RGB mode for
- Ilitek ILI9341 panels
-Date: Wed, 10 Jul 2019 15:39:56 +0200
-Message-ID: <20190710133956.GB11791@ravnborg.org>
-References: <20190304125033.28841-1-josef@lusticky.cz>
- <20190708145618.26031-1-josef@lusticky.cz>
- <20190708145618.26031-2-josef@lusticky.cz>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH v7 0/6] Add CPU clock support for Armada 7K/8K
+Date: Wed, 10 Jul 2019 15:43:40 +0200
+Message-ID: <20190710134346.30239-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190708145618.26031-2-josef@lusticky.cz>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Josef Lusticky <josef@lusticky.cz>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, thierry.reding@gmail.com
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9zZWYuCgpPbiBNb24sIEp1bCAwOCwgMjAxOSBhdCAwNDo1NjoxN1BNICswMjAwLCBKb3Nl
-ZiBMdXN0aWNreSB3cm90ZToKPiBJTEk5MzQxIHN1cHBvcnRzIGJvdGggU1BJIGlucHV0IG1vZGUg
-YW5kIHBhcmFsbGVsIFJHQiBpbnB1dCBtb2RlLgo+IFRoaXMgY29tbWl0IGFkZHMgcGFyYWxsZWwg
-UkdCIGlucHV0IG1vZGUgYmluZGluZ3MuCj4gCj4gU2lnbmVkLW9mZi1ieTogSm9zZWYgTHVzdGlj
-a3kgPGpvc2VmQGx1c3RpY2t5LmN6Pgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9pbGl0
-ZWssaWxpOTM0MS50eHQgICAgICAgfCA2NyArKysrKysrKysrKysrKysrLS0tCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA1NiBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkKV2l0aCBSb2JzIHBhdGNo
-ZXMgbGFuZGVkIGluIGRybS1taXNjLW5leHQgeWFtbCBmb3JtYXQgaXMgZnJvbSBub3cgb24KcHJl
-ZmVycmVkIGZvciBwYW5lbCBiaW5kaW5ncywgb3IgYXQgbGVhc3QgdGhpcyBpcyBteSB0YWtlIG9u
-IGl0LgoKU28gYSB5YW1sIGNvbnZlcnNpb24gd291bGQgYmUgYXBwcmVjaWF0ZWQsIGJ1dCBub3Qg
-bWFuZGF0b3J5LgoKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEudHh0Cj4gaW5kZXggMTY5YjMyZTRl
-ZTRlLi42MjlmMzhhMWQwY2QgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEudHh0Cj4gQEAgLTEs
-MjcgKzEsNzIgQEAKPiAgSWxpdGVrIElMSTkzNDEgZGlzcGxheSBwYW5lbHMKPiAgCj4gLVRoaXMg
-YmluZGluZyBpcyBmb3IgZGlzcGxheSBwYW5lbHMgdXNpbmcgYW4gSWxpdGVrIElMSTkzNDEgY29u
-dHJvbGxlciBpbiBTUEkKPiAtbW9kZS4KPiArVGhpcyBiaW5kaW5nIGlzIGZvciBkaXNwbGF5IHBh
-bmVscyB1c2luZyBhbiBJbGl0ZWsgSUxJOTM0MSBjb250cm9sbGVyLgo+ICtUaGUgZGlzcGxheSBw
-YW5lbHMgYXJlIHN1cHBvcnRlZCBpbiB0aGUgZm9sbG93aW5nIGdyYXBoaWNhbCBpbnB1dCBtb2Rl
-czoKPiArLSBTUEkgaW5wdXQgbW9kZQo+ICsJTUlQSS1EQkkgVHlwZSAzIE9wdGlvbiAxIG9yIE9w
-dGlvbiAzIGlzIHVzZWQgdG8gdHJhbnNmZXIKPiArCWNvbW1hbmRzIGFuZCBncmFwaGljYWwgZGF0
-YQo+ICstIHBhcmFsbGVsIFJHQiBpbnB1dCBtb2RlCj4gKwlNSVBJLURCSSBUeXBlIDMgT3B0aW9u
-IDEgb3IgT3B0aW9uIDMgaXMgdXNlZCBmb3IgY29tbWFuZHMKPiArCU1JUEktRFBJIDE4LWJpdCBw
-YXJhbGxlbCBSR0IgY29ubmVjdGlvbiBpcyB1c2VkIHRvIHRyYW5zZmVyCj4gKwlncmFwaGljYWwg
-ZGF0YQo+ICAKPiAtUmVxdWlyZWQgcHJvcGVydGllczoKPiAtLSBjb21wYXRpYmxlOgkiYWRhZnJ1
-aXQseXgyNDBxdjI5IiwgImlsaXRlayxpbGk5MzQxIgo+IC0tIGRjLWdwaW9zOglEL0MgcGluCj4g
-LS0gcmVzZXQtZ3Bpb3M6CVJlc2V0IHBpbgo+ICsKPiArU1BJIGlucHV0IG1vZGU6Cj4gIAo+ICBU
-aGUgbm9kZSBmb3IgdGhpcyBkcml2ZXIgbXVzdCBiZSBhIGNoaWxkIG5vZGUgb2YgYSBTUEkgY29u
-dHJvbGxlciwgaGVuY2UKPiAtYWxsIG1hbmRhdG9yeSBwcm9wZXJ0aWVzIGRlc2NyaWJlZCBpbiAu
-Li9zcGkvc3BpLWJ1cy50eHQgbXVzdCBiZSBzcGVjaWZpZWQuCj4gK2FsbCBtYW5kYXRvcnkgcHJv
-cGVydGllcyBkZXNjcmliZWQgaW4gc3BpL3NwaS1idXMudHh0IG11c3QgYmUgc3BlY2lmaWVkLgo+
-ICsKPiArUmVxdWlyZWQgcHJvcGVydGllcyBpbiBTUEkgaW5wdXQgbW9kZToKPiArLSBjb21wYXRp
-YmxlOiAgICJhZGFmcnVpdCx5eDI0MHF2MjkiLCAiaWxpdGVrLGlsaTkzNDEiCj4gKy0gYmFja2xp
-Z2h0OiAgICBwaGFuZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBw
-YW5lbAo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGllcyBpbiBTUEkgaW5wdXQgbW9kZToKPiArLSBy
-b3RhdGlvbjogICAgIHBhbmVsIHJvdGF0aW9uIGluIGRlZ3JlZXMgY291bnRlciBjbG9ja3dpc2Ug
-KDAsOTAsMTgwLDI3MCkKPiArLSBkYy1ncGlvczogICAgIEdQSU8gc3BlYyBmb3IgdGhlIEQvQyBw
-aW4sIHNlZSBncGlvL2dwaW8udHh0Cj4gKy0gcmVzZXQtZ3Bpb3M6ICBHUElPIHNwZWMgZm9yIHRo
-ZSByZXNldCBwaW4sIHNlZSBncGlvL2dwaW8udHh0Cj4gKwo+ICsKPiArUGFyYWxsZWwgUkdCIGlu
-cHV0IG1vZGU6Cj4gKwo+ICtUaGUgbm9kZSBmb3IgdGhpcyBkcml2ZXIgbXVzdCBiZSBhIGNoaWxk
-IG5vZGUgb2YgYSBTUEkgY29udHJvbGxlciwgaGVuY2UKPiArYWxsIG1hbmRhdG9yeSBwcm9wZXJ0
-aWVzIGRlc2NyaWJlZCBpbiBzcGkvc3BpLWJ1cy50eHQgbXVzdCBiZSBzcGVjaWZpZWQuCj4gKwo+
-ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIGluIHBhcmFsbGVsIFJHQiBpbnB1dCBtb2RlOgo+ICstIGNv
-bXBhdGlibGU6ICAgImRpc3BsYXl0ZWNoLGR0MDI0Y3RmdCIsICJpbGl0ZWssaWxpOTM0MSIKPiAr
-LSBiYWNrbGlnaHQ6ICAgIHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQg
-dG8gdGhlIHBhbmVsCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzIGluIHBhcmFsbGVsIFJHQiBp
-bnB1dCBtb2RlOgo+ICstIGRjLWdwaW9zOiAgICAgR1BJTyBzcGVjIGZvciB0aGUgRC9DIHBpbiwg
-c2VlIGdwaW8vZ3Bpby50eHQKPiArLSByZXNldC1ncGlvczogIEdQSU8gc3BlYyBmb3IgdGhlIHJl
-c2V0IHBpbiwgc2VlIGdwaW8vZ3Bpby50eHQKPiAgCj4gLU9wdGlvbmFsIHByb3BlcnRpZXM6Cj4g
-LS0gcm90YXRpb246CXBhbmVsIHJvdGF0aW9uIGluIGRlZ3JlZXMgY291bnRlciBjbG9ja3dpc2Ug
-KDAsOTAsMTgwLDI3MCkKPiAtLSBiYWNrbGlnaHQ6CXBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBk
-ZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCj4gK0luIHBhcmFsbGVsIFJHQiBpbnB1dCBtb2Rl
-LAo+ICt0aGUgZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdp
-dGggb25lIGNoaWxkCj4gKydlbmRwb2ludCcgbm9kZSwgYWNjb3JkaW5nIHRvIHRoZSBiaW5kaW5n
-cyBkZWZpbmVkIGluCj4gK21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LiBUaGlzIG5vZGUgc2hv
-dWxkIGRlc2NyaWJlIHBhbmVsJ3MgdmlkZW8gYnVzLgo+ICAKPiAtRXhhbXBsZToKPiArCj4gK0V4
-YW1wbGUgaW4gU1BJIGlucHV0IG1vZGU6Cj4gIAlkaXNwbGF5QDB7Cj4gIAkJY29tcGF0aWJsZSA9
-ICJhZGFmcnVpdCx5eDI0MHF2MjkiLCAiaWxpdGVrLGlsaTkzNDEiOwo+ICAJCXJlZyA9IDwwPjsK
-PiAgCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDwzMjAwMDAwMD47Cj4gIAkJZGMtZ3Bpb3MgPSA8Jmdw
-aW8wIDkgR1BJT19BQ1RJVkVfSElHSD47Cj4gIAkJcmVzZXQtZ3Bpb3MgPSA8JmdwaW8wIDggR1BJ
-T19BQ1RJVkVfSElHSD47Cj4gKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+Owo+ICAJCXJvdGF0
-aW9uID0gPDI3MD47Cj4gKwl9Owo+ICsKPiArRXhhbXBsZSBpbiBwYXJhbGxlbCBSR0IgaW5wdXQg
-bW9kZToKPiArCXBhbmVsQHsKSSB0aGluayB5b3UgbmVlZCBhIG51bWJlciBhZnRlciAiQCIgaGVy
-ZS4KCldpdGggdGhpcyBmaXhlZDoKUmV2aWV3ZWQtYnk6IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5i
-b3JnLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Hello,
+
+This is the seventh version of a series allowing to manage the cpu
+clock for Armada 7K/8K.
+
+For these SoCs, the CPUs share the same clock by cluster, so actually
+the clock management is done at cluster level.
+
+As for the other Armada 7K/8K clocks it is possible to have multiple
+AP so here again we need to have unique name: the purpose of the second
+patch is to share a common code which will be used in 3 drivers.
+
+The last 2 patch enable the driver at dt and platform level and will
+be applied through the mvebu subsystem.
+
+Changelog v6->v7:
+
+   - Update binding documentation for the AP clock to mention that
+     they expose reference clocks for the cluster to make distinction
+     with the cluster clocks themselves exposed by the cpu clock.
+
+   - Add precision on the number of parent clock in the binding
+     documentation.
+
+   - Also fix the example by using the reg address in the node name.
+
+Changelog v5->v6:
+
+   - Restraint the reg property for the child node to not overlap the
+     other node.
+   - Give a specific compatible to ap_syscon1.
+
+Changelog v4->v5:
+
+ - As requested by the device tree maintainer make the reg property
+   mandatory
+
+ - Updated the device tree files accordingly with the new binding
+
+Changelog v3->v4:
+ - Rebased on v5.1-rc1
+ - Mention in the binding that a reg property can be used to make the
+   device tree maintainer happy in the hope that there will be finally
+   a review on this patch blocking the whole series.
+
+Changelog v2->v3:
+ - Add back the first patch documenting the binding
+
+Changelog v1->v2:
+ - Header cleanup
+ - Use unsigned int instead of it for cluster member of the ap_cpu_clk struct
+ - Use clk_hw instead of clk
+ - Use regmap_read_poll_timeout
+ - Use for_each_of_cpu_node
+ - Remove unnecessary WARN_ON()
+ - Remove headers from armada_ap_cp_helper.h
+ - Few other minor cleanup
+
+Gregory CLEMENT (6):
+  dt-bindings: ap806: add the cluster clock node in the syscon file
+  clk: mvebu: add helper file for Armada AP and CP clocks
+  clk: mvebu: add CPU clock driver for Armada 7K/8K
+  clk: mvebu: ap806: Fix clock name for the cluster
+  arm64: marvell: enable the  Armada 7K/8K CPU clk driver
+  arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
+
+ .../arm/marvell/ap806-system-controller.txt   |  31 ++-
+ arch/arm64/Kconfig.platforms                  |   1 +
+ .../boot/dts/marvell/armada-ap806-quad.dtsi   |   4 +
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi |   7 +
+ drivers/clk/mvebu/Kconfig                     |   8 +
+ drivers/clk/mvebu/Makefile                    |   2 +
+ drivers/clk/mvebu/ap-cpu-clk.c                | 259 ++++++++++++++++++
+ drivers/clk/mvebu/ap806-system-controller.c   |  24 +-
+ drivers/clk/mvebu/armada_ap_cp_helper.c       |  30 ++
+ drivers/clk/mvebu/armada_ap_cp_helper.h       |  11 +
+ drivers/clk/mvebu/cp110-system-controller.c   |  32 +--
+ 11 files changed, 365 insertions(+), 44 deletions(-)
+ create mode 100644 drivers/clk/mvebu/ap-cpu-clk.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.h
+
+-- 
+2.20.1
