@@ -1,105 +1,125 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH RFC 2/9] OPP: Export a number of helpers to prevent code
- duplication
-Date: Wed, 10 Jul 2019 13:31:24 +0530
-Message-ID: <474d4dba-581c-c57b-f510-dca5ba7fdce2@codeaurora.org>
-References: <20190328152822.532-1-sibis@codeaurora.org>
- <20190328152822.532-3-sibis@codeaurora.org>
- <CAJMQK-gcBC=ZyscuHzOe4t6xQzviTYo9W9_DSsppoaTZuiEOcw@mail.gmail.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Wed, 10 Jul 2019 08:25:08 +0000
+Message-ID: <BYAPR07MB47090E2221C96D0B8178235CDDF00@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1562324238-16655-1-git-send-email-pawell@cadence.com>
+ <1562324238-16655-6-git-send-email-pawell@cadence.com>
+ <87r274lmqk.fsf@linux.intel.com>
+ <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJMQK-gcBC=ZyscuHzOe4t6xQzviTYo9W9_DSsppoaTZuiEOcw@mail.gmail.com>
+In-Reply-To: <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, andy.gross@linaro.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, georgi.djakov@linaro.org, bjorn.andersson@linaro.org, david.brown@linaro.org, Mark Rutland <mark.rutland@arm.com>, lkml <linux-kernel@vger.kernel.org>, linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org, rnayak@codeaurora.org, Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, dianders@chromium.org
+To: Felipe Balbi <felipe.balbi@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hsin-Yi,
+Hi Felipe
 
-I'll get this addressed in the next re-spin which I plan to post by
-end of this week.
+>>> +
+>>> +static int cdns3_idle_init(struct cdns3 *cdns)
+>>> +{
+>>> +	struct cdns3_role_driver *rdrv;
+>>> +
+>>> +	rdrv =3D devm_kzalloc(cdns->dev, sizeof(*rdrv), GFP_KERNEL);
+>>> +	if (!rdrv)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	rdrv->start =3D cdns3_idle_role_start;
+>>> +	rdrv->stop =3D cdns3_idle_role_stop;
+>>> +	rdrv->state =3D CDNS3_ROLE_STATE_INACTIVE;
+>>> +	rdrv->suspend =3D NULL;
+>>> +	rdrv->resume =3D NULL;
+>>> +	rdrv->name =3D "idle";
+>>
+>>why don't you use the mux framework for this? This looks a bit fishy
+>>too. Why do you have your own driver registration structure for your
+>>driver only?
+>>
+>
+>I assume you mean interface defined in include/linux/usb/role.h.
+>It's quite new framework and probably was added after I've start implement=
+ing cdns3 driver.
+>At first glance it's look that I could use it.
 
-On 7/8/19 8:58 AM, Hsin-Yi Wang wrote:
-> On Thu, Mar 28, 2019 at 3:28 PM Sibi Sankar <sibis@codeaurora.org> wrote:
-> 
->> +
->> +/* The caller must call dev_pm_opp_put() after the OPP is used */
->> +struct dev_pm_opp *dev_pm_opp_find_opp_of_np(struct opp_table *opp_table,
->> +                                            struct device_node *opp_np)
->> +{
->> +       return _find_opp_of_np(opp_table, opp_np);
->> +}
-> Hi Sibi,
-> 
-> Though this is not the latest version, we've seen following issue:
-> 
-> We would get lockdep warnings on this:
-> [   79.068957] Call trace:
-> [   79.071396]  _find_opp_of_np+0xa0/0xa8
-> [   79.075136]  dev_pm_opp_find_opp_of_np+0x24/0x30
-> [   79.079744]  devfreq_passive_event_handler+0x304/0x51c
-> [   79.084872]  devfreq_add_device+0x368/0x434
-> [   79.089046]  devm_devfreq_add_device+0x68/0xb0
-> [   79.093480]  mtk_cci_devfreq_probe+0x108/0x158
-> [   79.097915]  platform_drv_probe+0x80/0xb0
-> [   79.101915]  really_probe+0x1b4/0x28c
-> [   79.105568]  driver_probe_device+0x64/0xfc
-> [   79.109655]  __driver_attach+0x94/0xcc
-> [   79.113395]  bus_for_each_dev+0x84/0xcc
-> [   79.117221]  driver_attach+0x2c/0x38
-> [   79.120788]  bus_add_driver+0x120/0x1f4
-> [   79.124614]  driver_register+0x64/0xf8
-> [   79.128355]  __platform_driver_register+0x4c/0x58
-> [   79.133049]  mtk_cci_devfreq_init+0x1c/0x24
-> [   79.137224]  do_one_initcall+0x1c0/0x3e0
-> [   79.141138]  do_initcall_level+0x1f4/0x224
-> [   79.145225]  do_basic_setup+0x34/0x4c
-> [   79.148878]  kernel_init_freeable+0x10c/0x194
-> [   79.153225]  kernel_init+0x14/0x100
-> [   79.156705]  ret_from_fork+0x10/0x18
-> [   79.160270] irq event stamp: 238006
-> [   79.163750] hardirqs last  enabled at (238005):
-> [<ffffffa71fdea0a4>] _raw_spin_unlock_irqrestore+0x40/0x84
-> [   79.173391] hardirqs last disabled at (238006):
-> [<ffffffa71f480e78>] do_debug_exception+0x70/0x198
-> [   79.182337] softirqs last  enabled at (237998):
-> [<ffffffa71f48165c>] __do_softirq+0x45c/0x4a4
-> [   79.190850] softirqs last disabled at (237987):
-> [<ffffffa71f4bc0d4>] irq_exit+0xd8/0xf8
-> [   79.198842] ---[ end trace 0e66a55077a0abab ]---
-> 
-> In _find_opp_of_np()[1], there's
-> lockdep_assert_held(&opp_table_lock);
-> 
-> [1] https://elixir.bootlin.com/linux/latest/source/drivers/opp/of.c#L75
-> 
-> But in governor passive.c#cpufreq_passive_register(), it call
-> dev_pm_opp_find_opp_of_np() directly, so it wouldn't access
-> opp_table_lock lock.
-> 
-> Another similar place is in dev_pm_opp_of_add_table(), most devfreq
-> would call this to get opp table.
-> dev_pm_opp_of_add_table
->   -->   _opp_add_static_v2
->      -->    _of_opp_alloc_required_opps  // would goes here if opp
-> table contains "required-opps" property.
->          -->    _find_opp_of_np
-> cpufreq-map governor needs devfreq to have "required-opps" property.
-> So it would also trigger above lockdep warning.
-> 
-> 
-> The question is: Is lockdep_assert_held(&opp_table_lock); needed in
-> above use cases? Since they don't need to modify device and opp lists.
-> 
-> Thanks
-> 
-> 
-> 
+I've started integrating driver with role switch framework. =20
 
--- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Even if I use role switch interface , I still need this internal driver reg=
+istration.=20
+It's convenient to use fallowing structure.=20
+
+struct cdns3_role_driver {
+	int (*start)(struct cdns3 *cdns);
+	void (*stop)(struct cdns3 *cdns);
+	int (*suspend)(struct cdns3 *cdns, bool do_wakeup);
+	int (*resume)(struct cdns3 *cdns, bool hibernated);
+	const char *name;
+#define CDNS3_ROLE_STATE_INACTIVE	0
+#define CDNS3_ROLE_STATE_ACTIVE		1
+	int state;
+};
+
+Driver can supports: only Host, only Device or DRD - depending on configura=
+tion.
+
+If current configuration support only Host then driver assigns:
+	rdrv_host->start	=3D __cdns3_host_init;
+	rdrv_host->stop	=3D cdns3_host_exit;
+
+	cdns->roles[CDNS3_ROLE_HOST]  =3D 	rdrv_host
+	cdns->roles[CDNS3_ROLE_GADGET	=3D NULL;
+if support only Device then:
+	rdrv_dev->start	=3D __cdns3_ gadget _init;
+	rdrv_dev->stop	=3D cdns3_ gadget _exit;
+	cdns->roles[CDNS3_ROLE_HOST]	=3D NULL;
+for DRD:
+	cdns->roles[CDNS3_ROLE_HOST =3D rdrv_host;
+	cdns->roles[CDNS3_ROLE_GADGET] =3D rdrv_dev;
+
+So for DRD we will have both filled, but for only Device or Host we=20
+will have filled single element of array.=20
+
+With such array we can easily start/stop role by=20
+	if (!cdns->roles[role])
+		not supported by configuration.
+	else
+		cdns->roles[role]->start / cdns->roles[role]->stop
+
+I don't need any extra: switch instruction or #ifdef statement.=20
+
+The name cdns3_role_driver can be misleading.=20
+Driver doesn't register the driver but rather the interface to Device/Host.=
+=20
+
+Maybe I should change this name to  cdns3_role_interface or cdns3_role_acti=
+on ?
+
+Now I have my private enum:
+enum cdns3_roles {
+	CDNS3_ROLE_IDLE =3D 0,
+	CDNS3_ROLE_HOST,
+	CDNS3_ROLE_GADGET,
+	CDNS3_ROLE_END,
+};
+
+I think I could replace it with usb_role. I need one extra state for IDLE b=
+ut
+Instead of CDNS3_ROLE_IDLE I can use USB_ROLE_NONE.
+
+It should little simplify the driver and improve readability.=20
+
+Do you have any comments or suggestion ?
+
+Cheers,=20
+Pawel
+
+>
+>>> +
+>>> +	cdns->roles[CDNS3_ROLE_IDLE] =3D rdrv;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
