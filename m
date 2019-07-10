@@ -1,130 +1,85 @@
 From: Luis de Oliveira <Luis.Oliveira@synopsys.com>
 Subject: RE: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
  Host
-Date: Wed, 10 Jul 2019 10:20:55 +0000
-Message-ID: <MN2PR12MB371026A6547B449EEC0439B1CBF00@MN2PR12MB3710.namprd12.prod.outlook.com>
+Date: Wed, 10 Jul 2019 10:23:09 +0000
+Message-ID: <MN2PR12MB371015DA79CE9D5A713D22B1CBF00@MN2PR12MB3710.namprd12.prod.outlook.com>
 References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
  <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
- <20190628141326.swgl3kg4fj5pmlqx@valkosipuli.retiisi.org.uk>
- <MN2PR12MB37109D7AADCE4823CB458CB9CBF60@MN2PR12MB3710.namprd12.prod.outlook.com>
- <20190709182500.3x544axnrgy72aje@valkosipuli.retiisi.org.uk>
+ <ae0ffeca-9305-b5a2-3480-da623d15ce67@microchip.com>
+ <MN2PR12MB3710465D7065DAF1F2D45C45CBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
+ <415416c4-c6d8-f81e-82cb-126e4702801b@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190709182500.3x544axnrgy72aje@valkosipuli.retiisi.org.uk>
+In-Reply-To: <415416c4-c6d8-f81e-82cb-126e4702801b@microchip.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, Luis de Oliveira <Luis.Oliveira@synopsys.com>
-Cc: "mchehab@kernel.org" <mchehab@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kishon@ti.com" <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+To: "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>, "Luis.Oliveira@synopsys.com" <Luis.Oliveira@synopsys.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kishon@ti.com" <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Date: Tue, Jul 09, 2019 at 19:25:00
-
-> Hi Luis,
->=20
-> On Mon, Jul 08, 2019 at 03:21:50PM +0000, Luis de Oliveira wrote:
-> > Hi Sakari,
-> >=20
-> > Thank you for your feedback.
-> > I have my comments inline.
-> >=20
-> > From: Sakari Ailus <sakari.ailus@iki.fi>
-> > Date: Fri, Jun 28, 2019 at 15:13:26
-> >=20
-> > > Hi Luis,
-> > >=20
-> > > Thank you for the patchset.
-> > >=20
-> > > On Tue, Jun 11, 2019 at 09:20:50PM +0200, Luis Oliveira wrote:
-> > > > From: Luis Oliveira <lolivei@synopsys.com>
-> > > >=20
-> > > > Add bindings for Synopsys DesignWare MIPI CSI-2 host.
-> > > >=20
-> > > > Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-> > > > ---
-> > > > Changelog
-> > > > v3-v4
-> > > > - remove "plat" from the block name @rob @laurent
-> > > > - remove "phy-names" when single-entry @rob
-> > > > - remove "snps,output-type" -> went to the driver config @laurent
-> > > >=20
-> > > >  .../devicetree/bindings/media/snps,dw-csi.txt      | 41 ++++++++++=
-++++++++++++
-> > > >  1 file changed, 41 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/media/snps,dw=
--csi.txt
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/media/snps,dw-csi.tx=
-t b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
-> > > > new file mode 100644
-> > > > index 0000000..613b7f9
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
-> > > > @@ -0,0 +1,41 @@
-> > > > +Synopsys DesignWare CSI-2 Host controller
-> > > > +
-> > > > +Description
-> > > > +-----------
-> > > > +
-> > > > +This HW block is used to receive image coming from an MIPI CSI-2 c=
-ompatible
-> > > > +camera.
-> > > > +
-> > > > +Required properties:
-> > > > +- compatible		: shall be "snps,dw-csi"
-> > > > +- reg			: physical base address and size of the device memory
-> > > > +			  mapped registers;
-> > > > +- interrupts		: DW CSI-2 Host interrupts
-> > > > +- phys			: List of one PHY specifier (as defined in
-> > > > +			  Documentation/devicetree/bindings/phy/phy-bindings.txt).
-> > > > +			  This PHY is a MIPI DPHY working in RX mode.
-> > > > +- resets		: Reference to a reset controller (optional)
-> > > > +
-> > > > +The per-board settings:
-> > > > + - port sub-node describing a single endpoint connected to the cam=
-era as
-> > > > +   described in video-interfaces.txt[1].
-> > >=20
-> > > Which endpoint properties in video-interfaces.txt are relevant for th=
-e
-> > > hardware? Which values may they have?
-> > >=20
-> >=20
-> > Currently I'm using only two properties "data-lanes" and "bus-width", b=
-ut=20
-> > I have plans to add blanking info also.
-> > I will add more info.
->=20
-> Isn't blanking defined by what the transmitter seneds? Or do you have
-> hardware limitations on the receiver side?
->=20
-
-When we use this IP in prototyping we configure blanking at the receiver=20
-side.
-Some cameras don't have blanking configuration capabilities so we=20
-configure it on the RX side.
-
-> I've only heard of one such case before, and it was a very old parallel
-> receiver.
->=20
-> If you have a CSI-2 receiver, bus-width isn't relevant --- it's for paral=
-le
-> interfaces only. Please add data-lanes to required endpoint properties.
->=20
-
-I used bus-width property in the Synopsys IPI (Image Pixel Interface)=20
-that enables direct video stream access.
-This interface is an output that can be 16-bit or 48-bit, that's why I=20
-used bus-width property.
-
-> --=20
-> Regards,
->=20
-> Sakari Ailus
-
-Thank you,
-Luis
+DQpIaSBFdWdlbiwNCg0KDQpGcm9tOiBFdWdlbi5IcmlzdGV2QG1pY3JvY2hpcC5jb20gPEV1Z2Vu
+LkhyaXN0ZXZAbWljcm9jaGlwLmNvbT4NCkRhdGU6IFdlZCwgSnVsIDEwLCAyMDE5IGF0IDA3OjUz
+OjAyDQoNCj4gDQo+IA0KPiBPbiAwOS4wNy4yMDE5IDIwOjA4LCBMdWlzIGRlIE9saXZlaXJhIHdy
+b3RlOg0KPiANCj4gPiANCj4gPiBIaSBFdWdlbiwNCj4gPiANCj4gPiANCj4gPiBGcm9tOiBFdWdl
+bi5IcmlzdGV2QG1pY3JvY2hpcC5jb20gPEV1Z2VuLkhyaXN0ZXZAbWljcm9jaGlwLmNvbT4NCj4g
+PiBEYXRlOiBUdWUsIEp1bCAwOSwgMjAxOSBhdCAxNTozMzo1MA0KPiA+IA0KPiA+Pg0KPiA+Pg0K
+PiA+PiBPbiAxMS4wNi4yMDE5IDIyOjIwLCBMdWlzIE9saXZlaXJhIHdyb3RlOg0KPiA+Pj4gRnJv
+bTogTHVpcyBPbGl2ZWlyYSA8bG9saXZlaUBzeW5vcHN5cy5jb20+DQo+ID4+Pg0KPiA+Pj4gQWRk
+IGJpbmRpbmdzIGZvciBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgQ1NJLTIgaG9zdC4NCj4gPj4+
+DQo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBMdWlzIE9saXZlaXJhIDxsb2xpdmVpQHN5bm9wc3lzLmNv
+bT4NCj4gPj4+IC0tLQ0KPiA+Pj4gQ2hhbmdlbG9nDQo+ID4+PiB2My12NA0KPiA+Pj4gLSByZW1v
+dmUgInBsYXQiIGZyb20gdGhlIGJsb2NrIG5hbWUgQHJvYiBAbGF1cmVudA0KPiA+Pj4gLSByZW1v
+dmUgInBoeS1uYW1lcyIgd2hlbiBzaW5nbGUtZW50cnkgQHJvYg0KPiA+Pj4gLSByZW1vdmUgInNu
+cHMsb3V0cHV0LXR5cGUiIC0+IHdlbnQgdG8gdGhlIGRyaXZlciBjb25maWcgQGxhdXJlbnQNCj4g
+Pj4+DQo+ID4+PiAgICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS50
+eHQgICAgICB8IDQxICsrKysrKysrKysrKysrKysrKysrKysNCj4gPj4+ICAgIDEgZmlsZSBjaGFu
+Z2VkLCA0MSBpbnNlcnRpb25zKCspDQo+ID4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3NucHMsZHctY3NpLnR4dA0KPiA+Pj4N
+Cj4gPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVk
+aWEvc25wcyxkdy1jc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
+ZGlhL3NucHMsZHctY3NpLnR4dA0KPiA+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPj4+IGlu
+ZGV4IDAwMDAwMDAuLjYxM2I3ZjkNCj4gPj4+IC0tLSAvZGV2L251bGwNCj4gPj4+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS50eHQNCj4g
+Pj4+IEBAIC0wLDAgKzEsNDEgQEANCj4gPj4+ICtTeW5vcHN5cyBEZXNpZ25XYXJlIENTSS0yIEhv
+c3QgY29udHJvbGxlcg0KPiA+Pj4gKw0KPiA+Pj4gK0Rlc2NyaXB0aW9uDQo+ID4+PiArLS0tLS0t
+LS0tLS0NCj4gPj4+ICsNCj4gPj4+ICtUaGlzIEhXIGJsb2NrIGlzIHVzZWQgdG8gcmVjZWl2ZSBp
+bWFnZSBjb21pbmcgZnJvbSBhbiBNSVBJIENTSS0yIGNvbXBhdGlibGUNCj4gPj4+ICtjYW1lcmEu
+DQo+ID4+PiArDQo+ID4+PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPj4+ICstIGNvbXBhdGli
+bGUJCTogc2hhbGwgYmUgInNucHMsZHctY3NpIg0KPiA+Pj4gKy0gcmVnCQkJOiBwaHlzaWNhbCBi
+YXNlIGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIGRldmljZSBtZW1vcnkNCj4gPj4+ICsJCQkgIG1h
+cHBlZCByZWdpc3RlcnM7DQo+ID4+PiArLSBpbnRlcnJ1cHRzCQk6IERXIENTSS0yIEhvc3QgaW50
+ZXJydXB0cw0KPiA+Pj4gKy0gcGh5cwkJCTogTGlzdCBvZiBvbmUgUEhZIHNwZWNpZmllciAoYXMg
+ZGVmaW5lZCBpbg0KPiA+Pj4gKwkJCSAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3BoeS9waHktYmluZGluZ3MudHh0KS4NCj4gPj4+ICsJCQkgIFRoaXMgUEhZIGlzIGEgTUlQSSBE
+UEhZIHdvcmtpbmcgaW4gUlggbW9kZS4NCj4gPj4+ICstIHJlc2V0cwkJOiBSZWZlcmVuY2UgdG8g
+YSByZXNldCBjb250cm9sbGVyIChvcHRpb25hbCkNCj4gPj4+ICsNCj4gPj4+ICtUaGUgcGVyLWJv
+YXJkIHNldHRpbmdzOg0KPiA+Pj4gKyAtIHBvcnQgc3ViLW5vZGUgZGVzY3JpYmluZyBhIHNpbmds
+ZSBlbmRwb2ludCBjb25uZWN0ZWQgdG8gdGhlIGNhbWVyYSBhcw0KPiA+Pj4gKyAgIGRlc2NyaWJl
+ZCBpbiB2aWRlby1pbnRlcmZhY2VzLnR4dFsxXS4NCj4gPj4+ICsNCj4gPj4+ICtFeGFtcGxlOg0K
+PiA+Pj4gKw0KPiA+Pj4gKwljc2kyOiBjc2kyQDMwMDAgew0KPiA+Pj4gKwkJY29tcGF0aWJsZSA9
+ICJzbnBzLGR3LWNzaSI7DQo+ID4+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPj4+ICsJ
+CSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+Pj4gKwkJcmVnID0gPCAweDAzMDAwIDB4N0ZGPjsNCj4g
+Pj4+ICsJCXBoeXMgPSA8Jm1pcGlfZHBoeV9yeD47DQo+ID4+PiArCQlyZXNldHMgPSA8JmR3X3Jz
+dCAxPjsNCj4gPj4+ICsJCWludGVycnVwdHMgPSA8Mj47DQo+ID4+PiArDQo+ID4+PiArCQlwb3J0
+QDAgew0KPiA+Pj4gKwkJCXJlZyA9IDwwPjsNCj4gPj4+ICsJCQljc2lfZXAxOiBlbmRwb2ludCB7
+DQo+ID4+PiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmY2FtZXJhXzE+Ow0KPiA+Pj4gKwkJCQlk
+YXRhLWxhbmVzID0gPDEgMj47DQo+ID4+PiArCQkJfTsNCj4gPj4NCj4gPj4gSGVsbG8gTHVpcywN
+Cj4gPj4NCj4gPj4gV2hpY2ggaXMgdGhlIG91dHB1dCBwb3J0IChlbmRwb2ludCkgOiBob3cgdG8g
+Y29ubmVjdCB0aGUgb3V0cHV0IG9mDQo+ID4+IGNzaTJob3N0IHRvIGFub3RoZXIgbm9kZSA/DQo+
+ID4+IEkgbWVhbiwgdGhlIHNlY29uZCBwb3J0IG9mIHRoaXMgYmxvY2ssIG9yLCBob3cgaXMgdGhl
+IGRhdGEgdGFrZW4gZnJvbQ0KPiA+PiBjc2kyaG9zdCA/DQo+ID4+DQo+ID4gDQo+ID4gSSB1bmRl
+cnN0YW5kIHlvdXIgcXVlc3Rpb24sIEkgdGhpbmsgeW91IGd1ZXNzZWQgdGhpcyBpcyBub3QgdGhl
+IGNvbXBsZXRlDQo+ID4gcGlwZWxpbmUgKEkgaGF2ZSBhIHRvcCBkcml2ZXIgdGhhdCBpbnRlcmFj
+dHMgd2l0aCB0aGlzIG9uZSkuDQo+ID4gSSB3YXMgbm90IHBsYW5uaW5nIHRvIHN1Ym1pdCBpdCwg
+ZG8geW91IHRoaW5rIEkgc2hvdWxkPw0KPiANCj4gWWVzIHBsZWFzZSwgeW91IGNhbiBoYXZlIHRo
+ZSBwYXRjaCB3aXRoIHN1YmplY3QgRE8gTk9UIE1FUkdFIGlmIHlvdSBkbyANCj4gbm90IHdhbnQg
+dGhhdCBwYXRjaCB0byBiZSBpbmNsdWRlZCBpbiB0aGUga2VybmVsIGFuZCBqdXN0IGZvciByZWZl
+cmVuY2UuDQo+IGJ1dCBpdCB3b3VsZCBoZWxwIG1lIGluIHVuZGVyc3RhbmRpbmcgeW91ciBzZXR1
+cA0KPiANCj4gVGhhbmtzICENCj4gDQpPaywgdGhhbmsgeW91LiBJIHdpbGwgaW5jbHVkZWQgaXQg
+bmV4dC4NCg0KPiA+IA0KPiA+IFRoZSBiZWhhdmlvciBpcyB2ZXJ5IHNpbWlsYXIgd2l0aCB0aGlz
+IG9uZQ0KPiA+IC4vZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9leHlub3M0LWlzL21lZGlhLWRldi5j
+DQo+ID4gDQo+ID4gDQo+ID4+IFRoYW5rcywNCj4gPj4NCj4gPj4gRXVnZW4NCj4gPj4NCj4gPj4+
+ICsJCX07DQo+ID4+PiArCX07DQo+ID4+Pg0KPiA+IA0KPiA+IFRoYW5rcywNCj4gPiBMdWlzDQo+
+ID4gDQoNCg0K
