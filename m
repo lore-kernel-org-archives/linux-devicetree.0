@@ -1,146 +1,80 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH V13 05/12] PCI: dwc: Add ext config space capability
- search API
-Date: Wed, 10 Jul 2019 11:37:09 +0100
-Message-ID: <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
- <20190710062212.1745-6-vidyas@nvidia.com>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: Re: [PATCH 1/3] opp: core: add regulators enable and disable
+Date: Wed, 10 Jul 2019 12:42:26 +0200
+Message-ID: <2f02b5bb-6258-754d-d2d2-bd73e34b0dbc@partner.samsung.com>
+References: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
+ <CGME20190708141159eucas1p1751506975ff96a436e14940916623722@eucas1p1.samsung.com>
+ <20190708141140.24379-2-k.konieczny@partner.samsung.com>
+ <20190709054014.o3g4e6gbovrq3vvn@vireshk-i7>
+ <3d6eacb8-ed8d-d4ac-1c36-6224ab88a5dc@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190710062212.1745-6-vidyas@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3d6eacb8-ed8d-d4ac-1c36-6224ab88a5dc@partner.samsung.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 11:52:05AM +0530, Vidya Sagar wrote:
-> Add extended configuration space capability search API using struct dw_pcie *
-> pointer
 
-Sentences are terminated with a period and this is v13 not v1, which
-proves that you do not read the commit logs you write.
 
-I need you guys to understand that I can't rewrite commit logs all
-the time, I do not want to go as far as not accepting your patches
-anymore so please do pay attention to commit log details they
-are as important as the code itself.
+On 10.07.2019 12:16, Kamil Konieczny wrote:
+> 
+> 
+> On 09.07.2019 07:40, Viresh Kumar wrote:
+>> On 08-07-19, 16:11, k.konieczny@partner.samsung.com wrote:
+>>> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>>>
+>>> Add enable regulators to dev_pm_opp_set_regulators() and disable
+>>> regulators to dev_pm_opp_put_regulators(). This prepares for
+>>> converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
+>>>
+>>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>>> ---
+>>>  drivers/opp/core.c | 13 +++++++++++++
+>>>  1 file changed, 13 insertions(+)
+>>>
+>>> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+>>> index 0e7703fe733f..947cac452854 100644
+>>> --- a/drivers/opp/core.c
+>>> +++ b/drivers/opp/core.c
+>>> @@ -1580,8 +1580,19 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+>>>  	if (ret)
+>>>  		goto free_regulators;
+>>>  
+>>> +	for (i = 0; i < opp_table->regulator_count; i++) {
+>>> +		ret = regulator_enable(opp_table->regulators[i]);
+>>> +		if (ret < 0)
+>>> +			goto disable;
+>>> +	}
+>>
+>> I am wondering on why is this really required as this isn't done for
+>> any other platform, probably because the regulators are enabled by
+>> bootloader and are always on.
+> 
+> It was not enabled for historical reasons, from design point regualtors
+> should be enabled before use.
+ 
+On Exynos platform devfreq driver (exynos-bus) always enabled them,
+so I wanted to preserve the current behaviour.
 
-https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
+I've also checked the change with cpufreq-dt driver and it doesn't cause
+issues.
 
-Thanks,
-Lorenzo
+Do you find this change acceptable?
 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> ---
-> V13:
-> * None
-> 
-> V12:
-> * None
-> 
-> V11:
-> * None
-> 
-> V10:
-> * None
-> 
-> V9:
-> * Added Acked-by from Thierry
-> 
-> V8:
-> * Changed data types of return and arguments to be inline with data being returned
->   and passed.
-> 
-> V7:
-> * None
-> 
-> V6:
-> * None
-> 
-> V5:
-> * None
-> 
-> V4:
-> * None
-> 
-> V3:
-> * None
-> 
-> V2:
-> * This is a new patch in v2 series
-> 
->  drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h |  1 +
->  2 files changed, 42 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 7818b4febb08..181449e342f1 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -53,6 +53,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
->  
-> +static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
-> +					    u8 cap)
-> +{
-> +	u32 header;
-> +	int ttl;
-> +	int pos = PCI_CFG_SPACE_SIZE;
-> +
-> +	/* minimum 8 bytes per capability */
-> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
-> +
-> +	if (start)
-> +		pos = start;
-> +
-> +	header = dw_pcie_readl_dbi(pci, pos);
-> +	/*
-> +	 * If we have no capabilities, this is indicated by cap ID,
-> +	 * cap version and next pointer all being 0.
-> +	 */
-> +	if (header == 0)
-> +		return 0;
-> +
-> +	while (ttl-- > 0) {
-> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
-> +			return pos;
-> +
-> +		pos = PCI_EXT_CAP_NEXT(header);
-> +		if (pos < PCI_CFG_SPACE_SIZE)
-> +			break;
-> +
-> +		header = dw_pcie_readl_dbi(pci, pos);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
-> +{
-> +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
-> +
->  int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->  {
->  	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index d8c66a6827dc..11c223471416 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -252,6 +252,7 @@ struct dw_pcie {
->  		container_of((endpoint), struct dw_pcie, ep)
->  
->  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
-> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
->  
->  int dw_pcie_read(void __iomem *addr, int size, u32 *val);
->  int dw_pcie_write(void __iomem *addr, int size, u32 val);
-> -- 
-> 2.17.1
-> 
+
+-- 
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
