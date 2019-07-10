@@ -1,51 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [v4 4/6] dt-bindings: phy: Document the Synopsys MIPI DPHY Rx bindings
-Date: Wed, 10 Jul 2019 07:50:30 -0600
-Message-ID: <CAL_JsqJVfcrQBOgMK_iNYOZpEMfWcjS=_j++LPyu7bnLinMpfw@mail.gmail.com>
-References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
- <1560280855-18085-5-git-send-email-luis.oliveira@synopsys.com>
- <20190709142000.GA995@bogus> <MN2PR12MB371024C55C5B48A91EECE7A0CBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v2 0/2] Add DRM ILI9341 parallel RGB panel driver
+Date: Wed, 10 Jul 2019 15:51:07 +0200
+Message-ID: <20190710135107.GD11791@ravnborg.org>
+References: <20190304125033.28841-1-josef@lusticky.cz>
+ <20190708145618.26031-1-josef@lusticky.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <MN2PR12MB371024C55C5B48A91EECE7A0CBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luis de Oliveira <Luis.Oliveira@synopsys.com>
-Cc: "mchehab@kernel.org" <mchehab@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kishon@ti.com" <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190708145618.26031-1-josef@lusticky.cz>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Josef Lusticky <josef@lusticky.cz>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 10:29 AM Luis de Oliveira
-<Luis.Oliveira@synopsys.com> wrote:
->
-> From: Rob Herring <robh@kernel.org>
-> Date: Tue, Jul 09, 2019 at 15:20:00
->
-> > On Tue, Jun 11, 2019 at 09:20:53PM +0200, Luis Oliveira wrote:
-> > > Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
-> > > RX mode.
-> > >
-> > > Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
-> > > ---
-> > > Changelog
-> > > v3-v4
-> > > - @Laurent I know I told you I could remove the snps,dphy-frequency on V3 but
-> > >   it is really useful for me here. I removed all other the proprietary
-> > >   properties except this one. Do you still think it must be removed?
-> > > - Frequency units @Rob
-> >
-> > Frequency units means append '-khz' to the property name. That also
-> > makes the 'frequency' part redundant, so maybe name it more around what
-> > the frequency is. The frequency for what?
-> >
-> > Rob
-> >
->
-> This is the D-PHY high speed frequency configuration that corresponds to
-> the high speed data transfer of the bus.
-> Basically is the transmission speed per lane.
-> Do you think I can use "link-frequencies" (present in
-> video-interfaces.txt) with one frequency?
-
-Seems reasonable.
-
-Rob
+SGkgSm9zZWYuCgpPbiBNb24sIEp1bCAwOCwgMjAxOSBhdCAwNDo1NjoxNlBNICswMjAwLCBKb3Nl
+ZiBMdXN0aWNreSB3cm90ZToKPiBIaSwKPiBUaGlzIGlzIHRoZSB2MiBvZiB0aGUgcGF0Y2gtc2V0
+IHdoaWNoIGFkZHMgc3VwcG9ydCBmb3IKPiBJbGl0ZWsgSUxJOTM0MSBwYXJhbGxlbCBSR0IgcGFu
+ZWxzLgo+IAo+IFRoZSBJTEk5MzQxIGNoaXAgc3VwcG9ydHMgYm90aCBwYXJhbGxlbCBSR0IgaW5w
+dXQgbW9kZSBhbmQgU1BJIGlucHV0IG1vZGUuCj4gVGhpcyBkcml2ZXIgYWRkcyBzdXBwb3J0IGZv
+ciB0aGUgcGFyYWxsZWwgUkdCIGlucHV0IG1vZGUuCj4gCj4gQ2hhbmdlcyBzaW5jZSB2MToKPiAq
+IERldmljZS10cmVlIGJpbmRpbmdzIGluIG9uZSBmaWxlCj4gKiBEL0MgR1BJTyBwaW4gaXMgb3B0
+aW9uYWwKPiAqIG1pcGlfZGJpXyogZnVuY3Rpb25zIHVzZWQgdG8gaW5pdGlhbGl6ZSB0aGUgZGlz
+cGxheQo+ICogZW50cnkgaW4gTUFJTlRBSU5FUlMgc29ydGVkIGFscGhhYmV0aWNhbGx5Cj4gKiBN
+YWtlZmlsZSwgS2NvbmZpZzogRFJNX1BBTkVMX0lMSVRFS19JTDkzNDEgcmVuYW1lZCB0byBEUk1f
+UEFORUxfSUxJVEVLX0lMSTkzNDEKPiAqIEtjb25maWc6IGRlcGVuZCBvbiBCQUNLTElHSFRfQ0xB
+U1NfREVWSUNFCj4gKiBLY29uZmlnOiBzZWxlY3QgVElOWURSTV9NSVBJX0RCSQo+ICogb3JkZXIg
+b2YgaW5jbHVkZSBmaWxlcyBjaGFuZ2VkCj4gKiBkcm1fbW9kZV9kdXBsaWNhdGUgY2hlY2tlZCBm
+b3IgZmFpbHVyZQoKVGhhbmtzIGZvciBkb2luZyBhbGwgdGhpcy4KClNvbWUgbWlub3IgZGV0YWls
+cy4gUGxlYXNlIGZpeCBhbmQgcmVzZW5kIHNvIHdlIGNhbiB0aGVzZSBwYXRjaGVzCmFwcGxpZWQu
+ClBsZWFzZSBhbHNvIHJlLWNoZWNrIGlmIHlvdSBmb3Jnb3QgYW4gYWNrIGZyb20gUm9iIG9uIHRo
+ZSBiaW5kaW5ncyBmaWxlLgoKCVNhbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWw=
