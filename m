@@ -1,7 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH V5 5/5] arm64: dts: imx8mm: Enable cpu-idle driver
-Date: Wed, 10 Jul 2019 14:30:56 +0800
-Message-ID: <20190710063056.35689-5-Anson.Huang@nxp.com>
+Subject: [PATCH V5 4/5] arm64: dts: imx8mq: Add system counter node
+Date: Wed, 10 Jul 2019 14:30:55 +0800
+Message-ID: <20190710063056.35689-4-Anson.Huang@nxp.com>
 References: <20190710063056.35689-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190710063056.35689-1-Anson.Huang@nxp.com>
@@ -12,81 +12,37 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Enable i.MX8MM cpu-idle using generic ARM cpu-idle driver, 2 states
-are supported, details as below:
-
-root@imx8mmevk:~# cat /sys/devices/system/cpu/cpu0/cpuidle/state0/name
-WFI
-root@imx8mmevk:~# cat /sys/devices/system/cpu/cpu0/cpuidle/state0/usage
-3973
-root@imx8mmevk:~# cat /sys/devices/system/cpu/cpu0/cpuidle/state1/name
-cpu-sleep-wait
-root@imx8mmevk:~# cat /sys/devices/system/cpu/cpu0/cpuidle/state1/usage
-6647
+Add i.MX8MQ system counter node to enable timer-imx-sysctr
+broadcast timer driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-New patch, as this patch is based on other patches in this series, so I include it.
+Changes since V4:
+	- update the clock info using fixed clock node;
+	- correct the reg range;
+	- update the interrupt number as the system counter driver ONLY uses 1 irq now.
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 8cf7f34..8f3ed39 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -44,6 +44,20 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
-+		idle-states {
-+			entry-method = "psci";
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index a1bbd80..2991172 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -644,6 +644,14 @@
+ 				#pwm-cells = <2>;
+ 				status = "disabled";
+ 			};
 +
-+			cpu_sleep_wait: cpu-sleep-wait {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x0010033>;
-+				local-timer-stop;
-+				entry-latency-us = <1000>;
-+				exit-latency-us = <700>;
-+				min-residency-us = <2700>;
-+				wakeup-latency-us = <1500>;
++			system_counter: timer@306a0000 {
++				compatible = "nxp,sysctr-timer";
++				reg = <0x306a0000 0x20000>;
++				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&osc_25m>;
++				clock-names = "per";
 +			};
-+		};
-+
- 		A53_0: cpu@0 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53";
-@@ -56,6 +70,7 @@
- 			nvmem-cells = <&cpu_speed_grade>;
- 			nvmem-cell-names = "speed_grade";
- 			#cooling-cells = <2>;
-+			cpu-idle-states = <&cpu_sleep_wait>;
  		};
  
- 		A53_1: cpu@1 {
-@@ -68,6 +83,7 @@
- 			next-level-cache = <&A53_L2>;
- 			operating-points-v2 = <&a53_opp_table>;
- 			#cooling-cells = <2>;
-+			cpu-idle-states = <&cpu_sleep_wait>;
- 		};
- 
- 		A53_2: cpu@2 {
-@@ -80,6 +96,7 @@
- 			next-level-cache = <&A53_L2>;
- 			operating-points-v2 = <&a53_opp_table>;
- 			#cooling-cells = <2>;
-+			cpu-idle-states = <&cpu_sleep_wait>;
- 		};
- 
- 		A53_3: cpu@3 {
-@@ -92,6 +109,7 @@
- 			next-level-cache = <&A53_L2>;
- 			operating-points-v2 = <&a53_opp_table>;
- 			#cooling-cells = <2>;
-+			cpu-idle-states = <&cpu_sleep_wait>;
- 		};
- 
- 		A53_L2: l2-cache0 {
+ 		bus@30800000 { /* AIPS3 */
 -- 
 2.7.4
