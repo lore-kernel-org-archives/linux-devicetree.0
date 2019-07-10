@@ -1,150 +1,103 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Date: Wed, 10 Jul 2019 13:40:42 +0200
-Message-ID: <20190710114042.ybgavnxb4hgqrtor@flea>
-References: <20190607062802.m5wslx3imiqooq5a@flea>
- <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
- <20190607094030.GA12373@lst.de>
- <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
- <20190612152022.c3cfhp4cauhzhfyr@flea>
- <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
- <20190701095842.fvganvycce2cy7jn@flea>
- <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
- <20190709085532.cdqv7whuesrjs64c@flea>
- <CA+E=qVdz4vfU3rtTTKjYdM+4UA+=FWheJfWOMaDtFMnWQ1rHbw@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH V4 2/5] clocksource/drivers/sysctr: Add clock-frequency property
+Date: Wed, 10 Jul 2019 07:23:23 -0600
+Message-ID: <CAL_JsqJbHFZ2qcLvhZGk8Q-f80_QhdgQxcHe2TyCjc4GGRNJNQ@mail.gmail.com>
+References: <20190701093826.5472-1-Anson.Huang@nxp.com> <20190701093826.5472-2-Anson.Huang@nxp.com>
+ <CAL_JsqKeu-b8mbMJBtnNn1vL=RSvUXbo+g40haZnjXTW11CJ6w@mail.gmail.com> <DB3PR0402MB39167FC68991F071E9E58D81F5F00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="escjyxb6ltmmy4x5"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+E=qVdz4vfU3rtTTKjYdM+4UA+=FWheJfWOMaDtFMnWQ1rHbw@mail.gmail.com>
+In-Reply-To: <DB3PR0402MB39167FC68991F071E9E58D81F5F00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Torsten Duwe <duwe@lst.de>, Harald Geyer <harald@ccbib.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Carlo Caione <ccaione@baylibre.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---escjyxb6ltmmy4x5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jul 09, 2019 at 01:30:18PM -0700, Vasily Khoruzhick wrote:
-> On Tue, Jul 9, 2019 at 1:55 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Mon, Jul 08, 2019 at 05:49:21PM -0700, Vasily Khoruzhick wrote:
-> > > > > Maybe instead of edp-connector one would introduce integrator's specific
-> > > > > connector, for example with compatible "olimex,teres-edp-connector"
-> > > > > which should follow edp abstract connector rules? This will be at least
-> > > > > consistent with below presentation[1] - eDP requirements depends on
-> > > > > integrator. Then if olimex has standard way of dealing with panels
-> > > > > present in olimex/teres platforms the driver would then create
-> > > > > drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
-> > > > > Anyway it still looks fishy for me :), maybe because I am not
-> > > > > familiarized with details of these platforms.
-> > > >
-> > > > That makes sense yes
+On Tue, Jul 9, 2019 at 7:30 PM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Hi, Rob
+>
+> > On Mon, Jul 1, 2019 at 3:47 AM <Anson.Huang@nxp.com> wrote:
 > > >
-> > > Actually, it makes no sense at all. Current implementation for anx6345
-> > > driver works fine as is with any panel specified assuming panel delays
-> > > are long enough for connected panel. It just doesn't use panel timings
-> > > from the driver. Creating a platform driver for connector itself looks
-> > > redundant since it can't be reused, it doesn't describe actual
-> > > hardware and it's just defeats purpose of DT by introducing
-> > > board-specific code.
+> > > From: Anson Huang <Anson.Huang@nxp.com>
 > >
-> > I'm not sure where you got the idea that the purpose of DT is to not
-> > have any board-specific code.
+> > 'dt-bindings: timer: ...' for the subject.
 >
-> I believe DT was an attempt to move to declarative approach for
-> describing hardware. Yes, we have different compatibles for different
-> devices but they're specific to particular device rather than
-> particular board. Device interconnection is described in DT along with
-> some properties rather than in board-specific C-file.
-
-You're right, but it's not incompatible with having some code to deal
-with some board quirk.
-
-> Introducing board-specific compatible for a connector isn't looking
-> right to me.
-
-If that board has a board-specific behaviour for it's connector, then
-what's the issue?
-
-You can't describe all the quirks in the all boards using purely
-properties.
-
-> > It's perfectly fine to have some, that's even why there's a compatible
-> > assigned to each and every board.
-> >
-> > What the DT is about is allowing us to have a generic behaviour that
-> > we can detect: we can have a given behaviour for a given board, and a
-> > separate one for another one, and this will be evaluated at runtime.
-> >
-> > This is *exactly* what this is about: we can have a compatible that
-> > sets a given, more specific, behaviour (olimex,teres-edp-connector)
-> > while saying that this is compatible with the generic behaviour
-> > (edp-connector). That way, any OS will know what quirk to apply if
-> > needed, and if not that it can use the generic behaviour.
-> >
-> > And we could create a generic driver, for the generic behaviour if
-> > needed.
-> >
-> > > There's another issue: if we introduce edp-connector we'll have to
-> > > specify power up delays somewhere (in dts? or in platform driver?), so
-> > > edp-connector doesn't really solve the issue of multiple panels with
-> > > same motherboard.
-> >
-> > And that's what that compatible is about :)
+> OK, I made a mistake.
 >
-> Sorry, I fail to see how it would be different from using existing
-> panels infrastructure and different panels compatibles. I think Rob's
-> idea was to introduce generic edp-connector.
-
-Again, there's no such thing as a generic edp-connector. The spec
-doesn't define anything related to the power sequence for example.
-
-> If we can't make it generic then let's use panel infrastructure.
-
-Which uses a device specific compatible. Really, I'm not sure what
-your objection and / or argument is here.
-
-In addition, when that was brought up in the discussion, you rejected
-it because it was inconvenient:
-https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1#comment_535206
-
-And I agree with you on that one.
-
-> > > I'd say DT overlays should be preferred solution here, not another
-> > > connector binding.
 > >
-> > Overlays are a way to apply a device tree dynamically. It's orthogonal
-> > to the binding.
+> > >
+> > > Systems which use platform driver model for clock driver require the
+> > > clock frequency to be supplied via device tree when system counter
+> > > driver is enabled.
+> >
+> > This is a DT binding. What's a platform driver?
 >
-> It isn't orthogonal to original problem though.
+> It is just trying to explain why we need to introduce this "clock-frequency"
+> property, nothing about the binding and platform driver.
+>
+> >
+> > >
+> > > This is necessary as in the platform driver model the of_clk
+> > > operations do not work correctly because system counter driver is
+> > > initialized in early phase of system boot up, and clock driver using
+> > > platform driver model is NOT ready at that time, it will cause system
+> > > counter driver initialization failed.
+> > >
+> > > Add clock-frequency property to the device tree bindings of the NXP
+> > > system counter, so the driver can tell timer-of driver to get clock
+> > > frequency from DT directly instead of doing of_clk operations via clk
+> > > APIs.
+> >
+> > While you've now given a good explanation why you need this, it all sounds
+> > like linux specific issues and a DT change should not be necessary.
+> >
+> > Presumably, 'clocks' points to a fixed-clock node, right? Just parse the 'clocks'
+> > phandle and fetch the frequency from that node if you need to get the
+> > frequency 'early'.
+>
+> Sound like a better solution, I will try that, since the system counter's clock is
+> from osc_24m and divided by 3, since different platforms may have different divider,
+> so maybe I can create a fixed-clock node in DT, then system counter driver can parse
+> the clock and fetch the frequency from that node, will redo a V5 patch.
 
-It is. The original problem is that you want to power up whatever is
-on the other side of a eDP link using an arbitrary regulator.
+The divide by 3 can be implied by the compatible. If you need a
+different divider, add another compatible.
 
-This is a "how do I describe that in my DT" problem, and it really has
-nothing to do with how the DT is being passed to the kernel.
+> >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > > No change.
+> > > ---
+> > >  .../devicetree/bindings/timer/nxp,sysctr-timer.txt        | 15 +++++++++------
+> > >  1 file changed, 9 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+> > > b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+> > > index d576599..7088a0e 100644
+> > > --- a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+> > > +++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+> > > @@ -11,15 +11,18 @@ Required properties:
+> > >  - reg :             Specifies the base physical address and size of the comapre
+> > >                      frame and the counter control, read & compare.
+> > >  - interrupts :      should be the first compare frames' interrupt
+> > > -- clocks :         Specifies the counter clock.
+> > > -- clock-names:             Specifies the clock's name of this module
+> > > +- clocks :          Specifies the counter clock, mutually exclusive with clock-
+> > frequency.
+> > > +- clock-names :     Specifies the clock's name of this module, mutually
+> > exclusive with
+> > > +                   clock-frequency.
+> > > +- clock-frequency : Specifies system counter clock frequency, mutually
+> > exclusive with
+> > > +                   clocks/clock-names.
+> >
+> > It doesn't really work to say one or the other is needed unless you make the
+> > OS support both cases.
+>
+> The OS already support both cases now with this patch series.
 
-Maxime
+What about FreeBSD or any other OS?
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---escjyxb6ltmmy4x5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXSXOugAKCRDj7w1vZxhR
-xdG+AP9pfxb7uYcDFKG6xikGZewhXzpg/acmPfrETXLF2B1jZQD7Bc2oEF0IKqh7
-tiE8F0AU/5LApsNMhblCY9s+dkDrFwU=
-=gnu6
------END PGP SIGNATURE-----
-
---escjyxb6ltmmy4x5--
+Rob
