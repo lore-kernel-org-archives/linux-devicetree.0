@@ -1,78 +1,93 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
- Host
-Date: Wed, 10 Jul 2019 06:53:02 +0000
-Message-ID: <415416c4-c6d8-f81e-82cb-126e4702801b@microchip.com>
-References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
- <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
- <ae0ffeca-9305-b5a2-3480-da623d15ce67@microchip.com>
- <MN2PR12MB3710465D7065DAF1F2D45C45CBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v8 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Wed, 10 Jul 2019 00:14:50 -0700
+Message-ID: <20190710071508.173491-1-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <MN2PR12MB3710465D7065DAF1F2D45C45CBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
-Content-Language: en-US
-Content-ID: <4F13DBCDAA972C418C3611B5F6E35780@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luis.Oliveira@synopsys.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, robh@kernel.org, Nicolas.Ferre@microchip.com, paulmck@linux.ibm.com, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Joao.Pinto@synopsys.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jpoimboe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tytso-3s7WtUTddSA@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org
+Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Iurii Zaikin <yzaikin-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Michal Marek <michal.lkml-yyZNWGI4GtDR7s880joybQ@public.gmane.org>, richard-/L3Ra7n9ekc@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA5LjA3LjIwMTkgMjA6MDgsIEx1aXMgZGUgT2xpdmVpcmEgd3JvdGU6DQoNCj4gDQo+
-IEhpIEV1Z2VuLA0KPiANCj4gDQo+IEZyb206IEV1Z2VuLkhyaXN0ZXZAbWljcm9jaGlwLmNvbSA8
-RXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tPg0KPiBEYXRlOiBUdWUsIEp1bCAwOSwgMjAxOSBh
-dCAxNTozMzo1MA0KPiANCj4+DQo+Pg0KPj4gT24gMTEuMDYuMjAxOSAyMjoyMCwgTHVpcyBPbGl2
-ZWlyYSB3cm90ZToNCj4+PiBGcm9tOiBMdWlzIE9saXZlaXJhIDxsb2xpdmVpQHN5bm9wc3lzLmNv
-bT4NCj4+Pg0KPj4+IEFkZCBiaW5kaW5ncyBmb3IgU3lub3BzeXMgRGVzaWduV2FyZSBNSVBJIENT
-SS0yIGhvc3QuDQo+Pj4NCj4+PiBTaWduZWQtb2ZmLWJ5OiBMdWlzIE9saXZlaXJhIDxsb2xpdmVp
-QHN5bm9wc3lzLmNvbT4NCj4+PiAtLS0NCj4+PiBDaGFuZ2Vsb2cNCj4+PiB2My12NA0KPj4+IC0g
-cmVtb3ZlICJwbGF0IiBmcm9tIHRoZSBibG9jayBuYW1lIEByb2IgQGxhdXJlbnQNCj4+PiAtIHJl
-bW92ZSAicGh5LW5hbWVzIiB3aGVuIHNpbmdsZS1lbnRyeSBAcm9iDQo+Pj4gLSByZW1vdmUgInNu
-cHMsb3V0cHV0LXR5cGUiIC0+IHdlbnQgdG8gdGhlIGRyaXZlciBjb25maWcgQGxhdXJlbnQNCj4+
-Pg0KPj4+ICAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3NucHMsZHctY3NpLnR4dCAg
-ICAgIHwgNDEgKysrKysrKysrKysrKysrKysrKysrKw0KPj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCA0
-MSBpbnNlcnRpb25zKCspDQo+Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS50eHQNCj4+Pg0KPj4+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvc25wcyxkdy1j
-c2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3NucHMsZHct
-Y3NpLnR4dA0KPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+Pj4gaW5kZXggMDAwMDAwMC4uNjEz
-YjdmOQ0KPj4+IC0tLSAvZGV2L251bGwNCj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbWVkaWEvc25wcyxkdy1jc2kudHh0DQo+Pj4gQEAgLTAsMCArMSw0MSBAQA0K
-Pj4+ICtTeW5vcHN5cyBEZXNpZ25XYXJlIENTSS0yIEhvc3QgY29udHJvbGxlcg0KPj4+ICsNCj4+
-PiArRGVzY3JpcHRpb24NCj4+PiArLS0tLS0tLS0tLS0NCj4+PiArDQo+Pj4gK1RoaXMgSFcgYmxv
-Y2sgaXMgdXNlZCB0byByZWNlaXZlIGltYWdlIGNvbWluZyBmcm9tIGFuIE1JUEkgQ1NJLTIgY29t
-cGF0aWJsZQ0KPj4+ICtjYW1lcmEuDQo+Pj4gKw0KPj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
-Pj4+ICstIGNvbXBhdGlibGUJCTogc2hhbGwgYmUgInNucHMsZHctY3NpIg0KPj4+ICstIHJlZwkJ
-CTogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBzaXplIG9mIHRoZSBkZXZpY2UgbWVtb3J5DQo+
-Pj4gKwkJCSAgbWFwcGVkIHJlZ2lzdGVyczsNCj4+PiArLSBpbnRlcnJ1cHRzCQk6IERXIENTSS0y
-IEhvc3QgaW50ZXJydXB0cw0KPj4+ICstIHBoeXMJCQk6IExpc3Qgb2Ygb25lIFBIWSBzcGVjaWZp
-ZXIgKGFzIGRlZmluZWQgaW4NCj4+PiArCQkJICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcGh5L3BoeS1iaW5kaW5ncy50eHQpLg0KPj4+ICsJCQkgIFRoaXMgUEhZIGlzIGEgTUlQ
-SSBEUEhZIHdvcmtpbmcgaW4gUlggbW9kZS4NCj4+PiArLSByZXNldHMJCTogUmVmZXJlbmNlIHRv
-IGEgcmVzZXQgY29udHJvbGxlciAob3B0aW9uYWwpDQo+Pj4gKw0KPj4+ICtUaGUgcGVyLWJvYXJk
-IHNldHRpbmdzOg0KPj4+ICsgLSBwb3J0IHN1Yi1ub2RlIGRlc2NyaWJpbmcgYSBzaW5nbGUgZW5k
-cG9pbnQgY29ubmVjdGVkIHRvIHRoZSBjYW1lcmEgYXMNCj4+PiArICAgZGVzY3JpYmVkIGluIHZp
-ZGVvLWludGVyZmFjZXMudHh0WzFdLg0KPj4+ICsNCj4+PiArRXhhbXBsZToNCj4+PiArDQo+Pj4g
-Kwljc2kyOiBjc2kyQDMwMDAgew0KPj4+ICsJCWNvbXBhdGlibGUgPSAic25wcyxkdy1jc2kiOw0K
-Pj4+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPj4+ICsJCSNzaXplLWNlbGxzID0gPDA+Ow0K
-Pj4+ICsJCXJlZyA9IDwgMHgwMzAwMCAweDdGRj47DQo+Pj4gKwkJcGh5cyA9IDwmbWlwaV9kcGh5
-X3J4PjsNCj4+PiArCQlyZXNldHMgPSA8JmR3X3JzdCAxPjsNCj4+PiArCQlpbnRlcnJ1cHRzID0g
-PDI+Ow0KPj4+ICsNCj4+PiArCQlwb3J0QDAgew0KPj4+ICsJCQlyZWcgPSA8MD47DQo+Pj4gKwkJ
-CWNzaV9lcDE6IGVuZHBvaW50IHsNCj4+PiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmY2FtZXJh
-XzE+Ow0KPj4+ICsJCQkJZGF0YS1sYW5lcyA9IDwxIDI+Ow0KPj4+ICsJCQl9Ow0KPj4NCj4+IEhl
-bGxvIEx1aXMsDQo+Pg0KPj4gV2hpY2ggaXMgdGhlIG91dHB1dCBwb3J0IChlbmRwb2ludCkgOiBo
-b3cgdG8gY29ubmVjdCB0aGUgb3V0cHV0IG9mDQo+PiBjc2kyaG9zdCB0byBhbm90aGVyIG5vZGUg
-Pw0KPj4gSSBtZWFuLCB0aGUgc2Vjb25kIHBvcnQgb2YgdGhpcyBibG9jaywgb3IsIGhvdyBpcyB0
-aGUgZGF0YSB0YWtlbiBmcm9tDQo+PiBjc2kyaG9zdCA/DQo+Pg0KPiANCj4gSSB1bmRlcnN0YW5k
-IHlvdXIgcXVlc3Rpb24sIEkgdGhpbmsgeW91IGd1ZXNzZWQgdGhpcyBpcyBub3QgdGhlIGNvbXBs
-ZXRlDQo+IHBpcGVsaW5lIChJIGhhdmUgYSB0b3AgZHJpdmVyIHRoYXQgaW50ZXJhY3RzIHdpdGgg
-dGhpcyBvbmUpLg0KPiBJIHdhcyBub3QgcGxhbm5pbmcgdG8gc3VibWl0IGl0LCBkbyB5b3UgdGhp
-bmsgSSBzaG91bGQ/DQoNClllcyBwbGVhc2UsIHlvdSBjYW4gaGF2ZSB0aGUgcGF0Y2ggd2l0aCBz
-dWJqZWN0IERPIE5PVCBNRVJHRSBpZiB5b3UgZG8gDQpub3Qgd2FudCB0aGF0IHBhdGNoIHRvIGJl
-IGluY2x1ZGVkIGluIHRoZSBrZXJuZWwgYW5kIGp1c3QgZm9yIHJlZmVyZW5jZS4NCmJ1dCBpdCB3
-b3VsZCBoZWxwIG1lIGluIHVuZGVyc3RhbmRpbmcgeW91ciBzZXR1cA0KDQpUaGFua3MgIQ0KDQo+
-IA0KPiBUaGUgYmVoYXZpb3IgaXMgdmVyeSBzaW1pbGFyIHdpdGggdGhpcyBvbmUNCj4gLi9kcml2
-ZXJzL21lZGlhL3BsYXRmb3JtL2V4eW5vczQtaXMvbWVkaWEtZGV2LmMNCj4gDQo+IA0KPj4gVGhh
-bmtzLA0KPj4NCj4+IEV1Z2VuDQo+Pg0KPj4+ICsJCX07DQo+Pj4gKwl9Ow0KPj4+DQo+IA0KPiBU
-aGFua3MsDQo+IEx1aXMNCj4gDQo=
+## TL;DR
+
+This new patch set only contains a very minor change suggested by
+Masahiro to [PATCH v7 06/18] and is otherwise identical to PATCH v7.
+
+Also, with Josh's ack on the preceding patch set, I think we now have
+all necessary reviews and acks from all interested parties.
+
+## Background
+
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
+
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want[1]) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in about a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
+
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
+
+### What's so special about unit testing?
+
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
+
+### Is KUnit trying to replace other testing frameworks for the kernel?
+
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
+
+### More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[2].
+
+Additionally for convenience, I have applied these patches to a
+branch[3]. The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.2/v8 branch.
+
+## Changes Since Last Version
+
+Like I said in the TL;DR, there is only one minor change since the
+previous revision. That change only affects patch 06/18; it makes it so
+that make doesn't attempt to scan the kunit/ directory when CONFIG_KUNIT
+is not set as suggested by Masahiro.
+
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[3] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.2/v8
+
+-- 
+2.22.0.410.gd8fdbe21b5-goog
