@@ -1,91 +1,59 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext
- Milbeaut HDMAC bindings
-Date: Tue, 9 Jul 2019 23:12:03 -0500
-Message-ID: <CABb+yY3OsAh3xgX8_vvA7A7mU+FkEj__BQs9CxMvf=eYxRYXyw@mail.gmail.com>
-References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
- <20190613005237.1996-1-jassisinghbrar@gmail.com> <20190709143437.GA30850@bogus>
+From: Cheng-yi Chiang <cychiang@chromium.org>
+Subject: Re: [PATCH 5/7] ASoC: rockchip: rockchip-max98090: Add node for HDMI
+Date: Wed, 10 Jul 2019 12:11:48 +0800
+Message-ID: <CAFv8NwLiKu055S7apzj+gTYh0neQ5rLmPYEYkEj6Zf3hikWWpA@mail.gmail.com>
+References: <20190603043251.226549-1-cychiang@chromium.org>
+ <20190603043251.226549-6-cychiang@chromium.org> <20190709200121.GA19118@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190709143437.GA30850@bogus>
+In-Reply-To: <20190709200121.GA19118@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: dmaengine@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, vkoul@kernel.org, Mark Rutland <mark.rutland@arm.com>, orito.takao@socionext.com, Masami Hiramatsu <masami.hiramatsu@linaro.org>, kasai.kazuhiro@socionext.com, Jassi Brar <jaswinder.singh@linaro.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Russell King <rmk+kernel@armlinux.org.uk>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org, linux-media@vger.kernel.org, moderated list:SOUND - SOC LAYER /
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 9:34 AM Rob Herring <robh@kernel.org> wrote:
+On Wed, Jul 10, 2019 at 4:01 AM Rob Herring <robh@kernel.org> wrote:
 >
-> On Wed, Jun 12, 2019 at 07:52:37PM -0500, jassisinghbrar@gmail.com wrote:
-> > From: Jassi Brar <jaswinder.singh@linaro.org>
+> On Mon, Jun 03, 2019 at 12:32:49PM +0800, Cheng-Yi Chiang wrote:
+> > Let user specify HDMI node so machine driver can use it to let codec
+> > driver register callback on correct hdmi-notifier.
 > >
-> > Document the devicetree bindings for Socionext Milbeaut HDMAC
-> > controller. Controller has upto 8 floating channels, that need
-> > a predefined slave-id to work from a set of slaves.
-> >
-> > Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
 > > ---
-> >  .../bindings/dma/milbeaut-m10v-hdmac.txt           | 54 +++++++++++++++++++
-> >  1 file changed, 54 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> >  Documentation/devicetree/bindings/sound/rockchip-max98090.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
 > >
-> > diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > new file mode 100644
-> > index 000000000000..a104fcb9e73d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > @@ -0,0 +1,51 @@
-> > +* Milbeaut AHB DMA Controller
-> > +
-> > +Milbeaut AHB DMA controller has transfer capability bellow.
-> > + - memory to memory transfer
-> > + - device to memory transfer
-> > + - memory to device transfer
-> > +
-> > +Required property:
-> > +- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
-> > +- reg:              Should contain DMA registers location and length.
-> > +- interrupts:       Should contain all of the per-channel DMA interrupts.
+> > diff --git a/Documentation/devicetree/bindings/sound/rockchip-max98090.txt b/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+> > index a805aa99ad75..dae57c14864e 100644
+> > --- a/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+> > +++ b/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+> > @@ -7,6 +7,7 @@ Required properties:
+> >    connected to the CODEC
+> >  - rockchip,audio-codec: The phandle of the MAX98090 audio codec
+> >  - rockchip,headset-codec: The phandle of Ext chip for jack detection
+> > +- rockchip,hdmi: The phandle of HDMI node for HDMI jack detection
+> >
+> >  Example:
+> >
+> > @@ -16,4 +17,5 @@ sound {
+> >       rockchip,i2s-controller = <&i2s>;
+> >       rockchip,audio-codec = <&max98090>;
+> >       rockchip,headset-codec = <&headsetcodec>;
+> > +     rockchip,hdmi= <&hdmi>;
 >
-> How many?
+> space                ^
 >
-Each channel has an IRQ line. And the number of channels is
-configurable. So instead of having some explicit property like
-'dma-channels', we infer that from the number of irqs registered.
-
-> > +- #dma-cells:       Should be 1. Specify the ID of the slave.
-> > +- clocks:           Phandle to the clock used by the HDMAC module.
-> > +
-> > +
-> > +Example:
-> > +
-> > +     hdmac1: hdmac@1e110000 {
+> With that,
 >
-> dma-controller@...
+> Acked-by: Rob Herring <robh@kernel.org>
 >
-OK
-
-> > +             compatible = "socionext,milbeaut-m10v-hdmac";
-> > +             reg = <0x1e110000 0x10000>;
-> > +             interrupts = <0 132 4>,
-> > +                          <0 133 4>,
-> > +                          <0 134 4>,
-> > +                          <0 135 4>,
-> > +                          <0 136 4>,
-> > +                          <0 137 4>,
-> > +                          <0 138 4>,
-> > +                          <0 139 4>;
-> > +             #dma-cells = <1>;
-> > +             clocks = <&dummy_clk>;
-> > +     };
-> > +
-> > +* DMA client
-> > +
-> > +Clients have to specify the DMA requests with phandles in a list.
->
-> Nothing specific to this binding here and the client side is already
-> documented, so drop this section.
->
-OK.
-
-Thanks
+Hi Rob,
+Thank you for the review.
+But I have changed the approach in v2 so there is no need for machine
+driver to expose this property.
+Thanks!
+> >  };
+> > --
+> > 2.22.0.rc1.257.g3120a18244-goog
+> >
