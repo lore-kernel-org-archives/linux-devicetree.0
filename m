@@ -1,64 +1,96 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH V5 1/5] clocksource: imx-sysctr: Add internal clock divider
- handle
-Date: Wed, 10 Jul 2019 14:30:52 +0800
-Message-ID: <20190710063056.35689-1-Anson.Huang@nxp.com>
+From: Chuanhong Guo <gch981213@gmail.com>
+Subject: Re: [PATCH 4/5] staging: mt7621-dts: add dt nodes for mt7621-pll
+Date: Wed, 10 Jul 2019 14:46:18 +0800
+Message-ID: <CAJsYDVJ-qJppkuvbYLmkWU0SBE=UrOoNLrM0kcOzhSTqNTeaWQ@mail.gmail.com>
+References: <20190709182018.23193-1-gch981213@gmail.com>
+ <20190709182018.23193-5-gch981213@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, leonard.crestez@nxp.com, aisheng.dong@nxp.com, daniel.baluta@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca, agx@sigxcpu.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Linux-imx@nxp.com
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20190709182018.23193-5-gch981213@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Weijie Gao <hackpascal@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@kernel.org>, James Hogan <jhogan@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, John Crispin <john@phrozen.org>, NeilBrown <neil@brown.name>
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On Wed, Jul 10, 2019 at 2:22 AM Chuanhong Guo <gch981213@gmail.com> wrote:
+>
+> This commit adds device-tree node for mt7621-pll and use its clock
+> accordingly.
+>
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
 
-The system counter block guide states that the base clock is
-internally divided by 3 before use, that means the clock input of
-system counter defined in DT should be base clock which is normally
-from OSC, and then internally divided by 3 before use.
+Oops. Please ignore this single patch for now. I forgot to drop
+cpuclock node in drivers/staging/mt7621-dts/gbpc1.dts
+I'll resend this patch with changes for gbpc1.dts after the other four
+patches are applied.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V4:
-	- to solve the clock driver probed after system counter driver issue, now we can easily switch to
-	  use fixed clock defined in DT and get its rate, then divided by 3 to get real clock rate for
-	  system counter driver, no need to add "clock-frequency" property in DT.
----
- drivers/clocksource/timer-imx-sysctr.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
-index fd7d680..b7c80a3 100644
---- a/drivers/clocksource/timer-imx-sysctr.c
-+++ b/drivers/clocksource/timer-imx-sysctr.c
-@@ -20,6 +20,8 @@
- #define SYS_CTR_EN		0x1
- #define SYS_CTR_IRQ_MASK	0x2
- 
-+#define SYS_CTR_CLK_DIV		0x3
-+
- static void __iomem *sys_ctr_base;
- static u32 cmpcr;
- 
-@@ -134,6 +136,9 @@ static int __init sysctr_timer_init(struct device_node *np)
- 	if (ret)
- 		return ret;
- 
-+	/* system counter clock is divided by 3 internally */
-+	to_sysctr.of_clk.rate /= SYS_CTR_CLK_DIV;
-+
- 	sys_ctr_base = timer_of_base(&to_sysctr);
- 	cmpcr = readl(sys_ctr_base + CMPCR);
- 	cmpcr &= ~SYS_CTR_EN;
--- 
-2.7.4
+> ---
+>  drivers/staging/mt7621-dts/mt7621.dtsi | 15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/staging/mt7621-dts/mt7621.dtsi b/drivers/staging/mt7621-dts/mt7621.dtsi
+> index a4c08110094b..12717f570ceb 100644
+> --- a/drivers/staging/mt7621-dts/mt7621.dtsi
+> +++ b/drivers/staging/mt7621-dts/mt7621.dtsi
+> @@ -1,4 +1,5 @@
+>  #include <dt-bindings/interrupt-controller/mips-gic.h>
+> +#include <dt-bindings/clock/mt7621-clk.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>
+>  / {
+> @@ -27,12 +28,11 @@
+>                 serial0 = &uartlite;
+>         };
+>
+> -       cpuclock: cpuclock@0 {
+> -               #clock-cells = <0>;
+> -               compatible = "fixed-clock";
+> +       pll: pll {
+> +               compatible = "mediatek,mt7621-pll", "syscon";
+>
+> -               /* FIXME: there should be way to detect this */
+> -               clock-frequency = <880000000>;
+> +               #clock-cells = <1>;
+> +               clock-output-names = "cpu", "bus";
+>         };
+>
+>         sysclock: sysclock@0 {
+> @@ -155,7 +155,6 @@
+>                         compatible = "ns16550a";
+>                         reg = <0xc00 0x100>;
+>
+> -                       clocks = <&sysclock>;
+>                         clock-frequency = <50000000>;
+>
+>                         interrupt-parent = <&gic>;
+> @@ -172,7 +171,7 @@
+>                         compatible = "ralink,mt7621-spi";
+>                         reg = <0xb00 0x100>;
+>
+> -                       clocks = <&sysclock>;
+> +                       clocks = <&pll MT7621_CLK_BUS>;
+>
+>                         resets = <&rstctrl 18>;
+>                         reset-names = "spi";
+> @@ -372,7 +371,7 @@
+>                 timer {
+>                         compatible = "mti,gic-timer";
+>                         interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
+> -                       clocks = <&cpuclock>;
+> +                       clocks = <&pll MT7621_CLK_CPU>;
+>                 };
+>         };
+>
+> --
+> 2.21.0
+>
