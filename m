@@ -1,103 +1,96 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V4 2/5] clocksource/drivers/sysctr: Add clock-frequency property
-Date: Wed, 10 Jul 2019 07:23:23 -0600
-Message-ID: <CAL_JsqJbHFZ2qcLvhZGk8Q-f80_QhdgQxcHe2TyCjc4GGRNJNQ@mail.gmail.com>
-References: <20190701093826.5472-1-Anson.Huang@nxp.com> <20190701093826.5472-2-Anson.Huang@nxp.com>
- <CAL_JsqKeu-b8mbMJBtnNn1vL=RSvUXbo+g40haZnjXTW11CJ6w@mail.gmail.com> <DB3PR0402MB39167FC68991F071E9E58D81F5F00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: panel: Add parallel RGB mode for
+ Ilitek ILI9341 panels
+Date: Wed, 10 Jul 2019 15:39:56 +0200
+Message-ID: <20190710133956.GB11791@ravnborg.org>
+References: <20190304125033.28841-1-josef@lusticky.cz>
+ <20190708145618.26031-1-josef@lusticky.cz>
+ <20190708145618.26031-2-josef@lusticky.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB39167FC68991F071E9E58D81F5F00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Carlo Caione <ccaione@baylibre.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190708145618.26031-2-josef@lusticky.cz>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Josef Lusticky <josef@lusticky.cz>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 7:30 PM Anson Huang <anson.huang@nxp.com> wrote:
->
-> Hi, Rob
->
-> > On Mon, Jul 1, 2019 at 3:47 AM <Anson.Huang@nxp.com> wrote:
-> > >
-> > > From: Anson Huang <Anson.Huang@nxp.com>
-> >
-> > 'dt-bindings: timer: ...' for the subject.
->
-> OK, I made a mistake.
->
-> >
-> > >
-> > > Systems which use platform driver model for clock driver require the
-> > > clock frequency to be supplied via device tree when system counter
-> > > driver is enabled.
-> >
-> > This is a DT binding. What's a platform driver?
->
-> It is just trying to explain why we need to introduce this "clock-frequency"
-> property, nothing about the binding and platform driver.
->
-> >
-> > >
-> > > This is necessary as in the platform driver model the of_clk
-> > > operations do not work correctly because system counter driver is
-> > > initialized in early phase of system boot up, and clock driver using
-> > > platform driver model is NOT ready at that time, it will cause system
-> > > counter driver initialization failed.
-> > >
-> > > Add clock-frequency property to the device tree bindings of the NXP
-> > > system counter, so the driver can tell timer-of driver to get clock
-> > > frequency from DT directly instead of doing of_clk operations via clk
-> > > APIs.
-> >
-> > While you've now given a good explanation why you need this, it all sounds
-> > like linux specific issues and a DT change should not be necessary.
-> >
-> > Presumably, 'clocks' points to a fixed-clock node, right? Just parse the 'clocks'
-> > phandle and fetch the frequency from that node if you need to get the
-> > frequency 'early'.
->
-> Sound like a better solution, I will try that, since the system counter's clock is
-> from osc_24m and divided by 3, since different platforms may have different divider,
-> so maybe I can create a fixed-clock node in DT, then system counter driver can parse
-> the clock and fetch the frequency from that node, will redo a V5 patch.
-
-The divide by 3 can be implied by the compatible. If you need a
-different divider, add another compatible.
-
-> >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > > No change.
-> > > ---
-> > >  .../devicetree/bindings/timer/nxp,sysctr-timer.txt        | 15 +++++++++------
-> > >  1 file changed, 9 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-> > > b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-> > > index d576599..7088a0e 100644
-> > > --- a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-> > > +++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-> > > @@ -11,15 +11,18 @@ Required properties:
-> > >  - reg :             Specifies the base physical address and size of the comapre
-> > >                      frame and the counter control, read & compare.
-> > >  - interrupts :      should be the first compare frames' interrupt
-> > > -- clocks :         Specifies the counter clock.
-> > > -- clock-names:             Specifies the clock's name of this module
-> > > +- clocks :          Specifies the counter clock, mutually exclusive with clock-
-> > frequency.
-> > > +- clock-names :     Specifies the clock's name of this module, mutually
-> > exclusive with
-> > > +                   clock-frequency.
-> > > +- clock-frequency : Specifies system counter clock frequency, mutually
-> > exclusive with
-> > > +                   clocks/clock-names.
-> >
-> > It doesn't really work to say one or the other is needed unless you make the
-> > OS support both cases.
->
-> The OS already support both cases now with this patch series.
-
-What about FreeBSD or any other OS?
-
-Rob
+SGkgSm9zZWYuCgpPbiBNb24sIEp1bCAwOCwgMjAxOSBhdCAwNDo1NjoxN1BNICswMjAwLCBKb3Nl
+ZiBMdXN0aWNreSB3cm90ZToKPiBJTEk5MzQxIHN1cHBvcnRzIGJvdGggU1BJIGlucHV0IG1vZGUg
+YW5kIHBhcmFsbGVsIFJHQiBpbnB1dCBtb2RlLgo+IFRoaXMgY29tbWl0IGFkZHMgcGFyYWxsZWwg
+UkdCIGlucHV0IG1vZGUgYmluZGluZ3MuCj4gCj4gU2lnbmVkLW9mZi1ieTogSm9zZWYgTHVzdGlj
+a3kgPGpvc2VmQGx1c3RpY2t5LmN6Pgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9pbGl0
+ZWssaWxpOTM0MS50eHQgICAgICAgfCA2NyArKysrKysrKysrKysrKysrLS0tCj4gIDEgZmlsZSBj
+aGFuZ2VkLCA1NiBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkKV2l0aCBSb2JzIHBhdGNo
+ZXMgbGFuZGVkIGluIGRybS1taXNjLW5leHQgeWFtbCBmb3JtYXQgaXMgZnJvbSBub3cgb24KcHJl
+ZmVycmVkIGZvciBwYW5lbCBiaW5kaW5ncywgb3IgYXQgbGVhc3QgdGhpcyBpcyBteSB0YWtlIG9u
+IGl0LgoKU28gYSB5YW1sIGNvbnZlcnNpb24gd291bGQgYmUgYXBwcmVjaWF0ZWQsIGJ1dCBub3Qg
+bWFuZGF0b3J5LgoKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEudHh0Cj4gaW5kZXggMTY5YjMyZTRl
+ZTRlLi42MjlmMzhhMWQwY2QgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEudHh0Cj4gQEAgLTEs
+MjcgKzEsNzIgQEAKPiAgSWxpdGVrIElMSTkzNDEgZGlzcGxheSBwYW5lbHMKPiAgCj4gLVRoaXMg
+YmluZGluZyBpcyBmb3IgZGlzcGxheSBwYW5lbHMgdXNpbmcgYW4gSWxpdGVrIElMSTkzNDEgY29u
+dHJvbGxlciBpbiBTUEkKPiAtbW9kZS4KPiArVGhpcyBiaW5kaW5nIGlzIGZvciBkaXNwbGF5IHBh
+bmVscyB1c2luZyBhbiBJbGl0ZWsgSUxJOTM0MSBjb250cm9sbGVyLgo+ICtUaGUgZGlzcGxheSBw
+YW5lbHMgYXJlIHN1cHBvcnRlZCBpbiB0aGUgZm9sbG93aW5nIGdyYXBoaWNhbCBpbnB1dCBtb2Rl
+czoKPiArLSBTUEkgaW5wdXQgbW9kZQo+ICsJTUlQSS1EQkkgVHlwZSAzIE9wdGlvbiAxIG9yIE9w
+dGlvbiAzIGlzIHVzZWQgdG8gdHJhbnNmZXIKPiArCWNvbW1hbmRzIGFuZCBncmFwaGljYWwgZGF0
+YQo+ICstIHBhcmFsbGVsIFJHQiBpbnB1dCBtb2RlCj4gKwlNSVBJLURCSSBUeXBlIDMgT3B0aW9u
+IDEgb3IgT3B0aW9uIDMgaXMgdXNlZCBmb3IgY29tbWFuZHMKPiArCU1JUEktRFBJIDE4LWJpdCBw
+YXJhbGxlbCBSR0IgY29ubmVjdGlvbiBpcyB1c2VkIHRvIHRyYW5zZmVyCj4gKwlncmFwaGljYWwg
+ZGF0YQo+ICAKPiAtUmVxdWlyZWQgcHJvcGVydGllczoKPiAtLSBjb21wYXRpYmxlOgkiYWRhZnJ1
+aXQseXgyNDBxdjI5IiwgImlsaXRlayxpbGk5MzQxIgo+IC0tIGRjLWdwaW9zOglEL0MgcGluCj4g
+LS0gcmVzZXQtZ3Bpb3M6CVJlc2V0IHBpbgo+ICsKPiArU1BJIGlucHV0IG1vZGU6Cj4gIAo+ICBU
+aGUgbm9kZSBmb3IgdGhpcyBkcml2ZXIgbXVzdCBiZSBhIGNoaWxkIG5vZGUgb2YgYSBTUEkgY29u
+dHJvbGxlciwgaGVuY2UKPiAtYWxsIG1hbmRhdG9yeSBwcm9wZXJ0aWVzIGRlc2NyaWJlZCBpbiAu
+Li9zcGkvc3BpLWJ1cy50eHQgbXVzdCBiZSBzcGVjaWZpZWQuCj4gK2FsbCBtYW5kYXRvcnkgcHJv
+cGVydGllcyBkZXNjcmliZWQgaW4gc3BpL3NwaS1idXMudHh0IG11c3QgYmUgc3BlY2lmaWVkLgo+
+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllcyBpbiBTUEkgaW5wdXQgbW9kZToKPiArLSBjb21wYXRp
+YmxlOiAgICJhZGFmcnVpdCx5eDI0MHF2MjkiLCAiaWxpdGVrLGlsaTkzNDEiCj4gKy0gYmFja2xp
+Z2h0OiAgICBwaGFuZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBw
+YW5lbAo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGllcyBpbiBTUEkgaW5wdXQgbW9kZToKPiArLSBy
+b3RhdGlvbjogICAgIHBhbmVsIHJvdGF0aW9uIGluIGRlZ3JlZXMgY291bnRlciBjbG9ja3dpc2Ug
+KDAsOTAsMTgwLDI3MCkKPiArLSBkYy1ncGlvczogICAgIEdQSU8gc3BlYyBmb3IgdGhlIEQvQyBw
+aW4sIHNlZSBncGlvL2dwaW8udHh0Cj4gKy0gcmVzZXQtZ3Bpb3M6ICBHUElPIHNwZWMgZm9yIHRo
+ZSByZXNldCBwaW4sIHNlZSBncGlvL2dwaW8udHh0Cj4gKwo+ICsKPiArUGFyYWxsZWwgUkdCIGlu
+cHV0IG1vZGU6Cj4gKwo+ICtUaGUgbm9kZSBmb3IgdGhpcyBkcml2ZXIgbXVzdCBiZSBhIGNoaWxk
+IG5vZGUgb2YgYSBTUEkgY29udHJvbGxlciwgaGVuY2UKPiArYWxsIG1hbmRhdG9yeSBwcm9wZXJ0
+aWVzIGRlc2NyaWJlZCBpbiBzcGkvc3BpLWJ1cy50eHQgbXVzdCBiZSBzcGVjaWZpZWQuCj4gKwo+
+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIGluIHBhcmFsbGVsIFJHQiBpbnB1dCBtb2RlOgo+ICstIGNv
+bXBhdGlibGU6ICAgImRpc3BsYXl0ZWNoLGR0MDI0Y3RmdCIsICJpbGl0ZWssaWxpOTM0MSIKPiAr
+LSBiYWNrbGlnaHQ6ICAgIHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQg
+dG8gdGhlIHBhbmVsCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzIGluIHBhcmFsbGVsIFJHQiBp
+bnB1dCBtb2RlOgo+ICstIGRjLWdwaW9zOiAgICAgR1BJTyBzcGVjIGZvciB0aGUgRC9DIHBpbiwg
+c2VlIGdwaW8vZ3Bpby50eHQKPiArLSByZXNldC1ncGlvczogIEdQSU8gc3BlYyBmb3IgdGhlIHJl
+c2V0IHBpbiwgc2VlIGdwaW8vZ3Bpby50eHQKPiAgCj4gLU9wdGlvbmFsIHByb3BlcnRpZXM6Cj4g
+LS0gcm90YXRpb246CXBhbmVsIHJvdGF0aW9uIGluIGRlZ3JlZXMgY291bnRlciBjbG9ja3dpc2Ug
+KDAsOTAsMTgwLDI3MCkKPiAtLSBiYWNrbGlnaHQ6CXBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBk
+ZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCj4gK0luIHBhcmFsbGVsIFJHQiBpbnB1dCBtb2Rl
+LAo+ICt0aGUgZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdp
+dGggb25lIGNoaWxkCj4gKydlbmRwb2ludCcgbm9kZSwgYWNjb3JkaW5nIHRvIHRoZSBiaW5kaW5n
+cyBkZWZpbmVkIGluCj4gK21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LiBUaGlzIG5vZGUgc2hv
+dWxkIGRlc2NyaWJlIHBhbmVsJ3MgdmlkZW8gYnVzLgo+ICAKPiAtRXhhbXBsZToKPiArCj4gK0V4
+YW1wbGUgaW4gU1BJIGlucHV0IG1vZGU6Cj4gIAlkaXNwbGF5QDB7Cj4gIAkJY29tcGF0aWJsZSA9
+ICJhZGFmcnVpdCx5eDI0MHF2MjkiLCAiaWxpdGVrLGlsaTkzNDEiOwo+ICAJCXJlZyA9IDwwPjsK
+PiAgCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDwzMjAwMDAwMD47Cj4gIAkJZGMtZ3Bpb3MgPSA8Jmdw
+aW8wIDkgR1BJT19BQ1RJVkVfSElHSD47Cj4gIAkJcmVzZXQtZ3Bpb3MgPSA8JmdwaW8wIDggR1BJ
+T19BQ1RJVkVfSElHSD47Cj4gKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+Owo+ICAJCXJvdGF0
+aW9uID0gPDI3MD47Cj4gKwl9Owo+ICsKPiArRXhhbXBsZSBpbiBwYXJhbGxlbCBSR0IgaW5wdXQg
+bW9kZToKPiArCXBhbmVsQHsKSSB0aGluayB5b3UgbmVlZCBhIG51bWJlciBhZnRlciAiQCIgaGVy
+ZS4KCldpdGggdGhpcyBmaXhlZDoKUmV2aWV3ZWQtYnk6IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5i
+b3JnLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
