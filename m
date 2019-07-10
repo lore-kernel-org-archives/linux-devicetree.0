@@ -1,59 +1,56 @@
-From: Cheng-yi Chiang <cychiang@chromium.org>
-Subject: Re: [PATCH 5/7] ASoC: rockchip: rockchip-max98090: Add node for HDMI
-Date: Wed, 10 Jul 2019 12:11:48 +0800
-Message-ID: <CAFv8NwLiKu055S7apzj+gTYh0neQ5rLmPYEYkEj6Zf3hikWWpA@mail.gmail.com>
-References: <20190603043251.226549-1-cychiang@chromium.org>
- <20190603043251.226549-6-cychiang@chromium.org> <20190709200121.GA19118@bogus>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Subject: Re: [PATCH v2 05/10] net: hisilicon: HI13X1_GMAX need dreq reset at
+ first
+Date: Wed, 10 Jul 2019 13:05:20 +0800
+Message-ID: <5e3eda91-dedc-e687-6a18-b1aec1e9fe63@huawei.com>
+References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
+ <1562643071-46811-6-git-send-email-xiaojiangfeng@huawei.com>
+ <890c48d1-76b8-5aea-e175-aa7d9967acd2@cogentembedded.com>
+ <101b8c68-75f5-00a7-9845-e59c0467768c@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190709200121.GA19118@bogus>
+In-Reply-To: <101b8c68-75f5-00a7-9845-e59c0467768c@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Russell King <rmk+kernel@armlinux.org.uk>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org, linux-media@vger.kernel.org, moderated list:SOUND - SOC LAYER /
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, davem@davemloft.net, robh+dt@kernel.org, yisen.zhuang@huawei.com, salil.mehta@huawei.com, mark.rutland@arm.com, dingtianhong@huawei.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leeyou.li@huawei.com, nixiaoming@huawei.com, jianping.liu@huawei.com, xiekunxun@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 4:01 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Jun 03, 2019 at 12:32:49PM +0800, Cheng-Yi Chiang wrote:
-> > Let user specify HDMI node so machine driver can use it to let codec
-> > driver register callback on correct hdmi-notifier.
-> >
-> > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> > ---
-> >  Documentation/devicetree/bindings/sound/rockchip-max98090.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/sound/rockchip-max98090.txt b/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
-> > index a805aa99ad75..dae57c14864e 100644
-> > --- a/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
-> > +++ b/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
-> > @@ -7,6 +7,7 @@ Required properties:
-> >    connected to the CODEC
-> >  - rockchip,audio-codec: The phandle of the MAX98090 audio codec
-> >  - rockchip,headset-codec: The phandle of Ext chip for jack detection
-> > +- rockchip,hdmi: The phandle of HDMI node for HDMI jack detection
-> >
-> >  Example:
-> >
-> > @@ -16,4 +17,5 @@ sound {
-> >       rockchip,i2s-controller = <&i2s>;
-> >       rockchip,audio-codec = <&max98090>;
-> >       rockchip,headset-codec = <&headsetcodec>;
-> > +     rockchip,hdmi= <&hdmi>;
->
-> space                ^
->
-> With that,
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
-Hi Rob,
-Thank you for the review.
-But I have changed the approach in v2 so there is no need for machine
-driver to expose this property.
-Thanks!
-> >  };
-> > --
-> > 2.22.0.rc1.257.g3120a18244-goog
-> >
+
+
+On 2019/7/9 21:48, Jiangfeng Xiao wrote:
+> 
+> 
+> On 2019/7/9 17:35, Sergei Shtylyov wrote:
+>> Hello!
+>>
+>> On 09.07.2019 6:31, Jiangfeng Xiao wrote:
+>>
+[...]
+>>> @@ -853,6 +867,15 @@ static int hip04_mac_probe(struct platform_device *pdev)
+>>>           goto init_fail;
+>>>       }
+>>>   +#if defined(CONFIG_HI13X1_GMAC)
+>>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>>> +    priv->sysctrl_base = devm_ioremap_resource(d, res);
+>>
+>>    There's devm_platform_ioremap_resource() now.
+> 
+> Thank you for your review, Great issue, which makes my code more concise.
+> 
+> I will fix it in v3. Or submit a patch to modify it separately, if maintainer
+> applies this patch series.
+> 
+I decided to wait for this series of patches to sync to the mainline
+and then fix this based on the mainline.
+
+Because the mainline does not currently have this part of the code,
+if I submit the changes, and the patch is accidentally merged into
+another branch or another maintainer to handle, a conflict will occur.
+
+As we all know, maintianer has to deal with many commits every day,
+I don't want to increase the burden of maintainer.
+
+So I decided to wait until the patch is synced to the mainline
+and then modify it, which is more safe.
