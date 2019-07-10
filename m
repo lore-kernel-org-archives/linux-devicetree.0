@@ -1,100 +1,56 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: Re: [linux,dev-5.1 v1] dt-bindings: gpio: aspeed: Add SGPIO support
-Date: Wed, 10 Jul 2019 11:46:09 +0930
-Message-ID: <9c998f5f-42ef-43bd-b024-839ee00126de@www.fastmail.com>
-References: <1562184069-22332-1-git-send-email-hongweiz@ami.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH v7 08/18] objtool: add kunit_try_catch_throw to the
+ noreturn list
+Date: Tue, 9 Jul 2019 21:31:23 -0500
+Message-ID: <20190710023123.ifnt5osimvzoe5hf@treble>
+References: <20190709063023.251446-1-brendanhiggins@google.com>
+ <20190709063023.251446-9-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562184069-22332-1-git-send-email-hongweiz@ami.com>
+Content-Disposition: inline
+In-Reply-To: <20190709063023.251446-9-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hongwei Zhang <hongweiz@ami.com>, devicetree@vger.kernel.org, Joel Stanley <joel@jms.id.au>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: frowand.list@gmail.com, gregkh@linuxfoundation.org, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Thu, 4 Jul 2019, at 05:31, Hongwei Zhang wrote:
-> Add bindings to support SGPIO on AST2400 or AST2500.
+On Mon, Jul 08, 2019 at 11:30:13PM -0700, Brendan Higgins wrote:
+> Fix the following warning seen on GCC 7.3:
+>   kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
 > 
-> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+> kunit_try_catch_throw is a function added in the following patch in this
+> series; it allows KUnit, a unit testing framework for the kernel, to
+> bail out of a broken test. As a consequence, it is a new __noreturn
+> function that objtool thinks is broken (as seen above). So fix this
+> warning by adding kunit_try_catch_throw to objtool's noreturn list.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Link: https://www.spinics.net/lists/linux-kbuild/msg21708.html
+> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
 > ---
->  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+>  tools/objtool/check.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt 
-> b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> new file mode 100644
-> index 0000000..f5fc6ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> @@ -0,0 +1,36 @@
-> +Aspeed SGPIO controller Device Tree Bindings
-> +-------------------------------------------
-> +
-> +Required properties:
-> +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-> +
-> +- #gpio-cells 		: Should be two
-> +			  - First cell is the GPIO line number
-> +			  - Second cell is used to specify optional
-> +			    parameters (unused)
-> +
-> +- reg			: Address and length of the register set for the device
-> +- gpio-controller	: Marks the device node as a GPIO controller.
-> +- interrupts		: Interrupt specifier (see interrupt bindings for
-> +			  details)
-> +- interrupt-controller	: Mark the GPIO controller as an 
-> interrupt-controller
-
-As this is a serial GPIO controller, a critical piece of configuration
-information is how many GPIOs we wish to serialise. This is done
-in multiples of 8, up to 80 pins.
-
-The bindings need to describe the "ngpios" property from the
-generic GPIO bindings and how this affects the behaviour of
-the controller.
-
-We also need to add the "bus-frequency" property here to control
-the rate of SGPMCK.
-
-> +
-> +Optional properties:
-> +
-> +- clocks                : A phandle to the clock to use for debounce 
-> timings
-
-We need this, but not for the reason specified, and it should be a
-required property. We need PCLK (the APB clock) to derive the SGPIO
-bus frequency. Despite what the datasheet blurb says, there's no
-debounce control for the SGPIO master (this is a copy/paste mistake
-from the description of the parallel GPIO master).
-
-> +
-> +The sgpio and interrupt properties are further described in their 
-> respective
-> +bindings documentation:
-> +
-> +- Documentation/devicetree/bindings/sgpio/gpio.txt
-> +- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +
-> +  Example:
-> +	sgpio@1e780200 {
-> +		#gpio-cells = <2>;
-> +		compatible = "aspeed,ast2500-sgpio";
-> +		gpio-controller;
-> +		interrupts = <40>;
-> +		reg = <0x1e780200 0x0100>;
-> +		interrupt-controller;
-> +	};
-
-You'll need to fix up the example after making the changes mentioned
-above.
-
-Andrew
-
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index 172f991957269..98db5fe85c797 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -134,6 +134,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
+>  		"usercopy_abort",
+>  		"machine_real_restart",
+>  		"rewind_stack_do_exit",
+> +		"kunit_try_catch_throw",
+>  	};
+>  
+>  	if (func->bind == STB_WEAK)
 > -- 
-> 2.7.4
+> 2.22.0.410.gd8fdbe21b5-goog
 > 
->
+
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+
+-- 
+Josh
