@@ -1,87 +1,91 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v7 06/18] kbuild: enable building KUnit
-Date: Wed, 10 Jul 2019 12:59:30 +0900
-Message-ID: <CAK7LNATx30AhZ51xozde=nO06-8UzuC0M9nfZXrqkyfmEFdu5w@mail.gmail.com>
-References: <20190709063023.251446-1-brendanhiggins@google.com> <20190709063023.251446-7-brendanhiggins@google.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext
+ Milbeaut HDMAC bindings
+Date: Tue, 9 Jul 2019 23:12:03 -0500
+Message-ID: <CABb+yY3OsAh3xgX8_vvA7A7mU+FkEj__BQs9CxMvf=eYxRYXyw@mail.gmail.com>
+References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
+ <20190613005237.1996-1-jassisinghbrar@gmail.com> <20190709143437.GA30850@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190709063023.251446-7-brendanhiggins@google.com>
+In-Reply-To: <20190709143437.GA30850@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, "Luis R. Rodriguez" <mcgrof@kernel.org>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, "Cc: Shuah Khan" <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, DTML <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTES
+To: Rob Herring <robh@kernel.org>
+Cc: dmaengine@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, vkoul@kernel.org, Mark Rutland <mark.rutland@arm.com>, orito.takao@socionext.com, Masami Hiramatsu <masami.hiramatsu@linaro.org>, kasai.kazuhiro@socionext.com, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 3:34 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
+On Tue, Jul 9, 2019 at 9:34 AM Rob Herring <robh@kernel.org> wrote:
 >
-> KUnit is a new unit testing framework for the kernel and when used is
-> built into the kernel as a part of it. Add KUnit to the root Kconfig and
-> Makefile to allow it to be actually built.
+> On Wed, Jun 12, 2019 at 07:52:37PM -0500, jassisinghbrar@gmail.com wrote:
+> > From: Jassi Brar <jaswinder.singh@linaro.org>
+> >
+> > Document the devicetree bindings for Socionext Milbeaut HDMAC
+> > controller. Controller has upto 8 floating channels, that need
+> > a predefined slave-id to work from a set of slaves.
+> >
+> > Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> > ---
+> >  .../bindings/dma/milbeaut-m10v-hdmac.txt           | 54 +++++++++++++++++++
+> >  1 file changed, 54 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> > new file mode 100644
+> > index 000000000000..a104fcb9e73d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> > @@ -0,0 +1,51 @@
+> > +* Milbeaut AHB DMA Controller
+> > +
+> > +Milbeaut AHB DMA controller has transfer capability bellow.
+> > + - memory to memory transfer
+> > + - device to memory transfer
+> > + - memory to device transfer
+> > +
+> > +Required property:
+> > +- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
+> > +- reg:              Should contain DMA registers location and length.
+> > +- interrupts:       Should contain all of the per-channel DMA interrupts.
 >
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Michal Marek <michal.lkml@markovi.net>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->  Kconfig  | 2 ++
->  Makefile | 2 +-
->  2 files changed, 3 insertions(+), 1 deletion(-)
+> How many?
 >
-> diff --git a/Kconfig b/Kconfig
-> index 48a80beab6853..10428501edb78 100644
-> --- a/Kconfig
-> +++ b/Kconfig
-> @@ -30,3 +30,5 @@ source "crypto/Kconfig"
->  source "lib/Kconfig"
+Each channel has an IRQ line. And the number of channels is
+configurable. So instead of having some explicit property like
+'dma-channels', we infer that from the number of irqs registered.
+
+> > +- #dma-cells:       Should be 1. Specify the ID of the slave.
+> > +- clocks:           Phandle to the clock used by the HDMAC module.
+> > +
+> > +
+> > +Example:
+> > +
+> > +     hdmac1: hdmac@1e110000 {
 >
->  source "lib/Kconfig.debug"
-> +
-> +source "kunit/Kconfig"
-> diff --git a/Makefile b/Makefile
-> index 3e4868a6498b2..60cf4f0813e0d 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -991,7 +991,7 @@ endif
->  PHONY += prepare0
+> dma-controller@...
 >
->  ifeq ($(KBUILD_EXTMOD),)
-> -core-y         += kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
-> +core-y         += kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/ kunit/
+OK
+
+> > +             compatible = "socionext,milbeaut-m10v-hdmac";
+> > +             reg = <0x1e110000 0x10000>;
+> > +             interrupts = <0 132 4>,
+> > +                          <0 133 4>,
+> > +                          <0 134 4>,
+> > +                          <0 135 4>,
+> > +                          <0 136 4>,
+> > +                          <0 137 4>,
+> > +                          <0 138 4>,
+> > +                          <0 139 4>;
+> > +             #dma-cells = <1>;
+> > +             clocks = <&dummy_clk>;
+> > +     };
+> > +
+> > +* DMA client
+> > +
+> > +Clients have to specify the DMA requests with phandles in a list.
 >
->  vmlinux-dirs   := $(patsubst %/,%,$(filter %/, $(init-y) $(init-m) \
->                      $(core-y) $(core-m) $(drivers-y) $(drivers-m) \
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
+> Nothing specific to this binding here and the client side is already
+> documented, so drop this section.
+>
+OK.
 
-
-This is so trivial, and do not need to get ack from me.
-
-Just a nit.
-
-
-When CONFIG_KUNIT is disable, is there any point in descending into kunit/ ?
-
-core-$(CONFIG_KUNIT) += kunit/
-
-... might be useful to skip kunit/ entirely.
-
-If you look at the top-level Makefile, some entries are doing this:
-
-
-init-y          := init/
-drivers-y       := drivers/ sound/
-drivers-$(CONFIG_SAMPLES) += samples/
-drivers-$(CONFIG_KERNEL_HEADER_TEST) += include/
-net-y           := net/
-libs-y          := lib/
-core-y          := usr/
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+Thanks
