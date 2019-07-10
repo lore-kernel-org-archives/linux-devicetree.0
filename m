@@ -1,32 +1,96 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 2/3] devfreq: exynos-bus: convert to use dev_pm_opp_set_rate()
-Date: Wed, 10 Jul 2019 19:04:34 +0200
-Message-ID: <CAJKOXPfWr-2t_e3f6oi7E6KLLRAbskzgEKz26XyK5n_9C8wV1w@mail.gmail.com>
-References: <CGME20190708141200eucas1p144ca3b2a5b4019aaa5773d23c0236f31@eucas1p1.samsung.com>
- <20190708141140.24379-1-k.konieczny@partner.samsung.com> <20190708141140.24379-3-k.konieczny@partner.samsung.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH V13 08/12] dt-bindings: Add PCIe supports-clkreq property
+Date: Wed, 10 Jul 2019 22:44:20 +0530
+Message-ID: <95103fa2-9181-247e-3fd5-1b0bd95e8bb9@nvidia.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-9-vidyas@nvidia.com>
+ <20190710152856.GB8781@e121166-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190708141140.24379-3-k.konieczny@partner.samsung.com>
+In-Reply-To: <20190710152856.GB8781@e121166-lin.cambridge.arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: k.konieczny@partner.samsung.com
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Jul 2019 at 16:12, <k.konieczny@partner.samsung.com> wrote:
->
-> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
->
-> Reuse opp core code for setting bus clock and voltage. As a side
-> effect this allow useage of coupled regulators feature (required
-> for boards using Exynos5422/5800 SoCs) because dev_pm_opp_set_rate()
-> uses regulator_set_voltage_triplet() for setting regulator voltage
-> while the old code used regulator_set_voltage_tol() with fixed
-> tolerance. This patch also removes no longer needed parsing of DT
-> property "exynos,voltage-tolerance" (no Exynos devfreq DT node uses
+On 7/10/2019 8:58 PM, Lorenzo Pieralisi wrote:
+> On Wed, Jul 10, 2019 at 11:52:08AM +0530, Vidya Sagar wrote:
+>> Some host controllers need to know the existence of clkreq signal routing to
+>> downstream devices to be able to advertise low power features like ASPM L1
+>> substates. Without clkreq signal routing being present, enabling ASPM L1 sub
+>> states might lead to downstream devices falling off the bus. Hence a new device
+> 
+> You mean "being disconnected from the bus" right ? I will update it.
+Yes. I meant the same.
 
-Please also update the bindings in such case. Both with removal of
-unused property and with example/recommended regulator couplings.
-
-Best regards,
-Krzysztof
+> 
+> Lorenzo
+> 
+>> tree property 'supports-clkreq' is added to make such host controllers
+>> aware of clkreq signal routing to downstream devices.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Reviewed-by: Thierry Reding <treding@nvidia.com>
+>> ---
+>> V13:
+>> * None
+>>
+>> V12:
+>> * Rebased on top of linux-next top of the tree
+>>
+>> V11:
+>> * None
+>>
+>> V10:
+>> * None
+>>
+>> V9:
+>> * None
+>>
+>> V8:
+>> * None
+>>
+>> V7:
+>> * None
+>>
+>> V6:
+>> * s/Documentation\/devicetree/dt-bindings/ in the subject
+>>
+>> V5:
+>> * None
+>>
+>> V4:
+>> * Rebased on top of linux-next top of the tree
+>>
+>> V3:
+>> * None
+>>
+>> V2:
+>> * This is a new patch in v2 series
+>>
+>>   Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+>> index 2a5d91024059..29bcbd88f457 100644
+>> --- a/Documentation/devicetree/bindings/pci/pci.txt
+>> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+>> @@ -27,6 +27,11 @@ driver implementation may support the following properties:
+>>   - reset-gpios:
+>>      If present this property specifies PERST# GPIO. Host drivers can parse the
+>>      GPIO and apply fundamental reset to endpoints.
+>> +- supports-clkreq:
+>> +   If present this property specifies that CLKREQ signal routing exists from
+>> +   root port to downstream device and host bridge drivers can do programming
+>> +   which depends on CLKREQ signal existence. For example, programming root port
+>> +   not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
+>>   
+>>   PCI-PCI Bridge properties
+>>   -------------------------
+>> -- 
+>> 2.17.1
+>>
