@@ -1,120 +1,91 @@
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v8 07/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
- Mode
-Date: Wed, 10 Jul 2019 15:36:50 +0100
-Message-ID: <20190710143649.w5dplhzdpi3bxp7e@willie-the-truck>
-References: <1561774167-24141-1-git-send-email-yong.wu@mediatek.com>
- <1561774167-24141-8-git-send-email-yong.wu@mediatek.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH V13 08/12] dt-bindings: Add PCIe supports-clkreq property
+Date: Wed, 10 Jul 2019 16:28:56 +0100
+Message-ID: <20190710152856.GB8781@e121166-lin.cambridge.arm.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-9-vidyas@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1561774167-24141-8-git-send-email-yong.wu@mediatek.com>
+In-Reply-To: <20190710062212.1745-9-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 29, 2019 at 10:09:13AM +0800, Yong Wu wrote:
-> MediaTek extend the arm v7s descriptor to support the dram over 4GB.
-> 
-> In the mt2712 and mt8173, it's called "4GB mode", the physical address
-> is from 0x4000_0000 to 0x1_3fff_ffff, but from EMI point of view, it
-> is remapped to high address from 0x1_0000_0000 to 0x1_ffff_ffff, the
-> bit32 is always enabled. thus, in the M4U, we always enable the bit9
-> for all PTEs which means to enable bit32 of physical address.
-> 
-> but in mt8183, M4U support the dram from 0x4000_0000 to 0x3_ffff_ffff
-> which isn't remaped. We extend the PTEs: the bit9 represent bit32 of
-> PA and the bit4 represent bit33 of PA. Meanwhile the iova still is
-> 32bits.
+On Wed, Jul 10, 2019 at 11:52:08AM +0530, Vidya Sagar wrote:
+> Some host controllers need to know the existence of clkreq signal routing to
+> downstream devices to be able to advertise low power features like ASPM L1
+> substates. Without clkreq signal routing being present, enabling ASPM L1 sub
+> states might lead to downstream devices falling off the bus. Hence a new device
 
-What happens if bit4 is set in the pte for mt2712 or mt8173? Perhaps the
-io-pgtable backend should be allowing oas > 32 when
-IO_PGTABLE_QUIRK_ARM_MTK_4GB is set, and then enforcing that itself.
+You mean "being disconnected from the bus" right ? I will update it.
 
-> In order to unify code, in the "4GB mode", we add the bit32 for the
-> physical address manually in our driver.
+Lorenzo
+
+> tree property 'supports-clkreq' is added to make such host controllers
+> aware of clkreq signal routing to downstream devices.
 > 
-> Correspondingly, Adding bit32 and bit33 for the PA in the iova_to_phys
-> has to been moved into v7s.
-> 
-> Regarding whether the pagetable address could be over 4GB, the mt8183
-> support it while the previous mt8173 don't. thus keep it as is.
-> 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
 > ---
-> Comparing with the previous one:
-> 1). Add a new patch "iommu/mediatek: Fix iova_to_phys PA start for 4GB
-> mode" before this one. Thus rebase it.
-> A little difference: in the 4gb mode, we add bit32 for PA. and the PA got
-> from iova_to_phys always have bit32 here, thus we should adjust it to locate
-> the valid pa.
-> 2). Add this code suggested from Evan.
->  if (!data->plat_data->has_4gb_mode)
-> 	       data->enable_4GB = false;
-> ---
->  drivers/iommu/io-pgtable-arm-v7s.c | 31 ++++++++++++++++++++++++-------
->  drivers/iommu/mtk_iommu.c          | 29 ++++++++++++++++++-----------
->  drivers/iommu/mtk_iommu.h          |  1 +
->  3 files changed, 43 insertions(+), 18 deletions(-)
+> V13:
+> * None
 > 
-> diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
-> index 94c38db..4077822 100644
-> --- a/drivers/iommu/io-pgtable-arm-v7s.c
-> +++ b/drivers/iommu/io-pgtable-arm-v7s.c
-> @@ -123,7 +123,9 @@
->  #define ARM_V7S_TEX_MASK		0x7
->  #define ARM_V7S_ATTR_TEX(val)		(((val) & ARM_V7S_TEX_MASK) << ARM_V7S_TEX_SHIFT)
+> V12:
+> * Rebased on top of linux-next top of the tree
+> 
+> V11:
+> * None
+> 
+> V10:
+> * None
+> 
+> V9:
+> * None
+> 
+> V8:
+> * None
+> 
+> V7:
+> * None
+> 
+> V6:
+> * s/Documentation\/devicetree/dt-bindings/ in the subject
+> 
+> V5:
+> * None
+> 
+> V4:
+> * Rebased on top of linux-next top of the tree
+> 
+> V3:
+> * None
+> 
+> V2:
+> * This is a new patch in v2 series
+> 
+>  Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+> index 2a5d91024059..29bcbd88f457 100644
+> --- a/Documentation/devicetree/bindings/pci/pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+> @@ -27,6 +27,11 @@ driver implementation may support the following properties:
+>  - reset-gpios:
+>     If present this property specifies PERST# GPIO. Host drivers can parse the
+>     GPIO and apply fundamental reset to endpoints.
+> +- supports-clkreq:
+> +   If present this property specifies that CLKREQ signal routing exists from
+> +   root port to downstream device and host bridge drivers can do programming
+> +   which depends on CLKREQ signal existence. For example, programming root port
+> +   not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
 >  
-> -#define ARM_V7S_ATTR_MTK_4GB		BIT(9) /* MTK extend it for 4GB mode */
-> +/* MediaTek extend the two bits below for over 4GB mode */
-> +#define ARM_V7S_ATTR_MTK_PA_BIT32	BIT(9)
-> +#define ARM_V7S_ATTR_MTK_PA_BIT33	BIT(4)
->  
->  /* *well, except for TEX on level 2 large pages, of course :( */
->  #define ARM_V7S_CONT_PAGE_TEX_SHIFT	6
-> @@ -190,13 +192,22 @@ static dma_addr_t __arm_v7s_dma_addr(void *pages)
->  static arm_v7s_iopte paddr_to_iopte(phys_addr_t paddr, int lvl,
->  				    struct io_pgtable_cfg *cfg)
->  {
-> -	return paddr & ARM_V7S_LVL_MASK(lvl);
-> +	arm_v7s_iopte pte = paddr & ARM_V7S_LVL_MASK(lvl);
-> +
-> +	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB) {
-> +		if (paddr & BIT_ULL(32))
-> +			pte |= ARM_V7S_ATTR_MTK_PA_BIT32;
-> +		if (paddr & BIT_ULL(33))
-> +			pte |= ARM_V7S_ATTR_MTK_PA_BIT33;
-> +	}
-> +	return pte;
->  }
->  
->  static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
->  				  struct io_pgtable_cfg *cfg)
->  {
->  	arm_v7s_iopte mask;
-> +	phys_addr_t paddr;
->  
->  	if (ARM_V7S_PTE_IS_TABLE(pte, lvl))
->  		mask = ARM_V7S_TABLE_MASK;
-> @@ -205,7 +216,14 @@ static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
->  	else
->  		mask = ARM_V7S_LVL_MASK(lvl);
->  
-> -	return pte & mask;
-> +	paddr = pte & mask;
-> +	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB) {
-> +		if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
-> +			paddr |= BIT_ULL(32);
-> +		if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
-> +			paddr |= BIT_ULL(33);
-> +	}
-> +	return paddr;
-
-I think this relies on CONFIG_PHYS_ADDR_T_64BIT, which isn't always set on
-32-bit ARM.
-
-Will
+>  PCI-PCI Bridge properties
+>  -------------------------
+> -- 
+> 2.17.1
+> 
