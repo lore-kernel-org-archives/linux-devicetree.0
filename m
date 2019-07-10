@@ -1,290 +1,133 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [GIT PULL] Devicetree updates for 5.3
-Date: Wed, 10 Jul 2019 14:50:01 -0600
-Message-ID: <CAL_JsqJAydO3Zjx_9S+r8h5YAQbDBJjqHSFV-aKkN9n=MH7erg@mail.gmail.com>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Date: Wed, 10 Jul 2019 15:11:04 -0700
+Message-ID: <CA+E=qVdFoT137pADfxz3uMwhOqjqrA9+6hBeOfbJxuH-M-3Pjw@mail.gmail.com>
+References: <20190607062802.m5wslx3imiqooq5a@flea> <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
+ <20190607094030.GA12373@lst.de> <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
+ <20190612152022.c3cfhp4cauhzhfyr@flea> <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
+ <20190701095842.fvganvycce2cy7jn@flea> <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
+ <20190709085532.cdqv7whuesrjs64c@flea> <CA+E=qVdz4vfU3rtTTKjYdM+4UA+=FWheJfWOMaDtFMnWQ1rHbw@mail.gmail.com>
+ <20190710114042.ybgavnxb4hgqrtor@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190710114042.ybgavnxb4hgqrtor@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Torsten Duwe <duwe@lst.de>, Harald Geyer <harald@ccbib.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Wed, Jul 10, 2019 at 4:40 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Tue, Jul 09, 2019 at 01:30:18PM -0700, Vasily Khoruzhick wrote:
+> > On Tue, Jul 9, 2019 at 1:55 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Mon, Jul 08, 2019 at 05:49:21PM -0700, Vasily Khoruzhick wrote:
+> > > > > > Maybe instead of edp-connector one would introduce integrator's specific
+> > > > > > connector, for example with compatible "olimex,teres-edp-connector"
+> > > > > > which should follow edp abstract connector rules? This will be at least
+> > > > > > consistent with below presentation[1] - eDP requirements depends on
+> > > > > > integrator. Then if olimex has standard way of dealing with panels
+> > > > > > present in olimex/teres platforms the driver would then create
+> > > > > > drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
+> > > > > > Anyway it still looks fishy for me :), maybe because I am not
+> > > > > > familiarized with details of these platforms.
+> > > > >
+> > > > > That makes sense yes
+> > > >
+> > > > Actually, it makes no sense at all. Current implementation for anx6345
+> > > > driver works fine as is with any panel specified assuming panel delays
+> > > > are long enough for connected panel. It just doesn't use panel timings
+> > > > from the driver. Creating a platform driver for connector itself looks
+> > > > redundant since it can't be reused, it doesn't describe actual
+> > > > hardware and it's just defeats purpose of DT by introducing
+> > > > board-specific code.
+> > >
+> > > I'm not sure where you got the idea that the purpose of DT is to not
+> > > have any board-specific code.
+> >
+> > I believe DT was an attempt to move to declarative approach for
+> > describing hardware. Yes, we have different compatibles for different
+> > devices but they're specific to particular device rather than
+> > particular board. Device interconnection is described in DT along with
+> > some properties rather than in board-specific C-file.
+>
+> You're right, but it's not incompatible with having some code to deal
+> with some board quirk.
+>
+> > Introducing board-specific compatible for a connector isn't looking
+> > right to me.
+>
+> If that board has a board-specific behaviour for it's connector, then
+> what's the issue?
+>
+> You can't describe all the quirks in the all boards using purely
+> properties.
+>
+> > > It's perfectly fine to have some, that's even why there's a compatible
+> > > assigned to each and every board.
+> > >
+> > > What the DT is about is allowing us to have a generic behaviour that
+> > > we can detect: we can have a given behaviour for a given board, and a
+> > > separate one for another one, and this will be evaluated at runtime.
+> > >
+> > > This is *exactly* what this is about: we can have a compatible that
+> > > sets a given, more specific, behaviour (olimex,teres-edp-connector)
+> > > while saying that this is compatible with the generic behaviour
+> > > (edp-connector). That way, any OS will know what quirk to apply if
+> > > needed, and if not that it can use the generic behaviour.
+> > >
+> > > And we could create a generic driver, for the generic behaviour if
+> > > needed.
+> > >
+> > > > There's another issue: if we introduce edp-connector we'll have to
+> > > > specify power up delays somewhere (in dts? or in platform driver?), so
+> > > > edp-connector doesn't really solve the issue of multiple panels with
+> > > > same motherboard.
+> > >
+> > > And that's what that compatible is about :)
+> >
+> > Sorry, I fail to see how it would be different from using existing
+> > panels infrastructure and different panels compatibles. I think Rob's
+> > idea was to introduce generic edp-connector.
+>
+> Again, there's no such thing as a generic edp-connector. The spec
+> doesn't define anything related to the power sequence for example.
+>
+> > If we can't make it generic then let's use panel infrastructure.
+>
+> Which uses a device specific compatible. Really, I'm not sure what
+> your objection and / or argument is here.
+>
+> In addition, when that was brought up in the discussion, you rejected
+> it because it was inconvenient:
+> https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1#comment_535206
 
-Please pull. There's 2 conflicts. The first is with your tree and SPDX
-tags in scripts/dtc/. The correct resolution is to take the version
-from my tree as that has the correct licenses from upstream dtc. The
-2nd conflict is with the netdev tree. It's fine to just delete
-ethernet.txt. The necessary changes are already in the new schema
-file.
+It is inconvenient, but I don't understand how having board-specific
+connectors fixes it.
 
-Rob
 
-The following changes since commit 852d095d16a6298834839f441593f59d58a31978=
-:
 
-  checkpatch.pl: Update DT vendor prefix check (2019-05-22 14:54:49 -0500)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-for-5.3
-
-for you to fetch changes up to f59d261180f3b66367962f1974090815ce710056:
-
-  dt-bindings: vendor-prefixes: add Sipeed (2019-07-09 16:57:41 -0600)
-
-----------------------------------------------------------------
-Devicetree updates for v5.3:
-
-- DT binding schema examples are now validated against the schemas.
-  Various examples are fixed due to that.
-
-- Sync dtc with upstream version v1.5.0-30-g702c1b6c0e73
-
-- Initial schemas for networking bindings. This includes ethernet, phy
-  and mdio common bindings with several Allwinner and stmmac converted
-  to the schema.
-
-- Conversion of more Arm top-level SoC/board bindings to DT schema
-
-- Conversion of PSCI binding to DT schema
-
-- Rework Arm CPU schema to coexist with other CPU schemas
-
-- Add a bunch of missing vendor prefixes and new ones for SoChip,
-  Sipeed, Kontron, B&R Industrial Automation GmbH, and Espressif
-
-- Add Mediatek UART RX wakeup support to binding
-
-- Add reset to ST UART binding
-
-- Remove some Linuxisms from the endianness common-properties.txt
-  binding
-
-- Make the flattened DT read-only after init
-
-- Ignore disabled reserved memory nodes
-
-- Clean-up some dead code in FDT functions
-
-----------------------------------------------------------------
-Amit Kucheria (1):
-      Documentation: arm: Link idle-states binding to "enable-method" prope=
-rty
-
-Brian Masney (1):
-      dt-bindings: backlight: lm3630a: correct schema validation
-
-Claire Chang (1):
-      dt-bindings: serial: add documentation for Rx in-band wakeup support
-
-Erwan Le Ray (1):
-      dt-bindings: stm32: serial: Add optional reset
-
-Geert Uytterhoeven (3):
-      dt-bindings: property-units: Sanitize unit naming
-      dt-bindings: Add missing newline at end of file
-      of/platform: Drop superfluous cast in of_device_make_bus_id()
-
-Hannes Schmelzer (1):
-      Documentation: devicetree: Add vendor prefix for B&R Industrial
-Automation GmbH
-
-Icenowy Zheng (2):
-      dt-bindings: vendor-prefixes: add SoChip
-      dt-bindings: vendor-prefixes: add Sipeed
-
-Kefeng Wang (2):
-      of/fdt: Fix =E2=80=98of_fdt_match=E2=80=99 defined but not used compi=
-ler warning
-      dt-bindings: 83xx-512x-pci: Drop cell-index property
-
-Krishna Reddy (1):
-      of: reserved-memory: ignore disabled memory-region nodes
-
-Marco Felsch (1):
-      dt-bindings: add Kontron vendor prefix
-
-Masahiro Yamada (1):
-      of/fdt: pass early_init_dt_reserve_memory_arch() with bool type nomap
-
-Maxime Ripard (22):
-      dt-bindings: Add vendor prefix for Espressif
-      dt-bindings: vendor: Escape single quote
-      dt-bindings: vendor: Fix simtek vendor compatible
-      dt-bindings: vendor: Add a bunch of vendors
-      dt-bindings: net: Add YAML schemas for the generic Ethernet options
-      dt-bindings: net: Add a YAML schemas for the generic PHY options
-      dt-bindings: net: Add a YAML schemas for the generic MDIO options
-      MAINTAINERS: Add Ethernet PHY YAML file
-      dt-bindings: net: phy: The interrupt property is not mandatory
-      dt-bindings: net: sun4i-emac: Convert the binding to a schemas
-      dt-bindings: net: sun4i-mdio: Convert the binding to a schemas
-      dt-bindings: net: stmmac: Convert the binding to a schemas
-      dt-bindings: net: sun7i-gmac: Convert the binding to a schemas
-      dt-bindings: net: sun8i-emac: Convert the binding to a schemas
-      dt-bindings: net: dwmac: Deprecate the PHY reset properties
-      dt-bindings: net: mdio: Add a nodename pattern
-      dt-bindings: net: mdio: Add address and size cells
-      dt-bindings: net: mdio: Add child nodes
-      dt-bindings: display: Fix simple-framebuffer example
-      dt-bindings: simple-framebuffer: Add requirement for pipelines
-      dt-bindings: net: Use phy-mode instead of phy-connection-type
-      dt-bindings: usb: ehci: Fix example warnings
-
-Rob Herring (15):
-      scripts/dtc: Update to upstream version v1.5.0-23-g87963ee20693
-      dt-bindings: vendor-prefixes: Also allow node names starting with '_'
-      dt-bindings: Check the examples against the schemas
-      scripts/dtc: Update to upstream version v1.5.0-30-g702c1b6c0e73
-      dt-bindings: arm: Convert Alpine board/soc bindings to json-schema
-      dt-bindings: arm: qcom: Add missing schema for MSM8974
-      dt-bindings: arm: qcom: Add missing schema for IPQ4019 boards
-      dt-bindings: arm: Convert Axxia board/soc bindings to json-schema
-      dt-bindings: arm: Convert MOXA ART board/soc bindings to json-schema
-      dt-bindings: arm: Convert NXP LPC32xx board/soc bindings to json-sche=
-ma
-      dt-bindings: arm: Convert Conexant Digicolor board/soc bindings
-to json-schema
-      dt-bindings: arm: Convert PSCI binding to json-schema
-      dt-bindings: arm: Limit cpus schema to only check Arm 'cpu' nodes
-      dt-bindings: mtd: sunxi-nand: Drop 'maxItems' from child 'reg' proper=
-ty
-      dt-bindings: arm: Convert RDA Micro board/soc bindings to json-schema
-
-Stephen Boyd (3):
-      dt-bindings: Remove Linuxisms from common-properties binding
-      of/fdt: Remove dead code and mark functions with __init
-      of/fdt: Mark initial_boot_params as __ro_after_init
-
-Wolfram Sang (1):
-      of: unittest: simplify getting the adapter of a client
-
- Documentation/arm64/booting.txt                    |   2 +-
- Documentation/devicetree/bindings/Makefile         |   2 +-
- .../devicetree/bindings/arm/al,alpine.txt          |  16 -
- .../devicetree/bindings/arm/al,alpine.yaml         |  21 +
- Documentation/devicetree/bindings/arm/arm-boards   |   2 +-
- Documentation/devicetree/bindings/arm/axxia.txt    |  12 -
- Documentation/devicetree/bindings/arm/axxia.yaml   |  19 +
- Documentation/devicetree/bindings/arm/cpus.yaml    | 487 ++++++++++-------=
-----
- .../devicetree/bindings/arm/digicolor.txt          |   6 -
- .../devicetree/bindings/arm/digicolor.yaml         |  16 +
- .../devicetree/bindings/arm/idle-states.txt        |  15 +-
- Documentation/devicetree/bindings/arm/moxart.txt   |  12 -
- Documentation/devicetree/bindings/arm/moxart.yaml  |  19 +
- .../devicetree/bindings/arm/nxp/lpc32xx.txt        |   8 -
- .../devicetree/bindings/arm/nxp/lpc32xx.yaml       |  25 ++
- Documentation/devicetree/bindings/arm/psci.txt     | 111 -----
- Documentation/devicetree/bindings/arm/psci.yaml    | 163 +++++++
- Documentation/devicetree/bindings/arm/qcom.yaml    |  14 +
- Documentation/devicetree/bindings/arm/rda.txt      |  17 -
- Documentation/devicetree/bindings/arm/rda.yaml     |  20 +
- .../devicetree/bindings/common-properties.txt      |  17 +-
- .../bindings/display/simple-framebuffer.yaml       |  25 +-
- .../devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt   |   2 +-
- .../bindings/leds/backlight/lm3630a-backlight.yaml |  21 +-
- .../bindings/mtd/allwinner,sun4i-a10-nand.yaml     |   1 -
- .../bindings/net/allwinner,sun4i-a10-emac.yaml     |  56 +++
- .../bindings/net/allwinner,sun4i-a10-mdio.yaml     |  70 +++
- .../bindings/net/allwinner,sun4i-emac.txt          |  19 -
- .../bindings/net/allwinner,sun4i-mdio.txt          |  27 --
- .../bindings/net/allwinner,sun7i-a20-gmac.txt      |  27 --
- .../bindings/net/allwinner,sun7i-a20-gmac.yaml     |  65 +++
- .../bindings/net/allwinner,sun8i-a83t-emac.yaml    | 321 ++++++++++++++
- .../devicetree/bindings/net/dwmac-sun8i.txt        | 201 ---------
- .../bindings/net/ethernet-controller.yaml          | 206 +++++++++
- .../devicetree/bindings/net/ethernet-phy.yaml      | 177 ++++++++
- Documentation/devicetree/bindings/net/ethernet.txt |  68 +--
- .../devicetree/bindings/net/fixed-link.txt         |  55 +--
- Documentation/devicetree/bindings/net/mdio.txt     |  38 +-
- Documentation/devicetree/bindings/net/mdio.yaml    |  74 ++++
- Documentation/devicetree/bindings/net/phy.txt      |  80 +---
- .../devicetree/bindings/net/snps,dwmac.yaml        | 411 +++++++++++++++++
- Documentation/devicetree/bindings/net/stmmac.txt   | 179 +-------
- .../devicetree/bindings/pci/83xx-512x-pci.txt      |   1 -
- .../bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt   |   2 +-
- .../devicetree/bindings/property-units.txt         |  34 +-
- .../devicetree/bindings/regulator/pv88060.txt      |   2 +-
- .../devicetree/bindings/serial/mtk-uart.txt        |  13 +-
- .../devicetree/bindings/serial/st,stm32-usart.txt  |   1 +
- .../devicetree/bindings/sound/cs42l73.txt          |   2 +-
- .../devicetree/bindings/usb/generic-ehci.yaml      |   3 +-
- .../devicetree/bindings/vendor-prefixes.yaml       |  76 +++-
- Documentation/translations/zh_CN/arm64/booting.txt |   2 +-
- MAINTAINERS                                        |   3 +-
- drivers/of/fdt.c                                   | 141 +++---
- drivers/of/of_reserved_mem.c                       |   3 +
- drivers/of/platform.c                              |   3 +-
- drivers/of/unittest.c                              |   2 +-
- include/linux/of_fdt.h                             |  11 -
- scripts/dtc/Makefile.dtc                           |   1 +
- scripts/dtc/checks.c                               |  72 ++-
- scripts/dtc/data.c                                 |  17 +-
- scripts/dtc/dtc-lexer.l                            |  17 +-
- scripts/dtc/dtc-parser.y                           |  17 +-
- scripts/dtc/dtc.c                                  |  17 +-
- scripts/dtc/dtc.h                                  |  20 +-
- scripts/dtc/flattree.c                             |  19 +-
- scripts/dtc/fstree.c                               |  17 +-
- scripts/dtc/libfdt/Makefile.libfdt                 |   3 +
- scripts/dtc/libfdt/fdt.c                           |  47 +-
- scripts/dtc/libfdt/fdt.h                           |  47 +-
- scripts/dtc/libfdt/fdt_addresses.c                 |  94 ++--
- scripts/dtc/libfdt/fdt_empty_tree.c                |  47 +-
- scripts/dtc/libfdt/fdt_overlay.c                   |  57 +--
- scripts/dtc/libfdt/fdt_ro.c                        |  97 ++--
- scripts/dtc/libfdt/fdt_rw.c                        |  69 +--
- scripts/dtc/libfdt/fdt_strerror.c                  |  47 +-
- scripts/dtc/libfdt/fdt_sw.c                        | 125 +++---
- scripts/dtc/libfdt/fdt_wip.c                       |  47 +-
- scripts/dtc/libfdt/libfdt.h                        | 205 ++++++---
- scripts/dtc/libfdt/libfdt_env.h                    |  48 +-
- scripts/dtc/libfdt/libfdt_internal.h               |  47 +-
- scripts/dtc/livetree.c                             |  37 +-
- scripts/dtc/srcpos.c                               |  16 +-
- scripts/dtc/srcpos.h                               |  16 +-
- scripts/dtc/treesource.c                           |  17 +-
- scripts/dtc/util.c                                 |  16 +-
- scripts/dtc/util.h                                 |  20 +-
- scripts/dtc/version_gen.h                          |   2 +-
- scripts/dtc/yamltree.c                             |  16 +-
- 89 files changed, 2562 insertions(+), 2181 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/al,alpine.txt
- create mode 100644 Documentation/devicetree/bindings/arm/al,alpine.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/axxia.txt
- create mode 100644 Documentation/devicetree/bindings/arm/axxia.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/digicolor.txt
- create mode 100644 Documentation/devicetree/bindings/arm/digicolor.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/moxart.txt
- create mode 100644 Documentation/devicetree/bindings/arm/moxart.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/nxp/lpc32xx.txt
- create mode 100644 Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/psci.txt
- create mode 100644 Documentation/devicetree/bindings/arm/psci.yaml
- delete mode 100644 Documentation/devicetree/bindings/arm/rda.txt
- create mode 100644 Documentation/devicetree/bindings/arm/rda.yaml
- create mode 100644
-Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
- create mode 100644
-Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml
- delete mode 100644
-Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
- delete mode 100644
-Documentation/devicetree/bindings/net/allwinner,sun4i-mdio.txt
- delete mode 100644
-Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.txt
- create mode 100644
-Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
- create mode 100644
-Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
- delete mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
- create mode 100644
-Documentation/devicetree/bindings/net/ethernet-controller.yaml
- create mode 100644 Documentation/devicetree/bindings/net/ethernet-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/net/mdio.yaml
- create mode 100644 Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> And I agree with you on that one.
+>
+> > > > I'd say DT overlays should be preferred solution here, not another
+> > > > connector binding.
+> > >
+> > > Overlays are a way to apply a device tree dynamically. It's orthogonal
+> > > to the binding.
+> >
+> > It isn't orthogonal to original problem though.
+>
+> It is. The original problem is that you want to power up whatever is
+> on the other side of a eDP link using an arbitrary regulator.
+>
+> This is a "how do I describe that in my DT" problem, and it really has
+> nothing to do with how the DT is being passed to the kernel.
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
