@@ -1,96 +1,129 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V13 08/12] dt-bindings: Add PCIe supports-clkreq property
-Date: Wed, 10 Jul 2019 22:44:20 +0530
-Message-ID: <95103fa2-9181-247e-3fd5-1b0bd95e8bb9@nvidia.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
- <20190710062212.1745-9-vidyas@nvidia.com>
- <20190710152856.GB8781@e121166-lin.cambridge.arm.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 1/6] dt-bindings: irqchip: Add PRUSS interrupt controller
+ bindings
+Date: Wed, 10 Jul 2019 12:08:24 -0500
+Message-ID: <c3f0061f-22b0-c281-b8ff-4a2cb7e91aba@lechnology.com>
+References: <20190708035243.12170-1-s-anna@ti.com>
+ <20190708035243.12170-2-s-anna@ti.com>
+ <b67e8ce6-a291-ce4c-9972-b7fc7cd08bb4@ti.com>
+ <53868885-a78d-448a-1f2a-03a16251d028@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190710152856.GB8781@e121166-lin.cambridge.arm.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <53868885-a78d-448a-1f2a-03a16251d028@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suman Anna <s-anna@ti.com>, "Andrew F. Davis" <afd@ti.com>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 7/10/2019 8:58 PM, Lorenzo Pieralisi wrote:
-> On Wed, Jul 10, 2019 at 11:52:08AM +0530, Vidya Sagar wrote:
->> Some host controllers need to know the existence of clkreq signal routing to
->> downstream devices to be able to advertise low power features like ASPM L1
->> substates. Without clkreq signal routing being present, enabling ASPM L1 sub
->> states might lead to downstream devices falling off the bus. Hence a new device
-> 
-> You mean "being disconnected from the bus" right ? I will update it.
-Yes. I meant the same.
 
+>>> +- interrupts           : all the interrupts generated towards the main host
+>>> +                         processor in the SoC. The format depends on the
+>>> +                         interrupt specifier for the particular SoC's ARM GIC
+>>> +                         parent interrupt controller. A shared interrupt can
+>>> +                         be skipped if the desired destination and usage is by
+>>> +                         a different processor/device.
+>>> +- interrupt-names      : should use one of the following names for each valid
+>>> +                         interrupt connected to ARM GIC, the name should match
+>>> +                         the corresponding host interrupt number,
+>>> +                             "host0", "host1", "host2", "host3", "host4",
+>>> +                             "host5", "host6" or "host7"
+>>> +- interrupt-controller : mark this node as an interrupt controller
+>>> +- #interrupt-cells     : should be 1. Client users shall use the PRU System
+>>> +                         event number (the interrupt source that the client
+>>> +                         is interested in) as the value of the interrupts
+>>> +                         property in their node
+>>> +
+>>> +Optional Properties:
+>>> +--------------------
+>>> +The following properties are _required_ only for some SoCs. If none of the below
+>>> +properties are defined, it implies that all the host interrupts 2 through 9 are
+>>> +connected exclusively to the ARM GIC.
+>>> +
+>>> +- ti,irqs-reserved     : an array of 8-bit elements of host interrupts between
+>>> +                         0 and 7 (corresponding to PRUSS INTC output interrupts
+>>> +                         2 through 9) that are not connected to the ARM GIC.
+>>
+>> The reason for 0-7 mapping to 2-9 is not instantly clear to someone
+>> reading this. If you respin this could you note that reason is
+>> interrupts 0 and 1 are always routed back into the PRUSS.
 > 
-> Lorenzo
+> Yeah, this is always going to be somewhat confusing since the driver has
+> to deal with all hosts from channel-mapping perspective, but only the 8
+> interrupts at most that reach MPU for handling interrupts. TRM has
 > 
->> tree property 'supports-clkreq' is added to make such host controllers
->> aware of clkreq signal routing to downstream devices.
+> Anyway, I have already mentioned the first 2 interrupt routing in the
+> first paragraph above.
+> 
+> Thinking more
+>> on that, the same is true for interrupt 7 ("host5") on AM437x/66AK2G yet
+>> we don't skip that in the naming.. now that we have the reserved IRQ
+>> mechanism above, why not leave the one-to-one interrupt to name mapping,
+>> but always have at least the first two marked as reserved for all the
+>> current devices:
 >>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Thierry Reding <treding@nvidia.com>
->> ---
->> V13:
->> * None
+>> ti,irqs-reserved = /bits/ 8 <0 1>;
 >>
->> V12:
->> * Rebased on top of linux-next top of the tree
->>
->> V11:
->> * None
->>
->> V10:
->> * None
->>
->> V9:
->> * None
->>
->> V8:
->> * None
->>
->> V7:
->> * None
->>
->> V6:
->> * s/Documentation\/devicetree/dt-bindings/ in the subject
->>
->> V5:
->> * None
->>
->> V4:
->> * Rebased on top of linux-next top of the tree
->>
->> V3:
->> * None
->>
->> V2:
->> * This is a new patch in v2 series
->>
->>   Documentation/devicetree/bindings/pci/pci.txt | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
->> index 2a5d91024059..29bcbd88f457 100644
->> --- a/Documentation/devicetree/bindings/pci/pci.txt
->> +++ b/Documentation/devicetree/bindings/pci/pci.txt
->> @@ -27,6 +27,11 @@ driver implementation may support the following properties:
->>   - reset-gpios:
->>      If present this property specifies PERST# GPIO. Host drivers can parse the
->>      GPIO and apply fundamental reset to endpoints.
->> +- supports-clkreq:
->> +   If present this property specifies that CLKREQ signal routing exists from
->> +   root port to downstream device and host bridge drivers can do programming
->> +   which depends on CLKREQ signal existence. For example, programming root port
->> +   not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
->>   
->>   PCI-PCI Bridge properties
->>   -------------------------
->> -- 
->> 2.17.1
->>
+>> Then any "hostx" listed as reserved need not be present in the host
+>> interrupts property array. To me that would solve the "managing
+>> interrupts not targeting the Linux running core" problem and keep the
+>> names consistent, e.g.:
+> 
+> I had actually used the interrupt-names always starting from "host2"
+> through "host9" (names from PRU perspective) previously, and I have
+> changed this to start indexing from 0 in this series to address an
+> internal review comment from Grygorii and to align with TRM. All the
+> TRMs (except for AM572x) actually use the names/signals "host_intr0",
+> "host_intr1".."host_intr7" etc for the interrupts going towards MPU.
+> Maybe I should actually rename the interrupt-names to be host_intrX
+> instead of hostX to avoid confusion and be exactly aligned with the TRM
+> names. I will file a bug against AM57xx TRM to align the names with all
+> other SoC TRMs.
+> 
+> I am using "output interrupt lines" to imply names w.r.t PRU vs "host
+> interrupt" to imply ARM GIC names.
+> 
+> regards
+> Suman
+> 
+
+FWIW, the AM1808 TRM only uses PRU_EVTOUT0 to PRU_EVTOUT7 and does not
+mention "host" in relation to these interrupts. The AM3xxx and AM4xxx
+also use similar names (PRU_ICSS_EVTOUT0, PRU_ICSS1_EVTOUT0) although
+they do mention that the source is "pr1_host[0] output/events exported
+from PRU_ICSS1". (Also, the older processors have AINTC instead of GIC).
+
+Maybe to help clarify here we could mention "event" in the docs:
+
+
++- interrupt-names      : should use one of the following names for each valid
++                         host event interrupt connected to ARM interrupt
++                         controller,the name should match the corresponding
++                         host event interrupt number,
++                             "host0", "host1", "host2", "host3", "host4",
++                             "host5", "host6" or "host7"
+
+
+
+...
+
+>>> +
+>>> +Example:
+>>> +--------
+>>> +
+>>> +1.	/* AM33xx PRU-ICSS */
+>>> +	pruss: pruss@0 {
+
+I don't suppose there is a generic name that could be used here
+instead of pruss? It seems like there should be one for remote
+processors that aren't DSPs or other specialized processors.
