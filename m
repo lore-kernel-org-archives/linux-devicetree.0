@@ -1,85 +1,146 @@
-From: Luis de Oliveira <Luis.Oliveira@synopsys.com>
-Subject: RE: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
- Host
-Date: Wed, 10 Jul 2019 10:23:09 +0000
-Message-ID: <MN2PR12MB371015DA79CE9D5A713D22B1CBF00@MN2PR12MB3710.namprd12.prod.outlook.com>
-References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
- <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
- <ae0ffeca-9305-b5a2-3480-da623d15ce67@microchip.com>
- <MN2PR12MB3710465D7065DAF1F2D45C45CBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
- <415416c4-c6d8-f81e-82cb-126e4702801b@microchip.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH V13 05/12] PCI: dwc: Add ext config space capability
+ search API
+Date: Wed, 10 Jul 2019 11:37:09 +0100
+Message-ID: <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-6-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <415416c4-c6d8-f81e-82cb-126e4702801b@microchip.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190710062212.1745-6-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>, "Luis.Oliveira@synopsys.com" <Luis.Oliveira@synopsys.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kishon@ti.com" <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-DQpIaSBFdWdlbiwNCg0KDQpGcm9tOiBFdWdlbi5IcmlzdGV2QG1pY3JvY2hpcC5jb20gPEV1Z2Vu
-LkhyaXN0ZXZAbWljcm9jaGlwLmNvbT4NCkRhdGU6IFdlZCwgSnVsIDEwLCAyMDE5IGF0IDA3OjUz
-OjAyDQoNCj4gDQo+IA0KPiBPbiAwOS4wNy4yMDE5IDIwOjA4LCBMdWlzIGRlIE9saXZlaXJhIHdy
-b3RlOg0KPiANCj4gPiANCj4gPiBIaSBFdWdlbiwNCj4gPiANCj4gPiANCj4gPiBGcm9tOiBFdWdl
-bi5IcmlzdGV2QG1pY3JvY2hpcC5jb20gPEV1Z2VuLkhyaXN0ZXZAbWljcm9jaGlwLmNvbT4NCj4g
-PiBEYXRlOiBUdWUsIEp1bCAwOSwgMjAxOSBhdCAxNTozMzo1MA0KPiA+IA0KPiA+Pg0KPiA+Pg0K
-PiA+PiBPbiAxMS4wNi4yMDE5IDIyOjIwLCBMdWlzIE9saXZlaXJhIHdyb3RlOg0KPiA+Pj4gRnJv
-bTogTHVpcyBPbGl2ZWlyYSA8bG9saXZlaUBzeW5vcHN5cy5jb20+DQo+ID4+Pg0KPiA+Pj4gQWRk
-IGJpbmRpbmdzIGZvciBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgQ1NJLTIgaG9zdC4NCj4gPj4+
-DQo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBMdWlzIE9saXZlaXJhIDxsb2xpdmVpQHN5bm9wc3lzLmNv
-bT4NCj4gPj4+IC0tLQ0KPiA+Pj4gQ2hhbmdlbG9nDQo+ID4+PiB2My12NA0KPiA+Pj4gLSByZW1v
-dmUgInBsYXQiIGZyb20gdGhlIGJsb2NrIG5hbWUgQHJvYiBAbGF1cmVudA0KPiA+Pj4gLSByZW1v
-dmUgInBoeS1uYW1lcyIgd2hlbiBzaW5nbGUtZW50cnkgQHJvYg0KPiA+Pj4gLSByZW1vdmUgInNu
-cHMsb3V0cHV0LXR5cGUiIC0+IHdlbnQgdG8gdGhlIGRyaXZlciBjb25maWcgQGxhdXJlbnQNCj4g
-Pj4+DQo+ID4+PiAgICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS50
-eHQgICAgICB8IDQxICsrKysrKysrKysrKysrKysrKysrKysNCj4gPj4+ICAgIDEgZmlsZSBjaGFu
-Z2VkLCA0MSBpbnNlcnRpb25zKCspDQo+ID4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3NucHMsZHctY3NpLnR4dA0KPiA+Pj4N
-Cj4gPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVk
-aWEvc25wcyxkdy1jc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
-ZGlhL3NucHMsZHctY3NpLnR4dA0KPiA+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPj4+IGlu
-ZGV4IDAwMDAwMDAuLjYxM2I3ZjkNCj4gPj4+IC0tLSAvZGV2L251bGwNCj4gPj4+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS50eHQNCj4g
-Pj4+IEBAIC0wLDAgKzEsNDEgQEANCj4gPj4+ICtTeW5vcHN5cyBEZXNpZ25XYXJlIENTSS0yIEhv
-c3QgY29udHJvbGxlcg0KPiA+Pj4gKw0KPiA+Pj4gK0Rlc2NyaXB0aW9uDQo+ID4+PiArLS0tLS0t
-LS0tLS0NCj4gPj4+ICsNCj4gPj4+ICtUaGlzIEhXIGJsb2NrIGlzIHVzZWQgdG8gcmVjZWl2ZSBp
-bWFnZSBjb21pbmcgZnJvbSBhbiBNSVBJIENTSS0yIGNvbXBhdGlibGUNCj4gPj4+ICtjYW1lcmEu
-DQo+ID4+PiArDQo+ID4+PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPj4+ICstIGNvbXBhdGli
-bGUJCTogc2hhbGwgYmUgInNucHMsZHctY3NpIg0KPiA+Pj4gKy0gcmVnCQkJOiBwaHlzaWNhbCBi
-YXNlIGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIGRldmljZSBtZW1vcnkNCj4gPj4+ICsJCQkgIG1h
-cHBlZCByZWdpc3RlcnM7DQo+ID4+PiArLSBpbnRlcnJ1cHRzCQk6IERXIENTSS0yIEhvc3QgaW50
-ZXJydXB0cw0KPiA+Pj4gKy0gcGh5cwkJCTogTGlzdCBvZiBvbmUgUEhZIHNwZWNpZmllciAoYXMg
-ZGVmaW5lZCBpbg0KPiA+Pj4gKwkJCSAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BoeS9waHktYmluZGluZ3MudHh0KS4NCj4gPj4+ICsJCQkgIFRoaXMgUEhZIGlzIGEgTUlQSSBE
-UEhZIHdvcmtpbmcgaW4gUlggbW9kZS4NCj4gPj4+ICstIHJlc2V0cwkJOiBSZWZlcmVuY2UgdG8g
-YSByZXNldCBjb250cm9sbGVyIChvcHRpb25hbCkNCj4gPj4+ICsNCj4gPj4+ICtUaGUgcGVyLWJv
-YXJkIHNldHRpbmdzOg0KPiA+Pj4gKyAtIHBvcnQgc3ViLW5vZGUgZGVzY3JpYmluZyBhIHNpbmds
-ZSBlbmRwb2ludCBjb25uZWN0ZWQgdG8gdGhlIGNhbWVyYSBhcw0KPiA+Pj4gKyAgIGRlc2NyaWJl
-ZCBpbiB2aWRlby1pbnRlcmZhY2VzLnR4dFsxXS4NCj4gPj4+ICsNCj4gPj4+ICtFeGFtcGxlOg0K
-PiA+Pj4gKw0KPiA+Pj4gKwljc2kyOiBjc2kyQDMwMDAgew0KPiA+Pj4gKwkJY29tcGF0aWJsZSA9
-ICJzbnBzLGR3LWNzaSI7DQo+ID4+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPj4+ICsJ
-CSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+Pj4gKwkJcmVnID0gPCAweDAzMDAwIDB4N0ZGPjsNCj4g
-Pj4+ICsJCXBoeXMgPSA8Jm1pcGlfZHBoeV9yeD47DQo+ID4+PiArCQlyZXNldHMgPSA8JmR3X3Jz
-dCAxPjsNCj4gPj4+ICsJCWludGVycnVwdHMgPSA8Mj47DQo+ID4+PiArDQo+ID4+PiArCQlwb3J0
-QDAgew0KPiA+Pj4gKwkJCXJlZyA9IDwwPjsNCj4gPj4+ICsJCQljc2lfZXAxOiBlbmRwb2ludCB7
-DQo+ID4+PiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmY2FtZXJhXzE+Ow0KPiA+Pj4gKwkJCQlk
-YXRhLWxhbmVzID0gPDEgMj47DQo+ID4+PiArCQkJfTsNCj4gPj4NCj4gPj4gSGVsbG8gTHVpcywN
-Cj4gPj4NCj4gPj4gV2hpY2ggaXMgdGhlIG91dHB1dCBwb3J0IChlbmRwb2ludCkgOiBob3cgdG8g
-Y29ubmVjdCB0aGUgb3V0cHV0IG9mDQo+ID4+IGNzaTJob3N0IHRvIGFub3RoZXIgbm9kZSA/DQo+
-ID4+IEkgbWVhbiwgdGhlIHNlY29uZCBwb3J0IG9mIHRoaXMgYmxvY2ssIG9yLCBob3cgaXMgdGhl
-IGRhdGEgdGFrZW4gZnJvbQ0KPiA+PiBjc2kyaG9zdCA/DQo+ID4+DQo+ID4gDQo+ID4gSSB1bmRl
-cnN0YW5kIHlvdXIgcXVlc3Rpb24sIEkgdGhpbmsgeW91IGd1ZXNzZWQgdGhpcyBpcyBub3QgdGhl
-IGNvbXBsZXRlDQo+ID4gcGlwZWxpbmUgKEkgaGF2ZSBhIHRvcCBkcml2ZXIgdGhhdCBpbnRlcmFj
-dHMgd2l0aCB0aGlzIG9uZSkuDQo+ID4gSSB3YXMgbm90IHBsYW5uaW5nIHRvIHN1Ym1pdCBpdCwg
-ZG8geW91IHRoaW5rIEkgc2hvdWxkPw0KPiANCj4gWWVzIHBsZWFzZSwgeW91IGNhbiBoYXZlIHRo
-ZSBwYXRjaCB3aXRoIHN1YmplY3QgRE8gTk9UIE1FUkdFIGlmIHlvdSBkbyANCj4gbm90IHdhbnQg
-dGhhdCBwYXRjaCB0byBiZSBpbmNsdWRlZCBpbiB0aGUga2VybmVsIGFuZCBqdXN0IGZvciByZWZl
-cmVuY2UuDQo+IGJ1dCBpdCB3b3VsZCBoZWxwIG1lIGluIHVuZGVyc3RhbmRpbmcgeW91ciBzZXR1
-cA0KPiANCj4gVGhhbmtzICENCj4gDQpPaywgdGhhbmsgeW91LiBJIHdpbGwgaW5jbHVkZWQgaXQg
-bmV4dC4NCg0KPiA+IA0KPiA+IFRoZSBiZWhhdmlvciBpcyB2ZXJ5IHNpbWlsYXIgd2l0aCB0aGlz
-IG9uZQ0KPiA+IC4vZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9leHlub3M0LWlzL21lZGlhLWRldi5j
-DQo+ID4gDQo+ID4gDQo+ID4+IFRoYW5rcywNCj4gPj4NCj4gPj4gRXVnZW4NCj4gPj4NCj4gPj4+
-ICsJCX07DQo+ID4+PiArCX07DQo+ID4+Pg0KPiA+IA0KPiA+IFRoYW5rcywNCj4gPiBMdWlzDQo+
-ID4gDQoNCg0K
+On Wed, Jul 10, 2019 at 11:52:05AM +0530, Vidya Sagar wrote:
+> Add extended configuration space capability search API using struct dw_pcie *
+> pointer
+
+Sentences are terminated with a period and this is v13 not v1, which
+proves that you do not read the commit logs you write.
+
+I need you guys to understand that I can't rewrite commit logs all
+the time, I do not want to go as far as not accepting your patches
+anymore so please do pay attention to commit log details they
+are as important as the code itself.
+
+https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
+
+Thanks,
+Lorenzo
+
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> ---
+> V13:
+> * None
+> 
+> V12:
+> * None
+> 
+> V11:
+> * None
+> 
+> V10:
+> * None
+> 
+> V9:
+> * Added Acked-by from Thierry
+> 
+> V8:
+> * Changed data types of return and arguments to be inline with data being returned
+>   and passed.
+> 
+> V7:
+> * None
+> 
+> V6:
+> * None
+> 
+> V5:
+> * None
+> 
+> V4:
+> * None
+> 
+> V3:
+> * None
+> 
+> V2:
+> * This is a new patch in v2 series
+> 
+>  drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h |  1 +
+>  2 files changed, 42 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 7818b4febb08..181449e342f1 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -53,6 +53,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+>  
+> +static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+> +					    u8 cap)
+> +{
+> +	u32 header;
+> +	int ttl;
+> +	int pos = PCI_CFG_SPACE_SIZE;
+> +
+> +	/* minimum 8 bytes per capability */
+> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+> +
+> +	if (start)
+> +		pos = start;
+> +
+> +	header = dw_pcie_readl_dbi(pci, pos);
+> +	/*
+> +	 * If we have no capabilities, this is indicated by cap ID,
+> +	 * cap version and next pointer all being 0.
+> +	 */
+> +	if (header == 0)
+> +		return 0;
+> +
+> +	while (ttl-- > 0) {
+> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+> +			return pos;
+> +
+> +		pos = PCI_EXT_CAP_NEXT(header);
+> +		if (pos < PCI_CFG_SPACE_SIZE)
+> +			break;
+> +
+> +		header = dw_pcie_readl_dbi(pci, pos);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+> +{
+> +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
+> +}
+> +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
+> +
+>  int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+>  {
+>  	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index d8c66a6827dc..11c223471416 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -252,6 +252,7 @@ struct dw_pcie {
+>  		container_of((endpoint), struct dw_pcie, ep)
+>  
+>  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
+>  
+>  int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>  int dw_pcie_write(void __iomem *addr, int size, u32 val);
+> -- 
+> 2.17.1
+> 
