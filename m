@@ -1,157 +1,48 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V13 05/12] PCI: dwc: Add ext config space capability
- search API
-Date: Wed, 10 Jul 2019 16:57:23 +0530
-Message-ID: <fd1fc10e-47d0-aaac-158d-1c19363ec8d3@nvidia.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
- <20190710062212.1745-6-vidyas@nvidia.com>
- <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
+From: jun.li@nxp.com
+Subject: [PATCH 1/2] clk: imx8mq: set correct parent for usb ctrl clocks
+Date: Wed, 10 Jul 2019 19:19:16 +0800
+Message-ID: <20190710111917.6615-1-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, sboyd@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, peter.chen@nxp.com, agx@sigxcpu.org, ping.bai@nxp.com, Anson.Huang@nxp.com, ccaione@baylibre.com, andrew.smirnov@gmail.com, mturquette@baylibre.com, angus@akkea.ca, linux-clk@vger.kernel.org, abel.vesa@nxp.com, devicetree@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, l.stach@pengutronix.de, festevam@gmail.com, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org, jun.li@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On 7/10/2019 4:07 PM, Lorenzo Pieralisi wrote:
-> On Wed, Jul 10, 2019 at 11:52:05AM +0530, Vidya Sagar wrote:
->> Add extended configuration space capability search API using struct dw_pcie *
->> pointer
-> 
-> Sentences are terminated with a period and this is v13 not v1, which
-> proves that you do not read the commit logs you write.
-> 
-> I need you guys to understand that I can't rewrite commit logs all
-> the time, I do not want to go as far as not accepting your patches
-> anymore so please do pay attention to commit log details they
-> are as important as the code itself.
-> 
-> https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
-My sincere apologies.
-Since I didn't touch this patch much all through this series, I missed it.
-I'll make a point to not make such mistakes again.
-Do you want me to send a new version fixing it?
+From: Li Jun <jun.li@nxp.com>
 
-Thanks,
-Vidya Sagar
+Per latest imx8mq datasheet of CCM, the parent of usb1_ctrl_root_clk
+and usb2_ctrl_root_clk is usb_bus.
 
-> 
-> Thanks,
-> Lorenzo
-> 
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> ---
->> V13:
->> * None
->>
->> V12:
->> * None
->>
->> V11:
->> * None
->>
->> V10:
->> * None
->>
->> V9:
->> * Added Acked-by from Thierry
->>
->> V8:
->> * Changed data types of return and arguments to be inline with data being returned
->>    and passed.
->>
->> V7:
->> * None
->>
->> V6:
->> * None
->>
->> V5:
->> * None
->>
->> V4:
->> * None
->>
->> V3:
->> * None
->>
->> V2:
->> * This is a new patch in v2 series
->>
->>   drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
->>   drivers/pci/controller/dwc/pcie-designware.h |  1 +
->>   2 files changed, 42 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->> index 7818b4febb08..181449e342f1 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->> @@ -53,6 +53,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->>   }
->>   EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
->>   
->> +static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
->> +					    u8 cap)
->> +{
->> +	u32 header;
->> +	int ttl;
->> +	int pos = PCI_CFG_SPACE_SIZE;
->> +
->> +	/* minimum 8 bytes per capability */
->> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
->> +
->> +	if (start)
->> +		pos = start;
->> +
->> +	header = dw_pcie_readl_dbi(pci, pos);
->> +	/*
->> +	 * If we have no capabilities, this is indicated by cap ID,
->> +	 * cap version and next pointer all being 0.
->> +	 */
->> +	if (header == 0)
->> +		return 0;
->> +
->> +	while (ttl-- > 0) {
->> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
->> +			return pos;
->> +
->> +		pos = PCI_EXT_CAP_NEXT(header);
->> +		if (pos < PCI_CFG_SPACE_SIZE)
->> +			break;
->> +
->> +		header = dw_pcie_readl_dbi(pci, pos);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
->> +{
->> +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
->> +}
->> +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
->> +
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->>   {
->>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index d8c66a6827dc..11c223471416 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -252,6 +252,7 @@ struct dw_pcie {
->>   		container_of((endpoint), struct dw_pcie, ep)
->>   
->>   u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
->> +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
->>   
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
->>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
->> -- 
->> 2.17.1
->>
+Signed-off-by: Li Jun <jun.li@nxp.com>
+---
+ drivers/clk/imx/clk-imx8mq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index d407a07..c7d1546 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -523,8 +523,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MQ_CLK_UART2_ROOT] = imx_clk_gate4("uart2_root_clk", "uart2", base + 0x44a0, 0);
+ 	clks[IMX8MQ_CLK_UART3_ROOT] = imx_clk_gate4("uart3_root_clk", "uart3", base + 0x44b0, 0);
+ 	clks[IMX8MQ_CLK_UART4_ROOT] = imx_clk_gate4("uart4_root_clk", "uart4", base + 0x44c0, 0);
+-	clks[IMX8MQ_CLK_USB1_CTRL_ROOT] = imx_clk_gate4("usb1_ctrl_root_clk", "usb_core_ref", base + 0x44d0, 0);
+-	clks[IMX8MQ_CLK_USB2_CTRL_ROOT] = imx_clk_gate4("usb2_ctrl_root_clk", "usb_core_ref", base + 0x44e0, 0);
++	clks[IMX8MQ_CLK_USB1_CTRL_ROOT] = imx_clk_gate4("usb1_ctrl_root_clk", "usb_bus", base + 0x44d0, 0);
++	clks[IMX8MQ_CLK_USB2_CTRL_ROOT] = imx_clk_gate4("usb2_ctrl_root_clk", "usb_bus", base + 0x44e0, 0);
+ 	clks[IMX8MQ_CLK_USB1_PHY_ROOT] = imx_clk_gate4("usb1_phy_root_clk", "usb_phy_ref", base + 0x44f0, 0);
+ 	clks[IMX8MQ_CLK_USB2_PHY_ROOT] = imx_clk_gate4("usb2_phy_root_clk", "usb_phy_ref", base + 0x4500, 0);
+ 	clks[IMX8MQ_CLK_USDHC1_ROOT] = imx_clk_gate4("usdhc1_root_clk", "usdhc1", base + 0x4510, 0);
+-- 
+2.7.4
