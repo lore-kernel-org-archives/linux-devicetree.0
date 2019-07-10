@@ -1,59 +1,130 @@
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: Re: [PATCH 1/3] opp: core: add regulators enable and disable
-Date: Wed, 10 Jul 2019 12:16:48 +0200
-Message-ID: <3d6eacb8-ed8d-d4ac-1c36-6224ab88a5dc@partner.samsung.com>
-References: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
-        <CGME20190708141159eucas1p1751506975ff96a436e14940916623722@eucas1p1.samsung.com>
-        <20190708141140.24379-2-k.konieczny@partner.samsung.com>
-        <20190709054014.o3g4e6gbovrq3vvn@vireshk-i7>
+From: Luis de Oliveira <Luis.Oliveira@synopsys.com>
+Subject: RE: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
+ Host
+Date: Wed, 10 Jul 2019 10:20:55 +0000
+Message-ID: <MN2PR12MB371026A6547B449EEC0439B1CBF00@MN2PR12MB3710.namprd12.prod.outlook.com>
+References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+ <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
+ <20190628141326.swgl3kg4fj5pmlqx@valkosipuli.retiisi.org.uk>
+ <MN2PR12MB37109D7AADCE4823CB458CB9CBF60@MN2PR12MB3710.namprd12.prod.outlook.com>
+ <20190709182500.3x544axnrgy72aje@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190709054014.o3g4e6gbovrq3vvn@vireshk-i7>
+In-Reply-To: <20190709182500.3x544axnrgy72aje@valkosipuli.retiisi.org.uk>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>, Luis de Oliveira <Luis.Oliveira@synopsys.com>
+Cc: "mchehab@kernel.org" <mchehab@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kishon@ti.com" <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sakari,
 
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Date: Tue, Jul 09, 2019 at 19:25:00
 
-On 09.07.2019 07:40, Viresh Kumar wrote:
-> On 08-07-19, 16:11, k.konieczny@partner.samsung.com wrote:
->> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
->>
->> Add enable regulators to dev_pm_opp_set_regulators() and disable
->> regulators to dev_pm_opp_put_regulators(). This prepares for
->> converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
->>
->> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
->> ---
->>  drivers/opp/core.c | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
->> index 0e7703fe733f..947cac452854 100644
->> --- a/drivers/opp/core.c
->> +++ b/drivers/opp/core.c
->> @@ -1580,8 +1580,19 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
->>  	if (ret)
->>  		goto free_regulators;
->>  
->> +	for (i = 0; i < opp_table->regulator_count; i++) {
->> +		ret = regulator_enable(opp_table->regulators[i]);
->> +		if (ret < 0)
->> +			goto disable;
->> +	}
-> 
-> I am wondering on why is this really required as this isn't done for
-> any other platform, probably because the regulators are enabled by
-> bootloader and are always on.
+> Hi Luis,
+>=20
+> On Mon, Jul 08, 2019 at 03:21:50PM +0000, Luis de Oliveira wrote:
+> > Hi Sakari,
+> >=20
+> > Thank you for your feedback.
+> > I have my comments inline.
+> >=20
+> > From: Sakari Ailus <sakari.ailus@iki.fi>
+> > Date: Fri, Jun 28, 2019 at 15:13:26
+> >=20
+> > > Hi Luis,
+> > >=20
+> > > Thank you for the patchset.
+> > >=20
+> > > On Tue, Jun 11, 2019 at 09:20:50PM +0200, Luis Oliveira wrote:
+> > > > From: Luis Oliveira <lolivei@synopsys.com>
+> > > >=20
+> > > > Add bindings for Synopsys DesignWare MIPI CSI-2 host.
+> > > >=20
+> > > > Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+> > > > ---
+> > > > Changelog
+> > > > v3-v4
+> > > > - remove "plat" from the block name @rob @laurent
+> > > > - remove "phy-names" when single-entry @rob
+> > > > - remove "snps,output-type" -> went to the driver config @laurent
+> > > >=20
+> > > >  .../devicetree/bindings/media/snps,dw-csi.txt      | 41 ++++++++++=
+++++++++++++
+> > > >  1 file changed, 41 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/media/snps,dw=
+-csi.txt
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/media/snps,dw-csi.tx=
+t b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
+> > > > new file mode 100644
+> > > > index 0000000..613b7f9
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
+> > > > @@ -0,0 +1,41 @@
+> > > > +Synopsys DesignWare CSI-2 Host controller
+> > > > +
+> > > > +Description
+> > > > +-----------
+> > > > +
+> > > > +This HW block is used to receive image coming from an MIPI CSI-2 c=
+ompatible
+> > > > +camera.
+> > > > +
+> > > > +Required properties:
+> > > > +- compatible		: shall be "snps,dw-csi"
+> > > > +- reg			: physical base address and size of the device memory
+> > > > +			  mapped registers;
+> > > > +- interrupts		: DW CSI-2 Host interrupts
+> > > > +- phys			: List of one PHY specifier (as defined in
+> > > > +			  Documentation/devicetree/bindings/phy/phy-bindings.txt).
+> > > > +			  This PHY is a MIPI DPHY working in RX mode.
+> > > > +- resets		: Reference to a reset controller (optional)
+> > > > +
+> > > > +The per-board settings:
+> > > > + - port sub-node describing a single endpoint connected to the cam=
+era as
+> > > > +   described in video-interfaces.txt[1].
+> > >=20
+> > > Which endpoint properties in video-interfaces.txt are relevant for th=
+e
+> > > hardware? Which values may they have?
+> > >=20
+> >=20
+> > Currently I'm using only two properties "data-lanes" and "bus-width", b=
+ut=20
+> > I have plans to add blanking info also.
+> > I will add more info.
+>=20
+> Isn't blanking defined by what the transmitter seneds? Or do you have
+> hardware limitations on the receiver side?
+>=20
 
-It was not enabled for historical reasons, from design point regualtors
-should be enabled before use.
+When we use this IP in prototyping we configure blanking at the receiver=20
+side.
+Some cameras don't have blanking configuration capabilities so we=20
+configure it on the RX side.
 
--- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
+> I've only heard of one such case before, and it was a very old parallel
+> receiver.
+>=20
+> If you have a CSI-2 receiver, bus-width isn't relevant --- it's for paral=
+le
+> interfaces only. Please add data-lanes to required endpoint properties.
+>=20
+
+I used bus-width property in the Synopsys IPI (Image Pixel Interface)=20
+that enables direct video stream access.
+This interface is an output that can be 16-bit or 48-bit, that's why I=20
+used bus-width property.
+
+> --=20
+> Regards,
+>=20
+> Sakari Ailus
+
+Thank you,
+Luis
