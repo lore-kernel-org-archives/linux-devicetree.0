@@ -1,53 +1,26 @@
-From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH 1/1] dt-bindings: interrupt-controller: al-fic: remove redundant binding
-Date: Thu, 11 Jul 2019 09:38:59 +0300
-Message-ID: <1562827139-1666-1-git-send-email-talel@amazon.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH AUTOSEL 5.1 08/39] arm64: dts: ls1028a: Fix CPU idle fail.
+Date: Thu, 11 Jul 2019 08:43:05 +0200
+Message-ID: <20190711064305.GA10089@kroah.com>
+References: <20190703021514.17727-1-sashal@kernel.org>
+ <20190703021514.17727-8-sashal@kernel.org>
+ <DB8PR04MB6826A4A8CE604F2570DC1EA7F1F30@DB8PR04MB6826.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, marc.zyngier@arm.com, tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com, nicolas.ferre@microchip.com, mchehab+samsung@kernel.org, shawn.lin@rock-chips.com, gregkh@linuxfoundation.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, talel@amazon.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <DB8PR04MB6826A4A8CE604F2570DC1EA7F1F30@DB8PR04MB6826.eurprd04.prod.outlook.com>
+Sender: stable-owner@vger.kernel.org
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: Sasha Levin <sashal@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove dt binding description for standard binding.
+On Thu, Jul 11, 2019 at 05:04:24AM +0000, Ran Wang wrote:
+> Hi Sasha, 
+> 
+>     Thanks for helping port this patch to stable.
+>     May I know if I can submit other bug fixes which has been accepted by upstream to stable by myself?
+>     If yes, where I can find related process for reference?
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
----
- .../bindings/interrupt-controller/amazon,al-fic.txt      | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
-index 4e82fd5..c676b03 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
-@@ -5,21 +5,19 @@ Required properties:
- - compatible: should be "amazon,al-fic"
- - reg: physical base address and size of the registers
- - interrupt-controller: identifies the node as an interrupt controller
--- #interrupt-cells: must be 2.
--  First cell defines the index of the interrupt within the controller.
--  Second cell is used to specify the trigger type and must be one of the
--  following:
--    - bits[3:0] trigger type and level flags
--	1 = low-to-high edge triggered
--	4 = active high level-sensitive
--- interrupt-parent: specifies the parent interrupt controller.
-+- #interrupt-cells : must be 2. Specifies the number of cells needed to encode
-+  an interrupt source. Supported trigger types are low-to-high edge
-+  triggered and active high level-sensitive.
- - interrupts: describes which input line in the interrupt parent, this
-   fic's output is connected to. This field property depends on the parent's
-   binding
- 
-+Please refer to interrupts.txt in this directory for details of the common
-+Interrupt Controllers bindings used by client devices.
-+
- Example:
- 
--amazon_fic: interrupt-controller@0xfd8a8500 {
-+amazon_fic: interrupt-controller@fd8a8500 {
- 	compatible = "amazon,al-fic";
- 	interrupt-controller;
- 	#interrupt-cells = <2>;
--- 
-2.7.4
+Sure!, please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
