@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v6 4/5] ARM: dts: sun7i: Add CSI0 controller
-Date: Thu, 11 Jul 2019 14:15:06 +0200
-Message-ID: <d98fad047cf18fc76b623287f346c1927b357582.1562847292.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v6 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
+Date: Thu, 11 Jul 2019 14:15:07 +0200
+Message-ID: <cf0e40b0bca9219d2bb023a5b7f23bad8baba1e5.1562847292.git-series.maxime.ripard@bootlin.com>
 References: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,35 +12,140 @@ To: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.inte
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The CSI controller embedded in the A20 can be supported by our new driver.
-Let's add it to our DT.
-
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- arch/arm/boot/dts/sun7i-a20.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts | 91 +++++++++++++++++++++++++-
+ 1 file changed, 91 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 9ad8e445b240..13051fa8b4cb 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -376,6 +376,17 @@
- 			num-cs = <1>;
- 		};
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index 4df921632f7a..cecc4eb26082 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -54,6 +54,9 @@
+ 	compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
  
-+		csi0: csi@1c09000 {
-+			compatible = "allwinner,sun7i-a20-csi0",
-+				     "allwinner,sun4i-a10-csi0";
-+			reg = <0x01c09000 0x1000>;
-+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
-+				 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
-+			clock-names = "bus", "mod", "isp", "ram";
-+			resets = <&ccu RST_CSI0>;
-+		};
+ 	aliases {
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
+ 		serial0 = &uart0;
+ 		serial1 = &uart3;
+ 		serial2 = &uart7;
+@@ -63,6 +66,41 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	reg_cam: cam {
++		compatible = "regulator-fixed";
++		regulator-name = "cam";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&reg_vcc5v0>;
++		gpio = <&pio 7 16 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		regulator-always-on;
++	};
 +
- 		emac: ethernet@1c0b000 {
- 			compatible = "allwinner,sun4i-a10-emac";
- 			reg = <0x01c0b000 0x1000>;
++        reg_cam_avdd: cam-avdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-avdd";
++                regulator-min-microvolt = <2800000>;
++                regulator-max-microvolt = <2800000>;
++                vin-supply = <&reg_cam>;
++        };
++
++        reg_cam_dovdd: cam-dovdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-dovdd";
++                regulator-min-microvolt = <1800000>;
++                regulator-max-microvolt = <1800000>;
++                vin-supply = <&reg_cam>;
++        };
++
++        reg_cam_dvdd: cam-dvdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-dvdd";
++                regulator-min-microvolt = <1500000>;
++                regulator-max-microvolt = <1500000>;
++                vin-supply = <&reg_cam>;
++        };
++
+ 	hdmi-connector {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+@@ -116,6 +154,23 @@
+ 		>;
+ };
+ 
++&csi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&csi0_pins_a>;
++	status = "okay";
++
++	port {
++		csi_from_ov5640: endpoint {
++                        remote-endpoint = <&ov5640_to_csi>;
++                        bus-width = <8>;
++                        hsync-active = <1>; /* Active high */
++                        vsync-active = <0>; /* Active low */
++                        data-active = <1>;  /* Active high */
++                        pclk-sample = <1>;  /* Rising */
++                };
++	};
++};
++
+ &de {
+ 	status = "okay";
+ };
+@@ -161,6 +216,36 @@
+ 	};
+ };
+ 
++&i2c1 {
++	status = "okay";
++
++	camera: camera@21 {
++		compatible = "ovti,ov5640";
++		reg = <0x21>;
++                clocks = <&ccu CLK_CSI0>;
++                clock-names = "xclk";
++		assigned-clocks = <&ccu CLK_CSI0>;
++		assigned-clock-rates = <24000000>;
++
++                reset-gpios = <&pio 7 14 GPIO_ACTIVE_LOW>;
++                powerdown-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
++                AVDD-supply = <&reg_cam_avdd>;
++                DOVDD-supply = <&reg_cam_dovdd>;
++                DVDD-supply = <&reg_cam_dvdd>;
++
++                port {
++                        ov5640_to_csi: endpoint {
++                                remote-endpoint = <&csi_from_ov5640>;
++                                bus-width = <8>;
++                                hsync-active = <1>; /* Active high */
++                                vsync-active = <0>; /* Active low */
++                                data-active = <1>;  /* Active high */
++                                pclk-sample = <1>;  /* Rising */
++                        };
++                };
++	};
++};
++
+ &i2c2 {
+ 	status = "okay";
+ };
+@@ -246,6 +331,12 @@
+ 			"SPI-MISO", "SPI-CE1", "",
+ 		"IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
+ 		"", "", "", "", "", "", "", "";
++
++	csi0_pins_a: csi_pins_a@0 {
++		pins = "PE0", "PE1", "PE2", "PE3", "PE4", "PE5",
++		       "PE6", "PE7", "PE8", "PE9", "PE10", "PE11";
++		function = "csi0";
++	};
+ };
+ 
+ #include "axp209.dtsi"
 -- 
 git-series 0.9.1
