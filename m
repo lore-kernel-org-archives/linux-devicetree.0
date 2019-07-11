@@ -1,8 +1,8 @@
 From: Jonathan Chocron <jonnyc@amazon.com>
-Subject: [PATCH 3/8] PCI/VPD: Add VPD release quirk for Amazon Annapurna
- Labs host bridge
-Date: Thu, 11 Jul 2019 17:55:56 +0300
-Message-ID: <20190710164519.17883-4-jonnyc@amazon.com>
+Subject: [PATCH 4/8] PCI: Add quirk to disable MSI support for Amazon's
+ Annapurna Labs host bridge
+Date: Thu, 11 Jul 2019 17:56:25 +0300
+Message-ID: <20190710164519.17883-5-jonnyc@amazon.com>
 References: <20190710164519.17883-1-jonnyc@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,45 +14,35 @@ To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustav
 Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonnyc@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-The Amazon Annapurna Labs pcie host bridge exposes the VPD capability,
-but there is no actual support for it.
-
-The reason for not using the already existing quirk_blacklist_vpd()
-is that, although this fails pci_vpd_read/write, the 'vpd' sysfs
-entry still exists. When running lspci -vv, for example, this
-results in the following error:
-
-pcilib: sysfs_read_vpd: read failed: Input/output error
-
-This quirk removes the sysfs entry, which avoids the error print.
+On some platforms, the host bridge exposes an MSI-X capability but
+doesn't actually support it.
+This causes a crash during initialization by the pcieport driver, since
+it tries to configure the MSI-X capability.
 
 Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
 ---
- drivers/pci/vpd.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/pci/quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index 4963c2e2bd4c..b594b2895ffe 100644
---- a/drivers/pci/vpd.c
-+++ b/drivers/pci/vpd.c
-@@ -644,4 +644,16 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *d=
-ev)
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
- 			quirk_chelsio_extend_vpd);
-=20
-+static void quirk_al_vpd_release(struct pci_dev *dev)
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 11850b030637..0fb70d755977 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2925,6 +2925,14 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10=
+a1,
+ 			quirk_msi_intx_disable_qca_bug);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
+ 			quirk_msi_intx_disable_qca_bug);
++
++static void quirk_al_msi_disable(struct pci_dev *dev)
 +{
-+	if (dev->vpd) {
-+		pci_vpd_release(dev);
-+		dev->vpd =3D NULL;
-+		pci_warn(dev, FW_BUG "Annapurna Labs pcie quirk - Releasing VPD capabili=
-ty (No support for VPD read/write transactions)\n");
-+	}
++	dev->no_msi =3D 1;
++	dev_warn(&dev->dev, "Annapurna Labs pcie quirk - disabling MSI\n");
 +}
-+
 +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
-+			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_vpd_release);
-+
- #endif
++			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_msi_disable);
+ #endif /* CONFIG_PCI_MSI */
+=20
+ /*
 --=20
 2.17.1
