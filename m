@@ -1,7 +1,7 @@
 From: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Subject: [PATCH 04/12] remoteproc: qcom: Add ssr subdevice identifier
-Date: Thu, 11 Jul 2019 21:11:00 +0530
-Message-ID: <1562859668-14209-5-git-send-email-gokulsri@codeaurora.org>
+Subject: [PATCH 09/12] mailbox: qcom: Add support for IPQ8074 APCS
+Date: Thu, 11 Jul 2019 21:11:05 +0530
+Message-ID: <1562859668-14209-10-git-send-email-gokulsri@codeaurora.org>
 References: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
@@ -9,26 +9,25 @@ Sender: linux-kernel-owner@vger.kernel.org
 To: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, jassisinghbrar@gmail.com, ohad@wizery.com, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, gokulsri@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add name for ssr subdevice on IPQ8074 SoC.
+Add support of IPQ8074 with IPC register offset as 8.
 
 Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
 ---
- drivers/remoteproc/qcom_q6v5_wcss.c | 1 +
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index 5957114..6d3ef06 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -1156,6 +1156,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- 	.m3_firmware_name = "IPQ8074/m3_fw.mdt",
- 	.crash_reason_smem = 421,
- 	.aon_reset_required = true,
-+	.ssr_name = "q6wcss",
- 	.ops = &q6v5_wcss_ipq8074_ops,
- 	.requires_force_stop = true,
- 	.need_mem_protection = true,
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index 705e17a..52185eb 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -119,6 +119,7 @@ static int qcom_apcs_ipc_remove(struct platform_device *pdev)
+ 	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = (void *)8 },
+ 	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = (void *)8 },
+ 	{ .compatible = "qcom,sdm845-apss-shared", .data = (void *)12 },
++	{ .compatible = "qcom,ipq8074-apcs-apps-global", .data = (void *)8 },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, qcom_apcs_ipc_of_match);
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
