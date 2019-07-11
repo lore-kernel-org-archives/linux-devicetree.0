@@ -1,102 +1,79 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH AUTOSEL 5.1 08/39] arm64: dts: ls1028a: Fix CPU idle fail.
-Date: Thu, 11 Jul 2019 05:04:24 +0000
-Message-ID: <DB8PR04MB6826A4A8CE604F2570DC1EA7F1F30@DB8PR04MB6826.eurprd04.prod.outlook.com>
-References: <20190703021514.17727-1-sashal@kernel.org>
- <20190703021514.17727-8-sashal@kernel.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/3] opp: core: add regulators enable and disable
+Date: Thu, 11 Jul 2019 11:52:26 +0530
+Message-ID: <20190711062226.4i4bvbsyczshdlyr@vireshk-i7>
+References: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
+ <CGME20190708141159eucas1p1751506975ff96a436e14940916623722@eucas1p1.samsung.com>
+ <20190708141140.24379-2-k.konieczny@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190703021514.17727-8-sashal@kernel.org>
-Content-Language: en-US
-Sender: stable-owner@vger.kernel.org
-To: Sasha Levin <sashal@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190708141140.24379-2-k.konieczny@partner.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: k.konieczny@partner.samsung.com
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sasha,=20
-
-    Thanks for helping port this patch to stable.
-    May I know if I can submit other bug fixes which has been accepted by u=
-pstream to stable by myself?
-    If yes, where I can find related process for reference?
-
-Thanks & Regards,
-Ran
-
-> -----Original Message-----
-> From: Sasha Levin <sashal@kernel.org>
-> Sent: Wednesday, July 03, 2019 10:15
-> To: linux-kernel@vger.kernel.org; stable@vger.kernel.org
-> Cc: Ran Wang <ran.wang_1@nxp.com>; Shawn Guo <shawnguo@kernel.org>;
-> Sasha Levin <sashal@kernel.org>; devicetree@vger.kernel.org
-> Subject: [PATCH AUTOSEL 5.1 08/39] arm64: dts: ls1028a: Fix CPU idle fail=
-.
->=20
-> From: Ran Wang <ran.wang_1@nxp.com>
->=20
-> [ Upstream commit 53f2ac9d3aa881ed419054076042898b77c27ee4 ]
->=20
-> PSCI spec define 1st parameter's bit 16 of function CPU_SUSPEND to indica=
-te
-> CPU State Type: 0 for standby, 1 for power down. In this case, we want to=
- select
-> standby for CPU idle feature. But current setting wrongly select power do=
-wn and
-> cause CPU SUSPEND fail every time. Need this fix.
->=20
-> Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+On 08-07-19, 16:11, k.konieczny@partner.samsung.com wrote:
+> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> 
+> Add enable regulators to dev_pm_opp_set_regulators() and disable
+> regulators to dev_pm_opp_put_regulators(). This prepares for
+> converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
+> 
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 2896bbcfa3bb..228872549f01 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -28,7 +28,7 @@
->  			enable-method =3D "psci";
->  			clocks =3D <&clockgen 1 0>;
->  			next-level-cache =3D <&l2>;
-> -			cpu-idle-states =3D <&CPU_PH20>;
-> +			cpu-idle-states =3D <&CPU_PW20>;
->  		};
->=20
->  		cpu1: cpu@1 {
-> @@ -38,7 +38,7 @@
->  			enable-method =3D "psci";
->  			clocks =3D <&clockgen 1 0>;
->  			next-level-cache =3D <&l2>;
-> -			cpu-idle-states =3D <&CPU_PH20>;
-> +			cpu-idle-states =3D <&CPU_PW20>;
->  		};
->=20
->  		l2: l2-cache {
-> @@ -53,13 +53,13 @@
->  		 */
->  		entry-method =3D "arm,psci";
->=20
-> -		CPU_PH20: cpu-ph20 {
-> -			compatible =3D "arm,idle-state";
-> -			idle-state-name =3D "PH20";
-> -			arm,psci-suspend-param =3D <0x00010000>;
-> -			entry-latency-us =3D <1000>;
-> -			exit-latency-us =3D <1000>;
-> -			min-residency-us =3D <3000>;
-> +		CPU_PW20: cpu-pw20 {
-> +			  compatible =3D "arm,idle-state";
-> +			  idle-state-name =3D "PW20";
-> +			  arm,psci-suspend-param =3D <0x0>;
-> +			  entry-latency-us =3D <2000>;
-> +			  exit-latency-us =3D <2000>;
-> +			  min-residency-us =3D <6000>;
->  		};
->  	};
->=20
-> --
-> 2.20.1
+>  drivers/opp/core.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 0e7703fe733f..947cac452854 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -1580,8 +1580,19 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+>  	if (ret)
+>  		goto free_regulators;
+>  
+> +	for (i = 0; i < opp_table->regulator_count; i++) {
+> +		ret = regulator_enable(opp_table->regulators[i]);
+> +		if (ret < 0)
+> +			goto disable;
+> +	}
+
+What about doing this in the same loop of regulator_get_optional() ?
+
+> +
+>  	return opp_table;
+>  
+> +disable:
+> +	while (i != 0)
+> +		regulator_disable(opp_table->regulators[--i]);
+> +
+> +	i = opp_table->regulator_count;
+
+You also need to call _free_set_opp_data() here.
+
+>  free_regulators:
+>  	while (i != 0)
+>  		regulator_put(opp_table->regulators[--i]);
+> @@ -1609,6 +1620,8 @@ void dev_pm_opp_put_regulators(struct opp_table *opp_table)
+>  
+>  	/* Make sure there are no concurrent readers while updating opp_table */
+>  	WARN_ON(!list_empty(&opp_table->opp_list));
+
+Preserve the blank line here.
+
+> +	for (i = opp_table->regulator_count - 1; i >= 0; i--)
+> +		regulator_disable(opp_table->regulators[i]);
+>  
+>  	for (i = opp_table->regulator_count - 1; i >= 0; i--)
+>  		regulator_put(opp_table->regulators[i]);
+
+Only single loop should be sufficient for this.
+
+> -- 
+> 2.22.0
+
+-- 
+viresh
