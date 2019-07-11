@@ -1,10 +1,10 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH] dt-bindings: input: Convert Allwinner LRADC to a schema
-Date: Thu, 11 Jul 2019 11:38:35 +0200
-Message-ID: <20190711093835.20663-1-maxime.ripard@bootlin.com>
+Subject: [PATCH] dt-bindings: bus: Convert Allwinner DE2 bus to a schema
+Date: Thu, 11 Jul 2019 11:40:36 +0200
+Message-ID: <20190711094036.21777-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -15,100 +15,160 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEFsbHdpbm5lciBTb0NzIGhhdmUgYW4gTFJBREMgdXNlZCB0byByZXBvcnQga2V5cyBhbmQg
-c3VwcG9ydGVkIGluCkxpbnV4LCB3aXRoIGEgbWF0Y2hpbmcgRGV2aWNlIFRyZWUgYmluZGluZy4K
-Ck5vdyB0aGF0IHdlIGhhdmUgdGhlIERUIHZhbGlkYXRpb24gaW4gcGxhY2UsIGxldCdzIGNvbnZl
-cnQgdGhlIGRldmljZSB0cmVlCmJpbmRpbmdzIGZvciB0aGF0IGNvbnRyb2xsZXIgb3ZlciB0byBh
-IFlBTUwgc2NoZW1hcy4KClNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBh
-cmRAYm9vdGxpbi5jb20+Ci0tLQogLi4uL2lucHV0L2FsbHdpbm5lcixzdW40aS1hMTAtbHJhZGMt
-a2V5cy55YW1sIHwgOTUgKysrKysrKysrKysrKysrKysrKwogLi4uL2JpbmRpbmdzL2lucHV0L3N1
-bjRpLWxyYWRjLWtleXMudHh0ICAgICAgIHwgNjUgLS0tLS0tLS0tLS0tLQogMiBmaWxlcyBjaGFu
-Z2VkLCA5NSBpbnNlcnRpb25zKCspLCA2NSBkZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvYWxsd2lubmVyLHN1bjRp
-LWExMC1scmFkYy1rZXlzLnlhbWwKIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaW5wdXQvc3VuNGktbHJhZGMta2V5cy50eHQKCmRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvYWxsd2lubmVyLHN1bjRp
-LWExMC1scmFkYy1rZXlzLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-aW5wdXQvYWxsd2lubmVyLHN1bjRpLWExMC1scmFkYy1rZXlzLnlhbWwKbmV3IGZpbGUgbW9kZSAx
-MDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5iM2JkOGVmN2ZiZDYKLS0tIC9kZXYvbnVsbAorKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvYWxsd2lubmVyLHN1bjRp
-LWExMC1scmFkYy1rZXlzLnlhbWwKQEAgLTAsMCArMSw5NSBAQAorIyBTUERYLUxpY2Vuc2UtSWRl
-bnRpZmllcjogR1BMLTIuMAorJVlBTUwgMS4yCistLS0KKyRpZDogaHR0cDovL2RldmljZXRyZWUu
-b3JnL3NjaGVtYXMvaW5wdXQvYWxsd2lubmVyLHN1bjRpLWExMC1scmFkYy1rZXlzLnlhbWwjCisk
-c2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKKwor
-dGl0bGU6IEFsbHdpbm5lciBBMTAgTFJBREMgRGV2aWNlIFRyZWUgQmluZGluZ3MKKworbWFpbnRh
-aW5lcnM6CisgIC0gQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgorICAtIE1heGltZSBSaXBh
-cmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+CisKK3Byb3BlcnRpZXM6CisgIGNvbXBhdGli
-bGU6CisgICAgb25lT2Y6CisgICAgICAtIGNvbnN0OiBhbGx3aW5uZXIsc3VuNGktYTEwLWxyYWRj
-LWtleXMKKyAgICAgIC0gY29uc3Q6IGFsbHdpbm5lcixzdW44aS1hODN0LXItbHJhZGMKKyAgICAg
-IC0gaXRlbXM6CisgICAgICAgIC0gY29uc3Q6IGFsbHdpbm5lcixzdW41MGktYTY0LWxyYWRjCisg
-ICAgICAgIC0gY29uc3Q6IGFsbHdpbm5lcixzdW44aS1hODN0LXItbHJhZGMKKworICByZWc6Cisg
-ICAgbWF4SXRlbXM6IDEKKworICBpbnRlcnJ1cHRzOgorICAgIG1heEl0ZW1zOiAxCisKKyAgdnJl
-Zi1zdXBwbHk6CisgICAgZGVzY3JpcHRpb246CisgICAgICBSZWd1bGF0b3IgZm9yIHRoZSBMUkFE
-QyByZWZlcmVuY2Ugdm9sdGFnZQorCitwYXR0ZXJuUHJvcGVydGllczoKKyAgIl5idXR0b24tWzAt
-OV0rJCI6CisgICAgdHlwZTogb2JqZWN0CisgICAgcHJvcGVydGllczoKKyAgICAgIGxhYmVsOgor
-ICAgICAgICAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy9zdHJpbmcKKyAg
-ICAgICAgZGVzY3JpcHRpb246IERlc2NyaXB0aXZlIG5hbWUgb2YgdGhlIGtleQorCisgICAgICBs
-aW51eCxjb2RlOgorICAgICAgICAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9u
-cy91aW50MzIKKyAgICAgICAgZGVzY3JpcHRpb246IEtleWNvZGUgdG8gZW1pdAorCisgICAgICBj
-aGFubmVsOgorICAgICAgICBhbGxPZjoKKyAgICAgICAgICAtICRyZWY6IC9zY2hlbWFzL3R5cGVz
-LnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMgorICAgICAgICAgIC0gZW51bTogWzAsIDFdCisgICAg
-ICAgIGRlc2NyaXB0aW9uOiBBREMgQ2hhbm5lbCB0aGlzIGtleSBpcyBhdHRhY2hlZCB0bworCisg
-ICAgICB2b2x0YWdlOgorICAgICAgICAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0
-aW9ucy91aW50MzIKKyAgICAgICAgZGVzY3JpcHRpb246CisgICAgICAgICAgVm9sdGFnZSBpbiBt
-aWNyb3ZvbHRzIGF0IExSQURDIGlucHV0IHdoZW4gdGhpcyBrZXkgaXMKKyAgICAgICAgICBwcmVz
-c2VkCisKKyAgICByZXF1aXJlZDoKKyAgICAgIC0gbGFiZWwKKyAgICAgIC0gbGludXgsY29kZQor
-ICAgICAgLSBjaGFubmVsCisgICAgICAtIHZvbHRhZ2UKKworICAgIGFkZGl0aW9uYWxQcm9wZXJ0
-aWVzOiBmYWxzZQorCityZXF1aXJlZDoKKyAgLSBjb21wYXRpYmxlCisgIC0gcmVnCisgIC0gaW50
-ZXJydXB0cworICAtIHZyZWYtc3VwcGx5CisKK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQor
-CitleGFtcGxlczoKKyAgLSB8CisgICAgbHJhZGM6IGxyYWRjQDFjMjI4MDAgeworICAgICAgICBj
-b21wYXRpYmxlID0gImFsbHdpbm5lcixzdW40aS1hMTAtbHJhZGMta2V5cyI7CisgICAgICAgIHJl
-ZyA9IDwweDAxYzIyODAwIDB4MTAwPjsKKyAgICAgICAgaW50ZXJydXB0cyA9IDwzMT47CisgICAg
-ICAgIHZyZWYtc3VwcGx5ID0gPCZyZWdfdmNjM3YwPjsKKworICAgICAgICBidXR0b24tMTkxIHsK
-KyAgICAgICAgICAgIGxhYmVsID0gIlZvbHVtZSBVcCI7CisgICAgICAgICAgICBsaW51eCxjb2Rl
-ID0gPDExNT47CisgICAgICAgICAgICBjaGFubmVsID0gPDA+OworICAgICAgICAgICAgdm9sdGFn
-ZSA9IDwxOTEyNzQ+OworICAgICAgICB9OworCisgICAgICAgIGJ1dHRvbi0zOTIgeworICAgICAg
-ICAgICAgbGFiZWwgPSAiVm9sdW1lIERvd24iOworICAgICAgICAgICAgbGludXgsY29kZSA9IDwx
-MTQ+OworICAgICAgICAgICAgY2hhbm5lbCA9IDwwPjsKKyAgICAgICAgICAgIHZvbHRhZ2UgPSA8
-MzkyNjQ0PjsKKyAgICAgICAgfTsKKyAgICB9OworCisuLi4KZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC9zdW40aS1scmFkYy1rZXlzLnR4dCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC9zdW40aS1scmFkYy1rZXlzLnR4
-dApkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggNTA3YjczNzYxMmVhLi4wMDAwMDAwMDAw
-MDAKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L3N1bjRpLWxy
-YWRjLWtleXMudHh0CisrKyAvZGV2L251bGwKQEAgLTEsNjUgKzAsMCBAQAotQWxsd2lubmVyIHN1
-bjRpIGxvdyByZXMgYWRjIGF0dGFjaGVkIHRhYmxldCBrZXlzCi0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLQotUmVxdWlyZWQgcHJvcGVydGllczoKLSAt
-IGNvbXBhdGlibGU6IHNob3VsZCBiZSBvbmUgb2YgdGhlIGZvbGxvd2luZyBzdHJpbmc6Ci0JCSJh
-bGx3aW5uZXIsc3VuNGktYTEwLWxyYWRjLWtleXMiCi0JCSJhbGx3aW5uZXIsc3VuOGktYTgzdC1y
-LWxyYWRjIgotCQkiYWxsd2lubmVyLHN1bjUwaS1hNjQtbHJhZGMiLCAiYWxsd2lubmVyLHN1bjhp
-LWE4M3Qtci1scmFkYyIKLSAtIHJlZzogbW1pbyBhZGRyZXNzIHJhbmdlIG9mIHRoZSBjaGlwCi0g
-LSBpbnRlcnJ1cHRzOiBpbnRlcnJ1cHQgdG8gd2hpY2ggdGhlIGNoaXAgaXMgY29ubmVjdGVkCi0g
-LSB2cmVmLXN1cHBseTogcG93ZXJzdXBwbHkgZm9yIHRoZSBscmFkYyByZWZlcmVuY2Ugdm9sdGFn
-ZQotCi1FYWNoIGtleSBpcyByZXByZXNlbnRlZCBhcyBhIHN1Yi1ub2RlIG9mIHRoZSBjb21wYXRp
-YmxlIG1lbnRpb25lZCBhYm92ZToKLQotUmVxdWlyZWQgc3Vibm9kZS1wcm9wZXJ0aWVzOgotCS0g
-bGFiZWw6IERlc2NyaXB0aXZlIG5hbWUgb2YgdGhlIGtleS4KLQktIGxpbnV4LGNvZGU6IEtleWNv
-ZGUgdG8gZW1pdC4KLQktIGNoYW5uZWw6IENoYW5uZWwgdGhpcyBrZXkgaXMgYXR0YWNoZWQgdG8s
-IG11c3QgYmUgMCBvciAxLgotCS0gdm9sdGFnZTogVm9sdGFnZSBpbiDCtVYgYXQgbHJhZGMgaW5w
-dXQgd2hlbiB0aGlzIGtleSBpcyBwcmVzc2VkLgotCi1FeGFtcGxlOgotCi0jaW5jbHVkZSA8ZHQt
-YmluZGluZ3MvaW5wdXQvaW5wdXQuaD4KLQotCWxyYWRjOiBscmFkY0AxYzIyODAwIHsKLQkJY29t
-cGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuNGktYTEwLWxyYWRjLWtleXMiOwotCQlyZWcgPSA8MHgw
-MWMyMjgwMCAweDEwMD47Ci0JCWludGVycnVwdHMgPSA8MzE+OwotCQl2cmVmLXN1cHBseSA9IDwm
-cmVnX3ZjYzN2MD47Ci0KLQkJYnV0dG9uQDE5MSB7Ci0JCQlsYWJlbCA9ICJWb2x1bWUgVXAiOwot
-CQkJbGludXgsY29kZSA9IDxLRVlfVk9MVU1FVVA+OwotCQkJY2hhbm5lbCA9IDwwPjsKLQkJCXZv
-bHRhZ2UgPSA8MTkxMjc0PjsKLQkJfTsKLQotCQlidXR0b25AMzkyIHsKLQkJCWxhYmVsID0gIlZv
-bHVtZSBEb3duIjsKLQkJCWxpbnV4LGNvZGUgPSA8S0VZX1ZPTFVNRURPV04+OwotCQkJY2hhbm5l
-bCA9IDwwPjsKLQkJCXZvbHRhZ2UgPSA8MzkyNjQ0PjsKLQkJfTsKLQotCQlidXR0b25ANjAxIHsK
-LQkJCWxhYmVsID0gIk1lbnUiOwotCQkJbGludXgsY29kZSA9IDxLRVlfTUVOVT47Ci0JCQljaGFu
-bmVsID0gPDA+OwotCQkJdm9sdGFnZSA9IDw2MDExNTE+OwotCQl9OwotCi0JCWJ1dHRvbkA3OTUg
-ewotCQkJbGFiZWwgPSAiRW50ZXIiOwotCQkJbGludXgsY29kZSA9IDxLRVlfRU5URVI+OwotCQkJ
-Y2hhbm5lbCA9IDwwPjsKLQkJCXZvbHRhZ2UgPSA8Nzk1MDkwPjsKLQkJfTsKLQotCQlidXR0b25A
-OTg3IHsKLQkJCWxhYmVsID0gIkhvbWUiOwotCQkJbGludXgsY29kZSA9IDxLRVlfSE9NRVBBR0U+
-OwotCQkJY2hhbm5lbCA9IDwwPjsKLQkJCXZvbHRhZ2UgPSA8OTg3Mzg3PjsKLQkJfTsKLQl9Owot
-LSAKMi4yMS4wCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-bGludXgtYXJtLWtlcm5lbAo=
+The Allwinner SoCs using the second generation of the display engine have a
+bus for that display engine. The bus is supported in Linux, with a matching
+Device Tree binding.
+
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ .../bus/allwinner,sun50i-a64-de2.yaml         | 84 +++++++++++++++++++
+ .../bindings/bus/sun50i-de2-bus.txt           | 40 ---------
+ 2 files changed, 84 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml
+ delete mode 100644 Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt
+
+diff --git a/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml b/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml
+new file mode 100644
+index 000000000000..b9734f8109c6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: GPL2
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bus/allwinner,sun50i-a64-de2.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A64 Display Engine Bus Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  $nodename:
++    pattern: "^bus(@[0-9a-f]+)?$"
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 1
++
++  compatible:
++    oneOf:
++      - const: allwinner,sun50i-a64-de2
++      - items:
++          - const: allwinner,sun50i-h6-de3
++          - const: allwinner,sun50i-a64-de2
++
++  reg:
++    maxItems: 1
++
++  allwinner,sram:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/phandle-array
++      - maxItems: 1
++    description:
++      The SRAM that needs to be claimed to access the display engine
++      bus.
++
++  ranges: true
++
++patternProperties:
++  # All other properties should be child nodes with unit-address and 'reg'
++  "^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+$":
++    properties:
++      reg:
++        maxItems: 1
++
++    required:
++      - reg
++
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#size-cells"
++  - ranges
++  - allwinner,sram
++
++additionalProperties: false
++
++examples:
++  - |
++    bus@1000000 {
++        compatible = "allwinner,sun50i-a64-de2";
++        reg = <0x1000000 0x400000>;
++        allwinner,sram = <&de2_sram 1>;
++        #address-cells = <1>;
++        #size-cells = <1>;
++        ranges = <0 0x1000000 0x400000>;
++
++        display_clocks: clock@0 {
++            compatible = "allwinner,sun50i-a64-de2-clk";
++            reg = <0x0 0x100000>;
++            clocks = <&ccu 52>, <&ccu 99>;
++            clock-names = "bus", "mod";
++            resets = <&ccu 30>;
++            #clock-cells = <1>;
++            #reset-cells = <1>;
++        };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt b/Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt
+deleted file mode 100644
+index b9d533717dff..000000000000
+--- a/Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt
++++ /dev/null
+@@ -1,40 +0,0 @@
+-Device tree bindings for Allwinner DE2/3 bus
+-
+-The Allwinner A64 DE2 is on a special bus, which needs a SRAM region (SRAM C)
+-to be claimed for enabling the access. The DE3 on Allwinner H6 is at the same
+-situation, and the binding also applies.
+-
+-Required properties:
+-
+- - compatible:		Should be one of:
+-				- "allwinner,sun50i-a64-de2"
+-				- "allwinner,sun50i-h6-de3", "allwinner,sun50i-a64-de2"
+- - reg:			A resource specifier for the register space
+- - #address-cells:	Must be set to 1
+- - #size-cells:		Must be set to 1
+- - ranges:		Must be set up to map the address space inside the
+-			DE2, for the sub-blocks of DE2.
+- - allwinner,sram:	the SRAM that needs to be claimed
+-
+-Example:
+-
+-	de2@1000000 {
+-		compatible = "allwinner,sun50i-a64-de2";
+-		reg = <0x1000000 0x400000>;
+-		allwinner,sram = <&de2_sram 1>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges = <0 0x1000000 0x400000>;
+-
+-		display_clocks: clock@0 {
+-			compatible = "allwinner,sun50i-a64-de2-clk";
+-			reg = <0x0 0x100000>;
+-			clocks = <&ccu CLK_DE>,
+-				 <&ccu CLK_BUS_DE>;
+-			clock-names = "mod",
+-				      "bus";
+-			resets = <&ccu RST_BUS_DE>;
+-			#clock-cells = <1>;
+-			#reset-cells = <1>;
+-		};
+-	};
+-- 
+2.21.0
