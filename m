@@ -1,169 +1,323 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/6] dt-bindings: pinctrl: aspeed: Document AST2600 pinmux
-Date: Thu, 11 Jul 2019 11:18:01 -0600
-Message-ID: <CAL_JsqLvY_yxN=-tfUPGn_Bv=UNmntHjXqUhSD1aey79MXznQg@mail.gmail.com>
-References: <20190711041942.23202-1-andrew@aj.id.au> <20190711041942.23202-2-andrew@aj.id.au>
+Subject: Re: [PATCH 1/3] dt-bindings: dma: Add YAML schemas for the generic
+ DMA bindings
+Date: Thu, 11 Jul 2019 11:33:30 -0600
+Message-ID: <CAL_JsqLh8QEwa-3v9-Vs=e55k3GyyvwsNVxmdBMWMD_VxqKMyA@mail.gmail.com>
+References: <20190711092158.14678-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190711041942.23202-2-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Ryan Chen <ryanchen.aspeed@gmail.com>, Johnny Huang <johnny_huang@aspeedtech.com>, linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190711092158.14678-1-maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Jon Hunter <jonathanh@nvidia.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Vinod Koul <vkoul@kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:19 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+On Thu, Jul 11, 2019 at 3:34 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> The AST260 differs from the 2400 and 2500 in that it supports multiple
-> groups for a subset of functions.
+> The DMA controllers and consumers have a bunch of generic properties that
+> are needed in a device tree. Add a YAML schemas for those.
 >
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 > ---
->  .../pinctrl/aspeed,ast2600-pinctrl.yaml       | 128 ++++++++++++++++++
->  1 file changed, 128 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+>  .../devicetree/bindings/dma/dma-consumer.yaml |  60 +++++++++
+
+This already exists in the dt-schema/schemas/dma/dma.yaml though not
+the descriptions because that needs relicensing.
+
+Looks like we need NVidia's (Jon H) and TI's (Peter U) permission.
+
+>  .../bindings/dma/dma-controller.yaml          |  79 ++++++++++++
+>  Documentation/devicetree/bindings/dma/dma.txt | 114 +-----------------
+>  3 files changed, 140 insertions(+), 113 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/dma-consumer.yaml
+>  create mode 100644 Documentation/devicetree/bindings/dma/dma-controller.yaml
 >
-> diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+> diff --git a/Documentation/devicetree/bindings/dma/dma-consumer.yaml b/Documentation/devicetree/bindings/dma/dma-consumer.yaml
 > new file mode 100644
-> index 000000000000..dd31f8e62433
+> index 000000000000..2f6315863ad1
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-> @@ -0,0 +1,128 @@
-> +# SPDX-License-Identifier: GPL-2.0+
+> +++ b/Documentation/devicetree/bindings/dma/dma-consumer.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/pinctrl/aspeed,ast2600-pinctrl.yaml#
+> +$id: http://devicetree.org/schemas/dma/dma-consumer.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: ASPEED AST2600 Pin Controller
+> +title: DMA Consumer Generic Binding
 > +
 > +maintainers:
-> +  - Andrew Jeffery <andrew@aj.id.au>
+> +  - Vinod Koul <vkoul@kernel.org>
 > +
-> +description: |+
-> +  The pin controller node should be the child of a syscon node with the
-> +  required property:
-> +
-> +  - compatible: Should be one of the following:
-> +                "aspeed,ast2600-scu", "syscon", "simple-mfd"
-> +
-> +  Refer to the the bindings described in
-> +  Documentation/devicetree/bindings/mfd/syscon.txt
+> +select: true
 > +
 > +properties:
-> +  compatible:
-> +    const: aspeed,ast2600-pinctrl
+> +  dmas:
+> +    description:
+> +      List of one or more DMA specifiers, each consisting of
+> +          - A phandle pointing to DMA controller node
+> +          - A number of integer cells, as determined by the
+> +            \#dma-cells property in the node referenced by phandle
+> +            containing DMA controller specific information. This
+> +            typically contains a DMA request line number or a
+> +            channel number, but can contain any data that is
+> +            required for configuring a channel.
 > +
-> +patternProperties:
-> +  '^.*$':
-> +    if:
-> +      type: object
-> +    then:
-> +      patternProperties:
-> +        "^function$":
-
-That's a fixed string, not a pattern, so just put under 'properties'.
-
-> +          allOf:
-> +            - $ref: "/schemas/types.yaml#/definitions/string"
-> +            - enum: [ "ADC0", "ADC1", "ADC10", "ADC11", "ADC12", "ADC13",
-
-You can drop the quoting here. I wouldn't really care, but yours is
-one of the few right now and everyone will copy.
-
-> +              "ADC14", "ADC15", "ADC2", "ADC3", "ADC4", "ADC5", "ADC6", "ADC7",
-> +              "ADC8", "ADC9", "BMCINT", "ESPI", "ESPIALT", "FSI1", "FSI2",
-> +              "FWSPIABR", "FWSPID", "FWSPIWP", "GPIT0", "GPIT1", "GPIT2",
-> +              "GPIT3", "GPIT4", "GPIT5", "GPIT6", "GPIT7", "GPIU0", "GPIU1",
-> +              "GPIU2", "GPIU3", "GPIU4", "GPIU5", "GPIU6", "GPIU7", "I2C1",
-> +              "I2C10", "I2C11", "I2C12", "I2C13", "I2C14", "I2C15", "I2C16",
-> +              "I2C2", "I2C3", "I2C4", "I2C5", "I2C6", "I2C7", "I2C8", "I2C9",
-> +              "I3C3", "I3C4", "I3C5", "I3C6", "JTAGM", "LHPD", "LHSIRQ", "LPC",
-> +              "LPCHC", "LPCPD", "LPCPME", "LPCSMI", "LSIRQ", "MACLINK1",
-> +              "MACLINK2", "MACLINK3", "MACLINK4", "MDIO1", "MDIO2", "MDIO3",
-> +              "MDIO4", "NCTS1", "NCTS2", "NCTS3", "NCTS4", "NDCD1", "NDCD2",
-> +              "NDCD3", "NDCD4", "NDSR1", "NDSR2", "NDSR3", "NDSR4", "NDTR1",
-> +              "NDTR2", "NDTR3", "NDTR4", "NRI1", "NRI2", "NRI3", "NRI4",
-> +              "NRTS1", "NRTS2", "NRTS3", "NRTS4", "OSCCLK", "PEWAKE", "PWM0",
-> +              "PWM1", "PWM10", "PWM11", "PWM12", "PWM13", "PWM14", "PWM15",
-> +              "PWM2", "PWM3", "PWM4", "PWM5", "PWM6", "PWM7", "PWM8", "PWM9",
-> +              "RGMII1", "RGMII2", "RGMII3", "RGMII4", "RMII1", "RMII2",
-> +              "RMII3", "RMII4", "RXD1", "RXD2", "RXD3", "RXD4", "SALT1",
-> +              "SALT10", "SALT11", "SALT12", "SALT13", "SALT14", "SALT15",
-> +              "SALT16", "SALT2", "SALT3", "SALT4", "SALT5", "SALT6", "SALT7",
-> +              "SALT8", "SALT9", "SD1", "SD2", "SD3", "SD3DAT4", "SD3DAT5",
-> +              "SD3DAT6", "SD3DAT7", "SGPM1", "SGPS1", "SIOONCTRL", "SIOPBI",
-> +              "SIOPBO", "SIOPWREQ", "SIOPWRGD", "SIOS3", "SIOS5", "SIOSCI",
-> +              "SPI1", "SPI1ABR", "SPI1CS1", "SPI1WP", "SPI2", "SPI2CS1",
-> +              "SPI2CS2", "TACH0", "TACH1", "TACH10", "TACH11", "TACH12",
-> +              "TACH13", "TACH14", "TACH15", "TACH2", "TACH3", "TACH4", "TACH5",
-> +              "TACH6", "TACH7", "TACH8", "TACH9", "THRU0", "THRU1", "THRU2",
-> +              "THRU3", "TXD1", "TXD2", "TXD3", "TXD4", "UART10", "UART11",
-> +              "UART12", "UART13", "UART6", "UART7", "UART8", "UART9", "VB",
-> +              "VGAHS", "VGAVS", "WDTRST1", "WDTRST2", "WDTRST3", "WDTRST4", ]
-> +        "^groups$":
-> +          allOf:
-> +            - $ref: "/schemas/types.yaml#/definitions/string"
-> +            - enum: [ "ADC0", "ADC1", "ADC10", "ADC11", "ADC12", "ADC13",
-> +              "ADC14", "ADC15", "ADC2", "ADC3", "ADC4", "ADC5", "ADC6", "ADC7",
-> +              "ADC8", "ADC9", "BMCINT", "ESPI", "ESPIALT", "FSI1", "FSI2",
-> +              "FWSPIABR", "FWSPID", "FWQSPID", "FWSPIWP", "GPIT0", "GPIT1",
-> +              "GPIT2", "GPIT3", "GPIT4", "GPIT5", "GPIT6", "GPIT7", "GPIU0",
-> +              "GPIU1", "GPIU2", "GPIU3", "GPIU4", "GPIU5", "GPIU6", "GPIU7",
-> +              "HVI3C3", "HVI3C4", "I2C1", "I2C10", "I2C11", "I2C12", "I2C13",
-> +              "I2C14", "I2C15", "I2C16", "I2C2", "I2C3", "I2C4", "I2C5",
-> +              "I2C6", "I2C7", "I2C8", "I2C9", "I3C3", "I3C4", "I3C5", "I3C6",
-> +              "JTAGM", "LHPD", "LHSIRQ", "LPC", "LPCHC", "LPCPD", "LPCPME",
-> +              "LPCSMI", "LSIRQ", "MACLINK1", "MACLINK2", "MACLINK3",
-> +              "MACLINK4", "MDIO1", "MDIO2", "MDIO3", "MDIO4", "NCTS1", "NCTS2",
-> +              "NCTS3", "NCTS4", "NDCD1", "NDCD2", "NDCD3", "NDCD4", "NDSR1",
-> +              "NDSR2", "NDSR3", "NDSR4", "NDTR1", "NDTR2", "NDTR3", "NDTR4",
-> +              "NRI1", "NRI2", "NRI3", "NRI4", "NRTS1", "NRTS2", "NRTS3",
-> +              "NRTS4", "OSCCLK", "PEWAKE", "PWM0", "PWM1", "PWM10G0",
-> +              "PWM10G1", "PWM11G0", "PWM11G1", "PWM12G0", "PWM12G1", "PWM13G0",
-> +              "PWM13G1", "PWM14G0", "PWM14G1", "PWM15G0", "PWM15G1", "PWM2",
-> +              "PWM3", "PWM4", "PWM5", "PWM6", "PWM7", "PWM8G0", "PWM8G1",
-> +              "PWM9G0", "PWM9G1", "QSPI1", "QSPI2", "RGMII1", "RGMII2",
-> +              "RGMII3", "RGMII4", "RMII1", "RMII2", "RMII3", "RMII4", "RXD1",
-> +              "RXD2", "RXD3", "RXD4", "SALT1", "SALT10G0", "SALT10G1",
-> +              "SALT11G0", "SALT11G1", "SALT12G0", "SALT12G1", "SALT13G0",
-> +              "SALT13G1", "SALT14G0", "SALT14G1", "SALT15G0", "SALT15G1",
-> +              "SALT16G0", "SALT16G1", "SALT2", "SALT3", "SALT4", "SALT5",
-> +              "SALT6", "SALT7", "SALT8", "SALT9G0", "SALT9G1", "SD1", "SD2",
-> +              "SD3", "SD3DAT4", "SD3DAT5", "SD3DAT6", "SD3DAT7", "SGPM1",
-> +              "SGPS1", "SIOONCTRL", "SIOPBI", "SIOPBO", "SIOPWREQ", "SIOPWRGD",
-> +              "SIOS3", "SIOS5", "SIOSCI", "SPI1", "SPI1ABR", "SPI1CS1",
-> +              "SPI1WP", "SPI2", "SPI2CS1", "SPI2CS2", "TACH0", "TACH1",
-> +              "TACH10", "TACH11", "TACH12", "TACH13", "TACH14", "TACH15",
-> +              "TACH2", "TACH3", "TACH4", "TACH5", "TACH6", "TACH7", "TACH8",
-> +              "TACH9", "THRU0", "THRU1", "THRU2", "THRU3", "TXD1", "TXD2",
-> +              "TXD3", "TXD4", "UART10", "UART11", "UART12G0", "UART12G1",
-> +              "UART13G0", "UART13G1", "UART6", "UART7", "UART8", "UART9", "VB",
-> +              "VGAHS", "VGAVS", "WDTRST1", "WDTRST2", "WDTRST3", "WDTRST4", ]
+> +  dma-names:
+> +    description:
+> +      Contains one identifier string for each DMA specifier in the
+> +      dmas property. The specific strings that can be used are defined
+> +      in the binding of the DMA client device.  Multiple DMA
+> +      specifiers can be used to represent alternatives and in this
+> +      case the dma-names for those DMA specifiers must be identical
+> +      (see examples).
 > +
-> +required:
-> +  - compatible
+> +dependencies:
+> +  dma-names: [ dmas ]
 > +
 > +examples:
 > +  - |
-> +    syscon: scu@1e6e2000 {
-> +        compatible = "aspeed,ast2600-scu", "syscon", "simple-mfd";
-> +        reg = <0x1e6e2000 0xf6c>;
+> +    /* A device with one DMA read channel, one DMA write channel */
+> +    i2c1: i2c@1 {
+> +         /* ... */
+> +         dmas = <&dma 2>,      /* read channel */
+> +                <&dma 3>;      /* write channel */
+> +        dma-names = "rx", "tx";
+> +        /* ... */
+> +    };
 > +
-> +        pinctrl: pinctrl {
-> +            compatible = "aspeed,g6-pinctrl";
+> +  - |
+> +    /* A single read-write channel with three alternative DMA controllers */
+> +    dmas = <&dma1 5>, <&dma2 7>, <&dma3 2>;
+> +    dma-names = "rx-tx", "rx-tx", "rx-tx";
 > +
-> +            pinctrl_pwm10g1_default: pwm10g1_default {
-> +                function = "PWM10";
-> +                groups = "PWM10G1";
-> +            };
+> +  - |
+> +    /* A device with three channels, one of which has two alternatives */
+> +    dmas = <&dma1 2>,          /* read channel */
+> +           <&dma1 3>,          /* write channel */
+> +           <&dma2 0>,          /* error read */
+> +           <&dma3 0>;          /* alternative error read */
+> +    dma-names = "rx", "tx", "error", "error";
+> diff --git a/Documentation/devicetree/bindings/dma/dma-controller.yaml b/Documentation/devicetree/bindings/dma/dma-controller.yaml
+> new file mode 100644
+> index 000000000000..17c650131b78
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/dma-controller.yaml
+> @@ -0,0 +1,79 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +            pinctrl_gpioh0_unbiased_default: gpioh0 {
-> +                pins = "A18";
-> +                bias-disable;
+> +title: DMA Controller Generic Binding
+> +
+> +maintainers:
+> +  - Vinod Koul <vkoul@kernel.org>
+> +
+> +description:
+> +  Generic binding to provide a way for a driver using DMA Engine to
+> +  retrieve the DMA request or channel information that goes from a
+> +  hardware device to a DMA controller.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^dma-controller(@.*)?$"
+> +
+> +  "#dma-cells":
+> +    # minimum: 1
+> +    description:
+> +      Used to provide DMA controller specific information.
+> +
+> +  dma-channel-masks:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description:
+> +      Bitmask of available DMA channels in ascending order that are
+> +      not reserved by firmware and are available to the
+> +      kernel. i.e. first channel corresponds to LSB.
+> +
+> +  dma-channels:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description:
+> +      Number of DMA channels supported by the controller.
+> +
+> +  dma-masters:
+> +    $ref: /schemas/types.yaml#definitions/phandle-array
+> +    description:
+> +      DMA routers are transparent IP blocks used to route DMA request
+> +      lines from devices to the DMA controller. Some SoCs (like TI
+> +      DRA7x) have more peripherals integrated with DMA requests than
+> +      what the DMA controller can handle directly.
+> +
+> +      In such a case, dma-masters is an array of phandle to the DMA
+> +      controllers the router can direct the signal to.
+> +
+> +  dma-requests:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description:
+> +      Number of DMA request signals supported by the controller.
+> +
+> +examples:
+> +  - |
+> +    dma: dma@48000000 {
 
-This node and properties aren't getting checked. Need to figure out
-how to do that. That may mean needing some structure to the node
-names. You can worry about that later I suppose.
+dma-controller@...
 
-Rob
+This is a case where I'd like some check that the schema is actually
+applied to the schema's example.
+
+> +        compatible = "ti,omap-sdma";
+> +        reg = <0x48000000 0x1000>;
+> +        interrupts = <0 12 0x4
+> +                      0 13 0x4
+> +                      0 14 0x4
+> +                      0 15 0x4>;
+> +        #dma-cells = <1>;
+> +        dma-channels = <32>;
+> +        dma-requests = <127>;
+> +        dma-channel-mask = <0xfffe>;
+> +    };
+> +
+> +  - |
+> +    sdma_xbar: dma-router@4a002b78 {
+> +        compatible = "ti,dra7-dma-crossbar";
+> +        reg = <0x4a002b78 0xfc>;
+> +        #dma-cells = <1>;
+> +        dma-requests = <205>;
+> +        ti,dma-safe-map = <0>;
+> +        dma-masters = <&sdma>;
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
+> index eeb4e4d1771e..90a67a016a48 100644
+> --- a/Documentation/devicetree/bindings/dma/dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/dma.txt
+> @@ -1,113 +1 @@
+> -* Generic DMA Controller and DMA request bindings
+> -
+> -Generic binding to provide a way for a driver using DMA Engine to retrieve the
+> -DMA request or channel information that goes from a hardware device to a DMA
+> -controller.
+> -
+> -
+> -* DMA controller
+> -
+> -Required property:
+> -- #dma-cells:          Must be at least 1. Used to provide DMA controller
+> -                       specific information. See DMA client binding below for
+> -                       more details.
+> -
+> -Optional properties:
+> -- dma-channels:        Number of DMA channels supported by the controller.
+> -- dma-requests:        Number of DMA request signals supported by the
+> -                       controller.
+> -- dma-channel-mask:    Bitmask of available DMA channels in ascending order
+> -                       that are not reserved by firmware and are available to
+> -                       the kernel. i.e. first channel corresponds to LSB.
+> -
+> -Example:
+> -
+> -       dma: dma@48000000 {
+> -               compatible = "ti,omap-sdma";
+> -               reg = <0x48000000 0x1000>;
+> -               interrupts = <0 12 0x4
+> -                             0 13 0x4
+> -                             0 14 0x4
+> -                             0 15 0x4>;
+> -               #dma-cells = <1>;
+> -               dma-channels = <32>;
+> -               dma-requests = <127>;
+> -               dma-channel-mask = <0xfffe>
+> -       };
+> -
+> -* DMA router
+> -
+> -DMA routers are transparent IP blocks used to route DMA request lines from
+> -devices to the DMA controller. Some SoCs (like TI DRA7x) have more peripherals
+> -integrated with DMA requests than what the DMA controller can handle directly.
+> -
+> -Required property:
+> -- dma-masters:         phandle of the DMA controller or list of phandles for
+> -                       the DMA controllers the router can direct the signal to.
+> -- #dma-cells:          Must be at least 1. Used to provide DMA router specific
+> -                       information. See DMA client binding below for more
+> -                       details.
+> -
+> -Optional properties:
+> -- dma-requests:        Number of incoming request lines the router can handle.
+> -- In the node pointed by the dma-masters:
+> -       - dma-requests: The router driver might need to look for this in order
+> -                       to configure the routing.
+> -
+> -Example:
+> -       sdma_xbar: dma-router@4a002b78 {
+> -               compatible = "ti,dra7-dma-crossbar";
+> -               reg = <0x4a002b78 0xfc>;
+> -               #dma-cells = <1>;
+> -               dma-requests = <205>;
+> -               ti,dma-safe-map = <0>;
+> -               dma-masters = <&sdma>;
+> -       };
+> -
+> -* DMA client
+> -
+> -Client drivers should specify the DMA property using a phandle to the controller
+> -followed by DMA controller specific data.
+> -
+> -Required property:
+> -- dmas:                        List of one or more DMA specifiers, each consisting of
+> -                       - A phandle pointing to DMA controller node
+> -                       - A number of integer cells, as determined by the
+> -                         #dma-cells property in the node referenced by phandle
+> -                         containing DMA controller specific information. This
+> -                         typically contains a DMA request line number or a
+> -                         channel number, but can contain any data that is
+> -                         required for configuring a channel.
+> -- dma-names:           Contains one identifier string for each DMA specifier in
+> -                       the dmas property. The specific strings that can be used
+> -                       are defined in the binding of the DMA client device.
+> -                       Multiple DMA specifiers can be used to represent
+> -                       alternatives and in this case the dma-names for those
+> -                       DMA specifiers must be identical (see examples).
+> -
+> -Examples:
+> -
+> -1. A device with one DMA read channel, one DMA write channel:
+> -
+> -       i2c1: i2c@1 {
+> -               ...
+> -               dmas = <&dma 2          /* read channel */
+> -                       &dma 3>;        /* write channel */
+> -               dma-names = "rx", "tx";
+> -               ...
+> -       };
+> -
+> -2. A single read-write channel with three alternative DMA controllers:
+> -
+> -       dmas = <&dma1 5
+> -               &dma2 7
+> -               &dma3 2>;
+> -       dma-names = "rx-tx", "rx-tx", "rx-tx";
+> -
+> -3. A device with three channels, one of which has two alternatives:
+> -
+> -       dmas = <&dma1 2                 /* read channel */
+> -               &dma1 3                 /* write channel */
+> -               &dma2 0                 /* error read */
+> -               &dma3 0>;               /* alternative error read */
+> -       dma-names = "rx", "tx", "error", "error";
+> +This file has been moved to dma-controller.yaml.
+> --
+> 2.21.0
+>
