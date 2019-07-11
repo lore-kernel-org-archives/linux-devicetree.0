@@ -1,87 +1,94 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 04/14] dt-bindings: mailbox: qcom: Add clock-name
- optional property
-Date: Thu, 11 Jul 2019 07:45:57 -0700
-Message-ID: <20190711144557.GE7234@tuxbook-pro>
-References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
- <20190625164733.11091-5-jorge.ramirez-ortiz@linaro.org>
+From: Jonathan Chocron <jonnyc@amazon.com>
+Subject: [PATCH 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host
+ bridge binding
+Date: Thu, 11 Jul 2019 17:45:41 +0300
+Message-ID: <20190710164519.17883-6-jonnyc@amazon.com>
+References: <20190710164519.17883-1-jonnyc@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190625164733.11091-5-jorge.ramirez-ortiz@linaro.org>
+In-Reply-To: <20190710164519.17883-1-jonnyc@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc: sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, sibis@codeaurora.org, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonnyc@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue 25 Jun 09:47 PDT 2019, Jorge Ramirez-Ortiz wrote:
+Document Amazon's Annapurna Labs PCIe host bridge.
 
-> When the APCS clock is registered (platform dependent), it retrieves
-> its parent names from hardcoded values in the driver.
-> 
-> The following commit allows the DT node to provide such clock names to
-> the platform data based clock driver therefore avoiding having to
-> explicitly embed those names in the clock driver source code.
-> 
-> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+---
+ .../devicetree/bindings/pci/pcie-al.txt       | 45 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> ---
->  .../mailbox/qcom,apcs-kpss-global.txt         | 24 ++++++++++++++++---
->  1 file changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-> index 1232fc9fc709..b69310322b09 100644
-> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-> @@ -18,10 +18,11 @@ platforms.
->  	Usage: required
->  	Value type: <prop-encoded-array>
->  	Definition: must specify the base address and size of the global block
-> +
->  - clocks:
-> -	Usage: required if #clocks-cells property is present
-> -	Value type: <phandle>
-> -	Definition: phandle to the input PLL, which feeds the APCS mux/divider
-> +	Usage: required if #clock-names property is present
-> +	Value type: <phandle array>
-> +	Definition: phandles to the two parent clocks of the clock driver.
->  
->  - #mbox-cells:
->  	Usage: required
-> @@ -33,6 +34,12 @@ platforms.
->  	Value type: <u32>
->  	Definition: as described in clock.txt, must be 0
->  
-> +- clock-names:
-> +	Usage: required if the platform data based clock driver needs to
-> +	retrieve the parent clock names from device tree.
-> +	This will requires two mandatory clocks to be defined.
-> +	Value type: <string-array>
-> +	Definition: must be "aux" and "pll"
->  
->  = EXAMPLE
->  The following example describes the APCS HMSS found in MSM8996 and part of the
-> @@ -65,3 +72,14 @@ Below is another example of the APCS binding on MSM8916 platforms:
->  		clocks = <&a53pll>;
->  		#clock-cells = <0>;
->  	};
-> +
-> +Below is another example of the APCS binding on QCS404 platforms:
-> +
-> +	apcs_glb: mailbox@b011000 {
-> +		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
-> +		reg = <0x0b011000 0x1000>;
-> +		#mbox-cells = <1>;
-> +		clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
-> +		clock-names = "aux", "pll";
-> +		#clock-cells = <0>;
-> +	};
-> -- 
-> 2.21.0
-> 
+diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentat=
+ion/devicetree/bindings/pci/pcie-al.txt
+new file mode 100644
+index 000000000000..d92cc529490e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
+@@ -0,0 +1,45 @@
++* Amazon Annapurna Labs PCIe host bridge
++
++Annapurna Labs' PCIe Host Controller is based on the Synopsys DesignWare
++PCI core.
++It shares common functions with the PCIe DesignWare core driver and inheri=
+ts
++common properties defined in Documentation/devicetree/bindings/pci/designw=
+are-pcie.txt.
++Properties of the host controller node that differ from it are:
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Value should contain
++			- "amazon,al-pcie"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Register ranges as listed in the reg-names property
++
++- reg-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Must include the following entries
++			- "config"	PCIe ECAM space
++			- "controller"	AL proprietary registers
++			- "dbi"		Designware PCIe registers
++
++Example:
++
++	pcie-external0 {
++		compatible =3D "amazon,al-pcie";
++		reg =3D <0x0 0xfb600000 0x0 0x00100000
++		       0x0 0xfd800000 0x0 0x00010000
++		       0x0 0xfd810000 0x0 0x00001000>;
++		reg-names =3D "config", "controller", "dbi";
++		bus-range =3D <0 255>;
++		device_type =3D "pci";
++		#address-cells =3D <3>;
++		#size-cells =3D <2>;
++		#interrupt-cells =3D <1>;
++		interrupts =3D <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map-mask =3D <0x00 0 0 7>;
++		interrupt-map =3D <0x0000 0 0 1 &gic_main GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH=
+>; /* INTa */
++		ranges =3D <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5a6137df3f0e..d555beb794bb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12205,6 +12205,7 @@ PCIE DRIVER FOR ANNAPURNA LABS
+ M:	Jonathan Chocron <jonnyc@amazon.com>
+ L:	linux-pci@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/pci/pcie-al.txt
+ F:	drivers/pci/controller/dwc/pcie-al.c
+=20
+ PCIE DRIVER FOR AMLOGIC MESON
+--=20
+2.17.1
