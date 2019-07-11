@@ -1,63 +1,42 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 07/14] clk: qcom: hfpll: register as clock provider
-Date: Thu, 11 Jul 2019 08:07:54 -0700
-Message-ID: <20190711150754.GH7234@tuxbook-pro>
-References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
- <20190625164733.11091-8-jorge.ramirez-ortiz@linaro.org>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH v2 3/4] dt-bindings: iommu/arm,smmu: add compatible string for Marvell
+Date: Thu, 11 Jul 2019 17:02:41 +0200
+Message-ID: <20190711150242.25290-4-gregory.clement@bootlin.com>
+References: <20190711150242.25290-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190625164733.11091-8-jorge.ramirez-ortiz@linaro.org>
+In-Reply-To: <20190711150242.25290-1-gregory.clement@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc: sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, sibis@codeaurora.org, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+To: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 25 Jun 09:47 PDT 2019, Jorge Ramirez-Ortiz wrote:
+From: Hanna Hawa <hannah@marvell.com>
 
-> Make the output of the high frequency pll a clock provider.
-> On the QCS404 this PLL controls cpu frequency scaling.
-> 
-> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
+Add specific compatible string for Marvell usage due errata of
+accessing 64bits registers of ARM SMMU, in AP806.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+AP806 SoC uses the generic ARM-MMU500, and there's no specific
+implementation of Marvell, this compatible is used for errata only.
 
-> ---
->  drivers/clk/qcom/hfpll.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
-> index 87b7f46d27e0..0ffed0d41c50 100644
-> --- a/drivers/clk/qcom/hfpll.c
-> +++ b/drivers/clk/qcom/hfpll.c
-> @@ -53,6 +53,7 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
->  	struct regmap *regmap;
->  	struct clk_hfpll *h;
->  	struct clk *pclk;
-> +	int ret;
->  	struct clk_init_data init = {
->  		.parent_names = (const char *[]){ "xo" },
->  		.num_parents = 1,
-> @@ -87,7 +88,14 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
->  	h->clkr.hw.init = &init;
->  	spin_lock_init(&h->lock);
->  
-> -	return devm_clk_register_regmap(&pdev->dev, &h->clkr);
-> +	ret = devm_clk_register_regmap(dev, &h->clkr);
-> +	if (ret) {
-> +		dev_err(dev, "failed to register regmap clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
-> +					   &h->clkr.hw);
->  }
->  
->  static struct platform_driver qcom_hfpll_driver = {
-> -- 
-> 2.21.0
-> 
+Signed-off-by: Hanna Hawa <hannah@marvell.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+---
+ Documentation/devicetree/bindings/iommu/arm,smmu.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+index 3133f3ba7567..7ed58d51846e 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+@@ -16,6 +16,7 @@ conditions.
+                         "arm,mmu-400"
+                         "arm,mmu-401"
+                         "arm,mmu-500"
++                        "marvell,mmu-500"
+                         "cavium,smmu-v2"
+                         "qcom,smmu-v2"
+ 
+-- 
+2.20.1
