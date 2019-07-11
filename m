@@ -1,51 +1,85 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v2 4/4] arm64: dts: marvell: armada-ap806: add smmu support
-Date: Thu, 11 Jul 2019 17:02:42 +0200
-Message-ID: <20190711150242.25290-5-gregory.clement@bootlin.com>
-References: <20190711150242.25290-1-gregory.clement@bootlin.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 08/14] clk: qcom: hfpll: CLK_IGNORE_UNUSED
+Date: Thu, 11 Jul 2019 08:16:31 -0700
+Message-ID: <20190711151631.GI7234@tuxbook-pro>
+References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
+ <20190625164733.11091-9-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190711150242.25290-1-gregory.clement@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <20190625164733.11091-9-jorge.ramirez-ortiz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc: sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, sibis@codeaurora.org, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add IOMMU node for Marvell AP806 based SoCs.
+On Tue 25 Jun 09:47 PDT 2019, Jorge Ramirez-Ortiz wrote:
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+> When COMMON_CLK_DISABLED_UNUSED is set, in an effort to save power and
+> to keep the software model of the clock in line with reality, the
+> framework transverses the clock tree and disables those clocks that
+> were enabled by the firmware but have not been enabled by any device
+> driver.
+> 
+> If CPUFREQ is enabled, early during the system boot, it might attempt
+> to change the CPU frequency ("set_rate"). If the HFPLL is selected as
+> a provider, it will then change the rate for this clock.
+> 
+> As boot continues, clk_disable_unused_subtree will run. Since it wont
+> find a valid counter (enable_count) for a clock that is actually
+> enabled it will attempt to disable it which will cause the CPU to
+> stop.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 91dad7e4ee59..8e29d593970a 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -115,6 +115,23 @@
- 				interrupts = <17>;
- 			};
- 
-+			smmu: iommu@5000000 {
-+				compatible = "marvell,mmu-500";
-+				reg = <0x100000 0x100000>;
-+				dma-coherent;
-+				#iommu-cells = <1>;
-+				#global-interrupts = <1>;
-+				interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+					    <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+					    <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+					    <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+					    <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+					    <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+					    <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+					    <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+					    <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
- 			odmi: odmi@300000 {
- 				compatible = "marvell,odmi-controller";
- 				interrupt-controller;
--- 
-2.20.1
+But if CPUfreq has acquired the CPU clock and the hfpll is the currently
+selected input, why does the clock framework not know about this clock
+being used?
+
+> Notice that in this driver, calls to check whether the clock is
+> enabled are routed via the is_enabled callback which queries the
+> hardware.
+> 
+> The following commit, rather than marking the clock critical and
+> forcing the clock to be always enabled, addresses the above scenario
+> making sure the clock is not disabled but it continues to rely on the
+> firmware to enable the clock.
+> 
+> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+
+
+I can see that we have a real issue in the case where CPUfreq is not
+enabled and hence there are no clients, according to Linux. And that I
+don't know another way to guard against.
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/clk/qcom/hfpll.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
+> index 0ffed0d41c50..d5fd27938e7b 100644
+> --- a/drivers/clk/qcom/hfpll.c
+> +++ b/drivers/clk/qcom/hfpll.c
+> @@ -58,6 +58,13 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
+>  		.parent_names = (const char *[]){ "xo" },
+>  		.num_parents = 1,
+>  		.ops = &clk_ops_hfpll,
+> +		/*
+> +		 * rather than marking the clock critical and forcing the clock
+> +		 * to be always enabled, we make sure that the clock is not
+> +		 * disabled: the firmware remains responsible of enabling this
+> +		 * clock (for more info check the commit log)
+> +		 */
+> +		.flags = CLK_IGNORE_UNUSED,
+>  	};
+>  
+>  	h = devm_kzalloc(dev, sizeof(*h), GFP_KERNEL);
+> -- 
+> 2.21.0
+> 
