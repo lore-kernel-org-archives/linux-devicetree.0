@@ -1,51 +1,72 @@
-From: Jonathan Chocron <jonnyc@amazon.com>
-Subject: [PATCH 0/8] Amazon's Annapurna Labs DT-based PCIe host controller
- driver
-Date: Thu, 11 Jul 2019 17:50:03 +0300
-Message-ID: <20190710164519.17883-1-jonnyc@amazon.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+From: Biwen Li <biwen.li@nxp.com>
+Subject: [v3 2/2] Documentation: dt: binding: rtc: add binding for ftm alarm driver
+Date: Thu, 11 Jul 2019 22:43:25 +0800
+Message-ID: <20190711144325.10963-1-biwen.li@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonnyc@amazon.com
+To: a.zummo@towertech.it, alexandre.belloni@bootlin.com, leoyang.li@nxp.com, robh+dt@kernel.org
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, xiaobo.xie@nxp.com, jiafei.pan@nxp.com, ran.wang_1@nxp.com, mark.rutland@arm.com, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for Amazon's Annapurna Labs DT-based PCIe host
-controller driver.
-Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patch=
-es.
+The patch adds binding for ftm alarm driver
 
-Regarding the 2nd DWC patch (PCI flags support), do you think this should
-be done in the context of a host-bridge driver at all (as opposed to PCI
-system-wide code)?
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+Change in v3:
+	- remove reg-names property
+	- correct cells number
 
+Change in v2:
+	- replace ls1043a with ls1088a as example
+	- add rcpm node and fsl,rcpm-wakeup property
 
-Ali Saidi (1):
-  PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+ .../devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt  | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
 
-Jonathan Chocron (7):
-  PCI: Add Amazon's Annapurna Labs vendor ID
-  PCI/VPD: Add VPD release quirk for Amazon Annapurna Labs host bridge
-  PCI: Add quirk to disable MSI support for Amazon's Annapurna Labs host
-    bridge
-  dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
-  PCI: al: Add support for DW based driver type
-  PCI: dw: Add validation that PCIe core is set to correct mode
-  PCI: dw: Add support for PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-
- .../devicetree/bindings/pci/pcie-al.txt       |  45 ++
- MAINTAINERS                                   |   1 +
- drivers/pci/controller/dwc/Kconfig            |  11 +
- drivers/pci/controller/dwc/pcie-al.c          | 397 ++++++++++++++++++
- .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
- .../pci/controller/dwc/pcie-designware-host.c |  31 +-
- drivers/pci/quirks.c                          |  27 ++
- drivers/pci/vpd.c                             |  12 +
- include/linux/pci_ids.h                       |   2 +
- 9 files changed, 530 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
-
---=20
-2.17.1
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+new file mode 100644
+index 0000000..e4eea18
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+@@ -0,0 +1,38 @@
++Freescale FlexTimer Module (FTM) Alarm
++
++Note: The driver need work with RCPM driver to wake up system in sleep.
++
++Required properties:
++- compatible : Should be "fsl,<chip>-ftm-alarm", the
++	       supported chips include
++	       "fsl,ls1012a-ftm-alarm"
++	       "fsl,ls1021a-ftm-alarm"
++	       "fsl,ls1028a-ftm-alarm"
++	       "fsl,ls1043a-ftm-alarm"
++	       "fsl,ls1046a-ftm-alarm"
++	       "fsl,ls1088a-ftm-alarm"
++	       "fsl,ls208xa-ftm-alarm"
++- reg : Specifies base physical address and size of the register sets for the
++  FlexTimer Module and base physical address of IP Powerdown Exception Control
++  Register.
++- interrupts : Should be the FlexTimer Module interrupt.
++- fsl,rcpm-wakeup property and rcpm node : Please refer
++	Documentation/devicetree/bindings/soc/fsl/rcpm.txt
++
++Optional properties:
++- big-endian: If the host controller is big-endian mode, specify this property.
++  The default endian mode is little-endian.
++
++Example:
++rcpm: rcpm@1e34040 {
++	compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
++	reg = <0x0 0x1e34040 0x0 0x18>;
++	fsl,#rcpm-wakeup-cells = <6>;
++}
++
++ftm_alarm0: timer@2800000 {
++	compatible = "fsl,ls1088a-ftm-alarm";
++	reg = <0x0 0x2800000 0x0 0x10000>;
++	fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
++	interrupts = <0 44 4>;
++}
+-- 
+2.7.4
