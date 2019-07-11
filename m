@@ -1,39 +1,90 @@
-From: Oliver Graute <oliver.graute@gmail.com>
-Subject: Re: [PATCHv2] clk: add imx8 clk defines
-Date: Thu, 11 Jul 2019 10:57:25 +0200
-Message-ID: <20190711085725.GA1385@optiplex>
-References: <20190619074000.30852-1-oliver.graute@gmail.com>
- <20190711082039.zze4t22rvlgdxzow@fsr-ub1664-175>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
+ host bridge binding
+Date: Thu, 11 Jul 2019 10:32:10 +0100
+Message-ID: <20190711093210.GA26088@e121166-lin.cambridge.arm.com>
+References: <20190710164519.17883-1-jonnyc@amazon.com>
+ <20190710164519.17883-6-jonnyc@amazon.com>
+ <36e8c3b0-feeb-db8f-3808-0218b54adcec@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190711082039.zze4t22rvlgdxzow@fsr-ub1664-175>
+In-Reply-To: <36e8c3b0-feeb-db8f-3808-0218b54adcec@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>
-Cc: "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: "Shenhar, Talel" <talel@amazon.com>
+Cc: Jonathan Chocron <jonnyc@amazon.com>, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/19, Abel Vesa wrote:
-> On 19-06-19 09:39:52, Oliver Graute wrote:
-> > From: Oliver Graute <oliver.graute@kococonnector.com>
-> > 
-> > added header defines for imx8qm clock
-> > 
-> > Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
+On Thu, Jul 11, 2019 at 10:12:35AM +0300, Shenhar, Talel wrote:
 > 
-> Again, this seems to be taken from some vendor tree, so please keep the
-> original author.
+> On 7/10/2019 7:45 PM, Jonathan Chocron wrote:
+> > Document Amazon's Annapurna Labs PCIe host bridge.
+> 
+> That is the way! (best to keep same wordings (Amazon's)
 
-yes the header defines is from NXP vendor tree. One of orginal authors is
+Guys,
 
-Author: Anson Huang <Anson.Huang@nxp.com>
-Date:   Thu Jan 19 03:53:31 2017 +0800
-    MLK-13911-3 ARM64: dts: imx8qm: add dtsi
-    Add i.MX8QM dtsi support.
-    https://github.com/ADVANTECH-Corp/linux-imx6.git
+as a heads-up, the original posting, for whatever reason, did not hit
+linux-pci@vger, which means that from a PCI patches queue review point
+of view it does not exist.
 
-Whats is the right way to attribute him?
+It ought to be fixed otherwise we won't be able to review the code.
 
-Best regards,
-Oliver
+Lorenzo
+
+> > 
+> > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> > ---
+> >   .../devicetree/bindings/pci/pcie-al.txt       | 45 +++++++++++++++++++
+> >   MAINTAINERS                                   |  1 +
+> >   2 files changed, 46 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentation/devicetree/bindings/pci/pcie-al.txt
+> > new file mode 100644
+> > index 000000000000..d92cc529490e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
+> > @@ -0,0 +1,45 @@
+> > +* Amazon Annapurna Labs PCIe host bridge
+> > +
+> > +Annapurna Labs' PCIe Host Controller is based on the Synopsys DesignWare
+> 
+> Amazon's
+> 
+> 
+> and what is the s' ? should it be for all
+> 
+> > +Example:
+> > +
+> > +	pcie-external0 {
+> probably should have a reference with the address
+> > +		compatible = "amazon,al-pcie";
+> > +		reg = <0x0 0xfb600000 0x0 0x00100000
+> > +		       0x0 0xfd800000 0x0 0x00010000
+> > +		       0x0 0xfd810000 0x0 0x00001000>;
+> > +		reg-names = "config", "controller", "dbi";
+> > +		bus-range = <0 255>;
+> > +		device_type = "pci";
+> > +		#address-cells = <3>;
+> > +		#size-cells = <2>;
+> > +		#interrupt-cells = <1>;
+> > +		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> > +		interrupt-map-mask = <0x00 0 0 7>;
+> > +		interrupt-map = <0x0000 0 0 1 &gic_main GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>; /* INTa */
+> gic_main->gic
+> > +		ranges = <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
+> > +	};
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 5a6137df3f0e..d555beb794bb 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -12205,6 +12205,7 @@ PCIE DRIVER FOR ANNAPURNA LABS
+> AMAZON!
+> >   M:	Jonathan Chocron <jonnyc@amazon.com>
+> >   L:	linux-pci@vger.kernel.org
+> >   S:	Maintained
+> > +F:	Documentation/devicetree/bindings/pci/pcie-al.txt
+> >   F:	drivers/pci/controller/dwc/pcie-al.c
+> >   PCIE DRIVER FOR AMLOGIC MESON
