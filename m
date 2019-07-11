@@ -1,112 +1,93 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v5 2/7] drm/panel: simple: Add ability to override typical
- timing
-Date: Thu, 11 Jul 2019 15:16:50 -0400
-Message-ID: <CAEqLBR=jmc1zs75vfVP2b4d4dpLJjNpUX=5W5AYyCtCoLvK59A@mail.gmail.com>
-References: <20190401171724.215780-1-dianders@chromium.org>
- <20190401171724.215780-3-dianders@chromium.org>
- <20190630202246.GB15102@ravnborg.org>
- <20190630205514.GA17046@ravnborg.org>
- <CAD=FV=WH4kmhQA0kbKcAUx=oOeqTZiQOFCXYpVWwq+mG7Y7ofA@mail.gmail.com>
- <20190708175606.GB3511@ravnborg.org>
- <CAD=FV=VdkPLwyGhSnrHCcduQAPwby35Mqhk_r=O595bMoMT=6w@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
+Date: Thu, 11 Jul 2019 22:26:27 +0300
+Message-ID: <e5a7866d-bc34-887d-31d3-de4f745c8d65@cogentembedded.com>
+References: <20190625075746.10439-1-vigneshr@ti.com>
+ <20190625075746.10439-4-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAD=FV=VdkPLwyGhSnrHCcduQAPwby35Mqhk_r=O595bMoMT=6w@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Ezequiel Garcia <ezequiel@collabora.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Boris Brezillon <boris.brezillon@collabora.com>, =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, Sam Ravnborg <sam@ravnborg.org>, Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190625075746.10439-4-vigneshr@ti.com>
+Content-Language: en-MW
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vignesh Raghavendra <vigneshr@ti.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Tokunori Ikegami <ikegami.t@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdWwgMTAsIDIwMTkgYXQgNjo1NiBQTSBEb3VnIEFuZGVyc29uIDxkaWFuZGVyc0Bj
-aHJvbWl1bS5vcmc+IHdyb3RlOgo+Cj4gSGksCj4KPiBPbiBNb24sIEp1bCA4LCAyMDE5IGF0IDEw
-OjU2IEFNIFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4gd3JvdGU6Cj4gPgo+ID4gT24g
-TW9uLCBKdWwgMDEsIDIwMTkgYXQgMDk6Mzk6MDZBTSAtMDcwMCwgRG91ZyBBbmRlcnNvbiB3cm90
-ZToKPiA+ID4gSGksCj4gPiA+Cj4gPiA+IE9uIFN1biwgSnVuIDMwLCAyMDE5IGF0IDE6NTUgUE0g
-U2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcub3JnPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+IEhp
-IERvdWdsYXMuCj4gPiA+ID4KPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiArICAgLyogT25seSBh
-ZGQgdGltaW5ncyBpZiBvdmVycmlkZSB3YXMgbm90IHRoZXJlIG9yIGZhaWxlZCB0byB2YWxpZGF0
-ZSAqLwo+ID4gPiA+ID4gPiArICAgaWYgKG51bSA9PSAwICYmIHBhbmVsLT5kZXNjLT5udW1fdGlt
-aW5ncykKPiA+ID4gPiA+ID4gKyAgICAgICAgICAgbnVtID0gcGFuZWxfc2ltcGxlX2dldF90aW1p
-bmdzX21vZGVzKHBhbmVsKTsKPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiArICAgLyoKPiA+ID4g
-PiA+ID4gKyAgICAqIE9ubHkgYWRkIGZpeGVkIG1vZGVzIGlmIHRpbWluZ3Mvb3ZlcnJpZGUgYWRk
-ZWQgbm8gbW9kZS4KPiA+ID4gPiA+Cj4gPiA+ID4gPiBUaGlzIHBhcnQgSSBmYWlsIHRvIHVuZGVy
-c3RhbmQuCj4gPiA+ID4gPiBJZiB3ZSBoYXZlIGEgcGFuZWwgd2hlcmUgd2UgaW4gcGFuZWwtc2lt
-cGxlIGhhdmUgc3BlY2lmaWVkIHRoZSB0aW1pbmdzLAo+ID4gPiA+ID4gYW5kIGRvbmUgc28gdXNp
-bmcgZGlzcGxheV90aW1pbmcgc28gd2l0aCBwcm9wZXIge21pbiwgdHlwLCBtYXh9IHRoZW4gaXQK
-PiA+ID4gPiA+IHNob3VsZCBiZSBwZXJmZWN0bHkgbGVnYWwgdG8gc3BlY2lmeSBhIG1vcmUgcHJl
-Y2lzZSB2YXJpYW50IGluIHRoZSBEVAo+ID4gPiA+ID4gZmlsZS4KPiA+ID4gPiA+IE9yIHdoYXQg
-ZGlkIEkgbWlzcyBoZXJlPwo+ID4gPiA+Cj4gPiA+ID4gR290IGl0IG5vdy4KPiA+ID4gPiBJZiBk
-aXNwbGF5X21vZGUgaXMgdXNlZCBmb3IgdGltaW5ncyB0aGlzIGlzIHdoYXQgeW91IGNhbGwgImZp
-eGVkIG1vZGUiLgo+ID4gPiA+IEhtbSwgaWYgSSBnb3QgY29uZnVzZWQgc29tZW9uZSBlbHNlIG1h
-eSBhbHNvIGJlIGNvbmZ1c2VkIGJ5IHRoaXMgbmFtaW5nLgo+ID4gPgo+ID4gPiBUaGUgbmFtZSAi
-Zml4ZWQgbW9kZSIgY29tZXMgZnJvbSB0aGUgb2xkIGNvZGUsIHRob3VnaCBJIGd1ZXNzIGluIHRo
-ZQo+ID4gPiBvbGQgY29kZSBpdCB1c2VkIHRvIHJlZmVyIHRvIGEgbW9kZSB0aGF0IGNhbWUgZnJv
-bSBlaXRoZXIgdGhlCj4gPiA+IGRpc3BsYXlfdGltaW5nIG9yIHRoZSBkaXNwbGF5X21vZGUuCj4g
-PiA+Cj4gPiA+IEhvdyBhYm91dCBpZiBJIGNhbGwgaXQgInBhbmVsX3NpbXBsZV9nZXRfZnJvbV9m
-aXhlZF9kaXNwbGF5X21vZGUiPwo+ID4gPiAuLi5vciBpZiB5b3UgaGF2ZSBhbm90aGVyIHN1Z2dl
-c3Rpb24gZmVlbCBmcmVlIHRvIGNoaW1lIGluLgo+ID4gV2hhdCB3ZSByZWFsbHkgd2FudCB0byBk
-aXN0aW5ndXNoIGhlcmUgaXMgdGhlIHVzZSBvZiBkaXNwbGF5X21vZGUKPiA+IGFuZCBkaXNwbGF5
-X3RpbWluZ3MgKGlmIEkgZ290IHRoZSBuYW1lcyByaWdodCkuCj4gPiBUaGF0IGRpc3BsYXlfbW9k
-ZSBzcGVjaWZ5IGEgZml4ZWQgdGltaW5nIGFuZCBkaXNwbGF5X3RpbWluZyBzcGVjaWZ5Cj4gPiBh
-IHZhbGlkIHJhbmdlIGlzIHNvbWV0aGluZyBpbiB0aGUgc2VtYW50aWNzIG9mIHRoZSB0d28gdHlw
-ZXMuCj4gPiBTbyBuYW1pbmcgdGhhdCByZWZlciB0byBkaXNwbGF5X21vZGUgdmVyc3VzIGRpc3Bs
-YXlfdGltaW5nIHdpbGwgbWFrZSB0aGUKPiA+IGNvZGUgc2ltcGxlciB0byB1bmRlcnN0YW5kLiBh
-bmQgdGhlbiBhIG5pY2UgY29tbWVudCB0aGF0IHdoZW4KPiA+IGRpc3BsYXlfbW9kZQo+ID4gaXMg
-dXNlZCBvbmUgbG9vc2VzIHRoZSBwb3NzaWJpbGl0eSB0byB1c2Ugb3ZlcnJpZGVfbW9kZS4KPiA+
-IFRoYXQgd291bGQgYmUgZmluZSB0byBoYXZlIGluIHRoZSBzdHJ1Y3QgaW4gdGhlIGRyaXZlci4K
-Pgo+IE9LLCBJIGNhbiBjaGFuZ2UgdGhlIG5hbWVzIGhlcmUgYW5kIHRyeSB0byBmaW5kIGEgZ29v
-ZCBwbGFjZSB0byBhZGQgYSBjb21tZW50Lgo+Cj4KPiA+ID4gTk9URTogU2luY2UgdGhpcyBmZWVk
-YmFjayBpcyBtaW5vciBhbmQgdGhpcyBwYXRjaCBoYXMgYmVlbiBvdXRzdGFuZGluZwo+ID4gPiBm
-b3IgYSB3aGlsZSAoYW5kIGlzIGJsb2NraW5nIG90aGVyIHdvcmspLCBJIGFtIGFzc3VtaW5nIHRo
-YXQgdGhlIGJlc3QKPiA+ID4gcGF0aCBmb3J3YXJkIGlzIGZvciBIZWlrbyB0byBsYW5kIHRoaXMg
-cGF0Y2ggd2l0aCBUaGllcnJ5J3MgQWNrIGFuZAo+ID4gPiBJJ2xsIHNlbmQgYSBmb2xsb3ctdXAu
-ICBQbGVhc2UgeWVsbCBpZiB5b3UgZGlzYWdyZWUuCj4gPiBMZXQncyBnaXZlIHRoZSBwYXRjaGVz
-IGEgc3BpbiBtb3JlIGFzIHdlIGhhdmUgcGFzc2VkIHRoZSBwb3NzaWJpbGl0eSBmb3IKPiA+IHRo
-ZSBjdXJyZW50IG1lcmdlIHdpbmRvdy4KPgo+IEFueSB3YXkgSSBjYW4gY29udmluY2UgeW91IHRv
-IGNoYW5nZSB5b3VyIG1pbmQgaGVyZT8gIFRoZXJlIGFyZSBubwo+IGZ1bmN0aW9uYWwgY2hhbmdl
-cyByZXF1ZXN0ZWQgc28gZmFyIGluIHlvdXIgZmVlZGJhY2sgYW5kIG5vIGJ1Z3MtLWl0J3MKPiBq
-dXN0IGEgZmV3IHZhcmlhYmxlIG5hbWVzIGFuZCBjb21tZW50cy4gIEJ5IGxhbmRpbmcgdGhlIGV4
-aXN0aW5nCj4gcGF0Y2hlcyBhcy1pczoKPgo+IDEuIFdlIHN0b3Agc3BhbW1pbmcgYWxsIHRoZSBw
-ZW9wbGUgQ0NlZCBvbiB0aGlzIHdob2xlIHNlcmllcyAod2hpY2gKPiBpbmNsdWRlcyBkZXZpY2Ug
-dHJlZSBwYXRjaGVzKSB0aGF0IG1pZ2h0IGJlIGludGVyZXN0ZWQgaW4gdGhlIHNlcmllcwo+IGFz
-IGEgd2hvbGUgYnV0IGFyZW4ndCBpbnRlcmVzdGVkIGluIGRldGFpbHMuCj4KPiAyLiBXZSBjYW4g
-ZGViYXRlIHRoZSBiaWtlc2hlZC10eXBlIGlzc3VlcyBvbiB0aGVpciBvd24gbWVyaXQgYW5kIEkK
-PiBkb24ndCBoYXZlIHRvIGRlYmF0ZSByZW1vdmluZyBleGlzdGluZyBBY2tzIC8gUmV2aWV3ZWQt
-YnkgLyBUZXN0ZWQtYnkKPiB0YWdzIGFzIEkgbWFrZSBjaGFuZ2VzLgo+Cj4gMy4gRXZlbiBpZiBp
-dCdzIG5vdCBhIGdvb2QgdGltZSB0byBsYW5kIHRoZSBwYXRjaGVzIHJpZ2h0IG5vdyB3ZSBrbm93
-Cj4gdGhhdCB0aGVzZSBwYXRjaGVzIHdpbGwgYmUgcmVhZHkgdG8gbGFuZCBhcyBzb29uIGFzIHRo
-ZSB3aW5kb3cgb3BlbnMuCj4gQXMgSSBtZW50aW9uZWQgZWFybGllciB0aGVzZSBwYXRjaGVzIGFy
-ZSBibG9ja2luZyBvdGhlciB3b3JrIFsxXSBhbmQKPiBsYW5kaW5nIHRoYXQgcGF0Y2ggaXMgYWN0
-dWFsbHkgcHJldmVudGluZyBNYXR0aGlhcyBmcm9tIHN1Ym1pdHRpbmcKPiBhbm90aGVyIHNlcmll
-cyBvZiBwYXRjaGVzIHRvIGFkZCBzdXBwb3J0IGZvciByazMyODgtdmV5cm9uLXRpZ2VyIGFuZAo+
-IHJrMzI4OC12ZXlyb24tZmlldmVsLiAgQ2VydGFpbmx5IEkga25vdyB0aGF0IHVwc3RyZWFtIGRv
-ZXNuJ3QgbWFrZSBhCj4gcG9saWN5IG9mIGxhbmRpbmcgdGhpbmdzIGp1c3QgdG8gc3VpdCB0aGUg
-dGltZWxpbmVzIG9mIGEgZG93bnN0cmVhbQo+IHByb2plY3QsIGJ1dCBpbiB0aGlzIGNhc2UgdGhl
-cmUgc2VlbXMgdmVyeSBsaXR0bGUgZG93bnNpZGVzIHRvIGxhbmRpbmcKPiB0aGUgZXhpc3Rpbmcg
-cGF0Y2hlcyBhbmQgdGFraW5nIGEgbGF0ZXIgY2xlYW51cCBwYXRjaC4KPgoKW3NlbmRpbmcgZnJv
-bSBteSBAY2hyb21pdW0ub3JnIGFkZHJlc3Mgc28gYW55IGFwcGVhcmFuY2Ugb2YgYmlhcyBpcwpl
-eHBsaWNpdCA6KSBdCgpBZ3JlZSB3aXRoIERvdWcgaGVyZSwgdGhlIG5hbWluZyBhbmQgY2FzdGlu
-ZyBkaXNjdXNzaW9uIGlzIHByZXR0eQpzdWJqZWN0aXZlIGFuZCBub24tZnVuY3Rpb25hbC4gV2Un
-dmUgZ290IGFuIEFjayBmcm9tIFRoaWVycnkgYW5kIGEKUmV2aWV3IGZyb20gQm9yaXMgKGJvdGgg
-c2Vhc29uZWQgZHJtX3BhbmVsJ2VycyksIHRoaXMgcGF0Y2ggaGFzIGJlZW4Kc2l0dGluZyBpbiBy
-ZXZpZXcgZm9yIGEgd2hpbGUuIExldCdzIG5vdCBsZXQgdGhlIHBlcmZlY3QgYmUgdGhlIGVuZW15
-Cm9mIHRoZSBnb29kLgoKU2VhbgoKPgo+ID4gSSBhbSBvbiB2YWNhdGlvbiBhdCB0aGUgbW9tZW50
-IGFuZCB0aHVzIHNsb3cgaW4gcmVzcG9uc2VzLCBidXQgd2lsbCBiZSBiYWNrCj4gPiBhdCB0aGUg
-aG9tZSBvZmZpY2UgbmV4dCB3ZWVrIGFuZCB3aWxsIGJlIG1vcmUgcmVzcG9uc2l2ZSBhZ2Fpbi4K
-PiA+Cj4gPiAgICAgICAgIFNhbSAtIHdobyBpcyBlbmpveWluZyB0aGUgYWxwcyBpbiBBdXN0cmlh
-Cj4KPiBIb3BlIHlvdSBoYXZlIGhhZCBhIGdyZWF0IHZhY2F0aW9uIQo+Cj4gWzFdIGh0dHBzOi8v
-bGttbC5rZXJuZWwub3JnL3IvMjAxOTA2MjUyMjI2MjkuMTU0NjE5LTEtbWthQGNocm9taXVtLm9y
-Zwo+Cj4gLURvdWcKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Hello!
+
+On 06/25/2019 10:57 AM, Vignesh Raghavendra wrote:
+
+> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
+> Bus interface between a host system master and one or more slave
+> interfaces. HyperBus is used to connect microprocessor, microcontroller,
+> or ASIC devices with random access NOR flash memory (called HyperFlash)
+> or self refresh DRAM (called HyperRAM).
+> 
+> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+> signal and either Single-ended clock(3.0V parts) or Differential clock
+> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+> At bus level, it follows a separate protocol described in HyperBus
+> specification[1].
+> 
+> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
+> its equivalent to x16 parallel NOR flash with respect to bits per clock
+> cycle. But HyperBus operates at >166MHz frequencies.
+> HyperRAM provides direct random read/write access to flash memory
+> array.
+> 
+> But, HyperBus memory controllers seem to abstract implementation details
+> and expose a simple MMIO interface to access connected flash.
+> 
+> Add support for registering HyperFlash devices with MTD framework. MTD
+> maps framework along with CFI chip support framework are used to support
+> communicating with flash.
+> 
+> Framework is modelled along the lines of spi-nor framework. HyperBus
+> memory controller (HBMC) drivers calls hyperbus_register_device() to
+> register a single HyperFlash device. HyperFlash core parses MMIO access
+> information from DT, sets up the map_info struct, probes CFI flash and
+> registers it with MTD framework.
+> 
+> Some HBMC masters need calibration/training sequence[3] to be carried
+> out, in order for DLL inside the controller to lock, by reading a known
+> string/pattern. This is done by repeatedly reading CFI Query
+> Identification String. Calibration needs to be done before trying to detect
+> flash as part of CFI flash probe.
+> 
+> HyperRAM is not supported at the moment.
+> 
+> HyperBus specification can be found at[1]
+> HyperFlash datasheet can be found at[2]
+> 
+> [1] https://www.cypress.com/file/213356/download
+> [2] https://www.cypress.com/file/213346/download
+> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>     Table 12-5741. HyperFlash Access Sequence
+> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+[...]
+
+> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+> new file mode 100644
+> index 000000000000..63a9e64895bc
+> --- /dev/null
+> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
+> @@ -0,0 +1,154 @@
+[...]
+> +int hyperbus_register_device(struct hyperbus_device *hbdev)
+> +{
+[...]
+> +	map->name = dev_name(dev);
+> +	map->bankwidth = 2;
+
+   I think this should really be 1, judging on the comment to that field (and on
+Cogent's own RPC-IF HF driver).
+
+> +	map->device_node = np;
+
+[...]
+
+MBR, Sergei
