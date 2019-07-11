@@ -1,323 +1,130 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: dma: Add YAML schemas for the generic
- DMA bindings
-Date: Thu, 11 Jul 2019 11:33:30 -0600
-Message-ID: <CAL_JsqLh8QEwa-3v9-Vs=e55k3GyyvwsNVxmdBMWMD_VxqKMyA@mail.gmail.com>
-References: <20190711092158.14678-1-maxime.ripard@bootlin.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH RFC 2/4] OPP: Add and export helper to set bandwidth
+Date: Thu, 11 Jul 2019 10:40:43 -0700
+Message-ID: <20190711174043.GU7234@tuxbook-pro>
+References: <20190627133424.4980-1-sibis@codeaurora.org>
+ <20190627133424.4980-3-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190711092158.14678-1-maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Jon Hunter <jonathanh@nvidia.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Vinod Koul <vkoul@kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190627133424.4980-3-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org, georgi.djakov@linaro.org, agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, saravanak@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 3:34 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> The DMA controllers and consumers have a bunch of generic properties that
-> are needed in a device tree. Add a YAML schemas for those.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+On Thu 27 Jun 06:34 PDT 2019, Sibi Sankar wrote:
+
+> Add and export 'dev_pm_opp_set_bw' to set the bandwidth
+> levels associated with an OPP for a given frequency.
+> 
+
+While this looks quite reasonable I'm uncertain about the overall OPP
+API.
+
+With the profiling based (bwmon/llcc) approach we would acquire the peak
+bandwidth from the OPP table and calculate the average dynamically,
+based on measurements and heuristics.
+
+For that I think we will have a struct dev_pm_opp at hand (e.g. from
+devfreq_recommended_opp() or similar), from which we want to read the
+peak value and then apply the icc vote. Or would we want to update the
+avg bw and then apply the opp using a method like this? (In which case
+we probably don't want to pass a freq, but a struct dev_pm_opp *, to
+avoid the additional lookup)
+
+Regards,
+Bjorn
+
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  .../devicetree/bindings/dma/dma-consumer.yaml |  60 +++++++++
-
-This already exists in the dt-schema/schemas/dma/dma.yaml though not
-the descriptions because that needs relicensing.
-
-Looks like we need NVidia's (Jon H) and TI's (Peter U) permission.
-
->  .../bindings/dma/dma-controller.yaml          |  79 ++++++++++++
->  Documentation/devicetree/bindings/dma/dma.txt | 114 +-----------------
->  3 files changed, 140 insertions(+), 113 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/dma-consumer.yaml
->  create mode 100644 Documentation/devicetree/bindings/dma/dma-controller.yaml
->
-> diff --git a/Documentation/devicetree/bindings/dma/dma-consumer.yaml b/Documentation/devicetree/bindings/dma/dma-consumer.yaml
-> new file mode 100644
-> index 000000000000..2f6315863ad1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/dma-consumer.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/dma-consumer.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  drivers/opp/core.c     | 46 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_opp.h |  6 ++++++
+>  2 files changed, 52 insertions(+)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index c85c04dc2c7de..78f42960860d1 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -746,6 +746,52 @@ static int _set_required_opps(struct device *dev,
+>  	return ret;
+>  }
+>  
+> +/**
+> + * dev_pm_opp_set_bw() - Configures OPP bandwidth levels
+> + * @dev:	device for which we do this operation
+> + * @freq:	bandwidth values to set with matching 'freq'
+> + *
+> + * This configures the bandwidth to the levels specified
+> + * by the OPP corresponding to the given frequency.
+> + *
+> + * Return: 0 on success or a negative error value.
+> + */
+> +int dev_pm_opp_set_bw(struct device *dev, unsigned long freq)
+> +{
+> +	struct opp_table *opp_table;
+> +	struct dev_pm_opp *opp;
+> +	int ret = 0;
+> +	int i;
 > +
-> +title: DMA Consumer Generic Binding
+> +	opp = dev_pm_opp_find_freq_exact(dev, freq, true);
+> +	if (IS_ERR(opp))
+> +		return PTR_ERR(opp);
 > +
-> +maintainers:
-> +  - Vinod Koul <vkoul@kernel.org>
+> +	opp_table = _find_opp_table(dev);
+> +	if (IS_ERR(opp_table)) {
+> +		dev_err(dev, "%s: device opp table doesn't exist\n", __func__);
+> +		ret = PTR_ERR(opp_table);
+> +		goto put_opp;
+> +	}
 > +
-> +select: true
+> +	if (IS_ERR_OR_NULL(opp_table->paths)) {
+> +		ret = -ENODEV;
+> +		goto put_opp_table;
+> +	}
 > +
-> +properties:
-> +  dmas:
-> +    description:
-> +      List of one or more DMA specifiers, each consisting of
-> +          - A phandle pointing to DMA controller node
-> +          - A number of integer cells, as determined by the
-> +            \#dma-cells property in the node referenced by phandle
-> +            containing DMA controller specific information. This
-> +            typically contains a DMA request line number or a
-> +            channel number, but can contain any data that is
-> +            required for configuring a channel.
+> +	for (i = 0; i < opp_table->path_count; i++) {
+> +		ret = icc_set_bw(opp_table->paths[i], opp->bandwidth[i].avg,
+> +				 opp->bandwidth[i].peak);
+> +	}
 > +
-> +  dma-names:
-> +    description:
-> +      Contains one identifier string for each DMA specifier in the
-> +      dmas property. The specific strings that can be used are defined
-> +      in the binding of the DMA client device.  Multiple DMA
-> +      specifiers can be used to represent alternatives and in this
-> +      case the dma-names for those DMA specifiers must be identical
-> +      (see examples).
+> +put_opp_table:
+> +	dev_pm_opp_put_opp_table(opp_table);
+> +put_opp:
+> +	dev_pm_opp_put(opp);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_opp_set_bw);
 > +
-> +dependencies:
-> +  dma-names: [ dmas ]
+>  /**
+>   * dev_pm_opp_set_rate() - Configure new OPP based on frequency
+>   * @dev:	 device for which we do this operation
+> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+> index a17c462974851..1cdc2d0a2b20e 100644
+> --- a/include/linux/pm_opp.h
+> +++ b/include/linux/pm_opp.h
+> @@ -152,6 +152,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names
+>  void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
+>  int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
+>  int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
+> +int dev_pm_opp_set_bw(struct device *dev, unsigned long freq);
+>  int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask);
+>  int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
+>  void dev_pm_opp_remove_table(struct device *dev);
+> @@ -336,6 +337,11 @@ static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long target_f
+>  	return -ENOTSUPP;
+>  }
+>  
+> +static inline int dev_pm_opp_set_bw(struct device *dev, unsigned long freq)
+> +{
+> +	return -ENOTSUPP;
+> +}
 > +
-> +examples:
-> +  - |
-> +    /* A device with one DMA read channel, one DMA write channel */
-> +    i2c1: i2c@1 {
-> +         /* ... */
-> +         dmas = <&dma 2>,      /* read channel */
-> +                <&dma 3>;      /* write channel */
-> +        dma-names = "rx", "tx";
-> +        /* ... */
-> +    };
-> +
-> +  - |
-> +    /* A single read-write channel with three alternative DMA controllers */
-> +    dmas = <&dma1 5>, <&dma2 7>, <&dma3 2>;
-> +    dma-names = "rx-tx", "rx-tx", "rx-tx";
-> +
-> +  - |
-> +    /* A device with three channels, one of which has two alternatives */
-> +    dmas = <&dma1 2>,          /* read channel */
-> +           <&dma1 3>,          /* write channel */
-> +           <&dma2 0>,          /* error read */
-> +           <&dma3 0>;          /* alternative error read */
-> +    dma-names = "rx", "tx", "error", "error";
-> diff --git a/Documentation/devicetree/bindings/dma/dma-controller.yaml b/Documentation/devicetree/bindings/dma/dma-controller.yaml
-> new file mode 100644
-> index 000000000000..17c650131b78
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/dma-controller.yaml
-> @@ -0,0 +1,79 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: DMA Controller Generic Binding
-> +
-> +maintainers:
-> +  - Vinod Koul <vkoul@kernel.org>
-> +
-> +description:
-> +  Generic binding to provide a way for a driver using DMA Engine to
-> +  retrieve the DMA request or channel information that goes from a
-> +  hardware device to a DMA controller.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^dma-controller(@.*)?$"
-> +
-> +  "#dma-cells":
-> +    # minimum: 1
-> +    description:
-> +      Used to provide DMA controller specific information.
-> +
-> +  dma-channel-masks:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +      Bitmask of available DMA channels in ascending order that are
-> +      not reserved by firmware and are available to the
-> +      kernel. i.e. first channel corresponds to LSB.
-> +
-> +  dma-channels:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +      Number of DMA channels supported by the controller.
-> +
-> +  dma-masters:
-> +    $ref: /schemas/types.yaml#definitions/phandle-array
-> +    description:
-> +      DMA routers are transparent IP blocks used to route DMA request
-> +      lines from devices to the DMA controller. Some SoCs (like TI
-> +      DRA7x) have more peripherals integrated with DMA requests than
-> +      what the DMA controller can handle directly.
-> +
-> +      In such a case, dma-masters is an array of phandle to the DMA
-> +      controllers the router can direct the signal to.
-> +
-> +  dma-requests:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +      Number of DMA request signals supported by the controller.
-> +
-> +examples:
-> +  - |
-> +    dma: dma@48000000 {
-
-dma-controller@...
-
-This is a case where I'd like some check that the schema is actually
-applied to the schema's example.
-
-> +        compatible = "ti,omap-sdma";
-> +        reg = <0x48000000 0x1000>;
-> +        interrupts = <0 12 0x4
-> +                      0 13 0x4
-> +                      0 14 0x4
-> +                      0 15 0x4>;
-> +        #dma-cells = <1>;
-> +        dma-channels = <32>;
-> +        dma-requests = <127>;
-> +        dma-channel-mask = <0xfffe>;
-> +    };
-> +
-> +  - |
-> +    sdma_xbar: dma-router@4a002b78 {
-> +        compatible = "ti,dra7-dma-crossbar";
-> +        reg = <0x4a002b78 0xfc>;
-> +        #dma-cells = <1>;
-> +        dma-requests = <205>;
-> +        ti,dma-safe-map = <0>;
-> +        dma-masters = <&sdma>;
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
-> index eeb4e4d1771e..90a67a016a48 100644
-> --- a/Documentation/devicetree/bindings/dma/dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/dma.txt
-> @@ -1,113 +1 @@
-> -* Generic DMA Controller and DMA request bindings
-> -
-> -Generic binding to provide a way for a driver using DMA Engine to retrieve the
-> -DMA request or channel information that goes from a hardware device to a DMA
-> -controller.
-> -
-> -
-> -* DMA controller
-> -
-> -Required property:
-> -- #dma-cells:          Must be at least 1. Used to provide DMA controller
-> -                       specific information. See DMA client binding below for
-> -                       more details.
-> -
-> -Optional properties:
-> -- dma-channels:        Number of DMA channels supported by the controller.
-> -- dma-requests:        Number of DMA request signals supported by the
-> -                       controller.
-> -- dma-channel-mask:    Bitmask of available DMA channels in ascending order
-> -                       that are not reserved by firmware and are available to
-> -                       the kernel. i.e. first channel corresponds to LSB.
-> -
-> -Example:
-> -
-> -       dma: dma@48000000 {
-> -               compatible = "ti,omap-sdma";
-> -               reg = <0x48000000 0x1000>;
-> -               interrupts = <0 12 0x4
-> -                             0 13 0x4
-> -                             0 14 0x4
-> -                             0 15 0x4>;
-> -               #dma-cells = <1>;
-> -               dma-channels = <32>;
-> -               dma-requests = <127>;
-> -               dma-channel-mask = <0xfffe>
-> -       };
-> -
-> -* DMA router
-> -
-> -DMA routers are transparent IP blocks used to route DMA request lines from
-> -devices to the DMA controller. Some SoCs (like TI DRA7x) have more peripherals
-> -integrated with DMA requests than what the DMA controller can handle directly.
-> -
-> -Required property:
-> -- dma-masters:         phandle of the DMA controller or list of phandles for
-> -                       the DMA controllers the router can direct the signal to.
-> -- #dma-cells:          Must be at least 1. Used to provide DMA router specific
-> -                       information. See DMA client binding below for more
-> -                       details.
-> -
-> -Optional properties:
-> -- dma-requests:        Number of incoming request lines the router can handle.
-> -- In the node pointed by the dma-masters:
-> -       - dma-requests: The router driver might need to look for this in order
-> -                       to configure the routing.
-> -
-> -Example:
-> -       sdma_xbar: dma-router@4a002b78 {
-> -               compatible = "ti,dra7-dma-crossbar";
-> -               reg = <0x4a002b78 0xfc>;
-> -               #dma-cells = <1>;
-> -               dma-requests = <205>;
-> -               ti,dma-safe-map = <0>;
-> -               dma-masters = <&sdma>;
-> -       };
-> -
-> -* DMA client
-> -
-> -Client drivers should specify the DMA property using a phandle to the controller
-> -followed by DMA controller specific data.
-> -
-> -Required property:
-> -- dmas:                        List of one or more DMA specifiers, each consisting of
-> -                       - A phandle pointing to DMA controller node
-> -                       - A number of integer cells, as determined by the
-> -                         #dma-cells property in the node referenced by phandle
-> -                         containing DMA controller specific information. This
-> -                         typically contains a DMA request line number or a
-> -                         channel number, but can contain any data that is
-> -                         required for configuring a channel.
-> -- dma-names:           Contains one identifier string for each DMA specifier in
-> -                       the dmas property. The specific strings that can be used
-> -                       are defined in the binding of the DMA client device.
-> -                       Multiple DMA specifiers can be used to represent
-> -                       alternatives and in this case the dma-names for those
-> -                       DMA specifiers must be identical (see examples).
-> -
-> -Examples:
-> -
-> -1. A device with one DMA read channel, one DMA write channel:
-> -
-> -       i2c1: i2c@1 {
-> -               ...
-> -               dmas = <&dma 2          /* read channel */
-> -                       &dma 3>;        /* write channel */
-> -               dma-names = "rx", "tx";
-> -               ...
-> -       };
-> -
-> -2. A single read-write channel with three alternative DMA controllers:
-> -
-> -       dmas = <&dma1 5
-> -               &dma2 7
-> -               &dma3 2>;
-> -       dma-names = "rx-tx", "rx-tx", "rx-tx";
-> -
-> -3. A device with three channels, one of which has two alternatives:
-> -
-> -       dmas = <&dma1 2                 /* read channel */
-> -               &dma1 3                 /* write channel */
-> -               &dma2 0                 /* error read */
-> -               &dma3 0>;               /* alternative error read */
-> -       dma-names = "rx", "tx", "error", "error";
-> +This file has been moved to dma-controller.yaml.
-> --
-> 2.21.0
->
+>  static inline int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask)
+>  {
+>  	return -ENOTSUPP;
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
