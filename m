@@ -1,108 +1,501 @@
-From: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Subject: [PATCH 03/12] remoteproc: qcom: Add support for split q6 + m3 wlan firmware
-Date: Thu, 11 Jul 2019 21:10:59 +0530
-Message-ID: <1562859668-14209-4-git-send-email-gokulsri@codeaurora.org>
-References: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, jassisinghbrar@gmail.com, ohad@wizery.com, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, gokulsri@codeaurora.org
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [RFC v2] DT-based tuner/demod init
+Date: Thu, 11 Jul 2019 18:21:16 +0200
+Message-ID: <6d38f9b1-a8cd-803d-b330-f92f7bcf08ca@free.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-media <linux-media@vger.kernel.org>, I2C <linux-i2c@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: DT <devicetree@vger.kernel.org>, Peter Korsgaard <peter@korsgaard.com>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Brad Love <brad@nextdimension.cc>, =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Antti Palosaari <crope@iki.fi>, Peter Rosin <peda@axentia.se>, Simon Horman <horms+renesas@verge.net.au>, Mauro Carvalho Chehab <mchehab@kernel.org>, Olli Salonen <olli.salonen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-IPQ8074 supports split firmware for q6 and m3 as well.
-So add support for loading the m3 firmware before q6.
-Now the drivers works fine for both split and unified
-firmwares.
+Hello everyone,
 
-Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_wcss.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+This is a follow-up RFC to my first request for comments:
+"[RFC] SW connection between DVB Transport Stream demuxer and I2C-based frontend"
+https://www.spinics.net/lists/arm-kernel/msg739972.html
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index 8418f57..5957114 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -138,12 +138,14 @@ struct q6v5_wcss {
- 	u8 version;
- 	bool requires_force_stop;
- 	bool need_mem_protection;
-+	const char *m3_firmware_name;
+Background: my SoC provides a "Transport Stream Interface" on-chip
+(for which I wrote a small driver, tsif.c) as well as a tuner/demod combo
+(si2141/si2168) on the board.
+
+My original goal was: being able to link the tuner/demod from the device tree,
+instead of hard-coding them in the TSIF driver.
+
+(Please see the resulting code at the end of this message)
+
+Aside from the tsif driver itself (I would appreciate if someone could answer
+some questions and TODOs in that part as well), there were two hurdles that
+had to be solved for this to work:
+
+PROBLEM #1
+
+The dvb_adapter and the tuner need to "see" the dvb_frontend struct filled
+by the demod driver. In order to do this (in a generic, OO-like way), Brad
+suggested that I could make 'struct dvb_frontend' the first field of a
+demod's clientdata. That way, dvb_get_demod_fe() callers don't need to
+know which demod they are tied to.
+
+I'd like to hear comments on dvb_get_demod_fe() because
+A. It is an essential part of the patch series, and
+B. I have no better way to do this.
+
+
+PROBLEM #2
+
+Peter Rosin suggested a great way to get the demod instantiate the tuner
+via DT (by using an i2c-gate node. I think we can all agree that this
+solution is good to go?
+
+
+So basically, I need an amen on solution for Problem #1, and ideally a few
+comments on the driver itself. Then I can spin an actual patch series.
+
+Regards.
+
+
+
+diff --git a/arch/arm64/boot/dts/qcom/apq8098-batfish.dts b/arch/arm64/boot/dts/qcom/apq8098-batfish.dts
+index 29d59ecad138..06cd2663e089 100644
+--- a/arch/arm64/boot/dts/qcom/apq8098-batfish.dts
++++ b/arch/arm64/boot/dts/qcom/apq8098-batfish.dts
+@@ -30,6 +30,48 @@
+ 	status = "ok";
  };
  
- struct wcss_data {
- 	int (*init_clock)(struct q6v5_wcss *wcss);
- 	int (*init_regulator)(struct q6v5_wcss *wcss);
--	const char *firmware_name;
-+	const char *q6_firmware_name;
-+	const char *m3_firmware_name;
- 	int crash_reason_smem;
- 	u8 version;
- 	bool aon_reset_required;
-@@ -759,7 +761,26 @@ static void *q6v5_wcss_da_to_va(struct rproc *rproc, u64 da, int len)
- static int q6v5_wcss_load(struct rproc *rproc, const struct firmware *fw)
++&blsp1_i2c5 {
++	status = "ok";
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c5_default>;
++
++	demod: demod@64 {
++		compatible = "silabs,si2168";
++		reg = <0x64>;
++		reset-gpios = <&tlmm 84 GPIO_ACTIVE_LOW>;
++		i2c-gate {
++			tuner@60 {
++				compatible = "silabs,si2141";
++				reg = <0x60>;
++				demod = <&demod>;
++			};
++		};
++	};
++};
++
++&tlmm {
++	i2c5_default: i2c5-default {
++		pins = "gpio87", "gpio88";
++		function = "blsp_i2c5";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	tsif0_default: tsif0-default {
++		pins = "gpio89", "gpio90", "gpio91";
++		function = "tsif0";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++};
++
++&tsif {
++	demod = <&demod>;
++	pinctrl-0 = <&tsif0_default>;
++	pinctrl-names = "default";
++};
++
+ &qusb2phy {
+ 	status = "ok";
+ 	vdda-pll-supply = <&vreg_l12a_1p8>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index f8671a46392d..62518dcbe2a3 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -1206,6 +1206,16 @@
+ 			status = "disabled";
+ 		};
+ 
++		tsif: tsif@c1e7000 {
++			compatible = "qcom,msm8998-tsif";
++			reg = <0x0c1e7000 0x104>;
++			reg-names = "tsif0";
++			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "tsif0";
++			clocks = <&gcc GCC_TSIF_AHB_CLK>;
++			clock-names = "iface";
++		};
++
+ 		timer@17920000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index 6351a97f3d18..5a55c6bd0bd2 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -3030,3 +3030,17 @@ void dvb_frontend_detach(struct dvb_frontend *fe)
+ 	dvb_frontend_put(fe);
+ }
+ EXPORT_SYMBOL(dvb_frontend_detach);
++
++/*
++ * DT-enabled demodulator drivers are required to have 'struct dvb_frontend'
++ * as the first field of their state struct (stored as clientdata) in order
++ * to allow this function to return 'struct dvb_frontend' generically.
++ */
++struct dvb_frontend *dvb_get_demod_fe(struct device_node *np)
++{
++	struct device_node *demod_node = of_parse_phandle(np, "demod", 0);
++	struct i2c_client *demod = of_find_i2c_device_by_node(demod_node);
++	of_node_put(demod_node);
++	return demod ? i2c_get_clientdata(demod) : NULL;
++}
++EXPORT_SYMBOL(dvb_get_demod_fe);
+diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-frontends/si2168.c
+index 48e8a376766e..09e1382ed128 100644
+--- a/drivers/media/dvb-frontends/si2168.c
++++ b/drivers/media/dvb-frontends/si2168.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ 
+ #include "si2168_priv.h"
+ 
+@@ -663,6 +664,8 @@ static const struct dvb_frontend_ops si2168_ops = {
+ static int si2168_probe(struct i2c_client *client,
+ 		const struct i2c_device_id *id)
  {
- 	struct q6v5_wcss *wcss = rproc->priv;
-+	const struct firmware *m3_fw;
-+	int ret;
-+
-+	if (wcss->m3_firmware_name) {
-+		ret = request_firmware(&m3_fw, wcss->m3_firmware_name,
-+				       wcss->dev);
-+		if (ret)
-+			goto skip_m3;
-+
-+		ret = qcom_mdt_load_no_init(wcss->dev, m3_fw,
-+					    wcss->m3_firmware_name, 0,
-+					    wcss->mem_region, wcss->mem_phys,
-+					    wcss->mem_size, &wcss->mem_reloc);
-+		if (ret) {
-+			dev_err(wcss->dev, "can't load m3_fw.bXX\n");
-+			return ret;
-+		}
++	struct device *cdev = &client->dev;
++	struct si2168_config defconfig = { .ts_mode = SI2168_TS_SERIAL };
+ 	struct si2168_config *config = client->dev.platform_data;
+ 	struct si2168_dev *dev;
+ 	int ret;
+@@ -670,6 +673,13 @@ static int si2168_probe(struct i2c_client *client,
+ 
+ 	dev_dbg(&client->dev, "\n");
+ 
++	if (cdev->of_node) {
++		struct gpio_desc *desc;
++		desc = devm_gpiod_get_optional(cdev, "reset", GPIOD_OUT_LOW);
++		if (IS_ERR(desc)) return PTR_ERR(desc);
++		config = &defconfig;
 +	}
++
+ 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+ 	if (!dev) {
+ 		ret = -ENOMEM;
+@@ -723,9 +733,21 @@ static int si2168_probe(struct i2c_client *client,
+ 	dev->version = (cmd.args[1]) << 24 | (cmd.args[3] - '0') << 16 |
+ 		       (cmd.args[4] - '0') << 8 | (cmd.args[5]) << 0;
  
-+skip_m3:
- 	if (wcss->need_mem_protection)
- 		return qcom_mdt_load(wcss->dev, fw, rproc->firmware,
- 				     WCNSS_PAS_ID, wcss->mem_region,
-@@ -1055,7 +1076,7 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 		return -EPROBE_DEFER;
- 
- 	rproc = rproc_alloc(&pdev->dev, pdev->name, desc->ops,
--			    desc->firmware_name, sizeof(*wcss));
-+			    desc->q6_firmware_name, sizeof(*wcss));
- 	if (!rproc) {
- 		dev_err(&pdev->dev, "failed to allocate rproc\n");
- 		return -ENOMEM;
-@@ -1068,6 +1089,7 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 	wcss->version = desc->version;
- 	wcss->requires_force_stop = desc->requires_force_stop;
- 	wcss->need_mem_protection = desc->need_mem_protection;
-+	wcss->m3_firmware_name = desc->m3_firmware_name;
- 
- 	ret = q6v5_wcss_init_mmio(wcss, pdev);
++	/* create dvb_frontend */
++	memcpy(&dev->fe.ops, &si2168_ops, sizeof(si2168_ops));
++	dev->fe.demodulator_priv = client;
++	if (config->i2c_adapter)
++		*config->i2c_adapter = dev->muxc->adapter[0];
++	if (config->fe)
++		*config->fe = &dev->fe;
++	dev->ts_mode = config->ts_mode;
++	dev->ts_clock_inv = config->ts_clock_inv;
++	dev->ts_clock_gapped = config->ts_clock_gapped;
++	dev->spectral_inversion = config->spectral_inversion;
++
+ 	/* create mux i2c adapter for tuner */
+ 	dev->muxc = i2c_mux_alloc(client->adapter, &client->dev,
+-				  1, 0, I2C_MUX_LOCKED,
++				  1, 0, I2C_MUX_LOCKED | I2C_MUX_GATE,
+ 				  si2168_select, si2168_deselect);
+ 	if (!dev->muxc) {
+ 		ret = -ENOMEM;
+@@ -736,16 +758,6 @@ static int si2168_probe(struct i2c_client *client,
  	if (ret)
-@@ -1130,7 +1152,8 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
+ 		goto err_kfree;
  
- static const struct wcss_data wcss_ipq8074_res_init = {
- 	.init_clock = ipq8074_init_clock,
--	.firmware_name = "IPQ8074/q6_fw.mdt",
-+	.q6_firmware_name = "IPQ8074/q6_fw.mdt",
-+	.m3_firmware_name = "IPQ8074/m3_fw.mdt",
- 	.crash_reason_smem = 421,
- 	.aon_reset_required = true,
- 	.ops = &q6v5_wcss_ipq8074_ops,
-@@ -1142,7 +1165,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- 	.init_clock = qcs404_init_clock,
- 	.init_regulator = qcs404_init_regulator,
- 	.crash_reason_smem = 421,
--	.firmware_name = "wcnss.mdt",
-+	.q6_firmware_name = "wcnss.mdt",
- 	.version = WCSS_QCS404,
- 	.aon_reset_required = false,
- 	.ssr_name = "mpss",
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+-	/* create dvb_frontend */
+-	memcpy(&dev->fe.ops, &si2168_ops, sizeof(struct dvb_frontend_ops));
+-	dev->fe.demodulator_priv = client;
+-	*config->i2c_adapter = dev->muxc->adapter[0];
+-	*config->fe = &dev->fe;
+-	dev->ts_mode = config->ts_mode;
+-	dev->ts_clock_inv = config->ts_clock_inv;
+-	dev->ts_clock_gapped = config->ts_clock_gapped;
+-	dev->spectral_inversion = config->spectral_inversion;
+-
+ 	dev_info(&client->dev, "Silicon Labs Si2168-%c%d%d successfully identified\n",
+ 		 dev->version >> 24 & 0xff, dev->version >> 16 & 0xff,
+ 		 dev->version >> 8 & 0xff);
+diff --git a/drivers/media/dvb-frontends/si2168_priv.h b/drivers/media/dvb-frontends/si2168_priv.h
+index 804d5b30c697..1e3cac3b8381 100644
+--- a/drivers/media/dvb-frontends/si2168_priv.h
++++ b/drivers/media/dvb-frontends/si2168_priv.h
+@@ -22,9 +22,9 @@
+ 
+ /* state struct */
+ struct si2168_dev {
++	struct dvb_frontend fe; /* see dvb_get_demod_fe() */
+ 	struct mutex i2c_mutex;
+ 	struct i2c_mux_core *muxc;
+-	struct dvb_frontend fe;
+ 	enum fe_delivery_system delivery_system;
+ 	enum fe_status fe_status;
+ 	#define SI2168_CHIP_ID_A20 ('A' << 24 | 68 << 16 | '2' << 8 | '0' << 0)
+diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+index 7cbbd925124c..6a522e647a9d 100644
+--- a/drivers/media/platform/Makefile
++++ b/drivers/media/platform/Makefile
+@@ -101,3 +101,5 @@ obj-y					+= meson/
+ obj-y					+= cros-ec-cec/
+ 
+ obj-$(CONFIG_VIDEO_SUN6I_CSI)		+= sunxi/sun6i-csi/
++
++obj-y += tsif.o
+diff --git a/drivers/media/platform/tsif.c b/drivers/media/platform/tsif.c
+new file mode 100644
+index 000000000000..b136f334e9c6
+--- /dev/null
++++ b/drivers/media/platform/tsif.c
+@@ -0,0 +1,185 @@
++#include <linux/clk.h>
++#include <linux/interrupt.h>
++#include <linux/platform_device.h>
++#include <media/dvb_frontend.h>
++#include <media/dvb_demux.h>
++#include <media/dmxdev.h>
++
++/* TSIF register offsets */
++#define TSIF_STS_CTL	0x0	/* status and control */
++#define TSIF_DATA_PORT	0x100
++
++/* TSIF_STS_CTL bits */
++#define ENABLE_IRQ	BIT(28)
++#define TSIF_STOP	BIT(3)
++#define TSIF_START	BIT(0)
++
++struct tsif {
++	void __iomem *base;
++	struct clk *clk;
++	int ref_count; /*** TODO: use atomic_t ??? or refcount_t ??? or kref ??? ***/
++	u32 buf[48];
++	struct dvb_frontend *fe;
++	/*** DO I NEED ALL 4 ***/
++	//struct dmx_frontend dmx_frontend;
++	struct dvb_adapter dvb_adapter;
++	struct dvb_demux dvb_demux;
++	struct dmxdev dmxdev;
++};
++
++static int start_tsif(struct dvb_demux_feed *feed)
++{
++	struct tsif *tsif = feed->demux->priv;
++	printk("%s: feed PID=%u\n", __func__, feed->pid);
++
++	if (tsif->ref_count++ == 0) {
++		u32 val = TSIF_START | ENABLE_IRQ | BIT(29);
++		writel_relaxed(val, tsif->base + TSIF_STS_CTL);
++	}
++
++	return 0;
++}
++
++static int stop_tsif(struct dvb_demux_feed *feed)
++{
++	struct tsif *tsif = feed->demux->priv;
++	printk("%s: feed PID=%u\n", __func__, feed->pid);
++
++	if (--tsif->ref_count == 0) {
++		writel_relaxed(TSIF_STOP, tsif->base + TSIF_STS_CTL);
++	}
++
++	return 0;
++}
++
++static irqreturn_t tsif_isr(int irq, void *arg)
++{
++	int i;
++	u32 status;
++	struct tsif *tsif = arg;
++
++	status = readl_relaxed(tsif->base + TSIF_STS_CTL);
++	writel_relaxed(status, tsif->base + TSIF_STS_CTL);
++
++	for (i = 0; i < 48; ++i)
++		tsif->buf[i] = readl_relaxed(tsif->base + TSIF_DATA_PORT);
++
++	dvb_dmx_swfilter_packets(&tsif->dvb_demux, (void *)tsif->buf, 1);
++
++	return IRQ_HANDLED;
++}
++
++static int tsif_probe(struct platform_device *pdev)
++{
++	int err, virq;
++	struct tsif *tsif;
++	struct resource *res;
++	struct device *dev = &pdev->dev;
++
++	tsif = devm_kzalloc(dev, sizeof(*tsif), GFP_KERNEL);
++	if (!tsif)
++		return -ENOMEM;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "tsif0");
++	tsif->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(tsif->base))
++		return PTR_ERR(tsif->base);
++
++	virq = platform_get_irq_byname(pdev, "tsif0");
++	err = devm_request_irq(dev, virq, tsif_isr, IRQF_SHARED, "tsif", tsif);
++	if (err)
++		return err;
++
++	tsif->clk = devm_clk_get(dev, "iface");
++	if (IS_ERR(tsif->clk))
++		return PTR_ERR(tsif->clk);
++
++	tsif->fe = dvb_get_demod_fe(dev->of_node);
++	if (!tsif->fe)
++		return -ENXIO;
++
++	/*** TODO: use devm version ***/
++	clk_prepare_enable(tsif->clk);
++
++	{
++	int ret;
++	short any = DVB_UNSET;
++
++	ret = dvb_register_adapter(&tsif->dvb_adapter, "tsif", THIS_MODULE, dev, &any);
++	if (ret < 0) panic("dvb_register_adapter");
++
++	tsif->dvb_demux.priv = tsif;
++	/* Not sure the diff between filter and feed? */
++	tsif->dvb_demux.filternum = 16; /*** Dunno what to put here ***/
++	tsif->dvb_demux.feednum = 16;	/*** Dunno what to put here ***/
++	tsif->dvb_demux.start_feed = start_tsif;
++	tsif->dvb_demux.stop_feed = stop_tsif;
++
++	ret = dvb_dmx_init(&tsif->dvb_demux);
++	if (ret < 0) panic("dvb_dmx_init");
++
++	/* What relation to dvb_demux.filternum??? */
++	/* Do I need this object?? */
++	tsif->dmxdev.filternum = 16;
++	tsif->dmxdev.demux = &tsif->dvb_demux.dmx;
++
++	ret = dvb_dmxdev_init(&tsif->dmxdev, &tsif->dvb_adapter);
++	if (ret < 0) panic("dvb_dmxdev_init");
++
++#if 0
++	/*** These calls don't seem required??? ***/
++	/*** Who reads this? Do I need to set it? ***/
++	tsif->dmx_frontend.source = DMX_FRONTEND_0;
++
++	/* Required or done elsewhere? */
++	ret = tsif->dvb_demux.dmx.add_frontend(&tsif->dvb_demux.dmx, &tsif->dmx_frontend);
++	if (ret < 0) panic("add_frontend");
++
++	/* Required or done elsewhere? */
++	ret = tsif->dvb_demux.dmx.connect_frontend(&tsif->dvb_demux.dmx, &tsif->dmx_frontend);
++	if (ret < 0) panic("connect_frontend");
++#endif
++
++	ret = dvb_register_frontend(&tsif->dvb_adapter, tsif->fe);
++	if (ret < 0) panic("dvb_register_frontend");
++	}
++
++	platform_set_drvdata(pdev, tsif);
++	return 0;
++}
++
++/*** TODO: Double check .remove callback ***/
++static int tsif_remove(struct platform_device *pdev)
++{
++	struct tsif *tsif = platform_get_drvdata(pdev);
++
++	clk_disable_unprepare(tsif->clk);
++
++	dvb_unregister_frontend(tsif->fe);
++	//tsif->dvb_demux.dmx.remove_frontend(&tsif->dvb_demux.dmx, &tsif->dmx_frontend);
++	dvb_dmxdev_release(&tsif->dmxdev);
++	dvb_dmx_release(&tsif->dvb_demux);
++	dvb_unregister_adapter(&tsif->dvb_adapter);
++
++	return 0;
++}
++
++static const struct of_device_id tsif_of_ids[] = {
++	{ .compatible = "qcom,msm8998-tsif" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, tsif_of_ids);
++
++static struct platform_driver qcom_tsif_driver = {
++	.probe  = tsif_probe,
++	.remove = tsif_remove,
++	.driver = {
++		.name = "qcom-tsif",
++		.of_match_table = tsif_of_ids,
++	},
++};
++
++module_platform_driver(qcom_tsif_driver);
++
++MODULE_DESCRIPTION("Qualcomm TSIF driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
+index 7be893def190..9d2ca775ada9 100644
+--- a/drivers/media/tuners/si2157.c
++++ b/drivers/media/tuners/si2157.c
+@@ -420,12 +420,18 @@ static void si2157_stat_work(struct work_struct *work)
+ static int si2157_probe(struct i2c_client *client,
+ 			const struct i2c_device_id *id)
+ {
++	struct device *cdev = &client->dev;
++	struct si2157_config defconfig = { 0 };
+ 	struct si2157_config *cfg = client->dev.platform_data;
+-	struct dvb_frontend *fe = cfg->fe;
+ 	struct si2157_dev *dev;
+ 	struct si2157_cmd cmd;
+ 	int ret;
+ 
++	if (cdev->of_node) {
++		cfg = &defconfig;
++		cfg->fe = dvb_get_demod_fe(cdev->of_node);
++	}
++
+ 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+ 	if (!dev) {
+ 		ret = -ENOMEM;
+@@ -449,8 +455,8 @@ static int si2157_probe(struct i2c_client *client,
+ 	if (ret)
+ 		goto err_kfree;
+ 
+-	memcpy(&fe->ops.tuner_ops, &si2157_ops, sizeof(struct dvb_tuner_ops));
+-	fe->tuner_priv = client;
++	memcpy(&dev->fe->ops.tuner_ops, &si2157_ops, sizeof(si2157_ops));
++	dev->fe->tuner_priv = client;
+ 
+ #ifdef CONFIG_MEDIA_CONTROLLER
+ 	if (cfg->mdev) {
+diff --git a/include/media/dvb_frontend.h b/include/media/dvb_frontend.h
+index f05cd7b94a2c..f8ea4839095f 100644
+--- a/include/media/dvb_frontend.h
++++ b/include/media/dvb_frontend.h
+@@ -821,4 +821,6 @@ void dvb_frontend_reinitialise(struct dvb_frontend *fe);
+  */
+ void dvb_frontend_sleep_until(ktime_t *waketime, u32 add_usec);
+ 
++struct dvb_frontend *dvb_get_demod_fe(struct device_node *np);
++
+ #endif
