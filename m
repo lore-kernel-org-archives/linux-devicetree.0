@@ -1,15 +1,16 @@
 From: Abel Vesa <abel.vesa@nxp.com>
-Subject: Re: [PATCH 1/2] clk: imx8mq: set correct parent for usb ctrl clocks
-Date: Thu, 11 Jul 2019 08:16:18 +0000
-Message-ID: <20190711081617.iruwo4fuiwfbie4k@fsr-ub1664-175>
-References: <20190710111917.6615-1-jun.li@nxp.com>
+Subject: Re: [PATCH 3/4] clk: imx8mm: Add system counter to clock tree
+Date: Thu, 11 Jul 2019 08:19:09 +0000
+Message-ID: <20190711081908.ray2pjtigbjaezyc@fsr-ub1664-175>
+References: <20190621070720.12395-1-Anson.Huang@nxp.com>
+ <20190621070720.12395-3-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190710111917.6615-1-jun.li@nxp.com>
+In-Reply-To: <20190621070720.12395-3-Anson.Huang@nxp.com>
 Content-Language: en-US
-Content-ID: <490811C2CED56246ACFCE4B5184CA7D8@eurprd04.prod.outlook.com>
+Content-ID: <5D9D0CDF90B35D4FB3BC742B2D394AB9@eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,41 +20,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jun Li <jun.li@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Peter Chen <peter.chen@nxp.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, Jacky Bai <ping.bai@nxp.com>, Anson Huang <anson.huang@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "angus@akkea.ca" <angus@akkea.ca>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, l.stach@
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, "will@kernel.org" <will@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, linux-arm-kernel@lists.infrad
 List-Id: devicetree@vger.kernel.org
 
-On 19-07-10 19:19:16, jun.li@nxp.com wrote:
-> From: Li Jun <jun.li@nxp.com>
+On 19-06-21 15:07:19, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
 > 
-> Per latest imx8mq datasheet of CCM, the parent of usb1_ctrl_root_clk
-> and usb2_ctrl_root_clk is usb_bus.
+> i.MX8MM timer-imx-sysctr driver needs system counter clock
+> for proper function, add it into clock tree.
 > 
-> Signed-off-by: Li Jun <jun.li@nxp.com>
-
-For the entire series.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
 Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
 > ---
->  drivers/clk/imx/clk-imx8mq.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/clk/imx/clk-imx8mm.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-> index d407a07..c7d1546 100644
-> --- a/drivers/clk/imx/clk-imx8mq.c
-> +++ b/drivers/clk/imx/clk-imx8mq.c
-> @@ -523,8 +523,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
->  	clks[IMX8MQ_CLK_UART2_ROOT] = imx_clk_gate4("uart2_root_clk", "uart2", base + 0x44a0, 0);
->  	clks[IMX8MQ_CLK_UART3_ROOT] = imx_clk_gate4("uart3_root_clk", "uart3", base + 0x44b0, 0);
->  	clks[IMX8MQ_CLK_UART4_ROOT] = imx_clk_gate4("uart4_root_clk", "uart4", base + 0x44c0, 0);
-> -	clks[IMX8MQ_CLK_USB1_CTRL_ROOT] = imx_clk_gate4("usb1_ctrl_root_clk", "usb_core_ref", base + 0x44d0, 0);
-> -	clks[IMX8MQ_CLK_USB2_CTRL_ROOT] = imx_clk_gate4("usb2_ctrl_root_clk", "usb_core_ref", base + 0x44e0, 0);
-> +	clks[IMX8MQ_CLK_USB1_CTRL_ROOT] = imx_clk_gate4("usb1_ctrl_root_clk", "usb_bus", base + 0x44d0, 0);
-> +	clks[IMX8MQ_CLK_USB2_CTRL_ROOT] = imx_clk_gate4("usb2_ctrl_root_clk", "usb_bus", base + 0x44e0, 0);
->  	clks[IMX8MQ_CLK_USB1_PHY_ROOT] = imx_clk_gate4("usb1_phy_root_clk", "usb_phy_ref", base + 0x44f0, 0);
->  	clks[IMX8MQ_CLK_USB2_PHY_ROOT] = imx_clk_gate4("usb2_phy_root_clk", "usb_phy_ref", base + 0x4500, 0);
->  	clks[IMX8MQ_CLK_USDHC1_ROOT] = imx_clk_gate4("usdhc1_root_clk", "usdhc1", base + 0x4510, 0);
+> diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
+> index 43fa9c3..56d53dd 100644
+> --- a/drivers/clk/imx/clk-imx8mm.c
+> +++ b/drivers/clk/imx/clk-imx8mm.c
+> @@ -645,6 +645,8 @@ static int __init imx8mm_clocks_init(struct device_node *ccm_node)
+>  	clks[IMX8MM_CLK_DRAM_ALT_ROOT] = imx_clk_fixed_factor("dram_alt_root", "dram_alt", 1, 4);
+>  	clks[IMX8MM_CLK_DRAM_CORE] = imx_clk_mux2_flags("dram_core_clk", base + 0x9800, 24, 1, imx8mm_dram_core_sels, ARRAY_SIZE(imx8mm_dram_core_sels), CLK_IS_CRITICAL);
+>  
+> +	clks[IMX8MM_CLK_SYS_CTR] = imx_clk_fixed_factor("sys_ctr", "osc_24m", 1, 3);
+> +
+>  	clks[IMX8MM_CLK_ARM] = imx_clk_cpu("arm", "arm_a53_div",
+>  					   clks[IMX8MM_CLK_A53_DIV],
+>  					   clks[IMX8MM_CLK_A53_SRC],
 > -- 
 > 2.7.4
 > 
