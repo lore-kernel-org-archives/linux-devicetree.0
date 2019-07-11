@@ -1,7 +1,7 @@
 From: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Subject: [PATCH 06/12] dt-bindings: clock: qcom: Add reset for WCSSAON
-Date: Thu, 11 Jul 2019 21:11:02 +0530
-Message-ID: <1562859668-14209-7-git-send-email-gokulsri@codeaurora.org>
+Subject: [PATCH 11/12] arm64: dts: Add support for scm on IPQ8074 SoCs
+Date: Thu, 11 Jul 2019 21:11:07 +0530
+Message-ID: <1562859668-14209-12-git-send-email-gokulsri@codeaurora.org>
 References: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
@@ -9,25 +9,30 @@ Sender: linux-kernel-owner@vger.kernel.org
 To: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, jassisinghbrar@gmail.com, ohad@wizery.com, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, gokulsri@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding for WCSSAON reset required for Q6v5 reset on IPQ8074 SoC.
+Enables scm support, clock is not needed for enabling scm interface.
 
 Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
 ---
- include/dt-bindings/clock/qcom,gcc-ipq8074.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/include/dt-bindings/clock/qcom,gcc-ipq8074.h b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
-index 4de4811..04e1f57 100644
---- a/include/dt-bindings/clock/qcom,gcc-ipq8074.h
-+++ b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
-@@ -362,5 +362,6 @@
- #define GCC_PCIE1_AXI_SLAVE_ARES		128
- #define GCC_PCIE1_AHB_ARES			129
- #define GCC_PCIE1_AXI_MASTER_STICKY_ARES	130
-+#define GCC_WCSSAON_RESET			131
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+index 67ee5f5..6a61a63 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+@@ -10,6 +10,12 @@
+ 	model = "Qualcomm Technologies, Inc. IPQ8074";
+ 	compatible = "qcom,ipq8074";
  
- #endif
++	firmware {
++		scm {
++			compatible = "qcom,scm-ipq8074", "qcom,scm";
++		};
++	};
++
+ 	soc: soc {
+ 		#address-cells = <0x1>;
+ 		#size-cells = <0x1>;
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
