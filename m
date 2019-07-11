@@ -1,81 +1,55 @@
-From: Jonathan Chocron <jonnyc@amazon.com>
-Subject: [PATCH 8/8] PCI: dw: Add support for
- PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Date: Thu, 11 Jul 2019 17:57:54 +0300
-Message-ID: <20190710164519.17883-9-jonnyc@amazon.com>
-References: <20190710164519.17883-1-jonnyc@amazon.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH v2 0/4]  Add system mmu support for Armada-806
+Date: Thu, 11 Jul 2019 17:02:38 +0200
+Message-ID: <20190711150242.25290-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190710164519.17883-1-jonnyc@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonnyc@amazon.com
+To: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-This basically aligns the usage of PCI_PROBE_ONLY and
-PCI_REASSIGN_ALL_BUS in dw_pcie_host_init() with the logic in
-pci_host_common_probe().
+Hello,
 
-Now it will be possible to control via the devicetree whether to just
-probe the PCI bus (in cases where FW already configured it) or to fully
-configure it.
+last year a first version of this series was submitted to add support
+for IOMMU for AP806, including workaround for accessing ARM SMMU 64bit
+registers[1].
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
----
- .../pci/controller/dwc/pcie-designware-host.c | 23 +++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+For the record, AP-806 can't access SMMU registers with 64bit width,
+this patches split the readq/writeq for 32bit access, due to erratanum
+#582743.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pc=
-i/controller/dwc/pcie-designware-host.c
-index d2ca748e4c85..0a294d8aa21a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -342,6 +342,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (!bridge)
- 		return -ENOMEM;
-=20
-+	of_pci_check_probe_only();
-+
- 	ret =3D devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
- 					&bridge->windows, &pp->io_base);
- 	if (ret)
-@@ -474,6 +476,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
-=20
- 	pp->root_bus_nr =3D pp->busn->start;
-=20
-+	/* Do not reassign bus nums if probe only */
-+	if (!pci_has_flag(PCI_PROBE_ONLY))
-+		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-+
- 	bridge->dev.parent =3D dev;
- 	bridge->sysdata =3D pp;
- 	bridge->busnr =3D pp->root_bus_nr;
-@@ -490,11 +496,20 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (pp->ops->scan_bus)
- 		pp->ops->scan_bus(pp);
-=20
--	pci_bus_size_bridges(pp->root_bus);
--	pci_bus_assign_resources(pp->root_bus);
-+	/*
-+	 * We insert PCI resources into the iomem_resource and
-+	 * ioport_resource trees in either pci_bus_claim_resources()
-+	 * or pci_bus_assign_resources().
-+	 */
-+	if (pci_has_flag(PCI_PROBE_ONLY)) {
-+		pci_bus_claim_resources(pp->root_bus);
-+	} else {
-+		pci_bus_size_bridges(pp->root_bus);
-+		pci_bus_assign_resources(pp->root_bus);
-=20
--	list_for_each_entry(child, &pp->root_bus->children, node)
--		pcie_bus_configure_settings(child);
-+		list_for_each_entry(child, &pp->root_bus->children, node)
-+			pcie_bus_configure_settings(child);
-+	}
-=20
- 	pci_bus_add_devices(pp->root_bus);
- 	return 0;
---=20
-2.17.1
+Based on the feedback from Robin Murphy, I also add code ensuring that
+we won't try to use AArch64 format with 32 bits acces.
+
+It was also discussed to not use compatible but propertu to support
+this workaround. I agree to make this change if needed, but for now I
+would like to have a feedback on the current code to know if it is
+acceptable if there is still potential issue.
+
+The series was tested on a vanilla v5.1 kernel, and without the
+series, an USB stick was not detected under QEMU whereas with this
+series it worked as expected.
+
+Greogry
+
+[1]: https://lkml.org/lkml/2018/10/15/373
+
+Gregory CLEMENT (1):
+  arm64: dts: marvell: armada-ap806: add smmu support
+
+Hanna Hawa (3):
+  iommu/arm-smmu: Introduce wrapper for writeq/readq
+  iommu/arm-smmu: Workaround for Marvell Armada-AP806 SoC erratum
+    #582743
+  dt-bindings: iommu/arm,smmu: add compatible string for Marvell
+
+ Documentation/arm64/silicon-errata.txt        |  2 +
+ .../devicetree/bindings/iommu/arm,smmu.txt    |  1 +
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 17 +++++
+ drivers/iommu/arm-smmu.c                      | 74 ++++++++++++++++---
+ 4 files changed, 83 insertions(+), 11 deletions(-)
+
+-- 
+2.20.1
