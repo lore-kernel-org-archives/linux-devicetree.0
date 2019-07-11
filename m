@@ -1,207 +1,97 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: Re: [PATCH 1/2] dt-bindings: mmc: Document Aspeed SD controller
-Date: Thu, 11 Jul 2019 10:26:39 +0930
-Message-ID: <3b0788cf-eee4-48b2-901d-d2ab6716ab1b@www.fastmail.com>
-References: <20190710141611.21159-1-andrew@aj.id.au>
- <20190710141611.21159-2-andrew@aj.id.au>
- <CAL_JsqKrYcUbn_02z9GQO6U4rz7k=p3kB7_G0tKmv25MMZZNQg@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V4 2/5] clocksource/drivers/sysctr: Add clock-frequency
+ property
+Date: Thu, 11 Jul 2019 01:04:52 +0000
+Message-ID: <AM6PR0402MB39117F91D660450647A692E8F5F30@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+References: <20190701093826.5472-1-Anson.Huang@nxp.com>
+ <20190701093826.5472-2-Anson.Huang@nxp.com>
+ <CAL_JsqKeu-b8mbMJBtnNn1vL=RSvUXbo+g40haZnjXTW11CJ6w@mail.gmail.com>
+ <DB3PR0402MB39167FC68991F071E9E58D81F5F00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAL_JsqJbHFZ2qcLvhZGk8Q-f80_QhdgQxcHe2TyCjc4GGRNJNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKrYcUbn_02z9GQO6U4rz7k=p3kB7_G0tKmv25MMZZNQg@mail.gmail.com>
+In-Reply-To: <CAL_JsqJbHFZ2qcLvhZGk8Q-f80_QhdgQxcHe2TyCjc4GGRNJNQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Adrian Hunter <adrian.hunter@intel.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ryan Chen <ryanchen.aspeed@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Carlo Caione <ccaione@baylibre.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, =?utf-8?B?R3VpZG8gR8O8bnRoZXI=?= <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Thu, 11 Jul 2019, at 01:20, Rob Herring wrote:
-> On Wed, Jul 10, 2019 at 8:16 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> > The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the
-> > SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
-> > data bus if only a single slot is enabled.
-> >
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > ---
-> >  .../bindings/mmc/sdhci-of-aspeed.yaml         | 91 +++++++++++++++++++
-> 
-> aspeed,sdhci.yaml
-
-Ack. Previously I had separate documents for different compatibles, wasn't sure
-how to tackle name one document covering multiple compatibles.
-
-> 
-> >  1 file changed, 91 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-of-aspeed.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-of-aspeed.yaml b/Documentation/devicetree/bindings/mmc/sdhci-of-aspeed.yaml
-> > new file mode 100644
-> > index 000000000000..e98a2ac4d46d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/sdhci-of-aspeed.yaml
-> > @@ -0,0 +1,91 @@
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> 
-> The preferred license is (GPL-2.0 OR BSD-2-Clause) if that is okay with you.
-
-I should poke people internally again, I had asked, just haven't got a clear
-answer. What was the justification for the preference (just so I can pass that
-on)?
-
-> 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mmc/sdhci-of-aspeed.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ASPEED SD/SDIO/eMMC Controller
-> > +
-> > +maintainers:
-> > +  - Andrew Jeffery <andrew@aj.id.au>
-> > +  - Ryan Chen <ryanchen.aspeed@gmail.com>
-> > +
-> > +description: |+
-> > +  The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the SDIO
-> > +  Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit data bus if
-> > +  only a single slot is enabled.
-> > +
-> > +  The two slots are supported by a common configuration area. As the SDHCIs for
-> > +  the slots are dependent on the common configuration area, they are described
-> > +  as child nodes.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum: [ aspeed,ast2400-sdc, aspeed,ast2500-sdc ]
-> > +  reg:
-> > +    description: Common configuration registers
-> 
-> This should have a 'maxItems: 1'. Same for the child reg.
-
-Ack.
-
-> 
-> > +  ranges: true
-> > +  clocks:
-> > +    maxItems: 1
-> > +    description: The SD/SDIO controller clock gate
-> > +  sdhci:
-> 
-> This needs to be a pattern (under patternProperties) as these have
-> unit-addresses.
-
-Ah, I didn't think about that.
-
-> 
-> > +    type: object
-> > +    properties:
-> > +      compatible:
-> > +        allOf:
-> > +          - enum: [ aspeed,ast2400-sdhci, aspeed,ast2500-sdhci ]
-> > +          - const: sdhci
-> 
-> This condition can never be true. What you need is s/allOf/items/.
-> However, 'sdhci' is not really a useful compatible because every
-> implementation has quirks, so I'd drop it.
-
-Yeah, I was tossing up whether to include "sdhci". I'll drop it as you
-suggest.
-
-Pity the shorthand doesn't work how I expected. Might explain
-some of the behaviour I was seeing with the bindings make targets
-though.
-
-> 
-> > +      reg:
-> > +        description: The SDHCI registers
-> > +      clocks:
-> > +        maxItems: 1
-> > +        description: The SD bus clock
-> > +      slot:
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/uint32
-> > +          - enum: [0, 1]
-> 
-> Is this really needed? Offset 0x100 is slot 0 and offset 0x200 is slot
-> 1. Does that ever change?
-
-It doesn't in the SoCs at hand, but the downstream impact (driver
-implementation) is that you need to derive the slot index from the
-address and I was trying to avoid that. The slot index influences
-some bit index calculations.
-
-> 
-> > +      interrupts:
-> > +        maxItems: 1
-> > +        description: The SD interrupt shared between both slots
-> > +    required:
-> > +      - compatible
-> > +      - reg
-> > +      - clocks
-> > +      - slot
-> > +      - interrupts
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - ranges
-> > +  - clocks
-> 
-> #address-cells and #size-cells are required too.
-
-Ack.
-
-> 
-> You should also add 'additionalProperties: false' here so other random
-> properties can't be present.
-
-Ah yes. Will fix.
-
-> 
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/aspeed-clock.h>
-> > +    sdc@1e740000 {
-> > +            compatible = "aspeed,ast2500-sdc";
-> > +            reg = <0x1e740000 0x100>;
-> > +            #address-cells = <1>;
-> > +            #size-cells = <1>;
-> > +            ranges;
-> 
-> It's preferred to limit the range here and then the child addresses
-> are 0x100 and 0x200.
-
-Okay. Was just trying to dodge mental arithmetic where I could, but
-if that's the preference then I'll fix it up.
-
-Thanks for the review!
-
-Andrew
-
-> 
-> > +            clocks = <&syscon ASPEED_CLK_GATE_SDCLK>;
-> > +
-> > +            sdhci0: sdhci@1e740100 {
-> > +                    compatible = "aspeed,ast2500-sdhci", "sdhci";
-> > +                    reg = <0x1e740100 0x100>;
-> > +                    slot = <0>;
-> > +                    interrupts = <26>;
-> > +                    sdhci,auto-cmd12;
-> > +                    clocks = <&syscon ASPEED_CLK_SDIO>;
-> > +            };
-> > +
-> > +            sdhci1: sdhci@1e740200 {
-> > +                    compatible = "aspeed,ast2500-sdhci", "sdhci";
-> > +                    reg = <0x1e740200 0x100>;
-> > +                    slot = <1>;
-> > +                    interrupts = <26>;
-> > +                    sdhci,auto-cmd12;
-> > +                    clocks = <&syscon ASPEED_CLK_SDIO>;
-> > +            };
-> > +    };
-> > --
-> > 2.20.1
-> >
->
+SGksIFJvYg0KDQo+IE9uIFR1ZSwgSnVsIDksIDIwMTkgYXQgNzozMCBQTSBBbnNvbiBIdWFuZyA8
+YW5zb24uaHVhbmdAbnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaSwgUm9iDQo+ID4NCj4gPiA+
+IE9uIE1vbiwgSnVsIDEsIDIwMTkgYXQgMzo0NyBBTSA8QW5zb24uSHVhbmdAbnhwLmNvbT4gd3Jv
+dGU6DQo+ID4gPiA+DQo+ID4gPiA+IEZyb206IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAu
+Y29tPg0KPiA+ID4NCj4gPiA+ICdkdC1iaW5kaW5nczogdGltZXI6IC4uLicgZm9yIHRoZSBzdWJq
+ZWN0Lg0KPiA+DQo+ID4gT0ssIEkgbWFkZSBhIG1pc3Rha2UuDQo+ID4NCj4gPiA+DQo+ID4gPiA+
+DQo+ID4gPiA+IFN5c3RlbXMgd2hpY2ggdXNlIHBsYXRmb3JtIGRyaXZlciBtb2RlbCBmb3IgY2xv
+Y2sgZHJpdmVyIHJlcXVpcmUNCj4gPiA+ID4gdGhlIGNsb2NrIGZyZXF1ZW5jeSB0byBiZSBzdXBw
+bGllZCB2aWEgZGV2aWNlIHRyZWUgd2hlbiBzeXN0ZW0NCj4gPiA+ID4gY291bnRlciBkcml2ZXIg
+aXMgZW5hYmxlZC4NCj4gPiA+DQo+ID4gPiBUaGlzIGlzIGEgRFQgYmluZGluZy4gV2hhdCdzIGEg
+cGxhdGZvcm0gZHJpdmVyPw0KPiA+DQo+ID4gSXQgaXMganVzdCB0cnlpbmcgdG8gZXhwbGFpbiB3
+aHkgd2UgbmVlZCB0byBpbnRyb2R1Y2UgdGhpcyAiY2xvY2stZnJlcXVlbmN5Ig0KPiA+IHByb3Bl
+cnR5LCBub3RoaW5nIGFib3V0IHRoZSBiaW5kaW5nIGFuZCBwbGF0Zm9ybSBkcml2ZXIuDQo+ID4N
+Cj4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+IFRoaXMgaXMgbmVjZXNzYXJ5IGFzIGluIHRoZSBwbGF0
+Zm9ybSBkcml2ZXIgbW9kZWwgdGhlIG9mX2Nsaw0KPiA+ID4gPiBvcGVyYXRpb25zIGRvIG5vdCB3
+b3JrIGNvcnJlY3RseSBiZWNhdXNlIHN5c3RlbSBjb3VudGVyIGRyaXZlciBpcw0KPiA+ID4gPiBp
+bml0aWFsaXplZCBpbiBlYXJseSBwaGFzZSBvZiBzeXN0ZW0gYm9vdCB1cCwgYW5kIGNsb2NrIGRy
+aXZlcg0KPiA+ID4gPiB1c2luZyBwbGF0Zm9ybSBkcml2ZXIgbW9kZWwgaXMgTk9UIHJlYWR5IGF0
+IHRoYXQgdGltZSwgaXQgd2lsbA0KPiA+ID4gPiBjYXVzZSBzeXN0ZW0gY291bnRlciBkcml2ZXIg
+aW5pdGlhbGl6YXRpb24gZmFpbGVkLg0KPiA+ID4gPg0KPiA+ID4gPiBBZGQgY2xvY2stZnJlcXVl
+bmN5IHByb3BlcnR5IHRvIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5ncyBvZiB0aGUNCj4gPiA+ID4g
+TlhQIHN5c3RlbSBjb3VudGVyLCBzbyB0aGUgZHJpdmVyIGNhbiB0ZWxsIHRpbWVyLW9mIGRyaXZl
+ciB0byBnZXQNCj4gPiA+ID4gY2xvY2sgZnJlcXVlbmN5IGZyb20gRFQgZGlyZWN0bHkgaW5zdGVh
+ZCBvZiBkb2luZyBvZl9jbGsNCj4gPiA+ID4gb3BlcmF0aW9ucyB2aWEgY2xrIEFQSXMuDQo+ID4g
+Pg0KPiA+ID4gV2hpbGUgeW91J3ZlIG5vdyBnaXZlbiBhIGdvb2QgZXhwbGFuYXRpb24gd2h5IHlv
+dSBuZWVkIHRoaXMsIGl0IGFsbA0KPiA+ID4gc291bmRzIGxpa2UgbGludXggc3BlY2lmaWMgaXNz
+dWVzIGFuZCBhIERUIGNoYW5nZSBzaG91bGQgbm90IGJlIG5lY2Vzc2FyeS4NCj4gPiA+DQo+ID4g
+PiBQcmVzdW1hYmx5LCAnY2xvY2tzJyBwb2ludHMgdG8gYSBmaXhlZC1jbG9jayBub2RlLCByaWdo
+dD8gSnVzdCBwYXJzZSB0aGUNCj4gJ2Nsb2NrcycNCj4gPiA+IHBoYW5kbGUgYW5kIGZldGNoIHRo
+ZSBmcmVxdWVuY3kgZnJvbSB0aGF0IG5vZGUgaWYgeW91IG5lZWQgdG8gZ2V0DQo+ID4gPiB0aGUg
+ZnJlcXVlbmN5ICdlYXJseScuDQo+ID4NCj4gPiBTb3VuZCBsaWtlIGEgYmV0dGVyIHNvbHV0aW9u
+LCBJIHdpbGwgdHJ5IHRoYXQsIHNpbmNlIHRoZSBzeXN0ZW0NCj4gPiBjb3VudGVyJ3MgY2xvY2sg
+aXMgZnJvbSBvc2NfMjRtIGFuZCBkaXZpZGVkIGJ5IDMsIHNpbmNlIGRpZmZlcmVudA0KPiA+IHBs
+YXRmb3JtcyBtYXkgaGF2ZSBkaWZmZXJlbnQgZGl2aWRlciwgc28gbWF5YmUgSSBjYW4gY3JlYXRl
+IGENCj4gPiBmaXhlZC1jbG9jayBub2RlIGluIERULCB0aGVuIHN5c3RlbSBjb3VudGVyIGRyaXZl
+ciBjYW4gcGFyc2UgdGhlIGNsb2NrIGFuZA0KPiBmZXRjaCB0aGUgZnJlcXVlbmN5IGZyb20gdGhh
+dCBub2RlLCB3aWxsIHJlZG8gYSBWNSBwYXRjaC4NCj4gDQo+IFRoZSBkaXZpZGUgYnkgMyBjYW4g
+YmUgaW1wbGllZCBieSB0aGUgY29tcGF0aWJsZS4gSWYgeW91IG5lZWQgYSBkaWZmZXJlbnQNCj4g
+ZGl2aWRlciwgYWRkIGFub3RoZXIgY29tcGF0aWJsZS4NCg0KWWVzLCB3ZSBjYW4gY29uc2lkZXIg
+aXQgbGF0ZXIsIHRpbGwgbm93LCBhbGwgdGhlIHBsYXRmb3JtcyB1c2VkIGFyZSB3aXRoIGFuIGlu
+dGVybmFsDQpkaXZpZGVyIG9mIDMgaW4gc3lzdGVtIGNvdW50ZXIgYmxvY2ssIHNvIEkgbWFrZSBp
+dCBmaXhlZCBkaXZpZGVkIGJ5IDMgaW4gc3lzdGVtIGNvdW50ZXINCmRyaXZlci4NCg0KPiANCj4g
+PiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAu
+Y29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gTm8gY2hhbmdlLg0KPiA+ID4gPiAtLS0NCj4gPiA+
+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL254cCxzeXNjdHItdGltZXIudHh0ICAg
+ICAgICB8IDE1ICsrKysrKysrKy0tDQo+IC0tLS0NCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA5
+IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1n
+aXQNCj4gPiA+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbnhw
+LHN5c2N0ci10aW1lci50eHQNCj4gPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvdGltZXIvbnhwLHN5c2N0ci10aW1lci50eHQNCj4gPiA+ID4gaW5kZXggZDU3NjU5OS4u
+NzA4OGEwZSAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3RpbWVyL254cCxzeXNjdHItdGltZXIudHh0DQo+ID4gPiA+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9ueHAsc3lzY3RyLXRpbWVyLnR4dA0KPiA+
+ID4gPiBAQCAtMTEsMTUgKzExLDE4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gPiA+ICAt
+IHJlZyA6ICAgICAgICAgICAgIFNwZWNpZmllcyB0aGUgYmFzZSBwaHlzaWNhbCBhZGRyZXNzIGFu
+ZCBzaXplIG9mIHRoZQ0KPiBjb21hcHJlDQo+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgIGZy
+YW1lIGFuZCB0aGUgY291bnRlciBjb250cm9sLCByZWFkICYgY29tcGFyZS4NCj4gPiA+ID4gIC0g
+aW50ZXJydXB0cyA6ICAgICAgc2hvdWxkIGJlIHRoZSBmaXJzdCBjb21wYXJlIGZyYW1lcycgaW50
+ZXJydXB0DQo+ID4gPiA+IC0tIGNsb2NrcyA6ICAgICAgICAgU3BlY2lmaWVzIHRoZSBjb3VudGVy
+IGNsb2NrLg0KPiA+ID4gPiAtLSBjbG9jay1uYW1lczogICAgICAgICAgICAgU3BlY2lmaWVzIHRo
+ZSBjbG9jaydzIG5hbWUgb2YgdGhpcyBtb2R1bGUNCj4gPiA+ID4gKy0gY2xvY2tzIDogICAgICAg
+ICAgU3BlY2lmaWVzIHRoZSBjb3VudGVyIGNsb2NrLCBtdXR1YWxseSBleGNsdXNpdmUgd2l0aA0K
+PiBjbG9jay0NCj4gPiA+IGZyZXF1ZW5jeS4NCj4gPiA+ID4gKy0gY2xvY2stbmFtZXMgOiAgICAg
+U3BlY2lmaWVzIHRoZSBjbG9jaydzIG5hbWUgb2YgdGhpcyBtb2R1bGUsIG11dHVhbGx5DQo+ID4g
+PiBleGNsdXNpdmUgd2l0aA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgIGNsb2NrLWZyZXF1
+ZW5jeS4NCj4gPiA+ID4gKy0gY2xvY2stZnJlcXVlbmN5IDogU3BlY2lmaWVzIHN5c3RlbSBjb3Vu
+dGVyIGNsb2NrIGZyZXF1ZW5jeSwNCj4gPiA+ID4gK211dHVhbGx5DQo+ID4gPiBleGNsdXNpdmUg
+d2l0aA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgIGNsb2Nrcy9jbG9jay1uYW1lcy4NCj4g
+PiA+DQo+ID4gPiBJdCBkb2Vzbid0IHJlYWxseSB3b3JrIHRvIHNheSBvbmUgb3IgdGhlIG90aGVy
+IGlzIG5lZWRlZCB1bmxlc3MgeW91DQo+ID4gPiBtYWtlIHRoZSBPUyBzdXBwb3J0IGJvdGggY2Fz
+ZXMuDQo+ID4NCj4gPiBUaGUgT1MgYWxyZWFkeSBzdXBwb3J0IGJvdGggY2FzZXMgbm93IHdpdGgg
+dGhpcyBwYXRjaCBzZXJpZXMuDQo+IA0KPiBXaGF0IGFib3V0IEZyZWVCU0Qgb3IgYW55IG90aGVy
+IE9TPw0KDQpOb3cgdGhhdCBpbiBWNSwgSSB1c2UgdGhlIGZpeGVkIGNsb2NrIG9mIE9TQyBhcyBj
+bG9jayBpbnB1dCBvZiBzeXN0ZW0gY291bnRlciwNCm5vIG5lZWQgdG8gaGF2ZSBhbGwgdGhlc2Ug
+Y2hhbmdlcyBub3cuIEFuZCBhbHNvIG5vIGNoYW5nZXMgbmVlZGVkIGluIERUDQpiaW5kaW5nLCB0
+aGFua3MgZm9yIHlvdXIgcmV2aWV3Lg0KDQpBbnNvbi4NCg==
