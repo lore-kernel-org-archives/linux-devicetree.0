@@ -1,34 +1,147 @@
-From: "Chocron, Jonathan" <jonnyc@amazon.com>
-Subject: Re: [PATCH 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
- host bridge binding
-Date: Thu, 11 Jul 2019 15:44:02 +0000
-Message-ID: <44bf0c96505bb3620bec10d378eac3f6d60ceb4f.camel@amazon.com>
-References: <20190710164519.17883-1-jonnyc@amazon.com>
-         <20190710164519.17883-6-jonnyc@amazon.com>
-         <36e8c3b0-feeb-db8f-3808-0218b54adcec@amazon.com>
-         <20190711093210.GA26088@e121166-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+Subject: [PATCH 02/12] remoteproc: qcom: Add secure PIL support
+Date: Thu, 11 Jul 2019 21:10:58 +0530
+Message-ID: <1562859668-14209-3-git-send-email-gokulsri@codeaurora.org>
+References: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190711093210.GA26088@e121166-lin.cambridge.arm.com>
-Content-Language: en-US
-Content-ID: <712B7F4B1C184E4E9F1C6E079F224C5B@amazon.com>
+In-Reply-To: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Shenhar, Talel" <talel@amazon.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+To: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, jassisinghbrar@gmail.com, ohad@wizery.com, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, gokulsri@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA3LTExIGF0IDEwOjMyICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
-ZToNCj4gT24gVGh1LCBKdWwgMTEsIDIwMTkgYXQgMTA6MTI6MzVBTSArMDMwMCwgU2hlbmhhciwg
-VGFsZWwgd3JvdGU6DQo+ID4gDQo+ID4gT24gNy8xMC8yMDE5IDc6NDUgUE0sIEpvbmF0aGFuIENo
-b2Nyb24gd3JvdGU6DQo+ID4gPiBEb2N1bWVudCBBbWF6b24ncyBBbm5hcHVybmEgTGFicyBQQ0ll
-IGhvc3QgYnJpZGdlLg0KPiA+IA0KPiA+IFRoYXQgaXMgdGhlIHdheSEgKGJlc3QgdG8ga2VlcCBz
-YW1lIHdvcmRpbmdzIChBbWF6b24ncykNCj4gDQo+IEd1eXMsDQo+IA0KPiBhcyBhIGhlYWRzLXVw
-LCB0aGUgb3JpZ2luYWwgcG9zdGluZywgZm9yIHdoYXRldmVyIHJlYXNvbiwgZGlkIG5vdCBoaXQN
-Cj4gbGludXgtcGNpQHZnZXIsIHdoaWNoIG1lYW5zIHRoYXQgZnJvbSBhIFBDSSBwYXRjaGVzIHF1
-ZXVlIHJldmlldw0KPiBwb2ludA0KPiBvZiB2aWV3IGl0IGRvZXMgbm90IGV4aXN0Lg0KPiANCj4g
-SXQgb3VnaHQgdG8gYmUgZml4ZWQgb3RoZXJ3aXNlIHdlIHdvbid0IGJlIGFibGUgdG8gcmV2aWV3
-IHRoZSBjb2RlLg0KPiANCj4gTG9yZW56bw0KPiANCg0KSSd2ZSBzdWNjZWVkZWQgdG8gcmVkaXJl
-Y3QgdGhlIG9yaWdpbmFsIGVtYWlscyB0byBsaW51eC1wY2lAdmdlciwgc28NCnBsZWFzZSBwcm9j
-ZWVkIHdpdGggcmV2aWV3aW5nIHRoZSBwYXRjaGVzLg0KDQpUaGFua3MsDQogICBKb25hdGhhbg0K
+IPQ8074 uses secure PIL. Hence, adding the support for the same.
+
+Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
+---
+ drivers/remoteproc/qcom_q6v5_wcss.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+index dc2bae4..8418f57 100644
+--- a/drivers/remoteproc/qcom_q6v5_wcss.c
++++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+@@ -19,6 +19,7 @@
+ #include <linux/regulator/consumer.h>
+ #include <linux/reset.h>
+ #include <linux/soc/qcom/mdt_loader.h>
++#include <linux/qcom_scm.h>
+ #include "qcom_common.h"
+ #include "qcom_q6v5.h"
+ 
+@@ -83,6 +84,9 @@
+ #define TCSR_WCSS_CLK_ENABLE	0x14
+ 
+ #define MAX_HALT_REG		3
++
++#define WCNSS_PAS_ID		6
++
+ enum {
+ 	WCSS_IPQ8074,
+ 	WCSS_QCS404,
+@@ -133,6 +137,7 @@ struct q6v5_wcss {
+ 	int crash_reason_smem;
+ 	u8 version;
+ 	bool requires_force_stop;
++	bool need_mem_protection;
+ };
+ 
+ struct wcss_data {
+@@ -147,6 +152,7 @@ struct wcss_data {
+ 	int ssctl_id;
+ 	const struct rproc_ops *ops;
+ 	bool requires_force_stop;
++	bool need_mem_protection;
+ };
+ 
+ static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
+@@ -246,6 +252,15 @@ static int q6v5_wcss_start(struct rproc *rproc)
+ 
+ 	qcom_q6v5_prepare(&wcss->q6v5);
+ 
++	if (wcss->need_mem_protection) {
++		ret = qcom_scm_pas_auth_and_reset(WCNSS_PAS_ID);
++		if (ret) {
++			dev_err(wcss->dev, "wcss_reset failed\n");
++			return ret;
++		}
++		goto wait_for_reset;
++	}
++
+ 	/* Release Q6 and WCSS reset */
+ 	ret = reset_control_deassert(wcss->wcss_reset);
+ 	if (ret) {
+@@ -280,6 +295,7 @@ static int q6v5_wcss_start(struct rproc *rproc)
+ 	if (ret)
+ 		goto wcss_q6_reset;
+ 
++wait_for_reset:
+ 	ret = qcom_q6v5_wait_for_start(&wcss->q6v5, 5 * HZ);
+ 	if (ret == -ETIMEDOUT)
+ 		dev_err(wcss->dev, "start timed out\n");
+@@ -688,6 +704,15 @@ static int q6v5_wcss_stop(struct rproc *rproc)
+ 	struct q6v5_wcss *wcss = rproc->priv;
+ 	int ret;
+ 
++	if (wcss->need_mem_protection) {
++		ret = qcom_scm_pas_shutdown(WCNSS_PAS_ID);
++		if (ret) {
++			dev_err(wcss->dev, "not able to shutdown\n");
++			return ret;
++		}
++		goto pas_done;
++	}
++
+ 	/* WCSS powerdown */
+ 	if (wcss->requires_force_stop) {
+ 		ret = qcom_q6v5_request_stop(&wcss->q6v5);
+@@ -712,6 +737,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
+ 			return ret;
+ 	}
+ 
++pas_done:
+ 	clk_disable_unprepare(wcss->prng_clk);
+ 	qcom_q6v5_unprepare(&wcss->q6v5);
+ 
+@@ -734,6 +760,12 @@ static int q6v5_wcss_load(struct rproc *rproc, const struct firmware *fw)
+ {
+ 	struct q6v5_wcss *wcss = rproc->priv;
+ 
++	if (wcss->need_mem_protection)
++		return qcom_mdt_load(wcss->dev, fw, rproc->firmware,
++				     WCNSS_PAS_ID, wcss->mem_region,
++				     wcss->mem_phys, wcss->mem_size,
++				     &wcss->mem_reloc);
++
+ 	return qcom_mdt_load_no_init(wcss->dev, fw, rproc->firmware,
+ 				     0, wcss->mem_region, wcss->mem_phys,
+ 				     wcss->mem_size, &wcss->mem_reloc);
+@@ -1019,6 +1051,9 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
+ 	if (!desc)
+ 		return -EINVAL;
+ 
++	if (desc->need_mem_protection && !qcom_scm_is_available())
++		return -EPROBE_DEFER;
++
+ 	rproc = rproc_alloc(&pdev->dev, pdev->name, desc->ops,
+ 			    desc->firmware_name, sizeof(*wcss));
+ 	if (!rproc) {
+@@ -1032,6 +1067,7 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
+ 
+ 	wcss->version = desc->version;
+ 	wcss->requires_force_stop = desc->requires_force_stop;
++	wcss->need_mem_protection = desc->need_mem_protection;
+ 
+ 	ret = q6v5_wcss_init_mmio(wcss, pdev);
+ 	if (ret)
+@@ -1099,6 +1135,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
+ 	.aon_reset_required = true,
+ 	.ops = &q6v5_wcss_ipq8074_ops,
+ 	.requires_force_stop = true,
++	.need_mem_protection = true,
+ };
+ 
+ static const struct wcss_data wcss_qcs404_res_init = {
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
