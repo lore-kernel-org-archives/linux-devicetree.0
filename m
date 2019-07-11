@@ -1,7 +1,7 @@
 From: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Subject: [PATCH 01/12] remoteproc: qcom: Add PRNG proxy clock
-Date: Thu, 11 Jul 2019 21:10:57 +0530
-Message-ID: <1562859668-14209-2-git-send-email-gokulsri@codeaurora.org>
+Subject: [PATCH 12/12] arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
+Date: Thu, 11 Jul 2019 21:11:08 +0530
+Message-ID: <1562859668-14209-13-git-send-email-gokulsri@codeaurora.org>
 References: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
@@ -9,155 +9,159 @@ Sender: linux-kernel-owner@vger.kernel.org
 To: agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, jassisinghbrar@gmail.com, ohad@wizery.com, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, gokulsri@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-PRNG clock is needed by the secure PIL, support for the same
-is added in subsequent patches.
+Enable remoteproc WCSS PIL driver with glink
+and ssr subdevices. Also configures shared memory
+and enables smp2p and mailboxes required for IPC.
 
 Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
 ---
- drivers/remoteproc/qcom_q6v5_wcss.c | 63 +++++++++++++++++++++++++++----------
- 1 file changed, 46 insertions(+), 17 deletions(-)
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi | 125 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 125 insertions(+)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index 0821c94..dc2bae4 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -88,18 +88,6 @@ enum {
- 	WCSS_QCS404,
- };
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+index 6a61a63..c24e3f6 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+@@ -10,6 +10,22 @@
+ 	model = "Qualcomm Technologies, Inc. IPQ8074";
+ 	compatible = "qcom,ipq8074";
  
--struct wcss_data {
--	const char *firmware_name;
--	int crash_reason_smem;
--	u8 version;
--	bool aon_reset_required;
--	const char *ssr_name;
--	const char *sysmon_name;
--	int ssctl_id;
--	const struct rproc_ops *ops;
--	bool requires_force_stop;
--};
--
- struct q6v5_wcss {
- 	struct device *dev;
- 
-@@ -124,6 +112,7 @@ struct q6v5_wcss {
- 	struct clk *qdsp6ss_xo_cbcr;
- 	struct clk *qdsp6ss_core_gfmux;
- 	struct clk *wcss_bcr_cbcr;
-+	struct clk *prng_clk;
- 	struct regulator *cx_supply;
- 
- 	struct qcom_rproc_glink glink_subdev;
-@@ -146,6 +135,20 @@ struct q6v5_wcss {
- 	bool requires_force_stop;
- };
- 
-+struct wcss_data {
-+	int (*init_clock)(struct q6v5_wcss *wcss);
-+	int (*init_regulator)(struct q6v5_wcss *wcss);
-+	const char *firmware_name;
-+	int crash_reason_smem;
-+	u8 version;
-+	bool aon_reset_required;
-+	const char *ssr_name;
-+	const char *sysmon_name;
-+	int ssctl_id;
-+	const struct rproc_ops *ops;
-+	bool requires_force_stop;
-+};
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
 +
- static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
- {
- 	int ret;
-@@ -235,6 +238,12 @@ static int q6v5_wcss_start(struct rproc *rproc)
- 	struct q6v5_wcss *wcss = rproc->priv;
- 	int ret;
- 
-+	ret = clk_prepare_enable(wcss->prng_clk);
-+	if (ret) {
-+		dev_err(wcss->dev, "prng clock enable failed\n");
-+		return ret;
-+	}
++		smem_region:smem@4ab00000 {
++			no-map;
++			reg = <0x0 0x4ab00000 0x0 0x00100000>;
++		};
 +
- 	qcom_q6v5_prepare(&wcss->q6v5);
- 
- 	/* Release Q6 and WCSS reset */
-@@ -703,6 +712,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
- 			return ret;
- 	}
- 
-+	clk_disable_unprepare(wcss->prng_clk);
- 	qcom_q6v5_unprepare(&wcss->q6v5);
- 
- 	return 0;
-@@ -858,7 +868,21 @@ static int q6v5_alloc_memory_region(struct q6v5_wcss *wcss)
- 	return 0;
- }
- 
--static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
-+static int ipq8074_init_clock(struct q6v5_wcss *wcss)
-+{
-+	int ret;
++		q6_region: q6@4b000000 {
++			no-map;
++			reg = <0x0 0x4b000000 0x0 0x05f00000>;
++		};
++	};
 +
-+	wcss->prng_clk = devm_clk_get(wcss->dev, "prng");
-+	if (IS_ERR(wcss->prng_clk)) {
-+		ret = PTR_ERR(wcss->prng_clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "Failed to get prng clock\n");
-+		return ret;
-+	}
-+	return 0;
-+}
+ 	firmware {
+ 		scm {
+ 			compatible = "qcom,scm-ipq8074", "qcom,scm";
+@@ -431,6 +447,115 @@
+ 				      "axi_m_sticky";
+ 			status = "disabled";
+ 		};
++		apcs: syscon@b111000 {
++			compatible = "syscon";
++			reg = <0x0B111000 0x1000>;
++		};
 +
-+static int qcs404_init_clock(struct q6v5_wcss *wcss)
- {
- 	int ret;
++		wcss: smp2p-wcss {
++			compatible = "qcom,smp2p";
++			qcom,smem = <435>, <428>;
++
++			interrupt-parent = <&intc>;
++			interrupts = <0 322 1>;
++
++			qcom,ipc = <&apcs 8 9>;
++
++			qcom,local-pid = <0>;
++			qcom,remote-pid = <1>;
++
++			wcss_smp2p_out: master-kernel {
++				qcom,entry-name = "master-kernel";
++				qcom,smp2p-feature-ssr-ack;
++				#qcom,smem-state-cells = <1>;
++			};
++
++			wcss_smp2p_in: slave-kernel {
++				qcom,entry-name = "slave-kernel";
++
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
++		};
++
++		tcsr_q6_block: syscon@1945000 {
++			compatible = "syscon";
++			reg = <0x1945000 0xE000>;
++		};
++
++		tcsr_mutex_block: syscon@193d000 {
++			compatible = "syscon";
++			reg = <0x1905000 0x8000>;
++		};
++
++		tcsr_mutex: hwlock@193d000 {
++			compatible = "qcom,tcsr-mutex";
++			syscon = <&tcsr_mutex_block 0 0x80>;
++			#hwlock-cells = <1>;
++		};
++
++		smem: qcom,smem@4AB00000 {
++			compatible = "qcom,smem";
++			memory-region = <&smem_region>;
++			hwlocks = <&tcsr_mutex 0>;
++		};
++
++		apcs_glb: mailbox@b111000 {
++			compatible = "qcom,ipq8074-apcs-apps-global";
++			reg = <0xb111000 0x1000>;
++
++			#mbox-cells = <1>;
++		};
++
++		q6v5_wcss: q6v5_wcss@CD00000 {
++			compatible = "qcom,ipq8074-wcss-pil";
++			reg = <0xCD00000 0x4040>,
++			      <0x4AB000 0x20>;
++			reg-names = "qdsp6",
++				    "rmb";
++			qca,auto-restart;
++			qca,extended-intc;
++			interrupts-extended = <&intc 0 325 1>,
++					      <&wcss_smp2p_in 0 0>,
++					      <&wcss_smp2p_in 1 0>,
++					      <&wcss_smp2p_in 2 0>,
++					      <&wcss_smp2p_in 3 0>;
++			interrupt-names = "wdog",
++					  "fatal",
++					  "ready",
++					  "handover",
++					  "stop-ack";
++
++			resets = <&gcc GCC_WCSSAON_RESET>,
++				 <&gcc GCC_WCSS_BCR>,
++				 <&gcc GCC_WCSS_Q6_BCR>;
++
++			reset-names = "wcss_aon_reset",
++				      "wcss_reset",
++				      "wcss_q6_reset";
++
++			clocks = <&gcc GCC_PRNG_AHB_CLK>;
++			clock-names = "prng";
++
++			qcom,halt-regs = <&tcsr_q6_block 0xA000 0xD000 0x0>;
++
++			qcom,smem-states = <&wcss_smp2p_out 0>,
++					   <&wcss_smp2p_out 1>;
++			qcom,smem-state-names = "shutdown",
++						"stop";
++
++			memory-region = <&q6_region>;
++
++			glink-edge {
++				interrupts = <GIC_SPI 321 IRQ_TYPE_EDGE_RISING>;
++				qcom,remote-pid = <1>;
++				mboxes = <&apcs_glb 8>;
++
++				rpm_requests {
++					qcom,glink-channels = "IPCRTR";
++				};
++			};
++		};
+ 	};
  
-@@ -973,7 +997,7 @@ static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
- 	return 0;
- }
- 
--static int q6v5_wcss_init_regulator(struct q6v5_wcss *wcss)
-+static int qcs404_init_regulator(struct q6v5_wcss *wcss)
- {
- 	wcss->cx_supply = devm_regulator_get(wcss->dev, "cx");
- 	if (IS_ERR(wcss->cx_supply))
-@@ -1017,12 +1041,14 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	if (wcss->version == WCSS_QCS404) {
--		ret = q6v5_wcss_init_clock(wcss);
-+	if (desc->init_clock) {
-+		ret = desc->init_clock(wcss);
- 		if (ret)
- 			goto free_rproc;
-+	}
- 
--		ret = q6v5_wcss_init_regulator(wcss);
-+	if (desc->init_regulator) {
-+		ret = desc->init_regulator(wcss);
- 		if (ret)
- 			goto free_rproc;
- 	}
-@@ -1067,6 +1093,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- }
- 
- static const struct wcss_data wcss_ipq8074_res_init = {
-+	.init_clock = ipq8074_init_clock,
- 	.firmware_name = "IPQ8074/q6_fw.mdt",
- 	.crash_reason_smem = 421,
- 	.aon_reset_required = true,
-@@ -1075,6 +1102,8 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- };
- 
- static const struct wcss_data wcss_qcs404_res_init = {
-+	.init_clock = qcs404_init_clock,
-+	.init_regulator = qcs404_init_regulator,
- 	.crash_reason_smem = 421,
- 	.firmware_name = "wcnss.mdt",
- 	.version = WCSS_QCS404,
+ 	cpus {
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
