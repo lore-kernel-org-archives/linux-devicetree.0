@@ -1,152 +1,108 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH] dt-bindings: crypto: Convert Allwinner A10 Security Engine to
- a schema
-Date: Thu, 11 Jul 2019 14:23:01 +0200
-Message-ID: <20190711122301.8193-1-maxime.ripard@bootlin.com>
+From: Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v8 07/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
+ Mode
+Date: Thu, 11 Jul 2019 13:31:29 +0100
+Message-ID: <20190711123129.da4rg35b54u4svfw@willie-the-truck>
+References: <1561774167-24141-1-git-send-email-yong.wu@mediatek.com>
+ <1561774167-24141-8-git-send-email-yong.wu@mediatek.com>
+ <20190710143649.w5dplhzdpi3bxp7e@willie-the-truck>
+ <1562846036.31342.10.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1562846036.31342.10.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Wu <yong.wu@mediatek.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, chao.hao@mediatek.com, cui.zhang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-The older Allwinner SoCs have a crypto engine that is supported in Linux,
-with a matching Device Tree binding.
+On Thu, Jul 11, 2019 at 07:53:56PM +0800, Yong Wu wrote:
+> On Wed, 2019-07-10 at 15:36 +0100, Will Deacon wrote:
+> > On Sat, Jun 29, 2019 at 10:09:13AM +0800, Yong Wu wrote:
+> > > MediaTek extend the arm v7s descriptor to support the dram over 4GB.
+> > > 
+> > > In the mt2712 and mt8173, it's called "4GB mode", the physical address
+> > > is from 0x4000_0000 to 0x1_3fff_ffff, but from EMI point of view, it
+> > > is remapped to high address from 0x1_0000_0000 to 0x1_ffff_ffff, the
+> > > bit32 is always enabled. thus, in the M4U, we always enable the bit9
+> > > for all PTEs which means to enable bit32 of physical address.
+> > > 
+> > > but in mt8183, M4U support the dram from 0x4000_0000 to 0x3_ffff_ffff
+> > > which isn't remaped. We extend the PTEs: the bit9 represent bit32 of
+> > > PA and the bit4 represent bit33 of PA. Meanwhile the iova still is
+> > > 32bits.
+> > 
+> > What happens if bit4 is set in the pte for mt2712 or mt8173? Perhaps the
+> 
+> bit4 is ignored in mt2712 and mt8173(No effect).
+> 
+> > io-pgtable backend should be allowing oas > 32 when
+> > IO_PGTABLE_QUIRK_ARM_MTK_4GB is set, and then enforcing that itself.
+> 
+> About oas, It looks the oas doesn't work in current the v7s. 
+> 
+> How about I add a new simple preparing patch like this(copy from
+> io-pgtable-arm.c)?
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for that controller over to a YAML schemas.
+This looks like the right sort of idea. Basically, I was thinking that you
+can use the oas in conjunction with the quirk to specify whether or not
+your two magic bits should be set. You could also then cap the oas using
+the size of phys_addr_t to deal with my other comment.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- .../crypto/allwinner,sun4i-a10-crypto.yaml    | 79 +++++++++++++++++++
- .../devicetree/bindings/crypto/sun4i-ss.txt   | 23 ------
- 2 files changed, 79 insertions(+), 23 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
- delete mode 100644 Documentation/devicetree/bindings/crypto/sun4i-ss.txt
+Finally, I was hoping you could drop the |= BIT_ULL(32) and the &=
+~BIT_ULL(32) bits of the mtk driver if the pgtable code now accepts higher
+addresses. Did that not work out?
+> 
+> ==========================================
+> --- a/drivers/iommu/io-pgtable-arm-v7s.c
+> +++ b/drivers/iommu/io-pgtable-arm-v7s.c
+> @@ -495,7 +495,8 @@ static int arm_v7s_map(struct io_pgtable_ops *ops,
+> unsigned long iova,
+>         if (!(prot & (IOMMU_READ | IOMMU_WRITE)))
+>                 return 0;
+> 
+> -       if (WARN_ON(upper_32_bits(iova) || upper_32_bits(paddr)))
+> +       if (WARN_ON(iova >= (1ULL << data->iop.cfg.ias) ||
+> +                   paddr >= (1ULL << data->iop.cfg.oas)))
+>                 return -ERANGE;
+> 
+> ===============================================
+> 
+> Then, change the oas in MTK 4GB mode, like this:
+> 
+> ================================================
+> --- a/drivers/iommu/io-pgtable-arm-v7s.c
+> +++ b/drivers/iommu/io-pgtable-arm-v7s.c
+> @@ -721,7 +721,9 @@ static struct io_pgtable
+> *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+>  {
+>         struct arm_v7s_io_pgtable *data;
+> 
+> -       if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas >
+> ARM_V7S_ADDR_BITS)
+> +       if (cfg->ias > ARM_V7S_ADDR_BITS ||
+> +           (cfg->oas > ARM_V7S_ADDR_BITS &&
+> +            !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB)))
 
-diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
-new file mode 100644
-index 000000000000..80b3e7350a73
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/crypto/allwinner,sun4i-a10-crypto.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Security System Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: allwinner,sun4i-a10-crypto
-+      - items:
-+        - const: allwinner,sun5i-a13-crypto
-+        - const: allwinner,sun4i-a10-crypto
-+      - items:
-+        - const: allwinner,sun6i-a31-crypto
-+        - const: allwinner,sun4i-a10-crypto
-+      - items:
-+        - const: allwinner,sun7i-a20-crypto
-+        - const: allwinner,sun4i-a10-crypto
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Bus Clock
-+      - description: Module Clock
-+
-+  clock-names:
-+    items:
-+      - const: ahb
-+      - const: mod
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    const: ahb
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: allwinner,sun6i-a31-crypto
-+
-+then:
-+  required:
-+    - resets
-+    - reset-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    crypto: crypto-engine@1c15000 {
-+      compatible = "allwinner,sun4i-a10-crypto";
-+      reg = <0x01c15000 0x1000>;
-+      interrupts = <86>;
-+      clocks = <&ahb_gates 5>, <&ss_clk>;
-+      clock-names = "ahb", "mod";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/crypto/sun4i-ss.txt b/Documentation/devicetree/bindings/crypto/sun4i-ss.txt
-deleted file mode 100644
-index f2dc3d9bca92..000000000000
---- a/Documentation/devicetree/bindings/crypto/sun4i-ss.txt
-+++ /dev/null
-@@ -1,23 +0,0 @@
--* Allwinner Security System found on A20 SoC
--
--Required properties:
--- compatible : Should be "allwinner,sun4i-a10-crypto".
--- reg: Should contain the Security System register location and length.
--- interrupts: Should contain the IRQ line for the Security System.
--- clocks : List of clock specifiers, corresponding to ahb and ss.
--- clock-names : Name of the functional clock, should be
--	* "ahb" : AHB gating clock
--	* "mod" : SS controller clock
--
--Optional properties:
-- - resets : phandle + reset specifier pair
-- - reset-names : must contain "ahb"
--
--Example:
--	crypto: crypto-engine@1c15000 {
--		compatible = "allwinner,sun4i-a10-crypto";
--		reg = <0x01c15000 0x1000>;
--		interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&ahb_gates 5>, <&ss_clk>;
--		clock-names = "ahb", "mod";
--	};
--- 
-2.21.0
+This should probably still be capped at 34 bits.
+
+> > > +	paddr = pte & mask;
+> > > +	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB) {
+> > > +		if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
+> > > +			paddr |= BIT_ULL(32);
+> > > +		if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
+> > > +			paddr |= BIT_ULL(33);
+> > > +	}
+> > > +	return paddr;
+> > 
+> > I think this relies on CONFIG_PHYS_ADDR_T_64BIT, which isn't always set on
+> > 32-bit ARM.
+> 
+> This was discussed at [1]. Robin commented that this is not needed and
+> build won't complain about this.
+
+It's not so much the build I was worried about, but more that we'd silently
+be doing the wrong thing and I think we can fix that as I mentioned above.
+
+Will
