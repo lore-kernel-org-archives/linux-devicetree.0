@@ -1,187 +1,129 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: Re: [PATCH v8 07/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
- Mode
-Date: Thu, 11 Jul 2019 19:53:56 +0800
-Message-ID: <1562846036.31342.10.camel@mhfsdcap03>
-References: <1561774167-24141-1-git-send-email-yong.wu@mediatek.com>
-         <1561774167-24141-8-git-send-email-yong.wu@mediatek.com>
-         <20190710143649.w5dplhzdpi3bxp7e@willie-the-truck>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v6 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
+Date: Thu, 11 Jul 2019 14:15:03 +0200
+Message-ID: <110dd9ff1784c29fa16304825a41d1603a33f166.1562847292.git-series.maxime.ripard@bootlin.com>
+References: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190710143649.w5dplhzdpi3bxp7e@willie-the-truck>
+In-Reply-To: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will@kernel.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, chao.hao@mediatek.com, cui.zhang@mediatek.com
+To: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-07-10 at 15:36 +0100, Will Deacon wrote:
-> On Sat, Jun 29, 2019 at 10:09:13AM +0800, Yong Wu wrote:
-> > MediaTek extend the arm v7s descriptor to support the dram over 4GB.
-> > 
-> > In the mt2712 and mt8173, it's called "4GB mode", the physical address
-> > is from 0x4000_0000 to 0x1_3fff_ffff, but from EMI point of view, it
-> > is remapped to high address from 0x1_0000_0000 to 0x1_ffff_ffff, the
-> > bit32 is always enabled. thus, in the M4U, we always enable the bit9
-> > for all PTEs which means to enable bit32 of physical address.
-> > 
-> > but in mt8183, M4U support the dram from 0x4000_0000 to 0x3_ffff_ffff
-> > which isn't remaped. We extend the PTEs: the bit9 represent bit32 of
-> > PA and the bit4 represent bit33 of PA. Meanwhile the iova still is
-> > 32bits.
-> 
-> What happens if bit4 is set in the pte for mt2712 or mt8173? Perhaps the
+The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
+used in later (A10s, A13, A20, R8 and GR8) SoCs.
 
-bit4 is ignored in mt2712 and mt8173(No effect).
+On some SoCs, like the A10, there's multiple instances of that controller,
+with one instance supporting more channels and having an ISP.
 
-> io-pgtable backend should be allowing oas > 32 when
-> IO_PGTABLE_QUIRK_ARM_MTK_4GB is set, and then enforcing that itself.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 94 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 94 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
 
-About oas, It looks the oas doesn't work in current the v7s. 
-
-How about I add a new simple preparing patch like this(copy from
-io-pgtable-arm.c)?
-
-==========================================
---- a/drivers/iommu/io-pgtable-arm-v7s.c
-+++ b/drivers/iommu/io-pgtable-arm-v7s.c
-@@ -495,7 +495,8 @@ static int arm_v7s_map(struct io_pgtable_ops *ops,
-unsigned long iova,
-        if (!(prot & (IOMMU_READ | IOMMU_WRITE)))
-                return 0;
-
--       if (WARN_ON(upper_32_bits(iova) || upper_32_bits(paddr)))
-+       if (WARN_ON(iova >= (1ULL << data->iop.cfg.ias) ||
-+                   paddr >= (1ULL << data->iop.cfg.oas)))
-                return -ERANGE;
-
-===============================================
-
-Then, change the oas in MTK 4GB mode, like this:
-
-================================================
---- a/drivers/iommu/io-pgtable-arm-v7s.c
-+++ b/drivers/iommu/io-pgtable-arm-v7s.c
-@@ -721,7 +721,9 @@ static struct io_pgtable
-*arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
- {
-        struct arm_v7s_io_pgtable *data;
-
--       if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas >
-ARM_V7S_ADDR_BITS)
-+       if (cfg->ias > ARM_V7S_ADDR_BITS ||
-+           (cfg->oas > ARM_V7S_ADDR_BITS &&
-+            !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB)))
-                return NULL;
-
-        if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
-
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -274,7 +274,7 @@ static int mtk_iommu_domain_finalise(struct
-mtk_iommu_domain *dom)
-                        IO_PGTABLE_QUIRK_TLBI_ON_MAP,
-                .pgsize_bitmap = mtk_iommu_ops.pgsize_bitmap,
-                .ias = 32,
--               .oas = 32,
-+               .oas = 34,
-                .tlb = &mtk_iommu_gather_ops,
-                .iommu_dev = data->dev,
-        };
-================================================
-
-
-> 
-> > In order to unify code, in the "4GB mode", we add the bit32 for the
-> > physical address manually in our driver.
-> > 
-> > Correspondingly, Adding bit32 and bit33 for the PA in the iova_to_phys
-> > has to been moved into v7s.
-> > 
-> > Regarding whether the pagetable address could be over 4GB, the mt8183
-> > support it while the previous mt8173 don't. thus keep it as is.
-> > 
-> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> > Reviewed-by: Evan Green <evgreen@chromium.org>
-> > ---
-> > Comparing with the previous one:
-> > 1). Add a new patch "iommu/mediatek: Fix iova_to_phys PA start for 4GB
-> > mode" before this one. Thus rebase it.
-> > A little difference: in the 4gb mode, we add bit32 for PA. and the PA got
-> > from iova_to_phys always have bit32 here, thus we should adjust it to locate
-> > the valid pa.
-> > 2). Add this code suggested from Evan.
-> >  if (!data->plat_data->has_4gb_mode)
-> > 	       data->enable_4GB = false;
-> > ---
-> >  drivers/iommu/io-pgtable-arm-v7s.c | 31 ++++++++++++++++++++++++-------
-> >  drivers/iommu/mtk_iommu.c          | 29 ++++++++++++++++++-----------
-> >  drivers/iommu/mtk_iommu.h          |  1 +
-> >  3 files changed, 43 insertions(+), 18 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
-> > index 94c38db..4077822 100644
-> > --- a/drivers/iommu/io-pgtable-arm-v7s.c
-> > +++ b/drivers/iommu/io-pgtable-arm-v7s.c
-> > @@ -123,7 +123,9 @@
-> >  #define ARM_V7S_TEX_MASK		0x7
-> >  #define ARM_V7S_ATTR_TEX(val)		(((val) & ARM_V7S_TEX_MASK) << ARM_V7S_TEX_SHIFT)
-> >  
-> > -#define ARM_V7S_ATTR_MTK_4GB		BIT(9) /* MTK extend it for 4GB mode */
-> > +/* MediaTek extend the two bits below for over 4GB mode */
-> > +#define ARM_V7S_ATTR_MTK_PA_BIT32	BIT(9)
-> > +#define ARM_V7S_ATTR_MTK_PA_BIT33	BIT(4)
-> >  
-> >  /* *well, except for TEX on level 2 large pages, of course :( */
-> >  #define ARM_V7S_CONT_PAGE_TEX_SHIFT	6
-> > @@ -190,13 +192,22 @@ static dma_addr_t __arm_v7s_dma_addr(void *pages)
-> >  static arm_v7s_iopte paddr_to_iopte(phys_addr_t paddr, int lvl,
-> >  				    struct io_pgtable_cfg *cfg)
-> >  {
-> > -	return paddr & ARM_V7S_LVL_MASK(lvl);
-> > +	arm_v7s_iopte pte = paddr & ARM_V7S_LVL_MASK(lvl);
-> > +
-> > +	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB) {
-> > +		if (paddr & BIT_ULL(32))
-> > +			pte |= ARM_V7S_ATTR_MTK_PA_BIT32;
-> > +		if (paddr & BIT_ULL(33))
-> > +			pte |= ARM_V7S_ATTR_MTK_PA_BIT33;
-> > +	}
-> > +	return pte;
-> >  }
-> >  
-> >  static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
-> >  				  struct io_pgtable_cfg *cfg)
-> >  {
-> >  	arm_v7s_iopte mask;
-> > +	phys_addr_t paddr;
-> >  
-> >  	if (ARM_V7S_PTE_IS_TABLE(pte, lvl))
-> >  		mask = ARM_V7S_TABLE_MASK;
-> > @@ -205,7 +216,14 @@ static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
-> >  	else
-> >  		mask = ARM_V7S_LVL_MASK(lvl);
-> >  
-> > -	return pte & mask;
-> > +	paddr = pte & mask;
-> > +	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB) {
-> > +		if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
-> > +			paddr |= BIT_ULL(32);
-> > +		if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
-> > +			paddr |= BIT_ULL(33);
-> > +	}
-> > +	return paddr;
-> 
-> I think this relies on CONFIG_PHYS_ADDR_T_64BIT, which isn't always set on
-> 32-bit ARM.
-
-This was discussed at [1]. Robin commented that this is not needed and
-build won't complain about this.
-
-[1]
-http://lists.infradead.org/pipermail/linux-mediatek/2018-November/015688.html
-
-> 
-> Will
+diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+new file mode 100644
+index 000000000000..97c9fc3b5050
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+@@ -0,0 +1,94 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++description: |-
++  The Allwinner A10 and later has a CMOS Sensor Interface to retrieve
++  frames from a parallel or BT656 sensor.
++
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - allwinner,sun7i-a20-csi0
++          - const: allwinner,sun4i-a10-csi0
++
++      - items:
++          - const: allwinner,sun4i-a10-csi0
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: The CSI interface clock
++      - description: The CSI module clock
++      - description: The CSI ISP clock
++      - description: The CSI DRAM clock
++
++  clock-names:
++    items:
++      - const: bus
++      - const: mod
++      - const: isp
++      - const: ram
++
++  resets:
++    description: The reset line driver this IP
++    maxItems: 1
++
++  pinctrl-0:
++    minItems: 1
++
++  pinctrl-names:
++    const: default
++
++  port:
++    type: object
++    additionalProperties: false
++
++    properties:
++      endpoint:
++        properties:
++          bus-width:
++            const: 8
++            description: Number of data lines actively used.
++
++          data-active: true
++          hsync-active: true
++          pclk-sample: true
++          remote-endpoint: true
++          vsync-active: true
++
++        required:
++          - bus-width
++          - data-active
++          - hsync-active
++          - pclk-sample
++          - remote-endpoint
++          - vsync-active
++
++    required:
++      - endpoint
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++...
+-- 
+git-series 0.9.1
