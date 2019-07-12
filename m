@@ -1,57 +1,85 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v8 0/7] Unify CPU topology across ARM & RISC-V
-Date: Fri, 12 Jul 2019 10:16:40 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1907121012050.2267@viisi.sifive.com>
-References: <20190627195302.28300-1-atish.patra@wdc.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
+ configure LED mode
+Date: Fri, 12 Jul 2019 10:20:47 -0700
+Message-ID: <20190712172047.GQ250418@google.com>
+References: <20190703193724.246854-1-mka@chromium.org>
+ <20190703193724.246854-6-mka@chromium.org>
+ <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
+ <20190703232331.GL250418@google.com>
+ <CAL_JsqL_AU+JV0c2mNbXiPh2pvfYbPbLV-2PHHX0hC3vUH4QWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190627195302.28300-1-atish.patra@wdc.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL_AU+JV0c2mNbXiPh2pvfYbPbLV-2PHHX0hC3vUH4QWg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: linux-kernel@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Johan Hovold <johan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Folks,
-
-On Thu, 27 Jun 2019, Atish Patra wrote:
-
-> The cpu-map DT entry in ARM can describe the CPU topology in much better
-> way compared to other existing approaches. RISC-V can easily adopt this
-> binding to represent its own CPU topology. Thus, both cpu-map DT
-> binding and topology parsing code can be moved to a common location so
-> that RISC-V or any other architecture can leverage that.
+On Wed, Jul 10, 2019 at 09:55:12AM -0600, Rob Herring wrote:
+> On Wed, Jul 3, 2019 at 5:23 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > Hi Florian,
+> >
+> > On Wed, Jul 03, 2019 at 02:37:47PM -0700, Florian Fainelli wrote:
+> > > On 7/3/19 12:37 PM, Matthias Kaehlcke wrote:
+> > > > The LED behavior of some Realtek PHYs is configurable. Add the
+> > > > property 'realtek,led-modes' to specify the configuration of the
+> > > > LEDs.
+> > > >
+> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > ---
+> > > > Changes in v2:
+> > > > - patch added to the series
+> > > > ---
+> > > >  .../devicetree/bindings/net/realtek.txt         |  9 +++++++++
+> > > >  include/dt-bindings/net/realtek.h               | 17 +++++++++++++++++
+> > > >  2 files changed, 26 insertions(+)
+> > > >  create mode 100644 include/dt-bindings/net/realtek.h
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
+> > > > index 71d386c78269..40b0d6f9ee21 100644
+> > > > --- a/Documentation/devicetree/bindings/net/realtek.txt
+> > > > +++ b/Documentation/devicetree/bindings/net/realtek.txt
+> > > > @@ -9,6 +9,12 @@ Optional properties:
+> > > >
+> > > >     SSC is only available on some Realtek PHYs (e.g. RTL8211E).
+> > > >
+> > > > +- realtek,led-modes: LED mode configuration.
+> > > > +
+> > > > +   A 0..3 element vector, with each element configuring the operating
+> > > > +   mode of an LED. Omitted LEDs are turned off. Allowed values are
+> > > > +   defined in "include/dt-bindings/net/realtek.h".
+> > >
+> > > This should probably be made more general and we should define LED modes
+> > > that makes sense regardless of the PHY device, introduce a set of
+> > > generic functions for validating and then add new function pointer for
+> > > setting the LED configuration to the PHY driver. This would allow to be
+> > > more future proof where each PHY driver could expose standard LEDs class
+> > > devices to user-space, and it would also allow facilities like: ethtool
+> > > -p to plug into that.
+> > >
+> > > Right now, each driver invents its own way of configuring LEDs, that
+> > > does not scale, and there is not really a good reason for that other
+> > > than reviewing drivers in isolation and therefore making it harder to
+> > > extract the commonality. Yes, I realize that since you are the latest
+> > > person submitting something in that area, you are being selected :)
 > 
-> The relevant discussion regarding unifying cpu topology can be found in
-> [1].
+> I agree.
 > 
-> arch_topology seems to be a perfect place to move the common code. I
-> have not introduced any significant functional changes in the moved code.
-> The only downside in this approach is that the capacity code will be
-> executed for RISC-V as well. But, it will exit immediately after not
-> able to find the appropriate DT node. If the overhead is considered too
-> much, we can always compile out capacity related functions under a
-> different config for the architectures that do not support them.
+> > I see the merit of your proposal to come up with a generic mechanism
+> > to configure Ethernet LEDs, however I can't justify spending much of
+> > my work time on this. If it is deemed useful I'm happy to send another
+> > version of the current patchset that addresses the reviewer's comments,
+> > but if the implementation of a generic LED configuration interface is
+> > a requirement I will have to abandon at least the LED configuration
+> > part of this series.
 > 
-> There was an opportunity to unify topology data structure for ARM32 done
-> by patch 3/4. But, I refrained from making any other changes as I am not
-> very well versed with original intention for some functions that
-> are present in arch_topology.c. I hope this patch series can be served
-> as a baseline for such changes in the future.
-> 
-> The patches have been tested for RISC-V, ARM64, ARM32 & compile tested for
-> x86.
+> Can you at least define a common binding for this. Maybe that's just
+> removing 'realtek'. While the kernel side can evolve to a common
+> infrastructure, the DT bindings can't.
 
-Since these patches touch files across several different architectures, 
-and thus really should sit in -next for a while; and because it's late in 
-the merge window, I'm planning to postpone sending these patches upstream 
-until after v5.3-rc1 is released.
-
-Once v5.3-rc1 is released, let's plan to get these patches rebased and 
-reposted and into linux-next as soon as possible.
-
-
-Sorry for the delay here,
-
-
-- Paul
+Defining a common binding sounds good to me, I will follow up on
+Florian's reply to this.
