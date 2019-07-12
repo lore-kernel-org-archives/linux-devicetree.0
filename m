@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH] dt-bindings: bus: Convert Allwinner DE2 bus to a schema
-Date: Fri, 12 Jul 2019 07:21:12 -0600
-Message-ID: <20190712132112.GA11035@bogus>
+Date: Fri, 12 Jul 2019 07:23:05 -0600
+Message-ID: <20190712132305.GA13584@bogus>
 References: <20190711094036.21777-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,10 +18,11 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Jul 2019 11:40:36 +0200, Maxime Ripard wrote:
+On Thu, Jul 11, 2019 at 11:40:36AM +0200, Maxime Ripard wrote:
 > The Allwinner SoCs using the second generation of the display engine have a
 > bus for that display engine. The bus is supported in Linux, with a matching
 > Device Tree binding.
@@ -37,7 +38,14 @@ On Thu, 11 Jul 2019 11:40:36 +0200, Maxime Ripard wrote:
 >  create mode 100644 Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml
 >  delete mode 100644 Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml b/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml
+> new file mode 100644
+> index 000000000000..b9734f8109c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml
+> @@ -0,0 +1,84 @@
+> +# SPDX-License-Identifier: GPL2
 
-Applied, thanks.
+I fixed this up.
 
 Rob
