@@ -1,227 +1,71 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 1/2] leds: Add control of the voltage/current regulator to
- the LED core
-Date: Fri, 12 Jul 2019 13:49:21 -0500
-Message-ID: <56d16260-ff82-3439-4c1f-2a3a1552bc7d@ti.com>
-References: <20190708103547.23528-1-jjhiblot@ti.com>
- <20190708103547.23528-2-jjhiblot@ti.com>
+From: Hongwei Zhang <hongweiz@ami.com>
+Subject: [PATCH 2/3 v2] dt-bindings: gpio: aspeed: Add SGPIO support
+Date: Fri, 12 Jul 2019 16:14:00 -0400
+Message-ID: <1562962440-15908-1-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190708103547.23528-2-jjhiblot@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Jacques Hiblot <jjhiblot@ti.com>, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, daniel.thompson@linaro.org
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+Cc: Hongwei Zhang <hongweiz@ami.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-JJ
+Add bindings to support SGPIO on AST2400 or AST2500.
 
-On 7/8/19 5:35 AM, Jean-Jacques Hiblot wrote:
-> A LED is usually powered by a voltage/current regulator. Let the LED core
-Let the LED core know
-> about it. This allows the LED core to turn on or off the power supply
-> as needed.
+Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+---
+ .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100755 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
 
->
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> ---
->   drivers/leds/led-class.c | 10 ++++++++
->   drivers/leds/led-core.c  | 53 +++++++++++++++++++++++++++++++++++++---
->   include/linux/leds.h     |  4 +++
->   3 files changed, 64 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> index 4793e77808e2..e01b2d982564 100644
-> --- a/drivers/leds/led-class.c
-> +++ b/drivers/leds/led-class.c
-> @@ -17,6 +17,7 @@
->   #include <linux/slab.h>
->   #include <linux/spinlock.h>
->   #include <linux/timer.h>
-> +#include <linux/regulator/consumer.h>
-
-What if you move this to leds.h so core and class can both include it.
-
-
->   #include <uapi/linux/uleds.h>
->   #include "leds.h"
->   
-> @@ -272,6 +273,15 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
->   		dev_warn(parent, "Led %s renamed to %s due to name collision",
->   				led_cdev->name, dev_name(led_cdev->dev));
->   
-> +	led_cdev->regulator = devm_regulator_get(led_cdev->dev, "power");
-
-Is the regulator always going to be called power?
-
-> +	if (IS_ERR(led_cdev->regulator)) {
-> +		dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
-> +			led_cdev->name);
-> +		device_unregister(led_cdev->dev);
-> +		mutex_unlock(&led_cdev->led_access);
-> +		return PTR_ERR(led_cdev->regulator);
-
-This is listed as optional in the DT doc.  This appears to be required.
-
-I prefer to keep it optional.  Many LED drivers are connected to fixed 
-non-managed supplies.
-
-> +	}
-> +
->   	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
->   		ret = led_add_brightness_hw_changed(led_cdev);
->   		if (ret) {
-> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-> index 7107cd7e87cf..139de6b08cad 100644
-> --- a/drivers/leds/led-core.c
-> +++ b/drivers/leds/led-core.c
-> @@ -16,6 +16,7 @@
->   #include <linux/rwsem.h>
->   #include <linux/slab.h>
->   #include "leds.h"
-> +#include <linux/regulator/consumer.h>
->   
->   DECLARE_RWSEM(leds_list_lock);
->   EXPORT_SYMBOL_GPL(leds_list_lock);
-> @@ -23,6 +24,31 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
->   LIST_HEAD(leds_list);
->   EXPORT_SYMBOL_GPL(leds_list);
->   
-> +static bool __led_need_regulator_update(struct led_classdev *led_cdev,
-> +					int brightness)
-> +{
-> +	bool new_regulator_state = (brightness != LED_OFF);
-> +
-> +	return led_cdev->regulator_state != new_regulator_state;
-> +}
-> +
-> +static int __led_handle_regulator(struct led_classdev *led_cdev,
-> +				int brightness)
-> +{
-> +	if (__led_need_regulator_update(led_cdev, brightness)) {
-> +		int ret;
-
-Prefer to this to be moved up.
-
-> +
-> +		if (brightness != LED_OFF)
-> +			ret = regulator_enable(led_cdev->regulator);
-> +		else
-> +			ret = regulator_disable(led_cdev->regulator);
-> +		if (ret)
-> +			return ret;
-new line
-> +		led_cdev->regulator_state = (brightness != LED_OFF);
-> +	}
-> +	return 0;
-> +}
-> +
->   static int __led_set_brightness(struct led_classdev *led_cdev,
->   				enum led_brightness value)
->   {
-> @@ -80,6 +106,7 @@ static void led_timer_function(struct timer_list *t)
->   	}
->   
->   	led_set_brightness_nosleep(led_cdev, brightness);
-> +	__led_handle_regulator(led_cdev, brightness);
-
-Again this seems to indicate that the regulator is a required property 
-for the LEDs
-
-This needs to be made optional.  And the same comment through out for 
-every call.
-
-
->   
->   	/* Return in next iteration if led is in one-shot mode and we are in
->   	 * the final blink state so that the led is toggled each delay_on +
-> @@ -115,6 +142,8 @@ static void set_brightness_delayed(struct work_struct *ws)
->   	if (ret == -ENOTSUPP)
->   		ret = __led_set_brightness_blocking(led_cdev,
->   					led_cdev->delayed_set_value);
-> +	__led_handle_regulator(led_cdev, led_cdev->delayed_set_value);
-> +
->   	if (ret < 0 &&
->   	    /* LED HW might have been unplugged, therefore don't warn */
->   	    !(ret == -ENODEV && (led_cdev->flags & LED_UNREGISTERING) &&
-> @@ -141,6 +170,7 @@ static void led_set_software_blink(struct led_classdev *led_cdev,
->   	/* never on - just set to off */
->   	if (!delay_on) {
->   		led_set_brightness_nosleep(led_cdev, LED_OFF);
-> +		__led_handle_regulator(led_cdev, LED_OFF);
->   		return;
->   	}
->   
-> @@ -148,6 +178,7 @@ static void led_set_software_blink(struct led_classdev *led_cdev,
->   	if (!delay_off) {
->   		led_set_brightness_nosleep(led_cdev,
->   					   led_cdev->blink_brightness);
-> +		__led_handle_regulator(led_cdev, led_cdev->blink_brightness);
->   		return;
->   	}
->   
-> @@ -256,8 +287,14 @@ void led_set_brightness_nopm(struct led_classdev *led_cdev,
->   			      enum led_brightness value)
->   {
->   	/* Use brightness_set op if available, it is guaranteed not to sleep */
-> -	if (!__led_set_brightness(led_cdev, value))
-> -		return;
-> +	if (!__led_set_brightness(led_cdev, value)) {
-> +		/*
-> +		 * if regulator state doesn't need to be changed, that is all/
-> +		 * Otherwise delegate the change to a work queue
-> +		 */
-> +		if (!__led_need_regulator_update(led_cdev, value))
-> +			return;
-> +	}
->   
->   	/* If brightness setting can sleep, delegate it to a work queue task */
->   	led_cdev->delayed_set_value = value;
-> @@ -280,6 +317,8 @@ EXPORT_SYMBOL_GPL(led_set_brightness_nosleep);
->   int led_set_brightness_sync(struct led_classdev *led_cdev,
->   			    enum led_brightness value)
->   {
-> +	int ret;
-> +
->   	if (led_cdev->blink_delay_on || led_cdev->blink_delay_off)
->   		return -EBUSY;
->   
-> @@ -288,7 +327,15 @@ int led_set_brightness_sync(struct led_classdev *led_cdev,
->   	if (led_cdev->flags & LED_SUSPENDED)
->   		return 0;
->   
-> -	return __led_set_brightness_blocking(led_cdev, led_cdev->brightness);
-> +	ret = __led_set_brightness_blocking(led_cdev, led_cdev->brightness);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = __led_handle_regulator(led_cdev, led_cdev->brightness);
-
-Can't you just return here?
-
-Dan
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
->   }
->   EXPORT_SYMBOL_GPL(led_set_brightness_sync);
->   
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index 9b2bf574a17a..bee8e3f8dddd 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -123,6 +123,10 @@ struct led_classdev {
->   
->   	/* Ensures consistent access to the LED Flash Class device */
->   	struct mutex		led_access;
-> +
-> +	/* regulator */
-> +	struct regulator	*regulator;
-> +	bool			regulator_state;
->   };
->   
->   extern int of_led_classdev_register(struct device *parent,
+diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+new file mode 100755
+index 0000000..3ae2b79
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+@@ -0,0 +1,43 @@
++Aspeed SGPIO controller Device Tree Bindings
++-------------------------------------------
++
++Required properties:
++- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
++
++- #gpio-cells 		: Should be two
++			  - First cell is the GPIO line number
++			  - Second cell is used to specify optional
++			    parameters (unused)
++
++- reg			: Address and length of the register set for the device
++- gpio-controller	: Marks the device node as a GPIO controller.
++- interrupts		: Interrupt specifier (see interrupt bindings for
++			  details)
++
++- interrupt-controller	: Mark the GPIO controller as an interrupt-controller
++
++- nr-gpios		: number of GPIO pins to serialise. (should be multiple of 8, up to 80 pins)
++			  if not specified, defaults to 80.
++
++- clocks               : A phandle to the APB clock for SGPM clock division
++
++- bus-frequency	: SGPM CLK frequency, if not specified defaults to 1 MHz
++
++
++The sgpio and interrupt properties are further described in their respective bindings documentation:
++
++- Documentation/devicetree/bindings/sgpio/gpio.txt
++- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++
++  Example:
++	sgpio@1e780200 {
++		#gpio-cells = <2>;
++		compatible = "aspeed,ast2500-sgpio";
++		gpio-controller;
++		interrupts = <40>;
++		reg = <0x1e780200 0x0100>;
++		clocks = <&syscon ASPEED_CLK_APB>;
++		interrupt-controller;
++		nr-gpios = <80>;
++		bus-frequency = <1000000>;
++	};
+-- 
+2.7.4
