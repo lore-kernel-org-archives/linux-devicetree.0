@@ -1,78 +1,37 @@
-Return-Path: <SRS0=pYfm=VC=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 2/3] arm64: dts: renesas: hihope-common: Add BT support
-Date: Fri,  5 Jul 2019 11:15:19 +0100
-Message-Id: <1562321720-18735-3-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1562321720-18735-1-git-send-email-biju.das@bp.renesas.com>
-References: <1562321720-18735-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=siEA=VJ=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1562333979-28516-1-git-send-email-fabrizio.castro@bp.renesas.com> <1562333979-28516-2-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1562333979-28516-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 12 Jul 2019 15:14:33 +0200
+Message-ID: <CAMuHMdWqpyC5=nA_pFM9Y-9LbU83xDHL1jN1OUA1mAbx17Sycw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm64: dts: renesas: r8a774a1: Use extended audio
+ dmac register
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables BT support for the HiHope RZ/G2[MN] boards.
+On Fri, Jul 5, 2019 at 3:39 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Basic audio dmac register only supports busif from 0 to 3,
+> in order to use busif4 ~ busif7 extended audio dmac registers
+> need to be used.
+>
+> Based on similar work from Jiada Wang:
+> 7a516e49d975 ("arm64: dts: renesas: use extended audio dmac register")
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/hihope-common.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm64/boot/dts/renesas/hihope-common.dtsi b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-index 1480242..fdeb4d2 100644
---- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-@@ -10,6 +10,7 @@
- / {
- 	aliases {
- 		serial0 = &scif2;
-+		serial1 = &hscif0;
- 	};
- 
- 	chosen {
-@@ -31,6 +32,13 @@
- 	leds {
- 		compatible = "gpio-leds";
- 
-+		bt_active_led {
-+			label = "blue:bt";
-+			gpios = <&gpio7  0 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "hci0-power";
-+			default-state = "off";
-+		};
-+
- 		led0 {
- 			gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
- 		};
-@@ -153,6 +161,19 @@
- 	};
- };
- 
-+&hscif0 {
-+	pinctrl-0 = <&hscif0_pins>;
-+	pinctrl-names = "default";
-+
-+	uart-has-rtscts;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "ti,wl1837-st";
-+		enable-gpios = <&gpio_expander 2 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
- &hsusb {
- 	dr_mode = "otg";
- 	status = "okay";
-@@ -194,6 +215,11 @@
- 	pinctrl-0 = <&scif_clk_pins>;
- 	pinctrl-names = "default";
- 
-+	hscif0_pins: hscif0 {
-+		groups = "hscif0_data", "hscif0_ctrl";
-+		function = "hscif0";
-+	};
-+
- 	scif2_pins: scif2 {
- 		groups = "scif2_data_a";
- 		function = "scif2";
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
