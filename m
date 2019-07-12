@@ -1,128 +1,131 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 3/3] drm/bridge: sii902x: make audio mclk optional
-Date: Fri, 12 Jul 2019 12:45:46 +0200
-Message-ID: <beef9917-1e8b-1ddb-740b-5b2ca8cd379c@samsung.com>
-References: <1562082426-14876-1-git-send-email-olivier.moysan@st.com>
-        <CGME20190702154808epcas2p263688e1a3f29a656a86f5feda73aa6ab@epcas2p2.samsung.com>
-        <1562082426-14876-4-git-send-email-olivier.moysan@st.com>
+From: Michael Drake <michael.drake@codethink.co.uk>
+Subject: Re: [PATCH v1 01/11] dt-bindings: display/bridge: Add bindings for
+ ti948
+Date: Fri, 12 Jul 2019 13:42:54 +0100
+Message-ID: <4f8c1aa9-0c0b-0337-b273-2ffd76d83ee1@codethink.co.uk>
+References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
+ <20190611140412.32151-2-michael.drake@codethink.co.uk>
+ <20190611180316.GS5016@pendragon.ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562082426-14876-4-git-send-email-olivier.moysan@st.com>
+In-Reply-To: <20190611180316.GS5016@pendragon.ideasonboard.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olivier Moysan <olivier.moysan@st.com>, narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, benjamin.gaignard@st.com, alexandre.torgue@st.com, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, jsarha@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@lists.codethink.co.uk, Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02.07.2019 17:47, Olivier Moysan wrote:
-> The master clock on i2s bus is not mandatory,
-> as sii902X internal PLL can be used instead.
-> Make use of mclk optional.
->
-> Fixes: ff5781634c41 ("drm/bridge: sii902x: Implement HDMI audio support")
->
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-> ---
->  drivers/gpu/drm/bridge/sii902x.c | 39 +++++++++++++++++++++++----------------
->  1 file changed, 23 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-> index 36acc256e67e..a08bd9fdc046 100644
-> --- a/drivers/gpu/drm/bridge/sii902x.c
-> +++ b/drivers/gpu/drm/bridge/sii902x.c
-> @@ -562,19 +562,21 @@ static int sii902x_audio_hw_params(struct device *dev, void *data,
->  		}
->  	}
->  
-> -	ret = clk_prepare_enable(sii902x->audio.mclk);
-> -	if (ret) {
-> -		dev_err(dev, "Enabling mclk failed: %d\n", ret);
-> -		return ret;
-> -	}
-> +	if (sii902x->audio.mclk) {
-> +		ret = clk_prepare_enable(sii902x->audio.mclk);
-> +		if (ret) {
-> +			dev_err(dev, "Enabling mclk failed: %d\n", ret);
-> +			return ret;
-> +		}
->  
-> -	mclk_rate = clk_get_rate(sii902x->audio.mclk);
-> +		mclk_rate = clk_get_rate(sii902x->audio.mclk);
->  
-> -	ret = sii902x_select_mclk_div(&i2s_config_reg, params->sample_rate,
-> -				      mclk_rate);
-> -	if (mclk_rate != ret * params->sample_rate)
-> -		dev_dbg(dev, "Inaccurate reference clock (%ld/%d != %u)\n",
-> -			mclk_rate, ret, params->sample_rate);
-> +		ret = sii902x_select_mclk_div(&i2s_config_reg,
-> +					      params->sample_rate, mclk_rate);
-> +		if (mclk_rate != ret * params->sample_rate)
-> +			dev_dbg(dev, "Inaccurate reference clock (%ld/%d != %u)\n",
-> +				mclk_rate, ret, params->sample_rate);
-> +	}
->  
->  	mutex_lock(&sii902x->mutex);
->  
-> @@ -640,7 +642,8 @@ static int sii902x_audio_hw_params(struct device *dev, void *data,
->  	mutex_unlock(&sii902x->mutex);
->  
->  	if (ret) {
-> -		clk_disable_unprepare(sii902x->audio.mclk);
-> +		if (sii902x->audio.mclk)
-> +			clk_disable_unprepare(sii902x->audio.mclk);
+Hi Laurent,
 
+On 11/06/2019 19:03, Laurent Pinchart wrote:
+> Hi Michael,
+> 
+> Thank you for the patch.
 
-"if" clause is not necessary
+My pleasure, and thank you for the feedback!  I'm sorry it's
+taken me a while to respond to it.
 
+> On Tue, Jun 11, 2019 at 03:04:02PM +0100, Michael Drake wrote:
+>> Adds device tree bindings for:
+>>
+>>   TI DS90UB948-Q1 2K FPD-Link III to OpenLDI Deserializer
+>>
+>> The device has the compatible string "ti,ds90ub948", and
+>> and allows an arrray of strings to be provided as regulator
+> 
+> s/arrray/array/
 
->  		dev_err(dev, "%s: hdmi audio enable failed: %d\n", __func__,
->  			ret);
->  	}
-> @@ -659,7 +662,8 @@ static void sii902x_audio_shutdown(struct device *dev, void *data)
->  
->  	mutex_unlock(&sii902x->mutex);
->  
-> -	clk_disable_unprepare(sii902x->audio.mclk);
-> +	if (sii902x->audio.mclk)
+Thanks.  Fixed for the next version.
 
-ditto
+>> names to enable for operation of the device.
+>>
+>> Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
+>> Cc: Patrick Glaser <pglaser@tesla.com>
+>> Cc: Nate Case <ncase@tesla.com>
+>> ---
+>>  .../bindings/display/bridge/ti,ds90ub948.txt  | 24 +++++++++++++++++++
+>>  1 file changed, 24 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
+>> new file mode 100644
+>> index 000000000000..f9e86cb22900
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
+>> @@ -0,0 +1,24 @@
+>> +TI DS90UB948-Q1 2K FPD-Link III to OpenLDI Deserializer
+>> +=======================================================
+>> +
+>> +This is the binding for Texas Instruments DS90UB948-Q1 bridge deserializer.
+>> +
+>> +This device supports I2C only.
+> 
+> Then the DT node should be a child of its I2C controller, and have a reg
+> property.
 
-> +		clk_disable_unprepare(sii902x->audio.mclk);
->  }
->  
->  int sii902x_audio_digital_mute(struct device *dev, void *data, bool enable)
-> @@ -752,9 +756,12 @@ static int sii902x_audio_codec_init(struct sii902x *sii902x,
->  
->  	sii902x->audio.mclk = devm_clk_get(dev, "mclk");
->  	if (IS_ERR(sii902x->audio.mclk)) {
-> -		dev_err(dev, "%s: No clock (audio mclk) found: %ld\n",
-> -			__func__, PTR_ERR(sii902x->audio.mclk));
-> -		return 0;
-> +		if (PTR_ERR(sii902x->audio.mclk) != -ENOENT) {
-> +			dev_err(dev, "%s: No clock (audio mclk) found: %ld\n",
-> +				__func__, PTR_ERR(sii902x->audio.mclk));
-> +			return PTR_ERR(sii902x->audio.mclk);
-> +		}
-> +		sii902x->audio.mclk = NULL;
+OK, thank you.  I'm not actually using DT, I'm using ACPI tables.
 
+For DT, would this cause the device to get bound to the driver on
+startup?
 
-devm_clk_get_optional should be used here.
+I tried adding a reg property with the value set to the device's
+I2C address with device tree compatible properties, coupled with
+the DT "compatible" string property, but that was insufficient to
+bind the device to the driver.  At the moment, I'm using the ACPI
+mechanism for achieving this.
 
-Summarizing, clk framework supports NULL clocks so you can adjust code
-to benefit from it: no need to checks "if (sii902x->audio.mclk)". The
-only place you should care is near clk_get_rate, for null clock it will
-return 0, so you should react appropriately.
+So all I've done for this is add the "reg" property to the device
+tree ti,ds90ub948.txt documentation file, in the Example section.
 
-With that changed:
+Is this what you were expecting?
 
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+For the other point, that the DT node should be a child of its I2C
+controller, I've made the devices descendants of the I2C controller
+in ACPI, but one of them is not a direct child.
 
- --
-Regards
-Andrzej
+The ti949 is a child of its I2C controller node, but the ti948
+is a child of the ti949 node in the ACPI table.  I did this to
+ensure that linux was aware of the dependency of the devices, so
+that they would be brought up in the correct order and suspended
+and resumed in the correct order.
 
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: "ti,ds90ub948"
+>> +
+>> +Optional properties:
+>> +
+>> +- regulators: List of regulator name strings to enable for operation of device.
+> 
+> There's a standard binding for regulators, using *-supply properties.
+> Please use them.
 
->  	}
->  
->  	sii902x->audio.pdev = platform_device_register_data(
+Thank you!  I've switched to using that, and it is less code.  :)
+
+> You should also use the OF graph DT bindings to model the data
+> connections.
+
+I'm not clear on the implications of this from the driver code.
+Does it need any code changes to the driver to support these
+endpoints?  How are they used?
+
+If it's just a documentation thing, I can easily do it, but
+otherwise, I can't test Device Tree because we're using ACPI.
+
+>> +
+>> +Example
+>> +-------
+>> +
+>> +ti948: ds90ub948@0 {
+>> +	compatible = "ti,ds90ub948";
+>> +
+>> +	regulators: "vcc",
+>> +	            "vcc_disp";
+>> +};
+> 
+
+-- 
+Michael Drake                 https://www.codethink.co.uk/
