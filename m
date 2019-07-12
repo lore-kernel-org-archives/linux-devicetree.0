@@ -1,37 +1,66 @@
+Return-Path: <SRS0=Hfcl=VJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga11.intel.com ([192.55.52.93]:22332 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726266AbfGLPZc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:25:32 -0400
+Reply-To: thor.thayer@linux.intel.com
+Subject: Re: [PATCH 2/3] arm64: dts: Stratix10: Include regs in SDRAM ECC node
+References: <1562711090-900-1-git-send-email-thor.thayer@linux.intel.com>
+ <1562711090-900-3-git-send-email-thor.thayer@linux.intel.com>
+From: Thor Thayer <thor.thayer@linux.intel.com>
+Message-ID: <31193266-7b1c-6b25-bba7-33a76f3a79de@linux.intel.com>
+Date: Fri, 12 Jul 2019 10:27:47 -0500
 MIME-Version: 1.0
-Date: Wed, 17 Jul 2019 09:01:05 -0600
-References: <20190712235245.202558-1-saravanak@google.com>
-	<20190712235245.202558-4-saravanak@google.com>
-In-Reply-To: <20190712235245.202558-4-saravanak@google.com>
-Message-ID: <CAL_JsqJMUgY_23+CKkBo1Oq==io_0FivebJVxhUXySXJm3SBuA@mail.gmail.com>
-Subject: Re: [PATCH v5 03/11] driver core: Add sync_state driver/bus callback
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Saravana Kannan <saravanak@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>
+In-Reply-To: <1562711090-900-3-git-send-email-thor.thayer@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org
+Cc: devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jul 12, 2019 at 5:52 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> This sync_state driver/bus callback is called once all the consumers
-> of a supplier have probed successfully.
->
-> This allows the supplier device's driver/bus to sync the supplier
-> device's state to the software state with the guarantee that all the
-> consumers are actively managing the resources provided by the supplier
-> device.
->
-> To maintain backwards compatibility and ease transition from existing
-> frameworks and resource cleanup schemes, late_initcall_sync is the
-> earliest when the sync_state callback might be called.
->
-> There is no upper bound on the time by which the sync_state callback
-> has to be called. This is because if a consumer device never probes,
-> the supplier has to maintain its resources in the state left by the
-> bootloader. For example, if the bootloader leaves the display
-> backlight at a fixed voltage and the backlight driver is never probed,
-> you don't want the backlight to ever be turned off after boot up.
-
-Doesn't putting the regulator in the simple-framebuffer node solve this problem in particular? 
-
-I think this suffers from the same problem we have today, but makes it per driver rather than global. We still have side effects of the h/w state being out of sync with the ref count. We really need to get rid of 
+On 7/9/19 5:24 PM, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> Include the regs directly in the SDRAM node instead of using
+> a syscon. The Stratix10 SDRAM ECC registers are partitioned
+> away from other Sys Manager registers so the syscon is no
+> longer needed for Stratix10.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> ---
+>   arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 9 ++-------
+>   1 file changed, 2 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> index 4b0f674df849..a1e9545de3d3 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> @@ -517,11 +517,6 @@
+>   			status = "disabled";
+>   		};
+>   
+> -		sdr: sdr@f8011100 {
+> -			compatible = "altr,sdr-ctl", "syscon";
+> -			reg = <0xf8011100 0xc0>;
+> -		};
+> -
+>   		eccmgr {
+>   			compatible = "altr,socfpga-s10-ecc-manager",
+>   				     "altr,socfpga-a10-ecc-manager";
+> @@ -533,9 +528,9 @@
+>   			#interrupt-cells = <2>;
+>   			ranges;
+>   
+> -			sdramedac {
+> +			sdramedac@0xf8011100 {
+>   				compatible = "altr,sdram-edac-s10";
+> -				altr,sdr-syscon = <&sdr>;
+> +				reg = <0xf8011100 0xc0>;
+>   				interrupts = <16 4>;
+>   			};
+>   
+> 
+Please disregard this patch, there is a simpler solution that I will 
+submit shortly.
