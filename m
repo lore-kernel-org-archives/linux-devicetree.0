@@ -1,83 +1,117 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [RFC PATCH V2 1/4] dt-bindings: mt8183: Added FD dt-bindings
-Date: Fri, 12 Jul 2019 15:16:54 +0800
-Message-ID: <1562915814.27825.2.camel@mtksdaap41>
-References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
- <1562661672-22439-2-git-send-email-Jerry-Ch.chen@mediatek.com>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [EXT] Re: [PATCH 00/10] Improvements and fixes for mxsfb DRM
+ driver
+Date: Fri, 12 Jul 2019 08:15:32 +0000
+Message-ID: <1562919331.3209.11.camel@nxp.com>
+References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
+         <20190711150403.GB23195@bogon.m.sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1562661672-22439-2-git-send-email-Jerry-Ch.chen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
-Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, po-yang.huang@mediatek.com, suleiman@chromium.org, sj.huang@mediatek.com, tfiga@chromium.org, jungo.lin@mediatek.com, shik@chromium.org, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, frederic.chen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190711150403.GB23195@bogon.m.sigxcpu.org>
+Content-Language: en-US
+Content-ID: <E9B2574B3BBE654EB1C0BABA73DF44AA@eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "agx@sigxcpu.org" <agx@sigxcpu.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "marex@denx.de" <marex@denx.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "airlied@linux.ie" <airlied@linux.ie>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Jerry:
-
-On Tue, 2019-07-09 at 16:41 +0800, Jerry-ch Chen wrote:
-> From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
-> 
-> This patch adds DT binding documentation for the Face Detection (FD)
-> unit of the Mediatek's mt8183 SoC.
-> 
-> Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
-> ---
->  .../bindings/media/mediatek,mt8183-fd.txt          | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt b/Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
-> new file mode 100644
-> index 0000000..0837223
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mediatek,mt8183-fd.txt
-> @@ -0,0 +1,33 @@
-> +* Mediatek Face Detection Unit (FD)
-> +
-> +Face Detection (FD) unit is a typical memory-to-memory HW device.
-> +It provides hardware accelerated face detection function, and it
-> +is able to detect different poses of faces. FD will writre result
-> +of detected face into memory as output.
-> +
-> +Required properties:
-> +- compatible: "mediatek,mt8183-fd"
-> +- mediatek,scp : the node of system control processor (SCP), see
-> +  Documentation/devicetree/bindings/remoteproc/mtk,scp.txt for details.
-> +- iommus: should point to the 3 entries:  M4U_PORT_CAM_FDVT_RP,
-> +  M4U_PORT_CAM_FDVT_WR and M4U_PORT_CAM_FDVT_RB.  (Please see
-> +  Documentation/devicetree/bindings/iommu/mediatek,iommu.txt for details.)
-> +- reg: Physical base address and length of the register space.
-> +- interrupts: interrupt number to the cpu.
-> +- clocks : must contain the FDVT clock, see
-> +  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
-> +- clock-names: must be "fd".
-> +
-> +Example:
-> +	fd: fd@1502b000 {
-> +		compatible = "mediatek,mt8183-fd";
-> +		mediatek,scp = <&scp>;
-> +		iommus = <&iommu M4U_PORT_CAM_FDVT_RP>,
-> +			 <&iommu M4U_PORT_CAM_FDVT_WR>,
-> +			 <&iommu M4U_PORT_CAM_FDVT_RB>;
-> +		reg = <0 0x1502b000 0 0x1000>;
-> +		interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&imgsys CLK_IMG_FDVT>;
-> +		clock-names = "fd";
-
-This device has no power-domain?
-
-Regards,
-CK
-
-> +	};
-> +
+SGkgR3VpZG8sDQoNCk9uIEpvLCAyMDE5LTA3LTExIGF0IDE3OjA0ICswMjAwLCBHdWlkbyBHw7xu
+dGhlciB3cm90ZToNCj4gSGkgUm9iZXJ0LA0KPiBPbiBXZWQsIEp1biAyNiwgMjAxOSBhdCAwNDoz
+MjowOFBNICswMzAwLCBSb2JlcnQgQ2hpcmFzIHdyb3RlOg0KPiA+IA0KPiA+IFRoaXMgcGF0Y2gt
+c2V0IGltcHJvdmVzIHRoZSB1c2Ugb2YgZUxDRElGIGJsb2NrIG9uIGlNWCA4IFNvQ3MgKGxpa2UN
+Cj4gPiA4TVEsIDhNTQ0KPiA+IGFuZCA4UVhQKS4gRm9sbG93aW5nLCBhcmUgdGhlIG5ldyBmZWF0
+dXJlcyBhZGRlZCBhbmQgZml4ZXMgZnJvbQ0KPiA+IHRoaXMNCj4gPiBwYXRjaC1zZXQ6DQo+ID4g
+DQo+ID4gMS4gQWRkIHN1cHBvcnQgZm9yIGRybV9icmlkZ2UNCj4gPiBPbiA4TVEgYW5kIDhNTSwg
+dGhlIExDRElGIGJsb2NrIGlzIG5vdCBkaXJlY3RseSBjb25uZWN0ZWQgdG8gYQ0KPiA+IHBhcmFs
+bGVsDQo+ID4gZGlzcGxheSBjb25uZWN0b3IsIHdoZXJlIGFuIExDRCBwYW5lbCBjYW4gYmUgYXR0
+YWNoZWQsIGJ1dCBpbnN0ZWFkDQo+ID4gaXQgaXMNCj4gPiBjb25uZWN0ZWQgdG8gRFNJIGNvbnRy
+b2xsZXIuIFNpbmNlIHRoaXMgRFNJIHN0YW5kcyBiZXR3ZWVuIHRoZQ0KPiA+IGRpc3BsYXkNCj4g
+PiBjb250cm9sbGVyIChlTENESUYpIGFuZCB0aGUgcGh5c2ljYWwgY29ubmVjdG9yLCB0aGUgRFNJ
+IGNhbiBiZQ0KPiA+IGltcGxlbWVudGVkDQo+ID4gYXMgYSBEUk0gYnJpZGdlLiBTbywgaW4gb3Jk
+ZXIgdG8gYmUgYWJsZSB0byBjb25uZWN0IHRoZSBteHNmYg0KPiA+IGRyaXZlciB0bw0KPiA+IHRo
+ZSBEU0kgZHJpdmVyLCB0aGUgc3VwcG9ydCBmb3IgYSBkcm1fYnJpZGdlIHdhcyBuZWVkZWQgaW4g
+bXhzZmINCj4gPiBEUk0NCj4gPiBkcml2ZXIgKHRoZSBhY3R1YWwgZHJpdmVyIGZvciB0aGUgZUxD
+RElGIGJsb2NrKS4NCj4gU28gSSB3YW50ZWQgdG8gdGVzdCB0aGlzIGJ1dCB3aXRoIGJvdGggbXkg
+c29tZXdoYXQgY2xlYW5lZCB1cCBud2wNCj4gZHJpdmVywrkgYW5kIHRoZSBud2wgZHJpdmVyIGZv
+cndhcmQgcG9ydGVkIGZyb20gdGhlIG54cCB2ZW5kb3IgdHJlZQ0KPiBJJ20NCj4gbG9va2luZyBh
+dCBhIGJsYWNrIHNjcmVlbiB3aXRoIGN1cnJlbnQgbWFpbmxpbmUgLSB3aGlsZSBteSBkY3NzDQo+
+IGZvcndhcmQNCj4gcG9ydCBnaXZlcyBtZSBuaWNlIG91dHB1dCBvbiBtaXBpIGRzaS4gRG8geW91
+IGhhdmUgYSB0cmVlIHRoYXQgdXNlcw0KPiBtaXBpDQo+IGRzaSBvbiBpbXg4bXEgd2hlcmUgSSBj
+b3VsZCBsb29rIGF0IHRvIGNoZWNrIGZvciBkaWZmZXJlbmNlcz8NClNvbWV3aGVyZSBvbiB0aGUg
+cGl4ZWwgcGF0aCAoYmV0d2VlbiB0aGUgZGlzcGxheSBjb250cm9sbGVyIGFuZCB0aGUNCkRTSSkg
+dGhlcmUgaXMgYSBibG9jayB0aGF0IGludmVydHMgdGhlIHBvbGFyaXR5LiBJIGNhbid0IHJlbWVt
+YmVyDQpleGFjdGx5IHdoYXQgd2FzIHRoZSByb2xlIG9mIHRoaXMgYmxvY2ssIGJ1dCB0aGUgcG9s
+YXJpdHkgaXMgaW52ZXJ0ZWQNCndoZW4gZUxDRElGIGlzIHVzZWQgaW4gY29tYmluYXRpb24gd2l0
+aCB0aGUgRFNJLg0KSWYgeW91IHRha2UgYSBsb29rIGF0IG15IERTSSBkcml2ZXIgZnJvbSBOWFAg
+cmVsZWFzZXMgKEkgZ3Vlc3MgeW91IGhhdmUNCnRoZW0pLCB5b3Ugd2lsbCBzZWUgdGhlcmUgaXMg
+YSBoYWNrIGluIG1vZGVfZml4dXA6DQoNCnVuc2lnbmVkIGludCAqZmxhZ3MgPSAmbW9kZS0+Zmxh
+Z3M7DQppZiAoZHNpLT5zeW5jX3BvbCB7DQoJKmZsYWdzIHw9IERSTV9NT0RFX0ZMQUdfUEhTWU5D
+Ow0KCSpmbGFncyB8PSBEUk1fTU9ERV9GTEFHX1BWU1lOQzsNCgkqZmxhZ3MgJj0gfkRSTV9NT0RF
+X0ZMQUdfTkhTWU5DOw0KCSpmbGFncyAmPSB+RFJNX01PREVfRkxBR19OVlNZTkM7DQp9IGVsc2Ug
+ew0KCSpmbGFncyAmPSB+RFJNX01PREVfRkxBR19QSFNZTkM7DQoJKmZsYWdzICY9IH5EUk1fTU9E
+RV9GTEFHX1BWU1lOQzsNCgkqZmxhZ3MgfD0gRFJNX01PREVfRkxBR19OSFNZTkM7DQoJKmZsYWdz
+IHw9IERSTV9NT0RFX0ZMQUdfTlZTWU5DOw0KfQ0KDQpJIGtub3cgaXQncyBub3QgY2xlYW4sIGJ1
+dCBpdCB3b3JrcyBmb3Igbm93LiBZb3UgY2FuIHRyeSB0aGlzIGluIHlvdXINCmRyaXZlciBhbmQg
+c2VlIGlmIGl0IGhlbHBzLg0KVGhlc2UgZGF5cyBJIHdpbGwgYWxzbyB0YWtlIHlvdXIgbndsLWRz
+aSBkcml2ZXIgYW5kIHRlc3QgaXQsIGFuZCBhbHNvDQphZGQgc3VwcG9ydCBmb3IgYnJpZGdlIGFu
+ZCBlTENESUYgdG8gc2VlIGlmIEkgY2FuIG1ha2UgaXQgd29yay4NCg0KQmVzdCByZWdhcmRzLA0K
+Um9iZXJ0DQo+IA0KPiBDaGVlcnMsDQo+IMKgLS0gR3VpZG8NCj4gDQo+ID4gDQo+ID4gDQo+ID4g
+Mi4gQWRkIHN1cHBvcnQgZm9yIGFkZGl0aW9uYWwgcGl4ZWwgZm9ybWF0cw0KPiA+IFNvbWUgb2Yg
+dGhlIHBpeGVsIGZvcm1hdHMgbmVlZGVkIGJ5IEFuZHJvaWQgd2VyZSBub3QgaW1wbGVtZW50ZWQg
+aW4NCj4gPiB0aGlzDQo+ID4gZHJpdmVyLCBidXQgdGhleSB3ZXJlIGFjdHVhbGx5IHN1cHBvcnRl
+ZC4gU28sIGFkZCBzdXBwb3J0IGZvciB0aGVtLg0KPiA+IA0KPiA+IDMuIEFkZCBzdXBwb3J0IGZv
+ciBob3Jpem9udGFsIHN0cmlkZQ0KPiA+IEhhdmluZyBzdXBwb3J0IGZvciBob3Jpem9udGFsIHN0
+cmlkZSBhbGxvd3MgdGhlIHVzZSBvZiBlTENESUYgd2l0aA0KPiA+IGEgR1BVDQo+ID4gKGZvciBl
+eGFtcGxlKSB0aGF0IGNhbiBvbmx5IG91dHB1dCByZXNvbHV0aW9uIHNpemVzIG11bHRpcGxlIG9m
+IGENCj4gPiBwb3dlciBvZg0KPiA+IDguIEZvciBleGFtcGxlLCAxMDgwIGlzIG5vdCBhIHBvd2Vy
+IG9mIDE2LCBzbyBpbiBvcmRlciB0byBzdXBwb3J0DQo+ID4gMTkyMHgxMDgwDQo+ID4gb3V0cHV0
+IGZyb20gR1BVcyB0aGF0IGNhbiBwcm9kdWNlIGxpbmVhciBidWZmZXJzIG9ubHkgaW4gc2l6ZXMN
+Cj4gPiBtdWx0aXBsZSB0byAxNiwNCj4gPiB0aGlzIGZlYXR1cmUgaXMgbmVlZGVkLg0KPiA+IA0K
+PiA+IDMuIEZldyBtaW5vciBmZWF0dXJlcyBhbmQgYnVnLWZpeGluZw0KPiA+IFRoZSBhZGRpdGlv
+biBvZiBtYXgtcmVzIERUIHByb3BlcnR5IHdhcyBhY3R1YWxseSBuZWVkZWQgaW4gb3JkZXIgdG8N
+Cj4gPiBsaW1pdA0KPiA+IHRoZSBiYW5kd2lkdGggdXNhZ2Ugb2YgdGhlIGVMQ0RJRiBibG9jay4g
+VGhpcyBpcyBuZWVkIG9uIHN5c3RlbXMNCj4gPiB3aGVyZQ0KPiA+IG11bHRpcGxlIGRpc3BsYXkg
+Y29udHJvbGxlcnMgYXJlIHByZXNlbmQgYW5kIHRoZSBtZW1vcnkgYmFuZHdpZHRoDQo+ID4gaXMg
+bm90DQo+ID4gZW5vdWdoIHRvIGhhbmRsZSBhbGwgb2YgdGhlbSBhdCBtYXhpbXVtIGNhcGFjaXR5
+IChsaWtlIGl0IGlzIHRoZQ0KPiA+IGNhc2Ugb24NCj4gPiA4TVEsIHdoZXJlIHRoZXJlIGFyZSB0
+d28gZGlzcGxheSBjb250cm9sbGVyczogRENTUyBhbmQgZUxDRElGKS4NCj4gPiBUaGUgcmVzdCBv
+ZiB0aGUgcGF0Y2hlcyBhcmUgYnVnLWZpeGVzLg0KPiA+IA0KPiA+IE1pcmVsYSBSYWJ1bGVhICgx
+KToNCj4gPiDCoCBkcm0vbXhzZmI6IFNpZ25hbCBtb2RlIGNoYW5nZWQgd2hlbiBicHAgY2hhbmdl
+ZA0KPiA+IA0KPiA+IFJvYmVydCBDaGlyYXMgKDkpOg0KPiA+IMKgIGRybS9teHNmYjogVXBkYXRl
+IG14c2ZiIHRvIHN1cHBvcnQgYSBicmlkZ2UNCj4gPiDCoCBkcm0vbXhzZmI6IFVwZGF0ZSBteHNm
+YiB3aXRoIGFkZGl0aW9uYWwgcGl4ZWwgZm9ybWF0cw0KPiA+IMKgIGRybS9teHNmYjogRml4IHRo
+ZSB2YmxhbmsgZXZlbnRzDQo+ID4gwqAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IEFkZCBtYXgtcmVz
+IHByb3BlcnR5IGZvciBteHNmYg0KPiA+IMKgIGRybS9teHNmYjogQWRkIG1heC1yZXMgcHJvcGVy
+dHkgZm9yIE1YU0ZCDQo+ID4gwqAgZHJtL214c2ZiOiBVcGRhdGUgbXhzZmIgdG8gc3VwcG9ydCBM
+Q0QgcmVzZXQNCj4gPiDCoCBkcm0vbXhzZmI6IEltcHJvdmUgdGhlIGF4aSBjbG9jayB1c2FnZQ0K
+PiA+IMKgIGRybS9teHNmYjogQ2xlYXIgT1VUU1RBTkRJTkdfUkVRUyBiaXRzDQo+ID4gwqAgZHJt
+L214c2ZiOiBBZGQgc3VwcG9ydCBmb3IgaG9yaXpvbnRhbCBzdHJpZGUNCj4gPiANCj4gPiDCoC4u
+Li9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXhzZmIudHh0wqDCoMKgwqDCoMKgwqDCoMKg
+wqB8wqDCoMKgNiArDQo+ID4gwqBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfY3J0Yy5jwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHwgMjkwDQo+ID4gKysrKysrKysrKysrKysr
+KysrLS0tDQo+ID4gwqBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfZHJ2LmPCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8IDE4OQ0KPiA+ICsrKysrKysrKysrLS0tDQo+ID4g
+wqBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfZHJ2LmjCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqB8wqDCoDEwICstDQo+ID4gwqBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhz
+ZmJfb3V0LmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8wqDCoDI2ICstDQo+
+ID4gwqBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfcmVncy5owqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoHwgMTI4ICsrKysrKy0tLQ0KPiA+IMKgNiBmaWxlcyBjaGFuZ2VkLCA1
+MzEgaW5zZXJ0aW9ucygrKSwgMTE4IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IC0tDQo+ID4gMi43
+LjQNCj4gPiANCj4gPiANCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXw0KPiA+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+ID4gbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+ID4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlu
+a3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZsaQ0KPiA+IHN0cy5p
+bmZyYWRlYWQub3JnJTJGbWFpbG1hbiUyRmxpc3RpbmZvJTJGbGludXgtYXJtLQ0KPiA+IGtlcm5l
+bCZhbXA7ZGF0YT0wMiU3QzAxJTdDcm9iZXJ0LmNoaXJhcyU0MG54cC5jb20lN0M3ZGMwMWEwYmRm
+OTI0NWINCj4gPiA4ZDg3MDA4ZDcwNjExMDU1YiU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVj
+MzAxNjM1JTdDMCU3QzAlN0M2MzY5DQo+ID4gODQ1NDI0ODE5MDM0MjUmYW1wO3NkYXRhPXlTSW5P
+NkgxQjRrSnRKVXdSczJ1VElVdmUwU1NOWkYwcyUyQnYlMkZEVQ0KPiA+IDBWeTFFJTNEJmFtcDty
+ZXNlcnZlZD0wDQo+ID4gDQo+IMK5IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24u
+b3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmwNCj4gaXN0cy5mcmVlZGVza3RvcC5vcmcl
+MkZhcmNoaXZlcyUyRmRyaS1kZXZlbCUyRjIwMTktDQo+IE1hcmNoJTJGMjA5Njg1Lmh0bWwmYW1w
+O2RhdGE9MDIlN0MwMSU3Q3JvYmVydC5jaGlyYXMlNDBueHAuY29tJTdDN2RjMA0KPiAxYTBiZGY5
+MjQ1YjhkODcwMDhkNzA2MTEwNTViJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUl
+N0MwJTcNCj4gQzAlN0M2MzY5ODQ1NDI0ODE5MTM0MTYmYW1wO3NkYXRhPXVjWURRTGlLN1JhbFJG
+JTJCNU1lQjMlMkY3NmNGTEdXYTdDDQo+IG14Q0ZMRWc0V3ZxYyUzRCZhbXA7cmVzZXJ2ZWQ9MA==
