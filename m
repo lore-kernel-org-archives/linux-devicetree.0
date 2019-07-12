@@ -1,108 +1,960 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv8 5/5] coresight: cpu-debug: Add support for Qualcomm Kryo
-Date: Fri, 12 Jul 2019 19:46:27 +0530
-Message-ID: <e2c4cc7c6ccaa5695f25af20c8e487ac53b39955.1562940244.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
+From: Schrempf Frieder <frieder.schrempf@kontron.de>
+Subject: Re: [PATCH] ARM: dts: imx6ul-kontron-ul2: Add Exceet/Kontron iMX6-UL2
+ SoM
+Date: Fri, 12 Jul 2019 15:21:43 +0000
+Message-ID: <5cbd8bb2-6ecb-7e55-1580-e580e2c340dd@kontron.de>
+References: <20190712141242.4915-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mike Leach <mike.leach@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Marc Gonzalez <marc.w.gonzalez@free.fr>, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190712141242.4915-1-krzk@kernel.org>
+Content-Language: en-US
+Content-ID: <9EABA688A261044E86714FBBCC49DE08@snt-world.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for coresight CPU debug module on Qualcomm
-Kryo CPUs. This patch adds the UCI entries for Kryo CPUs
-found on MSM8996 which shares the same PIDs as ETMs.
+Hi Krzysztof,
 
-Without this, below error is observed on MSM8996:
+On 12.07.19 16:12, Krzysztof Kozlowski wrote:
+> Add support for iMX6-UL2 modules from Kontron Electronics GmbH (before
+> acquisition: Exceet Electronics) and evalkit boards based on it:
+> 
+> 1. i.MX6 UL System-on-Module, a 25x25 mm solderable module (LGA pads and
+>     pin castellations) with 256 MB RAM, 1 MB NOR-Flash, 256 MB NAND and
+>     other interfaces,
+> 1. UL2 evalkit, w/wo eMMC, without display,
+> 2. UL2 evalkit with 4.3" display,
+> 3. UL2 evalkit with 5.0" display.
+> 
+> This includes device nodes for unsupported displays (Admatec
+> T043C004800272T2A and T070P133T0S301).
+> 
+> The work is based on Exceet source code (GPLv2) with numerous changes:
+> 1. Reorganize files,
+> 2. Rename Exceet -> Kontron,
+> 3. Fix coding style errors,
+> 4. Fix DTC warnings,
+> 5. Extend compatibles so eval boards inherit the SoM compatible,
+> 6. Use defines instead of GPIO flag values,
+> 7. Adjust operating points of CPU0,
+> 8. Sort nodes alphabetically.
+> 
+> In downstream BSP the Exceet name still appears in multiple places
+> therefore I left it in the model names.
 
-[    5.429867] OF: graph: no port node found in /soc/debug@3810000
-[    5.429938] coresight-etm4x: probe of 3810000.debug failed with error -22
-[    5.435415] coresight-cpu-debug 3810000.debug: Coresight debug-CPU0 initialized
-[    5.446474] OF: graph: no port node found in /soc/debug@3910000
-[    5.448927] coresight-etm4x: probe of 3910000.debug failed with error -22
-[    5.454681] coresight-cpu-debug 3910000.debug: Coresight debug-CPU1 initialized
-[    5.487765] OF: graph: no port node found in /soc/debug@3a10000
-[    5.488007] coresight-etm4x: probe of 3a10000.debug failed with error -22
-[    5.493024] coresight-cpu-debug 3a10000.debug: Coresight debug-CPU2 initialized
-[    5.501802] OF: graph: no port node found in /soc/debug@3b10000
-[    5.512901] coresight-etm4x: probe of 3b10000.debug failed with error -22
-[    5.513192] coresight-cpu-debug 3b10000.debug: Coresight debug-CPU3 initialized
+First, thanks for your work. I planned to upstream these boards myself 
+after the FSL QSPI spi-mem driver was merged in 5.1, but didn't have 
+time to finalize and send the patches.
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- .../hwtracing/coresight/coresight-cpu-debug.c | 33 +++++++++----------
- drivers/hwtracing/coresight/coresight-priv.h  | 10 +++---
- 2 files changed, 21 insertions(+), 22 deletions(-)
+Meanwhile we came up with a new naming scheme for our boards, that 
+hasn't been implemented yet. But I would like to take this chance to 
+implement the new scheme.
 
-diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-index 2463aa7ab4f6..96544b348c27 100644
---- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-+++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-@@ -646,24 +646,23 @@ static int debug_remove(struct amba_device *adev)
- 	return 0;
- }
- 
-+static const struct amba_cs_uci_id uci_id_debug[] = {
-+	{
-+		/*  CPU Debug UCI data */
-+		.devarch	= 0x47706a15,
-+		.devarch_mask	= 0xfff0ffff,
-+		.devtype	= 0x00000015,
-+	}
-+};
-+
- static const struct amba_id debug_ids[] = {
--	{       /* Debug for Cortex-A53 */
--		.id	= 0x000bbd03,
--		.mask	= 0x000fffff,
--	},
--	{       /* Debug for Cortex-A57 */
--		.id	= 0x000bbd07,
--		.mask	= 0x000fffff,
--	},
--	{       /* Debug for Cortex-A72 */
--		.id	= 0x000bbd08,
--		.mask	= 0x000fffff,
--	},
--	{       /* Debug for Cortex-A73 */
--		.id	= 0x000bbd09,
--		.mask	= 0x000fffff,
--	},
--	{ 0, 0 },
-+	CS_AMBA_ID(0x000bbd03),				/* Cortex-A53 */
-+	CS_AMBA_ID(0x000bbd07),				/* Cortex-A57 */
-+	CS_AMBA_ID(0x000bbd08),				/* Cortex-A72 */
-+	CS_AMBA_ID(0x000bbd09),				/* Cortex-A73 */
-+	CS_AMBA_UCI_ID(0x000f0205, uci_id_debug),	/* Qualcomm Kryo */
-+	CS_AMBA_UCI_ID(0x000f0211, uci_id_debug),	/* Qualcomm Kryo */
-+	{},
- };
- 
- static struct amba_driver debug_driver = {
-diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-index 7d401790dd7e..41ae5863104d 100644
---- a/drivers/hwtracing/coresight/coresight-priv.h
-+++ b/drivers/hwtracing/coresight/coresight-priv.h
-@@ -185,11 +185,11 @@ static inline int etm_writel_cp14(u32 off, u32 val) { return 0; }
- 	}
- 
- /* coresight AMBA ID, full UCI structure: id table entry. */
--#define CS_AMBA_UCI_ID(pid, uci_ptr)	\
--	{				\
--		.id	= pid,		\
--		.mask	= 0x000fffff,	\
--		.data	= uci_ptr	\
-+#define CS_AMBA_UCI_ID(pid, uci_ptr)		\
-+	{					\
-+		.id	= pid,			\
-+		.mask	= 0x000fffff,		\
-+		.data	= (void *)uci_ptr	\
- 	}
- 
- /* extract the data value from a UCI structure given amba_id pointer. */
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Also there are some more flavors of the SoM (with i.MX6ULL instead of 
+i.MX6UL, with 512MiB instead of 256MiB flash/RAM), that I would like to 
+add and for which common parts of the SoM dtsi would need to be factored 
+out to a separate file.
+
+I would prefer to at least apply the naming changes before merging. The 
+additional board flavors could be added before merging or I could send 
+them as follow-up patches. What do you think?
+
+Thanks,
+Frieder
+
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>   arch/arm/boot/dts/Makefile                    |   3 +
+>   arch/arm/boot/dts/imx6ul-kontron-ul2-43.dts   | 123 +++++
+>   arch/arm/boot/dts/imx6ul-kontron-ul2-50.dts   | 123 +++++
+>   arch/arm/boot/dts/imx6ul-kontron-ul2-som.dtsi | 152 ++++++
+>   arch/arm/boot/dts/imx6ul-kontron-ul2.dts      | 435 ++++++++++++++++++
+>   5 files changed, 836 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/imx6ul-kontron-ul2-43.dts
+>   create mode 100644 arch/arm/boot/dts/imx6ul-kontron-ul2-50.dts
+>   create mode 100644 arch/arm/boot/dts/imx6ul-kontron-ul2-som.dtsi
+>   create mode 100644 arch/arm/boot/dts/imx6ul-kontron-ul2.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 9159fa2cea90..3431bb44fb5d 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -569,6 +569,9 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
+>   	imx6ul-geam.dtb \
+>   	imx6ul-isiot-emmc.dtb \
+>   	imx6ul-isiot-nand.dtb \
+> +	imx6ul-kontron-ul2.dtb \
+> +	imx6ul-kontron-ul2-43.dtb \
+> +	imx6ul-kontron-ul2-50.dtb \
+>   	imx6ul-liteboard.dtb \
+>   	imx6ul-opos6uldev.dtb \
+>   	imx6ul-pico-hobbit.dtb \
+> diff --git a/arch/arm/boot/dts/imx6ul-kontron-ul2-43.dts b/arch/arm/boot/dts/imx6ul-kontron-ul2-43.dts
+> new file mode 100644
+> index 000000000000..a2b68ba14765
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ul-kontron-ul2-43.dts
+> @@ -0,0 +1,123 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2017 exceet electronics GmbH
+> + * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "imx6ul-kontron-ul2.dts"
+> +
+> +/ {
+> +	model = "Exceet/Kontron iMX6 UL-2 S 43";
+> +	compatible = "kontron,imx6ul-ul2-s-43", "kontron,imx6ul-ul2-s",
+> +		     "kontron,imx6ul-ul2-som", "fsl,imx6ul";
+> +
+> +	backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm7 0 5000000>;
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <6>;
+> +		status = "okay";
+> +	};
+> +
+> +	panel {
+> +		compatible = "admatec,t043c004800272t2a";
+> +		backlight = <&backlight>;
+> +
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&display_out>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&i2c4 {
+> +	gt911@5d {
+> +		compatible = "goodix,gt928";
+> +		reg = <0x5d>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_cap_touch>;
+> +		interrupt-parent = <&gpio5>;
+> +		interrupts = <6 8>;
+> +		reset-gpios = <&gpio5 8 GPIO_ACTIVE_HIGH>;
+> +		irq-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_lcdif_dat: lcdifdatgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00	0x79
+> +			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01	0x79
+> +			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02	0x79
+> +			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03	0x79
+> +			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04	0x79
+> +			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05	0x79
+> +			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06	0x79
+> +			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07	0x79
+> +			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08	0x79
+> +			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09	0x79
+> +			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10	0x79
+> +			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11	0x79
+> +			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12	0x79
+> +			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13	0x79
+> +			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14	0x79
+> +			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15	0x79
+> +			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16	0x79
+> +			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17	0x79
+> +			MX6UL_PAD_LCD_DATA18__LCDIF_DATA18	0x79
+> +			MX6UL_PAD_LCD_DATA19__LCDIF_DATA19	0x79
+> +			MX6UL_PAD_LCD_DATA20__LCDIF_DATA20	0x79
+> +			MX6UL_PAD_LCD_DATA21__LCDIF_DATA21	0x79
+> +			MX6UL_PAD_LCD_DATA22__LCDIF_DATA22	0x79
+> +			MX6UL_PAD_LCD_DATA23__LCDIF_DATA23	0x79
+> +		>;
+> +	};
+> +
+> +	pinctrl_lcdif_ctrl: lcdifctrlgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_LCD_CLK__LCDIF_CLK		0x79
+> +			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE	0x79
+> +			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC	0x79
+> +			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC	0x79
+> +			MX6UL_PAD_LCD_RESET__LCDIF_RESET	0x79
+> +		>;
+> +	};
+> +
+> +	pinctrl_cap_touch: captouchgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x1b0b0 /* Touch Interrupt */
+> +			MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0 /* Touch Reset */
+> +			MX6UL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x1b0b0 /* Touch Wake */
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm7: pwm7grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_VSYNC__PWM7_OUT		0x110b0
+> +		>;
+> +	};
+> +};
+> +
+> +&lcdif {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_lcdif_dat
+> +		     &pinctrl_lcdif_ctrl>;
+> +	status = "okay";
+> +
+> +	port {
+> +		display_out: endpoint {
+> +			remote-endpoint = <&panel_in>;
+> +		};
+> +	};
+> +};
+> +
+> +&pwm7 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm7>;
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/imx6ul-kontron-ul2-50.dts b/arch/arm/boot/dts/imx6ul-kontron-ul2-50.dts
+> new file mode 100644
+> index 000000000000..61017020e02f
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ul-kontron-ul2-50.dts
+> @@ -0,0 +1,123 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2017 exceet electronics GmbH
+> + * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "imx6ul-kontron-ul2.dts"
+> +
+> +/ {
+> +	model = "Exceet/Kontron iMX6 UL-2 S 50";
+> +	compatible = "kontron,imx6ul-ul2-s-50", "kontron,imx6ul-ul2-s",
+> +		     "kontron,imx6ul-ul2-som", "fsl,imx6ul";
+> +
+> +	backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm7 0 5000000>;
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <6>;
+> +		status = "okay";
+> +	};
+> +
+> +	panel {
+> +		compatible = "admatec,t070p133t0s301";
+> +		backlight = <&backlight>;
+> +
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&display_out>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&i2c4 {
+> +	gt911@5d {
+> +		compatible = "goodix,gt928";
+> +		reg = <0x5d>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_cap_touch>;
+> +		interrupt-parent = <&gpio5>;
+> +		interrupts = <6 8>;
+> +		reset-gpios = <&gpio5 8 GPIO_ACTIVE_HIGH>;
+> +		irq-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_lcdif_dat: lcdifdatgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00	0x79
+> +			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01	0x79
+> +			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02	0x79
+> +			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03	0x79
+> +			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04	0x79
+> +			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05	0x79
+> +			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06	0x79
+> +			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07	0x79
+> +			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08	0x79
+> +			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09	0x79
+> +			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10	0x79
+> +			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11	0x79
+> +			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12	0x79
+> +			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13	0x79
+> +			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14	0x79
+> +			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15	0x79
+> +			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16	0x79
+> +			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17	0x79
+> +			MX6UL_PAD_LCD_DATA18__LCDIF_DATA18	0x79
+> +			MX6UL_PAD_LCD_DATA19__LCDIF_DATA19	0x79
+> +			MX6UL_PAD_LCD_DATA20__LCDIF_DATA20	0x79
+> +			MX6UL_PAD_LCD_DATA21__LCDIF_DATA21	0x79
+> +			MX6UL_PAD_LCD_DATA22__LCDIF_DATA22	0x79
+> +			MX6UL_PAD_LCD_DATA23__LCDIF_DATA23	0x79
+> +		>;
+> +	};
+> +
+> +	pinctrl_lcdif_ctrl: lcdifctrlgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_LCD_CLK__LCDIF_CLK		0x79
+> +			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE	0x79
+> +			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC	0x79
+> +			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC	0x79
+> +			MX6UL_PAD_LCD_RESET__LCDIF_RESET	0x79
+> +		>;
+> +	};
+> +
+> +	pinctrl_cap_touch: captouchgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x1b0b0 /* Touch Interrupt */
+> +			MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0 /* Touch Reset */
+> +			MX6UL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x1b0b0 /* Touch Wake */
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm7: pwm7grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_VSYNC__PWM7_OUT		0x110b0
+> +		>;
+> +	};
+> +};
+> +
+> +&lcdif {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_lcdif_dat
+> +		     &pinctrl_lcdif_ctrl>;
+> +	status = "okay";
+> +
+> +	port {
+> +		display_out: endpoint {
+> +			remote-endpoint = <&panel_in>;
+> +		};
+> +	};
+> +};
+> +
+> +&pwm7 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm7>;
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/imx6ul-kontron-ul2-som.dtsi b/arch/arm/boot/dts/imx6ul-kontron-ul2-som.dtsi
+> new file mode 100644
+> index 000000000000..26b6615cf839
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ul-kontron-ul2-som.dtsi
+> @@ -0,0 +1,152 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2017 exceet electronics GmbH
+> + * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "imx6ul.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	model = "Exceet/Kontron iMX6 UL-2 SOM";
+> +	compatible = "kontron,imx6ul-ul2-som", "fsl,imx6ul";
+> +
+> +	memory@80000000 {
+> +		reg = <0x80000000 0x10000000>;
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	clock-frequency = <528000000>;
+> +	operating-points = <
+> +		/* kHz	uV */
+> +		528000	1175000
+> +		396000	1025000
+> +		198000	950000
+> +	>;
+> +	fsl,soc-operating-points = <
+> +		/* KHz	uV */
+> +		528000	1175000
+> +		396000	1175000
+> +		198000	1175000
+> +	>;
+> +};
+> +
+> +&ecspi2 {
+> +	cs-gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi2>;
+> +	status = "okay";
+> +
+> +	flash: mx25v80@0 {
+> +		compatible = "macronix,mx25v8035f", "jedec,spi-nor";
+> +		spi-max-frequency = <50000000>;
+> +		reg = <0>;
+> +	};
+> +};
+> +
+> +&fec1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet1 &pinctrl_enet1_mdio>;
+> +	phy-mode = "rmii";
+> +	phy-handle = <&ethphy1>;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy1: ethernet-phy@1 {
+> +			reg = <1>;
+> +			micrel,led-mode = <0>;
+> +			clocks = <&clks IMX6UL_CLK_ENET_REF>;
+> +			clock-names = "rmii-ref";
+> +		};
+> +	};
+> +};
+> +
+> +&fec2 {
+> +	phy-mode = "rmii";
+> +	status = "disabled";
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_reset_out>;
+> +
+> +	pinctrl_reset_out: rstoutgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SNVS_TAMPER9__GPIO5_IO09      0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_ecspi2: ecspi2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_DATA03__ECSPI2_MISO      0x100b1
+> +			MX6UL_PAD_CSI_DATA02__ECSPI2_MOSI      0x100b1
+> +			MX6UL_PAD_CSI_DATA00__ECSPI2_SCLK      0x100b1
+> +			MX6UL_PAD_CSI_DATA01__GPIO4_IO22       0x100b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet1: enet1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN      0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER      0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00 0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01 0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN      0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00 0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01 0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1  0x4001b009
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet1_mdio: enet1mdiogrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO07__ENET1_MDC         0x1b0b0
+> +			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO        0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_qspi: qspigrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_WP_B__QSPI_A_SCLK        0x70a1
+> +			MX6UL_PAD_NAND_READY_B__QSPI_A_DATA00   0x70a1
+> +			MX6UL_PAD_NAND_CE0_B__QSPI_A_DATA01     0x70a1
+> +			MX6UL_PAD_NAND_CE1_B__QSPI_A_DATA02     0x70a1
+> +			MX6UL_PAD_NAND_CLE__QSPI_A_DATA03       0x70a1
+> +			MX6UL_PAD_NAND_DQS__QSPI_A_SS0_B        0x70a1
+> +		>;
+> +	};
+> +};
+> +
+> +&qspi {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_qspi>;
+> +	status = "okay";
+> +
+> +	flash0: w25m02gv@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "spi-nand";
+> +		spi-max-frequency = <108000000>;
+> +		spi-tx-bus-width = <4>;
+> +		spi-rx-bus-width = <4>;
+> +		reg = <0>;
+> +
+> +		partition@0 {
+> +			label = "ubi1";
+> +			reg = <0x00000000 0x08000000>;
+> +		};
+> +
+> +		partition@8000000 {
+> +			label = "ubi2";
+> +			reg = <0x08000000 0x08000000>;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/imx6ul-kontron-ul2.dts b/arch/arm/boot/dts/imx6ul-kontron-ul2.dts
+> new file mode 100644
+> index 000000000000..6d394a97712b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ul-kontron-ul2.dts
+> @@ -0,0 +1,435 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2017 exceet electronics GmbH
+> + * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "imx6ul-kontron-ul2-som.dtsi"
+> +
+> +/ {
+> +	model = "Exceet/Kontron iMX6 UL-2 S";
+> +	compatible = "kontron,imx6ul-ul2-s", "kontron,imx6ul-ul2-som",
+> +		     "fsl,imx6ul";
+> +
+> +	pwm-beeper {
+> +		compatible = "pwm-beeper";
+> +		pwms = <&pwm8 0 5000>;
+> +	};
+> +
+> +	gpio-leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpio_leds>;
+> +
+> +		led1 {
+> +			label = "debug-led1";
+> +			gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
+> +			default-state = "off";
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +
+> +		led2 {
+> +			label = "debug-led2";
+> +			gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
+> +			default-state = "off";
+> +		};
+> +
+> +		led3 {
+> +			label = "debug-led3";
+> +			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
+> +			default-state = "off";
+> +		};
+> +	};
+> +
+> +	regulators {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		reg_3v3: regulator@0 {
+> +			compatible = "regulator-fixed";
+> +			reg = <0>;
+> +			regulator-name = "3v3";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +		};
+> +
+> +		reg_vref_adc: regulator@1 {
+> +			compatible = "regulator-fixed";
+> +			reg = <1>;
+> +			regulator-name = "vref-adc";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +		};
+> +
+> +		reg_usb_otg1_vbus: regulator@2 {
+> +			compatible = "regulator-fixed";
+> +			reg = <2>;
+> +			regulator-name = "usb_otg1_vbus";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			gpio = <&gpio1 4 GPIO_ACTIVE_HIGH>;
+> +			enable-active-high;
+> +		};
+> +	};
+> +
+> +};
+> +
+> +&adc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_adc1>;
+> +	num-channels = <3>;
+> +	vref-supply = <&reg_vref_adc>;
+> +	status = "okay";
+> +};
+> +
+> +&can2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_flexcan2>;
+> +	status = "okay";
+> +};
+> +
+> +&ecspi1 {
+> +	fsl,spi-num-chipselects = <1>;
+> +	cs-gpios = <&gpio4 26 GPIO_ACTIVE_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi1>;
+> +	status = "okay";
+> +
+> +	fram@0 {
+> +		compatible = "atmel,at25";
+> +		reg = <0>;
+> +		spi-max-frequency = <20000000>;
+> +		spi-cpha;
+> +		spi-cpol;
+> +		pagesize = <1>;
+> +		size = <8192>;
+> +		address-width = <16>;
+> +	};
+> +};
+> +
+> +&fec1 {
+> +	pinctrl-0 = <&pinctrl_enet1>;
+> +	/delete-node/ mdio;
+> +};
+> +
+> +&fec2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet2 &pinctrl_enet2_mdio>;
+> +	phy-mode = "rmii";
+> +	phy-handle = <&ethphy2>;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy1: ethernet-phy@1 {
+> +			reg = <1>;
+> +			micrel,led-mode = <0>;
+> +			clocks = <&clks IMX6UL_CLK_ENET_REF>;
+> +			clock-names = "rmii-ref";
+> +		};
+> +
+> +		ethphy2: ethernet-phy@2 {
+> +			reg = <2>;
+> +			micrel,led-mode = <0>;
+> +			clocks = <&clks IMX6UL_CLK_ENET2_REF>;
+> +			clock-names = "rmii-ref";
+> +		};
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c4 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c4>;
+> +	status = "okay";
+> +
+> +	rtc@32 {
+> +		compatible = "epson,rx8900";
+> +		reg = <0x32>;
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl-0 = <&pinctrl_reset_out &pinctrl_gpio>;
+> +
+> +	pinctrl_wdog: wdoggrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY	0x30b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpio: gpio {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x1b0b0 /* DOUT1 */
+> +			MX6UL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0 /* DIN1 */
+> +			MX6UL_PAD_SNVS_TAMPER1__GPIO5_IO01	0x1b0b0 /* DOUT2 */
+> +			MX6UL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0b0 /* DIN2 */
+> +		>;
+> +	};
+> +
+> +	pinctrl_usbotg1: usbotg1 {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpio_leds: gpio_leds {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART5_TX_DATA__GPIO1_IO30	0x1b0b0	/* LED H14 */
+> +			MX6UL_PAD_SNVS_TAMPER3__GPIO5_IO03	0x1b0b0	/* LED H15 */
+> +			MX6UL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x1b0b0	/* LED H16 */
+> +		>;
+> +	};
+> +
+> +	/* FRAM */
+> +	pinctrl_ecspi1: ecspi1grp-1 {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_DATA07__ECSPI1_MISO	0x100b1
+> +			MX6UL_PAD_CSI_DATA06__ECSPI1_MOSI	0x100b1
+> +			MX6UL_PAD_CSI_DATA04__ECSPI1_SCLK	0x100b1
+> +			MX6UL_PAD_CSI_DATA05__GPIO4_IO26	0x100b1	/* ECSPI1-CS1 */
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet2: enet2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER	0x1b0b0
+> +			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b009
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet2_mdio: enet2mdiogrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO07__ENET2_MDC         0x1b0b0
+> +			MX6UL_PAD_GPIO1_IO06__ENET2_MDIO        0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_flexcan2: flexcan2grp{
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART2_RTS_B__FLEXCAN2_RX	0x1b020
+> +			MX6UL_PAD_UART2_CTS_B__FLEXCAN2_TX	0x1b020
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm8: pwm8grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_HSYNC__PWM8_OUT		0x110b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart2: uart2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_DATA04__UART2_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_NAND_DATA05__UART2_DCE_RX	0x1b0b1
+> +			MX6UL_PAD_NAND_DATA06__UART2_DCE_CTS	0x1b0b1
+> +			/*
+> +			 * mux unused RTS to make sure it doesn't cause
+> +			 * any interrupts when it is undefined
+> +			 */
+> +			MX6UL_PAD_NAND_DATA07__UART2_DCE_RTS	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart3: uart3grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART3_TX_DATA__UART3_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART3_RX_DATA__UART3_DCE_RX	0x1b0b1
+> +			MX6UL_PAD_UART3_CTS_B__UART3_DCE_CTS	0x1b0b1
+> +			MX6UL_PAD_UART3_RTS_B__UART3_DCE_RTS	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart4: uart4grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART4_TX_DATA__UART4_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART4_RX_DATA__UART4_DCE_RX	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
+> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x10059
+> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
+> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
+> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
+> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
+> +			MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x100b1	/* SD1_CD */
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2: usdhc2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x10059
+> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x17059
+> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x17059
+> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x17059
+> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x17059
+> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100b9
+> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170b9
+> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170b9
+> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170b9
+> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170b9
+> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170b9
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100f9
+> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170f9
+> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170f9
+> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170f9
+> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170f9
+> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170f9
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_PIXCLK__I2C1_SCL		0x4001b8b0
+> +			MX6UL_PAD_CSI_MCLK__I2C1_SDA		0x4001b8b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c4: i2c4grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART2_TX_DATA__I2C4_SCL	0x4001f8b0
+> +			MX6UL_PAD_UART2_RX_DATA__I2C4_SDA	0x4001f8b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_adc1: adc1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0xb0
+> +			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0xb0
+> +			MX6UL_PAD_GPIO1_IO08__GPIO1_IO08	0xb0
+> +		>;
+> +	};
+> +};
+> +
+> +&pwm8 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm8>;
+> +	status = "okay";
+> +};
+> +
+> +&snvs_poweroff {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	linux,rs485-enabled-at-boot-time;
+> +	rs485-rx-during-tx;
+> +	rs485-rts-active-low;
+> +	uart-has-rtscts;
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart3>;
+> +	fsl,uart-has-rtscts;
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart4>;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg1>;
+> +	dr_mode = "otg";
+> +	status = "okay";
+> +	srp-disable;
+> +	hnp-disable;
+> +	adp-disable;
+> +	vbus-supply = <&reg_usb_otg1_vbus>;
+> +};
+> +
+> +&usbotg2 {
+> +	dr_mode = "host";
+> +	disable-over-current;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
+> +	keep-power-in-suspend;
+> +	enable-sdio-wakeup;
+> +	vmmc-supply = <&reg_3v3>;
+> +	voltage-ranges = <3300 3300>;
+> +	no-1-8-v;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc2 {
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc2>;
+> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
+> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
+> +	tuning-step = <2>;
+> +	non-removable;
+> +	keep-power-in-suspend;
+> +	enable-sdio-wakeup;
+> +	vmmc-supply = <&reg_3v3>;
+> +	voltage-ranges = <3300 3300>;
+> +	no-1-8-v;
+> +	status = "okay";
+> +};
+> +
+> +&wdog1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_wdog>;
+> +	status = "okay";
+> +	fsl,ext-reset-output;
+> +};
+> 
