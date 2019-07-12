@@ -1,21 +1,23 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v5 00/11] Solve postboot supplier cleanup and optimize probe ordering
-Date: Fri, 12 Jul 2019 16:52:33 -0700
-Message-ID: <20190712235245.202558-1-saravanak@google.com>
+Subject: [PATCH v5 02/11] of/platform: Add functional dependency link from DT bindings
+Date: Fri, 12 Jul 2019 16:52:35 -0700
+Message-ID: <20190712235245.202558-3-saravanak@google.com>
+References: <20190712235245.202558-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190712235245.202558-1-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device-links to track functional dependencies between devices
-after they are created (but before they are probed) by looking at
-their common DT bindings like clocks, interconnects, etc.
+Add device-links after the devices are created (but before they are
+probed) by looking at common DT bindings like clocks and
+interconnects.
 
-Having functional dependencies automatically added before the devices
-are probed, provides the following benefits:
+Automatically adding device-links for functional dependencies at the
+framework level provides the following benefits:
 
 - Optimizes device probe order and avoids the useless work of
   attempting probes of devices that will not probe successfully
@@ -55,60 +57,102 @@ succeeded) of the supplier device. If any other functionality provided
 by device-links are needed, it is left to the consumer/supplier
 devices to change the link when they probe.
 
-v1 -> v2:
-- Drop patch to speed up of_find_device_by_node()
-- Drop depends-on property and use existing bindings
-v2 -> v3:
-- Refactor the code to have driver core initiate the linking of devs
-- Have driver core link consumers to supplier before it's probed
-- Add support for drivers to edit the device links before probing
-v3 -> v4
-- Tested edit_links() on system with cyclic dependency. Works.
-- Added some checks to make sure device link isn't attempted from
-  parent device node to child device node.
-- Added way to pause/resume sync_state callbacks across
-  of_platform_populate().
-- Recursively parse DT node to create device links from parent to
-  suppliers of parent and all child nodes.
-v4 -> v5
-- Fixed copy-pasta bugs with linked list handling
-- Walk up the phandle reference till I find an actual device (needed
-  for regulators to work)
-- Added support for linking devices from regulator DT bindings
-- Tested the whole series again to make sure cyclic dependencies are
-  broken with edit_links() and regulator links are created properly.
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ .../admin-guide/kernel-parameters.txt         |  5 ++
+ drivers/of/platform.c                         | 57 +++++++++++++++++++
+ 2 files changed, 62 insertions(+)
 
-I could probably squash some of the patches, but leaving them like this
-because I think it's easier to understand this way.
-
-I've also not updated this patch series to handle the new patch [1] from
-Rafael. Will do that once this patch series is close to being Acked.
-
-[1] - https://lore.kernel.org/lkml/3121545.4lOhFoIcdQ@kreacher/
-
--Saravana
-
-
-Saravana Kannan (11):
-  driver core: Add support for linking devices during device addition
-  of/platform: Add functional dependency link from DT bindings
-  driver core: Add sync_state driver/bus callback
-  driver core: Add edit_links() callback for drivers
-  driver core: Add APIs to pause/resume sync state callbacks
-  of/platform: Pause/resume sync state in of_platform_populate()
-  of/platform: Sanity check DT bindings before creating device links
-  of/platform: Make sure supplier DT node is device when creating device
-    links
-  of/platform: Create device links for all child-supplier depencencies
-  of/platform: Add functional dependency link from DT regulator bindings
-  of/platform: Don't create device links default busses
-
- .../admin-guide/kernel-parameters.txt         |   5 +
- drivers/base/core.c                           | 168 ++++++++++++++++++
- drivers/base/dd.c                             |  29 +++
- drivers/of/platform.c                         | 132 ++++++++++++++
- include/linux/device.h                        |  47 +++++
- 5 files changed, 381 insertions(+)
-
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 138f6664b2e2..109b4310844f 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3141,6 +3141,11 @@
+ 			This can be set from sysctl after boot.
+ 			See Documentation/sysctl/vm.txt for details.
+ 
++	of_devlink	[KNL] Make device links from common DT bindings. Useful
++			for optimizing probe order and making sure resources
++			aren't turned off before the consumer devices have
++			probed.
++
+ 	ohci1394_dma=early	[HW] enable debugging via the ohci1394 driver.
+ 			See Documentation/debugging-via-ohci1394.txt for more
+ 			info.
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 04ad312fd85b..0930f9f89571 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -509,6 +509,62 @@ int of_platform_default_populate(struct device_node *root,
+ }
+ EXPORT_SYMBOL_GPL(of_platform_default_populate);
+ 
++static int of_link_binding(struct device *dev,
++			   const char *binding, const char *cell)
++{
++	struct of_phandle_args sup_args;
++	struct platform_device *sup_dev;
++	unsigned int i = 0, links = 0;
++	u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
++
++	while (!of_parse_phandle_with_args(dev->of_node, binding, cell, i,
++					   &sup_args)) {
++		i++;
++		sup_dev = of_find_device_by_node(sup_args.np);
++		of_node_put(sup_args.np);
++		if (!sup_dev)
++			continue;
++		if (device_link_add(dev, &sup_dev->dev, dl_flags))
++			links++;
++		put_device(&sup_dev->dev);
++	}
++	if (links < i)
++		return -ENODEV;
++	return 0;
++}
++
++static bool of_devlink;
++core_param(of_devlink, of_devlink, bool, 0);
++
++/*
++ * List of bindings and their cell names (use NULL if no cell names) from which
++ * device links need to be created.
++ */
++static const char * const link_bindings[] = {
++	"clocks", "#clock-cells",
++	"interconnects", "#interconnect-cells",
++};
++
++static int of_link_to_suppliers(struct device *dev)
++{
++	unsigned int i = 0;
++	bool done = true;
++
++	if (!of_devlink)
++		return 0;
++	if (unlikely(!dev->of_node))
++		return 0;
++
++	for (i = 0; i < ARRAY_SIZE(link_bindings) / 2; i++)
++		if (of_link_binding(dev, link_bindings[i * 2],
++					link_bindings[i * 2 + 1]))
++			done = false;
++
++	if (!done)
++		return -ENODEV;
++	return 0;
++}
++
+ #ifndef CONFIG_PPC
+ static const struct of_device_id reserved_mem_matches[] = {
+ 	{ .compatible = "qcom,rmtfs-mem" },
+@@ -524,6 +580,7 @@ static int __init of_platform_default_populate_init(void)
+ 	if (!of_have_populated_dt())
+ 		return -ENODEV;
+ 
++	platform_bus_type.add_links = of_link_to_suppliers;
+ 	/*
+ 	 * Handle certain compatibles explicitly, since we don't want to create
+ 	 * platform_devices for every node in /reserved-memory with a
 -- 
 2.22.0.510.g264f2c817a-goog
