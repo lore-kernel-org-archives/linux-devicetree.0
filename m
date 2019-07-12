@@ -1,137 +1,84 @@
 From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH V2 2/2] usb: dwc3: Add cache type configuration support
-Date: Fri, 12 Jul 2019 14:42:06 +0800
-Message-ID: <20190712064206.48249-2-ran.wang_1@nxp.com>
-References: <20190712064206.48249-1-ran.wang_1@nxp.com>
+Subject: [PATCH V2 1/2] usb: dwc3: Add node to update cache type setting
+Date: Fri, 12 Jul 2019 14:42:05 +0800
+Message-ID: <20190712064206.48249-1-ran.wang_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190712064206.48249-1-ran.wang_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>
 Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support to configure cache type for 4 different transfer types: Data Read,
-Desc Read, Data Write and Desc write. For each treasfer type, controller has a
-4-bit register field to enable different cache type.
-
-Some Layerscape platforms might need this to resolve USB detect problem
-when DWC3 node apply dma-coherent.
+Some Layerscape paltforms (such as LS1088A, LS2088A, etc) encounter USB
+detect failues when adding dma-coherent to DWC3 node. This is because the
+HW default cache type configuration of those SoC are not right, need to
+be updated in DTS.
 
 Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 ---
 Change in v2:
-	- Change most program logic to meet new DTS property define.
-	- Rename related register address macros.
-	- Rename function  dwc3_enable_snooping() to dwc3_set_cache_type().
+	- New file.
 
- drivers/usb/dwc3/core.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/usb/dwc3/core.h | 12 ++++++++++
- 2 files changed, 76 insertions(+)
+ Documentation/devicetree/bindings/usb/dwc3.txt | 43 ++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 4aff1d8..43bdd73 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -284,6 +284,69 @@ static const struct clk_bulk_data dwc3_core_clks[] = {
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 8e5265e..7bc1cef 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -110,6 +110,43 @@ Optional properties:
+  - in addition all properties from usb-xhci.txt from the current directory are
+    supported as well
+ 
++* Cache type nodes (optional)
++
++The Cache type node is used to tell how to configure cache type on 4 different
++transfer types: Data Read, Desc Read, Data Write and Desc write. For each
++treasfer type, controller has a 4-bit register field to enable different cache
++type. Quoted from DWC3 data book Table 6-5 Cache Type Bit Assignments:
++----------------------------------------------------------------
++MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
++----------------------------------------------------------------
++AHB      |Cacheable     |Bufferable   |Privilegge |Data
++AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
++AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
++AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
++Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
++----------------------------------------------------------------
++Note: The AHB, AXI3, AXI4, and PCIe busses use different names for certain
++signals, which have the same meaning:
++  Bufferable = Posted
++  Cacheable = Modifiable = Snoop (negation of No Snoop)
++
++In most cases, this node is not required unless the default values of related
++registers are not correct *and* DWC3 node has enabled dma-coherent. So far we
++have observed USB device detect failure on some Layerscape platforms if this
++programming is not conducted properly.
++
++Required properties:
++- transfer_type_datard:	A value for 4-bit register which decide cache type of
++  Data Read transfer. According to above table, we can know that different
++  master bus type will cause different definition of cache type control bit. So
++  developer need to know which master bus type his platforms are using in
++  advance, then decide the value for this transfer type.
++- transfer_type_descrd:	A value for 4-bit register which decide cache type of
++  Desc Read transfer.
++- transfer_type_datawr:	A value for 4-bit register which decide cache type of
++  Data Write transfer.
++- transfer_type_descwr:	A value for 4-bit register which decide cache type of
++  Desc Write transfer.
+ 
+ This is usually a subnode to DWC3 glue to which it is connected.
+ 
+@@ -119,4 +156,10 @@ dwc3@4a030000 {
+ 	interrupts = <0 92 4>
+ 	usb-phy = <&usb2_phy>, <&usb3,phy>;
+ 	snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
++	cache_type: cache_type {
++		transfer_type_datard = <0x2>;
++		transfer_type_descrd = <0x2>;
++		transfer_type_datawr = <0x2>;
++		transfer_type_descwr = <0x2>;
++	};
  };
- 
- /*
-+ * dwc3_set_cache_type - Configure cache type
-+ * @dwc3: Pointer to our controller context structure
-+ */
-+static void dwc3_set_cache_type(struct dwc3 *dwc)
-+{
-+	int ret;
-+	u32 tmp, reg, cache_type;
-+	struct fwnode_handle *fwnode;
-+
-+	reg = dwc3_readl(dwc->regs,  DWC3_GSBUSCFG0);
-+	tmp = reg;
-+
-+	fwnode = device_get_named_child_node(dwc->dev, "cache_type");
-+	if (!fwnode) {
-+		dev_info(dwc->dev, "Cache_type node no found, skip.\n");
-+		return;
-+	}
-+
-+	ret = fwnode_property_read_u32(fwnode,
-+				       "transfer_type_datard", &cache_type);
-+	if (ret) {
-+		dev_err(dwc->dev,
-+			"Can't find property transfer_type_datard.\n");
-+		return;
-+	}
-+	reg &= ~DWC3_GSBUSCFG0_DATARD(~0);
-+	reg |= DWC3_GSBUSCFG0_DATARD(cache_type);
-+
-+	ret = fwnode_property_read_u32(fwnode,
-+				       "transfer_type_descrd", &cache_type);
-+	if (ret) {
-+		dev_err(dwc->dev,
-+			"Can't find property transfer_type_descrd.\n");
-+		return;
-+	}
-+	reg &= ~DWC3_GSBUSCFG0_DESCRD(~0);
-+	reg |= DWC3_GSBUSCFG0_DESCRD(cache_type);
-+
-+	ret = fwnode_property_read_u32(fwnode,
-+				       "transfer_type_datawr", &cache_type);
-+	if (ret) {
-+		dev_err(dwc->dev,
-+			"Can't find property transfer_type_datawr.\n");
-+		return;
-+	}
-+	reg &= ~DWC3_GSBUSCFG0_DATAWR(~0);
-+	reg |= DWC3_GSBUSCFG0_DATAWR(cache_type);
-+
-+	ret = fwnode_property_read_u32(fwnode,
-+				       "transfer_type_descwr", &cache_type);
-+	if (ret) {
-+		dev_err(dwc->dev,
-+			"Can't find property transfer_type_descwr.\n");
-+		return;
-+	}
-+	reg &= ~DWC3_GSBUSCFG0_DESCWR(~0);
-+	reg |= DWC3_GSBUSCFG0_DESCWR(cache_type);
-+
-+	if (tmp != reg)
-+		dwc3_writel(dwc->regs, DWC3_GSBUSCFG0, reg);
-+}
-+
-+/*
-  * dwc3_frame_length_adjustment - Adjusts frame length if required
-  * @dwc3: Pointer to our controller context structure
-  */
-@@ -942,6 +1005,7 @@ static int dwc3_core_init(struct dwc3 *dwc)
- 	dwc3_frame_length_adjustment(dwc);
- 
- 	dwc3_set_incr_burst_type(dwc);
-+	dwc3_set_cache_type(dwc);
- 
- 	usb_phy_set_suspend(dwc->usb2_phy, 0);
- 	usb_phy_set_suspend(dwc->usb3_phy, 0);
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index f19cbeb..24a613f 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -165,6 +165,18 @@
- /* Bit fields */
- 
- /* Global SoC Bus Configuration INCRx Register 0 */
-+#define DWC3_GSBUSCFG0_DATARD_SHIFT	28
-+#define DWC3_GSBUSCFG0_DATARD(n)	(((n) & 0xf)		\
-+			<< DWC3_GSBUSCFG0_DATARD_SHIFT)
-+#define DWC3_GSBUSCFG0_DESCRD_SHIFT	24
-+#define DWC3_GSBUSCFG0_DESCRD(n)	(((n) & 0xf)		\
-+			<< DWC3_GSBUSCFG0_DESCRD_SHIFT)
-+#define DWC3_GSBUSCFG0_DATAWR_SHIFT	20
-+#define DWC3_GSBUSCFG0_DATAWR(n)	(((n) & 0xf)		\
-+			<< DWC3_GSBUSCFG0_DATAWR_SHIFT)
-+#define DWC3_GSBUSCFG0_DESCWR_SHIFT	16
-+#define DWC3_GSBUSCFG0_DESCWR(n)	(((n) & 0xf)		\
-+			<< DWC3_GSBUSCFG0_DESCWR_SHIFT)
- #define DWC3_GSBUSCFG0_INCR256BRSTENA	(1 << 7) /* INCR256 burst */
- #define DWC3_GSBUSCFG0_INCR128BRSTENA	(1 << 6) /* INCR128 burst */
- #define DWC3_GSBUSCFG0_INCR64BRSTENA	(1 << 5) /* INCR64 burst */
 -- 
 2.7.4
