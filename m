@@ -1,51 +1,128 @@
 From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 2/3] dt-bindings: display: sii902x: Change audio mclk
- binding
-Date: Fri, 12 Jul 2019 12:31:54 +0200
-Message-ID: <bc2b0a58-d5e2-ce82-d1c8-c17731e44e31@samsung.com>
+Subject: Re: [PATCH 3/3] drm/bridge: sii902x: make audio mclk optional
+Date: Fri, 12 Jul 2019 12:45:46 +0200
+Message-ID: <beef9917-1e8b-1ddb-740b-5b2ca8cd379c@samsung.com>
 References: <1562082426-14876-1-git-send-email-olivier.moysan@st.com>
-        <CGME20190702154806epcas3p4058827de402f54ea3911c56ee17ae631@epcas3p4.samsung.com>
-        <1562082426-14876-3-git-send-email-olivier.moysan@st.com>
+        <CGME20190702154808epcas2p263688e1a3f29a656a86f5feda73aa6ab@epcas2p2.samsung.com>
+        <1562082426-14876-4-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562082426-14876-3-git-send-email-olivier.moysan@st.com>
+In-Reply-To: <1562082426-14876-4-git-send-email-olivier.moysan@st.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Olivier Moysan <olivier.moysan@st.com>, narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, benjamin.gaignard@st.com, alexandre.torgue@st.com, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, jsarha@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 02.07.2019 17:47, Olivier Moysan wrote:
-> As stated in SiL9022/24 datasheet, master clock is not required for I2S.
-> Make mclk property optional in DT bindings.
+> The master clock on i2s bus is not mandatory,
+> as sii902X internal PLL can be used instead.
+> Make use of mclk optional.
 >
-> Fixes: 3f18021f43a3 ("dt-bindings: display: sii902x: Add HDMI audio bindings")
+> Fixes: ff5781634c41 ("drm/bridge: sii902x: Implement HDMI audio support")
 >
 > Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 > ---
->  Documentation/devicetree/bindings/display/bridge/sii902x.txt | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+>  drivers/gpu/drm/bridge/sii902x.c | 39 +++++++++++++++++++++++----------------
+>  1 file changed, 23 insertions(+), 16 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/display/bridge/sii902x.txt b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
-> index 2df44b7d3821..6e14e087c0d0 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/sii902x.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
-> @@ -26,9 +26,8 @@ Optional properties:
->  	- clocks: phandle and clock specifier for each clock listed in
->             the clock-names property
->  	- clock-names: "mclk"
-> -	   Describes SII902x MCLK input. MCLK is used to produce
-> -	   HDMI audio CTS values. This property is required if
-> -	   "#sound-dai-cells"-property is present. This property follows
-> +	   Describes SII902x MCLK input. MCLK can be used to produce
-> +	   HDMI audio CTS values. This property follows
->  	   Documentation/devicetree/bindings/clock/clock-bindings.txt
->  	   consumer binding.
+> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
+> index 36acc256e67e..a08bd9fdc046 100644
+> --- a/drivers/gpu/drm/bridge/sii902x.c
+> +++ b/drivers/gpu/drm/bridge/sii902x.c
+> @@ -562,19 +562,21 @@ static int sii902x_audio_hw_params(struct device *dev, void *data,
+>  		}
+>  	}
 >  
+> -	ret = clk_prepare_enable(sii902x->audio.mclk);
+> -	if (ret) {
+> -		dev_err(dev, "Enabling mclk failed: %d\n", ret);
+> -		return ret;
+> -	}
+> +	if (sii902x->audio.mclk) {
+> +		ret = clk_prepare_enable(sii902x->audio.mclk);
+> +		if (ret) {
+> +			dev_err(dev, "Enabling mclk failed: %d\n", ret);
+> +			return ret;
+> +		}
+>  
+> -	mclk_rate = clk_get_rate(sii902x->audio.mclk);
+> +		mclk_rate = clk_get_rate(sii902x->audio.mclk);
+>  
+> -	ret = sii902x_select_mclk_div(&i2s_config_reg, params->sample_rate,
+> -				      mclk_rate);
+> -	if (mclk_rate != ret * params->sample_rate)
+> -		dev_dbg(dev, "Inaccurate reference clock (%ld/%d != %u)\n",
+> -			mclk_rate, ret, params->sample_rate);
+> +		ret = sii902x_select_mclk_div(&i2s_config_reg,
+> +					      params->sample_rate, mclk_rate);
+> +		if (mclk_rate != ret * params->sample_rate)
+> +			dev_dbg(dev, "Inaccurate reference clock (%ld/%d != %u)\n",
+> +				mclk_rate, ret, params->sample_rate);
+> +	}
+>  
+>  	mutex_lock(&sii902x->mutex);
+>  
+> @@ -640,7 +642,8 @@ static int sii902x_audio_hw_params(struct device *dev, void *data,
+>  	mutex_unlock(&sii902x->mutex);
+>  
+>  	if (ret) {
+> -		clk_disable_unprepare(sii902x->audio.mclk);
+> +		if (sii902x->audio.mclk)
+> +			clk_disable_unprepare(sii902x->audio.mclk);
 
-Acked-by: Andrzej Hajda <a.hajda@samsung.com>
+
+"if" clause is not necessary
+
+
+>  		dev_err(dev, "%s: hdmi audio enable failed: %d\n", __func__,
+>  			ret);
+>  	}
+> @@ -659,7 +662,8 @@ static void sii902x_audio_shutdown(struct device *dev, void *data)
+>  
+>  	mutex_unlock(&sii902x->mutex);
+>  
+> -	clk_disable_unprepare(sii902x->audio.mclk);
+> +	if (sii902x->audio.mclk)
+
+ditto
+
+> +		clk_disable_unprepare(sii902x->audio.mclk);
+>  }
+>  
+>  int sii902x_audio_digital_mute(struct device *dev, void *data, bool enable)
+> @@ -752,9 +756,12 @@ static int sii902x_audio_codec_init(struct sii902x *sii902x,
+>  
+>  	sii902x->audio.mclk = devm_clk_get(dev, "mclk");
+>  	if (IS_ERR(sii902x->audio.mclk)) {
+> -		dev_err(dev, "%s: No clock (audio mclk) found: %ld\n",
+> -			__func__, PTR_ERR(sii902x->audio.mclk));
+> -		return 0;
+> +		if (PTR_ERR(sii902x->audio.mclk) != -ENOENT) {
+> +			dev_err(dev, "%s: No clock (audio mclk) found: %ld\n",
+> +				__func__, PTR_ERR(sii902x->audio.mclk));
+> +			return PTR_ERR(sii902x->audio.mclk);
+> +		}
+> +		sii902x->audio.mclk = NULL;
+
+
+devm_clk_get_optional should be used here.
+
+Summarizing, clk framework supports NULL clocks so you can adjust code
+to benefit from it: no need to checks "if (sii902x->audio.mclk)". The
+only place you should care is near clk_get_rate, for null clock it will
+return 0, so you should react appropriately.
+
+With that changed:
+
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 
  --
 Regards
 Andrzej
+
+
+>  	}
+>  
+>  	sii902x->audio.pdev = platform_device_register_data(
