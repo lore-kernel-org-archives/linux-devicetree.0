@@ -1,47 +1,49 @@
-Return-Path: <SRS0=aAxj=VJ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 1/3] arm64: dts: renesas: hihope-common: Add PCA9654 I/O
- expander
-Date: Fri, 12 Jul 2019 13:21:59 +0000
-Message-ID: 
- <TYAPR01MB2111E5F445AC1CEA0C720BD9B8F20@TYAPR01MB2111.jpnprd01.prod.outlook.com>
-References: <1562321720-18735-1-git-send-email-biju.das@bp.renesas.com>
- <1562321720-18735-2-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdU79JQfEH5hY=wjyknE+sLpS6i3GeXYZ5Z=uzWkWDC-DA@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdU79JQfEH5hY=wjyknE+sLpS6i3GeXYZ5Z=uzWkWDC-DA@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=siEA=VJ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Chris Paterson" <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+References: <1562321720-18735-1-git-send-email-biju.das@bp.renesas.com> <1562321720-18735-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1562321720-18735-2-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 12 Jul 2019 14:29:18 +0200
+Message-ID: <CAMuHMdU79JQfEH5hY=wjyknE+sLpS6i3GeXYZ5Z=uzWkWDC-DA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm64: dts: renesas: hihope-common: Add PCA9654 I/O expander
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-DQpIaSBHZWVydCwNCg0KVGhhbmtzIGZvciB0aGUgZmVlZGJhY2suDQoNCg0KPiBTdWJqZWN0OiBS
-ZTogW1BBVENIIDEvM10gYXJtNjQ6IGR0czogcmVuZXNhczogaGlob3BlLWNvbW1vbjogQWRkIFBD
-QTk2NTQNCj4gSS9PIGV4cGFuZGVyDQo+IA0KPiBIaSBCaWp1LA0KPiANCj4gT24gRnJpLCBKdWwg
-NSwgMjAxOSBhdCAxMjoyMCBQTSBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+IHdy
-b3RlOg0KPiA+IEVuYWJsZSBQQ0E5NjU0IEdQSU8gZXhwYW5kZXIsIHNvIHRoYXQgd2UgY2FuIGNv
-bmZpZ3VyZSBpdHMgR1BJT3MgbGF0ZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERh
-cyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+IA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvcmVuZXNhcy9oaWhvcGUtY29tbW9uLmR0c2kNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jv
-b3QvZHRzL3JlbmVzYXMvaGlob3BlLWNvbW1vbi5kdHNpDQo+ID4gQEAgLTE2Miw2ICsxNjIsMTMg
-QEANCj4gPiAgICAgICAgIGNsb2NrLWZyZXF1ZW5jeSA9IDw0MDAwMDA+Ow0KPiA+ICAgICAgICAg
-c3RhdHVzID0gIm9rYXkiOw0KPiA+DQo+ID4gKyAgICAgICBncGlvX2V4cGFuZGVyOiBncGlvQDIw
-IHsNCj4gPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJvbm5uLHBjYTk2NTQiOw0KPiA+
-ICsgICAgICAgICAgICAgICByZWcgPSA8MHgyMD47DQo+ID4gKyAgICAgICAgICAgICAgIGdwaW8t
-Y29udHJvbGxlcjsNCj4gPiArICAgICAgICAgICAgICAgI2dwaW8tY2VsbHMgPSA8Mj47DQo+IA0K
-PiBZb3UgbWF5IHdhbnQgdG8gZGVzY3JpYmUgdGhhdCB0aGUgaW50ZXJydXB0IG91dHB1dCBpcyB0
-aWVkIHRvIEdQNV8yNT8NCg0KQlRfUkVHX09OIGFuZCBXTEFOX1JFR19PTiBhcmUgb3V0cHV0IHBp
-bnMuIFRoYXQgaXMgdGhlIHJlYXNvbiwgSSBoYXZlbid0IGRlc2NyaWJlZCB0aGUgaW50ZXJydXB0
-IG91dHB1dC4NCklmIG5lZWRlZCwgSSBjYW4gYWRkIHRoaXMuIFBsZWFzZSBsZXQgbWUga25vdy4N
-Cg0KPiA+ICsgICAgICAgfTsNCj4gPiArDQo+IA0KPiBSZXZpZXdlZC1ieTogR2VlcnQgVXl0dGVy
-aG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCj4gDQo+IEdye29ldGplLGVldGluZ31z
-LA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0
-IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2Vl
-cnRAbGludXgtDQo+IG02OGsub3JnDQo+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdp
-dGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4g
-SSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29t
-ZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBM
-aW51cyBUb3J2YWxkcw0K
+Hi Biju,
+
+On Fri, Jul 5, 2019 at 12:20 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Enable PCA9654 GPIO expander, so that we can configure its GPIOs later.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+
+> --- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
+> @@ -162,6 +162,13 @@
+>         clock-frequency = <400000>;
+>         status = "okay";
+>
+> +       gpio_expander: gpio@20 {
+> +               compatible = "onnn,pca9654";
+> +               reg = <0x20>;
+> +               gpio-controller;
+> +               #gpio-cells = <2>;
+
+You may want to describe that the interrupt output is tied to GP5_25?
+
+> +       };
+> +
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
