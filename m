@@ -1,24 +1,37 @@
-From: pr-tracker-bot@kernel.org
-Subject: Re: [GIT PULL] Devicetree updates for 5.3
-Date: Fri, 12 Jul 2019 01:55:10 +0000
-Message-ID: <156289651093.2089.8336732917653000086.pr-tracker-bot@kernel.org>
-References: <CAL_JsqJAydO3Zjx_9S+r8h5YAQbDBJjqHSFV-aKkN9n=MH7erg@mail.gmail.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH v2 0/2] mmc: Add support for the ASPEED SD controller
+Date: Fri, 12 Jul 2019 13:02:12 +0930
+Message-ID: <20190712033214.24713-1-andrew@aj.id.au>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJAydO3Zjx_9S+r8h5YAQbDBJjqHSFV-aKkN9n=MH7erg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>
+To: linux-mmc@vger.kernel.org
+Cc: Andrew Jeffery <andrew@aj.id.au>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, adrian.hunter@intel.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, ryanchen.aspeed@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The pull request you sent on Wed, 10 Jul 2019 14:50:01 -0600:
+Hello,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-5.3
+This is v2 of the ASPEED SD controller driver. v2 primarily addresses Rob's
+comments on the bindings in v1. The v1 series can be found here:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d06e4156430e7c5eb4f04dabcaa0d9e2fba335e3
+https://lists.ozlabs.org/pipermail/linux-aspeed/2019-July/001988.html
 
-Thank you!
+Please review!
+
+Andrew
+
+Andrew Jeffery (2):
+  dt-bindings: mmc: Document Aspeed SD controller
+  mmc: Add support for the ASPEED SD controller
+
+ .../devicetree/bindings/mmc/aspeed,sdhci.yaml |  90 +++++
+ drivers/mmc/host/Kconfig                      |  12 +
+ drivers/mmc/host/Makefile                     |   1 +
+ drivers/mmc/host/sdhci-of-aspeed.c            | 326 ++++++++++++++++++
+ 4 files changed, 429 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+ create mode 100644 drivers/mmc/host/sdhci-of-aspeed.c
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.20.1
