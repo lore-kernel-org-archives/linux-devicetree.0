@@ -1,334 +1,186 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 1/2] ARM: dts: rockchip: move rk3288-veryon display
- settings into a separate file
-Date: Thu, 11 Jul 2019 15:34:54 -0700
-Message-ID: <20190711223455.12210-1-mka@chromium.org>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH 1/6] dt-bindings: pinctrl: aspeed: Document AST2600 pinmux
+Date: Fri, 12 Jul 2019 10:21:38 +0930
+Message-ID: <da2f05bf-5117-4e08-b26b-e261ef4162f1@www.fastmail.com>
+References: <20190711041942.23202-1-andrew@aj.id.au>
+ <20190711041942.23202-2-andrew@aj.id.au>
+ <CAL_JsqLvY_yxN=-tfUPGn_Bv=UNmntHjXqUhSD1aey79MXznQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLvY_yxN=-tfUPGn_Bv=UNmntHjXqUhSD1aey79MXznQg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Ryan Chen <ryanchen.aspeed@gmail.com>, Johnny Huang <johnny_huang@aspeedtech.com>, linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The chromebook .dtsi file contains common settings for veyron
-Chromebooks with eDP displays. Some veyron devices with a display
-aren't Chromebooks (e.g. 'tiger' aka 'AOpen Chromebase Mini'), move
-display related bits from the chromebook .dtsi into a separate file
-to avoid redundant DT settings.
 
-The new file is included from the chromebook .dtsi and can be
-included by non-Chromebook devices with a display.
 
-Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Changes in v2:
-- rebased on v5.4-armsoc/dts32 (0d19541e3b45)
----
- .../boot/dts/rk3288-veyron-chromebook.dtsi    | 115 +---------------
- arch/arm/boot/dts/rk3288-veyron-edp.dtsi      | 124 ++++++++++++++++++
- 2 files changed, 125 insertions(+), 114 deletions(-)
- create mode 100644 arch/arm/boot/dts/rk3288-veyron-edp.dtsi
+On Fri, 12 Jul 2019, at 02:48, Rob Herring wrote:
+> On Wed, Jul 10, 2019 at 10:19 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+> >
+> > The AST260 differs from the 2400 and 2500 in that it supports multiple
+> > groups for a subset of functions.
+> >
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > ---
+> >  .../pinctrl/aspeed,ast2600-pinctrl.yaml       | 128 ++++++++++++++++++
+> >  1 file changed, 128 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+> > new file mode 100644
+> > index 000000000000..dd31f8e62433
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+> > @@ -0,0 +1,128 @@
+> > +# SPDX-License-Identifier: GPL-2.0+
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pinctrl/aspeed,ast2600-pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: ASPEED AST2600 Pin Controller
+> > +
+> > +maintainers:
+> > +  - Andrew Jeffery <andrew@aj.id.au>
+> > +
+> > +description: |+
+> > +  The pin controller node should be the child of a syscon node with the
+> > +  required property:
+> > +
+> > +  - compatible: Should be one of the following:
+> > +                "aspeed,ast2600-scu", "syscon", "simple-mfd"
+> > +
+> > +  Refer to the the bindings described in
+> > +  Documentation/devicetree/bindings/mfd/syscon.txt
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: aspeed,ast2600-pinctrl
+> > +
+> > +patternProperties:
+> > +  '^.*$':
+> > +    if:
+> > +      type: object
+> > +    then:
+> > +      patternProperties:
+> > +        "^function$":
+> 
+> That's a fixed string, not a pattern, so just put under 'properties'.
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-index 6a28ce345ba0..ffb60f880b39 100644
---- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/input/input.h>
- #include "rk3288-veyron.dtsi"
- #include "rk3288-veyron-analog-audio.dtsi"
-+#include "rk3288-veyron-edp.dtsi"
- #include "rk3288-veyron-sdmmc.dtsi"
- 
- / {
-@@ -18,50 +19,6 @@
- 		i2c20 = &i2c_tunnel;
- 	};
- 
--	backlight: backlight {
--		compatible = "pwm-backlight";
--		brightness-levels = <
--			  0   1   2   3   4   5   6   7
--			  8   9  10  11  12  13  14  15
--			 16  17  18  19  20  21  22  23
--			 24  25  26  27  28  29  30  31
--			 32  33  34  35  36  37  38  39
--			 40  41  42  43  44  45  46  47
--			 48  49  50  51  52  53  54  55
--			 56  57  58  59  60  61  62  63
--			 64  65  66  67  68  69  70  71
--			 72  73  74  75  76  77  78  79
--			 80  81  82  83  84  85  86  87
--			 88  89  90  91  92  93  94  95
--			 96  97  98  99 100 101 102 103
--			104 105 106 107 108 109 110 111
--			112 113 114 115 116 117 118 119
--			120 121 122 123 124 125 126 127
--			128 129 130 131 132 133 134 135
--			136 137 138 139 140 141 142 143
--			144 145 146 147 148 149 150 151
--			152 153 154 155 156 157 158 159
--			160 161 162 163 164 165 166 167
--			168 169 170 171 172 173 174 175
--			176 177 178 179 180 181 182 183
--			184 185 186 187 188 189 190 191
--			192 193 194 195 196 197 198 199
--			200 201 202 203 204 205 206 207
--			208 209 210 211 212 213 214 215
--			216 217 218 219 220 221 222 223
--			224 225 226 227 228 229 230 231
--			232 233 234 235 236 237 238 239
--			240 241 242 243 244 245 246 247
--			248 249 250 251 252 253 254 255>;
--		default-brightness-level = <128>;
--		enable-gpios = <&gpio7 RK_PA2 GPIO_ACTIVE_HIGH>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&bl_en>;
--		pwms = <&pwm0 0 1000000 0>;
--		post-pwm-on-delay-ms = <10>;
--		pwm-off-delay-ms = <10>;
--	};
--
- 	gpio-charger {
- 		compatible = "gpio-charger";
- 		charger-type = "mains";
-@@ -85,35 +42,6 @@
- 		};
- 	};
- 
--	panel: panel {
--		compatible ="innolux,n116bge", "simple-panel";
--		status = "okay";
--		power-supply = <&vcc33_lcd>;
--		backlight = <&backlight>;
--
--		panel-timing {
--			clock-frequency = <74250000>;
--			hactive = <1366>;
--			hfront-porch = <136>;
--			hback-porch = <60>;
--			hsync-len = <30>;
--			hsync-active = <0>;
--			vactive = <768>;
--			vfront-porch = <8>;
--			vback-porch = <12>;
--			vsync-len = <12>;
--			vsync-active = <0>;
--		};
--
--		ports {
--			panel_in: port {
--				panel_in_edp: endpoint {
--					remote-endpoint = <&edp_out_panel>;
--				};
--			};
--		};
--	};
--
- 	/* A non-regulated voltage from power supply or battery */
- 	vccsys: vccsys {
- 		compatible = "regulator-fixed";
-@@ -155,33 +83,6 @@
- 	};
- };
- 
--&edp {
--	status = "okay";
--
--	pinctrl-names = "default";
--	pinctrl-0 = <&edp_hpd>;
--
--	ports {
--		edp_out: port@1 {
--			reg = <1>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			edp_out_panel: endpoint@0 {
--				reg = <0>;
--				remote-endpoint = <&panel_in_edp>;
--			};
--		};
--	};
--};
--
--&edp_phy {
--	status = "okay";
--};
--
--&pwm0 {
--	status = "okay";
--};
--
- &rk808 {
- 	vcc11-supply = <&vcc_5v>;
- 
-@@ -234,14 +135,6 @@
- 	};
- };
- 
--&vopl {
--	status = "okay";
--};
--
--&vopl_mmu {
--	status = "okay";
--};
--
- &pinctrl {
- 	pinctrl-0 = <
- 		/* Common for sleep and wake, but no owners */
-@@ -264,12 +157,6 @@
- 		&bt_dev_wake_sleep
- 	>;
- 
--	backlight {
--		bl_en: bl-en {
--			rockchip,pins = <7 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
--		};
--	};
--
- 	buttons {
- 		ap_lid_int_l: ap-lid-int-l {
- 			rockchip,pins = <0 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>;
-diff --git a/arch/arm/boot/dts/rk3288-veyron-edp.dtsi b/arch/arm/boot/dts/rk3288-veyron-edp.dtsi
-new file mode 100644
-index 000000000000..5d812e9e78aa
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-veyron-edp.dtsi
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Google Veyron (and derivatives) fragment for the edp displays
-+ *
-+ * Copyright 2019 Google LLC
-+ */
-+
-+/ {
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		brightness-levels = <
-+			  0   1   2   3   4   5   6   7
-+			  8   9  10  11  12  13  14  15
-+			 16  17  18  19  20  21  22  23
-+			 24  25  26  27  28  29  30  31
-+			 32  33  34  35  36  37  38  39
-+			 40  41  42  43  44  45  46  47
-+			 48  49  50  51  52  53  54  55
-+			 56  57  58  59  60  61  62  63
-+			 64  65  66  67  68  69  70  71
-+			 72  73  74  75  76  77  78  79
-+			 80  81  82  83  84  85  86  87
-+			 88  89  90  91  92  93  94  95
-+			 96  97  98  99 100 101 102 103
-+			104 105 106 107 108 109 110 111
-+			112 113 114 115 116 117 118 119
-+			120 121 122 123 124 125 126 127
-+			128 129 130 131 132 133 134 135
-+			136 137 138 139 140 141 142 143
-+			144 145 146 147 148 149 150 151
-+			152 153 154 155 156 157 158 159
-+			160 161 162 163 164 165 166 167
-+			168 169 170 171 172 173 174 175
-+			176 177 178 179 180 181 182 183
-+			184 185 186 187 188 189 190 191
-+			192 193 194 195 196 197 198 199
-+			200 201 202 203 204 205 206 207
-+			208 209 210 211 212 213 214 215
-+			216 217 218 219 220 221 222 223
-+			224 225 226 227 228 229 230 231
-+			232 233 234 235 236 237 238 239
-+			240 241 242 243 244 245 246 247
-+			248 249 250 251 252 253 254 255>;
-+		default-brightness-level = <128>;
-+		enable-gpios = <&gpio7 RK_PA2 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bl_en>;
-+		pwms = <&pwm0 0 1000000 0>;
-+		post-pwm-on-delay-ms = <10>;
-+		pwm-off-delay-ms = <10>;
-+	};
-+
-+	panel: panel {
-+		compatible ="innolux,n116bge", "simple-panel";
-+		status = "okay";
-+		power-supply = <&vcc33_lcd>;
-+		backlight = <&backlight>;
-+
-+		panel-timing {
-+			clock-frequency = <74250000>;
-+			hactive = <1366>;
-+			hfront-porch = <136>;
-+			hback-porch = <60>;
-+			hsync-len = <30>;
-+			hsync-active = <0>;
-+			vactive = <768>;
-+			vfront-porch = <8>;
-+			vback-porch = <12>;
-+			vsync-len = <12>;
-+			vsync-active = <0>;
-+		};
-+
-+		ports {
-+			panel_in: port {
-+				panel_in_edp: endpoint {
-+					remote-endpoint = <&edp_out_panel>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&edp {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&edp_hpd>;
-+
-+	ports {
-+		edp_out: port@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			edp_out_panel: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&panel_in_edp>;
-+			};
-+		};
-+	};
-+};
-+
-+&edp_phy {
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	backlight {
-+		bl_en: bl-en {
-+			rockchip,pins = <7 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
-+&pwm0 {
-+	status = "okay";
-+};
-+
-+&vopl {
-+	status = "okay";
-+};
-+
-+&vopl_mmu {
-+	status = "okay";
-+};
--- 
-2.22.0.410.gd8fdbe21b5-goog
+Haha, good point. Hopefully I'll get the hang of this eventually!
+
+> 
+> > +          allOf:
+> > +            - $ref: "/schemas/types.yaml#/definitions/string"
+> > +            - enum: [ "ADC0", "ADC1", "ADC10", "ADC11", "ADC12", "ADC13",
+> 
+> You can drop the quoting here. I wouldn't really care, but yours is
+> one of the few right now and everyone will copy.
+
+Yeah, fair point, the quotes add a lot of noise.
+
+> 
+> > +              "ADC14", "ADC15", "ADC2", "ADC3", "ADC4", "ADC5", "ADC6", "ADC7",
+> > +              "ADC8", "ADC9", "BMCINT", "ESPI", "ESPIALT", "FSI1", "FSI2",
+> > +              "FWSPIABR", "FWSPID", "FWSPIWP", "GPIT0", "GPIT1", "GPIT2",
+> > +              "GPIT3", "GPIT4", "GPIT5", "GPIT6", "GPIT7", "GPIU0", "GPIU1",
+> > +              "GPIU2", "GPIU3", "GPIU4", "GPIU5", "GPIU6", "GPIU7", "I2C1",
+> > +              "I2C10", "I2C11", "I2C12", "I2C13", "I2C14", "I2C15", "I2C16",
+> > +              "I2C2", "I2C3", "I2C4", "I2C5", "I2C6", "I2C7", "I2C8", "I2C9",
+> > +              "I3C3", "I3C4", "I3C5", "I3C6", "JTAGM", "LHPD", "LHSIRQ", "LPC",
+> > +              "LPCHC", "LPCPD", "LPCPME", "LPCSMI", "LSIRQ", "MACLINK1",
+> > +              "MACLINK2", "MACLINK3", "MACLINK4", "MDIO1", "MDIO2", "MDIO3",
+> > +              "MDIO4", "NCTS1", "NCTS2", "NCTS3", "NCTS4", "NDCD1", "NDCD2",
+> > +              "NDCD3", "NDCD4", "NDSR1", "NDSR2", "NDSR3", "NDSR4", "NDTR1",
+> > +              "NDTR2", "NDTR3", "NDTR4", "NRI1", "NRI2", "NRI3", "NRI4",
+> > +              "NRTS1", "NRTS2", "NRTS3", "NRTS4", "OSCCLK", "PEWAKE", "PWM0",
+> > +              "PWM1", "PWM10", "PWM11", "PWM12", "PWM13", "PWM14", "PWM15",
+> > +              "PWM2", "PWM3", "PWM4", "PWM5", "PWM6", "PWM7", "PWM8", "PWM9",
+> > +              "RGMII1", "RGMII2", "RGMII3", "RGMII4", "RMII1", "RMII2",
+> > +              "RMII3", "RMII4", "RXD1", "RXD2", "RXD3", "RXD4", "SALT1",
+> > +              "SALT10", "SALT11", "SALT12", "SALT13", "SALT14", "SALT15",
+> > +              "SALT16", "SALT2", "SALT3", "SALT4", "SALT5", "SALT6", "SALT7",
+> > +              "SALT8", "SALT9", "SD1", "SD2", "SD3", "SD3DAT4", "SD3DAT5",
+> > +              "SD3DAT6", "SD3DAT7", "SGPM1", "SGPS1", "SIOONCTRL", "SIOPBI",
+> > +              "SIOPBO", "SIOPWREQ", "SIOPWRGD", "SIOS3", "SIOS5", "SIOSCI",
+> > +              "SPI1", "SPI1ABR", "SPI1CS1", "SPI1WP", "SPI2", "SPI2CS1",
+> > +              "SPI2CS2", "TACH0", "TACH1", "TACH10", "TACH11", "TACH12",
+> > +              "TACH13", "TACH14", "TACH15", "TACH2", "TACH3", "TACH4", "TACH5",
+> > +              "TACH6", "TACH7", "TACH8", "TACH9", "THRU0", "THRU1", "THRU2",
+> > +              "THRU3", "TXD1", "TXD2", "TXD3", "TXD4", "UART10", "UART11",
+> > +              "UART12", "UART13", "UART6", "UART7", "UART8", "UART9", "VB",
+> > +              "VGAHS", "VGAVS", "WDTRST1", "WDTRST2", "WDTRST3", "WDTRST4", ]
+> > +        "^groups$":
+> > +          allOf:
+> > +            - $ref: "/schemas/types.yaml#/definitions/string"
+> > +            - enum: [ "ADC0", "ADC1", "ADC10", "ADC11", "ADC12", "ADC13",
+> > +              "ADC14", "ADC15", "ADC2", "ADC3", "ADC4", "ADC5", "ADC6", "ADC7",
+> > +              "ADC8", "ADC9", "BMCINT", "ESPI", "ESPIALT", "FSI1", "FSI2",
+> > +              "FWSPIABR", "FWSPID", "FWQSPID", "FWSPIWP", "GPIT0", "GPIT1",
+> > +              "GPIT2", "GPIT3", "GPIT4", "GPIT5", "GPIT6", "GPIT7", "GPIU0",
+> > +              "GPIU1", "GPIU2", "GPIU3", "GPIU4", "GPIU5", "GPIU6", "GPIU7",
+> > +              "HVI3C3", "HVI3C4", "I2C1", "I2C10", "I2C11", "I2C12", "I2C13",
+> > +              "I2C14", "I2C15", "I2C16", "I2C2", "I2C3", "I2C4", "I2C5",
+> > +              "I2C6", "I2C7", "I2C8", "I2C9", "I3C3", "I3C4", "I3C5", "I3C6",
+> > +              "JTAGM", "LHPD", "LHSIRQ", "LPC", "LPCHC", "LPCPD", "LPCPME",
+> > +              "LPCSMI", "LSIRQ", "MACLINK1", "MACLINK2", "MACLINK3",
+> > +              "MACLINK4", "MDIO1", "MDIO2", "MDIO3", "MDIO4", "NCTS1", "NCTS2",
+> > +              "NCTS3", "NCTS4", "NDCD1", "NDCD2", "NDCD3", "NDCD4", "NDSR1",
+> > +              "NDSR2", "NDSR3", "NDSR4", "NDTR1", "NDTR2", "NDTR3", "NDTR4",
+> > +              "NRI1", "NRI2", "NRI3", "NRI4", "NRTS1", "NRTS2", "NRTS3",
+> > +              "NRTS4", "OSCCLK", "PEWAKE", "PWM0", "PWM1", "PWM10G0",
+> > +              "PWM10G1", "PWM11G0", "PWM11G1", "PWM12G0", "PWM12G1", "PWM13G0",
+> > +              "PWM13G1", "PWM14G0", "PWM14G1", "PWM15G0", "PWM15G1", "PWM2",
+> > +              "PWM3", "PWM4", "PWM5", "PWM6", "PWM7", "PWM8G0", "PWM8G1",
+> > +              "PWM9G0", "PWM9G1", "QSPI1", "QSPI2", "RGMII1", "RGMII2",
+> > +              "RGMII3", "RGMII4", "RMII1", "RMII2", "RMII3", "RMII4", "RXD1",
+> > +              "RXD2", "RXD3", "RXD4", "SALT1", "SALT10G0", "SALT10G1",
+> > +              "SALT11G0", "SALT11G1", "SALT12G0", "SALT12G1", "SALT13G0",
+> > +              "SALT13G1", "SALT14G0", "SALT14G1", "SALT15G0", "SALT15G1",
+> > +              "SALT16G0", "SALT16G1", "SALT2", "SALT3", "SALT4", "SALT5",
+> > +              "SALT6", "SALT7", "SALT8", "SALT9G0", "SALT9G1", "SD1", "SD2",
+> > +              "SD3", "SD3DAT4", "SD3DAT5", "SD3DAT6", "SD3DAT7", "SGPM1",
+> > +              "SGPS1", "SIOONCTRL", "SIOPBI", "SIOPBO", "SIOPWREQ", "SIOPWRGD",
+> > +              "SIOS3", "SIOS5", "SIOSCI", "SPI1", "SPI1ABR", "SPI1CS1",
+> > +              "SPI1WP", "SPI2", "SPI2CS1", "SPI2CS2", "TACH0", "TACH1",
+> > +              "TACH10", "TACH11", "TACH12", "TACH13", "TACH14", "TACH15",
+> > +              "TACH2", "TACH3", "TACH4", "TACH5", "TACH6", "TACH7", "TACH8",
+> > +              "TACH9", "THRU0", "THRU1", "THRU2", "THRU3", "TXD1", "TXD2",
+> > +              "TXD3", "TXD4", "UART10", "UART11", "UART12G0", "UART12G1",
+> > +              "UART13G0", "UART13G1", "UART6", "UART7", "UART8", "UART9", "VB",
+> > +              "VGAHS", "VGAVS", "WDTRST1", "WDTRST2", "WDTRST3", "WDTRST4", ]
+> > +
+> > +required:
+> > +  - compatible
+> > +
+> > +examples:
+> > +  - |
+> > +    syscon: scu@1e6e2000 {
+> > +        compatible = "aspeed,ast2600-scu", "syscon", "simple-mfd";
+> > +        reg = <0x1e6e2000 0xf6c>;
+> > +
+> > +        pinctrl: pinctrl {
+> > +            compatible = "aspeed,g6-pinctrl";
+> > +
+> > +            pinctrl_pwm10g1_default: pwm10g1_default {
+> > +                function = "PWM10";
+> > +                groups = "PWM10G1";
+> > +            };
+> > +
+> > +            pinctrl_gpioh0_unbiased_default: gpioh0 {
+> > +                pins = "A18";
+> > +                bias-disable;
+> 
+> This node and properties aren't getting checked. Need to figure out
+> how to do that. That may mean needing some structure to the node
+> names. You can worry about that later I suppose.
+
+I surfaced the issue around subnode naming when I updated the 2400
+and 2500 pinctrl bindings. As it stands the generic pinctrl bindings do
+not impose any constraints on the naming, it's freeform. Converting
+the bindings to yaml shouldn't be adding any constraints and
+invalidating existing devicetrees. Not really sure how we solve that.
+
+Andrew
