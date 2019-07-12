@@ -1,89 +1,71 @@
-From: Michael Drake <michael.drake@codethink.co.uk>
-Subject: Re: [PATCH v1 08/11] dt-bindings: display/bridge: Add bindings for
- ti949
-Date: Fri, 12 Jul 2019 13:43:36 +0100
-Message-ID: <534c485b-2074-1fcc-2d8f-11e5a9f278e4@codethink.co.uk>
-References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
- <20190611140412.32151-9-michael.drake@codethink.co.uk>
- <20190611181351.GW5016@pendragon.ideasonboard.com>
+From: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
+Subject: [PATCH] arm: dts: imx6qdl: add gpio expander pca9535
+Date: Fri, 12 Jul 2019 14:45:22 +0200
+Message-ID: <20190712124522.571-1-gilles.doffe@savoirfairelinux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611181351.GW5016@pendragon.ideasonboard.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@lists.codethink.co.uk, Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, festevam@gmail.com, s.hauer@pengutronix.de, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+The pca9535 gpio expander is present on the Rex baseboard, but missing
+from the dtsi.
 
-On 11/06/2019 19:13, Laurent Pinchart wrote:
-> Hi Michael,
-> 
-> Thank you for the patch.
+Add the new gpio controller and the associated interrupt line
+MX6QDL_PAD_NANDF_CS3__GPIO6_IO16.
 
-My pleasure, and thank you for the feedback!
+Signed-off-by: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
+---
+ arch/arm/boot/dts/imx6qdl-rex.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-> On Tue, Jun 11, 2019 at 03:04:09PM +0100, Michael Drake wrote:
->> Adds device tree bindings for:
->>
->>   TI DS90UB949-Q1 1080p HDMI to FPD-Link III bridge serializer
->>
->> It supports instantiation via device tree / ACPI table.
->>
->> The device has the compatible string "ti,ds90ub949", and
->> and allows an arrray of strings to be provided as regulator
->> names to enable for operation of the device.
-> 
-> All the comments I made regarding the ds90ub948 DT bindings apply here
-> too. Same for the comments related to the driver, they apply to the
-> subsequent patches in this series.
-
-OK, understood.
-
-Thank you very much for the review.
-
->> Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
->> Cc: Patrick Glaser <pglaser@tesla.com>
->> Cc: Nate Case <ncase@tesla.com>
->> ---
->>  .../bindings/display/bridge/ti,ds90ub949.txt  | 24 +++++++++++++++++++
->>  1 file changed, 24 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
->>
->> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
->> new file mode 100644
->> index 000000000000..3ba3897d5e81
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
->> @@ -0,0 +1,24 @@
->> +TI DS90UB949-Q1 1080p HDMI to FPD-Link III bridge serializer
->> +============================================================
->> +
->> +This is the binding for Texas Instruments DS90UB949-Q1 bridge serializer.
->> +
->> +This device supports I2C only.
->> +
->> +Required properties:
->> +
->> +- compatible: "ti,ds90ub949"
->> +
->> +Optional properties:
->> +
->> +- regulators: List of regulator name strings to enable for operation of device.
->> +
->> +Example
->> +-------
->> +
->> +ti949: ds90ub949@0 {
->> +	compatible = "ti,ds90ub949";
->> +
->> +	regulators: "vcc",
->> +	            "vcc_hdmi";
->> +};
-> 
-
+diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+index 97f1659144ea..d5324c6761c1 100644
+--- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+@@ -136,6 +136,19 @@
+ 		compatible = "atmel,24c02";
+ 		reg = <0x57>;
+ 	};
++
++	gpio8: pca9535@27 {
++		compatible = "nxp,pca9535";
++		reg = <0x27>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pca9535>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
+ };
+ 
+ &i2c3 {
+@@ -237,6 +250,12 @@
+ 			>;
+ 		};
+ 
++		pinctrl_pca9535: pca9535 {
++			fsl,pins = <
++				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x00017059
++		   >;
++		};
++
+ 		pinctrl_uart1: uart1grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
 -- 
-Michael Drake                 https://www.codethink.co.uk/
+2.19.1
