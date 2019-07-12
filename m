@@ -1,206 +1,799 @@
-From: =?UTF-8?B?Sm9zZWYgTHXFoXRpY2vDvQ==?= <josef@lusticky.cz>
-Subject: Re: [PATCH v2 2/2] drm/panel: Add Ilitek ILI9341 parallel RGB panel
- driver
-Date: Fri, 12 Jul 2019 11:53:09 +0200
-Message-ID: <CAMqqaJHMmBckVhMj5q-eOthZtwwaQKFiF7hSb3G1G4ZpLZo6zQ@mail.gmail.com>
-References: <20190304125033.28841-1-josef@lusticky.cz>
- <20190708145618.26031-1-josef@lusticky.cz>
- <20190708145618.26031-3-josef@lusticky.cz>
- <20190710134722.GC11791@ravnborg.org>
+From: Gerald BAEZA <gerald.baeza@st.com>
+Subject: RE: [PATCH v2 3/5] perf: stm32: ddrperfm driver creation
+Date: Fri, 12 Jul 2019 10:00:45 +0000
+Message-ID: <d9109967681846b09abac2e340cd21f8@SFHDAG5NODE1.st.com>
+References: <1558366019-24214-1-git-send-email-gerald.baeza@st.com>
+ <1558366019-24214-4-git-send-email-gerald.baeza@st.com>
+ <20190626122228.GB20313@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190710134722.GC11791@ravnborg.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, thierry.reding@gmail.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190626122228.GB20313@lakrids.cambridge.arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <Mark.Rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "arnd@arndb.de" <arnd@arndb.de>, "corbet@lwn.net" <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "olof@lixom.net" <olof@lixom.net>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FtLAp0aGFuayB5b3UgZm9yIGNvbW1lbnRzLgoKc3QgMTAuIDcuIDIwMTkgdiAxNTo0NyBv
-ZGVzw61sYXRlbCBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+IG5hcHNhbDoKPgo+IEhp
-IEpvc2VmLgo+Cj4gVGhhbmtzIGZvciB1cGRhdGluZyB0aGUgZHJpdmVyLgo+Cj4gT24gTW9uLCBK
-dWwgMDgsIDIwMTkgYXQgMDQ6NTY6MThQTSArMDIwMCwgSm9zZWYgTHVzdGlja3kgd3JvdGU6Cj4g
-PiBBZGQgZHJpdmVyIGZvciBJbGl0ZWsgSUxJOTM0MSBwYW5lbHMgaW4gcGFyYWxsZWwgUkdCIG1v
-ZGUKPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBKb3NlZiBMdXN0aWNreSA8am9zZWZAbHVzdGlja3ku
-Y3o+Cj4gPiArICovCj4gPiArCj4gPiArI2luY2x1ZGUgPGxpbnV4L2JhY2tsaWdodC5oPgo+ID4g
-KyNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9ncGlvL2NvbnN1
-bWVyLmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ID4gKyNpbmNsdWRlIDxsaW51
-eC9vZl9kZXZpY2UuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvc3BpL3NwaS5oPgo+ID4gKwo+ID4g
-KyNpbmNsdWRlIDx2aWRlby9taXBpX2Rpc3BsYXkuaD4KPiA+ICsKPiA+ICsjaW5jbHVkZSA8ZHJt
-L2RybV9tb2Rlcy5oPgo+ID4gKyNpbmNsdWRlIDxkcm0vZHJtX3BhbmVsLmg+Cj4gPiArI2luY2x1
-ZGUgPGRybS9kcm1fcHJpbnQuaD4KPiA+ICsjaW5jbHVkZSA8ZHJtL3Rpbnlkcm0vbWlwaS1kYmku
-aD4KPiBHb29kIHRvIHNlZSBkcml2ZXJzIHRoYXQgbm8gbG9uZ2VyIHVzZXMgZHJtUC5oIDotKQo+
-Cj4gPiArCj4gPiArLyogSUxJOTM0MSBleHRlbmRlZCByZWdpc3RlciBzZXQgKFZlbmRvciBDb21t
-YW5kIFNldCkgKi8KPiA+ICsjZGVmaW5lIElMSTkzNDFfSUZNT0RFICAgICAgICAgMHhCMCAvLyBj
-bG9jayBwb2xhcml0eQo+ID4gKyNkZWZpbmUgSUxJOTM0MV9JRkNUTCAgICAgICAgICAweEY2IC8v
-IGludGVyZmFjZSBjb25yb2wKPiA+ICsjZGVmaW5lIElMSTkzNDFfUEdBTUNUUkwgICAgICAgMHhF
-MCAvLyBwb3NpdGl2ZSBnYW1tYSBjb250cm9sCj4gPiArI2RlZmluZSBJTEk5MzQxX05HQU1DVFJM
-ICAgICAgIDB4RTEgLy8gbmVnYXRpdmUgZ2FtbWEgY29udHJvbAo+ID4gKwo+ID4gKyNkZWZpbmUg
-SUxJOTM0MV9NQURDVExfTVYgICAgICBCSVQoNSkKPiA+ICsjZGVmaW5lIElMSTkzNDFfTUFEQ1RM
-X01YICAgICAgQklUKDYpCj4gPiArI2RlZmluZSBJTEk5MzQxX01BRENUTF9NWSAgICAgIEJJVCg3
-KQo+ID4gKwo+ID4gKy8qKgo+ID4gKyAqIHN0cnVjdCBpbGk5MzQxX2NvbmZpZyAtIHRoZSBkaXNw
-bGF5IHNwZWNpZmljIGNvbmZpZ3VyYXRpb24KPiA+ICsgKiBAd2lkdGhfbW06IHBoeXNpY2FsIHBh
-bmVsIHdpZHRoIFttbV0KPiA+ICsgKiBAaGVpZ2h0X21tOiBwaHlzaWNhbCBwYW5lbCBoZWlnaHQg
-W21tXQo+ID4gKyAqLwo+ID4gK3N0cnVjdCBpbGk5MzQxX2NvbmZpZyB7Cj4gPiArICAgICB1MzIg
-d2lkdGhfbW07Cj4gPiArICAgICB1MzIgaGVpZ2h0X21tOwo+ID4gK307Cj4gPiArCj4gPiArc3Ry
-dWN0IGlsaTkzNDEgewo+ID4gKyAgICAgc3RydWN0IGRybV9wYW5lbCBwYW5lbDsKPiA+ICsgICAg
-IHN0cnVjdCBtaXBpX2RiaSAqbWlwaTsKPiA+ICsgICAgIGNvbnN0IHN0cnVjdCBpbGk5MzQxX2Nv
-bmZpZyAqY29uZjsKPiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBpbmxpbmUgc3RydWN0IGlsaTkz
-NDEgKnBhbmVsX3RvX2lsaTkzNDEoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpCj4gPiArewo+ID4g
-KyAgICAgcmV0dXJuIGNvbnRhaW5lcl9vZihwYW5lbCwgc3RydWN0IGlsaTkzNDEsIHBhbmVsKTsK
-PiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGludCBpbGk5MzQxX2RlaW5pdChzdHJ1Y3QgZHJtX3Bh
-bmVsICpwYW5lbCwgc3RydWN0IGlsaTkzNDEgKmlsaSkKPiA+ICt7Cj4gPiArICAgICBtaXBpX2Ri
-aV9jb21tYW5kKGlsaS0+bWlwaSwgTUlQSV9EQ1NfU0VUX0RJU1BMQVlfT0ZGKTsKPiA+ICsgICAg
-IG1pcGlfZGJpX2NvbW1hbmQoaWxpLT5taXBpLCBNSVBJX0RDU19FTlRFUl9TTEVFUF9NT0RFKTsK
-PiA+ICsgICAgIG1zbGVlcCg1KTsKPiA+ICsgICAgIHJldHVybiAwOwo+ID4gK30KPiA+ICsKPiA+
-ICtzdGF0aWMgaW50IGlsaTkzNDFfaW5pdChzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCwgc3RydWN0
-IGlsaTkzNDEgKmlsaSkKPiA+ICt7Cj4gPiArICAgICAvKiBIVyAvIFNXIFJlc2V0IGRpc3BsYXkg
-YW5kIHdhaXQgKi8KPiA+ICsgICAgIGlmIChpbGktPm1pcGktPnJlc2V0KQo+ID4gKyAgICAgICAg
-ICAgICBtaXBpX2RiaV9od19yZXNldChpbGktPm1pcGkpOwo+ID4gKwo+ID4gKyAgICAgbWlwaV9k
-YmlfY29tbWFuZChpbGktPm1pcGksIE1JUElfRENTX1NPRlRfUkVTRVQpOwo+ID4gKyAgICAgbXNs
-ZWVwKDEyMCk7Cj4gQ29uc2lkZXIgYSB1c2xlZXBfcmFuZ2UgaGVyZSAtIHRvIGhhdmUgdGhlIHdh
-aXRpbmcgYSBsaXR0bGUgbW9yZSByZWxheGVkCj4gaW4gdGhlIHN5c3RlbS4KPgoKSSBhbSB1c2lu
-ZyBtc2xlZXAgaGVyZSBhcyBpdCBpcyByZWNvbW1lbmRlZCBmb3Igc2xlZXBpbmcgZm9yIDEwbXMr
-CmJ5IERvY3VtZW50YXRpb24vdGltZXJzL3RpbWVycy1ob3d0by50eHQuCkFueXdheSwgSSdsbCBj
-aGFuZ2UgdGhpcyB0byBjYWxsIHRoZQptaXBpX2RiaV9wb3dlcm9uX3Jlc2V0KCk6bWlwaV9kYmku
-YyBmdW5jdGlvbiwKd2hpY2ggZG9lcyB0aGUgc2FtZSBhcyBhYm92ZS4KUGx1cywgSSBzaG91bGQg
-Y2hhbmdlIHRoZSBtc2xlZXAoNSkgaW4gaWxpOTM0MV9kZWluaXQoKSB0bwp1c2xlZXBfcmFuZ2Uo
-NTAwMCwgMjAwMDApLgoKPiA+ICsKPiA+ICsgICAgIC8qIFBvbGFyaXR5ICovCj4gPiArICAgICBt
-aXBpX2RiaV9jb21tYW5kKGlsaS0+bWlwaSwgSUxJOTM0MV9JRk1PREUsIDB4QzApOwo+ID4gKwo+
-ID4gKyAgICAgLyogSW50ZXJmYWNlIGNvbnRyb2wgKi8KPiA+ICsgICAgIG1pcGlfZGJpX2NvbW1h
-bmQoaWxpLT5taXBpLCBJTEk5MzQxX0lGQ1RMLCAweDA5LCAweDAxLCAweDI2KTsKPiA+ICsKPiA+
-ICsgICAgIC8qIFBpeGVsIGZvcm1hdCAqLwo+ID4gKyAgICAgbWlwaV9kYmlfY29tbWFuZChpbGkt
-Pm1pcGksIE1JUElfRENTX1NFVF9QSVhFTF9GT1JNQVQsIE1JUElfRENTX1BJWEVMX0ZNVF8xOEJJ
-VCA8PCA0KTsKPiA+ICsKPiA+ICsgICAgIC8qIEdhbW1hICovCj4gPiArICAgICBtaXBpX2RiaV9j
-b21tYW5kKGlsaS0+bWlwaSwgTUlQSV9EQ1NfU0VUX0dBTU1BX0NVUlZFLCAweDAxKTsKPiA+ICsg
-ICAgIG1pcGlfZGJpX2NvbW1hbmQoaWxpLT5taXBpLCBJTEk5MzQxX1BHQU1DVFJMLAo+ID4gKyAg
-ICAgICAgICAgICAweDBmLCAweDMxLCAweDJiLCAweDBjLCAweDBlLCAweDA4LCAweDRlLCAweGYx
-LAo+ID4gKyAgICAgICAgICAgICAweDM3LCAweDA3LCAweDEwLCAweDAzLCAweDBlLCAweDA5LCAw
-eDAwKTsKPiA+ICsgICAgIG1pcGlfZGJpX2NvbW1hbmQoaWxpLT5taXBpLCBJTEk5MzQxX05HQU1D
-VFJMLAo+ID4gKyAgICAgICAgICAgICAweDAwLCAweDBlLCAweDE0LCAweDAzLCAweDExLCAweDA3
-LCAweDMxLCAweGMxLAo+ID4gKyAgICAgICAgICAgICAweDQ4LCAweDA4LCAweDBmLCAweDBjLCAw
-eDMxLCAweDM2LCAweDBmKTsKPiA+ICsKPiA+ICsgICAgIC8qIFJvdGF0aW9uICovCj4gPiArICAg
-ICBtaXBpX2RiaV9jb21tYW5kKGlsaS0+bWlwaSwgTUlQSV9EQ1NfU0VUX0FERFJFU1NfTU9ERSwg
-SUxJOTM0MV9NQURDVExfTVgpOwo+ID4gKwo+ID4gKyAgICAgLyogRXhpdCBzbGVlcCBtb2RlICov
-Cj4gPiArICAgICBtaXBpX2RiaV9jb21tYW5kKGlsaS0+bWlwaSwgTUlQSV9EQ1NfRVhJVF9TTEVF
-UF9NT0RFKTsKPiA+ICsgICAgIG1zbGVlcCgxMjApOwo+ID4gKwo+ID4gKyAgICAgbWlwaV9kYmlf
-Y29tbWFuZChpbGktPm1pcGksIE1JUElfRENTX1NFVF9ESVNQTEFZX09OKTsKPiA+ICsKPiA+ICsg
-ICAgIHJldHVybiAwOwo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgaW50IGlsaTkzNDFfdW5wcmVw
-YXJlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+ID4gK3sKPiA+ICsgICAgIHN0cnVjdCBpbGk5
-MzQxICppbGkgPSBwYW5lbF90b19pbGk5MzQxKHBhbmVsKTsKPiA+ICsKPiA+ICsgICAgIHJldHVy
-biBpbGk5MzQxX2RlaW5pdChwYW5lbCwgaWxpKTsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGlu
-dCBpbGk5MzQxX3ByZXBhcmUoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpCj4gPiArewo+ID4gKyAg
-ICAgc3RydWN0IGlsaTkzNDEgKmlsaSA9IHBhbmVsX3RvX2lsaTkzNDEocGFuZWwpOwo+ID4gKyAg
-ICAgaW50IHJldDsKPiA+ICsKPiA+ICsgICAgIHJldCA9IGlsaTkzNDFfaW5pdChwYW5lbCwgaWxp
-KTsKPiA+ICsgICAgIGlmIChyZXQgPCAwKQo+ID4gKyAgICAgICAgICAgICBpbGk5MzQxX3VucHJl
-cGFyZShwYW5lbCk7Cj4gPiArICAgICByZXR1cm4gcmV0Owo+ID4gK30KPiA+ICsKPiA+ICtzdGF0
-aWMgaW50IGlsaTkzNDFfZW5hYmxlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+ID4gK3sKPiA+
-ICsgICAgIHN0cnVjdCBpbGk5MzQxICppbGkgPSBwYW5lbF90b19pbGk5MzQxKHBhbmVsKTsKPiA+
-ICsKPiA+ICsgICAgIHJldHVybiBiYWNrbGlnaHRfZW5hYmxlKGlsaS0+bWlwaS0+YmFja2xpZ2h0
-KTsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGludCBpbGk5MzQxX2Rpc2FibGUoc3RydWN0IGRy
-bV9wYW5lbCAqcGFuZWwpCj4gPiArewo+ID4gKyAgICAgc3RydWN0IGlsaTkzNDEgKmlsaSA9IHBh
-bmVsX3RvX2lsaTkzNDEocGFuZWwpOwo+ID4gKwo+ID4gKyAgICAgcmV0dXJuIGJhY2tsaWdodF9k
-aXNhYmxlKGlsaS0+bWlwaS0+YmFja2xpZ2h0KTsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGNv
-bnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIHByZ2JfMjQweDMyMF9tb2RlID0gewo+ID4gKyAg
-ICAgLmNsb2NrID0gNjM1MCwKPiA+ICsKPiA+ICsgICAgIC5oZGlzcGxheSA9IDI0MCwKPiA+ICsg
-ICAgIC5oc3luY19zdGFydCA9IDI0MCArIDEwLAo+ID4gKyAgICAgLmhzeW5jX2VuZCA9IDI0MCAr
-IDEwICsgMTAsCj4gPiArICAgICAuaHRvdGFsID0gMjQwICsgMTAgKyAxMCArIDIwLAo+ID4gKwo+
-ID4gKyAgICAgLnZkaXNwbGF5ID0gMzIwLAo+ID4gKyAgICAgLnZzeW5jX3N0YXJ0ID0gMzIwICsg
-NCwKPiA+ICsgICAgIC52c3luY19lbmQgPSAzMjAgKyA0ICsgMiwKPiA+ICsgICAgIC52dG90YWwg
-PSAzMjAgKyA0ICsgMiArIDIsCj4gPiArCj4gPiArICAgICAuZmxhZ3MgPSBEUk1fTU9ERV9GTEFH
-X05IU1lOQyB8IERSTV9NT0RFX0ZMQUdfTlZTWU5DLAo+ID4gKyAgICAgLnR5cGUgPSBEUk1fTU9E
-RV9UWVBFX0RSSVZFUiB8IERSTV9NT0RFX1RZUEVfUFJFRkVSUkVECj4gPiArfTsKPiA+ICsKPiA+
-ICtzdGF0aWMgaW50IGlsaTkzNDFfZ2V0X21vZGVzKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+
-ID4gK3sKPiA+ICsgICAgIHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IgPSBwYW5lbC0+
-Y29ubmVjdG9yOwo+ID4gKyAgICAgc3RydWN0IGlsaTkzNDEgKmlsaSA9IHBhbmVsX3RvX2lsaTkz
-NDEocGFuZWwpOwo+ID4gKyAgICAgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGU7Cj4gPiAr
-Cj4gPiArICAgICBtb2RlID0gZHJtX21vZGVfZHVwbGljYXRlKHBhbmVsLT5kcm0sICZwcmdiXzI0
-MHgzMjBfbW9kZSk7Cj4gPiArICAgICBpZiAoIW1vZGUpIHsKPiA+ICsgICAgICAgICAgICAgRFJN
-X0RFVl9FUlJPUihwYW5lbC0+ZHJtLT5kZXYsICJiYWQgbW9kZSBvciBmYWlsZWQgdG8gYWRkIG1v
-ZGVcbiIpOwo+ID4gKyAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsKPiA+ICsgICAgIH0KPiA+
-ICsKPiA+ICsgICAgIGRybV9tb2RlX3NldF9uYW1lKG1vZGUpOwo+ID4gKwo+ID4gKyAgICAgbW9k
-ZS0+d2lkdGhfbW0gPSBpbGktPmNvbmYtPndpZHRoX21tOwo+ID4gKyAgICAgbW9kZS0+aGVpZ2h0
-X21tID0gaWxpLT5jb25mLT5oZWlnaHRfbW07Cj4gPiArCj4gPiArICAgICBjb25uZWN0b3ItPmRp
-c3BsYXlfaW5mby53aWR0aF9tbSA9IG1vZGUtPndpZHRoX21tOwo+ID4gKyAgICAgY29ubmVjdG9y
-LT5kaXNwbGF5X2luZm8uaGVpZ2h0X21tID0gbW9kZS0+aGVpZ2h0X21tOwo+ID4gKyAgICAgY29u
-bmVjdG9yLT5kaXNwbGF5X2luZm8uYnVzX2ZsYWdzIHw9IERSTV9CVVNfRkxBR19ERV9ISUdIIHwK
-PiA+ICsgICAgICAgICAgICAgRFJNX0JVU19GTEFHX1BJWERBVEFfUE9TRURHRSB8IERSTV9CVVNf
-RkxBR19TWU5DX05FR0VER0U7Cj4gPiArCj4gPiArICAgICBkcm1fbW9kZV9wcm9iZWRfYWRkKGNv
-bm5lY3RvciwgbW9kZSk7Cj4gPiArCj4gPiArICAgICByZXR1cm4gMTsgLyogTnVtYmVyIG9mIG1v
-ZGVzICovCj4gPiArfQo+ID4gKwo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX3BhbmVsX2Z1
-bmNzIGlsaTkzNDFfZHJtX2Z1bmNzID0gewo+ID4gKyAgICAgLmRpc2FibGUgPSBpbGk5MzQxX2Rp
-c2FibGUsCj4gPiArICAgICAudW5wcmVwYXJlID0gaWxpOTM0MV91bnByZXBhcmUsCj4gPiArICAg
-ICAucHJlcGFyZSA9IGlsaTkzNDFfcHJlcGFyZSwKPiA+ICsgICAgIC5lbmFibGUgPSBpbGk5MzQx
-X2VuYWJsZSwKPiA+ICsgICAgIC5nZXRfbW9kZXMgPSBpbGk5MzQxX2dldF9tb2RlcywKPiA+ICt9
-Owo+ID4gKwo+ID4gK3N0YXRpYyBpbnQgaWxpOTM0MV9wcm9iZShzdHJ1Y3Qgc3BpX2RldmljZSAq
-c3BpKQo+ID4gK3sKPiA+ICsgICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9ICZzcGktPmRldjsKPiA+
-ICsgICAgIHN0cnVjdCBpbGk5MzQxICppbGk7Cj4gPiArICAgICBzdHJ1Y3QgbWlwaV9kYmkgKm1p
-cGk7Cj4gPiArICAgICBzdHJ1Y3QgZ3Bpb19kZXNjICpkY19ncGlvOwo+ID4gKyAgICAgaW50IHJl
-dDsKPiA+ICsKPiA+ICsgICAgIG1pcGkgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKm1pcGkp
-LCBHRlBfS0VSTkVMKTsKPiA+ICsgICAgIGlmICghbWlwaSkKPiA+ICsgICAgICAgICAgICAgcmV0
-dXJuIC1FTk9NRU07Cj4gPiArCj4gPiArICAgICBpbGkgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXpl
-b2YoKmlsaSksIEdGUF9LRVJORUwpOwo+ID4gKyAgICAgaWYgKCFpbGkpCj4gPiArICAgICAgICAg
-ICAgIHJldHVybiAtRU5PTUVNOwo+ID4gKwo+ID4gKyAgICAgaWxpLT5taXBpID0gbWlwaTsKPiA+
-ICsKPiA+ICsgICAgIHNwaV9zZXRfZHJ2ZGF0YShzcGksIGlsaSk7Cj4gPiArCj4gPiArICAgICAv
-Kgo+ID4gKyAgICAgICogRXZlcnkgbmV3IGluY2FybmF0aW9uIG9mIHRoaXMgZGlzcGxheSBtdXN0
-IGhhdmUgYSB1bmlxdWUKPiA+ICsgICAgICAqIGRhdGEgZW50cnkgZm9yIHRoZSBzeXN0ZW0gaW4g
-dGhpcyBkcml2ZXIuCj4gPiArICAgICAgKi8KPiA+ICsgICAgIGlsaS0+Y29uZiA9IG9mX2Rldmlj
-ZV9nZXRfbWF0Y2hfZGF0YShkZXYpOwo+ID4gKyAgICAgaWYgKCFpbGktPmNvbmYpIHsKPiA+ICsg
-ICAgICAgICAgICAgRFJNX0RFVl9FUlJPUihkZXYsICJtaXNzaW5nIGRldmljZSBjb25maWd1cmF0
-aW9uXG4iKTsKPiA+ICsgICAgICAgICAgICAgcmV0dXJuIC1FTk9ERVY7Cj4gPiArICAgICB9Cj4g
-PiArCj4gPiArICAgICBpbGktPm1pcGktPnJlc2V0ID0gZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwo
-ZGV2LCAicmVzZXQiLCBHUElPRF9PVVRfSElHSCk7Cj4gPiArICAgICBpZiAoSVNfRVJSKGlsaS0+
-bWlwaS0+cmVzZXQpKSB7Cj4gPiArICAgICAgICAgICAgIERSTV9ERVZfRVJST1IoZGV2LCAiZmFp
-bGVkIHRvIGdldCBncGlvICdyZXNldCdcbiIpOwo+ID4gKyAgICAgICAgICAgICByZXR1cm4gUFRS
-X0VSUihpbGktPm1pcGktPnJlc2V0KTsKPiA+ICsgICAgIH0KPiA+ICsKPiA+ICsgICAgIGlsaS0+
-bWlwaS0+YmFja2xpZ2h0ID0gZGV2bV9vZl9maW5kX2JhY2tsaWdodChkZXYpOwo+ID4gKyAgICAg
-aWYgKElTX0VSUihpbGktPm1pcGktPmJhY2tsaWdodCkpIHsKPiA+ICsgICAgICAgICAgICAgRFJN
-X0RFVl9FUlJPUihkZXYsICJmYWlsZWQgdG8gZ2V0IGJhY2tsaWdodFxuIik7Cj4gPiArICAgICAg
-ICAgICAgIHJldHVybiBQVFJfRVJSKGlsaS0+bWlwaS0+YmFja2xpZ2h0KTsKPiA+ICsgICAgIH0K
-PiA+ICsKPiA+ICsgICAgIGRjX2dwaW8gPSBkZXZtX2dwaW9kX2dldF9vcHRpb25hbChkZXYsICJk
-YyIsIEdQSU9EX09VVF9MT1cpOwo+ID4gKyAgICAgaWYgKElTX0VSUihkY19ncGlvKSkgewo+ID4g
-KyAgICAgICAgICAgICBEUk1fREVWX0VSUk9SKGRldiwgImZhaWxlZCB0byBnZXQgZ3BpbyAnZGMn
-XG4iKTsKPiA+ICsgICAgICAgICAgICAgcmV0dXJuIFBUUl9FUlIoZGNfZ3Bpbyk7Cj4gPiArICAg
-ICB9Cj4gPiArCj4gPiArICAgICByZXQgPSBtaXBpX2RiaV9zcGlfaW5pdChzcGksIGlsaS0+bWlw
-aSwgZGNfZ3Bpbyk7Cj4gPiArICAgICBpZiAocmV0KSB7Cj4gPiArICAgICAgICAgICAgIERSTV9E
-RVZfRVJST1IoZGV2LCAiTUlQSS1EQkkgU1BJIHNldHVwIGZhaWxlZFxuIik7Cj4gPiArICAgICAg
-ICAgICAgIHJldHVybiByZXQ7Cj4gPiArICAgICB9Cj4gPiArCj4gPiArICAgICBkcm1fcGFuZWxf
-aW5pdCgmaWxpLT5wYW5lbCk7Cj4gPiArICAgICBpbGktPnBhbmVsLmRldiA9IGRldjsKPiA+ICsg
-ICAgIGlsaS0+cGFuZWwuZnVuY3MgPSAmaWxpOTM0MV9kcm1fZnVuY3M7Cj4gPiArCj4gPiArICAg
-ICByZXR1cm4gZHJtX3BhbmVsX2FkZCgmaWxpLT5wYW5lbCk7Cj4gPiArfQo+ID4gKwo+ID4gK3N0
-YXRpYyBpbnQgaWxpOTM0MV9yZW1vdmUoc3RydWN0IHNwaV9kZXZpY2UgKnNwaSkKPiA+ICt7Cj4g
-PiArICAgICBzdHJ1Y3QgaWxpOTM0MSAqaWxpID0gc3BpX2dldF9kcnZkYXRhKHNwaSk7Cj4gPiAr
-Cj4gPiArICAgICBkcm1fcGFuZWxfcmVtb3ZlKCZpbGktPnBhbmVsKTsKPiA+ICsKPiA+ICsgICAg
-IGlsaTkzNDFfZGlzYWJsZSgmaWxpLT5wYW5lbCk7Cj4gPiArICAgICBpbGk5MzQxX3VucHJlcGFy
-ZSgmaWxpLT5wYW5lbCk7Cj4gPiArCj4gPiArICAgICByZXR1cm4gMDsKPiA+ICt9Cj4gPiArCj4g
-PiArc3RhdGljIGNvbnN0IHN0cnVjdCBpbGk5MzQxX2NvbmZpZyBkdDAyNGN0ZnRfZGF0YSA9IHsK
-PiA+ICsgICAgIC53aWR0aF9tbSA9IDM3LAo+ID4gKyAgICAgLmhlaWdodF9tbSA9IDQ5LAo+ID4g
-K307Cj4gPiArCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgaWxpOTM0MV9v
-Zl9tYXRjaFtdID0gewo+ID4gKyAgICAgeyAuY29tcGF0aWJsZSA9ICJkaXNwbGF5dGVjaCxkdDAy
-NGN0ZnQiLCAuZGF0YSA9ICZkdDAyNGN0ZnRfZGF0YSB9LAo+ID4gKyAgICAgeyAvKiBzZW50aW5l
-bCAqLyB9Cj4gPiArfTsKPiBJZiBhbm90aGVyIGRpc3BsYXkgaXMgc3VwcG9ydGVkIHRoZW4gdGhl
-IGRybV9kaXNwbGF5X21vZGUgbWF5IG5vdCBtYXRjaC4KPiBTbyB0aGUgYWJvdmUgbWF5IG5vdCBw
-cm92ZSBlbm91Z2ggaW4gdGhlIGZ1dHVyZS4KPiBmb3Igbm93IGl0IHNob3VsZCBiZSBmaW5lLgo+
-Cj4KPiA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBpbGk5MzQxX29mX21hdGNoKTsKPiA+ICsK
-PiA+ICtzdGF0aWMgc3RydWN0IHNwaV9kcml2ZXIgaWxpOTM0MV9kcml2ZXIgPSB7Cj4gPiArICAg
-ICAucHJvYmUgPSBpbGk5MzQxX3Byb2JlLAo+ID4gKyAgICAgLnJlbW92ZSA9IGlsaTkzNDFfcmVt
-b3ZlLAo+ID4gKyAgICAgLmRyaXZlciA9IHsKPiA+ICsgICAgICAgICAgICAgLm5hbWUgPSAicGFu
-ZWwtaWxpdGVrLWlsaTkzNDEiLAo+ID4gKyAgICAgICAgICAgICAub2ZfbWF0Y2hfdGFibGUgPSBp
-bGk5MzQxX29mX21hdGNoLAo+ID4gKyAgICAgfSwKPiA+ICt9Owo+ID4gK21vZHVsZV9zcGlfZHJp
-dmVyKGlsaTkzNDFfZHJpdmVyKTsKPiA+ICsKPiA+ICtNT0RVTEVfQVVUSE9SKCJKb3NlZiBMdXN0
-aWNreSA8am9zZWZAbHVzdGlja3kuY3o+Iik7Cj4gPiArTU9EVUxFX0RFU0NSSVBUSU9OKCJJTEk5
-MzQxIExDRCBwYW5lbCBkcml2ZXIiKTsKPiA+ICtNT0RVTEVfTElDRU5TRSgiR1BMIik7Cj4KPiBM
-b29rcyBnb29kLgo+IFJldmlld2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+
-Cj4KPiAgICAgICAgIFNhbQoKVGhhbmsgeW91IQpKb3NlZgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hi Mark
+
+Thanks a lot for your review !
+
+I started to rework the driver, based on your feedback but I have some ques=
+tions for you: they are in line below... (where I also answer to your quest=
+ions)
+
+Best regards
+
+G=E9rald
+
+
+> -----Original Message-----
+> From: Mark Rutland <Mark.Rutland@arm.com>
+> Sent: mercredi 26 juin 2019 14:23
+> To: Gerald BAEZA <gerald.baeza@st.com>
+> Cc: Will Deacon <Will.Deacon@arm.com>; robh+dt@kernel.org;
+> mcoquelin.stm32@gmail.com; Alexandre TORGUE
+> <alexandre.torgue@st.com>; corbet@lwn.net; linux@armlinux.org.uk;
+> olof@lixom.net; horms+renesas@verge.net.au; arnd@arndb.de; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-stm32@st-
+> md-mailman.stormreply.com; linux-kernel@vger.kernel.org; linux-
+> doc@vger.kernel.org
+> Subject: Re: [PATCH v2 3/5] perf: stm32: ddrperfm driver creation
+> =
+
+> On Mon, May 20, 2019 at 03:27:17PM +0000, Gerald BAEZA wrote:
+> > The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1
+> SOC.
+> >
+> > This perf drivers supports the read, write, activate, idle and total
+> > time counters, described in the reference manual RM0436.
+> =
+
+> Is this document publicly accessible anywhere?
+
+Yes
+
+> If so, could you please provide a link?
+
+https://www.st.com/resource/en/reference_manual/DM00327659.pdf =
+
+
+> > A 'bandwidth' attribute is added in the 'ddrperfm' event_source in
+> > order to directly get the read and write bandwidths (in MB/s), from
+> > the last read, write and total time counters reading.
+> > This attribute is aside the 'events' attributes group because it is
+> > not a counter, as seen by perf tool.
+> =
+
+> This should be removed. This is unusually stateful, and this can be calcu=
+lated
+> in userspace by using the events. I'm also not keen on creating a precede=
+nt
+> for weird sysfs bits for PMUs.
+
+Ok, I will remove it in the v3.
+This will also have impact on the bindings and dts since the DDR frequency =
+
+will disappear from the clocks.
+
+Just to be sure : should I do the bandwidth computing on userspace (via =
+
+a script, for instance) or are you suggesting to do this in perf tool ? =
+
+
+> > Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
+> > ---
+> >  drivers/perf/Kconfig         |   6 +
+> >  drivers/perf/Makefile        |   1 +
+> >  drivers/perf/stm32_ddr_pmu.c | 512
+> > +++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 519 insertions(+)
+> >  create mode 100644 drivers/perf/stm32_ddr_pmu.c
+> >
+> > diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig index
+> > a94e586..9add8a7 100644
+> > --- a/drivers/perf/Kconfig
+> > +++ b/drivers/perf/Kconfig
+> > @@ -105,6 +105,12 @@ config THUNDERX2_PMU
+> >     The SoC has PMU support in its L3 cache controller (L3C) and
+> >     in the DDR4 Memory Controller (DMC).
+> >
+> > +config STM32_DDR_PMU
+> > +       tristate "STM32 DDR PMU"
+> > +       depends on MACH_STM32MP157
+> > +       help
+> > +         Support for STM32 DDR performance monitor (DDRPERFM).
+> > +
+> >  config XGENE_PMU
+> >          depends on ARCH_XGENE
+> >          bool "APM X-Gene SoC PMU"
+> > diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile index
+> > 3048994..fa64719 100644
+> > --- a/drivers/perf/Makefile
+> > +++ b/drivers/perf/Makefile
+> > @@ -8,6 +8,7 @@ obj-$(CONFIG_ARM_SMMU_V3_PMU) +=3D arm_smmuv3_pmu.o
+> >  obj-$(CONFIG_HISI_PMU) +=3D hisilicon/
+> >  obj-$(CONFIG_QCOM_L2_PMU)+=3D qcom_l2_pmu.o
+> >  obj-$(CONFIG_QCOM_L3_PMU) +=3D qcom_l3_pmu.o
+> > +obj-$(CONFIG_STM32_DDR_PMU) +=3D stm32_ddr_pmu.o
+> >  obj-$(CONFIG_THUNDERX2_PMU) +=3D thunderx2_pmu.o
+> >  obj-$(CONFIG_XGENE_PMU) +=3D xgene_pmu.o
+> >  obj-$(CONFIG_ARM_SPE_PMU) +=3D arm_spe_pmu.o diff --git
+> > a/drivers/perf/stm32_ddr_pmu.c b/drivers/perf/stm32_ddr_pmu.c new file
+> > mode 100644 index 0000000..ae4a813
+> > --- /dev/null
+> > +++ b/drivers/perf/stm32_ddr_pmu.c
+> > @@ -0,0 +1,512 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * This file is the STM32 DDR performance monitor (DDRPERFM) driver
+> > + *
+> > + * Copyright (C) 2019, STMicroelectronics - All Rights Reserved
+> > + * Author: Gerald Baeza <gerald.baeza@st.com>  */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/hrtimer.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/perf_event.h>
+> > +#include <linux/reset.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/types.h>
+> > +
+> > +#define POLL_MS4000/* The counter roll over after ~8s @533MHz */
+> =
+
+> I take it this is because there's no IRQ? If so, please expand the commen=
+t to
+> call that out, e.g.
+>
+> /*
+>  * The PMU has no overflow IRQ, so we must poll to avoid losing events.
+>  * The fastest counter can overflow in ~8s @533MHz, so we poll in 4s
+>  * intervals to ensure we don't miss a rollover.
+>  */
+> #define POLL_MS4000
+
+The IP is able to freeze all counters and generate an interrupt when there =
+is
+a counter overflow. But, relying on this means that I lose all the events t=
+hat
+occur between the freeze and the interrupt handler execution, corresponding
+to the interrupt latency. I can avoid such events losing in polling, so tha=
+t is
+why I preferred to use a polling mechanism.
+ =
+
+> Which clock specifically is operating at 533MHz, and is this something th=
+at
+> may vary? Is it possible that this may go higher in future?
+
+533 MHz is the DDR frequency and this is the maximum for STM32MP15.
+
+> > +#define WORD_LENGTH4/* Bytes */
+> > +#define BURST_LENGTH8/* Words */
+> > +
+> > +#define DDRPERFM_CTL0x000
+> > +#define DDRPERFM_CFG0x004
+> > +#define DDRPERFM_STATUS 0x008
+> > +#define DDRPERFM_CCR0x00C
+> > +#define DDRPERFM_IER0x010
+> > +#define DDRPERFM_ISR0x014
+> > +#define DDRPERFM_ICR0x018
+> > +#define DDRPERFM_TCNT0x020
+> > +#define DDRPERFM_CNT(X)(0x030 + 8 * (X)) =
+
+> > +#define DDRPERFM_HWCFG0x3F0
+> > +#define DDRPERFM_VER0x3F4 =
+
+> > +#define DDRPERFM_ID0x3F8
+> > +#define DDRPERFM_SID0x3FC
+> > +
+> > +#define CTL_START0x00000001
+> > +#define CTL_STOP0x00000002
+> > +#define CCR_CLEAR_ALL0x8000000F
+> > +#define SID_MAGIC_ID0xA3C5DD01
+> > +
+> > +#define STRING "Read =3D %llu, Write =3D %llu, Read & Write =3D %llu (=
+MB/s)\n"
+> =
+
+> If you need this, please expand it in-place. As-is, this is needless obfu=
+scation.
+ =
+
+This will be removed in v3, so no problem.
+
+> > +
+> > +enum {
+> > +READ_CNT,
+> > +WRITE_CNT,
+> > +ACTIVATE_CNT,
+> > +IDLE_CNT,
+> > +TIME_CNT,
+> > +PMU_NR_COUNTERS
+> > +};
+> =
+
+> I take it these are fixed-purpose counters in the hardware?
+
+Yes
+
+> > +
+> > +struct stm32_ddr_pmu {
+> > +struct pmu pmu;
+> > +void __iomem *membase;
+> > +struct clk *clk;
+> > +struct clk *clk_ddr;
+> > +unsigned long clk_ddr_rate;
+> > +struct hrtimer hrtimer;
+> > +ktime_t poll_period;
+> > +spinlock_t lock; /* for shared registers access */
+> =
+
+> All accesses to a PMU instance should be serialized on the same CPU, so y=
+ou
+> shouldn't need a lock (though you will need to disable IRQs to serialize =
+with
+> the interrupt handler).
+> =
+
+> The perf subsystem cannot sanely access the PMU across multiple CPUs.
+
+Ok, so I will only control the IP from one core and remove the lock in v3.
+
+> > +struct perf_event *events[PMU_NR_COUNTERS];
+> > +u64 events_cnt[PMU_NR_COUNTERS];
+> > +};
+> > +
+> > +static inline struct stm32_ddr_pmu *pmu_to_stm32_ddr_pmu(struct
+> pmu
+> > +*p) { return container_of(p, struct stm32_ddr_pmu, pmu); }
+> > +
+> > +static inline struct stm32_ddr_pmu *hrtimer_to_stm32_ddr_pmu(struct
+> > +hrtimer *h) { return container_of(h, struct stm32_ddr_pmu, hrtimer);
+> > +}
+> > +
+> > +static u64 stm32_ddr_pmu_compute_bw(struct stm32_ddr_pmu
+> *stm32_ddr_pmu,
+> > +    int counter)
+> > +{
+> > +u64 bw =3D stm32_ddr_pmu->events_cnt[counter], tmp;
+> > +u64 div =3D stm32_ddr_pmu->events_cnt[TIME_CNT];
+> > +u32 prediv =3D 1, premul =3D 1;
+> > +
+> > +if (bw && div) {
+> > +/* Maximize the dividend into 64 bits */ while ((bw <
+> > +0x8000000000000000ULL) &&
+> > +       (premul < 0x40000000UL)) {
+> > +bw =3D bw << 1;
+> > +premul *=3D 2;
+> > +}
+> > +/* Minimize the dividor to fit in 32 bits */ while ((div >
+> > +0xffffffffUL) && (prediv < 0x40000000UL)) { div =3D div >> 1; prediv *=
+=3D
+> > +2; }
+> > +/* Divide counter per time and multiply per DDR settings */
+> > +do_div(bw, div); tmp =3D bw * BURST_LENGTH * WORD_LENGTH; tmp *=3D
+> > +stm32_ddr_pmu->clk_ddr_rate; if (tmp < bw) goto error; bw =3D tmp;
+> > +/* Cancel the prediv and premul factors */ while (prediv > 1) { bw =3D
+> > +bw >> 1; prediv /=3D 2; } while (premul > 1) { bw =3D bw >> 1; premul =
+/=3D
+> > +2; }
+> > +/* Convert MHz to Hz and B to MB, to finally get MB/s */ tmp =3D bw *
+> > +1000000; if (tmp < bw) goto error; bw =3D tmp; premul =3D 1024 * 1024;
+> > +while (premul > 1) { bw =3D bw >> 1; premul /=3D 2; } } return bw;
+> > +
+> > +error:
+> > +pr_warn("stm32-ddr-pmu: overflow detected\n"); return 0; }
+> =
+
+> IIUC this is for the stateful sysfs stuff, which should be removed.
+> =
+
+
+Yes, you are right : to be removed in v3.
+
+> > +
+> > +static void stm32_ddr_pmu_event_configure(struct perf_event *event) {
+> > +struct stm32_ddr_pmu *stm32_ddr_pmu =3D
+> > +pmu_to_stm32_ddr_pmu(event->pmu); unsigned long lock_flags,
+> > +config_base =3D event->hw.config_base;
+> > +u32 val;
+> > +
+> > +spin_lock_irqsave(&stm32_ddr_pmu->lock, lock_flags);
+> > +writel_relaxed(CTL_STOP, stm32_ddr_pmu->membase + DDRPERFM_CTL);
+> > +
+> > +if (config_base < TIME_CNT) {
+> > +val =3D readl_relaxed(stm32_ddr_pmu->membase + DDRPERFM_CFG); val |=3D=
+ (1
+> > +<< config_base); writel_relaxed(val, stm32_ddr_pmu->membase +
+> > +DDRPERFM_CFG); } spin_unlock_irqrestore(&stm32_ddr_pmu->lock,
+> > +lock_flags); }
+> =
+
+> You don't need the lock here. This is called from your pmu::{start,add}
+> callbacks, and the perf core already ensures those are serialized (via the
+> context lock), and called with IRQs disabled.
+> =
+
+
+Ok
+
+> > +
+> > +static void stm32_ddr_pmu_event_read(struct perf_event *event) {
+> > +struct stm32_ddr_pmu *stm32_ddr_pmu =3D
+> > +pmu_to_stm32_ddr_pmu(event->pmu); unsigned long flags, config_base =3D
+> > +event->hw.config_base; struct hw_perf_event *hw =3D &event->hw;
+> > +u64 prev_count, new_count, mask;
+> > +u32 val, offset, bit;
+> > +
+> > +spin_lock_irqsave(&stm32_ddr_pmu->lock, flags);
+> > +
+> > +writel_relaxed(CTL_STOP, stm32_ddr_pmu->membase + DDRPERFM_CTL);
+> > +
+> > +if (config_base =3D=3D TIME_CNT) {
+> > +offset =3D DDRPERFM_TCNT;
+> > +bit =3D 1 << 31;
+> > +} else {
+> > +offset =3D DDRPERFM_CNT(config_base);
+> > +bit =3D 1 << config_base;
+> > +}
+> > +val =3D readl_relaxed(stm32_ddr_pmu->membase + DDRPERFM_STATUS);
+> > +if (val & bit) pr_warn("stm32_ddr_pmu hardware overflow\n"); val =3D
+> > +readl_relaxed(stm32_ddr_pmu->membase + offset); writel_relaxed(bit,
+> > +stm32_ddr_pmu->membase + DDRPERFM_CCR);
+> > + writel_relaxed(CTL_START, stm32_ddr_pmu->membase + DDRPERFM_CTL);
+> > +
+> > +do {
+> > +prev_count =3D local64_read(&hw->prev_count); new_count =3D prev_count
+> > +val; } while (local64_xchg(&hw->prev_count, new_count) !=3D
+> > +prev_count);
+> > +
+> > +mask =3D GENMASK_ULL(31, 0);
+> > +local64_add(val & mask, &event->count);
+> > +
+> > +if (new_count < prev_count)
+> > +pr_warn("STM32 DDR PMU counter saturated\n");
+> =
+
+> Do the counter saturate, or do they roll-over?
+> =
+
+> I think that the message is misleading here, but I just want to check.
+
+This check is on the software counter, that may roll-over after a very long=
+ capture time.
+I took the "counter saturated" warning from "cache-l2x0-pmu.c" but I can ch=
+ange to
+something more explicit.
+
+The hardware counters, in DDRPERFM IP, are frozen in case of overflow (this=
+ is when
+the interrupt mentioned above can be generated).
+If this occurs, a "stm32_ddr_pmu hardware overflow" warning is generated.
+
+Is this clearer ? Should I change anything ?
+
+> > +
+> > +spin_unlock_irqrestore(&stm32_ddr_pmu->lock, flags); }
+> > +
+> > +static void stm32_ddr_pmu_event_start(struct perf_event *event, int
+> > +flags) { struct stm32_ddr_pmu *stm32_ddr_pmu =3D
+> > +pmu_to_stm32_ddr_pmu(event->pmu);
+> > +struct hw_perf_event *hw =3D &event->hw; unsigned long lock_flags;
+> > +
+> > +if (WARN_ON_ONCE(!(hw->state & PERF_HES_STOPPED))) return;
+> > +
+> > +if (flags & PERF_EF_RELOAD)
+> > +WARN_ON_ONCE(!(hw->state & PERF_HES_UPTODATE));
+> > +
+> > +stm32_ddr_pmu_event_configure(event);
+> > +
+> > +/* Clear all counters to synchronize them, then start */
+> > +spin_lock_irqsave(&stm32_ddr_pmu->lock, lock_flags);
+> > +writel_relaxed(CCR_CLEAR_ALL, stm32_ddr_pmu->membase + DDRPERFM_CCR);
+> > +writel_relaxed(CTL_START, stm32_ddr_pmu->membase + DDRPERFM_CTL);
+> > +spin_unlock_irqrestore(&stm32_ddr_pmu->lock, lock_flags);
+> =
+
+> By 'clear' do you mean set the counters to zero?
+> =
+
+> Or is there a control bit that determine whether they count?
+
+There is one "enable" bit per counter (except the total counter that is ena=
+bled by default).
+"Clear" means that the counters are set to zero and the counting will only =
+be started with =
+
+the "Start" for all enabled counters.
+
+> If we're updating the counter, we could update prev_count at the same
+> instant.
+
+This synchronization is just for the start because the events are enabled &=
+ started one
+per one by perf tool. Since each counter has to be compared to the "time" c=
+ount that is
+the overall reference for all, I want to ensure that "time" and all the ena=
+bled counters =
+
+finally start at the same time. Thus, this synchro.
+
+Do you mean that, to be consistent, I should set prev_count to zero here al=
+so ?
+
+> =
+
+> > +
+> > +hw->state =3D 0;
+> > +}
+> > +
+> > +static void stm32_ddr_pmu_event_stop(struct perf_event *event, int
+> > +flags) { struct stm32_ddr_pmu *stm32_ddr_pmu =3D
+> > +pmu_to_stm32_ddr_pmu(event->pmu);
+> > +unsigned long lock_flags, config_base =3D event->hw.config_base; struct
+> > +hw_perf_event *hw =3D &event->hw;
+> > +u32 val, bit;
+> > +
+> > +if (WARN_ON_ONCE(hw->state & PERF_HES_STOPPED)) return;
+> > +
+> > +spin_lock_irqsave(&stm32_ddr_pmu->lock, lock_flags);
+> > +writel_relaxed(CTL_STOP, stm32_ddr_pmu->membase +
+> DDRPERFM_CTL); if
+> > +(config_base =3D=3D TIME_CNT) bit =3D 1 << 31; else bit =3D 1 << confi=
+g_base;
+> > +writel_relaxed(bit, stm32_ddr_pmu->membase + DDRPERFM_CCR); if
+> > +(config_base < TIME_CNT) { val =3D readl_relaxed(stm32_ddr_pmu-
+> >membase
+> > ++ DDRPERFM_CFG); val &=3D ~bit; writel_relaxed(val,
+> > +stm32_ddr_pmu->membase + DDRPERFM_CFG); }
+> > +spin_unlock_irqrestore(&stm32_ddr_pmu->lock, lock_flags);
+> > +
+> > +hw->state |=3D PERF_HES_STOPPED;
+> > +
+> > +if (flags & PERF_EF_UPDATE) {
+> > +stm32_ddr_pmu_event_read(event);
+> > +hw->state |=3D PERF_HES_UPTODATE;
+> > +}
+> > +}
+> > +
+> > +static int stm32_ddr_pmu_event_add(struct perf_event *event, int
+> > +flags) { struct stm32_ddr_pmu *stm32_ddr_pmu =3D
+> > +pmu_to_stm32_ddr_pmu(event->pmu);
+> > +unsigned long config_base =3D event->hw.config_base; struct
+> > +hw_perf_event *hw =3D &event->hw;
+> > +
+> > +stm32_ddr_pmu->events_cnt[config_base] =3D 0;
+> > +stm32_ddr_pmu->events[config_base] =3D event;
+> > +
+> > +clk_enable(stm32_ddr_pmu->clk);
+> > +hrtimer_start(&stm32_ddr_pmu->hrtimer, stm32_ddr_pmu-poll_period,
+> > +      HRTIMER_MODE_REL);
+> > +
+> > +stm32_ddr_pmu_event_configure(event);
+> > +
+> > +hw->state =3D PERF_HES_STOPPED | PERF_HES_UPTODATE;
+> > +
+> > +if (flags & PERF_EF_START)
+> > +stm32_ddr_pmu_event_start(event, 0);
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +static void stm32_ddr_pmu_event_del(struct perf_event *event, int
+> > +flags) { struct stm32_ddr_pmu *stm32_ddr_pmu =3D
+> > +pmu_to_stm32_ddr_pmu(event->pmu);
+> > +unsigned long config_base =3D event->hw.config_base; bool stop =3D tru=
+e;
+> > +int i;
+> > +
+> > +stm32_ddr_pmu_event_stop(event, PERF_EF_UPDATE);
+> > +
+> > +stm32_ddr_pmu->events_cnt[config_base] +=3D
+> > +local64_read(&event->count); stm32_ddr_pmu->events[config_base] =3D
+> > +NULL;
+> > +
+> > +for (i =3D 0; i < PMU_NR_COUNTERS; i++) if (stm32_ddr_pmu->events[i])
+> > +stop =3D false; if (stop) hrtimer_cancel(&stm32_ddr_pmu->hrtimer);
+> > +
+> > +clk_disable(stm32_ddr_pmu->clk);
+> =
+
+> This doesn't look right. If I add two events A and B, then delete event A,
+> surely we want the clock on for event B?
+> =
+
+
+clk_enable() is called for each event enable and clk_disable() is called fo=
+r =
+
+each event disable. So with your example we have:
++A -> clk_enable()
++B -> clk_enable()
+-B -> clk_disable()
+And the clock remains enabled until A is also deleted.
+
+> Does the clock only affect whether the counters count, or does it also af=
+fect
+> whether the register file is usable?
+
+Both
+
+> =
+
+> > +}
+> > +
+> > +static int stm32_ddr_pmu_event_init(struct perf_event *event) {
+> > +struct hw_perf_event *hw =3D &event->hw;
+> > +
+> > +if (is_sampling_event(event))
+> > +return -EINVAL;
+> > +
+> > +if (event->attach_state & PERF_ATTACH_TASK) return -EINVAL;
+> > +
+> > +if (event->attr.exclude_user   ||
+> > +    event->attr.exclude_kernel ||
+> > +    event->attr.exclude_hv     ||
+> > +    event->attr.exclude_idle   ||
+> > +    event->attr.exclude_host   ||
+> > +    event->attr.exclude_guest)
+> > +return -EINVAL;
+> > +
+> > +if (event->cpu < 0)
+> > +return -EINVAL;
+> =
+
+> For a system PMU like this, you must ensure that all events are assigned =
+to
+> the same CPU.
+> =
+
+> You'll need to designate some arbitrary CPU to mange the PMU, expose that
+> under sysfs, and upon hotplug events you must choose a new CPU and
+> migrate existing events.
+> =
+
+> For a simple example, see arch/arm/mm/cache-l2x0-pmu.c.
+
+Among CPU#0 and CPU#1, the CPU#0 is the only one that can be running alone
+(in other words, we disable CPU#1 before low power transition and CPU#0 will
+finally enter low power).
+So I think I can avoid to manage any migration by systematically launching =
+the PMU
+on CPU#0. =
+
+
+Is this fine for you or do you anyway prefer a generic approach that I coul=
+d find =
+
+in arch/arm/mm/cache-l2x0-pmu.c ?
+
+> > +
+> > +hw->config_base =3D event->attr.config;
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +static enum hrtimer_restart stm32_ddr_pmu_poll(struct hrtimer
+> > +*hrtimer) { struct stm32_ddr_pmu *stm32_ddr_pmu =3D
+> > +hrtimer_to_stm32_ddr_pmu(hrtimer);
+> > +int i;
+> > +
+> > +for (i =3D 0; i < PMU_NR_COUNTERS; i++) if (stm32_ddr_pmu->events[i])
+> > +stm32_ddr_pmu_event_read(stm32_ddr_pmu->events[i]);
+> > +
+> > +hrtimer_forward_now(hrtimer, stm32_ddr_pmu->poll_period);
+> > +
+> > +return HRTIMER_RESTART;
+> > +}
+> > +
+> > +static ssize_t stm32_ddr_pmu_sysfs_show(struct device *dev, struct
+> > +device_attribute *attr, char *buf) { struct dev_ext_attribute *eattr;
+> > +
+> > +eattr =3D container_of(attr, struct dev_ext_attribute, attr);
+> > +
+> > +return sprintf(buf, "config=3D0x%lx\n", (unsigned long)eattr->var); }
+> > +
+> > +static ssize_t bandwidth_show(struct device *dev,
+> > +      struct device_attribute *attr,
+> > +      char *buf)
+> > +{
+> > +struct stm32_ddr_pmu *stm32_ddr_pmu =3D dev_get_drvdata(dev);
+> > +u64 r_bw, w_bw;
+> > +int ret;
+> > +
+> > +if (stm32_ddr_pmu->events_cnt[TIME_CNT]) { r_bw =3D
+> > +stm32_ddr_pmu_compute_bw(stm32_ddr_pmu, READ_CNT); w_bw =3D
+> > +stm32_ddr_pmu_compute_bw(stm32_ddr_pmu, WRITE_CNT);
+> > +
+> > +ret =3D snprintf(buf, PAGE_SIZE, STRING,
+> > +       r_bw, w_bw, (r_bw + w_bw));
+> > +} else {
+> > +ret =3D snprintf(buf, PAGE_SIZE, "No data available\n"); }
+> > +
+> > +return ret;
+> > +}
+> =
+
+> As commented above, this should not be exposed under sysfs. It doesn't
+> follow the usual ABI rules, it's weirdly stateful, and it's redundant.
+> =
+
+
+Ok
+
+> > +
+> > +#define STM32_DDR_PMU_ATTR(_name, _func, _config)\ (&((struct
+> > +dev_ext_attribute[]) {\
+> > +{ __ATTR(_name, 0444, _func, NULL), (void *)_config }   \
+> > +})[0].attr.attr)
+> > +
+> > +#define STM32_DDR_PMU_EVENT_ATTR(_name, _config)\
+> > +STM32_DDR_PMU_ATTR(_name, stm32_ddr_pmu_sysfs_show,\
+> > +   (unsigned long)_config)
+> > +
+> > +static struct attribute *stm32_ddr_pmu_event_attrs[] =3D {
+> > +STM32_DDR_PMU_EVENT_ATTR(read_cnt, READ_CNT),
+> > +STM32_DDR_PMU_EVENT_ATTR(write_cnt, WRITE_CNT),
+> > +STM32_DDR_PMU_EVENT_ATTR(activate_cnt, ACTIVATE_CNT),
+> > +STM32_DDR_PMU_EVENT_ATTR(idle_cnt, IDLE_CNT),
+> > +STM32_DDR_PMU_EVENT_ATTR(time_cnt, TIME_CNT), NULL };
+> > +
+> > +static DEVICE_ATTR_RO(bandwidth);
+> > +static struct attribute *stm32_ddr_pmu_bandwidth_attrs[] =3D {
+> > +&dev_attr_bandwidth.attr, NULL, };
+> > +
+> > +static struct attribute_group stm32_ddr_pmu_event_attrs_group =3D {
+> > +.name =3D "events", .attrs =3D stm32_ddr_pmu_event_attrs, };
+> > +
+> > +static struct attribute_group stm32_ddr_pmu_bandwidth_attrs_group =3D {
+> > +.attrs =3D stm32_ddr_pmu_bandwidth_attrs, };
+> > +
+> > +static const struct attribute_group *stm32_ddr_pmu_attr_groups[] =3D {
+> > +&stm32_ddr_pmu_event_attrs_group,
+> > +&stm32_ddr_pmu_bandwidth_attrs_group,
+> > +NULL,
+> > +};
+> > +
+> > +static int stm32_ddr_pmu_device_probe(struct platform_device *pdev) {
+> > +struct stm32_ddr_pmu *stm32_ddr_pmu; struct reset_control *rst;
+> > +struct resource *res; int i, ret;
+> > +u32 val;
+> > +
+> > +stm32_ddr_pmu =3D devm_kzalloc(&pdev->dev, sizeof(struct
+> stm32_ddr_pmu),
+> > +     GFP_KERNEL);
+> > +if (!stm32_ddr_pmu)
+> > +return -ENOMEM;
+> > +platform_set_drvdata(pdev, stm32_ddr_pmu);
+> > +
+> > +res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +stm32_ddr_pmu->membase =3D devm_ioremap_resource(&pdev->dev,
+> res); if
+> > +(IS_ERR(stm32_ddr_pmu->membase)) { pr_warn("Unable to get STM32
+> DDR
+> > +PMU membase\n"); return PTR_ERR(stm32_ddr_pmu->membase); }
+> > +
+> > +stm32_ddr_pmu->clk =3D devm_clk_get(&pdev->dev, "bus"); if
+> > +(IS_ERR(stm32_ddr_pmu->clk)) { pr_warn("Unable to get STM32 DDR
+> PMU
+> > +clock\n"); return PTR_ERR(stm32_ddr_pmu->clk); }
+> > +
+> > +ret =3D clk_prepare_enable(stm32_ddr_pmu->clk);
+> > +if (ret) {
+> > +pr_warn("Unable to prepare STM32 DDR PMU clock\n"); return ret; }
+> > +
+> > +stm32_ddr_pmu->clk_ddr =3D devm_clk_get(&pdev->dev, "ddr"); if
+> > +(IS_ERR(stm32_ddr_pmu->clk_ddr)) { pr_warn("Unable to get STM32
+> DDR
+> > +clock\n"); return PTR_ERR(stm32_ddr_pmu->clk_ddr); }
+> > +stm32_ddr_pmu->clk_ddr_rate =3D clk_get_rate(stm32_ddr_pmu-
+> >clk_ddr);
+> > +stm32_ddr_pmu->clk_ddr_rate /=3D 1000000;
+> > +
+> > +stm32_ddr_pmu->poll_period =3D ms_to_ktime(POLL_MS);
+> > +hrtimer_init(&stm32_ddr_pmu->hrtimer, CLOCK_MONOTONIC,
+> > +     HRTIMER_MODE_REL);
+> > +stm32_ddr_pmu->hrtimer.function =3D stm32_ddr_pmu_poll;
+> > +spin_lock_init(&stm32_ddr_pmu->lock);
+> > +
+> > +for (i =3D 0; i < PMU_NR_COUNTERS; i++) { stm32_ddr_pmu->events[i] =3D
+> > +NULL; stm32_ddr_pmu->events_cnt[i] =3D 0; }
+> > +
+> > +val =3D readl_relaxed(stm32_ddr_pmu->membase + DDRPERFM_SID); if
+> (val
+> > +!=3D SID_MAGIC_ID) return -EINVAL;
+> > +
+> > +stm32_ddr_pmu->pmu =3D (struct pmu) {
+> > +.task_ctx_nr =3D perf_invalid_context,
+> > +.start =3D stm32_ddr_pmu_event_start,
+> > +.stop =3D stm32_ddr_pmu_event_stop,
+> > +.add =3D stm32_ddr_pmu_event_add,
+> > +.del =3D stm32_ddr_pmu_event_del,
+> > +.event_init =3D stm32_ddr_pmu_event_init, .attr_groups =3D
+> > +stm32_ddr_pmu_attr_groups, }; ret =3D
+> > +perf_pmu_register(&stm32_ddr_pmu->pmu, "ddrperfm", -1);
+> =
+
+> Please give this a better name. The usual convention is to use "_pmu" as =
+the
+> suffix, so we should use that rather than "perfm".
+> =
+
+> To be unambiguous, something like "stm32_ddr_pmu" would be good.
+
+Ok, understood
+
+> =
+
+> Thanks,
+> Mark.
+> =
+
+> > +if (ret) {
+> > +pr_warn("Unable to register STM32 DDR PMU\n"); return ret; }
+> > +
+> > +rst =3D devm_reset_control_get_exclusive(&pdev->dev, NULL); if
+> > +(!IS_ERR(rst)) { reset_control_assert(rst); udelay(2);
+> > +reset_control_deassert(rst); }
+> > +
+> > +pr_info("stm32-ddr-pmu: probed (ID=3D0x%08x VER=3D0x%08x),
+> DDR@%luMHz\n",
+> > +readl_relaxed(stm32_ddr_pmu->membase + DDRPERFM_ID),
+> > +readl_relaxed(stm32_ddr_pmu->membase + DDRPERFM_VER),
+> > +stm32_ddr_pmu->clk_ddr_rate);
+> > +
+> > +clk_disable(stm32_ddr_pmu->clk);
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +static int stm32_ddr_pmu_device_remove(struct platform_device *pdev)
+> > +{ struct stm32_ddr_pmu *stm32_ddr_pmu =3D
+> platform_get_drvdata(pdev);
+> > +
+> > +perf_pmu_unregister(&stm32_ddr_pmu->pmu);
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +static const struct of_device_id stm32_ddr_pmu_of_match[] =3D { {
+> > +.compatible =3D "st,stm32-ddr-pmu" }, { }, };
+> > +
+> > +static struct platform_driver stm32_ddr_pmu_driver =3D { .driver =3D {
+> > +.name=3D "stm32-ddr-pmu", .of_match_table =3D
+> > +of_match_ptr(stm32_ddr_pmu_of_match),
+> > +},
+> > +.probe =3D stm32_ddr_pmu_device_probe,
+> > +.remove =3D stm32_ddr_pmu_device_remove, };
+> > +
+> > +module_platform_driver(stm32_ddr_pmu_driver);
+> > +
+> > +MODULE_DESCRIPTION("Perf driver for STM32 DDR performance
+> monitor");
+> > +MODULE_AUTHOR("Gerald Baeza <gerald.baeza@st.com>");
+> > +MODULE_LICENSE("GPL v2");
+> > --
+> > 2.7.4
+> IMPORTANT NOTICE: The contents of this email and any attachments are
+> confidential and may also be privileged. If you are not the intended reci=
+pient,
+> please notify the sender immediately and do not disclose the contents to =
+any
+> other person, use it for any purpose, or store or copy the information in=
+ any
+> medium. Thank you.
