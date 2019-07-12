@@ -1,69 +1,111 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Date: Fri, 12 Jul 2019 22:15:43 +0200
-Message-ID: <20190712201543.krhsfjepd3cqndla@flea>
-References: <20190607094030.GA12373@lst.de>
- <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
- <20190612152022.c3cfhp4cauhzhfyr@flea>
- <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
- <20190701095842.fvganvycce2cy7jn@flea>
- <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
- <20190709085532.cdqv7whuesrjs64c@flea>
- <CA+E=qVdz4vfU3rtTTKjYdM+4UA+=FWheJfWOMaDtFMnWQ1rHbw@mail.gmail.com>
- <20190710114042.ybgavnxb4hgqrtor@flea>
- <CA+E=qVdFoT137pADfxz3uMwhOqjqrA9+6hBeOfbJxuH-M-3Pjw@mail.gmail.com>
+From: Hongwei Zhang <Hongweiz@ami.com>
+Subject: RE: [linux,dev-5.1 v1] dt-bindings: gpio: aspeed: Add SGPIO support
+Date: Fri, 12 Jul 2019 20:18:39 +0000
+Message-ID: <14D3C8298A3B0F42A1EB31EE961CFF82AA8F46AD@atlms2.us.megatrends.com>
+References: <1562184069-22332-1-git-send-email-hongweiz@ami.com>
+ <9c998f5f-42ef-43bd-b024-839ee00126de@www.fastmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+E=qVdFoT137pADfxz3uMwhOqjqrA9+6hBeOfbJxuH-M-3Pjw@mail.gmail.com>
+In-Reply-To: <9c998f5f-42ef-43bd-b024-839ee00126de@www.fastmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Torsten Duwe <duwe@lst.de>, Harald Geyer <harald@ccbib.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Andrew Jeffery <andrew@aj.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Joel Stanley <joel@jms.id.au>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 03:11:04PM -0700, Vasily Khoruzhick wrote:
-> On Wed, Jul 10, 2019 at 4:40 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > There's another issue: if we introduce edp-connector we'll have to
-> > > > > specify power up delays somewhere (in dts? or in platform driver?), so
-> > > > > edp-connector doesn't really solve the issue of multiple panels with
-> > > > > same motherboard.
-> > > >
-> > > > And that's what that compatible is about :)
-> > >
-> > > Sorry, I fail to see how it would be different from using existing
-> > > panels infrastructure and different panels compatibles. I think Rob's
-> > > idea was to introduce generic edp-connector.
-> >
-> > Again, there's no such thing as a generic edp-connector. The spec
-> > doesn't define anything related to the power sequence for example.
-> >
-> > > If we can't make it generic then let's use panel infrastructure.
-> >
-> > Which uses a device specific compatible. Really, I'm not sure what
-> > your objection and / or argument is here.
-> >
-> > In addition, when that was brought up in the discussion, you rejected
-> > it because it was inconvenient:
-> > https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1#comment_535206
+Thanks for your review, Andrew,
+
+Just submitted an updated binding document, with new proper subject line:
+
+[PATCH 2/3 v2] dt-bindings: gpio: aspeed: Add SGPIO support
+
+Regards,
+--Hongwei
+
+-----Original Message-----
+From: Andrew Jeffery <andrew@aj.id.au> 
+Sent: Tuesday, July 9, 2019 10:16 PM
+To: Hongwei Zhang <Hongweiz@ami.com>; devicetree@vger.kernel.org; Joel Stanley <joel@jms.id.au>; Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; linux-aspeed@lists.ozlabs.org; linux-kernel@vger.kernel.org
+Subject: Re: [linux,dev-5.1 v1] dt-bindings: gpio: aspeed: Add SGPIO support
+
+
+
+On Thu, 4 Jul 2019, at 05:31, Hongwei Zhang wrote:
+> Add bindings to support SGPIO on AST2400 or AST2500.
+> 
+> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+> ---
+>  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 
+> Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> new file mode 100644
+> index 0000000..f5fc6ef
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> @@ -0,0 +1,36 @@
+> +Aspeed SGPIO controller Device Tree Bindings
+> +-------------------------------------------
+> +
+> +Required properties:
+> +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
+> +
+> +- #gpio-cells 		: Should be two
+> +			  - First cell is the GPIO line number
+> +			  - Second cell is used to specify optional
+> +			    parameters (unused)
+> +
+> +- reg			: Address and length of the register set for the device
+> +- gpio-controller	: Marks the device node as a GPIO controller.
+> +- interrupts		: Interrupt specifier (see interrupt bindings for
+> +			  details)
+> +- interrupt-controller	: Mark the GPIO controller as an 
+> interrupt-controller
+
+As this is a serial GPIO controller, a critical piece of configuration information is how many GPIOs we wish to serialise. This is done in multiples of 8, up to 80 pins.
+
+The bindings need to describe the "ngpios" property from the generic GPIO bindings and how this affects the behaviour of the controller.
+
+We also need to add the "bus-frequency" property here to control the rate of SGPMCK.
+
+> +
+> +Optional properties:
+> +
+> +- clocks                : A phandle to the clock to use for debounce 
+> timings
+
+We need this, but not for the reason specified, and it should be a required property. We need PCLK (the APB clock) to derive the SGPIO bus frequency. Despite what the datasheet blurb says, there's no debounce control for the SGPIO master (this is a copy/paste mistake from the description of the parallel GPIO master).
+
+> +
+> +The sgpio and interrupt properties are further described in their
+> respective
+> +bindings documentation:
+> +
+> +- Documentation/devicetree/bindings/sgpio/gpio.txt
+> +- 
+> +Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +
+> +  Example:
+> +	sgpio@1e780200 {
+> +		#gpio-cells = <2>;
+> +		compatible = "aspeed,ast2500-sgpio";
+> +		gpio-controller;
+> +		interrupts = <40>;
+> +		reg = <0x1e780200 0x0100>;
+> +		interrupt-controller;
+> +	};
+
+You'll need to fix up the example after making the changes mentioned above.
+
+Andrew
+
+> --
+> 2.7.4
+> 
 >
-> It is inconvenient, but I don't understand how having board-specific
-> connectors fixes it.
-
-How it would not fix it?
-
-You'll have one connector, without the need to describe each and every
-panel in the device tree and rely on the EDID instead, and you'll have
-the option to power up the regulator you need.
-
-I really don't understand what's the issue here, so let's take a step
-back. What are is the issue , what are your requirements, and how
-would you like that to be described ?
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
