@@ -1,62 +1,57 @@
-From: saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCHv8 1/5] arm64: dts: qcom: sdm845: Add Coresight support
-Date: Fri, 12 Jul 2019 22:19:33 +0530
-Message-ID: <8b82793e7b693dbb922ef4fdbffdb76f@codeaurora.org>
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <52550ed9bbc10dca860eb1700aef5c97f644327b.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <06c1a087-53f7-4841-1ae3-07ccbed22a72@arm.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v8 0/7] Unify CPU topology across ARM & RISC-V
+Date: Fri, 12 Jul 2019 10:16:40 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1907121012050.2267@viisi.sifive.com>
+References: <20190627195302.28300-1-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <06c1a087-53f7-4841-1ae3-07ccbed22a72@arm.com>
+In-Reply-To: <20190627195302.28300-1-atish.patra@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: gregkh@linuxfoundation.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, mike.leach@linaro.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, david.brown@linaro.org, mark.rutland@arm.com, rnayak@codeaurora.org, vivek.gautam@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, marc.w.gonzalez@free.fr, devicetree-owner@vger.kernel.org
+To: Atish Patra <atish.patra@wdc.com>
+Cc: linux-kernel@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Johan Hovold <johan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob
 List-Id: devicetree@vger.kernel.org
 
-Hi Suzuki,
+Folks,
 
-On 2019-07-12 22:14, Suzuki K Poulose wrote:
-> Hi Sai,
-> 
-> On 12/07/2019 15:16, Sai Prakash Ranjan wrote:
->> Add coresight components found on Qualcomm SDM845 SoC.
-> 
->> 
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 451 
->> +++++++++++++++++++++++++++
->>   1 file changed, 451 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi 
->> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> index 4babff5f19b5..5d7e3f8e0f91 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -1815,6 +1815,457 @@
->>   			clock-names = "xo";
->>   		};
->>   +		stm@6002000 {
->> +			compatible = "arm,coresight-stm", "arm,primecell";
->> +			reg = <0 0x06002000 0 0x1000>,
->> +			      <0 0x16280000 0 0x180000>;
->> +			reg-names = "stm-base", "stm-stimulus-base";
->> +
->> +			clocks = <&aoss_qmp>;
->> +			clock-names = "apb_pclk";
-> 
-> 
-> Which tree is this based on ? I can't see aoss_qmp anywhere under 
-> dts/qcom
-> on 5.2-rc7.
-> 
+On Thu, 27 Jun 2019, Atish Patra wrote:
 
-It's based on linux-next.
+> The cpu-map DT entry in ARM can describe the CPU topology in much better
+> way compared to other existing approaches. RISC-V can easily adopt this
+> binding to represent its own CPU topology. Thus, both cpu-map DT
+> binding and topology parsing code can be moved to a common location so
+> that RISC-V or any other architecture can leverage that.
+> 
+> The relevant discussion regarding unifying cpu topology can be found in
+> [1].
+> 
+> arch_topology seems to be a perfect place to move the common code. I
+> have not introduced any significant functional changes in the moved code.
+> The only downside in this approach is that the capacity code will be
+> executed for RISC-V as well. But, it will exit immediately after not
+> able to find the appropriate DT node. If the overhead is considered too
+> much, we can always compile out capacity related functions under a
+> different config for the architectures that do not support them.
+> 
+> There was an opportunity to unify topology data structure for ARM32 done
+> by patch 3/4. But, I refrained from making any other changes as I am not
+> very well versed with original intention for some functions that
+> are present in arch_topology.c. I hope this patch series can be served
+> as a baseline for such changes in the future.
+> 
+> The patches have been tested for RISC-V, ARM64, ARM32 & compile tested for
+> x86.
 
-Thanks,
-Sai
+Since these patches touch files across several different architectures, 
+and thus really should sit in -next for a while; and because it's late in 
+the merge window, I'm planning to postpone sending these patches upstream 
+until after v5.3-rc1 is released.
+
+Once v5.3-rc1 is released, let's plan to get these patches rebased and 
+reposted and into linux-next as soon as possible.
+
+
+Sorry for the delay here,
+
+
+- Paul
