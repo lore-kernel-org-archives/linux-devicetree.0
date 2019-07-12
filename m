@@ -1,36 +1,39 @@
-Return-Path: <SRS0=vA0O=VV=vergenet.net=horms@kernel.org>
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH 0/4] dt-bindings: i2c: renesas: Rename bindings documentation files
-Date: Wed, 24 Jul 2019 14:15:55 +0200
-Message-Id: <20190724121559.19079-1-horms+renesas@verge.net.au>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, Chris Brandt <chris.brandt@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+Return-Path: <SRS0=siEA=VJ=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1562333979-28516-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1562333979-28516-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 12 Jul 2019 15:54:45 +0200
+Message-ID: <CAMuHMdUu7YesYt6JgH-hYBCF7s7M7HHBC5OxEmipcpqFBMezrA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Add HDMI audio support to the HiHope RZ/G2[MN]
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 List-ID: <devicetree@vger.kernel.org>
 
-Rename the bindings documentation file for Renesas I2C controllers.
+Hi Fabrizio,
 
-This is part of an ongoing effort to name bindings documentation files for
-Renesas IP blocks consistently, in line with the compat strings they
-document.
+On Fri, Jul 5, 2019 at 3:39 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> this series adds HDMI audio support to the HiHope RZ/G2[MN].
+>
+> Thanks,
+> Fab
+>
+> Fabrizio Castro (3):
+>   arm64: dts: renesas: r8a774a1: Use extended audio dmac register
+>   arm64: dts: renesas: r8a774a1: Add SSIU support for sound
+>   arm64: dts: renesas: hihope-common: Add HDMI audio support
 
-Based on v5.3-rc1
+Thanks, I have applied and queued for v5.4 the first two patches.
 
-Simon Horman (4):
-  dt-bindings: i2c: sh_mobile: Rename bindings documentation file
-  dt-bindings: i2c: rcar: Rename bindings documentation file
-  dt-bindings: i2c: riic: Rename bindings documentation file
-  dt-bindings: i2c: riic: Rename bindings documentation file
+Gr{oetje,eeting}s,
 
- .../devicetree/bindings/i2c/{i2c-rcar.txt => renesas,i2c.txt}     | 0
- .../bindings/i2c/{i2c-emev2.txt => renesas,iic-emev2.txt}         | 0
- .../bindings/i2c/{i2c-sh_mobile.txt => renesas,iic.txt}           | 0
- .../devicetree/bindings/i2c/{i2c-riic.txt => renesas,riic.txt}    | 0
- MAINTAINERS                                                       | 8 ++++----
- 5 files changed, 4 insertions(+), 4 deletions(-)
- rename Documentation/devicetree/bindings/i2c/{i2c-rcar.txt => renesas,i2c.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{i2c-emev2.txt => renesas,iic-emev2.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{i2c-sh_mobile.txt => renesas,iic.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{i2c-riic.txt => renesas,riic.txt} (100%)
+                        Geert
 
 -- 
-2.11.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
