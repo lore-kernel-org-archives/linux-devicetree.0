@@ -1,74 +1,67 @@
-From: Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH v2] ARM: dts: msm8974-FP2: add reboot-mode node
-Date: Sat, 13 Jul 2019 17:48:06 +0200
-Message-ID: <20190713154805.17159-1-luca@z3ntu.xyz>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH v4 00/11] add thermal driver for h6
+Date: Sat, 13 Jul 2019 11:01:58 -0700
+Message-ID: <CA+E=qVdAUFJM27cNL6WRkk5moX=mEk7WUs6UBoX58Y7ove40oQ@mail.gmail.com>
+References: <20190623164206.7467-1-tiny.windzz@gmail.com> <CA+E=qVfhDEQER2UTj65hR9erzej9Ey2FrUa9GV=iCFYsWZ2ztw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+E=qVfhDEQER2UTj65hR9erzej9Ey2FrUa9GV=iCFYsWZ2ztw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org
-Cc: ~martijnbraam/pmos-upstream@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>, Brian Masney <masneyb@onstation.org>, Andy Gross <agross@kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Yangtao Li <tiny.windzz@gmail.com>
+Cc: rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Linux PM <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This enables userspace to signal the bootloader to go into the
-bootloader or recovery mode.
+On Wed, Jul 10, 2019 at 4:09 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> On Sun, Jun 23, 2019 at 9:42 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
+> >
+> > This patchset add support for H3 and H6 thermal sensor.
+> >
+> > BTY, do a cleanup in thermal makfile.
+> >
+> > Yangtao Li (11):
+> >   thermal: sun8i: add thermal driver for h6
+> >   dt-bindings: thermal: add binding document for h6 thermal controller
+> >   thermal: fix indentation in makefile
+> >   thermal: sun8i: get ths sensor number from device compatible
+> >   thermal: sun8i: rework for sun8i_ths_get_temp()
+> >   thermal: sun8i: get ths init func from device compatible
+> >   thermal: sun8i: rework for ths irq handler func
+> >   thermal: sun8i: support ahb clocks
+> >   thermal: sun8i: rework for ths calibrate func
+> >   dt-bindings: thermal: add binding document for h3 thermal controller
+> >   thermal: sun8i: add thermal driver for h3
+>
+> It would be nice to add dts changes to this series. It's unlikely that
+> you'll get any "Tested-by" otherwise.
 
-The magic values can be found in both the downstream kernel and the LK
-kernel (bootloader).
+I added A64 support on top of this series, see
+https://github.com/anarsoul/linux-2.6/tree/v5.2-thermal
 
-Reviewed-by: Brian Masney <masneyb@onstation.org>
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
-Changes v1 -> v2:
-- Move the majority of the node into the board dts, just keep the magic
-  values in the device-specific dts.
+Branch also contains patches to enable DVFS on A64, feel free to
+cherry pick only those related to thermal driver if you want to
+include A64 support into v5 series.
 
- arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts | 10 ++++++++++
- arch/arm/boot/dts/qcom-msm8974.dtsi              | 11 +++++++++++
- 2 files changed, 21 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts b/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
-index 643c57f84818..ff4a3e0aa746 100644
---- a/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
-@@ -338,6 +338,16 @@
- 			};
- 		};
- 	};
-+
-+	imem@fe805000 {
-+		status = "okay";
-+
-+		reboot-mode {
-+			mode-normal	= <0x77665501>;
-+			mode-bootloader	= <0x77665500>;
-+			mode-recovery	= <0x77665502>;
-+		};
-+	};
- };
- 
- &spmi_bus {
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 45b5c8ef0374..1927430bded7 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -1085,6 +1085,17 @@
- 				};
- 			};
- 		};
-+
-+		imem@fe805000 {
-+			status = "disabled";
-+			compatible = "syscon", "simple-mfd";
-+			reg = <0xfe805000 0x1000>;
-+
-+			reboot-mode {
-+				compatible = "syscon-reboot-mode";
-+				offset = <0x65c>;
-+			};
-+		};
- 	};
- 
- 	smd {
--- 
-2.22.0
+>
+> >  .../bindings/thermal/sun8i-thermal.yaml       |  94 +++
+> >  MAINTAINERS                                   |   7 +
+> >  drivers/thermal/Kconfig                       |  14 +
+> >  drivers/thermal/Makefile                      |   9 +-
+> >  drivers/thermal/sun8i_thermal.c               | 534 ++++++++++++++++++
+> >  5 files changed, 654 insertions(+), 4 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> >  create mode 100644 drivers/thermal/sun8i_thermal.c
+> >
+> > ---
+> > v4:
+> > -add h3 support
+> > -fix yaml file
+> > ---
+> > 2.17.1
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
