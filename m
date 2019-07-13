@@ -1,157 +1,47 @@
-Return-Path: <SRS0=8nao=VW=gmail.com=jassisinghbrar@kernel.org>
+Return-Path: <SRS0=DKhf=VK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39297 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbfGMNZA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jul 2019 09:25:00 -0400
+Date: Sat, 13 Jul 2019 06:24:58 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] device-tree: bindinds: add NXP PCT2075 as compatible
+ device to LM75
+Message-ID: <20190713132458.GA13733@roeck-us.net>
+References: <20190711124504.7580-1-daniel@zonque.org>
 MIME-Version: 1.0
-References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
- <20190717192616.1731-2-tushar.khandelwal@arm.com> <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
-In-Reply-To: <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Date: Thu, 25 Jul 2019 00:49:58 -0500
-Message-ID: <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
-Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding documentation
-Content-Type: text/plain; charset="UTF-8"
-To: Tushar Khandelwal <tushar.khandelwal@arm.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, tushar.2nov@gmail.com, morten_bp@live.dk, nd@arm.com, Morten Borup Petersen <morten.petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711124504.7580-1-daniel@zonque.org>
+Sender: devicetree-owner@vger.kernel.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Sun, Jul 21, 2019 at 4:58 PM Jassi Brar <jassisinghbrar@gmail.com> wrote:
->
-> On Wed, Jul 17, 2019 at 2:26 PM Tushar Khandelwal
-> <tushar.khandelwal@arm.com> wrote:
->
-> > diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
-> > new file mode 100644
-> > index 000000000000..3a05593414bc
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
-> > @@ -0,0 +1,108 @@
-> > +Arm MHUv2 Mailbox Driver
-> > +========================
-> > +
-> > +The Arm Message-Handling-Unit (MHU) Version 2 is a mailbox controller that has
-> > +between 1 and 124 channel windows to provide unidirectional communication with
-> > +remote processor(s).
-> > +
-> > +Given the unidirectional nature of the device, an MHUv2 mailbox may only be
-> > +written to or read from. If a pair of MHU devices is implemented between two
-> > +processing elements to provide bidirectional communication, these must be
-> > +specified as two separate mailboxes.
-> > +
-> > +A device tree node for an Arm MHUv2 device must specify either a receiver frame
-> > +or a sender frame, indicating which end of the unidirectional MHU device which
-> > +the device node entry describes.
-> > +
-> > +An MHU device must be specified with a transport protocol. The transport
-> > +protocol of an MHU device determines the method of data transmission as well as
-> > +the number of provided mailboxes.
-> > +Following are the possible transport protocol types:
-> > +- Single-word: An MHU device implements as many mailboxes as it
-> > +               provides channel windows. Data is transmitted through
-> > +               the MHU registers.
-> > +- Multi-word:  An MHU device implements a single mailbox. All channel windows
-> > +               will be used during transmission. Data is transmitted through
-> > +               the MHU registers.
-> > +- Doorbell:    An MHU device implements as many mailboxes as there are flag
-> > +               bits available in its channel windows. Optionally, data may
-> > +               be transmitted through a shared memory region, wherein the MHU
-> > +               is used strictly as an interrupt generation mechanism.
-> > +
-> > +Mailbox Device Node:
-> > +====================
-> > +
-> > +Required properties:
-> > +--------------------
-> > +- compatible:  Shall be "arm,mhuv2" & "arm,primecell"
-> > +- reg:         Contains the mailbox register address range (base
-> > +               address and length)
-> > +- #mbox-cells  Shall be 1 - the index of the channel needed.
-> > +- mhu-frame    Frame type of the device.
-> > +               Shall be either "sender" or "receiver"
-> > +- mhu-protocol Transport protocol of the device. Shall be one of the
-> > +               following: "single-word", "multi-word", "doorbell"
-> > +
-> > +Required properties (receiver frame):
-> > +-------------------------------------
-> > +- interrupts:  Contains the interrupt information corresponding to the
-> > +               combined interrupt of the receiver frame
-> > +
-> > +Example:
-> > +--------
-> > +
-> > +       mbox_mw_tx: mhu@10000000 {
-> > +               compatible = "arm,mhuv2","arm,primecell";
-> > +               reg = <0x10000000 0x1000>;
-> > +               clocks = <&refclk100mhz>;
-> > +               clock-names = "apb_pclk";
-> > +               #mbox-cells = <1>;
-> > +               mhu-protocol = "multi-word";
-> > +               mhu-frame = "sender";
-> > +       };
-> > +
-> > +       mbox_sw_tx: mhu@10000000 {
-> > +               compatible = "arm,mhuv2","arm,primecell";
-> > +               reg = <0x11000000 0x1000>;
-> > +               clocks = <&refclk100mhz>;
-> > +               clock-names = "apb_pclk";
-> > +               #mbox-cells = <1>;
-> > +               mhu-protocol = "single-word";
-> > +               mhu-frame = "sender";
-> > +       };
-> > +
-> > +       mbox_db_rx: mhu@10000000 {
-> > +               compatible = "arm,mhuv2","arm,primecell";
-> > +               reg = <0x12000000 0x1000>;
-> > +               clocks = <&refclk100mhz>;
-> > +               clock-names = "apb_pclk";
-> > +               #mbox-cells = <1>;
-> > +               interrupts = <0 45 4>;
-> > +               interrupt-names = "mhu_rx";
-> > +               mhu-protocol = "doorbell";
-> > +               mhu-frame = "receiver";
-> > +       };
-> > +
-> > +       mhu_client: scb@2e000000 {
-> > +       compatible = "fujitsu,mb86s70-scb-1.0";
-> > +       reg = <0 0x2e000000 0x4000>;
-> > +       mboxes =
-> > +               // For multi-word frames, client may only instantiate a single
-> > +               // mailbox for a mailbox controller
-> > +               <&mbox_mw_tx 0>,
-> > +
-> > +               // For single-word frames, client may instantiate as many
-> > +               // mailboxes as there are channel windows in the MHU
-> > +                <&mbox_sw_tx 0>,
-> > +                <&mbox_sw_tx 1>,
-> > +                <&mbox_sw_tx 2>,
-> > +                <&mbox_sw_tx 3>,
-> > +
-> > +               // For doorbell frames, client may instantiate as many mailboxes
-> > +               // as there are bits available in the combined number of channel
-> > +               // windows ((channel windows * 32) mailboxes)
-> > +                <mbox_db_rx 0>,
-> > +                <mbox_db_rx 1>,
-> > +                ...
-> > +                <mbox_db_rx 17>;
-> > +       };
->
-> If the mhuv2 instance implements, say, 3 channel windows between
-> sender (linux) and receiver (firmware), and Linux runs two protocols
-> each requiring 1 and 2-word sized messages respectively. The hardware
-> supports that by assigning windows [0] and [1,2] to each protocol.
-> However, I don't think the driver can support that. Or does it?
->
-Thinking about it, IMO, the mbox-cell should carry a 128 (4x32) bit
-mask specifying the set of windows (corresponding to the bits set in
-the mask) associated with the channel.
-And the controller driver should see any channel as associated with
-variable number of windows 'N', where N is [0,124]
+On Thu, Jul 11, 2019 at 02:45:03PM +0200, Daniel Mack wrote:
+> The PCT2075 is compatible to other chips that are already handled by
+> the LM75 driver.
+> 
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
 
-mhu_client1: proto1@2e000000 {
-       .....
-       mboxes = <&mbox 0x0 0x0 0x0 0x1>
-}
+Applied to hwmon-next.
 
-mhu_client2: proto2@2f000000 {
-       .....
-       mboxes = <&mbox 0x0 0x0 0x0 0x6>
-}
+Thanks,
+Guenter
 
-Cheers!
+> ---
+>  Documentation/devicetree/bindings/hwmon/lm75.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
+> index 12d8cf7cf592..bfb22b249708 100644
+> --- a/Documentation/devicetree/bindings/hwmon/lm75.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
+> @@ -15,6 +15,7 @@ Required properties:
+>  		"maxim,max31725",
+>  		"maxim,max31726",
+>  		"maxim,mcp980x",
+> +		"nxp,pct2075",
+>  		"st,stds75",
+>  		"st,stlm75",
+>  		"microchip,tcn75",
