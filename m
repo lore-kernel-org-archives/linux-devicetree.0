@@ -1,97 +1,119 @@
-Return-Path: <SRS0=rl5R=VC=huawei.com=xiaojiangfeng@kernel.org>
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Subject: [PATCH] net: hisilicon: Add an tx_desc to adapt HI13X1_GMAC
-Date: Fri, 5 Jul 2019 14:10:03 +0800
-Message-ID: <1562307003-103516-1-git-send-email-xiaojiangfeng@huawei.com>
+Return-Path: <SRS0=DKhf=VK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33790 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbfGMH5W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jul 2019 03:57:22 -0400
+Received: by mail-io1-f67.google.com with SMTP id z3so25479312iog.0
+        for <devicetree@vger.kernel.org>; Sat, 13 Jul 2019 00:57:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-To: yisen.zhuang@huawei.com, salil.mehta@huawei.com, dingtianhong@huawei.com, xiaojiangfeng@huawei.com
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leeyou.li@huawei.com, xiekunxun@huawei.com, jianping.liu@huawei.com, nixiaoming@huawei.com
+References: <15B09F895BF9AE09.30352@groups.io>
+In-Reply-To: <15B09F895BF9AE09.30352@groups.io>
+From: Alexandre Mergnat <amergnat@baylibre.com>
+Date: Sat, 13 Jul 2019 09:57:10 +0200
+Message-ID: <CAFGrd9pHGF6hQpcD7+PGQGvUDt2nFdGei=GYCiW_cCsK5Jkv2g@mail.gmail.com>
+Subject: Fwd: [PATCH v4 0/3] Add PAT9125 optical tracker driver
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-HI13X1 changed the offsets and bitmaps for tx_desc
-registers in the same peripheral device on different
-models of the hip04_eth.
+PixArt Imaging PAT9125 is a miniature low power optical navigation chip
+using LASER light source enabling digital surface tracking.
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
----
- drivers/net/ethernet/hisilicon/hip04_eth.c | 34 +++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
+This device driver use IIO API to provide punctual and/or buffered data.
+The data is a relative position from where start the device on X and Y
+axis, depend on CPI (Counts Per Inch) resolution setting chosen.
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 780fc46..6256357 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -76,8 +76,15 @@
- /* TX descriptor config */
- #define TX_FREE_MEM			BIT(0)
- #define TX_READ_ALLOC_L3		BIT(1)
--#define TX_FINISH_CACHE_INV		BIT(2)
-+#if defined(CONFIG_HI13X1_GMAC)
-+#define TX_CLEAR_WB			BIT(7)
-+#define TX_RELEASE_TO_PPE		BIT(4)
-+#define TX_FINISH_CACHE_INV		BIT(6)
-+#define TX_POOL_SHIFT			16
-+#else
- #define TX_CLEAR_WB			BIT(4)
-+#define TX_FINISH_CACHE_INV		BIT(2)
-+#endif
- #define TX_L3_CHECKSUM			BIT(5)
- #define TX_LOOP_BACK			BIT(11)
- 
-@@ -124,6 +131,7 @@
- /* buf unit size is cache_line_size, which is 64, so the shift is 6 */
- #define PPE_BUF_SIZE_SHIFT		6
- #define PPE_TX_BUF_HOLD			BIT(31)
-+#define CACHE_LINE_MASK			0x3F
- #else
- #define PPE_CFG_QOS_VMID_GRP_SHIFT	8
- #define PPE_CFG_RX_CTRL_ALIGN_SHIFT	11
-@@ -163,11 +171,22 @@
- #define HIP04_MIN_TX_COALESCE_FRAMES	100
- 
- struct tx_desc {
-+#if defined(CONFIG_HI13X1_GMAC)
-+	u32 reserved1[2];
-+	u32 send_addr;
-+	u16 send_size;
-+	u16 data_offset;
-+	u32 reserved2[7];
-+	u32 cfg;
-+	u32 wb_addr;
-+	u32 reserved3[3];
-+#else
- 	u32 send_addr;
- 	u32 send_size;
- 	u32 next_addr;
- 	u32 cfg;
- 	u32 wb_addr;
-+#endif
- } __aligned(64);
- 
- struct rx_desc {
-@@ -505,11 +524,20 @@ static void hip04_start_tx_timer(struct hip04_priv *priv)
- 
- 	priv->tx_skb[tx_head] = skb;
- 	priv->tx_phys[tx_head] = phys;
--	desc->send_addr = (__force u32)cpu_to_be32(phys);
-+
- 	desc->send_size = (__force u32)cpu_to_be32(skb->len);
-+#if defined(CONFIG_HI13X1_GMAC)
-+	desc->cfg = (__force u32)cpu_to_be32(TX_CLEAR_WB | TX_FINISH_CACHE_INV
-+		| TX_RELEASE_TO_PPE | priv->port << TX_POOL_SHIFT);
-+	desc->data_offset = (__force u32)cpu_to_be32(phys & CACHE_LINE_MASK);
-+	desc->send_addr =  (__force u32)cpu_to_be32(phys & ~CACHE_LINE_MASK);
-+#else
- 	desc->cfg = (__force u32)cpu_to_be32(TX_CLEAR_WB | TX_FINISH_CACHE_INV);
-+	desc->send_addr = (__force u32)cpu_to_be32(phys);
-+#endif
- 	phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
--	desc->wb_addr = (__force u32)cpu_to_be32(phys);
-+	desc->wb_addr = (__force u32)cpu_to_be32(phys +
-+		offsetof(struct tx_desc, send_addr));
- 	skb_tx_timestamp(skb);
- 
- 	hip04_set_xmit_desc(priv, phys);
--- 
-1.8.5.6
+The device support CPI configuration through IIO interface.
+
+This patchset :
+- Update vendor prefix
+- Add the bindings for this device
+- Add the device driver
+- Add directory for optical tracker devices
+
+Change since v3:
+- Replace delta value by relative position
+- Improve write protected reg function by removing print log and obvious
+  returns
+- Handle error in postenable buffer function
+
+Change since v2:
+- Fix typo
+- Add constructor webpage and datasheet in commit message
+- Use BIT() macro for define bit mask
+- Remove shift from IIO channel spec structure
+- Replace IIO_LE by IIO_CPU from IIO channel spec structure
+- Replace memcpy() by cast (s32)
+- Rename "pat9125_trig_try_reen" to "pat9125_trig_try_reenable"
+- Add carriage return (\n) at the end of each "dev_err" function
+- Remove "iio_trigger_unregister" in case of "iio_trigger_register" fail,
+  register function already manage it
+- Remove log which print device name in case of successful initialization
+- Fix enabled IRQ flag warning during nested IRQ thread
+- Improve retry algo now based on status register
+- Remove "ts", "motion_detected" and "buffer_mode" from pat9125_data
+  structure
+- Rename all "ot" directories to "position"
+- Polling sample through IIO_CHAN_INFO_RAW now return position value
+  (relative to the position at initialization time) instead of delta
+  position
+- Clean iio_buffer_setup_ops structure by removing NULL pointer.
+- Use devm_iio_ function for all init functions and then delete
+  "pat9125_remove"
+- Move device_register at the end of probe function
+- Replace MODULE_PARM_DESC by IIO_SCALE to set axis resolution (CPI)
+
+Change since v1:
+- Fix typo
+- Rename some defines / variables
+- Remove I2C client from driver structure
+- Change type of delta_x and delta_y from s16 to s32 to simplify signed
+  operations
+- Add module parameter for axis resolution
+- Replace "IIO_MOD_X_AND_Y" by "IIO_MOD_X" and "IIO_MOD_Y"
+- Add sign extension macro
+- Improve read value algorithm to avoid data loss
+- Implement a trigger handler function which can work with any IIO
+  trigger, independently of it own GPIO IRQ, to match with IIO
+  requirement/behaviour
+- Replace iio push event function by iio trigger poll in GPIO IRQ handler
+- Use triggered_buffer helpers to replace kfifo use, setup buffer,
+  implement enable/disable setup buffer operations, IIO trigger
+  allocation and re-enable operations
+- Remove useless "goto"
+- Change GPIO IRQ handler from planified thread to IRQ thread
+- Change GPIO IRQ trigger from low level and one shot to falling edge
+- Add device unregister and buffer cleanup to driver remove function
+
+Alexandre Mergnat (3):
+  dt-bindings: Add pixart vendor
+  dt-bindings: iio: position: Add docs pat9125
+  iio: Add PAT9125 optical tracker sensor
+
+ .../bindings/iio/position/pat9125.txt         |  18 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ drivers/iio/Kconfig                           |   1 +
+ drivers/iio/Makefile                          |   1 +
+ drivers/iio/position/Kconfig                  |  18 +
+ drivers/iio/position/Makefile                 |   6 +
+ drivers/iio/position/pat9125.c                | 506 ++++++++++++++++++
+ 7 files changed, 552 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/position/pat9125.txt
+ create mode 100644 drivers/iio/position/Kconfig
+ create mode 100644 drivers/iio/position/Makefile
+ create mode 100644 drivers/iio/position/pat9125.c
+
+--
+2.17.1
+
+
+-=-=-=-=-=-=-=-=-=-=-=-
+Groups.io Links: You receive all messages sent to this group.
+
+View/Reply Online (#161): https://groups.io/g/baylibre-upstreaming/message/161
+Mute This Topic: https://groups.io/mt/32440226/1769967
+Group Owner: baylibre-upstreaming+owner@groups.io
+Unsubscribe: https://groups.io/g/baylibre-upstreaming/unsub
+[amergnat@baylibre.com]
+-=-=-=-=-=-=-=-=-=-=-=-
