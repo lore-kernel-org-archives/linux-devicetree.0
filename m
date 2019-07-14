@@ -1,7 +1,7 @@
 From: Zhou Yanjie <zhouyanjie@zoho.com>
-Subject: [PATCH 3/6] dt-bindings: pinctrl: Add X1000 and X1000E bindings.
-Date: Sun, 14 Jul 2019 11:53:53 +0800
-Message-ID: <1563076436-5338-4-git-send-email-zhouyanjie@zoho.com>
+Subject: [PATCH 5/6] dt-bindings: pinctrl: Add X1500 bindings.
+Date: Sun, 14 Jul 2019 11:53:55 +0800
+Message-ID: <1563076436-5338-6-git-send-email-zhouyanjie@zoho.com>
 References: <1563076436-5338-1-git-send-email-zhouyanjie@zoho.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1563076436-5338-1-git-send-email-zhouyanjie@zoho.com>
@@ -10,58 +10,24 @@ To: linux-mips@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, paul.burton@mips.com, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Add the pinctrl bindings for the X1000 Soc and
-the X1000E Soc from Ingenic.
+Add the pinctrl bindings for the X1500 Soc from Ingenic.
 
 Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 ---
- .../devicetree/bindings/pinctrl/ingenic,pinctrl.txt         | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
-index a80ff68..7e2ee46 100644
+index 7e2ee46..0014d98 100644
 --- a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
 +++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
-@@ -1,18 +1,18 @@
--Ingenic jz47xx pin controller
-+Ingenic XBurst pin controller
- 
- Please refer to pinctrl-bindings.txt in this directory for details of the
- common pinctrl bindings used by client devices, including the meaning of the
- phrase "pin configuration node".
- 
--For the jz47xx SoCs, pin control is tightly bound with GPIO ports. All pins may
-+For the XBurst SoCs, pin control is tightly bound with GPIO ports. All pins may
- be used as GPIOs, multiplexed device functions are configured within the
- GPIO port configuration registers and it is typical to refer to pins using the
- naming scheme "PxN" where x is a character identifying the GPIO port with
- which the pin is associated and N is an integer from 0 to 31 identifying the
- pin within that GPIO port. For example PA0 is the first pin in GPIO port A, and
--PB31 is the last pin in GPIO port B. The jz4740 contains 4 GPIO ports, PA to
--PD, for a total of 128 pins. The jz4760, the jz4770 and the jz4780 contains 6
--GPIO ports, PA to PF, for a total of 192 pins.
-+PB31 is the last pin in GPIO port B. The jz4740 and the x1000 contains 4 GPIO
-+ports, PA to PD, for a total of 128 pins. The jz4760, the jz4770 and the jz4780
-+contains 6 GPIO ports, PA to PF, for a total of 192 pins.
- 
- 
- Required properties:
-@@ -25,6 +25,8 @@ Required properties:
-     - "ingenic,jz4760b-pinctrl"
-     - "ingenic,jz4770-pinctrl"
+@@ -27,6 +27,7 @@ Required properties:
      - "ingenic,jz4780-pinctrl"
-+    - "ingenic,x1000-pinctrl"
-+    - "ingenic,x1000e-pinctrl"
+     - "ingenic,x1000-pinctrl"
+     - "ingenic,x1000e-pinctrl"
++    - "ingenic,x1500-pinctrl"
   - reg: Address range of the pinctrl registers.
  
  
-@@ -36,6 +38,7 @@ Required properties for sub-nodes (GPIO chips):
-     - "ingenic,jz4760-gpio"
-     - "ingenic,jz4770-gpio"
-     - "ingenic,jz4780-gpio"
-+    - "ingenic,x1000-gpio"
-  - reg: The GPIO bank number.
-  - interrupt-controller: Marks the device node as an interrupt controller.
-  - interrupts: Interrupt specifier for the controllers interrupt.
 -- 
 2.7.4
