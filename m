@@ -1,580 +1,294 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 2/3] rtc: Add support for the MediaTek MT2712 RTC
-Date: Sat, 13 Jul 2019 23:12:31 +0200
-Message-ID: <20190713211231.GD4732@piout.net>
-References: <20190702032120.16539-1-ran.bi@mediatek.com>
- <20190702032120.16539-3-ran.bi@mediatek.com>
+From: Yong Wu <yong.wu@mediatek.com>
+Subject: Re: [PATCH v8 07/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
+ Mode
+Date: Sun, 14 Jul 2019 12:41:20 +0800
+Message-ID: <1563079280.31342.22.camel@mhfsdcap03>
+References: <1561774167-24141-1-git-send-email-yong.wu@mediatek.com>
+ <1561774167-24141-8-git-send-email-yong.wu@mediatek.com>
+ <20190710143649.w5dplhzdpi3bxp7e@willie-the-truck>
+ <1562846036.31342.10.camel@mhfsdcap03>
+ <20190711123129.da4rg35b54u4svfw@willie-the-truck>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190702032120.16539-3-ran.bi@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Bi <ran.bi@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Flora Fu <flora.fu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190711123129.da4rg35b54u4svfw@willie-the-truck>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will@kernel.org>
+Cc: youlin.pei@mediatek.com, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, cui.zhang@mediatek.com, srv_heupstream@mediatek.com, Tomasz Figa <tfiga@google.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>, chao.hao@mediatek.com, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, anan.sun@mediatek.com, Robin Murphy <robin.murphy@arm.com>, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 2019-07-11 at 13:31 +0100, Will Deacon wrote:
+> On Thu, Jul 11, 2019 at 07:53:56PM +0800, Yong Wu wrote:
+> > On Wed, 2019-07-10 at 15:36 +0100, Will Deacon wrote:
+> > > On Sat, Jun 29, 2019 at 10:09:13AM +0800, Yong Wu wrote:
+> > > > MediaTek extend the arm v7s descriptor to support the dram over 4GB.
+> > > > 
+> > > > In the mt2712 and mt8173, it's called "4GB mode", the physical address
+> > > > is from 0x4000_0000 to 0x1_3fff_ffff, but from EMI point of view, it
+> > > > is remapped to high address from 0x1_0000_0000 to 0x1_ffff_ffff, the
+> > > > bit32 is always enabled. thus, in the M4U, we always enable the bit9
+> > > > for all PTEs which means to enable bit32 of physical address.
+> > > > 
+> > > > but in mt8183, M4U support the dram from 0x4000_0000 to 0x3_ffff_ffff
+> > > > which isn't remaped. We extend the PTEs: the bit9 represent bit32 of
+> > > > PA and the bit4 represent bit33 of PA. Meanwhile the iova still is
+> > > > 32bits.
+> > > 
+> > > What happens if bit4 is set in the pte for mt2712 or mt8173? Perhaps the
+> > 
+> > bit4 is ignored in mt2712 and mt8173(No effect).
+> > 
+> > > io-pgtable backend should be allowing oas > 32 when
+> > > IO_PGTABLE_QUIRK_ARM_MTK_4GB is set, and then enforcing that itself.
+> > 
+> > About oas, It looks the oas doesn't work in current the v7s. 
+> > 
+> > How about I add a new simple preparing patch like this(copy from
+> > io-pgtable-arm.c)?
+> 
+> This looks like the right sort of idea. Basically, I was thinking that you
+> can use the oas in conjunction with the quirk to specify whether or not
+> your two magic bits should be set. You could also then cap the oas using
+> the size of phys_addr_t to deal with my other comment.
+> 
+> Finally, I was hoping you could drop the |= BIT_ULL(32) and the &=
+> ~BIT_ULL(32) bits of the mtk driver if the pgtable code now accepts higher
+> addresses. Did that not work out?
 
-On 02/07/2019 11:21:19+0800, Ran Bi wrote:
-> diff --git a/drivers/rtc/rtc-mt2712.c b/drivers/rtc/rtc-mt2712.c
-> new file mode 100644
-> index 000000000000..f98f0ab114c5
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-mt2712.c
-> @@ -0,0 +1,495 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Author: Ran Bi <ran.bi@mediatek.com>
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/rtc.h>
-> +
-> +#define MTK_RTC_DEV		KBUILD_MODNAME
-> +
-> +#define RTC_BBPU		0x0000
-> +#define RTC_BBPU_CLRPKY		(1U << 4)
 
-Please use BIT(). Also, I don't feel that the RTC prefix is adding any
-value. MT2712 would be a better choice here.
+After the current patch, the pgtable has accepted the higher address.
+the " |= BIT_ULL(32)" and "& = ~ BIT_ULL(32)" is for a special case(we
+call it 4GB mode).
 
-> +#define RTC_BBPU_RELOAD		(1U << 5)
-> +#define RTC_BBPU_CBUSY		(1U << 6)
-> +#define RTC_BBPU_KEY		(0x43 << 8)
-> +
-> +#define RTC_IRQ_STA		0x0004
-> +#define RTC_IRQ_STA_AL		(1U << 0)
-> +#define RTC_IRQ_STA_TC		(1U << 1)
-> +
-> +#define RTC_IRQ_EN		0x0008
-> +#define RTC_IRQ_EN_AL		(1U << 0)
-> +#define RTC_IRQ_EN_TC		(1U << 1)
-> +#define RTC_IRQ_EN_ONESHOT	(1U << 2)
-> +#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
-> +
-> +#define RTC_CII_EN		0x000c
-> +
-> +#define RTC_AL_MASK		0x0010
-> +#define RTC_AL_MASK_DOW		(1U << 4)
-> +
-> +#define RTC_TC_SEC		0x0014
-> +#define RTC_TC_MIN		0x0018
-> +#define RTC_TC_HOU		0x001c
-> +#define RTC_TC_DOM		0x0020
-> +#define RTC_TC_DOW		0x0024
-> +#define RTC_TC_MTH		0x0028
-> +#define RTC_TC_YEA		0x002c
-> +
-> +#define RTC_AL_SEC		0x0030
-> +#define RTC_AL_MIN		0x0034
-> +#define RTC_AL_HOU		0x0038
-> +#define RTC_AL_DOM		0x003c
-> +#define RTC_AL_DOW		0x0040
-> +#define RTC_AL_MTH		0x0044
-> +#define RTC_AL_YEA		0x0048
-> +
-> +#define RTC_SEC_MASK		0x003f
-> +#define RTC_MIN_MASK		0x003f
-> +#define RTC_HOU_MASK		0x001f
-> +#define RTC_DOM_MASK		0x001f
-> +#define RTC_DOW_MASK		0x0007
-> +#define RTC_MTH_MASK		0x000f
-> +#define RTC_YEA_MASK		0x007f
-> +
-> +#define RTC_POWERKEY1		0x004c
-> +#define RTC_POWERKEY2		0x0050
-> +#define RTC_POWERKEY1_KEY	0xa357
-> +#define RTC_POWERKEY2_KEY	0x67d2
-> +
-> +#define RTC_CON0		0x005c
-> +#define RTC_CON1		0x0060
-> +
-> +#define RTC_PROT		0x0070
-> +#define RTC_PROT_UNLOCK1	0x9136
-> +#define RTC_PROT_UNLOCK2	0x586a
-> +
-> +#define RTC_WRTGR		0x0078
-> +
-> +/* we map HW YEAR 0 to 1968 not 1970 because 2000 is the leap year */
-> +#define RTC_MIN_YEAR		1968
-> +#define RTC_BASE_YEAR		1900
-> +#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
+Now MediaTek IOMMU support 2 kind memory:
+1) normal case: PA is 0x4000_0000 - 0x3_ffff_ffff. the PA won't be
+remapped. mt8183 and the non-4GB mode of mt8173/mt2712 use this mode.
 
-Do not do that. If this RTC range starts in 200, ths is what the driver
-has to support, you should not care about dates before 2000. Note that
-the RTC core can still properly shift the range if it is absolutely
-necessary.
+2) 4GB Mode: PA is 0x4000_0000 - 0x1_3fff_ffff. But the PA will remapped
+to 0x1_0000_0000 to 0x1_ffff_ffff. This is for the 4GB mode of
+mt8173/mt2712. This case is so special that we should change the PA
+manually(add bit32).
+(mt2712 and mt8173 have both mode: 4GB and non-4GB.)
 
-> +
-> +#define RTC_DEFAULT_YEA		2010
-> +#define RTC_DEFAULT_MTH		1
-> +#define RTC_DEFAULT_DOM		1
-> +
-> +struct mt2712_rtc {
-> +	struct device		*dev;
-> +	struct rtc_device	*rtc_dev;
-> +	void __iomem		*base;
-> +	struct mutex		lock;
-> +	int			irq;
-> +	u8			irq_wake_enabled;
-> +};
-> +
-> +static inline u32 rtc_readl(struct mt2712_rtc *rtc, u32 reg)
+If we try to use oas and our quirk to cover this two case. Then I can
+use "oas == 33" only for this 4GB mode. and "oas == 34" for the normal
+case even though the PA mayn't reach 34bit. Also I should add some
+"workaround" for the 4GB mode(oas==33).
 
-Please use a more descriptive prefix than just rtc_.
+I copy the new patch in the mail below(have dropped the "|= BIT_ULL(32)"
+and the "&= ~BIT_ULL(32)) in mtk iommu". please help have a look if it
+is ok.
+(another thing: Current the PA can support over 4GB. So the quirk name
+"MTK_4GB" looks not suitable, I used a new patch rename to "MTK_EXT").
 
-> +{
-> +	return readl(rtc->base + reg);
-> +}
-> +
-> +static inline void rtc_writel(struct mt2712_rtc *rtc, u32 reg, u32 val)
-> +{
-> +	writel(val, rtc->base + reg);
-> +}
-> +
-> +static void rtc_write_trigger(struct mt2712_rtc *rtc)
-> +{
-> +	unsigned long timeout = jiffies + HZ/10;
-> +
-> +	rtc_writel(rtc, RTC_WRTGR, 1);
-> +	while (1) {
-> +		if (!(rtc_readl(rtc, RTC_BBPU) & RTC_BBPU_CBUSY))
-> +			break;
-> +
-> +		if (time_after(jiffies, timeout)) {
-> +			dev_err(rtc->dev, "%s time out!\n", __func__);
-> +			break;
-> +		}
-> +		cpu_relax();
-> +	}
-> +}
-> +
-> +static void rtc_writeif_unlock(struct mt2712_rtc *rtc)
-> +{
-> +	rtc_writel(rtc, RTC_PROT, RTC_PROT_UNLOCK1);
-> +	rtc_write_trigger(rtc);
-> +	rtc_writel(rtc, RTC_PROT, RTC_PROT_UNLOCK2);
-> +	rtc_write_trigger(rtc);
-> +}
-> +
-> +static irqreturn_t rtc_irq_handler_thread(int irq, void *data)
-> +{
-> +	struct mt2712_rtc *rtc = data;
-> +	u16 irqsta, irqen;
-> +
-> +	irqsta = rtc_readl(rtc, RTC_IRQ_STA);
-> +	if (irqsta & RTC_IRQ_STA_AL) {
-> +		rtc_update_irq(rtc->rtc_dev, 1, RTC_IRQF | RTC_AF);
-> +		irqen = irqsta & ~RTC_IRQ_EN_AL;
-> +
-> +		mutex_lock(&rtc->lock);
+> > 
+> > ==========================================
+> > --- a/drivers/iommu/io-pgtable-arm-v7s.c
+> > +++ b/drivers/iommu/io-pgtable-arm-v7s.c
+> > @@ -495,7 +495,8 @@ static int arm_v7s_map(struct io_pgtable_ops *ops,
+> > unsigned long iova,
+> >         if (!(prot & (IOMMU_READ | IOMMU_WRITE)))
+> >                 return 0;
+> > 
+> > -       if (WARN_ON(upper_32_bits(iova) || upper_32_bits(paddr)))
+> > +       if (WARN_ON(iova >= (1ULL << data->iop.cfg.ias) ||
+> > +                   paddr >= (1ULL << data->iop.cfg.oas)))
+> >                 return -ERANGE;
+> > 
+> > ===============================================
+> > 
+> > Then, change the oas in MTK 4GB mode, like this:
+> > 
+> > ================================================
+> > --- a/drivers/iommu/io-pgtable-arm-v7s.c
+> > +++ b/drivers/iommu/io-pgtable-arm-v7s.c
+> > @@ -721,7 +721,9 @@ static struct io_pgtable
+> > *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+> >  {
+> >         struct arm_v7s_io_pgtable *data;
+> > 
+> > -       if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas >
+> > ARM_V7S_ADDR_BITS)
+> > +       if (cfg->ias > ARM_V7S_ADDR_BITS ||
+> > +           (cfg->oas > ARM_V7S_ADDR_BITS &&
+> > +            !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB)))
+> 
+> This should probably still be capped at 34 bits.
 
-You should take rtc->rtc_dev->ops_lock. This would remove the need for
-rtc->lock.
+Don't get here. This is only a simple checking (if (oas > 32) return
+NULL). I should avoid this checking for our case.
 
-> +		rtc_writel(rtc, RTC_IRQ_EN, irqen);
-> +		rtc_write_trigger(rtc);
-> +		mutex_unlock(&rtc->lock);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	return IRQ_NONE;
-> +}
-> +
-> +static void __mtk_rtc_read_time(struct mt2712_rtc *rtc,
-> +				struct rtc_time *tm, int *sec)
-> +{
-> +	mutex_lock(&rtc->lock);
-> +	tm->tm_sec  = rtc_readl(rtc, RTC_TC_SEC) & RTC_SEC_MASK;
-> +	tm->tm_min  = rtc_readl(rtc, RTC_TC_MIN) & RTC_MIN_MASK;
-> +	tm->tm_hour = rtc_readl(rtc, RTC_TC_HOU) & RTC_HOU_MASK;
-> +	tm->tm_mday = rtc_readl(rtc, RTC_TC_DOM) & RTC_DOM_MASK;
-> +	tm->tm_mon  = rtc_readl(rtc, RTC_TC_MTH) & RTC_MTH_MASK;
-> +	tm->tm_year = rtc_readl(rtc, RTC_TC_YEA) & RTC_YEA_MASK;
-> +
-> +	*sec = rtc_readl(rtc, RTC_TC_SEC) & RTC_SEC_MASK;
-> +	mutex_unlock(&rtc->lock);
-> +}
-> +
-> +static int mtk_rtc_read_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct mt2712_rtc *rtc = dev_get_drvdata(dev);
-> +	time64_t time;
-> +	int days, sec;
-> +
-> +	do {
-> +		__mtk_rtc_read_time(rtc, tm, &sec);
-> +	} while (sec < tm->tm_sec);	/* SEC has carried */
-> +
-> +	/* HW register use 7 bits to store year data, minus
-> +	 * RTC_MIN_YEAR_OFFSET brfore write year data to register, and plus
-> +	 * RTC_MIN_YEAR_OFFSET back after read year from register
-> +	 */
-> +	tm->tm_year += RTC_MIN_YEAR_OFFSET;
-> +
+> 
+> > > > +	paddr = pte & mask;
+> > > > +	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB) {
+> > > > +		if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
+> > > > +			paddr |= BIT_ULL(32);
+> > > > +		if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
+> > > > +			paddr |= BIT_ULL(33);
+> > > > +	}
+> > > > +	return paddr;
+> > > 
+> > > I think this relies on CONFIG_PHYS_ADDR_T_64BIT, which isn't always set on
+> > > 32-bit ARM.
+> > 
+> > This was discussed at [1]. Robin commented that this is not needed and
+> > build won't complain about this.
+> 
+> It's not so much the build I was worried about, but more that we'd silently
+> be doing the wrong thing and I think we can fix that as I mentioned above.
 
-As stated before, do not do that, simply add 100.
+OK. see below.
 
-> +	/* HW register start mon from one, but tm_mon start from zero. */
-> +	tm->tm_mon--;
-> +
-> +	/* rtc_tm_to_time64 convert Gregorian date to seconds since
-> +	 * 01-01-1970 00:00:00, and this date is Thursday
-> +	 */
-> +	time = rtc_tm_to_time64(tm);
-> +	days = div_s64(time, 86400);
-> +	tm->tm_wday = (days + 4) % 7;
-> +
-
-This is not necessary, nobody cares about tm_wday, if you don't have it,
-do not set it.
-
-> +	return 0;
-> +}
-> +
-> +static int mtk_rtc_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct mt2712_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	mutex_lock(&rtc->lock);
-> +	tm->tm_year -= RTC_MIN_YEAR_OFFSET;
-> +	tm->tm_mon++;
-> +
-> +	rtc_writel(rtc, RTC_TC_SEC, tm->tm_sec  & RTC_SEC_MASK);
-> +	rtc_writel(rtc, RTC_TC_MIN, tm->tm_min  & RTC_MIN_MASK);
-> +	rtc_writel(rtc, RTC_TC_HOU, tm->tm_hour & RTC_HOU_MASK);
-> +	rtc_writel(rtc, RTC_TC_DOM, tm->tm_mday & RTC_DOM_MASK);
-> +	rtc_writel(rtc, RTC_TC_MTH, tm->tm_mon  & RTC_MTH_MASK);
-> +	rtc_writel(rtc, RTC_TC_YEA, tm->tm_year & RTC_YEA_MASK);
-> +
-> +	rtc_write_trigger(rtc);
-> +	mutex_unlock(&rtc->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
-> +{
-> +	struct mt2712_rtc *rtc = dev_get_drvdata(dev);
-> +	struct rtc_time *tm = &alm->time;
-> +	u16 irqen;
-> +
-> +	mutex_lock(&rtc->lock);
-> +	irqen = rtc_readl(rtc, RTC_IRQ_EN);
-> +	alm->enabled = !!(irqen & RTC_IRQ_EN_AL);
-> +
-> +	tm->tm_sec  = rtc_readl(rtc, RTC_AL_SEC) & RTC_SEC_MASK;
-> +	tm->tm_min  = rtc_readl(rtc, RTC_AL_MIN) & RTC_MIN_MASK;
-> +	tm->tm_hour = rtc_readl(rtc, RTC_AL_HOU) & RTC_HOU_MASK;
-> +	tm->tm_mday = rtc_readl(rtc, RTC_AL_DOM) & RTC_DOM_MASK;
-> +	tm->tm_mon  = rtc_readl(rtc, RTC_AL_MTH) & RTC_MTH_MASK;
-> +	tm->tm_year = rtc_readl(rtc, RTC_AL_YEA) & RTC_YEA_MASK;
-> +
-> +	tm->tm_year += RTC_MIN_YEAR_OFFSET;
-> +	tm->tm_mon--;
-> +	mutex_unlock(&rtc->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
-> +{
-> +	struct mt2712_rtc *rtc = dev_get_drvdata(dev);
-> +	struct rtc_time *tm = &alm->time;
-> +	u16 irqen;
-> +
-> +	dev_info(rtc->dev, "set al time = %04d-%02d-%02d %02d:%02d:%02d (%d)\n",
-
-Do not use dev_info, dev_dbg is probably what you want here. Also, use
-%ptR.
-
-> +		 tm->tm_year + RTC_BASE_YEAR, tm->tm_mon + 1, tm->tm_mday,
-> +		 tm->tm_hour, tm->tm_min, tm->tm_sec, alm->enabled);
-> +
-> +	tm->tm_year -= RTC_MIN_YEAR_OFFSET;
-> +	tm->tm_mon++;
-> +
-> +	mutex_lock(&rtc->lock);
-
-You probably need to disable the alarm before starting to modify the
-registers.
-
-> +	rtc_writel(rtc, RTC_AL_SEC,
-> +		   (rtc_readl(rtc, RTC_AL_SEC) & ~(RTC_SEC_MASK)) |
-> +		    (tm->tm_sec  & RTC_SEC_MASK));
-> +	rtc_writel(rtc, RTC_AL_MIN,
-> +		   (rtc_readl(rtc, RTC_AL_MIN) & ~(RTC_MIN_MASK)) |
-> +		    (tm->tm_min  & RTC_MIN_MASK));
-> +	rtc_writel(rtc, RTC_AL_HOU,
-> +		   (rtc_readl(rtc, RTC_AL_HOU) & ~(RTC_HOU_MASK)) |
-> +		    (tm->tm_hour & RTC_HOU_MASK));
-> +	rtc_writel(rtc, RTC_AL_DOM,
-> +		   (rtc_readl(rtc, RTC_AL_DOM) & ~(RTC_DOM_MASK)) |
-> +		    (tm->tm_mday & RTC_DOM_MASK));
-> +	rtc_writel(rtc, RTC_AL_MTH,
-> +		   (rtc_readl(rtc, RTC_AL_MTH) & ~(RTC_MTH_MASK)) |
-> +		    (tm->tm_mon  & RTC_MTH_MASK));
-> +	rtc_writel(rtc, RTC_AL_YEA,
-> +		   (rtc_readl(rtc, RTC_AL_YEA) & ~(RTC_YEA_MASK)) |
-> +		    (tm->tm_year & RTC_YEA_MASK));
-> +
-> +	rtc_writel(rtc, RTC_AL_MASK, RTC_AL_MASK_DOW);	/* mask DOW */
-> +
-> +	if (alm->enabled) {
-> +		irqen = rtc_readl(rtc, RTC_IRQ_EN) | RTC_IRQ_EN_ONESHOT_AL;
-> +		rtc_writel(rtc, RTC_IRQ_EN, irqen);
-> +	} else {
-> +		irqen = rtc_readl(rtc, RTC_IRQ_EN) & ~(RTC_IRQ_EN_ONESHOT_AL);
-> +		rtc_writel(rtc, RTC_IRQ_EN, irqen);
-> +	}
-> +	rtc_write_trigger(rtc);
-> +	mutex_unlock(&rtc->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static bool valid_rtc_time(struct mt2712_rtc *rtc)
-
-This function is not necessary, see later.
-
-> +{
-> +	struct rtc_time tm;
-> +	struct rtc_wkalrm alm;
-> +
-> +	mtk_rtc_read_time(rtc->dev, &tm);
-> +	if (rtc_valid_tm(&tm))
-> +		return false;
-> +
-> +	mtk_rtc_read_alarm(rtc->dev, &alm);
-> +	if (rtc_valid_tm(&alm.time))
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static void reset_rtc_time(struct mt2712_rtc *rtc)
-> +{
-> +	rtc_writel(rtc, RTC_TC_YEA, RTC_DEFAULT_YEA - RTC_MIN_YEAR);
-> +	rtc_writel(rtc, RTC_TC_MTH, RTC_DEFAULT_MTH);
-> +	rtc_writel(rtc, RTC_TC_DOM, RTC_DEFAULT_DOM);
-> +	rtc_writel(rtc, RTC_TC_DOW, 1);
-> +	rtc_writel(rtc, RTC_TC_HOU, 0);
-> +	rtc_writel(rtc, RTC_TC_MIN, 0);
-> +	rtc_writel(rtc, RTC_TC_SEC, 0);
-> +
-> +	rtc_writel(rtc, RTC_AL_YEA, 1970 - RTC_MIN_YEAR);
-> +	rtc_writel(rtc, RTC_AL_MTH, 1);
-> +	rtc_writel(rtc, RTC_AL_DOM, 1);
-> +	rtc_writel(rtc, RTC_AL_DOW, 1);
-> +	rtc_writel(rtc, RTC_AL_HOU, 0);
-> +	rtc_writel(rtc, RTC_AL_MIN, 0);
-> +	rtc_writel(rtc, RTC_AL_SEC, 0);
-> +
-> +	rtc_write_trigger(rtc);
-> +}
-> +
-> +/* Init RTC register */
-> +static void rtc_hw_init(struct mt2712_rtc *rtc)
-> +{
-> +	u32 p1, p2;
-> +
-> +	rtc_writel(rtc, RTC_BBPU, RTC_BBPU_KEY | RTC_BBPU_RELOAD);
-> +
-> +	rtc_writel(rtc, RTC_IRQ_EN,  0);
-
-Are you sure you want to disable interrupts every time you reboot? I
-guess the RTC has its own power domain and may be used across reboots.
-
-> +	rtc_writel(rtc, RTC_IRQ_STA, 0);
-> +	rtc_writel(rtc, RTC_CII_EN,  0);
-> +	rtc_writel(rtc, RTC_AL_MASK, 0);
-> +	/* necessary before set RTC_POWERKEY */
-> +	rtc_writel(rtc, RTC_CON0, 0x4848);
-> +	rtc_writel(rtc, RTC_CON1, 0x0048);
-> +
-> +	rtc_write_trigger(rtc);
-> +
-> +	rtc_readl(rtc, RTC_IRQ_STA);	/* read clear */
-> +
-> +	p1 = rtc_readl(rtc, RTC_POWERKEY1);
-> +	p2 = rtc_readl(rtc, RTC_POWERKEY2);
-> +	dev_info(rtc->dev, "%s rtc p1 is %x, p2 is %x!\n", __func__, p1, p2);
-
-This debug message has to be removed.
-
-> +
-> +	 /* RTC need POWERKEY1/2 match, then goto normal work mode */
-> +	rtc_writel(rtc, RTC_POWERKEY1, RTC_POWERKEY1_KEY);
-> +	rtc_writel(rtc, RTC_POWERKEY2, RTC_POWERKEY2_KEY);
-> +	rtc_write_trigger(rtc);
-> +
-> +	rtc_writeif_unlock(rtc);
-> +
-> +	/*
-> +	 * register status was not correct,
-> +	 * need set time and alarm to default
-> +	 */
-> +	if (p1 != RTC_POWERKEY1_KEY || p2 != RTC_POWERKEY2_KEY
-> +	    || !valid_rtc_time(rtc)) {
-> +		reset_rtc_time(rtc);
-
-Do not do that. This is valuable information. If the time is invalid,
-report it as such in read_time and read_alarm. Resetting the time here
-will lead to more issues later (i.e. userspace is not able to know
-whether the time is set correctly or not).
-
-> +		dev_info(rtc->dev, "first boot init!\n");
-> +	}
-> +}
-> +
-> +static const struct rtc_class_ops mtk_rtc_ops = {
-> +	.read_time	= mtk_rtc_read_time,
-> +	.set_time	= mtk_rtc_set_time,
-> +	.read_alarm	= mtk_rtc_read_alarm,
-> +	.set_alarm	= mtk_rtc_set_alarm,
-> +};
-> +
-> +static int mtk_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	struct mt2712_rtc *rtc;
-> +	int ret;
-> +
-> +	rtc = devm_kzalloc(&pdev->dev, sizeof(struct mt2712_rtc), GFP_KERNEL);
-> +	if (!rtc)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	rtc->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(rtc->base))
-> +		return PTR_ERR(rtc->base);
-> +
-> +	rtc->irq = platform_get_irq(pdev, 0);
-> +	if (rtc->irq < 0) {
-> +		dev_err(&pdev->dev, "No IRQ resource\n");
-> +		return rtc->irq;
-> +	}
-> +
-> +	mutex_init(&rtc->lock);
-> +	rtc->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, rtc);
-> +
-> +	rtc->rtc_dev = devm_rtc_allocate_device(rtc->dev);
-> +	if (IS_ERR(rtc->rtc_dev))
-> +		return PTR_ERR(rtc->rtc_dev);
-> +
-> +	ret = request_threaded_irq(rtc->irq, NULL,
-
-devm_request_threaded_irq would remove the need for out_free_irq and
-mtk_rtc_remove().
-
-> +				   rtc_irq_handler_thread,
-> +				   IRQF_ONESHOT | IRQF_TRIGGER_LOW,
-> +				   dev_name(rtc->dev), rtc);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
-> +			rtc->irq, ret);
-> +		return ret;
-> +	}
-> +
-> +	/* rtc hw init */
-> +	rtc_hw_init(rtc);
-> +
-> +	device_init_wakeup(&pdev->dev, true);
-> +
-> +	rtc->rtc_dev->ops = &mtk_rtc_ops;
-> +
-> +	ret = rtc_register_device(rtc->rtc_dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "register rtc device failed\n");
-> +		goto out_free_irq;
-> +	}
-> +
-> +	return 0;
-> +
-> +out_free_irq:
-> +	free_irq(rtc->irq, rtc);
-> +	return ret;
-> +}
-> +
-> +static int mtk_rtc_remove(struct platform_device *pdev)
-> +{
-> +	struct mt2712_rtc *rtc = dev_get_drvdata(&pdev->dev);
-> +
-> +	free_irq(rtc->irq, rtc);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int mt2712_rtc_suspend(struct device *dev)
-> +{
-> +	int wake_status = 0;
-> +	struct mt2712_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	if (device_may_wakeup(dev)) {
-> +		wake_status = enable_irq_wake(rtc->irq);
-> +		if (!wake_status)
-> +			rtc->irq_wake_enabled = true;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mt2712_rtc_resume(struct device *dev)
-> +{
-> +	int wake_status = 0;
-> +	struct mt2712_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	if (device_may_wakeup(dev) && rtc->irq_wake_enabled) {
-> +		wake_status = disable_irq_wake(rtc->irq);
-> +		if (!wake_status)
-> +			rtc->irq_wake_enabled = false;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(mt2712_pm_ops, mt2712_rtc_suspend,
-> +			 mt2712_rtc_resume);
-> +#endif
-> +
-> +static const struct of_device_id mt2712_rtc_of_match[] = {
-> +	{ .compatible = "mediatek,mt2712-rtc", },
-> +	{ },
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, mt2712_rtc_of_match)
-> +
-> +static struct platform_driver mtk_rtc_driver = {
-> +	.driver = {
-> +		.name = MTK_RTC_DEV,
-> +		.of_match_table = mt2712_rtc_of_match,
-> +		.pm = &mt2712_pm_ops,
-> +	},
-> +	.probe  = mtk_rtc_probe,
-> +	.remove = mtk_rtc_remove,
-> +};
-> +
-> +module_platform_driver(mtk_rtc_driver);
-> +
-> +MODULE_DESCRIPTION("MediaTek MT2712 SoC based RTC Driver");
-> +MODULE_AUTHOR("Ran Bi <ran.bi@mediatek.com>");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.18.0
+> 
+> Will
 > 
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+===================================
+-#define ARM_V7S_ATTR_MTK_4GB  BIT(9) /* MTK extend it for 4GB mode */
++/* MediaTek extend the two bits for PA 32bit/33bit */
++#define ARM_V7S_ATTR_MTK_PA_BIT32  BIT(9)
++#define ARM_V7S_ATTR_MTK_PA_BIT33  BIT(4)
+ 
+ /* *well, except for TEX on level 2 large pages, of course :( */
+ #define ARM_V7S_CONT_PAGE_TEX_SHIFT 6
+@@ -190,13 +192,22 @@ static dma_addr_t __arm_v7s_dma_addr(void *pages)
+ static arm_v7s_iopte paddr_to_iopte(phys_addr_t paddr, int lvl,
+ 				    struct io_pgtable_cfg *cfg)
+ {
+-	return paddr & ARM_V7S_LVL_MASK(lvl);
++	arm_v7s_iopte pte = paddr & ARM_V7S_LVL_MASK(lvl);
++
++	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
++		if ((paddr & BIT_ULL(32)) || cfg->oas == 33 /* 4GB mode */)
++			pte |= ARM_V7S_ATTR_MTK_PA_BIT32;
++		if (paddr & BIT_ULL(33))
++			pte |= ARM_V7S_ATTR_MTK_PA_BIT33;
++	}
++	return pte;
+ }
+ 
+ static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
+ 				  struct io_pgtable_cfg *cfg)
+ {
+ 	arm_v7s_iopte mask;
++	phys_addr_t paddr;
+ 
+ 	if (ARM_V7S_PTE_IS_TABLE(pte, lvl))
+ 		mask = ARM_V7S_TABLE_MASK;
+@@ -205,7 +216,20 @@ static phys_addr_t iopte_to_paddr(arm_v7s_iopte
+pte, int lvl,
+ 	else
+ 		mask = ARM_V7S_LVL_MASK(lvl);
+ 
+-	return pte & mask;
++	paddr = pte & mask;
++	if (IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT) &&
++	    (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)) {
++		/*
++		 * Workaround for MTK 4GB Mode:
++		 * Add BIT32 only when PA < 0x4000_0000.
++		 */
++		if ((cfg->oas == 33 && paddr < 0x40000000UL) ||
++		    (cfg->oas > 33 && (pte & ARM_V7S_ATTR_MTK_PA_BIT32)))
++			paddr |= BIT_ULL(32);
++		if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
++			paddr |= BIT_ULL(33);
++	}
++	return paddr;
+ }
+ 
+ static arm_v7s_iopte *iopte_deref(arm_v7s_iopte pte, int lvl,
+@@ -326,9 +350,6 @@ static arm_v7s_iopte arm_v7s_prot_to_pte(int prot,
+int lvl,
+ 	if (lvl == 1 && (cfg->quirks & IO_PGTABLE_QUIRK_ARM_NS))
+ 		pte |= ARM_V7S_ATTR_NS_SECTION;
+ 
+-	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)
+-		pte |= ARM_V7S_ATTR_MTK_4GB;
+-
+ 	return pte;
+ }
+ 
+@@ -742,7 +763,9 @@ static struct io_pgtable
+*arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+ {
+ 	struct arm_v7s_io_pgtable *data;
+ 
+-	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
++	if (cfg->ias > ARM_V7S_ADDR_BITS ||
++	    (cfg->oas > ARM_V7S_ADDR_BITS &&
++	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
+ 		return NULL;
+ 
+ 	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index 85e71fb..1a141ea 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -271,16 +271,18 @@ static int mtk_iommu_domain_finalise(struct
+mtk_iommu_domain *dom)
+ 	dom->cfg = (struct io_pgtable_cfg) {
+ 		.quirks = IO_PGTABLE_QUIRK_ARM_NS |
+ 			IO_PGTABLE_QUIRK_NO_PERMS |
+-			IO_PGTABLE_QUIRK_TLBI_ON_MAP,
++			IO_PGTABLE_QUIRK_TLBI_ON_MAP |
++			IO_PGTABLE_QUIRK_ARM_MTK_EXT,
+ 		.pgsize_bitmap = mtk_iommu_ops.pgsize_bitmap,
+ 		.ias = 32,
+-		.oas = 32,
+ 		.tlb = &mtk_iommu_gather_ops,
+ 		.iommu_dev = data->dev,
+ 	};
+ 
+ 	if (data->enable_4GB)
+-		dom->cfg.quirks |= IO_PGTABLE_QUIRK_ARM_MTK_EXT;
++		dom->cfg.oas = 33; /* Only for 4GB mode */
++	else
++		dom->cfg.oas = 34;
+ 
+ 	dom->iop = alloc_io_pgtable_ops(ARM_V7S, &dom->cfg, data);
+ 	if (!dom->iop) {
+@@ -371,8 +373,7 @@ static int mtk_iommu_map(struct iommu_domain
+*domain, unsigned long iova,
+ 	int ret;
+ 
+ 	spin_lock_irqsave(&dom->pgtlock, flags);
+-	ret = dom->iop->map(dom->iop, iova, paddr & DMA_BIT_MASK(32),
+-			    size, prot);
++	ret = dom->iop->map(dom->iop, iova, paddr, size, prot);
+ 	spin_unlock_irqrestore(&dom->pgtlock, flags);
+ 
+ 	return ret;
+@@ -401,7 +402,6 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct
+iommu_domain *domain,
+ 					  dma_addr_t iova)
+ {
+ 	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
+-	struct mtk_iommu_data *data = mtk_iommu_get_m4u_data();
+ 	unsigned long flags;
+ 	phys_addr_t pa;
+ 
+@@ -409,9 +409,6 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct
+iommu_domain *domain,
+ 	pa = dom->iop->iova_to_phys(dom->iop, iova);
+ 	spin_unlock_irqrestore(&dom->pgtlock, flags);
+ 
+-	if (data->enable_4GB)
+-		pa |= BIT_ULL(32);
+-
+ 	return pa;
+ } 
+===================================
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
