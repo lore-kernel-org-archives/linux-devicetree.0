@@ -1,61 +1,185 @@
-Return-Path: <SRS0=jOAO=V4=linux-m68k.org=geert@kernel.org>
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] scripts/dtc: dtx_diff - add color output support
-Date: Wed, 31 Jul 2019 14:37:41 +0200
-Message-Id: <20190731123741.13947-1-geert+renesas@glider.be>
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=6AaC=VL=zoho.com=zhouyanjie@kernel.org>
+From: Zhou Yanjie <zhouyanjie@zoho.com>
+Subject: [PATCH 6/6] pinctrl: Ingenic: Add pinctrl driver for X1500.
+Date: Sun, 14 Jul 2019 11:53:56 +0800
+Message-Id: <1563076436-5338-7-git-send-email-zhouyanjie@zoho.com>
+In-Reply-To: <1563076436-5338-1-git-send-email-zhouyanjie@zoho.com>
+References: <1563076436-5338-1-git-send-email-zhouyanjie@zoho.com>
+To: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, paul.burton@mips.com, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add new -c/--color options, to enhance the diff output with color, and
-improve the user's experience.
+Add support for probing the pinctrl-ingenic driver on the
+X1500 Soc from Ingenic.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 ---
- scripts/dtc/dtx_diff | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-ingenic.c | 118 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 117 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/dtc/dtx_diff b/scripts/dtc/dtx_diff
-index e9ad7834a22d9459..4e2c8617f69a333e 100755
---- a/scripts/dtc/dtx_diff
-+++ b/scripts/dtc/dtx_diff
-@@ -20,6 +20,8 @@ Usage:
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 5bb4ae5..6e26830 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -3,6 +3,7 @@
+  * Ingenic SoCs pinctrl driver
+  *
+  * Copyright (c) 2017 Paul Cercueil <paul@crapouillou.net>
++ * Copyright (c) 2019 Zhou Yanjie <zhouyanjie@zoho.com>
+  */
  
+ #include <linux/compiler.h>
+@@ -58,6 +59,7 @@ enum jz_version {
+ 	ID_JZ4780,
+ 	ID_X1000,
+ 	ID_X1000E,
++	ID_X1500,
+ };
  
-       --annotate    synonym for -T
-+      --color       synonym for -c
-+       -c           enable colored output
-        -f           print full dts in diff (--unified=99999)
-        -h           synonym for --help
-        -help        synonym for --help
-@@ -178,6 +180,7 @@ compile_to_dts() {
- annotate=""
- cmd_diff=0
- diff_flags="-u"
-+diff_color=""
- dtx_file_1=""
- dtx_file_2=""
- dtc_sort="-s"
-@@ -189,6 +192,11 @@ while [ $# -gt 0 ] ; do
+ struct ingenic_chip_info {
+@@ -1218,6 +1220,116 @@ static const struct ingenic_chip_info x1000e_chip_info = {
+ 	.pull_downs = x1000_pull_downs,
+ };
  
- 	case $1 in
- 
-+	-c | --color )
-+		diff_color="--color=always"
-+		shift
-+		;;
++static int x1500_uart0_data_pins[] = { 0x4a, 0x4b, };
++static int x1500_uart0_hwflow_pins[] = { 0x4c, 0x4d, };
++static int x1500_uart1_data_a_pins[] = { 0x04, 0x05, };
++static int x1500_uart1_data_d_pins[] = { 0x62, 0x63, };
++static int x1500_uart1_hwflow_d_pins[] = { 0x64, 0x65, };
++static int x1500_uart2_data_a_pins[] = { 0x02, 0x03, };
++static int x1500_uart2_data_d_pins[] = { 0x65, 0x64, };
++static int x1500_mmc0_1bit_pins[] = { 0x18, 0x19, 0x17, };
++static int x1500_mmc0_4bit_pins[] = { 0x16, 0x15, 0x14, };
++static int x1500_i2c0_pins[] = { 0x38, 0x37, };
++static int x1500_i2c1_a_pins[] = { 0x01, 0x00, };
++static int x1500_i2c1_c_pins[] = { 0x5b, 0x5a, };
++static int x1500_i2c2_pins[] = { 0x61, 0x60, };
++static int x1500_cim_pins[] = {
++	0x08, 0x09, 0x0a, 0x0b,
++	0x13, 0x12, 0x11, 0x10, 0x0f, 0x0e, 0x0d, 0x0c,
++};
++static int x1500_pwm_pwm0_pins[] = { 0x59, };
++static int x1500_pwm_pwm1_pins[] = { 0x5a, };
++static int x1500_pwm_pwm2_pins[] = { 0x5b, };
++static int x1500_pwm_pwm3_pins[] = { 0x26, };
++static int x1500_pwm_pwm4_pins[] = { 0x58, };
 +
- 	-f )
- 		diff_flags="--unified=999999"
- 		shift
-@@ -344,7 +352,7 @@ DTC="\
++static int x1500_uart0_data_funcs[] = { 0, 0, };
++static int x1500_uart0_hwflow_funcs[] = { 0, 0, };
++static int x1500_uart1_data_a_funcs[] = { 2, 2, };
++static int x1500_uart1_data_d_funcs[] = { 1, 1, };
++static int x1500_uart1_hwflow_d_funcs[] = { 1, 1, };
++static int x1500_uart2_data_a_funcs[] = { 2, 2, };
++static int x1500_uart2_data_d_funcs[] = { 0, 0, };
++static int x1500_mmc0_1bit_funcs[] = { 1, 1, 1, };
++static int x1500_mmc0_4bit_funcs[] = { 1, 1, 1, };
++static int x1500_i2c0_funcs[] = { 0, 0, };
++static int x1500_i2c1_a_funcs[] = { 2, 2, };
++static int x1500_i2c1_c_funcs[] = { 0, 0, };
++static int x1500_i2c2_funcs[] = { 1, 1, };
++static int x1500_cim_funcs[] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
++static int x1500_pwm_pwm0_funcs[] = { 0, };
++static int x1500_pwm_pwm1_funcs[] = { 1, };
++static int x1500_pwm_pwm2_funcs[] = { 1, };
++static int x1500_pwm_pwm3_funcs[] = { 2, };
++static int x1500_pwm_pwm4_funcs[] = { 0, };
++
++static const struct group_desc x1500_groups[] = {
++	INGENIC_PIN_GROUP("uart0-data", x1500_uart0_data),
++	INGENIC_PIN_GROUP("uart0-hwflow", x1500_uart0_hwflow),
++	INGENIC_PIN_GROUP("uart1-data-a", x1500_uart1_data_a),
++	INGENIC_PIN_GROUP("uart1-data-d", x1500_uart1_data_d),
++	INGENIC_PIN_GROUP("uart1-hwflow-d", x1500_uart1_hwflow_d),
++	INGENIC_PIN_GROUP("uart2-data-a", x1500_uart2_data_a),
++	INGENIC_PIN_GROUP("uart2-data-d", x1500_uart2_data_d),
++	INGENIC_PIN_GROUP("mmc0-1bit", x1500_mmc0_1bit),
++	INGENIC_PIN_GROUP("mmc0-4bit", x1500_mmc0_4bit),
++	INGENIC_PIN_GROUP("i2c0-data", x1500_i2c0),
++	INGENIC_PIN_GROUP("i2c1-data-a", x1500_i2c1_a),
++	INGENIC_PIN_GROUP("i2c1-data-c", x1500_i2c1_c),
++	INGENIC_PIN_GROUP("i2c2-data", x1500_i2c2),
++	INGENIC_PIN_GROUP("cim-data", x1500_cim),
++	{ "lcd-no-pins", },
++	INGENIC_PIN_GROUP("pwm0", x1500_pwm_pwm0),
++	INGENIC_PIN_GROUP("pwm1", x1500_pwm_pwm1),
++	INGENIC_PIN_GROUP("pwm2", x1500_pwm_pwm2),
++	INGENIC_PIN_GROUP("pwm3", x1500_pwm_pwm3),
++	INGENIC_PIN_GROUP("pwm4", x1500_pwm_pwm4),
++};
++
++static const char *x1500_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
++static const char *x1500_uart1_groups[] = {
++	"uart1-data-a", "uart1-data-d", "uart1-hwflow-d",
++};
++static const char *x1500_uart2_groups[] = { "uart2-data-a", "uart2-data-d", };
++static const char *x1500_mmc0_groups[] = { "mmc0-1bit", "mmc0-4bit", };
++static const char *x1500_i2c0_groups[] = { "i2c0-data", };
++static const char *x1500_i2c1_groups[] = { "i2c1-data-a", "i2c1-data-c", };
++static const char *x1500_i2c2_groups[] = { "i2c2-data", };
++static const char *x1500_cim_groups[] = { "cim-data", };
++static const char *x1500_lcd_groups[] = { "lcd-no-pins", };
++static const char *x1500_pwm0_groups[] = { "pwm0", };
++static const char *x1500_pwm1_groups[] = { "pwm1", };
++static const char *x1500_pwm2_groups[] = { "pwm2", };
++static const char *x1500_pwm3_groups[] = { "pwm3", };
++static const char *x1500_pwm4_groups[] = { "pwm4", };
++
++static const struct function_desc x1500_functions[] = {
++	{ "uart0", x1500_uart0_groups, ARRAY_SIZE(x1500_uart0_groups), },
++	{ "uart1", x1500_uart1_groups, ARRAY_SIZE(x1500_uart1_groups), },
++	{ "uart2", x1500_uart2_groups, ARRAY_SIZE(x1500_uart2_groups), },
++	{ "mmc0", x1500_mmc0_groups, ARRAY_SIZE(x1500_mmc0_groups), },
++	{ "i2c0", x1500_i2c0_groups, ARRAY_SIZE(x1500_i2c0_groups), },
++	{ "i2c1", x1500_i2c1_groups, ARRAY_SIZE(x1500_i2c1_groups), },
++	{ "i2c2", x1500_i2c2_groups, ARRAY_SIZE(x1500_i2c2_groups), },
++	{ "cim", x1500_cim_groups, ARRAY_SIZE(x1500_cim_groups), },
++	{ "lcd", x1500_lcd_groups, ARRAY_SIZE(x1500_lcd_groups), },
++	{ "pwm0", x1500_pwm0_groups, ARRAY_SIZE(x1500_pwm0_groups), },
++	{ "pwm1", x1500_pwm1_groups, ARRAY_SIZE(x1500_pwm1_groups), },
++	{ "pwm2", x1500_pwm2_groups, ARRAY_SIZE(x1500_pwm2_groups), },
++	{ "pwm3", x1500_pwm3_groups, ARRAY_SIZE(x1500_pwm3_groups), },
++	{ "pwm4", x1500_pwm4_groups, ARRAY_SIZE(x1500_pwm4_groups), },
++};
++
++static const struct ingenic_chip_info x1500_chip_info = {
++	.num_chips = 4,
++	.groups = x1500_groups,
++	.num_groups = ARRAY_SIZE(x1500_groups),
++	.functions = x1500_functions,
++	.num_functions = ARRAY_SIZE(x1500_functions),
++	.pull_ups = x1000_pull_ups,
++	.pull_downs = x1000_pull_downs,
++};
++
+ static u32 ingenic_gpio_read_reg(struct ingenic_gpio_chip *jzgc, u8 reg)
+ {
+ 	unsigned int val;
+@@ -1810,6 +1922,7 @@ static const struct of_device_id ingenic_pinctrl_of_match[] = {
+ 	{ .compatible = "ingenic,jz4780-pinctrl", .data = (void *) ID_JZ4780 },
+ 	{ .compatible = "ingenic,x1000-pinctrl", .data = (void *) ID_X1000 },
+ 	{ .compatible = "ingenic,x1000e-pinctrl", .data = (void *) ID_X1000E },
++	{ .compatible = "ingenic,x1500-pinctrl", .data = (void *) ID_X1500 },
+ 	{},
+ };
  
- if (( ${cmd_diff} )) ; then
+@@ -1934,7 +2047,9 @@ static int __init ingenic_pinctrl_probe(struct platform_device *pdev)
+ 	else
+ 		jzpc->version = (enum jz_version)id->driver_data;
  
--	diff ${diff_flags} --label "${dtx_file_1}" --label "${dtx_file_2}" \
-+	diff ${diff_flags} ${diff_color} --label "${dtx_file_1}" --label "${dtx_file_2}" \
- 		<(compile_to_dts "${dtx_file_1}" "${dtx_path_1_dtc_include}") \
- 		<(compile_to_dts "${dtx_file_2}" "${dtx_path_2_dtc_include}")
+-	if (jzpc->version >= ID_X1000E)
++	if (jzpc->version >= ID_X1500)
++		chip_info = &x1500_chip_info;
++	else if (jzpc->version >= ID_X1000E)
+ 		chip_info = &x1000e_chip_info;
+ 	else if (jzpc->version >= ID_X1000)
+ 		chip_info = &x1000_chip_info;
+@@ -2028,6 +2143,7 @@ static const struct platform_device_id ingenic_pinctrl_ids[] = {
+ 	{ "jz4780-pinctrl", ID_JZ4780 },
+ 	{ "x1000-pinctrl", ID_X1000 },
+ 	{ "x1000e-pinctrl", ID_X1000E },
++	{ "x1500-pinctrl", ID_X1500 },
+ 	{},
+ };
  
 -- 
-2.17.1
+2.7.4
