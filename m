@@ -1,40 +1,49 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: chemical: pms7003: convert
- bindings to yaml
-Date: Sun, 14 Jul 2019 12:36:23 +0100
-Message-ID: <20190714123623.680c3827@archlinux>
+Subject: Re: [PATCH 2/2] MAINTAINERS: add entry for plantower pms7003 driver
+Date: Sun, 14 Jul 2019 12:36:40 +0100
+Message-ID: <20190714123640.7c21034c@archlinux>
 References: <20190710192155.11489-1-tduszyns@gmail.com>
-        <20190710192155.11489-2-tduszyns@gmail.com>
-        <CAL_JsqJ8iLuif-UqVzpgwOLafVYr9aOo38EMeUnmYJ0a9aQ5DQ@mail.gmail.com>
+        <20190710192155.11489-3-tduszyns@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ8iLuif-UqVzpgwOLafVYr9aOo38EMeUnmYJ0a9aQ5DQ@mail.gmail.com>
+In-Reply-To: <20190710192155.11489-3-tduszyns@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Tomasz Duszynski <tduszyns@gmail.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Tomasz Duszynski <tduszyns@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 10 Jul 2019 14:12:26 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
+On Wed, 10 Jul 2019 21:21:55 +0200
+Tomasz Duszynski <tduszyns@gmail.com> wrote:
 
-> On Wed, Jul 10, 2019 at 1:22 PM Tomasz Duszynski <tduszyns@gmail.com> wrote:
-> >
-> > Convert existing device tree bindings to yaml.
-> >
-> > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> > ---
-> >  .../iio/chemical/plantower,pms7003.txt        | 26 ----------
-> >  .../iio/chemical/plantower,pms7003.yaml       | 51 +++++++++++++++++++
-> >  2 files changed, 51 insertions(+), 26 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml  
+> Add myself as a plantower pms7003 driver maintainer.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
+Applied,
 
 Thanks,
 
 Jonathan
+
+> ---
+>  MAINTAINERS | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ad498428b38c..771de33ef737 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12548,6 +12548,12 @@ F:	drivers/i2c/busses/i2c-puv3.c
+>  F:	drivers/video/fbdev/fb-puv3.c
+>  F:	drivers/rtc/rtc-puv3.c
+>  
+> +PLANTOWER PMS7003 AIR POLLUTION SENSOR DRIVER
+> +M:	Tomasz Duszynski <tduszyns@gmail.com>
+> +S:	Maintained
+> +F:	drivers/iio/chemical/pms7003.c
+> +F:	Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
+> +
+>  PMBUS HARDWARE MONITORING DRIVERS
+>  M:	Guenter Roeck <linux@roeck-us.net>
+>  L:	linux-hwmon@vger.kernel.org
