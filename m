@@ -1,68 +1,38 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
-Date: Mon, 15 Jul 2019 00:41:57 +0300
-Message-ID: <23f10791-3fff-0e94-2798-6f38a27745d1@gmail.com>
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
- <a262cbb3-845c-3ad1-16cc-375a24b9f7e9@gmail.com>
- <822867d6-4a4d-5f68-9b21-84a20d73c589@gmail.com>
- <CACRpkdYdCmT0ErTuewYbv7bPkjoFLrK9KSVuKVMkAXNQYAGV7g@mail.gmail.com>
- <66b5e81b-d468-e2aa-7336-3d4854c234ab@gmail.com>
- <db7ac8e6-bfad-bc60-b46e-d886025872e4@nvidia.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 4/8] PCI: Add quirk to disable MSI support for Amazon's
+ Annapurna Labs host bridge
+Date: Mon, 15 Jul 2019 08:54:00 +1000
+Message-ID: <54a3e2de1baf2aab893ab6370f8f6ec0a83c45db.camel@kernel.crashing.org>
+References: <20190710164519.17883-1-jonnyc@amazon.com>
+         <20190710164519.17883-5-jonnyc@amazon.com>
+         <20190712130419.GA46935@google.com>
+         <2cac43401f0cf76acb645b98c6543204f12d5c05.camel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <db7ac8e6-bfad-bc60-b46e-d886025872e4@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <2cac43401f0cf76acb645b98c6543204f12d5c05.camel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com, Rob Herring <robh+dt@kernel.org>, open list:OPEN FIRM
+To: "Chocron, Jonathan" <jonnyc@amazon.com>, "helgaas@kernel.org" <helgaas@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-13.07.2019 8:31, Sowjanya Komatineni пишет:
+On Sun, 2019-07-14 at 15:09 +0000, Chocron, Jonathan wrote:
+> > s/host bridge/Root Port/, if I understand correctly.
+> > 
 > 
-> On 7/4/19 3:40 AM, Dmitry Osipenko wrote:
->> 04.07.2019 10:31, Linus Walleij пишет:
->>> On Sat, Jun 29, 2019 at 5:58 PM Dmitry Osipenko <digetx@gmail.com>
->>> wrote:
->>>
->>>> Oh, also what about GPIO-pinctrl suspend resume ordering .. is it
->>>> okay that pinctrl
->>>> will be resumed after GPIO? Shouldn't a proper pin-muxing be
->>>> selected at first?
->>> Thierry sent some initial patches about this I think. We need to use
->>> device links for this to work properly so he adds support for
->>> linking the pinctrl and GPIO devices through the ranges.
->>>
->>> For links between pin control handles and their consumers, see also:
->>> 036f394dd77f pinctrl: Enable device link creation for pin control
->>> c6045b4e3cad pinctrl: stmfx: enable links creations
->>> 489b64d66325 pinctrl: stm32: Add links to consumers
->>>
->>> I am using STM32 as guinea pig for this, consider adding links also
->>> from the Tegra pinctrl. I might simply make these pinctrl consumer
->>> to producer links default because I think it makes a lot sense.
->> IIUC, currently the plan is to resume pinctrl *after* GPIO for
->> Tegra210 [1]. But this
->> contradicts to what was traditionally done for older Tegras where
->> pinctrl was always
->> resumed first and apparently it won't work well for the GPIO ranges as
->> well. I think this
->> and the other patchsets related to suspend-resume still need some more
->> thought.
->>
->> [1] https://patchwork.kernel.org/patch/11012077/
+> Ack.
 > 
-> Park bit was introduced from Tegra210 onwards and during suspend/resume,
-> requirement of gpio restore prior to pinctrl restore is not required for
-> prior Tegra210.
-> 
-> Also currently pinctrl suspend/resume implementation for prior Tegra210
-> is not yet upstreamed but having gpio restore prior to pinmux during
-> suspend/resume should not cause any issue for prior tegra's as well as
-> gpio resume restores pins back to same gpio config as they were during
-> suspend entry.
-> 
+> BTW, what is the main difference between the 2 terms, since they seem
+> to be (mistakenly?) used interchangeably?
 
-Okay!
+The host bridge is the parent of the root port. You can have several
+root ports under a host bridge in fact. They tend to be part of the
+same silicon and somewhat intimately linked but they are distinct
+logical entities. The root port appears as a PCIe p2p bridge sitting on
+the top level bus provided by the host bridge. The Host Bridge doesn't
+have to have a representation in config space (it sometimes does
+historically, but as a sibling of the devices on that top level bus. In
+PCIe land, these are chipset built-in devices).
+
+Ben.
