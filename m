@@ -1,258 +1,134 @@
-From: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: Re: [PATCH 1/2] leds: Add control of the voltage/current regulator to
- the LED core
-Date: Mon, 15 Jul 2019 11:47:08 +0200
-Message-ID: <9c53f54f-d0d4-50d4-09da-34389085269a@ti.com>
-References: <20190708103547.23528-1-jjhiblot@ti.com>
- <20190708103547.23528-2-jjhiblot@ti.com>
- <56d16260-ff82-3439-4c1f-2a3a1552bc7d@ti.com>
- <ab4818c0-bc7a-13e1-c6ce-e977b0234de0@ti.com>
- <20190715092400.sedjumqkecglheyu@holly.lan>
+From: Will Deacon <will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 07/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
+	Mode
+Date: Mon, 15 Jul 2019 10:51:57 +0100
+Message-ID: <20190715095156.xczfkbm6zpjueq32@willie-the-truck>
+References: <1561774167-24141-1-git-send-email-yong.wu@mediatek.com>
+	<1561774167-24141-8-git-send-email-yong.wu@mediatek.com>
+	<20190710143649.w5dplhzdpi3bxp7e@willie-the-truck>
+	<1562846036.31342.10.camel@mhfsdcap03>
+	<20190711123129.da4rg35b54u4svfw@willie-the-truck>
+	<1563079280.31342.22.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190715092400.sedjumqkecglheyu@holly.lan>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1563079280.31342.22.camel@mhfsdcap03>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, chao.hao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Jul 14, 2019 at 12:41:20PM +0800, Yong Wu wrote:
+> On Thu, 2019-07-11 at 13:31 +0100, Will Deacon wrote:
+> > This looks like the right sort of idea. Basically, I was thinking that you
+> > can use the oas in conjunction with the quirk to specify whether or not
+> > your two magic bits should be set. You could also then cap the oas using
+> > the size of phys_addr_t to deal with my other comment.
+> > 
+> > Finally, I was hoping you could drop the |= BIT_ULL(32) and the &=
+> > ~BIT_ULL(32) bits of the mtk driver if the pgtable code now accepts higher
+> > addresses. Did that not work out?
+> 
+> After the current patch, the pgtable has accepted the higher address.
+> the " |= BIT_ULL(32)" and "& = ~ BIT_ULL(32)" is for a special case(we
+> call it 4GB mode).
+> 
+> Now MediaTek IOMMU support 2 kind memory:
+> 1) normal case: PA is 0x4000_0000 - 0x3_ffff_ffff. the PA won't be
+> remapped. mt8183 and the non-4GB mode of mt8173/mt2712 use this mode.
+> 
+> 2) 4GB Mode: PA is 0x4000_0000 - 0x1_3fff_ffff. But the PA will remapped
+> to 0x1_0000_0000 to 0x1_ffff_ffff. This is for the 4GB mode of
+> mt8173/mt2712. This case is so special that we should change the PA
+> manually(add bit32).
+> (mt2712 and mt8173 have both mode: 4GB and non-4GB.)
+> 
+> If we try to use oas and our quirk to cover this two case. Then I can
+> use "oas == 33" only for this 4GB mode. and "oas == 34" for the normal
+> case even though the PA mayn't reach 34bit. Also I should add some
+> "workaround" for the 4GB mode(oas==33).
+> 
+> I copy the new patch in the mail below(have dropped the "|= BIT_ULL(32)"
+> and the "&= ~BIT_ULL(32)) in mtk iommu". please help have a look if it
+> is ok.
+> (another thing: Current the PA can support over 4GB. So the quirk name
+> "MTK_4GB" looks not suitable, I used a new patch rename to "MTK_EXT").
 
-On 15/07/2019 11:24, Daniel Thompson wrote:
-> On Mon, Jul 15, 2019 at 11:01:29AM +0200, Jean-Jacques Hiblot wrote:
->> Hi Dan,
->>
->> On 12/07/2019 20:49, Dan Murphy wrote:
->>> JJ
->>>
->>> On 7/8/19 5:35 AM, Jean-Jacques Hiblot wrote:
->>>> A LED is usually powered by a voltage/current regulator. Let the LED
->>>> core
->>> Let the LED core know
->>>> about it. This allows the LED core to turn on or off the power supply
->>>> as needed.
->>>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->>>> ---
->>>>    drivers/leds/led-class.c | 10 ++++++++
->>>>    drivers/leds/led-core.c  | 53 +++++++++++++++++++++++++++++++++++++---
->>>>    include/linux/leds.h     |  4 +++
->>>>    3 files changed, 64 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
->>>> index 4793e77808e2..e01b2d982564 100644
->>>> --- a/drivers/leds/led-class.c
->>>> +++ b/drivers/leds/led-class.c
->>>> @@ -17,6 +17,7 @@
->>>>    #include <linux/slab.h>
->>>>    #include <linux/spinlock.h>
->>>>    #include <linux/timer.h>
->>>> +#include <linux/regulator/consumer.h>
->>> What if you move this to leds.h so core and class can both include it.
->>>
->>>
->>>>    #include <uapi/linux/uleds.h>
->>>>    #include "leds.h"
->>>>    @@ -272,6 +273,15 @@ int of_led_classdev_register(struct device
->>>> *parent, struct device_node *np,
->>>>            dev_warn(parent, "Led %s renamed to %s due to name collision",
->>>>                    led_cdev->name, dev_name(led_cdev->dev));
->>>>    +    led_cdev->regulator = devm_regulator_get(led_cdev->dev, "power");
->>> Is the regulator always going to be called power?
->> Actually in the dts, that will be "power-supply". I lacked the imagination
->> to come up with a better name.
->>
->>
->>
->>>> +    if (IS_ERR(led_cdev->regulator)) {
->>>> +        dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
->>>> +            led_cdev->name);
->>>> +        device_unregister(led_cdev->dev);
->>>> +        mutex_unlock(&led_cdev->led_access);
->>>> +        return PTR_ERR(led_cdev->regulator);
->>> This is listed as optional in the DT doc.  This appears to be required.
->> The regulator core will provide a dummy regulator if none is given in the
->> device tree. I would rather have an error in that case, but that is not how
->> it works.
-> If you actively wanted to get -ENODEV back when there is no regulator
-> then you can use devm_regulator_get_optional() for that.
->
-> However perhaps be careful what you wish for. If you use get_optional()
-> then you will have to sprinkle NULL or IS_ERR() checks everywhere. I'd
-> favour using the current approach!
+Makes sense, thanks. One comment below.
 
-Thanks for the info. I think I'll use the get_optionnal(). That will add 
-a bit of complexity, but it will avoid deferring some work in 
-led_set_brightness_nopm() when it is not needed.
+> @@ -205,7 +216,20 @@ static phys_addr_t iopte_to_paddr(arm_v7s_iopte
+> pte, int lvl,
+>  	else
+>  		mask = ARM_V7S_LVL_MASK(lvl);
+>  
+> -	return pte & mask;
+> +	paddr = pte & mask;
+> +	if (IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT) &&
+> +	    (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)) {
+> +		/*
+> +		 * Workaround for MTK 4GB Mode:
+> +		 * Add BIT32 only when PA < 0x4000_0000.
+> +		 */
+> +		if ((cfg->oas == 33 && paddr < 0x40000000UL) ||
+> +		    (cfg->oas > 33 && (pte & ARM_V7S_ATTR_MTK_PA_BIT32)))
+> +			paddr |= BIT_ULL(32);
+> +		if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
+> +			paddr |= BIT_ULL(33);
+> +	}
+> +	return paddr;
+>  }
+>  
+>  static arm_v7s_iopte *iopte_deref(arm_v7s_iopte pte, int lvl,
+> @@ -326,9 +350,6 @@ static arm_v7s_iopte arm_v7s_prot_to_pte(int prot,
+> int lvl,
+>  	if (lvl == 1 && (cfg->quirks & IO_PGTABLE_QUIRK_ARM_NS))
+>  		pte |= ARM_V7S_ATTR_NS_SECTION;
+>  
+> -	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)
+> -		pte |= ARM_V7S_ATTR_MTK_4GB;
+> -
+>  	return pte;
+>  }
+>  
+> @@ -742,7 +763,9 @@ static struct io_pgtable
+> *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+>  {
+>  	struct arm_v7s_io_pgtable *data;
+>  
+> -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
+> +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
+> +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
+> +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
+>  		return NULL;
 
-JJ
+I think you can rework this to do something like:
 
->
->
-> Daniel.
->
->>
->>> I prefer to keep it optional.  Many LED drivers are connected to fixed
->>> non-managed supplies.
->>>
->>>> +    }
->>>> +
->>>>        if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
->>>>            ret = led_add_brightness_hw_changed(led_cdev);
->>>>            if (ret) {
->>>> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
->>>> index 7107cd7e87cf..139de6b08cad 100644
->>>> --- a/drivers/leds/led-core.c
->>>> +++ b/drivers/leds/led-core.c
->>>> @@ -16,6 +16,7 @@
->>>>    #include <linux/rwsem.h>
->>>>    #include <linux/slab.h>
->>>>    #include "leds.h"
->>>> +#include <linux/regulator/consumer.h>
->>>>      DECLARE_RWSEM(leds_list_lock);
->>>>    EXPORT_SYMBOL_GPL(leds_list_lock);
->>>> @@ -23,6 +24,31 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
->>>>    LIST_HEAD(leds_list);
->>>>    EXPORT_SYMBOL_GPL(leds_list);
->>>>    +static bool __led_need_regulator_update(struct led_classdev
->>>> *led_cdev,
->>>> +                    int brightness)
->>>> +{
->>>> +    bool new_regulator_state = (brightness != LED_OFF);
->>>> +
->>>> +    return led_cdev->regulator_state != new_regulator_state;
->>>> +}
->>>> +
->>>> +static int __led_handle_regulator(struct led_classdev *led_cdev,
->>>> +                int brightness)
->>>> +{
->>>> +    if (__led_need_regulator_update(led_cdev, brightness)) {
->>>> +        int ret;
->>> Prefer to this to be moved up.
->> ok
->>>> +
->>>> +        if (brightness != LED_OFF)
->>>> +            ret = regulator_enable(led_cdev->regulator);
->>>> +        else
->>>> +            ret = regulator_disable(led_cdev->regulator);
->>>> +        if (ret)
->>>> +            return ret;
->>> new line
->>>> +        led_cdev->regulator_state = (brightness != LED_OFF);
->>>> +    }
->>>> +    return 0;
->>>> +}
->>>> +
->>>>    static int __led_set_brightness(struct led_classdev *led_cdev,
->>>>                    enum led_brightness value)
->>>>    {
->>>> @@ -80,6 +106,7 @@ static void led_timer_function(struct timer_list *t)
->>>>        }
->>>>          led_set_brightness_nosleep(led_cdev, brightness);
->>>> +    __led_handle_regulator(led_cdev, brightness);
->>> Again this seems to indicate that the regulator is a required property
->>> for the LEDs
->>>
->>> This needs to be made optional.  And the same comment through out for
->>> every call.
->>>
->>>
->>>>          /* Return in next iteration if led is in one-shot mode and
->>>> we are in
->>>>         * the final blink state so that the led is toggled each
->>>> delay_on +
->>>> @@ -115,6 +142,8 @@ static void set_brightness_delayed(struct
->>>> work_struct *ws)
->>>>        if (ret == -ENOTSUPP)
->>>>            ret = __led_set_brightness_blocking(led_cdev,
->>>>                        led_cdev->delayed_set_value);
->>>> +    __led_handle_regulator(led_cdev, led_cdev->delayed_set_value);
->>>> +
->>>>        if (ret < 0 &&
->>>>            /* LED HW might have been unplugged, therefore don't warn */
->>>>            !(ret == -ENODEV && (led_cdev->flags & LED_UNREGISTERING) &&
->>>> @@ -141,6 +170,7 @@ static void led_set_software_blink(struct
->>>> led_classdev *led_cdev,
->>>>        /* never on - just set to off */
->>>>        if (!delay_on) {
->>>>            led_set_brightness_nosleep(led_cdev, LED_OFF);
->>>> +        __led_handle_regulator(led_cdev, LED_OFF);
->>>>            return;
->>>>        }
->>>>    @@ -148,6 +178,7 @@ static void led_set_software_blink(struct
->>>> led_classdev *led_cdev,
->>>>        if (!delay_off) {
->>>>            led_set_brightness_nosleep(led_cdev,
->>>>                           led_cdev->blink_brightness);
->>>> +        __led_handle_regulator(led_cdev, led_cdev->blink_brightness);
->>>>            return;
->>>>        }
->>>>    @@ -256,8 +287,14 @@ void led_set_brightness_nopm(struct
->>>> led_classdev *led_cdev,
->>>>                      enum led_brightness value)
->>>>    {
->>>>        /* Use brightness_set op if available, it is guaranteed not to
->>>> sleep */
->>>> -    if (!__led_set_brightness(led_cdev, value))
->>>> -        return;
->>>> +    if (!__led_set_brightness(led_cdev, value)) {
->>>> +        /*
->>>> +         * if regulator state doesn't need to be changed, that is all/
->>>> +         * Otherwise delegate the change to a work queue
->>>> +         */
->>>> +        if (!__led_need_regulator_update(led_cdev, value))
->>>> +            return;
->>>> +    }
->>>>          /* If brightness setting can sleep, delegate it to a work
->>>> queue task */
->>>>        led_cdev->delayed_set_value = value;
->>>> @@ -280,6 +317,8 @@ EXPORT_SYMBOL_GPL(led_set_brightness_nosleep);
->>>>    int led_set_brightness_sync(struct led_classdev *led_cdev,
->>>>                    enum led_brightness value)
->>>>    {
->>>> +    int ret;
->>>> +
->>>>        if (led_cdev->blink_delay_on || led_cdev->blink_delay_off)
->>>>            return -EBUSY;
->>>>    @@ -288,7 +327,15 @@ int led_set_brightness_sync(struct
->>>> led_classdev *led_cdev,
->>>>        if (led_cdev->flags & LED_SUSPENDED)
->>>>            return 0;
->>>>    -    return __led_set_brightness_blocking(led_cdev,
->>>> led_cdev->brightness);
->>>> +    ret = __led_set_brightness_blocking(led_cdev,
->>>> led_cdev->brightness);
->>>> +    if (ret)
->>>> +        return ret;
->>>> +
->>>> +    ret = __led_handle_regulator(led_cdev, led_cdev->brightness);
->>> Can't you just return here?
->> ok
->>
->>
->> thanks for the review
->>
->> JJ
->>
->>> Dan
->>>
->>>> +    if (ret)
->>>> +        return ret;
->>>> +
->>>> +    return 0;
->>>>    }
->>>>    EXPORT_SYMBOL_GPL(led_set_brightness_sync);
->>>>    diff --git a/include/linux/leds.h b/include/linux/leds.h
->>>> index 9b2bf574a17a..bee8e3f8dddd 100644
->>>> --- a/include/linux/leds.h
->>>> +++ b/include/linux/leds.h
->>>> @@ -123,6 +123,10 @@ struct led_classdev {
->>>>          /* Ensures consistent access to the LED Flash Class device */
->>>>        struct mutex        led_access;
->>>> +
->>>> +    /* regulator */
->>>> +    struct regulator    *regulator;
->>>> +    bool            regulator_state;
->>>>    };
->>>>      extern int of_led_classdev_register(struct device *parent,
+	if (cfg->ias > ARM_V7S_ADDR_BITS)
+		return NULL;
+
+	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
+		if (!IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
+			cfg->oas = min(cfg->oas, ARM_V7S_ADDR_BITS);
+		else if (cfg->oas > 34)
+			return NULL;
+	} else if (cfg->oas > ARM_V7S_ADDR_BITS) {
+		return NULL;
+	}
+
+so that we clamp the oas when phys_addr_t is 32-bit for you. That should
+allow you to remove lots of the checking from iopte_to_paddr() too if you
+check against oas in the map() function.
+
+Does that make sense?
+
+Will
