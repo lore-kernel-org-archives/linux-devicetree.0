@@ -1,269 +1,162 @@
-From: Hanna Hawa <hhhawa@amazon.com>
-Subject: [PATCH v3 4/4] edac: Add support for Amazon's Annapurna Labs L2 EDAC
-Date: Mon, 15 Jul 2019 16:24:09 +0300
-Message-ID: <1563197049-12679-5-git-send-email-hhhawa@amazon.com>
-References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCH 1/3] iio: imu: st_lsm6sdx: move some register definitions to sensor_settings struct
+Date: Mon, 15 Jul 2019 15:19:17 +0200
+Message-ID: <20190715131919.31938-1-martin.kepplinger@puri.sm>
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com
-Cc: dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, hhhawa@amazon.com
+To: lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
-Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
-report L2 errors.
+Move some register definitions to the per-device array of struct
+st_lsm6dsx_sensor_settings in order to simplify adding new sensor
+devices to the driver.
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+Also, remove completely unused register definitions.
+
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
 ---
- MAINTAINERS               |   6 ++
- drivers/edac/Kconfig      |   8 ++
- drivers/edac/Makefile     |   1 +
- drivers/edac/al_l2_edac.c | 187 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 202 insertions(+)
- create mode 100644 drivers/edac/al_l2_edac.c
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
+ 2 files changed, 28 insertions(+), 9 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fd29ea6..a6dcf3d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -749,6 +749,12 @@ S:	Maintained
- F:	drivers/edac/al_l1_edac.c
- F:	Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+index c14bf533b66b..f072ac14f213 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+@@ -196,6 +196,9 @@ struct st_lsm6dsx_ext_dev_settings {
+ /**
+  * struct st_lsm6dsx_settings - ST IMU sensor settings
+  * @wai: Sensor WhoAmI default value.
++ * @reg_int1_addr: Control Register address for INT1
++ * @reg_int2_addr: Control Register address for INT2
++ * @reg_reset_addr: register address for reset/reboot
+  * @max_fifo_size: Sensor max fifo length in FIFO words.
+  * @id: List of hw id/device name supported by the driver configuration.
+  * @decimator: List of decimator register info (addr + mask).
+@@ -206,6 +209,9 @@ struct st_lsm6dsx_ext_dev_settings {
+  */
+ struct st_lsm6dsx_settings {
+ 	u8 wai;
++	u8 reg_int1_addr;
++	u8 reg_int2_addr;
++	u8 reg_reset_addr;
+ 	u16 max_fifo_size;
+ 	struct {
+ 		enum st_lsm6dsx_hw_id hw_id;
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+index a6702a74570e..7a4fe70a8f20 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+@@ -49,17 +49,12 @@
  
-+AMAZON ANNAPURNA LABS L2 EDAC
-+M:	Hanna Hawa <hhhawa@amazon.com>
-+S:	Maintained
-+F:	drivers/edac/al_l2_edac.c
-+F:	Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
-+
- AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
- M:	Talel Shenhar <talel@amazon.com>
- S:	Maintained
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 58b92bc..8bbb745 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -82,6 +82,14 @@ config EDAC_AL_L1
- 	  for Amazon's Annapurna Labs SoCs.
- 	  This driver detects errors of L1 caches.
+ #include "st_lsm6dsx.h"
  
-+config EDAC_AL_L2
-+	bool "Amazon's Annapurna Labs L2 EDAC"
-+	depends on ARCH_ALPINE
-+	help
-+	  Support for L2 error detection and correction
-+	  for Amazon's Annapurna Labs SoCs.
-+	  This driver detects errors of L2 caches.
-+
- config EDAC_AMD64
- 	tristate "AMD64 (Opteron, Athlon64)"
- 	depends on AMD_NB && EDAC_DECODE_MCE
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index caa2dc9..60a6b8b 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -23,6 +23,7 @@ edac_mce_amd-y				:= mce_amd.o
- obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
+-#define ST_LSM6DSX_REG_INT1_ADDR		0x0d
+-#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
+ #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
+ #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
+-#define ST_LSM6DSX_REG_RESET_ADDR		0x12
+ #define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
+ #define ST_LSM6DSX_REG_BOOT_MASK		BIT(7)
+ #define ST_LSM6DSX_REG_BDU_ADDR			0x12
+ #define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
+-#define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
+-#define ST_LSM6DSX_REG_INT2_ON_INT1_MASK	BIT(5)
  
- obj-$(CONFIG_EDAC_AL_L1)		+= al_l1_edac.o
-+obj-$(CONFIG_EDAC_AL_L2)		+= al_l2_edac.o
- obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
- obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
- obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
-diff --git a/drivers/edac/al_l2_edac.c b/drivers/edac/al_l2_edac.c
-new file mode 100644
-index 0000000..bae1ea9
---- /dev/null
-+++ b/drivers/edac/al_l2_edac.c
-@@ -0,0 +1,187 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/of.h>
-+
-+#include "edac_device.h"
-+#include "edac_module.h"
-+
-+#define DRV_NAME				"al_l2_edac"
-+
-+/* Same bit assignments of L2MERRSR_EL1 in ARM CA57/CA72 */
-+#define ARM_CA57_L2MERRSR_EL1			sys_reg(3, 1, 15, 2, 3)
-+#define ARM_CA57_L2MERRSR_RAMID			GENMASK(30, 24)
-+#define  ARM_CA57_L2_TAG_RAM			0x10
-+#define  ARM_CA57_L2_DATA_RAM			0x11
-+#define  ARM_CA57_L2_SNOOP_RAM			0x12
-+#define  ARM_CA57_L2_DIRTY_RAM			0x14
-+#define  ARM_CA57_L2_INC_PF_RAM			0x18
-+#define ARM_CA57_L2MERRSR_VALID			BIT(31)
-+#define ARM_CA57_L2MERRSR_REPEAT		GENMASK_ULL(39, 32)
-+#define ARM_CA57_L2MERRSR_OTHER			GENMASK_ULL(47, 40)
-+#define ARM_CA57_L2MERRSR_FATAL			BIT_ULL(63)
-+
-+#define AL_L2_EDAC_MSG_MAX			256
-+
-+struct al_l2_edac {
-+	cpumask_t cluster_cpus;
-+};
-+
-+static void al_l2_edac_l2merrsr(void *arg)
-+{
-+	struct edac_device_ctl_info *edac_dev = arg;
-+	int cpu, i;
-+	u32 ramid, repeat, other, fatal;
-+	u64 val = read_sysreg_s(ARM_CA57_L2MERRSR_EL1);
-+	char msg[AL_L2_EDAC_MSG_MAX];
-+	int space, count;
-+	char *p;
-+
-+	if (!(FIELD_GET(ARM_CA57_L2MERRSR_VALID, val)))
-+		return;
-+
-+	cpu = smp_processor_id();
-+	ramid = FIELD_GET(ARM_CA57_L2MERRSR_RAMID, val);
-+	repeat = FIELD_GET(ARM_CA57_L2MERRSR_REPEAT, val);
-+	other = FIELD_GET(ARM_CA57_L2MERRSR_OTHER, val);
-+	fatal = FIELD_GET(ARM_CA57_L2MERRSR_FATAL, val);
-+
-+	space = sizeof(msg);
-+	p = msg;
-+	count = snprintf(p, space, "CPU%d L2 %serror detected", cpu,
-+			 (fatal) ? "Fatal " : "");
-+	p += count;
-+	space -= count;
-+
-+	switch (ramid) {
-+	case ARM_CA57_L2_TAG_RAM:
-+		count = snprintf(p, space, " RAMID='L2 Tag RAM'");
-+		break;
-+	case ARM_CA57_L2_DATA_RAM:
-+		count = snprintf(p, space, " RAMID='L2 Data RAM'");
-+		break;
-+	case ARM_CA57_L2_SNOOP_RAM:
-+		count = snprintf(p, space, " RAMID='L2 Snoop RAM'");
-+		break;
-+	case ARM_CA57_L2_DIRTY_RAM:
-+		count = snprintf(p, space, " RAMID='L2 Dirty RAM'");
-+		break;
-+	case ARM_CA57_L2_INC_PF_RAM:
-+		count = snprintf(p, space, " RAMID='L2 internal metadat'");
-+		break;
-+	default:
-+		count = snprintf(p, space, " RAMID='unknown'");
-+		break;
-+	}
-+
-+	p += count;
-+	space -= count;
-+
-+	count = snprintf(p, space,
-+			 " repeat=%d, other=%d (L2MERRSR_EL1=0x%llx)",
-+			 repeat, other, val);
-+
-+	for (i = 0; i < repeat; i++) {
-+		if (fatal)
-+			edac_device_handle_ue(edac_dev, 0, 0, msg);
-+		else
-+			edac_device_handle_ce(edac_dev, 0, 0, msg);
-+	}
-+
-+	write_sysreg_s(0, ARM_CA57_L2MERRSR_EL1);
-+}
-+
-+static void al_l2_edac_check(struct edac_device_ctl_info *edac_dev)
-+{
-+	struct al_l2_edac *al_l2 = edac_dev->pvt_info;
-+
-+	smp_call_function_any(&al_l2->cluster_cpus, al_l2_edac_l2merrsr,
-+			      edac_dev, 1);
-+}
-+
-+static int al_l2_edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev;
-+	struct al_l2_edac *al_l2;
-+	struct device *dev = &pdev->dev;
-+	int ret, i;
-+
-+	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_l2),
-+					      (char *)dev_name(dev), 1, "L", 1,
-+					      2, NULL, 0,
-+					      edac_device_alloc_index());
-+	if (IS_ERR(edac_dev))
-+		return -ENOMEM;
-+
-+	al_l2 = edac_dev->pvt_info;
-+	edac_dev->edac_check = al_l2_edac_check;
-+	edac_dev->dev = dev;
-+	edac_dev->mod_name = DRV_NAME;
-+	edac_dev->dev_name = dev_name(dev);
-+	edac_dev->ctl_name = "L2 cache";
-+	platform_set_drvdata(pdev, edac_dev);
-+
-+	for_each_online_cpu(i) {
-+		struct device_node *cpu;
-+		struct device_node *cpu_cache, *l2_cache;
-+
-+		cpu = of_get_cpu_node(i, NULL);
-+		cpu_cache = of_find_next_cache_node(cpu);
-+		l2_cache = of_parse_phandle(dev->of_node, "l2-cache", 0);
-+
-+		if (cpu_cache == l2_cache)
-+			cpumask_set_cpu(i, &al_l2->cluster_cpus);
-+	}
-+
-+	if (cpumask_empty(&al_l2->cluster_cpus)) {
-+		dev_err(dev, "CPU mask is empty for this L2 cache\n");
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	ret = edac_device_add_device(edac_dev);
-+	if (ret) {
-+		dev_err(dev, "Failed to add L2 edac device\n");
-+		goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return ret;
-+}
-+
-+static int al_l2_edac_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
-+
-+	edac_device_del_device(edac_dev->dev);
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id al_l2_edac_of_match[] = {
-+	{ .compatible = "amazon,al-l2-edac" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, al_l2_edac_of_match);
-+
-+static struct platform_driver al_l2_edac_driver = {
-+	.probe = al_l2_edac_probe,
-+	.remove = al_l2_edac_remove,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = al_l2_edac_of_match,
-+	},
-+};
-+module_platform_driver(al_l2_edac_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Hanna Hawa <hhhawa@amazon.com>");
-+MODULE_DESCRIPTION("Amazon's Annapurna Lab's L2 EDAC Driver");
+ #define ST_LSM6DSX_REG_ACC_OUT_X_L_ADDR		0x28
+ #define ST_LSM6DSX_REG_ACC_OUT_Y_L_ADDR		0x2a
+@@ -122,6 +117,9 @@ static const struct st_lsm6dsx_fs_table_entry st_lsm6dsx_fs_table[] = {
+ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	{
+ 		.wai = 0x69,
++		.reg_int1_addr = 0x0d,
++		.reg_int2_addr = 0x0e,
++		.reg_reset_addr = 0x12,
+ 		.max_fifo_size = 1365,
+ 		.id = {
+ 			{
+@@ -172,6 +170,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x69,
++		.reg_int1_addr = 0x0d,
++		.reg_int2_addr = 0x0e,
++		.reg_reset_addr = 0x12,
+ 		.max_fifo_size = 682,
+ 		.id = {
+ 			{
+@@ -222,6 +223,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6a,
++		.reg_int1_addr = 0x0d,
++		.reg_int2_addr = 0x0e,
++		.reg_reset_addr = 0x12,
+ 		.max_fifo_size = 682,
+ 		.id = {
+ 			{
+@@ -278,6 +282,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6c,
++		.reg_int1_addr = 0x0d,
++		.reg_int2_addr = 0x0e,
++		.reg_reset_addr = 0x12,
+ 		.max_fifo_size = 512,
+ 		.id = {
+ 			{
+@@ -349,6 +356,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6b,
++		.reg_int1_addr = 0x0d,
++		.reg_int2_addr = 0x0e,
++		.reg_reset_addr = 0x12,
+ 		.max_fifo_size = 512,
+ 		.id = {
+ 			{
+@@ -391,6 +401,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6b,
++		.reg_int1_addr = 0x0d,
++		.reg_int2_addr = 0x0e,
++		.reg_reset_addr = 0x12,
+ 		.max_fifo_size = 512,
+ 		.id = {
+ 			{
+@@ -873,10 +886,10 @@ static int st_lsm6dsx_get_drdy_reg(struct st_lsm6dsx_hw *hw, u8 *drdy_reg)
+ 
+ 	switch (drdy_pin) {
+ 	case 1:
+-		*drdy_reg = ST_LSM6DSX_REG_INT1_ADDR;
++		*drdy_reg = hw->settings->reg_int1_addr;
+ 		break;
+ 	case 2:
+-		*drdy_reg = ST_LSM6DSX_REG_INT2_ADDR;
++		*drdy_reg = hw->settings->reg_int2_addr;
+ 		break;
+ 	default:
+ 		dev_err(hw->dev, "unsupported data ready pin\n");
+@@ -976,7 +989,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+ 	int err;
+ 
+ 	/* device sw reset */
+-	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
++	err = regmap_update_bits(hw->regmap, hw->settings->reg_reset_addr,
+ 				 ST_LSM6DSX_REG_RESET_MASK,
+ 				 FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
+ 	if (err < 0)
+@@ -985,7 +998,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+ 	msleep(50);
+ 
+ 	/* reload trimming parameter */
+-	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
++	err = regmap_update_bits(hw->regmap, hw->settings->reg_reset_addr,
+ 				 ST_LSM6DSX_REG_BOOT_MASK,
+ 				 FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
+ 	if (err < 0)
 -- 
-2.7.4
+2.20.1
