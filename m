@@ -1,24 +1,35 @@
-Return-Path: <SRS0=3KNm=VL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from [46.101.26.142] ([46.101.26.142]:33092 "EHLO TEST.localdomain"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728147AbfGNLGK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 14 Jul 2019 07:06:10 -0400
-Received: from localhost (TEST [127.0.0.1])
-        by TEST.localdomain (Postfix) with SMTP id A2294F33BC0
-        for <devicetree@vger.kernel.org>; Sun, 14 Jul 2019 08:11:17 +0000 (UTC)
-From: devicetree@vger.kernel.org
-Reply-To: prodawez@armyspy.com
-Subject: =?utf-8?B?0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1ISDQktCw0YEg?=
-        =?utf-8?B?0LjQvdGC0LXRgNC10YHRg9GO0YIg0LrQu9C40LXQvdGC?=
-        =?utf-8?B?0YHQutC40LUg0LHQsNC30Ysg0LTQsNC90L3Ri9GFPw==?=
+Return-Path: <mhiramat@kernel.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [RFC PATCH v2 06/15] tracing: Add NULL trace-array check in print_synth_event()
+Date: Mon, 15 Jul 2019 14:12:12 +0900
+Message-Id: <156316753259.23477.16711531463620386669.stgit@devnote2>
+In-Reply-To: <156316746861.23477.5815110570539190650.stgit@devnote2>
+References: <156316746861.23477.5815110570539190650.stgit@devnote2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8";
-Content-Transfer-Encoding: base64
-Message-Id: <20190714081117.A2294F33BC0@TEST.localdomain>
-Date: Sun, 14 Jul 2019 08:11:17 +0000 (UTC)
-Sender: devicetree-owner@vger.kernel.org
-To: rhwEdevicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+To: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Tim Bird <Tim.Bird@sony.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1ISDQktCw0YEg0LjQvdGC0LXRgNC10YHRg9GO0YIg0LrQ
-u9C40LXQvdGC0YHQutC40LUg0LHQsNC30Ysg0LTQsNC90L3Ri9GFPw0K
+Add NULL trace-array check in print_synth_event(), because
+if we enable tp_printk option, iter->tr can be NULL.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ kernel/trace/trace_events_hist.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index a7f447195143..db973928e580 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -822,7 +822,7 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
+ 		fmt = synth_field_fmt(se->fields[i]->type);
+ 
+ 		/* parameter types */
+-		if (tr->trace_flags & TRACE_ITER_VERBOSE)
++		if (tr && tr->trace_flags & TRACE_ITER_VERBOSE)
+ 			trace_seq_printf(s, "%s ", fmt);
+ 
+ 		snprintf(print_fmt, sizeof(print_fmt), "%%s=%s%%s", fmt);
