@@ -1,110 +1,120 @@
-Return-Path: <SRS0=6UxY=VC=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V5 0/8] Tegra XUSB gadget driver support
-Date: Fri, 5 Jul 2019 17:11:43 +0530
-Message-ID: <1562326911-26855-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <mhiramat@kernel.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [RFC PATCH v2 13/15] tracing: of: Add cpumask property support
+Date: Mon, 15 Jul 2019 14:13:27 +0900
+Message-Id: <156316760712.23477.13986980388044489506.stgit@devnote2>
+In-Reply-To: <156316746861.23477.5815110570539190650.stgit@devnote2>
+References: <156316746861.23477.5815110570539190650.stgit@devnote2>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+To: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Tim Bird <Tim.Bird@sony.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This is the fifth version of series "Tegra XUSB gadget driver support"
+Add cpumask property for tracing. Note that this property accepts
+a string cpumask, not a digit number.
 
-Patches 1-3 are phy driver changes to add support for device
-mode.
-Patches 4-7 are changes related to XUSB device mode
-controller driver.
-Patch 8 is to enable XUDC driver in defconfig
-
-Test Steps(USB 2.0):
-- Enable "USB Gadget precomposed configurations" in defconfig
-- Build, flash and boot Jetson TX1
-- Connect Jetson TX1 and Ubuntu device using USB A to Micro B
-  cable
-- After boot on Jetson TX1 terminal usb0 network device should be
-  enumerated
-- Assign static ip to usb0 on Jetson TX1 and corresponding net
-  device on ubuntu
-- Run ping test and transfer test(used scp) to check data transfer
-  communication
-
-SS mode is verified by enabling Type A port as peripheral
-
-This patch series is dependent on
-https://patchwork.kernel.org/cover/10986249/
-
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
-v5:
-* Patches 1-3 - Commit subject updated as per inputs from Thierry
-* Patch 4 - Added reg-names used on Tegra210 in the bindings doc
-* Enabled xudc driver as module instead of part of kernel in patch 8
-* Patched 5-8 - No changes
----
-v4:
-* patch 1 - no changes
-* corrected companion device search based on inputs from Thierry in patch 2
-* removed unneeded dev variable and corrected value read in
-  tegra210_utmi_port_reset function in patch 3
-* dt binding doc and dtb files are corrected for alignments.
-  Replaced extcon-usb-gpio with usb role switch.
-* Added support for USB role switch instead of extcon-usb-gpio and other minor
-  comments as suggested by Chunfeng.
-* Enabled xudc driver as module instead of part of kernel in patch 8
----
-V3:
-* Rebased patch 1 to top of tree.
-* Fixed bug in patch 2, where xudc interrupts dont get generated if USB host
-  mode fails to probe. Moved fake port detection logic to generic xusb.c. fake
-  usb port data is updated based on soc flag need_fake_usb3_port.
-* Added extra lines whereever necessary to make code more readable in patch 3
-  and 7.
-* dt binding doc is corrected for typos and extcon references. Also added
-  details for clocks and removed xusb_ references to clock and power-domain
-  names and accordingly patch 5 is updated.
-* removed avdd-pll-utmip-supply in patch 6, as its now part of padctl driver.
-* Patch 8 has no changes.
----
-V2:
-* Patches 1-3 are new patches in this series, which splits unified features
-  patch to speprated features and removes need of port-fake entry in DT.
-* Patch 4 is re-arragend dt-bindings patch which incorporates previous
-  patch comments to sort DT entries alphabetically, addresses name changes
-  and PM domain details added.
-* Patch 5-6 are re-arranged DT patches with major changes - sort entries
-  alphabetically, and adds clock names.
-* Patch 7 is UDC driver tegra XUSB device mode controller with major
-  changes - remove un-used module params, lockinng for device_mode flag,
-  moving un-needed info logs to debug level, making changes feature flag
-  dependent rather than SOC based macros and other error handling in probe.
-* Patch 8 has no changes.
+ kernel/trace/trace.c    |   41 ++++++++++++++++++++++++++++-------------
+ kernel/trace/trace_of.c |   14 ++++++++++++++
+ 2 files changed, 42 insertions(+), 13 deletions(-)
 
-
-
-Nagarjuna Kristam (8):
-  phy: tegra: xusb: Add XUSB dual mode support on Tegra210
-  phy: tegra: xusb: Add usb3 port fake support on Tegra210
-  phy: tegra: xusb: Add vbus override support on Tegra210
-  dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
-  arm64: tegra: Add xudc node for Tegra210
-  arm64: tegra: Enable xudc on Jetson TX1
-  usb: gadget: Add UDC driver for tegra XUSB device mode controller
-  arm64: defconfig: Enable tegra XUDC driver
-
- .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  |  110 +
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   29 +
- arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   19 +
- arch/arm64/configs/defconfig                       |    1 +
- drivers/phy/tegra/xusb-tegra210.c                  |  133 +-
- drivers/phy/tegra/xusb.c                           |   87 +
- drivers/phy/tegra/xusb.h                           |    4 +
- drivers/usb/gadget/udc/Kconfig                     |   11 +
- drivers/usb/gadget/udc/Makefile                    |    1 +
- drivers/usb/gadget/udc/tegra_xudc.c                | 3808 ++++++++++++++++++++
- include/linux/phy/tegra/xusb.h                     |    4 +-
- 11 files changed, 4204 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
- create mode 100644 drivers/usb/gadget/udc/tegra_xudc.c
-
--- 
-2.7.4
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6f50c58a3ad4..251d9de14b12 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4437,20 +4437,12 @@ tracing_cpumask_read(struct file *filp, char __user *ubuf,
+ 	return count;
+ }
+ 
+-static ssize_t
+-tracing_cpumask_write(struct file *filp, const char __user *ubuf,
+-		      size_t count, loff_t *ppos)
++int tracing_set_cpumask(struct trace_array *tr, cpumask_var_t tracing_cpumask_new)
+ {
+-	struct trace_array *tr = file_inode(filp)->i_private;
+-	cpumask_var_t tracing_cpumask_new;
+-	int err, cpu;
+-
+-	if (!alloc_cpumask_var(&tracing_cpumask_new, GFP_KERNEL))
+-		return -ENOMEM;
++	int cpu;
+ 
+-	err = cpumask_parse_user(ubuf, count, tracing_cpumask_new);
+-	if (err)
+-		goto err_unlock;
++	if (!tr)
++		return -EINVAL;
+ 
+ 	local_irq_disable();
+ 	arch_spin_lock(&tr->max_lock);
+@@ -4474,11 +4466,34 @@ tracing_cpumask_write(struct file *filp, const char __user *ubuf,
+ 	local_irq_enable();
+ 
+ 	cpumask_copy(tr->tracing_cpumask, tracing_cpumask_new);
++
++	return 0;
++}
++
++static ssize_t
++tracing_cpumask_write(struct file *filp, const char __user *ubuf,
++		      size_t count, loff_t *ppos)
++{
++	struct trace_array *tr = file_inode(filp)->i_private;
++	cpumask_var_t tracing_cpumask_new;
++	int err;
++
++	if (!alloc_cpumask_var(&tracing_cpumask_new, GFP_KERNEL))
++		return -ENOMEM;
++
++	err = cpumask_parse_user(ubuf, count, tracing_cpumask_new);
++	if (err)
++		goto err_free;
++
++	err = tracing_set_cpumask(tr, tracing_cpumask_new);
++	if (err)
++		goto err_free;
++
+ 	free_cpumask_var(tracing_cpumask_new);
+ 
+ 	return count;
+ 
+-err_unlock:
++err_free:
+ 	free_cpumask_var(tracing_cpumask_new);
+ 
+ 	return err;
+diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
+index 7fe81c25dc59..14d6c9a8fd81 100644
+--- a/kernel/trace/trace_of.c
++++ b/kernel/trace/trace_of.c
+@@ -22,6 +22,8 @@ extern void __init trace_init_tracepoint_printk(void);
+ extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+ 					  unsigned long size, int cpu_id);
+ extern struct trace_array *trace_array_create(const char *name);
++extern int tracing_set_cpumask(struct trace_array *tr,
++			       cpumask_var_t tracing_cpumask_new);
+ 
+ static void __init
+ trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
+@@ -59,6 +61,18 @@ trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
+ 			pr_err("Failed to resize trace buffer to %d KB\n",
+ 				v >> 10);
+ 	}
++
++	err = of_property_read_string(node, "cpumask", &p);
++	if (!err) {
++		cpumask_var_t new_mask;
++
++		if (alloc_cpumask_var(&new_mask, GFP_KERNEL)) {
++			if (cpumask_parse(p, new_mask) < 0 ||
++			    tracing_set_cpumask(tr, new_mask) < 0)
++				pr_err("Failed to set new CPU mask %s\n", p);
++			free_cpumask_var(new_mask);
++		}
++	}
+ }
+ 
+ static void __init
