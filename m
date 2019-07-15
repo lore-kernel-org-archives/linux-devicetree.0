@@ -1,74 +1,133 @@
-Return-Path: <SRS0=+kfZ=VV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51881 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfGXNJl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jul 2019 09:09:41 -0400
-Date: Wed, 24 Jul 2019 15:09:39 +0200
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH] ARM: imx25: provide a fixed regulator for usb phys
-Message-ID: <20190724130939.43t66umrasbe4wwf@pengutronix.de>
-References: <20190625100412.11815-1-u.kleine-koenig@pengutronix.de>
- <VI1PR04MB5327E09DB0DFEB7E868DB59D8BE20@VI1PR04MB5327.eurprd04.prod.outlook.com>
- <20190626055409.jjiwptyths6p6jty@pengutronix.de>
- <VI1PR04MB53270E979BA9817D47A7AFC88BFD0@VI1PR04MB5327.eurprd04.prod.outlook.com>
+Return-Path: <mhiramat@kernel.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [RFC PATCH v2 12/15] tracing: of: Add instance node support
+Date: Mon, 15 Jul 2019 14:13:16 +0900
+Message-Id: <156316759652.23477.15841482804179404771.stgit@devnote2>
+In-Reply-To: <156316746861.23477.5815110570539190650.stgit@devnote2>
+References: <156316746861.23477.5815110570539190650.stgit@devnote2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR04MB53270E979BA9817D47A7AFC88BFD0@VI1PR04MB5327.eurprd04.prod.outlook.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Peter Chen <peter.chen@nxp.com>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, Marco Felsch <m.felsch@pengutronix.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Tim Bird <Tim.Bird@sony.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hello,
+Add instance node support to devicetree ftrace binding.
+User can set some options and event nodes in instance node.
 
-On Thu, Jun 27, 2019 at 03:15:10AM +0000, Peter Chen wrote:
->  
-> > On 19-06-26 02:40, Peter Chen wrote:
-> > >
-> > > > Subject: [PATCH] ARM: imx25: provide a fixed regulator for usb phys
-> > > >
-> > > > The usb phys are internal to the SoC and so it their 5V supply. With
-> > > > this regulator added explicitly the following (harmless) boot messages go away:
-> > > >
-> > > > 	usb_phy_generic usbphy:usb-phy@0: usbphy:usb-phy@0 supply vcc not found, using dummy regulator
-> > > > 	usb_phy_generic usbphy:usb-phy@1: usbphy:usb-phy@1 supply vcc not found, using dummy regulator
-> > > >
-> > >
-> > > To eliminate the warning message, I suggest doing below changes, as
-> > > vcc supply is not mandatory.
-> > >
-> > > diff --git a/drivers/usb/phy/phy-generic.c
-> > > b/drivers/usb/phy/phy-generic.c index a53b89be5324..01a5ff1a0515
-> > > 100644
-> > > --- a/drivers/usb/phy/phy-generic.c
-> > > +++ b/drivers/usb/phy/phy-generic.c
-> > > @@ -275,7 +275,7 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop,
-> > >                 }
-> > >         }
-> > >
-> > > -       nop->vcc = devm_regulator_get(dev, "vcc");
-> > > +       nop->vcc = devm_regulator_get_optional(dev, "vcc");
-> > 
-> > Is the regulator optional? IMHO this shouldn't be the fix. I think the right fix is Uwe's
-> > approach.
-> > 
-> 
-> Add Felipe.
-> 
-> Some USB PHY's power are from the core system's power (eg, DDR), and some are
-> fixed at the board and no switch for it. So, it is transparent for software at some cases.
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ kernel/trace/trace_of.c |   67 +++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 55 insertions(+), 12 deletions(-)
 
-It's not clear to me how to proceed. There are two opposing opinions and
-I don't know enough about USB on mx25 to judge myself.
-
-Felipe?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
+index e9142c63ece1..7fe81c25dc59 100644
+--- a/kernel/trace/trace_of.c
++++ b/kernel/trace/trace_of.c
+@@ -21,9 +21,10 @@ extern int tracing_set_tracer(struct trace_array *tr, const char *buf);
+ extern void __init trace_init_tracepoint_printk(void);
+ extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+ 					  unsigned long size, int cpu_id);
++extern struct trace_array *trace_array_create(const char *name);
+ 
+ static void __init
+-trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
++trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
+ {
+ 	struct property *prop;
+ 	const char *p;
+@@ -48,6 +49,24 @@ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
+ 			pr_err("Failed to set trace clock: %s\n", p);
+ 	}
+ 
++	/* This accepts per-cpu buffer size in KB */
++	err = of_property_read_u32_index(node, "buffer-size-kb", 0, &v);
++	if (!err) {
++		v <<= 10;	/* KB to Byte */
++		if (v < PAGE_SIZE)
++			pr_err("Buffer size is too small: %d KB\n", v >> 10);
++		if (tracing_resize_ring_buffer(tr, v, RING_BUFFER_ALL_CPUS) < 0)
++			pr_err("Failed to resize trace buffer to %d KB\n",
++				v >> 10);
++	}
++}
++
++static void __init
++trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
++{
++	u32 v = 0;
++	int err;
++
+ 	/* Command line boot options */
+ 	if (of_find_property(node, "dump-on-oops", NULL)) {
+ 		err = of_property_read_u32_index(node, "dump-on-oops", 0, &v);
+@@ -63,20 +82,11 @@ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
+ 	if (of_find_property(node, "tp-printk", NULL))
+ 		trace_init_tracepoint_printk();
+ 
+-	/* This accepts per-cpu buffer size in KB */
+-	err = of_property_read_u32_index(node, "buffer-size-kb", 0, &v);
+-	if (!err) {
+-		v <<= 10;	/* KB to Byte */
+-		if (v < PAGE_SIZE)
+-			pr_err("Buffer size is too small: %d KB\n", v >> 10);
+-		if (tracing_resize_ring_buffer(tr, v, RING_BUFFER_ALL_CPUS) < 0)
+-			pr_err("Failed to resize trace buffer to %d KB\n",
+-				v >> 10);
+-	}
+-
+ 	if (of_find_property(node, "alloc-snapshot", NULL))
+ 		if (tracing_alloc_snapshot() < 0)
+ 			pr_err("Failed to allocate snapshot buffer\n");
++
++	trace_of_set_instance_options(tr, node);
+ }
+ 
+ #ifdef CONFIG_EVENT_TRACING
+@@ -310,6 +320,38 @@ trace_of_enable_tracer(struct trace_array *tr, struct device_node *node)
+ 	}
+ }
+ 
++static void __init
++trace_of_init_instances(struct device_node *__node)
++{
++	struct device_node *node;
++	struct trace_array *tr;
++	const char *p;
++	int err;
++
++	for_each_child_of_node(__node, node) {
++		if (!of_node_name_prefix(node, "instance"))
++			continue;
++
++		err = of_property_read_string(node, "instance", &p);
++		if (err) {
++			pr_err("Failed to get instance name on %s\n",
++				of_node_full_name(node));
++			continue;
++		}
++
++		tr = trace_array_create(p);
++		if (IS_ERR(tr)) {
++			pr_err("Failed to create instance %s\n", p);
++			continue;
++		}
++
++		trace_of_set_instance_options(tr, node);
++		trace_of_init_events(tr, node);
++		trace_of_enable_events(tr, node);
++		trace_of_enable_tracer(tr, node);
++	}
++}
++
+ static struct device_node * __init trace_of_find_ftrace_node(void)
+ {
+ 	if (!of_chosen)
+@@ -337,6 +379,7 @@ static int __init trace_of_init(void)
+ 	trace_of_init_events(tr, trace_node);
+ 	trace_of_enable_events(tr, trace_node);
+ 	trace_of_enable_tracer(tr, trace_node);
++	trace_of_init_instances(trace_node);
+ 
+ end:
+ 	of_node_put(trace_node);
