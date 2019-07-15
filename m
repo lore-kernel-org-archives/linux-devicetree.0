@@ -1,39 +1,51 @@
-From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Subject: [PATCH v2 2/2] arm64: dts: imx8mq-librem5: Enable MIPI D-PHY
-Date: Mon, 15 Jul 2019 12:43:06 +0200
-Message-ID: <f80df8fcae320eb6eb4937fb5a07799fc610adae.1563187253.git.agx@sigxcpu.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] arm64: dts: imx8mq: Add MIPI D-PHY
+Date: Mon, 15 Jul 2019 12:55:14 +0200
+Message-ID: <1563188114.2307.7.camel@pengutronix.de>
 References: <cover.1563187253.git.agx@sigxcpu.org>
+         <30c7622bf590670190b93c9b5b6dd1e8f809bbb2.1563187253.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1563187253.git.agx@sigxcpu.org>
+In-Reply-To: <30c7622bf590670190b93c9b5b6dd1e8f809bbb2.1563187253.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pavel Machek <pavel@ucw.cz>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This enables the Mixel MIPI D-PHY on the Librem 5 devkit
+Am Montag, den 15.07.2019, 12:43 +0200 schrieb Guido Günther:
+> Add a node for the Mixel MIPI D-PHY, "disabled" by default.
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> Acked-by: Angus Ainslie (Purism) <angus@akkea.ca>
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
-Acked-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 5179e22f5126..683a11035643 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -174,6 +174,10 @@
- 	assigned-clock-rates = <786432000>, <722534400>;
- };
- 
-+&dphy {
-+	status = "okay";
-+};
-+
- &fec1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_fec1>;
--- 
-2.20.1
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index d09b808eff87..891ee7578c2d 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -728,6 +728,19 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			dphy: dphy@30a00300 {
+> +				compatible = "fsl,imx8mq-mipi-dphy";
+> +				reg = <0x30a00300 0x100>;
+> +				clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
+> +				clock-names = "phy_ref";
+> +				assigned-clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
+> +				assigned-clock-parents = <&clk IMX8MQ_VIDEO_PLL1_OUT>;
+> +				assigned-clock-rates = <24000000>;
+> +				#phy-cells = <0>;
+> +				power-domains = <&pgc_mipi>;
+> +				status = "disabled";
+> +			};
+> +
+>  			i2c1: i2c@30a20000 {
+>  				compatible = "fsl,imx8mq-i2c", "fsl,imx21-i2c";
+>  				reg = <0x30a20000 0x10000>;
