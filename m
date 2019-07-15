@@ -1,7 +1,7 @@
 From: Hanna Hawa <hhhawa@amazon.com>
-Subject: [PATCH v3 2/4] edac: Add support for Amazon's Annapurna Labs L1 EDAC
-Date: Mon, 15 Jul 2019 16:24:07 +0300
-Message-ID: <1563197049-12679-3-git-send-email-hhhawa@amazon.com>
+Subject: [PATCH v3 3/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L2 EDAC
+Date: Mon, 15 Jul 2019 16:24:08 +0300
+Message-ID: <1563197049-12679-4-git-send-email-hhhawa@amazon.com>
 References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,227 +12,39 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, 
 Cc: dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, hhhawa@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
-report L1 errors.
+Document Amazon's Annapurna Labs L2 EDAC SoC binding.
 
 Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
 ---
- MAINTAINERS               |   6 ++
- drivers/edac/Kconfig      |   8 +++
- drivers/edac/Makefile     |   1 +
- drivers/edac/al_l1_edac.c | 156 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 171 insertions(+)
- create mode 100644 drivers/edac/al_l1_edac.c
+ .../devicetree/bindings/edac/amazon,al-l2-edac.txt   | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 77eae44..fd29ea6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -743,6 +743,12 @@ F:	drivers/tty/serial/altera_jtaguart.c
- F:	include/linux/altera_uart.h
- F:	include/linux/altera_jtaguart.h
- 
-+AMAZON ANNAPURNA LABS L1 EDAC
-+M:	Hanna Hawa <hhhawa@amazon.com>
-+S:	Maintained
-+F:	drivers/edac/al_l1_edac.c
-+F:	Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
-+
- AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
- M:	Talel Shenhar <talel@amazon.com>
- S:	Maintained
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 200c04c..58b92bc 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -74,6 +74,14 @@ config EDAC_GHES
- 
- 	  In doubt, say 'Y'.
- 
-+config EDAC_AL_L1
-+	bool "Amazon's Annapurna Labs L1 EDAC"
-+	depends on ARCH_ALPINE
-+	help
-+	  Support for L1 error detection and correction
-+	  for Amazon's Annapurna Labs SoCs.
-+	  This driver detects errors of L1 caches.
-+
- config EDAC_AMD64
- 	tristate "AMD64 (Opteron, Athlon64)"
- 	depends on AMD_NB && EDAC_DECODE_MCE
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 165ca65e..caa2dc9 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_EDAC_GHES)			+= ghes_edac.o
- edac_mce_amd-y				:= mce_amd.o
- obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
- 
-+obj-$(CONFIG_EDAC_AL_L1)		+= al_l1_edac.o
- obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
- obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
- obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
-diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
+diff --git a/Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt b/Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
 new file mode 100644
-index 0000000..70510ea
+index 0000000..7b0b734
 --- /dev/null
-+++ b/drivers/edac/al_l1_edac.c
-@@ -0,0 +1,156 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
++++ b/Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
+@@ -0,0 +1,20 @@
++* Amazon's Annapurna Labs L2 EDAC
 +
-+#include <linux/bitfield.h>
++Amazon's Annapurna Labs SoCs supports L2 single bit correction and
++two bits detection capability based on ARM implementation.
 +
-+#include "edac_device.h"
-+#include "edac_module.h"
++Required properties:
++- compatible:
++	should be "amazon,al-l2-edac".
++- l2-cache:
++	Phandle to L2 cache handler.
++	This property is used to compare with the CPU node property
++	'next-level-cache' to create cpu-mask with all CPUs that
++	share same L2 cache.
 +
-+#define DRV_NAME				"al_l1_edac"
++Example:
 +
-+/* Same bit assignments of CPUMERRSR_EL1 in ARM CA57/CA72 */
-+#define ARM_CA57_CPUMERRSR_EL1			sys_reg(3, 1, 15, 2, 2)
-+#define ARM_CA57_CPUMERRSR_RAM_ID		GENMASK(30, 24)
-+#define  ARM_CA57_L1_I_TAG_RAM			0x00
-+#define  ARM_CA57_L1_I_DATA_RAM			0x01
-+#define  ARM_CA57_L1_D_TAG_RAM			0x08
-+#define  ARM_CA57_L1_D_DATA_RAM			0x09
-+#define  ARM_CA57_L2_TLB_RAM			0x18
-+#define ARM_CA57_CPUMERRSR_VALID		BIT(31)
-+#define ARM_CA57_CPUMERRSR_REPEAT		GENMASK_ULL(39, 32)
-+#define ARM_CA57_CPUMERRSR_OTHER		GENMASK_ULL(47, 40)
-+#define ARM_CA57_CPUMERRSR_FATAL		BIT_ULL(63)
-+
-+#define AL_L1_EDAC_MSG_MAX			256
-+
-+static void al_l1_edac_cpumerrsr(void *arg)
-+{
-+	struct edac_device_ctl_info *edac_dev = arg;
-+	int cpu, i;
-+	u32 ramid, repeat, other, fatal;
-+	u64 val = read_sysreg_s(ARM_CA57_CPUMERRSR_EL1);
-+	char msg[AL_L1_EDAC_MSG_MAX];
-+	int space, count;
-+	char *p;
-+
-+	if (!(FIELD_GET(ARM_CA57_CPUMERRSR_VALID, val)))
-+		return;
-+
-+	cpu = smp_processor_id();
-+	ramid = FIELD_GET(ARM_CA57_CPUMERRSR_RAM_ID, val);
-+	repeat = FIELD_GET(ARM_CA57_CPUMERRSR_REPEAT, val);
-+	other = FIELD_GET(ARM_CA57_CPUMERRSR_OTHER, val);
-+	fatal = FIELD_GET(ARM_CA57_CPUMERRSR_FATAL, val);
-+
-+	space = sizeof(msg);
-+	p = msg;
-+	count = snprintf(p, space, "CPU%d L1 %serror detected", cpu,
-+			 (fatal) ? "Fatal " : "");
-+	p += count;
-+	space -= count;
-+
-+	switch (ramid) {
-+	case ARM_CA57_L1_I_TAG_RAM:
-+		count = snprintf(p, space, " RAMID='L1-I Tag RAM'");
-+		break;
-+	case ARM_CA57_L1_I_DATA_RAM:
-+		count = snprintf(p, space, " RAMID='L1-I Data RAM'");
-+		break;
-+	case ARM_CA57_L1_D_TAG_RAM:
-+		count = snprintf(p, space, " RAMID='L1-D Tag RAM'");
-+		break;
-+	case ARM_CA57_L1_D_DATA_RAM:
-+		count = snprintf(p, space, " RAMID='L1-D Data RAM'");
-+		break;
-+	case ARM_CA57_L2_TLB_RAM:
-+		count = snprintf(p, space, " RAMID='L2 TLB RAM'");
-+		break;
-+	default:
-+		count = snprintf(p, space, " RAMID='unknown'");
-+		break;
-+	}
-+
-+	p += count;
-+	space -= count;
-+	count = snprintf(p, space,
-+			 " repeat=%d, other=%d (CPUMERRSR_EL1=0x%llx)",
-+			 repeat, other, val);
-+
-+	for (i = 0; i < repeat; i++) {
-+		if (fatal)
-+			edac_device_handle_ue(edac_dev, 0, 0, msg);
-+		else
-+			edac_device_handle_ce(edac_dev, 0, 0, msg);
-+	}
-+
-+	write_sysreg_s(0, ARM_CA57_CPUMERRSR_EL1);
-+}
-+
-+static void al_l1_edac_check(struct edac_device_ctl_info *edac_dev)
-+{
-+	on_each_cpu(al_l1_edac_cpumerrsr, edac_dev, 1);
-+}
-+
-+static int al_l1_edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	edac_dev = edac_device_alloc_ctl_info(0, (char *)dev_name(dev), 1, "L",
-+					      1, 1, NULL, 0,
-+					      edac_device_alloc_index());
-+	if (IS_ERR(edac_dev))
-+		return -ENOMEM;
-+
-+	edac_dev->edac_check = al_l1_edac_check;
-+	edac_dev->dev = dev;
-+	edac_dev->mod_name = DRV_NAME;
-+	edac_dev->dev_name = dev_name(dev);
-+	edac_dev->ctl_name = "L1 cache";
-+	platform_set_drvdata(pdev, edac_dev);
-+
-+	ret = edac_device_add_device(edac_dev);
-+	if (ret) {
-+		dev_err(dev, "Failed to add L1 edac device\n");
-+		goto err;
-+	}
-+
-+	return 0;
-+err:
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return ret;
-+}
-+
-+static int al_l1_edac_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
-+
-+	edac_device_del_device(edac_dev->dev);
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id al_l1_edac_of_match[] = {
-+	{ .compatible = "amazon,al-l1-edac" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, al_l1_edac_of_match);
-+
-+static struct platform_driver al_l1_edac_driver = {
-+	.probe = al_l1_edac_probe,
-+	.remove = al_l1_edac_remove,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = al_l1_edac_of_match,
-+	},
-+};
-+module_platform_driver(al_l1_edac_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Hanna Hawa <hhhawa@amazon.com>");
-+MODULE_DESCRIPTION("Amazon's Annapurna Lab's L1 EDAC Driver");
++	al_l2_edac {
++		compatible = "amazon,al-l2-edac";
++		l2-cache = <&cluster0_l2>;
++	};
 -- 
 2.7.4
