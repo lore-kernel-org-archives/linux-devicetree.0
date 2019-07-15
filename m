@@ -1,225 +1,178 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v4 1/5] dt-bindings: interconnect: Add Qualcomm QCS404 DT
- bindings
-Date: Mon, 15 Jul 2019 16:56:03 +0300
-Message-ID: <70982f11-792e-6c02-056d-47582708be4f@linaro.org>
-References: <20190613151323.10850-1-georgi.djakov@linaro.org>
- <20190613151323.10850-2-georgi.djakov@linaro.org>
- <20190708192612.GE30636@minitux>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using devicetree
+Date: Mon, 15 Jul 2019 06:55:40 -0700
+Message-ID: <c01bd567-0c8b-ec32-773b-fb95bfcdcd50@gmail.com>
+References: <156113387975.28344.16009584175308192243.stgit@devnote2>
+ <f0cee7b6-b83b-b74c-82f5-f43e39bd391a@gmail.com>
+ <20190624115223.db1e53549a15c6548bfa1fa1@kernel.org>
+ <e5e3f55b-095b-e6fc-8734-d888ba5c87f3@gmail.com>
+ <20190625140004.a74443238596b297a558a66f@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190708192612.GE30636@minitux>
+In-Reply-To: <20190625140004.a74443238596b297a558a66f@kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Hi Masami,
 
-On 7/8/19 22:26, Bjorn Andersson wrote:
-> On Thu 13 Jun 08:13 PDT 2019, Georgi Djakov wrote:
+Note that Masami has submitted v2 of the patch with further discussion.  I
+noticed that I had left some comments unanswered in this thread, so I am
+doing this reply before moving on to reply to the v2 thread.
+
+Feel free to move the discussion to v2 instead of replying to this email
+if you find that easier.
+
+On 6/24/19 10:00 PM, Masami Hiramatsu wrote:
+> Hi Frank,
 > 
->> The Qualcomm QCS404 platform has several buses that could be controlled
->> and tuned according to the bandwidth demand.
+> On Mon, 24 Jun 2019 15:31:07 -0700
+> Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>> Currently, kernel support boot-time tracing using kernel command-line
+>>>>> parameters. But that is very limited because of limited expressions
+>>>>> and limited length of command line. Recently, useful features like
+>>>>> histogram, synthetic events, etc. are being added to ftrace, but it is
+>>>>> clear that we can not expand command-line options to support these
+>>>>> features.
+>>>>
+>>>> "it is clear that we can not expand command-line options" needs a fuller
+>>>> explanation.  And maybe further exploration.
+>>>
+>>> Indeed. As an example of tracing settings in the first mail, even for simple
+>>> use-case,  the trace command is long and complicated. I think it is hard to
+>>> express that as 1-liner kernel command line. But devicetree looks very good
+>>> for expressing structured data. That is great and I like it :)
 >>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->> ---
+>> But you could extend the command line paradigm to meet your needs.
+> 
+> But the kernel command line is a command line. Would you mean encoding the 
+> structured setting in binary format with base64 and pass it? :(
+
+If you want to put structured data in the command line, then yes, you could use
+an ascii safe form, such as base64, to contain it.  If that is what you want.
+
+
+> 
+>>>> Devicetree is NOT for configuration information.  This has been discussed
+>>>> over and over again in mail lists, at various conferences, and was also an
+>>>> entire session at plumbers a few years ago:
+>>>>
+>>>>    https://elinux.org/Device_tree_future#Linux_Plumbers_2016_Device_Tree_Track
+>>>
+>>> Thanks, I'll check that.
+> 
+> I found following discussion in etherpad log, https://elinux.org/Device_tree_plumbers_2016_etherpad
+> ----
+> If you have data that the kernel does not have a good way to get, that's OK to put into DT.
+> 
+>     Operating points are OK - but should still be structured well.
+> ----
+> 
+> This sounds like if it is structured well, and there are no other way,
+> we will be able to use DT as a channel.
+> 
+>>>>
+>>>> There is one part of device tree that does allow non-hardware description,
+>>>> which is the "chosen" node which is provided to allow communication between
+>>>> the bootloader and the kernel.
+>>>
+>>> Ah, "chosen" will be suit for me :)
 >>
->> v4:
->> - Add the DT header into this patch.
->> - Pick Bjorn's r-b.
+>> No.  This is not communicating boot loader information.
+> 
+> Hmm, it's a kind of communication with the operator of the boot loader, since there
+> is an admin or developer behind it. I think the comminication is to communicate
+> with that human. Then if they intend to trace boot process, that is a kind of
+> communication.
+
+The quote from the plumbers 2016 devicetree etherpad ("Operating points are OK ...)
+conveniently ignores a sentence just a few lines later:
+
+   "If firmware is deciding the operating point, then it's OK to convey it via DT."
+
+The operating points example is clearly communicating boot loader information to
+the kernel.
+
+Something the admin or developer wants to communicate is not boot loader
+information.
+
+
+> 
+> [...]
+>>>>> - Can we use devicetree for configuring kernel dynamically?
+>>>>
+>>>> No.  Sorry.
+>>>>
+>>>> My understanding of this proposal is that it is intended to better
+>>>> support boot time kernel and driver debugging.  As an alternate
+>>>> implementation, could you compile the ftrace configuration information
+>>>> directly into a kernel data structure?  It seems like it would not be
+>>>> very difficult to populate the data structure data via a few macros.
+>>>
+>>> No, that is not what I intended. My intention was to trace boot up
+>>> process "without recompiling kernel", but with a structured data.
 >>
->> v3:
->> - Add a reg property and move the interconnect nodes under the "soc" node.
+>> That is debugging.  Or if you want to be pedantic, a complex performance
+>> measurement of the boot process (more than holding a stopwatch in your
+>> hand).
+> 
+> Yeah, that's right.
+> 
+>> Recompiling a single object file (containing the ftrace command data)
+>> and re-linking the kernel is not a big price in that context).
+> 
+> No, if I can use DT, I can choose one of them while boot up.
+> That will be a big difference.
+> (Of course for that purpose, I should work on boot loader to support
+> DT overlay)
+
+This is debugging kernel drivers.  I do not think that it is a big cost for
+a kernel developer to re-link the kernel.  On any reasonable modern
+development system this should be a matter of seconds, not minutes.
+
+Compiling a devicetree source is not significantly less time.  (To be
+fair, you imply that you would have various compiled devicetrees to
+choose from at boot time.  It may be realistic to have a library of
+ftrace commands, or it may be more realistic that someone debugging
+a kernel driver will create a unique ftrace command set for the
+particular case they are debugging.)
+
+> 
+>>  Or if
+>> you create a new communication channel, you will have the cost of
+>> creating that data object (certainly not much different than compiling
+>> a devicetree) and have the bootloader provide the ftrace data object
+>> to the kernel.
+> 
+> Yes, and for me, that sounds like just a reinvention of the wheel.
+> If I can reuse devicetree infrastructure, it is easily done (as I
+> implemented in this series. It's just about 500LOC (and YAML document)
+
+Or you can just use the existing ftrace boot command line syntax.
+
+
+> 
+> I can clone drivers/of/ code only for that new communication channel,
+> but that makes no one happy. :(
+> 
+>>> For such purpose, we have to implement a tool to parse and pack the
+>>> data and a channel to load it at earlier stage in bootloader. And
+>>> those are already done by devicetree. Thus I thought I could get a
+>>> piggyback on devicetree.
 >>
->> v2:
->> - No changes.
->>
->>  .../bindings/interconnect/qcom,qcs404.txt     | 46 ++++++++++
->>  .../dt-bindings/interconnect/qcom,qcs404.h    | 88 +++++++++++++++++++
->>  2 files changed, 134 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
->>  create mode 100644 include/dt-bindings/interconnect/qcom,qcs404.h
->>
->> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
->> new file mode 100644
->> index 000000000000..14a827268dda
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
->> @@ -0,0 +1,46 @@
->> +Qualcomm QCS404 Network-On-Chip interconnect driver binding
->> +-----------------------------------------------------------
->> +
->> +Required properties :
->> +- compatible : shall contain only one of the following:
->> +			"qcom,qcs404-bimc"
->> +			"qcom,qcs404-pcnoc"
->> +			"qcom,qcs404-snoc"
->> +- #interconnect-cells : should contain 1
->> +
->> +Optional properties :
->> +reg : specifies the physical base address and size of registers
->> +clocks : list of phandles and specifiers to all interconnect bus clocks
->> +clock-names : clock names should include both "bus_clk" and "bus_a_clk"
+>> Devicetree is not the universal dumping ground for communicating
+>> information to a booting kernel.  Please create another communication
+>> channel.
 > 
-> Spoke to Rob about this patch, and I don't think these properties should
-> not be described as optional.
-> 
-> The reg isn't used unless we're implementing support for QoS, but let's
-> include them in the binding as required anyways.
+> Why should we so limit the availability of even a small corner of existing
+> open source software...?
 
-Ok, will do it!
+Because the proposal is a mis-use of devicetree.
 
 > 
-> Iirc the two clocks are required with the current implementation, but
-> shouldn't there be an iface clock as well, for accessing the QoS
-> register space?
-
-Actually i expect this to be a list of AXI clocks of the IP blocks, whose QoS
-ports we configure. For this platform, according to downstream, it would be just
-<&gcc GCC_SYS_NOC_USB3_CLK>. For other platforms i see these are a few usb/ufs
-clocks that should be enabled while we set QoS for usb/ufs.
-
+> Thank you,
 > 
-> PS. As I read this again, please drop _clk from the two clocks names -
-> we know they are clocks...
-
-Sure, will do it!
-
-Thanks,
-Georgi
-
-> 
-> Regards,
-> Bjorn
-> 
->> +
->> +Example:
->> +
->> +soc {
->> +	...
->> +	bimc: interconnect@400000 {
->> +		reg = <0x00400000 0x80000>;
->> +		compatible = "qcom,qcs404-bimc";
->> +		#interconnect-cells = <1>;
->> +		clock-names = "bus_clk", "bus_a_clk";
->> +		clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
->> +			<&rpmcc RPM_SMD_BIMC_A_CLK>;
->> +	};
->> +
->> +	pnoc: interconnect@500000 {
->> +		reg = <0x00500000 0x15080>;
->> +		compatible = "qcom,qcs404-pcnoc";
->> +		#interconnect-cells = <1>;
->> +		clock-names = "bus_clk", "bus_a_clk";
->> +		clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
->> +			<&rpmcc RPM_SMD_PNOC_A_CLK>;
->> +	};
->> +
->> +	snoc: interconnect@580000 {
->> +		reg = <0x00580000 0x23080>;
->> +		compatible = "qcom,qcs404-snoc";
->> +		#interconnect-cells = <1>;
->> +		clock-names = "bus_clk", "bus_a_clk";
->> +		clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
->> +			<&rpmcc RPM_SMD_SNOC_A_CLK>;
->> +	};
->> +};
->> diff --git a/include/dt-bindings/interconnect/qcom,qcs404.h b/include/dt-bindings/interconnect/qcom,qcs404.h
->> new file mode 100644
->> index 000000000000..960f6e39c5f2
->> --- /dev/null
->> +++ b/include/dt-bindings/interconnect/qcom,qcs404.h
->> @@ -0,0 +1,88 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Qualcomm interconnect IDs
->> + *
->> + * Copyright (c) 2019, Linaro Ltd.
->> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
->> + */
->> +
->> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_QCS404_H
->> +#define __DT_BINDINGS_INTERCONNECT_QCOM_QCS404_H
->> +
->> +#define MASTER_AMPSS_M0			0
->> +#define MASTER_OXILI			1
->> +#define MASTER_MDP_PORT0		2
->> +#define MASTER_SNOC_BIMC_1		3
->> +#define MASTER_TCU_0			4
->> +#define SLAVE_EBI_CH0			5
->> +#define SLAVE_BIMC_SNOC			6
->> +
->> +#define MASTER_SPDM			0
->> +#define MASTER_BLSP_1			1
->> +#define MASTER_BLSP_2			2
->> +#define MASTER_XI_USB_HS1		3
->> +#define MASTER_CRYPT0			4
->> +#define MASTER_SDCC_1			5
->> +#define MASTER_SDCC_2			6
->> +#define MASTER_SNOC_PCNOC		7
->> +#define MASTER_QPIC			8
->> +#define PCNOC_INT_0			9
->> +#define PCNOC_INT_2			10
->> +#define PCNOC_INT_3			11
->> +#define PCNOC_S_0			12
->> +#define PCNOC_S_1			13
->> +#define PCNOC_S_2			14
->> +#define PCNOC_S_3			15
->> +#define PCNOC_S_4			16
->> +#define PCNOC_S_6			17
->> +#define PCNOC_S_7			18
->> +#define PCNOC_S_8			19
->> +#define PCNOC_S_9			20
->> +#define PCNOC_S_10			21
->> +#define PCNOC_S_11			22
->> +#define SLAVE_SPDM			23
->> +#define SLAVE_PDM			24
->> +#define SLAVE_PRNG			25
->> +#define SLAVE_TCSR			26
->> +#define SLAVE_SNOC_CFG			27
->> +#define SLAVE_MESSAGE_RAM		28
->> +#define SLAVE_DISP_SS_CFG		29
->> +#define SLAVE_GPU_CFG			30
->> +#define SLAVE_BLSP_1			31
->> +#define SLAVE_BLSP_2			32
->> +#define SLAVE_TLMM_NORTH		33
->> +#define SLAVE_PCIE			34
->> +#define SLAVE_ETHERNET			35
->> +#define SLAVE_TLMM_EAST			36
->> +#define SLAVE_TCU			37
->> +#define SLAVE_PMIC_ARB			38
->> +#define SLAVE_SDCC_1			39
->> +#define SLAVE_SDCC_2			40
->> +#define SLAVE_TLMM_SOUTH		41
->> +#define SLAVE_USB_HS			42
->> +#define SLAVE_USB3			43
->> +#define SLAVE_CRYPTO_0_CFG		44
->> +#define SLAVE_PCNOC_SNOC		45
->> +
->> +#define MASTER_QDSS_BAM			0
->> +#define MASTER_BIMC_SNOC		1
->> +#define MASTER_PCNOC_SNOC		2
->> +#define MASTER_QDSS_ETR			3
->> +#define MASTER_EMAC			4
->> +#define MASTER_PCIE			5
->> +#define MASTER_USB3			6
->> +#define QDSS_INT			7
->> +#define SNOC_INT_0			8
->> +#define SNOC_INT_1			9
->> +#define SNOC_INT_2			10
->> +#define SLAVE_KPSS_AHB			11
->> +#define SLAVE_WCSS			12
->> +#define SLAVE_SNOC_BIMC_1		13
->> +#define SLAVE_IMEM			14
->> +#define SLAVE_SNOC_PCNOC		15
->> +#define SLAVE_QDSS_STM			16
->> +#define SLAVE_CATS_0			17
->> +#define SLAVE_CATS_1			18
->> +#define SLAVE_LPASS			19
->> +
->> +#endif
