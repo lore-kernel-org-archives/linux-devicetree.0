@@ -1,7 +1,7 @@
 From: Zhou Yanjie <zhouyanjie@zoho.com>
-Subject: [PATCH v3 6/8] irqchip: Ingenic: Add support for X1000 and X1000E.
-Date: Mon, 15 Jul 2019 20:09:53 +0800
-Message-ID: <1563192595-53546-7-git-send-email-zhouyanjie@zoho.com>
+Subject: [PATCH v3 7/8] dt-bindings: interrupt-controller: Add X1500 bindings.
+Date: Mon, 15 Jul 2019 20:09:54 +0800
+Message-ID: <1563192595-53546-8-git-send-email-zhouyanjie@zoho.com>
 References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
  <1563192595-53546-1-git-send-email-zhouyanjie@zoho.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,23 +11,25 @@ To: linux-mips@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, paul.burton@mips.com, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Add support for probing the irq-ingenic driver on the X1000 Soc
-and the X1000E Soc from Ingenic.
+Add the interrupt-controller bindings for the
+X1500 Soc from Ingenic.
 
 Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 ---
- drivers/irqchip/irq-ingenic.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index e9e959c..e8f7ae7 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -178,3 +178,5 @@ IRQCHIP_DECLARE(jz4760b_intc, "ingenic,jz4760b-intc", intc_2chip_of_init);
- IRQCHIP_DECLARE(jz4770_intc, "ingenic,jz4770-intc", intc_2chip_of_init);
- IRQCHIP_DECLARE(jz4775_intc, "ingenic,jz4775-intc", intc_2chip_of_init);
- IRQCHIP_DECLARE(jz4780_intc, "ingenic,jz4780-intc", intc_2chip_of_init);
-+IRQCHIP_DECLARE(x1000_intc, "ingenic,x1000-intc", intc_2chip_of_init);
-+IRQCHIP_DECLARE(x1000e_intc, "ingenic,x1000e-intc", intc_2chip_of_init);
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+index 4f91bda..a96e120 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+@@ -12,6 +12,7 @@ Required properties:
+     ingenic,jz4780-intc
+     ingenic,x1000-intc
+     ingenic,x1000e-intc
++    ingenic,x1500-intc
+ - reg : Specifies base physical address and size of the registers.
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode an
 -- 
 2.7.4
