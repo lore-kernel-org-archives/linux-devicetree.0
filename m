@@ -1,251 +1,67 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [RFC PATCH v2 15/15] tracing: of: Add function-graph tracer option properties
-Date: Mon, 15 Jul 2019 14:13:48 +0900
-Message-ID: <156316762864.23477.2115123246398911458.stgit@devnote2>
-References: <156316746861.23477.5815110570539190650.stgit@devnote2>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 3/3] ARM: dts: stm32: add syscfg to ADC on stm32mp157c
+Date: Mon, 15 Jul 2019 09:01:05 +0200
+Message-ID: <c69cff23-b67e-2aed-f250-c237e9cd4a3d@st.com>
+References: <1562148496-26789-1-git-send-email-fabrice.gasnier@st.com>
+ <1562148496-26789-4-git-send-email-fabrice.gasnier@st.com>
+ <20190714171310.1816afe3@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <156316746861.23477.5815110570539190650.stgit@devnote2>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Tim Bird <Tim.Bird@sony.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190714171310.1816afe3@archlinux>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add following function-graph tracer related options
- - fgraph-filters : string array of filter
- - fgraph-notraces : string array of notrace-filter
- - fgraph-max-depth : u32 value of max depth
+On 7/14/19 6:13 PM, Jonathan Cameron wrote:
+> On Wed, 3 Jul 2019 12:08:16 +0200
+> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+> 
+>> On stm32mp157c, the ADC inputs are multiplexed with analog switches which
+>> have reduced performances when their supply is below 2.7V (vdda by
+>> default).
+>> Add syscfg registers that can be used on stm32mp157c, to get full ADC
+>> analog performances.
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> I've applied the patches using this on the assumption this will go via
+> the usual SoC route.
+> 
+> Thanks,
 
-Note that these properties are available on ftrace root node
-only, because these filters are globally applied.
+Hi Jonathan,
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- kernel/trace/ftrace.c   |   85 ++++++++++++++++++++++++++++++-----------------
- kernel/trace/trace_of.c |   68 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 123 insertions(+), 30 deletions(-)
+Many thanks,
+Fabrice
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 5c3eadb143ed..7bc60ac4583e 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1241,7 +1241,7 @@ static void clear_ftrace_mod_list(struct list_head *head)
- 	mutex_unlock(&ftrace_lock);
- }
- 
--static void free_ftrace_hash(struct ftrace_hash *hash)
-+void free_ftrace_hash(struct ftrace_hash *hash)
- {
- 	if (!hash || hash == EMPTY_HASH)
- 		return;
-@@ -4895,7 +4895,7 @@ __setup("ftrace_filter=", set_ftrace_filter);
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- static char ftrace_graph_buf[FTRACE_FILTER_SIZE] __initdata;
- static char ftrace_graph_notrace_buf[FTRACE_FILTER_SIZE] __initdata;
--static int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
-+int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
- 
- static int __init set_graph_function(char *str)
- {
-@@ -5224,6 +5224,26 @@ __ftrace_graph_open(struct inode *inode, struct file *file,
- 	return ret;
- }
- 
-+struct ftrace_hash *ftrace_graph_copy_hash(bool enable)
-+{
-+	struct ftrace_hash *hash;
-+
-+	mutex_lock(&graph_lock);
-+
-+	if (enable)
-+		hash = rcu_dereference_protected(ftrace_graph_hash,
-+					lockdep_is_held(&graph_lock));
-+	else
-+		hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
-+					lockdep_is_held(&graph_lock));
-+
-+	hash = alloc_and_copy_ftrace_hash(FTRACE_HASH_DEFAULT_BITS, hash);
-+
-+	mutex_unlock(&graph_lock);
-+
-+	return hash;
-+}
-+
- static int
- ftrace_graph_open(struct inode *inode, struct file *file)
- {
-@@ -5280,11 +5300,40 @@ ftrace_graph_notrace_open(struct inode *inode, struct file *file)
- 	return ret;
- }
- 
-+int ftrace_graph_apply_hash(struct ftrace_hash *hash, bool enable)
-+{
-+	struct ftrace_hash *old_hash, *new_hash;
-+
-+	new_hash = __ftrace_hash_move(hash);
-+	if (!new_hash)
-+		return -ENOMEM;
-+
-+	mutex_lock(&graph_lock);
-+
-+	if (enable) {
-+		old_hash = rcu_dereference_protected(ftrace_graph_hash,
-+				lockdep_is_held(&graph_lock));
-+		rcu_assign_pointer(ftrace_graph_hash, new_hash);
-+	} else {
-+		old_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
-+				lockdep_is_held(&graph_lock));
-+		rcu_assign_pointer(ftrace_graph_notrace_hash, new_hash);
-+	}
-+
-+	mutex_unlock(&graph_lock);
-+
-+	/* Wait till all users are no longer using the old hash */
-+	synchronize_rcu();
-+
-+	free_ftrace_hash(old_hash);
-+
-+	return 0;
-+}
-+
- static int
- ftrace_graph_release(struct inode *inode, struct file *file)
- {
- 	struct ftrace_graph_data *fgd;
--	struct ftrace_hash *old_hash, *new_hash;
- 	struct trace_parser *parser;
- 	int ret = 0;
- 
-@@ -5309,41 +5358,17 @@ ftrace_graph_release(struct inode *inode, struct file *file)
- 
- 		trace_parser_put(parser);
- 
--		new_hash = __ftrace_hash_move(fgd->new_hash);
--		if (!new_hash) {
--			ret = -ENOMEM;
--			goto out;
--		}
--
--		mutex_lock(&graph_lock);
--
--		if (fgd->type == GRAPH_FILTER_FUNCTION) {
--			old_hash = rcu_dereference_protected(ftrace_graph_hash,
--					lockdep_is_held(&graph_lock));
--			rcu_assign_pointer(ftrace_graph_hash, new_hash);
--		} else {
--			old_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
--					lockdep_is_held(&graph_lock));
--			rcu_assign_pointer(ftrace_graph_notrace_hash, new_hash);
--		}
--
--		mutex_unlock(&graph_lock);
--
--		/* Wait till all users are no longer using the old hash */
--		synchronize_rcu();
--
--		free_ftrace_hash(old_hash);
-+		ret = ftrace_graph_apply_hash(fgd->new_hash,
-+					fgd->type == GRAPH_FILTER_FUNCTION);
- 	}
- 
-- out:
- 	free_ftrace_hash(fgd->new_hash);
- 	kfree(fgd);
- 
- 	return ret;
- }
- 
--static int
--ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer)
-+int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer)
- {
- 	struct ftrace_glob func_g;
- 	struct dyn_ftrace *rec;
-diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
-index 1ee6fab918f5..d78a082b1752 100644
---- a/kernel/trace/trace_of.c
-+++ b/kernel/trace/trace_of.c
-@@ -75,6 +75,71 @@ trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
- 	}
- }
- 
-+#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+extern unsigned int fgraph_max_depth;
-+extern struct ftrace_hash *ftrace_graph_copy_hash(bool enable);
-+extern int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
-+extern int ftrace_graph_apply_hash(struct ftrace_hash *hash, bool enable);
-+extern void free_ftrace_hash(struct ftrace_hash *hash);
-+
-+static void __init
-+trace_of_set_fgraph_filter(struct device_node *node, const char *property,
-+			   bool enable)
-+{
-+	struct ftrace_hash *hash;
-+	struct property *prop;
-+	const char *p;
-+	char buf[MAX_BUF_LEN];
-+	int err;
-+
-+	if (!of_find_property(node, property, NULL))
-+		return;
-+
-+	/* Get current filter hash */
-+	hash = ftrace_graph_copy_hash(enable);
-+	if (!hash) {
-+		pr_err("Failed to copy hash\n");
-+		return;
-+	}
-+
-+	of_property_for_each_string(node, property, prop, p) {
-+		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
-+			pr_err("filter string is too long: %s\n", p);
-+			goto free_hash;
-+		}
-+		err = ftrace_graph_set_hash(hash, buf);
-+		if (err) {
-+			pr_err("Failed to add %s: %s\n", property, buf);
-+			goto free_hash;
-+		}
-+	}
-+
-+	if (ftrace_graph_apply_hash(hash, enable) < 0) {
-+		pr_err("Failed to apply new hash\n");
-+		goto free_hash;
-+	}
-+
-+	return;
-+
-+free_hash:
-+	free_ftrace_hash(hash);
-+}
-+
-+static void __init
-+trace_of_set_fgraph_options(struct device_node *node)
-+{
-+	u32 v = 0;
-+
-+	trace_of_set_fgraph_filter(node, "fgraph-filters", true);
-+	trace_of_set_fgraph_filter(node, "fgraph-notraces", false);
-+
-+	if (!of_property_read_u32_index(node, "fgraph-max-depth", 0, &v))
-+		fgraph_max_depth = (unsigned int)v;
-+}
-+#else
-+#define trace_of_set_fgraph_options(node) do {} while (0)
-+#endif
-+
- static void __init
- trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
- {
-@@ -100,6 +165,9 @@ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
- 		if (tracing_alloc_snapshot() < 0)
- 			pr_err("Failed to allocate snapshot buffer\n");
- 
-+	/* function graph filters are global settings. */
-+	trace_of_set_fgraph_options(node);
-+
- 	trace_of_set_instance_options(tr, node);
- }
- 
+> 
+> Jonathan
+> 
+>> ---
+>>  arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+>> index 2dd5162..b9a5b58 100644
+>> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+>> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+>> @@ -862,6 +862,7 @@
+>>  			clocks = <&rcc ADC12>, <&rcc ADC12_K>;
+>>  			clock-names = "bus", "adc";
+>>  			interrupt-controller;
+>> +			st,syscfg = <&syscfg>;
+>>  			#interrupt-cells = <1>;
+>>  			#address-cells = <1>;
+>>  			#size-cells = <0>;
+> 
