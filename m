@@ -1,85 +1,77 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: Re: [PATCH v2 1/2] arm64: dts: imx8mq: Add MIPI D-PHY
-Date: Mon, 15 Jul 2019 11:10:27 +0000
-Message-ID: <20190715111027.a4wlpzex3taxymyr@fsr-ub1664-175>
-References: <cover.1563187253.git.agx@sigxcpu.org>
- <30c7622bf590670190b93c9b5b6dd1e8f809bbb2.1563187253.git.agx@sigxcpu.org>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: [PATCH v2 1/4] opp: core: add regulators enable and disable
+Date: Mon, 15 Jul 2019 14:04:13 +0200
+Message-ID: <20190715120416.3561-2-k.konieczny@partner.samsung.com>
+References: <20190715120416.3561-1-k.konieczny@partner.samsung.com>
+        <CGME20190715120430eucas1p19dddcc93756e6a110d3476229f9428b3@eucas1p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <30c7622bf590670190b93c9b5b6dd1e8f809bbb2.1563187253.git.agx@sigxcpu.org>
-Content-Language: en-US
-Content-ID: <4AB6BC72093B9A4CBF3A5D208EC97346@eurprd04.prod.outlook.com>
+In-Reply-To: <20190715120416.3561-1-k.konieczny@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Guido_G=FCnther?= <agx@sigxcpu.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Pavel Machek <pavel@ucw.cz>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Lucas Stach <l.stach@pengutronix.de>, Anson Huang <anson.huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: k.konieczny@partner.samsung.com
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19-07-15 12:43:05, Guido G=FCnther wrote:
-> Add a node for the Mixel MIPI D-PHY, "disabled" by default.
->=20
-> Signed-off-by: Guido G=FCnther <agx@sigxcpu.org>
-> Acked-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/=
-dts/freescale/imx8mq.dtsi
-> index d09b808eff87..891ee7578c2d 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -728,6 +728,19 @@
->  				status =3D "disabled";
->  			};
-> =20
-> +			dphy: dphy@30a00300 {
-> +				compatible =3D "fsl,imx8mq-mipi-dphy";
-> +				reg =3D <0x30a00300 0x100>;
-> +				clocks =3D <&clk IMX8MQ_CLK_DSI_PHY_REF>;
-> +				clock-names =3D "phy_ref";
-> +				assigned-clocks =3D <&clk IMX8MQ_CLK_DSI_PHY_REF>;
-> +				assigned-clock-parents =3D <&clk IMX8MQ_VIDEO_PLL1_OUT>;
-> +				assigned-clock-rates =3D <24000000>;
+Add enable regulators to dev_pm_opp_set_regulators() and disable
+regulators to dev_pm_opp_put_regulators(). This prepares for
+converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
 
-We have the following in the clk-imx8mq in the vendor tree:
+Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+--
+Changes in v2:
 
-	clk_set_parent(clks[IMX8MQ_VIDEO_PLL1_BYPASS], clks[IMX8MQ_VIDEO_PLL1]);
+- move regulator enable and disable into loop
 
-This unbypasses the video pll 1. And then we also have this:
+---
+ drivers/opp/core.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-	/* config video_pll1 clock */
-	clk_set_parent(clks[IMX8MQ_VIDEO_PLL1_REF_SEL], clks[IMX8MQ_CLK_27M]);
-	clk_set_rate(clks[IMX8MQ_VIDEO_PLL1], 593999999);
-
-But none of that is acceptable upstream since the clock provider should not
-use clock consumer API.
-
-So please update the assigned-clock* properties to something like this:
-				assigned-clocks =3D <&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
-						  <&clk IMX8MQ_VIDEO_PLL1_BYPASS>,
-						  <&clk IMX8MQ_CLK_DSI_PHY_REF>,
-						  <&clk IMX8MQ_VIDEO_PLL1>;
-				assigned-clock-parents =3D <&clk IMX8MQ_CLK_27M>,
-							 <&clk IMX8MQ_VIDEO_PLL1>,
-							 <&clk IMX8MQ_VIDEO_PLL1_OUT>
-							 <0>;
-				assigned-clock-rates =3D <0>,
-						       <0>,
-						       <24000000>,            =20
-						       <593999999>;
-
-I've written this without testing, so please do test it on your setup.
-
-> +				#phy-cells =3D <0>;
-> +				power-domains =3D <&pgc_mipi>;
-> +				status =3D "disabled";
-> +			};
-> +
->  			i2c1: i2c@30a20000 {
->  				compatible =3D "fsl,imx8mq-i2c", "fsl,imx21-i2c";
->  				reg =3D <0x30a20000 0x10000>;
-> --=20
-> 2.20.1
-> =
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 0e7703fe733f..069c5cf8827e 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -1570,6 +1570,10 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+ 			goto free_regulators;
+ 		}
+ 
++		ret = regulator_enable(reg);
++		if (ret < 0)
++			goto disable;
++
+ 		opp_table->regulators[i] = reg;
+ 	}
+ 
+@@ -1582,9 +1586,15 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+ 
+ 	return opp_table;
+ 
++disable:
++	regulator_put(reg);
++	--i;
++
+ free_regulators:
+-	while (i != 0)
+-		regulator_put(opp_table->regulators[--i]);
++	for (; i >= 0; --i) {
++		regulator_disable(opp_table->regulators[i]);
++		regulator_put(opp_table->regulators[i]);
++	}
+ 
+ 	kfree(opp_table->regulators);
+ 	opp_table->regulators = NULL;
+@@ -1610,8 +1620,10 @@ void dev_pm_opp_put_regulators(struct opp_table *opp_table)
+ 	/* Make sure there are no concurrent readers while updating opp_table */
+ 	WARN_ON(!list_empty(&opp_table->opp_list));
+ 
+-	for (i = opp_table->regulator_count - 1; i >= 0; i--)
++	for (i = opp_table->regulator_count - 1; i >= 0; i--) {
++		regulator_disable(opp_table->regulators[i]);
+ 		regulator_put(opp_table->regulators[i]);
++	}
+ 
+ 	_free_set_opp_data(opp_table);
+ 
+-- 
+2.22.0
