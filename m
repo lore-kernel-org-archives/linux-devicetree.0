@@ -1,7 +1,7 @@
 From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [RFC PATCH v2 14/15] tracing: of: Add function tracer filter properties
-Date: Mon, 15 Jul 2019 14:13:37 +0900
-Message-ID: <156316761767.23477.13784128240295644594.stgit@devnote2>
+Subject: [RFC PATCH v2 15/15] tracing: of: Add function-graph tracer option properties
+Date: Mon, 15 Jul 2019 14:13:48 +0900
+Message-ID: <156316762864.23477.2115123246398911458.stgit@devnote2>
 References: <156316746861.23477.5815110570539190650.stgit@devnote2>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -13,66 +13,239 @@ To: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Fran
 Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add function tracer filter properties which includes
- - ftrace-filters : string array of filter rules
- - ftrace-notraces : string array of notrace rules
-These properties are available on ftrace root node and
-instance node.
+Add following function-graph tracer related options
+ - fgraph-filters : string array of filter
+ - fgraph-notraces : string array of notrace-filter
+ - fgraph-max-depth : u32 value of max depth
+
+Note that these properties are available on ftrace root node
+only, because these filters are globally applied.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/trace_of.c |   36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ kernel/trace/ftrace.c   |   85 ++++++++++++++++++++++++++++++-----------------
+ kernel/trace/trace_of.c |   68 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 123 insertions(+), 30 deletions(-)
 
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 5c3eadb143ed..7bc60ac4583e 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1241,7 +1241,7 @@ static void clear_ftrace_mod_list(struct list_head *head)
+ 	mutex_unlock(&ftrace_lock);
+ }
+ 
+-static void free_ftrace_hash(struct ftrace_hash *hash)
++void free_ftrace_hash(struct ftrace_hash *hash)
+ {
+ 	if (!hash || hash == EMPTY_HASH)
+ 		return;
+@@ -4895,7 +4895,7 @@ __setup("ftrace_filter=", set_ftrace_filter);
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ static char ftrace_graph_buf[FTRACE_FILTER_SIZE] __initdata;
+ static char ftrace_graph_notrace_buf[FTRACE_FILTER_SIZE] __initdata;
+-static int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
++int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
+ 
+ static int __init set_graph_function(char *str)
+ {
+@@ -5224,6 +5224,26 @@ __ftrace_graph_open(struct inode *inode, struct file *file,
+ 	return ret;
+ }
+ 
++struct ftrace_hash *ftrace_graph_copy_hash(bool enable)
++{
++	struct ftrace_hash *hash;
++
++	mutex_lock(&graph_lock);
++
++	if (enable)
++		hash = rcu_dereference_protected(ftrace_graph_hash,
++					lockdep_is_held(&graph_lock));
++	else
++		hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
++					lockdep_is_held(&graph_lock));
++
++	hash = alloc_and_copy_ftrace_hash(FTRACE_HASH_DEFAULT_BITS, hash);
++
++	mutex_unlock(&graph_lock);
++
++	return hash;
++}
++
+ static int
+ ftrace_graph_open(struct inode *inode, struct file *file)
+ {
+@@ -5280,11 +5300,40 @@ ftrace_graph_notrace_open(struct inode *inode, struct file *file)
+ 	return ret;
+ }
+ 
++int ftrace_graph_apply_hash(struct ftrace_hash *hash, bool enable)
++{
++	struct ftrace_hash *old_hash, *new_hash;
++
++	new_hash = __ftrace_hash_move(hash);
++	if (!new_hash)
++		return -ENOMEM;
++
++	mutex_lock(&graph_lock);
++
++	if (enable) {
++		old_hash = rcu_dereference_protected(ftrace_graph_hash,
++				lockdep_is_held(&graph_lock));
++		rcu_assign_pointer(ftrace_graph_hash, new_hash);
++	} else {
++		old_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
++				lockdep_is_held(&graph_lock));
++		rcu_assign_pointer(ftrace_graph_notrace_hash, new_hash);
++	}
++
++	mutex_unlock(&graph_lock);
++
++	/* Wait till all users are no longer using the old hash */
++	synchronize_rcu();
++
++	free_ftrace_hash(old_hash);
++
++	return 0;
++}
++
+ static int
+ ftrace_graph_release(struct inode *inode, struct file *file)
+ {
+ 	struct ftrace_graph_data *fgd;
+-	struct ftrace_hash *old_hash, *new_hash;
+ 	struct trace_parser *parser;
+ 	int ret = 0;
+ 
+@@ -5309,41 +5358,17 @@ ftrace_graph_release(struct inode *inode, struct file *file)
+ 
+ 		trace_parser_put(parser);
+ 
+-		new_hash = __ftrace_hash_move(fgd->new_hash);
+-		if (!new_hash) {
+-			ret = -ENOMEM;
+-			goto out;
+-		}
+-
+-		mutex_lock(&graph_lock);
+-
+-		if (fgd->type == GRAPH_FILTER_FUNCTION) {
+-			old_hash = rcu_dereference_protected(ftrace_graph_hash,
+-					lockdep_is_held(&graph_lock));
+-			rcu_assign_pointer(ftrace_graph_hash, new_hash);
+-		} else {
+-			old_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
+-					lockdep_is_held(&graph_lock));
+-			rcu_assign_pointer(ftrace_graph_notrace_hash, new_hash);
+-		}
+-
+-		mutex_unlock(&graph_lock);
+-
+-		/* Wait till all users are no longer using the old hash */
+-		synchronize_rcu();
+-
+-		free_ftrace_hash(old_hash);
++		ret = ftrace_graph_apply_hash(fgd->new_hash,
++					fgd->type == GRAPH_FILTER_FUNCTION);
+ 	}
+ 
+- out:
+ 	free_ftrace_hash(fgd->new_hash);
+ 	kfree(fgd);
+ 
+ 	return ret;
+ }
+ 
+-static int
+-ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer)
++int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer)
+ {
+ 	struct ftrace_glob func_g;
+ 	struct dyn_ftrace *rec;
 diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
-index 14d6c9a8fd81..1ee6fab918f5 100644
+index 1ee6fab918f5..d78a082b1752 100644
 --- a/kernel/trace/trace_of.c
 +++ b/kernel/trace/trace_of.c
-@@ -322,11 +322,47 @@ trace_of_init_events(struct trace_array *tr, struct device_node *node)
- #define trace_of_init_events(tr, node) do {} while (0)
- #endif
+@@ -75,6 +75,71 @@ trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
+ 	}
+ }
  
-+#ifdef CONFIG_FUNCTION_TRACER
-+extern bool ftrace_filter_param __initdata;
-+extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
-+			     int len, int reset);
-+extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
-+			     int len, int reset);
++#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++extern unsigned int fgraph_max_depth;
++extern struct ftrace_hash *ftrace_graph_copy_hash(bool enable);
++extern int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
++extern int ftrace_graph_apply_hash(struct ftrace_hash *hash, bool enable);
++extern void free_ftrace_hash(struct ftrace_hash *hash);
 +
 +static void __init
-+trace_of_set_ftrace_filter(struct ftrace_ops *ops, const char *property,
-+			   struct device_node *node)
++trace_of_set_fgraph_filter(struct device_node *node, const char *property,
++			   bool enable)
 +{
++	struct ftrace_hash *hash;
 +	struct property *prop;
 +	const char *p;
 +	char buf[MAX_BUF_LEN];
 +	int err;
 +
++	if (!of_find_property(node, property, NULL))
++		return;
++
++	/* Get current filter hash */
++	hash = ftrace_graph_copy_hash(enable);
++	if (!hash) {
++		pr_err("Failed to copy hash\n");
++		return;
++	}
++
 +	of_property_for_each_string(node, property, prop, p) {
 +		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
 +			pr_err("filter string is too long: %s\n", p);
-+			return;
++			goto free_hash;
 +		}
-+		err = ftrace_set_filter(ops, buf, strlen(buf), 0);
++		err = ftrace_graph_set_hash(hash, buf);
 +		if (err) {
 +			pr_err("Failed to add %s: %s\n", property, buf);
-+			return;
++			goto free_hash;
 +		}
-+		ftrace_filter_param = true;
 +	}
++
++	if (ftrace_graph_apply_hash(hash, enable) < 0) {
++		pr_err("Failed to apply new hash\n");
++		goto free_hash;
++	}
++
++	return;
++
++free_hash:
++	free_ftrace_hash(hash);
++}
++
++static void __init
++trace_of_set_fgraph_options(struct device_node *node)
++{
++	u32 v = 0;
++
++	trace_of_set_fgraph_filter(node, "fgraph-filters", true);
++	trace_of_set_fgraph_filter(node, "fgraph-notraces", false);
++
++	if (!of_property_read_u32_index(node, "fgraph-max-depth", 0, &v))
++		fgraph_max_depth = (unsigned int)v;
 +}
 +#else
-+#define trace_of_set_ftrace_filter(ops, prop, node) do {} while (0)
++#define trace_of_set_fgraph_options(node) do {} while (0)
 +#endif
 +
  static void __init
- trace_of_enable_tracer(struct trace_array *tr, struct device_node *node)
+ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
  {
- 	const char *p;
+@@ -100,6 +165,9 @@ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
+ 		if (tracing_alloc_snapshot() < 0)
+ 			pr_err("Failed to allocate snapshot buffer\n");
  
-+	trace_of_set_ftrace_filter(tr->ops, "ftrace-filters", node);
-+	trace_of_set_ftrace_filter(tr->ops, "ftrace-notraces", node);
++	/* function graph filters are global settings. */
++	trace_of_set_fgraph_options(node);
 +
- 	if (!of_property_read_string(node, "tracer", &p)) {
- 		if (tracing_set_tracer(tr, p) < 0)
- 			pr_err("Failed to set given tracer: %s\n", p);
+ 	trace_of_set_instance_options(tr, node);
+ }
+ 
