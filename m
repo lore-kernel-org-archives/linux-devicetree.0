@@ -1,38 +1,103 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 4/8] PCI: Add quirk to disable MSI support for Amazon's
- Annapurna Labs host bridge
-Date: Mon, 15 Jul 2019 08:54:00 +1000
-Message-ID: <54a3e2de1baf2aab893ab6370f8f6ec0a83c45db.camel@kernel.crashing.org>
-References: <20190710164519.17883-1-jonnyc@amazon.com>
-         <20190710164519.17883-5-jonnyc@amazon.com>
-         <20190712130419.GA46935@google.com>
-         <2cac43401f0cf76acb645b98c6543204f12d5c05.camel@amazon.com>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH 2/3 v2] dt-bindings: gpio: aspeed: Add SGPIO support
+Date: Mon, 15 Jul 2019 11:55:06 +0930
+Message-ID: <56d7603a-c1b9-4893-871d-2aee17329e40@www.fastmail.com>
+References: <1562962440-15908-1-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2cac43401f0cf76acb645b98c6543204f12d5c05.camel@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Chocron, Jonathan" <jonnyc@amazon.com>, "helgaas@kernel.org" <helgaas@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1562962440-15908-1-git-send-email-hongweiz@ami.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-aspeed@lists.ozlabs.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2019-07-14 at 15:09 +0000, Chocron, Jonathan wrote:
-> > s/host bridge/Root Port/, if I understand correctly.
-> > 
-> 
-> Ack.
-> 
-> BTW, what is the main difference between the 2 terms, since they seem
-> to be (mistakenly?) used interchangeably?
+Hello Hongwei,
 
-The host bridge is the parent of the root port. You can have several
-root ports under a host bridge in fact. They tend to be part of the
-same silicon and somewhat intimately linked but they are distinct
-logical entities. The root port appears as a PCIe p2p bridge sitting on
-the top level bus provided by the host bridge. The Host Bridge doesn't
-have to have a representation in config space (it sometimes does
-historically, but as a sibling of the devices on that top level bus. In
-PCIe land, these are chipset built-in devices).
+On Sat, 13 Jul 2019, at 05:44, Hongwei Zhang wrote:
+> Add bindings to support SGPIO on AST2400 or AST2500.
+> 
+> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+> ---
+>  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100755 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt 
+> b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> new file mode 100755
+> index 0000000..3ae2b79
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> @@ -0,0 +1,43 @@
+> +Aspeed SGPIO controller Device Tree Bindings
+> +-------------------------------------------
+> +
+> +Required properties:
+> +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
+> +
+> +- #gpio-cells 		: Should be two
+> +			  - First cell is the GPIO line number
+> +			  - Second cell is used to specify optional
+> +			    parameters (unused)
+> +
+> +- reg			: Address and length of the register set for the device
+> +- gpio-controller	: Marks the device node as a GPIO controller.
+> +- interrupts		: Interrupt specifier (see interrupt bindings for
+> +			  details)
+> +
+> +- interrupt-controller	: Mark the GPIO controller as an 
+> interrupt-controller
+> +
+> +- nr-gpios		: number of GPIO pins to serialise. (should be multiple of 
+> 8, up to 80 pins)
+> +			  if not specified, defaults to 80.
 
-Ben.
+This appears to be a statement about the driver implementation, but bindings
+documents are about describing hardware. Reading the datasheet it actually
+appears the ASPEED SGPIO hardware comes up in what is "technically" a
+forbidden state (equivalent to `nr-gpios = <0>;`), though the device is also
+disabled at this point, so it's probably moot. The point is the true default
+value from a hardware perspective is 0, not 80, so if we're going to talk about
+default values, 0 would be more appropriate. However:
+
+You've also listed nr-gpios under the "Required properties" header, but the
+description suggests it's optional. It's either one or the other, please lets be
+clear about it. On that front, lets make it nr-gpios *not* optional (i.e. make it
+required) thus force the specification of how many SGPIOs we want to emit
+on the bus. This value is coupled to the platform design, so I don't think
+there's ever a scenario where we want nr-gpios to take a default value.
+
+> +
+> +- clocks               : A phandle to the APB clock for SGPM clock 
+> division
+> +
+> +- bus-frequency	: SGPM CLK frequency, if not specified defaults to 1 
+> MHz
+
+Again here with the default value - SGPM CLK period is derived from PCLK by
+the expression `period = PCLK * 2 *(GPIO254[31:16] + 1)`, where GPIO254's
+initialisation state is `GPIO254[31:16] = 0`, which gives a default SGPM bus
+frequency of PCLK / 2. This is likely not going to be 1MHz (more like ~12MHz).
+
+Lets just make the property required. That way we avoid any ambiguity about
+the bus frequency and thus don't need words about defaults that turn out to
+be about the driver, not about the hardware.
+
+Finally, when updating patches in response to feedback, please send the full
+series again, and bump the series version number. That way people can review
+a coherent set of patches and not have to hunt around and (fail to) collate the
+correct combination. It makes it easier to say "Reviewed-by:" on your patches :)
+
+Cheers,
+
+Andrew
