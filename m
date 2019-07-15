@@ -1,32 +1,57 @@
-From: Zhou Yanjie <zhouyanjie@zoho.com>
-Subject: [PATCH v3 8/8] irqchip: Ingenic: Add support for X1500.
-Date: Mon, 15 Jul 2019 20:09:55 +0800
-Message-ID: <1563192595-53546-9-git-send-email-zhouyanjie@zoho.com>
-References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
- <1563192595-53546-1-git-send-email-zhouyanjie@zoho.com>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH v5 04/13] media: rc: sunxi: Add RXSTA bits definition
+Date: Mon, 15 Jul 2019 13:12:45 +0100
+Message-ID: <20190715121244.2vrsw6qa4fgp72fn@gofer.mess.org>
+References: <20190607231100.5894-1-peron.clem@gmail.com>
+ <20190607231100.5894-5-peron.clem@gmail.com>
+ <20190610095243.7xwp4xhauds22qzw@flea>
+ <CAJiuCcfyjGTBbsjZQYj2p3KD6O-WaXhFe5NZrnKQwJYACmatUw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563192595-53546-1-git-send-email-zhouyanjie@zoho.com>
+Content-Disposition: inline
+In-Reply-To: <CAJiuCcfyjGTBbsjZQYj2p3KD6O-WaXhFe5NZrnKQwJYACmatUw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, paul.burton@mips.com, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, marc.zyngier@arm.com
+To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for probing the irq-ingenic driver on the
-X1500 Soc from Ingenic.
+On Sun, Jul 14, 2019 at 04:32:22PM +0200, Clément Péron wrote:
+> Hi Sean,
+> 
+> You acked the whole v3 series but this patch has been introduced in v5
+> could you ack this one too?
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
- drivers/irqchip/irq-ingenic.c | 1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Sean Young <sean@mess.org>
 
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index e8f7ae7..b72430c 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -180,3 +180,4 @@ IRQCHIP_DECLARE(jz4775_intc, "ingenic,jz4775-intc", intc_2chip_of_init);
- IRQCHIP_DECLARE(jz4780_intc, "ingenic,jz4780-intc", intc_2chip_of_init);
- IRQCHIP_DECLARE(x1000_intc, "ingenic,x1000-intc", intc_2chip_of_init);
- IRQCHIP_DECLARE(x1000e_intc, "ingenic,x1000e-intc", intc_2chip_of_init);
-+IRQCHIP_DECLARE(x1500_intc, "ingenic,x1500-intc", intc_2chip_of_init);
--- 
-2.7.4
+Thanks
+
+Sean
+
+> 
+> Thanks,
+> Clément
+> 
+> 
+> 
+> 
+> On Mon, 10 Jun 2019 at 11:52, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Sat, Jun 08, 2019 at 01:10:51AM +0200, Clément Péron wrote:
+> > > We are using RXINT bits definition when looking at RXSTA register.
+> > >
+> > > These bits are equal but it's not really proper.
+> > >
+> > > Introduce the RXSTA bits and use them to have coherency.
+> > >
+> > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> >
+> > Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> >
+> > Maxime
+> >
+> > --
+> > Maxime Ripard, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
