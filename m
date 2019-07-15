@@ -1,7 +1,7 @@
 From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [RFC PATCH v2 07/15] dt-bindings: tracing: Add ftrace binding document
-Date: Mon, 15 Jul 2019 14:12:23 +0900
-Message-ID: <156316754322.23477.15176287275000782502.stgit@devnote2>
+Subject: [RFC PATCH v2 09/15] tracing: of: Add trace event settings
+Date: Mon, 15 Jul 2019 14:12:45 +0900
+Message-ID: <156316756493.23477.857559505771671133.stgit@devnote2>
 References: <156316746861.23477.5815110570539190650.stgit@devnote2>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -13,328 +13,136 @@ To: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Fran
 Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a devicetree binding document for ftrace node.
+Add per-event settings, which includes filter and actions.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
   Changes in v2:
-    - Add cpumask, ftrace-filters, ftrace-notraces, fgraph-filters,
-      fgraph-notraces, fgraph-max-depth and instance node.
-    - Remove compatible and move file to bindings/chosen/linux,ftrace.yaml
+   - Make event node available only if CONFIG_EVENT_TRACING=y
 ---
- .../devicetree/bindings/chosen/linux,ftrace.yaml   |  306 ++++++++++++++++++++
- 1 file changed, 306 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/chosen/linux,ftrace.yaml
+ kernel/trace/trace_events_trigger.c |    2 -
+ kernel/trace/trace_of.c             |   82 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 83 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/chosen/linux,ftrace.yaml b/Documentation/devicetree/bindings/chosen/linux,ftrace.yaml
-new file mode 100644
-index 000000000000..a5c60ac2f66d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/chosen/linux,ftrace.yaml
-@@ -0,0 +1,306 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Linaro Ltd.
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/tracing/ftrace.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index 2a2912cb4533..74a19c18219f 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -208,7 +208,7 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
+ 	return ret;
+ }
+ 
+-static int trigger_process_regex(struct trace_event_file *file, char *buff)
++int trigger_process_regex(struct trace_event_file *file, char *buff)
+ {
+ 	char *command, *next = buff;
+ 	struct event_command *p;
+diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
+index 5e108a1d5bb3..3719f711144a 100644
+--- a/kernel/trace/trace_of.c
++++ b/kernel/trace/trace_of.c
+@@ -81,6 +81,7 @@ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
+ 
+ #ifdef CONFIG_EVENT_TRACING
+ extern int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
++extern int trigger_process_regex(struct trace_event_file *file, char *buff);
+ 
+ static void __init
+ trace_of_enable_events(struct trace_array *tr, struct device_node *node)
+@@ -99,8 +100,88 @@ trace_of_enable_events(struct trace_array *tr, struct device_node *node)
+ 			pr_err("Failed to enable event: %s\n", p);
+ 	}
+ }
 +
-+title: Ftrace setting devicetree binding
++static void __init
++trace_of_init_one_event(struct trace_array *tr, struct device_node *node)
++{
++	struct trace_event_file *file;
++	struct property *prop;
++	char buf[MAX_BUF_LEN];
++	char *bufp;
++	const char *p;
++	int err;
 +
-+maintainers:
-+  - Masami Hiramatsu <mhiramat@kernel.org>
++	if (!of_node_name_prefix(node, "event"))
++		return;
 +
-+description: |
-+  Boot-time ftrace tracing setting via devicetree. Users can use devicetree node
-+  for programming ftrace boot-time tracing. This node must be placed at
-+  /chosen/linux,ftrace.
++	err = of_property_read_string(node, "event", &p);
++	if (err) {
++		pr_err("Failed to find event on %s\n", of_node_full_name(node));
++		return;
++	}
 +
-+properties:
-+  dump-on-oops:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [0, 1, 2]
-+    description: |
-+      A neumerical flag to enable ftrace dump on Kernel Oops. 0 means no dump,
-+      1 means dump on the origin cpu of the oops, and means dump on all cpus.
++	err = strlcpy(buf, p, ARRAY_SIZE(buf));
++	if (err >= ARRAY_SIZE(buf)) {
++		pr_err("Event name is too long: %s\n", p);
++		return;
++	}
++	bufp = buf;
 +
-+  traceoff-on-warning:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: A flag to stop tracing on warning.
++	p = strsep(&bufp, ":");
++	if (!bufp) {
++		pr_err("%s has no group name\n", buf);
++		return;
++	}
 +
-+  tp-printk:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: A flag to send tracing output to printk buffer too.
++	mutex_lock(&event_mutex);
++	file = find_event_file(tr, buf, bufp);
++	if (!file) {
++		pr_err("Failed to find event: %s\n", buf);
++		return;
++	}
 +
-+  alloc-snapshot:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: |
-+      A flag to allocate snapshot buffer at boot. This will be required if you
-+      use "snapshot" action on some events.
++	err = of_property_read_string(node, "filter", &p);
++	if (!err) {
++		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
++			pr_err("filter string is too long: %s\n", p);
++			return;
++		}
 +
-+  trace-clock:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/string
-+      - enum: [ global, local, counter, uptime, perf, mono, mono_raw, boot, ppc-tb, x86-tsc ]
-+    description: Specify which clock method is used for trace-clock.
++		if (apply_event_filter(file, buf) < 0) {
++			pr_err("Failed to apply filter: %s\n", buf);
++			return;
++		}
++	}
 +
-+  buffer-size-kb:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 1
-+    description: |
-+      The size of per-cpu tracing buffer in KByte. Note that the size must be
-+      larger than page size, and total size of buffers depends on the number
-+      of CPUs.
++	of_property_for_each_string(node, "actions", prop, p) {
++		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
++			pr_err("action string is too long: %s\n", p);
++			continue;
++		}
 +
-+  events:
-+    minItems: 1
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description: |
-+      A string array of enabling events (including wildcard patterns).
-+      See Documentation/trace/events.rst for detail.
++		if (trigger_process_regex(file, buf) < 0)
++			pr_err("Failed to apply an action: %s\n", buf);
++	}
 +
-+  options:
-+    minItems: 1
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description: |
-+      A string array of trace options for ftrace to control what gets printed
-+      in the trace output or manipulate the tracers.
-+      See Documentation/trace/ftrace.rst#trace_options for detail.
++	if (of_property_read_bool(node, "enable")) {
++		if (trace_event_enable_disable(file, 1, 0) < 0)
++			pr_err("Failed to enable event node: %s\n",
++				of_node_full_name(node));
++	}
++	mutex_unlock(&event_mutex);
++}
 +
-+  tracer:
-+    default: nop
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: A string of the tracer to start up.
++static void __init
++trace_of_init_events(struct trace_array *tr, struct device_node *node)
++{
++	struct device_node *enode;
 +
-+  cpumask:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: |
-+      A hexadecimal number of the cpu-mask value which is given as a string.
-+      This is because the number of cores can be bigger than 64.
-+
-+  ftrace-filters:
-+    minItems: 1
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description: |
-+        A string array of the functions traced by the function tracer at boot
-+        up. The function can be given with wildcards. This list can be
-+        specified in each instance.
-+
-+  ftrace-notraces:
-+    minItems: 1
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description: |
-+        A string array of the functions NOT traced by the function tracer at
-+        boot up. The function can be given with wildcards. This list can be
-+        specified in each instance.
-+
-+  fgraph-filters:
-+    minItems: 1
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description: |
-+        A string array of the top level callers functions traced by the
-+        function graph tracer at boot up. The function can be given with
-+        wildcards. This list is not available in instance node.
-+
-+  fgraph-notraces:
-+    minItems: 1
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description: |
-+        A string array of the top level callers functions NOT traced by the
-+        function graph tracer at boot up. The function can be given with
-+        wildcards. This list is not available in instance node.
-+
-+  fgraph-max-depth:
-+    default: 0
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+        This is the max depth, the function graph tracer will trace into
-+        a function. 0 means no limit for the trace depth.
-+
-+patternProperties:
-+   "event[0-9a-fA-F]+$":
-+     type: object
-+
-+     description: |
-+       event* properties are child nodes for per-event settings. It is also
-+       able to define new kprobe events and synthetic events. Note that you
-+       can not define both "probes" and "fields" properties on same event.
-+
-+     properties:
-+       event:
-+         $ref: /schemas/types.yaml#/definitions/string
-+         description: |
-+           Event name string formatted as "GROUP:EVENT". For synthetic event,
-+           you must use "synthetic" for group name. For kprobe and synthetic
-+           event, you can ommit the group name.
-+
-+       probes:
-+         minItems: 1
-+         $ref: /schemas/types.yaml#/definitions/string-array
-+         description: |
-+           A string array of kprobe event definitions, including location
-+           (symbol+offset) and event arguments.
-+           See Documentation/trace/kprobetrace.rst for detail.
-+
-+       fields:
-+         minItems: 1
-+         $ref: /schemas/types.yaml#/definitions/string-array
-+         description: |
-+           A string of synthetic event's fields definition. Note that you
-+           don't need to repeat event name.
-+
-+       filter:
-+         $ref: /schemas/types.yaml#/definitions/string
-+         description: A string of event filter rule
-+
-+       actions:
-+         minItems: 1
-+         $ref: /schemas/types.yaml#/definitions/string-array
-+         description: A string array of event trigger actions.
-+
-+       enable:
-+         type: boolean
-+         description: |
-+           A flag to enable event. Note that the event is not enabled by
-+           default. (But actions will set the event soft-disabled)
-+
-+     oneOf:
-+       - required:
-+         - event
-+       - required:
-+         - event
-+         - probes
-+       - required:
-+         - event
-+         - fields
-+
-+   "instance[0-9a-fA-F]+$":
-+     type: object
-+
-+     description: |
-+       instance* properties are child nodes for per-instance settings.
-+       It is also able to have event nodes as linux,ftrace node does.
-+
-+     properties:
-+       instance:
-+         $ref: /schemas/types.yaml#/definitions/string
-+         description: The name of new instance.
-+
-+       trace-clock:
-+         allOf:
-+           - $ref: /schemas/types.yaml#/definitions/string
-+           - enum: [ global, local, counter, uptime, perf, mono, mono_raw, boot, ppc-tb, x86-tsc ]
-+         description: Specify which clock method is used for trace-clock.
-+
-+       buffer-size-kb:
-+         allOf:
-+           - $ref: /schemas/types.yaml#/definitions/uint32
-+           - minimum: 1
-+         description: |
-+           The size of per-cpu tracing buffer in KByte. Note that the size must be
-+           larger than page size, and total size of buffers depends on the number
-+           of CPUs.
-+
-+       events:
-+         minItems: 1
-+         $ref: /schemas/types.yaml#/definitions/string-array
-+         description: |
-+           A string array of enabling events (including wildcard patterns).
-+           See Documentation/trace/events.rst for detail.
-+
-+       options:
-+         minItems: 1
-+         $ref: /schemas/types.yaml#/definitions/string-array
-+         description: |
-+           A string array of trace options for ftrace to control what gets printed
-+           in the trace output or manipulate the tracers.
-+           See Documentation/trace/ftrace.rst#trace_options for detail.
-+
-+       tracer:
-+         default: nop
-+         $ref: /schemas/types.yaml#/definitions/string
-+         description: A string of the tracer to start up.
-+
-+       cpumask:
-+         $ref: /schemas/types.yaml#/definitions/string
-+         description: |
-+           A hexadecimal number of the cpu-mask value which is given as a string.
-+           This is because the number of cores can be bigger than 64.
-+
-+       ftrace-filters:
-+         minItems: 1
-+         $ref: /schemas/types.yaml#/definitions/string-array
-+         description: |
-+             A string array of the functions traced by the function tracer at boot
-+             up. The function can be given with wildcards. This list can be
-+             specified in each instance.
-+
-+       ftrace-notraces:
-+         minItems: 1
-+         $ref: /schemas/types.yaml#/definitions/string-array
-+         description: |
-+             A string array of the functions NOT traced by the function tracer at
-+             boot up. The function can be given with wildcards. This list can be
-+             specified in each instance.
-+
-+       fgraph-filters:
-+         minItems: 1
-+         $ref: /schemas/types.yaml#/definitions/string-array
-+         description: |
-+             A string array of the top level callers functions traced by the
-+             function graph tracer at boot up. The function can be given with
-+             wildcards. This list is not available in instance node.
-+
-+       fgraph-notraces:
-+         minItems: 1
-+         $ref: /schemas/types.yaml#/definitions/string-array
-+         description: |
-+             A string array of the top level callers functions NOT traced by the
-+             function graph tracer at boot up. The function can be given with
-+             wildcards. This list is not available in instance node.
-+
-+       fgraph-max-depth:
-+         default: 0
-+         $ref: /schemas/types.yaml#/definitions/uint32
-+         description: |
-+             This is the max depth, the function graph tracer will trace into
-+             a function. 0 means no limit for the trace depth.
-+
-+     required:
-+      - instance
-+
-+examples:
-+  - |
-+    ftrace {
-+          events = "initcall:*";
-+          tp-printk;
-+          buffer-size-kb = <0x400>;
-+          event1 {
-+                event = "kprobes:vfs_read";
-+                probes = "vfs_read $arg1 $arg2";
-+                filter = "common_pid < 200";
-+          };
-+          event2 {
-+                event = "initcall_latency";
-+                fields = "unsigned long func", "u64 lat";
-+                actions = "hist:keys=func.sym,lat:vals=lat:sort=lat";
-+          };
-+          event3 {
-+                event = "initcall:initcall_start";
-+                actions = "hist:keys=func:ts0=common_timestamp.usecs";
-+          };
-+          event4 {
-+                event = "initcall:initcall_finish";
-+                actions = "hist:keys=func:lat=common_timestamp.usecs-$ts0:onmatch(initcall.initcall_start).initcall_latency(func,$lat)";
-+          };
-+          instance0 {
-+                buffer-size-kb = <0x100>;
-+                event5 {
-+                      event = "task:task_newtask";
-+                      filter = "pid < 128";
-+                      enable;
-+                };
-+          };
-+
-+    };
++	for_each_child_of_node(node, enode)
++		trace_of_init_one_event(tr, enode);
++}
+ #else
+ #define trace_of_enable_events(tr, node) do {} while (0)
++#define trace_of_init_events(tr, node) do {} while (0)
+ #endif
+ 
+ static void __init
+@@ -139,6 +220,7 @@ static int __init trace_of_init(void)
+ 		goto end;
+ 
+ 	trace_of_set_ftrace_options(tr, trace_node);
++	trace_of_init_events(tr, trace_node);
+ 	trace_of_enable_events(tr, trace_node);
+ 	trace_of_enable_tracer(tr, trace_node);
+ 
