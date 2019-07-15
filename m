@@ -1,54 +1,66 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v9 03/18] kunit: test: add string_stream a std::stream
- like string builder
-Date: Mon, 15 Jul 2019 15:43:20 -0700
-Message-ID: <CAFd5g47y4vDB2P=EsGN8305LGeQPCTveNs-Jd5-=6K-XKY==CA@mail.gmail.com>
-References: <20190712081744.87097-1-brendanhiggins@google.com>
- <20190712081744.87097-4-brendanhiggins@google.com> <20190715204356.4E3F92145D@mail.kernel.org>
- <CAFd5g47481sRaez=yEJN4_ghiXZbxayk1Y04tAZpuzPLsmnhKg@mail.gmail.com>
- <20190715220407.0030420665@mail.kernel.org> <CAFd5g44bE0F=wq_fOAnxFTtoOyx1dUshhDAkKWr5hX9ipJ4Sxw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] dt-bindings: pinctrl: aspeed: Fix AST2500 example errors
+Date: Mon, 15 Jul 2019 16:48:41 -0600
+Message-ID: <20190715224841.6771-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFd5g44bE0F=wq_fOAnxFTtoOyx1dUshhDAkKWr5hX9ipJ4Sxw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Andrew Jeffery <andrew@aj.id.au>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 3:11 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Mon, Jul 15, 2019 at 3:04 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Brendan Higgins (2019-07-15 14:11:50)
-> > > On Mon, Jul 15, 2019 at 1:43 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > >
-> > > > I also wonder if it would be better to just have a big slop buffer of a
-> > > > 4K page or something so that we almost never have to allocate anything
-> > > > with a string_stream and we can just rely on a reader consuming data
-> > > > while writers are writing. That might work out better, but I don't quite
-> > > > understand the use case for the string stream.
-> > >
-> > > That makes sense, but might that also waste memory since we will
-> > > almost never need that much memory?
-> >
-> > Why do we care? These are unit tests.
->
-> Agreed.
->
-> > Having allocations in here makes
-> > things more complicated, whereas it would be simpler to have a pointer
-> > and a spinlock operating on a chunk of memory that gets flushed out
-> > periodically.
->
-> I am not so sure. I have to have the logic to allocate memory in some
-> case no matter what (what if I need more memory that my preallocated
-> chuck?). I think it is simpler to always request an allocation than to
-> only sometimes request an allocation.
+The schema examples are now validated against the schema itself. The
+AST2500 pinctrl schema has a couple of errors:
 
-Another even simpler alternative might be to just allocate memory
-using kunit_kmalloc as we need it and just let the kunit_resource code
-handle cleaning it all up when the test case finishes.
+Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.example.dt.yaml: \
+example-0: $nodename:0: 'example-0' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.example.dt.yaml: \
+pinctrl: aspeed,external-nodes: [[1, 2]] is too short
 
-What do you think?
+Fixes: 0a617de16730 ("dt-bindings: pinctrl: aspeed: Convert AST2500 bindings to json-schema")
+Cc: Andrew Jeffery <andrew@aj.id.au>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Joel Stanley <joel@jms.id.au>
+Cc: linux-aspeed@lists.ozlabs.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml  | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+index a464cfa0cba3..3e6d85318577 100644
+--- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+@@ -76,9 +76,6 @@ required:
+ 
+ examples:
+   - |
+-    compatible = "simple-bus";
+-    ranges;
+-
+     apb {
+         compatible = "simple-bus";
+         #address-cells = <1>;
+@@ -91,7 +88,7 @@ examples:
+ 
+             pinctrl: pinctrl {
+                 compatible = "aspeed,g5-pinctrl";
+-                aspeed,external-nodes = <&gfx &lhc>;
++                aspeed,external-nodes = <&gfx>, <&lhc>;
+ 
+                 pinctrl_i2c3_default: i2c3_default {
+                     function = "I2C3";
+-- 
+2.20.1
