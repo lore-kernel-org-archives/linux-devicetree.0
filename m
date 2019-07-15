@@ -1,15 +1,15 @@
 From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: document the "power-supply"
- property
-Date: Mon, 15 Jul 2019 13:52:58 -0500
-Message-ID: <f0dcce32-2bc0-5106-9bd7-27df699bbf06@ti.com>
+Subject: Re: [PATCH v2 2/2] leds: Add control of the voltage/current regulator
+ to the LED core
+Date: Mon, 15 Jul 2019 13:59:27 -0500
+Message-ID: <9c17e9cc-8162-7b5d-2db9-d2bed20969c5@ti.com>
 References: <20190715155657.22976-1-jjhiblot@ti.com>
- <20190715155657.22976-2-jjhiblot@ti.com>
+ <20190715155657.22976-3-jjhiblot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190715155657.22976-2-jjhiblot@ti.com>
+In-Reply-To: <20190715155657.22976-3-jjhiblot@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jean-Jacques Hiblot <jjhiblot@ti.com>, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, daniel.thompson@linaro.org
@@ -19,42 +19,86 @@ List-Id: devicetree@vger.kernel.org
 JJ
 
 On 7/15/19 10:56 AM, Jean-Jacques Hiblot wrote:
-> Most of the LEDs are powered by a voltage/current regulator. Describing it
-> in the device-tree makes it possible for the LED core to enable/disable it
-> when needed.
+> A LED is usually powered by a voltage/current regulator. Let the LED core
+> know about it. This allows the LED core to turn on or off the power supply
+> as needed.
+
+This allows the LED core to turn on or off managed power supplies.
+
+
 >
 > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
 > ---
->   Documentation/devicetree/bindings/leds/common.txt | 6 ++++++
->   1 file changed, 6 insertions(+)
+>   drivers/leds/led-class.c | 15 ++++++++++++
+>   drivers/leds/led-core.c  | 50 +++++++++++++++++++++++++++++++++++++---
+>   drivers/leds/leds.h      |  1 +
+>   include/linux/leds.h     |  4 ++++
+>   4 files changed, 67 insertions(+), 3 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index 70876ac11367..539e124b1457 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -61,6 +61,11 @@ Optional properties for child nodes:
->   - panic-indicator : This property specifies that the LED should be used,
->   		    if at all possible, as a panic indicator.
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 4793e77808e2..cadd43c30d50 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -253,6 +253,7 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
+>   {
+>   	char name[LED_MAX_NAME_SIZE];
+>   	int ret;
+> +	struct regulator *regulator;
 >   
-> +- power-supply : A voltage/current regulator used to to power the LED. When a
-Is the phandle to a voltage/current regulator used to to power the LED
-> +		 LED is turned off, the LED core disable its regulator. The
-The regulator is only disabled if it is the only consumer and/or the 
-number of users = 0.
-> +		 same regulator can power many LED (or other) devices. It is
-> +		 turned off only when all of its users disabled it.
+>   	ret = led_classdev_next_name(led_cdev->name, name, sizeof(name));
+>   	if (ret < 0)
+> @@ -272,6 +273,20 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
+>   		dev_warn(parent, "Led %s renamed to %s due to name collision",
+>   				led_cdev->name, dev_name(led_cdev->dev));
+>   
+> +	regulator = devm_regulator_get_optional(led_cdev->dev, "power");
+Store the regulator in  led_cdev->regulator and drop the else case below.
+> +	if (IS_ERR(regulator)) {
+> +		if (PTR_ERR(regulator) != -ENODEV) {
+> +			dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
+> +				led_cdev->name);
+> +			device_unregister(led_cdev->dev);
+> +			mutex_unlock(&led_cdev->led_access);
+> +			return PTR_ERR(regulator);
+> +		}
+> +		led_cdev->regulator = NULL;
+> +	} else {
+> +		led_cdev->regulator = regulator;
+> +	}
 > +
->   - trigger-sources : List of devices which should be used as a source triggering
->   		    this LED activity. Some LEDs can be related to a specific
->   		    device and should somehow indicate its state. E.g. USB 2.0
-> @@ -106,6 +111,7 @@ gpio-leds {
->   		label = "Status";
->   		linux,default-trigger = "heartbeat";
->   		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
-> +		power-supply = <&led_regulator>;
->   	};
+>   	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
+>   		ret = led_add_brightness_hw_changed(led_cdev);
+>   		if (ret) {
+> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+> index 7107cd7e87cf..a12b880b0a2f 100644
+> --- a/drivers/leds/led-core.c
+> +++ b/drivers/leds/led-core.c
+> @@ -23,6 +23,33 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
+>   LIST_HEAD(leds_list);
+>   EXPORT_SYMBOL_GPL(leds_list);
 >   
->   	usb {
+> +static bool __led_need_regulator_update(struct led_classdev *led_cdev,
+> +					int brightness)
+> +{
+> +	bool new_state = (brightness != LED_OFF);
+> +
+> +	return led_cdev->regulator && led_cdev->regulator_state != new_state;
+> +}
+> +
+> +static int __led_handle_regulator(struct led_classdev *led_cdev,
+> +				int brightness)
+> +{
+> +	int rc;
 
+Should there be a check for the regulator pointer.
+
+If (!led_cdev->regulator)
+
+     return 0;
+
+
+Otherwise
 
 Reviewed-by: Dan Murphy <dmurphy@ti.com>
+
+<snip>
