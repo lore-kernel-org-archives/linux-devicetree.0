@@ -1,342 +1,391 @@
-From: Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: Re: [PATCH 2/3] iio: imu: st_lsm6dsx: add support for accel/gyro unit
- of lsm9sd1
-Date: Tue, 16 Jul 2019 08:10:26 +0200
-Message-ID: <27b18ff1-6970-e473-d118-fd7878eda7a6@puri.sm>
-References: <20190715131919.31938-1-martin.kepplinger@puri.sm>
- <20190715131919.31938-2-martin.kepplinger@puri.sm>
- <20190715214920.GB23126@localhost.localdomain>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+Date: Tue, 16 Jul 2019 09:20:46 +0300
+Message-ID: <20190716092046.7e23b6b2@dimatab>
+References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+        <1561687972-19319-12-git-send-email-skomatineni@nvidia.com>
+        <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
+        <a9b5c364-52b4-bee1-5881-47197f043950@nvidia.com>
+        <e9d4bc0e-fd5d-ae02-2d67-86c7f7c9620f@gmail.com>
+        <3938092a-bbc7-b304-641d-31677539598d@nvidia.com>
+        <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
+        <0ee055ad-d397-32e5-60ee-d62c14c6f77b@gmail.com>
+        <86fc07d5-ab2e-a52a-a570-b1dfff4c20fe@nvidia.com>
+        <20190716083701.225f0fd9@dimatab>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190715214920.GB23126@localhost.localdomain>
-Content-Language: en-US
+In-Reply-To: <20190716083701.225f0fd9@dimatab>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 15.07.19 23:49, Lorenzo Bianconi wrote:
->> The LSM9DS1's accelerometer / gyroscope unit and it's magnetometer (separately
->> supported in iio/magnetometer/st_magn*) are located on a separate i2c addresses
->> on the bus.
->>
->> For the datasheet, see https://www.st.com/resource/en/datasheet/lsm9ds1.pdf
->>
->> Treat it just like the LSM6* devices and, despite it's name, hook it up
->> to the st_lsm6dsx driver, using it's basic functionality.
->>
->> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
->> ---
->>
->> What do you think about an addition like this? How confusing is it to support
->> an LSM9 module by the lsm6 driver, despite it's name? It requires almost no
->> code, so why not think about it, right?
-> 
-> I am fine with (it was on my ToDo list, so thanks for working on this).
-> I have just posted the following series that will help you adding support for
-> LSM9DS1
-> https://patchwork.kernel.org/cover/11045061/
-> I think you just need to take care of gyro channels allocating iio devices (you
-> probably need to pass hw_id to st_lsm6dsx_alloc_iiodev())
+=D0=92 Tue, 16 Jul 2019 08:37:01 +0300
+Dmitry Osipenko <digetx@gmail.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 
-yes. I'll look over allocation once more.
+> =D0=92 Mon, 15 Jul 2019 21:37:09 -0700
+> Sowjanya Komatineni <skomatineni@nvidia.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+>=20
+> > On 7/15/19 8:50 PM, Dmitry Osipenko wrote: =20
+> > > 16.07.2019 6:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82: =
+  =20
+> > >> On 7/15/19 5:35 PM, Sowjanya Komatineni wrote:   =20
+> > >>> On 7/14/19 2:41 PM, Dmitry Osipenko wrote:   =20
+> > >>>> 13.07.2019 8:54, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:   =20
+> > >>>>> On 6/29/19 8:10 AM, Dmitry Osipenko wrote:   =20
+> > >>>>>> 28.06.2019 5:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:   =20
+> > >>>>>>> This patch adds system suspend and resume support for
+> > >>>>>>> Tegra210 clocks.
+> > >>>>>>>
+> > >>>>>>> All the CAR controller settings are lost on suspend when
+> > >>>>>>> core power goes off.
+> > >>>>>>>
+> > >>>>>>> This patch has implementation for saving and restoring all
+> > >>>>>>> the PLLs and clocks context during system suspend and resume
+> > >>>>>>> to have the clocks back to same state for normal operation.
+> > >>>>>>>
+> > >>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+> > >>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> > >>>>>>> ---
+> > >>>>>>>  =C2=A0=C2=A0 drivers/clk/tegra/clk-tegra210.c | 115
+> > >>>>>>> ++++++++++++++++++++++++++++++++++++++-
+> > >>>>>>>  =C2=A0=C2=A0 drivers/clk/tegra/clk.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 14 +++++
+> > >>>>>>>  =C2=A0=C2=A0 drivers/clk/tegra/clk.h=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> > >>>>>>>  =C2=A0=C2=A0 3 files changed, 127 insertions(+), 3 deletions(-)
+> > >>>>>>>
+> > >>>>>>> diff --git a/drivers/clk/tegra/clk-tegra210.c
+> > >>>>>>> b/drivers/clk/tegra/clk-tegra210.c
+> > >>>>>>> index 1c08c53482a5..1b839544e086 100644
+> > >>>>>>> --- a/drivers/clk/tegra/clk-tegra210.c
+> > >>>>>>> +++ b/drivers/clk/tegra/clk-tegra210.c
+> > >>>>>>> @@ -9,10 +9,12 @@
+> > >>>>>>>  =C2=A0=C2=A0 #include <linux/clkdev.h>
+> > >>>>>>>  =C2=A0=C2=A0 #include <linux/of.h>
+> > >>>>>>>  =C2=A0=C2=A0 #include <linux/of_address.h>
+> > >>>>>>> +#include <linux/of_platform.h>
+> > >>>>>>>  =C2=A0=C2=A0 #include <linux/delay.h>
+> > >>>>>>>  =C2=A0=C2=A0 #include <linux/export.h>
+> > >>>>>>>  =C2=A0=C2=A0 #include <linux/mutex.h>
+> > >>>>>>>  =C2=A0=C2=A0 #include <linux/clk/tegra.h>
+> > >>>>>>> +#include <linux/syscore_ops.h>
+> > >>>>>>>  =C2=A0=C2=A0 #include <dt-bindings/clock/tegra210-car.h>
+> > >>>>>>>  =C2=A0=C2=A0 #include <dt-bindings/reset/tegra210-car.h>
+> > >>>>>>>  =C2=A0=C2=A0 #include <linux/iopoll.h>
+> > >>>>>>> @@ -20,6 +22,7 @@
+> > >>>>>>>  =C2=A0=C2=A0 #include <soc/tegra/pmc.h>
+> > >>>>>>>  =C2=A0=C2=A0 =C2=A0 #include "clk.h"
+> > >>>>>>> +#include "clk-dfll.h"
+> > >>>>>>>  =C2=A0=C2=A0 #include "clk-id.h"
+> > >>>>>>>  =C2=A0=C2=A0 =C2=A0 /*
+> > >>>>>>> @@ -225,6 +228,7 @@
+> > >>>>>>>  =C2=A0=C2=A0 =C2=A0 #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0=
+x2a8
+> > >>>>>>>  =C2=A0=C2=A0 #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+> > >>>>>>> +#define CPU_SOFTRST_CTRL 0x380
+> > >>>>>>>  =C2=A0=C2=A0 =C2=A0 #define LVL2_CLK_GATE_OVRA 0xf8
+> > >>>>>>>  =C2=A0=C2=A0 #define LVL2_CLK_GATE_OVRC 0x3a0
+> > >>>>>>> @@ -2820,6 +2824,7 @@ static int tegra210_enable_pllu(void)
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_clk_pll_freq=
+_table *fentry;
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_clk_pll pllu;
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 reg;
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 int ret;
+> > >>>>>>>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (fentry =3D pl=
+l_u_freq_table;
+> > >>>>>>> fentry->input_rate; fentry++) {
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
+f (fentry->input_rate =3D=3D pll_ref_freq)
+> > >>>>>>> @@ -2847,10 +2852,10 @@ static int
+> > >>>>>>> tegra210_enable_pllu(void) fence_udelay(1, clk_base);
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg |=3D PLL_ENABLE;
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel(reg, clk_base + PL=
+LU_BASE);
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 fence_udelay(1, clk_base);
+> > >>>>>>>  =C2=A0=C2=A0 -=C2=A0=C2=A0=C2=A0 readl_relaxed_poll_timeout_at=
+omic(clk_base +
+> > >>>>>>> PLLU_BASE, reg,
+> > >>>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg & PL=
+L_BASE_LOCK, 2, 1000);
+> > >>>>>>> -=C2=A0=C2=A0=C2=A0 if (!(reg & PLL_BASE_LOCK)) {
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 ret =3D tegra210_wait_for_mask(&pllu, PLLU_=
+BASE,
+> > >>>>>>> PLL_BASE_LOCK);
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 if (ret) {
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 p=
+r_err("Timed out waiting for PLL_U to lock\n");
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
+eturn -ETIMEDOUT;
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> > >>>>>>> @@ -3283,6 +3288,103 @@ static void
+> > >>>>>>> tegra210_disable_cpu_clock(u32 cpu)
+> > >>>>>>>  =C2=A0=C2=A0 }
+> > >>>>>>>  =C2=A0=C2=A0 =C2=A0 #ifdef CONFIG_PM_SLEEP
+> > >>>>>>> +static u32 cpu_softrst_ctx[3];
+> > >>>>>>> +static struct platform_device *dfll_pdev;
+> > >>>>>>> +#define car_readl(_base, _off) readl_relaxed(clk_base +
+> > >>>>>>> (_base) + ((_off) * 4))
+> > >>>>>>> +#define car_writel(_val, _base, _off) \
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_relaxed(_val=
+, clk_base + (_base) + ((_off) *
+> > >>>>>>> 4)) +
+> > >>>>>>> +static int tegra210_clk_suspend(void)
+> > >>>>>>> +{
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int i;
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 struct device_node *node;
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_cclkg_burst_policy_save_context();
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 if (!dfll_pdev) {
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 node =3D of_find_co=
+mpatible_node(NULL, NULL,
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 "nvidia,tegra210-dfll");
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (node)
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 dfll_pdev =3D of_find_device_by_node(node);
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 of_node_put(node);
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!dfll_pdev)
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 pr_err("dfll node not found. no suspend for
+> > >>>>>>> dfll\n");
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 }
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 if (dfll_pdev)
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_dfll_suspend(=
+dfll_pdev);
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 /* Enable PLLP_OUT_CPU after dfll suspend */
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_clk_set_pllp_out_cpu(true);
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_sclk_cclklp_burst_policy_save_context=
+();
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 clk_save_context();
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARRAY_SIZE(cpu_softrst_ct=
+x); i++)
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cpu_softrst_ctx[i] =
+=3D car_readl(CPU_SOFTRST_CTRL,
+> > >>>>>>> i); +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+> > >>>>>>> +}
+> > >>>>>>> +
+> > >>>>>>> +static void tegra210_clk_resume(void)
+> > >>>>>>> +{
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int i;
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *parent;
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk *clk;
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 /*
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * clk_restore_context restores clocks=
+ as per the clock
+> > >>>>>>> tree.
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 *
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * dfllCPU_out is first in the clock t=
+ree to get
+> > >>>>>>> restored and it
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * involves programming DFLL controlle=
+r along with
+> > >>>>>>> restoring CPUG
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * clock burst policy.
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 *
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * DFLL programming needs dfll_ref and=
+ dfll_soc
+> > >>>>>>> peripheral clocks
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * to be restores which are part ofthe=
+ peripheral
+> > >>>>>>> clocks.   =20
+> > >>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^ white-space
+> > >>>>
+> > >>>> Please use spellchecker to avoid typos.
+> > >>>>   =20
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * So, peripheral clocks restore shoul=
+d happen prior to
+> > >>>>>>> dfll clock
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * restore.
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_clk_osc_resume(clk_base);
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARRAY_SIZE(cpu_softrst_ct=
+x); i++)
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 car_writel(cpu_soft=
+rst_ctx[i], CPU_SOFTRST_CTRL,
+> > >>>>>>> i); +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 /* restore all plls and peripheral clocks */
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 tegra210_init_pllu();
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 clk_restore_context();
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 fence_udelay(5, clk_base);
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 /* resume SCLK and CPULP clocks */
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_sclk_cpulp_burst_policy_restore_conte=
+xt();
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 /*
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * restore CPUG clocks:
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * - enable DFLL in open loop mode
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * - switch CPUG to DFLL clock source
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * - close DFLL loop
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * - sync PLLX state
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 if (dfll_pdev)
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_dfll_resume(d=
+fll_pdev, false);
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_cclkg_burst_policy_restore_context();
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 fence_udelay(2, clk_base);
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 if (dfll_pdev)
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_dfll_resume(d=
+fll_pdev, true);
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 parent =3D
+> > >>>>>>> clk_hw_get_parent(__clk_get_hw(clks[TEGRA210_CLK_CCLK_G]));
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 clk =3D clks[TEGRA210_CLK_PLL_X];
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 if (parent !=3D __clk_get_hw(clk))
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_clk_sync_stat=
+e_pll(__clk_get_hw(clk));
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 /* Disable PLL_OUT_CPU after DFLL resume */
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_clk_set_pllp_out_cpu(false);
+> > >>>>>>> +}
+> > >>>>>>> +
+> > >>>>>>>  =C2=A0=C2=A0 static void tegra210_cpu_clock_suspend(void)
+> > >>>>>>>  =C2=A0=C2=A0 {
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* switch coresite to clk=
+_m, save off original
+> > >>>>>>> source */ @@ -3298,6 +3400,11 @@ static void
+> > >>>>>>> tegra210_cpu_clock_resume(void) }
+> > >>>>>>>  =C2=A0=C2=A0 #endif
+> > >>>>>>>  =C2=A0=C2=A0 +static struct syscore_ops tegra_clk_syscore_ops =
+=3D {
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 .suspend =3D tegra210_clk_suspend,
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 .resume =3D tegra210_clk_resume,
+> > >>>>>>> +};
+> > >>>>>>> +
+> > >>>>>>>  =C2=A0=C2=A0 static struct tegra_cpu_car_ops tegra210_cpu_car_=
+ops =3D {
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .wait_for_reset=C2=A0=C2=
+=A0=C2=A0 =3D tegra210_wait_cpu_in_reset,
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .disable_clock=C2=A0=C2=
+=A0=C2=A0 =3D tegra210_disable_cpu_clock,
+> > >>>>>>> @@ -3583,5 +3690,7 @@ static void __init
+> > >>>>>>> tegra210_clock_init(struct device_node *np)
+> > >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra210_mbist_clk_init();
+> > >>>>>>>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_cpu_car_ops =
+=3D &tegra210_cpu_car_ops;
+> > >>>>>>> +
+> > >>>>>>> +=C2=A0=C2=A0=C2=A0 register_syscore_ops(&tegra_clk_syscore_ops=
+);
+> > >>>>>>>  =C2=A0=C2=A0 }   =20
+> > >>>>>> Is it really worthwhile to use syscore_ops for suspend/resume
+> > >>>>>> given that drivers for
+> > >>>>>> won't resume before the CLK driver anyway? Are there any
+> > >>>>>> other options for CLK
+> > >>>>>> suspend/resume?
+> > >>>>>>
+> > >>>>>> I'm also not sure whether PM runtime API could be used at all
+> > >>>>>> in the context of
+> > >>>>>> syscore_ops ..
+> > >>>>>>
+> > >>>>>> Secondly, what about to use generic clk_save_context() /
+> > >>>>>> clk_restore_context()
+> > >>>>>> helpers for the suspend-resume? It looks to me that some
+> > >>>>>> other essential (and proper)
+> > >>>>>> platform driver (soc/tegra/? PMC?) should suspend-resume the
+> > >>>>>> clocks using the generic
+> > >>>>>> CLK Framework API.   =20
+> > >>>>> Clock resume should happen very early to restore peripheral
+> > >>>>> and cpu clocks very early than peripheral drivers resume
+> > >>>>> happens.   =20
+> > >>>> If all peripheral drivers properly requested all of the
+> > >>>> necessary clocks and CLK driver was a platform driver, then I
+> > >>>> guess the probe should have been naturally ordered. But that's
+> > >>>> not very achievable with the currently available infrastructure
+> > >>>> in the kernel, so I'm not arguing that the clocks should be
+> > >>>> explicitly resumed before the users.  =20
+> > >>>>> this patch series uses clk_save_context and
+> > >>>>> clk_restore_context for corresponding divider, pll, pllout..
+> > >>>>> save and restore context.   =20
+> > >>>> Now I see that indeed this API is utilized in this patch, thank
+> > >>>> you for the clarification.
+> > >>>>   =20
+> > >>>>> But as there is dependency on dfll resume and cpu and pllx
+> > >>>>> clocks restore, couldnt use clk_save_context and
+> > >>>>> clk_restore_context for dfll.
+> > >>>>>
+> > >>>>> So implemented recommended dfll resume sequence in main
+> > >>>>> Tegra210 clock driver along with invoking
+> > >>>>> clk_save_context/clk_restore_context where all other clocks
+> > >>>>> save/restore happens as per clock tree traversal.   =20
+> > >>>> Could you please clarify what part of peripherals clocks is
+> > >>>> required for DFLL's restore? Couldn't DFLL driver be changed to
+> > >>>> avoid that quirkness and thus to make DFLL driver
+> > >>>> suspend/resume the clock?   =20
+> > >>> DFLL source ref_clk and soc_clk need to be restored prior to
+> > >>> dfll.
+> > >>>
+> > >>> I see dfllCPU_out parent to CCLK_G first in the clock tree and
+> > >>> dfll_ref and dfll_soc peripheral clocks are not resumed by the
+> > >>> time dfll resume happens first.
+> > >>>
+> > >>> ref_clk and soc_clk source is from pll_p and clock tree has
+> > >>> these registered under pll_p which happens later.
+> > >>>
+> > >>> tegra210_clock_init registers in order plls, peripheral clocks,
+> > >>> super_clk init for cclk_g during clock driver probe and dfll
+> > >>> probe and register happens later.
+> > >>>   =20
+> > >> One more thing, CLDVFS peripheral clock enable is also needed to
+> > >> be enabled to program DFLL Controller and all peripheral clock
+> > >> context is restored only after their PLL sources are restored.
+> > >>
+> > >> DFLL restore involves dfll source clock resume along with CLDVFS
+> > >> periheral clock enable and reset
+> > >>   =20
+> > > I don't quite see why you can't simply add suspend/resume
+> > > callbacks to the CPUFreq driver to:
+> > >
+> > > On suspend:
+> > > 1. Switch CPU to PLLP (or whatever "safe" parent)
+> > > 2. Disable/teardown DFLL
+> > >
+> > > On resume:
+> > > 1. Enable/restore DFLL
+> > > 2. Switch CPU back to DFLL   =20
+> >=20
+> > dfll runtime suspend/resume are already part of dfll_pm_ops. Don't
+> > we want to use it for suspend/resume as well? =20
+>=20
+> Looks like no. Seems runtime PM of that driver is intended solely for
+> the DFLL's clk management.
+>=20
+> > currently no APIs are shared b/w clk/tegra driver and CPUFreq driver
+> > to invoke dfll suspend/resume in CPUFreq driver
+> >  =20
+>=20
+> Just add it. Also, please note that CPUFreq driver is optional and
+> thus you may need to switch CPU to a safe parent on clk-core suspend
+> as well in order to resume properly if CPU was running off unsafe
+> parent during boot and CPUFreq driver is disabled in kernel build (or
+> failed to load).
 
-> 
->>
->> Oh, I'm not 100% convinced by my new "if" in probe(), but even that is
->> not too confusing I guess.
->>
->> thanks,
->>
->>                            martin
->>
->> p.s.: todos:
->> * hook up the fifo / buffer / trigger functionality,
->> * (off-topic a bit) move the (currently strange) gyro-only support
->>   for lsm9ds0 to this driver as well.
-> 
-> Regarding FIFO I guess it is enough to set decimator factor to 1 for both accel
-> and gyro.
-> 
-> Regards,
-> Lorenzo
-> 
->>
->>
->>
->>  drivers/iio/imu/st_lsm6dsx/Kconfig           |   3 +-
->>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |   4 +
->>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 105 ++++++++++++++++++-
->>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c  |   5 +
->>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c  |   5 +
->>  5 files changed, 117 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
->> index 002a423eae52..0b5a568e4c16 100644
->> --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
->> +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
->> @@ -10,7 +10,8 @@ config IIO_ST_LSM6DSX
->>  	help
->>  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
->>  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
->> -	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr
->> +	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr and the
->> +	  accelerometer/gyroscope of lsm9ds1.
->>  
->>  	  To compile this driver as a module, choose M here: the module
->>  	  will be called st_lsm6dsx.
->> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
->> index f072ac14f213..8af9641260fa 100644
->> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
->> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
->> @@ -22,6 +22,7 @@
->>  #define ST_ASM330LHH_DEV_NAME	"asm330lhh"
->>  #define ST_LSM6DSOX_DEV_NAME	"lsm6dsox"
->>  #define ST_LSM6DSR_DEV_NAME	"lsm6dsr"
->> +#define ST_LSM9DS1_DEV_NAME	"lsm9ds1"
->>  
->>  enum st_lsm6dsx_hw_id {
->>  	ST_LSM6DS3_ID,
->> @@ -33,6 +34,7 @@ enum st_lsm6dsx_hw_id {
->>  	ST_ASM330LHH_ID,
->>  	ST_LSM6DSOX_ID,
->>  	ST_LSM6DSR_ID,
->> +	ST_LSM9DS1_ID,
->>  	ST_LSM6DSX_MAX_ID,
->>  };
->>  
->> @@ -230,6 +232,8 @@ enum st_lsm6dsx_sensor_id {
->>  	ST_LSM6DSX_ID_EXT0,
->>  	ST_LSM6DSX_ID_EXT1,
->>  	ST_LSM6DSX_ID_EXT2,
->> +	ST_LSM9DSX_ID_GYRO,
->> +	ST_LSM9DSX_ID_ACC,
->>  	ST_LSM6DSX_ID_MAX,
->>  };
->>  
->> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
->> index 7a4fe70a8f20..6acfe63073de 100644
->> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
->> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
->> @@ -10,6 +10,8 @@
->>   * +-125/+-245/+-500/+-1000/+-2000 dps
->>   * LSM6DSx series has an integrated First-In-First-Out (FIFO) buffer
->>   * allowing dynamic batching of sensor data.
->> + * LSM9DSx series is similar but includes an additional magnetometer, handled
->> + * by a different driver.
->>   *
->>   * Supported sensors:
->>   * - LSM6DS3:
->> @@ -30,6 +32,13 @@
->>   *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
->>   *   - FIFO size: 3KB
->>   *
->> + * - LSM9DS1:
->> + *   - Accelerometer supported ODR [Hz]: 10, 50, 119, 238, 476, 952
->> + *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
->> + *   - Gyroscope supported ODR [Hz]: 15, 60, 119, 238, 476, 952
->> + *   - Gyroscope supported full-scale [dps]: +-245/+-500/+-2000
->> + *   - FIFO size: 32
->> + *
->>   * Copyright 2016 STMicroelectronics Inc.
->>   *
->>   * Lorenzo Bianconi <lorenzo.bianconi@st.com>
->> @@ -64,6 +73,10 @@
->>  #define ST_LSM6DSX_REG_GYRO_OUT_Y_L_ADDR	0x24
->>  #define ST_LSM6DSX_REG_GYRO_OUT_Z_L_ADDR	0x26
->>  
->> +#define ST_LSM9DSX_REG_GYRO_OUT_X_L_ADDR	0x18
->> +#define ST_LSM9DSX_REG_GYRO_OUT_Y_L_ADDR	0x1a
->> +#define ST_LSM9DSX_REG_GYRO_OUT_Z_L_ADDR	0x1c
->> +
->>  static const struct st_lsm6dsx_odr_table_entry st_lsm6dsx_odr_table[] = {
->>  	[ST_LSM6DSX_ID_ACC] = {
->>  		.reg = {
->> @@ -88,6 +101,30 @@ static const struct st_lsm6dsx_odr_table_entry st_lsm6dsx_odr_table[] = {
->>  		.odr_avl[3] = { 104, 0x04 },
->>  		.odr_avl[4] = { 208, 0x05 },
->>  		.odr_avl[5] = { 416, 0x06 },
->> +	},
->> +	[ST_LSM9DSX_ID_ACC] = {
->> +		.reg = {
->> +			.addr = 0x20,
->> +			.mask = GENMASK(7, 5),
->> +		},
->> +		.odr_avl[0] = {  10, 0x01 },
->> +		.odr_avl[1] = {  50, 0x02 },
->> +		.odr_avl[2] = { 119, 0x03 },
->> +		.odr_avl[3] = { 238, 0x04 },
->> +		.odr_avl[4] = { 476, 0x05 },
->> +		.odr_avl[5] = { 952, 0x06 },
->> +	},
->> +	[ST_LSM9DSX_ID_GYRO] = {
->> +		.reg = {
->> +			.addr = 0x10,
->> +			.mask = GENMASK(7, 5),
->> +		},
->> +		.odr_avl[0] = {  15, 0x01 },
->> +		.odr_avl[1] = {  60, 0x02 },
->> +		.odr_avl[2] = { 119, 0x03 },
->> +		.odr_avl[3] = { 238, 0x04 },
->> +		.odr_avl[4] = { 476, 0x05 },
->> +		.odr_avl[5] = { 952, 0x06 },
->>  	}
->>  };
->>  
->> @@ -111,10 +148,43 @@ static const struct st_lsm6dsx_fs_table_entry st_lsm6dsx_fs_table[] = {
->>  		.fs_avl[1] = { IIO_DEGREE_TO_RAD(17500), 0x1 },
->>  		.fs_avl[2] = { IIO_DEGREE_TO_RAD(35000), 0x2 },
->>  		.fs_avl[3] = { IIO_DEGREE_TO_RAD(70000), 0x3 },
->> +	},
->> +	[ST_LSM9DSX_ID_ACC] = {
->> +		.reg = {
->> +			.addr = 0x20,
->> +			.mask = GENMASK(4, 3),
->> +		},
->> +		.fs_avl[0] = {  599, 0x0 },
->> +		.fs_avl[1] = { 1197, 0x2 },
->> +		.fs_avl[2] = { 2394, 0x3 },
->> +		.fs_avl[3] = { 4788, 0x1 },
->> +	},
->> +	[ST_LSM9DSX_ID_GYRO] = {
->> +		.reg = {
->> +			.addr = 0x10,
->> +			.mask = GENMASK(4, 3),
->> +		},
->> +		.fs_avl[0] = { IIO_DEGREE_TO_RAD(245), 0x0 },
->> +		.fs_avl[1] = { IIO_DEGREE_TO_RAD(500), 0x1 },
->> +		.fs_avl[2] = { IIO_DEGREE_TO_RAD(0), 0x2 },
->> +		.fs_avl[3] = { IIO_DEGREE_TO_RAD(2000), 0x3 },
->>  	}
->>  };
->>  
->>  static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
->> +	{
->> +		.wai = 0x68,
->> +		.reg_int1_addr = 0x0c,
->> +		.reg_int2_addr = 0x0d,
->> +		.reg_reset_addr = 0x22,
->> +		.max_fifo_size = 32,
->> +		.id = {
->> +			{
->> +				.hw_id = ST_LSM9DS1_ID,
->> +				.name = ST_LSM9DS1_DEV_NAME,
->> +			},
->> +		},
->> +	},
->>  	{
->>  		.wai = 0x69,
->>  		.reg_int1_addr = 0x0d,
->> @@ -492,6 +562,16 @@ static const struct iio_chan_spec st_lsm6dsx_gyro_channels[] = {
->>  	IIO_CHAN_SOFT_TIMESTAMP(3),
->>  };
->>  
->> +static const struct iio_chan_spec st_lsm9dsx_gyro_channels[] = {
->> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, ST_LSM9DSX_REG_GYRO_OUT_X_L_ADDR,
->> +			   IIO_MOD_X, 0),
->> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, ST_LSM9DSX_REG_GYRO_OUT_Y_L_ADDR,
->> +			   IIO_MOD_Y, 1),
->> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, ST_LSM9DSX_REG_GYRO_OUT_Z_L_ADDR,
->> +			   IIO_MOD_Z, 2),
->> +	IIO_CHAN_SOFT_TIMESTAMP(3),
->> +};
->> +
->>  int st_lsm6dsx_set_page(struct st_lsm6dsx_hw *hw, bool enable)
->>  {
->>  	const struct st_lsm6dsx_shub_settings *hub_settings;
->> @@ -1056,6 +1136,7 @@ static struct iio_dev *st_lsm6dsx_alloc_iiodev(struct st_lsm6dsx_hw *hw,
->>  
->>  	switch (id) {
->>  	case ST_LSM6DSX_ID_ACC:
->> +	case ST_LSM9DSX_ID_ACC:
->>  		iio_dev->channels = st_lsm6dsx_acc_channels;
->>  		iio_dev->num_channels = ARRAY_SIZE(st_lsm6dsx_acc_channels);
->>  		iio_dev->info = &st_lsm6dsx_acc_info;
->> @@ -1068,6 +1149,14 @@ static struct iio_dev *st_lsm6dsx_alloc_iiodev(struct st_lsm6dsx_hw *hw,
->>  		iio_dev->num_channels = ARRAY_SIZE(st_lsm6dsx_gyro_channels);
->>  		iio_dev->info = &st_lsm6dsx_gyro_info;
->>  
->> +		scnprintf(sensor->name, sizeof(sensor->name), "%s_gyro",
->> +			  name);
->> +		break;
->> +	case ST_LSM9DSX_ID_GYRO:
->> +		iio_dev->channels = st_lsm9dsx_gyro_channels;
->> +		iio_dev->num_channels = ARRAY_SIZE(st_lsm9dsx_gyro_channels);
->> +		iio_dev->info = &st_lsm6dsx_gyro_info;
->> +
->>  		scnprintf(sensor->name, sizeof(sensor->name), "%s_gyro",
->>  			  name);
->>  		break;
->> @@ -1109,10 +1198,18 @@ int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id,
->>  	if (err < 0)
->>  		return err;
->>  
->> -	for (i = 0; i < ST_LSM6DSX_ID_EXT0; i++) {
->> -		hw->iio_devs[i] = st_lsm6dsx_alloc_iiodev(hw, i, name);
->> -		if (!hw->iio_devs[i])
->> -			return -ENOMEM;
->> +	if (hw_id == ST_LSM9DS1_ID) {
->> +		for (i = ST_LSM9DSX_ID_GYRO; i <= ST_LSM9DSX_ID_ACC; i++) {
->> +			hw->iio_devs[i] = st_lsm6dsx_alloc_iiodev(hw, i, name);
->> +			if (!hw->iio_devs[i])
->> +				return -ENOMEM;
->> +		}
->> +	} else {
->> +		for (i = 0; i < ST_LSM6DSX_ID_EXT0; i++) {
->> +			hw->iio_devs[i] = st_lsm6dsx_alloc_iiodev(hw, i, name);
->> +			if (!hw->iio_devs[i])
->> +				return -ENOMEM;
->> +		}
->>  	}
->>  
->>  	err = st_lsm6dsx_init_device(hw);
->> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
->> index b3211e0ac07b..a684e7db1299 100644
->> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
->> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
->> @@ -75,6 +75,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
->>  		.compatible = "st,lsm6dsr",
->>  		.data = (void *)ST_LSM6DSR_ID,
->>  	},
->> +	{
->> +		.compatible = "st,lsm9ds1",
->> +		.data = (void *)ST_LSM9DS1_ID,
->> +	},
->>  	{},
->>  };
->>  MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
->> @@ -89,6 +93,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
->>  	{ ST_ASM330LHH_DEV_NAME, ST_ASM330LHH_ID },
->>  	{ ST_LSM6DSOX_DEV_NAME, ST_LSM6DSOX_ID },
->>  	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
->> +	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
->>  	{},
->>  };
->>  MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
->> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
->> index c9d3c4711018..709769177e91 100644
->> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
->> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
->> @@ -75,6 +75,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
->>  		.compatible = "st,lsm6dsr",
->>  		.data = (void *)ST_LSM6DSR_ID,
->>  	},
->> +	{
->> +		.compatible = "st,lsm9ds1",
->> +		.data = (void *)ST_LSM9DS1_ID,
->> +	},
->>  	{},
->>  };
->>  MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
->> @@ -89,6 +93,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
->>  	{ ST_ASM330LHH_DEV_NAME, ST_ASM330LHH_ID },
->>  	{ ST_LSM6DSOX_DEV_NAME, ST_LSM6DSOX_ID },
->>  	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
->> +	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
->>  	{},
->>  };
->>  MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
->> -- 
->> 2.20.1
->>
+Although, if PLLs are restored before CCLK, then it should be fine
+as-is.
+
+> The other thing that also need attention is that T124 CPUFreq driver
+> implicitly relies on DFLL driver to be probed first, which is icky.
+>=20
