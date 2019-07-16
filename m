@@ -1,48 +1,90 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 2/4] of/platform: Add functional dependency link from
- DT bindings
-Date: Tue, 16 Jul 2019 16:56:55 -0600
-Message-ID: <CAL_JsqLySLMLanBJvyWqFGhVzXrEaUP-3t9MDmpnAXhQA_7y=g@mail.gmail.com>
-References: <20190702004811.136450-1-saravanak@google.com> <20190702004811.136450-3-saravanak@google.com>
- <CAL_JsqLdvDpKB=iV6x3eTr2F4zY0bxU-Wjb+JeMjj5rdnRc-OQ@mail.gmail.com>
- <CAGETcx_i9353aRFbJXNS78EvqwmU-2-xSBJ+ySZX1gjjHpz_cg@mail.gmail.com>
- <9e75b3dd-380b-c868-728f-46379e53bc11@gmail.com> <07812739-0e6b-6598-ac58-8e0ea74a3331@gmail.com>
- <CAGETcx8YCCGxgXnByenVUb+q8pHPPTjwAjK3L_+9mwoCe=9SbA@mail.gmail.com> <3e340ff1-e842-2521-4344-da62802d472f@gmail.com>
+Subject: Re: [PATCH] of/fdt: Make sure no-map does not remove already reserved regions
+Date: Tue, 16 Jul 2019 17:12:01 -0600
+Message-ID: <CAL_JsqLETdazfnz5EU0Qw4TVVBhWmzk12Z5zYMo5Hm2ACPXh1w@mail.gmail.com>
+References: <20190703050827.173284-1-drinkcat@chromium.org> <815a8414-bfbe-c693-3208-1580779815ec@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3e340ff1-e842-2521-4344-da62802d472f@gmail.com>
+In-Reply-To: <815a8414-bfbe-c693-3208-1580779815ec@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Saravana Kannan <saravanak@google.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>
+To: Florian Fainelli <f.fainelli@gmail.com>, KarimAllah Ahmed <karahmed@amazon.de>, Nicolas Boichat <drinkcat@chromium.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>, Stephen Boyd <swboyd@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 7:05 PM Frank Rowand <frowand.list@gmail.com> wrote:
+On Tue, Jul 16, 2019 at 4:46 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 >
-> On 7/15/19 11:40 AM, Saravana Kannan wrote:
-> > Replying again because the previous email accidentally included HTML.
+> On 7/2/19 10:08 PM, Nicolas Boichat wrote:
+> > If the device tree is incorrectly configured, and attempts to
+> > define a "no-map" reserved memory that overlaps with the kernel
+> > data/code, the kernel would crash quickly after boot, with no
+> > obvious clue about the nature of the issue.
 > >
-> > Thanks for taking the time to reconsider the wording Frank. Your
-> > intention was clear to me in the first email too.
+> > For example, this would happen if we have the kernel mapped at
+> > these addresses (from /proc/iomem):
+> > 40000000-41ffffff : System RAM
+> >   40080000-40dfffff : Kernel code
+> >   40e00000-411fffff : reserved
+> >   41200000-413e0fff : Kernel data
 > >
-> > A kernel command line option can also completely disable this
-> > functionality easily and cleanly. Can we pick that as an option? I've
-> > an implementation of that in the v5 series I sent out last week.
+> > And we declare a no-map shared-dma-pool region at a fixed address
+> > within that range:
+> > mem_reserved: mem_region {
+> >       compatible = "shared-dma-pool";
+> >       reg = <0 0x40000000 0 0x01A00000>;
+> >       no-map;
+> > };
+> >
+> > To fix this, when removing memory regions at early boot (which is
+> > what "no-map" regions do), we need to make sure that the memory
+> > is not already reserved. If we do, __reserved_mem_reserve_reg
+> > will throw an error:
+> > [    0.000000] OF: fdt: Reserved memory: failed to reserve memory
+> >    for node 'mem_region': base 0x0000000040000000, size 26 MiB
+> > and the code that will try to use the region should also fail,
+> > later on.
+> >
+> > We do not do anything for non-"no-map" regions, as memblock
+> > explicitly allows reserved regions to overlap, and the commit
+> > that this fixes removed the check for that precise reason.
+> >
+> > Fixes: 094cb98179f19b7 ("of/fdt: memblock_reserve /memreserve/ regions in the case of partial overlap")
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > ---
+> >  drivers/of/fdt.c | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> > index cd17dc62a71980a..a1ded43fc332d0c 100644
+> > --- a/drivers/of/fdt.c
+> > +++ b/drivers/of/fdt.c
+> > @@ -1138,8 +1138,16 @@ int __init __weak early_init_dt_mark_hotplug_memory_arch(u64 base, u64 size)
+> >  int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+> >                                       phys_addr_t size, bool nomap)
+> >  {
+> > -     if (nomap)
+> > +     if (nomap) {
+> > +             /*
+> > +              * If the memory is already reserved (by another region), we
+> > +              * should not allow it to be removed altogether.
+> > +              */
+> > +             if (memblock_is_region_reserved(base, size))
+> > +                     return -EBUSY;
+> > +
+> >               return memblock_remove(base, size);
 >
-> Yes, Rob suggested a command line option for debugging, and I am fine with
-> that.  But even with that, I would like a lot of testing so that we have a
-> chance of finding systems that have trouble with the changes and could
-> potentially be fixed before impacting a large number of users.
+> While you are it, the nomap argument (introduced with
+> e8d9d1f5485b52ec3c4d7af839e6914438f6c285) predates the introduction of
+> memblock_is_nomap() (bf3d3cc580f9960883ebf9ea05868f336d9491c2), so
+> should just remove memblock_remove() and use memblock_mark_nomap()
+> instead here.
 
-Leaving it in -next for more than a cycle will not help. There's some
-number of users who test linux-next. Then there's more that test -rc
-kernels. Then there's more that test final releases and/or stable
-kernels. Probably, the more stable the h/w, the more it tends to be
-latter groups. (I don't get reports of breaking PowerMacs with the
-changes sitting in linux-next.)
-
-My main worry about this being off by default is it won't get tested.
-I'm not sure there's enough interest to drive folks to turn it on and
-test. Maybe it needs to be on until we see breakage.
+Perhaps like this patch[1]? Though the reasoning is different and the
+commit message here is more thorough, so can I get a combined patch.
+However, I don't under how handling a misconfigured DT and aligned
+with EFI are the same patch. What's considered valid for EFI is not
+for DT regions?
 
 Rob
+
+[1] https://patchwork.ozlabs.org/patch/1131232/
