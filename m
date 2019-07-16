@@ -1,268 +1,69 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
-Date: Tue, 16 Jul 2019 00:57:06 -0700
-Message-ID: <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
-References: <20190712081744.87097-1-brendanhiggins@google.com>
- <20190712081744.87097-5-brendanhiggins@google.com> <20190715221554.8417320665@mail.kernel.org>
+From: Schrempf Frieder <frieder.schrempf@kontron.de>
+Subject: Re: [PATCH] ARM: dts: imx6ul-kontron-ul2: Add Exceet/Kontron iMX6-UL2
+ SoM
+Date: Tue, 16 Jul 2019 08:02:22 +0000
+Message-ID: <74823caa-ace4-7f24-98f3-7da6f2a4e5c2@kontron.de>
+References: <20190712141242.4915-1-krzk@kernel.org>
+ <5cbd8bb2-6ecb-7e55-1580-e580e2c340dd@kontron.de>
+ <CAJKOXPdq5e1OPmxamicAVf4ZDoSAuD=yvfOgZD04aQD9PtnCEQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190715221554.8417320665@mail.kernel.org>
+In-Reply-To: <CAJKOXPdq5e1OPmxamicAVf4ZDoSAuD=yvfOgZD04aQD9PtnCEQ@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <8338E8458D9FB44BA707B7261589B984@snt-world.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 3:15 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Brendan Higgins (2019-07-12 01:17:30)
-> > diff --git a/include/kunit/kunit-stream.h b/include/kunit/kunit-stream.h
-> > new file mode 100644
-> > index 0000000000000..a7b53eabf6be4
-> > --- /dev/null
-> > +++ b/include/kunit/kunit-stream.h
-> > @@ -0,0 +1,81 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * C++ stream style string formatter and printer used in KUnit for outputting
-> > + * KUnit messages.
-> > + *
-> > + * Copyright (C) 2019, Google LLC.
-> > + * Author: Brendan Higgins <brendanhiggins@google.com>
-> > + */
-> > +
-> > +#ifndef _KUNIT_KUNIT_STREAM_H
-> > +#define _KUNIT_KUNIT_STREAM_H
-> > +
-> > +#include <linux/types.h>
-> > +#include <kunit/string-stream.h>
-> > +
-> > +struct kunit;
-> > +
-> > +/**
-> > + * struct kunit_stream - a std::stream style string builder.
-> > + *
-> > + * A std::stream style string builder. Allows messages to be built up and
-> > + * printed all at once.
-> > + */
-> > +struct kunit_stream {
-> > +       /* private: internal use only. */
-> > +       struct kunit *test;
-> > +       const char *level;
->
-> Is the level changed? See my comment below, but I wonder if this whole
-> struct can go away and the wrappers can just operate on 'struct
-> string_stream' instead.
-
-I was inclined to agree with you when I first read your comment, but
-then I thought about the case that someone wants to add in a debug
-message (of which I currently have none). I think under most
-circumstances a user of kunit_stream would likely want to pick a
-default verbosity that maybe I should provide, but may still want
-different verbosity levels.
-
-The main reason I want to keep the types separate, string_stream vs.
-kunit_stream, is that they are intended to be used differently.
-string_stream is just a generic string builder. If you are using that,
-you are expecting to see someone building the string at some point and
-then doing something interesting with it. kunit_stream really tells
-you specifically that KUnit is putting together a message to
-communicate something to a user of KUnit. It is really used in a very
-specific way, and I wouldn't want to generalize its usage beyond how
-it is currently used. I think in order to preserve the author's
-intention it adds clarity to keep the types separate regardless of how
-similar they might be in reality.
-
-> > +       struct string_stream *internal_stream;
-> > +};
-> > diff --git a/kunit/kunit-stream.c b/kunit/kunit-stream.c
-> > new file mode 100644
-> > index 0000000000000..8bea1f22eafb5
-> > --- /dev/null
-> > +++ b/kunit/kunit-stream.c
-> > @@ -0,0 +1,123 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * C++ stream style string formatter and printer used in KUnit for outputting
-> > + * KUnit messages.
-> > + *
-> > + * Copyright (C) 2019, Google LLC.
-> > + * Author: Brendan Higgins <brendanhiggins@google.com>
-> > + */
-> > +
-> > +#include <kunit/test.h>
-> > +#include <kunit/kunit-stream.h>
-> > +#include <kunit/string-stream.h>
-> > +
-> > +void kunit_stream_add(struct kunit_stream *kstream, const char *fmt, ...)
-> > +{
-> > +       va_list args;
-> > +       struct string_stream *stream = kstream->internal_stream;
-> > +
-> > +       va_start(args, fmt);
-> > +
-> > +       if (string_stream_vadd(stream, fmt, args) < 0)
-> > +               kunit_err(kstream->test,
-> > +                         "Failed to allocate fragment: %s\n",
-> > +                         fmt);
-> > +
-> > +       va_end(args);
-> > +}
-> > +
-> > +void kunit_stream_append(struct kunit_stream *kstream,
-> > +                               struct kunit_stream *other)
-> > +{
-> > +       struct string_stream *other_stream = other->internal_stream;
-> > +       const char *other_content;
-> > +
-> > +       other_content = string_stream_get_string(other_stream);
-> > +
-> > +       if (!other_content) {
-> > +               kunit_err(kstream->test,
-> > +                         "Failed to get string from second argument for appending\n");
-> > +               return;
-> > +       }
-> > +
-> > +       kunit_stream_add(kstream, other_content);
-> > +}
->
-> Why can't this function be implemented in the string_stream API? Seems
-> valid to want to append one stream to another and that isn't
-> kunit_stream specific.
-
-Fair point. Will do.
-
-> > +
-> > +void kunit_stream_clear(struct kunit_stream *kstream)
-> > +{
-> > +       string_stream_clear(kstream->internal_stream);
-> > +}
-> > +
-> > +void kunit_stream_commit(struct kunit_stream *kstream)
-> > +{
-> > +       struct string_stream *stream = kstream->internal_stream;
-> > +       struct string_stream_fragment *fragment;
-> > +       struct kunit *test = kstream->test;
-> > +       char *buf;
-> > +
-> > +       buf = string_stream_get_string(stream);
-> > +       if (!buf) {
-> > +               kunit_err(test,
-> > +                         "Could not allocate buffer, dumping stream:\n");
-> > +               list_for_each_entry(fragment, &stream->fragments, node) {
-> > +                       kunit_err(test, fragment->fragment);
-> > +               }
-> > +               kunit_err(test, "\n");
-> > +               goto cleanup;
-> > +       }
-> > +
-> > +       kunit_printk(kstream->level, test, buf);
-> > +       kfree(buf);
-> > +
-> > +cleanup:
->
-> Drop the goto and use an 'else' please.
-
-Will do.
-
-> > +       kunit_stream_clear(kstream);
-> > +}
-> > +
-> > +static int kunit_stream_init(struct kunit_resource *res, void *context)
-> > +{
-> > +       struct kunit *test = context;
-> > +       struct kunit_stream *stream;
-> > +
-> > +       stream = kzalloc(sizeof(*stream), GFP_KERNEL);
-> > +       if (!stream)
-> > +               return -ENOMEM;
-> > +
-> > +       res->allocation = stream;
-> > +       stream->test = test;
-> > +       stream->internal_stream = alloc_string_stream(test);
-> > +
-> > +       if (!stream->internal_stream)
-> > +               return -ENOMEM;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static void kunit_stream_free(struct kunit_resource *res)
-> > +{
-> > +       struct kunit_stream *stream = res->allocation;
-> > +
-> > +       if (!string_stream_is_empty(stream->internal_stream)) {
-> > +               kunit_err(stream->test,
-> > +                         "End of test case reached with uncommitted stream entries\n");
-> > +               kunit_stream_commit(stream);
-> > +       }
-> > +}
-> > +
->
-> Nitpick: Drop this extra newline.
-
-Oops, nice catch.
-
-> > diff --git a/kunit/test.c b/kunit/test.c
-> > index f165c9d8e10b0..29edf34a89a37 100644
-> > --- a/kunit/test.c
-> > +++ b/kunit/test.c
-> > @@ -120,6 +120,12 @@ static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
-> >                               test_case->name);
-> >  }
-> >
-> > +void kunit_fail(struct kunit *test, struct kunit_stream *stream)
->
-> Why doesn't 'struct kunit' have a 'struct kunit_stream' inside of it? It
-> seems that the two are highly related, to the point that it might just
-> make sense to have
-
-A `struct kunit_stream` is usually associated with a message that is
-being built up over time like maybe an expectation; it is meant to
-capture the idea that we might want to send some information out to
-the user pertaining to some thing 'X', but we aren't sure that we
-actually want to send it until 'X' is complete, but do to the nature
-of 'X' it is easier to start constructing the message before 'X' is
-complete.
-
-Consider a complicated expectation, there might be multiple conditions
-that satisfy it and multiple conditions which could make it fail. As
-we start exploring the input to the expectation we gain information
-that we might want to share back with the user if the expectation were
-to fail and we might get that information before we are actually sure
-that the expectation does indeed fail.
-
-When we first step into the expectation we immediately know the
-function name, file name, and line number where we are called and
-would want to put that information into any message we would send to
-the user about this expectation. Next, we might want to check a
-property of the input, it may or may not be enough information on its
-own for the expectation to fail, but we want to share the result of
-the property check with the user regardless, BUT only if the
-expectation as a whole fails.
-
-Hence, we can have multiple `struct kunit_stream`s associated with a
-`struct kunit` active at any given time.
-
->         struct kunit {
->                 struct kunit_stream stream;
->                 ...
->         };
->
-> > +{
-> > +       kunit_set_failure(test);
-> > +       kunit_stream_commit(stream);
->
-> And then this function can just take a test and the stream can be
-> associated with the test directly. Use container_of() to get to the test
-> when the only pointer in hand is for the stream too.
-
-Unfortunately that wouldn't work. See my above explanation.
-
-> > +}
-> > +
-> >  void kunit_init_test(struct kunit *test, const char *name)
-> >  {
-> >         mutex_init(&test->lock);
-
-Thanks!
+T24gMTYuMDcuMTkgMDk6NTAsIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+IE9uIEZyaSwg
+MTIgSnVsIDIwMTkgYXQgMTc6MjEsIFNjaHJlbXBmIEZyaWVkZXINCj4gPGZyaWVkZXIuc2NocmVt
+cGZAa29udHJvbi5kZT4gd3JvdGU6DQo+Pg0KPj4gSGkgS3J6eXN6dG9mLA0KPj4NCj4+IE9uIDEy
+LjA3LjE5IDE2OjEyLCBLcnp5c3p0b2YgS296bG93c2tpIHdyb3RlOg0KPj4+IEFkZCBzdXBwb3J0
+IGZvciBpTVg2LVVMMiBtb2R1bGVzIGZyb20gS29udHJvbiBFbGVjdHJvbmljcyBHbWJIIChiZWZv
+cmUNCj4+PiBhY3F1aXNpdGlvbjogRXhjZWV0IEVsZWN0cm9uaWNzKSBhbmQgZXZhbGtpdCBib2Fy
+ZHMgYmFzZWQgb24gaXQ6DQo+Pj4NCj4+PiAxLiBpLk1YNiBVTCBTeXN0ZW0tb24tTW9kdWxlLCBh
+IDI1eDI1IG1tIHNvbGRlcmFibGUgbW9kdWxlIChMR0EgcGFkcyBhbmQNCj4+PiAgICAgIHBpbiBj
+YXN0ZWxsYXRpb25zKSB3aXRoIDI1NiBNQiBSQU0sIDEgTUIgTk9SLUZsYXNoLCAyNTYgTUIgTkFO
+RCBhbmQNCj4+PiAgICAgIG90aGVyIGludGVyZmFjZXMsDQo+Pj4gMS4gVUwyIGV2YWxraXQsIHcv
+d28gZU1NQywgd2l0aG91dCBkaXNwbGF5LA0KPj4+IDIuIFVMMiBldmFsa2l0IHdpdGggNC4zIiBk
+aXNwbGF5LA0KPj4+IDMuIFVMMiBldmFsa2l0IHdpdGggNS4wIiBkaXNwbGF5Lg0KPj4+DQo+Pj4g
+VGhpcyBpbmNsdWRlcyBkZXZpY2Ugbm9kZXMgZm9yIHVuc3VwcG9ydGVkIGRpc3BsYXlzIChBZG1h
+dGVjDQo+Pj4gVDA0M0MwMDQ4MDAyNzJUMkEgYW5kIFQwNzBQMTMzVDBTMzAxKS4NCj4+Pg0KPj4+
+IFRoZSB3b3JrIGlzIGJhc2VkIG9uIEV4Y2VldCBzb3VyY2UgY29kZSAoR1BMdjIpIHdpdGggbnVt
+ZXJvdXMgY2hhbmdlczoNCj4+PiAxLiBSZW9yZ2FuaXplIGZpbGVzLA0KPj4+IDIuIFJlbmFtZSBF
+eGNlZXQgLT4gS29udHJvbiwNCj4+PiAzLiBGaXggY29kaW5nIHN0eWxlIGVycm9ycywNCj4+PiA0
+LiBGaXggRFRDIHdhcm5pbmdzLA0KPj4+IDUuIEV4dGVuZCBjb21wYXRpYmxlcyBzbyBldmFsIGJv
+YXJkcyBpbmhlcml0IHRoZSBTb00gY29tcGF0aWJsZSwNCj4+PiA2LiBVc2UgZGVmaW5lcyBpbnN0
+ZWFkIG9mIEdQSU8gZmxhZyB2YWx1ZXMsDQo+Pj4gNy4gQWRqdXN0IG9wZXJhdGluZyBwb2ludHMg
+b2YgQ1BVMCwNCj4+PiA4LiBTb3J0IG5vZGVzIGFscGhhYmV0aWNhbGx5Lg0KPj4+DQo+Pj4gSW4g
+ZG93bnN0cmVhbSBCU1AgdGhlIEV4Y2VldCBuYW1lIHN0aWxsIGFwcGVhcnMgaW4gbXVsdGlwbGUg
+cGxhY2VzDQo+Pj4gdGhlcmVmb3JlIEkgbGVmdCBpdCBpbiB0aGUgbW9kZWwgbmFtZXMuDQo+Pg0K
+Pj4gRmlyc3QsIHRoYW5rcyBmb3IgeW91ciB3b3JrLiBJIHBsYW5uZWQgdG8gdXBzdHJlYW0gdGhl
+c2UgYm9hcmRzIG15c2VsZg0KPj4gYWZ0ZXIgdGhlIEZTTCBRU1BJIHNwaS1tZW0gZHJpdmVyIHdh
+cyBtZXJnZWQgaW4gNS4xLCBidXQgZGlkbid0IGhhdmUNCj4+IHRpbWUgdG8gZmluYWxpemUgYW5k
+IHNlbmQgdGhlIHBhdGNoZXMuDQo+Pg0KPj4gTWVhbndoaWxlIHdlIGNhbWUgdXAgd2l0aCBhIG5l
+dyBuYW1pbmcgc2NoZW1lIGZvciBvdXIgYm9hcmRzLCB0aGF0DQo+PiBoYXNuJ3QgYmVlbiBpbXBs
+ZW1lbnRlZCB5ZXQuIEJ1dCBJIHdvdWxkIGxpa2UgdG8gdGFrZSB0aGlzIGNoYW5jZSB0bw0KPj4g
+aW1wbGVtZW50IHRoZSBuZXcgc2NoZW1lLg0KPiANCj4gU3VyZSwgSSBzZWUgbm8gcHJvYmxlbSBp
+biB1c2luZyBkaWZmZXJlbnQgbmFtZXMsIG1hdGNoaW5nIGRvd25zdHJlYW0NCj4ga2VybmVsLiBK
+dXN0IHBvaW50IG1lIHRvIHByb3BlciBuYW1lcy4NCj4gDQo+PiBBbHNvIHRoZXJlIGFyZSBzb21l
+IG1vcmUgZmxhdm9ycyBvZiB0aGUgU29NICh3aXRoIGkuTVg2VUxMIGluc3RlYWQgb2YNCj4+IGku
+TVg2VUwsIHdpdGggNTEyTWlCIGluc3RlYWQgb2YgMjU2TWlCIGZsYXNoL1JBTSksIHRoYXQgSSB3
+b3VsZCBsaWtlIHRvDQo+PiBhZGQgYW5kIGZvciB3aGljaCBjb21tb24gcGFydHMgb2YgdGhlIFNv
+TSBkdHNpIHdvdWxkIG5lZWQgdG8gYmUgZmFjdG9yZWQNCj4+IG91dCB0byBhIHNlcGFyYXRlIGZp
+bGUuDQo+IA0KPiBJIGhhdmUgb25seSB0aGlzIG9uZSBwYXJ0aWN1bGFyIGZsYXZvciBzbyBJIHdv
+dWxkIHByZWZlciB0byB1cHN0cmVhbQ0KPiBvbmx5IHRoaXMgb25lLiBJIGRvIG5vdCBrbm93IGFs
+bCB0aGUgcG9zc2libGUgY29tYmluYXRpb25zIG9yIGZvcg0KPiBleGFtcGxlIHRoZSBtb3N0IGlu
+dGVyZXN0aW5nIG9uZXMuIEkgdGhpbmsgYWZ0ZXIgdGhpcyBwYXRjaHNldCB3ZSBjYW4NCj4gcmVm
+YWN0b3IgdGhlIERUUyB3aGVuZXZlciBpdHMgbmVlZGVkIC0gc3BsaXQgY29tbW9uIHBhcnRzLCBh
+ZGQgbmV3DQo+IGZpbGVzLg0KPiANCj4+IEkgd291bGQgcHJlZmVyIHRvIGF0IGxlYXN0IGFwcGx5
+IHRoZSBuYW1pbmcgY2hhbmdlcyBiZWZvcmUgbWVyZ2luZy4gVGhlDQo+PiBhZGRpdGlvbmFsIGJv
+YXJkIGZsYXZvcnMgY291bGQgYmUgYWRkZWQgYmVmb3JlIG1lcmdpbmcgb3IgSSBjb3VsZCBzZW5k
+DQo+PiB0aGVtIGFzIGZvbGxvdy11cCBwYXRjaGVzLiBXaGF0IGRvIHlvdSB0aGluaz8NCj4gDQo+
+IExldCdzIGNoYW5nZSB0aGUgbmFtaW5nIGFuZCBhZGQgbmV3IGZsYXZvcnMgYXMgZm9sbG93IHVw
+cz8NCg0KT2ssIGxldCdzIGRvIGl0IGxpa2UgdGhpcy4gSSB3aWxsIHNvb24gc2VuZCBhbm90aGVy
+IHJlcGx5IHRvIHRoZSANCm9yaWdpbmFsIHBhdGNoIHdpdGggdGhlIHByb3Bvc2VkIG5hbWluZyBj
+aGFuZ2VzLg0KDQpUaGFua3MsDQpGcmllZGVy
