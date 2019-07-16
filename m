@@ -1,417 +1,76 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-Date: Tue, 16 Jul 2019 15:24:26 +0800
-Message-ID: <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-12-git-send-email-skomatineni@nvidia.com>
- <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <a9b5c364-52b4-bee1-5881-47197f043950@nvidia.com>
- <e9d4bc0e-fd5d-ae02-2d67-86c7f7c9620f@gmail.com>
- <3938092a-bbc7-b304-641d-31677539598d@nvidia.com>
- <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
- <0ee055ad-d397-32e5-60ee-d62c14c6f77b@gmail.com>
- <86fc07d5-ab2e-a52a-a570-b1dfff4c20fe@nvidia.com>
- <20190716083701.225f0fd9@dimatab>
- <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx6ul-kontron-ul2: Add Exceet/Kontron iMX6-UL2 SoM
+Date: Tue, 16 Jul 2019 09:50:34 +0200
+Message-ID: <CAJKOXPdq5e1OPmxamicAVf4ZDoSAuD=yvfOgZD04aQD9PtnCEQ@mail.gmail.com>
+References: <20190712141242.4915-1-krzk@kernel.org> <5cbd8bb2-6ecb-7e55-1580-e580e2c340dd@kontron.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <5cbd8bb2-6ecb-7e55-1580-e580e2c340dd@kontron.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, Dmitry Osipenko <digetx@gmail.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 12 Jul 2019 at 17:21, Schrempf Frieder
+<frieder.schrempf@kontron.de> wrote:
+>
+> Hi Krzysztof,
+>
+> On 12.07.19 16:12, Krzysztof Kozlowski wrote:
+> > Add support for iMX6-UL2 modules from Kontron Electronics GmbH (before
+> > acquisition: Exceet Electronics) and evalkit boards based on it:
+> >
+> > 1. i.MX6 UL System-on-Module, a 25x25 mm solderable module (LGA pads and
+> >     pin castellations) with 256 MB RAM, 1 MB NOR-Flash, 256 MB NAND and
+> >     other interfaces,
+> > 1. UL2 evalkit, w/wo eMMC, without display,
+> > 2. UL2 evalkit with 4.3" display,
+> > 3. UL2 evalkit with 5.0" display.
+> >
+> > This includes device nodes for unsupported displays (Admatec
+> > T043C004800272T2A and T070P133T0S301).
+> >
+> > The work is based on Exceet source code (GPLv2) with numerous changes:
+> > 1. Reorganize files,
+> > 2. Rename Exceet -> Kontron,
+> > 3. Fix coding style errors,
+> > 4. Fix DTC warnings,
+> > 5. Extend compatibles so eval boards inherit the SoM compatible,
+> > 6. Use defines instead of GPIO flag values,
+> > 7. Adjust operating points of CPU0,
+> > 8. Sort nodes alphabetically.
+> >
+> > In downstream BSP the Exceet name still appears in multiple places
+> > therefore I left it in the model names.
+>
+> First, thanks for your work. I planned to upstream these boards myself
+> after the FSL QSPI spi-mem driver was merged in 5.1, but didn't have
+> time to finalize and send the patches.
+>
+> Meanwhile we came up with a new naming scheme for our boards, that
+> hasn't been implemented yet. But I would like to take this chance to
+> implement the new scheme.
 
+Sure, I see no problem in using different names, matching downstream
+kernel. Just point me to proper names.
 
-On 7/16/19 2:35 PM, Sowjanya Komatineni wrote:
->=20
-> On 7/15/19 10:37 PM, Dmitry Osipenko wrote:
->> =D0=92 Mon, 15 Jul 2019 21:37:09 -0700
->> Sowjanya Komatineni <skomatineni@nvidia.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>
->>> On 7/15/19 8:50 PM, Dmitry Osipenko wrote:
->>>> 16.07.2019 6:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 7/15/19 5:35 PM, Sowjanya Komatineni wrote:
->>>>>> On 7/14/19 2:41 PM, Dmitry Osipenko wrote:
->>>>>>> 13.07.2019 8:54, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->>>>>>>> On 6/29/19 8:10 AM, Dmitry Osipenko wrote:
->>>>>>>>> 28.06.2019 5:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>>> This patch adds system suspend and resume support for Tegra210
->>>>>>>>>> clocks.
->>>>>>>>>>
->>>>>>>>>> All the CAR controller settings are lost on suspend when core
->>>>>>>>>> power goes off.
->>>>>>>>>>
->>>>>>>>>> This patch has implementation for saving and restoring all
->>>>>>>>>> the PLLs and clocks context during system suspend and resume
->>>>>>>>>> to have the clocks back to same state for normal operation.
->>>>>>>>>>
->>>>>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>>> ---
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 drivers/clk/tegra/clk-tegra210.c | 115
->>>>>>>>>> ++++++++++++++++++++++++++++++++++++++-
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 drivers/clk/tegra/clk.c=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 14 +++++
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 drivers/clk/tegra/clk.h=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 3 files changed, 127 insertions(+), 3 deleti=
-ons(-)
->>>>>>>>>>
->>>>>>>>>> diff --git a/drivers/clk/tegra/clk-tegra210.c
->>>>>>>>>> b/drivers/clk/tegra/clk-tegra210.c
->>>>>>>>>> index 1c08c53482a5..1b839544e086 100644
->>>>>>>>>> --- a/drivers/clk/tegra/clk-tegra210.c
->>>>>>>>>> +++ b/drivers/clk/tegra/clk-tegra210.c
->>>>>>>>>> @@ -9,10 +9,12 @@
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #include <linux/clkdev.h>
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #include <linux/of.h>
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #include <linux/of_address.h>
->>>>>>>>>> +#include <linux/of_platform.h>
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #include <linux/delay.h>
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #include <linux/export.h>
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #include <linux/mutex.h>
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #include <linux/clk/tegra.h>
->>>>>>>>>> +#include <linux/syscore_ops.h>
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #include <dt-bindings/clock/tegra210-car.h>
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #include <dt-bindings/reset/tegra210-car.h>
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #include <linux/iopoll.h>
->>>>>>>>>> @@ -20,6 +22,7 @@
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #include <soc/tegra/pmc.h>
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 =C2=A0 #include "clk.h"
->>>>>>>>>> +#include "clk-dfll.h"
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #include "clk-id.h"
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 =C2=A0 /*
->>>>>>>>>> @@ -225,6 +228,7 @@
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 =C2=A0 #define CLK_RST_CONTROLLER_RST_DEV_Y_=
-SET 0x2a8
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2=
-ac
->>>>>>>>>> +#define CPU_SOFTRST_CTRL 0x380
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 =C2=A0 #define LVL2_CLK_GATE_OVRA 0xf8
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #define LVL2_CLK_GATE_OVRC 0x3a0
->>>>>>>>>> @@ -2820,6 +2824,7 @@ static int tegra210_enable_pllu(void)
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_clk_pll=
-_freq_table *fentry;
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_clk_pll=
- pllu;
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 reg;
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (fentry =
-=3D pll_u_freq_table; fentry->input_rate;
->>>>>>>>>> fentry++) {
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 if (fentry->input_rate =3D=3D pll_ref_freq)
->>>>>>>>>> @@ -2847,10 +2852,10 @@ static int tegra210_enable_pllu(void)
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fence_udelay(1, clk_=
-base);
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg |=3D PLL_ENABLE;
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel(reg, clk_base=
- + PLLU_BASE);
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 fence_udelay(1, clk_base);
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 -=C2=A0=C2=A0=C2=A0 readl_relaxed_poll_timeo=
-ut_atomic(clk_base +
->>>>>>>>>> PLLU_BASE, reg,
->>>>>>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg & PLL_B=
-ASE_LOCK, 2, 1000);
->>>>>>>>>> -=C2=A0=C2=A0=C2=A0 if (!(reg & PLL_BASE_LOCK)) {
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 ret =3D tegra210_wait_for_mask(&pllu, PLLU_B=
-ASE,
->>>>>>>>>> PLL_BASE_LOCK);
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (ret) {
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 pr_err("Timed out waiting for PLL_U to lock\n");
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 return -ETIMEDOUT;
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>> @@ -3283,6 +3288,103 @@ static void
->>>>>>>>>> tegra210_disable_cpu_clock(u32 cpu)
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 }
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 =C2=A0 #ifdef CONFIG_PM_SLEEP
->>>>>>>>>> +static u32 cpu_softrst_ctx[3];
->>>>>>>>>> +static struct platform_device *dfll_pdev;
->>>>>>>>>> +#define car_readl(_base, _off) readl_relaxed(clk_base +
->>>>>>>>>> (_base) + ((_off) * 4))
->>>>>>>>>> +#define car_writel(_val, _base, _off) \
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_relaxed(_val,=
- clk_base + (_base) + ((_off) *
->>>>>>>>>> 4)) +
->>>>>>>>>> +static int tegra210_clk_suspend(void)
->>>>>>>>>> +{
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int i;
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct device_node *node;
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_cclkg_burst_policy_save_context();
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!dfll_pdev) {
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 node =3D of_find_com=
-patible_node(NULL, NULL,
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 "nvidia,tegra210-dfll");
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (node)
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 dfll_pdev =3D of_find_device_by_node(node);
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 of_node_put(node);
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!dfll_pdev)
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 pr_err("dfll node not found. no suspend for
->>>>>>>>>> dfll\n");
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (dfll_pdev)
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_dfll_suspend(d=
-fll_pdev);
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /* Enable PLLP_OUT_CPU after dfll suspend */
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_clk_set_pllp_out_cpu(true);
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_sclk_cclklp_burst_policy_save_context(=
-);
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 clk_save_context();
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARRAY_SIZE(cpu_softrst_ctx=
-); i++)
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cpu_softrst_ctx[i] =
-=3D car_readl(CPU_SOFTRST_CTRL, i);
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>> +}
->>>>>>>>>> +
->>>>>>>>>> +static void tegra210_clk_resume(void)
->>>>>>>>>> +{
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int i;
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *parent;
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk *clk;
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /*
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * clk_restore_context restores clocks =
-as per the clock
->>>>>>>>>> tree.
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 *
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * dfllCPU_out is first in the clock tr=
-ee to get
->>>>>>>>>> restored and it
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * involves programming DFLL controller=
- along with
->>>>>>>>>> restoring CPUG
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * clock burst policy.
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 *
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * DFLL programming needs dfll_ref and =
-dfll_soc
->>>>>>>>>> peripheral clocks
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * to be restores which are part ofthe =
-peripheral
->>>>>>>>>> clocks.
->>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^ white-space
->>>>>>>
->>>>>>> Please use spellchecker to avoid typos.
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * So, peripheral clocks restore should=
- happen prior to
->>>>>>>>>> dfll clock
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * restore.
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_clk_osc_resume(clk_base);
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARRAY_SIZE(cpu_softrst_ctx=
-); i++)
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 car_writel(cpu_softr=
-st_ctx[i], CPU_SOFTRST_CTRL, i);
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /* restore all plls and peripheral clocks */
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra210_init_pllu();
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 clk_restore_context();
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 fence_udelay(5, clk_base);
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /* resume SCLK and CPULP clocks */
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_sclk_cpulp_burst_policy_restore_contex=
-t();
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /*
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * restore CPUG clocks:
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * - enable DFLL in open loop mode
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * - switch CPUG to DFLL clock source
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * - close DFLL loop
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * - sync PLLX state
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (dfll_pdev)
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_dfll_resume(df=
-ll_pdev, false);
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_cclkg_burst_policy_restore_context();
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 fence_udelay(2, clk_base);
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (dfll_pdev)
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_dfll_resume(df=
-ll_pdev, true);
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 parent =3D
->>>>>>>>>> clk_hw_get_parent(__clk_get_hw(clks[TEGRA210_CLK_CCLK_G]));
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 clk =3D clks[TEGRA210_CLK_PLL_X];
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (parent !=3D __clk_get_hw(clk))
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_clk_sync_state=
-_pll(__clk_get_hw(clk));
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /* Disable PLL_OUT_CPU after DFLL resume */
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_clk_set_pllp_out_cpu(false);
->>>>>>>>>> +}
->>>>>>>>>> +
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 static void tegra210_cpu_clock_suspend(void)
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 {
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* switch coresite t=
-o clk_m, save off original source
->>>>>>>>>> */ @@ -3298,6 +3400,11 @@ static void
->>>>>>>>>> tegra210_cpu_clock_resume(void) }
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 #endif
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 +static struct syscore_ops tegra_clk_syscore=
-_ops =3D {
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .suspend =3D tegra210_clk_suspend,
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .resume =3D tegra210_clk_resume,
->>>>>>>>>> +};
->>>>>>>>>> +
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 static struct tegra_cpu_car_ops tegra210_cpu=
-_car_ops =3D {
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .wait_for_reset=C2=
-=A0=C2=A0=C2=A0 =3D tegra210_wait_cpu_in_reset,
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .disable_clock=C2=A0=
-=C2=A0=C2=A0 =3D tegra210_disable_cpu_clock,
->>>>>>>>>> @@ -3583,5 +3690,7 @@ static void __init
->>>>>>>>>> tegra210_clock_init(struct device_node *np)
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra210_mbist_clk_i=
-nit();
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_cpu_car=
-_ops =3D &tegra210_cpu_car_ops;
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0 register_syscore_ops(&tegra_clk_syscore_ops)=
-;
->>>>>>>>>> =C2=A0 =C2=A0=C2=A0 }
->>>>>>>>> Is it really worthwhile to use syscore_ops for suspend/resume
->>>>>>>>> given that drivers for
->>>>>>>>> won't resume before the CLK driver anyway? Are there any other
->>>>>>>>> options for CLK
->>>>>>>>> suspend/resume?
->>>>>>>>>
->>>>>>>>> I'm also not sure whether PM runtime API could be used at all
->>>>>>>>> in the context of
->>>>>>>>> syscore_ops ..
->>>>>>>>>
->>>>>>>>> Secondly, what about to use generic clk_save_context() /
->>>>>>>>> clk_restore_context()
->>>>>>>>> helpers for the suspend-resume? It looks to me that some other
->>>>>>>>> essential (and proper)
->>>>>>>>> platform driver (soc/tegra/? PMC?) should suspend-resume the
->>>>>>>>> clocks using the generic
->>>>>>>>> CLK Framework API.
->>>>>>>> Clock resume should happen very early to restore peripheral and
->>>>>>>> cpu clocks very early than peripheral drivers resume happens.
->>>>>>> If all peripheral drivers properly requested all of the
->>>>>>> necessary clocks and CLK driver was a platform driver, then I
->>>>>>> guess the probe should have been naturally ordered. But that's
->>>>>>> not very achievable with the currently available infrastructure
->>>>>>> in the kernel, so I'm not arguing that the clocks should be
->>>>>>> explicitly resumed before the users.
->>>>>>>> this patch series uses clk_save_context and clk_restore_context
->>>>>>>> for corresponding divider, pll, pllout.. save and restore
->>>>>>>> context.
->>>>>>> Now I see that indeed this API is utilized in this patch, thank
->>>>>>> you for the clarification.
->>>>>>>> But as there is dependency on dfll resume and cpu and pllx
->>>>>>>> clocks restore, couldnt use clk_save_context and
->>>>>>>> clk_restore_context for dfll.
->>>>>>>>
->>>>>>>> So implemented recommended dfll resume sequence in main
->>>>>>>> Tegra210 clock driver along with invoking
->>>>>>>> clk_save_context/clk_restore_context where all other clocks
->>>>>>>> save/restore happens as per clock tree traversal.
->>>>>>> Could you please clarify what part of peripherals clocks is
->>>>>>> required for DFLL's restore? Couldn't DFLL driver be changed to
->>>>>>> avoid that quirkness and thus to make DFLL driver suspend/resume
->>>>>>> the clock?
->>>>>> DFLL source ref_clk and soc_clk need to be restored prior to dfll.
->>>>>>
->>>>>> I see dfllCPU_out parent to CCLK_G first in the clock tree and
->>>>>> dfll_ref and dfll_soc peripheral clocks are not resumed by the
->>>>>> time dfll resume happens first.
->>>>>>
->>>>>> ref_clk and soc_clk source is from pll_p and clock tree has these
->>>>>> registered under pll_p which happens later.
->>>>>>
->>>>>> tegra210_clock_init registers in order plls, peripheral clocks,
->>>>>> super_clk init for cclk_g during clock driver probe and dfll
->>>>>> probe and register happens later.
->>>>> One more thing, CLDVFS peripheral clock enable is also needed to be
->>>>> enabled to program DFLL Controller and all peripheral clock
->>>>> context is restored only after their PLL sources are restored.
->>>>>
->>>>> DFLL restore involves dfll source clock resume along with CLDVFS
->>>>> periheral clock enable and reset
->>>> I don't quite see why you can't simply add suspend/resume callbacks
->>>> to the CPUFreq driver to:
->>>>
->>>> On suspend:
->>>> 1. Switch CPU to PLLP (or whatever "safe" parent)
->>>> 2. Disable/teardown DFLL
->>>>
->>>> On resume:
->>>> 1. Enable/restore DFLL
->>>> 2. Switch CPU back to DFLL
->>> dfll runtime suspend/resume are already part of dfll_pm_ops. Don't we
->>> want to use it for suspend/resume as well?
->> Looks like no. Seems runtime PM of that driver is intended solely for
->> the DFLL's clk management.
->>
->>> currently no APIs are shared b/w clk/tegra driver and CPUFreq driver
->>> to invoke dfll suspend/resume in CPUFreq driver
->>>
->> Just add it. Also, please note that CPUFreq driver is optional and thus
->> you may need to switch CPU to a safe parent on clk-core suspend as
->> well in order to resume properly if CPU was running off unsafe parent
->> during boot and CPUFreq driver is disabled in kernel build (or failed
->> to load).
-> OK, Will add to CPUFreq driver...
->>
->> The other thing that also need attention is that T124 CPUFreq driver
->> implicitly relies on DFLL driver to be probed first, which is icky.
->>
-> Should I add check for successful dfll clk register explicitly in=20
-> CPUFreq driver probe and defer till dfll clk registers?
+> Also there are some more flavors of the SoM (with i.MX6ULL instead of
+> i.MX6UL, with 512MiB instead of 256MiB flash/RAM), that I would like to
+> add and for which common parts of the SoM dtsi would need to be factored
+> out to a separate file.
 
-Sorry, I didn't follow the mail thread. Just regarding the DFLL part.
+I have only this one particular flavor so I would prefer to upstream
+only this one. I do not know all the possible combinations or for
+example the most interesting ones. I think after this patchset we can
+refactor the DTS whenever its needed - split common parts, add new
+files.
 
-As you know it, the DFLL clock is one of the CPU clock sources and=20
-integrated with DVFS control logic with the regulator. We will not=20
-switch CPU to other clock sources once we switched to DFLL. Because the=20
-CPU has been regulated by the DFLL HW with the DVFS table (CVB or OPP=20
-table you see in the driver.). We shouldn't reparent it to other sources=20
-with unknew freq/volt pair. That's not guaranteed to work. We allow=20
-switching to open-loop mode but different sources.
+> I would prefer to at least apply the naming changes before merging. The
+> additional board flavors could be added before merging or I could send
+> them as follow-up patches. What do you think?
 
-And I don't exactly understand why we need to switch to PLLP in CPU idle=20
-driver. Just keep it on CL-DVFS mode all the time.
+Let's change the naming and add new flavors as follow ups?
 
-In SC7 entry, the dfll suspend function moves it the open-loop mode.=20
-That's all. The sc7-entryfirmware will handle the rest of the sequence=20
-to turn off the CPU power.
-
-In SC7 resume, the warmboot code will handle the sequence to turn on=20
-regulator and power up the CPU cluster. And leave it on PLL_P. After=20
-resuming to the kernel, we re-init DFLL, restore the CPU clock policy=20
-(CPU runs on DFLL open-loop mode) and then moving to close-loop mode.
-
-The DFLL part looks good to me. BTW, change the patch subject to "Add=20
-suspend-resume support" seems more appropriate to me.
-
-Thanks.
+Best regards,
+Krzysztof
