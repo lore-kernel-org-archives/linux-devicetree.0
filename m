@@ -1,87 +1,97 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [EXT] Re: [PATCH 00/10] Improvements and fixes for mxsfb DRM
- driver
-Date: Tue, 16 Jul 2019 16:54:50 +0200
-Message-ID: <20190716145450.GA609@bogon.m.sigxcpu.org>
-References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
- <20190711150403.GB23195@bogon.m.sigxcpu.org>
- <1562919331.3209.11.camel@nxp.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: Document Aspeed SD controller
+Date: Tue, 16 Jul 2019 08:57:21 -0600
+Message-ID: <CAL_JsqKMo_uv4Ur-D4NaUXk94hGJeRt5fg+0998dDjJCTgumGg@mail.gmail.com>
+References: <20190712033214.24713-1-andrew@aj.id.au> <20190712033214.24713-2-andrew@aj.id.au>
+ <CAL_JsqLkOtsAxj9NvNB=EEkH00k-dtNedNY042uuntSmcjhDhA@mail.gmail.com> <3fe55ea9-b949-48a0-9eab-90ad3bc1ee2a@www.fastmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1562919331.3209.11.camel@nxp.com>
+In-Reply-To: <3fe55ea9-b949-48a0-9eab-90ad3bc1ee2a@www.fastmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: "marex@denx.de" <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "airlied@linux.ie" <airlied@linux.ie>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Adrian Hunter <adrian.hunter@intel.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ryan Chen <ryanchen.aspeed@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Robert,
-On Fri, Jul 12, 2019 at 08:15:32AM +0000, Robert Chiras wrote:
-> Hi Guido,
-> 
-> On Jo, 2019-07-11 at 17:04 +0200, Guido Günther wrote:
-> > Hi Robert,
-> > On Wed, Jun 26, 2019 at 04:32:08PM +0300, Robert Chiras wrote:
-> > > 
-> > > This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like
-> > > 8MQ, 8MM
-> > > and 8QXP). Following, are the new features added and fixes from
-> > > this
-> > > patch-set:
-> > > 
-> > > 1. Add support for drm_bridge
-> > > On 8MQ and 8MM, the LCDIF block is not directly connected to a
-> > > parallel
-> > > display connector, where an LCD panel can be attached, but instead
-> > > it is
-> > > connected to DSI controller. Since this DSI stands between the
-> > > display
-> > > controller (eLCDIF) and the physical connector, the DSI can be
-> > > implemented
-> > > as a DRM bridge. So, in order to be able to connect the mxsfb
-> > > driver to
-> > > the DSI driver, the support for a drm_bridge was needed in mxsfb
-> > > DRM
-> > > driver (the actual driver for the eLCDIF block).
-> > So I wanted to test this but with both my somewhat cleaned up nwl
-> > driver¹ and the nwl driver forward ported from the nxp vendor tree
-> > I'm
-> > looking at a black screen with current mainline - while my dcss
-> > forward
-> > port gives me nice output on mipi dsi. Do you have a tree that uses
-> > mipi
-> > dsi on imx8mq where I could look at to check for differences?
-> Somewhere on the pixel path (between the display controller and the
-> DSI) there is a block that inverts the polarity. I can't remember
-> exactly what was the role of this block, but the polarity is inverted
-> when eLCDIF is used in combination with the DSI.
-> If you take a look at my DSI driver from NXP releases (I guess you have
-> them), you will see there is a hack in mode_fixup:
-> 
-> unsigned int *flags = &mode->flags;
-> if (dsi->sync_pol {
-> 	*flags |= DRM_MODE_FLAG_PHSYNC;
-> 	*flags |= DRM_MODE_FLAG_PVSYNC;
-> 	*flags &= ~DRM_MODE_FLAG_NHSYNC;
-> 	*flags &= ~DRM_MODE_FLAG_NVSYNC;
-> } else {
-> 	*flags &= ~DRM_MODE_FLAG_PHSYNC;
-> 	*flags &= ~DRM_MODE_FLAG_PVSYNC;
-> 	*flags |= DRM_MODE_FLAG_NHSYNC;
-> 	*flags |= DRM_MODE_FLAG_NVSYNC;
-> }
+On Mon, Jul 15, 2019 at 6:36 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+>
+>
+> On Tue, 16 Jul 2019, at 07:47, Rob Herring wrote:
+> > On Thu, Jul 11, 2019 at 9:32 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+> > >
+> > > The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the
+> > > SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
+> > > data bus if only a single slot is enabled.
+> > >
+> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > ---
+> > > In v2:
+> > >
+> > > * Rename to aspeed,sdhci.yaml
+> > > * Rename sd-controller compatible
+> > > * Add `maxItems: 1` for reg properties
+> > > * Move sdhci subnode description to patternProperties
+> > > * Drop sdhci compatible requirement
+> > > * #address-cells and #size-cells are required
+> > > * Prevent additional properties
+> > > * Implement explicit ranges in example
+> > > * Remove slot property
+> > >
+> > >  .../devicetree/bindings/mmc/aspeed,sdhci.yaml | 90 +++++++++++++++++++
+> > >  1 file changed, 90 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> > > new file mode 100644
+> > > index 000000000000..67a691c3348c
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> > > @@ -0,0 +1,90 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-or-later
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: ASPEED SD/SDIO/eMMC Controller
+> > > +
+> > > +maintainers:
+> > > +  - Andrew Jeffery <andrew@aj.id.au>
+> > > +  - Ryan Chen <ryanchen.aspeed@gmail.com>
+> > > +
+> > > +description: |+
+> > > +  The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the SDIO
+> > > +  Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit data bus if
+> > > +  only a single slot is enabled.
+> > > +
+> > > +  The two slots are supported by a common configuration area. As the SDHCIs for
+> > > +  the slots are dependent on the common configuration area, they are described
+> > > +  as child nodes.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum: [ aspeed,ast2400-sd-controller, aspeed,ast2500-sd-controller ]
+> >
+> > This is actually a list of 4 strings. Please reformat to 1 per line.
+>
+> On reflection that's obvious, but also a somewhat subtle interaction with the
+> preference for no quotes (the obvious caveat being "except where required").
 
-Thanks for the suggestion! I'll try that.
+It wasn't something I'd run into before. I'm working on a check, but
+unfortunately we can only check for quotes not needed and can't check
+for missing quotes.
 
-> 
-> I know it's not clean, but it works for now. You can try this in your
-> driver and see if it helps.
-> These days I will also take your nwl-dsi driver and test it, and also
-> add support for bridge and eLCDIF to see if I can make it work.
+> Thanks for pointing it out.
+>
+> I have been running `make dt_binding_check` and `make dtbs_check` over
+> these, looks like I need to up my game a bit though. Do you do additional things
+> in your workflow?
 
-I have hacky bridge support over here already. Give me some days to
-clean it up and it might safe you some work.
-Cheers,
- -- Guido
+That should have thrown the warnings. If you aren't seeing those, do
+you have dtschema package installed (see
+Documentation/devicetree/writing-schema.md)? Or it could be erroring
+out on something else first. There's a few breakages that I'm trying
+to fix.
+
+Rob
