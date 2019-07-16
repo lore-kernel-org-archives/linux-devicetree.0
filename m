@@ -1,14 +1,14 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 10/15] arm64: dts: imx8qm: add conn ss support
-Date: Tue, 16 Jul 2019 16:31:15 -0300
-Message-ID: <CAOMZO5B=yK_S=2xRFt_1pAJ2iYE7CCCenOKQ3rjOeF3e+=vQtQ@mail.gmail.com>
+Subject: Re: [PATCH v2 13/15] arm64: dts: imx: add imx8qm common dts file
+Date: Tue, 16 Jul 2019 16:33:18 -0300
+Message-ID: <CAOMZO5Cc6XLjFFEVd59Pru7t72jvW=OCikyXK7W6E8rWRVO3jA@mail.gmail.com>
 References: <1563290089-11085-1-git-send-email-aisheng.dong@nxp.com>
- <1563290089-11085-11-git-send-email-aisheng.dong@nxp.com>
+ <1563290089-11085-14-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1563290089-11085-11-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <1563290089-11085-14-git-send-email-aisheng.dong@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,10 +23,14 @@ Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED 
 List-Id: devicetree@vger.kernel.org
 
 On Tue, Jul 16, 2019 at 12:37 PM Dong Aisheng <aisheng.dong@nxp.com> wrote:
->
-> The CONN SS of MX8QM is mostly the same as MX8QXP except it has one more
-> USB HSIC module support. So we can fully reuse the exist CONN SS dtsi.
-> Add <soc>-ss-conn.dtsi with compatible string updated according to
-> imx8-ss-conn.dtsi.
 
-Subject and commit log does not match what the patch is actually doing.
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -144,7 +144,7 @@
+>                 };
+>
+>                 clk: clock-controller {
+> -                       compatible = "fsl,imx8qxp-clk";
+> +                       compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
+
+This looks like unrelated to adding imx8qm support.
