@@ -1,142 +1,144 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-Date: Tue, 16 Jul 2019 09:50:38 -0700
-Message-ID: <72b5df8c-8acb-d0d0-ebcf-b406e8404973@nvidia.com>
-References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <a9b5c364-52b4-bee1-5881-47197f043950@nvidia.com>
- <e9d4bc0e-fd5d-ae02-2d67-86c7f7c9620f@gmail.com>
- <3938092a-bbc7-b304-641d-31677539598d@nvidia.com>
- <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
- <0ee055ad-d397-32e5-60ee-d62c14c6f77b@gmail.com>
- <86fc07d5-ab2e-a52a-a570-b1dfff4c20fe@nvidia.com>
- <20190716083701.225f0fd9@dimatab>
- <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
- <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
- <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
- <d908d3a2-3013-7f92-0852-115f428d1c5f@gmail.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 1/6] dt-bindings: irqchip: Add PRUSS interrupt controller
+ bindings
+Date: Tue, 16 Jul 2019 12:07:58 -0500
+Message-ID: <2eb76f94-3d01-2620-89a0-207a4084be1b@ti.com>
+References: <20190708035243.12170-1-s-anna@ti.com>
+ <20190708035243.12170-2-s-anna@ti.com>
+ <b67e8ce6-a291-ce4c-9972-b7fc7cd08bb4@ti.com>
+ <53868885-a78d-448a-1f2a-03a16251d028@ti.com>
+ <c3f0061f-22b0-c281-b8ff-4a2cb7e91aba@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d908d3a2-3013-7f92-0852-115f428d1c5f@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <c3f0061f-22b0-c281-b8ff-4a2cb7e91aba@lechnology.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Joseph Lo <josephl@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>, "Andrew F. Davis" <afd@ti.com>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 7/16/19 8:00 AM, Dmitry Osipenko wrote:
-> 16.07.2019 11:06, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On Tue, Jul 16, 2019 at 03:24:26PM +0800, Joseph Lo wrote:
->>>> OK, Will add to CPUFreq driver...
->>>>> The other thing that also need attention is that T124 CPUFreq driver
->>>>> implicitly relies on DFLL driver to be probed first, which is icky.
->>>>>
->>>> Should I add check for successful dfll clk register explicitly in
->>>> CPUFreq driver probe and defer till dfll clk registers?
-> Probably you should use the "device links". See [1][2] for the example.
->
-> [1]
-> https://elixir.bootlin.com/linux/v5.2.1/source/drivers/gpu/drm/tegra/dc.c=
-#L2383
->
-> [2] https://www.kernel.org/doc/html/latest/driver-api/device_link.html
->
-> Return EPROBE_DEFER instead of EINVAL if device_link_add() fails. And
-> use of_find_device_by_node() to get the DFLL's device, see [3].
->
-> [3]
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/=
-drivers/devfreq/tegra20-devfreq.c#n100
-Will go thru and add...
->>> Sorry, I didn't follow the mail thread. Just regarding the DFLL part.
->>>
->>> As you know it, the DFLL clock is one of the CPU clock sources and
->>> integrated with DVFS control logic with the regulator. We will not swit=
-ch
->>> CPU to other clock sources once we switched to DFLL. Because the CPU ha=
-s
->>> been regulated by the DFLL HW with the DVFS table (CVB or OPP table you=
- see
->>> in the driver.). We shouldn't reparent it to other sources with unknew
->>> freq/volt pair. That's not guaranteed to work. We allow switching to
->>> open-loop mode but different sources.
-> Okay, then the CPUFreq driver will have to enforce DFLL freq to PLLP's
-> rate before switching to PLLP in order to have a proper CPU voltage.
-
-PLLP freq is safe to work for any CPU voltage. So no need to enforce=20
-DFLL freq to PLLP rate before changing CCLK_G source to PLLP during suspend
-
->>> And I don't exactly understand why we need to switch to PLLP in CPU idl=
-e
->>> driver. Just keep it on CL-DVFS mode all the time.
->>>
->>> In SC7 entry, the dfll suspend function moves it the open-loop mode. Th=
-at's
->>> all. The sc7-entryfirmware will handle the rest of the sequence to turn=
- off
->>> the CPU power.
->>>
->>> In SC7 resume, the warmboot code will handle the sequence to turn on
->>> regulator and power up the CPU cluster. And leave it on PLL_P. After
->>> resuming to the kernel, we re-init DFLL, restore the CPU clock policy (=
-CPU
->>> runs on DFLL open-loop mode) and then moving to close-loop mode.
-> The DFLL is re-inited after switching CCLK to DFLL parent during of the
-> early clocks-state restoring by CaR driver. Hence instead of having odd
-> hacks in the CaR driver, it is much nicer to have a proper
-> suspend-resume sequencing of the device drivers. In this case CPUFreq
-> driver is the driver that enables DFLL and switches CPU to that clock
-> source, which means that this driver is also should be responsible for
-> management of the DFLL's state during of suspend/resume process. If
-> CPUFreq driver disables DFLL during suspend and re-enables it during
-> resume, then looks like the CaR driver hacks around DFLL are not needed.
->
->>> The DFLL part looks good to me. BTW, change the patch subject to "Add
->>> suspend-resume support" seems more appropriate to me.
->>>
->> To clarify this, the sequences for DFLL use are as follows (assuming all
->> required DFLL hw configuration has been done)
->>
->> Switch to DFLL:
->> 0) Save current parent and frequency
->> 1) Program DFLL to open loop mode
->> 2) Enable DFLL
->> 3) Change cclk_g parent to DFLL
->> For OVR regulator:
->> 4) Change PWM output pin from tristate to output
->> 5) Enable DFLL PWM output
->> For I2C regulator:
->> 4) Enable DFLL I2C output
->> 6) Program DFLL to closed loop mode
->>
->> Switch away from DFLL:
->> 0) Change cclk_g parent to PLLP so the CPU frequency is ok for any vdd_c=
-pu voltage
->> 1) Program DFLL to open loop mode
->>
->> For OVR regulator:
->> 2) Change PWM output pin from output to tristate: vdd_cpu will go back
->>     to hardwired boot voltage.
->> 3) Disable DFLL PWM output
->>
->> For I2C regulator:
->> 2) Program vdd_cpu regulator voltage to the boot voltage
->> 3) Disable DFLL I2C output
->>
->> 4) Reprogram parent saved in step 0 of 'Switch to DFLL' to the saved
->>     frequency
->> 5) Change cclk_g parent to saved parent
->> 6) Disable DFLL
-
-This is the same sequence currently implemented. But dfll suspend/resume=20
-calls are thru Tegra210 clock driver.
-
-Dmitry wants to have dfll suspend/resume along with CCLK_G restore to=20
-happen from CPUFreq driver pm_ops rather than tegra210 clock driver or=20
-tegra dfll driver.
-
-Will move it to CPUFreq driver...
-
-> Thanks!
+SGkgRGF2aWQsCgpPbiA3LzEwLzE5IDEyOjA4IFBNLCBEYXZpZCBMZWNobmVyIHdyb3RlOgo+IAo+
+Pj4+ICstIGludGVycnVwdHPCoMKgwqDCoMKgwqDCoMKgwqDCoCA6IGFsbCB0aGUgaW50ZXJydXB0
+cyBnZW5lcmF0ZWQgdG93YXJkcyB0aGUKPj4+PiBtYWluIGhvc3QKPj4+PiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHByb2Nlc3NvciBpbiB0aGUgU29D
+LiBUaGUgZm9ybWF0IGRlcGVuZHMKPj4+PiBvbiB0aGUKPj4+PiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGludGVycnVwdCBzcGVjaWZpZXIgZm9yIHRo
+ZSBwYXJ0aWN1bGFyCj4+Pj4gU29DJ3MgQVJNIEdJQwo+Pj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGFyZW50IGludGVycnVwdCBjb250cm9sbGVy
+LiBBIHNoYXJlZAo+Pj4+IGludGVycnVwdCBjYW4KPj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJlIHNraXBwZWQgaWYgdGhlIGRlc2lyZWQgZGVz
+dGluYXRpb24gYW5kCj4+Pj4gdXNhZ2UgaXMgYnkKPj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGEgZGlmZmVyZW50IHByb2Nlc3Nvci9kZXZpY2Uu
+Cj4+Pj4gKy0gaW50ZXJydXB0LW5hbWVzwqDCoMKgwqDCoCA6IHNob3VsZCB1c2Ugb25lIG9mIHRo
+ZSBmb2xsb3dpbmcgbmFtZXMgZm9yCj4+Pj4gZWFjaCB2YWxpZAo+Pj4+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaW50ZXJydXB0IGNvbm5lY3RlZCB0
+byBBUk0gR0lDLCB0aGUgbmFtZQo+Pj4+IHNob3VsZCBtYXRjaAo+Pj4+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdGhlIGNvcnJlc3BvbmRpbmcgaG9z
+dCBpbnRlcnJ1cHQgbnVtYmVyLAo+Pj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAiaG9zdDAiLCAiaG9zdDEiLCAiaG9zdDIiLCAiaG9z
+dDMiLAo+Pj4+ICJob3N0NCIsCj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJob3N0NSIsICJob3N0NiIgb3IgImhvc3Q3Igo+Pj4+
+ICstIGludGVycnVwdC1jb250cm9sbGVyIDogbWFyayB0aGlzIG5vZGUgYXMgYW4gaW50ZXJydXB0
+IGNvbnRyb2xsZXIKPj4+PiArLSAjaW50ZXJydXB0LWNlbGxzwqDCoMKgwqAgOiBzaG91bGQgYmUg
+MS4gQ2xpZW50IHVzZXJzIHNoYWxsIHVzZSB0aGUKPj4+PiBQUlUgU3lzdGVtCj4+Pj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBldmVudCBudW1iZXIg
+KHRoZSBpbnRlcnJ1cHQgc291cmNlIHRoYXQKPj4+PiB0aGUgY2xpZW50Cj4+Pj4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpcyBpbnRlcmVzdGVkIGlu
+KSBhcyB0aGUgdmFsdWUgb2YgdGhlCj4+Pj4gaW50ZXJydXB0cwo+Pj4+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcHJvcGVydHkgaW4gdGhlaXIgbm9k
+ZQo+Pj4+ICsKPj4+PiArT3B0aW9uYWwgUHJvcGVydGllczoKPj4+PiArLS0tLS0tLS0tLS0tLS0t
+LS0tLS0KPj4+PiArVGhlIGZvbGxvd2luZyBwcm9wZXJ0aWVzIGFyZSBfcmVxdWlyZWRfIG9ubHkg
+Zm9yIHNvbWUgU29Dcy4gSWYgbm9uZQo+Pj4+IG9mIHRoZSBiZWxvdwo+Pj4+ICtwcm9wZXJ0aWVz
+IGFyZSBkZWZpbmVkLCBpdCBpbXBsaWVzIHRoYXQgYWxsIHRoZSBob3N0IGludGVycnVwdHMgMgo+
+Pj4+IHRocm91Z2ggOSBhcmUKPj4+PiArY29ubmVjdGVkIGV4Y2x1c2l2ZWx5IHRvIHRoZSBBUk0g
+R0lDLgo+Pj4+ICsKPj4+PiArLSB0aSxpcnFzLXJlc2VydmVkwqDCoMKgwqAgOiBhbiBhcnJheSBv
+ZiA4LWJpdCBlbGVtZW50cyBvZiBob3N0Cj4+Pj4gaW50ZXJydXB0cyBiZXR3ZWVuCj4+Pj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAwIGFuZCA3IChj
+b3JyZXNwb25kaW5nIHRvIFBSVVNTIElOVEMKPj4+PiBvdXRwdXQgaW50ZXJydXB0cwo+Pj4+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMiB0aHJvdWdo
+IDkpIHRoYXQgYXJlIG5vdCBjb25uZWN0ZWQgdG8gdGhlCj4+Pj4gQVJNIEdJQy4KPj4+Cj4+PiBU
+aGUgcmVhc29uIGZvciAwLTcgbWFwcGluZyB0byAyLTkgaXMgbm90IGluc3RhbnRseSBjbGVhciB0
+byBzb21lb25lCj4+PiByZWFkaW5nIHRoaXMuIElmIHlvdSByZXNwaW4gdGhpcyBjb3VsZCB5b3Ug
+bm90ZSB0aGF0IHJlYXNvbiBpcwo+Pj4gaW50ZXJydXB0cyAwIGFuZCAxIGFyZSBhbHdheXMgcm91
+dGVkIGJhY2sgaW50byB0aGUgUFJVU1MuCj4+Cj4+IFllYWgsIHRoaXMgaXMgYWx3YXlzIGdvaW5n
+IHRvIGJlIHNvbWV3aGF0IGNvbmZ1c2luZyBzaW5jZSB0aGUgZHJpdmVyIGhhcwo+PiB0byBkZWFs
+IHdpdGggYWxsIGhvc3RzIGZyb20gY2hhbm5lbC1tYXBwaW5nIHBlcnNwZWN0aXZlLCBidXQgb25s
+eSB0aGUgOAo+PiBpbnRlcnJ1cHRzIGF0IG1vc3QgdGhhdCByZWFjaCBNUFUgZm9yIGhhbmRsaW5n
+IGludGVycnVwdHMuIFRSTSBoYXMKPj4KPj4gQW55d2F5LCBJIGhhdmUgYWxyZWFkeSBtZW50aW9u
+ZWQgdGhlIGZpcnN0IDIgaW50ZXJydXB0IHJvdXRpbmcgaW4gdGhlCj4+IGZpcnN0IHBhcmFncmFw
+aCBhYm92ZS4KPj4KPj4gVGhpbmtpbmcgbW9yZQo+Pj4gb24gdGhhdCwgdGhlIHNhbWUgaXMgdHJ1
+ZSBmb3IgaW50ZXJydXB0IDcgKCJob3N0NSIpIG9uIEFNNDM3eC82NkFLMkcgeWV0Cj4+PiB3ZSBk
+b24ndCBza2lwIHRoYXQgaW4gdGhlIG5hbWluZy4uIG5vdyB0aGF0IHdlIGhhdmUgdGhlIHJlc2Vy
+dmVkIElSUQo+Pj4gbWVjaGFuaXNtIGFib3ZlLCB3aHkgbm90IGxlYXZlIHRoZSBvbmUtdG8tb25l
+IGludGVycnVwdCB0byBuYW1lIG1hcHBpbmcsCj4+PiBidXQgYWx3YXlzIGhhdmUgYXQgbGVhc3Qg
+dGhlIGZpcnN0IHR3byBtYXJrZWQgYXMgcmVzZXJ2ZWQgZm9yIGFsbCB0aGUKPj4+IGN1cnJlbnQg
+ZGV2aWNlczoKPj4+Cj4+PiB0aSxpcnFzLXJlc2VydmVkID0gL2JpdHMvIDggPDAgMT47Cj4+Pgo+
+Pj4gVGhlbiBhbnkgImhvc3R4IiBsaXN0ZWQgYXMgcmVzZXJ2ZWQgbmVlZCBub3QgYmUgcHJlc2Vu
+dCBpbiB0aGUgaG9zdAo+Pj4gaW50ZXJydXB0cyBwcm9wZXJ0eSBhcnJheS4gVG8gbWUgdGhhdCB3
+b3VsZCBzb2x2ZSB0aGUgIm1hbmFnaW5nCj4+PiBpbnRlcnJ1cHRzIG5vdCB0YXJnZXRpbmcgdGhl
+IExpbnV4IHJ1bm5pbmcgY29yZSIgcHJvYmxlbSBhbmQga2VlcCB0aGUKPj4+IG5hbWVzIGNvbnNp
+c3RlbnQsIGUuZy46Cj4+Cj4+IEkgaGFkIGFjdHVhbGx5IHVzZWQgdGhlIGludGVycnVwdC1uYW1l
+cyBhbHdheXMgc3RhcnRpbmcgZnJvbSAiaG9zdDIiCj4+IHRocm91Z2ggImhvc3Q5IiAobmFtZXMg
+ZnJvbSBQUlUgcGVyc3BlY3RpdmUpIHByZXZpb3VzbHksIGFuZCBJIGhhdmUKPj4gY2hhbmdlZCB0
+aGlzIHRvIHN0YXJ0IGluZGV4aW5nIGZyb20gMCBpbiB0aGlzIHNlcmllcyB0byBhZGRyZXNzIGFu
+Cj4+IGludGVybmFsIHJldmlldyBjb21tZW50IGZyb20gR3J5Z29yaWkgYW5kIHRvIGFsaWduIHdp
+dGggVFJNLiBBbGwgdGhlCj4+IFRSTXMgKGV4Y2VwdCBmb3IgQU01NzJ4KSBhY3R1YWxseSB1c2Ug
+dGhlIG5hbWVzL3NpZ25hbHMgImhvc3RfaW50cjAiLAo+PiAiaG9zdF9pbnRyMSIuLiJob3N0X2lu
+dHI3IiBldGMgZm9yIHRoZSBpbnRlcnJ1cHRzIGdvaW5nIHRvd2FyZHMgTVBVLgo+PiBNYXliZSBJ
+IHNob3VsZCBhY3R1YWxseSByZW5hbWUgdGhlIGludGVycnVwdC1uYW1lcyB0byBiZSBob3N0X2lu
+dHJYCj4+IGluc3RlYWQgb2YgaG9zdFggdG8gYXZvaWQgY29uZnVzaW9uIGFuZCBiZSBleGFjdGx5
+IGFsaWduZWQgd2l0aCB0aGUgVFJNCj4+IG5hbWVzLiBJIHdpbGwgZmlsZSBhIGJ1ZyBhZ2FpbnN0
+IEFNNTd4eCBUUk0gdG8gYWxpZ24gdGhlIG5hbWVzIHdpdGggYWxsCj4+IG90aGVyIFNvQyBUUk1z
+Lgo+Pgo+PiBJIGFtIHVzaW5nICJvdXRwdXQgaW50ZXJydXB0IGxpbmVzIiB0byBpbXBseSBuYW1l
+cyB3LnIudCBQUlUgdnMgImhvc3QKPj4gaW50ZXJydXB0IiB0byBpbXBseSBBUk0gR0lDIG5hbWVz
+Lgo+Pgo+PiByZWdhcmRzCj4+IFN1bWFuCj4+Cj4gCj4gRldJVywgdGhlIEFNMTgwOCBUUk0gb25s
+eSB1c2VzIFBSVV9FVlRPVVQwIHRvIFBSVV9FVlRPVVQ3IGFuZCBkb2VzIG5vdAo+IG1lbnRpb24g
+Imhvc3QiIGluIHJlbGF0aW9uIHRvIHRoZXNlIGludGVycnVwdHMuIFRoZSBBTTN4eHggYW5kIEFN
+NHh4eAo+IGFsc28gdXNlIHNpbWlsYXIgbmFtZXMgKFBSVV9JQ1NTX0VWVE9VVDAsIFBSVV9JQ1NT
+MV9FVlRPVVQwKSBhbHRob3VnaAo+IHRoZXkgZG8gbWVudGlvbiB0aGF0IHRoZSBzb3VyY2UgaXMg
+InByMV9ob3N0WzBdIG91dHB1dC9ldmVudHMgZXhwb3J0ZWQKPiBmcm9tIFBSVV9JQ1NTMSIuIChB
+bHNvLCB0aGUgb2xkZXIgcHJvY2Vzc29ycyBoYXZlIEFJTlRDIGluc3RlYWQgb2YgR0lDKS4KCklu
+ZGVlZCwgRVZUT1VUIHdhcyBvbmx5IHVzZWQgaW4gdGhlIEludGVycnVwdHMgY2hhcHRlciBvbiBB
+TTE4MDgsIEFNMzM1eAphbmQgQU00Mzd4LiBUaGVzZSBUUk1zIGFyZSBvbmx5IGdldHRpbmcgdmVy
+eSBpbmZyZXF1ZW50IHVwZGF0ZXMsIHNvIEkKZG91YnQgd2Ugd2lsbCBoYXZlIHRoZXNlIG5hbWVz
+IHN5bmNocm9uaXplZCB0byB0aGUgb3RoZXIgU29Dcy4KClRoZSBkZXNjcmlwdGlvbnMgaW4gUFJV
+U1MgSU5UQyBzZWN0aW9ucyB0aGVtc2VsdmVzIGFsd2F5cyB1c2UgdGhlIHRlcm0KaG9zdCBpbnRl
+cnJ1cHRzIGZvciBhbGwgaG9zdCBldmVudHMsIGJ1dCB0aGUgb3V0cHV0IHNpZ25hbHMgZ2V0CnJl
+LWluZGV4ZWQgdG8gMCwgd2hpY2ggdGVuZHMgdG8gYmUgY29uZnVzaW5nLgoKPiAKPiBNYXliZSB0
+byBoZWxwIGNsYXJpZnkgaGVyZSB3ZSBjb3VsZCBtZW50aW9uICJldmVudCIgaW4gdGhlIGRvY3M6
+Cj4gCj4gCj4gKy0gaW50ZXJydXB0LW5hbWVzwqDCoMKgwqDCoCA6IHNob3VsZCB1c2Ugb25lIG9m
+IHRoZSBmb2xsb3dpbmcgbmFtZXMgZm9yIGVhY2gKPiB2YWxpZAo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaG9zdCBldmVudCBpbnRlcnJ1cHQgY29u
+bmVjdGVkIHRvIEFSTSBpbnRlcnJ1cHQKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIGNvbnRyb2xsZXIsdGhlIG5hbWUgc2hvdWxkIG1hdGNoIHRoZQo+
+IGNvcnJlc3BvbmRpbmcKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIGhvc3QgZXZlbnQgaW50ZXJydXB0IG51bWJlciwKClllYWgsIEkgbGlrZSB5b3Vy
+IHJld29yZGluZy4gV2lsbCB1cGRhdGUgZm9yIHRoZSBuZXh0IHZlcnNpb24uCgo+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAiaG9zdDAi
+LCAiaG9zdDEiLCAiaG9zdDIiLCAiaG9zdDMiLCAiaG9zdDQiLAo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAiaG9zdDUiLCAiaG9zdDYi
+IG9yICJob3N0NyIKCkkgd2lsbCBiZSB1cGRhdGluZyB0aGVzZSBuYW1lcyBhcyB3ZWxsIHRvIGFk
+ZCBlaXRoZXIgYSBpbnQgb3IgaW50ciBzdWZmaXguCgo+IAo+IAo+IAo+IC4uLgo+IAo+Pj4+ICsK
+Pj4+PiArRXhhbXBsZToKPj4+PiArLS0tLS0tLS0KPj4+PiArCj4+Pj4gKzEuwqDCoMKgIC8qIEFN
+MzN4eCBQUlUtSUNTUyAqLwo+Pj4+ICvCoMKgwqAgcHJ1c3M6IHBydXNzQDAgewo+IAo+IEkgZG9u
+J3Qgc3VwcG9zZSB0aGVyZSBpcyBhIGdlbmVyaWMgbmFtZSB0aGF0IGNvdWxkIGJlIHVzZWQgaGVy
+ZQo+IGluc3RlYWQgb2YgcHJ1c3M/IEl0IHNlZW1zIGxpa2UgdGhlcmUgc2hvdWxkIGJlIG9uZSBm
+b3IgcmVtb3RlCj4gcHJvY2Vzc29ycyB0aGF0IGFyZW4ndCBEU1BzIG9yIG90aGVyIHNwZWNpYWxp
+emVkIHByb2Nlc3NvcnMuCj4gCgpZZWFoLCB0aGVyZSBpcyBub25lLiBJdCBpcyB0aGUgb3ZlcmFs
+bCBQUlUgc3Vic3lzdGVtLCB0aGUgaW5kaXZpZHVhbApjb3JlcyBhcmUgY2FsbGVkIFBSVS4gVGhl
+IHN1YnN5c3RlbXMgYXJlIHVzdWFsbHkgcmVmZXJyZWQgdG8gYXMgUFJVU1MsClBSVS1JQ1NTIGFu
+ZCBJQ1NTRyAob24gdGhlIG5ld2VyIEszIFNvQ3MpLCBzbyBJIHNpbXBseSBjaG9zZSB0aGUgc2hv
+cnRlcgpwcnVzcy4KCnJlZ2FyZHMKU3VtYW4KCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
