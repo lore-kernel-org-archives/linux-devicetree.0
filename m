@@ -1,69 +1,93 @@
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: Re: [PATCH] ARM: dts: imx6ul-kontron-ul2: Add Exceet/Kontron iMX6-UL2
- SoM
-Date: Tue, 16 Jul 2019 08:02:22 +0000
-Message-ID: <74823caa-ace4-7f24-98f3-7da6f2a4e5c2@kontron.de>
-References: <20190712141242.4915-1-krzk@kernel.org>
- <5cbd8bb2-6ecb-7e55-1580-e580e2c340dd@kontron.de>
- <CAJKOXPdq5e1OPmxamicAVf4ZDoSAuD=yvfOgZD04aQD9PtnCEQ@mail.gmail.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+Date: Tue, 16 Jul 2019 11:06:10 +0300
+Message-ID: <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
+References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
+ <a9b5c364-52b4-bee1-5881-47197f043950@nvidia.com>
+ <e9d4bc0e-fd5d-ae02-2d67-86c7f7c9620f@gmail.com>
+ <3938092a-bbc7-b304-641d-31677539598d@nvidia.com>
+ <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
+ <0ee055ad-d397-32e5-60ee-d62c14c6f77b@gmail.com>
+ <86fc07d5-ab2e-a52a-a570-b1dfff4c20fe@nvidia.com>
+ <20190716083701.225f0fd9@dimatab>
+ <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
+ <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPdq5e1OPmxamicAVf4ZDoSAuD=yvfOgZD04aQD9PtnCEQ@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <8338E8458D9FB44BA707B7261589B984@snt-world.com>
+Content-Disposition: inline
+In-Reply-To: <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Joseph Lo <josephl@nvidia.com>
+Cc: Sowjanya Komatineni <skomatineni@nvidia.com>, Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYuMDcuMTkgMDk6NTAsIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+IE9uIEZyaSwg
-MTIgSnVsIDIwMTkgYXQgMTc6MjEsIFNjaHJlbXBmIEZyaWVkZXINCj4gPGZyaWVkZXIuc2NocmVt
-cGZAa29udHJvbi5kZT4gd3JvdGU6DQo+Pg0KPj4gSGkgS3J6eXN6dG9mLA0KPj4NCj4+IE9uIDEy
-LjA3LjE5IDE2OjEyLCBLcnp5c3p0b2YgS296bG93c2tpIHdyb3RlOg0KPj4+IEFkZCBzdXBwb3J0
-IGZvciBpTVg2LVVMMiBtb2R1bGVzIGZyb20gS29udHJvbiBFbGVjdHJvbmljcyBHbWJIIChiZWZv
-cmUNCj4+PiBhY3F1aXNpdGlvbjogRXhjZWV0IEVsZWN0cm9uaWNzKSBhbmQgZXZhbGtpdCBib2Fy
-ZHMgYmFzZWQgb24gaXQ6DQo+Pj4NCj4+PiAxLiBpLk1YNiBVTCBTeXN0ZW0tb24tTW9kdWxlLCBh
-IDI1eDI1IG1tIHNvbGRlcmFibGUgbW9kdWxlIChMR0EgcGFkcyBhbmQNCj4+PiAgICAgIHBpbiBj
-YXN0ZWxsYXRpb25zKSB3aXRoIDI1NiBNQiBSQU0sIDEgTUIgTk9SLUZsYXNoLCAyNTYgTUIgTkFO
-RCBhbmQNCj4+PiAgICAgIG90aGVyIGludGVyZmFjZXMsDQo+Pj4gMS4gVUwyIGV2YWxraXQsIHcv
-d28gZU1NQywgd2l0aG91dCBkaXNwbGF5LA0KPj4+IDIuIFVMMiBldmFsa2l0IHdpdGggNC4zIiBk
-aXNwbGF5LA0KPj4+IDMuIFVMMiBldmFsa2l0IHdpdGggNS4wIiBkaXNwbGF5Lg0KPj4+DQo+Pj4g
-VGhpcyBpbmNsdWRlcyBkZXZpY2Ugbm9kZXMgZm9yIHVuc3VwcG9ydGVkIGRpc3BsYXlzIChBZG1h
-dGVjDQo+Pj4gVDA0M0MwMDQ4MDAyNzJUMkEgYW5kIFQwNzBQMTMzVDBTMzAxKS4NCj4+Pg0KPj4+
-IFRoZSB3b3JrIGlzIGJhc2VkIG9uIEV4Y2VldCBzb3VyY2UgY29kZSAoR1BMdjIpIHdpdGggbnVt
-ZXJvdXMgY2hhbmdlczoNCj4+PiAxLiBSZW9yZ2FuaXplIGZpbGVzLA0KPj4+IDIuIFJlbmFtZSBF
-eGNlZXQgLT4gS29udHJvbiwNCj4+PiAzLiBGaXggY29kaW5nIHN0eWxlIGVycm9ycywNCj4+PiA0
-LiBGaXggRFRDIHdhcm5pbmdzLA0KPj4+IDUuIEV4dGVuZCBjb21wYXRpYmxlcyBzbyBldmFsIGJv
-YXJkcyBpbmhlcml0IHRoZSBTb00gY29tcGF0aWJsZSwNCj4+PiA2LiBVc2UgZGVmaW5lcyBpbnN0
-ZWFkIG9mIEdQSU8gZmxhZyB2YWx1ZXMsDQo+Pj4gNy4gQWRqdXN0IG9wZXJhdGluZyBwb2ludHMg
-b2YgQ1BVMCwNCj4+PiA4LiBTb3J0IG5vZGVzIGFscGhhYmV0aWNhbGx5Lg0KPj4+DQo+Pj4gSW4g
-ZG93bnN0cmVhbSBCU1AgdGhlIEV4Y2VldCBuYW1lIHN0aWxsIGFwcGVhcnMgaW4gbXVsdGlwbGUg
-cGxhY2VzDQo+Pj4gdGhlcmVmb3JlIEkgbGVmdCBpdCBpbiB0aGUgbW9kZWwgbmFtZXMuDQo+Pg0K
-Pj4gRmlyc3QsIHRoYW5rcyBmb3IgeW91ciB3b3JrLiBJIHBsYW5uZWQgdG8gdXBzdHJlYW0gdGhl
-c2UgYm9hcmRzIG15c2VsZg0KPj4gYWZ0ZXIgdGhlIEZTTCBRU1BJIHNwaS1tZW0gZHJpdmVyIHdh
-cyBtZXJnZWQgaW4gNS4xLCBidXQgZGlkbid0IGhhdmUNCj4+IHRpbWUgdG8gZmluYWxpemUgYW5k
-IHNlbmQgdGhlIHBhdGNoZXMuDQo+Pg0KPj4gTWVhbndoaWxlIHdlIGNhbWUgdXAgd2l0aCBhIG5l
-dyBuYW1pbmcgc2NoZW1lIGZvciBvdXIgYm9hcmRzLCB0aGF0DQo+PiBoYXNuJ3QgYmVlbiBpbXBs
-ZW1lbnRlZCB5ZXQuIEJ1dCBJIHdvdWxkIGxpa2UgdG8gdGFrZSB0aGlzIGNoYW5jZSB0bw0KPj4g
-aW1wbGVtZW50IHRoZSBuZXcgc2NoZW1lLg0KPiANCj4gU3VyZSwgSSBzZWUgbm8gcHJvYmxlbSBp
-biB1c2luZyBkaWZmZXJlbnQgbmFtZXMsIG1hdGNoaW5nIGRvd25zdHJlYW0NCj4ga2VybmVsLiBK
-dXN0IHBvaW50IG1lIHRvIHByb3BlciBuYW1lcy4NCj4gDQo+PiBBbHNvIHRoZXJlIGFyZSBzb21l
-IG1vcmUgZmxhdm9ycyBvZiB0aGUgU29NICh3aXRoIGkuTVg2VUxMIGluc3RlYWQgb2YNCj4+IGku
-TVg2VUwsIHdpdGggNTEyTWlCIGluc3RlYWQgb2YgMjU2TWlCIGZsYXNoL1JBTSksIHRoYXQgSSB3
-b3VsZCBsaWtlIHRvDQo+PiBhZGQgYW5kIGZvciB3aGljaCBjb21tb24gcGFydHMgb2YgdGhlIFNv
-TSBkdHNpIHdvdWxkIG5lZWQgdG8gYmUgZmFjdG9yZWQNCj4+IG91dCB0byBhIHNlcGFyYXRlIGZp
-bGUuDQo+IA0KPiBJIGhhdmUgb25seSB0aGlzIG9uZSBwYXJ0aWN1bGFyIGZsYXZvciBzbyBJIHdv
-dWxkIHByZWZlciB0byB1cHN0cmVhbQ0KPiBvbmx5IHRoaXMgb25lLiBJIGRvIG5vdCBrbm93IGFs
-bCB0aGUgcG9zc2libGUgY29tYmluYXRpb25zIG9yIGZvcg0KPiBleGFtcGxlIHRoZSBtb3N0IGlu
-dGVyZXN0aW5nIG9uZXMuIEkgdGhpbmsgYWZ0ZXIgdGhpcyBwYXRjaHNldCB3ZSBjYW4NCj4gcmVm
-YWN0b3IgdGhlIERUUyB3aGVuZXZlciBpdHMgbmVlZGVkIC0gc3BsaXQgY29tbW9uIHBhcnRzLCBh
-ZGQgbmV3DQo+IGZpbGVzLg0KPiANCj4+IEkgd291bGQgcHJlZmVyIHRvIGF0IGxlYXN0IGFwcGx5
-IHRoZSBuYW1pbmcgY2hhbmdlcyBiZWZvcmUgbWVyZ2luZy4gVGhlDQo+PiBhZGRpdGlvbmFsIGJv
-YXJkIGZsYXZvcnMgY291bGQgYmUgYWRkZWQgYmVmb3JlIG1lcmdpbmcgb3IgSSBjb3VsZCBzZW5k
-DQo+PiB0aGVtIGFzIGZvbGxvdy11cCBwYXRjaGVzLiBXaGF0IGRvIHlvdSB0aGluaz8NCj4gDQo+
-IExldCdzIGNoYW5nZSB0aGUgbmFtaW5nIGFuZCBhZGQgbmV3IGZsYXZvcnMgYXMgZm9sbG93IHVw
-cz8NCg0KT2ssIGxldCdzIGRvIGl0IGxpa2UgdGhpcy4gSSB3aWxsIHNvb24gc2VuZCBhbm90aGVy
-IHJlcGx5IHRvIHRoZSANCm9yaWdpbmFsIHBhdGNoIHdpdGggdGhlIHByb3Bvc2VkIG5hbWluZyBj
-aGFuZ2VzLg0KDQpUaGFua3MsDQpGcmllZGVy
+On Tue, Jul 16, 2019 at 03:24:26PM +0800, Joseph Lo wrote:
+> > OK, Will add to CPUFreq driver...
+> > > 
+> > > The other thing that also need attention is that T124 CPUFreq driver
+> > > implicitly relies on DFLL driver to be probed first, which is icky.
+> > > 
+> > Should I add check for successful dfll clk register explicitly in
+> > CPUFreq driver probe and defer till dfll clk registers?
+> 
+> Sorry, I didn't follow the mail thread. Just regarding the DFLL part.
+> 
+> As you know it, the DFLL clock is one of the CPU clock sources and
+> integrated with DVFS control logic with the regulator. We will not switch
+> CPU to other clock sources once we switched to DFLL. Because the CPU has
+> been regulated by the DFLL HW with the DVFS table (CVB or OPP table you see
+> in the driver.). We shouldn't reparent it to other sources with unknew
+> freq/volt pair. That's not guaranteed to work. We allow switching to
+> open-loop mode but different sources.
+> 
+> And I don't exactly understand why we need to switch to PLLP in CPU idle
+> driver. Just keep it on CL-DVFS mode all the time.
+> 
+> In SC7 entry, the dfll suspend function moves it the open-loop mode. That's
+> all. The sc7-entryfirmware will handle the rest of the sequence to turn off
+> the CPU power.
+> 
+> In SC7 resume, the warmboot code will handle the sequence to turn on
+> regulator and power up the CPU cluster. And leave it on PLL_P. After
+> resuming to the kernel, we re-init DFLL, restore the CPU clock policy (CPU
+> runs on DFLL open-loop mode) and then moving to close-loop mode.
+> 
+> The DFLL part looks good to me. BTW, change the patch subject to "Add
+> suspend-resume support" seems more appropriate to me.
+> 
+
+To clarify this, the sequences for DFLL use are as follows (assuming all
+required DFLL hw configuration has been done)
+
+Switch to DFLL:
+0) Save current parent and frequency
+1) Program DFLL to open loop mode
+2) Enable DFLL
+3) Change cclk_g parent to DFLL
+For OVR regulator:
+4) Change PWM output pin from tristate to output
+5) Enable DFLL PWM output
+For I2C regulator:
+4) Enable DFLL I2C output
+6) Program DFLL to closed loop mode
+
+Switch away from DFLL:
+0) Change cclk_g parent to PLLP so the CPU frequency is ok for any vdd_cpu voltage
+1) Program DFLL to open loop mode
+
+For OVR regulator:
+2) Change PWM output pin from output to tristate: vdd_cpu will go back
+   to hardwired boot voltage.
+3) Disable DFLL PWM output
+
+For I2C regulator:
+2) Program vdd_cpu regulator voltage to the boot voltage
+3) Disable DFLL I2C output
+
+4) Reprogram parent saved in step 0 of 'Switch to DFLL' to the saved
+   frequency
+5) Change cclk_g parent to saved parent
+6) Disable DFLL
+
+Peter.
