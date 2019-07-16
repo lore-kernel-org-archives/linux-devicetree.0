@@ -1,65 +1,94 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v9 03/18] kunit: test: add string_stream a std::stream like string builder
-Date: Tue, 16 Jul 2019 08:33:59 -0700
-Message-ID: <20190716153400.5CB182054F@mail.kernel.org>
-References: <20190712081744.87097-1-brendanhiggins@google.com> <20190712081744.87097-4-brendanhiggins@google.com> <20190715204356.4E3F92145D@mail.kernel.org> <CAFd5g47481sRaez=yEJN4_ghiXZbxayk1Y04tAZpuzPLsmnhKg@mail.gmail.com> <20190715220407.0030420665@mail.kernel.org> <CAFd5g44bE0F=wq_fOAnxFTtoOyx1dUshhDAkKWr5hX9ipJ4Sxw@mail.gmail.com> <CAFd5g47y4vDB2P=EsGN8305LGeQPCTveNs-Jd5-=6K-XKY==CA@mail.gmail.com>
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH v2 00/15] arm64: dts: imx8: architecture improvement and
+ adding imx8qm support
+Date: Tue, 16 Jul 2019 23:14:34 +0800
+Message-ID: <1563290089-11085-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFd5g47y4vDB2P=EsGN8305LGeQPCTveNs-Jd5-=6K-XKY==CA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, dongas86@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brendan Higgins (2019-07-15 15:43:20)
-> On Mon, Jul 15, 2019 at 3:11 PM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
-> >
-> > On Mon, Jul 15, 2019 at 3:04 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > >
-> > > Quoting Brendan Higgins (2019-07-15 14:11:50)
-> > > > On Mon, Jul 15, 2019 at 1:43 PM Stephen Boyd <sboyd@kernel.org> wro=
-te:
-> > > > >
-> > > > > I also wonder if it would be better to just have a big slop buffe=
-r of a
-> > > > > 4K page or something so that we almost never have to allocate any=
-thing
-> > > > > with a string_stream and we can just rely on a reader consuming d=
-ata
-> > > > > while writers are writing. That might work out better, but I don'=
-t quite
-> > > > > understand the use case for the string stream.
-> > > >
-> > > > That makes sense, but might that also waste memory since we will
-> > > > almost never need that much memory?
-> > >
-> > > Why do we care? These are unit tests.
-> >
-> > Agreed.
-> >
-> > > Having allocations in here makes
-> > > things more complicated, whereas it would be simpler to have a pointer
-> > > and a spinlock operating on a chunk of memory that gets flushed out
-> > > periodically.
-> >
-> > I am not so sure. I have to have the logic to allocate memory in some
-> > case no matter what (what if I need more memory that my preallocated
-> > chuck?). I think it is simpler to always request an allocation than to
-> > only sometimes request an allocation.
->=20
-> Another even simpler alternative might be to just allocate memory
-> using kunit_kmalloc as we need it and just let the kunit_resource code
-> handle cleaning it all up when the test case finishes.
+IMX SCU based platforms (e.g. MX8QM/MX8QXP) are comprised of a number of SS
+(Subsystems), those SS may be shared between different SoCs while most of them
+can be reused like Devices Resources, Clocks, Power domains and etc.
 
-Sure, sounds like a nice way to avoid duplicating similar logic to
-maintain a list of things to free later.
+This patch series aims to improve the MX8 architecture to comply with the HW
+design to save a lot of duplicated codes and benefits us a better
+maintainability and scalability in the future.
 
->=20
-> What do you think?
+This patch series depends on another clk new binding series:
+[v3,00/11] clk: imx8: add new clock binding for better pm support
+https://patchwork.kernel.org/cover/11046287/
 
-If you go the allocation route then you'll need to have the flags to
-know what context you're in to allocate appropriately. Does that mean
-all the string operations will now take GFP flags?
+NOTE: for the missing undocumented compatible strings for the new SoC IMX8QM
+in this patch series. It will be sent in another patch series later.
+
+ChangeLog:
+v1->v2:
+ * change to the new two cells scu clock binding, so original adding scu clocks
+   patches were removed.
+ * Move scu pd node above clk node
+
+Dong Aisheng (15):
+  arm64: dts: imx8qxp: add fallback compatible string for scu pd
+  arm64: dts: imx8qxp: move scu pd node before scu clock node
+  arm64: dts: imx8qxp: orginize dts in subsystems
+  arm64: dts: imx8: add lsio lpcg clocks
+  arm64: dts: imx8: add conn lpcg clocks
+  arm64: dts: imx8: add adma lpcg clocks
+  arm64: dts: imx8: switch to two cell scu clock binding
+  arm64: dts: imx8: switch to new lpcg clock binding
+  arm64: dts: imx8qm: add lsio ss support
+  arm64: dts: imx8qm: add conn ss support
+  arm64: dts: imx8: split adma ss into dma and audio ss
+  arm64: dts: imx8qm: add dma ss support
+  arm64: dts: imx: add imx8qm common dts file
+  arm64: dts: imx: add imx8qm mek support
+  arm64: defconfig: add imx8qm mek support
+
+ arch/arm64/boot/dts/freescale/Makefile             |   1 +
+ arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi    |   7 +
+ arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi    | 185 ++++++++++
+ arch/arm64/boot/dts/freescale/imx8-ss-ddr.dtsi     |  19 +
+ arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi     | 205 +++++++++++
+ arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi    | 294 +++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8qm-mek.dts       | 144 ++++++++
+ arch/arm64/boot/dts/freescale/imx8qm-ss-conn.dtsi  |  21 ++
+ arch/arm64/boot/dts/freescale/imx8qm-ss-dma.dtsi   |  50 +++
+ arch/arm64/boot/dts/freescale/imx8qm-ss-lsio.dtsi  |  61 ++++
+ arch/arm64/boot/dts/freescale/imx8qm.dtsi          | 179 +++++++++
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      |   6 +-
+ arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi |  37 ++
+ arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi |  21 ++
+ arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi |  61 ++++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         | 401 ++-------------------
+ arch/arm64/configs/defconfig                       |   1 +
+ 17 files changed, 1311 insertions(+), 382 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8-ss-ddr.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-mek.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-ss-conn.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-ss-dma.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-ss-lsio.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qm.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
+
+-- 
+2.7.4
