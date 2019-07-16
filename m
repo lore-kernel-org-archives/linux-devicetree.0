@@ -1,15 +1,14 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 02/15] arm64: dts: imx8qxp: move scu pd node before scu
- clock node
-Date: Tue, 16 Jul 2019 16:26:23 -0300
-Message-ID: <CAOMZO5CMM94rAOryvfmHpuAsJnCRj-98kX3rfiZSn5EZt_c0kA@mail.gmail.com>
+Subject: Re: [PATCH v2 06/15] arm64: dts: imx8: add adma lpcg clocks
+Date: Tue, 16 Jul 2019 16:28:22 -0300
+Message-ID: <CAOMZO5CdBhJmdbavfWzpx0YPhAXgQvA+ik3GMz0e5U1j6ytyHg@mail.gmail.com>
 References: <1563290089-11085-1-git-send-email-aisheng.dong@nxp.com>
- <1563290089-11085-3-git-send-email-aisheng.dong@nxp.com>
+ <1563290089-11085-7-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1563290089-11085-3-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <1563290089-11085-7-git-send-email-aisheng.dong@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,9 +23,18 @@ Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED 
 List-Id: devicetree@vger.kernel.org
 
 On Tue, Jul 16, 2019 at 12:37 PM Dong Aisheng <aisheng.dong@nxp.com> wrote:
->
-> SCU clock depends on SCU Power domain. So let's move scu pd node
-> before scu clock to make it probe earlier.
 
-This looks like a fragile solution. Shouldn't this be handled via
-probe deferring?
+> +       uart0_lpcg: clock-controller@5a460000 {
+> +               reg = <0x5a460000 0x10000>;
+> +               #clock-cells = <1>;
+> +               clocks = <&clk IMX_ADMA_UART0_CLK>,
+> +                        <&dma_ipg_clk>;
+
+Putting the clocks into a single line helps readability, even if it is
+over 80 col.
+
+> +               bit-offset = <0 16>;
+> +               clock-output-names = "uart0_lpcg_baud_clk",
+> +                                    "uart0_lpcg_ipg_clk";
+
+Same here.
