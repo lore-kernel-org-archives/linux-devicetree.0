@@ -1,95 +1,101 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
-Date: Tue, 16 Jul 2019 14:00:13 -0500
-Message-ID: <20190716190013.GB4470@google.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
- <20190710062212.1745-13-vidyas@nvidia.com>
- <20190711125433.GB26088@e121166-lin.cambridge.arm.com>
- <986d0b1a-666a-7b05-a9f3-e761518bdc92@nvidia.com>
- <20190712160754.GA24285@e121166-lin.cambridge.arm.com>
- <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
- <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v3 2/6] OPP: Add support for bandwidth OPP tables
+Date: Tue, 16 Jul 2019 12:10:34 -0700
+Message-ID: <CAGETcx9NpYY4OmXdjHHCjqN7eZ4=7H9TdGZvw2Qr0K9Aq==ENg@mail.gmail.com>
+References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-3-saravanak@google.com>
+ <5dd35be3-fd03-c9cc-1eed-ce4bc1433363@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
+In-Reply-To: <5dd35be3-fd03-c9cc-1eed-ce4bc1433363@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Vidya Sagar <vidyas@nvidia.com>, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, adharmap@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 12:22:25PM +0100, Lorenzo Pieralisi wrote:
-> On Sat, Jul 13, 2019 at 12:34:34PM +0530, Vidya Sagar wrote:
+On Tue, Jul 16, 2019 at 10:33 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+>
+> Hey Saravana,
+>
+> On 7/3/19 6:40 AM, Saravana Kannan wrote:
+> > Not all devices quantify their performance points in terms of frequency.
+> > Devices like interconnects quantify their performance points in terms of
+> > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
+> > add support for parsing bandwidth OPPs from DT.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >   drivers/opp/of.c  | 34 ++++++++++++++++++++++++++++++++--
+> >   drivers/opp/opp.h |  4 +++-
+> >   2 files changed, 35 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> > index c10c782d15aa..54fa70ed2adc 100644
+> > --- a/drivers/opp/of.c
+> > +++ b/drivers/opp/of.c
+> > @@ -552,6 +552,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+> >   }
+> >   EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> >
+> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
+> > +{
+> > +     int ret;
+> > +     u64 rate;
+> > +     u32 bw;
+> > +
+> > +     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > +     if (!ret) {
+> > +             /*
+> > +              * Rate is defined as an unsigned long in clk API, and so
+> > +              * casting explicitly to its type. Must be fixed once rate is 64
+> > +              * bit guaranteed in clk API.
+> > +              */
+> > +             new_opp->rate = (unsigned long)rate
+> now that the rate gets set here, please remove the rate assignment in
+> _opp_add_static_v2
+>
+> > +             return 0;
+> > +     }
+> > +
+> > +     ret = of_property_read_u32(np, "opp-peak-KBps", &bw);
+> > +     if (ret)
+> > +             return ret;
+> > +     new_opp->rate = (unsigned long) &bw;
+>
+> should be bw instead
 
-> > > > > So if the link is not up we still go ahead and make probe
-> > > > > succeed. What for ?
-> > > > We may need root port to be available to support hot-plugging of
-> > > > endpoint devices, so, we don't fail the probe.
-> > > 
-> > > We need it or we don't. If you do support hotplugging of endpoint
-> > > devices point me at the code, otherwise link up failure means
-> > > failure to probe.
-> > Currently hotplugging of endpoint is not supported, but it is one of
-> > the use cases that we may add support for in future. 
-> 
-> You should elaborate on this, I do not understand what you mean,
-> either the root port(s) supports hotplug or it does not.
-> 
-> > But, why should we fail probe if link up doesn't happen? As such,
-> > nothing went wrong in terms of root port initialization right?  I
-> > checked other DWC based implementations and following are not failing
-> > the probe pci-dra7xx.c, pcie-armada8k.c, pcie-artpec6.c, pcie-histb.c,
-> > pcie-kirin.c, pcie-spear13xx.c, pci-exynos.c, pci-imx6.c,
-> > pci-keystone.c, pci-layerscape.c
-> > 
-> > Although following do fail the probe if link is not up.  pcie-qcom.c,
-> > pcie-uniphier.c, pci-meson.c
-> > 
-> > So, to me, it looks more like a choice we can make whether to fail the
-> > probe or not and in this case we are choosing not to fail.
-> 
-> I disagree. I had an offline chat with Bjorn and whether link-up should
-> fail the probe or not depends on whether the root port(s) is hotplug
-> capable or not and this in turn relies on the root port "Slot
-> implemented" bit in the PCI Express capabilities register.
+Good catch. Thanks!
 
-There might be a little more we can talk about in this regard.  I did
-bring up the "Slot implemented" bit, but after thinking about it more,
-I don't really think the host bridge driver should be looking at that.
-That's a PCIe concept, and it's really *downstream* from the host
-bridge itself.  The host bridge is logically a device on the CPU bus,
-not the PCI bus.
+>
+> > +
+> > +     ret = of_property_read_u32(np, "opp-avg-KBps", &bw);
+> > +     if (!ret)
+> > +             new_opp->avg_bw = (unsigned long) &bw;
+>
+> ditto
+>
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >   /**
+> >    * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
+> >    * @opp_table:      OPP table
+> > @@ -589,11 +618,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+> >       if (!new_opp)
+> >               return ERR_PTR(-ENOMEM);
+> >
+> > -     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > +     ret = _read_opp_key(new_opp, np);
+> >       if (ret < 0) {
+> >               /* "opp-hz" is optional for devices like power domains. */
+> >               if (!opp_table->is_genpd) {
+> > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
+> > +                     dev_err(dev, "%s: opp-hz or opp-peak-bw not found\n",
+> > +                             __func__);
+>
+> please remove the else part where rate value will be reset.
 
-I'm starting to think that the host bridge driver probe should be
-disconnected from question of whether the root port links are up.
+Ah! I flipped the meaning of the "if" check in my head. Thanks!
 
-Logically, the host bridge driver connects the CPU bus to a PCI root
-bus, so it converts CPU-side accesses to PCI config, memory, or I/O
-port transactions.  Given that, the PCI core can enumerate devices on
-the root bus and downstream buses.
-
-Devices on the root bus typically include Root Ports, but might also
-include endpoints, Root Complex Integrated Endpoints, Root Complex
-Event Collectors, etc.  I think in principle, we would want the host
-bridge probe to succeed so we can use these devices even if none of
-the Root Ports have a link.
-
-If a Root Port is present, I think users will expect to see it in the
-"lspci" output, even if its downstream link is not up.  That will
-enable things like manually poking the Root Port via "setpci" for
-debug.  And if it has a connector, the generic pciehp should be able
-to handle hot-add events without any special help from the host bridge
-driver.
-
-On ACPI systems there is no concept of the host bridge driver probe
-failing because of lack of link on a Root Port.  If a Root Port
-doesn't have an operational link, we still keep the pci_root.c driver,
-and we'll enumerate the Root Port itself.  So I tend to think DT
-systems should behave the same way, i.e., the driver probe should
-succeed unless it fails to allocate resources or something similar.  I
-think this is analogous to a NIC or USB adapter driver, where the
-probe succeeds even if there's no network cable or USB device
-attached.
-
-Bjorn
+-Saravana
