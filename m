@@ -1,179 +1,73 @@
-From: Hongwei Zhang <hongweiz@ami.com>
-Subject: [PATCH 2/3 v3] dt-bindings: gpio: aspeed: Add SGPIO support
-Date: Tue, 16 Jul 2019 17:48:31 -0400
-Message-ID: <1563313711-17961-1-git-send-email-hongweiz@ami.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] dt-bindings: pinctrl: stm32: Fix missing 'clocks' property in examples
+Date: Tue, 16 Jul 2019 15:56:18 -0600
+Message-ID: <20190716215618.29757-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
-Cc: Hongwei Zhang <hongweiz@ami.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Add bindings to support SGPIO on AST2400 or AST2500.
+Now that examples are validated against the DT schema, an error with
+required 'clocks' property missing is exposed:
 
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.example.dt.yaml: \
+pinctrl@40020000: gpio@0: 'clocks' is a required property
+Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.example.dt.yaml: \
+pinctrl@50020000: gpio@1000: 'clocks' is a required property
+Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.example.dt.yaml: \
+pinctrl@50020000: gpio@2000: 'clocks' is a required property
+
+Add the missing 'clocks' properties to the examples to fix the errors.
+
+Fixes: 2c9239c125f0 ("dt-bindings: pinctrl: Convert stm32 pinctrl bindings to json-schema")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+ .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml         | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-new file mode 100644
-index 0000000..8c3a747
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-@@ -0,0 +1,55 @@
-+Aspeed SGPIO controller Device Tree Bindings
-+-------------------------------------------
-+
-+This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80 full 
-+featured Serial GPIOs. Each of the Serial GPIO pins can be programmed to 
-+support the following options:
-+- Support interrupt option for each input port and various interrupt 
-+  sensitivity option (level-high, level-low, edge-high, edge-low)
-+- Support reset tolerance option for each output port
-+- Directly connected to APB bus and its shift clock is from APB bus clock
-+  divided by a programmable value.
-+- Co-work with external signal-chained TTL components (74LV165/74LV595)
-+
-+
-+Required properties:
-+
-+- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-+
-+- #gpio-cells 		: Should be two
-+			  - First cell is the GPIO line number
-+			  - Second cell is used to specify optional
-+			    parameters (unused)
-+
-+- reg			: Address and length of the register set for the device
-+- gpio-controller	: Marks the device node as a GPIO controller.
-+- interrupts		: Interrupt specifier (see interrupt bindings for
-+			  details)
-+
-+- interrupt-controller	: Mark the GPIO controller as an interrupt-controller
-+
-+- nr-gpios		: number of GPIO pins to serialise. 
-+			  (should be multiple of 8, up to 80 pins; 0 if not used)
-+
-+- clocks               : A phandle to the APB clock for SGPM clock division
-+
-+- bus-frequency	: SGPM CLK frequency, derived from APB bus clock by a programmable devisor
-+
-+
-+The sgpio and interrupt properties are further described in their respective bindings documentation:
-+
-+- Documentation/devicetree/bindings/sgpio/gpio.txt
-+- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+  Example:
-+	sgpio@1e780200 {
-+		#gpio-cells = <2>;
-+		compatible = "aspeed,ast2500-sgpio";
-+		gpio-controller;
-+		interrupts = <40>;
-+		reg = <0x1e780200 0x0100>;
-+		clocks = <&syscon ASPEED_CLK_APB>;
-+		interrupt-controller;
-+		nr-gpios = <8>;
-+		bus-frequency = <12000000>;
-+	};
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+index 3ac5d2088e49..91d3e78b3395 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+@@ -197,6 +197,7 @@ required:
+ examples:
+   - |
+     #include <dt-bindings/pinctrl/stm32-pinfunc.h>
++    #include <dt-bindings/mfd/stm32f4-rcc.h>
+     //Example 1
+       pinctrl@40020000 {
+               #address-cells = <1>;
+@@ -210,6 +211,7 @@ examples:
+                       #gpio-cells = <2>;
+                       reg = <0x0 0x400>;
+                       resets = <&reset_ahb1 0>;
++                      clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOA)>;
+                       st,bank-name = "GPIOA";
+               };
+        };
+@@ -227,6 +229,7 @@ examples:
+                       #gpio-cells = <2>;
+                       reg = <0x1000 0x400>;
+                       resets = <&reset_ahb1 0>;
++                      clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOB)>;
+                       st,bank-name = "GPIOB";
+                       gpio-ranges = <&pinctrl 0 0 16>;
+               };
+@@ -236,6 +239,7 @@ examples:
+                       #gpio-cells = <2>;
+                       reg = <0x2000 0x400>;
+                       resets = <&reset_ahb1 0>;
++                      clocks = <&rcc 0 STM32F4_AHB1_CLOCK(GPIOC)>;
+                       st,bank-name = "GPIOC";
+                       ngpios = <5>;
+                       gpio-ranges = <&pinctrl 0 16 3>,
 -- 
-2.7.4
-
-
-Thanks Andrew, please see above v3 and inline comments at below.
---Hongwei
-
-> From:	Andrew Jeffery <andrew@aj.id.au>
-> Sent:	Sunday, July 14, 2019 10:25 PM
-> To:	Hongwei Zhang; Joel Stanley; Linus Walleij; devicetree@vger.kernel.org
-> Cc:	Rob Herring; Mark Rutland; Bartosz Golaszewski; linux-aspeed@lists.ozlabs.org; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-gpio@vger.kernel.org
-> Subject:	Re: [PATCH 2/3 v2] dt-bindings: gpio: aspeed: Add SGPIO support
-> 
-> Hello Hongwei,
-> 
-> On Sat, 13 Jul 2019, at 05:44, Hongwei Zhang wrote:
-> > Add bindings to support SGPIO on AST2400 or AST2500.
-> > 
-> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> > ---
-> >  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 43 ++++++++++++++++++++++
-> >  1 file changed, 43 insertions(+)
-> >  create mode 100755 
-> > Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > new file mode 100755
-> > index 0000000..3ae2b79
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > @@ -0,0 +1,43 @@
-> > +Aspeed SGPIO controller Device Tree Bindings
-> > +-------------------------------------------
-> > +
-> > +Required properties:
-> > +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-> > +
-> > +- #gpio-cells 		: Should be two
-> > +			  - First cell is the GPIO line number
-> > +			  - Second cell is used to specify optional
-> > +			    parameters (unused)
-> > +
-> > +- reg			: Address and length of the register set for the device
-> > +- gpio-controller	: Marks the device node as a GPIO controller.
-> > +- interrupts		: Interrupt specifier (see interrupt bindings for
-> > +			  details)
-> > +
-> > +- interrupt-controller	: Mark the GPIO controller as an 
-> > interrupt-controller
-> > +
-> > +- nr-gpios		: number of GPIO pins to serialise. (should be multiple of 
-> > 8, up to 80 pins)
-> > +			  if not specified, defaults to 80.
-> 
-> This appears to be a statement about the driver implementation, but bindings documents are about 
-> describing hardware. Reading the datasheet it actually appears the ASPEED SGPIO hardware comes up 
-> in what is "technically" a forbidden state (equivalent to `nr-gpios = <0>;`), though the device is also 
-> disabled at this point, so it's probably moot. The point is the true default value from a hardware 
-> perspective is 0, not 80, so if we're going to talk about default values, 0 would be more appropriate. 
-> However:
-> 
-> You've also listed nr-gpios under the "Required properties" header, but the description suggests it's 
-> optional. It's either one or the other, please lets be clear about it. On that front, lets make it nr-gpios 
-> *not* optional (i.e. make it
-> required) thus force the specification of how many SGPIOs we want to emit on the bus. This value is 
-> coupled to the platform design, so I don't think there's ever a scenario where we want nr-gpios to take a 
-> default value.
-> 
-
-Added some descriptions and updated nr-gpios, please see v3.
-
-> > +
-> > +- clocks               : A phandle to the APB clock for SGPM clock 
-> > division
-> > +
-> > +- bus-frequency	: SGPM CLK frequency, if not specified defaults to 1 
-> > MHz
-> 
-> Again here with the default value - SGPM CLK period is derived from PCLK by the expression `period = 
-> PCLK * 2 *(GPIO254[31:16] + 1)`, where GPIO254's initialisation state is `GPIO254[31:16] = 0`, which 
-> gives a default SGPM bus frequency of PCLK / 2. This is likely not going to be 1MHz (more like ~12MHz).
-> 
-> Lets just make the property required. That way we avoid any ambiguity about the bus frequency and 
-> thus don't need words about defaults that turn out to be about the driver, not about the hardware.
-> 
-
-updated, please see v3.
-
-> Finally, when updating patches in response to feedback, please send the full series again, and bump the 
-> series version number. That way people can review a coherent set of patches and not have to hunt 
-> around and (fail to) collate the correct combination. It makes it easier to say "Reviewed-by:" on your 
-> patches :)
-> 
-> Cheers,
-> 
-> Andrew
+2.20.1
