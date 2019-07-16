@@ -1,277 +1,600 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
-Date: Tue, 16 Jul 2019 12:22:25 +0100
-Message-ID: <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
- <20190710062212.1745-13-vidyas@nvidia.com>
- <20190711125433.GB26088@e121166-lin.cambridge.arm.com>
- <986d0b1a-666a-7b05-a9f3-e761518bdc92@nvidia.com>
- <20190712160754.GA24285@e121166-lin.cambridge.arm.com>
- <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v2 2/4] devfreq: exynos-bus: convert to use
+ dev_pm_opp_set_rate()
+Date: Tue, 16 Jul 2019 20:26:43 +0900
+Message-ID: <29cfafc4-ee22-6d38-4c67-776c48bfed8a@samsung.com>
+References: <20190715120416.3561-1-k.konieczny@partner.samsung.com>
+        <CGME20190715120431eucas1p215eae81d0ca772d7e2a22a803669068a@eucas1p2.samsung.com>
+        <20190715120416.3561-3-k.konieczny@partner.samsung.com>
+        <7f7cf551-005a-c647-d571-77eb5426478a@samsung.com>
+        <3d1687b7-4825-ad82-2706-a712c30e530b@samsung.com>
+        <5612547b-47c8-0dc4-cb3c-e972782d5a26@samsung.com>
+        <3ba736fa-832c-a72c-e60b-f4328e54c524@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
+In-Reply-To: <3ba736fa-832c-a72c-e60b-f4328e54c524@samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Kamil Konieczny <k.konieczny@partner.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 12:34:34PM +0530, Vidya Sagar wrote:
+Hi,
 
-[...]
-
-> > > > > +static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
-> > > > > +					  bool enable)
-> > > > > +{
-> > > > > +	struct mrq_uphy_response resp;
-> > > > > +	struct tegra_bpmp_message msg;
-> > > > > +	struct mrq_uphy_request req;
-> > > > > +	int err;
-> > > > > +
-> > > > > +	if (pcie->cid == 5)
-> > > > > +		return 0;
-> > > > 
-> > > > What's wrong with cid == 5 ? Explain please.
-> > > Controller with ID=5 doesn't need any programming to enable it which is
-> > > done here through calling firmware API.
-> > > 
-> > > > 
-> > > > > +	memset(&req, 0, sizeof(req));
-> > > > > +	memset(&resp, 0, sizeof(resp));
-> > > > > +
-> > > > > +	req.cmd = CMD_UPHY_PCIE_CONTROLLER_STATE;
-> > > > > +	req.controller_state.pcie_controller = pcie->cid;
-> > > > > +	req.controller_state.enable = enable;
-> > > > > +
-> > > > > +	memset(&msg, 0, sizeof(msg));
-> > > > > +	msg.mrq = MRQ_UPHY;
-> > > > > +	msg.tx.data = &req;
-> > > > > +	msg.tx.size = sizeof(req);
-> > > > > +	msg.rx.data = &resp;
-> > > > > +	msg.rx.size = sizeof(resp);
-> > > > > +
-> > > > > +	if (irqs_disabled())
-> > > > 
-> > > > Can you explain to me what this check is meant to achieve please ?
-> > > Firmware interface provides different APIs to be called when there are
-> > > no interrupts enabled in the system (noirq context) and otherwise
-> > > hence checking that situation here and calling appropriate API.
-> > 
-> > That's what I am questioning. Being called from {suspend/resume}_noirq()
-> > callbacks (if that's the code path this check caters for) does not mean
-> > irqs_disabled() == true.
-> Agree.
-> Actually, I got a hint of having this check from the following.
-> Both tegra_bpmp_transfer_atomic() and tegra_bpmp_transfer() are indirectly
-> called by APIs registered with .master_xfer() and .master_xfer_atomic() hooks of
-> struct i2c_algorithm and the decision to call which one of these is made using the
-> following check in i2c-core.h file.
-> static inline bool i2c_in_atomic_xfer_mode(void)
-> {
-> 	return system_state > SYSTEM_RUNNING && irqs_disabled();
-> }
-> I think I should use this condition as is IIUC.
-> Please let me know if there are any concerns with this.
-
-It is not a concern, it is just that I don't understand how this code
-can be called with IRQs disabled, if you can give me an execution path I
-am happy to leave the check there. On top of that, when called from
-suspend NOIRQ context, it is likely to use the blocking API (because
-IRQs aren't disabled at CPU level) behind which there is most certainly
-an IRQ required to wake the thread up and if the IRQ in question was
-disabled in the suspend NOIRQ phase this code is likely to deadlock.
-
-I want to make sure we can justify adding this check, I do not
-want to add it because we think it can be needed when it may not
-be needed at all (and it gets copy and pasted over and over again
-in other drivers).
-
-> > Actually, if tegra_bpmp_transfer() requires IRQs to be enabled you may
-> > even end up in a situation where that blocking call does not wake up
-> > because the IRQ in question was disabled in the NOIRQ suspend/resume
-> > phase.
-> > 
-> > [...]
-> > 
-> > > > > +static int tegra_pcie_dw_probe(struct platform_device *pdev)
-> > > > > +{
-> > > > > +	const struct tegra_pcie_soc *data;
-> > > > > +	struct device *dev = &pdev->dev;
-> > > > > +	struct resource *atu_dma_res;
-> > > > > +	struct tegra_pcie_dw *pcie;
-> > > > > +	struct resource *dbi_res;
-> > > > > +	struct pcie_port *pp;
-> > > > > +	struct dw_pcie *pci;
-> > > > > +	struct phy **phys;
-> > > > > +	char *name;
-> > > > > +	int ret;
-> > > > > +	u32 i;
-> > > > > +
-> > > > > +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> > > > > +	if (!pcie)
-> > > > > +		return -ENOMEM;
-> > > > > +
-> > > > > +	pci = &pcie->pci;
-> > > > > +	pci->dev = &pdev->dev;
-> > > > > +	pci->ops = &tegra_dw_pcie_ops;
-> > > > > +	pp = &pci->pp;
-> > > > > +	pcie->dev = &pdev->dev;
-> > > > > +
-> > > > > +	data = (struct tegra_pcie_soc *)of_device_get_match_data(dev);
-> > > > > +	if (!data)
-> > > > > +		return -EINVAL;
-> > > > > +	pcie->mode = (enum dw_pcie_device_mode)data->mode;
-> > > > > +
-> > > > > +	ret = tegra_pcie_dw_parse_dt(pcie);
-> > > > > +	if (ret < 0) {
-> > > > > +		dev_err(dev, "Failed to parse device tree: %d\n", ret);
-> > > > > +		return ret;
-> > > > > +	}
-> > > > > +
-> > > > > +	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
-> > > > > +	if (IS_ERR(pcie->pex_ctl_supply)) {
-> > > > > +		dev_err(dev, "Failed to get regulator: %ld\n",
-> > > > > +			PTR_ERR(pcie->pex_ctl_supply));
-> > > > > +		return PTR_ERR(pcie->pex_ctl_supply);
-> > > > > +	}
-> > > > > +
-> > > > > +	pcie->core_clk = devm_clk_get(dev, "core");
-> > > > > +	if (IS_ERR(pcie->core_clk)) {
-> > > > > +		dev_err(dev, "Failed to get core clock: %ld\n",
-> > > > > +			PTR_ERR(pcie->core_clk));
-> > > > > +		return PTR_ERR(pcie->core_clk);
-> > > > > +	}
-> > > > > +
-> > > > > +	pcie->appl_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > > > > +						      "appl");
-> > > > > +	if (!pcie->appl_res) {
-> > > > > +		dev_err(dev, "Failed to find \"appl\" region\n");
-> > > > > +		return PTR_ERR(pcie->appl_res);
-> > > > > +	}
-> > > > > +	pcie->appl_base = devm_ioremap_resource(dev, pcie->appl_res);
-> > > > > +	if (IS_ERR(pcie->appl_base))
-> > > > > +		return PTR_ERR(pcie->appl_base);
-> > > > > +
-> > > > > +	pcie->core_apb_rst = devm_reset_control_get(dev, "apb");
-> > > > > +	if (IS_ERR(pcie->core_apb_rst)) {
-> > > > > +		dev_err(dev, "Failed to get APB reset: %ld\n",
-> > > > > +			PTR_ERR(pcie->core_apb_rst));
-> > > > > +		return PTR_ERR(pcie->core_apb_rst);
-> > > > > +	}
-> > > > > +
-> > > > > +	phys = devm_kcalloc(dev, pcie->phy_count, sizeof(*phys), GFP_KERNEL);
-> > > > > +	if (!phys)
-> > > > > +		return PTR_ERR(phys);
-> > > > > +
-> > > > > +	for (i = 0; i < pcie->phy_count; i++) {
-> > > > > +		name = kasprintf(GFP_KERNEL, "p2u-%u", i);
-> > > > > +		if (!name) {
-> > > > > +			dev_err(dev, "Failed to create P2U string\n");
-> > > > > +			return -ENOMEM;
-> > > > > +		}
-> > > > > +		phys[i] = devm_phy_get(dev, name);
-> > > > > +		kfree(name);
-> > > > > +		if (IS_ERR(phys[i])) {
-> > > > > +			ret = PTR_ERR(phys[i]);
-> > > > > +			dev_err(dev, "Failed to get PHY: %d\n", ret);
-> > > > > +			return ret;
-> > > > > +		}
-> > > > > +	}
-> > > > > +
-> > > > > +	pcie->phys = phys;
-> > > > > +
-> > > > > +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> > > > > +	if (!dbi_res) {
-> > > > > +		dev_err(dev, "Failed to find \"dbi\" region\n");
-> > > > > +		return PTR_ERR(dbi_res);
-> > > > > +	}
-> > > > > +	pcie->dbi_res = dbi_res;
-> > > > > +
-> > > > > +	pci->dbi_base = devm_ioremap_resource(dev, dbi_res);
-> > > > > +	if (IS_ERR(pci->dbi_base))
-> > > > > +		return PTR_ERR(pci->dbi_base);
-> > > > > +
-> > > > > +	/* Tegra HW locates DBI2 at a fixed offset from DBI */
-> > > > > +	pci->dbi_base2 = pci->dbi_base + 0x1000;
-> > > > > +
-> > > > > +	atu_dma_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > > > > +						   "atu_dma");
-> > > > > +	if (!atu_dma_res) {
-> > > > > +		dev_err(dev, "Failed to find \"atu_dma\" region\n");
-> > > > > +		return PTR_ERR(atu_dma_res);
-> > > > > +	}
-> > > > > +	pcie->atu_dma_res = atu_dma_res;
-> > > > > +	pci->atu_base = devm_ioremap_resource(dev, atu_dma_res);
-> > > > > +	if (IS_ERR(pci->atu_base))
-> > > > > +		return PTR_ERR(pci->atu_base);
-> > > > > +
-> > > > > +	pcie->core_rst = devm_reset_control_get(dev, "core");
-> > > > > +	if (IS_ERR(pcie->core_rst)) {
-> > > > > +		dev_err(dev, "Failed to get core reset: %ld\n",
-> > > > > +			PTR_ERR(pcie->core_rst));
-> > > > > +		return PTR_ERR(pcie->core_rst);
-> > > > > +	}
-> > > > > +
-> > > > > +	pp->irq = platform_get_irq_byname(pdev, "intr");
-> > > > > +	if (!pp->irq) {
-> > > > > +		dev_err(dev, "Failed to get \"intr\" interrupt\n");
-> > > > > +		return -ENODEV;
-> > > > > +	}
-> > > > > +
-> > > > > +	ret = devm_request_irq(dev, pp->irq, tegra_pcie_irq_handler,
-> > > > > +			       IRQF_SHARED, "tegra-pcie-intr", pcie);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "Failed to request IRQ %d: %d\n", pp->irq, ret);
-> > > > > +		return ret;
-> > > > > +	}
-> > > > > +
-> > > > > +	pcie->bpmp = tegra_bpmp_get(dev);
-> > > > > +	if (IS_ERR(pcie->bpmp))
-> > > > > +		return PTR_ERR(pcie->bpmp);
-> > > > > +
-> > > > > +	platform_set_drvdata(pdev, pcie);
-> > > > > +
-> > > > > +	if (pcie->mode == DW_PCIE_RC_TYPE) {
-> > > > > +		ret = tegra_pcie_config_rp(pcie);
-> > > > > +		if (ret && ret != -ENOMEDIUM)
-> > > > > +			goto fail;
-> > > > > +		else
-> > > > > +			return 0;
-> > > > 
-> > > > So if the link is not up we still go ahead and make probe
-> > > > succeed. What for ?
-> > > We may need root port to be available to support hot-plugging of
-> > > endpoint devices, so, we don't fail the probe.
-> > 
-> > We need it or we don't. If you do support hotplugging of endpoint
-> > devices point me at the code, otherwise link up failure means
-> > failure to probe.
-> Currently hotplugging of endpoint is not supported, but it is one of
-> the use cases that we may add support for in future. 
-
-You should elaborate on this, I do not understand what you mean,
-either the root port(s) supports hotplug or it does not.
-
-> But, why should we fail probe if link up doesn't happen? As such,
-> nothing went wrong in terms of root port initialization right?  I
-> checked other DWC based implementations and following are not failing
-> the probe pci-dra7xx.c, pcie-armada8k.c, pcie-artpec6.c, pcie-histb.c,
-> pcie-kirin.c, pcie-spear13xx.c, pci-exynos.c, pci-imx6.c,
-> pci-keystone.c, pci-layerscape.c
+On 19. 7. 16. 오후 7:59, Bartlomiej Zolnierkiewicz wrote:
 > 
-> Although following do fail the probe if link is not up.  pcie-qcom.c,
-> pcie-uniphier.c, pci-meson.c
+> On 7/16/19 12:33 PM, Chanwoo Choi wrote:
+>> Hi Bartlomiej,
+>>
+>> On 19. 7. 16. 오후 7:13, Bartlomiej Zolnierkiewicz wrote:
+>>>
+>>> Hi Chanwoo,
+>>>
+>>> On 7/16/19 5:56 AM, Chanwoo Choi wrote:
+>>>> Hi Kamil,
+>>>>
+>>>> Looks good to me. But, this patch has some issue.
+>>>> I added the detailed reviews.
+>>>>
+>>>> I recommend that you make the separate patches as following
+>>>> in order to clarify the role of which apply the dev_pm_opp_* function.
+>>>>
+>>>> First patch,
+>>>> Need to consolidate the following two function into one function.
+>>>> because the original exynos-bus.c has the problem that the regulator
+>>>> of parent devfreq device have to be enabled before enabling the clock.
+>>>> This issue did not happen because bootloader enables the bus-related
+>>>> regulators before kernel booting.
+>>>> - exynos_bus_parse_of()
+>>>> - exynos_bus_parent_parse_of()
+>>>>> Second patch,
+>>>> Apply dev_pm_opp_set_regulators() and dev_pm_opp_set_rate()
+>>>>
+>>>>
+>>>> On 19. 7. 15. 오후 9:04, Kamil Konieczny wrote:
+>>>>> Reuse opp core code for setting bus clock and voltage. As a side
+>>>>> effect this allow useage of coupled regulators feature (required
+>>>>> for boards using Exynos5422/5800 SoCs) because dev_pm_opp_set_rate()
+>>>>> uses regulator_set_voltage_triplet() for setting regulator voltage
+>>>>> while the old code used regulator_set_voltage_tol() with fixed
+>>>>> tolerance. This patch also removes no longer needed parsing of DT
+>>>>> property "exynos,voltage-tolerance" (no Exynos devfreq DT node uses
+>>>>> it).
+>>>>>
+>>>>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>>>>> ---
+>>>>>  drivers/devfreq/exynos-bus.c | 172 ++++++++++++++---------------------
+>>>>>  1 file changed, 66 insertions(+), 106 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+>>>>> index 486cc5b422f1..7fc4f76bd848 100644
+>>>>> --- a/drivers/devfreq/exynos-bus.c
+>>>>> +++ b/drivers/devfreq/exynos-bus.c
+>>>>> @@ -25,7 +25,6 @@
+>>>>>  #include <linux/slab.h>
+>>>>>  
+>>>>>  #define DEFAULT_SATURATION_RATIO	40
+>>>>> -#define DEFAULT_VOLTAGE_TOLERANCE	2
+>>>>>  
+>>>>>  struct exynos_bus {
+>>>>>  	struct device *dev;
+>>>>> @@ -37,9 +36,9 @@ struct exynos_bus {
+>>>>>  
+>>>>>  	unsigned long curr_freq;
+>>>>>  
+>>>>> -	struct regulator *regulator;
+>>>>> +	struct opp_table *opp_table;
+>>>>> +
+>>>>>  	struct clk *clk;
+>>>>> -	unsigned int voltage_tolerance;
+>>>>>  	unsigned int ratio;
+>>>>>  };
+>>>>>  
+>>>>> @@ -99,56 +98,25 @@ static int exynos_bus_target(struct device *dev, unsigned long *freq, u32 flags)
+>>>>>  {
+>>>>>  	struct exynos_bus *bus = dev_get_drvdata(dev);
+>>>>>  	struct dev_pm_opp *new_opp;
+>>>>> -	unsigned long old_freq, new_freq, new_volt, tol;
+>>>>>  	int ret = 0;
+>>>>> -
+>>>>> -	/* Get new opp-bus instance according to new bus clock */
+>>>>> +	/*
+>>>>> +	 * New frequency for bus may not be exactly matched to opp, adjust
+>>>>> +	 * *freq to correct value.
+>>>>> +	 */
+>>>>
+>>>> You better to change this comment with following styles
+>>>> to keep the consistency:
+>>>>
+>>>> 	/* Get correct frequency for bus ... */
+>>>>
+>>>>>  	new_opp = devfreq_recommended_opp(dev, freq, flags);
+>>>>>  	if (IS_ERR(new_opp)) {
+>>>>>  		dev_err(dev, "failed to get recommended opp instance\n");
+>>>>>  		return PTR_ERR(new_opp);
+>>>>>  	}
+>>>>>  
+>>>>> -	new_freq = dev_pm_opp_get_freq(new_opp);
+>>>>> -	new_volt = dev_pm_opp_get_voltage(new_opp);
+>>>>>  	dev_pm_opp_put(new_opp);
+>>>>>  
+>>>>> -	old_freq = bus->curr_freq;
+>>>>> -
+>>>>> -	if (old_freq == new_freq)
+>>>>> -		return 0;
+>>>>> -	tol = new_volt * bus->voltage_tolerance / 100;
+>>>>> -
+>>>>>  	/* Change voltage and frequency according to new OPP level */
+>>>>>  	mutex_lock(&bus->lock);
+>>>>> +	ret = dev_pm_opp_set_rate(dev, *freq);
+>>>>> +	if (!ret)
+>>>>> +		bus->curr_freq = *freq;
+>>>>
+>>>> Have to print the error log if ret has minus error value.
+>>>
+>>> dev_pm_opp_set_rate() should print the error message on all
+>>> errors so wouldn't printing the error log also here be superfluous?
+>>>
+>>> [ Please also note that the other user of dev_pm_opp_set_rate()
+>>>   (cpufreq-dt cpufreq driver) doesn't do this. ]
+>>
+>> OK. Thanks for the explanation. 
+>>
+>>>
+>>>> Modify it as following:
+>>>>
+>>>> 	if (ret < 0) {
+>>>> 		dev_err(dev, "failed to set bus rate\n");
+>>>> 		goto err:
+>>>> 	}
+>>>> 	bus->curr_freq = *freq;
+>>>>
+>>>> err:
+>>>> 	mutex_unlock(&bus->lock);
+>>>> 	
+>>>> 	return ret;
+>>>>
+>>>>>  
+>>>>> -	if (old_freq < new_freq) {
+>>>>> -		ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
+>>>>> -		if (ret < 0) {
+>>>>> -			dev_err(bus->dev, "failed to set voltage\n");
+>>>>> -			goto out;
+>>>>> -		}
+>>>>> -	}
+>>>>> -
+>>>>> -	ret = clk_set_rate(bus->clk, new_freq);
+>>>>> -	if (ret < 0) {
+>>>>> -		dev_err(dev, "failed to change clock of bus\n");
+>>>>> -		clk_set_rate(bus->clk, old_freq);
+>>>>> -		goto out;
+>>>>> -	}
+>>>>> -
+>>>>> -	if (old_freq > new_freq) {
+>>>>> -		ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
+>>>>> -		if (ret < 0) {
+>>>>> -			dev_err(bus->dev, "failed to set voltage\n");
+>>>>> -			goto out;
+>>>>> -		}
+>>>>> -	}
+>>>>> -	bus->curr_freq = new_freq;
+>>>>> -
+>>>>> -	dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n",
+>>>>> -			old_freq, new_freq, clk_get_rate(bus->clk));
+>>>>> -out:
+>>>>>  	mutex_unlock(&bus->lock);
+>>>>>  
+>>>>>  	return ret;
+>>>>> @@ -194,10 +162,11 @@ static void exynos_bus_exit(struct device *dev)
+>>>>>  	if (ret < 0)
+>>>>>  		dev_warn(dev, "failed to disable the devfreq-event devices\n");
+>>>>>  
+>>>>> -	if (bus->regulator)
+>>>>> -		regulator_disable(bus->regulator);
+>>>>> +	if (bus->opp_table)
+>>>>> +		dev_pm_opp_put_regulators(bus->opp_table);
+>>>>
+>>>> Have to disable regulator after disabling the clock
+>>>> to prevent the h/w fault.
+>>>>
+>>>> I think that you should call them with following sequence:
+>>>>
+>>>> 	clk_disable_unprepare(bus->clk);
+>>>> 	if (bus->opp_table)
+>>>> 		dev_pm_opp_put_regulators(bus->opp_table);
+>>>> 	dev_pm_opp_of_remove_table(dev);
+>>>>
+>>>>>  
+>>>>>  	dev_pm_opp_of_remove_table(dev);
+>>>>> +
+>>>>>  	clk_disable_unprepare(bus->clk);
+>>>>>  }
+>>>>>  
+>>>>> @@ -209,39 +178,26 @@ static int exynos_bus_passive_target(struct device *dev, unsigned long *freq,
+>>>>>  {
+>>>>>  	struct exynos_bus *bus = dev_get_drvdata(dev);
+>>>>>  	struct dev_pm_opp *new_opp;
+>>>>> -	unsigned long old_freq, new_freq;
+>>>>> -	int ret = 0;
+>>>>> +	int ret;
+>>>>>  
+>>>>> -	/* Get new opp-bus instance according to new bus clock */
+>>>>> +	/*
+>>>>> +	 * New frequency for bus may not be exactly matched to opp, adjust
+>>>>> +	 * *freq to correct value.
+>>>>> +	 */
+>>>>
+>>>> You better to change this comment with following styles
+>>>> to keep the consistency:
+>>>>
+>>>> 	/* Get correct frequency for bus ... */
+>>>>
+>>>>>  	new_opp = devfreq_recommended_opp(dev, freq, flags);
+>>>>>  	if (IS_ERR(new_opp)) {
+>>>>>  		dev_err(dev, "failed to get recommended opp instance\n");
+>>>>>  		return PTR_ERR(new_opp);
+>>>>>  	}
+>>>>>  
+>>>>> -	new_freq = dev_pm_opp_get_freq(new_opp);
+>>>>>  	dev_pm_opp_put(new_opp);
+>>>>>  
+>>>>> -	old_freq = bus->curr_freq;
+>>>>> -
+>>>>> -	if (old_freq == new_freq)
+>>>>> -		return 0;
+>>>>> -
+>>>>>  	/* Change the frequency according to new OPP level */
+>>>>>  	mutex_lock(&bus->lock);
+>>>>> +	ret = dev_pm_opp_set_rate(dev, *freq);
+>>>>> +	if (!ret)
+>>>>> +		bus->curr_freq = *freq;
+>>>>
+>>>> ditto. Have to print the error log, check above comment.
+>>>>
+>>>>>  
+>>>>> -	ret = clk_set_rate(bus->clk, new_freq);
+>>>>> -	if (ret < 0) {
+>>>>> -		dev_err(dev, "failed to set the clock of bus\n");
+>>>>> -		goto out;
+>>>>> -	}
+>>>>> -
+>>>>> -	*freq = new_freq;
+>>>>> -	bus->curr_freq = new_freq;
+>>>>> -
+>>>>> -	dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n",
+>>>>> -			old_freq, new_freq, clk_get_rate(bus->clk));
+>>>>> -out:
+>>>>>  	mutex_unlock(&bus->lock);
+>>>>>  
+>>>>>  	return ret;
+>>>>> @@ -259,20 +215,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>>>>>  					struct exynos_bus *bus)
+>>>>>  {
+>>>>>  	struct device *dev = bus->dev;
+>>>>> -	int i, ret, count, size;
+>>>>> -
+>>>>> -	/* Get the regulator to provide each bus with the power */
+>>>>> -	bus->regulator = devm_regulator_get(dev, "vdd");
+>>>>> -	if (IS_ERR(bus->regulator)) {
+>>>>> -		dev_err(dev, "failed to get VDD regulator\n");
+>>>>> -		return PTR_ERR(bus->regulator);
+>>>>> -	}
+>>>>> -
+>>>>> -	ret = regulator_enable(bus->regulator);
+>>>>> -	if (ret < 0) {
+>>>>> -		dev_err(dev, "failed to enable VDD regulator\n");
+>>>>> -		return ret;
+>>>>> -	}
+>>>>> +	int i, count, size;
+>>>>>  
+>>>>>  	/*
+>>>>>  	 * Get the devfreq-event devices to get the current utilization of
+>>>>> @@ -281,24 +224,20 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>>>>>  	count = devfreq_event_get_edev_count(dev);
+>>>>>  	if (count < 0) {
+>>>>>  		dev_err(dev, "failed to get the count of devfreq-event dev\n");
+>>>>> -		ret = count;
+>>>>> -		goto err_regulator;
+>>>>> +		return count;
+>>>>>  	}
+>>>>> +
+>>>>>  	bus->edev_count = count;
+>>>>>  
+>>>>>  	size = sizeof(*bus->edev) * count;
+>>>>>  	bus->edev = devm_kzalloc(dev, size, GFP_KERNEL);
+>>>>> -	if (!bus->edev) {
+>>>>> -		ret = -ENOMEM;
+>>>>> -		goto err_regulator;
+>>>>> -	}
+>>>>> +	if (!bus->edev)
+>>>>> +		return -ENOMEM;
+>>>>>  
+>>>>>  	for (i = 0; i < count; i++) {
+>>>>>  		bus->edev[i] = devfreq_event_get_edev_by_phandle(dev, i);
+>>>>> -		if (IS_ERR(bus->edev[i])) {
+>>>>> -			ret = -EPROBE_DEFER;
+>>>>> -			goto err_regulator;
+>>>>> -		}
+>>>>> +		if (IS_ERR(bus->edev[i]))
+>>>>> +			return -EPROBE_DEFER;
+>>>>>  	}
+>>>>>  
+>>>>>  	/*
+>>>>> @@ -314,22 +253,15 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>>>>>  	if (of_property_read_u32(np, "exynos,saturation-ratio", &bus->ratio))
+>>>>>  		bus->ratio = DEFAULT_SATURATION_RATIO;
+>>>>>  
+>>>>> -	if (of_property_read_u32(np, "exynos,voltage-tolerance",
+>>>>> -					&bus->voltage_tolerance))
+>>>>> -		bus->voltage_tolerance = DEFAULT_VOLTAGE_TOLERANCE;
+>>>>> -
+>>>>>  	return 0;
+>>>>> -
+>>>>> -err_regulator:
+>>>>> -	regulator_disable(bus->regulator);
+>>>>> -
+>>>>> -	return ret;
+>>>>>  }
+>>>>>  
+>>>>>  static int exynos_bus_parse_of(struct device_node *np,
+>>>>> -			      struct exynos_bus *bus)
+>>>>> +			      struct exynos_bus *bus, bool passive)
+>>>>>  {
+>>>>>  	struct device *dev = bus->dev;
+>>>>> +	struct opp_table *opp_table;
+>>>>> +	const char *vdd = "vdd";
+>>>>>  	struct dev_pm_opp *opp;
+>>>>>  	unsigned long rate;
+>>>>>  	int ret;
+>>>>> @@ -347,11 +279,22 @@ static int exynos_bus_parse_of(struct device_node *np,
+>>>>>  		return ret;
+>>>>>  	}
+>>>>>  
+>>>>> +	if (!passive) {
+>>>>> +		opp_table = dev_pm_opp_set_regulators(dev, &vdd, 1);
+>>>>> +		if (IS_ERR(opp_table)) {
+>>>>> +			ret = PTR_ERR(opp_table);
+>>>>> +			dev_err(dev, "failed to set regulators %d\n", ret);
+>>>>> +			goto err_clk;/
+>>>>> +		}
+>>>>> +
+>>>>> +		bus->opp_table = opp_table;
+>>>>> +	}
+>>>>
+>>>> This driver has exynos_bus_parent_parse_of() function for parent devfreq device.
+>>>> dev_pm_opp_set_regulators() have to be called in exynos_bus_parent_parse_of()
+>>>> because the regulator is only used by parent devfreq device.
+>>>
+>>> exynos_bus_parse_of() is called for all devfreq devices (including
+>>> parent) and (as you've noticed) the regulator should be enabled before
+>>> enabling clock (which is done in exynos_bus_parse_of()) so adding
+>>> extra argument to exynos_bus_parse_of() (like it is done currently in
+>>> the patch) 
+>>
+>> I think that this patch has still the problem about call sequence
+>> between clock and regulator as following:
 > 
-> So, to me, it looks more like a choice we can make whether to fail the
-> probe or not and in this case we are choosing not to fail.
+> Yes, this should be fixed (though the wrong sequence between regulator
+> and clock handling is not introduced by the patchset itself and is present
+> in the original driver code).
+> 
+>> 273         ret = clk_prepare_enable(bus->clk);                                     
+>> 274         if (ret < 0) {                                                          
+>> 275                 dev_err(dev, "failed to get enable clock\n");                   
+>> 276                 return ret;                                                     
+>> 277         }                                                                       
+>> 278                                                                                 
+>> 279         if (!passive) {                                                         
+>> 280                 opp_table = dev_pm_opp_set_regulators(dev, &vdd, 1);            
+>> 281                 if (IS_ERR(opp_table)) {                                        
+>> 282                         ret = PTR_ERR(opp_table);                               
+>> 283                         dev_err(dev, "failed to set regulators %d\n", ret);     
+>> 284                         goto err_clk;                                           
+>> 285                 }                                                               
+>> 286                                                                                 
+>> 287                 bus->opp_table = opp_table;                                     
+>> 288         }                   
+>>
+>> makes it possible to do the setup correctly without the need
+>>> of merging both functions into one huge function (which would be more
+>>> difficult to follow than two simpler functions IMHO). Is that approach
+>>> acceptable or do you prefer one big function?
+>>
+>> Actually, I don't force to make one function for both
+>> exynos_bus_parse_of() and exynos_bus_parent_parse_of().
+>>
+>> If we just keep this code, dev_pm_opp_set_regulators()
+>> should be handled in exynos_bus_parent_parse_of()
+>> because only parent devfreq device controls the regulator.
+> 
+> Could your please explain rationale for this requirement (besides
+> function name)?
 
-I disagree. I had an offline chat with Bjorn and whether link-up should
-fail the probe or not depends on whether the root port(s) is hotplug
-capable or not and this in turn relies on the root port "Slot
-implemented" bit in the PCI Express capabilities register.
+OK. I hope to satisfy the following requirements:
 
-It is a choice but it should be based on evidence.
+1. Fix the sequence problem between clock and regulator for enabling them.
+2. dev_pm_opp_set_regulator() have to be handled in exynos_bus_parent_parse_of()
+   instead of exynos_bus_parse_of() for only parent devfreq device.
+3. exynos_bus_parse_of() have to handle the only common properties
+   of both parent devfreq device and passive devfreq device.
 
-Lorenzo
+> 
+> The patch adds 'bool passive' argument (which is set to false for
+> parent devfreq device and true for child devfreq device) to
+> exynos_bus_parse_of() (which is called for *all* devfreq devices
+
+As I menteiond, exynos_bus_parse_of have to handle the only common
+properties of both parent device and passive device. 
+
+I gathered the properties for parent device into exynos_bus_parent_parse_of()
+This way using 'bool passive' argument is not proper in exynos_bus_parse_of().
+
+
+> and is called before exynos_bus_parent_parse_of()) and there is
+> no hard requirement to call dev_pm_opp_set_regulators() in
+> exynos_bus_parent_parse_of() so after only changing the ordering
+> between regulator and clock handling the setup code should be
+> correct.
+> 
+> [ Please note that this patch moves parent/child detection before
+>   exynos_bus_parse_of() call. ]
+> 
+>> In order to keep the two functions, maybe have to change
+>> the call the sequence between exynos_bus_parse_of() and
+>> exynos_bus_parent_parse_of().
+> 
+> Doesn't seem to be needed, care to explain it more?
+
+In order to fix the sequence problem between clock and regulator
+with dev_pm_opp_set_regualtor() and want to keep two functions
+(exynos_bus_parent_parse_of() and exynos_bus_parse_of()),
+have to change the call order as following and then modify
+the exception handling code when error happen.
+
+	node = of_parse_phandle(dev->of_node, "devfreq", 0);                    
+	if (node) {                                                             
+		of_node_put(node);                                              
+		passive = true
+	}
+
+	if (!passive)	
+		exynos_bus_parent_parse_of()
+			dev_pm_opp_set_regulator
+
+	exynos_bus_parse_of()
+
+> 
+>> Once again, I don't force any fixed method. I want to fix them
+>> with correct way.
+>>
+>>>
+>>>>> +
+>>>>>  	/* Get the freq and voltage from OPP table to scale the bus freq */
+>>>>>  	ret = dev_pm_opp_of_add_table(dev);
+>>>>>  	if (ret < 0) {
+>>>>>  		dev_err(dev, "failed to get OPP table\n");
+>>>>> -		goto err_clk;
+>>>>> +		goto err_regulator;
+>>>>>  	}
+>>>>>  
+>>>>>  	rate = clk_get_rate(bus->clk);
+>>>>> @@ -362,6 +305,7 @@ static int exynos_bus_parse_of(struct device_node *np,
+>>>>>  		ret = PTR_ERR(opp);
+>>>>>  		goto err_opp;
+>>>>>  	}
+>>>>> +
+>>>>>  	bus->curr_freq = dev_pm_opp_get_freq(opp);
+>>>>>  	dev_pm_opp_put(opp);
+>>>>>  
+>>>>> @@ -369,6 +313,13 @@ static int exynos_bus_parse_of(struct device_node *np,
+>>>>>  
+>>>>>  err_opp:
+>>>>>  	dev_pm_opp_of_remove_table(dev);
+>>>>> +
+>>>>> +err_regulator:
+>>>>> +	if (bus->opp_table) {
+>>>>> +		dev_pm_opp_put_regulators(bus->opp_table);
+>>>>> +		bus->opp_table = NULL;
+>>>>> +	}
+>>>>
+>>>> As I mentioned above, it it wrong to call dev_pm_opp_put_regulators()
+>>>> after removing the opp_table by dev_pm_opp_of_remove_table().
+>>>>
+>>>>> +
+>>>>>  err_clk:
+>>>>>  	clk_disable_unprepare(bus->clk);
+>>>>>  
+>>>>> @@ -386,6 +337,7 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>>>>>  	struct exynos_bus *bus;
+>>>>>  	int ret, max_state;
+>>>>>  	unsigned long min_freq, max_freq;
+>>>>> +	bool passive = false;
+>>>>>  
+>>>>>  	if (!np) {
+>>>>>  		dev_err(dev, "failed to find devicetree node\n");
+>>>>> @@ -395,12 +347,18 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>>>>>  	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
+>>>>>  	if (!bus)
+>>>>>  		return -ENOMEM;
+>>>>> +
+>>>>>  	mutex_init(&bus->lock);
+>>>>>  	bus->dev = &pdev->dev;
+>>>>>  	platform_set_drvdata(pdev, bus);
+>>>>> +	node = of_parse_phandle(dev->of_node, "devfreq", 0);
+>>>>> +	if (node) {
+>>>>> +		of_node_put(node);
+>>>>> +		passive = true;
+>>>>> +	}
+>>>>>  
+>>>>>  	/* Parse the device-tree to get the resource information */
+>>>>> -	ret = exynos_bus_parse_of(np, bus);
+>>>>> +	ret = exynos_bus_parse_of(np, bus, passive);
+>>>>>  	if (ret < 0)
+>>>>>  		return ret;
+>>>>>  
+>>>>> @@ -410,13 +368,10 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>>>>>  		goto err;
+>>>>>  	}
+>>>>>  
+>>>>> -	node = of_parse_phandle(dev->of_node, "devfreq", 0);
+>>>>> -	if (node) {
+>>>>> -		of_node_put(node);
+>>>>> +	if (passive)
+>>>>>  		goto passive;
+>>>>> -	} else {
+>>>>> -		ret = exynos_bus_parent_parse_of(np, bus);
+>>>>> -	}
+>>>>> +
+>>>>> +	ret = exynos_bus_parent_parse_of(np, bus);
+>>>>>  
+>>>>
+>>>> Remove unneeded blank line.
+>>>>
+>>>>>  	if (ret < 0)
+>>>>>  		goto err;
+>>>>> @@ -509,6 +464,11 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>>>>>  
+>>>>>  err:
+>>>>>  	dev_pm_opp_of_remove_table(dev);
+>>>>> +	if (bus->opp_table) {
+>>>>> +		dev_pm_opp_put_regulators(bus->opp_table);
+>>>>> +		bus->opp_table = NULL;
+>>>>> +	}
+>>>>> +
+>>>>
+>>>> ditto.
+>>>> Have to disable regulator after disabling the clock
+>>>> to prevent the h/w fault.
+>>>>
+>>>> I think that you should call them with following sequence:
+>>>>
+>>>> 	clk_disable_unprepare(bus->clk);
+>>>> 	if (bus->opp_table)
+>>>> 		dev_pm_opp_put_regulators(bus->opp_table);
+>>>> 	dev_pm_opp_of_remove_table(dev);
+>>>>
+>>>>>  	clk_disable_unprepare(bus->clk);
+>>>>>  
+>>>>>  	return ret;
+>>>
+>>> Best regards,
+>>> --
+>>> Bartlomiej Zolnierkiewicz
+>>> Samsung R&D Institute Poland
+>>> Samsung Electronics
+> 
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+> 
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
