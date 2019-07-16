@@ -1,128 +1,101 @@
-From: Ryan Case <ryandcase@chromium.org>
-Subject: Re: [PATCH v4, 23/33] drm/mediatek: add ovl0/ovl_2l0 usecase
-Date: Tue, 16 Jul 2019 16:13:26 -0700
-Message-ID: <CACjz--=Wn4BH_EwEm0DD-vUxB796wUy5Z3MLiOSeiOZXa92r_w@mail.gmail.com>
-References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com> <1562625253-29254-24-git-send-email-yongqiang.niu@mediatek.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] of/fdt: Make sure no-map does not remove already reserved
+ regions
+Date: Tue, 16 Jul 2019 16:17:10 -0700
+Message-ID: <421844aa-cf68-d4d2-f02d-aefaf8954fdf@gmail.com>
+References: <20190703050827.173284-1-drinkcat@chromium.org>
+ <815a8414-bfbe-c693-3208-1580779815ec@gmail.com>
+ <CAL_JsqLETdazfnz5EU0Qw4TVVBhWmzk12Z5zYMo5Hm2ACPXh1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562625253-29254-24-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <CAL_JsqLETdazfnz5EU0Qw4TVVBhWmzk12Z5zYMo5Hm2ACPXh1w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: yongqiang.niu@mediatek.com
-Cc: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, KarimAllah Ahmed <karahmed@amazon.de>, Nicolas Boichat <drinkcat@chromium.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>, Stephen Boyd <swboyd@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 3:35 PM <yongqiang.niu@mediatek.com> wrote:
->
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
->
-> This patch add ovl0/ovl_2l0 usecase
-> in ovl->ovl_2l0 direct link usecase:
-> 1. the crtc support layer number will 4+2
-> 2. ovl_2l0 background color input select ovl0 when crtc init
-> and disable it when crtc finish
-> 3. config ovl_2l0 layer, if crtc config layer number is
-> bigger than ovl0 support layers(max is 4)
->
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
->  1 file changed, 36 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> index 5eac376..9ee9ce2 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -282,6 +282,15 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
->
->         for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
->                 struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
-> +               enum mtk_ddp_comp_id prev;
-> +
-> +               if (i > 0)
-> +                       prev = mtk_crtc->ddp_comp[i - 1]->id;
-> +               else
-> +                       prev = DDP_COMPONENT_ID_MAX;
-> +
-> +               if (prev == DDP_COMPONENT_OVL0)
-> +                       mtk_ddp_comp_bgclr_in_on(comp);
->
->                 mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
->                 mtk_ddp_comp_start(comp);
-> @@ -291,9 +300,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
->         for (i = 0; i < mtk_crtc->layer_nr; i++) {
->                 struct drm_plane *plane = &mtk_crtc->planes[i];
->                 struct mtk_plane_state *plane_state;
-> +               struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
-> +               unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-> +               unsigned int local_layer;
->
->                 plane_state = to_mtk_plane_state(plane->state);
-> -               mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
-> +
-> +               if (i >= comp_layer_nr) {
-> +                       comp = mtk_crtc->ddp_comp[1];
-> +                       local_layer = i - comp_layer_nr;
-> +               } else
-> +                       local_layer = i;
-> +               mtk_ddp_comp_layer_config(comp , local_layer,
->                                           plane_state);
+On 7/16/19 4:12 PM, Rob Herring wrote:
+> On Tue, Jul 16, 2019 at 4:46 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>
+>> On 7/2/19 10:08 PM, Nicolas Boichat wrote:
+>>> If the device tree is incorrectly configured, and attempts to
+>>> define a "no-map" reserved memory that overlaps with the kernel
+>>> data/code, the kernel would crash quickly after boot, with no
+>>> obvious clue about the nature of the issue.
+>>>
+>>> For example, this would happen if we have the kernel mapped at
+>>> these addresses (from /proc/iomem):
+>>> 40000000-41ffffff : System RAM
+>>>   40080000-40dfffff : Kernel code
+>>>   40e00000-411fffff : reserved
+>>>   41200000-413e0fff : Kernel data
+>>>
+>>> And we declare a no-map shared-dma-pool region at a fixed address
+>>> within that range:
+>>> mem_reserved: mem_region {
+>>>       compatible = "shared-dma-pool";
+>>>       reg = <0 0x40000000 0 0x01A00000>;
+>>>       no-map;
+>>> };
+>>>
+>>> To fix this, when removing memory regions at early boot (which is
+>>> what "no-map" regions do), we need to make sure that the memory
+>>> is not already reserved. If we do, __reserved_mem_reserve_reg
+>>> will throw an error:
+>>> [    0.000000] OF: fdt: Reserved memory: failed to reserve memory
+>>>    for node 'mem_region': base 0x0000000040000000, size 26 MiB
+>>> and the code that will try to use the region should also fail,
+>>> later on.
+>>>
+>>> We do not do anything for non-"no-map" regions, as memblock
+>>> explicitly allows reserved regions to overlap, and the commit
+>>> that this fixes removed the check for that precise reason.
+>>>
+>>> Fixes: 094cb98179f19b7 ("of/fdt: memblock_reserve /memreserve/ regions in the case of partial overlap")
+>>> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+>>> ---
+>>>  drivers/of/fdt.c | 10 +++++++++-
+>>>  1 file changed, 9 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>>> index cd17dc62a71980a..a1ded43fc332d0c 100644
+>>> --- a/drivers/of/fdt.c
+>>> +++ b/drivers/of/fdt.c
+>>> @@ -1138,8 +1138,16 @@ int __init __weak early_init_dt_mark_hotplug_memory_arch(u64 base, u64 size)
+>>>  int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+>>>                                       phys_addr_t size, bool nomap)
+>>>  {
+>>> -     if (nomap)
+>>> +     if (nomap) {
+>>> +             /*
+>>> +              * If the memory is already reserved (by another region), we
+>>> +              * should not allow it to be removed altogether.
+>>> +              */
+>>> +             if (memblock_is_region_reserved(base, size))
+>>> +                     return -EBUSY;
+>>> +
+>>>               return memblock_remove(base, size);
+>>
+>> While you are it, the nomap argument (introduced with
+>> e8d9d1f5485b52ec3c4d7af839e6914438f6c285) predates the introduction of
+>> memblock_is_nomap() (bf3d3cc580f9960883ebf9ea05868f336d9491c2), so
+>> should just remove memblock_remove() and use memblock_mark_nomap()
+>> instead here.
+> 
+> Perhaps like this patch[1]? Though the reasoning is different and the
+> commit message here is more thorough, so can I get a combined patch.
 
-There is an extra space after comp.
+>From a quick reading it does look like memblock_isolate_range(), as
+called by memblock_setclr_flag() should be able to detect this region
+was already reserved, though I have not tried it.
 
-This whole loop is essentially identical to the one found in
-mtk_crtc_ddp_config below. It would be nice to either move that loop
-to a dedicated function called from both spots or allow
-mtk_crtc_ddp_config to be called from here.
+> However, I don't under how handling a misconfigured DT and aligned
+> with EFI are the same patch. What's considered valid for EFI is not
+> for DT regions?
 
->         }
->
-> @@ -319,6 +337,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
->                                            mtk_crtc->ddp_comp[i]->id);
->         mtk_disp_mutex_disable(mtk_crtc->mutex);
->         for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
-> +               mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
->                 mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
->                                               mtk_crtc->mmsys_reg_data,
->                                               mtk_crtc->ddp_comp[i]->id,
-> @@ -339,6 +358,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
->         struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
->         struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
->         unsigned int i;
-> +       unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-> +       unsigned int local_layer;
->
->         /*
->          * TODO: instead of updating the registers here, we should prepare
-> @@ -361,7 +382,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
->                         plane_state = to_mtk_plane_state(plane->state);
->
->                         if (plane_state->pending.config) {
-> -                               mtk_ddp_comp_layer_config(comp, i, plane_state);
-> +                               if (i >= comp_layer_nr) {
-> +                                       comp = mtk_crtc->ddp_comp[1];
-> +                                       local_layer = i - comp_layer_nr;
-> +                               } else
-> +                                       local_layer = i;
-> +
-> +                               mtk_ddp_comp_layer_config(comp, local_layer,
-> +                                                         plane_state);
->                                 plane_state->pending.config = false;
->                         }
->                 }
-> @@ -592,6 +620,12 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
->         }
->
->         mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
-> +       if (mtk_crtc->ddp_comp_nr > 1) {
-> +               struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
-> +
-> +               if (comp->funcs->bgclr_in_on)
-> +                       mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
-> +       }
->         mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
->                                         sizeof(struct drm_plane),
->                                         GFP_KERNEL);
-> --
-> 1.8.1.1.dirty
->
+That I don't know how to answer.
+-- 
+Florian
