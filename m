@@ -1,73 +1,88 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v9 03/18] kunit: test: add string_stream a std::stream
- like string builder
-Date: Tue, 16 Jul 2019 11:55:54 -0700
-Message-ID: <CAFd5g47Nawp7V8=hetgBQWzWqmEyAz1GtWWwMrb9k=CCR33inQ@mail.gmail.com>
-References: <20190712081744.87097-1-brendanhiggins@google.com>
- <20190712081744.87097-4-brendanhiggins@google.com> <20190715204356.4E3F92145D@mail.kernel.org>
- <CAFd5g47481sRaez=yEJN4_ghiXZbxayk1Y04tAZpuzPLsmnhKg@mail.gmail.com>
- <20190715220407.0030420665@mail.kernel.org> <CAFd5g44bE0F=wq_fOAnxFTtoOyx1dUshhDAkKWr5hX9ipJ4Sxw@mail.gmail.com>
- <CAFd5g47y4vDB2P=EsGN8305LGeQPCTveNs-Jd5-=6K-XKY==CA@mail.gmail.com> <20190716153400.5CB182054F@mail.kernel.org>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
+ opp-avg-KBps bindings
+Date: Tue, 16 Jul 2019 11:58:08 -0700
+Message-ID: <CAGETcx9KSqvyzbM-S8LvBObkNBt38K683Ljm8nNQuhxk7MuvAg@mail.gmail.com>
+References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-2-saravanak@google.com>
+ <98b2e315-e8da-80ad-1ef8-e6b222c1c6fe@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190716153400.5CB182054F@mail.kernel.org>
+In-Reply-To: <98b2e315-e8da-80ad-1ef8-e6b222c1c6fe@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 8:34 AM Stephen Boyd <sboyd@kernel.org> wrote:
+On Tue, Jul 16, 2019 at 10:25 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 >
-> Quoting Brendan Higgins (2019-07-15 15:43:20)
-> > On Mon, Jul 15, 2019 at 3:11 PM Brendan Higgins
-> > <brendanhiggins@google.com> wrote:
-> > >
-> > > On Mon, Jul 15, 2019 at 3:04 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > >
-> > > > Quoting Brendan Higgins (2019-07-15 14:11:50)
-> > > > > On Mon, Jul 15, 2019 at 1:43 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > > > >
-> > > > > > I also wonder if it would be better to just have a big slop buffer of a
-> > > > > > 4K page or something so that we almost never have to allocate anything
-> > > > > > with a string_stream and we can just rely on a reader consuming data
-> > > > > > while writers are writing. That might work out better, but I don't quite
-> > > > > > understand the use case for the string stream.
-> > > > >
-> > > > > That makes sense, but might that also waste memory since we will
-> > > > > almost never need that much memory?
-> > > >
-> > > > Why do we care? These are unit tests.
-> > >
-> > > Agreed.
-> > >
-> > > > Having allocations in here makes
-> > > > things more complicated, whereas it would be simpler to have a pointer
-> > > > and a spinlock operating on a chunk of memory that gets flushed out
-> > > > periodically.
-> > >
-> > > I am not so sure. I have to have the logic to allocate memory in some
-> > > case no matter what (what if I need more memory that my preallocated
-> > > chuck?). I think it is simpler to always request an allocation than to
-> > > only sometimes request an allocation.
+> Hey Saravana,
+>
+> https://patchwork.kernel.org/patch/10850815/
+> There was already a discussion ^^ on how bandwidth bindings were to be
+> named.
+
+Yes, I'm aware of that series. That series is trying to define a BW
+mapping for an existing frequency OPP table. This patch is NOT about
+adding a mapping to an existing table. This patch is about adding the
+notion of BW OPP tables where BW is the "key" instead of "frequency".
+
+So let's not mixed up these two series.
+
+-Saravana
+
+> On 7/3/19 6:40 AM, Saravana Kannan wrote:
+> > Interconnects often quantify their performance points in terms of
+> > bandwidth. So, add opp-peak-KBps (required) and opp-avg-KBps (optional) to
+> > allow specifying Bandwidth OPP tables in DT.
 > >
-> > Another even simpler alternative might be to just allocate memory
-> > using kunit_kmalloc as we need it and just let the kunit_resource code
-> > handle cleaning it all up when the test case finishes.
->
-> Sure, sounds like a nice way to avoid duplicating similar logic to
-> maintain a list of things to free later.
-
-I think I will go that route for now.
-
+> > opp-peak-KBps is a required property that replace opp-hz for Bandwidth OPP
+> > tables.
 > >
-> > What do you think?
+> > opp-avg-KBps is an optional property that can be used in Bandwidth OPP
+> > tables.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >   Documentation/devicetree/bindings/opp/opp.txt | 15 ++++++++++++---
+> >   1 file changed, 12 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> > index 76b6c79604a5..c869e87caa2a 100644
+> > --- a/Documentation/devicetree/bindings/opp/opp.txt
+> > +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> > @@ -83,9 +83,14 @@ properties.
+> >
+> >   Required properties:
+> >   - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
+> > -  required property for all device nodes but devices like power domains. The
+> > -  power domain nodes must have another (implementation dependent) property which
+> > -  uniquely identifies the OPP nodes.
+> > +  required property for all device nodes but for devices like power domains or
+> > +  bandwidth opp tables. The power domain nodes must have another (implementation
+> > +  dependent) property which uniquely identifies the OPP nodes. The interconnect
+> > +  opps are required to have the opp-peak-bw property.
+> > +
+> > +- opp-peak-KBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
+> > +  big-endian integer. This is a required property for all devices that don't
+> > +  have opp-hz. For example, bandwidth OPP tables for interconnect paths.
+> >
+> >   Optional properties:
+> >   - opp-microvolt: voltage in micro Volts.
+> > @@ -132,6 +137,10 @@ Optional properties:
+> >   - opp-level: A value representing the performance level of the device,
+> >     expressed as a 32-bit integer.
+> >
+> > +- opp-avg-KBps: Average bandwidth in kilobytes per second, expressed as a
+> > +  32-bit big-endian integer. This property is only meaningful in OPP tables
+> > +  where opp-peak-KBps is present.
+> > +
+> >   - clock-latency-ns: Specifies the maximum possible transition latency (in
+> >     nanoseconds) for switching to this OPP from any other OPP.
+> >
+> >
 >
-> If you go the allocation route then you'll need to have the flags to
-> know what context you're in to allocate appropriately. Does that mean
-> all the string operations will now take GFP flags?
-
-We could set the GFP flags in the constructor, store them in a field,
-and then just reuse them.
-
-Thanks!
+> --
+> Qualcomm Innovation Center, Inc.
+> Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
