@@ -1,14 +1,14 @@
 From: Frank Li <frank.li@nxp.com>
-Subject: RE: [PATCH 1/3] perf/imx_ddr: Add MODULE_DEVICE_TABLE
-Date: Tue, 16 Jul 2019 13:34:17 +0000
-Message-ID: <VI1PR04MB49100BE846047F44034DB9E388CE0@VI1PR04MB4910.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH 2/3] arm64: dts: imx8m: Add ddr-pmu nodes
+Date: Tue, 16 Jul 2019 13:35:08 +0000
+Message-ID: <VI1PR04MB4910AF706069756BF960115588CE0@VI1PR04MB4910.eurprd04.prod.outlook.com>
 References: <cover.1562230183.git.leonard.crestez@nxp.com>
- <6e88abe2ed5f361469cbb8ccccd4586036fc2fa2.1562230183.git.leonard.crestez@nxp.com>
+ <b8aeb9caf6c2380a7c8f65b19e420e18498d5c1a.1562230183.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6e88abe2ed5f361469cbb8ccccd4586036fc2fa2.1562230183.git.leonard.crestez@nxp.com>
+In-Reply-To: <b8aeb9caf6c2380a7c8f65b19e420e18498d5c1a.1562230183.git.leonard.crestez@nxp.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -36,35 +36,65 @@ List-Id: devicetree@vger.kernel.org
 > <fabio.estevam@nxp.com>; Jacky Bai <ping.bai@nxp.com>;
 > devicetree@vger.kernel.org; kernel@pengutronix.de; dl-linux-imx <linux-
 > imx@nxp.com>; linux-arm-kernel@lists.infradead.org
-> Subject: [PATCH 1/3] perf/imx_ddr: Add MODULE_DEVICE_TABLE
+> Subject: [PATCH 2/3] arm64: dts: imx8m: Add ddr-pmu nodes
 > 
-> This is required for automatic probing when driver is built as a module.
+> The same ddr perfomance counter IP from 8qxp is also available on imx8m
+> series so add it to dts.
 > 
-> Fixes: 9a66d36cc7ac ("drivers/perf: imx_ddr: Add DDR performance counter
-> support to perf")
+> Tested with `perf stat` and `memtester` on imx8mm-evk and obtained plausible
+> results.
+> 
 > Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 
 Acked-by: Frank Li <frank.li@nxp.com>
 
 > ---
->  drivers/perf/fsl_imx8_ddr_perf.c | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 7 +++++++
+> arch/arm64/boot/dts/freescale/imx8mq.dtsi | 7 +++++++
+>  2 files changed, 14 insertions(+)
 > 
-> diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-> index 63fe21600072..0e3310dbb145 100644
-> --- a/drivers/perf/fsl_imx8_ddr_perf.c
-> +++ b/drivers/perf/fsl_imx8_ddr_perf.c
-> @@ -45,10 +45,11 @@ static DEFINE_IDA(ddr_ida);  static const struct
-> of_device_id imx_ddr_pmu_dt_ids[] = {
->  	{ .compatible = "fsl,imx8-ddr-pmu",},
->  	{ .compatible = "fsl,imx8m-ddr-pmu",},
->  	{ /* sentinel */ }
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> index 232a7412755a..9a8d8cd21ef0 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> @@ -816,7 +816,14 @@
+>  			      <0x38880000 0xc0000>; /* GICR (RD_base +
+> SGI_base) */
+>  			#interrupt-cells = <3>;
+>  			interrupt-controller;
+>  			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+> +
+> +		ddr-pmu@3d800000 {
+> +			compatible = "fsl,imx8mm-ddr-pmu", "fsl,imx8m-ddr-
+> pmu";
+> +			reg = <0x3d800000 0x400000>;
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+>  	};
 >  };
-> +MODULE_DEVICE_TABLE(of, imx_ddr_pmu_dt_ids);
-> 
->  struct ddr_pmu {
->  	struct pmu pmu;
->  	void __iomem *base;
->  	unsigned int cpu;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index d09b808eff87..fb0fdee5f889 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -1031,7 +1031,14 @@
+>  			#interrupt-cells = <3>;
+>  			interrupt-controller;
+>  			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>  			interrupt-parent = <&gic>;
+>  		};
+> +
+> +		ddr-pmu@3d800000 {
+> +			compatible = "fsl,imx8mq-ddr-pmu", "fsl,imx8m-ddr-
+> pmu";
+> +			reg = <0x3d800000 0x400000>;
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+>  	};
+>  };
 > --
 > 2.17.1
