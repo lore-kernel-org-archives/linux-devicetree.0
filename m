@@ -1,114 +1,157 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 11/11] interconnect: Add devfreq support
-Date: Tue, 16 Jul 2019 23:42:58 +0530
-Message-ID: <9f2bf3fd-f7c5-40e8-6415-f334e3ef8d5d@codeaurora.org>
-References: <20190614041733.120807-1-saravanak@google.com>
- <20190614041733.120807-12-saravanak@google.com>
- <5dc6c820-ead8-d0dc-44de-4d13f86df042@linaro.org>
- <CAGETcx-xU9i1FJB5JecUoyZEfWpD8f+o9bC3SQmb-=3fLVbmQw@mail.gmail.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+Date: Tue, 16 Jul 2019 11:19:15 -0700
+Message-ID: <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
+References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
+ <a9b5c364-52b4-bee1-5881-47197f043950@nvidia.com>
+ <e9d4bc0e-fd5d-ae02-2d67-86c7f7c9620f@gmail.com>
+ <3938092a-bbc7-b304-641d-31677539598d@nvidia.com>
+ <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
+ <0ee055ad-d397-32e5-60ee-d62c14c6f77b@gmail.com>
+ <86fc07d5-ab2e-a52a-a570-b1dfff4c20fe@nvidia.com>
+ <20190716083701.225f0fd9@dimatab>
+ <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
+ <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
+ <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
+ <d908d3a2-3013-7f92-0852-115f428d1c5f@gmail.com>
+ <72b5df8c-8acb-d0d0-ebcf-b406e8404973@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGETcx-xU9i1FJB5JecUoyZEfWpD8f+o9bC3SQmb-=3fLVbmQw@mail.gmail.com>
+In-Reply-To: <72b5df8c-8acb-d0d0-ebcf-b406e8404973@nvidia.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>, Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rajendra Nayak <rnayak@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, Vincent Guittot <vincent.guittot@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, Android Kernel Team <kernel-team@android.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, adharmap@codeaurora.org
+To: Dmitry Osipenko <digetx@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Joseph Lo <josephl@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hey Saravana,
 
-On 6/18/19 2:48 AM, Saravana Kannan wrote:
-> On Mon, Jun 17, 2019 at 8:44 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+On 7/16/19 9:50 AM, Sowjanya Komatineni wrote:
+>
+> On 7/16/19 8:00 AM, Dmitry Osipenko wrote:
+>> 16.07.2019 11:06, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> On Tue, Jul 16, 2019 at 03:24:26PM +0800, Joseph Lo wrote:
+>>>>> OK, Will add to CPUFreq driver...
+>>>>>> The other thing that also need attention is that T124 CPUFreq driver
+>>>>>> implicitly relies on DFLL driver to be probed first, which is icky.
+>>>>>>
+>>>>> Should I add check for successful dfll clk register explicitly in
+>>>>> CPUFreq driver probe and defer till dfll clk registers?
+>> Probably you should use the "device links". See [1][2] for the example.
 >>
->> Hi Saravana,
+>> [1]
+>> https://elixir.bootlin.com/linux/v5.2.1/source/drivers/gpu/drm/tegra/dc.=
+c#L2383=20
 >>
->> On 6/14/19 07:17, Saravana Kannan wrote:
->>> Add a icc_create_devfreq() and icc_remove_devfreq() to create and remove
->>> devfreq devices for interconnect paths. A driver can create/remove devfreq
->>> devices for the interconnects needed for its device by calling these APIs.
->>> This would allow various devfreq governors to work with interconnect paths
->>> and the device driver itself doesn't have to actively manage the bandwidth
->>> votes for the interconnects.
 >>
->> Thanks for the patches, but creating devfreq devices for each interconnect path
->> seems odd to me - at least for consumers that already use a governor.
-> 
-> Each governor instance always handles one "frequency" (more like
-> performance) domain at a time. So if a consumer is already using a
-> governor to scale the hardware block, then using another governor to
-> scale the interconnect performance points is the right way to go about
-> it. In fact, that's exactly what devfreq passive governor's
-> documentation even says it's meant for. That's also what cpufreq does
-> for each cluster/CPU frequency domain too.
-> 
->> So for DDR
->> scaling for example, are you suggesting that we add a devfreq device from the
->> cpufreq driver in order to scale the interconnect between CPU<->DDR?
-> 
-> Yes in general. Although, CPUs are a special case because CPUs don't
-> go through devfreq. So passive governor as it stands today won't work.
-> CPU<->DDR scaling might need a separate governor (unlikely) or some
-> changes to the passive governor that I'm happy to work on once we
-> settle this for general devices like GPU, etc. But the DT format for
-> CPUs will be identical to GPUs or any other device.
+>> [2] https://www.kernel.org/doc/html/latest/driver-api/device_link.html
+>>
+>> Return EPROBE_DEFER instead of EINVAL if device_link_add() fails. And
+>> use of_find_device_by_node() to get the DFLL's device, see [3].
+>>
+>> [3]
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree=
+/drivers/devfreq/tegra20-devfreq.c#n100=20
+>>
+> Will go thru and add...
+>>>> Sorry, I didn't follow the mail thread. Just regarding the DFLL part.
+>>>>
+>>>> As you know it, the DFLL clock is one of the CPU clock sources and
+>>>> integrated with DVFS control logic with the regulator. We will not=20
+>>>> switch
+>>>> CPU to other clock sources once we switched to DFLL. Because the=20
+>>>> CPU has
+>>>> been regulated by the DFLL HW with the DVFS table (CVB or OPP table=20
+>>>> you see
+>>>> in the driver.). We shouldn't reparent it to other sources with unknew
+>>>> freq/volt pair. That's not guaranteed to work. We allow switching to
+>>>> open-loop mode but different sources.
+>> Okay, then the CPUFreq driver will have to enforce DFLL freq to PLLP's
+>> rate before switching to PLLP in order to have a proper CPU voltage.
+>
+> PLLP freq is safe to work for any CPU voltage. So no need to enforce=20
+> DFLL freq to PLLP rate before changing CCLK_G source to PLLP during=20
+> suspend
+>
+Sorry, please ignore my above comment. During suspend, need to change=20
+CCLK_G source to PLLP when dfll is in closed loop mode first and then=20
+dfll need to be set to open loop.
+>>>> And I don't exactly understand why we need to switch to PLLP in CPU=20
+>>>> idle
+>>>> driver. Just keep it on CL-DVFS mode all the time.
+>>>>
+>>>> In SC7 entry, the dfll suspend function moves it the open-loop=20
+>>>> mode. That's
+>>>> all. The sc7-entryfirmware will handle the rest of the sequence to=20
+>>>> turn off
+>>>> the CPU power.
+>>>>
+>>>> In SC7 resume, the warmboot code will handle the sequence to turn on
+>>>> regulator and power up the CPU cluster. And leave it on PLL_P. After
+>>>> resuming to the kernel, we re-init DFLL, restore the CPU clock=20
+>>>> policy (CPU
+>>>> runs on DFLL open-loop mode) and then moving to close-loop mode.
+>> The DFLL is re-inited after switching CCLK to DFLL parent during of the
+>> early clocks-state restoring by CaR driver. Hence instead of having odd
+>> hacks in the CaR driver, it is much nicer to have a proper
+>> suspend-resume sequencing of the device drivers. In this case CPUFreq
+>> driver is the driver that enables DFLL and switches CPU to that clock
+>> source, which means that this driver is also should be responsible for
+>> management of the DFLL's state during of suspend/resume process. If
+>> CPUFreq driver disables DFLL during suspend and re-enables it during
+>> resume, then looks like the CaR driver hacks around DFLL are not needed.
+>>
+>>>> The DFLL part looks good to me. BTW, change the patch subject to "Add
+>>>> suspend-resume support" seems more appropriate to me.
+>>>>
+>>> To clarify this, the sequences for DFLL use are as follows (assuming=20
+>>> all
+>>> required DFLL hw configuration has been done)
+>>>
+>>> Switch to DFLL:
+>>> 0) Save current parent and frequency
+>>> 1) Program DFLL to open loop mode
+>>> 2) Enable DFLL
+>>> 3) Change cclk_g parent to DFLL
+>>> For OVR regulator:
+>>> 4) Change PWM output pin from tristate to output
+>>> 5) Enable DFLL PWM output
+>>> For I2C regulator:
+>>> 4) Enable DFLL I2C output
+>>> 6) Program DFLL to closed loop mode
+>>>
+>>> Switch away from DFLL:
+>>> 0) Change cclk_g parent to PLLP so the CPU frequency is ok for any=20
+>>> vdd_cpu voltage
+>>> 1) Program DFLL to open loop mode
+>>>
+I see during switch away from DFLL (suspend), cclk_g parent is not=20
+changed to PLLP before changing dfll to open loop mode.
 
-using icc_create_devfreq from the cpufreq-hw driver on SDM845 SoC
-to scale CPU<->DDR would cause a circular dependency. (i.e) with
-the addition of cpufreq notifier to the passive governor as in
-https://patchwork.kernel.org/patch/11046147/ devm_devfreq_add_device
-would require the cpufreq transistion notifier register and cpu
-freq_cpu_get to go through. Please add your thought on addressing this.
+Will add this ...
 
-> 
->> Also if the
->> GPU is already using devfreq, should we add a devfreq per each interconnect
->> path? What would be the benefit in this case - using different governors for
->> bandwidth scaling maybe?
-> 
-> When saying "separate/different governors" in this email, I mean both
-> different instance of the same governor logic with different tunables
-> AND actually different algorithms/governor logic entirely.
-> 
-> The heuristics to use for each interconnect path might be (more like,
-> will be) different based on hardware characteristics (Eg: what voltage
-> domains the interconnect is sitting on) and what interconnect
-> information is available (Eg: Just busy time vs bandwidth count vs no
-> information etc) -- so having separate governors for each interconnect
-> path makes a lot of sense. It also allows userspace to control the
-> policy for scaling each of those paths based on product use cases.
-> 
-> For example, when the GPU is just doing simple UI rendering, userspace
-> can use the max_freq sysfs file for the devfreq device to disallow high
-> bandwidth OPPs on the GPU<->DDR path, but those higher OPPs could be
-> allowed by userspace when the GPU is used for games. Having devfreq
-> device for each interconnect path also make it easy to debug
-> performance issues -- you can independently change the votes for each
-> path to figure out what is causing the bottleneck, etc.
-> 
-> Adding a devfreq device for interconnect voting with a few lines gives
-> all these features "for free".
-> 
-> This doesn't mean all users of interconnect framework NEED to use
-> devfreq for interconnect. They might do it simply based on
-> calculations based on the use case (Eg: display driver from display
-> resolution). But if they are trying to use any kind of
-> algorithm/heuristics, writing it as a devfreq governor should be
-> encouraged.
-> 
-> Also want to point out that BW OPPs also work for drivers that don't
-> use devfreq at all. The interconnect-opp-table just lists the
-> meaningful OPP leveld for the path and the device driver can pick one
-> entry from the table based on the use case.
-> 
-> Thanks,
-> Saravana
-> 
-> 
-> 
-
--- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>>> For OVR regulator:
+>>> 2) Change PWM output pin from output to tristate: vdd_cpu will go back
+>>> =C2=A0=C2=A0=C2=A0 to hardwired boot voltage.
+>>> 3) Disable DFLL PWM output
+>>>
+>>> For I2C regulator:
+>>> 2) Program vdd_cpu regulator voltage to the boot voltage
+>>> 3) Disable DFLL I2C output
+>>>
+>>> 4) Reprogram parent saved in step 0 of 'Switch to DFLL' to the saved
+>>> =C2=A0=C2=A0=C2=A0 frequency
+>>> 5) Change cclk_g parent to saved parent
+>>> 6) Disable DFLL
+>
+> This is the same sequence currently implemented. But dfll=20
+> suspend/resume calls are thru Tegra210 clock driver.
+>
+> Dmitry wants to have dfll suspend/resume along with CCLK_G restore to=20
+> happen from CPUFreq driver pm_ops rather than tegra210 clock driver or=20
+> tegra dfll driver.
+>
+> Will move it to CPUFreq driver...
+>
+Thanks!
