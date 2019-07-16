@@ -1,131 +1,98 @@
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH v3 01/11] dt-bindings: firmware: imx-scu: new binding to parse
- clocks from device tree
-Date: Tue, 16 Jul 2019 23:00:55 +0800
-Message-ID: <1563289265-10977-2-git-send-email-aisheng.dong@nxp.com>
-References: <1563289265-10977-1-git-send-email-aisheng.dong@nxp.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
+Date: Tue, 16 Jul 2019 08:30:01 -0700
+Message-ID: <20190716153002.49E292054F@mail.kernel.org>
+References: <20190712081744.87097-1-brendanhiggins@google.com> <20190712081744.87097-5-brendanhiggins@google.com> <20190715221554.8417320665@mail.kernel.org> <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com> <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1563289265-10977-1-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-clk@vger.kernel.org
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
 List-Id: devicetree@vger.kernel.org
 
-There's a few limitations on the original one cell clock binding
-(#clock-cells = <1>) that we have to define some SW clock IDs for device
-tree to reference. This may cause troubles if we want to use common
-clock IDs for multi platforms support when the clock of those platforms
-are mostly the same.
-e.g. Current clock IDs name are defined with SS prefix.
+Quoting Brendan Higgins (2019-07-16 01:37:34)
+> On Tue, Jul 16, 2019 at 12:57 AM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > On Mon, Jul 15, 2019 at 3:15 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Brendan Higgins (2019-07-12 01:17:30)
+> > > > diff --git a/include/kunit/kunit-stream.h b/include/kunit/kunit-str=
+eam.h
+> > > > new file mode 100644
+> > > > index 0000000000000..a7b53eabf6be4
+> > > > --- /dev/null
+> > > > +++ b/include/kunit/kunit-stream.h
+> > > > +/**
+> > > > + * struct kunit_stream - a std::stream style string builder.
+> > > > + *
+> > > > + * A std::stream style string builder. Allows messages to be built=
+ up and
+> > > > + * printed all at once.
+> > > > + */
+> > > > +struct kunit_stream {
+> > > > +       /* private: internal use only. */
+> > > > +       struct kunit *test;
+> > > > +       const char *level;
+> > >
+> > > Is the level changed? See my comment below, but I wonder if this whole
+> > > struct can go away and the wrappers can just operate on 'struct
+> > > string_stream' instead.
+> >
+> > I was inclined to agree with you when I first read your comment, but
+> > then I thought about the case that someone wants to add in a debug
+> > message (of which I currently have none). I think under most
+> > circumstances a user of kunit_stream would likely want to pick a
+> > default verbosity that maybe I should provide, but may still want
+> > different verbosity levels.
+> >
+> > The main reason I want to keep the types separate, string_stream vs.
+> > kunit_stream, is that they are intended to be used differently.
+> > string_stream is just a generic string builder. If you are using that,
+> > you are expecting to see someone building the string at some point and
+> > then doing something interesting with it. kunit_stream really tells
+> > you specifically that KUnit is putting together a message to
+> > communicate something to a user of KUnit. It is really used in a very
+> > specific way, and I wouldn't want to generalize its usage beyond how
+> > it is currently used. I think in order to preserve the author's
+> > intention it adds clarity to keep the types separate regardless of how
+> > similar they might be in reality.
 
-However the device may reside in different SS across CPUs, that means the
-SS prefix may not valid anymore for a new SoC. Furthermore, the device
-availability of those clocks may also vary a bit.
+You may want to add some of these reasons to the commit text.
 
-For such situation, we want to eliminate the using of SW Clock IDs and
-change to use a more close to HW one instead.
-For SCU clocks usage, only two params required: Resource id + Clock Type.
-Both parameters are platform independent. So we could use two cells binding
-to pass those parameters,
+> > > > +
+> > > > +       if (!string_stream_is_empty(stream->internal_stream)) {
+> > > > +               kunit_err(stream->test,
+> > > > +                         "End of test case reached with uncommitte=
+d stream entries\n");
+> > > > +               kunit_stream_commit(stream);
+> > > > +       }
+> > > > +}
+> > > > +
+> > >
+> > > Nitpick: Drop this extra newline.
+> >
+> > Oops, nice catch.
+>=20
+> Not super important, but I don't want you to think that I am ignoring
+> you. I think you must have unintentionally deleted the last function
+> in this file, or maybe you are referring to something that I am just
+> not seeing, but I don't see the extra newline here.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-ChangeLog:
-v2->v3:
- * Changed to two cells binding and register all clocks in driver
-   instead of parse from device tree.
-v1->v2:
- * changed to one cell binding inspired by arm,scpi.txt
-   Documentation/devicetree/bindings/arm/arm,scpi.txt
-   Resource ID is encoded in 'reg' property.
-   Clock type is encoded in generic clock-indices property.
-   Then we don't have to search all the DT nodes to fetch
-   those two value to construct clocks which is relatively
-   low efficiency.
- * Add required power-domain property as well.
----
- .../devicetree/bindings/arm/freescale/fsl,scu.txt       | 12 +++++++-----
- include/dt-bindings/firmware/imx/rsrc.h                 | 17 +++++++++++++++++
- 2 files changed, 24 insertions(+), 5 deletions(-)
+No worries. Sorry for the noise.
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index 5d7dbab..351d335 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -89,7 +89,10 @@ Required properties:
- 			  "fsl,imx8qm-clock"
- 			  "fsl,imx8qxp-clock"
- 			followed by "fsl,scu-clk"
--- #clock-cells:		Should be 1. Contains the Clock ID value.
-+- #clock-cells:		Should be either
-+			2: Contains the Resource and Clock ID value.
-+			or
-+			1: Contains the Clock ID value. (DEPRECATED)
- - clocks:		List of clock specifiers, must contain an entry for
- 			each required entry in clock-names
- - clock-names:		Should include entries "xtal_32KHz", "xtal_24MHz"
-@@ -162,7 +165,7 @@ firmware {
- 
- 		clk: clk {
- 			compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
--			#clock-cells = <1>;
-+			#clock-cells = <2>;
- 		};
- 
- 		iomuxc {
-@@ -192,8 +195,7 @@ serial@5a060000 {
- 	...
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_lpuart0>;
--	clocks = <&clk IMX8QXP_UART0_CLK>,
--		 <&clk IMX8QXP_UART0_IPG_CLK>;
--	clock-names = "per", "ipg";
-+	clocks = <&uart0_clk IMX_SC_R_UART_0 IMX_SC_PM_CLK_PER>;
-+	clock-names = "ipg";
- 	power-domains = <&pd IMX_SC_R_UART_0>;
- };
-diff --git a/include/dt-bindings/firmware/imx/rsrc.h b/include/dt-bindings/firmware/imx/rsrc.h
-index 4e61f64..fbeaca7 100644
---- a/include/dt-bindings/firmware/imx/rsrc.h
-+++ b/include/dt-bindings/firmware/imx/rsrc.h
-@@ -547,4 +547,21 @@
- #define IMX_SC_R_ATTESTATION		545
- #define IMX_SC_R_LAST			546
- 
-+/*
-+ * Defines for SC PM CLK
-+ */
-+#define IMX_SC_PM_CLK_SLV_BUS		0	/* Slave bus clock */
-+#define IMX_SC_PM_CLK_MST_BUS		1	/* Master bus clock */
-+#define IMX_SC_PM_CLK_PER		2	/* Peripheral clock */
-+#define IMX_SC_PM_CLK_PHY		3	/* Phy clock */
-+#define IMX_SC_PM_CLK_MISC		4	/* Misc clock */
-+#define IMX_SC_PM_CLK_MISC0		0	/* Misc 0 clock */
-+#define IMX_SC_PM_CLK_MISC1		1	/* Misc 1 clock */
-+#define IMX_SC_PM_CLK_MISC2		2	/* Misc 2 clock */
-+#define IMX_SC_PM_CLK_MISC3		3	/* Misc 3 clock */
-+#define IMX_SC_PM_CLK_MISC4		4	/* Misc 4 clock */
-+#define IMX_SC_PM_CLK_CPU		2	/* CPU clock */
-+#define IMX_SC_PM_CLK_PLL		4	/* PLL */
-+#define IMX_SC_PM_CLK_BYPASS		4	/* Bypass clock */
-+
- #endif /* __DT_BINDINGS_RSCRC_IMX_H */
--- 
-2.7.4
+> > property of the input, it may or may not be enough information on its
+> > own for the expectation to fail, but we want to share the result of
+> > the property check with the user regardless, BUT only if the
+> > expectation as a whole fails.
+> >
+> > Hence, we can have multiple `struct kunit_stream`s associated with a
+> > `struct kunit` active at any given time.
+
+Makes sense. I wasn't sure if there were more than one stream associated
+with a test. Sounds like there are many to one so it can't just be a
+member of the test. This could be documented somewhere so this question
+doesn't come up again.
