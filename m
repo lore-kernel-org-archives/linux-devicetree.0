@@ -1,13 +1,23 @@
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH v2 14/15] arm64: dts: imx: add imx8qm mek support
-Date: Tue, 16 Jul 2019 23:14:48 +0800
-Message-ID: <1563290089-11085-15-git-send-email-aisheng.dong@nxp.com>
-References: <1563290089-11085-1-git-send-email-aisheng.dong@nxp.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V2 1/2] dt-bindings: firmware: imx-scu: new binding to
+ parse clocks from device tree
+Date: Tue, 16 Jul 2019 15:56:39 +0000
+Message-ID: <AM0PR04MB4211138D41AE98AC2E0B46D780CE0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1556846821-8581-1-git-send-email-aisheng.dong@nxp.com>
+ <1556846821-8581-2-git-send-email-aisheng.dong@nxp.com>
+ <CAL_JsqLJ+Lc_3huQizy4BVFgVV94Yg8KsOOgXLv4dQU8H=WfWw@mail.gmail.com>
+ <AM0PR04MB4211B2F21350CAE370D7A93780360@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CAL_JsqLNRnYxUGyhpiL2OFxOT1wXZH2LG4XUH7qf14TpA5Dk=A@mail.gmail.com>
+ <AM0PR04MB421180CD45226B30082BDE4D80320@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <20190513180004.GA26344@bogus>
+ <AM0PR04MB4211C4F27C9D1DEC29B1600E80070@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <AM0PR04MB421104C260EE55FD8016656480140@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1563290089-11085-1-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <AM0PR04MB421104C260EE55FD8016656480140@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,194 +27,266 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, dongas86@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, Mark Rutland <mark.rutland@arm.com>, shawnguo@kernel.org
+To: Rob Herring <robh@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The i.MX8QuadMax is a Dual (2x) Cortex-A72 and Quad (4x) Cortex-A53
-proccessor with powerful graphic and multimedia features.
-This patch adds i.MX8QuadMax MEK board support.
+Hi Rob,
 
-Note that MX8QM needs a special workaround for TLB flush due to a SoC
-errata, otherwise there may be random crash if enable both clusters of
-A72 and A53. As the errata workaround is still not in mainline, so we
-disable A72 cluster first for MX8QM MEK.
+Would you help check the new patch series I just sent?
+[v3,00/11] clk: imx8: add new clock binding for better pm support
+https://patchwork.kernel.org/cover/11046287/
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-ChangeLog:
- v1-v2: copyright update to 2019, minor node name change
----
- arch/arm64/boot/dts/freescale/Makefile       |   1 +
- arch/arm64/boot/dts/freescale/imx8qm-mek.dts | 144 +++++++++++++++++++++++++++
- 2 files changed, 145 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-mek.dts
+The former solution you suggested seems can't work as it lost the ability
+to set parents for each individual clocks within the same hardware subsystems.
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index c043aca..c5e39cd4 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -25,4 +25,5 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm-mek.dts b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
-new file mode 100644
-index 0000000..ce9d3f0
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
-@@ -0,0 +1,144 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2018-2019 NXP
-+ *	Dong Aisheng <aisheng.dong@nxp.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx8qm.dtsi"
-+
-+/ {
-+	model = "Freescale i.MX8QM MEK";
-+	compatible = "fsl,imx8qm-mek", "fsl,imx8qm";
-+
-+	chosen {
-+		stdout-path = &lpuart0;
-+	};
-+
-+	cpus {
-+		/delete-node/ cpu-map;
-+		/delete-node/ cpu@100;
-+		/delete-node/ cpu@101;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000 0 0x40000000>;
-+	};
-+
-+	reg_usdhc2_vmmc: usdhc2-vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "SD1_SPWR";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		gpio = <&lsio_gpio4 19 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+};
-+
-+&lpuart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart0>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
-+
-+		ethphy1: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+		};
-+	};
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	bus-width = <8>;
-+	no-sd;
-+	no-sdio;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	vmmc-supply = <&reg_usdhc2_vmmc>;
-+	cd-gpios = <&lsio_gpio4 22 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&lsio_gpio4 21 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			IMX8QM_ENET0_MDC_CONN_ENET0_MDC				0x06000020
-+			IMX8QM_ENET0_MDIO_CONN_ENET0_MDIO			0x06000020
-+			IMX8QM_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL	0x06000020
-+			IMX8QM_ENET0_RGMII_TXC_CONN_ENET0_RGMII_TXC		0x06000020
-+			IMX8QM_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0		0x06000020
-+			IMX8QM_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1		0x06000020
-+			IMX8QM_ENET0_RGMII_TXD2_CONN_ENET0_RGMII_TXD2		0x06000020
-+			IMX8QM_ENET0_RGMII_TXD3_CONN_ENET0_RGMII_TXD3		0x06000020
-+			IMX8QM_ENET0_RGMII_RXC_CONN_ENET0_RGMII_RXC		0x06000020
-+			IMX8QM_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL	0x06000020
-+			IMX8QM_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0		0x06000020
-+			IMX8QM_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1		0x06000020
-+			IMX8QM_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2		0x06000020
-+			IMX8QM_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3		0x06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart0: lpuart0grp {
-+		fsl,pins = <
-+			IMX8QM_UART0_RX_DMA_UART0_RX				0x06000020
-+			IMX8QM_UART0_TX_DMA_UART0_TX				0x06000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK				0x06000041
-+			IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD				0x00000021
-+			IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0			0x00000021
-+			IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1			0x00000021
-+			IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2			0x00000021
-+			IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3			0x00000021
-+			IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4			0x00000021
-+			IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5			0x00000021
-+			IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6			0x00000021
-+			IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7			0x00000021
-+			IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE			0x00000041
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK			0x06000041
-+			IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD			0x00000021
-+			IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0			0x00000021
-+			IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1			0x00000021
-+			IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2			0x00000021
-+			IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3			0x00000021
-+			IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT		0x00000021
-+		>;
-+	};
-+};
--- 
-2.7.4
+And seems both Stephen & You may not quite like the per node clock in DT for SCU
+clocks, In order to not stuck at here, I totally removed the SCU clock nodes in DT,
+Instead, we still define those SCU clocks in driver but changed to two cells binding
+which is more close to hardware (SW Clock IDs are removed) and can handle
+above issues.
+
+And we also need some tricks in driver to handle the required power domains
+and Clock availability for different partition configuration, as well as 
+clock state save& restore.
+
+The patch series has been pending for quite a few months.
+So it would be really appreciated if you can help review and provide some
+advices.
+
+Note: for DT patches which may help the understanding, please refer to:
+[v2,00/15] arm64: dts: imx8: architecture improvement and adding imx8qm support
+https://patchwork.kernel.org/cover/11046341/
+
+Regards
+Dong Aisheng
+
+> From: Aisheng Dong
+> Sent: Tuesday, June 4, 2019 12:50 AM
+> Subject: RE: [PATCH V2 1/2] dt-bindings: firmware: imx-scu: new binding to
+> parse clocks from device tree
+> 
+> Hi Rob,
+> 
+> Would you help check my reply and offer some suggestions?
+> We're a bit lost on what to do and being blocked here for a long time which
+> affects all the following MX8QM/QXP upstreaming works.
+> 
+> We really need your help to clarify how to move forward.
+> If any more information need me to provide, feel free to let me know.
+> 
+> Thanks a lot in advance!
+> 
+> Regards
+> Dong Aisheng
+> 
+> > From: Aisheng Dong
+> > Sent: Wednesday, May 22, 2019 1:57 AM
+> > Hi Rob,
+> >
+> > [...]
+> >
+> > > > > > For SCU based platforms, the resource availability (e.g.
+> > > > > > device/clocks/power) are configurable by SCU firmware
+> > > > > > according to the
+> > > > > different SW execution partition configuration.
+> > > > > > e.g. According to customer's requirements, we may allocate
+> > > > > > some resources to M4 partition like some I2C, CAN, audio
+> > > > > > resources which can't be
+> > > > > accessed by A core.
+> > > > > > And we may allocate even more for virtual machines running at
+> > > > > > another CPU
+> > > > > core.
+> > > > > > Thus, defining all the clock sources (fixed) in device tree
+> > > > > > for A core seems to be a little bit meaningless and it also
+> > > > > > causes us hard to extend for a
+> > > > > new SoC.
+> > > > >
+> > > > > I'm not suggesting that. It's really just re-arranging all the
+> > > > > same data from a bunch of child nodes to a single node. Granted,
+> > > > > it may be easier to add/delete nodes than add/delete elements
+> > > > > from an array of property values, but really that's just a
+> > > > > tooling problem
+> > > > >
+> > > >
+> > > > Okay, understood.
+> > > > So it seems we could still have a separate clock controller node
+> > > > for each SS but merge all the same data of child nodes data into it.
+> > > >
+> > > > However, we still have one concern.
+> > > > Taking MX8QXP DMA SS as example, with one node description, it may
+> > > > be something like below:
+> > > > dma_scu_clk: dma-scu-clock-controller {
+> > > >         compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-clk";
+> > > >         #clock-cells = <1>;
+> > > >         clock-indices = <IMX_SCU_CLK_ID(IMX_SC_R_ADC_0,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_CAN_0,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_FTM_0,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_FTM_1,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_I2C_0,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_I2C_1,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_I2C_2,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_I2C_3,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_LCD_0,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >
+> <IMX_SCU_CLK_ID(IMX_SC_R_LCD_0_PWM_0,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_SPI_0,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_SPI_1,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_SPI_2,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_SPI_3,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_UART_0,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_UART_1,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_UART_2,
+> > > IMX_SC_PM_CLK_PER)>,
+> > > >                         <IMX_SCU_CLK_ID(IMX_SC_R_UART_3,
+> > > IMX_SC_PM_CLK_PER)>;
+> > > >         clock-output-names = "adc0_clk",
+> > > >                              "can0_clk",
+> > > >                              "ftm0_clk",
+> > > >                              "ftm1_clk",
+> > > >                              "i2c0_clk",
+> > > >                              "i2c1_clk",
+> > > >                              "i2c2_clk",
+> > > >                              "i2c3_clk",
+> > > >                              "lcd0_clk",
+> > > >                              "lcd0_pwm0_clk",
+> > > >                              "spi0_clk",
+> > > >                              "spi1_clk",
+> > > >                              "spi2_clk",
+> > > >                              "spi3_clk",
+> > > >                              "uart0_clk",
+> > > >                              "uart1_clk",
+> > > >                              "uart2_clk",
+> > > >                              "uart3_clk";
+> > > >         power-domains = <&pd IMX_SC_R_ADC_0>,
+> > > >                         <&pd IMX_SC_R_CAN_0>,
+> > > >                         <&pd IMX_SC_R_FTM_0>,
+> > > >                         <&pd IMX_SC_R_FTM_1>,
+> > > >                         <&pd IMX_SC_R_I2C_0>,
+> > > >                         <&pd IMX_SC_R_I2C_1>,
+> > > >                         <&pd IMX_SC_R_I2C_2>,
+> > > >                         <&pd IMX_SC_R_I2C_3>,
+> > > >                         <&pd IMX_SC_R_LCD_0>,
+> > > >                         <&pd IMX_SC_R_LCD_0_PWM_0>,
+> > > >                         <&pd IMX_SC_R_SPI_0>,
+> > > >                         <&pd IMX_SC_R_SPI_1>,
+> > > >                         <&pd IMX_SC_R_SPI_2>,
+> > > >                         <&pd IMX_SC_R_SPI_3>,
+> > > >                         <&pd IMX_SC_R_UART_0>,
+> > > >                         <&pd IMX_SC_R_UART_1>,
+> > > >                         <&pd IMX_SC_R_UART_2>,
+> > > >                         <&pd IMX_SC_R_UART_3>; };
+> > > >
+> > > > For MX8QM, even if we have one more UART_4, then we still have to
+> > > > write all the same things again with an extra UART_4. It seems
+> > > > it's a bit violate our design that using a shared one and do
+> > > > incremental changes for
+> > > new SoCs.
+> > > > Do you think if this is acceptable to you?
+> > >
+> > > Yes, as it should be a one time thing to do per SoC.
+> > >
+> >
+> > I found we may still can't use this new way after giving a try.
+> > One know issue is that it can't support clock parent setting well with
+> > this binding If merged all sub clocks into a single node.
+> > Hard to describe parent clocks for each clock within the same big array.
+> >
+> > For example in MX8 ADMA SS, there're another LCD PLL which can be
+> > optional parent clocks to others peripherals.
+> > If we list them all in the same array, we can't describe LCD
+> > baud/pixel clock parents.
+> > dma_scu_clk: dma-scu-clock-controller {
+> >         compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-clk";
+> >         #clock-cells = <1>;
+> >         clock-indices = <SC_R_ELCDIF_PLL IMX_SC_PM_CLK_PLL>,
+> >                         <SC_R_LCD_0 IMX_SC_PM_CLK_PER>,
+> /*
+> > lcd baud */
+> >                         <SC_R_LCD_0 IMX_SC_PM_CLK_SLV_BUS>,
+> /*
+> > Pixel Link */
+> >                         ...
+> >         clock-output-names = "lcdif_pll",
+> >                              "lcdif_baud_clk",
+> >                              "lcdif_pixel_clk",
+> >                                 ...
+> >         power-domains = <&pd IMX_SC_R_LCD_0>,
+> >                         <&pd IMX_SC_R_LCD_0>,
+> >                         <&pd IMX_SC_R_LCD_0>,
+> >                         ...
+> > };
+> >
+> > And other peripherals might have different parents within the same array.
+> >
+> > The old way does not have this issue because it's capable of
+> > configuring parents respectively for each sub clocks.
+> > /* SCU clocks */
+> > dma_scu_clk: clock-controller-scu-dma {
+> >         #address-cells = <1>;
+> >         #size-cells = <0>;
+> >
+> >         lcd_pll: clock-scu@323 {
+> >                 reg = <323>;
+> >                 #clock-cells = <1>;
+> >                 clock-indices = <IMX_SC_PM_CLK_PLL>;
+> >                 clock-output-names = "lcd_pll";
+> >                 power-domains = <&pd IMX_SC_R_ELCDIF_PLL>;
+> >         };
+> >
+> >         lcd0_clk: clock-scu@187 {
+> >                 reg = <187>;
+> >                 #clock-cells = <1>;
+> >                 /* parent clocks should match HW programing order */
+> >                 clocks = <&dummy_clk &dummy_clk &dummy_clk
+> &dummy_clk
+> > &lcd_pll>;
+> >                 clock-indices = <IMX_SC_PM_CLK_PER>;
+> >                 clock-output-names = "lcd0_clk";
+> >                 power-domains = <&pd IMX_SC_R_LCD_0>;
+> >         };
+> >         ...
+> > };
+> >
+> > I double checked other SS like Audio, DC, MIPI, PI which have the same issue.
+> > I really don't know if there will be a way out if using the one single node way.
+> > And I'm also a bit worrying whether it may cause more issues due to
+> > its losing of the flexibility and causes potential issues.
+> >
+> > Do you think if we can still go back to the old way which is proposed
+> > In this patch set?
+> > As it can perfectly meet our requirements and also ease the driver
+> > implementation.
+> >
+> > Hope you can help shed some lights as we're pending on it for a long time.
+> >
+> > Regards
+> > Dong Aisheng
+> >
+> > > > But if describe them per nodes, we do not have such issue.
+> > > >
+> > > > Anyway, please tell me your choice, then I will follow.
+> > > >
+> > > > BTW, I don't know how a tool can address this issue.
+> > >
+> > > I meant you could write one that understands the binding. It's a bit
+> > > more complicated having to parse and update properties compared to
+> > > adding or removing nodes, but it can still be done.
+> > >
+> > > Rob
