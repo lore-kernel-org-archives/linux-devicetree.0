@@ -1,326 +1,222 @@
-Return-Path: <SRS0=jObF=U7=nxp.com=ping.bai@kernel.org>
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: [RESEND PATCH 2/3] soc: imx: Add power domain driver support for
- i.mx8m family
-Date: Tue, 2 Jul 2019 10:03:46 +0000
-Message-ID: <20190702100832.29718-3-ping.bai@nxp.com>
-References: <20190702100832.29718-1-ping.bai@nxp.com>
-In-Reply-To: <20190702100832.29718-1-ping.bai@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <1D29A89D4534824DB83E2C9B2B7E7443@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=DyW0=VN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387484AbfGPJoE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jul 2019 05:44:04 -0400
+Date: Tue, 16 Jul 2019 11:43:58 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCHv2 1/3] iio: imu: st_lsm6sdx: move register definitions to
+ sensor_settings struct
+Message-ID: <20190716094358.GC13440@localhost.localdomain>
+References: <20190716093325.7683-1-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ncSAzJYg3Aa9+CRW"
+Content-Disposition: inline
+In-Reply-To: <20190716093325.7683-1-martin.kepplinger@puri.sm>
+Sender: devicetree-owner@vger.kernel.org
+To: Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc: lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The i.MX8M family is a set of NXP product focus on delivering
-the latest and greatest video and audio experience combining
-state-of-the-art media-specific features with high-performance
-processing while optimized for lowest power consumption.
 
-i.MX8MQ, i.MX8MM, i.MX8MN, even the furture i.MX8MP are all
-belong to this family. A GPC module is used to manage all the
-PU power domain on/off. But the situation is that the number of
-power domains & the power up sequence has significate difference
-on those SoCs. Even on the same SoC. The power up sequence still
-has big difference. It makes us hard to reuse the GPCv2 driver to
-cover the whole i.MX8M family. Each time a new SoC is supported in
-the mainline kernel, we need to modify the GPCv2 driver to support
-it. We need to add or modify hundred lines of code in worst case.
-It is a bad practice for the driver maintainability.
+--ncSAzJYg3Aa9+CRW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This driver add a more generic power domain driver that the actual
-power on/off is done by TF-A code. the abstraction give us the
-possibility that using one driver to cover the whole i.MX8M family
-in kernel side.
+> Move some register definitions to the per-device array of struct
+> st_lsm6dsx_sensor_settings in order to simplify adding new sensor
+> devices to the driver.
+>=20
+> Also, remove completely unused register definitions.
+>=20
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> ---
+>=20
 
-Signed-off-by: Jacky Bai <ping.bai@nxp.com>
----
- drivers/soc/imx/Kconfig            |   6 +
- drivers/soc/imx/Makefile           |   1 +
- drivers/soc/imx/imx8m_pm_domains.c | 224 +++++++++++++++++++++++++++++
- include/soc/imx/imx_sip.h          |  12 ++
- 4 files changed, 243 insertions(+)
- create mode 100644 drivers/soc/imx/imx8m_pm_domains.c
- create mode 100644 include/soc/imx/imx_sip.h
+Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig
-index 8aaebf13e2e6..2f3be81aabea 100644
---- a/drivers/soc/imx/Kconfig
-+++ b/drivers/soc/imx/Kconfig
-@@ -17,4 +17,10 @@ config IMX_SCU_SOC
- 	  Controller Unit SoC info module, it will provide the SoC info
- 	  like SoC family, ID and revision etc.
-=20
-+config IMX8M_PM_DOMAINS
-+	bool "i.MX8M PM domains"
-+	depends on ARCH_MXC || (COMPILE_TEST && OF)
-+	depends on PM
-+	select PM_GENERIC_DOMAINS
-+
- endmenu
-diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile
-index cf9ca42ff739..469e721b479e 100644
---- a/drivers/soc/imx/Makefile
-+++ b/drivers/soc/imx/Makefile
-@@ -3,3 +3,4 @@ obj-$(CONFIG_HAVE_IMX_GPC) +=3D gpc.o
- obj-$(CONFIG_IMX_GPCV2_PM_DOMAINS) +=3D gpcv2.o
- obj-$(CONFIG_ARCH_MXC) +=3D soc-imx8.o
- obj-$(CONFIG_IMX_SCU_SOC) +=3D soc-imx-scu.o
-+obj-$(CONFIG_IMX8M_PM_DOMAINS) +=3D imx8m_pm_domains.o
-diff --git a/drivers/soc/imx/imx8m_pm_domains.c b/drivers/soc/imx/imx8m_pm_=
-domains.c
-new file mode 100644
-index 000000000000..ce06a059eaaa
---- /dev/null
-+++ b/drivers/soc/imx/imx8m_pm_domains.c
-@@ -0,0 +1,224 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <linux/arm-smccc.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <soc/imx/imx_sip.h>
-+
-+#define MAX_CLK_NUM	6
-+#define to_imx8m_pm_domain(_genpd) container_of(_genpd, struct imx8m_pm_do=
-main, pd)
-+
-+
-+struct imx8m_pm_domain {
-+	struct device *dev;
-+	struct generic_pm_domain pd;
-+	u32 domain_index;
-+	struct clk *clk[MAX_CLK_NUM];
-+	unsigned int num_clks;
-+	struct regulator *reg;
-+};
-+
-+enum imx8m_pm_domain_state {
-+	PD_STATE_OFF,
-+	PD_STATE_ON,
-+};
-+
-+static DEFINE_MUTEX(gpc_pd_mutex);
-+
-+static int imx8m_pd_power_on(struct generic_pm_domain *genpd)
-+{
-+	struct imx8m_pm_domain *domain =3D to_imx8m_pm_domain(genpd);
-+	struct arm_smccc_res res;
-+	int index, ret =3D 0;
-+
-+	/* power on the external supply */
-+	if (!IS_ERR(domain->reg)) {
-+		ret =3D regulator_enable(domain->reg);
-+		if (ret) {
-+			dev_warn(domain->dev, "failed to power up the reg%d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	/* enable the necessary clks needed by the power domain */
-+	if (domain->num_clks) {
-+		for (index =3D 0; index < domain->num_clks; index++)
-+			clk_prepare_enable(domain->clk[index]);
-+	}
-+
-+	mutex_lock(&gpc_pd_mutex);
-+	arm_smccc_smc(IMX_SIP_GPC, IMX_SIP_CONFIG_GPC_PM_DOMAIN, domain->domain_i=
-ndex,
-+		      PD_STATE_ON, 0, 0, 0, 0, &res);
-+	mutex_unlock(&gpc_pd_mutex);
-+
-+	return 0;
-+}
-+
-+static int imx8m_pd_power_off(struct generic_pm_domain *genpd)
-+{
-+	struct imx8m_pm_domain *domain =3D to_imx8m_pm_domain(genpd);
-+	struct arm_smccc_res res;
-+	int index, ret =3D 0;
-+
-+	mutex_lock(&gpc_pd_mutex);
-+	arm_smccc_smc(IMX_SIP_GPC, IMX_SIP_CONFIG_GPC_PM_DOMAIN, domain->domain_i=
-ndex,
-+		      PD_STATE_OFF, 0, 0, 0, 0, &res);
-+	mutex_unlock(&gpc_pd_mutex);
-+
-+	/* power off the external supply */
-+	if (!IS_ERR(domain->reg)) {
-+		ret =3D regulator_disable(domain->reg);
-+		if (ret) {
-+			dev_warn(domain->dev, "failed to power off the reg%d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	/* disable clks when power domain is off */
-+	if (domain->num_clks) {
-+		for (index =3D 0; index < domain->num_clks; index++)
-+			clk_disable_unprepare(domain->clk[index]);
-+	}
-+
-+	return ret;
-+};
-+
-+static int imx8m_pd_get_clocks(struct imx8m_pm_domain *domain)
-+{
-+	int i, ret;
-+
-+	for (i =3D 0; ; i++) {
-+		struct clk *clk =3D of_clk_get(domain->dev->of_node, i);
-+		if (IS_ERR(clk))
-+			break;
-+		if (i >=3D MAX_CLK_NUM) {
-+			dev_err(domain->dev, "more than %d clocks\n",
-+				MAX_CLK_NUM);
-+			ret =3D -EINVAL;
-+			goto clk_err;
-+		}
-+		domain->clk[i] =3D clk;
-+	}
-+	domain->num_clks =3D i;
-+
-+	return 0;
-+
-+clk_err:
-+	while (i--)
-+		clk_put(domain->clk[i]);
-+
-+	return ret;
-+}
-+
-+static void imx8m_pd_put_clocks(struct imx8m_pm_domain *domain)
-+{
-+	int i;
-+
-+	for (i =3D domain->num_clks - 1; i >=3D 0; i--)
-+		clk_put(domain->clk[i]);
-+}
-+
-+static const struct of_device_id imx8m_pm_domain_ids[] =3D {
-+	{.compatible =3D "fsl,imx8m-pm-domain"},
-+	{},
-+};
-+
-+static int imx8m_pm_domain_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct device_node *np =3D dev->of_node;
-+	struct imx8m_pm_domain *domain;
-+	struct of_phandle_args parent, child;
-+	int ret;
-+
-+	domain =3D devm_kzalloc(dev, sizeof(*domain), GFP_KERNEL);
-+	if (!domain)
-+		return -ENOMEM;
-+
-+	child.np =3D np;
-+	domain->dev =3D dev;
-+
-+	ret =3D of_property_read_string(np, "domain-name", &domain->pd.name);
-+	if (ret) {
-+		dev_err(dev, "failed to get the domain name\n");
-+		return -EINVAL;
-+	}
-+
-+	ret =3D of_property_read_u32(np, "domain-index", &domain->domain_index);
-+	if (ret) {
-+		dev_err(dev, "failed to get the domain index\n");
-+		return -EINVAL;
-+	}
-+
-+	domain->reg =3D devm_regulator_get_optional(dev, "power");
-+	if (IS_ERR(domain->reg)) {
-+		if (PTR_ERR(domain->reg) !=3D -ENODEV) {
-+			if (PTR_ERR(domain->reg) !=3D -EPROBE_DEFER)
-+				dev_err(dev, "failed to get domain's regulator\n");
-+			return PTR_ERR(domain->reg);
-+		}
-+	}
-+
-+	ret =3D imx8m_pd_get_clocks(domain);
-+	if (ret) {
-+		if (ret !=3D -EPROBE_DEFER)
-+			dev_err(dev, "failed to get domain's clocks\n");
-+		return ret;
-+	}
-+
-+	domain->pd.power_off =3D imx8m_pd_power_off;
-+	domain->pd.power_on =3D imx8m_pd_power_on;
-+
-+	pm_genpd_init(&domain->pd, NULL, true);
-+
-+	ret =3D of_genpd_add_provider_simple(np, &domain->pd);
-+	if (ret) {
-+		dev_err(dev, "failed to add the domain provider\n");
-+		pm_genpd_remove(&domain->pd);
-+		imx8m_pd_put_clocks(domain);
-+		return ret;
-+	}
-+
-+	/* add it as subdomain if necessary */
-+	if (!of_parse_phandle_with_args(np, "parent-domains",
-+			"#power-domain-cells", 0, &parent)) {
-+		ret =3D of_genpd_add_subdomain(&parent, &child);
-+		of_node_put(parent.np);
-+
-+		if (ret < 0) {
-+			dev_dbg(dev, "failed to add the subdomain: %s: %d",
-+				domain->pd.name, ret);
-+			of_genpd_del_provider(np);
-+			pm_genpd_remove(&domain->pd);
-+			imx8m_pd_put_clocks(domain);
-+			return driver_deferred_probe_check_state(dev);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver imx8m_pm_domain_driver =3D {
-+	.driver =3D {
-+		.name	=3D "imx8m_pm_domain",
-+		.owner	=3D THIS_MODULE,
-+		.of_match_table =3D imx8m_pm_domain_ids,
-+	},
-+	.probe =3D imx8m_pm_domain_probe,
-+};
-+module_platform_driver(imx8m_pm_domain_driver);
-+
-+MODULE_AUTHOR("NXP");
-+MODULE_DESCRIPTION("NXP i.MX8M power domain driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/soc/imx/imx_sip.h b/include/soc/imx/imx_sip.h
-new file mode 100644
-index 000000000000..6b96b33c870e
---- /dev/null
-+++ b/include/soc/imx/imx_sip.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright 2019 NXP
-+ */
-+
-+#ifndef __IMX_SIP_H__
-+#define __IMX_SIP_H__
-+
-+#define IMX_SIP_GPC			0xC2000000
-+#define IMX_SIP_CONFIG_GPC_PM_DOMAIN	0x03
-+
-+#endif /* __IMX_SIP_H__ */
---=20
-2.21.0
+>=20
+> This is already based on Lorenzo's recent changes:
+> https://lore.kernel.org/linux-iio/853f216a-7814-cb79-180b-078ac5e8a359@pu=
+ri.sm/T/#u
+> https://lore.kernel.org/linux-iio/501b0db9-63cb-905c-c09b-682eb73f1ff3@pu=
+ri.sm/T/#u
+>=20
+> revision history:
+> v2: improve variable names, thanks Lorenzo
+>=20
+> thanks
+>                        martin
+>=20
+>=20
+>=20
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
+>  2 files changed, 28 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st=
+_lsm6dsx/st_lsm6dsx.h
+> index ab1c66615d67..3c47f5d27d30 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> @@ -198,6 +198,9 @@ struct st_lsm6dsx_ext_dev_settings {
+>  /**
+>   * struct st_lsm6dsx_settings - ST IMU sensor settings
+>   * @wai: Sensor WhoAmI default value.
+> + * @int1_addr: Control Register address for INT1
+> + * @int2_addr: Control Register address for INT2
+> + * @reset_addr: register address for reset/reboot
+>   * @max_fifo_size: Sensor max fifo length in FIFO words.
+>   * @id: List of hw id/device name supported by the driver configuration.
+>   * @odr_table: Hw sensors odr table (Hz + val).
+> @@ -210,6 +213,9 @@ struct st_lsm6dsx_ext_dev_settings {
+>   */
+>  struct st_lsm6dsx_settings {
+>  	u8 wai;
+> +	u8 int1_addr;
+> +	u8 int2_addr;
+> +	u8 reset_addr;
+>  	u16 max_fifo_size;
+>  	struct {
+>  		enum st_lsm6dsx_hw_id hw_id;
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/i=
+mu/st_lsm6dsx/st_lsm6dsx_core.c
+> index 9aa109428a52..e0d2149625cc 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -49,17 +49,12 @@
+> =20
+>  #include "st_lsm6dsx.h"
+> =20
+> -#define ST_LSM6DSX_REG_INT1_ADDR		0x0d
+> -#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
+>  #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
+>  #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
+> -#define ST_LSM6DSX_REG_RESET_ADDR		0x12
+>  #define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
+>  #define ST_LSM6DSX_REG_BOOT_MASK		BIT(7)
+>  #define ST_LSM6DSX_REG_BDU_ADDR			0x12
+>  #define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
+> -#define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
+> -#define ST_LSM6DSX_REG_INT2_ON_INT1_MASK	BIT(5)
+> =20
+>  #define ST_LSM6DSX_REG_ACC_OUT_X_L_ADDR		0x28
+>  #define ST_LSM6DSX_REG_ACC_OUT_Y_L_ADDR		0x2a
+> @@ -72,6 +67,9 @@
+>  static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] =3D=
+ {
+>  	{
+>  		.wai =3D 0x69,
+> +		.int1_addr =3D 0x0d,
+> +		.int2_addr =3D 0x0e,
+> +		.reset_addr =3D 0x12,
+>  		.max_fifo_size =3D 1365,
+>  		.id =3D {
+>  			{
+> @@ -170,6 +168,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
+nsor_settings[] =3D {
+>  	},
+>  	{
+>  		.wai =3D 0x69,
+> +		.int1_addr =3D 0x0d,
+> +		.int2_addr =3D 0x0e,
+> +		.reset_addr =3D 0x12,
+>  		.max_fifo_size =3D 682,
+>  		.id =3D {
+>  			{
+> @@ -268,6 +269,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
+nsor_settings[] =3D {
+>  	},
+>  	{
+>  		.wai =3D 0x6a,
+> +		.int1_addr =3D 0x0d,
+> +		.int2_addr =3D 0x0e,
+> +		.reset_addr =3D 0x12,
+>  		.max_fifo_size =3D 682,
+>  		.id =3D {
+>  			{
+> @@ -375,6 +379,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
+nsor_settings[] =3D {
+>  	},
+>  	{
+>  		.wai =3D 0x6c,
+> +		.int1_addr =3D 0x0d,
+> +		.int2_addr =3D 0x0e,
+> +		.reset_addr =3D 0x12,
+>  		.max_fifo_size =3D 512,
+>  		.id =3D {
+>  			{
+> @@ -494,6 +501,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
+nsor_settings[] =3D {
+>  	},
+>  	{
+>  		.wai =3D 0x6b,
+> +		.int1_addr =3D 0x0d,
+> +		.int2_addr =3D 0x0e,
+> +		.reset_addr =3D 0x12,
+>  		.max_fifo_size =3D 512,
+>  		.id =3D {
+>  			{
+> @@ -584,6 +594,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
+nsor_settings[] =3D {
+>  	},
+>  	{
+>  		.wai =3D 0x6b,
+> +		.int1_addr =3D 0x0d,
+> +		.int2_addr =3D 0x0e,
+> +		.reset_addr =3D 0x12,
+>  		.max_fifo_size =3D 512,
+>  		.id =3D {
+>  			{
+> @@ -1117,10 +1130,10 @@ static int st_lsm6dsx_get_drdy_reg(struct st_lsm6=
+dsx_hw *hw, u8 *drdy_reg)
+> =20
+>  	switch (drdy_pin) {
+>  	case 1:
+> -		*drdy_reg =3D ST_LSM6DSX_REG_INT1_ADDR;
+> +		*drdy_reg =3D hw->settings->int1_addr;
+>  		break;
+>  	case 2:
+> -		*drdy_reg =3D ST_LSM6DSX_REG_INT2_ADDR;
+> +		*drdy_reg =3D hw->settings->int2_addr;
+>  		break;
+>  	default:
+>  		dev_err(hw->dev, "unsupported data ready pin\n");
+> @@ -1220,7 +1233,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx=
+_hw *hw)
+>  	int err;
+> =20
+>  	/* device sw reset */
+> -	err =3D regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
+> +	err =3D regmap_update_bits(hw->regmap, hw->settings->reset_addr,
+>  				 ST_LSM6DSX_REG_RESET_MASK,
+>  				 FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
+>  	if (err < 0)
+> @@ -1229,7 +1242,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx=
+_hw *hw)
+>  	msleep(50);
+> =20
+>  	/* reload trimming parameter */
+> -	err =3D regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
+> +	err =3D regmap_update_bits(hw->regmap, hw->settings->reset_addr,
+>  				 ST_LSM6DSX_REG_BOOT_MASK,
+>  				 FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
+>  	if (err < 0)
+> --=20
+> 2.20.1
+>=20
+
+--ncSAzJYg3Aa9+CRW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXS2cWwAKCRA6cBh0uS2t
+rPCiAP9ZSYRWVjF/NQsyE0/XMhEB+B/jKxlgh2QWGQNVwt3ZbAD/VnSyeT+Vdboh
+oVhejxk+BT5WBkrA7hnTjCo6ZI+yPgY=
+=YeZb
+-----END PGP SIGNATURE-----
+
+--ncSAzJYg3Aa9+CRW--
