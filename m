@@ -1,63 +1,49 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 11/13] arm64: dts: qcom: qcs404: Add CPR and populate OPP
- table
-Date: Tue, 16 Jul 2019 16:04:36 +0530
-Message-ID: <20190716103436.az5rdk6f3yoa3apz@vireshk-i7>
-References: <20190705095726.21433-1-niklas.cassel@linaro.org>
- <20190705095726.21433-12-niklas.cassel@linaro.org>
- <20190710090303.tb5ue3wq6r7ofyev@vireshk-i7>
- <20190715132405.GA5040@centauri>
+From: grygorii <grygorii.strashko@ti.com>
+Subject: Re: [RESEND PATCH next v2 0/6] ARM: keystone: update dt and enable
+ cpts support
+Date: Tue, 16 Jul 2019 16:14:39 +0530
+Message-ID: <a2dae3a5-7e25-1de0-e722-8860b58cb3a2@ti.com>
+References: <20190705151247.30422-1-grygorii.strashko@ti.com>
+ <2ef8b34e-7a6e-b3e4-90e0-c4e7f16c2e99@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190715132405.GA5040@centauri>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2ef8b34e-7a6e-b3e4-90e0-c4e7f16c2e99@oracle.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: santosh.shilimkar@oracle.com, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 15-07-19, 15:24, Niklas Cassel wrote:
-> This was actually my initial thought when talking to you 6+ months ago.
-> However, the problem was that, from the CPR drivers' perspective, it
-> only sees the CPR OPP table.
-> 
-> 
-> So this is the order things are called,
-> from qcom-cpufreq-nvmem.c perspective:
-> 
-> 1) dev_pm_opp_set_supported_hw()
-> 
-> 2) dev_pm_opp_attach_genpd() ->
-> which results in
-> int cpr_pd_attach_dev(struct generic_pm_domain *domain,
-> 		      struct device *dev)
-> being called.
-> This callback is inside the CPR driver, and here we have the
-> CPU's (genpd virtual) struct device, and this is where we would like to
-> know the opp-hz.
-> The problem here is that:
-> [    3.114979] cpr_pd_attach_dev: dev_pm_opp_get_opp_count for dev: genpd:0:cpu0: -19
-> [    3.119610] cpr_pd_attach_dev: dev_pm_opp_get_opp_count for dev: cpu0: 0
-> [    3.126489] cpr_pd_attach_dev: dev_pm_opp_get_opp_count for dev: cpr@b018000: 3
-> 
-> While we have the CPR OPP table in the attach callback, we don't
-> have the CPU OPP table, neither in the CPU struct device or the genpd virtual
-> struct device.
-
-If you can find CPU's physical number from the virtual device, then
-you can do get_cpu_device(X) and then life will be easy ?
-
-> Since we have called dev_pm_opp_attach_genpd(.., .., &virt_devs) which
-> attaches an OPP table to the CPU, I would have expected one of them to
-> be >= 0.
-> Especially since dev_name(virt_devs[0]) == genpd:0:cpu0
-> 
-> I guess it should still be possible to parse the required-opps manually here,
-> by iterating the OF nodes, however, we won't be able to use the CPU's struct
-> opp_table (which is the nice representation of the OF nodes).
-> 
-> Any suggestions?
-
--- 
-viresh
+CgpPbiAwNi8wNy8yMDE5IDA1OjE4LCBzYW50b3NoLnNoaWxpbWthckBvcmFjbGUuY29tIHdyb3Rl
+Ogo+IE9uIDcvNS8xOSA4OjEyIEFNLCBHcnlnb3JpaSBTdHJhc2hrbyB3cm90ZToKPj4gSGkgU2Fu
+dG9zaCwKPj4KPj4gVGhpcyBzZXJpZXMgaXMgc2V0IG9mIHBsYXRmb3JtIGNoYW5nZXMgcmVxdWly
+ZWQgdG8gZW5hYmxlIE5FVENQIENQVFMgcmVmZXJlbmNlCj4+IGNsb2NrIHNlbGVjdGlvbiBhbmQg
+ZmluYWwgcGF0Y2ggdG8gZW5hYmxlIENQVFMgZm9yIEtleXN0b25lIDY2QUsyRS9ML0hLIFNvQ3Mu
+Cj4+Cj4+IFRob3NlIHBhdGNoZXMgd2VyZSBwb3N0ZWQgYWxyZWFkeSBbMV0gdG9nZXRoZXIgd2l0
+aCBkcml2ZXIncyBjaGFuZ2VzLCBzbyB0aGlzCj4+IGlzIHJlLXNlbmQgb2YgRFQvcGxhdGZvcm0g
+c3BlY2lmaWMgY2hhbmdlcyBvbmx5LCBhcyBkcml2ZXIncyBjaGFuZ2VzIGhhdmUKPj4gYmVlbiBt
+ZXJnZWQgYWxyZWFkeS4KPj4KPj4gUGF0Y2hlcyAxLTU6IENQVFMgRFQgbm9kZXMgdXBkYXRlIGZv
+ciBUSSBLZXlzdG9uZSAyIDY2QUsySEsvRS9MIFNvQ3MuCj4+IFBhdGNoIDY6IGVuYWJsZXMgQ1BU
+UyBmb3IgVEkgS2V5c3RvbmUgMiA2NkFLMkhLL0UvTCBTb0NzLgo+Pgo+PiBbMV0gaHR0cHM6Ly9w
+YXRjaHdvcmsua2VybmVsLm9yZy9jb3Zlci8xMDk4MDAzNy8KPj4KPj4gR3J5Z29yaWkgU3RyYXNo
+a28gKDYpOgo+PiDCoMKgIEFSTTogZHRzOiBrZXlzdG9uZS1jbG9ja3M6IGFkZCBpbnB1dCBmaXhl
+ZCBjbG9ja3MKPj4gwqDCoCBBUk06IGR0czogazJlLWNsb2NrczogYWRkIGlucHV0IGV4dC4gZml4
+ZWQgY2xvY2tzIHRzaXBjbGthL2IKPj4gwqDCoCBBUk06IGR0czogazJlLW5ldGNwOiBhZGQgY3B0
+cyByZWZjbGtfbXV4IG5vZGUKPj4gwqDCoCBBUk06IGR0czogazJoay1uZXRjcDogYWRkIGNwdHMg
+cmVmY2xrX211eCBub2RlCj4+IMKgwqAgQVJNOiBkdHM6IGsybC1uZXRjcDogYWRkIGNwdHMgcmVm
+Y2xrX211eCBub2RlCj4+IMKgwqAgQVJNOiBjb25maWdzOiBrZXlzdG9uZTogZW5hYmxlIGNwdHMK
+Pj4KPiBXaWxsIGFkZCB0aGVzZSBmb3IgNS40IHF1ZXVlLiBUaGFua3MgISEKClRoYW5rIHlvdQoK
+LS0gCkJlc3QgcmVnYXJkcywKZ3J5Z29yaWkKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
