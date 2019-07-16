@@ -1,126 +1,97 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v3 2/6] OPP: Add support for bandwidth OPP tables
-Date: Tue, 16 Jul 2019 23:03:12 +0530
-Message-ID: <5dd35be3-fd03-c9cc-1eed-ce4bc1433363@codeaurora.org>
-References: <20190703011020.151615-1-saravanak@google.com>
- <20190703011020.151615-3-saravanak@google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
+Date: Tue, 16 Jul 2019 10:50:20 -0700
+Message-ID: <20190716175021.9CA412173C@mail.kernel.org>
+References: <20190712081744.87097-1-brendanhiggins@google.com> <20190712081744.87097-5-brendanhiggins@google.com> <20190715221554.8417320665@mail.kernel.org> <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com> <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703011020.151615-3-saravanak@google.com>
-Content-Language: en-US
+In-Reply-To: <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>, Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, adharmap@codeaurora.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
 List-Id: devicetree@vger.kernel.org
 
-Hey Saravana,
+Quoting Brendan Higgins (2019-07-16 01:37:34)
+> On Tue, Jul 16, 2019 at 12:57 AM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > A `struct kunit_stream` is usually associated with a message that is
+> > being built up over time like maybe an expectation; it is meant to
+> > capture the idea that we might want to send some information out to
+> > the user pertaining to some thing 'X', but we aren't sure that we
+> > actually want to send it until 'X' is complete, but do to the nature
+> > of 'X' it is easier to start constructing the message before 'X' is
+> > complete.
+> >
+> > Consider a complicated expectation, there might be multiple conditions
+> > that satisfy it and multiple conditions which could make it fail. As
+> > we start exploring the input to the expectation we gain information
+> > that we might want to share back with the user if the expectation were
+> > to fail and we might get that information before we are actually sure
+> > that the expectation does indeed fail.
+> >
+> > When we first step into the expectation we immediately know the
+> > function name, file name, and line number where we are called and
+> > would want to put that information into any message we would send to
+> > the user about this expectation. Next, we might want to check a
+> > property of the input, it may or may not be enough information on its
+> > own for the expectation to fail, but we want to share the result of
+> > the property check with the user regardless, BUT only if the
+> > expectation as a whole fails.
+> >
+> > Hence, we can have multiple `struct kunit_stream`s associated with a
+> > `struct kunit` active at any given time.
 
-On 7/3/19 6:40 AM, Saravana Kannan wrote:
-> Not all devices quantify their performance points in terms of frequency.
-> Devices like interconnects quantify their performance points in terms of
-> bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-> add support for parsing bandwidth OPPs from DT.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->   drivers/opp/of.c  | 34 ++++++++++++++++++++++++++++++++--
->   drivers/opp/opp.h |  4 +++-
->   2 files changed, 35 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index c10c782d15aa..54fa70ed2adc 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -552,6 +552,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
->   }
->   EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
->   
-> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
-> +{
-> +	int ret;
-> +	u64 rate;
-> +	u32 bw;
-> +
-> +	ret = of_property_read_u64(np, "opp-hz", &rate);
-> +	if (!ret) {
-> +		/*
-> +		 * Rate is defined as an unsigned long in clk API, and so
-> +		 * casting explicitly to its type. Must be fixed once rate is 64
-> +		 * bit guaranteed in clk API.
-> +		 */
-> +		new_opp->rate = (unsigned long)rate
-now that the rate gets set here, please remove the rate assignment in
-_opp_add_static_v2
+I'm coming back to this now after reading the rest of the patches that
+deal with assertions and expectations. It looks like the string stream
+is there to hold a few different pieces of information:
 
-> +		return 0;
-> +	}
-> +
-> +	ret = of_property_read_u32(np, "opp-peak-KBps", &bw);
-> +	if (ret)
-> +		return ret;
-> +	new_opp->rate = (unsigned long) &bw;
+ - Line Number
+ - File Name
+ - Function Name
 
-should be bw instead
+The above items could be stored in a structure on the stack that then
+gets printed and formatted when the expectation or assertion fails. That
+would make the whole string stream structure and code unnecessary.
 
-> +
-> +	ret = of_property_read_u32(np, "opp-avg-KBps", &bw);
-> +	if (!ret)
-> +		new_opp->avg_bw = (unsigned long) &bw;
+The only hypothetical case where this can't be done is a complicated
+assertion or expectation that does more than one check and can't be
+written as a function that dumps out what went wrong. Is this a real
+problem? Maybe such an assertion should just open code that logic so we
+don't have to build up a string for all the other simple cases.
 
-ditto
+It seems far simpler to get rid of the string stream API and just have a
+struct for this.
 
-> +
-> +	return 0;
-> +}
-> +
->   /**
->    * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
->    * @opp_table:	OPP table
-> @@ -589,11 +618,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
->   	if (!new_opp)
->   		return ERR_PTR(-ENOMEM);
->   
-> -	ret = of_property_read_u64(np, "opp-hz", &rate);
-> +	ret = _read_opp_key(new_opp, np);
->   	if (ret < 0) {
->   		/* "opp-hz" is optional for devices like power domains. */
->   		if (!opp_table->is_genpd) {
-> -			dev_err(dev, "%s: opp-hz not found\n", __func__);
-> +			dev_err(dev, "%s: opp-hz or opp-peak-bw not found\n",
-> +				__func__);
+	struct kunit_fail_msg {
+		const char *line;
+		const char *file;
+		const char *func;
+		const char *msg;
+	};
 
-please remove the else part where rate value will be reset.
+Then you can have the assertion macros create this on the stack (with
+another macro?).
 
->   			goto free_opp;
->   		}
->   
-> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> index 569b3525aa67..ead2cdafe957 100644
-> --- a/drivers/opp/opp.h
-> +++ b/drivers/opp/opp.h
-> @@ -59,7 +59,8 @@ extern struct list_head opp_tables;
->    * @turbo:	true if turbo (boost) OPP
->    * @suspend:	true if suspend OPP
->    * @pstate: Device's power domain's performance state.
-> - * @rate:	Frequency in hertz
-> + * @rate:	Frequency in hertz OR Peak bandwidth in kilobytes per second
-> + * @avg_bw:	Average bandwidth in kilobytes per second
->    * @level:	Performance level
->    * @supplies:	Power supplies voltage/current values
->    * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
-> @@ -81,6 +82,7 @@ struct dev_pm_opp {
->   	bool suspend;
->   	unsigned int pstate;
->   	unsigned long rate;
-> +	unsigned long avg_bw;
->   	unsigned int level;
->   
->   	struct dev_pm_opp_supply *supplies;
-> 
+	#define DEFINE_KUNIT_FAIL_MSG(name, _msg) \
+		struct kunit_fail_msg name =3D { \
+			.line =3D  __LINE__, \
+			.file =3D __FILE__, \
+			.func =3D __func__, \
+			.msg =3D _msg, \
+		}
 
--- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Note: I don't know if the __LINE__ above will use the macro location, so
+this probably needs another wrapper to put the right line number there.
+
+I don't want to derail this whole series on this topic, but it seems
+like a bunch of code is there to construct this same set of information
+over and over again into a buffer a little bit at a time and then throw
+it away when nothing fails just because we may want to support the case
+where we have some unstructured data to inform the user about.
+
+Why not build in the structured part into the framework (i.e. the struct
+above) so that it's always there and then add the string building part
+later when we have to?
