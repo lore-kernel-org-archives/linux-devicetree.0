@@ -1,8 +1,8 @@
 From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH v3 02/11] dt-bindings: clock: imx-lpcg: add support to parse
+Subject: [PATCH v3 01/11] dt-bindings: firmware: imx-scu: new binding to parse
  clocks from device tree
-Date: Tue, 16 Jul 2019 23:00:56 +0800
-Message-ID: <1563289265-10977-3-git-send-email-aisheng.dong@nxp.com>
+Date: Tue, 16 Jul 2019 23:00:55 +0800
+Message-ID: <1563289265-10977-2-git-send-email-aisheng.dong@nxp.com>
 References: <1563289265-10977-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,15 +22,22 @@ To: linux-clk@vger.kernel.org
 Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-MX8QM and MX8QXP LPCG Clocks are mostly the same except they may reside
-in different subsystems across CPUs and also vary a bit on the availability.
+There's a few limitations on the original one cell clock binding
+(#clock-cells = <1>) that we have to define some SW clock IDs for device
+tree to reference. This may cause troubles if we want to use common
+clock IDs for multi platforms support when the clock of those platforms
+are mostly the same.
+e.g. Current clock IDs name are defined with SS prefix.
 
-Same as SCU clock, we want to move the clock definition into device tree
-which can fully decouple the dependency of Clock ID definition from device
-tree and make us be able to write a fully generic lpcg clock driver.
+However the device may reside in different SS across CPUs, that means the
+SS prefix may not valid anymore for a new SoC. Furthermore, the device
+availability of those clocks may also vary a bit.
 
-And we can also use the existence of clock nodes in device tree to address
-the device and clock availability differences across different SoCs.
+For such situation, we want to eliminate the using of SW Clock IDs and
+change to use a more close to HW one instead.
+For SCU clocks usage, only two params required: Resource id + Clock Type.
+Both parameters are platform independent. So we could use two cells binding
+to pass those parameters,
 
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Stephen Boyd <sboyd@kernel.org>
@@ -42,72 +49,83 @@ Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
 ChangeLog:
 v2->v3:
- * no changes
+ * Changed to two cells binding and register all clocks in driver
+   instead of parse from device tree.
 v1->v2:
- * Update example
- * Add power domain property
+ * changed to one cell binding inspired by arm,scpi.txt
+   Documentation/devicetree/bindings/arm/arm,scpi.txt
+   Resource ID is encoded in 'reg' property.
+   Clock type is encoded in generic clock-indices property.
+   Then we don't have to search all the DT nodes to fetch
+   those two value to construct clocks which is relatively
+   low efficiency.
+ * Add required power-domain property as well.
 ---
- .../devicetree/bindings/clock/imx8qxp-lpcg.txt     | 34 ++++++++++++++++++----
- 1 file changed, 28 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt       | 12 +++++++-----
+ include/dt-bindings/firmware/imx/rsrc.h                 | 17 +++++++++++++++++
+ 2 files changed, 24 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
-index 965cfa4..6fc2fd8 100644
---- a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
-+++ b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
-@@ -11,6 +11,21 @@ enabled by these control bits, it might still not be running based
- on the base resource.
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index 5d7dbab..351d335 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -89,7 +89,10 @@ Required properties:
+ 			  "fsl,imx8qm-clock"
+ 			  "fsl,imx8qxp-clock"
+ 			followed by "fsl,scu-clk"
+-- #clock-cells:		Should be 1. Contains the Clock ID value.
++- #clock-cells:		Should be either
++			2: Contains the Resource and Clock ID value.
++			or
++			1: Contains the Clock ID value. (DEPRECATED)
+ - clocks:		List of clock specifiers, must contain an entry for
+ 			each required entry in clock-names
+ - clock-names:		Should include entries "xtal_32KHz", "xtal_24MHz"
+@@ -162,7 +165,7 @@ firmware {
  
- Required properties:
-+- compatible:		Should be one of:
-+			  "fsl,imx8qxp-lpcg"
-+			  "fsl,imx8qm-lpcg" followed by "fsl,imx8qxp-lpcg".
-+- reg:			Address and length of the register set.
-+- #clock-cells:		Should be 1. One LPCG supports multiple clocks.
-+- clocks:		Input parent clocks phandle array for each clock.
-+- bit-offset:		An integer array indicating the bit offset for each clock.
-+- hw-autogate:		Boolean array indicating whether supports HW autogate for
-+			each clock.
-+- clock-output-names:	Shall be the corresponding names of the outputs.
-+			NOTE this property must be specified in the same order
-+			as the clock bit-offset and hw-autogate property.
-+- power-domains:	Should contain the power domain used by this clock.
+ 		clk: clk {
+ 			compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
+-			#clock-cells = <1>;
++			#clock-cells = <2>;
+ 		};
+ 
+ 		iomuxc {
+@@ -192,8 +195,7 @@ serial@5a060000 {
+ 	...
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_lpuart0>;
+-	clocks = <&clk IMX8QXP_UART0_CLK>,
+-		 <&clk IMX8QXP_UART0_IPG_CLK>;
+-	clock-names = "per", "ipg";
++	clocks = <&uart0_clk IMX_SC_R_UART_0 IMX_SC_PM_CLK_PER>;
++	clock-names = "ipg";
+ 	power-domains = <&pd IMX_SC_R_UART_0>;
+ };
+diff --git a/include/dt-bindings/firmware/imx/rsrc.h b/include/dt-bindings/firmware/imx/rsrc.h
+index 4e61f64..fbeaca7 100644
+--- a/include/dt-bindings/firmware/imx/rsrc.h
++++ b/include/dt-bindings/firmware/imx/rsrc.h
+@@ -547,4 +547,21 @@
+ #define IMX_SC_R_ATTESTATION		545
+ #define IMX_SC_R_LAST			546
+ 
++/*
++ * Defines for SC PM CLK
++ */
++#define IMX_SC_PM_CLK_SLV_BUS		0	/* Slave bus clock */
++#define IMX_SC_PM_CLK_MST_BUS		1	/* Master bus clock */
++#define IMX_SC_PM_CLK_PER		2	/* Peripheral clock */
++#define IMX_SC_PM_CLK_PHY		3	/* Phy clock */
++#define IMX_SC_PM_CLK_MISC		4	/* Misc clock */
++#define IMX_SC_PM_CLK_MISC0		0	/* Misc 0 clock */
++#define IMX_SC_PM_CLK_MISC1		1	/* Misc 1 clock */
++#define IMX_SC_PM_CLK_MISC2		2	/* Misc 2 clock */
++#define IMX_SC_PM_CLK_MISC3		3	/* Misc 3 clock */
++#define IMX_SC_PM_CLK_MISC4		4	/* Misc 4 clock */
++#define IMX_SC_PM_CLK_CPU		2	/* CPU clock */
++#define IMX_SC_PM_CLK_PLL		4	/* PLL */
++#define IMX_SC_PM_CLK_BYPASS		4	/* Bypass clock */
 +
-+Legacy binding (DEPRECATED):
- - compatible:	Should be one of:
- 		  "fsl,imx8qxp-lpcg-adma",
- 		  "fsl,imx8qxp-lpcg-conn",
-@@ -33,10 +48,17 @@ Examples:
- 
- #include <dt-bindings/clock/imx8qxp-clock.h>
- 
--conn_lpcg: clock-controller@5b200000 {
--	compatible = "fsl,imx8qxp-lpcg-conn";
--	reg = <0x5b200000 0xb0000>;
-+sdhc0_lpcg: clock-controller@5b200000 {
-+	compatible = "fsl,imx8qxp-lpcg";
-+	reg = <0x5b200000 0x10000>;
- 	#clock-cells = <1>;
-+	clocks = <&sdhc0_clk IMX_SC_PM_CLK_PER>,
-+		 <&conn_ipg_clk>, <&conn_axi_clk>;
-+	bit-offset = <0 16 20>;
-+	clock-output-names = "sdhc0_lpcg_per_clk",
-+			     "sdhc0_lpcg_ipg_clk",
-+			     "sdhc0_lpcg_ahb_clk";
-+	power-domains = <&pd IMX_SC_R_SDHC_0>;
- };
- 
- usdhc1: mmc@5b010000 {
-@@ -44,8 +66,8 @@ usdhc1: mmc@5b010000 {
- 	interrupt-parent = <&gic>;
- 	interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
- 	reg = <0x5b010000 0x10000>;
--	clocks = <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_IPG_CLK>,
--		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_PER_CLK>,
--		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_HCLK>;
-+	clocks = <&sdhc0_lpcg 1>,
-+		 <&sdhc0_lpcg 0>,
-+		 <&sdhc0_lpcg 2>;
- 	clock-names = "ipg", "per", "ahb";
- };
+ #endif /* __DT_BINDINGS_RSCRC_IMX_H */
 -- 
 2.7.4
