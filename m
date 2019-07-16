@@ -1,14 +1,14 @@
 From: Frank Li <frank.li@nxp.com>
-Subject: RE: [PATCH 2/3] arm64: dts: imx8m: Add ddr-pmu nodes
-Date: Tue, 16 Jul 2019 13:35:08 +0000
-Message-ID: <VI1PR04MB4910AF706069756BF960115588CE0@VI1PR04MB4910.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH 3/3] arm64: defconfig: Build imx8 ddr pmu as module
+Date: Tue, 16 Jul 2019 13:35:40 +0000
+Message-ID: <VI1PR04MB4910CFB4D94CF4AE23A7F38A88CE0@VI1PR04MB4910.eurprd04.prod.outlook.com>
 References: <cover.1562230183.git.leonard.crestez@nxp.com>
- <b8aeb9caf6c2380a7c8f65b19e420e18498d5c1a.1562230183.git.leonard.crestez@nxp.com>
+ <e51a2f95044f0a9003c3be2e82c3c4b2653670a7.1562230183.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b8aeb9caf6c2380a7c8f65b19e420e18498d5c1a.1562230183.git.leonard.crestez@nxp.com>
+In-Reply-To: <e51a2f95044f0a9003c3be2e82c3c4b2653670a7.1562230183.git.leonard.crestez@nxp.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -36,65 +36,32 @@ List-Id: devicetree@vger.kernel.org
 > <fabio.estevam@nxp.com>; Jacky Bai <ping.bai@nxp.com>;
 > devicetree@vger.kernel.org; kernel@pengutronix.de; dl-linux-imx <linux-
 > imx@nxp.com>; linux-arm-kernel@lists.infradead.org
-> Subject: [PATCH 2/3] arm64: dts: imx8m: Add ddr-pmu nodes
+> Subject: [PATCH 3/3] arm64: defconfig: Build imx8 ddr pmu as module
 > 
-> The same ddr perfomance counter IP from 8qxp is also available on imx8m
-> series so add it to dts.
-> 
-> Tested with `perf stat` and `memtester` on imx8mm-evk and obtained plausible
-> results.
+> This is available on all imx8 but is not "boot critical" in any way so build as a
+> module.
 > 
 > Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 
 Acked-by: Frank Li <frank.li@nxp.com>
 
 > ---
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 7 +++++++
-> arch/arm64/boot/dts/freescale/imx8mq.dtsi | 7 +++++++
->  2 files changed, 14 insertions(+)
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index 232a7412755a..9a8d8cd21ef0 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -816,7 +816,14 @@
->  			      <0x38880000 0xc0000>; /* GICR (RD_base +
-> SGI_base) */
->  			#interrupt-cells = <3>;
->  			interrupt-controller;
->  			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->  		};
-> +
-> +		ddr-pmu@3d800000 {
-> +			compatible = "fsl,imx8mm-ddr-pmu", "fsl,imx8m-ddr-
-> pmu";
-> +			reg = <0x3d800000 0x400000>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
->  	};
->  };
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index d09b808eff87..fb0fdee5f889 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -1031,7 +1031,14 @@
->  			#interrupt-cells = <3>;
->  			interrupt-controller;
->  			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->  			interrupt-parent = <&gic>;
->  		};
-> +
-> +		ddr-pmu@3d800000 {
-> +			compatible = "fsl,imx8mq-ddr-pmu", "fsl,imx8m-ddr-
-> pmu";
-> +			reg = <0x3d800000 0x400000>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
->  	};
->  };
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 812fe887477d..134a4067846f 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -766,10 +766,11 @@ CONFIG_PHY_ROCKCHIP_INNO_USB2=y
+> CONFIG_PHY_ROCKCHIP_PCIE=m  CONFIG_PHY_ROCKCHIP_TYPEC=y
+> CONFIG_PHY_UNIPHIER_USB2=y  CONFIG_PHY_UNIPHIER_USB3=y
+> CONFIG_PHY_TEGRA_XUSB=y
+> +CONFIG_FSL_IMX8_DDR_PMU=m
+>  CONFIG_HISI_PMU=y
+>  CONFIG_QCOM_L2_PMU=y
+>  CONFIG_QCOM_L3_PMU=y
+>  CONFIG_NVMEM_SUNXI_SID=y
+>  CONFIG_NVMEM_IMX_OCOTP=y
 > --
 > 2.17.1
