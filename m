@@ -1,88 +1,95 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
- opp-avg-KBps bindings
-Date: Tue, 16 Jul 2019 11:58:08 -0700
-Message-ID: <CAGETcx9KSqvyzbM-S8LvBObkNBt38K683Ljm8nNQuhxk7MuvAg@mail.gmail.com>
-References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-2-saravanak@google.com>
- <98b2e315-e8da-80ad-1ef8-e6b222c1c6fe@codeaurora.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
+Date: Tue, 16 Jul 2019 14:00:13 -0500
+Message-ID: <20190716190013.GB4470@google.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-13-vidyas@nvidia.com>
+ <20190711125433.GB26088@e121166-lin.cambridge.arm.com>
+ <986d0b1a-666a-7b05-a9f3-e761518bdc92@nvidia.com>
+ <20190712160754.GA24285@e121166-lin.cambridge.arm.com>
+ <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
+ <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <98b2e315-e8da-80ad-1ef8-e6b222c1c6fe@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Vidya Sagar <vidyas@nvidia.com>, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:25 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> Hey Saravana,
->
-> https://patchwork.kernel.org/patch/10850815/
-> There was already a discussion ^^ on how bandwidth bindings were to be
-> named.
+On Tue, Jul 16, 2019 at 12:22:25PM +0100, Lorenzo Pieralisi wrote:
+> On Sat, Jul 13, 2019 at 12:34:34PM +0530, Vidya Sagar wrote:
 
-Yes, I'm aware of that series. That series is trying to define a BW
-mapping for an existing frequency OPP table. This patch is NOT about
-adding a mapping to an existing table. This patch is about adding the
-notion of BW OPP tables where BW is the "key" instead of "frequency".
+> > > > > So if the link is not up we still go ahead and make probe
+> > > > > succeed. What for ?
+> > > > We may need root port to be available to support hot-plugging of
+> > > > endpoint devices, so, we don't fail the probe.
+> > > 
+> > > We need it or we don't. If you do support hotplugging of endpoint
+> > > devices point me at the code, otherwise link up failure means
+> > > failure to probe.
+> > Currently hotplugging of endpoint is not supported, but it is one of
+> > the use cases that we may add support for in future. 
+> 
+> You should elaborate on this, I do not understand what you mean,
+> either the root port(s) supports hotplug or it does not.
+> 
+> > But, why should we fail probe if link up doesn't happen? As such,
+> > nothing went wrong in terms of root port initialization right?  I
+> > checked other DWC based implementations and following are not failing
+> > the probe pci-dra7xx.c, pcie-armada8k.c, pcie-artpec6.c, pcie-histb.c,
+> > pcie-kirin.c, pcie-spear13xx.c, pci-exynos.c, pci-imx6.c,
+> > pci-keystone.c, pci-layerscape.c
+> > 
+> > Although following do fail the probe if link is not up.  pcie-qcom.c,
+> > pcie-uniphier.c, pci-meson.c
+> > 
+> > So, to me, it looks more like a choice we can make whether to fail the
+> > probe or not and in this case we are choosing not to fail.
+> 
+> I disagree. I had an offline chat with Bjorn and whether link-up should
+> fail the probe or not depends on whether the root port(s) is hotplug
+> capable or not and this in turn relies on the root port "Slot
+> implemented" bit in the PCI Express capabilities register.
 
-So let's not mixed up these two series.
+There might be a little more we can talk about in this regard.  I did
+bring up the "Slot implemented" bit, but after thinking about it more,
+I don't really think the host bridge driver should be looking at that.
+That's a PCIe concept, and it's really *downstream* from the host
+bridge itself.  The host bridge is logically a device on the CPU bus,
+not the PCI bus.
 
--Saravana
+I'm starting to think that the host bridge driver probe should be
+disconnected from question of whether the root port links are up.
 
-> On 7/3/19 6:40 AM, Saravana Kannan wrote:
-> > Interconnects often quantify their performance points in terms of
-> > bandwidth. So, add opp-peak-KBps (required) and opp-avg-KBps (optional) to
-> > allow specifying Bandwidth OPP tables in DT.
-> >
-> > opp-peak-KBps is a required property that replace opp-hz for Bandwidth OPP
-> > tables.
-> >
-> > opp-avg-KBps is an optional property that can be used in Bandwidth OPP
-> > tables.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >   Documentation/devicetree/bindings/opp/opp.txt | 15 ++++++++++++---
-> >   1 file changed, 12 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> > index 76b6c79604a5..c869e87caa2a 100644
-> > --- a/Documentation/devicetree/bindings/opp/opp.txt
-> > +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> > @@ -83,9 +83,14 @@ properties.
-> >
-> >   Required properties:
-> >   - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
-> > -  required property for all device nodes but devices like power domains. The
-> > -  power domain nodes must have another (implementation dependent) property which
-> > -  uniquely identifies the OPP nodes.
-> > +  required property for all device nodes but for devices like power domains or
-> > +  bandwidth opp tables. The power domain nodes must have another (implementation
-> > +  dependent) property which uniquely identifies the OPP nodes. The interconnect
-> > +  opps are required to have the opp-peak-bw property.
-> > +
-> > +- opp-peak-KBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
-> > +  big-endian integer. This is a required property for all devices that don't
-> > +  have opp-hz. For example, bandwidth OPP tables for interconnect paths.
-> >
-> >   Optional properties:
-> >   - opp-microvolt: voltage in micro Volts.
-> > @@ -132,6 +137,10 @@ Optional properties:
-> >   - opp-level: A value representing the performance level of the device,
-> >     expressed as a 32-bit integer.
-> >
-> > +- opp-avg-KBps: Average bandwidth in kilobytes per second, expressed as a
-> > +  32-bit big-endian integer. This property is only meaningful in OPP tables
-> > +  where opp-peak-KBps is present.
-> > +
-> >   - clock-latency-ns: Specifies the maximum possible transition latency (in
-> >     nanoseconds) for switching to this OPP from any other OPP.
-> >
-> >
->
-> --
-> Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Logically, the host bridge driver connects the CPU bus to a PCI root
+bus, so it converts CPU-side accesses to PCI config, memory, or I/O
+port transactions.  Given that, the PCI core can enumerate devices on
+the root bus and downstream buses.
+
+Devices on the root bus typically include Root Ports, but might also
+include endpoints, Root Complex Integrated Endpoints, Root Complex
+Event Collectors, etc.  I think in principle, we would want the host
+bridge probe to succeed so we can use these devices even if none of
+the Root Ports have a link.
+
+If a Root Port is present, I think users will expect to see it in the
+"lspci" output, even if its downstream link is not up.  That will
+enable things like manually poking the Root Port via "setpci" for
+debug.  And if it has a connector, the generic pciehp should be able
+to handle hot-add events without any special help from the host bridge
+driver.
+
+On ACPI systems there is no concept of the host bridge driver probe
+failing because of lack of link on a Root Port.  If a Root Port
+doesn't have an operational link, we still keep the pci_root.c driver,
+and we'll enumerate the Root Port itself.  So I tend to think DT
+systems should behave the same way, i.e., the driver probe should
+succeed unless it fails to allocate resources or something similar.  I
+think this is analogous to a NIC or USB adapter driver, where the
+probe succeeds even if there's no network cable or USB device
+attached.
+
+Bjorn
