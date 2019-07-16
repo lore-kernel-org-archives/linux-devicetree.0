@@ -1,100 +1,114 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like
- logger
-Date: Tue, 16 Jul 2019 10:51:45 -0700
-Message-ID: <CAFd5g44jruCZLunpQuDPnQS995x0F+Gxp99z4BoP_pLt=Hr1BQ@mail.gmail.com>
-References: <20190712081744.87097-1-brendanhiggins@google.com>
- <20190712081744.87097-5-brendanhiggins@google.com>
- <20190715221554.8417320665@mail.kernel.org>
- <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
- <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
- <20190716153002.49E292054F@mail.kernel.org>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v2 11/11] interconnect: Add devfreq support
+Date: Tue, 16 Jul 2019 23:42:58 +0530
+Message-ID: <9f2bf3fd-f7c5-40e8-6415-f334e3ef8d5d@codeaurora.org>
+References: <20190614041733.120807-1-saravanak@google.com>
+ <20190614041733.120807-12-saravanak@google.com>
+ <5dc6c820-ead8-d0dc-44de-4d13f86df042@linaro.org>
+ <CAGETcx-xU9i1FJB5JecUoyZEfWpD8f+o9bC3SQmb-=3fLVbmQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190716153002.49E292054F@mail.kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, shuah <shuah@kernel.org>, linux-nvdimm <linux-nvdimm@lists.01.org>, Frank Rowand <frowand.list@gmail.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>, "Bird,
- Timothy" <Tim.Bird>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGETcx-xU9i1FJB5JecUoyZEfWpD8f+o9bC3SQmb-=3fLVbmQw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>, Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rajendra Nayak <rnayak@codeaurora.org>, Jordan Crouse <jcrouse@codeaurora.org>, Vincent Guittot <vincent.guittot@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, Android Kernel Team <kernel-team@android.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, adharmap@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMTYsIDIwMTkgYXQgODozMCBBTSBTdGVwaGVuIEJveWQgPHNib3lkQGtlcm5l
-bC5vcmc+IHdyb3RlOgo+Cj4gUXVvdGluZyBCcmVuZGFuIEhpZ2dpbnMgKDIwMTktMDctMTYgMDE6
-Mzc6MzQpCj4gPiBPbiBUdWUsIEp1bCAxNiwgMjAxOSBhdCAxMjo1NyBBTSBCcmVuZGFuIEhpZ2dp
-bnMKPiA+IDxicmVuZGFuaGlnZ2luc0Bnb29nbGUuY29tPiB3cm90ZToKPiA+ID4KPiA+ID4gT24g
-TW9uLCBKdWwgMTUsIDIwMTkgYXQgMzoxNSBQTSBTdGVwaGVuIEJveWQgPHNib3lkQGtlcm5lbC5v
-cmc+IHdyb3RlOgo+ID4gPiA+Cj4gPiA+ID4gUXVvdGluZyBCcmVuZGFuIEhpZ2dpbnMgKDIwMTkt
-MDctMTIgMDE6MTc6MzApCj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9rdW5pdC9rdW5p
-dC1zdHJlYW0uaCBiL2luY2x1ZGUva3VuaXQva3VuaXQtc3RyZWFtLmgKPiA+ID4gPiA+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0Cj4gPiA+ID4gPiBpbmRleCAwMDAwMDAwMDAwMDAwLi5hN2I1M2VhYmY2
-YmU0Cj4gPiA+ID4gPiAtLS0gL2Rldi9udWxsCj4gPiA+ID4gPiArKysgYi9pbmNsdWRlL2t1bml0
-L2t1bml0LXN0cmVhbS5oCj4gPiA+ID4gPiArLyoqCj4gPiA+ID4gPiArICogc3RydWN0IGt1bml0
-X3N0cmVhbSAtIGEgc3RkOjpzdHJlYW0gc3R5bGUgc3RyaW5nIGJ1aWxkZXIuCj4gPiA+ID4gPiAr
-ICoKPiA+ID4gPiA+ICsgKiBBIHN0ZDo6c3RyZWFtIHN0eWxlIHN0cmluZyBidWlsZGVyLiBBbGxv
-d3MgbWVzc2FnZXMgdG8gYmUgYnVpbHQgdXAgYW5kCj4gPiA+ID4gPiArICogcHJpbnRlZCBhbGwg
-YXQgb25jZS4KPiA+ID4gPiA+ICsgKi8KPiA+ID4gPiA+ICtzdHJ1Y3Qga3VuaXRfc3RyZWFtIHsK
-PiA+ID4gPiA+ICsgICAgICAgLyogcHJpdmF0ZTogaW50ZXJuYWwgdXNlIG9ubHkuICovCj4gPiA+
-ID4gPiArICAgICAgIHN0cnVjdCBrdW5pdCAqdGVzdDsKPiA+ID4gPiA+ICsgICAgICAgY29uc3Qg
-Y2hhciAqbGV2ZWw7Cj4gPiA+ID4KPiA+ID4gPiBJcyB0aGUgbGV2ZWwgY2hhbmdlZD8gU2VlIG15
-IGNvbW1lbnQgYmVsb3csIGJ1dCBJIHdvbmRlciBpZiB0aGlzIHdob2xlCj4gPiA+ID4gc3RydWN0
-IGNhbiBnbyBhd2F5IGFuZCB0aGUgd3JhcHBlcnMgY2FuIGp1c3Qgb3BlcmF0ZSBvbiAnc3RydWN0
-Cj4gPiA+ID4gc3RyaW5nX3N0cmVhbScgaW5zdGVhZC4KPiA+ID4KPiA+ID4gSSB3YXMgaW5jbGlu
-ZWQgdG8gYWdyZWUgd2l0aCB5b3Ugd2hlbiBJIGZpcnN0IHJlYWQgeW91ciBjb21tZW50LCBidXQK
-PiA+ID4gdGhlbiBJIHRob3VnaHQgYWJvdXQgdGhlIGNhc2UgdGhhdCBzb21lb25lIHdhbnRzIHRv
-IGFkZCBpbiBhIGRlYnVnCj4gPiA+IG1lc3NhZ2UgKG9mIHdoaWNoIEkgY3VycmVudGx5IGhhdmUg
-bm9uZSkuIEkgdGhpbmsgdW5kZXIgbW9zdAo+ID4gPiBjaXJjdW1zdGFuY2VzIGEgdXNlciBvZiBr
-dW5pdF9zdHJlYW0gd291bGQgbGlrZWx5IHdhbnQgdG8gcGljayBhCj4gPiA+IGRlZmF1bHQgdmVy
-Ym9zaXR5IHRoYXQgbWF5YmUgSSBzaG91bGQgcHJvdmlkZSwgYnV0IG1heSBzdGlsbCB3YW50Cj4g
-PiA+IGRpZmZlcmVudCB2ZXJib3NpdHkgbGV2ZWxzLgo+ID4gPgo+ID4gPiBUaGUgbWFpbiByZWFz
-b24gSSB3YW50IHRvIGtlZXAgdGhlIHR5cGVzIHNlcGFyYXRlLCBzdHJpbmdfc3RyZWFtIHZzLgo+
-ID4gPiBrdW5pdF9zdHJlYW0sIGlzIHRoYXQgdGhleSBhcmUgaW50ZW5kZWQgdG8gYmUgdXNlZCBk
-aWZmZXJlbnRseS4KPiA+ID4gc3RyaW5nX3N0cmVhbSBpcyBqdXN0IGEgZ2VuZXJpYyBzdHJpbmcg
-YnVpbGRlci4gSWYgeW91IGFyZSB1c2luZyB0aGF0LAo+ID4gPiB5b3UgYXJlIGV4cGVjdGluZyB0
-byBzZWUgc29tZW9uZSBidWlsZGluZyB0aGUgc3RyaW5nIGF0IHNvbWUgcG9pbnQgYW5kCj4gPiA+
-IHRoZW4gZG9pbmcgc29tZXRoaW5nIGludGVyZXN0aW5nIHdpdGggaXQuIGt1bml0X3N0cmVhbSBy
-ZWFsbHkgdGVsbHMKPiA+ID4geW91IHNwZWNpZmljYWxseSB0aGF0IEtVbml0IGlzIHB1dHRpbmcg
-dG9nZXRoZXIgYSBtZXNzYWdlIHRvCj4gPiA+IGNvbW11bmljYXRlIHNvbWV0aGluZyB0byBhIHVz
-ZXIgb2YgS1VuaXQuIEl0IGlzIHJlYWxseSB1c2VkIGluIGEgdmVyeQo+ID4gPiBzcGVjaWZpYyB3
-YXksIGFuZCBJIHdvdWxkbid0IHdhbnQgdG8gZ2VuZXJhbGl6ZSBpdHMgdXNhZ2UgYmV5b25kIGhv
-dwo+ID4gPiBpdCBpcyBjdXJyZW50bHkgdXNlZC4gSSB0aGluayBpbiBvcmRlciB0byBwcmVzZXJ2
-ZSB0aGUgYXV0aG9yJ3MKPiA+ID4gaW50ZW50aW9uIGl0IGFkZHMgY2xhcml0eSB0byBrZWVwIHRo
-ZSB0eXBlcyBzZXBhcmF0ZSByZWdhcmRsZXNzIG9mIGhvdwo+ID4gPiBzaW1pbGFyIHRoZXkgbWln
-aHQgYmUgaW4gcmVhbGl0eS4KPgo+IFlvdSBtYXkgd2FudCB0byBhZGQgc29tZSBvZiB0aGVzZSBy
-ZWFzb25zIHRvIHRoZSBjb21taXQgdGV4dC4KCldpbGwgZG8uCgo+ID4gPiA+ID4gKwo+ID4gPiA+
-ID4gKyAgICAgICBpZiAoIXN0cmluZ19zdHJlYW1faXNfZW1wdHkoc3RyZWFtLT5pbnRlcm5hbF9z
-dHJlYW0pKSB7Cj4gPiA+ID4gPiArICAgICAgICAgICAgICAga3VuaXRfZXJyKHN0cmVhbS0+dGVz
-dCwKPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIkVuZCBvZiB0ZXN0IGNhc2Ug
-cmVhY2hlZCB3aXRoIHVuY29tbWl0dGVkIHN0cmVhbSBlbnRyaWVzXG4iKTsKPiA+ID4gPiA+ICsg
-ICAgICAgICAgICAgICBrdW5pdF9zdHJlYW1fY29tbWl0KHN0cmVhbSk7Cj4gPiA+ID4gPiArICAg
-ICAgIH0KPiA+ID4gPiA+ICt9Cj4gPiA+ID4gPiArCj4gPiA+ID4KPiA+ID4gPiBOaXRwaWNrOiBE
-cm9wIHRoaXMgZXh0cmEgbmV3bGluZS4KPiA+ID4KPiA+ID4gT29wcywgbmljZSBjYXRjaC4KPiA+
-Cj4gPiBOb3Qgc3VwZXIgaW1wb3J0YW50LCBidXQgSSBkb24ndCB3YW50IHlvdSB0byB0aGluayB0
-aGF0IEkgYW0gaWdub3JpbmcKPiA+IHlvdS4gSSB0aGluayB5b3UgbXVzdCBoYXZlIHVuaW50ZW50
-aW9uYWxseSBkZWxldGVkIHRoZSBsYXN0IGZ1bmN0aW9uCj4gPiBpbiB0aGlzIGZpbGUsIG9yIG1h
-eWJlIHlvdSBhcmUgcmVmZXJyaW5nIHRvIHNvbWV0aGluZyB0aGF0IEkgYW0ganVzdAo+ID4gbm90
-IHNlZWluZywgYnV0IEkgZG9uJ3Qgc2VlIHRoZSBleHRyYSBuZXdsaW5lIGhlcmUuCj4KPiBObyB3
-b3JyaWVzLiBTb3JyeSBmb3IgdGhlIG5vaXNlLgo+Cj4gPiA+IHByb3BlcnR5IG9mIHRoZSBpbnB1
-dCwgaXQgbWF5IG9yIG1heSBub3QgYmUgZW5vdWdoIGluZm9ybWF0aW9uIG9uIGl0cwo+ID4gPiBv
-d24gZm9yIHRoZSBleHBlY3RhdGlvbiB0byBmYWlsLCBidXQgd2Ugd2FudCB0byBzaGFyZSB0aGUg
-cmVzdWx0IG9mCj4gPiA+IHRoZSBwcm9wZXJ0eSBjaGVjayB3aXRoIHRoZSB1c2VyIHJlZ2FyZGxl
-c3MsIEJVVCBvbmx5IGlmIHRoZQo+ID4gPiBleHBlY3RhdGlvbiBhcyBhIHdob2xlIGZhaWxzLgo+
-ID4gPgo+ID4gPiBIZW5jZSwgd2UgY2FuIGhhdmUgbXVsdGlwbGUgYHN0cnVjdCBrdW5pdF9zdHJl
-YW1gcyBhc3NvY2lhdGVkIHdpdGggYQo+ID4gPiBgc3RydWN0IGt1bml0YCBhY3RpdmUgYXQgYW55
-IGdpdmVuIHRpbWUuCj4KPiBNYWtlcyBzZW5zZS4gSSB3YXNuJ3Qgc3VyZSBpZiB0aGVyZSB3ZXJl
-IG1vcmUgdGhhbiBvbmUgc3RyZWFtIGFzc29jaWF0ZWQKPiB3aXRoIGEgdGVzdC4gU291bmRzIGxp
-a2UgdGhlcmUgYXJlIG1hbnkgdG8gb25lIHNvIGl0IGNhbid0IGp1c3QgYmUgYQo+IG1lbWJlciBv
-ZiB0aGUgdGVzdC4gVGhpcyBjb3VsZCBiZSBkb2N1bWVudGVkIHNvbWV3aGVyZSBzbyB0aGlzIHF1
-ZXN0aW9uCj4gZG9lc24ndCBjb21lIHVwIGFnYWluLgoKU291bmRzIGdvb2QuIFdpbGwgZG8uCgpU
-aGFua3MhCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Hey Saravana,
+
+On 6/18/19 2:48 AM, Saravana Kannan wrote:
+> On Mon, Jun 17, 2019 at 8:44 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>>
+>> Hi Saravana,
+>>
+>> On 6/14/19 07:17, Saravana Kannan wrote:
+>>> Add a icc_create_devfreq() and icc_remove_devfreq() to create and remove
+>>> devfreq devices for interconnect paths. A driver can create/remove devfreq
+>>> devices for the interconnects needed for its device by calling these APIs.
+>>> This would allow various devfreq governors to work with interconnect paths
+>>> and the device driver itself doesn't have to actively manage the bandwidth
+>>> votes for the interconnects.
+>>
+>> Thanks for the patches, but creating devfreq devices for each interconnect path
+>> seems odd to me - at least for consumers that already use a governor.
+> 
+> Each governor instance always handles one "frequency" (more like
+> performance) domain at a time. So if a consumer is already using a
+> governor to scale the hardware block, then using another governor to
+> scale the interconnect performance points is the right way to go about
+> it. In fact, that's exactly what devfreq passive governor's
+> documentation even says it's meant for. That's also what cpufreq does
+> for each cluster/CPU frequency domain too.
+> 
+>> So for DDR
+>> scaling for example, are you suggesting that we add a devfreq device from the
+>> cpufreq driver in order to scale the interconnect between CPU<->DDR?
+> 
+> Yes in general. Although, CPUs are a special case because CPUs don't
+> go through devfreq. So passive governor as it stands today won't work.
+> CPU<->DDR scaling might need a separate governor (unlikely) or some
+> changes to the passive governor that I'm happy to work on once we
+> settle this for general devices like GPU, etc. But the DT format for
+> CPUs will be identical to GPUs or any other device.
+
+using icc_create_devfreq from the cpufreq-hw driver on SDM845 SoC
+to scale CPU<->DDR would cause a circular dependency. (i.e) with
+the addition of cpufreq notifier to the passive governor as in
+https://patchwork.kernel.org/patch/11046147/ devm_devfreq_add_device
+would require the cpufreq transistion notifier register and cpu
+freq_cpu_get to go through. Please add your thought on addressing this.
+
+> 
+>> Also if the
+>> GPU is already using devfreq, should we add a devfreq per each interconnect
+>> path? What would be the benefit in this case - using different governors for
+>> bandwidth scaling maybe?
+> 
+> When saying "separate/different governors" in this email, I mean both
+> different instance of the same governor logic with different tunables
+> AND actually different algorithms/governor logic entirely.
+> 
+> The heuristics to use for each interconnect path might be (more like,
+> will be) different based on hardware characteristics (Eg: what voltage
+> domains the interconnect is sitting on) and what interconnect
+> information is available (Eg: Just busy time vs bandwidth count vs no
+> information etc) -- so having separate governors for each interconnect
+> path makes a lot of sense. It also allows userspace to control the
+> policy for scaling each of those paths based on product use cases.
+> 
+> For example, when the GPU is just doing simple UI rendering, userspace
+> can use the max_freq sysfs file for the devfreq device to disallow high
+> bandwidth OPPs on the GPU<->DDR path, but those higher OPPs could be
+> allowed by userspace when the GPU is used for games. Having devfreq
+> device for each interconnect path also make it easy to debug
+> performance issues -- you can independently change the votes for each
+> path to figure out what is causing the bottleneck, etc.
+> 
+> Adding a devfreq device for interconnect voting with a few lines gives
+> all these features "for free".
+> 
+> This doesn't mean all users of interconnect framework NEED to use
+> devfreq for interconnect. They might do it simply based on
+> calculations based on the use case (Eg: display driver from display
+> resolution). But if they are trying to use any kind of
+> algorithm/heuristics, writing it as a devfreq governor should be
+> encouraged.
+> 
+> Also want to point out that BW OPPs also work for drivers that don't
+> use devfreq at all. The interconnect-opp-table just lists the
+> meaningful OPP leveld for the path and the device driver can pick one
+> entry from the table based on the use case.
+> 
+> Thanks,
+> Saravana
+> 
+> 
+> 
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
