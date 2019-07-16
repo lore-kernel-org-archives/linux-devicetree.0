@@ -1,73 +1,176 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v1 13/50] clk: samsung: add DPLL rate table in
- Exynos5420
-Date: Tue, 16 Jul 2019 18:31:03 +0900
-Message-ID: <9095a5be-3002-93c6-9d08-92eb84f5c103@samsung.com>
-References: <20190715124417.4787-1-l.luba@partner.samsung.com>
-        <CGME20190715124444eucas1p2683c9896e8be45d6a0cd4afeb681a2ea@eucas1p2.samsung.com>
-        <20190715124417.4787-14-l.luba@partner.samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+From: Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCHv2 1/3] iio: imu: st_lsm6sdx: move register definitions to sensor_settings struct
+Date: Tue, 16 Jul 2019 11:33:23 +0200
+Message-ID: <20190716093325.7683-1-martin.kepplinger@puri.sm>
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190715124417.4787-14-l.luba@partner.samsung.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, kyungmin.park@samsung.com, a.hajda@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+To: lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Move some register definitions to the per-device array of struct
+st_lsm6dsx_sensor_settings in order to simplify adding new sensor
+devices to the driver.
 
-Also, you better to merge patch13/patch15/patch16 to one patch
-in order to add the PLL table for DPLL/MPLL/SPLL.
+Also, remove completely unused register definitions.
 
-And I have a question. Are there any use-case to change
-the PLL frequency for DPLL/MPLL/SPLL?
-
-On 19. 7. 15. 오후 9:43, Lukasz Luba wrote:
-> The DPLL has fixed frequency left by the bootloader and it is not possible
-> to change it. With this patch the DPLL gets rate table the same for the
-> whole  PLL family (similar as APLL, KPLL according to RM) so the frequency
-> might be changed to one of the values defined there.
-> It is needed for further patches which change the DPLL frequency to feed
-> the clocks with proper base.
-> It also sets CLK_IS_CRITICAL for SCLK_DPLL due to some drivers which could
-> disable master clock, which is then populated higher and tries to disable
-> PLL, which casues system crash. The flag is needed for this kind of use
-> cases.
-> 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  drivers/clk/samsung/clk-exynos5420.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> index 7f8221527633..2395b02ce8c5 100644
-> --- a/drivers/clk/samsung/clk-exynos5420.c
-> +++ b/drivers/clk/samsung/clk-exynos5420.c
-> @@ -694,7 +694,8 @@ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
->  	MUX(0, "mout_sclk_rpll", mout_rpll_p, SRC_TOP6, 16, 1),
->  	MUX_F(CLK_MOUT_EPLL, "mout_sclk_epll", mout_epll_p, SRC_TOP6, 20, 1,
->  			CLK_SET_RATE_PARENT, 0),
-> -	MUX(0, "mout_sclk_dpll", mout_dpll_p, SRC_TOP6, 24, 1),
-> +	MUX_F(CLK_MOUT_SCLK_DPLL, "mout_sclk_dpll", mout_dpll_p,
-> +			SRC_TOP6, 24, 1, CLK_IS_CRITICAL, 0),
->  	MUX(0, "mout_sclk_cpll", mout_cpll_p, SRC_TOP6, 28, 1),
->  
->  	MUX(CLK_MOUT_SW_ACLK400_ISP, "mout_sw_aclk400_isp",
-> @@ -1514,6 +1515,7 @@ static void __init exynos5x_clk_init(struct device_node *np,
->  
->  	if (_get_rate("fin_pll") == 24 * MHZ) {
->  		exynos5x_plls[apll].rate_table = exynos5420_pll2550x_24mhz_tbl;
-> +		exynos5x_plls[dpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
->  		exynos5x_plls[epll].rate_table = exynos5420_epll_24mhz_tbl;
->  		exynos5x_plls[kpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
->  	}
-> 
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+---
 
 
+This is already based on Lorenzo's recent changes:
+https://lore.kernel.org/linux-iio/853f216a-7814-cb79-180b-078ac5e8a359@puri.sm/T/#u
+https://lore.kernel.org/linux-iio/501b0db9-63cb-905c-c09b-682eb73f1ff3@puri.sm/T/#u
+
+revision history:
+v2: improve variable names, thanks Lorenzo
+
+thanks
+                       martin
+
+
+
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
+ 2 files changed, 28 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+index ab1c66615d67..3c47f5d27d30 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+@@ -198,6 +198,9 @@ struct st_lsm6dsx_ext_dev_settings {
+ /**
+  * struct st_lsm6dsx_settings - ST IMU sensor settings
+  * @wai: Sensor WhoAmI default value.
++ * @int1_addr: Control Register address for INT1
++ * @int2_addr: Control Register address for INT2
++ * @reset_addr: register address for reset/reboot
+  * @max_fifo_size: Sensor max fifo length in FIFO words.
+  * @id: List of hw id/device name supported by the driver configuration.
+  * @odr_table: Hw sensors odr table (Hz + val).
+@@ -210,6 +213,9 @@ struct st_lsm6dsx_ext_dev_settings {
+  */
+ struct st_lsm6dsx_settings {
+ 	u8 wai;
++	u8 int1_addr;
++	u8 int2_addr;
++	u8 reset_addr;
+ 	u16 max_fifo_size;
+ 	struct {
+ 		enum st_lsm6dsx_hw_id hw_id;
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+index 9aa109428a52..e0d2149625cc 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+@@ -49,17 +49,12 @@
+ 
+ #include "st_lsm6dsx.h"
+ 
+-#define ST_LSM6DSX_REG_INT1_ADDR		0x0d
+-#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
+ #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
+ #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
+-#define ST_LSM6DSX_REG_RESET_ADDR		0x12
+ #define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
+ #define ST_LSM6DSX_REG_BOOT_MASK		BIT(7)
+ #define ST_LSM6DSX_REG_BDU_ADDR			0x12
+ #define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
+-#define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
+-#define ST_LSM6DSX_REG_INT2_ON_INT1_MASK	BIT(5)
+ 
+ #define ST_LSM6DSX_REG_ACC_OUT_X_L_ADDR		0x28
+ #define ST_LSM6DSX_REG_ACC_OUT_Y_L_ADDR		0x2a
+@@ -72,6 +67,9 @@
+ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	{
+ 		.wai = 0x69,
++		.int1_addr = 0x0d,
++		.int2_addr = 0x0e,
++		.reset_addr = 0x12,
+ 		.max_fifo_size = 1365,
+ 		.id = {
+ 			{
+@@ -170,6 +168,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x69,
++		.int1_addr = 0x0d,
++		.int2_addr = 0x0e,
++		.reset_addr = 0x12,
+ 		.max_fifo_size = 682,
+ 		.id = {
+ 			{
+@@ -268,6 +269,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6a,
++		.int1_addr = 0x0d,
++		.int2_addr = 0x0e,
++		.reset_addr = 0x12,
+ 		.max_fifo_size = 682,
+ 		.id = {
+ 			{
+@@ -375,6 +379,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6c,
++		.int1_addr = 0x0d,
++		.int2_addr = 0x0e,
++		.reset_addr = 0x12,
+ 		.max_fifo_size = 512,
+ 		.id = {
+ 			{
+@@ -494,6 +501,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6b,
++		.int1_addr = 0x0d,
++		.int2_addr = 0x0e,
++		.reset_addr = 0x12,
+ 		.max_fifo_size = 512,
+ 		.id = {
+ 			{
+@@ -584,6 +594,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6b,
++		.int1_addr = 0x0d,
++		.int2_addr = 0x0e,
++		.reset_addr = 0x12,
+ 		.max_fifo_size = 512,
+ 		.id = {
+ 			{
+@@ -1117,10 +1130,10 @@ static int st_lsm6dsx_get_drdy_reg(struct st_lsm6dsx_hw *hw, u8 *drdy_reg)
+ 
+ 	switch (drdy_pin) {
+ 	case 1:
+-		*drdy_reg = ST_LSM6DSX_REG_INT1_ADDR;
++		*drdy_reg = hw->settings->int1_addr;
+ 		break;
+ 	case 2:
+-		*drdy_reg = ST_LSM6DSX_REG_INT2_ADDR;
++		*drdy_reg = hw->settings->int2_addr;
+ 		break;
+ 	default:
+ 		dev_err(hw->dev, "unsupported data ready pin\n");
+@@ -1220,7 +1233,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+ 	int err;
+ 
+ 	/* device sw reset */
+-	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
++	err = regmap_update_bits(hw->regmap, hw->settings->reset_addr,
+ 				 ST_LSM6DSX_REG_RESET_MASK,
+ 				 FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
+ 	if (err < 0)
+@@ -1229,7 +1242,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+ 	msleep(50);
+ 
+ 	/* reload trimming parameter */
+-	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
++	err = regmap_update_bits(hw->regmap, hw->settings->reset_addr,
+ 				 ST_LSM6DSX_REG_BOOT_MASK,
+ 				 FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
+ 	if (err < 0)
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.20.1
