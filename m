@@ -1,54 +1,225 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v4, 04/33] dt-bindings: mediatek: add dither description
- for mt8183 display
-Date: Wed, 17 Jul 2019 11:40:13 +0800
-Message-ID: <1563334813.29169.9.camel@mtksdaap41>
-References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
- <1562625253-29254-5-git-send-email-yongqiang.niu@mediatek.com>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH 2/3 v3] dt-bindings: gpio: aspeed: Add SGPIO support
+Date: Wed, 17 Jul 2019 13:19:07 +0930
+Message-ID: <91ebb817-3cc6-4b87-8c2b-cfcd66f4c284@www.fastmail.com>
+References: <1563313711-17961-1-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1562625253-29254-5-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1563313711-17961-1-git-send-email-hongweiz@ami.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-aspeed@lists.ozlabs.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCgpUaGlzIHZlcnNpb24gaXMgaWRlbnRpY2FsIHRvIHByZXZpb3VzIHZl
-cnNpb24sIGFuZCBSb2IgaGFzIGdhdmUgYQonUmV2aXdlZC1ieScgdGFnIG9uIHByZXZpb3VzIHZl
-cnNpb24sIHNvIHlvdSBzaG91bGQga2VlcCB0aGF0IHRhZyBvbgp0aGlzIHZlcnNpb24sIHNvIHdl
-IGRvbid0IG5lZWQgdG8gcmV2aWV3IHRoaXMgcGF0Y2ggYWdhaW4uCgpSZWdhcmRzLApDSwoKCk9u
-IFR1ZSwgMjAxOS0wNy0wOSBhdCAwNjozMyArMDgwMCwgeW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5j
-b20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5j
-b20+Cj4gCj4gVXBkYXRlIGRldmljZSB0cmVlIGJpbmRpbmcgZG9jdW1lbnRpb24gZm9yIHRoZSBk
-aXNwbGF5IHN1YnN5c3RlbSBmb3IKPiBNZWRpYXRlayBNVDgxODMgU09Dcwo+IAo+IFNpZ25lZC1v
-ZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPgo+IC0tLQo+
-ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRp
-YXRlayxkaXNwLnR4dCB8IDEgKwo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPiAK
-PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-bWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkaXNwLnR4dAo+IGluZGV4IGNmNWZiMDgu
-LmFmZDNjOTAgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkaXNwLnR4dAo+
-IEBAIC0zMyw2ICszMyw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXMgKGFsbCBmdW5jdGlvbiBibG9j
-a3MpOgo+ICAJIm1lZGlhdGVrLDxjaGlwPi1kaXNwLXdkbWEiICAJCS0gd3JpdGUgRE1BCj4gIAki
-bWVkaWF0ZWssPGNoaXA+LWRpc3AtY2NvcnIiICAgICAgICAgICAgLSBjb2xvciBjb3JyZWN0aW9u
-Cj4gIAkibWVkaWF0ZWssPGNoaXA+LWRpc3AtY29sb3IiIAkJLSBjb2xvciBwcm9jZXNzb3IKPiAr
-CSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1kaXRoZXIiICAgICAgICAgICAtIGRpdGhlcgo+ICAJIm1l
-ZGlhdGVrLDxjaGlwPi1kaXNwLWFhbCIgICAJCS0gYWRhcHRpdmUgYW1iaWVudCBsaWdodCBjb250
-cm9sbGVyCj4gIAkibWVkaWF0ZWssPGNoaXA+LWRpc3AtZ2FtbWEiIAkJLSBnYW1tYSBjb3JyZWN0
-aW9uCj4gIAkibWVkaWF0ZWssPGNoaXA+LWRpc3AtbWVyZ2UiIAkJLSBtZXJnZSBzdHJlYW1zIGZy
-b20gdHdvIFJETUEgc291cmNlcwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbA==
+Hello Hongwei,
+
+On Wed, 17 Jul 2019, at 07:18, Hongwei Zhang wrote:
+> Add bindings to support SGPIO on AST2400 or AST2500.
+> 
+> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+> ---
+>  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt 
+> b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> new file mode 100644
+> index 0000000..8c3a747
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> @@ -0,0 +1,55 @@
+> +Aspeed SGPIO controller Device Tree Bindings
+> +-------------------------------------------
+> +
+> +This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80 
+> full 
+> +featured Serial GPIOs. Each of the Serial GPIO pins can be programmed 
+> to 
+> +support the following options:
+> +- Support interrupt option for each input port and various interrupt 
+> +  sensitivity option (level-high, level-low, edge-high, edge-low)
+> +- Support reset tolerance option for each output port
+> +- Directly connected to APB bus and its shift clock is from APB bus 
+> clock
+> +  divided by a programmable value.
+> +- Co-work with external signal-chained TTL components (74LV165/74LV595)
+
+Nice description.
+
+> +
+> +
+> +Required properties:
+> +
+> +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
+> +
+> +- #gpio-cells 		: Should be two
+> +			  - First cell is the GPIO line number
+> +			  - Second cell is used to specify optional
+> +			    parameters (unused)
+> +
+> +- reg			: Address and length of the register set for the device
+> +- gpio-controller	: Marks the device node as a GPIO controller.
+> +- interrupts		: Interrupt specifier (see interrupt bindings for
+> +			  details)
+> +
+> +- interrupt-controller	: Mark the GPIO controller as an 
+> interrupt-controller
+> +
+> +- nr-gpios		: number of GPIO pins to serialise. 
+> +			  (should be multiple of 8, up to 80 pins; 0 if not used)
+
+It's unclear to me what you mean by "0 if not used" here. The property is
+required, so its description in a devicetree should always have a non-zero
+value of `status = "okay";`, as 0 is an invalid value according to the
+datasheet (sensibly so). If `status = "disabled";` then it doesn't really
+matter, which makes the comment not terribly useful.
+
+> +
+> +- clocks               : A phandle to the APB clock for SGPM clock 
+> division
+> +
+> +- bus-frequency	: SGPM CLK frequency, derived from APB bus clock by a 
+> programmable devisor
+
+I'd leave off the parent clock information. Practically speaking it's probably
+always going to be the APB clock, but who knows. From a devicetree writer's
+perspective they just want to say "make it 7MHz" or whatever speed they,
+and it shouldn't matter too much how we get there.
+
+Finally, as mentioned on the driver patch, please send v4 without the history
+at the bottom.
+
+Cheers,
+
+Andrew
+
+> +
+> +
+> +The sgpio and interrupt properties are further described in their 
+> respective bindings documentation:
+> +
+> +- Documentation/devicetree/bindings/sgpio/gpio.txt
+> +- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +
+> +  Example:
+> +	sgpio@1e780200 {
+> +		#gpio-cells = <2>;
+> +		compatible = "aspeed,ast2500-sgpio";
+> +		gpio-controller;
+> +		interrupts = <40>;
+> +		reg = <0x1e780200 0x0100>;
+> +		clocks = <&syscon ASPEED_CLK_APB>;
+> +		interrupt-controller;
+> +		nr-gpios = <8>;
+> +		bus-frequency = <12000000>;
+> +	};
+> -- 
+> 2.7.4
+> 
+> 
+> Thanks Andrew, please see above v3 and inline comments at below.
+> --Hongwei
+> 
+> > From:	Andrew Jeffery <andrew@aj.id.au>
+> > Sent:	Sunday, July 14, 2019 10:25 PM
+> > To:	Hongwei Zhang; Joel Stanley; Linus Walleij; devicetree@vger.kernel.org
+> > Cc:	Rob Herring; Mark Rutland; Bartosz Golaszewski; linux-aspeed@lists.ozlabs.org; linux-
+> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-gpio@vger.kernel.org
+> > Subject:	Re: [PATCH 2/3 v2] dt-bindings: gpio: aspeed: Add SGPIO support
+> > 
+> > Hello Hongwei,
+> > 
+> > On Sat, 13 Jul 2019, at 05:44, Hongwei Zhang wrote:
+> > > Add bindings to support SGPIO on AST2400 or AST2500.
+> > > 
+> > > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+> > > ---
+> > >  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 43 ++++++++++++++++++++++
+> > >  1 file changed, 43 insertions(+)
+> > >  create mode 100755 
+> > > Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > > b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > > new file mode 100755
+> > > index 0000000..3ae2b79
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > > @@ -0,0 +1,43 @@
+> > > +Aspeed SGPIO controller Device Tree Bindings
+> > > +-------------------------------------------
+> > > +
+> > > +Required properties:
+> > > +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
+> > > +
+> > > +- #gpio-cells 		: Should be two
+> > > +			  - First cell is the GPIO line number
+> > > +			  - Second cell is used to specify optional
+> > > +			    parameters (unused)
+> > > +
+> > > +- reg			: Address and length of the register set for the device
+> > > +- gpio-controller	: Marks the device node as a GPIO controller.
+> > > +- interrupts		: Interrupt specifier (see interrupt bindings for
+> > > +			  details)
+> > > +
+> > > +- interrupt-controller	: Mark the GPIO controller as an 
+> > > interrupt-controller
+> > > +
+> > > +- nr-gpios		: number of GPIO pins to serialise. (should be multiple of 
+> > > 8, up to 80 pins)
+> > > +			  if not specified, defaults to 80.
+> > 
+> > This appears to be a statement about the driver implementation, but bindings documents are about 
+> > describing hardware. Reading the datasheet it actually appears the ASPEED SGPIO hardware comes up 
+> > in what is "technically" a forbidden state (equivalent to `nr-gpios = <0>;`), though the device is also 
+> > disabled at this point, so it's probably moot. The point is the true default value from a hardware 
+> > perspective is 0, not 80, so if we're going to talk about default values, 0 would be more appropriate. 
+> > However:
+> > 
+> > You've also listed nr-gpios under the "Required properties" header, but the description suggests it's 
+> > optional. It's either one or the other, please lets be clear about it. On that front, lets make it nr-gpios 
+> > *not* optional (i.e. make it
+> > required) thus force the specification of how many SGPIOs we want to emit on the bus. This value is 
+> > coupled to the platform design, so I don't think there's ever a scenario where we want nr-gpios to take a 
+> > default value.
+> > 
+> 
+> Added some descriptions and updated nr-gpios, please see v3.
+> 
+> > > +
+> > > +- clocks               : A phandle to the APB clock for SGPM clock 
+> > > division
+> > > +
+> > > +- bus-frequency	: SGPM CLK frequency, if not specified defaults to 1 
+> > > MHz
+> > 
+> > Again here with the default value - SGPM CLK period is derived from PCLK by the expression `period = 
+> > PCLK * 2 *(GPIO254[31:16] + 1)`, where GPIO254's initialisation state is `GPIO254[31:16] = 0`, which 
+> > gives a default SGPM bus frequency of PCLK / 2. This is likely not going to be 1MHz (more like ~12MHz).
+> > 
+> > Lets just make the property required. That way we avoid any ambiguity about the bus frequency and 
+> > thus don't need words about defaults that turn out to be about the driver, not about the hardware.
+> > 
+> 
+> updated, please see v3.
+> 
+> > Finally, when updating patches in response to feedback, please send the full series again, and bump the 
+> > series version number. That way people can review a coherent set of patches and not have to hunt 
+> > around and (fail to) collate the correct combination. It makes it easier to say "Reviewed-by:" on your 
+> > patches :)
+> > 
+> > Cheers,
+> > 
+> > Andrew
+>
