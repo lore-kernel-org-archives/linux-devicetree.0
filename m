@@ -1,175 +1,123 @@
-From: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v3 2/3] leds: Add control of the voltage/current regulator to the LED core
-Date: Wed, 17 Jul 2019 15:59:47 +0200
-Message-ID: <20190717135948.19340-3-jjhiblot@ti.com>
-References: <20190717135948.19340-1-jjhiblot@ti.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH v3] arm64: dts: imx8mq: Add sai3 and sai6 nodes
+Date: Wed, 17 Jul 2019 17:04:01 +0300
+Message-ID: <CAEnQRZDSzjMUQ36BCE=wQUN3fRg_pL2cDb1xxFz222LoZrmW_A@mail.gmail.com>
+References: <20190702132353.18632-1-andradanciu1997@gmail.com>
+ <9ea5109f8645c3f27a9e350c5f9b2d4c@www.akkea.ca> <CAEnQRZDCpPju7xBBY9=e0dWt=A9c3t3g88pEw+teoZmmOiiKXQ@mail.gmail.com>
+ <9e196ce51eac9ce9c327198c4a2911a8@www.akkea.ca> <CAEnQRZCoOyyZVs0=BjXB5=wYe3XW9GOF9JvwjhSU9BsChh08uA@mail.gmail.com>
+ <1563292685.2676.12.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190717135948.19340-1-jjhiblot@ti.com>
+In-Reply-To: <1563292685.2676.12.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, daniel.thompson@linaro.org
-Cc: dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@ti.com>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Angus Ainslie <angus@akkea.ca>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Andra Danciu <andradanciu1997@gmail.com>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, andrew.smirnov@gmail.com, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Sometimes LEDs are powered by an external voltage/current regulator. Let
-the LED core know about it. This allows the LED core to turn on or off
-managed power supplies.
+On Tue, Jul 16, 2019 at 6:58 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+>
+> Hi Daniel,
+>
+> Am Mittwoch, den 03.07.2019, 16:25 +0300 schrieb Daniel Baluta:
+> > > On Wed, Jul 3, 2019 at 4:12 PM Angus Ainslie <angus@akkea.ca> wrote:
+> > >
+> > > Hi Daniel,
+> > >
+> > > On 2019-07-03 07:10, Daniel Baluta wrote:
+> > > > > > > On Wed, Jul 3, 2019 at 4:01 PM Angus Ainslie <angus@akkea.ca> wrote:
+> > > > >
+> > > > > Hi Andra,
+> > > > >
+> > > > > I tried this out on linux-next and I'm not able to record or play
+> > > > > sound.
+> > > > >
+> > > > > I also added the sai2 entry to test out our devkit and get a PCM
+> > > > > timeout
+> > > > > with that.
+> > > >
+> > > > Hi Angus,
+> > > >
+> > > > There are still lots of SAI patches that need to be upstream. Me and
+> > > > Andra
+> > > > will be working on that over this summer.
+> > > >
+> > > > >
+> > > > > On 2019-07-02 07:23, Andra Danciu wrote:
+> > > > > > SAI3 and SAI6 nodes are used to connect to an external codec.
+> > > > > > They have 1 Tx and 1 Rx dataline.
+> > > > > >
+> > > > > > > > > > > Cc: Daniel Baluta <daniel.baluta@nxp.com>
+> > > > > > > > > > > Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+> > > > > > ---
+> > > > > > Changes since v2:
+> > > > > >       - removed multiple new lines
+> > > > > >
+> > > > > > Changes since v1:
+> > > > > >       - Added sai3 node because we need it to enable audio on pico-pi-8m
+> > > > > >       - Added commit description
+> > > > > >
+> > > > > >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 29
+> > > > > > +++++++++++++++++++++++++++++
+> > > > > >  1 file changed, 29 insertions(+)
+> > > > > >
+> > > > > > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > > > > > b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > > > > > index d09b808eff87..736cf81b695e 100644
+> > > > > > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > > > > > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > > > > > @@ -278,6 +278,20 @@
+> > > > > >                       #size-cells = <1>;
+> > > > > >                       ranges = <0x30000000 0x30000000 0x400000>;
+> > > > > >
+> > > > > > > > > > > +                     sai6: sai@30030000 {
+> > > > > > +                             compatible = "fsl,imx8mq-sai",
+> > > > >
+> > > > > I don't find this compatible string in sound/soc/fsl/fsl_sai.c. Aren't
+> > > > > the registers at a different offset from "fsl,imx6sx-sai".
+> > > >
+> > > > Yes, you are right on this. We are trying to slowly push all our
+> > > > internal-tree
+> > > > patches to mainline. Obviously, with started with low hanging fruits,
+> > > > DTS
+> > > > nodes and small SAI fixes.
+> > > >
+> > > > Soon, we will start to send patches for SAI IP ipgrade for imx8.
+> > > >
+> > > > >
+> > > > > How is this supposed to work ?
+> > > > >
+> > > >
+> > > > For the moment it won't work unless we will upstream all our SAI
+> > > > internal patches.
+> > > > But we will get there hopefully this summer.
+> > > >
+> > >
+> > > Shouldn't a working driver be upstream before enabling it in the
+> > > devicetree ?
+> >
+> > I see your point here and maybe your suggestion is the ideal
+> > way to do things.
+> >
+> > Anyhow, I don't see a problem with adding the node in dts
+> > because CONFIG_FSL_SAI is not set in the default config.
+> >
+> > We try to speedup the upstreaming process giving the fact
+> > that SAI patches will go through audio maintainer's tree and
+> > the DTS patches will most likely go through Shawn's tree.
+>
+> I've also looked at adding audio support to one of the custom boards I
+> have here and was caught a bit off guard by the fact that the SAI
+> driver is totally broken for i.MX8M due to missing patches, as I
+> assumed the necessary bits are in place before the DT patches are
+> landed. It's certainly not how things are usually done.
+>
+> This also means the DT description of the SAI nodes is wrong, as they
+> are actually not compatible to the "fsl,imx6sx-sai". The register
+> layout is moved around, so there is no point in claiming any backwards
+> compat with the old SAI version.
+>
+> Do you have an ETA when the necessary patches for the i.MX8M SAI will
+> be available for test and review?
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/leds/led-class.c | 15 +++++++++++++
- drivers/leds/led-core.c  | 47 +++++++++++++++++++++++++++++++++++++---
- drivers/leds/leds.h      |  1 +
- include/linux/leds.h     |  4 ++++
- 4 files changed, 64 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 4793e77808e2..cadd43c30d50 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -253,6 +253,7 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
- {
- 	char name[LED_MAX_NAME_SIZE];
- 	int ret;
-+	struct regulator *regulator;
- 
- 	ret = led_classdev_next_name(led_cdev->name, name, sizeof(name));
- 	if (ret < 0)
-@@ -272,6 +273,20 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
- 		dev_warn(parent, "Led %s renamed to %s due to name collision",
- 				led_cdev->name, dev_name(led_cdev->dev));
- 
-+	regulator = devm_regulator_get_optional(led_cdev->dev, "power");
-+	if (IS_ERR(regulator)) {
-+		if (PTR_ERR(regulator) != -ENODEV) {
-+			dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
-+				led_cdev->name);
-+			device_unregister(led_cdev->dev);
-+			mutex_unlock(&led_cdev->led_access);
-+			return PTR_ERR(regulator);
-+		}
-+		led_cdev->regulator = NULL;
-+	} else {
-+		led_cdev->regulator = regulator;
-+	}
-+
- 	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
- 		ret = led_add_brightness_hw_changed(led_cdev);
- 		if (ret) {
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index 7107cd7e87cf..dab32cf778f2 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -23,6 +23,33 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
- LIST_HEAD(leds_list);
- EXPORT_SYMBOL_GPL(leds_list);
- 
-+static bool __led_need_regulator_update(struct led_classdev *led_cdev,
-+					int brightness)
-+{
-+	bool new_state = (brightness != LED_OFF);
-+
-+	return led_cdev->regulator && led_cdev->regulator_state != new_state;
-+}
-+
-+static int __led_handle_regulator(struct led_classdev *led_cdev,
-+				int brightness)
-+{
-+	int rc;
-+
-+	if (__led_need_regulator_update(led_cdev, brightness)) {
-+
-+		if (brightness != LED_OFF)
-+			rc = regulator_enable(led_cdev->regulator);
-+		else
-+			rc = regulator_disable(led_cdev->regulator);
-+		if (rc)
-+			return rc;
-+
-+		led_cdev->regulator_state = (brightness != LED_OFF);
-+	}
-+	return 0;
-+}
-+
- static int __led_set_brightness(struct led_classdev *led_cdev,
- 				enum led_brightness value)
- {
-@@ -115,6 +142,8 @@ static void set_brightness_delayed(struct work_struct *ws)
- 	if (ret == -ENOTSUPP)
- 		ret = __led_set_brightness_blocking(led_cdev,
- 					led_cdev->delayed_set_value);
-+	__led_handle_regulator(led_cdev, led_cdev->delayed_set_value);
-+
- 	if (ret < 0 &&
- 	    /* LED HW might have been unplugged, therefore don't warn */
- 	    !(ret == -ENODEV && (led_cdev->flags & LED_UNREGISTERING) &&
-@@ -256,8 +285,14 @@ void led_set_brightness_nopm(struct led_classdev *led_cdev,
- 			      enum led_brightness value)
- {
- 	/* Use brightness_set op if available, it is guaranteed not to sleep */
--	if (!__led_set_brightness(led_cdev, value))
--		return;
-+	if (!__led_set_brightness(led_cdev, value)) {
-+		/*
-+		 * if regulator state doesn't need to be changed, that is all/
-+		 * Otherwise delegate the change to a work queue
-+		 */
-+		if (!__led_need_regulator_update(led_cdev, value))
-+			return;
-+	}
- 
- 	/* If brightness setting can sleep, delegate it to a work queue task */
- 	led_cdev->delayed_set_value = value;
-@@ -280,6 +315,8 @@ EXPORT_SYMBOL_GPL(led_set_brightness_nosleep);
- int led_set_brightness_sync(struct led_classdev *led_cdev,
- 			    enum led_brightness value)
- {
-+	int ret;
-+
- 	if (led_cdev->blink_delay_on || led_cdev->blink_delay_off)
- 		return -EBUSY;
- 
-@@ -288,7 +325,11 @@ int led_set_brightness_sync(struct led_classdev *led_cdev,
- 	if (led_cdev->flags & LED_SUSPENDED)
- 		return 0;
- 
--	return __led_set_brightness_blocking(led_cdev, led_cdev->brightness);
-+	ret = __led_set_brightness_blocking(led_cdev, led_cdev->brightness);
-+	if (ret)
-+		return ret;
-+
-+	return __led_handle_regulator(led_cdev, led_cdev->brightness);
- }
- EXPORT_SYMBOL_GPL(led_set_brightness_sync);
- 
-diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
-index 47b229469069..5aa5c038bd38 100644
---- a/drivers/leds/leds.h
-+++ b/drivers/leds/leds.h
-@@ -11,6 +11,7 @@
- 
- #include <linux/rwsem.h>
- #include <linux/leds.h>
-+#include <linux/regulator/consumer.h>
- 
- static inline int led_get_brightness(struct led_classdev *led_cdev)
- {
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 9b2bf574a17a..bee8e3f8dddd 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -123,6 +123,10 @@ struct led_classdev {
- 
- 	/* Ensures consistent access to the LED Flash Class device */
- 	struct mutex		led_access;
-+
-+	/* regulator */
-+	struct regulator	*regulator;
-+	bool			regulator_state;
- };
- 
- extern int of_led_classdev_register(struct device *parent,
--- 
-2.17.1
+No ETA for this. Sorry! We try to upstream it as soon as possible
