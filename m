@@ -1,53 +1,32 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v1 26/50] ARM: dts: exynos: align NOC100 bus OPPs in
- Exynos5420
-Date: Wed, 17 Jul 2019 12:41:32 +0200
-Message-ID: <4d91a2fd-b6cf-37cc-d453-eb147ea6a1da@partner.samsung.com>
-References: <CGME20190715124455eucas1p13bfc0c1d113225db9607e4c0dbac353c@eucas1p1.samsung.com>
-        <20190715124417.4787-1-l.luba@partner.samsung.com>
-        <20190715124417.4787-27-l.luba@partner.samsung.com>
-        <CAJKOXPc3qsM5Xe5JViDZXYfes+_veb-KX3fnZjpkUCrphBcu-Q@mail.gmail.com>
-        <8ed83c77-57f7-78a4-e437-714cfc7b5c58@partner.samsung.com>
-        <CAJKOXPdMUV6JP0R4kj=cFKd7QUdrtMXtSm4S9pfF77zvKu4v1g@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 1/2] ARM: dts: Add ZII support for ZII i.MX7 RMU2 board
+Date: Wed, 17 Jul 2019 18:42:22 +0800
+Message-ID: <20190717104219.GG3738@dragon>
+References: <20190624183044.30240-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPdMUV6JP0R4kj=cFKd7QUdrtMXtSm4S9pfF77zvKu4v1g@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190624183044.30240-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Bob Langer <Bob.Langer@zii.aero>, Liang Pan <Liang.Pan@zii.aero>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jun 24, 2019 at 11:30:43AM -0700, Andrey Smirnov wrote:
+> Add support for ZII's i.MX7 based Remote Modem Unit 2 (RMU2) board.
+> 
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Bob Langer <Bob.Langer@zii.aero>
+> Cc: Liang Pan <Liang.Pan@zii.aero>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 
-
-On 7/17/19 12:38 PM, Krzysztof Kozlowski wrote:
-> On Wed, 17 Jul 2019 at 12:27, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->>
->> On 7/17/19 12:10 PM, Krzysztof Kozlowski wrote:
->>> On Mon, 15 Jul 2019 at 14:44, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>>>
->>>> The NOC100 has a parent which clock rate is set tot 400MHz. The OPPs which
->>>> are not possible to set are removed and new one is added.
->>>
->>> I think it is just NOC bus... or are there more of such and this is 100 MHz one?
->> Yes, there is a bus NOC100 with a dedicated clock tree in the HW (with
->> 3 muxes and one divider), which makes possible to take different PLL as
->> a source then WCORE have, divide the rate from it and even switch for a
->> while to alternative stable PLL (on the 2nd mux to SPLL (after a
->> divider)) to wait for main PLL rate change stability delay. Max rate is
->> limited to 100MHz for this NOC100 bus.
-> 
-> I think we misunderstood each other. I am saying, that the bus is
-> called "NOC" in the DTSI. Not NOC100. So unless there are more of
-> NOCs, stick to existing name NOC, even if it is not the most accurate.
-OK, got it, thanks!
-
-Lukasz
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+Applied both, thanks.
