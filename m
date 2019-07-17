@@ -1,128 +1,84 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v1 37/50] ARM: dts: exynos: change parent and rate of
- bus_fsys in Exynos5422
-Date: Wed, 17 Jul 2019 14:55:53 +0200
-Message-ID: <7ad899c5-347d-546e-a2e9-d96f0203210c@partner.samsung.com>
-References: <CGME20190715124504eucas1p1afe0da2c6ac3a8b45d85017a77ba9edf@eucas1p1.samsung.com>
-        <20190715124417.4787-1-l.luba@partner.samsung.com>
-        <20190715124417.4787-38-l.luba@partner.samsung.com>
-        <CAJKOXPfrGgAczQ-=1aE453RpJ9BN10ZDmFcrEMPkNyF6GcGtNA@mail.gmail.com>
-        <2fe2e840-f4b2-773b-7d92-4ffb8502d4e6@partner.samsung.com>
-        <CAJKOXPd3gm7no-0TnPmgFg+X3FgdiM6ov5rtzFSM6hKEdEzRCg@mail.gmail.com>
-        <518c26ca-4254-056c-d6d0-ae1b4b63709c@partner.samsung.com>
-        <CAJKOXPfDX06s7eMctbnPabxho2EaWcTM4xAGKCd_+O6jCCDcRQ@mail.gmail.com>
+From: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: Re: [PATCH v2 2/2] leds: Add control of the voltage/current regulator
+ to the LED core
+Date: Wed, 17 Jul 2019 15:14:21 +0200
+Message-ID: <3b8e5847-6859-d78d-6274-7a879557dcae@ti.com>
+References: <20190715155657.22976-1-jjhiblot@ti.com>
+ <20190715155657.22976-3-jjhiblot@ti.com>
+ <9c17e9cc-8162-7b5d-2db9-d2bed20969c5@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPfDX06s7eMctbnPabxho2EaWcTM4xAGKCd_+O6jCCDcRQ@mail.gmail.com>
+In-Reply-To: <9c17e9cc-8162-7b5d-2db9-d2bed20969c5@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+To: Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, daniel.thompson@linaro.org
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Dan,
 
-On 7/17/19 1:11 PM, Krzysztof Kozlowski wrote:
-> On Wed, 17 Jul 2019 at 13:06, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+On 15/07/2019 20:59, Dan Murphy wrote:
+> JJ
+>
+> On 7/15/19 10:56 AM, Jean-Jacques Hiblot wrote:
+>> A LED is usually powered by a voltage/current regulator. Let the LED 
+>> core
+>> know about it. This allows the LED core to turn on or off the power 
+>> supply
+>> as needed.
+>
+> This allows the LED core to turn on or off managed power supplies.
+>
+>
 >>
->>
->>
->> On 7/17/19 12:45 PM, Krzysztof Kozlowski wrote:
->>> On Wed, 17 Jul 2019 at 12:39, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>>>>>
->>>>>>     &bus_fsys {
->>>>>>            devfreq = <&bus_wcore>;
->>>>>> +       assigned-clocks = <&clock CLK_MOUT_ACLK200_FSYS>,
->>>>>> +                         <&clock CLK_DOUT_ACLK200_FSYS>,
->>>>>> +                         <&clock CLK_FOUT_DPLL>;
->>>>>> +       assigned-clock-parents = <&clock CLK_MOUT_SCLK_DPLL>;
->>>>>> +       assigned-clock-rates = <0>, <240000000>,<1200000000>;
->>>>>
->>>>> Here and in all other patches:
->>>>> I am not entirely sure that this should be here. It looks like
->>>>> property of the SoC. Do we expect that buses will be configured to
->>>>> different clock rates between different boards?
-This is the board file for Exynos5420/5422/5800 which enables buses.
-Thus, I have change them here. Patch 49/50 adds these buses to
-Exynos5800 (Peach Pi). In Exynos5420 there is no clock tree for
-bus_isp266. The parents for different devices could be also different.
-It is because i.e. in 5420 there is 2 bit in the WCORE 1st mux while in
-5422 there is 3 bits (6 parents possible).
-That's why I have picked exynos5422-odroid-core.dtsi to reference
-the bus devices and pinned them into proper parent and changed rate.
-When you check patch 49/50 for 5800 not all the parents are the same.
+>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>> ---
 
-(1) I could create a dedicated files like: exynos5422-bus.dtsi,
-exynos5420-bus.dtsi, exynos5800-bus.dtsi which would include some
-base file with the basic &bus_X and set the right parent, rate.
-Then these files would be included into proper board file like:
-exynos5800-peach-pi.dts.
-Is this something that you would like to see?
-  Since the OPP tables
->>>>> are shared (they are property of the SoC, not board) then I would
->>>>> assume that default frequency is shared as well.
->>>> These clocks they all relay on some bootloader configuration. It depends
->>>> which version of the bootloader you have, then you might get different
->>>> default configuration in the clocks.
->>>
->>> I do not agree here. This configuration is not dependent on
->>> bootloader. Although one bootloader might set the clocks to X and
->>> other to Y, but still you provide here valid configuration setting
->>> them, e.g. to Y (or to Z). What bootloader set before does not matter
->>> because you always override it.
->> This exactly the patch set is aim to do: overwrite any bootloader
->> configuration which could be wrong set after boot.
->> I don't know for how long it is left in such
->> 'bootloader-default-clock-settings' but it is not accurate
->> configuration. The pattern in the DT to change the clock rates is
->> there.
-> 
-> Still it is not the answer to my concerns and questions.
-Please look at my answer above.
-> 
->>>
->>>> The pattern of changing the parent
->>>> or even rate is known in the DT files (or I am missing something).
->>>> When you grep for it, you get 168 hits (38 for exynos*):
->>>> git grep -n "assigned-clock-rates" ./arch/arm/boot/dts/ | wc -l
->>>
->>> Yeah, and if you grep per type you got:
->>> DTSI: 114
->>> DTS: 54
->>> so what do you want to say?
->> Thus, It could be changed in DT.
-> 
-> Of course, why not. But how this relevant to my question?
-Please see above.
-> 
->>> My thinking is that all the boards have buses configured to the same
->>> initial frequency. I am not questioning the use of
->>> assigned-clock-rates at all. Just the place...
->> It is not only 'initial frequency' as you name it. It has three changes:
->> - re-parent to proper PLL
->> - changing this PLL rate
->> - change the OPPs frequency values to integer values derived from PLL
->>
->> The initial frequencies will be changed by devfreq governor using OPP
->> tables and the load after the whole system boots.
-> 
-> I simplified with "initial frequency" but it does not matter. Let me
-> try to raise my concerns again, different wording:
-> All this looks like property of the SoC, not the board, because:
-> 1. the OPPs are already properties of the SoC, not the board (XU3 Lite
-> is kind of exception but in fact it uses different flavor of
-> Exynos5422 SoC which we do not model here as separate DTSI),
-Please see above at (1).
-> 2. I expect all boards to have the same properties.
-All boards which have the same SoC, i.e. Exysno5422 <- then I agree.
+>>       if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
+>>           ret = led_add_brightness_hw_changed(led_cdev);
+>>           if (ret) {
+>> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+>> index 7107cd7e87cf..a12b880b0a2f 100644
+>> --- a/drivers/leds/led-core.c
+>> +++ b/drivers/leds/led-core.c
+>> @@ -23,6 +23,33 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
+>>   LIST_HEAD(leds_list);
+>>   EXPORT_SYMBOL_GPL(leds_list);
+>>   +static bool __led_need_regulator_update(struct led_classdev 
+>> *led_cdev,
+>> +                    int brightness)
+>> +{
+>> +    bool new_state = (brightness != LED_OFF);
+>> +
+>> +    return led_cdev->regulator && led_cdev->regulator_state != 
+>> new_state;
+>> +}
+>> +
+>> +static int __led_handle_regulator(struct led_classdev *led_cdev,
+>> +                int brightness)
+>> +{
+>> +    int rc;
+>
+> Should there be a check for the regulator pointer.
+>
+> If (!led_cdev->regulator)
+>
+>     return 0;
 
-Thank you for the comments.
+Not required because __led_need_regulator_update() returns false if 
+led_cdev->regulator is NULL.
 
-Regards,
-Lukasz
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+Thanks for the review
+
+JJ
+
+>
+>
+> Otherwise
+>
+> Reviewed-by: Dan Murphy <dmurphy@ti.com>
+>
+> <snip>
+>
