@@ -1,301 +1,395 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 3/3] arm64: dts: freescale: Add support for i.MX8QXP AI_ML board
-Date: Wed, 17 Jul 2019 11:40:39 +0530
-Message-ID: <20190717061039.9271-4-manivannan.sadhasivam@linaro.org>
-References: <20190717061039.9271-1-manivannan.sadhasivam@linaro.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+Date: Wed, 17 Jul 2019 09:33:17 +0300
+Message-ID: <20190717093317.70fefb27@dimatab>
+References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
+        <72b5df8c-8acb-d0d0-ebcf-b406e8404973@nvidia.com>
+        <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
+        <76e341be-6f38-2bc1-048e-1aa6883f9b88@gmail.com>
+        <0706576a-ce61-1cf3-bed1-05f54a1e2489@nvidia.com>
+        <5b2945c5-fcb2-2ac0-2bf2-df869dc9c713@gmail.com>
+        <ef63f72a-db03-ef28-a371-e578f351c713@nvidia.com>
+        <27641e30-fdd1-e53a-206d-71e1f23343fd@gmail.com>
+        <10c4b9a2-a857-d124-c22d-7fd71a473079@nvidia.com>
+        <fd8bad73-464b-54f1-be94-fe3ac8b23e6e@gmail.com>
+        <0ee06d1a-310d-59f7-0aa6-b688b33447f5@nvidia.com>
+        <cedfafd0-4114-0821-0c4b-efc17c213449@gmail.com>
+        <707c4679-fde6-1714-ced0-dcf7ca8380a9@nvidia.com>
+        <c6c0a205-c083-fd46-361c-175bd8840c6e@nvidia.com>
+        <055457fd-621b-6c93-b671-d5e5380698c6@nvidia.com>
+        <20190717071105.3750a021@dimatab>
+        <77df234f-aa40-0319-a593-f1f19f0f1c2a@nvidia.com>
+        <20190717084221.2e9af56c@dimatab>
+        <093462f3-8c6d-d084-9822-ae4eff041c64@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190717061039.9271-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <093462f3-8c6d-d084-9822-ae4eff041c64@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org
-Cc: kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Darshak.Patel@einfochips.com, kinjan.patel@einfochips.com, prajose.john@einfochips.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for i.MX8QXP AI_ML board from Einfochips. This board is one
-of the Consumer Edition boards of the 96Boards family based on i.MX8QXP
-SoC from NXP/Freescale.
+=D0=92 Tue, 16 Jul 2019 22:55:52 -0700
+Sowjanya Komatineni <skomatineni@nvidia.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 
-The initial support includes following peripherals which are tested and
-known to be working:
+> On 7/16/19 10:42 PM, Dmitry Osipenko wrote:
+> > =D0=92 Tue, 16 Jul 2019 22:25:25 -0700
+> > Sowjanya Komatineni <skomatineni@nvidia.com> =D0=BF=D0=B8=D1=88=D0=B5=
+=D1=82:
+> > =20
+> >> On 7/16/19 9:11 PM, Dmitry Osipenko wrote: =20
+> >>> =D0=92 Tue, 16 Jul 2019 19:35:49 -0700
+> >>> Sowjanya Komatineni <skomatineni@nvidia.com> =D0=BF=D0=B8=D1=88=D0=B5=
+=D1=82:
+> >>>    =20
+> >>>> On 7/16/19 7:18 PM, Sowjanya Komatineni wrote: =20
+> >>>>> On 7/16/19 3:06 PM, Sowjanya Komatineni wrote: =20
+> >>>>>> On 7/16/19 3:00 PM, Dmitry Osipenko wrote: =20
+> >>>>>>> 17.07.2019 0:35, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82: =20
+> >>>>>>>> On 7/16/19 2:21 PM, Dmitry Osipenko wrote: =20
+> >>>>>>>>> 17.07.2019 0:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=
+=D1=82: =20
+> >>>>>>>>>> On 7/16/19 1:47 PM, Dmitry Osipenko wrote: =20
+> >>>>>>>>>>> 16.07.2019 22:26, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=
+=B5=D1=82: =20
+> >>>>>>>>>>>> On 7/16/19 11:43 AM, Dmitry Osipenko wrote: =20
+> >>>>>>>>>>>>> 16.07.2019 21:30, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=
+=B5=D1=82: =20
+> >>>>>>>>>>>>>> On 7/16/19 11:25 AM, Dmitry Osipenko wrote: =20
+> >>>>>>>>>>>>>>> 16.07.2019 21:19, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=
+=D0=B5=D1=82: =20
+> >>>>>>>>>>>>>>>> On 7/16/19 9:50 AM, Sowjanya Komatineni wrote: =20
+> >>>>>>>>>>>>>>>>> On 7/16/19 8:00 AM, Dmitry Osipenko wrote: =20
+> >>>>>>>>>>>>>>>>>> 16.07.2019 11:06, Peter De Schrijver =D0=BF=D0=B8=D1=
+=88=D0=B5=D1=82: =20
+> >>>>>>>>>>>>>>>>>>> On Tue, Jul 16, 2019 at 03:24:26PM +0800, Joseph
+> >>>>>>>>>>>>>>>>>>> Lo wrote: =20
+> >>>>>>>>>>>>>>>>>>>>> OK, Will add to CPUFreq driver... =20
+> >>>>>>>>>>>>>>>>>>>>>> The other thing that also need attention is
+> >>>>>>>>>>>>>>>>>>>>>> that T124 CPUFreq
+> >>>>>>>>>>>>>>>>>>>>>> driver
+> >>>>>>>>>>>>>>>>>>>>>> implicitly relies on DFLL driver to be probed
+> >>>>>>>>>>>>>>>>>>>>>> first, which is
+> >>>>>>>>>>>>>>>>>>>>>> icky.
+> >>>>>>>>>>>>>>>>>>>>>>       =20
+> >>>>>>>>>>>>>>>>>>>>> Should I add check for successful dfll clk
+> >>>>>>>>>>>>>>>>>>>>> register explicitly in
+> >>>>>>>>>>>>>>>>>>>>> CPUFreq driver probe and defer till dfll clk
+> >>>>>>>>>>>>>>>>>>>>> registers? =20
+> >>>>>>>>>>>>>>>>>> Probably you should use the "device links". See
+> >>>>>>>>>>>>>>>>>> [1][2] for the
+> >>>>>>>>>>>>>>>>>> example.
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>> [1]
+> >>>>>>>>>>>>>>>>>> https://elixir.bootlin.com/linux/v5.2.1/source/drivers=
+/gpu/drm/tegra/dc.c#L2383
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>> [2]
+> >>>>>>>>>>>>>>>>>> https://www.kernel.org/doc/html/latest/driver-api/devi=
+ce_link.html
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>> Return EPROBE_DEFER instead of EINVAL if
+> >>>>>>>>>>>>>>>>>> device_link_add() fails.
+> >>>>>>>>>>>>>>>>>> And
+> >>>>>>>>>>>>>>>>>> use of_find_device_by_node() to get the DFLL's
+> >>>>>>>>>>>>>>>>>> device, see [3].
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>> [3]
+> >>>>>>>>>>>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/next/l=
+inux-next.git/tree/drivers/devfreq/tegra20-devfreq.c#n100
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>       =20
+> >>>>>>>>>>>>>>>>> Will go thru and add... =20
+> >>>>>>>>>>>>>>> Looks like I initially confused this case with getting
+> >>>>>>>>>>>>>>> orphaned clock.
+> >>>>>>>>>>>>>>> I'm now seeing that the DFLL driver registers the
+> >>>>>>>>>>>>>>> clock and then
+> >>>>>>>>>>>>>>> clk_get(dfll) should be returning EPROBE_DEFER until
+> >>>>>>>>>>>>>>> DFLL driver is
+> >>>>>>>>>>>>>>> probed, hence everything should be fine as-is and
+> >>>>>>>>>>>>>>> there is no real
+> >>>>>>>>>>>>>>> need
+> >>>>>>>>>>>>>>> for the 'device link'. Sorry for the confusion!
+> >>>>>>>>>>>>>>>       =20
+> >>>>>>>>>>>>>>>>>>>> Sorry, I didn't follow the mail thread. Just
+> >>>>>>>>>>>>>>>>>>>> regarding the DFLL
+> >>>>>>>>>>>>>>>>>>>> part.
+> >>>>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>>> As you know it, the DFLL clock is one of the CPU
+> >>>>>>>>>>>>>>>>>>>> clock sources and
+> >>>>>>>>>>>>>>>>>>>> integrated with DVFS control logic with the
+> >>>>>>>>>>>>>>>>>>>> regulator. We will not
+> >>>>>>>>>>>>>>>>>>>> switch
+> >>>>>>>>>>>>>>>>>>>> CPU to other clock sources once we switched to
+> >>>>>>>>>>>>>>>>>>>> DFLL. Because the
+> >>>>>>>>>>>>>>>>>>>> CPU has
+> >>>>>>>>>>>>>>>>>>>> been regulated by the DFLL HW with the DVFS table
+> >>>>>>>>>>>>>>>>>>>> (CVB or OPP
+> >>>>>>>>>>>>>>>>>>>> table
+> >>>>>>>>>>>>>>>>>>>> you see
+> >>>>>>>>>>>>>>>>>>>> in the driver.). We shouldn't reparent it to
+> >>>>>>>>>>>>>>>>>>>> other sources with
+> >>>>>>>>>>>>>>>>>>>> unknew
+> >>>>>>>>>>>>>>>>>>>> freq/volt pair. That's not guaranteed to work. We
+> >>>>>>>>>>>>>>>>>>>> allow switching to
+> >>>>>>>>>>>>>>>>>>>> open-loop mode but different sources. =20
+> >>>>>>>>>>>>>>>>>> Okay, then the CPUFreq driver will have to enforce
+> >>>>>>>>>>>>>>>>>> DFLL freq to
+> >>>>>>>>>>>>>>>>>> PLLP's
+> >>>>>>>>>>>>>>>>>> rate before switching to PLLP in order to have a
+> >>>>>>>>>>>>>>>>>> proper CPU voltage. =20
+> >>>>>>>>>>>>>>>>> PLLP freq is safe to work for any CPU voltage. So no
+> >>>>>>>>>>>>>>>>> need to enforce
+> >>>>>>>>>>>>>>>>> DFLL freq to PLLP rate before changing CCLK_G source
+> >>>>>>>>>>>>>>>>> to PLLP during
+> >>>>>>>>>>>>>>>>> suspend
+> >>>>>>>>>>>>>>>>>       =20
+> >>>>>>>>>>>>>>>> Sorry, please ignore my above comment. During
+> >>>>>>>>>>>>>>>> suspend, need to change
+> >>>>>>>>>>>>>>>> CCLK_G source to PLLP when dfll is in closed loop
+> >>>>>>>>>>>>>>>> mode first and
+> >>>>>>>>>>>>>>>> then
+> >>>>>>>>>>>>>>>> dfll need to be set to open loop. =20
+> >>>>>>>>>>>>>>> Okay.
+> >>>>>>>>>>>>>>>       =20
+> >>>>>>>>>>>>>>>>>>>> And I don't exactly understand why we need to
+> >>>>>>>>>>>>>>>>>>>> switch to PLLP in
+> >>>>>>>>>>>>>>>>>>>> CPU
+> >>>>>>>>>>>>>>>>>>>> idle
+> >>>>>>>>>>>>>>>>>>>> driver. Just keep it on CL-DVFS mode all the
+> >>>>>>>>>>>>>>>>>>>> time.
+> >>>>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>>> In SC7 entry, the dfll suspend function moves it
+> >>>>>>>>>>>>>>>>>>>> the open-loop
+> >>>>>>>>>>>>>>>>>>>> mode. That's
+> >>>>>>>>>>>>>>>>>>>> all. The sc7-entryfirmware will handle the rest
+> >>>>>>>>>>>>>>>>>>>> of the sequence to
+> >>>>>>>>>>>>>>>>>>>> turn off
+> >>>>>>>>>>>>>>>>>>>> the CPU power.
+> >>>>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>>> In SC7 resume, the warmboot code will handle the
+> >>>>>>>>>>>>>>>>>>>> sequence to
+> >>>>>>>>>>>>>>>>>>>> turn on
+> >>>>>>>>>>>>>>>>>>>> regulator and power up the CPU cluster. And leave
+> >>>>>>>>>>>>>>>>>>>> it on PLL_P.
+> >>>>>>>>>>>>>>>>>>>> After
+> >>>>>>>>>>>>>>>>>>>> resuming to the kernel, we re-init DFLL, restore
+> >>>>>>>>>>>>>>>>>>>> the CPU clock
+> >>>>>>>>>>>>>>>>>>>> policy (CPU
+> >>>>>>>>>>>>>>>>>>>> runs on DFLL open-loop mode) and then moving to
+> >>>>>>>>>>>>>>>>>>>> close-loop mode. =20
+> >>>>>>>>>>>>>>>>>> The DFLL is re-inited after switching CCLK to DFLL
+> >>>>>>>>>>>>>>>>>> parent during of
+> >>>>>>>>>>>>>>>>>> the
+> >>>>>>>>>>>>>>>>>> early clocks-state restoring by CaR driver. Hence
+> >>>>>>>>>>>>>>>>>> instead of having
+> >>>>>>>>>>>>>>>>>> odd
+> >>>>>>>>>>>>>>>>>> hacks in the CaR driver, it is much nicer to have a
+> >>>>>>>>>>>>>>>>>> proper suspend-resume sequencing of the device
+> >>>>>>>>>>>>>>>>>> drivers. In this case
+> >>>>>>>>>>>>>>>>>> CPUFreq
+> >>>>>>>>>>>>>>>>>> driver is the driver that enables DFLL and switches
+> >>>>>>>>>>>>>>>>>> CPU to that
+> >>>>>>>>>>>>>>>>>> clock
+> >>>>>>>>>>>>>>>>>> source, which means that this driver is also should
+> >>>>>>>>>>>>>>>>>> be responsible for
+> >>>>>>>>>>>>>>>>>> management of the DFLL's state during of
+> >>>>>>>>>>>>>>>>>> suspend/resume process. If
+> >>>>>>>>>>>>>>>>>> CPUFreq driver disables DFLL during suspend and
+> >>>>>>>>>>>>>>>>>> re-enables it
+> >>>>>>>>>>>>>>>>>> during
+> >>>>>>>>>>>>>>>>>> resume, then looks like the CaR driver hacks around
+> >>>>>>>>>>>>>>>>>> DFLL are not
+> >>>>>>>>>>>>>>>>>> needed.
+> >>>>>>>>>>>>>>>>>>       =20
+> >>>>>>>>>>>>>>>>>>>> The DFLL part looks good to me. BTW, change the
+> >>>>>>>>>>>>>>>>>>>> patch subject to
+> >>>>>>>>>>>>>>>>>>>> "Add
+> >>>>>>>>>>>>>>>>>>>> suspend-resume support" seems more appropriate to
+> >>>>>>>>>>>>>>>>>>>> me. =20
+> >>>>>>>>>>>>>>>>>>> To clarify this, the sequences for DFLL use are as
+> >>>>>>>>>>>>>>>>>>> follows (assuming
+> >>>>>>>>>>>>>>>>>>> all
+> >>>>>>>>>>>>>>>>>>> required DFLL hw configuration has been done)
+> >>>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>> Switch to DFLL:
+> >>>>>>>>>>>>>>>>>>> 0) Save current parent and frequency
+> >>>>>>>>>>>>>>>>>>> 1) Program DFLL to open loop mode
+> >>>>>>>>>>>>>>>>>>> 2) Enable DFLL
+> >>>>>>>>>>>>>>>>>>> 3) Change cclk_g parent to DFLL
+> >>>>>>>>>>>>>>>>>>> For OVR regulator:
+> >>>>>>>>>>>>>>>>>>> 4) Change PWM output pin from tristate to output
+> >>>>>>>>>>>>>>>>>>> 5) Enable DFLL PWM output
+> >>>>>>>>>>>>>>>>>>> For I2C regulator:
+> >>>>>>>>>>>>>>>>>>> 4) Enable DFLL I2C output
+> >>>>>>>>>>>>>>>>>>> 6) Program DFLL to closed loop mode
+> >>>>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>>>> Switch away from DFLL:
+> >>>>>>>>>>>>>>>>>>> 0) Change cclk_g parent to PLLP so the CPU
+> >>>>>>>>>>>>>>>>>>> frequency is ok for
+> >>>>>>>>>>>>>>>>>>> any
+> >>>>>>>>>>>>>>>>>>> vdd_cpu voltage
+> >>>>>>>>>>>>>>>>>>> 1) Program DFLL to open loop mode
+> >>>>>>>>>>>>>>>>>>>       =20
+> >>>>>>>>>>>>>>>> I see during switch away from DFLL (suspend), cclk_g
+> >>>>>>>>>>>>>>>> parent is not
+> >>>>>>>>>>>>>>>> changed to PLLP before changing dfll to open loop
+> >>>>>>>>>>>>>>>> mode.
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>> Will add this ... =20
+> >>>>>>>>>>>>>>> The CPUFreq driver switches parent to PLLP during the
+> >>>>>>>>>>>>>>> probe, similar
+> >>>>>>>>>>>>>>> should be done on suspend.
+> >>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>> I'm also wondering if it's always safe to switch to
+> >>>>>>>>>>>>>>> PLLP in the probe.
+> >>>>>>>>>>>>>>> If CPU is running on a lower freq than PLLP, then some
+> >>>>>>>>>>>>>>> other more
+> >>>>>>>>>>>>>>> appropriate intermediate parent should be selected.
+> >>>>>>>>>>>>>>>       =20
+> >>>>>>>>>>>>>> CPU parents are PLL_X, PLL_P, and dfll. PLL_X always
+> >>>>>>>>>>>>>> runs at higher
+> >>>>>>>>>>>>>> rate
+> >>>>>>>>>>>>>> so switching to PLL_P during CPUFreq probe prior to
+> >>>>>>>>>>>>>> dfll clock enable
+> >>>>>>>>>>>>>> should be safe. =20
+> >>>>>>>>>>>>> AFAIK, PLLX could run at ~200MHz. There is also a
+> >>>>>>>>>>>>> divided output of
+> >>>>>>>>>>>>> PLLP
+> >>>>>>>>>>>>> which CCLKG supports, the PLLP_OUT4.
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> Probably, realistically, CPU is always running off a
+> >>>>>>>>>>>>> fast PLLX during
+> >>>>>>>>>>>>> boot, but I'm wondering what may happen on KEXEC. I
+> >>>>>>>>>>>>> guess ideally CPUFreq driver should also have a
+> >>>>>>>>>>>>> 'shutdown' callback to teardown DFLL
+> >>>>>>>>>>>>> on a reboot, but likely that there are other
+> >>>>>>>>>>>>> clock-related problems as
+> >>>>>>>>>>>>> well that may break KEXEC and thus it is not very
+> >>>>>>>>>>>>> important at the
+> >>>>>>>>>>>>> moment.
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> [snip] =20
+> >>>>>>>>>>>> During bootup CPUG sources from PLL_X. By PLL_P source
+> >>>>>>>>>>>> above I meant
+> >>>>>>>>>>>> PLL_P_OUT4.
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> As per clock policies, PLL_X is always used for high freq
+> >>>>>>>>>>>> like =20
+> >>>>>>>>>>>>> 800Mhz =20
+> >>>>>>>>>>>> and for low frequency it will be sourced from PLLP. =20
+> >>>>>>>>>>> Alright, then please don't forget to pre-initialize
+> >>>>>>>>>>> PLLP_OUT4 rate to a
+> >>>>>>>>>>> reasonable value using tegra_clk_init_table or
+> >>>>>>>>>>> assigned-clocks. =20
+> >>>>>>>>>> PLLP_OUT4 rate update is not needed as it is safe to run at
+> >>>>>>>>>> 408Mhz because it is below fmax @ Vmin =20
+> >>>>>>>>> So even 204MHz CVB entries are having the same voltage as
+> >>>>>>>>> 408MHz, correct? It's not instantly obvious to me from the
+> >>>>>>>>> DFLL driver's code where the fmax @ Vmin is defined, I see
+> >>>>>>>>> that there is the min_millivolts
+> >>>>>>>>> and frequency entries starting from 204MHZ defined
+> >>>>>>>>> per-table. =20
+> >>>>>>>> Yes at Vmin CPU Fmax is ~800Mhz. So anything below that will
+> >>>>>>>> work at Vmin voltage and PLLP max is 408Mhz. =20
+> >>>>>>> Thank you for the clarification. It would be good to have that
+> >>>>>>> commented
+> >>>>>>> in the code as well. =20
+> >>>>>> OK, Will add... =20
+> >>>>> Regarding, adding suspend/resume to CPUFreq, CPUFreq suspend
+> >>>>> happens very early even before disabling non-boot CPUs and also
+> >>>>> need to export clock driver APIs to CPUFreq.
+> >>>>>
+> >>>>> Was thinking of below way of implementing this...
+> >>>>>
+> >>>>>
+> >>>>> Clock DFLL driver Suspend:
+> >>>>>
+> >>>>>   =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 - Save CPU clock policy reg=
+isters, and Perform dfll
+> >>>>> suspend which sets in open loop mode
+> >>>>>
+> >>>>> CPU Freq driver Suspend: does nothing
+> >>>>>
+> >>>>>
+> >>>>> Clock DFLL driver Resume:
+> >>>>>
+> >>>>>   =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 - Re-init DFLL, Set in Open=
+-Loop mode, restore CPU
+> >>>>> Clock policy registers which actually sets source to DFLL along
+> >>>>> with other CPU Policy register restore.
+> >>>>>
+> >>>>> CPU Freq driver Resume:
+> >>>>>
+> >>>>>   =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 - do clk_prepare_enable whi=
+ch acutally sets DFLL in
+> >>>>> Closed loop mode
+> >>>>>
+> >>>>>
+> >>>>> Adding one more note: Switching CPU Clock to PLLP is not needed
+> >>>>> as CPU CLock can be from dfll in open-loop mode as DFLL is not
+> >>>>> disabled anywhere throught the suspend/resume path and SC7 entry
+> >>>>> FW and Warm boot code will switch CPU source to PLLP. =20
+> >>> Since CPU resumes on PLLP, it will be cleaner to suspend it on
+> >>> PLLP as well. And besides, seems that currently disabling DFLL
+> >>> clock will disable DFLL completely and then you'd want to re-init
+> >>> the DFLL on resume any ways. So better to just disable DFLL
+> >>> completely on suspend, which should happen on clk_disable(dfll). =20
+> >> Will switch to PLLP during CPUFreq suspend. With decision of using
+> >> clk_disable during suspend, its mandatory to switch to PLLP as DFLL
+> >> is completely disabled.
+> >>
+> >> My earlier concern was on restoring CPU policy as we can't do that
+> >> from CPUFreq driver and need export from clock driver.
+> >>
+> >> Clear now and will do CPU clock policy restore in after dfll
+> >> re-init. =20
+> > Why the policy can't be saved/restored by the CaR driver as a
+> > context of any other clock? =20
+>=20
+> restoring cpu clock policy involves programming source and=20
+> super_cclkg_divider.
+>=20
+> cclk_g is registered as clk_super_mux and it doesn't use frac_div ops
+> to do save/restore its divider.
 
-1. Debug serial via UART2
-2. uSD
-3. WiFi
-4. Ethernet
+That can be changed of course and I guess it also could be as simple as
+saving and restoring of two raw u32 values of the policy/divider
+registers.
 
-More information about this board can be found in Arrow website:
-https://www.arrow.com/en/products/imx8-ai-ml/arrow-development-tools
+> Also, during clock context we cant restore cclk_g as cclk_g source
+> will be dfll and dfll will not be resumed/re-initialized by the time=20
+> clk_super_mux save/restore happens.
+>=20
+> we can't use save/restore context for dfll clk_ops because
+> dfllCPU_out parent to CCLK_G is first in the clock tree and dfll_ref
+> and dfll_soc peripheral clocks are not restored by the time dfll
+> restore happens. Also dfll peripheral clock enables need to be
+> restored before dfll restore happens which involves programming dfll
+> controller for re-initialization.
+>=20
+> So dfll resume/re-init is done in clk-tegra210 at end of all clocks=20
+> restore in V5 series but instead of in clk-tegra210 driver I moved
+> now to dfll-fcpu driver pm_ops as all dfll dependencies will be
+> restored thru clk_restore_context by then. This will be in V6.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../boot/dts/freescale/imx8qxp-ai_ml.dts      | 249 ++++++++++++++++++
- 2 files changed, 250 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
-
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 0bd122f60549..bd8460549d1a 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -24,4 +24,5 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts b/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
-new file mode 100644
-index 000000000000..dcd36e57d916
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
-@@ -0,0 +1,249 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2018 Einfochips
-+ * Copyright 2019 Linaro Ltd.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx8qxp.dtsi"
-+
-+/ {
-+	model = "Einfochips i.MX8QXP AI_ML";
-+	compatible = "einfochips,imx8qxp-ai_ml", "fsl,imx8qxp";
-+
-+	aliases {
-+		serial1 = &adma_lpuart1;
-+		serial2 = &adma_lpuart2;
-+		serial3 = &adma_lpuart3;
-+	};
-+
-+	chosen {
-+		stdout-path = &adma_lpuart2;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000 0 0x80000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_leds>;
-+
-+		user_led1 {
-+			label = "green:user1";
-+			gpios = <&lsio_gpio4 16 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		user_led2 {
-+			label = "green:user2";
-+			gpios = <&lsio_gpio0 6 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "none";
-+		};
-+
-+		user_led3 {
-+			label = "green:user3";
-+			gpios = <&lsio_gpio0 7 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc1";
-+			default-state = "off";
-+		};
-+
-+		user_led4 {
-+			label = "green:user4";
-+			gpios = <&lsio_gpio4 21 GPIO_ACTIVE_HIGH>;
-+			panic-indicator;
-+			linux,default-trigger = "none";
-+		};
-+
-+		wlan_active_led {
-+			label = "yellow:wlan";
-+			gpios = <&lsio_gpio4 17 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "phy0tx";
-+			default-state = "off";
-+		};
-+
-+		bt_active_led {
-+			label = "blue:bt";
-+			gpios = <&lsio_gpio4 18 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "hci0-power";
-+			default-state = "off";
-+		};
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wifi_reg_on>;
-+		reset-gpios = <&lsio_gpio3 24 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+/* BT */
-+&adma_lpuart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart0>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+/* LS-I2C0 */
-+&adma_lpuart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart1>;
-+	status = "okay";
-+};
-+
-+/* Debug */
-+&adma_lpuart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart2>;
-+	status = "okay";
-+};
-+
-+/* PCI-E */
-+&adma_lpuart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart3>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+/* WiFi */
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	bus-width = <4>;
-+	no-sd;
-+	non-removable;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
-+
-+/* SD */
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	cd-gpios = <&lsio_gpio4 22 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			IMX8QXP_ENET0_MDC_CONN_ENET0_MDC			0x06000020
-+			IMX8QXP_ENET0_MDIO_CONN_ENET0_MDIO			0x06000020
-+			IMX8QXP_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL	0x06000020
-+			IMX8QXP_ENET0_RGMII_TXC_CONN_ENET0_RGMII_TXC		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD2_CONN_ENET0_RGMII_TXD2		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD3_CONN_ENET0_RGMII_TXD3		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXC_CONN_ENET0_RGMII_RXC		0x06000020
-+			IMX8QXP_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL	0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3		0x06000020
-+		>;
-+	};
-+
-+	pinctrl_leds: ledsgrp{
-+		fsl,pins = <
-+			IMX8QXP_ESAI0_TX2_RX3_LSIO_GPIO0_IO06			0x00000021
-+			IMX8QXP_ESAI0_TX3_RX2_LSIO_GPIO0_IO07			0x00000021
-+			IMX8QXP_EMMC0_DATA7_LSIO_GPIO4_IO16			0x00000021
-+			IMX8QXP_USDHC1_WP_LSIO_GPIO4_IO21			0x00000021
-+			IMX8QXP_EMMC0_STROBE_LSIO_GPIO4_IO17			0x00000021
-+			IMX8QXP_EMMC0_RESET_B_LSIO_GPIO4_IO18			0x00000021
-+		>;
-+	};
-+
-+	pinctrl_lpuart0: lpuart0grp {
-+		fsl,pins = <
-+			IMX8QXP_UART0_RX_ADMA_UART0_RX				0X06000020
-+			IMX8QXP_UART0_TX_ADMA_UART0_TX				0X06000020
-+			IMX8QXP_FLEXCAN0_TX_ADMA_UART0_CTS_B 			0x06000020
-+			IMX8QXP_FLEXCAN0_RX_ADMA_UART0_RTS_B			0x06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart1: lpuart1grp {
-+		fsl,pins = <
-+			IMX8QXP_UART1_RX_ADMA_UART1_RX				0X06000020
-+			IMX8QXP_UART1_TX_ADMA_UART1_TX				0X06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart2: lpuart2grp {
-+		fsl,pins = <
-+			IMX8QXP_UART2_RX_ADMA_UART2_RX				0X06000020
-+			IMX8QXP_UART2_TX_ADMA_UART2_TX				0X06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart3: lpuart3grp {
-+		fsl,pins = <
-+			IMX8QXP_FLEXCAN2_RX_ADMA_UART3_RX			0X06000020
-+			IMX8QXP_FLEXCAN2_TX_ADMA_UART3_TX			0X06000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK			0x06000041
-+			IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD			0x00000021
-+			IMX8QXP_EMMC0_DATA0_CONN_EMMC0_DATA0			0x00000021
-+			IMX8QXP_EMMC0_DATA1_CONN_EMMC0_DATA1			0x00000021
-+			IMX8QXP_EMMC0_DATA2_CONN_EMMC0_DATA2			0x00000021
-+			IMX8QXP_EMMC0_DATA3_CONN_EMMC0_DATA3			0x00000021
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK			0x06000041
-+			IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD			0x00000021
-+			IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0			0x00000021
-+			IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1			0x00000021
-+			IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2			0x00000021
-+			IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3			0x00000021
-+			IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT		0x00000021
-+			IMX8QXP_USDHC1_CD_B_LSIO_GPIO4_IO22			0x00000021
-+		>;
-+	};
-+
-+	pinctrl_wifi_reg_on: wifiregongrp {
-+		fsl,pins = <
-+			IMX8QXP_QSPI0B_SS1_B_LSIO_GPIO3_IO24			0x00000021
-+		>;
-+	};
-+};
--- 
-2.17.1
+Since DFLL is now guaranteed to be disabled across CaR suspend/resume
+(hence it has nothing to do in regards to CCLK) and given that PLLs
+state is restored before the rest of the clocks, I don't see why not to
+implement CCLK save/restore in a generic fasion. CPU policy wull be
+restored to either PLLP or PLLX (if CPUFreq driver is disabled).
