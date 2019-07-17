@@ -1,259 +1,82 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: Add support for i.MX6 UltraLite DART
- Variscite Customboard
-Date: Wed, 17 Jul 2019 17:05:18 +0800
-Message-ID: <20190717090517.GF3738@dragon>
-References: <1561398017-10548-1-git-send-email-oliver.graute@gmail.com>
- <1561398017-10548-3-git-send-email-oliver.graute@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 2/3] rtc: Add support for the MediaTek MT2712 RTC
+Date: Wed, 17 Jul 2019 11:06:55 +0200
+Message-ID: <20190717090655.GA21823@piout.net>
+References: <20190702032120.16539-1-ran.bi@mediatek.com>
+ <20190702032120.16539-3-ran.bi@mediatek.com>
+ <20190713211231.GD4732@piout.net>
+ <1563353694.19945.33.camel@mhfsdcap03>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1561398017-10548-3-git-send-email-oliver.graute@gmail.com>
+In-Reply-To: <1563353694.19945.33.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oliver Graute <oliver.graute@gmail.com>
-Cc: narmstrong@baylibre.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Ran Bi <ran.bi@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Flora Fu <flora.fu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 07:40:13PM +0200, Oliver Graute wrote:
-> This patch adds DeviceTree Source for the i.MX6 UltraLite DART NAND/WIFI
+On 17/07/2019 16:54:54+0800, Ran Bi wrote:
+> > > +
+> > > +/* we map HW YEAR 0 to 1968 not 1970 because 2000 is the leap year */
+> > > +#define RTC_MIN_YEAR		1968
+> > > +#define RTC_BASE_YEAR		1900
+> > > +#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
+> > 
+> > Do not do that. If this RTC range starts in 200, ths is what the driver
+> > has to support, you should not care about dates before 2000. Note that
+> > the RTC core can still properly shift the range if it is absolutely
+> > necessary.
+> > 
 > 
-> Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
-> ---
->  arch/arm/boot/dts/Makefile                      |   1 +
->  arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts | 203 ++++++++++++++++++++++++
->  2 files changed, 204 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+> Do we need to care about default alarm date 1970-01-01? Or can I just
+> set it to 2000-01-01?
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index c4742af..5dc3fbf 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -577,6 +577,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
->  	imx6ul-tx6ul-0010.dtb \
->  	imx6ul-tx6ul-0011.dtb \
->  	imx6ul-tx6ul-mainboard.dtb \
-> +	imx6ul-var-6ulcustomboard.dtb \
->  	imx6ull-14x14-evk.dtb \
->  	imx6ull-colibri-eval-v3.dtb \
->  	imx6ull-colibri-wifi-eval-v3.dtb \
-> diff --git a/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-> new file mode 100644
-> index 0000000..59354e6
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-> @@ -0,0 +1,203 @@
-> +// SPDX-License-Identifier: (GPL-2.0)
-> +/*
-> + * Support for Variscite DART-6UL Module
-> + *
-> + * Copyright (C) 2015 Freescale Semiconductor, Inc.
-> + * Copyright (C) 2015-2016 Variscite Ltd. - http://www.variscite.com
-> + * Copyright (C) 2018-2019 Oliver Graute <oliver.graute@gmail.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/input/input.h>
-> +#include "imx6ul-imx6ull-var-dart-common.dtsi"
-> +
-> +/ {
-> +	model = "Variscite i.MX6 UltraLite Carrier-board";
-> +	compatible = "fsl,6ulcustomboard", "fsl,imx6ul";
 
-The board compatible is documented?
+You never have to set a default value. It doesn't add any value versus
+an unknown value.
 
-> +
-> +	backlight {
-> +		compatible = "pwm-backlight";
-> +		pwms = <&pwm1 0 20000>;
-> +		brightness-levels = <0 4 8 16 32 64 128 255>;
-> +		default-brightness-level = <6>;
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +
-> +		user {
-> +			gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-> +			linux,code = <KEY_BACK>;
-> +			gpio-key,wakeup;
-> +		};
-> +	};
-> +
-> +	gpio-leds {
-> +		compatible = "gpio-leds";
-> +
-> +		d16-led {
-> +			gpios = <&gpio4 20 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +
-> +	sound {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "wm8731audio";
-> +		simple-audio-card,widgets =
-> +			"Headphone", "Headphone Jack",
-> +			"Line", "Line Jack",
-> +			"Microphone", "Mic Jack";
-> +		simple-audio-card,routing =
-> +			"Headphone Jack", "RHPOUT",
-> +			"Headphone Jack", "LHPOUT",
-> +			"LLINEIN", "Line Jack",
-> +			"RLINEIN", "Line Jack",
-> +			"MICIN", "Mic Bias",
-> +			"Mic Bias", "Mic Jack";
-> +		simple-audio-card,format = "i2s";
-> +		simple-audio-card,bitclock-master = <&sound_master>;
-> +		simple-audio-card,frame-master = <&sound_master>;
-> +
-> +		sound_master: simple-audio-card,cpu {
-> +				sound-dai = <&sai2>;
-> +		};
-> +	};
-> +};
-> +
-> +&can1 {
-> +	status = "okay";
-> +};
-> +
-> +&can2 {
-> +	status = "okay";
-> +};
-> +
-> +&gpc {
-> +	fsl,cpu_pupscr_sw2iso = <0x2>;
-> +	fsl,cpu_pupscr_sw = <0x1>;
-> +	fsl,cpu_pdnscr_iso2sw = <0x1>;
-> +	fsl,cpu_pdnscr_iso = <0x1>;
-> +	fsl,ldo-bypass = <0>; /* DCDC, ldo-enable */
-
-These are not supported by mainline kernel, IIRC.
-
-Shawn
-
-> +};
-> +
-> +&fec1 {
-> +	phy-mode = "rgmii";
-> +	phy-reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-> +	phy-handle = <&ethphy0>;
-> +	status = "okay";
-> +};
-> +
-> +&fec2 {
-> +	phy-mode = "rgmii";
-> +	phy-reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
-> +	phy-handle = <&ethphy1>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c1 {
-> +	clock-frequency = <400000>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c2 {
-> +	clock_frequency = <100000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c2>;
-> +	status = "okay";
-> +
-> +	wm8731: audio-codec@1a {
-> +		#sound-dai-cells = <0>;
-> +		compatible = "wlf,wm8731";
-> +		reg = <0x1a>;
-> +		clocks = <&clks IMX6UL_CLK_SAI2>;
-> +		clock-names = "mclk";
-> +	};
-> +
-> +	touchscreen@38 {
-> +		compatible = "edt,edt-ft5x06";
-> +		reg = <0x38>;
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <4 0>;
-> +		touchscreen-size-x = <800>;
-> +		touchscreen-size-y = <480>;
-> +		touchscreen-inverted-x;
-> +		touchscreen-inverted-y;
-> +	};
-> +
-> +	rtc@68 {
-> +		compatible = "dallas,ds1337";
-> +		reg = <0x68>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_rtc>;
-> +		interrupt-parent = <&gpio5>;
-> +		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-> +	};
-> +};
-> +
-> +&lcdif {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_lcdif_dat
-> +		     &pinctrl_lcdif_ctrl>;
-> +	display = <&display0>;
-> +	status = "okay";
-> +
-> +	display0: display0 {
-> +		bits-per-pixel = <16>;
-> +		bus-width = <24>;
-> +
-> +		display-timings {
-> +			native-mode = <&timing0>;
-> +			timing0: timing0 {
-> +				clock-frequency =<35000000>;
-> +				hactive = <800>;
-> +				vactive = <480>;
-> +				hfront-porch = <40>;
-> +				hback-porch = <40>;
-> +				hsync-len = <48>;
-> +				vback-porch = <29>;
-> +				vfront-porch = <13>;
-> +				vsync-len = <3>;
-> +				hsync-active = <0>;
-> +				vsync-active = <0>;
-> +				de-active = <1>;
-> +				pixelclk-active = <0>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&pwm1 {
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +};
-> +
-> +&uart3 {
-> +	status = "okay";
-> +};
-> +
-> +&usbotg1 {
-> +	dr_mode = "host";
-> +	status = "okay";
-> +};
-> +
-> +&usbotg2 {
-> +	dr_mode = "host";
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl_rtc: rtcgrp {
-> +		fsl,pins = <
-> +			MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
-> +		>;
-> +	};
-> +};
-> -- 
-> 2.7.4
+> > > +
+> > > +static inline u32 rtc_readl(struct mt2712_rtc *rtc, u32 reg)
+> > 
+> > Please use a more descriptive prefix than just rtc_.
+> > 
 > 
+> Do you mean it's better to use prefix "mt2712_rtc_"?
+> 
+
+Yes.
+
+> > > +
+> > > +	/*
+> > > +	 * register status was not correct,
+> > > +	 * need set time and alarm to default
+> > > +	 */
+> > > +	if (p1 != RTC_POWERKEY1_KEY || p2 != RTC_POWERKEY2_KEY
+> > > +	    || !valid_rtc_time(rtc)) {
+> > > +		reset_rtc_time(rtc);
+> > 
+> > Do not do that. This is valuable information. If the time is invalid,
+> > report it as such in read_time and read_alarm. Resetting the time here
+> > will lead to more issues later (i.e. userspace is not able to know
+> > whether the time is set correctly or not).
+> > 
+> 
+> When RTC's power run out, RTC will lost it's registers value and time
+> data at next boot up. We even cannot know what the date and time it
+> shows. We want to check this state here and set a default RTC date. Do
+> you think it's no need here and the date should be set by system?
+> 
+
+If I understand correctly, the POWERKEY register will lose their value.
+This means that you know that the time is incorrect. instead of setting
+it to a default value and losing that valuable information, simply check
+for that in read_time and return EINVAL in that case. then on the next
+set_time invocation, you can set the POWERKEY registers and set the time
+to a known value.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
