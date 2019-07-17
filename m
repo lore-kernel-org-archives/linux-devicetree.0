@@ -1,29 +1,151 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v1 21/50] ARM: dts: exynos: add OPP into FSYS APB bus in Exynos5420
-Date: Wed, 17 Jul 2019 10:48:10 +0200
-Message-ID: <CAJKOXPd0kzwZ9_eCK9r04Qj0Rf5SSSnMmwDj11cZozmu0gqsgw@mail.gmail.com>
-References: <CGME20190715124451eucas1p2904b49f59cca0cbbc22381f168affbb5@eucas1p2.samsung.com>
- <20190715124417.4787-1-l.luba@partner.samsung.com> <20190715124417.4787-22-l.luba@partner.samsung.com>
+From: Ran Bi <ran.bi@mediatek.com>
+Subject: Re: [PATCH 2/3] rtc: Add support for the MediaTek MT2712 RTC
+Date: Wed, 17 Jul 2019 16:54:54 +0800
+Message-ID: <1563353694.19945.33.camel@mhfsdcap03>
+References: <20190702032120.16539-1-ran.bi@mediatek.com>
+         <20190702032120.16539-3-ran.bi@mediatek.com>
+         <20190713211231.GD4732@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190715124417.4787-22-l.luba@partner.samsung.com>
+In-Reply-To: <20190713211231.GD4732@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Flora Fu <flora.fu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 15 Jul 2019 at 14:44, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Add an OPP for FSYS APB which reflects the real possible frequency.
-> The bus will have a new parent clock which speed has 600MHz, thus
-> a new possible frequency provided by the clock divider is 150MHz.
-> According to the documentation max possible frequency for this bus is
-> 200MHz.
+Hi Belloni,
 
-Commit msg is good but title could be improved. Focus in the title
-what problem/issue you are solving - add intermediate step in scaling
-of FSYS APB?
+On Sat, 2019-07-13 at 23:12 +0200, Alexandre Belloni wrote:
 
-Best regards,
-Krzysztof
+> > +#define RTC_BBPU		0x0000
+> > +#define RTC_BBPU_CLRPKY		(1U << 4)
+> 
+> Please use BIT(). Also, I don't feel that the RTC prefix is adding any
+> value. MT2712 would be a better choice here.
+> 
+
+Will change to MT2712 at next patch.
+
+> > +
+> > +/* we map HW YEAR 0 to 1968 not 1970 because 2000 is the leap year */
+> > +#define RTC_MIN_YEAR		1968
+> > +#define RTC_BASE_YEAR		1900
+> > +#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
+> 
+> Do not do that. If this RTC range starts in 200, ths is what the driver
+> has to support, you should not care about dates before 2000. Note that
+> the RTC core can still properly shift the range if it is absolutely
+> necessary.
+> 
+
+Do we need to care about default alarm date 1970-01-01? Or can I just
+set it to 2000-01-01?
+
+> > +
+> > +static inline u32 rtc_readl(struct mt2712_rtc *rtc, u32 reg)
+> 
+> Please use a more descriptive prefix than just rtc_.
+> 
+
+Do you mean it's better to use prefix "mt2712_rtc_"?
+
+> > +		mutex_lock(&rtc->lock);
+> 
+> You should take rtc->rtc_dev->ops_lock. This would remove the need for
+> rtc->lock.
+> 
+
+Will change it at next patch.
+
+> > +	tm->tm_year += RTC_MIN_YEAR_OFFSET;
+> > +
+> 
+> As stated before, do not do that, simply add 100.
+> 
+
+Will change it at next patch.
+
+> > +	/* rtc_tm_to_time64 convert Gregorian date to seconds since
+> > +	 * 01-01-1970 00:00:00, and this date is Thursday
+> > +	 */
+> > +	time = rtc_tm_to_time64(tm);
+> > +	days = div_s64(time, 86400);
+> > +	tm->tm_wday = (days + 4) % 7;
+> > +
+> 
+> This is not necessary, nobody cares about tm_wday, if you don't have it,
+> do not set it.
+> 
+
+Will remove this part at next patch.
+
+> > +	dev_info(rtc->dev, "set al time = %04d-%02d-%02d %02d:%02d:%02d (%d)\n",
+> 
+> Do not use dev_info, dev_dbg is probably what you want here. Also, use
+> %ptR.
+> 
+
+Will change it at next patch.
+
+> > +	mutex_lock(&rtc->lock);
+> 
+> You probably need to disable the alarm before starting to modify the
+> registers.
+> 
+
+Will change it at next patch.
+
+> > +static bool valid_rtc_time(struct mt2712_rtc *rtc)
+> 
+> This function is not necessary, see later.
+> 
+
+Will change it at next patch.
+
+> > +	rtc_writel(rtc, RTC_IRQ_EN,  0);
+> 
+> Are you sure you want to disable interrupts every time you reboot? I
+> guess the RTC has its own power domain and may be used across reboots.
+> 
+
+Will remove this at next patch.
+
+> > +	dev_info(rtc->dev, "%s rtc p1 is %x, p2 is %x!\n", __func__, p1, p2);
+> 
+> This debug message has to be removed.
+> 
+
+Will remove this at next patch.
+
+> > +
+> > +	/*
+> > +	 * register status was not correct,
+> > +	 * need set time and alarm to default
+> > +	 */
+> > +	if (p1 != RTC_POWERKEY1_KEY || p2 != RTC_POWERKEY2_KEY
+> > +	    || !valid_rtc_time(rtc)) {
+> > +		reset_rtc_time(rtc);
+> 
+> Do not do that. This is valuable information. If the time is invalid,
+> report it as such in read_time and read_alarm. Resetting the time here
+> will lead to more issues later (i.e. userspace is not able to know
+> whether the time is set correctly or not).
+> 
+
+When RTC's power run out, RTC will lost it's registers value and time
+data at next boot up. We even cannot know what the date and time it
+shows. We want to check this state here and set a default RTC date. Do
+you think it's no need here and the date should be set by system?
+
+> > +	ret = request_threaded_irq(rtc->irq, NULL,
+> 
+> devm_request_threaded_irq would remove the need for out_free_irq and
+> mtk_rtc_remove().
+> 
+
+Will change it at next patch. And will remove mtk_rtc_remove() function.
+
+--
+Ran Bi, MediaTek
