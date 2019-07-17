@@ -1,7 +1,7 @@
 From: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v3 1/3] dt-bindings: leds: document the "power-supply" property
-Date: Wed, 17 Jul 2019 15:59:46 +0200
-Message-ID: <20190717135948.19340-2-jjhiblot@ti.com>
+Subject: [PATCH v3 3/3] leds: Make led_set_brightness_sync() also use __led_set_brightness()
+Date: Wed, 17 Jul 2019 15:59:48 +0200
+Message-ID: <20190717135948.19340-4-jjhiblot@ti.com>
 References: <20190717135948.19340-1-jjhiblot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,37 +12,41 @@ To: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@a
 Cc: dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Sometimes LEDs are powered by a voltage/current regulator. Describing it
-in the device-tree makes it possible for the LED core to enable/disable it
-when needed.
+There are some LED drivers that do not implement brightness_set_blocking(),
+for those drivers led_set_brightness_sync() cannot work.
+Fixing it by calling first __led_set_brightness() and falling back to
+__led_set_brightness_blocking() if it failed.
 
 Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
 ---
- Documentation/devicetree/bindings/leds/common.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/leds/led-core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-index 70876ac11367..f496ec1c1542 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -61,6 +61,9 @@ Optional properties for child nodes:
- - panic-indicator : This property specifies that the LED should be used,
- 		    if at all possible, as a panic indicator.
+diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+index dab32cf778f2..4a0506081c0e 100644
+--- a/drivers/leds/led-core.c
++++ b/drivers/leds/led-core.c
+@@ -320,15 +320,19 @@ int led_set_brightness_sync(struct led_classdev *led_cdev,
+ 	if (led_cdev->blink_delay_on || led_cdev->blink_delay_off)
+ 		return -EBUSY;
  
-+- power-supply : Is a phandle to a voltage/current regulator used to to power
-+		 the LED.
+-	led_cdev->brightness = min(value, led_cdev->max_brightness);
++	value = min(value, led_cdev->max_brightness);
+ 
+ 	if (led_cdev->flags & LED_SUSPENDED)
+ 		return 0;
+ 
+-	ret = __led_set_brightness_blocking(led_cdev, led_cdev->brightness);
++	ret = __led_set_brightness(led_cdev, value);
++	if (ret == -ENOTSUPP)
++		ret = __led_set_brightness_blocking(led_cdev, value);
+ 	if (ret)
+ 		return ret;
+ 
++	led_cdev->brightness = value;
 +
- - trigger-sources : List of devices which should be used as a source triggering
- 		    this LED activity. Some LEDs can be related to a specific
- 		    device and should somehow indicate its state. E.g. USB 2.0
-@@ -106,6 +109,7 @@ gpio-leds {
- 		label = "Status";
- 		linux,default-trigger = "heartbeat";
- 		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
-+		power-supply = <&led_regulator>;
- 	};
- 
- 	usb {
+ 	return __led_handle_regulator(led_cdev, led_cdev->brightness);
+ }
+ EXPORT_SYMBOL_GPL(led_set_brightness_sync);
 -- 
 2.17.1
