@@ -1,86 +1,24 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: RE: [EXT] Re: [v5,2/2] Documentation: dt: binding: rtc: add binding
- for ftm alarm driver
-Date: Wed, 17 Jul 2019 10:05:13 +0000
-Message-ID: <DB7PR04MB44902483232D323AF611D6298FC90@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190716101655.47418-1-biwen.li@nxp.com>
- <20190716101655.47418-2-biwen.li@nxp.com>
- <CAL_Jsq+U=W_51qUDvOMPgexMOLuqTyYua5H6G-cwFnKCh8YmPg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v1 26/50] ARM: dts: exynos: align NOC100 bus OPPs in Exynos5420
+Date: Wed, 17 Jul 2019 12:10:13 +0200
+Message-ID: <CAJKOXPc3qsM5Xe5JViDZXYfes+_veb-KX3fnZjpkUCrphBcu-Q@mail.gmail.com>
+References: <CGME20190715124455eucas1p13bfc0c1d113225db9607e4c0dbac353c@eucas1p1.samsung.com>
+ <20190715124417.4787-1-l.luba@partner.samsung.com> <20190715124417.4787-27-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+U=W_51qUDvOMPgexMOLuqTyYua5H6G-cwFnKCh8YmPg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190715124417.4787-27-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Leo Li <leoyang.li@nxp.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-PiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBPbiBUdWUsIEp1bCAxNiwgMjAxOSBhdCA0
-OjI2IEFNIEJpd2VuIExpIDxiaXdlbi5saUBueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IFRoZSBw
-YXRjaCBhZGRzIGJpbmRpbmcgZm9yIGZ0bSBhbGFybSBkcml2ZXINCj4gDQo+IEJpbmRpbmdzIGFy
-ZSBmb3IgaC93LCBub3QgZHJpdmVycy4uLg0KPiANCj4gJ2R0LWJpbmRpbmdzOiBydGM6IC4uLicg
-Zm9yIHRoZSBzdWJqZWN0IHByZWZpeC4NCkkgd2lsbCBjb3JyZWN0IGl0IGluIHY2Lg0KPiANCj4g
-Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpd2VuIExpIDxiaXdlbi5saUBueHAuY29tPg0KPiA+IC0t
-LQ0KPiA+IENoYW5nZSBpbiB2NToNCj4gPiAgICAgLSBOb25lDQo+ID4NCj4gPiBDaGFuZ2UgaW4g
-djQ6DQo+ID4gICAgIC0gYWRkIG5vdGUgYWJvdXQgZHRzIGFuZCBrZXJuZWwgb3B0aW9ucw0KPiA+
-ICAgICAtIGFkZCBhbGlhc2VzIGluIGV4YW1wbGUNCj4gPg0KPiA+IENoYW5nZSBpbiB2MzoNCj4g
-PiAgICAgICAgIC0gcmVtb3ZlIHJlZy1uYW1lcyBwcm9wZXJ0eQ0KPiA+ICAgICAgICAgLSBjb3Jy
-ZWN0IGNlbGxzIG51bWJlcg0KPiA+DQo+ID4gQ2hhbmdlIGluIHYyOg0KPiA+ICAgICAgICAgLSBy
-ZXBsYWNlIGxzMTA0M2Egd2l0aCBsczEwODhhIGFzIGV4YW1wbGUNCj4gPiAgICAgICAgIC0gYWRk
-IHJjcG0gbm9kZSBhbmQgZnNsLHJjcG0td2FrZXVwIHByb3BlcnR5DQo+ID4NCj4gPg0KPiA+ICAu
-Li4vYmluZGluZ3MvcnRjL3J0Yy1mc2wtZnRtLWFsYXJtLnR4dCAgICAgICAgfCA0OSArKysrKysr
-KysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0OSBpbnNlcnRpb25zKCspDQo+ID4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9ydGMvcnRjLWZzbC1mdG0tYWxhcm0udHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcnRjL3J0Yy1mc2wtZnRtLWFsYXJtLnR4
-dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9ydGMtZnNsLWZ0
-bS1hbGFybS50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAw
-MDAwMC4uZmIwMTgwNjU0MDZjDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvcnRjLWZzbC1mdG0tYWxhcm0udHh0DQo+ID4g
-QEAgLTAsMCArMSw0OSBAQA0KPiA+ICtGcmVlc2NhbGUgRmxleFRpbWVyIE1vZHVsZSAoRlRNKSBB
-bGFybQ0KPiA+ICsNCj4gPiArTm90ZToNCj4gPiArLSBUaGUgZHJpdmVyIGRlcGVuZHMgb24gUkNQ
-TSBkcml2ZXINCj4gPiArICB0byB3YWtlIHVwIHN5c3RlbSBpbiBzbGVlcC4NCj4gPiArLSBOZWVk
-IHN0b3AgdXNpbmcgUlRDX0hDVE9TWVMgb3IgdXNlIHRoZSBEVCBhbGlhc2VzDQo+ID4gKyAgdG8g
-ZW5zdXJlIHRoZSBkcml2ZXIgaXMgbm90IHVzZWQgYXMgdGhlIHByaW1hcnkgUlRDLg0KPiA+ICsg
-IChTZWxlY3QgRFQgYWxpYXNlcyBkZWZhdWx0bHkpDQo+IA0KPiBUaGlzIGlzIExpbnV4IHNwZWNp
-ZmljIGFuZCBub3QgcmVsZXZhbnQgdG8gdGhlIGJpbmRpbmcuDQpPaywgSSB3aWxsIHJlbW92ZSBh
-bGwgb2YgdGhlIE5vdGUgaW4gdjYuDQo+IA0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGll
-czoNCj4gPiArLSBjb21wYXRpYmxlIDogU2hvdWxkIGJlICJmc2wsPGNoaXA+LWZ0bS1hbGFybSIs
-IHRoZQ0KPiA+ICsgICAgICAgICAgICAgIHN1cHBvcnRlZCBjaGlwcyBpbmNsdWRlDQo+ID4gKyAg
-ICAgICAgICAgICAgImZzbCxsczEwMTJhLWZ0bS1hbGFybSINCj4gPiArICAgICAgICAgICAgICAi
-ZnNsLGxzMTAyMWEtZnRtLWFsYXJtIg0KPiA+ICsgICAgICAgICAgICAgICJmc2wsbHMxMDI4YS1m
-dG0tYWxhcm0iDQo+ID4gKyAgICAgICAgICAgICAgImZzbCxsczEwNDNhLWZ0bS1hbGFybSINCj4g
-PiArICAgICAgICAgICAgICAiZnNsLGxzMTA0NmEtZnRtLWFsYXJtIg0KPiA+ICsgICAgICAgICAg
-ICAgICJmc2wsbHMxMDg4YS1mdG0tYWxhcm0iDQo+ID4gKyAgICAgICAgICAgICAgImZzbCxsczIw
-OHhhLWZ0bS1hbGFybSINCj4gPiArLSByZWcgOiBTcGVjaWZpZXMgYmFzZSBwaHlzaWNhbCBhZGRy
-ZXNzIGFuZCBzaXplIG9mIHRoZSByZWdpc3RlciBzZXRzDQo+ID4gK2ZvciB0aGUNCj4gPiArICBG
-bGV4VGltZXIgTW9kdWxlIGFuZCBiYXNlIHBoeXNpY2FsIGFkZHJlc3Mgb2YgSVAgUG93ZXJkb3du
-DQo+ID4gK0V4Y2VwdGlvbiBDb250cm9sDQo+ID4gKyAgUmVnaXN0ZXIuDQo+ID4gKy0gaW50ZXJy
-dXB0cyA6IFNob3VsZCBiZSB0aGUgRmxleFRpbWVyIE1vZHVsZSBpbnRlcnJ1cHQuDQo+ID4gKy0g
-ZnNsLHJjcG0td2FrZXVwIHByb3BlcnR5IGFuZCByY3BtIG5vZGUgOiBQbGVhc2UgcmVmZXINCj4g
-PiArICAgICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL3JjcG0u
-dHh0DQo+ID4gKw0KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICstIGJpZy1lbmRpYW46
-IElmIHRoZSBob3N0IGNvbnRyb2xsZXIgaXMgYmlnLWVuZGlhbiBtb2RlLCBzcGVjaWZ5IHRoaXMg
-cHJvcGVydHkuDQo+ID4gKyAgVGhlIGRlZmF1bHQgZW5kaWFuIG1vZGUgaXMgbGl0dGxlLWVuZGlh
-bi4NCj4gPiArDQo+ID4gK0V4YW1wbGU6DQo+ID4gK2FsaWFzZXMgew0KPiA+ICsgICAgICAgLi4u
-DQo+ID4gKyAgICAgICBydGMxID0gZnRtX2FsYXJtMDsgLyogVXNlIGZsZXh0aW1lciBhbGFybSBk
-cml2ZXIgYXMgL2Rldi9ydGMxICovDQo+ID4gKyAgICAgICAuLi4NCj4gPiArfTsNCj4gDQo+IERy
-b3AgdGhlIGFsaWFzZXMgcGFydC4gSXQncyBub3QgZ29pbmcgdG8gd29yayB3aGVuIHRoaXMgaXMg
-Y29udmVydGVkIHRvIERUIHNjaGVtYQ0KPiBhbmQgdGhlIGNvbW1lbnQgaXMgTGludXggc3BlY2lm
-aWMuDQpTb3JyeSxJIGNhbid0IGRyb3AgdGhlIGFsaWFzZXMgcGFydC4gSWYgYW55IHVzZXIgdXNl
-cyB0aGUgYWxhcm0gZHJpdmVyIGFzIHJ0YzAsDQp0aGUgdXNlciB3aWxsIGdldCB3cm9uZyB0aW1l
-IGZyb20gL2Rldi9ydGMwLkl0IGlzIHZlcnkgaW1wb3J0YW50Lg0KPiANCj4gPiArDQo+ID4gK3Jj
-cG06IHJjcG1AMWUzNDA0MCB7DQo+ID4gKyAgICAgICBjb21wYXRpYmxlID0gImZzbCxsczEwODhh
-LXJjcG0iLCAiZnNsLHFvcmlxLXJjcG0tMi4xKyI7DQo+ID4gKyAgICAgICByZWcgPSA8MHgwIDB4
-MWUzNDA0MCAweDAgMHgxOD47DQo+ID4gKyAgICAgICBmc2wsI3JjcG0td2FrZXVwLWNlbGxzID0g
-PDY+Ow0KPiANCj4gQmVmb3JlIHRoZXJlIGFyZSBhbnkgdXNlcnMgb2YgdGhpcywgZWl0aGVyIGRy
-b3AgaXQgaWYgaXQgaXMgbm90IHZhcmlhYmxlIG9yIHRoZSBjb3JyZWN0DQo+IGZvcm0gd291bGQg
-YmUgJyNmc2wscmNwbS13YWtldXAtY2VsbHMnLg0KSSB3aWxsIHJlcGxhY2UgJ2ZzbCwjcmNwbS13
-YWtldXAtY2VsbHMnIHdpdGggJyNmc2wscmNwbS13YWtldXAtY2VsbHMnIGluIHY2Lg0KPiANCj4g
-PiArfTsNCj4gPiArDQo+ID4gK2Z0bV9hbGFybTA6IHRpbWVyQDI4MDAwMDAgew0KPiA+ICsgICAg
-ICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDg4YS1mdG0tYWxhcm0iOw0KPiA+ICsgICAgICAgcmVn
-ID0gPDB4MCAweDI4MDAwMDAgMHgwIDB4MTAwMDA+Ow0KPiA+ICsgICAgICAgZnNsLHJjcG0td2Fr
-ZXVwID0gPCZyY3BtIDB4MCAweDAgMHgwIDB4MCAweDQwMDAgMHgwPjsNCj4gPiArICAgICAgIGlu
-dGVycnVwdHMgPSA8MCA0NCA0PjsNCj4gPiArfTsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo=
+On Mon, 15 Jul 2019 at 14:44, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> The NOC100 has a parent which clock rate is set tot 400MHz. The OPPs which
+> are not possible to set are removed and new one is added.
+
+I think it is just NOC bus... or are there more of such and this is 100 MHz one?
+
+Best regards,
+Krzysztof
