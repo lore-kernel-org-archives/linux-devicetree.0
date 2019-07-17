@@ -1,93 +1,390 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v1 37/50] ARM: dts: exynos: change parent and rate of
- bus_fsys in Exynos5422
-Date: Wed, 17 Jul 2019 13:11:22 +0200
-Message-ID: <CAJKOXPfDX06s7eMctbnPabxho2EaWcTM4xAGKCd_+O6jCCDcRQ@mail.gmail.com>
-References: <CGME20190715124504eucas1p1afe0da2c6ac3a8b45d85017a77ba9edf@eucas1p1.samsung.com>
- <20190715124417.4787-1-l.luba@partner.samsung.com> <20190715124417.4787-38-l.luba@partner.samsung.com>
- <CAJKOXPfrGgAczQ-=1aE453RpJ9BN10ZDmFcrEMPkNyF6GcGtNA@mail.gmail.com>
- <2fe2e840-f4b2-773b-7d92-4ffb8502d4e6@partner.samsung.com>
- <CAJKOXPd3gm7no-0TnPmgFg+X3FgdiM6ov5rtzFSM6hKEdEzRCg@mail.gmail.com> <518c26ca-4254-056c-d6d0-ae1b4b63709c@partner.samsung.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 3/3] arm64: dts: freescale: Add support for i.MX8QXP
+ AI_ML board
+Date: Wed, 17 Jul 2019 17:04:35 +0530
+Message-ID: <20190717113435.GA32330@Mani-XPS-13-9360>
+References: <20190717061039.9271-1-manivannan.sadhasivam@linaro.org>
+ <20190717061039.9271-4-manivannan.sadhasivam@linaro.org>
+ <AM0PR04MB42116A61D7E32E6BA36D1CBA80C90@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <518c26ca-4254-056c-d6d0-ae1b4b63709c@partner.samsung.com>
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB42116A61D7E32E6BA36D1CBA80C90@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Darshak Patel <Darshak.patel@einfochips.com>, Kinjan Patel <Kinjan.patel@einfochips.com>, Prajose John <Prajose.john@einfochips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Jul 2019 at 13:06, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
->
->
-> On 7/17/19 12:45 PM, Krzysztof Kozlowski wrote:
-> > On Wed, 17 Jul 2019 at 12:39, Lukasz Luba <l.luba@partner.samsung.com> wrote:
-> >>>>
-> >>>>    &bus_fsys {
-> >>>>           devfreq = <&bus_wcore>;
-> >>>> +       assigned-clocks = <&clock CLK_MOUT_ACLK200_FSYS>,
-> >>>> +                         <&clock CLK_DOUT_ACLK200_FSYS>,
-> >>>> +                         <&clock CLK_FOUT_DPLL>;
-> >>>> +       assigned-clock-parents = <&clock CLK_MOUT_SCLK_DPLL>;
-> >>>> +       assigned-clock-rates = <0>, <240000000>,<1200000000>;
-> >>>
-> >>> Here and in all other patches:
-> >>> I am not entirely sure that this should be here. It looks like
-> >>> property of the SoC. Do we expect that buses will be configured to
-> >>> different clock rates between different boards? Since the OPP tables
-> >>> are shared (they are property of the SoC, not board) then I would
-> >>> assume that default frequency is shared as well.
-> >> These clocks they all relay on some bootloader configuration. It depends
-> >> which version of the bootloader you have, then you might get different
-> >> default configuration in the clocks.
-> >
-> > I do not agree here. This configuration is not dependent on
-> > bootloader. Although one bootloader might set the clocks to X and
-> > other to Y, but still you provide here valid configuration setting
-> > them, e.g. to Y (or to Z). What bootloader set before does not matter
-> > because you always override it.
-> This exactly the patch set is aim to do: overwrite any bootloader
-> configuration which could be wrong set after boot.
-> I don't know for how long it is left in such
-> 'bootloader-default-clock-settings' but it is not accurate
-> configuration. The pattern in the DT to change the clock rates is
-> there.
+Hi Dong,
 
-Still it is not the answer to my concerns and questions.
+On Wed, Jul 17, 2019 at 10:40:10AM +0000, Aisheng Dong wrote:
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Sent: Wednesday, July 17, 2019 2:11 PM
+> > 
+> > Add support for i.MX8QXP AI_ML board from Einfochips. This board is one of
+> > the Consumer Edition boards of the 96Boards family based on i.MX8QXP SoC
+> > from NXP/Freescale.
+> > 
+> > The initial support includes following peripherals which are tested and known
+> > to be working:
+> > 
+> > 1. Debug serial via UART2
+> > 2. uSD
+> > 3. WiFi
+> > 4. Ethernet
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> The patch looks good to me. Only a few nitpicks below.
+> Otherwise,
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> 
+> Regards
+> Dong Aisheng
+> 
 
-> >
-> >> The pattern of changing the parent
-> >> or even rate is known in the DT files (or I am missing something).
-> >> When you grep for it, you get 168 hits (38 for exynos*):
-> >> git grep -n "assigned-clock-rates" ./arch/arm/boot/dts/ | wc -l
-> >
-> > Yeah, and if you grep per type you got:
-> > DTSI: 114
-> > DTS: 54
-> > so what do you want to say?
-> Thus, It could be changed in DT.
+Thanks for the review!
 
-Of course, why not. But how this relevant to my question?
+> > ---
+> >  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+> >  .../boot/dts/freescale/imx8qxp-ai_ml.dts      | 249 ++++++++++++++++++
+> >  2 files changed, 250 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
+> > 
+> > diff --git a/arch/arm64/boot/dts/freescale/Makefile
+> > b/arch/arm64/boot/dts/freescale/Makefile
+> > index 0bd122f60549..bd8460549d1a 100644
+> > --- a/arch/arm64/boot/dts/freescale/Makefile
+> > +++ b/arch/arm64/boot/dts/freescale/Makefile
+> > @@ -24,4 +24,5 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
+> >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
+> >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
+> >  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
+> > +dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
+> >  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb diff --git
+> > a/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
+> > b/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
+> > new file mode 100644
+> > index 000000000000..dcd36e57d916
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
+> > @@ -0,0 +1,249 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright 2018 Einfochips
+> > + * Copyright 2019 Linaro Ltd.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "imx8qxp.dtsi"
+> > +
+> > +/ {
+> > +	model = "Einfochips i.MX8QXP AI_ML";
+> > +	compatible = "einfochips,imx8qxp-ai_ml", "fsl,imx8qxp";
+> > +
+> > +	aliases {
+> > +		serial1 = &adma_lpuart1;
+> > +		serial2 = &adma_lpuart2;
+> > +		serial3 = &adma_lpuart3;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = &adma_lpuart2;
+> > +	};
+> > +
+> > +	memory@80000000 {
+> > +		device_type = "memory";
+> > +		reg = <0x00000000 0x80000000 0 0x80000000>;
+> > +	};
+> > +
+> > +	leds {
+> > +		compatible = "gpio-leds";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_leds>;
+> > +
+> > +		user_led1 {
+> > +			label = "green:user1";
+> > +			gpios = <&lsio_gpio4 16 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger = "heartbeat";
+> > +		};
+> > +
+> > +		user_led2 {
+> > +			label = "green:user2";
+> > +			gpios = <&lsio_gpio0 6 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger = "none";
+> > +		};
+> > +
+> > +		user_led3 {
+> > +			label = "green:user3";
+> > +			gpios = <&lsio_gpio0 7 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger = "mmc1";
+> > +			default-state = "off";
+> > +		};
+> > +
+> > +		user_led4 {
+> > +			label = "green:user4";
+> > +			gpios = <&lsio_gpio4 21 GPIO_ACTIVE_HIGH>;
+> > +			panic-indicator;
+> > +			linux,default-trigger = "none";
+> > +		};
+> > +
+> > +		wlan_active_led {
+> > +			label = "yellow:wlan";
+> > +			gpios = <&lsio_gpio4 17 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger = "phy0tx";
+> > +			default-state = "off";
+> > +		};
+> > +
+> > +		bt_active_led {
+> > +			label = "blue:bt";
+> > +			gpios = <&lsio_gpio4 18 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger = "hci0-power";
+> > +			default-state = "off";
+> > +		};
+> > +	};
+> > +
+> > +	sdio_pwrseq: sdio-pwrseq {
+> > +		compatible = "mmc-pwrseq-simple";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_wifi_reg_on>;
+> > +		reset-gpios = <&lsio_gpio3 24 GPIO_ACTIVE_LOW>;
+> > +	};
+> > +};
+> > +
+> > +/* BT */
+> > +&adma_lpuart0 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_lpuart0>;
+> > +	uart-has-rtscts;
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* LS-I2C0 */
+> 
+> Typo?
+> 
 
-> > My thinking is that all the boards have buses configured to the same
-> > initial frequency. I am not questioning the use of
-> > assigned-clock-rates at all. Just the place...
-> It is not only 'initial frequency' as you name it. It has three changes:
-> - re-parent to proper PLL
-> - changing this PLL rate
-> - change the OPPs frequency values to integer values derived from PLL
->
-> The initial frequencies will be changed by devfreq governor using OPP
-> tables and the load after the whole system boots.
+Ah, yes. It should be LS-UART0, will fix it.
 
-I simplified with "initial frequency" but it does not matter. Let me
-try to raise my concerns again, different wording:
-All this looks like property of the SoC, not the board, because:
-1. the OPPs are already properties of the SoC, not the board (XU3 Lite
-is kind of exception but in fact it uses different flavor of
-Exynos5422 SoC which we do not model here as separate DTSI),
-2. I expect all boards to have the same properties.
+> > +&adma_lpuart1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_lpuart1>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* Debug */
+> > +&adma_lpuart2 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_lpuart2>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* PCI-E */
+> 
+> A bit confusing for the comments...
+> 
 
-Best regards,
-Krzysztof
+Hmm. How about, "PCI-E UART"?
+
+> > +&adma_lpuart3 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_lpuart3>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&fec1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_fec1>;
+> > +	phy-mode = "rgmii-id";
+> > +	phy-handle = <&ethphy0>;
+> > +	fsl,magic-packet;
+> > +	status = "okay";
+> > +
+> > +	mdio {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		ethphy0: ethernet-phy@0 {
+> > +			compatible = "ethernet-phy-ieee802.3-c22";
+> > +			reg = <0>;
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +/* WiFi */
+> > +&usdhc1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_usdhc1>;
+> > +	bus-width = <4>;
+> > +	no-sd;
+> > +	non-removable;
+> > +	mmc-pwrseq = <&sdio_pwrseq>;
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> 
+> Nitpick: we usually put this two properties at the first place.
+> 
+
+Okay.
+
+Thanks,
+Mani
+
+> > +	status = "okay";
+> > +
+> > +	brcmf: wifi@1 {
+> > +		reg = <1>;
+> > +		compatible = "brcm,bcm4329-fmac";
+> > +	};
+> > +};
+> > +
+> > +/* SD */
+> > +&usdhc2 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_usdhc2>;
+> > +	bus-width = <4>;
+> > +	cd-gpios = <&lsio_gpio4 22 GPIO_ACTIVE_LOW>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&iomuxc {
+> > +	pinctrl_fec1: fec1grp {
+> > +		fsl,pins = <
+> > +			IMX8QXP_ENET0_MDC_CONN_ENET0_MDC
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_MDIO_CONN_ENET0_MDIO
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_RGMII_TXC_CONN_ENET0_RGMII_TXC
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_RGMII_TXD2_CONN_ENET0_RGMII_TXD2
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_RGMII_TXD3_CONN_ENET0_RGMII_TXD3
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_RGMII_RXC_CONN_ENET0_RGMII_RXC
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2
+> > 	0x06000020
+> > +			IMX8QXP_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3
+> > 	0x06000020
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_leds: ledsgrp{
+> > +		fsl,pins = <
+> > +			IMX8QXP_ESAI0_TX2_RX3_LSIO_GPIO0_IO06
+> > 	0x00000021
+> > +			IMX8QXP_ESAI0_TX3_RX2_LSIO_GPIO0_IO07
+> > 	0x00000021
+> > +			IMX8QXP_EMMC0_DATA7_LSIO_GPIO4_IO16
+> > 	0x00000021
+> > +			IMX8QXP_USDHC1_WP_LSIO_GPIO4_IO21
+> > 	0x00000021
+> > +			IMX8QXP_EMMC0_STROBE_LSIO_GPIO4_IO17
+> > 	0x00000021
+> > +			IMX8QXP_EMMC0_RESET_B_LSIO_GPIO4_IO18
+> > 	0x00000021
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_lpuart0: lpuart0grp {
+> > +		fsl,pins = <
+> > +			IMX8QXP_UART0_RX_ADMA_UART0_RX
+> > 	0X06000020
+> > +			IMX8QXP_UART0_TX_ADMA_UART0_TX
+> > 	0X06000020
+> > +			IMX8QXP_FLEXCAN0_TX_ADMA_UART0_CTS_B
+> > 	0x06000020
+> > +			IMX8QXP_FLEXCAN0_RX_ADMA_UART0_RTS_B
+> > 	0x06000020
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_lpuart1: lpuart1grp {
+> > +		fsl,pins = <
+> > +			IMX8QXP_UART1_RX_ADMA_UART1_RX
+> > 	0X06000020
+> > +			IMX8QXP_UART1_TX_ADMA_UART1_TX
+> > 	0X06000020
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_lpuart2: lpuart2grp {
+> > +		fsl,pins = <
+> > +			IMX8QXP_UART2_RX_ADMA_UART2_RX
+> > 	0X06000020
+> > +			IMX8QXP_UART2_TX_ADMA_UART2_TX
+> > 	0X06000020
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_lpuart3: lpuart3grp {
+> > +		fsl,pins = <
+> > +			IMX8QXP_FLEXCAN2_RX_ADMA_UART3_RX
+> > 	0X06000020
+> > +			IMX8QXP_FLEXCAN2_TX_ADMA_UART3_TX
+> > 	0X06000020
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_usdhc1: usdhc1grp {
+> > +		fsl,pins = <
+> > +			IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK
+> > 	0x06000041
+> > +			IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD
+> > 	0x00000021
+> > +			IMX8QXP_EMMC0_DATA0_CONN_EMMC0_DATA0
+> > 	0x00000021
+> > +			IMX8QXP_EMMC0_DATA1_CONN_EMMC0_DATA1
+> > 	0x00000021
+> > +			IMX8QXP_EMMC0_DATA2_CONN_EMMC0_DATA2
+> > 	0x00000021
+> > +			IMX8QXP_EMMC0_DATA3_CONN_EMMC0_DATA3
+> > 	0x00000021
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_usdhc2: usdhc2grp {
+> > +		fsl,pins = <
+> > +			IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK
+> > 	0x06000041
+> > +			IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD
+> > 	0x00000021
+> > +			IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0
+> > 	0x00000021
+> > +			IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1
+> > 	0x00000021
+> > +			IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2
+> > 	0x00000021
+> > +			IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3
+> > 	0x00000021
+> > +			IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT
+> > 	0x00000021
+> > +			IMX8QXP_USDHC1_CD_B_LSIO_GPIO4_IO22
+> > 	0x00000021
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_wifi_reg_on: wifiregongrp {
+> > +		fsl,pins = <
+> > +			IMX8QXP_QSPI0B_SS1_B_LSIO_GPIO3_IO24
+> > 	0x00000021
+> > +		>;
+> > +	};
+> > +};
+> > --
+> > 2.17.1
+> 
