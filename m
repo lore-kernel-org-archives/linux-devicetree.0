@@ -1,83 +1,140 @@
-From: Hongwei Zhang <hongweiz@ami.com>
-Subject: [PATCH 2/3 v4] dt-bindings: gpio: aspeed: Add SGPIO support
-Date: Wed, 17 Jul 2019 16:12:05 -0400
-Message-ID: <1563394325-15941-1-git-send-email-hongweiz@ami.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 12/12] arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
+Date: Wed, 17 Jul 2019 13:13:26 -0700
+Message-ID: <20190717201326.DCEB520880@mail.kernel.org>
+References: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org> <1562859668-14209-13-git-send-email-gokulsri@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1562859668-14209-13-git-send-email-gokulsri@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
-Cc: Hongwei Zhang <hongweiz@ami.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+To: agross@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, devicetree@vger.kernel.org, gokulsri@codeaurora.org, jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com, robh+dt@kernel.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add bindings to support SGPIO on AST2400 or AST2500.
+Quoting Gokul Sriram Palanisamy (2019-07-11 08:41:08)
+> diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/=
+qcom/ipq8074.dtsi
+> index 6a61a63..c24e3f6 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> @@ -10,6 +10,22 @@
+>         model =3D "Qualcomm Technologies, Inc. IPQ8074";
+>         compatible =3D "qcom,ipq8074";
+> =20
+> +       reserved-memory {
+> +               #address-cells =3D <2>;
+> +               #size-cells =3D <2>;
+> +               ranges;
+> +
+> +               smem_region:smem@4ab00000 {
 
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
----
- .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+Put a space between the colon and the node name. Also, just call it
+memory@4ab00000.
 
-diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-new file mode 100644
-index 0000000..2d6305e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-@@ -0,0 +1,55 @@
-+Aspeed SGPIO controller Device Tree Bindings
-+-------------------------------------------
-+
-+This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80 full 
-+featured Serial GPIOs. Each of the Serial GPIO pins can be programmed to 
-+support the following options:
-+- Support interrupt option for each input port and various interrupt 
-+  sensitivity option (level-high, level-low, edge-high, edge-low)
-+- Support reset tolerance option for each output port
-+- Directly connected to APB bus and its shift clock is from APB bus clock
-+  divided by a programmable value.
-+- Co-work with external signal-chained TTL components (74LV165/74LV595)
-+
-+
-+Required properties:
-+
-+- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-+
-+- #gpio-cells 		: Should be two
-+			  - First cell is the GPIO line number
-+			  - Second cell is used to specify optional
-+			    parameters (unused)
-+
-+- reg			: Address and length of the register set for the device
-+- gpio-controller	: Marks the device node as a GPIO controller
-+- interrupts		: Interrupt specifier (see interrupt bindings for
-+			  details)
-+
-+- interrupt-controller	: Mark the GPIO controller as an interrupt-controller
-+
-+- nr-gpios		: number of GPIO pins to serialise. 
-+			  (should be multiple of 8, up to 80 pins)
-+
-+- clocks                : A phandle to the APB clock for SGPM clock division
-+
-+- bus-frequency		: SGPM CLK frequency
-+
-+
-+The sgpio and interrupt properties are further described in their respective bindings documentation:
-+
-+- Documentation/devicetree/bindings/sgpio/gpio.txt
-+- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+  Example:
-+	sgpio: sgpio@1e780200 {
-+		#gpio-cells = <2>;
-+		compatible = "aspeed,ast2500-sgpio";
-+		gpio-controller;
-+		interrupts = <40>;
-+		reg = <0x1e780200 0x0100>;
-+		clocks = <&syscon ASPEED_CLK_APB>;
-+		interrupt-controller;
-+		nr-gpios = <8>;
-+		bus-frequency = <12000000>;
-+	};
--- 
-2.7.4
+		smem_region: memory@4ab00000 {
+
+> +                       no-map;
+> +                       reg =3D <0x0 0x4ab00000 0x0 0x00100000>;
+> +               };
+> +
+> +               q6_region: q6@4b000000 {
+
+memory@
+
+> +                       no-map;
+> +                       reg =3D <0x0 0x4b000000 0x0 0x05f00000>;
+> +               };
+> +       };
+> +
+>         firmware {
+>                 scm {
+>                         compatible =3D "qcom,scm-ipq8074", "qcom,scm";
+> @@ -431,6 +447,115 @@
+>                                       "axi_m_sticky";
+>                         status =3D "disabled";
+>                 };
+> +               apcs: syscon@b111000 {
+
+Add a newline between nodes please.
+
+> +                       compatible =3D "syscon";
+> +                       reg =3D <0x0B111000 0x1000>;
+> +               };
+> +
+> +               wcss: smp2p-wcss {
+
+This node should be outside the soc node because it doesn't have a reg
+property
+
+> +                       compatible =3D "qcom,smp2p";
+> +                       qcom,smem =3D <435>, <428>;
+> +
+> +                       interrupt-parent =3D <&intc>;
+> +                       interrupts =3D <0 322 1>;
+> +
+> +                       qcom,ipc =3D <&apcs 8 9>;
+> +
+> +                       qcom,local-pid =3D <0>;
+> +                       qcom,remote-pid =3D <1>;
+> +
+> +                       wcss_smp2p_out: master-kernel {
+> +                               qcom,entry-name =3D "master-kernel";
+> +                               qcom,smp2p-feature-ssr-ack;
+> +                               #qcom,smem-state-cells =3D <1>;
+> +                       };
+> +
+> +                       wcss_smp2p_in: slave-kernel {
+> +                               qcom,entry-name =3D "slave-kernel";
+> +
+> +                               interrupt-controller;
+> +                               #interrupt-cells =3D <2>;
+> +                       };
+> +               };
+> +
+> +               tcsr_q6_block: syscon@1945000 {
+
+Do you really need _block in these aliases?
+
+> +                       compatible =3D "syscon";
+> +                       reg =3D <0x1945000 0xE000>;
+> +               };
+> +
+> +               tcsr_mutex_block: syscon@193d000 {
+> +                       compatible =3D "syscon";
+> +                       reg =3D <0x1905000 0x8000>;
+> +               };
+> +
+> +               tcsr_mutex: hwlock@193d000 {
+> +                       compatible =3D "qcom,tcsr-mutex";
+> +                       syscon =3D <&tcsr_mutex_block 0 0x80>;
+> +                       #hwlock-cells =3D <1>;
+> +               };
+> +
+> +               smem: qcom,smem@4AB00000 {
+
+lowercase please. And just 'smem' I guess.
+
+> +                       compatible =3D "qcom,smem";
+> +                       memory-region =3D <&smem_region>;
+> +                       hwlocks =3D <&tcsr_mutex 0>;
+> +               };
+> +
+> +               apcs_glb: mailbox@b111000 {
+> +                       compatible =3D "qcom,ipq8074-apcs-apps-global";
+> +                       reg =3D <0xb111000 0x1000>;
+
+These addresses should be padded out to 8 digits for the address part
+(not the size).
+
+> +
+> +                       #mbox-cells =3D <1>;
+> +               };
+> +
+> +               q6v5_wcss: q6v5_wcss@CD00000 {
+
+lowercase.
+
+> +                       compatible =3D "qcom,ipq8074-wcss-pil";
+> +                       reg =3D <0xCD00000 0x4040>,
+> +                             <0x4AB000 0x20>;
