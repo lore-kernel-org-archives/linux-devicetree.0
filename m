@@ -1,74 +1,44 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
- opp-avg-KBps bindings
-Date: Wed, 17 Jul 2019 13:24:48 +0530
-Message-ID: <20190717075448.xlyg2ddewlci3abg@vireshk-i7>
-References: <20190703011020.151615-1-saravanak@google.com>
- <20190703011020.151615-2-saravanak@google.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v2 15/15] arm64: defconfig: add imx8qm mek support
+Date: Wed, 17 Jul 2019 08:16:21 +0000
+Message-ID: <AM0PR04MB4211AF3216E3A641DA80B6C680C90@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1563290089-11085-1-git-send-email-aisheng.dong@nxp.com>
+ <1563290089-11085-16-git-send-email-aisheng.dong@nxp.com>
+ <CAOMZO5CTmAdxRK4FZu+Lw3WxkBzdufNJ=gE11TFSoizdYwXnbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190703011020.151615-2-saravanak@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOMZO5CTmAdxRK4FZu+Lw3WxkBzdufNJ=gE11TFSoizdYwXnbw@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02-07-19, 18:10, Saravana Kannan wrote:
-> Interconnects often quantify their performance points in terms of
-> bandwidth. So, add opp-peak-KBps (required) and opp-avg-KBps (optional) to
-> allow specifying Bandwidth OPP tables in DT.
+> From: Fabio Estevam <festevam@gmail.com>
+> Sent: Wednesday, July 17, 2019 3:25 AM
 > 
-> opp-peak-KBps is a required property that replace opp-hz for Bandwidth OPP
-> tables.
+> Hi Dong,
 > 
-> opp-avg-KBps is an optional property that can be used in Bandwidth OPP
-> tables.
+> On Tue, Jul 16, 2019 at 12:38 PM Dong Aisheng <aisheng.dong@nxp.com>
+> wrote:
+> >
+> > add imx8qm mek support
 > 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  Documentation/devicetree/bindings/opp/opp.txt | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index 76b6c79604a5..c869e87caa2a 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -83,9 +83,14 @@ properties.
->  
->  Required properties:
->  - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
-> -  required property for all device nodes but devices like power domains. The
-> -  power domain nodes must have another (implementation dependent) property which
-> -  uniquely identifies the OPP nodes.
-> +  required property for all device nodes but for devices like power domains or
-> +  bandwidth opp tables. The power domain nodes must have another (implementation
-> +  dependent) property which uniquely identifies the OPP nodes. The interconnect
-> +  opps are required to have the opp-peak-bw property.
+> The Subject and commit log does not match with the patch content.
 
-                                   ??
+Because mx8qm shares the most things from mx8qxp which has already
+been enabled in defconfig. The only one left is pinctrl driver.
+I would update the title a bit to be more specific in next version.
 
-> +
-> +- opp-peak-KBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
-> +  big-endian integer. This is a required property for all devices that don't
-> +  have opp-hz. For example, bandwidth OPP tables for interconnect paths.
->  
->  Optional properties:
->  - opp-microvolt: voltage in micro Volts.
-> @@ -132,6 +137,10 @@ Optional properties:
->  - opp-level: A value representing the performance level of the device,
->    expressed as a 32-bit integer.
->  
-> +- opp-avg-KBps: Average bandwidth in kilobytes per second, expressed as a
-> +  32-bit big-endian integer. This property is only meaningful in OPP tables
-> +  where opp-peak-KBps is present.
-> +
->  - clock-latency-ns: Specifies the maximum possible transition latency (in
->    nanoseconds) for switching to this OPP from any other OPP.
->  
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-
--- 
-viresh
+Regards
+Aisheng
