@@ -1,48 +1,94 @@
-From: Ryan Case <ryandcase@chromium.org>
-Subject: Re: [PATCH v4, 06/33] dt-bindings: mediatek: add mutex description
- for mt8183 display
-Date: Tue, 16 Jul 2019 16:59:23 -0700
-Message-ID: <CACjz--k0wVpxWTBXQeUHqm50RgvaCNkNb3DO+KviCOtq-e9gTQ@mail.gmail.com>
-References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com> <1562625253-29254-7-git-send-email-yongqiang.niu@mediatek.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using
+ devicetree
+Date: Wed, 17 Jul 2019 09:57:36 +0900
+Message-ID: <20190717095736.c53f0368034a11332346d18e@kernel.org>
+References: <156113387975.28344.16009584175308192243.stgit@devnote2>
+        <f0cee7b6-b83b-b74c-82f5-f43e39bd391a@gmail.com>
+        <20190624115223.db1e53549a15c6548bfa1fa1@kernel.org>
+        <e5e3f55b-095b-e6fc-8734-d888ba5c87f3@gmail.com>
+        <20190625140004.a74443238596b297a558a66f@kernel.org>
+        <c01bd567-0c8b-ec32-773b-fb95bfcdcd50@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562625253-29254-7-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <c01bd567-0c8b-ec32-773b-fb95bfcdcd50@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: yongqiang.niu@mediatek.com
-Cc: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 3:37 PM <yongqiang.niu@mediatek.com> wrote:
->
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
->
-> This patch add mutex description for mt8183 display
->
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> index bb9274a..4a22d49 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> @@ -53,6 +53,7 @@ Required properties (all function blocks):
->    For most function blocks this is just a single clock input. Only the DSI and
->    DPI controller nodes have multiple clock inputs. These are documented in
->    mediatek,dsi.txt and mediatek,dpi.txt, respectively.
-> +  for MT8183 mutex, this hardware is always free run, has no clocks control
+Hi Frank,
 
-This should have capitalization, punctuation, and drop the trailing space.
+On Mon, 15 Jul 2019 06:55:40 -0700
+Frank Rowand <frowand.list@gmail.com> wrote:
 
-It also reads a little strangely. You may want something like "An
-exception is that the mt8183 mutex is always free running with no
-clocks property."
+> > Hmm, it's a kind of communication with the operator of the boot loader, since there
+> > is an admin or developer behind it. I think the comminication is to communicate
+> > with that human. Then if they intend to trace boot process, that is a kind of
+> > communication.
+> 
+> The quote from the plumbers 2016 devicetree etherpad ("Operating points are OK ...)
+> conveniently ignores a sentence just a few lines later:
+> 
+>    "If firmware is deciding the operating point, then it's OK to convey it via DT."
+> 
+> The operating points example is clearly communicating boot loader information to
+> the kernel.
+> 
+> Something the admin or developer wants to communicate is not boot loader
+> information.
 
->
->  Required properties (DMA function blocks):
->  - compatible: Should be one of
-> --
-> 1.8.1.1.dirty
->
+But the cmdline (bootargs) is already supported, I think this is a kind of bootargs.
+
+> > [...]
+> >>>>> - Can we use devicetree for configuring kernel dynamically?
+> >>>>
+> >>>> No.  Sorry.
+> >>>>
+> >>>> My understanding of this proposal is that it is intended to better
+> >>>> support boot time kernel and driver debugging.  As an alternate
+> >>>> implementation, could you compile the ftrace configuration information
+> >>>> directly into a kernel data structure?  It seems like it would not be
+> >>>> very difficult to populate the data structure data via a few macros.
+> >>>
+> >>> No, that is not what I intended. My intention was to trace boot up
+> >>> process "without recompiling kernel", but with a structured data.
+> >>
+> >> That is debugging.  Or if you want to be pedantic, a complex performance
+> >> measurement of the boot process (more than holding a stopwatch in your
+> >> hand).
+> > 
+> > Yeah, that's right.
+> > 
+> >> Recompiling a single object file (containing the ftrace command data)
+> >> and re-linking the kernel is not a big price in that context).
+> > 
+> > No, if I can use DT, I can choose one of them while boot up.
+> > That will be a big difference.
+> > (Of course for that purpose, I should work on boot loader to support
+> > DT overlay)
+> 
+> This is debugging kernel drivers.  I do not think that it is a big cost for
+> a kernel developer to re-link the kernel.  On any reasonable modern
+> development system this should be a matter of seconds, not minutes.
+
+Tracing is not only debugging the kernel drivers, but also measures
+performance or behavior and compare with different settings.
+Also, in some case, we can not change the binary, like distro kernel.
+
+> Compiling a devicetree source is not significantly less time.  (To be
+> fair, you imply that you would have various compiled devicetrees to
+> choose from at boot time.  It may be realistic to have a library of
+> ftrace commands, or it may be more realistic that someone debugging
+> a kernel driver will create a unique ftrace command set for the
+> particular case they are debugging.)
+
+Yeah, devicetree build time may not be matter, decoupling from the
+kernel image is, I think, the key point.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
