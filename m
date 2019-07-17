@@ -1,82 +1,95 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 2/3] rtc: Add support for the MediaTek MT2712 RTC
-Date: Wed, 17 Jul 2019 11:06:55 +0200
-Message-ID: <20190717090655.GA21823@piout.net>
-References: <20190702032120.16539-1-ran.bi@mediatek.com>
- <20190702032120.16539-3-ran.bi@mediatek.com>
- <20190713211231.GD4732@piout.net>
- <1563353694.19945.33.camel@mhfsdcap03>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH 1/2] net/macb: bindings doc: add sifive fu540-c000 binding
+Date: Wed, 17 Jul 2019 14:37:33 +0530
+Message-ID: <CAJ2_jOFEVZQat0Yprg4hem4jRrqkB72FKSeQj4p8P5KA-+rgww@mail.gmail.com>
+References: <1558611952-13295-1-git-send-email-yash.shah@sifive.com>
+ <1558611952-13295-2-git-send-email-yash.shah@sifive.com> <CAL_Jsq+p5PnTDgxuh9_Aw1RvTk4aTYjKxyMq7DPczLzQVv8_ew@mail.gmail.com>
+ <b0c60ec9-2f57-c3f5-c3b4-ee83a5ec4c45@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1563353694.19945.33.camel@mhfsdcap03>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Bi <ran.bi@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Flora Fu <flora.fu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <b0c60ec9-2f57-c3f5-c3b4-ee83a5ec4c45@microchip.com>
+Sender: netdev-owner@vger.kernel.org
+To: Nicolas Ferre <Nicolas.Ferre@microchip.com>
+Cc: Rob Herring <robh+dt@kernel.org>, David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>, Paul Walmsley <paul.walmsley@sifive.com>, Sachin Ghadi <sachin.ghadi@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On 17/07/2019 16:54:54+0800, Ran Bi wrote:
-> > > +
-> > > +/* we map HW YEAR 0 to 1968 not 1970 because 2000 is the leap year */
-> > > +#define RTC_MIN_YEAR		1968
-> > > +#define RTC_BASE_YEAR		1900
-> > > +#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
-> > 
-> > Do not do that. If this RTC range starts in 200, ths is what the driver
-> > has to support, you should not care about dates before 2000. Note that
-> > the RTC core can still properly shift the range if it is absolutely
-> > necessary.
-> > 
-> 
-> Do we need to care about default alarm date 1970-01-01? Or can I just
-> set it to 2000-01-01?
-> 
+On Mon, Jun 24, 2019 at 9:08 PM <Nicolas.Ferre@microchip.com> wrote:
+>
+> On 23/05/2019 at 22:50, Rob Herring wrote:
+> > On Thu, May 23, 2019 at 6:46 AM Yash Shah <yash.shah@sifive.com> wrote:
+> >>
+> >> Add the compatibility string documentation for SiFive FU540-C0000
+> >> interface.
+> >> On the FU540, this driver also needs to read and write registers in a
+> >> management IP block that monitors or drives boundary signals for the
+> >> GEMGXL IP block that are not directly mapped to GEMGXL registers.
+> >> Therefore, add additional range to "reg" property for SiFive GEMGXL
+> >> management IP registers.
+> >>
+> >> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/net/macb.txt | 3 +++
+> >>   1 file changed, 3 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+> >> index 9c5e944..91a2a66 100644
+> >> --- a/Documentation/devicetree/bindings/net/macb.txt
+> >> +++ b/Documentation/devicetree/bindings/net/macb.txt
+> >> @@ -4,6 +4,7 @@ Required properties:
+> >>   - compatible: Should be "cdns,[<chip>-]{macb|gem}"
+> >>     Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
+> >>     Use "cdns,at91sam9260-macb" for Atmel at91sam9 SoCs.
+> >> +  Use "cdns,fu540-macb" for SiFive FU540-C000 SoC.
+> >
+> > This pattern that Atmel started isn't really correct. The vendor
+> > prefix here should be sifive. 'cdns' would be appropriate for a
+> > fallback.
+>
+> Ok, we missed this for the sam9x60 SoC that we added recently then.
+>
+> Anyway a little too late, coming back to this machine, and talking to
+> Yash, isn't "sifive,fu540-c000-macb" more specific and a better match
+> for being future proof? I would advice for the most specific possible
+> with other compatible strings on the same line in the DT, like:
+>
+> "sifive,fu540-c000-macb", "sifive,fu540-macb"
+>
 
-You never have to set a default value. It doesn't add any value versus
-an unknown value.
+Yes, I agree that "sifive,fu540-c000-macb" is a better match.
 
-> > > +
-> > > +static inline u32 rtc_readl(struct mt2712_rtc *rtc, u32 reg)
-> > 
-> > Please use a more descriptive prefix than just rtc_.
-> > 
-> 
-> Do you mean it's better to use prefix "mt2712_rtc_"?
-> 
+> Moreover, is it really a "macb" or a "gem" type of interface from
+> Cadence? Not a big deal, but just to discuss the topic to the bone...
 
-Yes.
+I believe it should be "gem". I will plan to submit the patch for
+these changes. Thanks for pointing it out.
 
-> > > +
-> > > +	/*
-> > > +	 * register status was not correct,
-> > > +	 * need set time and alarm to default
-> > > +	 */
-> > > +	if (p1 != RTC_POWERKEY1_KEY || p2 != RTC_POWERKEY2_KEY
-> > > +	    || !valid_rtc_time(rtc)) {
-> > > +		reset_rtc_time(rtc);
-> > 
-> > Do not do that. This is valuable information. If the time is invalid,
-> > report it as such in read_time and read_alarm. Resetting the time here
-> > will lead to more issues later (i.e. userspace is not able to know
-> > whether the time is set correctly or not).
-> > 
-> 
-> When RTC's power run out, RTC will lost it's registers value and time
-> data at next boot up. We even cannot know what the date and time it
-> shows. We want to check this state here and set a default RTC date. Do
-> you think it's no need here and the date should be set by system?
-> 
+- Yash
 
-If I understand correctly, the POWERKEY register will lose their value.
-This means that you know that the time is incorrect. instead of setting
-it to a default value and losing that valuable information, simply check
-for that in read_time and return EINVAL in that case. then on the next
-set_time invocation, you can set the POWERKEY registers and set the time
-to a known value.
-
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>
+> Note that I'm fine if you consider that what you have in net-next new is
+> correct.
+>
+> Regards,
+>    Nicolas
+>
+> >>     Use "cdns,sam9x60-macb" for Microchip sam9x60 SoC.
+> >>     Use "cdns,np4-macb" for NP4 SoC devices.
+> >>     Use "cdns,at32ap7000-macb" for other 10/100 usage or use the generic form: "cdns,macb".
+> >> @@ -17,6 +18,8 @@ Required properties:
+> >>     Use "cdns,zynqmp-gem" for Zynq Ultrascale+ MPSoC.
+> >>     Or the generic form: "cdns,emac".
+> >>   - reg: Address and length of the register set for the device
+> >> +       For "cdns,fu540-macb", second range is required to specify the
+> >> +       address and length of the registers for GEMGXL Management block.
+> >>   - interrupts: Should contain macb interrupt
+> >>   - phy-mode: See ethernet.txt file in the same directory.
+> >>   - clock-names: Tuple listing input clock names.
+> >> --
+> >> 1.9.1
+> >>
+> >
+>
+>
+> --
+> Nicolas Ferre
