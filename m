@@ -1,79 +1,147 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
- for PRUSS interrupts
-Date: Wed, 17 Jul 2019 12:21:42 -0500
-Message-ID: <5241ecb9-4ab2-b01c-367c-38c554c056c4@lechnology.com>
-References: <20190708035243.12170-1-s-anna@ti.com>
- <20190708035243.12170-3-s-anna@ti.com>
- <3d91800b-e858-8c73-5ea8-e99e5ea30e8e@lechnology.com>
- <54e871a8-dfa4-f65b-5869-d1661144cbf0@ti.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Wed, 17 Jul 2019 18:28:01 +0100
+Message-ID: <20190717172801.GG18370@e107155-lin>
+References: <1563184103-8493-1-git-send-email-peng.fan@nxp.com>
+ <1563184103-8493-2-git-send-email-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54e871a8-dfa4-f65b-5869-d1661144cbf0@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1563184103-8493-2-git-send-email-peng.fan@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: Tony Lindgren <tony@atomide.com>, "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 7/16/19 12:21 PM, Suman Anna wrote:
->>> +static int pruss_intc_probe(struct platform_device *pdev)
->>> +{
->>> +    static const char * const irq_names[] = {
->>> +                "host0", "host1", "host2", "host3",
->>> +                "host4", "host5", "host6", "host7", };
->>> +    struct device *dev = &pdev->dev;
->>> +    struct pruss_intc *intc;
->>> +    struct resource *res;
->>> +    struct irq_chip *irqchip;
->>> +    int i, irq;
->>> +
->>> +    intc = devm_kzalloc(dev, sizeof(*intc), GFP_KERNEL);
->>> +    if (!intc)
->>> +        return -ENOMEM;
->>> +    platform_set_drvdata(pdev, intc);
->>> +
->>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +    intc->base = devm_ioremap_resource(dev, res);
->>> +    if (IS_ERR(intc->base)) {
->>> +        dev_err(dev, "failed to parse and map intc memory resource\n");
->>> +        return PTR_ERR(intc->base);
->>> +    }
->>> +
->>> +    dev_dbg(dev, "intc memory: pa %pa size 0x%zx va %pK\n", &res->start,
->>> +        (size_t)resource_size(res), intc->base);
->>> +
->>> +    mutex_init(&intc->lock);
->>> +
->>> +    pruss_intc_init(intc);
->>> +
->>> +    irqchip = devm_kzalloc(dev, sizeof(*irqchip), GFP_KERNEL);
->>> +    if (!irqchip)
->>> +        return -ENOMEM;
->>> +
->>> +    irqchip->irq_ack = pruss_intc_irq_ack;
->>> +    irqchip->irq_mask = pruss_intc_irq_mask;
->>> +    irqchip->irq_unmask = pruss_intc_irq_unmask;
->>> +    irqchip->irq_retrigger = pruss_intc_irq_retrigger;
->>> +    irqchip->irq_request_resources = pruss_intc_irq_reqres;
->>> +    irqchip->irq_release_resources = pruss_intc_irq_relres;
->>> +    irqchip->name = dev_name(dev);
->>
->> Should we also set `irqchip->parent_device = dev;` here?
->>
->> I tried it and had to add pm runtime stuff as well, otherwise
->> requesting irqs would fail.
-> 
-> I haven't seen any during my local testing. What sort of failure are you
-> seeing?
-> 
-> The clocking for the overall PRUSS module will be handled in either the
-> ti-sysc driver for OMAP SoCs or in the pruss platform driver.
-> 
-I was getting -EACCESS bubbling up from rpm_resume() in drivers/base/
-power/runtime.c. It was probably a mix of how I set up the device tree
-and the dummy PRUSS bus driver I made.
+This looks much better now.
 
-I'm sure it will be fine with a proper PRUSS platform driver.
+On Mon, Jul 15, 2019 at 10:10:10AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
+> actions in software layers running in the EL2 or EL3 exception levels.
+> The term "ARM" here relates to the SMC instruction as part of the ARM
+> instruction set, not as a standard endorsed by ARM Ltd.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+> 
+> V3:
+>  Convert to yaml
+>  Drop interrupt
+>  Introudce transports to indicate mem/reg
+>  The func id is still kept as optional, because like SCMI it only
+>  cares about message.
+> 
+> V2:
+>  Introduce interrupts as a property.
+> 
+>  .../devicetree/bindings/mailbox/arm-smc.yaml       | 124 +++++++++++++++++++++
+>  1 file changed, 124 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> new file mode 100644
+> index 000000000000..da9b1a03bc4e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> @@ -0,0 +1,124 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM SMC Mailbox Interface
+> +
+> +maintainers:
+> +  - Peng Fan <peng.fan@nxp.com>
+> +
+> +description: |
+> +  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
+> +  call) instruction to trigger a mailbox-connected activity in firmware,
+> +  executing on the very same core as the caller. By nature this operation
+> +  is synchronous and this mailbox provides no way for asynchronous messages
+> +  to be delivered the other way round, from firmware to the OS, but
+> +  asynchronous notification could also be supported. However the value of
+> +  r0/w0/x0 the firmware returns after the smc call is delivered as a received
+> +  message to the mailbox framework, so a synchronous communication can be
+> +  established, for a asynchronous notification, no value will be returned.
+> +  The exact meaning of both the action the mailbox triggers as well as the
+> +  return value is defined by their users and is not subject to this binding.
+> +
+> +  One use case of this mailbox is the SCMI interface, which uses shared memory
+> +  to transfer commands and parameters, and a mailbox to trigger a function
+> +  call. This allows SoCs without a separate management processor (or when
+> +  such a processor is not available or used) to use this standardized
+> +  interface anyway.
+> +
+> +  This binding describes no hardware, but establishes a firmware interface.
+> +  Upon receiving an SMC using one of the described SMC function identifiers,
+> +  the firmware is expected to trigger some mailbox connected functionality.
+> +  The communication follows the ARM SMC calling convention.
+> +  Firmware expects an SMC function identifier in r0 or w0. The supported
+> +  identifiers are passed from consumers, or listed in the the arm,func-ids
+> +  properties as described below. The firmware can return one value in
+> +  the first SMC result register, it is expected to be an error value,
+> +  which shall be propagated to the mailbox client.
+> +
+> +  Any core which supports the SMC or HVC instruction can be used, as long as
+> +  a firmware component running in EL3 or EL2 is handling these calls.
+> +
+> +properties:
+> +  compatible:
+> +    const: arm,smc-mbox
+> +
+> +  "#mbox-cells":
+> +    const: 1
+> +
+> +  arm,num-chans:
+> +    description: The number of channels supported.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  method:
+> +    items:
+> +      - enum:
+> +          - smc
+> +          - hvc
+> +
+> +  transports:
+> +    items:
+> +      - enum:
+> +          - mem
+> +          - reg
+> +
+> +  arm,func-ids:
+> +    description: |
+> +      An array of 32-bit values specifying the function IDs used by each
+> +      mailbox channel. Those function IDs follow the ARM SMC calling
+> +      convention standard [1].
+> +
+> +      There is one identifier per channel and the number of supported
+> +      channels is determined by the length of this array.
+> +    minItems: 0
+> +    maxItems: 4096   # Should be enough?
+
+I am new to yaml, is there a way to say the number of entries here must
+match arm,num-chans ? And not sure if min/maxItems matter then ?
+
+> +
+> +required:
+> +  - compatible
+> +  - "#mbox-cells"
+> +  - arm,num-chans
+> +  - transports
+> +  - method
+> +
+
+Why is arm,func-ids optional ? Is there any standard arm,func-ids we can
+resort to. Sorry I know you expect ARM Ltd to answer that, but I just want
+to raise the point that we don't have one today and hence it can't be
+optional. Or I am missing something ?
+
+--
+Regards,
+Sudeep
