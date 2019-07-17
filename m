@@ -1,69 +1,84 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH] clk: imx8: Add DSP related clocks
-Date: Wed, 17 Jul 2019 23:17:19 +0300
-Message-ID: <CAEnQRZB23GLVXp459+JieeqQdAKXBRyeTc=hxnovFZwje-tgCw@mail.gmail.com>
-References: <20190702152007.12190-1-daniel.baluta@nxp.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
+ opp-avg-KBps bindings
+Date: Wed, 17 Jul 2019 13:29:47 -0700
+Message-ID: <CAGETcx-kUM7MqNYowwNAL1Q0bnFzxPEO6yMg0YTkk16=OnPdmg@mail.gmail.com>
+References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-2-saravanak@google.com>
+ <20190717075448.xlyg2ddewlci3abg@vireshk-i7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702152007.12190-1-daniel.baluta@nxp.com>
+In-Reply-To: <20190717075448.xlyg2ddewlci3abg@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, weiyongjun1@huawei.com, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Aisheng/Jacky,
+On Wed, Jul 17, 2019 at 12:54 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 02-07-19, 18:10, Saravana Kannan wrote:
+> > Interconnects often quantify their performance points in terms of
+> > bandwidth. So, add opp-peak-KBps (required) and opp-avg-KBps (optional) to
+> > allow specifying Bandwidth OPP tables in DT.
+> >
+> > opp-peak-KBps is a required property that replace opp-hz for Bandwidth OPP
+> > tables.
+> >
+> > opp-avg-KBps is an optional property that can be used in Bandwidth OPP
+> > tables.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  Documentation/devicetree/bindings/opp/opp.txt | 15 ++++++++++++---
+> >  1 file changed, 12 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> > index 76b6c79604a5..c869e87caa2a 100644
+> > --- a/Documentation/devicetree/bindings/opp/opp.txt
+> > +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> > @@ -83,9 +83,14 @@ properties.
+> >
+> >  Required properties:
+> >  - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
+> > -  required property for all device nodes but devices like power domains. The
+> > -  power domain nodes must have another (implementation dependent) property which
+> > -  uniquely identifies the OPP nodes.
+> > +  required property for all device nodes but for devices like power domains or
+> > +  bandwidth opp tables. The power domain nodes must have another (implementation
+> > +  dependent) property which uniquely identifies the OPP nodes. The interconnect
+> > +  opps are required to have the opp-peak-bw property.
+>
+>                                    ??
 
-Can you help with review on this?
+Sorry, what's the question? Was this an accidental email?
 
-On Tue, Jul 2, 2019 at 6:22 PM Daniel Baluta <daniel.baluta@nxp.com> wrote:
+-Saravana
+
 >
-> i.MX8QXP contains Hifi4 DSP. There are four clocks
-> associated with DSP:
->   * dsp_lpcg_core_clk
->   * dsp_lpcg_ipg_clk
->   * dsp_lpcg_adb_aclk
->   * ocram_lpcg_ipg_clk
+> > +
+> > +- opp-peak-KBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
+> > +  big-endian integer. This is a required property for all devices that don't
+> > +  have opp-hz. For example, bandwidth OPP tables for interconnect paths.
+> >
+> >  Optional properties:
+> >  - opp-microvolt: voltage in micro Volts.
+> > @@ -132,6 +137,10 @@ Optional properties:
+> >  - opp-level: A value representing the performance level of the device,
+> >    expressed as a 32-bit integer.
+> >
+> > +- opp-avg-KBps: Average bandwidth in kilobytes per second, expressed as a
+> > +  32-bit big-endian integer. This property is only meaningful in OPP tables
+> > +  where opp-peak-KBps is present.
+> > +
+> >  - clock-latency-ns: Specifies the maximum possible transition latency (in
+> >    nanoseconds) for switching to this OPP from any other OPP.
+> >
+> > --
+> > 2.22.0.410.gd8fdbe21b5-goog
 >
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  drivers/clk/imx/clk-imx8qxp-lpcg.c     | 5 +++++
->  include/dt-bindings/clock/imx8-clock.h | 6 +++++-
->  2 files changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/imx/clk-imx8qxp-lpcg.c b/drivers/clk/imx/clk-imx8qxp-lpcg.c
-> index fb6edf1b8aa2..c0aff7ca6374 100644
-> --- a/drivers/clk/imx/clk-imx8qxp-lpcg.c
-> +++ b/drivers/clk/imx/clk-imx8qxp-lpcg.c
-> @@ -72,6 +72,11 @@ static const struct imx8qxp_lpcg_data imx8qxp_lpcg_adma[] = {
->         { IMX_ADMA_LPCG_I2C2_CLK, "i2c2_lpcg_clk", "i2c2_clk", 0, ADMA_LPI2C_2_LPCG, 0, 0, },
->         { IMX_ADMA_LPCG_I2C3_IPG_CLK, "i2c3_lpcg_ipg_clk", "dma_ipg_clk_root", 0, ADMA_LPI2C_3_LPCG, 16, 0, },
->         { IMX_ADMA_LPCG_I2C3_CLK, "i2c3_lpcg_clk", "i2c3_clk", 0, ADMA_LPI2C_3_LPCG, 0, 0, },
-> +
-> +       { IMX_ADMA_LPCG_DSP_CORE_CLK, "dsp_lpcg_core_clk", "dma_ipg_clk_root", 0, ADMA_HIFI_LPCG, 28, 0, },
-> +       { IMX_ADMA_LPCG_DSP_IPG_CLK, "dsp_lpcg_ipg_clk", "dma_ipg_clk_root", 0, ADMA_HIFI_LPCG, 20, 0, },
-> +       { IMX_ADMA_LPCG_DSP_ADB_CLK, "dsp_lpcg_adb_clk", "dma_ipg_clk_root", 0, ADMA_HIFI_LPCG, 16, 0, },
-> +       { IMX_ADMA_LPCG_OCRAM_IPG_CLK, "ocram_lpcg_ipg_clk", "dma_ipg_clk_root", 0, ADMA_OCRAM_LPCG, 16, 0, },
->  };
->
->  static const struct imx8qxp_ss_lpcg imx8qxp_ss_adma = {
-> diff --git a/include/dt-bindings/clock/imx8-clock.h b/include/dt-bindings/clock/imx8-clock.h
-> index 4236818e3be5..673a8c662340 100644
-> --- a/include/dt-bindings/clock/imx8-clock.h
-> +++ b/include/dt-bindings/clock/imx8-clock.h
-> @@ -283,7 +283,11 @@
->  #define IMX_ADMA_LPCG_PWM_IPG_CLK                      38
->  #define IMX_ADMA_LPCG_LCD_PIX_CLK                      39
->  #define IMX_ADMA_LPCG_LCD_APB_CLK                      40
-> +#define IMX_ADMA_LPCG_DSP_ADB_CLK                      41
-> +#define IMX_ADMA_LPCG_DSP_IPG_CLK                      42
-> +#define IMX_ADMA_LPCG_DSP_CORE_CLK                     43
-> +#define IMX_ADMA_LPCG_OCRAM_IPG_CLK                    44
->
-> -#define IMX_ADMA_LPCG_CLK_END                          41
-> +#define IMX_ADMA_LPCG_CLK_END                          45
->
->  #endif /* __DT_BINDINGS_CLOCK_IMX_H */
 > --
-> 2.17.1
+> viresh
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
 >
