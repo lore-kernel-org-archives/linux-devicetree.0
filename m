@@ -1,42 +1,24 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v1 26/50] ARM: dts: exynos: align NOC100 bus OPPs in
- Exynos5420
-Date: Wed, 17 Jul 2019 12:27:38 +0200
-Message-ID: <8ed83c77-57f7-78a4-e437-714cfc7b5c58@partner.samsung.com>
-References: <CGME20190715124455eucas1p13bfc0c1d113225db9607e4c0dbac353c@eucas1p1.samsung.com>
-        <20190715124417.4787-1-l.luba@partner.samsung.com>
-        <20190715124417.4787-27-l.luba@partner.samsung.com>
-        <CAJKOXPc3qsM5Xe5JViDZXYfes+_veb-KX3fnZjpkUCrphBcu-Q@mail.gmail.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 2/3] dt-bindings: arm: Document i.MX8QXP AI_ML board
+ binding
+Date: Wed, 17 Jul 2019 10:28:00 +0000
+Message-ID: <AM0PR04MB4211FDB909B4114B7B01232480C90@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190717061039.9271-1-manivannan.sadhasivam@linaro.org>
+ <20190717061039.9271-3-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPc3qsM5Xe5JViDZXYfes+_veb-KX3fnZjpkUCrphBcu-Q@mail.gmail.com>
+In-Reply-To: <20190717061039.9271-3-manivannan.sadhasivam@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Darshak Patel <Darshak.patel@einfochips.com>, Kinjan Patel <Kinjan.patel@einfochips.com>, Prajose John <Prajose.john@einfochips.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 7/17/19 12:10 PM, Krzysztof Kozlowski wrote:
-> On Mon, 15 Jul 2019 at 14:44, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> The NOC100 has a parent which clock rate is set tot 400MHz. The OPPs which
->> are not possible to set are removed and new one is added.
-> 
-> I think it is just NOC bus... or are there more of such and this is 100 MHz one?
-Yes, there is a bus NOC100 with a dedicated clock tree in the HW (with
-3 muxes and one divider), which makes possible to take different PLL as
-a source then WCORE have, divide the rate from it and even switch for a
-while to alternative stable PLL (on the 2nd mux to SPLL (after a
-divider)) to wait for main PLL rate change stability delay. Max rate is
-limited to 100MHz for this NOC100 bus.
-
-Regards,
-Lukasz
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+PiBGcm9tOiBNYW5pdmFubmFuIFNhZGhhc2l2YW0gPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5h
+cm8ub3JnPg0KPiBTZW50OiBXZWRuZXNkYXksIEp1bHkgMTcsIDIwMTkgMjoxMSBQTQ0KPiANCj4g
+RG9jdW1lbnQgZGV2aWNldHJlZSBiaW5kaW5nIG9mIGkuTVg4UVhQIEFJX01MIGJvYXJkIGZyb20g
+RWluZm9jaGlwcy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE1hbml2YW5uYW4gU2FkaGFzaXZhbSA8
+bWFuaXZhbm5hbi5zYWRoYXNpdmFtQGxpbmFyby5vcmc+DQoNClJldmlld2VkLWJ5OiBEb25nIEFp
+c2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KDQpSZWdhcmRzDQpBaXNoZW5nDQo=
