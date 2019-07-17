@@ -1,94 +1,87 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using
- devicetree
-Date: Wed, 17 Jul 2019 09:57:36 +0900
-Message-ID: <20190717095736.c53f0368034a11332346d18e@kernel.org>
-References: <156113387975.28344.16009584175308192243.stgit@devnote2>
-        <f0cee7b6-b83b-b74c-82f5-f43e39bd391a@gmail.com>
-        <20190624115223.db1e53549a15c6548bfa1fa1@kernel.org>
-        <e5e3f55b-095b-e6fc-8734-d888ba5c87f3@gmail.com>
-        <20190625140004.a74443238596b297a558a66f@kernel.org>
-        <c01bd567-0c8b-ec32-773b-fb95bfcdcd50@gmail.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: [PATCH v11 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Tue, 16 Jul 2019 18:55:25 -0700
+Message-ID: <20190717015543.152251-1-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c01bd567-0c8b-ec32-773b-fb95bfcdcd50@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>, Michal Marek <michal.lkml@markovi.net>, Jonathan Corbet <corbet@lwn.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+## TL;DR
 
-On Mon, 15 Jul 2019 06:55:40 -0700
-Frank Rowand <frowand.list@gmail.com> wrote:
+This patchset addresses comments from Stephen Boyd. No changes affect
+the API, and all changes are specific to patches 02, 03, and 04;
+however, there were some significant changes to how string_stream and
+kunit_stream work under the hood.
 
-> > Hmm, it's a kind of communication with the operator of the boot loader, since there
-> > is an admin or developer behind it. I think the comminication is to communicate
-> > with that human. Then if they intend to trace boot process, that is a kind of
-> > communication.
-> 
-> The quote from the plumbers 2016 devicetree etherpad ("Operating points are OK ...)
-> conveniently ignores a sentence just a few lines later:
-> 
->    "If firmware is deciding the operating point, then it's OK to convey it via DT."
-> 
-> The operating points example is clearly communicating boot loader information to
-> the kernel.
-> 
-> Something the admin or developer wants to communicate is not boot loader
-> information.
+## Background
 
-But the cmdline (bootargs) is already supported, I think this is a kind of bootargs.
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
 
-> > [...]
-> >>>>> - Can we use devicetree for configuring kernel dynamically?
-> >>>>
-> >>>> No.  Sorry.
-> >>>>
-> >>>> My understanding of this proposal is that it is intended to better
-> >>>> support boot time kernel and driver debugging.  As an alternate
-> >>>> implementation, could you compile the ftrace configuration information
-> >>>> directly into a kernel data structure?  It seems like it would not be
-> >>>> very difficult to populate the data structure data via a few macros.
-> >>>
-> >>> No, that is not what I intended. My intention was to trace boot up
-> >>> process "without recompiling kernel", but with a structured data.
-> >>
-> >> That is debugging.  Or if you want to be pedantic, a complex performance
-> >> measurement of the boot process (more than holding a stopwatch in your
-> >> hand).
-> > 
-> > Yeah, that's right.
-> > 
-> >> Recompiling a single object file (containing the ftrace command data)
-> >> and re-linking the kernel is not a big price in that context).
-> > 
-> > No, if I can use DT, I can choose one of them while boot up.
-> > That will be a big difference.
-> > (Of course for that purpose, I should work on boot loader to support
-> > DT overlay)
-> 
-> This is debugging kernel drivers.  I do not think that it is a big cost for
-> a kernel developer to re-link the kernel.  On any reasonable modern
-> development system this should be a matter of seconds, not minutes.
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want[1]) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in about a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
 
-Tracing is not only debugging the kernel drivers, but also measures
-performance or behavior and compare with different settings.
-Also, in some case, we can not change the binary, like distro kernel.
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
 
-> Compiling a devicetree source is not significantly less time.  (To be
-> fair, you imply that you would have various compiled devicetrees to
-> choose from at boot time.  It may be realistic to have a library of
-> ftrace commands, or it may be more realistic that someone debugging
-> a kernel driver will create a unique ftrace command set for the
-> particular case they are debugging.)
+### What's so special about unit testing?
 
-Yeah, devicetree build time may not be matter, decoupling from the
-kernel image is, I think, the key point.
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
 
-Thank you,
+### Is KUnit trying to replace other testing frameworks for the kernel?
+
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
+
+### More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[2].
+
+Additionally for convenience, I have applied these patches to a
+branch[3]. The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.2/v11 branch.
+
+## Changes Since Last Version
+
+- Went back to using spinlock in `struct string_stream`. Needed for so
+  that it is compatible with different GFP flags to address comment from
+  Stephen.
+- Added string_stream_append function to string_stream API. - suggested
+  by Stephen.
+- Made all string fragments and other allocations internal to
+  string_stream and kunit_stream managed by the KUnit resource
+  management API.
+
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[3] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.2/v11
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.22.0.510.g264f2c817a-goog
