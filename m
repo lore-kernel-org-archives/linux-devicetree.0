@@ -1,40 +1,74 @@
-From: Alexander Steffen <Alexander.Steffen@infineon.com>
-Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
-Date: Wed, 17 Jul 2019 09:48:02 +0200
-Message-ID: <bccd2ebf-75b1-d02f-9283-4ffd7aa36616@infineon.com>
-References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
- <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
- <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com>
- <CAM9mBwJC2QD5-gV1eJUDzC2Fnnugr-oCZCoaH2sT_7ktFDkS-Q@mail.gmail.com>
- <45603af2fc8374a90ef9e81a67083395cc9c7190.camel@linux.intel.com>
- <6e7ff1b958d84f6e8e585fd3273ef295@NTILML02.nuvoton.com>
- <CAP6Zq1hPo9dG71YFyr7z9rjmi-DvoUZJOme4+2uqsfO+7nH+HQ@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
+ opp-avg-KBps bindings
+Date: Wed, 17 Jul 2019 13:24:48 +0530
+Message-ID: <20190717075448.xlyg2ddewlci3abg@vireshk-i7>
+References: <20190703011020.151615-1-saravanak@google.com>
+ <20190703011020.151615-2-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP6Zq1hPo9dG71YFyr7z9rjmi-DvoUZJOme4+2uqsfO+7nH+HQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190703011020.151615-2-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>, Oshri Alkobi <oshrialkoby85@gmail.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, peterhuewe@gmx.de, jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>, IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>, devicetree <devicetree@vger.kernel.org>, AP MS30 Linux Kernel community <linux-kernel@vger.kernel.org>, linux-integrity@vger.kernel.org, gcwilson@us.ibm.com, kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com, IS30 Dan Morav <Dan.Morav@nuvoton.com>, eyal.cohen@nuvoton.com
+To: Saravana Kannan <saravanak@google.com>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 15.07.2019 10:08, Tomer Maimon wrote:
-> Hi Jarkko and All,
+On 02-07-19, 18:10, Saravana Kannan wrote:
+> Interconnects often quantify their performance points in terms of
+> bandwidth. So, add opp-peak-KBps (required) and opp-avg-KBps (optional) to
+> allow specifying Bandwidth OPP tables in DT.
 > 
-> Thanks for your feedback and sorry for the late response.
+> opp-peak-KBps is a required property that replace opp-hz for Bandwidth OPP
+> tables.
 > 
+> opp-avg-KBps is an optional property that can be used in Bandwidth OPP
+> tables.
 > 
-> Due to the amount of work required to handle this technical feedback and 
-> project constraints we need to put this task on hold for the near future.
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  Documentation/devicetree/bindings/opp/opp.txt | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
 > 
-> In the meantime, anyone from the community is welcome to take over this 
-> code and handle the re-design for the benefit of the entire TPM community.
+> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> index 76b6c79604a5..c869e87caa2a 100644
+> --- a/Documentation/devicetree/bindings/opp/opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> @@ -83,9 +83,14 @@ properties.
+>  
+>  Required properties:
+>  - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
+> -  required property for all device nodes but devices like power domains. The
+> -  power domain nodes must have another (implementation dependent) property which
+> -  uniquely identifies the OPP nodes.
+> +  required property for all device nodes but for devices like power domains or
+> +  bandwidth opp tables. The power domain nodes must have another (implementation
+> +  dependent) property which uniquely identifies the OPP nodes. The interconnect
+> +  opps are required to have the opp-peak-bw property.
 
-Too bad you lack the time to finish this.
+                                   ??
 
-If somebody else were to pick it up, would it be possible for you to 
-provide a couple of TPMs that implement this protocol, so that it can be 
-properly tested?
+> +
+> +- opp-peak-KBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
+> +  big-endian integer. This is a required property for all devices that don't
+> +  have opp-hz. For example, bandwidth OPP tables for interconnect paths.
+>  
+>  Optional properties:
+>  - opp-microvolt: voltage in micro Volts.
+> @@ -132,6 +137,10 @@ Optional properties:
+>  - opp-level: A value representing the performance level of the device,
+>    expressed as a 32-bit integer.
+>  
+> +- opp-avg-KBps: Average bandwidth in kilobytes per second, expressed as a
+> +  32-bit big-endian integer. This property is only meaningful in OPP tables
+> +  where opp-peak-KBps is present.
+> +
+>  - clock-latency-ns: Specifies the maximum possible transition latency (in
+>    nanoseconds) for switching to this OPP from any other OPP.
+>  
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
 
-Alexander
+-- 
+viresh
