@@ -1,33 +1,42 @@
-Return-Path: <SRS0=OASA=U6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.planimolde.pt ([62.48.184.67]:39155 "EHLO
-        mail.planimolde.pt" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727662AbfGAK5S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jul 2019 06:57:18 -0400
-Date: Mon, 1 Jul 2019 12:50:57 +0200
-From: Peter Wong <info@planimolde.pt>
-Reply-To: Peter Wong <pw178483@gmail.com>
-Message-ID: <14225325.31876.1561978257909.JavaMail.cash@mail.planimolde.pt>
-Subject: =?Cp1252?Q?Investitionsm=F6glichkeit?=
+Return-Path: <SRS0=xQJe=VO=gmail.com=dmitry.torokhov@kernel.org>
+Date: Wed, 17 Jul 2019 06:33:46 +0300
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] Input: atmel_mxt_ts - allow specification of config name
+Message-ID: <20190717033346.GA621@penguin>
+References: <20190712135338.6211-1-l.stach@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="Cp1252"
-Content-Transfer-Encoding: 8BIT
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712135338.6211-1-l.stach@pengutronix.de>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Nick Dyer <nick@shmanahar.org>, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, patchwork-lst@pengutronix.de, Chris Healy <cphealy@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Sch�ne Gr��e,
+Hi Lucas,
 
-Bitte finden Sie den Inhalt dieser Mail sehr vertraulich und legal. Ich hei�e Peter Wong und arbeite mit einer Bank hier in Hongkong zusammen. 
-Ich habe mich entschlossen, mit Ihnen Kontakt aufzunehmen, um in jedes lukrative Gesch�ft in Ihrem Land investieren zu k�nnen. Ich bin bereit, 
-Ihnen 40% des Anlageergebnisses als Gesch�ftspartner anzubieten.
+On Fri, Jul 12, 2019 at 03:53:38PM +0200, Lucas Stach wrote:
+> From: Nick Dyer <nick@shmanahar.org>
+> 
+> Some systems require different touchscreen configurations depending on the
+> populated touchscreen. To allow different configs to co-exist in the file
+> system we need a way to tell the driver, which config should be loaded.
+> 
+> Signed-off-by: Nick Dyer <nick@shmanahar.org>
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+> lst:
+> - switch to property name to not use underscore
+> - Add more elaborate commit message
 
-Wir bieten auch ein schnelles Darlehen zu niedrigen Zinss�tzen an, ohne dass Sicherheiten erforderlich sind. Bei Interesse antworten Sie bitte auf 
-meine private E-Mail: pw178484@gmail.com
+I believe we have already discussed this patch and back then I said that
+the "atmel" prefix was not appropriate, as it describes not hardware
+specifics but rather Linux kernel behavior and therefore we should be
+using "linux,cfg-name" as the property. Unfortunately that version of
+the patch got lost in my mailbox.
 
-Mit freundlichen Gr��en: Peter Wong
+I will fish it out and apply.
 
+Thanks.
 
-
-
-----------------------------------------------------
-This email was sent by the shareware version of Postman Professional.
+-- 
+Dmitry
