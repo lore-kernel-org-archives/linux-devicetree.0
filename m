@@ -1,123 +1,47 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: RE: [v5,2/2] Documentation: dt: binding: rtc: add binding for ftm
- alarm driver
-Date: Wed, 17 Jul 2019 09:37:53 +0000
-Message-ID: <DB7PR04MB449083E19DCF1A68254AEC298FC90@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190716101655.47418-1-biwen.li@nxp.com>
- <20190716101655.47418-2-biwen.li@nxp.com>
- <VE1PR04MB668718A642D1E521BF5F3F198FCE0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH] arm64: dts: imx8mq: fix SAI compatible
+Date: Wed, 17 Jul 2019 11:54:36 +0200
+Message-ID: <20190717095436.28154-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VE1PR04MB668718A642D1E521BF5F3F198FCE0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Li <leoyang.li@nxp.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> > From: Biwen Li <biwen.li@nxp.com>
-> > Sent: Tuesday, July 16, 2019 5:17 AM
-> > To: a.zummo@towertech.it; alexandre.belloni@bootlin.com; Leo Li
-> > <leoyang.li@nxp.com>; robh+dt@kernel.org
-> > Cc: linux-rtc@vger.kernel.org; linux-kernel@vger.kernel.org; Xiaobo
-> > Xie <xiaobo.xie@nxp.com>; Jiafei Pan <jiafei.pan@nxp.com>; Ran Wang
-> > <ran.wang_1@nxp.com>; mark.rutland@arm.com;
-> > devicetree@vger.kernel.org; Biwen Li <biwen.li@nxp.com>
-> > Subject: [v5,2/2] Documentation: dt: binding: rtc: add binding for ftm
-> > alarm driver
-> >
-> > The patch adds binding for ftm alarm driver
-> >
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > ---
-> > Change in v5:
-> >     - None
-> >
-> > Change in v4:
-> >     - add note about dts and kernel options
-> >     - add aliases in example
-> >
-> > Change in v3:
-> > 	- remove reg-names property
-> > 	- correct cells number
-> >
-> > Change in v2:
-> > 	- replace ls1043a with ls1088a as example
-> > 	- add rcpm node and fsl,rcpm-wakeup property
-> >
-> >
-> >  .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 49 +++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-
-> > alarm.txt
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> > b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> > new file mode 100644
-> > index 000000000000..fb018065406c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> > @@ -0,0 +1,49 @@
-> > +Freescale FlexTimer Module (FTM) Alarm
-> > +
-> > +Note:
-> > +- The driver depends on RCPM driver
-> > +  to wake up system in sleep.
-> > +- Need stop using RTC_HCTOSYS or use the DT aliases
-> > +  to ensure the driver is not used as the primary RTC.
-> > +  (Select DT aliases defaultly)
-> > +
-> > +Required properties:
-> > +- compatible : Should be "fsl,<chip>-ftm-alarm", the
-> > +	       supported chips include
-> > +	       "fsl,ls1012a-ftm-alarm"
-> > +	       "fsl,ls1021a-ftm-alarm"
-> > +	       "fsl,ls1028a-ftm-alarm"
-> > +	       "fsl,ls1043a-ftm-alarm"
-> > +	       "fsl,ls1046a-ftm-alarm"
-> > +	       "fsl,ls1088a-ftm-alarm"
-> > +	       "fsl,ls208xa-ftm-alarm"
-> > +- reg : Specifies base physical address and size of the register sets
-> > +for the
-> > +  FlexTimer Module and base physical address of IP Powerdown
-> > +Exception
-> > Control
-> > +  Register.
->=20
-> You removed the IP Powerdown exception register in the examples, but not
-> here.
-Ok,I will remove it in v6.
->=20
-> > +- interrupts : Should be the FlexTimer Module interrupt.
-> > +- fsl,rcpm-wakeup property and rcpm node : Please refer
-> > +	Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > +
-> > +Optional properties:
-> > +- big-endian: If the host controller is big-endian mode, specify this =
-property.
-> > +  The default endian mode is little-endian.
-> > +
-> > +Example:
-> > +aliases {
-> > +	...
-> > +	rtc1 =3D ftm_alarm0; /* Use flextimer alarm driver as /dev/rtc1 */
-> > +	...
-> > +};
-> > +
-> > +rcpm: rcpm@1e34040 {
-> > +	compatible =3D "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-> > +	reg =3D <0x0 0x1e34040 0x0 0x18>;
-> > +	fsl,#rcpm-wakeup-cells =3D <6>;
-> > +};
-> > +
-> > +ftm_alarm0: timer@2800000 {
-> > +	compatible =3D "fsl,ls1088a-ftm-alarm";
-> > +	reg =3D <0x0 0x2800000 0x0 0x10000>;
-> > +	fsl,rcpm-wakeup =3D <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-> > +	interrupts =3D <0 44 4>;
-> > +};
-> > --
-> > 2.17.1
+The i.MX8M SAI block is not compatible with the i.MX6SX one, as the
+register layout has changed due to two version registers being added
+at the beginning of the address map. Remove the bogus compatible.
+
+Fixes: 8c61538dc945 "arm64: dts: imx8mq: Add SAI2 node"
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 9326bd4150a3..0c533c66b340 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -718,8 +718,7 @@
+ 
+ 			sai2: sai@308b0000 {
+ 				#sound-dai-cells = <0>;
+-				compatible = "fsl,imx8mq-sai",
+-					     "fsl,imx6sx-sai";
++				compatible = "fsl,imx8mq-sai";
+ 				reg = <0x308b0000 0x10000>;
+ 				interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clk IMX8MQ_CLK_SAI2_IPG>,
+-- 
+2.20.1
