@@ -1,115 +1,86 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v1 20/50] ARM: dts: exynos: change and rename FSYS OPP
- table in Exynos5420
-Date: Wed, 17 Jul 2019 12:04:45 +0200
-Message-ID: <33804835-4003-b86d-62cf-3802fbb91202@partner.samsung.com>
-References: <CGME20190715124450eucas1p189043d196375aa6adacf898de81bfa9b@eucas1p1.samsung.com>
-        <20190715124417.4787-1-l.luba@partner.samsung.com>
-        <20190715124417.4787-21-l.luba@partner.samsung.com>
-        <CAJKOXPfHgmBo9NX6jO8qSqXjN1pFmnKkQEWbou+q7-BDq2XKQg@mail.gmail.com>
+From: Biwen Li <biwen.li@nxp.com>
+Subject: RE: [EXT] Re: [v5,2/2] Documentation: dt: binding: rtc: add binding
+ for ftm alarm driver
+Date: Wed, 17 Jul 2019 10:05:13 +0000
+Message-ID: <DB7PR04MB44902483232D323AF611D6298FC90@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190716101655.47418-1-biwen.li@nxp.com>
+ <20190716101655.47418-2-biwen.li@nxp.com>
+ <CAL_Jsq+U=W_51qUDvOMPgexMOLuqTyYua5H6G-cwFnKCh8YmPg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPfHgmBo9NX6jO8qSqXjN1pFmnKkQEWbou+q7-BDq2XKQg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+U=W_51qUDvOMPgexMOLuqTyYua5H6G-cwFnKCh8YmPg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Leo Li <leoyang.li@nxp.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
-
-On 7/17/19 10:39 AM, Krzysztof Kozlowski wrote:
-> On Mon, 15 Jul 2019 at 14:44, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> The FSYS and FSYS2 buses have similar characteristics and both have max
->> frequency 240MHz. The old OPP table bus_fsys_apb_opp_table should be used
->> only to FSYS APB bus because APB max frequency is 200MHz.
->> The new OPPs for FSYS should increase its performance and related devices.
-> 
-> I do not understand the explanation. You say that there are two buses
-> - FSYS and FSYS2 - and old OPP table should be used for FSYS APB but
-> you remove the old one (by renaming). Or which one is the 'old one'
-> here? The reason is speed... wait, what? Usually DTS should describe
-> the HW so I imagine that proper opp table should be used for proper
-> bus. It surprised me that we switch a bus to different OPP table just
-> because of speed concerns. It should be correctness concern.
-> 
-> Please clarify and reword all this.
-> 
-> I am also not sure how this relates with previous patch - whether you
-> are fixing independent issues. Maybe because I do not see the issue
-> fixed... change the commit title and adjust the messages to focus WHY
-> you are doing it. For small fixes WHAT you are doing is rather obvious
-> so commit msg (and title) should not focus on it.
-
-I don't know how familiar you are with AMBA standard or general concept
-of NoC, so I am not sure if the explanation below would be sufficient.
-There are 3 buses: FSYS, FSYS2, FSYS APB. The first two are connecting
-AXI Slave/Master interfaces of the IP blocks. They are dedicated to
-transfer the data i.e. to MMC block using 128 bit bus width and 240MHz
-clock. The 3rd is dedicated for accessing peripheral registers -
-connecting to IP block interfaces called APB3 slave.
-As I mentioned in the comment the FSYS and FSYS2 are able to run faster
-than the APB bus.
-Thus, changing the old implementation which pinned FSYS and FSYS APB
-to the same OPP table is wrong. The right connection made by OPP
-reference should be FSYS and FSYS2 with also 240MHz max freq inside.
-
-I have discussed offline with Bartek and I will squash DT patches to
-an atomic-change-with-OPPs-and-PLL-rate-for-all-children, with more
-detailed comment in the commit message describing the old state and the
-new one.
-
-Thank you for the review.
-
-Regards,
-Lukasz
-
-> 
-> Best regards,
-> Krzysztof
-> 
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos5420.dtsi | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
->> index 941c58bdd809..c7fc4b829b2a 100644
->> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> @@ -995,7 +995,7 @@
->>                          compatible = "samsung,exynos-bus";
->>                          clocks = <&clock CLK_DOUT_ACLK200_FSYS>;
->>                          clock-names = "bus";
->> -                       operating-points-v2 = <&bus_fsys_apb_opp_table>;
->> +                       operating-points-v2 = <&bus_fsys_opp_table>;
->>                          status = "disabled";
->>                  };
->>
->> @@ -1003,7 +1003,7 @@
->>                          compatible = "samsung,exynos-bus";
->>                          clocks = <&clock CLK_DOUT_ACLK200_FSYS2>;
->>                          clock-names = "bus";
->> -                       operating-points-v2 = <&bus_fsys2_opp_table>;
->> +                       operating-points-v2 = <&bus_fsys_opp_table>;
->>                          status = "disabled";
->>                  };
->>
->> @@ -1157,7 +1157,7 @@
->>                          };
->>                  };
->>
->> -               bus_fsys2_opp_table: opp_table5 {
->> +               bus_fsys_opp_table: opp_table5 {
->>                          compatible = "operating-points-v2";
->>
->>                          opp00 {
->> --
->> 2.17.1
->>
-> 
-> 
+PiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBPbiBUdWUsIEp1bCAxNiwgMjAxOSBhdCA0
+OjI2IEFNIEJpd2VuIExpIDxiaXdlbi5saUBueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IFRoZSBw
+YXRjaCBhZGRzIGJpbmRpbmcgZm9yIGZ0bSBhbGFybSBkcml2ZXINCj4gDQo+IEJpbmRpbmdzIGFy
+ZSBmb3IgaC93LCBub3QgZHJpdmVycy4uLg0KPiANCj4gJ2R0LWJpbmRpbmdzOiBydGM6IC4uLicg
+Zm9yIHRoZSBzdWJqZWN0IHByZWZpeC4NCkkgd2lsbCBjb3JyZWN0IGl0IGluIHY2Lg0KPiANCj4g
+Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpd2VuIExpIDxiaXdlbi5saUBueHAuY29tPg0KPiA+IC0t
+LQ0KPiA+IENoYW5nZSBpbiB2NToNCj4gPiAgICAgLSBOb25lDQo+ID4NCj4gPiBDaGFuZ2UgaW4g
+djQ6DQo+ID4gICAgIC0gYWRkIG5vdGUgYWJvdXQgZHRzIGFuZCBrZXJuZWwgb3B0aW9ucw0KPiA+
+ICAgICAtIGFkZCBhbGlhc2VzIGluIGV4YW1wbGUNCj4gPg0KPiA+IENoYW5nZSBpbiB2MzoNCj4g
+PiAgICAgICAgIC0gcmVtb3ZlIHJlZy1uYW1lcyBwcm9wZXJ0eQ0KPiA+ICAgICAgICAgLSBjb3Jy
+ZWN0IGNlbGxzIG51bWJlcg0KPiA+DQo+ID4gQ2hhbmdlIGluIHYyOg0KPiA+ICAgICAgICAgLSBy
+ZXBsYWNlIGxzMTA0M2Egd2l0aCBsczEwODhhIGFzIGV4YW1wbGUNCj4gPiAgICAgICAgIC0gYWRk
+IHJjcG0gbm9kZSBhbmQgZnNsLHJjcG0td2FrZXVwIHByb3BlcnR5DQo+ID4NCj4gPg0KPiA+ICAu
+Li4vYmluZGluZ3MvcnRjL3J0Yy1mc2wtZnRtLWFsYXJtLnR4dCAgICAgICAgfCA0OSArKysrKysr
+KysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0OSBpbnNlcnRpb25zKCspDQo+ID4g
+IGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9ydGMvcnRjLWZzbC1mdG0tYWxhcm0udHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcnRjL3J0Yy1mc2wtZnRtLWFsYXJtLnR4
+dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9ydGMtZnNsLWZ0
+bS1hbGFybS50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAw
+MDAwMC4uZmIwMTgwNjU0MDZjDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvcnRjLWZzbC1mdG0tYWxhcm0udHh0DQo+ID4g
+QEAgLTAsMCArMSw0OSBAQA0KPiA+ICtGcmVlc2NhbGUgRmxleFRpbWVyIE1vZHVsZSAoRlRNKSBB
+bGFybQ0KPiA+ICsNCj4gPiArTm90ZToNCj4gPiArLSBUaGUgZHJpdmVyIGRlcGVuZHMgb24gUkNQ
+TSBkcml2ZXINCj4gPiArICB0byB3YWtlIHVwIHN5c3RlbSBpbiBzbGVlcC4NCj4gPiArLSBOZWVk
+IHN0b3AgdXNpbmcgUlRDX0hDVE9TWVMgb3IgdXNlIHRoZSBEVCBhbGlhc2VzDQo+ID4gKyAgdG8g
+ZW5zdXJlIHRoZSBkcml2ZXIgaXMgbm90IHVzZWQgYXMgdGhlIHByaW1hcnkgUlRDLg0KPiA+ICsg
+IChTZWxlY3QgRFQgYWxpYXNlcyBkZWZhdWx0bHkpDQo+IA0KPiBUaGlzIGlzIExpbnV4IHNwZWNp
+ZmljIGFuZCBub3QgcmVsZXZhbnQgdG8gdGhlIGJpbmRpbmcuDQpPaywgSSB3aWxsIHJlbW92ZSBh
+bGwgb2YgdGhlIE5vdGUgaW4gdjYuDQo+IA0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGll
+czoNCj4gPiArLSBjb21wYXRpYmxlIDogU2hvdWxkIGJlICJmc2wsPGNoaXA+LWZ0bS1hbGFybSIs
+IHRoZQ0KPiA+ICsgICAgICAgICAgICAgIHN1cHBvcnRlZCBjaGlwcyBpbmNsdWRlDQo+ID4gKyAg
+ICAgICAgICAgICAgImZzbCxsczEwMTJhLWZ0bS1hbGFybSINCj4gPiArICAgICAgICAgICAgICAi
+ZnNsLGxzMTAyMWEtZnRtLWFsYXJtIg0KPiA+ICsgICAgICAgICAgICAgICJmc2wsbHMxMDI4YS1m
+dG0tYWxhcm0iDQo+ID4gKyAgICAgICAgICAgICAgImZzbCxsczEwNDNhLWZ0bS1hbGFybSINCj4g
+PiArICAgICAgICAgICAgICAiZnNsLGxzMTA0NmEtZnRtLWFsYXJtIg0KPiA+ICsgICAgICAgICAg
+ICAgICJmc2wsbHMxMDg4YS1mdG0tYWxhcm0iDQo+ID4gKyAgICAgICAgICAgICAgImZzbCxsczIw
+OHhhLWZ0bS1hbGFybSINCj4gPiArLSByZWcgOiBTcGVjaWZpZXMgYmFzZSBwaHlzaWNhbCBhZGRy
+ZXNzIGFuZCBzaXplIG9mIHRoZSByZWdpc3RlciBzZXRzDQo+ID4gK2ZvciB0aGUNCj4gPiArICBG
+bGV4VGltZXIgTW9kdWxlIGFuZCBiYXNlIHBoeXNpY2FsIGFkZHJlc3Mgb2YgSVAgUG93ZXJkb3du
+DQo+ID4gK0V4Y2VwdGlvbiBDb250cm9sDQo+ID4gKyAgUmVnaXN0ZXIuDQo+ID4gKy0gaW50ZXJy
+dXB0cyA6IFNob3VsZCBiZSB0aGUgRmxleFRpbWVyIE1vZHVsZSBpbnRlcnJ1cHQuDQo+ID4gKy0g
+ZnNsLHJjcG0td2FrZXVwIHByb3BlcnR5IGFuZCByY3BtIG5vZGUgOiBQbGVhc2UgcmVmZXINCj4g
+PiArICAgICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL3JjcG0u
+dHh0DQo+ID4gKw0KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICstIGJpZy1lbmRpYW46
+IElmIHRoZSBob3N0IGNvbnRyb2xsZXIgaXMgYmlnLWVuZGlhbiBtb2RlLCBzcGVjaWZ5IHRoaXMg
+cHJvcGVydHkuDQo+ID4gKyAgVGhlIGRlZmF1bHQgZW5kaWFuIG1vZGUgaXMgbGl0dGxlLWVuZGlh
+bi4NCj4gPiArDQo+ID4gK0V4YW1wbGU6DQo+ID4gK2FsaWFzZXMgew0KPiA+ICsgICAgICAgLi4u
+DQo+ID4gKyAgICAgICBydGMxID0gZnRtX2FsYXJtMDsgLyogVXNlIGZsZXh0aW1lciBhbGFybSBk
+cml2ZXIgYXMgL2Rldi9ydGMxICovDQo+ID4gKyAgICAgICAuLi4NCj4gPiArfTsNCj4gDQo+IERy
+b3AgdGhlIGFsaWFzZXMgcGFydC4gSXQncyBub3QgZ29pbmcgdG8gd29yayB3aGVuIHRoaXMgaXMg
+Y29udmVydGVkIHRvIERUIHNjaGVtYQ0KPiBhbmQgdGhlIGNvbW1lbnQgaXMgTGludXggc3BlY2lm
+aWMuDQpTb3JyeSxJIGNhbid0IGRyb3AgdGhlIGFsaWFzZXMgcGFydC4gSWYgYW55IHVzZXIgdXNl
+cyB0aGUgYWxhcm0gZHJpdmVyIGFzIHJ0YzAsDQp0aGUgdXNlciB3aWxsIGdldCB3cm9uZyB0aW1l
+IGZyb20gL2Rldi9ydGMwLkl0IGlzIHZlcnkgaW1wb3J0YW50Lg0KPiANCj4gPiArDQo+ID4gK3Jj
+cG06IHJjcG1AMWUzNDA0MCB7DQo+ID4gKyAgICAgICBjb21wYXRpYmxlID0gImZzbCxsczEwODhh
+LXJjcG0iLCAiZnNsLHFvcmlxLXJjcG0tMi4xKyI7DQo+ID4gKyAgICAgICByZWcgPSA8MHgwIDB4
+MWUzNDA0MCAweDAgMHgxOD47DQo+ID4gKyAgICAgICBmc2wsI3JjcG0td2FrZXVwLWNlbGxzID0g
+PDY+Ow0KPiANCj4gQmVmb3JlIHRoZXJlIGFyZSBhbnkgdXNlcnMgb2YgdGhpcywgZWl0aGVyIGRy
+b3AgaXQgaWYgaXQgaXMgbm90IHZhcmlhYmxlIG9yIHRoZSBjb3JyZWN0DQo+IGZvcm0gd291bGQg
+YmUgJyNmc2wscmNwbS13YWtldXAtY2VsbHMnLg0KSSB3aWxsIHJlcGxhY2UgJ2ZzbCwjcmNwbS13
+YWtldXAtY2VsbHMnIHdpdGggJyNmc2wscmNwbS13YWtldXAtY2VsbHMnIGluIHY2Lg0KPiANCj4g
+PiArfTsNCj4gPiArDQo+ID4gK2Z0bV9hbGFybTA6IHRpbWVyQDI4MDAwMDAgew0KPiA+ICsgICAg
+ICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDg4YS1mdG0tYWxhcm0iOw0KPiA+ICsgICAgICAgcmVn
+ID0gPDB4MCAweDI4MDAwMDAgMHgwIDB4MTAwMDA+Ow0KPiA+ICsgICAgICAgZnNsLHJjcG0td2Fr
+ZXVwID0gPCZyY3BtIDB4MCAweDAgMHgwIDB4MCAweDQwMDAgMHgwPjsNCj4gPiArICAgICAgIGlu
+dGVycnVwdHMgPSA8MCA0NCA0PjsNCj4gPiArfTsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo=
