@@ -1,47 +1,123 @@
-From: Xia Jiang <xia.jiang@mediatek.com>
-Subject: [PATCH 5/5] arm: dts: add jpeg enc device tree node
-Date: Wed, 17 Jul 2019 17:30:34 +0800
-Message-ID: <20190717093034.22826-6-xia.jiang@mediatek.com>
-References: <20190717093034.22826-1-xia.jiang@mediatek.com>
+From: Biwen Li <biwen.li@nxp.com>
+Subject: RE: [v5,2/2] Documentation: dt: binding: rtc: add binding for ftm
+ alarm driver
+Date: Wed, 17 Jul 2019 09:37:53 +0000
+Message-ID: <DB7PR04MB449083E19DCF1A68254AEC298FC90@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190716101655.47418-1-biwen.li@nxp.com>
+ <20190716101655.47418-2-biwen.li@nxp.com>
+ <VE1PR04MB668718A642D1E521BF5F3F198FCE0@VE1PR04MB6687.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190717093034.22826-1-xia.jiang@mediatek.com>
+In-Reply-To: <VE1PR04MB668718A642D1E521BF5F3F198FCE0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rick Chang <rick.chang@mediatek.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com, Xia Jiang <xia.jiang@mediatek.com>
+To: Leo Li <leoyang.li@nxp.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-add jpeg enc device tree node
-
-Change-Id: I901602f04540d619a490746ed61c8cd8b420b051
-Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
----
- arch/arm/boot/dts/mt2701.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 51e1305c6471..560f27fd9d9e 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -569,6 +569,18 @@
- 			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
- 	};
- 
-+	jpegenc: jpegenc@1500a000 {
-+		compatible = "mediatek,mt2701-jpgenc", "mediatek,mtk-jpgenc";
-+		reg = <0 0x1500a000 0 0x1000>;
-+		interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
-+		clocks =  <&imgsys CLK_IMG_VENC>;
-+		clock-names = "jpgenc";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
-+		mediatek,larb = <&larb2>;
-+		iommus = <&iommu MT2701_M4U_PORT_JPGENC_RDMA>,
-+			<&iommu MT2701_M4U_PORT_JPGENC_BSDMA>;
-+	};
-+
- 	vdecsys: syscon@16000000 {
- 		compatible = "mediatek,mt2701-vdecsys", "syscon";
- 		reg = <0 0x16000000 0 0x1000>;
--- 
-2.18.0
+> > From: Biwen Li <biwen.li@nxp.com>
+> > Sent: Tuesday, July 16, 2019 5:17 AM
+> > To: a.zummo@towertech.it; alexandre.belloni@bootlin.com; Leo Li
+> > <leoyang.li@nxp.com>; robh+dt@kernel.org
+> > Cc: linux-rtc@vger.kernel.org; linux-kernel@vger.kernel.org; Xiaobo
+> > Xie <xiaobo.xie@nxp.com>; Jiafei Pan <jiafei.pan@nxp.com>; Ran Wang
+> > <ran.wang_1@nxp.com>; mark.rutland@arm.com;
+> > devicetree@vger.kernel.org; Biwen Li <biwen.li@nxp.com>
+> > Subject: [v5,2/2] Documentation: dt: binding: rtc: add binding for ftm
+> > alarm driver
+> >
+> > The patch adds binding for ftm alarm driver
+> >
+> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > ---
+> > Change in v5:
+> >     - None
+> >
+> > Change in v4:
+> >     - add note about dts and kernel options
+> >     - add aliases in example
+> >
+> > Change in v3:
+> > 	- remove reg-names property
+> > 	- correct cells number
+> >
+> > Change in v2:
+> > 	- replace ls1043a with ls1088a as example
+> > 	- add rcpm node and fsl,rcpm-wakeup property
+> >
+> >
+> >  .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 49 +++++++++++++++++++
+> >  1 file changed, 49 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-
+> > alarm.txt
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+> > b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+> > new file mode 100644
+> > index 000000000000..fb018065406c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+> > @@ -0,0 +1,49 @@
+> > +Freescale FlexTimer Module (FTM) Alarm
+> > +
+> > +Note:
+> > +- The driver depends on RCPM driver
+> > +  to wake up system in sleep.
+> > +- Need stop using RTC_HCTOSYS or use the DT aliases
+> > +  to ensure the driver is not used as the primary RTC.
+> > +  (Select DT aliases defaultly)
+> > +
+> > +Required properties:
+> > +- compatible : Should be "fsl,<chip>-ftm-alarm", the
+> > +	       supported chips include
+> > +	       "fsl,ls1012a-ftm-alarm"
+> > +	       "fsl,ls1021a-ftm-alarm"
+> > +	       "fsl,ls1028a-ftm-alarm"
+> > +	       "fsl,ls1043a-ftm-alarm"
+> > +	       "fsl,ls1046a-ftm-alarm"
+> > +	       "fsl,ls1088a-ftm-alarm"
+> > +	       "fsl,ls208xa-ftm-alarm"
+> > +- reg : Specifies base physical address and size of the register sets
+> > +for the
+> > +  FlexTimer Module and base physical address of IP Powerdown
+> > +Exception
+> > Control
+> > +  Register.
+>=20
+> You removed the IP Powerdown exception register in the examples, but not
+> here.
+Ok,I will remove it in v6.
+>=20
+> > +- interrupts : Should be the FlexTimer Module interrupt.
+> > +- fsl,rcpm-wakeup property and rcpm node : Please refer
+> > +	Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > +
+> > +Optional properties:
+> > +- big-endian: If the host controller is big-endian mode, specify this =
+property.
+> > +  The default endian mode is little-endian.
+> > +
+> > +Example:
+> > +aliases {
+> > +	...
+> > +	rtc1 =3D ftm_alarm0; /* Use flextimer alarm driver as /dev/rtc1 */
+> > +	...
+> > +};
+> > +
+> > +rcpm: rcpm@1e34040 {
+> > +	compatible =3D "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
+> > +	reg =3D <0x0 0x1e34040 0x0 0x18>;
+> > +	fsl,#rcpm-wakeup-cells =3D <6>;
+> > +};
+> > +
+> > +ftm_alarm0: timer@2800000 {
+> > +	compatible =3D "fsl,ls1088a-ftm-alarm";
+> > +	reg =3D <0x0 0x2800000 0x0 0x10000>;
+> > +	fsl,rcpm-wakeup =3D <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
+> > +	interrupts =3D <0 44 4>;
+> > +};
+> > --
+> > 2.17.1
