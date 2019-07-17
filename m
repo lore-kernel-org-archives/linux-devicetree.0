@@ -1,118 +1,145 @@
-From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
-Subject: [PATCHv3] MIPS: JZ4780: DTS: Add I2C nodes
-Date: Wed, 17 Jul 2019 21:19:26 +0200
-Message-ID: <20190717191926.GA4571@localhost.localdomain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Tushar Khandelwal <tushar.khandelwal@arm.com>
+Subject: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding documentation
+Date: Wed, 17 Jul 2019 20:26:13 +0100
+Message-ID: <20190717192616.1731-2-tushar.khandelwal@arm.com>
+References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <20190717192616.1731-1-tushar.khandelwal@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Alexandre GRIVEAUX <agriveaux@deutnet.info>
-Cc: linux-mips <linux-mips@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: tushar.2nov@gmail.com, morten_bp@live.dk, jassisinghbrar@gmail.com, nd@arm.com, Morten Borup Petersen <morten.petersen@arm.com>, Tushar Khandelwal <tushar.khandelwal@arm.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the devicetree nodes for the I2C core of the JZ4780 SoC, disabled
-by default.
----
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 86 ++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+From: Morten Borup Petersen <morten.petersen@arm.com>
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index b03cdec56de9..a76ecd69bfd0 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -239,6 +239,92 @@
- 		status = "disabled";
- 	};
- 
-+	i2c0: i2c@10050000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
+This patch adds device tree binding for Message Handling Unit
+controller version 2 from Arm.
+
+Signed-off-by: Morten Borup Petersen <morten.petersen@arm.com>
+Signed-off-by: Tushar Khandelwal <tushar.khandelwal@arm.com>
+Cc: robh+dt@kernel.org
+Cc: mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org
+Cc: jassisinghbrar@gmail.com
+---
+ .../devicetree/bindings/mailbox/arm,mhuv2.txt | 108 ++++++++++++++++++
+ 1 file changed, 108 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
+
+diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
+new file mode 100644
+index 000000000000..3a05593414bc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
+@@ -0,0 +1,108 @@
++Arm MHUv2 Mailbox Driver
++========================
 +
-+		reg = <0x10050000 0x1000>;
++The Arm Message-Handling-Unit (MHU) Version 2 is a mailbox controller that has
++between 1 and 124 channel windows to provide unidirectional communication with
++remote processor(s).
 +
-+		interrupt-parent = <&intc>;
-+		interrupts = <60>;
++Given the unidirectional nature of the device, an MHUv2 mailbox may only be
++written to or read from. If a pair of MHU devices is implemented between two
++processing elements to provide bidirectional communication, these must be
++specified as two separate mailboxes.
 +
-+		clocks = <&cgu JZ4780_CLK_SMB0>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c0_data>;
++A device tree node for an Arm MHUv2 device must specify either a receiver frame
++or a sender frame, indicating which end of the unidirectional MHU device which
++the device node entry describes.
 +
-+		status = "disabled";
++An MHU device must be specified with a transport protocol. The transport
++protocol of an MHU device determines the method of data transmission as well as
++the number of provided mailboxes.
++Following are the possible transport protocol types:
++- Single-word:	An MHU device implements as many mailboxes as it
++		provides channel windows. Data is transmitted through
++		the MHU registers.
++- Multi-word:	An MHU device implements a single mailbox. All channel windows
++		will be used during transmission. Data is transmitted through
++		the MHU registers.
++- Doorbell:	An MHU device implements as many mailboxes as there are flag
++		bits available in its channel windows. Optionally, data may
++		be transmitted through a shared memory region, wherein the MHU
++		is used strictly as an interrupt generation mechanism.
++
++Mailbox Device Node:
++====================
++
++Required properties:
++--------------------
++- compatible:	Shall be "arm,mhuv2" & "arm,primecell"
++- reg:		Contains the mailbox register address range (base
++		address and length)
++- #mbox-cells	Shall be 1 - the index of the channel needed.
++- mhu-frame	Frame type of the device.
++		Shall be either "sender" or "receiver"
++- mhu-protocol	Transport protocol of the device. Shall be one of the
++		following: "single-word", "multi-word", "doorbell"
++
++Required properties (receiver frame):
++-------------------------------------
++- interrupts:	Contains the interrupt information corresponding to the
++		combined interrupt of the receiver frame
++
++Example:
++--------
++
++	mbox_mw_tx: mhu@10000000 {
++		compatible = "arm,mhuv2","arm,primecell";
++		reg = <0x10000000 0x1000>;
++		clocks = <&refclk100mhz>;
++		clock-names = "apb_pclk";
++		#mbox-cells = <1>;
++		mhu-protocol = "multi-word";
++		mhu-frame = "sender";
 +	};
 +
-+	i2c1: i2c@10051000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10051000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <59>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB1>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c1_data>;
-+
-+		status = "disabled";
++	mbox_sw_tx: mhu@10000000 {
++		compatible = "arm,mhuv2","arm,primecell";
++		reg = <0x11000000 0x1000>;
++		clocks = <&refclk100mhz>;
++		clock-names = "apb_pclk";
++		#mbox-cells = <1>;
++		mhu-protocol = "single-word";
++		mhu-frame = "sender";
 +	};
 +
-+	i2c2: i2c@10052000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10052000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <58>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB2>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c2_data>;
-+
-+		status = "disabled";
++	mbox_db_rx: mhu@10000000 {
++		compatible = "arm,mhuv2","arm,primecell";
++		reg = <0x12000000 0x1000>;
++		clocks = <&refclk100mhz>;
++		clock-names = "apb_pclk";
++		#mbox-cells = <1>;
++		interrupts = <0 45 4>;
++		interrupt-names = "mhu_rx";
++		mhu-protocol = "doorbell";
++		mhu-frame = "receiver";
 +	};
 +
-+	i2c3: i2c@10053000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10053000 0x1000>;
++	mhu_client: scb@2e000000 {
++	compatible = "fujitsu,mb86s70-scb-1.0";
++	reg = <0 0x2e000000 0x4000>;
++	mboxes =
++		// For multi-word frames, client may only instantiate a single
++		// mailbox for a mailbox controller
++		<&mbox_mw_tx 0>,
 +
-+		interrupt-parent = <&intc>;
-+		interrupts = <57>;
++		// For single-word frames, client may instantiate as many
++		// mailboxes as there are channel windows in the MHU
++		 <&mbox_sw_tx 0>,
++		 <&mbox_sw_tx 1>,
++		 <&mbox_sw_tx 2>,
++		 <&mbox_sw_tx 3>,
 +
-+		clocks = <&cgu JZ4780_CLK_SMB3>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c3_data>;
-+
-+		status = "disabled";
++		// For doorbell frames, client may instantiate as many mailboxes
++		// as there are bits available in the combined number of channel
++		// windows ((channel windows * 32) mailboxes)
++		 <mbox_db_rx 0>,
++		 <mbox_db_rx 1>,
++		 ...
++		 <mbox_db_rx 17>;
 +	};
-+
-+	i2c4: i2c@10054000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10054000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <56>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB4>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c4_data>;
-+
-+		status = "disabled";
-+	};
-+
- 	watchdog: watchdog@10002000 {
- 		compatible = "ingenic,jz4780-watchdog";
- 		reg = <0x10002000 0x10>;
+\ No newline at end of file
 -- 
-2.20.1
+2.17.1
