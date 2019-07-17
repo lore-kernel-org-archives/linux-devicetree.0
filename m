@@ -1,118 +1,113 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCHv8 5/5] coresight: cpu-debug: Add support for Qualcomm Kryo
-Date: Wed, 17 Jul 2019 10:56:02 -0600
-Message-ID: <20190717165602.GA4271@xps15>
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <e2c4cc7c6ccaa5695f25af20c8e487ac53b39955.1562940244.git.saiprakash.ranjan@codeaurora.org>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v1 27/50] ARM: dts: exynos: align bus_wcore OPPs in
+ Exynos5420
+Date: Wed, 17 Jul 2019 18:58:11 +0200
+Message-ID: <15310bd0-0fd4-8d62-82a9-7a9df6a8ced3@partner.samsung.com>
+References: <CGME20190715124456eucas1p2acf15d00e3fa7b77fe3a2b10ce1ab74f@eucas1p2.samsung.com>
+        <20190715124417.4787-1-l.luba@partner.samsung.com>
+        <20190715124417.4787-28-l.luba@partner.samsung.com>
+        <CAJKOXPfFZL8q9hM1vPsLq+Qxe-gMz4c8j0jgFKfdf5qs68MTmA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e2c4cc7c6ccaa5695f25af20c8e487ac53b39955.1562940244.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <CAJKOXPfFZL8q9hM1vPsLq+Qxe-gMz4c8j0jgFKfdf5qs68MTmA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mike Leach <mike.leach@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Marc Gonzalez <marc.w.gonzalez@free.fr>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 07:46:27PM +0530, Sai Prakash Ranjan wrote:
-> Add support for coresight CPU debug module on Qualcomm
-> Kryo CPUs. This patch adds the UCI entries for Kryo CPUs
-> found on MSM8996 which shares the same PIDs as ETMs.
-> 
-> Without this, below error is observed on MSM8996:
-> 
-> [    5.429867] OF: graph: no port node found in /soc/debug@3810000
-> [    5.429938] coresight-etm4x: probe of 3810000.debug failed with error -22
-> [    5.435415] coresight-cpu-debug 3810000.debug: Coresight debug-CPU0 initialized
-> [    5.446474] OF: graph: no port node found in /soc/debug@3910000
-> [    5.448927] coresight-etm4x: probe of 3910000.debug failed with error -22
-> [    5.454681] coresight-cpu-debug 3910000.debug: Coresight debug-CPU1 initialized
-> [    5.487765] OF: graph: no port node found in /soc/debug@3a10000
-> [    5.488007] coresight-etm4x: probe of 3a10000.debug failed with error -22
-> [    5.493024] coresight-cpu-debug 3a10000.debug: Coresight debug-CPU2 initialized
-> [    5.501802] OF: graph: no port node found in /soc/debug@3b10000
-> [    5.512901] coresight-etm4x: probe of 3b10000.debug failed with error -22
-> [    5.513192] coresight-cpu-debug 3b10000.debug: Coresight debug-CPU3 initialized
-> 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  .../hwtracing/coresight/coresight-cpu-debug.c | 33 +++++++++----------
->  drivers/hwtracing/coresight/coresight-priv.h  | 10 +++---
->  2 files changed, 21 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> index 2463aa7ab4f6..96544b348c27 100644
-> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> @@ -646,24 +646,23 @@ static int debug_remove(struct amba_device *adev)
->  	return 0;
->  }
->  
-> +static const struct amba_cs_uci_id uci_id_debug[] = {
-> +	{
-> +		/*  CPU Debug UCI data */
-> +		.devarch	= 0x47706a15,
-> +		.devarch_mask	= 0xfff0ffff,
-> +		.devtype	= 0x00000015,
-> +	}
-> +};
-> +
->  static const struct amba_id debug_ids[] = {
-> -	{       /* Debug for Cortex-A53 */
-> -		.id	= 0x000bbd03,
-> -		.mask	= 0x000fffff,
-> -	},
-> -	{       /* Debug for Cortex-A57 */
-> -		.id	= 0x000bbd07,
-> -		.mask	= 0x000fffff,
-> -	},
-> -	{       /* Debug for Cortex-A72 */
-> -		.id	= 0x000bbd08,
-> -		.mask	= 0x000fffff,
-> -	},
-> -	{       /* Debug for Cortex-A73 */
-> -		.id	= 0x000bbd09,
-> -		.mask	= 0x000fffff,
-> -	},
-> -	{ 0, 0 },
-> +	CS_AMBA_ID(0x000bbd03),				/* Cortex-A53 */
-> +	CS_AMBA_ID(0x000bbd07),				/* Cortex-A57 */
-> +	CS_AMBA_ID(0x000bbd08),				/* Cortex-A72 */
-> +	CS_AMBA_ID(0x000bbd09),				/* Cortex-A73 */
-> +	CS_AMBA_UCI_ID(0x000f0205, uci_id_debug),	/* Qualcomm Kryo */
-> +	CS_AMBA_UCI_ID(0x000f0211, uci_id_debug),	/* Qualcomm Kryo */
-> +	{},
->  };
->  
->  static struct amba_driver debug_driver = {
-> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-> index 7d401790dd7e..41ae5863104d 100644
-> --- a/drivers/hwtracing/coresight/coresight-priv.h
-> +++ b/drivers/hwtracing/coresight/coresight-priv.h
-> @@ -185,11 +185,11 @@ static inline int etm_writel_cp14(u32 off, u32 val) { return 0; }
->  	}
->  
->  /* coresight AMBA ID, full UCI structure: id table entry. */
-> -#define CS_AMBA_UCI_ID(pid, uci_ptr)	\
-> -	{				\
-> -		.id	= pid,		\
-> -		.mask	= 0x000fffff,	\
-> -		.data	= uci_ptr	\
-> +#define CS_AMBA_UCI_ID(pid, uci_ptr)		\
-> +	{					\
-> +		.id	= pid,			\
-> +		.mask	= 0x000fffff,		\
-> +		.data	= (void *)uci_ptr	\
->  	}
+Hi Krzysztof,
 
-I will pickup this patch - it will show up in my next tree when rc1 comes out.
+On 7/17/19 12:15 PM, Krzysztof Kozlowski wrote:
+> On Mon, 15 Jul 2019 at 14:44, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> This is the most important bus in the Exynos5x SoC. The whole communication
+>> inside SoC does through that bus (apart from direct requests from CCI to
+>> DRAM controller). It is also modeled as a master bus in devfreq framework.
+>> It is also the only one OPP table throughout other buses which has voltage
+>> values. The devfreq software controls the speed of that bus and other
+>> buses. The other buses follows the rate of the master. There is only one
+>> regulator. The old lowest OPP had pair 925mV, 84MHz which is enough for
+> 
+> s/lowest/slowest/
+please see below
+> 
+>> this frequency. However, due to the fact that the other buses follows the
+>> WCORE bus by taking the OPP from their table with the same id, e.g. opp02,
+>> the children frequency should be stable with the set voltage.
+>> It could cause random faults very hard to debug.
+>> Thus, the patch removes the lowest OPP to make other buses' lowest OPPs
+> 
+> s/lowest/slowest/
+Actually, I have double checked that, because we always used this 
+terminology: low OPP, high OPP, lower OPPs, higher OPPs. I can change
+it here for you, but I think this is not something that people are used
+to. Please check EAS pdf documentation or this file:
+https://www.kernel.org/doc/Documentation/scheduler/sched-energy.txt
+i.e. "running at a lower OPP" or "high OPPs", "lowest OPPs".
 
-Thanks,
-Mathieu
-
->  
->  /* extract the data value from a UCI structure given amba_id pointer. */
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+Regards,
+Lukasz
+> 
+>> working. The new lowest OPP has voltage high enough for buses working up
+>> to 333MHz. It also changes the frequencies of the OPPs to align them to
+>> PLL value such that it is possible to set them using only a divider without
+>> reprogramming OPP.
+> 
+> Reprogramming OPP? What is it?
+> 
+>> Reprogramming the PLL was not set, so the real frequency
+> 
+> I understood from the previous that reprogramming the OPP (PLL?) was
+> happening... Please rephrase entire sentence.
+> 
+> BR,
+> Krzysztof
+> 
+>> values were not the one from the OPP table, which could confuse the
+>> governor algorithms which relay on OPP speed values making the system to
+>> behave weird.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos5420.dtsi | 12 ++++--------
+>>   1 file changed, 4 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index f8c36ff0d4c3..a355c76af5a5 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -1107,22 +1107,18 @@
+>>                          compatible = "operating-points-v2";
+>>
+>>                          opp00 {
+>> -                               opp-hz = /bits/ 64 <84000000>;
+>> -                               opp-microvolt = <925000>;
+>> +                               opp-hz = /bits/ 64 <150000000>;
+>> +                               opp-microvolt = <950000>;
+>>                          };
+>>                          opp01 {
+>> -                               opp-hz = /bits/ 64 <111000000>;
+>> +                               opp-hz = /bits/ 64 <200000000>;
+>>                                  opp-microvolt = <950000>;
+>>                          };
+>>                          opp02 {
+>> -                               opp-hz = /bits/ 64 <222000000>;
+>> +                               opp-hz = /bits/ 64 <300000000>;
+>>                                  opp-microvolt = <950000>;
+>>                          };
+>>                          opp03 {
+>> -                               opp-hz = /bits/ 64 <333000000>;
+>> -                               opp-microvolt = <950000>;
+>> -                       };
+>> -                       opp04 {
+>>                                  opp-hz = /bits/ 64 <400000000>;
+>>                                  opp-microvolt = <987500>;
+>>                          };
+>> --
+>> 2.17.1
+>>
+> 
 > 
