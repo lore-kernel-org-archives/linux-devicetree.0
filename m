@@ -1,51 +1,97 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v1 31/50] ARM: dts: exynos: align lowest OPP in bus_jpeg
- in Exynos5420
-Date: Wed, 17 Jul 2019 12:30:58 +0200
-Message-ID: <CAJKOXPf1tZMLPT9pJrM5wM5wUEMdw1iEPVjaz6K3iq17KdbAxw@mail.gmail.com>
-References: <CGME20190715124459eucas1p2a1d8795e57a82704ff221567a8810485@eucas1p2.samsung.com>
- <20190715124417.4787-1-l.luba@partner.samsung.com> <20190715124417.4787-32-l.luba@partner.samsung.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
+Date: Wed, 17 Jul 2019 16:02:20 +0530
+Message-ID: <20190717103220.f7cys267hq23fbsb@vireshk-i7>
+References: <20190703011020.151615-1-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190715124417.4787-32-l.luba@partner.samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20190703011020.151615-1-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+To: Saravana Kannan <saravanak@google.com>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 15 Jul 2019 at 14:45, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Make the lowest OPP frequency possible to set using a clock divider keeping
-> in mind the master clock rate.
+On 02-07-19, 18:10, Saravana Kannan wrote:
+> Interconnects and interconnect paths quantify their performance levels in
+> terms of bandwidth and not in terms of frequency. So similar to how we have
+> frequency based OPP tables in DT and in the OPP framework, we need
+> bandwidth OPP table support in the OPP framework and in DT. Since there can
+> be more than one interconnect path used by a device, we also need a way to
+> assign a bandwidth OPP table to an interconnect path.
+> 
+> This patch series:
+> - Adds opp-peak-KBps and opp-avg-KBps properties to OPP DT bindings
+> - Adds interconnect-opp-table property to interconnect DT bindings
+> - Adds OPP helper functions for bandwidth OPP tables
+> - Adds icc_get_opp_table() to get the OPP table for an interconnect path
+> 
+> So with the DT bindings added in this patch series, the DT for a GPU
+> that does bandwidth voting from GPU to Cache and GPU to DDR would look
+> something like this:
+> 
+> gpu_cache_opp_table: gpu_cache_opp_table {
+> 	compatible = "operating-points-v2";
+> 
+> 	gpu_cache_3000: opp-3000 {
+> 		opp-peak-KBps = <3000>;
+> 		opp-avg-KBps = <1000>;
+> 	};
+> 	gpu_cache_6000: opp-6000 {
+> 		opp-peak-KBps = <6000>;
+> 		opp-avg-KBps = <2000>;
+> 	};
+> 	gpu_cache_9000: opp-9000 {
+> 		opp-peak-KBps = <9000>;
+> 		opp-avg-KBps = <9000>;
+> 	};
+> };
+> 
+> gpu_ddr_opp_table: gpu_ddr_opp_table {
+> 	compatible = "operating-points-v2";
+> 
+> 	gpu_ddr_1525: opp-1525 {
+> 		opp-peak-KBps = <1525>;
+> 		opp-avg-KBps = <452>;
+> 	};
+> 	gpu_ddr_3051: opp-3051 {
+> 		opp-peak-KBps = <3051>;
+> 		opp-avg-KBps = <915>;
+> 	};
+> 	gpu_ddr_7500: opp-7500 {
+> 		opp-peak-KBps = <7500>;
+> 		opp-avg-KBps = <3000>;
+> 	};
+> };
 
-As in previous patch - lowest->slowest. I think OPPs are not
-associated with the height or altitude but speed (slow/fast). You
-could also add "frequency" which would make it also correct and
-specific but slightly longer in title.
+Who is going to use the above tables and how ? These are the maximum
+BW available over these paths, right ?
 
-Best regards,
-Krzysztof
+> gpu_opp_table: gpu_opp_table {
+> 	compatible = "operating-points-v2";
+> 	opp-shared;
+> 
+> 	opp-200000000 {
+> 		opp-hz = /bits/ 64 <200000000>;
+> 	};
+> 	opp-400000000 {
+> 		opp-hz = /bits/ 64 <400000000>;
+> 	};
+> };
 
->
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index f2e2e77a86d6..0be799f843dc 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -1250,7 +1250,7 @@
->                         compatible = "operating-points-v2";
->
->                         opp00 {
-> -                               opp-hz = /bits/ 64 <75000000>;
-> +                               opp-hz = /bits/ 64 <100000000>;
->                         };
->                         opp01 {
->                                 opp-hz = /bits/ 64 <150000000>;
-> --
-> 2.17.1
->
+Shouldn't this link back to the above tables via required-opp, etc ?
+How will we know how much BW is required by the GPU device for all the
+paths ?
+
+> gpu@7864000 {
+> 	...
+> 	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
+> 	interconnects = <&mmnoc MASTER_GPU_1 &bimc SLAVE_SYSTEM_CACHE>,
+> 			<&mmnoc MASTER_GPU_1 &bimc SLAVE_DDR>;
+> 	interconnect-names = "gpu-cache", "gpu-mem";
+> 	interconnect-opp-table = <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>
+> };
+
+-- 
+viresh
