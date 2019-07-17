@@ -1,84 +1,58 @@
-From: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: Re: [PATCH v2 2/2] leds: Add control of the voltage/current regulator
- to the LED core
-Date: Wed, 17 Jul 2019 15:14:21 +0200
-Message-ID: <3b8e5847-6859-d78d-6274-7a879557dcae@ti.com>
-References: <20190715155657.22976-1-jjhiblot@ti.com>
- <20190715155657.22976-3-jjhiblot@ti.com>
- <9c17e9cc-8162-7b5d-2db9-d2bed20969c5@ti.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/2] dt-bindings: i2c: Add MediaTek i2c AC timing binding
+Date: Wed, 17 Jul 2019 15:29:23 +0200
+Message-ID: <20190717132923.GC1458@kunai>
+References: <1560240715-22595-1-git-send-email-qii.wang@mediatek.com>
+ <1560240715-22595-2-git-send-email-qii.wang@mediatek.com>
+ <20190626133941.GL801@ninjato>
+ <1563368121.16970.7.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GZVR6ND4mMseVXL/"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9c17e9cc-8162-7b5d-2db9-d2bed20969c5@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1563368121.16970.7.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, daniel.thompson@linaro.org
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Qii Wang <qii.wang@mediatek.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, matthias.bgg@gmail.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
 
-On 15/07/2019 20:59, Dan Murphy wrote:
-> JJ
->
-> On 7/15/19 10:56 AM, Jean-Jacques Hiblot wrote:
->> A LED is usually powered by a voltage/current regulator. Let the LED 
->> core
->> know about it. This allows the LED core to turn on or off the power 
->> supply
->> as needed.
->
-> This allows the LED core to turn on or off managed power supplies.
->
->
->>
->> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->> ---
+--GZVR6ND4mMseVXL/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>       if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
->>           ret = led_add_brightness_hw_changed(led_cdev);
->>           if (ret) {
->> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
->> index 7107cd7e87cf..a12b880b0a2f 100644
->> --- a/drivers/leds/led-core.c
->> +++ b/drivers/leds/led-core.c
->> @@ -23,6 +23,33 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
->>   LIST_HEAD(leds_list);
->>   EXPORT_SYMBOL_GPL(leds_list);
->>   +static bool __led_need_regulator_update(struct led_classdev 
->> *led_cdev,
->> +                    int brightness)
->> +{
->> +    bool new_state = (brightness != LED_OFF);
->> +
->> +    return led_cdev->regulator && led_cdev->regulator_state != 
->> new_state;
->> +}
->> +
->> +static int __led_handle_regulator(struct led_classdev *led_cdev,
->> +                int brightness)
->> +{
->> +    int rc;
->
-> Should there be a check for the regulator pointer.
->
-> If (!led_cdev->regulator)
->
->     return 0;
 
-Not required because __led_need_regulator_update() returns false if 
-led_cdev->regulator is NULL.
+> > Can't you use those to derive your values from that? Which ones are you=
+ missing
+> > if not?
+>=20
+> I have take a little time to develop a new patch which based on your
+> suggestions, and it tested OK. Thanks for your suggestions, I will
+> update the patch after I test it fully.
 
-Thanks for the review
+Great news, thanks!
 
-JJ
 
->
->
-> Otherwise
->
-> Reviewed-by: Dan Murphy <dmurphy@ti.com>
->
-> <snip>
->
+--GZVR6ND4mMseVXL/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0vIrMACgkQFA3kzBSg
+KbZc3A/+MaKqaXoxfLhF7cf/4W3pivQuZ1XwN1uUj0ywybWz2dxrakkTsTS5kCSF
+D2GRUcGvTLGKod/BaV/wIfdFVeyYPGoh38C2LSEcc2zTWl3CO+CyiJ35rAUvVhKe
+DoxAxfkR4LSUpzTJUi26asAWZggVjEBZkWQQxhyJma8txPhAtuOg2Dp9J6w8oZtO
+Ufj5c1FbF8r3q82ah5dmHqs924Q6WHUhBQXQf3eGNRJgqY/np4XHB5TZkOVj1uCW
+qQhUIx4xBooJa1cSXGr7kA6nSay+zIX++F5R9hbxkGSCFcGZXei0owslreNQsyDf
+rHMEc9JoZ5wXIMVjzPoxRwWrxDVIGdqfkqrmSDBjmYq4CDOAWvBZUIjgsy1E9d9R
+YPX5zj3Fvinui4/dxqADBLuAoinkw3NAYg14KCAzIzXbOLwetnGXxoIaiLE2v8PT
+qaTbtnIIhG9n/gaSQIQ3lDwTsa6dxv7FS3++6h+RFhAQ8XsaNKvYTgvmVrV4jKvs
+Rr3Kg+m/MdEiWHceoa6tPM96kiWlQAQLq1yN1B06DMoFBkr4S7pjOe6LCYFG7AfP
+Cu8nEykpDz6DT6KVwjefQpH14gTGH4TSjvpuXQLfjKB5k5sfi+NIif3+v3tJUBoE
+8KH9/iRcWMwVKm36gyugDLIa4xfsb5fj0v2Lk1ZL4dvw75Z2JiU=
+=K/nF
+-----END PGP SIGNATURE-----
+
+--GZVR6ND4mMseVXL/--
