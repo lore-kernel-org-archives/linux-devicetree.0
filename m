@@ -1,116 +1,129 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3 1/2] arm64: dts: fsl: pico-pi: Add a device tree for
- the PICO-PI-IMX8M
-Date: Thu, 18 Jul 2019 20:05:41 -0300
-Message-ID: <CAOMZO5B-9+JnbfrTWP8GTuc0VcnDDPEZq-iXGbYVx9a6O9gwRg@mail.gmail.com>
-References: <20190718121628.23991-1-andradanciu1997@gmail.com> <20190718121628.23991-2-andradanciu1997@gmail.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+Date: Thu, 18 Jul 2019 16:08:48 -0700
+Message-ID: <f664f161-9b6b-6446-e2f9-6373e654dfc3@nvidia.com>
+References: <351a07d4-ba90-4793-129b-b1a733f95531@nvidia.com>
+ <e3e9beaf-b195-305e-4010-66e824813472@gmail.com>
+ <9271ae75-5663-e26e-df26-57cba94dab75@nvidia.com>
+ <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
+ <b01e37aa-f14e-e628-ceef-b25a845c6359@gmail.com>
+ <46b55527-da5d-c0b7-1c14-43b5c6d49dfa@nvidia.com>
+ <2de9a608-cf38-f56c-b192-7ffed65092f8@nvidia.com>
+ <bff3e9c0-727d-9aef-a0e2-583e53c39afd@gmail.com>
+ <5eedd224-77b0-1fc9-4e5e-d884b41a64ed@nvidia.com>
+ <89f23878-d4b2-2305-03e5-8a3e781c2b02@gmail.com>
+ <20190718194222.GH12715@pdeschrijver-desktop.Nvidia.com>
+ <056496ed-9abf-6907-c61c-a99ccf23b834@gmail.com>
+ <1c85cb35-ce7c-1dd1-f637-0c91b2b36db3@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190718121628.23991-2-andradanciu1997@gmail.com>
+In-Reply-To: <1c85cb35-ce7c-1dd1-f637-0c91b2b36db3@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andra Danciu <andradanciu1997@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Li Yang <leoyang.li@nxp.com>, sriram.dash@nxp.com, Lucas Stach <l.stach@pengutronix.de>, pankaj.bansal@nxp.com, Ping Bai <ping.bai@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Richard Hu <richard.hu@technexion.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Dmitry Osipenko <digetx@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: sboyd@kernel.org, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andra,
 
-On Thu, Jul 18, 2019 at 9:16 AM Andra Danciu <andradanciu1997@gmail.com> wrote:
+On 7/18/19 1:36 PM, Sowjanya Komatineni wrote:
 >
-> From: Richard Hu <richard.hu@technexion.com>
-
-Please put a few words about the board and a link to its webpage, if available.
-
-> The current level of support yields a working console and is able to boot
-> userspace from NFS or init ramdisk.
+> On 7/18/19 1:26 PM, Dmitry Osipenko wrote:
+>> 18.07.2019 22:42, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> On Thu, Jul 18, 2019 at 02:44:56AM +0300, Dmitry Osipenko wrote:
+>>>>> dependencies I am referring are dfll_ref, dfll_soc, and DVFS=20
+>>>>> peripheral
+>>>>> clocks which need to be restored prior to DFLL reinit.
+>>>> Okay, but that shouldn't be a problem if clock dependencies are set up
+>>>> properly.
+>>>>
+>>>>>>> reverse list order during restore might not work as all other=20
+>>>>>>> clocks are
+>>>>>>> in proper order no with any ref clocks for plls getting restored=20
+>>>>>>> prior
+>>>>>>> to their clients
+>>>>>> Why? The ref clocks should be registered first and be the roots=20
+>>>>>> for PLLs
+>>>>>> and the rest. If it's not currently the case, then this need to be
+>>>>>> fixed. You need to ensure that each clock is modeled properly. If=20
+>>>>>> some
+>>>>>> child clock really depends on multiple parents, then the parents=20
+>>>>>> need to
+>>>>>> in the correct order or CCF need to be taught about such
+>>>>>> multi-dependencies.
+>>>>>>
+>>>>>> If some required feature is missed, then you have to implement it
+>>>>>> properly and for all, that's how things are done in upstream.=20
+>>>>>> Sometimes
+>>>>>> it's quite a lot of extra work that everyone are benefiting from in
+>>>>>> the end.
+>>>>>>
+>>>>>> [snip]
+>>>>> Yes, we should register ref/parents before their clients.
+>>>>>
+>>>>> cclk_g clk is registered last after all pll and peripheral clocks are
+>>>>> registers during clock init.
+>>>>>
+>>>>> dfllCPU_out clk is registered later during dfll-fcpu driver probe and
+>>>>> gets added to the clock list.
+>>>>>
+>>>>> Probably the issue seems to be not linking dfll_ref and dfll_soc
+>>>>> dependencies for dfllCPU_out thru clock list.
+>>>>>
+>>>>> clk-dfll driver during dfll_init_clks gets ref_clk and soc_clk=20
+>>>>> reference
+>>>>> thru DT.
+>>> The dfll does not have any parents. It has some clocks which are needed
+>>> for the logic part of the dfll to function, but there's no parent clock
+>>> as such unlike for peripheral clocks or PLLs where the parent is at
+>>> least used as a reference. The I2C controller of the DFLL shares the
+>>> lines with a normal I2C controller using some arbitration logic. That
+>>> logic only works if the clock for the normal I2C controller is enabled.
+>>> So you need probably 3 clocks enabled to initialize the dfll in that
+>>> case. I don't think it makes sense to add complicated logic to the=20
+>>> clock
+>>> core to deal with this rather strange case. To me it makes more=20
+>>> sense to
+>>> use pmops and open code the sequence there.
+>> It looks to me that dfllCPU is a PLL and dfll_ref is its reference
+>> parent, while dfll_soc clocks the logic that dynamically reconfigures
+>> dfllCPU in background. I see that PLLP is defined as a parent for
+>> dfll_ref and dfll_soc in the code. Hence seems dfll_ref should be set as
+>> a parent for dfllCPU, no?
 >
-> Additional subsystems that are active :
->         - Ethernet
->         - USB
+> dfll_soc will not be restored by the time dfllCPU resume happens after=20
+> dfll_ref.
 >
-> Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> Signed-off-by: Richard Hu <richard.hu@technexion.com>
-> Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile       |   1 +
->  arch/arm64/boot/dts/freescale/pico-pi-8m.dts | 417 +++++++++++++++++++++++++++
->  2 files changed, 418 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/pico-pi-8m.dts
+> without dfll_soc, dfllCPU cannot be resumed either. So if we decide to=20
+> use parent we should use dfll_soc.
 >
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index c043aca66572..538422903e8a 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -26,3 +26,4 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += pico-pi-8m.dtb
+>> Either way is good to me, given that DFLL will be disabled during
+>> suspend. Resetting DFLL on DFLL's driver resume using PM ops should be
+>> good. And then it also will be better to error out if DFLL is active
+>> during suspend on the DFLL's driver suspend.
+>
+> Doing in dfll-fcpu pm_ops is much better as it happens right after all=20
+> clocks are restored and unlike other clock enables, dfll need dfll=20
+> controller programming as well and is actually registered in dfll-fcpu=20
+> driver.
+>
+> With this, below is the sequence:
+>
+> CPUFreq suspend switches CPU to PLLP and disables dfll
+>
+> Will add dfll_suspend/resume in dfll-fcpu driver and in dfll suspend=20
+> will check for dfll active and will error out suspend.
+>
+> dfll resume does dfll reinit.
+>
+> CPUFreq resume enables dfll and switches CPU to dfll.
+>
+>
+> Will go with doing in dfll-fcpu pm_ops rather than parenting=20
+> dfllCPU_OUT...
+>
+Does is make sense to return error EBUSY if dfll is not disabled by the=20
+time dfll-fcpu suspend happens?
 
-The convention we use with imx dtbs is to put the SoC name first, so
-that would become:
-
-imx8mq-pico-pi.dtb
-
-
-> +&iomuxc {
-
-Please place iomuxc node as the last one.
-
-> +&fec1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_fec1 &pinctrl_enet_3v3>;
-> +       phy-mode = "rgmii-id";
-> +       pinctrl-assert-gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-
-This property does not exist.
-
-> +       phy-handle = <&ethphy0>;
-> +       fsl,magic-packet;
-> +       status = "okay";
-> +
-> +       mdio {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               ethphy0: ethernet-phy@1 {
-> +                       compatible = "ethernet-phy-ieee802.3-c22";
-> +                       reg = <1>;
-> +                       at803x,led-act-blind-workaround;
-> +                       at803x,eee-disabled;
-
-These two properties do not exist.
-
-> +&i2c1 {
-> +       clock-frequency = <100000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c1>;
-> +       status = "okay";
-> +
-> +       pmic: pmic@4b {
-> +               reg = <0x4b>;
-> +               compatible = "rohm,bd71837";
-> +               /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-> +               pinctrl-0 = <&pinctrl_pmic>;
-
-pinctrl-names = "default" is missing
-
-> +               gpio_intr = <&gpio1 3 GPIO_ACTIVE_LOW>;
-
-This is not documented.
-
-Please look at Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-for the valid bindings and also at
-arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts for a
-reference for adding the BD71837 support.
-
-> +&A53_0 {
-> +       operating-points = <
-> +               /* kHz    uV */
-> +               1500000 1000000
-> +               1300000 1000000
-> +               1000000 900000
-> +               800000  900000
-
-This is not needed as these operating points are already specified at
-imx8mq.dtsi.
+Or should I use ETIMEOUT?
