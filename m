@@ -1,55 +1,85 @@
 From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH 0/3] Add DSP node on i.MX8QXP board
-Date: Thu, 18 Jul 2019 18:13:43 +0300
-Message-ID: <20190718151346.3523-1-daniel.baluta@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH 2/3] arm64: dts: imx8qxp: Add DSP DT node
+Date: Thu, 18 Jul 2019 18:13:45 +0300
+Message-ID: <20190718151346.3523-3-daniel.baluta@nxp.com>
+References: <20190718151346.3523-1-daniel.baluta@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190718151346.3523-1-daniel.baluta@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: shawnguo@kernel.org
-Cc: mark.rutland@arm.com, aisheng.dong@nxp.com, peng.fan@nxp.com, anson.huang@nxp.com, devicetree@vger.kernel.org, daniel.baluta@nxp.com, s.hauer@pengutronix.de, Frank.Li@nxp.com, linux-kernel@vger.kernel.org, paul.olaru@nxp.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, leonard.crestez@nxp.com, festevam@gmail.com, shengjiu.wang@nxp.com, linux-arm-kernel@lists.infradead.org, sound-open-firmware@alsa-project.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, daniel.baluta@nxp.com, shengjiu.wang@nxp.com, paul.olaru@nxp.com, aisheng.dong@nxp.com, leonard.crestez@nxp.com, anson.huang@nxp.com, peng.fan@nxp.com, Frank.Li@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sound-open-firmware@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-i.MX8QXP boards feature an Hifi4 DSP from Tensilica. This patch series
-adds the DT node.
+This includes DSP reserved memory, ADMA DSP device and DSP MU
+communication channels description.
 
-Note that we switched to the new yaml format for bindings documentation.
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts |  4 +++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 32 +++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
-The DSP will run SOF Firmware [1]. Patches adding support for Linux DSP
-driver are already sent for review to SOF folks [2].
-
-This patch series also contains a patch introducing DT related clocks.
-
-The patch was already reviewed here:
-	https://lkml.org/lkml/2019/7/17/975
-
-but I added it in this patch series because it wasn't yet picked by
-Shawn so patches 2/3 will not compiled without patch 1.
-
-[1] https://github.com/thesofproject/sof
-[2] https://github.com/thesofproject/linux/pull/1048/commits
-
-Daniel Baluta (3):
-  clk: imx8: Add DSP related clocks
-  arm64: dts: imx8qxp: Add DSP DT node
-  dt-bindings: dsp: fsl: Add DSP core binding support
-
- .../devicetree/bindings/dsp/fsl,dsp.yaml      | 87 +++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8qxp-mek.dts |  4 +
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 32 +++++++
- drivers/clk/imx/clk-imx8qxp-lpcg.c            |  5 ++
- include/dt-bindings/clock/imx8-clock.h        |  6 +-
- 5 files changed, 133 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+index bfdada2db176..19468058e6ae 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
++++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+@@ -230,3 +230,7 @@
+ 		>;
+ 	};
+ };
++
++&adma_dsp {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index 05fa0b7f36bb..6a4efb1f0fa2 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -113,6 +113,17 @@
+ 		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		dsp_reserved: dsp@92400000 {
++			reg = <0 0x92400000 0 0x2000000>;
++			no-map;
++		};
++	};
++
+ 	pmu {
+ 		compatible = "arm,armv8-pmuv3";
+ 		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
+@@ -204,6 +215,27 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		adma_dsp: dsp@596e8000 {
++			compatible = "fsl,imx8qxp-dsp";
++			reg = <0x596e8000 0x88000>;
++			clocks = <&adma_lpcg IMX_ADMA_LPCG_DSP_IPG_CLK>,
++				<&adma_lpcg IMX_ADMA_LPCG_OCRAM_IPG_CLK>,
++				<&adma_lpcg IMX_ADMA_LPCG_DSP_CORE_CLK>;
++			clock-names = "ipg", "ocram", "core";
++			power-domains = <&pd IMX_SC_R_MU_13A>,
++				<&pd IMX_SC_R_MU_13B>,
++				<&pd IMX_SC_R_DSP>,
++				<&pd IMX_SC_R_DSP_RAM>;
++			mbox-names = "txdb0", "txdb1",
++				"rxdb0", "rxdb1";
++			mboxes = <&lsio_mu13 2 0>,
++				<&lsio_mu13 2 1>,
++				<&lsio_mu13 3 0>,
++				<&lsio_mu13 3 1>;
++			reserved-region = <&dsp_reserved>;
++			status = "disabled";
++		};
++
+ 		adma_lpuart0: serial@5a060000 {
+ 			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+ 			reg = <0x5a060000 0x1000>;
 -- 
 2.17.1
