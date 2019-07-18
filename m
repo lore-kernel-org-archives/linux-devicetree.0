@@ -1,355 +1,47 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH v2 1/2] firmware: imx: Add DSP IPC protocol interface
-Date: Thu, 18 Jul 2019 09:40:00 +0300
-Message-ID: <CAEnQRZA=5q-EnvHs41k0nFxYLt591C65GPhO6b5iOtOqBMuCYg@mail.gmail.com>
-References: <20190627081205.22065-1-daniel.baluta@nxp.com>
- <20190627081205.22065-2-daniel.baluta@nxp.com>
- <CAEnQRZAGTdMpsnH-F_Xoaae0+nX8WTqYOrMJUjeQ6vhWvZ1y1Q@mail.gmail.com>
- <20190709120241.nlzy7o6etucn5udk@pengutronix.de>
+From: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Subject: [PATCH v1 1/2] arm64: dts: mt8183: auxadc: add efuse information in device tree
+Date: Thu, 18 Jul 2019 16:01:18 +0800
+Message-ID: <20190718080119.30707-2-zhiyong.tao@mediatek.com>
+References: <20190718080119.30707-1-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190709120241.nlzy7o6etucn5udk@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190718080119.30707-1-zhiyong.tao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
+Cc: srv_heupstream@mediatek.com, hui.liu@mediatek.com, jg_poxu@mediatek.com, sj.huang@mediatek.com, yingjoe.chen@mediatek.com, sean.wang@mediatek.com, erin.lo@mediatek.com, eddie.huang@mediatek.com, matthias.bgg@gmail.com, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-mediatek@lists.infradead.org, Zhiyong Tao <zhiyong.tao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-I just made some minor changes and will send the patch right now.
-Shawn please skip this.
+The commit add add efuse information in device tree
 
-On Tue, Jul 9, 2019 at 3:02 PM Oleksij Rempel <o.rempel@pengutronix.de> wrote:
->
-> On Tue, Jul 09, 2019 at 08:48:20AM +0300, Daniel Baluta wrote:
-> > Hi Oleksij,
-> >
-> > Any comments on this?
->
-> Looks good for me. All my suggestions was fixed.
->
-> Reviewed-by: <o.rempel@pengutronix.de>
->
-> > On Thu, Jun 27, 2019 at 11:14 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
-> > >
-> > > Some of i.MX8 processors (e.g i.MX8QM, i.MX8QXP) contain
-> > > the Tensilica HiFi4 DSP for advanced pre- and post-audio
-> > > processing.
-> > >
-> > > The communication between Host CPU and DSP firmware is
-> > > taking place using a shared memory area for message passing
-> > > and a dedicated Messaging Unit for notifications.
-> > >
-> > > DSP IPC protocol driver offers a doorbell interface using
-> > > imx-mailbox API.
-> > >
-> > > We use 4 MU channels (2 x TXDB, 2 x RXDB) to implement a
-> > > request-reply protocol.
-> > >
-> > > Connection 0 (txdb0, rxdb0):
-> > >         - Host writes messasge to shared memory [SHMEM]
-> > >         - Host sends a request [MU]
-> > >         - DSP handles request [SHMEM]
-> > >         - DSP sends reply [MU]
-> > >
-> > > Connection 1 (txdb1, rxdb1):
-> > >         - DSP writes a message to shared memory [SHMEM]
-> > >         - DSP sends a request [MU]
-> > >         - Host handles request [SHMEM]
-> > >         - Host sends reply [MU]
-> > >
-> > > The protocol driver will be used by a Host client to
-> > > communicate with the DSP. First client will be the i.MX8
-> > > part from Sound Open Firmware infrastructure.
-> > >
-> > > The protocol drivers offers the following interface:
-> > >
-> > > On Tx:
-> > >    - imx_dsp_ring_doorbell, will be called to notify the DSP
-> > >    that it needs to handle a request.
-> > >
-> > > On Rx:
-> > >    - clients need to provide two callbacks:
-> > >         .handle_reply
-> > >         .handle_request
-> > >   - the callbacks will be used by the protocol driver on
-> > >     notification arrival from DSP.
-> > >
-> > > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > > ---
-> > >  drivers/firmware/imx/Kconfig     |  11 +++
-> > >  drivers/firmware/imx/Makefile    |   1 +
-> > >  drivers/firmware/imx/imx-dsp.c   | 142 +++++++++++++++++++++++++++++++
-> > >  include/linux/firmware/imx/dsp.h |  67 +++++++++++++++
-> > >  4 files changed, 221 insertions(+)
-> > >  create mode 100644 drivers/firmware/imx/imx-dsp.c
-> > >  create mode 100644 include/linux/firmware/imx/dsp.h
-> > >
-> > > diff --git a/drivers/firmware/imx/Kconfig b/drivers/firmware/imx/Kconfig
-> > > index 42b566f8903f..ddb241708c31 100644
-> > > --- a/drivers/firmware/imx/Kconfig
-> > > +++ b/drivers/firmware/imx/Kconfig
-> > > @@ -1,4 +1,15 @@
-> > >  # SPDX-License-Identifier: GPL-2.0-only
-> > > +config IMX_DSP
-> > > +       bool "IMX DSP Protocol driver"
-> > > +       depends on IMX_MBOX
-> > > +       help
-> > > +         This enables DSP IPC protocol between host CPU (Linux)
-> > > +         and the firmware running on DSP.
-> > > +         DSP exists on some i.MX8 processors (e.g i.MX8QM, i.MX8QXP).
-> > > +
-> > > +         It acts like a doorbell. Client might use shared memory to
-> > > +         exchange information with DSP side.
-> > > +
-> > >  config IMX_SCU
-> > >         bool "IMX SCU Protocol driver"
-> > >         depends on IMX_MBOX
-> > > diff --git a/drivers/firmware/imx/Makefile b/drivers/firmware/imx/Makefile
-> > > index 802c4ad8e8f9..08bc9ddfbdfb 100644
-> > > --- a/drivers/firmware/imx/Makefile
-> > > +++ b/drivers/firmware/imx/Makefile
-> > > @@ -1,3 +1,4 @@
-> > >  # SPDX-License-Identifier: GPL-2.0
-> > > +obj-$(CONFIG_IMX_DSP)          += imx-dsp.o
-> > >  obj-$(CONFIG_IMX_SCU)          += imx-scu.o misc.o imx-scu-irq.o
-> > >  obj-$(CONFIG_IMX_SCU_PD)       += scu-pd.o
-> > > diff --git a/drivers/firmware/imx/imx-dsp.c b/drivers/firmware/imx/imx-dsp.c
-> > > new file mode 100644
-> > > index 000000000000..c4d34a2fbff3
-> > > --- /dev/null
-> > > +++ b/drivers/firmware/imx/imx-dsp.c
-> > > @@ -0,0 +1,142 @@
-> > > +// SPDX-License-Identifier: GPL-2.0+
-> > > +/*
-> > > + * Copyright 2019 NXP
-> > > + *  Author: Daniel Baluta <daniel.baluta@nxp.com>
-> > > + *
-> > > + * Implementation of the DSP IPC interface (host side)
-> > > + */
-> > > +
-> > > +#include <linux/firmware/imx/dsp.h>
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/mailbox_client.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of_platform.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/slab.h>
-> > > +
-> > > +/*
-> > > + * imx_dsp_ring_doorbell - triggers an interrupt on the other side (DSP)
-> > > + *
-> > > + * @dsp: DSP IPC handle
-> > > + * @chan_idx: index of the channel where to trigger the interrupt
-> > > + *
-> > > + * Returns non-negative value for success, negative value for error
-> > > + */
-> > > +int imx_dsp_ring_doorbell(struct imx_dsp_ipc *ipc, unsigned int idx)
-> > > +{
-> > > +       int ret;
-> > > +       struct imx_dsp_chan *dsp_chan;
-> > > +
-> > > +       if (idx >= DSP_MU_CHAN_NUM)
-> > > +               return -EINVAL;
-> > > +
-> > > +       dsp_chan = &ipc->chans[idx];
-> > > +       ret = mbox_send_message(dsp_chan->ch, NULL);
-> > > +       if (ret < 0)
-> > > +               return ret;
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +EXPORT_SYMBOL(imx_dsp_ring_doorbell);
-> > > +
-> > > +/*
-> > > + * imx_dsp_handle_rx - rx callback used by imx mailbox
-> > > + *
-> > > + * @c: mbox client
-> > > + * @msg: message received
-> > > + *
-> > > + * Users of DSP IPC will need to privde handle_reply and handle_request
-> > > + * callbacks.
-> > > + */
-> > > +static void imx_dsp_handle_rx(struct mbox_client *c, void *msg)
-> > > +{
-> > > +       struct imx_dsp_chan *chan = container_of(c, struct imx_dsp_chan, cl);
-> > > +
-> > > +       if (chan->idx == 0) {
-> > > +               chan->ipc->ops->handle_reply(chan->ipc);
-> > > +       } else {
-> > > +               chan->ipc->ops->handle_request(chan->ipc);
-> > > +               imx_dsp_ring_doorbell(chan->ipc, 1);
-> > > +       }
-> > > +}
-> > > +
-> > > +static int imx_dsp_probe(struct platform_device *pdev)
-> > > +{
-> > > +       struct device *dev = &pdev->dev;
-> > > +       struct imx_dsp_ipc *dsp_ipc;
-> > > +       struct imx_dsp_chan *dsp_chan;
-> > > +       struct mbox_client *cl;
-> > > +       char *chan_name;
-> > > +       int ret;
-> > > +       int i, j;
-> > > +
-> > > +       dsp_ipc = devm_kzalloc(dev, sizeof(*dsp_ipc), GFP_KERNEL);
-> > > +       if (!dsp_ipc)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       for (i = 0; i < DSP_MU_CHAN_NUM; i++) {
-> > > +               if (i < 2)
-> > > +                       chan_name = kasprintf(GFP_KERNEL, "txdb%d", i);
-> > > +               else
-> > > +                       chan_name = kasprintf(GFP_KERNEL, "rxdb%d", i - 2);
-> > > +
-> > > +               if (!chan_name)
-> > > +                       return -ENOMEM;
-> > > +
-> > > +               dsp_chan = &dsp_ipc->chans[i];
-> > > +               cl = &dsp_chan->cl;
-> > > +               cl->dev = dev;
-> > > +               cl->tx_block = false;
-> > > +               cl->knows_txdone = true;
-> > > +               cl->rx_callback = imx_dsp_handle_rx;
-> > > +
-> > > +               dsp_chan->ipc = dsp_ipc;
-> > > +               dsp_chan->idx = i % 2;
-> > > +               dsp_chan->ch = mbox_request_channel_byname(cl, chan_name);
-> > > +               if (IS_ERR(dsp_chan->ch)) {
-> > > +                       ret = PTR_ERR(dsp_chan->ch);
-> > > +                       if (ret != -EPROBE_DEFER)
-> > > +                               dev_err(dev, "Failed to request mbox chan %s ret %d\n",
-> > > +                                       chan_name, ret);
-> > > +                       goto out;
-> > > +               }
-> > > +
-> > > +               dev_dbg(dev, "request mbox chan %s\n", chan_name);
-> > > +               /* chan_name is not used anymore by framework */
-> > > +               kfree(chan_name);
-> > > +       }
-> > > +
-> > > +       dsp_ipc->dev = dev;
-> > > +
-> > > +       dev_set_drvdata(dev, dsp_ipc);
-> > > +
-> > > +       dev_info(dev, "NXP i.MX DSP IPC initialized\n");
-> > > +
-> > > +       return devm_of_platform_populate(dev);
-> > > +out:
-> > > +       kfree(chan_name);
-> > > +       for (j = 0; j < i; j++) {
-> > > +               dsp_chan = &dsp_ipc->chans[j];
-> > > +               mbox_free_channel(dsp_chan->ch);
-> > > +       }
-> > > +
-> > > +       return ret;
-> > > +}
-> > > +
-> > > +static const struct of_device_id imx_dsp_match[] = {
-> > > +       { .compatible = "fsl,imx8qxp-dsp", },
-> > > +       { /* Sentinel */ }
-> > > +};
-> > > +
-> > > +static struct platform_driver imx_dsp_driver = {
-> > > +       .driver = {
-> > > +               .name = "imx-dsp",
-> > > +               .of_match_table = imx_dsp_match,
-> > > +       },
-> > > +       .probe = imx_dsp_probe,
-> > > +};
-> > > +builtin_platform_driver(imx_dsp_driver);
-> > > +
-> > > +MODULE_AUTHOR("Daniel Baluta <daniel.baluta@nxp.com>");
-> > > +MODULE_DESCRIPTION("IMX DSP IPC protocol driver");
-> > > +MODULE_LICENSE("GPL v2");
-> > > diff --git a/include/linux/firmware/imx/dsp.h b/include/linux/firmware/imx/dsp.h
-> > > new file mode 100644
-> > > index 000000000000..7562099c9e46
-> > > --- /dev/null
-> > > +++ b/include/linux/firmware/imx/dsp.h
-> > > @@ -0,0 +1,67 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > > +/*
-> > > + * Copyright 2019 NXP
-> > > + *
-> > > + * Header file for the DSP IPC implementation
-> > > + */
-> > > +
-> > > +#ifndef _IMX_DSP_IPC_H
-> > > +#define _IMX_DSP_IPC_H
-> > > +
-> > > +#include <linux/device.h>
-> > > +#include <linux/types.h>
-> > > +#include <linux/mailbox_client.h>
-> > > +
-> > > +#define DSP_MU_CHAN_NUM                4
-> > > +
-> > > +struct imx_dsp_chan {
-> > > +       struct imx_dsp_ipc *ipc;
-> > > +       struct mbox_client cl;
-> > > +       struct mbox_chan *ch;
-> > > +       char *name;
-> > > +       int idx;
-> > > +};
-> > > +
-> > > +struct imx_dsp_ops {
-> > > +       void (*handle_reply)(struct imx_dsp_ipc *ipc);
-> > > +       void (*handle_request)(struct imx_dsp_ipc *ipc);
-> > > +};
-> > > +
-> > > +struct imx_dsp_ipc {
-> > > +       /* Host <-> DSP communication uses 2 txdb and 2 rxdb channels */
-> > > +       struct imx_dsp_chan chans[DSP_MU_CHAN_NUM];
-> > > +       struct device *dev;
-> > > +       struct imx_dsp_ops *ops;
-> > > +       void *private_data;
-> > > +};
-> > > +
-> > > +static inline void imx_dsp_set_data(struct imx_dsp_ipc *ipc, void *data)
-> > > +{
-> > > +       if (!ipc)
-> > > +               return;
-> > > +
-> > > +       ipc->private_data = data;
-> > > +}
-> > > +
-> > > +static inline void *imx_dsp_get_data(struct imx_dsp_ipc *ipc)
-> > > +{
-> > > +       if (!ipc)
-> > > +               return NULL;
-> > > +
-> > > +       return ipc->private_data;
-> > > +}
-> > > +
-> > > +#if IS_ENABLED(CONFIG_IMX_DSP)
-> > > +
-> > > +int imx_dsp_ring_doorbell(struct imx_dsp_ipc *dsp, unsigned int chan_idx);
-> > > +
-> > > +#else
-> > > +
-> > > +static inline int imx_dsp_ring_doorbell(struct imx_dsp_ipc *ipc,
-> > > +                                       unsigned int chan_idx)
-> > > +{
-> > > +       return -ENOTSUPP;
-> > > +}
-> > > +
-> > > +#endif
-> > > +#endif /* _IMX_DSP_IPC_H */
-> > > --
-> > > 2.17.1
-> > >
-> >
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Signed-off-by: jg_poxu <jg_poxu@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index c2749c4631bc..59b4f3d933b5 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -261,6 +261,8 @@
+ 			clocks = <&infracfg CLK_INFRA_AUXADC>;
+ 			clock-names = "main";
+ 			#io-channel-cells = <1>;
++			nvmem-cells = <&auxadc_calibration>;
++			nvmem-cell-names = "calibration-data";
+ 			status = "disabled";
+ 		};
+ 
+@@ -382,6 +384,9 @@
+ 			compatible = "mediatek,mt8183-efuse",
+ 				     "mediatek,efuse";
+ 			reg = <0 0x11f10000 0 0x1000>;
++			auxadc_calibration: auxadccali@1b4 {
++				reg = <0x1b4 0x4>;
++			};
+ 		};
+ 
+ 		mfgcfg: syscon@13000000 {
+-- 
+2.12.5
