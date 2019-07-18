@@ -1,74 +1,87 @@
-From: Sven Van Asbroeck <thesven73@gmail.com>
-Subject: [PATCH v1] dt-bindings: fec: explicitly mark deprecated properties
-Date: Thu, 18 Jul 2019 16:14:53 -0400
-Message-ID: <20190718201453.13062-1-TheSven73@gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+Date: Thu, 18 Jul 2019 23:26:10 +0300
+Message-ID: <056496ed-9abf-6907-c61c-a99ccf23b834@gmail.com>
+References: <351a07d4-ba90-4793-129b-b1a733f95531@nvidia.com>
+ <e3e9beaf-b195-305e-4010-66e824813472@gmail.com>
+ <9271ae75-5663-e26e-df26-57cba94dab75@nvidia.com>
+ <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
+ <b01e37aa-f14e-e628-ceef-b25a845c6359@gmail.com>
+ <46b55527-da5d-c0b7-1c14-43b5c6d49dfa@nvidia.com>
+ <2de9a608-cf38-f56c-b192-7ffed65092f8@nvidia.com>
+ <bff3e9c0-727d-9aef-a0e2-583e53c39afd@gmail.com>
+ <5eedd224-77b0-1fc9-4e5e-d884b41a64ed@nvidia.com>
+ <89f23878-d4b2-2305-03e5-8a3e781c2b02@gmail.com>
+ <20190718194222.GH12715@pdeschrijver-desktop.Nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190718194222.GH12715@pdeschrijver-desktop.Nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fugang Duan <fugang.duan@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: Sowjanya Komatineni <skomatineni@nvidia.com>, sboyd@kernel.org, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-fec's gpio phy reset properties have been deprecated.
-Update the dt-bindings documentation to explicitly mark
-them as such, and provide a short description of the
-recommended alternative.
+18.07.2019 22:42, Peter De Schrijver пишет:
+> On Thu, Jul 18, 2019 at 02:44:56AM +0300, Dmitry Osipenko wrote:
+>>>
+>>> dependencies I am referring are dfll_ref, dfll_soc, and DVFS peripheral
+>>> clocks which need to be restored prior to DFLL reinit.
+>>
+>> Okay, but that shouldn't be a problem if clock dependencies are set up
+>> properly.
+>>
+>>>>> reverse list order during restore might not work as all other clocks are
+>>>>> in proper order no with any ref clocks for plls getting restored prior
+>>>>> to their clients
+>>>> Why? The ref clocks should be registered first and be the roots for PLLs
+>>>> and the rest. If it's not currently the case, then this need to be
+>>>> fixed. You need to ensure that each clock is modeled properly. If some
+>>>> child clock really depends on multiple parents, then the parents need to
+>>>> in the correct order or CCF need to be taught about such
+>>>> multi-dependencies.
+>>>>
+>>>> If some required feature is missed, then you have to implement it
+>>>> properly and for all, that's how things are done in upstream. Sometimes
+>>>> it's quite a lot of extra work that everyone are benefiting from in
+>>>> the end.
+>>>>
+>>>> [snip]
+>>>
+>>> Yes, we should register ref/parents before their clients.
+>>>
+>>> cclk_g clk is registered last after all pll and peripheral clocks are
+>>> registers during clock init.
+>>>
+>>> dfllCPU_out clk is registered later during dfll-fcpu driver probe and
+>>> gets added to the clock list.
+>>>
+>>> Probably the issue seems to be not linking dfll_ref and dfll_soc
+>>> dependencies for dfllCPU_out thru clock list.
+>>>
+>>> clk-dfll driver during dfll_init_clks gets ref_clk and soc_clk reference
+>>> thru DT.
+> 
+> The dfll does not have any parents. It has some clocks which are needed
+> for the logic part of the dfll to function, but there's no parent clock
+> as such unlike for peripheral clocks or PLLs where the parent is at
+> least used as a reference. The I2C controller of the DFLL shares the
+> lines with a normal I2C controller using some arbitration logic. That
+> logic only works if the clock for the normal I2C controller is enabled.
+> So you need probably 3 clocks enabled to initialize the dfll in that
+> case. I don't think it makes sense to add complicated logic to the clock
+> core to deal with this rather strange case. To me it makes more sense to
+> use pmops and open code the sequence there.
 
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- .../devicetree/bindings/net/fsl-fec.txt       | 30 +++++++++++--------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+It looks to me that dfllCPU is a PLL and dfll_ref is its reference
+parent, while dfll_soc clocks the logic that dynamically reconfigures
+dfllCPU in background. I see that PLLP is defined as a parent for
+dfll_ref and dfll_soc in the code. Hence seems dfll_ref should be set as
+a parent for dfllCPU, no?
 
-diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-index 2d41fb96ce0a..5b88fae0307d 100644
---- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-@@ -7,18 +7,6 @@ Required properties:
- - phy-mode : See ethernet.txt file in the same directory
- 
- Optional properties:
--- phy-reset-gpios : Should specify the gpio for phy reset
--- phy-reset-duration : Reset duration in milliseconds.  Should present
--  only if property "phy-reset-gpios" is available.  Missing the property
--  will have the duration be 1 millisecond.  Numbers greater than 1000 are
--  invalid and 1 millisecond will be used instead.
--- phy-reset-active-high : If present then the reset sequence using the GPIO
--  specified in the "phy-reset-gpios" property is reversed (H=reset state,
--  L=operation state).
--- phy-reset-post-delay : Post reset delay in milliseconds. If present then
--  a delay of phy-reset-post-delay milliseconds will be observed after the
--  phy-reset-gpios has been toggled. Can be omitted thus no delay is
--  observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
- - phy-supply : regulator that powers the Ethernet PHY.
- - phy-handle : phandle to the PHY device connected to this device.
- - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
-@@ -47,11 +35,27 @@ Optional properties:
-   For imx6sx, "int0" handles all 3 queues and ENET_MII. "pps" is for the pulse
-   per second interrupt associated with 1588 precision time protocol(PTP).
- 
--
- Optional subnodes:
- - mdio : specifies the mdio bus in the FEC, used as a container for phy nodes
-   according to phy.txt in the same directory
- 
-+Deprecated optional properties:
-+	To avoid these, create a phy node according to phy.txt in the same
-+	directory, and point the fec's "phy-handle" property to it. Then use
-+	the phy's reset binding, again described by phy.txt.
-+- phy-reset-gpios : Should specify the gpio for phy reset
-+- phy-reset-duration : Reset duration in milliseconds.  Should present
-+  only if property "phy-reset-gpios" is available.  Missing the property
-+  will have the duration be 1 millisecond.  Numbers greater than 1000 are
-+  invalid and 1 millisecond will be used instead.
-+- phy-reset-active-high : If present then the reset sequence using the GPIO
-+  specified in the "phy-reset-gpios" property is reversed (H=reset state,
-+  L=operation state).
-+- phy-reset-post-delay : Post reset delay in milliseconds. If present then
-+  a delay of phy-reset-post-delay milliseconds will be observed after the
-+  phy-reset-gpios has been toggled. Can be omitted thus no delay is
-+  observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
-+
- Example:
- 
- ethernet@83fec000 {
--- 
-2.17.1
+Either way is good to me, given that DFLL will be disabled during
+suspend. Resetting DFLL on DFLL's driver resume using PM ops should be
+good. And then it also will be better to error out if DFLL is active
+during suspend on the DFLL's driver suspend.
