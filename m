@@ -1,69 +1,74 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-Date: Thu, 18 Jul 2019 23:11:48 +0300
-Message-ID: <5c6e17ed-bdbd-fa27-87e7-aa95dfa7c591@gmail.com>
-References: <20190716083701.225f0fd9@dimatab>
- <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
- <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
- <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
- <d908d3a2-3013-7f92-0852-115f428d1c5f@gmail.com>
- <72b5df8c-8acb-d0d0-ebcf-b406e8404973@nvidia.com>
- <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
- <76e341be-6f38-2bc1-048e-1aa6883f9b88@gmail.com>
- <0706576a-ce61-1cf3-bed1-05f54a1e2489@nvidia.com>
- <5b2945c5-fcb2-2ac0-2bf2-df869dc9c713@gmail.com>
- <20190718191820.GG12715@pdeschrijver-desktop.Nvidia.com>
- <2274fccb-59d3-824c-cb97-55c23a4eaa75@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Sven Van Asbroeck <thesven73@gmail.com>
+Subject: [PATCH v1] dt-bindings: fec: explicitly mark deprecated properties
+Date: Thu, 18 Jul 2019 16:14:53 -0400
+Message-ID: <20190718201453.13062-1-TheSven73@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2274fccb-59d3-824c-cb97-55c23a4eaa75@nvidia.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Fugang Duan <fugang.duan@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-18.07.2019 22:24, Sowjanya Komatineni пишет:
-> 
-> On 7/18/19 12:18 PM, Peter De Schrijver wrote:
->> On Tue, Jul 16, 2019 at 09:43:16PM +0300, Dmitry Osipenko wrote:
->>>> CPU parents are PLL_X, PLL_P, and dfll. PLL_X always runs at higher
->>>> rate
->>>> so switching to PLL_P during CPUFreq probe prior to dfll clock enable
->>>> should be safe.
->>> AFAIK, PLLX could run at ~200MHz. There is also a divided output of PLLP
->>> which CCLKG supports, the PLLP_OUT4.
->>>
->>> Probably, realistically, CPU is always running off a fast PLLX during
->>> boot, but I'm wondering what may happen on KEXEC. I guess ideally
->>> CPUFreq driver should also have a 'shutdown' callback to teardown DFLL
->>> on a reboot, but likely that there are other clock-related problems as
->>> well that may break KEXEC and thus it is not very important at the
->>> moment.
->>>
->> If you turn off the DFLL, you have to be aware that the voltage margins
->> for DFLL use are lower than for PLL use. So you either need to be sure
->> to switch to a frequency below fmax @ Vmin or you program the boot
->> voltage and then you can use PLLX as setup by the bootloader. For OVR
->> regulators you can't program a voltage without the DFLL, so you have to
->> tristate the PWM output which will give you a hardwired boot voltage.
->>
->> Peter.
-> 
-> Yes, we switch CPU to PLLP and then disable DFLL during suspend.
+fec's gpio phy reset properties have been deprecated.
+Update the dt-bindings documentation to explicitly mark
+them as such, and provide a short description of the
+recommended alternative.
 
-I'm wondering what happens to T124 on resume from suspend, given that it
-switches CPU to PLLX [1]. I imagine that CPU voltage could be lower than
-needed if suspend happened on DFLL. I'm also now vaguely recalling that
-CPUFreq driver was disabled for T124 because of some problems.
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ .../devicetree/bindings/net/fsl-fec.txt       | 30 +++++++++++--------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
-Or maybe warmboot code is actually touching the voltage regulators?
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm/mach-tegra/sleep-tegra30.S#n389
-
-That is also should be a problem for T30 if voltage scaling is happening
-and I have some patches in works that are switching CPU to PLLP instead
-of PLLX on suspend/resume.
+diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+index 2d41fb96ce0a..5b88fae0307d 100644
+--- a/Documentation/devicetree/bindings/net/fsl-fec.txt
++++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+@@ -7,18 +7,6 @@ Required properties:
+ - phy-mode : See ethernet.txt file in the same directory
+ 
+ Optional properties:
+-- phy-reset-gpios : Should specify the gpio for phy reset
+-- phy-reset-duration : Reset duration in milliseconds.  Should present
+-  only if property "phy-reset-gpios" is available.  Missing the property
+-  will have the duration be 1 millisecond.  Numbers greater than 1000 are
+-  invalid and 1 millisecond will be used instead.
+-- phy-reset-active-high : If present then the reset sequence using the GPIO
+-  specified in the "phy-reset-gpios" property is reversed (H=reset state,
+-  L=operation state).
+-- phy-reset-post-delay : Post reset delay in milliseconds. If present then
+-  a delay of phy-reset-post-delay milliseconds will be observed after the
+-  phy-reset-gpios has been toggled. Can be omitted thus no delay is
+-  observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
+ - phy-supply : regulator that powers the Ethernet PHY.
+ - phy-handle : phandle to the PHY device connected to this device.
+ - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
+@@ -47,11 +35,27 @@ Optional properties:
+   For imx6sx, "int0" handles all 3 queues and ENET_MII. "pps" is for the pulse
+   per second interrupt associated with 1588 precision time protocol(PTP).
+ 
+-
+ Optional subnodes:
+ - mdio : specifies the mdio bus in the FEC, used as a container for phy nodes
+   according to phy.txt in the same directory
+ 
++Deprecated optional properties:
++	To avoid these, create a phy node according to phy.txt in the same
++	directory, and point the fec's "phy-handle" property to it. Then use
++	the phy's reset binding, again described by phy.txt.
++- phy-reset-gpios : Should specify the gpio for phy reset
++- phy-reset-duration : Reset duration in milliseconds.  Should present
++  only if property "phy-reset-gpios" is available.  Missing the property
++  will have the duration be 1 millisecond.  Numbers greater than 1000 are
++  invalid and 1 millisecond will be used instead.
++- phy-reset-active-high : If present then the reset sequence using the GPIO
++  specified in the "phy-reset-gpios" property is reversed (H=reset state,
++  L=operation state).
++- phy-reset-post-delay : Post reset delay in milliseconds. If present then
++  a delay of phy-reset-post-delay milliseconds will be observed after the
++  phy-reset-gpios has been toggled. Can be omitted thus no delay is
++  observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
++
+ Example:
+ 
+ ethernet@83fec000 {
+-- 
+2.17.1
