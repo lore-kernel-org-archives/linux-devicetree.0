@@ -1,43 +1,39 @@
-From: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: Re: [PATCH v2] pinctrl: msm8998: Squash TSIF pins together
-Date: Thu, 18 Jul 2019 11:30:11 +0200
-Message-ID: <7431cf2d-4406-ff0c-331a-6ab82cf48b1f@free.fr>
-References: <503b2ae8-ead6-70cd-7b21-ce5f5166a23a@free.fr>
- <20190704163527.GJ12249@tuxbook-pro>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] ARM: dts: meson8b: add ethernet fifo sizes
+Date: Thu, 18 Jul 2019 11:36:23 +0200
+Message-ID: <20190718093623.23598-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190704163527.GJ12249@tuxbook-pro>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>
-Cc: DT <devicetree@vger.kernel.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, MSM <linux-arm-msm@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>, gpio <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/07/2019 18:35, Bjorn Andersson wrote:
+If unspecified in DT, the fifo sizes are not automatically detected by
+the dwmac1000 dma driver and the reported fifo sizes default to 0.
+Because of this, flow control will be turned off on the device.
 
-> On Thu 04 Jul 01:57 PDT 2019, Marc Gonzalez wrote:
-> 
->> TSIF is the Transport Stream Interface.
->> First, rename tsif1 to tsif0, and tsif2 to tsif1.
->> Then squash all 5 tsif0 pins into a single function.
->> Same for tsif1.
->>
->> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> 
-> Thanks for the respin Marc.
-> 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Add the fifo sizes provided by the datasheet in the SoC in DT so
+flow control may be enabled if necessary.
 
-Can you or Andy pick it up for inclusion in linux-next?
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm/boot/dts/meson8b.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Regards.
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index fba2c70c2fda..b044ad78b475 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -410,6 +410,8 @@
+ 		 <&clkc CLKID_MPLL2>,
+ 		 <&clkc CLKID_MPLL2>;
+ 	clock-names = "stmmaceth", "clkin0", "clkin1";
++	rx-fifo-depth = <4096>;
++	tx-fifo-depth = <2048>;
+ 
+ 	resets = <&reset RESET_ETHERNET>;
+ 	reset-names = "stmmaceth";
+-- 
+2.21.0
