@@ -1,7 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH 2/4] ARM: dts: imx6sl: move GIC to right location in DT
-Date: Thu, 18 Jul 2019 17:15:06 +0800
-Message-ID: <20190718091508.3248-2-Anson.Huang@nxp.com>
+Subject: [PATCH 4/4] ARM: dts: imx6sll: move GIC to right location in DT
+Date: Thu, 18 Jul 2019 17:15:08 +0800
+Message-ID: <20190718091508.3248-4-Anson.Huang@nxp.com>
 References: <20190718091508.3248-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190718091508.3248-1-Anson.Huang@nxp.com>
@@ -17,14 +17,14 @@ be located inside of soc node in DT.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/imx6sl.dtsi | 18 +++++++++---------
+ arch/arm/boot/dts/imx6sll.dtsi | 18 +++++++++---------
  1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index b36fc01..3a96b55 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -77,15 +77,6 @@
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+index b0a77ff..0e8116d 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -75,15 +75,6 @@
  		};
  	};
  
@@ -37,11 +37,11 @@ index b36fc01..3a96b55 100644
 -		interrupt-parent = <&intc>;
 -	};
 -
- 	clocks {
- 		ckil {
- 			compatible = "fixed-clock";
-@@ -133,6 +124,15 @@
- 			clocks = <&clks IMX6SL_CLK_OCRAM>;
+ 	ckil: clock-ckil {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+@@ -134,6 +125,15 @@
+ 			reg = <0x00900000 0x20000>;
  		};
  
 +		intc: interrupt-controller@a01000 {
