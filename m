@@ -1,79 +1,51 @@
-From: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: Re: [PATCH v3 2/3] leds: Add control of the voltage/current regulator
- to the LED core
-Date: Thu, 18 Jul 2019 15:31:56 +0200
-Message-ID: <49152281-059c-6006-4c0f-a6be96a12707@ti.com>
-References: <20190717135948.19340-1-jjhiblot@ti.com>
- <20190717135948.19340-3-jjhiblot@ti.com>
- <4bd3b558-ea5b-0d2e-16b2-5b2e8bb484d2@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2] pinctrl: msm8998: Squash TSIF pins together
+Date: Thu, 18 Jul 2019 06:34:11 -0700
+Message-ID: <20190718133411.GA7234@tuxbook-pro>
+References: <503b2ae8-ead6-70cd-7b21-ce5f5166a23a@free.fr>
+ <20190704163527.GJ12249@tuxbook-pro>
+ <7431cf2d-4406-ff0c-331a-6ab82cf48b1f@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4bd3b558-ea5b-0d2e-16b2-5b2e8bb484d2@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, daniel.thompson@linaro.org
-Cc: dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <7431cf2d-4406-ff0c-331a-6ab82cf48b1f@free.fr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc: DT <devicetree@vger.kernel.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, MSM <linux-arm-msm@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Jonathan Neusch?fer <j.neuschaefer@gmx.net>, Rob Herring <robh+dt@kernel.org>, gpio <linux-gpio@vger.kernel.org>, Andy Gross <agross@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu 18 Jul 02:30 PDT 2019, Marc Gonzalez wrote:
 
-On 18/07/2019 14:24, Jacek Anaszewski wrote:
-> Hi Jean,
->
-> Thank you for the updated patch set.
->
-> I have some more comments below.
->
-> On 7/17/19 3:59 PM, Jean-Jacques Hiblot wrote:
->>   
->> +static bool __led_need_regulator_update(struct led_classdev *led_cdev,
->> +					int brightness)
->> +{
->> +	bool new_state = (brightness != LED_OFF);
-> How about:
->
-> bool new_state = !!brightness;
+> On 04/07/2019 18:35, Bjorn Andersson wrote:
+> 
+> > On Thu 04 Jul 01:57 PDT 2019, Marc Gonzalez wrote:
+> > 
+> >> TSIF is the Transport Stream Interface.
+> >> First, rename tsif1 to tsif0, and tsif2 to tsif1.
+> >> Then squash all 5 tsif0 pins into a single function.
+> >> Same for tsif1.
+> >>
+> >> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> > 
+> > Thanks for the respin Marc.
+> > 
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> Can you or Andy pick it up for inclusion in linux-next?
+> 
 
-Throughout the code LED_OFF is used when the LED is turned off. I think 
-it would be more consistent to use it there too.
+This is Linus' subsystem, so I expect that he will pick it up after the
+merge window closes.
 
->
->> +
->> +	return led_cdev->regulator && led_cdev->regulator_state != new_state;
->> +}
->> +static int __led_handle_regulator(struct led_classdev *led_cdev,
->> +				int brightness)
->> +{
->> +	int rc;
->> +
->> +	if (__led_need_regulator_update(led_cdev, brightness)) {
->> +
->> +		if (brightness != LED_OFF)
->> +			rc = regulator_enable(led_cdev->regulator);
->> +		else
->> +			rc = regulator_disable(led_cdev->regulator);
->> +		if (rc)
->> +			return rc;
->> +
->> +		led_cdev->regulator_state = (brightness != LED_OFF);
->> +	}
->> +	return 0;
->> +}
-> Let's have these function names without leading underscores.
-OK.
->
->>   static int __led_set_brightness(struct led_classdev *led_cdev,
->>   				enum led_brightness value)
->>   {
->> @@ -115,6 +142,8 @@ static void set_brightness_delayed(struct work_struct *ws)
->>   	if (ret == -ENOTSUPP)
->>   		ret = __led_set_brightness_blocking(led_cdev,
->>   					led_cdev->delayed_set_value);
->> +	__led_handle_regulator(led_cdev, led_cdev->delayed_set_value)
-> If you called it from __led_set_brightness() and
-
-We cannot call it from __led_set_brightness() because it is supposed not 
-to block.
-
-JJ
+Regards,
+Bjorn
