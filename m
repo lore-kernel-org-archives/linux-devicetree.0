@@ -1,96 +1,109 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-Date: Thu, 18 Jul 2019 10:41:55 -0700
-Message-ID: <419e1b16-683e-1b56-7334-50d87368c1b9@nvidia.com>
-References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <16f8b146-2581-a842-4997-53ab05b62c70@gmail.com>
- <d7892bfc-2cbf-27af-518d-dc7e243815b8@nvidia.com>
- <71272e9a-0f2a-c20d-6532-7e9057ad985c@gmail.com>
- <78fd19b9-b652-8ac3-1f57-3b4adadee03f@nvidia.com>
- <351a07d4-ba90-4793-129b-b1a733f95531@nvidia.com>
- <e3e9beaf-b195-305e-4010-66e824813472@gmail.com>
- <9271ae75-5663-e26e-df26-57cba94dab75@nvidia.com>
- <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
- <b01e37aa-f14e-e628-ceef-b25a845c6359@gmail.com>
- <46b55527-da5d-c0b7-1c14-43b5c6d49dfa@nvidia.com>
- <2de9a608-cf38-f56c-b192-7ffed65092f8@nvidia.com>
- <bff3e9c0-727d-9aef-a0e2-583e53c39afd@gmail.com>
- <5eedd224-77b0-1fc9-4e5e-d884b41a64ed@nvidia.com>
- <89f23878-d4b2-2305-03e5-8a3e781c2b02@gmail.com>
- <c759d71b-1549-2562-f0cf-db5f9e51329e@nvidia.com>
- <ef7928ad-239d-eca8-41bf-f76e72a9841d@nvidia.com>
- <4141181d-7162-0321-71b6-33abf11f631c@gmail.com>
- <ab8f2441-8f4b-3a2b-5bcd-1a889555176a@nvidia.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 2/3] leds: Add control of the voltage/current regulator
+ to the LED core
+Date: Thu, 18 Jul 2019 19:49:14 +0200
+Message-ID: <928fd71b-d1d3-cbf3-1aed-ae7fa97f6cf0@gmail.com>
+References: <20190717135948.19340-1-jjhiblot@ti.com>
+ <20190717135948.19340-3-jjhiblot@ti.com>
+ <4bd3b558-ea5b-0d2e-16b2-5b2e8bb484d2@gmail.com>
+ <49152281-059c-6006-4c0f-a6be96a12707@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ab8f2441-8f4b-3a2b-5bcd-1a889555176a@nvidia.com>
+In-Reply-To: <49152281-059c-6006-4c0f-a6be96a12707@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, sboyd@kernel.org, Michael Turquette <mturquette@baylibre.com>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, daniel.thompson@linaro.org
+Cc: dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 7/18/19 10:22 AM, Sowjanya Komatineni wrote:
->
-> On 7/18/19 9:34 AM, Dmitry Osipenko wrote:
->> 18.07.2019 4:15, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+On 7/18/19 3:31 PM, Jean-Jacques Hiblot wrote:
+> 
+> On 18/07/2019 14:24, Jacek Anaszewski wrote:
+>> Hi Jean,
 >>
->> [snip]
+>> Thank you for the updated patch set.
 >>
->>>>> Please try to fix all missing dependencies and orderings.
->>>> Peter,
->>>>
->>>> dfllCPU_OUT is the first one to go thru restore when
->>>> clk_restore_context traverses thru the list.
->>>>
->>>> dfllCPU_OUT has dependency on DFLL_ref and DFLL_SOC but this
->>>> dependency is unknown to clock-tree.
->>>>
->>>> We can add DFLL_REF and DFLL_SOC as parents to dfllCPU_OUT during
->>>> register so dfllCPU_OUT save/restore happens after their parents are
->>>> restored.
->>>>
->>>> But DFLL needs both of these to be restored before DFLLCPU_Out and as
->>>> DFLL_SOC restore always happens after the REF, thinking to add
->>>> DFLL_SOC as parent to dfllCPU_OUT so save/restore follows after their
->>>> dependencies.
->>>>
->>>> Please comment.
->>>>
->>> Did quick try and I see by adding dfll-soc as parent to dfllCPU_OUT,=20
->>> its
->>> in proper order after all its dependencies.
->>>
->>> Can now add dfll save/restore to do dfll reinit during restore..
->>>
->> If dfllCPU_OUT can work properly with dfll-soc being disabled, then this
->> kind of dependency isn't very correct and just papers over the real
->> problem, which is that there should be a way for CCF to specify multiple
->> dependencies for the clock or the reverse ordering should be used for
->> the restoring.
->
-> dfll will not work without dfll-soc enabled.
->
-> CLDVFS control logic is split into 2 clock domains. dvfs_ref_clk and=20
-> dvfs_soc_clk.
->
-> Majority of the control logic is clocked from dvfs_soc_clk for=20
-> interfacing control registers.
->
-Note on reverse ordering for restore. Currently restore order goes thru=20
-clock list and for each root goes thru parent -> child restore.
+>> I have some more comments below.
+>>
+>> On 7/17/19 3:59 PM, Jean-Jacques Hiblot wrote:
+>>>   +static bool __led_need_regulator_update(struct led_classdev
+>>> *led_cdev,
+>>> +                    int brightness)
+>>> +{
+>>> +    bool new_state = (brightness != LED_OFF);
+>> How about:
+>>
+>> bool new_state = !!brightness;
+> 
+> Throughout the code LED_OFF is used when the LED is turned off. I think
+> it would be more consistent to use it there too.
 
-this order is correct and also all clocks are parented properly so they=20
-follow proper order.
+Basically brightness is a scalar and 0 always means off.
+We treat enum led_brightness as a legacy type - it is no
+longer valid on the whole its span since LED_FULL = 255
+was depreciated with addition of max_brightness property.
 
-dfllCPU is the only one where current driver doesn't take care of=20
-dependency in dfll_soc which gets enabled only after dfll_ref.
+IMHO use of reverse logic here only hinders code analysis.
 
+>>> +
+>>> +    return led_cdev->regulator && led_cdev->regulator_state !=
+>>> new_state;
+>>> +}
+>>> +static int __led_handle_regulator(struct led_classdev *led_cdev,
+>>> +                int brightness)
+>>> +{
+>>> +    int rc;
+>>> +
+>>> +    if (__led_need_regulator_update(led_cdev, brightness)) {
+>>> +
+>>> +        if (brightness != LED_OFF)
+>>> +            rc = regulator_enable(led_cdev->regulator);
+>>> +        else
+>>> +            rc = regulator_disable(led_cdev->regulator);
+>>> +        if (rc)
+>>> +            return rc;
+>>> +
+>>> +        led_cdev->regulator_state = (brightness != LED_OFF);
+>>> +    }
+>>> +    return 0;
+>>> +}
+>> Let's have these function names without leading underscores.
+> OK.
+>>
+>>>   static int __led_set_brightness(struct led_classdev *led_cdev,
+>>>                   enum led_brightness value)
+>>>   {
+>>> @@ -115,6 +142,8 @@ static void set_brightness_delayed(struct
+>>> work_struct *ws)
+>>>       if (ret == -ENOTSUPP)
+>>>           ret = __led_set_brightness_blocking(led_cdev,
+>>>                       led_cdev->delayed_set_value);
+>>> +    __led_handle_regulator(led_cdev, led_cdev->delayed_set_value)
+>> If you called it from __led_set_brightness() and
+> 
+> We cannot call it from __led_set_brightness() because it is supposed not
+> to block.
 
-Based on dfllCPU control logic module design, dfll_ref and dfll_soc=20
-should be enabled prior to dfll init/enable.
+You're right. The problematic part is that with regulator handling
+we cannot treat the whole brightness setting operation uniformly
+for brightness_set op case, i.e. without mediation of a workqueue.
 
-So parenting dfll_soc to dfllCPU keeps proper order.
+Now you have to fire workqueue in led_set_brightness_nopm()
+even for brightness_set() op path, if regulator state needs update.
+This is ugly and can be misleading. Can be also error prone and
+have non-obvious implications for software blink state transitions.
+
+I think we would first need to improve locking between the workqueue
+and led_timer_function(). I proposed a patch [0] over a year
+ago.
+
+Only then we could think of adding another asynchronous dependency
+to the brightness setting chain.
+
+[0] https://lkml.org/lkml/2018/1/17/1144
+
+-- 
+Best regards,
+Jacek Anaszewski
