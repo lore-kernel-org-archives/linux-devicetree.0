@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH 2/7] dt-bindings: timer: renesas, cmt: Update CMT1 on sh73a0 and r8a7740
-Date: Thu, 18 Jul 2019 20:44:25 +0900
-Message-ID: <156345026539.5307.17098096827162445534.sendpatchset@octo>
+Subject: [PATCH 3/7] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a7792
+Date: Thu, 18 Jul 2019 20:44:39 +0900
+Message-ID: <156345027946.5307.6314778386600420219.sendpatchset@octo>
 References: <156345023791.5307.6113391102648394591.sendpatchset@octo>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <156345023791.5307.6113391102648394591.sendpatchset@octo>
@@ -12,47 +12,25 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-This patch reworks the DT binding documentation for the 6-channel
-48-bit CMTs known as CMT1 on r8a7740 and sh73a0.
-
-After the update the same style of DT binding as the rest of the upstream
-SoCs will now also be used by r8a7740 and sh73a0. The DT binding "cmt-48"
-is removed from the DT binding documentation, however software support for
-this deprecated binding will still remain in the CMT driver for some time.
+This patch adds DT binding documentation for the CMT devices on
+the R-Car Gen2 V2H (r8a7792) SoC.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |   10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- 0002/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-07-18 18:21:59.453309074 +0900
-@@ -12,17 +12,10 @@ datasheets.
- Required Properties:
- 
-   - compatible: must contain one or more of the following:
--    - "renesas,cmt-48-sh73a0" for the sh73A0 48-bit CMT
--		(CMT1)
--    - "renesas,cmt-48-r8a7740" for the r8a7740 48-bit CMT
--		(CMT1)
--    - "renesas,cmt-48" for all non-second generation 48-bit CMT
--		(CMT1 on sh73a0 and r8a7740)
--		This is a fallback for the above renesas,cmt-48-* entries.
--
-     - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a73a4.
-     - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a73a4.
-     - "renesas,r8a7740-cmt0" for the 32-bit CMT0 device included in r8a7740.
-+    - "renesas,r8a7740-cmt1" for the 48-bit CMT1 device included in r8a7740.
-     - "renesas,r8a7740-cmt2" for the 32-bit CMT2 device included in r8a7740.
-     - "renesas,r8a7740-cmt3" for the 32-bit CMT3 device included in r8a7740.
-     - "renesas,r8a7740-cmt4" for the 32-bit CMT4 device included in r8a7740.
-@@ -59,6 +52,7 @@ Required Properties:
-     - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
-     - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
-     - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
-+    - "renesas,sh73a0-cmt1" for the 48-bit CMT1 device included in sh73a0.
-     - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
-     - "renesas,sh73a0-cmt3" for the 32-bit CMT3 device included in sh73a0.
-     - "renesas,sh73a0-cmt4" for the 32-bit CMT4 device included in sh73a0.
+--- 0004/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-07-18 18:23:48.256013425 +0900
+@@ -35,6 +35,8 @@ Required Properties:
+     - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
+     - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
+     - "renesas,r8a7791-cmt1" for the 48-bit CMT1 device included in r8a7791.
++    - "renesas,r8a7792-cmt0" for the 32-bit CMT0 device included in r8a7792.
++    - "renesas,r8a7792-cmt1" for the 48-bit CMT1 device included in r8a7792.
+     - "renesas,r8a7793-cmt0" for the 32-bit CMT0 device included in r8a7793.
+     - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
+     - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
