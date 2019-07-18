@@ -1,71 +1,123 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-Date: Thu, 18 Jul 2019 19:34:21 +0300
-Message-ID: <4141181d-7162-0321-71b6-33abf11f631c@gmail.com>
-References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <093462f3-8c6d-d084-9822-ae4eff041c64@nvidia.com>
- <20190717093317.70fefb27@dimatab>
- <6e73dcee-6e24-b646-97a4-4b34aedd231d@nvidia.com>
- <16f8b146-2581-a842-4997-53ab05b62c70@gmail.com>
- <d7892bfc-2cbf-27af-518d-dc7e243815b8@nvidia.com>
- <71272e9a-0f2a-c20d-6532-7e9057ad985c@gmail.com>
- <78fd19b9-b652-8ac3-1f57-3b4adadee03f@nvidia.com>
- <351a07d4-ba90-4793-129b-b1a733f95531@nvidia.com>
- <e3e9beaf-b195-305e-4010-66e824813472@gmail.com>
- <9271ae75-5663-e26e-df26-57cba94dab75@nvidia.com>
- <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
- <b01e37aa-f14e-e628-ceef-b25a845c6359@gmail.com>
- <46b55527-da5d-c0b7-1c14-43b5c6d49dfa@nvidia.com>
- <2de9a608-cf38-f56c-b192-7ffed65092f8@nvidia.com>
- <bff3e9c0-727d-9aef-a0e2-583e53c39afd@gmail.com>
- <5eedd224-77b0-1fc9-4e5e-d884b41a64ed@nvidia.com>
- <89f23878-d4b2-2305-03e5-8a3e781c2b02@gmail.com>
- <c759d71b-1549-2562-f0cf-db5f9e51329e@nvidia.com>
- <ef7928ad-239d-eca8-41bf-f76e72a9841d@nvidia.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 3/3] dt-bindings: dsp: fsl: Add DSP core binding support
+Date: Thu, 18 Jul 2019 10:40:21 -0600
+Message-ID: <CAL_JsqJ6o9mTjLYjnfcYgfSFKb95W8FseZBBb8RLosB__GNBcw@mail.gmail.com>
+References: <20190718151346.3523-1-daniel.baluta@nxp.com> <20190718151346.3523-4-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ef7928ad-239d-eca8-41bf-f76e72a9841d@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <20190718151346.3523-4-daniel.baluta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, sboyd@kernel.org, Michael Turquette <mturquette@baylibre.com>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, paul.olaru@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>, Frank Li <Frank.Li@nxp.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, sound-open-firmware@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-18.07.2019 4:15, Sowjanya Komatineni пишет:
+On Thu, Jul 18, 2019 at 9:13 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
+>
+> This describes the DSP device tree node.
+>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  .../devicetree/bindings/dsp/fsl,dsp.yaml      | 87 +++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+> new file mode 100644
+> index 000000000000..d112486eda0e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+> @@ -0,0 +1,87 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/freescale/fsl,dsp.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP i.MX8 DSP core
+> +
+> +maintainers:
+> +  - Daniel Baluta <daniel.baluta@nxp.com>
+> +
+> +description: |
+> +  Some boards from i.MX8 family contain a DSP core used for
+> +  advanced pre- and post- audio processing.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,imx8qxp-dsp
+> +
+> +  reg:
+> +    description: Should contain register location and length
+> +
+> +  clocks:
+> +    items:
+> +      - description: ipg clock
+> +      - description: ocram clock
+> +      - description: core clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ipg
+> +      - const: ocram
+> +      - const: core
+> +
+> +  power-domains:
+> +    description:
+> +      List of phandle and PM domain specifier as documented in
+> +      Documentation/devicetree/bindings/power/power_domain.txt
 
-[snip]
+How many? 4?
 
->>> Please try to fix all missing dependencies and orderings.
->>
->> Peter,
->>
->> dfllCPU_OUT is the first one to go thru restore when
->> clk_restore_context traverses thru the list.
->>
->> dfllCPU_OUT has dependency on DFLL_ref and DFLL_SOC but this
->> dependency is unknown to clock-tree.
->>
->> We can add DFLL_REF and DFLL_SOC as parents to dfllCPU_OUT during
->> register so dfllCPU_OUT save/restore happens after their parents are
->> restored.
->>
->> But DFLL needs both of these to be restored before DFLLCPU_Out and as
->> DFLL_SOC restore always happens after the REF, thinking to add
->> DFLL_SOC as parent to dfllCPU_OUT so save/restore follows after their
->> dependencies.
->>
->> Please comment.
->>
-> Did quick try and I see by adding dfll-soc as parent to dfllCPU_OUT, its
-> in proper order after all its dependencies.
-> 
-> Can now add dfll save/restore to do dfll reinit during restore..
-> 
-
-If dfllCPU_OUT can work properly with dfll-soc being disabled, then this
-kind of dependency isn't very correct and just papers over the real
-problem, which is that there should be a way for CCF to specify multiple
-dependencies for the clock or the reverse ordering should be used for
-the restoring.
+> +
+> +  mboxes:
+> +    description:
+> +      List of <&phandle type channel> - 2 channels for TXDB, 2 channels for RXDB
+> +      (see mailbox/fsl,mu.txt)
+> +    maxItems: 4
+> +
+> +  mbox-names:
+> +    items:
+> +      - const: txdb0
+> +      - const: txdb1
+> +      - const: rxdb0
+> +      - const: rxdb1
+> +
+> +  memory-region:
+> +    description:
+> +       phandle to a node describing reserved memory (System RAM memory)
+> +       used by DSP (see bindings/reserved-memory/reserved-memory.txt)
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - power-domains
+> +  - mboxes
+> +  - mbox-names
+> +  - memory-region
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/firmware/imx/rsrc.h>
+> +    #include <dt-bindings/clock/imx8-clock.h>
+> +    dsp@596e8000 {
+> +        compatbile = "fsl,imx8qxp-dsp";
+> +        reg = <0x596e8000 0x88000>;
+> +        clocks = <&adma_lpcg IMX_ADMA_LPCG_DSP_IPG_CLK>,
+> +                 <&adma_lpcg IMX_ADMA_LPCG_OCRAM_IPG_CLK>,
+> +                 <&adma_lpcg IMX_ADMA_LPCG_DSP_CORE_CLK>;
+> +        clock-names = "ipg", "ocram", "core";
+> +        power-domains = <&pd IMX_SC_R_MU_13A>,
+> +                        <&pd IMX_SC_R_MU_13B>,
+> +                        <&pd IMX_SC_R_DSP>,
+> +                        <&pd IMX_SC_R_DSP_RAM>;
+> +        mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
+> +        mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
+> +    };
+> --
+> 2.17.1
+>
