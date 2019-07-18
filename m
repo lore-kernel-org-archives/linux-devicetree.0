@@ -1,123 +1,81 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: dsp: fsl: Add DSP core binding support
-Date: Thu, 18 Jul 2019 10:40:21 -0600
-Message-ID: <CAL_JsqJ6o9mTjLYjnfcYgfSFKb95W8FseZBBb8RLosB__GNBcw@mail.gmail.com>
-References: <20190718151346.3523-1-daniel.baluta@nxp.com> <20190718151346.3523-4-daniel.baluta@nxp.com>
+From: Torsten Duwe <duwe@lst.de>
+Subject: Re: [PATCH v2 5/7] drm/bridge: Add Analogix anx6345 support
+Date: Thu, 18 Jul 2019 18:42:07 +0200
+Message-ID: <20190718164207.GA29501@lst.de>
+References: <20190604122150.29D6468B05@newverein.lst.de> <CGME20190604122331epcas1p45e234dfad3f1288cb557e3bae7f9af38@epcas1p4.samsung.com> <20190604122302.006A168C7B@newverein.lst.de> <610ab353-7e05-81b6-2cc4-2dac09823d42@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190718151346.3523-4-daniel.baluta@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <610ab353-7e05-81b6-2cc4-2dac09823d42@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, paul.olaru@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>, Frank Li <Frank.Li@nxp.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, sound-open-firmware@alsa-project.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 9:13 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
->
-> This describes the DSP device tree node.
->
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  .../devicetree/bindings/dsp/fsl,dsp.yaml      | 87 +++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
->
-> diff --git a/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-> new file mode 100644
-> index 000000000000..d112486eda0e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-> @@ -0,0 +1,87 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/freescale/fsl,dsp.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP i.MX8 DSP core
-> +
-> +maintainers:
-> +  - Daniel Baluta <daniel.baluta@nxp.com>
-> +
-> +description: |
-> +  Some boards from i.MX8 family contain a DSP core used for
-> +  advanced pre- and post- audio processing.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,imx8qxp-dsp
-> +
-> +  reg:
-> +    description: Should contain register location and length
-> +
-> +  clocks:
-> +    items:
-> +      - description: ipg clock
-> +      - description: ocram clock
-> +      - description: core clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ipg
-> +      - const: ocram
-> +      - const: core
-> +
-> +  power-domains:
-> +    description:
-> +      List of phandle and PM domain specifier as documented in
-> +      Documentation/devicetree/bindings/power/power_domain.txt
+On Wed, Jun 12, 2019 at 11:13:10AM +0200, Andrzej Hajda wrote:
+> On 04.06.2019 14:23, Torsten Duwe wrote:
+> > +
+> > +static void anx6345_poweron(struct anx6345 *anx6345)
+> > +{
+> > +	int err;
+> > +
+> > +	/* Ensure reset is asserted before starting power on sequence */
+> > +	gpiod_set_value_cansleep(anx6345->gpiod_reset, 1);
+> 
+> With fixed devm_gpiod_get below this line can be removed.
 
-How many? 4?
+In any case, reset must be asserted for this procedure to succeed...
 
-> +
-> +  mboxes:
-> +    description:
-> +      List of <&phandle type channel> - 2 channels for TXDB, 2 channels for RXDB
-> +      (see mailbox/fsl,mu.txt)
-> +    maxItems: 4
-> +
-> +  mbox-names:
-> +    items:
-> +      - const: txdb0
-> +      - const: txdb1
-> +      - const: rxdb0
-> +      - const: rxdb1
-> +
-> +  memory-region:
-> +    description:
-> +       phandle to a node describing reserved memory (System RAM memory)
-> +       used by DSP (see bindings/reserved-memory/reserved-memory.txt)
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - power-domains
-> +  - mboxes
-> +  - mbox-names
-> +  - memory-region
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/firmware/imx/rsrc.h>
-> +    #include <dt-bindings/clock/imx8-clock.h>
-> +    dsp@596e8000 {
-> +        compatbile = "fsl,imx8qxp-dsp";
-> +        reg = <0x596e8000 0x88000>;
-> +        clocks = <&adma_lpcg IMX_ADMA_LPCG_DSP_IPG_CLK>,
-> +                 <&adma_lpcg IMX_ADMA_LPCG_OCRAM_IPG_CLK>,
-> +                 <&adma_lpcg IMX_ADMA_LPCG_DSP_CORE_CLK>;
-> +        clock-names = "ipg", "ocram", "core";
-> +        power-domains = <&pd IMX_SC_R_MU_13A>,
-> +                        <&pd IMX_SC_R_MU_13B>,
-> +                        <&pd IMX_SC_R_DSP>,
-> +                        <&pd IMX_SC_R_DSP_RAM>;
-> +        mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
-> +        mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
-> +    };
-> --
-> 2.17.1
->
+> > +static enum drm_mode_status
+> > +anx6345_bridge_mode_valid(struct drm_bridge *bridge,
+> > +			  const struct drm_display_mode *mode)
+> > +{
+> > +	if (mode->flags & DRM_MODE_FLAG_INTERLACE)
+> > +		return MODE_NO_INTERLACE;
+> > +
+> > +	/* Max 1200p at 5.4 Ghz, one lane */
+> > +	if (mode->clock > 154000)
+> > +		return MODE_CLOCK_HIGH;
+> 
+> I wonder if you shouldn't take into account training results here, ie.
+> training perfrormed before validation.
+
+Sure, but this is verbatim from the anx78xx.c sibling, code provided
+by analogix. Lacking in-depth datasheets, this is probably the best effort.
+
+> > +
+> > +	/* 2.5V digital core power regulator  */
+> > +	anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25-supply");
+> > +	if (IS_ERR(anx6345->dvdd25)) {
+> > +		DRM_ERROR("dvdd25-supply not found\n");
+> > +		return PTR_ERR(anx6345->dvdd25);
+> > +	}
+> > +
+> > +	/* GPIO for chip reset */
+> > +	anx6345->gpiod_reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> 
+> Shouldn't be set to GPIOD_OUT_HIGH?
+
+It used to be in the original submission, and confused even more people ;-)
+Fact is, the reset for this chip _is_ low active; I'm following
+Documentation/devicetree/bindings/gpio/gpio.txt, "1.1) GPIO specifier
+best practices", which I find rather comprehensive.
+
+Any suggestions on how to phrase this even better are appreciated.
+
+> > +};
+> > +module_i2c_driver(anx6345_driver);
+> > +
+> > +MODULE_DESCRIPTION("ANX6345 eDP Transmitter driver");
+> > +MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
+> 
+> Submitter, patch author, and module author are different, this can be
+> correct, but maybe somebody forgot to update some of these fields.
+
+As mentioned in the v2 cover letter, I had a closer look on which code got
+actually introduced and which lines were simply copied around, and made the
+copyright and authorship stick to where they belong. *I* believe this is
+correct now; specific improvements welcome.
+
+	Torsten
