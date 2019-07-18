@@ -1,51 +1,69 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2] pinctrl: msm8998: Squash TSIF pins together
-Date: Thu, 18 Jul 2019 06:34:11 -0700
-Message-ID: <20190718133411.GA7234@tuxbook-pro>
-References: <503b2ae8-ead6-70cd-7b21-ce5f5166a23a@free.fr>
- <20190704163527.GJ12249@tuxbook-pro>
- <7431cf2d-4406-ff0c-331a-6ab82cf48b1f@free.fr>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH 1/4][V2] drivers: spi: core: Add optional delay between
+ cs_change transfers
+Date: Thu, 18 Jul 2019 13:36:54 +0000
+Message-ID: <3b5c33bb4f3ed4bb73304f1034184a683107ea55.camel@analog.com>
+References: <20190717115109.15168-1-alexandru.ardelean@analog.com>
+         <20190717115109.15168-2-alexandru.ardelean@analog.com>
+         <20190718125008.GD5761@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <7431cf2d-4406-ff0c-331a-6ab82cf48b1f@free.fr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc: DT <devicetree@vger.kernel.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, MSM <linux-arm-msm@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Jonathan Neusch?fer <j.neuschaefer@gmx.net>, Rob Herring <robh+dt@kernel.org>, gpio <linux-gpio@vger.kernel.org>, Andy Gross <agross@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190718125008.GD5761@sirena.org.uk>
+Content-Language: en-US
+Content-ID: <8A96C2C30BB4DB49BA8C6F2B476A331A@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "broonie@kernel.org" <broonie@kernel.org>
+Cc: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jic23@kernel.org" <jic23@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 18 Jul 02:30 PDT 2019, Marc Gonzalez wrote:
-
-> On 04/07/2019 18:35, Bjorn Andersson wrote:
-> 
-> > On Thu 04 Jul 01:57 PDT 2019, Marc Gonzalez wrote:
-> > 
-> >> TSIF is the Transport Stream Interface.
-> >> First, rename tsif1 to tsif0, and tsif2 to tsif1.
-> >> Then squash all 5 tsif0 pins into a single function.
-> >> Same for tsif1.
-> >>
-> >> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> > 
-> > Thanks for the respin Marc.
-> > 
-> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> Can you or Andy pick it up for inclusion in linux-next?
-> 
-
-This is Linus' subsystem, so I expect that he will pick it up after the
-merge window closes.
-
-Regards,
-Bjorn
+T24gVGh1LCAyMDE5LTA3LTE4IGF0IDEzOjUwICswMTAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
+biBXZWQsIEp1bCAxNywgMjAxOSBhdCAwMjo1MTowNlBNICswMzAwLCBBbGV4YW5kcnUgQXJkZWxl
+YW4gd3JvdGU6DQo+ID4gU29tZSBkZXZpY2VzIGxpa2UgdGhlIEFESVMxNjQ2MCBJTVUgcmVxdWly
+ZSBhIHN0YWxsIHBlcmlvZCBiZXR3ZWVuDQo+ID4gdHJhbnNmZXJzLCBpLmUuIGJldHdlZW4gd2hl
+biB0aGUgQ1MgaXMgZGUtYXNzZXJ0ZWQgYW5kIHJlLWFzc2VydGVkLiBUaGUNCj4gPiBkZWZhdWx0
+IHZhbHVlIG9mIDEwdXMgaXMgbm90IGVub3VnaC4gVGhpcyBjaGFuZ2UgbWFrZXMgdGhlIGRlbGF5
+DQo+ID4gY29uZmlndXJhYmxlIGZvciB3aGVuIHRoZSBuZXh0IENTIGNoYW5nZSBnb2VzIGFjdGl2
+ZS4NCj4gDQo+IFRvIHJlcGVhdCBteSBwcmV2aW91cyBmZWVkYmFjazoNCj4gDQo+ID4gVGhpcyBs
+b29rcyBsaWtlIGNzX2NoYW5nZV9kZWxheS4NCg0KQWNrLg0KV2lsbCB1c2UgYGNzX2NoYW5nZV9k
+ZWxheWAuDQpJIGhhdmUgbm8gc3Ryb25nIHByZWZlcmVuY2UgcmVnYXJkaW5nIHRoZSBuYW1lLg0K
+DQo+IA0KPiBQbGVhc2UgdXNlIHN1YmplY3QgbGluZXMgbWF0Y2hpbmcgdGhlIHN0eWxlIGZvciB0
+aGUgc3Vic3lzdGVtLiAgVGhpcw0KPiBtYWtlcyBpdCBlYXNpZXIgZm9yIHBlb3BsZSB0byBpZGVu
+dGlmeSByZWxldmFudCBwYXRjaGVzLg0KDQpBY2suDQpXaWxsIGxvb2sgZm9yIFNQSSBzdWJzeXN0
+ZW0gc3BlY2lmaWMgc3ViamVjdCBsaW5lcyBhbmQgdXNlIHRoZW0uDQoNCj4gDQo+IFBsZWFzZSBk
+b24ndCBpZ25vcmUgcmV2aWV3IGNvbW1lbnRzLCBwZW9wbGUgYXJlIGdlbmVyYWxseSBtYWtpbmcg
+dGhlbQ0KPiBmb3IgYSByZWFzb24gYW5kIGFyZSBsaWtlbHkgdG8gaGF2ZSB0aGUgc2FtZSBjb25j
+ZXJucyBpZiBpc3N1ZXMgcmVtYWluDQo+IHVuYWRkcmVzc2VkLiAgSGF2aW5nIHRvIHJlcGVhdCB0
+aGUgc2FtZSBjb21tZW50cyBjYW4gZ2V0IHJlcGV0aXRpdmUgYW5kDQo+IG1ha2UgcGVvcGxlIHF1
+ZXN0aW9uIHRoZSB2YWx1ZSBvZiB0aW1lIHNwZW50IHJldmlld2luZy4gIElmIHlvdSBkaXNhZ3Jl
+ZQ0KPiB3aXRoIHRoZSByZXZpZXcgY29tbWVudHMgdGhhdCdzIGZpbmUgYnV0IHlvdSBuZWVkIHRv
+IHJlcGx5IGFuZCBkaXNjdXNzDQo+IHlvdXIgY29uY2VybnMgc28gdGhhdCB0aGUgcmV2aWV3ZXIg
+Y2FuIHVuZGVyc3RhbmQgeW91ciBkZWNpc2lvbnMuDQoNClsgdGhlIGZvbGxvd2luZyBwYXJ0IHNo
+b3VsZCBub3QgYmUgY29uc2lkZXJlZCBpbiBhIGRpc3Jlc3BlY3RmdWwgdG9uZSA7IHRoZSBpbnRl
+bnQgaXMgbm93aGVyZSBuZWFyIHRoYXQsIGJ1dCB0ZXh0LQ0KY29tbXVuaWNhdGlvbiBoYXMgYSBk
+ZXNpZ24tZmxhdyB3aGVyZSBhIGRpc3Jlc3BlY3RmdWwgdG9uZSBtYXkgYmUgaW50ZXJwcmV0ZWQg
+W3doZXJlIHRoZXJlIGlzbid0IG9uZV0gXQ0KDQpNeSBpbnRlbnQgd2Fzbid0IHRvIGlnbm9yZSB0
+aGUgcmV2aWV3IGNvbW1lbnQuDQpTb3JyeSBpZiBpdCBjYW1lIG91dCBsaWtlIHRoYXQuDQoNCkkg
+YXNzdW1lZCBhIHBhdGNoIHJlLXNwaW4gd2FzIHByZWZlcnJlZCB2cyBhIHZlcmJhbCBkaXNjdXNz
+aW9uLg0KU29tZSBwZW9wbGUgcHJlZmVyIHBhdGNoIHJlLXNwaW5zIGFzIGEgYmFzaXMgZm9yIGRp
+c2N1c3Npb24uDQpWYXJpb3VzIHBlb3BsZSBoYXZlIHZhcmlvdXMgcHJlZmVyZW5jZXMuDQoNCkFs
+c28sIEkgd2Fzbid0IHN1cmUgaG93IHNvb24gSSdkIGdldCBhIHJlcGx5IGJhY2sgb24gdGhpcywg
+c2luY2UgdmFyaW91cyBwZW9wbGUvbWFpbnRhaW5lcnMgaGF2ZSB2YXJpb3VzIHJlcGx5LXRpbWVz
+Lg0KQW5kIEkgYWxzbyBbc29tZXRpbWVzXSBoYXZlIGxvbmdlciByZXBseS1iYWNrLXRpbWVzIFt3
+aGljaCBkb2Vzbid0IGhlbHAgZWl0aGVyXS4NCkFuZCBJIHdhc24ndCBzdXJlIGlmIGBjc19jaGFu
+Z2VfZGVsYXlgIHdhcyBmdWxseSBpbnRlbnRpb25hbC9hZC1saXRlcmFtLCBvciB3aGV0aGVyIGl0
+IHdhcyBhIGZlZWRiYWNrIG9mIHRoZSBzb3J0cw0KImFsb25nLXRoZS1saW5lcyBvZiBgY3NfY2hh
+bmdlX2RlbGF5YCIuDQoNCldoaWxlIGxvb2tpbmcgYXQgYHN0cnVjdCBzcGlfdHJhbnNmZXJgIHRo
+ZSBvdGhlciAiZGVsYXkiIGZpZWxkcyBzZWVtIHRvIGJlOiBgd29yZF9kZWxheV91c2Vjc2AgJiBg
+ZGVsYXlfdXNlY3NgLCB3aGljaCBpcw0Kd2h5IEkgYXNzdW1lZCBgY3NfY2hhbmdlX2RlbGF5X3Vz
+ZWNzYCB3YXMgcHJlZmVycmVkIFt0aG91Z2ggSSB3aWxsIGFkbWl0LCBpdCBpcyBhIGxvbmcgdmFy
+LW5hbWVdLg0KDQpBbmQgdGhlIGNvbmNsdXNpb24gW2Zyb20gbXkgc2lkZV0gaXM6IG1heWJlIEkg
+cnVzaGVkIHRoaXMgYSBiaXQgYW5kIG1heWJlIGl0IGFubm95ZWQgeW91Lg0KTm90IG15IGludGVu
+dGlvbiwgYW5kIGl0J2xsIHRha2UgbWUgYSBiaXQgdG8gYWRqdXN0IHRvIHlvdXIgc3R5bGUuDQoN
+Ck1vdmluZyBmb3J3YXJkLg0KDQoxLiBJIHdpbGwgdXNlIGBjc19jaGFuZ2VfZGVsYXlgIGFzIGZp
+ZWxkIG5hbWUgDQoyLiBJIHdpbGwgdXNlIFNQSSBzdWJzeXN0ZW0gc3ViamVjdCBsaW5lOyBJIHdp
+bGwgYWRtaXQgSSBmb3JnZXQgdGhpcyBzdHVmZiBwZXJpb2RpY2FsbHkNCg0KSXMgdGhlcmUgYW55
+dGhpbmcgZWxzZSBJIHNob3VsZCBjb25zaWRlcj8NCk9yIGFueXRoaW5nIGVsc2UgdG8gZGlzY3Vz
+cz8NCg0KSSdtIG9wZW4gdG8gZWxlbWVudHMgSSBtYXkgaGF2ZSBmb3Jnb3R0ZW4vb21pdHRlZCB1
+bmludGVudGlvbmFsbHkuDQoNClRoYW5rcw0KQWxleA0K
