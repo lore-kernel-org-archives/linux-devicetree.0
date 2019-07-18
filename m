@@ -1,104 +1,66 @@
-From: Hui Song <hui.song_1@nxp.com>
-Subject: [PATCH 2/2] gpio: mpc8xxx: Add ls1028a device specify function.
-Date: Thu, 18 Jul 2019 17:49:02 +0800
-Message-ID: <20190718094902.15562-2-hui.song_1@nxp.com>
-References: <20190718094902.15562-1-hui.song_1@nxp.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v5 00/26] Add generic support for composing LED class
+ device name
+Date: Thu, 18 Jul 2019 12:52:34 +0200
+Message-ID: <20190718105233.GA3859@amd>
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+ <405b2806-342a-952d-67ab-47516225c54e@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190718094902.15562-1-hui.song_1@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <405b2806-342a-952d-67ab-47516225c54e@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: linux-leds@vger.kernel.org, dmurphy@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
 
-There is a device specify register(named GPIO_IBE)
-on ls1028a need to enable in initial stage.
+--OgqxwSJOaUobr8KG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
- drivers/gpio/gpio-mpc8xxx.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index c8673a5..1a680aa 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -32,6 +32,7 @@
- #define GPIO_IMR		0x10
- #define GPIO_ICR		0x14
- #define GPIO_ICR2		0x18
-+#define GPIO_IBE		0x18
- 
- struct mpc8xxx_gpio_chip {
- 	struct gpio_chip	gc;
-@@ -45,6 +46,27 @@ struct mpc8xxx_gpio_chip {
- 	unsigned int irqn;
- };
- 
-+/* The GPIO Input Buffer Enable register(GPIO_IBE) is used to
-+ * control the input enable of each individual GPIO port.
-+ * When an individual GPIO port’s direction is set to
-+ * input (GPIO_GPDIR[DRn=0]), the associated input enable must be
-+ * set (GPIOxGPIE[IEn]=1) to propagate the port value to the GPIO
-+ * Data Register.
-+ */
-+static int ls1028a_gpio_dir_in_init(struct gpio_chip *gc)
-+{
-+	unsigned long flags;
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = gpiochip_get_data(gc);
-+
-+	spin_lock_irqsave(&gc->bgpio_lock, flags);
-+
-+	gc->write_reg(mpc8xxx_gc->regs + GPIO_IBE, 0xffffffff);
-+
-+	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
-+
-+	return 0;
-+}
-+
- /*
-  * This hardware has a big endian bit assignment such that GPIO line 0 is
-  * connected to bit 31, line 1 to bit 30 ... line 31 to bit 0.
-@@ -261,6 +283,7 @@ static const struct irq_domain_ops mpc8xxx_gpio_irq_ops = {
- };
- 
- struct mpc8xxx_gpio_devtype {
-+	int (*gpio_dir_in_init)(struct gpio_chip *chip);
- 	int (*gpio_dir_out)(struct gpio_chip *, unsigned int, int);
- 	int (*gpio_get)(struct gpio_chip *, unsigned int);
- 	int (*irq_set_type)(struct irq_data *, unsigned int);
-@@ -271,6 +294,10 @@ static const struct mpc8xxx_gpio_devtype mpc512x_gpio_devtype = {
- 	.irq_set_type = mpc512x_irq_set_type,
- };
- 
-+static const struct mpc8xxx_gpio_devtype ls1028a_gpio_devtype = {
-+	.gpio_dir_in_init = ls1028a_gpio_dir_in_init,
-+};
-+
- static const struct mpc8xxx_gpio_devtype mpc5125_gpio_devtype = {
- 	.gpio_dir_out = mpc5125_gpio_dir_out,
- 	.irq_set_type = mpc512x_irq_set_type,
-@@ -291,6 +318,7 @@ static const struct of_device_id mpc8xxx_gpio_ids[] = {
- 	{ .compatible = "fsl,mpc5121-gpio", .data = &mpc512x_gpio_devtype, },
- 	{ .compatible = "fsl,mpc5125-gpio", .data = &mpc5125_gpio_devtype, },
- 	{ .compatible = "fsl,pq3-gpio",     },
-+	{ .compatible = "fsl,ls1028a-gpio", .data = &ls1028a_gpio_devtype, },
- 	{ .compatible = "fsl,qoriq-gpio",   },
- 	{}
- };
-@@ -376,6 +404,9 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	/* ack and mask all irqs */
- 	gc->write_reg(mpc8xxx_gc->regs + GPIO_IER, 0xffffffff);
- 	gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0);
-+	/* enable input buffer  */
-+	if (devtype->gpio_dir_in_init)
-+		devtype->gpio_dir_in_init(gc);
- 
- 	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
- 					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
--- 
-2.9.5
+> Hi all,
+>=20
+> I need explicit acks for some patches from this series, that
+> were either requested improvements or I modified them by myself
+> after v4.
+>=20
+> The patches I am talking about are the following:
+>=20
+> 1/26
+> 21/26
+> 23/26
+> 25/26
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+> 26/26 would be nice to have but I presume it needs more discussion
+> and analysis.
+
+Idea is good, but I'd sort the file in different way.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--OgqxwSJOaUobr8KG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0wT3EACgkQMOfwapXb+vI1tACcCTFYaHPYF4l3AuLVbz3Ti/Pn
++nQAniCt8QUkaqGmg4Y5QMHqfyVCFSzD
+=7Pli
+-----END PGP SIGNATURE-----
+
+--OgqxwSJOaUobr8KG--
