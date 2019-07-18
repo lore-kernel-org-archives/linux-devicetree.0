@@ -1,60 +1,43 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH 4/4] ARM: dts: imx6sll: move GIC to right location in DT
-Date: Thu, 18 Jul 2019 17:15:08 +0800
-Message-ID: <20190718091508.3248-4-Anson.Huang@nxp.com>
-References: <20190718091508.3248-1-Anson.Huang@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190718091508.3248-1-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: Re: [PATCH v2] pinctrl: msm8998: Squash TSIF pins together
+Date: Thu, 18 Jul 2019 11:30:11 +0200
+Message-ID: <7431cf2d-4406-ff0c-331a-6ab82cf48b1f@free.fr>
+References: <503b2ae8-ead6-70cd-7b21-ce5f5166a23a@free.fr>
+ <20190704163527.GJ12249@tuxbook-pro>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190704163527.GJ12249@tuxbook-pro>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>
+Cc: DT <devicetree@vger.kernel.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, MSM <linux-arm-msm@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>, gpio <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On 04/07/2019 18:35, Bjorn Andersson wrote:
 
-GIC is inside of SoC from architecture perspective, it should
-be located inside of soc node in DT.
+> On Thu 04 Jul 01:57 PDT 2019, Marc Gonzalez wrote:
+> 
+>> TSIF is the Transport Stream Interface.
+>> First, rename tsif1 to tsif0, and tsif2 to tsif1.
+>> Then squash all 5 tsif0 pins into a single function.
+>> Same for tsif1.
+>>
+>> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> 
+> Thanks for the respin Marc.
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6sll.dtsi | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Can you or Andy pick it up for inclusion in linux-next?
 
-diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-index b0a77ff..0e8116d 100644
---- a/arch/arm/boot/dts/imx6sll.dtsi
-+++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -75,15 +75,6 @@
- 		};
- 	};
- 
--	intc: interrupt-controller@a01000 {
--		compatible = "arm,cortex-a9-gic";
--		#interrupt-cells = <3>;
--		interrupt-controller;
--		reg = <0x00a01000 0x1000>,
--		      <0x00a00100 0x100>;
--		interrupt-parent = <&intc>;
--	};
--
- 	ckil: clock-ckil {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
-@@ -134,6 +125,15 @@
- 			reg = <0x00900000 0x20000>;
- 		};
- 
-+		intc: interrupt-controller@a01000 {
-+			compatible = "arm,cortex-a9-gic";
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			reg = <0x00a01000 0x1000>,
-+			      <0x00a00100 0x100>;
-+			interrupt-parent = <&intc>;
-+		};
-+
- 		L2: l2-cache@a02000 {
- 			compatible = "arm,pl310-cache";
- 			reg = <0x00a02000 0x1000>;
--- 
-2.7.4
+Regards.
