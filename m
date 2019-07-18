@@ -1,68 +1,59 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v4 3/4] dt-bindings: backlight: Add led-backlight binding
-Date: Thu, 18 Jul 2019 14:30:00 +0200
-Message-ID: <16865fe5-cc9c-e6f5-6950-54cc70153243@gmail.com>
-References: <20190717141514.21171-1-jjhiblot@ti.com>
- <20190717141514.21171-4-jjhiblot@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/4][V2] drivers: spi: core: Add optional delay between
+ cs_change transfers
+Date: Thu, 18 Jul 2019 13:50:08 +0100
+Message-ID: <20190718125008.GD5761@sirena.org.uk>
+References: <20190717115109.15168-1-alexandru.ardelean@analog.com>
+ <20190717115109.15168-2-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190717141514.21171-4-jjhiblot@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190717115109.15168-2-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com
-Cc: dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: linux-iio@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Michael Hennerich <michael.hennerich@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-Cc devicetree@vger.kernel.org list - Rob once informed us this gets
-higher priority in his queue this way.
 
-On 7/17/19 4:15 PM, Jean-Jacques Hiblot wrote:
-> Add DT binding for led-backlight.
-> 
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> ---
->  .../bindings/leds/backlight/led-backlight.txt | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> new file mode 100644
-> index 000000000000..4c7dfbe7f67a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> @@ -0,0 +1,28 @@
-> +led-backlight bindings
-> +
-> +This binding is used to describe a basic backlight device made of LEDs.
-> +It can also be used to describe a backlight device controlled by the output of
-> +a LED driver.
-> +
-> +Required properties:
-> +  - compatible: "led-backlight"
-> +  - leds: a list of LEDs
-> +
-> +Optional properties:
-> +  - brightness-levels: Array of distinct brightness levels. The levels must be
-> +                       in the range accepted by the underlying LED devices.
-> +                       This is used to translate a backlight brightness level
-> +                       into a LED brightness level. If it is not provided, the
-> +                       identity mapping is used.
-> +
-> +  - default-brightness-level: The default brightness level.
-> +
-> +Example:
-> +
-> +	backlight {
-> +		compatible = "led-backlight";
-> +
-> +		leds = <&led1>, <&led2>;
-> +		brightness-levels = <0 4 8 16 32 64 128 255>;
-> +		default-brightness-level = <6>;
-> +	};
-> 
+--3Gf/FFewwPeBMqCJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Best regards,
-Jacek Anaszewski
+On Wed, Jul 17, 2019 at 02:51:06PM +0300, Alexandru Ardelean wrote:
+> Some devices like the ADIS16460 IMU require a stall period between
+> transfers, i.e. between when the CS is de-asserted and re-asserted. The
+> default value of 10us is not enough. This change makes the delay
+> configurable for when the next CS change goes active.
+
+To repeat my previous feedback:
+
+| This looks like cs_change_delay.
+
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
+
+Please don't ignore review comments, people are generally making them
+for a reason and are likely to have the same concerns if issues remain
+unaddressed.  Having to repeat the same comments can get repetitive and
+make people question the value of time spent reviewing.  If you disagree
+with the review comments that's fine but you need to reply and discuss
+your concerns so that the reviewer can understand your decisions.
+
+--3Gf/FFewwPeBMqCJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0wav8ACgkQJNaLcl1U
+h9APhQf/QOouOeq0OOWIhFy4+/g0D4HdPXY0lzPOPRqIa3No7BWtewQIntQ7uARy
+/6nZrCA4lT9IuLtQY9TtxBtY3GyY1hLyWXnibxUsD0vZqS7cBjvVdYYv9/FTdDEK
+VquUng/K54Vp6Ku0GCfh9EXhEs05w/L4B1cWa1r7FD6gbF5llweQ6A/JP68B2Jzl
+mAj3fEjb7brceyU08UiJsfDCIehvVc3vpu5wCyFFj0FzGhJ+IfJdAmFn7C6EmotF
+CM8deV1NaeQB0iUkCSVgTj+pBG4UZ0hj0CGju8xXxE6/f/+1BgBp6EpNZj1Tptzg
+XIBZ7Xf1k9oTXGZ+05q/wXtv2P9N+w==
+=liAJ
+-----END PGP SIGNATURE-----
+
+--3Gf/FFewwPeBMqCJ--
