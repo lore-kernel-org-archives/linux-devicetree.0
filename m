@@ -1,44 +1,55 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v2 4/9] ARM: EXYNOS: enable exynos_chipid for ARCH_EXYNOS
-Date: Thu, 18 Jul 2019 16:30:39 +0200
-Message-ID: <20190718143044.25066-5-s.nawrocki@samsung.com>
-References: <20190718143044.25066-1-s.nawrocki@samsung.com>
-        <CGME20190718143131eucas1p2e1afc9fe816fff52ee4d12e0979eeb4c@eucas1p2.samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190718143044.25066-1-s.nawrocki@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: krzk@kernel.org
-Cc: robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH 0/3] Add DSP node on i.MX8QXP board
+Date: Thu, 18 Jul 2019 18:13:43 +0300
+Message-ID: <20190718151346.3523-1-daniel.baluta@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: mark.rutland@arm.com, aisheng.dong@nxp.com, peng.fan@nxp.com, anson.huang@nxp.com, devicetree@vger.kernel.org, daniel.baluta@nxp.com, s.hauer@pengutronix.de, Frank.Li@nxp.com, linux-kernel@vger.kernel.org, paul.olaru@nxp.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, leonard.crestez@nxp.com, festevam@gmail.com, shengjiu.wang@nxp.com, linux-arm-kernel@lists.infradead.org, sound-open-firmware@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
+i.MX8QXP boards feature an Hifi4 DSP from Tensilica. This patch series
+adds the DT node.
 
-As now we have chipid driver to initialize SoC related information
-let's include it in build by default.
+Note that we switched to the new yaml format for bindings documentation.
 
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-Changes since v1 (RFC):
- - none
----
- arch/arm/mach-exynos/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+The DSP will run SOF Firmware [1]. Patches adding support for Linux DSP
+driver are already sent for review to SOF folks [2].
 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 1c518b8ee520..6fc4af312361 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -13,6 +13,7 @@ menuconfig ARCH_EXYNOS
- 	select ARM_AMBA
- 	select ARM_GIC
- 	select COMMON_CLK_SAMSUNG
-+	select EXYNOS_CHIPID
- 	select EXYNOS_THERMAL
- 	select EXYNOS_PMU
- 	select EXYNOS_SROM
+This patch series also contains a patch introducing DT related clocks.
+
+The patch was already reviewed here:
+	https://lkml.org/lkml/2019/7/17/975
+
+but I added it in this patch series because it wasn't yet picked by
+Shawn so patches 2/3 will not compiled without patch 1.
+
+[1] https://github.com/thesofproject/sof
+[2] https://github.com/thesofproject/linux/pull/1048/commits
+
+Daniel Baluta (3):
+  clk: imx8: Add DSP related clocks
+  arm64: dts: imx8qxp: Add DSP DT node
+  dt-bindings: dsp: fsl: Add DSP core binding support
+
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      | 87 +++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts |  4 +
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 32 +++++++
+ drivers/clk/imx/clk-imx8qxp-lpcg.c            |  5 ++
+ include/dt-bindings/clock/imx8-clock.h        |  6 +-
+ 5 files changed, 133 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+
 -- 
 2.17.1
