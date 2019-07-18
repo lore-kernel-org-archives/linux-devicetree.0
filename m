@@ -1,115 +1,71 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH 3/3] dt-bindings: dsp: fsl: Add DSP core binding support
-Date: Thu, 18 Jul 2019 18:13:46 +0300
-Message-ID: <20190718151346.3523-4-daniel.baluta@nxp.com>
-References: <20190718151346.3523-1-daniel.baluta@nxp.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCHv8 3/5] arm64: dts: qcom: msm8996: Add Coresight support
+Date: Thu, 18 Jul 2019 09:31:00 -0600
+Message-ID: <CANLsYkx9X36OJmczNK1255y8fKJfkyVq1zyQUDihqMewcU6Kxw@mail.gmail.com>
+References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <2fa725fbc09306f1a95befc62715a708b4c0fad0.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <20190717170050.GB4271@xps15> <f28d9c8f-017c-c990-2f00-0ef5a62f3b40@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190718151346.3523-1-daniel.baluta@nxp.com>
+In-Reply-To: <f28d9c8f-017c-c990-2f00-0ef5a62f3b40@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, daniel.baluta@nxp.com, shengjiu.wang@nxp.com, paul.olaru@nxp.com, aisheng.dong@nxp.com, leonard.crestez@nxp.com, anson.huang@nxp.com, peng.fan@nxp.com, Frank.Li@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sound-open-firmware@alsa-project.org
+To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mike Leach <mike.leach@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-This describes the DSP device tree node.
+On Wed, 17 Jul 2019 at 23:47, Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Hi Mathieu,
+>
+> On 7/17/2019 10:30 PM, Mathieu Poirier wrote:
+> > On Fri, Jul 12, 2019 at 07:46:25PM +0530, Sai Prakash Ranjan wrote:
+> >> From: Vivek Gautam <vivek.gautam@codeaurora.org>
+> >>
+> >> Enable coresight support by adding device nodes for the
+> >> available source, sinks and channel blocks on msm8996.
+> >>
+> >> This also adds coresight cpu debug nodes.
+> >>
+> >> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> >> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> >> Acked-By: Suzuki K Poulose <suzuki.poulose@arm.com>
+> >> ---
+> >>   arch/arm64/boot/dts/qcom/msm8996.dtsi | 434 ++++++++++++++++++++++++++
+> >>   1 file changed, 434 insertions(+)
+> >>
+> >
+> > We've gone trhough 8 iteration of this set and I'm still finding checkpatch
+> > problems, and I'm not referring to lines over 80 characters.
+> >
+>
+> I only get below 2 checkpatch warnings:
+>
+> If you are talking about the below one, then it was not added manually.
+> It was taken automatically when I pulled in the v7. Should I be
+> resending this patch for this?
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- .../devicetree/bindings/dsp/fsl,dsp.yaml      | 87 +++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+That depends if you want David and Andy to pickup your patches - I am
+sure they'll point out exactly the same thing.
 
-diff --git a/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-new file mode 100644
-index 000000000000..d112486eda0e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/freescale/fsl,dsp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP i.MX8 DSP core
-+
-+maintainers:
-+  - Daniel Baluta <daniel.baluta@nxp.com>
-+
-+description: |
-+  Some boards from i.MX8 family contain a DSP core used for
-+  advanced pre- and post- audio processing.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx8qxp-dsp
-+
-+  reg:
-+    description: Should contain register location and length
-+
-+  clocks:
-+    items:
-+      - description: ipg clock
-+      - description: ocram clock
-+      - description: core clock
-+
-+  clock-names:
-+    items:
-+      - const: ipg
-+      - const: ocram
-+      - const: core
-+
-+  power-domains:
-+    description:
-+      List of phandle and PM domain specifier as documented in
-+      Documentation/devicetree/bindings/power/power_domain.txt
-+
-+  mboxes:
-+    description:
-+      List of <&phandle type channel> - 2 channels for TXDB, 2 channels for RXDB
-+      (see mailbox/fsl,mu.txt)
-+    maxItems: 4
-+
-+  mbox-names:
-+    items:
-+      - const: txdb0
-+      - const: txdb1
-+      - const: rxdb0
-+      - const: rxdb1
-+
-+  memory-region:
-+    description:
-+       phandle to a node describing reserved memory (System RAM memory)
-+       used by DSP (see bindings/reserved-memory/reserved-memory.txt)
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - mboxes
-+  - mbox-names
-+  - memory-region
-+
-+examples:
-+  - |
-+    #include <dt-bindings/firmware/imx/rsrc.h>
-+    #include <dt-bindings/clock/imx8-clock.h>
-+    dsp@596e8000 {
-+        compatbile = "fsl,imx8qxp-dsp";
-+        reg = <0x596e8000 0x88000>;
-+        clocks = <&adma_lpcg IMX_ADMA_LPCG_DSP_IPG_CLK>,
-+                 <&adma_lpcg IMX_ADMA_LPCG_OCRAM_IPG_CLK>,
-+                 <&adma_lpcg IMX_ADMA_LPCG_DSP_CORE_CLK>;
-+        clock-names = "ipg", "ocram", "core";
-+        power-domains = <&pd IMX_SC_R_MU_13A>,
-+                        <&pd IMX_SC_R_MU_13B>,
-+                        <&pd IMX_SC_R_DSP>,
-+                        <&pd IMX_SC_R_DSP_RAM>;
-+        mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
-+        mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
-+    };
--- 
-2.17.1
+>
+> $ ./scripts/checkpatch.pl -g 2fa725fbc09306f1a95befc62715a708b4c0fad0
+> WARNING: 'Acked-by:' is the preferred signature form
+> #14:
+> Acked-By: Suzuki K Poulose <suzuki.poulose@arm.com>
+>
+> WARNING: line over 80 characters
+> #154: FILE: arch/arm64/boot/dts/qcom/msm8996.dtsi:763:
+> +                       compatible = "arm,coresight-dynamic-replicator",
+> "arm,primecell";
+>
+> total: 0 errors, 2 warnings, 440 lines checked
+>
+>
+> -Sai
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
