@@ -1,39 +1,67 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] ARM: dts: meson8b: add ethernet fifo sizes
-Date: Thu, 18 Jul 2019 11:36:23 +0200
-Message-ID: <20190718093623.23598-1-jbrunet@baylibre.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCHv8 2/5] arm64: dts: qcom: msm8998: Add Coresight support
+Date: Thu, 18 Jul 2019 10:37:19 +0100
+Message-ID: <281e3548-af53-f9a7-b9e4-813b448ab078@arm.com>
+References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <e510df23f741205fac9030f2c95d06d607549caa.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <3b192063-f31f-b861-d913-61d737cecc57@arm.com>
+ <4854b0f7-6a81-bc87-3e63-d2b7c68a44f6@codeaurora.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4854b0f7-6a81-bc87-3e63-d2b7c68a44f6@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: saiprakash.ranjan@codeaurora.org, gregkh@linuxfoundation.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, mike.leach@linaro.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, david.brown@linaro.org, mark.rutland@arm.com
+Cc: rnayak@codeaurora.org, vivek.gautam@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, marc.w.gonzalez@free.fr
 List-Id: devicetree@vger.kernel.org
 
-If unspecified in DT, the fifo sizes are not automatically detected by
-the dwmac1000 dma driver and the reported fifo sizes default to 0.
-Because of this, flow control will be turned off on the device.
 
-Add the fifo sizes provided by the datasheet in the SoC in DT so
-flow control may be enabled if necessary.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm/boot/dts/meson8b.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+On 18/07/2019 10:14, Sai Prakash Ranjan wrote:
+> Hi Suzuki,
+> 
+> On 7/18/2019 1:58 PM, Suzuki K Poulose wrote:
+>> Hi Sai,
+>>
+>>
+>>           etr@6048000 {
+>>> +            compatible = "arm,coresight-tmc", "arm,primecell";
+>>> +            reg = <0x06048000 0x1000>;
+>>> +
+>>> +            clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc
+>>> RPM_SMD_QDSS_A_CLK>;
+>>> +            clock-names = "apb_pclk", "atclk";
+>>> +            arm,scatter-gather;
+>>
+>> Please could you confirm that you have tested the scatter-gather mode
+>> with ETR ? Either via perf/sysfs. Please could you share your results ?
+>> Unless verified
+>> this is going to be fatal for the system.
+>>
+>> Similarly for other platforms.
+>>
+> 
+> Yes I have tested with scatter-gather mode with ETR on all platforms
+> which I have posted via sysfs(not perf) before on previous versions of
+> this patch series and no issues were found. And I suppose this was
+> discussed in v2 of this patch series [1].
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index fba2c70c2fda..b044ad78b475 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -410,6 +410,8 @@
- 		 <&clkc CLKID_MPLL2>,
- 		 <&clkc CLKID_MPLL2>;
- 	clock-names = "stmmaceth", "clkin0", "clkin1";
-+	rx-fifo-depth = <4096>;
-+	tx-fifo-depth = <2048>;
- 
- 	resets = <&reset RESET_ETHERNET>;
- 	reset-names = "stmmaceth";
--- 
-2.21.0
+Using the sysfs doesn't guarantee that the ETR actually uses SG mode, unless
+the buffer size selected is > 1M, which is why I am more interested in the
+perf usage. Alternatively you may configure a larger buffer size (say, 8MB) via:
+
+echo 0x800000 > /sys/bus/coresight/.../tmc_etr0/buffer_size
+
+
+> 
+> As said in one of the series initially [1], QCOM msm downstream kernels
+> have been using scatter gather mode and we haven't seen any fatal issues.
+> 
+> [1] https://patchwork.kernel.org/patch/10769535/
+
+I haven't seen any test results there either.
+
+Cheers
+Suzuki
