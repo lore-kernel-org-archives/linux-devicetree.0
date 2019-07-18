@@ -1,35 +1,24 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 0/2] arm64: dts: imx8mq: Add DT node for the Mixel MIPI
- D-PHY
-Date: Thu, 18 Jul 2019 10:42:08 +0800
-Message-ID: <20190718024207.GB11324@X250>
-References: <cover.1561451144.git.agx@sigxcpu.org>
+Subject: Re: [PATCH v5 6/6] ARM: dts: imx7ulp: add edma device node
+Date: Thu, 18 Jul 2019 10:49:21 +0800
+Message-ID: <20190718024920.GC11324@X250>
+References: <20190625094324.19196-1-yibin.gong@nxp.com>
+ <20190625094324.19196-7-yibin.gong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1561451144.git.agx@sigxcpu.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "Angus Ainslie (Purism)" <angus@akkea.ca>, linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
+In-Reply-To: <20190625094324.19196-7-yibin.gong@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: yibin.gong@nxp.com
+Cc: robh@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, mark.rutland@arm.com, vkoul@kernel.org, dan.j.williams@intel.com, angelo@sysam.it, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 10:27:19AM +0200, Guido G=FCnther wrote:
-> Now that the driver is in linux-next as of 20190624 let's have a DT node
-> for the i.MX8mq and enable it on the Librem 5 devkit.
-> =
+On Tue, Jun 25, 2019 at 05:43:24PM +0800, yibin.gong@nxp.com wrote:
+> From: Robin Gong <yibin.gong@nxp.com>
+> 
+> Add edma device node in dts.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 
-> Guido G=FCnther (2):
->   arm64: dts: imx8mq: Add MIPI D-PHY
->   arm64: dts: imx8mq-librem5: Enable MIPI D-PHY
-
-Applied both, thanks.
+Applied, thanks.
