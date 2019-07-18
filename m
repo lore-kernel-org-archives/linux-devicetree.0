@@ -1,69 +1,32 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH 1/4][V2] drivers: spi: core: Add optional delay between
- cs_change transfers
-Date: Thu, 18 Jul 2019 13:36:54 +0000
-Message-ID: <3b5c33bb4f3ed4bb73304f1034184a683107ea55.camel@analog.com>
-References: <20190717115109.15168-1-alexandru.ardelean@analog.com>
-         <20190717115109.15168-2-alexandru.ardelean@analog.com>
-         <20190718125008.GD5761@sirena.org.uk>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH RFC 3/8] dt-bindings: exynos: Add ASV tables binding
+ documentation
+Date: Thu, 18 Jul 2019 16:02:11 +0200
+Message-ID: <4c0ad46b-6790-b154-9c55-587b87dc204e@samsung.com>
+References: <20190404171735.12815-1-s.nawrocki@samsung.com>
+        <CGME20190404172234epcas1p37667ec0996000aff9297f13639908dfc@epcas1p3.samsung.com>
+        <20190404171735.12815-4-s.nawrocki@samsung.com>
+        <20190429172337.GA30032@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190718125008.GD5761@sirena.org.uk>
-Content-Language: en-US
-Content-ID: <8A96C2C30BB4DB49BA8C6F2B476A331A@analog.com>
+In-Reply-To: <20190429172337.GA30032@bogus>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: "broonie@kernel.org" <broonie@kernel.org>
-Cc: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jic23@kernel.org" <jic23@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: krzk@kernel.org, kgene@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, pankaj.dubey@samsung.com, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA3LTE4IGF0IDEzOjUwICswMTAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
-biBXZWQsIEp1bCAxNywgMjAxOSBhdCAwMjo1MTowNlBNICswMzAwLCBBbGV4YW5kcnUgQXJkZWxl
-YW4gd3JvdGU6DQo+ID4gU29tZSBkZXZpY2VzIGxpa2UgdGhlIEFESVMxNjQ2MCBJTVUgcmVxdWly
-ZSBhIHN0YWxsIHBlcmlvZCBiZXR3ZWVuDQo+ID4gdHJhbnNmZXJzLCBpLmUuIGJldHdlZW4gd2hl
-biB0aGUgQ1MgaXMgZGUtYXNzZXJ0ZWQgYW5kIHJlLWFzc2VydGVkLiBUaGUNCj4gPiBkZWZhdWx0
-IHZhbHVlIG9mIDEwdXMgaXMgbm90IGVub3VnaC4gVGhpcyBjaGFuZ2UgbWFrZXMgdGhlIGRlbGF5
-DQo+ID4gY29uZmlndXJhYmxlIGZvciB3aGVuIHRoZSBuZXh0IENTIGNoYW5nZSBnb2VzIGFjdGl2
-ZS4NCj4gDQo+IFRvIHJlcGVhdCBteSBwcmV2aW91cyBmZWVkYmFjazoNCj4gDQo+ID4gVGhpcyBs
-b29rcyBsaWtlIGNzX2NoYW5nZV9kZWxheS4NCg0KQWNrLg0KV2lsbCB1c2UgYGNzX2NoYW5nZV9k
-ZWxheWAuDQpJIGhhdmUgbm8gc3Ryb25nIHByZWZlcmVuY2UgcmVnYXJkaW5nIHRoZSBuYW1lLg0K
-DQo+IA0KPiBQbGVhc2UgdXNlIHN1YmplY3QgbGluZXMgbWF0Y2hpbmcgdGhlIHN0eWxlIGZvciB0
-aGUgc3Vic3lzdGVtLiAgVGhpcw0KPiBtYWtlcyBpdCBlYXNpZXIgZm9yIHBlb3BsZSB0byBpZGVu
-dGlmeSByZWxldmFudCBwYXRjaGVzLg0KDQpBY2suDQpXaWxsIGxvb2sgZm9yIFNQSSBzdWJzeXN0
-ZW0gc3BlY2lmaWMgc3ViamVjdCBsaW5lcyBhbmQgdXNlIHRoZW0uDQoNCj4gDQo+IFBsZWFzZSBk
-b24ndCBpZ25vcmUgcmV2aWV3IGNvbW1lbnRzLCBwZW9wbGUgYXJlIGdlbmVyYWxseSBtYWtpbmcg
-dGhlbQ0KPiBmb3IgYSByZWFzb24gYW5kIGFyZSBsaWtlbHkgdG8gaGF2ZSB0aGUgc2FtZSBjb25j
-ZXJucyBpZiBpc3N1ZXMgcmVtYWluDQo+IHVuYWRkcmVzc2VkLiAgSGF2aW5nIHRvIHJlcGVhdCB0
-aGUgc2FtZSBjb21tZW50cyBjYW4gZ2V0IHJlcGV0aXRpdmUgYW5kDQo+IG1ha2UgcGVvcGxlIHF1
-ZXN0aW9uIHRoZSB2YWx1ZSBvZiB0aW1lIHNwZW50IHJldmlld2luZy4gIElmIHlvdSBkaXNhZ3Jl
-ZQ0KPiB3aXRoIHRoZSByZXZpZXcgY29tbWVudHMgdGhhdCdzIGZpbmUgYnV0IHlvdSBuZWVkIHRv
-IHJlcGx5IGFuZCBkaXNjdXNzDQo+IHlvdXIgY29uY2VybnMgc28gdGhhdCB0aGUgcmV2aWV3ZXIg
-Y2FuIHVuZGVyc3RhbmQgeW91ciBkZWNpc2lvbnMuDQoNClsgdGhlIGZvbGxvd2luZyBwYXJ0IHNo
-b3VsZCBub3QgYmUgY29uc2lkZXJlZCBpbiBhIGRpc3Jlc3BlY3RmdWwgdG9uZSA7IHRoZSBpbnRl
-bnQgaXMgbm93aGVyZSBuZWFyIHRoYXQsIGJ1dCB0ZXh0LQ0KY29tbXVuaWNhdGlvbiBoYXMgYSBk
-ZXNpZ24tZmxhdyB3aGVyZSBhIGRpc3Jlc3BlY3RmdWwgdG9uZSBtYXkgYmUgaW50ZXJwcmV0ZWQg
-W3doZXJlIHRoZXJlIGlzbid0IG9uZV0gXQ0KDQpNeSBpbnRlbnQgd2Fzbid0IHRvIGlnbm9yZSB0
-aGUgcmV2aWV3IGNvbW1lbnQuDQpTb3JyeSBpZiBpdCBjYW1lIG91dCBsaWtlIHRoYXQuDQoNCkkg
-YXNzdW1lZCBhIHBhdGNoIHJlLXNwaW4gd2FzIHByZWZlcnJlZCB2cyBhIHZlcmJhbCBkaXNjdXNz
-aW9uLg0KU29tZSBwZW9wbGUgcHJlZmVyIHBhdGNoIHJlLXNwaW5zIGFzIGEgYmFzaXMgZm9yIGRp
-c2N1c3Npb24uDQpWYXJpb3VzIHBlb3BsZSBoYXZlIHZhcmlvdXMgcHJlZmVyZW5jZXMuDQoNCkFs
-c28sIEkgd2Fzbid0IHN1cmUgaG93IHNvb24gSSdkIGdldCBhIHJlcGx5IGJhY2sgb24gdGhpcywg
-c2luY2UgdmFyaW91cyBwZW9wbGUvbWFpbnRhaW5lcnMgaGF2ZSB2YXJpb3VzIHJlcGx5LXRpbWVz
-Lg0KQW5kIEkgYWxzbyBbc29tZXRpbWVzXSBoYXZlIGxvbmdlciByZXBseS1iYWNrLXRpbWVzIFt3
-aGljaCBkb2Vzbid0IGhlbHAgZWl0aGVyXS4NCkFuZCBJIHdhc24ndCBzdXJlIGlmIGBjc19jaGFu
-Z2VfZGVsYXlgIHdhcyBmdWxseSBpbnRlbnRpb25hbC9hZC1saXRlcmFtLCBvciB3aGV0aGVyIGl0
-IHdhcyBhIGZlZWRiYWNrIG9mIHRoZSBzb3J0cw0KImFsb25nLXRoZS1saW5lcyBvZiBgY3NfY2hh
-bmdlX2RlbGF5YCIuDQoNCldoaWxlIGxvb2tpbmcgYXQgYHN0cnVjdCBzcGlfdHJhbnNmZXJgIHRo
-ZSBvdGhlciAiZGVsYXkiIGZpZWxkcyBzZWVtIHRvIGJlOiBgd29yZF9kZWxheV91c2Vjc2AgJiBg
-ZGVsYXlfdXNlY3NgLCB3aGljaCBpcw0Kd2h5IEkgYXNzdW1lZCBgY3NfY2hhbmdlX2RlbGF5X3Vz
-ZWNzYCB3YXMgcHJlZmVycmVkIFt0aG91Z2ggSSB3aWxsIGFkbWl0LCBpdCBpcyBhIGxvbmcgdmFy
-LW5hbWVdLg0KDQpBbmQgdGhlIGNvbmNsdXNpb24gW2Zyb20gbXkgc2lkZV0gaXM6IG1heWJlIEkg
-cnVzaGVkIHRoaXMgYSBiaXQgYW5kIG1heWJlIGl0IGFubm95ZWQgeW91Lg0KTm90IG15IGludGVu
-dGlvbiwgYW5kIGl0J2xsIHRha2UgbWUgYSBiaXQgdG8gYWRqdXN0IHRvIHlvdXIgc3R5bGUuDQoN
-Ck1vdmluZyBmb3J3YXJkLg0KDQoxLiBJIHdpbGwgdXNlIGBjc19jaGFuZ2VfZGVsYXlgIGFzIGZp
-ZWxkIG5hbWUgDQoyLiBJIHdpbGwgdXNlIFNQSSBzdWJzeXN0ZW0gc3ViamVjdCBsaW5lOyBJIHdp
-bGwgYWRtaXQgSSBmb3JnZXQgdGhpcyBzdHVmZiBwZXJpb2RpY2FsbHkNCg0KSXMgdGhlcmUgYW55
-dGhpbmcgZWxzZSBJIHNob3VsZCBjb25zaWRlcj8NCk9yIGFueXRoaW5nIGVsc2UgdG8gZGlzY3Vz
-cz8NCg0KSSdtIG9wZW4gdG8gZWxlbWVudHMgSSBtYXkgaGF2ZSBmb3Jnb3R0ZW4vb21pdHRlZCB1
-bmludGVudGlvbmFsbHkuDQoNClRoYW5rcw0KQWxleA0K
+On 4/29/19 19:23, Rob Herring wrote:
+> We already have OPP tables defined for QCom CPUs to do speed bining, and 
+> I just reviewed something from Allwinner for similar purposes. We can't 
+> have each vendor doing their own thing here.
+
+I tried that opp-supported-hw bitmask approach but number of OPP DT nodes
+was rather high, around 200 per CPU cluster.  So I moved OPP tables to
+the driver. I'm going to post next version of the patch set soon.
+
+-- 
+Regards,
+Sylwester
