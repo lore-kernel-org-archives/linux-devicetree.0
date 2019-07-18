@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH 5/7] dt-bindings: timer: renesas, cmt: Update R-Car Gen3 CMT1 usage
-Date: Thu, 18 Jul 2019 20:45:11 +0900
-Message-ID: <156345031152.5307.4388075759256453367.sendpatchset@octo>
+Subject: [PATCH 6/7] clocksource/drivers/sh_cmt: r8a7740 and sh73a0 SoC-specific match
+Date: Thu, 18 Jul 2019 20:45:24 +0900
+Message-ID: <156345032407.5307.16702422867507502597.sendpatchset@octo>
 References: <156345023791.5307.6113391102648394591.sendpatchset@octo>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <156345023791.5307.6113391102648394591.sendpatchset@octo>
@@ -12,80 +12,34 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-The R-Car Gen3 SoCs so far come with a total for 4 on-chip CMT devices:
- - CMT0
- - CMT1
- - CMT2
- - CMT3
+Add SoC-specific matching for CMT1 on r8a7740 and sh73a0.
 
-CMT0 includes two rather basic 32-bit timer channels. The rest of the on-chip
-CMT devices support 48-bit counters and have 8 channels each.
-
-Based on the data sheet information "CMT2/3 are exactly same as CMT1"
-it seems that CMT2 and CMT3 now use the CMT1 compat string in the DTSI.
-
-Clarify this in the DT binding documentation by describing R-Car Gen3 and
-RZ/G2 CMT1 as "48-bit CMT devices".
+This allows us to move away from the old DT bindings such as
+ - "renesas,cmt-48-sh73a0"
+ - "renesas,cmt-48-r8a7740"
+ - "renesas,cmt-48"
+in favour for the now commonly used format "renesas,<soc>-<device>"
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
- Changes since last version:
- - Use "devices" for fallback entry - thanks Geert!
- - Keen to Gen3 so removed out-of-scope Gen2 portions
+ drivers/clocksource/sh_cmt.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |   20 +++++++--------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
---- 0008/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-07-18 19:24:05.195643742 +0900
-@@ -28,9 +28,9 @@ Required Properties:
-     - "renesas,r8a77470-cmt0" for the 32-bit CMT0 device included in r8a77470.
-     - "renesas,r8a77470-cmt1" for the 48-bit CMT1 device included in r8a77470.
-     - "renesas,r8a774a1-cmt0" for the 32-bit CMT0 device included in r8a774a1.
--    - "renesas,r8a774a1-cmt1" for the 48-bit CMT1 device included in r8a774a1.
-+    - "renesas,r8a774a1-cmt1" for the 48-bit CMT devices included in r8a774a1.
-     - "renesas,r8a774c0-cmt0" for the 32-bit CMT0 device included in r8a774c0.
--    - "renesas,r8a774c0-cmt1" for the 48-bit CMT1 device included in r8a774c0.
-+    - "renesas,r8a774c0-cmt1" for the 48-bit CMT devices included in r8a774c0.
-     - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
-     - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
-     - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
-@@ -42,19 +42,19 @@ Required Properties:
-     - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
-     - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
-     - "renesas,r8a7795-cmt0" for the 32-bit CMT0 device included in r8a7795.
--    - "renesas,r8a7795-cmt1" for the 48-bit CMT1 device included in r8a7795.
-+    - "renesas,r8a7795-cmt1" for the 48-bit CMT devices included in r8a7795.
-     - "renesas,r8a7796-cmt0" for the 32-bit CMT0 device included in r8a7796.
--    - "renesas,r8a7796-cmt1" for the 48-bit CMT1 device included in r8a7796.
-+    - "renesas,r8a7796-cmt1" for the 48-bit CMT devices included in r8a7796.
-     - "renesas,r8a77965-cmt0" for the 32-bit CMT0 device included in r8a77965.
--    - "renesas,r8a77965-cmt1" for the 48-bit CMT1 device included in r8a77965.
-+    - "renesas,r8a77965-cmt1" for the 48-bit CMT devices included in r8a77965.
-     - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
--    - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
-+    - "renesas,r8a77970-cmt1" for the 48-bit CMT devices included in r8a77970.
-     - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
--    - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
-+    - "renesas,r8a77980-cmt1" for the 48-bit CMT devices included in r8a77980.
-     - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
--    - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
-+    - "renesas,r8a77990-cmt1" for the 48-bit CMT devices included in r8a77990.
-     - "renesas,r8a77995-cmt0" for the 32-bit CMT0 device included in r8a77995.
--    - "renesas,r8a77995-cmt1" for the 48-bit CMT1 device included in r8a77995.
-+    - "renesas,r8a77995-cmt1" for the 48-bit CMT devices included in r8a77995.
-     - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
-     - "renesas,sh73a0-cmt1" for the 48-bit CMT1 device included in sh73a0.
-     - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
-@@ -69,7 +69,7 @@ Required Properties:
- 		listed above.
-     - "renesas,rcar-gen3-cmt0" for 32-bit CMT0 devices included in R-Car Gen3
- 		and RZ/G2.
--    - "renesas,rcar-gen3-cmt1" for 48-bit CMT1 devices included in R-Car Gen3
-+    - "renesas,rcar-gen3-cmt1" for 48-bit CMT devices included in R-Car Gen3
- 		and RZ/G2.
- 		These are fallbacks for R-Car Gen3 and RZ/G2 entries listed
- 		above.
+--- 0001/drivers/clocksource/sh_cmt.c
++++ work/drivers/clocksource/sh_cmt.c	2019-07-18 19:29:06.005414716 +0900
+@@ -928,6 +928,14 @@ static const struct of_device_id sh_cmt_
+ 		.data = &sh_cmt_info[SH_CMT0_RCAR_GEN2]
+ 	},
+ 	{
++		.compatible = "renesas,r8a7740-cmt1",
++		.data = &sh_cmt_info[SH_CMT_48BIT]
++	},
++	{
++		.compatible = "renesas,sh73a0-cmt1",
++		.data = &sh_cmt_info[SH_CMT_48BIT]
++	},
++	{
+ 		.compatible = "renesas,rcar-gen2-cmt0",
+ 		.data = &sh_cmt_info[SH_CMT0_RCAR_GEN2]
+ 	},
