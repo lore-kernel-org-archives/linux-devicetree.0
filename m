@@ -1,79 +1,63 @@
-From: Jonathan Chocron <jonnyc@amazon.com>
-Subject: [PATCH v2 7/8] PCI: dw: Add validation that PCIe core is set to correct mode
-Date: Thu, 18 Jul 2019 12:47:17 +0300
-Message-ID: <20190718094718.25083-3-jonnyc@amazon.com>
-References: <20190718094531.21423-1-jonnyc@amazon.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv8 2/5] arm64: dts: qcom: msm8998: Add Coresight support
+Date: Thu, 18 Jul 2019 15:23:49 +0530
+Message-ID: <2b08943b-3900-ceb5-15ac-28ef2bbad03e@codeaurora.org>
+References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <e510df23f741205fac9030f2c95d06d607549caa.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <3b192063-f31f-b861-d913-61d737cecc57@arm.com>
+ <4854b0f7-6a81-bc87-3e63-d2b7c68a44f6@codeaurora.org>
+ <281e3548-af53-f9a7-b9e4-813b448ab078@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190718094531.21423-1-jonnyc@amazon.com>
+In-Reply-To: <281e3548-af53-f9a7-b9e4-813b448ab078@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonnyc@amazon.com
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, gregkh@linuxfoundation.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, mike.leach@linaro.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, david.brown@linaro.org, mark.rutland@arm.com
+Cc: rnayak@codeaurora.org, vivek.gautam@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, marc.w.gonzalez@free.fr
 List-Id: devicetree@vger.kernel.org
 
-Some PCIe controllers can be set to either Host or EP according to some
-early boot FW. To make sure there is no discrepancy (e.g. FW configured
-the port to EP mode while the DT specifies it as a host bridge or vice
-versa), a check has been added for each mode.
+Hi,
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c   | 8 ++++++++
- drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
- 2 files changed, 16 insertions(+)
+On 7/18/2019 3:07 PM, Suzuki K Poulose wrote:
+> 
+> 
+> Using the sysfs doesn't guarantee that the ETR actually uses SG mode, 
+> unless
+> the buffer size selected is > 1M, which is why I am more interested in the
+> perf usage. Alternatively you may configure a larger buffer size (say, 
+> 8MB) via:
+> 
+> echo 0x800000 > /sys/bus/coresight/.../tmc_etr0/buffer_size
+> 
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 2bf5a35c0570..00e59a134b93 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -531,6 +531,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	int ret;
- 	u32 reg;
- 	void *addr;
-+	u8 hdr_type;
- 	unsigned int nbars;
- 	unsigned int offset;
- 	struct pci_epc *epc;
-@@ -543,6 +544,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 		return -EINVAL;
- 	}
- 
-+	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-+	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-+		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
-+			hdr_type);
-+		return -EIO;
-+	}
-+
- 	ret = of_property_read_u32(np, "num-ib-windows", &ep->num_ib_windows);
- 	if (ret < 0) {
- 		dev_err(dev, "Unable to read *num-ib-windows* property\n");
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index f93252d0da5b..d2ca748e4c85 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -323,6 +323,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	struct pci_bus *child;
- 	struct pci_host_bridge *bridge;
- 	struct resource *cfg_res;
-+	u8 hdr_type;
- 	int ret;
- 
- 	raw_spin_lock_init(&pci->pp.lock);
-@@ -396,6 +397,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		}
- 	}
- 
-+	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-+	if (hdr_type != PCI_HEADER_TYPE_BRIDGE) {
-+		dev_err(pci->dev, "PCIe controller is not set to bridge type (hdr_type: 0x%x)!\n",
-+			hdr_type);
-+		return -EIO;
-+	}
-+
- 	pp->mem_base = pp->mem->start;
- 
- 	if (!pp->va_cfg0_base) {
+Yes, you had mentioned about setting buffer size > 1M in the same 
+thread[1] and I had followed the same.
+
+[1] https://lkml.org/lkml/2019/1/18/311
+
+> 
+>>
+>> As said in one of the series initially [1], QCOM msm downstream kernels
+>> have been using scatter gather mode and we haven't seen any fatal issues.
+>>
+>> [1] https://patchwork.kernel.org/patch/10769535/
+> 
+> I haven't seen any test results there either.
+> 
+
+You did not ask for it there ;)
+
+I do not have the test results handy now and those platforms.
+I will arrange for them and post some test results.
+
+Just to confirm, do you need some traces or just the buffer size
+and sink set?
+
+Thanks,
+Sai
+
 -- 
-2.17.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
