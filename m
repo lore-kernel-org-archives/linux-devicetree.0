@@ -1,109 +1,146 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 2/3] leds: Add control of the voltage/current regulator
- to the LED core
-Date: Thu, 18 Jul 2019 19:49:14 +0200
-Message-ID: <928fd71b-d1d3-cbf3-1aed-ae7fa97f6cf0@gmail.com>
-References: <20190717135948.19340-1-jjhiblot@ti.com>
- <20190717135948.19340-3-jjhiblot@ti.com>
- <4bd3b558-ea5b-0d2e-16b2-5b2e8bb484d2@gmail.com>
- <49152281-059c-6006-4c0f-a6be96a12707@ti.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like
+ logger
+Date: Thu, 18 Jul 2019 10:50:23 -0700
+Message-ID: <20190718175024.C3EC421019@mail.kernel.org>
+References: <20190712081744.87097-1-brendanhiggins@google.com>
+ <20190712081744.87097-5-brendanhiggins@google.com>
+ <20190715221554.8417320665@mail.kernel.org>
+ <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
+ <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
+ <20190716175021.9CA412173C@mail.kernel.org>
+ <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <49152281-059c-6006-4c0f-a6be96a12707@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Jacques Hiblot <jjhiblot@ti.com>, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, daniel.thompson@linaro.org
-Cc: dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, shuah <shuah@kernel.org>, linux-nvdimm <linux-nvdimm@lists.01.org>, Frank Rowand <frowand.list@gmail.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>, "Bird,
+ Timothy" <Tim.Bird>
 List-Id: devicetree@vger.kernel.org
 
-On 7/18/19 3:31 PM, Jean-Jacques Hiblot wrote:
-> 
-> On 18/07/2019 14:24, Jacek Anaszewski wrote:
->> Hi Jean,
->>
->> Thank you for the updated patch set.
->>
->> I have some more comments below.
->>
->> On 7/17/19 3:59 PM, Jean-Jacques Hiblot wrote:
->>>   +static bool __led_need_regulator_update(struct led_classdev
->>> *led_cdev,
->>> +                    int brightness)
->>> +{
->>> +    bool new_state = (brightness != LED_OFF);
->> How about:
->>
->> bool new_state = !!brightness;
-> 
-> Throughout the code LED_OFF is used when the LED is turned off. I think
-> it would be more consistent to use it there too.
-
-Basically brightness is a scalar and 0 always means off.
-We treat enum led_brightness as a legacy type - it is no
-longer valid on the whole its span since LED_FULL = 255
-was depreciated with addition of max_brightness property.
-
-IMHO use of reverse logic here only hinders code analysis.
-
->>> +
->>> +    return led_cdev->regulator && led_cdev->regulator_state !=
->>> new_state;
->>> +}
->>> +static int __led_handle_regulator(struct led_classdev *led_cdev,
->>> +                int brightness)
->>> +{
->>> +    int rc;
->>> +
->>> +    if (__led_need_regulator_update(led_cdev, brightness)) {
->>> +
->>> +        if (brightness != LED_OFF)
->>> +            rc = regulator_enable(led_cdev->regulator);
->>> +        else
->>> +            rc = regulator_disable(led_cdev->regulator);
->>> +        if (rc)
->>> +            return rc;
->>> +
->>> +        led_cdev->regulator_state = (brightness != LED_OFF);
->>> +    }
->>> +    return 0;
->>> +}
->> Let's have these function names without leading underscores.
-> OK.
->>
->>>   static int __led_set_brightness(struct led_classdev *led_cdev,
->>>                   enum led_brightness value)
->>>   {
->>> @@ -115,6 +142,8 @@ static void set_brightness_delayed(struct
->>> work_struct *ws)
->>>       if (ret == -ENOTSUPP)
->>>           ret = __led_set_brightness_blocking(led_cdev,
->>>                       led_cdev->delayed_set_value);
->>> +    __led_handle_regulator(led_cdev, led_cdev->delayed_set_value)
->> If you called it from __led_set_brightness() and
-> 
-> We cannot call it from __led_set_brightness() because it is supposed not
-> to block.
-
-You're right. The problematic part is that with regulator handling
-we cannot treat the whole brightness setting operation uniformly
-for brightness_set op case, i.e. without mediation of a workqueue.
-
-Now you have to fire workqueue in led_set_brightness_nopm()
-even for brightness_set() op path, if regulator state needs update.
-This is ugly and can be misleading. Can be also error prone and
-have non-obvious implications for software blink state transitions.
-
-I think we would first need to improve locking between the workqueue
-and led_timer_function(). I proposed a patch [0] over a year
-ago.
-
-Only then we could think of adding another asynchronous dependency
-to the brightness setting chain.
-
-[0] https://lkml.org/lkml/2018/1/17/1144
-
--- 
-Best regards,
-Jacek Anaszewski
+UXVvdGluZyBCcmVuZGFuIEhpZ2dpbnMgKDIwMTktMDctMTYgMTE6NTI6MDEpCj4gT24gVHVlLCBK
+dWwgMTYsIDIwMTkgYXQgMTA6NTAgQU0gU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwub3JnPiB3
+cm90ZToKPiA+Cj4gCj4gPiBUaGUgb25seSBoeXBvdGhldGljYWwgY2FzZSB3aGVyZSB0aGlzIGNh
+bid0IGJlIGRvbmUgaXMgYSBjb21wbGljYXRlZAo+ID4gYXNzZXJ0aW9uIG9yIGV4cGVjdGF0aW9u
+IHRoYXQgZG9lcyBtb3JlIHRoYW4gb25lIGNoZWNrIGFuZCBjYW4ndCBiZQo+ID4gd3JpdHRlbiBh
+cyBhIGZ1bmN0aW9uIHRoYXQgZHVtcHMgb3V0IHdoYXQgd2VudCB3cm9uZy4gSXMgdGhpcyBhIHJl
+YWwKPiA+IHByb2JsZW0/IE1heWJlIHN1Y2ggYW4gYXNzZXJ0aW9uIHNob3VsZCBqdXN0IG9wZW4g
+Y29kZSB0aGF0IGxvZ2ljIHNvIHdlCj4gPiBkb24ndCBoYXZlIHRvIGJ1aWxkIHVwIGEgc3RyaW5n
+IGZvciBhbGwgdGhlIG90aGVyIHNpbXBsZSBjYXNlcy4KPiAKPiBJIGhhdmUgc29tZSBleHBlY3Rh
+dGlvbnMgaW4gZm9sbG93IHVwIHBhdGNoc2V0cyBmb3Igd2hpY2ggSSBjcmVhdGVkIGEKPiBzZXQg
+b2YgY29tcG9zYWJsZSBtYXRjaGVycyBmb3IgbWF0Y2hpbmcgc3RydWN0dXJlcyBhbmQgZnVuY3Rp
+b24gY2FsbHMKPiB0aGF0IGJ5IHRoZWlyIG5hdHVyZSBjYW5ub3QgYmUgd3JpdHRlbiBhcyBhIHNp
+bmdsZSBmdW5jdGlvbi4gVGhlCj4gbWF0Y2hlciB0aGluZyBpcyBhIGJpdCBzcGVjdWxhdGl2ZSwg
+SSBrbm93LCBidXQgZm9yIGFueSBraW5kIG9mCj4gZnVuY3Rpb24gY2FsbCBtYXRjaGluZywgeW91
+IG5lZWQgdG8gc3RvcmUgYSByZWNvcmQgb2YgZnVuY3Rpb25zIHlvdQo+IGFyZSBleHBlY3Rpbmcg
+dG8gaGF2ZSBjYWxsZWQgYW5kIHRoZW4gZWFjaCBvbmUgbmVlZHMgdG8gaGF2ZSBhIHNldCBvZgo+
+IGV4cGVjdGF0aW9ucyBkZWZpbmVkIGJ5IHRoZSB1c2VyOyBJIGRvbid0IHRoaW5rIHRoZXJlIGlz
+IGEgd2F5IHRvIGRvCj4gdGhhdCB0aGF0IGRvZXNuJ3QgaW52b2x2ZSBoYXZpbmcgbXVsdGlwbGUg
+c2VwYXJhdGUgZnVuY3Rpb25zIGVhY2gKPiBoYXZpbmcgc29tZSBpbmZvcm1hdGlvbiB1c2VmdWwg
+dG8gY29uc3RydWN0aW5nIHRoZSBtZXNzYWdlLgo+IAo+IEkga25vdyB0aGUgY29kZSBpbiBxdWVz
+dGlvbiBpc24ndCBpbiB0aGlzIHBhdGNoc2V0OyB0aGUgZnVuY3Rpb24KPiBtYXRjaGluZyBjb2Rl
+IHdhcyBpbiBvbmUgb2YgdGhlIGVhcmxpZXIgdmVyc2lvbnMgb2YgdGhlIFJGQywgYnV0IEkKPiBk
+cm9wcGVkIGl0IHRvIG1ha2UgdGhpcyBwYXRjaHNldCBzbWFsbGVyIGFuZCBtb3JlIG1hbmFnZWFi
+bGUuIFNvIEkgZ2V0Cj4gaXQgaWYgeW91IHdvdWxkIGxpa2UgbWUgdG8gZHJvcCBpdCBhbmQgYWRk
+IGl0IGJhY2sgaW4gd2hlbiBJIHRyeSB0bwo+IGdldCB0aGUgZnVuY3Rpb24gYW5kIHN0cnVjdHVy
+ZSBtYXRjaGluZyBzdHVmZiBpbiwgYnV0IEkgd291bGQgcmVhbGx5Cj4gcHJlZmVyIHRvIGtlZXAg
+aXQgYXMgaXMgaWYgeW91IGRvbid0IGNhcmUgdG9vIG11Y2guCgpEbyB5b3UgaGF2ZSBhIGxpbmsg
+dG8gdGhvc2UgZWFybGllciBwYXRjaGVzPwoKPiAKPiA+IEl0IHNlZW1zIGZhciBzaW1wbGVyIHRv
+IGdldCByaWQgb2YgdGhlIHN0cmluZyBzdHJlYW0gQVBJIGFuZCBqdXN0IGhhdmUgYQo+ID4gc3Ry
+dWN0IGZvciB0aGlzLgo+ID4KPiA+ICAgICAgICAgc3RydWN0IGt1bml0X2ZhaWxfbXNnIHsKPiA+
+ICAgICAgICAgICAgICAgICBjb25zdCBjaGFyICpsaW5lOwo+ID4gICAgICAgICAgICAgICAgIGNv
+bnN0IGNoYXIgKmZpbGU7Cj4gPiAgICAgICAgICAgICAgICAgY29uc3QgY2hhciAqZnVuYzsKPiA+
+ICAgICAgICAgICAgICAgICBjb25zdCBjaGFyICptc2c7Cj4gPiAgICAgICAgIH07Cj4gPgo+ID4g
+VGhlbiB5b3UgY2FuIGhhdmUgdGhlIGFzc2VydGlvbiBtYWNyb3MgY3JlYXRlIHRoaXMgb24gdGhl
+IHN0YWNrICh3aXRoCj4gPiBhbm90aGVyIG1hY3JvPykuCj4gPgo+ID4gICAgICAgICAjZGVmaW5l
+IERFRklORV9LVU5JVF9GQUlMX01TRyhuYW1lLCBfbXNnKSBcCj4gPiAgICAgICAgICAgICAgICAg
+c3RydWN0IGt1bml0X2ZhaWxfbXNnIG5hbWUgPSB7IFwKPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgIC5saW5lID0gIF9fTElORV9fLCBcCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAuZmls
+ZSA9IF9fRklMRV9fLCBcCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAuZnVuYyA9IF9fZnVu
+Y19fLCBcCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAubXNnID0gX21zZywgXAo+ID4gICAg
+ICAgICAgICAgICAgIH0KPiA+Cj4gPiBJIGRvbid0IHdhbnQgdG8gZGVyYWlsIHRoaXMgd2hvbGUg
+c2VyaWVzIG9uIHRoaXMgdG9waWMsIGJ1dCBpdCBzZWVtcwo+ID4gbGlrZSBhIGJ1bmNoIG9mIGNv
+ZGUgaXMgdGhlcmUgdG8gY29uc3RydWN0IHRoaXMgc2FtZSBzZXQgb2YgaW5mb3JtYXRpb24KPiA+
+IG92ZXIgYW5kIG92ZXIgYWdhaW4gaW50byBhIGJ1ZmZlciBhIGxpdHRsZSBiaXQgYXQgYSB0aW1l
+IGFuZCB0aGVuIHRocm93Cj4gPiBpdCBhd2F5IHdoZW4gbm90aGluZyBmYWlscyBqdXN0IGJlY2F1
+c2Ugd2UgbWF5IHdhbnQgdG8gc3VwcG9ydCB0aGUgY2FzZQo+ID4gd2hlcmUgd2UgaGF2ZSBzb21l
+IHVuc3RydWN0dXJlZCBkYXRhIHRvIGluZm9ybSB0aGUgdXNlciBhYm91dC4KPiAKPiBZZWFoLCB0
+aGF0J3MgZmFpci4gSSB0aGluayB0aGVyZSBhcmUgYSBudW1iZXIgb2YgaW1wcm92ZW1lbnRzIHRv
+IGJlCj4gbWFkZSB3aXRoIGhvdyB0aGUgZXhwZWN0YXRpb25zIGFyZSBkZWZpbmVkIG90aGVyIHRo
+YW4gdGhhdCwgYnV0IEkgd2FzCj4gaG9waW5nIEkgY291bGQgZG8gdGhhdCBhZnRlciB0aGlzIHBh
+dGNoc2V0IGlzIG1lcmdlZC4gSSBqdXN0IGZpZ3VyZWQKPiB3aXRoIHRoZSBraW5kcyBvZiB0aGlu
+Z3MgSSB3b3VsZCBsaWtlIHRvIGRvLCBpdCB3b3VsZCBsZWFkIHRvIGEgd2hvbGUKPiBuZXcgcm91
+bmQgb2YgZGlzY3Vzc2lvbi4KPiAKPiBJbiBlaXRoZXIgY2FzZSwgSSB0aGluayBJIHdvdWxkIHN0
+aWxsIGxpa2UgdG8gdXNlIHRoZSBgc3RydWN0Cj4ga3VuaXRfc3RyZWFtYCBhcyBwYXJ0IG9mIHRo
+ZSBpbnRlcmZhY2UgdG8gc2hhcmUgdGhlIGZhaWx1cmUgbWVzc2FnZQo+IHdpdGggdGhlIHRlc3Qg
+Y2FzZSBydW5uZXIgY29kZSBpbiB0ZXN0LmMsIGF0IGxlYXN0IGV2ZW50dWFsbHksIHNvIHRoYXQK
+PiBJIG9ubHkgaGF2ZSB0byBoYXZlIG9uZSB3YXkgdG8gcmVjZWl2ZSBkYXRhIGZyb20gZXhwZWN0
+YXRpb25zLCBidXQgSQo+IHRoaW5rIEkgY2FuIGRvIHRoYXQgYW5kIHN0aWxsIGRvIHdoYXQgeW91
+IHN1Z2dlc3QgYnkganVzdCBjb25zdHJ1Y3RpbmcKPiB0aGUga3VuaXRfc3RyZWFtIGF0IHRoZSBl
+bmQgb2YgZXhwZWN0YXRpb25zIHdoZXJlIGl0IGlzIGZlYXNpYmxlLgo+IAo+IEFsbCBpbiBhbGwg
+SSBhZ3JlZSB3aXRoIHdoYXQgeW91IGFyZSBzYXlpbmcsIGJ1dCBJIHdvdWxkIHJhdGhlciBkbyBp
+dAo+IGFzIGEgZm9sbG93IHVwIHBvc3NpYmx5IG9uY2Ugd2UgaGF2ZSBzb21lIG1vcmUgY29kZSBv
+biB0aGUgdGFibGUuIEkKPiBjb3VsZCBqdXN0IHNlZSB0aGlzIG9wZW5pbmcgdXAgYSB3aG9sZSBu
+ZXcgY2FuIG9mIHdvcm1zIHdoZXJlIHdlCj4gZGViYXRlIGFib3V0IGV4YWN0bHkgaG93IGV4cGVj
+dGF0aW9ucyBhbmQgYXNzZXJ0aW9ucyB3b3JrIGZvciBhbm90aGVyCj4gc2V2ZXJhbCBtb250aHMs
+IG9ubHkgdG8gcmlwIGl0IGFsbCBvdXQgc2hvcnRseSB0aGVyZSBhZnRlci4gSSBrbm93Cj4gdGhh
+dCdzIGhvdyB0aGVzZSB0aGluZ3MgZ28sIGJ1dCB0aGF0J3MgbXkgcHJlZmVyZW5jZS4KPiAKPiBJ
+IGNhbiBkbyB3aGF0IHlvdSBzdWdnZXN0IGlmIHlvdSBmZWVsIHN0cm9uZ2x5IGFib3V0IGl0LCBi
+dXQgSSB3b3VsZAo+IHByZWZlciB0byBob2xkIG9mZiB1bnRpbCBsYXRlci4gSXQncyB5b3VyIGNh
+bGwuCj4gCgpUaGUgY3J1eCBvZiBteSBjb21wbGFpbnQgaXMgdGhhdCB0aGUgc3RyaW5nIHN0cmVh
+bSBBUEkgaXMgdG9vIGxvb3NlbHkKZGVmaW5lZCB0byBiZSB1c2FibGUuIEl0IGFsbG93cyB0ZXN0
+cyB0byBidWlsZCB1cCBhIHN0cmluZyBvZgp1bnN0cnVjdHVyZWQgaW5mb3JtYXRpb24sIGJ1dCB3
+aXRoIGNlcnRhaW4gY2FsbGluZyBjb25zdHJhaW50cyBzbyB3ZQpoYXZlIHRvIHRyZWFkIGNhcmVm
+dWxseS4gSWYgdGhlcmUgd2FzIG1vcmUgc3RydWN0dXJlIHRvIHRoZSBkYXRhIHRoYXQncwpiZWlu
+ZyByZWNvcmRlZCB0aGVuIHRoZSB0ZXN0IGNhc2UgcnVubmVyIGNvdWxkIG9wZXJhdGUgb24gdGhl
+IGRhdGEKd2l0aG91dCBoYXZpbmcgdG8gZG8gc3RyaW5nL3N0cmVhbSBvcGVyYXRpb25zLCBhbGxv
+Y2F0aW9ucywgZXRjLiBUaGlzCndvdWxkIG1ha2UgdGhlIGFzc2VydGlvbiBsb2dpYyBtdWNoIG1v
+cmUgY29uY3JldGUgYW5kIHNwZWNpZmljIHRvIGt1bml0LAppbnN0ZWFkIG9mIHRoaXMgc21hbGwg
+a3VuaXQgd3JhcHBlciB0aGF0J3MgYmVlbiBwbGFjZWQgb24gdG9wIG9mIHN0cmluZwpzdHJlYW0u
+CgpUTDtEUjogSWYgd2UgY2FuIGdldCByaWQgb2YgdGhlIHN0cmluZyBzdHJlYW0gQVBJIEknZCB2
+aWV3IHRoYXQgYXMgYW4KaW1wcm92ZW1lbnQgYmVjYXVzZSBidWlsZGluZyBhcmJpdHJhcnkgc3Ry
+aW5ncyBpbiB0aGUga2VybmVsIGlzIGNvbXBsZXgsCmVycm9yIHByb25lIGFuZCBoYXMgY2FsbGlu
+ZyBjb250ZXh0IGNvbmNlcm5zLgoKSXMgdGhlIGludGVudGlvbiB0aGF0IG90aGVyIGNvZGUgYmVz
+aWRlcyB1bml0IHRlc3RzIHdpbGwgdXNlIHRoaXMgc3RyaW5nCnN0cmVhbSBBUEkgdG8gYnVpbGQg
+dXAgc3RyaW5ncz8gQW55IHRhcmdldHMgaW4gbWluZD8gVGhpcyB3b3VsZCBiZSBhCmdvb2Qgd2F5
+IHRvIGdldCB0aGUgQVBJIG1lcmdlZCB1cHN0cmVhbSBnaXZlbiB0aGF0IGl0cyAyMDE5IGFuZCB3
+ZQpoYXZlbid0IGhhZCBzdWNoIGFuIEFQSSBpbiB0aGUga2VybmVsIHNvIGZhci4KCkFuICJvYmpl
+Y3Qgb3JpZW50ZWQiIChzdHJvbmcgcXVvdGVzISkgYXBwcm9hY2ggd2hlcmUga3VuaXRfZmFpbF9t
+c2cgaXMKdGhlIGlubmVybW9zdCBzdHJ1Y3QgaW4gc29tZSBhc3NlcnRpb24gc3BlY2lmaWMgc3Ry
+dWN0dXJlIG1pZ2h0IHdvcmsKbmljZWx5IGFuZCBhbGxvdyB0aGUgdGVzdCBydW5uZXIgdG8gY2Fs
+bCBhIGdlbmVyaWMgJ2Zvcm1hdCcgZnVuY3Rpb24gdG8KcHJpbnQgb3V0IHRoZSBtZXNzYWdlIGJh
+c2VkIG9uIHRoZSB0eXBlIG9mIGFzc2VydGlvbi9leHBlY3RhdGlvbiBpdCBpcy4KSXQgcHJvYmFi
+bHkgd291bGQgbWVhbiBsZXNzIGNvZGUgc2l6ZSB0b28gYmVjYXVzZSB0aGUgc3RyaW5ncyB0aGF0
+IGFyZQpjb21tb24gd2lsbCBiZSBpbiB0aGUgY29tbW9uIHByaW50aW5nIGZ1bmN0aW9uIGluc3Rl
+YWQgb2YgY3JlYXRlZCB0d2ljZSwKaW4gdGhlIG1hY3Jvcy9jb2RlIGFuZCB0aGVuIGNvcGllZCB0
+byB0aGUgaGVhcCBmb3IgdGhlIHN0cmluZyBzdHJlYW0uCgoJc3RydWN0IGt1bml0X2Fzc2VydCB7
+CgkJY29uc3QgY2hhciAqbGluZTsKCQljb25zdCBjaGFyICpmaWxlOwoJCWNvbnN0IGNoYXIgKmZ1
+bmM7CgkJdm9pZCAoKmZvcm1hdCkoc3RydWN0IGt1bml0X2Fzc2VydCAqYXNzZXJ0KTsKCX07CgoJ
+c3RydWN0IGt1bml0X2NvbXBhcmlzb25fYXNzZXJ0IHsKCQllbnVtIG9wZXJhdG9yIG9wZXJhdG9y
+OwoJCWNvbnN0IGNoYXIgKmxlZnQ7CgkJY29uc3QgY2hhciAqcmlnaHQ7CgkJc3RydWN0IGt1bml0
+X2Fzc2VydCBhc3NlcnQ7Cgl9OwoKCXN0cnVjdCBrdW5pdF9ib29sX2Fzc2VydCB7CgkJY29uc3Qg
+Y2hhciAqdHJ1dGg7CgkJY29uc3QgY2hhciAqc3RhdGVtZW50OwoJCXN0cnVjdCBrdW5pdF9hc3Nl
+cnQgYXNzZXJ0OwoJfTsKCgl2b2lkIGt1bml0X2Zvcm1hdF9jb21wYXJpc29uKHN0cnVjdCBrdW5p
+dF9hc3NlcnQgKmFzc2VydCkKCXsKCQlzdHJ1Y3Qga3VuaXRfY29tcGFyaXNvbl9hc3NlcnQgKmNv
+bXAgPSBjb250YWluZXJfb2YoYXNzZXJ0LCAuLi4pCgoJCWt1bml0X3ByaW50ayguLi4pCgl9CgpN
+YXliZSBvdGhlciBwZW9wbGUgaGF2ZSBvcGluaW9ucyBoZXJlIG9uIGlmIHlvdSBzaG91bGQgZG8g
+aXQgbm93IG9yCmxhdGVyLiBGdXR1cmUgY29kaW5nIGlzIG5vdCBhIGdyZWF0IGFyZ3VtZW50IGJl
+Y2F1c2UgaXQncyBoYXJkIHRvCnByZWRpY3QgdGhlIGZ1dHVyZS4gT24gdGhlIG90aGVyIGhhbmQs
+IHRoaXMgcGF0Y2hzZXQgaXMgaW4gZ29vZCBzaGFwZSB0bwptZXJnZSBhbmQgSSdkIGxpa2UgdG8g
+dXNlIGl0IHRvIHdyaXRlIHVuaXQgdGVzdHMgZm9yIGNvZGUgSSBtYWludGFpbiBzbwpJIGRvbid0
+IHdhbnQgdG8gc2VlIHRoaXMgc3RhbGwgb3V0LiBTb3JyeSBpZiBJJ20gb3BlbmluZyB0aGUgY2Fu
+IG9mCndvcm1zIHlvdSdyZSB0YWxraW5nIGFib3V0LgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVs
