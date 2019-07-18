@@ -1,86 +1,68 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCHv8 3/5] arm64: dts: qcom: msm8996: Add Coresight support
-Date: Thu, 18 Jul 2019 08:48:54 -0700
-Message-ID: <20190718154854.GB7234@tuxbook-pro>
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <2fa725fbc09306f1a95befc62715a708b4c0fad0.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <20190717170050.GB4271@xps15>
- <f28d9c8f-017c-c990-2f00-0ef5a62f3b40@codeaurora.org>
- <CANLsYkx9X36OJmczNK1255y8fKJfkyVq1zyQUDihqMewcU6Kxw@mail.gmail.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH] dt-bindings: Ensure child nodes are of type 'object'
+Date: Thu, 18 Jul 2019 18:20:42 +0200
+Message-ID: <66b45e4e-31b1-f878-5042-2282a5e8334f@st.com>
+References: <20190715230457.3901-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANLsYkx9X36OJmczNK1255y8fKJfkyVq1zyQUDihqMewcU6Kxw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mike Leach <mike.leach@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20190715230457.3901-1-robh@kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc: Vignesh Raghavendra <vigneshr@ti.com>, linux-gpio@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Richard Weinberger <richard@nod.at>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu 18 Jul 08:31 PDT 2019, Mathieu Poirier wrote:
+Hi Rob
 
-> On Wed, 17 Jul 2019 at 23:47, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
-> >
-> > Hi Mathieu,
-> >
-> > On 7/17/2019 10:30 PM, Mathieu Poirier wrote:
-> > > On Fri, Jul 12, 2019 at 07:46:25PM +0530, Sai Prakash Ranjan wrote:
-> > >> From: Vivek Gautam <vivek.gautam@codeaurora.org>
-> > >>
-> > >> Enable coresight support by adding device nodes for the
-> > >> available source, sinks and channel blocks on msm8996.
-> > >>
-> > >> This also adds coresight cpu debug nodes.
-> > >>
-> > >> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> > >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> > >> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > >> Acked-By: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > >> ---
-> > >>   arch/arm64/boot/dts/qcom/msm8996.dtsi | 434 ++++++++++++++++++++++++++
-> > >>   1 file changed, 434 insertions(+)
-> > >>
-> > >
-> > > We've gone trhough 8 iteration of this set and I'm still finding checkpatch
-> > > problems, and I'm not referring to lines over 80 characters.
-> > >
-> >
-> > I only get below 2 checkpatch warnings:
-> >
-> > If you are talking about the below one, then it was not added manually.
-> > It was taken automatically when I pulled in the v7. Should I be
-> > resending this patch for this?
+On 7/16/19 1:04 AM, Rob Herring wrote:
+> Properties which are child node definitions need to have an explict
+> type. Otherwise, a matching (DT) property can silently match when an
+> error is desired. Fix this up tree-wide. Once this is fixed, the
+> meta-schema will enforce this on any child node definitions.
 > 
-> That depends if you want David and Andy to pickup your patches - I am
-> sure they'll point out exactly the same thing.
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: David Woodhouse <dwmw2@infradead.org>
+> Cc: Brian Norris <computersforpeace@gmail.com>
+> Cc: Marek Vasut <marek.vasut@gmail.com>
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: linux-mtd@lists.infradead.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> Cc: linux-spi@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Please ack. I will take this via the DT tree.
+>
+
+For pinctrl STM32:
+
+Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
+
+thanks
+
+Alexandre
+
+> Rob
 > 
+>
 
-If it's only the capitalization of "By" then I'll just fix it up as I
-apply the patches (thanks for pointing it out though!).
-
-But it seems the discussion on patch 2 needs to settle(?) (And the merge
-window has to close).
-
-Regards,
-Bjorn
-
-> >
-> > $ ./scripts/checkpatch.pl -g 2fa725fbc09306f1a95befc62715a708b4c0fad0
-> > WARNING: 'Acked-by:' is the preferred signature form
-> > #14:
-> > Acked-By: Suzuki K Poulose <suzuki.poulose@arm.com>
-> >
-> > WARNING: line over 80 characters
-> > #154: FILE: arch/arm64/boot/dts/qcom/msm8996.dtsi:763:
-> > +                       compatible = "arm,coresight-dynamic-replicator",
-> > "arm,primecell";
-> >
-> > total: 0 errors, 2 warnings, 440 lines checked
-> >
-> >
-> > -Sai
-> >
-> > --
-> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> > of Code Aurora Forum, hosted by The Linux Foundation
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
