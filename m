@@ -1,44 +1,49 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH 7/7] clocksource/drivers/sh_cmt: Document "cmt-48" as deprecated
-Date: Thu, 18 Jul 2019 20:45:38 +0900
-Message-ID: <156345033835.5307.9206628986166423962.sendpatchset@octo>
-References: <156345023791.5307.6113391102648394591.sendpatchset@octo>
+From: Andra Danciu <andradanciu1997@gmail.com>
+Subject: [PATCH v3 0/2] Add basic support for pico-pi-imx8m
+Date: Thu, 18 Jul 2019 15:16:26 +0300
+Message-ID: <20190718121628.23991-1-andradanciu1997@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <156345023791.5307.6113391102648394591.sendpatchset@octo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, geert+renesas@glider.be, daniel.lezcano@linaro.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, Magnus Damm <magnus.damm@gmail.com>, tglx@linutronix.de
+To: shawnguo@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com, u.kleine-koenig@pengutronix.de, aisheng.dong@nxp.com, andradanciu1997@gmail.com, leoyang.li@nxp.com, festevam@gmail.com, sriram.dash@nxp.com, l.stach@pengutronix.de, pankaj.bansal@nxp.com, ping.bai@nxp.com, pramod.kumar_1@nxp.com, bhaskar.upadhaya@nxp.com, richard.hu@technexion.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+Add support for TechNexion PICO-PI-IMX8M based on patches from Richard Hu
+Datasheet is at: https://s3.us-east-2.amazonaws.com/technexion/datasheets/picopiimx8m.pdf
 
-Update the CMT driver to mark "renesas,cmt-48" as deprecated.
+Changes since v2:
+ - changed PICO-PI-8M bord compatible from wand,imx8mq-pico-pi to
+   technexion,pico-pi-imx8m
+ - removed bootargs property
+ - removed regulators node and put fixed regulator directly under root node
+ - changed node name from usb_otg_vbus to regulator-usb-otg-vbus
+ - removed pinctrl-names property from iomuxc node
+ - removed wand-pi-8m container node
+ - sorted pinctrl nodes alphabetically
+ - removed tusb320_irqgrp, tusb320_irqgrp nodes because there is no upstream
+   driver
+ - changed properties' order in usb_dwc3_1 node
 
-Instead of documenting a theoretical hardware device based on current software
-support level, define DT bindings top-down based on available data sheet
-information and make use of part numbers in the DT compat string.
+Changes since v1:
+ - renamed wandboard-pi-8m.dts to pico-pi-8m.dts
+ - removed pinctrl_csi1, pinctrl_wifi_ctrl
+ - used generic name for pmic
+ - removed gpo node
+ - delete regulator-virtuals node
+ - remove always-on property from buck1-8 and ldo3-7
+ - remove pmic-buck-uses-i2c-dvs property for buck1-4
 
-In case of the only in-tree users r8a7740 and sh73a0 the compat strings
-"renesas,r8a7740-cmt1" and "renesas,sh73a0-cmt1" may be used instead.
+Andra Danciu (1):
+  dt-bindings: arm: fsl: Add the pico-pi-imx8m board
 
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
----
+Richard Hu (1):
+  arm64: dts: fsl: pico-pi: Add a device tree for the PICO-PI-IMX8M
 
- drivers/clocksource/sh_cmt.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/fsl.yaml |   1 +
+ arch/arm64/boot/dts/freescale/Makefile         |   1 +
+ arch/arm64/boot/dts/freescale/pico-pi-8m.dts   | 417 +++++++++++++++++++++++++
+ 3 files changed, 419 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/pico-pi-8m.dts
 
---- 0011/drivers/clocksource/sh_cmt.c
-+++ work/drivers/clocksource/sh_cmt.c	2019-07-18 19:31:01.917491800 +0900
-@@ -921,7 +921,11 @@ static const struct platform_device_id s
- MODULE_DEVICE_TABLE(platform, sh_cmt_id_table);
- 
- static const struct of_device_id sh_cmt_of_table[] __maybe_unused = {
--	{ .compatible = "renesas,cmt-48", .data = &sh_cmt_info[SH_CMT_48BIT] },
-+	{
-+		/* deprecated, preserved for backward compatibility */
-+		.compatible = "renesas,cmt-48",
-+		.data = &sh_cmt_info[SH_CMT_48BIT]
-+	},
- 	{
- 		/* deprecated, preserved for backward compatibility */
- 		.compatible = "renesas,cmt-48-gen2",
+-- 
+2.11.0
