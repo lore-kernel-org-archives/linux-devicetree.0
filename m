@@ -1,1065 +1,150 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-Date: Wed, 17 Jul 2019 18:15:22 -0700
-Message-ID: <ef7928ad-239d-eca8-41bf-f76e72a9841d@nvidia.com>
-References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <20190717084221.2e9af56c@dimatab>
- <093462f3-8c6d-d084-9822-ae4eff041c64@nvidia.com>
- <20190717093317.70fefb27@dimatab>
- <6e73dcee-6e24-b646-97a4-4b34aedd231d@nvidia.com>
- <16f8b146-2581-a842-4997-53ab05b62c70@gmail.com>
- <d7892bfc-2cbf-27af-518d-dc7e243815b8@nvidia.com>
- <71272e9a-0f2a-c20d-6532-7e9057ad985c@gmail.com>
- <78fd19b9-b652-8ac3-1f57-3b4adadee03f@nvidia.com>
- <351a07d4-ba90-4793-129b-b1a733f95531@nvidia.com>
- <e3e9beaf-b195-305e-4010-66e824813472@gmail.com>
- <9271ae75-5663-e26e-df26-57cba94dab75@nvidia.com>
- <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
- <b01e37aa-f14e-e628-ceef-b25a845c6359@gmail.com>
- <46b55527-da5d-c0b7-1c14-43b5c6d49dfa@nvidia.com>
- <2de9a608-cf38-f56c-b192-7ffed65092f8@nvidia.com>
- <bff3e9c0-727d-9aef-a0e2-583e53c39afd@gmail.com>
- <5eedd224-77b0-1fc9-4e5e-d884b41a64ed@nvidia.com>
- <89f23878-d4b2-2305-03e5-8a3e781c2b02@gmail.com>
- <c759d71b-1549-2562-f0cf-db5f9e51329e@nvidia.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH v3 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Thu, 18 Jul 2019 01:42:52 +0000
+Message-ID: <AM0PR04MB44816D1B4251E7DDE34C5BDE88C80@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1563184103-8493-1-git-send-email-peng.fan@nxp.com>
+ <1563184103-8493-2-git-send-email-peng.fan@nxp.com>
+ <CAL_JsqJkt7pX9F9NggL2EXxS=2oiF07VJCOqVTvF-Zwz=cjmvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c759d71b-1549-2562-f0cf-db5f9e51329e@nvidia.com>
+In-Reply-To: <CAL_JsqJkt7pX9F9NggL2EXxS=2oiF07VJCOqVTvF-Zwz=cjmvg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, sboyd@kernel.org, Michael Turquette <mturquette@baylibre.com>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 7/17/19 5:25 PM, Sowjanya Komatineni wrote:
->
-> On 7/17/19 4:44 PM, Dmitry Osipenko wrote:
->> 18.07.2019 2:36, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On 7/17/19 3:48 PM, Dmitry Osipenko wrote:
->>>> 18.07.2019 0:57, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 7/17/19 2:51 PM, Sowjanya Komatineni wrote:
->>>>>> On 7/17/19 2:30 PM, Dmitry Osipenko wrote:
->>>>>>> 17.07.2019 23:11, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>> On 7/17/19 1:01 PM, Sowjanya Komatineni wrote:
->>>>>>>>> On 7/17/19 12:43 PM, Dmitry Osipenko wrote:
->>>>>>>>>> 17.07.2019 21:54, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=
-=D1=82:
->>>>>>>>>>> On 7/17/19 11:51 AM, Sowjanya Komatineni wrote:
->>>>>>>>>>>> On 7/17/19 11:32 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>>> 17.07.2019 20:29, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=
-=B5=D1=82:
->>>>>>>>>>>>>> On 7/17/19 8:17 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>> 17.07.2019 9:36, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=
-=B5=D1=82:
->>>>>>>>>>>>>>>> On 7/16/19 11:33 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>> =D0=92 Tue, 16 Jul 2019 22:55:52 -0700
->>>>>>>>>>>>>>>>> Sowjanya Komatineni <skomatineni@nvidia.com> =D0=BF=D0=B8=
-=D1=88=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>> On 7/16/19 10:42 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>>>> =D0=92 Tue, 16 Jul 2019 22:25:25 -0700
->>>>>>>>>>>>>>>>>>> Sowjanya Komatineni <skomatineni@nvidia.com> =D0=BF=D0=
-=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>>> On 7/16/19 9:11 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>>>>>> =D0=92 Tue, 16 Jul 2019 19:35:49 -0700
->>>>>>>>>>>>>>>>>>>>> Sowjanya Komatineni <skomatineni@nvidia.com> =D0=BF=
-=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>>>>> On 7/16/19 7:18 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>>>>>>>>>>>>>> On 7/16/19 3:06 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>>>>>>>>>>>>>>> On 7/16/19 3:00 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>>>>>>>>>> 17.07.2019 0:35, Sowjanya Komatineni =D0=BF=D0=B8=
-=D1=88=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>>>>>>>>> On 7/16/19 2:21 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>>>>>>>>>>>> 17.07.2019 0:12, Sowjanya Komatineni =D0=BF=D0=
-=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>>>>>>>>>>> On 7/16/19 1:47 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>> 16.07.2019 22:26, Sowjanya Komatineni =D0=BF=
-=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> On 7/16/19 11:43 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 16.07.2019 21:30, Sowjanya Komatineni=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> On 7/16/19 11:25 AM, Dmitry Osipenko=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> wrote:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 16.07.2019 21:19, Sowjanya Komatineni=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> On 7/16/19 9:50 AM, Sowjanya Komatineni
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> wrote:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> On 7/16/19 8:00 AM, Dmitry Osipenko=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> wrote:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 16.07.2019 11:06, Peter De Schrijver
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> On Tue, Jul 16, 2019 at 03:24:26PM
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> +0800,
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Joseph
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Lo wrote:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OK, Will add to CPUFreq driver...
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The other thing that also need
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> attention is
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> that T124 CPUFreq
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> driver
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> implicitly relies on DFLL driver
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> to be
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> probed
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> first, which is
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> icky.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Should I add check for successful
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> dfll clk
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> register explicitly in
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPUFreq driver probe and defer till
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> dfll
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> clk
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> registers?
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Probably you should use the "device
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> links".
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> See
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [1][2] for the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> example.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [1]
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> https://elixir.bootlin.com/linux/v5.2.=
-1/source/drivers/gpu/drm/tegra/dc.c#L2383=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [2]
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> https://www.kernel.org/doc/html/latest=
-/driver-api/device_link.html=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Return EPROBE_DEFER instead of=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> EINVAL if
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> device_link_add() fails.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> And
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> use of_find_device_by_node() to get=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL's
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> device, see [3].
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [3]
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> https://git.kernel.org/pub/scm/linux/k=
-ernel/git/next/linux-next.git/tree/drivers/devfreq/tegra20-devfreq.c#n100=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Will go thru and add...
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Looks like I initially confused this case
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> with
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> getting
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> orphaned clock.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> I'm now seeing that the DFLL driver
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> registers the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> clock and then
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> clk_get(dfll) should be returning
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> EPROBE_DEFER
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> until
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL driver is
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> probed, hence everything should be fine
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> as-is and
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> there is no real
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> need
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> for the 'device link'. Sorry for the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> confusion!
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sorry, I didn't follow the mail
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> thread. Just
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> regarding the DFLL
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> part.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> As you know it, the DFLL clock is=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> one
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> of the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPU
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> clock sources and
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> integrated with DVFS control logic
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> with the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> regulator. We will not
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> switch
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPU to other clock sources once we
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> switched to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL. Because the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPU has
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> been regulated by the DFLL HW=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> with the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DVFS
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> table
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (CVB or OPP
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> table
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> you see
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> in the driver.). We shouldn't=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> reparent
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> it to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> other sources with
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> unknew
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> freq/volt pair. That's not
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> guaranteed to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> work. We
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> allow switching to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> open-loop mode but different=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> sources.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Okay, then the CPUFreq driver will
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> have to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> enforce
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL freq to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLLP's
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> rate before switching to PLLP in=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> order to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> have a
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> proper CPU voltage.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLLP freq is safe to work for any CPU
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> voltage.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> So no
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> need to enforce
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL freq to PLLP rate before changing
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CCLK_G
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> source
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> to PLLP during
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> suspend
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sorry, please ignore my above comment.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> During
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> suspend, need to change
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CCLK_G source to PLLP when dfll is in
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> closed
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> loop
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> mode first and
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> then
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> dfll need to be set to open loop.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Okay.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> And I don't exactly understand=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> why we
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> need to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> switch to PLLP in
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPU
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> idle
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> driver. Just keep it on CL-DVFS mode
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> all the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> time.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> In SC7 entry, the dfll suspend=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> function
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> moves it
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the open-loop
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> mode. That's
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> all. The sc7-entryfirmware will=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> handle
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the rest
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> of the sequence to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> turn off
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the CPU power.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> In SC7 resume, the warmboot code=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> will
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> handle
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> sequence to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> turn on
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> regulator and power up the CPU
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> cluster. And
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> leave
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> it on PLL_P.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> After
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resuming to the kernel, we re-init
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL,
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> restore
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the CPU clock
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> policy (CPU
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> runs on DFLL open-loop mode) and=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> then
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> moving to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> close-loop mode.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The DFLL is re-inited after switching
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CCLK to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> parent during of
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> early clocks-state restoring by CaR
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> driver.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Hence
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> instead of having
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> odd
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> hacks in the CaR driver, it is much
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> nicer to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> have a
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> proper suspend-resume sequencing of=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> device
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> drivers. In this case
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPUFreq
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> driver is the driver that enables DFLL
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> and
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> switches
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPU to that
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> clock
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> source, which means that this=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> driver is
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> also
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> should
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> be responsible for
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> management of the DFLL's state=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> during of
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> suspend/resume process. If
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPUFreq driver disables DFLL during
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> suspend
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> and
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> re-enables it
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> during
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resume, then looks like the CaR driver
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> hacks
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> around
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL are not
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> needed.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The DFLL part looks good to me. BTW,
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> change the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> patch subject to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "Add
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> suspend-resume support" seems more
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> appropriate to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> me.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> To clarify this, the sequences for=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> use
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> are as
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> follows (assuming
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> all
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> required DFLL hw configuration has=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> been
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> done)
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Switch to DFLL:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 0) Save current parent and frequency
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1) Program DFLL to open loop mode
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2) Enable DFLL
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3) Change cclk_g parent to DFLL
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> For OVR regulator:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 4) Change PWM output pin from
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> tristate to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> output
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 5) Enable DFLL PWM output
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> For I2C regulator:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 4) Enable DFLL I2C output
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 6) Program DFLL to closed loop mode
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Switch away from DFLL:
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 0) Change cclk_g parent to PLLP so
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the CPU
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> frequency is ok for
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> any
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> vdd_cpu voltage
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1) Program DFLL to open loop mode
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> I see during switch away from DFLL
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (suspend),
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> cclk_g
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> parent is not
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> changed to PLLP before changing dfll to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> open
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> loop
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> mode.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Will add this ...
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The CPUFreq driver switches parent to=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLLP
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> during
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> probe, similar
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> should be done on suspend.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> I'm also wondering if it's always safe to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> switch to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLLP in the probe.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> If CPU is running on a lower freq than
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLLP, then
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> some
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> other more
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> appropriate intermediate parent should be
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selected.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CPU parents are PLL_X, PLL_P, and dfll.=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLL_X
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> always
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> runs at higher
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> rate
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> so switching to PLL_P during CPUFreq probe
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> prior to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> dfll clock enable
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> should be safe.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AFAIK, PLLX could run at ~200MHz. There is
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> also a
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> divided output of
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLLP
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> which CCLKG supports, the PLLP_OUT4.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Probably, realistically, CPU is always=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> running
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> off a
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> fast PLLX during
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> boot, but I'm wondering what may happen on
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> KEXEC. I
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> guess ideally CPUFreq driver should also
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> have a
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 'shutdown' callback to teardown DFLL
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> on a reboot, but likely that there are=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> other
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> clock-related problems as
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> well that may break KEXEC and thus it is=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> not
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> very
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> important at the
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> moment.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [snip]
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> During bootup CPUG sources from PLL_X. By=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLL_P
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> source
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> above I meant
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLL_P_OUT4.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> As per clock policies, PLL_X is always used
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> for high
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> freq
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> like
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 800Mhz
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> and for low frequency it will be sourced=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> from
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLLP.
->>>>>>>>>>>>>>>>>>>>>>>>>>>>> Alright, then please don't forget to
->>>>>>>>>>>>>>>>>>>>>>>>>>>>> pre-initialize
->>>>>>>>>>>>>>>>>>>>>>>>>>>>> PLLP_OUT4 rate to a
->>>>>>>>>>>>>>>>>>>>>>>>>>>>> reasonable value using=20
->>>>>>>>>>>>>>>>>>>>>>>>>>>>> tegra_clk_init_table or
->>>>>>>>>>>>>>>>>>>>>>>>>>>>> assigned-clocks.
->>>>>>>>>>>>>>>>>>>>>>>>>>>> PLLP_OUT4 rate update is not needed as it is
->>>>>>>>>>>>>>>>>>>>>>>>>>>> safe to
->>>>>>>>>>>>>>>>>>>>>>>>>>>> run at
->>>>>>>>>>>>>>>>>>>>>>>>>>>> 408Mhz because it is below fmax @ Vmin
->>>>>>>>>>>>>>>>>>>>>>>>>>> So even 204MHz CVB entries are having the same
->>>>>>>>>>>>>>>>>>>>>>>>>>> voltage as
->>>>>>>>>>>>>>>>>>>>>>>>>>> 408MHz, correct? It's not instantly obvious=20
->>>>>>>>>>>>>>>>>>>>>>>>>>> to me
->>>>>>>>>>>>>>>>>>>>>>>>>>> from the
->>>>>>>>>>>>>>>>>>>>>>>>>>> DFLL driver's code where the fmax @ Vmin is
->>>>>>>>>>>>>>>>>>>>>>>>>>> defined,
->>>>>>>>>>>>>>>>>>>>>>>>>>> I see
->>>>>>>>>>>>>>>>>>>>>>>>>>> that there is the min_millivolts
->>>>>>>>>>>>>>>>>>>>>>>>>>> and frequency entries starting from 204MHZ=20
->>>>>>>>>>>>>>>>>>>>>>>>>>> defined
->>>>>>>>>>>>>>>>>>>>>>>>>>> per-table.
->>>>>>>>>>>>>>>>>>>>>>>>>> Yes at Vmin CPU Fmax is ~800Mhz. So anything=20
->>>>>>>>>>>>>>>>>>>>>>>>>> below
->>>>>>>>>>>>>>>>>>>>>>>>>> that
->>>>>>>>>>>>>>>>>>>>>>>>>> will
->>>>>>>>>>>>>>>>>>>>>>>>>> work at Vmin voltage and PLLP max is 408Mhz.
->>>>>>>>>>>>>>>>>>>>>>>>> Thank you for the clarification. It would be good
->>>>>>>>>>>>>>>>>>>>>>>>> to have
->>>>>>>>>>>>>>>>>>>>>>>>> that
->>>>>>>>>>>>>>>>>>>>>>>>> commented
->>>>>>>>>>>>>>>>>>>>>>>>> in the code as well.
->>>>>>>>>>>>>>>>>>>>>>>> OK, Will add...
->>>>>>>>>>>>>>>>>>>>>>> Regarding, adding suspend/resume to CPUFreq,=20
->>>>>>>>>>>>>>>>>>>>>>> CPUFreq
->>>>>>>>>>>>>>>>>>>>>>> suspend
->>>>>>>>>>>>>>>>>>>>>>> happens very early even before disabling non-boot
->>>>>>>>>>>>>>>>>>>>>>> CPUs and
->>>>>>>>>>>>>>>>>>>>>>> also
->>>>>>>>>>>>>>>>>>>>>>> need to export clock driver APIs to CPUFreq.
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>> Was thinking of below way of implementing this...
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>> Clock DFLL driver Suspend:
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 - Save CPU clock policy=20
->>>>>>>>>>>>>>>>>>>>>>> registers, and
->>>>>>>>>>>>>>>>>>>>>>> Perform
->>>>>>>>>>>>>>>>>>>>>>> dfll
->>>>>>>>>>>>>>>>>>>>>>> suspend which sets in open loop mode
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>> CPU Freq driver Suspend: does nothing
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>> Clock DFLL driver Resume:
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 - Re-init DFLL, Set in=20
->>>>>>>>>>>>>>>>>>>>>>> Open-Loop mode,
->>>>>>>>>>>>>>>>>>>>>>> restore
->>>>>>>>>>>>>>>>>>>>>>> CPU
->>>>>>>>>>>>>>>>>>>>>>> Clock policy registers which actually sets=20
->>>>>>>>>>>>>>>>>>>>>>> source to
->>>>>>>>>>>>>>>>>>>>>>> DFLL
->>>>>>>>>>>>>>>>>>>>>>> along
->>>>>>>>>>>>>>>>>>>>>>> with other CPU Policy register restore.
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>> CPU Freq driver Resume:
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 - do clk_prepare_enable which=20
->>>>>>>>>>>>>>>>>>>>>>> acutally
->>>>>>>>>>>>>>>>>>>>>>> sets
->>>>>>>>>>>>>>>>>>>>>>> DFLL in
->>>>>>>>>>>>>>>>>>>>>>> Closed loop mode
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>> Adding one more note: Switching CPU Clock to PLLP
->>>>>>>>>>>>>>>>>>>>>>> is not
->>>>>>>>>>>>>>>>>>>>>>> needed
->>>>>>>>>>>>>>>>>>>>>>> as CPU CLock can be from dfll in open-loop mode as
->>>>>>>>>>>>>>>>>>>>>>> DFLL
->>>>>>>>>>>>>>>>>>>>>>> is not
->>>>>>>>>>>>>>>>>>>>>>> disabled anywhere throught the suspend/resume path
->>>>>>>>>>>>>>>>>>>>>>> and SC7
->>>>>>>>>>>>>>>>>>>>>>> entry
->>>>>>>>>>>>>>>>>>>>>>> FW and Warm boot code will switch CPU source to=20
->>>>>>>>>>>>>>>>>>>>>>> PLLP.
->>>>>>>>>>>>>>>>>>>>> Since CPU resumes on PLLP, it will be cleaner to=20
->>>>>>>>>>>>>>>>>>>>> suspend
->>>>>>>>>>>>>>>>>>>>> it on
->>>>>>>>>>>>>>>>>>>>> PLLP as well. And besides, seems that currently
->>>>>>>>>>>>>>>>>>>>> disabling
->>>>>>>>>>>>>>>>>>>>> DFLL
->>>>>>>>>>>>>>>>>>>>> clock will disable DFLL completely and then you'd
->>>>>>>>>>>>>>>>>>>>> want to
->>>>>>>>>>>>>>>>>>>>> re-init
->>>>>>>>>>>>>>>>>>>>> the DFLL on resume any ways. So better to just=20
->>>>>>>>>>>>>>>>>>>>> disable
->>>>>>>>>>>>>>>>>>>>> DFLL
->>>>>>>>>>>>>>>>>>>>> completely on suspend, which should happen on
->>>>>>>>>>>>>>>>>>>>> clk_disable(dfll).
->>>>>>>>>>>>>>>>>>>> Will switch to PLLP during CPUFreq suspend. With
->>>>>>>>>>>>>>>>>>>> decision of
->>>>>>>>>>>>>>>>>>>> using
->>>>>>>>>>>>>>>>>>>> clk_disable during suspend, its mandatory to switch to
->>>>>>>>>>>>>>>>>>>> PLLP as
->>>>>>>>>>>>>>>>>>>> DFLL
->>>>>>>>>>>>>>>>>>>> is completely disabled.
->>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>> My earlier concern was on restoring CPU policy as we
->>>>>>>>>>>>>>>>>>>> can't do
->>>>>>>>>>>>>>>>>>>> that
->>>>>>>>>>>>>>>>>>>> from CPUFreq driver and need export from clock driver.
->>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>> Clear now and will do CPU clock policy restore in=20
->>>>>>>>>>>>>>>>>>>> after
->>>>>>>>>>>>>>>>>>>> dfll
->>>>>>>>>>>>>>>>>>>> re-init.
->>>>>>>>>>>>>>>>>>> Why the policy can't be saved/restored by the CaR=20
->>>>>>>>>>>>>>>>>>> driver
->>>>>>>>>>>>>>>>>>> as a
->>>>>>>>>>>>>>>>>>> context of any other clock?
->>>>>>>>>>>>>>>>>> restoring cpu clock policy involves programming=20
->>>>>>>>>>>>>>>>>> source and
->>>>>>>>>>>>>>>>>> super_cclkg_divider.
->>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>> cclk_g is registered as clk_super_mux and it doesn't use
->>>>>>>>>>>>>>>>>> frac_div ops
->>>>>>>>>>>>>>>>>> to do save/restore its divider.
->>>>>>>>>>>>>>>>> That can be changed of course and I guess it also could
->>>>>>>>>>>>>>>>> be as
->>>>>>>>>>>>>>>>> simple as
->>>>>>>>>>>>>>>>> saving and restoring of two raw u32 values of the
->>>>>>>>>>>>>>>>> policy/divider
->>>>>>>>>>>>>>>>> registers.
->>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>> Also, during clock context we cant restore cclk_g as=20
->>>>>>>>>>>>>>>>>> cclk_g
->>>>>>>>>>>>>>>>>> source
->>>>>>>>>>>>>>>>>> will be dfll and dfll will not be resumed/re-initialized
->>>>>>>>>>>>>>>>>> by the
->>>>>>>>>>>>>>>>>> time
->>>>>>>>>>>>>>>>>> clk_super_mux save/restore happens.
->>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>> we can't use save/restore context for dfll clk_ops=20
->>>>>>>>>>>>>>>>>> because
->>>>>>>>>>>>>>>>>> dfllCPU_out parent to CCLK_G is first in the clock=20
->>>>>>>>>>>>>>>>>> tree and
->>>>>>>>>>>>>>>>>> dfll_ref
->>>>>>>>>>>>>>>>>> and dfll_soc peripheral clocks are not restored by the
->>>>>>>>>>>>>>>>>> time dfll
->>>>>>>>>>>>>>>>>> restore happens. Also dfll peripheral clock enables need
->>>>>>>>>>>>>>>>>> to be
->>>>>>>>>>>>>>>>>> restored before dfll restore happens which involves
->>>>>>>>>>>>>>>>>> programming
->>>>>>>>>>>>>>>>>> dfll
->>>>>>>>>>>>>>>>>> controller for re-initialization.
->>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>> So dfll resume/re-init is done in clk-tegra210 at end of
->>>>>>>>>>>>>>>>>> all
->>>>>>>>>>>>>>>>>> clocks
->>>>>>>>>>>>>>>>>> restore in V5 series but instead of in clk-tegra210
->>>>>>>>>>>>>>>>>> driver I
->>>>>>>>>>>>>>>>>> moved
->>>>>>>>>>>>>>>>>> now to dfll-fcpu driver pm_ops as all dfll dependencies
->>>>>>>>>>>>>>>>>> will be
->>>>>>>>>>>>>>>>>> restored thru clk_restore_context by then. This will=20
->>>>>>>>>>>>>>>>>> be in
->>>>>>>>>>>>>>>>>> V6.
->>>>>>>>>>>>>>>>> Since DFLL is now guaranteed to be disabled across CaR
->>>>>>>>>>>>>>>>> suspend/resume
->>>>>>>>>>>>>>>>> (hence it has nothing to do in regards to CCLK) and given
->>>>>>>>>>>>>>>>> that
->>>>>>>>>>>>>>>>> PLLs
->>>>>>>>>>>>>>>>> state is restored before the rest of the clocks, I don't
->>>>>>>>>>>>>>>>> see why
->>>>>>>>>>>>>>>>> not to
->>>>>>>>>>>>>>>>> implement CCLK save/restore in a generic fasion. CPU=20
->>>>>>>>>>>>>>>>> policy
->>>>>>>>>>>>>>>>> wull be
->>>>>>>>>>>>>>>>> restored to either PLLP or PLLX (if CPUFreq driver is
->>>>>>>>>>>>>>>>> disabled).
->>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> CCLK_G save/restore should happen in clk_super_mux ops
->>>>>>>>>>>>>>>> save/context and
->>>>>>>>>>>>>>>> clk_super_mux save/restore happens very early as cclk_g is
->>>>>>>>>>>>>>>> first
->>>>>>>>>>>>>>>> in the
->>>>>>>>>>>>>>>> clock tree and save/restore traverses through the tree
->>>>>>>>>>>>>>>> top-bottom
->>>>>>>>>>>>>>>> order.
->>>>>>>>>>>>>>> If CCLK_G is restored before the PLLs, then just change the
->>>>>>>>>>>>>>> clocks
->>>>>>>>>>>>>>> order
->>>>>>>>>>>>>>> such that it won't happen.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>> I dont think we can change clocks order for CCLK_G.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> During bootup, cclk_g is registered after all pll's and
->>>>>>>>>>>>>> peripheral
->>>>>>>>>>>>>> clocks which is the way we wanted, So cclk_g will be the=20
->>>>>>>>>>>>>> first
->>>>>>>>>>>>>> one in
->>>>>>>>>>>>>> the clk list as clk_register adds new clock first in the=20
->>>>>>>>>>>>>> list.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> When clk_save_context and clk_restore_context APIs iterates
->>>>>>>>>>>>>> over the
->>>>>>>>>>>>>> list, cclk_g is the first
->>>>>>>>>>>>> Looking at clk_core_restore_context(), I see that it walks up
->>>>>>>>>>>>> CLKs
->>>>>>>>>>>>> list
->>>>>>>>>>>>> from parent to children, hence I don't understand how it can
->>>>>>>>>>>>> ever
->>>>>>>>>>>>> happen
->>>>>>>>>>>>> that CCLK will be restored before the parent. The clocks
->>>>>>>>>>>>> registration
->>>>>>>>>>>>> order doesn't matter at all in that case.
->>>>>>>>>>>> yes from parent to children and dfllCPU_out is the top in the
->>>>>>>>>>>> list and
->>>>>>>>>>>> its child is cclk_g.
->>>>>>>>>>>>
->>>>>>>>>>>> the way clocks are registered is the order I see in the clock
->>>>>>>>>>>> list and
->>>>>>>>>>>> looking into clk_register API it adds new node first in the=20
->>>>>>>>>>>> list.
->>>>>>>>>>>>
->>>>>>>>>>> cclkg_g & dfll register happens after all plls and peripheral
->>>>>>>>>>> clocks as
->>>>>>>>>>> it need ref, soc and peripheral clocks to be enabled.
->>>>>>>>>>>> So they are the last to get registered and so becomes first in
->>>>>>>>>>>> the
->>>>>>>>>>>> list.
->>>>>>>>>>>>
->>>>>>>>>>>> During save/restore context, it traverses thru this list and
->>>>>>>>>>>> first in
->>>>>>>>>>>> the list is dfllcpu_OUT (parent) and its child (cclk_g)
->>>>>>>>>>>>
->>>>>>>>>>>> saving should not be an issue at all but we cant restore
->>>>>>>>>>>> cclk_g/dfll
->>>>>>>>>>>> in normal way thru clk_ops restore as plls and peripherals
->>>>>>>>>>>> restore
->>>>>>>>>>>> doesn't happen by that time.
->>>>>>>>>>>>
->>>>>>>>>>> I was referring to clk_restore_context where it iterates thru
->>>>>>>>>>> root list
->>>>>>>>>>> and for each core from the root list clk_core_restore does
->>>>>>>>>>> restore of
->>>>>>>>>>> parent and children.
->>>>>>>>>>>
->>>>>>>>>>> dfllCPU_Out gets first in the list and its child is cclk_g
->>>>>>>>>>>
->>>>>>>>>>> https://elixir.bootlin.com/linux/v5.2.1/source/drivers/clk/clk.=
-c#L1105=20
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>> What list you're talking about? clk_summary? It shows current
->>>>>>>>>> *active*
->>>>>>>>>> clocks configuration, if you'll try to disable CPUFreq driver=20
->>>>>>>>>> then
->>>>>>>>>> the
->>>>>>>>>> parent of CCLK_G should be PLLX. Similarly when CPU is
->>>>>>>>>> reparented to
->>>>>>>>>> PLLP on driver's suspend, then PLLP is the parent.
->>>>>>>>>>
->>>>>>>>>>>>>>>> DFLL enable thru CPUFreq resume happens after all
->>>>>>>>>>>>>>>> clk_restore_context
->>>>>>>>>>>>>>>> happens. So during clk_restore_context, dfll re-init=20
->>>>>>>>>>>>>>>> doesnt
->>>>>>>>>>>>>>>> happen
->>>>>>>>>>>>>>>> and
->>>>>>>>>>>>>>>> doing cpu clock policy restore during super_mux clk_ops=20
->>>>>>>>>>>>>>>> will
->>>>>>>>>>>>>>>> crash as
->>>>>>>>>>>>>>>> DFLL is not initialized and its clock is not enabled=20
->>>>>>>>>>>>>>>> but CPU
->>>>>>>>>>>>>>>> clock
->>>>>>>>>>>>>>>> restore sets source to DFLL if we restore during
->>>>>>>>>>>>>>>> super_clk_mux
->>>>>>>>>>>>>>> If CPU was suspended on PLLP, then it will be restored on
->>>>>>>>>>>>>>> PLLP by
->>>>>>>>>>>>>>> CaR. I
->>>>>>>>>>>>>>> don't understand what DFLL has to do with the CCLK in that
->>>>>>>>>>>>>>> case
->>>>>>>>>>>>>>> during
->>>>>>>>>>>>>>> the clocks restore.
->>>>>>>>>>>>>> My above comment is in reference to your request of doing
->>>>>>>>>>>>>> save/restore
->>>>>>>>>>>>>> for cclk_g in normal fashion thru save/restore context.=20
->>>>>>>>>>>>>> Because
->>>>>>>>>>>>>> of the
->>>>>>>>>>>>>> clk order I mentioned above, we cclk_g will be the first=20
->>>>>>>>>>>>>> one to
->>>>>>>>>>>>>> go thru
->>>>>>>>>>>>>> save/context.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> During save_context of cclk_g, source can be from PLLX,=20
->>>>>>>>>>>>>> dfll.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> Issue will be when we do restore during=20
->>>>>>>>>>>>>> clk_restore_context of
->>>>>>>>>>>>>> cclk_g as
->>>>>>>>>>>>>> by that time PLLX/dfll will not be restored.
->>>>>>>>>>>>>>
->>>>>>>>>>>>> Seems we already agreed that DFLL will be disabled by the
->>>>>>>>>>>>> CPUFreq
->>>>>>>>>>>>> driver
->>>>>>>>>>>>> on suspend. Hence CCLK can't be from DFLL if CPU is
->>>>>>>>>>>>> reparented to
->>>>>>>>>>>>> PLLP
->>>>>>>>>>>>> on CPUFreq driver's suspend, otherwise CPU keeps running=20
->>>>>>>>>>>>> from a
->>>>>>>>>>>>> boot-state PLLX if CPUFreq driver is disabled.
->>>>>>>>>>>> Yes suspend should not be an issue but issue will be during
->>>>>>>>>>>> resume
->>>>>>>>>>>> where if we do cclk_g restore in normal way thru
->>>>>>>>>>>> clk_restore_context,
->>>>>>>>>>>> cclk_g restore happens very early as dfllCPU out is the first
->>>>>>>>>>>> one that
->>>>>>>>>>>> goes thru restore context and plls/peripherals are not=20
->>>>>>>>>>>> resumed by
->>>>>>>>>>>> then.
->>>>>>>>>>>>
->>>>>>>>>>>> CPU runs from PLLX if dfll clock enable fails during boot. So
->>>>>>>>>>>> when it
->>>>>>>>>>>> gets to suspend, we save CPU running clock source as either
->>>>>>>>>>>> PLLX or
->>>>>>>>>>>> DFLL and then we switch to PLLP.
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> On resume, CPU runs from PLLP by warm boot code and we need to
->>>>>>>>>>>> restore
->>>>>>>>>>>> back its source to the one it was using from saved source=20
->>>>>>>>>>>> context
->>>>>>>>>>>> (which can be either PLLX or DFLL)
->>>>>>>>>>>>
->>>>>>>>>>>> So PLLs & DFLL resume need to happen before CCLKG=20
->>>>>>>>>>>> restore/resume.
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> With all above discussions, we do DFLL disable in CPUFreq
->>>>>>>>>>>> driver on
->>>>>>>>>>>> suspend and on CPUFreq resume we enable DFLL back and=20
->>>>>>>>>>>> restore CPU
->>>>>>>>>>>> clock source it was using during suspend (which will be either
->>>>>>>>>>>> PLLX if
->>>>>>>>>>>> dfll enable fails during probe or it will be using DFLL).
->>>>>>>>>> During suspend CPU's parent shall be PLLP and not DFLL (note=20
->>>>>>>>>> that
->>>>>>>>>> it is
->>>>>>>>>> disabled) after reparenting to PLLP by the CPUFreq driver.
->>>>>>>>>>
->>>>>>>>> CPU source context should be saved before switching to safe
->>>>>>>>> source of
->>>>>>>>> PLLP as on resume we need to restore back to source it was using
->>>>>>>>> before we switch to safe source during suspend entry.
->>>>>>>>>
->>>>>>>>> So saved context for CPU Source will be either dfll or PLLX
->>>>>>>>>
->>>>>>>> PLLP reparenting is only during suspend/entry to have it as safe
->>>>>>>> source
->>>>>>>> but actual CPU source it was running from before suspending is=20
->>>>>>>> either
->>>>>>>> dfll/pllx which should be the one to be restored on CPUFreq=20
->>>>>>>> resume.
->>>>>>>> Resume happens with CPU running from PLLP till it gets to the
->>>>>>>> point of
->>>>>>>> restoring its original source (dfll or pllx)
->>>>>>> CaR should restore CPU to PLLP or PLLX, while CPUFreq driver=20
->>>>>>> restores
->>>>>>> CPU to DFLL. Please see more comments below.
->>>>>>>
->>>>>>>>>>>> So i was trying to say dfll/cclk_g restore can't be done in
->>>>>>>>>>>> normal way
->>>>>>>>>>>> thru clk_ops save/restore context
->>>>>>>>>> Let's see what happens if CPUFreq is active:
->>>>>>>>>>
->>>>>>>>>> 1. CPUFreq driver probe happens
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A02. CPU is reparented t=
-o PLLP
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A03. DFLL inited
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A04. CPU is reparented t=
-o DFLL
->>>>>>>>>>
->>>>>>>>>> 5. CPUFreq driver suspend happens
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A06. CPU is reparented t=
-o PLLP
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A07. DFLL is disabled
->>>>>>>>>>
->>>>>>>>>> 8. Car suspend happens
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A09. DFLL context saved
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A010. PLLP/PLLX context =
-saved
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A011. CCLK context saved
->>>>>>>>>>
->>>>>>>>>> 12. Car resume happens
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A013. DFLL context resto=
-red
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A014. PLLP/PLLX context =
-restored
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A015. CCLK context resto=
-red
->>>>>>>>>>
->>>>>>>>>> 16. CPUFreq driver resume happens
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A017. DFLL re-inited
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A018. CPU is reparented =
-to DFLL
->>>>>>>>> Below is the order of sequence it should be based on the order of
->>>>>>>>> clk
->>>>>>>>> register.
->>>>>>>>>
->>>>>>>>> My comments inline in this sequence.
->>>>>>>>>
->>>>>>>>> 1. CPUFreq driver probe happens
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A02. CPU is reparented to=
- PLLP
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A03. DFLL inited
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A04. CPU is reparented to=
- DFLL
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> 5. CPUFreq driver suspend happens
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A06. Save CPU source whic=
-h could be either dfll or pllx
->>>>>>> Please see my next comment.
->>>>>>>
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A07. CPU is reparented to=
- safe known source PLLP
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A08. DFLL is disabled
->>>>>>>>>
->>>>>>>>> 8. Car suspend happens
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A09. DFLL context saved (=
-With DFLL disabled in CPUFreq=20
->>>>>>>>> suspend,
->>>>>>>>> nothing to be saved here as last freq req will always be saved).
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A010. CCLK context saved =
-(CPU clock source will be saved in
->>>>>>>>> CPUFreq
->>>>>>>>> driver suspend which could be either dfll or pllx)
->>>>>>> That I don't understand. The CPU's clock source state should be
->>>>>>> saved at
->>>>>>> the moment of the CaR's suspending (i.e. CCLK policy will be set to
->>>>>>> PLLP
->>>>>>> or PLLX) and then CCLK state should be also restored by the CaR in
->>>>>>> step 14.
->>>>>> CPU clock to be saved and restored should be the source used=20
->>>>>> before we
->>>>>> switch it to safe PLLP for suspend/resume operation.
->>>>>>
->>>>>> This original source could be either PLLX or DFLL which it was using
->>>>>> before we disable DFLL during CPU Freq suspend.
->>>>>>
->>>>>> If we save CPU clock source at moment of CAR suspending, it will be
->>>>>> PLLP as we switch to safe PLLP in CPUFreq driver suspend.
->>>>>>
->>>>>> Infact, we dont need to restore CPU clock source to PLLP anywhere in
->>>>>> resume as it comes up with PLLP source from warm boot code itself.
->>>> You must always maintain proper suspend/resume encapsulation,=20
->>>> otherwise
->>>> it's a total mess. It doesn't matter that CCLK is restored to PLLP=20
->>>> even
->>>> that CPU is already running off PLLP after warmboot.
->>>>
->>>>>> But we need to restore CPU source to original source it was using
->>>>>> before we switch to safe PLLP source for suspend operation. This
->>>>>> original source could be PLLX/DFLL and this should be re-stored in
->>>>>> CPUFreq resume as by this time PLLs and peripherals are restored and
->>>>>> dfll is re-initialized.
->>>>>>
->>>>>> So saving actual CPU source before switching to intermediate safe=20
->>>>>> PLLP
->>>>>> in CPUFreq driver and then restoring back during CPUFreq resume=20
->>>>>> should
->>>>>> be good as CPUFreq resume happens right after all clocks (plls
->>>>>> restore, peripherals restore, dfll resume)>>
->>>>>>> CPUFreq driver should only switch CPU to PLLP and disable DFLL on
->>>>>>> suspend in step 5, that's it. On resume CPUFreq driver will restore
->>>>>>> CPU
->>>>>>> to DFLL in step 18.
->>>>>> Also I don't think we should hard-code to force CPU source to=20
->>>>>> DFLL on
->>>>>> CPUFreq resume.
->>>>>>
->>>>>> Reason is during CPU Probe when it tries to switch to dfll=20
->>>>>> source, for
->>>>>> some reason if dfll enable fails it sets CPU to its original source
->>>>>> which will be PLLX.
->>>> No!
->>>>
->>>> 1. CPU voltage could be too low for PLLX
->>>> 2. PLLX rate can't be changed without manual reparenting CPU to
->>>> intermediate clock
->>>> 3. CPUFreq can't manually manage CPU voltage
->>>>
->>>> DFLL-restoring failure is an extreme case. CPU must be kept on a safe
->>>> PLLP in that case and disable_cpufreq() must be invoked as well.
->>> OK, PLLX option was also in my mind. So If we just consider sources as
->>> DFLL or PLLP, then we can save source in CCLK save context and restore
->>> in CCLK restore basically it will be PLLP.
->>>
->>> Later during CPUFreq resume we can just switch to DFLL and if DFLL
->>> enable fails we will keep source as PLLP. Yes will invoke
->>> disable_cpufreq as well in case of dfll enable failure for some reason.
->> Sounds good!
->>
->>>>>> So CPU source could be either DFLL or PLLX in CPUFreq
->>>>>> tegra124_cpu_switch_to_dfll
->>>>>>
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A011. PLLP/PLLX context s=
-aved
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A012. Peripheral Clock sa=
-ved
->>>>>>>>>
->>>>>>>>> 12. Car resume happens
->>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A013. DFLL context restor=
-ed : No DFLL context to be restored
->>>>>>>>> and we
->>>>>>>>> only need to reinitialize DFLL and re-initialize can't be done
->>>>>>>>> here as
->>>>>>>>> this is the 1st to get restored and PLL/Peripheral clocks are not
->>>>>>>>> restored by this time. So we can't use clk_ops restore for DFLL
->>>>>>> It looks to me that clk_core_restore_context() should just do
->>>>>>> hlist_for_each_entry *_reverse*. Don't you think so?
->>>>>> Thought of that but this is in core driver and is used by other
->>>>>> non-tegra clock driver and not sure if that impacts for those.
->>>> The reverse ordering should be correct, I think it's just a=20
->>>> shortcoming
->>>> of the CCF that need to be fixed. But will better to make a more
->>>> thorough research, asking Stephen and Michael for the clarification.
->>>>
->>>>>> But with decision of switching CPUFreq with dfll clock=20
->>>>>> enable/disable
->>>>>> during CPUFreq suspend/resume, we can re-init dfll during dfll-fcpu
->>>>>> driver resume and we don't need CCLK save/restore.
->>>>>>
->> Actually CPUFreq driver should implement suspend/resume regardless of
->> CaR ability to restore DFLL or whatever, simply to properly handle
->> possible clock restoring failure on resume as we just found out.
->>
->>>>> the way of all clocks order is good except cclk_g which has=20
->>>>> dependency
->>>>> on multiple clocks.
->>>> CCLK_G has a single parent at a time. What "multiple clocks" you're
->>>> talking about? Please explain.
->>> dependencies I am referring are dfll_ref, dfll_soc, and DVFS peripheral
->>> clocks which need to be restored prior to DFLL reinit.
->> Okay, but that shouldn't be a problem if clock dependencies are set up
->> properly.
->>
->>>>> reverse list order during restore might not work as all other=20
->>>>> clocks are
->>>>> in proper order no with any ref clocks for plls getting restored=20
->>>>> prior
->>>>> to their clients
->>>> Why? The ref clocks should be registered first and be the roots for=20
->>>> PLLs
->>>> and the rest. If it's not currently the case, then this need to be
->>>> fixed. You need to ensure that each clock is modeled properly. If some
->>>> child clock really depends on multiple parents, then the parents=20
->>>> need to
->>>> in the correct order or CCF need to be taught about such
->>>> multi-dependencies.
->>>>
->>>> If some required feature is missed, then you have to implement it
->>>> properly and for all, that's how things are done in upstream.=20
->>>> Sometimes
->>>> it's quite a lot of extra work that everyone are benefiting from in
->>>> the end.
->>>>
->>>> [snip]
->>> Yes, we should register ref/parents before their clients.
->>>
->>> cclk_g clk is registered last after all pll and peripheral clocks are
->>> registers during clock init.
->>>
->>> dfllCPU_out clk is registered later during dfll-fcpu driver probe and
->>> gets added to the clock list.
->>>
->>> Probably the issue seems to be not linking dfll_ref and dfll_soc
->>> dependencies for dfllCPU_out thru clock list.
->>>
->>> clk-dfll driver during dfll_init_clks gets ref_clk and soc_clk=20
->>> reference
->>> thru DT.
->> Please try to fix all missing dependencies and orderings.
->
-> Peter,
->
-> dfllCPU_OUT is the first one to go thru restore when=20
-> clk_restore_context traverses thru the list.
->
-> dfllCPU_OUT has dependency on DFLL_ref and DFLL_SOC but this=20
-> dependency is unknown to clock-tree.
->
-> We can add DFLL_REF and DFLL_SOC as parents to dfllCPU_OUT during=20
-> register so dfllCPU_OUT save/restore happens after their parents are=20
-> restored.
->
-> But DFLL needs both of these to be restored before DFLLCPU_Out and as=20
-> DFLL_SOC restore always happens after the REF, thinking to add=20
-> DFLL_SOC as parent to dfllCPU_OUT so save/restore follows after their=20
-> dependencies.
->
-> Please comment.
->
-Did quick try and I see by adding dfll-soc as parent to dfllCPU_OUT, its=20
-in proper order after all its dependencies.
-
-Can now add dfll save/restore to do dfll reinit during restore..
+SGkgUm9iLA0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMS8yXSBkdC1iaW5kaW5nczogbWFp
+bGJveDogYWRkIGJpbmRpbmcgZG9jIGZvciB0aGUgQVJNDQo+IFNNQy9IVkMgbWFpbGJveA0KPiAN
+Cj4gT24gTW9uLCBKdWwgMTUsIDIwMTkgYXQgNDoxMCBBTSBQZW5nIEZhbiA8cGVuZy5mYW5Abnhw
+LmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4N
+Cj4gPg0KPiA+IFRoZSBBUk0gU01DL0hWQyBtYWlsYm94IGJpbmRpbmcgZGVzY3JpYmVzIGEgZmly
+bXdhcmUgaW50ZXJmYWNlIHRvDQo+ID4gdHJpZ2dlciBhY3Rpb25zIGluIHNvZnR3YXJlIGxheWVy
+cyBydW5uaW5nIGluIHRoZSBFTDIgb3IgRUwzIGV4Y2VwdGlvbiBsZXZlbHMuDQo+ID4gVGhlIHRl
+cm0gIkFSTSIgaGVyZSByZWxhdGVzIHRvIHRoZSBTTUMgaW5zdHJ1Y3Rpb24gYXMgcGFydCBvZiB0
+aGUgQVJNDQo+ID4gaW5zdHJ1Y3Rpb24gc2V0LCBub3QgYXMgYSBzdGFuZGFyZCBlbmRvcnNlZCBi
+eSBBUk0gTHRkLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGVuZyBGYW4gPHBlbmcuZmFuQG54
+cC5jb20+DQo+ID4gLS0tDQo+ID4NCj4gPiBWMzoNCj4gPiAgQ29udmVydCB0byB5YW1sDQo+ID4g
+IERyb3AgaW50ZXJydXB0DQo+ID4gIEludHJvdWRjZSB0cmFuc3BvcnRzIHRvIGluZGljYXRlIG1l
+bS9yZWcgIFRoZSBmdW5jIGlkIGlzIHN0aWxsIGtlcHQNCj4gPiBhcyBvcHRpb25hbCwgYmVjYXVz
+ZSBsaWtlIFNDTUkgaXQgb25seSAgY2FyZXMgYWJvdXQgbWVzc2FnZS4NCj4gPg0KPiA+IFYyOg0K
+PiA+ICBJbnRyb2R1Y2UgaW50ZXJydXB0cyBhcyBhIHByb3BlcnR5Lg0KPiA+DQo+ID4gIC4uLi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvYXJtLXNtYy55YW1sICAgICAgIHwgMTI0DQo+ICsr
+KysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTI0IGluc2VydGlvbnMo
+KykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21haWxib3gvYXJtLXNtYy55YW1sDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvYXJtLXNtYy55YW1sDQo+ID4g
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC9hcm0tc21jLnlhbWwN
+Cj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uZGE5YjFh
+MDNiYzRlDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tYWlsYm94L2FybS1zbWMueWFtbA0KPiA+IEBAIC0wLDAgKzEsMTI0IEBA
+DQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wIE9SIEJTRC0yLUNsYXVz
+ZSkgJVlBTUwgMS4yDQo+ID4gKy0tLQ0KPiA+ICskaWQ6DQo+ID4gK2h0dHBzOi8vZXVyMDEuc2Fm
+ZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGZGV2aQ0KPiA+
+DQo+ICtjZXRyZWUub3JnJTJGc2NoZW1hcyUyRm1haWxib3glMkZhcm0tc21jLnlhbWwlMjMmYW1w
+O2RhdGE9MDIlNw0KPiBDMDElN0NwDQo+ID4NCj4gK2VuZy5mYW4lNDBueHAuY29tJTdDNDI0ZTBk
+MWMxOWMzNDQ0MDZiNjAwOGQ3MDk0NjU1OTElN0M2ODZlYTENCj4gZDNiYzJiNGMNCj4gPg0KPiAr
+NmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzY5ODgwNzAwMDI3NzI3MDUmYW1wO3NkYXRh
+PURWDQo+IHN0USUyRmh1Tg0KPiA+ICtjNjclMkJ0MDh5WGliUXJYN3NJZW9jSHppWXAzZGtrZVJv
+SjQlM0QmYW1wO3Jlc2VydmVkPTANCj4gPiArJHNjaGVtYToNCj4gPiAraHR0cHM6Ly9ldXIwMS5z
+YWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZkZXZpDQo+
+ID4NCj4gK2NldHJlZS5vcmclMkZtZXRhLXNjaGVtYXMlMkZjb3JlLnlhbWwlMjMmYW1wO2RhdGE9
+MDIlN0MwMSU3Q3BlDQo+IG5nLmZhbiUNCj4gPg0KPiArNDBueHAuY29tJTdDNDI0ZTBkMWMxOWMz
+NDQ0MDZiNjAwOGQ3MDk0NjU1OTElN0M2ODZlYTFkM2JjMmI0DQo+IGM2ZmE5MmNkOQ0KPiA+DQo+
+ICs5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzY5ODgwNzAwMDI3ODI2OTgmYW1wO3NkYXRhPUQlMkZh
+MlNVDQo+IFclMkZDcWNsSmR5DQo+ID4gK1JiRmdncXFMJTJCQUV1bUVSMEszckFhaXNZMmJNYyUz
+RCZhbXA7cmVzZXJ2ZWQ9MA0KPiA+ICsNCj4gPiArdGl0bGU6IEFSTSBTTUMgTWFpbGJveCBJbnRl
+cmZhY2UNCj4gPiArDQo+ID4gK21haW50YWluZXJzOg0KPiA+ICsgIC0gUGVuZyBGYW4gPHBlbmcu
+ZmFuQG54cC5jb20+DQo+ID4gKw0KPiA+ICtkZXNjcmlwdGlvbjogfA0KPiA+ICsgIFRoaXMgbWFp
+bGJveCB1c2VzIHRoZSBBUk0gc21jIChzZWN1cmUgbW9uaXRvciBjYWxsKSBhbmQgaHZjDQo+ID4g
+KyhoeXBlcnZpc29yDQo+ID4gKyAgY2FsbCkgaW5zdHJ1Y3Rpb24gdG8gdHJpZ2dlciBhIG1haWxi
+b3gtY29ubmVjdGVkIGFjdGl2aXR5IGluDQo+ID4gK2Zpcm13YXJlLA0KPiA+ICsgIGV4ZWN1dGlu
+ZyBvbiB0aGUgdmVyeSBzYW1lIGNvcmUgYXMgdGhlIGNhbGxlci4gQnkgbmF0dXJlIHRoaXMNCj4g
+PiArb3BlcmF0aW9uDQo+ID4gKyAgaXMgc3luY2hyb25vdXMgYW5kIHRoaXMgbWFpbGJveCBwcm92
+aWRlcyBubyB3YXkgZm9yIGFzeW5jaHJvbm91cw0KPiA+ICttZXNzYWdlcw0KPiA+ICsgIHRvIGJl
+IGRlbGl2ZXJlZCB0aGUgb3RoZXIgd2F5IHJvdW5kLCBmcm9tIGZpcm13YXJlIHRvIHRoZSBPUywg
+YnV0DQo+ID4gKyAgYXN5bmNocm9ub3VzIG5vdGlmaWNhdGlvbiBjb3VsZCBhbHNvIGJlIHN1cHBv
+cnRlZC4gSG93ZXZlciB0aGUNCj4gPiArdmFsdWUgb2YNCj4gPiArICByMC93MC94MCB0aGUgZmly
+bXdhcmUgcmV0dXJucyBhZnRlciB0aGUgc21jIGNhbGwgaXMgZGVsaXZlcmVkIGFzIGENCj4gPiAr
+cmVjZWl2ZWQNCj4gPiArICBtZXNzYWdlIHRvIHRoZSBtYWlsYm94IGZyYW1ld29yaywgc28gYSBz
+eW5jaHJvbm91cyBjb21tdW5pY2F0aW9uDQo+ID4gK2NhbiBiZQ0KPiA+ICsgIGVzdGFibGlzaGVk
+LCBmb3IgYSBhc3luY2hyb25vdXMgbm90aWZpY2F0aW9uLCBubyB2YWx1ZSB3aWxsIGJlIHJldHVy
+bmVkLg0KPiA+ICsgIFRoZSBleGFjdCBtZWFuaW5nIG9mIGJvdGggdGhlIGFjdGlvbiB0aGUgbWFp
+bGJveCB0cmlnZ2VycyBhcyB3ZWxsDQo+ID4gK2FzIHRoZQ0KPiA+ICsgIHJldHVybiB2YWx1ZSBp
+cyBkZWZpbmVkIGJ5IHRoZWlyIHVzZXJzIGFuZCBpcyBub3Qgc3ViamVjdCB0byB0aGlzIGJpbmRp
+bmcuDQo+ID4gKw0KPiA+ICsgIE9uZSB1c2UgY2FzZSBvZiB0aGlzIG1haWxib3ggaXMgdGhlIFND
+TUkgaW50ZXJmYWNlLCB3aGljaCB1c2VzDQo+ID4gKyBzaGFyZWQgbWVtb3J5ICB0byB0cmFuc2Zl
+ciBjb21tYW5kcyBhbmQgcGFyYW1ldGVycywgYW5kIGEgbWFpbGJveA0KPiB0bw0KPiA+ICsgdHJp
+Z2dlciBhIGZ1bmN0aW9uICBjYWxsLiBUaGlzIGFsbG93cyBTb0NzIHdpdGhvdXQgYSBzZXBhcmF0
+ZQ0KPiA+ICsgbWFuYWdlbWVudCBwcm9jZXNzb3IgKG9yIHdoZW4gIHN1Y2ggYSBwcm9jZXNzb3Ig
+aXMgbm90IGF2YWlsYWJsZSBvcg0KPiA+ICsgdXNlZCkgdG8gdXNlIHRoaXMgc3RhbmRhcmRpemVk
+ICBpbnRlcmZhY2UgYW55d2F5Lg0KPiA+ICsNCj4gPiArICBUaGlzIGJpbmRpbmcgZGVzY3JpYmVz
+IG5vIGhhcmR3YXJlLCBidXQgZXN0YWJsaXNoZXMgYSBmaXJtd2FyZQ0KPiBpbnRlcmZhY2UuDQo+
+ID4gKyAgVXBvbiByZWNlaXZpbmcgYW4gU01DIHVzaW5nIG9uZSBvZiB0aGUgZGVzY3JpYmVkIFNN
+QyBmdW5jdGlvbg0KPiA+ICsgaWRlbnRpZmllcnMsICB0aGUgZmlybXdhcmUgaXMgZXhwZWN0ZWQg
+dG8gdHJpZ2dlciBzb21lIG1haWxib3ggY29ubmVjdGVkDQo+IGZ1bmN0aW9uYWxpdHkuDQo+ID4g
+KyAgVGhlIGNvbW11bmljYXRpb24gZm9sbG93cyB0aGUgQVJNIFNNQyBjYWxsaW5nIGNvbnZlbnRp
+b24uDQo+ID4gKyAgRmlybXdhcmUgZXhwZWN0cyBhbiBTTUMgZnVuY3Rpb24gaWRlbnRpZmllciBp
+biByMCBvciB3MC4gVGhlDQo+ID4gKyBzdXBwb3J0ZWQgIGlkZW50aWZpZXJzIGFyZSBwYXNzZWQg
+ZnJvbSBjb25zdW1lcnMsIG9yIGxpc3RlZCBpbiB0aGUNCj4gPiArIHRoZSBhcm0sZnVuYy1pZHMg
+IHByb3BlcnRpZXMgYXMgZGVzY3JpYmVkIGJlbG93LiBUaGUgZmlybXdhcmUgY2FuDQo+ID4gKyBy
+ZXR1cm4gb25lIHZhbHVlIGluICB0aGUgZmlyc3QgU01DIHJlc3VsdCByZWdpc3RlciwgaXQgaXMg
+ZXhwZWN0ZWQNCj4gPiArIHRvIGJlIGFuIGVycm9yIHZhbHVlLCAgd2hpY2ggc2hhbGwgYmUgcHJv
+cGFnYXRlZCB0byB0aGUgbWFpbGJveCBjbGllbnQuDQo+ID4gKw0KPiA+ICsgIEFueSBjb3JlIHdo
+aWNoIHN1cHBvcnRzIHRoZSBTTUMgb3IgSFZDIGluc3RydWN0aW9uIGNhbiBiZSB1c2VkLCBhcw0K
+PiA+ICsgbG9uZyBhcyAgYSBmaXJtd2FyZSBjb21wb25lbnQgcnVubmluZyBpbiBFTDMgb3IgRUwy
+IGlzIGhhbmRsaW5nIHRoZXNlDQo+IGNhbGxzLg0KPiA+ICsNCj4gPiArcHJvcGVydGllczoNCj4g
+PiArICBjb21wYXRpYmxlOg0KPiA+ICsgICAgY29uc3Q6IGFybSxzbWMtbWJveA0KPiA+ICsNCj4g
+PiArICAiI21ib3gtY2VsbHMiOg0KPiA+ICsgICAgY29uc3Q6IDENCj4gPiArDQo+ID4gKyAgYXJt
+LG51bS1jaGFuczoNCj4gPiArICAgIGRlc2NyaXB0aW9uOiBUaGUgbnVtYmVyIG9mIGNoYW5uZWxz
+IHN1cHBvcnRlZC4NCj4gPiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRp
+b25zL3VpbnQzMg0KPiANCj4gQ29uc3RyYWludHM/IDAgaXMgdmFsaWQ/IDJeMzI/DQoNCjAgaXMg
+bm90IHZhbGlkLiBUaGVyZSBzaG91bGQgYmUgbGltaXRlZCBjaGFubmVscywgYnV0IGRlcGVuZHMg
+b24gZmlybXdhcmUgZGVzaWduLg0KDQo+IA0KPiA+ICsNCj4gPiArICBtZXRob2Q6DQo+ID4gKyAg
+ICBpdGVtczoNCj4gPiArICAgICAgLSBlbnVtOg0KPiA+ICsgICAgICAgICAgLSBzbWMNCj4gPiAr
+ICAgICAgICAgIC0gaHZjDQo+ID4gKw0KPiA+ICsgIHRyYW5zcG9ydHM6DQo+ID4gKyAgICBpdGVt
+czoNCj4gPiArICAgICAgLSBlbnVtOg0KPiA+ICsgICAgICAgICAgLSBtZW0NCj4gPiArICAgICAg
+ICAgIC0gcmVnDQo+IA0KPiBXaGF0IGlmIHNvbWVvbmUgd2FudHMgdG8gY29uZmlndXJlIHRoaXMg
+cGVyIGNoYW5uZWw/IFBlcmhhcHMgI21ib3gtY2VsbHMNCj4gc2hvdWxkIGJlIDIgYW5kIHRoaXMg
+Y2FuIGJlIGEgY2xpZW50IHBhcmFtZXRlci4NCg0KSSBuZWVkIHRvIGNoZWNrLiBDdXJyZW50bHkg
+SSBvbmx5IHVzZSBvbmUgdHlwZS4gVGhlcmUgbWlnaHQgYmUgcGVvcGxlDQp3YW50IHRvIHVzZSBk
+aWZmZXJlbnQgdHJhbnNwb3J0cyBmb3IgZWFjaCBjaGFubmVscy4NCg0KPiANCj4gTWluaW1hbGx5
+LCB0aGlzIG5lZWRzIGEgJ2FybScgdmVuZG9yIHByZWZpeCBpZiBpdCBzdGF5cy4NCg0KImFybSx0
+cmFuc3BvcnRzIiBpbiB2NC4NCg0KPiANCj4gPiArDQo+ID4gKyAgYXJtLGZ1bmMtaWRzOg0KPiA+
+ICsgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAgQW4gYXJyYXkgb2YgMzItYml0IHZhbHVl
+cyBzcGVjaWZ5aW5nIHRoZSBmdW5jdGlvbiBJRHMgdXNlZCBieSBlYWNoDQo+ID4gKyAgICAgIG1h
+aWxib3ggY2hhbm5lbC4gVGhvc2UgZnVuY3Rpb24gSURzIGZvbGxvdyB0aGUgQVJNIFNNQyBjYWxs
+aW5nDQo+ID4gKyAgICAgIGNvbnZlbnRpb24gc3RhbmRhcmQgWzFdLg0KPiANCj4gV2hhdCdzIHRo
+ZSBkZWZhdWx0IGlmIG5vdCBzcGVjaWZpZWQ/IE9yIHRoaXMgc2hvdWxkIGJlIHJlcXVpcmVkPw0K
+DQpJZiBub3Qgc3BlY2lmaWVkLCBpdCBtZWFucyB0aGUgY2xpZW50IGZpcm13YXJlIGRyaXZlciB3
+aWxsIHBhc3MgaXQgdG8gbWFpbGJveCBkcml2ZXIuDQoNClRoYW5rcywNClBlbmcuDQoNCj4gDQo+
+ID4gKw0KPiA+ICsgICAgICBUaGVyZSBpcyBvbmUgaWRlbnRpZmllciBwZXIgY2hhbm5lbCBhbmQg
+dGhlIG51bWJlciBvZiBzdXBwb3J0ZWQNCj4gPiArICAgICAgY2hhbm5lbHMgaXMgZGV0ZXJtaW5l
+ZCBieSB0aGUgbGVuZ3RoIG9mIHRoaXMgYXJyYXkuDQo+ID4gKyAgICBtaW5JdGVtczogMA0KPiA+
+ICsgICAgbWF4SXRlbXM6IDQwOTYgICAjIFNob3VsZCBiZSBlbm91Z2g/DQo+ID4gKw0KPiA+ICty
+ZXF1aXJlZDoNCj4gPiArICAtIGNvbXBhdGlibGUNCj4gPiArICAtICIjbWJveC1jZWxscyINCj4g
+PiArICAtIGFybSxudW0tY2hhbnMNCj4gPiArICAtIHRyYW5zcG9ydHMNCj4gPiArICAtIG1ldGhv
+ZA0KPiA+ICsNCj4gPiArZXhhbXBsZXM6DQo+ID4gKyAgLSB8DQo+ID4gKyAgICBzcmFtQDkxMDAw
+MCB7DQo+ID4gKyAgICAgIGNvbXBhdGlibGUgPSAibW1pby1zcmFtIjsNCj4gPiArICAgICAgcmVn
+ID0gPDB4MCAweDkzZjAwMCAweDAgMHgxMDAwPjsNCj4gPiArICAgICAgI2FkZHJlc3MtY2VsbHMg
+PSA8MT47DQo+ID4gKyAgICAgICNzaXplLWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICByYW5nZXMg
+PSA8MCAweDAgMHg5M2YwMDAgMHgxMDAwPjsNCj4gPiArDQo+ID4gKyAgICAgICAgY3B1X3NjcF9s
+cHJpOiBzY3Atc2htZW1AMCB7DQo+ID4gKyAgICAgICAgICBjb21wYXRpYmxlID0gImFybSxzY21p
+LXNobWVtIjsNCj4gPiArICAgICAgICAgIHJlZyA9IDwweDAgMHgyMDA+Ow0KPiA+ICsgICAgICAg
+IH07DQo+ID4gKw0KPiA+ICsgICAgICAgIGNwdV9zY3BfaHByaTogc2NwLXNobWVtQDIwMCB7DQo+
+ID4gKyAgICAgICAgICBjb21wYXRpYmxlID0gImFybSxzY21pLXNobWVtIjsNCj4gPiArICAgICAg
+ICAgIHJlZyA9IDwweDIwMCAweDIwMD47DQo+ID4gKyAgICAgICAgfTsNCj4gPiArICAgIH07DQo+
+ID4gKw0KPiA+ICsgICAgZmlybXdhcmUgew0KPiA+ICsgICAgICBzbWNfbWJveDogbWFpbGJveCB7
+DQo+ID4gKyAgICAgICAgI21ib3gtY2VsbHMgPSA8MT47DQo+ID4gKyAgICAgICAgY29tcGF0aWJs
+ZSA9ICJhcm0sc21jLW1ib3giOw0KPiA+ICsgICAgICAgIG1ldGhvZCA9ICJzbWMiOw0KPiA+ICsg
+ICAgICAgIGFybSxudW0tY2hhbnMgPSA8MHgyPjsNCj4gPiArICAgICAgICB0cmFuc3BvcnRzID0g
+Im1lbSI7DQo+ID4gKyAgICAgICAgLyogT3B0aW9uYWwgKi8NCj4gPiArICAgICAgICBhcm0sZnVu
+Yy1pZHMgPSA8MHhjMjAwMDBmZT4sIDwweGMyMDAwMGZmPjsNCj4gPiArICAgICAgfTsNCj4gPiAr
+DQo+ID4gKyAgICAgIHNjbWkgew0KPiA+ICsgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHNjbWki
+Ow0KPiA+ICsgICAgICAgIG1ib3hlcyA9IDwmbWFpbGJveCAwICZtYWlsYm94IDE+Ow0KPiA+ICsg
+ICAgICAgIG1ib3gtbmFtZXMgPSAidHgiLCAicngiOw0KPiA+ICsgICAgICAgIHNobWVtID0gPCZj
+cHVfc2NwX2xwcmkgJmNwdV9zY3BfaHByaT47DQo+ID4gKyAgICAgIH07DQo+ID4gKyAgICB9Ow0K
+PiA+ICsNCj4gPiArLi4uDQo+ID4gLS0NCj4gPiAyLjE2LjQNCj4gPg0K
