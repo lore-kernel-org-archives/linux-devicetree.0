@@ -1,29 +1,87 @@
-From: mtk12025 <xia.jiang@mediatek.com>
-Subject: Re: [PATCH 0/5]Add support for mt2701 JPEG ENC support
-Date: Thu, 18 Jul 2019 11:19:39 +0800
-Message-ID: <1563419979.20220.12.camel@mhfsdcap03>
-References: <20190709032103.10291-1-xia.jiang@mediatek.com>
-         <79316488-30fd-7ff3-7598-d29f85f663ab@xs4all.nl>
+From: Biwen Li <biwen.li@nxp.com>
+Subject: RE: [EXT] Re: [v5,2/2] Documentation: dt: binding: rtc: add binding
+ for ftm alarm driver
+Date: Thu, 18 Jul 2019 03:33:18 +0000
+Message-ID: <DB7PR04MB4490BC5DDEC821E4DC25421C8FC80@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190716101655.47418-1-biwen.li@nxp.com>
+ <20190716101655.47418-2-biwen.li@nxp.com>
+ <CAL_Jsq+U=W_51qUDvOMPgexMOLuqTyYua5H6G-cwFnKCh8YmPg@mail.gmail.com>
+ <DB7PR04MB44902483232D323AF611D6298FC90@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <CAL_JsqKdsZQFtn+Bd2rZFKgZN5pgcsgXZz-Cy0qAt=8ycT0VHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <79316488-30fd-7ff3-7598-d29f85f663ab@xs4all.nl>
+In-Reply-To: <CAL_JsqKdsZQFtn+Bd2rZFKgZN5pgcsgXZz-Cy0qAt=8ycT0VHA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rick Chang <rick.chang@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Leo Li <leoyang.li@nxp.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Hans,
-Thank you for your reply.
-
-PATCH v2 has used the latest v4l2-compliance version for test.
-
-PATCH v2 has fixed the compliance test fail, and the driver checked the
-buffer size in queue_setup function.
-
-I am sorry for existence of change-id caused by my mistake in the new
-patch.
-
-Best Regards,
-Xia Jiang
+PiA+DQo+ID4gPg0KPiA+ID4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+ID4gPg0KPiA+ID4gT24gVHVl
+LCBKdWwgMTYsIDIwMTkgYXQgNDoyNiBBTSBCaXdlbiBMaSA8Yml3ZW4ubGlAbnhwLmNvbT4gd3Jv
+dGU6DQo+ID4gPiA+DQo+ID4gPiA+IFRoZSBwYXRjaCBhZGRzIGJpbmRpbmcgZm9yIGZ0bSBhbGFy
+bSBkcml2ZXINCj4gPiA+DQo+ID4gPiBCaW5kaW5ncyBhcmUgZm9yIGgvdywgbm90IGRyaXZlcnMu
+Li4NCj4gPiA+DQo+ID4gPiAnZHQtYmluZGluZ3M6IHJ0YzogLi4uJyBmb3IgdGhlIHN1YmplY3Qg
+cHJlZml4Lg0KPiA+IEkgd2lsbCBjb3JyZWN0IGl0IGluIHY2Lg0KPiA+ID4NCj4gPiA+ID4NCj4g
+PiA+ID4gU2lnbmVkLW9mZi1ieTogQml3ZW4gTGkgPGJpd2VuLmxpQG54cC5jb20+DQo+ID4gPiA+
+IC0tLQ0KPiA+ID4gPiBDaGFuZ2UgaW4gdjU6DQo+ID4gPiA+ICAgICAtIE5vbmUNCj4gPiA+ID4N
+Cj4gPiA+ID4gQ2hhbmdlIGluIHY0Og0KPiA+ID4gPiAgICAgLSBhZGQgbm90ZSBhYm91dCBkdHMg
+YW5kIGtlcm5lbCBvcHRpb25zDQo+ID4gPiA+ICAgICAtIGFkZCBhbGlhc2VzIGluIGV4YW1wbGUN
+Cj4gPiA+ID4NCj4gPiA+ID4gQ2hhbmdlIGluIHYzOg0KPiA+ID4gPiAgICAgICAgIC0gcmVtb3Zl
+IHJlZy1uYW1lcyBwcm9wZXJ0eQ0KPiA+ID4gPiAgICAgICAgIC0gY29ycmVjdCBjZWxscyBudW1i
+ZXINCj4gPiA+ID4NCj4gPiA+ID4gQ2hhbmdlIGluIHYyOg0KPiA+ID4gPiAgICAgICAgIC0gcmVw
+bGFjZSBsczEwNDNhIHdpdGggbHMxMDg4YSBhcyBleGFtcGxlDQo+ID4gPiA+ICAgICAgICAgLSBh
+ZGQgcmNwbSBub2RlIGFuZCBmc2wscmNwbS13YWtldXAgcHJvcGVydHkNCj4gPiA+ID4NCj4gPiA+
+ID4NCj4gPiA+ID4gIC4uLi9iaW5kaW5ncy9ydGMvcnRjLWZzbC1mdG0tYWxhcm0udHh0ICAgICAg
+ICB8IDQ5DQo+ICsrKysrKysrKysrKysrKysrKysNCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0
+OSBpbnNlcnRpb25zKCspDQo+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9ydGMtZnNsLWZ0bS1hbGFybS50eHQN
+Cj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdA0KPiA+ID4gPiBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9ydGMvcnRjLWZzbC1mdG0tYWxhcm0udHh0DQo+ID4gPiA+IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9ydGMtZnNsLWZ0bS1hbGFybS50eHQN
+Cj4gPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gaW5kZXggMDAwMDAwMDAwMDAw
+Li5mYjAxODA2NTQwNmMNCj4gPiA+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ID4gPiArKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcnRjL3J0Yy1mc2wtZnRtLWFsYXJtLnR4dA0K
+PiA+ID4gPiBAQCAtMCwwICsxLDQ5IEBADQo+ID4gPiA+ICtGcmVlc2NhbGUgRmxleFRpbWVyIE1v
+ZHVsZSAoRlRNKSBBbGFybQ0KPiA+ID4gPiArDQo+ID4gPiA+ICtOb3RlOg0KPiA+ID4gPiArLSBU
+aGUgZHJpdmVyIGRlcGVuZHMgb24gUkNQTSBkcml2ZXINCj4gPiA+ID4gKyAgdG8gd2FrZSB1cCBz
+eXN0ZW0gaW4gc2xlZXAuDQo+ID4gPiA+ICstIE5lZWQgc3RvcCB1c2luZyBSVENfSENUT1NZUyBv
+ciB1c2UgdGhlIERUIGFsaWFzZXMNCj4gPiA+ID4gKyAgdG8gZW5zdXJlIHRoZSBkcml2ZXIgaXMg
+bm90IHVzZWQgYXMgdGhlIHByaW1hcnkgUlRDLg0KPiA+ID4gPiArICAoU2VsZWN0IERUIGFsaWFz
+ZXMgZGVmYXVsdGx5KQ0KPiA+ID4NCj4gPiA+IFRoaXMgaXMgTGludXggc3BlY2lmaWMgYW5kIG5v
+dCByZWxldmFudCB0byB0aGUgYmluZGluZy4NCj4gPiBPaywgSSB3aWxsIHJlbW92ZSBhbGwgb2Yg
+dGhlIE5vdGUgaW4gdjYuDQo+ID4gPg0KPiA+ID4gPiArDQo+ID4gPiA+ICtSZXF1aXJlZCBwcm9w
+ZXJ0aWVzOg0KPiA+ID4gPiArLSBjb21wYXRpYmxlIDogU2hvdWxkIGJlICJmc2wsPGNoaXA+LWZ0
+bS1hbGFybSIsIHRoZQ0KPiA+ID4gPiArICAgICAgICAgICAgICBzdXBwb3J0ZWQgY2hpcHMgaW5j
+bHVkZQ0KPiA+ID4gPiArICAgICAgICAgICAgICAiZnNsLGxzMTAxMmEtZnRtLWFsYXJtIg0KPiA+
+ID4gPiArICAgICAgICAgICAgICAiZnNsLGxzMTAyMWEtZnRtLWFsYXJtIg0KPiA+ID4gPiArICAg
+ICAgICAgICAgICAiZnNsLGxzMTAyOGEtZnRtLWFsYXJtIg0KPiA+ID4gPiArICAgICAgICAgICAg
+ICAiZnNsLGxzMTA0M2EtZnRtLWFsYXJtIg0KPiA+ID4gPiArICAgICAgICAgICAgICAiZnNsLGxz
+MTA0NmEtZnRtLWFsYXJtIg0KPiA+ID4gPiArICAgICAgICAgICAgICAiZnNsLGxzMTA4OGEtZnRt
+LWFsYXJtIg0KPiA+ID4gPiArICAgICAgICAgICAgICAiZnNsLGxzMjA4eGEtZnRtLWFsYXJtIg0K
+PiA+ID4gPiArLSByZWcgOiBTcGVjaWZpZXMgYmFzZSBwaHlzaWNhbCBhZGRyZXNzIGFuZCBzaXpl
+IG9mIHRoZSByZWdpc3Rlcg0KPiA+ID4gPiArc2V0cyBmb3IgdGhlDQo+ID4gPiA+ICsgIEZsZXhU
+aW1lciBNb2R1bGUgYW5kIGJhc2UgcGh5c2ljYWwgYWRkcmVzcyBvZiBJUCBQb3dlcmRvd24NCj4g
+PiA+ID4gK0V4Y2VwdGlvbiBDb250cm9sDQo+ID4gPiA+ICsgIFJlZ2lzdGVyLg0KPiA+ID4gPiAr
+LSBpbnRlcnJ1cHRzIDogU2hvdWxkIGJlIHRoZSBGbGV4VGltZXIgTW9kdWxlIGludGVycnVwdC4N
+Cj4gPiA+ID4gKy0gZnNsLHJjcG0td2FrZXVwIHByb3BlcnR5IGFuZCByY3BtIG5vZGUgOiBQbGVh
+c2UgcmVmZXINCj4gPiA+ID4gKyAgICAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3Mvc29jL2ZzbC9yY3BtLnR4dA0KPiA+ID4gPiArDQo+ID4gPiA+ICtPcHRpb25hbCBwcm9wZXJ0
+aWVzOg0KPiA+ID4gPiArLSBiaWctZW5kaWFuOiBJZiB0aGUgaG9zdCBjb250cm9sbGVyIGlzIGJp
+Zy1lbmRpYW4gbW9kZSwgc3BlY2lmeSB0aGlzDQo+IHByb3BlcnR5Lg0KPiA+ID4gPiArICBUaGUg
+ZGVmYXVsdCBlbmRpYW4gbW9kZSBpcyBsaXR0bGUtZW5kaWFuLg0KPiA+ID4gPiArDQo+ID4gPiA+
+ICtFeGFtcGxlOg0KPiA+ID4gPiArYWxpYXNlcyB7DQo+ID4gPiA+ICsgICAgICAgLi4uDQo+ID4g
+PiA+ICsgICAgICAgcnRjMSA9IGZ0bV9hbGFybTA7IC8qIFVzZSBmbGV4dGltZXIgYWxhcm0gZHJp
+dmVyIGFzIC9kZXYvcnRjMSAqLw0KPiA+ID4gPiArICAgICAgIC4uLg0KPiA+ID4gPiArfTsNCj4g
+PiA+DQo+ID4gPiBEcm9wIHRoZSBhbGlhc2VzIHBhcnQuIEl0J3Mgbm90IGdvaW5nIHRvIHdvcmsg
+d2hlbiB0aGlzIGlzIGNvbnZlcnRlZA0KPiA+ID4gdG8gRFQgc2NoZW1hIGFuZCB0aGUgY29tbWVu
+dCBpcyBMaW51eCBzcGVjaWZpYy4NCj4gPiBTb3JyeSxJIGNhbid0IGRyb3AgdGhlIGFsaWFzZXMg
+cGFydC4gSWYgYW55IHVzZXIgdXNlcyB0aGUgYWxhcm0gZHJpdmVyDQo+ID4gYXMgcnRjMCwgdGhl
+IHVzZXIgd2lsbCBnZXQgd3JvbmcgdGltZSBmcm9tIC9kZXYvcnRjMC5JdCBpcyB2ZXJ5IGltcG9y
+dGFudC4NCj4gDQo+IEkganVzdCBtZWFuIGRvbid0IHB1dCBpdCBpbiB0aGUgZXhhbXBsZS4gWW91
+IGNhbiB1c2UgaXQgaW4geW91ciBkdHMgZmlsZS4NClRoYW5rIHlvdSBzbyBtdWNoLEkgbmVlZCBw
+dXQgaXQgaW4gdGhlIGV4YW1wbGUgZm9yIGEgbm90ZShQbGVhc2Ugbm90IHVzZSBpdCBhcyBydGMw
+KS4NCkkgdXNlIGl0IGFzIGEgbm90ZSBpbiB0aGUgZXhhbXBsZSB0byBhdm9pZCB0aGF0IHNvbWVv
+bmUgdXNlIEZsZXhUaW1lciBtb2R1bGUgYXMgcnRjMC4gDQo=
