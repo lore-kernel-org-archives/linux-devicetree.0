@@ -1,8 +1,10 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH 1/4] ARM: dts: imx6sx: move GIC to right location in DT
-Date: Thu, 18 Jul 2019 17:15:05 +0800
-Message-ID: <20190718091508.3248-1-Anson.Huang@nxp.com>
+Subject: [PATCH 3/4] ARM: dts: imx6ul: move GIC to right location in DT
+Date: Thu, 18 Jul 2019 17:15:07 +0800
+Message-ID: <20190718091508.3248-3-Anson.Huang@nxp.com>
+References: <20190718091508.3248-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190718091508.3248-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: Linux-imx@nxp.com
@@ -15,44 +17,50 @@ be located inside of soc node in DT.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/imx6sx.dtsi | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/imx6ul.dtsi | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index bb25add..fe00f9a 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -90,15 +90,6 @@
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 81d4b49..da1eae6 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -93,18 +93,6 @@
  		};
  	};
  
 -	intc: interrupt-controller@a01000 {
--		compatible = "arm,cortex-a9-gic";
+-		compatible = "arm,gic-400", "arm,cortex-a7-gic";
+-		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
 -		#interrupt-cells = <3>;
 -		interrupt-controller;
--		reg = <0x00a01000 0x1000>,
--		      <0x00a00100 0x100>;
 -		interrupt-parent = <&intc>;
+-		reg = <0x00a01000 0x1000>,
+-		      <0x00a02000 0x2000>,
+-		      <0x00a04000 0x2000>,
+-		      <0x00a06000 0x2000>;
 -	};
 -
- 	ckil: clock-ckil {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
-@@ -181,6 +172,15 @@
- 			clocks = <&clks IMX6SX_CLK_OCRAM>;
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
+@@ -171,6 +159,18 @@
+ 			reg = <0x00900000 0x20000>;
  		};
  
 +		intc: interrupt-controller@a01000 {
-+			compatible = "arm,cortex-a9-gic";
++			compatible = "arm,gic-400", "arm,cortex-a7-gic";
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
 +			#interrupt-cells = <3>;
 +			interrupt-controller;
-+			reg = <0x00a01000 0x1000>,
-+			      <0x00a00100 0x100>;
 +			interrupt-parent = <&intc>;
++			reg = <0x00a01000 0x1000>,
++			      <0x00a02000 0x2000>,
++			      <0x00a04000 0x2000>,
++			      <0x00a06000 0x2000>;
 +		};
 +
- 		L2: l2-cache@a02000 {
- 			compatible = "arm,pl310-cache";
- 			reg = <0x00a02000 0x1000>;
+ 		dma_apbh: dma-apbh@1804000 {
+ 			compatible = "fsl,imx6q-dma-apbh", "fsl,imx28-dma-apbh";
+ 			reg = <0x01804000 0x2000>;
 -- 
 2.7.4
