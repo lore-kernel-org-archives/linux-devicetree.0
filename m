@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH 6/7] clocksource/drivers/sh_cmt: r8a7740 and sh73a0 SoC-specific match
-Date: Thu, 18 Jul 2019 20:45:24 +0900
-Message-ID: <156345032407.5307.16702422867507502597.sendpatchset@octo>
+Subject: [PATCH 7/7] clocksource/drivers/sh_cmt: Document "cmt-48" as deprecated
+Date: Thu, 18 Jul 2019 20:45:38 +0900
+Message-ID: <156345033835.5307.9206628986166423962.sendpatchset@octo>
 References: <156345023791.5307.6113391102648394591.sendpatchset@octo>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <156345023791.5307.6113391102648394591.sendpatchset@octo>
@@ -12,34 +12,33 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Add SoC-specific matching for CMT1 on r8a7740 and sh73a0.
+Update the CMT driver to mark "renesas,cmt-48" as deprecated.
 
-This allows us to move away from the old DT bindings such as
- - "renesas,cmt-48-sh73a0"
- - "renesas,cmt-48-r8a7740"
- - "renesas,cmt-48"
-in favour for the now commonly used format "renesas,<soc>-<device>"
+Instead of documenting a theoretical hardware device based on current software
+support level, define DT bindings top-down based on available data sheet
+information and make use of part numbers in the DT compat string.
+
+In case of the only in-tree users r8a7740 and sh73a0 the compat strings
+"renesas,r8a7740-cmt1" and "renesas,sh73a0-cmt1" may be used instead.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 ---
 
- drivers/clocksource/sh_cmt.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clocksource/sh_cmt.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- 0001/drivers/clocksource/sh_cmt.c
-+++ work/drivers/clocksource/sh_cmt.c	2019-07-18 19:29:06.005414716 +0900
-@@ -928,6 +928,14 @@ static const struct of_device_id sh_cmt_
- 		.data = &sh_cmt_info[SH_CMT0_RCAR_GEN2]
- 	},
+--- 0011/drivers/clocksource/sh_cmt.c
++++ work/drivers/clocksource/sh_cmt.c	2019-07-18 19:31:01.917491800 +0900
+@@ -921,7 +921,11 @@ static const struct platform_device_id s
+ MODULE_DEVICE_TABLE(platform, sh_cmt_id_table);
+ 
+ static const struct of_device_id sh_cmt_of_table[] __maybe_unused = {
+-	{ .compatible = "renesas,cmt-48", .data = &sh_cmt_info[SH_CMT_48BIT] },
++	{
++		/* deprecated, preserved for backward compatibility */
++		.compatible = "renesas,cmt-48",
++		.data = &sh_cmt_info[SH_CMT_48BIT]
++	},
  	{
-+		.compatible = "renesas,r8a7740-cmt1",
-+		.data = &sh_cmt_info[SH_CMT_48BIT]
-+	},
-+	{
-+		.compatible = "renesas,sh73a0-cmt1",
-+		.data = &sh_cmt_info[SH_CMT_48BIT]
-+	},
-+	{
- 		.compatible = "renesas,rcar-gen2-cmt0",
- 		.data = &sh_cmt_info[SH_CMT0_RCAR_GEN2]
- 	},
+ 		/* deprecated, preserved for backward compatibility */
+ 		.compatible = "renesas,cmt-48-gen2",
