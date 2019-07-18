@@ -1,67 +1,132 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v2 3/5] memremap: Add support for read-only memory mappings
-Date: Thu, 18 Jul 2019 11:00:07 -0700
-Message-ID: <5d30b3a8.1c69fb81.8c54.63a6@mx.google.com>
-References: <20190614203717.75479-1-swboyd@chromium.org> <20190614203717.75479-4-swboyd@chromium.org> <20190710141433.7ama3gncss3y6dcx@willie-the-truck>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: dsp: fsl: Add DSP core binding support
+Date: Thu, 18 Jul 2019 21:24:34 +0300
+Message-ID: <CAEnQRZBubFz90Xf8irDwc=erTXmByXX4rkzZy9r8ymfAuQEsZA@mail.gmail.com>
+References: <20190718151346.3523-1-daniel.baluta@nxp.com> <20190718151346.3523-4-daniel.baluta@nxp.com>
+ <CAL_JsqJ6o9mTjLYjnfcYgfSFKb95W8FseZBBb8RLosB__GNBcw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190710141433.7ama3gncss3y6dcx@willie-the-truck>
+In-Reply-To: <CAL_JsqJ6o9mTjLYjnfcYgfSFKb95W8FseZBBb8RLosB__GNBcw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, paul.olaru@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>, Frank Li <Frank.Li@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, sound-open-firmware@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Will Deacon (2019-07-10 07:14:34)
-> On Fri, Jun 14, 2019 at 01:37:15PM -0700, Stephen Boyd wrote:
-> > @@ -84,7 +91,10 @@ void *memremap(resource_size_t offset, size_t size, =
-unsigned long flags)
-> >       }
-> > =20
-> >       /* Try all mapping types requested until one returns non-NULL */
-> > -     if (flags & MEMREMAP_WB) {
-> > +     if ((flags & MEMREMAP_RO) && is_ram !=3D REGION_INTERSECTS)
-> > +             addr =3D arch_memremap_ro(offset, size);
+On Thu, Jul 18, 2019 at 7:41 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Thu, Jul 18, 2019 at 9:13 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
+> >
+> > This describes the DSP device tree node.
+> >
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > ---
+> >  .../devicetree/bindings/dsp/fsl,dsp.yaml      | 87 +++++++++++++++++++
+> >  1 file changed, 87 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+> > new file mode 100644
+> > index 000000000000..d112486eda0e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+> > @@ -0,0 +1,87 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/arm/freescale/fsl,dsp.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> > +     if (!addr && (flags & MEMREMAP_WB)) {
-> >               /*
-> >                * MEMREMAP_WB is special in that it can be satisfied
-> >                * from the direct map.  Some archs depend on the
-> > @@ -103,7 +113,8 @@ void *memremap(resource_size_t offset, size_t size,=
- unsigned long flags)
-> >        * address mapping.  Enforce that this mapping is not aliasing
-> >        * System RAM.
-> >        */
-> > -     if (!addr && is_ram =3D=3D REGION_INTERSECTS && flags !=3D MEMREM=
-AP_WB) {
-> > +     if (!addr && is_ram =3D=3D REGION_INTERSECTS &&
-> > +         (flags !=3D MEMREMAP_WB || flags !=3D MEMREMAP_RO)) {
-> >               WARN_ONCE(1, "memremap attempted on ram %pa size: %#lx\n",
-> >                               &offset, (unsigned long) size);
-> >               return NULL;
->=20
-> This function seems a little confused about whether 'flags' is really a
-> bitmap of flags, or whether it is equal to exactly one entry in the enum.
-> Given that I think it's sensible for somebody to specify 'MEMREMAP_RO |
-> MEMREMAP_WT', then we probably need to start checking these things a bit
-> more thoroughly so we can reject unsupported combinations at the very lea=
-st.
->=20
+> > +title: NXP i.MX8 DSP core
+> > +
+> > +maintainers:
+> > +  - Daniel Baluta <daniel.baluta@nxp.com>
+> > +
+> > +description: |
+> > +  Some boards from i.MX8 family contain a DSP core used for
+> > +  advanced pre- and post- audio processing.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - fsl,imx8qxp-dsp
+> > +
+> > +  reg:
+> > +    description: Should contain register location and length
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: ipg clock
+> > +      - description: ocram clock
+> > +      - description: core clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: ipg
+> > +      - const: ocram
+> > +      - const: core
+> > +
+> > +  power-domains:
+> > +    description:
+> > +      List of phandle and PM domain specifier as documented in
+> > +      Documentation/devicetree/bindings/power/power_domain.txt
+>
+> How many? 4?
 
-I'm also confused about the same thing. I thought it was a "getting
-worse via best effort" type of thing based on the comment above the
-function.
+Yes, 4 for i.MX8QXP. Also, the same number is for i.MX8QM. Anyhow, I didn't
+added added a limit here because I really don't know how many will be
+in upcoming
+i.MX platforms.
 
- * In the case of multiple flags, the different
- * mapping types will be attempted in the order listed below until one of
- * them succeeds.
-
-(I now realize I should have documented the new flag so that this order
-would be known. I'll resend this series again with the documentation
-fix.)
-
-I also thought that the combination of read-only and write through would
-be OK because the flags are more of a best effort approach to making a
-mapping. Given that, is there anything to reject? Or do we just keep
-trying until we can't try anymore?
+>
+> > +
+> > +  mboxes:
+> > +    description:
+> > +      List of <&phandle type channel> - 2 channels for TXDB, 2 channels for RXDB
+> > +      (see mailbox/fsl,mu.txt)
+> > +    maxItems: 4
+> > +
+> > +  mbox-names:
+> > +    items:
+> > +      - const: txdb0
+> > +      - const: txdb1
+> > +      - const: rxdb0
+> > +      - const: rxdb1
+> > +
+> > +  memory-region:
+> > +    description:
+> > +       phandle to a node describing reserved memory (System RAM memory)
+> > +       used by DSP (see bindings/reserved-memory/reserved-memory.txt)
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - clock-names
+> > +  - power-domains
+> > +  - mboxes
+> > +  - mbox-names
+> > +  - memory-region
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/firmware/imx/rsrc.h>
+> > +    #include <dt-bindings/clock/imx8-clock.h>
+> > +    dsp@596e8000 {
+> > +        compatbile = "fsl,imx8qxp-dsp";
+> > +        reg = <0x596e8000 0x88000>;
+> > +        clocks = <&adma_lpcg IMX_ADMA_LPCG_DSP_IPG_CLK>,
+> > +                 <&adma_lpcg IMX_ADMA_LPCG_OCRAM_IPG_CLK>,
+> > +                 <&adma_lpcg IMX_ADMA_LPCG_DSP_CORE_CLK>;
+> > +        clock-names = "ipg", "ocram", "core";
+> > +        power-domains = <&pd IMX_SC_R_MU_13A>,
+> > +                        <&pd IMX_SC_R_MU_13B>,
+> > +                        <&pd IMX_SC_R_DSP>,
+> > +                        <&pd IMX_SC_R_DSP_RAM>;
+> > +        mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
+> > +        mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
+> > +    };
+> > --
+> > 2.17.1
+> >
