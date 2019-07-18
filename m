@@ -1,67 +1,65 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCHv8 2/5] arm64: dts: qcom: msm8998: Add Coresight support
-Date: Thu, 18 Jul 2019 10:37:19 +0100
-Message-ID: <281e3548-af53-f9a7-b9e4-813b448ab078@arm.com>
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <e510df23f741205fac9030f2c95d06d607549caa.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <3b192063-f31f-b861-d913-61d737cecc57@arm.com>
- <4854b0f7-6a81-bc87-3e63-d2b7c68a44f6@codeaurora.org>
+From: Jonathan Chocron <jonnyc@amazon.com>
+Subject: [PATCH v2 0/8] Amazon's Annapurna Labs DT-based PCIe host controller driver
+Date: Thu, 18 Jul 2019 12:45:23 +0300
+Message-ID: <20190718094531.21423-1-jonnyc@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4854b0f7-6a81-bc87-3e63-d2b7c68a44f6@codeaurora.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: saiprakash.ranjan@codeaurora.org, gregkh@linuxfoundation.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, mike.leach@linaro.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, david.brown@linaro.org, mark.rutland@arm.com
-Cc: rnayak@codeaurora.org, vivek.gautam@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, marc.w.gonzalez@free.fr
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonnyc@amazon.com
 List-Id: devicetree@vger.kernel.org
 
+This series adds support for Amazon's Annapurna Labs DT-based PCIe host
+controller driver.
+Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patches.
+
+Regarding the 2nd DWC patch (PCI flags support), do you think this should
+be done in the context of a host-bridge driver at all (as opposed to PCI
+system-wide code)?
+
+Changes since v1:
+- Added comment regarding 0x0031 being used as a dev_id for non root-port devices as well
+- Fixed different message/comment/print wordings
+- Added panic stacktrace to commit message of MSI-x quirk patch
+- Changed to pci_warn() instead of dev_warn()
+- Added unit_address after node_name in dt-binding
+- Updated Kconfig help description
+- Used GENMASK and FIELD_PREP/GET where appropriate
+- Removed leftover field from struct al_pcie and moved all ptrs to
+  the beginning
+- Re-wrapped function definitions and invocations to use fewer lines
+- Change %p to %px in dbg prints in rd/wr_conf() functions
+- Removed validation that the port is configured to RC mode (as this is
+  added generically in PATCH 7/8)
+- Removed unnecessary variable initializations
+- Swtiched to %pR for printing resources
 
 
-On 18/07/2019 10:14, Sai Prakash Ranjan wrote:
-> Hi Suzuki,
-> 
-> On 7/18/2019 1:58 PM, Suzuki K Poulose wrote:
->> Hi Sai,
->>
->>
->>           etr@6048000 {
->>> +            compatible = "arm,coresight-tmc", "arm,primecell";
->>> +            reg = <0x06048000 0x1000>;
->>> +
->>> +            clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc
->>> RPM_SMD_QDSS_A_CLK>;
->>> +            clock-names = "apb_pclk", "atclk";
->>> +            arm,scatter-gather;
->>
->> Please could you confirm that you have tested the scatter-gather mode
->> with ETR ? Either via perf/sysfs. Please could you share your results ?
->> Unless verified
->> this is going to be fatal for the system.
->>
->> Similarly for other platforms.
->>
-> 
-> Yes I have tested with scatter-gather mode with ETR on all platforms
-> which I have posted via sysfs(not perf) before on previous versions of
-> this patch series and no issues were found. And I suppose this was
-> discussed in v2 of this patch series [1].
+Ali Saidi (1):
+  PCI: Add ACS quirk for Amazon Annapurna Labs root ports
 
-Using the sysfs doesn't guarantee that the ETR actually uses SG mode, unless
-the buffer size selected is > 1M, which is why I am more interested in the
-perf usage. Alternatively you may configure a larger buffer size (say, 8MB) via:
+Jonathan Chocron (7):
+  PCI: Add Amazon's Annapurna Labs vendor ID
+  PCI/VPD: Add VPD release quirk for Amazon's Annapurna Labs Root Port
+  PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs
+    Root Port
+  dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+  PCI: al: Add support for DW based driver type
+  PCI: dw: Add validation that PCIe core is set to correct mode
+  PCI: dw: Add support for PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
 
-echo 0x800000 > /sys/bus/coresight/.../tmc_etr0/buffer_size
+ .../devicetree/bindings/pci/pcie-al.txt       |  45 +++
+ MAINTAINERS                                   |   3 +-
+ drivers/pci/controller/dwc/Kconfig            |  12 +
+ drivers/pci/controller/dwc/pcie-al.c          | 373 ++++++++++++++++++
+ .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
+ .../pci/controller/dwc/pcie-designware-host.c |  31 +-
+ drivers/pci/quirks.c                          |  34 ++
+ drivers/pci/vpd.c                             |  16 +
+ include/linux/pci_ids.h                       |   2 +
+ 9 files changed, 519 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
 
-
-> 
-> As said in one of the series initially [1], QCOM msm downstream kernels
-> have been using scatter gather mode and we haven't seen any fatal issues.
-> 
-> [1] https://patchwork.kernel.org/patch/10769535/
-
-I haven't seen any test results there either.
-
-Cheers
-Suzuki
+-- 
+2.17.1
