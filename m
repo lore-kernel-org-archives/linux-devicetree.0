@@ -1,146 +1,67 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like
- logger
-Date: Thu, 18 Jul 2019 10:50:23 -0700
-Message-ID: <20190718175024.C3EC421019@mail.kernel.org>
-References: <20190712081744.87097-1-brendanhiggins@google.com>
- <20190712081744.87097-5-brendanhiggins@google.com>
- <20190715221554.8417320665@mail.kernel.org>
- <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
- <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
- <20190716175021.9CA412173C@mail.kernel.org>
- <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v2 3/5] memremap: Add support for read-only memory mappings
+Date: Thu, 18 Jul 2019 11:00:07 -0700
+Message-ID: <5d30b3a8.1c69fb81.8c54.63a6@mx.google.com>
+References: <20190614203717.75479-1-swboyd@chromium.org> <20190614203717.75479-4-swboyd@chromium.org> <20190710141433.7ama3gncss3y6dcx@willie-the-truck>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, shuah <shuah@kernel.org>, linux-nvdimm <linux-nvdimm@lists.01.org>, Frank Rowand <frowand.list@gmail.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>, "Bird,
- Timothy" <Tim.Bird>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190710141433.7ama3gncss3y6dcx@willie-the-truck>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBCcmVuZGFuIEhpZ2dpbnMgKDIwMTktMDctMTYgMTE6NTI6MDEpCj4gT24gVHVlLCBK
-dWwgMTYsIDIwMTkgYXQgMTA6NTAgQU0gU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwub3JnPiB3
-cm90ZToKPiA+Cj4gCj4gPiBUaGUgb25seSBoeXBvdGhldGljYWwgY2FzZSB3aGVyZSB0aGlzIGNh
-bid0IGJlIGRvbmUgaXMgYSBjb21wbGljYXRlZAo+ID4gYXNzZXJ0aW9uIG9yIGV4cGVjdGF0aW9u
-IHRoYXQgZG9lcyBtb3JlIHRoYW4gb25lIGNoZWNrIGFuZCBjYW4ndCBiZQo+ID4gd3JpdHRlbiBh
-cyBhIGZ1bmN0aW9uIHRoYXQgZHVtcHMgb3V0IHdoYXQgd2VudCB3cm9uZy4gSXMgdGhpcyBhIHJl
-YWwKPiA+IHByb2JsZW0/IE1heWJlIHN1Y2ggYW4gYXNzZXJ0aW9uIHNob3VsZCBqdXN0IG9wZW4g
-Y29kZSB0aGF0IGxvZ2ljIHNvIHdlCj4gPiBkb24ndCBoYXZlIHRvIGJ1aWxkIHVwIGEgc3RyaW5n
-IGZvciBhbGwgdGhlIG90aGVyIHNpbXBsZSBjYXNlcy4KPiAKPiBJIGhhdmUgc29tZSBleHBlY3Rh
-dGlvbnMgaW4gZm9sbG93IHVwIHBhdGNoc2V0cyBmb3Igd2hpY2ggSSBjcmVhdGVkIGEKPiBzZXQg
-b2YgY29tcG9zYWJsZSBtYXRjaGVycyBmb3IgbWF0Y2hpbmcgc3RydWN0dXJlcyBhbmQgZnVuY3Rp
-b24gY2FsbHMKPiB0aGF0IGJ5IHRoZWlyIG5hdHVyZSBjYW5ub3QgYmUgd3JpdHRlbiBhcyBhIHNp
-bmdsZSBmdW5jdGlvbi4gVGhlCj4gbWF0Y2hlciB0aGluZyBpcyBhIGJpdCBzcGVjdWxhdGl2ZSwg
-SSBrbm93LCBidXQgZm9yIGFueSBraW5kIG9mCj4gZnVuY3Rpb24gY2FsbCBtYXRjaGluZywgeW91
-IG5lZWQgdG8gc3RvcmUgYSByZWNvcmQgb2YgZnVuY3Rpb25zIHlvdQo+IGFyZSBleHBlY3Rpbmcg
-dG8gaGF2ZSBjYWxsZWQgYW5kIHRoZW4gZWFjaCBvbmUgbmVlZHMgdG8gaGF2ZSBhIHNldCBvZgo+
-IGV4cGVjdGF0aW9ucyBkZWZpbmVkIGJ5IHRoZSB1c2VyOyBJIGRvbid0IHRoaW5rIHRoZXJlIGlz
-IGEgd2F5IHRvIGRvCj4gdGhhdCB0aGF0IGRvZXNuJ3QgaW52b2x2ZSBoYXZpbmcgbXVsdGlwbGUg
-c2VwYXJhdGUgZnVuY3Rpb25zIGVhY2gKPiBoYXZpbmcgc29tZSBpbmZvcm1hdGlvbiB1c2VmdWwg
-dG8gY29uc3RydWN0aW5nIHRoZSBtZXNzYWdlLgo+IAo+IEkga25vdyB0aGUgY29kZSBpbiBxdWVz
-dGlvbiBpc24ndCBpbiB0aGlzIHBhdGNoc2V0OyB0aGUgZnVuY3Rpb24KPiBtYXRjaGluZyBjb2Rl
-IHdhcyBpbiBvbmUgb2YgdGhlIGVhcmxpZXIgdmVyc2lvbnMgb2YgdGhlIFJGQywgYnV0IEkKPiBk
-cm9wcGVkIGl0IHRvIG1ha2UgdGhpcyBwYXRjaHNldCBzbWFsbGVyIGFuZCBtb3JlIG1hbmFnZWFi
-bGUuIFNvIEkgZ2V0Cj4gaXQgaWYgeW91IHdvdWxkIGxpa2UgbWUgdG8gZHJvcCBpdCBhbmQgYWRk
-IGl0IGJhY2sgaW4gd2hlbiBJIHRyeSB0bwo+IGdldCB0aGUgZnVuY3Rpb24gYW5kIHN0cnVjdHVy
-ZSBtYXRjaGluZyBzdHVmZiBpbiwgYnV0IEkgd291bGQgcmVhbGx5Cj4gcHJlZmVyIHRvIGtlZXAg
-aXQgYXMgaXMgaWYgeW91IGRvbid0IGNhcmUgdG9vIG11Y2guCgpEbyB5b3UgaGF2ZSBhIGxpbmsg
-dG8gdGhvc2UgZWFybGllciBwYXRjaGVzPwoKPiAKPiA+IEl0IHNlZW1zIGZhciBzaW1wbGVyIHRv
-IGdldCByaWQgb2YgdGhlIHN0cmluZyBzdHJlYW0gQVBJIGFuZCBqdXN0IGhhdmUgYQo+ID4gc3Ry
-dWN0IGZvciB0aGlzLgo+ID4KPiA+ICAgICAgICAgc3RydWN0IGt1bml0X2ZhaWxfbXNnIHsKPiA+
-ICAgICAgICAgICAgICAgICBjb25zdCBjaGFyICpsaW5lOwo+ID4gICAgICAgICAgICAgICAgIGNv
-bnN0IGNoYXIgKmZpbGU7Cj4gPiAgICAgICAgICAgICAgICAgY29uc3QgY2hhciAqZnVuYzsKPiA+
-ICAgICAgICAgICAgICAgICBjb25zdCBjaGFyICptc2c7Cj4gPiAgICAgICAgIH07Cj4gPgo+ID4g
-VGhlbiB5b3UgY2FuIGhhdmUgdGhlIGFzc2VydGlvbiBtYWNyb3MgY3JlYXRlIHRoaXMgb24gdGhl
-IHN0YWNrICh3aXRoCj4gPiBhbm90aGVyIG1hY3JvPykuCj4gPgo+ID4gICAgICAgICAjZGVmaW5l
-IERFRklORV9LVU5JVF9GQUlMX01TRyhuYW1lLCBfbXNnKSBcCj4gPiAgICAgICAgICAgICAgICAg
-c3RydWN0IGt1bml0X2ZhaWxfbXNnIG5hbWUgPSB7IFwKPiA+ICAgICAgICAgICAgICAgICAgICAg
-ICAgIC5saW5lID0gIF9fTElORV9fLCBcCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAuZmls
-ZSA9IF9fRklMRV9fLCBcCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAuZnVuYyA9IF9fZnVu
-Y19fLCBcCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAubXNnID0gX21zZywgXAo+ID4gICAg
-ICAgICAgICAgICAgIH0KPiA+Cj4gPiBJIGRvbid0IHdhbnQgdG8gZGVyYWlsIHRoaXMgd2hvbGUg
-c2VyaWVzIG9uIHRoaXMgdG9waWMsIGJ1dCBpdCBzZWVtcwo+ID4gbGlrZSBhIGJ1bmNoIG9mIGNv
-ZGUgaXMgdGhlcmUgdG8gY29uc3RydWN0IHRoaXMgc2FtZSBzZXQgb2YgaW5mb3JtYXRpb24KPiA+
-IG92ZXIgYW5kIG92ZXIgYWdhaW4gaW50byBhIGJ1ZmZlciBhIGxpdHRsZSBiaXQgYXQgYSB0aW1l
-IGFuZCB0aGVuIHRocm93Cj4gPiBpdCBhd2F5IHdoZW4gbm90aGluZyBmYWlscyBqdXN0IGJlY2F1
-c2Ugd2UgbWF5IHdhbnQgdG8gc3VwcG9ydCB0aGUgY2FzZQo+ID4gd2hlcmUgd2UgaGF2ZSBzb21l
-IHVuc3RydWN0dXJlZCBkYXRhIHRvIGluZm9ybSB0aGUgdXNlciBhYm91dC4KPiAKPiBZZWFoLCB0
-aGF0J3MgZmFpci4gSSB0aGluayB0aGVyZSBhcmUgYSBudW1iZXIgb2YgaW1wcm92ZW1lbnRzIHRv
-IGJlCj4gbWFkZSB3aXRoIGhvdyB0aGUgZXhwZWN0YXRpb25zIGFyZSBkZWZpbmVkIG90aGVyIHRo
-YW4gdGhhdCwgYnV0IEkgd2FzCj4gaG9waW5nIEkgY291bGQgZG8gdGhhdCBhZnRlciB0aGlzIHBh
-dGNoc2V0IGlzIG1lcmdlZC4gSSBqdXN0IGZpZ3VyZWQKPiB3aXRoIHRoZSBraW5kcyBvZiB0aGlu
-Z3MgSSB3b3VsZCBsaWtlIHRvIGRvLCBpdCB3b3VsZCBsZWFkIHRvIGEgd2hvbGUKPiBuZXcgcm91
-bmQgb2YgZGlzY3Vzc2lvbi4KPiAKPiBJbiBlaXRoZXIgY2FzZSwgSSB0aGluayBJIHdvdWxkIHN0
-aWxsIGxpa2UgdG8gdXNlIHRoZSBgc3RydWN0Cj4ga3VuaXRfc3RyZWFtYCBhcyBwYXJ0IG9mIHRo
-ZSBpbnRlcmZhY2UgdG8gc2hhcmUgdGhlIGZhaWx1cmUgbWVzc2FnZQo+IHdpdGggdGhlIHRlc3Qg
-Y2FzZSBydW5uZXIgY29kZSBpbiB0ZXN0LmMsIGF0IGxlYXN0IGV2ZW50dWFsbHksIHNvIHRoYXQK
-PiBJIG9ubHkgaGF2ZSB0byBoYXZlIG9uZSB3YXkgdG8gcmVjZWl2ZSBkYXRhIGZyb20gZXhwZWN0
-YXRpb25zLCBidXQgSQo+IHRoaW5rIEkgY2FuIGRvIHRoYXQgYW5kIHN0aWxsIGRvIHdoYXQgeW91
-IHN1Z2dlc3QgYnkganVzdCBjb25zdHJ1Y3RpbmcKPiB0aGUga3VuaXRfc3RyZWFtIGF0IHRoZSBl
-bmQgb2YgZXhwZWN0YXRpb25zIHdoZXJlIGl0IGlzIGZlYXNpYmxlLgo+IAo+IEFsbCBpbiBhbGwg
-SSBhZ3JlZSB3aXRoIHdoYXQgeW91IGFyZSBzYXlpbmcsIGJ1dCBJIHdvdWxkIHJhdGhlciBkbyBp
-dAo+IGFzIGEgZm9sbG93IHVwIHBvc3NpYmx5IG9uY2Ugd2UgaGF2ZSBzb21lIG1vcmUgY29kZSBv
-biB0aGUgdGFibGUuIEkKPiBjb3VsZCBqdXN0IHNlZSB0aGlzIG9wZW5pbmcgdXAgYSB3aG9sZSBu
-ZXcgY2FuIG9mIHdvcm1zIHdoZXJlIHdlCj4gZGViYXRlIGFib3V0IGV4YWN0bHkgaG93IGV4cGVj
-dGF0aW9ucyBhbmQgYXNzZXJ0aW9ucyB3b3JrIGZvciBhbm90aGVyCj4gc2V2ZXJhbCBtb250aHMs
-IG9ubHkgdG8gcmlwIGl0IGFsbCBvdXQgc2hvcnRseSB0aGVyZSBhZnRlci4gSSBrbm93Cj4gdGhh
-dCdzIGhvdyB0aGVzZSB0aGluZ3MgZ28sIGJ1dCB0aGF0J3MgbXkgcHJlZmVyZW5jZS4KPiAKPiBJ
-IGNhbiBkbyB3aGF0IHlvdSBzdWdnZXN0IGlmIHlvdSBmZWVsIHN0cm9uZ2x5IGFib3V0IGl0LCBi
-dXQgSSB3b3VsZAo+IHByZWZlciB0byBob2xkIG9mZiB1bnRpbCBsYXRlci4gSXQncyB5b3VyIGNh
-bGwuCj4gCgpUaGUgY3J1eCBvZiBteSBjb21wbGFpbnQgaXMgdGhhdCB0aGUgc3RyaW5nIHN0cmVh
-bSBBUEkgaXMgdG9vIGxvb3NlbHkKZGVmaW5lZCB0byBiZSB1c2FibGUuIEl0IGFsbG93cyB0ZXN0
-cyB0byBidWlsZCB1cCBhIHN0cmluZyBvZgp1bnN0cnVjdHVyZWQgaW5mb3JtYXRpb24sIGJ1dCB3
-aXRoIGNlcnRhaW4gY2FsbGluZyBjb25zdHJhaW50cyBzbyB3ZQpoYXZlIHRvIHRyZWFkIGNhcmVm
-dWxseS4gSWYgdGhlcmUgd2FzIG1vcmUgc3RydWN0dXJlIHRvIHRoZSBkYXRhIHRoYXQncwpiZWlu
-ZyByZWNvcmRlZCB0aGVuIHRoZSB0ZXN0IGNhc2UgcnVubmVyIGNvdWxkIG9wZXJhdGUgb24gdGhl
-IGRhdGEKd2l0aG91dCBoYXZpbmcgdG8gZG8gc3RyaW5nL3N0cmVhbSBvcGVyYXRpb25zLCBhbGxv
-Y2F0aW9ucywgZXRjLiBUaGlzCndvdWxkIG1ha2UgdGhlIGFzc2VydGlvbiBsb2dpYyBtdWNoIG1v
-cmUgY29uY3JldGUgYW5kIHNwZWNpZmljIHRvIGt1bml0LAppbnN0ZWFkIG9mIHRoaXMgc21hbGwg
-a3VuaXQgd3JhcHBlciB0aGF0J3MgYmVlbiBwbGFjZWQgb24gdG9wIG9mIHN0cmluZwpzdHJlYW0u
-CgpUTDtEUjogSWYgd2UgY2FuIGdldCByaWQgb2YgdGhlIHN0cmluZyBzdHJlYW0gQVBJIEknZCB2
-aWV3IHRoYXQgYXMgYW4KaW1wcm92ZW1lbnQgYmVjYXVzZSBidWlsZGluZyBhcmJpdHJhcnkgc3Ry
-aW5ncyBpbiB0aGUga2VybmVsIGlzIGNvbXBsZXgsCmVycm9yIHByb25lIGFuZCBoYXMgY2FsbGlu
-ZyBjb250ZXh0IGNvbmNlcm5zLgoKSXMgdGhlIGludGVudGlvbiB0aGF0IG90aGVyIGNvZGUgYmVz
-aWRlcyB1bml0IHRlc3RzIHdpbGwgdXNlIHRoaXMgc3RyaW5nCnN0cmVhbSBBUEkgdG8gYnVpbGQg
-dXAgc3RyaW5ncz8gQW55IHRhcmdldHMgaW4gbWluZD8gVGhpcyB3b3VsZCBiZSBhCmdvb2Qgd2F5
-IHRvIGdldCB0aGUgQVBJIG1lcmdlZCB1cHN0cmVhbSBnaXZlbiB0aGF0IGl0cyAyMDE5IGFuZCB3
-ZQpoYXZlbid0IGhhZCBzdWNoIGFuIEFQSSBpbiB0aGUga2VybmVsIHNvIGZhci4KCkFuICJvYmpl
-Y3Qgb3JpZW50ZWQiIChzdHJvbmcgcXVvdGVzISkgYXBwcm9hY2ggd2hlcmUga3VuaXRfZmFpbF9t
-c2cgaXMKdGhlIGlubmVybW9zdCBzdHJ1Y3QgaW4gc29tZSBhc3NlcnRpb24gc3BlY2lmaWMgc3Ry
-dWN0dXJlIG1pZ2h0IHdvcmsKbmljZWx5IGFuZCBhbGxvdyB0aGUgdGVzdCBydW5uZXIgdG8gY2Fs
-bCBhIGdlbmVyaWMgJ2Zvcm1hdCcgZnVuY3Rpb24gdG8KcHJpbnQgb3V0IHRoZSBtZXNzYWdlIGJh
-c2VkIG9uIHRoZSB0eXBlIG9mIGFzc2VydGlvbi9leHBlY3RhdGlvbiBpdCBpcy4KSXQgcHJvYmFi
-bHkgd291bGQgbWVhbiBsZXNzIGNvZGUgc2l6ZSB0b28gYmVjYXVzZSB0aGUgc3RyaW5ncyB0aGF0
-IGFyZQpjb21tb24gd2lsbCBiZSBpbiB0aGUgY29tbW9uIHByaW50aW5nIGZ1bmN0aW9uIGluc3Rl
-YWQgb2YgY3JlYXRlZCB0d2ljZSwKaW4gdGhlIG1hY3Jvcy9jb2RlIGFuZCB0aGVuIGNvcGllZCB0
-byB0aGUgaGVhcCBmb3IgdGhlIHN0cmluZyBzdHJlYW0uCgoJc3RydWN0IGt1bml0X2Fzc2VydCB7
-CgkJY29uc3QgY2hhciAqbGluZTsKCQljb25zdCBjaGFyICpmaWxlOwoJCWNvbnN0IGNoYXIgKmZ1
-bmM7CgkJdm9pZCAoKmZvcm1hdCkoc3RydWN0IGt1bml0X2Fzc2VydCAqYXNzZXJ0KTsKCX07CgoJ
-c3RydWN0IGt1bml0X2NvbXBhcmlzb25fYXNzZXJ0IHsKCQllbnVtIG9wZXJhdG9yIG9wZXJhdG9y
-OwoJCWNvbnN0IGNoYXIgKmxlZnQ7CgkJY29uc3QgY2hhciAqcmlnaHQ7CgkJc3RydWN0IGt1bml0
-X2Fzc2VydCBhc3NlcnQ7Cgl9OwoKCXN0cnVjdCBrdW5pdF9ib29sX2Fzc2VydCB7CgkJY29uc3Qg
-Y2hhciAqdHJ1dGg7CgkJY29uc3QgY2hhciAqc3RhdGVtZW50OwoJCXN0cnVjdCBrdW5pdF9hc3Nl
-cnQgYXNzZXJ0OwoJfTsKCgl2b2lkIGt1bml0X2Zvcm1hdF9jb21wYXJpc29uKHN0cnVjdCBrdW5p
-dF9hc3NlcnQgKmFzc2VydCkKCXsKCQlzdHJ1Y3Qga3VuaXRfY29tcGFyaXNvbl9hc3NlcnQgKmNv
-bXAgPSBjb250YWluZXJfb2YoYXNzZXJ0LCAuLi4pCgoJCWt1bml0X3ByaW50ayguLi4pCgl9CgpN
-YXliZSBvdGhlciBwZW9wbGUgaGF2ZSBvcGluaW9ucyBoZXJlIG9uIGlmIHlvdSBzaG91bGQgZG8g
-aXQgbm93IG9yCmxhdGVyLiBGdXR1cmUgY29kaW5nIGlzIG5vdCBhIGdyZWF0IGFyZ3VtZW50IGJl
-Y2F1c2UgaXQncyBoYXJkIHRvCnByZWRpY3QgdGhlIGZ1dHVyZS4gT24gdGhlIG90aGVyIGhhbmQs
-IHRoaXMgcGF0Y2hzZXQgaXMgaW4gZ29vZCBzaGFwZSB0bwptZXJnZSBhbmQgSSdkIGxpa2UgdG8g
-dXNlIGl0IHRvIHdyaXRlIHVuaXQgdGVzdHMgZm9yIGNvZGUgSSBtYWludGFpbiBzbwpJIGRvbid0
-IHdhbnQgdG8gc2VlIHRoaXMgc3RhbGwgb3V0LiBTb3JyeSBpZiBJJ20gb3BlbmluZyB0aGUgY2Fu
-IG9mCndvcm1zIHlvdSdyZSB0YWxraW5nIGFib3V0LgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVs
+Quoting Will Deacon (2019-07-10 07:14:34)
+> On Fri, Jun 14, 2019 at 01:37:15PM -0700, Stephen Boyd wrote:
+> > @@ -84,7 +91,10 @@ void *memremap(resource_size_t offset, size_t size, =
+unsigned long flags)
+> >       }
+> > =20
+> >       /* Try all mapping types requested until one returns non-NULL */
+> > -     if (flags & MEMREMAP_WB) {
+> > +     if ((flags & MEMREMAP_RO) && is_ram !=3D REGION_INTERSECTS)
+> > +             addr =3D arch_memremap_ro(offset, size);
+> > +
+> > +     if (!addr && (flags & MEMREMAP_WB)) {
+> >               /*
+> >                * MEMREMAP_WB is special in that it can be satisfied
+> >                * from the direct map.  Some archs depend on the
+> > @@ -103,7 +113,8 @@ void *memremap(resource_size_t offset, size_t size,=
+ unsigned long flags)
+> >        * address mapping.  Enforce that this mapping is not aliasing
+> >        * System RAM.
+> >        */
+> > -     if (!addr && is_ram =3D=3D REGION_INTERSECTS && flags !=3D MEMREM=
+AP_WB) {
+> > +     if (!addr && is_ram =3D=3D REGION_INTERSECTS &&
+> > +         (flags !=3D MEMREMAP_WB || flags !=3D MEMREMAP_RO)) {
+> >               WARN_ONCE(1, "memremap attempted on ram %pa size: %#lx\n",
+> >                               &offset, (unsigned long) size);
+> >               return NULL;
+>=20
+> This function seems a little confused about whether 'flags' is really a
+> bitmap of flags, or whether it is equal to exactly one entry in the enum.
+> Given that I think it's sensible for somebody to specify 'MEMREMAP_RO |
+> MEMREMAP_WT', then we probably need to start checking these things a bit
+> more thoroughly so we can reject unsupported combinations at the very lea=
+st.
+>=20
+
+I'm also confused about the same thing. I thought it was a "getting
+worse via best effort" type of thing based on the comment above the
+function.
+
+ * In the case of multiple flags, the different
+ * mapping types will be attempted in the order listed below until one of
+ * them succeeds.
+
+(I now realize I should have documented the new flag so that this order
+would be known. I'll resend this series again with the documentation
+fix.)
+
+I also thought that the combination of read-only and write through would
+be OK because the flags are more of a best effort approach to making a
+mapping. Given that, is there anything to reject? Or do we just keep
+trying until we can't try anymore?
