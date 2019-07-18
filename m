@@ -1,67 +1,79 @@
-From: Alexander Steffen <Alexander.Steffen@infineon.com>
-Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
-Date: Thu, 18 Jul 2019 19:10:02 +0200
-Message-ID: <548d3727-4a8f-38d4-2193-8a09cbae1e64@infineon.com>
-References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
- <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
- <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com>
- <CAM9mBwJC2QD5-gV1eJUDzC2Fnnugr-oCZCoaH2sT_7ktFDkS-Q@mail.gmail.com>
- <45603af2fc8374a90ef9e81a67083395cc9c7190.camel@linux.intel.com>
- <6e7ff1b958d84f6e8e585fd3273ef295@NTILML02.nuvoton.com>
- <CAP6Zq1hPo9dG71YFyr7z9rjmi-DvoUZJOme4+2uqsfO+7nH+HQ@mail.gmail.com>
- <20190715094541.zjqxainggjuvjxd2@linux.intel.com>
- <9c8e216dbc4f43dbaa1701dc166b05e0@NTILML02.nuvoton.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+Date: Thu, 18 Jul 2019 10:22:27 -0700
+Message-ID: <ab8f2441-8f4b-3a2b-5bcd-1a889555176a@nvidia.com>
+References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
+ <20190717093317.70fefb27@dimatab>
+ <6e73dcee-6e24-b646-97a4-4b34aedd231d@nvidia.com>
+ <16f8b146-2581-a842-4997-53ab05b62c70@gmail.com>
+ <d7892bfc-2cbf-27af-518d-dc7e243815b8@nvidia.com>
+ <71272e9a-0f2a-c20d-6532-7e9057ad985c@gmail.com>
+ <78fd19b9-b652-8ac3-1f57-3b4adadee03f@nvidia.com>
+ <351a07d4-ba90-4793-129b-b1a733f95531@nvidia.com>
+ <e3e9beaf-b195-305e-4010-66e824813472@gmail.com>
+ <9271ae75-5663-e26e-df26-57cba94dab75@nvidia.com>
+ <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
+ <b01e37aa-f14e-e628-ceef-b25a845c6359@gmail.com>
+ <46b55527-da5d-c0b7-1c14-43b5c6d49dfa@nvidia.com>
+ <2de9a608-cf38-f56c-b192-7ffed65092f8@nvidia.com>
+ <bff3e9c0-727d-9aef-a0e2-583e53c39afd@gmail.com>
+ <5eedd224-77b0-1fc9-4e5e-d884b41a64ed@nvidia.com>
+ <89f23878-d4b2-2305-03e5-8a3e781c2b02@gmail.com>
+ <c759d71b-1549-2562-f0cf-db5f9e51329e@nvidia.com>
+ <ef7928ad-239d-eca8-41bf-f76e72a9841d@nvidia.com>
+ <4141181d-7162-0321-71b6-33abf11f631c@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9c8e216dbc4f43dbaa1701dc166b05e0@NTILML02.nuvoton.com>
+In-Reply-To: <4141181d-7162-0321-71b6-33abf11f631c@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com, tmaimon77@gmail.com
-Cc: oshrialkoby85@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org, oshri.alkoby@nuvoton.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, gcwilson@us.ibm.com, kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com
+To: Dmitry Osipenko <digetx@gmail.com>, sboyd@kernel.org, Michael Turquette <mturquette@baylibre.com>
+Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 18.07.2019 14:51, Eyal.Cohen@nuvoton.com wrote:
-> Hi Jarkko and Alexander,
-> 
-> We have made an additional code review on the TPM TIS core driver, it looks quite good and we can connect our new I2C driver to this layer.
 
-Great :) In the meantime, I've done some experiments creating an I2C 
-driver based on tpm_tis_core, see 
-https://patchwork.kernel.org/patch/11049363/ Please have a look at that 
-and provide your feedback (and/or use it as a basis for further 
-implementations).
+On 7/18/19 9:34 AM, Dmitry Osipenko wrote:
+> 18.07.2019 4:15, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>
+> [snip]
+>
+>>>> Please try to fix all missing dependencies and orderings.
+>>> Peter,
+>>>
+>>> dfllCPU_OUT is the first one to go thru restore when
+>>> clk_restore_context traverses thru the list.
+>>>
+>>> dfllCPU_OUT has dependency on DFLL_ref and DFLL_SOC but this
+>>> dependency is unknown to clock-tree.
+>>>
+>>> We can add DFLL_REF and DFLL_SOC as parents to dfllCPU_OUT during
+>>> register so dfllCPU_OUT save/restore happens after their parents are
+>>> restored.
+>>>
+>>> But DFLL needs both of these to be restored before DFLLCPU_Out and as
+>>> DFLL_SOC restore always happens after the REF, thinking to add
+>>> DFLL_SOC as parent to dfllCPU_OUT so save/restore follows after their
+>>> dependencies.
+>>>
+>>> Please comment.
+>>>
+>> Did quick try and I see by adding dfll-soc as parent to dfllCPU_OUT, its
+>> in proper order after all its dependencies.
+>>
+>> Can now add dfll save/restore to do dfll reinit during restore..
+>>
+> If dfllCPU_OUT can work properly with dfll-soc being disabled, then this
+> kind of dependency isn't very correct and just papers over the real
+> problem, which is that there should be a way for CCF to specify multiple
+> dependencies for the clock or the reverse ordering should be used for
+> the restoring.
 
-> However, there are several differences between the SPI interface and the I2C interface that will require changes to the TIS core.
-> At a minimum we thought of:
-> 1. Handling TPM Localities in I2C is different
+dfll will not work without dfll-soc enabled.
 
-It turned out not to be that different in the end, see the code 
-mentioned above and my comment here: 
-https://patchwork.kernel.org/cover/11049365/
+CLDVFS control logic is split into 2 clock domains. dvfs_ref_clk and=20
+dvfs_soc_clk.
 
-> 2. Handling I2C CRC - relevant only to I2C bus hence not supported today by TIS core
-
-That is completely optional, so there is no need to implement it in the 
-beginning. Also, do you expect a huge benefit from that functionality? 
-Are bit flips that much more likely on I2C compared to SPI, which has no 
-CRC at all, but still works fine?
-
-> 3. Handling Chip specific issues, since I2C implementation might be slightly different across the various TPM vendors
-
-Right, that seems similar to the cr50 issues 
-(https://lkml.org/lkml/2019/7/17/677), so there should probably be a 
-similar way to do it.
-
-> 4. Modify tpm_tis_send_data and tpm_tis_recv_data to work according the TCG Device Driver Guide (optimization on TPM_STS access and send/recv retry)
-
-Optimizations are always welcome, but I'd expect basic communication to 
-work already with the current code (though maybe not as efficiently as 
-possible).
-
-> Besides this, during development we might encounter additional differences between SPI and I2C.
-> 
-> We currently target to allocate an eng. to work on this on the second half of August with a goal to have the driver ready for the next kernel merge window.
-> 
-> Regards,
-> Eyal.
+Majority of the control logic is clocked from dvfs_soc_clk for=20
+interfacing control registers.
