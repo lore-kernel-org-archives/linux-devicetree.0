@@ -1,42 +1,85 @@
 From: Hongwei Zhang <hongweiz@ami.com>
-Subject: [v5 0/2] gpio: aspeed: Add SGPIO driver
-Date: Fri, 19 Jul 2019 15:24:49 -0400
-Message-ID: <1563564291-9692-1-git-send-email-hongweiz@ami.com>
+Subject: [v5 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
+Date: Fri, 19 Jul 2019 15:24:50 -0400
+Message-ID: <1563564291-9692-2-git-send-email-hongweiz@ami.com>
+References: <1563564291-9692-1-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1563564291-9692-1-git-send-email-hongweiz@ami.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Hongwei Zhang <hongweiz@ami.com>, linux-arm-kernel@lists.infradead.org
+Cc: Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add bindings to support SGPIO on AST2400 or AST2500.
 
-This short series introduce dt-binding document and a driver for the 
-Aspeed AST2500 SGPIO controller. Please review.
-
-The related SGPM pinmux dt-binding document, dts, and pinctrl driver
-updates have been accepted and merged:
-_http://patchwork.ozlabs.org/patch/1110210/
-
-Hongwei Zhang (2):
-  dt-bindings: gpio: aspeed: Add SGPIO support
-  gpio: aspeed: Add SGPIO driver
-
- .../devicetree/bindings/gpio/sgpio-aspeed.txt      |  55 +++
- drivers/gpio/sgpio-aspeed.c                        | 522 +++++++++++++++++++++
- 2 files changed, 577 insertions(+)
+Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+---
+ .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
- create mode 100644 drivers/gpio/sgpio-aspeed.c
 
+diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+new file mode 100644
+index 0000000..f9ed438
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+@@ -0,0 +1,55 @@
++Aspeed SGPIO controller Device Tree Bindings
++-------------------------------------------
++
++This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80 full 
++featured Serial GPIOs. Each of the Serial GPIO pins can be programmed to 
++support the following options:
++- Support interrupt option for each input port and various interrupt 
++  sensitivity option (level-high, level-low, edge-high, edge-low)
++- Support reset tolerance option for each output port
++- Directly connected to APB bus and its shift clock is from APB bus clock
++  divided by a programmable value.
++- Co-work with external signal-chained TTL components (74LV165/74LV595)
++
++
++Required properties:
++
++- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
++
++- #gpio-cells 		: Should be two
++			  - First cell is the GPIO line number
++			  - Second cell is used to specify optional
++			    parameters (unused)
++
++- reg			: Address and length of the register set for the device
++- gpio-controller	: Marks the device node as a GPIO controller
++- interrupts		: Interrupt specifier (see interrupt bindings for
++			  details)
++
++- interrupt-controller	: Mark the GPIO controller as an interrupt-controller
++
++- ngpios		: number of GPIO pins to serialise. 
++			  (should be multiple of 8, up to 80 pins)
++
++- clocks                : A phandle to the APB clock for SGPM clock division
++
++- bus-frequency		: SGPM CLK frequency
++
++
++The sgpio and interrupt properties are further described in their respective bindings documentation:
++
++- Documentation/devicetree/bindings/sgpio/gpio.txt
++- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++
++  Example:
++	sgpio: sgpio@1e780200 {
++		#gpio-cells = <2>;
++		compatible = "aspeed,ast2500-sgpio";
++		gpio-controller;
++		interrupts = <40>;
++		reg = <0x1e780200 0x0100>;
++		clocks = <&syscon ASPEED_CLK_APB>;
++		interrupt-controller;
++		ngpios = <8>;
++		bus-frequency = <12000000>;
++	};
 -- 
 2.7.4
