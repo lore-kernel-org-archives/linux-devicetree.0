@@ -1,83 +1,63 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCHv8 1/5] arm64: dts: qcom: sdm845: Add Coresight support
-Date: Fri, 19 Jul 2019 15:58:58 +0530
-Message-ID: <a1a2a9c6-f58b-f849-76e4-3a76d6faaab5@codeaurora.org>
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <52550ed9bbc10dca860eb1700aef5c97f644327b.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <33215f68-1bf9-322a-d889-1d22514bdbdc@arm.com>
+From: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
+Subject: [PATCH v2] arm: dts: imx6qdl: add gpio expander pca9535
+Date: Fri, 19 Jul 2019 12:46:15 +0200
+Message-ID: <20190719104615.5329-1-gilles.doffe@savoirfairelinux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <33215f68-1bf9-322a-d889-1d22514bdbdc@arm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, gregkh@linuxfoundation.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, mike.leach@linaro.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, david.brown@linaro.org, mark.rutland@arm.com
-Cc: rnayak@codeaurora.org, vivek.gautam@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, marc.w.gonzalez@free.fr
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: jerome.oufella@savoirfairelinux.com, rennes@savoirfairelinux.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Suzuki,
+The pca9535 gpio expander is present on the Rex baseboard, but missing
+from the dtsi.
 
-On 7/19/2019 3:16 PM, Suzuki K Poulose wrote:
-> 
-> Hi Sai,
-> 
-> 
-> On 12/07/2019 15:16, Sai Prakash Ranjan wrote:
->> Add coresight components found on Qualcomm SDM845 SoC.
->>
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 451 +++++++++++++++++++++++++++
->>   1 file changed, 451 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi 
->> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> index 4babff5f19b5..5d7e3f8e0f91 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -1815,6 +1815,457 @@
->>               clock-names = "xo";
->>           };
->> +        stm@6002000 {
->> +            compatible = "arm,coresight-stm", "arm,primecell";
->> +            reg = <0 0x06002000 0 0x1000>,
->> +                  <0 0x16280000 0 0x180000>;
->> +            reg-names = "stm-base", "stm-stimulus-base";
->> +
->> +            clocks = <&aoss_qmp>;
->> +            clock-names = "apb_pclk";
->> +
->> +            out-ports {
->> +                port {
->> +                    stm_out: endpoint {
->> +                        remote-endpoint =
->> +                          <&funnel0_in7>;
->> +                    };
->> +                };
->> +            };
->> +        };
->> +
->> +        funnel@6041000 {
->> +            compatible = "arm,coresight-funnel", "arm,primecell";
-> 
-> We added support for static funnels and have thus updated our DT 
-> bindings. And
-> that implies, the above binding is now obsolete.
-> As of the coresight/next tree, and thus linux-next, this must be 
-> arm,coresight-dynamic-funnel and same applies everywhere else in the 
-> series. Please could you
-> update the series ?
-> 
+Add the new gpio controller and the associated interrupt line
+MX6QDL_PAD_NANDF_CS3__GPIO6_IO16.
 
-Sure, will update in the next version of the series.
+Signed-off-by: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
+---
+ arch/arm/boot/dts/imx6qdl-rex.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Thanks,
-Sai
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi b/arch/arm/boot/dts/imx6q=
+dl-rex.dtsi
+index 97f1659144ea..b517efb22fcb 100644
+--- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+@@ -136,6 +136,19 @@
+ 		compatible =3D "atmel,24c02";
+ 		reg =3D <0x57>;
+ 	};
++
++	pca9535: gpio8@27 {
++		compatible =3D "nxp,pca9535";
++		reg =3D <0x27>;
++		gpio-controller;
++		#gpio-cells =3D <2>;
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_pca9535>;
++		interrupt-parent =3D <&gpio6>;
++		interrupts =3D <16 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-controller;
++		#interrupt-cells =3D <2>;
++	};
+ };
+=20
+ &i2c3 {
+@@ -237,6 +250,12 @@
+ 			>;
+ 		};
+=20
++		pinctrl_pca9535: pca9535 {
++			fsl,pins =3D <
++				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x00017059
++		   >;
++		};
++
+ 		pinctrl_uart1: uart1grp {
+ 			fsl,pins =3D <
+ 				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
+--=20
+2.19.1
