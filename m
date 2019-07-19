@@ -1,38 +1,38 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [TRIVIAL PATCH] of: per-file dtc preprocessor flags
-Date: Fri, 19 Jul 2019 22:28:24 +0300
-Message-ID: <20190719192824.24639-1-Eugeniy.Paltsev@synopsys.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: David Dai <daidavid1@codeaurora.org>
+Subject: [PATCH 0/2] Redefine interconnect provider DT nodes for SDM845
+Date: Fri, 19 Jul 2019 13:32:22 -0700
+Message-ID: <1563568344-1274-1-git-send-email-daidavid1@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kbuild@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To: georgi.djakov@linaro.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc: David Dai <daidavid1@codeaurora.org>, evgreen@google.com, ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As of today we are able to pass custom flags to dtc compiler but not
-to dtc preprocessor.
-This ability is required for including some board-specific header files.
-It allows us to pass defined constants to dts without their duplication
-in several places.
+Redefine the SDM845 interconnect device nodes as the previous definitions
+of using a single child node under the apps_rsc device did not accurately
+capture the description of the hardware. The Network-On-Chip (NoC) interconnect
+devices should be represented in a manner akin to QCS404 platforms[1]
+where there is a separation of NoC devices and its RPM/RPMh counterparts.
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- scripts/Makefile.lib | 2 ++
- 1 file changed, 2 insertions(+)
+The bcm-voter devices are representing the RPMh devices that the interconnect
+providers need to communicate with and there can be more than one instance of
+the Bus Clock Manager (BCM) which can live under different instances of Resource
+State Coordinators (RSC). There are display use cases where consumers may need
+to target a different bcm-voter (Some display specific RSC) than the default,
+and there needs to be a way to represent this connection in devicetree.
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index f1f38c8cdc74..f2595a608dce 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -166,6 +166,8 @@ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
- 		 $(addprefix -I,$(DTC_INCLUDE))                          \
- 		 -undef -D__DTS__
- 
-+dtc_cpp_flags  += $(DTC_CPP_FLAGS_$(basetarget))
-+
- # Useful for describing the dependency of composite objects
- # Usage:
- #   $(call multi_depend, multi_used_targets, suffix_to_remove, suffix_to_add)
+[1]: https://lkml.org/lkml/2019/6/13/143
+
+David Dai (2):
+  dt-bindings: interconnect: Update Qualcomm SDM845 DT bindings
+  arm64: dts: sdm845: Redefine interconnect provider DT nodes
+
+ .../bindings/interconnect/qcom,bcm-voter.txt       | 32 ++++++++++++
+ .../bindings/interconnect/qcom,sdm845.txt          | 40 ++++++++++----
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               | 61 ++++++++++++++++++++--
+ 3 files changed, 121 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.txt
+
 -- 
-2.21.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
