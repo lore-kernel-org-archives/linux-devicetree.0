@@ -1,142 +1,121 @@
-Return-Path: <SRS0=7frD=VR=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 2/3] dt-bindings: dma: Convert Allwinner A10 DMA to a schema
-Date: Sat, 20 Jul 2019 08:41:22 +0200
-Message-Id: <20190720064123.15411-2-maxime.ripard@bootlin.com>
-In-Reply-To: <20190720064123.15411-1-maxime.ripard@bootlin.com>
-References: <20190720064123.15411-1-maxime.ripard@bootlin.com>
+Return-Path: <SRS0=5puu=VQ=outlook.com=leiwang_git@kernel.org>
+From: Lei Wang <leiwang_git@outlook.com>
+Subject: Re: [PATCH v4 2/2] EDAC: add EDAC driver for DMC520
+Date: Fri, 19 Jul 2019 19:49:38 +0000
+Message-ID: <BN6PR04MB1107476879762678425B9C9286CB0@BN6PR04MB1107.namprd04.prod.outlook.com>
+References: <BN6PR04MB11075E9070EE1A263E099A7386E60@BN6PR04MB1107.namprd04.prod.outlook.com>
+ <65439e51-5356-ae93-dffb-5a87279f6c8b@arm.com>
+ <BN6PR04MB1107E018F29465B68EE708C786FA0@BN6PR04MB1107.namprd04.prod.outlook.com>
+ <d82e6187-4a3d-1dc2-298a-0748ef0a7136@arm.com>
+In-Reply-To: <d82e6187-4a3d-1dc2-298a-0748ef0a7136@arm.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <DBE04A51BD3C904C85006309A320D9A0@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Vinod Koul <vkoul@kernel.org>
-Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-arm-kernel@lists.infradead.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh@kernel.org>
+To: James Morse <james.morse@arm.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "bp@alien8.de" <bp@alien8.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, "ruizhao@microsoft.com" <ruizhao@microsoft.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The older Allwinner SoCs have a DMA controller supported in Linux, with a
-matching Device Tree binding.
+Hi James,
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for that controller over to a YAML schemas.
+> Bingo: 'format_control' can be read in all states and has a 'memory_width=
+' field that
+> indicates if the PHY is connected to a 'x32 DDR device' or 'x64 DDR devic=
+e'. (I'm guessing
+> those double bit values are for address + data)
+>=20
+> This probably affects the 'grain' too.
+>=20
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- .../bindings/dma/allwinner,sun4i-a10-dma.yaml | 55 +++++++++++++++++++
- .../devicetree/bindings/dma/sun4i-dma.txt     | 45 ---------------
- 2 files changed, 55 insertions(+), 45 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
- delete mode 100644 Documentation/devicetree/bindings/dma/sun4i-dma.txt
+Thanks a lot for this finding! I double-checked with brcm and yes this=20
+can be used to decide the memory data width.
 
-diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
-new file mode 100644
-index 000000000000..15abc0f9429f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/allwinner,sun4i-a10-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 DMA Controller Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+allOf:
-+  - $ref: "dma-controller.yaml#"
-+
-+properties:
-+  "#dma-cells":
-+    const: 2
-+    description:
-+      The first cell is either 0 or 1, the former to use the normal
-+      DMA, 1 for dedicated DMA. The second cell is the request line
-+      number.
-+
-+  compatible:
-+    const: allwinner,sun4i-a10-dma
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - "#dma-cells"
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    dma: dma-controller@1c02000 {
-+        compatible = "allwinner,sun4i-a10-dma";
-+        reg = <0x01c02000 0x1000>;
-+        interrupts = <27>;
-+        clocks = <&ahb_gates 6>;
-+        #dma-cells = <2>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/dma/sun4i-dma.txt b/Documentation/devicetree/bindings/dma/sun4i-dma.txt
-deleted file mode 100644
-index 8ad556aca70b..000000000000
---- a/Documentation/devicetree/bindings/dma/sun4i-dma.txt
-+++ /dev/null
-@@ -1,45 +0,0 @@
--Allwinner A10 DMA Controller
--
--This driver follows the generic DMA bindings defined in dma.txt.
--
--Required properties:
--
--- compatible:	Must be "allwinner,sun4i-a10-dma"
--- reg:		Should contain the registers base address and length
--- interrupts:	Should contain a reference to the interrupt used by this device
--- clocks:	Should contain a reference to the parent AHB clock
--- #dma-cells :	Should be 2, first cell denoting normal or dedicated dma,
--		second cell holding the request line number.
--
--Example:
--	dma: dma-controller@1c02000 {
--		compatible = "allwinner,sun4i-a10-dma";
--		reg = <0x01c02000 0x1000>;
--		interrupts = <27>;
--		clocks = <&ahb_gates 6>;
--		#dma-cells = <2>;
--	};
--
--Clients:
--
--DMA clients connected to the Allwinner A10 DMA controller must use the
--format described in the dma.txt file, using a three-cell specifier for
--each channel: a phandle plus two integer cells.
--The three cells in order are:
--
--1. A phandle pointing to the DMA controller.
--2. Whether it is using normal (0) or dedicated (1) channels
--3. The port ID as specified in the datasheet
--
--Example:
--	spi2: spi@1c17000 {
--		compatible = "allwinner,sun4i-a10-spi";
--		reg = <0x01c17000 0x1000>;
--		interrupts = <0 12 4>;
--		clocks = <&ahb_gates 22>, <&spi2_clk>;
--		clock-names = "ahb", "mod";
--		dmas = <&dma 1 29>, <&dma 1 28>;
--		dma-names = "rx", "tx";
--		#address-cells = <1>;
--		#size-cells = <0>;
--	};
--- 
-2.21.0
+
+>>>> +static void dmc520_handle_dram_ecc_errors(struct mem_ctl_info *mci,
+>>>> +					  bool is_ce)
+>>>> +{
+>>>> +	struct ecc_error_info info;
+>>>> +	struct dmc520_edac *edac;
+>>>> +	u32 cnt;
+>>>> +	char message[EDAC_MSG_BUF_SIZE];
+>>>> +	unsigned long flags;
+>>>> +
+>>>> +	edac =3D mci->pvt_info;
+>>>> +	dmc520_get_dram_ecc_error_info(edac, is_ce, &info);
+>>>> +
+>>>> +	cnt =3D dmc520_get_dram_ecc_error_count(edac, is_ce);
+>>>> +
+>>>> +	if (cnt > 0) {
+>>>> +		snprintf(message, ARRAY_SIZE(message),
+>>>> +			 "rank:%d bank:%d row:%d col:%d",
+>>>> +			 info.rank, info.bank,
+>>>> +			 info.row, info.col);
+>>>> +
+>>>> +		spin_lock_irqsave(&edac->ecc_lock, flags);
+>>> irqsave/irqrestore is overkill as this function is only called from an =
+interrupt handler.
+>>> There is no way for this to be called with interrupts unmasked.
+>=20
+>> Still feel spin_lock_irqsave and spin_unlock_irqstore are the safest. If
+>> a processor is on isr for interrupt line 1 and calls
+>> dmc520_handle_dram_ecc_errors, only line 1 is disabled and and other
+>> lines can still interrupt calling dmc520_handle_dram_ecc_errors again.
+>=20
+> But not on the same CPU, (which is the problem the irqsave helpers solve)=
+.
+>=20
+> When the CPU takes an interrupt the hardware sets a status bit to prevent=
+ this CPU taking
+> any other interrupt. On armv8, this is PSTATE.I, its set automatically by=
+ the hardware. If
+> CPUs didn't do this, you could never guarantee that any interrupt would e=
+ver be handled.
+>=20
+> You are right a second interrupt may occur, but it can't interrupt this C=
+PU until it
+> returns from the Interrupt, or clears the status bit. If the second inter=
+rupt is taken at
+> the same time its because it was routed to a different CPU. A regular spi=
+n_lock() stops
+> any problems here, the second CPU has to wait for the first CPU to releas=
+e the lock.
+>=20
+> spin_lock_irqsave() is for a more complicated problem. If you used the sp=
+inlock in process
+> context, (e.g. your probe function), as well as interrupt context, then i=
+ts possible the
+> interrupt is taken while the lock is held in process context on the same =
+CPU. This causes
+> your interrupt handler to wait forever for the lock. The irqsave helpers =
+stop this by
+> masking interrupts when taking the lock, so that this 'same CPU' sequence=
+ can't happen.
+>=20
+> Because you don't take the lock in process context, you don't need the ir=
+qsave variants.
+>=20
+
+Thanks! I overlooked the fact that aarch64's default behavior for=20
+interrupt handling is that further interrupts are disabled on the same=20
+CPU in interrupt context. Found the arm doc for it. :)=20
+https://developer.arm.com/docs/100933/latest/interrupt-handling. With=20
+this, yes I'll switch to normal spin_lock instead of irq version's=20
+spin_lock API's.
+
+Just for my education: if in a more general condition when the same CPU=20
+supports embedded interrupts, are the spin_lock_irqsave and restore=20
+always the recommended if used in an interrupt context?
+
+>=20
+> (N.B: your mail is still coming base64 encoded, so its very unlikely the =
+maintainer can
+> pick it up.)
+>=20
+Ah I found if without explicit "--transfer-encoding=3D7bit" when do "git=20
+send-mail", my ubuntu box sent out base64 by default. I'll make sure to=20
+explicitly setting 7bit sending new patches.
+
+
+Thanks,
+-Lei
