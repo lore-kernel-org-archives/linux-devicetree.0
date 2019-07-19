@@ -1,170 +1,71 @@
-From: k.konieczny@partner.samsung.com
-Subject: [PATCH v3 1/5] devfreq: exynos-bus: correct clock enable sequence
-Date: Fri, 19 Jul 2019 17:05:31 +0200
-Message-ID: <20190719150535.15501-2-k.konieczny@partner.samsung.com>
-References: <20190719150535.15501-1-k.konieczny@partner.samsung.com>
-        <CGME20190719150553eucas1p1665462f3fc0e06fc9c082e258be3a851@eucas1p1.samsung.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH 11/13] arm64: dts: qcom: qcs404: Add CPR and populate OPP
+ table
+Date: Fri, 19 Jul 2019 17:45:58 +0200
+Message-ID: <20190719154558.GA32518@centauri>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
+ <20190705095726.21433-12-niklas.cassel@linaro.org>
+ <20190710090303.tb5ue3wq6r7ofyev@vireshk-i7>
+ <20190715132405.GA5040@centauri>
+ <20190716103436.az5rdk6f3yoa3apz@vireshk-i7>
+ <20190716105318.GA26592@centauri>
+ <20190717044923.ccmebeewbinlslkm@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190719150535.15501-1-k.konieczny@partner.samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20190717044923.ccmebeewbinlslkm@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: k.konieczny@partner.samsung.com
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Regulators should be enabled before clocks to avoid h/w hang. This
-require change in exynos_bus_probe() to move exynos_bus_parse_of()
-after exynos_bus_parent_parse_of() and change in enabling sequence
-of regulator and clock in exynos_bus_parse_of(). Similar change is
-needed in exynos_bus_exit() where clock should be disabled first.
+On Wed, Jul 17, 2019 at 10:19:23AM +0530, Viresh Kumar wrote:
+> On 16-07-19, 12:53, Niklas Cassel wrote:
+> > Here I cheated and simply used get_cpu_device(0).
+> > 
+> > Since I cheated, I used get_cpu_device(0) always,
+> > so even when CPU1,CPU2,CPU3 is attached, dev_pm_opp_get_opp_count(cpu0) is
+> > still 0.
+> > 
+> > I added a print in
+> > [    3.836533] cpr_set_performance: number of OPPs for dev: cpu0: 3
+> > 
+> > And there I can see that OPP count is 3, so it appears that with the
+> > current code, we need to wait until cpufreq-dt.c:cpufreq_init()
+> > has been called, maybe dev_pm_opp_of_cpumask_add_table() needs
+> > to be called before dev_pm_opp_get_opp_count(cpu0) actually returns 3.
+> > 
+> > cpufreq_init() is called by platform_device_register_simple("cpufreq-dt", -1,
+> >                                                           NULL, 0);
+> > which is called after dev_pm_opp_attach_genpd().
+> > 
+> > What I don't understand is that dev_pm_opp_attach_genpd() actually returns
+> > a OPP table. So why do we need to wait for dev_pm_opp_of_cpumask_add_table(),
+> > before either dev_pm_opp_get_opp_count(cpu0) or
+> > dev_pm_opp_get_opp_count(genpd_virtdev_for_cpu0) returns 3?
+> 
+> Ah, I see the problems now. No, cpufreq table can't be available at
+> this point of time and we aren't going to change that. It is the right
+> thing to do.
+> 
+> Now, even if the kernel isn't written in a way which works for you, it
+> isn't right to put more things in DT than required. DT is (should be)
+> very much independent of the Linux kernel.
+> 
+> So we have to parse DT to find highest frequency for each
+> required-opp. Best is to put that code in the OPP core and use it from
+> your driver.
 
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
----
-This patch is new to this series.
+Hello Viresh,
 
----
- drivers/devfreq/exynos-bus.c | 58 ++++++++++++++++++++----------------
- 1 file changed, 32 insertions(+), 26 deletions(-)
+Could you please have a look at the last two patches here:
+https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-opp-hz
 
-diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-index 486cc5b422f1..f391044aa39d 100644
---- a/drivers/devfreq/exynos-bus.c
-+++ b/drivers/devfreq/exynos-bus.c
-@@ -194,11 +194,11 @@ static void exynos_bus_exit(struct device *dev)
- 	if (ret < 0)
- 		dev_warn(dev, "failed to disable the devfreq-event devices\n");
- 
-+	clk_disable_unprepare(bus->clk);
- 	if (bus->regulator)
- 		regulator_disable(bus->regulator);
- 
- 	dev_pm_opp_of_remove_table(dev);
--	clk_disable_unprepare(bus->clk);
- }
- 
- /*
-@@ -326,8 +326,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
- 	return ret;
- }
- 
--static int exynos_bus_parse_of(struct device_node *np,
--			      struct exynos_bus *bus)
-+static int exynos_bus_parse_of(struct exynos_bus *bus)
- {
- 	struct device *dev = bus->dev;
- 	struct dev_pm_opp *opp;
-@@ -341,36 +340,35 @@ static int exynos_bus_parse_of(struct device_node *np,
- 		return PTR_ERR(bus->clk);
- 	}
- 
--	ret = clk_prepare_enable(bus->clk);
-+	/* Get the freq and voltage from OPP table to scale the bus freq */
-+	ret = dev_pm_opp_of_add_table(dev);
- 	if (ret < 0) {
--		dev_err(dev, "failed to get enable clock\n");
-+		dev_err(dev, "failed to get OPP table\n");
- 		return ret;
- 	}
- 
--	/* Get the freq and voltage from OPP table to scale the bus freq */
--	ret = dev_pm_opp_of_add_table(dev);
-+	ret = clk_prepare_enable(bus->clk);
- 	if (ret < 0) {
--		dev_err(dev, "failed to get OPP table\n");
-+		dev_err(dev, "failed to enable clock\n");
- 		goto err_clk;
- 	}
--
- 	rate = clk_get_rate(bus->clk);
- 
- 	opp = devfreq_recommended_opp(dev, &rate, 0);
- 	if (IS_ERR(opp)) {
- 		dev_err(dev, "failed to find dev_pm_opp\n");
- 		ret = PTR_ERR(opp);
--		goto err_opp;
-+		goto err;
- 	}
- 	bus->curr_freq = dev_pm_opp_get_freq(opp);
- 	dev_pm_opp_put(opp);
- 
- 	return 0;
- 
--err_opp:
--	dev_pm_opp_of_remove_table(dev);
--err_clk:
-+err:
- 	clk_disable_unprepare(bus->clk);
-+err_clk:
-+	dev_pm_opp_of_remove_table(dev);
- 
- 	return ret;
- }
-@@ -386,6 +384,7 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 	struct exynos_bus *bus;
- 	int ret, max_state;
- 	unsigned long min_freq, max_freq;
-+	bool passive = false;
- 
- 	if (!np) {
- 		dev_err(dev, "failed to find devicetree node\n");
-@@ -399,27 +398,31 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 	bus->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, bus);
- 
--	/* Parse the device-tree to get the resource information */
--	ret = exynos_bus_parse_of(np, bus);
--	if (ret < 0)
--		return ret;
--
- 	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
--	if (!profile) {
--		ret = -ENOMEM;
--		goto err;
--	}
-+	if (!profile)
-+		return -ENOMEM;
- 
- 	node = of_parse_phandle(dev->of_node, "devfreq", 0);
- 	if (node) {
- 		of_node_put(node);
--		goto passive;
-+		passive = true;
- 	} else {
- 		ret = exynos_bus_parent_parse_of(np, bus);
-+		if (ret < 0)
-+			return ret;
- 	}
- 
--	if (ret < 0)
--		goto err;
-+	/* Parse the device-tree to get the resource information */
-+	ret = exynos_bus_parse_of(bus);
-+	if (ret < 0) {
-+		if (!passive)
-+			regulator_disable(bus->regulator);
-+
-+		return ret;
-+	}
-+
-+	if (passive)
-+		goto passive;
- 
- 	/* Initialize the struct profile and governor data for parent device */
- 	profile->polling_ms = 50;
-@@ -508,8 +511,11 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 	return 0;
- 
- err:
--	dev_pm_opp_of_remove_table(dev);
- 	clk_disable_unprepare(bus->clk);
-+	if (!passive)
-+		regulator_disable(bus->regulator);
-+
-+	dev_pm_opp_of_remove_table(dev);
- 
- 	return ret;
- }
--- 
-2.22.0
+If you like my proposal then I could send out the first patch (the one to
+OPP core) as a real patch (with an improved commit message), and
+incorporate the second patch into my CPR patch series when I send out a V2.
+
+
+Kind regards,
+Niklas
