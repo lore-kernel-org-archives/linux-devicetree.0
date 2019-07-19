@@ -1,57 +1,57 @@
 From: Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [v2 2/3] dt/bindings: display: Add optional property node
- defined for Mali DP500
-Date: Fri, 19 Jul 2019 12:47:03 +0100
-Message-ID: <20190719114703.GC16673@e110455-lin.cambridge.arm.com>
-References: <20190719095842.11683-1-wen.he_1@nxp.com>
+Subject: Re: [v2 3/3] dts: arm64: ls1028a: Add optional property node for
+ Mali DP500
+Date: Fri, 19 Jul 2019 12:47:38 +0100
+Message-ID: <20190719114738.GD16673@e110455-lin.cambridge.arm.com>
+References: <20190719095956.11774-1-wen.he_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190719095842.11683-1-wen.he_1@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190719095956.11774-1-wen.he_1@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Wen He <wen.he_1@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, leoyang.li@nxp.com, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, robh+dt@kernel.org, leoyang.li@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdWwgMTksIDIwMTkgYXQgMDU6NTg6NDJQTSArMDgwMCwgV2VuIEhlIHdyb3RlOgo+
-IEFkZCBvcHRpb25hbCBwcm9wZXJ0eSBub2RlICdhcm0sbWFsaWRwLWFycW9zLXZhbHVlJyBmb3Ig
-dGhlIE1hbGkgRFA1MDAuCj4gVGhpcyBwcm9wZXJ0eSBkZXNjcmliZSB0aGUgQVJRb1MgbGV2ZWxz
-IG9mIERQNTAwJ3MgUW9TIHNpZ25hbGluZy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBXZW4gSGUgPHdl
-bi5oZV8xQG54cC5jb20+CgpBY2tlZC1ieTogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1QGFybS5j
-b20+CgpUaGFua3MgZm9yIHRoZSBwYXRjaCEKCkJlc3QgcmVnYXJkcywKTGl2aXUKCj4gLS0tCj4g
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0
-IHwgMyArKysKPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0sbWFsaWRw
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxtYWxp
-ZHAudHh0Cj4gaW5kZXggMmY3ODcwOTgzZWYxLi43NmEwZTcyNTEyNTEgMTAwNjQ0Cj4gLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQK
-PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0sbWFs
-aWRwLnR4dAo+IEBAIC0zNyw2ICszNyw4IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gICAgICBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3Jlc2VydmVk
-LW1lbW9yeS50eHQpCj4gICAgICB0byBiZSB1c2VkIGZvciB0aGUgZnJhbWVidWZmZXI7IGlmIG5v
-dCBwcmVzZW50LCB0aGUgZnJhbWVidWZmZXIgbWF5Cj4gICAgICBiZSBsb2NhdGVkIGFueXdoZXJl
-IGluIG1lbW9yeS4KPiArICAtIGFybSxtYWxpZHAtYXJxb3MtaGlnaC1sZXZlbDogaW50ZWdlciBv
-ZiB1MzIgdmFsdWUgZGVzY3JpYmluZyB0aGUgQVJRb1MKPiArICAgIGxldmVscyBvZiBEUDUwMCdz
-IFFvUyBzaWduYWxpbmcuCj4gIAo+ICAKPiAgRXhhbXBsZToKPiBAQCAtNTQsNiArNTYsNyBAQCBF
-eGFtcGxlOgo+ICAJCWNsb2NrcyA9IDwmb3NjY2xrMj4sIDwmZnBnYW9zYzA+LCA8JmZwZ2Fvc2Mx
-PiwgPCZmcGdhb3NjMT47Cj4gIAkJY2xvY2stbmFtZXMgPSAicHhsY2xrIiwgIm1jbGsiLCAiYWNs
-ayIsICJwY2xrIjsKPiAgCQlhcm0sbWFsaWRwLW91dHB1dC1wb3J0LWxpbmVzID0gL2JpdHMvIDgg
-PDggOCA4PjsKPiArCQlhcm0sbWFsaWRwLWFycW9zLWhpZ2gtbGV2ZWwgPSA8JnJxb3N2YWx1ZT47
-Cj4gIAkJcG9ydCB7Cj4gIAkJCWRwMF9vdXRwdXQ6IGVuZHBvaW50IHsKPiAgCQkJCXJlbW90ZS1l
-bmRwb2ludCA9IDwmdGRhOTk4eF8yX2lucHV0PjsKPiAtLSAKPiAyLjE3LjEKPiAKCi0tIAo9PT09
-PT09PT09PT09PT09PT09PQp8IEkgd291bGQgbGlrZSB0byB8CnwgZml4IHRoZSB3b3JsZCwgIHwK
-fCBidXQgdGhleSdyZSBub3QgfAp8IGdpdmluZyBtZSB0aGUgICB8CiBcIHNvdXJjZSBjb2RlISAg
-LwogIC0tLS0tLS0tLS0tLS0tLQogICAgwq9cXyjjg4QpXy/CrwpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Fri, Jul 19, 2019 at 05:59:56PM +0800, Wen He wrote:
+> This patch use the optional property node "arm,malidp-arqos-value" to
+> can be dynamic configure QoS signaling.
+> 
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+
+Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+
+Best regards,
+Liviu
+
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 7975519b4f56..aef5b06a98d5 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -554,6 +554,7 @@
+>  		clocks = <&dpclk>, <&aclk>, <&aclk>, <&pclk>;
+>  		clock-names = "pxlclk", "mclk", "aclk", "pclk";
+>  		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
+> +		arm,malidp-arqos-value = <0xd000d000>;
+>  
+>  		port {
+>  			dp0_out: endpoint {
+> -- 
+> 2.17.1
+> 
+
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
