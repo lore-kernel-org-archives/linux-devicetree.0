@@ -1,71 +1,42 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH 11/13] arm64: dts: qcom: qcs404: Add CPR and populate OPP
- table
-Date: Fri, 19 Jul 2019 17:45:58 +0200
-Message-ID: <20190719154558.GA32518@centauri>
-References: <20190705095726.21433-1-niklas.cassel@linaro.org>
- <20190705095726.21433-12-niklas.cassel@linaro.org>
- <20190710090303.tb5ue3wq6r7ofyev@vireshk-i7>
- <20190715132405.GA5040@centauri>
- <20190716103436.az5rdk6f3yoa3apz@vireshk-i7>
- <20190716105318.GA26592@centauri>
- <20190717044923.ccmebeewbinlslkm@vireshk-i7>
+From: Hongwei Zhang <hongweiz@ami.com>
+Subject: [v5 0/2] gpio: aspeed: Add SGPIO driver
+Date: Fri, 19 Jul 2019 15:24:49 -0400
+Message-ID: <1563564291-9692-1-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190717044923.ccmebeewbinlslkm@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Hongwei Zhang <hongweiz@ami.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 10:19:23AM +0530, Viresh Kumar wrote:
-> On 16-07-19, 12:53, Niklas Cassel wrote:
-> > Here I cheated and simply used get_cpu_device(0).
-> > 
-> > Since I cheated, I used get_cpu_device(0) always,
-> > so even when CPU1,CPU2,CPU3 is attached, dev_pm_opp_get_opp_count(cpu0) is
-> > still 0.
-> > 
-> > I added a print in
-> > [    3.836533] cpr_set_performance: number of OPPs for dev: cpu0: 3
-> > 
-> > And there I can see that OPP count is 3, so it appears that with the
-> > current code, we need to wait until cpufreq-dt.c:cpufreq_init()
-> > has been called, maybe dev_pm_opp_of_cpumask_add_table() needs
-> > to be called before dev_pm_opp_get_opp_count(cpu0) actually returns 3.
-> > 
-> > cpufreq_init() is called by platform_device_register_simple("cpufreq-dt", -1,
-> >                                                           NULL, 0);
-> > which is called after dev_pm_opp_attach_genpd().
-> > 
-> > What I don't understand is that dev_pm_opp_attach_genpd() actually returns
-> > a OPP table. So why do we need to wait for dev_pm_opp_of_cpumask_add_table(),
-> > before either dev_pm_opp_get_opp_count(cpu0) or
-> > dev_pm_opp_get_opp_count(genpd_virtdev_for_cpu0) returns 3?
-> 
-> Ah, I see the problems now. No, cpufreq table can't be available at
-> this point of time and we aren't going to change that. It is the right
-> thing to do.
-> 
-> Now, even if the kernel isn't written in a way which works for you, it
-> isn't right to put more things in DT than required. DT is (should be)
-> very much independent of the Linux kernel.
-> 
-> So we have to parse DT to find highest frequency for each
-> required-opp. Best is to put that code in the OPP core and use it from
-> your driver.
+Hello,
 
-Hello Viresh,
+This short series introduce dt-binding document and a driver for the 
+Aspeed AST2500 SGPIO controller. Please review.
 
-Could you please have a look at the last two patches here:
-https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-opp-hz
+The related SGPM pinmux dt-binding document, dts, and pinctrl driver
+updates have been accepted and merged:
+_http://patchwork.ozlabs.org/patch/1110210/
 
-If you like my proposal then I could send out the first patch (the one to
-OPP core) as a real patch (with an improved commit message), and
-incorporate the second patch into my CPR patch series when I send out a V2.
+Hongwei Zhang (2):
+  dt-bindings: gpio: aspeed: Add SGPIO support
+  gpio: aspeed: Add SGPIO driver
 
+ .../devicetree/bindings/gpio/sgpio-aspeed.txt      |  55 +++
+ drivers/gpio/sgpio-aspeed.c                        | 522 +++++++++++++++++++++
+ 2 files changed, 577 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+ create mode 100644 drivers/gpio/sgpio-aspeed.c
 
-Kind regards,
-Niklas
+-- 
+2.7.4
