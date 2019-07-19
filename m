@@ -1,32 +1,86 @@
 From: Wen He <wen.he_1@nxp.com>
-Subject: [v2 3/3] dts: arm64: ls1028a: Add optional property node for Mali DP500
-Date: Fri, 19 Jul 2019 17:59:56 +0800
-Message-ID: <20190719095956.11774-1-wen.he_1@nxp.com>
+Subject: [v2 1/4] dt-bindings: display: Add DT bindings for LS1028A HDP-TX PHY.
+Date: Fri, 19 Jul 2019 18:09:39 +0800
+Message-ID: <20190719100942.12016-1-wen.he_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, liviu.dudau@arm.com, robh+dt@kernel.org
+To: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, robh+dt@kernel.org
 Cc: leoyang.li@nxp.com, Wen He <wen.he_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch use the optional property node "arm,malidp-arqos-value" to
-can be dynamic configure QoS signaling.
+Add DT bindings documentmation for the HDP-TX PHY controller. The describes
+which could be found on NXP Layerscape ls1028a platform.
 
 Signed-off-by: Wen He <wen.he_1@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+change in v2:
+        - correction the node name.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 7975519b4f56..aef5b06a98d5 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -554,6 +554,7 @@
- 		clocks = <&dpclk>, <&aclk>, <&aclk>, <&pclk>;
- 		clock-names = "pxlclk", "mclk", "aclk", "pclk";
- 		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
-+		arm,malidp-arqos-value = <0xd000d000>;
- 
- 		port {
- 			dp0_out: endpoint {
+ .../devicetree/bindings/display/fsl,hdp.txt   | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/fsl,hdp.txt
+
+diff --git a/Documentation/devicetree/bindings/display/fsl,hdp.txt b/Documentation/devicetree/bindings/display/fsl,hdp.txt
+new file mode 100644
+index 000000000000..53ca08337587
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/fsl,hdp.txt
+@@ -0,0 +1,56 @@
++NXP Layerscpae ls1028a HDP-TX PHY Controller
++============================================
++
++The following bindings describe the Cadence HDP TX PHY on ls1028a that
++offer multi-protocol support of standars such as eDP and Displayport,
++supports for 25-600MHz pixel clock and up to 4k2k at 60MHz resolution.
++The HDP transmitter is a Cadence HDP TX controller IP with a companion
++PHY IP.
++
++Required properties:
++  - compatible:   Should be "fsl,ls1028a-dp" for ls1028a.
++  - reg:          Physical base address and size of the block of registers used
++  by the processor.
++  - interrupts:   HDP hotplug in/out detect interrupt number
++  - clocks:       A list of phandle + clock-specifier pairs, one for each entry
++  in 'clock-names'
++  - clock-names:  A list of clock names. It should contain:
++      - "clk_ipg": inter-Integrated circuit clock
++      - "clk_core": for the Main Display TX controller clock
++      - "clk_pxl": for the pixel clock feeding the output PLL of the processor
++      - "clk_pxl_mux": for the high PerfPLL bypass clock
++      - "clk_pxl_link": for the link rate pixel clock
++      - "clk_apb": for the APB interface clock
++      - "clk_vif": for the Video pixel clock
++
++Required sub-nodes:
++  - port: The HDP connection to an encoder output port. The connection
++    is modelled using the OF graph bindings specified in
++    Documentation/devicetree/bindings/graph.txt
++
++
++Example:
++
++/ {
++        ...
++
++        hdptx0: display@f200000 {
++                compatible = "fsl,ls1028a-dp";
++		reg = <0x0 0xf1f0000 0x0 0xffff>,
++		    <0x0 0xf200000 0x0 0xfffff>;
++                interrupts = <0 221 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&sysclk>, <&hdpclk>, <&dpclk>,
++                         <&dpclk>, <&dpclk>, <&pclk>, <&dpclk>;
++		clock-names = "clk_ipg", "clk_core", "clk_pxl",
++                              "clk_pxl_mux", "clk_pxl_link", "clk_apb",
++                              "clk_vif";
++
++		port {
++			dp1_output: endpoint {
++				remote-endpoint = <&dp0_input>;
++			};
++		};
++        };
++
++        ...
++};
 -- 
 2.17.1
