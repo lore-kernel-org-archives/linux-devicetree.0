@@ -1,70 +1,41 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCHv8 1/5] arm64: dts: qcom: sdm845: Add Coresight support
-Date: Fri, 19 Jul 2019 10:46:32 +0100
-Message-ID: <33215f68-1bf9-322a-d889-1d22514bdbdc@arm.com>
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <52550ed9bbc10dca860eb1700aef5c97f644327b.1562940244.git.saiprakash.ranjan@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v2 2/3] dt/bindings: display: Add optional property node defined for Mali DP500
+Date: Fri, 19 Jul 2019 17:58:42 +0800
+Message-ID: <20190719095842.11683-1-wen.he_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52550ed9bbc10dca860eb1700aef5c97f644327b.1562940244.git.saiprakash.ranjan@codeaurora.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: saiprakash.ranjan@codeaurora.org, gregkh@linuxfoundation.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, mike.leach@linaro.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, david.brown@linaro.org, mark.rutland@arm.com
-Cc: rnayak@codeaurora.org, vivek.gautam@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, marc.w.gonzalez@free.fr
+To: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, mark.rutland@arm.com, liviu.dudau@arm.com, brian.starkey@arm.com, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org
+Cc: leoyang.li@nxp.com, Wen He <wen.he_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+Add optional property node 'arm,malidp-arqos-value' for the Mali DP500.
+This property describe the ARQoS levels of DP500's QoS signaling.
 
-Hi Sai,
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+---
+ Documentation/devicetree/bindings/display/arm,malidp.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
-On 12/07/2019 15:16, Sai Prakash Ranjan wrote:
-> Add coresight components found on Qualcomm SDM845 SoC.
-> 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->   arch/arm64/boot/dts/qcom/sdm845.dtsi | 451 +++++++++++++++++++++++++++
->   1 file changed, 451 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 4babff5f19b5..5d7e3f8e0f91 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -1815,6 +1815,457 @@
->   			clock-names = "xo";
->   		};
->   
-> +		stm@6002000 {
-> +			compatible = "arm,coresight-stm", "arm,primecell";
-> +			reg = <0 0x06002000 0 0x1000>,
-> +			      <0 0x16280000 0 0x180000>;
-> +			reg-names = "stm-base", "stm-stimulus-base";
-> +
-> +			clocks = <&aoss_qmp>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					stm_out: endpoint {
-> +						remote-endpoint =
-> +						  <&funnel0_in7>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@6041000 {
-> +			compatible = "arm,coresight-funnel", "arm,primecell";
-
-We added support for static funnels and have thus updated our DT bindings. And
-that implies, the above binding is now obsolete.
-As of the coresight/next tree, and thus linux-next, this must be 
-arm,coresight-dynamic-funnel and same applies everywhere else in the series. 
-Please could you
-update the series ?
-
-Kind regards
-Suzuki
+diff --git a/Documentation/devicetree/bindings/display/arm,malidp.txt b/Documentation/devicetree/bindings/display/arm,malidp.txt
+index 2f7870983ef1..76a0e7251251 100644
+--- a/Documentation/devicetree/bindings/display/arm,malidp.txt
++++ b/Documentation/devicetree/bindings/display/arm,malidp.txt
+@@ -37,6 +37,8 @@ Optional properties:
+     Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
+     to be used for the framebuffer; if not present, the framebuffer may
+     be located anywhere in memory.
++  - arm,malidp-arqos-high-level: integer of u32 value describing the ARQoS
++    levels of DP500's QoS signaling.
+ 
+ 
+ Example:
+@@ -54,6 +56,7 @@ Example:
+ 		clocks = <&oscclk2>, <&fpgaosc0>, <&fpgaosc1>, <&fpgaosc1>;
+ 		clock-names = "pxlclk", "mclk", "aclk", "pclk";
+ 		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
++		arm,malidp-arqos-high-level = <&rqosvalue>;
+ 		port {
+ 			dp0_output: endpoint {
+ 				remote-endpoint = <&tda998x_2_input>;
+-- 
+2.17.1
