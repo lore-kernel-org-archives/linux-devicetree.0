@@ -1,68 +1,78 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v3 2/4] of/platform: Add functional dependency link from
- DT bindings
-Date: Thu, 18 Jul 2019 19:49:24 -0700
-Message-ID: <6d501755-7ee3-4c48-f6fc-b1416460ead0@gmail.com>
-References: <20190702004811.136450-1-saravanak@google.com>
- <20190702004811.136450-3-saravanak@google.com>
- <CAL_JsqLdvDpKB=iV6x3eTr2F4zY0bxU-Wjb+JeMjj5rdnRc-OQ@mail.gmail.com>
- <CAGETcx_i9353aRFbJXNS78EvqwmU-2-xSBJ+ySZX1gjjHpz_cg@mail.gmail.com>
- <9e75b3dd-380b-c868-728f-46379e53bc11@gmail.com>
- <07812739-0e6b-6598-ac58-8e0ea74a3331@gmail.com>
- <CAGETcx8YCCGxgXnByenVUb+q8pHPPTjwAjK3L_+9mwoCe=9SbA@mail.gmail.com>
- <3e340ff1-e842-2521-4344-da62802d472f@gmail.com>
- <CAL_JsqLySLMLanBJvyWqFGhVzXrEaUP-3t9MDmpnAXhQA_7y=g@mail.gmail.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 091/171] dt-bindings: backlight: lm3630a: correct
+ schema validation
+Date: Thu, 18 Jul 2019 23:55:22 -0400
+Message-ID: <20190719035643.14300-91-sashal@kernel.org>
+References: <20190719035643.14300-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLySLMLanBJvyWqFGhVzXrEaUP-3t9MDmpnAXhQA_7y=g@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Sasha Levin <sashal@kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org, Brian Masney <masneyb@onstation.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/16/19 3:56 PM, Rob Herring wrote:
-> On Mon, Jul 15, 2019 at 7:05 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 7/15/19 11:40 AM, Saravana Kannan wrote:
->>> Replying again because the previous email accidentally included HTML.
->>>
->>> Thanks for taking the time to reconsider the wording Frank. Your
->>> intention was clear to me in the first email too.
->>>
->>> A kernel command line option can also completely disable this
->>> functionality easily and cleanly. Can we pick that as an option? I've
->>> an implementation of that in the v5 series I sent out last week.
->>
->> Yes, Rob suggested a command line option for debugging, and I am fine with
->> that.  But even with that, I would like a lot of testing so that we have a
->> chance of finding systems that have trouble with the changes and could
->> potentially be fixed before impacting a large number of users.
-> 
-> Leaving it in -next for more than a cycle will not help. There's some
-
-I have to agree with your scepticism of the value of -next for this
-specific case.  But I think there is a _tiny_ potential of additional
-testing if the feature is in more than one -next cycle.
-
-> number of users who test linux-next. Then there's more that test -rc
-> kernels. Then there's more that test final releases and/or stable
-> kernels. Probably, the more stable the h/w, the more it tends to be
-> latter groups. (I don't get reports of breaking PowerMacs with the
-> changes sitting in linux-next.)
-> 
-> My main worry about this being off by default is it won't get tested.
-> I'm not sure there's enough interest to drive folks to turn it on and
-> test. Maybe it needs to be on until we see breakage.
-
-Agreed, but worried about the potential disruption when breakage
-occurs.
-
--Frank
-
-> 
-> Rob
-> .
-> 
+RnJvbTogQnJpYW4gTWFzbmV5IDxtYXNuZXliQG9uc3RhdGlvbi5vcmc+CgpbIFVwc3RyZWFtIGNv
+bW1pdCBlZjRkYjI4YzFmNDVjZGE2OTg5YmM4YThlNDUyOTQ4OTQ3ODZkOTQ3IF0KClRoZSAnI2Fk
+ZHJlc3MtY2VsbHMnIGFuZCAnI3NpemUtY2VsbHMnIHByb3BlcnRpZXMgd2VyZSBub3QgZGVmaW5l
+ZCBpbgp0aGUgbG0zNjMwYSBiaW5kaW5ncyBhbmQgd291bGQgY2F1c2UgdGhlIGZvbGxvd2luZyBl
+cnJvciB3aGVuCmF0dGVtcHRpbmcgdG8gdmFsaWRhdGUgdGhlIGV4YW1wbGVzIGFnYWluc3QgdGhl
+IHNjaGVtYToKCkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdo
+dC9sbTM2MzBhLWJhY2tsaWdodC5leGFtcGxlLmR0LnlhbWw6CicjYWRkcmVzcy1jZWxscycsICcj
+c2l6ZS1jZWxscycgZG8gbm90IG1hdGNoIGFueSBvZiB0aGUgcmVnZXhlczoKJ15sZWRAWzAxXSQn
+LCAncGluY3RybC1bMC05XSsnCgpDb3JyZWN0IHRoaXMgYnkgYWRkaW5nIHRob3NlIHR3byBwcm9w
+ZXJ0aWVzLgoKV2hpbGUgd2UncmUgaGVyZSwgbW92ZSB0aGUgdGksbGluZWFyLW1hcHBpbmctbW9k
+ZSBwcm9wZXJ0eSB0byB0aGUKbGVkQFswMV0gY2hpbGQgbm9kZXMgdG8gY29ycmVjdCB0aGUgZm9s
+bG93aW5nIHZhbGlkYXRpb24gZXJyb3I6CgpEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbGVkcy9iYWNrbGlnaHQvbG0zNjMwYS1iYWNrbGlnaHQuZXhhbXBsZS5kdC55YW1sOgpsZWRA
+MDogJ3RpLGxpbmVhci1tYXBwaW5nLW1vZGUnIGRvZXMgbm90IG1hdGNoIGFueSBvZiB0aGUgcmVn
+ZXhlczoKJ3BpbmN0cmwtWzAtOV0rJwoKRml4ZXM6IDMyZmNiNzVjNjZhMCAoImR0LWJpbmRpbmdz
+OiBiYWNrbGlnaHQ6IEFkZCBsbTM2MzBhIGJpbmRpbmdzIikKU2lnbmVkLW9mZi1ieTogQnJpYW4g
+TWFzbmV5IDxtYXNuZXliQG9uc3RhdGlvbi5vcmc+ClJlcG9ydGVkLWJ5OiBSb2IgSGVycmluZyA8
+cm9iaCtkdEBrZXJuZWwub3JnPgpBY2tlZC1ieTogRGFuaWVsIFRob21wc29uIDxkYW5pZWwudGhv
+bXBzb25AbGluYXJvLm9yZz4KQWNrZWQtYnk6IERhbiBNdXJwaHkgPGRtdXJwaHlAdGkuY29tPgpb
+cm9iaDogYWxzbyBkcm9wIG1heEl0ZW1zIGZyb20gY2hpbGQgcmVnXQpTaWduZWQtb2ZmLWJ5OiBS
+b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpTaWduZWQtb2ZmLWJ5OiBTYXNoYSBMZXZpbiA8
+c2FzaGFsQGtlcm5lbC5vcmc+Ci0tLQogLi4uL2xlZHMvYmFja2xpZ2h0L2xtMzYzMGEtYmFja2xp
+Z2h0LnlhbWwgICAgIHwgMjEgKysrKysrKysrKysrLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDE0
+IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L2xtMzYzMGEtYmFja2xpZ2h0Lnlh
+bWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvbG0z
+NjMwYS1iYWNrbGlnaHQueWFtbAppbmRleCA0ZDYxZmUwYTk4YTQuLmRjMTI5ZDlhMzI5ZSAxMDA2
+NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0
+L2xtMzYzMGEtYmFja2xpZ2h0LnlhbWwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2xlZHMvYmFja2xpZ2h0L2xtMzYzMGEtYmFja2xpZ2h0LnlhbWwKQEAgLTIzLDE2ICsy
+MywxNyBAQCBwcm9wZXJ0aWVzOgogICByZWc6CiAgICAgbWF4SXRlbXM6IDEKIAotICB0aSxsaW5l
+YXItbWFwcGluZy1tb2RlOgotICAgIGRlc2NyaXB0aW9uOiB8Ci0gICAgICBFbmFibGUgbGluZWFy
+IG1hcHBpbmcgbW9kZS4gSWYgZGlzYWJsZWQsIHRoZW4gaXQgd2lsbCB1c2UgZXhwb25lbnRpYWwK
+LSAgICAgIG1hcHBpbmcgbW9kZSBpbiB3aGljaCB0aGUgcmFtcCB1cC9kb3duIGFwcGVhcnMgdG8g
+aGF2ZSBhIG1vcmUgdW5pZm9ybQotICAgICAgdHJhbnNpdGlvbiB0byB0aGUgaHVtYW4gZXllLgot
+ICAgIHR5cGU6IGJvb2xlYW4KKyAgJyNhZGRyZXNzLWNlbGxzJzoKKyAgICBjb25zdDogMQorCisg
+ICcjc2l6ZS1jZWxscyc6CisgICAgY29uc3Q6IDAKIAogcmVxdWlyZWQ6CiAgIC0gY29tcGF0aWJs
+ZQogICAtIHJlZworICAtICcjYWRkcmVzcy1jZWxscycKKyAgLSAnI3NpemUtY2VsbHMnCiAKIHBh
+dHRlcm5Qcm9wZXJ0aWVzOgogICAiXmxlZEBbMDFdJCI6CkBAIC00OCw3ICs0OSw2IEBAIHBhdHRl
+cm5Qcm9wZXJ0aWVzOgogICAgICAgICAgIGluIHRoaXMgcHJvcGVydHkuIFRoZSB0d28gY3VycmVu
+dCBzaW5rcyBjYW4gYmUgY29udHJvbGxlZAogICAgICAgICAgIGluZGVwZW5kZW50bHkgd2l0aCBi
+b3RoIGJhbmtzLCBvciBiYW5rIEEgY2FuIGJlIGNvbmZpZ3VyZWQgdG8gY29udHJvbAogICAgICAg
+ICAgIGJvdGggc2lua3Mgd2l0aCB0aGUgbGVkLXNvdXJjZXMgcHJvcGVydHkuCi0gICAgICAgIG1h
+eEl0ZW1zOiAxCiAgICAgICAgIG1pbmltdW06IDAKICAgICAgICAgbWF4aW11bTogMQogCkBAIC03
+Myw2ICs3MywxMyBAQCBwYXR0ZXJuUHJvcGVydGllczoKICAgICAgICAgbWluaW11bTogMAogICAg
+ICAgICBtYXhpbXVtOiAyNTUKIAorICAgICAgdGksbGluZWFyLW1hcHBpbmctbW9kZToKKyAgICAg
+ICAgZGVzY3JpcHRpb246IHwKKyAgICAgICAgICBFbmFibGUgbGluZWFyIG1hcHBpbmcgbW9kZS4g
+SWYgZGlzYWJsZWQsIHRoZW4gaXQgd2lsbCB1c2UgZXhwb25lbnRpYWwKKyAgICAgICAgICBtYXBw
+aW5nIG1vZGUgaW4gd2hpY2ggdGhlIHJhbXAgdXAvZG93biBhcHBlYXJzIHRvIGhhdmUgYSBtb3Jl
+IHVuaWZvcm0KKyAgICAgICAgICB0cmFuc2l0aW9uIHRvIHRoZSBodW1hbiBleWUuCisgICAgICAg
+IHR5cGU6IGJvb2xlYW4KKwogICAgIHJlcXVpcmVkOgogICAgICAgLSByZWcKIAotLSAKMi4yMC4x
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
