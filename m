@@ -1,96 +1,59 @@
-From: Gilles Doffe <gilles.doffe@savoirfairelinux.com>
-Subject: Re: [PATCH] arm: dts: imx6qdl: add gpio expander pca9535
-Date: Fri, 19 Jul 2019 06:51:08 -0400 (EDT)
-Message-ID: <405527661.6507550.1563533468485.JavaMail.zimbra@savoirfairelinux.com>
-References: <20190712124522.571-1-gilles.doffe@savoirfairelinux.com> <20190712135541.55fgchvyp33cl3uv@pengutronix.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RFC PATCH 23/30] of/platform: Export
+ of_platform_device_create_pdata()
+Date: Fri, 19 Jul 2019 16:25:37 +0530
+Message-ID: <f9034a1d-1906-54e8-62f0-cdacf95c42ab@ti.com>
+References: <20190604131516.13596-1-kishon@ti.com>
+ <20190604131516.13596-24-kishon@ti.com>
+ <CAL_JsqJ5gsctd7L3VOhTO1JdUqmMmSJRpos1XQyfxzmGO7wauw@mail.gmail.com>
+ <a80c7c33-7091-70d9-cd86-a19fe43d3bc6@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190712135541.55fgchvyp33cl3uv@pengutronix.de>
+In-Reply-To: <a80c7c33-7091-70d9-cd86-a19fe43d3bc6@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark rutland <mark.rutland@arm.com>, festevam@gmail.com, s hauer <s.hauer@pengutronix.de>, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Tom Joseph <tjoseph@cadence.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Marco,
+Lorenzo,
 
-Thanks for your review.
-
-Corrected in v2.
-
-Regards,
-Gilles
-
------ Le 12 Juil 19, à 15:55, Marco Felsch m.felsch@pengutronix.de a écrit :
-
-Hi,
-
-On 19-07-12 14:45, Gilles DOFFE wrote:
-> The pca9535 gpio expander is present on the Rex baseboard, but missing
-> from the dtsi.
+On 11/06/19 10:08 AM, Kishon Vijay Abraham I wrote:
+> Hi Rob,
 > 
-> Add the new gpio controller and the associated interrupt line
-> MX6QDL_PAD_NANDF_CS3__GPIO6_IO16.
+> On 10/06/19 11:13 PM, Rob Herring wrote:
+>> On Tue, Jun 4, 2019 at 7:19 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>
+>>> Export of_platform_device_create_pdata() to be used by drivers to
+>>> create child devices with the given platform data. This can be used
+>>> by platform specific driver to send platform data core driver. For e.g.,
+>>> this will be used by TI's J721E SoC specific PCIe driver to send
+>>> ->start_link() ops and ->is_link_up() ops to Cadence core PCIe driver.
+>>
+>> NAK
+>>
+>> of_platform_device_create_pdata() is purely for legacy handling of
+>> auxdata which is something I hope to get rid of someday. Or to put it
+>> another way, auxdata use is a sign of platforms not fully converted to
+>> DT.
 > 
-> Signed-off-by: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
-> ---
->  arch/arm/boot/dts/imx6qdl-rex.dtsi | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+> All right. Thanks for letting me know your thoughts.
 > 
-> diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi b/arch/arm/boot/dts/imx6qdl-rex.dtsi
-> index 97f1659144ea..d5324c6761c1 100644
-> --- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
-> @@ -136,6 +136,19 @@
->  		compatible = "atmel,24c02";
->  		reg = <0x57>;
->  	};
-> +
-> +	gpio8: pca9535@27 {
-
-Just a nitpick, I would change that to
-
-	pca9535: gpio8@27 {
-
-Regards,
-  Marco
-
-> +		compatible = "nxp,pca9535";
-> +		reg = <0x27>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_pca9535>;
-> +		interrupt-parent = <&gpio6>;
-> +		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
->  };
->  
->  &i2c3 {
-> @@ -237,6 +250,12 @@
->  			>;
->  		};
->  
-> +		pinctrl_pca9535: pca9535 {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x00017059
-> +		   >;
-> +		};
-> +
->  		pinctrl_uart1: uart1grp {
->  			fsl,pins = <
->  				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
-> -- 
-> 2.19.1
+> Lorenzo,
 > 
-> 
-> 
+> We've modeled Cadence PCIe core as a separate driver and for some of the
+> functionalities (for example starting LTSSM or checking link status) it has to
+> invoke the wrapper driver functions (The registers for these are present in
+> wrapper and not in Cadence Core). In the case of Designware, we modeled DWC
+> core as a library which provided APIs to be used by wrapper driver. Now that
+> Rob is not inclined for passing platform data from one driver to another (in
+> this case TI specific J721E driver to Cadence PCIe driver), should we model
+> Cadence core also as a library? If you agree, I can prepare patches for making
+> Cadence PCIe core as a library. Please let me know your thoughts.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Can you share your thoughts on this?
+
+Thanks
+Kishon
