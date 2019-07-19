@@ -1,79 +1,54 @@
-From: Sagar Kadam <sagar.kadam@sifive.com>
-Subject: Re: [PATCH 3/3] riscv: dts: Add DT node for SiFive FU540 Ethernet
- controller driver
-Date: Fri, 19 Jul 2019 17:23:45 +0530
-Message-ID: <CAARK3H=D1N8gO0Z82_MCtgr5DtT1=E0wzYbn-y451ASgxV-qBg@mail.gmail.com>
-References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com> <1563534631-15897-3-git-send-email-yash.shah@sifive.com>
+From: <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH 1/3] macb: bindings doc: update sifive fu540-c000 binding
+Date: Fri, 19 Jul 2019 12:02:27 +0000
+Message-ID: <443fd93a-ff6f-1641-89ec-f35f39de3688@microchip.com>
+References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1563534631-15897-3-git-send-email-yash.shah@sifive.com>
-Sender: netdev-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: davem@davemloft.net, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, nicolas.ferre@microchip.com, Sachin Ghadi <sachin.ghadi@sifive.com>, ynezz@true.cz
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
+Content-Language: en-US
+Content-ID: <165F3368D1BE9941BA62F18B715B2CA7@namprd11.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: yash.shah@sifive.com, davem@davemloft.net, robh+dt@kernel.org, paul.walmsley@sifive.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, sachin.ghadi@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-The series looks good to me.
-
-Reviewed-by: Sagar Kadam <sagar.kadam@sifive.com>
-
-On Fri, Jul 19, 2019 at 4:41 PM Yash Shah <yash.shah@sifive.com> wrote:
->
-> DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
->
+On 19/07/2019 at 13:10, Yash Shah wrote:
+> As per the discussion with Nicolas Ferre, rename the compatible property
+> to a more appropriate and specific string.
+> LINK: https://lkml.org/lkml/2019/7/17/200
+>=20
 > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+
 > ---
->  arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 15 +++++++++++++++
->  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  9 +++++++++
->  2 files changed, 24 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> index cc73522..588669f0 100644
-> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> @@ -231,5 +231,20 @@
->                         #size-cells = <0>;
->                         status = "disabled";
->                 };
-> +               eth0: ethernet@10090000 {
-> +                       compatible = "sifive,fu540-c000-gem";
-> +                       interrupt-parent = <&plic0>;
-> +                       interrupts = <53>;
-> +                       reg = <0x0 0x10090000 0x0 0x2000
-> +                              0x0 0x100a0000 0x0 0x1000>;
-> +                       local-mac-address = [00 00 00 00 00 00];
-> +                       clock-names = "pclk", "hclk";
-> +                       clocks = <&prci PRCI_CLK_GEMGXLPLL>,
-> +                                <&prci PRCI_CLK_GEMGXLPLL>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       status = "disabled";
-> +               };
-> +
->         };
->  };
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> index 0b55c53..85c17a7 100644
-> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> @@ -76,3 +76,12 @@
->                 disable-wp;
->         };
->  };
-> +
-> +&eth0 {
-> +       status = "okay";
-> +       phy-mode = "gmii";
-> +       phy-handle = <&phy1>;
-> +       phy1: ethernet-phy@0 {
-> +               reg = <0>;
-> +       };
-> +};
-> --
-> 1.9.1
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>   Documentation/devicetree/bindings/net/macb.txt | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentati=
+on/devicetree/bindings/net/macb.txt
+> index 63c73fa..0b61a90 100644
+> --- a/Documentation/devicetree/bindings/net/macb.txt
+> +++ b/Documentation/devicetree/bindings/net/macb.txt
+> @@ -15,10 +15,10 @@ Required properties:
+>     Use "atmel,sama5d4-gem" for the GEM IP (10/100) available on Atmel sa=
+ma5d4 SoCs.
+>     Use "cdns,zynq-gem" Xilinx Zynq-7xxx SoC.
+>     Use "cdns,zynqmp-gem" for Zynq Ultrascale+ MPSoC.
+> -  Use "sifive,fu540-macb" for SiFive FU540-C000 SoC.
+> +  Use "sifive,fu540-c000-gem" for SiFive FU540-C000 SoC.
+>     Or the generic form: "cdns,emac".
+>   - reg: Address and length of the register set for the device
+> -	For "sifive,fu540-macb", second range is required to specify the
+> +	For "sifive,fu540-c000-gem", second range is required to specify the
+>   	address and length of the registers for GEMGXL Management block.
+>   - interrupts: Should contain macb interrupt
+>   - phy-mode: See ethernet.txt file in the same directory.
+>=20
+
+
+--=20
+Nicolas Ferre
