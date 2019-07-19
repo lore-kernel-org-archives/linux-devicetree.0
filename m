@@ -1,57 +1,79 @@
-From: Andra Danciu <andradanciu1997@gmail.com>
-Subject: Re: [PATCH v4 1/2] arm64: dts: fsl: pico-pi: Add a device tree for
- the PICO-PI-IMX8M
-Date: Fri, 19 Jul 2019 14:49:54 +0300
-Message-ID: <CAJNLGswXF8XtZKnFtzaK+7Xvs0Ygwwh4WP5PiO8Csc7pDG1vNA@mail.gmail.com>
-References: <20190719104802.18070-1-andradanciu1997@gmail.com>
- <20190719104802.18070-2-andradanciu1997@gmail.com> <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
+From: Sagar Kadam <sagar.kadam@sifive.com>
+Subject: Re: [PATCH 3/3] riscv: dts: Add DT node for SiFive FU540 Ethernet
+ controller driver
+Date: Fri, 19 Jul 2019 17:23:45 +0530
+Message-ID: <CAARK3H=D1N8gO0Z82_MCtgr5DtT1=E0wzYbn-y451ASgxV-qBg@mail.gmail.com>
+References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com> <1563534631-15897-3-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ping Bai <ping.bai@nxp.com>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <Michal.Vokac@ysoft.com>, Li Yang <leoyang.li@nxp.com>, sriram.dash@nxp.com, Lucas Stach <l.stach@pengutronix.de>, Vabhav Sharma <vabhav.sharma@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, pankaj.bansal@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Richard Hu <richard.hu@technexion.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1563534631-15897-3-git-send-email-yash.shah@sifive.com>
+Sender: netdev-owner@vger.kernel.org
+To: Yash Shah <yash.shah@sifive.com>
+Cc: davem@davemloft.net, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, nicolas.ferre@microchip.com, Sachin Ghadi <sachin.ghadi@sifive.com>, ynezz@true.cz
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+The series looks good to me.
 
-I compiled with W=3D1 and you are right, they cause warning. I will remove =
-them.
+Reviewed-by: Sagar Kadam <sagar.kadam@sifive.com>
 
-=C3=8En vin., 19 iul. 2019 la 14:19, Fabio Estevam <festevam@gmail.com> a s=
-cris:
+On Fri, Jul 19, 2019 at 4:41 PM Yash Shah <yash.shah@sifive.com> wrote:
 >
-> Hi Andra,
+> DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
 >
-> On Fri, Jul 19, 2019 at 7:48 AM andradanciu1997
-> <andradanciu1997@gmail.com> wrote:
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 15 +++++++++++++++
+>  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  9 +++++++++
+>  2 files changed, 24 insertions(+)
 >
-> > +       pmic: pmic@4b {
-> > +               reg =3D <0x4b>;
-> > +               compatible =3D "rohm,bd71837";
-> > +               /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-> > +               pinctrl-names =3D "default";
-> > +               pinctrl-0 =3D <&pinctrl_pmic>;
-> > +               clocks =3D <&pmic_osc>;
-> > +               clock-names =3D "osc";
-> > +               clock-output-names =3D "pmic_clk";
-> > +               interrupt-parent =3D <&gpio1>;
-> > +               interrupts =3D <3 GPIO_ACTIVE_LOW>;
-> > +               interrupt-names =3D "irq";
-> > +
-> > +               regulators {
-> > +                       #address-cells =3D <1>;
-> > +                       #size-cells =3D <0>;
+> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> index cc73522..588669f0 100644
+> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+> @@ -231,5 +231,20 @@
+>                         #size-cells = <0>;
+>                         status = "disabled";
+>                 };
+> +               eth0: ethernet@10090000 {
+> +                       compatible = "sifive,fu540-c000-gem";
+> +                       interrupt-parent = <&plic0>;
+> +                       interrupts = <53>;
+> +                       reg = <0x0 0x10090000 0x0 0x2000
+> +                              0x0 0x100a0000 0x0 0x1000>;
+> +                       local-mac-address = [00 00 00 00 00 00];
+> +                       clock-names = "pclk", "hclk";
+> +                       clocks = <&prci PRCI_CLK_GEMGXLPLL>,
+> +                                <&prci PRCI_CLK_GEMGXLPLL>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
+> +
+>         };
+>  };
+> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> index 0b55c53..85c17a7 100644
+> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> @@ -76,3 +76,12 @@
+>                 disable-wp;
+>         };
+>  };
+> +
+> +&eth0 {
+> +       status = "okay";
+> +       phy-mode = "gmii";
+> +       phy-handle = <&phy1>;
+> +       phy1: ethernet-phy@0 {
+> +               reg = <0>;
+> +       };
+> +};
+> --
+> 1.9.1
 >
-> #address-cells and  #size-cells are not needed and they cause warnings wi=
-th W=3D1:
 >
->   DTC     arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb
-> arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts:77.14-196.5: Warning
-> (avoid_unnecessary_addr_size):
-> /soc@0/bus@30800000/i2c@30a20000/pmic@4b/regulators: unnecessary
-> #address-cells/#size-cells without "ranges" or child "reg" property
->
-> Please remove them.
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
