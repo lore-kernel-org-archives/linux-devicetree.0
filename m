@@ -1,54 +1,53 @@
-From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH 1/3] macb: bindings doc: update sifive fu540-c000 binding
-Date: Fri, 19 Jul 2019 12:02:27 +0000
-Message-ID: <443fd93a-ff6f-1641-89ec-f35f39de3688@microchip.com>
-References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH v4 1/2] arm64: dts: fsl: pico-pi: Add a device tree for
+ the PICO-PI-IMX8M
+Date: Fri, 19 Jul 2019 15:04:05 +0300
+Message-ID: <CAEnQRZByhULeq14BLbH4JzJwgL2+5hUaPn8=osZqVWrEMpCN6g@mail.gmail.com>
+References: <20190719104802.18070-1-andradanciu1997@gmail.com>
+ <20190719104802.18070-2-andradanciu1997@gmail.com> <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
-Content-Language: en-US
-Content-ID: <165F3368D1BE9941BA62F18B715B2CA7@namprd11.prod.outlook.com>
+In-Reply-To: <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: yash.shah@sifive.com, davem@davemloft.net, robh+dt@kernel.org, paul.walmsley@sifive.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc: mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, sachin.ghadi@sifive.com
+To: Fabio Estevam <festevam@gmail.com>
+Cc: andradanciu1997 <andradanciu1997@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ping Bai <ping.bai@nxp.com>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <Michal.Vokac@ysoft.com>, Li Yang <leoyang.li@nxp.com>, sriram.dash@nxp.com, Lucas Stach <l.stach@pengutronix.de>, Vabhav Sharma <vabhav.sharma@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, pankaj.bansal@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea>
 List-Id: devicetree@vger.kernel.org
 
-On 19/07/2019 at 13:10, Yash Shah wrote:
-> As per the discussion with Nicolas Ferre, rename the compatible property
-> to a more appropriate and specific string.
-> LINK: https://lkml.org/lkml/2019/7/17/200
->=20
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+On Fri, Jul 19, 2019 at 2:22 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Andra,
+>
+> On Fri, Jul 19, 2019 at 7:48 AM andradanciu1997
+> <andradanciu1997@gmail.com> wrote:
+>
+> > +       pmic: pmic@4b {
+> > +               reg = <0x4b>;
+> > +               compatible = "rohm,bd71837";
+> > +               /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
+> > +               pinctrl-names = "default";
+> > +               pinctrl-0 = <&pinctrl_pmic>;
+> > +               clocks = <&pmic_osc>;
+> > +               clock-names = "osc";
+> > +               clock-output-names = "pmic_clk";
+> > +               interrupt-parent = <&gpio1>;
+> > +               interrupts = <3 GPIO_ACTIVE_LOW>;
+> > +               interrupt-names = "irq";
+> > +
+> > +               regulators {
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+>
+> #address-cells and  #size-cells are not needed and they cause warnings with W=1:
+>
+>   DTC     arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb
+> arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts:77.14-196.5: Warning
+> (avoid_unnecessary_addr_size):
+> /soc@0/bus@30800000/i2c@30a20000/pmic@4b/regulators: unnecessary
+> #address-cells/#size-cells without "ranges" or child "reg" property
+>
+> Please remove them.
 
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Thanks Fabio for review, we learned something new today :).
 
-> ---
->   Documentation/devicetree/bindings/net/macb.txt | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentati=
-on/devicetree/bindings/net/macb.txt
-> index 63c73fa..0b61a90 100644
-> --- a/Documentation/devicetree/bindings/net/macb.txt
-> +++ b/Documentation/devicetree/bindings/net/macb.txt
-> @@ -15,10 +15,10 @@ Required properties:
->     Use "atmel,sama5d4-gem" for the GEM IP (10/100) available on Atmel sa=
-ma5d4 SoCs.
->     Use "cdns,zynq-gem" Xilinx Zynq-7xxx SoC.
->     Use "cdns,zynqmp-gem" for Zynq Ultrascale+ MPSoC.
-> -  Use "sifive,fu540-macb" for SiFive FU540-C000 SoC.
-> +  Use "sifive,fu540-c000-gem" for SiFive FU540-C000 SoC.
->     Or the generic form: "cdns,emac".
->   - reg: Address and length of the register set for the device
-> -	For "sifive,fu540-macb", second range is required to specify the
-> +	For "sifive,fu540-c000-gem", second range is required to specify the
->   	address and length of the registers for GEMGXL Management block.
->   - interrupts: Should contain macb interrupt
->   - phy-mode: See ethernet.txt file in the same directory.
->=20
-
-
---=20
-Nicolas Ferre
+Daniel.
