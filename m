@@ -1,53 +1,60 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH v4 1/2] arm64: dts: fsl: pico-pi: Add a device tree for
- the PICO-PI-IMX8M
-Date: Fri, 19 Jul 2019 15:04:05 +0300
-Message-ID: <CAEnQRZByhULeq14BLbH4JzJwgL2+5hUaPn8=osZqVWrEMpCN6g@mail.gmail.com>
-References: <20190719104802.18070-1-andradanciu1997@gmail.com>
- <20190719104802.18070-2-andradanciu1997@gmail.com> <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
+From: <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH 2/3] macb: Update compatibility string for SiFive
+ FU540-C000
+Date: Fri, 19 Jul 2019 12:05:57 +0000
+Message-ID: <4075b955-a187-6fd7-a2e6-deb82b5d4fb6@microchip.com>
+References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
+ <1563534631-15897-2-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
+In-Reply-To: <1563534631-15897-2-git-send-email-yash.shah@sifive.com>
+Content-Language: en-US
+Content-ID: <D5BEB55406C32044939CB2E42927225D@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: andradanciu1997 <andradanciu1997@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ping Bai <ping.bai@nxp.com>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <Michal.Vokac@ysoft.com>, Li Yang <leoyang.li@nxp.com>, sriram.dash@nxp.com, Lucas Stach <l.stach@pengutronix.de>, Vabhav Sharma <vabhav.sharma@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, pankaj.bansal@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea>
+To: yash.shah@sifive.com, davem@davemloft.net, robh+dt@kernel.org, paul.walmsley@sifive.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, sachin.ghadi@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 2:22 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> Hi Andra,
->
-> On Fri, Jul 19, 2019 at 7:48 AM andradanciu1997
-> <andradanciu1997@gmail.com> wrote:
->
-> > +       pmic: pmic@4b {
-> > +               reg = <0x4b>;
-> > +               compatible = "rohm,bd71837";
-> > +               /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-> > +               pinctrl-names = "default";
-> > +               pinctrl-0 = <&pinctrl_pmic>;
-> > +               clocks = <&pmic_osc>;
-> > +               clock-names = "osc";
-> > +               clock-output-names = "pmic_clk";
-> > +               interrupt-parent = <&gpio1>;
-> > +               interrupts = <3 GPIO_ACTIVE_LOW>;
-> > +               interrupt-names = "irq";
-> > +
-> > +               regulators {
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <0>;
->
-> #address-cells and  #size-cells are not needed and they cause warnings with W=1:
->
->   DTC     arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb
-> arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts:77.14-196.5: Warning
-> (avoid_unnecessary_addr_size):
-> /soc@0/bus@30800000/i2c@30a20000/pmic@4b/regulators: unnecessary
-> #address-cells/#size-cells without "ranges" or child "reg" property
->
-> Please remove them.
+On 19/07/2019 at 13:10, Yash Shah wrote:
+> Update the compatibility string for SiFive FU540-C000 as per the new
+> string updated in the binding doc.
+> Reference: https://lkml.org/lkml/2019/7/17/200
 
-Thanks Fabio for review, we learned something new today :).
+Maybe referring to lore.kernel.org is better:
+https://lore.kernel.org/netdev/CAJ2_jOFEVZQat0Yprg4hem4jRrqkB72FKSeQj4p8P5K=
+A-+rgww@mail.gmail.com/
 
-Daniel.
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+
+Thanks, best regards,
+   Nicolas
+
+> ---
+>   drivers/net/ethernet/cadence/macb_main.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ether=
+net/cadence/macb_main.c
+> index 15d0737..305371c 100644
+> --- a/drivers/net/ethernet/cadence/macb_main.c
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+> @@ -4112,7 +4112,7 @@ static int fu540_c000_init(struct platform_device *=
+pdev)
+>   	{ .compatible =3D "cdns,emac", .data =3D &emac_config },
+>   	{ .compatible =3D "cdns,zynqmp-gem", .data =3D &zynqmp_config},
+>   	{ .compatible =3D "cdns,zynq-gem", .data =3D &zynq_config },
+> -	{ .compatible =3D "sifive,fu540-macb", .data =3D &fu540_c000_config },
+> +	{ .compatible =3D "sifive,fu540-c000-gem", .data =3D &fu540_c000_config=
+ },
+>   	{ /* sentinel */ }
+>   };
+>   MODULE_DEVICE_TABLE(of, macb_dt_ids);
+>=20
+
+
+--=20
+Nicolas Ferre
