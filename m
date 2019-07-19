@@ -1,46 +1,57 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v4 1/2] arm64: dts: fsl: pico-pi: Add a device tree for
- the PICO-PI-IMX8M
-Date: Fri, 19 Jul 2019 08:19:43 -0300
-Message-ID: <CAOMZO5Btu1Shou=dGRrG74e5UjHnh7NtR4+4ETK0t_1Zt48Crw@mail.gmail.com>
-References: <20190719104802.18070-1-andradanciu1997@gmail.com> <20190719104802.18070-2-andradanciu1997@gmail.com>
+From: Liviu Dudau <liviu.dudau@arm.com>
+Subject: Re: [v2 2/3] dt/bindings: display: Add optional property node
+ defined for Mali DP500
+Date: Fri, 19 Jul 2019 12:47:03 +0100
+Message-ID: <20190719114703.GC16673@e110455-lin.cambridge.arm.com>
+References: <20190719095842.11683-1-wen.he_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190719104802.18070-2-andradanciu1997@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andradanciu1997 <andradanciu1997@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ping Bai <ping.bai@nxp.com>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <Michal.Vokac@ysoft.com>, Li Yang <leoyang.li@nxp.com>, sriram.dash@nxp.com, Lucas Stach <l.stach@pengutronix.de>, Vabhav Sharma <vabhav.sharma@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, pankaj.bansal@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Richard Hu <richard.hu@technexion.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190719095842.11683-1-wen.he_1@nxp.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Wen He <wen.he_1@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, leoyang.li@nxp.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andra,
-
-On Fri, Jul 19, 2019 at 7:48 AM andradanciu1997
-<andradanciu1997@gmail.com> wrote:
-
-> +       pmic: pmic@4b {
-> +               reg = <0x4b>;
-> +               compatible = "rohm,bd71837";
-> +               /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_pmic>;
-> +               clocks = <&pmic_osc>;
-> +               clock-names = "osc";
-> +               clock-output-names = "pmic_clk";
-> +               interrupt-parent = <&gpio1>;
-> +               interrupts = <3 GPIO_ACTIVE_LOW>;
-> +               interrupt-names = "irq";
-> +
-> +               regulators {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-
-#address-cells and  #size-cells are not needed and they cause warnings with W=1:
-
-  DTC     arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb
-arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts:77.14-196.5: Warning
-(avoid_unnecessary_addr_size):
-/soc@0/bus@30800000/i2c@30a20000/pmic@4b/regulators: unnecessary
-#address-cells/#size-cells without "ranges" or child "reg" property
-
-Please remove them.
+T24gRnJpLCBKdWwgMTksIDIwMTkgYXQgMDU6NTg6NDJQTSArMDgwMCwgV2VuIEhlIHdyb3RlOgo+
+IEFkZCBvcHRpb25hbCBwcm9wZXJ0eSBub2RlICdhcm0sbWFsaWRwLWFycW9zLXZhbHVlJyBmb3Ig
+dGhlIE1hbGkgRFA1MDAuCj4gVGhpcyBwcm9wZXJ0eSBkZXNjcmliZSB0aGUgQVJRb1MgbGV2ZWxz
+IG9mIERQNTAwJ3MgUW9TIHNpZ25hbGluZy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBXZW4gSGUgPHdl
+bi5oZV8xQG54cC5jb20+CgpBY2tlZC1ieTogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1QGFybS5j
+b20+CgpUaGFua3MgZm9yIHRoZSBwYXRjaCEKCkJlc3QgcmVnYXJkcywKTGl2aXUKCj4gLS0tCj4g
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0
+IHwgMyArKysKPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0sbWFsaWRw
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxtYWxp
+ZHAudHh0Cj4gaW5kZXggMmY3ODcwOTgzZWYxLi43NmEwZTcyNTEyNTEgMTAwNjQ0Cj4gLS0tIGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQK
+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0sbWFs
+aWRwLnR4dAo+IEBAIC0zNyw2ICszNyw4IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gICAgICBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3Jlc2VydmVk
+LW1lbW9yeS50eHQpCj4gICAgICB0byBiZSB1c2VkIGZvciB0aGUgZnJhbWVidWZmZXI7IGlmIG5v
+dCBwcmVzZW50LCB0aGUgZnJhbWVidWZmZXIgbWF5Cj4gICAgICBiZSBsb2NhdGVkIGFueXdoZXJl
+IGluIG1lbW9yeS4KPiArICAtIGFybSxtYWxpZHAtYXJxb3MtaGlnaC1sZXZlbDogaW50ZWdlciBv
+ZiB1MzIgdmFsdWUgZGVzY3JpYmluZyB0aGUgQVJRb1MKPiArICAgIGxldmVscyBvZiBEUDUwMCdz
+IFFvUyBzaWduYWxpbmcuCj4gIAo+ICAKPiAgRXhhbXBsZToKPiBAQCAtNTQsNiArNTYsNyBAQCBF
+eGFtcGxlOgo+ICAJCWNsb2NrcyA9IDwmb3NjY2xrMj4sIDwmZnBnYW9zYzA+LCA8JmZwZ2Fvc2Mx
+PiwgPCZmcGdhb3NjMT47Cj4gIAkJY2xvY2stbmFtZXMgPSAicHhsY2xrIiwgIm1jbGsiLCAiYWNs
+ayIsICJwY2xrIjsKPiAgCQlhcm0sbWFsaWRwLW91dHB1dC1wb3J0LWxpbmVzID0gL2JpdHMvIDgg
+PDggOCA4PjsKPiArCQlhcm0sbWFsaWRwLWFycW9zLWhpZ2gtbGV2ZWwgPSA8JnJxb3N2YWx1ZT47
+Cj4gIAkJcG9ydCB7Cj4gIAkJCWRwMF9vdXRwdXQ6IGVuZHBvaW50IHsKPiAgCQkJCXJlbW90ZS1l
+bmRwb2ludCA9IDwmdGRhOTk4eF8yX2lucHV0PjsKPiAtLSAKPiAyLjE3LjEKPiAKCi0tIAo9PT09
+PT09PT09PT09PT09PT09PQp8IEkgd291bGQgbGlrZSB0byB8CnwgZml4IHRoZSB3b3JsZCwgIHwK
+fCBidXQgdGhleSdyZSBub3QgfAp8IGdpdmluZyBtZSB0aGUgICB8CiBcIHNvdXJjZSBjb2RlISAg
+LwogIC0tLS0tLS0tLS0tLS0tLQogICAgwq9cXyjjg4QpXy/CrwpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
