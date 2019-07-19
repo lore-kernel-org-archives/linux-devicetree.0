@@ -1,63 +1,60 @@
-From: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
-Subject: [PATCH v2] arm: dts: imx6qdl: add gpio expander pca9535
-Date: Fri, 19 Jul 2019 12:46:15 +0200
-Message-ID: <20190719104615.5329-1-gilles.doffe@savoirfairelinux.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+From: andradanciu1997 <andradanciu1997@gmail.com>
+Subject: [PATCH v4 0/2] Add basic support for pico-pi-imx8m
+Date: Fri, 19 Jul 2019 13:48:00 +0300
+Message-ID: <20190719104802.18070-1-andradanciu1997@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: jerome.oufella@savoirfairelinux.com, rennes@savoirfairelinux.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com
+To: shawnguo@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org, ping.bai@nxp.com, Michal.Vokac@ysoft.com, leoyang.li@nxp.com, sriram.dash@nxp.com, l.stach@pengutronix.de, vabhav.sharma@nxp.com, bhaskar.upadhaya@nxp.com, pramod.kumar_1@nxp.com, pankaj.bansal@nxp.com, aisheng.dong@nxp.com, angus@akkea.ca, richard.hu@technexion.com, andradanciu1997@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The pca9535 gpio expander is present on the Rex baseboard, but missing
-from the dtsi.
+Add support for TechNexion PICO-PI-IMX8M based on patches from Richard Hu
+Datasheet is at: https://s3.us-east-2.amazonaws.com/technexion/datasheets/picopiimx8m.pdf
 
-Add the new gpio controller and the associated interrupt line
-MX6QDL_PAD_NANDF_CS3__GPIO6_IO16.
+Changes since v3:
+ - renamed pico-pi-8m.dts to imx8mq-pico-pi.dts
+ - moved iomuxc node as the last one
+ - removed pinctrl-assert-gpios property from fec1 node
+ - removed at803x,led-act-blind-workaround, at803x,eee-disabled
+   properties from mdio node
+ - added pinctrl-names = "default" to i2c1 node
+ - changed bd71837 pmic support properties according to
+   Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+ - removed A53_0 node
 
-Signed-off-by: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
----
- arch/arm/boot/dts/imx6qdl-rex.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Changes since v2:
+ - changed PICO-PI-8M bord compatible from wand,imx8mq-pico-pi to
+   technexion,pico-pi-imx8m
+ - removed bootargs property
+ - removed regulators node and put fixed regulator directly under root node
+ - changed node name from usb_otg_vbus to regulator-usb-otg-vbus
+ - removed pinctrl-names property from iomuxc node
+ - removed wand-pi-8m container node
+ - sorted pinctrl nodes alphabetically
+ - removed tusb320_irqgrp, tusb320_irqgrp nodes because there is no upstream
+   driver
+ - changed properties' order in usb_dwc3_1 node
 
-diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi b/arch/arm/boot/dts/imx6q=
-dl-rex.dtsi
-index 97f1659144ea..b517efb22fcb 100644
---- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
-@@ -136,6 +136,19 @@
- 		compatible =3D "atmel,24c02";
- 		reg =3D <0x57>;
- 	};
-+
-+	pca9535: gpio8@27 {
-+		compatible =3D "nxp,pca9535";
-+		reg =3D <0x27>;
-+		gpio-controller;
-+		#gpio-cells =3D <2>;
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_pca9535>;
-+		interrupt-parent =3D <&gpio6>;
-+		interrupts =3D <16 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells =3D <2>;
-+	};
- };
-=20
- &i2c3 {
-@@ -237,6 +250,12 @@
- 			>;
- 		};
-=20
-+		pinctrl_pca9535: pca9535 {
-+			fsl,pins =3D <
-+				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x00017059
-+		   >;
-+		};
-+
- 		pinctrl_uart1: uart1grp {
- 			fsl,pins =3D <
- 				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
---=20
-2.19.1
+Changes since v1:
+ - renamed wandboard-pi-8m.dts to pico-pi-8m.dts
+ - removed pinctrl_csi1, pinctrl_wifi_ctrl
+ - used generic name for pmic
+ - removed gpo node
+ - delete regulator-virtuals node
+ - remove always-on property from buck1-8 and ldo3-7
+ - remove pmic-buck-uses-i2c-dvs property for buck1-4
+
+Andra Danciu (1):
+  dt-bindings: arm: fsl: Add the pico-pi-imx8m board
+
+Richard Hu (1):
+  arm64: dts: fsl: pico-pi: Add a device tree for the PICO-PI-IMX8M
+
+ Documentation/devicetree/bindings/arm/fsl.yaml   |   1 +
+ arch/arm64/boot/dts/freescale/Makefile           |   1 +
+ arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts | 417 +++++++++++++++++++++++
+ 3 files changed, 419 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
+
+-- 
+2.11.0
