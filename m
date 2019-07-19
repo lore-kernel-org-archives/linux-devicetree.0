@@ -1,7 +1,7 @@
 From: Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH 2/3] macb: Update compatibility string for SiFive FU540-C000
-Date: Fri, 19 Jul 2019 16:40:30 +0530
-Message-ID: <1563534631-15897-2-git-send-email-yash.shah@sifive.com>
+Subject: [PATCH 3/3] riscv: dts: Add DT node for SiFive FU540 Ethernet controller driver
+Date: Fri, 19 Jul 2019 16:40:31 +0530
+Message-ID: <1563534631-15897-3-git-send-email-yash.shah@sifive.com>
 References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
@@ -10,27 +10,55 @@ To: davem@davemloft.net, robh+dt@kernel.org, paul.walmsley@sifive.com, netdev@vg
 Cc: mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu, nicolas.ferre@microchip.com, ynezz@true.cz, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Update the compatibility string for SiFive FU540-C000 as per the new
-string updated in the binding doc.
-Reference: https://lkml.org/lkml/2019/7/17/200
+DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
 
 Signed-off-by: Yash Shah <yash.shah@sifive.com>
 ---
- drivers/net/ethernet/cadence/macb_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 15 +++++++++++++++
+ arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  9 +++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 15d0737..305371c 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -4112,7 +4112,7 @@ static int fu540_c000_init(struct platform_device *pdev)
- 	{ .compatible = "cdns,emac", .data = &emac_config },
- 	{ .compatible = "cdns,zynqmp-gem", .data = &zynqmp_config},
- 	{ .compatible = "cdns,zynq-gem", .data = &zynq_config },
--	{ .compatible = "sifive,fu540-macb", .data = &fu540_c000_config },
-+	{ .compatible = "sifive,fu540-c000-gem", .data = &fu540_c000_config },
- 	{ /* sentinel */ }
+diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+index cc73522..588669f0 100644
+--- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
++++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+@@ -231,5 +231,20 @@
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
++		eth0: ethernet@10090000 {
++			compatible = "sifive,fu540-c000-gem";
++			interrupt-parent = <&plic0>;
++			interrupts = <53>;
++			reg = <0x0 0x10090000 0x0 0x2000
++			       0x0 0x100a0000 0x0 0x1000>;
++			local-mac-address = [00 00 00 00 00 00];
++			clock-names = "pclk", "hclk";
++			clocks = <&prci PRCI_CLK_GEMGXLPLL>,
++				 <&prci PRCI_CLK_GEMGXLPLL>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 	};
  };
- MODULE_DEVICE_TABLE(of, macb_dt_ids);
+diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+index 0b55c53..85c17a7 100644
+--- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
++++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+@@ -76,3 +76,12 @@
+ 		disable-wp;
+ 	};
+ };
++
++&eth0 {
++	status = "okay";
++	phy-mode = "gmii";
++	phy-handle = <&phy1>;
++	phy1: ethernet-phy@0 {
++		reg = <0>;
++	};
++};
 -- 
 1.9.1
