@@ -1,38 +1,34 @@
-From: andradanciu1997 <andradanciu1997@gmail.com>
-Subject: [PATCH v5 2/2] dt-bindings: arm: fsl: Add the pico-pi-imx8m board
-Date: Fri, 19 Jul 2019 15:14:30 +0300
-Message-ID: <20190719121430.9318-3-andradanciu1997@gmail.com>
-References: <20190719121430.9318-1-andradanciu1997@gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 3/3] riscv: dts: Add DT node for SiFive FU540 Ethernet
+ controller driver
+Date: Fri, 19 Jul 2019 15:26:57 +0200
+Message-ID: <20190719132657.GD24930@lunn.ch>
+References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
+ <1563534631-15897-3-git-send-email-yash.shah@sifive.com>
+ <CAARK3H=D1N8gO0Z82_MCtgr5DtT1=E0wzYbn-y451ASgxV-qBg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190719121430.9318-1-andradanciu1997@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAARK3H=D1N8gO0Z82_MCtgr5DtT1=E0wzYbn-y451ASgxV-qBg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com, j.neuschaefer@gmx.net, andradanciu1997@gmail.com, aisheng.dong@nxp.com, leoyang.li@nxp.com, l.stach@pengutronix.de, pankaj.bansal@nxp.com, bhaskar.upadhaya@nxp.com, pramod.kumar_1@nxp.com, angus@akkea.ca, richard.hu@technexion.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Sagar Kadam <sagar.kadam@sifive.com>
+Cc: Yash Shah <yash.shah@sifive.com>, davem@davemloft.net, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, nicolas.ferre@microchip.com, Sachin Ghadi <sachin.ghadi@sifive.com>, ynezz@true.cz
 List-Id: devicetree@vger.kernel.org
 
-From: Andra Danciu <andradanciu1997@gmail.com>
+On Fri, Jul 19, 2019 at 05:23:45PM +0530, Sagar Kadam wrote:
+> > +&eth0 {
+> > +       status = "okay";
+> > +       phy-mode = "gmii";
+> > +       phy-handle = <&phy1>;
+> > +       phy1: ethernet-phy@0 {
+> > +               reg = <0>;
+> > +       };
 
-Add an entry for TechNexion PICO-PI-IMX8M board based on i.MX8MQ SoC
-Datasheet can be found at:
-https://s3.us-east-2.amazonaws.com/technexion/datasheets/picopiimx8m.pdf
+Hi Sagar
 
-Cc: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Is there a good reason to call it phy1? Is there a phy0?
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 7294ac36f4c0..54c094341121 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -219,6 +219,7 @@ properties:
-           - enum:
-               - fsl,imx8mq-evk            # i.MX8MQ EVK Board
-               - purism,librem5-devkit     # Purism Librem5 devkit
-+              - technexion,pico-pi-imx8m  # TechNexion PICO-PI-8M evk
-           - const: fsl,imx8mq
- 
-       - description: i.MX8QXP based Boards
--- 
-2.11.0
+Thanks
+
+   Andrew
