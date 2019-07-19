@@ -1,103 +1,128 @@
-From: David Dai <daidavid1@codeaurora.org>
-Subject: [PATCH 2/2] arm64: dts: sdm845: Redefine interconnect provider DT nodes
-Date: Fri, 19 Jul 2019 13:32:24 -0700
-Message-ID: <1563568344-1274-3-git-send-email-daidavid1@codeaurora.org>
-References: <1563568344-1274-1-git-send-email-daidavid1@codeaurora.org>
+From: Hongwei Zhang <hongweiz@ami.com>
+Subject: dt-bindings: gpio: aspeed: Add SGPIO support
+Date: Fri, 19 Jul 2019 16:37:24 -0400
+Message-ID: <1563568644-10392-1-git-send-email-hongweiz@ami.com>
+References: <1563394325-15941-1-git-send-email-hongweiz@ami.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563568344-1274-1-git-send-email-daidavid1@codeaurora.org>
+In-Reply-To: <1563394325-15941-1-git-send-email-hongweiz@ami.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: georgi.djakov@linaro.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc: David Dai <daidavid1@codeaurora.org>, evgreen@google.com, ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+To: hongweiz@ami.com, Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the DT nodes for each of the Network-On-Chip interconnect
-buses found on SDM845 based platform and redefine the rsc_hlos
-child node as a bcm-voter device to better represent the hardware.
+Hello Andrew,
 
-Signed-off-by: David Dai <daidavid1@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 61 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 58 insertions(+), 3 deletions(-)
+Thanks for reviewing and please see my inline comments.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index e7d78bc..204222e 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -610,6 +610,62 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		aggre1_noc: interconnect@16e0000 {
-+			compatible = "qcom,sdm845-aggre1_noc";
-+			reg = <0 0x16e0000 0 0xd080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		aggre2_noc: interconnect@1700000 {
-+			compatible = "qcom,sdm845-aggre2_noc";
-+			reg = <0 0x1700000 0 0x3b100>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		config_noc: interconnect@1500000 {
-+			compatible = "qcom,sdm845-config_noc";
-+			reg = <0 0x1500000 0 0x5080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		dc_noc: interconnect@14e0000 {
-+			compatible = "qcom,sdm845-dc_noc";
-+			reg = <0 0x14e0000 0 0x400>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		gladiator_noc: interconnect@17900000 {
-+			compatible = "qcom,sdm845-gladiator_noc";
-+			reg = <0 0x17900000 0 0xd080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		mem_noc: interconnect@1380000 {
-+			compatible = "qcom,sdm845-mem_noc";
-+			reg = <0 0x1380000 0 0x27200>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		mmss_noc: interconnect@1740000 {
-+			compatible = "qcom,sdm845-mmss_noc";
-+			reg = <0 0x1740000 0 0x1c1000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
-+		system_noc: interconnect@1620000 {
-+			compatible = "qcom,sdm845-system_noc";
-+			reg = <0 0x1620000 0 0x18080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voter = <&apps_bcm_voter>;
-+		};
-+
- 		qfprom@784000 {
- 			compatible = "qcom,qfprom";
- 			reg = <0 0x00784000 0 0x8ff>;
-@@ -2801,9 +2857,8 @@
- 				};
- 			};
- 
--			rsc_hlos: interconnect {
--				compatible = "qcom,sdm845-rsc-hlos";
--				#interconnect-cells = <1>;
-+			apps_bcm_voter: bcm_voter {
-+				compatible = "qcom,sdm845-bcm-voter";
- 			};
- 		};
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--Hongwei
+
+> From:	Andrew Jeffery <andrew@aj.id.au>
+> Sent:	Wednesday, July 17, 2019 9:48 PM
+> To:	Hongwei Zhang; Joel Stanley; Linus Walleij; devicetree@vger.kernel.org
+> Cc:	Rob Herring; Mark Rutland; Bartosz Golaszewski; linux-aspeed@lists.ozlabs.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-gpio@vger.kernel.org
+> Subject:	Re: [PATCH 2/3 v4] dt-bindings: gpio: aspeed: Add SGPIO support
+> 
+> The subject is largely correct, but please see the discussion on the driver patch about how to clean up 
+> the [PATCH ...] prefix.
+> 
+> On Thu, 18 Jul 2019, at 05:42, Hongwei Zhang wrote:
+> > Add bindings to support SGPIO on AST2400 or AST2500.
+> > 
+> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+> > ---
+> >  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
+> >  1 file changed, 55 insertions(+)
+> >  create mode 100644 
+> > Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > new file mode 100644
+> > index 0000000..2d6305e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> > @@ -0,0 +1,55 @@
+> > +Aspeed SGPIO controller Device Tree Bindings
+> > +-------------------------------------------
+> > +
+> > +This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80
+> > full
+> > +featured Serial GPIOs. Each of the Serial GPIO pins can be programmed
+> > to
+> > +support the following options:
+> > +- Support interrupt option for each input port and various interrupt
+> > +  sensitivity option (level-high, level-low, edge-high, edge-low)
+> > +- Support reset tolerance option for each output port
+> > +- Directly connected to APB bus and its shift clock is from APB bus
+> > clock
+> > +  divided by a programmable value.
+> > +- Co-work with external signal-chained TTL components 
+> > +(74LV165/74LV595)
+> > +
+> > +
+> > +Required properties:
+> > +
+> > +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
+> > +
+> > +- #gpio-cells 		: Should be two
+> > +			  - First cell is the GPIO line number
+> > +			  - Second cell is used to specify optional
+> > +			    parameters (unused)
+> > +
+> > +- reg			: Address and length of the register set for the device
+> > +- gpio-controller	: Marks the device node as a GPIO controller
+> > +- interrupts		: Interrupt specifier (see interrupt bindings for
+> > +			  details)
+> > +
+> > +- interrupt-controller	: Mark the GPIO controller as an 
+> > interrupt-controller
+> > +
+> > +- nr-gpios		: number of GPIO pins to serialise. 
+> > +			  (should be multiple of 8, up to 80 pins)
+> 
+> Please change the property name to "ngpios", as per the generic GPIO bindings[1].
+> 
+> [1] 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindi
+> ngs/gpio/gpio.txt?h=v5.2#n141
+
+done
+
+> 
+> Cheers,
+> 
+> Andrew
+> 
+> > +
+> > +- clocks                : A phandle to the APB clock for SGPM clock 
+> > division
+> > +
+> > +- bus-frequency		: SGPM CLK frequency
+> > +
+> > +
+> > +The sgpio and interrupt properties are further described in their
+> > respective bindings documentation:
+> > +
+> > +- Documentation/devicetree/bindings/sgpio/gpio.txt
+> > +- 
+> > +Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> > +
+> > +  Example:
+> > +	sgpio: sgpio@1e780200 {
+> > +		#gpio-cells = <2>;
+> > +		compatible = "aspeed,ast2500-sgpio";
+> > +		gpio-controller;
+> > +		interrupts = <40>;
+> > +		reg = <0x1e780200 0x0100>;
+> > +		clocks = <&syscon ASPEED_CLK_APB>;
+> > +		interrupt-controller;
+> > +		nr-gpios = <8>;
+> > +		bus-frequency = <12000000>;
+> > +	};
+> > --
+> > 2.7.4
+> > 
+> >
