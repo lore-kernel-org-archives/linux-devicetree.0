@@ -1,71 +1,85 @@
-Return-Path: <SRS0=gSIt=VA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:55903 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbfGCJzY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jul 2019 05:55:24 -0400
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 5/7] dt-bindings: simple-framebuffer: Add requirement for pipelines
-Date: Wed,  3 Jul 2019 11:55:11 +0200
-Message-Id: <20190703095513.12340-5-maxime.ripard@bootlin.com>
-In-Reply-To: <20190703095513.12340-1-maxime.ripard@bootlin.com>
-References: <20190703095513.12340-1-maxime.ripard@bootlin.com>
+Return-Path: <SRS0=OQoQ=VQ=pengutronix.de=l.stach@kernel.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 3/3] usb: usb251xb: Reallow swap-dx-lanes to apply to the upstream port
+Date: Fri, 19 Jul 2019 10:44:07 +0200
+Message-Id: <20190719084407.28041-3-l.stach@pengutronix.de>
+In-Reply-To: <20190719084407.28041-1-l.stach@pengutronix.de>
+References: <20190719084407.28041-1-l.stach@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
+To: Richard Leitner <richard.leitner@skidata.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Serge Semin <fancer.lancer@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, patchwork-lst@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Both the allwinner and amlogic compatibles require that either the
-allwinner,pipeline or the amlogic,pipeline property is set. This was
-dropped during the conversion since we didn't have conditionals back then,
-but we can express this properly now.
+This is a partial revert of 73d31def1aab "usb: usb251xb: Create a ports
+field collector method", which broke a existing devicetree
+(arch/arm64/boot/dts/freescale/imx8mq.dtsi).
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+There is no reason why the swap-dx-lanes property should not apply to
+the upstream port. The reason given in the breaking commit was that it's
+inconsitent with respect to other port properties, but in fact it is not.
+All other properties which only apply to the downstream ports explicitly
+reject port 0, so there is pretty strong precedence that the driver
+referred to the upstream port as port 0. So there is no inconsistency in
+this property at all, other than the swapping being also applicable to
+the upstream port.
+
+CC: stable@vger.kernel.org #5.2
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 ---
- .../bindings/display/simple-framebuffer.yaml  | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/usb/misc/usb251xb.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
-index c8d73ef010b5..678776b6012a 100644
---- a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
-+++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
-@@ -126,6 +126,28 @@ required:
-   # but usually they will be filled by the bootloader.
-   - compatible
+diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+index 119aeb658c81..6ca9111d150a 100644
+--- a/drivers/usb/misc/usb251xb.c
++++ b/drivers/usb/misc/usb251xb.c
+@@ -375,7 +375,8 @@ static int usb251xb_connect(struct usb251xb *hub)
  
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: allwinner,simple-framebuffer
-+
-+    then:
-+      required:
-+        - allwinner,pipeline
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: amlogic,simple-framebuffer
-+
-+    then:
-+      required:
-+        - amlogic,pipeline
-+
-+
- additionalProperties: false
+ #ifdef CONFIG_OF
+ static void usb251xb_get_ports_field(struct usb251xb *hub,
+-				    const char *prop_name, u8 port_cnt, u8 *fld)
++				    const char *prop_name, u8 port_cnt,
++				    bool ds_only, u8 *fld)
+ {
+ 	struct device *dev = hub->dev;
+ 	struct property *prop;
+@@ -383,7 +384,7 @@ static void usb251xb_get_ports_field(struct usb251xb *hub,
+ 	u32 port;
  
- examples:
-@@ -140,6 +162,7 @@ examples:
-       stdout-path = "display0";
-       framebuffer0: framebuffer@1d385000 {
-         compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
-+        allwinner,pipeline = "de_be0-lcd0";
-         reg = <0x1d385000 3840000>;
-         width = <1600>;
-         height = <1200>;
+ 	of_property_for_each_u32(dev->of_node, prop_name, prop, p, port) {
+-		if ((port >= 1) && (port <= port_cnt))
++		if ((port >= ds_only ? 1 : 0) && (port <= port_cnt))
+ 			*fld |= BIT(port);
+ 		else
+ 			dev_warn(dev, "port %u doesn't exist\n", port);
+@@ -501,15 +502,15 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 
+ 	hub->non_rem_dev = USB251XB_DEF_NON_REMOVABLE_DEVICES;
+ 	usb251xb_get_ports_field(hub, "non-removable-ports", data->port_cnt,
+-				 &hub->non_rem_dev);
++				 true, &hub->non_rem_dev);
+ 
+ 	hub->port_disable_sp = USB251XB_DEF_PORT_DISABLE_SELF;
+ 	usb251xb_get_ports_field(hub, "sp-disabled-ports", data->port_cnt,
+-				 &hub->port_disable_sp);
++				 true, &hub->port_disable_sp);
+ 
+ 	hub->port_disable_bp = USB251XB_DEF_PORT_DISABLE_BUS;
+ 	usb251xb_get_ports_field(hub, "bp-disabled-ports", data->port_cnt,
+-				 &hub->port_disable_bp);
++				 true, &hub->port_disable_bp);
+ 
+ 	hub->max_power_sp = USB251XB_DEF_MAX_POWER_SELF;
+ 	if (!of_property_read_u32(np, "sp-max-total-current-microamp",
+@@ -573,7 +574,7 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 	 */
+ 	hub->port_swap = USB251XB_DEF_PORT_SWAP;
+ 	usb251xb_get_ports_field(hub, "swap-dx-lanes", data->port_cnt,
+-				 &hub->port_swap);
++				 false, &hub->port_swap);
+ 
+ 	/* The following parameters are currently not exposed to devicetree, but
+ 	 * may be as soon as needed.
 -- 
-2.21.0
+2.20.1
