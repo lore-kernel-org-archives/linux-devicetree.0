@@ -1,60 +1,38 @@
 From: andradanciu1997 <andradanciu1997@gmail.com>
-Subject: [PATCH v4 0/2] Add basic support for pico-pi-imx8m
-Date: Fri, 19 Jul 2019 13:48:00 +0300
-Message-ID: <20190719104802.18070-1-andradanciu1997@gmail.com>
+Subject: [PATCH v4 2/2] dt-bindings: arm: fsl: Add the pico-pi-imx8m board
+Date: Fri, 19 Jul 2019 13:48:02 +0300
+Message-ID: <20190719104802.18070-3-andradanciu1997@gmail.com>
+References: <20190719104802.18070-1-andradanciu1997@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190719104802.18070-1-andradanciu1997@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: shawnguo@kernel.org
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org, ping.bai@nxp.com, Michal.Vokac@ysoft.com, leoyang.li@nxp.com, sriram.dash@nxp.com, l.stach@pengutronix.de, vabhav.sharma@nxp.com, bhaskar.upadhaya@nxp.com, pramod.kumar_1@nxp.com, pankaj.bansal@nxp.com, aisheng.dong@nxp.com, angus@akkea.ca, richard.hu@technexion.com, andradanciu1997@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for TechNexion PICO-PI-IMX8M based on patches from Richard Hu
-Datasheet is at: https://s3.us-east-2.amazonaws.com/technexion/datasheets/picopiimx8m.pdf
+From: Andra Danciu <andradanciu1997@gmail.com>
 
-Changes since v3:
- - renamed pico-pi-8m.dts to imx8mq-pico-pi.dts
- - moved iomuxc node as the last one
- - removed pinctrl-assert-gpios property from fec1 node
- - removed at803x,led-act-blind-workaround, at803x,eee-disabled
-   properties from mdio node
- - added pinctrl-names = "default" to i2c1 node
- - changed bd71837 pmic support properties according to
-   Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
- - removed A53_0 node
+Add an entry for TechNexion PICO-PI-IMX8M board based on i.MX8MQ SoC
+Datasheet can be found at:
+https://s3.us-east-2.amazonaws.com/technexion/datasheets/picopiimx8m.pdf
 
-Changes since v2:
- - changed PICO-PI-8M bord compatible from wand,imx8mq-pico-pi to
-   technexion,pico-pi-imx8m
- - removed bootargs property
- - removed regulators node and put fixed regulator directly under root node
- - changed node name from usb_otg_vbus to regulator-usb-otg-vbus
- - removed pinctrl-names property from iomuxc node
- - removed wand-pi-8m container node
- - sorted pinctrl nodes alphabetically
- - removed tusb320_irqgrp, tusb320_irqgrp nodes because there is no upstream
-   driver
- - changed properties' order in usb_dwc3_1 node
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes since v1:
- - renamed wandboard-pi-8m.dts to pico-pi-8m.dts
- - removed pinctrl_csi1, pinctrl_wifi_ctrl
- - used generic name for pmic
- - removed gpo node
- - delete regulator-virtuals node
- - remove always-on property from buck1-8 and ldo3-7
- - remove pmic-buck-uses-i2c-dvs property for buck1-4
-
-Andra Danciu (1):
-  dt-bindings: arm: fsl: Add the pico-pi-imx8m board
-
-Richard Hu (1):
-  arm64: dts: fsl: pico-pi: Add a device tree for the PICO-PI-IMX8M
-
- Documentation/devicetree/bindings/arm/fsl.yaml   |   1 +
- arch/arm64/boot/dts/freescale/Makefile           |   1 +
- arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts | 417 +++++++++++++++++++++++
- 3 files changed, 419 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
-
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 7294ac36f4c0..54c094341121 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -219,6 +219,7 @@ properties:
+           - enum:
+               - fsl,imx8mq-evk            # i.MX8MQ EVK Board
+               - purism,librem5-devkit     # Purism Librem5 devkit
++              - technexion,pico-pi-imx8m  # TechNexion PICO-PI-8M evk
+           - const: fsl,imx8mq
+ 
+       - description: i.MX8QXP based Boards
 -- 
 2.11.0
