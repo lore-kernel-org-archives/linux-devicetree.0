@@ -1,165 +1,147 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum
- rate for PLL_MIPI
-Date: Sat, 20 Jul 2019 13:04:58 +0530
-Message-ID: <CAMty3ZA0H_rbe2tJVeOmi=1v4dWXY1=0zK-+DoNawzQaHd=4ug@mail.gmail.com>
-References: <20190605064933.6bmskkxzzgn35xz7@flea> <CAMty3ZCCP=oCqm5=49BsjwoxdDETgBfU_5g8fQ=bz=iWApV0tw@mail.gmail.com>
- <20190614142406.ybdiqfppo5mc5bgq@flea> <CAMty3ZB45cHx3WeXnywBh2_UA_bTmFs6yBTqLWA1BNf4fQtVvQ@mail.gmail.com>
- <20190625144930.5hegt6bkzqzykjid@flea> <CAMty3ZCmj0Rz7MMhLqihsvLQi+1CHf0fAoJQ4QN65xB-bwxaJw@mail.gmail.com>
- <20190703114933.u3x4ej3v7ocewvif@flea> <CAOf5uw=ZEvMV1hFQE986rNG_ctpReGbjbZzv0m=OzKPdBh57uQ@mail.gmail.com>
- <20190711100100.cty3s6rs3w27low6@flea> <CAOf5uw=3fiMuhcj3kDtCaGNTsxHKRrYb79MXZ+yUZtmf0jU10A@mail.gmail.com>
- <20190720065830.zn3txpyduakywcva@flea> <CAMty3ZDE1xiNgHVLihH378dY5szzkr14V-fwLZdvPs12tY+G1A@mail.gmail.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [v5 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
+Date: Sat, 20 Jul 2019 10:12:56 +0200
+Message-ID: <CACRpkdYhVoP75ZDfASW+DH5yf-a5diitiXsh7eLsJx5hsTC9sQ@mail.gmail.com>
+References: <1563564291-9692-1-git-send-email-hongweiz@ami.com>
+ <1563564291-9692-2-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBL4IZPUQKGQESFV5C5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAMty3ZDE1xiNgHVLihH378dY5szzkr14V-fwLZdvPs12tY+G1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Michael Nazzareno Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1563564291-9692-2-git-send-email-hongweiz@ami.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hongwei Zhang <hongweiz@ami.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Andrew Jeffery <andrew@aj.id.au>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 12:46 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
->
-> On Sat, Jul 20, 2019 at 12:28 PM Maxime Ripard
-> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Thu, Jul 11, 2019 at 07:43:16PM +0200, Michael Nazzareno Trimarchi wrote:
-> > > > > tcon-pixel clock is the rate that you want to achive on display side
-> > > > > and if you have 4 lanes 32bit or lanes and different bit number that
-> > > > > you need to have a clock that is able to put outside bits and speed
-> > > > > equal to pixel-clock * bits / lanes. so If you want a pixel-clock of
-> > > > > 40 mhz and you have 32bits and 4 lanes you need to have a clock of
-> > > > > 40 * 32 / 4 in no-burst mode. I think that this is done but most of
-> > > > > the display.
-> > > >
-> > > > So this is what the issue is then?
-> > > >
-> > > > This one does make sense, and you should just change the rate in the
-> > > > call to clk_set_rate in sun4i_tcon0_mode_set_cpu.
-> > > >
-> > > > I'm still wondering why that hasn't been brought up in either the
-> > > > discussion or the commit log before though.
-> > > >
-> > > Something like this?
-> > >
-> > > drivers/gpu/drm/sun4i/sun4i_tcon.c     | 20 +++++++++++---------
-> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  2 --
-> > >  2 files changed, 11 insertions(+), 11 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > index 64c43ee6bd92..42560d5c327c 100644
-> > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > @@ -263,10 +263,11 @@ static int sun4i_tcon_get_clk_delay(const struct
-> > > drm_display_mode *mode,
-> > >  }
-> > >
-> > >  static void sun4i_tcon0_mode_set_common(struct sun4i_tcon *tcon,
-> > > -                                       const struct drm_display_mode *mode)
-> > > +                                       const struct drm_display_mode *mode,
-> > > +                                       u32 tcon_mul)
-> > >  {
-> > >         /* Configure the dot clock */
-> > > -       clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
-> > > +       clk_set_rate(tcon->dclk, mode->crtc_clock * tcon_mul * 1000);
-> > >
-> > >         /* Set the resolution */
-> > >         regmap_write(tcon->regs, SUN4I_TCON0_BASIC0_REG,
-> > > @@ -335,12 +336,13 @@ static void sun4i_tcon0_mode_set_cpu(struct
-> > > sun4i_tcon *tcon,
-> > >         u8 bpp = mipi_dsi_pixel_format_to_bpp(device->format);
-> > >         u8 lanes = device->lanes;
-> > >         u32 block_space, start_delay;
-> > > -       u32 tcon_div;
-> > > +       u32 tcon_div, tcon_mul;
-> > >
-> > > -       tcon->dclk_min_div = SUN6I_DSI_TCON_DIV;
-> > > -       tcon->dclk_max_div = SUN6I_DSI_TCON_DIV;
-> > > +       tcon->dclk_min_div = 4;
-> > > +       tcon->dclk_max_div = 127;
-> > >
-> > > -       sun4i_tcon0_mode_set_common(tcon, mode);
-> > > +       tcon_mul = bpp / lanes;
-> > > +       sun4i_tcon0_mode_set_common(tcon, mode, tcon_mul);
-> > >
-> > >         /* Set dithering if needed */
-> > >         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
-> > > @@ -366,7 +368,7 @@ static void sun4i_tcon0_mode_set_cpu(struct
-> > > sun4i_tcon *tcon,
-> > >          */
-> > >         regmap_read(tcon->regs, SUN4I_TCON0_DCLK_REG, &tcon_div);
-> > >         tcon_div &= GENMASK(6, 0);
-> > > -       block_space = mode->htotal * bpp / (tcon_div * lanes);
-> > > +       block_space = mode->htotal * tcon_div * tcon_mul;
-> > >         block_space -= mode->hdisplay + 40;
-> > >
-> > >         regmap_write(tcon->regs, SUN4I_TCON0_CPU_TRI0_REG,
-> > > @@ -408,7 +410,7 @@ static void sun4i_tcon0_mode_set_lvds(struct
-> > > sun4i_tcon *tcon,
-> > >
-> > >         tcon->dclk_min_div = 7;
-> > >         tcon->dclk_max_div = 7;
-> > > -       sun4i_tcon0_mode_set_common(tcon, mode);
-> > > +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
-> > >
-> > >         /* Set dithering if needed */
-> > >         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
-> > > @@ -487,7 +489,7 @@ static void sun4i_tcon0_mode_set_rgb(struct
-> > > sun4i_tcon *tcon,
-> > >
-> > >         tcon->dclk_min_div = 6;
-> > >         tcon->dclk_max_div = 127;
-> > > -       sun4i_tcon0_mode_set_common(tcon, mode);
-> > > +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
-> > >
-> > >         /* Set dithering if needed */
-> > >         sun4i_tcon0_mode_set_dithering(tcon, connector);
-> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > index 5c3ad5be0690..a07090579f84 100644
-> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > @@ -13,8 +13,6 @@
-> > >  #include <drm/drm_encoder.h>
-> > >  #include <drm/drm_mipi_dsi.h>
-> > >
-> > > -#define SUN6I_DSI_TCON_DIV     4
-> > > -
-> > >  struct sun6i_dsi {
-> > >         struct drm_connector    connector;
-> > >         struct drm_encoder      encoder;
-> >
-> > I had more something like this in mind:
-> > http://code.bulix.org/nlp5a4-803511
->
-> Worth to look at it. was it working on your panel? meanwhile I will check it.
->
-> We have updated with below change [1], seems working on but is
-> actually checking the each divider as before start with 4... till 127.
->
-> This new approach, is start looking the best divider from 4.. based on
-> the idea vs rounded it will ended up best divider like [2]
->
-> https://gist.github.com/openedev/7e2c33248b372d29be9979e06d483673
-> https://gist.github.com/openedev/c72dfffc0ca59e7ec1edcd7ad360cdd1
+Hi Hongwei,
 
-I made quick check on two possibilities.
+after looking close at the driver and bindings I have this feeback:
 
-1) with Maxime change
-https://gist.github.com/openedev/3b0b3d35ced6d89f5be0831f1cc9d840
-https://gist.github.com/openedev/dd6a9e528cde80ef0508cb54723f505d
+On Fri, Jul 19, 2019 at 9:25 PM Hongwei Zhang <hongweiz@ami.com> wrote:
 
-2) with Maxime change along with min 4, max 127 divider values.
-The outcome similar like 1)
++- reg                  : Address and length of the register set for the device
 
-This look it will depends on divider, need to check further on this page.
+This 0x100 range may look simple but in the driver it looks like
+this:
 
-Jagan.
++static const struct aspeed_sgpio_bank aspeed_sgpio_banks[] = {
++       {
++               .val_regs = 0x0000,
++               .rdata_reg = 0x0070,
++               .irq_regs = 0x0004,
++               .names = { "A", "B", "C", "D" },
++       },
++       {
++               .val_regs = 0x001C,
++               .rdata_reg = 0x0074,
++               .irq_regs = 0x0020,
++               .names = { "E", "F", "G", "H" },
++       },
++       {
++               .val_regs = 0x0038,
++               .rdata_reg = 0x0078,
++               .irq_regs = 0x003C,
++               .names = { "I", "J" },
++       },
++};
+
+So first break this into up to 10 different instances with one device
+per bank instead.
+
+For each device:
+
+reg = <0x1e780200 4>, <x1e780204 ..>, <0x1e780270 ..>;
+reg-names = "val", "irq", "rdata";
+
+This way you use the device tree features for locating the
+register offsets instead of hard-coding it into the driver,
+which will make the driver simpler.
+
+> +- ngpios               : number of GPIO pins to serialise.
+> +                         (should be multiple of 8, up to 80 pins)
+
+This is wrong. This should be split into 10 different devices providing
+8 GPIO lines each. The "ngpios" is not intended to subdivide
+banks, but for the case where you use say bits 0..11 of 32 bits in
+a register by setting ngpios to 12.
+
+I see that they use the same clock divider and the same interrupt,
+but this is better to partition into a separate clock divider driver
+and up to 10 instances of GPIO devices with 8 GPIOs each.
+
+I also see that they use the same interrupt. This is fine, in your
+driver just grab a shared IRQ and all the IRQ handlers will be
+traversed. This is a well known pattern for all operating systems.
+
+> +- clocks                : A phandle to the APB clock for SGPM clock division
+> +
+> +- bus-frequency                : SGPM CLK frequency
+
+I see that there is a common clock control register in offset 0x54.
+
+Split this out to a separate clock driver that provides a divided clock
+that all GPIO blocks can get, no matter if you use 1, 2 .. 10 of these
+blocks.
+
+The fact that these GPIO banks and the clock register is in the same
+memory range does not really matter. Split up the memory range in
+on reg = per GPIO chip and one reg for the clock.
+
+> +  Example:
+> +       sgpio: sgpio@1e780200 {
+> +               #gpio-cells = <2>;
+> +               compatible = "aspeed,ast2500-sgpio";
+> +               gpio-controller;
+> +               interrupts = <40>;
+> +               reg = <0x1e780200 0x0100>;
+> +               clocks = <&syscon ASPEED_CLK_APB>;
+> +               interrupt-controller;
+> +               ngpios = <8>;
+> +               bus-frequency = <12000000>;
+> +       };
+
+Splitting this up into a clock controller and 1-10 instances of sgpio
+will make things simpler, because it will closer reflect what the hardware
+people are doing: they have just created 10 instances of the same
+block, and added a clock divider.
+
+You can put the 1-10 instances and the clock divider inside a collected
+node "simple-bus" in the device tree:
+
+{
+    compatible = "simple-bus";
+
+    sgpio0: sgpio {
+        compatible = "aspeed,ast2500-sgpio";
+        reg = <0x1e780200 ...> ...;
+        clk = <&sgpioclk>;
+    };
+    sgpio1: sgpio {
+        ...
+    };
+    ...
+    sgpioclk: clock {
+          compatible = "aspeed,sgpio-clock";
+          reg = 0x1e780254 4>;
+    };
+};
+
+This is a better fit with the actual hardware and will make it much
+easier to write drivers.
+
+Admittedly DT device partitioning of SoC devices is a grey area,
+but here I think the DT infrastructure helps you to break things
+down and make it easier, I am thinking in a divide-and-conquer
+way about it.
+
+Yours,
+Linus Walleij
