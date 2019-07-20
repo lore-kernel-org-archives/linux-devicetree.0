@@ -1,98 +1,86 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: Re: [TRIVIAL PATCH] of: per-file dtc preprocessor flags
-Date: Sat, 20 Jul 2019 15:37:40 +0000
-Message-ID: <b2f24f32fead8bc9f282d2beb77d58ed3b98850c.camel@synopsys.com>
-References: <20190719192824.24639-1-Eugeniy.Paltsev@synopsys.com>
- <CAK7LNARJjb3fgdo_dxPSv-vs5x573OHKf-UAUJGMc89Jfmk+QA@mail.gmail.com>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: Re: [EXT] Re: [PATCH 00/10] Improvements and fixes for mxsfb DRM
+ driver
+Date: Sat, 20 Jul 2019 23:09:22 +0200
+Message-ID: <20190720210922.GA464@bogon.m.sigxcpu.org>
+References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
+ <20190711150403.GB23195@bogon.m.sigxcpu.org>
+ <1562919331.3209.11.camel@nxp.com>
+ <20190716145450.GA609@bogon.m.sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK7LNARJjb3fgdo_dxPSv-vs5x573OHKf-UAUJGMc89Jfmk+QA@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <FF127F5F7C65E642B19BDE983CF152BA@namprd12.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.lkml@markovi.net" <michal.lkml@markovi.net>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190716145450.GA609@bogon.m.sigxcpu.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Robert Chiras <robert.chiras@nxp.com>
+Cc: "marex@denx.de" <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "airlied@linux.ie" <airlied@linux.ie>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro,
-
-On Sat, 2019-07-20 at 11:40 +0900, Masahiro Yamada wrote:
-> On Sat, Jul 20, 2019 at 4:28 AM Eugeniy Paltsev
-> <Eugeniy.Paltsev@synopsys.com> wrote:
-> > As of today we are able to pass custom flags to dtc compiler but not
-> > to dtc preprocessor.
-> > This ability is required for including some board-specific header files.
-> > It allows us to pass defined constants to dts without their duplication
-> > in several places.
-> 
-> How to use this option in a useful way?
-> 
-> I see a bunch of defined constants under include/dt-bindings/.
-> 
-> If you are talking about code duplication across architectures,
-> you can include arm dtsi from arm64 dts, or vice versa.
-> This was made possible by the symbolic links
-> in scripts/dtc/include-prefixes/.
-> 
-> Could you please elaborate your issues if you cannot solve them
-> by the current strategy?
-> 
-
-Here is the example:
-
-We have several FPGA-based boards (haps_hs, haps_hs_idu,...) which are involved
-in SW and HW automated verification. For some tests we randomize physical memory
-location so we patch 'CONFIG_LINUX_RAM_BASE' kconfig variable and 'memory' node in
-device tree. We want to keep number of patches as less as possible (to avoid
-conflicts on their applying) so we want to avoid duplication and pass
-'CONFIG_LINUX_RAM_BASE' directly to dts by including it from
-'include/generated/autoconf.h':
-
------------------------------>8------------------------------------
-memory {
-	device_type = "memory";
--		/* CONFIG_LINUX_RAM_BASE needs to match low mem start */
--               reg = <0x80000000 0x20000000>;  /* 512 */
-+               reg = <CONFIG_LINUX_RAM_BASE 0x20000000>;      /* 512 */
-};
------------------------------>8------------------------------------
-
-This patch allows us to extend the search path of include files to
-include 'include/generated/autoconf.h'.
-
-> 
-> > Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> > ---
-> >  scripts/Makefile.lib | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> > index f1f38c8cdc74..f2595a608dce 100644
-> > --- a/scripts/Makefile.lib
-> > +++ b/scripts/Makefile.lib
-> > @@ -166,6 +166,8 @@ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
-> >                  $(addprefix -I,$(DTC_INCLUDE))                          \
-> >                  -undef -D__DTS__
-> > 
-> > +dtc_cpp_flags  += $(DTC_CPP_FLAGS_$(basetarget))
-> > +
-> >  # Useful for describing the dependency of composite objects
-> >  # Usage:
-> >  #   $(call multi_depend, multi_used_targets, suffix_to_remove, suffix_to_add)
-> > --
-> > 2.21.0
-> > 
-> 
-> 
--- 
- Eugeniy Paltsev
+SGkgUm9iZXJ0LApPbiBUdWUsIEp1bCAxNiwgMjAxOSBhdCAwNDo1NDo1MFBNICswMjAwLCBHdWlk
+byBHw7xudGhlciB3cm90ZToKPiBIaSBSb2JlcnQsCj4gT24gRnJpLCBKdWwgMTIsIDIwMTkgYXQg
+MDg6MTU6MzJBTSArMDAwMCwgUm9iZXJ0IENoaXJhcyB3cm90ZToKPiA+IEhpIEd1aWRvLAo+ID4g
+Cj4gPiBPbiBKbywgMjAxOS0wNy0xMSBhdCAxNzowNCArMDIwMCwgR3VpZG8gR8O8bnRoZXIgd3Jv
+dGU6Cj4gPiA+IEhpIFJvYmVydCwKPiA+ID4gT24gV2VkLCBKdW4gMjYsIDIwMTkgYXQgMDQ6MzI6
+MDhQTSArMDMwMCwgUm9iZXJ0IENoaXJhcyB3cm90ZToKPiA+ID4gPiAKPiA+ID4gPiBUaGlzIHBh
+dGNoLXNldCBpbXByb3ZlcyB0aGUgdXNlIG9mIGVMQ0RJRiBibG9jayBvbiBpTVggOCBTb0NzIChs
+aWtlCj4gPiA+ID4gOE1RLCA4TU0KPiA+ID4gPiBhbmQgOFFYUCkuIEZvbGxvd2luZywgYXJlIHRo
+ZSBuZXcgZmVhdHVyZXMgYWRkZWQgYW5kIGZpeGVzIGZyb20KPiA+ID4gPiB0aGlzCj4gPiA+ID4g
+cGF0Y2gtc2V0Ogo+ID4gPiA+IAo+ID4gPiA+IDEuIEFkZCBzdXBwb3J0IGZvciBkcm1fYnJpZGdl
+Cj4gPiA+ID4gT24gOE1RIGFuZCA4TU0sIHRoZSBMQ0RJRiBibG9jayBpcyBub3QgZGlyZWN0bHkg
+Y29ubmVjdGVkIHRvIGEKPiA+ID4gPiBwYXJhbGxlbAo+ID4gPiA+IGRpc3BsYXkgY29ubmVjdG9y
+LCB3aGVyZSBhbiBMQ0QgcGFuZWwgY2FuIGJlIGF0dGFjaGVkLCBidXQgaW5zdGVhZAo+ID4gPiA+
+IGl0IGlzCj4gPiA+ID4gY29ubmVjdGVkIHRvIERTSSBjb250cm9sbGVyLiBTaW5jZSB0aGlzIERT
+SSBzdGFuZHMgYmV0d2VlbiB0aGUKPiA+ID4gPiBkaXNwbGF5Cj4gPiA+ID4gY29udHJvbGxlciAo
+ZUxDRElGKSBhbmQgdGhlIHBoeXNpY2FsIGNvbm5lY3RvciwgdGhlIERTSSBjYW4gYmUKPiA+ID4g
+PiBpbXBsZW1lbnRlZAo+ID4gPiA+IGFzIGEgRFJNIGJyaWRnZS4gU28sIGluIG9yZGVyIHRvIGJl
+IGFibGUgdG8gY29ubmVjdCB0aGUgbXhzZmIKPiA+ID4gPiBkcml2ZXIgdG8KPiA+ID4gPiB0aGUg
+RFNJIGRyaXZlciwgdGhlIHN1cHBvcnQgZm9yIGEgZHJtX2JyaWRnZSB3YXMgbmVlZGVkIGluIG14
+c2ZiCj4gPiA+ID4gRFJNCj4gPiA+ID4gZHJpdmVyICh0aGUgYWN0dWFsIGRyaXZlciBmb3IgdGhl
+IGVMQ0RJRiBibG9jaykuCj4gPiA+IFNvIEkgd2FudGVkIHRvIHRlc3QgdGhpcyBidXQgd2l0aCBi
+b3RoIG15IHNvbWV3aGF0IGNsZWFuZWQgdXAgbndsCj4gPiA+IGRyaXZlcsK5IGFuZCB0aGUgbnds
+IGRyaXZlciBmb3J3YXJkIHBvcnRlZCBmcm9tIHRoZSBueHAgdmVuZG9yIHRyZWUKPiA+ID4gSSdt
+Cj4gPiA+IGxvb2tpbmcgYXQgYSBibGFjayBzY3JlZW4gd2l0aCBjdXJyZW50IG1haW5saW5lIC0g
+d2hpbGUgbXkgZGNzcwo+ID4gPiBmb3J3YXJkCj4gPiA+IHBvcnQgZ2l2ZXMgbWUgbmljZSBvdXRw
+dXQgb24gbWlwaSBkc2kuIERvIHlvdSBoYXZlIGEgdHJlZSB0aGF0IHVzZXMKPiA+ID4gbWlwaQo+
+ID4gPiBkc2kgb24gaW14OG1xIHdoZXJlIEkgY291bGQgbG9vayBhdCB0byBjaGVjayBmb3IgZGlm
+ZmVyZW5jZXM/Cj4gPiBTb21ld2hlcmUgb24gdGhlIHBpeGVsIHBhdGggKGJldHdlZW4gdGhlIGRp
+c3BsYXkgY29udHJvbGxlciBhbmQgdGhlCj4gPiBEU0kpIHRoZXJlIGlzIGEgYmxvY2sgdGhhdCBp
+bnZlcnRzIHRoZSBwb2xhcml0eS4gSSBjYW4ndCByZW1lbWJlcgo+ID4gZXhhY3RseSB3aGF0IHdh
+cyB0aGUgcm9sZSBvZiB0aGlzIGJsb2NrLCBidXQgdGhlIHBvbGFyaXR5IGlzIGludmVydGVkCj4g
+PiB3aGVuIGVMQ0RJRiBpcyB1c2VkIGluIGNvbWJpbmF0aW9uIHdpdGggdGhlIERTSS4KPiA+IElm
+IHlvdSB0YWtlIGEgbG9vayBhdCBteSBEU0kgZHJpdmVyIGZyb20gTlhQIHJlbGVhc2VzIChJIGd1
+ZXNzIHlvdSBoYXZlCj4gPiB0aGVtKSwgeW91IHdpbGwgc2VlIHRoZXJlIGlzIGEgaGFjayBpbiBt
+b2RlX2ZpeHVwOgo+ID4gCj4gPiB1bnNpZ25lZCBpbnQgKmZsYWdzID0gJm1vZGUtPmZsYWdzOwo+
+ID4gaWYgKGRzaS0+c3luY19wb2wgewo+ID4gCSpmbGFncyB8PSBEUk1fTU9ERV9GTEFHX1BIU1lO
+QzsKPiA+IAkqZmxhZ3MgfD0gRFJNX01PREVfRkxBR19QVlNZTkM7Cj4gPiAJKmZsYWdzICY9IH5E
+Uk1fTU9ERV9GTEFHX05IU1lOQzsKPiA+IAkqZmxhZ3MgJj0gfkRSTV9NT0RFX0ZMQUdfTlZTWU5D
+Owo+ID4gfSBlbHNlIHsKPiA+IAkqZmxhZ3MgJj0gfkRSTV9NT0RFX0ZMQUdfUEhTWU5DOwo+ID4g
+CSpmbGFncyAmPSB+RFJNX01PREVfRkxBR19QVlNZTkM7Cj4gPiAJKmZsYWdzIHw9IERSTV9NT0RF
+X0ZMQUdfTkhTWU5DOwo+ID4gCSpmbGFncyB8PSBEUk1fTU9ERV9GTEFHX05WU1lOQzsKPiA+IH0K
+PiAKPiBUaGFua3MgZm9yIHRoZSBzdWdnZXN0aW9uISBJJ2xsIHRyeSB0aGF0Lgo+Cj4gPiAKPiA+
+IEkga25vdyBpdCdzIG5vdCBjbGVhbiwgYnV0IGl0IHdvcmtzIGZvciBub3cuIFlvdSBjYW4gdHJ5
+IHRoaXMgaW4geW91cgo+ID4gZHJpdmVyIGFuZCBzZWUgaWYgaXQgaGVscHMuCj4gPiBUaGVzZSBk
+YXlzIEkgd2lsbCBhbHNvIHRha2UgeW91ciBud2wtZHNpIGRyaXZlciBhbmQgdGVzdCBpdCwgYW5k
+IGFsc28KPiA+IGFkZCBzdXBwb3J0IGZvciBicmlkZ2UgYW5kIGVMQ0RJRiB0byBzZWUgaWYgSSBj
+YW4gbWFrZSBpdCB3b3JrLgo+IAo+IEkgaGF2ZSBoYWNreSBicmlkZ2Ugc3VwcG9ydCBvdmVyIGhl
+cmUgYWxyZWFkeS4gR2l2ZSBtZSBzb21lIGRheXMgdG8KPiBjbGVhbiBpdCB1cCBhbmQgaXQgbWln
+aHQgc2FmZSB5b3Ugc29tZSB3b3JrLgoKWW91ciBzdWdnZXN0aW9uIGFib3ZlIChwbHVzIHNvbWUg
+b3RoZXIgZml4ZXMpIHdvcmtlZCBhbmQKbXhzZmIrbndsK21peGVsLWRwaHkgd29ya3Mgb3ZlciBo
+ZXJlLiBJJ2xsIHRyeSB0byBzZW5kIGEgdjEgb2YgdGhlIG53bApkcml2ZXIgb3V0IGR1cmluZyB0
+aGUgd2Vlay4KQ2hlZXJzLAogLS0gR3VpZG8KCj4gQ2hlZXJzLAo+ICAtLSBHdWlkbwo+IAo+IF9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
