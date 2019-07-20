@@ -1,33 +1,34 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/3] media: dt-bindings: Update bindings for Cadence
- CSI2TX version 2.1
-Date: Sat, 20 Jul 2019 10:26:24 +0200
-Message-ID: <20190720082624.wdignhhub75zh7w4@flea>
-References: <20190718111509.29924-1-jank@cadence.com>
- <20190718111509.29924-2-jank@cadence.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/8] pinctrl: sunxi: v3s: introduce
+ support for V3
+Date: Sat, 20 Jul 2019 11:20:16 +0200
+Message-ID: <20190720092016.bue2d7lhflrpmcg4@flea>
+References: <20190713034634.44585-1-icenowy@aosc.io>
+ <20190713034634.44585-2-icenowy@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kxdudh735ieygcik"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUVZZPUQKGQEGOQ3BMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190718111509.29924-2-jank@cadence.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Kotas <jank@cadence.com>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190713034634.44585-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---kxdudh735ieygcik
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Jul 18, 2019 at 12:15:07PM +0100, Jan Kotas wrote:
-> This patch adds a DT bindings documentation for
-> Cadence CSI2TX v2.1 controller.
+On Sat, Jul 13, 2019 at 11:46:27AM +0800, Icenowy Zheng wrote:
+> Introduce the GPIO pins that is only available on V3 (not on V3s) to the
+> V3s pinctrl driver.
 >
-> Signed-off-by: Jan Kotas <jank@cadence.com>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
 Maxime
 
@@ -35,16 +36,3 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
---kxdudh735ieygcik
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTLQMAAKCRDj7w1vZxhR
-xa6LAP9ZJVEG73pOF+gJ1WOZNzWcR9iUi6Al6CvMO9aj5tQfFwEAjANZAdALwgOh
-rhFkyxgF1FxW1IeCTz3OL+O2jDxLUQY=
-=FW9N
------END PGP SIGNATURE-----
-
---kxdudh735ieygcik--
