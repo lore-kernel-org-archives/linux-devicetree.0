@@ -1,65 +1,258 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 9 Jul 2019 10:23:01 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/8] dt-bindings: timer: renesas, cmt: Update CMT1 on
- sh73a0 and r8a7740
-Message-ID: <20190709162301.GA8807@bogus>
-References: <156076216767.4736.16337667537984218274.sendpatchset@octo>
- <156076218574.4736.10317127566447729303.sendpatchset@octo>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156076218574.4736.10317127566447729303.sendpatchset@octo>
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org
+Return-Path: <SRS0=hhkD=VR=flex--saravanak.bounces.google.com=34LEyXQkKB_0xfwf0fsfplttlqj.htrwtgm+iypjwsjq.twl@kernel.org>
+Date: Fri, 19 Jul 2019 23:16:42 -0700
+In-Reply-To: <20190720061647.234852-1-saravanak@google.com>
+Message-Id: <20190720061647.234852-4-saravanak@google.com>
+Mime-Version: 1.0
+References: <20190720061647.234852-1-saravanak@google.com>
+Subject: [PATCH v6 3/7] of/platform: Add functional dependency link from DT bindings
+From: Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com, linux-doc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, 17 Jun 2019 18:03:05 +0900, Magnus Damm wrote:
-> From: Magnus Damm <damm+renesas@opensource.se>
-> 
-> This patch reworks the DT binding documentation for the 6-channel
-> 48-bit CMTs known as CMT1 on r8a7740 and sh73a0.
-> 
-> After the update the same style of DT binding as the rest of the upstream
-> SoCs will now also be used by r8a7740 and sh73a0. The DT binding "cmt-48"
-> is removed from the DT binding documentation, however software support for
-> this deprecated binding will still remain in the CMT driver for some time.
-> 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> ---
-> 
->  Documentation/devicetree/bindings/timer/renesas,cmt.txt |   10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
-> 
-> --- 0002/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> +++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-06-17 13:31:52.766505901 +0900
-> @@ -12,17 +12,10 @@ datasheets.
->  Required Properties:
->  
->    - compatible: must contain one or more of the following:
-> -    - "renesas,cmt-48-sh73a0" for the sh73A0 48-bit CMT
-> -		(CMT1)
-> -    - "renesas,cmt-48-r8a7740" for the r8a7740 48-bit CMT
-> -		(CMT1)
-> -    - "renesas,cmt-48" for all non-second generation 48-bit CMT
-> -		(CMT1 on sh73a0 and r8a7740)
-> -		This is a fallback for the above renesas,cmt-48-* entries.
-> -
->      - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a73a4.
->      - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a73a4.
->      - "renesas,r8a7740-cmt0" for the 32-bit CMT0 device included in r8a7740.
-> +    - "renesas,r8a7740-cmt1" for the 48-bit CMT1 device included in r8a7740.
->      - "renesas,r8a7740-cmt2" for the 32-bit CMT2 device included in r8a7740.
->      - "renesas,r8a7740-cmt3" for the 32-bit CMT3 device included in r8a7740.
->      - "renesas,r8a7740-cmt4" for the 32-bit CMT4 device included in r8a7740.
-> @@ -53,6 +46,7 @@ Required Properties:
->      - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
->      - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
->      - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
-> +    - "renesas,sh73a0-cmt1" for the 48-bit CMT1 device included in sh73a0.
->      - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
->      - "renesas,sh73a0-cmt3" for the 32-bit CMT3 device included in sh73a0.
->      - "renesas,sh73a0-cmt4" for the 32-bit CMT4 device included in sh73a0.
-> 
+Add device-links after the devices are created (but before they are
+probed) by looking at common DT bindings like clocks and
+interconnects.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Automatically adding device-links for functional dependencies at the
+framework level provides the following benefits:
+
+- Optimizes device probe order and avoids the useless work of
+  attempting probes of devices that will not probe successfully
+  (because their suppliers aren't present or haven't probed yet).
+
+  For example, in a commonly available mobile SoC, registering just
+  one consumer device's driver at an initcall level earlier than the
+  supplier device's driver causes 11 failed probe attempts before the
+  consumer device probes successfully. This was with a kernel with all
+  the drivers statically compiled in. This problem gets a lot worse if
+  all the drivers are loaded as modules without direct symbol
+  dependencies.
+
+- Supplier devices like clock providers, interconnect providers, etc
+  need to keep the resources they provide active and at a particular
+  state(s) during boot up even if their current set of consumers don't
+  request the resource to be active. This is because the rest of the
+  consumers might not have probed yet and turning off the resource
+  before all the consumers have probed could lead to a hang or
+  undesired user experience.
+
+  Some frameworks (Eg: regulator) handle this today by turning off
+  "unused" resources at late_initcall_sync and hoping all the devices
+  have probed by then. This is not a valid assumption for systems with
+  loadable modules. Other frameworks (Eg: clock) just don't handle
+  this due to the lack of a clear signal for when they can turn off
+  resources. This leads to downstream hacks to handle cases like this
+  that can easily be solved in the upstream kernel.
+
+  By linking devices before they are probed, we give suppliers a clear
+  count of the number of dependent consumers. Once all of the
+  consumers are active, the suppliers can turn off the unused
+  resources without making assumptions about the number of consumers.
+
+By default we just add device-links to track "driver presence" (probe
+succeeded) of the supplier device. If any other functionality provided
+by device-links are needed, it is left to the consumer/supplier
+devices to change the link when they probe.
+
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ .../admin-guide/kernel-parameters.txt         |   5 +
+ drivers/of/platform.c                         | 158 ++++++++++++++++++
+ 2 files changed, 163 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 138f6664b2e2..109b4310844f 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3141,6 +3141,11 @@
+ 			This can be set from sysctl after boot.
+ 			See Documentation/sysctl/vm.txt for details.
+ 
++	of_devlink	[KNL] Make device links from common DT bindings. Useful
++			for optimizing probe order and making sure resources
++			aren't turned off before the consumer devices have
++			probed.
++
+ 	ohci1394_dma=early	[HW] enable debugging via the ohci1394 driver.
+ 			See Documentation/debugging-via-ohci1394.txt for more
+ 			info.
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 04ad312fd85b..88a2086e26fa 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -509,6 +509,163 @@ int of_platform_default_populate(struct device_node *root,
+ }
+ EXPORT_SYMBOL_GPL(of_platform_default_populate);
+ 
++bool of_link_is_valid(struct device_node *con, struct device_node *sup)
++{
++	of_node_get(sup);
++	/*
++	 * Don't allow linking a device node as a consumer of one of its
++	 * descendant nodes. By definition, a child node can't be a functional
++	 * dependency for the parent node.
++	 */
++	while (sup) {
++		if (sup == con) {
++			of_node_put(sup);
++			return false;
++		}
++		sup = of_get_next_parent(sup);
++	}
++	return true;
++}
++
++static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
++{
++	struct platform_device *sup_dev;
++	u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
++	int ret = 0;
++
++	/*
++	 * Since we are trying to create device links, we need to find
++	 * the actual device node that owns this supplier phandle.
++	 * Often times it's the same node, but sometimes it can be one
++	 * of the parents. So walk up the parent till you find a
++	 * device.
++	 */
++	while (sup_np && !of_find_property(sup_np, "compatible", NULL))
++		sup_np = of_get_next_parent(sup_np);
++	if (!sup_np)
++		return 0;
++
++	if (!of_link_is_valid(dev->of_node, sup_np)) {
++		of_node_put(sup_np);
++		return 0;
++	}
++	sup_dev = of_find_device_by_node(sup_np);
++	of_node_put(sup_np);
++	if (!sup_dev)
++		return -ENODEV;
++	if (!device_link_add(dev, &sup_dev->dev, dl_flags))
++		ret = -ENODEV;
++	put_device(&sup_dev->dev);
++	return ret;
++}
++
++static struct device_node *parse_prop_cells(struct device_node *np,
++					    const char *prop, int i,
++					    const char *binding,
++					    const char *cell)
++{
++	struct of_phandle_args sup_args;
++
++	if (!i && strcmp(prop, binding))
++		return NULL;
++
++	if (of_parse_phandle_with_args(np, binding, cell, i, &sup_args))
++		return NULL;
++
++	return sup_args.np;
++}
++
++static struct device_node *parse_clocks(struct device_node *np,
++					const char *prop, int i)
++{
++	return parse_prop_cells(np, prop, i, "clocks", "#clock-cells");
++}
++
++static struct device_node *parse_interconnects(struct device_node *np,
++					       const char *prop, int i)
++{
++	return parse_prop_cells(np, prop, i, "interconnects",
++				"#interconnect-cells");
++}
++
++static int strcmp_suffix(const char *str, const char *suffix)
++{
++	unsigned int len, suffix_len;
++
++	len = strlen(str);
++	suffix_len = strlen(suffix);
++	if (len <= suffix_len)
++		return -1;
++	return strcmp(str + len - suffix_len, suffix);
++}
++
++static struct device_node *parse_regulators(struct device_node *np,
++					    const char *prop, int i)
++{
++	if (i || strcmp_suffix(prop, "-supply"))
++		return NULL;
++
++	return of_parse_phandle(np, prop, 0);
++}
++
++/**
++ * struct supplier_bindings - Information for parsing supplier DT binding
++ *
++ * @parse_prop:		If the function cannot parse the property, return NULL.
++ *			Otherwise, return the phandle listed in the property
++ *			that corresponds to index i.
++ */
++struct supplier_bindings {
++	struct device_node *(*parse_prop)(struct device_node *np,
++					  const char *name, int i);
++};
++
++struct supplier_bindings bindings[] = {
++	{ .parse_prop = parse_clocks, },
++	{ .parse_prop = parse_interconnects, },
++	{ .parse_prop = parse_regulators, },
++	{ },
++};
++
++static bool of_link_property(struct device *dev, struct device_node *con_np,
++			     const char *prop)
++{
++	struct device_node *phandle;
++	struct supplier_bindings *s = bindings;
++	unsigned int i = 0;
++	bool done = true;
++
++	while (!i && s->parse_prop) {
++		while ((phandle = s->parse_prop(con_np, prop, i))) {
++			i++;
++			if (of_link_to_phandle(dev, phandle))
++				done = false;
++		}
++		s++;
++	}
++	return done ? 0 : -ENODEV;
++}
++
++static bool of_devlink;
++core_param(of_devlink, of_devlink, bool, 0);
++
++static int of_link_to_suppliers(struct device *dev)
++{
++	struct property *p;
++	bool done = true;
++
++	if (!of_devlink)
++		return 0;
++	if (unlikely(!dev->of_node))
++		return 0;
++
++	for_each_property_of_node(dev->of_node, p)
++		if (of_link_property(dev, dev->of_node, p->name))
++			done = false;
++
++	return done ? 0 : -ENODEV;
++}
++
+ #ifndef CONFIG_PPC
+ static const struct of_device_id reserved_mem_matches[] = {
+ 	{ .compatible = "qcom,rmtfs-mem" },
+@@ -524,6 +681,7 @@ static int __init of_platform_default_populate_init(void)
+ 	if (!of_have_populated_dt())
+ 		return -ENODEV;
+ 
++	platform_bus_type.add_links = of_link_to_suppliers;
+ 	/*
+ 	 * Handle certain compatibles explicitly, since we don't want to create
+ 	 * platform_devices for every node in /reserved-memory with a
+-- 
+2.22.0.657.g960e92d24f-goog
