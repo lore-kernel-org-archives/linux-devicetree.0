@@ -1,63 +1,64 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [TRIVIAL PATCH] of: per-file dtc preprocessor flags
-Date: Sat, 20 Jul 2019 11:40:59 +0900
-Message-ID: <CAK7LNARJjb3fgdo_dxPSv-vs5x573OHKf-UAUJGMc89Jfmk+QA@mail.gmail.com>
-References: <20190719192824.24639-1-Eugeniy.Paltsev@synopsys.com>
+Subject: [Question] orphan platform data header
+Date: Sat, 20 Jul 2019 12:25:58 +0900
+Message-ID: <CAK7LNASyzmYjjBkFxRc06rqf36-en-bvJvrKcg6iiRfjoPCxhQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190719192824.24639-1-Eugeniy.Paltsev@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, arcml <linux-snps-arc@lists.infradead.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, masahiroy@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 4:28 AM Eugeniy Paltsev
-<Eugeniy.Paltsev@synopsys.com> wrote:
->
-> As of today we are able to pass custom flags to dtc compiler but not
-> to dtc preprocessor.
-> This ability is required for including some board-specific header files.
-> It allows us to pass defined constants to dts without their duplication
-> in several places.
+Hi.
 
-How to use this option in a useful way?
-
-I see a bunch of defined constants under include/dt-bindings/.
-
-If you are talking about code duplication across architectures,
-you can include arm dtsi from arm64 dts, or vice versa.
-This was made possible by the symbolic links
-in scripts/dtc/include-prefixes/.
-
-Could you please elaborate your issues if you cannot solve them
-by the current strategy?
+I see several platform-data headers
+that are not used in upstream.
 
 
+For instance, please look at this driver:
+drivers/leds/leds-netxbig.c
 
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> ---
->  scripts/Makefile.lib | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index f1f38c8cdc74..f2595a608dce 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -166,6 +166,8 @@ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
->                  $(addprefix -I,$(DTC_INCLUDE))                          \
->                  -undef -D__DTS__
->
-> +dtc_cpp_flags  += $(DTC_CPP_FLAGS_$(basetarget))
-> +
->  # Useful for describing the dependency of composite objects
->  # Usage:
->  #   $(call multi_depend, multi_used_targets, suffix_to_remove, suffix_to_add)
-> --
-> 2.21.0
->
+If I understood it correctly, this driver
+supports both device tree and legacy board-file.
 
 
--- 
+I grepped 'netxbig_led_platform_data', but
+I only found the driver and platform_data header.
+No board-file in upstream.
+
+masahiro@grover:~/ref/linux$ git grep netxbig_led_platform_data
+drivers/leds/leds-netxbig.c:                          struct
+netxbig_led_platform_data *pdata,
+drivers/leds/leds-netxbig.c:                                 struct
+netxbig_led_platform_data *pdata)
+drivers/leds/leds-netxbig.c:                      struct
+netxbig_led_platform_data *pdata)
+drivers/leds/leds-netxbig.c:    struct netxbig_led_platform_data
+*pdata = dev_get_platdata(&pdev->dev);
+include/linux/platform_data/leds-kirkwood-netxbig.h:struct
+netxbig_led_platform_data {
+
+
+
+So, what shall we do?
+
+Drop the board-file support? Or, keep it
+in case somebody is still using their board-files
+in downstream?
+
+
+
+
+--
 Best Regards
 Masahiro Yamada
