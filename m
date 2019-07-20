@@ -1,313 +1,158 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 1/3] dt-bindings: dma: Add YAML schemas for the generic DMA
- bindings
-Date: Sat, 20 Jul 2019 08:41:21 +0200
-Message-ID: <20190720064123.15411-1-maxime.ripard@bootlin.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum
+ rate for PLL_MIPI
+Date: Sat, 20 Jul 2019 08:58:30 +0200
+Message-ID: <20190720065830.zn3txpyduakywcva@flea>
+References: <20190605064933.6bmskkxzzgn35xz7@flea>
+ <CAMty3ZCCP=oCqm5=49BsjwoxdDETgBfU_5g8fQ=bz=iWApV0tw@mail.gmail.com>
+ <20190614142406.ybdiqfppo5mc5bgq@flea>
+ <CAMty3ZB45cHx3WeXnywBh2_UA_bTmFs6yBTqLWA1BNf4fQtVvQ@mail.gmail.com>
+ <20190625144930.5hegt6bkzqzykjid@flea>
+ <CAMty3ZCmj0Rz7MMhLqihsvLQi+1CHf0fAoJQ4QN65xB-bwxaJw@mail.gmail.com>
+ <20190703114933.u3x4ej3v7ocewvif@flea>
+ <CAOf5uw=ZEvMV1hFQE986rNG_ctpReGbjbZzv0m=OzKPdBh57uQ@mail.gmail.com>
+ <20190711100100.cty3s6rs3w27low6@flea>
+ <CAOf5uw=3fiMuhcj3kDtCaGNTsxHKRrYb79MXZ+yUZtmf0jU10A@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Vinod Koul <vkoul@kernel.org>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Chen-Yu Tsai <wens@csie.org>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="r4qilfqhu2adyooy"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGPXZLUQKGQEEJGWMDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAOf5uw=3fiMuhcj3kDtCaGNTsxHKRrYb79MXZ+yUZtmf0jU10A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Michael Nazzareno Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The DMA controllers and consumers have a bunch of generic properties that
-are needed in a device tree. Add a YAML schemas for those.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+--r4qilfqhu2adyooy
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
----
+On Thu, Jul 11, 2019 at 07:43:16PM +0200, Michael Nazzareno Trimarchi wrote:
+> > > tcon-pixel clock is the rate that you want to achive on display side
+> > > and if you have 4 lanes 32bit or lanes and different bit number that
+> > > you need to have a clock that is able to put outside bits and speed
+> > > equal to pixel-clock * bits / lanes. so If you want a pixel-clock of
+> > > 40 mhz and you have 32bits and 4 lanes you need to have a clock of
+> > > 40 * 32 / 4 in no-burst mode. I think that this is done but most of
+> > > the display.
+> >
+> > So this is what the issue is then?
+> >
+> > This one does make sense, and you should just change the rate in the
+> > call to clk_set_rate in sun4i_tcon0_mode_set_cpu.
+> >
+> > I'm still wondering why that hasn't been brought up in either the
+> > discussion or the commit log before though.
+> >
+> Something like this?
+>
+> drivers/gpu/drm/sun4i/sun4i_tcon.c     | 20 +++++++++++---------
+>  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  2 --
+>  2 files changed, 11 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> index 64c43ee6bd92..42560d5c327c 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -263,10 +263,11 @@ static int sun4i_tcon_get_clk_delay(const struct
+> drm_display_mode *mode,
+>  }
+>
+>  static void sun4i_tcon0_mode_set_common(struct sun4i_tcon *tcon,
+> -                                       const struct drm_display_mode *mode)
+> +                                       const struct drm_display_mode *mode,
+> +                                       u32 tcon_mul)
+>  {
+>         /* Configure the dot clock */
+> -       clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
+> +       clk_set_rate(tcon->dclk, mode->crtc_clock * tcon_mul * 1000);
+>
+>         /* Set the resolution */
+>         regmap_write(tcon->regs, SUN4I_TCON0_BASIC0_REG,
+> @@ -335,12 +336,13 @@ static void sun4i_tcon0_mode_set_cpu(struct
+> sun4i_tcon *tcon,
+>         u8 bpp = mipi_dsi_pixel_format_to_bpp(device->format);
+>         u8 lanes = device->lanes;
+>         u32 block_space, start_delay;
+> -       u32 tcon_div;
+> +       u32 tcon_div, tcon_mul;
+>
+> -       tcon->dclk_min_div = SUN6I_DSI_TCON_DIV;
+> -       tcon->dclk_max_div = SUN6I_DSI_TCON_DIV;
+> +       tcon->dclk_min_div = 4;
+> +       tcon->dclk_max_div = 127;
+>
+> -       sun4i_tcon0_mode_set_common(tcon, mode);
+> +       tcon_mul = bpp / lanes;
+> +       sun4i_tcon0_mode_set_common(tcon, mode, tcon_mul);
+>
+>         /* Set dithering if needed */
+>         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
+> @@ -366,7 +368,7 @@ static void sun4i_tcon0_mode_set_cpu(struct
+> sun4i_tcon *tcon,
+>          */
+>         regmap_read(tcon->regs, SUN4I_TCON0_DCLK_REG, &tcon_div);
+>         tcon_div &= GENMASK(6, 0);
+> -       block_space = mode->htotal * bpp / (tcon_div * lanes);
+> +       block_space = mode->htotal * tcon_div * tcon_mul;
+>         block_space -= mode->hdisplay + 40;
+>
+>         regmap_write(tcon->regs, SUN4I_TCON0_CPU_TRI0_REG,
+> @@ -408,7 +410,7 @@ static void sun4i_tcon0_mode_set_lvds(struct
+> sun4i_tcon *tcon,
+>
+>         tcon->dclk_min_div = 7;
+>         tcon->dclk_max_div = 7;
+> -       sun4i_tcon0_mode_set_common(tcon, mode);
+> +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
+>
+>         /* Set dithering if needed */
+>         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
+> @@ -487,7 +489,7 @@ static void sun4i_tcon0_mode_set_rgb(struct
+> sun4i_tcon *tcon,
+>
+>         tcon->dclk_min_div = 6;
+>         tcon->dclk_max_div = 127;
+> -       sun4i_tcon0_mode_set_common(tcon, mode);
+> +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
+>
+>         /* Set dithering if needed */
+>         sun4i_tcon0_mode_set_dithering(tcon, connector);
+> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> index 5c3ad5be0690..a07090579f84 100644
+> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> @@ -13,8 +13,6 @@
+>  #include <drm/drm_encoder.h>
+>  #include <drm/drm_mipi_dsi.h>
+>
+> -#define SUN6I_DSI_TCON_DIV     4
+> -
+>  struct sun6i_dsi {
+>         struct drm_connector    connector;
+>         struct drm_encoder      encoder;
 
-Changes from v1:
-  - Dropped the dma consumer schemas
-  - Fixed the node name of the examples
-  - Enhanced a bit the description for dma-requests in case of a router
-  - Split the bindings in two to handle the router and controller case
-    separately
-  - Made #dma-cells required
----
- .../devicetree/bindings/dma/dma-common.yaml   |  43 +++++++
- .../bindings/dma/dma-controller.yaml          |  35 ++++++
- .../devicetree/bindings/dma/dma-router.yaml   |  50 ++++++++
- Documentation/devicetree/bindings/dma/dma.txt | 114 +-----------------
- 4 files changed, 129 insertions(+), 113 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/dma-common.yaml
- create mode 100644 Documentation/devicetree/bindings/dma/dma-controller.yaml
- create mode 100644 Documentation/devicetree/bindings/dma/dma-router.yaml
+I had more something like this in mind:
+http://code.bulix.org/nlp5a4-803511
 
-diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
-new file mode 100644
-index 000000000000..422fd6c8b0ce
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/dma-common.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DMA Engine Generic Binding
-+
-+maintainers:
-+  - Vinod Koul <vkoul@kernel.org>
-+
-+description:
-+  Generic binding to provide a way for a driver using DMA Engine to
-+  retrieve the DMA request or channel information that goes from a
-+  hardware device to a DMA controller.
-+
-+properties:
-+  "#dma-cells":
-+    minimum: 1
-+    # Should be enough
-+    maximum: 255
-+    description:
-+      Used to provide DMA controller specific information.
-+
-+  dma-channel-masks:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Bitmask of available DMA channels in ascending order that are
-+      not reserved by firmware and are available to the
-+      kernel. i.e. first channel corresponds to LSB.
-+
-+  dma-channels:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Number of DMA channels supported by the controller.
-+
-+  dma-requests:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Number of DMA request signals supported by the controller.
-+
-+required:
-+  - "#dma-cells"
-diff --git a/Documentation/devicetree/bindings/dma/dma-controller.yaml b/Documentation/devicetree/bindings/dma/dma-controller.yaml
-new file mode 100644
-index 000000000000..c39f6de76670
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/dma-controller.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DMA Controller Generic Binding
-+
-+maintainers:
-+  - Vinod Koul <vkoul@kernel.org>
-+
-+allOf:
-+  - $ref: "dma-common.yaml#"
-+
-+# Everything else is described in the common file
-+properties:
-+  $nodename:
-+    pattern: "^dma-controller(@.*)?$"
-+
-+examples:
-+  - |
-+    dma: dma-controller@48000000 {
-+        compatible = "ti,omap-sdma";
-+        reg = <0x48000000 0x1000>;
-+        interrupts = <0 12 0x4
-+                      0 13 0x4
-+                      0 14 0x4
-+                      0 15 0x4>;
-+        #dma-cells = <1>;
-+        dma-channels = <32>;
-+        dma-requests = <127>;
-+        dma-channel-mask = <0xfffe>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/dma/dma-router.yaml b/Documentation/devicetree/bindings/dma/dma-router.yaml
-new file mode 100644
-index 000000000000..5b5f07393135
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/dma-router.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/dma-router.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DMA Router Generic Binding
-+
-+maintainers:
-+  - Vinod Koul <vkoul@kernel.org>
-+
-+allOf:
-+  - $ref: "dma-common.yaml#"
-+
-+description:
-+  DMA routers are transparent IP blocks used to route DMA request
-+  lines from devices to the DMA controller. Some SoCs (like TI DRA7x)
-+  have more peripherals integrated with DMA requests than what the DMA
-+  controller can handle directly.
-+
-+properties:
-+  $nodename:
-+    pattern: "^dma-router(@.*)?$"
-+
-+  dma-masters:
-+    $ref: /schemas/types.yaml#definitions/phandle-array
-+    description:
-+      Array of phandles to the DMA controllers the router can direct
-+      the signal to.
-+
-+  dma-requests:
-+    description:
-+      Number of incoming request lines the router can handle.
-+
-+required:
-+  - "#dma-cells"
-+  - dma-masters
-+
-+examples:
-+  - |
-+    sdma_xbar: dma-router@4a002b78 {
-+        compatible = "ti,dra7-dma-crossbar";
-+        reg = <0x4a002b78 0xfc>;
-+        #dma-cells = <1>;
-+        dma-requests = <205>;
-+        ti,dma-safe-map = <0>;
-+        dma-masters = <&sdma>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
-index eeb4e4d1771e..90a67a016a48 100644
---- a/Documentation/devicetree/bindings/dma/dma.txt
-+++ b/Documentation/devicetree/bindings/dma/dma.txt
-@@ -1,113 +1 @@
--* Generic DMA Controller and DMA request bindings
--
--Generic binding to provide a way for a driver using DMA Engine to retrieve the
--DMA request or channel information that goes from a hardware device to a DMA
--controller.
--
--
--* DMA controller
--
--Required property:
--- #dma-cells: 		Must be at least 1. Used to provide DMA controller
--			specific information. See DMA client binding below for
--			more details.
--
--Optional properties:
--- dma-channels: 	Number of DMA channels supported by the controller.
--- dma-requests: 	Number of DMA request signals supported by the
--			controller.
--- dma-channel-mask:	Bitmask of available DMA channels in ascending order
--			that are not reserved by firmware and are available to
--			the kernel. i.e. first channel corresponds to LSB.
--
--Example:
--
--	dma: dma@48000000 {
--		compatible = "ti,omap-sdma";
--		reg = <0x48000000 0x1000>;
--		interrupts = <0 12 0x4
--			      0 13 0x4
--			      0 14 0x4
--			      0 15 0x4>;
--		#dma-cells = <1>;
--		dma-channels = <32>;
--		dma-requests = <127>;
--		dma-channel-mask = <0xfffe>
--	};
--
--* DMA router
--
--DMA routers are transparent IP blocks used to route DMA request lines from
--devices to the DMA controller. Some SoCs (like TI DRA7x) have more peripherals
--integrated with DMA requests than what the DMA controller can handle directly.
--
--Required property:
--- dma-masters:		phandle of the DMA controller or list of phandles for
--			the DMA controllers the router can direct the signal to.
--- #dma-cells: 		Must be at least 1. Used to provide DMA router specific
--			information. See DMA client binding below for more
--			details.
--
--Optional properties:
--- dma-requests: 	Number of incoming request lines the router can handle.
--- In the node pointed by the dma-masters:
--	- dma-requests:	The router driver might need to look for this in order
--			to configure the routing.
--
--Example:
--	sdma_xbar: dma-router@4a002b78 {
--		compatible = "ti,dra7-dma-crossbar";
--		reg = <0x4a002b78 0xfc>;
--		#dma-cells = <1>;
--		dma-requests = <205>;
--		ti,dma-safe-map = <0>;
--		dma-masters = <&sdma>;
--	};
--
--* DMA client
--
--Client drivers should specify the DMA property using a phandle to the controller
--followed by DMA controller specific data.
--
--Required property:
--- dmas:			List of one or more DMA specifiers, each consisting of
--			- A phandle pointing to DMA controller node
--			- A number of integer cells, as determined by the
--			  #dma-cells property in the node referenced by phandle
--			  containing DMA controller specific information. This
--			  typically contains a DMA request line number or a
--			  channel number, but can contain any data that is
--			  required for configuring a channel.
--- dma-names: 		Contains one identifier string for each DMA specifier in
--			the dmas property. The specific strings that can be used
--			are defined in the binding of the DMA client device.
--			Multiple DMA specifiers can be used to represent
--			alternatives and in this case the dma-names for those
--			DMA specifiers must be identical (see examples).
--
--Examples:
--
--1. A device with one DMA read channel, one DMA write channel:
--
--	i2c1: i2c@1 {
--		...
--		dmas = <&dma 2		/* read channel */
--			&dma 3>;	/* write channel */
--		dma-names = "rx", "tx";
--		...
--	};
--
--2. A single read-write channel with three alternative DMA controllers:
--
--	dmas = <&dma1 5
--		&dma2 7
--		&dma3 2>;
--	dma-names = "rx-tx", "rx-tx", "rx-tx";
--
--3. A device with three channels, one of which has two alternatives:
--
--	dmas = <&dma1 2			/* read channel */
--		&dma1 3			/* write channel */
--		&dma2 0			/* error read */
--		&dma3 0>;		/* alternative error read */
--	dma-names = "rx", "tx", "error", "error";
-+This file has been moved to dma-controller.yaml.
--- 
-2.21.0
+You really don't need to change the divider range (or this is another
+issue that the one you mentionned).
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--r4qilfqhu2adyooy--
