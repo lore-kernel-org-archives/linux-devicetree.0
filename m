@@ -1,107 +1,235 @@
-Return-Path: <SRS0=xzqK=VB=outlook.com=leiwang_git@kernel.org>
-From: Lei Wang <leiwang_git@outlook.com>
-Subject: Re: [PATCH v4 2/2] EDAC: add EDAC driver for DMC520
-Date: Thu, 4 Jul 2019 00:16:41 +0000
-Message-ID: 
- <BN6PR04MB1107E018F29465B68EE708C786FA0@BN6PR04MB1107.namprd04.prod.outlook.com>
-References: 
- <BN6PR04MB11075E9070EE1A263E099A7386E60@BN6PR04MB1107.namprd04.prod.outlook.com>
- <65439e51-5356-ae93-dffb-5a87279f6c8b@arm.com>
-In-Reply-To: <65439e51-5356-ae93-dffb-5a87279f6c8b@arm.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9921C6E2291F4B47A42EE7101B866DB7@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-To: James Morse <james.morse@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "bp@alien8.de" <bp@alien8.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, "ruizhao@microsoft.com" <ruizhao@microsoft.com>
+Return-Path: <SRS0=yAIf=VR=flex--saravanak.bounces.google.com=347EyXQkKBwIuctcxcpcmiqqing.eqotqdj+fvmgtpgn.qti@kernel.org>
+Date: Fri, 19 Jul 2019 23:16:43 -0700
+In-Reply-To: <20190720061647.234852-1-saravanak@google.com>
+Message-Id: <20190720061647.234852-5-saravanak@google.com>
+Mime-Version: 1.0
+References: <20190720061647.234852-1-saravanak@google.com>
+Subject: [PATCH v6 4/7] driver core: Add sync_state driver/bus callback
+From: Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
 List-ID: <devicetree@vger.kernel.org>
 
-VGhhbmtzIEphbWVzIQ0KDQoNCj4gI2luY2x1ZGUgPGxpbnV4L3NwaW5sb2NrLmg+ID8NCj4NCj4g
-SXQncyBiZXN0IHRvIGtlZXAgdGhpcyBsaXN0IHNvcnRlZCwgaXQgbWFrZXMgaXQgZWFzaWVyIGZv
-ciB0aGUgbWFpbnRhaW5lciB0byByZXNvbHZlDQo+IGNvbmZsaWN0cyB3aGVuIGhlYWRlciBmaWxl
-cyBnZXQgc3BsaXQvbW92ZWQtYXJvdW5kLg0KDQpJdCBidWlsZHMgZmluZSBpbiBvdXIgZGlzdHJv
-LiBUaGUgaGVhZGVyIHNlZW1zIHRvIGhhdmUgYmVlbiBpbmhlcml0ZWQgDQpmcm9tIHNvbWUgb3Ro
-ZXIgaGVhZGVyIGZpbGVzLg0KDQo+DQo+PiArI2RlZmluZSBETUM1MjBfQlVTX1dJRFRICTggIC8q
-IERhdGEgYnVzIHdpZHRoIGlzIDY0Yml0cy84Qnl0ZXMgKi8NCj4gQ2FuIHlvdSBwb2ludCBtZSB0
-byB3aGVyZSB0aGlzIGNvbWVzIGZyb20gaW4gdGhlIGRhdGFzaGVldFswXT8NCj4gSSBzZWUgaXQg
-dGFsayBpbiAiMS4zIEZlYXR1cmVzIiBvZiAiZWl0aGVyIGEgMzItYml0IHdpZGUgZGF0YSBTRFJB
-TSBpbnRlcmZhY2Ugb3IgYSA2NC1iaXQNCj4gd2lkZSBkYXRhIFNEUkFNIGludGVyZmFjZSIuDQo+
-DQo+IElmIHRoaXMgaXMgYSBjaG9pY2UgdGhhdCB3YXMgbWFkZSBvbiB5b3VyIHBsYXRmb3JtIGl0
-IG5lZWRzIHRvIGJlIGRlc2NyaWJlZCBpbiB0aGUgRFQuDQo+DQo+IChJIG1heSBiZSBjb25mdXNl
-ZCBiZXR3ZWVuIFNEUkFNL0REUi9EUkFNLCBhcyAyLjMuMy4gIlBIWSBpbnRlcmZhY2UiIHNlZW1z
-IHRvIGRlc2NyaWJlIG9uZQ0KPiBjb25uZWN0aW5nIHRvIHRoZSBvdGhlci4pDQo+DQpJIGRpZG4n
-dCBmaW5kIGEgY29uZmlndXJhdGlvbiBmb3IgYnVzIHdpZHRoIGZyb20gdGhlIGRtYzUyMCBkb2Mu
-IEkgDQpzZWFyY2ggb25saW5lIGFuZCBpdCBzZWVtcyBsaWtlIG1vcmUgdGhhbiBvbmUgcGxhY2Vz
-IHN0YXRlIDY0LWJpdCBhcyANCkREUidzIGRhdGEgYnVzIHdpZHRoLCBlLmcuIHRoaXMgb25lIA0K
-KGh0dHBzOi8vZW4ud2lraXBlZGlhLm9yZy93aWtpL0REUl9TRFJBTSkgbWVudGlvbnMgIkREUiBt
-ZW1vcnkgYnVzIHdpZHRoIA0KcGVyIGNoYW5uZWwgaXMgNjQgYml0cyAoNzIgZm9yIEVDQyBtZW1v
-cnkpLiIgU28gSSB0b29rIGl0IGFzIGEgZGVmaW5lIA0KaGVyZSBmb3IgOCBieXRlcy4NCg0KPj4g
-K3N0YXRpYyB2b2lkIGRtYzUyMF9oYW5kbGVfZHJhbV9lY2NfZXJyb3JzKHN0cnVjdCBtZW1fY3Rs
-X2luZm8gKm1jaSwNCj4+ICsJCQkJCSAgYm9vbCBpc19jZSkNCj4+ICt7DQo+PiArCXN0cnVjdCBl
-Y2NfZXJyb3JfaW5mbyBpbmZvOw0KPj4gKwlzdHJ1Y3QgZG1jNTIwX2VkYWMgKmVkYWM7DQo+PiAr
-CXUzMiBjbnQ7DQo+PiArCWNoYXIgbWVzc2FnZVtFREFDX01TR19CVUZfU0laRV07DQo+PiArCXVu
-c2lnbmVkIGxvbmcgZmxhZ3M7DQo+PiArDQo+PiArCWVkYWMgPSBtY2ktPnB2dF9pbmZvOw0KPj4g
-KwlkbWM1MjBfZ2V0X2RyYW1fZWNjX2Vycm9yX2luZm8oZWRhYywgaXNfY2UsICZpbmZvKTsNCj4+
-ICsNCj4+ICsJY250ID0gZG1jNTIwX2dldF9kcmFtX2VjY19lcnJvcl9jb3VudChlZGFjLCBpc19j
-ZSk7DQo+PiArDQo+PiArCWlmIChjbnQgPiAwKSB7DQo+PiArCQlzbnByaW50ZihtZXNzYWdlLCBB
-UlJBWV9TSVpFKG1lc3NhZ2UpLA0KPj4gKwkJCSAicmFuazolZCBiYW5rOiVkIHJvdzolZCBjb2w6
-JWQiLA0KPj4gKwkJCSBpbmZvLnJhbmssIGluZm8uYmFuaywNCj4+ICsJCQkgaW5mby5yb3csIGlu
-Zm8uY29sKTsNCj4+ICsNCj4+ICsJCXNwaW5fbG9ja19pcnFzYXZlKCZlZGFjLT5lY2NfbG9jaywg
-ZmxhZ3MpOw0KPiBpcnFzYXZlL2lycXJlc3RvcmUgaXMgb3ZlcmtpbGwgYXMgdGhpcyBmdW5jdGlv
-biBpcyBvbmx5IGNhbGxlZCBmcm9tIGFuIGludGVycnVwdCBoYW5kbGVyLg0KPiBUaGVyZSBpcyBu
-byB3YXkgZm9yIHRoaXMgdG8gYmUgY2FsbGVkIHdpdGggaW50ZXJydXB0cyB1bm1hc2tlZC4NCg0K
-U3RpbGwgZmVlbCBzcGluX2xvY2tfaXJxc2F2ZSBhbmQgc3Bpbl91bmxvY2tfaXJxc3RvcmUgYXJl
-IHRoZSBzYWZlc3QuIElmIA0KYSBwcm9jZXNzb3IgaXMgb24gaXNyIGZvciBpbnRlcnJ1cHQgbGlu
-ZSAxIGFuZCBjYWxscyANCmRtYzUyMF9oYW5kbGVfZHJhbV9lY2NfZXJyb3JzLCBvbmx5IGxpbmUg
-MSBpcyBkaXNhYmxlZCBhbmQgYW5kIG90aGVyIA0KbGluZXMgY2FuIHN0aWxsIGludGVycnVwdCBj
-YWxsaW5nIGRtYzUyMF9oYW5kbGVfZHJhbV9lY2NfZXJyb3JzIGFnYWluLiANCnNwaW5fbG9jayBh
-bmQgc3Bpbl91bmxvY2sgYXJlIG5vdCBzYWZlIHRvIHVzZSB3aXRoIHRoZSByaXNrIG9mIGxlYWRp
-bmcgDQp0byBkZWFkbG9jay4gQWxzbywgc3Bpbl9sb2NrX2lycSBhbmQgc3Bpbl91bmxvY2tfaXJx
-IGFyZSBub3Qgc2FmZSANCmVpdGhlciwgaW4gdGhlIGNhc2Ugd2hlbiBzb21lIGludGVycnVwdHMg
-KG90aGVyIGludGVycnVwdHMgb3V0c2lkZSBvZiANCmNvbnRyb2wgb2YgZG1jNTIwX2VkYWMgZHJp
-dmVyKSBtaWdodCBhbHJlYWR5IGJlIGRpc2FibGVkL2VuYWJsZWQuDQoNCj4+ICt7DQo+PiArCXUz
-MiBpX21hc2s7DQo+PiArCXN0cnVjdCBtZW1fY3RsX2luZm8gKm1jaTsNCj4+ICsJc3RydWN0IGRt
-YzUyMF9lZGFjICplZGFjOw0KPj4gKw0KPj4gKwltY2kgPSBkYXRhOw0KPj4gKwllZGFjID0gbWNp
-LT5wdnRfaW5mbzsNCj4+ICsNCj4+ICsJaV9tYXNrID0gaXNfY2UgPyBEUkFNX0VDQ19JTlRfQ0Vf
-TUFTSyA6IERSQU1fRUNDX0lOVF9VRV9NQVNLOw0KPiAoVGhlIG1hc2svYml0IGhlcmUgY291bGQg
-YmUgcGFzc2VkIGluIGRpcmVjdGx5LCBpdHMgdGhlIHZhbHVlIHlvdSBuZWVkIG1vc3Qgb2Z0ZW4p
-DQo+DQppc19jZSBpcyBhbHNvIHVzZWQgd2hlbiBjYWxsaW5nIGRtYzUyMF9oYW5kbGVfZHJhbV9l
-Y2NfZXJyb3JzLiBBZGRpbmcgDQptYXNrL2JpdCBhcyBhIG5ldyBwYXJhbWV0ZXIgc2VlbXMgY29t
-cGFyYWJsZSB0byBjYWxjdWxhdGUgaV9tYXNrLiBJJ2xsIA0Ka2VlcCBjdXJyZW50Lg0KDQo+DQo+
-PiArCWZvciAoaW50cl9pbmRleCA9IDA7IGludHJfaW5kZXggPCBuaW50cjsgKytpbnRyX2luZGV4
-KSB7DQo+PiArCQlpZiAoZWRhYy0+aW50ZXJydXB0X21hc2tfYWxsICYgZWRhYy0+aW50ZXJydXB0
-X21hc2tzW2ludHJfaW5kZXhdKSB7DQo+PiArCQkJZWRhY19wcmludGsoS0VSTl9FUlIsIEVEQUNf
-TUMsDQo+PiArCQkJCSJpbnRlcnJ1cHQtY29uZmlnIGVycm9yOiAiDQo+PiArCQkJCSJlbGVtZW50
-ICVkJ3MgaW50ZXJydXB0IG1hc2sgJWQgaGFzIG92ZXJsYXAuXG4iLA0KPj4gKwkJCQlpbnRyX2lu
-ZGV4LCBlZGFjLT5pbnRlcnJ1cHRfbWFza3NbaW50cl9pbmRleF0pOw0KPj4gKwkJCWdvdG8gZXJy
-X2ZyZWVfbWM7DQo+PiArCQl9DQo+PiArDQo+PiArCQllZGFjLT5pbnRlcnJ1cHRfbWFza19hbGwg
-fD0gZWRhYy0+aW50ZXJydXB0X21hc2tzW2ludHJfaW5kZXhdOw0KPj4gKwl9DQo+IEFoLCBzbyB0
-aGUgZHJpdmVyIGRvZXNuJ3Qgc3VwcG9ydCBvdmVybGFwcGluZyBtYXNrcy4uLiBidXQgd2Fzbid0
-IHRoaXMgdGhlIHJlYXNvbiBmb3INCj4gZGVzY3JpYmluZyB0aGUgaW50ZXJydXB0cyB3aXRoIHRo
-ZXNlIG1hc2tzIGluIHRoZSBmaXJzdCBwbGFjZT8NCj4gKEl0IGxvb2tzIGxpa2UgdGhlIERULWZv
-bGsgd2FudCB0aGlzIGFzIG5hbWVkIGludGVycnVwdHMpDQo+DQo+IGxvcmUua2VybmVsLm9yZy9y
-L0JZQVBSMjFNQjEzMTlCQzREMDc5QjkxOEFCMDM4QTRENTkwMDEwQEJZQVBSMjFNQjEzMTkubmFt
-cHJkMjEucHJvZC5vdXRsb29rLmNvbQ0KPg0KPiBXb3VsZCB0aGlzIGRyaXZlciBzdXBwb3J0IHRo
-ZSBjb25maWd1cmF0aW9uIHlvdSBnYXZlIHRoZXJlPw0KDQpUaGUgaW50ZXJydXB0IGxpbmUgdG8g
-bWFzayBtYXBwaW5nIGlzIHRvIHNvbHZlIGhvdyB0byBmbGV4aWJseSBhZGFwdGluZyANCnRvIHBv
-c3NpYmxlIGhhcmR3YXJlIGltcGxlbWVudGF0aW9ucy4gZG1jNTIwIHN1cHBvcnRzIG11bHRpcGxl
-IA0KaW50ZXJydXB0cyAoMy4zLjE2OSBpbnRlcnJ1cHRfY29udHJvbCkuIEFuZCB0aGVzZSBpbnRl
-cnJ1cHRzIG1heSBoYXZlIA0KZGlmZmVyZW50IHdheXMgdG8gYmUgd2lyZWQgdG8gcGh5c2ljYWwg
-aW50ZXJydXB0IGxpbmVzLiBBcyBpbiB0aGUgYWJvdmUgDQpsaW5rLCBpbiB0aGlzIHBhcnRpY3Vs
-YXIgYnJjbSBpbXBsZW1lbnRhdGlvbjoNCg0KTGluZSA4NDE6IHNvdXJjZSBkcmFtX2VjY19lcnJj
-X2ludA0KTGluZSA4NDM6IHNvdXJjZSBkcmFtX2VjY19lcnJkX2ludA0KTGluZSA4Mzk6IHNvdXJj
-ZSBkcmFtX2VjY19lcnJjX2ludCBhbmQgZHJhbV9lY2NfZXJyZF9pbnQNCg0KVHdvIHN0cmFpZ2h0
-Zm9yd2FyZCBwb3NzaWJpbGl0aWVzIGZvciBpbXBsZW1lbnRpbmcgZWNjIGNvdW50cyBmb3IgY2Uv
-dWU6IA0KMS4gV2UgY2hvc2UgdG8gdXNlIHRoZSBzaW5nbGUgc291cmNlIGxpbmUuIDIuIEl0J3Mg
-cG9zc2libGUgdG8gaW1wbGVtZW50IA0KdXNpbmcgdGhlIGNvbWJpbmVkLXNvdXJjZSBsaW5lIHRv
-by4gT3VyIGltcGxlbWVudGF0aW9uIHdvdWxkIHN1cHBvcnQgDQplaXRoZXIgb2YgdGhlc2UgY2Fz
-ZXMuDQoNCk9mIGNvdXJzZSB0aGVyZSBtaWdodCBiZSBvdGhlciBwb3NzaWJpbGl0aWVzIHRoYXQg
-aW52b2x2ZSBvdmVybGFwcGluZywgDQpzdWNoIGFzIGluY2x1ZGluZyBhbGwgYWJvdmUgMyBpbnRl
-cnJ1cHQgbGluZXMgaW50byB0aGUgRFQuIEJ1dCB0aGlzIA0KdW5saWtlbHkgaXMgb2YgYW55IHJl
-YWwgdmFsdWUgb2YgdXNlLiBPdXIgaW1wbGVtZW50YXRpb24gZG9lcyBub3QgDQpzdXBwb3J0IHRo
-aXMgY2FzZS4NCg0KPiBXaXRoIHRoZSBib29sL2VudW0gYW5kIGludGVycnVwdC1kaXNhYmxpbmcg
-dGhpbmdzIGZpeGVkOg0KPiBSZXZpZXdlZC1ieTogSmFtZXMgTW9yc2UgPGphbWVzLm1vcnNlQGFy
-bS5jb20+DQo+DQpOZXcgdG8gdGhlIHVwc3RyZWFtaW5nIHJldmlldyBwcm9jZXNzLiBEb2VzIHRo
-aXMgbGFzdCBjb21tZW50IG1lYW4gd2UncmUgDQpjbG9zZXI/IDopDQoNCkFzIGFsd2F5cywgbWFu
-eSB0aGFua3MgZm9yIHlvdXIgdGhvcm91Z2ggY29tbWVudHMhDQoNCi1MZWkNCg0K
+This sync_state driver/bus callback is called once all the consumers
+of a supplier have probed successfully.
+
+This allows the supplier device's driver/bus to sync the supplier
+device's state to the software state with the guarantee that all the
+consumers are actively managing the resources provided by the supplier
+device.
+
+To maintain backwards compatibility and ease transition from existing
+frameworks and resource cleanup schemes, late_initcall_sync is the
+earliest when the sync_state callback might be called.
+
+There is no upper bound on the time by which the sync_state callback
+has to be called. This is because if a consumer device never probes,
+the supplier has to maintain its resources in the state left by the
+bootloader. For example, if the bootloader leaves the display
+backlight at a fixed voltage and the backlight driver is never probed,
+you don't want the backlight to ever be turned off after boot up.
+
+Also, when multiple devices are added after kernel init, some
+suppliers could be added before their consumer devices get added. In
+these instances, the supplier devices could get their sync_state
+callback called right after they probe because the consumers devices
+haven't had a chance to create device links to the suppliers.
+
+To handle this correctly, this change also provides APIs to
+pause/resume sync state callbacks so that when multiple devices are
+added, their sync_state callback evaluation can be postponed to happen
+after all of them are added.
+
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/base/core.c    | 65 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/device.h | 21 ++++++++++++++
+ 2 files changed, 86 insertions(+)
+
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 6eb14093e905..b03e679faea4 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -46,6 +46,8 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
+ /* Device links support. */
+ static LIST_HEAD(wait_for_suppliers);
+ static DEFINE_MUTEX(wfs_lock);
++static LIST_HEAD(deferred_sync);
++static unsigned int supplier_sync_state_disabled;
+ 
+ #ifdef CONFIG_SRCU
+ static DEFINE_MUTEX(device_links_lock);
+@@ -634,6 +636,62 @@ int device_links_check_suppliers(struct device *dev)
+ 	return ret;
+ }
+ 
++static void __device_links_supplier_sync_state(struct device *dev)
++{
++	struct device_link *link;
++
++	if (dev->state_synced)
++		return;
++
++	list_for_each_entry(link, &dev->links.consumers, s_node) {
++		if (link->flags & DL_FLAG_STATELESS)
++			continue;
++		if (link->status != DL_STATE_ACTIVE)
++			return;
++	}
++
++	if (dev->bus->sync_state)
++		dev->bus->sync_state(dev);
++	else if (dev->driver && dev->driver->sync_state)
++		dev->driver->sync_state(dev);
++
++	dev->state_synced = true;
++}
++
++void device_links_supplier_sync_state_pause(void)
++{
++	device_links_write_lock();
++	supplier_sync_state_disabled++;
++	device_links_write_unlock();
++}
++
++void device_links_supplier_sync_state_resume(void)
++{
++	struct device *dev, *tmp;
++
++	device_links_write_lock();
++	if (!supplier_sync_state_disabled) {
++		WARN(true, "Unmatched sync_state pause/resume!");
++		goto out;
++	}
++	supplier_sync_state_disabled--;
++	if (supplier_sync_state_disabled)
++		goto out;
++
++	list_for_each_entry_safe(dev, tmp, &deferred_sync, links.defer_sync) {
++		__device_links_supplier_sync_state(dev);
++		list_del_init(&dev->links.defer_sync);
++	}
++out:
++	device_links_write_unlock();
++}
++
++static void __device_links_supplier_defer_sync(struct device *sup)
++{
++	if (list_empty(&sup->links.defer_sync))
++		list_add_tail(&sup->links.defer_sync, &deferred_sync);
++}
++
+ /**
+  * device_links_driver_bound - Update device links after probing its driver.
+  * @dev: Device to update the links for.
+@@ -678,6 +736,11 @@ void device_links_driver_bound(struct device *dev)
+ 
+ 		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
+ 		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
++
++		if (supplier_sync_state_disabled)
++			__device_links_supplier_defer_sync(link->supplier);
++		else
++			__device_links_supplier_sync_state(link->supplier);
+ 	}
+ 
+ 	dev->links.status = DL_DEV_DRIVER_BOUND;
+@@ -787,6 +850,7 @@ void device_links_driver_cleanup(struct device *dev)
+ 		WRITE_ONCE(link->status, DL_STATE_DORMANT);
+ 	}
+ 
++	list_del_init(&dev->links.defer_sync);
+ 	__device_links_no_driver(dev);
+ 
+ 	device_links_write_unlock();
+@@ -1758,6 +1822,7 @@ void device_initialize(struct device *dev)
+ 	INIT_LIST_HEAD(&dev->links.consumers);
+ 	INIT_LIST_HEAD(&dev->links.suppliers);
+ 	INIT_LIST_HEAD(&dev->links.needs_suppliers);
++	INIT_LIST_HEAD(&dev->links.defer_sync);
+ 	dev->links.status = DL_DEV_NO_DRIVER;
+ }
+ EXPORT_SYMBOL_GPL(device_initialize);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index a2d509a36ebe..489d9f4e3104 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -84,6 +84,13 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
+  *		in the future.
+  * @probe:	Called when a new device or driver add to this bus, and callback
+  *		the specific driver's probe to initial the matched device.
++ * @sync_state:	Called to sync device state to software state after all the
++ *		state tracking consumers linked to this device (present at
++ *		the time of late_initcall) have successfully bound to a
++ *		driver. If the device has no consumers, this function will
++ *		be called at late_initcall_sync level. If the device has
++ *		consumers that are never bound to a driver, this function
++ *		will never get called until they do.
+  * @remove:	Called when a device removed from this bus.
+  * @shutdown:	Called at shut-down time to quiesce the device.
+  *
+@@ -128,6 +135,7 @@ struct bus_type {
+ 	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
+ 	int (*add_links)(struct device *dev);
+ 	int (*probe)(struct device *dev);
++	void (*sync_state)(struct device *dev);
+ 	int (*remove)(struct device *dev);
+ 	void (*shutdown)(struct device *dev);
+ 
+@@ -271,6 +279,13 @@ enum probe_type {
+  * @probe:	Called to query the existence of a specific device,
+  *		whether this driver can work with it, and bind the driver
+  *		to a specific device.
++ * @sync_state:	Called to sync device state to software state after all the
++ *		state tracking consumers linked to this device (present at
++ *		the time of late_initcall) have successfully bound to a
++ *		driver. If the device has no consumers, this function will
++ *		be called at late_initcall_sync level. If the device has
++ *		consumers that are never bound to a driver, this function
++ *		will never get called until they do.
+  * @remove:	Called when the device is removed from the system to
+  *		unbind a device from this driver.
+  * @shutdown:	Called at shut-down time to quiesce the device.
+@@ -309,6 +324,7 @@ struct device_driver {
+ 
+ 	int (*edit_links)(struct device *dev);
+ 	int (*probe) (struct device *dev);
++	void (*sync_state)(struct device *dev);
+ 	int (*remove) (struct device *dev);
+ 	void (*shutdown) (struct device *dev);
+ 	int (*suspend) (struct device *dev, pm_message_t state);
+@@ -910,12 +926,14 @@ enum dl_dev_state {
+  * @suppliers: List of links to supplier devices.
+  * @consumers: List of links to consumer devices.
+  * @needs_suppliers: Hook to global list of devices waiting for suppliers.
++ * @defer_sync: Hook to global list of devices that have deferred sync_state.
+  * @status: Driver status information.
+  */
+ struct dev_links_info {
+ 	struct list_head suppliers;
+ 	struct list_head consumers;
+ 	struct list_head needs_suppliers;
++	struct list_head defer_sync;
+ 	enum dl_dev_state status;
+ };
+ 
+@@ -1081,6 +1099,7 @@ struct device {
+ 	bool			offline:1;
+ 	bool			of_node_reused:1;
+ 	bool			has_edit_links:1;
++	bool			state_synced:1;
+ #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
+     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
+     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
+@@ -1422,6 +1441,8 @@ struct device_link *device_link_add(struct device *consumer,
+ void device_link_del(struct device_link *link);
+ void device_link_remove(void *consumer, struct device *supplier);
+ void device_link_remove_from_wfs(struct device *consumer);
++void device_links_supplier_sync_state_pause(void);
++void device_links_supplier_sync_state_resume(void);
+ 
+ #ifndef dev_fmt
+ #define dev_fmt(fmt) fmt
+-- 
+2.22.0.657.g960e92d24f-goog
