@@ -1,57 +1,98 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v5 1/2] arm64: dts: fsl: pico-pi: Add a device tree for
- the PICO-PI-IMX8M
-Date: Sat, 20 Jul 2019 12:09:51 -0300
-Message-ID: <CAOMZO5CAsTxEegEkBQ1uVaVD52WyLO7tV-GDSzYDDuEVpP6pmg@mail.gmail.com>
-References: <20190719121430.9318-1-andradanciu1997@gmail.com> <20190719121430.9318-2-andradanciu1997@gmail.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: Re: [TRIVIAL PATCH] of: per-file dtc preprocessor flags
+Date: Sat, 20 Jul 2019 15:37:40 +0000
+Message-ID: <b2f24f32fead8bc9f282d2beb77d58ed3b98850c.camel@synopsys.com>
+References: <20190719192824.24639-1-Eugeniy.Paltsev@synopsys.com>
+ <CAK7LNARJjb3fgdo_dxPSv-vs5x573OHKf-UAUJGMc89Jfmk+QA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190719121430.9318-2-andradanciu1997@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andradanciu1997 <andradanciu1997@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Dong Aisheng <aisheng.dong@nxp.com>, Li Yang <leoyang.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, pankaj.bansal@nxp.com, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Richard Hu <richard.hu@technexion.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK7LNARJjb3fgdo_dxPSv-vs5x573OHKf-UAUJGMc89Jfmk+QA@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <FF127F5F7C65E642B19BDE983CF152BA@namprd12.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.lkml@markovi.net" <michal.lkml@markovi.net>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andra,
+Hi Masahiro,
 
-Just realized one minor issue:
+On Sat, 2019-07-20 at 11:40 +0900, Masahiro Yamada wrote:
+> On Sat, Jul 20, 2019 at 4:28 AM Eugeniy Paltsev
+> <Eugeniy.Paltsev@synopsys.com> wrote:
+> > As of today we are able to pass custom flags to dtc compiler but not
+> > to dtc preprocessor.
+> > This ability is required for including some board-specific header files.
+> > It allows us to pass defined constants to dts without their duplication
+> > in several places.
+> 
+> How to use this option in a useful way?
+> 
+> I see a bunch of defined constants under include/dt-bindings/.
+> 
+> If you are talking about code duplication across architectures,
+> you can include arm dtsi from arm64 dts, or vice versa.
+> This was made possible by the symbolic links
+> in scripts/dtc/include-prefixes/.
+> 
+> Could you please elaborate your issues if you cannot solve them
+> by the current strategy?
+> 
 
-On Fri, Jul 19, 2019 at 9:14 AM andradanciu1997
-<andradanciu1997@gmail.com> wrote:
+Here is the example:
 
-> +&i2c1 {
-> +       clock-frequency = <100000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c1>;
-> +       status = "okay";
-> +
-> +       pmic: pmic@4b {
-> +               reg = <0x4b>;
-> +               compatible = "rohm,bd71837";
-> +               /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
+We have several FPGA-based boards (haps_hs, haps_hs_idu,...) which are involved
+in SW and HW automated verification. For some tests we randomize physical memory
+location so we patch 'CONFIG_LINUX_RAM_BASE' kconfig variable and 'memory' node in
+device tree. We want to keep number of patches as less as possible (to avoid
+conflicts on their applying) so we want to avoid duplication and pass
+'CONFIG_LINUX_RAM_BASE' directly to dts by including it from
+'include/generated/autoconf.h':
 
-Comment says gpio1 12...
+----------------------------->8------------------------------------
+memory {
+	device_type = "memory";
+-		/* CONFIG_LINUX_RAM_BASE needs to match low mem start */
+-               reg = <0x80000000 0x20000000>;  /* 512 */
++               reg = <CONFIG_LINUX_RAM_BASE 0x20000000>;      /* 512 */
+};
+----------------------------->8------------------------------------
 
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_pmic>;
-> +               clocks = <&pmic_osc>;
-> +               clock-names = "osc";
-> +               clock-output-names = "pmic_clk";
-> +               interrupt-parent = <&gpio1>;
-> +               interrupts = <3 GPIO_ACTIVE_LOW>;
+This patch allows us to extend the search path of include files to
+include 'include/generated/autoconf.h'.
 
-but here you use gpio1 3 instead, so there is a mismatch.
-
-Please check against the schematics and pick the correct one.
-
-I would suggest removing the:
-/* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-
-comment entirely.
-
-For the next version you can:
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-
-Thanks
+> 
+> > Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> > ---
+> >  scripts/Makefile.lib | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> > index f1f38c8cdc74..f2595a608dce 100644
+> > --- a/scripts/Makefile.lib
+> > +++ b/scripts/Makefile.lib
+> > @@ -166,6 +166,8 @@ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
+> >                  $(addprefix -I,$(DTC_INCLUDE))                          \
+> >                  -undef -D__DTS__
+> > 
+> > +dtc_cpp_flags  += $(DTC_CPP_FLAGS_$(basetarget))
+> > +
+> >  # Useful for describing the dependency of composite objects
+> >  # Usage:
+> >  #   $(call multi_depend, multi_used_targets, suffix_to_remove, suffix_to_add)
+> > --
+> > 2.21.0
+> > 
+> 
+> 
+-- 
+ Eugeniy Paltsev
