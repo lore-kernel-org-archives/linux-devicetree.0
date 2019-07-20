@@ -1,27 +1,63 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 4/4][V2] dt-bindings: iio: imu: add bindings for ADIS16460
-Date: Fri, 19 Jul 2019 16:49:37 -0600
-Message-ID: <CAL_JsqKZMoxdH_rpyD9kTEPtFZ=QxEV325wH=6qdhNX2nS=9ug@mail.gmail.com>
-References: <20190717115109.15168-1-alexandru.ardelean@analog.com> <20190717115109.15168-5-alexandru.ardelean@analog.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [TRIVIAL PATCH] of: per-file dtc preprocessor flags
+Date: Sat, 20 Jul 2019 11:40:59 +0900
+Message-ID: <CAK7LNARJjb3fgdo_dxPSv-vs5x573OHKf-UAUJGMc89Jfmk+QA@mail.gmail.com>
+References: <20190719192824.24639-1-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190717115109.15168-5-alexandru.ardelean@analog.com>
+In-Reply-To: <20190719192824.24639-1-Eugeniy.Paltsev@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, arcml <linux-snps-arc@lists.infradead.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 5:51 AM Alexandru Ardelean
-<alexandru.ardelean@analog.com> wrote:
+On Sat, Jul 20, 2019 at 4:28 AM Eugeniy Paltsev
+<Eugeniy.Paltsev@synopsys.com> wrote:
 >
-> This change adds device-tree bindings for the ADIS16460.
->
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  .../bindings/iio/imu/adi,adis16460.yaml       | 53 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16460.yaml
+> As of today we are able to pass custom flags to dtc compiler but not
+> to dtc preprocessor.
+> This ability is required for including some board-specific header files.
+> It allows us to pass defined constants to dts without their duplication
+> in several places.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+How to use this option in a useful way?
+
+I see a bunch of defined constants under include/dt-bindings/.
+
+If you are talking about code duplication across architectures,
+you can include arm dtsi from arm64 dts, or vice versa.
+This was made possible by the symbolic links
+in scripts/dtc/include-prefixes/.
+
+Could you please elaborate your issues if you cannot solve them
+by the current strategy?
+
+
+
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> ---
+>  scripts/Makefile.lib | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index f1f38c8cdc74..f2595a608dce 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -166,6 +166,8 @@ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
+>                  $(addprefix -I,$(DTC_INCLUDE))                          \
+>                  -undef -D__DTS__
+>
+> +dtc_cpp_flags  += $(DTC_CPP_FLAGS_$(basetarget))
+> +
+>  # Useful for describing the dependency of composite objects
+>  # Usage:
+>  #   $(call multi_depend, multi_used_targets, suffix_to_remove, suffix_to_add)
+> --
+> 2.21.0
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
