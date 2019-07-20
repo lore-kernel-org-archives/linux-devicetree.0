@@ -1,70 +1,142 @@
-Return-Path: <SRS0=dsAE=VX=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:57732 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfGZJXl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2019 05:23:41 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v5 0/7] Add non PAS wcss Q6 support for QCS404
-Date: Fri, 26 Jul 2019 14:53:25 +0530
-Message-Id: <20190726092332.25202-1-govinds@codeaurora.org>
+Return-Path: <SRS0=7frD=VR=bootlin.com=maxime.ripard@kernel.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH 2/3] dt-bindings: dma: Convert Allwinner A10 DMA to a schema
+Date: Sat, 20 Jul 2019 08:41:22 +0200
+Message-Id: <20190720064123.15411-2-maxime.ripard@bootlin.com>
+In-Reply-To: <20190720064123.15411-1-maxime.ripard@bootlin.com>
+References: <20190720064123.15411-1-maxime.ripard@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: andy.gross@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Vinod Koul <vkoul@kernel.org>
+Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-arm-kernel@lists.infradead.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add non PAS(Peripheral Authentication System) WCSS remoteproc
-driver support and wcss clock/reset controls for QCS404 SOC.
-Add WCSS q6 bootup and shutdown sequence handled from
-Application Processor SubSystem(APSS).
+The older Allwinner SoCs have a DMA controller supported in Linux, with a
+matching Device Tree binding.
 
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
 
-Changes since v4:
- removed QDSP6SS clock controls and moved to wcss rproc.
- renamed wcsccc to q6sstopcc.
- cleanup/refactoring.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ .../bindings/dma/allwinner,sun4i-a10-dma.yaml | 55 +++++++++++++++++++
+ .../devicetree/bindings/dma/sun4i-dma.txt     | 45 ---------------
+ 2 files changed, 55 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/sun4i-dma.txt
 
-Changes since v3:
- dt binding cleanup.
- Fixed remoteproc recovery.
- Added remoteproc dump support.
- wcsscc cleanup/refactoring.
-
-Changes since v2:
- Removed unused properties.
- Refactored code to have common logic b/w ipq8074 and QCS404, wherever possible.
- Added compatible example.
- Removed wcss-protected bool.
-
-Changes since v1:
-  Corrected clock names as per comments in v1 patch.
-
-Govind Singh (7):
-  clk: qcom: Add WCSS gcc clock control for QCS404
-  dt-bindings: clock: qcom: Add QCOM Q6SSTOP clock controller bindings
-  clk: qcom: define probe by index API as common API
-  clk: qcom: Add Q6SSTOP clock controller for QCS404
-  remoteproc: qcom: wcss: populate hardcoded param using driver data
-  remoteproc: qcom: wcss: Add non pas wcss Q6 support for QCS404
-  remoteproc: qcom: wcss: explicitly request exclusive reset control
-
- .../bindings/clock/qcom,q6sstopcc.txt         |  26 +
- drivers/clk/qcom/Kconfig                      |   8 +
- drivers/clk/qcom/Makefile                     |   1 +
- drivers/clk/qcom/common.c                     |  20 +
- drivers/clk/qcom/common.h                     |   2 +
- drivers/clk/qcom/gcc-qcs404.c                 |  30 +
- drivers/clk/qcom/lpasscc-sdm845.c             |  23 +-
- drivers/clk/qcom/q6sstop-qcs404.c             | 223 +++++++
- drivers/remoteproc/qcom_q6v5_wcss.c           | 599 ++++++++++++++++--
- include/dt-bindings/clock/qcom,gcc-qcs404.h   |   3 +
- .../dt-bindings/clock/qcom,q6sstopcc-qcs404.h |  18 +
- 11 files changed, 890 insertions(+), 63 deletions(-)
- create mode 100755 Documentation/devicetree/bindings/clock/qcom,q6sstopcc.txt
- create mode 100644 drivers/clk/qcom/q6sstop-qcs404.c
- create mode 100644 include/dt-bindings/clock/qcom,q6sstopcc-qcs404.h
-
+diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
+new file mode 100644
+index 000000000000..15abc0f9429f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/allwinner,sun4i-a10-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A10 DMA Controller Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  "#dma-cells":
++    const: 2
++    description:
++      The first cell is either 0 or 1, the former to use the normal
++      DMA, 1 for dedicated DMA. The second cell is the request line
++      number.
++
++  compatible:
++    const: allwinner,sun4i-a10-dma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - "#dma-cells"
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    dma: dma-controller@1c02000 {
++        compatible = "allwinner,sun4i-a10-dma";
++        reg = <0x01c02000 0x1000>;
++        interrupts = <27>;
++        clocks = <&ahb_gates 6>;
++        #dma-cells = <2>;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/dma/sun4i-dma.txt b/Documentation/devicetree/bindings/dma/sun4i-dma.txt
+deleted file mode 100644
+index 8ad556aca70b..000000000000
+--- a/Documentation/devicetree/bindings/dma/sun4i-dma.txt
++++ /dev/null
+@@ -1,45 +0,0 @@
+-Allwinner A10 DMA Controller
+-
+-This driver follows the generic DMA bindings defined in dma.txt.
+-
+-Required properties:
+-
+-- compatible:	Must be "allwinner,sun4i-a10-dma"
+-- reg:		Should contain the registers base address and length
+-- interrupts:	Should contain a reference to the interrupt used by this device
+-- clocks:	Should contain a reference to the parent AHB clock
+-- #dma-cells :	Should be 2, first cell denoting normal or dedicated dma,
+-		second cell holding the request line number.
+-
+-Example:
+-	dma: dma-controller@1c02000 {
+-		compatible = "allwinner,sun4i-a10-dma";
+-		reg = <0x01c02000 0x1000>;
+-		interrupts = <27>;
+-		clocks = <&ahb_gates 6>;
+-		#dma-cells = <2>;
+-	};
+-
+-Clients:
+-
+-DMA clients connected to the Allwinner A10 DMA controller must use the
+-format described in the dma.txt file, using a three-cell specifier for
+-each channel: a phandle plus two integer cells.
+-The three cells in order are:
+-
+-1. A phandle pointing to the DMA controller.
+-2. Whether it is using normal (0) or dedicated (1) channels
+-3. The port ID as specified in the datasheet
+-
+-Example:
+-	spi2: spi@1c17000 {
+-		compatible = "allwinner,sun4i-a10-spi";
+-		reg = <0x01c17000 0x1000>;
+-		interrupts = <0 12 4>;
+-		clocks = <&ahb_gates 22>, <&spi2_clk>;
+-		clock-names = "ahb", "mod";
+-		dmas = <&dma 1 29>, <&dma 1 28>;
+-		dma-names = "rx", "tx";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-	};
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.21.0
