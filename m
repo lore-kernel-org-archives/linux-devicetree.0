@@ -1,8 +1,8 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v6 1/7] driver core: Add support for linking devices during
- device addition
-Date: Fri, 19 Jul 2019 23:16:40 -0700
-Message-ID: <20190720061647.234852-2-saravanak@google.com>
+Subject: [PATCH v6 6/7] of/platform: Create device links for all
+ child-supplier depencencies
+Date: Fri, 19 Jul 2019 23:16:45 -0700
+Message-ID: <20190720061647.234852-7-saravanak@google.com>
 References: <20190720061647.234852-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -13,189 +13,114 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg 
 Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-When devices are added, the bus might want to create device links to track
-functional dependencies between supplier and consumer devices. This
-tracking of supplier-consumer relationship allows optimizing device probe
-order and tracking whether all consumers of a supplier are active. The
-add_links bus callback is added to support this.
+A parent device can have child devices that it adds when it probes. But
+this probing of the parent device can happen way after kernel init is done
+-- for example, when the parent device's driver is loaded as a module.
 
-However, when consumer devices are added, they might not have a supplier
-device to link to despite needing mandatory resources/functionality from
-one or more suppliers. A waiting_for_suppliers list is created to track
-such consumers and retry linking them when new devices get added.
+In such cases, if the child devices depend on a supplier in the system, we
+need to make sure the supplier gets the sync_state() callback only after
+these child devices are added and probed.
+
+To achieve this, when creating device links for a device by looking at its
+DT node, don't just look at DT references at the top node level. Look at DT
+references in all the descendant nodes too and create device links from the
+ancestor device to all these supplier devices.
+
+This way, when the parent device probes and adds child devices, the child
+devices can then create their own device links to the suppliers and further
+delay the supplier's sync_state() callback to after the child devices are
+probed.
+
+Example:
+In this illustration, -> denotes DT references and indentation
+represents child status.
+
+Device node A
+	Device node B -> D
+	Device node C -> B, D
+
+Device node D
+
+Assume all these devices have their drivers loaded as modules.
+
+Without this patch, this is the sequence of events:
+1. D is added.
+2. A is added.
+3. Device D probes.
+4. Device D gets its sync_state() callback.
+5. Device B and C might malfunction because their resources got
+   altered/turned off before they can make active requests for them.
+
+With this patch, this is the sequence of events:
+1. D is added.
+2. A is added and creates device links to D.
+3. Device link from A to B is not added because A is a parent of B.
+4. Device D probes.
+5. Device D does not get it's sync_state() callback because consumer A
+   hasn't probed yet.
+5. Device A probes.
+5. a. Devices B and C are added.
+5. b. Device links from B and C to D are added.
+5. c. Device A's probe completes.
+6. Device D does not get it's sync_state() callback because consumer A
+   has probed but consumers B and C haven't probed yet.
+7. Device B and C probe.
+8. Device D gets it's sync_state() callback because all its consumers
+   have probed.
+9. None of the devices malfunction.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/base/core.c    | 83 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/device.h |  8 ++++
- 2 files changed, 91 insertions(+)
+ drivers/of/platform.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index fd7511e04e62..0705926d362f 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -44,6 +44,8 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
- #endif
- 
- /* Device links support. */
-+static LIST_HEAD(wait_for_suppliers);
-+static DEFINE_MUTEX(wfs_lock);
- 
- #ifdef CONFIG_SRCU
- static DEFINE_MUTEX(device_links_lock);
-@@ -401,6 +403,51 @@ struct device_link *device_link_add(struct device *consumer,
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index d0c2f6443247..c1a116f7a087 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -649,24 +649,35 @@ static bool of_link_property(struct device *dev, struct device_node *con_np,
+ 	return done ? 0 : -ENODEV;
  }
- EXPORT_SYMBOL_GPL(device_link_add);
  
-+/**
-+ * device_link_wait_for_supplier - Mark device as waiting for supplier
-+ * @consumer: Consumer device
-+ *
-+ * Marks the consumer device as waiting for suppliers to become available. The
-+ * consumer device will never be probed until it's unmarked as waiting for
-+ * suppliers. The caller is responsible for adding the link to the supplier
-+ * once the supplier device is present.
-+ *
-+ * This function is NOT meant to be called from the probe function of the
-+ * consumer but rather from code that creates/adds the consumer device.
-+ */
-+static void device_link_wait_for_supplier(struct device *consumer)
++static int __of_link_to_suppliers(struct device *dev,
++				  struct device_node *con_np)
 +{
-+	mutex_lock(&wfs_lock);
-+	list_add_tail(&consumer->links.needs_suppliers, &wait_for_suppliers);
-+	mutex_unlock(&wfs_lock);
++	struct device_node *child;
++	struct property *p;
++	bool done = true;
++
++	for_each_property_of_node(con_np, p)
++		if (of_link_property(dev, con_np, p->name))
++			done = false;
++
++	for_each_child_of_node(con_np, child)
++		if (__of_link_to_suppliers(dev, child))
++			done = false;
++
++	return done ? 0 : -ENODEV;
 +}
 +
-+/**
-+ * device_link_check_waiting_consumers - Try to unmark waiting consumers
-+ *
-+ * Loops through all consumers waiting on suppliers and tries to add all their
-+ * supplier links. If that succeeds, the consumer device is unmarked as waiting
-+ * for suppliers. Otherwise, they are left marked as waiting on suppliers,
-+ *
-+ * The add_links bus callback is expected to return 0 if it has found and added
-+ * all the supplier links for the consumer device. It should return an error if
-+ * it isn't able to do so.
-+ *
-+ * The caller of device_link_wait_for_supplier() is expected to call this once
-+ * it's aware of potential suppliers becoming available.
-+ */
-+static void device_link_check_waiting_consumers(void)
-+{
-+	struct device *dev, *tmp;
-+
-+	mutex_lock(&wfs_lock);
-+	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
-+				 links.needs_suppliers)
-+		if (!dev->bus->add_links(dev))
-+			list_del_init(&dev->links.needs_suppliers);
-+	mutex_unlock(&wfs_lock);
-+}
-+
- static void device_link_free(struct device_link *link)
+ static bool of_devlink;
+ core_param(of_devlink, of_devlink, bool, 0);
+ 
+ static int of_link_to_suppliers(struct device *dev)
  {
- 	while (refcount_dec_not_one(&link->rpm_active))
-@@ -535,6 +582,19 @@ int device_links_check_suppliers(struct device *dev)
- 	struct device_link *link;
- 	int ret = 0;
+-	struct property *p;
+-	bool done = true;
+-
+ 	if (!of_devlink)
+ 		return 0;
+ 	if (unlikely(!dev->of_node))
+ 		return 0;
  
-+	/*
-+	 * If a device is waiting for one or more suppliers (in
-+	 * wait_for_suppliers list), it is not ready to probe yet. So just
-+	 * return -EPROBE_DEFER without having to check the links with existing
-+	 * suppliers.
-+	 */
-+	mutex_lock(&wfs_lock);
-+	if (!list_empty(&dev->links.needs_suppliers)) {
-+		mutex_unlock(&wfs_lock);
-+		return -EPROBE_DEFER;
-+	}
-+	mutex_unlock(&wfs_lock);
-+
- 	device_links_write_lock();
- 
- 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
-@@ -812,6 +872,10 @@ static void device_links_purge(struct device *dev)
- {
- 	struct device_link *link, *ln;
- 
-+	mutex_lock(&wfs_lock);
-+	list_del(&dev->links.needs_suppliers);
-+	mutex_unlock(&wfs_lock);
-+
- 	/*
- 	 * Delete all of the remaining links from this device to any other
- 	 * devices (either consumers or suppliers).
-@@ -1673,6 +1737,7 @@ void device_initialize(struct device *dev)
- #endif
- 	INIT_LIST_HEAD(&dev->links.consumers);
- 	INIT_LIST_HEAD(&dev->links.suppliers);
-+	INIT_LIST_HEAD(&dev->links.needs_suppliers);
- 	dev->links.status = DL_DEV_NO_DRIVER;
+-	for_each_property_of_node(dev->of_node, p)
+-		if (of_link_property(dev, dev->of_node, p->name))
+-			done = false;
+-
+-	return done ? 0 : -ENODEV;
++	return __of_link_to_suppliers(dev, dev->of_node);
  }
- EXPORT_SYMBOL_GPL(device_initialize);
-@@ -2108,6 +2173,24 @@ int device_add(struct device *dev)
- 					     BUS_NOTIFY_ADD_DEVICE, dev);
  
- 	kobject_uevent(&dev->kobj, KOBJ_ADD);
-+
-+	/*
-+	 * Check if any of the other devices (consumers) have been waiting for
-+	 * this device (supplier) to be added so that they can create a device
-+	 * link to it.
-+	 *
-+	 * This needs to happen after device_pm_add() because device_link_add()
-+	 * requires the supplier be registered before it's called.
-+	 *
-+	 * But this also needs to happe before bus_probe_device() to make sure
-+	 * waiting consumers can link to it before the driver is bound to the
-+	 * device and the driver sync_state callback is called for this device.
-+	 */
-+	device_link_check_waiting_consumers();
-+
-+	if (dev->bus && dev->bus->add_links && dev->bus->add_links(dev))
-+		device_link_wait_for_supplier(dev);
-+
- 	bus_probe_device(dev);
- 	if (parent)
- 		klist_add_tail(&dev->p->knode_parent,
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 848fc71c6ba6..7f8ae7e5fc6b 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -77,6 +77,11 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
-  *		-EPROBE_DEFER it will queue the device for deferred probing.
-  * @uevent:	Called when a device is added, removed, or a few other things
-  *		that generate uevents to add the environment variables.
-+ * @add_links:	Called, perhaps multiple times, when a new device is added to
-+ *		this bus. The function is expected to create all the device
-+ *		links for the new device and return 0 if it was completed
-+ *		successfully or return an error if it needs to be reattempted
-+ *		in the future.
-  * @probe:	Called when a new device or driver add to this bus, and callback
-  *		the specific driver's probe to initial the matched device.
-  * @remove:	Called when a device removed from this bus.
-@@ -121,6 +126,7 @@ struct bus_type {
- 
- 	int (*match)(struct device *dev, struct device_driver *drv);
- 	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
-+	int (*add_links)(struct device *dev);
- 	int (*probe)(struct device *dev);
- 	int (*remove)(struct device *dev);
- 	void (*shutdown)(struct device *dev);
-@@ -888,11 +894,13 @@ enum dl_dev_state {
-  * struct dev_links_info - Device data related to device links.
-  * @suppliers: List of links to supplier devices.
-  * @consumers: List of links to consumer devices.
-+ * @needs_suppliers: Hook to global list of devices waiting for suppliers.
-  * @status: Driver status information.
-  */
- struct dev_links_info {
- 	struct list_head suppliers;
- 	struct list_head consumers;
-+	struct list_head needs_suppliers;
- 	enum dl_dev_state status;
- };
- 
+ #ifndef CONFIG_PPC
 -- 
 2.22.0.657.g960e92d24f-goog
