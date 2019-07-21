@@ -1,124 +1,85 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCHv8 5/5] coresight: cpu-debug: Add support for Qualcomm Kryo
-Date: Sun, 21 Jul 2019 22:35:53 +0800
-Message-ID: <20190721143553.GA25136@leoy-ThinkPad-X240s>
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <e2c4cc7c6ccaa5695f25af20c8e487ac53b39955.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <20190717165602.GA4271@xps15>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [Question] orphan platform data header
+Date: Sun, 21 Jul 2019 23:58:32 +0900
+Message-ID: <CAK7LNATAhhmeKtQYJYEje3B26zy3EtdqegRL7YmbsDOJ=0HcAg@mail.gmail.com>
+References: <CAK7LNASyzmYjjBkFxRc06rqf36-en-bvJvrKcg6iiRfjoPCxhQ@mail.gmail.com>
+ <CAK8P3a2AeUpmNfFLJSvHT=AJ0kFRT2B=TWDm0HsTwoHt2jQ0gQ@mail.gmail.com>
+ <CAK7LNATPbCjwzVnAigsQ8tQRXjC31uxgPg3jgi7pwp+N1RPgWw@mail.gmail.com>
+ <CAK8P3a3cURmbGZc-6ESLjrF465VLnBroD4QENyfsSsCrNenRrA@mail.gmail.com>
+ <CAK7LNARN=iNmresDJ2=J1wOb2QYoZ7yw4O0Q9sYVPo0jRKDf=w@mail.gmail.com> <CAK8P3a133ekPqkLWfC2ee0mT3iLbFzSjJ9FDokSyaX+hMVigKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190717165602.GA4271@xps15>
+In-Reply-To: <CAK8P3a133ekPqkLWfC2ee0mT3iLbFzSjJ9FDokSyaX+hMVigKA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mike Leach <mike.leach@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Marc Gonzalez <marc.w.gonzalez@free.fr>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 10:56:02AM -0600, Mathieu Poirier wrote:
-> On Fri, Jul 12, 2019 at 07:46:27PM +0530, Sai Prakash Ranjan wrote:
-> > Add support for coresight CPU debug module on Qualcomm
-> > Kryo CPUs. This patch adds the UCI entries for Kryo CPUs
-> > found on MSM8996 which shares the same PIDs as ETMs.
-> > 
-> > Without this, below error is observed on MSM8996:
-> > 
-> > [    5.429867] OF: graph: no port node found in /soc/debug@3810000
-> > [    5.429938] coresight-etm4x: probe of 3810000.debug failed with error -22
-> > [    5.435415] coresight-cpu-debug 3810000.debug: Coresight debug-CPU0 initialized
-> > [    5.446474] OF: graph: no port node found in /soc/debug@3910000
-> > [    5.448927] coresight-etm4x: probe of 3910000.debug failed with error -22
-> > [    5.454681] coresight-cpu-debug 3910000.debug: Coresight debug-CPU1 initialized
-> > [    5.487765] OF: graph: no port node found in /soc/debug@3a10000
-> > [    5.488007] coresight-etm4x: probe of 3a10000.debug failed with error -22
-> > [    5.493024] coresight-cpu-debug 3a10000.debug: Coresight debug-CPU2 initialized
-> > [    5.501802] OF: graph: no port node found in /soc/debug@3b10000
-> > [    5.512901] coresight-etm4x: probe of 3b10000.debug failed with error -22
-> > [    5.513192] coresight-cpu-debug 3b10000.debug: Coresight debug-CPU3 initialized
-> > 
-> > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> > ---
-> >  .../hwtracing/coresight/coresight-cpu-debug.c | 33 +++++++++----------
-> >  drivers/hwtracing/coresight/coresight-priv.h  | 10 +++---
-> >  2 files changed, 21 insertions(+), 22 deletions(-)
-> > 
-> > diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> > index 2463aa7ab4f6..96544b348c27 100644
-> > --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> > +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> > @@ -646,24 +646,23 @@ static int debug_remove(struct amba_device *adev)
-> >  	return 0;
-> >  }
-> >  
-> > +static const struct amba_cs_uci_id uci_id_debug[] = {
-> > +	{
-> > +		/*  CPU Debug UCI data */
-> > +		.devarch	= 0x47706a15,
-> > +		.devarch_mask	= 0xfff0ffff,
-> > +		.devtype	= 0x00000015,
-> > +	}
-> > +};
-> > +
-> >  static const struct amba_id debug_ids[] = {
-> > -	{       /* Debug for Cortex-A53 */
-> > -		.id	= 0x000bbd03,
-> > -		.mask	= 0x000fffff,
-> > -	},
-> > -	{       /* Debug for Cortex-A57 */
-> > -		.id	= 0x000bbd07,
-> > -		.mask	= 0x000fffff,
-> > -	},
-> > -	{       /* Debug for Cortex-A72 */
-> > -		.id	= 0x000bbd08,
-> > -		.mask	= 0x000fffff,
-> > -	},
-> > -	{       /* Debug for Cortex-A73 */
-> > -		.id	= 0x000bbd09,
-> > -		.mask	= 0x000fffff,
-> > -	},
-> > -	{ 0, 0 },
-> > +	CS_AMBA_ID(0x000bbd03),				/* Cortex-A53 */
-> > +	CS_AMBA_ID(0x000bbd07),				/* Cortex-A57 */
-> > +	CS_AMBA_ID(0x000bbd08),				/* Cortex-A72 */
-> > +	CS_AMBA_ID(0x000bbd09),				/* Cortex-A73 */
-> > +	CS_AMBA_UCI_ID(0x000f0205, uci_id_debug),	/* Qualcomm Kryo */
-> > +	CS_AMBA_UCI_ID(0x000f0211, uci_id_debug),	/* Qualcomm Kryo */
-> > +	{},
-> >  };
-> >  
-> >  static struct amba_driver debug_driver = {
-> > diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-> > index 7d401790dd7e..41ae5863104d 100644
-> > --- a/drivers/hwtracing/coresight/coresight-priv.h
-> > +++ b/drivers/hwtracing/coresight/coresight-priv.h
-> > @@ -185,11 +185,11 @@ static inline int etm_writel_cp14(u32 off, u32 val) { return 0; }
-> >  	}
-> >  
-> >  /* coresight AMBA ID, full UCI structure: id table entry. */
-> > -#define CS_AMBA_UCI_ID(pid, uci_ptr)	\
-> > -	{				\
-> > -		.id	= pid,		\
-> > -		.mask	= 0x000fffff,	\
-> > -		.data	= uci_ptr	\
-> > +#define CS_AMBA_UCI_ID(pid, uci_ptr)		\
-> > +	{					\
-> > +		.id	= pid,			\
-> > +		.mask	= 0x000fffff,		\
-> > +		.data	= (void *)uci_ptr	\
-> >  	}
-> 
-> I will pickup this patch - it will show up in my next tree when rc1 comes out.
+On Sun, Jul 21, 2019 at 11:15 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Sun, Jul 21, 2019 at 2:13 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> > On Sun, Jul 21, 2019 at 6:10 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Sun, Jul 21, 2019 at 5:45 AM Masahiro Yamada
+> > > <yamada.masahiro@socionext.com> wrote:
+> > > > On Sat, Jul 20, 2019 at 10:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > > On Sat, Jul 20, 2019 at 5:26 AM Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> >
+> >
+> > Another example that I have no idea
+> > how it works:
+> >
+> > drivers/net/hamradio/yam.c
+> >
+> > yam_ioctl() reads data from user-space,
+> > but the data structures for ioctl are
+> > defined in include/linux/yam.h
+>
+> That is different: the hardware attaches to a serial port and may well
+> be usable, and the user space side just contains a copy of the header,
+> see https://github.com/nwdigitalradio/ax25-tools/tree/master/yamdrv
 
-I tested this patch on the mainline kernel with latest commit
-f1a3b43cc1f5 ("Merge branch 'for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input"). FWIW:
+Oh, I did not know that
+user-space had a copy of that.
 
-Tested-by: Leo Yan <leo.yan@linaro.org>
 
-P.s. Acutally I tested this patch for 5.2-rcx a few days ago and found
-a regression for CPU debug module: I observed the CPU debug module
-panic dump will stuck.  After I pulled to latest kernel code base the
-CPU debug module can work well; also works well with this patch.  F.Y.I.
+> > If we want to fix this, we could move it
+> > to include/uapi/linux/yam.h
+>
+> We could do that, or just leave it alone, as nobody would
+> tell the difference.
 
-Thanks,
-Leo Yan
+When we are changing structures in uapi,
+it is very likely a red alert.
+On the other hand, we can change code outside of uapi
+more safely.
+One benefit of uapi is we can catch the compatibility level
+from the directory path.
+
+
+>
+> > But, if nobody has reported any problem about this,
+> > it might be a good proof that nobody is using this driver.
+> >
+> > Maybe, can we simply drop odd drivers??
+>
+> Both the kernel driver and the user space side have a maintainer, and
+> I see no indication that it is actually broken. The driver is clearly
+> a relic from old times (earlier than 2.4) and we would not merge
+> this driver today.
+>
+> It seems more useful to keep looking for drivers with a platform_data
+> header file that is no longer included by any platform for candidates
+> that may be obsolete.
+
+OK.
+
+Thanks.
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
