@@ -1,87 +1,90 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Redefine interconnect provider
- DT nodes
-Date: Sun, 21 Jul 2019 12:13:05 -0700
-Message-ID: <20190721191305.GI7234@tuxbook-pro>
-References: <1563568344-1274-1-git-send-email-daidavid1@codeaurora.org>
- <1563568344-1274-3-git-send-email-daidavid1@codeaurora.org>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during suspend
+Date: Sun, 21 Jul 2019 12:40:40 -0700
+Message-ID: <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1563568344-1274-3-git-send-email-daidavid1@codeaurora.org>
+In-Reply-To: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Dai <daidavid1@codeaurora.org>
-Cc: georgi.djakov@linaro.org, robh+dt@kernel.org, evgreen@google.com, ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+To: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 19 Jul 13:32 PDT 2019, David Dai wrote:
+Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
+sequence and sc7 entry firmware is run from COP/BPMP-Lite.
 
-> Add the DT nodes for each of the Network-On-Chip interconnect
-> buses found on SDM845 based platform and redefine the rsc_hlos
-> child node as a bcm-voter device to better represent the hardware.
-> 
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 61 ++++++++++++++++++++++++++++++++++--
->  1 file changed, 58 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index e7d78bc..204222e 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -610,6 +610,62 @@
->  			#power-domain-cells = <1>;
->  		};
->  
-> +		aggre1_noc: interconnect@16e0000 {
-> +			compatible = "qcom,sdm845-aggre1_noc";
-> +			reg = <0 0x16e0000 0 0xd080>;
+So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
+for Tegra210.
 
-Please pad the address to 8 digits and keep nodes sorted by address.
+This patch has fix for leaving the COP IRQ enabled for Tegra210 during
+interrupt controller suspend operation.
 
-> +			#interconnect-cells = <1>;
-> +			qcom,bcm-voter = <&apps_bcm_voter>;
-> +		};
-> +
-> +		aggre2_noc: interconnect@1700000 {
-> +			compatible = "qcom,sdm845-aggre2_noc";
-> +			reg = <0 0x1700000 0 0x3b100>;
-> +			#interconnect-cells = <1>;
-> +			qcom,bcm-voter = <&apps_bcm_voter>;
-> +		};
-> +
-> +		config_noc: interconnect@1500000 {
-> +			compatible = "qcom,sdm845-config_noc";
-> +			reg = <0 0x1500000 0 0x5080>;
-> +			#interconnect-cells = <1>;
-> +			qcom,bcm-voter = <&apps_bcm_voter>;
-> +		};
-[..]
->  		qfprom@784000 {
->  			compatible = "qcom,qfprom";
->  			reg = <0 0x00784000 0 0x8ff>;
-> @@ -2801,9 +2857,8 @@
->  				};
->  			};
->  
-> -			rsc_hlos: interconnect {
-> -				compatible = "qcom,sdm845-rsc-hlos";
-> -				#interconnect-cells = <1>;
-> +			apps_bcm_voter: bcm_voter {
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-No '_' in node names, so bcm-voter.
-
-Apart from this nits this looks good.
-
-Regards,
-Bjorn
-
-> +				compatible = "qcom,sdm845-bcm-voter";
->  			};
->  		};
->  
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
+index e1f771c72fc4..851f88cef508 100644
+--- a/drivers/irqchip/irq-tegra.c
++++ b/drivers/irqchip/irq-tegra.c
+@@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
+ 
+ struct tegra_ictlr_soc {
+ 	unsigned int num_ictlrs;
++	bool supports_sc7;
+ };
+ 
+ static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
+@@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
+ 
+ static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
+ 	.num_ictlrs = 6,
++	.supports_sc7 = true,
+ };
+ 
+ static const struct of_device_id ictlr_matches[] = {
+@@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
+ 
+ struct tegra_ictlr_info {
+ 	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
++	const struct tegra_ictlr_soc *soc;
+ #ifdef CONFIG_PM_SLEEP
+ 	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
+ 	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
+@@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
+ 		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
+ 		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
+ 
+-		/* Disable COP interrupts */
+-		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
++		/*
++		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
++		 *
++		 * Tegra210 system suspend flow uses sc7entry firmware which
++		 * is executed by COP/BPMP and it includes disabling COP IRQ,
++		 * clamping CPU rail, turning off VDD_CPU, and preparing the
++		 * system to go to SC7/LP0.
++		 *
++		 * COP/BPMP wakes up when COP IRQ is triggered and runs
++		 * sc7entry-firmware. So need to keep COP interrupt enabled.
++		 */
++		if (!lic->soc->supports_sc7)
++			/* Disable COP interrupts if SC7 is not supported */
++			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+ 
+ 		/* Disable CPU interrupts */
+ 		writel_relaxed(~0ul, ictlr + ICTLR_CPU_IER_CLR);
+@@ -339,6 +354,7 @@ static int __init tegra_ictlr_init(struct device_node *node,
+ 		goto out_unmap;
+ 	}
+ 
++	lic->soc = soc;
+ 	tegra_ictlr_syscore_init();
+ 
+ 	pr_info("%pOF: %d interrupts forwarded to %pOF\n",
+-- 
+2.7.4
