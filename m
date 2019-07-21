@@ -1,61 +1,86 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [GIT PULL] Devicetree fixes for 5.3-rc
-Date: Sat, 20 Jul 2019 20:37:56 -0600
-Message-ID: <CAL_JsqLTAAT1hEPkxD=BUvmovvA+rdsZdbVfQM6=1m9bvaEysQ@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [Question] orphan platform data header
+Date: Sun, 21 Jul 2019 12:44:53 +0900
+Message-ID: <CAK7LNATPbCjwzVnAigsQ8tQRXjC31uxgPg3jgi7pwp+N1RPgWw@mail.gmail.com>
+References: <CAK7LNASyzmYjjBkFxRc06rqf36-en-bvJvrKcg6iiRfjoPCxhQ@mail.gmail.com>
+ <CAK8P3a2AeUpmNfFLJSvHT=AJ0kFRT2B=TWDm0HsTwoHt2jQ0gQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a2AeUpmNfFLJSvHT=AJ0kFRT2B=TWDm0HsTwoHt2jQ0gQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Linus,
+Hi Arnd,
 
-Please pull a couple of DT binding fixes for 5.3-rc.
+On Sat, Jul 20, 2019 at 10:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Sat, Jul 20, 2019 at 5:26 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > masahiro@grover:~/ref/linux$ git grep netxbig_led_platform_data
+> > drivers/leds/leds-netxbig.c:                          struct
+> > netxbig_led_platform_data *pdata,
+> > drivers/leds/leds-netxbig.c:                                 struct
+> > netxbig_led_platform_data *pdata)
+> > drivers/leds/leds-netxbig.c:                      struct
+> > netxbig_led_platform_data *pdata)
+> > drivers/leds/leds-netxbig.c:    struct netxbig_led_platform_data
+> > *pdata = dev_get_platdata(&pdev->dev);
+> > include/linux/platform_data/leds-kirkwood-netxbig.h:struct
+> > netxbig_led_platform_data {
+> >
+> >
+> >
+> > So, what shall we do?
+> >
+> > Drop the board-file support? Or, keep it
+> > in case somebody is still using their board-files
+> > in downstream?
+>
+> Generally speaking, I'd remove the board file support in another
+> case like this, but it's worth looking at when it was last used and by
+> what.
+>
+> For this file, all boards got converted to DT, and the old setup
+> code removed in commit ebc278f15759 ("ARM: mvebu: remove static
+> LED setup for netxbig boards"), four years ago, so it's a fairly
+> easy decision to make it DT only.
 
-Rob
 
-The following changes since commit abdfd52a295fb5731ab07b5c9013e2e39f4d1cbe:
+Thanks.
 
-  Merge tag 'armsoc-defconfig' of
-git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc (2019-07-19
-17:27:27 -0700)
+I see another case, which is difficult
+to make a decision.
 
-are available in the Git repository at:
+For example, drivers/spi/spi-tle62x0.c
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-5.3
+This driver supports only board-file, but the board-file
+is not found in upstream.
 
-for you to fetch changes up to e2297f7c3ab3b68dda2ac732b1767212019d3bdf:
+Unless I am terribly missing something,
+there is no one who passes tle62x0_pdata
+to this driver.
 
-  dt-bindings: pinctrl: stm32: Fix missing 'clocks' property in
-examples (2019-07-20 20:28:53 -0600)
+$ git grep tle62x0_pdata
+drivers/spi/spi-tle62x0.c:      struct tle62x0_pdata *pdata;
+include/linux/spi/tle62x0.h:struct tle62x0_pdata {
 
-----------------------------------------------------------------
-Devicetree fixes for 5.3:
+But, removing board-file support
+makes this driver completely useless...
 
-Fix several warnings/errors in validation of binding schemas.
 
-----------------------------------------------------------------
-Rob Herring (7):
-      dt-bindings: Ensure child nodes are of type 'object'
-      dt-bindings: riscv: Limit cpus schema to only check RiscV 'cpu' nodes
-      dt-bindings: pinctrl: aspeed: Fix 'compatible' schema errors
-      dt-bindings: pinctrl: aspeed: Fix AST2500 example errors
-      dt-bindings: iio: avia-hx711: Fix avdd-supply typo in example
-      dt-bindings: iio: ad7124: Fix dtc warnings in example
-      dt-bindings: pinctrl: stm32: Fix missing 'clocks' property in examples
-
- .../bindings/bus/allwinner,sun8i-a23-rsb.yaml      |   1 +
- .../devicetree/bindings/iio/adc/adi,ad7124.yaml    |  71 +++++-----
- .../devicetree/bindings/iio/adc/avia-hx711.yaml    |   2 +-
- .../bindings/mtd/allwinner,sun4i-a10-nand.yaml     |   1 +
- .../devicetree/bindings/mtd/nand-controller.yaml   |   1 +
- .../bindings/pinctrl/aspeed,ast2400-pinctrl.yaml   |   4 +-
- .../bindings/pinctrl/aspeed,ast2500-pinctrl.yaml   |   9 +-
- .../bindings/pinctrl/st,stm32-pinctrl.yaml         |   7 +
- Documentation/devicetree/bindings/riscv/cpus.yaml  | 143 +++++++++------------
- .../bindings/spi/allwinner,sun4i-a10-spi.yaml      |   1 +
- .../bindings/spi/allwinner,sun6i-a31-spi.yaml      |   1 +
- 11 files changed, 119 insertions(+), 122 deletions(-)
+--
+Best Regards
+Masahiro Yamada
