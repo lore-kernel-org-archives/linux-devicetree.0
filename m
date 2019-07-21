@@ -1,247 +1,535 @@
 From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH 01/10] drm/mxsfb: Update mxsfb to support a bridge
-Date: Sun, 21 Jul 2019 12:26:48 +0200
-Message-ID: <20190721102647.GA999@bogon.m.sigxcpu.org>
+Subject: Re: [PATCH 02/10] drm/mxsfb: Update mxsfb with additional pixel
+ formats
+Date: Sun, 21 Jul 2019 12:27:30 +0200
+Message-ID: <20190721102730.GB999@bogon.m.sigxcpu.org>
 References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
- <1561555938-21595-2-git-send-email-robert.chiras@nxp.com>
+ <1561555938-21595-3-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1561555938-21595-2-git-send-email-robert.chiras@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1561555938-21595-3-git-send-email-robert.chiras@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Robert Chiras <robert.chiras@nxp.com>
-Cc: Marek Vasut <marex@denx.de>, Mark Rutland <mark.rutland@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, NXP Linux Team <linux-imx@nxp.com>
+Cc: Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iZXJ0LApPbiBXZWQsIEp1biAyNiwgMjAxOSBhdCAwNDozMjowOVBNICswMzAwLCBSb2Jl
-cnQgQ2hpcmFzIHdyb3RlOgo+IEN1cnJlbnRseSwgdGhlIE1YU0ZCIERSTSBkcml2ZXIgb25seSBz
-dXBwb3J0cyBhIHBhbmVsLiBCdXQsIGl0cyBvdXRwdXQKPiBkaXNwbGF5IHNpZ25hbCBjYW4gYWxz
-byBiZSByZWRpcmVjdGVkIHRvIGFub3RoZXIgZW5jb2RlciwgbGlrZSBhIERTSQo+IGNvbnRyb2xs
-ZXIuIEluIHRoaXMgY2FzZSwgdGhhdCBEU0kgY29udHJvbGxlciBtYXkgYWN0IGxpa2UgYSBkcm1f
-YnJpZGdlLgo+IEluIG9yZGVyIHN1cHBvcnQgdGhpcyB1c2UtY2FzZSB0b28sIHRoaXMgcGF0Y2gg
-YWRkcyBzdXBwb3J0IGZvcgo+IGRybV9icmlkZ2UgaW4gbXhzZmIuCj4gCj4gU2lnbmVkLW9mZi1i
-eTogUm9iZXJ0IENoaXJhcyA8cm9iZXJ0LmNoaXJhc0BueHAuY29tPgo+IC0tLQo+ICBkcml2ZXJz
-L2dwdS9kcm0vbXhzZmIvbXhzZmJfY3J0Yy5jIHwgNDYgKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKystLS0KPiAgZHJpdmVycy9ncHUvZHJtL214c2ZiL214c2ZiX2Rydi5jICB8IDQ2
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9teHNmYi9teHNmYl9kcnYuaCAgfCAgNCArKystCj4gIGRyaXZlcnMvZ3B1L2RybS9teHNmYi9t
-eHNmYl9vdXQuYyAgfCAyNiArKysrKysrKysrKy0tLS0tLS0tLS0KPiAgZHJpdmVycy9ncHUvZHJt
-L214c2ZiL214c2ZiX3JlZ3MuaCB8IDE1ICsrKysrKysrKysrKysKPiAgNSBmaWxlcyBjaGFuZ2Vk
-LCAxMTYgaW5zZXJ0aW9ucygrKSwgMjEgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9teHNmYi9teHNmYl9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXhzZmIv
-bXhzZmJfY3J0Yy5jCj4gaW5kZXggOTNmNDEzMy4uMTRiZGUwMjQgMTAwNjQ0Cj4gLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL214c2ZiL214c2ZiX2NydGMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9t
-eHNmYi9teHNmYl9jcnRjLmMKPiBAQCAtOTMsOCArOTMsMTEgQEAgc3RhdGljIHZvaWQgbXhzZmJf
-c2V0X2J1c19mbXQoc3RydWN0IG14c2ZiX2RybV9wcml2YXRlICpteHNmYikKPiAgCj4gIAlyZWcg
-PSByZWFkbChteHNmYi0+YmFzZSArIExDRENfQ1RSTCk7Cj4gIAo+IC0JaWYgKG14c2ZiLT5jb25u
-ZWN0b3IuZGlzcGxheV9pbmZvLm51bV9idXNfZm9ybWF0cykKPiAtCQlidXNfZm9ybWF0ID0gbXhz
-ZmItPmNvbm5lY3Rvci5kaXNwbGF5X2luZm8uYnVzX2Zvcm1hdHNbMF07Cj4gKwlpZiAobXhzZmIt
-PmNvbm5lY3Rvci0+ZGlzcGxheV9pbmZvLm51bV9idXNfZm9ybWF0cykKPiArCQlidXNfZm9ybWF0
-ID0gbXhzZmItPmNvbm5lY3Rvci0+ZGlzcGxheV9pbmZvLmJ1c19mb3JtYXRzWzBdOwo+ICsKPiAr
-CURSTV9ERVZfREVCVUdfRFJJVkVSKGRybS0+ZGV2LCAiVXNpbmcgYnVzX2Zvcm1hdDogMHglMDhY
-XG4iLAo+ICsJCQkgICAgIGJ1c19mb3JtYXQpOwo+ICAKPiAgCXJlZyAmPSB+Q1RSTF9CVVNfV0lE
-VEhfTUFTSzsKPiAgCXN3aXRjaCAoYnVzX2Zvcm1hdCkgewo+IEBAIC0xMjIsNiArMTI1LDkgQEAg
-c3RhdGljIHZvaWQgbXhzZmJfZW5hYmxlX2NvbnRyb2xsZXIoc3RydWN0IG14c2ZiX2RybV9wcml2
-YXRlICpteHNmYikKPiAgCQljbGtfcHJlcGFyZV9lbmFibGUobXhzZmItPmNsa19kaXNwX2F4aSk7
-Cj4gIAljbGtfcHJlcGFyZV9lbmFibGUobXhzZmItPmNsayk7Cj4gIAo+ICsJd3JpdGVsKENUUkwy
-X09VVFNUQU5ESU5HX1JFUVNfX1JFUV8xNiwKPiArCSAgICAgICBteHNmYi0+YmFzZSArIExDRENf
-VjRfQ1RSTDIgKyBSRUdfU0VUKTsKPiArCj4gIAkvKiBJZiBpdCB3YXMgZGlzYWJsZWQsIHJlLWVu
-YWJsZSB0aGUgbW9kZSBhZ2FpbiAqLwo+ICAJd3JpdGVsKENUUkxfRE9UQ0xLX01PREUsIG14c2Zi
-LT5iYXNlICsgTENEQ19DVFJMICsgUkVHX1NFVCk7Cj4gIAo+IEBAIC0xMzEsMTIgKzEzNywxNSBA
-QCBzdGF0aWMgdm9pZCBteHNmYl9lbmFibGVfY29udHJvbGxlcihzdHJ1Y3QgbXhzZmJfZHJtX3By
-aXZhdGUgKm14c2ZiKQo+ICAJd3JpdGVsKHJlZywgbXhzZmItPmJhc2UgKyBMQ0RDX1ZEQ1RSTDQp
-Owo+ICAKPiAgCXdyaXRlbChDVFJMX1JVTiwgbXhzZmItPmJhc2UgKyBMQ0RDX0NUUkwgKyBSRUdf
-U0VUKTsKPiArCXdyaXRlbChDVFJMMV9SRUNPVkVSWV9PTl9VTkRFUkZMT1csIG14c2ZiLT5iYXNl
-ICsgTENEQ19DVFJMMSArIFJFR19TRVQpOwo+ICB9Cj4gIAo+ICBzdGF0aWMgdm9pZCBteHNmYl9k
-aXNhYmxlX2NvbnRyb2xsZXIoc3RydWN0IG14c2ZiX2RybV9wcml2YXRlICpteHNmYikKPiAgewo+
-ICAJdTMyIHJlZzsKPiAgCj4gKwl3cml0ZWwoQ1RSTF9SVU4sIG14c2ZiLT5iYXNlICsgTENEQ19D
-VFJMICsgUkVHX0NMUik7Cj4gKwo+ICAJLyoKPiAgCSAqIEV2ZW4gaWYgd2UgZGlzYWJsZSB0aGUg
-Y29udHJvbGxlciBoZXJlLCBpdCB3aWxsIHN0aWxsIGNvbnRpbnVlCj4gIAkgKiB1bnRpbCBpdHMg
-RklGT3MgYXJlIHJ1bm5pbmcgb3V0IG9mIGRhdGEKPiBAQCAtMjAyLDggKzIxMSw5IEBAIHN0YXRp
-YyBkbWFfYWRkcl90IG14c2ZiX2dldF9mYl9wYWRkcihzdHJ1Y3QgbXhzZmJfZHJtX3ByaXZhdGUg
-Km14c2ZiKQo+ICAKPiAgc3RhdGljIHZvaWQgbXhzZmJfY3J0Y19tb2RlX3NldF9ub2ZiKHN0cnVj
-dCBteHNmYl9kcm1fcHJpdmF0ZSAqbXhzZmIpCj4gIHsKPiArCXN0cnVjdCBkcm1fZGV2aWNlICpk
-cm0gPSBteHNmYi0+cGlwZS5jcnRjLmRldjsKPiAgCXN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICpt
-ID0gJm14c2ZiLT5waXBlLmNydGMuc3RhdGUtPmFkanVzdGVkX21vZGU7Cj4gLQljb25zdCB1MzIg
-YnVzX2ZsYWdzID0gbXhzZmItPmNvbm5lY3Rvci5kaXNwbGF5X2luZm8uYnVzX2ZsYWdzOwo+ICsJ
-Y29uc3QgdTMyIGJ1c19mbGFncyA9IG14c2ZiLT5jb25uZWN0b3ItPmRpc3BsYXlfaW5mby5idXNf
-ZmxhZ3M7Cj4gIAl1MzIgdmRjdHJsMCwgdnN5bmNfcHVsc2VfbGVuLCBoc3luY19wdWxzZV9sZW47
-Cj4gIAlpbnQgZXJyOwo+ICAKPiBAQCAtMjI3LDYgKzIzNywxMyBAQCBzdGF0aWMgdm9pZCBteHNm
-Yl9jcnRjX21vZGVfc2V0X25vZmIoc3RydWN0IG14c2ZiX2RybV9wcml2YXRlICpteHNmYikKPiAg
-Cj4gIAljbGtfc2V0X3JhdGUobXhzZmItPmNsaywgbS0+Y3J0Y19jbG9jayAqIDEwMDApOwo+ICAK
-PiArCURSTV9ERVZfREVCVUdfRFJJVkVSKGRybS0+ZGV2LCAiUGl4ZWwgY2xvY2s6ICVka0h6IChh
-Y3R1YWw6ICVka0h6KVxuIiwKPiArCQkJICAgICBtLT5jcnRjX2Nsb2NrLAo+ICsJCQkgICAgIChp
-bnQpKGNsa19nZXRfcmF0ZShteHNmYi0+Y2xrKSAvIDEwMDApKTsKPiArCURSTV9ERVZfREVCVUdf
-RFJJVkVSKGRybS0+ZGV2LCAiQ29ubmVjdG9yIGJ1c19mbGFnczogMHglMDhYXG4iLAo+ICsJCQkg
-ICAgIGJ1c19mbGFncyk7Cj4gKwlEUk1fREVWX0RFQlVHX0RSSVZFUihkcm0tPmRldiwgIk1vZGUg
-ZmxhZ3M6IDB4JTA4WFxuIiwgbS0+ZmxhZ3MpOwo+ICsKPiAgCXdyaXRlbChUUkFOU0ZFUl9DT1VO
-VF9TRVRfVkNPVU5UKG0tPmNydGNfdmRpc3BsYXkpIHwKPiAgCSAgICAgICBUUkFOU0ZFUl9DT1VO
-VF9TRVRfSENPVU5UKG0tPmNydGNfaGRpc3BsYXkpLAo+ICAJICAgICAgIG14c2ZiLT5iYXNlICsg
-bXhzZmItPmRldmRhdGEtPnRyYW5zZmVyX2NvdW50KTsKPiBAQCAtMjc5LDYgKzI5Niw3IEBAIHZv
-aWQgbXhzZmJfY3J0Y19lbmFibGUoc3RydWN0IG14c2ZiX2RybV9wcml2YXRlICpteHNmYikKPiAg
-CWRtYV9hZGRyX3QgcGFkZHI7Cj4gIAo+ICAJbXhzZmJfZW5hYmxlX2F4aV9jbGsobXhzZmIpOwo+
-ICsJd3JpdGVsKDAsIG14c2ZiLT5iYXNlICsgTENEQ19DVFJMKTsKPiAgCW14c2ZiX2NydGNfbW9k
-ZV9zZXRfbm9mYihteHNmYik7Cj4gIAo+ICAJLyogV3JpdGUgY3VyX2J1ZiBhcyB3ZWxsIHRvIGF2
-b2lkIGFuIGluaXRpYWwgY29ycnVwdCBmcmFtZSAqLwo+IEBAIC0zMDIsNiArMzIwLDggQEAgdm9p
-ZCBteHNmYl9wbGFuZV9hdG9taWNfdXBkYXRlKHN0cnVjdCBteHNmYl9kcm1fcHJpdmF0ZSAqbXhz
-ZmIsCj4gIHsKPiAgCXN0cnVjdCBkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZSAqcGlwZSA9ICZteHNm
-Yi0+cGlwZTsKPiAgCXN0cnVjdCBkcm1fY3J0YyAqY3J0YyA9ICZwaXBlLT5jcnRjOwo+ICsJc3Ry
-dWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIgPSBwaXBlLT5wbGFuZS5zdGF0ZS0+ZmI7Cj4gKwlzdHJ1
-Y3QgZHJtX2ZyYW1lYnVmZmVyICpvbGRfZmIgPSBvbGRfc3RhdGUtPmZiOwo+ICAJc3RydWN0IGRy
-bV9wZW5kaW5nX3ZibGFua19ldmVudCAqZXZlbnQ7Cj4gIAlkbWFfYWRkcl90IHBhZGRyOwo+ICAK
-PiBAQCAtMzI0LDQgKzM0NCwyNCBAQCB2b2lkIG14c2ZiX3BsYW5lX2F0b21pY191cGRhdGUoc3Ry
-dWN0IG14c2ZiX2RybV9wcml2YXRlICpteHNmYiwKPiAgCQl3cml0ZWwocGFkZHIsIG14c2ZiLT5i
-YXNlICsgbXhzZmItPmRldmRhdGEtPm5leHRfYnVmKTsKPiAgCQlteHNmYl9kaXNhYmxlX2F4aV9j
-bGsobXhzZmIpOwo+ICAJfQo+ICsKPiArCWlmICghZmIgfHwgIW9sZF9mYikKPiArCQlyZXR1cm47
-Cj4gKwo+ICsJLyoKPiArCSAqIFRPRE86IEN1cnJlbnRseSwgd2Ugb25seSBzdXBwb3J0IHBpeGVs
-IGZvcm1hdCBjaGFuZ2UsIGJ1dCB3ZSBuZWVkCj4gKwkgKiBhbHNvIHRvIGNhcmUgYWJvdXQgc2l6
-ZSBjaGFuZ2VzIHRvbwo+ICsJICovCj4gKwlpZiAob2xkX2ZiLT5mb3JtYXQtPmZvcm1hdCAhPSBm
-Yi0+Zm9ybWF0LT5mb3JtYXQpIHsKPiArCQlzdHJ1Y3QgZHJtX2Zvcm1hdF9uYW1lX2J1ZiBvbGRf
-Zm10X2J1ZjsKPiArCQlzdHJ1Y3QgZHJtX2Zvcm1hdF9uYW1lX2J1ZiBuZXdfZm10X2J1ZjsKPiAr
-Cj4gKwkJRFJNX0RFVl9ERUJVR19EUklWRVIoY3J0Yy0+ZGV2LT5kZXYsCj4gKwkJCQkgICAgICJT
-d2l0Y2hpbmcgcGl4ZWwgZm9ybWF0OiAlcyAtPiAlc1xuIiwKPiArCQkJCSAgICAgZHJtX2dldF9m
-b3JtYXRfbmFtZShvbGRfZmItPmZvcm1hdC0+Zm9ybWF0LAo+ICsJCQkJCQkJICZvbGRfZm10X2J1
-ZiksCj4gKwkJCQkgICAgIGRybV9nZXRfZm9ybWF0X25hbWUoZmItPmZvcm1hdC0+Zm9ybWF0LAo+
-ICsJCQkJCQkJICZuZXdfZm10X2J1ZikpOwo+ICsJCW14c2ZiX3NldF9waXhlbF9mbXQobXhzZmIs
-IHRydWUpOwoKVGhpcyBhc3N1bWVzIG14c2ZiX3NldF9waXhlbF9mbXQgaGFzIHR3byBhcmd1bWVu
-dHMgd2hpY2ggaXMgYmVpbmcgaW50cm9kdWNlZAppbiB0aGUgZm9sbG93aW5nIGNvbW1pdC4gV2l0
-aCB0aGF0IGZpeGVkOgoKVGVzdGVkLWJ5OiBHdWlkbyBHw7xudGhlciA8YWd4QHNpZ3hjcHUub3Jn
-PiAKCkNoZWVycywKIC0tIEd1aWRvCgo+ICsJfQo+ICB9Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9teHNmYi9teHNmYl9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9teHNmYi9teHNmYl9k
-cnYuYwo+IGluZGV4IDZmYWZjOTAuLjBkMTcxZTkgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUv
-ZHJtL214c2ZiL214c2ZiX2Rydi5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL214c2ZiL214c2Zi
-X2Rydi5jCj4gQEAgLTk4LDkgKzk4LDI1IEBAIHN0YXRpYyB2b2lkIG14c2ZiX3BpcGVfZW5hYmxl
-KHN0cnVjdCBkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZSAqcGlwZSwKPiAgCQkJICAgICAgc3RydWN0
-IGRybV9jcnRjX3N0YXRlICpjcnRjX3N0YXRlLAo+ICAJCQkgICAgICBzdHJ1Y3QgZHJtX3BsYW5l
-X3N0YXRlICpwbGFuZV9zdGF0ZSkKPiAgewo+ICsJc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5l
-Y3RvcjsKPiAgCXN0cnVjdCBteHNmYl9kcm1fcHJpdmF0ZSAqbXhzZmIgPSBkcm1fcGlwZV90b19t
-eHNmYl9kcm1fcHJpdmF0ZShwaXBlKTsKPiAgCXN0cnVjdCBkcm1fZGV2aWNlICpkcm0gPSBwaXBl
-LT5wbGFuZS5kZXY7Cj4gIAo+ICsJaWYgKCFteHNmYi0+Y29ubmVjdG9yKSB7Cj4gKwkJbGlzdF9m
-b3JfZWFjaF9lbnRyeShjb25uZWN0b3IsCj4gKwkJCQkgICAgJmRybS0+bW9kZV9jb25maWcuY29u
-bmVjdG9yX2xpc3QsCj4gKwkJCQkgICAgaGVhZCkKPiArCQkJaWYgKGNvbm5lY3Rvci0+ZW5jb2Rl
-ciA9PSAmbXhzZmItPnBpcGUuZW5jb2Rlcikgewo+ICsJCQkJbXhzZmItPmNvbm5lY3RvciA9IGNv
-bm5lY3RvcjsKPiArCQkJCWJyZWFrOwo+ICsJCQl9Cj4gKwl9Cj4gKwo+ICsJaWYgKCFteHNmYi0+
-Y29ubmVjdG9yKSB7Cj4gKwkJZGV2X3dhcm4oZHJtLT5kZXYsICJObyBjb25uZWN0b3IgYXR0YWNo
-ZWQsIHVzaW5nIGRlZmF1bHRcbiIpOwo+ICsJCW14c2ZiLT5jb25uZWN0b3IgPSAmbXhzZmItPnBh
-bmVsX2Nvbm5lY3RvcjsKPiArCX0KPiArCj4gIAlwbV9ydW50aW1lX2dldF9zeW5jKGRybS0+ZGV2
-KTsKPiAgCWRybV9wYW5lbF9wcmVwYXJlKG14c2ZiLT5wYW5lbCk7Cj4gIAlteHNmYl9jcnRjX2Vu
-YWJsZShteHNmYik7Cj4gQEAgLTEyNiw2ICsxNDIsOSBAQCBzdGF0aWMgdm9pZCBteHNmYl9waXBl
-X2Rpc2FibGUoc3RydWN0IGRybV9zaW1wbGVfZGlzcGxheV9waXBlICpwaXBlKQo+ICAJCWRybV9j
-cnRjX3NlbmRfdmJsYW5rX2V2ZW50KGNydGMsIGV2ZW50KTsKPiAgCX0KPiAgCXNwaW5fdW5sb2Nr
-X2lycSgmZHJtLT5ldmVudF9sb2NrKTsKPiArCj4gKwlpZiAobXhzZmItPmNvbm5lY3RvciAhPSAm
-bXhzZmItPnBhbmVsX2Nvbm5lY3RvcikKPiArCQlteHNmYi0+Y29ubmVjdG9yID0gTlVMTDsKPiAg
-fQo+ICAKPiAgc3RhdGljIHZvaWQgbXhzZmJfcGlwZV91cGRhdGUoc3RydWN0IGRybV9zaW1wbGVf
-ZGlzcGxheV9waXBlICpwaXBlLAo+IEBAIC0yMjMsMTYgKzI0MiwzMyBAQCBzdGF0aWMgaW50IG14
-c2ZiX2xvYWQoc3RydWN0IGRybV9kZXZpY2UgKmRybSwgdW5zaWduZWQgbG9uZyBmbGFncykKPiAg
-Cj4gIAlyZXQgPSBkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZV9pbml0KGRybSwgJm14c2ZiLT5waXBl
-LCAmbXhzZmJfZnVuY3MsCj4gIAkJCW14c2ZiX2Zvcm1hdHMsIEFSUkFZX1NJWkUobXhzZmJfZm9y
-bWF0cyksIE5VTEwsCj4gLQkJCSZteHNmYi0+Y29ubmVjdG9yKTsKPiArCQkJbXhzZmItPmNvbm5l
-Y3Rvcik7Cj4gIAlpZiAocmV0IDwgMCkgewo+ICAJCWRldl9lcnIoZHJtLT5kZXYsICJDYW5ub3Qg
-c2V0dXAgc2ltcGxlIGRpc3BsYXkgcGlwZVxuIik7Cj4gIAkJZ290byBlcnJfdmJsYW5rOwo+ICAJ
-fQo+ICAKPiAtCXJldCA9IGRybV9wYW5lbF9hdHRhY2gobXhzZmItPnBhbmVsLCAmbXhzZmItPmNv
-bm5lY3Rvcik7Cj4gLQlpZiAocmV0KSB7Cj4gLQkJZGV2X2Vycihkcm0tPmRldiwgIkNhbm5vdCBj
-b25uZWN0IHBhbmVsXG4iKTsKPiAtCQlnb3RvIGVycl92Ymxhbms7Cj4gKwkvKgo+ICsJICogQXR0
-YWNoIHBhbmVsIG9ubHkgaWYgdGhlcmUgaXMgb25lLgo+ICsJICogSWYgdGhlcmUgaXMgbm8gcGFu
-ZWwgYXR0YWNoLCBpdCBtdXN0IGJlIGEgYnJpZGdlLiBJbiB0aGlzIGNhc2UsIHdlCj4gKwkgKiBu
-ZWVkIGEgcmVmZXJlbmNlIHRvIGl0cyBjb25uZWN0b3IgZm9yIGEgcHJvcGVyIGluaXRpYWxpemF0
-aW9uLgo+ICsJICogV2Ugd2lsbCBkbyB0aGlzIGNoZWNrIGluIHBpcGUtPmVuYWJsZSgpLCBzaW5j
-ZSB0aGUgY29ubmVjdG9yIHdvbid0Cj4gKwkgKiBiZSBhdHRhY2hlZCB0byBhbiBlbmNvZGVyIHVu
-dGlsIHRoZW4uCj4gKwkgKi8KPiArCj4gKwlpZiAobXhzZmItPnBhbmVsKSB7Cj4gKwkJcmV0ID0g
-ZHJtX3BhbmVsX2F0dGFjaChteHNmYi0+cGFuZWwsIG14c2ZiLT5jb25uZWN0b3IpOwo+ICsJCWlm
-IChyZXQpIHsKPiArCQkJZGV2X2Vycihkcm0tPmRldiwgIkNhbm5vdCBjb25uZWN0IHBhbmVsXG4i
-KTsKPiArCQkJZ290byBlcnJfdmJsYW5rOwo+ICsJCX0KPiArCX0gZWxzZSBpZiAobXhzZmItPmJy
-aWRnZSkgewo+ICsJCXJldCA9IGRybV9zaW1wbGVfZGlzcGxheV9waXBlX2F0dGFjaF9icmlkZ2Uo
-Jm14c2ZiLT5waXBlLAo+ICsJCQkJCQkJICAgIG14c2ZiLT5icmlkZ2UpOwo+ICsJCWlmIChyZXQp
-IHsKPiArCQkJZGV2X2Vycihkcm0tPmRldiwgIkNhbm5vdCBjb25uZWN0IGJyaWRnZVxuIik7Cj4g
-KwkJCWdvdG8gZXJyX3ZibGFuazsKPiArCQl9Cj4gIAl9Cj4gIAo+ICAJZHJtLT5tb2RlX2NvbmZp
-Zy5taW5fd2lkdGgJPSBNWFNGQl9NSU5fWFJFUzsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL214c2ZiL214c2ZiX2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL214c2ZiL214c2ZiX2Rydi5o
-Cj4gaW5kZXggZDk3NTMwMC4uMGI2NWI1MSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
-bXhzZmIvbXhzZmJfZHJ2LmgKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfZHJ2
-LmgKPiBAQCAtMjcsOCArMjcsMTAgQEAgc3RydWN0IG14c2ZiX2RybV9wcml2YXRlIHsKPiAgCXN0
-cnVjdCBjbGsJCQkqY2xrX2Rpc3BfYXhpOwo+ICAKPiAgCXN0cnVjdCBkcm1fc2ltcGxlX2Rpc3Bs
-YXlfcGlwZQlwaXBlOwo+IC0Jc3RydWN0IGRybV9jb25uZWN0b3IJCWNvbm5lY3RvcjsKPiArCXN0
-cnVjdCBkcm1fY29ubmVjdG9yCQlwYW5lbF9jb25uZWN0b3I7Cj4gKwlzdHJ1Y3QgZHJtX2Nvbm5l
-Y3RvcgkJKmNvbm5lY3RvcjsKPiAgCXN0cnVjdCBkcm1fcGFuZWwJCSpwYW5lbDsKPiArCXN0cnVj
-dCBkcm1fYnJpZGdlCQkqYnJpZGdlOwo+ICB9Owo+ICAKPiAgaW50IG14c2ZiX3NldHVwX2NydGMo
-c3RydWN0IGRybV9kZXZpY2UgKmRldik7Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9t
-eHNmYi9teHNmYl9vdXQuYyBiL2RyaXZlcnMvZ3B1L2RybS9teHNmYi9teHNmYl9vdXQuYwo+IGlu
-ZGV4IDkxZTc2ZjkuLmI5YWNmMmIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL214c2Zi
-L214c2ZiX291dC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL214c2ZiL214c2ZiX291dC5jCj4g
-QEAgLTIyLDcgKzIyLDggQEAKPiAgc3RhdGljIHN0cnVjdCBteHNmYl9kcm1fcHJpdmF0ZSAqCj4g
-IGRybV9jb25uZWN0b3JfdG9fbXhzZmJfZHJtX3ByaXZhdGUoc3RydWN0IGRybV9jb25uZWN0b3Ig
-KmNvbm5lY3RvcikKPiAgewo+IC0JcmV0dXJuIGNvbnRhaW5lcl9vZihjb25uZWN0b3IsIHN0cnVj
-dCBteHNmYl9kcm1fcHJpdmF0ZSwgY29ubmVjdG9yKTsKPiArCXJldHVybiBjb250YWluZXJfb2Yo
-Y29ubmVjdG9yLCBzdHJ1Y3QgbXhzZmJfZHJtX3ByaXZhdGUsCj4gKwkJCSAgICBwYW5lbF9jb25u
-ZWN0b3IpOwo+ICB9Cj4gIAo+ICBzdGF0aWMgaW50IG14c2ZiX3BhbmVsX2dldF9tb2RlcyhzdHJ1
-Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+IEBAIC03NywyMiArNzgsMjMgQEAgc3RhdGlj
-IGNvbnN0IHN0cnVjdCBkcm1fY29ubmVjdG9yX2Z1bmNzIG14c2ZiX3BhbmVsX2Nvbm5lY3Rvcl9m
-dW5jcyA9IHsKPiAgaW50IG14c2ZiX2NyZWF0ZV9vdXRwdXQoc3RydWN0IGRybV9kZXZpY2UgKmRy
-bSkKPiAgewo+ICAJc3RydWN0IG14c2ZiX2RybV9wcml2YXRlICpteHNmYiA9IGRybS0+ZGV2X3By
-aXZhdGU7Cj4gLQlzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbDsKPiAgCWludCByZXQ7Cj4gIAo+IC0J
-cmV0ID0gZHJtX29mX2ZpbmRfcGFuZWxfb3JfYnJpZGdlKGRybS0+ZGV2LT5vZl9ub2RlLCAwLCAw
-LCAmcGFuZWwsIE5VTEwpOwo+ICsJcmV0ID0gZHJtX29mX2ZpbmRfcGFuZWxfb3JfYnJpZGdlKGRy
-bS0+ZGV2LT5vZl9ub2RlLCAwLCAwLAo+ICsJCQkJCSAgJm14c2ZiLT5wYW5lbCwgJm14c2ZiLT5i
-cmlkZ2UpOwo+ICAJaWYgKHJldCkKPiAgCQlyZXR1cm4gcmV0Owo+ICAKPiAtCW14c2ZiLT5jb25u
-ZWN0b3IuZHBtcyA9IERSTV9NT0RFX0RQTVNfT0ZGOwo+IC0JbXhzZmItPmNvbm5lY3Rvci5wb2xs
-ZWQgPSAwOwo+IC0JZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfYWRkKCZteHNmYi0+Y29ubmVjdG9yLAo+
-IC0JCQkmbXhzZmJfcGFuZWxfY29ubmVjdG9yX2hlbHBlcl9mdW5jcyk7Cj4gLQlyZXQgPSBkcm1f
-Y29ubmVjdG9yX2luaXQoZHJtLCAmbXhzZmItPmNvbm5lY3RvciwKPiAtCQkJCSAmbXhzZmJfcGFu
-ZWxfY29ubmVjdG9yX2Z1bmNzLAo+IC0JCQkJIERSTV9NT0RFX0NPTk5FQ1RPUl9Vbmtub3duKTsK
-PiAtCWlmICghcmV0KQo+IC0JCW14c2ZiLT5wYW5lbCA9IHBhbmVsOwo+ICsJaWYgKG14c2ZiLT5w
-YW5lbCkgewo+ICsJCW14c2ZiLT5jb25uZWN0b3IgPSAmbXhzZmItPnBhbmVsX2Nvbm5lY3RvcjsK
-PiArCQlteHNmYi0+Y29ubmVjdG9yLT5kcG1zID0gRFJNX01PREVfRFBNU19PRkY7Cj4gKwkJbXhz
-ZmItPmNvbm5lY3Rvci0+cG9sbGVkID0gMDsKPiArCQlkcm1fY29ubmVjdG9yX2hlbHBlcl9hZGQo
-bXhzZmItPmNvbm5lY3RvciwKPiArCQkJCQkgJm14c2ZiX3BhbmVsX2Nvbm5lY3Rvcl9oZWxwZXJf
-ZnVuY3MpOwo+ICsJCXJldCA9IGRybV9jb25uZWN0b3JfaW5pdChkcm0sIG14c2ZiLT5jb25uZWN0
-b3IsCj4gKwkJCQkJICZteHNmYl9wYW5lbF9jb25uZWN0b3JfZnVuY3MsCj4gKwkJCQkJIERSTV9N
-T0RFX0NPTk5FQ1RPUl9Vbmtub3duKTsKPiArCX0KPiAgCj4gIAlyZXR1cm4gcmV0Owo+ICB9Cj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9teHNmYi9teHNmYl9yZWdzLmggYi9kcml2ZXJz
-L2dwdS9kcm0vbXhzZmIvbXhzZmJfcmVncy5oCj4gaW5kZXggOTMyZDdlYS4uNzE0MjZhYSAxMDA2
-NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfcmVncy5oCj4gKysrIGIvZHJp
-dmVycy9ncHUvZHJtL214c2ZiL214c2ZiX3JlZ3MuaAo+IEBAIC0xNCwxOSArMTQsMzEgQEAKPiAg
-Cj4gICNkZWZpbmUgTENEQ19DVFJMCQkJMHgwMAo+ICAjZGVmaW5lIExDRENfQ1RSTDEJCQkweDEw
-Cj4gKyNkZWZpbmUgTENEQ19WNF9DVFJMMgkJCTB4MjAKPiAgI2RlZmluZSBMQ0RDX1YzX1RSQU5T
-RkVSX0NPVU5UCQkweDIwCj4gICNkZWZpbmUgTENEQ19WNF9UUkFOU0ZFUl9DT1VOVAkJMHgzMAo+
-ICAjZGVmaW5lIExDRENfVjRfQ1VSX0JVRgkJCTB4NDAKPiAgI2RlZmluZSBMQ0RDX1Y0X05FWFRf
-QlVGCQkweDUwCj4gICNkZWZpbmUgTENEQ19WM19DVVJfQlVGCQkJMHgzMAo+ICAjZGVmaW5lIExD
-RENfVjNfTkVYVF9CVUYJCTB4NDAKPiArI2RlZmluZSBMQ0RDX1RJTUlORwkJCTB4NjAKPiAgI2Rl
-ZmluZSBMQ0RDX1ZEQ1RSTDAJCQkweDcwCj4gICNkZWZpbmUgTENEQ19WRENUUkwxCQkJMHg4MAo+
-ICAjZGVmaW5lIExDRENfVkRDVFJMMgkJCTB4OTAKPiAgI2RlZmluZSBMQ0RDX1ZEQ1RSTDMJCQkw
-eGEwCj4gICNkZWZpbmUgTENEQ19WRENUUkw0CQkJMHhiMAo+ICsjZGVmaW5lIExDRENfRFZJQ1RS
-TDAJCQkweGMwCj4gKyNkZWZpbmUgTENEQ19EVklDVFJMMQkJCTB4ZDAKPiArI2RlZmluZSBMQ0RD
-X0RWSUNUUkwyCQkJMHhlMAo+ICsjZGVmaW5lIExDRENfRFZJQ1RSTDMJCQkweGYwCj4gKyNkZWZp
-bmUgTENEQ19EVklDVFJMNAkJCTB4MTAwCj4gKyNkZWZpbmUgTENEQ19WNF9EQVRBCQkJMHgxODAK
-PiArI2RlZmluZSBMQ0RDX1YzX0RBVEEJCQkweDFiMAo+ICAjZGVmaW5lIExDRENfVjRfREVCVUcw
-CQkJMHgxZDAKPiAgI2RlZmluZSBMQ0RDX1YzX0RFQlVHMAkJCTB4MWYwCj4gKyNkZWZpbmUgTENE
-Q19BU19DVFJMCQkJMHgyMTAKPiArI2RlZmluZSBMQ0RDX0FTX0JVRgkJCTB4MjIwCj4gKyNkZWZp
-bmUgTENEQ19BU19ORVhUX0JVRgkJMHgyMzAKPiAgCj4gICNkZWZpbmUgQ1RSTF9TRlRSU1QJCQko
-MSA8PCAzMSkKPiAgI2RlZmluZSBDVFJMX0NMS0dBVEUJCQkoMSA8PCAzMCkKPiBAQCAtNDUsMTIg
-KzU3LDE1IEBACj4gICNkZWZpbmUgQ1RSTF9ERjI0CQkJKDEgPDwgMSkKPiAgI2RlZmluZSBDVFJM
-X1JVTgkJCSgxIDw8IDApCj4gIAo+ICsjZGVmaW5lIENUUkwxX1JFQ09WRVJZX09OX1VOREVSRkxP
-VwkoMSA8PCAyNCkKPiAgI2RlZmluZSBDVFJMMV9GSUZPX0NMRUFSCQkoMSA8PCAyMSkKPiAgI2Rl
-ZmluZSBDVFJMMV9TRVRfQllURV9QQUNLQUdJTkcoeCkJKCgoeCkgJiAweGYpIDw8IDE2KQo+ICAj
-ZGVmaW5lIENUUkwxX0dFVF9CWVRFX1BBQ0tBR0lORyh4KQkoKCh4KSA+PiAxNikgJiAweGYpCj4g
-ICNkZWZpbmUgQ1RSTDFfQ1VSX0ZSQU1FX0RPTkVfSVJRX0VOCSgxIDw8IDEzKQo+ICAjZGVmaW5l
-IENUUkwxX0NVUl9GUkFNRV9ET05FX0lSUQkoMSA8PCA5KQo+ICAKPiArI2RlZmluZSBDVFJMMl9P
-VVRTVEFORElOR19SRVFTX19SRVFfMTYJCSg0IDw8IDIxKQo+ICsKPiAgI2RlZmluZSBUUkFOU0ZF
-Ul9DT1VOVF9TRVRfVkNPVU5UKHgpCSgoKHgpICYgMHhmZmZmKSA8PCAxNikKPiAgI2RlZmluZSBU
-UkFOU0ZFUl9DT1VOVF9HRVRfVkNPVU5UKHgpCSgoKHgpID4+IDE2KSAmIDB4ZmZmZikKPiAgI2Rl
-ZmluZSBUUkFOU0ZFUl9DT1VOVF9TRVRfSENPVU5UKHgpCSgoeCkgJiAweGZmZmYpCj4gLS0gCj4g
-Mi43LjQKPiAKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwo+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cj4gbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbA==
+Hi,
+I'm not very familiar with mxsfb, just some things that stood out while
+looking at the code:
+
+On Wed, Jun 26, 2019 at 04:32:10PM +0300, Robert Chiras wrote:
+> Since version 4 of eLCDIF, there are some registers that can do
+> transformations on the input data, like re-arranging the pixel
+> components. By doing that, we can support more pixel formats.
+> This patch adds support for X/ABGR and RGBX/A. Although, the local alpha
+> is not supported by eLCDIF, the alpha pixel formats were added to the
+> supported pixel formats but it will be ignored. This was necessary since
+> there are systems (like Android) that requires such pixel formats.
+> 
+> Also, add support for the following pixel formats:
+>         16 bpp: RG16 ,BG16, XR15, XB15, AR15, AB15
+> Set the bus format based on input from the user and panel capabilities.
+> Save the bus format in crtc->mode.private_flags, so the bridge can use
+> it.
+> 
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
+> ---
+>  drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 158 ++++++++++++++++++++++++++++++-------
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.c  |  30 +++++--
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.h  |   3 +-
+>  drivers/gpu/drm/mxsfb/mxsfb_regs.h | 100 ++++++++++++++---------
+>  4 files changed, 217 insertions(+), 74 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> index 14bde024..e48396d 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> @@ -41,14 +41,17 @@ static u32 set_hsync_pulse_width(struct mxsfb_drm_private *mxsfb, u32 val)
+>  }
+>  
+>  /* Setup the MXSFB registers for decoding the pixels out of the framebuffer */
+> -static int mxsfb_set_pixel_fmt(struct mxsfb_drm_private *mxsfb)
+> +static int mxsfb_set_pixel_fmt(struct mxsfb_drm_private *mxsfb, bool update)
+>  {
+>  	struct drm_crtc *crtc = &mxsfb->pipe.crtc;
+>  	struct drm_device *drm = crtc->dev;
+>  	const u32 format = crtc->primary->state->fb->format->format;
+> -	u32 ctrl, ctrl1;
+> +	u32 ctrl = 0, ctrl1 = 0;
+> +	bool bgr_format = true;
+> +	struct drm_format_name_buf format_name_buf;
+>  
+> -	ctrl = CTRL_BYPASS_COUNT | CTRL_MASTER;
+> +	if (!update)
+> +		ctrl = CTRL_BYPASS_COUNT | CTRL_MASTER;
+>  
+>  	/*
+>  	 * WARNING: The bus width, CTRL_SET_BUS_WIDTH(), is configured to
+> @@ -57,64 +60,158 @@ static int mxsfb_set_pixel_fmt(struct mxsfb_drm_private *mxsfb)
+>  	 * to arbitrary value. This limitation should not pose an issue.
+>  	 */
+>  
+> -	/* CTRL1 contains IRQ config and status bits, preserve those. */
+> -	ctrl1 = readl(mxsfb->base + LCDC_CTRL1);
+> -	ctrl1 &= CTRL1_CUR_FRAME_DONE_IRQ_EN | CTRL1_CUR_FRAME_DONE_IRQ;
+> +	if (!update) {
+> +		/* CTRL1 contains IRQ config and status bits, preserve those. */
+> +		ctrl1 = readl(mxsfb->base + LCDC_CTRL1);
+> +		ctrl1 &= CTRL1_CUR_FRAME_DONE_IRQ_EN | CTRL1_CUR_FRAME_DONE_IRQ;
+> +	}
+> +
+> +	DRM_DEV_DEBUG_DRIVER(drm->dev, "Setting up %s mode\n",
+> +			     drm_get_format_name(format, &format_name_buf));
+> +
+> +	/* Do some clean-up that we might have from a previous mode */
+> +	ctrl &= ~CTRL_SHIFT_DIR(1);
+> +	ctrl &= ~CTRL_SHIFT_NUM(0x3f);
+> +	if (mxsfb->devdata->ipversion >= 4)
+> +		writel(CTRL2_ODD_LINE_PATTERN(0x7) |
+> +		       CTRL2_EVEN_LINE_PATTERN(0x7),
+
+Would it make sense to not use magic constants here but rather '#define'
+the different line pattern values as well?
+
+
+> +		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
+>  
+>  	switch (format) {
+> -	case DRM_FORMAT_RGB565:
+> -		dev_dbg(drm->dev, "Setting up RGB565 mode\n");
+> +	case DRM_FORMAT_BGR565: /* BG16 */
+> +		if (mxsfb->devdata->ipversion < 4)
+> +			goto err;
+> +		writel(CTRL2_ODD_LINE_PATTERN(0x5) |
+> +			CTRL2_EVEN_LINE_PATTERN(0x5),
+> +			mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
+> +		/* Fall through */
+> +	case DRM_FORMAT_RGB565: /* RG16 */
+> +		ctrl |= CTRL_SET_WORD_LENGTH(0);
+> +		ctrl &= ~CTRL_DF16;
+> +		ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0xf);
+> +		break;
+> +	case DRM_FORMAT_XBGR1555: /* XB15 */
+> +	case DRM_FORMAT_ABGR1555: /* AB15 */
+> +		if (mxsfb->devdata->ipversion < 4)
+> +			goto err;
+> +		writel(CTRL2_ODD_LINE_PATTERN(0x5) |
+> +			CTRL2_EVEN_LINE_PATTERN(0x5),
+> +			mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
+> +		/* Fall through */
+> +	case DRM_FORMAT_XRGB1555: /* XR15 */
+> +	case DRM_FORMAT_ARGB1555: /* AR15 */
+>  		ctrl |= CTRL_SET_WORD_LENGTH(0);
+> +		ctrl |= CTRL_DF16;
+>  		ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0xf);
+>  		break;
+> -	case DRM_FORMAT_XRGB8888:
+> -		dev_dbg(drm->dev, "Setting up XRGB8888 mode\n");
+> +	case DRM_FORMAT_RGBX8888: /* RX24 */
+> +	case DRM_FORMAT_RGBA8888: /* RA24 */
+> +		/* RGBX - > 0RGB */
+> +		ctrl |= CTRL_SHIFT_DIR(1);
+> +		ctrl |= CTRL_SHIFT_NUM(8);
+> +		bgr_format = false;
+> +		/* Fall through */
+> +	case DRM_FORMAT_XBGR8888: /* XB24 */
+> +	case DRM_FORMAT_ABGR8888: /* AB24 */
+> +		if (bgr_format) {
+> +			if (mxsfb->devdata->ipversion < 4)
+> +				goto err;
+> +			writel(CTRL2_ODD_LINE_PATTERN(0x5) |
+> +			       CTRL2_EVEN_LINE_PATTERN(0x5),
+> +			       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
+> +		}
+> +		/* Fall through */
+> +	case DRM_FORMAT_XRGB8888: /* XR24 */
+> +	case DRM_FORMAT_ARGB8888: /* AR24 */
+>  		ctrl |= CTRL_SET_WORD_LENGTH(3);
+>  		/* Do not use packed pixels = one pixel per word instead. */
+>  		ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0x7);
+>  		break;
+>  	default:
+> -		dev_err(drm->dev, "Unhandled pixel format %08x\n", format);
+> -		return -EINVAL;
+> +		goto err;
+>  	}
+>  
+> -	writel(ctrl1, mxsfb->base + LCDC_CTRL1);
+> -	writel(ctrl, mxsfb->base + LCDC_CTRL);
+> +	if (update) {
+> +		writel(ctrl, mxsfb->base + LCDC_CTRL + REG_SET);
+> +		writel(ctrl1, mxsfb->base + LCDC_CTRL1 + REG_SET);
+> +	} else {
+> +		writel(ctrl, mxsfb->base + LCDC_CTRL);
+> +		writel(ctrl1, mxsfb->base + LCDC_CTRL1);
+> +	}
+>  
+>  	return 0;
+> +
+> +err:
+> +	DRM_DEV_ERROR(drm->dev, "Unhandled pixel format: %s\n",
+> +		      drm_get_format_name(format, &format_name_buf));
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static u32 get_bus_format_from_bpp(u32 bpp)
+> +{
+> +	switch (bpp) {
+> +	case 16:
+> +		return MEDIA_BUS_FMT_RGB565_1X16;
+> +	case 18:
+> +		return MEDIA_BUS_FMT_RGB666_1X18;
+> +	case 24:
+> +		return MEDIA_BUS_FMT_RGB888_1X24;
+> +	default:
+> +		return MEDIA_BUS_FMT_RGB888_1X24;
+> +	}
+>  }
+>  
+>  static void mxsfb_set_bus_fmt(struct mxsfb_drm_private *mxsfb)
+>  {
+>  	struct drm_crtc *crtc = &mxsfb->pipe.crtc;
+> +	unsigned int bits_per_pixel = crtc->primary->state->fb->format->depth;
+>  	struct drm_device *drm = crtc->dev;
+>  	u32 bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+> -	u32 reg;
+> -
+> -	reg = readl(mxsfb->base + LCDC_CTRL);
+> +	int num_bus_formats = mxsfb->connector->display_info.num_bus_formats;
+> +	const u32 *bus_formats = mxsfb->connector->display_info.bus_formats;
+> +	u32 reg = 0;
+> +	int i = 0;
+> +
+> +	/* match the user requested bus_format to one supported by the panel */
+> +	if (num_bus_formats) {
+> +		u32 user_bus_format = get_bus_format_from_bpp(bits_per_pixel);
+> +
+> +		bus_format = bus_formats[0];
+> +		for (i = 0; i < num_bus_formats; i++) {
+> +			if (user_bus_format == bus_formats[i]) {
+> +				bus_format = user_bus_format;
+> +				break;
+> +			}
+> +		}
+> +	}
+>  
+> -	if (mxsfb->connector->display_info.num_bus_formats)
+> -		bus_format = mxsfb->connector->display_info.bus_formats[0];
+> +	/*
+> +	 * CRTC will dictate the bus format via private_flags[16:1]
+> +	 * and private_flags[0] will signal a bus format change
+> +	 */
+> +	crtc->mode.private_flags &= ~0x1FFFF; /* clear bus format */
+> +	crtc->mode.private_flags |= (bus_format << 1); /* set bus format */
+> +	crtc->mode.private_flags |= 0x1; /* bus format change indication*/
+>  
+>  	DRM_DEV_DEBUG_DRIVER(drm->dev, "Using bus_format: 0x%08X\n",
+>  			     bus_format);
+>  
+> -	reg &= ~CTRL_BUS_WIDTH_MASK;
+>  	switch (bus_format) {
+>  	case MEDIA_BUS_FMT_RGB565_1X16:
+> -		reg |= CTRL_SET_BUS_WIDTH(STMLCDIF_16BIT);
+> +		reg = CTRL_SET_BUS_WIDTH(STMLCDIF_16BIT);
+>  		break;
+>  	case MEDIA_BUS_FMT_RGB666_1X18:
+> -		reg |= CTRL_SET_BUS_WIDTH(STMLCDIF_18BIT);
+> +		reg = CTRL_SET_BUS_WIDTH(STMLCDIF_18BIT);
+>  		break;
+>  	case MEDIA_BUS_FMT_RGB888_1X24:
+> -		reg |= CTRL_SET_BUS_WIDTH(STMLCDIF_24BIT);
+> +		reg = CTRL_SET_BUS_WIDTH(STMLCDIF_24BIT);
+>  		break;
+>  	default:
+>  		dev_err(drm->dev, "Unknown media bus format %d\n", bus_format);
+>  		break;
+>  	}
+> -	writel(reg, mxsfb->base + LCDC_CTRL);
+> +	writel(reg, mxsfb->base + LCDC_CTRL + REG_SET);
+>  }
+>  
+>  static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
+> @@ -125,8 +222,9 @@ static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
+>  		clk_prepare_enable(mxsfb->clk_disp_axi);
+>  	clk_prepare_enable(mxsfb->clk);
+>  
+> -	writel(CTRL2_OUTSTANDING_REQS__REQ_16,
+> -	       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
+> +	if (mxsfb->devdata->ipversion >= 4)
+> +		writel(CTRL2_OUTSTANDING_REQS__REQ_16,
+> +		       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
+>  
+>  	/* If it was disabled, re-enable the mode again */
+>  	writel(CTRL_DOTCLK_MODE, mxsfb->base + LCDC_CTRL + REG_SET);
+> @@ -144,6 +242,10 @@ static void mxsfb_disable_controller(struct mxsfb_drm_private *mxsfb)
+>  {
+>  	u32 reg;
+>  
+> +	if (mxsfb->devdata->ipversion >= 4)
+> +		writel(CTRL2_OUTSTANDING_REQS(0x7),
+> +		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
+> +
+>  	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_CLR);
+>  
+>  	/*
+> @@ -231,7 +333,7 @@ static void mxsfb_crtc_mode_set_nofb(struct mxsfb_drm_private *mxsfb)
+>  	/* Clear the FIFOs */
+>  	writel(CTRL1_FIFO_CLEAR, mxsfb->base + LCDC_CTRL1 + REG_SET);
+>  
+> -	err = mxsfb_set_pixel_fmt(mxsfb);
+> +	err = mxsfb_set_pixel_fmt(mxsfb, false);
+>  	if (err)
+>  		return;
+>  
+> @@ -316,7 +418,7 @@ void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb)
+>  }
+>  
+>  void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
+> -			       struct drm_plane_state *state)
+> +			       struct drm_plane_state *old_state)
+
+This hunk belongs to the previous commit.
+
+>  {
+>  	struct drm_simple_display_pipe *pipe = &mxsfb->pipe;
+>  	struct drm_crtc *crtc = &pipe->crtc;
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> index 0d171e9..d9fb734 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> @@ -40,6 +40,27 @@ enum mxsfb_devtype {
+>  	MXSFB_V4,
+>  };
+>  
+> +/*
+> + * When adding new formats, make sure to update the num_formats from
+> + * mxsfb_devdata below.
+> + */
+> +static const u32 mxsfb_formats[] = {
+> +	/* MXSFB_V3 */
+> +	DRM_FORMAT_XRGB8888,
+> +	DRM_FORMAT_ARGB8888,
+> +	DRM_FORMAT_RGB565,
+> +	/* MXSFB_V4 */
+> +	DRM_FORMAT_XBGR8888,
+> +	DRM_FORMAT_ABGR8888,
+> +	DRM_FORMAT_RGBX8888,
+> +	DRM_FORMAT_RGBA8888,
+> +	DRM_FORMAT_ARGB1555,
+> +	DRM_FORMAT_XRGB1555,
+> +	DRM_FORMAT_ABGR1555,
+> +	DRM_FORMAT_XBGR1555,
+> +	DRM_FORMAT_BGR565
+> +};
+> +
+>  static const struct mxsfb_devdata mxsfb_devdata[] = {
+>  	[MXSFB_V3] = {
+>  		.transfer_count	= LCDC_V3_TRANSFER_COUNT,
+> @@ -49,6 +70,7 @@ static const struct mxsfb_devdata mxsfb_devdata[] = {
+>  		.hs_wdth_mask	= 0xff,
+>  		.hs_wdth_shift	= 24,
+>  		.ipversion	= 3,
+> +		.num_formats	= 3,
+>  	},
+>  	[MXSFB_V4] = {
+>  		.transfer_count	= LCDC_V4_TRANSFER_COUNT,
+> @@ -58,14 +80,10 @@ static const struct mxsfb_devdata mxsfb_devdata[] = {
+>  		.hs_wdth_mask	= 0x3fff,
+>  		.hs_wdth_shift	= 18,
+>  		.ipversion	= 4,
+> +		.num_formats	= ARRAY_SIZE(mxsfb_formats),
+>  	},
+>  };
+>  
+> -static const uint32_t mxsfb_formats[] = {
+> -	DRM_FORMAT_XRGB8888,
+> -	DRM_FORMAT_RGB565
+> -};
+> -
+>  static struct mxsfb_drm_private *
+>  drm_pipe_to_mxsfb_drm_private(struct drm_simple_display_pipe *pipe)
+>  {
+> @@ -241,7 +259,7 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
+>  	}
+>  
+>  	ret = drm_simple_display_pipe_init(drm, &mxsfb->pipe, &mxsfb_funcs,
+> -			mxsfb_formats, ARRAY_SIZE(mxsfb_formats), NULL,
+> +			mxsfb_formats, mxsfb->devdata->num_formats, NULL,
+>  			mxsfb->connector);
+>  	if (ret < 0) {
+>  		dev_err(drm->dev, "Cannot setup simple display pipe\n");
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> index 0b65b51..8fb65d3 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> @@ -16,6 +16,7 @@ struct mxsfb_devdata {
+>  	unsigned int	 hs_wdth_mask;
+>  	unsigned int	 hs_wdth_shift;
+>  	unsigned int	 ipversion;
+> +	unsigned int	 num_formats;
+>  };
+>  
+>  struct mxsfb_drm_private {
+> @@ -42,6 +43,6 @@ void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb);
+>  void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb);
+>  void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb);
+>  void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
+> -			       struct drm_plane_state *state);
+> +			       struct drm_plane_state *old_state);
+>  
+>  #endif /* __MXSFB_DRV_H__ */
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_regs.h b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+> index 71426aa..9ee0d3c7 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+> @@ -40,54 +40,76 @@
+>  #define LCDC_AS_BUF			0x220
+>  #define LCDC_AS_NEXT_BUF		0x230
+>  
+> -#define CTRL_SFTRST			(1 << 31)
+> -#define CTRL_CLKGATE			(1 << 30)
+> -#define CTRL_BYPASS_COUNT		(1 << 19)
+> -#define CTRL_VSYNC_MODE			(1 << 18)
+> -#define CTRL_DOTCLK_MODE		(1 << 17)
+> -#define CTRL_DATA_SELECT		(1 << 16)
+> -#define CTRL_SET_BUS_WIDTH(x)		(((x) & 0x3) << 10)
+> -#define CTRL_GET_BUS_WIDTH(x)		(((x) >> 10) & 0x3)
+> -#define CTRL_BUS_WIDTH_MASK		(0x3 << 10)
+> -#define CTRL_SET_WORD_LENGTH(x)		(((x) & 0x3) << 8)
+> -#define CTRL_GET_WORD_LENGTH(x)		(((x) >> 8) & 0x3)
+> -#define CTRL_MASTER			(1 << 5)
+> -#define CTRL_DF16			(1 << 3)
+> -#define CTRL_DF18			(1 << 2)
+> -#define CTRL_DF24			(1 << 1)
+> -#define CTRL_RUN			(1 << 0)
+> -
+> -#define CTRL1_RECOVERY_ON_UNDERFLOW	(1 << 24)
+> -#define CTRL1_FIFO_CLEAR		(1 << 21)
+> -#define CTRL1_SET_BYTE_PACKAGING(x)	(((x) & 0xf) << 16)
+> -#define CTRL1_GET_BYTE_PACKAGING(x)	(((x) >> 16) & 0xf)
+> -#define CTRL1_CUR_FRAME_DONE_IRQ_EN	(1 << 13)
+> -#define CTRL1_CUR_FRAME_DONE_IRQ	(1 << 9)
+> -
+> -#define CTRL2_OUTSTANDING_REQS__REQ_16		(4 << 21)
+> +/* reg bit manipulation */
+> +#define REG_MASK(e, s) (((1 << ((e) - (s) + 1)) - 1) << (s))
+> +#define REG_PUT(x, e, s) (((x) << (s)) & REG_MASK(e, s))
+> +#define REG_GET(x, e, s) (((x) & REG_MASK(e, s)) >> (s))
+> +
+> +#define SWIZZLE_LE		0 /* Little-Endian or No swap */
+> +#define SWIZZLE_BE		1 /* Big-Endian or swap all */
+> +#define SWIZZLE_HWD		2 /* Swap half-words */
+> +#define SWIZZLE_HWD_BYTE	3 /* Swap bytes within each half-word */
+> +
+> +#define CTRL_SFTRST			BIT(31)
+> +#define CTRL_CLKGATE			BIT(30)
+> +#define CTRL_SHIFT_DIR(x)		REG_PUT((x), 26, 26)
+> +#define CTRL_SHIFT_NUM(x)		REG_PUT((x), 25, 21)
+> +#define CTRL_BYPASS_COUNT		BIT(19)
+> +#define CTRL_VSYNC_MODE			BIT(18)
+> +#define CTRL_DOTCLK_MODE		BIT(17)
+> +#define CTRL_DATA_SELECT		BIT(16)
+> +#define CTRL_INPUT_SWIZZLE(x)		REG_PUT((x), 15, 14)
+> +#define CTRL_CSC_SWIZZLE(x)		REG_PUT((x), 13, 12)
+> +#define CTRL_SET_BUS_WIDTH(x)		REG_PUT((x), 11, 10)
+> +#define CTRL_GET_BUS_WIDTH(x)		REG_GET((x), 11, 10)
+> +#define CTRL_BUS_WIDTH_MASK		REG_PUT((0x3), 11, 10)
+> +#define CTRL_SET_WORD_LENGTH(x)		REG_PUT((x), 9, 8)
+> +#define CTRL_GET_WORD_LENGTH(x)		REG_GET((x), 9, 8)
+> +#define CTRL_MASTER			BIT(5)
+> +#define CTRL_DF16			BIT(3)
+> +#define CTRL_DF18			BIT(2)
+> +#define CTRL_DF24			BIT(1)
+> +#define CTRL_RUN			BIT(0)
+> +
+> +#define CTRL1_RECOVERY_ON_UNDERFLOW	BIT(24)
+> +#define CTRL1_FIFO_CLEAR		BIT(21)
+> +#define CTRL1_SET_BYTE_PACKAGING(x)	REG_PUT((x), 19, 16)
+> +#define CTRL1_GET_BYTE_PACKAGING(x)	REG_GET((x), 19, 16)
+> +#define CTRL1_CUR_FRAME_DONE_IRQ_EN	BIT(13)
+> +#define CTRL1_CUR_FRAME_DONE_IRQ	BIT(9)
+
+Splitting the cleanups (introduction of BIT(x) usage) from new defines
+would ease reviewing.
+Cheers,
+ -- Guido
+
+> +
+> +#define REQ_1	0
+> +#define REQ_2	1
+> +#define REQ_4	2
+> +#define REQ_8	3
+> +#define REQ_16	4
+> +
+> +#define CTRL2_OUTSTANDING_REQS(x)	REG_PUT((x), 23, 21)
+> +#define CTRL2_ODD_LINE_PATTERN(x)	REG_PUT((x), 18, 16)
+> +#define CTRL2_EVEN_LINE_PATTERN(x)	REG_PUT((x), 14, 12)
+>  
+>  #define TRANSFER_COUNT_SET_VCOUNT(x)	(((x) & 0xffff) << 16)
+>  #define TRANSFER_COUNT_GET_VCOUNT(x)	(((x) >> 16) & 0xffff)
+>  #define TRANSFER_COUNT_SET_HCOUNT(x)	((x) & 0xffff)
+>  #define TRANSFER_COUNT_GET_HCOUNT(x)	((x) & 0xffff)
+>  
+> -#define VDCTRL0_ENABLE_PRESENT		(1 << 28)
+> -#define VDCTRL0_VSYNC_ACT_HIGH		(1 << 27)
+> -#define VDCTRL0_HSYNC_ACT_HIGH		(1 << 26)
+> -#define VDCTRL0_DOTCLK_ACT_FALLING	(1 << 25)
+> -#define VDCTRL0_ENABLE_ACT_HIGH		(1 << 24)
+> -#define VDCTRL0_VSYNC_PERIOD_UNIT	(1 << 21)
+> -#define VDCTRL0_VSYNC_PULSE_WIDTH_UNIT	(1 << 20)
+> -#define VDCTRL0_HALF_LINE		(1 << 19)
+> -#define VDCTRL0_HALF_LINE_MODE		(1 << 18)
+> +#define VDCTRL0_ENABLE_PRESENT		BIT(28)
+> +#define VDCTRL0_VSYNC_ACT_HIGH		BIT(27)
+> +#define VDCTRL0_HSYNC_ACT_HIGH		BIT(26)
+> +#define VDCTRL0_DOTCLK_ACT_FALLING	BIT(25)
+> +#define VDCTRL0_ENABLE_ACT_HIGH		BIT(24)
+> +#define VDCTRL0_VSYNC_PERIOD_UNIT	BIT(21)
+> +#define VDCTRL0_VSYNC_PULSE_WIDTH_UNIT	BIT(20)
+> +#define VDCTRL0_HALF_LINE		BIT(19)
+> +#define VDCTRL0_HALF_LINE_MODE		BIT(18)
+>  #define VDCTRL0_SET_VSYNC_PULSE_WIDTH(x) ((x) & 0x3ffff)
+>  #define VDCTRL0_GET_VSYNC_PULSE_WIDTH(x) ((x) & 0x3ffff)
+>  
+>  #define VDCTRL2_SET_HSYNC_PERIOD(x)	((x) & 0x3ffff)
+>  #define VDCTRL2_GET_HSYNC_PERIOD(x)	((x) & 0x3ffff)
+>  
+> -#define VDCTRL3_MUX_SYNC_SIGNALS	(1 << 29)
+> -#define VDCTRL3_VSYNC_ONLY		(1 << 28)
+> +#define VDCTRL3_MUX_SYNC_SIGNALS	BIT(29)
+> +#define VDCTRL3_VSYNC_ONLY		BIT(28)
+>  #define SET_HOR_WAIT_CNT(x)		(((x) & 0xfff) << 16)
+>  #define GET_HOR_WAIT_CNT(x)		(((x) >> 16) & 0xfff)
+>  #define SET_VERT_WAIT_CNT(x)		((x) & 0xffff)
+> @@ -95,7 +117,7 @@
+>  
+>  #define VDCTRL4_SET_DOTCLK_DLY(x)	(((x) & 0x7) << 29) /* v4 only */
+>  #define VDCTRL4_GET_DOTCLK_DLY(x)	(((x) >> 29) & 0x7) /* v4 only */
+> -#define VDCTRL4_SYNC_SIGNALS_ON		(1 << 18)
+> +#define VDCTRL4_SYNC_SIGNALS_ON		BIT(18)
+>  #define SET_DOTCLK_H_VALID_DATA_CNT(x)	((x) & 0x3ffff)
+>  
+>  #define DEBUG0_HSYNC			(1 < 26)
+> @@ -116,7 +138,7 @@
+>  #define STMLCDIF_18BIT 2 /* pixel data bus to the display is of 18 bit width */
+>  #define STMLCDIF_24BIT 3 /* pixel data bus to the display is of 24 bit width */
+>  
+> -#define MXSFB_SYNC_DATA_ENABLE_HIGH_ACT	(1 << 6)
+> -#define MXSFB_SYNC_DOTCLK_FALLING_ACT	(1 << 7) /* negative edge sampling */
+> +#define MXSFB_SYNC_DATA_ENABLE_HIGH_ACT	BIT(6)
+> +#define MXSFB_SYNC_DOTCLK_FALLING_ACT	BIT(7) /* negative edge sampling */
+>  
+>  #endif /* __MXSFB_REGS_H__ */
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
