@@ -1,55 +1,27 @@
-From: Teresa Remmet <t.remmet@phytec.de>
-Subject: Re: [PATCH] ARM: dts: am335x-wega.dtsi: fix wrong card detect pin
- level
-Date: Mon, 22 Jul 2019 10:06:05 +0200
-Message-ID: <812cb14400ee43176c2118247c8c47230b9206c2.camel@phytec.de>
-References: <20190709183209.y64keopah5rkismc@arbad>
+From: Jan Kotas <jank@cadence.com>
+Subject: [PATCH v2 0/4] media: Add support for Cadence CSI2TX version 2.1
+Date: Mon, 22 Jul 2019 09:22:19 +0100
+Message-ID: <20190722082223.18693-1-jank@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190709183209.y64keopah5rkismc@arbad>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>, linux-omap@vger.kernel.org
-Cc: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: maxime.ripard@bootlin.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: rafalc@cadence.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Andreas,
+This patchset adds support for Cadence CSI2TX controller version 2.1.
+Existing compatibility with v1.3 is updated and maintained. 
 
-Am Dienstag, den 09.07.2019, 20:32 +0200 schrieb Andreas Klinger:
-> mmc cards on mmc1 are not detected because of wrong card detect (cd)
-> level.
-> 
-> Change cd from GPIO_ACTIVE_HIGH to GPIO_ACTIVE_LOW.
-> 
-> This is necessary because of commit e63201f19438 ("mmc: omap_hsmmc:
-> Delete platform data GPIO CD and WP")
+Jan Kotas (4):
+  media: dt-bindings: Update bindings for Cadence CSI2TX version 2.1
+  media: Add lane checks for Cadence CSI2TX
+  media: Fix Lane mapping in Cadence CSI2TX
+  media: Add support for Cadence CSI2TX 2.1
 
-Thanks for noticing. But the fix is already in master.
+ .../devicetree/bindings/media/cdns,csi2tx.txt      |   3 +-
+ drivers/media/platform/cadence/cdns-csi2tx.c       | 155 ++++++++++++++++-----
+ 2 files changed, 125 insertions(+), 33 deletions(-)
 
-Teresa
-
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  arch/arm/boot/dts/am335x-wega.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-wega.dtsi
-> b/arch/arm/boot/dts/am335x-wega.dtsi
-> index b7d28a20341f..84581fed3d06 100644
-> --- a/arch/arm/boot/dts/am335x-wega.dtsi
-> +++ b/arch/arm/boot/dts/am335x-wega.dtsi
-> @@ -157,7 +157,7 @@
->  	bus-width = <4>;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&mmc1_pins>;
-> -	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-> +	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
->  	status = "okay";
->  };
->  
-> -- 
-> 2.11.0
-> 
-> 
+-- 
+2.15.0
