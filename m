@@ -1,91 +1,59 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH 4/4] ARM: dts: am335x-boneblue: Enable eQEP
-Date: Mon, 22 Jul 2019 10:45:38 -0500
-Message-ID: <20190722154538.5314-5-david@lechnology.com>
-References: <20190722154538.5314-1-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722154538.5314-1-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, William Breathitt Gray <vilhelm.gray@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+From: Olivier Moysan <olivier.moysan@st.com>
+Subject: [PATCH v2 3/3] drm/bridge: sii902x: make audio mclk optional
+Date: Mon, 22 Jul 2019 18:06:00 +0200
+Message-ID: <1563811560-29589-4-git-send-email-olivier.moysan@st.com>
+References: <1563811560-29589-1-git-send-email-olivier.moysan@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1563811560-29589-1-git-send-email-olivier.moysan@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: a.hajda@samsung.com, narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, benjamin.gaignard@st.com, alexandre.torgue@st.com, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, olivier.moysan@st.com, jsarha@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This enables the Enhanced Quadrature Encoder Pulse (eQEP) module for
-connectors E1, E2 and E3 on BeagleBone Blue.
-
-Signed-off-by: David Lechner <david@lechnology.com>
----
- arch/arm/boot/dts/am335x-boneblue.dts | 54 +++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
-index 0257576d5d16..df3978ce061c 100644
---- a/arch/arm/boot/dts/am335x-boneblue.dts
-+++ b/arch/arm/boot/dts/am335x-boneblue.dts
-@@ -258,6 +258,30 @@
- 			AM33XX_PADCONF(AM335X_PIN_MII1_RXD0, PIN_OUTPUT, MUX_MODE7)		/* (M16) gmii1_rxd0.gpio2[21] */
- 		>;
- 	};
-+
-+	/* E1 */
-+	eqep0_pins: pinmux_eqep0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_MCASP0_AXR0, PIN_INPUT, MUX_MODE1)		/* (B12) mcasp0_aclkr.eQEP0A_in */
-+			AM33XX_PADCONF(AM335X_PIN_MCASP0_FSR, PIN_INPUT, MUX_MODE1)		/* (C13) mcasp0_fsr.eQEP0B_in */
-+		>;
-+	};
-+
-+	/* E2 */
-+	eqep1_pins: pinmux_eqep1_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_LCD_DATA12, PIN_INPUT, MUX_MODE2)		/* (V2) lcd_data12.eQEP1A_in */
-+			AM33XX_PADCONF(AM335X_PIN_LCD_DATA13, PIN_INPUT, MUX_MODE2)		/* (V3) lcd_data13.eQEP1B_in */
-+		>;
-+	};
-+
-+	/* E3 */
-+	eqep2_pins: pinmux_eqep2_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD12, PIN_INPUT, MUX_MODE4)		/* (T12) gpmc_ad12.eQEP2A_in */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD13, PIN_INPUT, MUX_MODE4)		/* (R12) gpmc_ad13.eQEP2B_in */
-+		>;
-+	};
- };
- 
- &uart0 {
-@@ -530,3 +554,33 @@
- 		line-name = "LS_BUF_EN";
- 	};
- };
-+
-+&epwmss0 {
-+	status = "okay";
-+};
-+
-+&eqep0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eqep0_pins>;
-+};
-+
-+&epwmss1 {
-+	status = "okay";
-+};
-+
-+&eqep1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eqep1_pins>;
-+};
-+
-+&epwmss2 {
-+	status = "okay";
-+};
-+
-+&eqep2 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eqep2_pins>;
-+};
--- 
-2.17.1
+VGhlIG1hc3RlciBjbG9jayBvbiBpMnMgYnVzIGlzIG5vdCBtYW5kYXRvcnksCmFzIHNpaTkwMlgg
+aW50ZXJuYWwgUExMIGNhbiBiZSB1c2VkIGluc3RlYWQuCk1ha2UgdXNlIG9mIG1jbGsgb3B0aW9u
+YWwuCgpTaWduZWQtb2ZmLWJ5OiBPbGl2aWVyIE1veXNhbiA8b2xpdmllci5tb3lzYW5Ac3QuY29t
+PgpSZXZpZXdlZC1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KQWNrZWQtYnk6IEFuZHJ6
+ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL2JyaWRn
+ZS9zaWk5MDJ4LmMgfCAxOSArKysrKysrKysrLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMTAg
+aW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vYnJpZGdlL3NpaTkwMnguYyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jCmlu
+ZGV4IDk2MjkzMWMyMGVmZS4uYTMyMzgxNWFhOWI2IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9k
+cm0vYnJpZGdlL3NpaTkwMnguYworKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMngu
+YwpAQCAtNTY4LDEzICs1NjgsMTQgQEAgc3RhdGljIGludCBzaWk5MDJ4X2F1ZGlvX2h3X3BhcmFt
+cyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHZvaWQgKmRhdGEsCiAJCXJldHVybiByZXQ7CiAJfQogCi0J
+bWNsa19yYXRlID0gY2xrX2dldF9yYXRlKHNpaTkwMngtPmF1ZGlvLm1jbGspOwotCi0JcmV0ID0g
+c2lpOTAyeF9zZWxlY3RfbWNsa19kaXYoJmkyc19jb25maWdfcmVnLCBwYXJhbXMtPnNhbXBsZV9y
+YXRlLAotCQkJCSAgICAgIG1jbGtfcmF0ZSk7Ci0JaWYgKG1jbGtfcmF0ZSAhPSByZXQgKiBwYXJh
+bXMtPnNhbXBsZV9yYXRlKQotCQlkZXZfZGJnKGRldiwgIkluYWNjdXJhdGUgcmVmZXJlbmNlIGNs
+b2NrICglbGQvJWQgIT0gJXUpXG4iLAotCQkJbWNsa19yYXRlLCByZXQsIHBhcmFtcy0+c2FtcGxl
+X3JhdGUpOworCWlmIChzaWk5MDJ4LT5hdWRpby5tY2xrKSB7CisJCW1jbGtfcmF0ZSA9IGNsa19n
+ZXRfcmF0ZShzaWk5MDJ4LT5hdWRpby5tY2xrKTsKKwkJcmV0ID0gc2lpOTAyeF9zZWxlY3RfbWNs
+a19kaXYoJmkyc19jb25maWdfcmVnLAorCQkJCQkgICAgICBwYXJhbXMtPnNhbXBsZV9yYXRlLCBt
+Y2xrX3JhdGUpOworCQlpZiAobWNsa19yYXRlICE9IHJldCAqIHBhcmFtcy0+c2FtcGxlX3JhdGUp
+CisJCQlkZXZfZGJnKGRldiwgIkluYWNjdXJhdGUgcmVmZXJlbmNlIGNsb2NrICglbGQvJWQgIT0g
+JXUpXG4iLAorCQkJCW1jbGtfcmF0ZSwgcmV0LCBwYXJhbXMtPnNhbXBsZV9yYXRlKTsKKwl9CiAK
+IAltdXRleF9sb2NrKCZzaWk5MDJ4LT5tdXRleCk7CiAKQEAgLTc1MSwxMSArNzUyLDExIEBAIHN0
+YXRpYyBpbnQgc2lpOTAyeF9hdWRpb19jb2RlY19pbml0KHN0cnVjdCBzaWk5MDJ4ICpzaWk5MDJ4
+LAogCQlzaWk5MDJ4LT5hdWRpby5pMnNfZmlmb19zZXF1ZW5jZVtpXSB8PSBhdWRpb19maWZvX2lk
+W2ldIHwKIAkJCWkyc19sYW5lX2lkW2xhbmVzW2ldXSB8CVNJSTkwMlhfVFBJX0kyU19GSUZPX0VO
+QUJMRTsKIAotCXNpaTkwMngtPmF1ZGlvLm1jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAibWNsayIp
+OworCXNpaTkwMngtPmF1ZGlvLm1jbGsgPSBkZXZtX2Nsa19nZXRfb3B0aW9uYWwoZGV2LCAibWNs
+ayIpOwogCWlmIChJU19FUlIoc2lpOTAyeC0+YXVkaW8ubWNsaykpIHsKIAkJZGV2X2VycihkZXYs
+ICIlczogTm8gY2xvY2sgKGF1ZGlvIG1jbGspIGZvdW5kOiAlbGRcbiIsCiAJCQlfX2Z1bmNfXywg
+UFRSX0VSUihzaWk5MDJ4LT5hdWRpby5tY2xrKSk7Ci0JCXJldHVybiAwOworCQlyZXR1cm4gUFRS
+X0VSUihzaWk5MDJ4LT5hdWRpby5tY2xrKTsKIAl9CiAKIAlzaWk5MDJ4LT5hdWRpby5wZGV2ID0g
+cGxhdGZvcm1fZGV2aWNlX3JlZ2lzdGVyX2RhdGEoCi0tIAoyLjcuNAoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
