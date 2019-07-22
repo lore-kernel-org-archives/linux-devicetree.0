@@ -1,270 +1,47 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 2/2] hwrng: npcm: add NPCM RNG driver
-Date: Mon, 22 Jul 2019 18:02:41 +0300
-Message-ID: <20190722150241.345609-3-tmaimon77@gmail.com>
-References: <20190722150241.345609-1-tmaimon77@gmail.com>
+From: "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: Re: [PATCH v2 6/8] PCI: al: Add support for DW based driver type
+Date: Mon, 22 Jul 2019 15:38:46 +0000
+Message-ID: <27d8e8a8bba4aeb845d6c953f3a07a29875fef02.camel@amazon.com>
+References: <20190718094531.21423-1-jonnyc@amazon.com>
+         <20190718094718.25083-2-jonnyc@amazon.com>
+         <DM6PR12MB4010913E5408349A600762CADACB0@DM6PR12MB4010.namprd12.prod.outlook.com>
+         <d323007c6bf14cb9f90a497a26b66dac151164fc.camel@amazon.com>
+         <DM6PR12MB40101465C6D032B025473EFADAC40@DM6PR12MB4010.namprd12.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722150241.345609-1-tmaimon77@gmail.com>
+In-Reply-To: <DM6PR12MB40101465C6D032B025473EFADAC40@DM6PR12MB4010.namprd12.prod.outlook.com>
+Content-Language: en-US
+Content-ID: <BEE06177C9B70F46A85B8E622B3F6BA5@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com, yuenn@google.com, benjaminfair@google.com, sumit.garg@linaro.org, jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de, joel@jms.id.au
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
+To: "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Gustavo.Pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "Chocron, Jonathan" <jonnyc@amazon.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Nuvoton NPCM BMC Random Number Generator(RNG) driver.
-
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- drivers/char/hw_random/Kconfig    |  13 ++
- drivers/char/hw_random/Makefile   |   1 +
- drivers/char/hw_random/npcm-rng.c | 207 ++++++++++++++++++++++++++++++
- 3 files changed, 221 insertions(+)
- create mode 100644 drivers/char/hw_random/npcm-rng.c
-
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 59f25286befe..87a1c30e7958 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -440,6 +440,19 @@ config HW_RANDOM_OPTEE
- 
- 	  If unsure, say Y.
- 
-+config HW_RANDOM_NPCM
-+	tristate "NPCM Random Number Generator support"
-+	depends on ARCH_NPCM || COMPILE_TEST
-+	default HW_RANDOM
-+	help
-+ 	  This driver provides support for the Random Number
-+	  Generator hardware available in Nuvoton NPCM SoCs.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called npcm-rng.
-+
-+ 	  If unsure, say Y.
-+
- endif # HW_RANDOM
- 
- config UML_RANDOM
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index 7c9ef4a7667f..17b6d4e6d591 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -39,3 +39,4 @@ obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
- obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
- obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
- obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
-+obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
-diff --git a/drivers/char/hw_random/npcm-rng.c b/drivers/char/hw_random/npcm-rng.c
-new file mode 100644
-index 000000000000..5b4b1b6cb362
---- /dev/null
-+++ b/drivers/char/hw_random/npcm-rng.c
-@@ -0,0 +1,207 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2019 Nuvoton Technology corporation.
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/init.h>
-+#include <linux/random.h>
-+#include <linux/err.h>
-+#include <linux/platform_device.h>
-+#include <linux/hw_random.h>
-+#include <linux/delay.h>
-+#include <linux/of_irq.h>
-+#include <linux/pm_runtime.h>
-+
-+#define NPCM_RNGCS_REG		0x00	/* Control and status register */
-+#define NPCM_RNGD_REG		0x04	/* Data register */
-+#define NPCM_RNGMODE_REG	0x08	/* Mode register */
-+
-+#define NPCM_RNG_CLK_SET_25MHZ	GENMASK(4, 3) /* 20-25 MHz */
-+#define NPCM_RNG_DATA_VALID	BIT(1)
-+#define NPCM_RNG_ENABLE		BIT(0)
-+#define NPCM_RNG_M1ROSEL	BIT(1)
-+
-+#define NPCM_RNG_TIMEOUT_POLL	20
-+
-+#define to_npcm_rng(p)	container_of(p, struct npcm_rng, rng)
-+
-+struct npcm_rng {
-+	void __iomem *base;
-+	struct hwrng rng;
-+};
-+
-+static int npcm_rng_init(struct hwrng *rng)
-+{
-+	struct npcm_rng *priv = to_npcm_rng(rng);
-+	u32 val;
-+
-+	val = readl(priv->base + NPCM_RNGCS_REG);
-+	val |= NPCM_RNG_ENABLE;
-+	writel(val, priv->base + NPCM_RNGCS_REG);
-+
-+	return 0;
-+}
-+
-+static void npcm_rng_cleanup(struct hwrng *rng)
-+{
-+	struct npcm_rng *priv = to_npcm_rng(rng);
-+	u32 val;
-+
-+	val = readl(priv->base + NPCM_RNGCS_REG);
-+	val &= ~NPCM_RNG_ENABLE;
-+	writel(val, priv->base + NPCM_RNGCS_REG);
-+}
-+
-+static bool npcm_rng_wait_ready(struct hwrng *rng, bool wait)
-+{
-+	struct npcm_rng *priv = to_npcm_rng(rng);
-+	int timeout_cnt = 0;
-+	int ready;
-+
-+	ready = readl(priv->base + NPCM_RNGCS_REG) & NPCM_RNG_DATA_VALID;
-+	while ((ready == 0) && (timeout_cnt < NPCM_RNG_TIMEOUT_POLL)) {
-+		usleep_range(500, 1000);
-+		ready = readl(priv->base + NPCM_RNGCS_REG) &
-+			NPCM_RNG_DATA_VALID;
-+		timeout_cnt++;
-+	}
-+
-+	return !!ready;
-+}
-+
-+static int npcm_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-+{
-+	struct npcm_rng *priv = to_npcm_rng(rng);
-+	int retval = 0;
-+
-+	pm_runtime_get_sync((struct device *)priv->rng.priv);
-+
-+	while (max >= sizeof(u32)) {
-+		if (!npcm_rng_wait_ready(rng, wait))
-+			break;
-+
-+		*(u32 *)buf = readl(priv->base + NPCM_RNGD_REG);
-+		retval += sizeof(u32);
-+		buf += sizeof(u32);
-+		max -= sizeof(u32);
-+	}
-+
-+	pm_runtime_mark_last_busy((struct device *)priv->rng.priv);
-+	pm_runtime_put_sync_autosuspend((struct device *)priv->rng.priv);
-+
-+	return retval || !wait ? retval : -EIO;
-+}
-+
-+static int npcm_rng_probe(struct platform_device *pdev)
-+{
-+	struct npcm_rng *priv;
-+	struct resource *res;
-+	u32 quality;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	priv->rng.name = pdev->name;
-+#ifndef CONFIG_PM
-+	priv->rng.init = npcm_rng_init;
-+	priv->rng.cleanup = npcm_rng_cleanup;
-+#endif
-+	priv->rng.read = npcm_rng_read;
-+	priv->rng.priv = (unsigned long)&pdev->dev;
-+	if (of_property_read_u32(pdev->dev.of_node, "quality", &quality))
-+		priv->rng.quality = 1000;
-+	else
-+		priv->rng.quality = quality;
-+
-+	writel(NPCM_RNG_M1ROSEL, priv->base + NPCM_RNGMODE_REG);
-+#ifndef CONFIG_PM
-+	writel(NPCM_RNG_CLK_SET_25MHZ, priv->base + NPCM_RNGCS_REG);
-+#else
-+	writel(NPCM_RNG_CLK_SET_25MHZ | NPCM_RNG_ENABLE,
-+	       priv->base + NPCM_RNGCS_REG);
-+#endif
-+
-+	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register rng device: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	dev_set_drvdata(&pdev->dev, priv);
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
-+	pm_runtime_use_autosuspend(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	dev_info(&pdev->dev, "Random Number Generator Probed\n");
-+
-+	return 0;
-+}
-+
-+static int npcm_rng_remove(struct platform_device *pdev)
-+{
-+	struct npcm_rng *priv = platform_get_drvdata(pdev);
-+
-+	hwrng_unregister(&priv->rng);
-+	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_set_suspended(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+static int npcm_rng_runtime_suspend(struct device *dev)
-+{
-+	struct npcm_rng *priv = dev_get_drvdata(dev);
-+
-+	npcm_rng_cleanup(&priv->rng);
-+
-+	return 0;
-+}
-+
-+static int npcm_rng_runtime_resume(struct device *dev)
-+{
-+	struct npcm_rng *priv = dev_get_drvdata(dev);
-+
-+	return npcm_rng_init(&priv->rng);
-+}
-+#endif
-+
-+static const struct dev_pm_ops npcm_rng_pm_ops = {
-+	SET_RUNTIME_PM_OPS(npcm_rng_runtime_suspend,
-+			   npcm_rng_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
-+};
-+
-+static const struct of_device_id rng_dt_id[] = {
-+	{ .compatible = "nuvoton,npcm750-rng",  },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rng_dt_id);
-+
-+static struct platform_driver npcm_rng_driver = {
-+	.driver = {
-+		.name		= "npcm-rng",
-+		.pm		= &npcm_rng_pm_ops,
-+		.owner		= THIS_MODULE,
-+		.of_match_table = of_match_ptr(rng_dt_id),
-+	},
-+	.probe		= npcm_rng_probe,
-+	.remove		= npcm_rng_remove,
-+};
-+
-+module_platform_driver(npcm_rng_driver);
-+
-+MODULE_DESCRIPTION("Nuvoton NPCM Random Number Generator Driver");
-+MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.18.0
+T24gTW9uLCAyMDE5LTA3LTIyIGF0IDA4OjU0ICswMDAwLCBHdXN0YXZvIFBpbWVudGVsIHdyb3Rl
+Og0KPiANCj4gPiANCj4gPiA+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZCBhbF9wY2llX3RhcmdldF9i
+dXNfc2V0KHN0cnVjdCBhbF9wY2llDQo+ID4gPiA+ICpwY2llLA0KPiA+ID4gPiArCQkJCQkgIHU4
+IHRhcmdldF9idXMsDQo+ID4gPiA+ICsJCQkJCSAgdTggbWFza190YXJnZXRfYnVzKQ0KPiA+ID4g
+PiArew0KPiA+ID4gPiArCXZvaWQgX19pb21lbSAqY2ZnX2NvbnRyb2xfYWRkcjsNCj4gPiA+ID4g
+Kwl1MzIgcmVnOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJcmVnID0gRklFTERfUFJFUChDRkdfVEFS
+R0VUX0JVU19NQVNLX01BU0ssDQo+ID4gPiA+IG1hc2tfdGFyZ2V0X2J1cykgfA0KPiA+ID4gPiAr
+CSAgICAgIEZJRUxEX1BSRVAoQ0ZHX1RBUkdFVF9CVVNfQlVTTlVNX01BU0ssDQo+ID4gPiA+IHRh
+cmdldF9idXMpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJY2ZnX2NvbnRyb2xfYWRkciA9ICh2b2lk
+IF9faW9tZW0gKikoKHVpbnRwdHJfdClwY2llLQ0KPiA+ID4gPiA+IGNvbnRyb2xsZXJfYmFzZSAr
+DQo+ID4gPiA+IA0KPiA+ID4gPiArCQkJICAgQVhJX0JBU0VfT0ZGU0VUICsgcGNpZS0NCj4gPiA+
+ID4gPnJlZ19vZmZzZXRzLm9iX2N0cmwNCj4gPiA+ID4gKw0KPiA+ID4gPiArCQkJICAgQ0ZHX1RB
+UkdFVF9CVVMpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJd3JpdGVsKHJlZywgY2ZnX2NvbnRyb2xf
+YWRkcik7DQo+ID4gPiANCj4gPiA+IEZyb20gd2hhdCBJJ20gc2VlaW5nIHlvdSBjb21tb25seSB1
+c2Ugd3JpdGVsKCkgYW5kIHJlYWRsKCkgd2l0aCBhDQo+ID4gPiBjb21tb24gDQo+ID4gPiBiYXNl
+IGFkZHJlc3MsIHN1Y2ggYXMgcGNpZS0+Y29udHJvbGxlcl9iYXNlICsgQVhJX0JBU0VfT0ZGU0VU
+Lg0KPiA+ID4gSSdkIHN1Z2dlc3QgdG8gY3JlYXRpbmcgYSB3cml0ZWwgYW5kIHJlYWRsIHdpdGgg
+dGhhdCBvZmZzZXQNCj4gPiA+IGJ1aWx0LWluLg0KPiA+ID4gDQo+ID4gDQo+ID4gSSBwcmVmZXIg
+dG8ga2VlcCBpdCBnZW5lcmljLCBzaW5jZSBpbiBmdXR1cmUgcmV2aXNpb25zIHdlIG1pZ2h0DQo+
+ID4gd2FudCB0bw0KPiA+IGFjY2VzcyByZWdzIHdoaWNoIGFyZSBub3QgaW4gdGhlIEFYSSByZWdp
+b24uIFlvdSB0aGluayBJIHNob3VsZCBhZGQNCj4gPiB3cmFwcGVycyB3aGljaCBzaW1wbHkgaGlk
+ZSB0aGUgcGNpZS0+Y29udHJvbGxlcl9iYXNlIHBhcnQ/DQo+IA0KPiBJIGFuZCBvdGhlciBkZXZl
+bG9wZXJzIHR5cGljYWxseSBkbyB0aGF0LCBidXQgaXQncyBhIHN1Z2dlc3Rpb24uIElNSE8NCj4g
+aXQgDQo+IGhlbHBzIHRvIGtlZXAgdGhlIGNvZGUgY2xlYW5lciBhbmQgbW9yZSByZWFkYWJsZS4N
+Cj4gDQoNCkFkZGVkIGFsX3BjaWVfY29udHJvbGxlcl9yZWFkbC93cml0ZWwgd3JhcHBlcnMuDQoN
+Ci0tIA0KVGhhbmtzLA0KICAgSm9uYXRoYW4NCg==
