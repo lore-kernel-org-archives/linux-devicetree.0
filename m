@@ -1,58 +1,78 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
- configure LED mode
-Date: Mon, 22 Jul 2019 21:38:34 +0200
-Message-ID: <20190722193834.GG8972@lunn.ch>
-References: <20190703193724.246854-1-mka@chromium.org>
- <20190703193724.246854-6-mka@chromium.org>
- <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
- <20190703232331.GL250418@google.com>
- <CAL_JsqL_AU+JV0c2mNbXiPh2pvfYbPbLV-2PHHX0hC3vUH4QWg@mail.gmail.com>
- <20190722171418.GV250418@google.com>
- <20190722190133.GF8972@lunn.ch>
- <20190722191411.GW250418@google.com>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: [PATCH 1/2] ARM: dts: aspeed: tiogapass: Add VR devices
+Date: Mon, 22 Jul 2019 12:24:47 -0700
+Message-ID: <20190722192451.1947348-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190722191411.GW250418@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, sdasari@fb.com, vijaykhemka@fb.com
 List-Id: devicetree@vger.kernel.org
 
-> as of now it isn't even an API, the phy_device populates a new array
-> in its struct with the values from the DT. PHY drivers access the
-> array directly. Is it still preferable to post everything together?
-> 
-> (maybe I'm too concerned about 'noise' from the driver patches while
->  we are figuring out what exactly the binding should be).
+Addes Voltage regulators Infineon pxe1610 devices to Facebook
+tiogapass platform.
 
-We should try to have the DT parsing made generic in phylib, and add
-new driver API calls to actually configure the LEDs.
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+---
+ .../dts/aspeed-bmc-facebook-tiogapass.dts     | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-Please also take a look at the Linux generic LED binding. It would be
-nice to have something compatible with that. With time, the code could
-morph into being part of the generic LED subsystem. So we are mostly
-talking about triggers. But we offload the trigger to the hardware,
-rather than have software trigger the blinking of the LEDs. So
-something like:
-
-ethernet-phy0  {
-	reg = <0>;
-
-	leds {
-		phy-led@0 {
-	     	      reg = <0>
-		      label = "left:green";
-		      linux,default-trigger = "phy_link_1000_active";
-		}
-		phy-led@1 {
-	     	      reg = <1>
-		      label = "right:red";
-		      linux,default-trigger = "phy_collision";
-		}
-	}
-}
-
-      Andrew
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index c4521eda787c..b7783833a58c 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -144,6 +144,42 @@
+ &i2c5 {
+ 	status = "okay";
+ 	// CPU Voltage regulators
++	vr@48 {
++		compatible = "infineon,pxe1610";
++		reg = <0x48>;
++	};
++	vr@4a {
++		compatible = "infineon,pxe1610";
++		reg = <0x4a>;
++	};
++	vr@50 {
++		compatible = "infineon,pxe1610";
++		reg = <0x50>;
++	};
++	vr@52 {
++		compatible = "infineon,pxe1610";
++		reg = <0x52>;
++	};
++	vr@58 {
++		compatible = "infineon,pxe1610";
++		reg = <0x58>;
++	};
++	vr@5a {
++		compatible = "infineon,pxe1610";
++		reg = <0x5a>;
++	};
++	vr@68 {
++		compatible = "infineon,pxe1610";
++		reg = <0x68>;
++	};
++	vr@70 {
++		compatible = "infineon,pxe1610";
++		reg = <0x70>;
++	};
++	vr@72 {
++		compatible = "infineon,pxe1610";
++		reg = <0x72>;
++	};
+ };
+ 
+ &i2c6 {
+-- 
+2.17.1
