@@ -1,49 +1,33 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 2/2] dt-bindings: mmc: sunxi: Add H5 compatibles
-Date: Mon, 22 Jul 2019 14:07:40 +0200
-Message-ID: <20190722120740.8966-2-maxime.ripard@bootlin.com>
-References: <20190722120740.8966-1-maxime.ripard@bootlin.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 0/5] arm64: dts: qcom: sdm845: Fix DTS warnings
+Date: Mon, 22 Jul 2019 18:04:17 +0530
+Message-ID: <20190722123422.4571-1-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190722120740.8966-1-maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <agross@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The conversion to the YAML binding left out two compatibles. Add them.
+So this is an attempt to fix some warns on sdm845 dts. We still have bunch
+of warnings to fix after this series (dupplicate adress and node names
+having underscores etc).
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- .../devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml    | 6 ++++++
- 1 file changed, 6 insertions(+)
+lets get long hanging ones fixed, we can see the warns with W=1 or W=2
 
-diff --git a/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml b/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
-index 06329115dc6a..d2d4308596b8 100644
---- a/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
-+++ b/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
-@@ -35,6 +35,12 @@ properties:
-       - items:
-           - const: allwinner,sun8i-r40-mmc
-           - const: allwinner,sun50i-a64-mmc
-+      - items:
-+          - const: allwinner,sun50i-h5-emmc
-+          - const: allwinner,sun50i-a64-emmc
-+      - items:
-+          - const: allwinner,sun50i-h5-mmc
-+          - const: allwinner,sun50i-a64-mmc
-       - items:
-           - const: allwinner,sun50i-h6-emmc
-           - const: allwinner,sun50i-a64-emmc
+Vinod Koul (5):
+  arm64: dts: qcom: sdm845: Add unit name to soc node
+  arm64: dts: qcom: sdm845: remove unnecessary properties for dsi nodes
+  arm64: dts: qcom: sdm845: remove unit name for thermal trip points
+  arm64: dts: qcom: sdm845: remove macro from unit name
+  arm64: dts: qcom: sdm845-cheza: remove macro from unit name
+
+ arch/arm64/boot/dts/qcom/pm8998.dtsi       |  2 +-
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 10 ++--
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       | 66 ++++++++++------------
+ 3 files changed, 36 insertions(+), 42 deletions(-)
+
+Thanks
 -- 
-2.21.0
+2.20.1
