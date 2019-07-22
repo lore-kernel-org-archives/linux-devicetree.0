@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 06/11] ARM: dts: sun5i: Add missing timers interrupts
-Date: Mon, 22 Jul 2019 10:12:24 +0200
-Message-ID: <20190722081229.22422-6-maxime.ripard@bootlin.com>
+Subject: [PATCH 10/11] ARM: dts: h3: Change the timers compatible
+Date: Mon, 22 Jul 2019 10:12:28 +0200
+Message-ID: <20190722081229.22422-10-maxime.ripard@bootlin.com>
 References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,31 +21,27 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The timer unit in the sun5i die has 6 interrupts available. List all of
-them.
+Unlike the A10 that has 6 timers available, the H3 has only two, with only
+two interrupts, just like the A23. Let's change the compatible to reflect
+that.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- arch/arm/boot/dts/sun5i.dtsi | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-index 2fb438c4fe9d..4e725afe7203 100644
---- a/arch/arm/boot/dts/sun5i.dtsi
-+++ b/arch/arm/boot/dts/sun5i.dtsi
-@@ -588,7 +588,12 @@
- 		timer@1c20c00 {
- 			compatible = "allwinner,sun4i-a10-timer";
- 			reg = <0x01c20c00 0x90>;
--			interrupts = <22>;
-+			interrupts = <22>,
-+				     <23>,
-+				     <24>,
-+				     <25>,
-+				     <67>,
-+				     <68>;
- 			clocks = <&ccu CLK_HOSC>;
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index 84977d4eb97a..fa8bac5aa3ce 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -484,7 +484,7 @@
  		};
  
+ 		timer@1c20c00 {
+-			compatible = "allwinner,sun4i-a10-timer";
++			compatible = "allwinner,sun8i-a23-timer";
+ 			reg = <0x01c20c00 0xa0>;
+ 			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.21.0
