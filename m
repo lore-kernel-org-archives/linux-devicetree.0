@@ -1,58 +1,48 @@
-From: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Subject: RE: [PATCH v2] arm64: dts: fsl: pico-pi: Add a device tree for the
- PICO-PI-IMX8M
-Date: Mon, 22 Jul 2019 17:40:43 +0000
-Message-ID: <042F8805D2046347BB8420BEAE397A40749E9BDA@WILL-MAIL002.REu.RohmEu.com>
-References: <20190625123407.15888-1-andradanciu1997@gmail.com>
- <20190718035523.GD11324@X250>
- <CAJNLGszB239AHpD+kRCPRWZaToTYHiq5YUHRjfRwTqknwHMdMA@mail.gmail.com>,<20190722020345.GR3738@dragon>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 05/10] dt-bindings: display: Add max-res property for
+ mxsfb
+Date: Mon, 22 Jul 2019 11:48:53 -0600
+Message-ID: <20190722174853.GA31795@bogus>
+References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
+ <1561555938-21595-6-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722020345.GR3738@dragon>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1561555938-21595-6-git-send-email-robert.chiras@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Andra Danciu <andradanciu1997@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, Fabio Estevam <festevam@gmail.com>, "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "angus@akkea.ca" <angus@akkea.ca>, "vabhav.sharma@nxp.com" <vabhav.sharma@nxp.com>, "pankaj.bansal@nxp.com" <pankaj.bansal@nxp.com>, "bhaskar.upadhaya@nxp.com" <bhaskar.upadhaya@nxp.com>, "ping.bai@nxp.com" <ping.bai@nxp.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Richard Hu <richard.hu@technexion.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>, Daniel
+To: Robert Chiras <robert.chiras@nxp.com>
+Cc: Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry for top posting. I'm replying using mobile phone and outlook web app... 
+On Wed, Jun 26, 2019 at 04:32:13PM +0300, Robert Chiras wrote:
+> Add new optional property 'max-res', to limit the maximum supported
+> resolution by the MXSFB_DRM driver.
 
-gpio_intr is not needed. Irq must be given using the standard irq property. gpio_intr has been used in an old draft driver - I assume the dts originates from NXP bsp which used the old driver.
+Bindings are for h/w description, not driver config.
 
-Br,
-Matti Vaittinen
+> 
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/display/mxsfb.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/Documentation/devicetree/bindings/display/mxsfb.txt
+> index 472e1ea..55e22ed 100644
+> --- a/Documentation/devicetree/bindings/display/mxsfb.txt
+> +++ b/Documentation/devicetree/bindings/display/mxsfb.txt
+> @@ -17,6 +17,12 @@ Required properties:
+>  Required sub-nodes:
+>    - port: The connection to an encoder chip.
+>  
+> +Optional properties:
+> +- max-res:	an array with a maximum of two integers, representing the
+> +		maximum supported resolution, in the form of
+> +		<maxX>, <maxY>; if one of the item is <0>, the default
+> +		driver-defined maximum resolution for that axis is used
 
---
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+I suppose what you are after is bandwidth limits? IIRC, there's already 
+some bindings expressing such limits. Also, wouldn't you need to account 
+for bpp and using the 2nd plane (IIRC that there is one).
 
-~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
-
-
-________________________________________
-From: Shawn Guo [shawnguo@kernel.org]
-Sent: Monday, July 22, 2019 5:03 AM
-To: Andra Danciu
-Cc: robh+dt@kernel.org; mark.rutland@arm.com; leoyang.li@nxp.com; Fabio Estevam; aisheng.dong@nxp.com; l.stach@pengutronix.de; angus@akkea.ca; vabhav.sharma@nxp.com; pankaj.bansal@nxp.com; bhaskar.upadhaya@nxp.com; ping.bai@nxp.com; Manivannan Sadhasivam; Richard Hu; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Vaittinen, Matti; linux-imx@nxp.com; Daniel Baluta
-Subject: Re: [PATCH v2] arm64: dts: fsl: pico-pi: Add a device tree for the PICO-PI-IMX8M
-
-On Thu, Jul 18, 2019 at 02:12:10PM +0300, Andra Danciu wrote:
-...
-> > > +     pmic: pmic@4b {
-> > > +             reg = <0x4b>;
-> > > +             compatible = "rohm,bd71837";
-> > > +             /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-> > > +             pinctrl-0 = <&pinctrl_pmic>;
-> > > +             gpio_intr = <&gpio1 3 GPIO_ACTIVE_LOW>;
-> >
-> > Where is the bindings for this property?
-> Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-
-I do not see property 'gpio_intr' in there.
-
-Shawn
+Rob
