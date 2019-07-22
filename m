@@ -1,7 +1,7 @@
 From: Stephan Gerhold <stephan@gerhold.net>
-Subject: [RFC PATCH v2 4/4] arm64: dts: qcom: Add device tree for Longcheer L8150
-Date: Mon, 22 Jul 2019 11:22:11 +0200
-Message-ID: <20190722092211.100586-5-stephan@gerhold.net>
+Subject: [RFC PATCH v2 3/4] arm64: dts: qcom: Add device tree for Samsung Galaxy A3U/A5U
+Date: Mon, 22 Jul 2019 11:22:10 +0200
+Message-ID: <20190722092211.100586-4-stephan@gerhold.net>
 References: <20190722092211.100586-1-stephan@gerhold.net>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,58 +9,73 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190722092211.100586-1-stephan@gerhold.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <agross@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>, Nikita Travkin <nikitos.tr@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>, Michael Srba <Michael.Srba@seznam.cz>
 List-Id: devicetree@vger.kernel.org
 
-Longcheer L8150 is a smartphone based on MSM8916 which is
-used in several rebrands like the Snapdragon 410
-Android One devices or the Wileyfox Swift.
+Samsung Galaxy A3 (SM-A300FU) and Samsung Galaxy A5 (SM-A500FU)
+are smartphones using the MSM8916 SoC released in 2015.
 
-Add a device tree for L8150 with initial support for:
+Add a device tree for A3U and A5U with initial support for:
   - SDHCI (internal and external storage)
   - USB Device Mode
-  - UART
+  - UART (on USB connector via the SM5502 MUIC)
   - Regulators
 
-Co-developed-by: Nikita Travkin <nikitos.tr@gmail.com>
-Signed-off-by: Nikita Travkin <nikitos.tr@gmail.com>
+The two devices (and all other variants of A3/A5 released in 2015)
+are very similar, with some differences in display, touchscreen
+and sensors. The common parts are shared in
+msm8916-samsung-a2015-common.dtsi to reduce duplication.
+
+The device tree is loosely based on apq8016-sbc.dtsi and the
+downstream kernel provided by Samsung, mixed with a lot of own
+research.
+
+Co-developed-by: Michael Srba <Michael.Srba@seznam.cz>
+Signed-off-by: Michael Srba <Michael.Srba@seznam.cz>
 Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 ---
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/msm8916-longcheer-l8150.dts | 228 ++++++++++++++++++
- 2 files changed, 229 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
+Changes in v2:
+  - Remove msm8916-samsung-a2015-common-pins.dtsi, move to main .dtsi
+  - Update s4/l17 regulator-max-microvolt, remove regulator-always-on
+  - Use muic extcon device for both VBUS/USB-ID in usb@78d9000
+  - Move i2c-muic out of soc { ... } node
+
+ arch/arm64/boot/dts/qcom/Makefile             |   2 +
+ .../qcom/msm8916-samsung-a2015-common.dtsi    | 236 ++++++++++++++++++
+ .../boot/dts/qcom/msm8916-samsung-a3u-eur.dts |  10 +
+ .../boot/dts/qcom/msm8916-samsung-a5u-eur.dts |  10 +
+ 4 files changed, 258 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
 
 diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 5d725770d9c4..cb2d4de62668 100644
+index 0a7e5dfce6f7..5d725770d9c4 100644
 --- a/arch/arm64/boot/dts/qcom/Makefile
 +++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -3,6 +3,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+@@ -3,6 +3,8 @@ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-longcheer-l8150.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a3u-eur.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a5u-eur.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a3u-eur.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a5u-eur.dtb
  dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
 new file mode 100644
-index 000000000000..2b28e383fd0b
+index 000000000000..e675ff48fdd2
 --- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-@@ -0,0 +1,228 @@
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+@@ -0,0 +1,236 @@
 +// SPDX-License-Identifier: GPL-2.0-only
-+
-+/dts-v1/;
 +
 +#include "msm8916.dtsi"
 +#include "pm8916.dtsi"
 +#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
 +
 +/ {
-+	model = "Longcheer L8150";
-+	compatible = "longcheer,l8150", "qcom,msm8916-v1-qrd/9-v1", "qcom,msm8916";
-+
 +	aliases {
 +		serial0 = &blsp1_uart2;
 +	};
@@ -88,10 +103,10 @@ index 000000000000..2b28e383fd0b
 +			vqmmc-supply = <&pm8916_l12>;
 +
 +			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on>;
-+			pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off>;
++			pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
++			pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
 +
-+			non-removable;
++			cd-gpios = <&msmgpio 38 GPIO_ACTIVE_LOW>;
 +		};
 +
 +		serial@78b0000 {
@@ -103,8 +118,7 @@ index 000000000000..2b28e383fd0b
 +
 +		usb@78d9000 {
 +			status = "okay";
-+			dr_mode = "peripheral";
-+			extcon = <&usb_vbus>;
++			extcon = <&muic>, <&muic>;
 +
 +			hnp-disable;
 +			srp-disable;
@@ -112,7 +126,7 @@ index 000000000000..2b28e383fd0b
 +
 +			ulpi {
 +				phy {
-+					extcon = <&usb_vbus>;
++					extcon = <&muic>;
 +					v1p8-supply = <&pm8916_l7>;
 +					v3p3-supply = <&pm8916_l13>;
 +				};
@@ -143,24 +157,37 @@ index 000000000000..2b28e383fd0b
 +		etm@85f000 { status = "disabled"; };
 +	};
 +
-+	// FIXME: Use extcon device provided by charger driver when available
-+	usb_vbus: usb-vbus {
-+		compatible = "linux,extcon-usb-gpio";
-+		vbus-gpio = <&msmgpio 62 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb_vbus_default>;
++	i2c-muic {
++		compatible = "i2c-gpio";
++		sda-gpios = <&msmgpio 105 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&msmgpio 106 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		muic: sm5502@25 {
++			compatible = "siliconmitus,sm5502-muic";
++
++			reg = <0x25>;
++			interrupt-parent = <&msmgpio>;
++			interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&muic_int_default>;
++		};
 +	};
 +};
 +
 +&msmgpio {
-+	usb_vbus_default: usb-vbus-default {
++	muic_int_default: muic_int_default {
 +		pinmux {
 +			function = "gpio";
-+			pins = "gpio62";
++			pins = "gpio12";
 +		};
 +		pinconf {
-+			pins = "gpio62";
-+			bias-pull-up;
++			pins = "gpio12";
++			drive-strength = <2>;
++			bias-disable;
 +		};
 +	};
 +};
@@ -276,6 +303,38 @@ index 000000000000..2b28e383fd0b
 +		regulator-min-microvolt = <2700000>;
 +		regulator-max-microvolt = <2700000>;
 +	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
+new file mode 100644
+index 000000000000..d10f7ac5089f
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
+@@ -0,0 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++/dts-v1/;
++
++#include "msm8916-samsung-a2015-common.dtsi"
++
++/ {
++	model = "Samsung Galaxy A3U (EUR)";
++	compatible = "samsung,a3u-eur", "qcom,msm8916";
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts b/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
+new file mode 100644
+index 000000000000..1aa59da98495
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
+@@ -0,0 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++/dts-v1/;
++
++#include "msm8916-samsung-a2015-common.dtsi"
++
++/ {
++	model = "Samsung Galaxy A5U (EUR)";
++	compatible = "samsung,a5u-eur", "qcom,msm8916";
 +};
 -- 
 2.22.0
