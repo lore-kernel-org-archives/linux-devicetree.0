@@ -1,40 +1,107 @@
-From: Jan Kotas <jank@cadence.com>
-Subject: Re: [PATCH 3/3] media: Add support for Cadence CSI2TX 2.1
-Date: Mon, 22 Jul 2019 07:07:33 +0000
-Message-ID: <AF5297BE-EE52-4652-8DE6-6A3F4E855480@global.cadence.com>
-References: <20190718111509.29924-1-jank@cadence.com>
- <20190718111509.29924-4-jank@cadence.com>
- <20190720082559.pk3odkf5hztgvpif@flea>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V6 14/21] clk: tegra210: Add suspend and resume support
+Date: Mon, 22 Jul 2019 10:09:08 +0300
+Message-ID: <5054f178-db27-9286-d123-3e2b2a885717@gmail.com>
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-15-git-send-email-skomatineni@nvidia.com>
+ <e683b417-66fb-38dc-c16b-dab616583a88@gmail.com>
+ <88da46d2-b90d-f57e-7611-b8653b56bdf6@nvidia.com>
+ <ceedb802-7561-488f-3a89-67bee19f2fea@gmail.com>
+ <e2d0e8cc-b4ea-1148-4af1-fee6bb266cca@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190720082559.pk3odkf5hztgvpif@flea>
+In-Reply-To: <e2d0e8cc-b4ea-1148-4af1-fee6bb266cca@nvidia.com>
 Content-Language: en-US
-Content-ID: <73B7B35BAB48B647A849C30917595FFE@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Jan Kotas <jank@cadence.com>, "mchehab@kernel.org" <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media <linux-media@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gT24gMjAgSnVsIDIwMTksIGF0IDEwOjI1LCBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlw
-YXJkQGJvb3RsaW4uY29tPiB3cm90ZToNCj4gDQo+IEhpLA0KPiANCj4gT24gVGh1LCBKdWwgMTgs
-IDIwMTkgYXQgMTI6MTU6MDlQTSArMDEwMCwgSmFuIEtvdGFzIHdyb3RlOg0KPj4gCS8qIFB1dCBv
-dXIgbGFuZXMgKGNsb2NrIGFuZCBkYXRhKSBvdXQgb2YgcmVzZXQgKi8NCj4+IAlyZWcgPSBDU0ky
-VFhfRFBIWV9DRkdfQ0xLX1JFU0VUIHwgQ1NJMlRYX0RQSFlfQ0ZHX01PREVfTFBEVDsNCj4+IAlm
-b3IgKGkgPSAwOyBpIDwgY3NpMnR4LT5udW1fbGFuZXM7IGkrKykNCj4+IC0JCXJlZyB8PSBDU0ky
-VFhfRFBIWV9DRkdfTEFORV9SRVNFVChjc2kydHgtPmxhbmVzW2ldKTsNCj4+ICsJCXJlZyB8PSBD
-U0kyVFhfRFBIWV9DRkdfTEFORV9SRVNFVChjc2kydHgtPmxhbmVzW2ldIC0gMSk7DQo+IA0KPiBU
-aGlzIGxvb2tzIGxpa2UgYSBzZXBhcmF0ZSBjaGFuZ2U/DQo+IA0KPj4gCXdyaXRlbChyZWcsIGNz
-aTJ0eC0+YmFzZSArIENTSTJUWF9EUEhZX0NGR19SRUcpOw0KPj4gDQo+PiAtCXVkZWxheSgxMCk7
-DQo+PiArCWNzaTJ0eF9kcGh5X2luaXRfZmluaXNoKGNzaTJ0eCwgcmVnKTsNCj4+ICt9DQo+PiAN
-Cj4+IC0JLyogRW5hYmxlIG91ciAoY2xvY2sgYW5kIGRhdGEpIGxhbmVzICovDQo+PiAtCXJlZyB8
-PSBDU0kyVFhfRFBIWV9DRkdfQ0xLX0VOQUJMRTsNCj4+IC0JZm9yIChpID0gMDsgaSA8IGNzaTJ0
-eC0+bnVtX2xhbmVzOyBpKyspDQo+PiAtCQlyZWcgfD0gQ1NJMlRYX0RQSFlfQ0ZHX0xBTkVfRU5B
-QkxFKGNzaTJ0eC0+bGFuZXNbaV0pOw0KPiANCj4gQW5kIHlvdSBoYXZlIGEgc2ltaWxhciBjaGFu
-Z2UgaGVyZSB0aGF0IHNob3VsZCBiZSBpbiBhIHNlcGFyYXRlIHBhdGNoLA0KPiB3aXRoIGEgcHJv
-cGVyIGV4cGxhbmF0aW9uLg0KPiANCj4gT3RoZXJ3aXNlLCB0aGUgcmVzdCBsb29rcyBnb29kLg0K
-DQpPSywgSeKAmWxsIGNyZWF0ZSBhIHNlcGFyYXRlIHBhdGNoIHdpdGggdGhpcyBtb2RpZmljYXRp
-b24uDQpKYW4NCg0KPiBNYXhpbWUNCj4gDQo+IC0tDQo+IE1heGltZSBSaXBhcmQsIEJvb3RsaW4N
-Cj4gRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZw0KPiBodHRwczovL2Jvb3Rs
-aW4uY29tDQoNCg==
+22.07.2019 9:52, Sowjanya Komatineni пишет:
+> 
+> On 7/21/19 11:10 PM, Dmitry Osipenko wrote:
+>> 22.07.2019 1:45, Sowjanya Komatineni пишет:
+>>> On 7/21/19 2:38 PM, Dmitry Osipenko wrote:
+>>>> 21.07.2019 22:40, Sowjanya Komatineni пишет:
+>>>>> This patch adds support for clk: tegra210: suspend-resume.
+>>>>>
+>>>>> All the CAR controller settings are lost on suspend when core
+>>>>> power goes off.
+>>>>>
+>>>>> This patch has implementation for saving and restoring all PLLs
+>>>>> and clocks context during system suspend and resume to have the
+>>>>> clocks back to same state for normal operation.
+>>>>>
+>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>>    drivers/clk/tegra/clk-tegra210.c | 68
+>>>>> ++++++++++++++++++++++++++++++++++++++--
+>>>>>    drivers/clk/tegra/clk.c          | 14 +++++++++
+>>>>>    drivers/clk/tegra/clk.h          |  1 +
+>>>>>    3 files changed, 80 insertions(+), 3 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/clk/tegra/clk-tegra210.c
+>>>>> b/drivers/clk/tegra/clk-tegra210.c
+>>>>> index 55a88c0824a5..68271873acc1 100644
+>>>>> --- a/drivers/clk/tegra/clk-tegra210.c
+>>>>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>>>>> @@ -9,6 +9,7 @@
+>>>>>    #include <linux/clkdev.h>
+>>>>>    #include <linux/of.h>
+>>>>>    #include <linux/of_address.h>
+>>>>> +#include <linux/syscore_ops.h>
+>>>>>    #include <linux/delay.h>
+>>>>>    #include <linux/export.h>
+>>>>>    #include <linux/mutex.h>
+>>>>> @@ -220,11 +221,15 @@
+>>>>>    #define CLK_M_DIVISOR_SHIFT 2
+>>>>>    #define CLK_M_DIVISOR_MASK 0x3
+>>>>>    +#define CLK_MASK_ARM    0x44
+>>>>> +#define MISC_CLK_ENB    0x48
+>>>>> +
+>>>>>    #define RST_DFLL_DVCO 0x2f4
+>>>>>    #define DVFS_DFLL_RESET_SHIFT 0
+>>>>>      #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>>>>>    #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+>>>>> +#define CPU_SOFTRST_CTRL 0x380
+>>>>>      #define LVL2_CLK_GATE_OVRA 0xf8
+>>>>>    #define LVL2_CLK_GATE_OVRC 0x3a0
+>>>>> @@ -2825,6 +2830,7 @@ static int tegra210_enable_pllu(void)
+>>>>>        struct tegra_clk_pll_freq_table *fentry;
+>>>>>        struct tegra_clk_pll pllu;
+>>>>>        u32 reg;
+>>>>> +    int ret;
+>>>>>          for (fentry = pll_u_freq_table; fentry->input_rate;
+>>>>> fentry++) {
+>>>>>            if (fentry->input_rate == pll_ref_freq)
+>>>>> @@ -2853,9 +2859,8 @@ static int tegra210_enable_pllu(void)
+>>>>>        reg |= PLL_ENABLE;
+>>>>>        writel(reg, clk_base + PLLU_BASE);
+>>>>>    -    readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
+>>>>> -                      reg & PLL_BASE_LOCK, 2, 1000);
+>>>>> -    if (!(reg & PLL_BASE_LOCK)) {
+>>>>> +    ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
+>>>>> +    if (ret) {
+>>>> Why this is needed? Was there a bug?
+>>>>
+>>> during resume pllu init is needed and to use same terga210_init_pllu,
+>>> poll_timeout_atomic can't be used as its ony for atomic context.
+>>>
+>>> So changed to use wait_for_mask which should work in both cases.
+>> Atomic variant could be used from any context, not sure what do you
+>> mean. The 'atomic' part only means that function won't cause scheduling
+>> and that's it.
+> 
+> Sorry, replied incorrect. readx_poll_timeout_atomic uses ktime_get() and
+> during resume timekeeping suspend/resume happens later than clock
+> suspend/resume. So using tegra210_wait_for_mask.
+> 
+> both timekeeping and clk-tegra210 drivers are registered as syscore but
+> not ordered.
+
+Okay, thank you for the clarification.
+
+[snip]
