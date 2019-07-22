@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 07/11] ARM: dts: sun6i: Add missing timers interrupts
-Date: Mon, 22 Jul 2019 10:12:25 +0200
-Message-ID: <20190722081229.22422-7-maxime.ripard@bootlin.com>
+Subject: [PATCH 06/11] ARM: dts: sun5i: Add missing timers interrupts
+Date: Mon, 22 Jul 2019 10:12:24 +0200
+Message-ID: <20190722081229.22422-6-maxime.ripard@bootlin.com>
 References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,25 +21,30 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The timer unit in the A31 has 6 interrupts available. List all of them.
+The timer unit in the sun5i die has 6 interrupts available. List all of
+them.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- arch/arm/boot/dts/sun6i-a31.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/sun5i.dtsi | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index dcddc3392460..4c1ac7e58ae3 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -736,7 +736,8 @@
- 				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-+				     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&osc24M>;
+diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
+index 2fb438c4fe9d..4e725afe7203 100644
+--- a/arch/arm/boot/dts/sun5i.dtsi
++++ b/arch/arm/boot/dts/sun5i.dtsi
+@@ -588,7 +588,12 @@
+ 		timer@1c20c00 {
+ 			compatible = "allwinner,sun4i-a10-timer";
+ 			reg = <0x01c20c00 0x90>;
+-			interrupts = <22>;
++			interrupts = <22>,
++				     <23>,
++				     <24>,
++				     <25>,
++				     <67>,
++				     <68>;
+ 			clocks = <&ccu CLK_HOSC>;
  		};
  
 -- 
