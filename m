@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 02/11] dt-bindings: timer: Add missing compatibles
-Date: Mon, 22 Jul 2019 10:12:20 +0200
-Message-ID: <20190722081229.22422-2-maxime.ripard@bootlin.com>
+Subject: [PATCH 11/11] ARM: dts: v3s: Change the timers compatible
+Date: Mon, 22 Jul 2019 10:12:29 +0200
+Message-ID: <20190722081229.22422-11-maxime.ripard@bootlin.com>
 References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,57 +21,32 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Newer Allwinner SoCs have different number of interrupts, let's add
-different compatibles for all of them to deal with this properly.
+Unlike the A10 that has 6 timers available, the v3s has only three, with only
+three interrupts. Let's change the compatible to reflect that, and add the
+missing interrupts.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- .../timer/allwinner,sun4i-a10-timer.yaml      | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ arch/arm/boot/dts/sun8i-v3s.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml b/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
-index 7292a424092c..20adc1c8e9cc 100644
---- a/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
-+++ b/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
-@@ -14,6 +14,8 @@ properties:
-   compatible:
-     enum:
-       - allwinner,sun4i-a10-timer
-+      - allwinner,sun8i-a23-timer
-+      - allwinner,sun8i-v3s-timer
-       - allwinner,suniv-f1c100s-timer
+diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
+index d7aef128acb3..1fce5b07c65c 100644
+--- a/arch/arm/boot/dts/sun8i-v3s.dtsi
++++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
+@@ -327,10 +327,11 @@
+ 		};
  
-   reg:
-@@ -39,6 +41,30 @@ allOf:
-           minItems: 6
-           maxItems: 6
+ 		timer@1c20c00 {
+-			compatible = "allwinner,sun4i-a10-timer";
++			compatible = "allwinner,sun8i-v3s-timer";
+ 			reg = <0x01c20c00 0xa0>;
+ 			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&osc24M>;
+ 		};
  
-+  - if:
-+      properties:
-+        compatible:
-+          items:
-+            const: allwinner,sun8i-a23-timer
-+
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 2
-+          maxItems: 2
-+
-+  - if:
-+      properties:
-+        compatible:
-+          items:
-+            const: allwinner,sun8i-v3s-timer
-+
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 3
-+          maxItems: 3
-+
-   - if:
-       properties:
-         compatible:
 -- 
 2.21.0
