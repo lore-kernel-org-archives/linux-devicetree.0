@@ -1,36 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [v3 3/4] dt-bindings: display: panel: add auo kd101n80-45na
- panel bindings
-Date: Mon, 22 Jul 2019 11:39:36 -0600
-Message-ID: <20190722173936.GA26950@bogus>
-References: <20190626025400.109567-1-jitao.shi@mediatek.com>
- <20190626025400.109567-4-jitao.shi@mediatek.com>
+From: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Subject: RE: [PATCH v2] arm64: dts: fsl: pico-pi: Add a device tree for the
+ PICO-PI-IMX8M
+Date: Mon, 22 Jul 2019 17:40:43 +0000
+Message-ID: <042F8805D2046347BB8420BEAE397A40749E9BDA@WILL-MAIL002.REu.RohmEu.com>
+References: <20190625123407.15888-1-andradanciu1997@gmail.com>
+ <20190718035523.GD11324@X250>
+ <CAJNLGszB239AHpD+kRCPRWZaToTYHiq5YUHRjfRwTqknwHMdMA@mail.gmail.com>,<20190722020345.GR3738@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190626025400.109567-4-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, yingjoe.chen@mediatek.com, Sam Ravnborg <sam@ravnborg.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, linux-pwm@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-mediatek@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sean Paul <seanpaul@chromium>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190722020345.GR3738@dragon>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Andra Danciu <andradanciu1997@gmail.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, Fabio Estevam <festevam@gmail.com>, "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "angus@akkea.ca" <angus@akkea.ca>, "vabhav.sharma@nxp.com" <vabhav.sharma@nxp.com>, "pankaj.bansal@nxp.com" <pankaj.bansal@nxp.com>, "bhaskar.upadhaya@nxp.com" <bhaskar.upadhaya@nxp.com>, "ping.bai@nxp.com" <ping.bai@nxp.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Richard Hu <richard.hu@technexion.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>, Daniel
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyNiBKdW4gMjAxOSAxMDo1Mzo1OSArMDgwMCwgSml0YW8gU2hpIHdyb3RlOgo+IEFk
-ZCBkb2N1bWVudGF0aW9uIGZvciBhdW8ga2QxMDFuODAtNDVuYSBwYW5lbC4KPiAKPiBTaWduZWQt
-b2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRpYXRlay5jb20+Cj4gUmV2aWV3ZWQtYnk6
-IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4KPiAtLS0KPiAgLi4uL2Rpc3BsYXkvcGFu
-ZWwvYXVvLGtkMTAxbjgwLTQ1bmEudHh0ICAgICAgIHwgMzQgKysrKysrKysrKysrKysrKysrKwo+
-ICAxIGZpbGUgY2hhbmdlZCwgMzQgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXVvLGtkMTAx
-bjgwLTQ1bmEudHh0Cj4gCgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9y
-Zz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Sorry for top posting. I'm replying using mobile phone and outlook web app... 
+
+gpio_intr is not needed. Irq must be given using the standard irq property. gpio_intr has been used in an old draft driver - I assume the dts originates from NXP bsp which used the old driver.
+
+Br,
+Matti Vaittinen
+
+--
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
+
+
+________________________________________
+From: Shawn Guo [shawnguo@kernel.org]
+Sent: Monday, July 22, 2019 5:03 AM
+To: Andra Danciu
+Cc: robh+dt@kernel.org; mark.rutland@arm.com; leoyang.li@nxp.com; Fabio Estevam; aisheng.dong@nxp.com; l.stach@pengutronix.de; angus@akkea.ca; vabhav.sharma@nxp.com; pankaj.bansal@nxp.com; bhaskar.upadhaya@nxp.com; ping.bai@nxp.com; Manivannan Sadhasivam; Richard Hu; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Vaittinen, Matti; linux-imx@nxp.com; Daniel Baluta
+Subject: Re: [PATCH v2] arm64: dts: fsl: pico-pi: Add a device tree for the PICO-PI-IMX8M
+
+On Thu, Jul 18, 2019 at 02:12:10PM +0300, Andra Danciu wrote:
+...
+> > > +     pmic: pmic@4b {
+> > > +             reg = <0x4b>;
+> > > +             compatible = "rohm,bd71837";
+> > > +             /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
+> > > +             pinctrl-0 = <&pinctrl_pmic>;
+> > > +             gpio_intr = <&gpio1 3 GPIO_ACTIVE_LOW>;
+> >
+> > Where is the bindings for this property?
+> Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+
+I do not see property 'gpio_intr' in there.
+
+Shawn
