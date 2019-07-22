@@ -1,39 +1,89 @@
-From: andradanciu1997 <andradanciu1997@gmail.com>
-Subject: [PATCH v6 2/2] dt-bindings: arm: fsl: Add the pico-pi-imx8m board
-Date: Mon, 22 Jul 2019 13:27:30 +0300
-Message-ID: <20190722102730.15763-3-andradanciu1997@gmail.com>
-References: <20190722102730.15763-1-andradanciu1997@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722102730.15763-1-andradanciu1997@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com, Michal.Vokac@ysoft.com, ping.bai@nxp.com, u.kleine-koenig@pengutronix.de, leoyang.li@nxp.com, aisheng.dong@nxp.com, l.stach@pengutronix.de, pankaj.bansal@nxp.com, angus@akkea.ca, pramod.kumar_1@nxp.com, bhaskar.upadhaya@nxp.com, vabhav.sharma@nxp.com, andradanciu1997@gmail.com, richard.hu@technexion.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
+Subject: [PATCH v3] arm64: dts: add the console node for DPAA2 platforms
+Date: Mon, 22 Jul 2019 13:30:43 +0300
+Message-ID: <1563791443-26372-1-git-send-email-ioana.ciornei@nxp.com>
+Reply-To: ioana.ciornei@nxp.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Ioana Ciornei <ioana.ciornei@nxp.com>, leoyang.li@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-From: Andra Danciu <andradanciu1997@gmail.com>
+Add the console device tree node for the following
+DPAA2 based platforms: LS1088A, LS2080A, LS2088A and LX2160A.
 
-Add an entry for TechNexion PICO-PI-IMX8M board based on i.MX8MQ SoC
-Datasheet can be found at:
-https://s3.us-east-2.amazonaws.com/technexion/datasheets/picopiimx8m.pdf
-
-Cc: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v3:
+ - sort the node by unit address
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 7294ac36f4c0..54c094341121 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -219,6 +219,7 @@ properties:
-           - enum:
-               - fsl,imx8mq-evk            # i.MX8MQ EVK Board
-               - purism,librem5-devkit     # Purism Librem5 devkit
-+              - technexion,pico-pi-imx8m  # TechNexion PICO-PI-8M evk
-           - const: fsl,imx8mq
+Changes in v2:
+ - use a generic node name
+ - remove leading zeros and 0x from the unit-address
+
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 5 +++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 5 +++++
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 5 +++++
+ 3 files changed, 15 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index dacd8cf03a7f..20f5ebd74200 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -609,6 +609,11 @@
+ 				     <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
  
-       - description: i.MX8QXP based Boards
++		console@8340020 {
++			compatible = "fsl,dpaa2-console";
++			reg = <0x00000000 0x08340020 0 0x2>;
++		};
++
+ 		ptp-timer@8b95000 {
+ 			compatible = "fsl,dpaa2-ptp";
+ 			reg = <0x0 0x8b95000 0x0 0x100>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+index 3ace91945b72..64101c9962ce 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -321,6 +321,11 @@
+ 			};
+ 		};
+ 
++		console@8340020 {
++			compatible = "fsl,dpaa2-console";
++			reg = <0x00000000 0x08340020 0 0x2>;
++		};
++
+ 		ptp-timer@8b95000 {
+ 			compatible = "fsl,dpaa2-ptp";
+ 			reg = <0x0 0x8b95000 0x0 0x100>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index e6fdba39453c..4720a8e7304c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -848,6 +848,11 @@
+ 			dma-coherent;
+ 		};
+ 
++		console@8340020 {
++			compatible = "fsl,dpaa2-console";
++			reg = <0x00000000 0x08340020 0 0x2>;
++		};
++
+ 		ptp-timer@8b95000 {
+ 			compatible = "fsl,dpaa2-ptp";
+ 			reg = <0x0 0x8b95000 0x0 0x100>;
 -- 
-2.11.0
+1.9.1
