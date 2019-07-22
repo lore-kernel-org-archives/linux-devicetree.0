@@ -1,33 +1,66 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v8 0/7] Unify CPU topology across ARM & RISC-V
-Date: Mon, 22 Jul 2019 12:25:17 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1907221224170.23563@viisi.sifive.com>
-References: <20190627195302.28300-1-atish.patra@wdc.com> <alpine.DEB.2.21.9999.1907121012050.2267@viisi.sifive.com>
+From: Alexandru Ardelean <ardeleanalex@gmail.com>
+Subject: Re: [PATCH 1/4][V3] spi: Add optional stall delay between cs_change transfers
+Date: Mon, 22 Jul 2019 22:27:47 +0300
+Message-ID: <CA+U=DspSkWzwVp38No9tGYb0_zc2yVP5jFcLsOd2aLi2WxaW-w@mail.gmail.com>
+References: <20190722124747.4792-1-alexandru.ardelean@analog.com>
+ <20190722124747.4792-2-alexandru.ardelean@analog.com> <20190722163202.GG4756@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1907121012050.2267@viisi.sifive.com>
+In-Reply-To: <20190722163202.GG4756@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: linux-kernel@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Johan Hovold <johan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob
+To: Mark Brown <broonie@kernel.org>
+Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>, linux-iio@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Hennerich <michael.hennerich@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Jul 2019, Paul Walmsley wrote:
-
-> On Thu, 27 Jun 2019, Atish Patra wrote:
-> 
-> > The cpu-map DT entry in ARM can describe the CPU topology in much better
-> > way compared to other existing approaches. RISC-V can easily adopt this
-> > binding to represent its own CPU topology. Thus, both cpu-map DT
-> > binding and topology parsing code can be moved to a common location so
-> > that RISC-V or any other architecture can leverage that.
-> > different config for the architectures that do not support them.
+On Mon, Jul 22, 2019 at 8:42 PM Mark Brown <broonie@kernel.org> wrote:
 >
-> Once v5.3-rc1 is released, let's plan to get these patches rebased and 
-> reposted and into linux-next as soon as possible.
+> On Mon, Jul 22, 2019 at 03:47:44PM +0300, Alexandru Ardelean wrote:
+> > Some devices like the ADIS16460 IMU require a longer period between
+> > transfers, i.e. between when the CS is de-asserted and re-asserted. The
+> > default value of 10us is not enough. This change makes the delay
+> > configurable for when the next CS change goes active, allowing the default
+> > to remain 10us is case it is unspecified.
+>
+> For the third time:
+>
+> | This looks like cs_change_delay.
+>
+> >  #define      SPI_NBITS_QUAD          0x04 /* 4bits transfer */
+> >       u8              bits_per_word;
+> >       u8              word_delay_usecs;
+> > +     u8              cs_change_delay;
+> >       u16             delay_usecs;
+> >       u32             speed_hz;
+> >       u16             word_delay;
+>
+> This patch doesn't apply and even if it did it won't compile because you
+> are trying to add a field with the same name as an existing one.
 
-These CPU topology patches are now queued for v5.4-rc1.  They should enter 
-linux-next shortly.
+oooohhhhhhhh
+now i see;
 
+well, my fault here;
+i was basing my patchset on top of branch iio/togreg from Jonathan's
+tree for the IMU:
+https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/log/?h=togreg
+[ typically that's the base branch for new IIO drivers ]
 
-- Paul
+that one is a bit behind, and does not contain the cs_change_delay
+stuff you mentioned;
+also, i will admit that sometimes, some review comments are not
+completely obvious to me;
+i should have checked the SPI tree before opening my mouth, but this
+will [hopefully] serve me as a learning experience when sending
+multi-subsystem patches
+when sending to a single subsystem, it's clear; when sending to 2, i
+get a bit lost
+
+i do feel a bit bad for the noise i caused, but it's not the worst
+thing i did today
+
+anyway: disregard this, and i will sync with Jonathan about how to
+proceed with this patch just for IIO;
+
+thanks for your time and sorry for the noise
+Alex
