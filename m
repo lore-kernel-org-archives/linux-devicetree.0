@@ -1,7 +1,7 @@
 From: Evgeny Kolesnikov <evgenyz@gmail.com>
-Subject: [PATCH 3/5] power/reset: Add a power off driver for UART-based PM MCUs
-Date: Mon, 22 Jul 2019 21:53:03 +0200
-Message-ID: <efdea0d2c7c5ed65e79fb3604130a4488ec8057c.1563822216.git.evgenyz@gmail.com>
+Subject: [PATCH 4/5] power/reset: Add a restart driver for UART-based PM MCUs
+Date: Mon, 22 Jul 2019 21:53:04 +0200
+Message-ID: <ae33cb72a370d3af6319330e950cdd6cc68a007c.1563822216.git.evgenyz@gmail.com>
 References: <cover.1563822216.git.evgenyz@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -11,57 +11,57 @@ Sender: linux-kernel-owner@vger.kernel.org
 Cc: Evgeny Kolesnikov <evgenyz@gmail.com>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the poweroff driver for power managing
+This adds the restart driver for power managing
 micro controller units that are connected to a board
 via the UART interface.
 
 Signed-off-by: Evgeny Kolesnikov <evgenyz@gmail.com>
 ---
- drivers/power/reset/Kconfig         |   7 ++
- drivers/power/reset/Makefile        |   1 +
- drivers/power/reset/uart-poweroff.c | 155 ++++++++++++++++++++++++++++
- 3 files changed, 163 insertions(+)
- create mode 100644 drivers/power/reset/uart-poweroff.c
+ drivers/power/reset/Kconfig        |   7 +
+ drivers/power/reset/Makefile       |   1 +
+ drivers/power/reset/uart-restart.c | 204 +++++++++++++++++++++++++++++
+ 3 files changed, 212 insertions(+)
+ create mode 100644 drivers/power/reset/uart-restart.c
 
 diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index a564237278ff..02fdf45e3988 100644
+index 02fdf45e3988..4b187af1fba6 100644
 --- a/drivers/power/reset/Kconfig
 +++ b/drivers/power/reset/Kconfig
-@@ -216,6 +216,13 @@ config POWER_RESET_RMOBILE
- 	help
- 	  Reboot support for Renesas R-Mobile and SH-Mobile SoCs.
+@@ -223,6 +223,13 @@ config POWER_RESET_UART_POWEROFF
+ 	  Power off support for boards with UART-based PM MCU
+ 	  such as WD My Cloud NAS, QNAP Turbo NAS, Synology devices.
  
-+config POWER_RESET_UART_POWEROFF
-+	tristate "UART-based PM MCU power off driver"
++config POWER_RESET_UART
++	tristate "UART-based PM MCU restart driver"
 +	depends on OF_GPIO
 +	help
-+	  Power off support for boards with UART-based PM MCU
++	  Reboot support for boards with UART-based PM MCU
 +	  such as WD My Cloud NAS, QNAP Turbo NAS, Synology devices.
 +
  config POWER_RESET_ZX
  	tristate "ZTE SoCs reset driver"
  	depends on ARCH_ZX || COMPILE_TEST
 diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index 85da3198e4e0..efe8f25f463d 100644
+index efe8f25f463d..fa8a936d7a1a 100644
 --- a/drivers/power/reset/Makefile
 +++ b/drivers/power/reset/Makefile
-@@ -25,6 +25,7 @@ obj-$(CONFIG_POWER_RESET_KEYSTONE) += keystone-reset.o
- obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
+@@ -26,6 +26,7 @@ obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
  obj-$(CONFIG_POWER_RESET_SYSCON_POWEROFF) += syscon-poweroff.o
  obj-$(CONFIG_POWER_RESET_RMOBILE) += rmobile-reset.o
-+obj-$(CONFIG_POWER_RESET_UART_POWEROFF) += uart-poweroff.o
+ obj-$(CONFIG_POWER_RESET_UART_POWEROFF) += uart-poweroff.o
++obj-$(CONFIG_POWER_RESET_UART) += uart-restart.o
  obj-$(CONFIG_POWER_RESET_ZX) += zx-reboot.o
  obj-$(CONFIG_REBOOT_MODE) += reboot-mode.o
  obj-$(CONFIG_SYSCON_REBOOT_MODE) += syscon-reboot-mode.o
-diff --git a/drivers/power/reset/uart-poweroff.c b/drivers/power/reset/uart-poweroff.c
+diff --git a/drivers/power/reset/uart-restart.c b/drivers/power/reset/uart-restart.c
 new file mode 100644
-index 000000000000..8122a6b306d7
+index 000000000000..be4dcbbb826e
 --- /dev/null
-+++ b/drivers/power/reset/uart-poweroff.c
-@@ -0,0 +1,155 @@
++++ b/drivers/power/reset/uart-restart.c
+@@ -0,0 +1,204 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Power off for boards with UART-based PM MCUs
++ * Restart for boards with UART-based PM MCUs
 + * such as WD My Cloud NAS, QNAP Turbo NAS, Synology devices.
 + *
 + * Copyright (C) 2019 Evgeny Kolesnikov <evgenyz@gmail.com>
@@ -75,6 +75,7 @@ index 000000000000..8122a6b306d7
 + *
 + */
 +
++#include <linux/reboot.h>
 +#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
@@ -84,52 +85,60 @@ index 000000000000..8122a6b306d7
 +#include <linux/io.h>
 +#include <linux/clk.h>
 +#include <linux/delay.h>
++#ifdef CONFIG_ARM
++#include <asm/system_misc.h>
++#endif
 +
 +#define UART_REG(b, x)	(b + ((UART_##x) << 2))
 +
-+struct uart_poweroff {
++
++struct uart_restart {
++	struct notifier_block restart_handler;
 +	const u8 *cmd;
 +	int cmd_len;
 +	void __iomem *base;
 +	unsigned int divisor;
 +	u32 byte_delay_ms;
 +	u32 timeout_ms;
++	void *pm_restart_org;
 +};
 +
-+static void *pm_power_off_org;
-+static struct uart_poweroff uart_poweroff;
-+
-+static void uart_power_off(void)
++static int uart_restart_notify(struct notifier_block *this,
++				unsigned long mode, void *cmd)
 +{
++	struct uart_restart *uart_restart =
++		container_of(this, struct uart_restart, restart_handler);
 +	int i;
 +
 +	/* Hijack UART and reset into sane state */
-+	writel(0x83, UART_REG(uart_poweroff.base, LCR));
-+	writel(uart_poweroff.divisor & 0xFF, UART_REG(uart_poweroff.base, DLL));
-+	writel((uart_poweroff.divisor >> 8) & 0xFF, UART_REG(uart_poweroff.base, DLM));
-+	writel(0x03, UART_REG(uart_poweroff.base, LCR));
-+	writel(0x00, UART_REG(uart_poweroff.base, IER));
-+	writel(0x00, UART_REG(uart_poweroff.base, FCR));
-+	writel(0x00, UART_REG(uart_poweroff.base, MCR));
++	writel(0x83, UART_REG(uart_restart->base, LCR));
++	writel(uart_restart->divisor & 0xFF, UART_REG(uart_restart->base, DLL));
++	writel((uart_restart->divisor >> 8) & 0xFF, UART_REG(uart_restart->base, DLM));
++	writel(0x03, UART_REG(uart_restart->base, LCR));
++	writel(0x00, UART_REG(uart_restart->base, IER));
++	writel(0x00, UART_REG(uart_restart->base, FCR));
++	writel(0x00, UART_REG(uart_restart->base, MCR));
 +
 +	/* Send the command */
-+	for (i = 0; i < uart_poweroff.cmd_len; i++) {
-+		writel(uart_poweroff.cmd[i], UART_REG(uart_poweroff.base, TX));
-+		mdelay(uart_poweroff.byte_delay_ms);
++	for (i = 0; i < uart_restart->cmd_len; i++) {
++		writel(uart_restart->cmd[i], UART_REG(uart_restart->base, TX));
++		mdelay(uart_restart->byte_delay_ms);
 +	}
-+
-+	mdelay(uart_poweroff.timeout_ms);
++	mdelay(uart_restart->timeout_ms);
 +	WARN_ON(1);
++
++	return NOTIFY_DONE;
 +}
 +
-+static int uart_poweroff_probe(struct platform_device *pdev)
++static int uart_restart_probe(struct platform_device *pdev)
 +{
++	struct uart_restart *uart_restart;
 +	struct resource *res;
-+	static void __iomem *base;
++	void __iomem *base;
 +	struct clk *clk;
 +	u32 baud;
 +	bool override;
-+	char symname[KSYM_NAME_LEN];
++	int err;
 +
 +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 +	if (!res) {
@@ -150,9 +159,14 @@ index 000000000000..8122a6b306d7
 +		return PTR_ERR(clk);
 +	}
 +
-+	uart_poweroff.cmd = of_get_property(pdev->dev.of_node, "cmd",
-+						&uart_poweroff.cmd_len);
-+	if (uart_poweroff.cmd == NULL || uart_poweroff.cmd_len < 1) {
++	uart_restart = devm_kzalloc(&pdev->dev, sizeof(*uart_restart),
++			GFP_KERNEL);
++	if (!uart_restart)
++		return -ENOMEM;
++
++	uart_restart->cmd = of_get_property(pdev->dev.of_node, "cmd",
++						&uart_restart->cmd_len);
++	if (uart_restart->cmd == NULL || uart_restart->cmd_len < 1) {
 +		dev_err(&pdev->dev, "Cmd is missing or empty\n");
 +		return -EINVAL;
 +	}
@@ -163,56 +177,91 @@ index 000000000000..8122a6b306d7
 +		return -EINVAL;
 +	}
 +
-+	uart_poweroff.base = base;
-+	uart_poweroff.divisor =
++	uart_restart->restart_handler.notifier_call = uart_restart_notify;
++	uart_restart->restart_handler.priority = 129;
++	uart_restart->base = base;
++	uart_restart->divisor =
 +		((clk_get_rate(clk) + (8 * baud)) / (16 * baud));
-+	uart_poweroff.byte_delay_ms = 5;
-+	uart_poweroff.timeout_ms = 1000;
++	uart_restart->byte_delay_ms = 5;
++	uart_restart->timeout_ms = 1000;
 +	of_property_read_u32(pdev->dev.of_node, "byte-delay",
-+				&uart_poweroff.byte_delay_ms);
++				&uart_restart->byte_delay_ms);
 +	of_property_read_u32(pdev->dev.of_node, "timeout",
-+				&uart_poweroff.timeout_ms);
++				&uart_restart->timeout_ms);
 +
 +	override = of_property_read_bool(pdev->dev.of_node, "override");
 +
-+	if (pm_power_off && !override) {
-+		lookup_symbol_name((ulong)pm_power_off, symname);
++	if (override)
++		uart_restart->restart_handler.priority = 192;
++
++	platform_set_drvdata(pdev, uart_restart);
++
++#ifdef CONFIG_ARM
++	char symname[KSYM_NAME_LEN];
++
++	if (arm_pm_restart && !override) {
++		lookup_symbol_name((ulong)arm_pm_restart, symname);
 +		dev_err(&pdev->dev,
-+			"The pm_power_off is already claimed by %s (%p) and override is false",
-+			symname, pm_power_off);
++			"The arm_pm_restart is already claimed by %s (%p) and override is false",
++			symname, arm_pm_restart);
 +		return -EBUSY;
 +	}
-+	pm_power_off_org = pm_power_off;
-+	pm_power_off = uart_power_off;
++#endif
++
++	err = register_restart_handler(&uart_restart->restart_handler);
++	if (err) {
++		dev_err(&pdev->dev,
++			"Unable to register restart handler: %d\n", err);
++		return -ENODEV;
++	}
++
++#ifdef CONFIG_ARM
++	if (arm_pm_restart && override) {
++		uart_restart->pm_restart_org = arm_pm_restart;
++		arm_pm_restart = NULL;
++	}
++#endif
 +
 +	return 0;
 +}
 +
-+static int uart_poweroff_remove(struct platform_device *pdev)
++static int uart_restart_remove(struct platform_device *pdev)
 +{
-+	if (pm_power_off == uart_power_off)
-+		pm_power_off = pm_power_off_org;
++	struct uart_restart *uart_restart = platform_get_drvdata(pdev);
++	int err;
++
++	err = unregister_restart_handler(&uart_restart->restart_handler);
++	if (err) {
++		dev_err(&pdev->dev,
++			"Unable to unregister restart handler, %d\n", err);
++		return -ENODEV;
++	}
++
++#ifdef CONFIG_ARM
++	if (arm_pm_restart == NULL && uart_restart->pm_restart_org != NULL)
++		arm_pm_restart = uart_restart->pm_restart_org;
++#endif
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id of_uart_poweroff_match[] = {
-+	{ .compatible = "uart-poweroff", },
++static const struct of_device_id of_uart_restart_match[] = {
++	{ .compatible = "uart-restart", },
 +	{},
 +};
 +
-+static struct platform_driver uart_poweroff_driver = {
-+	.probe	= uart_poweroff_probe,
-+	.remove	= uart_poweroff_remove,
++static struct platform_driver uart_restart_driver = {
++	.probe	= uart_restart_probe,
++	.remove	= uart_restart_remove,
 +	.driver	= {
-+		.name	= "uart_poweroff",
-+		.of_match_table = of_uart_poweroff_match,
++		.name	= "uart_restart",
++		.of_match_table = of_uart_restart_match,
 +	},
 +};
-+module_platform_driver(uart_poweroff_driver);
++module_platform_driver(uart_restart_driver);
 +
 +MODULE_AUTHOR("Evgeny Kolesnikov <evgenyz@gmail.com>");
-+MODULE_DESCRIPTION("UART-based PM MCU power off driver");
++MODULE_DESCRIPTION("UART-based PM MCU restart driver");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.21.0
