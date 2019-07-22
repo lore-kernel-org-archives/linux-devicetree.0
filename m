@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 11/11] ARM: dts: v3s: Change the timers compatible
-Date: Mon, 22 Jul 2019 10:12:29 +0200
-Message-ID: <20190722081229.22422-11-maxime.ripard@bootlin.com>
+Subject: [PATCH 09/11] ARM: dts: a83t: Change the timers compatible
+Date: Mon, 22 Jul 2019 10:12:27 +0200
+Message-ID: <20190722081229.22422-9-maxime.ripard@bootlin.com>
 References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,32 +21,27 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Unlike the A10 that has 6 timers available, the v3s has only three, with only
-three interrupts. Let's change the compatible to reflect that, and add the
-missing interrupts.
+Unlike the A10 that has 6 timers available, the A83t has only two, with
+only two interrupts, just like the A23. Let's change the compatible to
+reflect that.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- arch/arm/boot/dts/sun8i-v3s.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
-index d7aef128acb3..1fce5b07c65c 100644
---- a/arch/arm/boot/dts/sun8i-v3s.dtsi
-+++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
-@@ -327,10 +327,11 @@
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index ada6d08bc540..b849fbfd3cbf 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -806,7 +806,7 @@
  		};
  
  		timer@1c20c00 {
 -			compatible = "allwinner,sun4i-a10-timer";
-+			compatible = "allwinner,sun8i-v3s-timer";
++			compatible = "allwinner,sun8i-a23-timer";
  			reg = <0x01c20c00 0xa0>;
  			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&osc24M>;
- 		};
- 
+ 				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.21.0
