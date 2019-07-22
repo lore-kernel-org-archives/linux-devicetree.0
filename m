@@ -1,48 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 05/10] dt-bindings: display: Add max-res property for
- mxsfb
-Date: Mon, 22 Jul 2019 11:48:53 -0600
-Message-ID: <20190722174853.GA31795@bogus>
-References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
- <1561555938-21595-6-git-send-email-robert.chiras@nxp.com>
+Subject: Re: [PATCH v2 13/19] dt-bindings: phy: Add Marvell COMPHY clocks
+Date: Mon, 22 Jul 2019 11:51:23 -0600
+Message-ID: <20190722175123.GA13655@bogus>
+References: <20190627095104.22529-1-miquel.raynal@bootlin.com>
+ <20190627122505.25774-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1561555938-21595-6-git-send-email-robert.chiras@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190627122505.25774-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 04:32:13PM +0300, Robert Chiras wrote:
-> Add new optional property 'max-res', to limit the maximum supported
-> resolution by the MXSFB_DRM driver.
-
-Bindings are for h/w description, not driver config.
-
+On Thu, 27 Jun 2019 14:24:59 +0200, Miquel Raynal wrote:
+> Marvell CP110 COMPHY block is fed by 3 clocks. Describe each of them in the
+> bindings.
 > 
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
->  Documentation/devicetree/bindings/display/mxsfb.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../devicetree/bindings/phy/phy-mvebu-comphy.txt       | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/Documentation/devicetree/bindings/display/mxsfb.txt
-> index 472e1ea..55e22ed 100644
-> --- a/Documentation/devicetree/bindings/display/mxsfb.txt
-> +++ b/Documentation/devicetree/bindings/display/mxsfb.txt
-> @@ -17,6 +17,12 @@ Required properties:
->  Required sub-nodes:
->    - port: The connection to an encoder chip.
->  
-> +Optional properties:
-> +- max-res:	an array with a maximum of two integers, representing the
-> +		maximum supported resolution, in the form of
-> +		<maxX>, <maxY>; if one of the item is <0>, the default
-> +		driver-defined maximum resolution for that axis is used
 
-I suppose what you are after is bandwidth limits? IIRC, there's already 
-some bindings expressing such limits. Also, wouldn't you need to account 
-for bpp and using the 2nd plane (IIRC that there is one).
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
