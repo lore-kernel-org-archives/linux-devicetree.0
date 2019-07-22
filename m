@@ -1,131 +1,61 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-Date: Mon, 22 Jul 2019 09:21:21 -0700
-Message-ID: <a2ecc3ad-b7e9-9398-d59b-c7d3fbbd10bb@nvidia.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
- <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
- <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
- <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/4][V3] spi: Add optional stall delay between cs_change
+ transfers
+Date: Mon, 22 Jul 2019 17:32:02 +0100
+Message-ID: <20190722163202.GG4756@sirena.org.uk>
+References: <20190722124747.4792-1-alexandru.ardelean@analog.com>
+ <20190722124747.4792-2-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="B8ONY/mu/bqBak9m"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190722124747.4792-2-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: linux-iio@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Michael Hennerich <michael.hennerich@analog.com>
 List-Id: devicetree@vger.kernel.org
 
 
-On 7/22/19 3:57 AM, Dmitry Osipenko wrote:
-> 22.07.2019 13:13, Marc Zyngier =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 22/07/2019 10:54, Dmitry Osipenko wrote:
->>> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 ent=
-ry
->>>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
->>>>
->>>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequen=
-ce
->>>> for Tegra210.
->>>>
->>>> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
->>>> interrupt controller suspend operation.
->>>>
->>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>   drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
->>>>   1 file changed, 18 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
->>>> index e1f771c72fc4..851f88cef508 100644
->>>> --- a/drivers/irqchip/irq-tegra.c
->>>> +++ b/drivers/irqchip/irq-tegra.c
->>>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
->>>>  =20
->>>>   struct tegra_ictlr_soc {
->>>>   	unsigned int num_ictlrs;
->>>> +	bool supports_sc7;
->>>>   };
->>>>  =20
->>>>   static const struct tegra_ictlr_soc tegra20_ictlr_soc =3D {
->>>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_so=
-c =3D {
->>>>  =20
->>>>   static const struct tegra_ictlr_soc tegra210_ictlr_soc =3D {
->>>>   	.num_ictlrs =3D 6,
->>>> +	.supports_sc7 =3D true,
->>>>   };
->>>>  =20
->>>>   static const struct of_device_id ictlr_matches[] =3D {
->>>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] =3D=
- {
->>>>  =20
->>>>   struct tegra_ictlr_info {
->>>>   	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
->>>> +	const struct tegra_ictlr_soc *soc;
->>>>   #ifdef CONFIG_PM_SLEEP
->>>>   	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
->>>>   	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
->>>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
->>>>   		lic->cop_ier[i] =3D readl_relaxed(ictlr + ICTLR_COP_IER);
->>>>   		lic->cop_iep[i] =3D readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
->>>>  =20
->>>> -		/* Disable COP interrupts */
->>>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
->>>> +		/*
->>>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
->>>> +		 *
->>>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
->>>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
->>>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
->>>> +		 * system to go to SC7/LP0.
->>>> +		 *
->>>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
->>>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
->>>> +		 */
->>>> +		if (!lic->soc->supports_sc7)
->>>> +			/* Disable COP interrupts if SC7 is not supported */
->>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
->>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
->>> better here.
->> If what you're saying is true, then the whole patch is wrong, and the
->> SC7 property should come from DT.
-> It should be safe to assume that all of existing Tegra210 devices use
-> the firmware for SC7, hence I wouldn't say that the patch is entirely
-> wrong. To me it's not entirely correct.
+--B8ONY/mu/bqBak9m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yes, all existing Tegra210 platforms uses sc7 entry firmware for SC7 and=20
-AVP/COP IRQ need to be kept enabled as during suspend ATF triggers IRQ=20
-to COP for SC7 entry fw execution.
+On Mon, Jul 22, 2019 at 03:47:44PM +0300, Alexandru Ardelean wrote:
+> Some devices like the ADIS16460 IMU require a longer period between
+> transfers, i.e. between when the CS is de-asserted and re-asserted. The
+> default value of 10us is not enough. This change makes the delay
+> configurable for when the next CS change goes active, allowing the default
+> to remain 10us is case it is unspecified.
 
+For the third time:
 
->>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
->>> Secondly, I'm also not sure why COP interrupts need to be disabled for
->>> pre-T210 at all, since COP is unused. This looks to me like it was
->>> cut-n-pasted from downstream kernel without a good reason and could be
->>> simply removed.
->> Please verify that this is actually the case. Tegra-2 definitely needed
->> some level of poking, and I'm not keen on changing anything there until
->> you (or someone else) has verified it on actual HW (see e307cc8941fc).
-> Tested on Tegra20 and Tegra30, LP1 suspend-resume works perfectly fine
-> with all COP bits removed from the driver.
->
-> AFAIK, the reason why downstream needed that disabling is that it uses
-> proprietary firmware which is running on the COP and that firmware is
-> usually a BLOB audio/video DEC-ENC driver which doesn't cleanup
-> interrupts after itself. That firmware is not applicable for the
-> upstream kernel, hence there is no need to care about it.
->
->> Joseph, can you please shed some light here?
+| This looks like cs_change_delay.
 
-SC7 entry flow uses 3rd party ATF (arm-trusted FW) blob which is the one th=
-at actually loads SC7 entry firmware and triggers IRQ to AVP/COP which caus=
-es COP to wakeup and run SC7 entry FW.
+>  #define	SPI_NBITS_QUAD		0x04 /* 4bits transfer */
+>  	u8		bits_per_word;
+>  	u8		word_delay_usecs;
+> +	u8		cs_change_delay;
+>  	u16		delay_usecs;
+>  	u32		speed_hz;
+>  	u16		word_delay;
 
-So when SC7 support is enabled, IRQ need to be kept enabled and when SC7 FW=
- starts execution, it will disable COP IRQ.
+This patch doesn't apply and even if it did it won't compile because you
+are trying to add a field with the same name as an existing one.
+
+--B8ONY/mu/bqBak9m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl015QIACgkQJNaLcl1U
+h9D5fwf/Wo4+Hmy98fxnDeg7DpbiGSC8Ran91cmRVruDQ85ReTVXSyjGLF7QuDPU
+h5eXuOE2jwzrDrqVmX1CK8kXQCF5k9I9SiLWZZlPBxVAFGQmOBufa2voUWHN3zr7
+lhESGw8Ayl7JzHYF6KRvtGSIFq5vJ2fhLLFH+lDZ0ewq7A92U99OqyjaZD0gZCo7
+Nb3YJ2wASgP37haiibEHvpddA585QtGgcCjqdxybeoIxAqkez/2RTijc3DBRcXeb
+VsseUyF20RRXnICBpBgUnonhzzwN7jwf1VIOM4aKGiWIIXGRqiKO3OD9akqXodSG
+owJ6FsifVUS4oEXPHb76eFpu1x5A0g==
+=+XeL
+-----END PGP SIGNATURE-----
+
+--B8ONY/mu/bqBak9m--
