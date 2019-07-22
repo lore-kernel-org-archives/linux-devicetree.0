@@ -1,215 +1,67 @@
-From: Michael Nazzareno Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum
- rate for PLL_MIPI
-Date: Mon, 22 Jul 2019 12:25:03 +0200
-Message-ID: <CAOf5uw=5j+8XNv_ZBhY0yrnjjNnaV_w=a4oiV11LoksAfEY7AA@mail.gmail.com>
-References: <20190614142406.ybdiqfppo5mc5bgq@flea> <CAMty3ZB45cHx3WeXnywBh2_UA_bTmFs6yBTqLWA1BNf4fQtVvQ@mail.gmail.com>
- <20190625144930.5hegt6bkzqzykjid@flea> <CAMty3ZCmj0Rz7MMhLqihsvLQi+1CHf0fAoJQ4QN65xB-bwxaJw@mail.gmail.com>
- <20190703114933.u3x4ej3v7ocewvif@flea> <CAOf5uw=ZEvMV1hFQE986rNG_ctpReGbjbZzv0m=OzKPdBh57uQ@mail.gmail.com>
- <20190711100100.cty3s6rs3w27low6@flea> <CAOf5uw=3fiMuhcj3kDtCaGNTsxHKRrYb79MXZ+yUZtmf0jU10A@mail.gmail.com>
- <20190720065830.zn3txpyduakywcva@flea> <CAMty3ZDE1xiNgHVLihH378dY5szzkr14V-fwLZdvPs12tY+G1A@mail.gmail.com>
- <20190720093202.6fn6xmhvsgawscnu@flea> <CAMty3ZDpOA1mD77t3RB6hEG7o3+ws8y64m1DU8=3HdZ4zy4AUw@mail.gmail.com>
-Reply-To: michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCXK73FY3AFRBDE623UQKGQEKLPJU7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAMty3ZDpOA1mD77t3RB6hEG7o3+ws8y64m1DU8=3HdZ4zy4AUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: andradanciu1997 <andradanciu1997@gmail.com>
+Subject: [PATCH v6 0/2] Add basic support for pico-pi-imx8m
+Date: Mon, 22 Jul 2019 13:27:28 +0300
+Message-ID: <20190722102730.15763-1-andradanciu1997@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com, Michal.Vokac@ysoft.com, ping.bai@nxp.com, u.kleine-koenig@pengutronix.de, leoyang.li@nxp.com, aisheng.dong@nxp.com, l.stach@pengutronix.de, pankaj.bansal@nxp.com, angus@akkea.ca, pramod.kumar_1@nxp.com, bhaskar.upadhaya@nxp.com, vabhav.sharma@nxp.com, andradanciu1997@gmail.com, richard.hu@technexion.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jagan
+Add support for TechNexion PICO-PI-IMX8M based on patches from Richard Hu
+Datasheet is at: https://s3.us-east-2.amazonaws.com/technexion/datasheets/picopiimx8m.pdf
 
-On Mon, Jul 22, 2019 at 12:21 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
->
-> Hi Maxime,
->
-> On Sat, Jul 20, 2019 at 3:02 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Sat, Jul 20, 2019 at 12:46:27PM +0530, Jagan Teki wrote:
-> > > On Sat, Jul 20, 2019 at 12:28 PM Maxime Ripard
-> > > <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > >
-> > > > On Thu, Jul 11, 2019 at 07:43:16PM +0200, Michael Nazzareno Trimarchi wrote:
-> > > > > > > tcon-pixel clock is the rate that you want to achive on display side
-> > > > > > > and if you have 4 lanes 32bit or lanes and different bit number that
-> > > > > > > you need to have a clock that is able to put outside bits and speed
-> > > > > > > equal to pixel-clock * bits / lanes. so If you want a pixel-clock of
-> > > > > > > 40 mhz and you have 32bits and 4 lanes you need to have a clock of
-> > > > > > > 40 * 32 / 4 in no-burst mode. I think that this is done but most of
-> > > > > > > the display.
-> > > > > >
-> > > > > > So this is what the issue is then?
-> > > > > >
-> > > > > > This one does make sense, and you should just change the rate in the
-> > > > > > call to clk_set_rate in sun4i_tcon0_mode_set_cpu.
-> > > > > >
-> > > > > > I'm still wondering why that hasn't been brought up in either the
-> > > > > > discussion or the commit log before though.
-> > > > > >
-> > > > > Something like this?
-> > > > >
-> > > > > drivers/gpu/drm/sun4i/sun4i_tcon.c     | 20 +++++++++++---------
-> > > > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  2 --
-> > > > >  2 files changed, 11 insertions(+), 11 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > > b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > > index 64c43ee6bd92..42560d5c327c 100644
-> > > > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > > @@ -263,10 +263,11 @@ static int sun4i_tcon_get_clk_delay(const struct
-> > > > > drm_display_mode *mode,
-> > > > >  }
-> > > > >
-> > > > >  static void sun4i_tcon0_mode_set_common(struct sun4i_tcon *tcon,
-> > > > > -                                       const struct drm_display_mode *mode)
-> > > > > +                                       const struct drm_display_mode *mode,
-> > > > > +                                       u32 tcon_mul)
-> > > > >  {
-> > > > >         /* Configure the dot clock */
-> > > > > -       clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
-> > > > > +       clk_set_rate(tcon->dclk, mode->crtc_clock * tcon_mul * 1000);
-> > > > >
-> > > > >         /* Set the resolution */
-> > > > >         regmap_write(tcon->regs, SUN4I_TCON0_BASIC0_REG,
-> > > > > @@ -335,12 +336,13 @@ static void sun4i_tcon0_mode_set_cpu(struct
-> > > > > sun4i_tcon *tcon,
-> > > > >         u8 bpp = mipi_dsi_pixel_format_to_bpp(device->format);
-> > > > >         u8 lanes = device->lanes;
-> > > > >         u32 block_space, start_delay;
-> > > > > -       u32 tcon_div;
-> > > > > +       u32 tcon_div, tcon_mul;
-> > > > >
-> > > > > -       tcon->dclk_min_div = SUN6I_DSI_TCON_DIV;
-> > > > > -       tcon->dclk_max_div = SUN6I_DSI_TCON_DIV;
-> > > > > +       tcon->dclk_min_div = 4;
-> > > > > +       tcon->dclk_max_div = 127;
-> > > > >
-> > > > > -       sun4i_tcon0_mode_set_common(tcon, mode);
-> > > > > +       tcon_mul = bpp / lanes;
-> > > > > +       sun4i_tcon0_mode_set_common(tcon, mode, tcon_mul);
-> > > > >
-> > > > >         /* Set dithering if needed */
-> > > > >         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
-> > > > > @@ -366,7 +368,7 @@ static void sun4i_tcon0_mode_set_cpu(struct
-> > > > > sun4i_tcon *tcon,
-> > > > >          */
-> > > > >         regmap_read(tcon->regs, SUN4I_TCON0_DCLK_REG, &tcon_div);
-> > > > >         tcon_div &= GENMASK(6, 0);
-> > > > > -       block_space = mode->htotal * bpp / (tcon_div * lanes);
-> > > > > +       block_space = mode->htotal * tcon_div * tcon_mul;
-> > > > >         block_space -= mode->hdisplay + 40;
-> > > > >
-> > > > >         regmap_write(tcon->regs, SUN4I_TCON0_CPU_TRI0_REG,
-> > > > > @@ -408,7 +410,7 @@ static void sun4i_tcon0_mode_set_lvds(struct
-> > > > > sun4i_tcon *tcon,
-> > > > >
-> > > > >         tcon->dclk_min_div = 7;
-> > > > >         tcon->dclk_max_div = 7;
-> > > > > -       sun4i_tcon0_mode_set_common(tcon, mode);
-> > > > > +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
-> > > > >
-> > > > >         /* Set dithering if needed */
-> > > > >         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
-> > > > > @@ -487,7 +489,7 @@ static void sun4i_tcon0_mode_set_rgb(struct
-> > > > > sun4i_tcon *tcon,
-> > > > >
-> > > > >         tcon->dclk_min_div = 6;
-> > > > >         tcon->dclk_max_div = 127;
-> > > > > -       sun4i_tcon0_mode_set_common(tcon, mode);
-> > > > > +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
-> > > > >
-> > > > >         /* Set dithering if needed */
-> > > > >         sun4i_tcon0_mode_set_dithering(tcon, connector);
-> > > > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > > > b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > > > index 5c3ad5be0690..a07090579f84 100644
-> > > > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > > > @@ -13,8 +13,6 @@
-> > > > >  #include <drm/drm_encoder.h>
-> > > > >  #include <drm/drm_mipi_dsi.h>
-> > > > >
-> > > > > -#define SUN6I_DSI_TCON_DIV     4
-> > > > > -
-> > > > >  struct sun6i_dsi {
-> > > > >         struct drm_connector    connector;
-> > > > >         struct drm_encoder      encoder;
-> > > >
-> > > > I had more something like this in mind:
-> > > > http://code.bulix.org/nlp5a4-803511
-> > >
-> > > Worth to look at it. was it working on your panel? meanwhile I will check it.
-> >
-> > I haven't tested it.
-> >
-> > > We have updated with below change [1], seems working on but is
-> > > actually checking the each divider as before start with 4... till 127.
-> > >
-> > > This new approach, is start looking the best divider from 4.. based on
-> > > the idea vs rounded it will ended up best divider like [2]
-> >
-> > But why?
-> >
-> > I mean, it's not like it's the first time I'm asking this...
-> >
-> > If the issue is what Micheal described, then the divider has nothing
-> > to do with it. We've had that discussion over and over again.
->
-> This is what Michael is mentioned in above mail
-> "tcon-pixel clock is the rate that you want to achive on display side and
-> if you have 4 lanes 32bit or lanes and different bit number that you need
-> to have a clock that is able to put outside bits and speed equal to
-> pixel-clock * bits / lanes. so If you want a pixel-clock of 40 mhz
-> and you have 32bits and 4 lanes you need to have a clock of
-> 40 * 32 / 4 in no-burst mode. "
->
-> He is trying to manage the bpp/lanes into dclk_mul (in last mail) and
-> it can multiply with pixel clock which is rate argument in
-> sun4i_dclk_round_rate.
->
-> The solution I have mentioned in dclk_min, max is bpp/lanes also
-> multiple rate in dotclock sun4i_dclk_round_rate.
->
-> In both cases the overall pll_rate depends on dividers, the one that I
-> have on this patch is based on BSP and the Michael one is more generic
-> way so-that it can not to touch other functionalities and looping
-> dividers to find the best one.
->
-> If dclk_min/max is bpp/lanes then dotclock directly using divider 6
-> (assuming 24-bit and 4 lanes) and return the pll_rate and divider 6
-> associated.
->
-> if dclk_mul is bpp/lanes, on Michael new change, the dividers start
-> with 4 and end with 127 but the constant ideal rate which rate *
-> bpp/lanes but the loop from sun4i_dclk_round_rate computed the divider
-> as 6 only, ie what I'm mentioned on the above mail.
->
+Changes since v5:
+ - removed comment /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
+ - added "Reviewed-by" tags
 
-tcon-pixel clock and tcon are mutual connected. The code is done in a way
-that optimal clock need to be search. Now the patch that I propose is more
-connected to the description I gave.
+Changes since v4:
+ - removed #address-cells and  #size-cells from regulators node
 
-I need some comment from Maxime, what he prefers or we need to search for
-a different one. I don't had time to check Maxime proposal because I'm working
-on other projects.
+Changes since v3:
+ - renamed pico-pi-8m.dts to imx8mq-pico-pi.dts
+ - moved iomuxc node as the last one
+ - removed pinctrl-assert-gpios property from fec1 node
+ - removed at803x,led-act-blind-workaround, at803x,eee-disabled
+   properties from mdio node
+ - added pinctrl-names = "default" to i2c1 node
+ - changed bd71837 pmic support properties according to
+   Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+ - removed A53_0 node
 
-Michael
+Changes since v2:
+ - changed PICO-PI-8M bord compatible from wand,imx8mq-pico-pi to
+   technexion,pico-pi-imx8m
+ - removed bootargs property
+ - removed regulators node and put fixed regulator directly under root node
+ - changed node name from usb_otg_vbus to regulator-usb-otg-vbus
+ - removed pinctrl-names property from iomuxc node
+ - removed wand-pi-8m container node
+ - sorted pinctrl nodes alphabetically
+ - removed tusb320_irqgrp, tusb320_irqgrp nodes because there is no upstream
+   driver
+ - changed properties' order in usb_dwc3_1 node
 
-> Jagan.
+Changes since v1:
+ - renamed wandboard-pi-8m.dts to pico-pi-8m.dts
+ - removed pinctrl_csi1, pinctrl_wifi_ctrl
+ - used generic name for pmic
+ - removed gpo node
+ - delete regulator-virtuals node
+ - remove always-on property from buck1-8 and ldo3-7
+ - remove pmic-buck-uses-i2c-dvs property for buck1-4
 
+Andra Danciu (1):
+  dt-bindings: arm: fsl: Add the pico-pi-imx8m board
 
+Richard Hu (1):
+  arm64: dts: fsl: pico-pi: Add a device tree for the PICO-PI-IMX8M
+
+ Documentation/devicetree/bindings/arm/fsl.yaml   |   1 +
+ arch/arm64/boot/dts/freescale/Makefile           |   1 +
+ arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts | 413 +++++++++++++++++++++++
+ 3 files changed, 415 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
 
 -- 
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-| COO  -  Founder                                      Cruquiuskade 47 |
-| +31(0)851119172                                 Amsterdam 1018 AM NL |
-|                  [`as] http://www.amarulasolutions.com               |
+2.11.0
