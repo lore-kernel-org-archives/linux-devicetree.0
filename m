@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 03/11] clocksource: sun4i: Add missing compatibles
-Date: Mon, 22 Jul 2019 10:12:21 +0200
-Message-ID: <20190722081229.22422-3-maxime.ripard@bootlin.com>
+Subject: [PATCH 05/11] ARM: dts: sun4i: Add missing timers interrupts
+Date: Mon, 22 Jul 2019 10:12:23 +0200
+Message-ID: <20190722081229.22422-5-maxime.ripard@bootlin.com>
 References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,27 +21,30 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Newer Allwinner SoCs have different number of interrupts, let's add
-different compatibles for all of them to deal with this properly.
+The timer unit in the A10 has 6 interrupts available. List all of them.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/clocksource/timer-sun4i.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/sun4i-a10.dtsi | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/timer-sun4i.c b/drivers/clocksource/timer-sun4i.c
-index 65f38f6ca714..0ba8155b8287 100644
---- a/drivers/clocksource/timer-sun4i.c
-+++ b/drivers/clocksource/timer-sun4i.c
-@@ -219,5 +219,9 @@ static int __init sun4i_timer_init(struct device_node *node)
- }
- TIMER_OF_DECLARE(sun4i, "allwinner,sun4i-a10-timer",
- 		       sun4i_timer_init);
-+TIMER_OF_DECLARE(sun8i_a23, "allwinner,sun8i-a23-timer",
-+		 sun4i_timer_init);
-+TIMER_OF_DECLARE(sun8i_v3s, "allwinner,sun8i-v3s-timer",
-+		 sun4i_timer_init);
- TIMER_OF_DECLARE(suniv, "allwinner,suniv-f1c100s-timer",
- 		       sun4i_timer_init);
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index e88daa4ef1af..077d45c7db6f 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -803,7 +803,12 @@
+ 		timer@1c20c00 {
+ 			compatible = "allwinner,sun4i-a10-timer";
+ 			reg = <0x01c20c00 0x90>;
+-			interrupts = <22>;
++			interrupts = <22>,
++				     <23>,
++				     <24>,
++				     <25>,
++				     <67>,
++				     <68>;
+ 			clocks = <&osc24M>;
+ 		};
+ 
 -- 
 2.21.0
