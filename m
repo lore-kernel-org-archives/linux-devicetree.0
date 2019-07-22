@@ -1,33 +1,93 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: fsl: pico-pi: Add a device tree for the
- PICO-PI-IMX8M
-Date: Mon, 22 Jul 2019 10:03:46 +0800
-Message-ID: <20190722020345.GR3738@dragon>
-References: <20190625123407.15888-1-andradanciu1997@gmail.com>
- <20190718035523.GD11324@X250>
- <CAJNLGszB239AHpD+kRCPRWZaToTYHiq5YUHRjfRwTqknwHMdMA@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 1/4] arm64: Enable TIMER_IMX_SYS_CTR for ARCH_MXC platforms
+Date: Mon, 22 Jul 2019 02:15:10 +0000
+Message-ID: <AM6PR0402MB39113A76EE8A63F9C9F589C1F5C40@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+References: <20190621070720.12395-1-Anson.Huang@nxp.com>
+ <20190624022200.GN3800@dragon> <20190624022713.GO3800@dragon>
+ <DB3PR0402MB39162662C69B45BDB948D002F5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190722020026.GQ3738@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJNLGszB239AHpD+kRCPRWZaToTYHiq5YUHRjfRwTqknwHMdMA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andra Danciu <andradanciu1997@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com, Fabio Estevam <festevam@gmail.com>, aisheng.dong@nxp.com, l.stach@pengutronix.de, angus@akkea.ca, vabhav.sharma@nxp.com, pankaj.bansal@nxp.com, bhaskar.upadhaya@nxp.com, ping.bai@nxp.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Richard Hu <richard.hu@technexion.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, matti.vaittinen@fi.rohmeurope.com, linux-imx@nxp.com, Daniel Baluta <daniel.baluta@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190722020026.GQ3738@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "will@kernel.org" <will@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.or>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 02:12:10PM +0300, Andra Danciu wrote:
-...
-> > > +     pmic: pmic@4b {
-> > > +             reg = <0x4b>;
-> > > +             compatible = "rohm,bd71837";
-> > > +             /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-> > > +             pinctrl-0 = <&pinctrl_pmic>;
-> > > +             gpio_intr = <&gpio1 3 GPIO_ACTIVE_LOW>;
+Hi, Shawn
+
+> On Mon, Jun 24, 2019 at 02:35:10AM +0000, Anson Huang wrote:
+> > Hi, Shawn
 > >
-> > Where is the bindings for this property?
-> Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+> > > -----Original Message-----
+> > > From: Shawn Guo <shawnguo@kernel.org>
+> > > Sent: Monday, June 24, 2019 10:27 AM
+> > > To: Anson Huang <anson.huang@nxp.com>
+> > > Cc: mark.rutland@arm.com; Aisheng Dong <aisheng.dong@nxp.com>;
+> Peng
+> > > Fan <peng.fan@nxp.com>; festevam@gmail.com; Jacky Bai
+> > > <ping.bai@nxp.com>; devicetree@vger.kernel.org; sboyd@kernel.org;
+> > > catalin.marinas@arm.com; s.hauer@pengutronix.de; linux-
+> > > kernel@vger.kernel.org; Daniel Baluta <daniel.baluta@nxp.com>;
+> > > linux- clk@vger.kernel.org; robh+dt@kernel.org; dl-linux-imx <linux-
+> > > imx@nxp.com>; kernel@pengutronix.de; Leonard Crestez
+> > > <leonard.crestez@nxp.com>; will@kernel.org; mturquette@baylibre.com;
+> > > linux-arm-kernel@lists.infradead.org; Abel Vesa <abel.vesa@nxp.com>
+> > > Subject: Re: [PATCH 1/4] arm64: Enable TIMER_IMX_SYS_CTR for
+> > > ARCH_MXC platforms
+> > >
+> > > On Mon, Jun 24, 2019 at 10:22:01AM +0800, Shawn Guo wrote:
+> > > > On Fri, Jun 21, 2019 at 03:07:17PM +0800, Anson.Huang@nxp.com
+> wrote:
+> > > > > From: Anson Huang <Anson.Huang@nxp.com>
+> > > > >
+> > > > > ARCH_MXC platforms needs system counter as broadcast timer to
+> > > > > support cpuidle, enable it by default.
+> > > > >
+> > > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > > > ---
+> > > > >  arch/arm64/Kconfig.platforms | 1 +
+> > > > >  1 file changed, 1 insertion(+)
+> > > > >
+> > > > > diff --git a/arch/arm64/Kconfig.platforms
+> > > > > b/arch/arm64/Kconfig.platforms index 4778c77..f5e623f 100644
+> > > > > --- a/arch/arm64/Kconfig.platforms
+> > > > > +++ b/arch/arm64/Kconfig.platforms
+> > > > > @@ -173,6 +173,7 @@ config ARCH_MXC
+> > > > >  	select PM
+> > > > >  	select PM_GENERIC_DOMAINS
+> > > > >  	select SOC_BUS
+> > > > > +	select TIMER_IMX_SYS_CTR
+> > > >
+> > > > Where is that driver?
+> > >
+> > > Okay, just found it in the mailbox.  They seem to be sent in the wrong
+> order.
+> > > Really, you should send this series only after the driver lands on mainline.
+> >
+> > OK, just noticed that mainline does NOT have it, since I did it based on next
+> tree.
+> > I will resend the patch series after the system counter driver landing on
+> mainline.
+> 
+> I just picked the series up, so no need to resend.
 
-I do not see property 'gpio_intr' in there.
+Something changed for this series, the system counter clock related implementation
+are changed after some comments from maintainer, so I think you should picked up
+below patch series instead, and drop this series,
 
-Shawn
+https://patchwork.kernel.org/patch/11037953/
+
+thanks,
+Anson
