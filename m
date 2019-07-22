@@ -1,48 +1,53 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
- configure LED mode
-Date: Mon, 22 Jul 2019 21:01:33 +0200
-Message-ID: <20190722190133.GF8972@lunn.ch>
-References: <20190703193724.246854-1-mka@chromium.org>
- <20190703193724.246854-6-mka@chromium.org>
- <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
- <20190703232331.GL250418@google.com>
- <CAL_JsqL_AU+JV0c2mNbXiPh2pvfYbPbLV-2PHHX0hC3vUH4QWg@mail.gmail.com>
- <20190722171418.GV250418@google.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH 2/2] arm64: dts: ti: k3-j721e-main: Add hwspinlock node
+Date: Mon, 22 Jul 2019 14:05:39 -0500
+Message-ID: <20190722190539.27816-3-s-anna@ti.com>
+References: <20190722190539.27816-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190722171418.GV250418@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190722190539.27816-1-s-anna@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 10:14:18AM -0700, Matthias Kaehlcke wrote:
-> I'm working on a generic binding.
-> 
-> I wonder what is the best process for reviewing/landing it, I'm
-> doubting between two options:
-> 
-> a) only post the binding doc and the generic PHY code that reads
->    the configuration from the DT. Post Realtek patches once
->    the binding/generic code has been acked.
-> 
->    pros: no churn from Realtek specific patches
->    cons: initially no (real) user of the new binding
-> 
-> b) post generic and Realtek changes together
-> 
->    pros: the binding has a user initially
->    cons: churn from Realtek specific patches
-> 
-> I can do either, depending on what maintainers/reviewers prefer. I'm
-> slightly inclined towards a)
+The Main NavSS block on J721E SoCs contains a HwSpinlock IP instance that
+is same as the IP on AM65x SoCs and similar to the IP on some OMAP SoCs.
+Add the DT node for this on J721E SoCs. The node is present within the
+Main NavSS block, and is added as a child node under the cbass_main_navss
+interconnect node.
 
-Hi Matthias
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-It is normal to include one user of any generic API which is added,
-just to make is clear how an API should be used.
-
-     Andrew
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+index a01308142f77..a2e031f7d88e 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+@@ -89,6 +89,12 @@
+ 			ti,sci-rm-range-vint = <0xa>;
+ 			ti,sci-rm-range-global-event = <0xd>;
+ 		};
++
++		hwspinlock: spinlock@30e00000 {
++			compatible = "ti,am654-hwspinlock";
++			reg = <0x00 0x30e00000 0x00 0x1000>;
++			#hwlock-cells = <1>;
++		};
+ 	};
+ 
+ 	secure_proxy_main: mailbox@32c00000 {
+-- 
+2.22.0
