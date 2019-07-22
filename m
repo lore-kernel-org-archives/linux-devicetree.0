@@ -1,90 +1,119 @@
-From: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: Re: [RFC v2] DT-based tuner/demod init
-Date: Mon, 22 Jul 2019 12:54:40 +0200
-Message-ID: <7c7f05bc-26e6-7671-a5e2-265775744096@free.fr>
-References: <6d38f9b1-a8cd-803d-b330-f92f7bcf08ca@free.fr>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
+ suspend
+Date: Mon, 22 Jul 2019 13:57:28 +0300
+Message-ID: <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+ <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+ <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6d38f9b1-a8cd-803d-b330-f92f7bcf08ca@free.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-media <linux-media@vger.kernel.org>, I2C <linux-i2c@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
-Cc: DT <devicetree@vger.kernel.org>, Peter Korsgaard <peter@korsgaard.com>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Brad Love <brad@nextdimension.cc>, =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, Antti Palosaari <crope@iki.fi>, Peter Rosin <peda@axentia.se>, Simon Horman <horms+renesas@verge.net.au>, Mauro Carvalho Chehab <mchehab@kernel.org>, Olli Salonen <olli.salonen@iki.fi>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEvMDcvMjAxOSAxODoyMSwgTWFyYyBHb256YWxleiB3cm90ZToKCj4gVGhpcyBpcyBhIGZv
-bGxvdy11cCBSRkMgdG8gbXkgZmlyc3QgcmVxdWVzdCBmb3IgY29tbWVudHM6Cj4gIltSRkNdIFNX
-IGNvbm5lY3Rpb24gYmV0d2VlbiBEVkIgVHJhbnNwb3J0IFN0cmVhbSBkZW11eGVyIGFuZCBJMkMt
-YmFzZWQgZnJvbnRlbmQiCj4gaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5l
-bC9tc2c3Mzk5NzIuaHRtbAo+IAo+IEJhY2tncm91bmQ6IG15IFNvQyBwcm92aWRlcyBhICJUcmFu
-c3BvcnQgU3RyZWFtIEludGVyZmFjZSIgb24tY2hpcAo+IChmb3Igd2hpY2ggSSB3cm90ZSBhIHNt
-YWxsIGRyaXZlciwgdHNpZi5jKSBhcyB3ZWxsIGFzIGEgdHVuZXIvZGVtb2QgY29tYm8KPiAoc2ky
-MTQxL3NpMjE2OCkgb24gdGhlIGJvYXJkLgo+IAo+IE15IG9yaWdpbmFsIGdvYWwgd2FzOiBiZWlu
-ZyBhYmxlIHRvIGxpbmsgdGhlIHR1bmVyL2RlbW9kIGZyb20gdGhlIGRldmljZSB0cmVlLAo+IGlu
-c3RlYWQgb2YgaGFyZC1jb2RpbmcgdGhlbSBpbiB0aGUgVFNJRiBkcml2ZXIuCj4gCj4gKFBsZWFz
-ZSBzZWUgdGhlIHJlc3VsdGluZyBjb2RlIGF0IHRoZSBlbmQgb2YgdGhpcyBtZXNzYWdlKQoKQmVs
-b3cgaXMgYW4gYW5hbHlzaXMgb2YgdGhlIHByb3Bvc2VkIGRyaXZlciwgYWZ0ZXIgYSBmZXcgZXhj
-aGFuZ2VzIHdpdGggTWF1cm8Kb24gSVJDLgoKCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEv
-cGxhdGZvcm0vdHNpZi5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS90c2lmLmMKPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYjEzNmYzMzRlOWM2Cj4gLS0tIC9k
-ZXYvbnVsbAo+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdHNpZi5jCj4gQEAgLTAsMCAr
-MSwxODUgQEAKPiArI2luY2x1ZGUgPGxpbnV4L2Nsay5oPgo+ICsjaW5jbHVkZSA8bGludXgvaW50
-ZXJydXB0Lmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KPiArI2luY2x1
-ZGUgPG1lZGlhL2R2Yl9mcm9udGVuZC5oPgo+ICsjaW5jbHVkZSA8bWVkaWEvZHZiX2RlbXV4Lmg+
-Cj4gKyNpbmNsdWRlIDxtZWRpYS9kbXhkZXYuaD4KPiArCj4gKy8qIFRTSUYgcmVnaXN0ZXIgb2Zm
-c2V0cyAqLwo+ICsjZGVmaW5lIFRTSUZfU1RTX0NUTAkweDAJLyogc3RhdHVzIGFuZCBjb250cm9s
-ICovCj4gKyNkZWZpbmUgVFNJRl9EQVRBX1BPUlQJMHgxMDAKPiArCj4gKy8qIFRTSUZfU1RTX0NU
-TCBiaXRzICovCj4gKyNkZWZpbmUgRU5BQkxFX0lSUQlCSVQoMjgpCj4gKyNkZWZpbmUgVFNJRl9T
-VE9QCUJJVCgzKQo+ICsjZGVmaW5lIFRTSUZfU1RBUlQJQklUKDApCj4gKwo+ICtzdHJ1Y3QgdHNp
-ZiB7Cj4gKwl2b2lkIF9faW9tZW0gKmJhc2U7Cj4gKwlzdHJ1Y3QgY2xrICpjbGs7Cj4gKwlpbnQg
-cmVmX2NvdW50OyAvKioqIFRPRE86IHVzZSBhdG9taWNfdCA/Pz8gb3IgcmVmY291bnRfdCA/Pz8g
-b3Iga3JlZiA/Pz8gKioqLwo+ICsJdTMyIGJ1Zls0OF07Cj4gKwlzdHJ1Y3QgZHZiX2Zyb250ZW5k
-ICpmZTsKPiArCS8qKiogRE8gSSBORUVEIEFMTCA0ICoqKi8KPiArCS8vc3RydWN0IGRteF9mcm9u
-dGVuZCBkbXhfZnJvbnRlbmQ7Cj4gKwlzdHJ1Y3QgZHZiX2FkYXB0ZXIgZHZiX2FkYXB0ZXI7Cj4g
-KwlzdHJ1Y3QgZHZiX2RlbXV4IGR2Yl9kZW11eDsKPiArCXN0cnVjdCBkbXhkZXYgZG14ZGV2Owo+
-ICt9Owo+ICsKPiArc3RhdGljIGludCBzdGFydF90c2lmKHN0cnVjdCBkdmJfZGVtdXhfZmVlZCAq
-ZmVlZCkKPiArewo+ICsJc3RydWN0IHRzaWYgKnRzaWYgPSBmZWVkLT5kZW11eC0+cHJpdjsKPiAr
-CXByaW50aygiJXM6IGZlZWQgUElEPSV1XG4iLCBfX2Z1bmNfXywgZmVlZC0+cGlkKTsKPiArCj4g
-KwlpZiAodHNpZi0+cmVmX2NvdW50KysgPT0gMCkgewo+ICsJCXUzMiB2YWwgPSBUU0lGX1NUQVJU
-IHwgRU5BQkxFX0lSUSB8IEJJVCgyOSk7Cj4gKwkJd3JpdGVsX3JlbGF4ZWQodmFsLCB0c2lmLT5i
-YXNlICsgVFNJRl9TVFNfQ1RMKTsKPiArCX0KPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiAr
-c3RhdGljIGludCBzdG9wX3RzaWYoc3RydWN0IGR2Yl9kZW11eF9mZWVkICpmZWVkKQo+ICt7Cj4g
-KwlzdHJ1Y3QgdHNpZiAqdHNpZiA9IGZlZWQtPmRlbXV4LT5wcml2Owo+ICsJcHJpbnRrKCIlczog
-ZmVlZCBQSUQ9JXVcbiIsIF9fZnVuY19fLCBmZWVkLT5waWQpOwo+ICsKPiArCWlmICgtLXRzaWYt
-PnJlZl9jb3VudCA9PSAwKSB7Cj4gKwkJd3JpdGVsX3JlbGF4ZWQoVFNJRl9TVE9QLCB0c2lmLT5i
-YXNlICsgVFNJRl9TVFNfQ1RMKTsKPiArCX0KPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiAr
-c3RhdGljIGlycXJldHVybl90IHRzaWZfaXNyKGludCBpcnEsIHZvaWQgKmFyZykKPiArewo+ICsJ
-aW50IGk7Cj4gKwl1MzIgc3RhdHVzOwo+ICsJc3RydWN0IHRzaWYgKnRzaWYgPSBhcmc7Cj4gKwo+
-ICsJc3RhdHVzID0gcmVhZGxfcmVsYXhlZCh0c2lmLT5iYXNlICsgVFNJRl9TVFNfQ1RMKTsKPiAr
-CXdyaXRlbF9yZWxheGVkKHN0YXR1cywgdHNpZi0+YmFzZSArIFRTSUZfU1RTX0NUTCk7Cj4gKwo+
-ICsJZm9yIChpID0gMDsgaSA8IDQ4OyArK2kpCj4gKwkJdHNpZi0+YnVmW2ldID0gcmVhZGxfcmVs
-YXhlZCh0c2lmLT5iYXNlICsgVFNJRl9EQVRBX1BPUlQpOwo+ICsKPiArCWR2Yl9kbXhfc3dmaWx0
-ZXJfcGFja2V0cygmdHNpZi0+ZHZiX2RlbXV4LCAodm9pZCAqKXRzaWYtPmJ1ZiwgMSk7Cj4gKwo+
-ICsJcmV0dXJuIElSUV9IQU5ETEVEOwo+ICt9CgpXaGF0IG1heSBub3QgYmUgYXBwYXJlbnQgaGVy
-ZSBpcyB0aGF0IChpbiB0aGlzIG1vZGUpIHRoZSBIVyBnZW5lcmF0ZXMKb25lIGludGVycnVwdCBm
-b3IgKmV2ZXJ5KiAqc2luZ2xlKiBUUyBwYWNrZXQgKGkuZS4gMTUwNCBiaXRzKS4gQW5kIGl0CmNh
-biBidWZmZXIgb25seSBhIHNpbmdsZSBwYWNrZXQuIFByZXR0eSBoYXJkIHJlYWwtdGltZSBjb25z
-dHJhaW50cy4uLgoKU2luY2UgSSdtIGRlYWxpbmcgd2l0aCAyNSBNYnBzIHN0cmVhbXMgKEZyZW5j
-aCBEVkItVDIgbXVsdGlwbGV4KQoyNSoxMGU2IC8gMTUwNCA9IDE2NjAwIHBhY2tldHMgcGVyIHNl
-Y29uZCAtLSBpLmUuIDYwIMK1cyBiZXR3ZWVuIElSUXMKCkV2ZW4gYWZ0ZXI6CgoxKSBtb3Zpbmcg
-dGhlIElTUiB0byBpdHMgb3duIGRlZGljYXRlZCBjb3JlLAoyKSBtb3ZpbmcgZHZiX2RteF9zd2Zp
-bHRlcl9wYWNrZXRzKCkgdG8gYSB3b3JrX3F1ZXVlLAozKSByZW1vdmluZyBpbnRlcnJ1cHQgbWFz
-a2luZyBmcm9tIERWQiBmdW5jdGlvbnMsCjQpIHVzaW5nIGxhcmdlIFNXIGJ1ZmZlcnMgKDEwMjQg
-VFMgcGFja2V0cykKCkkgc3RpbGwgZHJvcCBhIGZldyBwYWNrZXRzIGhlcmUgYW5kIHRoZXJlICh+
-MSBwZXIgbWludXRlKS4KCkNvbmNsdXNpb246IGl0IHNlZW1zIHRoaXMgSFcgbW9kZSBjYW5ub3Qg
-d29yayByZWxpYWJseSBvbiB0aGUgdHlwZXMKb2Ygc3RyZWFtcyBJJ20gaW50ZXJlc3RlZCBpbi4g
-VGh1cywgdGhlcmUncyBubyBwb2ludCBpbiBzdXBwb3J0aW5nIGl0CmluIHRoZSBmaW5hbCBkcml2
-ZXIuIEkgbmVlZCB0byB0ZXN0ICJhZHZhbmNlZCIgbW9kZS4KClJlZ2FyZHMuCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+22.07.2019 13:13, Marc Zyngier пишет:
+> On 22/07/2019 10:54, Dmitry Osipenko wrote:
+>> 21.07.2019 22:40, Sowjanya Komatineni пишет:
+>>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
+>>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
+>>>
+>>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
+>>> for Tegra210.
+>>>
+>>> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
+>>> interrupt controller suspend operation.
+>>>
+>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>  drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
+>>>  1 file changed, 18 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
+>>> index e1f771c72fc4..851f88cef508 100644
+>>> --- a/drivers/irqchip/irq-tegra.c
+>>> +++ b/drivers/irqchip/irq-tegra.c
+>>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
+>>>  
+>>>  struct tegra_ictlr_soc {
+>>>  	unsigned int num_ictlrs;
+>>> +	bool supports_sc7;
+>>>  };
+>>>  
+>>>  static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
+>>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
+>>>  
+>>>  static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
+>>>  	.num_ictlrs = 6,
+>>> +	.supports_sc7 = true,
+>>>  };
+>>>  
+>>>  static const struct of_device_id ictlr_matches[] = {
+>>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
+>>>  
+>>>  struct tegra_ictlr_info {
+>>>  	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
+>>> +	const struct tegra_ictlr_soc *soc;
+>>>  #ifdef CONFIG_PM_SLEEP
+>>>  	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
+>>>  	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
+>>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
+>>>  		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
+>>>  		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
+>>>  
+>>> -		/* Disable COP interrupts */
+>>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>> +		/*
+>>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
+>>> +		 *
+>>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
+>>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
+>>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
+>>> +		 * system to go to SC7/LP0.
+>>> +		 *
+>>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
+>>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
+>>> +		 */
+>>> +		if (!lic->soc->supports_sc7)
+>>> +			/* Disable COP interrupts if SC7 is not supported */
+>>
+>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
+>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
+>> better here.
+> 
+> If what you're saying is true, then the whole patch is wrong, and the
+> SC7 property should come from DT.
+
+It should be safe to assume that all of existing Tegra210 devices use
+the firmware for SC7, hence I wouldn't say that the patch is entirely
+wrong. To me it's not entirely correct.
+
+>>
+>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>
+>> Secondly, I'm also not sure why COP interrupts need to be disabled for
+>> pre-T210 at all, since COP is unused. This looks to me like it was
+>> cut-n-pasted from downstream kernel without a good reason and could be
+>> simply removed.
+> 
+> Please verify that this is actually the case. Tegra-2 definitely needed
+> some level of poking, and I'm not keen on changing anything there until
+> you (or someone else) has verified it on actual HW (see e307cc8941fc).
+
+Tested on Tegra20 and Tegra30, LP1 suspend-resume works perfectly fine
+with all COP bits removed from the driver.
+
+AFAIK, the reason why downstream needed that disabling is that it uses
+proprietary firmware which is running on the COP and that firmware is
+usually a BLOB audio/video DEC-ENC driver which doesn't cleanup
+interrupts after itself. That firmware is not applicable for the
+upstream kernel, hence there is no need to care about it.
+
+> Joseph, can you please shed some light here?
