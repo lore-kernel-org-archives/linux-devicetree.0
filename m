@@ -1,70 +1,58 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 3/6] pwm: jz4740: Apply configuration atomically
-Date: Mon, 22 Jul 2019 21:34:56 +0200
-Message-ID: <20190722193456.h4hfte5cczucermd@pengutronix.de>
-References: <20190607154410.10633-1-paul@crapouillou.net>
- <20190607154410.10633-4-paul@crapouillou.net>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
+ configure LED mode
+Date: Mon, 22 Jul 2019 21:38:34 +0200
+Message-ID: <20190722193834.GG8972@lunn.ch>
+References: <20190703193724.246854-1-mka@chromium.org>
+ <20190703193724.246854-6-mka@chromium.org>
+ <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
+ <20190703232331.GL250418@google.com>
+ <CAL_JsqL_AU+JV0c2mNbXiPh2pvfYbPbLV-2PHHX0hC3vUH4QWg@mail.gmail.com>
+ <20190722171418.GV250418@google.com>
+ <20190722190133.GF8972@lunn.ch>
+ <20190722191411.GW250418@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190607154410.10633-4-paul@crapouillou.net>
+In-Reply-To: <20190722191411.GW250418@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Paul,
+> as of now it isn't even an API, the phy_device populates a new array
+> in its struct with the values from the DT. PHY drivers access the
+> array directly. Is it still preferable to post everything together?
+> 
+> (maybe I'm too concerned about 'noise' from the driver patches while
+>  we are figuring out what exactly the binding should be).
 
-On Fri, Jun 07, 2019 at 05:44:07PM +0200, Paul Cercueil wrote:
-> -static int jz4740_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> -			     int duty_ns, int period_ns)
-> +static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			    struct pwm_state *state)
->  {
->  	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
->  	unsigned long long tmp;
->  	unsigned long period, duty;
->  	unsigned int prescaler = 0;
->  	uint16_t ctrl;
-> -	bool is_enabled;
->  
-> -	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * period_ns;
-> +	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * state->period;
->  	do_div(tmp, 1000000000);
->  	period = tmp;
->  
-> @@ -96,16 +95,14 @@ static int jz4740_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  	if (prescaler == 6)
->  		return -EINVAL;
->  
-> -	tmp = (unsigned long long)period * duty_ns;
-> -	do_div(tmp, period_ns);
-> +	tmp = (unsigned long long)period * state->duty_cycle;
-> +	do_div(tmp, state->period);
->  	duty = period - tmp;
->  
->  	if (duty >= period)
->  		duty = period - 1;
->  
-> -	is_enabled = jz4740_timer_is_enabled(pwm->hwpwm);
-> -	if (is_enabled)
-> -		jz4740_pwm_disable(chip, pwm);
-> +	jz4740_pwm_disable(chip, pwm);
+We should try to have the DT parsing made generic in phylib, and add
+new driver API calls to actually configure the LEDs.
 
-I assume this stops the PWM. Does this complete the currently running
-period? How does the PWM behave then? (Does it still drive the output?
-If so, on which level?)
+Please also take a look at the Linux generic LED binding. It would be
+nice to have something compatible with that. With time, the code could
+morph into being part of the generic LED subsystem. So we are mostly
+talking about triggers. But we offload the trigger to the hardware,
+rather than have software trigger the blinking of the LEDs. So
+something like:
 
->  
->  	jz4740_timer_set_count(pwm->hwpwm, 0);
->  	jz4740_timer_set_duty(pwm->hwpwm, duty);
+ethernet-phy0  {
+	reg = <0>;
 
-Best regards
-Uwe
+	leds {
+		phy-led@0 {
+	     	      reg = <0>
+		      label = "left:green";
+		      linux,default-trigger = "phy_link_1000_active";
+		}
+		phy-led@1 {
+	     	      reg = <1>
+		      label = "right:red";
+		      linux,default-trigger = "phy_collision";
+		}
+	}
+}
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+      Andrew
