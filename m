@@ -1,61 +1,33 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
- configure LED mode
-Date: Mon, 22 Jul 2019 12:14:11 -0700
-Message-ID: <20190722191411.GW250418@google.com>
-References: <20190703193724.246854-1-mka@chromium.org>
- <20190703193724.246854-6-mka@chromium.org>
- <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
- <20190703232331.GL250418@google.com>
- <CAL_JsqL_AU+JV0c2mNbXiPh2pvfYbPbLV-2PHHX0hC3vUH4QWg@mail.gmail.com>
- <20190722171418.GV250418@google.com>
- <20190722190133.GF8972@lunn.ch>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v8 0/7] Unify CPU topology across ARM & RISC-V
+Date: Mon, 22 Jul 2019 12:25:17 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1907221224170.23563@viisi.sifive.com>
+References: <20190627195302.28300-1-atish.patra@wdc.com> <alpine.DEB.2.21.9999.1907121012050.2267@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190722190133.GF8972@lunn.ch>
+In-Reply-To: <alpine.DEB.2.21.9999.1907121012050.2267@viisi.sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
+To: Atish Patra <atish.patra@wdc.com>
+Cc: linux-kernel@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Johan Hovold <johan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On Fri, 12 Jul 2019, Paul Walmsley wrote:
 
-On Mon, Jul 22, 2019 at 09:01:33PM +0200, Andrew Lunn wrote:
-> On Mon, Jul 22, 2019 at 10:14:18AM -0700, Matthias Kaehlcke wrote:
-> > I'm working on a generic binding.
-> > 
-> > I wonder what is the best process for reviewing/landing it, I'm
-> > doubting between two options:
-> > 
-> > a) only post the binding doc and the generic PHY code that reads
-> >    the configuration from the DT. Post Realtek patches once
-> >    the binding/generic code has been acked.
-> > 
-> >    pros: no churn from Realtek specific patches
-> >    cons: initially no (real) user of the new binding
-> > 
-> > b) post generic and Realtek changes together
-> > 
-> >    pros: the binding has a user initially
-> >    cons: churn from Realtek specific patches
-> > 
-> > I can do either, depending on what maintainers/reviewers prefer. I'm
-> > slightly inclined towards a)
+> On Thu, 27 Jun 2019, Atish Patra wrote:
 > 
-> Hi Matthias
-> 
-> It is normal to include one user of any generic API which is added,
-> just to make is clear how an API should be used.
+> > The cpu-map DT entry in ARM can describe the CPU topology in much better
+> > way compared to other existing approaches. RISC-V can easily adopt this
+> > binding to represent its own CPU topology. Thus, both cpu-map DT
+> > binding and topology parsing code can be moved to a common location so
+> > that RISC-V or any other architecture can leverage that.
+> > different config for the architectures that do not support them.
+>
+> Once v5.3-rc1 is released, let's plan to get these patches rebased and 
+> reposted and into linux-next as soon as possible.
 
-as of now it isn't even an API, the phy_device populates a new array
-in its struct with the values from the DT. PHY drivers access the
-array directly. Is it still preferable to post everything together?
+These CPU topology patches are now queued for v5.4-rc1.  They should enter 
+linux-next shortly.
 
-(maybe I'm too concerned about 'noise' from the driver patches while
- we are figuring out what exactly the binding should be).
 
-Thanks
-
-Matthias
+- Paul
