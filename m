@@ -1,98 +1,69 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v2 00/11] Arasan SDHCI enhancements and ZynqMP Tap Delays
- Handling
-Date: Mon, 22 Jul 2019 04:56:38 +0000
-Message-ID: <MN2PR02MB60291FE74900566F4C5D359DC1C40@MN2PR02MB6029.namprd02.prod.outlook.com>
-References: <1561958991-21935-1-git-send-email-manish.narani@xilinx.com>
- <MN2PR02MB602959626A4F6E462A321F35C1CF0@MN2PR02MB6029.namprd02.prod.outlook.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v4 0/5] soc: ti: k3: Allow for exclusive and shared device
+ requests
+Date: Mon, 22 Jul 2019 10:37:52 +0530
+Message-ID: <20190722050757.29893-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <MN2PR02MB602959626A4F6E462A321F35C1CF0@MN2PR02MB6029.namprd02.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heiko@sntech.de" <heiko@sntech.de>, Michal Simek <michals@xilinx.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "christoph.muellner@theobroma-systems.com" <christoph.muellner@theobroma-systems.com>, "philipp.tomsich@theobroma-systems.com" <philipp.tomsich@theobroma-systems.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "scott.branden@broadcom.com" <scott.branden@broadcom.com>, "ayaka@soulik.info" <ayaka@soulik.info>, "kernel@esmil.dk" <kernel@esmil.dk>, "tony.xie@rock-chips.com" <tony.xie@rock-chips.com>, "mdf@kernel.org" <mdf@kernel.org>, "olof@lixom.net" <olof@lixom.net>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Lokesh Vutla <lokeshvutla@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Gentle Ping!
+Sysfw provides an option for requesting exclusive access for a
+device using the flags MSG_FLAG_DEVICE_EXCLUSIVE. If this flag is
+not used, the device is meant to be shared across hosts. Once a device
+is requested from a host with this flag set, any request to this
+device from a different host will be nacked by sysfw.
 
-> -----Original Message-----
-> From: Manish Narani
-> Sent: Monday, July 15, 2019 12:46 PM
-> To: Manish Narani <MNARANI@xilinx.com>; ulf.hansson@linaro.org;
-> robh+dt@kernel.org; mark.rutland@arm.com; heiko@sntech.de; Michal Simek
-> <michals@xilinx.com>; adrian.hunter@intel.com;
-> christoph.muellner@theobroma-systems.com; philipp.tomsich@theobroma-
-> systems.com; viresh.kumar@linaro.org; scott.branden@broadcom.com;
-> ayaka@soulik.info; kernel@esmil.dk; tony.xie@rock-chips.com;
-> mdf@kernel.org; olof@lixom.net
-> Cc: linux-mmc@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> rockchip@lists.infradead.org
-> Subject: RE: [PATCH v2 00/11] Arasan SDHCI enhancements and ZynqMP Tap
-> Delays Handling
->=20
-> Ping!
->=20
-> > -----Original Message-----
-> > From: Manish Narani <manish.narani@xilinx.com>
-> > Sent: Monday, July 1, 2019 11:00 AM
-> > To: ulf.hansson@linaro.org; robh+dt@kernel.org; mark.rutland@arm.com;
-> > heiko@sntech.de; Michal Simek <michals@xilinx.com>;
-> > adrian.hunter@intel.com; christoph.muellner@theobroma-systems.com;
-> > philipp.tomsich@theobroma-systems.com; viresh.kumar@linaro.org;
-> > scott.branden@broadcom.com; ayaka@soulik.info; kernel@esmil.dk;
-> > tony.xie@rock-chips.com; Rajan Vaja <RAJANV@xilinx.com>; Jolly Shah
-> > <JOLLYS@xilinx.com>; Nava kishore Manne <navam@xilinx.com>;
-> > mdf@kernel.org; Manish Narani <MNARANI@xilinx.com>; olof@lixom.net
-> > Cc: linux-mmc@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> > rockchip@lists.infradead.org
-> > Subject: [PATCH v2 00/11] Arasan SDHCI enhancements and ZynqMP Tap
-> > Delays Handling
-> >
-> > This patch series does the following:
-> >  - Reorganize the Clock Handling in Arasan SD driver
-> >  - Adds new sampling clock in Arasan SD driver
-> >  - Adds support to set Clock Delays in SD Arasan Driver
-> >  - Add SDIO Tap Delay handling in ZynqMP firmware driver
-> >  - Add support for ZynqMP Tap Delays setting in Arasan SD driver
-> >
-> > Changes in v2:
-> > 	- Replaced the deprecated calls to clock framework APIs
-> > 	- Added support for dev_clk_get() call to work for SD card clock
-> > 	- Separated the clock data struct
-> > 	- Fragmented the patch series in smaller patches to make it more
-> > 	  readable
-> >
-> > This patch series contains a DT patch, which I think should be there to
-> > maintain the order of commits.
-> >
-> > Manish Narani (11):
-> >   dt-bindings: mmc: arasan: Update documentation for SD Card Clock
-> >   arm64: dts: rockchip: Add optional clock property indicating sdcard
-> >     clock
-> >   mmc: sdhci-of-arasan: Replace deprecated clk API calls
-> >   mmc: sdhci-of-arasan: Separate out clk related data to another
-> >     structure
-> >   dt-bindings: mmc: arasan: Update Documentation for the input clock
-> >   mmc: sdhci-of-arasan: Add sampling clock for a phy to use
-> >   dt-bindings: mmc: arasan: Add optional properties for Arasan SDHCI
-> >   mmc: sdhci-of-arasan: Add support to set clock phase delays for SD
-> >   firmware: xilinx: Add SDIO Tap Delay APIs
-> >   dt-bindings: mmc: arasan: Document 'xlnx,zynqmp-8.9a' controller
-> >   mmc: sdhci-of-arasan: Add support for ZynqMP Platform Tap Delays Setu=
-p
-> >
-> >  .../devicetree/bindings/mmc/arasan,sdhci.txt       |  49 ++-
-> >  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   4 +-
-> >  drivers/firmware/xilinx/zynqmp.c                   |  48 +++
-> >  drivers/mmc/host/sdhci-of-arasan.c                 | 453
-> ++++++++++++++++++++-
-> >  include/linux/firmware/xlnx-zynqmp.h               |  15 +-
-> >  5 files changed, 540 insertions(+), 29 deletions(-)
-> >
-> > --
-> > 2.1.1
+Current tisci firmware and pm drivers always requests for device with
+exclusive permissions set. But this is not be true for certain devices
+that are expcted to be shared across different host contexts.
+So add support for getting the shared or exclusive permissions from DT
+and request firmware accordingly.
+
+Changes since v3: https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=103447
+- Rebased on top of v5.3-rc1
+- Updated power-domain cells for j721e.
+- Mark the console uart as shared in am65x-base-board
+- Added Reviewed-by from Rob
+
+Lokesh Vutla (5):
+  firmware: ti_sci: Allow for device shared and exclusive requests
+  dt-bindings: ti_sci_pm_domains: Add support for exclusive and shared
+    access
+  soc: ti: ti_sci_pm_domains: Add support for exclusive and shared
+    access
+  arm64: dts: ti: k3-am654: Update the power domain cells
+  arm64: dts: ti: k3-j721e: Update the power domain cells
+
+ .../bindings/soc/ti/sci-pm-domain.txt         | 11 ++++-
+ MAINTAINERS                                   |  1 +
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 44 +++++++++---------
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       | 10 ++---
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  6 +--
+ arch/arm64/boot/dts/ti/k3-am65.dtsi           |  1 +
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts |  1 +
+ .../dts/ti/k3-j721e-common-proc-board.dts     |  4 ++
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 20 ++++-----
+ .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  6 +--
+ arch/arm64/boot/dts/ti/k3-j721e.dtsi          |  1 +
+ drivers/firmware/ti_sci.c                     | 45 ++++++++++++++++++-
+ drivers/soc/ti/ti_sci_pm_domains.c            | 23 +++++++++-
+ include/dt-bindings/soc/ti,sci_pm_domain.h    |  9 ++++
+ include/linux/soc/ti/ti_sci_protocol.h        |  3 ++
+ 15 files changed, 136 insertions(+), 49 deletions(-)
+ create mode 100644 include/dt-bindings/soc/ti,sci_pm_domain.h
+
+-- 
+2.21.0
