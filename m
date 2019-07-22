@@ -1,73 +1,104 @@
-From: Neal Liu <neal.liu@mediatek.com>
-Subject: Re: [PATCH v4 0/3] MediaTek Security random number generator support
-Date: Mon, 22 Jul 2019 17:50:42 +0800
-Message-ID: <1563789042.14676.3.camel@mtkswgap22>
-References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
+ suspend
+Date: Mon, 22 Jul 2019 12:54:51 +0300
+Message-ID: <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>, Herbert
- Xu <herbert@gondor.apana.org.au>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, wsd_upstream <wsd_upstream@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= <Crystal.Guo@mediatek.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Neal Liu <neal.liu@mediatek.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Matthias, Rob, Mark,
-	Just gentle ping.
-	Thanks
+21.07.2019 22:40, Sowjanya Komatineni пишет:
+> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
+> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
+> 
+> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
+> for Tegra210.
+> 
+> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
+> interrupt controller suspend operation.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
+> index e1f771c72fc4..851f88cef508 100644
+> --- a/drivers/irqchip/irq-tegra.c
+> +++ b/drivers/irqchip/irq-tegra.c
+> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
+>  
+>  struct tegra_ictlr_soc {
+>  	unsigned int num_ictlrs;
+> +	bool supports_sc7;
+>  };
+>  
+>  static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
+> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
+>  
+>  static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
+>  	.num_ictlrs = 6,
+> +	.supports_sc7 = true,
+>  };
+>  
+>  static const struct of_device_id ictlr_matches[] = {
+> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
+>  
+>  struct tegra_ictlr_info {
+>  	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
+> +	const struct tegra_ictlr_soc *soc;
+>  #ifdef CONFIG_PM_SLEEP
+>  	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
+>  	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
+> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
+>  		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
+>  		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
+>  
+> -		/* Disable COP interrupts */
+> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+> +		/*
+> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
+> +		 *
+> +		 * Tegra210 system suspend flow uses sc7entry firmware which
+> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
+> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
+> +		 * system to go to SC7/LP0.
+> +		 *
+> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
+> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
+> +		 */
+> +		if (!lic->soc->supports_sc7)
+> +			/* Disable COP interrupts if SC7 is not supported */
 
+All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
+doesn't sound correct to me. Something like 'firmware_sc7' should suit
+better here.
 
-On Mon, 2019-06-24 at 15:24 +0800, Neal Liu wrote:
-> These patch series introduce a generic rng driver for Trustzone
-> based kernel driver which would like to communicate with ATF
-> SIP services.
-> 
-> Patch #1 initials SMC fid table for Mediatek SIP interfaces and
-> adds HWRNG related SMC call.
-> 
-> Patch #2..3 adds mtk-sec-rng kernel driver for Trustzone based SoCs.
-> For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
-> entropy sources is not accessible from normal world (linux) and
-> rather accessible from secure world (ATF/TEE) only. This driver aims
-> to provide a generic interface to ATF rng service.
-> 
-> 
-> changes since v1:
-> - rename mt67xx-rng to mtk-sec-rng since all MediaTek ARMv8 SoCs
-> can reuse this driver.
-> - refine coding style and unnecessary check.
-> 
-> changes since v2:
-> - remove unused comments.
-> - remove redundant variable.
-> 
-> changes since v3:
-> - add dt-bindings for MediaTek rng with TrustZone enabled
-> - revise HWRNG SMC call fid
-> 
-> 
-> Neal Liu (3):
->   soc: mediatek: add SMC fid table for SIP interface
->   dt-bindings: rng: add bindings for MediaTek ARMv8 SoCs
->   hwrng: add mtk-sec-rng driver
-> 
->  .../devicetree/bindings/rng/mtk-sec-rng.txt   | 10 ++
->  drivers/char/hw_random/Kconfig                | 16 +++
->  drivers/char/hw_random/Makefile               |  1 +
->  drivers/char/hw_random/mtk-sec-rng.c          | 97 +++++++++++++++++++
->  include/linux/soc/mediatek/mtk_sip_svc.h      | 33 +++++++
->  5 files changed, 157 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
->  create mode 100644 drivers/char/hw_random/mtk-sec-rng.c
->  create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
+> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+
+Secondly, I'm also not sure why COP interrupts need to be disabled for
+pre-T210 at all, since COP is unused. This looks to me like it was
+cut-n-pasted from downstream kernel without a good reason and could be
+simply removed.
+
+>  		/* Disable CPU interrupts */
+>  		writel_relaxed(~0ul, ictlr + ICTLR_CPU_IER_CLR);
+> @@ -339,6 +354,7 @@ static int __init tegra_ictlr_init(struct device_node *node,
+>  		goto out_unmap;
+>  	}
+>  
+> +	lic->soc = soc;
+>  	tegra_ictlr_syscore_init();
+>  
+>  	pr_info("%pOF: %d interrupts forwarded to %pOF\n",
 > 
