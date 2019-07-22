@@ -1,43 +1,27 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 0/2] Add HwSpinlock nodes for TI K3 SoCs
-Date: Mon, 22 Jul 2019 14:05:37 -0500
-Message-ID: <20190722190539.27816-1-s-anna@ti.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [v3 1/4] dt-bindngs: display: panel: Add BOE tv101wum-n16 panel
+ bindings
+Date: Mon, 22 Jul 2019 21:11:55 +0200
+Message-ID: <20190722191155.jc2z5bvayjwpe4bz@pengutronix.de>
+References: <20190626025400.109567-1-jitao.shi@mediatek.com>
+ <20190626025400.109567-2-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190626025400.109567-2-jitao.shi@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.o
 List-Id: devicetree@vger.kernel.org
 
-Hi Tero,
+$Subject ~= s/bindngs/bindings/
 
-The following series adds the HwSpinlock DT nodes for the
-TI K3 AM65x and J721E SoC families. Patches are based on
-v5.3-rc1.
-
-The bindings and driver support for the same have been
-merged in v5.3-rc1.
-
-regards
-Suman
-
-Suman Anna (2):
-  arm64: dts: ti: k3-am65-main: Add hwspinlock node
-  arm64: dts: ti: k3-j721e-main: Add hwspinlock node
-
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi  | 6 ++++++
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 6 ++++++
- 2 files changed, 12 insertions(+)
+Best regards
+Uwe
 
 -- 
-2.22.0
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
