@@ -1,7 +1,7 @@
 From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 2/2] arm64: dts: ti: k3-j721e-main: Add hwspinlock node
-Date: Mon, 22 Jul 2019 14:05:39 -0500
-Message-ID: <20190722190539.27816-3-s-anna@ti.com>
+Subject: [PATCH 1/2] arm64: dts: ti: k3-am65-main: Add hwspinlock node
+Date: Mon, 22 Jul 2019 14:05:38 -0500
+Message-ID: <20190722190539.27816-2-s-anna@ti.com>
 References: <20190722190539.27816-1-s-anna@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,24 +21,23 @@ To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Main NavSS block on J721E SoCs contains a HwSpinlock IP instance that
-is same as the IP on AM65x SoCs and similar to the IP on some OMAP SoCs.
-Add the DT node for this on J721E SoCs. The node is present within the
-Main NavSS block, and is added as a child node under the cbass_main_navss
-interconnect node.
+The Main NavSS block on AM65x SoCs contains a HwSpinlock IP instance
+that is similar to the IP on some OMAP SoCs. Add the DT node for this
+on AM65x SoCs. The node is present within the NavSS block, and is
+added as a child node under the cbass_main_navss interconnect node.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 6 ++++++
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 6 ++++++
  1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index a01308142f77..a2e031f7d88e 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -89,6 +89,12 @@
- 			ti,sci-rm-range-vint = <0xa>;
- 			ti,sci-rm-range-global-event = <0xd>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index ca70ff73f171..8413e80f9d3a 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -413,6 +413,12 @@
+ 			ti,sci-rm-range-vint = <0x0>;
+ 			ti,sci-rm-range-global-event = <0x1>;
  		};
 +
 +		hwspinlock: spinlock@30e00000 {
@@ -48,6 +47,6 @@ index a01308142f77..a2e031f7d88e 100644
 +		};
  	};
  
- 	secure_proxy_main: mailbox@32c00000 {
+ 	main_gpio0:  main_gpio0@600000 {
 -- 
 2.22.0
