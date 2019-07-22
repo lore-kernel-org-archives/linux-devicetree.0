@@ -1,38 +1,53 @@
-From: Jan Kotas <jank@cadence.com>
-Subject: [PATCH v2 1/4] media: dt-bindings: Update bindings for Cadence CSI2TX version 2.1
-Date: Mon, 22 Jul 2019 09:22:20 +0100
-Message-ID: <20190722082223.18693-2-jank@cadence.com>
-References: <20190722082223.18693-1-jank@cadence.com>
+From: Sagar Kadam <sagar.kadam@sifive.com>
+Subject: Re: [PATCH 3/3] riscv: dts: Add DT node for SiFive FU540 Ethernet
+ controller driver
+Date: Mon, 22 Jul 2019 13:57:14 +0530
+Message-ID: <CAARK3Hn7vocesjGm3mNGJ4GJXwRnqv-qtVGAgFKMghH033JH4g@mail.gmail.com>
+References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
+ <1563534631-15897-3-git-send-email-yash.shah@sifive.com> <CAARK3H=D1N8gO0Z82_MCtgr5DtT1=E0wzYbn-y451ASgxV-qBg@mail.gmail.com>
+ <20190719132657.GD24930@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722082223.18693-1-jank@cadence.com>
+In-Reply-To: <20190719132657.GD24930@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: maxime.ripard@bootlin.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: rafalc@cadence.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, netdev@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, ynezz@true.cz, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, nicolas.ferre@microchip.com, Sachin Ghadi <sachin.ghadi@sifive.com>, Yash Shah <yash.shah@sifive.com>, Rob Herring <robh+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a DT bindings documentation for
-Cadence CSI2TX v2.1 controller.
+Hello Andrew,
 
-Signed-off-by: Jan Kotas <jank@cadence.com>
----
- Documentation/devicetree/bindings/media/cdns,csi2tx.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Fri, Jul 19, 2019 at 6:57 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Fri, Jul 19, 2019 at 05:23:45PM +0530, Sagar Kadam wrote:
+> > > +&eth0 {
+> > > +       status = "okay";
+> > > +       phy-mode = "gmii";
+> > > +       phy-handle = <&phy1>;
+> > > +       phy1: ethernet-phy@0 {
+> > > +               reg = <0>;
+> > > +       };
+>
+> Hi Sagar
+>
+> Is there a good reason to call it phy1? Is there a phy0?
+>
 
-diff --git a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-index 459c6e332..751b9edf1 100644
---- a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-+++ b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-@@ -5,7 +5,8 @@ The Cadence MIPI-CSI2 TX controller is a CSI-2 bridge supporting up to
- 4 CSI lanes in output, and up to 4 different pixel streams in input.
- 
- Required properties:
--  - compatible: must be set to "cdns,csi2tx"
-+  - compatible: must be set to "cdns,csi2tx" or "cdns,csi2tx-1.3"
-+    for version 1.3 of the controller, "cdns,csi2tx-2.1" for v2.1
-   - reg: base address and size of the memory mapped region
-   - clocks: phandles to the clocks driving the controller
-   - clock-names: must contain:
--- 
-2.15.0
+Sorry for the delayed response.
+There is a single phy, so yes phy0 is a better name.
+Thank you for pointing this out.
+
+Thanks & Regards,
+Sagar Kadam
+
+
+
+
+> Thanks
+>
+>    Andrew
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
