@@ -1,92 +1,27 @@
-From: Torsten Duwe <duwe@lst.de>
-Subject: [PATCH v3 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge on Teres-I
-Date: Mon, 22 Jul 2019 17:12:08 +0200 (CEST)
-Message-ID: <20190722151208.9595968B20@verein.lst.de>
-References: <<20190722150414.9F97668B20@verein.lst.de>>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH v2 1/4] dt-bindings: vendor-prefixes: Add Longcheer
+ Technology Co., Ltd.
+Date: Mon, 22 Jul 2019 09:12:20 -0600
+Message-ID: <CAL_Jsq+Fe+bExtqXRHNoEvATh3qVuDBnS0SqgSJenZs+yDVOOQ@mail.gmail.com>
+References: <20190722092211.100586-1-stephan@gerhold.net> <20190722092211.100586-2-stephan@gerhold.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190722092211.100586-2-stephan@gerhold.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Stephan Gerhold <stephan@gerhold.net>
+Cc: Andy Gross <agross@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
-the I2C controlling signals are connected to I2C0 bus.
+On Mon, Jul 22, 2019 at 3:24 AM Stephan Gerhold <stephan@gerhold.net> wrote:
+>
+> Add the "longcheer" vendor prefix for Longcheer Technology Co., Ltd.,
+> an "industry-leading service provider of mobile phone design
+> and product delivery". (http://www.longcheer.com)
+>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Enable it in the device tree, and the display engine, video mixer
-and tcon0 as well.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Torsten Duwe <duwe@suse.de>
----
- .../boot/dts/allwinner/sun50i-a64-teres-i.dts      | 45 ++++++++++++++++++++--
- 1 file changed, 41 insertions(+), 4 deletions(-)
-
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -100,18 +100,41 @@
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
- 
- 
--/* The ANX6345 eDP-bridge is on i2c0. There is no linux (mainline)
-- * driver for this chip at the moment, the bootloader initializes it.
-- * However it can be accessed with the i2c-dev driver from user space.
-- */
- &i2c0 {
- 	clock-frequency = <100000>;
- 	status = "okay";
-+
-+	anx6345: anx6345@38 {
-+		compatible = "analogix,anx6345";
-+		reg = <0x38>;
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-+		dvdd25-supply = <&reg_dldo2>;
-+		dvdd12-supply = <&reg_dldo3>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				anx6345_in: endpoint {
-+					remote-endpoint = <&tcon0_out_anx6345>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&mixer0 {
-+	status = "okay";
- };
- 
- &mmc0 {
-@@ -319,6 +342,20 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_rgb666_pins>;
-+
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_anx6345: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&anx6345_in>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
+Reviewed-by: Rob Herring <robh@kernel.org>
