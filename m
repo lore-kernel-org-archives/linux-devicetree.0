@@ -1,67 +1,64 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5/5] arm64: dts: qcom: sdm845-cheza: remove macro from unit name
-Date: Mon, 22 Jul 2019 18:04:22 +0530
-Message-ID: <20190722123422.4571-6-vkoul@kernel.org>
-References: <20190722123422.4571-1-vkoul@kernel.org>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 1/4][V3] spi: Add optional stall delay between cs_change transfers
+Date: Mon, 22 Jul 2019 15:47:44 +0300
+Message-ID: <20190722124747.4792-2-alexandru.ardelean@analog.com>
+References: <20190722124747.4792-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
+Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722123422.4571-1-vkoul@kernel.org>
+In-Reply-To: <20190722124747.4792-1-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-iio@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>, Michael Hennerich <michael.hennerich@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-Unit name is supposed to be a number, using a macro with hex value is
-not recommended, so add the value in unit name.
+Some devices like the ADIS16460 IMU require a longer period between
+transfers, i.e. between when the CS is de-asserted and re-asserted. The
+default value of 10us is not enough. This change makes the delay
+configurable for when the next CS change goes active, allowing the default
+to remain 10us is case it is unspecified.
 
-arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:966.16-969.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4d: unit name should not have leading "0x"
-arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:971.16-974.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4e: unit name should not have leading "0x"
-arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:976.16-979.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4f: unit name should not have leading "0x"
-arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:981.16-984.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x50: unit name should not have leading "0x"
-arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:986.16-989.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x51: unit name should not have leading "0x"
-
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/spi/spi.c       | 3 ++-
+ include/linux/spi/spi.h | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 1ebbd568dfd7..9b27b8346ba1 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -963,27 +963,27 @@ ap_ts_i2c: &i2c14 {
- };
- 
- &pm8998_adc {
--	adc-chan@ADC5_AMUX_THM1_100K_PU {
-+	adc-chan@4d {
- 		reg = <ADC5_AMUX_THM1_100K_PU>;
- 		label = "sdm_temp";
- 	};
- 
--	adc-chan@ADC5_AMUX_THM2_100K_PU {
-+	adc-chan@4e {
- 		reg = <ADC5_AMUX_THM2_100K_PU>;
- 		label = "quiet_temp";
- 	};
- 
--	adc-chan@ADC5_AMUX_THM3_100K_PU {
-+	adc-chan@4f {
- 		reg = <ADC5_AMUX_THM3_100K_PU>;
- 		label = "lte_temp_1";
- 	};
- 
--	adc-chan@ADC5_AMUX_THM4_100K_PU {
-+	adc-chan@50 {
- 		reg = <ADC5_AMUX_THM4_100K_PU>;
- 		label = "lte_temp_2";
- 	};
- 
--	adc-chan@ADC5_AMUX_THM5_100K_PU {
-+	adc-chan@51 {
- 		reg = <ADC5_AMUX_THM5_100K_PU>;
- 		label = "charger_temp";
- 	};
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 5e75944ad5d1..fe7fa7fb25c5 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1163,7 +1163,8 @@ static int spi_transfer_one_message(struct spi_controller *ctlr,
+ 				keep_cs = true;
+ 			} else {
+ 				spi_set_cs(msg->spi, false);
+-				udelay(10);
++				udelay(xfer->cs_change_delay ?
++				       xfer->cs_change_delay : 10);
+ 				spi_set_cs(msg->spi, true);
+ 			}
+ 		}
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 053abd22ad31..6de287f8e465 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -734,6 +734,7 @@ extern void spi_res_release(struct spi_controller *ctlr,
+  *      transfer. If 0 the default (from @spi_device) is used.
+  * @bits_per_word: select a bits_per_word other than the device default
+  *      for this transfer. If 0 the default (from @spi_device) is used.
++ * @cs_change_delay: microseconds to delay between cs_change transfers.
+  * @cs_change: affects chipselect after this transfer completes
+  * @delay_usecs: microseconds to delay after this transfer before
+  *	(optionally) changing the chipselect status, then starting
+@@ -823,6 +824,7 @@ struct spi_transfer {
+ #define	SPI_NBITS_QUAD		0x04 /* 4bits transfer */
+ 	u8		bits_per_word;
+ 	u8		word_delay_usecs;
++	u8		cs_change_delay;
+ 	u16		delay_usecs;
+ 	u32		speed_hz;
+ 	u16		word_delay;
 -- 
 2.20.1
