@@ -1,49 +1,68 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v3 5/6] dt-bindings: interconnect: Add interconnect-opp-table
- property
-Date: Mon, 22 Jul 2019 16:43:38 -0700
-Message-ID: <CAGETcx-vNdqmt9_OHJnCv661i-B-f6WAvvqsz2H8c_EM+=fNBQ@mail.gmail.com>
-References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-6-saravanak@google.com>
- <20190722233927.GA1353@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 2/2] dt-bindings: mtd: Document Macronix raw NAND
+ controller bindings
+Date: Mon, 22 Jul 2019 17:46:14 -0600
+Message-ID: <20190722234614.GA11971@bogus>
+References: <1562138144-2212-1-git-send-email-masonccyang@mxic.com.tw>
+ <1562138144-2212-3-git-send-email-masonccyang@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722233927.GA1353@bogus>
+Content-Disposition: inline
+In-Reply-To: <1562138144-2212-3-git-send-email-masonccyang@mxic.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Mason Yang <masonccyang@mxic.com.tw>
+Cc: miquel.raynal@bootlin.com, marek.vasut@gmail.com, bbrezillon@kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, vigneshr@ti.com, richard@nod.at, stefan@agner.ch, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, juliensu@mxic.com.tw, paul.burton@mips.com, liang.yang@amlogic.com, lee.jones@linaro.org, anders.roxell@linaro.org, christophe.kerello@st.com, paul@crapouillou.net, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 4:39 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Jul 02, 2019 at 06:10:19PM -0700, Saravana Kannan wrote:
-> > Add support for listing bandwidth OPP tables for each interconnect path
-> > listed using the interconnects property.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  .../devicetree/bindings/interconnect/interconnect.txt     | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > index 6f5d23a605b7..fc5b75b76a2c 100644
-> > --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > @@ -55,10 +55,18 @@ interconnect-names : List of interconnect path name strings sorted in the same
-> >                        * dma-mem: Path from the device to the main memory of
-> >                                   the system
-> >
-> > +interconnect-opp-table: List of phandles to OPP tables (bandwidth OPP tables)
-> > +                     that specify the OPPs for the interconnect paths listed
-> > +                     in the interconnects property. This property can only
-> > +                     point to OPP tables that belong to the device and are
-> > +                     listed in the device's operating-points-v2 property.
-> > +
->
-> IMO, there's no need for this property. Which OPP is which should be
-> defined already as part of the device's binding. That's enough for the
-> driver to know which OPP applies to the interconnect.
+On Wed, Jul 03, 2019 at 03:15:44PM +0800, Mason Yang wrote:
+> Document the bindings used by the Macronix raw NAND controller.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> ---
+>  Documentation/devicetree/bindings/mtd/mxic-nand.txt | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> new file mode 100644
+> index 0000000..ddd7660
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> @@ -0,0 +1,20 @@
+> +Macronix Raw NAND Controller Device Tree Bindings
+> +-------------------------------------------------
+> +
+> +Required properties:
+> +- compatible: should be "macronix,nand-controller"
 
-Sure, I don't mind dropping this.
+That's not very specific. There's only 1 version of this h/w?
 
--Saravana
+> +- reg: should contain 1 entrie for the registers
+
+s/entrie/entry/
+
+> +- interrupts: interrupt line connected to this raw NAND controller
+> +- clock-names: should contain "ps_clk", "send_clk" and "send_dly_clk"
+> +- clocks: should contain 3 phandles for the "ps_clk", "send_clk" and
+> +	 "send_dly_clk" clocks
+
+You can drop '_clk' as that is redundant.
+
+> +
+> +Example:
+> +
+> +	nand: mxic-nfc@43c30000 {
+> +		compatible = "macronix,nand-controller";
+> +		reg = <0x43c30000 0x10000>;
+> +		reg-names = "regs";
+
+Not documented. You can drop as *-names is not generally useful when 
+there is only 1 entry.
+
+> +		clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
+> +		clock-names = "send_clk", "send_dly_clk", "ps_clk";
+> +	};
+> -- 
+> 1.9.1
+> 
