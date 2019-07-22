@@ -1,128 +1,105 @@
-Return-Path: <SRS0=kDdq=VU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:55574 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729058AbfGWH3a (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:29:30 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH] ARM: dts: Fix incomplete dts data for am3 and am4 mmc
-Date: Tue, 23 Jul 2019 00:29:23 -0700
-Message-Id: <20190723072923.23750-1-tony@atomide.com>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 22 Jul 2019 17:09:35 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCH 1/3] dt-bindings: power: Add power domain binding
+ for i.mx8m family
+Message-ID: <20190722230935.GA12833@bogus>
+References: <20190702100832.29718-1-ping.bai@nxp.com>
+ <20190702100832.29718-2-ping.bai@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, David Lechner <david@lechnology.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702100832.29718-2-ping.bai@nxp.com>
+To: Jacky Bai <ping.bai@nxp.com>
+Cc: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Commit 4e27f752ab8c ("ARM: OMAP2+: Drop mmc platform data for am330x and
-am43xx") dropped legacy mmc platform data for am3 and am4, but missed the
-fact that we never updated the dts files for mmc3 that is directly on l3
-interconnect instead of l4 interconnect. This leads to a situation with
-no legacy platform data and incomplete dts data.
+On Tue, Jul 02, 2019 at 10:03:41AM +0000, Jacky Bai wrote:
+> Add the binding doc of power domain for i.MX8M SOC family.
+> 
+> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+> ---
+>  .../bindings/power/fsl,imx8m-genpd.txt        | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx8m-genpd.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/fsl,imx8m-genpd.txt b/Documentation/devicetree/bindings/power/fsl,imx8m-genpd.txt
+> new file mode 100644
+> index 000000000000..a92a7103de38
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/fsl,imx8m-genpd.txt
+> @@ -0,0 +1,46 @@
+> +Device Tree Bindings for Freescale i.MX8M Generic Power Domain
+> +==============================================================
+> +The binding for the i.MX8M Generic power Domain[1].
+> +
+> +[1] Documentation/devicetree/bindings/power/power_domain.txt
+> +
+> +Required properties:
+> +
+> + - compatible: should be of:
+> +	- "fsl,imx8m-power-domain"
+> + - #power-domain-cells: Number of cells in a PM domain Specifier, must be 0
+> + - domain-index: should be the domain index number need to pass to TF-A
+> + - domain-name: the name of this pm domain
+> +
+> +Optional properties:
+> + - clocks: a number of phandles to clocks that need to be enabled during
+> +   domain power-up sequence to ensure reset propagation into devices
+> +   located inside this power domain
 
-Let's update the mmc instances on l3 interconnect to probe properly with
-ti-sysc interconnect target module driver to make mmc3 work again. Let's
-still keep legacy "ti,hwmods" property around for v5.2 kernel and only
-drop it later on.
+Isn't that firmware's problem?
 
-Note that there is no need to use property status = "disabled" for mmc3.
-The default for dts is enabled, and runtime PM will idle unused instances
-just fine.
+> + - power-supply: Power supply used to power the domain
+> + - parent-domains: the phandle to the parent power domain
+> +
+> +example:
+> +	vpu_g1_pd: vpug1-pd {
 
-Fixes: 4e27f752ab8c ("ARM: OMAP2+: Drop mmc platform data for am330x and am43xx")
-Reported-by: David Lechner <david@lechnology.com>
-Tested-by: David Lechner <david@lechnology.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/am33xx.dtsi | 32 ++++++++++++++++++++++++++------
- arch/arm/boot/dts/am4372.dtsi | 32 ++++++++++++++++++++++++++------
- 2 files changed, 52 insertions(+), 12 deletions(-)
+What's this a child of?
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -234,13 +234,33 @@
- 			interrupt-names = "edma3_tcerrint";
- 		};
- 
--		mmc3: mmc@47810000 {
--			compatible = "ti,omap4-hsmmc";
-+		target-module@47810000 {
-+			compatible = "ti,sysc-omap2", "ti,sysc";
- 			ti,hwmods = "mmc3";
--			ti,needs-special-reset;
--			interrupts = <29>;
--			reg = <0x47810000 0x1000>;
--			status = "disabled";
-+			reg = <0x478102fc 0x4>,
-+			      <0x47810110 0x4>,
-+			      <0x47810114 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,syss-mask = <1>;
-+			clocks = <&l3s_clkctrl AM3_L3S_MMC3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x47810000 0x1000>;
-+
-+			mmc3: mmc@0 {
-+				compatible = "ti,omap4-hsmmc";
-+				ti,needs-special-reset;
-+				interrupts = <29>;
-+				reg = <0x0 0x1000>;
-+			};
- 		};
- 
- 		usb: usb@47400000 {
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -228,13 +228,33 @@
- 			interrupt-names = "edma3_tcerrint";
- 		};
- 
--		mmc3: mmc@47810000 {
--			compatible = "ti,omap4-hsmmc";
--			reg = <0x47810000 0x1000>;
-+		target-module@47810000 {
-+			compatible = "ti,sysc-omap2", "ti,sysc";
- 			ti,hwmods = "mmc3";
--			ti,needs-special-reset;
--			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
--			status = "disabled";
-+			reg = <0x478102fc 0x4>,
-+			      <0x47810110 0x4>,
-+			      <0x47810114 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,syss-mask = <1>;
-+			clocks = <&l3s_clkctrl AM4_L3S_MMC3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x47810000 0x1000>;
-+
-+			mmc3: mmc@0 {
-+				compatible = "ti,omap4-hsmmc";
-+				ti,needs-special-reset;
-+				interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0 0x1000>;
-+			};
- 		};
- 
- 		sham: sham@53100000 {
--- 
-2.21.0
+Use generic node names.
+
+> +		compatible = "fsl,imx8mm-pm-domain";
+> +		#power-domain-cells = <0>;
+
+I'm usually not a fan when I see a single domain per provider. Why can't 
+you have firmware be a single provider with multiple domains?
+
+> +		domain-index = <6>;
+
+Don't create your own index properties.
+
+> +		domain-name = "vpu_g1";
+
+Not a standard name. Why do you need this? (Hint: we'd already have a 
+standard name if you did.)
+
+> +		parent-domains = <&vpumix_pd>;
+
+We already have a standard way to do this.
+
+> +		clocks = <&clk IMX8MM_CLK_VPU_G1_ROOT>;
+> +	};
+> +
+> +
+> +Specifying Power domain for IP modules
+> +======================================
+> +
+> +IP cores belonging to a power domain should contain a 'power-domains'
+> +property that is a phandle for PGC node representing the domain.
+> +
+> +Example of a device that is part of the vpu_g1 power domain:
+> +	vpu_g1: vpu_g1@38300000 {
+
+video-codec@...
+
+> +		/* ... */
+> +		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "irq_hantro";
+> +		/* ... */
+> +		power-domains = <&vpu_g1_pd>;
+> +	};
+> -- 
+> 2.21.0
+> 
