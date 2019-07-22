@@ -1,119 +1,77 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-Date: Mon, 22 Jul 2019 13:57:28 +0300
-Message-ID: <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
- <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
- <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 03/14] docs: fix broken doc references due to renames
+Date: Mon, 22 Jul 2019 13:38:46 +0200
+Message-ID: <20190722113845.GA1115@ninjato>
+References: <cover.1563277838.git.mchehab+samsung@kernel.org>
+ <aa415583bf6b812b0249093a601aa31412f3a1cf.1563277838.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0742215709=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <aa415583bf6b812b0249093a601aa31412f3a1cf.1563277838.git.mchehab+samsung@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrea Parri <andrea.parri@amarulasolutions.com>, Ajay Gupta <ajayg@nvidia.com>, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Akira Yokosawa <akiyks@gmail.com>, Lai Jiangshan <jiangshanlai@gmail.com>, Jerry Hoemann <jerry.hoemann@hpe.com>, dri-devel@lists.freedesktop.org, David Howells <dhowells@redhat.com>, linux-i2c@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>, "Paul E. McKenney" <paulmck@linux.ibm.com>, Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org, linux-scsi@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, esc.storagedev@microsemi.com, Maxime Ripard <maxime.ripard@bootlin.com>, Ingo Molnar <mingo@redhat.com>, Alan Stern <stern@rowland.harvard.edu>, Jade Alglave <j.alglave@ucl.ac.uk>, Boqun Feng <boqun.feng@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Don Brace <don.brace@microsemi>
 List-Id: devicetree@vger.kernel.org
 
-22.07.2019 13:13, Marc Zyngier пишет:
-> On 22/07/2019 10:54, Dmitry Osipenko wrote:
->> 21.07.2019 22:40, Sowjanya Komatineni пишет:
->>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
->>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
->>>
->>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
->>> for Tegra210.
->>>
->>> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
->>> interrupt controller suspend operation.
->>>
->>> Acked-by: Thierry Reding <treding@nvidia.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>  drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
->>>  1 file changed, 18 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
->>> index e1f771c72fc4..851f88cef508 100644
->>> --- a/drivers/irqchip/irq-tegra.c
->>> +++ b/drivers/irqchip/irq-tegra.c
->>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
->>>  
->>>  struct tegra_ictlr_soc {
->>>  	unsigned int num_ictlrs;
->>> +	bool supports_sc7;
->>>  };
->>>  
->>>  static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
->>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
->>>  
->>>  static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
->>>  	.num_ictlrs = 6,
->>> +	.supports_sc7 = true,
->>>  };
->>>  
->>>  static const struct of_device_id ictlr_matches[] = {
->>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
->>>  
->>>  struct tegra_ictlr_info {
->>>  	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
->>> +	const struct tegra_ictlr_soc *soc;
->>>  #ifdef CONFIG_PM_SLEEP
->>>  	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
->>>  	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
->>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
->>>  		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
->>>  		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
->>>  
->>> -		/* Disable COP interrupts */
->>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
->>> +		/*
->>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
->>> +		 *
->>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
->>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
->>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
->>> +		 * system to go to SC7/LP0.
->>> +		 *
->>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
->>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
->>> +		 */
->>> +		if (!lic->soc->supports_sc7)
->>> +			/* Disable COP interrupts if SC7 is not supported */
->>
->> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
->> doesn't sound correct to me. Something like 'firmware_sc7' should suit
->> better here.
-> 
-> If what you're saying is true, then the whole patch is wrong, and the
-> SC7 property should come from DT.
 
-It should be safe to assume that all of existing Tegra210 devices use
-the firmware for SC7, hence I wouldn't say that the patch is entirely
-wrong. To me it's not entirely correct.
+--===============0742215709==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
+Content-Disposition: inline
 
->>
->>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
->>
->> Secondly, I'm also not sure why COP interrupts need to be disabled for
->> pre-T210 at all, since COP is unused. This looks to me like it was
->> cut-n-pasted from downstream kernel without a good reason and could be
->> simply removed.
-> 
-> Please verify that this is actually the case. Tegra-2 definitely needed
-> some level of poking, and I'm not keen on changing anything there until
-> you (or someone else) has verified it on actual HW (see e307cc8941fc).
 
-Tested on Tegra20 and Tegra30, LP1 suspend-resume works perfectly fine
-with all COP bits removed from the driver.
+--CE+1k2dSO48ffgeK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-AFAIK, the reason why downstream needed that disabling is that it uses
-proprietary firmware which is running on the COP and that firmware is
-usually a BLOB audio/video DEC-ENC driver which doesn't cleanup
-interrupts after itself. That firmware is not applicable for the
-upstream kernel, hence there is no need to care about it.
+On Tue, Jul 16, 2019 at 09:10:42AM -0300, Mauro Carvalho Chehab wrote:
+> Some files got renamed but probably due to some merge conflicts,
+> a few references still point to the old locations.
+>=20
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-> Joseph, can you please shed some light here?
+Acked-by: Wolfram Sang <wsa@the-dreams.de> # I2C part
+
+
+--CE+1k2dSO48ffgeK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl01oEEACgkQFA3kzBSg
+KbYvLhAAiBCzjlLaOX8TozT9yXWwqRye46Tkkjqei2Gh2ruk6HulzAm4JLL1ghij
+bD5UKIqsqMqs8SThEWtBr7lpGKPY5dTOO7Lvp3Gg6Ykw4DSJHjwRbY9Gz3eKpjm6
+XCeKu+qe7IWU4PyqjfTmT2tYQBjZTg8+e5ycnPtgLxvLZGpqoOwplZvwady9klS0
+6KfODAi0M8Bv05man76ECm1z4PeUjQMjuSgO4lxWDm9QPN6pL1tZ1DN4TWoQpmY8
+gnS6iqRtIVwRqjxnx3BNP6q0iF0oMBIJbufn+udz5FVAvXkWtx6gaJ+HZO02CPnd
+DfLhbW0h0SzzRnLA8rtuTQl/wJwHcfRtlYBNitXwbXIewlBTqlhzhvuW7JZnXJTe
+QXk4bXJuRofQsmWiK/i6bP0ifWyWmH/mLQkZhXEAZXsiiSHYuLC0RGLYTk2OSbRS
+d4kM+3WQfr0F8KTgmhKZv0g6yKqxziFVCBFMkKvpYqOfk3MuRf9JREpFnAmtHaox
+310crjxth9IwT/SMq813fSz5+SueTeiTp7DZyOANc23QCyJTpTTnIsdpzYzna4+i
+t8H5nyy2JKWKP7rvIfn2O4BKHOt14Klmbno/pUak4lxLadz7Av7mC65akEwLWSiI
+0qO7h0/ZSuPlu8OPAyR3I7cvx8/RriyeQJUceA6/KjTSKtWhw/E=
+=7t6S
+-----END PGP SIGNATURE-----
+
+--CE+1k2dSO48ffgeK--
+
+--===============0742215709==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--===============0742215709==--
