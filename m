@@ -1,104 +1,49 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-Date: Mon, 22 Jul 2019 12:54:51 +0300
-Message-ID: <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 0/4] media: Add support for Cadence CSI2TX version 2.1
+Date: Mon, 22 Jul 2019 12:01:25 +0200
+Message-ID: <20190722100125.y4ojf3quqopktncf@flea>
+References: <20190722082223.18693-1-jank@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dgdhrvv3ycjgpmmt"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190722082223.18693-1-jank@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Jan Kotas <jank@cadence.com>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, rafalc@cadence.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-21.07.2019 22:40, Sowjanya Komatineni пишет:
-> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
-> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
-> 
-> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
-> for Tegra210.
-> 
-> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
-> interrupt controller suspend operation.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
-> index e1f771c72fc4..851f88cef508 100644
-> --- a/drivers/irqchip/irq-tegra.c
-> +++ b/drivers/irqchip/irq-tegra.c
-> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
->  
->  struct tegra_ictlr_soc {
->  	unsigned int num_ictlrs;
-> +	bool supports_sc7;
->  };
->  
->  static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
-> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
->  
->  static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
->  	.num_ictlrs = 6,
-> +	.supports_sc7 = true,
->  };
->  
->  static const struct of_device_id ictlr_matches[] = {
-> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] = {
->  
->  struct tegra_ictlr_info {
->  	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
-> +	const struct tegra_ictlr_soc *soc;
->  #ifdef CONFIG_PM_SLEEP
->  	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
->  	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
-> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
->  		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
->  		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
->  
-> -		/* Disable COP interrupts */
-> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
-> +		/*
-> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
-> +		 *
-> +		 * Tegra210 system suspend flow uses sc7entry firmware which
-> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
-> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
-> +		 * system to go to SC7/LP0.
-> +		 *
-> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
-> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
-> +		 */
-> +		if (!lic->soc->supports_sc7)
-> +			/* Disable COP interrupts if SC7 is not supported */
 
-All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
-doesn't sound correct to me. Something like 'firmware_sc7' should suit
-better here.
+--dgdhrvv3ycjgpmmt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+On Mon, Jul 22, 2019 at 09:22:19AM +0100, Jan Kotas wrote:
+> This patchset adds support for Cadence CSI2TX controller version 2.1.
+> Existing compatibility with v1.3 is updated and maintained.
+>
 
-Secondly, I'm also not sure why COP interrupts need to be disabled for
-pre-T210 at all, since COP is unused. This looks to me like it was
-cut-n-pasted from downstream kernel without a good reason and could be
-simply removed.
+For the whole series
 
->  		/* Disable CPU interrupts */
->  		writel_relaxed(~0ul, ictlr + ICTLR_CPU_IER_CLR);
-> @@ -339,6 +354,7 @@ static int __init tegra_ictlr_init(struct device_node *node,
->  		goto out_unmap;
->  	}
->  
-> +	lic->soc = soc;
->  	tegra_ictlr_syscore_init();
->  
->  	pr_info("%pOF: %d interrupts forwarded to %pOF\n",
-> 
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--dgdhrvv3ycjgpmmt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTWJdQAKCRDj7w1vZxhR
+xStlAQCn41vU+G6UpwEkOdIzsntf4crx4vpr3XFje6b3E/gn+AEAyOChzbyIRden
+akf239VnjvsQn3AU1/GEpWsF9jCc2wE=
+=YpCh
+-----END PGP SIGNATURE-----
+
+--dgdhrvv3ycjgpmmt--
