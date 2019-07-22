@@ -1,102 +1,132 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
- configure LED mode
-Date: Mon, 22 Jul 2019 10:14:18 -0700
-Message-ID: <20190722171418.GV250418@google.com>
-References: <20190703193724.246854-1-mka@chromium.org>
- <20190703193724.246854-6-mka@chromium.org>
- <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
- <20190703232331.GL250418@google.com>
- <CAL_JsqL_AU+JV0c2mNbXiPh2pvfYbPbLV-2PHHX0hC3vUH4QWg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/6] dt-bindings: soc: qcom: add On Chip MEMory
+ (OCMEM) bindings
+Date: Mon, 22 Jul 2019 11:35:14 -0600
+Message-ID: <20190722173514.GA11931@bogus>
+References: <20190626022148.23712-1-masneyb@onstation.org>
+ <20190626022148.23712-2-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqL_AU+JV0c2mNbXiPh2pvfYbPbLV-2PHHX0hC3vUH4QWg@mail.gmail.com>
+In-Reply-To: <20190626022148.23712-2-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
+To: Brian Masney <masneyb@onstation.org>
+Cc: agross@kernel.org, robdclark@gmail.com, sean@poorly.run, bjorn.andersson@linaro.org, airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, jcrouse@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 09:55:12AM -0600, Rob Herring wrote:
-> On Wed, Jul 3, 2019 at 5:23 PM Matthias Kaehlcke <mka@chromium.org> wrote:
-> >
-> > Hi Florian,
-> >
-> > On Wed, Jul 03, 2019 at 02:37:47PM -0700, Florian Fainelli wrote:
-> > > On 7/3/19 12:37 PM, Matthias Kaehlcke wrote:
-> > > > The LED behavior of some Realtek PHYs is configurable. Add the
-> > > > property 'realtek,led-modes' to specify the configuration of the
-> > > > LEDs.
-> > > >
-> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > ---
-> > > > Changes in v2:
-> > > > - patch added to the series
-> > > > ---
-> > > >  .../devicetree/bindings/net/realtek.txt         |  9 +++++++++
-> > > >  include/dt-bindings/net/realtek.h               | 17 +++++++++++++++++
-> > > >  2 files changed, 26 insertions(+)
-> > > >  create mode 100644 include/dt-bindings/net/realtek.h
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
-> > > > index 71d386c78269..40b0d6f9ee21 100644
-> > > > --- a/Documentation/devicetree/bindings/net/realtek.txt
-> > > > +++ b/Documentation/devicetree/bindings/net/realtek.txt
-> > > > @@ -9,6 +9,12 @@ Optional properties:
-> > > >
-> > > >     SSC is only available on some Realtek PHYs (e.g. RTL8211E).
-> > > >
-> > > > +- realtek,led-modes: LED mode configuration.
-> > > > +
-> > > > +   A 0..3 element vector, with each element configuring the operating
-> > > > +   mode of an LED. Omitted LEDs are turned off. Allowed values are
-> > > > +   defined in "include/dt-bindings/net/realtek.h".
-> > >
-> > > This should probably be made more general and we should define LED modes
-> > > that makes sense regardless of the PHY device, introduce a set of
-> > > generic functions for validating and then add new function pointer for
-> > > setting the LED configuration to the PHY driver. This would allow to be
-> > > more future proof where each PHY driver could expose standard LEDs class
-> > > devices to user-space, and it would also allow facilities like: ethtool
-> > > -p to plug into that.
-> > >
-> > > Right now, each driver invents its own way of configuring LEDs, that
-> > > does not scale, and there is not really a good reason for that other
-> > > than reviewing drivers in isolation and therefore making it harder to
-> > > extract the commonality. Yes, I realize that since you are the latest
-> > > person submitting something in that area, you are being selected :)
+On Tue, Jun 25, 2019 at 10:21:43PM -0400, Brian Masney wrote:
+> Add device tree bindings for the On Chip Memory (OCMEM) that is present
+> on some Qualcomm Snapdragon SoCs.
 > 
-> I agree.
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> Changes since v2:
+> - Add *-sram node and gmu-sram to example.
 > 
-> > I see the merit of your proposal to come up with a generic mechanism
-> > to configure Ethernet LEDs, however I can't justify spending much of
-> > my work time on this. If it is deemed useful I'm happy to send another
-> > version of the current patchset that addresses the reviewer's comments,
-> > but if the implementation of a generic LED configuration interface is
-> > a requirement I will have to abandon at least the LED configuration
-> > part of this series.
+> Changes since v1:
+> - Rename qcom,ocmem-msm8974 to qcom,msm8974-ocmem
+> - Renamed reg-names to ctrl and mem
+> - update hardware description
+> - moved from soc to sram namespace in the device tree bindings
 > 
-> Can you at least define a common binding for this. Maybe that's just
-> removing 'realtek'. While the kernel side can evolve to a common
-> infrastructure, the DT bindings can't.
+>  .../bindings/sram/qcom/qcom,ocmem.yaml        | 84 +++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sram/qcom/qcom,ocmem.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sram/qcom/qcom,ocmem.yaml b/Documentation/devicetree/bindings/sram/qcom/qcom,ocmem.yaml
+> new file mode 100644
+> index 000000000000..a0bf0af4860a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sram/qcom/qcom,ocmem.yaml
+> @@ -0,0 +1,84 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sram/qcom/qcom,ocmem.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: On Chip Memory (OCMEM) that is present on some Qualcomm Snapdragon SoCs.
+> +
+> +maintainers:
+> +  - Brian Masney <masneyb@onstation.org>
+> +
+> +description: |
+> +  The On Chip Memory (OCMEM) is typically used by the GPU, camera/video, and
+> +  audio components on some Snapdragon SoCs.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,msm8974-ocmem
+> +
+> +  reg:
+> +    items:
+> +      - description: Control registers
+> +      - description: OCMEM address range
+> +
+> +  reg-names:
+> +    items:
+> +      - const: ctrl
+> +      - const: mem
+> +
+> +  clocks:
+> +    items:
+> +      - description: Core clock
+> +      - description: Interface clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +      - const: iface
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - clock-names
+> +
+> +patternProperties:
+> +  "^.+-sram$":
+> +    type: object
+> +    description: |
 
-I'm working on a generic binding.
+You don't need this to be a literal block (i.e. drop the '|').
 
-I wonder what is the best process for reviewing/landing it, I'm
-doubting between two options:
+> +      A region of reserved memory.
+> +
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +
+> +examples:
+> +  - |
+> +      #include <dt-bindings/clock/qcom,rpmcc.h>
+> +      #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
+> +
+> +      ocmem: ocmem@fdd00000 {
+> +        compatible = "qcom,msm8974-ocmem";
+> +
+> +        reg = <0xfdd00000 0x2000>,
+> +              <0xfec00000 0x180000>;
+> +        reg-names = "ctrl",
+> +                    "mem";
+> +
+> +        clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+> +                 <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+> +        clock-names = "core",
+> +                      "iface";
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        gmu-sram@0 {
+> +                reg = <0x0 0x100000>;
 
-a) only post the binding doc and the generic PHY code that reads
-   the configuration from the DT. Post Realtek patches once
-   the binding/generic code has been acked.
+This is at 0xfec00000? If so you should have a 'ranges' to translate 0 
+to that.
 
-   pros: no churn from Realtek specific patches
-   cons: initially no (real) user of the new binding
-
-b) post generic and Realtek changes together
-
-   pros: the binding has a user initially
-   cons: churn from Realtek specific patches
-
-I can do either, depending on what maintainers/reviewers prefer. I'm
-slightly inclined towards a)
+Rob
