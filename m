@@ -1,77 +1,96 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH v2 0/7] Add anx6345 DP/eDP bridge for Olimex Teres-I
-Date: Mon, 22 Jul 2019 11:47:33 -0700
-Message-ID: <CA+E=qVdoqkpLvRULOQLLY6heOCNYEizfqBCV4iTrCMEj6HfDZg@mail.gmail.com>
-References: <20190722150414.9F97668B20@verein.lst.de>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v5 00/13] Allwinner A64/H6 IR support
+Date: Mon, 22 Jul 2019 20:48:47 +0200
+Message-ID: <CAJiuCcetkGEpD_BrOvipi3yhy_TWgFYSVuLoExcw5=7nyPhY7A@mail.gmail.com>
+References: <20190607231100.5894-1-peron.clem@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722150414.9F97668B20@verein.lst.de>
+In-Reply-To: <20190607231100.5894-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Torsten Duwe <duwe@lst.de>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "Bcc:duwe"@lst.de
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 8:04 AM Torsten Duwe <duwe@lst.de> wrote:
->
-> ANX6345 LVTTL->eDP video bridge, driver with device tree bindings.
->
-> Changes from v2:
->
-> * use SPDX-IDs throughout
->
-> * removed the panel output again, as it was not what Maxime had in mind.
->   At least the Teres-I does very well without. No connector spec, no "quirks"[1],
->   just plain EDID at work.
+Hi,
 
-You still need a panel to put backlight in there. Otherwise backlight
-will stay on when display is turned off.
+This series received ack from device-tree, media and sunxi maintainers.
 
+Can patch 2/3/4 goes to linux-media and the rest to linux-sunxi ?
+
+Thanks,
+Cl=C3=A9ment
+
+On Sat, 8 Jun 2019 at 01:11, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>=
+ wrote:
 >
-> * binding clarifications and cosmetic changes as suggested by Andrzej
+> Hi,
 >
-> Changes from v1:
+> A64 IR support series[1] pointed out that an A31 bindings should be
+> introduced.
 >
-> * fixed up copyright information. Most code changes are only moves and thus
->   retain copyright and module ownership. Even the new analogix-anx6345.c originates
->   from the old 1495-line analogix-anx78xx.c, with 306 insertions and 987 deletions
->   (ignoring the trivial anx78xx -> anx6345 replacements) 306 new vs. 508 old...
+> This series introduce the A31 compatible bindings, then switch it on
+> the already existing board.
 >
-> * fixed all minor formatting issues brought up
+> Finally introduce A64 and H6 support.
 >
-> * merged previously separate new analogix_dp_i2c module into existing analogix_dp
+> I have reenable the other H6 boards IR support as Ondrej solve the issue.
 >
-> * split additional defines into a preparatory patch
+> Regards,
+> Cl=C3=A9ment
 >
-> * renamed the factored-out common functions anx_aux_* -> anx_dp_aux_*, because
->   anx_...aux_transfer was exported globally. Besides, it is now GPL-only exported.
+> [1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
+> [2] https://lkml.org/lkml/2019/5/27/321
+> [3] https://patchwork.kernel.org/patch/10975563/
 >
-> * moved chip ID read into a separate function.
+> Changes since v4:
+>  - Reuse defines for RXSTA bits definition
 >
-> * keep the chip powered after a successful probe.
->   (There's a good chance that this is the only display during boot!)
+> Changes since v3:
+>  - Reenable IR for other H6 boards
+>  - Add RXSTA bits definition
+>  - Add Sean Young's "Acked-by" tags
 >
-> * updated the binding document: LVTTL input is now required, only the output side
->   description is optional.
+> Changes since v2:
+>  - Disable IR for other H6 boards
+>  - Split DTS patch for H3/H5
+>  - Introduce IR quirks
 >
->  Laurent: I have also looked into the drm_panel_bridge infrastructure,
->  but it's not that trivial to convert these drivers to it.
+> Cl=C3=A9ment P=C3=A9ron (11):
+>   dt-bindings: media: sunxi-ir: Add A31 compatible
+>   media: rc: Introduce sunxi_ir_quirks
+>   media: rc: sunxi: Add A31 compatible
+>   media: rc: sunxi: Add RXSTA bits definition
+>   ARM: dts: sunxi: Prefer A31 bindings for IR
+>   ARM: dts: sunxi: Prefer A31 bindings for IR
+>   dt-bindings: media: sunxi-ir: Add A64 compatible
+>   dt-bindings: media: sunxi-ir: Add H6 compatible
+>   arm64: dts: allwinner: h6: Add IR receiver node
+>   arm64: dts: allwinner: h6: Enable IR on H6 boards
+>   arm64: defconfig: Enable IR SUNXI option
 >
-> Changes from the respective previous versions:
+> Igors Makejevs (1):
+>   arm64: dts: allwinner: a64: Add IR node
 >
-> * the reset polarity is corrected in DT and the driver;
->   things should be clearer now.
+> Jernej Skrabec (1):
+>   arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
 >
-> * as requested, add a panel (the known innolux,n116bge) and connect
->   the ports.
+>  .../devicetree/bindings/media/sunxi-ir.txt    | 11 ++-
+>  arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
+>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
+>  arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
+>  .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 +
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ++++
+>  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 +
+>  .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  4 +
+>  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  4 +
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 ++++
+>  arch/arm64/configs/defconfig                  |  1 +
+>  drivers/media/rc/sunxi-cir.c                  | 88 ++++++++++++++-----
+>  13 files changed, 135 insertions(+), 26 deletions(-)
 >
-> * renamed dvdd?? to *-supply to match the established scheme
+> --
+> 2.20.1
 >
-> * trivial update to the #include list, to make it compile in 5.2
->
-> --------------
-> [1] I hesitate to associate information about a connected panel with that term.
->     But should it be neccessary for maximum power saving (e.g. pinebooks),
->     it would be good to have something here, regardless of nomenclature.
->
->         Torsten
