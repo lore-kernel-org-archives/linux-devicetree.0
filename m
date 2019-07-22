@@ -1,30 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/6] dt-bindings: thermal: qoriq: Add optional clocks
- property
-Date: Mon, 22 Jul 2019 17:55:35 -0600
-Message-ID: <20190722235535.GA2063@bogus>
-References: <20190705045612.27665-1-Anson.Huang@nxp.com>
- <20190705045612.27665-3-Anson.Huang@nxp.com>
+Subject: Re: [PATCH V4 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
+Date: Mon, 22 Jul 2019 17:56:27 -0600
+Message-ID: <20190722235627.GA3749@bogus>
+References: <20190705085406.22483-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190705045612.27665-3-Anson.Huang@nxp.com>
+In-Reply-To: <20190705085406.22483-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Anson.Huang@nxp.com
-Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com, agx@sigxcpu.org, leonard.crestez@nxp.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  5 Jul 2019 12:56:09 +0800, Anson.Huang@nxp.com wrote:
+On Fri,  5 Jul 2019 16:54:05 +0800, Anson.Huang@nxp.com wrote:
 > From: Anson Huang <Anson.Huang@nxp.com>
 > 
-> Some platforms have clock control for TMU, add optional
-> clocks property to the binding doc.
+> i.MX8MM can reuse i.MX8MQ's reset driver, update the compatible
+> property and related info to support i.MX8MM.
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Changes since V3:
+> 	- Add comments to those reset indices to indicate which are NOT supported on i.MX8MM.
+> ---
+>  .../devicetree/bindings/reset/fsl,imx7-src.txt     |  6 +++--
+>  include/dt-bindings/reset/imx8mq-reset.h           | 28 +++++++++++-----------
+>  2 files changed, 18 insertions(+), 16 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
