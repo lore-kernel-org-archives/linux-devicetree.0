@@ -1,330 +1,52 @@
-From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like
- logger
-Date: Mon, 22 Jul 2019 13:03:46 -0700
-Message-ID: <20190722200347.261D3218C9@mail.kernel.org>
-References: <20190712081744.87097-1-brendanhiggins@google.com>
- <20190712081744.87097-5-brendanhiggins@google.com>
- <20190715221554.8417320665@mail.kernel.org>
- <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
- <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
- <20190716175021.9CA412173C@mail.kernel.org>
- <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
- <20190718175024.C3EC421019@mail.kernel.org>
- <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com>
- <20190719000834.GA3228@google.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] dt-bindings: hwmon: Add binding for pxe1610
+Date: Mon, 22 Jul 2019 13:06:22 -0700
+Message-ID: <20190722200622.GA20435@roeck-us.net>
+References: <20190722192451.1947348-1-vijaykhemka@fb.com>
+ <20190722192451.1947348-2-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20190719000834.GA3228-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuah <shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, David Rientjes <rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kbuild <linux-kbuild-u79uwXL29TasMV2rI37PzA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190722192451.1947348-2-vijaykhemka@fb.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vijay Khemka <vijaykhemka@fb.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, sdasari@fb.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brendan Higgins (2019-07-18 17:08:34)
-> On Thu, Jul 18, 2019 at 12:22:33PM -0700, Brendan Higgins wrote:
->
-> I started poking around with your suggestion while we are waiting. A
-> couple early observations:
+On Mon, Jul 22, 2019 at 12:24:48PM -0700, Vijay Khemka wrote:
+> Added new DT binding document for Infineon PXE1610 devices.
 > 
-> 1) It is actually easier to do than I previously thought and will probably
->    help with getting more of the planned TAP output stuff working.
-> 
->    That being said, this is still a pretty substantial undertaking and
->    will likely take *at least* a week to implement and properly review.
->    Assuming everything goes extremely well (no unexpected issues on my
->    end, very responsive reviewers, etc).
-> 
-> 2) It *will* eliminate the need for kunit_stream.
-> 
-> 3) ...but, it *will not* eliminate the need for string_stream.
-> 
-> Based on my early observations, I do think it is worth doing, but I
-> don't think it is worth trying to make it in this patchset (unless I
-> have already missed the window, or it is going to be open for a while):
-
-The merge window is over. Typically code needs to be settled a few weeks
-before it opens (i.e. around -rc4 or -rc5) for most maintainers to pick
-up patches for the next merge window.
-
-> I do think it will make things much cleaner, but I don't think it will
-> achieve your desired goal of getting rid of an unstructured
-> {kunit|string}_stream style interface; it just adds a layer on top of it
-> that makes it harder to misuse.
-
-Ok.
-
-> 
-> I attached a patch of what I have so far at the end of this email so you
-> can see what I am talking about. And of course, if you agree with my
-> assessment, so we can start working on it as a future patch.
-> 
-> A couple things in regard to the patch I attached:
-> 
-> 1) I wrote it pretty quickly so there are almost definitely mistakes.
->    You should consider it RFC. I did verify it compiles though.
-> 
-> 2) Also, I did use kunit_stream in writing it: all occurences should be
->    pretty easy to replace with string_stream; nevertheless, the reason
->    for this is just to make it easier to play with the current APIs. I
->    wanted to have something working before I went through a big tedious
->    refactoring. So sorry if it causes any confusion.
-> 
-> 3) I also based the patch on all the KUnit patches I have queued up
->    (includes things like mocking and such) since I want to see how this
->    serialization thing will work with mocks and matchers and things like
->    that.
-
-Great!
-
-> 
-> From 53d475d3d56afcf92b452c6d347dbedfa1a17d34 Mon Sep 17 00:00:00 2001
-> From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Date: Thu, 18 Jul 2019 16:08:52 -0700
-> Subject: [PATCH v1] DO NOT MERGE: started playing around with the
->  serialization api
-> 
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 > ---
->  include/kunit/assert.h | 130 ++++++++++++++++++++++++++++++
->  include/kunit/mock.h   |   4 +
->  kunit/Makefile         |   3 +-
->  kunit/assert.c         | 179 +++++++++++++++++++++++++++++++++++++++++
->  kunit/mock.c           |   6 +-
->  5 files changed, 318 insertions(+), 4 deletions(-)
->  create mode 100644 include/kunit/assert.h
->  create mode 100644 kunit/assert.c
+>  .../devicetree/bindings/hwmon/pxe1610.txt         | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/pxe1610.txt
 > 
-> diff --git a/include/kunit/assert.h b/include/kunit/assert.h
+> diff --git a/Documentation/devicetree/bindings/hwmon/pxe1610.txt b/Documentation/devicetree/bindings/hwmon/pxe1610.txt
 > new file mode 100644
-> index 0000000000000..e054fdff4642f
+> index 000000000000..635daf4955db
 > --- /dev/null
-> +++ b/include/kunit/assert.h
-> @@ -0,0 +1,130 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Assertion and expectation serialization API.
-> + *
-> + * Copyright (C) 2019, Google LLC.
-> + * Author: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> + */
+> +++ b/Documentation/devicetree/bindings/hwmon/pxe1610.txt
+> @@ -0,0 +1,15 @@
+> +pxe1610 properties
 > +
-> +#ifndef _KUNIT_ASSERT_H
-> +#define _KUNIT_ASSERT_H
+> +Required properties:
+> +- compatible: Must be one of the following:
+> +	- "infineon,pxe1610" for pxe1610
+> +	- "infineon,pxe1110" for pxe1610
+> +	- "infineon,pxm1310" for pxm1310
+> +- reg: I2C address
 > +
-> +#include <kunit/test.h>
-> +#include <kunit/mock.h>
+> +Example:
 > +
-> +enum kunit_assert_type {
-> +       KUNIT_ASSERTION,
-> +       KUNIT_EXPECTATION,
-> +};
-> +
-> +struct kunit_assert {
-> +       enum kunit_assert_type type;
-> +       const char *line;
-> +       const char *file;
-> +       struct va_format message;
-> +       void (*format)(struct kunit_assert *assert,
-> +                      struct kunit_stream *stream);
-
-Would passing in the test help too?
-
-> +};
-> +
-> +void kunit_base_assert_format(struct kunit_assert *assert,
-> +                             struct kunit_stream *stream);
-> +
-> +void kunit_assert_print_msg(struct kunit_assert *assert,
-> +                           struct kunit_stream *stream);
-> +
-> +struct kunit_unary_assert {
-> +       struct kunit_assert assert;
-> +       const char *condition;
-> +       bool expected_true;
-> +};
-> +
-> +void kunit_unary_assert_format(struct kunit_assert *assert,
-> +                              struct kunit_stream *stream);
-> +
-> +struct kunit_ptr_not_err_assert {
-> +       struct kunit_assert assert;
-> +       const char *text;
-> +       void *value;
-> +};
-> +
-> +void kunit_ptr_not_err_assert_format(struct kunit_assert *assert,
-> +                                    struct kunit_stream *stream);
-> +
-> +struct kunit_binary_assert {
-> +       struct kunit_assert assert;
-> +       const char *operation;
-> +       const char *left_text;
-> +       long long left_value;
-> +       const char *right_text;
-> +       long long right_value;
-> +};
-> +
-> +void kunit_binary_assert_format(struct kunit_assert *assert,
-> +                               struct kunit_stream *stream);
-> +
-> +struct kunit_binary_ptr_assert {
-> +       struct kunit_assert assert;
-> +       const char *operation;
-> +       const char *left_text;
-> +       void *left_value;
-> +       const char *right_text;
-> +       void *right_value;
-> +};
-> +
-> +void kunit_binary_ptr_assert_format(struct kunit_assert *assert,
-> +                                   struct kunit_stream *stream);
-> +
-> +struct kunit_binary_str_assert {
-> +       struct kunit_assert assert;
-> +       const char *operation;
-> +       const char *left_text;
-> +       const char *left_value;
-> +       const char *right_text;
-> +       const char *right_value;
-> +};
-> +
-> +void kunit_binary_str_assert_format(struct kunit_assert *assert,
-> +                                   struct kunit_stream *stream);
-> +
-> +struct kunit_mock_assert {
-> +       struct kunit_assert assert;
-> +};
-> +
-> +struct kunit_mock_no_expectations {
-> +       struct kunit_mock_assert assert;
+> +vr@48 {
+> +	compatible = "infineon,pxe1610";
+> +	reg = <0x48>;
 > +};
 
-What's the purpose of making a wrapper struct with no other members?
-Just to make a different struct for some sort of type checking? I guess
-it's OK but I don't think it will be very useful in practice.
+Wouldn't it be better to add this to
+./Documentation/devicetree/bindings/trivial-devices.txt ?
 
-> +
-> +struct kunit_mock_declaration {
-> +       const char *function_name;
-> +       const char **type_names;
-> +       const void **params;
-> +       int len;
-> +};
-> +
-> +void kunit_mock_declaration_format(struct kunit_mock_declaration *declaration,
-> +                                  struct kunit_stream *stream);
-> +
-> +struct kunit_matcher_result {
-> +       struct kunit_assert assert;
-> +};
-> +
-> +struct kunit_mock_failed_match {
-> +       struct list_head node;
-> +       const char *expectation_text;
-> +       struct kunit_matcher_result *matcher_list;
-
-Minor nitpick: this code could use some const sprinkling.
-
-> +       size_t matcher_list_len;
-> +};
-> +
-> +void kunit_mock_failed_match_format(struct kunit_mock_failed_match *match,
-> +                                   struct kunit_stream *stream);
-> +
-> +struct kunit_mock_no_match {
-> +       struct kunit_mock_assert assert;
-> +       struct kunit_mock_declaration declaration;
-> +       struct list_head failed_match_list;
-> +};
-> +
-> +void kunit_mock_no_match_format(struct kunit_assert *assert,
-> +                               struct kunit_stream *stream);
-> +
-> +#endif /*  _KUNIT_ASSERT_H */
-> diff --git a/kunit/assert.c b/kunit/assert.c
-> new file mode 100644
-> index 0000000000000..75bb6922a994e
-> --- /dev/null
-> +++ b/kunit/assert.c
-> @@ -0,0 +1,179 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Assertion and expectation serialization API.
-> + *
-> + * Copyright (C) 2019, Google LLC.
-> + * Author: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> + */
-> +#include <kunit/assert.h>
-> +
-> +void kunit_base_assert_format(struct kunit_assert *assert,
-> +                             struct kunit_stream *stream)
-> +{
-> +       const char *expect_or_assert;
-> +
-> +       if (assert->type == KUNIT_EXPECTATION)
-> +               expect_or_assert = "EXPECTATION";
-> +       else
-> +               expect_or_assert = "ASSERTION";
-
-Make this is a switch statement so we can have the compiler complain if
-an enum is missing.
-
-> +
-> +       kunit_stream_add(stream, "%s FAILED at %s:%s\n",
-> +                        expect_or_assert, assert->file, assert->line);
-> +}
-> +
-> +void kunit_assert_print_msg(struct kunit_assert *assert,
-> +                           struct kunit_stream *stream)
-> +{
-> +       if (assert->message.fmt)
-> +               kunit_stream_add(stream, "\n%pV", &assert->message);
-> +}
-> +
-[...]
-> +
-> +void kunit_mock_failed_match_format(struct kunit_mock_failed_match *match,
-> +                                   struct kunit_stream *stream)
-> +{
-> +       struct kunit_matcher_result *result;
-> +       size_t i;
-> +
-> +       kunit_stream_add(stream,
-> +                        "Tried expectation: %s, but\n",
-> +                        match->expectation_text);
-> +       for (i = 0; i < match->matcher_list_len; i++) {
-> +               result = &match->matcher_list[i];
-> +               kunit_stream_add(stream, "\t");
-> +               result->assert.format(&result->assert, stream);
-> +               kunit_stream_add(stream, "\n");
-> +       }
-
-What's the calling context of the assertions and expectations? I still
-don't like the fact that string stream needs to allocate buffers and
-throw them into a list somewhere because the calling context matters
-there. I'd prefer we just wrote directly to the console/log via printk
-instead. That way things are simple because we use the existing
-buffering path of printk, but maybe there's some benefit to the string
-stream that I don't see? Right now it looks like it builds a string and
-then dumps it to printk so I'm sort of lost what the benefit is over
-just writing directly with printk.
-
-Maybe it's this part that you wrote up above?
-
-> > Nevertheless, I think the debate over the usefulness of the
-> > string_stream and kunit_stream are separate topics. Even if we made
-> > kunit_stream more structured, I am pretty sure I would want to use
-> > string_stream or some variation for constructing the message.
-
-Why do we need string_stream to construct the message? Can't we just
-print it as we process it?
+Thanks,
+Guenter
