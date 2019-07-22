@@ -1,242 +1,333 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/6] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-Date: Mon, 22 Jul 2019 16:59:14 -0600
-Message-ID: <20190722225914.GB2917@bogus>
-References: <20190702080920.22623-1-srinivas.kandagatla@linaro.org>
- <20190702080920.22623-2-srinivas.kandagatla@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v8 3/5] arm64: dts: qcom: Add Lenovo Miix 630
+Date: Mon, 22 Jul 2019 16:34:44 -0700
+Message-ID: <20190722233444.GA7352@tuxbook-pro>
+References: <20190621144854.38568-1-jeffrey.l.hugo@gmail.com>
+ <20190621145450.38741-1-jeffrey.l.hugo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190702080920.22623-2-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, vkoul@kernel.org, broonie@kernel.org, srini@kernel.org
+In-Reply-To: <20190621145450.38741-1-jeffrey.l.hugo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: agross@kernel.org, benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com, jikos@kernel.org, hdegoede@redhat.com, lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 09:09:15AM +0100, Srinivas Kandagatla wrote:
-> This patch adds bindings for wcd9340/wcd9341 audio codec which can
-> support both SLIMbus and I2S/I2C interface.
+On Fri 21 Jun 07:54 PDT 2019, Jeffrey Hugo wrote:
+
+> This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
+> functionality includes USB (host), microSD-card, keyboard, and trackpad.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+
+Applied patch 3-5
+
+Thanks,
+Bjorn
+
 > ---
->  .../bindings/sound/qcom,wcd934x.txt           | 188 ++++++++++++++++++
->  1 file changed, 188 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.txt
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/msm8998-clamshell.dtsi      | 240 ++++++++++++++++++
+>  .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 +++
+>  3 files changed, 271 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd934x.txt b/Documentation/devicetree/bindings/sound/qcom,wcd934x.txt
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 21d548f02d39..c3e4307bcbd4 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
 > new file mode 100644
-> index 000000000000..2b48c98b5b7d
+> index 000000000000..9682d4dd7496
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd934x.txt
-> @@ -0,0 +1,188 @@
-> +QCOM WCD9340/9341 Codec Bindings
+> +++ b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+> @@ -0,0 +1,240 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
 > +
-> +Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC, supports
-> +Qualcomm Technologies, Inc. (QTI) multimedia solutions, including
-> +the MSM8996, MSM8976, and MSM8956 chipsets. It has in-built
-> +Soundwire controller, interrupt mux. It supports both I2S/I2C and
-> +SLIMbus audio interfaces.
+> +/*
+> + * Common include for MSM8998 clamshell devices, ie the Lenovo Miix 630,
+> + * Asus NovaGo TP370QL, and HP Envy x2.  All three devices are basically the
+> + * same, with differences in peripherals.
+> + */
 > +
-> +Required properties with SLIMbus Interface:
+> +#include "msm8998.dtsi"
+> +#include "pm8998.dtsi"
+> +#include "pm8005.dtsi"
 > +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: For SLIMbus interface it should be "slimMID,PID",
-> +		    textual representation of Manufacturer ID, Product Code,
-> +		    shall be in lower case hexadecimal with leading zeroes
-> +		    suppressed.  Refer to slimbus/bus.txt for details.
-> +		    Should be:
-> +		    "slim217,250" for SDM845/SDA845 SoCs with SLIMbus.
-> +
-> +- reg
-> +	Usage: required
-> +	Value type: <u32 u32>
-> +	Definition: Should be ('Device index', 'Instance ID')
-> +
-> +- interrupts
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: Interrupts via WCD INTR1 and INTR2 pins
-
-Example only has 1 irq.
-
-> +
-> +- interrupt-names:
-> +	Usage: required
-> +	Value type: <String array>
-> +	Definition: Interrupt names of WCD INTR1 and INTR2
-> +	Should be: "intr1", "intr2"
-> +
-> +- reset-gpios:
-> +	Usage: required
-> +	Value type: <String Array>
-
-Really?
-
-> +	Definition: Reset gpio line
-> +
-> +- slim-ifc-dev:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: SLIM interface device
-> +
-> +- clocks:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: See clock-bindings.txt section "consumers". List of
-> +                three clock specifiers for mclk, mclk2 and slimbus clock.
-> +
-> +- clock-names:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Must contain "mclk", "mclk2" and "slimbus" strings.
-> +
-> +- vdd-buck-supply:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: Should contain a reference to the 1.8V buck supply
-> +
-> +- vdd-buck-sido-supply:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: Should contain a reference to the 1.8V SIDO buck supply
-> +
-> +- vdd-rx-supply:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: Should contain a reference to the 1.8V rx supply
-> +
-> +- vdd-tx-supply:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: Should contain a reference to the 1.8V tx supply
-> +
-> +- vdd-vbat-supply:
-> +	Usage: Optional
-> +	Value type: <phandle>
-> +	Definition: Should contain a reference to the vbat supply
-> +
-> +- vdd-micbias-supply:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: Should contain a reference to the micbias supply
-> +
-> +- vdd-io-supply:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: Should contain a reference to the 1.8V io supply
-> +
-> +- qcom,micbias1-lvl:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: Should be voltage in milli Volts for micbias1 output
-> +	Supported values are in inbetween 1800mV-2850mV
-> +
-> +- qcom,micbias2-lvl:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: Should be voltage in milli Volts for micbias2 output
-> +	Supported values are in inbetween 1800mV-2850mV
-> +
-> +- qcom,micbias3-lvl:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: Should be voltage in milli Volts for micbias3 output
-> +	Supported values are in inbetween 1800mV-2850mV
-> +
-> +- qcom,micbias4-lvl:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: Should be voltage in milli Volts for micbias4 output
-> +	Supported values are in inbetween 1800mV-2850mV
-> +
-> +- clock-output-names:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Should be the "mclk", corresponding to name
-> +			of the clk output.
-> +
-> +- clock-frequency:
-> +	Usage: required
-> +	Definition: Indicating the frequency of mclk output.
-> +
-> +- interrupt-controller:
-> +	Usage: required
-> +	Definition: Indicating that this is a interrupt controller
-> +
-> +- #interrupt-cells:
-> +	Usage: required
-> +	Value type: <int>
-> +	Definition: should be 1
-> +
-> +- #clock-cells:
-> +	Usage: required
-> +	Value type: <int>
-> +	Definition: should be 0, as there is only one clock out supported.
-> +
-> +#sound-dai-cells
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: Must be 1
-> +
-> +Example:
-> +
-> +wcd9340: audio-codec@1{
-> +	compatible = "slim217,250";
-> +	reg  = <1 0>;
-> +	reset-gpios = <&tlmm 64 0>;
-> +	slim-ifc-dev  = <&wcd9340_ifd>;
-> +	vdd-buck-supply = <&vreg_s4a_1p8>;
-> +	vdd-buck-sido-supply = <&vreg_s4a_1p8>;
-> +	vdd-tx-supply = <&vreg_s4a_1p8>;
-> +	vdd-rx-supply = <&vreg_s4a_1p8>;
-> +	vdd-io-supply = <&vreg_s4a_1p8>;
-> +	qcom,micbias1-lvl = <1800>;
-> +	qcom,micbias2-lvl = <1800>;
-> +	qcom,micbias3-lvl = <1800>;
-> +	qcom,micbias4-lvl = <1800>;
-> +
-> +	interrupt-parent = <&tlmm>;
-> +	interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names  = "intr1";
-> +	interrupt-controller;
-> +	#interrupt-cells = <1>;
-> +
-> +	#clock-cells = <0>;
-> +	clock-frequency = <9600000>;
-> +	clock-output-names = "mclk";
-> +	#sound-dai-cells = <1>;
-> +
-> +	pinctrl@42 {
-> +		compatible = "qcom,wcd9340-pinctrl";
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		gpio-ranges = <&wcdpinctrl 0 0 5>;
-> +		reg = <0x42 0x2>;
-> +		...
+> +/ {
+> +	chosen {
 > +	};
 > +
-> +	soundwire@c85{
-
-Child nodes need documenting.
-
-> +		compatible = "qcom,soundwire-v1.3.0";
-> +		reg = <0xc85 0x40>;
-> +		...
+> +	vph_pwr: vph-pwr-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vph_pwr";
+> +		regulator-always-on;
+> +		regulator-boot-on;
 > +	};
 > +};
+> +
+> +&qusb2phy {
+> +	status = "okay";
+> +
+> +	vdda-pll-supply = <&vreg_l12a_1p8>;
+> +	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
+> +};
+> +
+> +&rpm_requests {
+> +	pm8998-regulators {
+> +		compatible = "qcom,rpm-pm8998-regulators";
+> +
+> +		vdd_s1-supply = <&vph_pwr>;
+> +		vdd_s2-supply = <&vph_pwr>;
+> +		vdd_s3-supply = <&vph_pwr>;
+> +		vdd_s4-supply = <&vph_pwr>;
+> +		vdd_s5-supply = <&vph_pwr>;
+> +		vdd_s6-supply = <&vph_pwr>;
+> +		vdd_s7-supply = <&vph_pwr>;
+> +		vdd_s8-supply = <&vph_pwr>;
+> +		vdd_s9-supply = <&vph_pwr>;
+> +		vdd_s10-supply = <&vph_pwr>;
+> +		vdd_s11-supply = <&vph_pwr>;
+> +		vdd_s12-supply = <&vph_pwr>;
+> +		vdd_s13-supply = <&vph_pwr>;
+> +		vdd_l1_l27-supply = <&vreg_s7a_1p025>;
+> +		vdd_l2_l8_l17-supply = <&vreg_s3a_1p35>;
+> +		vdd_l3_l11-supply = <&vreg_s7a_1p025>;
+> +		vdd_l4_l5-supply = <&vreg_s7a_1p025>;
+> +		vdd_l6-supply = <&vreg_s5a_2p04>;
+> +		vdd_l7_l12_l14_l15-supply = <&vreg_s5a_2p04>;
+> +		vdd_l9-supply = <&vph_pwr>;
+> +		vdd_l10_l23_l25-supply = <&vph_pwr>;
+> +		vdd_l13_l19_l21-supply = <&vph_pwr>;
+> +		vdd_l16_l28-supply = <&vph_pwr>;
+> +		vdd_l18_l22-supply = <&vph_pwr>;
+> +		vdd_l20_l24-supply = <&vph_pwr>;
+> +		vdd_l26-supply = <&vreg_s3a_1p35>;
+> +		vdd_lvs1_lvs2-supply = <&vreg_s4a_1p8>;
+> +
+> +		vreg_s3a_1p35: s3 {
+> +			regulator-min-microvolt = <1352000>;
+> +			regulator-max-microvolt = <1352000>;
+> +		};
+> +		vreg_s4a_1p8: s4 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-allow-set-load;
+> +		};
+> +		vreg_s5a_2p04: s5 {
+> +			regulator-min-microvolt = <1904000>;
+> +			regulator-max-microvolt = <2040000>;
+> +		};
+> +		vreg_s7a_1p025: s7 {
+> +			regulator-min-microvolt = <900000>;
+> +			regulator-max-microvolt = <1028000>;
+> +		};
+> +		vreg_l1a_0p875: l1 {
+> +			regulator-min-microvolt = <880000>;
+> +			regulator-max-microvolt = <880000>;
+> +			regulator-allow-set-load;
+> +		};
+> +		vreg_l2a_1p2: l2 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +			regulator-allow-set-load;
+> +		};
+> +		vreg_l3a_1p0: l3 {
+> +			regulator-min-microvolt = <1000000>;
+> +			regulator-max-microvolt = <1000000>;
+> +		};
+> +		vreg_l5a_0p8: l5 {
+> +			regulator-min-microvolt = <800000>;
+> +			regulator-max-microvolt = <800000>;
+> +		};
+> +		vreg_l6a_1p8: l6 {
+> +			regulator-min-microvolt = <1808000>;
+> +			regulator-max-microvolt = <1808000>;
+> +		};
+> +		vreg_l7a_1p8: l7 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +		vreg_l8a_1p2: l8 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +		};
+> +		vreg_l9a_1p8: l9 {
+> +			regulator-min-microvolt = <1808000>;
+> +			regulator-max-microvolt = <2960000>;
+> +		};
+> +		vreg_l10a_1p8: l10 {
+> +			regulator-min-microvolt = <1808000>;
+> +			regulator-max-microvolt = <2960000>;
+> +		};
+> +		vreg_l11a_1p0: l11 {
+> +			regulator-min-microvolt = <1000000>;
+> +			regulator-max-microvolt = <1000000>;
+> +		};
+> +		vreg_l12a_1p8: l12 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +		vreg_l13a_2p95: l13 {
+> +			regulator-min-microvolt = <1808000>;
+> +			regulator-max-microvolt = <2960000>;
+> +		};
+> +		vreg_l14a_1p88: l14 {
+> +			regulator-min-microvolt = <1880000>;
+> +			regulator-max-microvolt = <1880000>;
+> +		};
+> +		vreg_15a_1p8: l15 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +		vreg_l16a_2p7: l16 {
+> +			regulator-min-microvolt = <2704000>;
+> +			regulator-max-microvolt = <2704000>;
+> +		};
+> +		vreg_l17a_1p3: l17 {
+> +			regulator-min-microvolt = <1304000>;
+> +			regulator-max-microvolt = <1304000>;
+> +		};
+> +		vreg_l18a_2p7: l18 {
+> +			regulator-min-microvolt = <2704000>;
+> +			regulator-max-microvolt = <2704000>;
+> +		};
+> +		vreg_l19a_3p0: l19 {
+> +			regulator-min-microvolt = <3008000>;
+> +			regulator-max-microvolt = <3008000>;
+> +		};
+> +		vreg_l20a_2p95: l20 {
+> +			regulator-min-microvolt = <2960000>;
+> +			regulator-max-microvolt = <2960000>;
+> +			regulator-allow-set-load;
+> +		};
+> +		vreg_l21a_2p95: l21 {
+> +			regulator-min-microvolt = <2960000>;
+> +			regulator-max-microvolt = <2960000>;
+> +			regulator-allow-set-load;
+> +			regulator-system-load = <800000>;
+> +		};
+> +		vreg_l22a_2p85: l22 {
+> +			regulator-min-microvolt = <2864000>;
+> +			regulator-max-microvolt = <2864000>;
+> +		};
+> +		vreg_l23a_3p3: l23 {
+> +			regulator-min-microvolt = <3312000>;
+> +			regulator-max-microvolt = <3312000>;
+> +		};
+> +		vreg_l24a_3p075: l24 {
+> +			regulator-min-microvolt = <3088000>;
+> +			regulator-max-microvolt = <3088000>;
+> +		};
+> +		vreg_l25a_3p3: l25 {
+> +			regulator-min-microvolt = <3104000>;
+> +			regulator-max-microvolt = <3312000>;
+> +		};
+> +		vreg_l26a_1p2: l26 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +		};
+> +		vreg_l28_3p0: l28 {
+> +			regulator-min-microvolt = <3008000>;
+> +			regulator-max-microvolt = <3008000>;
+> +		};
+> +
+> +		vreg_lvs1a_1p8: lvs1 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +
+> +		vreg_lvs2a_1p8: lvs2 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +		};
+> +
+> +	};
+> +};
+> +
+> +&tlmm {
+> +	gpio-reserved-ranges = <0 4>, <81 4>;
+> +
+> +	touchpad: touchpad {
+> +		config {
+> +			pins = "gpio123";
+> +			bias-pull-up;           /* pull up */
+> +		};
+> +	};
+> +};
+> +
+> +&sdhc2 {
+> +	status = "okay";
+> +
+> +	vmmc-supply = <&vreg_l21a_2p95>;
+> +	vqmmc-supply = <&vreg_l13a_2p95>;
+> +
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
+> +	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
+> +};
+> +
+> +&usb3 {
+> +	status = "okay";
+> +};
+> +
+> +&usb3_dwc3 {
+> +	dr_mode = "host"; /* Force to host until we have Type-C hooked up */
+> +};
+> +
+> +&usb3phy {
+> +	status = "okay";
+> +
+> +	vdda-phy-supply = <&vreg_l1a_0p875>;
+> +	vdda-pll-supply = <&vreg_l2a_1p2>;
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+> new file mode 100644
+> index 000000000000..407c6a32911c
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+> @@ -0,0 +1,30 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
+> +
+> +/dts-v1/;
+> +
+> +#include "msm8998-clamshell.dtsi"
+> +
+> +/ {
+> +	model = "Lenovo Miix 630";
+> +	compatible = "lenovo,miix-630", "qcom,msm8998";
+> +};
+> +
+> +&blsp1_i2c6 {
+> +	status = "okay";
+> +
+> +	keyboard@3a {
+> +		compatible = "hid-over-i2c";
+> +		interrupt-parent = <&tlmm>;
+> +		interrupts = <0x79 IRQ_TYPE_LEVEL_LOW>;
+> +		reg = <0x3a>;
+> +		hid-descr-addr = <0x0001>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&touchpad>;
+> +	};
+> +};
+> +
+> +&sdhc2 {
+> +	cd-gpios = <&tlmm 95 GPIO_ACTIVE_HIGH>;
+> +};
 > -- 
-> 2.21.0
+> 2.17.1
 > 
