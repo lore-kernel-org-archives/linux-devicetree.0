@@ -1,100 +1,48 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH v3 6/7] dt-bindings: Add ANX6345 DP/eDP transmitter binding
-Date: Mon, 22 Jul 2019 11:51:36 -0700
-Message-ID: <CA+E=qVdu3Hf7ufst-t_CiWkquximGFX8B2RcoQ1x0m++cc8n8Q@mail.gmail.com>
-References: <20190722151202.5506768B20@verein.lst.de>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
+ configure LED mode
+Date: Mon, 22 Jul 2019 21:01:33 +0200
+Message-ID: <20190722190133.GF8972@lunn.ch>
+References: <20190703193724.246854-1-mka@chromium.org>
+ <20190703193724.246854-6-mka@chromium.org>
+ <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
+ <20190703232331.GL250418@google.com>
+ <CAL_JsqL_AU+JV0c2mNbXiPh2pvfYbPbLV-2PHHX0hC3vUH4QWg@mail.gmail.com>
+ <20190722171418.GV250418@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722151202.5506768B20@verein.lst.de>
+Content-Disposition: inline
+In-Reply-To: <20190722171418.GV250418@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Torsten Duwe <duwe@lst.de>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 8:12 AM Torsten Duwe <duwe@lst.de> wrote:
->
-> The anx6345 is an ultra-low power DisplayPort/eDP transmitter designed
-> for portable devices.
->
-> Add a binding document for it.
+On Mon, Jul 22, 2019 at 10:14:18AM -0700, Matthias Kaehlcke wrote:
+> I'm working on a generic binding.
+> 
+> I wonder what is the best process for reviewing/landing it, I'm
+> doubting between two options:
+> 
+> a) only post the binding doc and the generic PHY code that reads
+>    the configuration from the DT. Post Realtek patches once
+>    the binding/generic code has been acked.
+> 
+>    pros: no churn from Realtek specific patches
+>    cons: initially no (real) user of the new binding
+> 
+> b) post generic and Realtek changes together
+> 
+>    pros: the binding has a user initially
+>    cons: churn from Realtek specific patches
+> 
+> I can do either, depending on what maintainers/reviewers prefer. I'm
+> slightly inclined towards a)
 
-I believe you'll have to convert it to yaml format.
+Hi Matthias
 
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->  .../devicetree/bindings/display/bridge/anx6345.txt | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.txt
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.txt b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
-> new file mode 100644
-> index 000000000000..0af092d101c5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
-> @@ -0,0 +1,57 @@
-> +Analogix ANX6345 eDP Transmitter
-> +--------------------------------
-> +
-> +The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
-> +portable devices.
-> +
-> +Required properties:
-> +
-> + - compatible          : "analogix,anx6345"
-> + - reg                 : I2C address of the device
-> + - reset-gpios         : Which GPIO to use for reset (active low)
-> + - dvdd12-supply       : Regulator for 1.2V digital core power.
-> + - dvdd25-supply       : Regulator for 2.5V digital core power.
-> + - Video port 0 for LVTTL input, using the DT bindings defined in [1].
-> +
-> +Optional properties:
-> +
-> + - Video port 1 for eDP output (panel or connector) using the DT bindings
-> +   defined in [1].
-> +
-> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +anx6345: anx6345@38 {
-> +       compatible = "analogix,anx6345";
-> +       reg = <0x38>;
-> +       reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-> +       dvdd25-supply = <&reg_dldo2>;
-> +       dvdd12-supply = <&reg_fldo1>;
-> +
-> +       ports {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               anx6345_in: port@0 {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg = <0>;
-> +                       anx6345_in_tcon0: endpoint@0 {
-> +                               reg = <0>;
-> +                               remote-endpoint = <&tcon0_out_anx6345>;
-> +                       };
-> +               };
-> +
-> +               anx6345_out: port@1 {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg = <1>;
-> +
-> +                       anx6345_out_panel: endpoint@0 {
-> +                               reg = <0>;
-> +                               remote-endpoint = <&panel_in_edp>;
-> +                       };
-> +               };
-> +       };
-> +};
-> --
-> 2.16.4
->
+It is normal to include one user of any generic API which is added,
+just to make is clear how an API should be used.
+
+     Andrew
