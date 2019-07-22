@@ -1,75 +1,84 @@
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 0/4][V3] iio: imu: Add support for the ADIS16460 IMU
-Date: Mon, 22 Jul 2019 15:47:43 +0300
-Message-ID: <20190722124747.4792-1-alexandru.ardelean@analog.com>
+From: Bin Meng <bmeng.cn@gmail.com>
+Subject: Re: [PATCH] riscv: dts: fu540-c000: Add "status" property to cpu node
+Date: Mon, 22 Jul 2019 21:35:20 +0800
+Message-ID: <CAEUhbmWLuFKdM0UhAvp2hjrDwYc5yxX91pZKOt9DHmb_oV-mJA@mail.gmail.com>
+References: <1562298766-25066-1-git-send-email-bmeng.cn@gmail.com>
+ <MN2PR04MB60611BD1B89E3D76ABFBE94A8DF50@MN2PR04MB6061.namprd04.prod.outlook.com>
+ <CAEUhbmWdLoRU1QGVZtwmymtYyQw43UMR8WDB17rJRmvXGbuBTg@mail.gmail.com>
+ <20190722081157.rojxwc6qrsplpduo@salmiak>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190722081157.rojxwc6qrsplpduo@salmiak>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <Anup.Patel@wdc.com>, Yash Shah <yash.shah@sifive.com>, Rob Herring <robh+dt@kernel.org>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv <linux-riscv@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This changeset adds support for the ADIS16460.
+Hi Mark,
 
-Support for this chip, requires changes in both IIO & SPI, in order to
-support configurable/longer CS change delays.
+On Mon, Jul 22, 2019 at 4:18 PM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Fri, Jul 05, 2019 at 01:11:01PM +0800, Bin Meng wrote:
+> > On Fri, Jul 5, 2019 at 11:59 AM Anup Patel <Anup.Patel@wdc.com> wrote:
+> > >
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: linux-riscv <linux-riscv-bounces@lists.infradead.org> On Behalf Of Bin
+> > > > Meng
+> > > > Sent: Friday, July 5, 2019 9:23 AM
+> > > > To: linux-riscv <linux-riscv@lists.infradead.org>; devicetree
+> > > > <devicetree@vger.kernel.org>; Rob Herring <robh+dt@kernel.org>; Mark
+> > > > Rutland <mark.rutland@arm.com>; Albert Ou <aou@eecs.berkeley.edu>;
+> > > > Paul Walmsley <paul.walmsley@sifive.com>; Palmer Dabbelt
+> > > > <palmer@sifive.com>; Yash Shah <yash.shah@sifive.com>
+> > > > Subject: [PATCH] riscv: dts: fu540-c000: Add "status" property to cpu node
+> > > >
+> > > > Per device tree spec, the "status" property property shall be present for
+> > > > nodes representing CPUs in a SMP configuration. This property is currently
+> > > > missing in cpu 1/2/3/4 node in the fu540-c000.dtsi.
+> > >
+> > > We don't need explicit "status = okay" for SOC internal devices
+> > > (such as PLIC, INTC, etc) which are always enabled by default.
+> > >
+> >
+> > Yes, that's fine because those device bindings do not require them.
+> >
+> > > Absence of "status" DT prop is treated as enabled by default.
+> > >
+> >
+> > But per current device tree spec, "status" in cpu node is mandatory.
+> > (spec uses "shall"). Missing it is a spec violation.
+>
+> I think this is a spec bug (or at least misleading wording in the spec).
+>
+> IEEE 1275 says (for status as a generic property):
+>
+>   The absence of this property menas that the operational status is unknown or
+>   okay.
 
-The default CS change delay is 10 uS, while the ADIS16460 requires a
-minimum of 16 uS. In order to accomodate this, the SPI transfer struct
-requires a `cs_change_delay_usecs` parameter that is used when `cs_change`
-is set.
+Yes, I checked IEEE 1275 doc, and it indeed says like you mentioned.
 
-The ADIS library also requires a small update to support the new SPI
-`cs_change_delay_usecs`, and after that, support for ADIS16460 is added,
-since all the required parts for operating the chip are in the kernel.
+However, it says "unknown" _or_ "okay", yet provides a definite value.
 
-Continuing discussion from:
-  https://lore.kernel.org/lkml/20190717115109.15168-5-alexandru.ardelean@analog.com/T/
+>
+> ... and I think it's fine to treat that the same as an explicit "okay" here, as
+> we do generically in Linux.
 
-Changelog v2 -> v3:
-* for SPI:
-  * used `cs_change_delay` instead of `cs_change_delay_usecs` (i.e. removed
-    `_usecs` suffix
-  * used SPI specific subject line for SPI patch
-* for ADIS lib:
-  * updated to use the `cs_change_delay`
-* for DT:
-  * added Rob's `Reviewed-by` tag
+So what Linux does is a defacto interpretation?
 
-Changelog v1 -> v2:
-* for SPI:
-  * renamed `cs_change_stall_delay_us` -> `cs_change_delay_usecs`
-    initial recommendation was `cs_change_delay`, but decided to name this
-    `cs_change_delay_usecs`, since the convention for these delays seems
-    to add the `_usecs` suffix
-* for ADIS lib:
-  * renamed `stall_delay` -> `cs_change_delay`
-  * removed some assignments of `cs_change_delay`
-    where `cs_change` is not set
-* for ADIS16460 driver:
-  * fixed license
-  * adjusted to new `cs_change_delay[_usecs]`
+If everyone agrees this is a device tree spec bug, I will submit the
+patch to devicetree spec then.
 
-Alexandru Ardelean (4):
-  spi: Add optional stall delay between cs_change transfers
-  iio: imu: adis: Add support for SPI transfer cs_change_delay
-  iio: imu: Add support for the ADIS16460 IMU
-  dt-bindings: iio: imu: add bindings for ADIS16460
-
- .../bindings/iio/imu/adi,adis16460.yaml       |  53 ++
- MAINTAINERS                                   |   8 +
- drivers/iio/imu/Kconfig                       |  12 +
- drivers/iio/imu/Makefile                      |   1 +
- drivers/iio/imu/adis.c                        |   6 +
- drivers/iio/imu/adis16460.c                   | 489 ++++++++++++++++++
- drivers/spi/spi.c                             |   3 +-
- include/linux/iio/imu/adis.h                  |   2 +
- include/linux/spi/spi.h                       |   2 +
- 9 files changed, 575 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16460.yaml
- create mode 100644 drivers/iio/imu/adis16460.c
-
--- 
-2.20.1
+Regards,
+Bin
