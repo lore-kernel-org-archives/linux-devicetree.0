@@ -1,11 +1,13 @@
 From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH 1/2] ARM: dts: aspeed: tiogapass: Add VR devices
-Date: Mon, 22 Jul 2019 12:24:47 -0700
-Message-ID: <20190722192451.1947348-1-vijaykhemka@fb.com>
+Subject: [PATCH] dt-bindings: hwmon: Add binding for pxe1610
+Date: Mon, 22 Jul 2019 12:24:48 -0700
+Message-ID: <20190722192451.1947348-2-vijaykhemka@fb.com>
+References: <20190722192451.1947348-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190722192451.1947348-1-vijaykhemka@fb.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,60 +21,34 @@ To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob He
 Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, sdasari@fb.com, vijaykhemka@fb.com
 List-Id: devicetree@vger.kernel.org
 
-Addes Voltage regulators Infineon pxe1610 devices to Facebook
-tiogapass platform.
+Added new DT binding document for Infineon PXE1610 devices.
 
 Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 ---
- .../dts/aspeed-bmc-facebook-tiogapass.dts     | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ .../devicetree/bindings/hwmon/pxe1610.txt         | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/pxe1610.txt
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-index c4521eda787c..b7783833a58c 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -144,6 +144,42 @@
- &i2c5 {
- 	status = "okay";
- 	// CPU Voltage regulators
-+	vr@48 {
-+		compatible = "infineon,pxe1610";
-+		reg = <0x48>;
-+	};
-+	vr@4a {
-+		compatible = "infineon,pxe1610";
-+		reg = <0x4a>;
-+	};
-+	vr@50 {
-+		compatible = "infineon,pxe1610";
-+		reg = <0x50>;
-+	};
-+	vr@52 {
-+		compatible = "infineon,pxe1610";
-+		reg = <0x52>;
-+	};
-+	vr@58 {
-+		compatible = "infineon,pxe1610";
-+		reg = <0x58>;
-+	};
-+	vr@5a {
-+		compatible = "infineon,pxe1610";
-+		reg = <0x5a>;
-+	};
-+	vr@68 {
-+		compatible = "infineon,pxe1610";
-+		reg = <0x68>;
-+	};
-+	vr@70 {
-+		compatible = "infineon,pxe1610";
-+		reg = <0x70>;
-+	};
-+	vr@72 {
-+		compatible = "infineon,pxe1610";
-+		reg = <0x72>;
-+	};
- };
- 
- &i2c6 {
+diff --git a/Documentation/devicetree/bindings/hwmon/pxe1610.txt b/Documentation/devicetree/bindings/hwmon/pxe1610.txt
+new file mode 100644
+index 000000000000..635daf4955db
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/pxe1610.txt
+@@ -0,0 +1,15 @@
++pxe1610 properties
++
++Required properties:
++- compatible: Must be one of the following:
++	- "infineon,pxe1610" for pxe1610
++	- "infineon,pxe1110" for pxe1610
++	- "infineon,pxm1310" for pxm1310
++- reg: I2C address
++
++Example:
++
++vr@48 {
++	compatible = "infineon,pxe1610";
++	reg = <0x48>;
++};
 -- 
 2.17.1
