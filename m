@@ -1,67 +1,44 @@
-From: Torsten Duwe <duwe@lst.de>
-Subject: [PATCH v2 0/7] Add anx6345 DP/eDP bridge for Olimex Teres-I
-Date: Mon, 22 Jul 2019 17:04:14 +0200 (CEST)
-Message-ID: <20190722150414.9F97668B20@verein.lst.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Bcc:duwe"@lst.de
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 01/11] dt-bindings: timer: Convert Allwinner A10 Timer to
+ a schema
+Date: Mon, 22 Jul 2019 09:05:59 -0600
+Message-ID: <CAL_JsqJyDS0eaQeUWRx3OGJfQ7+QDRwEC=fTM1MzZOOEO0h3SQ@mail.gmail.com>
+References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190722081229.22422-1-maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Thomas Gleixner <tglx@linutronix.de>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-ANX6345 LVTTL->eDP video bridge, driver with device tree bindings.
+On Mon, Jul 22, 2019 at 2:12 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> The older Allwinner SoCs have a Timer supported in Linux, with a matching
+> Device Tree binding.
+>
+> While the original binding only mentions one interrupt, the timer actually
+> has 6 of them.
+>
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for that controller over to a YAML schemas.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  .../timer/allwinner,sun4i-a10-timer.yaml      | 76 +++++++++++++++++++
+>  .../bindings/timer/allwinner,sun4i-timer.txt  | 19 -----
+>  2 files changed, 76 insertions(+), 19 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
 
-Changes from v2:
-
-* use SPDX-IDs throughout
-
-* removed the panel output again, as it was not what Maxime had in mind.
-  At least the Teres-I does very well without. No connector spec, no "quirks"[1],
-  just plain EDID at work.
-
-* binding clarifications and cosmetic changes as suggested by Andrzej
-
-Changes from v1:
-
-* fixed up copyright information. Most code changes are only moves and thus
-  retain copyright and module ownership. Even the new analogix-anx6345.c originates
-  from the old 1495-line analogix-anx78xx.c, with 306 insertions and 987 deletions
-  (ignoring the trivial anx78xx -> anx6345 replacements) 306 new vs. 508 old...
-
-* fixed all minor formatting issues brought up
-
-* merged previously separate new analogix_dp_i2c module into existing analogix_dp
-
-* split additional defines into a preparatory patch
-
-* renamed the factored-out common functions anx_aux_* -> anx_dp_aux_*, because
-  anx_...aux_transfer was exported globally. Besides, it is now GPL-only exported.
-
-* moved chip ID read into a separate function.
-
-* keep the chip powered after a successful probe.
-  (There's a good chance that this is the only display during boot!)
-
-* updated the binding document: LVTTL input is now required, only the output side
-  description is optional.
-
- Laurent: I have also looked into the drm_panel_bridge infrastructure,
- but it's not that trivial to convert these drivers to it.
-
-Changes from the respective previous versions:
-
-* the reset polarity is corrected in DT and the driver;
-  things should be clearer now.
-
-* as requested, add a panel (the known innolux,n116bge) and connect
-  the ports.
-
-* renamed dvdd?? to *-supply to match the established scheme
-
-* trivial update to the #include list, to make it compile in 5.2
-
---------------
-[1] I hesitate to associate information about a connected panel with that term.
-    But should it be neccessary for maximum power saving (e.g. pinebooks),
-    it would be good to have something here, regardless of nomenclature.
-
-	Torsten
+Reviewed-by: Rob Herring <robh@kernel.org>
