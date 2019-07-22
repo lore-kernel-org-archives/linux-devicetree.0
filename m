@@ -1,48 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] pinctrl: msm8998: Squash TSIF pins together
-Date: Mon, 22 Jul 2019 17:53:00 -0600
-Message-ID: <20190722235300.GA24879@bogus>
-References: <503b2ae8-ead6-70cd-7b21-ce5f5166a23a@free.fr>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
+Date: Mon, 22 Jul 2019 16:54:10 -0700
+Message-ID: <20190722235411.06C1320840@mail.kernel.org>
+References: <20190712081744.87097-1-brendanhiggins@google.com> <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com> <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com> <20190716175021.9CA412173C@mail.kernel.org> <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com> <20190718175024.C3EC421019@mail.kernel.org> <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com> <20190719000834.GA3228@google.com> <20190722200347.261D3218C9@mail.kernel.org> <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <503b2ae8-ead6-70cd-7b21-ce5f5166a23a@free.fr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc: DT <devicetree@vger.kernel.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, MSM <linux-arm-msm@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>, Bjorn Andersson <bjorn.andersson@linaro.org>, gpio <linux-gpio@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 10:57:06AM +0200, Marc Gonzalez wrote:
-> TSIF is the Transport Stream Interface.
-> First, rename tsif1 to tsif0, and tsif2 to tsif1.
-> Then squash all 5 tsif0 pins into a single function.
-> Same for tsif1.
+Quoting Brendan Higgins (2019-07-22 15:30:49)
+> On Mon, Jul 22, 2019 at 1:03 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> >
+> > What's the calling context of the assertions and expectations? I still
+> > don't like the fact that string stream needs to allocate buffers and
+> > throw them into a list somewhere because the calling context matters
+> > there.
+>=20
+> The calling context is the same as before, which is anywhere.
 
-Doesn't this break backwards compatibility? If so, you should say so and 
-say why that's okay for this platform. In any case, whether it's a 
-problem or not is up to the platform maintainer(s). 
+Ok. That's concerning then.
 
-> 
-> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> ---
-> Changes from v1:
-> - Reword commit message for clarity (hopefully)
-> - Drop unrelated change in qcom,msm8998-pinctrl.txt
-> - CC DT
-> ---
->  .../bindings/pinctrl/qcom,msm8998-pinctrl.txt |  5 +-
+>=20
+> > I'd prefer we just wrote directly to the console/log via printk
+> > instead. That way things are simple because we use the existing
+> > buffering path of printk, but maybe there's some benefit to the string
+> > stream that I don't see? Right now it looks like it builds a string and
+> > then dumps it to printk so I'm sort of lost what the benefit is over
+> > just writing directly with printk.
+>=20
+> It's just buffering it so the whole string gets printed uninterrupted.
+> If we were to print out piecemeal to printk, couldn't we have another
+> call to printk come in causing it to garble the KUnit message we are
+> in the middle of printing?
 
-Acked-by: Rob Herring <robh@kernel.org>
+Yes, printing piecemeal by calling printk many times could lead to
+interleaving of messages if something else comes in such as an interrupt
+printing something. Printk has some support to hold "records" but I'm
+not sure how that would work here because KERN_CONT talks about only
+being used early on in boot code. I haven't looked at printk in detail
+though so maybe I'm all wrong and KERN_CONT just works?
 
->  drivers/pinctrl/qcom/pinctrl-msm8998.c        | 76 +++++--------------
->  2 files changed, 20 insertions(+), 61 deletions(-)
+Can printk be called once with whatever is in the struct? Otherwise if
+this is about making printk into a structured log then maybe printk
+isn't the proper solution anyway. Maybe a dev interface should be used
+instead that can handle starting and stopping tests (via ioctl) in
+addition to reading test results, records, etc. with read() and a
+clearing of the records. Then the seqfile API works naturally. All of
+this is a bit premature, but it looks like you're going down the path of
+making something akin to ftrace that stores binary formatted
+assertion/expectation records in a lockless ring buffer that then
+formats those records when the user asks for them.
+
+I can imagine someone wanting to write unit tests that check conditions
+from a simulated hardirq context via irq works (a driver mock
+framework?), so this doesn't seem far off.
