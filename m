@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 08/11] ARM: dts: a23/a33: Change the timers compatible
-Date: Mon, 22 Jul 2019 10:12:26 +0200
-Message-ID: <20190722081229.22422-8-maxime.ripard@bootlin.com>
+Subject: [PATCH 02/11] dt-bindings: timer: Add missing compatibles
+Date: Mon, 22 Jul 2019 10:12:20 +0200
+Message-ID: <20190722081229.22422-2-maxime.ripard@bootlin.com>
 References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,26 +21,57 @@ To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Unlike the A10 that has 6 timers available, the A23 and A33 has only two,
-with only two interrupts. Let's change the compatible to reflect that.
+Newer Allwinner SoCs have different number of interrupts, let's add
+different compatibles for all of them to deal with this properly.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../timer/allwinner,sun4i-a10-timer.yaml      | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index af2fa694a467..954489b4ec66 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -441,7 +441,7 @@
- 		};
+diff --git a/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml b/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
+index 7292a424092c..20adc1c8e9cc 100644
+--- a/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
++++ b/Documentation/devicetree/bindings/timer/allwinner,sun4i-a10-timer.yaml
+@@ -14,6 +14,8 @@ properties:
+   compatible:
+     enum:
+       - allwinner,sun4i-a10-timer
++      - allwinner,sun8i-a23-timer
++      - allwinner,sun8i-v3s-timer
+       - allwinner,suniv-f1c100s-timer
  
- 		timer@1c20c00 {
--			compatible = "allwinner,sun4i-a10-timer";
-+			compatible = "allwinner,sun8i-a23-timer";
- 			reg = <0x01c20c00 0xa0>;
- 			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+   reg:
+@@ -39,6 +41,30 @@ allOf:
+           minItems: 6
+           maxItems: 6
+ 
++  - if:
++      properties:
++        compatible:
++          items:
++            const: allwinner,sun8i-a23-timer
++
++    then:
++      properties:
++        interrupts:
++          minItems: 2
++          maxItems: 2
++
++  - if:
++      properties:
++        compatible:
++          items:
++            const: allwinner,sun8i-v3s-timer
++
++    then:
++      properties:
++        interrupts:
++          minItems: 3
++          maxItems: 3
++
+   - if:
+       properties:
+         compatible:
 -- 
 2.21.0
