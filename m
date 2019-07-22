@@ -1,109 +1,52 @@
-Return-Path: <SRS0=qReI=VX=us.ibm.com=anoo@kernel.org>
-In-Reply-To: <20190726053959.2003-7-andrew@aj.id.au>
-From: "Adriana Kobylak" <anoo@us.ibm.com>
-Date: Fri, 26 Jul 2019 12:53:29 -0500
-References: <20190726053959.2003-1-andrew@aj.id.au>
- <20190726053959.2003-7-andrew@aj.id.au>
+Return-Path: <SRS0=vVIs=VT=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:41008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729765AbfGVNt4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jul 2019 09:49:56 -0400
+Date: Mon, 22 Jul 2019 19:18:43 +0530
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 4/5] arm64: dts: qcom: sdm845: remove macro from unit name
+Message-ID: <20190722134843.GR12733@vkoul-mobl.Dlink>
+References: <20190722123422.4571-1-vkoul@kernel.org>
+ <20190722123422.4571-5-vkoul@kernel.org>
+ <a100cb6e-78d0-8fde-131a-2b10f9f0819d@free.fr>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="=_alternative 006246DF86258443_="
-Message-Id: <OF8D1EDAE6.971111FC-ON86258443.0062157C-86258443.00624798@notes.na.collabserv.com>
-Subject: Re:  [PATCH 06/17] ARM: dts: swift: Cleanup gpio-keys-polled properties
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: devicetree@vger.kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a100cb6e-78d0-8fde-131a-2b10f9f0819d@free.fr>
+Sender: devicetree-owner@vger.kernel.org
+To: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc: MSM <linux-arm-msm@vger.kernel.org>, DT <devicetree@vger.kernel.org>, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
+On 22-07-19, 15:18, Marc Gonzalez wrote:
+> On 22/07/2019 14:34, Vinod Koul wrote:
+> 
+> > Unit name is supposed to be a number, using a macro with hex value is
+> > not recommended, so add the value in unit name.
+> > 
+> > arch/arm64/boot/dts/qcom/pm8998.dtsi:81.18-84.6: Warning (unit_address_format): /soc/spmi@c440000/pmic@0/adc@3100/adc-chan@0x06: unit name should not have leading "0x"
+> > arch/arm64/boot/dts/qcom/pm8998.dtsi:81.18-84.6: Warning (unit_address_format): /soc/spmi@c440000/pmic@0/adc@3100/adc-chan@0x06: unit name should not have leading 0s
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/pm8998.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> > index 051a52df80f9..d76c8377c224 100644
+> > --- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> > @@ -78,7 +78,7 @@
+> >  			#size-cells = <0>;
+> >  			#io-channel-cells = <1>;
+> >  
+> > -			adc-chan@ADC5_DIE_TEMP {
+> > +			adc-chan@6{
+> 
+> You dropped the space before the {
 
---=_alternative 006246DF86258443_=
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="US-ASCII"
+Oops, will fix it up, thanks for pointing!
 
-Andrew Jeffery <andrew@aj.id.au> wrote on 07/26/2019 12:39:48 AM:
-
-> From: Andrew Jeffery <andrew@aj.id.au>
-> To: linux-aspeed@lists.ozlabs.org
-> Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org,=20
-> mark.rutland@arm.com, joel@jms.id.au, devicetree@vger.kernel.org,=20
-> linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,=20
-> Adriana Kobylak <anoo@us.ibm.com>
-> Date: 07/26/2019 12:40 AM
-> Subject: [EXTERNAL] [PATCH 06/17] ARM: dts: swift: Cleanup gpio-
-> keys-polled properties
->=20
-> dtbs=5Fcheck gave the following warning:
->=20
->     Warning (avoid=5Funnecessary=5Faddr=5Fsize): /gpio-keys-polled:=20
-> unnecessary #address-cells/#size-cells without "ranges" or child=20
-> "reg" property
->=20
-> Cc: Adriana Kobylak <anoo@us.ibm.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-
-Reviewed-by: Adriana Kobylak <anoo@us.ibm.com>
-Tested-by: Adriana Kobylak <anoo@us.ibm.com>
-
-> ---
->  arch/arm/boot/dts/aspeed-bmc-opp-swift.dts | 2 --
->  1 file changed, 2 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts b/arch/arm/
-> boot/dts/aspeed-bmc-opp-swift.dts
-> index 2077e8d0e096..9f934509ca1b 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-> @@ -82,8 +82,6 @@
->=20
->     gpio-keys-polled {
->        compatible =3D "gpio-keys-polled";
-> -      #address-cells =3D <1>;
-> -      #size-cells =3D <0>;
->        poll-interval =3D <1000>;
->=20
->        scm0-presence {
-> --=20
-> 2.20.1
->=20
-
-
-
---=_alternative 006246DF86258443_=
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html; charset="US-ASCII"
-
-
-<br><tt><span style=3D" font-size:10pt">Andrew Jeffery &lt;andrew@aj.id.au&=
-gt;
-wrote on 07/26/2019 12:39:48 AM:<br><br>&gt; From: Andrew Jeffery &lt;andre=
-w@aj.id.au&gt;</span></tt><br><tt><span style=3D" font-size:10pt">&gt; To: =
-linux-aspeed@lists.ozlabs.org</span></tt><br><tt><span style=3D" font-size:=
-10pt">&gt; Cc: Andrew Jeffery &lt;andrew@aj.id.au&gt;,
-robh+dt@kernel.org, <br>&gt; mark.rutland@arm.com, joel@jms.id.au, devicetr=
-ee@vger.kernel.org,
-<br>&gt; linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-<br>&gt; Adriana Kobylak &lt;anoo@us.ibm.com&gt;</span></tt><br><tt><span s=
-tyle=3D" font-size:10pt">&gt; Date: 07/26/2019 12:40 AM</span></tt><br><tt>=
-<span style=3D" font-size:10pt">&gt; Subject: [EXTERNAL] [PATCH 06/17]
-ARM: dts: swift: Cleanup gpio-<br>&gt; keys-polled properties</span></tt><b=
-r><tt><span style=3D" font-size:10pt">&gt; <br>&gt; dtbs=5Fcheck gave the f=
-ollowing warning:<br>&gt; <br>&gt; &nbsp; &nbsp; Warning (avoid=5Funnecessa=
-ry=5Faddr=5Fsize): /gpio-keys-polled:
-<br>&gt; unnecessary #address-cells/#size-cells without &quot;ranges&quot;
-or child <br>&gt; &quot;reg&quot; property<br>&gt; <br>&gt; Cc: Adriana Kob=
-ylak &lt;anoo@us.ibm.com&gt;<br>&gt; Signed-off-by: Andrew Jeffery &lt;andr=
-ew@aj.id.au&gt;</span></tt><br><br><tt><span style=3D" font-size:10pt">Revi=
-ewed-by: Adriana Kobylak &lt;anoo@us.ibm.com&gt;</span></tt><br><tt><span s=
-tyle=3D" font-size:10pt">Tested-by: Adriana Kobylak &lt;anoo@us.ibm.com&gt;=
-</span></tt><br><tt><span style=3D" font-size:10pt"><br>&gt; ---<br>&gt; &n=
-bsp;arch/arm/boot/dts/aspeed-bmc-opp-swift.dts | 2 --<br>&gt; &nbsp;1 file =
-changed, 2 deletions(-)<br>&gt; <br>&gt; diff --git a/arch/arm/boot/dts/asp=
-eed-bmc-opp-swift.dts b/arch/arm/<br>&gt; boot/dts/aspeed-bmc-opp-swift.dts=
-<br>&gt; index 2077e8d0e096..9f934509ca1b 100644<br>&gt; --- a/arch/arm/boo=
-t/dts/aspeed-bmc-opp-swift.dts<br>&gt; +++ b/arch/arm/boot/dts/aspeed-bmc-o=
-pp-swift.dts<br>&gt; @@ -82,8 +82,6 @@<br>&gt; &nbsp;<br>&gt; &nbsp; &nbsp;=
- gpio-keys-polled {<br>&gt; &nbsp; &nbsp; &nbsp; &nbsp;compatible =3D &quot=
-;gpio-keys-polled&quot;;<br>&gt; - &nbsp; &nbsp; &nbsp;#address-cells =3D &=
-lt;1&gt;;<br>&gt; - &nbsp; &nbsp; &nbsp;#size-cells =3D &lt;0&gt;;<br>&gt; =
-&nbsp; &nbsp; &nbsp; &nbsp;poll-interval =3D &lt;1000&gt;;<br>&gt; &nbsp;<b=
-r>&gt; &nbsp; &nbsp; &nbsp; &nbsp;scm0-presence {<br>&gt; -- <br>&gt; 2.20.=
-1<br>&gt; <br></span></tt><BR>
-
---=_alternative 006246DF86258443_=--
+-- 
+~Vinod
