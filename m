@@ -1,12 +1,14 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v4 0/5] soc: ti: k3: Allow for exclusive and shared device
- requests
-Date: Mon, 22 Jul 2019 10:37:52 +0530
-Message-ID: <20190722050757.29893-1-lokeshvutla@ti.com>
+Subject: [PATCH v4 1/5] firmware: ti_sci: Allow for device shared and
+ exclusive requests
+Date: Mon, 22 Jul 2019 10:37:53 +0530
+Message-ID: <20190722050757.29893-2-lokeshvutla@ti.com>
+References: <20190722050757.29893-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190722050757.29893-1-lokeshvutla@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,46 +26,112 @@ Sysfw provides an option for requesting exclusive access for a
 device using the flags MSG_FLAG_DEVICE_EXCLUSIVE. If this flag is
 not used, the device is meant to be shared across hosts. Once a device
 is requested from a host with this flag set, any request to this
-device from a different host will be nacked by sysfw.
+device from a different host will be nacked by sysfw. Current tisci
+driver enables this flag for every device requests. But this may not
+be true for all the devices. So provide a separate commands in driver
+for exclusive and shared device requests.
 
-Current tisci firmware and pm drivers always requests for device with
-exclusive permissions set. But this is not be true for certain devices
-that are expcted to be shared across different host contexts.
-So add support for getting the shared or exclusive permissions from DT
-and request firmware accordingly.
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+ drivers/firmware/ti_sci.c              | 45 ++++++++++++++++++++++++--
+ include/linux/soc/ti/ti_sci_protocol.h |  3 ++
+ 2 files changed, 46 insertions(+), 2 deletions(-)
 
-Changes since v3: https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=103447
-- Rebased on top of v5.3-rc1
-- Updated power-domain cells for j721e.
-- Mark the console uart as shared in am65x-base-board
-- Added Reviewed-by from Rob
-
-Lokesh Vutla (5):
-  firmware: ti_sci: Allow for device shared and exclusive requests
-  dt-bindings: ti_sci_pm_domains: Add support for exclusive and shared
-    access
-  soc: ti: ti_sci_pm_domains: Add support for exclusive and shared
-    access
-  arm64: dts: ti: k3-am654: Update the power domain cells
-  arm64: dts: ti: k3-j721e: Update the power domain cells
-
- .../bindings/soc/ti/sci-pm-domain.txt         | 11 ++++-
- MAINTAINERS                                   |  1 +
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 44 +++++++++---------
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       | 10 ++---
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  6 +--
- arch/arm64/boot/dts/ti/k3-am65.dtsi           |  1 +
- .../arm64/boot/dts/ti/k3-am654-base-board.dts |  1 +
- .../dts/ti/k3-j721e-common-proc-board.dts     |  4 ++
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 20 ++++-----
- .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  6 +--
- arch/arm64/boot/dts/ti/k3-j721e.dtsi          |  1 +
- drivers/firmware/ti_sci.c                     | 45 ++++++++++++++++++-
- drivers/soc/ti/ti_sci_pm_domains.c            | 23 +++++++++-
- include/dt-bindings/soc/ti,sci_pm_domain.h    |  9 ++++
- include/linux/soc/ti/ti_sci_protocol.h        |  3 ++
- 15 files changed, 136 insertions(+), 49 deletions(-)
- create mode 100644 include/dt-bindings/soc/ti,sci_pm_domain.h
-
+diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+index cdee0b45943d..4126be9e3216 100644
+--- a/drivers/firmware/ti_sci.c
++++ b/drivers/firmware/ti_sci.c
+@@ -635,6 +635,7 @@ static int ti_sci_get_device_state(const struct ti_sci_handle *handle,
+ 
+ /**
+  * ti_sci_cmd_get_device() - command to request for device managed by TISCI
++ *			     that can be shared with other hosts.
+  * @handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
+  * @id:		Device Identifier
+  *
+@@ -642,11 +643,29 @@ static int ti_sci_get_device_state(const struct ti_sci_handle *handle,
+  * usage count by balancing get_device with put_device. No refcounting is
+  * managed by driver for that purpose.
+  *
+- * NOTE: The request is for exclusive access for the processor.
+- *
+  * Return: 0 if all went fine, else return appropriate error.
+  */
+ static int ti_sci_cmd_get_device(const struct ti_sci_handle *handle, u32 id)
++{
++	return ti_sci_set_device_state(handle, id, 0,
++				       MSG_DEVICE_SW_STATE_ON);
++}
++
++/**
++ * ti_sci_cmd_get_device_exclusive() - command to request for device managed by
++ *				       TISCI that is exclusively owned by the
++ *				       requesting host.
++ * @handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
++ * @id:		Device Identifier
++ *
++ * Request for the device - NOTE: the client MUST maintain integrity of
++ * usage count by balancing get_device with put_device. No refcounting is
++ * managed by driver for that purpose.
++ *
++ * Return: 0 if all went fine, else return appropriate error.
++ */
++static int ti_sci_cmd_get_device_exclusive(const struct ti_sci_handle *handle,
++					   u32 id)
+ {
+ 	return ti_sci_set_device_state(handle, id,
+ 				       MSG_FLAG_DEVICE_EXCLUSIVE,
+@@ -665,6 +684,26 @@ static int ti_sci_cmd_get_device(const struct ti_sci_handle *handle, u32 id)
+  * Return: 0 if all went fine, else return appropriate error.
+  */
+ static int ti_sci_cmd_idle_device(const struct ti_sci_handle *handle, u32 id)
++{
++	return ti_sci_set_device_state(handle, id, 0,
++				       MSG_DEVICE_SW_STATE_RETENTION);
++}
++
++/**
++ * ti_sci_cmd_idle_device_exclusive() - Command to idle a device managed by
++ *					TISCI that is exclusively owned by
++ *					requesting host.
++ * @handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
++ * @id:		Device Identifier
++ *
++ * Request for the device - NOTE: the client MUST maintain integrity of
++ * usage count by balancing get_device with put_device. No refcounting is
++ * managed by driver for that purpose.
++ *
++ * Return: 0 if all went fine, else return appropriate error.
++ */
++static int ti_sci_cmd_idle_device_exclusive(const struct ti_sci_handle *handle,
++					    u32 id)
+ {
+ 	return ti_sci_set_device_state(handle, id,
+ 				       MSG_FLAG_DEVICE_EXCLUSIVE,
+@@ -2894,7 +2933,9 @@ static void ti_sci_setup_ops(struct ti_sci_info *info)
+ 	core_ops->reboot_device = ti_sci_cmd_core_reboot;
+ 
+ 	dops->get_device = ti_sci_cmd_get_device;
++	dops->get_device_exclusive = ti_sci_cmd_get_device_exclusive;
+ 	dops->idle_device = ti_sci_cmd_idle_device;
++	dops->idle_device_exclusive = ti_sci_cmd_idle_device_exclusive;
+ 	dops->put_device = ti_sci_cmd_put_device;
+ 
+ 	dops->is_valid = ti_sci_cmd_dev_is_valid;
+diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+index 6c610e188a44..9531ec823298 100644
+--- a/include/linux/soc/ti/ti_sci_protocol.h
++++ b/include/linux/soc/ti/ti_sci_protocol.h
+@@ -97,7 +97,10 @@ struct ti_sci_core_ops {
+  */
+ struct ti_sci_dev_ops {
+ 	int (*get_device)(const struct ti_sci_handle *handle, u32 id);
++	int (*get_device_exclusive)(const struct ti_sci_handle *handle, u32 id);
+ 	int (*idle_device)(const struct ti_sci_handle *handle, u32 id);
++	int (*idle_device_exclusive)(const struct ti_sci_handle *handle,
++				     u32 id);
+ 	int (*put_device)(const struct ti_sci_handle *handle, u32 id);
+ 	int (*is_valid)(const struct ti_sci_handle *handle, u32 id);
+ 	int (*get_context_loss_count)(const struct ti_sci_handle *handle,
 -- 
 2.21.0
