@@ -1,14 +1,11 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: dma: Add YAML schemas for the generic
- DMA bindings
-Date: Mon, 22 Jul 2019 07:50:40 -0600
-Message-ID: <CAL_JsqL2dxZMpwP08xMjwdkv5kdeZGrTYwdHuvqAcY-nBuZ+fA@mail.gmail.com>
-References: <20190720092607.31095-1-maxime.ripard@bootlin.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH] dt-bindings: rtc: Remove the PCF8563 from the trivial RTCs
+Date: Mon, 22 Jul 2019 16:09:21 +0200
+Message-ID: <20190722140921.22681-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190720092607.31095-1-maxime.ripard@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,37 +15,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Vinod Koul <vkoul@kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 3:26 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> The DMA controllers and consumers have a bunch of generic properties that
-> are needed in a device tree. Add a YAML schemas for those.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> ---
->
-> Changes from v2:
->   - Added a select statement.
->
-> Changes from v1:
->   - Dropped the dma consumer schemas
->   - Fixed the node name of the examples
->   - Enhanced a bit the description for dma-requests in case of a router
->   - Split the bindings in two to handle the router and controller case
->     separately
->   - Made #dma-cells required
-> ---
->  .../devicetree/bindings/dma/dma-common.yaml   |  45 +++++++
->  .../bindings/dma/dma-controller.yaml          |  35 ++++++
->  .../devicetree/bindings/dma/dma-router.yaml   |  50 ++++++++
->  Documentation/devicetree/bindings/dma/dma.txt | 114 +-----------------
->  4 files changed, 131 insertions(+), 113 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/dma-common.yaml
->  create mode 100644 Documentation/devicetree/bindings/dma/dma-controller.yaml
->  create mode 100644 Documentation/devicetree/bindings/dma/dma-router.yaml
+The PCF8563 has a binding of its own, with some, clocks related, additional
+properties.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Remove it from the trivial RTC bindings.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ Documentation/devicetree/bindings/rtc/trivial-rtc.yaml | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+index 0c12ce9a9b45..18cb456752f6 100644
+--- a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
++++ b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+@@ -52,8 +52,6 @@ properties:
+       - nxp,pcf2127
+       # Real-time clock
+       - nxp,pcf2129
+-      # Real-time clock/calendar
+-      - nxp,pcf8563
+       # Real-time Clock Module
+       - pericom,pt7c4338
+       # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+-- 
+2.21.0
