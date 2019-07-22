@@ -1,53 +1,50 @@
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC PATCH v2 00/15] tracing: of: Boot time tracing using
- devicetree
-Date: Mon, 22 Jul 2019 23:38:26 +0900
-Message-ID: <20190722233826.bafd7aeaad3b821157f2d2ff@kernel.org>
-References: <156316746861.23477.5815110570539190650.stgit@devnote2>
-        <488a65e6-1d80-0acb-5092-80c18b7ff447@gmail.com>
-        <20190717000235.9ab100f0dac4af797a0fb76a@kernel.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] [RESEND] ARM: bcm47094: add missing #cells for mdio-bus-mux
+Date: Mon, 22 Jul 2019 16:55:52 +0200
+Message-ID: <20190722145618.1155492-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190717000235.9ab100f0dac4af797a0fb76a@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Tim Bird <Tim.Bird@sony.com>, Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: soc@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, bcm-kernel-feedback-list@broadcom.com
+Cc: Arnd Bergmann <arnd@arndb.de>, Vivek Unune <npcomplete13@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+The mdio-bus-mux has no #address-cells/#size-cells property,
+which causes a few dtc warnings:
 
-I discussed with Frank and other kernel developers last week at OSSJ 2019.
-Eventually, I decided to leave from devicetree, because it can unstabilize
-current devicetree desgin and policy. Instead, aim to introduce a new
-generic structured kernel cmdline, something like "configtree".
+arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #address-cells value
+arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-cells value
 
-I thought JSON or other generic data format, but they look a bit bloated
-for my purpose. I just need something like "extended hierarchical kernel
-cmdline". For example,
+Add the normal cell numbers.
 
-ftrace {
-  options = "sym-addr"
-  events = "initcall:*"
-  tp-printk
-  event.0 {
-    name = "tasl:task_newtask"
-    filter = "pid < 128"
-  } 
-}
+Fixes: 2bebdfcdcd0f ("ARM: dts: BCM5301X: Add support for Linksys EA9500")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+As Florian is apparently on vacation at the moment, let's merge this
+as a bugfix through arm-soc directly to get closer to clean allmodconfig
+build.
+---
+ arch/arm/boot/dts/bcm47094-linksys-panamera.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Which can be written as
-
-ftrace.options="sym-addr" ftrace.events="initcall:*" ftrace.tp-printk ftrace.event.0.name="tasl:task_newtask" ftrace.event.0.filter="pid < 128"
-
-on current kernel cmdline.
-
-So, the parameters are linearly extended from current kernel cmdline.
-Kernel internal APIs must be able to handle both of current cmdline
-key-values and configtree key-values.
-
-Thank you,
-
+diff --git a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
+index 18d0ae46e76c..0faae8950375 100644
+--- a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
++++ b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
+@@ -124,6 +124,9 @@
+ 	};
+ 
+ 	mdio-bus-mux {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
+ 		/* BIT(9) = 1 => external mdio */
+ 		mdio_ext: mdio@200 {
+ 			reg = <0x200>;
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.20.0
