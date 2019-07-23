@@ -1,109 +1,66 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v2 01/11] dt-bindings: mmc: arasan: Update documentation
- for SD Card Clock
-Date: Tue, 23 Jul 2019 08:23:25 +0000
-Message-ID: <MN2PR02MB602907616249FF19C1A737D8C1C70@MN2PR02MB6029.namprd02.prod.outlook.com>
-References: <1561958991-21935-1-git-send-email-manish.narani@xilinx.com>
- <1561958991-21935-2-git-send-email-manish.narani@xilinx.com>
- <20190722215404.GA28292@bogus>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v6 0/2] Add basic support for pico-pi-imx8m
+Date: Tue, 23 Jul 2019 16:25:10 +0800
+Message-ID: <20190723082509.GS15632@dragon>
+References: <20190722102730.15763-1-andradanciu1997@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722215404.GA28292@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190722102730.15763-1-andradanciu1997@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "heiko@sntech.de" <heiko@sntech.de>, Michal Simek <michals@xilinx.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "christoph.muellner@theobroma-systems.com" <christoph.muellner@theobroma-systems.com>, "philipp.tomsich@theobroma-systems.com" <philipp.tomsich@theobroma-systems.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "scott.branden@broadcom.com" <scott.branden@broadcom.com>, "ayaka@soulik.info" <ayaka@soulik.info>, "kernel@esmil.dk" <kernel@esmil.dk>, "tony.xie@rock-chips.com" <tony.xie@rock-chips.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, Nava kishore Manne <navam@xilinx.com>, "mdf@kernel.org" <mdf@kernel.org>, "olof@lixom.net" <olof@lixom.net>l
+To: andradanciu1997 <andradanciu1997@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com, Michal.Vokac@ysoft.com, ping.bai@nxp.com, u.kleine-koenig@pengutronix.de, leoyang.li@nxp.com, aisheng.dong@nxp.com, l.stach@pengutronix.de, pankaj.bansal@nxp.com, angus@akkea.ca, pramod.kumar_1@nxp.com, bhaskar.upadhaya@nxp.com, vabhav.sharma@nxp.com, richard.hu@technexion.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon, Jul 22, 2019 at 01:27:28PM +0300, andradanciu1997 wrote:
+> Add support for TechNexion PICO-PI-IMX8M based on patches from Richard Hu
+> Datasheet is at: https://s3.us-east-2.amazonaws.com/technexion/datasheets/picopiimx8m.pdf
+> 
+> Changes since v5:
+>  - removed comment /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
+>  - added "Reviewed-by" tags
+> 
+> Changes since v4:
+>  - removed #address-cells and  #size-cells from regulators node
+> 
+> Changes since v3:
+>  - renamed pico-pi-8m.dts to imx8mq-pico-pi.dts
+>  - moved iomuxc node as the last one
+>  - removed pinctrl-assert-gpios property from fec1 node
+>  - removed at803x,led-act-blind-workaround, at803x,eee-disabled
+>    properties from mdio node
+>  - added pinctrl-names = "default" to i2c1 node
+>  - changed bd71837 pmic support properties according to
+>    Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+>  - removed A53_0 node
+> 
+> Changes since v2:
+>  - changed PICO-PI-8M bord compatible from wand,imx8mq-pico-pi to
+>    technexion,pico-pi-imx8m
+>  - removed bootargs property
+>  - removed regulators node and put fixed regulator directly under root node
+>  - changed node name from usb_otg_vbus to regulator-usb-otg-vbus
+>  - removed pinctrl-names property from iomuxc node
+>  - removed wand-pi-8m container node
+>  - sorted pinctrl nodes alphabetically
+>  - removed tusb320_irqgrp, tusb320_irqgrp nodes because there is no upstream
+>    driver
+>  - changed properties' order in usb_dwc3_1 node
+> 
+> Changes since v1:
+>  - renamed wandboard-pi-8m.dts to pico-pi-8m.dts
+>  - removed pinctrl_csi1, pinctrl_wifi_ctrl
+>  - used generic name for pmic
+>  - removed gpo node
+>  - delete regulator-virtuals node
+>  - remove always-on property from buck1-8 and ldo3-7
+>  - remove pmic-buck-uses-i2c-dvs property for buck1-4
+> 
+> Andra Danciu (1):
+>   dt-bindings: arm: fsl: Add the pico-pi-imx8m board
+> 
+> Richard Hu (1):
+>   arm64: dts: fsl: pico-pi: Add a device tree for the PICO-PI-IMX8M
 
-Thanks a lot for the review!
-
-
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Tuesday, July 23, 2019 3:24 AM
-> To: Manish Narani <MNARANI@xilinx.com>
-> Cc: ulf.hansson@linaro.org; mark.rutland@arm.com; heiko@sntech.de; Michal
-> Simek <michals@xilinx.com>; adrian.hunter@intel.com;
-> christoph.muellner@theobroma-systems.com; philipp.tomsich@theobroma-
-> systems.com; viresh.kumar@linaro.org; scott.branden@broadcom.com;
-> ayaka@soulik.info; kernel@esmil.dk; tony.xie@rock-chips.com; Rajan Vaja
-> <RAJANV@xilinx.com>; Jolly Shah <JOLLYS@xilinx.com>; Nava kishore Manne
-> <navam@xilinx.com>; mdf@kernel.org; olof@lixom.net; linux-
-> mmc@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> rockchip@lists.infradead.org
-> Subject: Re: [PATCH v2 01/11] dt-bindings: mmc: arasan: Update
-> documentation for SD Card Clock
->=20
-> On Mon, Jul 01, 2019 at 10:59:41AM +0530, Manish Narani wrote:
-> > The clock handling is to be updated in the Arasan SDHCI. As the
-> > 'devm_clk_register' is deprecated in the clock framework, this needs to
-> > specify one more clock named 'clk_sdcard' to get the clock in the drive=
-r
-> > via 'devm_clk_get()'. This clock represents the clock from controller t=
-o
-> > the card.
->=20
-> Please explain why in terms of the binding, not some driver calls.
-Okay.
-
->=20
->=20
-> > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> > ---
-> >  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 15 ++++++++++=
--
-> ----
-> >  1 file changed, 10 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > index 1edbb04..15c6397 100644
-> > --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > @@ -23,6 +23,10 @@ Required Properties:
-> >    - reg: From mmc bindings: Register location and length.
-> >    - clocks: From clock bindings: Handles to clock inputs.
-> >    - clock-names: From clock bindings: Tuple including "clk_xin" and "c=
-lk_ahb"
-> > +		 Apart from these two there is one more optional clock which
-> > +		 is "clk_sdcard". This clock represents output clock from
-> > +		 controller and card. This must be specified when #clock-cells
-> > +		 is specified.
-> >    - interrupts: Interrupt specifier
-> >
-> >  Required Properties for "arasan,sdhci-5.1":
-> > @@ -36,9 +40,10 @@ Optional Properties:
-> >    - clock-output-names: If specified, this will be the name of the car=
-d clock
-> >      which will be exposed by this device.  Required if #clock-cells is
-> >      specified.
-> > -  - #clock-cells: If specified this should be the value <0>.  With thi=
-s property
-> > -    in place we will export a clock representing the Card Clock.  This=
- clock
-> > -    is expected to be consumed by our PHY.  You must also specify
-> > +  - #clock-cells: If specified this should be the value <0>. With this
-> > +    property in place we will export one clock representing the Card
-> > +    Clock. This clock is expected to be consumed by our PHY. You must =
-also
-> > +    specify
->=20
-> specify what?
-I think this line was already there, I missed to correct it, Will update in=
- v3.
-
->=20
-> The 3rd clock input I assume? This statement means any existing users
-> with 2 clock inputs and #clock-cells are in error now. Is that correct?
-Yes, this is correct. So far there was only one vendor using '#clock-cells'=
-  which is Rockchip. I have sent DT patch (02/11) for that also.
-Here this is needed as earlier implementation isn't correct as suggested by=
- Uffe. (https://lkml.org/lkml/2019/6/20/486) .
-
-Thanks,
-Manish
+Applied both, thanks.
