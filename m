@@ -1,108 +1,423 @@
-From: Saeed Mahameed <saeedm@mellanox.com>
-Subject: Re: [PATCH net-next 1/3] enetc: Add mdio bus driver for the PCIe MDIO
- endpoint
-Date: Tue, 23 Jul 2019 20:49:27 +0000
-Message-ID: <2e3c565cacae6050656aeb7c0132736c60f9f4ee.camel@mellanox.com>
-References: <1563894955-545-1-git-send-email-claudiu.manoil@nxp.com>
-         <1563894955-545-2-git-send-email-claudiu.manoil@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Subject: [RFC,v2 6/6] media: ds90ub953: new driver for TI DS90UB953-Q1 video serializer
+Date: Tue, 23 Jul 2019 22:37:23 +0200
+Message-ID: <20190723203723.11730-7-luca@lucaceresoli.net>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563894955-545-2-git-send-email-claudiu.manoil@nxp.com>
-Content-Language: en-US
-Content-ID: <E131E465F5E195408AFDA8F176CF2B58@eurprd05.prod.outlook.com>
+In-Reply-To: <20190723203723.11730-1-luca@lucaceresoli.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "claudiu.manoil@nxp.com" <claudiu.manoil@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "alexandru.marginean@nxp.com" <alexandru.marginean@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org
+Cc: Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Vladimir Zapolskiy <vz@mleia.com>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA3LTIzIGF0IDE4OjE1ICswMzAwLCBDbGF1ZGl1IE1hbm9pbCB3cm90ZToN
-Cj4gRU5FVEMgcG9ydHMgY2FuIG1hbmFnZSB0aGUgTURJTyBidXMgdmlhIGxvY2FsIHJlZ2lzdGVy
-DQo+IGludGVyZmFjZS4gIEhvd2V2ZXIgdGhlcmUncyBhbHNvIGEgY2VudHJhbGl6ZWQgd2F5DQo+
-IHRvIG1hbmFnZSB0aGUgTURJTyBidXMsIHZpYSB0aGUgTURJTyBQQ0llIGVuZHBvaW50DQo+IGRl
-dmljZSBpbnRlZ3JhdGVkIGJ5IHRoZSBzYW1lIHJvb3QgY29tcGxleCB0aGF0IGFsc28NCj4gaW50
-ZWdyYXRlcyB0aGUgRU5FVEMgcG9ydHMgKGV0aCBjb250cm9sbGVycykuDQo+IA0KPiBEZXBlbmRp
-bmcgb24gYm9hcmQgZGVzaWduIGFuZCB1c2UgY2FzZSwgY2VudHJhbGl6ZWQNCj4gYWNjZXNzIHRv
-IE1ESU8gbWF5IGJlIGJldHRlciB0aGFuIHVzaW5nIGxvY2FsIEVORVRDDQo+IHBvcnQgcmVnaXN0
-ZXJzLiAgRm9yIGluc3RhbmNlLCBvbiB0aGUgTFMxMDI4QSBRRFMgYm9hcmQNCj4gd2hlcmUgTURJ
-TyBtdXhpbmcgaXMgcmVxdWllcmVkLiAgQWxzbywgdGhlIExTMTAyOEEgb24tY2hpcA0KPiBzd2l0
-Y2ggZG9lc24ndCBoYXZlIGEgbG9jYWwgTURJTyByZWdpc3RlciBpbnRlcmZhY2UuDQo+IA0KPiBU
-aGUgY3VycmVudCBwYXRjaCByZWdpc3RlcnMgdGhlIGFib3ZlIFBDSWUgZW5wb2ludCBhcyBhDQo+
-IHNlcGFyYXRlIE1ESU8gYnVzIGFuZCBwcm92aWRlcyBhIGRyaXZlciBmb3IgaXQgYnkgcmUtdXNp
-bmcNCj4gdGhlIGNvZGUgdXNlZCBmb3IgbG9jYWwgTURJTyBhY2Nlc3MuICBJdCBhbHNvIGFsbG93
-cyB0aGUNCj4gRU5FVEMgcG9ydCBQSFlzIHRvIGJlIG1hbmFnZWQgYnkgdGhpcyBkcml2ZXIgaWYg
-dGhlIGxvY2FsDQo+ICJtZGlvIiBub2RlIGlzIG1pc3NpbmcgZnJvbSB0aGUgRU5FVEMgcG9ydCBu
-b2RlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ2xhdWRpdSBNYW5vaWwgPGNsYXVkaXUubWFub2ls
-QG54cC5jb20+DQo+IC0tLQ0KPiAgLi4uL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5l
-dGNfbWRpby5jIHwgOTANCj4gKysrKysrKysrKysrKysrKysrKw0KPiAgLi4uL25ldC9ldGhlcm5l
-dC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfcGYuYyAgIHwgIDUgKy0NCj4gIDIgZmlsZXMgY2hhbmdl
-ZCwgOTQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Y19tZGlvLmMNCj4gYi9kcml2
-ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfbWRpby5jDQo+IGluZGV4IDc3
-YjljZDEwYmEyYi4uZWZhOGEyOWY0NjNkIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhl
-cm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfbWRpby5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0
-aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Y19tZGlvLmMNCj4gQEAgLTE5NywzICsxOTcsOTMg
-QEAgdm9pZCBlbmV0Y19tZGlvX3JlbW92ZShzdHJ1Y3QgZW5ldGNfcGYgKnBmKQ0KPiAgCQltZGlv
-YnVzX2ZyZWUocGYtPm1kaW8pOw0KPiAgCX0NCj4gIH0NCj4gKw0KPiArI2RlZmluZSBFTkVUQ19N
-RElPX0RFVl9JRAkweGVlMDENCj4gKyNkZWZpbmUgRU5FVENfTURJT19ERVZfTkFNRQkiRlNMIFBD
-SWUgSUUgQ2VudHJhbCBNRElPIg0KPiArI2RlZmluZSBFTkVUQ19NRElPX0JVU19OQU1FCUVORVRD
-X01ESU9fREVWX05BTUUgIiBCdXMiDQo+ICsjZGVmaW5lIEVORVRDX01ESU9fRFJWX05BTUUJRU5F
-VENfTURJT19ERVZfTkFNRSAiIGRyaXZlciINCj4gKyNkZWZpbmUgRU5FVENfTURJT19EUlZfSUQJ
-ImZzbF9lbmV0Y19tZGlvIg0KPiArDQo+ICtzdGF0aWMgaW50IGVuZXRjX3BjaV9tZGlvX3Byb2Jl
-KHN0cnVjdCBwY2lfZGV2ICpwZGV2LA0KPiArCQkJCWNvbnN0IHN0cnVjdCBwY2lfZGV2aWNlX2lk
-ICplbnQpDQo+ICt7DQo+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gKwlz
-dHJ1Y3QgbWlpX2J1cyAqYnVzOw0KPiArCWludCBlcnI7DQo+ICsNCj4gKwlidXMgPSBtZGlvYnVz
-X2FsbG9jX3NpemUoc2l6ZW9mKHUzMiAqKSk7DQo+ICsJaWYgKCFidXMpDQo+ICsJCXJldHVybiAt
-RU5PTUVNOw0KPiArDQo+ICsJYnVzLT5uYW1lID0gRU5FVENfTURJT19CVVNfTkFNRTsNCj4gKwli
-dXMtPnJlYWQgPSBlbmV0Y19tZGlvX3JlYWQ7DQo+ICsJYnVzLT53cml0ZSA9IGVuZXRjX21kaW9f
-d3JpdGU7DQo+ICsJYnVzLT5wYXJlbnQgPSBkZXY7DQo+ICsJc25wcmludGYoYnVzLT5pZCwgTUlJ
-X0JVU19JRF9TSVpFLCAiJXMiLCBkZXZfbmFtZShkZXYpKTsNCj4gKw0KPiArCXBjaWVfZmxyKHBk
-ZXYpOw0KPiArCWVyciA9IHBjaV9lbmFibGVfZGV2aWNlX21lbShwZGV2KTsNCj4gKwlpZiAoZXJy
-KSB7DQo+ICsJCWRldl9lcnIoZGV2LCAiZGV2aWNlIGVuYWJsZSBmYWlsZWRcbiIpOw0KDQptZGlv
-YnVzX2ZyZWUoYnVzKSBpcyBtaXNzaW5nIGhlcmUgYW5kIGluIGV2ZXJ5IGVycm9yIHBhdGguDQoN
-Cj4gKwkJcmV0dXJuIGVycjsNCj4gKwl9DQo+ICsNCj4gKwllcnIgPSBwY2lfcmVxdWVzdF9tZW1f
-cmVnaW9ucyhwZGV2LCBFTkVUQ19NRElPX0RSVl9JRCk7DQo+ICsJaWYgKGVycikgew0KPiArCQlk
-ZXZfZXJyKGRldiwgInBjaV9yZXF1ZXN0X3JlZ2lvbnMgZmFpbGVkXG4iKTsNCj4gKwkJZ290byBl
-cnJfcGNpX21lbV9yZWc7DQo+ICsJfQ0KPiArDQo+ICsJYnVzLT5wcml2ID0gcGNpX2lvbWFwX3Jh
-bmdlKHBkZXYsIDAsIEVORVRDX01ESU9fUkVHX09GRlNFVCwgMCk7DQo+ICsJaWYgKCFidXMtPnBy
-aXYpIHsNCj4gKwkJZXJyID0gLUVOWElPOw0KPiArCQlkZXZfZXJyKGRldiwgImlvcmVtYXAgZmFp
-bGVkXG4iKTsNCj4gKwkJZ290byBlcnJfaW9yZW1hcDsNCj4gKwl9DQo+ICsNCj4gKwllcnIgPSBv
-Zl9tZGlvYnVzX3JlZ2lzdGVyKGJ1cywgZGV2LT5vZl9ub2RlKTsNCj4gKwlpZiAoZXJyKQ0KPiAr
-CQlnb3RvIGVycl9tZGlvYnVzX3JlZzsNCj4gKw0KPiArCXBjaV9zZXRfZHJ2ZGF0YShwZGV2LCBi
-dXMpOw0KPiArDQo+ICsJcmV0dXJuIDA7DQo+ICsNCj4gK2Vycl9tZGlvYnVzX3JlZzoNCj4gKwlp
-b3VubWFwKGJ1cy0+cHJpdik7DQo+ICtlcnJfaW9yZW1hcDoNCj4gKwlwY2lfcmVsZWFzZV9tZW1f
-cmVnaW9ucyhwZGV2KTsNCj4gK2Vycl9wY2lfbWVtX3JlZzoNCj4gKwlwY2lfZGlzYWJsZV9kZXZp
-Y2UocGRldik7DQo+ICsNCj4gKwlyZXR1cm4gZXJyOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgdm9p
-ZCBlbmV0Y19wY2lfbWRpb19yZW1vdmUoc3RydWN0IHBjaV9kZXYgKnBkZXYpDQo+ICt7DQo+ICsJ
-c3RydWN0IG1paV9idXMgKmJ1cyA9IHBjaV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4gKw0KPiArCW1k
-aW9idXNfdW5yZWdpc3RlcihidXMpOw0KPiArCWlvdW5tYXAoYnVzLT5wcml2KTsNCj4gKwltZGlv
-YnVzX2ZyZWUoYnVzKTsNCj4gKw0KDQp0aGlzIHNob3VsZCBjb21lIGxhc3QgdG8gYmUgc3ltbWV0
-cmljYWwgd2l0aCBwcm9iZSBmbG93Lg0KDQo+ICsJcGNpX3JlbGVhc2VfbWVtX3JlZ2lvbnMocGRl
-dik7DQo+ICsJcGNpX2Rpc2FibGVfZGV2aWNlKHBkZXYpOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMg
-Y29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQgZW5ldGNfcGNpX21kaW9faWRfdGFibGVbXSA9IHsN
-Cj4gKwl7IFBDSV9ERVZJQ0UoUENJX1ZFTkRPUl9JRF9GUkVFU0NBTEUsIEVORVRDX01ESU9fREVW
-X0lEKSB9LA0KPiArCXsgMCwgfSAvKiBFbmQgb2YgdGFibGUuICovDQo+ICt9Ow0KPiArTU9EVUxF
-X0RFVklDRV9UQUJMRShwY2ksIGVuZXRjX21kaW9faWRfdGFibGUpOw0KPiArDQo+ICtzdGF0aWMg
-c3RydWN0IHBjaV9kcml2ZXIgZW5ldGNfcGNpX21kaW9fZHJpdmVyID0gew0KPiArCS5uYW1lID0g
-RU5FVENfTURJT19EUlZfSUQsDQo+ICsJLmlkX3RhYmxlID0gZW5ldGNfcGNpX21kaW9faWRfdGFi
-bGUsDQo+ICsJLnByb2JlID0gZW5ldGNfcGNpX21kaW9fcHJvYmUsDQo+ICsJLnJlbW92ZSA9IGVu
-ZXRjX3BjaV9tZGlvX3JlbW92ZSwNCj4gK307DQo+ICttb2R1bGVfcGNpX2RyaXZlcihlbmV0Y19w
-Y2lfbWRpb19kcml2ZXIpOw0KPiArDQo+ICtNT0RVTEVfREVTQ1JJUFRJT04oRU5FVENfTURJT19E
-UlZfTkFNRSk7DQo+ICtNT0RVTEVfTElDRU5TRSgiRHVhbCBCU0QvR1BMIik7DQo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfcGYuYw0KPiBi
-L2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Y19wZi5jDQo+IGluZGV4
-IDI1OGIzY2IzOGE2Zi4uN2Q2NTEzZmY4NTA3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9l
-dGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfcGYuYw0KPiArKysgYi9kcml2ZXJzL25ldC9l
-dGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfcGYuYw0KPiBAQCAtNzUwLDYgKzc1MCw3IEBA
-IHN0YXRpYyBpbnQgZW5ldGNfb2ZfZ2V0X3BoeShzdHJ1Y3QNCj4gZW5ldGNfbmRldl9wcml2ICpw
-cml2KQ0KPiAgew0KPiAgCXN0cnVjdCBlbmV0Y19wZiAqcGYgPSBlbmV0Y19zaV9wcml2KHByaXYt
-PnNpKTsNCj4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gcHJpdi0+ZGV2LT5vZl9ub2RlOw0K
-PiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbWRpb19ucDsNCj4gIAlpbnQgZXJyOw0KPiAgDQo+ICAJ
-aWYgKCFucCkgew0KPiBAQCAtNzczLDcgKzc3NCw5IEBAIHN0YXRpYyBpbnQgZW5ldGNfb2ZfZ2V0
-X3BoeShzdHJ1Y3QNCj4gZW5ldGNfbmRldl9wcml2ICpwcml2KQ0KPiAgCQlwcml2LT5waHlfbm9k
-ZSA9IG9mX25vZGVfZ2V0KG5wKTsNCj4gIAl9DQo+ICANCj4gLQlpZiAoIW9mX3BoeV9pc19maXhl
-ZF9saW5rKG5wKSkgew0KPiArCW1kaW9fbnAgPSBvZl9nZXRfY2hpbGRfYnlfbmFtZShucCwgIm1k
-aW8iKTsNCj4gKwlpZiAobWRpb19ucCkgew0KPiArCQlvZl9ub2RlX3B1dChtZGlvX25wKTsNCj4g
-IAkJZXJyID0gZW5ldGNfbWRpb19wcm9iZShwZik7DQo+ICAJCWlmIChlcnIpIHsNCj4gIAkJCW9m
-X25vZGVfcHV0KHByaXYtPnBoeV9ub2RlKTsNCg==
+Add a driver for the TI DS90UB953-Q1, a MIPI CSI-2 video serializer that
+forwards a MIPI CSI-2 input video stream over an FPD Link 3 connection to a
+remote deserializer. It also allows access to I2C and GPIO from the
+deserializer.
+
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+
+---
+
+Changes RFCv1 -> RFCv2: none, this patch is new in RFCv2
+---
+ drivers/media/i2c/Kconfig     |  10 +
+ drivers/media/i2c/Makefile    |   1 +
+ drivers/media/i2c/ds90ub953.c | 354 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 365 insertions(+)
+ create mode 100644 drivers/media/i2c/ds90ub953.c
+
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index e7088ccfd280..9db84ebdc060 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -569,6 +569,16 @@ config VIDEO_DS90UB954
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called ds90ub954.
+ 
++config VIDEO_DS90UB953
++	tristate "TI DS90UB953-Q1 serializer"
++	help
++	  Device driver for the Texas Instruments "DS90UB953-Q1
++	  FPD-Link III 4.16-Gbps Serializer With CSI-2 Interface for
++	  2.3MP/60fps Cameras, RADAR, and Other Sensors".
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called ds90ub953.
++
+ comment "Camera sensor devices"
+ 
+ config VIDEO_APTINA_PLL
+diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+index 66e52ededa4e..98c124c47be2 100644
+--- a/drivers/media/i2c/Makefile
++++ b/drivers/media/i2c/Makefile
+@@ -116,5 +116,6 @@ obj-$(CONFIG_VIDEO_IMX355)	+= imx355.o
+ obj-$(CONFIG_VIDEO_ST_MIPID02) += st-mipid02.o
+ 
+ obj-$(CONFIG_VIDEO_DS90UB954)	+= ds90ub954.o
++obj-$(CONFIG_VIDEO_DS90UB953)	+= ds90ub953.o
+ 
+ obj-$(CONFIG_SDR_MAX2175) += max2175.o
+diff --git a/drivers/media/i2c/ds90ub953.c b/drivers/media/i2c/ds90ub953.c
+new file mode 100644
+index 000000000000..d88366f81a8d
+--- /dev/null
++++ b/drivers/media/i2c/ds90ub953.c
+@@ -0,0 +1,354 @@
++// SPDX-License-Identifier: GPL-2.0
++/**
++ * Driver for the Texas Instruments DS90UB953-Q1 video serializer
++ *
++ * Copyright (c) 2019 Luca Ceresoli <luca@lucaceresoli.net>
++ */
++
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/delay.h>
++#include <dt-bindings/media/ds90ub953.h>
++
++#define DS90_NUM_GPIOS			4  /* Physical GPIO pins */
++
++
++#define DS90_REG_DEVICE_ID		0x00
++
++#define DS90_REG_RESET_CTL		0x01
++#define DS90_REG_RESET_CTL_RESTART_AUTOLOAD	BIT(2)
++#define DS90_REG_RESET_CTL_DIGITAL_RESET_1	BIT(1)
++#define DS90_REG_RESET_CTL_DIGITAL_RESET_0	BIT(0)
++
++#define DS90_REG_GENERAL_CFG		0x02
++#define DS90_REG_MODE_SEL		0x03
++#define DS90_REG_BC_MODE_SELECT		0x04
++#define DS90_REG_PLLCLK_CTRL		0x05
++#define DS90_REG_CLKOUT_CTRL0		0x06
++#define DS90_REG_CLKOUT_CTRL1		0x07
++#define DS90_REG_BCC_WATCHDOG		0x08
++#define DS90_REG_I2C_CONTROL1		0x09
++#define DS90_REG_I2C_CONTROL2		0x0A
++#define DS90_REG_SCL_HIGH_TIME		0x0B
++#define DS90_REG_SCL_LOW_TIME		0x0C
++
++#define DS90_REG_LOCAL_GPIO_DATA	0x0D
++#define DS90_REG_LOCAL_GPIO_DATA_RMTEN(n)	BIT((n) + 4)
++#define DS90_REG_LOCAL_GPIO_DATA_OUT_SRC(n)	BIT((n) + 4)
++
++#define DS90_REG_GPIO_INPUT_CTRL	0x0E
++#define DS90_REG_GPIO_INPUT_CTRL_INPUT_EN(n)	BIT((n))
++#define DS90_REG_GPIO_INPUT_CTRL_OUT_EN(n)	BIT((n) + 4)
++
++#define DS90_REG_DVP_CFG		0x10
++#define DS90_REG_DVP_DT			0x11
++#define DS90_REG_FORCE_BIST_ERR		0x13
++#define DS90_REG_REMOTE_BIST_CTRL	0x14
++#define DS90_REG_SENSOR_VGAIN		0x15
++#define DS90_REG_SENSOR_CTRL0		0x17
++#define DS90_REG_SENSOR_CTRL1		0x18
++#define DS90_REG_SENSOR_V0_THRESH	0x19
++#define DS90_REG_SENSOR_V1_THRESH	0x1A
++#define DS90_REG_SENSOR_T_THRESH	0x1B
++#define DS90_REG_SENSOR_T_THRESH	0x1B
++#define DS90_REG_ALARM_CSI_EN		0x1C
++#define DS90_REG_ALARM_SENSE_EN		0x1D
++#define DS90_REG_ALARM_BC_EN		0x1E
++
++#define DS90_REG_CSI_POL_SEL		0x20
++#define DS90_REG_CSI_POL_SEL_POLARITY_CLK0	BIT(4)
++
++#define DS90_REG_CSI_LP_POLARITY	0x21
++#define DS90_REG_CSI_LP_POLARITY_POL_LP_CLK0	BIT(4)
++
++#define DS90_REG_CSI_EN_HSRX		0x22
++#define DS90_REG_CSI_EN_LPRX		0x23
++#define DS90_REG_CSI_EN_RXTERM		0x24
++#define DS90_REG_CSI_PKT_HDR_TINIT_CTRL 0x31
++#define DS90_REG_BCC_CONFIG		0x32
++#define DS90_REG_DATAPATH_CTL1		0x33
++#define DS90_REG_REMOTE_PAR_CAP1	0x35
++#define DS90_REG_DES_ID			0x37
++#define DS90_REG_SLAVE_ID_0		0x39
++#define DS90_REG_SLAVE_ID_1		0x3A
++#define DS90_REG_SLAVE_ID_2		0x3B
++#define DS90_REG_SLAVE_ID_3		0x3C
++#define DS90_REG_SLAVE_ID_4		0x3D
++#define DS90_REG_SLAVE_ID_5		0x3E
++#define DS90_REG_SLAVE_ID_6		0x3F
++#define DS90_REG_SLAVE_ID_7		0x40
++#define DS90_REG_SLAVE_ID_ALIAS_0	0x41
++#define DS90_REG_SLAVE_ID_ALIAS_0	0x41
++#define DS90_REG_SLAVE_ID_ALIAS_1	0x42
++#define DS90_REG_SLAVE_ID_ALIAS_2	0x43
++#define DS90_REG_SLAVE_ID_ALIAS_3	0x44
++#define DS90_REG_SLAVE_ID_ALIAS_4	0x45
++#define DS90_REG_SLAVE_ID_ALIAS_5	0x46
++#define DS90_REG_SLAVE_ID_ALIAS_6	0x47
++#define DS90_REG_SLAVE_ID_ALIAS_7	0x48
++#define DS90_REG_BC_CTRL		0x49
++#define DS90_REG_REV_MASK_ID		0x50
++
++#define DS90_REG_DEVICE_STS		0x51
++#define DS90_REG_DEVICE_STS_CFG_INIT_DONE	BIT(6)
++
++#define DS90_REG_GENERAL_STATUS		0x52
++#define DS90_REG_GPIO_PIN_STS		0x53
++#define DS90_REG_BIST_ERR_CNT		0x54
++#define DS90_REG_CRC_ERR_CNT1		0x55
++#define DS90_REG_CRC_ERR_CNT2		0x56
++#define DS90_REG_SENSOR_STATUS		0x57
++#define DS90_REG_SENSOR_V0		0x58
++#define DS90_REG_SENSOR_V1		0x59
++#define DS90_REG_SENSOR_T		0x5A
++#define DS90_REG_SENSOR_T		0x5A
++#define DS90_REG_CSI_ERR_CNT		0x5C
++#define DS90_REG_CSI_ERR_STATUS		0x5D
++#define DS90_REG_CSI_ERR_DLANE01	0x5E
++#define DS90_REG_CSI_ERR_DLANE23	0x5F
++#define DS90_REG_CSI_ERR_CLK_LANE	0x60
++#define DS90_REG_CSI_PKT_HDR_VC_ID	0x61
++#define DS90_REG_PKT_HDR_WC_LSB		0x62
++#define DS90_REG_PKT_HDR_WC_MSB		0x63
++#define DS90_REG_CSI_ECC		0x64
++#define DS90_REG_IND_ACC_CTL		0xB0
++#define DS90_REG_IND_ACC_ADDR		0xB1
++#define DS90_REG_IND_ACC_DATA		0xB2
++#define DS90_REG_FPD3_RX_ID0		0xF0
++#define DS90_REG_FPD3_RX_ID1		0xF1
++#define DS90_REG_FPD3_RX_ID2		0xF2
++#define DS90_REG_FPD3_RX_ID3		0xF3
++#define DS90_REG_FPD3_RX_ID4		0xF4
++#define DS90_REG_FPD3_RX_ID5		0xF5
++
++struct ds90_data {
++	struct i2c_client      *client;
++
++	u32 gpio_func[DS90_NUM_GPIOS];
++};
++
++/* -----------------------------------------------------------------------------
++ * Basic device access
++ */
++static s32 ds90_read(const struct ds90_data *ds90, u8 reg)
++{
++	s32 ret;
++
++	ret = i2c_smbus_read_byte_data(ds90->client, reg);
++	if (ret < 0)
++		dev_err(&ds90->client->dev, "Cannot read register 0x%02x!\n",
++			reg);
++
++	return ret;
++}
++
++static s32 ds90_write(const struct ds90_data *ds90, u8 reg, u8 val)
++{
++	s32 ret;
++
++	ret = i2c_smbus_write_byte_data(ds90->client, reg, val);
++	if (ret < 0)
++		dev_err(&ds90->client->dev, "Cannot write register 0x%02x!\n",
++			reg);
++
++	return ret;
++}
++
++/* -----------------------------------------------------------------------------
++ * GPIOs
++ */
++
++static int ds90_configure_gpios(struct ds90_data *ds90)
++{
++	struct device *dev = &ds90->client->dev;
++	u8 gpio_input_ctrl = 0;
++	u8 local_gpio_data = 0;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(ds90->gpio_func); i++) {
++
++		if (ds90->gpio_func[i] >= DS90_GPIO_N_FUNCS) {
++			dev_err(dev,
++				"Unknown gpio-functions value %u, GPIO%d will be unused",
++				ds90->gpio_func[i], i);
++			continue;
++		}
++
++		switch (ds90->gpio_func[i]) {
++		case DS90_GPIO_FUNC_INPUT:
++			gpio_input_ctrl |= DS90_REG_GPIO_INPUT_CTRL_INPUT_EN(i);
++			break;
++		case DS90_GPIO_FUNC_OUTPUT_REMOTE:
++			gpio_input_ctrl |= DS90_REG_GPIO_INPUT_CTRL_OUT_EN(i);
++			local_gpio_data |= DS90_REG_LOCAL_GPIO_DATA_RMTEN(i);
++			break;
++		}
++	}
++
++	ds90_write(ds90, DS90_REG_LOCAL_GPIO_DATA, local_gpio_data);
++	ds90_write(ds90, DS90_REG_GPIO_INPUT_CTRL, gpio_input_ctrl);
++	/* TODO setting DATAPATH_CTL1 is needed for inputs? */
++
++	return 0;
++}
++
++/* -----------------------------------------------------------------------------
++ * Core
++ */
++
++/*
++ * Reset via registers (useful from remote).
++ * Note: the procedure is undocumented, but this one seems to work.
++ */
++static void ds90_soft_reset(struct ds90_data *ds90)
++{
++	int retries = 10;
++	s32 ret;
++
++	while (retries-- > 0) {
++		ret = ds90_write(ds90, DS90_REG_RESET_CTL,
++				 DS90_REG_RESET_CTL_DIGITAL_RESET_1);
++		if (ret >= 0)
++			break;
++		usleep_range(1000, 3000);
++	}
++
++	retries = 10;
++	while (retries-- > 0) {
++		ret = ds90_read(ds90, DS90_REG_DEVICE_STS);
++		if (ret >= 0 && (ret & DS90_REG_DEVICE_STS_CFG_INIT_DONE))
++			break;
++		usleep_range(1000, 3000);
++	}
++}
++
++static int ds90_parse_dt(struct ds90_data *ds90)
++{
++	struct device_node *np = ds90->client->dev.of_node;
++	struct device *dev = &ds90->client->dev;
++	int err;
++
++	if (!np) {
++		dev_err(dev, "OF: no device tree node!\n");
++		return -ENOENT;
++	}
++
++	/* optional, if absent all GPIO pins are unused */
++	err = of_property_read_u32_array(np, "gpio-functions", ds90->gpio_func,
++					ARRAY_SIZE(ds90->gpio_func));
++	if (err && err != -EINVAL)
++		dev_err(dev, "DT: invalid gpio-functions property (%d)", err);
++
++	if (of_property_read_bool(np, "ti,ds90ub953-q1-clk-inv-pol-quirk")) {
++		ds90_write(ds90,
++			   DS90_REG_CSI_POL_SEL,
++			   DS90_REG_CSI_POL_SEL_POLARITY_CLK0);
++		ds90_write(ds90,
++			   DS90_REG_CSI_LP_POLARITY,
++			   DS90_REG_CSI_LP_POLARITY_POL_LP_CLK0);
++	}
++
++	return 0;
++}
++
++static int ds90_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct ds90_data *ds90;
++	s32 rev_mask;
++	int err;
++
++	dev_dbg(dev, "probing, addr 0x%02x\n", client->addr);
++
++	ds90 = devm_kzalloc(dev, sizeof(*ds90), GFP_KERNEL);
++	if (!ds90)
++		return -ENOMEM;
++
++	ds90->client = client;
++	i2c_set_clientdata(client, ds90);
++
++	ds90_soft_reset(ds90);
++
++	rev_mask = ds90_read(ds90, DS90_REG_REV_MASK_ID);
++	if (rev_mask < 0) {
++		err = rev_mask;
++		dev_err(dev,
++			"Cannot read first register (%d), abort\n", err);
++		goto err_reg_read;
++	}
++
++	err = ds90_parse_dt(ds90);
++	if (err)
++		goto err_parse_dt;
++
++	/* I2C fast mode 400 kHz */
++	/* TODO compute values from REFCLK */
++	ds90_write(ds90, DS90_REG_SCL_HIGH_TIME, 0x13);
++	ds90_write(ds90, DS90_REG_SCL_LOW_TIME,  0x26);
++
++	/*
++	 * TODO compute these hard-coded values
++	 *
++	 * SET CLK_OUT:
++	 * MODE    = 0 = CSI-2 sync (strap, reg 0x03) -> refclk from deser
++	 * REFCLK  = 23..26 MHz (REFCLK pin @ remote deserializer)
++	 * FC      = fwd channel data rate = 160 x REFCLK
++	 * CLK_OUT = FC * M / (HS_CLK_DIV * N)
++	 *         = FC * 1 / (4 * 20) = 2 * REFCLK
++	 */
++	ds90_write(ds90, DS90_REG_CLKOUT_CTRL0, 0x41); /* div by 4, M=1 */
++	ds90_write(ds90, DS90_REG_CLKOUT_CTRL1,   20); /* N=20 */
++
++	err = ds90_configure_gpios(ds90);
++	if (err)
++		goto err_configure_gpios;
++
++	dev_info(dev, "Successfully probed (rev/mask %02x)\n", rev_mask);
++
++	return 0;
++
++err_configure_gpios:
++err_parse_dt:
++err_reg_read:
++	return err;
++}
++
++static int ds90_remove(struct i2c_client *client)
++{
++	dev_info(&client->dev, "Removing\n");
++	return 0;
++}
++
++static const struct i2c_device_id ds90_id[] = {
++	{ "ds90ub953-q1", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, ds90_id);
++
++#ifdef CONFIG_OF
++static const struct of_device_id ds90_dt_ids[] = {
++	{ .compatible = "ti,ds90ub953-q1", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ds90_dt_ids);
++#endif
++
++static struct i2c_driver ds90ub953_driver = {
++	.probe_new	= ds90_probe,
++	.remove		= ds90_remove,
++	.id_table	= ds90_id,
++	.driver = {
++		.name	= "ds90ub953",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(ds90_dt_ids),
++	},
++};
++
++module_i2c_driver(ds90ub953_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Texas Instruments DS90UB953-Q1 CSI-2 serializer driver");
++MODULE_AUTHOR("Luca Ceresoli <luca@lucaceresoli.net>");
+-- 
+2.17.1
