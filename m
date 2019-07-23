@@ -1,43 +1,39 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: Add pxe1610 as a trivial device
-Date: Tue, 23 Jul 2019 08:50:18 -0600
-Message-ID: <CAL_Jsq+uAjK6+xzkyOhcH96tZuqv7i6Nz5_nhUQkZ2adt2gutA@mail.gmail.com>
-References: <20190723002052.2878847-1-vijaykhemka@fb.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 5/5] arm64: dts: qcom: sdm845-cheza: remove macro from unit name
+Date: Tue, 23 Jul 2019 07:51:02 -0700
+Message-ID: <5d371ed6.1c69fb81.1ea1c.47f1@mx.google.com>
+References: <20190722123422.4571-1-vkoul@kernel.org> <20190722123422.4571-6-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190723002052.2878847-1-vijaykhemka@fb.com>
+In-Reply-To: <20190722123422.4571-6-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Khemka <vijaykhemka@fb.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jiri Kosina <trivial@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Herbert Xu <herbert@gondor.apana.org.au>, Patrick Venture <venture@google.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Anson Huang <anson.huang@nxp.com>, Jeremy Gebben <jgebben@sweptlaser.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org, sdasari@fb.com
+To: Andy Gross <agross@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 6:46 PM Vijay Khemka <vijaykhemka@fb.com> wrote:
->
-> The pxe1610 is a voltage regulator from Infineon. It also supports
-> other VRs pxe1110 and pxm1310 from Infineon.
->
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+Quoting Vinod Koul (2019-07-22 05:34:22)
+> Unit name is supposed to be a number, using a macro with hex value is
+> not recommended, so add the value in unit name.
+>=20
+> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:966.16-969.4: Warning (unit_ad=
+dress_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4d: unit name=
+ should not have leading "0x"
+> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:971.16-974.4: Warning (unit_ad=
+dress_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4e: unit name=
+ should not have leading "0x"
+> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:976.16-979.4: Warning (unit_ad=
+dress_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4f: unit name=
+ should not have leading "0x"
+> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:981.16-984.4: Warning (unit_ad=
+dress_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x50: unit name=
+ should not have leading "0x"
+> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:986.16-989.4: Warning (unit_ad=
+dress_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x51: unit name=
+ should not have leading "0x"
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > ---
->  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-> index 2e742d399e87..1be648828a31 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> @@ -99,6 +99,8 @@ properties:
->              # Infineon IR38064 Voltage Regulator
->            - infineon,ir38064
->              # Infineon SLB9635 (Soft-) I2C TPM (old protocol, max 100khz)
-> +          - infineon,pxe1610
-> +            # Infineon PXE1610, PXE1110 and PXM1310 Voltage Regulators
 
-The comment goes above the entry.
-
->            - infineon,slb9635tt
->              # Infineon SLB9645 I2C TPM (new protocol, max 400khz)
->            - infineon,slb9645tt
-> --
-> 2.17.1
->
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
