@@ -1,65 +1,49 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] ARM: dts: am33xx: Add nodes for eQEP
-Date: Tue, 23 Jul 2019 07:51:00 -0700
-Message-ID: <20190723145100.GS5447@atomide.com>
-References: <20190722154538.5314-1-david@lechnology.com>
- <20190722154538.5314-4-david@lechnology.com>
- <20190723084213.GR5447@atomide.com>
- <af21fd76-7123-b317-896b-bfe18d293325@lechnology.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: Add pxe1610 as a trivial device
+Date: Tue, 23 Jul 2019 08:52:39 -0600
+Message-ID: <CAL_Jsq+Kw0TFW_v54Y2QHcChqpNDYhFyCSO5Cj-be9yLSCq-Pw@mail.gmail.com>
+References: <20190723002052.2878847-1-vijaykhemka@fb.com> <CAL_Jsq+uAjK6+xzkyOhcH96tZuqv7i6Nz5_nhUQkZ2adt2gutA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <af21fd76-7123-b317-896b-bfe18d293325@lechnology.com>
+In-Reply-To: <CAL_Jsq+uAjK6+xzkyOhcH96tZuqv7i6Nz5_nhUQkZ2adt2gutA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, William Breathitt Gray <vilhelm.gray@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: Vijay Khemka <vijaykhemka@fb.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jiri Kosina <trivial@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Herbert Xu <herbert@gondor.apana.org.au>, Patrick Venture <venture@google.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Anson Huang <anson.huang@nxp.com>, Jeremy Gebben <jgebben@sweptlaser.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org, sdasari@fb.com
 List-Id: devicetree@vger.kernel.org
 
-* David Lechner <david@lechnology.com> [190723 14:46]:
-> On 7/23/19 3:42 AM, Tony Lindgren wrote:
-> > * David Lechner <david@lechnology.com> [190722 15:46]:
-> > > This adds new nodes for the Texas Instruments Enhanced Quadrature
-> > > Encoder Pulse (eQEP) module in the PWM subsystem on AM33XX.
-> > > 
-> > > Signed-off-by: David Lechner <david@lechnology.com>
-> > > ---
-> > >   arch/arm/boot/dts/am33xx-l4.dtsi | 27 +++++++++++++++++++++++++++
-> > >   1 file changed, 27 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-> > > index 3b1fb2ba4dff..7fdc2f61c553 100644
-> > > --- a/arch/arm/boot/dts/am33xx-l4.dtsi
-> > > +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-> > > @@ -1908,6 +1908,15 @@
-> > >   					status = "disabled";
-> > >   				};
-> > > +				eqep0: eqep@180 {
-> > > +					compatible = "ti,am3352-eqep";
-> > > +					reg = <0x180 0x80>;
-> > > +					clocks = <&l4ls_gclk>;
-> > > +					clock-names = "fck";
-> > > +					interrupts = <79>;
-> > > +					status = "disabled";
-> > > +				};
-> > > +
-> > 
-> > You probably no longer need to map any clocks here as this> is now a child of the interconnect target module managed
-> > by ti-sysc driver. I have not checked but probably l4ls_gclk
-> > is same as clocks = <&l4ls_clkctrl AM3_L4LS_EPWMSS0_CLKCTRL 0>
-> > already managed by ti-sysc. If so, then just using runtime PM
-> > calls in any of the child device drivers will keep it enabled.
-> > 
-> > If l4ls_gclk is a separate functional clock, then it still
-> > needs to be managed by the child device driver directly.
-> 
-> The clock is included so that we can get the clock rate for
-> the timing aspects of the eQEP, not for power management.
-> 
-> I chose to use the "fck" name to be consistent with the
-> sibling EHRPWM and ECAP nodes that already have the same
-> bindings for the same clock.
+On Tue, Jul 23, 2019 at 8:50 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Mon, Jul 22, 2019 at 6:46 PM Vijay Khemka <vijaykhemka@fb.com> wrote:
+> >
+> > The pxe1610 is a voltage regulator from Infineon. It also supports
+> > other VRs pxe1110 and pxm1310 from Infineon.
 
-OK makes sense to me thanks.
+What happened to the other compatibles? S/w doesn't need to know the
+differences?
 
-Tony
+> >
+> > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> > ---
+> >  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+> > index 2e742d399e87..1be648828a31 100644
+> > --- a/Documentation/devicetree/bindings/trivial-devices.yaml
+> > +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+> > @@ -99,6 +99,8 @@ properties:
+> >              # Infineon IR38064 Voltage Regulator
+> >            - infineon,ir38064
+> >              # Infineon SLB9635 (Soft-) I2C TPM (old protocol, max 100khz)
+> > +          - infineon,pxe1610
+> > +            # Infineon PXE1610, PXE1110 and PXM1310 Voltage Regulators
+>
+> The comment goes above the entry.
+>
+> >            - infineon,slb9635tt
+> >              # Infineon SLB9645 I2C TPM (new protocol, max 400khz)
+> >            - infineon,slb9645tt
+> > --
+> > 2.17.1
+> >
