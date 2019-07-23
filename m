@@ -1,211 +1,40 @@
 Return-Path: <shawnguo@kernel.org>
-Date: Tue, 23 Jul 2019 14:52:19 +0800
+Date: Tue, 23 Jul 2019 14:32:49 +0800
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 2/2] arm64: dts: nxp: add ls1046a-frwy board support
-Message-ID: <20190723065217.GF15632@dragon>
-References: <1563284586-29928-1-git-send-email-pramod.kumar_1@nxp.com>
- <1563284586-29928-3-git-send-email-pramod.kumar_1@nxp.com>
+Subject: Re: [PATCH v2 0/2] arm64: dts: imx8mq: Add DT node for the Mixel
+ MIPI D-PHY
+Message-ID: <20190723063248.GD15632@dragon>
+References: <cover.1563187253.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1563284586-29928-3-git-send-email-pramod.kumar_1@nxp.com>
-To: Pramod Kumar <pramod.kumar_1@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1563187253.git.agx@sigxcpu.org>
+To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pavel Machek <pavel@ucw.cz>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Jul 16, 2019 at 01:43:31PM +0000, Pramod Kumar wrote:
-> ls1046afrwy board is based on nxp ls1046a SoC.
-> Board support's 4GB ddr memory, i2c, microSD card,
-> serial console,qspi nor flash,ifc nand flash,qsgmii network interface,
-> usb 3.0 and serdes interface to support two x1gen3 pcie interface.
+On Mon, Jul 15, 2019 at 12:43:04PM +0200, Guido G�nther wrote:
+> Now that the driver is in linux-next as of 20190624 let's have a DT node
+> for the i.MX8MQ and enable it on the Librem 5 devkit.
 > 
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile             |   1 +
->  arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts | 156 +++++++++++++++++++++
->  2 files changed, 157 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 0bd122f..1211531 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-frwy.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-qds.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> new file mode 100644
-> index 0000000..cda4998
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Device Tree Include file for Freescale Layerscape-1046A family SoC.
-> + *
-> + * Copyright 2019 NXP.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "fsl-ls1046a.dtsi"
-> +
-> +/ {
-> +	model = "LS1046A FRWY Board";
-> +	compatible = "fsl,ls1046a-frwy", "fsl,ls1046a";
-> +
-> +	aliases {
-> +		serial0 = &duart0;
-> +		serial1 = &duart1;
-> +		serial2 = &duart2;
-> +		serial3 = &duart3;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	sb_3v3: regulator-sb3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "LT8642SEV-3.3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&duart0 {
-> +	status = "okay";
-> +};
-> +
-> +&duart1 {
-> +	status = "okay";
-> +};
-> +
-> +&duart2 {
-> +	status = "okay";
-> +};
-> +
-> +&duart3 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +
-> +	i2c-mux@77 {
-> +		compatible = "nxp,pca9546";
-> +		reg = <0x77>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +
-> +			power-monitor@40 {
-> +				compatible = "ti,ina220";
-> +				reg = <0x40>;
-> +				shunt-resistor = <1000>;
-> +			};
-> +
-> +
+> Changes from v1:
+> - Add Acked-by: form Angus, thanks!
 
-One newline is good enough.  I fixed it up and applied the patch.
+You do not need to send a new version for just collecting ack/review
+tags.  I did that when applying v1.
 
 Shawn
 
-> +			temperature-sensor@4c {
-> +				compatible = "nxp,sa56004";
-> +				reg = <0x4c>;
-> +				vcc-supply = <&sb_3v3>;
-> +			};
-> +
-> +			rtc@51 {
-> +				compatible = "nxp,pcf2129";
-> +				reg = <0x51>;
-> +			};
-> +
-> +			eeprom@52 {
-> +				compatible = "atmel,24c512";
-> +				reg = <0x52>;
-> +			};
-> +
-> +			eeprom@53 {
-> +				compatible = "atmel,24c512";
-> +				reg = <0x53>;
-> +			};
-> +
-> +		};
-> +	};
-> +};
-> +
-> +&ifc {
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	/* NAND Flash */
-> +	ranges = <0x0 0x0 0x0 0x7e800000 0x00010000>;
-> +	status = "okay";
-> +
-> +	nand@0,0 {
-> +		compatible = "fsl,ifc-nand";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0x0 0x0 0x10000>;
-> +	};
-> +
-> +};
-> +
-> +#include "fsl-ls1046-post.dtsi"
-> +
-> +&fman0 {
-> +	ethernet@e0000 {
-> +		phy-handle = <&qsgmii_phy4>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@e8000 {
-> +		phy-handle = <&qsgmii_phy2>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@ea000 {
-> +		phy-handle = <&qsgmii_phy1>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@f2000 {
-> +		phy-handle = <&qsgmii_phy3>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	mdio@fd000 {
-> +		qsgmii_phy1: ethernet-phy@1c {
-> +			reg = <0x1c>;
-> +		};
-> +
-> +		qsgmii_phy2: ethernet-phy@1d {
-> +			reg = <0x1d>;
-> +		};
-> +
-> +		qsgmii_phy3: ethernet-phy@1e {
-> +			reg = <0x1e>;
-> +		};
-> +
-> +		qsgmii_phy4: ethernet-phy@1f {
-> +			reg = <0x1f>;
-> +		};
-> +	};
-> +};
+> 
+> Guido G�nther (2):
+>   arm64: dts: imx8mq: Add MIPI D-PHY
+>   arm64: dts: imx8mq-librem5: Enable MIPI D-PHY
+> 
+>  .../boot/dts/freescale/imx8mq-librem5-devkit.dts    |  4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi           | 13 +++++++++++++
+>  2 files changed, 17 insertions(+)
+> 
 > -- 
-> 2.7.4
+> 2.20.1
 > 
