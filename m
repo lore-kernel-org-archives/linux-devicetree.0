@@ -1,84 +1,227 @@
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: [PATCH net-next 2/3] dt-bindings: net: fsl: enetc: Add bindings for the central MDIO PCIe endpoint
-Date: Tue, 23 Jul 2019 18:15:54 +0300
-Message-ID: <1563894955-545-3-git-send-email-claudiu.manoil@nxp.com>
-References: <1563894955-545-1-git-send-email-claudiu.manoil@nxp.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1563894955-545-1-git-send-email-claudiu.manoil@nxp.com>
-Sender: netdev-owner@vger.kernel.org
-To: "David S . Miller" <davem@davemloft.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [Sound-open-firmware] [PATCH v2 3/5] ASoC: SOF: Add DT DSP device
+ support
+Date: Tue, 23 Jul 2019 10:11:56 -0500
+Message-ID: <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com>
+References: <20190723084104.12639-1-daniel.baluta@nxp.com>
+ <20190723084104.12639-4-daniel.baluta@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190723084104.12639-4-daniel.baluta@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@nxp.com>, m.felsch@pengutronix.de, shawnguo@kernel.org
+Cc: mark.rutland@arm.com, aisheng.dong@nxp.com, peng.fan@nxp.com, anson.huang@nxp.com, devicetree@vger.kernel.org, shengjiu.wang@nxp.com, linux-kernel@vger.kernel.org, paul.olaru@nxp.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, leonard.crestez@nxp.com, festevam@gmail.com, linux-arm-kernel@lists.infradead.org, sound-open-firmware@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-The on-chip PCIe root complex that integrates the ENETC ethernet
-controllers also integrates a PCIe enpoint for the MDIO controller
-provinding for cetralized control of the ENETC mdio bus.
-Add bindings for this "central" MDIO Integrated PCIe Endpoit.
 
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
----
- .../devicetree/bindings/net/fsl-enetc.txt     | 42 +++++++++++++++++--
- 1 file changed, 39 insertions(+), 3 deletions(-)
+> diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
+> index 61b97fc55bb2..2aa3a1cdf60c 100644
+> --- a/sound/soc/sof/Kconfig
+> +++ b/sound/soc/sof/Kconfig
+> @@ -36,6 +36,15 @@ config SND_SOC_SOF_ACPI
+>   	  Say Y if you need this option
+>   	  If unsure select "N".
+>   
+> +config SND_SOC_SOF_DT
+> +	tristate "SOF DT enumeration support"
+> +	select SND_SOC_SOF
+> +	select SND_SOC_SOF_OPTIONS
+> +	help
+> +	  This adds support for Device Tree enumeration. This option is
+> +	  required to enable i.MX8 devices.
+> +	  Say Y if you need this option. If unsure select "N".
+> +
 
-diff --git a/Documentation/devicetree/bindings/net/fsl-enetc.txt b/Documentation/devicetree/bindings/net/fsl-enetc.txt
-index 25fc687419db..c090f6df7a39 100644
---- a/Documentation/devicetree/bindings/net/fsl-enetc.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-enetc.txt
-@@ -11,7 +11,9 @@ Required properties:
- 		  to parent node bindings.
- - compatible	: Should be "fsl,enetc".
- 
--1) The ENETC external port is connected to a MDIO configurable phy:
-+1. The ENETC external port is connected to a MDIO configurable phy
-+
-+1.1. Using the local ENETC Port MDIO interface
- 
- In this case, the ENETC node should include a "mdio" sub-node
- that in turn should contain the "ethernet-phy" node describing the
-@@ -47,8 +49,42 @@ Example:
- 		};
- 	};
- 
--2) The ENETC port is an internal port or has a fixed-link external
--connection:
-+1.2. Using the central MDIO PCIe enpoint device
-+
-+In this case, the mdio node should be defined as another PCIe
-+endpoint node, at the same level with the ENETC port nodes.
-+
-+Required properties:
-+
-+- reg		: Specifies PCIe Device Number and Function
-+		  Number of the ENETC endpoint device, according
-+		  to parent node bindings.
-+- compatible	: Should be "fsl,enetc-mdio".
-+
-+The remaining required mdio bus properties are standard, their bindings
-+already defined in Documentation/devicetree/bindings/net/mdio.txt.
-+
-+Example:
-+
-+	ethernet@0,0 {
-+		compatible = "fsl,enetc";
-+		reg = <0x000000 0 0 0 0>;
-+		phy-handle = <&sgmii_phy0>;
-+		phy-connection-type = "sgmii";
-+	};
-+
-+	mdio@0,3 {
-+		compatible = "fsl,enetc-mdio";
-+		reg = <0x000300 0 0 0 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		sgmii_phy0: ethernet-phy@2 {
-+			reg = <0x2>;
-+		};
-+	};
-+
-+2. The ENETC port is an internal port or has a fixed-link external
-+connection
- 
- In this case, the ENETC port node defines a fixed link connection,
- as specified by Documentation/devicetree/bindings/net/fixed-link.txt.
--- 
-2.17.1
+[snip]
+
+> diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+> index fff64a9970f0..fa35994a79c4 100644
+> --- a/sound/soc/sof/imx/Kconfig
+> +++ b/sound/soc/sof/imx/Kconfig
+> @@ -12,6 +12,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
+>   
+>   config SND_SOC_SOF_IMX8
+>   	tristate "SOF support for i.MX8"
+> +	select SND_SOC_SOF_DT
+
+This looks upside down. You should select SOF_DT first then include the 
+NXP stuff.
+
+>   	help
+>             This adds support for Sound Open Firmware for NXP i.MX8 platforms
+>             Say Y if you have such a device.
+> diff --git a/sound/soc/sof/sof-dt-dev.c b/sound/soc/sof/sof-dt-dev.c
+> new file mode 100644
+> index 000000000000..31429bbb5c7e
+> --- /dev/null
+> +++ b/sound/soc/sof/sof-dt-dev.c
+> @@ -0,0 +1,159 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> +//
+> +// Copyright 2019 NXP
+> +//
+> +// Author: Daniel Baluta <daniel.baluta@nxp.com>
+> +//
+> +
+> +#include <linux/firmware.h>
+> +#include <linux/module.h>
+> +#include <linux/pm_runtime.h>
+> +#include <sound/sof.h>
+> +
+> +#include "ops.h"
+> +
+> +extern struct snd_sof_dsp_ops sof_imx8_ops;
+> +
+> +static char *fw_path;
+> +module_param(fw_path, charp, 0444);
+> +MODULE_PARM_DESC(fw_path, "alternate path for SOF firmware.");
+> +
+> +static char *tplg_path;
+> +module_param(tplg_path, charp, 0444);
+> +MODULE_PARM_DESC(tplg_path, "alternate path for SOF topology.");
+> +
+> +/* platform specific devices */
+> +#if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
+> +static struct sof_dev_desc sof_dt_imx8qxp_desc = {
+> +	.default_fw_path = "imx/sof",
+> +	.default_tplg_path = "imx/sof-tplg",
+> +	.nocodec_fw_filename = "sof-imx8.ri",
+> +	.nocodec_tplg_filename = "sof-imx8-nocodec.tplg",
+> +	.ops = &sof_imx8_ops,
+> +};
+> +#endif
+> +
+> +static const struct dev_pm_ops sof_dt_pm = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(snd_sof_suspend, snd_sof_resume)
+> +	SET_RUNTIME_PM_OPS(snd_sof_runtime_suspend, snd_sof_runtime_resume,
+> +			   NULL)
+> +};
+> +
+> +static void sof_dt_probe_complete(struct device *dev)
+> +{
+> +	/* allow runtime_pm */
+> +	pm_runtime_set_autosuspend_delay(dev, SND_SOF_SUSPEND_DELAY_MS);
+> +	pm_runtime_use_autosuspend(dev);
+> +	pm_runtime_enable(dev);
+> +}
+> +
+> +static int sof_dt_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	const struct sof_dev_desc *desc;
+> +	/*TODO: create a generic snd_soc_xxx_mach */
+> +	struct snd_soc_acpi_mach *mach;
+
+I wonder if you really need to use the same structures. For Intel we get 
+absolutely zero info from the firmware so rely on an ACPI codec ID as a 
+key to find information on which firmware and topology to use, and which 
+machine driver to load. You could have all this information in a DT blob?
+
+> +	struct snd_sof_pdata *sof_pdata;
+> +	const struct snd_sof_dsp_ops *ops;
+> +	int ret;
+> +
+> +	dev_info(&pdev->dev, "DT DSP detected");
+> +
+> +	sof_pdata = devm_kzalloc(dev, sizeof(*sof_pdata), GFP_KERNEL);
+> +	if (!sof_pdata)
+> +		return -ENOMEM;
+> +
+> +	desc = device_get_match_data(dev);
+> +	if (!desc)
+> +		return -ENODEV;
+> +
+> +	/* get ops for platform */
+> +	ops = desc->ops;
+> +	if (!ops) {
+> +		dev_err(dev, "error: no matching DT descriptor ops\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +#if IS_ENABLED(CONFIG_SND_SOC_SOF_FORCE_NOCODEC_MODE)
+> +	/* force nocodec mode */
+> +	dev_warn(dev, "Force to use nocodec mode\n");
+> +	mach = devm_kzalloc(dev, sizeof(*mach), GFP_KERNEL);
+> +	if (!mach)
+> +		return -ENOMEM;
+> +	ret = sof_nocodec_setup(dev, sof_pdata, mach, desc, ops);
+> +	if (ret < 0)
+> +		return ret;
+> +#else
+> +	/* TODO: implement case where we actually have a codec */
+> +	return -ENODEV;
+> +#endif
+> +
+> +	if (mach)
+> +		mach->mach_params.platform = dev_name(dev);
+> +
+> +	sof_pdata->machine = mach;
+> +	sof_pdata->desc = desc;
+> +	sof_pdata->dev = &pdev->dev;
+> +	sof_pdata->platform = dev_name(dev);
+> +
+> +	/* alternate fw and tplg filenames */
+> +	if (fw_path)
+> +		sof_pdata->fw_filename_prefix = fw_path;
+> +	else
+> +		sof_pdata->fw_filename_prefix =
+> +			sof_pdata->desc->default_fw_path;
+> +	if (tplg_path)
+> +		sof_pdata->tplg_filename_prefix = tplg_path;
+> +	else
+> +		sof_pdata->tplg_filename_prefix =
+> +			sof_pdata->desc->default_tplg_path;
+> +
+> +#if IS_ENABLED(CONFIG_SND_SOC_SOF_PROBE_WORK_QUEUE)
+> +	/* set callback to enable runtime_pm */
+> +	sof_pdata->sof_probe_complete = sof_dt_probe_complete;
+> +#endif
+> +	 /* call sof helper for DSP hardware probe */
+> +	ret = snd_sof_device_probe(dev, sof_pdata);
+> +	if (ret) {
+> +		dev_err(dev, "error: failed to probe DSP hardware\n");
+> +		return ret;
+> +	}
+> +
+> +#if !IS_ENABLED(CONFIG_SND_SOC_SOF_PROBE_WORK_QUEUE)
+> +	sof_dt_probe_complete(dev);
+> +#endif
+> +
+> +	return ret;
+> +}
+> +
+> +static int sof_dt_remove(struct platform_device *pdev)
+> +{
+> +	pm_runtime_disable(&pdev->dev);
+> +
+> +	/* call sof helper for DSP hardware remove */
+> +	snd_sof_device_remove(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id sof_dt_ids[] = {
+> +#if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
+> +	{ .compatible = "fsl,imx8qxp-dsp", .data = &sof_dt_imx8qxp_desc},
+> +#endif
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, sof_dt_ids);
+> +
+> +/* DT driver definition */
+> +static struct platform_driver snd_sof_dt_driver = {
+> +	.probe = sof_dt_probe,
+> +	.remove = sof_dt_remove,
+> +	.driver = {
+> +		.name = "sof-audio-dt",
+> +		.pm = &sof_dt_pm,
+> +		.of_match_table = sof_dt_ids
+> +	},
+> +};
+> +module_platform_driver(snd_sof_dt_driver);
+> +
+> +MODULE_LICENSE("Dual BSD/GPL");
+> 
