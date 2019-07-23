@@ -1,40 +1,128 @@
-Return-Path: <shawnguo@kernel.org>
-Date: Tue, 23 Jul 2019 14:32:49 +0800
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 0/2] arm64: dts: imx8mq: Add DT node for the Mixel
- MIPI D-PHY
-Message-ID: <20190723063248.GD15632@dragon>
-References: <cover.1563187253.git.agx@sigxcpu.org>
+Return-Path: <SRS0=kDdq=VU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:55574 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729058AbfGWH3a (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 23 Jul 2019 03:29:30 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH] ARM: dts: Fix incomplete dts data for am3 and am4 mmc
+Date: Tue, 23 Jul 2019 00:29:23 -0700
+Message-Id: <20190723072923.23750-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1563187253.git.agx@sigxcpu.org>
-To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pavel Machek <pavel@ucw.cz>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Sender: devicetree-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, David Lechner <david@lechnology.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jul 15, 2019 at 12:43:04PM +0200, Guido G�nther wrote:
-> Now that the driver is in linux-next as of 20190624 let's have a DT node
-> for the i.MX8MQ and enable it on the Librem 5 devkit.
-> 
-> Changes from v1:
-> - Add Acked-by: form Angus, thanks!
+Commit 4e27f752ab8c ("ARM: OMAP2+: Drop mmc platform data for am330x and
+am43xx") dropped legacy mmc platform data for am3 and am4, but missed the
+fact that we never updated the dts files for mmc3 that is directly on l3
+interconnect instead of l4 interconnect. This leads to a situation with
+no legacy platform data and incomplete dts data.
 
-You do not need to send a new version for just collecting ack/review
-tags.  I did that when applying v1.
+Let's update the mmc instances on l3 interconnect to probe properly with
+ti-sysc interconnect target module driver to make mmc3 work again. Let's
+still keep legacy "ti,hwmods" property around for v5.2 kernel and only
+drop it later on.
 
-Shawn
+Note that there is no need to use property status = "disabled" for mmc3.
+The default for dts is enabled, and runtime PM will idle unused instances
+just fine.
 
-> 
-> Guido G�nther (2):
->   arm64: dts: imx8mq: Add MIPI D-PHY
->   arm64: dts: imx8mq-librem5: Enable MIPI D-PHY
-> 
->  .../boot/dts/freescale/imx8mq-librem5-devkit.dts    |  4 ++++
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi           | 13 +++++++++++++
->  2 files changed, 17 insertions(+)
-> 
-> -- 
-> 2.20.1
-> 
+Fixes: 4e27f752ab8c ("ARM: OMAP2+: Drop mmc platform data for am330x and am43xx")
+Reported-by: David Lechner <david@lechnology.com>
+Tested-by: David Lechner <david@lechnology.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/am33xx.dtsi | 32 ++++++++++++++++++++++++++------
+ arch/arm/boot/dts/am4372.dtsi | 32 ++++++++++++++++++++++++++------
+ 2 files changed, 52 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -234,13 +234,33 @@
+ 			interrupt-names = "edma3_tcerrint";
+ 		};
+ 
+-		mmc3: mmc@47810000 {
+-			compatible = "ti,omap4-hsmmc";
++		target-module@47810000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
+ 			ti,hwmods = "mmc3";
+-			ti,needs-special-reset;
+-			interrupts = <29>;
+-			reg = <0x47810000 0x1000>;
+-			status = "disabled";
++			reg = <0x478102fc 0x4>,
++			      <0x47810110 0x4>,
++			      <0x47810114 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
++					 SYSC_OMAP2_ENAWAKEUP |
++					 SYSC_OMAP2_SOFTRESET |
++					 SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,syss-mask = <1>;
++			clocks = <&l3s_clkctrl AM3_L3S_MMC3_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x47810000 0x1000>;
++
++			mmc3: mmc@0 {
++				compatible = "ti,omap4-hsmmc";
++				ti,needs-special-reset;
++				interrupts = <29>;
++				reg = <0x0 0x1000>;
++			};
+ 		};
+ 
+ 		usb: usb@47400000 {
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -228,13 +228,33 @@
+ 			interrupt-names = "edma3_tcerrint";
+ 		};
+ 
+-		mmc3: mmc@47810000 {
+-			compatible = "ti,omap4-hsmmc";
+-			reg = <0x47810000 0x1000>;
++		target-module@47810000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
+ 			ti,hwmods = "mmc3";
+-			ti,needs-special-reset;
+-			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+-			status = "disabled";
++			reg = <0x478102fc 0x4>,
++			      <0x47810110 0x4>,
++			      <0x47810114 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
++					 SYSC_OMAP2_ENAWAKEUP |
++					 SYSC_OMAP2_SOFTRESET |
++					 SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,syss-mask = <1>;
++			clocks = <&l3s_clkctrl AM4_L3S_MMC3_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x47810000 0x1000>;
++
++			mmc3: mmc@0 {
++				compatible = "ti,omap4-hsmmc";
++				ti,needs-special-reset;
++				interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x1000>;
++			};
+ 		};
+ 
+ 		sham: sham@53100000 {
+-- 
+2.21.0
