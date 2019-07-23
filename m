@@ -1,51 +1,59 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 14/19] dt-bindings: pci: add PHY properties to Armada
- 7K/8K controller bindings
-Date: Tue, 23 Jul 2019 10:35:48 +0200
-Message-ID: <20190723103548.59d1a652@xps13>
-References: <20190627095104.22529-1-miquel.raynal@bootlin.com>
- <20190627122505.25774-1-miquel.raynal@bootlin.com>
- <20190627122505.25774-2-miquel.raynal@bootlin.com>
- <20190722175225.GA13801@bogus>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190722175225.GA13801@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v2 0/5] Add DSP node for i.MX8QXP board to be used by DSP SOF driver
+Date: Tue, 23 Jul 2019 11:40:59 +0300
+Message-ID: <20190723084104.12639-1-daniel.baluta@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: m.felsch@pengutronix.de, shawnguo@kernel.org
+Cc: mark.rutland@arm.com, aisheng.dong@nxp.com, peng.fan@nxp.com, anson.huang@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com, shengjiu.wang@nxp.com, paul.olaru@nxp.com, robh+dt@kernel.org, kernel@pengutronix.de, leonard.crestez@nxp.com, festevam@gmail.com, linux-arm-kernel@lists.infradead.org, sound-open-firmware@alsa-project.org, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGUgb24gTW9uLCAyMiBK
-dWwgMjAxOSAxMTo1MjoyNSAtMDYwMDoKCj4gT24gVGh1LCBKdW4gMjcsIDIwMTkgYXQgMDI6MjU6
-MDBQTSArMDIwMCwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiA+IEFybWFkYSBDUDExMCBQQ0llIGNv
-bnRyb2xsZXIgY2FuIGhhdmUgYSBQSFkgKGZvciBjb25maWd1cmluZyBTRVJERVMKPiA+IGxhbmVz
-KS4gRGVzY3JpYmUgdGhlc2UgdHdvIHByb3BlcnRpZXMgaW4gdGhlIGJpbmRpbmdzLgo+ID4gCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29t
-Pgo+ID4gLS0tCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9wY2kt
-YXJtYWRhOGsudHh0IHwgNCArKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygr
-KQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BjaS9wY2ktYXJtYWRhOGsudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BjaS9wY2ktYXJtYWRhOGsudHh0Cj4gPiBpbmRleCA5ZTNmYzE1ZTFhZjguLmEzNzNhODA1MjRk
-YiAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kv
-cGNpLWFybWFkYThrLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3BjaS9wY2ktYXJtYWRhOGsudHh0Cj4gPiBAQCAtMTcsNiArMTcsMTAgQEAgUmVxdWlyZWQg
-cHJvcGVydGllczoKPiA+ICAgICBuYW1lIG11c3QgYmUgImNvcmUiIGZvciB0aGUgZmlyc3QgY2xv
-Y2sgYW5kICJyZWciIGZvciB0aGUgc2Vjb25kCj4gPiAgICAgb25lCj4gPiAgCj4gPiArT3B0aW9u
-YWwgcHJvcGVydGllczoKPiA+ICstIHBoeXM6IHBoYW5kbGUgdG8gdGhlIFBIWSBub2RlIChnZW5l
-cmljIFBIWSBiaW5kaW5ncykuCj4gPiArLSBwaHktbmFtZXM6IG5hbWVzIG9mIHRoZSBQSFlzLiAg
-Cj4gCj4gSG93IG1hbnk/IElmIG9ubHkgMSwgeW91IGRvbid0IHJlYWxseSBuZWVkIHBoeS1uYW1l
-cy4KCkkgdGhvdWdodCBpdCB3YXMgcHJlZmVycmVkIHRvIGFsd2F5cyBhZGQgcGh5LW5hbWVzLCBi
-dXQgb2ssIEknbGwgZHJvcAp0aGUgcHJvcGVydHkuCgpUaGFua3MsCk1pcXXDqGwKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
-bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+i.MX8QXP boards feature an Hifi4 DSP from Tensilica.
+
+This patch series aims on adding the DT node describing the DSP,
+but it also contains the Linux SOF DSP driver that will use the DT node
+for easier review.
+
+Note that we switched to the new yaml format for bindings documentation.
+
+The DSP will run SOF Firmware [1]. Patches 1,2,3 are adding support
+for Linux DSP driver are already sent for review to SOF folks [2]
+
+[1] https://github.com/thesofproject/sof
+[2] https://github.com/thesofproject/linux/pull/1048/commits
+
+Changes since v1:
+	- removed 'clk: imx8: Add DSP related clocks' as it was already
+	  applied by Shawn
+	- add patches adding support for Linux DSP driver to make things
+	  clear for review
+	- add maxItems property for PM in DT bindings doc
+
+Daniel Baluta (5):
+  ASoC: SOF: imx: Add i.MX8 HW support
+  ASoC: SOF: topology: Add dummy support for i.MX8 DAIs
+  ASoC: SOF: Add DT DSP device support
+  arm64: dts: imx8qxp: Add DSP DT node
+  dt-bindings: dsp: fsl: Add DSP core binding support
+
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      |  87 ++++
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts |   4 +
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi    |  32 ++
+ include/sound/sof/dai.h                       |   2 +
+ include/uapi/sound/sof/tokens.h               |   8 +
+ sound/soc/sof/Kconfig                         |  10 +
+ sound/soc/sof/Makefile                        |   4 +
+ sound/soc/sof/imx/Kconfig                     |  21 +
+ sound/soc/sof/imx/Makefile                    |   7 +
+ sound/soc/sof/imx/imx8.c                      | 464 ++++++++++++++++++
+ sound/soc/sof/sof-dt-dev.c                    | 159 ++++++
+ sound/soc/sof/topology.c                      |  30 ++
+ 12 files changed, 828 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+ create mode 100644 sound/soc/sof/imx/Kconfig
+ create mode 100644 sound/soc/sof/imx/Makefile
+ create mode 100644 sound/soc/sof/imx/imx8.c
+ create mode 100644 sound/soc/sof/sof-dt-dev.c
+
+-- 
+2.17.1
