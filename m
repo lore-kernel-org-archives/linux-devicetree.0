@@ -1,138 +1,49 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: irq: Convert Allwinner NMI Controller to
- a schema
-Date: Tue, 23 Jul 2019 10:32:41 -0600
-Message-ID: <CAL_JsqJkTrCuscnWgm5cDmQj5RPGnd3qXkzR40XWKB2skZFwXA@mail.gmail.com>
-References: <20190723132658.5068-1-maxime.ripard@bootlin.com>
- <20190723132658.5068-2-maxime.ripard@bootlin.com>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: Re: [PATCH] dt-bindings: Add pxe1610 as a trivial device
+Date: Tue, 23 Jul 2019 17:13:49 +0000
+Message-ID: <F7BAC53E-925E-4FA4-815D-ACB82DF8D240@fb.com>
+References: <20190723002052.2878847-1-vijaykhemka@fb.com>
+ <CAL_Jsq+uAjK6+xzkyOhcH96tZuqv7i6Nz5_nhUQkZ2adt2gutA@mail.gmail.com>
+ <CAL_Jsq+Kw0TFW_v54Y2QHcChqpNDYhFyCSO5Cj-be9yLSCq-Pw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190723132658.5068-2-maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, maz@kernel.org, Chen-Yu Tsai <wens@csie.org>, Thomas Gleixner <tglx@linutronix.de>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+Kw0TFW_v54Y2QHcChqpNDYhFyCSO5Cj-be9yLSCq-Pw@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <6A4F4E0F5F9CCA4596181D63CAAD2BD0@namprd15.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jiri Kosina <trivial@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Herbert Xu <herbert@gondor.apana.org.au>, Patrick Venture <venture@google.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Anson Huang <anson.huang@nxp.com>, Jeremy Gebben <jgebben@sweptlaser.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, Joel Stanley <joel@jms.id.au>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, Sai Dasari <sdasari@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 7:27 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> The Allwinner SoCs have an interrupt controller called NMI supported in
-> Linux, with a matching Device Tree binding.
->
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for that controller over to a YAML schemas.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  .../allwinner,sun7i-a20-sc-nmi.yaml           | 83 +++++++++++++++++++
->  .../allwinner,sunxi-nmi.txt                   | 29 -------
->  2 files changed, 83 insertions(+), 29 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-> new file mode 100644
-> index 000000000000..cb8077b0c8dd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-> @@ -0,0 +1,83 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner A20 Non-Maskable Interrupt Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Chen-Yu Tsai <wens@csie.org>
-> +  - Maxime Ripard <maxime.ripard@bootlin.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/interrupt-controller.yaml#
-> +
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - allwinner,sun6i-a31-r-intc
-> +          - allwinner,sun7i-a20-sc-nmi
-> +          - allwinner,sun9i-a80-sc-nmi
-
-This should have all the possible compatibles in case all are not listed.
-
-> +
-> +          # Deprecated
-> +          - allwinner,sun6i-a31-sc-nmi
-
-I know we already did things this way before, but perhaps this should
-be listed below with the 'deprecated' property. The tools can include
-it in select, but then remove it from compatible property.
-
-> +
-> +  required:
-> +    - compatible
-> +
-> +properties:
-> +  "#interrupt-cells":
-> +    const: 2
-> +    description:
-> +      The first cell is the IRQ number, the second cell the trigger
-> +      type as defined in interrupt.txt in this directory.
-> +
-> +  compatible:
-> +    oneOf:
-> +      - const: allwinner,sun6i-a31-r-intc
-> +      - const: allwinner,sun7i-a20-sc-nmi
-> +      - items:
-> +        - const: allwinner,sun8i-a83t-r-intc
-> +        - const: allwinner,sun6i-a31-r-intc
-> +      - const: allwinner,sun9i-a80-sc-nmi
-> +      - items:
-> +        - const: allwinner,sun50i-a64-r-intc
-> +        - const: allwinner,sun6i-a31-r-intc
-> +      - items:
-> +        - const: allwinner,sun50i-h6-r-intc
-> +        - const: allwinner,sun6i-a31-r-intc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +required:
-> +  - "#interrupt-cells"
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +
-> +# FIXME: We should set it, but it would report all the generic
-> +# properties as additional properties.
-> +# additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    interrupt-controller@1c00030 {
-> +        compatible = "allwinner,sun7i-a20-sc-nmi";
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        reg = <0x01c00030 0x0c>;
-> +        interrupt-parent = <&gic>;
-> +        interrupts = <0 0 4>;
-> +    };
-> +
-> +...
+DQoNCu+7v09uIDcvMjMvMTksIDc6NTMgQU0sICJSb2IgSGVycmluZyIgPHJvYmgrZHRAa2VybmVs
+Lm9yZz4gd3JvdGU6DQoNCiAgICBPbiBUdWUsIEp1bCAyMywgMjAxOSBhdCA4OjUwIEFNIFJvYiBI
+ZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+IHdyb3RlOg0KICAgID4NCiAgICA+IE9uIE1vbiwg
+SnVsIDIyLCAyMDE5IGF0IDY6NDYgUE0gVmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5jb20+
+IHdyb3RlOg0KICAgID4gPg0KICAgID4gPiBUaGUgcHhlMTYxMCBpcyBhIHZvbHRhZ2UgcmVndWxh
+dG9yIGZyb20gSW5maW5lb24uIEl0IGFsc28gc3VwcG9ydHMNCiAgICA+ID4gb3RoZXIgVlJzIHB4
+ZTExMTAgYW5kIHB4bTEzMTAgZnJvbSBJbmZpbmVvbi4NCiAgICANCiAgICBXaGF0IGhhcHBlbmVk
+IHRvIHRoZSBvdGhlciBjb21wYXRpYmxlcz8gUy93IGRvZXNuJ3QgbmVlZCB0byBrbm93IHRoZQ0K
+ICAgIGRpZmZlcmVuY2VzPw0KQXMgZmFyIGFzIGRyaXZlciBpcyBjb25jZXJuZWQsIGl0IGRvZXNu
+J3QgbmVlZCB0byBrbm93IGRpZmZlcmVuY2VzLg0KICAgIA0KICAgID4gPg0KICAgID4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBWaWpheSBLaGVta2EgPHZpamF5a2hlbWthQGZiLmNvbT4NCiAgICA+ID4gLS0t
+DQogICAgPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdHJpdmlhbC1kZXZp
+Y2VzLnlhbWwgfCAyICsrDQogICAgPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCsp
+DQogICAgPiA+DQogICAgPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdHJpdmlhbC1kZXZpY2VzLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdHJpdmlhbC1kZXZpY2VzLnlhbWwNCiAgICA+ID4gaW5kZXggMmU3NDJkMzk5ZTg3
+Li4xYmU2NDg4MjhhMzEgMTAwNjQ0DQogICAgPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy90cml2aWFsLWRldmljZXMueWFtbA0KICAgID4gPiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdHJpdmlhbC1kZXZpY2VzLnlhbWwNCiAgICA+ID4g
+QEAgLTk5LDYgKzk5LDggQEAgcHJvcGVydGllczoNCiAgICA+ID4gICAgICAgICAgICAgICMgSW5m
+aW5lb24gSVIzODA2NCBWb2x0YWdlIFJlZ3VsYXRvcg0KICAgID4gPiAgICAgICAgICAgIC0gaW5m
+aW5lb24saXIzODA2NA0KICAgID4gPiAgICAgICAgICAgICAgIyBJbmZpbmVvbiBTTEI5NjM1IChT
+b2Z0LSkgSTJDIFRQTSAob2xkIHByb3RvY29sLCBtYXggMTAwa2h6KQ0KICAgID4gPiArICAgICAg
+ICAgIC0gaW5maW5lb24scHhlMTYxMA0KICAgID4gPiArICAgICAgICAgICAgIyBJbmZpbmVvbiBQ
+WEUxNjEwLCBQWEUxMTEwIGFuZCBQWE0xMzEwIFZvbHRhZ2UgUmVndWxhdG9ycw0KICAgID4NCiAg
+ICA+IFRoZSBjb21tZW50IGdvZXMgYWJvdmUgdGhlIGVudHJ5Lg0KICAgID4NCiAgICA+ID4gICAg
+ICAgICAgICAtIGluZmluZW9uLHNsYjk2MzV0dA0KICAgID4gPiAgICAgICAgICAgICAgIyBJbmZp
+bmVvbiBTTEI5NjQ1IEkyQyBUUE0gKG5ldyBwcm90b2NvbCwgbWF4IDQwMGtoeikNCiAgICA+ID4g
+ICAgICAgICAgICAtIGluZmluZW9uLHNsYjk2NDV0dA0KICAgID4gPiAtLQ0KICAgID4gPiAyLjE3
+LjENCiAgICA+ID4NCiAgICANCg0K
