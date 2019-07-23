@@ -1,40 +1,84 @@
-Return-Path: <SRS0=cIVi=VA=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 2/2] dt-bindings: i2c: sun6i-p2wi: Fix the binding example
-Date: Wed,  3 Jul 2019 11:53:38 +0200
-Message-Id: <20190703095338.11266-2-maxime.ripard@bootlin.com>
-In-Reply-To: <20190703095338.11266-1-maxime.ripard@bootlin.com>
-References: <20190703095338.11266-1-maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Gregory Clement <gregory.clement@bootlin.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
+Date: Tue, 23 Jul 2019 08:29:55 -0600
+References: <20190628042745.28455-1-j-keerthy@ti.com>
+	<20190628042745.28455-2-j-keerthy@ti.com>
+	<20190722182945.GA24685@bogus>
+	<b8712fe4-4590-fdda-8a24-bf0f135ad567@ti.com>
+In-Reply-To: <b8712fe4-4590-fdda-8a24-bf0f135ad567@ti.com>
+Message-ID: <CAL_JsqKXcRFrOf6qdhu74xeRq4PZLJmTgFbbV0PRre8E8uM0BA@mail.gmail.com>
+Subject: Re: [RESEND PATCH 01/10] dt-bindings: crypto: k3: Add sa2ul bindings documentation
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Keerthy <j-keerthy@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, Nishanth Menon <nm@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Even though the binding claims that the frequency can go up to 6MHz, the
-common i2c binding sets a limit at 3MHz, which then triggers a warning.
+On Mon, Jul 22, 2019 at 10:10 PM Keerthy <j-keerthy@ti.com> wrote:
+>
+>
+>
+> On 22/07/19 11:59 PM, Rob Herring wrote:
+> > On Fri, Jun 28, 2019 at 09:57:36AM +0530, Keerthy wrote:
+> >> The series adds Crypto hardware accelerator support for SA2UL.
+> >> SA2UL stands for security accelerator ultra lite.
+> >>
+> >> The Security Accelerator (SA2_UL) subsystem provides hardware
+> >> cryptographic acceleration for the following use cases:
+> >> =E2=80=A2 Encryption and authentication for secure boot
+> >> =E2=80=A2 Encryption and authentication of content in applications
+> >>    requiring DRM (digital rights management) and
+> >>    content/asset protection
+> >> The device includes one instantiation of SA2_UL named SA2_UL0
+> >>
+> >> SA2UL needs on tx channel and a pair of rx dma channels.
+> >>
+> >> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> >> ---
+> >>   .../devicetree/bindings/crypto/sa2ul.txt      | 47 +++++++++++++++++=
+++
+> >>   1 file changed, 47 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/crypto/sa2ul.tx=
+t
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/crypto/sa2ul.txt b/Docu=
+mentation/devicetree/bindings/crypto/sa2ul.txt
+> >> new file mode 100644
+> >> index 000000000000..81cc039673b4
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/crypto/sa2ul.txt
+> >> @@ -0,0 +1,47 @@
+> >> +K3 SoC SA2UL crypto module
+> >> +
+> >> +Required properties:
+> >> +
+> >> +- compatible : Should be:
+> >> +  - "ti,sa2ul-crypto"
+> >
+> > Needs to be SoC specific.
+>
+> okay
+>
+> >
+> >> +- reg : Offset and length of the register set for the module
+> >> +
+> >> +- dmas: DMA specifiers for tx and rx dma. sa2ul needs one tx channel
+> >> +    and 2 rx channels. First rx channel for < 256 bytes and
+> >> +    the other one for >=3D256 bytes. See the DMA client binding,
+> >> +        Documentation/devicetree/bindings/dma/dma.txt
+> >> +- dma-names: DMA request names has to have one tx and 2 rx names
+> >> +    corresponding to dmas abive.
+> >> +- ti,psil-config* - UDMA PSIL native Peripheral using packet mode.
+> >> +    SA2UL must have EPIB(Extended protocal information block)
+> >> +    and PSDATA(protocol specific data) properties.
+> >
+> > If ti,needs-epib is required, then why do you need to specify it in DT?
+> > In any case, this all seems like channel config info that should be par=
+t
+> > of the #dma-cells.
+>
+> ti,needs-epib is the udma client(Here sa2ul) conveying the udma layer.
+> Not every udma client needs epib.
 
-Since the only SoC that uses that bus uses a frequency of 100kHz, and that
-this bus hasn't been found in an SoC for something like 5 years, let's just
-fix the example to have a frequency within the acceptable range for i2c.
-
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- .../devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml       | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml b/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
-index 1804abe24f14..f9d526b7da01 100644
---- a/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
-+++ b/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
-@@ -51,7 +51,7 @@ examples:
-         reg = <0x01f03400 0x400>;
-         interrupts = <0 39 4>;
-         clocks = <&apb0_gates 3>;
--        clock-frequency = <6000000>;
-+        clock-frequency = <100000>;
-         resets = <&apb0_rst 3>;
-         #address-cells = <1>;
-         #size-cells = <0>;
--- 
-2.21.0
+Right, but if sa2ul always needs it, then it can be implied and set by the =
+driver.
