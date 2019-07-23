@@ -1,123 +1,80 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [RESEND PATCH 01/10] dt-bindings: crypto: k3: Add sa2ul bindings
- documentation
-Date: Tue, 23 Jul 2019 09:41:11 +0530
-Message-ID: <b8712fe4-4590-fdda-8a24-bf0f135ad567@ti.com>
-References: <20190628042745.28455-1-j-keerthy@ti.com>
- <20190628042745.28455-2-j-keerthy@ti.com> <20190722182945.GA24685@bogus>
+From: Amit Kucheria <amit.kucheria@verdurent.com>
+Subject: Re: [PATCH 5/5] arm64: dts: qcom: sdm845-cheza: remove macro from
+ unit name
+Date: Tue, 23 Jul 2019 10:38:09 +0530
+Message-ID: <CAHLCerPC0thO9gsaDAxc+XaexinrzG6JGJ8BhB4bFFuQ-P9Jxg@mail.gmail.com>
+References: <20190722123422.4571-1-vkoul@kernel.org> <20190722123422.4571-6-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722182945.GA24685@bogus>
-Content-Language: en-US
+In-Reply-To: <20190722123422.4571-6-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, linux-crypto@vger.kernel.org, nm@ti.com
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 22, 2019 at 6:06 PM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> Unit name is supposed to be a number, using a macro with hex value is
 
+/s/name/address?
 
-On 22/07/19 11:59 PM, Rob Herring wrote:
-> On Fri, Jun 28, 2019 at 09:57:36AM +0530, Keerthy wrote:
->> The series adds Crypto hardware accelerator support for SA2UL.
->> SA2UL stands for security accelerator ultra lite.
->>
->> The Security Accelerator (SA2_UL) subsystem provides hardware
->> cryptographic acceleration for the following use cases:
->> • Encryption and authentication for secure boot
->> • Encryption and authentication of content in applications
->>    requiring DRM (digital rights management) and
->>    content/asset protection
->> The device includes one instantiation of SA2_UL named SA2_UL0
->>
->> SA2UL needs on tx channel and a pair of rx dma channels.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   .../devicetree/bindings/crypto/sa2ul.txt      | 47 +++++++++++++++++++
->>   1 file changed, 47 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/crypto/sa2ul.txt
->>
->> diff --git a/Documentation/devicetree/bindings/crypto/sa2ul.txt b/Documentation/devicetree/bindings/crypto/sa2ul.txt
->> new file mode 100644
->> index 000000000000..81cc039673b4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/crypto/sa2ul.txt
->> @@ -0,0 +1,47 @@
->> +K3 SoC SA2UL crypto module
->> +
->> +Required properties:
->> +
->> +- compatible : Should be:
->> +  - "ti,sa2ul-crypto"
-> 
-> Needs to be SoC specific.
+> not recommended, so add the value in unit name.
+>
+> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:966.16-969.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4d: unit name should not have leading "0x"
+> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:971.16-974.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4e: unit name should not have leading "0x"
+> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:976.16-979.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4f: unit name should not have leading "0x"
+> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:981.16-984.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x50: unit name should not have leading "0x"
+> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:986.16-989.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x51: unit name should not have leading "0x"
+>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> index 1ebbd568dfd7..9b27b8346ba1 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> @@ -963,27 +963,27 @@ ap_ts_i2c: &i2c14 {
+>  };
+>
+>  &pm8998_adc {
+> -       adc-chan@ADC5_AMUX_THM1_100K_PU {
+> +       adc-chan@4d {
+>                 reg = <ADC5_AMUX_THM1_100K_PU>;
 
-okay
+I'm a little conflicted about this change. If we're replacing the
+address with actual values, perhaps we should do that same for the reg
+property to keep them in sync? Admittedly though, it is a bit easier
+to read the macro name and figure out its meaning.
 
-> 
->> +- reg : Offset and length of the register set for the module
->> +
->> +- dmas: DMA specifiers for tx and rx dma. sa2ul needs one tx channel
->> +	and 2 rx channels. First rx channel for < 256 bytes and
->> +	the other one for >=256 bytes. See the DMA client binding,
->> +        Documentation/devicetree/bindings/dma/dma.txt
->> +- dma-names: DMA request names has to have one tx and 2 rx names
->> +	corresponding to dmas abive.
->> +- ti,psil-config* - UDMA PSIL native Peripheral using packet mode.
->> +	SA2UL must have EPIB(Extended protocal information block)
->> +	and PSDATA(protocol specific data) properties.
-> 
-> If ti,needs-epib is required, then why do you need to specify it in DT?
-> In any case, this all seems like channel config info that should be part
-> of the #dma-cells.
-
-ti,needs-epib is the udma client(Here sa2ul) conveying the udma layer.
-Not every udma client needs epib.
-
-Peter,
-
-Any thoughts on the above?
-
-- Keerthy
-
-> 
-> Also, don't use vendor prefixes on node names.
-
-Okay
-
-> 
->> +
->> +Example AM654 SA2UL:
->> +crypto: crypto@4E00000 {
->> +	compatible = "ti,sa2ul-crypto";
->> +	reg = <0x0 0x4E00000 0x0 0x1200>;
->> +	ti,psil-base = <0x4000>;
->> +
->> +	dmas = <&main_udmap &crypto 0 UDMA_DIR_TX>,
->> +		<&main_udmap &crypto 0 UDMA_DIR_RX>,
->> +		<&main_udmap &crypto 1 UDMA_DIR_RX>;
->> +	dma-names = "tx", "rx1", "rx2";
->> +
->> +	ti,psil-config0 {
->> +		linux,udma-mode = <UDMA_PKT_MODE>;
->> +		ti,needs-epib;
->> +		ti,psd-size = <64>;
->> +	};
->> +
->> +	ti,psil-config1 {
->> +		linux,udma-mode = <UDMA_PKT_MODE>;
->> +		ti,needs-epib;
->> +		ti,psd-size = <64>;
->> +	};
->> +
->> +	ti,psil-config2 {
->> +		linux,udma-mode = <UDMA_PKT_MODE>;
->> +		ti,needs-epib;
->> +		ti,psd-size = <64>;
->> +	};
->> +};
->> -- 
->> 2.17.1
->>
+>                 label = "sdm_temp";
+>         };
+>
+> -       adc-chan@ADC5_AMUX_THM2_100K_PU {
+> +       adc-chan@4e {
+>                 reg = <ADC5_AMUX_THM2_100K_PU>;
+>                 label = "quiet_temp";
+>         };
+>
+> -       adc-chan@ADC5_AMUX_THM3_100K_PU {
+> +       adc-chan@4f {
+>                 reg = <ADC5_AMUX_THM3_100K_PU>;
+>                 label = "lte_temp_1";
+>         };
+>
+> -       adc-chan@ADC5_AMUX_THM4_100K_PU {
+> +       adc-chan@50 {
+>                 reg = <ADC5_AMUX_THM4_100K_PU>;
+>                 label = "lte_temp_2";
+>         };
+>
+> -       adc-chan@ADC5_AMUX_THM5_100K_PU {
+> +       adc-chan@51 {
+>                 reg = <ADC5_AMUX_THM5_100K_PU>;
+>                 label = "charger_temp";
+>         };
+> --
+> 2.20.1
+>
