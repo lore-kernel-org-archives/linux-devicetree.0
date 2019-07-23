@@ -1,34 +1,36 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH RFC 5/7] pwm: rcar: remove a redundant condition in rcar_pwm_apply()
-Date: Mon,  8 Jul 2019 18:07:46 +0900
-Message-Id: <1562576868-8124-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-To: linus.walleij@linaro.org, geert+renesas@glider.be, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=WIdc=VU=fb.com=prvs=210739c354=vijaykhemka@kernel.org>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: [PATCH v2] dt-bindings: Add pxe1610 as a trivial device
+Date: Tue, 23 Jul 2019 10:19:16 -0700
+Message-ID: <20190723171922.1435859-1-vijaykhemka@fb.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Kosina <trivial@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Herbert Xu <herbert@gondor.apana.org.au>, Patrick Venture <venture@google.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Vijay Khemka <vijaykhemka@fb.com>, Anson Huang <anson.huang@nxp.com>, Jeremy Gebben <jgebben@sweptlaser.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, joel@jms.id.au, linux-aspeed@lists.ozlabs.org, sdasari@fb.com
 List-ID: <devicetree@vger.kernel.org>
 
-Since the rcar_pwm_apply() has already check whehter state->enabled
-is not set or not, this patch removes a redundant condition.
+The pxe1610 is a voltage regulator from Infineon. It also supports
+other VRs pxe1110 and pxm1310 from Infineon.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 ---
- drivers/pwm/pwm-rcar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In V2: comment was put wrongly after device so corrected.
 
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index 5b2b8ec..c8cd43f 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -187,7 +187,7 @@ static int rcar_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	/* The SYNC should be set to 0 even if rcar_pwm_set_counter failed */
- 	rcar_pwm_update(rp, RCAR_PWMCR_SYNC, 0, RCAR_PWMCR);
- 
--	if (!ret && state->enabled)
-+	if (!ret)
- 		ret = rcar_pwm_enable(rp);
- 
- 	return ret;
+ Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 2e742d399e87..a3dd83d4f429 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -98,6 +98,8 @@ properties:
+           - gmt,g751
+             # Infineon IR38064 Voltage Regulator
+           - infineon,ir38064
++            # Infineon PXE1610, PXE1110 and PXM1310 Voltage Regulators
++          - infineon,pxe1610
+             # Infineon SLB9635 (Soft-) I2C TPM (old protocol, max 100khz)
+           - infineon,slb9635tt
+             # Infineon SLB9645 I2C TPM (new protocol, max 400khz)
 -- 
-2.7.4
+2.17.1
