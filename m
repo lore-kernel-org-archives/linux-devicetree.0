@@ -1,284 +1,522 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v6 3/7] of/platform: Add functional dependency link from
- DT bindings
-Date: Tue, 23 Jul 2019 16:18:13 -0600
-Message-ID: <CAL_JsqJC-xvj5OJeFRPPNaYJj=-RqmXFJepZ5Q2+z36-7qyPgQ@mail.gmail.com>
-References: <20190720061647.234852-1-saravanak@google.com> <20190720061647.234852-4-saravanak@google.com>
- <CAL_JsqK9GTxxxjhhWwqxOW9XERFziu2O71ETV2RhXb7B1WFY2g@mail.gmail.com> <CAGETcx-hCrUvY5whZBihueqqCxmF3oDjFybjmoo3JUu87iiiEw@mail.gmail.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH v3 2/7] drivers: Introduce device lookup variants by of_node
+Date: Tue, 23 Jul 2019 23:18:33 +0100
+Message-ID: <20190723221838.12024-3-suzuki.poulose@arm.com>
+References: <20190723221838.12024-1-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGETcx-hCrUvY5whZBihueqqCxmF3oDjFybjmoo3JUu87iiiEw@mail.gmail.com>
+In-Reply-To: <20190723221838.12024-1-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, linux-arm-kernel@lists.infradead.org, Suzuki K Poulose <suzuki.poulose@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Liam Girdwood <lgirdwood@gmail.com>, linux-i2c@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Takashi Iwai <tiwai@suse.com>, Wolfram
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 2:49 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Tue, Jul 23, 2019 at 11:06 AM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Sat, Jul 20, 2019 at 12:17 AM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > Add device-links after the devices are created (but before they are
-> > > probed) by looking at common DT bindings like clocks and
-> > > interconnects.
-> >
-> > The structure now looks a lot better to me. A few minor things below.
->
-> Thanks.
->
-> > >
-> > > Automatically adding device-links for functional dependencies at the
-> > > framework level provides the following benefits:
-> > >
-> > > - Optimizes device probe order and avoids the useless work of
-> > >   attempting probes of devices that will not probe successfully
-> > >   (because their suppliers aren't present or haven't probed yet).
-> > >
-> > >   For example, in a commonly available mobile SoC, registering just
-> > >   one consumer device's driver at an initcall level earlier than the
-> > >   supplier device's driver causes 11 failed probe attempts before the
-> > >   consumer device probes successfully. This was with a kernel with all
-> > >   the drivers statically compiled in. This problem gets a lot worse if
-> > >   all the drivers are loaded as modules without direct symbol
-> > >   dependencies.
-> > >
-> > > - Supplier devices like clock providers, interconnect providers, etc
-> > >   need to keep the resources they provide active and at a particular
-> > >   state(s) during boot up even if their current set of consumers don't
-> > >   request the resource to be active. This is because the rest of the
-> > >   consumers might not have probed yet and turning off the resource
-> > >   before all the consumers have probed could lead to a hang or
-> > >   undesired user experience.
-> > >
-> > >   Some frameworks (Eg: regulator) handle this today by turning off
-> > >   "unused" resources at late_initcall_sync and hoping all the devices
-> > >   have probed by then. This is not a valid assumption for systems with
-> > >   loadable modules. Other frameworks (Eg: clock) just don't handle
-> > >   this due to the lack of a clear signal for when they can turn off
-> > >   resources. This leads to downstream hacks to handle cases like this
-> > >   that can easily be solved in the upstream kernel.
-> > >
-> > >   By linking devices before they are probed, we give suppliers a clear
-> > >   count of the number of dependent consumers. Once all of the
-> > >   consumers are active, the suppliers can turn off the unused
-> > >   resources without making assumptions about the number of consumers.
-> > >
-> > > By default we just add device-links to track "driver presence" (probe
-> > > succeeded) of the supplier device. If any other functionality provided
-> > > by device-links are needed, it is left to the consumer/supplier
-> > > devices to change the link when they probe.
-> > >
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > ---
-> > >  .../admin-guide/kernel-parameters.txt         |   5 +
-> > >  drivers/of/platform.c                         | 158 ++++++++++++++++++
-> > >  2 files changed, 163 insertions(+)
-> > >
-> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > > index 138f6664b2e2..109b4310844f 100644
-> > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > @@ -3141,6 +3141,11 @@
-> > >                         This can be set from sysctl after boot.
-> > >                         See Documentation/sysctl/vm.txt for details.
-> > >
-> > > +       of_devlink      [KNL] Make device links from common DT bindings. Useful
-> > > +                       for optimizing probe order and making sure resources
-> > > +                       aren't turned off before the consumer devices have
-> > > +                       probed.
-> > > +
-> > >         ohci1394_dma=early      [HW] enable debugging via the ohci1394 driver.
-> > >                         See Documentation/debugging-via-ohci1394.txt for more
-> > >                         info.
-> > > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > > index 04ad312fd85b..88a2086e26fa 100644
-> > > --- a/drivers/of/platform.c
-> > > +++ b/drivers/of/platform.c
-> > > @@ -509,6 +509,163 @@ int of_platform_default_populate(struct device_node *root,
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(of_platform_default_populate);
-> > >
-> > > +bool of_link_is_valid(struct device_node *con, struct device_node *sup)
-> > > +{
-> > > +       of_node_get(sup);
-> > > +       /*
-> > > +        * Don't allow linking a device node as a consumer of one of its
-> > > +        * descendant nodes. By definition, a child node can't be a functional
-> > > +        * dependency for the parent node.
-> > > +        */
-> > > +       while (sup) {
-> > > +               if (sup == con) {
-> > > +                       of_node_put(sup);
-> > > +                       return false;
-> > > +               }
-> > > +               sup = of_get_next_parent(sup);
-> > > +       }
-> > > +       return true;
-> > > +}
-> > > +
-> > > +static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
-> > > +{
-> > > +       struct platform_device *sup_dev;
-> > > +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
-> > > +       int ret = 0;
-> > > +
-> > > +       /*
-> > > +        * Since we are trying to create device links, we need to find
-> > > +        * the actual device node that owns this supplier phandle.
-> > > +        * Often times it's the same node, but sometimes it can be one
-> > > +        * of the parents. So walk up the parent till you find a
-> > > +        * device.
-> > > +        */
-> > > +       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
-> > > +               sup_np = of_get_next_parent(sup_np);
-> > > +       if (!sup_np)
-> > > +               return 0;
-> > > +
-> > > +       if (!of_link_is_valid(dev->of_node, sup_np)) {
-> > > +               of_node_put(sup_np);
-> > > +               return 0;
-> > > +       }
-> > > +       sup_dev = of_find_device_by_node(sup_np);
-> > > +       of_node_put(sup_np);
-> > > +       if (!sup_dev)
-> > > +               return -ENODEV;
-> > > +       if (!device_link_add(dev, &sup_dev->dev, dl_flags))
-> > > +               ret = -ENODEV;
-> > > +       put_device(&sup_dev->dev);
-> > > +       return ret;
-> > > +}
-> > > +
-> > > +static struct device_node *parse_prop_cells(struct device_node *np,
-> > > +                                           const char *prop, int i,
-> >
-> > I like 'i' for for loops, but less so for function params. Perhaps
-> > 'index' instead like of_parse_phandle_with_args.
->
-> Sounds good.
->
-> >
-> > > +                                           const char *binding,
-> > > +                                           const char *cell)
-> > > +{
-> > > +       struct of_phandle_args sup_args;
-> > > +
-> > > +       if (!i && strcmp(prop, binding))
-> >
-> > Why the '!i' test?
->
-> To avoid a string comparison for every index. It's kinda wasteful once
-> the first index passes.
+Introduce wrappers for {bus/driver/class}_find_device() to
+locate devices by its of_node.
 
-That's not very obvious and pretty fragile though this is a static
-function. Perhaps we should split to match() and parse() functions. At
-least put a comment here as to what we're doing.
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: devicetree@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: linux-i2c@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org
+Cc: linux-spi@vger.kernel.org
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>
+Cc: Alan Tull <atull@kernel.org>
+Cc: Moritz Fischer <mdf@kernel.org>
+Cc: linux-fpga@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Thor Thayer <thor.thayer@linux.intel.com>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Peter Rosin <peda@axentia.se>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ - Dropped the reviewed-by tags from Thor, Mark, Andrew and Peter as the
+   patches are mereged, though there are no functional changes.
+---
+ drivers/amba/tegra-ahb.c              | 11 +-------
+ drivers/fpga/fpga-bridge.c            |  8 +-----
+ drivers/fpga/fpga-mgr.c               |  8 +-----
+ drivers/gpu/drm/drm_mipi_dsi.c        |  7 +----
+ drivers/i2c/i2c-core-of.c             |  7 +----
+ drivers/mfd/altera-sysmgr.c           | 14 ++--------
+ drivers/mux/core.c                    |  7 +----
+ drivers/net/phy/mdio_bus.c            |  9 +------
+ drivers/nvmem/core.c                  |  7 +----
+ drivers/of/of_mdio.c                  |  8 +-----
+ drivers/of/platform.c                 |  7 +----
+ drivers/regulator/of_regulator.c      |  7 +----
+ drivers/spi/spi.c                     | 20 +++------------
+ include/linux/device.h                | 37 +++++++++++++++++++++++++++
+ sound/soc/rockchip/rk3399_gru_sound.c |  9 ++-----
+ 15 files changed, 56 insertions(+), 110 deletions(-)
 
->
-> > > +               return NULL;
-> > > +
-> > > +       if (of_parse_phandle_with_args(np, binding, cell, i, &sup_args))
-> > > +               return NULL;
-> > > +
-> > > +       return sup_args.np;
-> > > +}
-> > > +
-> > > +static struct device_node *parse_clocks(struct device_node *np,
-> > > +                                       const char *prop, int i)
-> > > +{
-> > > +       return parse_prop_cells(np, prop, i, "clocks", "#clock-cells");
-> > > +}
-> > > +
-> > > +static struct device_node *parse_interconnects(struct device_node *np,
-> > > +                                              const char *prop, int i)
-> > > +{
-> > > +       return parse_prop_cells(np, prop, i, "interconnects",
-> > > +                               "#interconnect-cells");
-> > > +}
-> > > +
-> > > +static int strcmp_suffix(const char *str, const char *suffix)
-> > > +{
-> > > +       unsigned int len, suffix_len;
-> > > +
-> > > +       len = strlen(str);
-> > > +       suffix_len = strlen(suffix);
-> > > +       if (len <= suffix_len)
-> > > +               return -1;
-> > > +       return strcmp(str + len - suffix_len, suffix);
-> > > +}
-> > > +
-> > > +static struct device_node *parse_regulators(struct device_node *np,
-> > > +                                           const char *prop, int i)
-> > > +{
-> > > +       if (i || strcmp_suffix(prop, "-supply"))
-> > > +               return NULL;
-> > > +
-> > > +       return of_parse_phandle(np, prop, 0);
-> > > +}
-> > > +
-> > > +/**
-> > > + * struct supplier_bindings - Information for parsing supplier DT binding
-> > > + *
-> > > + * @parse_prop:                If the function cannot parse the property, return NULL.
-> > > + *                     Otherwise, return the phandle listed in the property
-> > > + *                     that corresponds to index i.
-> > > + */
-> > > +struct supplier_bindings {
-> > > +       struct device_node *(*parse_prop)(struct device_node *np,
-> > > +                                         const char *name, int i);
-> > > +};
-> > > +
-> > > +struct supplier_bindings bindings[] = {
-> >
-> > static const
->
-> Will do.
->
-> >
-> > > +       { .parse_prop = parse_clocks, },
-> > > +       { .parse_prop = parse_interconnects, },
-> > > +       { .parse_prop = parse_regulators, },
-> > > +       { },
-> > > +};
-> > > +
-> > > +static bool of_link_property(struct device *dev, struct device_node *con_np,
-> > > +                            const char *prop)
-> > > +{
-> > > +       struct device_node *phandle;
-> > > +       struct supplier_bindings *s = bindings;
-> > > +       unsigned int i = 0;
-> > > +       bool done = true;
-> > > +
-> > > +       while (!i && s->parse_prop) {
-> >
-> > Using 'i' is a little odd. Perhaps a 'matched' bool would be easier to read.
->
-> That's how I wrote it first (locally) and then redid it this way
-> because the bool felt very superfluous. I don't think this is that
-> hard to understand.
-
-Alright...
-
-> > > +               while ((phandle = s->parse_prop(con_np, prop, i))) {
-> > > +                       i++;
-> > > +                       if (of_link_to_phandle(dev, phandle))
-> > > +                               done = false;
-> >
-> > Just return here. No point in continuing as 'done' is never set back to true.
->
-> Actually, there is a point for this. Say Device-C depends on suppliers
-> Device-S1 and Device-S2 and they are listed in DT in that order.
->
-> Say, S1 gets populated after late_initcall_sync but S2 is probes way
-> before that. If I don't continue past a "failed linking" to S1 and
-> also link up to S2, then S2 will get a sync_state() callback before C
-> is probed. So I have to go through all possible suppliers and as many
-> as possible.
->
-> Let me add a comment about this somewhere in the code (probably the
-> header that defines the add_links() ops).
-
-Okay, makes sense.
-
-Rob
+diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
+index aa64eece77a6..57d3b2e2d007 100644
+--- a/drivers/amba/tegra-ahb.c
++++ b/drivers/amba/tegra-ahb.c
+@@ -134,22 +134,13 @@ static inline void gizmo_writel(struct tegra_ahb *ahb, u32 value, u32 offset)
+ }
+ 
+ #ifdef CONFIG_TEGRA_IOMMU_SMMU
+-static int tegra_ahb_match_by_smmu(struct device *dev, const void *data)
+-{
+-	struct tegra_ahb *ahb = dev_get_drvdata(dev);
+-	const struct device_node *dn = data;
+-
+-	return (ahb->dev->of_node == dn) ? 1 : 0;
+-}
+-
+ int tegra_ahb_enable_smmu(struct device_node *dn)
+ {
+ 	struct device *dev;
+ 	u32 val;
+ 	struct tegra_ahb *ahb;
+ 
+-	dev = driver_find_device(&tegra_ahb_driver.driver, NULL, dn,
+-				 tegra_ahb_match_by_smmu);
++	dev = driver_find_device_by_of_node(&tegra_ahb_driver.driver, dn);
+ 	if (!dev)
+ 		return -EPROBE_DEFER;
+ 	ahb = dev_get_drvdata(dev);
+diff --git a/drivers/fpga/fpga-bridge.c b/drivers/fpga/fpga-bridge.c
+index 80bd8f1b2aa6..4bab9028940a 100644
+--- a/drivers/fpga/fpga-bridge.c
++++ b/drivers/fpga/fpga-bridge.c
+@@ -19,11 +19,6 @@ static struct class *fpga_bridge_class;
+ /* Lock for adding/removing bridges to linked lists*/
+ static spinlock_t bridge_list_lock;
+ 
+-static int fpga_bridge_of_node_match(struct device *dev, const void *data)
+-{
+-	return dev->of_node == data;
+-}
+-
+ /**
+  * fpga_bridge_enable - Enable transactions on the bridge
+  *
+@@ -104,8 +99,7 @@ struct fpga_bridge *of_fpga_bridge_get(struct device_node *np,
+ {
+ 	struct device *dev;
+ 
+-	dev = class_find_device(fpga_bridge_class, NULL, np,
+-				fpga_bridge_of_node_match);
++	dev = class_find_device_by_of_node(fpga_bridge_class, np);
+ 	if (!dev)
+ 		return ERR_PTR(-ENODEV);
+ 
+diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
+index c3866816456a..e05104f5e40c 100644
+--- a/drivers/fpga/fpga-mgr.c
++++ b/drivers/fpga/fpga-mgr.c
+@@ -482,11 +482,6 @@ struct fpga_manager *fpga_mgr_get(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(fpga_mgr_get);
+ 
+-static int fpga_mgr_of_node_match(struct device *dev, const void *data)
+-{
+-	return dev->of_node == data;
+-}
+-
+ /**
+  * of_fpga_mgr_get - Given a device node, get a reference to a fpga mgr.
+  *
+@@ -498,8 +493,7 @@ struct fpga_manager *of_fpga_mgr_get(struct device_node *node)
+ {
+ 	struct device *dev;
+ 
+-	dev = class_find_device(fpga_mgr_class, NULL, node,
+-				fpga_mgr_of_node_match);
++	dev = class_find_device_by_of_node(fpga_mgr_class, node);
+ 	if (!dev)
+ 		return ERR_PTR(-ENODEV);
+ 
+diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
+index ad19df0686c9..bd2498bbd74a 100644
+--- a/drivers/gpu/drm/drm_mipi_dsi.c
++++ b/drivers/gpu/drm/drm_mipi_dsi.c
+@@ -93,11 +93,6 @@ static struct bus_type mipi_dsi_bus_type = {
+ 	.pm = &mipi_dsi_device_pm_ops,
+ };
+ 
+-static int of_device_match(struct device *dev, const void *data)
+-{
+-	return dev->of_node == data;
+-}
+-
+ /**
+  * of_find_mipi_dsi_device_by_node() - find the MIPI DSI device matching a
+  *    device tree node
+@@ -110,7 +105,7 @@ struct mipi_dsi_device *of_find_mipi_dsi_device_by_node(struct device_node *np)
+ {
+ 	struct device *dev;
+ 
+-	dev = bus_find_device(&mipi_dsi_bus_type, NULL, np, of_device_match);
++	dev = bus_find_device_by_of_node(&mipi_dsi_bus_type, np);
+ 
+ 	return dev ? to_mipi_dsi_device(dev) : NULL;
+ }
+diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+index d1c48dec7118..6f632d543fcc 100644
+--- a/drivers/i2c/i2c-core-of.c
++++ b/drivers/i2c/i2c-core-of.c
+@@ -113,11 +113,6 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
+ 	of_node_put(bus);
+ }
+ 
+-static int of_dev_node_match(struct device *dev, const void *data)
+-{
+-	return dev->of_node == data;
+-}
+-
+ static int of_dev_or_parent_node_match(struct device *dev, const void *data)
+ {
+ 	if (dev->of_node == data)
+@@ -135,7 +130,7 @@ struct i2c_client *of_find_i2c_device_by_node(struct device_node *node)
+ 	struct device *dev;
+ 	struct i2c_client *client;
+ 
+-	dev = bus_find_device(&i2c_bus_type, NULL, node, of_dev_node_match);
++	dev = bus_find_device_by_of_node(&i2c_bus_type, node);
+ 	if (!dev)
+ 		return NULL;
+ 
+diff --git a/drivers/mfd/altera-sysmgr.c b/drivers/mfd/altera-sysmgr.c
+index 2ee14d8a6d31..d2a13a547a3c 100644
+--- a/drivers/mfd/altera-sysmgr.c
++++ b/drivers/mfd/altera-sysmgr.c
+@@ -87,16 +87,6 @@ static struct regmap_config altr_sysmgr_regmap_cfg = {
+ 	.use_single_write = true,
+ };
+ 
+-/**
+- * sysmgr_match_phandle
+- * Matching function used by driver_find_device().
+- * Return: True if match is found, otherwise false.
+- */
+-static int sysmgr_match_phandle(struct device *dev, const void *data)
+-{
+-	return dev->of_node == (const struct device_node *)data;
+-}
+-
+ /**
+  * altr_sysmgr_regmap_lookup_by_phandle
+  * Find the sysmgr previous configured in probe() and return regmap property.
+@@ -117,8 +107,8 @@ struct regmap *altr_sysmgr_regmap_lookup_by_phandle(struct device_node *np,
+ 	if (!sysmgr_np)
+ 		return ERR_PTR(-ENODEV);
+ 
+-	dev = driver_find_device(&altr_sysmgr_driver.driver, NULL,
+-				 (void *)sysmgr_np, sysmgr_match_phandle);
++	dev = driver_find_device_by_of_node(&altr_sysmgr_driver.driver,
++					    (void *)sysmgr_np);
+ 	of_node_put(sysmgr_np);
+ 	if (!dev)
+ 		return ERR_PTR(-EPROBE_DEFER);
+diff --git a/drivers/mux/core.c b/drivers/mux/core.c
+index d1271c1ee23c..1fb22388e7e0 100644
+--- a/drivers/mux/core.c
++++ b/drivers/mux/core.c
+@@ -405,17 +405,12 @@ int mux_control_deselect(struct mux_control *mux)
+ }
+ EXPORT_SYMBOL_GPL(mux_control_deselect);
+ 
+-static int of_dev_node_match(struct device *dev, const void *data)
+-{
+-	return dev->of_node == data;
+-}
+-
+ /* Note this function returns a reference to the mux_chip dev. */
+ static struct mux_chip *of_find_mux_chip_by_node(struct device_node *np)
+ {
+ 	struct device *dev;
+ 
+-	dev = class_find_device(&mux_class, NULL, np, of_dev_node_match);
++	dev = class_find_device_by_of_node(&mux_class, np);
+ 
+ 	return dev ? to_mux_chip(dev) : NULL;
+ }
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index bd04fe762056..ce940871331e 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -262,11 +262,6 @@ static struct class mdio_bus_class = {
+ };
+ 
+ #if IS_ENABLED(CONFIG_OF_MDIO)
+-/* Helper function for of_mdio_find_bus */
+-static int of_mdio_bus_match(struct device *dev, const void *mdio_bus_np)
+-{
+-	return dev->of_node == mdio_bus_np;
+-}
+ /**
+  * of_mdio_find_bus - Given an mii_bus node, find the mii_bus.
+  * @mdio_bus_np: Pointer to the mii_bus.
+@@ -287,9 +282,7 @@ struct mii_bus *of_mdio_find_bus(struct device_node *mdio_bus_np)
+ 	if (!mdio_bus_np)
+ 		return NULL;
+ 
+-	d = class_find_device(&mdio_bus_class, NULL,  mdio_bus_np,
+-			      of_mdio_bus_match);
+-
++	d = class_find_device_by_of_node(&mdio_bus_class, mdio_bus_np);
+ 	return d ? to_mii_bus(d) : NULL;
+ }
+ EXPORT_SYMBOL(of_mdio_find_bus);
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index ac5d945be88a..057d1ff87d5d 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -76,11 +76,6 @@ static struct bus_type nvmem_bus_type = {
+ 	.name		= "nvmem",
+ };
+ 
+-static int of_nvmem_match(struct device *dev, const void *nvmem_np)
+-{
+-	return dev->of_node == nvmem_np;
+-}
+-
+ static struct nvmem_device *of_nvmem_find(struct device_node *nvmem_np)
+ {
+ 	struct device *d;
+@@ -88,7 +83,7 @@ static struct nvmem_device *of_nvmem_find(struct device_node *nvmem_np)
+ 	if (!nvmem_np)
+ 		return NULL;
+ 
+-	d = bus_find_device(&nvmem_bus_type, NULL, nvmem_np, of_nvmem_match);
++	d = bus_find_device_by_of_node(&nvmem_bus_type, nvmem_np);
+ 
+ 	if (!d)
+ 		return NULL;
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 44f53496cab1..000b95787df1 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -280,12 +280,6 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ }
+ EXPORT_SYMBOL(of_mdiobus_register);
+ 
+-/* Helper function for of_phy_find_device */
+-static int of_phy_match(struct device *dev, const void *phy_np)
+-{
+-	return dev->of_node == phy_np;
+-}
+-
+ /**
+  * of_phy_find_device - Give a PHY node, find the phy_device
+  * @phy_np: Pointer to the phy's device tree node
+@@ -301,7 +295,7 @@ struct phy_device *of_phy_find_device(struct device_node *phy_np)
+ 	if (!phy_np)
+ 		return NULL;
+ 
+-	d = bus_find_device(&mdio_bus_type, NULL, phy_np, of_phy_match);
++	d = bus_find_device_by_of_node(&mdio_bus_type, phy_np);
+ 	if (d) {
+ 		mdiodev = to_mdio_device(d);
+ 		if (mdiodev->flags & MDIO_DEVICE_FLAG_PHY)
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 7801e25e6895..b47a2292fe8e 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -37,11 +37,6 @@ static const struct of_device_id of_skipped_node_table[] = {
+ 	{} /* Empty terminated list */
+ };
+ 
+-static int of_dev_node_match(struct device *dev, const void *data)
+-{
+-	return dev->of_node == data;
+-}
+-
+ /**
+  * of_find_device_by_node - Find the platform_device associated with a node
+  * @np: Pointer to device tree node
+@@ -55,7 +50,7 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
+ {
+ 	struct device *dev;
+ 
+-	dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
++	dev = bus_find_device_by_of_node(&platform_bus_type, np);
+ 	return dev ? to_platform_device(dev) : NULL;
+ }
+ EXPORT_SYMBOL(of_find_device_by_node);
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 397918ebba55..20dcc9c03adc 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -460,16 +460,11 @@ struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
+ 	return NULL;
+ }
+ 
+-static int of_node_match(struct device *dev, const void *data)
+-{
+-	return dev->of_node == data;
+-}
+-
+ struct regulator_dev *of_find_regulator_by_node(struct device_node *np)
+ {
+ 	struct device *dev;
+ 
+-	dev = class_find_device(&regulator_class, NULL, np, of_node_match);
++	dev = class_find_device_by_of_node(&regulator_class, np);
+ 
+ 	return dev ? dev_to_rdev(dev) : NULL;
+ }
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 75ac046cae52..a591da87981a 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -3652,37 +3652,25 @@ EXPORT_SYMBOL_GPL(spi_write_then_read);
+ /*-------------------------------------------------------------------------*/
+ 
+ #if IS_ENABLED(CONFIG_OF)
+-static int __spi_of_device_match(struct device *dev, const void *data)
+-{
+-	return dev->of_node == data;
+-}
+-
+ /* must call put_device() when done with returned spi_device device */
+ struct spi_device *of_find_spi_device_by_node(struct device_node *node)
+ {
+-	struct device *dev = bus_find_device(&spi_bus_type, NULL, node,
+-						__spi_of_device_match);
++	struct device *dev = bus_find_device_by_of_node(&spi_bus_type, node);
++
+ 	return dev ? to_spi_device(dev) : NULL;
+ }
+ EXPORT_SYMBOL_GPL(of_find_spi_device_by_node);
+ #endif /* IS_ENABLED(CONFIG_OF) */
+ 
+ #if IS_ENABLED(CONFIG_OF_DYNAMIC)
+-static int __spi_of_controller_match(struct device *dev, const void *data)
+-{
+-	return dev->of_node == data;
+-}
+-
+ /* the spi controllers are not using spi_bus, so we find it with another way */
+ static struct spi_controller *of_find_spi_controller_by_node(struct device_node *node)
+ {
+ 	struct device *dev;
+ 
+-	dev = class_find_device(&spi_master_class, NULL, node,
+-				__spi_of_controller_match);
++	dev = class_find_device_by_of_node(&spi_master_class, node);
+ 	if (!dev && IS_ENABLED(CONFIG_SPI_SLAVE))
+-		dev = class_find_device(&spi_slave_class, NULL, node,
+-					__spi_of_controller_match);
++		dev = class_find_device_by_of_node(&spi_slave_class, node);
+ 	if (!dev)
+ 		return NULL;
+ 
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 3ba376b8b456..29d8d7ad41e6 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -186,6 +186,18 @@ static inline struct device *bus_find_device_by_name(struct bus_type *bus,
+ 	return bus_find_device(bus, start, name, device_match_name);
+ }
+ 
++/**
++ * bus_find_device_by_of_node : device iterator for locating a particular device
++ * matching the of_node.
++ * @bus: bus type
++ * @np: of_node of the device to match.
++ */
++static inline struct device *
++bus_find_device_by_of_node(struct bus_type *bus, const struct device_node *np)
++{
++	return bus_find_device(bus, NULL, np, device_match_of_node);
++}
++
+ struct device *subsys_find_device_by_id(struct bus_type *bus, unsigned int id,
+ 					struct device *hint);
+ int bus_for_each_drv(struct bus_type *bus, struct device_driver *start,
+@@ -366,6 +378,19 @@ static inline struct device *driver_find_device_by_name(struct device_driver *dr
+ 	return driver_find_device(drv, NULL, name, device_match_name);
+ }
+ 
++/**
++ * driver_find_device_by_of_node- device iterator for locating a particular device
++ * by of_node pointer.
++ * @driver: the driver we're iterating
++ * @np: of_node pointer to match.
++ */
++static inline struct device *
++driver_find_device_by_of_node(struct device_driver *drv,
++			      const struct device_node *np)
++{
++	return driver_find_device(drv, NULL, np, device_match_of_node);
++}
++
+ void driver_deferred_probe_add(struct device *dev);
+ int driver_deferred_probe_check_state(struct device *dev);
+ int driver_deferred_probe_check_state_continue(struct device *dev);
+@@ -507,6 +532,18 @@ static inline struct device *class_find_device_by_name(struct class *class,
+ 	return class_find_device(class, NULL, name, device_match_name);
+ }
+ 
++/**
++ * class_find_device_by_of_node : device iterator for locating a particular device
++ * matching the of_node.
++ * @class: class type
++ * @np: of_node of the device to match.
++ */
++static inline struct device *
++class_find_device_by_of_node(struct class *class, const struct device_node *np)
++{
++	return class_find_device(class, NULL, np, device_match_of_node);
++}
++
+ struct class_attribute {
+ 	struct attribute attr;
+ 	ssize_t (*show)(struct class *class, struct class_attribute *attr,
+diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
+index c16b0ffe8cfc..d951100bf770 100644
+--- a/sound/soc/rockchip/rk3399_gru_sound.c
++++ b/sound/soc/rockchip/rk3399_gru_sound.c
+@@ -422,11 +422,6 @@ static const struct dailink_match_data dailink_match[] = {
+ 	},
+ };
+ 
+-static int of_dev_node_match(struct device *dev, const void *data)
+-{
+-	return dev->of_node == data;
+-}
+-
+ static int rockchip_sound_codec_node_match(struct device_node *np_codec)
+ {
+ 	struct device *dev;
+@@ -438,8 +433,8 @@ static int rockchip_sound_codec_node_match(struct device_node *np_codec)
+ 			continue;
+ 
+ 		if (dailink_match[i].bus_type) {
+-			dev = bus_find_device(dailink_match[i].bus_type, NULL,
+-					      np_codec, of_dev_node_match);
++			dev = bus_find_device_by_of_node(dailink_match[i].bus_type,
++							 np_codec);
+ 			if (!dev)
+ 				continue;
+ 			put_device(dev);
+-- 
+2.21.0
