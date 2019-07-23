@@ -1,44 +1,43 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 1/5] arm64: dts: qcom: sdm845: Add unit name to soc node
-Date: Tue, 23 Jul 2019 07:50:05 -0700
-Message-ID: <5d371e9d.1c69fb81.8d9f4.1ac0@mx.google.com>
-References: <20190722123422.4571-1-vkoul@kernel.org> <20190722123422.4571-2-vkoul@kernel.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: Add pxe1610 as a trivial device
+Date: Tue, 23 Jul 2019 08:50:18 -0600
+Message-ID: <CAL_Jsq+uAjK6+xzkyOhcH96tZuqv7i6Nz5_nhUQkZ2adt2gutA@mail.gmail.com>
+References: <20190723002052.2878847-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722123422.4571-2-vkoul@kernel.org>
+In-Reply-To: <20190723002052.2878847-1-vijaykhemka@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vijay Khemka <vijaykhemka@fb.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jiri Kosina <trivial@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Herbert Xu <herbert@gondor.apana.org.au>, Patrick Venture <venture@google.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Anson Huang <anson.huang@nxp.com>, Jeremy Gebben <jgebben@sweptlaser.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org, sdasari@fb.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vinod Koul (2019-07-22 05:34:18)
-> We get a warning about missing unit name for soc node, so add it.
->=20
-> arch/arm64/boot/dts/qcom/sdm845.dtsi:623.11-2814.4: Warning (unit_address=
-_vs_reg): /soc: node has a reg or ranges property, but no unit name
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+On Mon, Jul 22, 2019 at 6:46 PM Vijay Khemka <vijaykhemka@fb.com> wrote:
+>
+> The pxe1610 is a voltage regulator from Infineon. It also supports
+> other VRs pxe1110 and pxm1310 from Infineon.
+>
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 > ---
+>  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+> index 2e742d399e87..1be648828a31 100644
+> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
+> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+> @@ -99,6 +99,8 @@ properties:
+>              # Infineon IR38064 Voltage Regulator
+>            - infineon,ir38064
+>              # Infineon SLB9635 (Soft-) I2C TPM (old protocol, max 100khz)
+> +          - infineon,pxe1610
+> +            # Infineon PXE1610, PXE1110 and PXM1310 Voltage Regulators
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+The comment goes above the entry.
 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/q=
-com/sdm845.dtsi
-> index 601cfb078bd5..e81f4a6d08ce 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -620,7 +620,7 @@
->                 method =3D "smc";
->         };
-> =20
-> -       soc: soc {
-> +       soc: soc@0 {
-
-This is kinda sad, but ok. Maybe you can apply this fix to at least all
-the qcom boards then.
-
->                 #address-cells =3D <2>;
->                 #size-cells =3D <2>;
->                 ranges =3D <0 0 0 0 0x10 0>;
+>            - infineon,slb9635tt
+>              # Infineon SLB9645 I2C TPM (new protocol, max 400khz)
+>            - infineon,slb9645tt
+> --
+> 2.17.1
+>
