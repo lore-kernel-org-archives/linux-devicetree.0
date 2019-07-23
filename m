@@ -1,52 +1,52 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] extcon: fsa9480: Support the FSA880 variant
-Date: Tue, 23 Jul 2019 19:43:01 +0200
-Message-ID: <20190723174301.31278-1-linus.walleij@linaro.org>
+From: Evgeny Kolesnikov <evgenyz@gmail.com>
+Subject: Re: [PATCH 0/5] Add support for WD MyCloud EX2 Ultra (+ versatile
+ UART-based restart/poweroff drivers)
+Date: Tue, 23 Jul 2019 19:48:49 +0200
+Message-ID: <c2ffe662-6975-351b-87b8-af760984ef4d@gmail.com>
+References: <cover.1563822216.git.evgenyz@gmail.com>
+ <20190723015631.GI8972@lunn.ch>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190723015631.GI8972@lunn.ch>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Mike Lockwood <lockwood@google.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, linux-pm@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The older compatible variant of this chip is called FSA880
-and works the same way, if we need some quirks in the future,
-it is good to let it have its own compatible string.
+On 23/07/2019 03:56, Andrew Lunn wrote:
+> On Mon, Jul 22, 2019 at 09:53:00PM +0200, Evgeny Kolesnikov wrote:
+>>
+>> The difference between uart-poweroff and qnap-poweroff is small, but important:
+>> uart-poweroff is able to send to an MCU a command of arbitrary length, and the command
+>> itself is defined in a DTS file for a specific device/board, thus making this driver
+>> applicable to wider range of devices.
+> 
+> There is a lot of replicated code here, and in the original
+> qnap-poweroff.c driver. Please consolidate it by extending the current
+> driver. It should be easy to add a new compatible string, and turn
+> power_off_cfg.cmd into an array.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt | 4 +++-
- drivers/extcon/extcon-fsa9480.c                             | 1 +
- 2 files changed, 4 insertions(+), 1 deletion(-)
+Hi, Andrew.
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-index d592c21245f2..624bd76f468e 100644
---- a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-+++ b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-@@ -5,7 +5,9 @@ controlled using I2C and enables USB data, stereo and mono audio, video,
- microphone, and UART data to use a common connector port.
- 
- Required properties:
-- - compatible : Must be "fcs,fsa9480"
-+ - compatible : Must be one of
-+   "fcs,fsa9480"
-+   "fcs,fsa880"
-  - reg : Specifies i2c slave address. Must be 0x25.
-  - interrupts : Should contain one entry specifying interrupt signal of
-    interrupt parent to which interrupt pin of the chip is connected.
-diff --git a/drivers/extcon/extcon-fsa9480.c b/drivers/extcon/extcon-fsa9480.c
-index 350fb34abfa0..8405512f5199 100644
---- a/drivers/extcon/extcon-fsa9480.c
-+++ b/drivers/extcon/extcon-fsa9480.c
-@@ -363,6 +363,7 @@ MODULE_DEVICE_TABLE(i2c, fsa9480_id);
- 
- static const struct of_device_id fsa9480_of_match[] = {
- 	{ .compatible = "fcs,fsa9480", },
-+	{ .compatible = "fcs,fsa880", },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, fsa9480_of_match);
--- 
-2.21.0
+I've considered extending qnap driver, but I have some doubts about this 
+approach.
+
+First of all there is only a poweroff counterpart. As there is no
+qnap-restart driver, what should I do with uart-restart? Is it OK to 
+have xxx-restart-poweroff driver (never saw anything like that)?
+
+While I can add cmd as a parameter to qnap driver (having it converted
+into an array) it should be optional as original qnap relies on two 
+hardcoded values for its devices. And having a non-qnap device with this 
+driver in DT without defined cmd would not make any sense. It feels 
+kinda ugly.
+
+Wouldn't it be more fitting to have these two generic drivers and then 
+retire old qnap driver while moving everything that uses it to the new one?
+
+Thanks for the review.
+
+EK.
