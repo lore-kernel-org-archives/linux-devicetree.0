@@ -1,87 +1,284 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 2/4] arm64: dts: ti: k3-am65-main: Add IPC sub-mailbox
- nodes for R5Fs
-Date: Tue, 23 Jul 2019 17:11:06 -0500
-Message-ID: <20190723221106.2rshffqma7c6l4gq@kahuna>
-References: <20190722202024.14867-1-s-anna@ti.com>
- <20190722202024.14867-3-s-anna@ti.com>
- <20190723113706.ctrxtpezuknohbj3@kahuna>
- <5e8e402e-d577-f1dd-b011-8ddc4407f30b@ti.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v6 3/7] of/platform: Add functional dependency link from
+ DT bindings
+Date: Tue, 23 Jul 2019 16:18:13 -0600
+Message-ID: <CAL_JsqJC-xvj5OJeFRPPNaYJj=-RqmXFJepZ5Q2+z36-7qyPgQ@mail.gmail.com>
+References: <20190720061647.234852-1-saravanak@google.com> <20190720061647.234852-4-saravanak@google.com>
+ <CAL_JsqK9GTxxxjhhWwqxOW9XERFziu2O71ETV2RhXb7B1WFY2g@mail.gmail.com> <CAGETcx-hCrUvY5whZBihueqqCxmF3oDjFybjmoo3JUu87iiiEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <5e8e402e-d577-f1dd-b011-8ddc4407f30b@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGETcx-hCrUvY5whZBihueqqCxmF3oDjFybjmoo3JUu87iiiEw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12:54-20190723, Suman Anna wrote:
-> Hi Nishanth,
-> 
-> On 7/23/19 6:37 AM, Nishanth Menon wrote:
-> > On 15:20-20190722, Suman Anna wrote:
-> >> Add the sub-mailbox nodes that are used to communicate between
-> >> MPU and the two R5F remote processors present in the MCU domain.
-> >> The parent mailbox cluster nodes are enabled and the interrupts
-> >> associated with the Mailbox Cluster User interrupt used by the
-> >> sub-mailbox nodes are also added. The GIC_SPI interrupt to be
-> >> used is dynamically allocated and managed by the System Firmware
-> >> through the ti-sci-intr irqchip driver.
-> >>
-> >> The sub-mailbox nodes utilize the System Mailbox clusters 1 and 2.
-> >> These sub-mailbox nodes are added to match the hard-coded mailbox
-> >> configuration used within the TI RTOS IPC software packages. The
-> >> Cortex R5F processor sub-system is assumed to be running in Split
-> >> mode, so a sub-mailbox node is used by each of the R5F cores. Only
-> >> the sub-mailbox node from cluster 0 is used in case of Lockstep
-> >> mode.
-> >>
-> >> Signed-off-by: Suman Anna <s-anna@ti.com>
-> >> ---
-> >>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 16 ++++++++++++++--
-> >>  1 file changed, 14 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> >> index 0b3ea2a871ee..317563c995b1 100644
-> >> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> >> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> >> @@ -426,7 +426,13 @@
-> >>  			#mbox-cells = <1>;
-> >>  			ti,mbox-num-users = <4>;
-> >>  			ti,mbox-num-fifos = <16>;
-> >> -			status = "disabled";
-> >> +			interrupt-parent = <&intr_main_navss>;
-> >> +			interrupts = <164 0>;
-> >> +
-> >> +			mbox_mcu_r5fss0_core0: mbox-mcu-r5fss0-core0 {
-> >> +				ti,mbox-tx = <1 0 0>;
-> >> +				ti,mbox-rx = <0 0 0>;
-> >> +			};
-> > 
-> > Should'nt this rather be a board specific node? This is completely
-> > dependent on the pre-defined communication scheme with R5F firmware?
-> 
-> These are the default assignments we are using and inherited by all
-> derivative boards leveraging the TI RTOS-side firmwares/stacks.
-> Otherwise, these sub-mailboxes have to be added to every board dts file.
-> One can always overwrite the values or disable the nodes if they chose a
-> different configuration.
+On Tue, Jul 23, 2019 at 2:49 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Tue, Jul 23, 2019 at 11:06 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Sat, Jul 20, 2019 at 12:17 AM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > Add device-links after the devices are created (but before they are
+> > > probed) by looking at common DT bindings like clocks and
+> > > interconnects.
+> >
+> > The structure now looks a lot better to me. A few minor things below.
+>
+> Thanks.
+>
+> > >
+> > > Automatically adding device-links for functional dependencies at the
+> > > framework level provides the following benefits:
+> > >
+> > > - Optimizes device probe order and avoids the useless work of
+> > >   attempting probes of devices that will not probe successfully
+> > >   (because their suppliers aren't present or haven't probed yet).
+> > >
+> > >   For example, in a commonly available mobile SoC, registering just
+> > >   one consumer device's driver at an initcall level earlier than the
+> > >   supplier device's driver causes 11 failed probe attempts before the
+> > >   consumer device probes successfully. This was with a kernel with all
+> > >   the drivers statically compiled in. This problem gets a lot worse if
+> > >   all the drivers are loaded as modules without direct symbol
+> > >   dependencies.
+> > >
+> > > - Supplier devices like clock providers, interconnect providers, etc
+> > >   need to keep the resources they provide active and at a particular
+> > >   state(s) during boot up even if their current set of consumers don't
+> > >   request the resource to be active. This is because the rest of the
+> > >   consumers might not have probed yet and turning off the resource
+> > >   before all the consumers have probed could lead to a hang or
+> > >   undesired user experience.
+> > >
+> > >   Some frameworks (Eg: regulator) handle this today by turning off
+> > >   "unused" resources at late_initcall_sync and hoping all the devices
+> > >   have probed by then. This is not a valid assumption for systems with
+> > >   loadable modules. Other frameworks (Eg: clock) just don't handle
+> > >   this due to the lack of a clear signal for when they can turn off
+> > >   resources. This leads to downstream hacks to handle cases like this
+> > >   that can easily be solved in the upstream kernel.
+> > >
+> > >   By linking devices before they are probed, we give suppliers a clear
+> > >   count of the number of dependent consumers. Once all of the
+> > >   consumers are active, the suppliers can turn off the unused
+> > >   resources without making assumptions about the number of consumers.
+> > >
+> > > By default we just add device-links to track "driver presence" (probe
+> > > succeeded) of the supplier device. If any other functionality provided
+> > > by device-links are needed, it is left to the consumer/supplier
+> > > devices to change the link when they probe.
+> > >
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > >  .../admin-guide/kernel-parameters.txt         |   5 +
+> > >  drivers/of/platform.c                         | 158 ++++++++++++++++++
+> > >  2 files changed, 163 insertions(+)
+> > >
+> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > > index 138f6664b2e2..109b4310844f 100644
+> > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > @@ -3141,6 +3141,11 @@
+> > >                         This can be set from sysctl after boot.
+> > >                         See Documentation/sysctl/vm.txt for details.
+> > >
+> > > +       of_devlink      [KNL] Make device links from common DT bindings. Useful
+> > > +                       for optimizing probe order and making sure resources
+> > > +                       aren't turned off before the consumer devices have
+> > > +                       probed.
+> > > +
+> > >         ohci1394_dma=early      [HW] enable debugging via the ohci1394 driver.
+> > >                         See Documentation/debugging-via-ohci1394.txt for more
+> > >                         info.
+> > > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > > index 04ad312fd85b..88a2086e26fa 100644
+> > > --- a/drivers/of/platform.c
+> > > +++ b/drivers/of/platform.c
+> > > @@ -509,6 +509,163 @@ int of_platform_default_populate(struct device_node *root,
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(of_platform_default_populate);
+> > >
+> > > +bool of_link_is_valid(struct device_node *con, struct device_node *sup)
+> > > +{
+> > > +       of_node_get(sup);
+> > > +       /*
+> > > +        * Don't allow linking a device node as a consumer of one of its
+> > > +        * descendant nodes. By definition, a child node can't be a functional
+> > > +        * dependency for the parent node.
+> > > +        */
+> > > +       while (sup) {
+> > > +               if (sup == con) {
+> > > +                       of_node_put(sup);
+> > > +                       return false;
+> > > +               }
+> > > +               sup = of_get_next_parent(sup);
+> > > +       }
+> > > +       return true;
+> > > +}
+> > > +
+> > > +static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
+> > > +{
+> > > +       struct platform_device *sup_dev;
+> > > +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+> > > +       int ret = 0;
+> > > +
+> > > +       /*
+> > > +        * Since we are trying to create device links, we need to find
+> > > +        * the actual device node that owns this supplier phandle.
+> > > +        * Often times it's the same node, but sometimes it can be one
+> > > +        * of the parents. So walk up the parent till you find a
+> > > +        * device.
+> > > +        */
+> > > +       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
+> > > +               sup_np = of_get_next_parent(sup_np);
+> > > +       if (!sup_np)
+> > > +               return 0;
+> > > +
+> > > +       if (!of_link_is_valid(dev->of_node, sup_np)) {
+> > > +               of_node_put(sup_np);
+> > > +               return 0;
+> > > +       }
+> > > +       sup_dev = of_find_device_by_node(sup_np);
+> > > +       of_node_put(sup_np);
+> > > +       if (!sup_dev)
+> > > +               return -ENODEV;
+> > > +       if (!device_link_add(dev, &sup_dev->dev, dl_flags))
+> > > +               ret = -ENODEV;
+> > > +       put_device(&sup_dev->dev);
+> > > +       return ret;
+> > > +}
+> > > +
+> > > +static struct device_node *parse_prop_cells(struct device_node *np,
+> > > +                                           const char *prop, int i,
+> >
+> > I like 'i' for for loops, but less so for function params. Perhaps
+> > 'index' instead like of_parse_phandle_with_args.
+>
+> Sounds good.
+>
+> >
+> > > +                                           const char *binding,
+> > > +                                           const char *cell)
+> > > +{
+> > > +       struct of_phandle_args sup_args;
+> > > +
+> > > +       if (!i && strcmp(prop, binding))
+> >
+> > Why the '!i' test?
+>
+> To avoid a string comparison for every index. It's kinda wasteful once
+> the first index passes.
 
+That's not very obvious and pretty fragile though this is a static
+function. Perhaps we should split to match() and parse() functions. At
+least put a comment here as to what we're doing.
 
-This looks strongly  like a case that is to be described in board.dts
-files.
+>
+> > > +               return NULL;
+> > > +
+> > > +       if (of_parse_phandle_with_args(np, binding, cell, i, &sup_args))
+> > > +               return NULL;
+> > > +
+> > > +       return sup_args.np;
+> > > +}
+> > > +
+> > > +static struct device_node *parse_clocks(struct device_node *np,
+> > > +                                       const char *prop, int i)
+> > > +{
+> > > +       return parse_prop_cells(np, prop, i, "clocks", "#clock-cells");
+> > > +}
+> > > +
+> > > +static struct device_node *parse_interconnects(struct device_node *np,
+> > > +                                              const char *prop, int i)
+> > > +{
+> > > +       return parse_prop_cells(np, prop, i, "interconnects",
+> > > +                               "#interconnect-cells");
+> > > +}
+> > > +
+> > > +static int strcmp_suffix(const char *str, const char *suffix)
+> > > +{
+> > > +       unsigned int len, suffix_len;
+> > > +
+> > > +       len = strlen(str);
+> > > +       suffix_len = strlen(suffix);
+> > > +       if (len <= suffix_len)
+> > > +               return -1;
+> > > +       return strcmp(str + len - suffix_len, suffix);
+> > > +}
+> > > +
+> > > +static struct device_node *parse_regulators(struct device_node *np,
+> > > +                                           const char *prop, int i)
+> > > +{
+> > > +       if (i || strcmp_suffix(prop, "-supply"))
+> > > +               return NULL;
+> > > +
+> > > +       return of_parse_phandle(np, prop, 0);
+> > > +}
+> > > +
+> > > +/**
+> > > + * struct supplier_bindings - Information for parsing supplier DT binding
+> > > + *
+> > > + * @parse_prop:                If the function cannot parse the property, return NULL.
+> > > + *                     Otherwise, return the phandle listed in the property
+> > > + *                     that corresponds to index i.
+> > > + */
+> > > +struct supplier_bindings {
+> > > +       struct device_node *(*parse_prop)(struct device_node *np,
+> > > +                                         const char *name, int i);
+> > > +};
+> > > +
+> > > +struct supplier_bindings bindings[] = {
+> >
+> > static const
+>
+> Will do.
+>
+> >
+> > > +       { .parse_prop = parse_clocks, },
+> > > +       { .parse_prop = parse_interconnects, },
+> > > +       { .parse_prop = parse_regulators, },
+> > > +       { },
+> > > +};
+> > > +
+> > > +static bool of_link_property(struct device *dev, struct device_node *con_np,
+> > > +                            const char *prop)
+> > > +{
+> > > +       struct device_node *phandle;
+> > > +       struct supplier_bindings *s = bindings;
+> > > +       unsigned int i = 0;
+> > > +       bool done = true;
+> > > +
+> > > +       while (!i && s->parse_prop) {
+> >
+> > Using 'i' is a little odd. Perhaps a 'matched' bool would be easier to read.
+>
+> That's how I wrote it first (locally) and then redid it this way
+> because the bool felt very superfluous. I don't think this is that
+> hard to understand.
 
--- 
-Regards,
-Nishanth Menon
+Alright...
+
+> > > +               while ((phandle = s->parse_prop(con_np, prop, i))) {
+> > > +                       i++;
+> > > +                       if (of_link_to_phandle(dev, phandle))
+> > > +                               done = false;
+> >
+> > Just return here. No point in continuing as 'done' is never set back to true.
+>
+> Actually, there is a point for this. Say Device-C depends on suppliers
+> Device-S1 and Device-S2 and they are listed in DT in that order.
+>
+> Say, S1 gets populated after late_initcall_sync but S2 is probes way
+> before that. If I don't continue past a "failed linking" to S1 and
+> also link up to S2, then S2 will get a sync_state() callback before C
+> is probed. So I have to go through all possible suppliers and as many
+> as possible.
+>
+> Let me add a comment about this somewhere in the code (probably the
+> header that defines the add_links() ops).
+
+Okay, makes sense.
+
+Rob
