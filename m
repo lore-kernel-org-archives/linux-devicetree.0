@@ -1,66 +1,31 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v6 0/2] Add basic support for pico-pi-imx8m
-Date: Tue, 23 Jul 2019 16:25:10 +0800
-Message-ID: <20190723082509.GS15632@dragon>
-References: <20190722102730.15763-1-andradanciu1997@gmail.com>
+Subject: Re: [PATCH v3] arm64: dts: add the console node for DPAA2 platforms
+Date: Tue, 23 Jul 2019 16:26:49 +0800
+Message-ID: <20190723082648.GT15632@dragon>
+References: <1563791443-26372-1-git-send-email-ioana.ciornei@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190722102730.15763-1-andradanciu1997@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andradanciu1997 <andradanciu1997@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com, Michal.Vokac@ysoft.com, ping.bai@nxp.com, u.kleine-koenig@pengutronix.de, leoyang.li@nxp.com, aisheng.dong@nxp.com, l.stach@pengutronix.de, pankaj.bansal@nxp.com, angus@akkea.ca, pramod.kumar_1@nxp.com, bhaskar.upadhaya@nxp.com, vabhav.sharma@nxp.com, richard.hu@technexion.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1563791443-26372-1-git-send-email-ioana.ciornei@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, leoyang.li@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 01:27:28PM +0300, andradanciu1997 wrote:
-> Add support for TechNexion PICO-PI-IMX8M based on patches from Richard Hu
-> Datasheet is at: https://s3.us-east-2.amazonaws.com/technexion/datasheets/picopiimx8m.pdf
+On Mon, Jul 22, 2019 at 01:30:43PM +0300, Ioana Ciornei wrote:
+> Add the console device tree node for the following
+> DPAA2 based platforms: LS1088A, LS2080A, LS2088A and LX2160A.
 > 
-> Changes since v5:
->  - removed comment /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
->  - added "Reviewed-by" tags
-> 
-> Changes since v4:
->  - removed #address-cells and  #size-cells from regulators node
-> 
-> Changes since v3:
->  - renamed pico-pi-8m.dts to imx8mq-pico-pi.dts
->  - moved iomuxc node as the last one
->  - removed pinctrl-assert-gpios property from fec1 node
->  - removed at803x,led-act-blind-workaround, at803x,eee-disabled
->    properties from mdio node
->  - added pinctrl-names = "default" to i2c1 node
->  - changed bd71837 pmic support properties according to
->    Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
->  - removed A53_0 node
-> 
-> Changes since v2:
->  - changed PICO-PI-8M bord compatible from wand,imx8mq-pico-pi to
->    technexion,pico-pi-imx8m
->  - removed bootargs property
->  - removed regulators node and put fixed regulator directly under root node
->  - changed node name from usb_otg_vbus to regulator-usb-otg-vbus
->  - removed pinctrl-names property from iomuxc node
->  - removed wand-pi-8m container node
->  - sorted pinctrl nodes alphabetically
->  - removed tusb320_irqgrp, tusb320_irqgrp nodes because there is no upstream
->    driver
->  - changed properties' order in usb_dwc3_1 node
-> 
-> Changes since v1:
->  - renamed wandboard-pi-8m.dts to pico-pi-8m.dts
->  - removed pinctrl_csi1, pinctrl_wifi_ctrl
->  - used generic name for pmic
->  - removed gpo node
->  - delete regulator-virtuals node
->  - remove always-on property from buck1-8 and ldo3-7
->  - remove pmic-buck-uses-i2c-dvs property for buck1-4
-> 
-> Andra Danciu (1):
->   dt-bindings: arm: fsl: Add the pico-pi-imx8m board
-> 
-> Richard Hu (1):
->   arm64: dts: fsl: pico-pi: Add a device tree for the PICO-PI-IMX8M
+> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 
-Applied both, thanks.
+Applied, thanks.
