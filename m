@@ -1,49 +1,39 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: Add pxe1610 as a trivial device
-Date: Tue, 23 Jul 2019 08:52:39 -0600
-Message-ID: <CAL_Jsq+Kw0TFW_v54Y2QHcChqpNDYhFyCSO5Cj-be9yLSCq-Pw@mail.gmail.com>
-References: <20190723002052.2878847-1-vijaykhemka@fb.com> <CAL_Jsq+uAjK6+xzkyOhcH96tZuqv7i6Nz5_nhUQkZ2adt2gutA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: [PATCH net-next 0/3] enetc: Add mdio bus driver for the PCIe MDIO endpoint
+Date: Tue, 23 Jul 2019 18:15:52 +0300
+Message-ID: <1563894955-545-1-git-send-email-claudiu.manoil@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+uAjK6+xzkyOhcH96tZuqv7i6Nz5_nhUQkZ2adt2gutA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Khemka <vijaykhemka@fb.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jiri Kosina <trivial@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Herbert Xu <herbert@gondor.apana.org.au>, Patrick Venture <venture@google.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Anson Huang <anson.huang@nxp.com>, Jeremy Gebben <jgebben@sweptlaser.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org, sdasari@fb.com
+To: "David S . Miller" <davem@davemloft.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 8:50 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Jul 22, 2019 at 6:46 PM Vijay Khemka <vijaykhemka@fb.com> wrote:
-> >
-> > The pxe1610 is a voltage regulator from Infineon. It also supports
-> > other VRs pxe1110 and pxm1310 from Infineon.
+First patch just registers the PCIe endpoint device containing
+the MDIO registers as a standalone MDIO bus driver, to allow
+an alternative way to control the MDIO bus.  The same code used
+by the ENETC ports (eth controllers) to manage MDIO via local
+registers applies and is reused.
 
-What happened to the other compatibles? S/w doesn't need to know the
-differences?
+Bindings are provided for the new MDIO node, similarly to ENETC
+port nodes bindings.
 
-> >
-> > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-> > ---
-> >  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-> > index 2e742d399e87..1be648828a31 100644
-> > --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> > +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> > @@ -99,6 +99,8 @@ properties:
-> >              # Infineon IR38064 Voltage Regulator
-> >            - infineon,ir38064
-> >              # Infineon SLB9635 (Soft-) I2C TPM (old protocol, max 100khz)
-> > +          - infineon,pxe1610
-> > +            # Infineon PXE1610, PXE1110 and PXM1310 Voltage Regulators
->
-> The comment goes above the entry.
->
-> >            - infineon,slb9635tt
-> >              # Infineon SLB9645 I2C TPM (new protocol, max 400khz)
-> >            - infineon,slb9645tt
-> > --
-> > 2.17.1
-> >
+Last patch enables the ENETC port 1 and its RGMII PHY on the
+LS1028A QDS board, where the MDIO muxing configuration relies
+on the MDIO support provided in the first patch.
+
+
+Claudiu Manoil (3):
+  enetc: Add mdio bus driver for the PCIe MDIO endpoint
+  dt-bindings: net: fsl: enetc: Add bindings for the central MDIO PCIe
+    endpoint
+  arm64: dts: ls1028a: Enable eth port1 on the ls1028a QDS board
+
+ .../devicetree/bindings/net/fsl-enetc.txt     | 42 ++++++++-
+ .../boot/dts/freescale/fsl-ls1028a-qds.dts    | 40 +++++++++
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 ++
+ .../net/ethernet/freescale/enetc/enetc_mdio.c | 90 +++++++++++++++++++
+ .../net/ethernet/freescale/enetc/enetc_pf.c   |  5 +-
+ 5 files changed, 179 insertions(+), 4 deletions(-)
+
+-- 
+2.17.1
