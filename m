@@ -1,56 +1,53 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] ARM: dts: am33xx: Add nodes for eQEP
-Date: Tue, 23 Jul 2019 01:42:13 -0700
-Message-ID: <20190723084213.GR5447@atomide.com>
-References: <20190722154538.5314-1-david@lechnology.com>
- <20190722154538.5314-4-david@lechnology.com>
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH v2 03/19] phy: mvebu-cp110-comphy: Add SMC call support
+Date: Tue, 23 Jul 2019 10:48:49 +0200
+Message-ID: <20190723104849.7158f634@bootlin.com>
+References: <20190627095104.22529-1-miquel.raynal@bootlin.com>
+ <20190627095104.22529-4-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190722154538.5314-4-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, William Breathitt Gray <vilhelm.gray@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190627095104.22529-4-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-* David Lechner <david@lechnology.com> [190722 15:46]:
-> This adds new nodes for the Texas Instruments Enhanced Quadrature
-> Encoder Pulse (eQEP) module in the PWM subsystem on AM33XX.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
-> ---
->  arch/arm/boot/dts/am33xx-l4.dtsi | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-> index 3b1fb2ba4dff..7fdc2f61c553 100644
-> --- a/arch/arm/boot/dts/am33xx-l4.dtsi
-> +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-> @@ -1908,6 +1908,15 @@
->  					status = "disabled";
->  				};
->  
-> +				eqep0: eqep@180 {
-> +					compatible = "ti,am3352-eqep";
-> +					reg = <0x180 0x80>;
-> +					clocks = <&l4ls_gclk>;
-> +					clock-names = "fck";
-> +					interrupts = <79>;
-> +					status = "disabled";
-> +				};
-> +
+Hi Miquel,
 
-You probably no longer need to map any clocks here as this
-is now a child of the interconnect target module managed
-by ti-sysc driver. I have not checked but probably l4ls_gclk
-is same as clocks = <&l4ls_clkctrl AM3_L4LS_EPWMSS0_CLKCTRL 0>
-already managed by ti-sysc. If so, then just using runtime PM
-calls in any of the child device drivers will keep it enabled.
+Thanks for this, I gave it a quick test and it looks good.
 
-If l4ls_gclk is a separate functional clock, then it still
-needs to be managed by the child device driver directly.
+On Thu, 27 Jun 2019 11:50:48 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-Regards,
+>From: Grzegorz Jaszczyk <jaz@semihalf.com>
+>
+>Keep the exact same list of supported configurations but first try to
+>use the firmware's implementation. If it fails, try the legacy method:
+>Linux implementation.
+>
+>Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+>[miquel.raynal@bootlin.com: adapt the content to the mainline driver]
+>Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-Tony
+[...]
+
+>+	dev_warn(priv->dev,
+>+		 "Firmware could not configure PHY %d with mode %d (ret: %d), trying legacy method\n",
+>+		 ret, lane->id, lane->mode);
+
+Small nit, you've got your parameters in the wrong order in that
+dev_warn.
+
+Besides that,
+
+Tested-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
