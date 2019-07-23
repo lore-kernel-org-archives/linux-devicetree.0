@@ -1,61 +1,107 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: imx8mq: fix SAI compatible
-Date: Tue, 23 Jul 2019 15:33:43 +0800
-Message-ID: <20190723073342.GG15632@dragon>
-References: <20190717095436.28154-1-l.stach@pengutronix.de>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 1/3][V4] iio: imu: adis: Add support for SPI transfer cs_change_delay
+Date: Tue, 23 Jul 2019 10:36:38 +0300
+Message-ID: <20190723073641.27801-2-alexandru.ardelean@analog.com>
+References: <20190723073641.27801-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190717095436.28154-1-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>, Daniel Baluta <daniel.baluta@nxp.com>
-Cc: devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190723073641.27801-1-alexandru.ardelean@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-iio@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>, Michael Hennerich <michael.hennerich@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Daniel for comment.
+The ADIS16460 requires a higher delay before the next transfer. Since the
+SPI framework supports configuring the delay before the next transfer, this
+driver will become the first user of it.
 
-On Wed, Jul 17, 2019 at 11:54:36AM +0200, Lucas Stach wrote:
-> The i.MX8M SAI block is not compatible with the i.MX6SX one, as the
-> register layout has changed due to two version registers being added
-> at the beginning of the address map. Remove the bogus compatible.
-> 
-> Fixes: 8c61538dc945 "arm64: dts: imx8mq: Add SAI2 node"
+The support for this functionality in ADIS16460 requires an addition to the
+ADIS lib to support the `cs_change_delay` functionality from the SPI
+subsystem.
 
-The format should be the following.  I can fix it when applying though.
+Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/imu/adis.c       | 12 ++++++++++++
+ include/linux/iio/imu/adis.h |  2 ++
+ 2 files changed, 14 insertions(+)
 
-Fixes: 8c61538dc945 ("arm64: dts: imx8mq: Add SAI2 node")
-
-Shawn
-
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 9326bd4150a3..0c533c66b340 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -718,8 +718,7 @@
->  
->  			sai2: sai@308b0000 {
->  				#sound-dai-cells = <0>;
-> -				compatible = "fsl,imx8mq-sai",
-> -					     "fsl,imx6sx-sai";
-> +				compatible = "fsl,imx8mq-sai";
->  				reg = <0x308b0000 0x10000>;
->  				interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&clk IMX8MQ_CLK_SAI2_IPG>,
-> -- 
-> 2.20.1
-> 
+diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+index 30281e91dbf9..1631c255deab 100644
+--- a/drivers/iio/imu/adis.c
++++ b/drivers/iio/imu/adis.c
+@@ -39,18 +39,24 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+ 			.len = 2,
+ 			.cs_change = 1,
+ 			.delay_usecs = adis->data->write_delay,
++			.cs_change_delay = adis->data->cs_change_delay,
++			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+ 			.tx_buf = adis->tx + 2,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+ 			.delay_usecs = adis->data->write_delay,
++			.cs_change_delay = adis->data->cs_change_delay,
++			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+ 			.tx_buf = adis->tx + 4,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+ 			.delay_usecs = adis->data->write_delay,
++			.cs_change_delay = adis->data->cs_change_delay,
++			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+ 			.tx_buf = adis->tx + 6,
+ 			.bits_per_word = 8,
+@@ -133,12 +139,16 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+ 			.len = 2,
+ 			.cs_change = 1,
+ 			.delay_usecs = adis->data->write_delay,
++			.cs_change_delay = adis->data->cs_change_delay,
++			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+ 			.tx_buf = adis->tx + 2,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+ 			.delay_usecs = adis->data->read_delay,
++			.cs_change_delay = adis->data->cs_change_delay,
++			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+ 			.tx_buf = adis->tx + 4,
+ 			.rx_buf = adis->rx,
+@@ -146,6 +156,8 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+ 			.len = 2,
+ 			.cs_change = 1,
+ 			.delay_usecs = adis->data->read_delay,
++			.cs_change_delay = adis->data->cs_change_delay,
++			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+ 			.rx_buf = adis->rx + 2,
+ 			.bits_per_word = 8,
+diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+index 3428d06b2f44..4c53815bb729 100644
+--- a/include/linux/iio/imu/adis.h
++++ b/include/linux/iio/imu/adis.h
+@@ -26,6 +26,7 @@ struct adis_burst;
+  * struct adis_data - ADIS chip variant specific data
+  * @read_delay: SPI delay for read operations in us
+  * @write_delay: SPI delay for write operations in us
++ * @cs_change_delay: SPI delay between CS changes in us
+  * @glob_cmd_reg: Register address of the GLOB_CMD register
+  * @msc_ctrl_reg: Register address of the MSC_CTRL register
+  * @diag_stat_reg: Register address of the DIAG_STAT register
+@@ -35,6 +36,7 @@ struct adis_burst;
+ struct adis_data {
+ 	unsigned int read_delay;
+ 	unsigned int write_delay;
++	unsigned int cs_change_delay;
+ 
+ 	unsigned int glob_cmd_reg;
+ 	unsigned int msc_ctrl_reg;
+-- 
+2.20.1
