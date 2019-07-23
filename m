@@ -1,137 +1,52 @@
-From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: Re: [PATCH 2/2] ARM: dts: aspeed: tiogapass: Add Riser card
-Date: Tue, 23 Jul 2019 17:22:36 +0000
-Message-ID: <C9C6AC86-B353-4CDA-8B63-50587F48DF44@fb.com>
-References: <20190722192451.1947348-1-vijaykhemka@fb.com>
- <20190722192451.1947348-3-vijaykhemka@fb.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] extcon: fsa9480: Support the FSA880 variant
+Date: Tue, 23 Jul 2019 19:43:01 +0200
+Message-ID: <20190723174301.31278-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190722192451.1947348-3-vijaykhemka@fb.com>
-Content-Language: en-US
-Content-ID: <8445B907535FB04D9AD197743F1E2206@namprd15.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob
- Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel
- Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>
-Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, Sai Dasari <sdasari@fb.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Mike Lockwood <lockwood@google.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGVhbSwNClRoaXMgcGF0Y2ggYWxzbyBuZWVkcyByZXZpZXcuIEkgc2VwYXJhdGVkIGZpcnN0IHBh
-dGNoIHdpdGggdjIgYW5kIHRoYXQgd2FzIGFja2VkLiBQbGVhc2UgcmV2aWV3IHRoaXMgYXMgd2Vs
-bC4NCg0KUmVnYXJkcw0KLVZpamF5DQoNCu+7v09uIDcvMjIvMTksIDEyOjQxIFBNLCAiVmlqYXkg
-S2hlbWthIiA8dmlqYXlraGVta2FAZmIuY29tPiB3cm90ZToNCg0KICAgIEFkZGVkIGkyYyBtdXgg
-Zm9yIHJpc2VyIGNhcmQgYW5kIG11bHRpcGxlIGF2YSBjYXJkIGFuZCBpdHMgc2Vuc29yDQogICAg
-Y29tcG9uZW50cyBmb3IgRmFjZWJvb2sgVGlvZ2FwYXNzIHBsYXRmb3JtDQogICAgDQogICAgU2ln
-bmVkLW9mZi1ieTogVmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5jb20+DQogICAgLS0tDQog
-ICAgIC4uLi9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzICAgICB8IDIzMCAr
-KysrKysrKysrKysrKysrKysNCiAgICAgMSBmaWxlIGNoYW5nZWQsIDIzMCBpbnNlcnRpb25zKCsp
-DQogICAgDQogICAgZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFj
-ZWJvb2stdGlvZ2FwYXNzLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJv
-b2stdGlvZ2FwYXNzLmR0cw0KICAgIGluZGV4IGI3NzgzODMzYTU4Yy4uOGQwYmNiM2NkNDE5IDEw
-MDY0NA0KICAgIC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlv
-Z2FwYXNzLmR0cw0KICAgICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJv
-b2stdGlvZ2FwYXNzLmR0cw0KICAgIEBAIC0xMiw2ICsxMiwyNyBAQA0KICAgICAJYWxpYXNlcyB7
-DQogICAgIAkJc2VyaWFsMCA9ICZ1YXJ0MTsNCiAgICAgCQlzZXJpYWw0ID0gJnVhcnQ1Ow0KICAg
-ICsNCiAgICArCQkvKg0KICAgICsJCSAqIEhhcmRjb2RlIHRoZSBidXMgbnVtYmVyIG9mIGkyYyBz
-d2l0Y2hlcycgY2hhbm5lbHMgdG8NCiAgICArCQkgKiBhdm9pZCBicmVha2luZyB0aGUgbGVnYWN5
-IGFwcGxpY2F0aW9ucy4NCiAgICArCQkgKi8NCiAgICArCQlpMmMxNiA9ICZpbXV4MTY7DQogICAg
-KwkJaTJjMTcgPSAmaW11eDE3Ow0KICAgICsJCWkyYzE4ID0gJmltdXgxODsNCiAgICArCQlpMmMx
-OSA9ICZpbXV4MTk7DQogICAgKwkJaTJjMjAgPSAmaW11eDIwOw0KICAgICsJCWkyYzIxID0gJmlt
-dXgyMTsNCiAgICArCQlpMmMyMiA9ICZpbXV4MjI7DQogICAgKwkJaTJjMjMgPSAmaW11eDIzOw0K
-ICAgICsJCWkyYzI0ID0gJmltdXgyNDsNCiAgICArCQlpMmMyNSA9ICZpbXV4MjU7DQogICAgKwkJ
-aTJjMjYgPSAmaW11eDI2Ow0KICAgICsJCWkyYzI3ID0gJmltdXgyNzsNCiAgICArCQlpMmMyOCA9
-ICZpbXV4Mjg7DQogICAgKwkJaTJjMjkgPSAmaW11eDI5Ow0KICAgICsJCWkyYzMwID0gJmltdXgz
-MDsNCiAgICArCQlpMmMzMSA9ICZpbXV4MzE7DQogICAgIAl9Ow0KICAgICAJY2hvc2VuIHsNCiAg
-ICAgCQlzdGRvdXQtcGF0aCA9ICZ1YXJ0NTsNCiAgICBAQCAtMTI0LDYgKzE0NSwyMTUgQEANCiAg
-ICAgJmkyYzEgew0KICAgICAJc3RhdHVzID0gIm9rYXkiOw0KICAgICAJLy9YMjQgUmlzZXINCiAg
-ICArCWkyYy1zd2l0Y2hANzEgew0KICAgICsJCWNvbXBhdGlibGUgPSAibnhwLHBjYTk1NDQiOw0K
-ICAgICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KICAgICsJCSNzaXplLWNlbGxzID0gPDA+Ow0K
-ICAgICsJCXJlZyA9IDwweDcxPjsNCiAgICArDQogICAgKwkJaW11eDE2OiBpMmNAMCB7DQogICAg
-KwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KICAgICsJCQkjc2l6ZS1jZWxscyA9IDwwPjsNCiAg
-ICArCQkJcmVnID0gPDA+Ow0KICAgICsNCiAgICArCQkJaW5hMjE5QDQ1IHsNCiAgICArCQkJCWNv
-bXBhdGlibGUgPSAidGksaW5hMjE5IjsNCiAgICArCQkJCXJlZyA9IDwweDQ1PjsNCiAgICArCQkJ
-fTsNCiAgICArDQogICAgKwkJCXRtcDc1QDQ4IHsNCiAgICArCQkJCWNvbXBhdGlibGUgPSAidGks
-dG1wNzUiOw0KICAgICsJCQkJcmVnID0gPDB4NDg+Ow0KICAgICsJCQl9Ow0KICAgICsNCiAgICAr
-CQkJdG1wNDIxQDQ5IHsNCiAgICArCQkJCWNvbXBhdGlibGUgPSAidGksdG1wNzUiOw0KICAgICsJ
-CQkJcmVnID0gPDB4NDk+Ow0KICAgICsJCQl9Ow0KICAgICsNCiAgICArCQkJZWVwcm9tQDUwIHsN
-CiAgICArCQkJCWNvbXBhdGlibGUgPSAiYXRtZWwsMjRjNjQiOw0KICAgICsJCQkJcmVnID0gPDB4
-NTA+Ow0KICAgICsJCQkJcGFnZXNpemUgPSA8MzI+Ow0KICAgICsJCQl9Ow0KICAgICsNCiAgICAr
-CQkJaTJjLXN3aXRjaEA3MyB7DQogICAgKwkJCQljb21wYXRpYmxlID0gIm54cCxwY2E5NTQ2IjsN
-CiAgICArCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KICAgICsJCQkJI3NpemUtY2VsbHMgPSA8
-MD47DQogICAgKwkJCQlyZWcgPSA8MHg3Mz47DQogICAgKw0KICAgICsJCQkJaW11eDIwOiBpMmNA
-MCB7DQogICAgKwkJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQogICAgKwkJCQkJI3NpemUtY2Vs
-bHMgPSA8MD47DQogICAgKwkJCQkJcmVnID0gPDA+Ow0KICAgICsJCQkJfTsNCiAgICArDQogICAg
-KwkJCQlpbXV4MjE6IGkyY0AxIHsNCiAgICArCQkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCiAg
-ICArCQkJCQkjc2l6ZS1jZWxscyA9IDwwPjsNCiAgICArCQkJCQlyZWcgPSA8MT47DQogICAgKwkJ
-CQl9Ow0KICAgICsNCiAgICArCQkJCWltdXgyMjogaTJjQDIgew0KICAgICsJCQkJCSNhZGRyZXNz
-LWNlbGxzID0gPDE+Ow0KICAgICsJCQkJCSNzaXplLWNlbGxzID0gPDA+Ow0KICAgICsJCQkJCXJl
-ZyA9IDwyPjsNCiAgICArCQkJCX07DQogICAgKw0KICAgICsJCQkJaW11eDIzOiBpMmNAMyB7DQog
-ICAgKwkJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQogICAgKwkJCQkJI3NpemUtY2VsbHMgPSA8
-MD47DQogICAgKwkJCQkJcmVnID0gPDM+Ow0KICAgICsJCQkJfTsNCiAgICArDQogICAgKwkJCX07
-DQogICAgKw0KICAgICsJCX07DQogICAgKw0KICAgICsJCWltdXgxNzogaTJjQDEgew0KICAgICsJ
-CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCiAgICArCQkJI3NpemUtY2VsbHMgPSA8MD47DQogICAg
-KwkJCXJlZyA9IDwxPjsNCiAgICArDQogICAgKwkJCWluYTIxOUA0NSB7DQogICAgKwkJCQljb21w
-YXRpYmxlID0gInRpLGluYTIxOSI7DQogICAgKwkJCQlyZWcgPSA8MHg0NT47DQogICAgKwkJCX07
-DQogICAgKw0KICAgICsJCQl0bXA0MjFANDggew0KICAgICsJCQkJY29tcGF0aWJsZSA9ICJ0aSx0
-bXA3NSI7DQogICAgKwkJCQlyZWcgPSA8MHg0OD47DQogICAgKwkJCX07DQogICAgKw0KICAgICsJ
-CQl0bXA0MjFANDkgew0KICAgICsJCQkJY29tcGF0aWJsZSA9ICJ0aSx0bXA3NSI7DQogICAgKwkJ
-CQlyZWcgPSA8MHg0OT47DQogICAgKwkJCX07DQogICAgKw0KICAgICsJCQllZXByb21ANTAgew0K
-ICAgICsJCQkJY29tcGF0aWJsZSA9ICJhdG1lbCwyNGM2NCI7DQogICAgKwkJCQlyZWcgPSA8MHg1
-MD47DQogICAgKwkJCQlwYWdlc2l6ZSA9IDwzMj47DQogICAgKwkJCX07DQogICAgKw0KICAgICsJ
-CQlpMmMtc3dpdGNoQDczIHsNCiAgICArCQkJCWNvbXBhdGlibGUgPSAibnhwLHBjYTk1NDYiOw0K
-ICAgICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQogICAgKwkJCQkjc2l6ZS1jZWxscyA9IDww
-PjsNCiAgICArCQkJCXJlZyA9IDwweDczPjsNCiAgICArDQogICAgKwkJCQlpbXV4MjQ6IGkyY0Aw
-IHsNCiAgICArCQkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCiAgICArCQkJCQkjc2l6ZS1jZWxs
-cyA9IDwwPjsNCiAgICArCQkJCQlyZWcgPSA8MD47DQogICAgKwkJCQl9Ow0KICAgICsNCiAgICAr
-CQkJCWltdXgyNTogaTJjQDEgew0KICAgICsJCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KICAg
-ICsJCQkJCSNzaXplLWNlbGxzID0gPDA+Ow0KICAgICsJCQkJCXJlZyA9IDwxPjsNCiAgICArCQkJ
-CX07DQogICAgKw0KICAgICsJCQkJaW11eDI2OiBpMmNAMiB7DQogICAgKwkJCQkJI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47DQogICAgKwkJCQkJI3NpemUtY2VsbHMgPSA8MD47DQogICAgKwkJCQkJcmVn
-ID0gPDI+Ow0KICAgICsJCQkJfTsNCiAgICArDQogICAgKwkJCQlpbXV4Mjc6IGkyY0AzIHsNCiAg
-ICArCQkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCiAgICArCQkJCQkjc2l6ZS1jZWxscyA9IDww
-PjsNCiAgICArCQkJCQlyZWcgPSA8Mz47DQogICAgKwkJCQl9Ow0KICAgICsNCiAgICArCQkJfTsN
-CiAgICArDQogICAgKwkJfTsNCiAgICArDQogICAgKwkJaW11eDE4OiBpMmNAMiB7DQogICAgKwkJ
-CSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KICAgICsJCQkjc2l6ZS1jZWxscyA9IDwwPjsNCiAgICAr
-CQkJcmVnID0gPDI+Ow0KICAgICsNCiAgICArCQkJaW5hMjE5QDQ1IHsNCiAgICArCQkJCWNvbXBh
-dGlibGUgPSAidGksaW5hMjE5IjsNCiAgICArCQkJCXJlZyA9IDwweDQ1PjsNCiAgICArCQkJfTsN
-CiAgICArDQogICAgKwkJCXRtcDQyMUA0OCB7DQogICAgKwkJCQljb21wYXRpYmxlID0gInRpLHRt
-cDc1IjsNCiAgICArCQkJCXJlZyA9IDwweDQ4PjsNCiAgICArCQkJfTsNCiAgICArDQogICAgKwkJ
-CXRtcDQyMUA0OSB7DQogICAgKwkJCQljb21wYXRpYmxlID0gInRpLHRtcDc1IjsNCiAgICArCQkJ
-CXJlZyA9IDwweDQ5PjsNCiAgICArCQkJfTsNCiAgICArDQogICAgKwkJCWVlcHJvbUA1MCB7DQog
-ICAgKwkJCQljb21wYXRpYmxlID0gImF0bWVsLDI0YzY0IjsNCiAgICArCQkJCXJlZyA9IDwweDUw
-PjsNCiAgICArCQkJCXBhZ2VzaXplID0gPDMyPjsNCiAgICArCQkJfTsNCiAgICArDQogICAgKwkJ
-CWkyYy1zd2l0Y2hANzMgew0KICAgICsJCQkJY29tcGF0aWJsZSA9ICJueHAscGNhOTU0NiI7DQog
-ICAgKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCiAgICArCQkJCSNzaXplLWNlbGxzID0gPDA+
-Ow0KICAgICsJCQkJcmVnID0gPDB4NzM+Ow0KICAgICsNCiAgICArCQkJCWltdXgyODogaTJjQDAg
-ew0KICAgICsJCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KICAgICsJCQkJCSNzaXplLWNlbGxz
-ID0gPDA+Ow0KICAgICsJCQkJCXJlZyA9IDwwPjsNCiAgICArCQkJCX07DQogICAgKw0KICAgICsJ
-CQkJaW11eDI5OiBpMmNAMSB7DQogICAgKwkJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQogICAg
-KwkJCQkJI3NpemUtY2VsbHMgPSA8MD47DQogICAgKwkJCQkJcmVnID0gPDE+Ow0KICAgICsJCQkJ
-fTsNCiAgICArDQogICAgKwkJCQlpbXV4MzA6IGkyY0AyIHsNCiAgICArCQkJCQkjYWRkcmVzcy1j
-ZWxscyA9IDwxPjsNCiAgICArCQkJCQkjc2l6ZS1jZWxscyA9IDwwPjsNCiAgICArCQkJCQlyZWcg
-PSA8Mj47DQogICAgKwkJCQl9Ow0KICAgICsNCiAgICArCQkJCWltdXgzMTogaTJjQDMgew0KICAg
-ICsJCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KICAgICsJCQkJCSNzaXplLWNlbGxzID0gPDA+
-Ow0KICAgICsJCQkJCXJlZyA9IDwzPjsNCiAgICArCQkJCX07DQogICAgKw0KICAgICsJCQl9Ow0K
-ICAgICsNCiAgICArCQl9Ow0KICAgICsNCiAgICArCQlpbXV4MTk6IGkyY0AzIHsNCiAgICArCQkJ
-I2FkZHJlc3MtY2VsbHMgPSA8MT47DQogICAgKwkJCSNzaXplLWNlbGxzID0gPDA+Ow0KICAgICsJ
-CQlyZWcgPSA8Mz47DQogICAgKw0KICAgICsJCQlpMmMtc3dpdGNoQDQwIHsNCiAgICArCQkJCWNv
-bXBhdGlibGUgPSAidGksaW5hMjE5IjsNCiAgICArCQkJCXJlZyA9IDwweDQwPjsNCiAgICArCQkJ
-fTsNCiAgICArDQogICAgKwkJCWkyYy1zd2l0Y2hANDEgew0KICAgICsJCQkJY29tcGF0aWJsZSA9
-ICJ0aSxpbmEyMTkiOw0KICAgICsJCQkJcmVnID0gPDB4NDE+Ow0KICAgICsJCQl9Ow0KICAgICsN
-CiAgICArCQkJaTJjLXN3aXRjaEA0NSB7DQogICAgKwkJCQljb21wYXRpYmxlID0gInRpLGluYTIx
-OSI7DQogICAgKwkJCQlyZWcgPSA8MHg0NT47DQogICAgKwkJCX07DQogICAgKw0KICAgICsJCX07
-DQogICAgKw0KICAgICsJfTsNCiAgICAgfTsNCiAgICAgDQogICAgICZpMmMyIHsNCiAgICAtLSAN
-CiAgICAyLjE3LjENCiAgICANCiAgICANCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+The older compatible variant of this chip is called FSA880
+and works the same way, if we need some quirks in the future,
+it is good to let it have its own compatible string.
+
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt | 4 +++-
+ drivers/extcon/extcon-fsa9480.c                             | 1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
+index d592c21245f2..624bd76f468e 100644
+--- a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
++++ b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
+@@ -5,7 +5,9 @@ controlled using I2C and enables USB data, stereo and mono audio, video,
+ microphone, and UART data to use a common connector port.
+ 
+ Required properties:
+- - compatible : Must be "fcs,fsa9480"
++ - compatible : Must be one of
++   "fcs,fsa9480"
++   "fcs,fsa880"
+  - reg : Specifies i2c slave address. Must be 0x25.
+  - interrupts : Should contain one entry specifying interrupt signal of
+    interrupt parent to which interrupt pin of the chip is connected.
+diff --git a/drivers/extcon/extcon-fsa9480.c b/drivers/extcon/extcon-fsa9480.c
+index 350fb34abfa0..8405512f5199 100644
+--- a/drivers/extcon/extcon-fsa9480.c
++++ b/drivers/extcon/extcon-fsa9480.c
+@@ -363,6 +363,7 @@ MODULE_DEVICE_TABLE(i2c, fsa9480_id);
+ 
+ static const struct of_device_id fsa9480_of_match[] = {
+ 	{ .compatible = "fcs,fsa9480", },
++	{ .compatible = "fcs,fsa880", },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, fsa9480_of_match);
+-- 
+2.21.0
