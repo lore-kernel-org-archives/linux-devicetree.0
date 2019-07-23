@@ -1,53 +1,30 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH 0/6] video: ssd1307fb: Support more displays
-Date: Tue, 23 Jul 2019 17:38:13 +0200
-Message-ID: <f0d8be30-4980-7e7c-dcbb-3bd7621cff08@samsung.com>
-References: <CGME20190618074155epcas1p3fcfe7cf1058162c11e4b1780987ca394@epcas1p3.samsung.com>
- <20190618074111.9309-1-marko.kohtala@okoko.fi>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 02/10] iio: document bindings for mounting matrices
+Date: Tue, 23 Jul 2019 18:39:02 +0300
+Message-ID: <20190723153902.GM9224@smile.fi.intel.com>
+References: <cover.1550768574.git.hns@goldelico.com>
+ <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
+ <CACRpkdZ5Z9VY457Fywt6X=K5XONgiPVcwbwSkwL_U+GCqZ+u5g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190618074111.9309-1-marko.kohtala@okoko.fi>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marko Kohtala <marko.kohtala@okoko.fi>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZ5Z9VY457Fywt6X=K5XONgiPVcwbwSkwL_U+GCqZ+u5g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kerne
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDYvMTgvMTkgOTo0MSBBTSwgTWFya28gS29odGFsYSB3cm90ZToKPiBUaGUga2VybmVsIGRy
-aXZlciBmb3Igc3NkMTMwN2ZiIGRpZCBub3QgYWxsb3cgZm9yIGFsbCBwcm9wZXIKPiBpbml0aWFs
-aXphdGlvbiBmb3IgYSBEZW5zaXRyb24gMTI4eDM2IGRpc3BsYXkuIFRoZSB0cmVuZCBpbiB0aGUg
-ZHJpdmVyCj4gaGFzIGJlZW4gdG8gYWRkIGRldmljZXRyZWUgcHJvcGVydGllcyBmb3IgdGhlIGNv
-bnRyb2xsZXIgaW5pdGlhbGl6YXRpb24KPiBhbmQgdGhlc2UgcGF0Y2hlcyBjb250aW51ZSBvbiB0
-aGF0IHRyZW5kLgo+IAo+IFRoZXJlIGFsc28gd2VyZSBzb21lIHNwYXJzZSBhbmQgQ29jY2luZWxs
-ZSBlcnJvcnMuCj4gCj4gQSBzbWFsbCBidWcgY2F1c2luZyBzY3JvbGxpbmcgb24gZGlzcGxheSB1
-cGRhdGVzIHdpdGggbm9uemVybyBwYWdlX29mZnNldAo+IHdhcyBhIGJpdCBzdXJwcmlzaW5nLiBJ
-dCB3b3VsZCBzZWVtIHRoZSBkcml2ZXIgaGFzIG9ubHkgYmVlbiB1c2VkIHdpdGgKPiBwYWdlX29m
-ZnNldCBzZXQgdG8gemVyby4gQnVnIGhhcyBiZWVuIHRoZXJlIHNpbmNlIGNvbW1pdAo+IDMwMWJj
-MDY3NWI2NzdhOTg0NzUxODcwNTBkNTZjZDJiMzlmZjBhY2YgKCJ2aWRlbzogc3NkMTMwN2ZiOiBN
-YWtlIHVzZSBvZgo+IGhvcml6b250YWwgYWRkcmVzc2luZyBtb2RlIikuCj4gCj4gTWFya28gS29o
-dGFsYSAoNik6Cj4gICB2aWRlbzogc3NkMTMwN2ZiOiBVc2Ugc2NyZWVuX2J1ZmZlciBpbnN0ZWFk
-IG9mIHNjcmVlbl9iYXNlCj4gICB2aWRlbzogc3NkMTMwN2ZiOiBSZW1vdmUgdW5uZWVkZWQgc2Vt
-aWNvbG9ucwo+ICAgdmlkZW86IHNzZDEzMDdmYjogU3RhcnQgcGFnZSByYW5nZSBhdCBwYWdlX29m
-ZnNldAo+ICAgdmlkZW86IHNzZDEzMDdmYjogSGFuZGxlIHdpZHRoIGFuZCBoZWlnaHQgdGhhdCBh
-cmUgbm90IG11bHRpcGxlIG9mIDgKPiAgIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBzc2QxMzA3ZmI6
-IEFkZCBpbml0aWFsaXphdGlvbiBwcm9wZXJ0aWVzCj4gICB2aWRlbzogc3NkMTMwN2ZiOiBBZGQg
-ZGV2aWNldHJlZSBjb25maWd1cmF0aW9uIG9mIGRpc3BsYXkgc2V0dXAKPiAKPiAgLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zc2QxMzA3ZmIudHh0IHwgIDEwICsrCj4gIGRyaXZlcnMv
-dmlkZW8vZmJkZXYvc3NkMTMwN2ZiLmMgICAgICAgICAgICAgICB8IDEzMCArKysrKysrKysrKyst
-LS0tLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxMDEgaW5zZXJ0aW9ucygrKSwgMzkgZGVsZXRpb25z
-KC0pClBhdGNoIHNlcmllcyBxdWV1ZWQgZm9yIHY1LjQsIHRoYW5rcy4KCkJlc3QgcmVnYXJkcywK
-LS0KQmFydGxvbWllaiBab2xuaWVya2lld2ljegpTYW1zdW5nIFImRCBJbnN0aXR1dGUgUG9sYW5k
-ClNhbXN1bmcgRWxlY3Ryb25pY3MKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVs
+On Tue, Jul 23, 2019 at 09:42:59AM +0200, Linus Walleij wrote:
+> On Thu, Feb 21, 2019 at 6:03 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+
+> > From: Linus Walleij <linus.walleij@linaro.org>
+> 
+> It is fair for you to change authorship to yourself at this point.
+> Just keeping my Signed-off-by is sufficient.
+
+...or Co-developed-by: can be used.
+
+-- 
+With Best Regards,
+Andy Shevchenko
