@@ -1,126 +1,164 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 2/9] soc: samsung: Convert exynos-chipid driver to use
- the regmap API
-Date: Tue, 23 Jul 2019 15:01:11 +0200
-Message-ID: <CAJKOXPfLPjmjgX01UAyu_=7etUO1G7osMQDmyHVBNxF2Sdh=yA@mail.gmail.com>
-References: <CGME20190718143128eucas1p2677ae16d229dddcd9a0db8084f0da5cf@eucas1p2.samsung.com>
- <20190718143044.25066-1-s.nawrocki@samsung.com> <20190718143044.25066-3-s.nawrocki@samsung.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH 2/2] dt-bindings: irq: Convert Allwinner NMI Controller to a
+ schema
+Date: Tue, 23 Jul 2019 15:26:58 +0200
+Message-ID: <20190723132658.5068-2-maxime.ripard@bootlin.com>
+References: <20190723132658.5068-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190718143044.25066-3-s.nawrocki@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190723132658.5068-1-maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Jul 2019 at 16:31, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
->
-> Convert the driver to use regmap API in order to allow other
-> drivers, like ASV, to access the CHIPID registers.
->
-> This patch adds definition of selected CHIPID register offsets
-> and register bit fields for Exynos5422 SoC.
->
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes since v1 (RFC):
->  - new patch
-> ---
->  drivers/soc/samsung/exynos-chipid.c       | 33 ++++++----------
->  include/linux/soc/samsung/exynos-chipid.h | 48 +++++++++++++++++++++++
->  2 files changed, 61 insertions(+), 20 deletions(-)
->  create mode 100644 include/linux/soc/samsung/exynos-chipid.h
->
-> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
-> index 78b123ee60c0..594b00488013 100644
-> --- a/drivers/soc/samsung/exynos-chipid.c
-> +++ b/drivers/soc/samsung/exynos-chipid.c
-> @@ -9,18 +9,16 @@
->   */
->
->  #include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
-> +#include <linux/regmap.h>
->  #include <linux/slab.h>
-> +#include <linux/soc/samsung/exynos-chipid.h>
->  #include <linux/sys_soc.h>
->
-> -#define EXYNOS_SUBREV_MASK     (0xF << 4)
-> -#define EXYNOS_MAINREV_MASK    (0xF << 0)
-> -#define EXYNOS_REV_MASK                (EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
-> -#define EXYNOS_MASK            0xFFFFF000
-> -
->  static const struct exynos_soc_id {
->         const char *name;
->         unsigned int id;
-> @@ -53,29 +51,24 @@ static const char * __init product_id_to_soc_id(unsigned int product_id)
->  int __init exynos_chipid_early_init(void)
->  {
->         struct soc_device_attribute *soc_dev_attr;
-> -       void __iomem *exynos_chipid_base;
->         struct soc_device *soc_dev;
->         struct device_node *root;
-> -       struct device_node *np;
-> +       struct regmap *regmap;
->         u32 product_id;
->         u32 revision;
-> +       int ret;
->
-> -       /* look up for chipid node */
-> -       np = of_find_compatible_node(NULL, NULL, "samsung,exynos4210-chipid");
-> -       if (!np)
-> -               return -ENODEV;
-> -
-> -       exynos_chipid_base = of_iomap(np, 0);
-> -       of_node_put(np);
-> -
-> -       if (!exynos_chipid_base) {
-> -               pr_err("Failed to map SoC chipid\n");
-> -               return -ENXIO;
-> +       regmap = syscon_regmap_lookup_by_compatible("samsung,exynos4210-chipid");
-> +       if (IS_ERR(regmap)) {
-> +               pr_err("%s: failed to get regmap\n", __func__);
+The Allwinner SoCs have an interrupt controller called NMI supported in
+Linux, with a matching Device Tree binding.
 
-Other places do not use __func__ prefix so make it consistent. Add it
-in patch #1?
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
 
-> +               return PTR_ERR(regmap);
->         }
->
-> -       product_id = readl_relaxed(exynos_chipid_base);
-> +       ret = regmap_read(regmap, EXYNOS_CHIPID_REG_PRO_ID, &product_id);
-> +       if (ret < 0)
-> +               return ret;
-> +
->         revision = product_id & EXYNOS_REV_MASK;
-> -       iounmap(exynos_chipid_base);
->
->         soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
->         if (!soc_dev_attr)
-> diff --git a/include/linux/soc/samsung/exynos-chipid.h b/include/linux/soc/samsung/exynos-chipid.h
-> new file mode 100644
-> index 000000000000..25359d70d617
-> --- /dev/null
-> +++ b/include/linux/soc/samsung/exynos-chipid.h
-> @@ -0,0 +1,48 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2018 Samsung Electronics Co., Ltd.
-> + *           http://www.samsung.com/
-> + *
-> + * Exynos - CHIPID support
-> + */
-> +
-> +#define EXYNOS_CHIPID_REG_PRO_ID       0x00
-> + #define EXYNOS_SUBREV_MASK            (0xf << 4)
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ .../allwinner,sun7i-a20-sc-nmi.yaml           | 83 +++++++++++++++++++
+ .../allwinner,sunxi-nmi.txt                   | 29 -------
+ 2 files changed, 83 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
 
-" #define" is unusual syntax. I think not used anywhere else. Stick to
-regular one.
-
-Best regards,
-Krzysztof
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
+new file mode 100644
+index 000000000000..cb8077b0c8dd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A20 Non-Maskable Interrupt Controller Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++allOf:
++  - $ref: /schemas/interrupt-controller.yaml#
++
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - allwinner,sun6i-a31-r-intc
++          - allwinner,sun7i-a20-sc-nmi
++          - allwinner,sun9i-a80-sc-nmi
++
++          # Deprecated
++          - allwinner,sun6i-a31-sc-nmi
++
++  required:
++    - compatible
++
++properties:
++  "#interrupt-cells":
++    const: 2
++    description:
++      The first cell is the IRQ number, the second cell the trigger
++      type as defined in interrupt.txt in this directory.
++
++  compatible:
++    oneOf:
++      - const: allwinner,sun6i-a31-r-intc
++      - const: allwinner,sun7i-a20-sc-nmi
++      - items:
++        - const: allwinner,sun8i-a83t-r-intc
++        - const: allwinner,sun6i-a31-r-intc
++      - const: allwinner,sun9i-a80-sc-nmi
++      - items:
++        - const: allwinner,sun50i-a64-r-intc
++        - const: allwinner,sun6i-a31-r-intc
++      - items:
++        - const: allwinner,sun50i-h6-r-intc
++        - const: allwinner,sun6i-a31-r-intc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++required:
++  - "#interrupt-cells"
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++
++# FIXME: We should set it, but it would report all the generic
++# properties as additional properties.
++# additionalProperties: false
++
++examples:
++  - |
++    interrupt-controller@1c00030 {
++        compatible = "allwinner,sun7i-a20-sc-nmi";
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        reg = <0x01c00030 0x0c>;
++        interrupt-parent = <&gic>;
++        interrupts = <0 0 4>;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
+deleted file mode 100644
+index 24beadf7ba83..000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-Allwinner Sunxi NMI Controller
+-==============================
+-
+-Required properties:
+-
+-- compatible : should be one of the following:
+-  - "allwinner,sun7i-a20-sc-nmi"
+-  - "allwinner,sun6i-a31-sc-nmi" (deprecated)
+-  - "allwinner,sun6i-a31-r-intc"
+-  - "allwinner,sun9i-a80-nmi"
+-- reg : Specifies base physical address and size of the registers.
+-- interrupt-controller : Identifies the node as an interrupt controller
+-- #interrupt-cells : Specifies the number of cells needed to encode an
+-  interrupt source. The value shall be 2. The first cell is the IRQ number, the
+-  second cell the trigger type as defined in interrupt.txt in this directory.
+-- interrupts: Specifies the interrupt line (NMI) which is handled by
+-  the interrupt controller in the parent controller's notation. This value
+-  shall be the NMI.
+-
+-Example:
+-
+-sc-nmi-intc@1c00030 {
+-	compatible = "allwinner,sun7i-a20-sc-nmi";
+-	interrupt-controller;
+-	#interrupt-cells = <2>;
+-	reg = <0x01c00030 0x0c>;
+-	interrupt-parent = <&gic>;
+-	interrupts = <0 0 4>;
+-};
+-- 
+2.21.0
