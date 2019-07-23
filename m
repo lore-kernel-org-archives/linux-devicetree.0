@@ -1,234 +1,303 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH V6 16/21] soc/tegra: pmc: Add pmc wake support for
- tegra210
-Date: Tue, 23 Jul 2019 16:39:48 -0700
-Message-ID: <6fefa6cc-f762-d473-a0ce-248d352a9a53@nvidia.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-17-git-send-email-skomatineni@nvidia.com>
- <0b3d08ea-4633-8a54-ba66-c3f3146a1ece@gmail.com>
- <ca32c2d8-d752-3ecd-3a3f-232366730c7b@gmail.com>
- <b575ca93-9f34-b07a-1234-ef1ea2a6ddee@gmail.com>
- <71a88a9c-a542-557a-0eaa-3c90112dee0e@nvidia.com>
- <70ad28cb-c268-cbbe-36f5-39df26617d8e@gmail.com>
- <629826f9-c453-386a-9e88-bd64d23b8eab@nvidia.com>
- <71c8cab1-bf72-c073-be30-4263c6b7c871@gmail.com>
- <97096b6c-f2f5-b82a-b172-802f4a06d1af@nvidia.com>
- <a58de350-f6ce-9308-1ae0-885e732b575d@gmail.com>
- <a545cc66-45cd-504a-4390-8274b8b79540@gmail.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v6 3/7] of/platform: Add functional dependency link from
+ DT bindings
+Date: Tue, 23 Jul 2019 16:57:24 -0700
+Message-ID: <CAGETcx_qDnwa4O7ytvxac6d3krptquCKXMvCFoH9c1p=WY0TkQ@mail.gmail.com>
+References: <20190720061647.234852-1-saravanak@google.com> <20190720061647.234852-4-saravanak@google.com>
+ <CAL_JsqK9GTxxxjhhWwqxOW9XERFziu2O71ETV2RhXb7B1WFY2g@mail.gmail.com>
+ <CAGETcx-hCrUvY5whZBihueqqCxmF3oDjFybjmoo3JUu87iiiEw@mail.gmail.com> <CAL_JsqJC-xvj5OJeFRPPNaYJj=-RqmXFJepZ5Q2+z36-7qyPgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a545cc66-45cd-504a-4390-8274b8b79540@gmail.com>
-Content-Language: en-US
+In-Reply-To: <CAL_JsqJC-xvj5OJeFRPPNaYJj=-RqmXFJepZ5Q2+z36-7qyPgQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jul 23, 2019 at 3:18 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Jul 23, 2019 at 2:49 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > On Tue, Jul 23, 2019 at 11:06 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Sat, Jul 20, 2019 at 12:17 AM Saravana Kannan <saravanak@google.com> wrote:
+> > > >
+> > > > Add device-links after the devices are created (but before they are
+> > > > probed) by looking at common DT bindings like clocks and
+> > > > interconnects.
+> > >
+> > > The structure now looks a lot better to me. A few minor things below.
+> >
+> > Thanks.
+> >
+> > > >
+> > > > Automatically adding device-links for functional dependencies at the
+> > > > framework level provides the following benefits:
+> > > >
+> > > > - Optimizes device probe order and avoids the useless work of
+> > > >   attempting probes of devices that will not probe successfully
+> > > >   (because their suppliers aren't present or haven't probed yet).
+> > > >
+> > > >   For example, in a commonly available mobile SoC, registering just
+> > > >   one consumer device's driver at an initcall level earlier than the
+> > > >   supplier device's driver causes 11 failed probe attempts before the
+> > > >   consumer device probes successfully. This was with a kernel with all
+> > > >   the drivers statically compiled in. This problem gets a lot worse if
+> > > >   all the drivers are loaded as modules without direct symbol
+> > > >   dependencies.
+> > > >
+> > > > - Supplier devices like clock providers, interconnect providers, etc
+> > > >   need to keep the resources they provide active and at a particular
+> > > >   state(s) during boot up even if their current set of consumers don't
+> > > >   request the resource to be active. This is because the rest of the
+> > > >   consumers might not have probed yet and turning off the resource
+> > > >   before all the consumers have probed could lead to a hang or
+> > > >   undesired user experience.
+> > > >
+> > > >   Some frameworks (Eg: regulator) handle this today by turning off
+> > > >   "unused" resources at late_initcall_sync and hoping all the devices
+> > > >   have probed by then. This is not a valid assumption for systems with
+> > > >   loadable modules. Other frameworks (Eg: clock) just don't handle
+> > > >   this due to the lack of a clear signal for when they can turn off
+> > > >   resources. This leads to downstream hacks to handle cases like this
+> > > >   that can easily be solved in the upstream kernel.
+> > > >
+> > > >   By linking devices before they are probed, we give suppliers a clear
+> > > >   count of the number of dependent consumers. Once all of the
+> > > >   consumers are active, the suppliers can turn off the unused
+> > > >   resources without making assumptions about the number of consumers.
+> > > >
+> > > > By default we just add device-links to track "driver presence" (probe
+> > > > succeeded) of the supplier device. If any other functionality provided
+> > > > by device-links are needed, it is left to the consumer/supplier
+> > > > devices to change the link when they probe.
+> > > >
+> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > ---
+> > > >  .../admin-guide/kernel-parameters.txt         |   5 +
+> > > >  drivers/of/platform.c                         | 158 ++++++++++++++++++
+> > > >  2 files changed, 163 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > > > index 138f6664b2e2..109b4310844f 100644
+> > > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > > @@ -3141,6 +3141,11 @@
+> > > >                         This can be set from sysctl after boot.
+> > > >                         See Documentation/sysctl/vm.txt for details.
+> > > >
+> > > > +       of_devlink      [KNL] Make device links from common DT bindings. Useful
+> > > > +                       for optimizing probe order and making sure resources
+> > > > +                       aren't turned off before the consumer devices have
+> > > > +                       probed.
+> > > > +
+> > > >         ohci1394_dma=early      [HW] enable debugging via the ohci1394 driver.
+> > > >                         See Documentation/debugging-via-ohci1394.txt for more
+> > > >                         info.
+> > > > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > > > index 04ad312fd85b..88a2086e26fa 100644
+> > > > --- a/drivers/of/platform.c
+> > > > +++ b/drivers/of/platform.c
+> > > > @@ -509,6 +509,163 @@ int of_platform_default_populate(struct device_node *root,
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(of_platform_default_populate);
+> > > >
+> > > > +bool of_link_is_valid(struct device_node *con, struct device_node *sup)
+> > > > +{
+> > > > +       of_node_get(sup);
+> > > > +       /*
+> > > > +        * Don't allow linking a device node as a consumer of one of its
+> > > > +        * descendant nodes. By definition, a child node can't be a functional
+> > > > +        * dependency for the parent node.
+> > > > +        */
+> > > > +       while (sup) {
+> > > > +               if (sup == con) {
+> > > > +                       of_node_put(sup);
+> > > > +                       return false;
+> > > > +               }
+> > > > +               sup = of_get_next_parent(sup);
+> > > > +       }
+> > > > +       return true;
+> > > > +}
+> > > > +
+> > > > +static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
+> > > > +{
+> > > > +       struct platform_device *sup_dev;
+> > > > +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+> > > > +       int ret = 0;
+> > > > +
+> > > > +       /*
+> > > > +        * Since we are trying to create device links, we need to find
+> > > > +        * the actual device node that owns this supplier phandle.
+> > > > +        * Often times it's the same node, but sometimes it can be one
+> > > > +        * of the parents. So walk up the parent till you find a
+> > > > +        * device.
+> > > > +        */
+> > > > +       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
+> > > > +               sup_np = of_get_next_parent(sup_np);
+> > > > +       if (!sup_np)
+> > > > +               return 0;
+> > > > +
+> > > > +       if (!of_link_is_valid(dev->of_node, sup_np)) {
+> > > > +               of_node_put(sup_np);
+> > > > +               return 0;
+> > > > +       }
+> > > > +       sup_dev = of_find_device_by_node(sup_np);
+> > > > +       of_node_put(sup_np);
+> > > > +       if (!sup_dev)
+> > > > +               return -ENODEV;
+> > > > +       if (!device_link_add(dev, &sup_dev->dev, dl_flags))
+> > > > +               ret = -ENODEV;
+> > > > +       put_device(&sup_dev->dev);
+> > > > +       return ret;
+> > > > +}
+> > > > +
+> > > > +static struct device_node *parse_prop_cells(struct device_node *np,
+> > > > +                                           const char *prop, int i,
+> > >
+> > > I like 'i' for for loops, but less so for function params. Perhaps
+> > > 'index' instead like of_parse_phandle_with_args.
+> >
+> > Sounds good.
+> >
+> > >
+> > > > +                                           const char *binding,
+> > > > +                                           const char *cell)
+> > > > +{
+> > > > +       struct of_phandle_args sup_args;
+> > > > +
+> > > > +       if (!i && strcmp(prop, binding))
+> > >
+> > > Why the '!i' test?
+> >
+> > To avoid a string comparison for every index. It's kinda wasteful once
+> > the first index passes.
+>
+> That's not very obvious and pretty fragile though this is a static
+> function. Perhaps we should split to match() and parse() functions.
 
-On 7/23/19 7:27 AM, Dmitry Osipenko wrote:
-> 23.07.2019 6:43, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> 23.07.2019 6:31, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On 7/22/19 8:25 PM, Dmitry Osipenko wrote:
->>>> 23.07.2019 6:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 7/22/19 8:03 PM, Dmitry Osipenko wrote:
->>>>>> 23.07.2019 4:52, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>> On 7/22/19 6:41 PM, Dmitry Osipenko wrote:
->>>>>>>> 23.07.2019 4:08, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>> 23.07.2019 3:58, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=
-=D1=82:
->>>>>>>>>>> This patch implements PMC wakeup sequence for Tegra210 and defi=
-nes
->>>>>>>>>>> common used RTC alarm wake event.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>>>> ---
->>>>>>>>>>>  =C2=A0=C2=A0 drivers/soc/tegra/pmc.c | 111
->>>>>>>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
->>>>>>>>>>>  =C2=A0=C2=A0 1 file changed, 111 insertions(+)
->>>>>>>>>>>
->>>>>>>>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>>>>>>>>> index 91c84d0e66ae..c556f38874e1 100644
->>>>>>>>>>> --- a/drivers/soc/tegra/pmc.c
->>>>>>>>>>> +++ b/drivers/soc/tegra/pmc.c
->>>>>>>>>>> @@ -57,6 +57,12 @@
->>>>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_CNTRL_SYSCLK_OE=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(11) /* system clock
->>>>>>>>>>> enable */
->>>>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_CNTRL_SYSCLK_POLARITY=C2=A0=C2=
-=A0=C2=A0 BIT(10) /* sys clk
->>>>>>>>>>> polarity */
->>>>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_CNTRL_MAIN_RST=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(4)
->>>>>>>>>>> +#define=C2=A0 PMC_CNTRL_LATCH_WAKEUPS=C2=A0=C2=A0=C2=A0 BIT(5)
->>>>>>>>> Please follow the TRM's bits naming.
->>>>>>>>>
->>>>>>>>> PMC_CNTRL_LATCHWAKE_EN
->>>>>>>>>
->>>>>>>>>>> +#define PMC_WAKE_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0c
->>>>>>>>>>> +#define PMC_WAKE_LEVEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x10
->>>>>>>>>>> +#define PMC_WAKE_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x14
->>>>>>>>>>> +#define PMC_SW_WAKE_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x18
->>>>>>>>>>>  =C2=A0=C2=A0 =C2=A0 #define DPD_SAMPLE=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x020
->>>>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 DPD_SAMPLE_ENABLE=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 BIT(0)
->>>>>>>>>>> @@ -87,6 +93,11 @@
->>>>>>>>>>>  =C2=A0=C2=A0 =C2=A0 #define PMC_SCRATCH41=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x140
->>>>>>>>>>>  =C2=A0=C2=A0 +#define PMC_WAKE2_MASK=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x160
->>>>>>>>>>> +#define PMC_WAKE2_LEVEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x164
->>>>>>>>>>> +#define PMC_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x168
->>>>>>>>>>> +#define PMC_SW_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 0x16c
->>>>>>>>>>> +
->>>>>>>>>>>  =C2=A0=C2=A0 #define PMC_SENSOR_CTRL=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1b0
->>>>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_SENSOR_CTRL_SCRATCH_WRITE=C2=A0=
-=C2=A0=C2=A0 BIT(2)
->>>>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_SENSOR_CTRL_ENABLE_RST=C2=A0=C2=
-=A0=C2=A0 BIT(1)
->>>>>>>>>>> @@ -1922,6 +1933,55 @@ static const struct irq_domain_ops
->>>>>>>>>>> tegra_pmc_irq_domain_ops =3D {
->>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .alloc =3D tegra_pmc_irq_=
-alloc,
->>>>>>>>>>>  =C2=A0=C2=A0 };
->>>>>>>>>>>  =C2=A0=C2=A0 +static int tegra210_pmc_irq_set_wake(struct irq_=
-data *data,
->>>>>>>>>>> unsigned int on)
->>>>>>>>>>> +{
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_pmc *pmc =3D irq_data_get_irq_=
-chip_data(data);
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int offset, bit;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 value;
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (data->hwirq =3D=3D ULONG_MAX)
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 offset =3D data->hwirq / 32;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 bit =3D data->hwirq % 32;
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /*
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Latch wakeups to SW_WAKE_STATUS reg=
-ister to capture events
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * that would not make it into wakeup =
-event register during
->>>>>>>>>>> LP0 exit.
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 value =3D tegra_pmc_readl(pmc, PMC_CNTRL);
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 value |=3D PMC_CNTRL_LATCH_WAKEUPS;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(120);
->>>>>>>>>> Why it takes so much time to latch the values? Shouldn't some
->>>>>>>>>> status-bit
->>>>>>>>>> be polled for the completion of latching?
->>>>>>>>>>
->>>>>>>>>> Is this register-write really getting buffered in the PMC?
->>>>>>>>>>
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 value &=3D ~PMC_CNTRL_LATCH_WAKEUPS;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(120);
->>>>>>>>>> 120 usecs to remove latching, really?
->>>>>>>>>>
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS=
-);
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATU=
-S);
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /* enable PMC wake */
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (data->hwirq >=3D 32)
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 offset =3D PMC_WAKE=
-2_MASK;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 offset =3D PMC_WAKE=
-_MASK;
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 value =3D tegra_pmc_readl(pmc, offset);
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (on)
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value |=3D 1 << bit=
-;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value &=3D ~(1 << b=
-it);
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, value, offset);
->>>>>>>>>> Why the latching is done *before* writing into the WAKE register=
-s?
->>>>>>>>>> What
->>>>>>>>>> it is latching then?
->>>>>>>>> I'm looking at the TRM doc and it says that latching should be do=
-ne
->>>>>>>>> *after* writing to the WAKE_MASK / LEVEL registers.
->>>>>>>>>
->>>>>>>>> Secondly it says that it's enough to do:
->>>>>>>>>
->>>>>>>>> value =3D tegra_pmc_readl(pmc, PMC_CNTRL);
->>>>>>>>> value |=3D PMC_CNTRL_LATCH_WAKEUPS;
->>>>>>>>> tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>>>>>>>
->>>>>>>>> in order to latch. There is no need for the delay and to remove t=
-he
->>>>>>>>> "LATCHWAKE_EN" bit, it should be a oneshot action.
->>>>>>>> Although, no. TRM says "stops latching on transition from 1
->>>>>>>> to 0 (sequence - set to 1,set to 0)", so it's not a oneshot action=
-.
->>>>>>>>
->>>>>>>> Have you tested this code at all? I'm wondering how it happens to
->>>>>>>> work
->>>>>>>> without a proper latching.
->>>>>>> Yes, ofcourse its tested and this sequence to do transition is
->>>>>>> recommendation from Tegra designer.
->>>>>>> Will check if TRM doesn't have update properly or will re-confirm
->>>>>>> internally on delay time...
->>>>>>>
->>>>>>> On any of the wake event PMC wakeup happens and WAKE_STATUS registe=
-r
->>>>>>> will have bits set for all events that triggered wake.
->>>>>>> After wakeup PMC doesn't update SW_WAKE_STATUS register as per PMC
->>>>>>> design.
->>>>>>> SW latch register added in design helps to provide a way to capture
->>>>>>> those events that happen right during wakeup time and didnt make it=
- to
->>>>>>> SW_WAKE_STATUS register.
->>>>>>> So before next suspend entry, latching all prior wake events into S=
-W
->>>>>>> WAKE_STATUS and then clearing them.
->>>>>> I'm now wondering whether the latching cold be turned ON permanently
->>>>>> during of the PMC's probe, for simplicity.
->>>>> latching should be done on suspend-resume cycle as wake events gets
->>>>> generates on every suspend-resume cycle.
->>>> You're saying that PMC "doesn't update SW_WAKE_STATUS" after wake-up,
->>>> then I don't quite understand what's the point of disabling the latchi=
-ng
->>>> at all.
->>> When latch wake enable is set, events are latched and during 1 to 0
->>> transition latching is disabled.
->>>
->>> This is to avoid sw_wake_status and wake_status showing diff events.
->> Okay.
->>
->>> Currently driver is not relying on SW_WAKE_STATUS but its good to latch
->>> and clear so even at some point for some reason when SW_WAKE_STATUS is
->>> used, this wlil not cause mismatch with wake_status.
->> Then the latching need to be enabled on suspend and disabled early on
->> resume to get a proper WAKE status.
-> Actually, it will be better to simply not implement the latching until
-> it will become really needed. In general you shouldn't add into the
-> patchset anything that is unused.
+Yeah, I did think about doing this. That's why I made it a struct for
+supplier_bindings instead of just an array of function pointers. But
+having a parse function just for a strcmp() was creating a lot of code
+noise. So went ahead and did it this way. We can keep it this way and
+if we later see the need for a separate parse function, it should be
+easy to do so (because it's already a struct for each binding).
 
-OK, will remove latch_wake for now.
+> At
+> least put a comment here as to what we're doing.
 
-Will send next version once I get all the review feedback ..
+Done.
+
+> >
+> > > > +               return NULL;
+> > > > +
+> > > > +       if (of_parse_phandle_with_args(np, binding, cell, i, &sup_args))
+> > > > +               return NULL;
+> > > > +
+> > > > +       return sup_args.np;
+> > > > +}
+> > > > +
+> > > > +static struct device_node *parse_clocks(struct device_node *np,
+> > > > +                                       const char *prop, int i)
+> > > > +{
+> > > > +       return parse_prop_cells(np, prop, i, "clocks", "#clock-cells");
+> > > > +}
+> > > > +
+> > > > +static struct device_node *parse_interconnects(struct device_node *np,
+> > > > +                                              const char *prop, int i)
+> > > > +{
+> > > > +       return parse_prop_cells(np, prop, i, "interconnects",
+> > > > +                               "#interconnect-cells");
+> > > > +}
+> > > > +
+> > > > +static int strcmp_suffix(const char *str, const char *suffix)
+> > > > +{
+> > > > +       unsigned int len, suffix_len;
+> > > > +
+> > > > +       len = strlen(str);
+> > > > +       suffix_len = strlen(suffix);
+> > > > +       if (len <= suffix_len)
+> > > > +               return -1;
+> > > > +       return strcmp(str + len - suffix_len, suffix);
+> > > > +}
+> > > > +
+> > > > +static struct device_node *parse_regulators(struct device_node *np,
+> > > > +                                           const char *prop, int i)
+> > > > +{
+> > > > +       if (i || strcmp_suffix(prop, "-supply"))
+> > > > +               return NULL;
+> > > > +
+> > > > +       return of_parse_phandle(np, prop, 0);
+> > > > +}
+> > > > +
+> > > > +/**
+> > > > + * struct supplier_bindings - Information for parsing supplier DT binding
+> > > > + *
+> > > > + * @parse_prop:                If the function cannot parse the property, return NULL.
+> > > > + *                     Otherwise, return the phandle listed in the property
+> > > > + *                     that corresponds to index i.
+> > > > + */
+> > > > +struct supplier_bindings {
+> > > > +       struct device_node *(*parse_prop)(struct device_node *np,
+> > > > +                                         const char *name, int i);
+> > > > +};
+> > > > +
+> > > > +struct supplier_bindings bindings[] = {
+> > >
+> > > static const
+> >
+> > Will do.
+> >
+> > >
+> > > > +       { .parse_prop = parse_clocks, },
+> > > > +       { .parse_prop = parse_interconnects, },
+> > > > +       { .parse_prop = parse_regulators, },
+> > > > +       { },
+> > > > +};
+> > > > +
+> > > > +static bool of_link_property(struct device *dev, struct device_node *con_np,
+> > > > +                            const char *prop)
+> > > > +{
+> > > > +       struct device_node *phandle;
+> > > > +       struct supplier_bindings *s = bindings;
+> > > > +       unsigned int i = 0;
+> > > > +       bool done = true;
+> > > > +
+> > > > +       while (!i && s->parse_prop) {
+> > >
+> > > Using 'i' is a little odd. Perhaps a 'matched' bool would be easier to read.
+> >
+> > That's how I wrote it first (locally) and then redid it this way
+> > because the bool felt very superfluous. I don't think this is that
+> > hard to understand.
+>
+> Alright...
+
+I like the name "matched" over "found" that I had used locally. So, I
+actually went ahead and did this.
+
+-Saravana
+
+> > > > +               while ((phandle = s->parse_prop(con_np, prop, i))) {
+> > > > +                       i++;
+> > > > +                       if (of_link_to_phandle(dev, phandle))
+> > > > +                               done = false;
+> > >
+> > > Just return here. No point in continuing as 'done' is never set back to true.
+> >
+> > Actually, there is a point for this. Say Device-C depends on suppliers
+> > Device-S1 and Device-S2 and they are listed in DT in that order.
+> >
+> > Say, S1 gets populated after late_initcall_sync but S2 is probes way
+> > before that. If I don't continue past a "failed linking" to S1 and
+> > also link up to S2, then S2 will get a sync_state() callback before C
+> > is probed. So I have to go through all possible suppliers and as many
+> > as possible.
+> >
+> > Let me add a comment about this somewhere in the code (probably the
+> > header that defines the add_links() ops).
+>
+> Okay, makes sense.
+>
+> Rob
