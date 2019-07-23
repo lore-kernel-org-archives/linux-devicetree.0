@@ -1,53 +1,72 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v3 5/6] dt-bindings: interconnect: Add
- interconnect-opp-table property
-Date: Tue, 23 Jul 2019 07:51:04 +0530
-Message-ID: <20190723022104.m3zx4w7i6ki5cmgd@vireshk-i7>
-References: <20190703011020.151615-1-saravanak@google.com>
- <20190703011020.151615-6-saravanak@google.com>
- <20190722233927.GA1353@bogus>
+From: Neal Liu <neal.liu@mediatek.com>
+Subject: Re: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek
+ ARMv8 SoCs
+Date: Tue, 23 Jul 2019 10:21:05 +0800
+Message-ID: <1563848465.31451.4.camel@mtkswgap22>
+References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
+         <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
+         <20190722171320.GA9806@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190722233927.GA1353@bogus>
+In-Reply-To: <20190722171320.GA9806@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>, Georgi Djakov <georgi.djakov@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, wsd_upstream <wsd_upstream@mediatek.com>, Sean Wang <sean.wang@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= <Crystal.Guo@mediatek.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Matt Mackall <mpm@selenic.com>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22-07-19, 17:39, Rob Herring wrote:
-> On Tue, Jul 02, 2019 at 06:10:19PM -0700, Saravana Kannan wrote:
-> > Add support for listing bandwidth OPP tables for each interconnect path
-> > listed using the interconnects property.
+Dear Rob,
+	You can check my driver for detail:
+	http://patchwork.kernel.org/patch/11012475/ or patchset 3/3
+
+	This driver is registered as hardware random number generator, and
+combines with rng-core.
+	We want to add one rng hw based on the dts. Is this proper or do you
+have other suggestion to meet this requirement?
+
+	Thanks
+
+
+On Tue, 2019-07-23 at 01:13 +0800, Rob Herring wrote:
+> On Mon, Jun 24, 2019 at 03:24:11PM +0800, Neal Liu wrote:
+> > Document the binding used by the MediaTek ARMv8 SoCs random
+> > number generator with TrustZone enabled.
 > > 
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
 > > ---
-> >  .../devicetree/bindings/interconnect/interconnect.txt     | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
+> >  .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
 > > 
-> > diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > index 6f5d23a605b7..fc5b75b76a2c 100644
-> > --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > @@ -55,10 +55,18 @@ interconnect-names : List of interconnect path name strings sorted in the same
-> >  			 * dma-mem: Path from the device to the main memory of
-> >  			            the system
-> >  
-> > +interconnect-opp-table: List of phandles to OPP tables (bandwidth OPP tables)
-> > +			that specify the OPPs for the interconnect paths listed
-> > +			in the interconnects property. This property can only
-> > +			point to OPP tables that belong to the device and are
-> > +			listed in the device's operating-points-v2 property.
+> > diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > new file mode 100644
+> > index 0000000..c04ce15
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > @@ -0,0 +1,10 @@
+> > +MediaTek random number generator with TrustZone enabled
 > > +
+> > +Required properties:
+> > +- compatible : Should be "mediatek,mtk-sec-rng"
 > 
-> IMO, there's no need for this property. Which OPP is which should be 
-> defined already as part of the device's binding. That's enough for the 
-> driver to know which OPP applies to the interconnect.
-
-And if there is confusion we can actually use the compatible property
-to have another string which highlights that it is an interconnect OPP
-?
-
--- 
-viresh
+> What's the interface to access this? 
+> 
+> A node with a 'compatible' and nothing else is a sign of something that 
+> a parent device should instantiate and doesn't need to be in DT. IOW, 
+> what do complete bindings for firmware functions look like?
+> 
+> > +
+> > +Example:
+> > +
+> > +hwrng: hwrng {
+> > +	compatible = "mediatek,mtk-sec-rng";
+> > +}
+> > -- 
+> > 1.7.9.5
+> > 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
