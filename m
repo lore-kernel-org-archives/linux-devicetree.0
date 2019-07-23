@@ -1,23 +1,39 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [v2 3/3] dts: arm64: ls1028a: Add optional property node for
- Mali DP500
-Date: Tue, 23 Jul 2019 16:12:39 +0800
-Message-ID: <20190723081238.GQ15632@dragon>
-References: <20190719095956.11774-1-wen.he_1@nxp.com>
+Subject: Re: [PATCH arm64/dts 0/2] arm64: dts: imx8qxp: add lpuart ports
+Date: Tue, 23 Jul 2019 16:21:34 +0800
+Message-ID: <20190723082133.GR15632@dragon>
+References: <20190722082824.15022-1-fugang.duan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190719095956.11774-1-wen.he_1@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wen He <wen.he_1@nxp.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, liviu.dudau@arm.com, robh+dt@kernel.org, leoyang.li@nxp.com
+In-Reply-To: <20190722082824.15022-1-fugang.duan@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: fugang.duan@nxp.com
+Cc: devicetree@vger.kernel.org, daniel.baluta@gmail.com, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 05:59:56PM +0800, Wen He wrote:
-> This patch use the optional property node "arm,malidp-arqos-value" to
-> can be dynamic configure QoS signaling.
+On Mon, Jul 22, 2019 at 04:28:22PM +0800, fugang.duan@nxp.com wrote:
+> From: Fugang Duan <fugang.duan@nxp.com>
 > 
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> Add lpuart baud clock and add serial alias for imx8qxp lpuart ports,
+> to let lpuart work on imx8qxp platform.
+> 
+> V2:
+> - separate v1 patch to two patches, one is to add baud clock,
+>   the other is to add serial alias property.
+> 
+> Fugang Duan (2):
+>   arm64: dts: imx8qxp: add lpuart baud clock
+>   arm64: dts: imx8qxp: add serial alias
 
-Applied, thanks.
+Applied both, thanks.
