@@ -1,72 +1,44 @@
-From: Neal Liu <neal.liu@mediatek.com>
-Subject: Re: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek
- ARMv8 SoCs
-Date: Tue, 23 Jul 2019 10:21:05 +0800
-Message-ID: <1563848465.31451.4.camel@mtkswgap22>
-References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
-         <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
-         <20190722171320.GA9806@bogus>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V5 3/5] arm64: dts: imx8mm: Add system counter node
+Date: Tue, 23 Jul 2019 02:29:13 +0000
+Message-ID: <DB3PR0402MB3916841134BBE0C98C05ABE8F5C70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190710063056.35689-1-Anson.Huang@nxp.com>
+ <20190710063056.35689-3-Anson.Huang@nxp.com> <20190722031517.GT3738@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722171320.GA9806@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, wsd_upstream <wsd_upstream@mediatek.com>, Sean Wang <sean.wang@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= <Crystal.Guo@mediatek.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Matt Mackall <mpm@selenic.com>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190722031517.GT3738@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Jacky Bai <ping.bai@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "angus@akkea.ca" <angus@akkea.ca>, Leonard Crestez <leonard.crestez@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "will@kernel.org" <will@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Daniel Baluta <daniel.baluta@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Aisheng Dong <aisheng.dong@nxp.com>"linux-kernel@vger.kernel.org" <linux->
 List-Id: devicetree@vger.kernel.org
 
-Dear Rob,
-	You can check my driver for detail:
-	http://patchwork.kernel.org/patch/11012475/ or patchset 3/3
+Hi, Shawn
 
-	This driver is registered as hardware random number generator, and
-combines with rng-core.
-	We want to add one rng hw based on the dts. Is this proper or do you
-have other suggestion to meet this requirement?
+> On Wed, Jul 10, 2019 at 02:30:54PM +0800, Anson.Huang@nxp.com wrote:
+> > From: Anson Huang <Anson.Huang@nxp.com>
+> >
+> > Add i.MX8MM system counter node to enable timer-imx-sysctr broadcast
+> > timer driver.
+> >
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> 
+> Do I need to wait for patch #1 landing before I apply #3 ~ #5, or can they be
+> applied independently (no breaking on anything)?
 
-	Thanks
+Without #1, system can bootup, but the system counter's freq will be incorrect,
+although it does NOT impact normal function. So I think it is better to wait for
+#1 landing. @daniel.lezcano@linaro.org, can you help review the #1 patch, since
+I use a different way to fix the clock issue which is more simple.
 
-
-On Tue, 2019-07-23 at 01:13 +0800, Rob Herring wrote:
-> On Mon, Jun 24, 2019 at 03:24:11PM +0800, Neal Liu wrote:
-> > Document the binding used by the MediaTek ARMv8 SoCs random
-> > number generator with TrustZone enabled.
-> > 
-> > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > new file mode 100644
-> > index 0000000..c04ce15
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > @@ -0,0 +1,10 @@
-> > +MediaTek random number generator with TrustZone enabled
-> > +
-> > +Required properties:
-> > +- compatible : Should be "mediatek,mtk-sec-rng"
-> 
-> What's the interface to access this? 
-> 
-> A node with a 'compatible' and nothing else is a sign of something that 
-> a parent device should instantiate and doesn't need to be in DT. IOW, 
-> what do complete bindings for firmware functions look like?
-> 
-> > +
-> > +Example:
-> > +
-> > +hwrng: hwrng {
-> > +	compatible = "mediatek,mtk-sec-rng";
-> > +}
-> > -- 
-> > 1.7.9.5
-> > 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Anson
