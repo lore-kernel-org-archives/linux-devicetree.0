@@ -1,32 +1,86 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH] ARM: dts: da850-evm: Use generic jedec, spi-nor for flash
-Date: Tue, 23 Jul 2019 07:10:42 -0500
-Message-ID: <20190723121042.28634-1-aford173@gmail.com>
+From: =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>
+Subject: [RFC PATCH 00/11] Simple QoS for exynos-bus driver using
+ interconnect
+Date: Tue, 23 Jul 2019 14:20:05 +0200
+Message-ID: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+References: <CGME20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5@eucas1p2.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>, Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: krzk@kernel.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, georgi.djakov@linaro.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Logic PD re-spun the L138 and AM1808 SOM's with larger flash.
-The m25p80 driver has a generic 'jedec,spi-nor' compatible option
-which is requests to use whenever possible since it will read the
-JEDEC READ ID opcode.
+The following patchset adds interconnect[1][2] framework support to the
+exynos-bus devfreq driver. Extending the devfreq driver with interconnect
+capabilities started as a response to the issue referenced in [3]. The
+patches can be subdivided into four logical groups:
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+(a) Refactoring the existing devfreq driver in order to improve readability
+and accommodate for adding new code (patches 01--04/11).
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 5b2b1ed04d51..f2e7609e5346 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -281,7 +281,7 @@
- 	flash: m25p80@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--		compatible = "m25p64";
-+		compatible = "jedec,spi-nor";
- 		spi-max-frequency = <30000000>;
- 		m25p,fast-read;
- 		reg = <0>;
+(b) Tweaking the interconnect framework to support the exynos-bus use case
+(patches 05--07/11). Exporting of_icc_get_from_provider() allows us to
+avoid hardcoding every single graph edge in the DT or driver source, and
+relaxing the requirement contained in that function removes the need to
+provide dummy node IDs in the DT. Adjusting the logic in
+apply_constraints() (drivers/interconnect/core.c) accounts for the fact
+that every bus is a separate entity and therefore a separate interconnect
+provider, albeit constituting a part of a larger hierarchy.
+
+(c) Implementing interconnect providers in the exynos-bus devfreq driver
+and adding required DT properties for one selected platform, namely
+Exynos4412 (patches 08--09/11). Due to the fact that this aims to be a
+generic driver for various Exynos SoCs, node IDs are generated dynamically
+rather than hardcoded. This has been determined to be a simpler approach,
+but depends on changes described in (b).
+
+(d) Implementing a sample interconnect consumer for exynos-mixer targeted
+at the issue referenced in [3], again with DT info only for Exynos4412
+(patches 10--11/11).
+
+Integration of devfreq and interconnect functionalities comes down to one
+extra line in the devfreq target() callback, which selects either the
+frequency calculated by the devfreq governor, or the one requested with the
+interconnect API, whichever is higher. All new code works equally well when
+CONFIG_INTERCONNECT is 'n' (as in exynos_defconfig) in which case all
+interconnect API functions are no-ops.
+
+---
+Artur Świgoń
+Samsung R&D Institute Poland
+Samsung Electronics
+
+---
+References:
+[1] Documentation/interconnect/interconnect.rst
+[2] Documentation/devicetree/bindings/interconnect/interconnect.txt
+[3] https://patchwork.kernel.org/patch/10861757
+
+Artur Świgoń (10):
+  devfreq: exynos-bus: Extract exynos_bus_profile_init()
+  devfreq: exynos-bus: Extract exynos_bus_profile_init_passive()
+  devfreq: exynos-bus: Change goto-based logic to if-else logic
+  devfreq: exynos-bus: Clean up code
+  icc: Export of_icc_get_from_provider()
+  icc: Relax requirement in of_icc_get_from_provider()
+  icc: Relax condition in apply_constraints()
+  arm: dts: exynos: Add parents and #interconnect-cells to Exynos4412
+  devfreq: exynos-bus: Add interconnect functionality to exynos-bus
+  arm: dts: exynos: Add interconnects to Exynos4412 mixer
+
+Marek Szyprowski (1):
+  drm: exynos: mixer: Add interconnect support
+
+ .../boot/dts/exynos4412-odroid-common.dtsi    |   1 +
+ arch/arm/boot/dts/exynos4412.dtsi             |  10 +
+ drivers/devfreq/exynos-bus.c                  | 296 ++++++++++++++----
+ drivers/gpu/drm/exynos/exynos_mixer.c         |  68 +++-
+ drivers/interconnect/core.c                   |  12 +-
+ include/linux/interconnect-provider.h         |   6 +
+ 6 files changed, 314 insertions(+), 79 deletions(-)
+
 -- 
 2.17.1
