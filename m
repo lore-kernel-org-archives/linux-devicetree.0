@@ -1,54 +1,90 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] hwmon: Remove ads1015 driver
-Date: Mon, 22 Jul 2019 17:07:22 -0700
-Message-ID: <20190723000722.GB31309@roeck-us.net>
-References: <1562004758-13025-1-git-send-email-linux@roeck-us.net>
- <20190722223944.GA9166@bogus>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH 1/2] ARM: dts: aspeed: tiogapass: Add VR devices
+Date: Tue, 23 Jul 2019 09:41:20 +0930
+Message-ID: <802c5419-08ec-4a0e-8a50-ad4a1bbf7f3a@www.fastmail.com>
+References: <20190722192451.1947348-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190722223944.GA9166@bogus>
+In-Reply-To: <20190722192451.1947348-1-vijaykhemka@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Dirk Eibach <eibach@gdsys.de>
+To: Vijay Khemka <vijaykhemka@fb.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, Sai Dasari <sdasari@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 04:39:44PM -0600, Rob Herring wrote:
-> On Mon, Jul 01, 2019 at 11:12:38AM -0700, Guenter Roeck wrote:
-> > A driver for ADS1015 with more functionality is available in the iio
-> > subsystem.
-> > 
-> > Remove the hwmon driver as duplicate. If the chip is used for hardware
-> > monitoring, the iio->hwmon bridge should be used.
-> > 
-> > Cc: Dirk Eibach <eibach@gdsys.de>
-> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> > ---
-> > Current plan is to queue this removal for v5.4 (not v5.3) in the hwmon
-> > tree.
-> > 
-> >  .../devicetree/bindings/hwmon/ads1015.txt          |  73 -----
-> >  .../devicetree/bindings/iio/adc/ads1015.txt        |  73 +++++
-> 
-> I assume no change or I should review it again?
-> 
-It is identical.
+Hi Vijay,
 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-Thanks,
-Guenter
+A few nitpicks.
 
-> >  Documentation/hwmon/ads1015.rst                    |  90 ------
-> >  Documentation/hwmon/index.rst                      |   1 -
-> >  MAINTAINERS                                        |   8 -
-> >  drivers/hwmon/Kconfig                              |  10 -
-> >  drivers/hwmon/Makefile                             |   1 -
-> >  drivers/hwmon/ads1015.c                            | 324 ---------------------
-> >  drivers/iio/adc/Kconfig                            |   2 +-
-> >  9 files changed, 74 insertions(+), 508 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/hwmon/ads1015.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/ads1015.txt
-> >  delete mode 100644 Documentation/hwmon/ads1015.rst
-> >  delete mode 100644 drivers/hwmon/ads1015.c
+On Tue, 23 Jul 2019, at 05:10, Vijay Khemka wrote:
+> Addes
+
+Typo: Adds
+
+> Voltage
+
+Unnecessary capitalisation.
+
+> regulators Infineon pxe1610 devices to Facebook
+> tiogapass platform.
+> 
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> ---
+>  .../dts/aspeed-bmc-facebook-tiogapass.dts     | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts 
+> b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> index c4521eda787c..b7783833a58c 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> @@ -144,6 +144,42 @@
+>  &i2c5 {
+>  	status = "okay";
+>  	// CPU Voltage regulators
+> +	vr@48 {
+
+The recommended generic name is 'regulator', so e.g. regulator@48
+
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x48>;
+> +	};
+> +	vr@4a {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x4a>;
+> +	};
+> +	vr@50 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x50>;
+> +	};
+> +	vr@52 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x52>;
+> +	};
+> +	vr@58 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x58>;
+> +	};
+> +	vr@5a {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x5a>;
+> +	};
+> +	vr@68 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x68>;
+> +	};
+> +	vr@70 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x70>;
+> +	};
+> +	vr@72 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x72>;
+> +	};
+>  };
+>  
+>  &i2c6 {
+> -- 
+> 2.17.1
+> 
+>
