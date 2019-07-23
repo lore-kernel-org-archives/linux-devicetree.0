@@ -1,45 +1,35 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 11/13] arm64: dts: qcom: qcs404: Add CPR and populate OPP
- table
-Date: Tue, 23 Jul 2019 07:26:35 +0530
-Message-ID: <20190723015635.rl5a2isjnjn23fzh@vireshk-i7>
-References: <20190705095726.21433-1-niklas.cassel@linaro.org>
- <20190705095726.21433-12-niklas.cassel@linaro.org>
- <20190710090303.tb5ue3wq6r7ofyev@vireshk-i7>
- <20190715132405.GA5040@centauri>
- <20190716103436.az5rdk6f3yoa3apz@vireshk-i7>
- <20190716105318.GA26592@centauri>
- <20190717044923.ccmebeewbinlslkm@vireshk-i7>
- <20190719154558.GA32518@centauri>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 0/5] Add support for WD MyCloud EX2 Ultra (+ versatile
+ UART-based restart/poweroff drivers)
+Date: Tue, 23 Jul 2019 03:56:31 +0200
+Message-ID: <20190723015631.GI8972@lunn.ch>
+References: <cover.1563822216.git.evgenyz@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190719154558.GA32518@centauri>
+In-Reply-To: <cover.1563822216.git.evgenyz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Evgeny Kolesnikov <evgenyz@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, linux-pm@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19-07-19, 17:45, Niklas Cassel wrote:
-> Hello Viresh,
+On Mon, Jul 22, 2019 at 09:53:00PM +0200, Evgeny Kolesnikov wrote:
+> This patchset consists of the DTS, which describes the WD MyCloud EX2 Ultra device,
+> 'poweroff' and 'resert' drivers for power-managing MCUs connected to a board via UART
+> (these drivers are more versatile than qnap-poweroff and could be used as a substitude),
+> and DT bindings for these drivers.
 > 
-> Could you please have a look at the last two patches here:
-> https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-opp-hz
+> The difference between uart-poweroff and qnap-poweroff is small, but important:
+> uart-poweroff is able to send to an MCU a command of arbitrary length, and the command
+> itself is defined in a DTS file for a specific device/board, thus making this driver
+> applicable to wider range of devices.
 
-There is no sane way of providing review comments with a link to the
-git tree :)
+Hi Evgeny
 
-I still had a look and I see that you don't search for max frequency
-but just any OPP that has required-opps set to the level u want. Also,
-can't there be multiple phandles in required-opps in your case ?
+There is a lot of replicated code here, and in the original
+qnap-poweroff.c driver. Please consolidate it by extending the current
+driver. It should be easy to add a new compatible string, and turn
+power_off_cfg.cmd into an array.
 
-> If you like my proposal then I could send out the first patch (the one to
-> OPP core) as a real patch (with an improved commit message), and
-> incorporate the second patch into my CPR patch series when I send out a V2.
-
-Send them both in your series only, otherwise the first one is useless
-anyway.
-
--- 
-viresh
+	  Andrew
