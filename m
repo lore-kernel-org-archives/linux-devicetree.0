@@ -1,44 +1,135 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V5 3/5] arm64: dts: imx8mm: Add system counter node
-Date: Tue, 23 Jul 2019 02:29:13 +0000
-Message-ID: <DB3PR0402MB3916841134BBE0C98C05ABE8F5C70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190710063056.35689-1-Anson.Huang@nxp.com>
- <20190710063056.35689-3-Anson.Huang@nxp.com> <20190722031517.GT3738@dragon>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v2 00/12] Clean up "mediatek,larb" after adding
+ device_link
+Date: Tue, 23 Jul 2019 10:31:49 +0800
+Message-ID: <1563849109.27558.14.camel@mtksdaap41>
+References: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190722031517.GT3738@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Jacky Bai <ping.bai@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "angus@akkea.ca" <angus@akkea.ca>, Leonard Crestez <leonard.crestez@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "will@kernel.org" <will@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Daniel Baluta <daniel.baluta@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Aisheng Dong <aisheng.dong@nxp.com>"linux-kernel@vger.kernel.org" <linux->
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Wu <yong.wu@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, youlin.pei@mediatek.com, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, srv_heupstream@mediatek.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, iommu@lists.linux-foundation.org, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, anan.sun@mediatek.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Shawn
+Hi, Yong:
 
-> On Wed, Jul 10, 2019 at 02:30:54PM +0800, Anson.Huang@nxp.com wrote:
-> > From: Anson Huang <Anson.Huang@nxp.com>
-> >
-> > Add i.MX8MM system counter node to enable timer-imx-sysctr broadcast
-> > timer driver.
-> >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+I've added log  in mtk_smi_clk_enable() and mtk_smi_clk_disable(), and I
+boot MT8183 with display, the log is
+
+[    4.020340] mtk-smi-common 14019000.smi: mtk_smi_clk_enable()
+[    4.331371] mtk-smi-common 14019000.smi: mtk_smi_clk_disable()
+[    4.429578] mtk-smi-common 14019000.smi: mtk_smi_clk_enable()
+[    4.719743] mtk-smi-common 14019000.smi: mtk_smi_clk_disable()
+[    5.084770] mtk-smi-common 14019000.smi: mtk_smi_clk_enable()
+[    5.904310] mtk-smi-common 14019000.smi: mtk_smi_clk_disable()
+
+>From the log, the clock is finally turned off, but the display works
+normally. This is because scpsys has turn the clock on,
+
+		scpsys: syscon@10006000 {
+			compatible = "mediatek,mt8183-scpsys", "syscon";
+			#power-domain-cells = <1>;
+			reg = <0 0x10006000 0 0x1000>;
+			clocks = <&topckgen CLK_TOP_MUX_AUD_INTBUS>,
+				 <&mmsys CLK_MM_SMI_COMMON>,
+				 <&mmsys CLK_MM_GALS_COMM0>,
+				 <&mmsys CLK_MM_GALS_COMM1>,
+			clock-names = "audio","mm-0",
+				      "mm-1", "mm-2";
+		}
+
+I'm worried that for MT8173, scpsys would not turn on subsys clock, this
+series would let display work abnormally, so I think smi common should
+not depend on scpsys to turn on the clock.
+
+You could simply remove the clock parameter in scpsys device node, and
+you would see the display works abnormally.
+
+Regards,
+CK
+
+
+On Mon, 2019-06-10 at 20:55 +0800, Yong Wu wrote:
+> MediaTek IOMMU block diagram always like below:
 > 
-> Do I need to wait for patch #1 landing before I apply #3 ~ #5, or can they be
-> applied independently (no breaking on anything)?
-
-Without #1, system can bootup, but the system counter's freq will be incorrect,
-although it does NOT impact normal function. So I think it is better to wait for
-#1 landing. @daniel.lezcano@linaro.org, can you help review the #1 patch, since
-I use a different way to fix the clock issue which is more simple.
-
-Anson
+>         M4U
+>          |
+>     smi-common
+>          |
+>   -------------
+>   |         |  ...
+>   |         |
+> larb1     larb2
+>   |         |
+> vdec       venc
+> 
+> All the consumer connect with smi-larb, then connect with smi-common.
+> 
+> MediaTek IOMMU don't have its power-domain. When the consumer works,
+> it should enable the smi-larb's power which also need enable the smi-common's
+> power firstly.
+> 
+> Thus, Firstly, use the device link connect the consumer and the
+> smi-larbs. then add device link between the smi-larb and smi-common.
+> 
+> After adding the device_link, then "mediatek,larb" property can be removed.
+> the iommu consumer don't need call the mtk_smi_larb_get/put to enable
+> the power and clock of smi-larb and smi-common.
+> 
+> This patchset depends on "MT8183 IOMMU SUPPORT"[1].
+> 
+> [1] https://lists.linuxfoundation.org/pipermail/iommu/2019-June/036552.html
+> 
+> Change notes:
+> v2:
+>    1) rebase on v5.2-rc1.
+>    2) Move adding device_link between the consumer and smi-larb into
+> iommu_add_device from Robin.
+>    3) add DL_FLAG_AUTOREMOVE_CONSUMER even though the smi is built-in from Evan.
+>    4) Remove the shutdown callback in iommu.   
+> 
+> v1: https://lists.linuxfoundation.org/pipermail/iommu/2019-January/032387.html
+> 
+> Yong Wu (12):
+>   dt-binding: mediatek: Get rid of mediatek,larb for multimedia HW
+>   iommu/mediatek: Add probe_defer for smi-larb
+>   iommu/mediatek: Add device_link between the consumer and the larb
+>     devices
+>   memory: mtk-smi: Add device-link between smi-larb and smi-common
+>   media: mtk-jpeg: Get rid of mtk_smi_larb_get/put
+>   media: mtk-mdp: Get rid of mtk_smi_larb_get/put
+>   media: mtk-vcodec: Get rid of mtk_smi_larb_get/put
+>   drm/mediatek: Get rid of mtk_smi_larb_get/put
+>   memory: mtk-smi: Get rid of mtk_smi_larb_get/put
+>   iommu/mediatek: Use builtin_platform_driver
+>   arm: dts: mediatek: Get rid of mediatek,larb for MM nodes
+>   arm64: dts: mediatek: Get rid of mediatek,larb for MM nodes
+> 
+>  .../bindings/display/mediatek/mediatek,disp.txt    |  9 -----
+>  .../bindings/media/mediatek-jpeg-decoder.txt       |  4 --
+>  .../devicetree/bindings/media/mediatek-mdp.txt     |  8 ----
+>  .../devicetree/bindings/media/mediatek-vcodec.txt  |  4 --
+>  arch/arm/boot/dts/mt2701.dtsi                      |  1 -
+>  arch/arm/boot/dts/mt7623.dtsi                      |  1 -
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           | 15 -------
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c            | 11 -----
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        | 26 ------------
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  1 -
+>  drivers/iommu/mtk_iommu.c                          | 45 +++++++--------------
+>  drivers/iommu/mtk_iommu_v1.c                       | 39 +++++++-----------
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c    | 22 ----------
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h    |  2 -
+>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c      | 38 -----------------
+>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h      |  2 -
+>  drivers/media/platform/mtk-mdp/mtk_mdp_core.c      |  1 -
+>  .../media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c  | 21 ----------
+>  drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h |  3 --
+>  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c |  1 -
+>  .../media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c  | 47 ----------------------
+>  drivers/memory/mtk-smi.c                           | 31 ++++----------
+>  include/soc/mediatek/smi.h                         | 20 ---------
+>  23 files changed, 36 insertions(+), 316 deletions(-)
+> 
