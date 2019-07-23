@@ -1,130 +1,300 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 5/5] dt-bindings: dsp: fsl: Add DSP core binding support
-Date: Tue, 23 Jul 2019 16:32:16 -0600
-Message-ID: <CAL_JsqJ0A8MikmZb0KZd5r72J2o73GJ_E0o4CzW_=OVu2OcPKA@mail.gmail.com>
-References: <20190723084104.12639-1-daniel.baluta@nxp.com> <20190723084104.12639-6-daniel.baluta@nxp.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH 2/2] ARM: dts: aspeed: tiogapass: Add Riser card
+Date: Tue, 23 Jul 2019 22:33:24 +0000
+Message-ID: <CACPK8Xc+1ZLoCQoERBjr7OQh3V0rV1g+mq+bPiJzCCzJix_13A@mail.gmail.com>
+References: <20190722192451.1947348-1-vijaykhemka@fb.com> <20190722192451.1947348-3-vijaykhemka@fb.com>
+ <C9C6AC86-B353-4CDA-8B63-50587F48DF44@fb.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190723084104.12639-6-daniel.baluta@nxp.com>
+In-Reply-To: <C9C6AC86-B353-4CDA-8B63-50587F48DF44@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: Marco Felsch <m.felsch@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dong Aisheng <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, paul.olaru@nxp.com, Sascha Hauer <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Fabio Estevam <festevam@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, sound-open-firmware@alsa-project.org
+To: Vijay Khemka <vijaykhemka@fb.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, Sai Dasari <sdasari@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 2:41 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
+On Tue, 23 Jul 2019 at 17:22, Vijay Khemka <vijaykhemka@fb.com> wrote:
 >
-> This describes the DSP device tree node.
+> Team,
+> This patch also needs review. I separated first patch with v2 and that wa=
+s acked. Please review this as well.
+
+Do you have a coworker who has access to the schematics and can review
+the device tree? They would make a great reviewer.
+
+If no reviewer steps forward I will merge it next time I'm merging patches.
+
+Cheers,
+
+Joel
+
 >
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  .../devicetree/bindings/dsp/fsl,dsp.yaml      | 87 +++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+> Regards
+> -Vijay
 >
-> diff --git a/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-> new file mode 100644
-> index 000000000000..d112486eda0e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-> @@ -0,0 +1,87 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/freescale/fsl,dsp.yaml#
-
-This needs updating to match the path.
-
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP i.MX8 DSP core
-> +
-> +maintainers:
-> +  - Daniel Baluta <daniel.baluta@nxp.com>
-> +
-> +description: |
-> +  Some boards from i.MX8 family contain a DSP core used for
-> +  advanced pre- and post- audio processing.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,imx8qxp-dsp
-> +
-> +  reg:
-> +    description: Should contain register location and length
-> +
-> +  clocks:
-> +    items:
-> +      - description: ipg clock
-> +      - description: ocram clock
-> +      - description: core clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ipg
-> +      - const: ocram
-> +      - const: core
-> +
-> +  power-domains:
-> +    description:
-> +      List of phandle and PM domain specifier as documented in
-> +      Documentation/devicetree/bindings/power/power_domain.txt
-> +    maxItems: 4
-
-Need a blank line here.
-
-With those 2 fixes:
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +  mboxes:
-> +    description:
-> +      List of <&phandle type channel> - 2 channels for TXDB, 2 channels for RXDB
-> +      (see mailbox/fsl,mu.txt)
-> +    maxItems: 4
-> +
-> +  mbox-names:
-> +    items:
-> +      - const: txdb0
-> +      - const: txdb1
-> +      - const: rxdb0
-> +      - const: rxdb1
-> +
-> +  memory-region:
-> +    description:
-> +       phandle to a node describing reserved memory (System RAM memory)
-> +       used by DSP (see bindings/reserved-memory/reserved-memory.txt)
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - power-domains
-> +  - mboxes
-> +  - mbox-names
-> +  - memory-region
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/firmware/imx/rsrc.h>
-> +    #include <dt-bindings/clock/imx8-clock.h>
-> +    dsp@596e8000 {
-> +        compatbile = "fsl,imx8qxp-dsp";
-> +        reg = <0x596e8000 0x88000>;
-> +        clocks = <&adma_lpcg IMX_ADMA_LPCG_DSP_IPG_CLK>,
-> +                 <&adma_lpcg IMX_ADMA_LPCG_OCRAM_IPG_CLK>,
-> +                 <&adma_lpcg IMX_ADMA_LPCG_DSP_CORE_CLK>;
-> +        clock-names = "ipg", "ocram", "core";
-> +        power-domains = <&pd IMX_SC_R_MU_13A>,
-> +                        <&pd IMX_SC_R_MU_13B>,
-> +                        <&pd IMX_SC_R_DSP>,
-> +                        <&pd IMX_SC_R_DSP_RAM>;
-> +        mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
-> +        mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
-> +    };
-> --
-> 2.17.1
+> =EF=BB=BFOn 7/22/19, 12:41 PM, "Vijay Khemka" <vijaykhemka@fb.com> wrote:
+>
+>     Added i2c mux for riser card and multiple ava card and its sensor
+>     components for Facebook Tiogapass platform
+>
+>     Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+>     ---
+>      .../dts/aspeed-bmc-facebook-tiogapass.dts     | 230 ++++++++++++++++=
+++
+>      1 file changed, 230 insertions(+)
+>
+>     diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/ar=
+ch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+>     index b7783833a58c..8d0bcb3cd419 100644
+>     --- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+>     +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+>     @@ -12,6 +12,27 @@
+>         aliases {
+>                 serial0 =3D &uart1;
+>                 serial4 =3D &uart5;
+>     +
+>     +           /*
+>     +            * Hardcode the bus number of i2c switches' channels to
+>     +            * avoid breaking the legacy applications.
+>     +            */
+>     +           i2c16 =3D &imux16;
+>     +           i2c17 =3D &imux17;
+>     +           i2c18 =3D &imux18;
+>     +           i2c19 =3D &imux19;
+>     +           i2c20 =3D &imux20;
+>     +           i2c21 =3D &imux21;
+>     +           i2c22 =3D &imux22;
+>     +           i2c23 =3D &imux23;
+>     +           i2c24 =3D &imux24;
+>     +           i2c25 =3D &imux25;
+>     +           i2c26 =3D &imux26;
+>     +           i2c27 =3D &imux27;
+>     +           i2c28 =3D &imux28;
+>     +           i2c29 =3D &imux29;
+>     +           i2c30 =3D &imux30;
+>     +           i2c31 =3D &imux31;
+>         };
+>         chosen {
+>                 stdout-path =3D &uart5;
+>     @@ -124,6 +145,215 @@
+>      &i2c1 {
+>         status =3D "okay";
+>         //X24 Riser
+>     +   i2c-switch@71 {
+>     +           compatible =3D "nxp,pca9544";
+>     +           #address-cells =3D <1>;
+>     +           #size-cells =3D <0>;
+>     +           reg =3D <0x71>;
+>     +
+>     +           imux16: i2c@0 {
+>     +                   #address-cells =3D <1>;
+>     +                   #size-cells =3D <0>;
+>     +                   reg =3D <0>;
+>     +
+>     +                   ina219@45 {
+>     +                           compatible =3D "ti,ina219";
+>     +                           reg =3D <0x45>;
+>     +                   };
+>     +
+>     +                   tmp75@48 {
+>     +                           compatible =3D "ti,tmp75";
+>     +                           reg =3D <0x48>;
+>     +                   };
+>     +
+>     +                   tmp421@49 {
+>     +                           compatible =3D "ti,tmp75";
+>     +                           reg =3D <0x49>;
+>     +                   };
+>     +
+>     +                   eeprom@50 {
+>     +                           compatible =3D "atmel,24c64";
+>     +                           reg =3D <0x50>;
+>     +                           pagesize =3D <32>;
+>     +                   };
+>     +
+>     +                   i2c-switch@73 {
+>     +                           compatible =3D "nxp,pca9546";
+>     +                           #address-cells =3D <1>;
+>     +                           #size-cells =3D <0>;
+>     +                           reg =3D <0x73>;
+>     +
+>     +                           imux20: i2c@0 {
+>     +                                   #address-cells =3D <1>;
+>     +                                   #size-cells =3D <0>;
+>     +                                   reg =3D <0>;
+>     +                           };
+>     +
+>     +                           imux21: i2c@1 {
+>     +                                   #address-cells =3D <1>;
+>     +                                   #size-cells =3D <0>;
+>     +                                   reg =3D <1>;
+>     +                           };
+>     +
+>     +                           imux22: i2c@2 {
+>     +                                   #address-cells =3D <1>;
+>     +                                   #size-cells =3D <0>;
+>     +                                   reg =3D <2>;
+>     +                           };
+>     +
+>     +                           imux23: i2c@3 {
+>     +                                   #address-cells =3D <1>;
+>     +                                   #size-cells =3D <0>;
+>     +                                   reg =3D <3>;
+>     +                           };
+>     +
+>     +                   };
+>     +
+>     +           };
+>     +
+>     +           imux17: i2c@1 {
+>     +                   #address-cells =3D <1>;
+>     +                   #size-cells =3D <0>;
+>     +                   reg =3D <1>;
+>     +
+>     +                   ina219@45 {
+>     +                           compatible =3D "ti,ina219";
+>     +                           reg =3D <0x45>;
+>     +                   };
+>     +
+>     +                   tmp421@48 {
+>     +                           compatible =3D "ti,tmp75";
+>     +                           reg =3D <0x48>;
+>     +                   };
+>     +
+>     +                   tmp421@49 {
+>     +                           compatible =3D "ti,tmp75";
+>     +                           reg =3D <0x49>;
+>     +                   };
+>     +
+>     +                   eeprom@50 {
+>     +                           compatible =3D "atmel,24c64";
+>     +                           reg =3D <0x50>;
+>     +                           pagesize =3D <32>;
+>     +                   };
+>     +
+>     +                   i2c-switch@73 {
+>     +                           compatible =3D "nxp,pca9546";
+>     +                           #address-cells =3D <1>;
+>     +                           #size-cells =3D <0>;
+>     +                           reg =3D <0x73>;
+>     +
+>     +                           imux24: i2c@0 {
+>     +                                   #address-cells =3D <1>;
+>     +                                   #size-cells =3D <0>;
+>     +                                   reg =3D <0>;
+>     +                           };
+>     +
+>     +                           imux25: i2c@1 {
+>     +                                   #address-cells =3D <1>;
+>     +                                   #size-cells =3D <0>;
+>     +                                   reg =3D <1>;
+>     +                           };
+>     +
+>     +                           imux26: i2c@2 {
+>     +                                   #address-cells =3D <1>;
+>     +                                   #size-cells =3D <0>;
+>     +                                   reg =3D <2>;
+>     +                           };
+>     +
+>     +                           imux27: i2c@3 {
+>     +                                   #address-cells =3D <1>;
+>     +                                   #size-cells =3D <0>;
+>     +                                   reg =3D <3>;
+>     +                           };
+>     +
+>     +                   };
+>     +
+>     +           };
+>     +
+>     +           imux18: i2c@2 {
+>     +                   #address-cells =3D <1>;
+>     +                   #size-cells =3D <0>;
+>     +                   reg =3D <2>;
+>     +
+>     +                   ina219@45 {
+>     +                           compatible =3D "ti,ina219";
+>     +                           reg =3D <0x45>;
+>     +                   };
+>     +
+>     +                   tmp421@48 {
+>     +                           compatible =3D "ti,tmp75";
+>     +                           reg =3D <0x48>;
+>     +                   };
+>     +
+>     +                   tmp421@49 {
+>     +                           compatible =3D "ti,tmp75";
+>     +                           reg =3D <0x49>;
+>     +                   };
+>     +
+>     +                   eeprom@50 {
+>     +                           compatible =3D "atmel,24c64";
+>     +                           reg =3D <0x50>;
+>     +                           pagesize =3D <32>;
+>     +                   };
+>     +
+>     +                   i2c-switch@73 {
+>     +                           compatible =3D "nxp,pca9546";
+>     +                           #address-cells =3D <1>;
+>     +                           #size-cells =3D <0>;
+>     +                           reg =3D <0x73>;
+>     +
+>     +                           imux28: i2c@0 {
+>     +                                   #address-cells =3D <1>;
+>     +                                   #size-cells =3D <0>;
+>     +                                   reg =3D <0>;
+>     +                           };
+>     +
+>     +                           imux29: i2c@1 {
+>     +                                   #address-cells =3D <1>;
+>     +                                   #size-cells =3D <0>;
+>     +                                   reg =3D <1>;
+>     +                           };
+>     +
+>     +                           imux30: i2c@2 {
+>     +                                   #address-cells =3D <1>;
+>     +                                   #size-cells =3D <0>;
+>     +                                   reg =3D <2>;
+>     +                           };
+>     +
+>     +                           imux31: i2c@3 {
+>     +                                   #address-cells =3D <1>;
+>     +                                   #size-cells =3D <0>;
+>     +                                   reg =3D <3>;
+>     +                           };
+>     +
+>     +                   };
+>     +
+>     +           };
+>     +
+>     +           imux19: i2c@3 {
+>     +                   #address-cells =3D <1>;
+>     +                   #size-cells =3D <0>;
+>     +                   reg =3D <3>;
+>     +
+>     +                   i2c-switch@40 {
+>     +                           compatible =3D "ti,ina219";
+>     +                           reg =3D <0x40>;
+>     +                   };
+>     +
+>     +                   i2c-switch@41 {
+>     +                           compatible =3D "ti,ina219";
+>     +                           reg =3D <0x41>;
+>     +                   };
+>     +
+>     +                   i2c-switch@45 {
+>     +                           compatible =3D "ti,ina219";
+>     +                           reg =3D <0x45>;
+>     +                   };
+>     +
+>     +           };
+>     +
+>     +   };
+>      };
+>
+>      &i2c2 {
+>     --
+>     2.17.1
+>
+>
 >
