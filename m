@@ -1,168 +1,211 @@
-Return-Path: <SRS0=d0Jw=VU=linaro.org=georgi.djakov@kernel.org>
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v5 3/5] interconnect: qcom: Add interconnect SMD over SMD driver
-Date: Tue, 23 Jul 2019 17:23:37 +0300
-Message-Id: <20190723142339.27772-4-georgi.djakov@linaro.org>
-In-Reply-To: <20190723142339.27772-1-georgi.djakov@linaro.org>
-References: <20190723142339.27772-1-georgi.djakov@linaro.org>
+Return-Path: <shawnguo@kernel.org>
+Date: Tue, 23 Jul 2019 14:52:19 +0800
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v4 2/2] arm64: dts: nxp: add ls1046a-frwy board support
+Message-ID: <20190723065217.GF15632@dragon>
+References: <1563284586-29928-1-git-send-email-pramod.kumar_1@nxp.com>
+ <1563284586-29928-3-git-send-email-pramod.kumar_1@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, georgi.djakov@linaro.org
-Cc: vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563284586-29928-3-git-send-email-pramod.kumar_1@nxp.com>
+To: Pramod Kumar <pramod.kumar_1@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>, Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vabhav Sharma <vabhav.sharma@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On some Qualcomm SoCs, there is a remote processor, which controls some of
-the Network-On-Chip interconnect resources. Other CPUs express their needs
-by communicating with this processor. Add a driver to handle communication
-with this remote processor.
+On Tue, Jul 16, 2019 at 01:43:31PM +0000, Pramod Kumar wrote:
+> ls1046afrwy board is based on nxp ls1046a SoC.
+> Board support's 4GB ddr memory, i2c, microSD card,
+> serial console,qspi nor flash,ifc nand flash,qsgmii network interface,
+> usb 3.0 and serdes interface to support two x1gen3 pcie interface.
+> 
+> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/Makefile             |   1 +
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts | 156 +++++++++++++++++++++
+>  2 files changed, 157 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 0bd122f..1211531 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-rdb.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
+> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-frwy.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-qds.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
+> new file mode 100644
+> index 0000000..cda4998
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
+> @@ -0,0 +1,156 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Device Tree Include file for Freescale Layerscape-1046A family SoC.
+> + *
+> + * Copyright 2019 NXP.
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "fsl-ls1046a.dtsi"
+> +
+> +/ {
+> +	model = "LS1046A FRWY Board";
+> +	compatible = "fsl,ls1046a-frwy", "fsl,ls1046a";
+> +
+> +	aliases {
+> +		serial0 = &duart0;
+> +		serial1 = &duart1;
+> +		serial2 = &duart2;
+> +		serial3 = &duart3;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	sb_3v3: regulator-sb3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "LT8642SEV-3.3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +};
+> +
+> +&duart0 {
+> +	status = "okay";
+> +};
+> +
+> +&duart1 {
+> +	status = "okay";
+> +};
+> +
+> +&duart2 {
+> +	status = "okay";
+> +};
+> +
+> +&duart3 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +
+> +	i2c-mux@77 {
+> +		compatible = "nxp,pca9546";
+> +		reg = <0x77>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		i2c@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +
+> +			power-monitor@40 {
+> +				compatible = "ti,ina220";
+> +				reg = <0x40>;
+> +				shunt-resistor = <1000>;
+> +			};
+> +
+> +
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
+One newline is good enough.  I fixed it up and applied the patch.
 
-v5:
-- Use the more succinct return !!icc_smd_rpm;
-- Picked Bjorn's r-b.
+Shawn
 
-v4:
-- Hide the driver from config menu. It will be selected by other driver.
-- Add remove() function to zero out the rpm handle.
-
-v3:
-- New patch.
-
- drivers/interconnect/qcom/Kconfig   |  3 ++
- drivers/interconnect/qcom/Makefile  |  2 +
- drivers/interconnect/qcom/smd-rpm.c | 77 +++++++++++++++++++++++++++++
- drivers/interconnect/qcom/smd-rpm.h | 15 ++++++
- 4 files changed, 97 insertions(+)
- create mode 100644 drivers/interconnect/qcom/smd-rpm.c
- create mode 100644 drivers/interconnect/qcom/smd-rpm.h
-
-diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-index d5e70ebc2410..03fd67173494 100644
---- a/drivers/interconnect/qcom/Kconfig
-+++ b/drivers/interconnect/qcom/Kconfig
-@@ -12,3 +12,6 @@ config INTERCONNECT_QCOM_SDM845
- 	help
- 	  This is a driver for the Qualcomm Network-on-Chip on sdm845-based
- 	  platforms.
-+
-+config INTERCONNECT_QCOM_SMD_RPM
-+	tristate
-diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
-index 1c1cea690f92..a600cf6cc272 100644
---- a/drivers/interconnect/qcom/Makefile
-+++ b/drivers/interconnect/qcom/Makefile
-@@ -1,5 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- qnoc-sdm845-objs			:= sdm845.o
-+icc-smd-rpm-objs			:= smd-rpm.o
- 
- obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
-+obj-$(CONFIG_INTERCONNECT_QCOM_SMD_RPM) += icc-smd-rpm.o
-diff --git a/drivers/interconnect/qcom/smd-rpm.c b/drivers/interconnect/qcom/smd-rpm.c
-new file mode 100644
-index 000000000000..dc8ff8d133a9
---- /dev/null
-+++ b/drivers/interconnect/qcom/smd-rpm.c
-@@ -0,0 +1,77 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * RPM over SMD communication wrapper for interconnects
-+ *
-+ * Copyright (C) 2019 Linaro Ltd
-+ * Author: Georgi Djakov <georgi.djakov@linaro.org>
-+ */
-+
-+#include <linux/interconnect-provider.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/soc/qcom/smd-rpm.h>
-+
-+#include "smd-rpm.h"
-+
-+#define RPM_KEY_BW		0x00007762
-+
-+static struct qcom_smd_rpm *icc_smd_rpm;
-+
-+struct icc_rpm_smd_req {
-+	__le32 key;
-+	__le32 nbytes;
-+	__le32 value;
-+};
-+
-+bool qcom_icc_rpm_smd_available(void)
-+{
-+	return !!icc_smd_rpm;
-+}
-+EXPORT_SYMBOL_GPL(qcom_icc_rpm_smd_available);
-+
-+int qcom_icc_rpm_smd_send(int ctx, int rsc_type, int id, u32 val)
-+{
-+	struct icc_rpm_smd_req req = {
-+		.key = cpu_to_le32(RPM_KEY_BW),
-+		.nbytes = cpu_to_le32(sizeof(u32)),
-+		.value = cpu_to_le32(val),
-+	};
-+
-+	return qcom_rpm_smd_write(icc_smd_rpm, ctx, rsc_type, id, &req,
-+				  sizeof(req));
-+}
-+EXPORT_SYMBOL_GPL(qcom_icc_rpm_smd_send);
-+
-+static int qcom_icc_rpm_smd_remove(struct platform_device *pdev)
-+{
-+	icc_smd_rpm = NULL;
-+
-+	return 0;
-+}
-+
-+static int qcom_icc_rpm_smd_probe(struct platform_device *pdev)
-+{
-+	icc_smd_rpm = dev_get_drvdata(pdev->dev.parent);
-+
-+	if (!icc_smd_rpm) {
-+		dev_err(&pdev->dev, "unable to retrieve handle to RPM\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver qcom_interconnect_rpm_smd_driver = {
-+	.driver = {
-+		.name		= "icc_smd_rpm",
-+	},
-+	.probe = qcom_icc_rpm_smd_probe,
-+	.remove = qcom_icc_rpm_smd_remove,
-+};
-+module_platform_driver(qcom_interconnect_rpm_smd_driver);
-+MODULE_AUTHOR("Georgi Djakov <georgi.djakov@linaro.org>");
-+MODULE_DESCRIPTION("Qualcomm SMD RPM interconnect proxy driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:icc_smd_rpm");
-diff --git a/drivers/interconnect/qcom/smd-rpm.h b/drivers/interconnect/qcom/smd-rpm.h
-new file mode 100644
-index 000000000000..ca9d0327b8ac
---- /dev/null
-+++ b/drivers/interconnect/qcom/smd-rpm.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019, Linaro Ltd.
-+ * Author: Georgi Djakov <georgi.djakov@linaro.org>
-+ */
-+
-+#ifndef __DRIVERS_INTERCONNECT_QCOM_SMD_RPM_H
-+#define __DRIVERS_INTERCONNECT_QCOM_SMD_RPM_H
-+
-+#include <linux/soc/qcom/smd-rpm.h>
-+
-+bool qcom_icc_rpm_smd_available(void);
-+int qcom_icc_rpm_smd_send(int ctx, int rsc_type, int id, u32 val);
-+
-+#endif
+> +			temperature-sensor@4c {
+> +				compatible = "nxp,sa56004";
+> +				reg = <0x4c>;
+> +				vcc-supply = <&sb_3v3>;
+> +			};
+> +
+> +			rtc@51 {
+> +				compatible = "nxp,pcf2129";
+> +				reg = <0x51>;
+> +			};
+> +
+> +			eeprom@52 {
+> +				compatible = "atmel,24c512";
+> +				reg = <0x52>;
+> +			};
+> +
+> +			eeprom@53 {
+> +				compatible = "atmel,24c512";
+> +				reg = <0x53>;
+> +			};
+> +
+> +		};
+> +	};
+> +};
+> +
+> +&ifc {
+> +	#address-cells = <2>;
+> +	#size-cells = <1>;
+> +	/* NAND Flash */
+> +	ranges = <0x0 0x0 0x0 0x7e800000 0x00010000>;
+> +	status = "okay";
+> +
+> +	nand@0,0 {
+> +		compatible = "fsl,ifc-nand";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0x0 0x0 0x10000>;
+> +	};
+> +
+> +};
+> +
+> +#include "fsl-ls1046-post.dtsi"
+> +
+> +&fman0 {
+> +	ethernet@e0000 {
+> +		phy-handle = <&qsgmii_phy4>;
+> +		phy-connection-type = "qsgmii";
+> +	};
+> +
+> +	ethernet@e8000 {
+> +		phy-handle = <&qsgmii_phy2>;
+> +		phy-connection-type = "qsgmii";
+> +	};
+> +
+> +	ethernet@ea000 {
+> +		phy-handle = <&qsgmii_phy1>;
+> +		phy-connection-type = "qsgmii";
+> +	};
+> +
+> +	ethernet@f2000 {
+> +		phy-handle = <&qsgmii_phy3>;
+> +		phy-connection-type = "qsgmii";
+> +	};
+> +
+> +	mdio@fd000 {
+> +		qsgmii_phy1: ethernet-phy@1c {
+> +			reg = <0x1c>;
+> +		};
+> +
+> +		qsgmii_phy2: ethernet-phy@1d {
+> +			reg = <0x1d>;
+> +		};
+> +
+> +		qsgmii_phy3: ethernet-phy@1e {
+> +			reg = <0x1e>;
+> +		};
+> +
+> +		qsgmii_phy4: ethernet-phy@1f {
+> +			reg = <0x1f>;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
