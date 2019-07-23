@@ -1,134 +1,67 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like
- logger
-Date: Mon, 22 Jul 2019 17:32:19 -0700
-Message-ID: <CAFd5g46h9XSRfA1H4kZR7u0Eh_F-fgPjoLPzqzLgFTXxeb105g@mail.gmail.com>
-References: <20190712081744.87097-1-brendanhiggins@google.com>
- <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
- <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
- <20190716175021.9CA412173C@mail.kernel.org>
- <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
- <20190718175024.C3EC421019@mail.kernel.org>
- <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com>
- <20190719000834.GA3228@google.com> <20190722200347.261D3218C9@mail.kernel.org>
- <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
- <20190722235411.06C1320840@mail.kernel.org>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: Re: [PATCH 1/2] ARM: dts: aspeed: tiogapass: Add VR devices
+Date: Tue, 23 Jul 2019 00:33:40 +0000
+Message-ID: <69DFAF50-E181-4C7A-910A-C45E6E151F8E@fb.com>
+References: <20190722192451.1947348-1-vijaykhemka@fb.com>
+ <802c5419-08ec-4a0e-8a50-ad4a1bbf7f3a@www.fastmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20190722235411.06C1320840-+nuXSHJNwjE76Z2rM5mHXA@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuah <shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, David Rientjes <rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kbuild <linux-kbuild-u79uwXL29TasMV2rI37PzA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <802c5419-08ec-4a0e-8a50-ad4a1bbf7f3a@www.fastmail.com>
+Content-Language: en-US
+Content-ID: <515ADAC7575AC24CABAC6D61534CEFDB@namprd15.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Jeffery <andrew@aj.id.au>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>
+Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, Sai Dasari <sdasari@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 4:54 PM Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
-> Quoting Brendan Higgins (2019-07-22 15:30:49)
-> > On Mon, Jul 22, 2019 at 1:03 PM Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > >
-> > >
-> > > What's the calling context of the assertions and expectations? I still
-> > > don't like the fact that string stream needs to allocate buffers and
-> > > throw them into a list somewhere because the calling context matters
-> > > there.
-> >
-> > The calling context is the same as before, which is anywhere.
->
-> Ok. That's concerning then.
-
-Yeah. Luis suggested just not supporting the IRQ context until later.
-See my later comment.
-
-> > > I'd prefer we just wrote directly to the console/log via printk
-> > > instead. That way things are simple because we use the existing
-> > > buffering path of printk, but maybe there's some benefit to the string
-> > > stream that I don't see? Right now it looks like it builds a string and
-> > > then dumps it to printk so I'm sort of lost what the benefit is over
-> > > just writing directly with printk.
-> >
-> > It's just buffering it so the whole string gets printed uninterrupted.
-> > If we were to print out piecemeal to printk, couldn't we have another
-> > call to printk come in causing it to garble the KUnit message we are
-> > in the middle of printing?
->
-> Yes, printing piecemeal by calling printk many times could lead to
-> interleaving of messages if something else comes in such as an interrupt
-> printing something. Printk has some support to hold "records" but I'm
-> not sure how that would work here because KERN_CONT talks about only
-> being used early on in boot code. I haven't looked at printk in detail
-> though so maybe I'm all wrong and KERN_CONT just works?
-
-It says KERN_CONT is not SMP safe, and it isn't supposed to contain
-newlines, so it doesn't sound like it does any buffering for you. I
-looked at it a while ago and those comments agreed with my
-understanding of the code, but I could be wrong.
-
-> Can printk be called once with whatever is in the struct?
-
-Unfortunately, no. That is part of what I was trying to illustrate
-with this patch. Most of the messages are deterministic, but
-hardcoding all the possible message types would lead to a massive
-number of hard coded strings. However, even this would break down for
-the mocking formatters. All the different ways a function can be
-called are just too complex to encode into a finite set of hard coded
-fmt strings.
-
-> Otherwise if
-> this is about making printk into a structured log then maybe printk
-> isn't the proper solution anyway. Maybe a dev interface should be used
-> instead that can handle starting and stopping tests (via ioctl) in
-> addition to reading test results, records, etc. with read() and a
-> clearing of the records. Then the seqfile API works naturally. All of
-
-Ehhh...I wouldn't mind providing such an interface, but I would really
-like to be able to provide the results without having to depend on a
-userland doing something to get test results. That has always been a
-pretty important goal for me.
-
-> this is a bit premature, but it looks like you're going down the path of
-> making something akin to ftrace that stores binary formatted
-> assertion/expectation records in a lockless ring buffer that then
-> formats those records when the user asks for them.
-
-Like you said, I think it is a bit premature to go that far.
-
-In anycase, I don't see a way to get rid of string_stream, without
-significantly sacrificing usability.
-
-> I can imagine someone wanting to write unit tests that check conditions
-> from a simulated hardirq context via irq works (a driver mock
-> framework?), so this doesn't seem far off.
-
-Yep, I actually presented the first pieces of that in the RFC v1 that
-I linked to you earlier in this discussion. I have a more fleshed out
-example here:
-
-https://kunit.googlesource.com/linux/+/e10484ad2f9fc7926412ec84739fe105981b4771/drivers/i2c/busses/i2c-aspeed-test.c
-
-I actually already have some people at Google playing around with it.
-So yeah, not far off at all! However, in these cases we are not
-actually running in the IRQ context (despite the fact that we are
-testing IRQ code) because we provide a fake IRQ chip, or some other
-fake mechanism that triggers the IRQ. Still, I could see someone
-wanting to do it in a non-fake-IRQ context.
-
-Luis' suggestion was just to hold off on the IRQ safe stuff at the
-outset, since that is going to require a lot more effort to review. I
-know that's kind of the future coding argument again, but maybe the
-answer will be to just restrict what features an IRQ user has access
-to (maybe just really simple expectations, for example). I mean, we
-will probably have to restrict what they are allowed to use anyway.
-
-Luis, do you have any ideas?
-
-Cheers
+DQoNCu+7v09uIDcvMjIvMTksIDU6MTIgUE0sICJBbmRyZXcgSmVmZmVyeSIgPGFuZHJld0Bhai5p
+ZC5hdT4gd3JvdGU6DQoNCiAgICBIaSBWaWpheSwNCiAgICANCiAgICBBIGZldyBuaXRwaWNrcy4N
+CiAgICANCiAgICBPbiBUdWUsIDIzIEp1bCAyMDE5LCBhdCAwNToxMCwgVmlqYXkgS2hlbWthIHdy
+b3RlOg0KICAgID4gQWRkZXMNCiAgICANCiAgICBUeXBvOiBBZGRzDQpBY2sNCiAgICANCiAgICA+
+IFZvbHRhZ2UNCiAgICANCiAgICBVbm5lY2Vzc2FyeSBjYXBpdGFsaXNhdGlvbi4NCkFjaw0KICAg
+IA0KICAgID4gcmVndWxhdG9ycyBJbmZpbmVvbiBweGUxNjEwIGRldmljZXMgdG8gRmFjZWJvb2sN
+CiAgICA+IHRpb2dhcGFzcyBwbGF0Zm9ybS4NCiAgICA+IA0KICAgID4gU2lnbmVkLW9mZi1ieTog
+VmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5jb20+DQogICAgPiAtLS0NCiAgICA+ICAuLi4v
+ZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0cyAgICAgfCAzNiArKysrKysrKysr
+KysrKysrKysrDQogICAgPiAgMSBmaWxlIGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKykNCiAgICA+
+IA0KICAgID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJv
+b2stdGlvZ2FwYXNzLmR0cyANCiAgICA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1m
+YWNlYm9vay10aW9nYXBhc3MuZHRzDQogICAgPiBpbmRleCBjNDUyMWVkYTc4N2MuLmI3NzgzODMz
+YTU4YyAxMDA2NDQNCiAgICA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFj
+ZWJvb2stdGlvZ2FwYXNzLmR0cw0KICAgID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVk
+LWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzDQogICAgPiBAQCAtMTQ0LDYgKzE0NCw0MiBAQA0K
+ICAgID4gICZpMmM1IHsNCiAgICA+ICAJc3RhdHVzID0gIm9rYXkiOw0KICAgID4gIAkvLyBDUFUg
+Vm9sdGFnZSByZWd1bGF0b3JzDQogICAgPiArCXZyQDQ4IHsNCiAgICANCiAgICBUaGUgcmVjb21t
+ZW5kZWQgZ2VuZXJpYyBuYW1lIGlzICdyZWd1bGF0b3InLCBzbyBlLmcuIHJlZ3VsYXRvckA0OA0K
+QWNrOiBTdWJtaXR0ZWQgdjIgZm9yIHRoaXMgcGF0Y2guDQogICAgDQogICAgPiArCQljb21wYXRp
+YmxlID0gImluZmluZW9uLHB4ZTE2MTAiOw0KICAgID4gKwkJcmVnID0gPDB4NDg+Ow0KICAgID4g
+Kwl9Ow0KICAgID4gKwl2ckA0YSB7DQogICAgPiArCQljb21wYXRpYmxlID0gImluZmluZW9uLHB4
+ZTE2MTAiOw0KICAgID4gKwkJcmVnID0gPDB4NGE+Ow0KICAgID4gKwl9Ow0KICAgID4gKwl2ckA1
+MCB7DQogICAgPiArCQljb21wYXRpYmxlID0gImluZmluZW9uLHB4ZTE2MTAiOw0KICAgID4gKwkJ
+cmVnID0gPDB4NTA+Ow0KICAgID4gKwl9Ow0KICAgID4gKwl2ckA1MiB7DQogICAgPiArCQljb21w
+YXRpYmxlID0gImluZmluZW9uLHB4ZTE2MTAiOw0KICAgID4gKwkJcmVnID0gPDB4NTI+Ow0KICAg
+ID4gKwl9Ow0KICAgID4gKwl2ckA1OCB7DQogICAgPiArCQljb21wYXRpYmxlID0gImluZmluZW9u
+LHB4ZTE2MTAiOw0KICAgID4gKwkJcmVnID0gPDB4NTg+Ow0KICAgID4gKwl9Ow0KICAgID4gKwl2
+ckA1YSB7DQogICAgPiArCQljb21wYXRpYmxlID0gImluZmluZW9uLHB4ZTE2MTAiOw0KICAgID4g
+KwkJcmVnID0gPDB4NWE+Ow0KICAgID4gKwl9Ow0KICAgID4gKwl2ckA2OCB7DQogICAgPiArCQlj
+b21wYXRpYmxlID0gImluZmluZW9uLHB4ZTE2MTAiOw0KICAgID4gKwkJcmVnID0gPDB4Njg+Ow0K
+ICAgID4gKwl9Ow0KICAgID4gKwl2ckA3MCB7DQogICAgPiArCQljb21wYXRpYmxlID0gImluZmlu
+ZW9uLHB4ZTE2MTAiOw0KICAgID4gKwkJcmVnID0gPDB4NzA+Ow0KICAgID4gKwl9Ow0KICAgID4g
+Kwl2ckA3MiB7DQogICAgPiArCQljb21wYXRpYmxlID0gImluZmluZW9uLHB4ZTE2MTAiOw0KICAg
+ID4gKwkJcmVnID0gPDB4NzI+Ow0KICAgID4gKwl9Ow0KICAgID4gIH07DQogICAgPiAgDQogICAg
+PiAgJmkyYzYgew0KICAgID4gLS0gDQogICAgPiAyLjE3LjENCiAgICA+IA0KICAgID4NCiAgICAN
+Cg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
+YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
+LWtlcm5lbAo=
