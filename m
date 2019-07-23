@@ -1,66 +1,45 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] dt-bindings: hwmon: Add binding for pxe1610
-Date: Mon, 22 Jul 2019 18:56:13 -0700
-Message-ID: <d3137d6b-8bf8-4da6-9da7-a42b8bc68fbd@roeck-us.net>
-References: <20190722192451.1947348-1-vijaykhemka@fb.com>
- <20190722192451.1947348-2-vijaykhemka@fb.com>
- <20190722200622.GA20435@roeck-us.net>
- <6E2B35D8-B538-4C96-B289-27A87ECD74DB@fb.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 11/13] arm64: dts: qcom: qcs404: Add CPR and populate OPP
+ table
+Date: Tue, 23 Jul 2019 07:26:35 +0530
+Message-ID: <20190723015635.rl5a2isjnjn23fzh@vireshk-i7>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
+ <20190705095726.21433-12-niklas.cassel@linaro.org>
+ <20190710090303.tb5ue3wq6r7ofyev@vireshk-i7>
+ <20190715132405.GA5040@centauri>
+ <20190716103436.az5rdk6f3yoa3apz@vireshk-i7>
+ <20190716105318.GA26592@centauri>
+ <20190717044923.ccmebeewbinlslkm@vireshk-i7>
+ <20190719154558.GA32518@centauri>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6E2B35D8-B538-4C96-B289-27A87ECD74DB@fb.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190719154558.GA32518@centauri>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Khemka <vijaykhemka@fb.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, Sai Dasari <sdasari@fb.com>
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/22/19 5:12 PM, Vijay Khemka wrote:
+On 19-07-19, 17:45, Niklas Cassel wrote:
+> Hello Viresh,
 > 
-> 
-> ﻿On 7/22/19, 1:06 PM, "Guenter Roeck" <groeck7@gmail.com on behalf of linux@roeck-us.net> wrote:
-> 
->      On Mon, Jul 22, 2019 at 12:24:48PM -0700, Vijay Khemka wrote:
->      > Added new DT binding document for Infineon PXE1610 devices.
->      >
->      > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
->      > ---
->      >  .../devicetree/bindings/hwmon/pxe1610.txt         | 15 +++++++++++++++
->      >  1 file changed, 15 insertions(+)
->      >  create mode 100644 Documentation/devicetree/bindings/hwmon/pxe1610.txt
->      >
->      > diff --git a/Documentation/devicetree/bindings/hwmon/pxe1610.txt b/Documentation/devicetree/bindings/hwmon/pxe1610.txt
->      > new file mode 100644
->      > index 000000000000..635daf4955db
->      > --- /dev/null
->      > +++ b/Documentation/devicetree/bindings/hwmon/pxe1610.txt
->      > @@ -0,0 +1,15 @@
->      > +pxe1610 properties
->      > +
->      > +Required properties:
->      > +- compatible: Must be one of the following:
->      > +	- "infineon,pxe1610" for pxe1610
->      > +	- "infineon,pxe1110" for pxe1610
->      > +	- "infineon,pxm1310" for pxm1310
->      > +- reg: I2C address
->      > +
->      > +Example:
->      > +
->      > +vr@48 {
->      > +	compatible = "infineon,pxe1610";
->      > +	reg = <0x48>;
->      > +};
->      
->      Wouldn't it be better to add this to
->      ./Documentation/devicetree/bindings/trivial-devices.txt ?
-> Sure, I didn't know about this file. I will add and send another patch. It is
-> Documentation/devicetree/bindings/trivial-devices.yaml. How do I abandon
-> this patch or just leave it.
->      
+> Could you please have a look at the last two patches here:
+> https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-opp-hz
 
-When you send v2, just add the device to the trivial-devices file instead
-and describe the differences to v1 (ie this patch).
+There is no sane way of providing review comments with a link to the
+git tree :)
 
-Guenter
+I still had a look and I see that you don't search for max frequency
+but just any OPP that has required-opps set to the level u want. Also,
+can't there be multiple phandles in required-opps in your case ?
+
+> If you like my proposal then I could send out the first patch (the one to
+> OPP core) as a real patch (with an improved commit message), and
+> incorporate the second patch into my CPR patch series when I send out a V2.
+
+Send them both in your series only, otherwise the first one is useless
+anyway.
+
+-- 
+viresh
