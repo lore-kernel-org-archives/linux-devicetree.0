@@ -1,78 +1,31 @@
-From: Jonathan Chocron <jonnyc@amazon.com>
-Subject: [PATCH v3 8/8] PCI: dw: Add support for PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Date: Tue, 23 Jul 2019 12:27:11 +0300
-Message-ID: <20190723092711.11786-4-jonnyc@amazon.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
+From: Robin Gong <yibin.gong@nxp.com>
+Subject: RE: [PATCH v5 12/15] ARM: dts: imx6ul: add dma support on ecspi
+Date: Tue, 23 Jul 2019 09:39:38 +0000
+Message-ID: <VE1PR04MB663894FA5BC88B130C70AC0789C70@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20190610081753.11422-1-yibin.gong@nxp.com>
+ <20190610081753.11422-13-yibin.gong@nxp.com> <20190717064204.GA3738@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190723092529.11310-1-jonnyc@amazon.com>
+In-Reply-To: <20190717064204.GA3738@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonnyc@amazon.com
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "broonie@kernel.org" <broonie@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "vkoul@kernel.org" <vkoul@kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kern
 List-Id: devicetree@vger.kernel.org
 
-This basically aligns the usage of PCI_PROBE_ONLY and
-PCI_REASSIGN_ALL_BUS in dw_pcie_host_init() with the logic in
-pci_host_common_probe().
-
-Now it will be possible to control via the devicetree whether to just
-probe the PCI bus (in cases where FW already configured it) or to fully
-configure it.
-
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
----
- .../pci/controller/dwc/pcie-designware-host.c | 23 +++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d2ca748e4c85..0a294d8aa21a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -342,6 +342,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (!bridge)
- 		return -ENOMEM;
- 
-+	of_pci_check_probe_only();
-+
- 	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
- 					&bridge->windows, &pp->io_base);
- 	if (ret)
-@@ -474,6 +476,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 
- 	pp->root_bus_nr = pp->busn->start;
- 
-+	/* Do not reassign bus nums if probe only */
-+	if (!pci_has_flag(PCI_PROBE_ONLY))
-+		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-+
- 	bridge->dev.parent = dev;
- 	bridge->sysdata = pp;
- 	bridge->busnr = pp->root_bus_nr;
-@@ -490,11 +496,20 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (pp->ops->scan_bus)
- 		pp->ops->scan_bus(pp);
- 
--	pci_bus_size_bridges(pp->root_bus);
--	pci_bus_assign_resources(pp->root_bus);
-+	/*
-+	 * We insert PCI resources into the iomem_resource and
-+	 * ioport_resource trees in either pci_bus_claim_resources()
-+	 * or pci_bus_assign_resources().
-+	 */
-+	if (pci_has_flag(PCI_PROBE_ONLY)) {
-+		pci_bus_claim_resources(pp->root_bus);
-+	} else {
-+		pci_bus_size_bridges(pp->root_bus);
-+		pci_bus_assign_resources(pp->root_bus);
- 
--	list_for_each_entry(child, &pp->root_bus->children, node)
--		pcie_bus_configure_settings(child);
-+		list_for_each_entry(child, &pp->root_bus->children, node)
-+			pcie_bus_configure_settings(child);
-+	}
- 
- 	pci_bus_add_devices(pp->root_bus);
- 	return 0;
--- 
-2.17.1
+On 2019-7-17 at 14:42 Shawn Guo <shawnguo@kernel.org> wrote:
+> On Mon, Jun 10, 2019 at 04:17:50PM +0800, yibin.gong@nxp.com wrote:
+> > From: Robin Gong <yibin.gong@nxp.com>
+> >
+> > Add dma support on ecspi.
+> >
+> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+>=20
+> Applied, thanks.
+Thanks Shawn, but how about other dts patches such as 01/15,02/15?
+Hi Mark and Vinod,
+ I got Ack from you last month on v5, https://patchwork.kernel.org/cover/10=
+984301/
+Is it the right time to apply v5 ? Any concern, please let me know, thanks.
