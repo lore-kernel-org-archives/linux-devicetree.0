@@ -1,49 +1,24 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 02/10] iio: document bindings for mounting matrices
-Date: Tue, 23 Jul 2019 09:42:59 +0200
-Message-ID: <CACRpkdZ5Z9VY457Fywt6X=K5XONgiPVcwbwSkwL_U+GCqZ+u5g@mail.gmail.com>
-References: <cover.1550768574.git.hns@goldelico.com> <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/4] ARM: dts: imx6sx: move GIC to right location in DT
+Date: Tue, 23 Jul 2019 15:48:10 +0800
+Message-ID: <20190723074809.GK15632@dragon>
+References: <20190718091508.3248-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
+Content-Disposition: inline
+In-Reply-To: <20190718091508.3248-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>li
+To: Anson.Huang@nxp.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi H. Nikolaus,
+On Thu, Jul 18, 2019 at 05:15:05PM +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> GIC is inside of SoC from architecture perspective, it should
+> be located inside of soc node in DT.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-On Thu, Feb 21, 2019 at 6:03 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
-
-> From: Linus Walleij <linus.walleij@linaro.org>
-
-It is fair for you to change authorship to yourself at this point.
-Just keeping my Signed-off-by is sufficient.
-
-> The mounting matrix for sensors was introduced in
-> commit dfc57732ad38 ("iio:core: mounting matrix support")
->
-> However the device tree bindings are very terse and since this is
-> a widely applicable property, we need a proper binding for it
-> that the other bindings can reference. This will also be useful
-> for other operating systems and sensor engineering at large.
->
-> I think all 3D sensors should support it, the current situation
-> is probably that the mounting information is confined in magic
-> userspace components rather than using the mounting matrix, which
-> is not good for portability and reuse.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Gregor Boirie <gregor.boirie@parrot.com>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Samu Onkalo <samu.onkalo@intel.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-
-Did this patch fall off somewhere? I think it's really neat, even in this
-form it is great help for developers. If you want I can try picking up the
-comments and resend it.
-
-Linus Walleij
+Applied all, thanks.
