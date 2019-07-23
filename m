@@ -1,182 +1,75 @@
-Return-Path: <SRS0=x64w=VT=ti.com=lokeshvutla@kernel.org>
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v4 5/5] arm64: dts: ti: k3-j721e: Update the power domain cells
-Date: Mon, 22 Jul 2019 10:37:57 +0530
-Message-ID: <20190722050757.29893-6-lokeshvutla@ti.com>
-In-Reply-To: <20190722050757.29893-1-lokeshvutla@ti.com>
-References: <20190722050757.29893-1-lokeshvutla@ti.com>
+Return-Path: <SRS0=d0Jw=VU=linaro.org=georgi.djakov@kernel.org>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH v5 0/5] Add QCS404 interconnect provider driver
+Date: Tue, 23 Jul 2019 17:23:34 +0300
+Message-Id: <20190723142339.27772-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
+To: robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, georgi.djakov@linaro.org
+Cc: vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Update the power-domain cells to 2 and mark all devices as
-exclusive. Main uart 0 is the debug console for processor boards
-and it is used by different software entities like u-boot, atf,
-linux simultaneously. So just mark main_uart0 as shared device
-for common processor board.
+Add drivers to support scaling of the on-chip interconnects on QCS404-based
+platforms. Also add the necessary device-tree nodes, so that the driver for
+each NoC can probe and register as interconnect-provider.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
- .../dts/ti/k3-j721e-common-proc-board.dts     |  4 ++++
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 20 +++++++++----------
- .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  6 +++---
- arch/arm64/boot/dts/ti/k3-j721e.dtsi          |  1 +
- 4 files changed, 18 insertions(+), 13 deletions(-)
+The plan is to get patches 2,5 through the Qcom/ARM tree and the rest
+through the interconnect tree.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-index c680123f067c..63b47b839388 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-@@ -19,6 +19,10 @@
- 	status = "disabled";
- };
- 
-+&main_uart0 {
-+	power-domains = <&k3_pds 146 TI_SCI_PD_SHARED>;
-+};
-+
- &main_uart3 {
- 	/* UART not brought out */
- 	status = "disabled";
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index a01308142f77..01661c22c39d 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -119,7 +119,7 @@
- 		interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 146>;
-+		power-domains = <&k3_pds 146 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 146 0>;
- 		clock-names = "fclk";
- 	};
-@@ -132,7 +132,7 @@
- 		interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 278>;
-+		power-domains = <&k3_pds 278 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 278 0>;
- 		clock-names = "fclk";
- 	};
-@@ -145,7 +145,7 @@
- 		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 279>;
-+		power-domains = <&k3_pds 279 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 279 0>;
- 		clock-names = "fclk";
- 	};
-@@ -158,7 +158,7 @@
- 		interrupts = <GIC_SPI 195 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 280>;
-+		power-domains = <&k3_pds 280 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 280 0>;
- 		clock-names = "fclk";
- 	};
-@@ -171,7 +171,7 @@
- 		interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 281>;
-+		power-domains = <&k3_pds 281 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 281 0>;
- 		clock-names = "fclk";
- 	};
-@@ -184,7 +184,7 @@
- 		interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 282>;
-+		power-domains = <&k3_pds 282 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 282 0>;
- 		clock-names = "fclk";
- 	};
-@@ -197,7 +197,7 @@
- 		interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 283>;
-+		power-domains = <&k3_pds 283 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 283 0>;
- 		clock-names = "fclk";
- 	};
-@@ -210,7 +210,7 @@
- 		interrupts = <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 284>;
-+		power-domains = <&k3_pds 284 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 284 0>;
- 		clock-names = "fclk";
- 	};
-@@ -223,7 +223,7 @@
- 		interrupts = <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 285>;
-+		power-domains = <&k3_pds 285 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 285 0>;
- 		clock-names = "fclk";
- 	};
-@@ -236,7 +236,7 @@
- 		interrupts = <GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 286>;
-+		power-domains = <&k3_pds 286 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 286 0>;
- 		clock-names = "fclk";
- 	};
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index 07b58eeebceb..e616c2481f51 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -20,7 +20,7 @@
- 
- 		k3_pds: power-controller {
- 			compatible = "ti,sci-pm-domain";
--			#power-domain-cells = <1>;
-+			#power-domain-cells = <2>;
- 		};
- 
- 		k3_clks: clocks {
-@@ -59,7 +59,7 @@
- 		interrupts = <GIC_SPI 897 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 287>;
-+		power-domains = <&k3_pds 287 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 287 0>;
- 		clock-names = "fclk";
- 	};
-@@ -72,7 +72,7 @@
- 		interrupts = <GIC_SPI 846 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <96000000>;
- 		current-speed = <115200>;
--		power-domains = <&k3_pds 149>;
-+		power-domains = <&k3_pds 149 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 149 0>;
- 		clock-names = "fclk";
- 	};
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e.dtsi b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-index f8dd74b17bfb..43ea1ba97922 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/k3.h>
-+#include <dt-bindings/soc/ti,sci_pm_domain.h>
- 
- / {
- 	model = "Texas Instruments K3 J721E SoC";
--- 
-2.21.0
+v5:
+- Make reg and clocks DT properties required. (Bjorn)
+- Remove _clk suffix from clock names. (Bjorn)
+- Use the more succinct return !!icc_smd_rpm; (Bjorn)
+
+v4: https://lore.kernel.org/lkml/20190613151323.10850-1-georgi.djakov@linaro.org/
+- Move DT headers into the dt-bindings patch (Bjorn)
+- Pick Bjorn's r-b on some patches.
+- Return error if platform_device_register_data() fails (Bjorn)
+- Use platform_set_drvdata() only in the child device. (Bjorn)
+- Hide the smd-rpm proxy driver from config menu. (Bjorn)
+- Add remove() function to zero out the rpm handle. (Bjorn)
+- Move move the qcs404 driver patch later in the serie. (Bjorn)
+- Insert the DT nodes after rng to keep the list sorted by address. (Bjorn)
+
+v3: https://lore.kernel.org/lkml/20190611164157.24656-1-georgi.djakov@linaro.org/
+- Drop the patch introducing the qcom,qos DT property.
+- Add two new patches to create an interconnect proxy device. This device is
+  part of the RPM hardware and handles the communication of the bus bandwidth
+  requests.
+- Add a DT reg property and move the interconnect nodes under the "soc" node.
+
+v2: https://lore.kernel.org/lkml/20190415104357.5305-1-georgi.djakov@linaro.org/
+- Use the clk_bulk API. (Bjorn)
+- Move the port IDs into the provider file. (Bjorn)
+- Use ARRAY_SIZE in the macro to automagically count the num_links. (Bjorn)
+- Improve code readability. (Bjorn)
+- Add patch [4/4] introducing a qcom,qos DT property to represent the link to
+  the MMIO QoS registers HW block.
+
+v1: https://lore.kernel.org/lkml/20190405035446.31886-1-georgi.djakov@linaro.org/
+
+
+Bjorn Andersson (1):
+  interconnect: qcom: Add QCS404 interconnect provider driver
+
+Georgi Djakov (4):
+  dt-bindings: interconnect: Add Qualcomm QCS404 DT bindings
+  soc: qcom: smd-rpm: Create RPM interconnect proxy child device
+  interconnect: qcom: Add interconnect SMD over SMD driver
+  arm64: dts: qcs404: Add interconnect provider DT nodes
+
+ .../bindings/interconnect/qcom,qcs404.txt     |  45 ++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  28 +
+ drivers/interconnect/qcom/Kconfig             |  12 +
+ drivers/interconnect/qcom/Makefile            |   4 +
+ drivers/interconnect/qcom/qcs404.c            | 539 ++++++++++++++++++
+ drivers/interconnect/qcom/smd-rpm.c           |  77 +++
+ drivers/interconnect/qcom/smd-rpm.h           |  15 +
+ drivers/soc/qcom/smd-rpm.c                    |  17 +-
+ .../dt-bindings/interconnect/qcom,qcs404.h    |  88 +++
+ 9 files changed, 824 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+ create mode 100644 drivers/interconnect/qcom/qcs404.c
+ create mode 100644 drivers/interconnect/qcom/smd-rpm.c
+ create mode 100644 drivers/interconnect/qcom/smd-rpm.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,qcs404.h
