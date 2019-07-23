@@ -1,58 +1,53 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [RESEND V2 2/2] reset: Add DesignWare IP support to simple reset
-Date: Tue, 23 Jul 2019 17:17:28 +0200
-Message-ID: <1563895048-30038-3-git-send-email-luis.oliveira@synopsys.com>
-References: <1563895048-30038-1-git-send-email-luis.oliveira@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563895048-30038-1-git-send-email-luis.oliveira@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Joao.Pinto@synopsys.com, Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 0/6] video: ssd1307fb: Support more displays
+Date: Tue, 23 Jul 2019 17:38:13 +0200
+Message-ID: <f0d8be30-4980-7e7c-dcbb-3bd7621cff08@samsung.com>
+References: <CGME20190618074155epcas1p3fcfe7cf1058162c11e4b1780987ca394@epcas1p3.samsung.com>
+ <20190618074111.9309-1-marko.kohtala@okoko.fi>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190618074111.9309-1-marko.kohtala@okoko.fi>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marko Kohtala <marko.kohtala@okoko.fi>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-
-The reset-simple driver can be now used on DesignWare IPs by
-default by selecting the following compatible strings:
- - snps,dw-high-reset for active high resets inputs
- - snps,dw-low-reset for active low resets inputs
-
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
----
-Changelog
--no changes
-
- drivers/reset/Kconfig        | 2 +-
- drivers/reset/reset-simple.c | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 2c8c23d..2ee69f2 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -117,7 +117,7 @@ config RESET_QCOM_PDC
- 
- config RESET_SIMPLE
- 	bool "Simple Reset Controller Driver" if COMPILE_TEST
--	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
-+	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED || ARC
- 	help
- 	  This enables a simple reset controller driver for reset lines that
- 	  that can be asserted and deasserted by toggling bits in a contiguous,
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index 77fbba3..79e73be 100644
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -129,6 +129,9 @@ static const struct of_device_id reset_simple_dt_ids[] = {
- 		.data = &reset_simple_active_low },
- 	{ .compatible = "aspeed,ast2400-lpc-reset" },
- 	{ .compatible = "aspeed,ast2500-lpc-reset" },
-+	{ .compatible = "snps,dw-high-reset" },
-+	{ .compatible = "snps,dw-low-reset",
-+		.data = &reset_simple_active_low },
- 	{ /* sentinel */ },
- };
- 
--- 
-2.7.4
+Ck9uIDYvMTgvMTkgOTo0MSBBTSwgTWFya28gS29odGFsYSB3cm90ZToKPiBUaGUga2VybmVsIGRy
+aXZlciBmb3Igc3NkMTMwN2ZiIGRpZCBub3QgYWxsb3cgZm9yIGFsbCBwcm9wZXIKPiBpbml0aWFs
+aXphdGlvbiBmb3IgYSBEZW5zaXRyb24gMTI4eDM2IGRpc3BsYXkuIFRoZSB0cmVuZCBpbiB0aGUg
+ZHJpdmVyCj4gaGFzIGJlZW4gdG8gYWRkIGRldmljZXRyZWUgcHJvcGVydGllcyBmb3IgdGhlIGNv
+bnRyb2xsZXIgaW5pdGlhbGl6YXRpb24KPiBhbmQgdGhlc2UgcGF0Y2hlcyBjb250aW51ZSBvbiB0
+aGF0IHRyZW5kLgo+IAo+IFRoZXJlIGFsc28gd2VyZSBzb21lIHNwYXJzZSBhbmQgQ29jY2luZWxs
+ZSBlcnJvcnMuCj4gCj4gQSBzbWFsbCBidWcgY2F1c2luZyBzY3JvbGxpbmcgb24gZGlzcGxheSB1
+cGRhdGVzIHdpdGggbm9uemVybyBwYWdlX29mZnNldAo+IHdhcyBhIGJpdCBzdXJwcmlzaW5nLiBJ
+dCB3b3VsZCBzZWVtIHRoZSBkcml2ZXIgaGFzIG9ubHkgYmVlbiB1c2VkIHdpdGgKPiBwYWdlX29m
+ZnNldCBzZXQgdG8gemVyby4gQnVnIGhhcyBiZWVuIHRoZXJlIHNpbmNlIGNvbW1pdAo+IDMwMWJj
+MDY3NWI2NzdhOTg0NzUxODcwNTBkNTZjZDJiMzlmZjBhY2YgKCJ2aWRlbzogc3NkMTMwN2ZiOiBN
+YWtlIHVzZSBvZgo+IGhvcml6b250YWwgYWRkcmVzc2luZyBtb2RlIikuCj4gCj4gTWFya28gS29o
+dGFsYSAoNik6Cj4gICB2aWRlbzogc3NkMTMwN2ZiOiBVc2Ugc2NyZWVuX2J1ZmZlciBpbnN0ZWFk
+IG9mIHNjcmVlbl9iYXNlCj4gICB2aWRlbzogc3NkMTMwN2ZiOiBSZW1vdmUgdW5uZWVkZWQgc2Vt
+aWNvbG9ucwo+ICAgdmlkZW86IHNzZDEzMDdmYjogU3RhcnQgcGFnZSByYW5nZSBhdCBwYWdlX29m
+ZnNldAo+ICAgdmlkZW86IHNzZDEzMDdmYjogSGFuZGxlIHdpZHRoIGFuZCBoZWlnaHQgdGhhdCBh
+cmUgbm90IG11bHRpcGxlIG9mIDgKPiAgIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBzc2QxMzA3ZmI6
+IEFkZCBpbml0aWFsaXphdGlvbiBwcm9wZXJ0aWVzCj4gICB2aWRlbzogc3NkMTMwN2ZiOiBBZGQg
+ZGV2aWNldHJlZSBjb25maWd1cmF0aW9uIG9mIGRpc3BsYXkgc2V0dXAKPiAKPiAgLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zc2QxMzA3ZmIudHh0IHwgIDEwICsrCj4gIGRyaXZlcnMv
+dmlkZW8vZmJkZXYvc3NkMTMwN2ZiLmMgICAgICAgICAgICAgICB8IDEzMCArKysrKysrKysrKyst
+LS0tLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxMDEgaW5zZXJ0aW9ucygrKSwgMzkgZGVsZXRpb25z
+KC0pClBhdGNoIHNlcmllcyBxdWV1ZWQgZm9yIHY1LjQsIHRoYW5rcy4KCkJlc3QgcmVnYXJkcywK
+LS0KQmFydGxvbWllaiBab2xuaWVya2lld2ljegpTYW1zdW5nIFImRCBJbnN0aXR1dGUgUG9sYW5k
+ClNhbXN1bmcgRWxlY3Ryb25pY3MKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVs
