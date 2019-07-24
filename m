@@ -1,34 +1,51 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [Sound-open-firmware] [PATCH v2 1/5] ASoC: SOF: imx: Add i.MX8 HW support
-Date: Wed, 24 Jul 2019 11:58:58 +0300
-Message-ID: <CAEnQRZAEsPFp36hD7XiWihTe2KQOJV6Eq9C8hjn0Z1kiUZjzyQ@mail.gmail.com>
-References: <20190723084104.12639-1-daniel.baluta@nxp.com> <20190723084104.12639-2-daniel.baluta@nxp.com>
- <a5d44d96-4d50-ee46-a6bf-3ce108b1994a@linux.intel.com> <CAEnQRZCuB2QKzz-08K0z+x+p0qCpqR_wDc=q2GChvJiw4E9hBA@mail.gmail.com>
- <1563957164.2311.28.camel@pengutronix.de>
+From: <ryder.lee@kernel.org>
+Subject: [PATCH 2/2] dt-bindings: gpu: mali-utgard: add mediatek, mt7623-mali compatible
+Date: Wed, 24 Jul 2019 17:01:00 +0800
+Message-ID: <efeadefe3895bcadf1d2e9847b82206dd8c7ec35.1563867856.git.ryder.lee@mediatek.com>
+References: <af7b5a2e00eb3a4b6262807c378e43afd5f74779.1563867856.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563957164.2311.28.camel@pengutronix.de>
+In-Reply-To: <af7b5a2e00eb3a4b6262807c378e43afd5f74779.1563867856.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Fabio Estevam <festevam@gmail.com>, Anson Huang <anson.huang@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Marco Felsch <m.felsch@pengutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Paul Olaru <paul.olaru@nxp.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, sound-open-fir
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Weijie Gao <weijie.gao@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 11:32 AM Lucas Stach <l.stach@pengutronix.de> wrote:
->
-> Hi Daniel,
->
-> Am Mittwoch, den 24.07.2019, 09:54 +0300 schrieb Daniel Baluta:
-> > On Tue, Jul 23, 2019 at 6:18 PM Pierre-Louis Bossart
-> [...]
-> >
-> > > Also are all the resources device-managed, I don't see a remove()?
-> >
-> > Good catch for pm stuff. We mostly didn't care about remove because
-> > drivers are always Y in our distribution.
->
-> Linux drivers need to be hotplug aware, even if they are not built as a
-> module. You can test things by manually unbinding the driver from the
-> device via sysfs.
+From: Sean Wang <sean.wang@mediatek.com>
 
-Agree. Will take this into consideration when sending next version!
+The MediaTek MT7623 SoC contains a Mali-450, so add a compatible for it
+and define its own vendor-specific properties.
+
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+index ae63f09fda7d..73021e2dda25 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+@@ -17,6 +17,7 @@ Required properties:
+       + amlogic,meson8b-mali
+       + amlogic,meson-gxbb-mali
+       + amlogic,meson-gxl-mali
++      + mediatek,mt7623-mali
+       + rockchip,rk3036-mali
+       + rockchip,rk3066-mali
+       + rockchip,rk3188-mali
+@@ -88,6 +89,10 @@ to specify one more vendor-specific compatible, among:
+     Required properties:
+       * resets: phandle to the reset line for the GPU
+ 
++  - mediatek,mt7623-mali
++     Required properties:
++      * resets: phandle to the reset line for the GPU
++
+   - Rockchip variants:
+     Required properties:
+       * resets: phandle to the reset line for the GPU
+-- 
+2.18.0
