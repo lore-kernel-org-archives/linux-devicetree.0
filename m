@@ -1,371 +1,85 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: msm8998: Node ordering, address
- cleanups
-Date: Wed, 24 Jul 2019 21:05:33 +0530
-Message-ID: <20190724153533.GP12733@vkoul-mobl.Dlink>
-References: <20190722165823.21539-1-jeffrey.l.hugo@gmail.com>
+From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+Subject: [PATCH 0/3] drm: bridge: Add NWL MIPI DSI host controller support
+Date: Wed, 24 Jul 2019 17:52:23 +0200
+Message-ID: <cover.1563983037.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190722165823.21539-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert
 List-Id: devicetree@vger.kernel.org
 
-On 22-07-19, 09:58, Jeffrey Hugo wrote:
-> DT nodes should be ordered by address, then node name, and finally label.
-> The msm8998 dtsi does not follow this, so clean it up by reordering the
-> nodes.  While we are at it, extend the addresses to be fully 32-bits wide
-> so that ordering is easy to determine when adding new nodes.  Also, two
-> or so nodes had the wrong address value in their node name (did not match
-> the reg property), so fix those up as well.
-> 
-> Hopefully going forward, things can be maintained so that a cleanup like
-> this is not needed.
+This adds initial support for the NWL MIPI DSI Host controller found on i.MX8
+SoCs.
 
-lgtm, ideally I would have liked that we reg addresses fixed first and
-then sort the file (remember a patch should do one thing)
+It adds support for the i.MX8MQ but the same IP core can also be found on e.g.
+i.MX8QXP. I added the necessary hooks to support other imx8 variants but since
+I only have imx8mq boards to test I omitted the platform data for other SoCs.
 
-But then any cleanup is better to do :) so:
+The code is based on NXPs BSP so I added Robert Chiras as
+Co-authored-by. Robert, if this looks sane could you add your
+Signed-off-by:?
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+The most notable changes over the BSP driver are
+ - Calculate HS mode timing from phy_configure_opts_mipi_dphy
+ - Perform all clock setup via DT
+ - Merge nwl-imx and nwl drivers
+ - Add B0 silion revision quirk
+ - become a bridge driver to hook into mxsfb (from what I read[0] DCSS, which
+   also can drive the nwl on the imx8mq will likely not become part of
+   imx-display-subsystem so it makes sense to make it drive a bridge for dsi as
+   well).
+ - Use panel_bridge to attach the panel
 
-> 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  arch/arm64/boot/dts/qcom/msm8998.dtsi | 254 +++++++++++++-------------
->  1 file changed, 127 insertions(+), 127 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> index c13ed7aeb1e0..4b66a1c588f8 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> @@ -787,14 +787,22 @@
->  		ranges = <0 0 0 0xffffffff>;
->  		compatible = "simple-bus";
->  
-> -		rpm_msg_ram: memory@68000 {
-> +		gcc: clock-controller@100000 {
-> +			compatible = "qcom,gcc-msm8998";
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +			#power-domain-cells = <1>;
-> +			reg = <0x00100000 0xb0000>;
-> +		};
-> +
-> +		rpm_msg_ram: memory@778000 {
->  			compatible = "qcom,rpm-msg-ram";
-> -			reg = <0x778000 0x7000>;
-> +			reg = <0x00778000 0x7000>;
->  		};
->  
->  		qfprom: qfprom@780000 {
->  			compatible = "qcom,qfprom";
-> -			reg = <0x780000 0x621c>;
-> +			reg = <0x00780000 0x621c>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  
-> @@ -804,47 +812,10 @@
->  			};
->  		};
->  
-> -		gcc: clock-controller@100000 {
-> -			compatible = "qcom,gcc-msm8998";
-> -			#clock-cells = <1>;
-> -			#reset-cells = <1>;
-> -			#power-domain-cells = <1>;
-> -			reg = <0x100000 0xb0000>;
-> -		};
-> -
-> -		tlmm: pinctrl@3400000 {
-> -			compatible = "qcom,msm8998-pinctrl";
-> -			reg = <0x3400000 0xc00000>;
-> -			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> -			gpio-controller;
-> -			#gpio-cells = <0x2>;
-> -			interrupt-controller;
-> -			#interrupt-cells = <0x2>;
-> -		};
-> -
-> -		spmi_bus: spmi@800f000 {
-> -			compatible = "qcom,spmi-pmic-arb";
-> -			reg =	<0x800f000 0x1000>,
-> -				<0x8400000 0x1000000>,
-> -				<0x9400000 0x1000000>,
-> -				<0xa400000 0x220000>,
-> -				<0x800a000 0x3000>;
-> -			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
-> -			interrupt-names = "periph_irq";
-> -			interrupts = <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>;
-> -			qcom,ee = <0>;
-> -			qcom,channel = <0>;
-> -			#address-cells = <2>;
-> -			#size-cells = <0>;
-> -			interrupt-controller;
-> -			#interrupt-cells = <4>;
-> -			cell-index = <0>;
-> -		};
-> -
->  		tsens0: thermal@10ab000 {
->  			compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
-> -			reg = <0x10ab000 0x1000>, /* TM */
-> -			      <0x10aa000 0x1000>; /* SROT */
-> +			reg = <0x010ab000 0x1000>, /* TM */
-> +			      <0x010aa000 0x1000>; /* SROT */
->  
->  			#qcom,sensors = <14>;
->  			#thermal-sensor-cells = <1>;
-> @@ -852,8 +823,8 @@
->  
->  		tsens1: thermal@10ae000 {
->  			compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
-> -			reg = <0x10ae000 0x1000>, /* TM */
-> -			      <0x10ad000 0x1000>; /* SROT */
-> +			reg = <0x010ae000 0x1000>, /* TM */
-> +			      <0x010ad000 0x1000>; /* SROT */
->  
->  			#qcom,sensors = <8>;
->  			#thermal-sensor-cells = <1>;
-> @@ -943,16 +914,107 @@
->  			};
->  		};
->  
-> +		ufshc: ufshc@1da4000 {
-> +			compatible = "qcom,msm8998-ufshc", "qcom,ufshc", "jedec,ufs-2.0";
-> +			reg = <0x01da4000 0x2500>;
-> +			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
-> +			phys = <&ufsphy_lanes>;
-> +			phy-names = "ufsphy";
-> +			lanes-per-direction = <2>;
-> +			power-domains = <&gcc UFS_GDSC>;
-> +			#reset-cells = <1>;
-> +
-> +			clock-names =
-> +				"core_clk",
-> +				"bus_aggr_clk",
-> +				"iface_clk",
-> +				"core_clk_unipro",
-> +				"ref_clk",
-> +				"tx_lane0_sync_clk",
-> +				"rx_lane0_sync_clk",
-> +				"rx_lane1_sync_clk";
-> +			clocks =
-> +				<&gcc GCC_UFS_AXI_CLK>,
-> +				<&gcc GCC_AGGRE1_UFS_AXI_CLK>,
-> +				<&gcc GCC_UFS_AHB_CLK>,
-> +				<&gcc GCC_UFS_UNIPRO_CORE_CLK>,
-> +				<&rpmcc RPM_SMD_LN_BB_CLK1>,
-> +				<&gcc GCC_UFS_TX_SYMBOL_0_CLK>,
-> +				<&gcc GCC_UFS_RX_SYMBOL_0_CLK>,
-> +				<&gcc GCC_UFS_RX_SYMBOL_1_CLK>;
-> +			freq-table-hz =
-> +				<50000000 200000000>,
-> +				<0 0>,
-> +				<0 0>,
-> +				<37500000 150000000>,
-> +				<0 0>,
-> +				<0 0>,
-> +				<0 0>,
-> +				<0 0>;
-> +
-> +			resets = <&gcc GCC_UFS_BCR>;
-> +			reset-names = "rst";
-> +		};
-> +
-> +		ufsphy: phy@1da7000 {
-> +			compatible = "qcom,msm8998-qmp-ufs-phy";
-> +			reg = <0x01da7000 0x18c>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +
-> +			clock-names =
-> +				"ref",
-> +				"ref_aux";
-> +			clocks =
-> +				<&gcc GCC_UFS_CLKREF_CLK>,
-> +				<&gcc GCC_UFS_PHY_AUX_CLK>;
-> +
-> +			reset-names = "ufsphy";
-> +			resets = <&ufshc 0>;
-> +
-> +			ufsphy_lanes: lanes@1da7400 {
-> +				reg = <0x01da7400 0x128>,
-> +				      <0x01da7600 0x1fc>,
-> +				      <0x01da7c00 0x1dc>,
-> +				      <0x01da7800 0x128>,
-> +				      <0x01da7a00 0x1fc>;
-> +				#phy-cells = <0>;
-> +			};
-> +		};
-> +
->  		tcsr_mutex_regs: syscon@1f40000 {
->  			compatible = "syscon";
-> -			reg = <0x1f40000 0x20000>;
-> +			reg = <0x01f40000 0x20000>;
->  		};
->  
-> -		apcs_glb: mailbox@9820000 {
-> -			compatible = "qcom,msm8998-apcs-hmss-global";
-> -			reg = <0x17911000 0x1000>;
-> +		tlmm: pinctrl@3400000 {
-> +			compatible = "qcom,msm8998-pinctrl";
-> +			reg = <0x03400000 0xc00000>;
-> +			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <0x2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <0x2>;
-> +		};
->  
-> -			#mbox-cells = <1>;
-> +		spmi_bus: spmi@800f000 {
-> +			compatible = "qcom,spmi-pmic-arb";
-> +			reg =	<0x0800f000 0x1000>,
-> +				<0x08400000 0x1000000>,
-> +				<0x09400000 0x1000000>,
-> +				<0x0a400000 0x220000>,
-> +				<0x0800a000 0x3000>;
-> +			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
-> +			interrupt-names = "periph_irq";
-> +			interrupts = <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>;
-> +			qcom,ee = <0>;
-> +			qcom,channel = <0>;
-> +			#address-cells = <2>;
-> +			#size-cells = <0>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <4>;
-> +			cell-index = <0>;
->  		};
->  
->  		usb3: usb@a8f8800 {
-> @@ -1044,7 +1106,7 @@
->  
->  		sdhc2: sdhci@c0a4900 {
->  			compatible = "qcom,sdhci-msm-v4";
-> -			reg = <0xc0a4900 0x314>, <0xc0a4000 0x800>;
-> +			reg = <0x0c0a4900 0x314>, <0x0c0a4000 0x800>;
->  			reg-names = "hc_mem", "core_mem";
->  
->  			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-> @@ -1149,6 +1211,16 @@
->  			#size-cells = <0>;
->  		};
->  
-> +		blsp2_uart1: serial@c1b0000 {
-> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-> +			reg = <0x0c1b0000 0x1000>;
-> +			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>,
-> +				 <&gcc GCC_BLSP2_AHB_CLK>;
-> +			clock-names = "core", "iface";
-> +			status = "disabled";
-> +		};
-> +
->  		blsp2_i2c0: i2c@c1b5000 {
->  			compatible = "qcom,i2c-qup-v2.2.1";
->  			reg = <0x0c1b5000 0x600>;
-> @@ -1239,14 +1311,11 @@
->  			#size-cells = <0>;
->  		};
->  
-> -		blsp2_uart1: serial@c1b0000 {
-> -			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-> -			reg = <0xc1b0000 0x1000>;
-> -			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>,
-> -				 <&gcc GCC_BLSP2_AHB_CLK>;
-> -			clock-names = "core", "iface";
-> -			status = "disabled";
-> +		apcs_glb: mailbox@17911000 {
-> +			compatible = "qcom,msm8998-apcs-hmss-global";
-> +			reg = <0x17911000 0x1000>;
-> +
-> +			#mbox-cells = <1>;
->  		};
->  
->  		timer@17920000 {
-> @@ -1320,75 +1389,6 @@
->  			redistributor-stride = <0x0 0x20000>;
->  			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->  		};
-> -
-> -		ufshc: ufshc@1da4000 {
-> -			compatible = "qcom,msm8998-ufshc", "qcom,ufshc", "jedec,ufs-2.0";
-> -			reg = <0x01da4000 0x2500>;
-> -			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
-> -			phys = <&ufsphy_lanes>;
-> -			phy-names = "ufsphy";
-> -			lanes-per-direction = <2>;
-> -			power-domains = <&gcc UFS_GDSC>;
-> -			#reset-cells = <1>;
-> -
-> -			clock-names =
-> -				"core_clk",
-> -				"bus_aggr_clk",
-> -				"iface_clk",
-> -				"core_clk_unipro",
-> -				"ref_clk",
-> -				"tx_lane0_sync_clk",
-> -				"rx_lane0_sync_clk",
-> -				"rx_lane1_sync_clk";
-> -			clocks =
-> -				<&gcc GCC_UFS_AXI_CLK>,
-> -				<&gcc GCC_AGGRE1_UFS_AXI_CLK>,
-> -				<&gcc GCC_UFS_AHB_CLK>,
-> -				<&gcc GCC_UFS_UNIPRO_CORE_CLK>,
-> -				<&rpmcc RPM_SMD_LN_BB_CLK1>,
-> -				<&gcc GCC_UFS_TX_SYMBOL_0_CLK>,
-> -				<&gcc GCC_UFS_RX_SYMBOL_0_CLK>,
-> -				<&gcc GCC_UFS_RX_SYMBOL_1_CLK>;
-> -			freq-table-hz =
-> -				<50000000 200000000>,
-> -				<0 0>,
-> -				<0 0>,
-> -				<37500000 150000000>,
-> -				<0 0>,
-> -				<0 0>,
-> -				<0 0>,
-> -				<0 0>;
-> -
-> -			resets = <&gcc GCC_UFS_BCR>;
-> -			reset-names = "rst";
-> -		};
-> -
-> -		ufsphy: phy@1da7000 {
-> -			compatible = "qcom,msm8998-qmp-ufs-phy";
-> -			reg = <0x01da7000 0x18c>;
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -			ranges;
-> -
-> -			clock-names =
-> -				"ref",
-> -				"ref_aux";
-> -			clocks =
-> -				<&gcc GCC_UFS_CLKREF_CLK>,
-> -				<&gcc GCC_UFS_PHY_AUX_CLK>;
-> -
-> -			reset-names = "ufsphy";
-> -			resets = <&ufshc 0>;
-> -
-> -			ufsphy_lanes: lanes@1da7400 {
-> -				reg = <0x01da7400 0x128>,
-> -				      <0x01da7600 0x1fc>,
-> -				      <0x01da7c00 0x1dc>,
-> -				      <0x01da7800 0x128>,
-> -				      <0x01da7a00 0x1fc>;
-> -				#phy-cells = <0>;
-> -			};
-> -		};
->  	};
->  };
->  
-> -- 
-> 2.17.1
+This has been tested on a Librem 5 devkit using mxsfb with Robert's patches[1]
+and the rocktech-jh057n00900 panel driver. The DCSS can later on also act as
+input source too.
+
+Changes from v0:
+- Add quirk for IMQ8MQ silicon B0 revision to not mess with the
+  system reset controller on power down since enable() won't work
+  otherwise.
+- Drop devm_free_irq() handled by the device driver core
+- Disable tx esc clock after the phy power down to unbreak
+  disable/enable (unblank/blank)
+- Add ports to dt binding docs
+- Select GENERIC_PHY_MIPI_DPHY instead of GENERIC_PHY for
+  phy_mipi_dphy_get_default_config
+- Select DRM_MIPI_DSI
+- Include drm_print.h to fix build on next-20190408
+- Drop some debugging messages
+- Newline terminate all DRM_ printouts
+- Turn component driver into a drm bridge
+
+[0]: https://lists.freedesktop.org/archives/dri-devel/2019-May/219484.html
+[1]: https://patchwork.freedesktop.org/series/62822/
+
+Guido Günther (3):
+  arm64: imx8mq: add imx8mq iomux-gpr field defines
+  dt-bindings: display/bridge: Add binding for IMX NWL mipi dsi host
+    controller
+  drm/bridge: Add NWL MIPI DSI host controller support
+
+ .../bindings/display/bridge/imx-nwl-dsi.txt   |  89 +++
+ drivers/gpu/drm/bridge/Kconfig                |   2 +
+ drivers/gpu/drm/bridge/Makefile               |   1 +
+ drivers/gpu/drm/bridge/imx-nwl/Kconfig        |  15 +
+ drivers/gpu/drm/bridge/imx-nwl/Makefile       |   2 +
+ drivers/gpu/drm/bridge/imx-nwl/nwl-drv.c      | 529 +++++++++++++
+ drivers/gpu/drm/bridge/imx-nwl/nwl-drv.h      |  72 ++
+ drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.c      | 745 ++++++++++++++++++
+ drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.h      | 111 +++
+ include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h  |  62 ++
+ 10 files changed, 1628 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
+ create mode 100644 drivers/gpu/drm/bridge/imx-nwl/Kconfig
+ create mode 100644 drivers/gpu/drm/bridge/imx-nwl/Makefile
+ create mode 100644 drivers/gpu/drm/bridge/imx-nwl/nwl-drv.c
+ create mode 100644 drivers/gpu/drm/bridge/imx-nwl/nwl-drv.h
+ create mode 100644 drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.c
+ create mode 100644 drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.h
+ create mode 100644 include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
 
 -- 
-~Vinod
+2.20.1
