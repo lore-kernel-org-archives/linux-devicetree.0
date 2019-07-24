@@ -1,14 +1,15 @@
 From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: RE: [PATCH 1/2] ARCv2: IDU-intc: Add support for edge-triggered
+Subject: RE: [PATCH 2/2] dt-bindings: IDU-intc: Add support for edge-triggered
  interrupts
-Date: Wed, 24 Jul 2019 10:47:31 +0000
-Message-ID: <CY4PR1201MB0120EDD4173511912A9FC99EA1C60@CY4PR1201MB0120.namprd12.prod.outlook.com>
+Date: Wed, 24 Jul 2019 10:53:30 +0000
+Message-ID: <CY4PR1201MB012055687BED617CB2689678A1C60@CY4PR1201MB0120.namprd12.prod.outlook.com>
 References: <20190723102606.309089-1-mischa.jonker@synopsys.com>
+ <20190723102606.309089-2-mischa.jonker@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190723102606.309089-1-mischa.jonker@synopsys.com>
+In-Reply-To: <20190723102606.309089-2-mischa.jonker@synopsys.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mischa Jonker <Mischa.Jonker@synopsys.com>
@@ -27,52 +28,15 @@ ux-snps-
 > arc@lists.infradead.org; linux-kernel@vger.kernel.org; devicetree@vger.ke=
 rnel.org
 > Cc: Mischa Jonker <mischa.jonker@synopsys.com>
-> Subject: [PATCH 1/2] ARCv2: IDU-intc: Add support for edge-triggered inte=
-rrupts
+> Subject: [PATCH 2/2] dt-bindings: IDU-intc: Add support for edge-triggere=
+d interrupts
 >=20
-> This adds support for an optional extra interrupt cell to specify edge
-> vs level triggered. It is backward compatible with dts files with only
-> one cell, and will default to level-triggered in such a case.
+> This updates the documentation for supporting  a optional extra interrupt
+> cell to specify edge vs level triggered.
 
-In general LGTM. Still a couple of comments.
-
-It might be useful to explain changes
-made to idu_irq_set_affinity() as it's not immediately clear what affinity
-has to do with IRQ modes (in theory it should be orthogonal).
-
-But what happens we're actually fixing previously implemented short-cut
-when instead of a separately set IRQ mode we were doing it together with
-setup of distribution since it's done with the same one command
-(anyways we relied on the one and only IRQ type being supported).
-
-And now we have a proper implementation with separated setup of IRQ mode an=
-d
-affinity.
-
->  static int
->  idu_irq_set_affinity(struct irq_data *data, const struct cpumask *cpumas=
-k,
->  		     bool force)
-> @@ -263,13 +285,32 @@ idu_irq_set_affinity(struct irq_data *data, const s=
-truct cpumask *cpumask,
->  	else
->  		distribution_mode =3D IDU_M_DISTRI_RR;
->=20
-> -	idu_set_mode(data->hwirq, IDU_M_TRIG_LEVEL, distribution_mode);
-> +	idu_set_mode(data->hwirq, false, 0, true, distribution_mode);
->=20
->  	raw_spin_unlock_irqrestore(&mcip_lock, flags);
->=20
->  	return IRQ_SET_MASK_OK;
->  }
->=20
-> +static int idu_irq_set_type(struct irq_data *data, u32 type)
-> +{
-> +	unsigned long flags;
-> +
-> +	if (type & ~(IRQ_TYPE_EDGE_RISING | IRQ_TYPE_LEVEL_HIGH))
-> +		return -EINVAL;
-
-Maybe add an explanation why only these types are supported?
+LGTM as well. But maybe split pure clean-up changes from addition of
+the new property description so that info about addition of new property is
+clearly seen? Otherwise it gets a bit lost among nice and useful generic fi=
+xes.
 
 -Alexey
