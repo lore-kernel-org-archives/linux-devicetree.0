@@ -1,70 +1,60 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: msm8998: Node ordering, address
- cleanups
-Date: Wed, 24 Jul 2019 11:45:07 -0700
-Message-ID: <20190724184507.GN7234@tuxbook-pro>
-References: <20190722165823.21539-1-jeffrey.l.hugo@gmail.com>
- <2165bbd3-aa60-bec0-4ee7-dfb7dc1dd1ad@free.fr>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 1/2] drm/pl111: Deprecate the pads from the DT binding
+Date: Wed, 24 Jul 2019 20:49:43 +0200
+Message-ID: <20190724184943.GA22640@ravnborg.org>
+References: <20190724134959.2365-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <2165bbd3-aa60-bec0-4ee7-dfb7dc1dd1ad@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, DT <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20190724134959.2365-1-linus.walleij@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Liviu Dudau <Liviu.Dudau@arm.com>, dri-devel@lists.freedesktop.org, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 24 Jul 04:16 PDT 2019, Marc Gonzalez wrote:
-
-> On 22/07/2019 18:58, Jeffrey Hugo wrote:
-> 
-> > DT nodes should be ordered by address, then node name, and finally label.
-> > The msm8998 dtsi does not follow this, so clean it up by reordering the
-> > nodes.  While we are at it, extend the addresses to be fully 32-bits wide
-> > so that ordering is easy to determine when adding new nodes.  Also, two
-> > or so nodes had the wrong address value in their node name (did not match
-> > the reg property), so fix those up as well.
-> > 
-> > Hopefully going forward, things can be maintained so that a cleanup like
-> > this is not needed.
-> > 
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/msm8998.dtsi | 254 +++++++++++++-------------
-> >  1 file changed, 127 insertions(+), 127 deletions(-)
-> 
-> LGTM.
-> 
-> Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> 
-> Rob, Mark: when there are multiple reg properties, why is the convention
-> to use the *first* address in the node's name, rather than the lowest
-> address?
-> 
-
-Per the ePAPR (section 2.2.1 Node Names of v1.1):
-
-"The unit-address must match the first address specified in the reg
-property of the node".
-
-Regards,
-Bjorn
-
-> e.g.
-> 
-> 		spmi_bus: spmi@800f000 {
-> 			compatible = "qcom,spmi-pmic-arb";
-> 			reg =	<0x0800f000 0x1000>,
-> 				<0x08400000 0x1000000>,
-> 				<0x09400000 0x1000000>,
-> 				<0x0a400000 0x220000>,
-> 				<0x0800a000 0x3000>;
-> 			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
-> 
-> "spmi@800f000" instead of "spmi@800a000"
-> 
-> Especially, since the reg props could be in any order here, given the
-> lookup by name.
-> 
-> Regards.
+SGkgTGludXMuCgpPbiBXZWQsIEp1bCAyNCwgMjAxOSBhdCAwMzo0OTo1OFBNICswMjAwLCBMaW51
+cyBXYWxsZWlqIHdyb3RlOgo+IFRoZSBwYWRzIHdlcmUgYW4gZWFybGllciB3b3JrYXJvdW5kIGZv
+ciB0aGUgaW50ZXJuYWwgaW1hZ2UKPiBwaXBlbGluZSBpbiB0aGUgTGludXggZmJkZXYgc3Vic3lz
+dGVtLiBBcyB3ZSBtb3ZlIHRvIGdlbmVyaWMKPiBkZWZpbml0aW9uIG9mIGRpc3BsYXkgcHJvcGVy
+dGllcyBhbmQgZHJpdmVycyB0aGF0IG5vIGxvbmdlcgo+IG5lZWQgdGhpcyB0byB3b3JrLCBkZXBy
+ZWNhdGUgdGhpcyBwcm9wZXJ0eS4KPiAKPiBDYzogU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcu
+b3JnPgo+IENjOiBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+Cj4gQ2M6IExpdml1IER1
+ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29tPgo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+Zwo+IFNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9y
+Zz4KCkFja2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+Cj4gLS0tCj4gIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxwbDExeC50eHQgfCA5
+ICsrKysrLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9u
+cygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9hcm0scGwxMXgudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvYXJtLHBsMTF4LnR4dAo+IGluZGV4IDU3MmZhMjc3M2VjNC4uM2Y5NzdlNzJhMjAw
+IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2FybSxwbDExeC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9hcm0scGwxMXgudHh0Cj4gQEAgLTM5LDkgKzM5LDExIEBAIFJlcXVpcmVkIHN1Yi1u
+b2RlczoKPiAgCj4gIC0gcG9ydDogZGVzY3JpYmVzIExDRCBwYW5lbCBzaWduYWxzLCBmb2xsb3dp
+bmcgdGhlIGNvbW1vbiBiaW5kaW5nCj4gIAlmb3IgdmlkZW8gdHJhbnNtaXR0ZXIgaW50ZXJmYWNl
+czsgc2VlCj4gLQlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8t
+aW50ZXJmYWNlcy50eHQ7Cj4gLQl3aGVuIGl0IGlzIGEgVEZUIHBhbmVsLCB0aGUgcG9ydCdzIGVu
+ZHBvaW50IG11c3QgZGVmaW5lIHRoZQo+IC0JZm9sbG93aW5nIHByb3BlcnR5Ogo+ICsJRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4g
+Kwo+ICtEZXByZWNhdGVkIHByb3BlcnRpZXM6Cj4gKwlUaGUgcG9ydCdzIGVuZGJwb2ludCBzdWJu
+b2RlIGhhZCB0aGlzLCBub3cgZGVwcmVjYXRlZCBwcm9wZXJ0eQo+ICsJaW4gdGhlIHBhc3QuIERy
+aXZlcnMgc2hvdWxkIGJlIGFibGUgdG8gc3Vydml2ZSB3aXRob3V0IGl0Ogo+ICAKPiAgCS0gYXJt
+LHBsMTF4LHRmdC1yMGcwYjAtcGFkczogYW4gYXJyYXkgb2YgdGhyZWUgMzItYml0IHZhbHVlcywK
+PiAgCQlkZWZpbmluZyB0aGUgd2F5IENMRCBwYWRzIGFyZSB3aXJlZCB1cDsgZmlyc3QgdmFsdWUK
+PiBAQCAtODAsNyArODIsNiBAQCBFeGFtcGxlOgo+ICAJCXBvcnQgewo+ICAJCQljbGNkX3BhZHM6
+IGVuZHBvaW50IHsKPiAgCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmY2xjZF9wYW5lbD47Cj4gLQkJ
+CQlhcm0scGwxMXgsdGZ0LXIwZzBiMC1wYWRzID0gPDAgOCAxNj47Cj4gIAkJCX07Cj4gIAkJfTsK
+PiAgCj4gLS0gCj4gMi4yMS4wCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbA==
