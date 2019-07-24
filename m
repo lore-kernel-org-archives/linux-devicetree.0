@@ -1,29 +1,60 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: bus: imx-weim: document optional burst
- clock mode
-Date: Wed, 24 Jul 2019 14:48:22 -0600
-Message-ID: <20190724204822.GA17166@bogus>
-References: <20190712204316.16783-1-TheSven73@gmail.com>
- <20190712204316.16783-2-TheSven73@gmail.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v5 00/26] Add generic support for composing LED class
+ device name
+Date: Wed, 24 Jul 2019 23:02:52 +0200
+Message-ID: <3d8890a2-47e8-2dd0-9764-93676703df2a@gmail.com>
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+ <405b2806-342a-952d-67ab-47516225c54e@gmail.com> <20190718105233.GA3859@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190712204316.16783-2-TheSven73@gmail.com>
+In-Reply-To: <20190718105233.GA3859@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sven Van Asbroeck <thesven73@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: linux-leds@vger.kernel.org, dmurphy@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Jul 2019 16:43:16 -0400, Sven Van Asbroeck wrote:
-> An optional devicetree property was added to the imx-weim driver,
-> which if present instructs it to operate in burst clock mode.
-> Update the dt-bindings to reflect this.
+On 7/18/19 12:52 PM, Pavel Machek wrote:
 > 
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> ---
->  Documentation/devicetree/bindings/bus/imx-weim.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>> Hi all,
+>>
+>> I need explicit acks for some patches from this series, that
+>> were either requested improvements or I modified them by myself
+>> after v4.
+>>
+>> The patches I am talking about are the following:
+>>
+>> 1/26
+>> 21/26
+>> 23/26
+>> 25/26
+> 
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+
+Applied the patch set without patch 26/26 for now.
+I had to make some formatting related changes in leds-class.rst, in
+part of the added text (we had leds-class.txt -> leds-class.rst
+transition in the meantime) to fix resulting html formatting.
+Basically they aimed to achieve nice bullets to compensate some
+sphinx issue related to lack of line breaks after quoted strings.
+
+Current shape of leds-class.rst on linux-leds.git for-next branch can
+be looked up via [0].
+
+>> 26/26 would be nice to have but I presume it needs more discussion
+>> and analysis.
+> 
+> Idea is good, but I'd sort the file in different way.
+> 
+> Best regards,
+> 									Pavel
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+[0]
+https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git/tree/Documentation/leds/leds-class.rst?h=for-next
+
+-- 
+Best regards,
+Jacek Anaszewski
