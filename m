@@ -1,114 +1,117 @@
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream
- like logger
-Date: Wed, 24 Jul 2019 09:31:25 +0200
-Message-ID: <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
-References: <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
- <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
- <20190716175021.9CA412173C@mail.kernel.org>
- <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
- <20190718175024.C3EC421019@mail.kernel.org>
- <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com>
- <20190719000834.GA3228@google.com>
- <20190722200347.261D3218C9@mail.kernel.org>
- <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
- <20190722235411.06C1320840@mail.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH v5 1/3] PM: wakeup: Add routine to help fetch wakeup source object.
+Date: Wed, 24 Jul 2019 15:47:20 +0800
+Message-ID: <20190724074722.12270-1-ran.wang_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190722235411.06C1320840@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Brendan Higgins <brendanhiggins@google.com>, Jeff Dike <jdike@addtoit.com>, Kevin Hilman <khilman@baylibre.com>, Logan Gunthorpe <logang@deltatee.com>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Vetter <daniel@ffwll.ch>, Amir Goldstein <amir73il@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Kees Cook <keescook@google.com>, David Rientjes <rientjes@google.com>, kunit-dev@googlegroups.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, Peter Zijlstra <peterz@infradead.org>, Randy Dunlap <rdunlap@infradead.org>, Joel Stanley <joel@jms.id.au>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, wfg@linux.intel.com, Greg KH <gregkh@linuxfoundation.org>
+To: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 2019-07-22 16:54:10, Stephen Boyd wrote:
-> Quoting Brendan Higgins (2019-07-22 15:30:49)
-> > On Mon, Jul 22, 2019 at 1:03 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > >
-> > >
-> > > What's the calling context of the assertions and expectations? I still
-> > > don't like the fact that string stream needs to allocate buffers and
-> > > throw them into a list somewhere because the calling context matters
-> > > there.
-> > 
-> > The calling context is the same as before, which is anywhere.
-> 
-> Ok. That's concerning then.
-> 
-> > 
-> > > I'd prefer we just wrote directly to the console/log via printk
-> > > instead. That way things are simple because we use the existing
-> > > buffering path of printk, but maybe there's some benefit to the string
-> > > stream that I don't see? Right now it looks like it builds a string and
-> > > then dumps it to printk so I'm sort of lost what the benefit is over
-> > > just writing directly with printk.
-> > 
-> > It's just buffering it so the whole string gets printed uninterrupted.
-> > If we were to print out piecemeal to printk, couldn't we have another
-> > call to printk come in causing it to garble the KUnit message we are
-> > in the middle of printing?
-> 
-> Yes, printing piecemeal by calling printk many times could lead to
-> interleaving of messages if something else comes in such as an interrupt
-> printing something. Printk has some support to hold "records" but I'm
-> not sure how that would work here because KERN_CONT talks about only
-> being used early on in boot code. I haven't looked at printk in detail
-> though so maybe I'm all wrong and KERN_CONT just works?
+Some user might want to go through all registered wakeup sources
+and doing things accordingly. For example, SoC PM driver might need to
+do HW programming to prevent powering down specific IP which wakeup
+source depending on. So add this API to help walk through all registered
+wakeup source objects on that list and return them one by one.
 
-KERN_CONT does not guarantee that the message will get printed
-together. The pieces get interleaved with messages printed in
-parallel.
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+---
+Change in v5:
+	- Update commit message, add decription of walk through all wakeup
+	source objects.
+	- Add SCU protection in function wakeup_source_get_next().
+	- Rename wakeup_source member 'attached_dev' to 'dev' and move it up
+	(before wakeirq).
 
-Note that KERN_CONT was originally really meant to be used only during
-boot. It was later used more widely and ended in the best effort category.
+Change in v4:
+	- None.
 
-There were several attempts to make it more reliable. But it was
-always either too complicated or error prone or both.
+Change in v3:
+	- Adjust indentation of *attached_dev;.
 
-You need to use your own buffering if you rely want perfect output.
-The question is if it is really worth the complexity. Also note that
-any buffering reduces the chance that the messages will reach
-the console.
+Change in v2:
+	- None.
 
-BTW: There is a work in progress on a lockless printk ring buffer.
-It will make printk() more secure regarding deadlocks. But it might
-make transparent handling of continuous lines even more tricky.
+ drivers/base/power/wakeup.c | 24 ++++++++++++++++++++++++
+ include/linux/pm_wakeup.h   |  3 +++
+ 2 files changed, 27 insertions(+)
 
-I guess that local buffering, before calling printk(), will be
-even more important then. Well, it might really force us to create
-an API for it.
-
-
-> Can printk be called once with whatever is in the struct? Otherwise if
-> this is about making printk into a structured log then maybe printk
-> isn't the proper solution anyway. Maybe a dev interface should be used
-> instead that can handle starting and stopping tests (via ioctl) in
-> addition to reading test results, records, etc. with read() and a
-> clearing of the records. Then the seqfile API works naturally. All of
-> this is a bit premature, but it looks like you're going down the path of
-> making something akin to ftrace that stores binary formatted
-> assertion/expectation records in a lockless ring buffer that then
-> formats those records when the user asks for them.
-
-IMHO, ftrace postpones the text formatting primary because it does not
-not want to slow down the traced code more than necessary. It is yet
-another layer and there should be some strong reason for it.
-
-> I can imagine someone wanting to write unit tests that check conditions
-> from a simulated hardirq context via irq works (a driver mock
-> framework?), so this doesn't seem far off.
-
-Note that stroring the messages into the printk log is basically safe in any
-context. It uses temporary per-CPU buffers for recursive messages and
-in NMI. The only problem is panic() when some CPU gets stuck with the
-lock taken. This will get solved by the lockless ringbuffer. Also
-the temporary buffers will not be necessary any longer.
-
-Much bigger problems are with consoles. There are many of them. It
-means a lot of code and more locks involved, including scheduler
-locks. Note that console lock is a semaphore.
-
-Best Regards,
-Petr
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index ee31d4f..2fba891 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -14,6 +14,7 @@
+ #include <linux/suspend.h>
+ #include <linux/seq_file.h>
+ #include <linux/debugfs.h>
++#include <linux/of_device.h>
+ #include <linux/pm_wakeirq.h>
+ #include <trace/events/power.h>
+ 
+@@ -226,6 +227,28 @@ void wakeup_source_unregister(struct wakeup_source *ws)
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(wakeup_source_unregister);
++/**
++ * wakeup_source_get_next - Get next wakeup source from the list
++ * @ws: Previous wakeup source object, null means caller want first one.
++ */
++struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws)
++{
++	struct list_head *ws_head = &wakeup_sources;
++	struct wakeup_source *next_ws = NULL;
++	int idx;
++
++	idx = srcu_read_lock(&wakeup_srcu);
++	if (ws)
++		next_ws = list_next_or_null_rcu(ws_head, &ws->entry,
++				struct wakeup_source, entry);
++	else
++		next_ws = list_entry_rcu(ws_head->next,
++				struct wakeup_source, entry);
++	srcu_read_unlock(&wakeup_srcu, idx);
++
++	return next_ws;
++}
++EXPORT_SYMBOL_GPL(wakeup_source_get_next);
+ 
+ /**
+  * device_wakeup_attach - Attach a wakeup source object to a device object.
+@@ -242,6 +265,7 @@ static int device_wakeup_attach(struct device *dev, struct wakeup_source *ws)
+ 		return -EEXIST;
+ 	}
+ 	dev->power.wakeup = ws;
++	ws->dev = dev;
+ 	if (dev->power.wakeirq)
+ 		device_wakeup_attach_irq(dev, dev->power.wakeirq);
+ 	spin_unlock_irq(&dev->power.lock);
+diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+index 9102760..fc23c1a 100644
+--- a/include/linux/pm_wakeup.h
++++ b/include/linux/pm_wakeup.h
+@@ -23,6 +23,7 @@ struct wake_irq;
+  * @name: Name of the wakeup source
+  * @entry: Wakeup source list entry
+  * @lock: Wakeup source lock
++ * @dev: The device it attached to
+  * @wakeirq: Optional device specific wakeirq
+  * @timer: Wakeup timer list
+  * @timer_expires: Wakeup timer expiration
+@@ -42,6 +43,7 @@ struct wakeup_source {
+ 	const char 		*name;
+ 	struct list_head	entry;
+ 	spinlock_t		lock;
++	struct device		*dev;
+ 	struct wake_irq		*wakeirq;
+ 	struct timer_list	timer;
+ 	unsigned long		timer_expires;
+@@ -88,6 +90,7 @@ extern void wakeup_source_add(struct wakeup_source *ws);
+ extern void wakeup_source_remove(struct wakeup_source *ws);
+ extern struct wakeup_source *wakeup_source_register(const char *name);
+ extern void wakeup_source_unregister(struct wakeup_source *ws);
++extern struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws);
+ extern int device_wakeup_enable(struct device *dev);
+ extern int device_wakeup_disable(struct device *dev);
+ extern void device_set_wakeup_capable(struct device *dev, bool capable);
+-- 
+2.7.4
