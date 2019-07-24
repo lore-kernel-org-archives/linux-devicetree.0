@@ -1,33 +1,30 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/7] dt-bindings: timer: renesas, cmt: Add CMT0234 to
+Subject: Re: [PATCH 2/7] dt-bindings: timer: renesas, cmt: Update CMT1 on
  sh73a0 and r8a7740
-Date: Wed, 24 Jul 2019 13:12:36 +0200
-Message-ID: <20190724111236.gkhs22rizwalpc63@verge.net.au>
+Date: Wed, 24 Jul 2019 13:12:52 +0200
+Message-ID: <20190724111252.bamz3fwd47n3kmwj@verge.net.au>
 References: <156345023791.5307.6113391102648394591.sendpatchset@octo>
- <156345025207.5307.17135263586186534810.sendpatchset@octo>
+ <156345026539.5307.17098096827162445534.sendpatchset@octo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <156345025207.5307.17135263586186534810.sendpatchset@octo>
+In-Reply-To: <156345026539.5307.17098096827162445534.sendpatchset@octo>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Magnus Damm <magnus.damm@gmail.com>
 Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, geert+renesas@glider.be, daniel.lezcano@linaro.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 08:44:12PM +0900, Magnus Damm wrote:
+On Thu, Jul 18, 2019 at 08:44:25PM +0900, Magnus Damm wrote:
 > From: Magnus Damm <damm+renesas@opensource.se>
 > 
-> Document the on-chip CMT devices included in r8a7740 and sh73a0.
+> This patch reworks the DT binding documentation for the 6-channel
+> 48-bit CMTs known as CMT1 on r8a7740 and sh73a0.
 > 
-> Included in this patch is DT binding documentation for 32-bit CMTs
-> CMT0, CMT2, CMT3 and CMT4. They all contain a single channel and are
-> quite similar however some minor differences still exist:
->  - "Counter input clock" (clock input and on-device divider)
->     One example is that RCLK 1/1 is supported by CMT2, CMT3 and CMT4.
->  - "Wakeup request" (supported by CMT0 and CMT2)
-> 
-> Because of this one unique compat string per CMT device is selected.
+> After the update the same style of DT binding as the rest of the upstream
+> SoCs will now also be used by r8a7740 and sh73a0. The DT binding "cmt-48"
+> is removed from the DT binding documentation, however software support for
+> this deprecated binding will still remain in the CMT driver for some time.
 > 
 > Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 > Reviewed-by: Rob Herring <robh@kernel.org>
