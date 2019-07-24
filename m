@@ -1,113 +1,113 @@
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: [PATCH net-next v2 4/4] arm64: dts: fsl: ls1028a: Enable eth port1 on the ls1028a QDS board
-Date: Thu, 25 Jul 2019 14:19:28 +0300
-Message-ID: <1564053568-20522-5-git-send-email-claudiu.manoil@nxp.com>
-References: <1564053568-20522-1-git-send-email-claudiu.manoil@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564053568-20522-1-git-send-email-claudiu.manoil@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David S . Miller" <davem@davemloft.net>
-Cc: andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 7/8] dt-bindings: arm: sunxi: add binding
+ for Lichee Zero Plus core board
+Date: Wed, 24 Jul 2019 16:14:25 +0200
+Message-ID: <20190724141425.aycdkdwlgmljwpgr@flea>
+References: <20190713034634.44585-1-icenowy@aosc.io>
+ <20190713034634.44585-8-icenowy@aosc.io>
+ <20190720101318.cwrvv5r42wxx5k4r@flea>
+ <BDF0C9F6-DD0D-4343-8E24-06A07055004C@aosc.io>
+ <20190722192934.3jaf3r4rnyeslqyw@flea>
+ <7d24576697521f4985617113dbc4cc41@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWVG43UQKGQE63KKE6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <7d24576697521f4985617113dbc4cc41-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-LS1028a has one Ethernet management interface. On the QDS board, the
-MDIO signals are multiplexed to either on-board AR8035 PHY device or
-to 4 PCIe slots allowing for SGMII cards.
-To enable the Ethernet ENETC Port 1, which can only be connected to a
-RGMII PHY, the multiplexer needs to be configured to route the MDIO to
-the AR8035 PHY.  The MDIO/MDC routing is controlled by bits 7:4 of FPGA
-board config register 0x54, and value 0 selects the on-board RGMII PHY.
-The FPGA board config registers are accessible on the i2c bus, at address
-0x66.
+On Wed, Jul 24, 2019 at 09:09:01PM +0800, Icenowy Zheng wrote:
+> =E5=9C=A8 2019-07-23 03:29=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> > On Sat, Jul 20, 2019 at 07:39:08PM +0800, Icenowy Zheng wrote:
+> > >
+> > >
+> > > =E4=BA=8E 2019=E5=B9=B47=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=
+=8D=886:13:18, Maxime Ripard
+> > > <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+> > > >On Sat, Jul 13, 2019 at 11:46:33AM +0800, Icenowy Zheng wrote:
+> > > >> The Lichee Zero Plus is a core board made by Sipeed, with a microU=
+SB
+> > > >> connector on it, TF slot or WSON8 SD chip, optional eMMC or SPI
+> > > >Flash.
+> > > >> It has a gold finger connector for expansion, and UART is availabl=
+e
+> > > >from
+> > > >> reserved pins w/ 2.54mm pitch. The board can use either SoChip S3 =
+or
+> > > >> Allwinner V3L SoCs.
+> > > >>
+> > > >> Add the device tree binding of the basic version of the core board=
+ --
+> > > >> w/o eMMC or SPI Flash, w/ TF slot or WSON8 SD, and use S3 SoC.
+> > > >>
+> > > >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > > >> ---
+> > > >> No changes since v3.
+> > > >>
+> > > >> Patch introduced in v2.
+> > > >>
+> > > >>  Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+> > > >>  1 file changed, 5 insertions(+)
+> > > >>
+> > > >> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml
+> > > >b/Documentation/devicetree/bindings/arm/sunxi.yaml
+> > > >> index 000a00d12d6a..48c126a7a848 100644
+> > > >> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
+> > > >> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+> > > >> @@ -353,6 +353,11 @@ properties:
+> > > >>            - const: licheepi,licheepi-zero
+> > > >>            - const: allwinner,sun8i-v3s
+> > > >>
+> > > >> +      - description: Lichee Zero Plus (with S3, without eMMC/SPI
+> > > >Flash)
+> > > >> +        items:
+> > > >> +          - const: sipeed,lichee-zero-plus
+> > > >> +          - const: allwinner,sun8i-s3
+> > > >
+> > > >If the S3 is just a rebranded V3, then we should have the v3 compati=
+le
+> > > >in that list too.
+> > >
+> > > S3 is V3 with copackaged DDR3 DRAM.
+> > >
+> > > It's pin incompatible w/ V3.
+> >
+> > Does it matter though?
+> >
+> > If the only thing that changes is the package, we're not manipulating
+> > that, and any software that deals with the v3 can deal with the
+> > s3. Which is what the compatible is about.
+>
+> Okay. Should the S3 compatible be kept befoer the V3 one?
 
-The PF3 MDIO PCIe integrated endpoint device allows for centralized access
-to the MDIO bus.  Add the corresponding devicetree node and set it to be
-the MDIO bus parent.
+Yep, something like (in the DT)
 
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
----
-v1 - none
-v2 - none
+compatible =3D "sipeed,lichee-zero-plus", "allwinner,sun8i-s3", "allwinner,=
+sun8i-v3"
 
- .../boot/dts/freescale/fsl-ls1028a-qds.dts    | 40 +++++++++++++++++++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
- 2 files changed, 46 insertions(+)
+Maxime
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index de6ef39f3118..663c4b728c07 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -85,6 +85,26 @@
- 			system-clock-frequency = <25000000>;
- 		};
- 	};
-+
-+	mdio-mux {
-+		compatible = "mdio-mux-multiplexer";
-+		mux-controls = <&mux 0>;
-+		mdio-parent-bus = <&enetc_mdio_pf3>;
-+		#address-cells=<1>;
-+		#size-cells = <0>;
-+
-+		/* on-board RGMII PHY */
-+		mdio@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			qds_phy1: ethernet-phy@5 {
-+				/* Atheros 8035 */
-+				reg = <5>;
-+			};
-+		};
-+	};
- };
- 
- &duart0 {
-@@ -164,6 +184,26 @@
- 			};
- 		};
- 	};
-+
-+	fpga@66 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "fsl,ls1028aqds-fpga", "fsl,fpga-qixis-i2c",
-+			     "simple-mfd";
-+		reg = <0x66>;
-+
-+		mux: mux-controller {
-+			compatible = "reg-mux";
-+			#mux-control-cells = <1>;
-+			mux-reg-masks = <0x54 0xf0>; /* 0: reg 0x54, bits 7:4 */
-+		};
-+	};
-+
-+};
-+
-+&enetc_port1 {
-+	phy-handle = <&qds_phy1>;
-+	phy-connection-type = "rgmii-id";
- };
- 
- &sai1 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 7975519b4f56..de71153fda00 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -536,6 +536,12 @@
- 				compatible = "fsl,enetc";
- 				reg = <0x000100 0 0 0 0>;
- 			};
-+			enetc_mdio_pf3: mdio@0,3 {
-+				compatible = "fsl,enetc-mdio";
-+				reg = <0x000300 0 0 0 0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 			ethernet@0,4 {
- 				compatible = "fsl,enetc-ptp";
- 				reg = <0x000400 0 0 0 0>;
--- 
-2.17.1
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190724141425.aycdkdwlgmljwpgr%40flea.
