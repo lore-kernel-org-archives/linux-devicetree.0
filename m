@@ -1,177 +1,49 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 4/6] ASoC: create pcm for codec2codec links as well
-Date: Wed, 24 Jul 2019 18:24:03 +0200
-Message-ID: <20190724162405.6574-5-jbrunet@baylibre.com>
-References: <20190724162405.6574-1-jbrunet@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: irqchip: Add PRUSS interrupt controller
+ bindings
+Date: Wed, 24 Jul 2019 10:34:19 -0600
+Message-ID: <20190724163419.GA29254@bogus>
+References: <20190708035243.12170-1-s-anna@ti.com>
+ <20190708035243.12170-2-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724162405.6574-1-jbrunet@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20190708035243.12170-2-s-anna@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Tony Lindgren <tony@atomide.com>, "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Murali Karicheri <m-karicheri2@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-At the moment, codec to codec links uses an ephemeral variable for
-the struct snd_pcm_substream. Also the struct snd_soc_pcm_runtime
-does not have real struct snd_pcm.
+On Sun, 7 Jul 2019 22:52:38 -0500, Suman Anna wrote:
+> The Programmable Real-Time Unit Subsystem (PRUSS) contains an interrupt
+> controller (INTC) that can handle various system input events and post
+> interrupts back to the device-level initiators. The INTC can support
+> upto 64 input events on most SoCs with individual control configuration
+> and hardware prioritization. These events are mapped onto 10 interrupt
+> lines through two levels of many-to-one mapping support. Different
+> interrupt lines are routed to the individual PRU cores or to the
+> host CPU or to other PRUSS instances.
+> 
+> The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS IP,
+> commonly called ICSSG. The ICSSG interrupt controller on K3 SoCs provide
+> a higher number of host interrupts (20 vs 10) and can handle an increased
+> number of input events (160 vs 64) from various SoC interrupt sources.
+> 
+> Add the bindings document for these interrupt controllers on all the
+> applicable SoCs. It covers the OMAP architecture SoCs - AM33xx, AM437x
+> and AM57xx; the Keystone 2 architecture based 66AK2G SoC; the Davinci
+> architecture based OMAPL138 SoCs, and the K3 architecture based AM65x
+> and J721E SoCs.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+> Prior version: https://patchwork.kernel.org/patch/10795771/
+> 
+>  .../interrupt-controller/ti,pruss-intc.txt    | 92 +++++++++++++++++++
+>  1 file changed, 92 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt
+> 
 
-This might a problem if the functions used by a codec on codec to
-codec link expect these structures to exist, and keep on existing
-during the life of the codec.
-
-For example, it is the case of the hdmi-codec, which uses
-snd_pcm_add_chmap_ctls(). For the controls to works, the pcm and
-substream must to exist.
-
-This change is first step, it create pcm (and substreams) for codec
-to codec links, in the same way as dpcm backend links.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/soc-core.c | 42 ++++++++++++------------------------------
- sound/soc/soc-pcm.c  | 35 ++++++++++++++++++++++++++++++++---
- 2 files changed, 44 insertions(+), 33 deletions(-)
-
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 7ecfe641ca46..9e8eb93c8a3f 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -447,16 +447,6 @@ static void snd_soc_flush_all_delayed_work(struct snd_soc_card *card)
- 		flush_delayed_work(&rtd->delayed_work);
- }
- 
--static void codec2codec_close_delayed_work(struct work_struct *work)
--{
--	/*
--	 * Currently nothing to do for c2c links
--	 * Since c2c links are internal nodes in the DAPM graph and
--	 * don't interface with the outside world or application layer
--	 * we don't have to do any special handling on close.
--	 */
--}
--
- #ifdef CONFIG_PM_SLEEP
- /* powers down audio subsystem for suspend */
- int snd_soc_suspend(struct device *dev)
-@@ -1552,27 +1542,19 @@ static int soc_probe_link_dais(struct snd_soc_card *card,
- 		return ret;
- 	}
- 
--	if (!dai_link->params) {
--		/* create the pcm */
--		ret = soc_new_pcm(rtd, num);
--		if (ret < 0) {
--			dev_err(card->dev, "ASoC: can't create pcm %s :%d\n",
--				dai_link->stream_name, ret);
--			return ret;
--		}
--		ret = soc_link_dai_pcm_new(&cpu_dai, 1, rtd);
--		if (ret < 0)
--			return ret;
--		ret = soc_link_dai_pcm_new(rtd->codec_dais,
--					   rtd->num_codecs, rtd);
--		if (ret < 0)
--			return ret;
--	} else {
--		INIT_DELAYED_WORK(&rtd->delayed_work,
--				  codec2codec_close_delayed_work);
-+	/* create the pcm */
-+	ret = soc_new_pcm(rtd, num);
-+	if (ret < 0) {
-+		dev_err(card->dev, "ASoC: can't create pcm %s :%d\n",
-+			dai_link->stream_name, ret);
-+		return ret;
- 	}
--
--	return 0;
-+	ret = soc_link_dai_pcm_new(&cpu_dai, 1, rtd);
-+	if (ret < 0)
-+		return ret;
-+	ret = soc_link_dai_pcm_new(rtd->codec_dais,
-+				   rtd->num_codecs, rtd);
-+	return ret;
- }
- 
- static int soc_bind_aux_dev(struct snd_soc_card *card, int num)
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index fabeac164a6c..30264bc592f6 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -678,6 +678,16 @@ static void close_delayed_work(struct work_struct *work)
- 	mutex_unlock(&rtd->pcm_mutex);
- }
- 
-+static void codec2codec_close_delayed_work(struct work_struct *work)
-+{
-+	/*
-+	 * Currently nothing to do for c2c links
-+	 * Since c2c links are internal nodes in the DAPM graph and
-+	 * don't interface with the outside world or application layer
-+	 * we don't have to do any special handling on close.
-+	 */
-+}
-+
- /*
-  * Called by ALSA when a PCM substream is closed. Private data can be
-  * freed here. The cpu DAI, codec DAI, machine and components are also
-@@ -3011,6 +3021,12 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
- 		playback = rtd->dai_link->dpcm_playback;
- 		capture = rtd->dai_link->dpcm_capture;
- 	} else {
-+		/* Adapt stream for codec2codec links */
-+		struct snd_soc_pcm_stream *cpu_capture = rtd->dai_link->params ?
-+			&cpu_dai->driver->playback : &cpu_dai->driver->capture;
-+		struct snd_soc_pcm_stream *cpu_playback = rtd->dai_link->params ?
-+			&cpu_dai->driver->capture : &cpu_dai->driver->playback;
-+
- 		for_each_rtd_codec_dai(rtd, i, codec_dai) {
- 			if (snd_soc_dai_stream_valid(codec_dai, SNDRV_PCM_STREAM_PLAYBACK) &&
- 			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_PLAYBACK))
-@@ -3019,6 +3035,9 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
- 			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_CAPTURE))
- 				capture = 1;
- 		}
-+
-+		capture = capture && cpu_capture->channels_min;
-+		playback = playback && cpu_playback->channels_min;
- 	}
- 
- 	if (rtd->dai_link->playback_only) {
-@@ -3032,7 +3051,13 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
- 	}
- 
- 	/* create the PCM */
--	if (rtd->dai_link->no_pcm) {
-+	if (rtd->dai_link->params) {
-+		snprintf(new_name, sizeof(new_name), "codec2codec(%s)",
-+			 rtd->dai_link->stream_name);
-+
-+		ret = snd_pcm_new_internal(rtd->card->snd_card, new_name, num,
-+					   playback, capture, &pcm);
-+	} else if (rtd->dai_link->no_pcm) {
- 		snprintf(new_name, sizeof(new_name), "(%s)",
- 			rtd->dai_link->stream_name);
- 
-@@ -3059,13 +3084,17 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
- 	dev_dbg(rtd->card->dev, "ASoC: registered pcm #%d %s\n",num, new_name);
- 
- 	/* DAPM dai link stream work */
--	INIT_DELAYED_WORK(&rtd->delayed_work, close_delayed_work);
-+	if (rtd->dai_link->params)
-+		INIT_DELAYED_WORK(&rtd->delayed_work,
-+				  codec2codec_close_delayed_work);
-+	else
-+		INIT_DELAYED_WORK(&rtd->delayed_work, close_delayed_work);
- 
- 	pcm->nonatomic = rtd->dai_link->nonatomic;
- 	rtd->pcm = pcm;
- 	pcm->private_data = rtd;
- 
--	if (rtd->dai_link->no_pcm) {
-+	if (rtd->dai_link->no_pcm || rtd->dai_link->params) {
- 		if (playback)
- 			pcm->streams[SNDRV_PCM_STREAM_PLAYBACK].substream->private_data = rtd;
- 		if (capture)
--- 
-2.21.0
+Reviewed-by: Rob Herring <robh@kernel.org>
