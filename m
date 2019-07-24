@@ -1,60 +1,93 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 1/2] drm/pl111: Deprecate the pads from the DT binding
-Date: Wed, 24 Jul 2019 20:49:43 +0200
-Message-ID: <20190724184943.GA22640@ravnborg.org>
-References: <20190724134959.2365-1-linus.walleij@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [RFC PATCH 11/11] drm: exynos: mixer: Add interconnect support
+Date: Wed, 24 Jul 2019 20:52:34 +0200
+Message-ID: <20190724185234.GB14346@kozik-lap>
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+ <CGME20190723122029eucas1p2915f536d9ef43a7bd043a878a553439f@eucas1p2.samsung.com>
+ <20190723122016.30279-12-a.swigon@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190724134959.2365-1-linus.walleij@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Liviu Dudau <Liviu.Dudau@arm.com>, dri-devel@lists.freedesktop.org, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190723122016.30279-12-a.swigon@partner.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, georgi.djakov@linaro.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGludXMuCgpPbiBXZWQsIEp1bCAyNCwgMjAxOSBhdCAwMzo0OTo1OFBNICswMjAwLCBMaW51
-cyBXYWxsZWlqIHdyb3RlOgo+IFRoZSBwYWRzIHdlcmUgYW4gZWFybGllciB3b3JrYXJvdW5kIGZv
-ciB0aGUgaW50ZXJuYWwgaW1hZ2UKPiBwaXBlbGluZSBpbiB0aGUgTGludXggZmJkZXYgc3Vic3lz
-dGVtLiBBcyB3ZSBtb3ZlIHRvIGdlbmVyaWMKPiBkZWZpbml0aW9uIG9mIGRpc3BsYXkgcHJvcGVy
-dGllcyBhbmQgZHJpdmVycyB0aGF0IG5vIGxvbmdlcgo+IG5lZWQgdGhpcyB0byB3b3JrLCBkZXBy
-ZWNhdGUgdGhpcyBwcm9wZXJ0eS4KPiAKPiBDYzogU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcu
-b3JnPgo+IENjOiBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+Cj4gQ2M6IExpdml1IER1
-ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29tPgo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-Zwo+IFNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9y
-Zz4KCkFja2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+Cj4gLS0tCj4gIERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxwbDExeC50eHQgfCA5
-ICsrKysrLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9u
-cygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9hcm0scGwxMXgudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvYXJtLHBsMTF4LnR4dAo+IGluZGV4IDU3MmZhMjc3M2VjNC4uM2Y5NzdlNzJhMjAw
-IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L2FybSxwbDExeC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9hcm0scGwxMXgudHh0Cj4gQEAgLTM5LDkgKzM5LDExIEBAIFJlcXVpcmVkIHN1Yi1u
-b2RlczoKPiAgCj4gIC0gcG9ydDogZGVzY3JpYmVzIExDRCBwYW5lbCBzaWduYWxzLCBmb2xsb3dp
-bmcgdGhlIGNvbW1vbiBiaW5kaW5nCj4gIAlmb3IgdmlkZW8gdHJhbnNtaXR0ZXIgaW50ZXJmYWNl
-czsgc2VlCj4gLQlEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8t
-aW50ZXJmYWNlcy50eHQ7Cj4gLQl3aGVuIGl0IGlzIGEgVEZUIHBhbmVsLCB0aGUgcG9ydCdzIGVu
-ZHBvaW50IG11c3QgZGVmaW5lIHRoZQo+IC0JZm9sbG93aW5nIHByb3BlcnR5Ogo+ICsJRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4g
-Kwo+ICtEZXByZWNhdGVkIHByb3BlcnRpZXM6Cj4gKwlUaGUgcG9ydCdzIGVuZGJwb2ludCBzdWJu
-b2RlIGhhZCB0aGlzLCBub3cgZGVwcmVjYXRlZCBwcm9wZXJ0eQo+ICsJaW4gdGhlIHBhc3QuIERy
-aXZlcnMgc2hvdWxkIGJlIGFibGUgdG8gc3Vydml2ZSB3aXRob3V0IGl0Ogo+ICAKPiAgCS0gYXJt
-LHBsMTF4LHRmdC1yMGcwYjAtcGFkczogYW4gYXJyYXkgb2YgdGhyZWUgMzItYml0IHZhbHVlcywK
-PiAgCQlkZWZpbmluZyB0aGUgd2F5IENMRCBwYWRzIGFyZSB3aXJlZCB1cDsgZmlyc3QgdmFsdWUK
-PiBAQCAtODAsNyArODIsNiBAQCBFeGFtcGxlOgo+ICAJCXBvcnQgewo+ICAJCQljbGNkX3BhZHM6
-IGVuZHBvaW50IHsKPiAgCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmY2xjZF9wYW5lbD47Cj4gLQkJ
-CQlhcm0scGwxMXgsdGZ0LXIwZzBiMC1wYWRzID0gPDAgOCAxNj47Cj4gIAkJCX07Cj4gIAkJfTsK
-PiAgCj4gLS0gCj4gMi4yMS4wCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbA==
+On Tue, Jul 23, 2019 at 02:20:16PM +0200, Artur Świgoń wrote:
+> From: Marek Szyprowski <m.szyprowski@samsung.com>
+> 
+> This patch adds interconnect support to exynos-mixer. Please note that the
+> mixer works the same as before when CONFIG_INTERCONNECT is 'n'.
+> 
+> Co-developed-by: Artur Świgoń <a.swigon@partner.samsung.com>
+> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  drivers/gpu/drm/exynos/exynos_mixer.c | 68 +++++++++++++++++++++++++--
+>  1 file changed, 63 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/exynos/exynos_mixer.c
+> index 7b24338fad3c..fb763854b300 100644
+> --- a/drivers/gpu/drm/exynos/exynos_mixer.c
+> +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/component.h>
+>  #include <linux/delay.h>
+>  #include <linux/i2c.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+>  #include <linux/kernel.h>
+> @@ -97,6 +98,7 @@ struct mixer_context {
+>  	struct exynos_drm_crtc	*crtc;
+>  	struct exynos_drm_plane	planes[MIXER_WIN_NR];
+>  	unsigned long		flags;
+> +	struct icc_path		*soc_path;
+>  
+>  	int			irq;
+>  	void __iomem		*mixer_regs;
+> @@ -931,6 +933,37 @@ static void mixer_disable_vblank(struct exynos_drm_crtc *crtc)
+>  	mixer_reg_writemask(mixer_ctx, MXR_INT_EN, 0, MXR_INT_EN_VSYNC);
+>  }
+>  
+> +static void mixer_set_memory_bandwidth(struct exynos_drm_crtc *crtc)
+> +{
+> +	struct drm_display_mode *mode = &crtc->base.state->adjusted_mode;
+> +	struct mixer_context *ctx = crtc->ctx;
+> +	unsigned long bw, bandwidth = 0;
+> +	int i, j, sub;
+> +
+
+Early exit if !ctx->soc_path, no need to figure out the bandwidth.
+Optionally check it before calling mixer_set_memory_bandwidth() - should
+not hurt readability.
+
+> +	for (i = 0; i < MIXER_WIN_NR; i++) {
+> +		struct drm_plane *plane = &ctx->planes[i].base;
+> +		const struct drm_format_info *format;
+> +
+> +		if (plane->state && plane->state->crtc && plane->state->fb) {
+> +			format = plane->state->fb->format;
+> +			bw = mode->hdisplay * mode->vdisplay *
+> +							drm_mode_vrefresh(mode);
+> +			if (mode->flags & DRM_MODE_FLAG_INTERLACE)
+> +				bw /= 2;
+> +			for (j = 0; j < format->num_planes; j++) {
+> +				sub = j ? (format->vsub * format->hsub) : 1;
+> +				bandwidth += format->cpp[j] * bw / sub;
+> +			}
+> +		}
+> +	}
+> +
+> +	/* add 20% safety margin */
+> +	bandwidth = 5UL * bandwidth / 4;
+> +
+> +	pr_info("exynos-mixer: safe bandwidth %ld Bps\n", bandwidth);
+
+dev_dbg()
+
+Best regards,
+Krzysztof
