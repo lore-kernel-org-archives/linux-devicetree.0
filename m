@@ -1,114 +1,52 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v1 1/4] enetc: Clean up local mdio bus allocation
-Date: Wed, 24 Jul 2019 17:18:03 +0200
-Message-ID: <20190724151803.GR25635@lunn.ch>
-References: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
- <1563979301-596-2-git-send-email-claudiu.manoil@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 05/13] dt-bindings: cpufreq: qcom-nvmem: Support pstates
+ provided by a power domain
+Date: Wed, 24 Jul 2019 09:26:56 -0600
+Message-ID: <20190724152656.GA10017@bogus>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
+ <20190705095726.21433-6-niklas.cassel@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1563979301-596-2-git-send-email-claudiu.manoil@nxp.com>
-Sender: netdev-owner@vger.kernel.org
-To: Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190705095726.21433-6-niklas.cassel@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Ilia Lin <ilia.lin@kernel.org>, Andy Gross <agross@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 05:41:38PM +0300, Claudiu Manoil wrote:
-> Though it works, this is not how it should have been.
-> What's needed is a pointer to the mdio registers.
-> Store it properly inside bus->priv allocated space.
-> Use devm_* variant to further clean up the init error /
-> remove paths.
+On Fri, Jul 05, 2019 at 11:57:16AM +0200, Niklas Cassel wrote:
+> Some Qualcomm SoCs have support for Core Power Reduction (CPR).
+> On these platforms, we need to attach to the power domain provider
+> providing the performance states, so that the leaky device (the CPU)
+> can configure the performance states (which represent different
+> CPU clock frequencies).
 > 
-> Fixes following sparse warning:
->  warning: incorrect type in assignment (different address spaces)
->     expected void *priv
->     got struct enetc_mdio_regs [noderef] <asn:2>*[assigned] regs
-> 
-> Fixes: ebfcb23d62ab ("enetc: Add ENETC PF level external MDIO support")
-> 
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 > ---
-> v1 - added this patch
+>  .../bindings/opp/qcom-nvmem-cpufreq.txt       | 111 ++++++++++++++++++
+>  1 file changed, 111 insertions(+)
 > 
->  .../net/ethernet/freescale/enetc/enetc_mdio.c | 31 +++++++------------
->  1 file changed, 12 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
-> index 77b9cd10ba2b..1e3cd21c13ee 100644
-> --- a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
-> +++ b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
-> @@ -15,7 +15,8 @@ struct enetc_mdio_regs {
->  	u32	mdio_addr;	/* MDIO address */
->  };
+> diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> index c5ea8b90e35d..e19a95318e98 100644
+> --- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> +++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> @@ -23,6 +23,15 @@ In 'operating-points-v2' table:
 >  
-> -#define bus_to_enetc_regs(bus)	(struct enetc_mdio_regs __iomem *)((bus)->priv)
-> +#define bus_to_enetc_regs(bus)	(*(struct enetc_mdio_regs __iomem **) \
-> +				((bus)->priv))
->  
->  #define ENETC_MDIO_REG_OFFSET	0x1c00
->  #define ENETC_MDC_DIV		258
-> @@ -146,12 +147,12 @@ static int enetc_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
->  int enetc_mdio_probe(struct enetc_pf *pf)
->  {
->  	struct device *dev = &pf->si->pdev->dev;
-> -	struct enetc_mdio_regs __iomem *regs;
-> +	struct enetc_mdio_regs __iomem **regsp;
->  	struct device_node *np;
->  	struct mii_bus *bus;
-> -	int ret;
-> +	int err;
->  
-> -	bus = mdiobus_alloc_size(sizeof(regs));
-> +	bus = devm_mdiobus_alloc_size(dev, sizeof(*regsp));
->  	if (!bus)
->  		return -ENOMEM;
->  
-> @@ -159,41 +160,33 @@ int enetc_mdio_probe(struct enetc_pf *pf)
->  	bus->read = enetc_mdio_read;
->  	bus->write = enetc_mdio_write;
->  	bus->parent = dev;
-> +	regsp = bus->priv;
->  	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
->  
->  	/* store the enetc mdio base address for this bus */
-> -	regs = pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
-> -	bus->priv = regs;
-> +	*regsp = pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
+>  Optional properties:
+>  --------------------
+> +In 'cpus' nodes:
 
-This is all very odd and different to every other driver.
+In 'cpus' node or 'cpu' nodes?
 
-If i get the code write, there are 4 registers, each u32 in size,
-starting at pf->si->hw.port + ENETC_MDIO_REG_OFFSET?
-
-There are macros like enetc_port_wr() and enetc_global_wr(). It think
-it would be much cleaner to add a macro enet_mdio_wr() which takes
-hw, off, val.
-
-#define enet_mdio_wr(hw, off, val) enet_port_wr(hw, off + ENETC_MDIO_REG_OFFSET, val)
-
-struct enetc_mdio_priv {
-       struct enetc_hw *hw;
-}
-
-	struct enetc_mdio_priv *mdio_priv;
-
-	bus = devm_mdiobus_alloc_size(dev, sizeof(*mdio_priv));
-
-	mdio_priv = bus->priv;
-	mdio_priv->hw = pf->si->hw;
-
-
-static int enetc_mdio_write(struct mii_bus *bus, int phy_id, int regnum,
-                            u16 value)
-{
-	struct enetc_mdio_priv *mdio_priv = bus->priv;
-...
-	enet_mdio_wr(priv->hw, ENETC_MDIO_CFG, mdio_cfg);
-}
-			    	
-All the horrible casts go away, the driver is structured like every
-other driver, sparse is probably happy, etc.
-
-      Andrew
+> +- power-domains: A phandle pointing to the PM domain specifier which provides
+> +		the performance states available for active state management.
+> +		Please refer to the power-domains bindings
+> +		Documentation/devicetree/bindings/power/power_domain.txt
+> +		and also examples below.
+> +- power-domain-names: Should be
+> +	- 'cpr' for qcs404.
+> +
+>  In 'operating-points-v2' table:
+>  - nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+>  		efuse registers that has information about the
