@@ -1,84 +1,34 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v8 08/11] usb: roles: get usb-role-switch from parent
-Date: Wed, 24 Jul 2019 16:50:42 +0800
-Message-ID: <1563958245-6321-9-git-send-email-chunfeng.yun@mediatek.com>
-References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [Sound-open-firmware] [PATCH v2 1/5] ASoC: SOF: imx: Add i.MX8 HW support
+Date: Wed, 24 Jul 2019 11:58:58 +0300
+Message-ID: <CAEnQRZAEsPFp36hD7XiWihTe2KQOJV6Eq9C8hjn0Z1kiUZjzyQ@mail.gmail.com>
+References: <20190723084104.12639-1-daniel.baluta@nxp.com> <20190723084104.12639-2-daniel.baluta@nxp.com>
+ <a5d44d96-4d50-ee46-a6bf-3ce108b1994a@linux.intel.com> <CAEnQRZCuB2QKzz-08K0z+x+p0qCpqR_wDc=q2GChvJiw4E9hBA@mail.gmail.com>
+ <1563957164.2311.28.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1563957164.2311.28.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Fabio Estevam <festevam@gmail.com>, Anson Huang <anson.huang@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Marco Felsch <m.felsch@pengutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Paul Olaru <paul.olaru@nxp.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, sound-open-fir
 List-Id: devicetree@vger.kernel.org
 
-when the USB host controller is the parent of the connector,
-usually type-B, sometimes don't need the graph, so we should
-check whether it's parent registers usb-role-switch or not
-firstly, and get it if exists.
+On Wed, Jul 24, 2019 at 11:32 AM Lucas Stach <l.stach@pengutronix.de> wrote:
+>
+> Hi Daniel,
+>
+> Am Mittwoch, den 24.07.2019, 09:54 +0300 schrieb Daniel Baluta:
+> > On Tue, Jul 23, 2019 at 6:18 PM Pierre-Louis Bossart
+> [...]
+> >
+> > > Also are all the resources device-managed, I don't see a remove()?
+> >
+> > Good catch for pm stuff. We mostly didn't care about remove because
+> > drivers are always Y in our distribution.
+>
+> Linux drivers need to be hotplug aware, even if they are not built as a
+> module. You can test things by manually unbinding the driver from the
+> device via sysfs.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-v8: no changes
-v7:
-  add signed-off-by Chunfeng
-
-v6:
-  new patch
----
- drivers/usb/roles/class.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index 5b637aaf311f..87439a84c983 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -114,6 +114,19 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
- 	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
- }
- 
-+static struct usb_role_switch *
-+usb_role_switch_is_parent(struct fwnode_handle *fwnode)
-+{
-+	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
-+	struct device *dev;
-+
-+	if (!parent || !fwnode_property_present(parent, "usb-role-switch"))
-+		return NULL;
-+
-+	dev = class_find_device(role_class, NULL, parent, switch_fwnode_match);
-+	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
-+}
-+
- /**
-  * usb_role_switch_get - Find USB role switch linked with the caller
-  * @dev: The caller device
-@@ -125,8 +138,10 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
- {
- 	struct usb_role_switch *sw;
- 
--	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
--					  usb_role_switch_match);
-+	sw = usb_role_switch_is_parent(dev_fwnode(dev));
-+	if (!sw)
-+		sw = device_connection_find_match(dev, "usb-role-switch", NULL,
-+						  usb_role_switch_match);
- 
- 	if (!IS_ERR_OR_NULL(sw))
- 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
-@@ -146,8 +161,10 @@ struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
- {
- 	struct usb_role_switch *sw;
- 
--	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
--					  usb_role_switch_match);
-+	sw = usb_role_switch_is_parent(fwnode);
-+	if (!sw)
-+		sw = fwnode_connection_find_match(fwnode, "usb-role-switch",
-+						  NULL, usb_role_switch_match);
- 	if (!IS_ERR_OR_NULL(sw))
- 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
- 
--- 
-2.21.0
+Agree. Will take this into consideration when sending next version!
