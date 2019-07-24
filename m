@@ -1,36 +1,44 @@
-Return-Path: <SRS0=MEFD=V2=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <20190724121559.19079-1-horms+renesas@verge.net.au> <20190724121559.19079-2-horms+renesas@verge.net.au>
-In-Reply-To: <20190724121559.19079-2-horms+renesas@verge.net.au>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 29 Jul 2019 13:39:44 +0200
-Message-ID: <CAMuHMdVmTSinvJ9RbG0MdFd9LoxtFHRPqZV31dju2n=PLbYG6w@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: i2c: sh_mobile: Rename bindings
- documentation file
-Content-Type: text/plain; charset="UTF-8"
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Return-Path: <SRS0=vA0O=VV=vergenet.net=horms@kernel.org>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH 1/4] dt-bindings: i2c: sh_mobile: Rename bindings documentation file
+Date: Wed, 24 Jul 2019 14:15:56 +0200
+Message-Id: <20190724121559.19079-2-horms+renesas@verge.net.au>
+In-Reply-To: <20190724121559.19079-1-horms+renesas@verge.net.au>
+References: <20190724121559.19079-1-horms+renesas@verge.net.au>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Jul 24, 2019 at 3:25 PM Simon Horman <horms+renesas@verge.net.au> wrote:
-> Rename the bindings documentation file for sh_mobile I2C controller
-> from i2c-sh_mobile.txt to renesas,iic.txt.
->
-> This is part of an ongoing effort to name bindings documentation files for
-> Renesas IP blocks consistently, in line with the compat strings they
-> document.
->
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Rename the bindings documentation file for sh_mobile I2C controller
+from i2c-sh_mobile.txt to renesas,iic.txt.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This is part of an ongoing effort to name bindings documentation files for
+Renesas IP blocks consistently, in line with the compat strings they
+document.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ .../devicetree/bindings/i2c/{i2c-sh_mobile.txt => renesas,iic.txt}      | 0
+ MAINTAINERS                                                             | 2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename Documentation/devicetree/bindings/i2c/{i2c-sh_mobile.txt => renesas,iic.txt} (100%)
 
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt b/Documentation/devicetree/bindings/i2c/renesas,iic.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt
+rename to Documentation/devicetree/bindings/i2c/renesas,iic.txt
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 783569e3c4b4..4c8262837da9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13651,7 +13651,7 @@ RENESAS R-CAR I2C DRIVERS
+ M:	Wolfram Sang <wsa+renesas@sang-engineering.com>
+ S:	Supported
+ F:	Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+-F:	Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt
++F:	Documentation/devicetree/bindings/i2c/renesas,iic.txt
+ F:	drivers/i2c/busses/i2c-rcar.c
+ F:	drivers/i2c/busses/i2c-sh_mobile.c
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.11.0
