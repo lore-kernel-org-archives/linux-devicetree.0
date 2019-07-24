@@ -1,7 +1,7 @@
 From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: [PATCH net-next v1 1/4] enetc: Clean up local mdio bus allocation
-Date: Wed, 24 Jul 2019 17:41:38 +0300
-Message-ID: <1563979301-596-2-git-send-email-claudiu.manoil@nxp.com>
+Subject: [PATCH net-next v1 4/4] arm64: dts: fsl: ls1028a: Enable eth port1 on the ls1028a QDS board
+Date: Wed, 24 Jul 2019 17:41:41 +0300
+Message-ID: <1563979301-596-5-git-send-email-claudiu.manoil@nxp.com>
 References: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
@@ -10,104 +10,103 @@ To: "David S . Miller" <davem@davemloft.net>
 Cc: andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Though it works, this is not how it should have been.
-What's needed is a pointer to the mdio registers.
-Store it properly inside bus->priv allocated space.
-Use devm_* variant to further clean up the init error /
-remove paths.
+LS1028a has one Ethernet management interface. On the QDS board, the
+MDIO signals are multiplexed to either on-board AR8035 PHY device or
+to 4 PCIe slots allowing for SGMII cards.
+To enable the Ethernet ENETC Port 1, which can only be connected to a
+RGMII PHY, the multiplexer needs to be configured to route the MDIO to
+the AR8035 PHY.  The MDIO/MDC routing is controlled by bits 7:4 of FPGA
+board config register 0x54, and value 0 selects the on-board RGMII PHY.
+The FPGA board config registers are accessible on the i2c bus, at address
+0x66.
 
-Fixes following sparse warning:
- warning: incorrect type in assignment (different address spaces)
-    expected void *priv
-    got struct enetc_mdio_regs [noderef] <asn:2>*[assigned] regs
+The PF3 MDIO PCIe integrated endpoint device allows for centralized access
+to the MDIO bus.  Add the corresponding devicetree node and set it to be
+the MDIO bus parent.
 
-Fixes: ebfcb23d62ab ("enetc: Add ENETC PF level external MDIO support")
-
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
 Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 ---
-v1 - added this patch
+v1 - none
 
- .../net/ethernet/freescale/enetc/enetc_mdio.c | 31 +++++++------------
- 1 file changed, 12 insertions(+), 19 deletions(-)
+ .../boot/dts/freescale/fsl-ls1028a-qds.dts    | 40 +++++++++++++++++++
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
+ 2 files changed, 46 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
-index 77b9cd10ba2b..1e3cd21c13ee 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
-@@ -15,7 +15,8 @@ struct enetc_mdio_regs {
- 	u32	mdio_addr;	/* MDIO address */
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+index de6ef39f3118..663c4b728c07 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+@@ -85,6 +85,26 @@
+ 			system-clock-frequency = <25000000>;
+ 		};
+ 	};
++
++	mdio-mux {
++		compatible = "mdio-mux-multiplexer";
++		mux-controls = <&mux 0>;
++		mdio-parent-bus = <&enetc_mdio_pf3>;
++		#address-cells=<1>;
++		#size-cells = <0>;
++
++		/* on-board RGMII PHY */
++		mdio@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			qds_phy1: ethernet-phy@5 {
++				/* Atheros 8035 */
++				reg = <5>;
++			};
++		};
++	};
  };
  
--#define bus_to_enetc_regs(bus)	(struct enetc_mdio_regs __iomem *)((bus)->priv)
-+#define bus_to_enetc_regs(bus)	(*(struct enetc_mdio_regs __iomem **) \
-+				((bus)->priv))
+ &duart0 {
+@@ -164,6 +184,26 @@
+ 			};
+ 		};
+ 	};
++
++	fpga@66 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "fsl,ls1028aqds-fpga", "fsl,fpga-qixis-i2c",
++			     "simple-mfd";
++		reg = <0x66>;
++
++		mux: mux-controller {
++			compatible = "reg-mux";
++			#mux-control-cells = <1>;
++			mux-reg-masks = <0x54 0xf0>; /* 0: reg 0x54, bits 7:4 */
++		};
++	};
++
++};
++
++&enetc_port1 {
++	phy-handle = <&qds_phy1>;
++	phy-connection-type = "rgmii-id";
+ };
  
- #define ENETC_MDIO_REG_OFFSET	0x1c00
- #define ENETC_MDC_DIV		258
-@@ -146,12 +147,12 @@ static int enetc_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
- int enetc_mdio_probe(struct enetc_pf *pf)
- {
- 	struct device *dev = &pf->si->pdev->dev;
--	struct enetc_mdio_regs __iomem *regs;
-+	struct enetc_mdio_regs __iomem **regsp;
- 	struct device_node *np;
- 	struct mii_bus *bus;
--	int ret;
-+	int err;
- 
--	bus = mdiobus_alloc_size(sizeof(regs));
-+	bus = devm_mdiobus_alloc_size(dev, sizeof(*regsp));
- 	if (!bus)
- 		return -ENOMEM;
- 
-@@ -159,41 +160,33 @@ int enetc_mdio_probe(struct enetc_pf *pf)
- 	bus->read = enetc_mdio_read;
- 	bus->write = enetc_mdio_write;
- 	bus->parent = dev;
-+	regsp = bus->priv;
- 	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
- 
- 	/* store the enetc mdio base address for this bus */
--	regs = pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
--	bus->priv = regs;
-+	*regsp = pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
- 
- 	np = of_get_child_by_name(dev->of_node, "mdio");
- 	if (!np) {
- 		dev_err(dev, "MDIO node missing\n");
--		ret = -EINVAL;
--		goto err_registration;
-+		return -EINVAL;
- 	}
- 
--	ret = of_mdiobus_register(bus, np);
--	if (ret) {
-+	err = of_mdiobus_register(bus, np);
-+	if (err) {
- 		of_node_put(np);
- 		dev_err(dev, "cannot register MDIO bus\n");
--		goto err_registration;
-+		return err;
- 	}
- 
- 	of_node_put(np);
- 	pf->mdio = bus;
- 
- 	return 0;
--
--err_registration:
--	mdiobus_free(bus);
--
--	return ret;
- }
- 
- void enetc_mdio_remove(struct enetc_pf *pf)
- {
--	if (pf->mdio) {
-+	if (pf->mdio)
- 		mdiobus_unregister(pf->mdio);
--		mdiobus_free(pf->mdio);
--	}
- }
+ &sai1 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 7975519b4f56..de71153fda00 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -536,6 +536,12 @@
+ 				compatible = "fsl,enetc";
+ 				reg = <0x000100 0 0 0 0>;
+ 			};
++			enetc_mdio_pf3: mdio@0,3 {
++				compatible = "fsl,enetc-mdio";
++				reg = <0x000300 0 0 0 0>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
+ 			ethernet@0,4 {
+ 				compatible = "fsl,enetc-ptp";
+ 				reg = <0x000400 0 0 0 0>;
 -- 
 2.17.1
