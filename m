@@ -1,70 +1,96 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v1 1/4] enetc: Clean up local mdio bus allocation
-Date: Wed, 24 Jul 2019 18:39:06 +0200
-Message-ID: <20190724163906.GT25635@lunn.ch>
-References: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
- <1563979301-596-2-git-send-email-claudiu.manoil@nxp.com>
- <20190724151803.GR25635@lunn.ch>
- <VI1PR04MB4880CD977A5D58DA0A7EE56696C60@VI1PR04MB4880.eurprd04.prod.outlook.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: add audio codec support on
+ stm32mp157a-dk1 board
+Date: Wed, 24 Jul 2019 18:40:32 +0200
+Message-ID: <27476214-07fe-886b-1cab-20902837f29c@st.com>
+References: <1562327580-19647-1-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB4880CD977A5D58DA0A7EE56696C60@VI1PR04MB4880.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1562327580-19647-1-git-send-email-olivier.moysan@st.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olivier Moysan <olivier.moysan@st.com>, linux-stm32@st-md-mailman.stormreply.com, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> >All the horrible casts go away, the driver is structured like every
-> >other driver, sparse is probably happy, etc.
-> >
+Hi Olivier
+
+On 7/5/19 1:53 PM, Olivier Moysan wrote:
+> Add support of Cirrus cs42l51 audio codec on stm32mp157a-dk1 board.
+> Configuration overview:
+> - SAI2A is the CPU interface used for the codec audio playback
+> - SAI2B is the CPU interface used for the codec audio record
+> - SAI2A is configured as a clock provider for the audio codec
+> - SAI2A&B are configured as slave of the audio codec
+> - SAI2A&B share the same interface of the audio codec
 > 
-> This looks more like a matter cosmetic preferences.  I mean, I didn't
-> notice anything "horrible" in the code so far.
+> Note:
+> In master mode, cs42l51 audio codec provides a bitclock
+> at 64 x FS, regardless of data width. This means that
+> slot width is always 32 bits.
+> Set slot width to 32 bits and slot number to 2
+> in SAI2A&B endpoint nodes, to match this constraint.
+> dai-tdm-slot-num and dai-tdm-slot-width properties are used here,
+> assuming that i2s is a special case of tdm, where slot number is 2.
+> 
+> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157a-dk1.dts | 89 +++++++++++++++++++++++++++++++++++
+>   1 file changed, 89 insertions(+)
+> 
 
-#define bus_to_enetc_regs(bus)  (struct enetc_mdio_regs __iomem *)((bus)->priv)
+...
 
-You should not need a cast here, bus->priv is a void *. But bus->priv
-is being abused to hold a __iomem pointer.
+>   
+> +&sai2 {
+> +	clocks = <&rcc SAI2>, <&rcc PLL3_Q>, <&rcc PLL3_R>;
+> +	clock-names = "pclk", "x8k", "x11k";
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&sai2a_pins_a>, <&sai2b_pins_b>;
+> +	pinctrl-1 = <&sai2a_sleep_pins_a>, <&sai2b_sleep_pins_b>;
+> +	status = "okay";
+> +
+> +	sai2a: audio-controller@4400b004 {
+> +		#clock-cells = <0>;
+> +		dma-names = "tx";
+> +		clocks = <&rcc SAI2_K>;
+> +		clock-names = "sai_ck";
+> +		status = "okay";
+> +
+> +		sai2a_port: port {
+> +			sai2a_endpoint: endpoint {
+> +				remote-endpoint = <&cs42l51_tx_endpoint>;
+> +				format = "i2s";
+> +				mclk-fs = <256>;
+> +				dai-tdm-slot-num = <2>;
+> +				dai-tdm-slot-width = <32>;
+> +			};
+> +		};
+> +	};
+> +
+You could use label to overload sai2a and sai2b. no ?
 
-enetc_wr_reg(&regs->mdio_cfg, mdio_cfg);
-
-This is also rather odd, passing the address of something to an IO
-operator? I also don't know the C standard well enough to know if it
-is guaranteed that:
-
-struct enetc_mdio_regs {
-        u32     mdio_cfg;       /* MDIO configuration and status */
-        u32     mdio_ctl;       /* MDIO control */
-        u32     mdio_data;      /* MDIO data */
-        u32     mdio_addr;      /* MDIO address */
-};
-
-actually works. On a 64bit system is the compiler allowed to put in
-padding to keep the u32 64 bit aligned?
-
-> I actually find it more
-> ugly to define a new structure with only one element inside, like:
-> struct enetc_mdio_priv {
->        struct enetc_hw *hw;
-> }
-
-One advantage of this is that struct enetc_hw correctly has all the
-__iomem attributes. All the casts to __iomem go away, and sparse is
-happy.
-
-> Anyway, if others already did this in the kernel, what can I do?
-
-Clean it up. Make the code more readable and easy to maintain.
-
-      Andrew
+> +	sai2b: audio-controller@4400b024 {
+> +		dma-names = "rx";
+> +		st,sync = <&sai2a 2>;
+> +		clocks = <&rcc SAI2_K>, <&sai2a>;
+> +		clock-names = "sai_ck", "MCLK";
+> +		status = "okay";
+> +
+> +		sai2b_port: port {
+> +			sai2b_endpoint: endpoint {
+> +				remote-endpoint = <&cs42l51_rx_endpoint>;
+> +				format = "i2s";
+> +				mclk-fs = <256>;
+> +				dai-tdm-slot-num = <2>;
+> +				dai-tdm-slot-width = <32>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+>   &sdmmc1 {
+>   	pinctrl-names = "default", "opendrain", "sleep";
+>   	pinctrl-0 = <&sdmmc1_b4_pins_a>;
+> 
