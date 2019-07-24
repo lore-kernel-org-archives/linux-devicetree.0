@@ -1,123 +1,312 @@
-From: =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource-91nzXlUTePbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH net-next 2/3] dt-bindings: net: dsa: mt7530: Add support for
- port 5
-Date: Wed, 24 Jul 2019 21:25:48 +0200
-Message-ID: <20190724192549.24615-3-opensource@vdorst.com>
+From: =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>
+Subject: [PATCH net-next 3/3] net: dsa: mt7530: Add support for port 5
+Date: Wed, 24 Jul 2019 21:25:49 +0200
+Message-ID: <20190724192549.24615-4-opensource@vdorst.com>
 References: <20190724192549.24615-1-opensource@vdorst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190724192549.24615-1-opensource-91nzXlUTePbQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frank-w-SipyoOjXbOMoAHOVJHB0wA@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, vivien.didelot-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource-91nzXlUTePbQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mips-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190724192549.24615-1-opensource@vdorst.com>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: frank-w@public-files.de, sean.wang@mediatek.com, f.fainelli@gmail.com, linux@armlinux.org.uk, davem@davemloft.net, matthias.bgg@gmail.com, andrew@lunn.ch, vivien.didelot@gmail.com, john@phrozen.org, linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>
 List-Id: devicetree@vger.kernel.org
 
-TVQ3NTMwIHBvcnQgNSBoYXMgbWFueSBtb2Rlcy9jb25maWd1cmF0aW9ucy4KVXBkYXRlIHRoZSBk
-b2N1bWVudGF0aW9uIGhvdyB0byB1c2UgcG9ydCA1LgoKU2lnbmVkLW9mZi1ieTogUmVuw6kgdmFu
-IERvcnN0IDxvcGVuc291cmNlQHZkb3JzdC5jb20+CgpyZmMtPnYxOgoqIE5vIGNoYW5nZQotLS0K
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9kc2EvbXQ3NTMwLnR4dCAgICB8IDIxNSArKysr
-KysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyMTUgaW5zZXJ0aW9ucygrKQoKZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvZHNhL210NzUzMC50
-eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2RzYS9tdDc1MzAudHh0
-CmluZGV4IDQ3YWEyMDVlZTBiZC4uZjM0ODY3ODBmMmMyIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2RzYS9tdDc1MzAudHh0CisrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvZHNhL210NzUzMC50eHQKQEAgLTM1LDYgKzM1
-LDM5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXMgZm9yIHRoZSBjaGlsZCBub2RlcyB3aXRoaW4gcG9y
-dHMgY29udGFpbmVyOgogLSBwaHktbW9kZTogU3RyaW5nLCBtdXN0IGJlIGVpdGhlciAidHJnbWlp
-IiBvciAicmdtaWkiIGZvciBwb3J0IGxhYmVsZWQKIAkgImNwdSIuCiAKK1BvcnQgNSBvZiB0aGUg
-c3dpdGNoIGlzIG11eGVkIGJldHdlZW46CisxLiBHTUFDNTogR01BQzUgY2FuIGludGVyZmFjZSB3
-aXRoIGFub3RoZXIgZXh0ZXJuYWwgTUFDIG9yIFBIWS4KKzIuIFBIWSBvZiBwb3J0IDAgb3IgcG9y
-dCA0OiBQSFkgaW50ZXJmYWNlcyB3aXRoIGFuIGV4dGVybmFsIE1BQyBsaWtlIDJuZCBHTUFDCisg
-ICBvZiB0aGUgU09DLiBVc2VkIGluIG1hbnkgc2V0dXBzIHdoZXJlIHBvcnQgMC80IGJlY29tZXMg
-dGhlIFdBTiBwb3J0LgorCitQb3J0IDUgbW9kZXMvY29uZmlndXJhdGlvbnM6CisxLiBQb3J0IDUg
-aXMgZGlzYWJsZWQgYW5kIGlzb2xhdGVkOiBBbiBleHRlcm5hbCBwaHkgY2FuIGludGVyZmFjZSB0
-byB0aGUgMm5kCisgICBHTUFDIG9mIHRoZSBTT0MuCisgICBJbiB0aGUgY2FzZSBvZiBhIGJ1aWxk
-LWluIE1UNzUzMCBzd2l0Y2gsIHBvcnQgNSBzaGFyZXMgdGhlIFJHTUlJIGJ1cyB3aXRoIDJuZAor
-ICAgR01BQyBhbmQgYW4gb3B0aW9uYWwgZXh0ZXJuYWwgcGh5LiBNaW5kIHRoZSBHUElPL3BpbmN0
-bCBzZXR0aW5ncyBvZiB0aGUgU09DIQorMi4gUG9ydCA1IGlzIG11eGVkIHRvIFBIWSBvZiBwb3J0
-IDAvNDogUG9ydCAwLzQgaW50ZXJmYWNlcyB3aXRoIDJuZCBHTUFDLgorICAgSXQgaXMgYSBzaW1w
-bGUgTUFDIHRvIFBIWSBpbnRlcmZhY2UsIHBvcnQgNSBuZWVkcyB0byBiZSBzZXR1cCBmb3IgeE1J
-SSBtb2RlCisgICBhbmQgUkdNSUkgZGVsYXkuCiszLiBQb3J0IDUgaXMgbXV4ZWQgdG8gR01BQzUg
-YW5kIGNhbiBpbnRlcmZhY2UgdG8gYW4gZXh0ZXJuYWwgcGh5LgorICAgUG9ydCA1IGJlY29tZXMg
-YW4gZXh0cmEgc3dpdGNoIHBvcnQuCisgICBPbmx5IHdvcmtzIG9uIHBsYXRmb3JtIHdoZXJlIGV4
-dGVybmFsIHBoeSBUWDwtPlJYIGxpbmVzIGFyZSBzd2FwcGVkLgorICAgTGlrZSBpbiB0aGUgVWJp
-cXVpdGkgRVItWC1TRlAuCis0LiBQb3J0IDUgaXMgbXV4ZWQgdG8gR01BQzUgYW5kIGludGVyZmFj
-ZXMgd2l0aCB0aGUgMm5kIEdBTUMgYXMgMm5kIENQVSBwb3J0LgorICAgQ3VycmVudGx5IGEgMm5k
-IENQVSBwb3J0IGlzIG5vdCBzdXBwb3J0ZWQgYnkgRFNBIGNvZGUuCisKK0RlcGVuZGluZyBvbiBo
-b3cgdGhlIGV4dGVybmFsIFBIWSBpcyB3aXJlZDoKKzEuIG5vcm1hbDogVGhlIFBIWSBjYW4gb25s
-eSBjb25uZWN0IHRvIDJuZCBHTUFDIGJ1dCBub3QgdG8gdGhlIHN3aXRjaAorMi4gc3dhcHBlZDog
-UkdNSUkgVFgsIFJYIGFyZSBzd2FwcGVkOyBleHRlcm5hbCBwaHkgaW50ZXJmYWNlIHdpdGggdGhl
-IHN3aXRjaCBhcworICAgYSBldGhlcm5ldCBwb3J0LiBCdXQgY2FuJ3QgaW50ZXJmYWNlIHRvIHRo
-ZSAybmQgR01BQy4KKworQmFzZWQgb24gdGhlIERUIHRoZSBwb3J0IDUgbW9kZSBpcyBjb25maWd1
-cmVkLgorCitEcml2ZXIgdHJpZXMgdG8gbG9va3VwIHRoZSBwaHktaGFuZGxlIG9mIHRoZSAybmQg
-R01BQyBvZiB0aGUgbWFzdGVyIGRldmljZS4KK1doZW4gcGh5LWhhbmRsZSBtYXRjaGVzIFBIWSBv
-ZiBwb3J0IDAgb3IgNCB0aGVuIHBvcnQgNSBzZXQtdXAgYXMgbW9kZSAyLgorcGh5LW1vZGUgbXVz
-dCBiZSBzZXQsIHNlZSBhbHNvIGV4YW1wbGUgMiBiZWxvdyEKKyAqIG10NzYyMTogcGh5LW1vZGUg
-PSAicmdtaWktdHhpZCI7CisgKiBtdDc2MjM6IHBoeS1tb2RlID0gInJnbWlpIjsKKwogU2VlIERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvZHNhL2RzYS50eHQgZm9yIGEgbGlz
-dCBvZiBhZGRpdGlvbmFsCiByZXF1aXJlZCwgb3B0aW9uYWwgcHJvcGVydGllcyBhbmQgaG93IHRo
-ZSBpbnRlZ3JhdGVkIHN3aXRjaCBzdWJub2RlcyBtdXN0CiBiZSBzcGVjaWZpZWQuCkBAIC05NCwz
-ICsxMjcsMTg1IEBAIEV4YW1wbGU6CiAJCQl9OwogCQl9OwogCX07CisKK0V4YW1wbGUgMjogTVQ3
-NjIxOiBQb3J0IDQgaXMgV0FOIHBvcnQ6IDJuZCBHTUFDIC0+IFBvcnQgNSAtPiBQSFkgcG9ydCA0
-LgorCismZXRoIHsKKwlzdGF0dXMgPSAib2theSI7CisKKwlnbWFjMDogbWFjQDAgeworCQljb21w
-YXRpYmxlID0gIm1lZGlhdGVrLGV0aC1tYWMiOworCQlyZWcgPSA8MD47CisJCXBoeS1tb2RlID0g
-InJnbWlpIjsKKworCQlmaXhlZC1saW5rIHsKKwkJCXNwZWVkID0gPDEwMDA+OworCQkJZnVsbC1k
-dXBsZXg7CisJCQlwYXVzZTsKKwkJfTsKKwl9OworCisJZ21hYzE6IG1hY0AxIHsKKwkJY29tcGF0
-aWJsZSA9ICJtZWRpYXRlayxldGgtbWFjIjsKKwkJcmVnID0gPDE+OworCQlwaHktbW9kZSA9ICJy
-Z21paS10eGlkIjsKKwkJcGh5LWhhbmRsZSA9IDwmcGh5ND47CisJfTsKKworCW1kaW86IG1kaW8t
-YnVzIHsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+OworCisJ
-CS8qIEludGVybmFsIHBoeSAqLworCQlwaHk0OiBldGhlcm5ldC1waHlANCB7CisJCQlyZWcgPSA8
-ND47CisJCX07CisKKwkJbXQ3NTMwOiBzd2l0Y2hAMWYgeworCQkJY29tcGF0aWJsZSA9ICJtZWRp
-YXRlayxtdDc2MjEiOworCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9
-IDwwPjsKKwkJCXJlZyA9IDwweDFmPjsKKwkJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJ
-CQltZWRpYXRlayxtY207CisKKwkJCXJlc2V0cyA9IDwmcnN0Y3RybCAyPjsKKwkJCXJlc2V0LW5h
-bWVzID0gIm1jbSI7CisKKwkJCXBvcnRzIHsKKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJ
-CQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQkJCXBvcnRAMCB7CisJCQkJCXJlZyA9IDwwPjsKKwkJ
-CQkJbGFiZWwgPSAibGFuMCI7CisJCQkJfTsKKworCQkJCXBvcnRAMSB7CisJCQkJCXJlZyA9IDwx
-PjsKKwkJCQkJbGFiZWwgPSAibGFuMSI7CisJCQkJfTsKKworCQkJCXBvcnRAMiB7CisJCQkJCXJl
-ZyA9IDwyPjsKKwkJCQkJbGFiZWwgPSAibGFuMiI7CisJCQkJfTsKKworCQkJCXBvcnRAMyB7CisJ
-CQkJCXJlZyA9IDwzPjsKKwkJCQkJbGFiZWwgPSAibGFuMyI7CisJCQkJfTsKKworLyogQ29tbWVu
-dGVkIG91dC4gUG9ydCA0IGlzIGhhbmRsZWQgYnkgMm5kIEdNQUMuCisJCQkJcG9ydEA0IHsKKwkJ
-CQkJcmVnID0gPDQ+OworCQkJCQlsYWJlbCA9ICJsYW40IjsKKwkJCQl9OworKi8KKworCQkJCWNw
-dV9wb3J0MDogcG9ydEA2IHsKKwkJCQkJcmVnID0gPDY+OworCQkJCQlsYWJlbCA9ICJjcHUiOwor
-CQkJCQlldGhlcm5ldCA9IDwmZ21hYzA+OworCQkJCQlwaHktbW9kZSA9ICJyZ21paSI7CisKKwkJ
-CQkJZml4ZWQtbGluayB7CisJCQkJCQlzcGVlZCA9IDwxMDAwPjsKKwkJCQkJCWZ1bGwtZHVwbGV4
-OworCQkJCQkJcGF1c2U7CisJCQkJCX07CisJCQkJfTsKKwkJCX07CisJCX07CisJfTsKK307CisK
-K0V4YW1wbGUgMzogTVQ3NjIxOiBQb3J0IDUgaXMgY29ubmVjdGVkIHRvIGV4dGVybmFsIFBIWTog
-UG9ydCA1IC0+IGV4dGVybmFsIFBIWS4KKworJmV0aCB7CisJc3RhdHVzID0gIm9rYXkiOworCisJ
-Z21hYzA6IG1hY0AwIHsKKwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxldGgtbWFjIjsKKwkJcmVn
-ID0gPDA+OworCQlwaHktbW9kZSA9ICJyZ21paSI7CisKKwkJZml4ZWQtbGluayB7CisJCQlzcGVl
-ZCA9IDwxMDAwPjsKKwkJCWZ1bGwtZHVwbGV4OworCQkJcGF1c2U7CisJCX07CisJfTsKKworCW1k
-aW86IG1kaW8tYnVzIHsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0g
-PDA+OworCisJCS8qIEV4dGVybmFsIHBoeSAqLworCQllcGh5NTogZXRoZXJuZXQtcGh5QDcgewor
-CQkJcmVnID0gPDc+OworCQl9OworCisJCW10NzUzMDogc3dpdGNoQDFmIHsKKwkJCWNvbXBhdGli
-bGUgPSAibWVkaWF0ZWssbXQ3NjIxIjsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJI3Np
-emUtY2VsbHMgPSA8MD47CisJCQlyZWcgPSA8MHgxZj47CisJCQlwaW5jdHJsLW5hbWVzID0gImRl
-ZmF1bHQiOworCQkJbWVkaWF0ZWssbWNtOworCisJCQlyZXNldHMgPSA8JnJzdGN0cmwgMj47CisJ
-CQlyZXNldC1uYW1lcyA9ICJtY20iOworCisJCQlwb3J0cyB7CisJCQkJI2FkZHJlc3MtY2VsbHMg
-PSA8MT47CisJCQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCQlwb3J0QDAgeworCQkJCQlyZWcg
-PSA8MD47CisJCQkJCWxhYmVsID0gImxhbjAiOworCQkJCX07CisKKwkJCQlwb3J0QDEgeworCQkJ
-CQlyZWcgPSA8MT47CisJCQkJCWxhYmVsID0gImxhbjEiOworCQkJCX07CisKKwkJCQlwb3J0QDIg
-eworCQkJCQlyZWcgPSA8Mj47CisJCQkJCWxhYmVsID0gImxhbjIiOworCQkJCX07CisKKwkJCQlw
-b3J0QDMgeworCQkJCQlyZWcgPSA8Mz47CisJCQkJCWxhYmVsID0gImxhbjMiOworCQkJCX07CisK
-KwkJCQlwb3J0QDQgeworCQkJCQlyZWcgPSA8ND47CisJCQkJCWxhYmVsID0gImxhbjQiOworCQkJ
-CX07CisKKwkJCQlwb3J0QDUgeworCQkJCQlyZWcgPSA8NT47CisJCQkJCWxhYmVsID0gImxhbjUi
-OworCQkJCQlwaHktbW9kZSA9ICJyZ21paSI7CisJCQkJCXBoeS1oYW5kbGUgPSA8JmVwaHk1PjsK
-KwkJCQl9OworCisJCQkJY3B1X3BvcnQwOiBwb3J0QDYgeworCQkJCQlyZWcgPSA8Nj47CisJCQkJ
-CWxhYmVsID0gImNwdSI7CisJCQkJCWV0aGVybmV0ID0gPCZnbWFjMD47CisJCQkJCXBoeS1tb2Rl
-ID0gInJnbWlpIjsKKworCQkJCQlmaXhlZC1saW5rIHsKKwkJCQkJCXNwZWVkID0gPDEwMDA+Owor
-CQkJCQkJZnVsbC1kdXBsZXg7CisJCQkJCQlwYXVzZTsKKwkJCQkJfTsKKwkJCQl9OworCQkJfTsK
-KwkJfTsKKwl9OworfTsKLS0gCjIuMjAuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCkxpbnV4LW1lZGlhdGVrIG1haWxpbmcgbGlzdApMaW51eC1tZWRp
-YXRla0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtbWVkaWF0ZWsK
+Adding support for port 5.
+
+Port 5 can muxed/interface to:
+- internal 5th GMAC of the switch; can be used as 2nd CPU port or as
+  extra port with an external phy for a 6th ethernet port.
+- internal PHY of port 0 or 4; Used in most applications so that port 0
+  or 4 is the WAN port and interfaces with the 2nd GMAC of the SOC.
+
+Signed-off-by: René van Dorst <opensource@vdorst.com>
+
+rfc->v1:
+* Removed unnecessary info print suggested by Andrew Lunn
+* Added support for MII mode for port 5
+---
+ drivers/net/dsa/mt7530.c | 145 ++++++++++++++++++++++++++++++++++++---
+ drivers/net/dsa/mt7530.h |  28 ++++++++
+ 2 files changed, 165 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 73a2204bf81a..785ce825aeb1 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -633,6 +633,75 @@ mt7530_get_sset_count(struct dsa_switch *ds, int port, int sset)
+ 	return ARRAY_SIZE(mt7530_mib);
+ }
+ 
++static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
++{
++	struct mt7530_priv *priv = ds->priv;
++	u8 tx_delay = 0;
++	int val;
++
++	mutex_lock(&priv->reg_mutex);
++
++	val = mt7530_read(priv, MT7530_MHWTRAP);
++
++	val |= MHWTRAP_MANUAL | MHWTRAP_P5_MAC_SEL | MHWTRAP_P5_DIS;
++	val &= ~MHWTRAP_P5_RGMII_MODE & ~MHWTRAP_PHY0_SEL;
++
++	switch (priv->p5_intf_sel) {
++	case P5_INTF_SEL_PHY_P0:
++		/* MT7530_P5_MODE_GPHY_P0: 2nd GMAC -> P5 -> P0 */
++		val |= MHWTRAP_PHY0_SEL;
++		/* fall through */
++	case P5_INTF_SEL_PHY_P4:
++		/* MT7530_P5_MODE_GPHY_P4: 2nd GMAC -> P5 -> P4 */
++		val &= ~MHWTRAP_P5_MAC_SEL & ~MHWTRAP_P5_DIS;
++
++		/* Setup the MAC by default for the cpu port */
++		mt7530_write(priv, MT7530_PMCR_P(5), 0x56300);
++		break;
++	case P5_INTF_SEL_GMAC5:
++		/* MT7530_P5_MODE_GMAC: P5 -> External phy or 2nd GMAC */
++		val &= ~MHWTRAP_P5_DIS;
++		break;
++	case P5_DISABLED:
++		interface = PHY_INTERFACE_MODE_NA;
++		break;
++	default:
++		dev_err(ds->dev, "Unsupported p5_intf_sel %d\n",
++			priv->p5_intf_sel);
++		goto unlock_exit;
++	}
++
++	/* Setup RGMII settings */
++	if (phy_interface_mode_is_rgmii(interface)) {
++		val |= MHWTRAP_P5_RGMII_MODE;
++
++		/* P5 RGMII RX Clock Control: delay setting for 1000M */
++		mt7530_write(priv, MT7530_P5RGMIIRXCR, CSR_RGMII_EDGE_ALIGN);
++
++		/* Don't set delay in DSA mode */
++		if (!dsa_is_dsa_port(priv->ds, 5) &&
++		    (interface == PHY_INTERFACE_MODE_RGMII_TXID ||
++		    interface == PHY_INTERFACE_MODE_RGMII_ID))
++			tx_delay = 4; /* n * 0.5 ns */
++
++		/* P5 RGMII TX Clock Control: delay x */
++		mt7530_write(priv, MT7530_P5RGMIITXCR,
++			     CSR_RGMII_TXC_CFG(0x10 + tx_delay));
++
++		/* reduce P5 RGMII Tx driving, 8mA */
++		mt7530_write(priv, MT7530_IO_DRV_CR,
++			     P5_IO_CLK_DRV(1) | P5_IO_DATA_DRV(1));
++	}
++
++	mt7530_write(priv, MT7530_MHWTRAP, val);
++
++	dev_info(ds->dev, "Setup P5, HWTRAP=0x%x, intf_sel=%s, phy-mode=%s\n",
++		 val, p5_intf_modes(priv->p5_intf_sel), phy_modes(interface));
++
++unlock_exit:
++	mutex_unlock(&priv->reg_mutex);
++}
++
+ static int
+ mt7530_cpu_port_enable(struct mt7530_priv *priv,
+ 		       int port)
+@@ -1167,6 +1236,10 @@ mt7530_setup(struct dsa_switch *ds)
+ 	u32 id, val;
+ 	struct device_node *dn;
+ 	struct mt7530_dummy_poll p;
++	phy_interface_t interface;
++	struct device_node *mac_np;
++	struct device_node *phy_node;
++	const __be32 *_id;
+ 
+ 	/* The parent node of master netdev which holds the common system
+ 	 * controller also is the container for two GMACs nodes representing
+@@ -1254,6 +1327,40 @@ mt7530_setup(struct dsa_switch *ds)
+ 			mt7530_port_disable(ds, i);
+ 	}
+ 
++	/* Setup port 5 */
++	priv->p5_intf_sel = P5_DISABLED;
++	interface = PHY_INTERFACE_MODE_NA;
++
++	if (!dsa_is_unused_port(ds, 5)) {
++		priv->p5_intf_sel = P5_INTF_SEL_GMAC5;
++		interface = of_get_phy_mode(ds->ports[5].dn);
++	} else {
++		/* Scan the ethernet nodes. Look for GMAC1, Lookup used phy */
++		for_each_child_of_node(dn, mac_np) {
++			if (!of_device_is_compatible(mac_np,
++						     "mediatek,eth-mac"))
++				continue;
++			_id = of_get_property(mac_np, "reg", NULL);
++			if (be32_to_cpup(_id)  != 1)
++				continue;
++
++			interface = of_get_phy_mode(mac_np);
++			phy_node = of_parse_phandle(mac_np, "phy-handle", 0);
++
++			if (phy_node->parent == priv->dev->of_node->parent) {
++				_id = of_get_property(phy_node, "reg", NULL);
++				id = be32_to_cpup(_id);
++				if (id == 0)
++					priv->p5_intf_sel = P5_INTF_SEL_PHY_P0;
++				if (id == 4)
++					priv->p5_intf_sel = P5_INTF_SEL_PHY_P4;
++			}
++			break;
++		}
++	}
++
++	mt7530_setup_port5(ds, interface);
++
+ 	/* Flush the FDB table */
+ 	ret = mt7530_fdb_cmd(priv, MT7530_FDB_FLUSH, NULL);
+ 	if (ret < 0)
+@@ -1267,7 +1374,7 @@ static void mt7530_phylink_mac_config(struct dsa_switch *ds, int port,
+ 				      const struct phylink_link_state *state)
+ {
+ 	struct mt7530_priv *priv = ds->priv;
+-	u32 mcr_cur, mcr_new;
++	u32 mcr_cur, mcr_new = 0;
+ 
+ 	switch (port) {
+ 	case 0: /* Internal phy */
+@@ -1278,7 +1385,19 @@ static void mt7530_phylink_mac_config(struct dsa_switch *ds, int port,
+ 		if (state->interface != PHY_INTERFACE_MODE_GMII)
+ 			return;
+ 		break;
+-	/* case 5: Port 5 is not supported! */
++	case 5: /* 2nd cpu port with phy of port 0 or 4 / external phy */
++		if (!phy_interface_mode_is_rgmii(state->interface) &&
++		    state->interface != PHY_INTERFACE_MODE_MII &&
++		    state->interface != PHY_INTERFACE_MODE_GMII)
++			return;
++		if (priv->p5_intf_sel != P5_INTF_SEL_GMAC5) {
++			priv->p5_intf_sel = P5_INTF_SEL_GMAC5;
++			mt7530_setup_port5(ds, state->interface);
++		}
++		/* We are connected to external phy */
++		if (dsa_is_user_port(ds, 5))
++			mcr_new |= PMCR_EXT_PHY;
++		break;
+ 	case 6: /* 1st cpu port */
+ 		if (state->interface != PHY_INTERFACE_MODE_RGMII &&
+ 		    state->interface != PHY_INTERFACE_MODE_TRGMII)
+@@ -1304,7 +1423,7 @@ static void mt7530_phylink_mac_config(struct dsa_switch *ds, int port,
+ 	}
+ 
+ 	mcr_cur = mt7530_read(priv, MT7530_PMCR_P(port));
+-	mcr_new = mcr_cur;
++	mcr_new |= mcr_cur;
+ 	mcr_new &= ~(PMCR_FORCE_SPEED_1000 | PMCR_FORCE_SPEED_100 |
+ 		     PMCR_FORCE_FDX | PMCR_TX_FC_EN | PMCR_RX_FC_EN);
+ 	mcr_new |= PMCR_IFG_XMIT(1) | PMCR_MAC_MODE | PMCR_BACKOFF_EN |
+@@ -1365,7 +1484,13 @@ static void mt7530_phylink_validate(struct dsa_switch *ds, int port,
+ 		    state->interface != PHY_INTERFACE_MODE_GMII)
+ 			goto unsupported;
+ 		break;
+-	/* case 5: Port 5 not supported! */
++	case 5: /* 2nd cpu port with phy of port 0 or 4 / external phy */
++		if (state->interface != PHY_INTERFACE_MODE_NA &&
++		    !phy_interface_mode_is_rgmii(state->interface) &&
++		    state->interface != PHY_INTERFACE_MODE_MII &&
++		    state->interface != PHY_INTERFACE_MODE_GMII)
++			goto unsupported;
++		break;
+ 	case 6: /* 1st cpu port */
+ 		if (state->interface != PHY_INTERFACE_MODE_NA &&
+ 		    state->interface != PHY_INTERFACE_MODE_RGMII &&
+@@ -1381,15 +1506,19 @@ static void mt7530_phylink_validate(struct dsa_switch *ds, int port,
+ 	phylink_set_port_modes(mask);
+ 	phylink_set(mask, Autoneg);
+ 
+-	if (state->interface != PHY_INTERFACE_MODE_TRGMII) {
++	if (state->interface == PHY_INTERFACE_MODE_TRGMII) {
++		phylink_set(mask, 1000baseT_Full);
++	} else {
+ 		phylink_set(mask, 10baseT_Half);
+ 		phylink_set(mask, 10baseT_Full);
+ 		phylink_set(mask, 100baseT_Half);
+ 		phylink_set(mask, 100baseT_Full);
+-		phylink_set(mask, 1000baseT_Half);
+-	}
+ 
+-	phylink_set(mask, 1000baseT_Full);
++		if (state->interface != PHY_INTERFACE_MODE_MII) {
++			phylink_set(mask, 1000baseT_Half);
++			phylink_set(mask, 1000baseT_Full);
++		}
++	}
+ 
+ 	phylink_set(mask, Pause);
+ 	phylink_set(mask, Asym_Pause);
+diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+index 107dd04acede..0f7276a2270a 100644
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -186,6 +186,7 @@ enum mt7530_vlan_port_attr {
+ /* Register for port MAC control register */
+ #define MT7530_PMCR_P(x)		(0x3000 + ((x) * 0x100))
+ #define  PMCR_IFG_XMIT(x)		(((x) & 0x3) << 18)
++#define  PMCR_EXT_PHY			BIT(17)
+ #define  PMCR_MAC_MODE			BIT(16)
+ #define  PMCR_FORCE_MODE		BIT(15)
+ #define  PMCR_TX_EN			BIT(14)
+@@ -245,6 +246,7 @@ enum mt7530_vlan_port_attr {
+ 
+ /* Register for hw trap modification */
+ #define MT7530_MHWTRAP			0x7804
++#define  MHWTRAP_PHY0_SEL		BIT(20)
+ #define  MHWTRAP_MANUAL			BIT(16)
+ #define  MHWTRAP_P5_MAC_SEL		BIT(13)
+ #define  MHWTRAP_P6_DIS			BIT(8)
+@@ -402,6 +404,30 @@ struct mt7530_port {
+ 	u16 pvid;
+ };
+ 
++/* Port 5 interface select definitions */
++enum p5_interface_select {
++	P5_DISABLED = 0,
++	P5_INTF_SEL_PHY_P0,
++	P5_INTF_SEL_PHY_P4,
++	P5_INTF_SEL_GMAC5,
++};
++
++static const char *p5_intf_modes(unsigned int p5_interface)
++{
++	switch (p5_interface) {
++	case P5_DISABLED:
++		return "DISABLED";
++	case P5_INTF_SEL_PHY_P0:
++		return "PHY P0";
++	case P5_INTF_SEL_PHY_P4:
++		return "PHY P4";
++	case P5_INTF_SEL_GMAC5:
++		return "GMAC5";
++	default:
++		return "unknown";
++	}
++}
++
+ /* struct mt7530_priv -	This is the main data structure for holding the state
+  *			of the driver
+  * @dev:		The device pointer
+@@ -418,6 +444,7 @@ struct mt7530_port {
+  * @reg_mutex:		The lock for protecting among process accessing
+  *			registers
+  * @p6_interface	Holding the current port 6 interface
++ * @p5_intf_sel:	Holding the current port 5 interface select
+  */
+ struct mt7530_priv {
+ 	struct device		*dev;
+@@ -431,6 +458,7 @@ struct mt7530_priv {
+ 	unsigned int		id;
+ 	bool			mcm;
+ 	phy_interface_t		p6_interface;
++	unsigned int		p5_intf_sel;
+ 
+ 	struct mt7530_port	ports[MT7530_NUM_PORTS];
+ 	/* protect among processes for registers access*/
+-- 
+2.20.1
