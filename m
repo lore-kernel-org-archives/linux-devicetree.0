@@ -1,40 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/9] dt-bindings: i2c: add bindings for i2c analog and
- digital filter
-Date: Wed, 24 Jul 2019 14:22:55 -0600
-Message-ID: <20190724202255.GA32633@bogus>
-References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
- <1562678049-17581-3-git-send-email-eugen.hristev@microchip.com>
+Subject: Re: [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to
+ make display work again
+Date: Wed, 24 Jul 2019 13:42:59 -0600
+Message-ID: <20190724194259.GA25847@bogus>
+References: <cover.1562597164.git.hns@goldelico.com>
+ <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1562678049-17581-3-git-send-email-eugen.hristev@microchip.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, wsa@the-dreams.de, linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, linux-i2c@vger.kernel.org, Eugen.Hristev@microchip.com, peda@axentia.se, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, letux-kernel@openphoenux.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 9 Jul 2019 13:19:33 +0000, <Eugen.Hristev@microchip.com> wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
+On Mon, Jul 08, 2019 at 04:46:05PM +0200, H. Nikolaus Schaller wrote:
+> commit 6953c57ab172 "gpio: of: Handle SPI chipselect legacy bindings"
 > 
-> Some i2c controllers have a built-in digital or analog filter.
-> This is specifically required depending on the hardware PCB/board.
-> Some controllers also allow specifying the maximum width of the
-> spikes that can be filtered. The width length can be specified in nanoseconds.
+> did introduce logic to centrally handle the legacy spi-cs-high property
+> in combination with cs-gpios. This assumes that the polarity
+> of the CS has to be inverted if spi-cs-high is missing, even
+> and especially if non-legacy GPIO_ACTIVE_HIGH is specified.
 > 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
+> The DTS for the GTA04 was orginally introduced under the assumption
+> that there is no need for spi-cs-high if the gpio is defined with
+> proper polarity GPIO_ACTIVE_HIGH.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Given that spi-cs-high is called legacy, that would imply that DT's 
+should not have to use spi-cs-high.
+
+> This was not a problem until gpiolib changed the interpretation of
+> GPIO_ACTIVE_HIGH and missing spi-cs-high.
+
+Then we should fix gpiolib...
+
+> The effect is that the missing spi-cs-high is now interpreted as CS being
+> low (despite GPIO_ACTIVE_HIGH) which turns off the SPI interface when the
+> panel is to be programmed by the panel driver.
+> 
+> Therefore, we have to add the redundant and legacy spi-cs-high property
+> to properly pass through the legacy handler.
+> 
+> Since this is nowhere documented in the bindings, we add some words of
+> WARNING.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  Documentation/devicetree/bindings/spi/spi-bus.txt | 6 ++++++
+>  arch/arm/boot/dts/omap3-gta04.dtsi                | 1 +
+>  2 files changed, 7 insertions(+)
