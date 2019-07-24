@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v8 09/11] usb: common: create Kconfig file
-Date: Wed, 24 Jul 2019 16:50:43 +0800
-Message-ID: <1563958245-6321-10-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v8 05/11] usb: roles: Introduce stubs for the exiting functions in role.h.
+Date: Wed, 24 Jul 2019 16:50:39 +0800
+Message-ID: <1563958245-6321-6-git-send-email-chunfeng.yun@mediatek.com>
 References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,117 +9,83 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Yu Chen <chenyu56@huawei.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Create Kconfig file for USB common core, and move USB_LED_TRIG
-and USB_ULPI_BUS configs into the new file from the parent Kconfig,
-it will help to add new configs later.
+From: Yu Chen <chenyu56@huawei.com>
 
+This patch adds stubs for the exiting functions while
+CONFIG_USB_ROLE_SWITCH does not enabled.
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: John Stultz <john.stultz@linaro.org>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Yu Chen <chenyu56@huawei.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
 v8:
-  new patch
----
- drivers/usb/Kconfig        | 35 +----------------------------------
- drivers/usb/common/Kconfig | 38 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+), 34 deletions(-)
- create mode 100644 drivers/usb/common/Kconfig
+  no changes
 
-diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
-index 6e59d370ef81..7bf94e65ed2f 100644
---- a/drivers/usb/Kconfig
-+++ b/drivers/usb/Kconfig
-@@ -36,8 +36,7 @@ menuconfig USB_SUPPORT
+v7:
+  add Signed-off-by Chunfeng
+
+v6:
+  merge this patch [1] into this series to add new API
+
+	[1] https://patchwork.kernel.org/patch/10909971/
+---
+ include/linux/usb/role.h | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+index c05ffa6abda9..da2b9641b877 100644
+--- a/include/linux/usb/role.h
++++ b/include/linux/usb/role.h
+@@ -42,6 +42,8 @@ struct usb_role_switch_desc {
+ 	bool allow_userspace_control;
+ };
  
- if USB_SUPPORT
++
++#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
+ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+ struct usb_role_switch *usb_role_switch_get(struct device *dev);
+@@ -51,5 +53,33 @@ struct usb_role_switch *
+ usb_role_switch_register(struct device *parent,
+ 			 const struct usb_role_switch_desc *desc);
+ void usb_role_switch_unregister(struct usb_role_switch *sw);
++#else
++static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
++		enum usb_role role)
++{
++	return 0;
++}
++
++static inline enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
++{
++	return USB_ROLE_NONE;
++}
++
++static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
++{
++	return ERR_PTR(-ENODEV);
++}
++
++static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
++
++static inline struct usb_role_switch *
++usb_role_switch_register(struct device *parent,
++			 const struct usb_role_switch_desc *desc)
++{
++	return ERR_PTR(-ENODEV);
++}
++
++static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
++#endif
  
--config USB_COMMON
--	tristate
-+source "drivers/usb/common/Kconfig"
- 
- config USB_ARCH_HAS_HCD
- 	def_bool y
-@@ -175,36 +174,4 @@ source "drivers/usb/typec/Kconfig"
- 
- source "drivers/usb/roles/Kconfig"
- 
--config USB_LED_TRIG
--	bool "USB LED Triggers"
--	depends on LEDS_CLASS && LEDS_TRIGGERS
--	select USB_COMMON
--	help
--	  This option adds LED triggers for USB host and/or gadget activity.
--
--	  Say Y here if you are working on a system with led-class supported
--	  LEDs and you want to use them as activity indicators for USB host or
--	  gadget.
--
--config USB_ULPI_BUS
--	tristate "USB ULPI PHY interface support"
--	select USB_COMMON
--	help
--	  UTMI+ Low Pin Interface (ULPI) is specification for a commonly used
--	  USB 2.0 PHY interface. The ULPI specification defines a standard set
--	  of registers that can be used to detect the vendor and product which
--	  allows ULPI to be handled as a bus. This module is the driver for that
--	  bus.
--
--	  The ULPI interfaces (the buses) are registered by the drivers for USB
--	  controllers which support ULPI register access and have ULPI PHY
--	  attached to them. The ULPI PHY drivers themselves are normal PHY
--	  drivers.
--
--	  ULPI PHYs provide often functions such as ADP sensing/probing (OTG
--	  protocol) and USB charger detection.
--
--	  To compile this driver as a module, choose M here: the module will
--	  be called ulpi.
--
- endif # USB_SUPPORT
-diff --git a/drivers/usb/common/Kconfig b/drivers/usb/common/Kconfig
-new file mode 100644
-index 000000000000..848545b099cf
---- /dev/null
-+++ b/drivers/usb/common/Kconfig
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+config USB_COMMON
-+	tristate
-+
-+
-+config USB_LED_TRIG
-+	bool "USB LED Triggers"
-+	depends on LEDS_CLASS && LEDS_TRIGGERS
-+	select USB_COMMON
-+	help
-+	  This option adds LED triggers for USB host and/or gadget activity.
-+
-+	  Say Y here if you are working on a system with led-class supported
-+	  LEDs and you want to use them as activity indicators for USB host or
-+	  gadget.
-+
-+config USB_ULPI_BUS
-+	tristate "USB ULPI PHY interface support"
-+	select USB_COMMON
-+	help
-+	  UTMI+ Low Pin Interface (ULPI) is specification for a commonly used
-+	  USB 2.0 PHY interface. The ULPI specification defines a standard set
-+	  of registers that can be used to detect the vendor and product which
-+	  allows ULPI to be handled as a bus. This module is the driver for that
-+	  bus.
-+
-+	  The ULPI interfaces (the buses) are registered by the drivers for USB
-+	  controllers which support ULPI register access and have ULPI PHY
-+	  attached to them. The ULPI PHY drivers themselves are normal PHY
-+	  drivers.
-+
-+	  ULPI PHYs provide often functions such as ADP sensing/probing (OTG
-+	  protocol) and USB charger detection.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called ulpi.
-+
+ #endif /* __LINUX_USB_ROLE_H */
 -- 
 2.21.0
