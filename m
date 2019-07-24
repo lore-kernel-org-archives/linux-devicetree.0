@@ -1,89 +1,421 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RFC PATCH 08/11] arm: dts: exynos: Add parents and
- #interconnect-cells to Exynos4412
-Date: Wed, 24 Jul 2019 21:24:26 +0200
-Message-ID: <20190724192426.GJ14346@kozik-lap>
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
- <CGME20190723122027eucas1p24b1d76e3139f7cc52614d7613ff9ba98@eucas1p2.samsung.com>
- <20190723122016.30279-9-a.swigon@partner.samsung.com>
+From: =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>
+Subject: [PATCH net-next 1/3] net: dsa: mt7530: Convert to PHYLINK API
+Date: Wed, 24 Jul 2019 21:25:47 +0200
+Message-ID: <20190724192549.24615-2-opensource@vdorst.com>
+References: <20190724192549.24615-1-opensource@vdorst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190723122016.30279-9-a.swigon@partner.samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, sw0312.kim@samsung.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, georgi.djakov@linaro.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190724192549.24615-1-opensource@vdorst.com>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: frank-w@public-files.de, sean.wang@mediatek.com, f.fainelli@gmail.com, linux@armlinux.org.uk, davem@davemloft.net, matthias.bgg@gmail.com, andrew@lunn.ch, vivien.didelot@gmail.com, john@phrozen.org, linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMjMsIDIwMTkgYXQgMDI6MjA6MTNQTSArMDIwMCwgQXJ0dXIgxZp3aWdvxYQg
-d3JvdGU6Cj4gVGhpcyBwYXRjaCBhZGRzIHR3byBmaWVsZHMgdHAgdGhlIEV4eW5vczQ0MTIgRFRT
-OgoKdHAtPnRvCgo+ICAgLSBwYXJlbnQ6IHRvIGRlY2xhcmUgY29ubmVjdGlvbnMgYmV0d2VlbiBu
-b2RlcyB0aGF0IGFyZSBub3QgaW4gYQo+ICAgICBwYXJlbnQtY2hpbGQgcmVsYXRpb24gaW4gZGV2
-ZnJlcTsKCklzIGl0IGEgc3RhbmRhcmQgcHJvcGVydHk/ClRoZSBleHBsYW5hdGlvbiBuZWVkcyBz
-b21lIGltcHJvdmVtZW50Li4uIHdoeSBhcmUgeW91IGFkZGluZyBwYXJlbnQgdG8gYQpkZXZpY2Vz
-IHdoaWNoIGFyZSBub3QgY2hpbGQtcGFyZW50PwoKQmVzdCByZWdhcmRzLApLcnp5c3p0b2YKCj4g
-ICAtICNpbnRlcmNvbm5lY3QtY2VsbHM6IHJlcXVpcmVkIGJ5IHRoZSBpbnRlcmNvbm5lY3QgZnJh
-bWV3b3JrLgo+IAo+IFBsZWFzZSBub3RlIHRoYXQgI2ludGVyY29ubmVjdC1jZWxscyBpcyBhbHdh
-eXMgemVybyBhbmQgbm9kZSBJRHMgYXJlIG5vdAo+IGhhcmRjb2RlZCBhbnl3aGVyZS4KPiAKPiBT
-aWduZWQtb2ZmLWJ5OiBBcnR1ciDFmndpZ2/FhCA8YS5zd2lnb25AcGFydG5lci5zYW1zdW5nLmNv
-bT4KPiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNDQxMi1vZHJvaWQtY29tbW9uLmR0
-c2kgfCAxICsKPiAgYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNDQxMi5kdHNpICAgICAgICAgICAg
-ICAgfCA5ICsrKysrKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKykKPiAK
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNDQxMi1vZHJvaWQtY29tbW9u
-LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M0NDEyLW9kcm9pZC1jb21tb24uZHRzaQo+
-IGluZGV4IGVhNTVmMzc3ZDE3Yy4uYmRkNjFhZTg2MTAzIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2V4eW5vczQ0MTItb2Ryb2lkLWNvbW1vbi5kdHNpCj4gKysrIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvZXh5bm9zNDQxMi1vZHJvaWQtY29tbW9uLmR0c2kKPiBAQCAtMTA2LDYgKzEwNiw3
-IEBACj4gICZidXNfbGVmdGJ1cyB7Cj4gIAlkZXZmcmVxLWV2ZW50cyA9IDwmcHBtdV9sZWZ0YnVz
-XzM+LCA8JnBwbXVfcmlnaHRidXNfMz47Cj4gIAl2ZGQtc3VwcGx5ID0gPCZidWNrM19yZWc+Owo+
-ICsJcGFyZW50ID0gPCZidXNfZG1jPjsKPiAgCXN0YXR1cyA9ICJva2F5IjsKPiAgfTsKPiAgCj4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQ0MTIuZHRzaSBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL2V4eW5vczQ0MTIuZHRzaQo+IGluZGV4IGQyMGRiMmRmZThlMi4uYTcwYTY3MWFj
-YWNkIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQ0MTIuZHRzaQo+ICsr
-KyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQ0MTIuZHRzaQo+IEBAIC0zOTAsNiArMzkwLDcg
-QEAKPiAgCQkJY2xvY2tzID0gPCZjbG9jayBDTEtfRElWX0RNQz47Cj4gIAkJCWNsb2NrLW5hbWVz
-ID0gImJ1cyI7Cj4gIAkJCW9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmJ1c19kbWNfb3BwX3RhYmxl
-PjsKPiArCQkJI2ludGVyY29ubmVjdC1jZWxscyA9IDwwPjsKPiAgCQkJc3RhdHVzID0gImRpc2Fi
-bGVkIjsKPiAgCQl9Owo+ICAKPiBAQCAtMzk4LDYgKzM5OSw3IEBACj4gIAkJCWNsb2NrcyA9IDwm
-Y2xvY2sgQ0xLX0RJVl9BQ1A+Owo+ICAJCQljbG9jay1uYW1lcyA9ICJidXMiOwo+ICAJCQlvcGVy
-YXRpbmctcG9pbnRzLXYyID0gPCZidXNfYWNwX29wcF90YWJsZT47Cj4gKwkJCSNpbnRlcmNvbm5l
-Y3QtY2VsbHMgPSA8MD47Cj4gIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gIAkJfTsKPiAgCj4g
-QEAgLTQwNiw2ICs0MDgsNyBAQAo+ICAJCQljbG9ja3MgPSA8JmNsb2NrIENMS19ESVZfQzJDPjsK
-PiAgCQkJY2xvY2stbmFtZXMgPSAiYnVzIjsKPiAgCQkJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwm
-YnVzX2RtY19vcHBfdGFibGU+Owo+ICsJCQkjaW50ZXJjb25uZWN0LWNlbGxzID0gPDA+Owo+ICAJ
-CQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICAJCX07Cj4gIAo+IEBAIC00NTksNiArNDYyLDcgQEAK
-PiAgCQkJY2xvY2tzID0gPCZjbG9jayBDTEtfRElWX0dETD47Cj4gIAkJCWNsb2NrLW5hbWVzID0g
-ImJ1cyI7Cj4gIAkJCW9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmJ1c19sZWZ0YnVzX29wcF90YWJs
-ZT47Cj4gKwkJCSNpbnRlcmNvbm5lY3QtY2VsbHMgPSA8MD47Cj4gIAkJCXN0YXR1cyA9ICJkaXNh
-YmxlZCI7Cj4gIAkJfTsKPiAgCj4gQEAgLTQ2Nyw2ICs0NzEsNyBAQAo+ICAJCQljbG9ja3MgPSA8
-JmNsb2NrIENMS19ESVZfR0RSPjsKPiAgCQkJY2xvY2stbmFtZXMgPSAiYnVzIjsKPiAgCQkJb3Bl
-cmF0aW5nLXBvaW50cy12MiA9IDwmYnVzX2xlZnRidXNfb3BwX3RhYmxlPjsKPiArCQkJI2ludGVy
-Y29ubmVjdC1jZWxscyA9IDwwPjsKPiAgCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiAgCQl9Owo+
-ICAKPiBAQCAtNDc1LDYgKzQ4MCw3IEBACj4gIAkJCWNsb2NrcyA9IDwmY2xvY2sgQ0xLX0FDTEsx
-NjA+Owo+ICAJCQljbG9jay1uYW1lcyA9ICJidXMiOwo+ICAJCQlvcGVyYXRpbmctcG9pbnRzLXYy
-ID0gPCZidXNfZGlzcGxheV9vcHBfdGFibGU+Owo+ICsJCQkjaW50ZXJjb25uZWN0LWNlbGxzID0g
-PDA+Owo+ICAJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICAJCX07Cj4gIAo+IEBAIC00ODMsNiAr
-NDg5LDcgQEAKPiAgCQkJY2xvY2tzID0gPCZjbG9jayBDTEtfQUNMSzEzMz47Cj4gIAkJCWNsb2Nr
-LW5hbWVzID0gImJ1cyI7Cj4gIAkJCW9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmJ1c19mc3lzX29w
-cF90YWJsZT47Cj4gKwkJCSNpbnRlcmNvbm5lY3QtY2VsbHMgPSA8MD47Cj4gIAkJCXN0YXR1cyA9
-ICJkaXNhYmxlZCI7Cj4gIAkJfTsKPiAgCj4gQEAgLTQ5MSw2ICs0OTgsNyBAQAo+ICAJCQljbG9j
-a3MgPSA8JmNsb2NrIENMS19BQ0xLMTAwPjsKPiAgCQkJY2xvY2stbmFtZXMgPSAiYnVzIjsKPiAg
-CQkJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwmYnVzX3Blcmlfb3BwX3RhYmxlPjsKPiArCQkJI2lu
-dGVyY29ubmVjdC1jZWxscyA9IDwwPjsKPiAgCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiAgCQl9
-Owo+ICAKPiBAQCAtNDk5LDYgKzUwNyw3IEBACj4gIAkJCWNsb2NrcyA9IDwmY2xvY2sgQ0xLX1ND
-TEtfTUZDPjsKPiAgCQkJY2xvY2stbmFtZXMgPSAiYnVzIjsKPiAgCQkJb3BlcmF0aW5nLXBvaW50
-cy12MiA9IDwmYnVzX2xlZnRidXNfb3BwX3RhYmxlPjsKPiArCQkJI2ludGVyY29ubmVjdC1jZWxs
-cyA9IDwwPjsKPiAgCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiAgCQl9Owo+ICAKPiAtLSAKPiAy
-LjE3LjEKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Convert mt7530 to PHYLINK API
+
+Signed-off-by: René van Dorst <opensource@vdorst.com>
+
+rfc->v1:
+* Renamed P5_MODE_* to P5_INTF_SEL_*. fits the function more
+* Convert if-statement for speed bits to a switch suggested by
+  Daniel Santos
+* Refactor flow_control pause bits and don't use state->link in
+  mt7530_phylink_mac_config() suggested by Russell King
+* Move MAC tx/rx en/disable to mt7530_phylink_mac_link_up/down()
+  suggested by Russell King
+* Always support PHY_INTERFACE_MODE_NA in mt7530_phylink_validate()
+  suggested by Russell King
+* Added phylink_set_port_modes() in mt7530_phylink_validate() suggested
+  by Russell King
+* Remove dev_err on the end of mt7530_phylink_mac_config() suggested by
+  Russell King
+---
+ drivers/net/dsa/mt7530.c | 255 +++++++++++++++++++++++++++++----------
+ drivers/net/dsa/mt7530.h |  32 +++--
+ 2 files changed, 203 insertions(+), 84 deletions(-)
+
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 3181e95586d6..73a2204bf81a 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -13,7 +13,7 @@
+ #include <linux/of_mdio.h>
+ #include <linux/of_net.h>
+ #include <linux/of_platform.h>
+-#include <linux/phy.h>
++#include <linux/phylink.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/reset.h>
+@@ -633,63 +633,6 @@ mt7530_get_sset_count(struct dsa_switch *ds, int port, int sset)
+ 	return ARRAY_SIZE(mt7530_mib);
+ }
+ 
+-static void mt7530_adjust_link(struct dsa_switch *ds, int port,
+-			       struct phy_device *phydev)
+-{
+-	struct mt7530_priv *priv = ds->priv;
+-
+-	if (phy_is_pseudo_fixed_link(phydev)) {
+-		dev_dbg(priv->dev, "phy-mode for master device = %x\n",
+-			phydev->interface);
+-
+-		/* Setup TX circuit incluing relevant PAD and driving */
+-		mt7530_pad_clk_setup(ds, phydev->interface);
+-
+-		if (priv->id == ID_MT7530) {
+-			/* Setup RX circuit, relevant PAD and driving on the
+-			 * host which must be placed after the setup on the
+-			 * device side is all finished.
+-			 */
+-			mt7623_pad_clk_setup(ds);
+-		}
+-	} else {
+-		u16 lcl_adv = 0, rmt_adv = 0;
+-		u8 flowctrl;
+-		u32 mcr = PMCR_USERP_LINK | PMCR_FORCE_MODE;
+-
+-		switch (phydev->speed) {
+-		case SPEED_1000:
+-			mcr |= PMCR_FORCE_SPEED_1000;
+-			break;
+-		case SPEED_100:
+-			mcr |= PMCR_FORCE_SPEED_100;
+-			break;
+-		}
+-
+-		if (phydev->link)
+-			mcr |= PMCR_FORCE_LNK;
+-
+-		if (phydev->duplex) {
+-			mcr |= PMCR_FORCE_FDX;
+-
+-			if (phydev->pause)
+-				rmt_adv = LPA_PAUSE_CAP;
+-			if (phydev->asym_pause)
+-				rmt_adv |= LPA_PAUSE_ASYM;
+-
+-			lcl_adv = linkmode_adv_to_lcl_adv_t(
+-				phydev->advertising);
+-			flowctrl = mii_resolve_flowctrl_fdx(lcl_adv, rmt_adv);
+-
+-			if (flowctrl & FLOW_CTRL_TX)
+-				mcr |= PMCR_TX_FC_EN;
+-			if (flowctrl & FLOW_CTRL_RX)
+-				mcr |= PMCR_RX_FC_EN;
+-		}
+-		mt7530_write(priv, MT7530_PMCR_P(port), mcr);
+-	}
+-}
+-
+ static int
+ mt7530_cpu_port_enable(struct mt7530_priv *priv,
+ 		       int port)
+@@ -698,9 +641,6 @@ mt7530_cpu_port_enable(struct mt7530_priv *priv,
+ 	mt7530_write(priv, MT7530_PVC_P(port),
+ 		     PORT_SPEC_TAG);
+ 
+-	/* Setup the MAC by default for the cpu port */
+-	mt7530_write(priv, MT7530_PMCR_P(port), PMCR_CPUP_LINK);
+-
+ 	/* Disable auto learning on the cpu port */
+ 	mt7530_set(priv, MT7530_PSC_P(port), SA_DIS);
+ 
+@@ -728,9 +668,6 @@ mt7530_port_enable(struct dsa_switch *ds, int port,
+ 
+ 	mutex_lock(&priv->reg_mutex);
+ 
+-	/* Setup the MAC for the user port */
+-	mt7530_write(priv, MT7530_PMCR_P(port), PMCR_USERP_LINK);
+-
+ 	/* Allow the user port gets connected to the cpu port and also
+ 	 * restore the port matrix if the port is the member of a certain
+ 	 * bridge.
+@@ -739,7 +676,7 @@ mt7530_port_enable(struct dsa_switch *ds, int port,
+ 	priv->ports[port].enable = true;
+ 	mt7530_rmw(priv, MT7530_PCR_P(port), PCR_MATRIX_MASK,
+ 		   priv->ports[port].pm);
+-	mt7530_port_set_status(priv, port, 1);
++	mt7530_port_set_status(priv, port, 0);
+ 
+ 	mutex_unlock(&priv->reg_mutex);
+ 
+@@ -1299,6 +1236,8 @@ mt7530_setup(struct dsa_switch *ds)
+ 	val |= MHWTRAP_MANUAL;
+ 	mt7530_write(priv, MT7530_MHWTRAP, val);
+ 
++	priv->p6_interface = PHY_INTERFACE_MODE_NA;
++
+ 	/* Enable and reset MIB counters */
+ 	mt7530_mib_reset(ds);
+ 
+@@ -1323,6 +1262,186 @@ mt7530_setup(struct dsa_switch *ds)
+ 	return 0;
+ }
+ 
++static void mt7530_phylink_mac_config(struct dsa_switch *ds, int port,
++				      unsigned int mode,
++				      const struct phylink_link_state *state)
++{
++	struct mt7530_priv *priv = ds->priv;
++	u32 mcr_cur, mcr_new;
++
++	switch (port) {
++	case 0: /* Internal phy */
++	case 1:
++	case 2:
++	case 3:
++	case 4:
++		if (state->interface != PHY_INTERFACE_MODE_GMII)
++			return;
++		break;
++	/* case 5: Port 5 is not supported! */
++	case 6: /* 1st cpu port */
++		if (state->interface != PHY_INTERFACE_MODE_RGMII &&
++		    state->interface != PHY_INTERFACE_MODE_TRGMII)
++			return;
++
++		if (priv->p6_interface == state->interface)
++			break;
++		/* Setup TX circuit incluing relevant PAD and driving */
++		mt7530_pad_clk_setup(ds, state->interface);
++
++		if (priv->id == ID_MT7530) {
++			/* Setup RX circuit, relevant PAD and driving on the
++			 * host which must be placed after the setup on the
++			 * device side is all finished.
++			 */
++			mt7623_pad_clk_setup(ds);
++		}
++		priv->p6_interface = state->interface;
++		break;
++	default:
++		dev_err(ds->dev, "%s: unsupported port: %i\n", __func__, port);
++		return;
++	}
++
++	mcr_cur = mt7530_read(priv, MT7530_PMCR_P(port));
++	mcr_new = mcr_cur;
++	mcr_new &= ~(PMCR_FORCE_SPEED_1000 | PMCR_FORCE_SPEED_100 |
++		     PMCR_FORCE_FDX | PMCR_TX_FC_EN | PMCR_RX_FC_EN);
++	mcr_new |= PMCR_IFG_XMIT(1) | PMCR_MAC_MODE | PMCR_BACKOFF_EN |
++		   PMCR_BACKPR_EN | PMCR_FORCE_MODE | PMCR_FORCE_LNK;
++
++	switch (state->speed) {
++	case SPEED_1000:
++		mcr_new |= PMCR_FORCE_SPEED_1000;
++		break;
++	case SPEED_100:
++		mcr_new |= PMCR_FORCE_SPEED_100;
++		break;
++	}
++	if (state->duplex == DUPLEX_FULL) {
++		mcr_new |= PMCR_FORCE_FDX;
++		if (state->pause & MLO_PAUSE_TX)
++			mcr_new |= PMCR_TX_FC_EN;
++		if (state->pause & MLO_PAUSE_RX)
++			mcr_new |= PMCR_RX_FC_EN;
++	}
++
++	if (mcr_new != mcr_cur)
++		mt7530_write(priv, MT7530_PMCR_P(port), mcr_new);
++}
++
++static void mt7530_phylink_mac_link_down(struct dsa_switch *ds, int port,
++					 unsigned int mode,
++					 phy_interface_t interface)
++{
++	struct mt7530_priv *priv = ds->priv;
++
++	mt7530_port_set_status(priv, port, 0);
++}
++
++static void mt7530_phylink_mac_link_up(struct dsa_switch *ds, int port,
++				       unsigned int mode,
++				       phy_interface_t interface,
++				       struct phy_device *phydev)
++{
++	struct mt7530_priv *priv = ds->priv;
++
++	mt7530_port_set_status(priv, port, 1);
++}
++
++static void mt7530_phylink_validate(struct dsa_switch *ds, int port,
++				    unsigned long *supported,
++				    struct phylink_link_state *state)
++{
++	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
++
++	switch (port) {
++	case 0: /* Internal phy */
++	case 1:
++	case 2:
++	case 3:
++	case 4:
++		if (state->interface != PHY_INTERFACE_MODE_NA &&
++		    state->interface != PHY_INTERFACE_MODE_GMII)
++			goto unsupported;
++		break;
++	/* case 5: Port 5 not supported! */
++	case 6: /* 1st cpu port */
++		if (state->interface != PHY_INTERFACE_MODE_NA &&
++		    state->interface != PHY_INTERFACE_MODE_RGMII &&
++		    state->interface != PHY_INTERFACE_MODE_TRGMII)
++			goto unsupported;
++		break;
++	default:
++		linkmode_zero(supported);
++		dev_err(ds->dev, "%s: unsupported port: %i\n", __func__, port);
++		return;
++	}
++
++	phylink_set_port_modes(mask);
++	phylink_set(mask, Autoneg);
++
++	if (state->interface != PHY_INTERFACE_MODE_TRGMII) {
++		phylink_set(mask, 10baseT_Half);
++		phylink_set(mask, 10baseT_Full);
++		phylink_set(mask, 100baseT_Half);
++		phylink_set(mask, 100baseT_Full);
++		phylink_set(mask, 1000baseT_Half);
++	}
++
++	phylink_set(mask, 1000baseT_Full);
++
++	phylink_set(mask, Pause);
++	phylink_set(mask, Asym_Pause);
++
++	linkmode_and(supported, supported, mask);
++	linkmode_and(state->advertising, state->advertising, mask);
++	return;
++
++unsupported:
++	linkmode_zero(supported);
++}
++
++static int
++mt7530_phylink_mac_link_state(struct dsa_switch *ds, int port,
++			      struct phylink_link_state *state)
++{
++	struct mt7530_priv *priv = ds->priv;
++	u32 pmsr;
++
++	if (port < 0 || port >= MT7530_NUM_PORTS)
++		return -EINVAL;
++
++	pmsr = mt7530_read(priv, MT7530_PMSR_P(port));
++
++	state->link = (pmsr & PMSR_LINK);
++	state->an_complete = state->link;
++	state->duplex = !!(pmsr & PMSR_DPX);
++
++	switch (pmsr & PMSR_SPEED_MASK) {
++	case PMSR_SPEED_10:
++		state->speed = SPEED_10;
++		break;
++	case PMSR_SPEED_100:
++		state->speed = SPEED_100;
++		break;
++	case PMSR_SPEED_1000:
++		state->speed = SPEED_1000;
++		break;
++	default:
++		state->speed = SPEED_UNKNOWN;
++		break;
++	}
++
++	state->pause &= ~(MLO_PAUSE_RX | MLO_PAUSE_TX);
++	if (pmsr & PMSR_RX_FC)
++		state->pause |= MLO_PAUSE_RX;
++	if (pmsr & PMSR_TX_FC)
++		state->pause |= MLO_PAUSE_TX;
++
++	return 1;
++}
++
+ static const struct dsa_switch_ops mt7530_switch_ops = {
+ 	.get_tag_protocol	= mtk_get_tag_protocol,
+ 	.setup			= mt7530_setup,
+@@ -1331,7 +1450,6 @@ static const struct dsa_switch_ops mt7530_switch_ops = {
+ 	.phy_write		= mt7530_phy_write,
+ 	.get_ethtool_stats	= mt7530_get_ethtool_stats,
+ 	.get_sset_count		= mt7530_get_sset_count,
+-	.adjust_link		= mt7530_adjust_link,
+ 	.port_enable		= mt7530_port_enable,
+ 	.port_disable		= mt7530_port_disable,
+ 	.port_stp_state_set	= mt7530_stp_state_set,
+@@ -1344,6 +1462,11 @@ static const struct dsa_switch_ops mt7530_switch_ops = {
+ 	.port_vlan_prepare	= mt7530_port_vlan_prepare,
+ 	.port_vlan_add		= mt7530_port_vlan_add,
+ 	.port_vlan_del		= mt7530_port_vlan_del,
++	.phylink_validate	= mt7530_phylink_validate,
++	.phylink_mac_link_state = mt7530_phylink_mac_link_state,
++	.phylink_mac_config	= mt7530_phylink_mac_config,
++	.phylink_mac_link_down	= mt7530_phylink_mac_link_down,
++	.phylink_mac_link_up	= mt7530_phylink_mac_link_up,
+ };
+ 
+ static const struct of_device_id mt7530_of_match[] = {
+diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+index bfac90f48102..107dd04acede 100644
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -198,26 +198,20 @@ enum mt7530_vlan_port_attr {
+ #define  PMCR_FORCE_SPEED_100		BIT(2)
+ #define  PMCR_FORCE_FDX			BIT(1)
+ #define  PMCR_FORCE_LNK			BIT(0)
+-#define  PMCR_COMMON_LINK		(PMCR_IFG_XMIT(1) | PMCR_MAC_MODE | \
+-					 PMCR_BACKOFF_EN | PMCR_BACKPR_EN | \
+-					 PMCR_TX_EN | PMCR_RX_EN | \
+-					 PMCR_TX_FC_EN | PMCR_RX_FC_EN)
+-#define  PMCR_CPUP_LINK			(PMCR_COMMON_LINK | PMCR_FORCE_MODE | \
+-					 PMCR_FORCE_SPEED_1000 | \
+-					 PMCR_FORCE_FDX | \
+-					 PMCR_FORCE_LNK)
+-#define  PMCR_USERP_LINK		PMCR_COMMON_LINK
+-#define  PMCR_FIXED_LINK		(PMCR_IFG_XMIT(1) | PMCR_MAC_MODE | \
+-					 PMCR_FORCE_MODE | PMCR_TX_EN | \
+-					 PMCR_RX_EN | PMCR_BACKPR_EN | \
+-					 PMCR_BACKOFF_EN | \
+-					 PMCR_FORCE_SPEED_1000 | \
+-					 PMCR_FORCE_FDX | \
+-					 PMCR_FORCE_LNK)
+-#define PMCR_FIXED_LINK_FC		(PMCR_FIXED_LINK | \
+-					 PMCR_TX_FC_EN | PMCR_RX_FC_EN)
++#define  PMCR_SPEED_MASK		(PMCR_FORCE_SPEED_100 | \
++					 PMCR_FORCE_SPEED_1000)
+ 
+ #define MT7530_PMSR_P(x)		(0x3008 + (x) * 0x100)
++#define  PMSR_EEE1G			BIT(7)
++#define  PMSR_EEE100M			BIT(6)
++#define  PMSR_RX_FC			BIT(5)
++#define  PMSR_TX_FC			BIT(4)
++#define  PMSR_SPEED_1000		BIT(3)
++#define  PMSR_SPEED_100			BIT(2)
++#define  PMSR_SPEED_10			0x00
++#define  PMSR_SPEED_MASK		(PMSR_SPEED_100 | PMSR_SPEED_1000)
++#define  PMSR_DPX			BIT(1)
++#define  PMSR_LINK			BIT(0)
+ 
+ /* Register for MIB */
+ #define MT7530_PORT_MIB_COUNTER(x)	(0x4000 + (x) * 0x100)
+@@ -423,6 +417,7 @@ struct mt7530_port {
+  * @ports:		Holding the state among ports
+  * @reg_mutex:		The lock for protecting among process accessing
+  *			registers
++ * @p6_interface	Holding the current port 6 interface
+  */
+ struct mt7530_priv {
+ 	struct device		*dev;
+@@ -435,6 +430,7 @@ struct mt7530_priv {
+ 	struct gpio_desc	*reset;
+ 	unsigned int		id;
+ 	bool			mcm;
++	phy_interface_t		p6_interface;
+ 
+ 	struct mt7530_port	ports[MT7530_NUM_PORTS];
+ 	/* protect among processes for registers access*/
+-- 
+2.20.1
