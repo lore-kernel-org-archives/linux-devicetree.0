@@ -1,53 +1,38 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
-Date: Wed, 24 Jul 2019 15:10:39 +0200
-Message-ID: <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
-References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
-        <20190718143044.25066-1-s.nawrocki@samsung.com>
-        <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 3/3] dt-bindings: aspeed: Remove mention of deprecated
+ compatibles
+Date: Wed, 24 Jul 2019 07:40:00 -0600
+Message-ID: <CAL_JsqLEb3QSLAhm9BsFa+A_Jmgr4gDtV2nUCKkgwwQaMLBk9g@mail.gmail.com>
+References: <20190724081313.12934-1-andrew@aj.id.au>
+ <20190724081313.12934-4-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: krzk@kernel.org, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190724081313.12934-4-andrew@aj.id.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Joel Stanley <joel@jms.id.au>, Lee Jones <lee.jones@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
+On Wed, Jul 24, 2019 at 2:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> Guide readers away from using the aspeed,g[45].* compatible patterns.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  Documentation/devicetree/bindings/mfd/aspeed-scu.txt         | 2 --
+>  Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt   | 2 --
+>  .../devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml  | 5 +----
+>  .../devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml  | 4 +---
+>  4 files changed, 2 insertions(+), 11 deletions(-)
 
-On 2019-07-23 04:04, Viresh Kumar wrote:
-> On 18-07-19, 16:30, Sylwester Nawrocki wrote:
->> This is second iteration of patch series adding ASV (Adaptive Supply
->> Voltage) support for Exynos SoCs. The first one can be found at:
->> https://lore.kernel.org/lkml/20190404171735.12815-1-s.nawrocki@samsung.com
->>
->> The main changes comparing to the first (RFC) version are:
->>   - moving ASV data tables from DT to the driver,
->>   - converting the chipid and the ASV drivers to use regmap,
->>   - converting the ASV driver to proper platform driver.
->>
->> I tried the opp-supported-hw bitmask approach as in the Qualcomm CPUFreq
->> DT bindings but it resulted in too many OPPs and DT nodes, around 200
->> per CPU cluster. So the ASV OPP tables are now in the ASV driver, as in
->> downstream kernels.
-> Hmm. Can you explain why do you have so many OPPs? How many
-> frequencies do you actually support per cluster and what all varies
-> per frequency based on hw ? How many hw version do u have ?
-
-For big cores there are 20 frequencies (2100MHz .. 200MHz). Each SoC 
-might belong to one of the 3 production 'sets' and each set contains 14 
-so called 'asv groups', which assign the certain voltage values for each 
-of those 20 frequencies (the lower asv group means lower voltage needed 
-for given frequency).
-
-> I am asking as the OPP core can be improved to support your case if
-> possible. But I need to understand the problem first.
-
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Reviewed-by: Rob Herring <robh@kernel.org>
