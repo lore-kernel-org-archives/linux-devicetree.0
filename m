@@ -1,53 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4, 05/33] dt-bindings: mediatek: add RDMA1 description
- for mt8183 display
-Date: Wed, 24 Jul 2019 14:16:35 -0600
-Message-ID: <20190724201635.GA18345@bogus>
-References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
- <1562625253-29254-6-git-send-email-yongqiang.niu@mediatek.com>
+Subject: Re: [PATCH V2 1/4] dt-bindings: opp: Support multiple opp-suspend
+ properties
+Date: Wed, 24 Jul 2019 14:18:58 -0600
+Message-ID: <20190724201858.GA25048@bogus>
+References: <20190709080015.43442-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1562625253-29254-6-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190709080015.43442-1-Anson.Huang@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson.Huang@nxp.com
+Cc: nm@ti.com, mark.rutland@arm.com, ping.bai@nxp.com, ccaione@baylibre.com, agx@sigxcpu.org, angus@akkea.ca, leonard.crestez@nxp.com, festevam@gmail.com, abel.vesa@nxp.com, andrew.smirnov@gmail.com, vireshk@kernel.org, Linux-imx@nxp.com, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org, daniel.baluta@nxp.com, linux-arm-kernel@lists.infradead.org, sboyd@kernel.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, shawnguo@kernel.org, l.stach@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMDksIDIwMTkgYXQgMDY6MzM6NDVBTSArMDgwMCwgeW9uZ3FpYW5nLm5pdUBt
-ZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBt
-ZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgUkRNQTEgZGVzY3JpcHRpb24gZm9yIG10
-ODE4MyBkaXNwbGF5Cj4gCj4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5n
-Lm5pdUBtZWRpYXRlay5jb20+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0IHwgMSArCj4gIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkaXNwLnR4dCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVr
-LGRpc3AudHh0Cj4gaW5kZXggYWZkM2M5MC4uYmI5Mjc0YSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkaXNw
-LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21l
-ZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0Cj4gQEAgLTMwLDYgKzMwLDcgQEAgUmVxdWlyZWQgcHJv
-cGVydGllcyAoYWxsIGZ1bmN0aW9uIGJsb2Nrcyk6Cj4gIAkibWVkaWF0ZWssPGNoaXA+LWRpc3At
-b3ZsIiAgIAkJLSBvdmVybGF5ICg0IGxheWVycywgYmxlbmRpbmcsIGNzYykKPiAgCSJtZWRpYXRl
-ayw8Y2hpcD4tZGlzcC1vdmwtMmwiICAgICAgICAgICAtIG92ZXJsYXkgKDIgbGF5ZXJzLCBibGVu
-ZGluZywgY3NjKQo+ICAJIm1lZGlhdGVrLDxjaGlwPi1kaXNwLXJkbWEiICAJCS0gcmVhZCBETUEg
-LyBsaW5lIGJ1ZmZlcgo+ICsJIm1lZGlhdGVrLDxjaGlwPi1kaXNwLXJkbWExIiAgICAgICAgICAg
-IC0gZnVuY3Rpb24gaXMgc2FtZSB3aXRoIFJETUEsIGZpZm8gc2l6ZSBpcyBkaWZmZXJlbnQKClRo
-aXMgY2FuJ3QgYmUgZGV0ZXJtaW5lZCBieSB3aGljaCBjaGlwIGl0IGlzPyBJT1csIGEgY2hpcCBt
-YXkgaGF2ZSBib3RoIApyZG1hIGFuZCByZG1hMT8KCj4gIAkibWVkaWF0ZWssPGNoaXA+LWRpc3At
-d2RtYSIgIAkJLSB3cml0ZSBETUEKPiAgCSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1jY29yciIgICAg
-ICAgICAgICAtIGNvbG9yIGNvcnJlY3Rpb24KPiAgCSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1jb2xv
-ciIgCQktIGNvbG9yIHByb2Nlc3Nvcgo+IC0tIAo+IDEuOC4xLjEuZGlydHkKPiAKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On Tue,  9 Jul 2019 16:00:12 +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> Update opp-suspend property's description to support multiple
+> opp-suspend properties defined in DT, the OPP with highest opp-hz
+> and with opp-suspend property present will be used as suspend opp.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> New patch.
+> ---
+>  Documentation/devicetree/bindings/opp/opp.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
