@@ -1,90 +1,53 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH v4 7/8] dt-bindings: arm: sunxi: add binding for Lichee
- Zero Plus core board
-Date: Wed, 24 Jul 2019 21:09:01 +0800
-Message-ID: <7d24576697521f4985617113dbc4cc41@aosc.io>
-References: <20190713034634.44585-1-icenowy@aosc.io>
- <20190713034634.44585-8-icenowy@aosc.io>
- <20190720101318.cwrvv5r42wxx5k4r@flea>
- <BDF0C9F6-DD0D-4343-8E24-06A07055004C@aosc.io>
- <20190722192934.3jaf3r4rnyeslqyw@flea>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
+Date: Wed, 24 Jul 2019 15:10:39 +0200
+Message-ID: <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
+References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
+        <20190718143044.25066-1-s.nawrocki@samsung.com>
+        <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722192934.3jaf3r4rnyeslqyw@flea>
+In-Reply-To: <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: krzk@kernel.org, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-在 2019-07-23 03:29，Maxime Ripard 写道：
-> On Sat, Jul 20, 2019 at 07:39:08PM +0800, Icenowy Zheng wrote:
->> 
->> 
->> 于 2019年7月20日 GMT+08:00 下午6:13:18, Maxime Ripard 
->> <maxime.ripard@bootlin.com> 写到:
->> >On Sat, Jul 13, 2019 at 11:46:33AM +0800, Icenowy Zheng wrote:
->> >> The Lichee Zero Plus is a core board made by Sipeed, with a microUSB
->> >> connector on it, TF slot or WSON8 SD chip, optional eMMC or SPI
->> >Flash.
->> >> It has a gold finger connector for expansion, and UART is available
->> >from
->> >> reserved pins w/ 2.54mm pitch. The board can use either SoChip S3 or
->> >> Allwinner V3L SoCs.
->> >>
->> >> Add the device tree binding of the basic version of the core board --
->> >> w/o eMMC or SPI Flash, w/ TF slot or WSON8 SD, and use S3 SoC.
->> >>
->> >> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->> >> ---
->> >> No changes since v3.
->> >>
->> >> Patch introduced in v2.
->> >>
->> >>  Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
->> >>  1 file changed, 5 insertions(+)
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml
->> >b/Documentation/devicetree/bindings/arm/sunxi.yaml
->> >> index 000a00d12d6a..48c126a7a848 100644
->> >> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
->> >> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
->> >> @@ -353,6 +353,11 @@ properties:
->> >>            - const: licheepi,licheepi-zero
->> >>            - const: allwinner,sun8i-v3s
->> >>
->> >> +      - description: Lichee Zero Plus (with S3, without eMMC/SPI
->> >Flash)
->> >> +        items:
->> >> +          - const: sipeed,lichee-zero-plus
->> >> +          - const: allwinner,sun8i-s3
->> >
->> >If the S3 is just a rebranded V3, then we should have the v3 compatile
->> >in that list too.
->> 
->> S3 is V3 with copackaged DDR3 DRAM.
->> 
->> It's pin incompatible w/ V3.
-> 
-> Does it matter though?
-> 
-> If the only thing that changes is the package, we're not manipulating
-> that, and any software that deals with the v3 can deal with the
-> s3. Which is what the compatible is about.
+Hi Viresh,
 
-Okay. Should the S3 compatible be kept befoer the V3 one?
+On 2019-07-23 04:04, Viresh Kumar wrote:
+> On 18-07-19, 16:30, Sylwester Nawrocki wrote:
+>> This is second iteration of patch series adding ASV (Adaptive Supply
+>> Voltage) support for Exynos SoCs. The first one can be found at:
+>> https://lore.kernel.org/lkml/20190404171735.12815-1-s.nawrocki@samsung.com
+>>
+>> The main changes comparing to the first (RFC) version are:
+>>   - moving ASV data tables from DT to the driver,
+>>   - converting the chipid and the ASV drivers to use regmap,
+>>   - converting the ASV driver to proper platform driver.
+>>
+>> I tried the opp-supported-hw bitmask approach as in the Qualcomm CPUFreq
+>> DT bindings but it resulted in too many OPPs and DT nodes, around 200
+>> per CPU cluster. So the ASV OPP tables are now in the ASV driver, as in
+>> downstream kernels.
+> Hmm. Can you explain why do you have so many OPPs? How many
+> frequencies do you actually support per cluster and what all varies
+> per frequency based on hw ? How many hw version do u have ?
 
-> 
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+For big cores there are 20 frequencies (2100MHz .. 200MHz). Each SoC 
+might belong to one of the 3 production 'sets' and each set contains 14 
+so called 'asv groups', which assign the certain voltage values for each 
+of those 20 frequencies (the lower asv group means lower voltage needed 
+for given frequency).
+
+> I am asking as the OPP core can be improved to support your case if
+> possible. But I need to understand the problem first.
+
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
