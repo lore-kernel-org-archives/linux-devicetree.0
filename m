@@ -1,146 +1,444 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [Sound-open-firmware] [PATCH v2 3/5] ASoC: SOF: Add DT DSP device
- support
-Date: Wed, 24 Jul 2019 10:04:38 +0300
-Message-ID: <CAEnQRZDr+gj_eiESLNbVUVy1rreRE1nnDgtb3g=CjaRF5Aq9Vw@mail.gmail.com>
-References: <20190723084104.12639-1-daniel.baluta@nxp.com>
- <20190723084104.12639-4-daniel.baluta@nxp.com>
- <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v3 6/6] interconnect: Add OPP table support for interconnects
+Date: Wed, 24 Jul 2019 09:16:36 +0200
+Message-ID: <CAKfTPtA+VAXPLRy8k7qC5PPmtOjO-Pq-3HmakFfxn98=Oj8Tug@mail.gmail.com>
+References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-7-saravanak@google.com>
+ <CAKfTPtCJFaEfvu3Dnp9WSxQEwSfY=VS+xsoQ+4P+vg7_WL0BAQ@mail.gmail.com>
+ <CAGETcx_5gu84FOVmELPnK5uJTE0NEhxYKtdFigoXGyFtjehQvw@mail.gmail.com>
+ <CAKfTPtBHrXG1QZzcaStWCtL3nx+vE_-WKtOhjiHbjFQiw9Yk8w@mail.gmail.com>
+ <CAGETcx912kpi9DejPCoWMUF5AMm4=o1C0C45zwMfUy6aX_jcYg@mail.gmail.com>
+ <CAKfTPtBngOT__TfmHXmmim-b9YhExOOvwVRaxYM9g9M6ffr_zQ@mail.gmail.com>
+ <CAGETcx90WC2o+ZmkyhOPp1xJbfSk1wpAv2RA-4VgnhJfcsmJiA@mail.gmail.com>
+ <CAKfTPtBE7e+hc55TY43JC0XPONvrS4FBPkZcRZ4EbzyCJKNhfg@mail.gmail.com> <CAGETcx_w=yVDiwVWT1+mmoj54FuLC37Eh2E-s0BfrtEa0AqEjw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Fabio Estevam <festevam@gmail.com>, Anson Huang <anson.huang@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Marco Felsch <m.felsch@pengutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Paul Olaru <paul.olaru@nxp.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, sound-open-firmware@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGETcx_w=yVDiwVWT1+mmoj54FuLC37Eh2E-s0BfrtEa0AqEjw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 6:19 PM Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
+On Tue, 16 Jul 2019 at 02:56, Saravana Kannan <saravanak@google.com> wrote:
 >
->
-> > diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
-> > index 61b97fc55bb2..2aa3a1cdf60c 100644
-> > --- a/sound/soc/sof/Kconfig
-> > +++ b/sound/soc/sof/Kconfig
-> > @@ -36,6 +36,15 @@ config SND_SOC_SOF_ACPI
-> >         Say Y if you need this option
-> >         If unsure select "N".
+> On Mon, Jul 15, 2019 at 1:16 AM Vincent Guittot
+> <vincent.guittot@linaro.org> wrote:
 > >
-> > +config SND_SOC_SOF_DT
-> > +     tristate "SOF DT enumeration support"
-> > +     select SND_SOC_SOF
-> > +     select SND_SOC_SOF_OPTIONS
-> > +     help
-> > +       This adds support for Device Tree enumeration. This option is
-> > +       required to enable i.MX8 devices.
-> > +       Say Y if you need this option. If unsure select "N".
-> > +
->
-> [snip]
->
-> > diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
-> > index fff64a9970f0..fa35994a79c4 100644
-> > --- a/sound/soc/sof/imx/Kconfig
-> > +++ b/sound/soc/sof/imx/Kconfig
-> > @@ -12,6 +12,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
+> > On Tue, 9 Jul 2019 at 21:03, Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > On Tue, Jul 9, 2019 at 12:25 AM Vincent Guittot
+> > > <vincent.guittot@linaro.org> wrote:
+> > > >
+> > > > On Sun, 7 Jul 2019 at 23:48, Saravana Kannan <saravanak@google.com> wrote:
+> > > > >
+> > > > > On Thu, Jul 4, 2019 at 12:12 AM Vincent Guittot
+> > > > > <vincent.guittot@linaro.org> wrote:
+> > > > > >
+> > > > > > On Wed, 3 Jul 2019 at 23:33, Saravana Kannan <saravanak@google.com> wrote:
+> > > > > > >
+> > > > > > > On Tue, Jul 2, 2019 at 11:45 PM Vincent Guittot
+> > > > > > > <vincent.guittot@linaro.org> wrote:
+> > > > > > > >
+> > > > > > > > On Wed, 3 Jul 2019 at 03:10, Saravana Kannan <saravanak@google.com> wrote:
+> > > > > > > > >
+> > > > > > > > > Interconnect paths can have different performance points. Now that OPP
+> > > > > > > > > framework supports bandwidth OPP tables, add OPP table support for
+> > > > > > > > > interconnects.
+> > > > > > > > >
+> > > > > > > > > Devices can use the interconnect-opp-table DT property to specify OPP
+> > > > > > > > > tables for interconnect paths. And the driver can obtain the OPP table for
+> > > > > > > > > an interconnect path by calling icc_get_opp_table().
+> > > > > > > >
+> > > > > > > > The opp table of a path must come from the aggregation of OPP tables
+> > > > > > > > of the interconnect providers.
+> > > > > > >
+> > > > > > > The aggregation of OPP tables of the providers is certainly the
+> > > > > > > superset of what a path can achieve, but to say that OPPs for
+> > > > > > > interconnect path should match that superset is an oversimplification
+> > > > > > > of the reality in hardware.
+> > > > > > >
+> > > > > > > There are lots of reasons an interconnect path might not want to use
+> > > > > > > all the available bandwidth options across all the interconnects in
+> > > > > > > the route.
+> > > > > > >
+> > > > > > > 1. That particular path might not have been validated or verified
+> > > > > > >    during the HW design process for some of the frequencies/bandwidth
+> > > > > > >    combinations of the providers.
+> > > > > >
+> > > > > > All these constraint are provider's constraints and not consumer's one
+> > > > > >
+> > > > > > The consumer asks for a bandwidth according to its needs and then the
+> > > > > > providers select the optimal bandwidth of each interconnect after
+> > > > > > aggregating all the request and according to what OPP have been
+> > > > > > validated
+> > > > >
+> > > > > Not really. The screening can be a consumer specific issue. The
+> > > > > consumer IP itself might have some issue with using too low of a
+> > > > > bandwidth or bandwidth that's not within some range. It should not be
+> > > >
+> > > > How can an IP ask for not enough bandwidth ?
+> > > > It asks the needed bandwidth based on its requirements
+> > >
+> > > The "enough bandwidth" is not always obvious. It's only for very
+> > > simple cases that you can calculate the required bandwidth. Even for
+> > > cases that you think might be "obvious/easy" aren't always easy.
+> > >
+> > > For example, you'd think a display IP would have a fixed bandwidth
+> > > requirement for a fixed resolution screen. But that's far from the
+> > > truth. It can also change as the number of layers change per frame.
+> > > For video decoder/encoder, it depends on how well the frames compress
+> > > with a specific compression scheme.
+> > > So the "required" bandwidth is often a heuristic based on the IP
+> > > frequency or traffic measurement.
+> > >
+> > > But that's not even the point I was making in this specific "bullet".
+> > >
+> > > A hardware IP might be screen/verified with only certain bandwidth
+> > > levels. Or it might have hardware bugs that prevent it from using
+> > > lower bandwidths even though it's technically sufficient. We need a
+> > > way to capture that per path. This is not even a fictional case. This
+> > > has been true multiple times over widely used IPs.
 > >
-> >   config SND_SOC_SOF_IMX8
-> >       tristate "SOF support for i.MX8"
-> > +     select SND_SOC_SOF_DT
+> > here you are mixing HW constraint on the soc and OPP screening with
+> > bandwidth request from consumer
+> > ICC framework is about getting bandwidth request not trying to fix
+> > some HW/voltage dependency of the SoC
+> >
+> > >
+> > > > > the provider's job to take into account all the IP that might be
+> > > > > connected to the interconnects. If the interconnect HW itself didn't
+> > > >
+> > > > That's not what I'm saying. The provider knows which bandwidth the
+> > > > interconnect can provide as it is the ones which configures it. So if
+> > > > the interconnect has a finite number of bandwidth point based probably
+> > > > on the possible clock frequency and others config of the interconnect,
+> > > > it selects the best final config after aggregating the request of the
+> > > > consumer.
+> > >
+> > > I completely agree with this. What you are stating above is how it
+> > > should work and that's the whole point of the interconnect framework.
+> > >
+> > > But this is orthogonal to the point I'm making.
+> >
+> > It's not orthogonal because you want to add a OPP table pointer in the
+> > ICC path structure to fix your platform HW constraint whereas it's not
+> > the purpose of the framework IMO
+> >
+> > >
+> > > > > change, the provider driver shouldn't need to change. By your
+> > > > > definition, a provider driver will have to account for all the
+> > > > > possible bus masters that might be connected to it across all SoCs.
+> > > >
+> > > > you didn't catch my point
+> > >
+> > > Same. I think we are talking over each other. Let me try again.
+> > >
+> > > You are trying to describe how and interconnect provider and framework
+> > > should work. There's no disagreement there.
+> > >
+> > > My point is that consumers might not want to or can not always use all
+> > > the available bandwidth levels offered by the providers. There can be
+> > > many reasons for that (which is what I listed in my earlier emails)
+> > > and we need a good and generic way to capture that so that everyone
+> > > isn't trying to invent their own property.
+> >
+> > And my point is that you want to describe some platform or even UCs
+> > specific constraint in the ICC framework which is not the place to do.
+> >
+> > If the consumers might not want to use all available bandwidth because
+> > this is not power efficient as an example, this should be describe
+> > somewhere else to express  that there is a shared power domain
+> > between some devices and we shoudl ensure that all devices in this
+> > power domain should use the  Optimal Operating Point (optimal freq for
+> > a voltage)
 >
-> This looks upside down. You should select SOF_DT first then include the
-> NXP stuff.
+> My patch series has nothing to do with shared power domains. I think
+> the examples have made it amply clear.
+
+It's far from being clear why a consumer doesn't want to use some
+bandwidth level TBH
+
+Do you have a real example ?
+
 >
-> >       help
-> >             This adds support for Sound Open Firmware for NXP i.MX8 platforms
-> >             Say Y if you have such a device.
-> > diff --git a/sound/soc/sof/sof-dt-dev.c b/sound/soc/sof/sof-dt-dev.c
-> > new file mode 100644
-> > index 000000000000..31429bbb5c7e
-> > --- /dev/null
-> > +++ b/sound/soc/sof/sof-dt-dev.c
-> > @@ -0,0 +1,159 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> > +//
-> > +// Copyright 2019 NXP
-> > +//
-> > +// Author: Daniel Baluta <daniel.baluta@nxp.com>
-> > +//
-> > +
-> > +#include <linux/firmware.h>
-> > +#include <linux/module.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <sound/sof.h>
-> > +
-> > +#include "ops.h"
-> > +
-> > +extern struct snd_sof_dsp_ops sof_imx8_ops;
-> > +
-> > +static char *fw_path;
-> > +module_param(fw_path, charp, 0444);
-> > +MODULE_PARM_DESC(fw_path, "alternate path for SOF firmware.");
-> > +
-> > +static char *tplg_path;
-> > +module_param(tplg_path, charp, 0444);
-> > +MODULE_PARM_DESC(tplg_path, "alternate path for SOF topology.");
-> > +
-> > +/* platform specific devices */
-> > +#if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
-> > +static struct sof_dev_desc sof_dt_imx8qxp_desc = {
-> > +     .default_fw_path = "imx/sof",
-> > +     .default_tplg_path = "imx/sof-tplg",
-> > +     .nocodec_fw_filename = "sof-imx8.ri",
-> > +     .nocodec_tplg_filename = "sof-imx8-nocodec.tplg",
-> > +     .ops = &sof_imx8_ops,
-> > +};
-> > +#endif
-> > +
-> > +static const struct dev_pm_ops sof_dt_pm = {
-> > +     SET_SYSTEM_SLEEP_PM_OPS(snd_sof_suspend, snd_sof_resume)
-> > +     SET_RUNTIME_PM_OPS(snd_sof_runtime_suspend, snd_sof_runtime_resume,
-> > +                        NULL)
-> > +};
-> > +
-> > +static void sof_dt_probe_complete(struct device *dev)
-> > +{
-> > +     /* allow runtime_pm */
-> > +     pm_runtime_set_autosuspend_delay(dev, SND_SOF_SUSPEND_DELAY_MS);
-> > +     pm_runtime_use_autosuspend(dev);
-> > +     pm_runtime_enable(dev);
-> > +}
-> > +
-> > +static int sof_dt_probe(struct platform_device *pdev)
-> > +{
-> > +     struct device *dev = &pdev->dev;
-> > +     const struct sof_dev_desc *desc;
-> > +     /*TODO: create a generic snd_soc_xxx_mach */
-> > +     struct snd_soc_acpi_mach *mach;
+> > ICC framework describes the bandwidth request that are expressed by
+> > the consumers for the current running state of their IP but it doesn't
+> > reflect the fact that on platform A, the consumer should use bandwidth
+> > X because it will select a voltage level of a shared power domain that
+> > is optimized for the other devices B, C ... . It's up to the provider
+> > to know HW details of the bus that it drives and to make such
+> > decision;  the consumer should always request the same
 >
-> I wonder if you really need to use the same structures. For Intel we get
-> absolutely zero info from the firmware so rely on an ACPI codec ID as a
-> key to find information on which firmware and topology to use, and which
-> machine driver to load. You could have all this information in a DT blob?
+> The change to ICC framework is practically just this. I don't have any
+> future changes planned for the ICC framework. This is the entirety of
+> it.
+>
+> +       opp_node = of_parse_phandle(np, "interconnect-opp-table", idx);
+> +       if (opp_node) {
+> +               path->opp_table = dev_pm_opp_of_find_table_from_node(opp_node);
+> +               of_node_put(opp_node);
+> +       }
+>
+> It's quite a stretch and bit hyperbolic to say this one change is
+> getting ICC framework to do all the things you claim above.
+>
 
-Yes. I see your point. I will still need to make a generic structure for
-snd_soc_acpi_mach so that everyone can use sof_nocodec_setup function.
+So I clearly don't see the benefit of adding this opp_table field in
+icc_path struct because I'm still convinced that the consumer doesn't
+have to get a bandwidth table like that.
+If the consumer already get a bandwidth value and it should in order
+to call icc_set or even in order to select one element in your table,
+then it should directly set it with icc_set and let the provider
+aggregate and choose the real one
 
-Maybe something like this:
-
-struct snd_soc_mach {
-  union {
-  struct snd_soc_acpi_mach acpi_mach;
-  struct snd_soc_of_mach of_mach;
-  }
-};
-
-and then change the prototype of sof_nocodec_setup.
+> It's literally a simple helper function so that the consumer doesn't
+> have to make assumptions about indices and it's a bit more explicit
+> about which OPP table of the device (a device can have multiple OPP
+> tables) corresponds to which ICC path.
+>
+> Going by your extreme argument, one can also claim that it's not the
+> ICC framework's job to make it easy for consumers to figure out the
+> source/destination endpoints or give them names and delete the
+> interconnect and interconnect-names properties. That's clearly just as
+> absurd a claim.
+>
+>
+> -Saravana
+>
+> > > > > That's not good design nor is it scalable.
+> > > > >
+> > > > > > >
+> > > > > > > 2. Similarly during parts screening in the factory, some of the
+> > > > > > >    combinations might not have been screened and can't be guaranteed
+> > > > > > >    to work.
+> > > > > >
+> > > > > > As above, it's the provider's job to select the final bandwidth
+> > > > > > according to its constraint
+> > > > >
+> > > > > Same reply as above.
+> > > > >
+> > > > > > >
+> > > > > > > 3. Only a certain set of bandwidth levels might make sense to use from
+> > > > > > >    a power/performance balance given the device using it. For example:
+> > > > > > >    - The big CPU might not want to use some of the lower bandwidths
+> > > > > > >      but the little CPU might want to.
+> > > > > > >    - The big CPU might not want to use some intermediate bandwidth
+> > > > > > >      points if they don't save a lot of power compared to a higher
+> > > > > > >      bandwidth levels, but the little CPU might want to.
+> > > > > > >    - The little CPU might never want to use the higher set of
+> > > > > > >      bandwidth levels since they won't be power efficient for the use
+> > > > > > >      cases that might run on it.
+> > > > > >
+> > > > > > These example are quite vague about the reasons why little might never
+> > > > > > want to use higher bandwidth.
+> > > > >
+> > > > > How is it vague? I just said because of power/performance balance.
+> > > > >
+> > > > > > But then, if little doesn't ask high bandwidth it will not use them.
+> > > > >
+> > > > > If you are running a heuristics based algorithm to pick bandwidth,
+> > > > > this is how it'll know NOT to use some of the bandwidth levels.
+> > > >
+> > > > so you want to set a bandwidth according to the cpu frequency which is
+> > > > what has been proposed in other thread
+> > >
+> > > Nope, that's just one heuristic. Often times it's based on hardware
+> > > monitors measuring interconnect activity. If you go look at the SDM845
+> > > in a Pixel 3, almost nothing is directly tied to the CPU frequency.
+> > >
+> > > Even if you are scaling bandwidth based on other hardware
+> > > measurements, you might want to avoid some bandwidth level provided by
+> > > the interconnect providers because it's suboptimal.
+> > >
+> > > For example, when making bandwidth votes to accommodate the big CPUs,
+> > > you might never want to use some of the lower bandwidth levels because
+> > > they are not power efficient for any CPU frequency or any bandwidth
+> > > level. Because at those levels the memory/interconnect is so slow that
+> > > it has a non-trivial utilization increase (because the CPU is
+> > > stalling) of the big CPUs.
+> > >
+> > > Again, this is completely different from what the providers/icc
+> > > framework does. Which is, once the request is made, they aggregate and
+> > > set the actual interconnect frequencies correctly.
+> > >
+> > > > >
+> > > > > > >
+> > > > > > > 4. It might not make sense from a system level power perspective.
+> > > > > > > Let's take an example of a path S (source) -> A -> B -> C -> D
+> > > > > > > (destination).
+> > > > > > >    - A supports only 2, 5, 7 and 10 GB/s. B supports 1, 2 ... 10 GB/s.
+> > > > > > >      C supports 5 and 10 GB/s
+> > > > > > >    - If you combine and list the superset of bandwidth levels
+> > > > > > >      supported in that path, that'd be 1, 2, 3, ... 10 GB/s.
+> > > > > > >    - Which set of bandwidth levels make sense will depend on the
+> > > > > > >      hardware characteristics of the interconnects.
+> > > > > > >    - If B is the biggest power sink, then you might want to use all 10
+> > > > > > >      levels.
+> > > > > > >    - If A is the biggest power sink, then you might want to use all 2,
+> > > > > > >      5 and 10 GB/s of the levels.
+> > > > > > >    - If C is the biggest power sink then you might only want to use 5
+> > > > > > >      and 10 GB/s
+> > > > > > >    - The more hops and paths you get the more convoluted this gets.
+> > > > > > >
+> > > > > > > 5. The design of the interconnects themselves might have an impact on
+> > > > > > > which bandwidth levels are used.
+> > > > > > >    - For example, the FIFO depth between two specific interconnects
+> > > > > > >      might affect the valid bandwidth levels for a specific path.
+> > > > > > >    - Say S1 -> A -> B -> D1, S2 -> C -> B -> D1 and S2 -> C -> D2 are
+> > > > > > >      three paths.
+> > > > > > >    - If C <-> B FIFO depth is small, then there might be a requirement
+> > > > > > >      that C and B be closely performance matched to avoid system level
+> > > > > > >      congestion due to back pressure.
+> > > > > > >    - So S2 -> D1 path can't use all the bandwidth levels supported by
+> > > > > > >      C-B combination.
+> > > > > > >    - But S2 -> D2 can use all the bandwidth levels supported by C.
+> > > > > > >    - And S1 -> D1 can use all the levels supported by A-B combination.
+> > > > > > >
+> > > > > >
+> > > > > > All the examples above makes sense but have to be handle by the
+> > > > > > provider not the consumer. The consumer asks for a bandwidth according
+> > > > > > to its constraints. Then the provider which is the driver that manages
+> > > > > > the interconnect IP, should manage all this hardware and platform
+> > > > > > specific stuff related to the interconnect IP in order to set the
+> > > > > > optimal bandwidth that fit both consumer constraint and platform
+> > > > > > specific configuration.
+> > > > >
+> > > > > Sure, but the provider itself can have interconnect properties to
+> > > > > indicate which other interconnects it's tied to. And the provider will
+> > > > > still need the interconnect-opp-table to denote which bandwidth levels
+> > > > > are sensible to use with each of its connections.
+> > >
+> > > You seem to have missed this comment.
+> > >
+> > > Thanks,
+> > > Saravana
+> > >
+> > > > > So in some instances the interconnect-opp-table covers the needs of
+> > > > > purely consumers and in some instances purely providers. But in either
+> > > > > case, it's still needed to describe the hardware properly.
+> > > > >
+> > > > > -Saravana
+> > > > >
+> > > > > > > These are just some of the reasons I could recollect in a few minutes.
+> > > > > > > These are all real world cases I had to deal with in the past several
+> > > > > > > years of dealing with scaling interconnects. I'm sure vendors and SoCs
+> > > > > > > I'm not familiar with have other good reasons I'm not aware of.
+> > > > > > >
+> > > > > > > Trying to figure this all out by aggregating OPP tables of
+> > > > > > > interconnect providers just isn't feasible nor is it efficient. The
+> > > > > > > OPP tables for an interconnect path is describing the valid BW levels
+> > > > > > > supported by that path and verified in hardware and makes a lot of
+> > > > > > > sense to capture it clearly in DT.
+> > > > > > >
+> > > > > > > > So such kind of OPP table should be at
+> > > > > > > > provider level but not at path level.
+> > > > > > >
+> > > > > > > They can also use it if they want to, but they'll probably want to use
+> > > > > > > a frequency OPP table.
+> > > > > > >
+> > > > > > >
+> > > > > > > -Saravana
+> > > > > > >
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > > > > > > ---
+> > > > > > > > >  drivers/interconnect/core.c  | 27 ++++++++++++++++++++++++++-
+> > > > > > > > >  include/linux/interconnect.h |  7 +++++++
+> > > > > > > > >  2 files changed, 33 insertions(+), 1 deletion(-)
+> > > > > > > > >
+> > > > > > > > > diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> > > > > > > > > index 871eb4bc4efc..881bac80bc1e 100644
+> > > > > > > > > --- a/drivers/interconnect/core.c
+> > > > > > > > > +++ b/drivers/interconnect/core.c
+> > > > > > > > > @@ -47,6 +47,7 @@ struct icc_req {
+> > > > > > > > >   */
+> > > > > > > > >  struct icc_path {
+> > > > > > > > >         size_t num_nodes;
+> > > > > > > > > +       struct opp_table *opp_table;
+> > > > > > > > >         struct icc_req reqs[];
+> > > > > > > > >  };
+> > > > > > > > >
+> > > > > > > > > @@ -313,7 +314,7 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
+> > > > > > > > >  {
+> > > > > > > > >         struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
+> > > > > > > > >         struct icc_node *src_node, *dst_node;
+> > > > > > > > > -       struct device_node *np = NULL;
+> > > > > > > > > +       struct device_node *np = NULL, *opp_node;
+> > > > > > > > >         struct of_phandle_args src_args, dst_args;
+> > > > > > > > >         int idx = 0;
+> > > > > > > > >         int ret;
+> > > > > > > > > @@ -381,10 +382,34 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
+> > > > > > > > >                 dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
+> > > > > > > > >         mutex_unlock(&icc_lock);
+> > > > > > > > >
+> > > > > > > > > +       opp_node = of_parse_phandle(np, "interconnect-opp-table", idx);
+> > > > > > > > > +       if (opp_node) {
+> > > > > > > > > +               path->opp_table = dev_pm_opp_of_find_table_from_node(opp_node);
+> > > > > > > > > +               of_node_put(opp_node);
+> > > > > > > > > +       }
+> > > > > > > > > +
+> > > > > > > > > +
+> > > > > > > > >         return path;
+> > > > > > > > >  }
+> > > > > > > > >  EXPORT_SYMBOL_GPL(of_icc_get);
+> > > > > > > > >
+> > > > > > > > > +/**
+> > > > > > > > > + * icc_get_opp_table() - Get the OPP table that corresponds to a path
+> > > > > > > > > + * @path: reference to the path returned by icc_get()
+> > > > > > > > > + *
+> > > > > > > > > + * This function will return the OPP table that corresponds to a path handle.
+> > > > > > > > > + * If the interconnect API is disabled, NULL is returned and the consumer
+> > > > > > > > > + * drivers will still build. Drivers are free to handle this specifically, but
+> > > > > > > > > + * they don't have to.
+> > > > > > > > > + *
+> > > > > > > > > + * Return: opp_table pointer on success. NULL is returned when the API is
+> > > > > > > > > + * disabled or the OPP table is missing.
+> > > > > > > > > + */
+> > > > > > > > > +struct opp_table *icc_get_opp_table(struct icc_path *path)
+> > > > > > > > > +{
+> > > > > > > > > +       return path->opp_table;
+> > > > > > > > > +}
+> > > > > > > > > +
+> > > > > > > > >  /**
+> > > > > > > > >   * icc_set_bw() - set bandwidth constraints on an interconnect path
+> > > > > > > > >   * @path: reference to the path returned by icc_get()
+> > > > > > > > > diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+> > > > > > > > > index dc25864755ba..0c0bc55f0e89 100644
+> > > > > > > > > --- a/include/linux/interconnect.h
+> > > > > > > > > +++ b/include/linux/interconnect.h
+> > > > > > > > > @@ -9,6 +9,7 @@
+> > > > > > > > >
+> > > > > > > > >  #include <linux/mutex.h>
+> > > > > > > > >  #include <linux/types.h>
+> > > > > > > > > +#include <linux/pm_opp.h>
+> > > > > > > > >
+> > > > > > > > >  /* macros for converting to icc units */
+> > > > > > > > >  #define Bps_to_icc(x)  ((x) / 1000)
+> > > > > > > > > @@ -28,6 +29,7 @@ struct device;
+> > > > > > > > >  struct icc_path *icc_get(struct device *dev, const int src_id,
+> > > > > > > > >                          const int dst_id);
+> > > > > > > > >  struct icc_path *of_icc_get(struct device *dev, const char *name);
+> > > > > > > > > +struct opp_table *icc_get_opp_table(struct icc_path *path);
+> > > > > > > > >  void icc_put(struct icc_path *path);
+> > > > > > > > >  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
+> > > > > > > > >
+> > > > > > > > > @@ -49,6 +51,11 @@ static inline void icc_put(struct icc_path *path)
+> > > > > > > > >  {
+> > > > > > > > >  }
+> > > > > > > > >
+> > > > > > > > > +static inline struct opp_table *icc_get_opp_table(struct icc_path *path)
+> > > > > > > > > +{
+> > > > > > > > > +       return NULL;
+> > > > > > > > > +}
+> > > > > > > > > +
+> > > > > > > > >  static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+> > > > > > > > >  {
+> > > > > > > > >         return 0;
+> > > > > > > > > --
+> > > > > > > > > 2.22.0.410.gd8fdbe21b5-goog
+> > > > > > > > >
+> > > > > >
+> > > > > > --
+> > > > > > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+> > > > > >
