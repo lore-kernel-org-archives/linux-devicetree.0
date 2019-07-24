@@ -1,39 +1,113 @@
 From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: [PATCH net-next v1 0/4] enetc: Add mdio bus driver for the PCIe MDIO endpoint
-Date: Wed, 24 Jul 2019 17:41:37 +0300
-Message-ID: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH net-next v1 1/4] enetc: Clean up local mdio bus allocation
+Date: Wed, 24 Jul 2019 17:41:38 +0300
+Message-ID: <1563979301-596-2-git-send-email-claudiu.manoil@nxp.com>
+References: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
+Sender: netdev-owner@vger.kernel.org
 To: "David S . Miller" <davem@davemloft.net>
 Cc: andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Second patch just registers the PCIe endpoint device containing
-the MDIO registers as a standalone MDIO bus driver, to allow
-an alternative way to control the MDIO bus.  The same code used
-by the ENETC ports (eth controllers) to manage MDIO via local
-registers applies and is reused.
+Though it works, this is not how it should have been.
+What's needed is a pointer to the mdio registers.
+Store it properly inside bus->priv allocated space.
+Use devm_* variant to further clean up the init error /
+remove paths.
 
-Bindings are provided for the new MDIO node, similarly to ENETC
-port nodes bindings.
+Fixes following sparse warning:
+ warning: incorrect type in assignment (different address spaces)
+    expected void *priv
+    got struct enetc_mdio_regs [noderef] <asn:2>*[assigned] regs
 
-Last patch enables the ENETC port 1 and its RGMII PHY on the
-LS1028A QDS board, where the MDIO muxing configuration relies
-on the MDIO support provided in the first patch.
+Fixes: ebfcb23d62ab ("enetc: Add ENETC PF level external MDIO support")
 
-Claudiu Manoil (4):
-  enetc: Clean up local mdio bus allocation
-  enetc: Add mdio bus driver for the PCIe MDIO endpoint
-  dt-bindings: net: fsl: enetc: Add bindings for the central MDIO PCIe
-    endpoint
-  arm64: dts: fsl: ls1028a: Enable eth port1 on the ls1028a QDS board
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+---
+v1 - added this patch
 
- .../devicetree/bindings/net/fsl-enetc.txt     |  42 ++++++-
- .../boot/dts/freescale/fsl-ls1028a-qds.dts    |  40 ++++++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   6 +
- .../net/ethernet/freescale/enetc/enetc_mdio.c | 119 +++++++++++++++---
- .../net/ethernet/freescale/enetc/enetc_pf.c   |   5 +-
- 5 files changed, 190 insertions(+), 22 deletions(-)
+ .../net/ethernet/freescale/enetc/enetc_mdio.c | 31 +++++++------------
+ 1 file changed, 12 insertions(+), 19 deletions(-)
 
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+index 77b9cd10ba2b..1e3cd21c13ee 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+@@ -15,7 +15,8 @@ struct enetc_mdio_regs {
+ 	u32	mdio_addr;	/* MDIO address */
+ };
+ 
+-#define bus_to_enetc_regs(bus)	(struct enetc_mdio_regs __iomem *)((bus)->priv)
++#define bus_to_enetc_regs(bus)	(*(struct enetc_mdio_regs __iomem **) \
++				((bus)->priv))
+ 
+ #define ENETC_MDIO_REG_OFFSET	0x1c00
+ #define ENETC_MDC_DIV		258
+@@ -146,12 +147,12 @@ static int enetc_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
+ int enetc_mdio_probe(struct enetc_pf *pf)
+ {
+ 	struct device *dev = &pf->si->pdev->dev;
+-	struct enetc_mdio_regs __iomem *regs;
++	struct enetc_mdio_regs __iomem **regsp;
+ 	struct device_node *np;
+ 	struct mii_bus *bus;
+-	int ret;
++	int err;
+ 
+-	bus = mdiobus_alloc_size(sizeof(regs));
++	bus = devm_mdiobus_alloc_size(dev, sizeof(*regsp));
+ 	if (!bus)
+ 		return -ENOMEM;
+ 
+@@ -159,41 +160,33 @@ int enetc_mdio_probe(struct enetc_pf *pf)
+ 	bus->read = enetc_mdio_read;
+ 	bus->write = enetc_mdio_write;
+ 	bus->parent = dev;
++	regsp = bus->priv;
+ 	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
+ 
+ 	/* store the enetc mdio base address for this bus */
+-	regs = pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
+-	bus->priv = regs;
++	*regsp = pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
+ 
+ 	np = of_get_child_by_name(dev->of_node, "mdio");
+ 	if (!np) {
+ 		dev_err(dev, "MDIO node missing\n");
+-		ret = -EINVAL;
+-		goto err_registration;
++		return -EINVAL;
+ 	}
+ 
+-	ret = of_mdiobus_register(bus, np);
+-	if (ret) {
++	err = of_mdiobus_register(bus, np);
++	if (err) {
+ 		of_node_put(np);
+ 		dev_err(dev, "cannot register MDIO bus\n");
+-		goto err_registration;
++		return err;
+ 	}
+ 
+ 	of_node_put(np);
+ 	pf->mdio = bus;
+ 
+ 	return 0;
+-
+-err_registration:
+-	mdiobus_free(bus);
+-
+-	return ret;
+ }
+ 
+ void enetc_mdio_remove(struct enetc_pf *pf)
+ {
+-	if (pf->mdio) {
++	if (pf->mdio)
+ 		mdiobus_unregister(pf->mdio);
+-		mdiobus_free(pf->mdio);
+-	}
+ }
 -- 
 2.17.1
