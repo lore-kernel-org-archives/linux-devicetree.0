@@ -1,91 +1,95 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH 3/3] dt-bindings: aspeed: Remove mention of deprecated compatibles
-Date: Wed, 24 Jul 2019 17:43:13 +0930
-Message-ID: <20190724081313.12934-4-andrew@aj.id.au>
-References: <20190724081313.12934-1-andrew@aj.id.au>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 04/13] media: rc: sunxi: Add RXSTA bits definition
+Date: Wed, 24 Jul 2019 10:24:59 +0200
+Message-ID: <20190724082459.xsstansjxtyvu4st@flea>
+References: <20190607231100.5894-1-peron.clem@gmail.com>
+ <20190607231100.5894-5-peron.clem@gmail.com>
+ <20190610095243.7xwp4xhauds22qzw@flea>
+ <CAJiuCcfyjGTBbsjZQYj2p3KD6O-WaXhFe5NZrnKQwJYACmatUw@mail.gmail.com>
+ <20190715121244.2vrsw6qa4fgp72fn@gofer.mess.org>
+ <20190723062557.hnbi6hgrg4ecawkn@gofer.mess.org>
+ <20190723070440.nfmhbrfykumxayjj@flea>
+ <20190724053937.4ic5n35xtw2chjdy@gofer.mess.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724081313.12934-1-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-aspeed@lists.ozlabs.org
-Cc: Andrew Jeffery <andrew@aj.id.au>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="og4sfmz7wdyyword"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXVL4DUQKGQER7UHZ7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190724053937.4ic5n35xtw2chjdy-3XSxi2G4b3iXFJAUJl40Xg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Cc: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Guide readers away from using the aspeed,g[45].* compatible patterns.
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- Documentation/devicetree/bindings/mfd/aspeed-scu.txt         | 2 --
- Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt   | 2 --
- .../devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml  | 5 +----
- .../devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml  | 4 +---
- 4 files changed, 2 insertions(+), 11 deletions(-)
+--og4sfmz7wdyyword
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-index ce8cf0ec6279..4d92c0bb6687 100644
---- a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-+++ b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-@@ -4,9 +4,7 @@ configuring elements such as clocks, pinmux, and reset.
- Required properties:
- - compatible:	One of:
- 		"aspeed,ast2400-scu", "syscon", "simple-mfd"
--		"aspeed,g4-scu", "syscon", "simple-mfd"
- 		"aspeed,ast2500-scu", "syscon", "simple-mfd"
--		"aspeed,g5-scu", "syscon", "simple-mfd"
- 
- - reg:		contains the offset and length of the SCU memory region
- - #clock-cells: should be set to <1> - the system controller is also a
-diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-index 854bd67ffec6..0e1fa5bc6a30 100644
---- a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-+++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-@@ -26,9 +26,7 @@ property:
- 
- - compatible : Should be one of the following:
- 		"aspeed,ast2400-scu", "syscon", "simple-mfd"
--		"aspeed,g4-scu", "syscon", "simple-mfd"
- 		"aspeed,ast2500-scu", "syscon", "simple-mfd"
--		"aspeed,g5-scu", "syscon", "simple-mfd"
- 
- Example
- ===================
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-index 125599a2dc5e..9368e4b6d4d0 100644
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-@@ -15,16 +15,13 @@ description: |+
- 
-   - compatible:     Should be one of the following:
-                     "aspeed,ast2400-scu", "syscon", "simple-mfd"
--                    "aspeed,g4-scu", "syscon", "simple-mfd"
- 
-   Refer to the the bindings described in
-   Documentation/devicetree/bindings/mfd/syscon.txt
- 
- properties:
-   compatible:
--    enum:
--      - aspeed,ast2400-pinctrl
--      - aspeed,g4-pinctrl
-+    const: aspeed,ast2400-pinctrl
- 
- patternProperties:
-   '^.*$':
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-index 3e6d85318577..939fb755a6db 100644
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-@@ -22,9 +22,7 @@ description: |+
- 
- properties:
-   compatible:
--    enum:
--      - aspeed,ast2500-pinctrl
--      - aspeed,g5-pinctrl
-+    const: aspeed,ast2500-pinctrl
-   aspeed,external-nodes:
-     minItems: 2
-     maxItems: 2
--- 
-2.20.1
+On Wed, Jul 24, 2019 at 06:39:37AM +0100, Sean Young wrote:
+> On Tue, Jul 23, 2019 at 09:04:40AM +0200, Maxime Ripard wrote:
+> > Hi Sean,
+> >
+> > On Tue, Jul 23, 2019 at 07:25:57AM +0100, Sean Young wrote:
+> > > On Mon, Jul 15, 2019 at 01:12:45PM +0100, Sean Young wrote:
+> > > > On Sun, Jul 14, 2019 at 04:32:22PM +0200, Cl=C3=A9ment P=C3=A9ron w=
+rote:
+> > > > > Hi Sean,
+> > > > >
+> > > > > You acked the whole v3 series but this patch has been introduced =
+in v5
+> > > > > could you ack this one too?
+> > > >
+> > > > Acked-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+> > >
+> > > So who's tree should this series go through? It seems mostly device t=
+ree.
+> > > Alternatively I'm happy to try it get merged via the media tree.
+> >
+> > Ideally the media bits should go through the media tree, the DT bits
+> > will go through arm-soc
+> >
+> > So you can apply the patches 1-4, 7 and 10, I'll apply the rest.
+> >
+> > Does that work for you?
+>
+> Works for me, I'll add them to my next pull request to Mauro.
+
+Applied 5, 6, 8, 9 and 11 to 13.
+
+Thanks!
+Maxmie
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190724082459.xsstansjxtyvu4st%40flea.
+
+--og4sfmz7wdyyword
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTgV2wAKCRDj7w1vZxhR
+xfJ7AP9T3lo+mjFXDqZN0Pz/4RMW3K3sSelGWolPV45h0MFvHAD/alxUyiaQdf/T
+yqmAR4Jmj9ViaeByiHDySDrorxlVhw0=
+=wgpG
+-----END PGP SIGNATURE-----
+
+--og4sfmz7wdyyword--
