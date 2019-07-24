@@ -1,16 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC v1 1/2] dt-bindings: mmc: Document the Amlogic Meson
- SDHC MMC host controller
-Date: Wed, 24 Jul 2019 14:04:01 -0600
-Message-ID: <20190724200401.GA28867@bogus>
-References: <20190708173330.13217-1-martin.blumenstingl@googlemail.com>
- <20190708173330.13217-2-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v4, 02/33] dt-bindings: mediatek: add ovl_2l description
+ for mt8183 display
+Date: Wed, 24 Jul 2019 14:15:19 -0600
+Message-ID: <20190724201519.GA18133@bogus>
+References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1562625253-29254-3-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190708173330.13217-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <1562625253-29254-3-git-send-email-yongqiang.niu@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,20 +20,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, jianxin.pan@amlogic.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  8 Jul 2019 19:33:29 +0200, Martin Blumenstingl wrote:
-> This documents the devicetree bindings for the SDHC MMC host controller
-> found in Meson6, Meson8, Meson8b and Meson8m2 SoCs. It can use a
-> bus-width of 1/4/8-bit and it supports eMMC spec 4.4x/4.5x including
-> HS200 mode (up to 100MHz clock).
+On Tue, 9 Jul 2019 06:33:42 +0800, <yongqiang.niu@mediatek.com> wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Update device tree binding documention for the display subsystem for
+> Mediatek MT8183 SOCs
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 > ---
->  .../bindings/mmc/amlogic,meson-mx-sdhc.txt    | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.txt
+>  .../bindings/display/mediatek/mediatek,disp.txt    | 27 +++++++++++-----------
+>  1 file changed, 14 insertions(+), 13 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
