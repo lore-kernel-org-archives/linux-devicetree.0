@@ -1,64 +1,42 @@
-From: Stefan Riedmueller <s.riedmueller@phytec.de>
-Subject: [PATCH 2/2] dt-bindings: arm: fsl: Add PHYTEC i.MX6 devicetree bindings
-Date: Wed, 24 Jul 2019 09:49:33 +0200
-Message-ID: <1563954573-370205-2-git-send-email-s.riedmueller@phytec.de>
-References: <1563954573-370205-1-git-send-email-s.riedmueller@phytec.de>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH 0/3] ARM: dts: aspeed: Deprecate g[45]-style compatibles
+Date: Wed, 24 Jul 2019 17:43:10 +0930
+Message-ID: <20190724081313.12934-1-andrew@aj.id.au>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563954573-370205-1-git-send-email-s.riedmueller@phytec.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Andrew Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-imx@nxp.com, Stefan Riedmueller <s.riedmueller@phytec.de>
+To: linux-aspeed@lists.ozlabs.org
+Cc: Andrew Jeffery <andrew@aj.id.au>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree bindings for i.MX6 based phyCORE-i.MX6, phyBOARD-Mira and
-phyFLEX-i.MX6.
+Hello,
 
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Joel and I decided that going forward we're not going to name compatibles along
+the lines of SoC generations, so discourage any further attempts by removing
+the remaining instances.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 40f007859092..00a037cf5c86 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -112,6 +112,13 @@ properties:
-               - fsl,imx6q-sabreauto
-               - fsl,imx6q-sabrelite
-               - fsl,imx6q-sabresd
-+              - phytec,imx6qdl-pcm058     # PHYTEC phyCORE-i.MX6
-+              - phytec,imx6q-pbab01       # PHYTEC phyFLEX carrier board
-+              - phytec,imx6q-pbab01-nand  # PHYTEC phyFLEX eval Kit
-+              - phytec,imx6q-pbac06       # PHYTEC phyBOARD-Mira with i.MX6 Quad
-+              - phytec,imx6q-pbac06-emmc  # PHYTEC phyBOARD-Mira eMMC RDK
-+              - phytec,imx6q-pbac06-nand  # PHYTEC phyBOARD-Mira NAND RDK
-+              - phytec,imx6q-pfla02       # PHYTEC phyFLEX-i.MX6 Quad
-               - technologic,imx6q-ts4900
-               - technologic,imx6q-ts7970
-           - const: fsl,imx6q
-@@ -121,6 +128,9 @@ properties:
-           - enum:
-               - fsl,imx6qp-sabreauto      # i.MX6 Quad Plus SABRE Automotive Board
-               - fsl,imx6qp-sabresd        # i.MX6 Quad Plus SABRE Smart Device Board
-+              - phytec,imx6qdl-pcm058     # PHYTEC phyCORE-i.MX6
-+              - phytec,imx6qp-pbac06      # PHYTEC phyBOARD-Mira with i.MX6 QuadPlus
-+              - phytec,imx6qp-pbac06-nand # PHYTEC phyBOARD-Mira NAND RDK
-           - const: fsl,imx6qp
- 
-       - description: i.MX6DL based Boards
-@@ -131,6 +141,13 @@ properties:
-               - emtrion,emcon-mx6-avari   # emCON-MX6S or emCON-MX6DL SoM on Avari Base
-               - fsl,imx6dl-sabreauto      # i.MX6 DualLite/Solo SABRE Automotive Board
-               - fsl,imx6dl-sabresd        # i.MX6 DualLite SABRE Smart Device Board
-+              - phytec,imx6qdl-pcm058     # PHYTEC phyCORE-i.MX6
-+              - phytec,imx6dl-pbab01      # PHYTEC phyFLEX carrier board
-+              - phytec,imx6dl-pbab01-nand # PHYTEC phyFLEX eval Kit
-+              - phytec,imx6dl-pbac06      # PHYTEC phyBOARD-Mira with i.MX6 DL
-+              - phytec,imx6dl-pbac06-emmc # PHYTEC phyBOARD-Mira eMMC RDK
-+              - phytec,imx6dl-pbac06-nand # PHYTEC phyBOARD-Mira NAND RDK
-+              - phytec,imx6dl-pfla02      # PHYTEC phyFLEX-i.MX6 DL
-               - technologic,imx6dl-ts4900
-               - technologic,imx6dl-ts7970
-               - ysoft,imx6dl-yapp4-draco  # i.MX6 DualLite Y Soft IOTA Draco board
+It's probably best if we push the three patches all through one tree rather
+than fragmenting. Is everyone happy if Joel applies them to the aspeed tree?
+
+Cheers,
+
+Andrew
+
+Andrew Jeffery (3):
+  dts: ARM: aspeed: Migrate away from aspeed,g[45].* compatibles
+  pinctrl: aspeed: Document existence of deprecated compatibles
+  dt-bindings: aspeed: Remove mention of deprecated compatibles
+
+ Documentation/devicetree/bindings/mfd/aspeed-scu.txt         | 2 --
+ Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt   | 2 --
+ .../devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml  | 5 +----
+ .../devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml  | 4 +---
+ arch/arm/boot/dts/aspeed-g4.dtsi                             | 2 +-
+ arch/arm/boot/dts/aspeed-g5.dtsi                             | 2 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c                   | 4 ++++
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c                   | 4 ++++
+ 8 files changed, 12 insertions(+), 13 deletions(-)
+
 -- 
-2.7.4
+2.20.1
