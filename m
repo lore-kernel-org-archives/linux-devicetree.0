@@ -1,88 +1,70 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] media: i2c: dw9768: Add DT support and MAINTAINERS
- entry
-Date: Wed, 24 Jul 2019 10:37:39 -0600
-Message-ID: <20190724163739.GA29502@bogus>
-References: <20190708100641.2702-1-dongchun.zhu@mediatek.com>
- <20190708100641.2702-2-dongchun.zhu@mediatek.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 1/4] ARM: dts: stm32: add FMC2 NAND controller support on
+ stm32mp157c
+Date: Wed, 24 Jul 2019 18:38:05 +0200
+Message-ID: <4b6a8df1-593e-44b2-4bb3-2af9f732396c@st.com>
+References: <1561128590-14621-1-git-send-email-christophe.kerello@st.com>
+ <1561128590-14621-2-git-send-email-christophe.kerello@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190708100641.2702-2-dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, shengnan.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, louis.kuo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bingbu.cao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1561128590-14621-2-git-send-email-christophe.kerello@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Christophe Kerello <christophe.kerello@st.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, olof@lixom.net, arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, mcoquelin.stm32@gmail.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 06:06:40PM +0800, dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Dongchun Zhu <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> =
+Hi Christophe
 
-> Add the Devicetree binding documentation and MAINTAINERS entry for dw9768.
-> =
-
-> Signed-off-by: Dongchun Zhu <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On 6/21/19 4:49 PM, Christophe Kerello wrote:
+> This patch adds FMC2 NAND controller support used by stm32mp157c SOC.
+> 
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
 > ---
->  Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt | 9 ++++=
-+++++
->  MAINTAINERS                                                     | 7 ++++=
-+++
->  2 files changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,=
-dw9768.txt
-> =
+>   arch/arm/boot/dts/stm32mp157c.dtsi | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+> index 0c4e6eb..f2bda28 100644
+> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+> @@ -1239,6 +1239,25 @@
+>   			dma-requests = <48>;
+>   		};
+>   
+> +		fmc: nand-controller@58002000 {
+> +			compatible = "st,stm32mp15-fmc2";
+> +			reg = <0x58002000 0x1000>,
+> +			      <0x80000000 0x1000>,
+> +			      <0x88010000 0x1000>,
+> +			      <0x88020000 0x1000>,
+> +			      <0x81000000 0x1000>,
+> +			      <0x89010000 0x1000>,
+> +			      <0x89020000 0x1000>;
+> +			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+> +			dmas = <&mdma1 20 0x10 0x12000A02 0x0 0x0>,
+> +			       <&mdma1 20 0x10 0x12000A08 0x0 0x0>,
+> +			       <&mdma1 21 0x10 0x12000A0A 0x0 0x0>;
 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.=
-txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt
-> new file mode 100644
-> index 0000000..94b8ec3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt
-> @@ -0,0 +1,9 @@
-> +Dongwoon Anatech DW9768 camera voice coil lens driver
+Please, don't use capital letter here.
+
+> +			dma-names = "tx", "rx", "ecc";
+> +			clocks = <&rcc FMC_K>;
+> +			resets = <&rcc FMC_R>;
+> +			status = "disabled";
+> +		};
 > +
-> +DW9768 is a 10-bit DAC with current sink capability. It is intended
-> +for driving voice coil lenses in camera modules.
-> +
-> +Mandatory properties:
-> +
-> +- compatible: "dongwoon,dw9768"
-> +- reg: I=B2C slave address
-
-Why not shared with the existing DW9807 binding? Or this could be a =
-
-trivial device.
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5cfbea4..8f6ac93 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4872,6 +4872,13 @@ S:	Maintained
->  F:	drivers/media/i2c/dw9714.c
->  F:	Documentation/devicetree/bindings/media/i2c/dongwoon,dw9714.txt
->  =
-
-> +DONGWOON DW9768 LENS VOICE COIL DRIVER
-> +M:	Dongchun Zhu <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> +L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +T:	git git://linuxtv.org/media_tree.git
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt
-> +
->  DONGWOON DW9807 LENS VOICE COIL DRIVER
->  M:	Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->  L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> -- =
-
-> 2.9.2
-> =
+>   		qspi: spi@58003000 {
+>   			compatible = "st,stm32f469-qspi";
+>   			reg = <0x58003000 0x1000>, <0x70000000 0x10000000>;
+> 
