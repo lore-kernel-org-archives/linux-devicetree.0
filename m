@@ -1,96 +1,52 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: add audio codec support on
- stm32mp157a-dk1 board
-Date: Wed, 24 Jul 2019 18:40:32 +0200
-Message-ID: <27476214-07fe-886b-1cab-20902837f29c@st.com>
-References: <1562327580-19647-1-git-send-email-olivier.moysan@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: leds: document new "power-supply"
+ property
+Date: Wed, 24 Jul 2019 10:47:57 -0600
+Message-ID: <20190724164757.GA3723@bogus>
+References: <20190708103547.23528-1-jjhiblot@ti.com>
+ <20190708103547.23528-3-jjhiblot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562327580-19647-1-git-send-email-olivier.moysan@st.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190708103547.23528-3-jjhiblot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olivier Moysan <olivier.moysan@st.com>, linux-stm32@st-md-mailman.stormreply.com, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, daniel.thompson@linaro.org, dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olivier
-
-On 7/5/19 1:53 PM, Olivier Moysan wrote:
-> Add support of Cirrus cs42l51 audio codec on stm32mp157a-dk1 board.
-> Configuration overview:
-> - SAI2A is the CPU interface used for the codec audio playback
-> - SAI2B is the CPU interface used for the codec audio record
-> - SAI2A is configured as a clock provider for the audio codec
-> - SAI2A&B are configured as slave of the audio codec
-> - SAI2A&B share the same interface of the audio codec
+On Mon, Jul 08, 2019 at 12:35:47PM +0200, Jean-Jacques Hiblot wrote:
+> Most of the LEDs are powered by a voltage/current regulator. describing in
+> the device-tree makes it possible for the LED core to enable/disable it
+> when needed.
 > 
-> Note:
-> In master mode, cs42l51 audio codec provides a bitclock
-> at 64 x FS, regardless of data width. This means that
-> slot width is always 32 bits.
-> Set slot width to 32 bits and slot number to 2
-> in SAI2A&B endpoint nodes, to match this constraint.
-> dai-tdm-slot-num and dai-tdm-slot-width properties are used here,
-> assuming that i2s is a special case of tdm, where slot number is 2.
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
 > ---
->   arch/arm/boot/dts/stm32mp157a-dk1.dts | 89 +++++++++++++++++++++++++++++++++++
->   1 file changed, 89 insertions(+)
+>  Documentation/devicetree/bindings/leds/common.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 70876ac11367..e093a2b7eb90 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -61,6 +61,11 @@ Optional properties for child nodes:
+>  - panic-indicator : This property specifies that the LED should be used,
+>  		    if at all possible, as a panic indicator.
+>  
+> +- power-supply : A voltage/current regulator used to to power the LED. When a
+> +		 LED is turned off, the LED core disable its regulator. The
+> +		 same regulator can power many LED (or other) devices. It is
+> +		 turned off only when all of its users disabled it.
 
-...
+Not sure this should be common. It wouldn't apply to cases where we have 
+an LED controller parent nor gpio and pwm LEDs and those are most cases.
 
->   
-> +&sai2 {
-> +	clocks = <&rcc SAI2>, <&rcc PLL3_Q>, <&rcc PLL3_R>;
-> +	clock-names = "pclk", "x8k", "x11k";
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&sai2a_pins_a>, <&sai2b_pins_b>;
-> +	pinctrl-1 = <&sai2a_sleep_pins_a>, <&sai2b_sleep_pins_b>;
-> +	status = "okay";
-> +
-> +	sai2a: audio-controller@4400b004 {
-> +		#clock-cells = <0>;
-> +		dma-names = "tx";
-> +		clocks = <&rcc SAI2_K>;
-> +		clock-names = "sai_ck";
-> +		status = "okay";
-> +
-> +		sai2a_port: port {
-> +			sai2a_endpoint: endpoint {
-> +				remote-endpoint = <&cs42l51_tx_endpoint>;
-> +				format = "i2s";
-> +				mclk-fs = <256>;
-> +				dai-tdm-slot-num = <2>;
-> +				dai-tdm-slot-width = <32>;
-> +			};
-> +		};
-> +	};
-> +
-You could use label to overload sai2a and sai2b. no ?
+Perhaps what makes sense here is an regulator-led binding.
 
-> +	sai2b: audio-controller@4400b024 {
-> +		dma-names = "rx";
-> +		st,sync = <&sai2a 2>;
-> +		clocks = <&rcc SAI2_K>, <&sai2a>;
-> +		clock-names = "sai_ck", "MCLK";
-> +		status = "okay";
 > +
-> +		sai2b_port: port {
-> +			sai2b_endpoint: endpoint {
-> +				remote-endpoint = <&cs42l51_rx_endpoint>;
-> +				format = "i2s";
-> +				mclk-fs = <256>;
-> +				dai-tdm-slot-num = <2>;
-> +				dai-tdm-slot-width = <32>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
->   &sdmmc1 {
->   	pinctrl-names = "default", "opendrain", "sleep";
->   	pinctrl-0 = <&sdmmc1_b4_pins_a>;
+>  - trigger-sources : List of devices which should be used as a source triggering
+>  		    this LED activity. Some LEDs can be related to a specific
+>  		    device and should somehow indicate its state. E.g. USB 2.0
+> -- 
+> 2.17.1
 > 
