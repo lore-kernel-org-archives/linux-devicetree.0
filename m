@@ -1,27 +1,129 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH] ARM: dts: am335x-boneblue: Use of
- am335x-osd335x-common.dtsi
-Date: Wed, 24 Jul 2019 16:41:20 -0500
-Message-ID: <978ea35c-793a-fd7b-ecd3-93534fdf4812@lechnology.com>
-References: <20190724212616.17945-1-david@lechnology.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: rockchip: consolidate veyron panel and
+ backlight settings
+Date: Wed, 24 Jul 2019 14:46:30 -0700
+Message-ID: <CAD=FV=Wj4Fei6t-STjY_FJkDKQYys5PcVquBJcdRE3wUN=y3Yg@mail.gmail.com>
+References: <20190711223455.12210-1-mka@chromium.org>
+ <20190711223455.12210-2-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724212616.17945-1-david@lechnology.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190711223455.12210-2-mka@chromium.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/24/19 4:26 PM, David Lechner wrote:
-> This makes use of the am335x-osd335x-common.dtsi file that contains the
-> common device tree components for Octavo Systems AM335x System-in-
-> Package that is used on the BeagleBone Blue.
-> 
-> This has two minor side-effects:
-> 1. pinmux_i2c0_pins is renamed to pinmux-i2c0-pins
-> 2. the 1MHz cpufreq operating point is enabled
+Hi,
 
-Oops. should be 1000MHz
+On Thu, Jul 11, 2019 at 3:35 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+> index 4cc7d3659484..2b0801a539c9 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+> +++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+> @@ -15,40 +15,6 @@
+>                      "google,veyron-minnie-rev0", "google,veyron-minnie",
+>                      "google,veyron", "rockchip,rk3288";
+>
+> -       backlight_regulator: backlight-regulator {
+> -               compatible = "regulator-fixed";
+> -               enable-active-high;
+> -               gpio = <&gpio2 RK_PB4 GPIO_ACTIVE_HIGH>;
+> -               pinctrl-names = "default";
+> -               pinctrl-0 = <&bl_pwr_en>;
+> -               regulator-name = "backlight_regulator";
+> -               vin-supply = <&vcc33_sys>;
+> -               startup-delay-us = <15000>;
+> -       };
+> -
+> -       panel_regulator: panel-regulator {
+> -               compatible = "regulator-fixed";
+> -               enable-active-high;
+> -               gpio = <&gpio7 RK_PB6 GPIO_ACTIVE_HIGH>;
+> -               pinctrl-names = "default";
+> -               pinctrl-0 = <&lcd_enable_h>;
+> -               regulator-name = "panel_regulator";
+> -               startup-delay-us = <100000>;
+> -               vin-supply = <&vcc33_sys>;
+> -       };
+> -
+> -       vcc18_lcd: vcc18-lcd {
+> -               compatible = "regulator-fixed";
+> -               enable-active-high;
+> -               gpio = <&gpio2 RK_PB5 GPIO_ACTIVE_HIGH>;
+> -               pinctrl-names = "default";
+> -               pinctrl-0 = <&avdd_1v8_disp_en>;
+> -               regulator-name = "vcc18_lcd";
+> -               regulator-always-on;
+> -               regulator-boot-on;
+> -               vin-supply = <&vcc18_wl>;
+> -       };
+> -
+>         volume_buttons: volume-buttons {
+>                 compatible = "gpio-keys";
+>                 pinctrl-names = "default";
+
+You forgot to remove the line:
+
+power-supply = <&backlight_regulator>;
+
+...from minnie.
+
+
+> diff --git a/arch/arm/boot/dts/rk3288-veyron-pinky.dts b/arch/arm/boot/dts/rk3288-veyron-pinky.dts
+> index 9b6f4d9b03b6..06af58e37a4b 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron-pinky.dts
+> +++ b/arch/arm/boot/dts/rk3288-veyron-pinky.dts
+> @@ -14,7 +14,14 @@
+>         compatible = "google,veyron-pinky-rev2", "google,veyron-pinky",
+>                      "google,veyron", "rockchip,rk3288";
+>
+> +       /delete-node/backlight-regulator;
+> +       /delete-node/panel-regulator;
+>         /delete-node/emmc-pwrseq;
+> +       /delete-node/vcc18-lcd;
+> +};
+> +
+> +&backlight {
+> +       /delete-property/power-supply;
+>  };
+>
+>  &emmc {
+> @@ -52,7 +59,17 @@
+>         i2c-scl-rising-time-ns = <300>;
+>  };
+>
+> +&panel {
+> +       power-supply= <&vcc33_lcd>;
+
+Might as well put a space before the "="?
+
+
+>  &pinctrl {
+> +       /delete-node/ lcd;
+> +
+> +       backlight {
+> +               /delete-node/ bl_pwr_en;
+> +       };
+
+I general as the defender of "pinky", I'll let Heiko confirm he's OK
+with the color of this bikeshed.  Sometimes a bit of repetition is
+preferred over a bunch of confusing /delete-node/ statements since
+those tend to make things harder to reason about in general.  In this
+case I think things are cleaner after your patch but I won't say it's
+100% clear cut.
+
+Other than nits I have double-checked this patch, so feel free to add
+my Reviewed-by after nits are fixed.
+
+-Doug
