@@ -1,47 +1,43 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v4 5/5] DT: arm: exynos4412: add event data type which
- is monitored
-Date: Wed, 24 Jul 2019 12:09:04 +0200
-Message-ID: <694617ed-5c02-40cc-2f27-82e8bb0ac6fe@partner.samsung.com>
-References: <20190605091236.24263-1-l.luba@partner.samsung.com>
-        <CGME20190605091305eucas1p136332cc3d1a299d90617bddcb365bee0@eucas1p1.samsung.com>
-        <20190605091236.24263-6-l.luba@partner.samsung.com>
-        <20190723175853.GA29195@kozik-lap>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] extcon: arizona: Update binding example to use
+ available defines
+Date: Wed, 24 Jul 2019 19:16:32 +0900
+Message-ID: <55bef964-1680-27ef-2bd9-c44de2ee07fc@samsung.com>
+References: <CGME20190724094922epcas5p3382c6fedfd2c450fc975223cef1de319@epcas5p3.samsung.com>
+        <20190724094914.19284-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190723175853.GA29195@kozik-lap>
+In-Reply-To: <20190724094914.19284-1-ckeepax@opensource.cirrus.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, willy.mh.wolff.ml@gmail.com
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: myungjoo.ham@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On 19. 7. 24. 오후 6:49, Charles Keepax wrote:
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  Documentation/devicetree/bindings/extcon/extcon-arizona.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> index 7f3d94ae81ffb..208daaff0be4f 100644
+> --- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> @@ -72,5 +72,5 @@ codec: wm8280@0 {
+>  		1 2 1 /* MICDET2 MICBIAS2 GPIO=high */
+>  	>;
+>  
+> -	wlf,gpsw = <0>;
+> +	wlf,gpsw = <ARIZONA_GPSW_OPEN>;
+>  };
+> 
 
-On 7/23/19 7:58 PM, Krzysztof Kozlowski wrote:
-> On Wed, Jun 05, 2019 at 11:12:36AM +0200, Lukasz Luba wrote:
->> The patch adds new field in the PPMU event which shows explicitly
->> what kind of data the event is monitoring. It is possible to change it
->> using defined values in exynos_ppmu.h file.
->>
->> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos4412-ppmu-common.dtsi | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
-> 
-> I tried to apply this... but prerequisites were not merged into
-> v5.3-rc1. This one will have to wait then till next release.
-Indeed, I will ask Chanwoo for ack for patch 4/5.
+Applied it. Thanks.
 
-Regards,
-Lukasz
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
-> 
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
