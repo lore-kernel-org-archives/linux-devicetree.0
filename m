@@ -1,49 +1,159 @@
-Return-Path: <SRS0=liIr=VV=mess.org=sean@kernel.org>
-Date: Wed, 24 Jul 2019 06:39:37 +0100
-From: Sean Young <sean@mess.org>
-Subject: Re: [PATCH v5 04/13] media: rc: sunxi: Add RXSTA bits definition
-Message-ID: <20190724053937.4ic5n35xtw2chjdy@gofer.mess.org>
-References: <20190607231100.5894-1-peron.clem@gmail.com>
- <20190607231100.5894-5-peron.clem@gmail.com>
- <20190610095243.7xwp4xhauds22qzw@flea>
- <CAJiuCcfyjGTBbsjZQYj2p3KD6O-WaXhFe5NZrnKQwJYACmatUw@mail.gmail.com>
- <20190715121244.2vrsw6qa4fgp72fn@gofer.mess.org>
- <20190723062557.hnbi6hgrg4ecawkn@gofer.mess.org>
- <20190723070440.nfmhbrfykumxayjj@flea>
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 24 Jul 2019 10:14:36 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [Patch V5 4/8] dt-bindings: usb: Add NVIDIA Tegra XUSB device
+ mode controller binding
+Message-ID: <20190724161436.GA9624@bogus>
+References: <1562326911-26855-1-git-send-email-nkristam@nvidia.com>
+ <1562326911-26855-5-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190723070440.nfmhbrfykumxayjj@flea>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
+In-Reply-To: <1562326911-26855-5-git-send-email-nkristam@nvidia.com>
+To: Nagarjuna Kristam <nkristam@nvidia.com>
+Cc: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Jul 23, 2019 at 09:04:40AM +0200, Maxime Ripard wrote:
-> Hi Sean,
+On Fri, Jul 05, 2019 at 05:11:47PM +0530, Nagarjuna Kristam wrote:
+> Add device-tree binding documentation for the XUSB device mode controller
+> present on Tegra210 SoC. This controller supports the USB 3.0
+> specification.
 > 
-> On Tue, Jul 23, 2019 at 07:25:57AM +0100, Sean Young wrote:
-> > On Mon, Jul 15, 2019 at 01:12:45PM +0100, Sean Young wrote:
-> > > On Sun, Jul 14, 2019 at 04:32:22PM +0200, Cl�ment P�ron wrote:
-> > > > Hi Sean,
-> > > >
-> > > > You acked the whole v3 series but this patch has been introduced in v5
-> > > > could you ack this one too?
-> > >
-> > > Acked-by: Sean Young <sean@mess.org>
-> >
-> > So who's tree should this series go through? It seems mostly device tree.
-> > Alternatively I'm happy to try it get merged via the media tree.
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> Reviewed-by: JC Kuo <jckuo@nvidia.com>
+> ---
+>  .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  | 110 +++++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
 > 
-> Ideally the media bits should go through the media tree, the DT bits
-> will go through arm-soc
-> 
-> So you can apply the patches 1-4, 7 and 10, I'll apply the rest.
-> 
-> Does that work for you?
+> diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
+> new file mode 100644
+> index 0000000..c6a1b81
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
+> @@ -0,0 +1,110 @@
+> +Device tree binding for NVIDIA Tegra XUSB device mode controller (XUDC)
+> +=======================================================================
+> +
+> +The Tegra XUDC controller supports both USB 2.0 HighSpeed/FullSpeed and
+> +USB 3.0 SuperSpeed protocols.
+> +
+> +Required properties:
+> +--------------------
+> +- compatible: For Tegra210, must contain "nvidia,tegra210-xudc".
+> +- reg: Must contain the base and length of all registers used.
+> +- interrupts: Must contain the XUSB device interrupt.
+> +- clocks: Must contain an entry for all clocks used.
+> +  See ../clock/clock-bindings.txt for details.
+> +- clock-names: Must include the following entries:
+> +   - dev: Clock to enable core XUSB dev clock.
+> +   - ss: Clock to enable XUSB super speed clock.
+> +   - ss_src: Clock to enable XUSB super speed dev clock.
+> +   - hs_src: Clock to enable XUSB high speed dev clock.
+> +   - fs_src: Clock to enable XUSB full speed dev clock.
+> +- nvidia,xusb-padctl: phandle to the XUSB pad controller that is used to
+> +  configure the USB pads used by the XUDC controller.
+> +- power-domains: A list of PM domain specifiers that reference each power-domain
+> +  used by the XUSB device mode controller. This list must comprise of a specifier
+> +  for the XUSBA and XUSBB power-domains. See ../power/power_domain.txt and
+> +  ../arm/tegra/nvidia,tegra20-pmc.txt for details.
+> +- power-domain-names: A list of names that represent each of the specifiers in
+> +  the 'power-domains' property. Must include 'ss' and 'dev'.
 
-Works for me, I'll add them to my next pull request to Mauro.
+The order matters and is the opposite of the example.
 
-Thanks,
+> +- phys: Must contain an entry for each entry in phy-names.
+> +  See ../phy/phy-bindings.txt for details.
+> +- phy-names: Should include an entry for each PHY used by the controller.
+> +  Names must be "usb2", and "usb3" if support SuperSpeed device mode.
+> +  - "usb3" phy, SuperSpeed (SSTX+/SSTX-/SSRX+/SSRX-) data lines.
+> +  - "usb2" phy, USB 2.0 (D+/D-) data lines.
+> +
+> +For Tegra210:
+> +- reg-names: Must include the following entries:
+> +   - base: XUSB device controller registers.
+> +   - fpci: XUSB device PCI Config registers.
+> +   - ipfs: XUSB device registers.
+> +- avddio-usb-supply: PCIe/USB3 analog logic power supply. Must supply 1.05 V.
+> +- hvdd-usb-supply: USB controller power supply. Must supply 3.3 V.
+> +
+> +
+> +Optional properties:
+> +--------------------
+> +- usb-role-switch: boolean property to indicate use of USB Role Switch driver.
+> +
+> +Sub-nodes:
+> +----------
+> +- The port would be added as subnode if use "usb-role-switch" property.
+> +  see graph.txt.
+> +
+> +Example:
+> +--------
+> +	pmc: pmc@7000e400 {
+> +		compatible = "nvidia,tegra210-pmc";
+> +		reg = <0x0 0x7000e400 0x0 0x400>;
+> +		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+> +		clock-names = "pclk", "clk32k_in";
+> +
+> +		powergates {
+> +			pd_xusbss: xusba {
+> +				clocks = <&tegra_car TEGRA210_CLK_XUSB_SS>;
+> +				resets = <&tegra_car 156>;
+> +				#power-domain-cells = <0>;
+> +			};
+> +
+> +			pd_xusbdev: xusbb {
+> +				clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>;
+> +				resets = <&tegra_car 95>;
+> +				#power-domain-cells = <0>;
+> +			};
+> +		};
+> +	};
+> +
+> +	xudc@700d0000 {
 
-Sean
+usb@...
+
+> +		compatible = "nvidia,tegra210-xudc";
+> +		reg = <0x0 0x700d0000 0x0 0x8000>,
+> +		      <0x0 0x700d8000 0x0 0x1000>,
+> +		      <0x0 0x700d9000 0x0 0x1000>;
+> +		reg-names = "base", "fpci", "ipfs";
+> +
+> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +		clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>,
+> +			 <&tegra_car TEGRA210_CLK_XUSB_SS>,
+> +			 <&tegra_car TEGRA210_CLK_XUSB_SSP_SRC>,
+> +			 <&tegra_car TEGRA210_CLK_XUSB_HS_SRC>,
+> +			 <&tegra_car TEGRA210_CLK_XUSB_FS_SRC>;
+> +		clock-names = "dev", "ss", "ss_src", "hs_src", "fs_src";
+> +
+> +		power-domains = <&pd_xusbdev>, <&pd_xusbss>;
+> +		power-domain-names = "dev", "ss";
+> +
+> +		nvidia,xusb-padctl = <&padctl>;
+> +
+> +		phys = <&{/padctl@7009f000/pads/usb2/lanes/usb2-0}>;
+
+Use a label.
+
+> +		phy-names = "usb2;
+> +
+> +		avddio-usb-supply = <&vdd_pex_1v05>;
+> +		hvdd-usb-supply = <&vdd_3v3_sys>;
+> +
+> +		usb-role-switch;
+> +		port {
+> +			usb_role_switch: endpoint@0 {
+
+Don't need a unit address.
+
+> +				remote-endpoint = <&bconn_ep>;
+> +			};
+> +		};
+> +
+> +	};
+> -- 
+> 2.7.4
+> 
