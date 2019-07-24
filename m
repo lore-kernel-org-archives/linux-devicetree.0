@@ -1,28 +1,36 @@
-Return-Path: <SRS0=cJxD=VG=linux.intel.com=thor.thayer@kernel.org>
-From: thor.thayer@linux.intel.com
-Subject: [PATCH 0/3] Stratix10 SDRAM Common EDAC Framework
-Date: Tue,  9 Jul 2019 17:24:47 -0500
-Message-Id: <1562711090-900-1-git-send-email-thor.thayer@linux.intel.com>
-To: bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org
-Cc: devicetree@vger.kernel.org, linux-edac@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>
+Return-Path: <SRS0=vA0O=VV=vergenet.net=horms@kernel.org>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH 0/4] dt-bindings: i2c: renesas: Rename bindings documentation files
+Date: Wed, 24 Jul 2019 14:15:55 +0200
+Message-Id: <20190724121559.19079-1-horms+renesas@verge.net.au>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+Rename the bindings documentation file for Renesas I2C controllers.
 
-Use the common Altera EDAC Device Framework for the SDRAM so that
-Double Bit Error Addresses can be tracked for SDRAM.
-This also simplifies the device tree.
+This is part of an ongoing effort to name bindings documentation files for
+Renesas IP blocks consistently, in line with the compat strings they
+document.
 
-Thor Thayer (3):
-  Documentation: dt: edac: Add reg to S10 SDRAM node
-  arm64: dts: Stratix10: Include regs in SDRAM ECC node
-  EDAC, altera: Use common framework for Stratix10 SDRAM ECC
+Based on v5.3-rc1
 
- .../devicetree/bindings/edac/socfpga-eccmgr.txt    |  4 ++-
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |  9 ++----
- drivers/edac/altera_edac.c                         | 32 ++++++++++++++++++++--
- drivers/edac/altera_edac.h                         | 25 ++++++++++++++++-
- 4 files changed, 58 insertions(+), 12 deletions(-)
+Simon Horman (4):
+  dt-bindings: i2c: sh_mobile: Rename bindings documentation file
+  dt-bindings: i2c: rcar: Rename bindings documentation file
+  dt-bindings: i2c: riic: Rename bindings documentation file
+  dt-bindings: i2c: riic: Rename bindings documentation file
+
+ .../devicetree/bindings/i2c/{i2c-rcar.txt => renesas,i2c.txt}     | 0
+ .../bindings/i2c/{i2c-emev2.txt => renesas,iic-emev2.txt}         | 0
+ .../bindings/i2c/{i2c-sh_mobile.txt => renesas,iic.txt}           | 0
+ .../devicetree/bindings/i2c/{i2c-riic.txt => renesas,riic.txt}    | 0
+ MAINTAINERS                                                       | 8 ++++----
+ 5 files changed, 4 insertions(+), 4 deletions(-)
+ rename Documentation/devicetree/bindings/i2c/{i2c-rcar.txt => renesas,i2c.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{i2c-emev2.txt => renesas,iic-emev2.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{i2c-sh_mobile.txt => renesas,iic.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{i2c-riic.txt => renesas,riic.txt} (100%)
 
 -- 
-2.7.4
+2.11.0
