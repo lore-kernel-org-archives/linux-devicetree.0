@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v8 03/11] dt-bindings: usb: add binding for USB GPIO based connection detection driver
-Date: Wed, 24 Jul 2019 16:50:37 +0800
-Message-ID: <1563958245-6321-4-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v8 07/11] usb: roles: Add fwnode_usb_role_switch_get() function
+Date: Wed, 24 Jul 2019 16:50:41 +0800
+Message-ID: <1563958245-6321-8-git-send-email-chunfeng.yun@mediatek.com>
 References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,79 +12,83 @@ To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation
 Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-It's used to support dual role switch via GPIO when use Type-B
-receptacle, typically the USB ID pin is connected to an input
-GPIO, and also used to enable/disable device when the USB Vbus
-pin is connected to an input GPIO.
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
+The fwnode_usb_role_switch_get() function is exactly the
+same as usb_role_switch_get(), except that it takes struct
+fwnode_handle as parameter instead of struct device.
+
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Tested-by: Biju Das <biju.das@bp.renesas.com>
 ---
-v8 changes:
- 1. rename the title
- 2. change the compatible as "linux,usb-conn-gpio" instead of
-    "linux,typeb-conn-gpio"
+v8: no changes
 
-v7 changes:
- 1. add description for device only mode
+v7: 
+ add signed-off-by Chunfeng and tested-by Biju
 
-v6 changes:
- 1. remove status and port nodes in example
- 2. make vbus-supply as optional property
-
-v5 changes:
- 1. treat type-B connector as child device of USB controller's, but not
-    as a separate virtual device, suggested by Rob
- 2. put connector's port node under connector node, suggested by Rob
-
-v4 no changes
-
-v3 changes:
- 1. treat type-B connector as a virtual device, but not child device of
-    USB controller's
-
-v2 changes:
-  1. new patch to make binding clear suggested by Hans
+v6:
+  new patch
 ---
- .../devicetree/bindings/usb/usb-conn-gpio.txt | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
+ drivers/usb/roles/class.c | 20 ++++++++++++++++++++
+ include/linux/usb/role.h  |  7 +++++++
+ 2 files changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
-new file mode 100644
-index 000000000000..d4d107fedc22
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
-@@ -0,0 +1,31 @@
-+USB GPIO Based Connection Detection
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index 86defca6623e..5b637aaf311f 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -135,6 +135,26 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(usb_role_switch_get);
+ 
++/**
++ * fwnode_usb_role_switch_get - Find USB role switch linked with the caller
++ * @fwnode: The caller device node
++ *
++ * This is similar to the usb_role_switch_get() function above, but it searches
++ * the switch using fwnode instead of device entry.
++ */
++struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
++{
++	struct usb_role_switch *sw;
 +
-+This is typically used to switch dual role mode from the USB ID pin connected
-+to an input GPIO, and also used to enable/disable device mode from the USB
-+Vbus pin connected to an input GPIO.
++	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
++					  usb_role_switch_match);
++	if (!IS_ERR_OR_NULL(sw))
++		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
 +
-+Required properties:
-+- compatible : should include "linux,usb-conn-gpio" and "usb-b-connector".
-+- id-gpios, vbus-gpios : input gpios, either one of them must be present,
-+	and both can be present as well.
-+	see connector/usb-connector.txt
++	return sw;
++}
++EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
 +
-+Optional properties:
-+- vbus-supply : can be present if needed when supports dual role mode.
-+	see connector/usb-connector.txt
+ /**
+  * usb_role_switch_put - Release handle to a switch
+  * @sw: USB Role Switch
+diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+index da2b9641b877..2d77f97df72d 100644
+--- a/include/linux/usb/role.h
++++ b/include/linux/usb/role.h
+@@ -47,6 +47,7 @@ struct usb_role_switch_desc {
+ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+ struct usb_role_switch *usb_role_switch_get(struct device *dev);
++struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *node);
+ void usb_role_switch_put(struct usb_role_switch *sw);
+ 
+ struct usb_role_switch *
+@@ -70,6 +71,12 @@ static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ 	return ERR_PTR(-ENODEV);
+ }
+ 
++static inline struct usb_role_switch *
++fwnode_usb_role_switch_get(struct fwnode_handle *node)
++{
++	return ERR_PTR(-ENODEV);
++}
 +
-+- Sub-nodes:
-+	- port : can be present.
-+		see graph.txt
-+
-+Example:
-+
-+&mtu3 {
-+	connector {
-+		compatible = "linux,usb-conn-gpio", "usb-b-connector";
-+		label = "micro-USB";
-+		type = "micro";
-+		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
-+		vbus-supply = <&usb_p0_vbus>;
-+	};
-+};
+ static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
+ 
+ static inline struct usb_role_switch *
 -- 
 2.21.0
