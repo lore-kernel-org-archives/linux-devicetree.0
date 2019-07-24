@@ -1,316 +1,561 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH v3 2/2] mailbox: introduce ARM SMC based mailbox
-Date: Wed, 24 Jul 2019 03:06:36 +0000
-Message-ID: <AM0PR04MB448115B329F1207A802BF24988C60@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1563184103-8493-1-git-send-email-peng.fan@nxp.com>
- <1563184103-8493-3-git-send-email-peng.fan@nxp.com>
+From: Bingbu Cao <bingbu.cao@linux.intel.com>
+Subject: Re: [PATCH 2/2] media: i2c: dw9768: Add DW9768 VCM driver
+Date: Wed, 24 Jul 2019 11:16:09 +0800
+Message-ID: <576bb964-c16d-2ca2-e3ec-feff2e155d3c@linux.intel.com>
+References: <20190708100641.2702-1-dongchun.zhu@mediatek.com>
+ <20190708100641.2702-3-dongchun.zhu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563184103-8493-3-git-send-email-peng.fan@nxp.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190708100641.2702-3-dongchun.zhu@mediatek.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dongchun.zhu@mediatek.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com, sakari.ailus@linux.intel.com, tfiga@chromium.org, bingbu.cao@intel.com
+Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, sj.huang@mediatek.com, linux-mediatek@lists.infradead.org, louis.kuo@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
 
-> Subject: [PATCH v3 2/2] mailbox: introduce ARM SMC based mailbox
 
-Any comments with this patch?
-
->=20
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> This mailbox driver implements a mailbox which signals transmitted data v=
-ia
-> an ARM smc (secure monitor call) instruction. The mailbox receiver is
-> implemented in firmware and can synchronously return data when it returns
-> execution to the non-secure world again.
-> An asynchronous receive path is not implemented.
-> This allows the usage of a mailbox to trigger firmware actions on SoCs wh=
-ich
-> either don't have a separate management processor or on which such a core
-> is not available. A user of this mailbox could be the SCP interface.
->=20
-> Modified from Andre Przywara's v2 patch
-> https://lore.kernel.org/patchwork/patch/812999/
->=20
-> Cc: Andre Przywara <andre.przywara@arm.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+On 7/8/19 6:06 PM, dongchun.zhu@mediatek.com wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> 
+> This patch adds a V4L2 sub-device driver for DW9768 lens voice coil,
+> and provides control to set the desired focus.
+> 
+> The DW9807 is a 10 bit DAC from Dongwoon, designed for linear
+> control of voice coil motor.
+> 
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
 > ---
->=20
-> V3:
->  Drop interrupt.
->  Introduce transports for mem/reg usage.
->  Add chan-id for mem usage.
->=20
-> V2:
->  Add interrupts notification support.
->=20
->  drivers/mailbox/Kconfig           |   7 ++
->  drivers/mailbox/Makefile          |   2 +
->  drivers/mailbox/arm-smc-mailbox.c | 215
-> ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 224 insertions(+)
->  create mode 100644 drivers/mailbox/arm-smc-mailbox.c
->=20
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig index
-> 595542bfae85..c3bd0f1ddcd8 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -15,6 +15,13 @@ config ARM_MHU
->  	  The controller has 3 mailbox channels, the last of which can be
->  	  used in Secure mode only.
->=20
-> +config ARM_SMC_MBOX
-> +	tristate "Generic ARM smc mailbox"
-> +	depends on OF && HAVE_ARM_SMCCC
+>  MAINTAINERS                |   1 +
+>  drivers/media/i2c/Kconfig  |  10 +
+>  drivers/media/i2c/Makefile |   1 +
+>  drivers/media/i2c/dw9768.c | 458 +++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 470 insertions(+)
+>  create mode 100644 drivers/media/i2c/dw9768.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8f6ac93..17152d7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4877,6 +4877,7 @@ M:	Dongchun Zhu <dongchun.zhu@mediatek.com>
+>  L:	linux-media@vger.kernel.org
+>  T:	git git://linuxtv.org/media_tree.git
+>  S:	Maintained
+> +F:	drivers/media/i2c/dw9768.c
+>  F:	Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt
+>  
+>  DONGWOON DW9807 LENS VOICE COIL DRIVER
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index 7793358..8ff6c95 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -1014,6 +1014,16 @@ config VIDEO_DW9714
+>  	  capability. This is designed for linear control of
+>  	  voice coil motors, controlled via I2C serial interface.
+>  
+> +config VIDEO_DW9768
+> +	tristate "DW9768 lens voice coil support"
+> +	depends on I2C && VIDEO_V4L2 && MEDIA_CONTROLLER
+> +	depends on VIDEO_V4L2_SUBDEV_API
 > +	help
-> +	  Generic mailbox driver which uses ARM smc calls to call into
-> +	  firmware for triggering mailboxes.
+> +	  This is a driver for the DW9768 camera lens voice coil.
+> +	  DW9768 is a 10 bit DAC with 100mA output current sink
+> +	  capability. This is designed for linear control of
+> +	  voice coil motors, controlled via I2C serial interface.
 > +
->  config IMX_MBOX
->  	tristate "i.MX Mailbox"
->  	depends on ARCH_MXC || COMPILE_TEST
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile index
-> c22fad6f696b..93918a84c91b 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)	+=3D mailbox-test.o
->=20
->  obj-$(CONFIG_ARM_MHU)	+=3D arm_mhu.o
->=20
-> +obj-$(CONFIG_ARM_SMC_MBOX)	+=3D arm-smc-mailbox.o
-> +
->  obj-$(CONFIG_IMX_MBOX)	+=3D imx-mailbox.o
->=20
->  obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)	+=3D
-> armada-37xx-rwtm-mailbox.o
-> diff --git a/drivers/mailbox/arm-smc-mailbox.c
-> b/drivers/mailbox/arm-smc-mailbox.c
+>  config VIDEO_DW9807_VCM
+>  	tristate "DW9807 lens voice coil support"
+>  	depends on I2C && VIDEO_V4L2 && MEDIA_CONTROLLER
+> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+> index d8ad9da..944fbf6 100644
+> --- a/drivers/media/i2c/Makefile
+> +++ b/drivers/media/i2c/Makefile
+> @@ -24,6 +24,7 @@ obj-$(CONFIG_VIDEO_SAA6752HS) += saa6752hs.o
+>  obj-$(CONFIG_VIDEO_AD5820)  += ad5820.o
+>  obj-$(CONFIG_VIDEO_AK7375)  += ak7375.o
+>  obj-$(CONFIG_VIDEO_DW9714)  += dw9714.o
+> +obj-$(CONFIG_VIDEO_DW9768)  += dw9768.o
+>  obj-$(CONFIG_VIDEO_DW9807_VCM)  += dw9807-vcm.o
+>  obj-$(CONFIG_VIDEO_ADV7170) += adv7170.o
+>  obj-$(CONFIG_VIDEO_ADV7175) += adv7175.o
+> diff --git a/drivers/media/i2c/dw9768.c b/drivers/media/i2c/dw9768.c
 > new file mode 100644
-> index 000000000000..76a2ae11ee4d
+> index 0000000..f5b5591
 > --- /dev/null
-> +++ b/drivers/mailbox/arm-smc-mailbox.c
-> @@ -0,0 +1,215 @@
+> +++ b/drivers/media/i2c/dw9768.c
+> @@ -0,0 +1,458 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Copyright (C) 2016,2017 ARM Ltd.
-> + * Copyright 2019 NXP
+> + * Copyright (c) 2018 MediaTek Inc.
 > + */
 > +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mailbox_controller.h>
+> +#include <linux/delay.h>
+> +#include <linux/i2c.h>
 > +#include <linux/module.h>
-> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/pm_runtime.h>
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-subdev.h>
 > +
-> +#define ARM_SMC_MBOX_MEM_TRANS	BIT(0)
+> +#define DW9768_VOLTAGE_ANALOG			2800000
+> +#define DW9768_NAME				"dw9768"
+> +#define DW9768_MAX_FOCUS_POS			1023
+> +/*
+> + * This sets the minimum granularity for the focus positions.
+> + * A value of 1 gives maximum accuracy for a desired focus position
+> + */
+> +#define DW9768_FOCUS_STEPS			1
 > +
-> +struct arm_smc_chan_data {
-> +	u32 function_id;
-> +	u32 chan_id;
-> +	u32 flags;
+> +#define DW9768_CTRL_DELAY_US			5000
+> +
+> +#define DW9768_REG_DAC_MSB			0x03
+> +#define DW9768_REG_DAC_LSB			0x04
+> +#define DW9768_REG_NULL				0xff
+> +
+> +#define DW9768_DAC_SHIFT			8
+> +
+> +#define DW9768_REG_VALUE_16BIT			2
+> +
+> +/* dw9768 device structure */
+> +struct dw9768_device {
+> +	struct v4l2_ctrl_handler ctrls;
+> +	struct v4l2_subdev sd;
+> +	struct regulator *analog_regulator;
+> +	/*
+> +	 * Serialize control access, get/set format, get selection
+> +	 * and start streaming.
+> +	 */
+> +	struct mutex power_lock;
+> +
+> +	int power_count;
+> +	bool standby;
 > +};
 > +
-> +struct arm_smccc_mbox_cmd {
-> +	unsigned long a0, a1, a2, a3, a4, a5, a6, a7; };
+> +static inline struct dw9768_device *to_dw9768_vcm(struct v4l2_ctrl *ctrl)
+> +{
+> +	return container_of(ctrl->handler, struct dw9768_device, ctrls);
+> +}
 > +
-> +typedef unsigned long (smc_mbox_fn)(unsigned long, unsigned long,
-> +				    unsigned long, unsigned long,
-> +				    unsigned long, unsigned long,
-> +				    unsigned long, unsigned long);
-> +static smc_mbox_fn *invoke_smc_mbox_fn;
+> +static inline struct dw9768_device *sd_to_dw9768_vcm(struct v4l2_subdev *subdev)
+> +{
+> +	return container_of(subdev, struct dw9768_device, sd);
+> +}
 > +
-> +static int arm_smc_send_data(struct mbox_chan *link, void *data) {
-> +	struct arm_smc_chan_data *chan_data =3D link->con_priv;
-> +	struct arm_smccc_mbox_cmd *cmd =3D data;
-> +	unsigned long ret;
-> +	u32 function_id;
-> +	u32 chan_id;
+> +static int dw9768_i2c_write(struct dw9768_device *dw9768_dev, u8 *data,
+> +			    int size)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&dw9768_dev->sd);
+> +	struct i2c_msg msg;
+> +	u8 *w_buf = NULL;
+> +	u8 retry_cnt = 3;
+> +	int ret;
 > +
-> +	if (chan_data->flags & ARM_SMC_MBOX_MEM_TRANS) {
-> +		if (chan_data->function_id !=3D UINT_MAX)
-> +			function_id =3D chan_data->function_id;
+> +	if (!client->adapter)
+> +		return -ENODEV;
+> +
+> +	if (size != 1 && size != 2)
+> +		return -EINVAL;
+> +
+> +	memset(&msg, 0, sizeof(struct i2c_msg));
+> +
+> +	w_buf = kzalloc(size, GFP_KERNEL);
+> +	if (!w_buf)
+> +		return -1;
+return -ENOMEM;
+> +
+> +	memcpy(w_buf, data, size);
+> +
+> +	msg.addr  = client->addr;
+> +	msg.flags = 0;
+> +	msg.len   = size;
+> +	msg.buf   = w_buf;
+> +
+> +	do {
+> +		ret = i2c_transfer(client->adapter, &msg, 1);
+> +		if (ret != 1)
+> +			dev_err(&client->dev, "write fail, ret:%d, retry:%d\n",
+> +				ret, retry_cnt);
 > +		else
-> +			function_id =3D cmd->a0;
-> +		chan_id =3D chan_data->chan_id;
-> +		ret =3D invoke_smc_mbox_fn(function_id, chan_id, 0, 0, 0, 0,
-> +					 0, 0);
-> +	} else {
-> +		ret =3D invoke_smc_mbox_fn(cmd->a0, cmd->a1, cmd->a2, cmd->a3,
-> +					 cmd->a4, cmd->a5, cmd->a6, cmd->a7);
+> +			break;
+> +		retry_cnt--;
+> +	} while (retry_cnt != 0);
+> +
+> +	if (retry_cnt == 0)	{
+> +		dev_err(&client->dev, "i2c write fail(%d)\n", ret);
+> +		return -EIO;
 > +	}
 > +
-> +	mbox_chan_received_data(link, (void *)ret);
+> +	kfree(w_buf);
 > +
 > +	return 0;
 > +}
 > +
-> +static unsigned long __invoke_fn_hvc(unsigned long function_id,
-> +				     unsigned long arg0, unsigned long arg1,
-> +				     unsigned long arg2, unsigned long arg3,
-> +				     unsigned long arg4, unsigned long arg5,
-> +				     unsigned long arg6)
+> +static int dw9768_release(struct dw9768_device *dw9768_dev)
 > +{
-> +	struct arm_smccc_res res;
+> +	unsigned char i;
+> +	int ret;
 > +
-> +	arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4,
-> +		      arg5, arg6, &res);
-> +	return res.a0;
+> +	char puSendCmdArray[4][2] = {
+> +		{0x02, 0x00}, {DW9768_REG_NULL, DW9768_REG_NULL},
+> +		{0x01, 0x00}, {DW9768_REG_NULL, DW9768_REG_NULL},
+> +	};
+> +
+> +	for (i = 0; i < (sizeof(puSendCmdArray) / sizeof(char)) /
+> +	     (sizeof(puSendCmdArray[0]) / sizeof(char)); i++) {> +		if (puSendCmdArray[i][0] != DW9768_REG_NULL) {
+> +			ret = dw9768_i2c_write(dw9768_dev, puSendCmdArray[i],
+> +					       DW9768_REG_VALUE_16BIT);
+> +			if (ret < 0)
+> +				return ret;
+> +		} else {
+> +			usleep_range(DW9768_CTRL_DELAY_US,
+> +				     DW9768_CTRL_DELAY_US + 100);
+> +		}
+> +	}
+Can we make this block more simple?  I think the loop is not necessary.
+> +
+> +	return 0;
 > +}
 > +
-> +static unsigned long __invoke_fn_smc(unsigned long function_id,
-> +				     unsigned long arg0, unsigned long arg1,
-> +				     unsigned long arg2, unsigned long arg3,
-> +				     unsigned long arg4, unsigned long arg5,
-> +				     unsigned long arg6)
+> +static int dw9768_init(struct dw9768_device *dw9768_dev)
 > +{
-> +	struct arm_smccc_res res;
+> +	unsigned char i;
+> +	int ret;
 > +
-> +	arm_smccc_smc(function_id, arg0, arg1, arg2, arg3, arg4,
-> +		      arg5, arg6, &res);
-> +	return res.a0;
+> +	char puSendCmdArray[5][2] = {
+> +		{0x02, 0x02}, {DW9768_REG_NULL, DW9768_REG_NULL},
+> +		{0x06, 0x41}, {0x07, 0x39}, {DW9768_REG_NULL, DW9768_REG_NULL},
+> +	};
+> +
+> +	for (i = 0; i < (sizeof(puSendCmdArray) / sizeof(char)) /
+> +	     (sizeof(puSendCmdArray[0]) / sizeof(char)); i++) {
+> +		if (puSendCmdArray[i][0] != DW9768_REG_NULL) {
+> +			ret = dw9768_i2c_write(dw9768_dev, puSendCmdArray[i],
+> +					       DW9768_REG_VALUE_16BIT);
+> +			if (ret < 0)
+> +				return ret;
+> +		} else {
+> +			usleep_range(DW9768_CTRL_DELAY_US,
+> +				     DW9768_CTRL_DELAY_US + 100);
+> +		}
+> +	}
+Ditto.
+> +
+> +	return 0;
 > +}
 > +
-> +static const struct mbox_chan_ops arm_smc_mbox_chan_ops =3D {
-> +	.send_data	=3D arm_smc_send_data,
-> +};
+> +/*
+> + * Power handling
+> + */
+> +static int dw9768_power_off(struct dw9768_device *dw9768_dev, bool standby)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&dw9768_dev->sd);
+> +	int ret;
 > +
-> +static int arm_smc_mbox_probe(struct platform_device *pdev) {
-> +	struct device *dev =3D &pdev->dev;
-> +	struct mbox_controller *mbox;
-> +	struct arm_smc_chan_data *chan_data;
-> +	const char *method;
-> +	bool mem_trans =3D false;
-> +	int ret, i;
-> +	u32 val;
-> +
-> +	if (!of_property_read_u32(dev->of_node, "arm,num-chans", &val)) {
-> +		if (!val) {
-> +			dev_err(dev, "invalid arm,num-chans value %u\n", val);
-> +			return -EINVAL;
-> +		}
-> +	} else {
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!of_property_read_string(dev->of_node, "transports", &method)) {
-> +		if (!strcmp("mem", method)) {
-> +			mem_trans =3D true;
-> +		} else if (!strcmp("reg", method)) {
-> +			mem_trans =3D false;
-> +		} else {
-> +			dev_warn(dev, "invalid \"transports\" property: %s\n",
-> +				 method);
-> +
-> +			return -EINVAL;
-> +		}
-> +	} else {
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!of_property_read_string(dev->of_node, "method", &method)) {
-> +		if (!strcmp("hvc", method)) {
-> +			invoke_smc_mbox_fn =3D __invoke_fn_hvc;
-> +		} else if (!strcmp("smc", method)) {
-> +			invoke_smc_mbox_fn =3D __invoke_fn_smc;
-> +		} else {
-> +			dev_warn(dev, "invalid \"method\" property: %s\n",
-> +				 method);
-> +
-> +			return -EINVAL;
-> +		}
-> +	} else {
-> +		return -EINVAL;
-> +	}
-> +
-> +	mbox =3D devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-> +	if (!mbox)
-> +		return -ENOMEM;
-> +
-> +	mbox->num_chans =3D val;
-> +	mbox->chans =3D devm_kcalloc(dev, mbox->num_chans,
-> sizeof(*mbox->chans),
-> +				   GFP_KERNEL);
-> +	if (!mbox->chans)
-> +		return -ENOMEM;
-> +
-> +	chan_data =3D devm_kcalloc(dev, mbox->num_chans, sizeof(*chan_data),
-> +				 GFP_KERNEL);
-> +	if (!chan_data)
-> +		return -ENOMEM;
-> +
-> +	for (i =3D 0; i < mbox->num_chans; i++) {
-> +		u32 function_id;
-> +
-> +		ret =3D of_property_read_u32_index(dev->of_node,
-> +						 "arm,func-ids", i,
-> +						 &function_id);
+> +	/*
+> +	 * Go to standby first as real power off my be denied by the hardware
+typo? "may be denied"
+> +	 * (single power line control for both dw9768_dev and sensor).
+> +	 */
+> +	if (standby) {
+> +		dw9768_dev->standby = true;
+> +		ret = dw9768_release(dw9768_dev);
 > +		if (ret)
-> +			chan_data[i].function_id =3D UINT_MAX;
-> +
-> +		else
-> +			chan_data[i].function_id =3D function_id;
-> +
-> +		chan_data[i].chan_id =3D i;
-> +
-> +		if (mem_trans)
-> +			chan_data[i].flags |=3D ARM_SMC_MBOX_MEM_TRANS;
-> +		mbox->chans[i].con_priv =3D &chan_data[i];
+> +			dev_err(&client->dev, "dw9768_release failed!\n");
 > +	}
-> +
-> +	mbox->txdone_poll =3D false;
-> +	mbox->txdone_irq =3D false;
-> +	mbox->ops =3D &arm_smc_mbox_chan_ops;
-> +	mbox->dev =3D dev;
-> +
-> +	platform_set_drvdata(pdev, mbox);
-> +
-> +	ret =3D devm_mbox_controller_register(dev, mbox);
+> +	ret = regulator_disable(dw9768_dev->analog_regulator);
 > +	if (ret)
 > +		return ret;
 > +
-> +	dev_info(dev, "ARM SMC mailbox enabled with %d chan%s.\n",
-> +		 mbox->num_chans, mbox->num_chans =3D=3D 1 ? "" : "s");
+> +	return 0;
+> +}
+> +
+> +static int dw9768_power_on(struct dw9768_device *dw9768_dev, bool restore)
+> +{
+> +	int ret;
+> +
+> +	ret = regulator_enable(dw9768_dev->analog_regulator);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (restore) {
+> +		/* Restore the hardware settings. */
+> +		dw9768_dev->standby = false;
+> +		ret = dw9768_init(dw9768_dev);
+> +		if (ret < 0)
+> +			goto fail;
+> +	}
+> +
+> +	return 0;
+> +
+> +fail:
+> +	dw9768_dev->standby = true;
+> +	regulator_disable(dw9768_dev->analog_regulator);
 > +
 > +	return ret;
 > +}
 > +
-> +static int arm_smc_mbox_remove(struct platform_device *pdev) {
-> +	struct mbox_controller *mbox =3D platform_get_drvdata(pdev);
+> +/*
+> + * Calculate status word and write it to the device based on current
+> + * values of V4L2 controls. It is assumed that the stored V4L2 control
+> + * values are properly limited and rounded.
+> + */
+> +static int dw9768_update_hw(struct dw9768_device *dw9768_dev, u16 val)
+> +{
+> +	unsigned char i;
+> +	int ret;
 > +
-> +	mbox_controller_unregister(mbox);
+> +	char puSendCmdArray[2][2] = {
+> +		{DW9768_REG_DAC_MSB, (char)(val >> DW9768_DAC_SHIFT)},
+> +		{DW9768_REG_DAC_LSB, (char)(val & 0xFF)},
+> +	};
+> +
+> +	for (i = 0; i < (sizeof(puSendCmdArray) / sizeof(char)) /
+> +	     (sizeof(puSendCmdArray[0]) / sizeof(char)); i++) {
+> +		ret = dw9768_i2c_write(dw9768_dev, puSendCmdArray[i],
+> +				       DW9768_REG_VALUE_16BIT);
+> +		if (ret)
+> +			return ret;
+> +	}
+ditto.
+> +
 > +	return 0;
 > +}
 > +
-> +static const struct of_device_id arm_smc_mbox_of_match[] =3D {
-> +	{ .compatible =3D "arm,smc-mbox", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, arm_smc_mbox_of_match);
+> +static int dw9768_set_ctrl(struct v4l2_ctrl *ctrl)
+> +{
+> +	struct dw9768_device *dw9768_dev = to_dw9768_vcm(ctrl);
 > +
-> +static struct platform_driver arm_smc_mbox_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "arm-smc-mbox",
-> +		.of_match_table =3D arm_smc_mbox_of_match,
+> +	if (ctrl->id == V4L2_CID_FOCUS_ABSOLUTE)
+> +		return dw9768_update_hw(dw9768_dev, ctrl->val);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_ctrl_ops dw9768_vcm_ctrl_ops = {
+> +	.s_ctrl = dw9768_set_ctrl,
+> +};
+> +
+> +static int
+> +dw9768_set_power(struct v4l2_subdev *subdev, int on)
+> +{
+> +	struct dw9768_device *dw9768_dev = sd_to_dw9768_vcm(subdev);
+> +	int ret = 0;
+> +
+> +	mutex_lock(&dw9768_dev->power_lock);
+> +
+> +	/*
+> +	 * If the power count is modified from 0 to != 0 or from != 0 to 0,
+> +	 * update the power state.
+> +	 */
+> +	if (dw9768_dev->power_count == !on) {
+> +		ret = on ? dw9768_power_on(dw9768_dev, true) :
+> +			dw9768_power_off(dw9768_dev, true);
+> +		if (ret < 0)
+> +			goto done;
+> +	}
+> +
+> +	/* Update the power count. */
+> +	dw9768_dev->power_count += on ? 1 : -1;
+> +	WARN_ON(dw9768_dev->power_count < 0);
+> +
+> +done:
+> +	mutex_unlock(&dw9768_dev->power_lock);
+> +	return ret;
+> +}
+> +
+> +static int dw9768_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
+> +{
+> +	return dw9768_set_power(sd, 1);
+> +}
+> +
+> +static int dw9768_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
+> +{
+> +	return dw9768_set_power(sd, 0);
+> +}
+I am a little confused about the pm control here.
+Could we use the pm generic APIs to help do this?
+> +
+> +static const struct v4l2_subdev_internal_ops dw9768_int_ops = {
+> +	.open = dw9768_open,
+> +	.close = dw9768_close,
+> +};
+> +
+> +static const struct v4l2_subdev_ops dw9768_ops = { };
+> +
+> +static void dw9768_subdev_cleanup(struct dw9768_device *dw9768_dev)
+> +{
+> +	v4l2_async_unregister_subdev(&dw9768_dev->sd);
+> +	v4l2_ctrl_handler_free(&dw9768_dev->ctrls);
+> +	media_entity_cleanup(&dw9768_dev->sd.entity);
+> +}
+> +
+> +static int dw9768_init_controls(struct dw9768_device *dw9768_dev)
+> +{
+> +	struct v4l2_ctrl_handler *hdl = &dw9768_dev->ctrls;
+> +	const struct v4l2_ctrl_ops *ops = &dw9768_vcm_ctrl_ops;
+> +
+> +	v4l2_ctrl_handler_init(hdl, 1);
+> +
+> +	v4l2_ctrl_new_std(hdl, ops, V4L2_CID_FOCUS_ABSOLUTE,
+> +			  0, DW9768_MAX_FOCUS_POS, DW9768_FOCUS_STEPS, 0);
+> +
+> +	if (hdl->error) {
+> +		dev_err(dw9768_dev->sd.dev, "%s fail error: 0x%x\n",
+> +			__func__, hdl->error);
+> +		return hdl->error;
+> +	}
+> +
+> +	dw9768_dev->sd.ctrl_handler = hdl;
+> +
+> +	return 0;
+> +}
+> +
+> +static int dw9768_probe(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct dw9768_device *dw9768_dev;
+> +	int rval;
+> +
+> +	dw9768_dev = devm_kzalloc(&client->dev, sizeof(*dw9768_dev),
+> +				  GFP_KERNEL);
+> +	if (!dw9768_dev)
+> +		return -ENOMEM;
+> +
+> +	dw9768_dev->analog_regulator = devm_regulator_get(dev, "afvdd");
+> +	if (IS_ERR(dw9768_dev->analog_regulator)) {
+> +		dev_err(dev, "cannot get analog regulator\n");
+> +		return PTR_ERR(dw9768_dev->analog_regulator);
+> +	}
+> +
+> +	rval = regulator_set_voltage(dw9768_dev->analog_regulator,
+> +				     DW9768_VOLTAGE_ANALOG,
+> +				     DW9768_VOLTAGE_ANALOG);
+> +	if (rval < 0) {
+> +		dev_err(dev, "cannot set analog voltage\n");
+> +		return rval;
+> +	}
+> +
+> +	mutex_init(&dw9768_dev->power_lock);
+> +
+> +	v4l2_i2c_subdev_init(&dw9768_dev->sd, client, &dw9768_ops);
+> +	dw9768_dev->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	dw9768_dev->sd.internal_ops = &dw9768_int_ops;
+> +
+> +	rval = dw9768_init_controls(dw9768_dev);
+> +	if (rval)
+> +		goto err_cleanup;
+> +
+> +	rval = media_entity_pads_init(&dw9768_dev->sd.entity, 0, NULL);
+> +	if (rval < 0)
+> +		goto err_cleanup;
+> +
+> +	dw9768_dev->sd.entity.function = MEDIA_ENT_F_LENS;
+> +
+> +	rval = v4l2_async_register_subdev(&dw9768_dev->sd);
+> +	if (rval < 0)
+> +		goto err_cleanup;
+> +
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_enable(dev);
+> +	pm_runtime_idle(dev);
+> +
+> +	return 0;
+> +
+> +err_cleanup:
+> +	mutex_destroy(&dw9768_dev->power_lock);
+> +	dw9768_subdev_cleanup(dw9768_dev);
+> +	dev_err(dev, "Probe failed: %d\n", rval);
+> +	return rval;
+> +}
+> +
+> +static int dw9768_remove(struct i2c_client *client)
+> +{
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct dw9768_device *dw9768_dev = sd_to_dw9768_vcm(sd);
+> +
+> +	pm_runtime_disable(&client->dev);
+> +	dw9768_subdev_cleanup(dw9768_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * This function sets the vcm position, so it consumes least current
+> + * The lens position is gradually moved in units of DW9768_CTRL_STEPS,
+> + * to make the movements smoothly.
+> + */
+> +static int __maybe_unused dw9768_vcm_suspend(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct dw9768_device *dw9768_dev = sd_to_dw9768_vcm(sd);
+> +
+> +	if (!dw9768_dev->power_count)
+> +		return 0;
+> +
+> +	return dw9768_power_off(dw9768_dev, false);
+> +}
+> +
+> +/*
+> + * This function sets the vcm position to the value set by the user
+> + * through v4l2_ctrl_ops s_ctrl handler
+> + * The lens position is gradually moved in units of DW9768_CTRL_STEPS,
+> + * to make the movements smoothly.
+> + */
+> +static int __maybe_unused dw9768_vcm_resume(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct dw9768_device *dw9768_dev = sd_to_dw9768_vcm(sd);
+> +
+> +	if (!dw9768_dev->power_count)
+> +		return 0;
+> +
+> +	return dw9768_power_on(dw9768_dev, true);
+> +}
+> +
+> +static const struct i2c_device_id dw9768_id_table[] = {
+> +	{ DW9768_NAME, 0 },
+> +	{ { 0 } }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, dw9768_id_table);
+> +
+> +static const struct of_device_id dw9768_of_table[] = {
+> +	{ .compatible = "dongwoon,dw9768" },
+> +	{ { 0 } }
+> +};
+> +MODULE_DEVICE_TABLE(of, dw9768_of_table);
+> +
+> +static const struct dev_pm_ops dw9768_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(dw9768_vcm_suspend, dw9768_vcm_resume)
+> +	SET_RUNTIME_PM_OPS(dw9768_vcm_suspend, dw9768_vcm_resume, NULL)
+> +};
+> +
+> +static struct i2c_driver dw9768_i2c_driver = {
+> +	.driver = {
+> +		.name = DW9768_NAME,
+> +		.pm = &dw9768_pm_ops,
+> +		.of_match_table = dw9768_of_table,
 > +	},
-> +	.probe		=3D arm_smc_mbox_probe,
-> +	.remove		=3D arm_smc_mbox_remove,
+> +	.probe_new  = dw9768_probe,
+> +	.remove = dw9768_remove,
+> +	.id_table = dw9768_id_table,
 > +};
-> +module_platform_driver(arm_smc_mbox_driver);
 > +
-> +MODULE_AUTHOR("Andre Przywara <andre.przywara@arm.com>");
-> +MODULE_DESCRIPTION("Generic ARM smc mailbox driver");
+> +module_i2c_driver(dw9768_i2c_driver);
+> +
+> +MODULE_AUTHOR("Dongchun Zhu <dongchun.zhu@mediatek.com>");
+> +MODULE_DESCRIPTION("DW9768 VCM driver");
 > +MODULE_LICENSE("GPL v2");
-
-Thanks,
-Peng.
-
-> --
-> 2.16.4
+> 
