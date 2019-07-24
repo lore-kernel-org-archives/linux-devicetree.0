@@ -1,38 +1,48 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: aspeed: Remove mention of deprecated
- compatibles
-Date: Wed, 24 Jul 2019 07:40:00 -0600
-Message-ID: <CAL_JsqLEb3QSLAhm9BsFa+A_Jmgr4gDtV2nUCKkgwwQaMLBk9g@mail.gmail.com>
-References: <20190724081313.12934-1-andrew@aj.id.au>
- <20190724081313.12934-4-andrew@aj.id.au>
+From: Marek Vasut <marex@denx.de>
+Subject: [PATCH 1/3] dt-bindings: net: dsa: ksz: document Microchip KSZ87xx family switches
+Date: Wed, 24 Jul 2019 15:40:46 +0200
+Message-ID: <20190724134048.31029-2-marex@denx.de>
+References: <20190724134048.31029-1-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190724081313.12934-4-andrew@aj.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Joel Stanley <joel@jms.id.au>, Lee Jones <lee.jones@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190724134048.31029-1-marex@denx.de>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: Marek Vasut <marex@denx.de>, Andrew Lunn <andrew@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Tristram Ha <Tristram.Ha@microchip.com>, Vivien Didelot <vivien.didelot@gmail.com>, Woojung Huh <woojung.huh@microchip.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 2:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> Guide readers away from using the aspeed,g[45].* compatible patterns.
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  Documentation/devicetree/bindings/mfd/aspeed-scu.txt         | 2 --
->  Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt   | 2 --
->  .../devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml  | 5 +----
->  .../devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml  | 4 +---
->  4 files changed, 2 insertions(+), 11 deletions(-)
+Document Microchip KSZ87xx family switches. These include
+KSZ8765 - 5 port switch
+KSZ8794 - 4 port switch
+KSZ8795 - 5 port switch
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Tristram Ha <Tristram.Ha@microchip.com>
+Cc: Vivien Didelot <vivien.didelot@gmail.com>
+Cc: Woojung Huh <woojung.huh@microchip.com>
+Cc: devicetree@vger.kernel.org
+---
+ Documentation/devicetree/bindings/net/dsa/ksz.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+index 4ac21cef370e..5e8429b6f9ca 100644
+--- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
++++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+@@ -5,6 +5,9 @@ Required properties:
+ 
+ - compatible: For external switch chips, compatible string must be exactly one
+   of the following:
++  - "microchip,ksz8765"
++  - "microchip,ksz8794"
++  - "microchip,ksz8795"
+   - "microchip,ksz9477"
+   - "microchip,ksz9897"
+   - "microchip,ksz9896"
+-- 
+2.20.1
