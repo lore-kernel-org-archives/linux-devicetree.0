@@ -1,58 +1,98 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: Limit WiFi TX power on rk3288-veyron-jerry
-Date: Wed, 24 Jul 2019 12:56:08 -0700
-Message-ID: <CAD=FV=Wk2meLxa6AszjFs=Mfp_wML_7OMsn81FLA5tcdEx=1kg@mail.gmail.com>
-References: <20190723225258.93058-1-mka@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: panel: Add parallel RGB mode for
+ Ilitek ILI9341 panels
+Date: Wed, 24 Jul 2019 13:57:44 -0600
+Message-ID: <20190724195744.GA22947@bogus>
+References: <20190304125033.28841-1-josef@lusticky.cz>
+ <20190708145618.26031-1-josef@lusticky.cz>
+ <20190708145618.26031-2-josef@lusticky.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190723225258.93058-1-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190708145618.26031-2-josef@lusticky.cz>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Josef Lusticky <josef@lusticky.cz>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, thierry.reding@gmail.com, sam@ravnborg.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, Jul 23, 2019 at 3:53 PM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> The downstream Chrome OS 3.14 kernel for jerry limits WiFi TX power
-> through calibration data in the device tree [1]. Add a DT node for
-> the WiFi chip and use the downstream calibration data.
->
-> Not all calibration data entries have the length specified in the
-> binding (Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt),
-> however this is the data used by the downstream ('official') kernel
-> and the binding mentions that "the length can vary between hw
-> versions".
->
-> [1] https://crrev.com/c/271237
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  arch/arm/boot/dts/rk3288-veyron-jerry.dts | 147 ++++++++++++++++++++++
->  1 file changed, 147 insertions(+)
-
-I agree that this matches what's downstream and seems right.
-
-As you pointed out the bindings are a bit on the sketchy side,
-claiming a certain length in one place but then saying that the length
-depends on the HW version in another place.  I'll also point out that
-the bindings are inconsistent about the name that should be used.
-AKA:
-
-marvell,caldata-txpwrlimit-2g
- -vs-
-marvell,caldata_00_txpwrlimit_2g_cfg_set
-
-...but I think the answer is that it doesn't matter at all from a
-practical point of view.  The code seems to just find everything that
-starts with "marvell,caldata" and send the binary blindly to the WiFi
-card.  Presumably there is enough of a header in the opaque binary
-data that the card can make sense of what it's being sent.
-
-
-So it seems like this is the best we can do given the current state of
-the world.
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+T24gTW9uLCBKdWwgMDgsIDIwMTkgYXQgMDQ6NTY6MTdQTSArMDIwMCwgSm9zZWYgTHVzdGlja3kg
+d3JvdGU6Cj4gSUxJOTM0MSBzdXBwb3J0cyBib3RoIFNQSSBpbnB1dCBtb2RlIGFuZCBwYXJhbGxl
+bCBSR0IgaW5wdXQgbW9kZS4KPiBUaGlzIGNvbW1pdCBhZGRzIHBhcmFsbGVsIFJHQiBpbnB1dCBt
+b2RlIGJpbmRpbmdzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEpvc2VmIEx1c3RpY2t5IDxqb3NlZkBs
+dXN0aWNreS5jej4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEu
+dHh0ICAgICAgIHwgNjcgKysrKysrKysrKysrKysrKy0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgNTYg
+aW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lsaXRlayxpbGk5MzQxLnR4dCBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lsaXRlayxpbGk5MzQxLnR4
+dAo+IGluZGV4IDE2OWIzMmU0ZWU0ZS4uNjI5ZjM4YTFkMGNkIDEwMDY0NAo+IC0tLSBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lsaXRlayxpbGk5MzQxLnR4dAo+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lsaXRlayxp
+bGk5MzQxLnR4dAo+IEBAIC0xLDI3ICsxLDcyIEBACj4gIElsaXRlayBJTEk5MzQxIGRpc3BsYXkg
+cGFuZWxzCj4gIAo+IC1UaGlzIGJpbmRpbmcgaXMgZm9yIGRpc3BsYXkgcGFuZWxzIHVzaW5nIGFu
+IElsaXRlayBJTEk5MzQxIGNvbnRyb2xsZXIgaW4gU1BJCj4gLW1vZGUuCj4gK1RoaXMgYmluZGlu
+ZyBpcyBmb3IgZGlzcGxheSBwYW5lbHMgdXNpbmcgYW4gSWxpdGVrIElMSTkzNDEgY29udHJvbGxl
+ci4KPiArVGhlIGRpc3BsYXkgcGFuZWxzIGFyZSBzdXBwb3J0ZWQgaW4gdGhlIGZvbGxvd2luZyBn
+cmFwaGljYWwgaW5wdXQgbW9kZXM6Cj4gKy0gU1BJIGlucHV0IG1vZGUKPiArCU1JUEktREJJIFR5
+cGUgMyBPcHRpb24gMSBvciBPcHRpb24gMyBpcyB1c2VkIHRvIHRyYW5zZmVyCj4gKwljb21tYW5k
+cyBhbmQgZ3JhcGhpY2FsIGRhdGEKPiArLSBwYXJhbGxlbCBSR0IgaW5wdXQgbW9kZQo+ICsJTUlQ
+SS1EQkkgVHlwZSAzIE9wdGlvbiAxIG9yIE9wdGlvbiAzIGlzIHVzZWQgZm9yIGNvbW1hbmRzCj4g
+KwlNSVBJLURQSSAxOC1iaXQgcGFyYWxsZWwgUkdCIGNvbm5lY3Rpb24gaXMgdXNlZCB0byB0cmFu
+c2Zlcgo+ICsJZ3JhcGhpY2FsIGRhdGEKPiAgCj4gLVJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gLS0g
+Y29tcGF0aWJsZToJImFkYWZydWl0LHl4MjQwcXYyOSIsICJpbGl0ZWssaWxpOTM0MSIKPiAtLSBk
+Yy1ncGlvczoJRC9DIHBpbgo+IC0tIHJlc2V0LWdwaW9zOglSZXNldCBwaW4KPiArCj4gK1NQSSBp
+bnB1dCBtb2RlOgo+ICAKPiAgVGhlIG5vZGUgZm9yIHRoaXMgZHJpdmVyIG11c3QgYmUgYSBjaGls
+ZCBub2RlIG9mIGEgU1BJIGNvbnRyb2xsZXIsIGhlbmNlCj4gLWFsbCBtYW5kYXRvcnkgcHJvcGVy
+dGllcyBkZXNjcmliZWQgaW4gLi4vc3BpL3NwaS1idXMudHh0IG11c3QgYmUgc3BlY2lmaWVkLgo+
+ICthbGwgbWFuZGF0b3J5IHByb3BlcnRpZXMgZGVzY3JpYmVkIGluIHNwaS9zcGktYnVzLnR4dCBt
+dXN0IGJlIHNwZWNpZmllZC4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXMgaW4gU1BJIGlucHV0
+IG1vZGU6Cj4gKy0gY29tcGF0aWJsZTogICAiYWRhZnJ1aXQseXgyNDBxdjI5IiwgImlsaXRlayxp
+bGk5MzQxIgo+ICstIGJhY2tsaWdodDogICAgcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmlj
+ZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKCldoeSBpcyBiYWNrbGlnaHQgbm93IHJlcXVpcmVkPwoK
+PiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXMgaW4gU1BJIGlucHV0IG1vZGU6Cj4gKy0gcm90YXRp
+b246ICAgICBwYW5lbCByb3RhdGlvbiBpbiBkZWdyZWVzIGNvdW50ZXIgY2xvY2t3aXNlICgwLDkw
+LDE4MCwyNzApCj4gKy0gZGMtZ3Bpb3M6ICAgICBHUElPIHNwZWMgZm9yIHRoZSBEL0MgcGluLCBz
+ZWUgZ3Bpby9ncGlvLnR4dAo+ICstIHJlc2V0LWdwaW9zOiAgR1BJTyBzcGVjIGZvciB0aGUgcmVz
+ZXQgcGluLCBzZWUgZ3Bpby9ncGlvLnR4dAo+ICsKPiArCj4gK1BhcmFsbGVsIFJHQiBpbnB1dCBt
+b2RlOgo+ICsKPiArVGhlIG5vZGUgZm9yIHRoaXMgZHJpdmVyIG11c3QgYmUgYSBjaGlsZCBub2Rl
+IG9mIGEgU1BJIGNvbnRyb2xsZXIsIGhlbmNlCj4gK2FsbCBtYW5kYXRvcnkgcHJvcGVydGllcyBk
+ZXNjcmliZWQgaW4gc3BpL3NwaS1idXMudHh0IG11c3QgYmUgc3BlY2lmaWVkLgo+ICsKPiArUmVx
+dWlyZWQgcHJvcGVydGllcyBpbiBwYXJhbGxlbCBSR0IgaW5wdXQgbW9kZToKPiArLSBjb21wYXRp
+YmxlOiAgICJkaXNwbGF5dGVjaCxkdDAyNGN0ZnQiLCAiaWxpdGVrLGlsaTkzNDEiCj4gKy0gYmFj
+a2xpZ2h0OiAgICBwaGFuZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRo
+ZSBwYW5lbAo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGllcyBpbiBwYXJhbGxlbCBSR0IgaW5wdXQg
+bW9kZToKPiArLSBkYy1ncGlvczogICAgIEdQSU8gc3BlYyBmb3IgdGhlIEQvQyBwaW4sIHNlZSBn
+cGlvL2dwaW8udHh0Cj4gKy0gcmVzZXQtZ3Bpb3M6ICBHUElPIHNwZWMgZm9yIHRoZSByZXNldCBw
+aW4sIHNlZSBncGlvL2dwaW8udHh0Cj4gIAo+IC1PcHRpb25hbCBwcm9wZXJ0aWVzOgo+IC0tIHJv
+dGF0aW9uOglwYW5lbCByb3RhdGlvbiBpbiBkZWdyZWVzIGNvdW50ZXIgY2xvY2t3aXNlICgwLDkw
+LDE4MCwyNzApCj4gLS0gYmFja2xpZ2h0OglwaGFuZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2aWNl
+IGF0dGFjaGVkIHRvIHRoZSBwYW5lbAo+ICtJbiBwYXJhbGxlbCBSR0IgaW5wdXQgbW9kZSwKPiAr
+dGhlIGRldmljZSBub2RlIGNhbiBjb250YWluIG9uZSAncG9ydCcgY2hpbGQgbm9kZSB3aXRoIG9u
+ZSBjaGlsZAo+ICsnZW5kcG9pbnQnIG5vZGUsIGFjY29yZGluZyB0byB0aGUgYmluZGluZ3MgZGVm
+aW5lZCBpbgo+ICttZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dC4gVGhpcyBub2RlIHNob3VsZCBk
+ZXNjcmliZSBwYW5lbCdzIHZpZGVvIGJ1cy4KPiAgCj4gLUV4YW1wbGU6Cj4gKwo+ICtFeGFtcGxl
+IGluIFNQSSBpbnB1dCBtb2RlOgo+ICAJZGlzcGxheUAwewo+ICAJCWNvbXBhdGlibGUgPSAiYWRh
+ZnJ1aXQseXgyNDBxdjI5IiwgImlsaXRlayxpbGk5MzQxIjsKPiAgCQlyZWcgPSA8MD47Cj4gIAkJ
+c3BpLW1heC1mcmVxdWVuY3kgPSA8MzIwMDAwMDA+Owo+ICAJCWRjLWdwaW9zID0gPCZncGlvMCA5
+IEdQSU9fQUNUSVZFX0hJR0g+Owo+ICAJCXJlc2V0LWdwaW9zID0gPCZncGlvMCA4IEdQSU9fQUNU
+SVZFX0hJR0g+Owo+ICsJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKPiAgCQlyb3RhdGlvbiA9
+IDwyNzA+Owo+ICsJfTsKPiArCj4gK0V4YW1wbGUgaW4gcGFyYWxsZWwgUkdCIGlucHV0IG1vZGU6
+Cj4gKwlwYW5lbEB7Cj4gKwkJY29tcGF0aWJsZSA9ICJkaXNwbGF5dGVjaCxkdDAyNGN0ZnQiLCAi
+aWxpdGVrLGlsaTkzNDEiOwo+ICsJCXJlZyA9IDwwPjsKPiArCQlzcGktbWF4LWZyZXF1ZW5jeSA9
+IDwzMjAwMDAwMD47Cj4gKwkJZGMtZ3Bpb3MgPSA8JmdwaW8wIDkgR1BJT19BQ1RJVkVfSElHSD47
+Cj4gKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwaW8wIDggR1BJT19BQ1RJVkVfSElHSD47Cj4gIAkJYmFj
+a2xpZ2h0ID0gPCZiYWNrbGlnaHQ+Owo+ICsJCXBvcnQgewo+ICsJCQlwYW5lbF9pbjogZW5kcG9p
+bnQgewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkaXNwbGF5X291dD47Cj4gKwkJCX07Cj4g
+KwkJfTsKPiAgCX07Cj4gLS0gCj4gMi4yMC4xCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbA==
