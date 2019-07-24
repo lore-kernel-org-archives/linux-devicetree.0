@@ -1,243 +1,214 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum
- rate for PLL_MIPI
-Date: Wed, 24 Jul 2019 11:05:13 +0200
-Message-ID: <20190724090513.vqnlmya3nqkl6pmu@flea>
-References: <20190625144930.5hegt6bkzqzykjid@flea>
- <CAMty3ZCmj0Rz7MMhLqihsvLQi+1CHf0fAoJQ4QN65xB-bwxaJw@mail.gmail.com>
- <20190703114933.u3x4ej3v7ocewvif@flea>
- <CAOf5uw=ZEvMV1hFQE986rNG_ctpReGbjbZzv0m=OzKPdBh57uQ@mail.gmail.com>
- <20190711100100.cty3s6rs3w27low6@flea>
- <CAOf5uw=3fiMuhcj3kDtCaGNTsxHKRrYb79MXZ+yUZtmf0jU10A@mail.gmail.com>
- <20190720065830.zn3txpyduakywcva@flea>
- <CAMty3ZDE1xiNgHVLihH378dY5szzkr14V-fwLZdvPs12tY+G1A@mail.gmail.com>
- <20190720093202.6fn6xmhvsgawscnu@flea>
- <CAMty3ZDpOA1mD77t3RB6hEG7o3+ws8y64m1DU8=3HdZ4zy4AUw@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH V6 16/21] soc/tegra: pmc: Add pmc wake support for
+ tegra210
+Date: Wed, 24 Jul 2019 12:31:59 +0300
+Message-ID: <9848eff6-dc12-850c-25cb-a85a464c0020@gmail.com>
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-17-git-send-email-skomatineni@nvidia.com>
+ <0b3d08ea-4633-8a54-ba66-c3f3146a1ece@gmail.com>
+ <ca32c2d8-d752-3ecd-3a3f-232366730c7b@gmail.com>
+ <b575ca93-9f34-b07a-1234-ef1ea2a6ddee@gmail.com>
+ <71a88a9c-a542-557a-0eaa-3c90112dee0e@nvidia.com>
+ <70ad28cb-c268-cbbe-36f5-39df26617d8e@gmail.com>
+ <629826f9-c453-386a-9e88-bd64d23b8eab@nvidia.com>
+ <71c8cab1-bf72-c073-be30-4263c6b7c871@gmail.com>
+ <97096b6c-f2f5-b82a-b172-802f4a06d1af@nvidia.com>
+ <a58de350-f6ce-9308-1ae0-885e732b575d@gmail.com>
+ <a545cc66-45cd-504a-4390-8274b8b79540@gmail.com>
+ <6fefa6cc-f762-d473-a0ce-248d352a9a53@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ae2iemjxaspus3zz"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVF64DUQKGQEVTG76YI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZDpOA1mD77t3RB6hEG7o3+ws8y64m1DU8=3HdZ4zy4AUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Michael Nazzareno Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amarula <linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6fefa6cc-f762-d473-a0ce-248d352a9a53@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+24.07.2019 2:39, Sowjanya Komatineni пишет:
+> 
+> On 7/23/19 7:27 AM, Dmitry Osipenko wrote:
+>> 23.07.2019 6:43, Dmitry Osipenko пишет:
+>>> 23.07.2019 6:31, Sowjanya Komatineni пишет:
+>>>> On 7/22/19 8:25 PM, Dmitry Osipenko wrote:
+>>>>> 23.07.2019 6:09, Sowjanya Komatineni пишет:
+>>>>>> On 7/22/19 8:03 PM, Dmitry Osipenko wrote:
+>>>>>>> 23.07.2019 4:52, Sowjanya Komatineni пишет:
+>>>>>>>> On 7/22/19 6:41 PM, Dmitry Osipenko wrote:
+>>>>>>>>> 23.07.2019 4:08, Dmitry Osipenko пишет:
+>>>>>>>>>> 23.07.2019 3:58, Dmitry Osipenko пишет:
+>>>>>>>>>>> 21.07.2019 22:40, Sowjanya Komatineni пишет:
+>>>>>>>>>>>> This patch implements PMC wakeup sequence for Tegra210 and
+>>>>>>>>>>>> defines
+>>>>>>>>>>>> common used RTC alarm wake event.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>>>>>> ---
+>>>>>>>>>>>>     drivers/soc/tegra/pmc.c | 111
+>>>>>>>>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>>>>>>>>>     1 file changed, 111 insertions(+)
+>>>>>>>>>>>>
+>>>>>>>>>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>>>>>>>>>>> index 91c84d0e66ae..c556f38874e1 100644
+>>>>>>>>>>>> --- a/drivers/soc/tegra/pmc.c
+>>>>>>>>>>>> +++ b/drivers/soc/tegra/pmc.c
+>>>>>>>>>>>> @@ -57,6 +57,12 @@
+>>>>>>>>>>>>     #define  PMC_CNTRL_SYSCLK_OE        BIT(11) /* system clock
+>>>>>>>>>>>> enable */
+>>>>>>>>>>>>     #define  PMC_CNTRL_SYSCLK_POLARITY    BIT(10) /* sys clk
+>>>>>>>>>>>> polarity */
+>>>>>>>>>>>>     #define  PMC_CNTRL_MAIN_RST        BIT(4)
+>>>>>>>>>>>> +#define  PMC_CNTRL_LATCH_WAKEUPS    BIT(5)
+>>>>>>>>>> Please follow the TRM's bits naming.
+>>>>>>>>>>
+>>>>>>>>>> PMC_CNTRL_LATCHWAKE_EN
+>>>>>>>>>>
+>>>>>>>>>>>> +#define PMC_WAKE_MASK            0x0c
+>>>>>>>>>>>> +#define PMC_WAKE_LEVEL            0x10
+>>>>>>>>>>>> +#define PMC_WAKE_STATUS            0x14
+>>>>>>>>>>>> +#define PMC_SW_WAKE_STATUS        0x18
+>>>>>>>>>>>>       #define DPD_SAMPLE            0x020
+>>>>>>>>>>>>     #define  DPD_SAMPLE_ENABLE        BIT(0)
+>>>>>>>>>>>> @@ -87,6 +93,11 @@
+>>>>>>>>>>>>       #define PMC_SCRATCH41            0x140
+>>>>>>>>>>>>     +#define PMC_WAKE2_MASK            0x160
+>>>>>>>>>>>> +#define PMC_WAKE2_LEVEL            0x164
+>>>>>>>>>>>> +#define PMC_WAKE2_STATUS        0x168
+>>>>>>>>>>>> +#define PMC_SW_WAKE2_STATUS        0x16c
+>>>>>>>>>>>> +
+>>>>>>>>>>>>     #define PMC_SENSOR_CTRL            0x1b0
+>>>>>>>>>>>>     #define  PMC_SENSOR_CTRL_SCRATCH_WRITE    BIT(2)
+>>>>>>>>>>>>     #define  PMC_SENSOR_CTRL_ENABLE_RST    BIT(1)
+>>>>>>>>>>>> @@ -1922,6 +1933,55 @@ static const struct irq_domain_ops
+>>>>>>>>>>>> tegra_pmc_irq_domain_ops = {
+>>>>>>>>>>>>         .alloc = tegra_pmc_irq_alloc,
+>>>>>>>>>>>>     };
+>>>>>>>>>>>>     +static int tegra210_pmc_irq_set_wake(struct irq_data
+>>>>>>>>>>>> *data,
+>>>>>>>>>>>> unsigned int on)
+>>>>>>>>>>>> +{
+>>>>>>>>>>>> +    struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>>>>>>>>>>>> +    unsigned int offset, bit;
+>>>>>>>>>>>> +    u32 value;
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    if (data->hwirq == ULONG_MAX)
+>>>>>>>>>>>> +        return 0;
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    offset = data->hwirq / 32;
+>>>>>>>>>>>> +    bit = data->hwirq % 32;
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    /*
+>>>>>>>>>>>> +     * Latch wakeups to SW_WAKE_STATUS register to capture
+>>>>>>>>>>>> events
+>>>>>>>>>>>> +     * that would not make it into wakeup event register
+>>>>>>>>>>>> during
+>>>>>>>>>>>> LP0 exit.
+>>>>>>>>>>>> +     */
+>>>>>>>>>>>> +    value = tegra_pmc_readl(pmc, PMC_CNTRL);
+>>>>>>>>>>>> +    value |= PMC_CNTRL_LATCH_WAKEUPS;
+>>>>>>>>>>>> +    tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>>>>>>>>>>>> +    udelay(120);
+>>>>>>>>>>> Why it takes so much time to latch the values? Shouldn't some
+>>>>>>>>>>> status-bit
+>>>>>>>>>>> be polled for the completion of latching?
+>>>>>>>>>>>
+>>>>>>>>>>> Is this register-write really getting buffered in the PMC?
+>>>>>>>>>>>
+>>>>>>>>>>>> +    value &= ~PMC_CNTRL_LATCH_WAKEUPS;
+>>>>>>>>>>>> +    tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>>>>>>>>>>>> +    udelay(120);
+>>>>>>>>>>> 120 usecs to remove latching, really?
+>>>>>>>>>>>
+>>>>>>>>>>>> +    tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
+>>>>>>>>>>>> +    tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
+>>>>>>>>>>>> +    tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    /* enable PMC wake */
+>>>>>>>>>>>> +    if (data->hwirq >= 32)
+>>>>>>>>>>>> +        offset = PMC_WAKE2_MASK;
+>>>>>>>>>>>> +    else
+>>>>>>>>>>>> +        offset = PMC_WAKE_MASK;
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    value = tegra_pmc_readl(pmc, offset);
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    if (on)
+>>>>>>>>>>>> +        value |= 1 << bit;
+>>>>>>>>>>>> +    else
+>>>>>>>>>>>> +        value &= ~(1 << bit);
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    tegra_pmc_writel(pmc, value, offset);
+>>>>>>>>>>> Why the latching is done *before* writing into the WAKE
+>>>>>>>>>>> registers?
+>>>>>>>>>>> What
+>>>>>>>>>>> it is latching then?
+>>>>>>>>>> I'm looking at the TRM doc and it says that latching should be
+>>>>>>>>>> done
+>>>>>>>>>> *after* writing to the WAKE_MASK / LEVEL registers.
+>>>>>>>>>>
+>>>>>>>>>> Secondly it says that it's enough to do:
+>>>>>>>>>>
+>>>>>>>>>> value = tegra_pmc_readl(pmc, PMC_CNTRL);
+>>>>>>>>>> value |= PMC_CNTRL_LATCH_WAKEUPS;
+>>>>>>>>>> tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>>>>>>>>>>
+>>>>>>>>>> in order to latch. There is no need for the delay and to
+>>>>>>>>>> remove the
+>>>>>>>>>> "LATCHWAKE_EN" bit, it should be a oneshot action.
+>>>>>>>>> Although, no. TRM says "stops latching on transition from 1
+>>>>>>>>> to 0 (sequence - set to 1,set to 0)", so it's not a oneshot
+>>>>>>>>> action.
+>>>>>>>>>
+>>>>>>>>> Have you tested this code at all? I'm wondering how it happens to
+>>>>>>>>> work
+>>>>>>>>> without a proper latching.
+>>>>>>>> Yes, ofcourse its tested and this sequence to do transition is
+>>>>>>>> recommendation from Tegra designer.
+>>>>>>>> Will check if TRM doesn't have update properly or will re-confirm
+>>>>>>>> internally on delay time...
+>>>>>>>>
+>>>>>>>> On any of the wake event PMC wakeup happens and WAKE_STATUS
+>>>>>>>> register
+>>>>>>>> will have bits set for all events that triggered wake.
+>>>>>>>> After wakeup PMC doesn't update SW_WAKE_STATUS register as per PMC
+>>>>>>>> design.
+>>>>>>>> SW latch register added in design helps to provide a way to capture
+>>>>>>>> those events that happen right during wakeup time and didnt make
+>>>>>>>> it to
+>>>>>>>> SW_WAKE_STATUS register.
+>>>>>>>> So before next suspend entry, latching all prior wake events
+>>>>>>>> into SW
+>>>>>>>> WAKE_STATUS and then clearing them.
+>>>>>>> I'm now wondering whether the latching cold be turned ON permanently
+>>>>>>> during of the PMC's probe, for simplicity.
+>>>>>> latching should be done on suspend-resume cycle as wake events gets
+>>>>>> generates on every suspend-resume cycle.
+>>>>> You're saying that PMC "doesn't update SW_WAKE_STATUS" after wake-up,
+>>>>> then I don't quite understand what's the point of disabling the
+>>>>> latching
+>>>>> at all.
+>>>> When latch wake enable is set, events are latched and during 1 to 0
+>>>> transition latching is disabled.
+>>>>
+>>>> This is to avoid sw_wake_status and wake_status showing diff events.
+>>> Okay.
+>>>
+>>>> Currently driver is not relying on SW_WAKE_STATUS but its good to latch
+>>>> and clear so even at some point for some reason when SW_WAKE_STATUS is
+>>>> used, this wlil not cause mismatch with wake_status.
+>>> Then the latching need to be enabled on suspend and disabled early on
+>>> resume to get a proper WAKE status.
+>> Actually, it will be better to simply not implement the latching until
+>> it will become really needed. In general you shouldn't add into the
+>> patchset anything that is unused.
+> 
+> OK, will remove latch_wake for now.
+> 
+> Will send next version once I get all the review feedback ..
+> 
 
---ae2iemjxaspus3zz
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, Jul 22, 2019 at 03:51:04PM +0530, Jagan Teki wrote:
-> Hi Maxime,
->
-> On Sat, Jul 20, 2019 at 3:02 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Sat, Jul 20, 2019 at 12:46:27PM +0530, Jagan Teki wrote:
-> > > On Sat, Jul 20, 2019 at 12:28 PM Maxime Ripard
-> > > <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > >
-> > > > On Thu, Jul 11, 2019 at 07:43:16PM +0200, Michael Nazzareno Trimarchi wrote:
-> > > > > > > tcon-pixel clock is the rate that you want to achive on display side
-> > > > > > > and if you have 4 lanes 32bit or lanes and different bit number that
-> > > > > > > you need to have a clock that is able to put outside bits and speed
-> > > > > > > equal to pixel-clock * bits / lanes. so If you want a pixel-clock of
-> > > > > > > 40 mhz and you have 32bits and 4 lanes you need to have a clock of
-> > > > > > > 40 * 32 / 4 in no-burst mode. I think that this is done but most of
-> > > > > > > the display.
-> > > > > >
-> > > > > > So this is what the issue is then?
-> > > > > >
-> > > > > > This one does make sense, and you should just change the rate in the
-> > > > > > call to clk_set_rate in sun4i_tcon0_mode_set_cpu.
-> > > > > >
-> > > > > > I'm still wondering why that hasn't been brought up in either the
-> > > > > > discussion or the commit log before though.
-> > > > > >
-> > > > > Something like this?
-> > > > >
-> > > > > drivers/gpu/drm/sun4i/sun4i_tcon.c     | 20 +++++++++++---------
-> > > > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  2 --
-> > > > >  2 files changed, 11 insertions(+), 11 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > > b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > > index 64c43ee6bd92..42560d5c327c 100644
-> > > > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > > @@ -263,10 +263,11 @@ static int sun4i_tcon_get_clk_delay(const struct
-> > > > > drm_display_mode *mode,
-> > > > >  }
-> > > > >
-> > > > >  static void sun4i_tcon0_mode_set_common(struct sun4i_tcon *tcon,
-> > > > > -                                       const struct drm_display_mode *mode)
-> > > > > +                                       const struct drm_display_mode *mode,
-> > > > > +                                       u32 tcon_mul)
-> > > > >  {
-> > > > >         /* Configure the dot clock */
-> > > > > -       clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
-> > > > > +       clk_set_rate(tcon->dclk, mode->crtc_clock * tcon_mul * 1000);
-> > > > >
-> > > > >         /* Set the resolution */
-> > > > >         regmap_write(tcon->regs, SUN4I_TCON0_BASIC0_REG,
-> > > > > @@ -335,12 +336,13 @@ static void sun4i_tcon0_mode_set_cpu(struct
-> > > > > sun4i_tcon *tcon,
-> > > > >         u8 bpp = mipi_dsi_pixel_format_to_bpp(device->format);
-> > > > >         u8 lanes = device->lanes;
-> > > > >         u32 block_space, start_delay;
-> > > > > -       u32 tcon_div;
-> > > > > +       u32 tcon_div, tcon_mul;
-> > > > >
-> > > > > -       tcon->dclk_min_div = SUN6I_DSI_TCON_DIV;
-> > > > > -       tcon->dclk_max_div = SUN6I_DSI_TCON_DIV;
-> > > > > +       tcon->dclk_min_div = 4;
-> > > > > +       tcon->dclk_max_div = 127;
-> > > > >
-> > > > > -       sun4i_tcon0_mode_set_common(tcon, mode);
-> > > > > +       tcon_mul = bpp / lanes;
-> > > > > +       sun4i_tcon0_mode_set_common(tcon, mode, tcon_mul);
-> > > > >
-> > > > >         /* Set dithering if needed */
-> > > > >         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
-> > > > > @@ -366,7 +368,7 @@ static void sun4i_tcon0_mode_set_cpu(struct
-> > > > > sun4i_tcon *tcon,
-> > > > >          */
-> > > > >         regmap_read(tcon->regs, SUN4I_TCON0_DCLK_REG, &tcon_div);
-> > > > >         tcon_div &= GENMASK(6, 0);
-> > > > > -       block_space = mode->htotal * bpp / (tcon_div * lanes);
-> > > > > +       block_space = mode->htotal * tcon_div * tcon_mul;
-> > > > >         block_space -= mode->hdisplay + 40;
-> > > > >
-> > > > >         regmap_write(tcon->regs, SUN4I_TCON0_CPU_TRI0_REG,
-> > > > > @@ -408,7 +410,7 @@ static void sun4i_tcon0_mode_set_lvds(struct
-> > > > > sun4i_tcon *tcon,
-> > > > >
-> > > > >         tcon->dclk_min_div = 7;
-> > > > >         tcon->dclk_max_div = 7;
-> > > > > -       sun4i_tcon0_mode_set_common(tcon, mode);
-> > > > > +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
-> > > > >
-> > > > >         /* Set dithering if needed */
-> > > > >         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
-> > > > > @@ -487,7 +489,7 @@ static void sun4i_tcon0_mode_set_rgb(struct
-> > > > > sun4i_tcon *tcon,
-> > > > >
-> > > > >         tcon->dclk_min_div = 6;
-> > > > >         tcon->dclk_max_div = 127;
-> > > > > -       sun4i_tcon0_mode_set_common(tcon, mode);
-> > > > > +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
-> > > > >
-> > > > >         /* Set dithering if needed */
-> > > > >         sun4i_tcon0_mode_set_dithering(tcon, connector);
-> > > > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > > > b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > > > index 5c3ad5be0690..a07090579f84 100644
-> > > > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-> > > > > @@ -13,8 +13,6 @@
-> > > > >  #include <drm/drm_encoder.h>
-> > > > >  #include <drm/drm_mipi_dsi.h>
-> > > > >
-> > > > > -#define SUN6I_DSI_TCON_DIV     4
-> > > > > -
-> > > > >  struct sun6i_dsi {
-> > > > >         struct drm_connector    connector;
-> > > > >         struct drm_encoder      encoder;
-> > > >
-> > > > I had more something like this in mind:
-> > > > http://code.bulix.org/nlp5a4-803511
-> > >
-> > > Worth to look at it. was it working on your panel? meanwhile I will check it.
-> >
-> > I haven't tested it.
-> >
-> > > We have updated with below change [1], seems working on but is
-> > > actually checking the each divider as before start with 4... till 127.
-> > >
-> > > This new approach, is start looking the best divider from 4.. based on
-> > > the idea vs rounded it will ended up best divider like [2]
-> >
-> > But why?
-> >
-> > I mean, it's not like it's the first time I'm asking this...
-> >
-> > If the issue is what Micheal described, then the divider has nothing
-> > to do with it. We've had that discussion over and over again.
->
-> This is what Michael is mentioned in above mail "tcon-pixel clock is
-> the rate that you want to achive on display side and if you have 4
-> lanes 32bit or lanes and different bit number that you need to have
-> a clock that is able to put outside bits and speed equal to
-> pixel-clock * bits / lanes. so If you want a pixel-clock of 40 mhz
-> and you have 32bits and 4 lanes you need to have a clock of 40 * 32
-> / 4 in no-burst mode. "
-
-Yeah, so we need to change the clock rate.
-
-> He is trying to manage the bpp/lanes into dclk_mul (in last mail)
-> and it can multiply with pixel clock which is rate argument in
-> sun4i_dclk_round_rate.
->
-> The solution I have mentioned in dclk_min, max is bpp/lanes also
-> multiple rate in dotclock sun4i_dclk_round_rate.
->
-> In both cases the overall pll_rate depends on dividers, the one that I
-> have on this patch is based on BSP and the Michael one is more generic
-> way so-that it can not to touch other functionalities and looping
-> dividers to find the best one.
->
-> If dclk_min/max is bpp/lanes then dotclock directly using divider 6
-> (assuming 24-bit and 4 lanes) and return the pll_rate and divider 6
-> associated.
->
-> if dclk_mul is bpp/lanes, on Michael new change, the dividers start
-> with 4 and end with 127 but the constant ideal rate which rate *
-> bpp/lanes but the loop from sun4i_dclk_round_rate computed the divider
-> as 6 only, ie what I'm mentioned on the above mail.
-
-We've been over this a couple of times already.
-
-The clock is generated like this:
-
-PLL -> TCON Module Clock -> TCON DCLK
-
-You want the TCON DCLK to be at the pixel clock rate * bpp /
-lanes. Fine, that makes sense.
-
-Except that the patch you've sent, instead of changing the rate
-itself, changes the ratio between the module clock and DCLK.
-
-And this is where the issue lies. First, from a logical viewpoint, it
-doesn't make sense. If you want to change the clock rate, then just do
-it. Don't hack around the multipliers trying to fall back to something
-that works for you.
-
-Then, the ratio itself needs to be set to 4. This is the part that
-we've discussed way too many times already, but in the Allwinner BSP,
-that ratio is hardcoded to 4, and we've had panels that need it at
-that value.
-
-So, what you want to do is to have:
-
-TCON DCLK = pixel clock * bpp / lanes
-TCON Module Clock = DCLK * 4
-PLL = Module Clock * Module Clock Divider (which I believe is 1 in most cases)
-
-So you want to increase the PLL. Fortunately for use, this is exactly
-what a call to clk_set_rate will end up doing.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---ae2iemjxaspus3zz--
+That's not a bad idea. Wait for one-two weeks and if it will happen that
+nobody is replying, then just issue a new version.
