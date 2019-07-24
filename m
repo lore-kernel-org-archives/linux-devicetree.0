@@ -1,16 +1,17 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RFC PATCH 00/11] Simple QoS for exynos-bus driver using
- interconnect
-Date: Wed, 24 Jul 2019 20:53:22 +0200
-Message-ID: <20190724185322.GC14346@kozik-lap>
-References: <CGME20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5@eucas1p2.samsung.com>
- <20190723122016.30279-1-a.swigon@partner.samsung.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 2/3] RTF: drm/panel: simple: Add TI nspire panels
+Date: Wed, 24 Jul 2019 20:53:29 +0200
+Message-ID: <20190724185329.GB22640@ravnborg.org>
+References: <20190723133755.22677-1-linus.walleij@linaro.org>
+ <20190723133755.22677-3-linus.walleij@linaro.org>
+ <20190723175445.GA23588@ravnborg.org>
+ <CACRpkdYmO=fBj3MFoQdLrEgA05BLZR3tNv9WhqjLeJ0R0cdDbQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+In-Reply-To: <CACRpkdYmO=fBj3MFoQdLrEgA05BLZR3tNv9WhqjLeJ0R0cdDbQ@mail.gmail.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -20,17 +21,25 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, sw0312.kim@samsung.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, georgi.djakov@linaro.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Fabian Vogt <fabian@ritter-vogt.de>, Daniel Tang <dt.tangr@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMjMsIDIwMTkgYXQgMDI6MjA6MDVQTSArMDIwMCwgQXJ0dXIgxZp3aWdvxYQg
-d3JvdGU6Cj4gVGhlIGZvbGxvd2luZyBwYXRjaHNldCBhZGRzIGludGVyY29ubmVjdFsxXVsyXSBm
-cmFtZXdvcmsgc3VwcG9ydCB0byB0aGUKPiBleHlub3MtYnVzIGRldmZyZXEgZHJpdmVyLiBFeHRl
-bmRpbmcgdGhlIGRldmZyZXEgZHJpdmVyIHdpdGggaW50ZXJjb25uZWN0Cj4gY2FwYWJpbGl0aWVz
-IHN0YXJ0ZWQgYXMgYSByZXNwb25zZSB0byB0aGUgaXNzdWUgcmVmZXJlbmNlZCBpbiBbM10uIFRo
-ZQo+IHBhdGNoZXMgY2FuIGJlIHN1YmRpdmlkZWQgaW50byBmb3VyIGxvZ2ljYWwgZ3JvdXBzOgoK
-TmljZSB3b3JrISBHb29kIHRvIHNlZSBwcm9wZXIgc29sdXRpb24gOikKCkJlc3QgcmVnYXJkcywK
-S3J6eXN6dG9mCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+SGkgTGludXMuCgpPbiBXZWQsIEp1bCAyNCwgMjAxOSBhdCAwMzo1ODo0MFBNICswMjAwLCBMaW51
+cyBXYWxsZWlqIHdyb3RlOgo+IEhpIFNhbSwKPiAKPiBmaXhlZCBtb3N0IHRoaW5ncywgb25lIHF1
+ZXN0aW9uIHJlbWFpbjoKPiAKPiBPbiBUdWUsIEp1bCAyMywgMjAxOSBhdCA3OjU0IFBNIFNhbSBS
+YXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4gd3JvdGU6Cj4gCj4gPiBGdXJ0aGVybW9yZSBJIGRp
+ZCBub3Qgc2VlIGFueSBiaW5kaW5ncyBmb3IgdGhlIHBhbmVscy4KPiA+IElmIHRoZXkgaW5kZWVk
+IGFyZSBtaXNzaW5nLCB0aGVuIHBsZWFzZSBwcm92aWRlIGJpbmRpbmdzIGluIHRoZSB5YW1sCj4g
+PiBmb3JtYXQuCj4gCj4gSUlVQyB3ZSBkbyBub3QgY3JlYXRlIGJpbmRpbmcgZG9jdW1lbnRzIGZv
+ciB0aGUgc2ltcGxlIHBhbmVscywKPiBidXQgSSBjYW4gZG8gdGhpcyBvZiBjb3Vyc2UsIGp1c3Qg
+dmFndWVseSByZW1lbWJlciB0aGF0IHRoZSBEVAo+IHBlb3BsZSBkaWRuJ3Qgd2FudCB0byBzZWUg
+YmluZGluZ3MgdGhhdCBhbGwgbG9vayB0aGUgc2FtZQo+IGJ1dCBpbnN0ZWFkIHJlbHkgb24gcGFu
+ZWwtY29tbW9uLnR4dAoKTXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHRoZSBiaW5kaW5ncyBmb3Ig
+dGggcGFuZWxzIHNob3VsZCBsaXN0IHdoYXQgaXMKcmVxdWlyZWQvb3B0aW9uYWwsIGJ1dCB3aXRo
+IHJlZmVyZW5jZSB0byBwYW5lbC1jb21tb24gKHdoaWNoIElJUkMgaGFzIGEKbmV3IG5hbWUgaW4g
+dGhlIHlhbWwgd29ybGQpLgpJZiB5b3UgbG9vayBpbiBiaW5kaW5ncy9kaXNwbGF5L3BhbmVscyB5
+b3UgY2FuIHNlZSBhIGxvdCBvZiBzaW1wbGUKcGFuZWxzIGxpc3RlZC4KCglTYW0KX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
