@@ -1,64 +1,47 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH] extcon: fsa9480: Support the FSA880 variant
-Date: Wed, 24 Jul 2019 19:12:01 +0900
-Message-ID: <2e832c87-71ea-af32-211d-a301cf58cb04@samsung.com>
-References: <CGME20190723174344epcas3p4dc935720d75f93a5ca0181662bc8036f@epcas3p4.samsung.com>
-        <20190723174301.31278-1-linus.walleij@linaro.org>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v4 5/5] DT: arm: exynos4412: add event data type which
+ is monitored
+Date: Wed, 24 Jul 2019 12:09:04 +0200
+Message-ID: <694617ed-5c02-40cc-2f27-82e8bb0ac6fe@partner.samsung.com>
+References: <20190605091236.24263-1-l.luba@partner.samsung.com>
+        <CGME20190605091305eucas1p136332cc3d1a299d90617bddcb365bee0@eucas1p1.samsung.com>
+        <20190605091236.24263-6-l.luba@partner.samsung.com>
+        <20190723175853.GA29195@kozik-lap>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190723174301.31278-1-linus.walleij@linaro.org>
+In-Reply-To: <20190723175853.GA29195@kozik-lap>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Mike Lockwood <lockwood@google.com>, devicetree@vger.kernel.org, "cpgs (cpgs@samsung.com)" <cpgs@samsung.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 19. 7. 24. 오전 2:43, Linus Walleij wrote:
-> The older compatible variant of this chip is called FSA880
-> and works the same way, if we need some quirks in the future,
-> it is good to let it have its own compatible string.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt | 4 +++-
->  drivers/extcon/extcon-fsa9480.c                             | 1 +
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-> index d592c21245f2..624bd76f468e 100644
-> --- a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
-> @@ -5,7 +5,9 @@ controlled using I2C and enables USB data, stereo and mono audio, video,
->  microphone, and UART data to use a common connector port.
->  
->  Required properties:
-> - - compatible : Must be "fcs,fsa9480"
-> + - compatible : Must be one of
-> +   "fcs,fsa9480"
-> +   "fcs,fsa880"
->   - reg : Specifies i2c slave address. Must be 0x25.
->   - interrupts : Should contain one entry specifying interrupt signal of
->     interrupt parent to which interrupt pin of the chip is connected.
-> diff --git a/drivers/extcon/extcon-fsa9480.c b/drivers/extcon/extcon-fsa9480.c
-> index 350fb34abfa0..8405512f5199 100644
-> --- a/drivers/extcon/extcon-fsa9480.c
-> +++ b/drivers/extcon/extcon-fsa9480.c
-> @@ -363,6 +363,7 @@ MODULE_DEVICE_TABLE(i2c, fsa9480_id);
->  
->  static const struct of_device_id fsa9480_of_match[] = {
->  	{ .compatible = "fcs,fsa9480", },
-> +	{ .compatible = "fcs,fsa880", },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, fsa9480_of_match);
-> 
+Hi Krzysztof,
 
-Applied it. Thanks.
+On 7/23/19 7:58 PM, Krzysztof Kozlowski wrote:
+> On Wed, Jun 05, 2019 at 11:12:36AM +0200, Lukasz Luba wrote:
+>> The patch adds new field in the PPMU event which shows explicitly
+>> what kind of data the event is monitoring. It is possible to change it
+>> using defined values in exynos_ppmu.h file.
+>>
+>> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos4412-ppmu-common.dtsi | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+> 
+> I tried to apply this... but prerequisites were not merged into
+> v5.3-rc1. This one will have to wait then till next release.
+Indeed, I will ask Chanwoo for ack for patch 4/5.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Regards,
+Lukasz
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
+> 
