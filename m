@@ -1,52 +1,45 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: leds: document new "power-supply"
- property
-Date: Wed, 24 Jul 2019 10:47:57 -0600
-Message-ID: <20190724164757.GA3723@bogus>
-References: <20190708103547.23528-1-jjhiblot@ti.com>
- <20190708103547.23528-3-jjhiblot@ti.com>
+Subject: Re: [RFC PATCH V2 1/6] dt-bindings: mt8183: Added DIP dt-bindings
+Date: Wed, 24 Jul 2019 10:49:38 -0600
+Message-ID: <20190724164938.GA25542@bogus>
+References: <20190708110500.7242-1-frederic.chen@mediatek.com>
+ <20190708110500.7242-2-frederic.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190708103547.23528-3-jjhiblot@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, daniel.thompson@linaro.org, dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20190708110500.7242-2-frederic.chen@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, Allan.Yang@mediatek.com, suleiman@chromium.org, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, hans.verkuil@cisco.com, frederic.chen@mediatek.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, holmes.chiou@mediatek.com, shik@chromium.org, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com, srv_heupstream@mediatek.com, sj.huang@mediatek.com, tfiga@chromium.org, christie.yu@mediatek.com, zwisler@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 12:35:47PM +0200, Jean-Jacques Hiblot wrote:
-> Most of the LEDs are powered by a voltage/current regulator. describing in
-> the device-tree makes it possible for the LED core to enable/disable it
-> when needed.
+On Mon, 8 Jul 2019 19:04:55 +0800, <frederic.chen@mediatek.com> wrote:
+> From: Frederic Chen <frederic.chen@mediatek.com>
 > 
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> This patch adds DT binding documentation for the Digital Image
+> Processing (DIP) unit of camera ISP system on Mediatek's SoCs.
+> 
+> It depends on the SCP and MDP 3 patch as following:
+> 
+> 1. dt-bindings: Add a binding for Mediatek SCP
+>    https://patchwork.kernel.org/patch/11027247/
+> 2. dt-binding: mt8183: Add Mediatek MDP3 dt-bindings
+>    https://patchwork.kernel.org/patch/10945603/
+> 
+> Signed-off-by: Frederic Chen <frederic.chen@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/leds/common.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+>  .../bindings/media/mediatek,mt8183-dip.txt    | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index 70876ac11367..e093a2b7eb90 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -61,6 +61,11 @@ Optional properties for child nodes:
->  - panic-indicator : This property specifies that the LED should be used,
->  		    if at all possible, as a panic indicator.
->  
-> +- power-supply : A voltage/current regulator used to to power the LED. When a
-> +		 LED is turned off, the LED core disable its regulator. The
-> +		 same regulator can power many LED (or other) devices. It is
-> +		 turned off only when all of its users disabled it.
 
-Not sure this should be common. It wouldn't apply to cases where we have 
-an LED controller parent nor gpio and pwm LEDs and those are most cases.
-
-Perhaps what makes sense here is an regulator-led binding.
-
-> +
->  - trigger-sources : List of devices which should be used as a source triggering
->  		    this LED activity. Some LEDs can be related to a specific
->  		    device and should somehow indicate its state. E.g. USB 2.0
-> -- 
-> 2.17.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
