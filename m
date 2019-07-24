@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v15 02/13] doc: Add doc for the Ingenic TCU hardware
-Date: Wed, 24 Jul 2019 13:16:04 -0400
-Message-ID: <20190724171615.20774-3-paul@crapouillou.net>
+Subject: [PATCH v15 04/13] mfd/syscon: Add device_node_to_regmap()
+Date: Wed, 24 Jul 2019 13:16:06 -0400
+Message-ID: <20190724171615.20774-5-paul@crapouillou.net>
 References: <20190724171615.20774-1-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,189 +9,142 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190724171615.20774-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me, Mathieu Malaterre <malat@debian.org>, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me, Mathieu Malaterre <malat@debian.org>, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation about the Timer/Counter Unit (TCU) present in the
-Ingenic JZ47xx SoCs.
+device_node_to_regmap() is exactly like syscon_node_to_regmap(), but it
+does not check that the node is compatible with "syscon", and won't
+attach the first clock it finds to the regmap.
 
-The Timer/Counter Unit (TCU) in Ingenic JZ47xx SoCs is a multi-function
-hardware block. It features up to to eight channels, that can be used as
-counters, timers, or PWM.
-
-- JZ4725B, JZ4750, JZ4755 only have six TCU channels. The other SoCs all
-  have eight channels.
-
-- JZ4725B introduced a separate channel, called Operating System Timer
-  (OST). It is a 32-bit programmable timer. On JZ4770 and above, it is
-  64-bit.
-
-- Each one of the TCU channels has its own clock, which can be reparented
-  to three different clocks (pclk, ext, rtc), gated, and reclocked, through
-  their TCSR register.
-  * The watchdog and OST hardware blocks also feature a TCSR register with
-    the same format in their register space.
-  * The TCU registers used to gate/ungate can also gate/ungate the watchdog
-    and OST clocks.
-
-- Each TCU channel works in one of two modes:
-  * mode TCU1: channels cannot work in sleep mode, but are easier to
-    operate.
-  * mode TCU2: channels can work in sleep mode, but the operation is a bit
-    more complicated than with TCU1 channels.
-
-- The mode of each TCU channel depends on the SoC used:
-  * On the oldest SoCs (up to JZ4740), all of the eight channels operate in
-    TCU1 mode.
-  * On JZ4725B, channel 5 operates as TCU2, the others operate as TCU1.
-  * On newest SoCs (JZ4750 and above), channels 1-2 operate as TCU2, the
-    others operate as TCU1.
-
-- Each channel can generate an interrupt. Some channels share an interrupt
-  line, some don't, and this changes between SoC versions:
-  * on older SoCs (JZ4740 and below), channel 0 and channel 1 have their
-    own interrupt line; channels 2-7 share the last interrupt line.
-  * On JZ4725B, channel 0 has its own interrupt; channels 1-5 share one
-    interrupt line; the OST uses the last interrupt line.
-  * on newer SoCs (JZ4750 and above), channel 5 has its own interrupt;
-    channels 0-4 and (if eight channels) 6-7 all share one interrupt line;
-    the OST uses the last interrupt line.
+The rationale behind this, is that one device node with a standard
+compatible string "foo,bar" can be covered by multiple drivers sharing a
+regmap, or by a single driver doing all the job without a regmap, but
+these are implementation details which shouldn't reflect on the
+devicetree.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
 
 Notes:
-    v4: New patch in this series
-    
-    v5: Added information about number of channels, and improved
-        documentation about channel modes
-    
-    v6: Add info about OST (can be 32-bit on older SoCs)
-    
-    v7-v11: No change
-    
-    v12: Add details about new implementation
-    
-    v13: No change
-    
-    v14: Convert to ReStructured Text
-    
-    v15: Remove info about MFD driver
+    v15: New patch
 
- Documentation/index.rst            |  1 +
- Documentation/mips/index.rst       | 11 +++++
- Documentation/mips/ingenic-tcu.rst | 71 ++++++++++++++++++++++++++++++
- 3 files changed, 83 insertions(+)
- create mode 100644 Documentation/mips/index.rst
- create mode 100644 Documentation/mips/ingenic-tcu.rst
+ drivers/mfd/syscon.c       | 46 +++++++++++++++++++++++++-------------
+ include/linux/mfd/syscon.h |  6 +++++
+ 2 files changed, 36 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/index.rst b/Documentation/index.rst
-index 70ae148ec980..87214feda41f 100644
---- a/Documentation/index.rst
-+++ b/Documentation/index.rst
-@@ -143,6 +143,7 @@ implementation.
-    arm64/index
-    ia64/index
-    m68k/index
-+   mips/index
-    riscv/index
-    s390/index
-    sh/index
-diff --git a/Documentation/mips/index.rst b/Documentation/mips/index.rst
-new file mode 100644
-index 000000000000..321b4794f3b8
---- /dev/null
-+++ b/Documentation/mips/index.rst
-@@ -0,0 +1,11 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index b65e585fc8c6..660723276481 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -40,7 +40,7 @@ static const struct regmap_config syscon_regmap_config = {
+ 	.reg_stride = 4,
+ };
+ 
+-static struct syscon *of_syscon_register(struct device_node *np)
++static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
+ {
+ 	struct clk *clk;
+ 	struct syscon *syscon;
+@@ -51,9 +51,6 @@ static struct syscon *of_syscon_register(struct device_node *np)
+ 	struct regmap_config syscon_config = syscon_regmap_config;
+ 	struct resource res;
+ 
+-	if (!of_device_is_compatible(np, "syscon"))
+-		return ERR_PTR(-EINVAL);
+-
+ 	syscon = kzalloc(sizeof(*syscon), GFP_KERNEL);
+ 	if (!syscon)
+ 		return ERR_PTR(-ENOMEM);
+@@ -117,16 +114,18 @@ static struct syscon *of_syscon_register(struct device_node *np)
+ 		goto err_regmap;
+ 	}
+ 
+-	clk = of_clk_get(np, 0);
+-	if (IS_ERR(clk)) {
+-		ret = PTR_ERR(clk);
+-		/* clock is optional */
+-		if (ret != -ENOENT)
+-			goto err_clk;
+-	} else {
+-		ret = regmap_mmio_attach_clk(regmap, clk);
+-		if (ret)
+-			goto err_attach;
++	if (check_clk) {
++		clk = of_clk_get(np, 0);
++		if (IS_ERR(clk)) {
++			ret = PTR_ERR(clk);
++			/* clock is optional */
++			if (ret != -ENOENT)
++				goto err_clk;
++		} else {
++			ret = regmap_mmio_attach_clk(regmap, clk);
++			if (ret)
++				goto err_attach;
++		}
+ 	}
+ 
+ 	syscon->regmap = regmap;
+@@ -150,7 +149,8 @@ static struct syscon *of_syscon_register(struct device_node *np)
+ 	return ERR_PTR(ret);
+ }
+ 
+-struct regmap *syscon_node_to_regmap(struct device_node *np)
++static struct regmap *device_node_get_regmap(struct device_node *np,
++					     bool check_clk)
+ {
+ 	struct syscon *entry, *syscon = NULL;
+ 
+@@ -165,13 +165,27 @@ struct regmap *syscon_node_to_regmap(struct device_node *np)
+ 	spin_unlock(&syscon_list_slock);
+ 
+ 	if (!syscon)
+-		syscon = of_syscon_register(np);
++		syscon = of_syscon_register(np, check_clk);
+ 
+ 	if (IS_ERR(syscon))
+ 		return ERR_CAST(syscon);
+ 
+ 	return syscon->regmap;
+ }
 +
-+===========================
-+MIPS-specific Documentation
-+===========================
++struct regmap *device_node_to_regmap(struct device_node *np)
++{
++	return device_node_get_regmap(np, false);
++}
++EXPORT_SYMBOL_GPL(device_node_to_regmap);
 +
-+.. toctree::
-+   :maxdepth: 1
-+   :numbered:
++struct regmap *syscon_node_to_regmap(struct device_node *np)
++{
++	if (!of_device_is_compatible(np, "syscon"))
++		return ERR_PTR(-EINVAL);
 +
-+   ingenic-tcu
-diff --git a/Documentation/mips/ingenic-tcu.rst b/Documentation/mips/ingenic-tcu.rst
-new file mode 100644
-index 000000000000..c4ef4c45aade
---- /dev/null
-+++ b/Documentation/mips/ingenic-tcu.rst
-@@ -0,0 +1,71 @@
-+.. SPDX-License-Identifier: GPL-2.0
++	return device_node_get_regmap(np, true);
++}
+ EXPORT_SYMBOL_GPL(syscon_node_to_regmap);
+ 
+ struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
+diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+index 8cfda0554381..112dc66262cc 100644
+--- a/include/linux/mfd/syscon.h
++++ b/include/linux/mfd/syscon.h
+@@ -17,12 +17,18 @@
+ struct device_node;
+ 
+ #ifdef CONFIG_MFD_SYSCON
++extern struct regmap *device_node_to_regmap(struct device_node *np);
+ extern struct regmap *syscon_node_to_regmap(struct device_node *np);
+ extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
+ extern struct regmap *syscon_regmap_lookup_by_phandle(
+ 					struct device_node *np,
+ 					const char *property);
+ #else
++static inline struct regmap *device_node_to_regmap(struct device_node *np)
++{
++	return ERR_PTR(-ENOTSUPP);
++}
 +
-+===============================================
-+Ingenic JZ47xx SoCs Timer/Counter Unit hardware
-+===============================================
-+
-+The Timer/Counter Unit (TCU) in Ingenic JZ47xx SoCs is a multi-function
-+hardware block. It features up to to eight channels, that can be used as
-+counters, timers, or PWM.
-+
-+- JZ4725B, JZ4750, JZ4755 only have six TCU channels. The other SoCs all
-+  have eight channels.
-+
-+- JZ4725B introduced a separate channel, called Operating System Timer
-+  (OST). It is a 32-bit programmable timer. On JZ4760B and above, it is
-+  64-bit.
-+
-+- Each one of the TCU channels has its own clock, which can be reparented to three
-+  different clocks (pclk, ext, rtc), gated, and reclocked, through their TCSR register.
-+
-+    - The watchdog and OST hardware blocks also feature a TCSR register with the same
-+      format in their register space.
-+    - The TCU registers used to gate/ungate can also gate/ungate the watchdog and
-+      OST clocks.
-+
-+- Each TCU channel works in one of two modes:
-+
-+    - mode TCU1: channels cannot work in sleep mode, but are easier to
-+      operate.
-+    - mode TCU2: channels can work in sleep mode, but the operation is a bit
-+      more complicated than with TCU1 channels.
-+
-+- The mode of each TCU channel depends on the SoC used:
-+
-+    - On the oldest SoCs (up to JZ4740), all of the eight channels operate in
-+      TCU1 mode.
-+    - On JZ4725B, channel 5 operates as TCU2, the others operate as TCU1.
-+    - On newest SoCs (JZ4750 and above), channels 1-2 operate as TCU2, the
-+      others operate as TCU1.
-+
-+- Each channel can generate an interrupt. Some channels share an interrupt
-+  line, some don't, and this changes between SoC versions:
-+
-+    - on older SoCs (JZ4740 and below), channel 0 and channel 1 have their
-+      own interrupt line; channels 2-7 share the last interrupt line.
-+    - On JZ4725B, channel 0 has its own interrupt; channels 1-5 share one
-+      interrupt line; the OST uses the last interrupt line.
-+    - on newer SoCs (JZ4750 and above), channel 5 has its own interrupt;
-+      channels 0-4 and (if eight channels) 6-7 all share one interrupt line;
-+      the OST uses the last interrupt line.
-+
-+Implementation
-+==============
-+
-+The functionalities of the TCU hardware are spread across multiple drivers:
-+
-+===========  =====
-+clocks       drivers/clk/ingenic/tcu.c
-+interrupts   drivers/irqchip/irq-ingenic-tcu.c
-+timers       drivers/clocksource/ingenic-timer.c
-+OST          drivers/clocksource/ingenic-ost.c
-+PWM          drivers/pwm/pwm-jz4740.c
-+watchdog     drivers/watchdog/jz4740_wdt.c
-+===========  =====
-+
-+Because various functionalities of the TCU that belong to different drivers
-+and frameworks can be controlled from the same registers, all of these
-+drivers access their registers through the same regmap.
-+
-+For more information regarding the devicetree bindings of the TCU drivers,
-+have a look at Documentation/devicetree/bindings/mfd/ingenic,tcu.txt.
+ static inline struct regmap *syscon_node_to_regmap(struct device_node *np)
+ {
+ 	return ERR_PTR(-ENOTSUPP);
 -- 
 2.21.0.593.g511ec345e18
