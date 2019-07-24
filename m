@@ -1,24 +1,64 @@
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: RE: [PATCH net-next 1/3] enetc: Add mdio bus driver for the PCIe MDIO
- endpoint
-Date: Wed, 24 Jul 2019 09:55:05 +0000
-Message-ID: <VI1PR04MB4880914975FCE9A37C4F3EFD96C60@VI1PR04MB4880.eurprd04.prod.outlook.com>
-References: <1563894955-545-1-git-send-email-claudiu.manoil@nxp.com>
-         <1563894955-545-2-git-send-email-claudiu.manoil@nxp.com>
- <2e3c565cacae6050656aeb7c0132736c60f9f4ee.camel@mellanox.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] extcon: fsa9480: Support the FSA880 variant
+Date: Wed, 24 Jul 2019 19:12:01 +0900
+Message-ID: <2e832c87-71ea-af32-211d-a301cf58cb04@samsung.com>
+References: <CGME20190723174344epcas3p4dc935720d75f93a5ca0181662bc8036f@epcas3p4.samsung.com>
+        <20190723174301.31278-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2e3c565cacae6050656aeb7c0132736c60f9f4ee.camel@mellanox.com>
+In-Reply-To: <20190723174301.31278-1-linus.walleij@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saeed Mahameed <saeedm@mellanox.com>, "davem@davemloft.net" <davem@davemloft.net>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Mike Lockwood <lockwood@google.com>, devicetree@vger.kernel.org, "cpgs (cpgs@samsung.com)" <cpgs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogU2FlZWQgTWFoYW1lZWQgPHNhZWVk
-bUBtZWxsYW5veC5jb20+DQpbLi4uXQ0KPg0KPm1kaW9idXNfZnJlZShidXMpIGlzIG1pc3Npbmcg
-aGVyZSBhbmQgaW4gZXZlcnkgZXJyb3IgcGF0aC4NCj4NClsuLi5dDQo+DQo+dGhpcyBzaG91bGQg
-Y29tZSBsYXN0IHRvIGJlIHN5bW1ldHJpY2FsIHdpdGggcHJvYmUgZmxvdy4NCj4NCg0KV2lsbCBj
-bGVhbiB0aGVzZSB1cCB0b28uIFRoYW5rcy4NCg==
+On 19. 7. 24. 오전 2:43, Linus Walleij wrote:
+> The older compatible variant of this chip is called FSA880
+> and works the same way, if we need some quirks in the future,
+> it is good to let it have its own compatible string.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt | 4 +++-
+>  drivers/extcon/extcon-fsa9480.c                             | 1 +
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
+> index d592c21245f2..624bd76f468e 100644
+> --- a/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-fsa9480.txt
+> @@ -5,7 +5,9 @@ controlled using I2C and enables USB data, stereo and mono audio, video,
+>  microphone, and UART data to use a common connector port.
+>  
+>  Required properties:
+> - - compatible : Must be "fcs,fsa9480"
+> + - compatible : Must be one of
+> +   "fcs,fsa9480"
+> +   "fcs,fsa880"
+>   - reg : Specifies i2c slave address. Must be 0x25.
+>   - interrupts : Should contain one entry specifying interrupt signal of
+>     interrupt parent to which interrupt pin of the chip is connected.
+> diff --git a/drivers/extcon/extcon-fsa9480.c b/drivers/extcon/extcon-fsa9480.c
+> index 350fb34abfa0..8405512f5199 100644
+> --- a/drivers/extcon/extcon-fsa9480.c
+> +++ b/drivers/extcon/extcon-fsa9480.c
+> @@ -363,6 +363,7 @@ MODULE_DEVICE_TABLE(i2c, fsa9480_id);
+>  
+>  static const struct of_device_id fsa9480_of_match[] = {
+>  	{ .compatible = "fcs,fsa9480", },
+> +	{ .compatible = "fcs,fsa880", },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, fsa9480_of_match);
+> 
+
+Applied it. Thanks.
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
