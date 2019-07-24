@@ -1,31 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 4/8] clk: mediatek: add mt6765 clock IDs
-Date: Wed, 24 Jul 2019 14:46:21 -0600
-Message-ID: <20190724204621.GA13063@bogus>
-References: <1562924653-10056-1-git-send-email-macpaul.lin@mediatek.com>
- <1562924653-10056-5-git-send-email-macpaul.lin@mediatek.com>
+Subject: Re: [PATCH 2/2] dt-bindings: bus: imx-weim: document optional burst
+ clock mode
+Date: Wed, 24 Jul 2019 14:48:22 -0600
+Message-ID: <20190724204822.GA17166@bogus>
+References: <20190712204316.16783-1-TheSven73@gmail.com>
+ <20190712204316.16783-2-TheSven73@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1562924653-10056-5-git-send-email-macpaul.lin@mediatek.com>
+In-Reply-To: <20190712204316.16783-2-TheSven73@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Sean Wang <sean.wang@mediatek.com>, Mars Cheng <mars.cheng@mediatek.com>, Owen Chen <owen.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-clk@vger.kernel.org, Macpaul Lin <macpaul.lin@mediatek.com>
+To: Sven Van Asbroeck <thesven73@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Jul 2019 17:43:40 +0800, Macpaul Lin wrote:
-> From: Mars Cheng <mars.cheng@mediatek.com>
+On Fri, 12 Jul 2019 16:43:16 -0400, Sven Van Asbroeck wrote:
+> An optional devicetree property was added to the imx-weim driver,
+> which if present instructs it to operate in burst clock mode.
+> Update the dt-bindings to reflect this.
 > 
-> Add MT6765 clock dt-bindings, include topckgen, apmixedsys,
-> infracfg, mcucfg and subsystem clocks.
-> 
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> Signed-off-by: Owen Chen <owen.chen@mediatek.com>
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 > ---
->  include/dt-bindings/clock/mt6765-clk.h | 313 +++++++++++++++++++++++++
->  1 file changed, 313 insertions(+)
->  create mode 100644 include/dt-bindings/clock/mt6765-clk.h
+>  Documentation/devicetree/bindings/bus/imx-weim.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
