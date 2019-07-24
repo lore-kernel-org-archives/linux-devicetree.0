@@ -1,99 +1,139 @@
-From: David Dai <daidavid1@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: interconnect: Update Qualcomm SDM845 DT
- bindings
-Date: Wed, 24 Jul 2019 10:22:57 -0700
-Message-ID: <8efd5c48-5d3a-97e1-1dec-6a9cdc4c8ef6@codeaurora.org>
-References: <1563568344-1274-1-git-send-email-daidavid1@codeaurora.org>
- <1563568344-1274-2-git-send-email-daidavid1@codeaurora.org>
- <5d371ce7.1c69fb81.9650.8239@mx.google.com>
- <8c181f08-559b-5d77-a617-65cfd3d5da55@codeaurora.org>
- <5d3868a9.1c69fb81.876aa.ac30@mx.google.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: [PATCH V14 00/13] PCI: tegra: Add Tegra194 PCIe support
+Date: Wed, 24 Jul 2019 23:18:11 +0530
+Message-ID: <20190724174824.20933-1-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d3868a9.1c69fb81.876aa.ac30@mx.google.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org, georgi.djakov@linaro.org, robh+dt@kernel.org
-Cc: evgreen@google.com, ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com
+Cc: digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+to PCIe controller
+This patch series
+- Adds support for P2U PHY driver
+- Adds support for PCIe host controller
+- Adds device tree nodes each PCIe controllers
+- Enables nodes applicable to p2972-0000 platform
+- Adds helper APIs in Designware core driver to get capability regs offset
+- Adds defines for new feature registers of PCIe spec revision 4
+- Makes changes in DesignWare core driver to get Tegra194 PCIe working
 
-On 7/24/2019 7:18 AM, Stephen Boyd wrote:
-> Quoting David Dai (2019-07-23 14:48:42)
->> On 7/23/2019 7:42 AM, Stephen Boyd wrote:
->>> Quoting David Dai (2019-07-19 13:32:23)
->>>> +- compatible : shall contain only one of the following:
->>>> +                       "qcom,sdm845-bcm-voter",
->>>> +
->>>> +Examples:
->>>> +
->>>> +apps_rsc: rsc@179c0000 {
->>> But there isn't a reg property.
->> I'll change this to the generic example with just apps_rsc: rsc {
->>>> +       label = "apps_rsc";
->>> Is label required?
-> Any answer?
-Not required.
->>>> +       compatible = "qcom,rpmh-rsc";
->>>> +
->>>> +       apps_bcm_voter: bcm_voter {
->>>> +               compatible = "qcom,sdm845-bcm-voter";
->>>> +       };
->>>> +}
->>>> +
->>>> +disp_rsc: rsc@179d0000 {
->>>> +       label = "disp_rsc";
->>>> +       compatible = "qcom,rpmh-rsc";
->>>> +
->>>> +       disp_bcm_voter: bcm_voter {
->>>> +               compatible = "qcom,sdm845-bcm-voter";
->>>> +       };
->>>> +}
->>>> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
->>>> index 5c4f1d9..27f9ed9 100644
->>>> --- a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
->>>> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
-> [...]
->>>> +
->>>> +mem_noc: interconnect@1380000 {
->>>> +       compatible = "qcom,sdm845-mem_noc";
->>>> +       reg = <0 0x1380000 0 0x27200>;
->>>> +       #interconnect-cells = <1>;
->>>> +       qcom,bcm-voter = <&apps_bcm_voter>, <&disp_bcm_voter>;
->>>> +};
->>> How does a consumer target a particular RSC? For example, how can
->>> display decide to use the disp_bcm_voter node from mem_noc here? Maybe
->>> you can add that consumer to the example?
->> I was thinking that the association between the bcm voters and the icc
->> nodes would be handled by the interconnect provider, and that there
->> would be a set of display specific icc nodes with their own unique IDs
->> that the consumers could reference. I will mention this as part of the
->> description and provide an example.
->>
->> Ex: interconnects = <&mmss_noc MASTER_MDP0_DISP &mem_noc SLAVE_EBI_DISP>;
->>
-> It looks backwards to me. Don't the consumers want to consume a
-> particular RSC, i.e. apps or display RSC, so they can choose where to
-> put the bcm vote and then those RSCs want to find MMIO registers for
-> mmss_noc or mem_noc that they have to write to tune something else like
-> QoS? If the MMIO space is the provider then I'm lost how it can
-> differentiate between the RSCs that may be targetting the particular
-> NoC.
-The way that I view this is that the consumers consume both bandwidth 
-and QoS from these physical NoC devices by getting some path between two 
-endpoints on these different NoCs and applying some constraints. The NoC 
-providers can accomplish that either by writing to MMIO spaces or by 
-talking to some remote processor/hardware to tune its clock speed. The 
-consumer doesn't interact with the RSCs directly, but can select a 
-different bcm voter based on the endpoints that are associated with a 
-particular bcm(apps or disp rsc). Each node(endpoints) will have its own 
-BCM designation and an unique bcm voter.
-> Maybe I've just completely missed something and this is all decided
-> already. If so, sorry, I'm just trying to understand.
-No problem, this just means I need to do a better job of explaining.
+Testing done on P2972-0000 platform
+- Able to get PCIe link up with on-board Marvel eSATA controller
+- Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+- Able to do data transfers with both SATA drives and NVMe cards
+
+Note
+- Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
+  It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
+  disabled in this patch series. A future patch series would enable this.
+- This series is based on top of the following series
+  Jisheng's patches to add support to .remove() in Designware sub-system
+  https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+  (Update: Jisheng's patches are now accepted and applied for v5.2)
+  My patches made on top of Jisheng's patches to export various symbols
+  http://patchwork.ozlabs.org/project/linux-pci/list/?series=115671
+  (Update: My above patch series is accepted and applied for v5.3)
+
+V14:
+* Addressed Lorenzo's review comments in pcie-tegra194.c file (Patch 13/13)
+* Added a new patch to export dw_pcie_wait_for_link() API
+
+V13:
+* Addressed Bjorn's review comments for adding Gen-4 specific defines to pci_regs.h header file
+
+V12:
+* Modified the commit message of patch-3 in this series to address review
+  comments from Lorenzo
+
+V11:
+* Removed device-tree patches from the series as they are applied to relevant
+  Tegra specific trees by Thierry Reding.
+* Included older Tegra chips to extend quirk that disables MSI interrupt being
+  used for Tegra PCIe root ports.
+* Addressed review comments in P2U driver file.
+
+V10:
+* Used _relaxed() versions of readl() & writel()
+
+V9:
+* Made the drivers dependent on ARCH_TEGRA_194_SOC directly
+* Addressed review comments from Dmitry
+
+V8:
+* Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p2u.c
+* Addressed review comments from Thierry and Rob
+
+V7:
+* Took care of review comments from Rob
+* Added a quirk to disable MSI for root ports
+* Removed using pcie_pme_disable_msi() API in host controller driver
+
+V6:
+* Removed patch that exports pcie_bus_config symbol
+* Took care of review comments from Thierry and Rob
+
+V5:
+* Removed redundant APIs in pcie-designware-ep.c file after moving them
+  to pcie-designware.c file based on Bjorn's review comments
+
+V4:
+* Rebased on top of linux-next top of the tree
+* Addressed Gustavo's comments and added his Ack for some of the changes.
+
+V3:
+* Addressed review comments from Thierry
+
+V2:
+* Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
+* Added more patches in v2 series
+
+Vidya Sagar (13):
+  PCI: Add #defines for some of PCIe spec r4.0 features
+  PCI: Disable MSI for Tegra root ports
+  PCI: dwc: Perform dbi regs write lock towards the end
+  PCI: dwc: Move config space capability search API
+  PCI: dwc: Add ext config space capability search API
+  PCI: dwc: Export dw_pcie_wait_for_link() API
+  dt-bindings: PCI: designware: Add binding for CDM register check
+  PCI: dwc: Add support to enable CDM register check
+  dt-bindings: Add PCIe supports-clkreq property
+  dt-bindings: PCI: tegra: Add device tree support for Tegra194
+  dt-bindings: PHY: P2U: Add Tegra194 P2U block
+  phy: tegra: Add PCIe PIPE2UPHY support
+  PCI: tegra: Add Tegra194 PCIe support
+
+ .../bindings/pci/designware-pcie.txt          |    5 +
+ .../bindings/pci/nvidia,tegra194-pcie.txt     |  155 ++
+ Documentation/devicetree/bindings/pci/pci.txt |    5 +
+ .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
+ drivers/pci/controller/dwc/Kconfig            |   10 +
+ drivers/pci/controller/dwc/Makefile           |    1 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
+ .../pci/controller/dwc/pcie-designware-host.c |   14 +-
+ drivers/pci/controller/dwc/pcie-designware.c  |   88 +
+ drivers/pci/controller/dwc/pcie-designware.h  |   12 +
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 1630 +++++++++++++++++
+ drivers/pci/quirks.c                          |   53 +
+ drivers/phy/tegra/Kconfig                     |    7 +
+ drivers/phy/tegra/Makefile                    |    1 +
+ drivers/phy/tegra/phy-tegra194-p2u.c          |  120 ++
+ include/uapi/linux/pci_regs.h                 |   14 +-
+ 16 files changed, 2138 insertions(+), 42 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+ create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.1
