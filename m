@@ -1,77 +1,68 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v7 5/7] of/platform: Pause/resume sync state during init and of_platform_populate()
-Date: Tue, 23 Jul 2019 17:10:58 -0700
-Message-ID: <20190724001100.133423-6-saravanak@google.com>
-References: <20190724001100.133423-1-saravanak@google.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
+ opp-avg-KBps bindings
+Date: Tue, 23 Jul 2019 17:18:31 -0700
+Message-ID: <CAGETcx9GkwDJHBuFBRheMqR80=JWnXa4xtPqQ+2xHcfvSd55+A@mail.gmail.com>
+References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-2-saravanak@google.com>
+ <98b2e315-e8da-80ad-1ef8-e6b222c1c6fe@codeaurora.org> <CAGETcx9KSqvyzbM-S8LvBObkNBt38K683Ljm8nNQuhxk7MuvAg@mail.gmail.com>
+ <20190722233501.GA19594@bogus> <CAGETcx9GzQj0ZHNF+uR2cGHUkQ5sOPYEwyXKK1dJ2sJbHVSVyw@mail.gmail.com>
+ <CAL_JsqJeGK2m6hVEqvFxW6dEhi22LXaRKgb5JmnJfmCp+J6XuA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724001100.133423-1-saravanak@google.com>
+In-Reply-To: <CAL_JsqJeGK2m6hVEqvFxW6dEhi22LXaRKgb5JmnJfmCp+J6XuA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
+To: Rob Herring <robh@kernel.org>
+Cc: Sibi Sankar <sibis@codeaurora.org>, Georgi Djakov <georgi.djakov@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-When all the top level devices are populated from DT during kernel
-init, the supplier devices could be added and probed before the
-consumer devices are added and linked to the suppliers. To avoid the
-sync_state() callback from being called prematurely, pause the
-sync_state() callbacks before populating the devices and resume them
-at late_initcall_sync().
+On Tue, Jul 23, 2019 at 7:27 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Jul 22, 2019 at 5:41 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > On Mon, Jul 22, 2019 at 4:35 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Tue, Jul 16, 2019 at 11:58:08AM -0700, Saravana Kannan wrote:
+> > > > On Tue, Jul 16, 2019 at 10:25 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+> > > > >
+> > > > > Hey Saravana,
+> > > > >
+> > > > > https://patchwork.kernel.org/patch/10850815/
+> > > > > There was already a discussion ^^ on how bandwidth bindings were to be
+> > > > > named.
+> > > >
+> > > > Yes, I'm aware of that series. That series is trying to define a BW
+> > > > mapping for an existing frequency OPP table. This patch is NOT about
+> > > > adding a mapping to an existing table. This patch is about adding the
+> > > > notion of BW OPP tables where BW is the "key" instead of "frequency".
+> > > >
+> > > > So let's not mixed up these two series.
+> > >
+> > > Maybe different reasons, but in the end we'd end up with 2 bandwidth
+> > > properties. We need to sort out how they'd overlap/coexist.
+> >
+> > Oh, I totally agree! My point is that the other mapping isn't the
+> > right approach because it doesn't handle a whole swath of use cases.
+> > The one I'm proposing can act as a super set of the other (as in, can
+> > handle that use case too).
+> >
+> > > The same comment in that series about defining a standard unit suffix
+> > > also applies to this one.
+> >
+> > I thought I read that whole series and I don't remember reading about
+> > the unit suffix. But I'll take a closer look. I've chosen to keep the
+> > DT units at least as "high of a resolution" as what the APIs accept
+> > today. The APIs take KB/s. So I make sure DT can capture KB/s
+> > differences. If we all agree that KB/s is "too accurate" then I think
+> > we should change everything to MB/s.
+>
+> Either one is fine with me, but trying to align to what the OS picked
+> doesn't work. What does BSD use for example? More important is
+> aligning across DT properties so we don't have folks picking whatever
+> random unit they like. We generally try to go with the smallest units
+> that will have enough (32-bit) range for everyone, so that's probably
+> KB/s here.
 
-Similarly, when children devices are populated after kernel init using
-of_platform_populate(), there could be supplier-consumer dependencies
-between the children devices that are populated. To avoid the same
-problem with sync_state() being called prematurely, pause and resume
-sync_state() callbacks across of_platform_populate().
+Yeah, that makes sense.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/of/platform.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 4344419a26fc..71d6138698ec 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -485,6 +485,7 @@ int of_platform_populate(struct device_node *root,
- 	pr_debug("%s()\n", __func__);
- 	pr_debug(" starting at: %pOF\n", root);
- 
-+	device_links_supplier_sync_state_pause();
- 	for_each_child_of_node(root, child) {
- 		rc = of_platform_bus_create(child, matches, lookup, parent, true);
- 		if (rc) {
-@@ -492,6 +493,8 @@ int of_platform_populate(struct device_node *root,
- 			break;
- 		}
- 	}
-+	device_links_supplier_sync_state_resume();
-+
- 	of_node_set_flag(root, OF_POPULATED_BUS);
- 
- 	of_node_put(root);
-@@ -688,6 +691,7 @@ static int __init of_platform_default_populate_init(void)
- 		return -ENODEV;
- 
- 	platform_bus_type.add_links = of_link_to_suppliers;
-+	device_links_supplier_sync_state_pause();
- 	/*
- 	 * Handle certain compatibles explicitly, since we don't want to create
- 	 * platform_devices for every node in /reserved-memory with a
-@@ -708,6 +712,13 @@ static int __init of_platform_default_populate_init(void)
- 	return 0;
- }
- arch_initcall_sync(of_platform_default_populate_init);
-+
-+static int __init of_platform_sync_state_init(void)
-+{
-+	device_links_supplier_sync_state_resume();
-+	return 0;
-+}
-+late_initcall_sync(of_platform_sync_state_init);
- #endif
- 
- int of_platform_device_destroy(struct device *dev, void *data)
--- 
-2.22.0.709.g102302147b-goog
+-Saravana
