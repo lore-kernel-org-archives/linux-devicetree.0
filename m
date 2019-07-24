@@ -1,79 +1,49 @@
-Return-Path: <SRS0=J/Os=U7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from inva020.nxp.com ([92.121.34.13]:38586 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbfGBPQd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:16:33 -0400
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH v2] arm64: dts: add the console node for DPAA2 platforms
-Date: Tue,  2 Jul 2019 18:16:18 +0300
-Message-Id: <1562080578-31677-1-git-send-email-ioana.ciornei@nxp.com>
-Reply-to: ioana.ciornei@nxp.com
-Sender: devicetree-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: leoyang.li@nxp.com, devicetree@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>
+Return-Path: <SRS0=liIr=VV=mess.org=sean@kernel.org>
+Date: Wed, 24 Jul 2019 06:39:37 +0100
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH v5 04/13] media: rc: sunxi: Add RXSTA bits definition
+Message-ID: <20190724053937.4ic5n35xtw2chjdy@gofer.mess.org>
+References: <20190607231100.5894-1-peron.clem@gmail.com>
+ <20190607231100.5894-5-peron.clem@gmail.com>
+ <20190610095243.7xwp4xhauds22qzw@flea>
+ <CAJiuCcfyjGTBbsjZQYj2p3KD6O-WaXhFe5NZrnKQwJYACmatUw@mail.gmail.com>
+ <20190715121244.2vrsw6qa4fgp72fn@gofer.mess.org>
+ <20190723062557.hnbi6hgrg4ecawkn@gofer.mess.org>
+ <20190723070440.nfmhbrfykumxayjj@flea>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190723070440.nfmhbrfykumxayjj@flea>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add the console device tree node for the following
-DPAA2 based platforms: LS1088A, LS2080A, LS2088A and LX2160A.
+On Tue, Jul 23, 2019 at 09:04:40AM +0200, Maxime Ripard wrote:
+> Hi Sean,
+> 
+> On Tue, Jul 23, 2019 at 07:25:57AM +0100, Sean Young wrote:
+> > On Mon, Jul 15, 2019 at 01:12:45PM +0100, Sean Young wrote:
+> > > On Sun, Jul 14, 2019 at 04:32:22PM +0200, Cl�ment P�ron wrote:
+> > > > Hi Sean,
+> > > >
+> > > > You acked the whole v3 series but this patch has been introduced in v5
+> > > > could you ack this one too?
+> > >
+> > > Acked-by: Sean Young <sean@mess.org>
+> >
+> > So who's tree should this series go through? It seems mostly device tree.
+> > Alternatively I'm happy to try it get merged via the media tree.
+> 
+> Ideally the media bits should go through the media tree, the DT bits
+> will go through arm-soc
+> 
+> So you can apply the patches 1-4, 7 and 10, I'll apply the rest.
+> 
+> Does that work for you?
 
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
----
-Changes in v2:
- - use a generic node name
- - remove leading zeros and 0x from the unit-address
+Works for me, I'll add them to my next pull request to Mauro.
 
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 5 +++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 5 +++++
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 5 +++++
- 3 files changed, 15 insertions(+)
+Thanks,
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 661137ffa319..d190d5490e31 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -665,6 +665,11 @@
- 			clock-names = "apb_pclk", "wdog_clk";
- 		};
- 
-+		console@8340020 {
-+			compatible = "fsl,dpaa2-console";
-+			reg = <0x00000000 0x08340020 0 0x2>;
-+		};
-+
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible = "fsl,qoriq-mc";
- 			reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index d7e78dcd153d..229d7f7d293d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -321,6 +321,11 @@
- 			};
- 		};
- 
-+		console@8340020 {
-+			compatible = "fsl,dpaa2-console";
-+			reg = <0x00000000 0x08340020 0 0x2>;
-+		};
-+
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible = "fsl,qoriq-mc";
- 			reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index 125a8cc2c5b3..0426e2230447 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -848,6 +848,11 @@
- 			dma-coherent;
- 		};
- 
-+		console@8340020 {
-+			compatible = "fsl,dpaa2-console";
-+			reg = <0x00000000 0x08340020 0 0x2>;
-+		};
-+
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible = "fsl,qoriq-mc";
- 			reg = <0x00000008 0x0c000000 0 0x40>,
--- 
-1.9.1
+Sean
