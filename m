@@ -1,7 +1,7 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 1/5] arm64: dts: qcom: sdm845: Add unit name to soc node
-Date: Wed, 24 Jul 2019 10:19:02 +0530
-Message-ID: <20190724044906.12007-2-vkoul@kernel.org>
+Subject: [PATCH v2 2/5] arm64: dts: qcom: sdm845: remove unnecessary properties for dsi nodes
+Date: Wed, 24 Jul 2019 10:19:03 +0530
+Message-ID: <20190724044906.12007-3-vkoul@kernel.org>
 References: <20190724044906.12007-1-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,28 +12,42 @@ To: Andy Gross <agross@kernel.org>
 Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-We get a warning about missing unit name for soc node, so add it.
+We get a warning about unnecessary properties of
 
-arch/arm64/boot/dts/qcom/sdm845.dtsi:623.11-2814.4: Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
+arch/arm64/boot/dts/qcom/sdm845.dtsi:2211.22-2257.6: Warning (avoid_unnecessary_addr_size): /soc/mdss@ae00000/dsi@ae94000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+arch/arm64/boot/dts/qcom/sdm845.dtsi:2278.22-2324.6: Warning (avoid_unnecessary_addr_size): /soc/mdss@ae00000/dsi@ae96000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+
+So, remove these properties
 
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 6 ------
+ 1 file changed, 6 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 601cfb078bd5..e81f4a6d08ce 100644
+index e81f4a6d08ce..2985df032179 100644
 --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -620,7 +620,7 @@
- 		method = "smc";
- 	};
+@@ -2234,9 +2234,6 @@
  
--	soc: soc {
-+	soc: soc@0 {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges = <0 0 0 0 0x10 0>;
+ 				status = "disabled";
+ 
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-
+ 				ports {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+@@ -2301,9 +2298,6 @@
+ 
+ 				status = "disabled";
+ 
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-
+ 				ports {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
 -- 
 2.20.1
