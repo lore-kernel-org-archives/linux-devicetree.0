@@ -1,62 +1,145 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 14/19] dt-bindings: pci: add PHY properties to Armada
- 7K/8K controller bindings
-Date: Wed, 24 Jul 2019 17:56:15 +0200
-Message-ID: <20190724175615.2fe46a8e@xps13>
-References: <20190627095104.22529-1-miquel.raynal@bootlin.com>
- <20190627122505.25774-1-miquel.raynal@bootlin.com>
- <20190627122505.25774-2-miquel.raynal@bootlin.com>
- <20190722175225.GA13801@bogus>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: RE: [PATCH net-next v1 1/4] enetc: Clean up local mdio bus allocation
+Date: Wed, 24 Jul 2019 16:03:24 +0000
+Message-ID: <VI1PR04MB4880CD977A5D58DA0A7EE56696C60@VI1PR04MB4880.eurprd04.prod.outlook.com>
+References: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
+ <1563979301-596-2-git-send-email-claudiu.manoil@nxp.com>
+ <20190724151803.GR25635@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190722175225.GA13801@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190724151803.GR25635@lunn.ch>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Leo Li <leoyang.li@nxp.com>, Alexandru Marginean <alexandru.marginean@nxp.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGUgb24gTW9uLCAyMiBK
-dWwgMjAxOSAxMTo1MjoyNSAtMDYwMDoKCj4gT24gVGh1LCBKdW4gMjcsIDIwMTkgYXQgMDI6MjU6
-MDBQTSArMDIwMCwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiA+IEFybWFkYSBDUDExMCBQQ0llIGNv
-bnRyb2xsZXIgY2FuIGhhdmUgYSBQSFkgKGZvciBjb25maWd1cmluZyBTRVJERVMKPiA+IGxhbmVz
-KS4gRGVzY3JpYmUgdGhlc2UgdHdvIHByb3BlcnRpZXMgaW4gdGhlIGJpbmRpbmdzLgo+ID4gCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29t
-Pgo+ID4gLS0tCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9wY2kt
-YXJtYWRhOGsudHh0IHwgNCArKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygr
-KQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BjaS9wY2ktYXJtYWRhOGsudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BjaS9wY2ktYXJtYWRhOGsudHh0Cj4gPiBpbmRleCA5ZTNmYzE1ZTFhZjguLmEzNzNhODA1MjRk
-YiAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kv
-cGNpLWFybWFkYThrLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3BjaS9wY2ktYXJtYWRhOGsudHh0Cj4gPiBAQCAtMTcsNiArMTcsMTAgQEAgUmVxdWlyZWQg
-cHJvcGVydGllczoKPiA+ICAgICBuYW1lIG11c3QgYmUgImNvcmUiIGZvciB0aGUgZmlyc3QgY2xv
-Y2sgYW5kICJyZWciIGZvciB0aGUgc2Vjb25kCj4gPiAgICAgb25lCj4gPiAgCj4gPiArT3B0aW9u
-YWwgcHJvcGVydGllczoKPiA+ICstIHBoeXM6IHBoYW5kbGUgdG8gdGhlIFBIWSBub2RlIChnZW5l
-cmljIFBIWSBiaW5kaW5ncykuCj4gPiArLSBwaHktbmFtZXM6IG5hbWVzIG9mIHRoZSBQSFlzLiAg
-Cj4gCj4gSG93IG1hbnk/IElmIG9ubHkgMSwgeW91IGRvbid0IHJlYWxseSBuZWVkIHBoeS1uYW1l
-cy4KCkFjdHVhbGx5IGl0IGRlcGVuZHMgb24gdGhlIGJvYXJkLiBGb3IgaW5zdGFuY2UsIHRoZSBN
-YWNjaGlhdG9CaW4gaGFzCmZvdXIgb2YgdGhlbToKCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-bWFydmVsbC9hcm1hZGEtODA0MC1tY2Jpbi5kdHNpCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-bWFydmVsbC9hcm1hZGEtODA0MC1tY2Jpbi5kdHNpCkBAIC0xODYsNiArMTg2LDEwIEBACiAgICAg
-ICAgcmVzZXQtZ3Bpb3MgPSA8JmNwMF9ncGlvMiAyMCBHUElPX0FDVElWRV9MT1c+OwogICAgICAg
-IHJhbmdlcyA9IDwweDgxMDAwMDAwIDB4MCAweGY5MDEwMDAwIDB4MCAweGY5MDEwMDAwIDB4MCAw
-eDEwMDAwCiAgICAgICAgICAgICAgICAgIDB4ODIwMDAwMDAgMHgwIDB4YzAwMDAwMDAgMHgwIDB4
-YzAwMDAwMDAgMHgwIDB4MjAwMDAwMDA+OworICAgICAgIHBoeXMgPSA8JmNwMF9jb21waHkwIDA+
-LCA8JmNwMF9jb21waHkxIDA+LAorICAgICAgICAgICAgICA8JmNwMF9jb21waHkyIDA+LCA8JmNw
-MF9jb21waHkzIDA+OworICAgICAgIHBoeS1uYW1lcyA9ICJjcDAtcGNpZTAteDQtbGFuZTAtcGh5
-IiwgImNwMC1wY2llMC14NC1sYW5lMS1waHkiLAorICAgICAgICAgICAgICAgICAgICJjcDAtcGNp
-ZTAteDQtbGFuZTItcGh5IiwgImNwMC1wY2llMC14NC1sYW5lMy1waHkiOwogICAgICAgIHN0YXR1
-cyA9ICJva2F5IjsKIH07CgoKVGhhbmtzLApNaXF1w6hsCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+
+>-----Original Message-----
+>From: Andrew Lunn <andrew@lunn.ch>
+>Sent: Wednesday, July 24, 2019 6:18 PM
+>To: Claudiu Manoil <claudiu.manoil@nxp.com>
+>Cc: David S . Miller <davem@davemloft.net>; Rob Herring
+><robh+dt@kernel.org>; Leo Li <leoyang.li@nxp.com>; Alexandru Marginean
+><alexandru.marginean@nxp.com>; netdev@vger.kernel.org;
+>devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+>kernel@vger.kernel.org
+>Subject: Re: [PATCH net-next v1 1/4] enetc: Clean up local mdio bus alloca=
+tion
+>
+>On Wed, Jul 24, 2019 at 05:41:38PM +0300, Claudiu Manoil wrote:
+>> Though it works, this is not how it should have been.
+>> What's needed is a pointer to the mdio registers.
+>> Store it properly inside bus->priv allocated space.
+>> Use devm_* variant to further clean up the init error /
+>> remove paths.
+>>
+>> Fixes following sparse warning:
+>>  warning: incorrect type in assignment (different address spaces)
+>>     expected void *priv
+>>     got struct enetc_mdio_regs [noderef] <asn:2>*[assigned] regs
+>>
+>> Fixes: ebfcb23d62ab ("enetc: Add ENETC PF level external MDIO support")
+>>
+>> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+>> ---
+>> v1 - added this patch
+>>
+>>  .../net/ethernet/freescale/enetc/enetc_mdio.c | 31 +++++++------------
+>>  1 file changed, 12 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+>b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+>> index 77b9cd10ba2b..1e3cd21c13ee 100644
+>> --- a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+>> +++ b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+>> @@ -15,7 +15,8 @@ struct enetc_mdio_regs {
+>>  	u32	mdio_addr;	/* MDIO address */
+>>  };
+>>
+>> -#define bus_to_enetc_regs(bus)	(struct enetc_mdio_regs __iomem
+>*)((bus)->priv)
+>> +#define bus_to_enetc_regs(bus)	(*(struct enetc_mdio_regs __iomem
+>**) \
+>> +				((bus)->priv))
+>>
+>>  #define ENETC_MDIO_REG_OFFSET	0x1c00
+>>  #define ENETC_MDC_DIV		258
+>> @@ -146,12 +147,12 @@ static int enetc_mdio_read(struct mii_bus *bus, in=
+t
+>phy_id, int regnum)
+>>  int enetc_mdio_probe(struct enetc_pf *pf)
+>>  {
+>>  	struct device *dev =3D &pf->si->pdev->dev;
+>> -	struct enetc_mdio_regs __iomem *regs;
+>> +	struct enetc_mdio_regs __iomem **regsp;
+>>  	struct device_node *np;
+>>  	struct mii_bus *bus;
+>> -	int ret;
+>> +	int err;
+>>
+>> -	bus =3D mdiobus_alloc_size(sizeof(regs));
+>> +	bus =3D devm_mdiobus_alloc_size(dev, sizeof(*regsp));
+>>  	if (!bus)
+>>  		return -ENOMEM;
+>>
+>> @@ -159,41 +160,33 @@ int enetc_mdio_probe(struct enetc_pf *pf)
+>>  	bus->read =3D enetc_mdio_read;
+>>  	bus->write =3D enetc_mdio_write;
+>>  	bus->parent =3D dev;
+>> +	regsp =3D bus->priv;
+>>  	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
+>>
+>>  	/* store the enetc mdio base address for this bus */
+>> -	regs =3D pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
+>> -	bus->priv =3D regs;
+>> +	*regsp =3D pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
+>
+>This is all very odd and different to every other driver.
+>
+>If i get the code write, there are 4 registers, each u32 in size,
+>starting at pf->si->hw.port + ENETC_MDIO_REG_OFFSET?
+>
+>There are macros like enetc_port_wr() and enetc_global_wr(). It think
+>it would be much cleaner to add a macro enet_mdio_wr() which takes
+>hw, off, val.
+>
+>#define enet_mdio_wr(hw, off, val) enet_port_wr(hw, off +
+>ENETC_MDIO_REG_OFFSET, val)
+>
+>struct enetc_mdio_priv {
+>       struct enetc_hw *hw;
+>}
+>
+>	struct enetc_mdio_priv *mdio_priv;
+>
+>	bus =3D devm_mdiobus_alloc_size(dev, sizeof(*mdio_priv));
+>
+>	mdio_priv =3D bus->priv;
+>	mdio_priv->hw =3D pf->si->hw;
+>
+>
+>static int enetc_mdio_write(struct mii_bus *bus, int phy_id, int regnum,
+>                            u16 value)
+>{
+>	struct enetc_mdio_priv *mdio_priv =3D bus->priv;
+>...
+>	enet_mdio_wr(priv->hw, ENETC_MDIO_CFG, mdio_cfg);
+>}
+>
+>All the horrible casts go away, the driver is structured like every
+>other driver, sparse is probably happy, etc.
+>
+
+This looks more like a matter cosmetic preferences.  I mean, I didn't
+notice anything "horrible" in the code so far.  I actually find it more
+ugly to define a new structure with only one element inside, like:
+struct enetc_mdio_priv {
+       struct enetc_hw *hw;
+}
+What is this technique called? Looks like a second type definition for
+another type.
+Anyway, if others already did this in the kernel, what can I do?
