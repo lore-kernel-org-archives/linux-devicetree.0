@@ -1,40 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 16/60] dt-bindings: Add vendor prefix for LG Display
-Date: Wed, 24 Jul 2019 10:22:35 -0600
-Message-ID: <20190724162235.GA7651@bogus>
-References: <20190707180852.5512-1-laurent.pinchart@ideasonboard.com>
- <20190707181937.6250-1-laurent.pinchart@ideasonboard.com>
- <20190707181937.6250-13-laurent.pinchart@ideasonboard.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/6] ASoC: improve codec to codec link support
+Date: Wed, 24 Jul 2019 18:23:59 +0200
+Message-ID: <20190724162405.6574-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190707181937.6250-13-laurent.pinchart@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Sebastian Reichel <sebastian.reichel@collabora.com>, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sean Paul <sean@poorly.run>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCAgNyBKdWwgMjAxOSAyMToxODo1MyArMDMwMCwgTGF1cmVudCBQaW5jaGFydCB3cm90
-ZToKPiBMRyBEaXNwbGF5IGlzIGFuIExDRCBkaXNwbGF5IG1hbnVmYWN0dXJlci4gT3JpZ2luYWxs
-eSBmb3JtZWQgYXMgYSBqb2ludAo+IHZlbnR1cmUgYnkgTEcgRWxlY3Ryb25pY3MgYW5kIFBoaWxp
-cHMgRWxlY3Ryb25pY3MsIGl0IHdhcyBmb3JtZXJseSBrbm93bgo+IGFzIExHLlBoaWxpcHMgTENE
-LCBoZW5jZSB0aGUgRFQgdmVuZG9yIHByZWZpeCBsZ3BoaWxpcHMgKHdoaWNoIGlzCj4gYWxyZWFk
-eSBpbiBhY3RpdmUgdXNlIGluIHRoZSBrZXJuZWwpLgo+IAo+IE1vcmUgaW5mb3JtYXRpb24gaXMg
-YXZhaWxhYmxlIGF0Cj4gaHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvTEdfRGlzcGxheS4K
-PiAKPiBTaWduZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlk
-ZWFzb25ib2FyZC5jb20+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy92ZW5kb3ItcHJlZml4ZXMueWFtbCB8IDIgKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0
-aW9ucygrKQo+IAoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+As explained in this previous series [0], on Amlogic, we are using codec to
+codec links to deal with the glue which is between the i2s backends and the
+synopsys hdmi controller.
+
+This worked well until I tried to .get_eld() support in the dw-hdmi-i2s
+driver.  Doing so adds channel mapping controls to the codec. This shown
+several problem
+
+1) .pcm_new() is not called on codec to codec links.
+   struct snd_soc_pcm_runtime do not even have a valid .pcm
+2) struct snd_pcm_substream and struct snd_pcm_runtime are ephemeral
+   This is a problem if a control needs to access them
+
+The goal of this patchset is to resolve the above issues and improve the
+codec to codec link support enough to correctly handle the hdmi-codec
+
+The support of these codec to codec links could probably be improved in the
+future to behave like any other link and use soc_pcm_open(),
+soc_pcm_hw_params(), etc...
+
+The challenge lies in the dapm mutex. The soc_pcm call dapm function locking
+this mutex but the dapm mutex is already held in snd_soc_dai_link_event()
+
+[0]: https://lkml.kernel.org/r/20190515131858.32130-1-jbrunet@baylibre.com
+
+Jerome Brunet (6):
+  ASoC: codec2codec: run callbacks in order
+  ASoC: codec2codec: name link using stream direction
+  ASoC: codec2codec: deal with params when necessary
+  ASoC: create pcm for codec2codec links as well
+  ASoC: codec2codec: remove ephemeral variables
+  ASoC: codec2codec: fill some of the runtime stream parameters
+
+ sound/soc/soc-core.c |  42 +++-------
+ sound/soc/soc-dapm.c | 186 +++++++++++++++++++++++++++----------------
+ sound/soc/soc-pcm.c  |  35 +++++++-
+ 3 files changed, 162 insertions(+), 101 deletions(-)
+
+-- 
+2.21.0
