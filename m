@@ -1,42 +1,74 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 9 Jul 2019 10:25:31 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 7/8] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1
- to r8a77995
-Message-ID: <20190709162531.GA13560@bogus>
-References: <156076216767.4736.16337667537984218274.sendpatchset@octo>
- <156076223184.4736.11067127180512614106.sendpatchset@octo>
+Return-Path: <SRS0=+kfZ=VV=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51881 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbfGXNJl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jul 2019 09:09:41 -0400
+Date: Wed, 24 Jul 2019 15:09:39 +0200
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH] ARM: imx25: provide a fixed regulator for usb phys
+Message-ID: <20190724130939.43t66umrasbe4wwf@pengutronix.de>
+References: <20190625100412.11815-1-u.kleine-koenig@pengutronix.de>
+ <VI1PR04MB5327E09DB0DFEB7E868DB59D8BE20@VI1PR04MB5327.eurprd04.prod.outlook.com>
+ <20190626055409.jjiwptyths6p6jty@pengutronix.de>
+ <VI1PR04MB53270E979BA9817D47A7AFC88BFD0@VI1PR04MB5327.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <156076223184.4736.11067127180512614106.sendpatchset@octo>
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR04MB53270E979BA9817D47A7AFC88BFD0@VI1PR04MB5327.eurprd04.prod.outlook.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Peter Chen <peter.chen@nxp.com>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, Marco Felsch <m.felsch@pengutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, 17 Jun 2019 18:03:51 +0900, Magnus Damm wrote:
-> From: Magnus Damm <damm+renesas@opensource.se>
-> 
-> This patch adds DT binding documentation for the CMT devices on
-> the R-Car Gen3 D3 (r8a77995) SoC.
-> 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> ---
-> 
->  Documentation/devicetree/bindings/timer/renesas,cmt.txt |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> --- 0012/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> +++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-06-17 14:00:04.813217175 +0900
-> @@ -53,6 +53,8 @@ Required Properties:
->      - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
->      - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
->      - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
-> +    - "renesas,r8a77995-cmt0" for the 32-bit CMT0 device included in r8a77995.
-> +    - "renesas,r8a77995-cmt1" for the 48-bit CMT1 device included in r8a77995.
->      - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
->      - "renesas,sh73a0-cmt1" for the 48-bit CMT1 device included in sh73a0.
->      - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
-> 
+Hello,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Thu, Jun 27, 2019 at 03:15:10AM +0000, Peter Chen wrote:
+>  
+> > On 19-06-26 02:40, Peter Chen wrote:
+> > >
+> > > > Subject: [PATCH] ARM: imx25: provide a fixed regulator for usb phys
+> > > >
+> > > > The usb phys are internal to the SoC and so it their 5V supply. With
+> > > > this regulator added explicitly the following (harmless) boot messages go away:
+> > > >
+> > > > 	usb_phy_generic usbphy:usb-phy@0: usbphy:usb-phy@0 supply vcc not found, using dummy regulator
+> > > > 	usb_phy_generic usbphy:usb-phy@1: usbphy:usb-phy@1 supply vcc not found, using dummy regulator
+> > > >
+> > >
+> > > To eliminate the warning message, I suggest doing below changes, as
+> > > vcc supply is not mandatory.
+> > >
+> > > diff --git a/drivers/usb/phy/phy-generic.c
+> > > b/drivers/usb/phy/phy-generic.c index a53b89be5324..01a5ff1a0515
+> > > 100644
+> > > --- a/drivers/usb/phy/phy-generic.c
+> > > +++ b/drivers/usb/phy/phy-generic.c
+> > > @@ -275,7 +275,7 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop,
+> > >                 }
+> > >         }
+> > >
+> > > -       nop->vcc = devm_regulator_get(dev, "vcc");
+> > > +       nop->vcc = devm_regulator_get_optional(dev, "vcc");
+> > 
+> > Is the regulator optional? IMHO this shouldn't be the fix. I think the right fix is Uwe's
+> > approach.
+> > 
+> 
+> Add Felipe.
+> 
+> Some USB PHY's power are from the core system's power (eg, DDR), and some are
+> fixed at the board and no switch for it. So, it is transparent for software at some cases.
+
+It's not clear to me how to proceed. There are two opposing opinions and
+I don't know enough about USB on mx25 to judge myself.
+
+Felipe?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
