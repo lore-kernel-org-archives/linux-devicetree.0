@@ -1,33 +1,34 @@
-From: Heiko Stuebner <heiko@sntech.de>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Subject: Re: [PATCH v2 2/2] ARM: dts: rockchip: consolidate veyron panel and
  backlight settings
-Date: Thu, 25 Jul 2019 00:38:05 +0200
-Message-ID: <1769449.YPoKHCOSj6@phil>
+Date: Wed, 24 Jul 2019 15:38:23 -0700
+Message-ID: <20190724223823.GC250418@google.com>
 References: <20190711223455.12210-1-mka@chromium.org>
  <20190711223455.12210-2-mka@chromium.org>
  <CAD=FV=Wj4Fei6t-STjY_FJkDKQYys5PcVquBJcdRE3wUN=y3Yg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD=FV=Wj4Fei6t-STjY_FJkDKQYys5PcVquBJcdRE3wUN=y3Yg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Matthias Kaehlcke <mka@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=Wj4Fei6t-STjY_FJkDKQYys5PcVquBJcdRE3wUN=y3Yg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 24. Juli 2019, 23:46:30 CEST schrieb Doug Anderson:
+On Wed, Jul 24, 2019 at 02:46:30PM -0700, Doug Anderson wrote:
 > Hi,
 > 
-> On Thu, Jul 11, 2019 at 3:35 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+> On Thu, Jul 11, 2019 at 3:35 PM Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
 > >
 > > diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
 > > index 4cc7d3659484..2b0801a539c9 100644
@@ -80,8 +81,9 @@ Am Mittwoch, 24. Juli 2019, 23:46:30 CEST schrieb Doug Anderson:
 > power-supply = <&backlight_regulator>;
 > 
 > ...from minnie.
-> 
-> 
+
+good catch, thanks!
+
 > > diff --git a/arch/arm/boot/dts/rk3288-veyron-pinky.dts b/arch/arm/boot/dts/rk3288-veyron-pinky.dts
 > > index 9b6f4d9b03b6..06af58e37a4b 100644
 > > --- a/arch/arm/boot/dts/rk3288-veyron-pinky.dts
@@ -109,8 +111,9 @@ Am Mittwoch, 24. Juli 2019, 23:46:30 CEST schrieb Doug Anderson:
 > > +       power-supply= <&vcc33_lcd>;
 > 
 > Might as well put a space before the "="?
-> 
-> 
+
+will do
+
 > >  &pinctrl {
 > > +       /delete-node/ lcd;
 > > +
@@ -125,16 +128,14 @@ Am Mittwoch, 24. Juli 2019, 23:46:30 CEST schrieb Doug Anderson:
 > case I think things are cleaner after your patch but I won't say it's
 > 100% clear cut.
 
-going this way with the delete-nodes looks good to me :-) ... pinky is
-the "odd" one in that, so I think it can carry the burden ... especially
-as you said, this really only affects me and my boardfarm at all ;-) .
+I agree that some repetition can be preferrable over /delete-node/
+statements. In this case repetition is above my personal threshold,
+especially since I'm about to add another device with eDP display and
+would have to repeat the mostly redundant config yet another time.
 
+If Heiko prefer's the repetition so be it :)
 
-Heiko
-
-> 
 > Other than nits I have double-checked this patch, so feel free to add
 > my Reviewed-by after nits are fixed.
-> 
-> -Doug
-> 
+
+Thanks for the review!
