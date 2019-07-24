@@ -1,77 +1,58 @@
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH 3/5] clk: imx8mm: correct the usb1_ctrl parent to be
- usb_bus
-Date: Wed, 24 Jul 2019 11:09:45 +0000
-Message-ID: <DB8PR04MB6523F8278C875D79DE5DC61689C60@DB8PR04MB6523.eurprd04.prod.outlook.com>
-References: <20190703072327.38165-1-jun.li@nxp.com>
- <20190722033418.GX3738@dragon>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 6/7] clocksource/drivers/sh_cmt: r8a7740 and sh73a0
+ SoC-specific match
+Date: Wed, 24 Jul 2019 13:12:27 +0200
+Message-ID: <20190724111227.qaeq3d5mkeyvlkq3@verge.net.au>
+References: <156345023791.5307.6113391102648394591.sendpatchset@octo>
+ <156345032407.5307.16702422867507502597.sendpatchset@octo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190722033418.GX3738@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Peter Chen <peter.chen@nxp.com>, Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Anson Huang <anson.huang@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <156345032407.5307.16702422867507502597.sendpatchset@octo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, geert+renesas@glider.be, daniel.lezcano@linaro.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOo31MIyMsjVIDExOjM0DQo+IFRvOiBKdW4g
-TGkgPGp1bi5saUBueHAuY29tPg0KPiBDYzogc2JveWRAa2VybmVsLm9yZzsgcm9iaCtkdEBrZXJu
-ZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gcy5oYXVlckBwZW5ndXRyb25peC5kZTsg
-a2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207IGRsLWxpbnV4LWlteA0K
-PiA8bGludXgtaW14QG54cC5jb20+OyBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsgUGV0ZXIgQ2hl
-biA8cGV0ZXIuY2hlbkBueHAuY29tPjsNCj4gSmFja3kgQmFpIDxwaW5nLmJhaUBueHAuY29tPjsg
-TGVvbmFyZCBDcmVzdGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT47IERhbmllbA0KPiBCYWx1
-dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT47IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAu
-Y29tPjsgQWlzaGVuZw0KPiBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IFBlbmcgRmFuIDxw
-ZW5nLmZhbkBueHAuY29tPjsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXgtY2xrQHZnZXIua2VybmVsLm9y
-Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDMvNV0gY2xrOiBpbXg4bW06IGNvcnJlY3QgdGhlIHVz
-YjFfY3RybCBwYXJlbnQgdG8gYmUgdXNiX2J1cw0KPiANCj4gT24gV2VkLCBKdWwgMDMsIDIwMTkg
-YXQgMDM6MjM6MjVQTSArMDgwMCwganVuLmxpQG54cC5jb20gd3JvdGU6DQo+ID4gRnJvbTogTGkg
-SnVuIDxqdW4ubGlAbnhwLmNvbT4NCj4gPg0KPiA+IFBlciBsYXRlc3QgaW14OG1tIGRhdGFzaGVl
-dCBvZiBDQ00sIHRoZSBwYXJlbnQgb2YgdXNiMV9jdHJsX3Jvb3RfY2xrDQo+ID4gc2hvdWxkIGJl
-IHVzYl9idXMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBMaSBKdW4gPGp1bi5saUBueHAuY29t
-Pg0KPiANCj4gSSBvbmx5IHJlY2VpdmVkIDMgcGF0Y2hlcyBhcyBhIHNlcmllcy4gIEluIHRoYXQg
-Y2FzZSwgdGhlIHBhdGNoZXMgc2hvdWxkIGhhdmUgc3ViamVjdCBwcmVmaXgNCj4gbGlrZSAnW1BB
-VENIIDEvM10nIC4uLg0KDQpBbm90aGVyIDIgcGF0Y2hlcyBhcmUgZm9yIGRyaXZlciwgc28gSSBk
-aWRuJ3Qgc2VuZCB0aGVtIHRvIHlvdSwgeWVzLCBJIHNob3VsZCB1c2UNCnRoZSBzdWJqZWN0IHBy
-ZWZpeCBsaWtlICdbUEFUQ0ggMS8zXScgdG8gYXZvaWQgY29uZnVzaW5nLCB3aWxsIHBheSBhdHRl
-bnRpb24gdGhpcy4NCg0KVGhhbmtzDQpMaSBKdW4NCj4gDQo+IFRoZSBwYXRjaGVzIGxvb2sgZ29v
-ZCB0byBtZS4gIEFwcGxpZWQgYWxsIDMsIHRoYW5rcy4NCj4gDQo+IFNoYXduDQo+IA0KPiA+IC0t
-LQ0KPiA+ICBkcml2ZXJzL2Nsay9pbXgvY2xrLWlteDhtbS5jIHwgMiArLQ0KPiA+ICAxIGZpbGUg
-Y2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDhtbS5jDQo+ID4gYi9kcml2ZXJzL2Nsay9pbXgv
-Y2xrLWlteDhtbS5jIGluZGV4IDZiOGU3NWQuLjczNWNmOWQgMTAwNjQ0DQo+ID4gLS0tIGEvZHJp
-dmVycy9jbGsvaW14L2Nsay1pbXg4bW0uYw0KPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2lteC9jbGst
-aW14OG1tLmMNCj4gPiBAQCAtNjMxLDcgKzYzMSw3IEBAIHN0YXRpYyBpbnQgX19pbml0IGlteDht
-bV9jbG9ja3NfaW5pdChzdHJ1Y3QgZGV2aWNlX25vZGUNCj4gKmNjbV9ub2RlKQ0KPiA+ICAJY2xr
-c1tJTVg4TU1fQ0xLX1VBUlQyX1JPT1RdID0gaW14X2Nsa19nYXRlNCgidWFydDJfcm9vdF9jbGsi
-LCAidWFydDIiLA0KPiBiYXNlICsgMHg0NGEwLCAwKTsNCj4gPiAgCWNsa3NbSU1YOE1NX0NMS19V
-QVJUM19ST09UXSA9IGlteF9jbGtfZ2F0ZTQoInVhcnQzX3Jvb3RfY2xrIiwgInVhcnQzIiwNCj4g
-YmFzZSArIDB4NDRiMCwgMCk7DQo+ID4gIAljbGtzW0lNWDhNTV9DTEtfVUFSVDRfUk9PVF0gPSBp
-bXhfY2xrX2dhdGU0KCJ1YXJ0NF9yb290X2NsayIsICJ1YXJ0NCIsDQo+IGJhc2UgKyAweDQ0YzAs
-IDApOw0KPiA+IC0JY2xrc1tJTVg4TU1fQ0xLX1VTQjFfQ1RSTF9ST09UXSA9IGlteF9jbGtfZ2F0
-ZTQoInVzYjFfY3RybF9yb290X2NsayIsDQo+ICJ1c2JfY29yZV9yZWYiLCBiYXNlICsgMHg0NGQw
-LCAwKTsNCj4gPiArCWNsa3NbSU1YOE1NX0NMS19VU0IxX0NUUkxfUk9PVF0gPQ0KPiA+ICtpbXhf
-Y2xrX2dhdGU0KCJ1c2IxX2N0cmxfcm9vdF9jbGsiLCAidXNiX2J1cyIsIGJhc2UgKyAweDQ0ZDAs
-IDApOw0KPiA+ICAJY2xrc1tJTVg4TU1fQ0xLX0dQVTNEX1JPT1RdID0gaW14X2Nsa19nYXRlNCgi
-Z3B1M2Rfcm9vdF9jbGsiLA0KPiAiZ3B1M2RfZGl2IiwgYmFzZSArIDB4NDRmMCwgMCk7DQo+ID4g
-IAljbGtzW0lNWDhNTV9DTEtfVVNESEMxX1JPT1RdID0gaW14X2Nsa19nYXRlNCgidXNkaGMxX3Jv
-b3RfY2xrIiwNCj4gInVzZGhjMSIsIGJhc2UgKyAweDQ1MTAsIDApOw0KPiA+ICAJY2xrc1tJTVg4
-TU1fQ0xLX1VTREhDMl9ST09UXSA9IGlteF9jbGtfZ2F0ZTQoInVzZGhjMl9yb290X2NsayIsDQo+
-ID4gInVzZGhjMiIsIGJhc2UgKyAweDQ1MjAsIDApOw0KPiA+IC0tDQo+ID4gMi43LjQNCj4gPg0K
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
-LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
-cm5lbAo=
+On Thu, Jul 18, 2019 at 08:45:24PM +0900, Magnus Damm wrote:
+> From: Magnus Damm <damm+renesas@opensource.se>
+> 
+> Add SoC-specific matching for CMT1 on r8a7740 and sh73a0.
+> 
+> This allows us to move away from the old DT bindings such as
+>  - "renesas,cmt-48-sh73a0"
+>  - "renesas,cmt-48-r8a7740"
+>  - "renesas,cmt-48"
+> in favour for the now commonly used format "renesas,<soc>-<device>"
+> 
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
+> ---
+> 
+>  drivers/clocksource/sh_cmt.c |    8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> --- 0001/drivers/clocksource/sh_cmt.c
+> +++ work/drivers/clocksource/sh_cmt.c	2019-07-18 19:29:06.005414716 +0900
+> @@ -928,6 +928,14 @@ static const struct of_device_id sh_cmt_
+>  		.data = &sh_cmt_info[SH_CMT0_RCAR_GEN2]
+>  	},
+>  	{
+> +		.compatible = "renesas,r8a7740-cmt1",
+> +		.data = &sh_cmt_info[SH_CMT_48BIT]
+
+Perhaps as a follow-up SH_CMT_48BIT could be renamed.
+
+> +	},
+> +	{
+> +		.compatible = "renesas,sh73a0-cmt1",
+> +		.data = &sh_cmt_info[SH_CMT_48BIT]
+> +	},
+> +	{
+>  		.compatible = "renesas,rcar-gen2-cmt0",
+>  		.data = &sh_cmt_info[SH_CMT0_RCAR_GEN2]
+>  	},
+> 
