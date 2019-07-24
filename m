@@ -1,258 +1,82 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v6 0/5] media: Allwinner A10 CSI support
-Date: Wed, 24 Jul 2019 14:39:10 +0200
-Message-ID: <20190724123910.lr6lipnlr7o5dxar@flea>
-References: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: RE: [PATCH net-next 1/3] enetc: Add mdio bus driver for the PCIe MDIO
+ endpoint
+Date: Wed, 24 Jul 2019 12:57:34 +0000
+Message-ID: <VI1PR04MB48805982F057B8DE4DF9FCAE96C60@VI1PR04MB4880.eurprd04.prod.outlook.com>
+References: <1563894955-545-1-git-send-email-claudiu.manoil@nxp.com>
+ <1563894955-545-2-git-send-email-claudiu.manoil@nxp.com>
+ <20190723222454.GE13517@lunn.ch>
+ <VI1PR04MB4880DAE881769F6DC845CEEF96C60@VI1PR04MB4880.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7galzcqmm5r5acql"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <VI1PR04MB4880DAE881769F6DC845CEEF96C60@VI1PR04MB4880.eurprd04.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Claudiu Manoil <claudiu.manoil@nxp.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Alexandru Marginean <alexandru.marginean@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
---7galzcqmm5r5acql
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-Hi,
+>-----Original Message-----
+>From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org> On
+>Behalf Of Claudiu Manoil
+>Sent: Wednesday, July 24, 2019 12:53 PM
+>To: Andrew Lunn <andrew@lunn.ch>
+>Cc: David S . Miller <davem@davemloft.net>; devicetree@vger.kernel.org;
+>netdev@vger.kernel.org; Alexandru Marginean
+><alexandru.marginean@nxp.com>; linux-kernel@vger.kernel.org; Leo Li
+><leoyang.li@nxp.com>; Rob Herring <robh+dt@kernel.org>; linux-arm-
+>kernel@lists.infradead.org
+>Subject: RE: [PATCH net-next 1/3] enetc: Add mdio bus driver for the PCIe MDIO
+>endpoint
+>
+>>-----Original Message-----
+>>From: Andrew Lunn <andrew@lunn.ch>
+>>Sent: Wednesday, July 24, 2019 1:25 AM
+>>To: Claudiu Manoil <claudiu.manoil@nxp.com>
+>>Cc: David S . Miller <davem@davemloft.net>; devicetree@vger.kernel.org;
+>>netdev@vger.kernel.org; Alexandru Marginean
+>><alexandru.marginean@nxp.com>; linux-kernel@vger.kernel.org; Leo Li
+>><leoyang.li@nxp.com>; Rob Herring <robh+dt@kernel.org>; linux-arm-
+>>kernel@lists.infradead.org
+>>Subject: Re: [PATCH net-next 1/3] enetc: Add mdio bus driver for the
+>>PCIe MDIO endpoint
+>>
+>>> +	bus = mdiobus_alloc_size(sizeof(u32 *));
+>>> +	if (!bus)
+>>> +		return -ENOMEM;
+>>> +
+>>
+>>> +	bus->priv = pci_iomap_range(pdev, 0, ENETC_MDIO_REG_OFFSET, 0);
+>>
+>>This got me confused for a while. You allocate space for a u32 pointer.
+>>bus->priv will point to this space. However, you are not using this
+>>space, you {ab}use the pointer to directly hold the return from
+>>pci_iomap_range(). This works, but sparse is probably unhappy, and you
+>>are wasting the space the u32 pointer takes.
+>>
+>
+>Thanks Andrew,
+>This is not what I wanted to do, don't ask me how I got to this, it's confusing
+>indeed.
+>What's needed here is mdiobus_alloc() or better, devm_mdiobus_alloc().
+>I've got to do some cleanup in the local mdio bus probing too.
+>Will send v2.
+>
 
-On Thu, Jul 11, 2019 at 02:15:02PM +0200, Maxime Ripard wrote:
-> Hi,
->
-> Here is a series introducing the support for the A10 (and SoCs of the same
-> generation) CMOS Sensor Interface (called CSI, not to be confused with
-> MIPI-CSI, which isn't support by that IP).
->
-> That interface is pretty straightforward, but the driver has a few issues
-> that I wanted to bring up:
->
->   * The only board I've been testing this with has an ov5640 sensor
->     attached, which doesn't work with the upstream driver. Copying the
->     Allwinner init sequence works though, and this is how it has been
->     tested. Testing with a second sensor would allow to see if it's an
->     issue on the CSI side or the sensor side.
->   * We don't have support for the ISP at the moment, but this can be added
->     eventually.
->
-> Here is the v4l2-compliance output (commit f61132e81d79 of v4l-utils), and
-> after running media-ctl -d /dev/media1 -v --set-v4l2 "'ov5640 1-0021':0
-> [fmt:YUYV8_2X8/640x4 80 field:none]"
->
-> Compliance test for device /dev/video1:
->
-> Driver Info:
-> 	Driver name      : sun4i_csi
-> 	Card type        : sun4i-csi
-> 	Bus info         : platform:1c09000.csi
-> 	Driver version   : 5.2.0
-> 	Capabilities     : 0x84201000
-> 		Video Capture Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 		Device Capabilities
-> 	Device Caps      : 0x04201000
-> 		Video Capture Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> Media Driver Info:
-> 	Driver name      : sun4i-csi
-> 	Model            : Allwinner Video Capture Device
-> 	Serial           :
-> 	Bus info         :
-> 	Media version    : 5.2.0
-> 	Hardware revision: 0x00000000 (0)
-> 	Driver version   : 5.2.0
-> Interface Info:
-> 	ID               : 0x03000008
-> 	Type             : V4L Video
-> Entity Info:
-> 	ID               : 0x00000006 (6)
-> 	Name             : sun4i_csi
-> 	Function         : V4L2 I/O
-> 	Pad 0x01000007   : 0: Sink, Must Connect
-> 	  Link 0x0200000a: from remote pad 0x1000005 of entity 'sun4i-csi-0': Data, Enabled, Immutable
->
-> Required ioctls:
-> 	test MC information (see 'Media Driver Info' above): OK
-> 	test VIDIOC_QUERYCAP: OK
->
-> Allow for multiple opens:
-> 	test second /dev/video1 open: OK
-> 	test VIDIOC_QUERYCAP: OK
-> 	test VIDIOC_G/S_PRIORITY: OK
-> 	test for unlimited opens: OK
->
-> Debug ioctls:
-> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
->
-> Input ioctls:
-> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMINPUT: OK
-> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> 	Inputs: 1 Audio Inputs: 0 Tuners: 0
->
-> Output ioctls:
-> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
->
-> Input/Output configuration ioctls:
-> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> 	test VIDIOC_G/S_EDID: OK (Not Supported)
->
-> Control ioctls (Input 0):
-> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-> 	test VIDIOC_QUERYCTRL: OK (Not Supported)
-> 	test VIDIOC_G/S_CTRL: OK (Not Supported)
-> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> 	Standard Controls: 0 Private Controls: 0
->
-> Format ioctls (Input 0):
-> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> 	test VIDIOC_G/S_PARM: OK (Not Supported)
-> 	test VIDIOC_G_FBUF: OK (Not Supported)
-> 	test VIDIOC_G_FMT: OK
-> 	test VIDIOC_TRY_FMT: OK
-> 	test VIDIOC_S_FMT: OK
-> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 	test Cropping: OK (Not Supported)
-> 	test Composing: OK (Not Supported)
-> 	test Scaling: OK
->
-> Codec ioctls (Input 0):
-> 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> 	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
->
-> Buffer ioctls (Input 0):
-> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> 	test VIDIOC_EXPBUF: OK
->
-> Test input 0:
->
-> Streaming ioctls:
-> 	test read/write: OK (Not Supported)
-> 	test blocking wait: OK
-> 	test MMAP: OK
-> 	test USERPTR: OK (Not Supported)
-> 	test DMABUF: OK (Not Supported)
->
-> Total: 49, Succeeded: 49, Failed: 0, Warnings: 0
-
-As requested by Sakari, here is the media-ctl -p output, both at boot,
-and after the link setup.
-
-# media-ctl -p -d /dev/media1
-Media controller API version 5.2.0
-
-Media device information
-------------------------
-driver          sun4i-csi
-model           Allwinner Video Capture Device
-serial
-bus info
-hw revision     0x0
-driver version  5.2.0
-
-Device topology
-- entity 1: ov5640 1-0021 (1 pad, 1 link)
-            type V4L2 subdev subtype Sensor flags 0
-            device node name /dev/v4l-subdev0
-	pad0: Source
-		[fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:srgb xfer:srgb ycbcr:601 quantization:full-range]
-		-> "sun4i-csi-0":0 [ENABLED,IMMUTABLE]
-
-- entity 3: sun4i-csi-0 (2 pads, 2 links)
-            type V4L2 subdev subtype Unknown flags 0
-            device node name /dev/v4l-subdev1
-	pad0: Sink
-		<- "ov5640 1-0021":0 [ENABLED,IMMUTABLE]
-	pad1: Source
-		[fmt:unknown/0x0]
-		-> "sun4i_csi":0 [ENABLED,IMMUTABLE]
-
-- entity 6: sun4i_csi (1 pad, 1 link)
-            type Node subtype V4L flags 0
-            device node name /dev/video1
-	pad0: Sink
-		<- "sun4i-csi-0":1 [ENABLED,IMMUTABLE]
-
-# media-ctl -d /dev/media1 -v --set-v4l2 "'ov5640 1-0021':0 [fmt:YUYV8_2X8/640x4
-80 field:none]"
-Opening media device /dev/media1
-Enumerating entities
-Found 3 entities
-Enumerating pads and links
-Setting up format YUYV8_2X8 640x480 on pad ov5640 1-0021/0
-Format set: YUYV8_2X8 640x480
-Setting up format YUYV8_2X8 640x480 on pad sun4i-csi-0/0
-Format set: YUYV8_2X8 640x480
-# media-ctl -p -d /dev/media1
-Media controller API version 5.2.0
-
-Media device information
-------------------------
-driver          sun4i-csi
-model           Allwinner Video Capture Device
-serial
-bus info
-hw revision     0x0
-driver version  5.2.0
-
-Device topology
-- entity 1: ov5640 1-0021 (1 pad, 1 link)
-            type V4L2 subdev subtype Sensor flags 0
-            device node name /dev/v4l-subdev0
-	pad0: Source
-		[fmt:YUYV8_2X8/640x480@1/30 field:none colorspace:srgb xfer:srgb ycbcr:601 quantization:full-range]
-		-> "sun4i-csi-0":0 [ENABLED,IMMUTABLE]
-
-- entity 3: sun4i-csi-0 (2 pads, 2 links)
-            type V4L2 subdev subtype Unknown flags 0
-            device node name /dev/v4l-subdev1
-	pad0: Sink
-		<- "ov5640 1-0021":0 [ENABLED,IMMUTABLE]
-	pad1: Source
-		[fmt:YUYV8_2X8/640x480]
-		-> "sun4i_csi":0 [ENABLED,IMMUTABLE]
-
-- entity 6: sun4i_csi (1 pad, 1 link)
-            type Node subtype V4L flags 0
-            device node name /dev/video1
-	pad0: Sink
-		<- "sun4i-csi-0":1 [ENABLED,IMMUTABLE]
-
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---7galzcqmm5r5acql
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXThRaQAKCRDj7w1vZxhR
-xfneAQCqVblAWBiXZyLmtv/VgoYllTAICjSZPmzuQRvh0vTbbwEA/YglnsR5zwUA
-IZkVR/YSQVPFbJ88ZyRSSMmNmAHo2wo=
-=YNV2
------END PGP SIGNATURE-----
-
---7galzcqmm5r5acql--
+This is tricky actually, mdiobus_alloc won't do it, I still need to allocate space
+for the pointer.
+So it's not ok to store the register space pointer directly into priv
+(even if iomap returns void *), it's unusual.
+Looks like I will have to use double pointers!
