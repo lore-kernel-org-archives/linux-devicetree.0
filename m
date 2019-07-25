@@ -1,454 +1,543 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [RFC PATCH v2 0/4] Input: mpr121-polled: Add polled driver for
- MPR121
-Date: Thu, 25 Jul 2019 11:57:53 +0300
-Message-ID: <20190725085753.GA26665@penguin>
-References: <1558098773-47416-1-git-send-email-michal.vokac@ysoft.com>
- <20190521053705.GI183429@dtor-ws>
- <ef172b24-cd27-5bb0-d8b1-718f835d0647@ysoft.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [RFC,v3 7/9] media: platform: Add Mediatek ISP P1 device driver
+Date: Thu, 25 Jul 2019 18:23:35 +0900
+Message-ID: <CAAFQd5AmAXm1T0eLPiUTFLv9qiKxe-wZGyXxk0jvge+EanZ3FQ@mail.gmail.com>
+References: <jungo.lin@mediatek.com>
+ <20190611035344.29814-1-jungo.lin@mediatek.com>
+ <20190611035344.29814-8-jungo.lin@mediatek.com>
+ <20190710095646.GB181405@chromium.org>
+ <1563616681.1212.386.camel@mtksdccf07>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ef172b24-cd27-5bb0-d8b1-718f835d0647@ysoft.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1563616681.1212.386.camel@mtksdccf07>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jungo Lin <jungo.lin@mediatek.com>
+Cc: devicetree@vger.kernel.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <sean.cheng@mediatek.com>, =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= <frederic.chen@mediatek.com>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <rynn.wu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Rob Herring <robh@kernel.org>, =?UTF-8?B?UnlhbiBZdSAo5L2Z5a2f5L+uKQ==?= <ryan.yu@mediatek.com>, =?UTF-8?B?RnJhbmtpZSBDaGl1ICjpgrHmloflh7Ep?= <frankie.chiu@mediatek.com>, Hans Verkuil <hverkuil@xs4all.nl>, ddavenport@chromium.org, Sj Huang <sj.huang@mediatek.com>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>,
+ Joerg Roedel <joro@8bytes.org>, " <linux-ar>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
+.Hi Jungo,
 
-On Tue, May 21, 2019 at 08:51:17AM +0200, Michal Vokáč wrote:
-> On 21. 05. 19 7:37, Dmitry Torokhov wrote:
-> > Hi Michal,
-> > 
-> > On Fri, May 17, 2019 at 03:12:49PM +0200, Michal Vokáč wrote:
-> > > Hi,
-> > > 
-> > > I have to deal with a situation where we have a custom i.MX6 based
-> > > platform in production that uses the MPR121 touchkey controller.
-> > > Unfortunately the chip is connected using only the I2C interface.
-> > > The interrupt line is not used. Back in 2015 (Linux v3.14), my
-> > > colleague modded the existing mpr121_touchkey.c driver to use polling
-> > > instead of interrupt.
-> > > 
-> > > For quite some time yet I am in a process of updating the product from
-> > > the ancient Freescale v3.14 kernel to the latest mainline and pushing
-> > > any needed changes upstream. The DT files for our imx6dl-yapp4 platform
-> > > already made it into v5.1-rc.
-> > > 
-> > > I rebased and updated our mpr121 patch to the latest mainline.
-> > > It is created as a separate driver, similarly to gpio_keys_polled.
-> > > 
-> > > The I2C device is quite susceptible to ESD. An ESD test quite often
-> > > causes reset of the chip or some register randomly changes its value.
-> > > The [PATCH 3/4] adds a write-through register cache. With the cache
-> > > this state can be detected and the device can be re-initialied.
-> > > 
-> > > The main question is: Is there any chance that such a polled driver
-> > > could be accepted? Is it correct to implement it as a separate driver
-> > > or should it be done as an option in the existing driver? I can not
-> > > really imagine how I would do that though..
-> > > 
-> > > There are also certain worries that the MPR121 chip may no longer be
-> > > available in nonspecifically distant future. In case of EOL I will need
-> > > to add a polled driver for an other touchkey chip. May it be already
-> > > in mainline or a completely new one.
-> > 
-> > I think that my addition of input_polled_dev was ultimately a wrong
-> > thing to do. I am looking into enabling polling mode for regular input
-> > devices as we then can enable polling mode in existing drivers.
-> 
-> OK, that sounds good. Especially when one needs to switch from one chip
-> to another that is already in tree, the need for a whole new polling
-> driver is eliminated.
+On Sat, Jul 20, 2019 at 6:58 PM Jungo Lin <jungo.lin@mediatek.com> wrote:
+>
+> Hi, Tomasz:
+>
+> On Wed, 2019-07-10 at 18:56 +0900, Tomasz Figa wrote:
+> > Hi Jungo,
+> >
+> > On Tue, Jun 11, 2019 at 11:53:42AM +0800, Jungo Lin wrote:
+> > > This patch adds the Mediatek ISP P1 HW control device driver.
+> > > It handles the ISP HW configuration, provides interrupt handling and
+> > > initializes the V4L2 device nodes and other functions.
+> > >
+> > > (The current metadata interface used in meta input and partial
+> > > meta nodes is only a temporary solution to kick off the driver
+> > > development and is not ready to be reviewed yet.)
+> > >
+> > > Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
+> > > ---
+> > >  .../platform/mtk-isp/isp_50/cam/Makefile      |    1 +
+> > >  .../mtk-isp/isp_50/cam/mtk_cam-regs.h         |  126 ++
+> > >  .../platform/mtk-isp/isp_50/cam/mtk_cam.c     | 1087 +++++++++++++++++
+> > >  .../platform/mtk-isp/isp_50/cam/mtk_cam.h     |  243 ++++
+> > >  4 files changed, 1457 insertions(+)
+> > >  create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-regs.h
+> > >  create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam.c
+> > >  create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam.h
+> > >
+> >
+> > Thanks for the patch! Please see my comments inline.
+> >
+> > [snip]
+> >
+>
+> Thanks for your comments. Please check my replies inline.
+>
 
-Could you please try the patch below and see if it works for your use
-case? Note that I have not tried running it, but it compiles so it must
-be good ;)
+Thanks! I'll snip anything I don't have further comments on.
 
-Thanks!
+[snip]
+> > > +/* META */
+> > > +#define REG_META0_VB2_INDEX                0x14dc
+> > > +#define REG_META1_VB2_INDEX                0x151c
+> >
+> > I don't believe these registers are really for VB2 indexes.
+> >
+>
+> MTK P1 ISP HW supports frame header spare registers for each DMA, such
+> as CAM_DMA_FH_AAO_SPARE or CAM_DMA_FH_AFO_SPARE. We could save some
+> frame information in these ISP registers. In this case, we save META0
+> VB2 index into AAO FH spare register and META1 VB2 index into AFO FH
+> spare register. These implementation is designed for non-request 3A
+> DMAs. These VB2 indexes are sent in ISP_CMD_ENQUEUE_META command of
+> mtk_isp_enqueue function. So we just call CAM_DMA_FH_AAO_SPARE as
+> REG_META0_VB2_INDEX for easy understanding.
 
-Input: add support for polling to input devices
+Unfortunately it's not a good idea to mix hardware concepts with
+naming specific to the OS the driver is written for. Better to keep
+the hardware naming, e.g. CAM_DMA_FH_AAO_SPARE.
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Moreover, if we only need to
+> support request mode, we should remove this here.
+>
+> cmd_params.cmd_id = ISP_CMD_ENQUEUE_META;
+> cmd_params.meta_frame.enabled_dma = dma_port;
+> cmd_params.meta_frame.vb_index = buffer->vbb.vb2_buf.index;
+> cmd_params.meta_frame.meta_addr.iova = buffer->daddr;
+> cmd_params.meta_frame.meta_addr.scp_addr = buffer->scp_addr;
+>
 
-Separating "normal" and "polled" input devices was a mistake, as often we want
-to allow the very same device work on both interrupt-driven and polled mode,
-depending on the board on which the device is used.
+Okay, removing sounds good to me. Let's keep the code simple.
 
-This introduces new APIs:
+[snip]
+> > > +
+> > > +   err_status = irq_status & INT_ST_MASK_CAM_ERR;
+> > > +
+> > > +   /* Sof, done order check */
+> > > +   if ((irq_status & SOF_INT_ST) && (irq_status & HW_PASS1_DON_ST)) {
+> > > +           dev_dbg(dev, "sof_done block cnt:%d\n", isp_dev->sof_count);
+> > > +
+> > > +           /* Notify IRQ event and enqueue frame */
+> > > +           irq_handle_notify_event(isp_dev, irq_status, dma_status, 0);
+> > > +           isp_dev->current_frame = hw_frame_num;
+> >
+> > What exactly is hw_frame_num? Shouldn't we assign it before notifying the
+> > event?
+> >
+>
+> This is a another spare register for frame sequence number usage.
+> It comes from struct p1_frame_param:frame_seq_no which is sent by
+> SCP_ISP_FRAME IPI command. We will rename this to dequeue_frame_seq_no.
+> Is it a better understanding?
 
-- input_setup_polling
-- input_set_poll_interval
-- input_set_min_poll_interval
-- input_set_max_poll_interval
+I'm sorry, unfortunately it's still not clear to me. Is it the
+sequence number of the frame that was just processed and returned to
+the kernel or the next frame that is going to be processed from now
+on?
 
-These new APIs allow switching an input device into polled mode with sysfs
-attributes matching drivers using input_polled_dev APIs that will be eventually
-removed.
+>
+> Below is our frame request handling in current design.
+>
+> 1. Buffer preparation
+> - Combined image buffers (IMGO/RRZO) + meta input buffer (Tuining) +
+> other meta histogram buffers (LCSO/LMVO) into one request.
+> - Accumulated one unique frame sequence number to each request and send
+> this request to the SCP composer to compose CQ (Command queue) buffer
+> via SCP_ISP_FRAME IPI command.
+> - CQ buffer is frame registers set. If ISP registers should be updated
+> per frame, these registers are configured in the CQ buffer, such as
+> frame sequence number, DMA addresses and tuning ISP registers.
+> - One frame request will be composed into one CQ buffer.Once CQ buffer
+> is composed done and kernel driver will receive ISP_CMD_FRAME_ACK with
+> its corresponding frame sequence number. Based on this, kernel driver
+> knows which request is ready to be en-queued and save this with
+> p1_dev->isp_ctx.composed_frame_id.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/input/Makefile       |    2 
- drivers/input/input-poller.c |  207 ++++++++++++++++++++++++++++++++++++++++++
- drivers/input/input.c        |   36 ++++++-
- include/linux/input.h        |   10 ++
- 4 files changed, 247 insertions(+), 8 deletions(-)
- create mode 100644 drivers/input/input-poller.c
+Hmm, why do we need to save this in p1_dev->isp_ctx? Wouldn't we
+already have a linked lists of requests that are composed and ready to
+be enqueued? Also, the request itself would contain its frame ID
+inside the driver request struct, right?
 
-diff --git a/drivers/input/Makefile b/drivers/input/Makefile
-index 40de6a7be641..e35650930371 100644
---- a/drivers/input/Makefile
-+++ b/drivers/input/Makefile
-@@ -6,7 +6,7 @@
- # Each configuration option enables a list of files.
- 
- obj-$(CONFIG_INPUT)		+= input-core.o
--input-core-y := input.o input-compat.o input-mt.o ff-core.o
-+input-core-y := input.o input-compat.o input-mt.o input-poller.o ff-core.o
- 
- obj-$(CONFIG_INPUT_FF_MEMLESS)	+= ff-memless.o
- obj-$(CONFIG_INPUT_POLLDEV)	+= input-polldev.o
-diff --git a/drivers/input/input-poller.c b/drivers/input/input-poller.c
-new file mode 100644
-index 000000000000..008d6f362d60
---- /dev/null
-+++ b/drivers/input/input-poller.c
-@@ -0,0 +1,207 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Support for polling mode for input devices.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/input.h>
-+#include <linux/jiffies.h>
-+#include <linux/mutex.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/workqueue.h>
-+#include "input-poller.h"
-+
-+struct input_dev_poller {
-+	void (*poll)(struct input_dev *dev);
-+
-+	unsigned int poll_interval; /* msec */
-+	unsigned int poll_interval_max; /* msec */
-+	unsigned int poll_interval_min; /* msec */
-+
-+	struct input_dev *input;
-+	struct delayed_work work;
-+};
-+
-+static void input_dev_poller_queue_work(struct input_dev_poller *poller)
-+{
-+	unsigned long delay;
-+
-+	delay = msecs_to_jiffies(poller->poll_interval);
-+	if (delay >= HZ)
-+		delay = round_jiffies_relative(delay);
-+
-+	queue_delayed_work(system_freezable_wq, &poller->work, delay);
-+}
-+
-+static void input_dev_poller_work(struct work_struct *work)
-+{
-+	struct input_dev_poller *poller =
-+		container_of(work, struct input_dev_poller, work.work);
-+
-+	poller->poll(poller->input);
-+	input_dev_poller_queue_work(poller);
-+}
-+
-+void input_dev_poller_finalize(struct input_dev_poller *poller)
-+{
-+	if (!poller->poll_interval)
-+		poller->poll_interval = 500;
-+	if (!poller->poll_interval_max)
-+		poller->poll_interval_max = poller->poll_interval;
-+}
-+
-+void input_dev_poller_start(struct input_dev_poller *poller)
-+{
-+	/* Only start polling if polling is enabled */
-+	if (poller->poll_interval > 0) {
-+		poller->poll(poller->input);
-+		input_dev_poller_queue_work(poller);
-+	}
-+}
-+
-+void input_dev_poller_stop(struct input_dev_poller *poller)
-+{
-+	cancel_delayed_work_sync(&poller->work);
-+}
-+
-+int input_setup_polling(struct input_dev *dev,
-+			void (*poll_fn)(struct input_dev *dev))
-+{
-+	struct input_dev_poller *poller;
-+
-+	poller = kzalloc(sizeof(*poller), GFP_KERNEL);
-+	if (!poller) {
-+		dev_err(dev->dev.parent ?: &dev->dev,
-+			"%s: unable to allocate poller structure\n", __func__);
-+		return -ENOMEM;
-+	}
-+
-+	INIT_DELAYED_WORK(&poller->work, input_dev_poller_work);
-+	poller->poll = poll_fn;
-+
-+	dev->poller = poller;
-+	return 0;
-+}
-+EXPORT_SYMBOL(input_setup_polling);
-+
-+static bool input_dev_ensure_poller(struct input_dev *dev)
-+{
-+	if (!dev->poller) {
-+		dev_err(dev->dev.parent ?: &dev->dev,
-+			"poller structure has not been set up\n");
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+void input_set_poll_interval(struct input_dev *dev, unsigned int interval)
-+{
-+	if (input_dev_ensure_poller(dev))
-+		dev->poller->poll_interval = interval;
-+}
-+EXPORT_SYMBOL(input_set_poll_interval);
-+
-+void input_set_min_poll_interval(struct input_dev *dev, unsigned int interval)
-+{
-+	if (input_dev_ensure_poller(dev))
-+		dev->poller->poll_interval_min = interval;
-+}
-+EXPORT_SYMBOL(input_set_min_poll_interval);
-+
-+void input_set_max_poll_interval(struct input_dev *dev, unsigned int interval)
-+{
-+	if (input_dev_ensure_poller(dev))
-+		dev->poller->poll_interval_max = interval;
-+}
-+EXPORT_SYMBOL(input_set_max_poll_interval);
-+
-+/* SYSFS interface */
-+
-+static ssize_t input_dev_get_poll_interval(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf)
-+{
-+	struct input_dev *input = to_input_dev(dev);
-+
-+	return sprintf(buf, "%d\n", input->poller->poll_interval);
-+}
-+
-+static ssize_t input_dev_set_poll_interval(struct device *dev,
-+					   struct device_attribute *attr,
-+					   const char *buf, size_t count)
-+{
-+	struct input_dev *input = to_input_dev(dev);
-+	struct input_dev_poller *poller = input->poller;
-+	unsigned int interval;
-+	int err;
-+
-+	err = kstrtouint(buf, 0, &interval);
-+	if (err)
-+		return err;
-+
-+	if (interval < poller->poll_interval_min)
-+		return -EINVAL;
-+
-+	if (interval > poller->poll_interval_max)
-+		return -EINVAL;
-+
-+	mutex_lock(&input->mutex);
-+
-+	poller->poll_interval = interval;
-+
-+	if (input->users) {
-+		cancel_delayed_work_sync(&poller->work);
-+		if (poller->poll_interval > 0)
-+			input_dev_poller_queue_work(poller);
-+	}
-+
-+	mutex_unlock(&input->mutex);
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR(poll, S_IRUGO | S_IWUSR,
-+		   input_dev_get_poll_interval, input_dev_set_poll_interval);
-+
-+static ssize_t input_dev_get_poll_max(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct input_dev *input = to_input_dev(dev);
-+
-+	return sprintf(buf, "%d\n", input->poller->poll_interval_max);
-+}
-+
-+static DEVICE_ATTR(max, S_IRUGO, input_dev_get_poll_max, NULL);
-+
-+static ssize_t input_dev_get_poll_min(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	struct input_dev *input = to_input_dev(dev);
-+
-+	return sprintf(buf, "%d\n", input->poller->poll_interval_min);
-+}
-+
-+static DEVICE_ATTR(min, S_IRUGO, input_dev_get_poll_min, NULL);
-+
-+static umode_t input_poller_attrs_visible(struct kobject *kobj,
-+					  struct attribute *attr, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct input_dev *input = to_input_dev(dev);
-+
-+	return input->poller ? attr->mode : 0;
-+}
-+
-+static struct attribute *input_poller_attrs[] = {
-+	&dev_attr_poll.attr,
-+	&dev_attr_max.attr,
-+	&dev_attr_min.attr,
-+	NULL
-+};
-+
-+struct attribute_group input_poller_attribute_group = {
-+	.is_visible	= input_poller_attrs_visible,
-+	.attrs		= input_poller_attrs,
-+};
-diff --git a/drivers/input/input.c b/drivers/input/input.c
-index 7f3c5fcb9ed6..6b87c07d5981 100644
---- a/drivers/input/input.c
-+++ b/drivers/input/input.c
-@@ -24,6 +24,7 @@
- #include <linux/mutex.h>
- #include <linux/rcupdate.h>
- #include "input-compat.h"
-+#include "input-poller.h"
- 
- MODULE_AUTHOR("Vojtech Pavlik <vojtech@suse.cz>");
- MODULE_DESCRIPTION("Input core");
-@@ -603,20 +604,31 @@ int input_open_device(struct input_handle *handle)
- 
- 	handle->open++;
- 
--	if (!dev->users++ && dev->open)
--		retval = dev->open(dev);
-+	if (dev->users++) {
-+		/*
-+		 * Device is already opened, so we can exit immediately and
-+		 * report success.
-+		 */
-+		goto out;
-+	}
- 
--	if (retval) {
--		dev->users--;
--		if (!--handle->open) {
-+	if (dev->open) {
-+		retval = dev->open(dev);
-+		if (retval) {
-+			dev->users--;
-+			handle->open--;
- 			/*
- 			 * Make sure we are not delivering any more events
- 			 * through this handle
- 			 */
- 			synchronize_rcu();
-+			goto out;
- 		}
- 	}
- 
-+	if (dev->poller)
-+		input_dev_poller_start(dev->poller);
-+
-  out:
- 	mutex_unlock(&dev->mutex);
- 	return retval;
-@@ -655,8 +667,13 @@ void input_close_device(struct input_handle *handle)
- 
- 	__input_release_device(handle);
- 
--	if (!--dev->users && dev->close)
--		dev->close(dev);
-+	if (!--dev->users) {
-+		if (dev->poller)
-+			input_dev_poller_stop(dev->poller);
-+
-+		if (dev->close)
-+			dev->close(dev);
-+	}
- 
- 	if (!--handle->open) {
- 		/*
-@@ -1502,6 +1519,7 @@ static const struct attribute_group *input_dev_attr_groups[] = {
- 	&input_dev_attr_group,
- 	&input_dev_id_attr_group,
- 	&input_dev_caps_attr_group,
-+	&input_poller_attribute_group,
- 	NULL
- };
- 
-@@ -1511,6 +1529,7 @@ static void input_dev_release(struct device *device)
- 
- 	input_ff_destroy(dev);
- 	input_mt_destroy_slots(dev);
-+	kfree(dev->poller);
- 	kfree(dev->absinfo);
- 	kfree(dev->vals);
- 	kfree(dev);
-@@ -2135,6 +2154,9 @@ int input_register_device(struct input_dev *dev)
- 	if (!dev->setkeycode)
- 		dev->setkeycode = input_default_setkeycode;
- 
-+	if (dev->poller)
-+		input_dev_poller_finalize(dev->poller);
-+
- 	error = device_add(&dev->dev);
- 	if (error)
- 		goto err_free_vals;
-diff --git a/include/linux/input.h b/include/linux/input.h
-index 510e78558c10..956f32be87cc 100644
---- a/include/linux/input.h
-+++ b/include/linux/input.h
-@@ -21,6 +21,8 @@
- #include <linux/timer.h>
- #include <linux/mod_devicetable.h>
- 
-+struct input_dev_poller;
-+
- /**
-  * struct input_value - input value representation
-  * @type: type of value (EV_KEY, EV_ABS, etc)
-@@ -147,6 +149,8 @@ struct input_dev {
- 
- 	struct ff_device *ff;
- 
-+	struct input_dev_poller *poller;
-+
- 	unsigned int repeat_key;
- 	struct timer_list timer;
- 
-@@ -361,6 +365,12 @@ void input_unregister_device(struct input_dev *);
- 
- void input_reset_device(struct input_dev *);
- 
-+int input_setup_polling(struct input_dev *dev,
-+			void (*poll_fn)(struct input_dev *dev));
-+void input_set_poll_interval(struct input_dev *dev, unsigned int interval);
-+void input_set_min_poll_interval(struct input_dev *dev, unsigned int interval);
-+void input_set_max_poll_interval(struct input_dev *dev, unsigned int interval);
-+
- int __must_check input_register_handler(struct input_handler *);
- void input_unregister_handler(struct input_handler *);
- 
--- 
-Dmitry
+> - The maximum number of CQ buffers in SCP is 3.
+>
+> 2. Buffer en-queue flow
+> - In order to configure correct CQ buffer setting before next SQF event,
+> it is depended on by MTK ISP P1 HW CQ mechanism.
+> - The basic concept of CQ mechanism is loaded ISP CQ buffer settings
+> when HW_PASS1_DON_ST is received which means DMA output is done.
+> - Btw, the pre-condition of this, need to tell ISP HW which CQ buffer
+> address is used. Otherwise, it will loaded one dummy CQ buffer to
+> bypass.
+> - So we will check available CQ buffers by comparing composed frame
+> sequence number & dequeued frame sequence from ISP HW in SOF event.
+> - If there are available CQ buffers, update the CQ base address to the
+> next CQ buffer address based on current de-enqueue frame sequence
+> number. So MTK ISP P1 HW will load this CQ buffer into HW when
+> HW_PASS1_DON_ST is triggered which is before the next SOF.
+> - So in next SOF event, ISP HW starts to output DMA buffers with this
+> request until request is done.
+> - But, for the first request, it is loaded into HW manually when
+> streaming is on for better performance.
+>
+> 3. Buffer de-queue flow
+> - We will use frame sequence number to decide which request is ready to
+> de-queue.
+> - We will save some important register setting from ISP HW when SOF is
+> received. This is because the ISP HW starts to output the data with the
+> corresponding settings, especially frame sequence number setting.
+
+Could you explain a bit more about these important register settings?
+When does the hardware update the values in the register to new ones?
+At SOF?
+
+> - When receiving SW_PASS1_DON_ST IRQ event, it means the DMA output is
+> done. So we could call isp_deque_request_frame with frame sequence
+> number to de-queue frame to VB2
+
+What's the difference between HW_PASS1_DON_ST and SW_PASS1_DON_ST?
+
+> - For AAO/AFO buffers, it has similar design concept. Sometimes, if only
+> AAO/AFO non-request buffers are en-queued without request buffers at the
+> same time, there will be no SW P1 done event for AAO/AFO DMA done.
+> Needs to depend on other IRQ events, such as AAO/AFO_DONE_EVENT.
+
+Do we have a case like this? Wouldn't we normally always want to
+bundle AAO/AFO buffers with frame buffers?
+
+> - Due to CQ buffer number limitation, if we receive SW_PASS1_DONT_ST,
+> we may try to send another request to SCP for composing.
+
+Okay, so basically in SW_PASS1_DONT_ST the CQ completed reading the CQ
+buffers, right?
+
+>
+> Hopefully, my explanation is helpful for better understanding our
+> implementation. If you still have any questions, please let me know.
+>
+
+Yes, it's more clear now, thanks. Still some more comments above, though.
+
+> > > +           isp_dev->meta0_vb2_index = meta0_vb2_index;
+> > > +           isp_dev->meta1_vb2_index = meta1_vb2_index;
+> > > +   } else {
+> > > +           if (irq_status & SOF_INT_ST) {
+> > > +                   isp_dev->current_frame = hw_frame_num;
+> > > +                   isp_dev->meta0_vb2_index = meta0_vb2_index;
+> > > +                   isp_dev->meta1_vb2_index = meta1_vb2_index;
+> > > +           }
+> > > +           irq_handle_notify_event(isp_dev, irq_status, dma_status, 1);
+> > > +   }
+> >
+> > The if and else blocks do almost the same things just in different order. Is
+> > it really expected?
+> >
+>
+> If we receive HW_PASS1_DON_ST & SOF_INT_ST IRQ events at the same time,
+> the correct sequence should be handle HW_PASS1_DON_ST firstly to check
+> any de-queued frame and update the next frame setting later.
+> Normally, this is a corner case or system performance issue.
+
+So it sounds like HW_PASS1_DON_ST means that all data from current
+frame has been written, right? If I understand your explanation above
+correctly, that would mean following handling of each interrupt:
+
+HW_PASS1_DON_ST:
+ - CQ executes with next CQ buffer to prepare for next frame. <- how
+is this handled? does the CQ hardware automatically receive this event
+from the ISP hadware?
+ - return VB2 buffers,
+ - complete requests.
+
+SOF_INT_ST:
+ - send VSYNC event to userspace,
+ - program next CQ buffer to CQ,
+
+SW_PASS1_DON_ST:
+ - reclaim CQ buffer and enqueue next frame to composing if available
+
+>
+> Btw, we will revise the above implementation as below.
+>
+>
+> if (irq_status & SOF_INT_ST)
+>         mtk_cam_dev_event_frame_sync(&p1_dev->cam_dev,
+>                                              dequeue_frame_seq_no);
+>
+> /* Sof, done order check */
+> if ((irq_status & SOF_INT_ST) && (irq_status & HW_PASS1_DON_ST))
+>         dev_warn(dev, "sof_done block cnt:%d\n", p1_dev->sof_count);
+>
+> /* Notify IRQ event and de-enqueue frame */
+> irq_handle_notify_event(p1_dev, irq_status, dma_status);
+
+Don't we still need to do this conditionally, only if we got HW_PASS1_DON_ST?
+
+[snip]
+> > > +/* ISP P1 interface functions */
+> > > +int mtk_isp_power_init(struct mtk_cam_dev *cam_dev)
+> > > +{
+> > > +   struct device *dev = &cam_dev->pdev->dev;
+> > > +   struct isp_p1_device *p1_dev = get_p1_device(dev);
+> > > +   struct mtk_isp_p1_ctx *isp_ctx = &p1_dev->isp_ctx;
+> > > +   int ret;
+> > > +
+> > > +   ret = isp_setup_scp_rproc(p1_dev);
+> > > +   if (ret)
+> > > +           return ret;
+> > > +
+> > > +   ret = isp_init_context(p1_dev);
+> > > +   if (ret)
+> > > +           return ret;
+> >
+> > The above function doesn't really seem to be related to power management.
+> > Should it be called from subdev stream on?
+> >
+>
+> We will rename this function to mtk_isp_hw_init.
+> But, it will be called when the first video node is streamed on.
+> This is because we need to initialize the HW firstly for sub-device
+> stream-on performance.  We need to send some IPI commands, such as
+> ISP_CMD_INIT & ISP_CMD_CONFIG_META & ISP_CMD_ENQUEUE_META in this
+> timing.
+
+What performance do you mean here? The time between first video node
+stream on and last video node stream on should be really short. Are
+you seeing some long delays there?
+
+That said, doing it when the first video node starts streaming is okay.
+
+[snip]
+> > > +   /* Use pure RAW as default HW path */
+> > > +   isp_ctx->isp_raw_path = ISP_PURE_RAW_PATH;
+> > > +   atomic_set(&p1_dev->cam_dev.streamed_node_count, 0);
+> > > +
+> > > +   isp_composer_hw_init(dev);
+> > > +   /* Check enabled DMAs which is configured by media setup */
+> > > +   isp_composer_meta_config(dev, get_enabled_dma_ports(cam_dev));
+> >
+> > Hmm, this seems to be also configured by isp_compoer_hw_config(). Are both
+> > necessary?
+> >
+>
+> Yes, it is necessary for non-request buffers design for Camera 3A video
+> nodes. For 3A video nodes, we just want to know which 3A video nodes are
+> enabled in ISP_CMD_CONFIG_META. In this stage, we may not know the image
+> format from user space. So we just pass the enabled DMA information from
+> kernel to SCP only. With 3A enabled DMA information, we could configure
+> related 3A registers in SCP.
+
+We should try to remove this non-request mode. Let's continue
+discussion on the other patch where I brought this topic.
+
+[snip]
+> > > +int mtk_isp_power_release(struct device *dev)
+> > > +{
+> > > +   isp_composer_hw_deinit(dev);
+> > > +   isp_uninit_context(dev);
+> >
+> > These two don't seem to be related to power either.
+> >
+> > Instead, I don't see anything that could undo the rproc_boot() operation
+> > here.
+> >
+>
+> We will rename this function to mtk_isp_hw_release.
+> We will also add rproc_shutdown function call here.
+>
+> int mtk_isp_hw_release(struct mtk_cam_dev *cam)
+> {
+>         struct device *dev = cam->dev;
+>         struct mtk_isp_p1_device *p1_dev = dev_get_drvdata(dev);
+>
+>         isp_composer_hw_deinit(p1_dev);
+>         pm_runtime_put_sync_autosuspend(dev);
+
+Note that for autosuspend to work correctly, you also need to call
+pm_runtime_mark_last_busy() before this one.
+
+[snip]
+> > > +   struct mtk_isp_p1_ctx *isp_ctx = &p1_dev->isp_ctx;
+> > > +   struct p1_frame_param frameparams;
+> > > +   struct mtk_isp_queue_job *framejob;
+> > > +   struct media_request_object *obj, *obj_safe;
+> > > +   struct vb2_buffer *vb;
+> > > +   struct mtk_cam_dev_buffer *buf;
+> > > +
+> > > +   framejob = kzalloc(sizeof(*framejob), GFP_ATOMIC);
+> >
+> > This allocation shouldn't be needed. The structure should be already a part
+> > of the mtk_cam_dev_request struct that wraps media_request. Actually. I'd
+> > even say that the contents of this struct should be just moved to that one
+> > to avoid overabstracting.
+> >
+>
+> For this function, we will apply the new design from P2 driver's
+> comment. Here is the new implementation.
+>
+> struct mtk_cam_dev_request {
+>         struct media_request req;
+>         struct mtk_p1_frame_param frame_params;
+>         struct work_struct frame_work;
+>         struct list_head list;
+>         atomic_t buf_count;
+> };
+>
+> void mtk_isp_req_enqueue(struct mtk_cam_dev *cam,
+>                          struct mtk_cam_dev_request *req)
+> {
+>         struct mtk_isp_p1_device *p1_dev = dev_get_drvdata(cam->dev);
+>         int ret;
+>
+>         req->frame_params.frame_seq_no = ++p1_dev->enqueue_frame_seq_no;
+>         INIT_WORK(&req->frame_work, isp_tx_frame_worker);
+>         ret = queue_work(p1_dev->composer_wq, &req->frame_work);
+>         if (!ret)
+>                 dev_dbg(cam->dev, "frame_no:%d queue_work failed\n",
+>                         req->frame_params.frame_seq_no, ret);
+>         else
+>                 dev_dbg(cam->dev, "Enqueue fd:%s frame_seq_no:%d job cnt:%d\n",
+>                         req->req.debug_str, req->frame_params.frame_seq_no,
+>                         atomic_read(&cam->running_job_count));
+
+It shouldn't be possible for queue_work() to fail here. We just
+received a brand new request from the Request API core and called
+INIT_WORK() on the work struct.
+
+[snip]
+> > > +   enable_sys_clock(p1_dev);
+> > > +
+> > > +   /* V4L2 stream-on phase & restore HW stream-on status */
+> > > +   if (p1_dev->cam_dev.streaming) {
+> > > +           dev_dbg(dev, "Cam:%d resume,enable VF\n", module);
+> > > +           /* Enable CMOS */
+> > > +           reg_val = readl(isp_dev->regs + REG_TG_SEN_MODE);
+> > > +           writel((reg_val | CMOS_EN_BIT),
+> > > +                  isp_dev->regs + REG_TG_SEN_MODE);
+> > > +           /* Enable VF */
+> > > +           reg_val = readl(isp_dev->regs + REG_TG_VF_CON);
+> > > +           writel((reg_val | VFDATA_EN_BIT),
+> > > +                  isp_dev->regs + REG_TG_VF_CON);
+> > > +   }
+> >
+> > Does the hardware keep all the state, e.g. queued buffers, during suspend?
+> > Would the code above continue all the capture from the next buffer, as
+> > queued by the userspace before the suspend?
+> >
+>
+> Yes, we will test it.
+> 1. SCP buffers are kept by SCP processor
+> 2. ISP registers are still kept even if ISP clock is disable.
+>
+
+That said, during system suspend, it would be more than just ISP clock
+disabled. I'd expect that the ISP power domain would be powered off.
+However, if we ensure that the ISP completes before suspend, I guess
+that after the resume the next frame CQ buffer would reprogram all the
+registers, right?
+
+Also, would SCP always keep running in system suspend?
+
+[snip]
+> > > +
+> > > +   for (i = ISP_CAMSYS_CONFIG_IDX; i < ISP_DEV_NODE_NUM; i++) {
+> >
+> > I think we want to start from 0 here?
+> >
+>
+> Because of single CAM support, we will revise our DTS tree to support
+> single CAM only.
+
+Note that DT bindings should describe the hardware not the driver. So
+please design the bindings in a way that would cover all the cameras,
+even if the driver only takes the information needed to handle 1.
+
+> So we could remove this loop and check the CAM-B HW
+> information here. Here is below new function.
+>
+> static int mtk_isp_probe(struct platform_device *pdev)
+> {
+>         /* List of clocks required by isp cam */
+>         static const char * const clk_names[] = {
+>                 "camsys_cam_cgpdn", "camsys_camtg_cgpdn"
+>         };
+>         struct mtk_isp_p1_device *p1_dev;
+>         struct device *dev = &pdev->dev;
+>         struct resource *res;
+>         int irq, ret, i;
+>
+>         p1_dev = devm_kzalloc(dev, sizeof(*p1_dev), GFP_KERNEL);
+>         if (!p1_dev)
+>                 return -ENOMEM;
+>
+>         p1_dev->dev = dev;
+>         dev_set_drvdata(dev, p1_dev);
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>         p1_dev->regs = devm_ioremap_resource(dev, res);
+>         if (IS_ERR(p1_dev->regs)) {
+>                 dev_err(dev, "Failed platform resources map\n");
+>                 return PTR_ERR(p1_dev->regs);
+>         }
+>         dev_dbg(dev, "cam, map_addr=0x%pK\n", p1_dev->regs);
+>
+>         irq = platform_get_irq(pdev, 0);
+>         if (!irq) {
+>                 dev_err(dev, "Missing IRQ resources data\n");
+>                 return -ENODEV;
+>         }
+>         ret = devm_request_irq(dev, irq, isp_irq_cam, IRQF_SHARED,
+>                                dev_name(dev), p1_dev);
+>         if (ret) {
+>                 dev_err(dev, "req_irq fail, dev:%s irq=%d\n",
+>                         dev->of_node->name, irq);
+>                 return ret;
+>         }
+>         dev_dbg(dev, "Reg. irq=%d, isr:%s\n", irq, dev_driver_string(dev));
+>         spin_lock_init(&p1_dev->spinlock_irq);
+>
+>         p1_dev->num_clks = ARRAY_SIZE(clk_names);
+>         p1_dev->clks = devm_kcalloc(dev, p1_dev->num_clks,
+>                                     sizeof(*p1_dev->clks), GFP_KERNEL);
+>         if (!p1_dev->clks)
+>                 return -ENOMEM;
+>
+>         for (i = 0; i < p1_dev->num_clks; ++i)
+>                 p1_dev->clks[i].id = clk_names[i];
+>
+>         ret = devm_clk_bulk_get(dev, p1_dev->num_clks, p1_dev->clks);
+>         if (ret) {
+>                 dev_err(dev, "cannot get isp cam clock:%d\n", ret);
+>                 return ret;
+>         }
+>
+>         ret = isp_setup_scp_rproc(p1_dev, pdev);
+>         if (ret)
+>                 return ret;
+>
+>         pm_runtime_enable(dev);
+
+We also need to call pm_runtime_use_autosuspend() and
+pm_runtime_set_autosuspend_delay() before enabling runtime PM. I'd
+suggest an autosuspend delay equal to around 2x the time that's needed
+to stop and start streaming in total.
+
+[snip]
+> > > +static const struct dev_pm_ops mtk_isp_pm_ops = {
+> > > +   SET_SYSTEM_SLEEP_PM_OPS(mtk_isp_suspend, mtk_isp_resume)
+> > > +   SET_RUNTIME_PM_OPS(mtk_isp_suspend, mtk_isp_resume, NULL)
+> >
+> > For V4L2 drivers system and runtime PM ops would normally be completely
+> > different. Runtime PM ops would be called when the hardware is idle already
+> > or is about to become active. System PM ops would be called at system power
+> > state change and the hardware might be both idle or active. Please also see
+> > my comments to mtk_isp_suspend() and mtk_isp_resume() above.
+> >
+>
+> Here is the new implementation. It should be clear to show the
+> difference between system and runtime PM ops.
+>
+> static const struct dev_pm_ops mtk_isp_pm_ops = {
+>         SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>                                 pm_runtime_force_resume)
+>         SET_RUNTIME_PM_OPS(mtk_isp_runtime_suspend, mtk_isp_runtime_resume,
+> NULL)
+> };
+
+That's still not correct. In runtime suspend/resume ops we already are
+not streaming anymore, because we call pm_runtime_get/put_*() when
+starting and stopping streaming. In system suspend/resume ops we might
+be streaming and that's when we need to stop the hardware and wait for
+it to finish. Please implement these ops separately.
+
+Best regards,
+Tomasz
