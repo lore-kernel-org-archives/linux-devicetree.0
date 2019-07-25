@@ -1,97 +1,36 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v2 1/3] dt-bindings: regulator: Document regulators coupling of NVIDIA Tegra20/30 SoCs
-Date: Thu, 25 Jul 2019 18:18:30 +0300
-Message-ID: <20190725151832.9802-2-digetx@gmail.com>
-References: <20190725151832.9802-1-digetx@gmail.com>
+From: Torsten Duwe <duwe@lst.de>
+Subject: Re: [PATCH v3 5/7] drm/bridge: Add Analogix anx6345 support
+Date: Thu, 25 Jul 2019 17:26:49 +0200
+Message-ID: <20190725152649.GB4820@lst.de>
+References: <20190722151154.8344568BFE@verein.lst.de> <CA+E=qVeSjE1i-ngJWv=GTQDM6HL-VEZWjXH_p_BXy+eP7SvWhg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725151832.9802-1-digetx@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CA+E=qVeSjE1i-ngJWv=GTQDM6HL-VEZWjXH_p_BXy+eP7SvWhg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Sean Paul <seanpaul@chromium.org>, Harald Geyer <harald@ccbib.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-There is voltage coupling between three regulators on Tegra20 boards and
-between two on Tegra30. The voltage coupling is a SoC-level feature and
-thus it is mandatory and common for all of the Tegra boards.
+On Mon, Jul 22, 2019 at 11:49:48AM -0700, Vasily Khoruzhick wrote:
+> On Mon, Jul 22, 2019 at 8:11 AM Torsten Duwe <duwe@lst.de> wrote:
+> >
+> > +module_i2c_driver(anx6345_driver);
+> > +
+> > +MODULE_DESCRIPTION("ANX6345 eDP Transmitter driver");
+> > +MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
+> 
+> I believe Icenowy is the author of this driver. If you think otherwise
+> please add Enric to CC and get his Signed-off-by.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- .../nvidia,tegra-regulators-coupling.txt      | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/nvidia,tegra-regulators-coupling.txt
+This has already been questioned, and consequently I had a closer look.
+Icenowy did the work of finding and splitting the common parts, and copied
+and modified those that needed adaption.
 
-diff --git a/Documentation/devicetree/bindings/regulator/nvidia,tegra-regulators-coupling.txt b/Documentation/devicetree/bindings/regulator/nvidia,tegra-regulators-coupling.txt
-new file mode 100644
-index 000000000000..4bf2dbf7c6cc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/nvidia,tegra-regulators-coupling.txt
-@@ -0,0 +1,65 @@
-+NVIDIA Tegra Regulators Coupling
-+================================
-+
-+NVIDIA Tegra SoC's have a mandatory voltage-coupling between regulators.
-+Thus on Tegra20 there are 3 coupled regulators and on NVIDIA Tegra30
-+there are 2.
-+
-+Tegra20 voltage coupling
-+------------------------
-+
-+On Tegra20 SoC's there are 3 coupled regulators: CORE, RTC and CPU.
-+The CORE and RTC voltages shall be in a range of 170mV from each other
-+and they both shall be higher than the CPU voltage by at least 120mV.
-+
-+Tegra30 voltage coupling
-+------------------------
-+
-+On Tegra30 SoC's there are 2 coupled regulators: CORE and CPU. The CORE
-+and CPU voltages shall be in a range of 300mV from each other and CORE
-+voltage shall be higher than the CPU by N mV, where N depends on the CPU
-+voltage.
-+
-+Required properties:
-+- nvidia,tegra-core-regulator: Boolean property that designates regulator
-+  as the "Core domain" voltage regulator.
-+- nvidia,tegra-rtc-regulator: Boolean property that designates regulator
-+  as the "RTC domain" voltage regulator.
-+- nvidia,tegra-cpu-regulator: Boolean property that designates regulator
-+  as the "CPU domain" voltage regulator.
-+
-+Example:
-+
-+	pmic {
-+		regulators {
-+			core_vdd_reg: core {
-+				regulator-name = "vdd_core";
-+				regulator-min-microvolt = <950000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-coupled-with = <&rtc_vdd_reg &cpu_vdd_reg>;
-+				regulator-coupled-max-spread = <170000 550000>;
-+
-+				nvidia,tegra-core-regulator;
-+			};
-+
-+			rtc_vdd_reg: rtc {
-+				regulator-name = "vdd_rtc";
-+				regulator-min-microvolt = <950000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-coupled-with = <&core_vdd_reg &cpu_vdd_reg>;
-+				regulator-coupled-max-spread = <170000 550000>;
-+
-+				nvidia,tegra-rtc-regulator;
-+			};
-+
-+			cpu_vdd_reg: cpu {
-+				regulator-name = "vdd_cpu";
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <1125000>;
-+				regulator-coupled-with = <&core_vdd_reg &rtc_vdd_reg>;
-+				regulator-coupled-max-spread = <550000 550000>;
-+
-+				nvidia,tegra-cpu-regulator;
-+			};
-+		};
-+	};
--- 
-2.22.0
+Please read the change log(s) in the cover letter(s).
+
+I guess Enric already did sign off his code, which only got moved, copied
+and modified.
+
+	Torsten
