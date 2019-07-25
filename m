@@ -1,129 +1,98 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 0/4] new driver for TI eQEP
-Date: Thu, 25 Jul 2019 17:52:21 -0500
-Message-ID: <4616508c-d753-586d-0d3b-5a003e86f582@lechnology.com>
-References: <20190722154538.5314-1-david@lechnology.com>
- <20190725124037.GA4802@icarus>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: crypto: Add DT bindings documentation
+ for amlogic-crypto
+Date: Thu, 25 Jul 2019 16:55:30 -0600
+Message-ID: <CAL_JsqLbYwRpNWHGkYbomWLMpum_DXW4OjNNRrwTRM=w86dONw@mail.gmail.com>
+References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com> <1564083776-20540-2-git-send-email-clabbe@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725124037.GA4802@icarus>
-Content-Language: en-US
+In-Reply-To: <1564083776-20540-2-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: Corentin Labbe <clabbe@baylibre.com>
+Cc: David Miller <davem@davemloft.net>, Herbert Xu <herbert@gondor.apana.org.au>, Kevin Hilman <khilman@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, baylibre-upstreaming@groups.io
 List-Id: devicetree@vger.kernel.org
 
-On 7/25/19 7:40 AM, William Breathitt Gray wrote:
-> On Mon, Jul 22, 2019 at 10:45:34AM -0500, David Lechner wrote:
->> This series adds device tree bindings and a new counter driver for the Texas
->> Instruments Enhanced Quadrature Encoder Pulse (eQEP).
->>
->> As mentioned in one of the commit messages, to start with, the driver only
->> supports reading the current counter value and setting the min/max values.
->> Other features can be added on an as-needed basis.
->>
->> The only other feature I am interested in is adding is getting time data in
->> order to calculate the rotational speed of a motor. However, there probably
->> needs to be a higher level discussion of how this can fit into the counter
->> subsystem in general first.
-> 
-> I believe exposing some sort of time data has merit. Quadrature counter
-> devices in particular are commonly used for position tracking of
-> automation systems, and such systems would benefit from velocity/speed
-> information. So let's try to introduce that sort of functionality in this
-> driver if possible.
-> 
-> First, let's discuss your specific use case and requirements, and hopefully we
-> can generalize it enough to be of use for future drivers. From your description,
-> it sounds like you're attaching some sort of rotary encoder to the eQEP device.
-> Is that correct? What sort of time data are you hoping to use; does the eQEP
-> device provide a clock value, or would you be grabbing a timestamp from the
-> system?
+On Thu, Jul 25, 2019 at 1:43 PM Corentin Labbe <clabbe@baylibre.com> wrote:
+>
+> This patch adds documentation for Device-Tree bindings for the
+> Amlogic GXL cryptographic offloader driver.
+>
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> ---
+>  .../bindings/crypto/amlogic-gxl-crypto.yaml   | 45 +++++++++++++++++++
 
-My use case is robotics using LEGO MINDSTORMS. More specifically, I am using
-motors that have a cheap optical rotary encoder (plastic wheel and infrared
-LED/detectors) that give 360 counts per 1 rotation of the motor shaft. One count
-is defined as the rising edge or falling edge of the A signal. We are looking at
-anywhere from 0 to around 2000 counts per second. We use the speed as feedback in
-a control algorithm to drive the motor at a constant speed. The control loop
-updates on the order of 1 to 10 ms.
+Follow the compatible string for the filename: amlogic,gxl-crypto.yaml
 
-Because the encoder resolution and speeds are relatively low, we are currently
-logging a timestamp for each count. If no count occurs for 50ms, then we log the
-same count again with a new timestamp (otherwise we would never see 0 speed). To
-get the actual speed, we find the first timestamp > 20 ms before the current
-timestamp then compute the speed as the change in position divided by the change
-in time between these two samples. This give a fairly accurate speed across most
-of the range, but does get a bit noisy once we get below 100 counts per second.
-It also means that we need a ring buffer that holds about 50 samples.
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml b/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+> new file mode 100644
+> index 000000000000..41265e57c00b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-The timestamp itself comes from the eQEP, not the system. There are latching
-registers to ensure that the timestamp read is from exactly the moment when
-the count register was read.
+Dual (GPL-2.0 OR BSD-2-Clause) is preferred for new bindings. Not a
+requirement though.
 
-  
-> I'm not sure yet if it would make sense to expose rotational speed directly as
-> an attribute. If we were to expose just the count value and timestamp since the
-> last read, that should be enough for a user to compute the delta and derive
-> speed. I'll think more about this since some devices may simplify that case if
-> the hardware is able to compute the speed for us.
-> 
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/crypto/amlogic-gxl-crypto.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic GXL Cryptographic Offloader
+> +
+> +maintainers:
+> +  - Corentin Labbe <clabbe@baylibre.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
 
-I agree that it probably doesn't make sense to expect drivers to compute the
-speed. There isn't really a general way to do that works for an arbitrary
-speed. For example at high speeds, it is better to just look at the change
-in counts over a fixed interval rather than triggering a timestamp based on
-a certain number of counts.
+Don't need 'oneOf' when there is only 1.
 
-I also don't think having a timestamp sysfs attribute would be very useful.
-To make it work at all, I think it would have to be implemented such that
-it returns the timestamp for the count that was most recently read via sysfs.
-And it would require 4 syscalls (2 seeks and 2 reads) to get a single count/
-timestamp pair in a control loop. On a 300MHz ARM9 processor, this is not
-a negligible amount of time.
+> +      - const: amlogic,gxl-crypto
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: blkmv
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    crypto: crypto@c883e000 {
+> +        compatible = "amlogic,gxl-crypto";
+> +        reg = <0x0 0xc883e000 0x0 0x36>;
 
-I noticed that several of the other counter drivers also register an IIO
-device. So this got me thinking that perhaps the counter subsystem should
-just be for configuring a counter device an then the IIO subsystem should
-be used for triggers and ring buffers.
+This should throw errors because the default size on examples are 1
+cell. But validating the examples with the schema only just landed in
+5.3-rc1.
 
-For the general case a counter device could have two possible triggers.
-One that triggers an interrupt after X counts and another that triggers
-with a period of T nanoseconds (or microseconds). Both triggers would add
-a count/timestamp pair to an IIO ring buffer.
+> +        interrupts = <GIC_SPI 188 IRQ_TYPE_EDGE_RISING>,
+> +            <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
 
-To fully reproduce our current methodology the first trigger would actually
-need two configurable settings, the count X that triggers every X counts and
-a watchdog time setting (using terminology from eQEP docs) that will also
-trigger if and only if the count does not change before the time has elapsed.
-Note, this is different from the other proposed time based trigger which
-would cause a trigger interrupt at a fixed period regardless of whether
-the count changed or not.
+This doesn't match the schema.
 
----
-
-Thinking more generally though, I think what I would propose is adding a new
-component to the existing list of Count, Signal and Synapse. The new component
-could be called Event. Event would be more general than the trigger conditions
-I have just discussed. In addition to those two, it could be any event
-generated by the hardware, such as an error condition or a change in direction.
-
-Drivers could register an arbitrary number of events for each Count, so we
-would have /sys/bus/counter/devices/counterX/eventY/*. There should be a few
-standard attributes, like "name" and "enable". Configurable events would need
-ext attributes to allow configuration.
-
-However, I see that there are already preset and error_noise "events" for
-count objects, so maybe we don't do the eventY thing and keep it flatter (or
-is the counter subsystem still considered in "staging" where breaking ABI
-changes could be made?).
-
-When thinking about what events would actually do when enabled though, it
-seems like we should be using IIO events and triggers (we have found reading
-sysfs attributes to be insufficient performance-wise). It seems like unnecessary
-work to reproduce all of this in the counter subsystem. Which makes me wonder if
-it would be better to have counter devices just be a different device type (i.e.
-different struct device_type for dev->type) in the IIO subsystem instead of
-creating a completely new subsystem.
+> +        clocks = <&clkc CLKID_BLKMV>;
+> +        clock-names = "blkmv";
+> +    };
+> --
+> 2.21.0
+>
