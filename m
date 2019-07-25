@@ -1,64 +1,171 @@
-From: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: Re: [PATCH 2/2] dt-bindings: leds: document new "power-supply"
- property
-Date: Thu, 25 Jul 2019 13:08:46 +0200
-Message-ID: <753b2c8d-e8fc-ec6e-f372-a84d4452fd33@ti.com>
-References: <20190708103547.23528-1-jjhiblot@ti.com>
- <20190708103547.23528-3-jjhiblot@ti.com> <20190724164757.GA3723@bogus>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: [PATCH net-next v2 2/4] enetc: Add mdio bus driver for the PCIe MDIO endpoint
+Date: Thu, 25 Jul 2019 14:19:26 +0300
+Message-ID: <1564053568-20522-3-git-send-email-claudiu.manoil@nxp.com>
+References: <1564053568-20522-1-git-send-email-claudiu.manoil@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724164757.GA3723@bogus>
-Content-Language: en-US
+In-Reply-To: <1564053568-20522-1-git-send-email-claudiu.manoil@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, daniel.thompson@linaro.org, dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: "David S . Miller" <davem@davemloft.net>
+Cc: andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+ENETC ports can manage the MDIO bus via local register
+interface.  However there's also a centralized way
+to manage the MDIO bus, via the MDIO PCIe endpoint
+device integrated by the same root complex that also
+integrates the ENETC ports (eth controllers).
 
-On 24/07/2019 18:47, Rob Herring wrote:
-> On Mon, Jul 08, 2019 at 12:35:47PM +0200, Jean-Jacques Hiblot wrote:
->> Most of the LEDs are powered by a voltage/current regulator. describing in
->> the device-tree makes it possible for the LED core to enable/disable it
->> when needed.
->>
->> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->> ---
->>   Documentation/devicetree/bindings/leds/common.txt | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
->> index 70876ac11367..e093a2b7eb90 100644
->> --- a/Documentation/devicetree/bindings/leds/common.txt
->> +++ b/Documentation/devicetree/bindings/leds/common.txt
->> @@ -61,6 +61,11 @@ Optional properties for child nodes:
->>   - panic-indicator : This property specifies that the LED should be used,
->>   		    if at all possible, as a panic indicator.
->>   
->> +- power-supply : A voltage/current regulator used to to power the LED. When a
->> +		 LED is turned off, the LED core disable its regulator. The
->> +		 same regulator can power many LED (or other) devices. It is
->> +		 turned off only when all of its users disabled it.
-> Not sure this should be common. It wouldn't apply to cases where we have
-> an LED controller parent nor gpio and pwm LEDs and those are most cases.
+Depending on board design and use case, centralized
+access to MDIO may be better than using local ENETC
+port registers.  For instance, on the LS1028A QDS board
+where MDIO muxing is requiered.  Also, the LS1028A on-chip
+switch doesn't have a local MDIO register interface.
 
-It does make sense for GPIO and PWM bindings if the anode of LED is tied 
-to a regulated voltage and the cathod to the control line.
+The current patch registers the above PCIe enpoint as a
+separate MDIO bus and provides a driver for it by re-using
+the code used for local MDIO access.  It also allows the
+ENETC port PHYs to be managed by this driver if the local
+"mdio" node is missing from the ENETC port node.
 
-The same is true for a certain class of true LED controller that do not 
-deliver power but act like current sinks.
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+---
+v1 - fixed mdio bus allocation
+   - requested only BAR0 region, as it's the only one used by the driver
+v2 - reworked accessors as per Andrew Lunn's request
 
-JJ
+ .../net/ethernet/freescale/enetc/enetc_mdio.c | 98 +++++++++++++++++++
+ .../net/ethernet/freescale/enetc/enetc_pf.c   |  5 +-
+ 2 files changed, 102 insertions(+), 1 deletion(-)
 
->
-> Perhaps what makes sense here is an regulator-led binding.
->
->> +
->>   - trigger-sources : List of devices which should be used as a source triggering
->>   		    this LED activity. Some LEDs can be related to a specific
->>   		    device and should somehow indicate its state. E.g. USB 2.0
->> -- 
->> 2.17.1
->>
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+index 05094601ece8..56ad94a3504c 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+@@ -195,3 +195,101 @@ void enetc_mdio_remove(struct enetc_pf *pf)
+ 	if (pf->mdio)
+ 		mdiobus_unregister(pf->mdio);
+ }
++
++#define ENETC_MDIO_DEV_ID	0xee01
++#define ENETC_MDIO_DEV_NAME	"FSL PCIe IE Central MDIO"
++#define ENETC_MDIO_BUS_NAME	ENETC_MDIO_DEV_NAME " Bus"
++#define ENETC_MDIO_DRV_NAME	ENETC_MDIO_DEV_NAME " driver"
++#define ENETC_MDIO_DRV_ID	"fsl_enetc_mdio"
++
++static int enetc_pci_mdio_probe(struct pci_dev *pdev,
++				const struct pci_device_id *ent)
++{
++	struct enetc_mdio_priv *mdio_priv;
++	struct device *dev = &pdev->dev;
++	struct enetc_hw *hw;
++	struct mii_bus *bus;
++	int err;
++
++	hw = devm_kzalloc(dev, sizeof(*hw), GFP_KERNEL);
++	if (!hw)
++		return -ENOMEM;
++
++	bus = devm_mdiobus_alloc_size(dev, sizeof(*mdio_priv));
++	if (!bus)
++		return -ENOMEM;
++
++	bus->name = ENETC_MDIO_BUS_NAME;
++	bus->read = enetc_mdio_read;
++	bus->write = enetc_mdio_write;
++	bus->parent = dev;
++	mdio_priv = bus->priv;
++	mdio_priv->hw = hw;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
++
++	pcie_flr(pdev);
++	err = pci_enable_device_mem(pdev);
++	if (err) {
++		dev_err(dev, "device enable failed\n");
++		return err;
++	}
++
++	err = pci_request_region(pdev, 0, ENETC_MDIO_DRV_ID);
++	if (err) {
++		dev_err(dev, "pci_request_region failed\n");
++		goto err_pci_mem_reg;
++	}
++
++	hw->port = pci_iomap(pdev, 0, 0);
++	if (!bus->priv) {
++		err = -ENXIO;
++		dev_err(dev, "iomap failed\n");
++		goto err_ioremap;
++	}
++
++	err = of_mdiobus_register(bus, dev->of_node);
++	if (err)
++		goto err_mdiobus_reg;
++
++	pci_set_drvdata(pdev, bus);
++
++	return 0;
++
++err_mdiobus_reg:
++	iounmap(mdio_priv->hw->port);
++err_ioremap:
++	pci_release_mem_regions(pdev);
++err_pci_mem_reg:
++	pci_disable_device(pdev);
++
++	return err;
++}
++
++static void enetc_pci_mdio_remove(struct pci_dev *pdev)
++{
++	struct mii_bus *bus = pci_get_drvdata(pdev);
++	struct enetc_mdio_priv *mdio_priv;
++
++	mdiobus_unregister(bus);
++	mdio_priv = bus->priv;
++	iounmap(mdio_priv->hw->port);
++	pci_release_mem_regions(pdev);
++	pci_disable_device(pdev);
++}
++
++static const struct pci_device_id enetc_pci_mdio_id_table[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, ENETC_MDIO_DEV_ID) },
++	{ 0, } /* End of table. */
++};
++MODULE_DEVICE_TABLE(pci, enetc_mdio_id_table);
++
++static struct pci_driver enetc_pci_mdio_driver = {
++	.name = ENETC_MDIO_DRV_ID,
++	.id_table = enetc_pci_mdio_id_table,
++	.probe = enetc_pci_mdio_probe,
++	.remove = enetc_pci_mdio_remove,
++};
++module_pci_driver(enetc_pci_mdio_driver);
++
++MODULE_DESCRIPTION(ENETC_MDIO_DRV_NAME);
++MODULE_LICENSE("Dual BSD/GPL");
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+index 258b3cb38a6f..7d6513ff8507 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+@@ -750,6 +750,7 @@ static int enetc_of_get_phy(struct enetc_ndev_priv *priv)
+ {
+ 	struct enetc_pf *pf = enetc_si_priv(priv->si);
+ 	struct device_node *np = priv->dev->of_node;
++	struct device_node *mdio_np;
+ 	int err;
+ 
+ 	if (!np) {
+@@ -773,7 +774,9 @@ static int enetc_of_get_phy(struct enetc_ndev_priv *priv)
+ 		priv->phy_node = of_node_get(np);
+ 	}
+ 
+-	if (!of_phy_is_fixed_link(np)) {
++	mdio_np = of_get_child_by_name(np, "mdio");
++	if (mdio_np) {
++		of_node_put(mdio_np);
+ 		err = enetc_mdio_probe(pf);
+ 		if (err) {
+ 			of_node_put(priv->phy_node);
+-- 
+2.17.1
