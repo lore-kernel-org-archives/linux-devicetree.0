@@ -1,154 +1,60 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: imx: Add i.mx8mq nitrogen8m basic dts support
-Date: Thu, 25 Jul 2019 11:07:34 -0300
-Message-ID: <CAOMZO5AJwocYFaKtUBZbo0NareGmdAySwDjouxh5KMvnGz2o0A@mail.gmail.com>
-References: <20190724171747.26076-1-dafna.hirschfeld@collabora.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 0/7] drivers: Add generic device lookup helpers
+Date: Thu, 25 Jul 2019 16:10:36 +0200
+Message-ID: <20190725141036.GA14950@kroah.com>
+References: <20190723221838.12024-1-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724171747.26076-1-dafna.hirschfeld@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com, Gary Bisson <gary.bisson@boundarydevices.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190723221838.12024-1-suzuki.poulose@arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexander Aring <alex.aring@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, rafael@kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-fpga@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, dri-devel@lists.freedesktop.org, Liam Girdwood <lgirdwood@gmail.com>, Elie Morisse <syniurge@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-i2c@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Shyam Sundar S K <shyam-sundar.s-k@amd.com>, Frank Rowand <frowand.list@gmail.com>, linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-acpi@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, Lee Jones <lee.jo>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dafna,
-
-On Wed, Jul 24, 2019 at 2:51 PM Dafna Hirschfeld
-<dafna.hirschfeld@collabora.com> wrote:
->
-> From: dafna <dafna.hirschfeld@collabora.com>
->
-> Add basic dts support for i.MX8MQ NITROGEN8M.
->
-> Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-
-Your From and Signed-off-by tags do not match.
-
-> ---
->  arch/arm64/boot/dts/freescale/Makefile             |   1 +
->  .../arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts | 411 +++++++++++++++++++++
->  2 files changed, 412 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts
->
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index c043aca66572..54a5c18c5c30 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -26,3 +26,4 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += imx8mq-nitrogen8m.dtb
-
-Please keep it in alphabetical order.
-
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts b/arch/arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts
-> new file mode 100644
-> index 000000000000..cfd4915d2916
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-nitrogen8m.dts
-
-Isn't the 8m in the end redundant? What about just naming it
-imx8mq-nitrogen.dts instead?
-
-> +&a53_opp_table {
-> +               opp-1500000000 {
-> +                       opp-hz = /bits/ 64 <1500000000>;
-> +                       opp-microvolt = <1000000>;
-> +               };
-> +
-> +               opp-1000000000 {
-> +                       opp-hz = /bits/ 64 <1000000000>;
-> +                       opp-microvolt = <900000>;
-> +               };
-
-Couldn't this be dropped and just use the operational points defined
-at imx8mq.dtsi?
-
-> +};
-> +
-> +&iomuxc {
-
-We usually prefer to place iomux as the last node.
-
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_hog>;
-
-You could place the "pinctrl_hog: hoggrp {" here
-
-> +&i2c1 {
-> +       clock-frequency = <400000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c1>;
-> +       status = "okay";
-> +
-> +       i2cmux@70 {
-> +               compatible = "pca9546";
-
-You missed the manufacturer string: "nxp,pca9546"
-
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_i2c1_pca9546>;
-> +               reg = <0x70>;
-> +               reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               i2c1a: i2c1@0 {
-> +                       reg = <0>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg_arm_dram: fan53555@60 {
-
-Node names should be generic:
-
-regulator@60
-
-> +                               compatible = "fcs,fan53555";
-> +                               pinctrl-names = "default";
-> +                               pinctrl-0 = <&pinctrl_reg_arm_dram>;
-> +                               reg = <0x60>;
-> +                               regulator-min-microvolt =  <900000>;
-> +                               regulator-max-microvolt = <1000000>;
-> +                               regulator-always-on;
-> +                               vsel-gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>;
-> +                       };
-> +               };
-> +
-> +               i2c1b: i2c1@1 {
-> +                       reg = <1>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg_dram_1p1v: fan53555@60 {
-
-regulator@60
-
-> +                               compatible = "fcs,fan53555";
-> +                               pinctrl-names = "default";
-> +                               pinctrl-0 = <&pinctrl_reg_dram_1p1v>;
-> +                               reg = <0x60>;
-> +                               regulator-min-microvolt = <1100000>;
-> +                               regulator-max-microvolt = <1100000>;
-> +                               regulator-always-on;
-> +                               vsel-gpios = <&gpio2 11 GPIO_ACTIVE_HIGH>;
-> +                       };
-> +               };
-> +
-> +               i2c1c: i2c1@2 {
-> +                       reg = <2>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg_soc_gpu_vpu: fan53555@60 {
-
-regulator@60
-
-> +&usdhc1 {
-> +       bus-width = <8>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_usdhc1>;
-> +       non-removable;
-> +       vqmmc-1-8-v;
-
-This property does not exist. Please remove it.
+T24gVHVlLCBKdWwgMjMsIDIwMTkgYXQgMTE6MTg6MzFQTSArMDEwMCwgU3V6dWtpIEsgUG91bG9z
+ZSB3cm90ZToKPiBXZSBoYXZlIGRldmljZSBpdGVyYXRvcnMgdG8gZmluZCBhIHBhcnRpY3VsYXIg
+ZGV2aWNlIG1hdGNoaW5nIGEgY3JpdGVyaWEKPiBmb3IgYSBnaXZlbiBidXMvY2xhc3MvZHJpdmVy
+LiBpLmUsIHtidXMsY2xhc3MsZHJpdmVyfV9maW5kX2RldmljZSgpCj4gQVBJcy4gVGhlIG1hdGNo
+aW5nIGNyaXRlcmlhIGlzIGEgZnVuY3Rpb24gcG9pbnRlciBmb3IgdGhlIEFQSXMuIE9mdGVuIHRo
+ZQo+IGxvb2t1cCBpcyBiYXNlZCBvbiBhIGdlbmVyaWMgcHJvcGVydHkgb2YgYSBkZXZpY2UgKGUu
+ZywgbmFtZSwgZndub2RlLCBvZiBub2RlCj4gcG9pbnRlciBvciBkZXZpY2UgdHlwZSkgcmF0aGVy
+IHRoYW4gYSBkcml2ZXIgc3BlY2lmaWMgaW5mb3JtYXRpb24uIEhvd2V2ZXIsIGVhY2gKPiBkcml2
+ZXIgd3JpdGVzIHVwIGl0cyBvd24gIm1hdGNoIiBmdW5jdGlvbiwgc3BpbGxpbmcgdGhlIHNpbWls
+YXIgbWF0Y2ggZnVuY3Rpb25zCj4gYWxsIG92ZXIgdGhlIGRyaXZlciBzdWJzeXN0ZW1zLgo+IAo+
+IFRoaXMgc2VyaWVzIGFkZHMgZGV2aWNlIG1hdGNoIGhlbHBlcnMgYnkgZ2VuZXJpYyBkZXZpY2Ug
+cHJvcGVydGllcyBvZiBhIGRldmljZS4KPiBVc2luZyB0aGVzZSBnZW5lcmljIG1hdGNoIGZ1bmN0
+aW9ucywgaW50cm9kdWNlIHdyYXBwZXJzIHRvIHRoZSBleGlzdGluZwo+ICAqX2ZpbmRfZGV2aWNl
+KCkgaGVscGVycyBhbmQgY29udmVydHMgdGhlIGV4aXN0aW5nIHVzZXJzIHRvIHVzZSB0aGUgbmV3
+IHdyYXBwZXJzLgo+ICBpLmUsCj4gCXtidXMvY2xhc3MvZHJpdmVyfV9maW5kX2RldmljZV9ieV9u
+YW1lKCkKPiAJe2J1cy9jbGFzcy9kcml2ZXJ9X2ZpbmRfZGV2aWNlX2J5X2Z3bm9kZSgpCj4gCXti
+dXMvY2xhc3MvZHJpdmVyfV9maW5kX2RldmljZV9ieV9kZXZ0KCkKPiAJe2J1cy9jbGFzcy9kcml2
+ZXJ9X2ZpbmRfZGV2aWNlX2J5X2FjcGlfZGV2KCkKPiAKPiBBbHNvIGFkZHMgYSB3cmFwcGVyIGZv
+ciBmaW5kaW5nIGEgcGxhdGZvcm0gZGV2aWNlIGJ5IGRyaXZlciwgdG8gYXZvaWQKPiBzcGlsbGlu
+ZyB0aGUgcGxhdGZvcm1fYnVzIGludGVybmFscyBpbiB0aGUgaW5kaXZpZHVhbCBkcml2ZXJzLiBB
+cHBsaWVzCj4gb24gNS4zLXJjMS4KPiAKPiAgICBbMF0gZ2l0Oi8vbGludXgtYXJtLm9yZy9saW51
+eC1za3AuZ2l0IGRyaXZlci1jbGVhbnVwL3YzCj4gUkZDWzFdIGh0dHBzOi8vbWFyYy5pbmZvLz9p
+PTE1NTk1NzcwMjMtNTU4LTEtZ2l0LXNlbmQtZW1haWwtc3V6dWtpLnBvdWxvc2VAYXJtLmNvbQo+
+IFYxIFsyXSBodHRwczovL21hcmMuaW5mby8/aT0xNTU5NzQ3NjMwLTI4MDY1LTEtZ2l0LXNlbmQt
+ZW1haWwtc3V6dWtpLnBvdWxvc2VAYXJtLmNvbQo+IFYyIFszXSBodHRwczovL21hcmMuaW5mby8/
+aT0xNTYwNTM0ODYzLTE1MTE1LTEtZ2l0LXNlbmQtZW1haWwtc3V6dWtpLnBvdWxvc2VAYXJtLmNv
+bQo+IAo+IENoYW5nZXMgc2luY2UgdjI6Cj4gIC0gTWVyZ2UgdGhlIGRldmljZSBtYXRjaCBoZWxw
+ZXIgaW50cm9kdWN0aW9uIHBhdGNoIHdpdGggdGhlIHZhcmlhbnRzCj4gICAgb2YgdGhlIGhlbHBl
+cnMsIGZvciBiZXR0ZXIgcmV2aWV3Lgo+ICAtIFVzZSBwbGF0Zm9ybV9maW5kX2RldmljZV9ieV9k
+cml2ZXIgZm9yIG1jZGUgZHJtIGRyaXZlci4KClRoaXMgbG9va3MgZ29vZCB0byBtZSBhdCBmaXJz
+dCBnbGFuY2UsIHRoYW5rcyBmb3IgZG9pbmcgdGhpcyB3b3JrLgoKSSdsbCB3YWl0IGEgZmV3IGRh
+eXMgdG8gY29sbGVjdCBhY2tzIGZyb20gdmFyaW91cyBzdWJzeXN0ZW0gbWFpbnRhaW5lcnMKYmVm
+b3JlIHRha2luZyB0aGUgc2VyaWVzIGluIG15IHRyZWUuCgp0aGFua3MsCgpncmVnIGstaApfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
