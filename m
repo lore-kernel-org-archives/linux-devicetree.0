@@ -1,29 +1,45 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/2] bus: imx-weim: optionally enable burst clock mode
-Date: Thu, 25 Jul 2019 16:32:31 -0300
-Message-ID: <CAOMZO5CrUZ1C0i8ofuiG8thsPgfxPiY5XOnvUsmnkYYSKJBMNQ@mail.gmail.com>
-References: <20190712204316.16783-1-TheSven73@gmail.com> <CAGngYiVb_-A4Au749GD6SKi=UqKKBm4yxim8YOCbgVjfz7xtvg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH 0/4] crypto: add amlogic crypto offloader driver
+Date: Thu, 25 Jul 2019 19:42:52 +0000
+Message-ID: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGngYiVb_-A4Au749GD6SKi=UqKKBm4yxim8YOCbgVjfz7xtvg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sven Van Asbroeck <thesven73@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Kees Cook <keescook@chromium.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree <devicetree@vger.kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>
+To: davem@davemloft.net, herbert@gondor.apana.org.au, khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, baylibre-upstreaming@groups.io, Corentin Labbe <clabbe@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sven,
+Hello
 
-On Thu, Jul 25, 2019 at 11:30 AM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> On Fri, Jul 12, 2019 at 4:43 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
-> >
-> > To enable burst clock mode, add the fsl,burst-clk-enable
-> > property to the weim bus's devicetree node.
-> >
->
-> Any feedback on this patch, positive or negative?
+This serie adds support for the crypto offloader present on amlogic GXL
+SoCs.
 
-Looks good to me:
+Tested on meson-gxl-s905x-khadas-vim and meson-gxl-s905x-libretech-cc
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Regards
+
+Corentin Labbe (4):
+  dt-bindings: crypto: Add DT bindings documentation for amlogic-crypto
+  crypto: amlogic: Add crypto accelerator for amlogic GXL
+  MAINTAINERS: Add myself as maintainer of amlogic crypto
+  ARM64: dts: amlogic: adds crypto hardware node
+
+ .../bindings/crypto/amlogic-gxl-crypto.yaml   |  45 +++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  11 +
+ drivers/crypto/Kconfig                        |   2 +
+ drivers/crypto/Makefile                       |   1 +
+ drivers/crypto/amlogic/Kconfig                |  24 ++
+ drivers/crypto/amlogic/Makefile               |   2 +
+ drivers/crypto/amlogic/amlogic-cipher.c       | 358 ++++++++++++++++++
+ drivers/crypto/amlogic/amlogic-core.c         | 326 ++++++++++++++++
+ drivers/crypto/amlogic/amlogic.h              | 172 +++++++++
+ 10 files changed, 948 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+ create mode 100644 drivers/crypto/amlogic/Kconfig
+ create mode 100644 drivers/crypto/amlogic/Makefile
+ create mode 100644 drivers/crypto/amlogic/amlogic-cipher.c
+ create mode 100644 drivers/crypto/amlogic/amlogic-core.c
+ create mode 100644 drivers/crypto/amlogic/amlogic.h
+
+-- 
+2.21.0
