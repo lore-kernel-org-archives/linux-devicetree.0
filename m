@@ -1,63 +1,47 @@
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 1/2] ARM: dts: stm32: remove OV5640 pinctrl definition on stm32mp157c-ev1
-Date: Thu, 25 Jul 2019 13:36:46 +0200
-Message-ID: <1564054607-2028-2-git-send-email-amelie.delaunay@st.com>
-References: <1564054607-2028-1-git-send-email-amelie.delaunay@st.com>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Subject: [PATCH v2 1/2] dt-bindings: arm: imx: add imx8mq nitrogen support
+Date: Thu, 25 Jul 2019 14:14:52 +0200
+Message-ID: <20190725121452.16607-2-dafna.hirschfeld@collabora.com>
+References: <20190725121452.16607-1-dafna.hirschfeld@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564054607-2028-1-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <20190725121452.16607-1-dafna.hirschfeld@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
+To: dafna.hirschfeld@collabora.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ezequiel@collabora.com, kernel@collabora.com, Gary Bisson <gary.bisson@boundarydevices.com>, Troy Kisky <troy.kisky@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Alexandre Torgue <alexandre.torgue@st.com>
+From: Gary Bisson <gary.bisson@boundarydevices.com>
 
-"push-pull" configuration is now fully handled by the gpiolib and the
-STMFX pinctrl driver. There is no longer need to declare a pinctrl group
-to only configure "push-pull" setting for the line. It is done directly by
-the gpiolib.
+i.MX 8Quad is a quad (4x) Cortex-A53 processor with powerful
+graphic and multimedia features.
+This patch adds Nitrogen8M board support.
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
+[Dafna: porting vendor's code to mainline]
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 ---
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index 9ab25da..e4b04dd 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -182,14 +182,12 @@
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 7294ac36f4c0..728c41ef83bb 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -227,6 +227,12 @@ properties:
+               - fsl,imx8qxp-mek           # i.MX8QXP MEK Board
+           - const: fsl,imx8qxp
  
- 	ov5640: camera@3c {
- 		compatible = "ovti,ov5640";
--		pinctrl-names = "default";
--		pinctrl-0 = <&ov5640_pins>;
- 		reg = <0x3c>;
- 		clocks = <&clk_ext_camera>;
- 		clock-names = "xclk";
- 		DOVDD-supply = <&v2v8>;
--		powerdown-gpios = <&stmfx_pinctrl 18 GPIO_ACTIVE_HIGH>;
--		reset-gpios = <&stmfx_pinctrl 19 GPIO_ACTIVE_LOW>;
-+		powerdown-gpios = <&stmfx_pinctrl 18 (GPIO_ACTIVE_HIGH | GPIO_PUSH_PULL)>;
-+		reset-gpios = <&stmfx_pinctrl 19 (GPIO_ACTIVE_LOW | GPIO_PUSH_PULL)>;
- 		rotation = <180>;
- 		status = "okay";
++      - description: i.MX8MQ based Boards
++        items:
++          - enum:
++              - boundary,imx8mq-nitrogen8m           # i.MX8MQ NITROGEN Board
++          - const: fsl,imx8mq
++
+       - description:
+           Freescale Vybrid Platform Device Tree Bindings
  
-@@ -225,12 +223,6 @@
- 				drive-push-pull;
- 				bias-pull-down;
- 			};
--
--			ov5640_pins: camera {
--				pins = "agpio2", "agpio3"; /* stmfx pins 18 & 19 */
--				drive-push-pull;
--				output-low;
--			};
- 		};
- 	};
- };
 -- 
-2.7.4
+2.20.1
