@@ -1,11 +1,15 @@
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Subject: [PATCH v2] arm64: dts: fast models: Remove clcd's max-memory-bandwidth
-Date: Thu, 25 Jul 2019 18:12:14 +0100
-Message-ID: <20190725171215.71801-1-kevin.brodsky@arm.com>
+From: santosh.shilimkar@oracle.com
+Subject: Re: [PATCH v4 0/5] soc: ti: k3: Allow for exclusive and shared device
+ requests
+Date: Thu, 25 Jul 2019 10:39:23 -0700
+Message-ID: <d549d2e9-c375-2c46-e4bc-e3a572c90f11@oracle.com>
+References: <20190722050757.29893-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190722050757.29893-1-lokeshvutla@ti.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,57 +19,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ruben Ayrapetyan <ruben.ayrapetyan@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, dri-devel@lists.freedesktop.org, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>, Brian Starkey <brian.starkey@arm.com>
+To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-It is unclear why max-memory-bandwidth should be set for CLCD on the
-fast model. Removing that property allows allocating and using 32bpp
-buffers, which may be desirable on certain platforms such as
-Android.
 
-Reported-by: Ruben Ayrapetyan <ruben.ayrapetyan@arm.com>
-Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
----
 
-Changes in v2:
-- Remove the attribute completely instead of increasing its value. It is
-  optional and there is no clear reason why it should be set at all.
+On 7/21/19 10:07 PM, Lokesh Vutla wrote:
+> Sysfw provides an option for requesting exclusive access for a
+> device using the flags MSG_FLAG_DEVICE_EXCLUSIVE. If this flag is
+> not used, the device is meant to be shared across hosts. Once a device
+> is requested from a host with this flag set, any request to this
+> device from a different host will be nacked by sysfw.
+> 
+> Current tisci firmware and pm drivers always requests for device with
+> exclusive permissions set. But this is not be true for certain devices
+> that are expcted to be shared across different host contexts.
+> So add support for getting the shared or exclusive permissions from DT
+> and request firmware accordingly.
+> 
+> Changes since v3: https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=103447
+> - Rebased on top of v5.3-rc1
+> - Updated power-domain cells for j721e.
+> - Mark the console uart as shared in am65x-base-board
+> - Added Reviewed-by from Rob
+> 
+> Lokesh Vutla (5):
+>    firmware: ti_sci: Allow for device shared and exclusive requests
+>    dt-bindings: ti_sci_pm_domains: Add support for exclusive and shared
+>      access
+>    soc: ti: ti_sci_pm_domains: Add support for exclusive and shared
+>      access
+>    arm64: dts: ti: k3-am654: Update the power domain cells
+>    arm64: dts: ti: k3-j721e: Update the power domain cells
+> 
+>   .../bindings/soc/ti/sci-pm-domain.txt         | 11 ++++-
+>   MAINTAINERS                                   |  1 +
+>   arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 44 +++++++++---------
+>   arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       | 10 ++---
+>   arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  6 +--
+>   arch/arm64/boot/dts/ti/k3-am65.dtsi           |  1 +
+>   .../arm64/boot/dts/ti/k3-am654-base-board.dts |  1 +
+>   .../dts/ti/k3-j721e-common-proc-board.dts     |  4 ++
+>   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 20 ++++-----
+>   .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  6 +--
+>   arch/arm64/boot/dts/ti/k3-j721e.dtsi          |  1 +
+>   drivers/firmware/ti_sci.c                     | 45 ++++++++++++++++++-
+>   drivers/soc/ti/ti_sci_pm_domains.c            | 23 +++++++++-
+>   include/dt-bindings/soc/ti,sci_pm_domain.h    |  9 ++++
+>   include/linux/soc/ti/ti_sci_protocol.h        |  3 ++
+>   15 files changed, 136 insertions(+), 49 deletions(-)
+>   create mode 100644 include/dt-bindings/soc/ti,sci_pm_domain.h
+> 
+Please split this patch series so that drivers and arch, dts patches
+can be queued by respective trees.
 
- arch/arm64/boot/dts/arm/fvp-base-revc.dts        | 8 --------
- arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi | 2 --
- 2 files changed, 10 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/arm/fvp-base-revc.dts b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-index 687707020ec1..62ab0d54ff71 100644
---- a/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-+++ b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-@@ -265,13 +265,5 @@
- 				<0 0 42 &gic 0 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
- 				<0 0 43 &gic 0 0 GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
- 				<0 0 44 &gic 0 0 GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
--
--		motherboard {
--			iofpga@3,00000000 {
--				clcd@1f0000 {
--					max-memory-bandwidth = <130000000>; /* 16bpp @ 63.5MHz */
--				};
--			};
--		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-index 454cf6c44c49..03a7bf079c8f 100644
---- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-@@ -188,8 +188,6 @@
- 					interrupts = <14>;
- 					clocks = <&v2m_oscclk1>, <&v2m_clk24mhz>;
- 					clock-names = "clcdclk", "apb_pclk";
--					/* 800x600 16bpp @36MHz works fine */
--					max-memory-bandwidth = <54000000>;
- 					memory-region = <&vram>;
- 
- 					port {
--- 
-2.22.0
+Regards,
+Santosh
