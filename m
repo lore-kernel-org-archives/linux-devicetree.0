@@ -1,83 +1,179 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
-Date: Thu, 25 Jul 2019 08:23:49 +0200
-Message-ID: <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com>
-References: <cover.1562597164.git.hns@goldelico.com> <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com> <20190724194259.GA25847@bogus>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724194259.GA25847@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, stable <stable@vger.kernel.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] ath10k: Fix HOST capability QMI incompatibility
+Date: Wed, 24 Jul 2019 23:31:08 -0700
+Message-ID: <20190725063108.15790-1-bjorn.andersson@linaro.org>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Kalle Valo <kvalo@codeaurora.org>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-wireless@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ath10k@lists.infradead.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+The introduction of 768ec4c012ac ("ath10k: update HOST capability QMI
+message") served the purpose of supporting the new and extended HOST
+capability QMI message.
 
-> Am 24.07.2019 um 21:42 schrieb Rob Herring <robh@kernel.org>:
-> 
-> On Mon, Jul 08, 2019 at 04:46:05PM +0200, H. Nikolaus Schaller wrote:
->> commit 6953c57ab172 "gpio: of: Handle SPI chipselect legacy bindings"
->> 
->> did introduce logic to centrally handle the legacy spi-cs-high property
->> in combination with cs-gpios. This assumes that the polarity
->> of the CS has to be inverted if spi-cs-high is missing, even
->> and especially if non-legacy GPIO_ACTIVE_HIGH is specified.
->> 
->> The DTS for the GTA04 was orginally introduced under the assumption
->> that there is no need for spi-cs-high if the gpio is defined with
->> proper polarity GPIO_ACTIVE_HIGH.
-> 
-> Given that spi-cs-high is called legacy, that would imply that DT's 
-> should not have to use spi-cs-high.
+But while the new message adds a slew of optional members it changes the
+data type of the "daemon_support" member, which means that older
+versions of the firmware will fail to decode the incoming request
+message.
 
-Yes.
+There is no way to detect this breakage from Linux and there's no way to
+recover from sending the wrong message (i.e. we can't just try one
+format and then fallback to the other), so a quirk is introduced in
+DeviceTree to indicate to the driver that the firmware requires the 8bit
+version of this message.
 
-> 
->> This was not a problem until gpiolib changed the interpretation of
->> GPIO_ACTIVE_HIGH and missing spi-cs-high.
-> 
-> Then we should fix gpiolib...
+Cc: stable@vger.kernel.org
+Fixes: 768ec4c012ac ("ath10k: update HOST capability qmi message")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ .../bindings/net/wireless/qcom,ath10k.txt     |  6 +++++
+ drivers/net/wireless/ath/ath10k/qmi.c         | 13 ++++++++---
+ .../net/wireless/ath/ath10k/qmi_wlfw_v01.c    | 22 +++++++++++++++++++
+ .../net/wireless/ath/ath10k/qmi_wlfw_v01.h    |  1 +
+ drivers/net/wireless/ath/ath10k/snoc.c        | 11 ++++++++++
+ drivers/net/wireless/ath/ath10k/snoc.h        |  1 +
+ 6 files changed, 51 insertions(+), 3 deletions(-)
 
-I tried to convince Linus that this is the right way but he convinced
-me that a fix that handles all cases does not exist.
-
-There seem to be embedded devices with older DTB (potentially in ROM)
-which provide a plain 0 value for a gpios definition. And either with
-or without spi-cs-high.
-
-Since "0" is the same as "GPIO_ACTIVE_HIGH", the absence of
-spi-cs-high was and must be interpreted as active low for these
-devices. This leads to the inversion logic in code.
-
-AFAIR it boils down to the question if gpiolib and the bindings
-should still support such legacy devices with out-of tree DTB,
-but force in-tree DTS to add the legacy spi-cs-high property.
-
-Or if we should fix the 2 or 3 cases of in-tree legacy cases
-and potentially break out-of tree DTBs.
-
-IMHO it is more general to keep the out-of-tree DTBs working
-and "fix" what we can control (in-tree DTS).
-
-> 
->> The effect is that the missing spi-cs-high is now interpreted as CS being
->> low (despite GPIO_ACTIVE_HIGH) which turns off the SPI interface when the
->> panel is to be programmed by the panel driver.
->> 
->> Therefore, we have to add the redundant and legacy spi-cs-high property
->> to properly pass through the legacy handler.
->> 
->> Since this is nowhere documented in the bindings, we add some words of
->> WARNING.
->> 
->> Cc: stable@vger.kernel.org
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> Documentation/devicetree/bindings/spi/spi-bus.txt | 6 ++++++
->> arch/arm/boot/dts/omap3-gta04.dtsi                | 1 +
->> 2 files changed, 7 insertions(+)
-
-BR,
-Nikolaus
+diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+index ae661e65354e..f9499b20d840 100644
+--- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
++++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+@@ -81,6 +81,12 @@ Optional properties:
+ 	Definition: Name of external front end module used. Some valid FEM names
+ 		    for example: "microsemi-lx5586", "sky85703-11"
+ 		    and "sky85803" etc.
++- qcom,snoc-host-cap-8bit-quirk:
++	Usage: Optional
++	Value type: <empty>
++	Definition: Quirk specifying that the firmware expects the 8bit version
++		    of the host capability QMI request
++
+ 
+ Example (to supply PCI based wifi block details):
+ 
+diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
+index 3b63b6257c43..545ac1f06997 100644
+--- a/drivers/net/wireless/ath/ath10k/qmi.c
++++ b/drivers/net/wireless/ath/ath10k/qmi.c
+@@ -581,22 +581,29 @@ static int ath10k_qmi_host_cap_send_sync(struct ath10k_qmi *qmi)
+ {
+ 	struct wlfw_host_cap_resp_msg_v01 resp = {};
+ 	struct wlfw_host_cap_req_msg_v01 req = {};
++	struct qmi_elem_info *req_ei;
+ 	struct ath10k *ar = qmi->ar;
++	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+ 	struct qmi_txn txn;
+ 	int ret;
+ 
+ 	req.daemon_support_valid = 1;
+ 	req.daemon_support = 0;
+ 
+-	ret = qmi_txn_init(&qmi->qmi_hdl, &txn,
+-			   wlfw_host_cap_resp_msg_v01_ei, &resp);
++	ret = qmi_txn_init(&qmi->qmi_hdl, &txn, wlfw_host_cap_resp_msg_v01_ei,
++			   &resp);
+ 	if (ret < 0)
+ 		goto out;
+ 
++	if (test_bit(ATH10K_SNOC_FLAG_8BIT_HOST_CAP_QUIRK, &ar_snoc->flags))
++		req_ei = wlfw_host_cap_8bit_req_msg_v01_ei;
++	else
++		req_ei = wlfw_host_cap_req_msg_v01_ei;
++
+ 	ret = qmi_send_request(&qmi->qmi_hdl, NULL, &txn,
+ 			       QMI_WLFW_HOST_CAP_REQ_V01,
+ 			       WLFW_HOST_CAP_REQ_MSG_V01_MAX_MSG_LEN,
+-			       wlfw_host_cap_req_msg_v01_ei, &req);
++			       req_ei, &req);
+ 	if (ret < 0) {
+ 		qmi_txn_cancel(&txn);
+ 		ath10k_err(ar, "failed to send host capability request: %d\n", ret);
+diff --git a/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.c b/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.c
+index 1fe05c6218c3..86fcf4e1de5f 100644
+--- a/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.c
++++ b/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.c
+@@ -1988,6 +1988,28 @@ struct qmi_elem_info wlfw_host_cap_req_msg_v01_ei[] = {
+ 	{}
+ };
+ 
++struct qmi_elem_info wlfw_host_cap_8bit_req_msg_v01_ei[] = {
++	{
++		.data_type      = QMI_OPT_FLAG,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u8),
++		.array_type     = NO_ARRAY,
++		.tlv_type       = 0x10,
++		.offset         = offsetof(struct wlfw_host_cap_req_msg_v01,
++					   daemon_support_valid),
++	},
++	{
++		.data_type      = QMI_UNSIGNED_1_BYTE,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u8),
++		.array_type     = NO_ARRAY,
++		.tlv_type       = 0x10,
++		.offset         = offsetof(struct wlfw_host_cap_req_msg_v01,
++					   daemon_support),
++	},
++	{}
++};
++
+ struct qmi_elem_info wlfw_host_cap_resp_msg_v01_ei[] = {
+ 	{
+ 		.data_type      = QMI_STRUCT,
+diff --git a/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.h b/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.h
+index bca1186e1560..4d107e1364a8 100644
+--- a/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.h
++++ b/drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.h
+@@ -575,6 +575,7 @@ struct wlfw_host_cap_req_msg_v01 {
+ 
+ #define WLFW_HOST_CAP_REQ_MSG_V01_MAX_MSG_LEN 189
+ extern struct qmi_elem_info wlfw_host_cap_req_msg_v01_ei[];
++extern struct qmi_elem_info wlfw_host_cap_8bit_req_msg_v01_ei[];
+ 
+ struct wlfw_host_cap_resp_msg_v01 {
+ 	struct qmi_response_type_v01 resp;
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+index b491361e6ed4..fc15a0037f0e 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.c
++++ b/drivers/net/wireless/ath/ath10k/snoc.c
+@@ -1261,6 +1261,15 @@ static int ath10k_snoc_resource_init(struct ath10k *ar)
+ 	return ret;
+ }
+ 
++static void ath10k_snoc_quirks_init(struct ath10k *ar)
++{
++	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
++	struct device *dev = &ar_snoc->dev->dev;
++
++	if (of_property_read_bool(dev->of_node, "qcom,snoc-host-cap-8bit-quirk"))
++		set_bit(ATH10K_SNOC_FLAG_8BIT_HOST_CAP_QUIRK, &ar_snoc->flags);
++}
++
+ int ath10k_snoc_fw_indication(struct ath10k *ar, u64 type)
+ {
+ 	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+@@ -1678,6 +1687,8 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
+ 	ar->ce_priv = &ar_snoc->ce;
+ 	msa_size = drv_data->msa_size;
+ 
++	ath10k_snoc_quirks_init(ar);
++
+ 	ret = ath10k_snoc_resource_init(ar);
+ 	if (ret) {
+ 		ath10k_warn(ar, "failed to initialize resource: %d\n", ret);
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.h b/drivers/net/wireless/ath/ath10k/snoc.h
+index d62f53501fbb..9db823e46314 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.h
++++ b/drivers/net/wireless/ath/ath10k/snoc.h
+@@ -63,6 +63,7 @@ enum ath10k_snoc_flags {
+ 	ATH10K_SNOC_FLAG_REGISTERED,
+ 	ATH10K_SNOC_FLAG_UNREGISTERING,
+ 	ATH10K_SNOC_FLAG_RECOVERY,
++	ATH10K_SNOC_FLAG_8BIT_HOST_CAP_QUIRK,
+ };
+ 
+ struct ath10k_snoc {
+-- 
+2.18.0
