@@ -1,74 +1,321 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v2 3/3] drm/bridge: sii902x: make audio mclk optional
-Date: Thu, 25 Jul 2019 12:06:10 +0200
-Message-ID: <CA+M3ks6ZRrLAa=xMPi5UfdLEzMCBCjeovUei2O9m8V4PW3bh-Q@mail.gmail.com>
-References: <1563811560-29589-1-git-send-email-olivier.moysan@st.com>
- <1563811560-29589-4-git-send-email-olivier.moysan@st.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 3/5] devfreq: exynos-bus: convert to use
+ dev_pm_opp_set_rate()
+Date: Thu, 25 Jul 2019 19:17:15 +0900
+Message-ID: <beb2455b-7f9e-35df-d524-01f4f51a1c62@samsung.com>
+References: <20190719150535.15501-1-k.konieczny@partner.samsung.com>
+        <CGME20190719150555eucas1p197adc3c58e45c53137fd70cadbfae60e@eucas1p1.samsung.com>
+        <20190719150535.15501-4-k.konieczny@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1563811560-29589-4-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Olivier Moysan <olivier.moysan@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, jernej.skrabec@siol.net, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Jonas Karlman <jonas@kwiboo.se>, David Airlie <airlied@linux.ie>, Neil Armstrong <narmstrong@baylibre.com>, Jyri Sarha <jsarha@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, Alexandre Torgue <alexandre.torgue@st.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190719150535.15501-4-k.konieczny@partner.samsung.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: k.konieczny@partner.samsung.com
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-TGUgbHVuLiAyMiBqdWlsLiAyMDE5IMOgIDE4OjA2LCBPbGl2aWVyIE1veXNhbiA8b2xpdmllci5t
-b3lzYW5Ac3QuY29tPiBhIMOpY3JpdCA6Cj4KPiBUaGUgbWFzdGVyIGNsb2NrIG9uIGkycyBidXMg
-aXMgbm90IG1hbmRhdG9yeSwKPiBhcyBzaWk5MDJYIGludGVybmFsIFBMTCBjYW4gYmUgdXNlZCBp
-bnN0ZWFkLgo+IE1ha2UgdXNlIG9mIG1jbGsgb3B0aW9uYWwuCgpBcHBsaWVkIG9uIGRybS1taXNj
-LW5leHQuClRoYW5rcywKQmVuamFtaW4KCj4KPiBTaWduZWQtb2ZmLWJ5OiBPbGl2aWVyIE1veXNh
-biA8b2xpdmllci5tb3lzYW5Ac3QuY29tPgo+IFJldmlld2VkLWJ5OiBKeXJpIFNhcmhhIDxqc2Fy
-aGFAdGkuY29tPgo+IEFja2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29t
-Pgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYyB8IDE5ICsrKysrKysr
-KystLS0tLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDkgZGVsZXRp
-b25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkwMnguYwo+IGluZGV4IDk2MjkzMWMyMGVmZS4u
-YTMyMzgxNWFhOWI2IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lpOTAy
-eC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMKPiBAQCAtNTY4LDEz
-ICs1NjgsMTQgQEAgc3RhdGljIGludCBzaWk5MDJ4X2F1ZGlvX2h3X3BhcmFtcyhzdHJ1Y3QgZGV2
-aWNlICpkZXYsIHZvaWQgKmRhdGEsCj4gICAgICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4gICAg
-ICAgICB9Cj4KPiAtICAgICAgIG1jbGtfcmF0ZSA9IGNsa19nZXRfcmF0ZShzaWk5MDJ4LT5hdWRp
-by5tY2xrKTsKPiAtCj4gLSAgICAgICByZXQgPSBzaWk5MDJ4X3NlbGVjdF9tY2xrX2RpdigmaTJz
-X2NvbmZpZ19yZWcsIHBhcmFtcy0+c2FtcGxlX3JhdGUsCj4gLSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBtY2xrX3JhdGUpOwo+IC0gICAgICAgaWYgKG1jbGtfcmF0ZSAhPSBy
-ZXQgKiBwYXJhbXMtPnNhbXBsZV9yYXRlKQo+IC0gICAgICAgICAgICAgICBkZXZfZGJnKGRldiwg
-IkluYWNjdXJhdGUgcmVmZXJlbmNlIGNsb2NrICglbGQvJWQgIT0gJXUpXG4iLAo+IC0gICAgICAg
-ICAgICAgICAgICAgICAgIG1jbGtfcmF0ZSwgcmV0LCBwYXJhbXMtPnNhbXBsZV9yYXRlKTsKPiAr
-ICAgICAgIGlmIChzaWk5MDJ4LT5hdWRpby5tY2xrKSB7Cj4gKyAgICAgICAgICAgICAgIG1jbGtf
-cmF0ZSA9IGNsa19nZXRfcmF0ZShzaWk5MDJ4LT5hdWRpby5tY2xrKTsKPiArICAgICAgICAgICAg
-ICAgcmV0ID0gc2lpOTAyeF9zZWxlY3RfbWNsa19kaXYoJmkyc19jb25maWdfcmVnLAo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwYXJhbXMtPnNhbXBsZV9y
-YXRlLCBtY2xrX3JhdGUpOwo+ICsgICAgICAgICAgICAgICBpZiAobWNsa19yYXRlICE9IHJldCAq
-IHBhcmFtcy0+c2FtcGxlX3JhdGUpCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2X2RiZyhk
-ZXYsICJJbmFjY3VyYXRlIHJlZmVyZW5jZSBjbG9jayAoJWxkLyVkICE9ICV1KVxuIiwKPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1jbGtfcmF0ZSwgcmV0LCBwYXJhbXMtPnNhbXBs
-ZV9yYXRlKTsKPiArICAgICAgIH0KPgo+ICAgICAgICAgbXV0ZXhfbG9jaygmc2lpOTAyeC0+bXV0
-ZXgpOwo+Cj4gQEAgLTc1MSwxMSArNzUyLDExIEBAIHN0YXRpYyBpbnQgc2lpOTAyeF9hdWRpb19j
-b2RlY19pbml0KHN0cnVjdCBzaWk5MDJ4ICpzaWk5MDJ4LAo+ICAgICAgICAgICAgICAgICBzaWk5
-MDJ4LT5hdWRpby5pMnNfZmlmb19zZXF1ZW5jZVtpXSB8PSBhdWRpb19maWZvX2lkW2ldIHwKPiAg
-ICAgICAgICAgICAgICAgICAgICAgICBpMnNfbGFuZV9pZFtsYW5lc1tpXV0gfCBTSUk5MDJYX1RQ
-SV9JMlNfRklGT19FTkFCTEU7Cj4KPiAtICAgICAgIHNpaTkwMngtPmF1ZGlvLm1jbGsgPSBkZXZt
-X2Nsa19nZXQoZGV2LCAibWNsayIpOwo+ICsgICAgICAgc2lpOTAyeC0+YXVkaW8ubWNsayA9IGRl
-dm1fY2xrX2dldF9vcHRpb25hbChkZXYsICJtY2xrIik7Cj4gICAgICAgICBpZiAoSVNfRVJSKHNp
-aTkwMngtPmF1ZGlvLm1jbGspKSB7Cj4gICAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAiJXM6
-IE5vIGNsb2NrIChhdWRpbyBtY2xrKSBmb3VuZDogJWxkXG4iLAo+ICAgICAgICAgICAgICAgICAg
-ICAgICAgIF9fZnVuY19fLCBQVFJfRVJSKHNpaTkwMngtPmF1ZGlvLm1jbGspKTsKPiAtICAgICAg
-ICAgICAgICAgcmV0dXJuIDA7Cj4gKyAgICAgICAgICAgICAgIHJldHVybiBQVFJfRVJSKHNpaTkw
-MngtPmF1ZGlvLm1jbGspOwo+ICAgICAgICAgfQo+Cj4gICAgICAgICBzaWk5MDJ4LT5hdWRpby5w
-ZGV2ID0gcGxhdGZvcm1fZGV2aWNlX3JlZ2lzdGVyX2RhdGEoCj4gLS0KPiAyLjcuNAo+Cj4gX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Hi Kamil,
+
+Looks good to me. But, I have some comment. Please check them.
+
+After this patch, exynos_bus_target is perfectly same with
+exynos_bus_passive_target. The exynos_bus_passive_target() could be removed.
+
+On 19. 7. 20. 오전 12:05, k.konieczny@partner.samsung.com wrote:
+> Reuse opp core code for setting bus clock and voltage. As a side
+> effect this allow useage of coupled regulators feature (required
+
+s/useage/usage ?
+
+> for boards using Exynos5422/5800 SoCs) because dev_pm_opp_set_rate()
+> uses regulator_set_voltage_triplet() for setting regulator voltage
+> while the old code used regulator_set_voltage_tol() with fixed
+> tolerance. This patch also removes no longer needed parsing of DT
+> property "exynos,voltage-tolerance" (no Exynos devfreq DT node uses
+> it).
+> 
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> ---
+>  drivers/devfreq/exynos-bus.c | 143 +++++++++--------------------------
+>  1 file changed, 37 insertions(+), 106 deletions(-)
+> 
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> index f391044aa39d..c2147b0912a0 100644
+> --- a/drivers/devfreq/exynos-bus.c
+> +++ b/drivers/devfreq/exynos-bus.c
+> @@ -25,7 +25,6 @@
+>  #include <linux/slab.h>
+>  
+>  #define DEFAULT_SATURATION_RATIO	40
+> -#define DEFAULT_VOLTAGE_TOLERANCE	2
+>  
+>  struct exynos_bus {
+>  	struct device *dev;
+> @@ -37,9 +36,9 @@ struct exynos_bus {
+>  
+>  	unsigned long curr_freq;
+>  
+> -	struct regulator *regulator;
+> +	struct opp_table *opp_table;
+> +
+>  	struct clk *clk;
+> -	unsigned int voltage_tolerance;
+>  	unsigned int ratio;
+>  };
+>  
+> @@ -99,56 +98,23 @@ static int exynos_bus_target(struct device *dev, unsigned long *freq, u32 flags)
+>  {
+>  	struct exynos_bus *bus = dev_get_drvdata(dev);
+>  	struct dev_pm_opp *new_opp;
+> -	unsigned long old_freq, new_freq, new_volt, tol;
+>  	int ret = 0;
+>  
+> -	/* Get new opp-bus instance according to new bus clock */
+> +	/* Get correct frequency for bus. */
+>  	new_opp = devfreq_recommended_opp(dev, freq, flags);
+>  	if (IS_ERR(new_opp)) {
+>  		dev_err(dev, "failed to get recommended opp instance\n");
+>  		return PTR_ERR(new_opp);
+>  	}
+>  
+> -	new_freq = dev_pm_opp_get_freq(new_opp);
+> -	new_volt = dev_pm_opp_get_voltage(new_opp);
+>  	dev_pm_opp_put(new_opp);
+>  
+> -	old_freq = bus->curr_freq;
+> -
+> -	if (old_freq == new_freq)
+> -		return 0;
+> -	tol = new_volt * bus->voltage_tolerance / 100;
+> -
+>  	/* Change voltage and frequency according to new OPP level */
+>  	mutex_lock(&bus->lock);
+> +	ret = dev_pm_opp_set_rate(dev, *freq);
+> +	if (!ret)
+> +		bus->curr_freq = *freq;
+>  
+> -	if (old_freq < new_freq) {
+> -		ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
+> -		if (ret < 0) {
+> -			dev_err(bus->dev, "failed to set voltage\n");
+> -			goto out;
+> -		}
+> -	}
+> -
+> -	ret = clk_set_rate(bus->clk, new_freq);
+> -	if (ret < 0) {
+> -		dev_err(dev, "failed to change clock of bus\n");
+> -		clk_set_rate(bus->clk, old_freq);
+> -		goto out;
+> -	}
+> -
+> -	if (old_freq > new_freq) {
+> -		ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
+> -		if (ret < 0) {
+> -			dev_err(bus->dev, "failed to set voltage\n");
+> -			goto out;
+> -		}
+> -	}
+> -	bus->curr_freq = new_freq;
+> -
+> -	dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n",
+> -			old_freq, new_freq, clk_get_rate(bus->clk));
+> -out:
+>  	mutex_unlock(&bus->lock);
+>  
+>  	return ret;
+> @@ -195,8 +161,8 @@ static void exynos_bus_exit(struct device *dev)
+>  		dev_warn(dev, "failed to disable the devfreq-event devices\n");
+>  
+>  	clk_disable_unprepare(bus->clk);
+> -	if (bus->regulator)
+> -		regulator_disable(bus->regulator);
+> +	if (bus->opp_table)
+> +		dev_pm_opp_put_regulators(bus->opp_table);
+>  
+>  	dev_pm_opp_of_remove_table(dev);
+>  }
+> @@ -209,39 +175,23 @@ static int exynos_bus_passive_target(struct device *dev, unsigned long *freq,
+>  {
+>  	struct exynos_bus *bus = dev_get_drvdata(dev);
+>  	struct dev_pm_opp *new_opp;
+> -	unsigned long old_freq, new_freq;
+> -	int ret = 0;
+> +	int ret;
+>  
+> -	/* Get new opp-bus instance according to new bus clock */
+> +	/* Get correct frequency for bus. */
+>  	new_opp = devfreq_recommended_opp(dev, freq, flags);
+>  	if (IS_ERR(new_opp)) {
+>  		dev_err(dev, "failed to get recommended opp instance\n");
+>  		return PTR_ERR(new_opp);
+>  	}
+>  
+> -	new_freq = dev_pm_opp_get_freq(new_opp);
+>  	dev_pm_opp_put(new_opp);
+>  
+> -	old_freq = bus->curr_freq;
+> -
+> -	if (old_freq == new_freq)
+> -		return 0;
+> -
+>  	/* Change the frequency according to new OPP level */
+>  	mutex_lock(&bus->lock);
+> +	ret = dev_pm_opp_set_rate(dev, *freq);
+> +	if (!ret)
+> +		bus->curr_freq = *freq;
+>  
+> -	ret = clk_set_rate(bus->clk, new_freq);
+> -	if (ret < 0) {
+> -		dev_err(dev, "failed to set the clock of bus\n");
+> -		goto out;
+> -	}
+> -
+> -	*freq = new_freq;
+> -	bus->curr_freq = new_freq;
+> -
+> -	dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n",
+> -			old_freq, new_freq, clk_get_rate(bus->clk));
+> -out:
+>  	mutex_unlock(&bus->lock);
+>  
+>  	return ret;
+> @@ -259,20 +209,9 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>  					struct exynos_bus *bus)
+>  {
+>  	struct device *dev = bus->dev;
+> -	int i, ret, count, size;
+> -
+> -	/* Get the regulator to provide each bus with the power */
+> -	bus->regulator = devm_regulator_get(dev, "vdd");
+> -	if (IS_ERR(bus->regulator)) {
+> -		dev_err(dev, "failed to get VDD regulator\n");
+> -		return PTR_ERR(bus->regulator);
+> -	}
+> -
+> -	ret = regulator_enable(bus->regulator);
+> -	if (ret < 0) {
+> -		dev_err(dev, "failed to enable VDD regulator\n");
+> -		return ret;
+> -	}
+> +	struct opp_table *opp_table;
+> +	const char *vdd = "vdd";
+> +	int i, count, size;
+>  
+>  	/*
+>  	 * Get the devfreq-event devices to get the current utilization of
+> @@ -281,26 +220,29 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>  	count = devfreq_event_get_edev_count(dev);
+>  	if (count < 0) {
+>  		dev_err(dev, "failed to get the count of devfreq-event dev\n");
+> -		ret = count;
+> -		goto err_regulator;
+> +		return count;
+>  	}
+> -	bus->edev_count = count;
+>  
+> +	bus->edev_count = count;
+>  	size = sizeof(*bus->edev) * count;
+>  	bus->edev = devm_kzalloc(dev, size, GFP_KERNEL);
+> -	if (!bus->edev) {
+> -		ret = -ENOMEM;
+> -		goto err_regulator;
+> -	}
+> +	if (!bus->edev)
+> +		return -ENOMEM;
+>  
+>  	for (i = 0; i < count; i++) {
+>  		bus->edev[i] = devfreq_event_get_edev_by_phandle(dev, i);
+> -		if (IS_ERR(bus->edev[i])) {
+> -			ret = -EPROBE_DEFER;
+> -			goto err_regulator;
+> -		}
+> +		if (IS_ERR(bus->edev[i]))
+> +			return -EPROBE_DEFER;
+> +	}
+> +
+> +	opp_table = dev_pm_opp_set_regulators(dev, &vdd, 1);
+> +	if (IS_ERR(opp_table)) {
+> +		i = PTR_ERR(opp_table);
+> +		dev_err(dev, "failed to set regulators %d\n", i);
+> +		return i;
+
+Maybe, you just used the 'i' defined variable instead of adding
+new variable. But, I think that you better to add new variable
+like 'err' for the readability. Or, jut use the 'PTR_ERR(opp_table)'
+directly without any additional variable.
+
+>  	}
+>  
+> +	bus->opp_table = opp_table;
+
+Add blank line. 
+
+>  	/*
+>  	 * Optionally, Get the saturation ratio according to Exynos SoC
+>  	 * When measuring the utilization of each AXI bus with devfreq-event
+> @@ -314,16 +256,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>  	if (of_property_read_u32(np, "exynos,saturation-ratio", &bus->ratio))
+>  		bus->ratio = DEFAULT_SATURATION_RATIO;
+>  
+> -	if (of_property_read_u32(np, "exynos,voltage-tolerance",
+> -					&bus->voltage_tolerance))
+> -		bus->voltage_tolerance = DEFAULT_VOLTAGE_TOLERANCE;
+> -
+>  	return 0;
+> -
+> -err_regulator:
+> -	regulator_disable(bus->regulator);
+> -
+> -	return ret;
+>  }
+>  
+>  static int exynos_bus_parse_of(struct exynos_bus *bus)
+> @@ -414,12 +347,8 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>  
+>  	/* Parse the device-tree to get the resource information */
+>  	ret = exynos_bus_parse_of(bus);
+> -	if (ret < 0) {
+> -		if (!passive)
+> -			regulator_disable(bus->regulator);
+> -
+> -		return ret;
+> -	}
+> +	if (ret < 0)
+> +		goto err_reg;
+>  
+>  	if (passive)
+>  		goto passive;
+> @@ -512,10 +441,12 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>  
+>  err:
+>  	clk_disable_unprepare(bus->clk);
+> -	if (!passive)
+> -		regulator_disable(bus->regulator);
+> -
+>  	dev_pm_opp_of_remove_table(dev);
+
+This function removes the 'opp_table'. But, the below code
+uses the 'opp_table' variable by dev_pm_opp_put_regulators().
+
+To disable the regulator, you have to call dev_pm_opp_of_remove_table(dev)
+after dev_pm_opp_put_regulators(bus->opp_table).
+
+> +err_reg:
+> +	if (bus->opp_table) {
+> +		dev_pm_opp_put_regulators(bus->opp_table);
+> +		bus->opp_table = NULL;
+> +	}
+>  
+>  	return ret;
+>  }
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
