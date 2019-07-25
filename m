@@ -1,78 +1,128 @@
-From: santosh.shilimkar@oracle.com
-Subject: Re: [PATCH v4 0/5] soc: ti: k3: Allow for exclusive and shared device
- requests
-Date: Thu, 25 Jul 2019 10:39:23 -0700
-Message-ID: <d549d2e9-c375-2c46-e4bc-e3a572c90f11@oracle.com>
-References: <20190722050757.29893-1-lokeshvutla@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190722050757.29893-1-lokeshvutla@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: codec2codec: run callbacks in order" to the asoc tree
+Date: Thu, 25 Jul 2019 18:43:39 +0100 (BST)
+Message-ID: <20190725174339.F005E2742B63@ypsilon.sirena.org.uk>
+References: <20190725165949.29699-2-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190725165949.29699-2-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
+   ASoC: codec2codec: run callbacks in order
 
-On 7/21/19 10:07 PM, Lokesh Vutla wrote:
-> Sysfw provides an option for requesting exclusive access for a
-> device using the flags MSG_FLAG_DEVICE_EXCLUSIVE. If this flag is
-> not used, the device is meant to be shared across hosts. Once a device
-> is requested from a host with this flag set, any request to this
-> device from a different host will be nacked by sysfw.
-> 
-> Current tisci firmware and pm drivers always requests for device with
-> exclusive permissions set. But this is not be true for certain devices
-> that are expcted to be shared across different host contexts.
-> So add support for getting the shared or exclusive permissions from DT
-> and request firmware accordingly.
-> 
-> Changes since v3: https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=103447
-> - Rebased on top of v5.3-rc1
-> - Updated power-domain cells for j721e.
-> - Mark the console uart as shared in am65x-base-board
-> - Added Reviewed-by from Rob
-> 
-> Lokesh Vutla (5):
->    firmware: ti_sci: Allow for device shared and exclusive requests
->    dt-bindings: ti_sci_pm_domains: Add support for exclusive and shared
->      access
->    soc: ti: ti_sci_pm_domains: Add support for exclusive and shared
->      access
->    arm64: dts: ti: k3-am654: Update the power domain cells
->    arm64: dts: ti: k3-j721e: Update the power domain cells
-> 
->   .../bindings/soc/ti/sci-pm-domain.txt         | 11 ++++-
->   MAINTAINERS                                   |  1 +
->   arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 44 +++++++++---------
->   arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       | 10 ++---
->   arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  6 +--
->   arch/arm64/boot/dts/ti/k3-am65.dtsi           |  1 +
->   .../arm64/boot/dts/ti/k3-am654-base-board.dts |  1 +
->   .../dts/ti/k3-j721e-common-proc-board.dts     |  4 ++
->   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 20 ++++-----
->   .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  6 +--
->   arch/arm64/boot/dts/ti/k3-j721e.dtsi          |  1 +
->   drivers/firmware/ti_sci.c                     | 45 ++++++++++++++++++-
->   drivers/soc/ti/ti_sci_pm_domains.c            | 23 +++++++++-
->   include/dt-bindings/soc/ti,sci_pm_domain.h    |  9 ++++
->   include/linux/soc/ti/ti_sci_protocol.h        |  3 ++
->   15 files changed, 136 insertions(+), 49 deletions(-)
->   create mode 100644 include/dt-bindings/soc/ti,sci_pm_domain.h
-> 
-Please split this patch series so that drivers and arch, dts patches
-can be queued by respective trees.
+has been applied to the asoc tree at
 
-Regards,
-Santosh
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 68c907f10cd816cad2287167a1a1d77914a6d466 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Thu, 25 Jul 2019 18:59:44 +0200
+Subject: [PATCH] ASoC: codec2codec: run callbacks in order
+
+When handling dai_link events on codec to codec links, run all .startup()
+callbacks on sinks and sources before running any .hw_params(). Same goes
+for hw_free() and shutdown(). This is closer to the behavior of regular
+dai links
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20190725165949.29699-2-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/soc-dapm.c | 36 +++++++++++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 9 deletions(-)
+
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index 1d04612601ad..034b31fd2ecb 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -3835,11 +3835,6 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
+ 				goto out;
+ 			}
+ 			source->active++;
+-			ret = snd_soc_dai_hw_params(source, &substream, params);
+-			if (ret < 0)
+-				goto out;
+-
+-			dapm_update_dai_unlocked(&substream, params, source);
+ 		}
+ 
+ 		substream.stream = SNDRV_PCM_STREAM_PLAYBACK;
+@@ -3853,6 +3848,23 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
+ 				goto out;
+ 			}
+ 			sink->active++;
++		}
++
++		substream.stream = SNDRV_PCM_STREAM_CAPTURE;
++		snd_soc_dapm_widget_for_each_source_path(w, path) {
++			source = path->source->priv;
++
++			ret = snd_soc_dai_hw_params(source, &substream, params);
++			if (ret < 0)
++				goto out;
++
++			dapm_update_dai_unlocked(&substream, params, source);
++		}
++
++		substream.stream = SNDRV_PCM_STREAM_PLAYBACK;
++		snd_soc_dapm_widget_for_each_sink_path(w, path) {
++			sink = path->sink->priv;
++
+ 			ret = snd_soc_dai_hw_params(sink, &substream, params);
+ 			if (ret < 0)
+ 				goto out;
+@@ -3889,9 +3901,18 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
+ 		substream.stream = SNDRV_PCM_STREAM_CAPTURE;
+ 		snd_soc_dapm_widget_for_each_source_path(w, path) {
+ 			source = path->source->priv;
+-
+ 			snd_soc_dai_hw_free(source, &substream);
++		}
++
++		substream.stream = SNDRV_PCM_STREAM_PLAYBACK;
++		snd_soc_dapm_widget_for_each_sink_path(w, path) {
++			sink = path->sink->priv;
++			snd_soc_dai_hw_free(sink, &substream);
++		}
+ 
++		substream.stream = SNDRV_PCM_STREAM_CAPTURE;
++		snd_soc_dapm_widget_for_each_source_path(w, path) {
++			source = path->source->priv;
+ 			source->active--;
+ 			snd_soc_dai_shutdown(source, &substream);
+ 		}
+@@ -3899,9 +3920,6 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
+ 		substream.stream = SNDRV_PCM_STREAM_PLAYBACK;
+ 		snd_soc_dapm_widget_for_each_sink_path(w, path) {
+ 			sink = path->sink->priv;
+-
+-			snd_soc_dai_hw_free(sink, &substream);
+-
+ 			sink->active--;
+ 			snd_soc_dai_shutdown(sink, &substream);
+ 		}
+-- 
+2.20.1
