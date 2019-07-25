@@ -1,17 +1,18 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 01/11] dt-bindings: mmc: arasan: Update documentation
- for SD Card Clock
-Date: Thu, 25 Jul 2019 15:00:53 +0200
-Message-ID: <CAPDyKFostBKYipTkCsDbggsrux7w8BPqARx7fwRsL1XqEEX2NQ@mail.gmail.com>
-References: <1561958991-21935-1-git-send-email-manish.narani@xilinx.com>
- <1561958991-21935-2-git-send-email-manish.narani@xilinx.com>
- <20190722215404.GA28292@bogus>
- <MN2PR02MB602907616249FF19C1A737D8C1C70@MN2PR02MB6029.namprd02.prod.outlook.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [RFC PATCH 03/11] devfreq: exynos-bus: Change goto-based logic to
+ if-else logic
+Date: Thu, 25 Jul 2019 22:02:14 +0900
+Message-ID: <CAGTfZH2pPh5VVQuHV1d_8Wj1N3TPAh6w4KUkQtssBhEdPgQiuA@mail.gmail.com>
+References: <CGME20190723122024eucas1p1ff060d072132bfbc8a8a1d10fa1f90f8@eucas1p1.samsung.com>
+ <20190723122016.30279-1-a.swigon@partner.samsung.com>
+ <20190723122016.30279-4-a.swigon@partner.samsung.com>
+ <CAGTfZH09n9UOLMwNrCvcdeRCHYFO4TiB-YG2rMVuxA4bxuLCVw@mail.gmail.com>
+Reply-To: cwchoi00@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <MN2PR02MB602907616249FF19C1A737D8C1C70@MN2PR02MB6029.namprd02.prod.outlook.com>
+In-Reply-To: <CAGTfZH09n9UOLMwNrCvcdeRCHYFO4TiB-YG2rMVuxA4bxuLCVw@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,95 +22,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Manish Narani <MNARANI@xilinx.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "kernel@esmil.dk" <kernel@esmil.dk>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jolly Shah <JOLLYS@xilinx.com>, "tony.xie@rock-chips.com" <tony.xie@rock-chips.com>, "philipp.tomsich@theobroma-systems.com" <philipp.tomsich@theobroma-systems.com>, "heiko@sntech.de" <heiko@sntech.de>, Rob Herring <robh@kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Rajan Vaja <RAJANV@xilinx.com>, Michal Simek <michals@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nava kishore Manne <navam@xilinx.com>, "scott.branden@broadcom.com" <scott.branden@broadcom.com>, "ayaka@soulik.info" <ayaka@soulik.info>, "mdf@kernel.org" <mdf@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead>
+To: =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, inki.dae@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, georgi.djakov@linaro.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Jul 2019 at 10:23, Manish Narani <MNARANI@xilinx.com> wrote:
->
-> Hi Rob,
->
-> Thanks a lot for the review!
->
->
-> > -----Original Message-----
-> > From: Rob Herring <robh@kernel.org>
-> > Sent: Tuesday, July 23, 2019 3:24 AM
-> > To: Manish Narani <MNARANI@xilinx.com>
-> > Cc: ulf.hansson@linaro.org; mark.rutland@arm.com; heiko@sntech.de; Michal
-> > Simek <michals@xilinx.com>; adrian.hunter@intel.com;
-> > christoph.muellner@theobroma-systems.com; philipp.tomsich@theobroma-
-> > systems.com; viresh.kumar@linaro.org; scott.branden@broadcom.com;
-> > ayaka@soulik.info; kernel@esmil.dk; tony.xie@rock-chips.com; Rajan Vaja
-> > <RAJANV@xilinx.com>; Jolly Shah <JOLLYS@xilinx.com>; Nava kishore Manne
-> > <navam@xilinx.com>; mdf@kernel.org; olof@lixom.net; linux-
-> > mmc@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> > rockchip@lists.infradead.org
-> > Subject: Re: [PATCH v2 01/11] dt-bindings: mmc: arasan: Update
-> > documentation for SD Card Clock
-> >
-> > On Mon, Jul 01, 2019 at 10:59:41AM +0530, Manish Narani wrote:
-> > > The clock handling is to be updated in the Arasan SDHCI. As the
-> > > 'devm_clk_register' is deprecated in the clock framework, this needs to
-> > > specify one more clock named 'clk_sdcard' to get the clock in the driver
-> > > via 'devm_clk_get()'. This clock represents the clock from controller to
-> > > the card.
-> >
-> > Please explain why in terms of the binding, not some driver calls.
-> Okay.
->
-> >
-> >
-> > > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 15 ++++++++++-
-> > ----
-> > >  1 file changed, 10 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > > index 1edbb04..15c6397 100644
-> > > --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > > +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > > @@ -23,6 +23,10 @@ Required Properties:
-> > >    - reg: From mmc bindings: Register location and length.
-> > >    - clocks: From clock bindings: Handles to clock inputs.
-> > >    - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
-> > > +            Apart from these two there is one more optional clock which
-> > > +            is "clk_sdcard". This clock represents output clock from
-> > > +            controller and card. This must be specified when #clock-cells
-> > > +            is specified.
-> > >    - interrupts: Interrupt specifier
-> > >
-> > >  Required Properties for "arasan,sdhci-5.1":
-> > > @@ -36,9 +40,10 @@ Optional Properties:
-> > >    - clock-output-names: If specified, this will be the name of the card clock
-> > >      which will be exposed by this device.  Required if #clock-cells is
-> > >      specified.
-> > > -  - #clock-cells: If specified this should be the value <0>.  With this property
-> > > -    in place we will export a clock representing the Card Clock.  This clock
-> > > -    is expected to be consumed by our PHY.  You must also specify
-> > > +  - #clock-cells: If specified this should be the value <0>. With this
-> > > +    property in place we will export one clock representing the Card
-> > > +    Clock. This clock is expected to be consumed by our PHY. You must also
-> > > +    specify
-> >
-> > specify what?
-> I think this line was already there, I missed to correct it, Will update in v3.
->
-> >
-> > The 3rd clock input I assume? This statement means any existing users
-> > with 2 clock inputs and #clock-cells are in error now. Is that correct?
-> Yes, this is correct. So far there was only one vendor using '#clock-cells'  which is Rockchip. I have sent DT patch (02/11) for that also.
-> Here this is needed as earlier implementation isn't correct as suggested by Uffe. (https://lkml.org/lkml/2019/6/20/486) .
-
-I am not sure how big of a problem the backwards compatible thingy
-with DT is, in general we must not break it. What do you say Manish?
-
-As a workaround, would it be possible to use
-of_clk_get_from_provider() somehow to address the compatibility issue?
-Or maybe there is another clock API that can help.
-
-Kind regards
-Uffe
+MjAxOeuFhCA37JuUIDI17J28ICjrqqkpIOyYpO2bhCA5OjU2LCBDaGFud29vIENob2kgPGN3Y2hv
+aTAwQGdtYWlsLmNvbT7ri5jsnbQg7J6R7ISxOgo+Cj4gMjAxOeuFhCA37JuUIDI07J28ICjsiJgp
+IOyYpOyghCA4OjA4LCBBcnR1ciDFmndpZ2/FhCA8YS5zd2lnb25AcGFydG5lci5zYW1zdW5nLmNv
+bT7ri5jsnbQg7J6R7ISxOgo+ID4KPiA+IFRoaXMgcGF0Y2ggaW1wcm92ZXMgY29kZSByZWFkYWJp
+bGl0eSBieSBjaGFuZ2luZyB0aGUgZm9sbG93aW5nIGNvbnN0cnVjdDoKPiA+Cj4gPiA+ICAgIGlm
+IChjb25kKQo+ID4gPiAgICAgICAgZ290byBwYXNzaXZlOwo+ID4gPiAgICBmb28oKTsKPiA+ID4g
+ICAgZ290byBvdXQ7Cj4gPiA+cGFzc2l2ZToKPiA+ID4gICAgYmFyKCk7Cj4gPiA+b3V0Ogo+ID4K
+PiA+IGludG8gdGhpczoKPiA+Cj4gPiA+ICAgIGlmIChjb25kKQo+ID4gPiAgICAgICAgYmFyKCk7
+Cj4gPiA+ICAgIGVsc2UKPiA+ID4gICAgICAgIGZvbygpOwo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6
+IEFydHVyIMWad2lnb8WEIDxhLnN3aWdvbkBwYXJ0bmVyLnNhbXN1bmcuY29tPgo+ID4gLS0tCj4g
+PiAgZHJpdmVycy9kZXZmcmVxL2V4eW5vcy1idXMuYyB8IDI0ICsrKysrKysrKy0tLS0tLS0tLS0t
+LS0tLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygt
+KQo+ID4KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2RldmZyZXEvZXh5bm9zLWJ1cy5jIGIvZHJp
+dmVycy9kZXZmcmVxL2V4eW5vcy1idXMuYwo+ID4gaW5kZXggY2Y2ZjZjYmQwZjU1Li40YmI4M2I5
+NDViZjcgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2RldmZyZXEvZXh5bm9zLWJ1cy5jCj4gPiAr
+KysgYi9kcml2ZXJzL2RldmZyZXEvZXh5bm9zLWJ1cy5jCj4gPiBAQCAtNTA1LDI1ICs1MDUsMTkg
+QEAgc3RhdGljIGludCBleHlub3NfYnVzX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYpCj4gPiAgICAgICAgIG5vZGUgPSBvZl9wYXJzZV9waGFuZGxlKGRldi0+b2Zfbm9kZSwgImRl
+dmZyZXEiLCAwKTsKPiA+ICAgICAgICAgaWYgKG5vZGUpIHsKPiA+ICAgICAgICAgICAgICAgICBv
+Zl9ub2RlX3B1dChub2RlKTsKPiA+IC0gICAgICAgICAgICAgICBnb3RvIHBhc3NpdmU7Cj4gPiAr
+ICAgICAgICAgICAgICAgcmV0ID0gZXh5bm9zX2J1c19wcm9maWxlX2luaXRfcGFzc2l2ZShidXMs
+IHByb2ZpbGUpOwo+ID4gKyAgICAgICAgICAgICAgIGlmIChyZXQgPCAwKQo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgZ290byBlcnI7Cj4gPiAgICAgICAgIH0gZWxzZSB7Cj4gPiAgICAgICAg
+ICAgICAgICAgcmV0ID0gZXh5bm9zX2J1c19wYXJlbnRfcGFyc2Vfb2YobnAsIGJ1cyk7Cj4gPiAr
+ICAgICAgICAgICAgICAgaWYgKHJldCA8IDApCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBn
+b3RvIGVycjsKPiA+ICsKPiA+ICsgICAgICAgICAgICAgICByZXQgPSBleHlub3NfYnVzX3Byb2Zp
+bGVfaW5pdChidXMsIHByb2ZpbGUpOwo+ID4gKyAgICAgICAgICAgICAgIGlmIChyZXQgPCAwKQo+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZ290byBlcnI7Cj4gPiAgICAgICAgIH0KPiA+Cj4g
+PiAtICAgICAgIGlmIChyZXQgPCAwKQo+ID4gLSAgICAgICAgICAgICAgIGdvdG8gZXJyOwo+ID4g
+LQo+ID4gLSAgICAgICByZXQgPSBleHlub3NfYnVzX3Byb2ZpbGVfaW5pdChidXMsIHByb2ZpbGUp
+Owo+ID4gLSAgICAgICBpZiAocmV0IDwgMCkKPiA+IC0gICAgICAgICAgICAgICBnb3RvIGVycjsK
+PiA+IC0KPiA+IC0gICAgICAgZ290byBvdXQ7Cj4gPiAtcGFzc2l2ZToKPiA+IC0gICAgICAgcmV0
+ID0gZXh5bm9zX2J1c19wcm9maWxlX2luaXRfcGFzc2l2ZShidXMsIHByb2ZpbGUpOwo+ID4gLSAg
+ICAgICBpZiAocmV0IDwgMCkKPiA+IC0gICAgICAgICAgICAgICBnb3RvIGVycjsKPiA+IC0KPiA+
+IC1vdXQ6Cj4gPiAgICAgICAgIG1heF9zdGF0ZSA9IGJ1cy0+ZGV2ZnJlcS0+cHJvZmlsZS0+bWF4
+X3N0YXRlOwo+ID4gICAgICAgICBtaW5fZnJlcSA9IChidXMtPmRldmZyZXEtPnByb2ZpbGUtPmZy
+ZXFfdGFibGVbMF0gLyAxMDAwKTsKPiA+ICAgICAgICAgbWF4X2ZyZXEgPSAoYnVzLT5kZXZmcmVx
+LT5wcm9maWxlLT5mcmVxX3RhYmxlW21heF9zdGF0ZSAtIDFdIC8gMTAwMCk7Cj4gPiAtLQo+ID4g
+Mi4xNy4xCj4gPgo+Cj4gSXQgc2VlbXMgbW9yZSBzaW1wbGUgdGhhbiBiZWZvcmUuCj4gSW5zdGVh
+ZCwgcGxlYXNlIG1lcmdlIHBhdGNoMS8yLzMgdG8gb25lIHBhdGNoLiBhbmQgZHJvcCB0aGUgcGF0
+Y2g0LgoKQnV0LCBJIHRoaW5rIHRoYXQgeW91IGJldHRlciB0byBkcm9wIHRoZSBjbGVhbnVwIHBh
+dGNoIGZyb20gdGhpcyBzZXJpZXMKYmVjYXVzZSB0aGUgc2VyaWVzWzFdIHRvdWNoIHRoZSBleHlu
+b3MtYnVzLmMgZHJpdmVyIGZvciBjb3VwbGVkIHJlZ3VsYXRvci4KWzFdIGh0dHBzOi8vd3d3LnNw
+aW5pY3MubmV0L2xpc3RzL2FybS1rZXJuZWwvbXNnNzQxOTcxLmh0bWwKCkkgcmVjb21tZW5kIHRo
+YXQgeW91IHNlbmQgdGhlIGNsZWFudXAgcGF0Y2ggd2l0aCBteSBjb21tZW50CmVpdGhlciBhZnRl
+ciByZXZpZXdpbmcgdGhlIEthbWlsJ3MgcGF0Y2hbMV0gb3IgcmViYXNlIHRoaXMgc2VyaWVzIGJh
+c2UKb24gcGF0Y2hbMV0uCgo+Cj4gLS0KPiBCZXN0IFJlZ2FyZHMsCj4gQ2hhbndvbyBDaG9pCgoK
+Ci0tIApCZXN0IFJlZ2FyZHMsCkNoYW53b28gQ2hvaQoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
