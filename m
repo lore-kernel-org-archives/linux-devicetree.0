@@ -1,68 +1,58 @@
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Subject: Re: [PATCH] arm64: dts: fast models: Increase clcd's
- max-memory-bandwidth
-Date: Thu, 25 Jul 2019 17:58:25 +0100
-Message-ID: <1d7929a2-273e-e695-6700-36aacf38f61a@arm.com>
-References: <20190725145040.42182-1-kevin.brodsky@arm.com>
- <042d5c3d-96fe-5466-3869-a0a3a08b964d@arm.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 0/6] ASoC: improve codec to codec link support
+Date: Thu, 25 Jul 2019 18:59:43 +0200
+Message-ID: <20190725165949.29699-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <042d5c3d-96fe-5466-3869-a0a3a08b964d@arm.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ruben Ayrapetyan <ruben.ayrapetyan@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, dri-devel@lists.freedesktop.org, Sudeep Holla <sudeep.holla@arm.com>, Brian Starkey <brian.starkey@arm.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/07/2019 16:15, Robin Murphy wrote:
-> Hi Kevin,
+As explained in this previous series [0], on Amlogic, we are using codec to
+codec links to deal with the glue which is between the i2s backends and the
+synopsys hdmi controller.
 
-Hi Robin,
+This worked well until I tried to .get_eld() support in the dw-hdmi-i2s
+driver.  Doing so adds channel mapping controls to the codec. This shown
+several problem
 
-> On 25/07/2019 15:50, Kevin Brodsky wrote:
->> It may be desirable on certain platforms, such as Android, to
->> use 32bpp buffers. Since there is no clear bandwidth limit for the
->> CLCD component on the fast model, let's increase
->> max-memory-bandwidth to allow using 32bpp buffers.
-> Given that the property is optional anyway, would it hurt to just remove
-> it? After trying to dig up any relevant internal email history, it's
-> still far from clear how and why it got here in the first place.
+1) .pcm_new() is not called on codec to codec links.
+   struct snd_soc_pcm_runtime do not even have a valid .pcm
+2) struct snd_pcm_substream and struct snd_pcm_runtime are ephemeral
+   This is a problem if a control needs to access them
 
-Very good point, I hadn't realised it was an optional property. Removing it 
-completely seems to work fine. I'll send a v2 removing it from both fvp-base-revc.dts 
-and rtsm_ve-motherboard.dtsi. Thanks!
+The goal of this patchset is to resolve the above issues and improve the
+codec to codec link support enough to correctly handle the hdmi-codec
 
-Kevin
+The support of these codec to codec links could probably be improved in the
+future to behave like any other link and use soc_pcm_open(),
+soc_pcm_hw_params(), etc...
 
-> Robin.
->
->> Reported-by: Ruben Ayrapetyan <ruben.ayrapetyan@arm.com>
->> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
->> ---
->>    arch/arm64/boot/dts/arm/fvp-base-revc.dts | 2 +-
->>    1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/arm/fvp-base-revc.dts b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
->> index 687707020ec1..3aee49ed6d88 100644
->> --- a/arch/arm64/boot/dts/arm/fvp-base-revc.dts
->> +++ b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
->> @@ -269,7 +269,7 @@
->>    		motherboard {
->>    			iofpga@3,00000000 {
->>    				clcd@1f0000 {
->> -					max-memory-bandwidth = <130000000>; /* 16bpp @ 63.5MHz */
->> +					max-memory-bandwidth = <260000000>; /* 32bpp @ 63.5MHz */
->>    				};
->>    			};
->>    		};
->>
+The challenge lies in the dapm mutex. The soc_pcm call dapm function locking
+this mutex but the dapm mutex is already held in snd_soc_dai_link_event()
+
+Changes since v1 [1]:
+* Fix rebase on Murimoto-san's patches
+* Allocate params dynamically again and refactor the pre_pmu code to
+  simplify the error handling and rollback a bit
+
+[0]: https://lkml.kernel.org/r/20190515131858.32130-1-jbrunet@baylibre.com
+[1]: https://lkml.kernel.org/r/20190724162405.6574-1-jbrunet@baylibre.com
+
+Jerome Brunet (6):
+  ASoC: codec2codec: run callbacks in order
+  ASoC: codec2codec: name link using stream direction
+  ASoC: codec2codec: deal with params when necessary
+  ASoC: create pcm for codec2codec links as well
+  ASoC: codec2codec: remove ephemeral variables
+  ASoC: codec2codec: fill some of the runtime stream parameters
+
+ sound/soc/soc-core.c |  42 +++------
+ sound/soc/soc-dapm.c | 220 +++++++++++++++++++++++++++----------------
+ sound/soc/soc-pcm.c  |  35 ++++++-
+ 3 files changed, 182 insertions(+), 115 deletions(-)
+
+-- 
+2.21.0
