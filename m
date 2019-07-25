@@ -1,136 +1,28 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v7 0/7] Solve postboot supplier cleanup and optimize probe
- ordering
-Date: Thu, 25 Jul 2019 14:04:23 -0700
-Message-ID: <99ca3252-55af-8eea-7653-8347b0a1ab03@gmail.com>
-References: <20190724001100.133423-1-saravanak@google.com>
- <20190725134214.GD11115@kroah.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] dt-bindings: clock: imx8mn: Fix tab indentation for yaml file
+Date: Thu, 25 Jul 2019 14:06:18 -0700
+Message-ID: <20190725210619.5EB94218D4@mail.kernel.org>
+References: <20190725020551.27034-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725134214.GD11115@kroah.com>
-Content-Language: en-US
+In-Reply-To: <20190725020551.27034-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
+To: Anson.Huang@nxp.com, devicetree@vger.kernel.org, festevam@gmail.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On 7/25/19 6:42 AM, Greg Kroah-Hartman wrote:
-> On Tue, Jul 23, 2019 at 05:10:53PM -0700, Saravana Kannan wrote:
->> Add device-links to track functional dependencies between devices
->> after they are created (but before they are probed) by looking at
->> their common DT bindings like clocks, interconnects, etc.
->>
->> Having functional dependencies automatically added before the devices
->> are probed, provides the following benefits:
->>
->> - Optimizes device probe order and avoids the useless work of
->>   attempting probes of devices that will not probe successfully
->>   (because their suppliers aren't present or haven't probed yet).
->>
->>   For example, in a commonly available mobile SoC, registering just
->>   one consumer device's driver at an initcall level earlier than the
->>   supplier device's driver causes 11 failed probe attempts before the
->>   consumer device probes successfully. This was with a kernel with all
->>   the drivers statically compiled in. This problem gets a lot worse if
->>   all the drivers are loaded as modules without direct symbol
->>   dependencies.
->>
->> - Supplier devices like clock providers, interconnect providers, etc
->>   need to keep the resources they provide active and at a particular
->>   state(s) during boot up even if their current set of consumers don't
->>   request the resource to be active. This is because the rest of the
->>   consumers might not have probed yet and turning off the resource
->>   before all the consumers have probed could lead to a hang or
->>   undesired user experience.
->>
->>   Some frameworks (Eg: regulator) handle this today by turning off
->>   "unused" resources at late_initcall_sync and hoping all the devices
->>   have probed by then. This is not a valid assumption for systems with
->>   loadable modules. Other frameworks (Eg: clock) just don't handle
->>   this due to the lack of a clear signal for when they can turn off
->>   resources. This leads to downstream hacks to handle cases like this
->>   that can easily be solved in the upstream kernel.
->>
->>   By linking devices before they are probed, we give suppliers a clear
->>   count of the number of dependent consumers. Once all of the
->>   consumers are active, the suppliers can turn off the unused
->>   resources without making assumptions about the number of consumers.
->>
->> By default we just add device-links to track "driver presence" (probe
->> succeeded) of the supplier device. If any other functionality provided
->> by device-links are needed, it is left to the consumer/supplier
->> devices to change the link when they probe.
->>
->> v1 -> v2:
->> - Drop patch to speed up of_find_device_by_node()
->> - Drop depends-on property and use existing bindings
->>
->> v2 -> v3:
->> - Refactor the code to have driver core initiate the linking of devs
->> - Have driver core link consumers to supplier before it's probed
->> - Add support for drivers to edit the device links before probing
->>
->> v3 -> v4:
->> - Tested edit_links() on system with cyclic dependency. Works.
->> - Added some checks to make sure device link isn't attempted from
->>   parent device node to child device node.
->> - Added way to pause/resume sync_state callbacks across
->>   of_platform_populate().
->> - Recursively parse DT node to create device links from parent to
->>   suppliers of parent and all child nodes.
->>
->> v4 -> v5:
->> - Fixed copy-pasta bugs with linked list handling
->> - Walk up the phandle reference till I find an actual device (needed
->>   for regulators to work)
->> - Added support for linking devices from regulator DT bindings
->> - Tested the whole series again to make sure cyclic dependencies are
->>   broken with edit_links() and regulator links are created properly.
->>
->> v5 -> v6:
->> - Split, squashed and reordered some of the patches.
->> - Refactored the device linking code to follow the same code pattern for
->>   any property.
->>
->> v6 -> v7:
->> - No functional changes.
->> - Renamed i to index
->> - Added comment to clarify not having to check property name for every
->>   index
->> - Added "matched" variable to clarify code. No functional change.
->> - Added comments to include/linux/device.h for add_links()
->>
->> I've also not updated this patch series to handle the new patch [1] from
->> Rafael. Will do that once this patch series is close to being Acked.
->>
->> [1] - https://lore.kernel.org/lkml/3121545.4lOhFoIcdQ@kreacher/
-> 
-> 
-> This looks sane to me.  Anyone have any objections for me queueing this
-> up for my tree to get into linux-next now?
+Quoting Anson.Huang@nxp.com (2019-07-24 19:05:51)
+> From: Anson Huang <Anson.Huang@nxp.com>
+>=20
+> YAML file can NOT contain tab as indentation, fix it.
+>=20
 
-I would like for the series to get into linux-next sooner than later,
-and spend some time there.  
+Would be nice if checkpatch could check for this.
 
-I am _slightly_ more optimistic than Rob that sitting in linux-next for
-an extended period might reveal any latent issues, so I would like for
-the series to be in linux-next for an extended period of time.  (Yes,
-my understanding is that Linus does not like patches to be in linux-next
-if they are not targeted for the next merge window, but I prefer that
-this patch series spend as much time in linux-next as possible).
+> Fixes: 6d6062553e3d ("dt-bindings: imx: Add clock binding doc for i.MX8MN=
+")
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-I have been waiting for the changes to settle down before bringing up
-the issue of devicetree overlays.  Now that the code seems to be
-settling down, I need to look at how these changes impact overlays.
-So I do not think the patches will be ready for a Linus pull request
-until overlays are considered.
-
--Frank
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Acked-by: Stephen Boyd <sboyd@kernel.org>
