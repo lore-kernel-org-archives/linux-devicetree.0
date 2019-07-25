@@ -1,21 +1,55 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH RESEND 0/5] ARM: dts: mmp2: devicetree updates
-Date: Thu, 25 Jul 2019 13:07:26 +0200
-Message-ID: <20190725110731.3294411-1-lkundrak@v3.sk>
+Subject: [PATCH 3/5] ARM: dts: mmp2: rename the USB PHY node
+Date: Thu, 25 Jul 2019 13:07:29 +0200
+Message-ID: <20190725110731.3294411-4-lkundrak@v3.sk>
+References: <20190725110731.3294411-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190725110731.3294411-1-lkundrak@v3.sk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This device is not an OTG phy, it's a regular USB HS phy. Follow the
+generic node name recommendation, and rename it to "usb-phy".
 
-Here's a couple of updates for the MMP2 SoC devicetree files.
-They're pretty much independent of each other, can be applied in any
-order.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ arch/arm/boot/dts/mmp2.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Hopefully I'm sending them the right way.
-
-Lubo
+diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
+index e64639ce57a91..21432cb9143f7 100644
+--- a/arch/arm/boot/dts/mmp2.dtsi
++++ b/arch/arm/boot/dts/mmp2.dtsi
+@@ -117,7 +117,7 @@
+ 				mrvl,intc-nr-irqs = <2>;
+ 			};
+ 
+-			usb_otg_phy0: usb-otg-phy@d4207000 {
++			usb_phy0: usb-phy@d4207000 {
+ 				compatible = "marvell,mmp2-usb-phy";
+ 				reg = <0xd4207000 0x40>;
+ 				#phy-cells = <0>;
+@@ -130,7 +130,7 @@
+ 				interrupts = <44>;
+ 				clocks = <&soc_clocks MMP2_CLK_USB>;
+ 				clock-names = "USBCLK";
+-				phys = <&usb_otg_phy0>;
++				phys = <&usb_phy0>;
+ 				phy-names = "usb";
+ 				status = "disabled";
+ 			};
+-- 
+2.21.0
