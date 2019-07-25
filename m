@@ -1,58 +1,81 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-Date: Thu, 25 Jul 2019 13:38:14 +0300
-Message-ID: <20190725103813.GO12715@pdeschrijver-desktop.Nvidia.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
- <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
- <20190725095502.GM12715@pdeschrijver-desktop.Nvidia.com>
- <dd01be5d-bab9-1329-c7ac-c3c893d49dd1@gmail.com>
- <20190725103348.GN12715@pdeschrijver-desktop.Nvidia.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH 11/13] arm64: dts: qcom: qcs404: Add CPR and populate OPP
+ table
+Date: Thu, 25 Jul 2019 12:40:31 +0200
+Message-ID: <20190725104031.GA21998@centauri>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
+ <20190705095726.21433-12-niklas.cassel@linaro.org>
+ <20190710090303.tb5ue3wq6r7ofyev@vireshk-i7>
+ <20190715132405.GA5040@centauri>
+ <20190716103436.az5rdk6f3yoa3apz@vireshk-i7>
+ <20190716105318.GA26592@centauri>
+ <20190717044923.ccmebeewbinlslkm@vireshk-i7>
+ <20190719154558.GA32518@centauri>
+ <20190723015635.rl5a2isjnjn23fzh@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190725103348.GN12715@pdeschrijver-desktop.Nvidia.com>
+In-Reply-To: <20190723015635.rl5a2isjnjn23fzh@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 01:33:48PM +0300, Peter De Schrijver wrote:
-> On Thu, Jul 25, 2019 at 01:05:13PM +0300, Dmitry Osipenko wrote:
-> > 25.07.2019 12:55, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > > On Mon, Jul 22, 2019 at 12:54:51PM +0300, Dmitry Osipenko wrote:
-> > >>
-> > >> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
-> > >> doesn't sound correct to me. Something like 'firmware_sc7' should su=
-it
-> > >> better here.
-> > >>
-> > >>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
-> > >>
-> > >> Secondly, I'm also not sure why COP interrupts need to be disabled f=
-or
-> > >> pre-T210 at all, since COP is unused. This looks to me like it was
-> > >> cut-n-pasted from downstream kernel without a good reason and could =
-be
-> > >> simply removed.
-> > >=20
-> > > I don't think we can rely on the fact that COP is unused. People can
-> > > write their own code to run on COP.
-> >=20
-> > 1. Not upstream - doesn't matter.
-> >=20
->=20
-> The code is not part of the kernel, so obviously it's not upstream?
->=20
-> > 2. That's not very good if something unknown is running on COP and then
-> > kernel suddenly intervenes, don't you think so?
->=20
-> Unless the code was written with this in mind.
->=20
+On Tue, Jul 23, 2019 at 07:26:35AM +0530, Viresh Kumar wrote:
+> On 19-07-19, 17:45, Niklas Cassel wrote:
+> > Hello Viresh,
+> > 
+> > Could you please have a look at the last two patches here:
+> > https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-opp-hz
+> 
+> There is no sane way of providing review comments with a link to the
+> git tree :)
+> 
+> I still had a look and I see that you don't search for max frequency
+> but just any OPP that has required-opps set to the level u want. Also,
+> can't there be multiple phandles in required-opps in your case ?
 
-Looking at this again, I don't think we need to enable the IRQ at all.
+For each OPP in the CPR OPP table, we need three things,
+opp-level, qcom,fuse-level and opp-hz.
+The first two can simply be parsed from the OPP node
+itself while iterating the CPR OPP table.
+The opp-hz has to be fetched from the CPU OPP table.
 
-Peter.
+Several OPPs might have the same qcom,fuse-level value.
+However, they will have unique opp-level values and unique
+opp-hz values. Each opp-level has a matching opp-hz.
+
+required-opps is basically a connection between a opp-hz
+(CPU OPP table) and and a opp-level (CPR OPP table).
+
+So there will be only one match. No need to search for
+max frequency.
+
+I think you are confusing this with something else.
+The CPR hardware has to be programmed with the highest
+frequency for each qcom,fuse-corner.
+This is done here:
+https://git.linaro.org/people/niklas.cassel/kernel.git/tree/drivers/power/avs/qcom-cpr.c?h=cpr-full#n1219
+by saving the highest frequency for each fuse level
+while iterating the OPP table.
+
+
+There can be only one phandle in the required-opps in my case,
+this is one of the reasons why I prefer implementing it in the
+CPR driver. If it were to be implemented in OPP core, it probably
+has to handle multiple phandles.
+
+> 
+> > If you like my proposal then I could send out the first patch (the one to
+> > OPP core) as a real patch (with an improved commit message), and
+> > incorporate the second patch into my CPR patch series when I send out a V2.
+> 
+> Send them both in your series only, otherwise the first one is useless
+> anyway.
+
+Ok, will do.
+
+
+Kind regards,
+Niklas
