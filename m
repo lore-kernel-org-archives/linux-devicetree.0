@@ -1,54 +1,42 @@
-Return-Path: <SRS0=Oxx0=VN=gmail.com=nishkadg.linux@kernel.org>
-From: Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] of: resolver: Add of_node_put() before return and break
-Date: Tue, 16 Jul 2019 11:13:30 +0530
-Message-Id: <20190716054331.2775-1-nishkadg.linux@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: pantelis.antoniou@konsulko.com, frowand.list@gmail.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc: Nishka Dasgupta <nishkadg.linux@gmail.com>
+Return-Path: <SRS0=7VNh=VW=electromag.com.au=rtresidd@kernel.org>
+From: Richard Tresidder <rtresidd@electromag.com.au>
+Subject: [PATCH 1/1] dt-bindings: power/supply/sbs_sbs-battery: Addition of force_load binding Add device tree binding documentation for addition of force_load boolean value to allow loading a battery during boot even if not present at that time.
+Date: Thu, 25 Jul 2019 14:50:45 +0800
+Message-Id: <1564037445-22936-1-git-send-email-rtresidd@electromag.com.au>
+To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, rtresidd@electromag.com.au, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Each iteration of for_each_child_of_node puts the previous node, but in
-the case of a return or break from the middle of the loop, there is no
-put, thus causing a memory leak. Hence add an of_node_put before the
-return or break in three places.
-Issue found with Coccinelle.
-
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
 ---
- drivers/of/resolver.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index c1b67dd7cd6e..83c766233181 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -206,16 +206,22 @@ static int adjust_local_phandle_references(struct device_node *local_fixups,
- 	for_each_child_of_node(local_fixups, child) {
+Notes:
+    Add device tree binding documentation for addition of force_load
+    boolean value to allow loading a battery during boot even if not
+    present at that time.
+    Accompanying patch to drivers/power/supply/sbs-battery.c submitted to linux-pm@vger.kernel.org
+
+ Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+index 4e78e51..187d7bb 100644
+--- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+@@ -15,7 +15,8 @@ Optional properties :
+    after an external change notification.
+  - sbs,battery-detect-gpios : The gpio which signals battery detection and
+    a flag specifying its polarity.
+-
++ - sbs,force-load : Allow loading of a hot-pluggable battery when there is no
++   GPIO detect available and the module is statically built.
+ Example:
  
- 		for_each_child_of_node(overlay, overlay_child)
--			if (!node_name_cmp(child, overlay_child))
-+			if (!node_name_cmp(child, overlay_child)) {
-+				of_node_put(overlay_child);
- 				break;
-+			}
- 
--		if (!overlay_child)
-+		if (!overlay_child) {
-+			of_node_put(child);
- 			return -EINVAL;
-+		}
- 
- 		err = adjust_local_phandle_references(child, overlay_child,
- 				phandle_delta);
--		if (err)
-+		if (err) {
-+			of_node_put(child);
- 			return err;
-+		}
+ 	battery@b {
+@@ -24,4 +25,5 @@ Example:
+ 		sbs,i2c-retry-count = <2>;
+ 		sbs,poll-retry-count = <10>;
+ 		sbs,battery-detect-gpios = <&gpio-controller 122 1>;
++		sbs,force-load;
  	}
- 
- 	return 0;
 -- 
-2.19.1
+1.8.3.1
