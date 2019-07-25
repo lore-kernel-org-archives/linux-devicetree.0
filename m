@@ -1,120 +1,58 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
-Date: Thu, 25 Jul 2019 13:21:12 -0700
-Message-ID: <CAFd5g47v3Mr4GEGOjqyYy9Jwwm+ow7ypbu9j88rxEN06QCzdxQ@mail.gmail.com>
-References: <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
- <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
- <20190716175021.9CA412173C@mail.kernel.org> <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
- <20190718175024.C3EC421019@mail.kernel.org> <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com>
- <20190719000834.GA3228@google.com> <20190722200347.261D3218C9@mail.kernel.org>
- <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
- <20190722235411.06C1320840@mail.kernel.org> <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: Limit WiFi TX power on rk3288-veyron-jerry
+Date: Thu, 25 Jul 2019 22:23:04 +0200
+Message-ID: <2130412.AuREfPFnmH@phil>
+References: <20190723225258.93058-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
+In-Reply-To: <20190723225258.93058-1-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, Jeff Dike <jdike@addtoit.com>, Kevin Hilman <khilman@baylibre.com>, Logan Gunthorpe <logang@deltatee.com>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Vetter <daniel@ffwll.ch>, Amir Goldstein <amir73il@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Kees Cook <keescook@google.com>, David Rientjes <rientjes@google.com>, kunit-dev@googlegroups.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, Peter Zijlstra <peterz@infradead.org>, Randy Dunlap <rdunlap@infradead.org>, Joel Stanley <joel@jms.id.au>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, wfg@linux.intel.com, Greg KH <gregkh@linuxfoundation.org>Julia Lawall <j>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 12:31 AM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Mon 2019-07-22 16:54:10, Stephen Boyd wrote:
-> > Quoting Brendan Higgins (2019-07-22 15:30:49)
-> > > On Mon, Jul 22, 2019 at 1:03 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > >
-> > > >
-> > > > What's the calling context of the assertions and expectations? I still
-> > > > don't like the fact that string stream needs to allocate buffers and
-> > > > throw them into a list somewhere because the calling context matters
-> > > > there.
-> > >
-> > > The calling context is the same as before, which is anywhere.
-> >
-> > Ok. That's concerning then.
-> >
-> > >
-> > > > I'd prefer we just wrote directly to the console/log via printk
-> > > > instead. That way things are simple because we use the existing
-> > > > buffering path of printk, but maybe there's some benefit to the string
-> > > > stream that I don't see? Right now it looks like it builds a string and
-> > > > then dumps it to printk so I'm sort of lost what the benefit is over
-> > > > just writing directly with printk.
-> > >
-> > > It's just buffering it so the whole string gets printed uninterrupted.
-> > > If we were to print out piecemeal to printk, couldn't we have another
-> > > call to printk come in causing it to garble the KUnit message we are
-> > > in the middle of printing?
-> >
-> > Yes, printing piecemeal by calling printk many times could lead to
-> > interleaving of messages if something else comes in such as an interrupt
-> > printing something. Printk has some support to hold "records" but I'm
-> > not sure how that would work here because KERN_CONT talks about only
-> > being used early on in boot code. I haven't looked at printk in detail
-> > though so maybe I'm all wrong and KERN_CONT just works?
->
-> KERN_CONT does not guarantee that the message will get printed
-> together. The pieces get interleaved with messages printed in
-> parallel.
->
-> Note that KERN_CONT was originally really meant to be used only during
-> boot. It was later used more widely and ended in the best effort category.
->
-> There were several attempts to make it more reliable. But it was
-> always either too complicated or error prone or both.
->
-> You need to use your own buffering if you rely want perfect output.
-> The question is if it is really worth the complexity. Also note that
-> any buffering reduces the chance that the messages will reach
-> the console.
+Am Mittwoch, 24. Juli 2019, 00:52:58 CEST schrieb Matthias Kaehlcke:
+> The downstream Chrome OS 3.14 kernel for jerry limits WiFi TX power
+> through calibration data in the device tree [1]. Add a DT node for
+> the WiFi chip and use the downstream calibration data.
+> 
+> Not all calibration data entries have the length specified in the
+> binding (Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt),
+> however this is the data used by the downstream ('official') kernel
+> and the binding mentions that "the length can vary between hw
+> versions".
+> 
+> [1] https://crrev.com/c/271237
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  arch/arm/boot/dts/rk3288-veyron-jerry.dts | 147 ++++++++++++++++++++++
+>  1 file changed, 147 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+> index b1613af83d5d..2d0d5a4603ba 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+> +++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+> @@ -82,6 +82,153 @@
+>  	};
+>  };
+>  
+> +&sdio0 {
 
-Seems like that settles it then. Thanks!
+added #address-cells = <1> and #size-cells = <0> here
+as it was creating dtc warnings due to the reg=1 below
 
-> BTW: There is a work in progress on a lockless printk ring buffer.
-> It will make printk() more secure regarding deadlocks. But it might
-> make transparent handling of continuous lines even more tricky.
->
-> I guess that local buffering, before calling printk(), will be
-> even more important then. Well, it might really force us to create
-> an API for it.
+> +	mwifiex: wifi@1 {
+> +		compatible = "marvell,sd8897";
+> +		reg = <1>;
+> +		status = "okay";
 
-Cool! Can you CC me on that discussion?
+dropped status ... okay is the default and the wifi node only was
+added to this board, not before.
 
-> > Can printk be called once with whatever is in the struct? Otherwise if
-> > this is about making printk into a structured log then maybe printk
-> > isn't the proper solution anyway. Maybe a dev interface should be used
-> > instead that can handle starting and stopping tests (via ioctl) in
-> > addition to reading test results, records, etc. with read() and a
-> > clearing of the records. Then the seqfile API works naturally. All of
-> > this is a bit premature, but it looks like you're going down the path of
-> > making something akin to ftrace that stores binary formatted
-> > assertion/expectation records in a lockless ring buffer that then
-> > formats those records when the user asks for them.
->
-> IMHO, ftrace postpones the text formatting primary because it does not
-> not want to slow down the traced code more than necessary. It is yet
-> another layer and there should be some strong reason for it.
+and applied for 5.4
 
-Noted. Yeah, I would prefer avoiding printing out the info at a separate time.
-
-> > I can imagine someone wanting to write unit tests that check conditions
-> > from a simulated hardirq context via irq works (a driver mock
-> > framework?), so this doesn't seem far off.
->
-> Note that stroring the messages into the printk log is basically safe in any
-> context. It uses temporary per-CPU buffers for recursive messages and
-> in NMI. The only problem is panic() when some CPU gets stuck with the
-> lock taken. This will get solved by the lockless ringbuffer. Also
-> the temporary buffers will not be necessary any longer.
-
-Sure, I think Stephen's concern is all the supporting code that is
-involved. Not printk specifically. It just means a lot more of KUnit
-has to be IRQ safe.
-
-> Much bigger problems are with consoles. There are many of them. It
-> means a lot of code and more locks involved, including scheduler
-> locks. Note that console lock is a semaphore.
-
-That shouldn't affect us though, right? As long as we continue to use
-the printk interface?
+Thanks
+Heiko
