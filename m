@@ -1,47 +1,119 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: imx: add imx8mq nitrogen support
-Date: Thu, 25 Jul 2019 11:11:17 -0300
-Message-ID: <CAOMZO5BWarNdbCc5eVW7TTO9ahkG5wMwX_3XXKkngzKcjk+mpg@mail.gmail.com>
-References: <20190725121452.16607-1-dafna.hirschfeld@collabora.com> <20190725121452.16607-2-dafna.hirschfeld@collabora.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [RFCv3 1/3] dt-bindings: devfreq: Add initial bindings for i.MX
+Date: Thu, 25 Jul 2019 23:23:44 +0900
+Message-ID: <CAGTfZH2UzvOVE-hKHLLGa7-ZF6DqsXvZiHcMy4O9qpohYLGbDA@mail.gmail.com>
+References: <cover.1563971855.git.leonard.crestez@nxp.com> <93df6e7d81a404a43af684e2f96bdb6561ed87fe.1563971855.git.leonard.crestez@nxp.com>
+Reply-To: cwchoi00@gmail.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725121452.16607-2-dafna.hirschfeld@collabora.com>
+In-Reply-To: <93df6e7d81a404a43af684e2f96bdb6561ed87fe.1563971855.git.leonard.crestez@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com, Gary Bisson <gary.bisson@boundarydevices.com>, Troy Kisky <troy.kisky@boundarydevices.com>
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Will Deacon <will@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Jacky Bai <ping.bai@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, Georgi Djakov <georgi.djakov@linaro.org>, Alexandre Bailon <abailon@baylibre.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Frank Li <Frank.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP
 List-Id: devicetree@vger.kernel.org
 
-Hi Dafna,
+Hi,
 
-On Thu, Jul 25, 2019 at 10:56 AM Dafna Hirschfeld
-<dafna.hirschfeld@collabora.com> wrote:
+2019=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 10:36, =
+Leonard Crestez <leonard.crestez@nxp.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
+=B1:
 >
-> From: Gary Bisson <gary.bisson@boundarydevices.com>
+> Add initial dt bindings for the interconnects inside i.MX chips.
+> Multiple external IPs are involved but SOC integration means the
+> software controllable interfaces are very similar.
 >
-> i.MX 8Quad is a quad (4x) Cortex-A53 processor with powerful
-> graphic and multimedia features.
-> This patch adds Nitrogen8M board support.
+> This is initially only for imx8mm but add an "fsl,imx-bus" fallback
+> similar to exynos-bus.
 >
-> Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
-> Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
-> [Dafna: porting vendor's code to mainline]
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 > ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../devicetree/bindings/devfreq/imx.yaml      | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/imx.yaml
 >
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index 7294ac36f4c0..728c41ef83bb 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -227,6 +227,12 @@ properties:
->                - fsl,imx8qxp-mek           # i.MX8QXP MEK Board
->            - const: fsl,imx8qxp
+> diff --git a/Documentation/devicetree/bindings/devfreq/imx.yaml b/Documen=
+tation/devicetree/bindings/devfreq/imx.yaml
+> new file mode 100644
+> index 000000000000..87f90cddfd29
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/devfreq/imx.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/devfreq/imx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic i.MX bus frequency device
+> +
+> +maintainers:
+> +  - Leonard Crestez <leonard.crestez@nxp.com>
+> +
+> +description: |
+> +  The i.MX SoC family has multiple buses for which clock frequency (and =
+sometimes
+> +  voltage) can be adjusted.
+> +
+> +  Some of those buses expose register areas mentioned in the memory maps=
+ as GPV
+> +  ("Global Programmers View") but not all. Access to this area might be =
+denied for
+> +  normal world.
+> +
+> +  The buses are based on externally licensed IPs such as ARM NIC-301 and=
+ Arteris
+> +  FlexNOC but DT bindings are specific to the integration of these bus
+> +  interconnect IPs into imx SOCs.
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +    description: GPV area
+> +
+> +  compatible:
+> +    contains:
+> +      enum:
+> +       - fsl,imx8m-noc
+> +       - fsl,imx8m-nic
+> +       - fsl,imx8m-ddrc
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/imx8mm-clock.h>
+> +    ddrc: dram-controller@3d400000 {
+> +            compatible =3D "fsl,imx8mm-ddrc";
+
+s/imx8mm/imx8m
+
+> +            reg =3D <0x3d400000 0x400000>;
+> +            clocks =3D <&clk IMX8MM_CLK_DRAM>;
+> +            operating-points-v2 =3D <&ddrc_opp_table>;
+> +    };
+> +
+> +  - |
+> +    noc: noc@32700000 {
+> +            compatible =3D "fsl,imx8mm-noc";
+
+s/imx8mm/imx8m
+
+> +            reg =3D <0x32700000 0x100000>;
+> +            clocks =3D <&clk IMX8MM_CLK_NOC>;
+> +            operating-points-v2 =3D <&noc_opp_table>;
+> +    };
+> --
+> 2.17.1
 >
-> +      - description: i.MX8MQ based Boards
 
-This line is already present in latest code as we already have some
-i.MX8MQ boards listed.
 
-Please rebase it against linux-next.
+--=20
+Best Regards,
+Chanwoo Choi
