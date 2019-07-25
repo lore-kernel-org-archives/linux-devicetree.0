@@ -1,88 +1,133 @@
-Return-Path: <SRS0=d0Jw=VU=linaro.org=georgi.djakov@kernel.org>
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v5 2/5] soc: qcom: smd-rpm: Create RPM interconnect proxy child device
-Date: Tue, 23 Jul 2019 17:23:36 +0300
-Message-Id: <20190723142339.27772-3-georgi.djakov@linaro.org>
-In-Reply-To: <20190723142339.27772-1-georgi.djakov@linaro.org>
-References: <20190723142339.27772-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, georgi.djakov@linaro.org
-Cc: vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Date: Thu, 25 Jul 2019 16:46:05 -0600
+References: <1561990354-4084-1-git-send-email-akinobu.mita@gmail.com>
+	<1561990354-4084-3-git-send-email-akinobu.mita@gmail.com>
+	<20190722221645.GA32515@bogus>
+	<CAC5umyh5d7Ya-Ou8BZmPfpXKT+WkMCWnRKkCw8xhe9upNKqVbg@mail.gmail.com>
+In-Reply-To: <CAC5umyh5d7Ya-Ou8BZmPfpXKT+WkMCWnRKkCw8xhe9upNKqVbg@mail.gmail.com>
+Message-ID: <CAL_Jsq++7TkihOTrcx+3NVqYsS502h-1Og7h9H2YCA_YY5av2A@mail.gmail.com>
+Subject: Re: [PATCH v5 2/4] dt-bindings: thermal: nvme: Add binding documentation
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: linux-nvme@lists.infradead.org, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Minwoo Im <minwoo.im.dev@gmail.com>, Kenneth Heitke <kenneth.heitke@intel.com>, Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Register a platform device to handle the communication of bus bandwidth
-requests with the remote processor. The interconnect proxy device is part
-of this remote processor (RPM) hardware. Let's create a icc-smd-rpm proxy
-child device to represent the bus throughput functionality that is provided
-by the RPM.
+On Thu, Jul 25, 2019 at 8:24 AM Akinobu Mita <akinobu.mita@gmail.com> wrote=
+:
+>
+> 2019=E5=B9=B47=E6=9C=8823=E6=97=A5(=E7=81=AB) 7:16 Rob Herring <robh@kern=
+el.org>:
+> >
+> > On Mon, Jul 01, 2019 at 11:12:32PM +0900, Akinobu Mita wrote:
+> > > Add thermal binding documentation for NVMe temperature sensor.
+> > >
+> > > Cc: Rob Herring <robh@kernel.org>
+> > > Cc: Zhang Rui <rui.zhang@intel.com>
+> > > Cc: Eduardo Valentin <edubezval@gmail.com>
+> > > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > Cc: Keith Busch <kbusch@kernel.org>
+> > > Cc: Jens Axboe <axboe@fb.com>
+> > > Cc: Christoph Hellwig <hch@lst.de>
+> > > Cc: Sagi Grimberg <sagi@grimberg.me>
+> > > Cc: Minwoo Im <minwoo.im.dev@gmail.com>
+> > > Cc: Kenneth Heitke <kenneth.heitke@intel.com>
+> > > Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+> > > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> > > ---
+> > > * v5
+> > > - New patch
+> > >
+> > >  Documentation/devicetree/bindings/thermal/nvme.txt | 56 ++++++++++++=
+++++++++++
+> > >  1 file changed, 56 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/thermal/nvme.tx=
+t
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/thermal/nvme.txt b/Doc=
+umentation/devicetree/bindings/thermal/nvme.txt
+> > > new file mode 100644
+> > > index 0000000..60b90de
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/thermal/nvme.txt
+> > > @@ -0,0 +1,56 @@
+> > > +Binding for NVMe temperature sensor
+> > > +
+> > > +An NVMe controller reports up to nine temperature values in the SMAR=
+T / Health
+> > > +log.
+> > > +
+> > > +Required properties:
+> > > +- reg: A five-cell address encoded as (phys.hi phys.mid phys.lo size=
+.hi
+> > > +  size.lo). phys.hi should contain the device's BDF (Bus/Device/Func=
+tion)
+> > > +  as 0b00000000 bbbbbbbb dddddfff 00000000. The other cells should b=
+e zero.
+> > > +  See also Documentation/devicetree/bindings/pci/pci.txt
+> > > +
+> > > +- #thermal-sensor-cells: Must be 1. See ./thermal.txt for a descript=
+ion.
+> > > +  In the thermal-sensors property, the sensor ID 0 for composite tem=
+perature,
+> > > +  1 through 8 for NVMe temperature sensor N.
+> > > +
+> > > +Example:
+> > > +
+> > > +&pcie0 {
+> > > +     ...
+> > > +     nvme: nvme@0,0 {
+> > > +             reg =3D <0x0000 0 0 0 0>;
+> > > +             #address-cells =3D <3>;
+> > > +             #size-cells =3D <2>;
+> > > +
+> > > +             nvmetemp: nvmetemp {
+> > > +                     reg =3D <0x0000 0 0 0 0>; /* DEVFN =3D 0x00 (0:=
+0) */
+> >
+> > I'm not sure this is really valid PCI addressing as the parent has the
+> > same address.
+> >
+> > > +                     #thermal-sensor-cells =3D <1>;
+> >
+> > Can't you just put this in the parent? Is this really a separate
+> > addressable device from the parent?
+>
+> How about this?
+>
+> &pcie0 {
+> ...
+>         pci-bridge@0 {
+>                 reg =3D <0x00000 0 0 0 0>;
+>                 #address-cells =3D <3>;
+>                 #size-cells =3D <2>;
+>
+>                 nvme: nvme@0,0 {
+>                         reg =3D <0x10000 0 0 0 0>;
+>                         #thermal-sensor-cells =3D <1>;
+>                 };
+>         };
+> };
+>
+> and
+>
+> &thermal_zones {
+> ...
+> thermal-sensors =3D <&nvme 0>;
+> };
+>
+> I tested this with the RockPro64 and edited
+> arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts.
+>
+> $ lspci
+> 00:00.0 PCI bridge: Fuzhou Rockchip Electronics Co., Ltd Device 0100
+> 01:00.0 Non-Volatile memory controller: Micron/Crucial Technology
+> Device 2263 (rev 03)
+>
+> $ lspci -tv
+> -[0000:00]---00.0-[01]----00.0  Micron/Crucial Technology Device 2263
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
+Looks better to me.
 
-v5:
-- Picked Bjorn's r-b. 
-
-v4:
-- Return error if platform_device_register_data() fails
-- Remove platform_set_drvdata() on the child device.
-
-v3:
-- New patch.
-
- drivers/soc/qcom/smd-rpm.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
-index fa9dd12b5e39..34cdd638a6c1 100644
---- a/drivers/soc/qcom/smd-rpm.c
-+++ b/drivers/soc/qcom/smd-rpm.c
-@@ -19,12 +19,14 @@
- /**
-  * struct qcom_smd_rpm - state of the rpm device driver
-  * @rpm_channel:	reference to the smd channel
-+ * @icc:		interconnect proxy device
-  * @ack:		completion for acks
-  * @lock:		mutual exclusion around the send/complete pair
-  * @ack_status:		result of the rpm request
-  */
- struct qcom_smd_rpm {
- 	struct rpmsg_endpoint *rpm_channel;
-+	struct platform_device *icc;
- 	struct device *dev;
- 
- 	struct completion ack;
-@@ -193,6 +195,7 @@ static int qcom_smd_rpm_callback(struct rpmsg_device *rpdev,
- static int qcom_smd_rpm_probe(struct rpmsg_device *rpdev)
- {
- 	struct qcom_smd_rpm *rpm;
-+	int ret;
- 
- 	rpm = devm_kzalloc(&rpdev->dev, sizeof(*rpm), GFP_KERNEL);
- 	if (!rpm)
-@@ -205,11 +208,23 @@ static int qcom_smd_rpm_probe(struct rpmsg_device *rpdev)
- 	rpm->rpm_channel = rpdev->ept;
- 	dev_set_drvdata(&rpdev->dev, rpm);
- 
--	return of_platform_populate(rpdev->dev.of_node, NULL, NULL, &rpdev->dev);
-+	rpm->icc = platform_device_register_data(&rpdev->dev, "icc_smd_rpm", -1,
-+						 NULL, 0);
-+	if (IS_ERR(rpm->icc))
-+		return PTR_ERR(rpm->icc);
-+
-+	ret = of_platform_populate(rpdev->dev.of_node, NULL, NULL, &rpdev->dev);
-+	if (ret)
-+		platform_device_unregister(rpm->icc);
-+
-+	return ret;
- }
- 
- static void qcom_smd_rpm_remove(struct rpmsg_device *rpdev)
- {
-+	struct qcom_smd_rpm *rpm = dev_get_drvdata(&rpdev->dev);
-+
-+	platform_device_unregister(rpm->icc);
- 	of_platform_depopulate(&rpdev->dev);
- }
- 
+Rob
