@@ -1,133 +1,157 @@
-Return-Path: <mhiramat@kernel.org>
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [RFC PATCH v2 12/15] tracing: of: Add instance node support
-Date: Mon, 15 Jul 2019 14:13:16 +0900
-Message-Id: <156316759652.23477.15841482804179404771.stgit@devnote2>
-In-Reply-To: <156316746861.23477.5815110570539190650.stgit@devnote2>
-References: <156316746861.23477.5815110570539190650.stgit@devnote2>
+Return-Path: <SRS0=8nao=VW=gmail.com=jassisinghbrar@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-To: Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Tim Bird <Tim.Bird@sony.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
+ <20190717192616.1731-2-tushar.khandelwal@arm.com> <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+In-Reply-To: <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Date: Thu, 25 Jul 2019 00:49:58 -0500
+Message-ID: <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
+Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding documentation
+Content-Type: text/plain; charset="UTF-8"
+To: Tushar Khandelwal <tushar.khandelwal@arm.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, tushar.2nov@gmail.com, morten_bp@live.dk, nd@arm.com, Morten Borup Petersen <morten.petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add instance node support to devicetree ftrace binding.
-User can set some options and event nodes in instance node.
+On Sun, Jul 21, 2019 at 4:58 PM Jassi Brar <jassisinghbrar@gmail.com> wrote:
+>
+> On Wed, Jul 17, 2019 at 2:26 PM Tushar Khandelwal
+> <tushar.khandelwal@arm.com> wrote:
+>
+> > diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
+> > new file mode 100644
+> > index 000000000000..3a05593414bc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
+> > @@ -0,0 +1,108 @@
+> > +Arm MHUv2 Mailbox Driver
+> > +========================
+> > +
+> > +The Arm Message-Handling-Unit (MHU) Version 2 is a mailbox controller that has
+> > +between 1 and 124 channel windows to provide unidirectional communication with
+> > +remote processor(s).
+> > +
+> > +Given the unidirectional nature of the device, an MHUv2 mailbox may only be
+> > +written to or read from. If a pair of MHU devices is implemented between two
+> > +processing elements to provide bidirectional communication, these must be
+> > +specified as two separate mailboxes.
+> > +
+> > +A device tree node for an Arm MHUv2 device must specify either a receiver frame
+> > +or a sender frame, indicating which end of the unidirectional MHU device which
+> > +the device node entry describes.
+> > +
+> > +An MHU device must be specified with a transport protocol. The transport
+> > +protocol of an MHU device determines the method of data transmission as well as
+> > +the number of provided mailboxes.
+> > +Following are the possible transport protocol types:
+> > +- Single-word: An MHU device implements as many mailboxes as it
+> > +               provides channel windows. Data is transmitted through
+> > +               the MHU registers.
+> > +- Multi-word:  An MHU device implements a single mailbox. All channel windows
+> > +               will be used during transmission. Data is transmitted through
+> > +               the MHU registers.
+> > +- Doorbell:    An MHU device implements as many mailboxes as there are flag
+> > +               bits available in its channel windows. Optionally, data may
+> > +               be transmitted through a shared memory region, wherein the MHU
+> > +               is used strictly as an interrupt generation mechanism.
+> > +
+> > +Mailbox Device Node:
+> > +====================
+> > +
+> > +Required properties:
+> > +--------------------
+> > +- compatible:  Shall be "arm,mhuv2" & "arm,primecell"
+> > +- reg:         Contains the mailbox register address range (base
+> > +               address and length)
+> > +- #mbox-cells  Shall be 1 - the index of the channel needed.
+> > +- mhu-frame    Frame type of the device.
+> > +               Shall be either "sender" or "receiver"
+> > +- mhu-protocol Transport protocol of the device. Shall be one of the
+> > +               following: "single-word", "multi-word", "doorbell"
+> > +
+> > +Required properties (receiver frame):
+> > +-------------------------------------
+> > +- interrupts:  Contains the interrupt information corresponding to the
+> > +               combined interrupt of the receiver frame
+> > +
+> > +Example:
+> > +--------
+> > +
+> > +       mbox_mw_tx: mhu@10000000 {
+> > +               compatible = "arm,mhuv2","arm,primecell";
+> > +               reg = <0x10000000 0x1000>;
+> > +               clocks = <&refclk100mhz>;
+> > +               clock-names = "apb_pclk";
+> > +               #mbox-cells = <1>;
+> > +               mhu-protocol = "multi-word";
+> > +               mhu-frame = "sender";
+> > +       };
+> > +
+> > +       mbox_sw_tx: mhu@10000000 {
+> > +               compatible = "arm,mhuv2","arm,primecell";
+> > +               reg = <0x11000000 0x1000>;
+> > +               clocks = <&refclk100mhz>;
+> > +               clock-names = "apb_pclk";
+> > +               #mbox-cells = <1>;
+> > +               mhu-protocol = "single-word";
+> > +               mhu-frame = "sender";
+> > +       };
+> > +
+> > +       mbox_db_rx: mhu@10000000 {
+> > +               compatible = "arm,mhuv2","arm,primecell";
+> > +               reg = <0x12000000 0x1000>;
+> > +               clocks = <&refclk100mhz>;
+> > +               clock-names = "apb_pclk";
+> > +               #mbox-cells = <1>;
+> > +               interrupts = <0 45 4>;
+> > +               interrupt-names = "mhu_rx";
+> > +               mhu-protocol = "doorbell";
+> > +               mhu-frame = "receiver";
+> > +       };
+> > +
+> > +       mhu_client: scb@2e000000 {
+> > +       compatible = "fujitsu,mb86s70-scb-1.0";
+> > +       reg = <0 0x2e000000 0x4000>;
+> > +       mboxes =
+> > +               // For multi-word frames, client may only instantiate a single
+> > +               // mailbox for a mailbox controller
+> > +               <&mbox_mw_tx 0>,
+> > +
+> > +               // For single-word frames, client may instantiate as many
+> > +               // mailboxes as there are channel windows in the MHU
+> > +                <&mbox_sw_tx 0>,
+> > +                <&mbox_sw_tx 1>,
+> > +                <&mbox_sw_tx 2>,
+> > +                <&mbox_sw_tx 3>,
+> > +
+> > +               // For doorbell frames, client may instantiate as many mailboxes
+> > +               // as there are bits available in the combined number of channel
+> > +               // windows ((channel windows * 32) mailboxes)
+> > +                <mbox_db_rx 0>,
+> > +                <mbox_db_rx 1>,
+> > +                ...
+> > +                <mbox_db_rx 17>;
+> > +       };
+>
+> If the mhuv2 instance implements, say, 3 channel windows between
+> sender (linux) and receiver (firmware), and Linux runs two protocols
+> each requiring 1 and 2-word sized messages respectively. The hardware
+> supports that by assigning windows [0] and [1,2] to each protocol.
+> However, I don't think the driver can support that. Or does it?
+>
+Thinking about it, IMO, the mbox-cell should carry a 128 (4x32) bit
+mask specifying the set of windows (corresponding to the bits set in
+the mask) associated with the channel.
+And the controller driver should see any channel as associated with
+variable number of windows 'N', where N is [0,124]
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- kernel/trace/trace_of.c |   67 +++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 55 insertions(+), 12 deletions(-)
+mhu_client1: proto1@2e000000 {
+       .....
+       mboxes = <&mbox 0x0 0x0 0x0 0x1>
+}
 
-diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
-index e9142c63ece1..7fe81c25dc59 100644
---- a/kernel/trace/trace_of.c
-+++ b/kernel/trace/trace_of.c
-@@ -21,9 +21,10 @@ extern int tracing_set_tracer(struct trace_array *tr, const char *buf);
- extern void __init trace_init_tracepoint_printk(void);
- extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
- 					  unsigned long size, int cpu_id);
-+extern struct trace_array *trace_array_create(const char *name);
- 
- static void __init
--trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
-+trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
- {
- 	struct property *prop;
- 	const char *p;
-@@ -48,6 +49,24 @@ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
- 			pr_err("Failed to set trace clock: %s\n", p);
- 	}
- 
-+	/* This accepts per-cpu buffer size in KB */
-+	err = of_property_read_u32_index(node, "buffer-size-kb", 0, &v);
-+	if (!err) {
-+		v <<= 10;	/* KB to Byte */
-+		if (v < PAGE_SIZE)
-+			pr_err("Buffer size is too small: %d KB\n", v >> 10);
-+		if (tracing_resize_ring_buffer(tr, v, RING_BUFFER_ALL_CPUS) < 0)
-+			pr_err("Failed to resize trace buffer to %d KB\n",
-+				v >> 10);
-+	}
-+}
-+
-+static void __init
-+trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
-+{
-+	u32 v = 0;
-+	int err;
-+
- 	/* Command line boot options */
- 	if (of_find_property(node, "dump-on-oops", NULL)) {
- 		err = of_property_read_u32_index(node, "dump-on-oops", 0, &v);
-@@ -63,20 +82,11 @@ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
- 	if (of_find_property(node, "tp-printk", NULL))
- 		trace_init_tracepoint_printk();
- 
--	/* This accepts per-cpu buffer size in KB */
--	err = of_property_read_u32_index(node, "buffer-size-kb", 0, &v);
--	if (!err) {
--		v <<= 10;	/* KB to Byte */
--		if (v < PAGE_SIZE)
--			pr_err("Buffer size is too small: %d KB\n", v >> 10);
--		if (tracing_resize_ring_buffer(tr, v, RING_BUFFER_ALL_CPUS) < 0)
--			pr_err("Failed to resize trace buffer to %d KB\n",
--				v >> 10);
--	}
--
- 	if (of_find_property(node, "alloc-snapshot", NULL))
- 		if (tracing_alloc_snapshot() < 0)
- 			pr_err("Failed to allocate snapshot buffer\n");
-+
-+	trace_of_set_instance_options(tr, node);
- }
- 
- #ifdef CONFIG_EVENT_TRACING
-@@ -310,6 +320,38 @@ trace_of_enable_tracer(struct trace_array *tr, struct device_node *node)
- 	}
- }
- 
-+static void __init
-+trace_of_init_instances(struct device_node *__node)
-+{
-+	struct device_node *node;
-+	struct trace_array *tr;
-+	const char *p;
-+	int err;
-+
-+	for_each_child_of_node(__node, node) {
-+		if (!of_node_name_prefix(node, "instance"))
-+			continue;
-+
-+		err = of_property_read_string(node, "instance", &p);
-+		if (err) {
-+			pr_err("Failed to get instance name on %s\n",
-+				of_node_full_name(node));
-+			continue;
-+		}
-+
-+		tr = trace_array_create(p);
-+		if (IS_ERR(tr)) {
-+			pr_err("Failed to create instance %s\n", p);
-+			continue;
-+		}
-+
-+		trace_of_set_instance_options(tr, node);
-+		trace_of_init_events(tr, node);
-+		trace_of_enable_events(tr, node);
-+		trace_of_enable_tracer(tr, node);
-+	}
-+}
-+
- static struct device_node * __init trace_of_find_ftrace_node(void)
- {
- 	if (!of_chosen)
-@@ -337,6 +379,7 @@ static int __init trace_of_init(void)
- 	trace_of_init_events(tr, trace_node);
- 	trace_of_enable_events(tr, trace_node);
- 	trace_of_enable_tracer(tr, trace_node);
-+	trace_of_init_instances(trace_node);
- 
- end:
- 	of_node_put(trace_node);
+mhu_client2: proto2@2f000000 {
+       .....
+       mboxes = <&mbox 0x0 0x0 0x0 0x6>
+}
+
+Cheers!
