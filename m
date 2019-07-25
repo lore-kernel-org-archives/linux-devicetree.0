@@ -1,81 +1,100 @@
 From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH 11/13] arm64: dts: qcom: qcs404: Add CPR and populate OPP
- table
-Date: Thu, 25 Jul 2019 12:40:31 +0200
-Message-ID: <20190725104031.GA21998@centauri>
-References: <20190705095726.21433-1-niklas.cassel@linaro.org>
- <20190705095726.21433-12-niklas.cassel@linaro.org>
- <20190710090303.tb5ue3wq6r7ofyev@vireshk-i7>
- <20190715132405.GA5040@centauri>
- <20190716103436.az5rdk6f3yoa3apz@vireshk-i7>
- <20190716105318.GA26592@centauri>
- <20190717044923.ccmebeewbinlslkm@vireshk-i7>
- <20190719154558.GA32518@centauri>
- <20190723015635.rl5a2isjnjn23fzh@vireshk-i7>
+Subject: [PATCH v2 00/14] Add support for QCOM Core Power Reduction
+Date: Thu, 25 Jul 2019 12:41:28 +0200
+Message-ID: <20190725104144.22924-1-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190723015635.rl5a2isjnjn23fzh@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, sboyd@kernel.org, vireshk@kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>, jorge.ramirez-ortiz@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 07:26:35AM +0530, Viresh Kumar wrote:
-> On 19-07-19, 17:45, Niklas Cassel wrote:
-> > Hello Viresh,
-> > 
-> > Could you please have a look at the last two patches here:
-> > https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-opp-hz
-> 
-> There is no sane way of providing review comments with a link to the
-> git tree :)
-> 
-> I still had a look and I see that you don't search for max frequency
-> but just any OPP that has required-opps set to the level u want. Also,
-> can't there be multiple phandles in required-opps in your case ?
+This series adds support for Core Power Reduction (CPR), a form of
+Adaptive Voltage Scaling (AVS), found on certain Qualcomm SoCs.
 
-For each OPP in the CPR OPP table, we need three things,
-opp-level, qcom,fuse-level and opp-hz.
-The first two can simply be parsed from the OPP node
-itself while iterating the CPR OPP table.
-The opp-hz has to be fetched from the CPU OPP table.
+This series is based on top of the qcs404 cpufreq patch series that
+hasn't landed yet:
+https://patchwork.kernel.org/project/linux-arm-msm/list/?series=137809
 
-Several OPPs might have the same qcom,fuse-level value.
-However, they will have unique opp-level values and unique
-opp-hz values. Each opp-level has a matching opp-hz.
+CPR is a technology that reduces core power on a CPU or on other device.
+It reads voltage settings from efuses (that have been written in
+production), it uses these voltage settings as initial values, for each
+OPP.
 
-required-opps is basically a connection between a opp-hz
-(CPU OPP table) and and a opp-level (CPR OPP table).
+After moving to a certain OPP, CPR monitors dynamic factors such as
+temperature, etc. and adjusts the voltage for that frequency accordingly
+to save power and meet silicon characteristic requirements.
 
-So there will be only one match. No need to search for
-max frequency.
+This driver has been developed together with Jorge Ramirez-Ortiz, and
+is based on an RFC by Stephen Boyd[1], which in turn is based on work
+by others on codeaurora.org[2].
 
-I think you are confusing this with something else.
-The CPR hardware has to be programmed with the highest
-frequency for each qcom,fuse-corner.
-This is done here:
-https://git.linaro.org/people/niklas.cassel/kernel.git/tree/drivers/power/avs/qcom-cpr.c?h=cpr-full#n1219
-by saving the highest frequency for each fuse level
-while iterating the OPP table.
+[1] https://lkml.org/lkml/2015/9/18/833
+[2] https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/regulator/cpr-regulator.c?h=msm-3.10
 
+Changes since V1:
+Added a new patch implementing dev_pm_opp_find_level_exact() in order to
+make the CPR OPP table in device tree cleaner.
+For more detailed changes, check the "Changes since V1" as comments in
+the individual patches, where applicable.
 
-There can be only one phandle in the required-opps in my case,
-this is one of the reasons why I prefer implementing it in the
-CPR driver. If it were to be implemented in OPP core, it probably
-has to handle multiple phandles.
+Jorge Ramirez-Ortiz (1):
+  cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
 
-> 
-> > If you like my proposal then I could send out the first patch (the one to
-> > OPP core) as a real patch (with an improved commit message), and
-> > incorporate the second patch into my CPR patch series when I send out a V2.
-> 
-> Send them both in your series only, otherwise the first one is useless
-> anyway.
+Niklas Cassel (11):
+  opp: Add dev_pm_opp_find_level_exact()
+  dt-bindings: cpufreq: qcom-nvmem: Make speedbin related properties
+    optional
+  cpufreq: qcom: Refactor the driver to make it easier to extend
+  dt-bindings: cpufreq: qcom-nvmem: Support pstates provided by a power
+    domain
+  cpufreq: qcom: Add support for qcs404 on nvmem driver
+  dt-bindings: opp: Add qcom-opp bindings with properties needed for CPR
+  dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
+  power: avs: Add support for CPR (Core Power Reduction)
+  arm64: dts: qcom: qcs404: Add CPR and populate OPP table
+  arm64: defconfig: enable CONFIG_QCOM_CPR
+  arm64: defconfig: enable CONFIG_ARM_QCOM_CPUFREQ_NVMEM
 
-Ok, will do.
+Sricharan R (2):
+  dt-bindings: cpufreq: Re-organise kryo cpufreq to use it for other
+    nvmem based qcom socs
+  cpufreq: qcom: Re-organise kryo cpufreq to use it for other nvmem
+    based qcom socs
 
+ ...ryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} |  125 +-
+ .../devicetree/bindings/opp/qcom-opp.txt      |   19 +
+ .../bindings/power/avs/qcom,cpr.txt           |  193 ++
+ MAINTAINERS                                   |   13 +-
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  142 +-
+ arch/arm64/configs/defconfig                  |    2 +
+ drivers/cpufreq/Kconfig.arm                   |    4 +-
+ drivers/cpufreq/Makefile                      |    2 +-
+ drivers/cpufreq/cpufreq-dt-platdev.c          |    1 +
+ drivers/cpufreq/qcom-cpufreq-kryo.c           |  249 ---
+ drivers/cpufreq/qcom-cpufreq-nvmem.c          |  352 +++
+ drivers/opp/core.c                            |   48 +
+ drivers/power/avs/Kconfig                     |   15 +
+ drivers/power/avs/Makefile                    |    1 +
+ drivers/power/avs/qcom-cpr.c                  | 1885 +++++++++++++++++
+ include/linux/pm_opp.h                        |    8 +
+ 16 files changed, 2792 insertions(+), 267 deletions(-)
+ rename Documentation/devicetree/bindings/opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} (87%)
+ create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
+ create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+ delete mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
+ create mode 100644 drivers/cpufreq/qcom-cpufreq-nvmem.c
+ create mode 100644 drivers/power/avs/qcom-cpr.c
 
-Kind regards,
-Niklas
+-- 
+2.21.0
