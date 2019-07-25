@@ -1,68 +1,69 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH RFC 3/7] pinctrl: sh-pfc: Rollback to mux if requires when the gpio is freed
-Date: Mon,  8 Jul 2019 18:07:44 +0900
-Message-Id: <1562576868-8124-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-To: linus.walleij@linaro.org, geert+renesas@glider.be, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=RZGj=VW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from comms.puri.sm ([159.203.221.185]:35968 "EHLO comms.puri.sm"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389116AbfGYIOQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jul 2019 04:14:16 -0400
+Subject: Re: [PATCH v3 4/5] iio: imu: st_lsm6dsx: add support for accel/gyro
+ unit of lsm9sd1
+References: <20190725053132.9589-1-martin.kepplinger@puri.sm>
+ <20190725053132.9589-5-martin.kepplinger@puri.sm>
+ <CAA2SeNK-pjkSWVsrv5dehEJbakZqR0oPF3DQ5mzhiiOD3Npxkg@mail.gmail.com>
+From: Martin Kepplinger <martin.kepplinger@puri.sm>
+Message-ID: <9af363c9-2676-05bf-0cb4-de4dc8ba991c@puri.sm>
+Date: Thu, 25 Jul 2019 10:14:08 +0200
+In-Reply-To: <CAA2SeNK-pjkSWVsrv5dehEJbakZqR0oPF3DQ5mzhiiOD3Npxkg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+Cc: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-R-Car PWM controller requires the gpio to output zero duty,
-this patch allows to roll it back from gpio to mux when the gpio
-is freed.
+On 25.07.19 09:04, Lorenzo Bianconi wrote:
+> 
+>     The LSM9DS1's accelerometer / gyroscope unit and it's magnetometer
+>     (separately
+>     supported in iio/magnetometer/st_magn*) are located on a separate
+>     i2c addresses
+>     on the bus.
+> 
+>     For the datasheet, see
+>     https://www.st.com/resource/en/datasheet/lsm9ds1.pdf
+>     <https://www.st.com/resource/en/datasheet/lsm9ds1.pdf>
+> 
+>     Treat it just like the LSM6* devices and, despite it's name, hook it up
+>     to the st_lsm6dsx driver, using it's basic functionality.
+> 
+>     Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm
+>     <mailto:martin.kepplinger@puri.sm>>
+> 
+> 
+> 
+>  Hi Martin,
+> 
+> could you please check if LSM9DS1 and LSM6DS0 have a common register map
+> for the supported features (I think so)? If so I think it is better to
+> rename LSM9DS1 in LSM6DS0 since st_lsm6dsx supports just acc and gyro
+> (we will support LSM9DS1 with a proper dts configuration)
+> 
+> Regards,
+> Lorenzo
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/pinctrl/sh-pfc/pinctrl.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Hi Lorenzo,
 
-diff --git a/drivers/pinctrl/sh-pfc/pinctrl.c b/drivers/pinctrl/sh-pfc/pinctrl.c
-index 7e5aca2..bc29066 100644
---- a/drivers/pinctrl/sh-pfc/pinctrl.c
-+++ b/drivers/pinctrl/sh-pfc/pinctrl.c
-@@ -26,6 +26,7 @@
- #include "../pinconf.h"
- 
- struct sh_pfc_pin_config {
-+	unsigned int mux_mark;
- 	bool mux_set;
- 	bool gpio_enabled;
- };
-@@ -353,6 +354,15 @@ static int sh_pfc_func_set_mux(struct pinctrl_dev *pctldev, unsigned selector,
- 	spin_lock_irqsave(&pfc->lock, flags);
- 
- 	for (i = 0; i < grp->nr_pins; ++i) {
-+		int idx = sh_pfc_get_pin_index(pfc, grp->pins[i]);
-+		struct sh_pfc_pin_config *cfg = &pmx->configs[idx];
-+
-+		/*
-+		 * This doesn't assume the order which gpios are enabled
-+		 * and then mux is set.
-+		 */
-+		WARN_ON(cfg->gpio_enabled);
-+
- 		ret = sh_pfc_config_mux(pfc, grp->mux[i], PINMUX_TYPE_FUNCTION);
- 		if (ret < 0)
- 			goto done;
-@@ -364,6 +374,7 @@ static int sh_pfc_func_set_mux(struct pinctrl_dev *pctldev, unsigned selector,
- 		struct sh_pfc_pin_config *cfg = &pmx->configs[idx];
- 
- 		cfg->mux_set = true;
-+		cfg->mux_mark = grp->mux[i];
- 	}
- 
- done:
-@@ -417,6 +428,9 @@ static void sh_pfc_gpio_disable_free(struct pinctrl_dev *pctldev,
- 
- 	spin_lock_irqsave(&pfc->lock, flags);
- 	cfg->gpio_enabled = false;
-+	/* If mux is already set, this configure it here */
-+	if (cfg->mux_set)
-+		sh_pfc_config_mux(pfc, cfg->mux_mark, PINMUX_TYPE_FUNCTION);
- 	spin_unlock_irqrestore(&pfc->lock, flags);
- }
- 
--- 
-2.7.4
+The register mappings of LSM6DSO and LSM9DS1 don't match (gyro out for
+example). The LSM9DS1 magnetometer is a *different* device on the bus
+than accel/gyro (despite being on the same chip). That one is already
+supported in drivers/iio/magnetometer/st_magn_*
+
+So LSM9DS1 in the imu driver (lsm6dsx) can also just support accel and
+gyro in order to complete the support for the device.
+
+Besides, that's the device I have and test here. I can't really name it
+differently.
+
+What are you working on (dts description)?
+
+thanks,
+                             martin
