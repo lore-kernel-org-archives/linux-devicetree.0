@@ -1,45 +1,79 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V2 2/4] opp: of: Support multiple suspend OPPs defined in
- DT
-Date: Thu, 25 Jul 2019 07:56:23 +0530
-Message-ID: <20190725022623.jzrlsxkppa35kljz@vireshk-i7>
-References: <20190709080015.43442-1-Anson.Huang@nxp.com>
- <20190709080015.43442-2-Anson.Huang@nxp.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH V2 1/2] usb: dwc3: Add node to update cache type setting
+Date: Thu, 25 Jul 2019 02:29:07 +0000
+Message-ID: <DB8PR04MB6826B4479A5A67A66025E89CF1C10@DB8PR04MB6826.eurprd04.prod.outlook.com>
+References: <20190712064206.48249-1-ran.wang_1@nxp.com>
+ <20190724204222.GA1234@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190709080015.43442-2-Anson.Huang@nxp.com>
+In-Reply-To: <20190724204222.GA1234@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, p.zabel@pengutronix.de, ping.bai@nxp.com, daniel.baluta@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, angus@akkea.ca, andrew.smirnov@gmail.com, ccaione@baylibre.com, agx@sigxcpu.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09-07-19, 16:00, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> With property "opp-supported-hw" introduced, the OPP table
-> in DT could be a large OPP table and ONLY a subset of OPPs
-> are available, based on the version of the hardware running
-> on. That introduces restriction of using "opp-suspend"
-> property to define the suspend OPP, as we are NOT sure if the
-> OPP containing "opp-suspend" property is available for the
-> hardware running on, and the of opp core does NOT allow multiple
-> suspend OPPs defined in DT OPP table.
-> 
-> To eliminate this restrition, make of opp core allow multiple
-> suspend OPPs defined in DT, and pick the OPP with highest rate
-> and with "opp-suspend" property present to be suspend OPP, it
-> can speed up the suspend/resume process.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No changes.
-> ---
->  drivers/opp/of.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+Hi Rob,
 
-Applied. Thanks.
+On Thursday, July 25, 2019 04:42 Rob Herring <robh@kernel.org> wrote:
+>=20
+> On Fri, Jul 12, 2019 at 02:42:05PM +0800, Ran Wang wrote:
+> > Some Layerscape paltforms (such as LS1088A, LS2088A, etc) encounter
+> > USB detect failues when adding dma-coherent to DWC3 node. This is
+> > because the HW default cache type configuration of those SoC are not
+> > right, need to be updated in DTS.
+> >
+> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > ---
+> > Change in v2:
+> > 	- New file.
+> >
+> >  Documentation/devicetree/bindings/usb/dwc3.txt | 43
+> > ++++++++++++++++++++++++++
+> >  1 file changed, 43 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > index 8e5265e..7bc1cef 100644
+> > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > @@ -110,6 +110,43 @@ Optional properties:
+> >   - in addition all properties from usb-xhci.txt from the current direc=
+tory are
+> >     supported as well
+> >
+> > +* Cache type nodes (optional)
+> > +
+> > +The Cache type node is used to tell how to configure cache type on 4
+> > +different transfer types: Data Read, Desc Read, Data Write and Desc
+> > +write. For each treasfer type, controller has a 4-bit register field
+> > +to enable different cache type. Quoted from DWC3 data book Table 6-5
+> Cache Type Bit Assignments:
+> > +----------------------------------------------------------------
+> > +MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
+> > +----------------------------------------------------------------
+> > +AHB      |Cacheable     |Bufferable   |Privilegge |Data
+> > +AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
+> > +AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
+> > +AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
+> > +Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
+> > +----------------------------------------------------------------
+> > +Note: The AHB, AXI3, AXI4, and PCIe busses use different names for
+> > +certain signals, which have the same meaning:
+> > +  Bufferable =3D Posted
+> > +  Cacheable =3D Modifiable =3D Snoop (negation of No Snoop)
+>=20
+> This should all be implied from the SoC specific compatible strings.
 
--- 
-viresh
+Did you mean I could implement a soc driver which can be matched by compati=
+ble of 'fsl,ls1088a-dwc3' which will pass known bus type to DWC3 driver? If=
+ yes, how to pass?
+
+Or I need to add a property snps,mbus_type=3D"AXI3" to DWC3 node, which wil=
+l co-work with property  transfer_type-datard =3D "cacheable" to set cache =
+type properly?
+
+Thanks & Regards,
+Ran
