@@ -1,135 +1,105 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH 12/15] arm64: dts: msm8974: thermal: Add interrupt support
-Date: Fri, 26 Jul 2019 03:48:47 +0530
-Message-ID: <ec8205566eb9c015ad51fbb88f0da7ca60b414fd.1564091601.git.amit.kucheria@linaro.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: add device tree for Mecer Xtreme Mini S6
+Date: Fri, 26 Jul 2019 00:19:32 +0200
+Message-ID: <1618985.EOrKlNyPW4@phil>
+References: <20190616204746.21001-1-justin.swartz@risingedge.co.za>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1564091601.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1564091601.git.amit.kucheria@linaro.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
+In-Reply-To: <20190616204746.21001-1-justin.swartz@risingedge.co.za>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, Andy Gross <agross@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Cc: masneyb@onstation.org, devicetree@vger.kernel.org
+To: Justin Swartz <justin.swartz@risingedge.co.za>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Register upper-lower interrupt for the tsens controller.
+Hi Justin,
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
-Cc: masneyb@onstation.org
+Am Sonntag, 16. Juni 2019, 22:47:45 CEST schrieb Justin Swartz:
+> The Mecer Xtreme Mini S6 features a Rockchip RK3229 SoC,
+> 1GB DDR3 RAM, 8GB eMMC, MicroSD port, 10/100Mbps Ethernet,
+> Realtek 8723BS WLAN module, 2 x USB 2.0 ports, HDMI output,
+> and S/PDIF output.
+> 
+> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+> ---
 
- arch/arm/boot/dts/qcom-msm8974.dtsi | 36 +++++++++++++++--------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+please add an entry to Documentation/devicetree/bindings/arm/rockchip.yaml
+for your board and if necessary also a vendor-prefix to
+Documentation/devicetree/bindings/vendor-prefixes.(yaml?)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index d32f639505f1..d10d47d20ab8 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -139,8 +139,8 @@
- 
- 	thermal-zones {
- 		cpu-thermal0 {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 5>;
- 
-@@ -159,8 +159,8 @@
- 		};
- 
- 		cpu-thermal1 {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 6>;
- 
-@@ -179,8 +179,8 @@
- 		};
- 
- 		cpu-thermal2 {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 7>;
- 
-@@ -199,8 +199,8 @@
- 		};
- 
- 		cpu-thermal3 {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 8>;
- 
-@@ -219,8 +219,8 @@
- 		};
- 
- 		q6-dsp-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 1>;
- 
-@@ -234,8 +234,8 @@
- 		};
- 
- 		modemtx-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 2>;
- 
-@@ -250,7 +250,7 @@
- 
- 		video-thermal {
- 			polling-delay-passive = <0>;
--			polling-delay = <1000>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 3>;
- 
-@@ -279,8 +279,8 @@
- 		};
- 
- 		gpu-thermal-top {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 9>;
- 
-@@ -294,8 +294,8 @@
- 		};
- 
- 		gpu-thermal-bottom {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 10>;
- 
-@@ -531,6 +531,8 @@
- 			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
- 			nvmem-cell-names = "calib", "calib_backup";
- 			#qcom,sensors = <11>;
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "tsens";
- 			#thermal-sensor-cells = <1>;
- 		};
- 
--- 
-2.17.1
+See below.
+
+>  arch/arm/boot/dts/Makefile        |   1 +
+>  arch/arm/boot/dts/rk3229-xms6.dts | 286 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 287 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/rk3229-xms6.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index dab2914fa293..6fbd7c304f62 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -902,6 +902,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+>  	rk3188-radxarock.dtb \
+>  	rk3228-evb.dtb \
+>  	rk3229-evb.dtb \
+> +	rk3229-xms6.dtb \
+>  	rk3288-evb-act8846.dtb \
+>  	rk3288-evb-rk808.dtb \
+>  	rk3288-fennec.dtb \
+> diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
+> new file mode 100644
+> index 000000000000..9b666fa66292
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rk3229-xms6.dts
+> @@ -0,0 +1,286 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/input/input.h>
+> +#include "rk3229.dtsi"
+> +
+> +/ {
+> +	model = "Rockchip RK3229 (Mecer Xtreme Mini S6)";
+> +	compatible = "rockchip,rk3229-xms6", "rockchip,rk3229";
+
+mode = "Mecer Xtreme Mini S6";
+compatible = "mecer,xms6", "rockchip,rk3229";
+
+(and as written above, add a vendor-prefix for mecer)
+
+...
+
+> +&cpu0 {
+> +	clock-frequency = <1464000000>;
+
+not sure I understand the reasoning here.
+There seems to be a regulator defined, so the cpu cores should
+have operating points defined to allow them to switch between
+different frequencies as needed.
+
+> +	cpu-supply = <&vdd_arm>;
+> +};
+> +
+> +&cpu1 {
+> +	clock-frequency = <1464000000>;
+> +	cpu-supply = <&vdd_arm>;
+> +};
+> +
+> +&cpu2 {
+> +	clock-frequency = <1464000000>;
+> +	cpu-supply = <&vdd_arm>;
+> +};
+> +
+> +&cpu3 {
+> +	clock-frequency = <1464000000>;
+> +	cpu-supply = <&vdd_arm>;
+> +};
+> +
+> +&vop {
+
+please sort the &node-references alphabetically.
+
+
+Heiko
