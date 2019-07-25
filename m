@@ -1,65 +1,136 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-Date: Thu, 25 Jul 2019 13:59:09 +0300
-Message-ID: <de1723df-8580-32fb-eb9d-e4c02f2b4306@gmail.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
- <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
- <20190725095502.GM12715@pdeschrijver-desktop.Nvidia.com>
- <dd01be5d-bab9-1329-c7ac-c3c893d49dd1@gmail.com>
- <20190725103348.GN12715@pdeschrijver-desktop.Nvidia.com>
- <20190725103813.GO12715@pdeschrijver-desktop.Nvidia.com>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC,
+ v3 8/9] media: platform: Add Mediatek ISP P1 SCP communication
+Date: Thu, 25 Jul 2019 19:56:28 +0900
+Message-ID: <CAAFQd5BT7M425AbFicYuX+wr-twgS_cxQ937+Rgxo6Y2fA6_gA@mail.gmail.com>
+References: <jungo.lin@mediatek.com>
+ <20190611035344.29814-1-jungo.lin@mediatek.com>
+ <20190611035344.29814-9-jungo.lin@mediatek.com>
+ <20190710095827.GC181405@chromium.org>
+ <1563675513.1212.444.camel@mtksdccf07>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725103813.GO12715@pdeschrijver-desktop.Nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1563675513.1212.444.camel@mtksdccf07>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jungo Lin <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <sean.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <rynn.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UnlhbiBZdSAo5L2Z5a2f5L+uKQ==?= <ryan.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?RnJhbmtpZSBDaGl1ICjpgrHmloflh7Ep?= <frankie.chiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, ddavenport-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+ Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <linux-ar>
 List-Id: devicetree@vger.kernel.org
 
-25.07.2019 13:38, Peter De Schrijver пишет:
-> On Thu, Jul 25, 2019 at 01:33:48PM +0300, Peter De Schrijver wrote:
->> On Thu, Jul 25, 2019 at 01:05:13PM +0300, Dmitry Osipenko wrote:
->>> 25.07.2019 12:55, Peter De Schrijver пишет:
->>>> On Mon, Jul 22, 2019 at 12:54:51PM +0300, Dmitry Osipenko wrote:
->>>>>
->>>>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
->>>>> doesn't sound correct to me. Something like 'firmware_sc7' should suit
->>>>> better here.
->>>>>
->>>>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
->>>>>
->>>>> Secondly, I'm also not sure why COP interrupts need to be disabled for
->>>>> pre-T210 at all, since COP is unused. This looks to me like it was
->>>>> cut-n-pasted from downstream kernel without a good reason and could be
->>>>> simply removed.
->>>>
->>>> I don't think we can rely on the fact that COP is unused. People can
->>>> write their own code to run on COP.
->>>
->>> 1. Not upstream - doesn't matter.
->>>
->>
->> The code is not part of the kernel, so obviously it's not upstream?
->>
->>> 2. That's not very good if something unknown is running on COP and then
->>> kernel suddenly intervenes, don't you think so?
->>
->> Unless the code was written with this in mind.
->>
+Hi Jungo,
 
-In that case, please see 1. ;)
+On Sun, Jul 21, 2019 at 11:18 AM Jungo Lin <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+[snip]
+> > > +           wake_up_interruptible(&isp_ctx->composer_tx_thread.wq);
+> > > +           isp_ctx->composer_tx_thread.thread = NULL;
+> > > +   }
+> > > +
+> > > +   if (isp_ctx->composer_deinit_thread.thread) {
+> > > +           wake_up(&isp_ctx->composer_deinit_thread.wq);
+> > > +           isp_ctx->composer_deinit_thread.thread = NULL;
+> > > +   }
+> > > +   mutex_unlock(&isp_ctx->lock);
+> > > +
+> > > +   pm_runtime_put_sync(&p1_dev->pdev->dev);
+> >
+> > No need to use the sync variant.
+> >
+>
+> We don't get this point. If we will call pm_runtime_get_sync in
+> mtk_isp_hw_init function, will we need to call
+> pm_runtime_put_sync_autosuspend in mtk_isp_hw_release in next patch?
+> As we know, we should call runtime pm functions in pair.
+>
 
-> 
-> Looking at this again, I don't think we need to enable the IRQ at all.
+My point is that pm_runtime_put_sync() is only needed if one wants the
+runtime count to be decremented after the function returns. Normally
+there is no need to do so and one would call pm_runtime_put(), or if
+autosuspend is used, pm_runtime_put_autosuspend() (note there is no
+"sync" in the name).
 
-Could you please clarify? The code only saves/restores COP's interrupts
-context across suspend-resume.
+[snip]
+> > +static void isp_composer_handler(void *data, unsigned int len, void *priv)
+> > > +{
+> > > +   struct mtk_isp_p1_ctx *isp_ctx = (struct mtk_isp_p1_ctx *)priv;
+> > > +   struct isp_p1_device *p1_dev = p1_ctx_to_dev(isp_ctx);
+> > > +   struct device *dev = &p1_dev->pdev->dev;
+> > > +   struct mtk_isp_scp_p1_cmd *ipi_msg;
+> > > +
+> > > +   ipi_msg = (struct mtk_isp_scp_p1_cmd *)data;
+> >
+> > Should we check that len == sizeof(*ipi_msg)? (Or at least >=, if data could
+> > contain some extra bytes at the end.)
+> >
+>
+> The len parameter is the actual sending bytes from SCP to kernel.
+> In the runtime, it is only 6 bytes for isp_ack_info command
+> However, sizeof(*ipi_msg) is large due to struct mtk_isp_scp_p1_cmd is
+> union structure.
+>
 
-Again, that's absolutely useless code for the upstream kernel which
-could be removed safely to avoid the confusion, IMHO. I can type a patch
-if you're agreeing.
+That said we still should check if len is enough to cover the data
+we're accessing below.
+
+> > > +
+> > > +   if (ipi_msg->cmd_id != ISP_CMD_ACK)
+> > > +           return;
+> > > +
+> > > +   if (ipi_msg->ack_info.cmd_id == ISP_CMD_FRAME_ACK) {
+> > > +           dev_dbg(dev, "ack frame_num:%d",
+> > > +                   ipi_msg->ack_info.frame_seq_no);
+> > > +           atomic_set(&isp_ctx->composed_frame_id,
+> > > +                      ipi_msg->ack_info.frame_seq_no);
+> >
+> > I suppose we are expecting here that ipi_msg->ack_info.frame_seq_no would be
+> > just isp_ctx->composed_frame_id + 1, right? If not, we probably dropped some
+> > frames and we should handle that somehow.
+> >
+>
+> No, we use isp_ctx->composed_frame_id to save which frame sequence
+> number are composed done in SCP. In new design, we will move this from
+> isp_ctx to p1_dev.
+
+But we compose the frames in order, don't we? Wouldn't every composed
+frame would be just previous frame ID + 1?
+
+[snip]
+> > > +void isp_composer_hw_init(struct device *dev)
+> > > +{
+> > > +   struct mtk_isp_scp_p1_cmd composer_tx_cmd;
+> > > +   struct isp_p1_device *p1_dev = get_p1_device(dev);
+> > > +   struct mtk_isp_p1_ctx *isp_ctx = &p1_dev->isp_ctx;
+> > > +
+> > > +   memset(&composer_tx_cmd, 0, sizeof(composer_tx_cmd));
+> > > +   composer_tx_cmd.cmd_id = ISP_CMD_INIT;
+> > > +   composer_tx_cmd.frameparam.hw_module = isp_ctx->isp_hw_module;
+> > > +   composer_tx_cmd.frameparam.cq_addr.iova = isp_ctx->scp_mem_iova;
+> > > +   composer_tx_cmd.frameparam.cq_addr.scp_addr = isp_ctx->scp_mem_pa;
+> >
+> > Should we also specify the size of the buffer? Otherwise we could end up
+> > with some undetectable overruns.
+> >
+>
+> The size of SCP composer's memory is fixed to 0x200000.
+> Is it necessary to specify the size of this buffer?
+>
+> #define MTK_ISP_COMPOSER_MEM_SIZE 0x200000
+>
+> ptr = dma_alloc_coherent(p1_dev->cam_dev.smem_dev,
+>                         MTK_ISP_COMPOSER_MEM_SIZE, &addr, GFP_KERNEL);
+>
+
+Okay, but please add a comment saying that this is an implicit
+requirement of the firmware.
+
+Best regards,
+Tomasz
