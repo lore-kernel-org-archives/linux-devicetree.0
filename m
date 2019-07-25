@@ -1,88 +1,35 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH 3/3] regulator: twl6030: workaround the VMMC reset behavior
-Date: Thu, 25 Jul 2019 11:45:42 +0200
-Message-ID: <20190725094542.16547-4-gregory.clement@bootlin.com>
-References: <20190725094542.16547-1-gregory.clement@bootlin.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
+ suspend
+Date: Thu, 25 Jul 2019 12:55:02 +0300
+Message-ID: <20190725095502.GM12715@pdeschrijver-desktop.Nvidia.com>
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+ <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725094542.16547-1-gregory.clement@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Gregory CLEMENT <gregory.clement@bootlin.com>
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-During reset the VMMC regulator doesn't reach 0V and only drops to
-1.8V, furthermore the pulse width is under 200us whereas the SD
-specification expect 1ms.
+On Mon, Jul 22, 2019 at 12:54:51PM +0300, Dmitry Osipenko wrote:
+> 
+> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
+> doesn't sound correct to me. Something like 'firmware_sc7' should suit
+> better here.
+> 
+> > +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+> 
+> Secondly, I'm also not sure why COP interrupts need to be disabled for
+> pre-T210 at all, since COP is unused. This looks to me like it was
+> cut-n-pasted from downstream kernel without a good reason and could be
+> simply removed.
 
-The WR_S bit allows the TWL6030 to no reset at all the VMMC during warm
-reset and keep the current voltage. Thanks to this workaround the SD
-card doesn't reach a undefined reset stage.
+I don't think we can rely on the fact that COP is unused. People can
+write their own code to run on COP.
 
-Actually this behavior is available for all the LDO regulator, so the
-driver will also allow to use it with any of these regulator.
-
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- drivers/regulator/twl6030-regulator.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/regulator/twl6030-regulator.c b/drivers/regulator/twl6030-regulator.c
-index d73c81542ceb..b8100c3cedad 100644
---- a/drivers/regulator/twl6030-regulator.c
-+++ b/drivers/regulator/twl6030-regulator.c
-@@ -57,6 +57,9 @@ struct twlreg_info {
- #define VREG_BC_PROC		3
- #define VREG_BC_CLK_RST		4
- 
-+/* TWL6030 LDO register values for VREG_VOLTAGE */
-+#define TWL6030_VREG_VOLTAGE_WR_S   BIT(7)
-+
- /* TWL6030 LDO register values for CFG_STATE */
- #define TWL6030_CFG_STATE_OFF	0x00
- #define TWL6030_CFG_STATE_ON	0x01
-@@ -68,9 +71,10 @@ struct twlreg_info {
- #define TWL6030_CFG_STATE_APP(v)	(((v) & TWL6030_CFG_STATE_APP_MASK) >>\
- 						TWL6030_CFG_STATE_APP_SHIFT)
- 
--/* Flags for SMPS Voltage reading */
-+/* Flags for SMPS Voltage reading and LDO reading*/
- #define SMPS_OFFSET_EN		BIT(0)
- #define SMPS_EXTENDED_EN	BIT(1)
-+#define TWL_6030_WARM_RESET	BIT(3)
- 
- /* twl6032 SMPS EPROM values */
- #define TWL6030_SMPS_OFFSET		0xB0
-@@ -250,6 +254,9 @@ twl6030ldo_set_voltage_sel(struct regulator_dev *rdev, unsigned selector)
- {
- 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
- 
-+	if (info->flags & TWL_6030_WARM_RESET)
-+		selector |= TWL6030_VREG_VOLTAGE_WR_S;
-+
- 	return twlreg_write(info, TWL_MODULE_PM_RECEIVER, VREG_VOLTAGE,
- 			    selector);
- }
-@@ -259,6 +266,9 @@ static int twl6030ldo_get_voltage_sel(struct regulator_dev *rdev)
- 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
- 	int vsel = twlreg_read(info, TWL_MODULE_PM_RECEIVER, VREG_VOLTAGE);
- 
-+	if (info->flags & TWL_6030_WARM_RESET)
-+		vsel &= ~TWL6030_VREG_VOLTAGE_WR_S;
-+
- 	return vsel;
- }
- 
-@@ -710,6 +720,9 @@ static int twlreg_probe(struct platform_device *pdev)
- 		break;
- 	}
- 
-+	if (of_get_property(np, "ti,retain-on-reset", NULL))
-+		info->flags |= TWL_6030_WARM_RESET;
-+
- 	config.dev = &pdev->dev;
- 	config.init_data = initdata;
- 	config.driver_data = info;
--- 
-2.20.1
+Peter.
