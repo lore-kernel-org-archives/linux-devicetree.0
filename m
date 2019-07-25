@@ -1,65 +1,64 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 5/5] ARM: dts: mmp2: specify reg-shift for the UARTs
-Date: Thu, 25 Jul 2019 13:07:31 +0200
-Message-ID: <20190725110731.3294411-6-lkundrak@v3.sk>
-References: <20190725110731.3294411-1-lkundrak@v3.sk>
+From: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: Re: [PATCH 2/2] dt-bindings: leds: document new "power-supply"
+ property
+Date: Thu, 25 Jul 2019 13:08:46 +0200
+Message-ID: <753b2c8d-e8fc-ec6e-f372-a84d4452fd33@ti.com>
+References: <20190708103547.23528-1-jjhiblot@ti.com>
+ <20190708103547.23528-3-jjhiblot@ti.com> <20190724164757.GA3723@bogus>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725110731.3294411-1-lkundrak@v3.sk>
+In-Reply-To: <20190724164757.GA3723@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+To: Rob Herring <robh@kernel.org>
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, daniel.thompson@linaro.org, dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This makes the 8250_of driver happy. There are two more drivers in the
-tree that bind to mrvl,mmp-uart compatibles: pxa and 8250_pxa and
-neither of them requires the reg-shift property, assuming it's always 2.
+Hi Rob,
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+On 24/07/2019 18:47, Rob Herring wrote:
+> On Mon, Jul 08, 2019 at 12:35:47PM +0200, Jean-Jacques Hiblot wrote:
+>> Most of the LEDs are powered by a voltage/current regulator. describing in
+>> the device-tree makes it possible for the LED core to enable/disable it
+>> when needed.
+>>
+>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>> ---
+>>   Documentation/devicetree/bindings/leds/common.txt | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+>> index 70876ac11367..e093a2b7eb90 100644
+>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>> @@ -61,6 +61,11 @@ Optional properties for child nodes:
+>>   - panic-indicator : This property specifies that the LED should be used,
+>>   		    if at all possible, as a panic indicator.
+>>   
+>> +- power-supply : A voltage/current regulator used to to power the LED. When a
+>> +		 LED is turned off, the LED core disable its regulator. The
+>> +		 same regulator can power many LED (or other) devices. It is
+>> +		 turned off only when all of its users disabled it.
+> Not sure this should be common. It wouldn't apply to cases where we have
+> an LED controller parent nor gpio and pwm LEDs and those are most cases.
 
----
-Changes since v1:
-- Updated the subject to fit the style of the DTS updates
----
- arch/arm/boot/dts/mmp2.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+It does make sense for GPIO and PWM bindings if the anode of LED is tied 
+to a regulated voltage and the cathod to the control line.
 
-diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index 68b5470773232..6a2f072c1d0a8 100644
---- a/arch/arm/boot/dts/mmp2.dtsi
-+++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -214,6 +214,7 @@
- 				interrupts =3D <27>;
- 				clocks =3D <&soc_clocks MMP2_CLK_UART0>;
- 				resets =3D <&soc_clocks MMP2_CLK_UART0>;
-+				reg-shift =3D <2>;
- 				status =3D "disabled";
- 			};
-=20
-@@ -223,6 +224,7 @@
- 				interrupts =3D <28>;
- 				clocks =3D <&soc_clocks MMP2_CLK_UART1>;
- 				resets =3D <&soc_clocks MMP2_CLK_UART1>;
-+				reg-shift =3D <2>;
- 				status =3D "disabled";
- 			};
-=20
-@@ -232,6 +234,7 @@
- 				interrupts =3D <24>;
- 				clocks =3D <&soc_clocks MMP2_CLK_UART2>;
- 				resets =3D <&soc_clocks MMP2_CLK_UART2>;
-+				reg-shift =3D <2>;
- 				status =3D "disabled";
- 			};
-=20
-@@ -241,6 +244,7 @@
- 				interrupts =3D <46>;
- 				clocks =3D <&soc_clocks MMP2_CLK_UART3>;
- 				resets =3D <&soc_clocks MMP2_CLK_UART3>;
-+				reg-shift =3D <2>;
- 				status =3D "disabled";
- 			};
-=20
---=20
-2.21.0
+The same is true for a certain class of true LED controller that do not 
+deliver power but act like current sinks.
+
+JJ
+
+>
+> Perhaps what makes sense here is an regulator-led binding.
+>
+>> +
+>>   - trigger-sources : List of devices which should be used as a source triggering
+>>   		    this LED activity. Some LEDs can be related to a specific
+>>   		    device and should somehow indicate its state. E.g. USB 2.0
+>> -- 
+>> 2.17.1
+>>
