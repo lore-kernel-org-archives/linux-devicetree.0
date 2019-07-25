@@ -1,79 +1,60 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH V2 1/2] usb: dwc3: Add node to update cache type setting
-Date: Thu, 25 Jul 2019 02:29:07 +0000
-Message-ID: <DB8PR04MB6826B4479A5A67A66025E89CF1C10@DB8PR04MB6826.eurprd04.prod.outlook.com>
-References: <20190712064206.48249-1-ran.wang_1@nxp.com>
- <20190724204222.GA1234@bogus>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v4, 05/33] dt-bindings: mediatek: add RDMA1 description
+ for mt8183 display
+Date: Thu, 25 Jul 2019 11:20:19 +0800
+Message-ID: <1564024819.2621.4.camel@mtksdaap41>
+References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1562625253-29254-6-git-send-email-yongqiang.niu@mediatek.com>
+ <20190724201635.GA18345@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724204222.GA1234@bogus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190724201635.GA18345@bogus>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, yongqiang.niu@mediatek.com, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Thursday, July 25, 2019 04:42 Rob Herring <robh@kernel.org> wrote:
->=20
-> On Fri, Jul 12, 2019 at 02:42:05PM +0800, Ran Wang wrote:
-> > Some Layerscape paltforms (such as LS1088A, LS2088A, etc) encounter
-> > USB detect failues when adding dma-coherent to DWC3 node. This is
-> > because the HW default cache type configuration of those SoC are not
-> > right, need to be updated in DTS.
-> >
-> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> > ---
-> > Change in v2:
-> > 	- New file.
-> >
-> >  Documentation/devicetree/bindings/usb/dwc3.txt | 43
-> > ++++++++++++++++++++++++++
-> >  1 file changed, 43 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
-> > b/Documentation/devicetree/bindings/usb/dwc3.txt
-> > index 8e5265e..7bc1cef 100644
-> > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> > @@ -110,6 +110,43 @@ Optional properties:
-> >   - in addition all properties from usb-xhci.txt from the current direc=
-tory are
-> >     supported as well
-> >
-> > +* Cache type nodes (optional)
-> > +
-> > +The Cache type node is used to tell how to configure cache type on 4
-> > +different transfer types: Data Read, Desc Read, Data Write and Desc
-> > +write. For each treasfer type, controller has a 4-bit register field
-> > +to enable different cache type. Quoted from DWC3 data book Table 6-5
-> Cache Type Bit Assignments:
-> > +----------------------------------------------------------------
-> > +MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
-> > +----------------------------------------------------------------
-> > +AHB      |Cacheable     |Bufferable   |Privilegge |Data
-> > +AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
-> > +AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
-> > +AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
-> > +Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
-> > +----------------------------------------------------------------
-> > +Note: The AHB, AXI3, AXI4, and PCIe busses use different names for
-> > +certain signals, which have the same meaning:
-> > +  Bufferable =3D Posted
-> > +  Cacheable =3D Modifiable =3D Snoop (negation of No Snoop)
->=20
-> This should all be implied from the SoC specific compatible strings.
-
-Did you mean I could implement a soc driver which can be matched by compati=
-ble of 'fsl,ls1088a-dwc3' which will pass known bus type to DWC3 driver? If=
- yes, how to pass?
-
-Or I need to add a property snps,mbus_type=3D"AXI3" to DWC3 node, which wil=
-l co-work with property  transfer_type-datard =3D "cacheable" to set cache =
-type properly?
-
-Thanks & Regards,
-Ran
+SGksIFJvYjoKCk9uIFdlZCwgMjAxOS0wNy0yNCBhdCAxNDoxNiAtMDYwMCwgUm9iIEhlcnJpbmcg
+d3JvdGU6Cj4gT24gVHVlLCBKdWwgMDksIDIwMTkgYXQgMDY6MzM6NDVBTSArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gPiBGcm9tOiBZb25ncWlhbmcgTml1IDx5b25n
+cWlhbmcubml1QG1lZGlhdGVrLmNvbT4KPiA+IAo+ID4gVGhpcyBwYXRjaCBhZGQgUkRNQTEgZGVz
+Y3JpcHRpb24gZm9yIG10ODE4MyBkaXNwbGF5Cj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFlvbmdx
+aWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPgo+ID4gLS0tCj4gPiAgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlz
+cC50eHQgfCAxICsKPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPiA+IAo+ID4g
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21l
+ZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQKPiA+IGluZGV4IGFmZDNjOTAu
+LmJiOTI3NGEgMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkaXNwLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50
+eHQKPiA+IEBAIC0zMCw2ICszMCw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXMgKGFsbCBmdW5jdGlv
+biBibG9ja3MpOgo+ID4gIAkibWVkaWF0ZWssPGNoaXA+LWRpc3Atb3ZsIiAgIAkJLSBvdmVybGF5
+ICg0IGxheWVycywgYmxlbmRpbmcsIGNzYykKPiA+ICAJIm1lZGlhdGVrLDxjaGlwPi1kaXNwLW92
+bC0ybCIgICAgICAgICAgIC0gb3ZlcmxheSAoMiBsYXllcnMsIGJsZW5kaW5nLCBjc2MpCj4gPiAg
+CSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1yZG1hIiAgCQktIHJlYWQgRE1BIC8gbGluZSBidWZmZXIK
+PiA+ICsJIm1lZGlhdGVrLDxjaGlwPi1kaXNwLXJkbWExIiAgICAgICAgICAgIC0gZnVuY3Rpb24g
+aXMgc2FtZSB3aXRoIFJETUEsIGZpZm8gc2l6ZSBpcyBkaWZmZXJlbnQKPiAKPiBUaGlzIGNhbid0
+IGJlIGRldGVybWluZWQgYnkgd2hpY2ggY2hpcCBpdCBpcz8gSU9XLCBhIGNoaXAgbWF5IGhhdmUg
+Ym90aCAKPiByZG1hIGFuZCByZG1hMT8KCkluIE1UODE4MywgdGhlcmUgYXJlIHR3byBkaWZmZXJl
+bnQgcmRtYS4gVGhlIGRpZmZlcmVuY2UgaXMgdGhlIGZpZm8gc2l6ZQppbiBlYWNoIG9uZS4gSSd2
+ZSBhIHF1ZXN0aW9uOiBpcyBpdCBiZXR0ZXIgdG8gaGF2ZSB0d28gY29tcGF0aWJsZSBzdHJpbmcK
+Zm9yIGVhY2ggb25lLCBvciBqdXN0IG9uZSBjb21wYXRpYmxlIHN0cmluZyBmb3IgYm90aCBidXQg
+d2l0aCBhIHByb3BlcnR5CnRvIHNldCBmaWZvIHNpemU/CgpSZWdhcmRzLApDSwoKPiAKPiA+ICAJ
+Im1lZGlhdGVrLDxjaGlwPi1kaXNwLXdkbWEiICAJCS0gd3JpdGUgRE1BCj4gPiAgCSJtZWRpYXRl
+ayw8Y2hpcD4tZGlzcC1jY29yciIgICAgICAgICAgICAtIGNvbG9yIGNvcnJlY3Rpb24KPiA+ICAJ
+Im1lZGlhdGVrLDxjaGlwPi1kaXNwLWNvbG9yIiAJCS0gY29sb3IgcHJvY2Vzc29yCj4gPiAtLSAK
+PiA+IDEuOC4xLjEuZGlydHkKPiA+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbA==
