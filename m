@@ -1,45 +1,35 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH v8 0/7] Unify CPU topology across ARM & RISC-V
-Date: Wed, 24 Jul 2019 18:24:22 -0700
-Message-ID: <ea88d4f4-eff8-adba-3135-0d480f501d48@wdc.com>
-References: <20190627195302.28300-1-atish.patra@wdc.com>
- <alpine.DEB.2.21.9999.1907121012050.2267@viisi.sifive.com>
- <alpine.DEB.2.21.9999.1907221224170.23563@viisi.sifive.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Anson.Huang@nxp.com
+Subject: [PATCH] dt-bindings: clock: imx8mn: Fix tab indentation for yaml file
+Date: Thu, 25 Jul 2019 10:05:51 +0800
+Message-ID: <20190725020551.27034-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1907221224170.23563@viisi.sifive.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Johan Hovold <johan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Otto Sabart <ottosabart@seberm.com>, Palmer Dabbelt <palmer@sifive.com>, Peter Zijlstr
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On 7/22/19 12:25 PM, Paul Walmsley wrote:
-> On Fri, 12 Jul 2019, Paul Walmsley wrote:
-> 
->> On Thu, 27 Jun 2019, Atish Patra wrote:
->>
->>> The cpu-map DT entry in ARM can describe the CPU topology in much better
->>> way compared to other existing approaches. RISC-V can easily adopt this
->>> binding to represent its own CPU topology. Thus, both cpu-map DT
->>> binding and topology parsing code can be moved to a common location so
->>> that RISC-V or any other architecture can leverage that.
->>> different config for the architectures that do not support them.
->>
->> Once v5.3-rc1 is released, let's plan to get these patches rebased and
->> reposted and into linux-next as soon as possible.
-> 
-> These CPU topology patches are now queued for v5.4-rc1.  They should enter
-> linux-next shortly.
-> 
-> 
-> - Paul
-> 
+From: Anson Huang <Anson.Huang@nxp.com>
 
-Thanks!!
+YAML file can NOT contain tab as indentation, fix it.
 
+Fixes: 6d6062553e3d ("dt-bindings: imx: Add clock binding doc for i.MX8MN")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ Documentation/devicetree/bindings/clock/imx8mn-clock.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml b/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
+index 454c5b4..622f365 100644
+--- a/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
++++ b/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
+@@ -71,7 +71,7 @@ examples:
+         compatible = "fixed-clock";
+         #clock-cells = <0>;
+         clock-frequency = <32768>;
+-	clock-output-names = "osc_32k";
++        clock-output-names = "osc_32k";
+     };
+ 
+     osc_24m: clock-osc-24m {
 -- 
-Regards,
-Atish
+2.7.4
