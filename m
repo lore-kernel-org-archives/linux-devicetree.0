@@ -1,44 +1,24 @@
-From: Torsten Duwe <duwe@lst.de>
-Subject: Re: [PATCH v3 5/7] drm/bridge: Add Analogix anx6345 support
-Date: Thu, 25 Jul 2019 17:53:28 +0200
-Message-ID: <20190725155328.GC4820@lst.de>
-References: <20190722151154.8344568BFE@verein.lst.de> <CA+E=qVeSjE1i-ngJWv=GTQDM6HL-VEZWjXH_p_BXy+eP7SvWhg@mail.gmail.com> <CAFqH_50s0J_NEevV9b5o-wq-bw+xGaUZ3WyhVDRZKyM2Yn-iVg@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: imx: add imx8mq nitrogen support
+Date: Thu, 25 Jul 2019 12:57:02 -0300
+Message-ID: <CAOMZO5AH7Rdvh+wocqHXYSOVbK=jjCANgG=BzD8Kx5XSvK5f_w@mail.gmail.com>
+References: <20190725121452.16607-1-dafna.hirschfeld@collabora.com> <20190725121452.16607-2-dafna.hirschfeld@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFqH_50s0J_NEevV9b5o-wq-bw+xGaUZ3WyhVDRZKyM2Yn-iVg@mail.gmail.com>
+In-Reply-To: <20190725121452.16607-2-dafna.hirschfeld@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo Serra <eballetbo@gmail.com>
-Cc: Vasily Khoruzhick <anarsoul@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+To: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com, Gary Bisson <gary.bisson@boundarydevices.com>, Troy Kisky <troy.kisky@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 05:45:15PM +0200, Enric Balletbo Serra wrote:
-> Hi,
-> 
-> Missatge de Vasily Khoruzhick <anarsoul@gmail.com> del dia dl., 22 de
-> jul. 2019 a les 20:50:
-> >
-> > On Mon, Jul 22, 2019 at 8:11 AM Torsten Duwe <duwe@lst.de> wrote:
-> > >
-> > > +module_i2c_driver(anx6345_driver);
-> > > +
-> > > +MODULE_DESCRIPTION("ANX6345 eDP Transmitter driver");
-> > > +MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
-> >
-> > I believe Icenowy is the author of this driver. If you think otherwise
-> > please add Enric to CC and get his Signed-off-by.
-> >
-> 
-> I think that the only reason my name appears here is because is a
-> copy/paste from analogix-anx78xx.c (probably this driver took that
+On Thu, Jul 25, 2019 at 10:56 AM Dafna Hirschfeld
+<dafna.hirschfeld@collabora.com> wrote:
+>
+> From: Gary Bisson <gary.bisson@boundarydevices.com>
+>
+> i.MX 8Quad is a quad (4x) Cortex-A53 processor with powerful
+> graphic and multimedia features.
 
-Yes, this is the case.
-You wrote / authored 500 lines of it, Icenowy about 300.
-
-> file as a reference?). Indeed I am not the author of this driver, so
-> Icenowy should be here, not me.
-
-Very well. Thanks for this clear statement!
-
-	Torsten
+Instead of describing the SoC, it would be better to describe the
+i.MX8M nitrogen board instead.
