@@ -1,35 +1,39 @@
 From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 0/2] STMFX GPIO consumers update
-Date: Thu, 25 Jul 2019 13:36:45 +0200
-Message-ID: <1564054607-2028-1-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCH 2/2] ARM: dts: stm32: change pinctrl definition for joystick pins on stm32mp157c-ev1
+Date: Thu, 25 Jul 2019 13:36:47 +0200
+Message-ID: <1564054607-2028-3-git-send-email-amelie.delaunay@st.com>
+References: <1564054607-2028-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1564054607-2028-1-git-send-email-amelie.delaunay@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This series depends on a STMFX pinctrl driver update
-(https://lkml.org/lkml/2019/7/25/536).
-Now, STMFX GPIO consumers can use standard GPIO bindings.
+From: Alexandre Torgue <alexandre.torgue@st.com>
 
-Alexandre Torgue (2):
-  ARM: dts: stm32: remove OV5640 pinctrl definition on stm32mp157c-ev1
-  ARM: dts: stm32: change pinctrl definition for joystick pins on
-    stm32mp157c-ev1
+Pins used for joystick are all configured as input. "Push-pull" is not
+a valid setting for an input.
 
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c-ev1.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+index e4b04dd..7d15f05 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -220,7 +220,6 @@
+ 
+ 			joystick_pins: joystick {
+ 				pins = "gpio0", "gpio1", "gpio2", "gpio3", "gpio4";
+-				drive-push-pull;
+ 				bias-pull-down;
+ 			};
+ 		};
 -- 
 2.7.4
