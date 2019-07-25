@@ -1,127 +1,52 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH 05/15] arm: dts: msm8974: thermal: Add thermal zones for each sensor
-Date: Fri, 26 Jul 2019 03:48:40 +0530
-Message-ID: <9e2948528c789225bf8a6ef458b83a5350a7ea26.1564091601.git.amit.kucheria@linaro.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4, 05/33] dt-bindings: mediatek: add RDMA1 description
+ for mt8183 display
+Date: Thu, 25 Jul 2019 16:23:54 -0600
+Message-ID: <CAL_JsqL439PCnG3B75uqCXb3-OfH2uK6qtU7XpUb-cEnPWRkkQ@mail.gmail.com>
+References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1562625253-29254-6-git-send-email-yongqiang.niu@mediatek.com>
+ <20190724201635.GA18345@bogus> <1564024819.2621.4.camel@mtksdaap41>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1564091601.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1564091601.git.amit.kucheria@linaro.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
+In-Reply-To: <1564024819.2621.4.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, Andy Gross <agross@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Cc: masneyb@onstation.org, devicetree@vger.kernel.org
+To: CK Hu <ck.hu@mediatek.com>
+Cc: yongqiang.niu@mediatek.com, Philipp Zabel <p.zabel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-msm8974 has 11 sensors connected to a single TSENS IP. Define a thermal
-zone for each of those sensors to expose the temperature of each zone.
+On Wed, Jul 24, 2019 at 9:20 PM CK Hu <ck.hu@mediatek.com> wrote:
+>
+> Hi, Rob:
+>
+> On Wed, 2019-07-24 at 14:16 -0600, Rob Herring wrote:
+> > On Tue, Jul 09, 2019 at 06:33:45AM +0800, yongqiang.niu@mediatek.com wrote:
+> > > From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> > >
+> > > This patch add RDMA1 description for mt8183 display
+> > >
+> > > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> > > index afd3c90..bb9274a 100644
+> > > --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> > > +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> > > @@ -30,6 +30,7 @@ Required properties (all function blocks):
+> > >     "mediatek,<chip>-disp-ovl"              - overlay (4 layers, blending, csc)
+> > >     "mediatek,<chip>-disp-ovl-2l"           - overlay (2 layers, blending, csc)
+> > >     "mediatek,<chip>-disp-rdma"             - read DMA / line buffer
+> > > +   "mediatek,<chip>-disp-rdma1"            - function is same with RDMA, fifo size is different
+> >
+> > This can't be determined by which chip it is? IOW, a chip may have both
+> > rdma and rdma1?
+>
+> In MT8183, there are two different rdma. The difference is the fifo size
+> in each one. I've a question: is it better to have two compatible string
+> for each one, or just one compatible string for both but with a property
+> to set fifo size?
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
-Cc: masneyb@onstation.org
-
- arch/arm/boot/dts/qcom-msm8974.dtsi | 90 +++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 369e58f64145..d32f639505f1 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -217,6 +217,96 @@
- 				};
- 			};
- 		};
-+
-+		q6-dsp-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens 1>;
-+
-+			trips {
-+				q6_dsp_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		modemtx-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens 2>;
-+
-+			trips {
-+				modemtx_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		video-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens 3>;
-+
-+			trips {
-+				video_alert0: trip-point0 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		wlan-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+
-+			thermal-sensors = <&tsens 4>;
-+
-+			trips {
-+				wlan_alert0: trip-point0 {
-+					temperature = <105000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		gpu-thermal-top {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens 9>;
-+
-+			trips {
-+				gpu1_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		gpu-thermal-bottom {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens 10>;
-+
-+			trips {
-+				gpu2_alert0: trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
- 	};
- 
- 	cpu-pmu {
--- 
-2.17.1
+If that's the only diff, then a property for fifo size is fine. We
+just don't want to be adding a new property for each new difference.
