@@ -1,7 +1,7 @@
 From: Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH 4/4] ARM64: dts: amlogic: adds crypto hardware node
-Date: Thu, 25 Jul 2019 19:42:56 +0000
-Message-ID: <1564083776-20540-5-git-send-email-clabbe@baylibre.com>
+Subject: [PATCH 3/4] MAINTAINERS: Add myself as maintainer of amlogic crypto
+Date: Thu, 25 Jul 2019 19:42:55 +0000
+Message-ID: <1564083776-20540-4-git-send-email-clabbe@baylibre.com>
 References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
@@ -10,34 +10,30 @@ To: davem@davemloft.net, herbert@gondor.apana.org.au, khilman@baylibre.com, mark
 Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, baylibre-upstreaming@groups.io, Corentin Labbe <clabbe@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the GXL crypto hardware node for all GXL SoCs.
+I will maintain the amlogic crypto driver.
 
 Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index c959456bacc6..fdcda12a7113 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -36,6 +36,17 @@
- 				phys = <&usb3_phy>, <&usb2_phy0>, <&usb2_phy1>;
- 			};
- 		};
-+
-+		crypto: crypto@c883e000 {
-+			compatible = "amlogic,gxl-crypto";
-+			reg = <0x0 0xc883e000 0x0 0x36>;
-+			interrupts = <GIC_SPI 188 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&clkc CLKID_BLKMV>;
-+			clock-names = "blkmv";
-+			status = "okay";
-+		};
-+
- 	};
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 93d6cae3274d..48e7fd110688 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1450,6 +1450,13 @@ F:	drivers/mmc/host/meson*
+ F:	drivers/soc/amlogic/
+ N:	meson
  
++ARM/Amlogic Meson SoC Crypto Drivers
++M:	Corentin Labbe <clabbe@baylibre.com>
++L:	linux-crypto@vger.kernel.org
++S:	Maintained
++F:	drivers/crypto/amlogic/
++F:	Documentation/devicetree/bindings/crypto/amlogic*
++
+ ARM/Amlogic Meson SoC Sound Drivers
+ M:	Jerome Brunet <jbrunet@baylibre.com>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
 -- 
 2.21.0
