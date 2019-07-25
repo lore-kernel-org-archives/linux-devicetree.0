@@ -1,95 +1,100 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [RFC PATCH 03/11] devfreq: exynos-bus: Change goto-based logic to
- if-else logic
-Date: Thu, 25 Jul 2019 21:56:48 +0900
-Message-ID: <CAGTfZH09n9UOLMwNrCvcdeRCHYFO4TiB-YG2rMVuxA4bxuLCVw@mail.gmail.com>
-References: <CGME20190723122024eucas1p1ff060d072132bfbc8a8a1d10fa1f90f8@eucas1p1.samsung.com>
- <20190723122016.30279-1-a.swigon@partner.samsung.com> <20190723122016.30279-4-a.swigon@partner.samsung.com>
-Reply-To: cwchoi00@gmail.com
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH v3 00/11] clk: imx8: add new clock binding for better pm
+ support
+Date: Thu, 25 Jul 2019 20:48:47 +0800
+Message-ID: <CAA+hA=TkrwzWbJQu7Cc6njdQSP--u=Zf+=FcPg-wCZ=rRXoRuQ@mail.gmail.com>
+References: <1563289265-10977-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190723122016.30279-4-a.swigon@partner.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com, Seung-Woo Kim <sw0312.kim@samsung.com>, georgi.djakov@linaro.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1563289265-10977-1-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: devicetree <devicetree@vger.kernel.org>, sboyd@kernel.org, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-2019=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 8:08, A=
-rtur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>=EB=8B=98=EC=9D=B4 =EC=
-=9E=91=EC=84=B1:
+Hi Rob & Stephen & Shawn,
+
+Could you help review this patchset?
+We're pretty stuck here for a long time and a lot continued work are blocked.
+We really need your kind help.
+
+The related DT patches could be found here:
+https://patchwork.kernel.org/cover/11046341/
+
+Regards
+Aisheng
+
+On Tue, Jul 16, 2019 at 11:23 PM Dong Aisheng <aisheng.dong@nxp.com> wrote:
 >
-> This patch improves code readability by changing the following construct:
+> This is a follow up of this patch series.
+> https://patchwork.kernel.org/cover/10924029/
+> [V2,0/2] clk: imx: scu: add parsing clocks from device tree support
 >
-> >    if (cond)
-> >        goto passive;
-> >    foo();
-> >    goto out;
-> >passive:
-> >    bar();
-> >out:
+> This patch series is a preparation for the MX8 Architecture improvement.
+> As for IMX SCU based platforms like MX8QM and MX8QXP, they are comprised
+> of a couple of SS(Subsystems) while most of them within the same SS
+> can be shared. e.g. Clocks, Devices and etc.
 >
-> into this:
+> However, current clock binding is using SW IDs for device tree to use
+> which can cause troubles in writing the common <soc>-ss-xx.dtsi file for
+> different SoCs.
 >
-> >    if (cond)
-> >        bar();
-> >    else
-> >        foo();
+> This patch series aims to introduce a new binding which is more close to
+> hardware and platform independent and can makes us write a more general
+> drivers for different SCU based SoCs.
 >
-> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>
-> ---
->  drivers/devfreq/exynos-bus.c | 24 +++++++++---------------
->  1 file changed, 9 insertions(+), 15 deletions(-)
+> Another important thing is that on MX8, each Clock resource is associated
+> with a power domain. So we have to attach that clock device to the power
+> domain in order to make it work properly. Further more, the clock state
+> will be lost when its power domain is completely off during suspend/resume,
+> so we also introduce the clock state save&restore mechanism.
 >
-> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-> index cf6f6cbd0f55..4bb83b945bf7 100644
-> --- a/drivers/devfreq/exynos-bus.c
-> +++ b/drivers/devfreq/exynos-bus.c
-> @@ -505,25 +505,19 @@ static int exynos_bus_probe(struct platform_device =
-*pdev)
->         node =3D of_parse_phandle(dev->of_node, "devfreq", 0);
->         if (node) {
->                 of_node_put(node);
-> -               goto passive;
-> +               ret =3D exynos_bus_profile_init_passive(bus, profile);
-> +               if (ret < 0)
-> +                       goto err;
->         } else {
->                 ret =3D exynos_bus_parent_parse_of(np, bus);
-> +               if (ret < 0)
-> +                       goto err;
-> +
-> +               ret =3D exynos_bus_profile_init(bus, profile);
-> +               if (ret < 0)
-> +                       goto err;
->         }
+> ChangeLog:
+> v2->v3:
+>  * change scu clk into two cells binding
+>  * add clk pm patches to ease the understand of the changes
+> v1->v2:
+>  * SCU clock changed to one cell clock binding inspired by arm,scpi.txt
+>    Documentation/devicetree/bindings/arm/arm,scpi.txt
+>  * Add required power domain property
+>  * Dropped PATCH 3&4 first, will send the updated version accordingly
+>    after the binding is finally determined,
 >
-> -       if (ret < 0)
-> -               goto err;
-> -
-> -       ret =3D exynos_bus_profile_init(bus, profile);
-> -       if (ret < 0)
-> -               goto err;
-> -
-> -       goto out;
-> -passive:
-> -       ret =3D exynos_bus_profile_init_passive(bus, profile);
-> -       if (ret < 0)
-> -               goto err;
-> -
-> -out:
->         max_state =3D bus->devfreq->profile->max_state;
->         min_freq =3D (bus->devfreq->profile->freq_table[0] / 1000);
->         max_freq =3D (bus->devfreq->profile->freq_table[max_state - 1] / =
-1000);
+> Dong Aisheng (11):
+>   dt-bindings: firmware: imx-scu: new binding to parse clocks from
+>     device tree
+>   dt-bindings: clock: imx-lpcg: add support to parse clocks from device
+>     tree
+>   clk: imx: scu: add two cells binding support
+>   clk: imx: scu: bypass cpu power domains
+>   clk: imx: scu: allow scu clk to take device pointer
+>   clk: imx: scu: add runtime pm support
+>   clk: imx: scu: add suspend/resume support
+>   clk: imx: imx8qxp-lpcg: add parsing clocks from device tree
+>   clk: imx: lpcg: allow lpcg clk to take device pointer
+>   clk: imx: clk-imx8qxp-lpcg: add runtime pm support
+>   clk: imx: lpcg: add suspend/resume support
+>
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt  |  12 +-
+>  .../devicetree/bindings/clock/imx8qxp-lpcg.txt     |  34 +++-
+>  drivers/clk/imx/clk-imx8qxp-lpcg.c                 | 103 ++++++++++
+>  drivers/clk/imx/clk-imx8qxp.c                      |   9 +-
+>  drivers/clk/imx/clk-lpcg-scu.c                     |  41 +++-
+>  drivers/clk/imx/clk-scu.c                          | 216 ++++++++++++++++++++-
+>  drivers/clk/imx/clk-scu.h                          |  50 ++++-
+>  include/dt-bindings/firmware/imx/rsrc.h            |  17 ++
+>  8 files changed, 452 insertions(+), 30 deletions(-)
+>
 > --
-> 2.17.1
+> 2.7.4
 >
-
-It seems more simple than before.
-Instead, please merge patch1/2/3 to one patch. and drop the patch4.
-
---=20
-Best Regards,
-Chanwoo Choi
