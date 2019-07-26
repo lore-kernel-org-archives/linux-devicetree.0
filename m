@@ -1,34 +1,21 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: sunxi: fix a sound binding broken reference" to the
- asoc tree
-Date: Fri, 26 Jul 2019 13:12:17 +0100 (BST)
-Message-ID: <20190726121217.9EDDC2742B63@ypsilon.sirena.org.uk>
-References: <9932608f32030c886d906ea656eda8408c544776.1564140865.git.mchehab+samsung@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9932608f32030c886d906ea656eda8408c544776.1564140865.git.mchehab+samsung@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Maxime Ripard <maxime.ripard@bootlin.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Cc:"@sirena.org.uk, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Subject: Applied "spi: sprd: adi: Change hwlock to be optional" to the spi tree
+Date: Fri, 26 Jul 2019 13:12:23 +0100 (BST)
+Message-ID: <20190726121223.D105E2742B66@ypsilon.sirena.org.uk>
+References: <2abe7dcf210e4197f8c5ece7fc6d6cc1eda8c655.1564125131.git.baolin.wang@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2abe7dcf210e4197f8c5ece7fc6d6cc1eda8c655.1564125131.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: baolin.wang@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, orsonzhai@gmail.com, robh+dt@kernel.org, sherry.zong@unisoc.com, vincent.guittot@linaro.org, weicx@spreadst.com, zhang.lyra@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: sunxi: fix a sound binding broken reference
+   spi: sprd: adi: Change hwlock to be optional
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -49,34 +36,132 @@ to this mail.
 Thanks,
 Mark
 
->From d8481155a3219ef427c6384022931758fbbe8ebe Mon Sep 17 00:00:00 2001
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Date: Fri, 26 Jul 2019 08:47:27 -0300
-Subject: [PATCH] ASoC: sunxi: fix a sound binding broken reference
+>From f9adf61e983f5d03334d841bc30f0e967a340b37 Mon Sep 17 00:00:00 2001
+From: Baolin Wang <baolin.wang@linaro.org>
+Date: Fri, 26 Jul 2019 15:20:52 +0800
+Subject: [PATCH] spi: sprd: adi: Change hwlock to be optional
 
-Address this rename:
-	Documentation/devicetree/bindings/sound/{sun4i-i2s.txt -> allwinner,sun4i-a10-i2s.yaml}
+Now Spreadtrum ADI controller supplies multiple master accessing channel
+to support multiple subsystems accessing, instead of using a hardware
+spinlock to synchronize between the multiple subsystems.
 
-Fixes: 0a0ca8e94ca3 ("dt-bindings: sound: Convert Allwinner I2S binding to YAML")
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Link: https://lore.kernel.org/r/9932608f32030c886d906ea656eda8408c544776.1564140865.git.mchehab+samsung@kernel.org
+To keep backward compatibility, we should change the hardware spinlock
+to be optional. Moreover change to use of_hwspin_lock_get_id() function
+which return -ENOENT error number to indicate no hwlock support.
+
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Link: https://lore.kernel.org/r/2abe7dcf210e4197f8c5ece7fc6d6cc1eda8c655.1564125131.git.baolin.wang@linaro.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-sprd-adi.c | 68 +++++++++++++++++++++++---------------
+ 1 file changed, 42 insertions(+), 26 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt b/Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt
-index 2ca3d138528e..7ecf6bd60d27 100644
---- a/Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt
-+++ b/Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt
-@@ -4,7 +4,7 @@ Allwinner SUN8I audio codec
- On Sun8i-A33 SoCs, the audio is separated in different parts:
- 	  - A DAI driver. It uses the "sun4i-i2s" driver which is
- 	  documented here:
--	  Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-+	  Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
- 	  - An analog part of the codec which is handled as PRCM registers.
- 	  See Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
- 	  - An digital part of the codec which is documented in this current
+diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
+index 0d767eb67fcf..9a051286f120 100644
+--- a/drivers/spi/spi-sprd-adi.c
++++ b/drivers/spi/spi-sprd-adi.c
+@@ -165,14 +165,16 @@ static int sprd_adi_read(struct sprd_adi *sadi, u32 reg_paddr, u32 *read_val)
+ 	int read_timeout = ADI_READ_TIMEOUT;
+ 	unsigned long flags;
+ 	u32 val, rd_addr;
+-	int ret;
+-
+-	ret = hwspin_lock_timeout_irqsave(sadi->hwlock,
+-					  ADI_HWSPINLOCK_TIMEOUT,
+-					  &flags);
+-	if (ret) {
+-		dev_err(sadi->dev, "get the hw lock failed\n");
+-		return ret;
++	int ret = 0;
++
++	if (sadi->hwlock) {
++		ret = hwspin_lock_timeout_irqsave(sadi->hwlock,
++						  ADI_HWSPINLOCK_TIMEOUT,
++						  &flags);
++		if (ret) {
++			dev_err(sadi->dev, "get the hw lock failed\n");
++			return ret;
++		}
+ 	}
+ 
+ 	/*
+@@ -219,7 +221,8 @@ static int sprd_adi_read(struct sprd_adi *sadi, u32 reg_paddr, u32 *read_val)
+ 	*read_val = val & RD_VALUE_MASK;
+ 
+ out:
+-	hwspin_unlock_irqrestore(sadi->hwlock, &flags);
++	if (sadi->hwlock)
++		hwspin_unlock_irqrestore(sadi->hwlock, &flags);
+ 	return ret;
+ }
+ 
+@@ -230,12 +233,14 @@ static int sprd_adi_write(struct sprd_adi *sadi, u32 reg_paddr, u32 val)
+ 	unsigned long flags;
+ 	int ret;
+ 
+-	ret = hwspin_lock_timeout_irqsave(sadi->hwlock,
+-					  ADI_HWSPINLOCK_TIMEOUT,
+-					  &flags);
+-	if (ret) {
+-		dev_err(sadi->dev, "get the hw lock failed\n");
+-		return ret;
++	if (sadi->hwlock) {
++		ret = hwspin_lock_timeout_irqsave(sadi->hwlock,
++						  ADI_HWSPINLOCK_TIMEOUT,
++						  &flags);
++		if (ret) {
++			dev_err(sadi->dev, "get the hw lock failed\n");
++			return ret;
++		}
+ 	}
+ 
+ 	ret = sprd_adi_drain_fifo(sadi);
+@@ -261,7 +266,8 @@ static int sprd_adi_write(struct sprd_adi *sadi, u32 reg_paddr, u32 val)
+ 	}
+ 
+ out:
+-	hwspin_unlock_irqrestore(sadi->hwlock, &flags);
++	if (sadi->hwlock)
++		hwspin_unlock_irqrestore(sadi->hwlock, &flags);
+ 	return ret;
+ }
+ 
+@@ -476,16 +482,26 @@ static int sprd_adi_probe(struct platform_device *pdev)
+ 	sadi->slave_pbase = res->start + ADI_SLAVE_OFFSET;
+ 	sadi->ctlr = ctlr;
+ 	sadi->dev = &pdev->dev;
+-	ret = of_hwspin_lock_get_id_byname(np, "adi");
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "can not get the hardware spinlock\n");
+-		goto put_ctlr;
+-	}
+-
+-	sadi->hwlock = devm_hwspin_lock_request_specific(&pdev->dev, ret);
+-	if (!sadi->hwlock) {
+-		ret = -ENXIO;
+-		goto put_ctlr;
++	ret = of_hwspin_lock_get_id(np, 0);
++	if (ret > 0 || (IS_ENABLED(CONFIG_HWSPINLOCK) && ret == 0)) {
++		sadi->hwlock =
++			devm_hwspin_lock_request_specific(&pdev->dev, ret);
++		if (!sadi->hwlock) {
++			ret = -ENXIO;
++			goto put_ctlr;
++		}
++	} else {
++		switch (ret) {
++		case -ENOENT:
++			dev_info(&pdev->dev, "no hardware spinlock supplied\n");
++			break;
++		default:
++			dev_err(&pdev->dev,
++				"failed to find hwlock id, %d\n", ret);
++			/* fall-through */
++		case -EPROBE_DEFER:
++			goto put_ctlr;
++		}
+ 	}
+ 
+ 	sprd_adi_hw_init(sadi);
 -- 
 2.20.1
