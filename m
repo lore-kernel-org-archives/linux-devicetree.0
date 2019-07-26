@@ -1,38 +1,70 @@
-Return-Path: <SRS0=OQoQ=VQ=pengutronix.de=l.stach@kernel.org>
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 2/3] Revert "usb: usb251xb: Add US port lanes inversion property"
-Date: Fri, 19 Jul 2019 10:44:06 +0200
-Message-Id: <20190719084407.28041-2-l.stach@pengutronix.de>
-In-Reply-To: <20190719084407.28041-1-l.stach@pengutronix.de>
-References: <20190719084407.28041-1-l.stach@pengutronix.de>
+Return-Path: <SRS0=dsAE=VX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.codeaurora.org ([198.145.29.96]:57732 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfGZJXl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2019 05:23:41 -0400
+From: Govind Singh <govinds@codeaurora.org>
+Subject: [PATCH v5 0/7] Add non PAS wcss Q6 support for QCS404
+Date: Fri, 26 Jul 2019 14:53:25 +0530
+Message-Id: <20190726092332.25202-1-govinds@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: Richard Leitner <richard.leitner@skidata.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Serge Semin <fancer.lancer@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, patchwork-lst@pengutronix.de
+Sender: devicetree-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: andy.gross@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This property isn't needed and not yet used anywhere. The swap-dx-lanes
-property is perfectly fine for doing the swap on the upstream port
-lanes.
+Add non PAS(Peripheral Authentication System) WCSS remoteproc
+driver support and wcss clock/reset controls for QCS404 SOC.
+Add WCSS q6 bootup and shutdown sequence handled from
+Application Processor SubSystem(APSS).
 
-CC: stable@vger.kernel.org #5.2
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
----
- drivers/usb/misc/usb251xb.c | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index 4d6ae3795a88..119aeb658c81 100644
---- a/drivers/usb/misc/usb251xb.c
-+++ b/drivers/usb/misc/usb251xb.c
-@@ -574,8 +574,6 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 	hub->port_swap = USB251XB_DEF_PORT_SWAP;
- 	usb251xb_get_ports_field(hub, "swap-dx-lanes", data->port_cnt,
- 				 &hub->port_swap);
--	if (of_get_property(np, "swap-us-lanes", NULL))
--		hub->port_swap |= BIT(0);
- 
- 	/* The following parameters are currently not exposed to devicetree, but
- 	 * may be as soon as needed.
+Changes since v4:
+ removed QDSP6SS clock controls and moved to wcss rproc.
+ renamed wcsccc to q6sstopcc.
+ cleanup/refactoring.
+
+Changes since v3:
+ dt binding cleanup.
+ Fixed remoteproc recovery.
+ Added remoteproc dump support.
+ wcsscc cleanup/refactoring.
+
+Changes since v2:
+ Removed unused properties.
+ Refactored code to have common logic b/w ipq8074 and QCS404, wherever possible.
+ Added compatible example.
+ Removed wcss-protected bool.
+
+Changes since v1:
+  Corrected clock names as per comments in v1 patch.
+
+Govind Singh (7):
+  clk: qcom: Add WCSS gcc clock control for QCS404
+  dt-bindings: clock: qcom: Add QCOM Q6SSTOP clock controller bindings
+  clk: qcom: define probe by index API as common API
+  clk: qcom: Add Q6SSTOP clock controller for QCS404
+  remoteproc: qcom: wcss: populate hardcoded param using driver data
+  remoteproc: qcom: wcss: Add non pas wcss Q6 support for QCS404
+  remoteproc: qcom: wcss: explicitly request exclusive reset control
+
+ .../bindings/clock/qcom,q6sstopcc.txt         |  26 +
+ drivers/clk/qcom/Kconfig                      |   8 +
+ drivers/clk/qcom/Makefile                     |   1 +
+ drivers/clk/qcom/common.c                     |  20 +
+ drivers/clk/qcom/common.h                     |   2 +
+ drivers/clk/qcom/gcc-qcs404.c                 |  30 +
+ drivers/clk/qcom/lpasscc-sdm845.c             |  23 +-
+ drivers/clk/qcom/q6sstop-qcs404.c             | 223 +++++++
+ drivers/remoteproc/qcom_q6v5_wcss.c           | 599 ++++++++++++++++--
+ include/dt-bindings/clock/qcom,gcc-qcs404.h   |   3 +
+ .../dt-bindings/clock/qcom,q6sstopcc-qcs404.h |  18 +
+ 11 files changed, 890 insertions(+), 63 deletions(-)
+ create mode 100755 Documentation/devicetree/bindings/clock/qcom,q6sstopcc.txt
+ create mode 100644 drivers/clk/qcom/q6sstop-qcs404.c
+ create mode 100644 include/dt-bindings/clock/qcom,q6sstopcc-qcs404.h
+
 -- 
-2.20.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
