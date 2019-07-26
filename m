@@ -1,51 +1,54 @@
-From: Marek Vasut <marex@denx.de>
-Subject: [PATCH V3 1/3] dt-bindings: net: dsa: ksz: document Microchip KSZ87xx family switches
-Date: Fri, 26 Jul 2019 18:23:06 +0200
-Message-ID: <20190726162308.16764-2-marex@denx.de>
-References: <20190726162308.16764-1-marex@denx.de>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: fix -Wall W=1 compilation warnings for
+ can1_sleep pinctrl
+Date: Fri, 26 Jul 2019 18:27:01 +0200
+Message-ID: <8cb628b9-dbbf-98d6-e09a-2ecc082315d4@st.com>
+References: <1561972686-23281-1-git-send-email-erwan.leray@st.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190726162308.16764-1-marex@denx.de>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: Marek Vasut <marex@denx.de>, Andrew Lunn <andrew@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Tristram Ha <Tristram.Ha@microchip.com>, Vivien Didelot <vivien.didelot@gmail.com>, Woojung Huh <woojung.huh@microchip.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1561972686-23281-1-git-send-email-erwan.leray@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Erwan Le Ray <erwan.leray@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, bich.hemon@st.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document Microchip KSZ87xx family switches. These include
-KSZ8765 - 5 port switch
-KSZ8794 - 4 port switch
-KSZ8795 - 5 port switch
+Hi Erwan		
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Tristram Ha <Tristram.Ha@microchip.com>
-Cc: Vivien Didelot <vivien.didelot@gmail.com>
-Cc: Woojung Huh <woojung.huh@microchip.com>
-Cc: devicetree@vger.kernel.org
----
-V2: No change
-V3: No change
----
- Documentation/devicetree/bindings/net/dsa/ksz.txt | 3 +++
- 1 file changed, 3 insertions(+)
+On 7/1/19 11:18 AM, Erwan Le Ray wrote:
+> Fix compilations warnings detected by -Wall W=1 compilation option:
+> - node has a unit name, but no reg property
+> 
+> Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> index 140a983..ce98fd8 100644
+> --- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> @@ -427,7 +427,7 @@
+>   				};
+>   			};
+>   
+> -			m_can1_sleep_pins_a: m_can1-sleep@0 {
+> +			m_can1_sleep_pins_a: m_can1-sleep-0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('H', 13, ANALOG)>, /* CAN1_TX */
+>   						 <STM32_PINMUX('I', 9, ANALOG)>; /* CAN1_RX */
+> 
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-index 4ac21cef370e..5e8429b6f9ca 100644
---- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-@@ -5,6 +5,9 @@ Required properties:
- 
- - compatible: For external switch chips, compatible string must be exactly one
-   of the following:
-+  - "microchip,ksz8765"
-+  - "microchip,ksz8794"
-+  - "microchip,ksz8795"
-   - "microchip,ksz9477"
-   - "microchip,ksz9897"
-   - "microchip,ksz9896"
--- 
-2.20.1
+Thanks for cleaning the STM32 DT. Applied on stm32-next. Note that I 
+changed commit title to indicate which STM32 platform is targeted by 
+this patch.
+
+Regards
+Alex
