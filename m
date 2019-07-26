@@ -1,178 +1,57 @@
-From: Jungo Lin <jungo.lin@mediatek.com>
-Subject: Re: [RFC,v3 8/9] media: platform: Add Mediatek ISP P1 SCP
- communication
-Date: Fri, 26 Jul 2019 16:07:17 +0800
-Message-ID: <1564128437.1212.615.camel@mtksdccf07>
-References: <jungo.lin@mediatek.com>
- <20190611035344.29814-1-jungo.lin@mediatek.com>
- <20190611035344.29814-9-jungo.lin@mediatek.com>
- <20190710095827.GC181405@chromium.org>
- <1563675513.1212.444.camel@mtksdccf07>
- <CAAFQd5BT7M425AbFicYuX+wr-twgS_cxQ937+Rgxo6Y2fA6_gA@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 00/14] Add support for QCOM Core Power Reduction
+Date: Fri, 26 Jul 2019 13:38:23 +0530
+Message-ID: <20190726080823.xwhxagv5iuhudmic@vireshk-i7>
+References: <20190725104144.22924-1-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAAFQd5BT7M425AbFicYuX+wr-twgS_cxQ937+Rgxo6Y2fA6_gA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: devicetree@vger.kernel.org, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <sean.cheng@mediatek.com>, Frederic Chen =?UTF-8?Q?=28=E9=99=B3=E4=BF=8A=E5=85=83=29?= <frederic.chen@mediatek.com>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <rynn.wu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Rob Herring <robh@kernel.org>, Ryan Yu =?UTF-8?Q?=28=E4=BD=99=E5=AD=9F=E4=BF=AE=29?= <ryan.yu@mediatek.com>, Frankie Chiu =?UTF-8?Q?=28=E9=82=B1=E6=96=87=E5=87=B1=29?= <frankie.chiu@mediatek.com>, Hans Verkuil <hverkuil@xs4all.nl>, ddavenport@chromium.org, Sj Huang <sj.huang@mediatek.com>, "moderated
- list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, list@263.net:IOMMU DRIVERS <iommu@lists.li
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190725104144.22924-1-niklas.cassel@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Tomasz:
-
-On Thu, 2019-07-25 at 19:56 +0900, Tomasz Figa wrote:
-> Hi Jungo,
+On 25-07-19, 12:41, Niklas Cassel wrote:
+> This series adds support for Core Power Reduction (CPR), a form of
+> Adaptive Voltage Scaling (AVS), found on certain Qualcomm SoCs.
 > 
-> On Sun, Jul 21, 2019 at 11:18 AM Jungo Lin <jungo.lin@mediatek.com> wrote:
-> [snip]
-> > > > +           wake_up_interruptible(&isp_ctx->composer_tx_thread.wq);
-> > > > +           isp_ctx->composer_tx_thread.thread = NULL;
-> > > > +   }
-> > > > +
-> > > > +   if (isp_ctx->composer_deinit_thread.thread) {
-> > > > +           wake_up(&isp_ctx->composer_deinit_thread.wq);
-> > > > +           isp_ctx->composer_deinit_thread.thread = NULL;
-> > > > +   }
-> > > > +   mutex_unlock(&isp_ctx->lock);
-> > > > +
-> > > > +   pm_runtime_put_sync(&p1_dev->pdev->dev);
-> > >
-> > > No need to use the sync variant.
-> > >
-> >
-> > We don't get this point. If we will call pm_runtime_get_sync in
-> > mtk_isp_hw_init function, will we need to call
-> > pm_runtime_put_sync_autosuspend in mtk_isp_hw_release in next patch?
-> > As we know, we should call runtime pm functions in pair.
-> >
+> This series is based on top of the qcs404 cpufreq patch series that
+> hasn't landed yet:
+> https://patchwork.kernel.org/project/linux-arm-msm/list/?series=137809
 > 
-> My point is that pm_runtime_put_sync() is only needed if one wants the
-> runtime count to be decremented after the function returns. Normally
-> there is no need to do so and one would call pm_runtime_put(), or if
-> autosuspend is used, pm_runtime_put_autosuspend() (note there is no
-> "sync" in the name).
+> CPR is a technology that reduces core power on a CPU or on other device.
+> It reads voltage settings from efuses (that have been written in
+> production), it uses these voltage settings as initial values, for each
+> OPP.
 > 
-> [snip]
-
-Ok, got your point.
-We will change to use pm_runtime_put_autosuspend() which has ASYNC flag.
-
-> > > +static void isp_composer_handler(void *data, unsigned int len, void *priv)
-> > > > +{
-> > > > +   struct mtk_isp_p1_ctx *isp_ctx = (struct mtk_isp_p1_ctx *)priv;
-> > > > +   struct isp_p1_device *p1_dev = p1_ctx_to_dev(isp_ctx);
-> > > > +   struct device *dev = &p1_dev->pdev->dev;
-> > > > +   struct mtk_isp_scp_p1_cmd *ipi_msg;
-> > > > +
-> > > > +   ipi_msg = (struct mtk_isp_scp_p1_cmd *)data;
-> > >
-> > > Should we check that len == sizeof(*ipi_msg)? (Or at least >=, if data could
-> > > contain some extra bytes at the end.)
-> > >
-> >
-> > The len parameter is the actual sending bytes from SCP to kernel.
-> > In the runtime, it is only 6 bytes for isp_ack_info command
-> > However, sizeof(*ipi_msg) is large due to struct mtk_isp_scp_p1_cmd is
-> > union structure.
-> >
+> After moving to a certain OPP, CPR monitors dynamic factors such as
+> temperature, etc. and adjusts the voltage for that frequency accordingly
+> to save power and meet silicon characteristic requirements.
 > 
-> That said we still should check if len is enough to cover the data
-> we're accessing below.
+> This driver has been developed together with Jorge Ramirez-Ortiz, and
+> is based on an RFC by Stephen Boyd[1], which in turn is based on work
+> by others on codeaurora.org[2].
 > 
-
-Ok, we will add the len checking before accessing the data.
-
-> > > > +
-> > > > +   if (ipi_msg->cmd_id != ISP_CMD_ACK)
-> > > > +           return;
-> > > > +
-> > > > +   if (ipi_msg->ack_info.cmd_id == ISP_CMD_FRAME_ACK) {
-> > > > +           dev_dbg(dev, "ack frame_num:%d",
-> > > > +                   ipi_msg->ack_info.frame_seq_no);
-> > > > +           atomic_set(&isp_ctx->composed_frame_id,
-> > > > +                      ipi_msg->ack_info.frame_seq_no);
-> > >
-> > > I suppose we are expecting here that ipi_msg->ack_info.frame_seq_no would be
-> > > just isp_ctx->composed_frame_id + 1, right? If not, we probably dropped some
-> > > frames and we should handle that somehow.
-> > >
-> >
-> > No, we use isp_ctx->composed_frame_id to save which frame sequence
-> > number are composed done in SCP. In new design, we will move this from
-> > isp_ctx to p1_dev.
+> [1] https://lkml.org/lkml/2015/9/18/833
+> [2] https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/regulator/cpr-regulator.c?h=msm-3.10
 > 
-> But we compose the frames in order, don't we? Wouldn't every composed
-> frame would be just previous frame ID + 1?
-> 
-> [snip]
+> Changes since V1:
+> Added a new patch implementing dev_pm_opp_find_level_exact() in order to
+> make the CPR OPP table in device tree cleaner.
+> For more detailed changes, check the "Changes since V1" as comments in
+> the individual patches, where applicable.
 
-Yes, we compose the frames in order.
-At the same time, we already increased "frame ID + 1" in
-mtk_isp_req_enqueue() for each new request before sending to SCP for
-composing. After receiving the ACK from SCP, we think the frame ID is
-composed done and save by isp_ctx->composed_frame_id(v3).
+Applied patches [1-9/14] to cpufreq and OPP trees and done some
+reordering as well to keep all binding patches together.
 
-[RFC v3]
-void mtk_isp_req_enqueue(struct device *dev, struct media_request *req)
-{
-	...
-	frameparams.frame_seq_no = isp_ctx->frame_seq_no++;
+Rob's Ack is missing on two of the binding patches and I will add them
+later once he provides it.
 
-[RFC v4]
-void mtk_isp_req_enqueue(struct mtk_cam_dev *cam,
-			 struct mtk_cam_dev_request *req)
-{
-	struct mtk_isp_p1_device *p1_dev = dev_get_drvdata(cam->dev);
+Everything should be available here for you to base rest of the stuff.
 
-	/* Accumulated frame sequence number */
-	req->frame_params.frame_seq_no = ++p1_dev->enqueue_frame_seq_no;
+git://git.kernel.org/pub/scm/linux/kernel/git/vireshk/pm.git cpufreq/arm/linux-next
 
- 
-
-> > > > +void isp_composer_hw_init(struct device *dev)
-> > > > +{
-> > > > +   struct mtk_isp_scp_p1_cmd composer_tx_cmd;
-> > > > +   struct isp_p1_device *p1_dev = get_p1_device(dev);
-> > > > +   struct mtk_isp_p1_ctx *isp_ctx = &p1_dev->isp_ctx;
-> > > > +
-> > > > +   memset(&composer_tx_cmd, 0, sizeof(composer_tx_cmd));
-> > > > +   composer_tx_cmd.cmd_id = ISP_CMD_INIT;
-> > > > +   composer_tx_cmd.frameparam.hw_module = isp_ctx->isp_hw_module;
-> > > > +   composer_tx_cmd.frameparam.cq_addr.iova = isp_ctx->scp_mem_iova;
-> > > > +   composer_tx_cmd.frameparam.cq_addr.scp_addr = isp_ctx->scp_mem_pa;
-> > >
-> > > Should we also specify the size of the buffer? Otherwise we could end up
-> > > with some undetectable overruns.
-> > >
-> >
-> > The size of SCP composer's memory is fixed to 0x200000.
-> > Is it necessary to specify the size of this buffer?
-> >
-> > #define MTK_ISP_COMPOSER_MEM_SIZE 0x200000
-> >
-> > ptr = dma_alloc_coherent(p1_dev->cam_dev.smem_dev,
-> >                         MTK_ISP_COMPOSER_MEM_SIZE, &addr, GFP_KERNEL);
-> >
-> 
-> Okay, but please add a comment saying that this is an implicit
-> requirement of the firmware.
-> 
-> Best regards,
-> Tomasz
-
-Ok, we will add comments.
-
-Best regards,
-
-
-Jungo
+-- 
+viresh
