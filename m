@@ -1,150 +1,248 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH 00/15] thermal: qcom: tsens: Add interrupt support
-Date: Fri, 26 Jul 2019 07:29:54 -0400
-Message-ID: <20190726112954.GA3984@onstation.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
- <20190726103605.GB3327@onstation.org>
- <CAHLCerOs3cMQrWrYk7F_bnxr_nxJ-nsRL8oOGALU63ySqmLaig@mail.gmail.com>
+From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Subject: Re: [RFC PATCH v2 0/4] Input: mpr121-polled: Add polled driver for
+ MPR121
+Date: Fri, 26 Jul 2019 13:31:31 +0200
+Message-ID: <dcee1139-c53f-5ea0-f387-a3aa5a9bf39f@ysoft.com>
+References: <1558098773-47416-1-git-send-email-michal.vokac@ysoft.com>
+ <20190521053705.GI183429@dtor-ws>
+ <ef172b24-cd27-5bb0-d8b1-718f835d0647@ysoft.com>
+ <20190725085753.GA26665@penguin>
+ <ac436c3c-fa89-f777-85b2-f38adf842e10@ysoft.com>
+ <20190725144009.GA27432@penguin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHLCerOs3cMQrWrYk7F_bnxr_nxJ-nsRL8oOGALU63ySqmLaig@mail.gmail.com>
+In-Reply-To: <20190725144009.GA27432@penguin>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Andy Gross <agross@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Amit,
-
-On Fri, Jul 26, 2019 at 04:40:16PM +0530, Amit Kucheria wrote:
-> > The device tree nodes appear in sysfs:
-> >
-> > / # ls -1 /sys/class/thermal/
-> > cooling_device0
-> > cooling_device1
-> > thermal_zone0
-> > thermal_zone1
-> > thermal_zone2
-> > thermal_zone3
-> > thermal_zone4
-> > thermal_zone5
-> > thermal_zone6
-> > thermal_zone7
-> > thermal_zone8
-> > thermal_zone9
+On 25. 07. 19 16:40, Dmitry Torokhov wrote:
+> On Thu, Jul 25, 2019 at 02:58:02PM +0200, Michal Vokáč wrote:
+>> On 25. 07. 19 10:57, Dmitry Torokhov wrote:
+>>> Hi Michal,
+>>>
+>>> On Tue, May 21, 2019 at 08:51:17AM +0200, Michal Vokáč wrote:
+>>>> On 21. 05. 19 7:37, Dmitry Torokhov wrote:
+>>>>> Hi Michal,
+>>>>>
+>>>>> On Fri, May 17, 2019 at 03:12:49PM +0200, Michal Vokáč wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> I have to deal with a situation where we have a custom i.MX6 based
+>>>>>> platform in production that uses the MPR121 touchkey controller.
+>>>>>> Unfortunately the chip is connected using only the I2C interface.
+>>>>>> The interrupt line is not used. Back in 2015 (Linux v3.14), my
+>>>>>> colleague modded the existing mpr121_touchkey.c driver to use polling
+>>>>>> instead of interrupt.
+>>>>>>
+>>>>>> For quite some time yet I am in a process of updating the product from
+>>>>>> the ancient Freescale v3.14 kernel to the latest mainline and pushing
+>>>>>> any needed changes upstream. The DT files for our imx6dl-yapp4 platform
+>>>>>> already made it into v5.1-rc.
+>>>>>>
+>>>>>> I rebased and updated our mpr121 patch to the latest mainline.
+>>>>>> It is created as a separate driver, similarly to gpio_keys_polled.
+>>>>>>
+>>>>>> The I2C device is quite susceptible to ESD. An ESD test quite often
+>>>>>> causes reset of the chip or some register randomly changes its value.
+>>>>>> The [PATCH 3/4] adds a write-through register cache. With the cache
+>>>>>> this state can be detected and the device can be re-initialied.
+>>>>>>
+>>>>>> The main question is: Is there any chance that such a polled driver
+>>>>>> could be accepted? Is it correct to implement it as a separate driver
+>>>>>> or should it be done as an option in the existing driver? I can not
+>>>>>> really imagine how I would do that though..
+>>>>>>
+>>>>>> There are also certain worries that the MPR121 chip may no longer be
+>>>>>> available in nonspecifically distant future. In case of EOL I will need
+>>>>>> to add a polled driver for an other touchkey chip. May it be already
+>>>>>> in mainline or a completely new one.
+>>>>>
+>>>>> I think that my addition of input_polled_dev was ultimately a wrong
+>>>>> thing to do. I am looking into enabling polling mode for regular input
+>>>>> devices as we then can enable polling mode in existing drivers.
+>>>>
+>>>> OK, that sounds good. Especially when one needs to switch from one chip
+>>>> to another that is already in tree, the need for a whole new polling
+>>>> driver is eliminated.
+>>>
+>>> Could you please try the patch below and see if it works for your use
+>>> case? Note that I have not tried running it, but it compiles so it must
+>>> be good ;)
+>>
+>> Hi Dmitry,
+>> Thank you very much for the patch!
+>> I gave it a shot and it seems you forgot to add the input-poller.h file
+>> to the patch.. it does not compile on my side :(
 > 
-> Looks good. What are the contents of the files inside the two
-> cooling_device directories? The output of the following command would
-> be nice:
+> Oops ;) Please see the updated patch below.
+
+Thank you, now it is (almost) good as you said :D
+
+>>
+>>> Input: add support for polling to input devices
+>>>
+>>> From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>>>
+>>> Separating "normal" and "polled" input devices was a mistake, as often we want
+>>> to allow the very same device work on both interrupt-driven and polled mode,
+>>> depending on the board on which the device is used.
+>>>
+>>> This introduces new APIs:
+>>>
+>>> - input_setup_polling
+>>> - input_set_poll_interval
+>>> - input_set_min_poll_interval
+>>> - input_set_max_poll_interval
+>>>
+>>> These new APIs allow switching an input device into polled mode with sysfs
+>>> attributes matching drivers using input_polled_dev APIs that will be eventually
+>>> removed.
+>>
+>> After reading this I am not really sure what else needs to be done
+>> to test/use the poller. I suspect I need to modify the input device
+>> driver (mpr121_touchkey.c in my case) like this:
+>>
+>> If the interrupt gpio is not provided in DT, the device driver probe
+>> function should:
+>>   - not request the threaded interrupt
+>>   - call input_setup_polling and provide it with poll_fn
+>>     Can the mpr_touchkey_interrupt function be used as is for this
+>>     purpose? The only problem I see is it returns IRQ_HANDLED.
 > 
-> $ grep "" cooling_device?/*
-
-/sys/class/thermal # grep "" cooling_device?/*
-cooling_device0/cur_state:100000
-cooling_device0/max_state:2500000
-cooling_device0/type:smbb-usbin
-cooling_device1/cur_state:500000
-cooling_device1/max_state:2500000
-cooling_device1/type:smbb-dcin
-
-> > The various temperatures were in the upper 40s and I threw some work at
-> > all four CPU cores to warm up the phone and watched the various
-> > temperatures rise:
-> >
-> > / # for i in $(seq 0 9) ; do
-> > > TYPE=$(cat /sys/class/thermal/thermal_zone$i/type)
-> > > TEMP=$(cat /sys/class/thermal/thermal_zone$i/temp)
-> > > echo "$TYPE = $TEMP"
-> > > done
-> > cpu-thermal0 = 66000
-> > cpu-thermal1 = 66000
-> > cpu-thermal2 = 66000
-> > cpu-thermal3 = 66000
-> > q6-dsp-thermal = 60000
-> > modemtx-thermal = 57000
-> > video-thermal = 61000
-> > wlan-thermal = 65000
-> > gpu-thermal-top = 61000
-> > gpu-thermal-bottom = 59000
-> >
-> > To test the interrupt support, I lowered all of the temperature trips to
-> > 51C but I'm not sure where to read that notification. I assume one of
-> > the cooling devices or a governor should be started? Sorry but I haven't
-> > done any work in the thermal subsystem yet and I'm short on time this
-> > morning to investigate right now.
+> I'd factor out code suitable for polling from mpr_touchkey_interrupt()
+> and then do
 > 
-> For now, just checking if the tsens interrupt in /proc/interrupts
-> fires should be fine. I have another patch to add some information to
-> debugs that I'll send at some point.
+> static irqreturn_t mpr_touchkey_interrupt(...)
+> {
+> 	mpr_touchkey_report(...);
+> 	return IRQ_HANDLED;
+> }
+> 
 
-An interrupt fires as each thermal zone exceeds the trip temperature and
-an interrupt fires again when it goes below that temperature.
-Here's my new test script:
+Probably a trivial problem for experienced kernel hacker but I can not
+wrap my head around this - the interrupt handler takes the mpr121
+device id as an argument while the poller poll_fn takes struct input_dev.
 
-for i in $(seq 0 9) ; do
-	TYPE=$(cat /sys/class/thermal/thermal_zone$i/type)
-	TEMP=$(cat /sys/class/thermal/thermal_zone$i/temp)
-	TRIP=$(cat /sys/class/thermal/thermal_zone$i/trip_point_0_temp)
-	echo "$TYPE = $TEMP. trip = $TRIP"
-done
+I fail to figure out how to get the device id from the input device.
 
-# Warm the phone up
+Here is what I have:
 
-/sys/class/thermal # /temp.sh 
-cpu-thermal0 = 57000. trip = 51000
-cpu-thermal1 = 56000. trip = 51000
-cpu-thermal2 = 57000. trip = 51000
-cpu-thermal3 = 56000. trip = 51000
-q6-dsp-thermal = 51000. trip = 51000
-modemtx-thermal = 49000. trip = 51000
-video-thermal = 53000. trip = 51000
-wlan-thermal = 55000. trip = 51000
-gpu-thermal-top = 53000. trip = 51000
-gpu-thermal-bottom = 52000. trip = 51000
-
-/sys/class/thermal # grep tsens /proc/interrupts 
- 27:          8          0          0          0     GIC-0 216 Level     tsens
-
-# Let the phone cool off
-
-/sys/class/thermal # /temp.sh 
-cpu-thermal0 = 48000. trip = 51000
-cpu-thermal1 = 48000. trip = 51000
-cpu-thermal2 = 49000. trip = 51000
-cpu-thermal3 = 48000. trip = 51000
-q6-dsp-thermal = 47000. trip = 51000
-modemtx-thermal = 45000. trip = 51000
-video-thermal = 48000. trip = 51000
-wlan-thermal = 48000. trip = 51000
-gpu-thermal-top = 48000. trip = 51000
-gpu-thermal-bottom = 47000. trip = 51000
-
-/sys/class/thermal # grep tsens /proc/interrupts 
- 27:         19          0          0          0     GIC-0 216 Level     tsens
-
-> How well does cpufreq work on 8974? I haven't looked at it yet but
-> we'll need it for thermal throttling.
-
-I'm not sure how to tell if the frequency is dynamically changed during
-runtime on arm. x86-64 shows this information in /proc/cpuinfo. Here's
-the /proc/cpuinfo on the Nexus 5:
-
-/sys/class/thermal # cat /proc/cpuinfo 
-processor       : 0
-model name      : ARMv7 Processor rev 0 (v7l)
-BogoMIPS        : 38.40
-Features        : half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 evtstrm 
-CPU implementer : 0x51
-CPU architecture: 7
-CPU variant     : 0x2
-CPU part        : 0x06f
-CPU revision    : 0
-
-# 3 more CPUs like 0....
-
-Hardware        : Generic DT based system
-Revision        : 0000
-Serial          : 0000000000000000
-
-Brian
+diff --git a/drivers/input/keyboard/mpr121_touchkey.c b/drivers/input/keyboard/mpr121_touchkey.c
+index e9ceaa16b46a..1124f77ee10a 100644
+--- a/drivers/input/keyboard/mpr121_touchkey.c
++++ b/drivers/input/keyboard/mpr121_touchkey.c
+@@ -54,6 +54,10 @@
+  /* MPR121 has 12 keys */
+  #define MPR121_MAX_KEY_COUNT		12
+  
++#define MPR121_POLL_INTERVAL		50
++#define MPR121_MIN_POLL_INTERVAL	10
++#define MPR121_MAX_POLL_INTERVAL	200
++
+  struct mpr121_touchkey {
+  	struct i2c_client	*client;
+  	struct input_dev	*input_dev;
+@@ -115,9 +119,12 @@ static struct regulator *mpr121_vdd_supply_init(struct device *dev)
+  	return vdd_supply;
+  }
+  
+-static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
++static void mpr_touchkey_report(struct input_dev *dev)
+  {
+-	struct mpr121_touchkey *mpr121 = dev_id;
++	/*
++	 * TODO the input_dev dev needs to be converted to mpr121 device id.
++	 */
++	struct mpr121_touchkey *mpr121 = /* TODO */;
+  	struct i2c_client *client = mpr121->client;
+  	struct input_dev *input = mpr121->input_dev;
+  	unsigned long bit_changed;
+@@ -127,14 +134,14 @@ static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
+  	reg = i2c_smbus_read_byte_data(client, ELE_TOUCH_STATUS_1_ADDR);
+  	if (reg < 0) {
+  		dev_err(&client->dev, "i2c read error [%d]\n", reg);
+-		goto out;
++		return;
+  	}
+  
+  	reg <<= 8;
+  	reg |= i2c_smbus_read_byte_data(client, ELE_TOUCH_STATUS_0_ADDR);
+  	if (reg < 0) {
+  		dev_err(&client->dev, "i2c read error [%d]\n", reg);
+-		goto out;
++		return;
+  	}
+  
+  	reg &= TOUCH_STATUS_MASK;
+@@ -155,8 +162,17 @@ static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
+  
+  	}
+  	input_sync(input);
++}
++
++static irqreturn_t mpr_touchkey_interrupt(int irq, void *dev_id)
++{
++	/*
++	 * TODO
++	 * mpr_touchkey_report takes struct input_dev as an argument,
++	 * not the device id.
++	 */
++	mpr_touchkey_report(/* TODO */);
+  
+-out:
+  	return IRQ_HANDLED;
+  }
+  
+@@ -232,11 +248,6 @@ static int mpr_touchkey_probe(struct i2c_client *client,
+  	int error;
+  	int i;
+  
+-	if (!client->irq) {
+-		dev_err(dev, "irq number should not be zero\n");
+-		return -EINVAL;
+-	}
+-
+  	vdd_supply = mpr121_vdd_supply_init(dev);
+  	if (IS_ERR(vdd_supply))
+  		return PTR_ERR(vdd_supply);
+@@ -289,13 +300,27 @@ static int mpr_touchkey_probe(struct i2c_client *client,
+  		return error;
+  	}
+  
+-	error = devm_request_threaded_irq(dev, client->irq, NULL,
+-					  mpr_touchkey_interrupt,
+-					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+-					  dev->driver->name, mpr121);
+-	if (error) {
+-		dev_err(dev, "Failed to register interrupt\n");
+-		return error;
++	if (client->irq) {
++		error = devm_request_threaded_irq(dev, client->irq, NULL,
++						  mpr_touchkey_interrupt,
++						  IRQF_TRIGGER_FALLING |
++						  IRQF_ONESHOT,
++						  dev->driver->name, mpr121);
++		if (error) {
++			dev_err(dev, "Failed to register interrupt\n");
++			return error;
++		}
++	} else {
++		dev_dbg(dev, "invalid IRQ number, using polling mode\n");
++		error = input_setup_polling(input_dev, mpr_touchkey_report);
++		if (error)
++			return error;
++
++		input_set_poll_interval(input_dev, MPR121_POLL_INTERVAL);
++		input_set_min_poll_interval(input_dev,
++					    MPR121_MIN_POLL_INTERVAL);
++		input_set_max_poll_interval(input_dev,
++					    MPR121_MAX_POLL_INTERVAL);
+  	}
+  
+  	error = input_register_device(input_dev);
+--
