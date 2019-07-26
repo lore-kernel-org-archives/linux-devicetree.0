@@ -1,74 +1,255 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH v4 00/11] add thermal driver for h6
-Date: Fri, 26 Jul 2019 10:46:35 -0700
-Message-ID: <CA+E=qVdw+DG7Bj4xg5-wjatyHMH76q2usanZ7Ty6pGHuaA_=5Q@mail.gmail.com>
-References: <20190623164206.7467-1-tiny.windzz@gmail.com> <CA+E=qVfhDEQER2UTj65hR9erzej9Ey2FrUa9GV=iCFYsWZ2ztw@mail.gmail.com>
- <CA+E=qVdAUFJM27cNL6WRkk5moX=mEk7WUs6UBoX58Y7ove40oQ@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: imx6ul-kontron-n6310: Add Kontron
+ i.MX6UL N6310 SoM and boards
+Date: Fri, 26 Jul 2019 14:54:20 -0300
+Message-ID: <CAOMZO5BPT5Bj+gbgsq+bW5x_NToWqUtz8vmOOS9LyZg5J+CfHQ@mail.gmail.com>
+References: <20190726061705.14764-1-krzk@kernel.org>
+ <20190726061705.14764-2-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+E=qVdAUFJM27cNL6WRkk5moX=mEk7WUs6UBoX58Y7ove40oQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190726061705.14764-2-krzk@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Schrempf Frieder <frieder.schrempf@kontron.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Yangtao,
+Hi Krzysztof,
 
-Are you planning to send v5 anytime soon?
+On Fri, Jul 26, 2019 at 3:17 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-On Sat, Jul 13, 2019 at 11:01 AM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> On Wed, Jul 10, 2019 at 4:09 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
-> >
-> > On Sun, Jun 23, 2019 at 9:42 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
-> > >
-> > > This patchset add support for H3 and H6 thermal sensor.
-> > >
-> > > BTY, do a cleanup in thermal makfile.
-> > >
-> > > Yangtao Li (11):
-> > >   thermal: sun8i: add thermal driver for h6
-> > >   dt-bindings: thermal: add binding document for h6 thermal controller
-> > >   thermal: fix indentation in makefile
-> > >   thermal: sun8i: get ths sensor number from device compatible
-> > >   thermal: sun8i: rework for sun8i_ths_get_temp()
-> > >   thermal: sun8i: get ths init func from device compatible
-> > >   thermal: sun8i: rework for ths irq handler func
-> > >   thermal: sun8i: support ahb clocks
-> > >   thermal: sun8i: rework for ths calibrate func
-> > >   dt-bindings: thermal: add binding document for h3 thermal controller
-> > >   thermal: sun8i: add thermal driver for h3
-> >
-> > It would be nice to add dts changes to this series. It's unlikely that
-> > you'll get any "Tested-by" otherwise.
->
-> I added A64 support on top of this series, see
-> https://github.com/anarsoul/linux-2.6/tree/v5.2-thermal
->
-> Branch also contains patches to enable DVFS on A64, feel free to
-> cherry pick only those related to thermal driver if you want to
-> include A64 support into v5 series.
->
-> >
-> > >  .../bindings/thermal/sun8i-thermal.yaml       |  94 +++
-> > >  MAINTAINERS                                   |   7 +
-> > >  drivers/thermal/Kconfig                       |  14 +
-> > >  drivers/thermal/Makefile                      |   9 +-
-> > >  drivers/thermal/sun8i_thermal.c               | 534 ++++++++++++++++++
-> > >  5 files changed, 654 insertions(+), 4 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> > >  create mode 100644 drivers/thermal/sun8i_thermal.c
-> > >
-> > > ---
-> > > v4:
-> > > -add h3 support
-> > > -fix yaml file
-> > > ---
-> > > 2.17.1
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index 7294ac36f4c0..afb61a55e26f 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -161,6 +161,10 @@ properties:
+>          items:
+>            - enum:
+>                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
+> +              - kontron,n6310-som         # Kontron N6310 SOM
+> +              - kontron,n6310-s           # Kontron N6310 S Board
+> +              - kontron,n6310-s-43        # Kontron N6310 S 43 Board
+> +              - kontron,n6310-s-50        # Kontron N6310 S 50 Board
+
+These entries should be:
+       imx6ul-kontron-n6310-s.dtb
+       imx6ul-kontron-n6310-s-43.dtb
+       imx6ul-kontron-n6310-s-50.dtb
+
+> +       panel {
+> +               compatible = "admatec,t043c004800272t2a";
+
+I do not find this binding documented.
+
+> +&i2c4 {
+> +       gt911@5d {
+
+Node names should be generic according to the devicetree spec, so:
+
+touchscreen@5d
+
+> +               compatible = "goodix,gt928";
+> +               reg = <0x5d>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_cap_touch>;
+> +               interrupt-parent = <&gpio5>;
+> +               interrupts = <6 8>;
+
+It would be better to use a laber to indicate the irq type:
+
+interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
+
+> +               reset-gpios = <&gpio5 8 GPIO_ACTIVE_HIGH>;
+> +               irq-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
+
+Active high?
+
+Above you use "interrupts = <6 8>;" which means IRQ_TYPE_LEVEL_LOW.
+
+> +       };
+> +};
+> +
+> +&iomuxc {
+
+We tend to prefer putting iomuxc as the last node.
+
+> +       pinctrl_lcdif_dat: lcdifdatgrp {
+> +               fsl,pins = <
+> +                       MX6UL_PAD_LCD_DATA00__LCDIF_DATA00      0x79
+> +                       MX6UL_PAD_LCD_DATA01__LCDIF_DATA01      0x79
+> +                       MX6UL_PAD_LCD_DATA02__LCDIF_DATA02      0x79
+> +                       MX6UL_PAD_LCD_DATA03__LCDIF_DATA03      0x79
+> +                       MX6UL_PAD_LCD_DATA04__LCDIF_DATA04      0x79
+> +                       MX6UL_PAD_LCD_DATA05__LCDIF_DATA05      0x79
+> +                       MX6UL_PAD_LCD_DATA06__LCDIF_DATA06      0x79
+> +                       MX6UL_PAD_LCD_DATA07__LCDIF_DATA07      0x79
+> +                       MX6UL_PAD_LCD_DATA08__LCDIF_DATA08      0x79
+> +                       MX6UL_PAD_LCD_DATA09__LCDIF_DATA09      0x79
+> +                       MX6UL_PAD_LCD_DATA10__LCDIF_DATA10      0x79
+> +                       MX6UL_PAD_LCD_DATA11__LCDIF_DATA11      0x79
+> +                       MX6UL_PAD_LCD_DATA12__LCDIF_DATA12      0x79
+> +                       MX6UL_PAD_LCD_DATA13__LCDIF_DATA13      0x79
+> +                       MX6UL_PAD_LCD_DATA14__LCDIF_DATA14      0x79
+> +                       MX6UL_PAD_LCD_DATA15__LCDIF_DATA15      0x79
+> +                       MX6UL_PAD_LCD_DATA16__LCDIF_DATA16      0x79
+> +                       MX6UL_PAD_LCD_DATA17__LCDIF_DATA17      0x79
+> +                       MX6UL_PAD_LCD_DATA18__LCDIF_DATA18      0x79
+> +                       MX6UL_PAD_LCD_DATA19__LCDIF_DATA19      0x79
+> +                       MX6UL_PAD_LCD_DATA20__LCDIF_DATA20      0x79
+> +                       MX6UL_PAD_LCD_DATA21__LCDIF_DATA21      0x79
+> +                       MX6UL_PAD_LCD_DATA22__LCDIF_DATA22      0x79
+> +                       MX6UL_PAD_LCD_DATA23__LCDIF_DATA23      0x79
+> +               >;
+> +       };
+> +
+> +       pinctrl_lcdif_ctrl: lcdifctrlgrp {
+> +               fsl,pins = <
+> +                       MX6UL_PAD_LCD_CLK__LCDIF_CLK            0x79
+> +                       MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE      0x79
+> +                       MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC        0x79
+> +                       MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC        0x79
+> +                       MX6UL_PAD_LCD_RESET__LCDIF_RESET        0x79
+> +               >;
+> +       };
+> +
+> +       pinctrl_cap_touch: captouchgrp {
+> +               fsl,pins = <
+> +                       MX6UL_PAD_SNVS_TAMPER6__GPIO5_IO06      0x1b0b0 /* Touch Interrupt */
+> +                       MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07      0x1b0b0 /* Touch Reset */
+> +                       MX6UL_PAD_SNVS_TAMPER8__GPIO5_IO08      0x1b0b0 /* Touch Wake */
+> +               >;
+> +       };
+> +
+> +       pinctrl_pwm7: pwm7grp {
+> +               fsl,pins = <
+> +                       MX6UL_PAD_CSI_VSYNC__PWM7_OUT           0x110b0
+> +               >;
+> +       };
+> +};
+> +
+> +&lcdif {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_lcdif_dat
+> +                    &pinctrl_lcdif_ctrl>;
+
+Could fit into a single line.
+
+> +       panel {
+> +               compatible = "admatec,t070p133t0s301";
+
+Same here. Undocumented binding.
+
+> +               backlight = <&backlight>;
+> +
+> +               port {
+> +                       panel_in: endpoint {
+> +                               remote-endpoint = <&display_out>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&i2c4 {
+> +       gt911@5d {
+
+Same comments as previously apply.
+
+> +
+> +       regulators {
+
+No need to have this regulators indent level.
+
+> +               reg_3v3: regulator1 {
+
+You can place this one directly. The preferred format is:
+
+reg_3v3: regulator-reg-3v3 {
+
+> +&ecspi1 {
+> +       fsl,spi-num-chipselects = <1>;
+
+This property is obsoleted. Please remove it.
+
+> +       cs-gpios = <&gpio4 26 GPIO_ACTIVE_HIGH>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_ecspi1>;
+> +       status = "okay";
+> +
+> +       fram@0 {
+
+Generic name please. eeprom@0
+
+> +               compatible = "atmel,at25";
+
+Please use the recommended compatible scheme as per
+Documentation/devicetree/bindings/eeprom/at25.txt.
+
+> +               reg = <0>;
+> +               spi-max-frequency = <20000000>;
+> +               spi-cpha;
+> +               spi-cpol;
+> +               pagesize = <1>;
+> +               size = <8192>;
+> +               address-width = <16>;
+> +       };
+> +};
+
+
+> +&usbotg1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_usbotg1>;
+> +       dr_mode = "otg";
+> +       status = "okay";
+
+We prefer to put the 'status' property as the last one.
+
+> +       srp-disable;
+> +       hnp-disable;
+> +       adp-disable;
+> +       vbus-supply = <&reg_usb_otg1_vbus>;
+> +};
+
+> +/ {
+> +       model = "Kontron N6310 SOM";
+> +       compatible = "kontron,n6310-som", "fsl,imx6ul";
+> +
+> +       memory@80000000 {
+
+device_type = "memory"; is missing here.
+
+> +               reg = <0x80000000 0x10000000>;
+> +       };
+> +};
+> +
+> +&cpu0 {
+> +       clock-frequency = <528000000>;
+
+Is this one really needed?
+
+> +&ecspi2 {
+> +       cs-gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_ecspi2>;
+> +       status = "okay";
+> +
+> +       flash: mx25v80@0 {
+
+spi-flash@0
+
+> +&qspi {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_qspi>;
+> +       status = "okay";
+> +
+> +       flash0: w25m02gv@0 {
+
+generic name, please.
