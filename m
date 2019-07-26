@@ -1,139 +1,46 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v3 2/4] edac: Add support for Amazon's Annapurna Labs L1
- EDAC
-Date: Fri, 26 Jul 2019 17:49:31 +0100
-Message-ID: <a2dc6760-50e2-6e98-5b61-002836d92dd2@arm.com>
-References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
- <1563197049-12679-3-git-send-email-hhhawa@amazon.com>
+From: "Wang, Haiyue" <haiyue.wang@linux.intel.com>
+Subject: Re: [RFC PATCH 14/17] ipmi: kcs: Finish configuring ASPEED KCS device
+ before enable
+Date: Sat, 27 Jul 2019 01:04:51 +0800
+Message-ID: <29a2d999-23bd-8e95-a1b8-f00e25a11df5@linux.intel.com>
+References: <20190726053959.2003-1-andrew@aj.id.au>
+ <20190726053959.2003-15-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563197049-12679-3-git-send-email-hhhawa@amazon.com>
-Content-Language: en-GB
+In-Reply-To: <20190726053959.2003-15-andrew@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hanna Hawa <hhhawa@amazon.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, openipmi-developer@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Hanna,
-
-On 15/07/2019 14:24, Hanna Hawa wrote:
-> Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
-> report L1 errors.
-
-> diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
-> new file mode 100644
-> index 0000000..70510ea
-> --- /dev/null
-> +++ b/drivers/edac/al_l1_edac.c
-> @@ -0,0 +1,156 @@
-
-> +#include <linux/bitfield.h>
-
-You need <linux/smp.h> for on-each_cpu().
-
-> +#include "edac_device.h"
-> +#include "edac_module.h"
-
-You need <asm/sysreg.h> for the sys_reg() macro. The ARCH_ALPINE dependency doesn't stop
-this from being built on 32bit arm, where this sys_reg() won't work/exist.
-
-[...]
-
-> +static void al_l1_edac_cpumerrsr(void *arg)
-> +{
-> +	struct edac_device_ctl_info *edac_dev = arg;
-> +	int cpu, i;
-> +	u32 ramid, repeat, other, fatal;
-> +	u64 val = read_sysreg_s(ARM_CA57_CPUMERRSR_EL1);
-> +	char msg[AL_L1_EDAC_MSG_MAX];
-> +	int space, count;
-> +	char *p;
-> +	if (!(FIELD_GET(ARM_CA57_CPUMERRSR_VALID, val)))
-> +		return;
-> +	space = sizeof(msg);
-> +	p = msg;
-> +	count = snprintf(p, space, "CPU%d L1 %serror detected", cpu,
-> +			 (fatal) ? "Fatal " : "");
-> +	p += count;
-> +	space -= count;
-
-snprintf() will return the number of characters it would have generated, even if that is
-more than space. If this happen, space becomes negative, p points outside msg[] and msg[]
-isn't NULL terminated...
-
-It looks like you want scnprintf(), which returns the number of characters written to buf
-instead. (I don't see how 256 characters would be printed by this code)
-
-
-> +	switch (ramid) {
-> +	case ARM_CA57_L1_I_TAG_RAM:
-> +		count = snprintf(p, space, " RAMID='L1-I Tag RAM'");
-> +		break;
-> +	case ARM_CA57_L1_I_DATA_RAM:
-> +		count = snprintf(p, space, " RAMID='L1-I Data RAM'");
-> +		break;
-> +	case ARM_CA57_L1_D_TAG_RAM:
-> +		count = snprintf(p, space, " RAMID='L1-D Tag RAM'");
-> +		break;
-> +	case ARM_CA57_L1_D_DATA_RAM:
-> +		count = snprintf(p, space, " RAMID='L1-D Data RAM'");
-> +		break;
-> +	case ARM_CA57_L2_TLB_RAM:
-> +		count = snprintf(p, space, " RAMID='L2 TLB RAM'");
-> +		break;
-> +	default:
-> +		count = snprintf(p, space, " RAMID='unknown'");
-> +		break;
-> +	}
+ÔÚ 2019-07-26 13:39, Andrew Jeffery Ð´µÀ:
+> The currently interrupts are configured after the channel was enabled.
+>
+> Cc: Haiyue Wang<haiyue.wang@linux.intel.com>
+> Cc: Corey Minyard<minyard@acm.org>
+> Cc: Arnd Bergmann<arnd@arndb.de>
+> Cc: Greg Kroah-Hartman<gregkh@linuxfoundation.org>
+> Cc:openipmi-developer@lists.sourceforge.net
+> Signed-off-by: Andrew Jeffery<andrew@aj.id.au>
+> ---
+>   drivers/char/ipmi/kcs_bmc_aspeed.c | 7 ++++---
+>   1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/char/ipmi/kcs_bmc_aspeed.c b/drivers/char/ipmi/kcs_bmc_aspeed.c
+> index 3c955946e647..e3dd09022589 100644
+> --- a/drivers/char/ipmi/kcs_bmc_aspeed.c
+> +++ b/drivers/char/ipmi/kcs_bmc_aspeed.c
+> @@ -268,13 +268,14 @@ static int aspeed_kcs_probe(struct platform_device *pdev)
+>   	kcs_bmc->io_inputb = aspeed_kcs_inb;
+>   	kcs_bmc->io_outputb = aspeed_kcs_outb;
+>   
+> +	rc = aspeed_kcs_config_irq(kcs_bmc, pdev);
+> +	if (rc)
+> +		return rc;
 > +
-> +	p += count;
-> +	space -= count;
-> +	count = snprintf(p, space,
-> +			 " repeat=%d, other=%d (CPUMERRSR_EL1=0x%llx)",
-> +			 repeat, other, val);
-> +
-> +	for (i = 0; i < repeat; i++) {
-> +		if (fatal)
-> +			edac_device_handle_ue(edac_dev, 0, 0, msg);
-> +		else
-> +			edac_device_handle_ce(edac_dev, 0, 0, msg);
-> +	}
-> +
-> +	write_sysreg_s(0, ARM_CA57_CPUMERRSR_EL1);
-
-Writing 0 just after you've read the value would minimise the window where repeat could
-have increased behind your back, or another error was counted as other, when it could have
-been reported more accurately.
+>   	dev_set_drvdata(dev, kcs_bmc);
 
 
-> +}
-
-
-> +static int al_l1_edac_probe(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *edac_dev;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	edac_dev = edac_device_alloc_ctl_info(0, (char *)dev_name(dev), 1, "L",
-> +					      1, 1, NULL, 0,
-> +					      edac_device_alloc_index());
-> +	if (IS_ERR(edac_dev))
-
-edac_device_alloc_ctl_info() returns NULL, or dev_ctl, which comes from kzalloc(). I think
-you need to check for NULL here, IS_ERR() only catches the -errno range. (there is an
-IS_ERR_OR_NULL() if you really needed both)
-
-
-> +		return -ENOMEM;
-
-
-With the header-includes and edac_device_alloc_ctl_info() NULL check:
-Reviewed-by: James Morse <james.morse@arm.com>
-
-
-Thanks,
-
-James
+Thanks for catching this, for not miss the data.
