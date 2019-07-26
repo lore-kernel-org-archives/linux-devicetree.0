@@ -1,490 +1,389 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: Re: [PATCH v2 2/2] mmc: Add support for the ASPEED SD controller
-Date: Fri, 26 Jul 2019 10:22:33 +0930
-Message-ID: <7cd30f3d-43fd-42da-9301-091eb2625c65@www.fastmail.com>
-References: <20190712033214.24713-1-andrew@aj.id.au>
- <20190712033214.24713-3-andrew@aj.id.au>
- <d6f7fdf2-07ed-354a-ca29-f3175623679c@intel.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 3/5] devfreq: exynos-bus: convert to use
+ dev_pm_opp_set_rate()
+Date: Fri, 26 Jul 2019 10:02:14 +0900
+Message-ID: <605a07ce-1b2c-c19c-87ae-23a576951263@samsung.com>
+References: <20190719150535.15501-1-k.konieczny@partner.samsung.com>
+        <CGME20190719150555eucas1p197adc3c58e45c53137fd70cadbfae60e@eucas1p1.samsung.com>
+        <20190719150535.15501-4-k.konieczny@partner.samsung.com>
+        <beb2455b-7f9e-35df-d524-01f4f51a1c62@samsung.com>
+        <ed80b6e3-5b40-18ce-ca1e-65520edf516e@partner.samsung.com>
+        <CAGTfZH1OaYpTheQxWQs7Fs4qcJEGtXQHESLg0CJSsL=dmROpQw@mail.gmail.com>
+        <4f62d397-0f62-f81d-8b76-b73c6fbee93d@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <d6f7fdf2-07ed-354a-ca29-f3175623679c@intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Adrian Hunter <adrian.hunter@intel.com>, linux-mmc <linux-mmc@vger.kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-aspeed@lists.ozlabs.org, Ryan Chen <ryanchen.aspeed@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4f62d397-0f62-f81d-8b76-b73c6fbee93d@partner.samsung.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kamil Konieczny <k.konieczny@partner.samsung.com>, cwchoi00@gmail.com
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-
-On Thu, 25 Jul 2019, at 22:49, Adrian Hunter wrote:
-> On 12/07/19 6:32 AM, Andrew Jeffery wrote:
-> > Add a minimal driver for ASPEED's SD controller, which exposes two
-> > SDHCIs.
-> > 
-> > The ASPEED design implements a common register set for the SDHCIs, and
-> > moves some of the standard configuration elements out to this common
-> > area (e.g. 8-bit mode, and card detect configuration which is not
-> > currently supported).
-> > 
-> > The SD controller has a dedicated hardware interrupt that is shared
-> > between the slots. The common register set exposes information on which
-> > slot triggered the interrupt; early revisions of the patch introduced an
-> > irqchip for the register, but reality is it doesn't behave as an
-> > irqchip, and the result fits awkwardly into the irqchip APIs. Instead
-> > I've taken the simple approach of using the IRQ as a shared IRQ with
-> > some minor performance impact for the second slot.
-> > 
-> > Ryan was the original author of the patch - I've taken his work and
-> > massaged it to drop the irqchip support and rework the devicetree
-> > integration. The driver has been smoke tested under qemu against a
-> > minimal SD controller model and lightly tested on an ast2500-evb.
-> > 
-> > Signed-off-by: Ryan Chen <ryanchen.aspeed@gmail.com>
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+On 19. 7. 26. 오전 12:15, Kamil Konieczny wrote:
+> Hi,
 > 
-> Looks fine.  Few minor comments below.
+> On 25.07.2019 16:53, Chanwoo Choi wrote:
+>> 2019년 7월 25일 (목) 오후 11:19, Kamil Konieczny
+>> <k.konieczny@partner.samsung.com>님이 작성:
+>>>
+>>> Hi Chanwoo,
+>>>
+>>> On 25.07.2019 12:17, Chanwoo Choi wrote:
+>>>> Hi Kamil,
+>>>>
+>>>> Looks good to me. But, I have some comment. Please check them.
+>>>
+>>> Thank you for review, please see answers below.
+>>>
+>>>> After this patch, exynos_bus_target is perfectly same with
+>>>> exynos_bus_passive_target. The exynos_bus_passive_target() could be removed.
+>>>
+>>> Ok, I will make it in separate patch to simplify review process.
+>>
+>> I think you can just modify this patch without any separate patch.
 > 
-> > ---
-> > In v2:
-> > 
-> > * Drop unnecesasry MODULE_DEVICE_TABLE()
-> > * Rename sd-controller compatible
-> > * Add IBM copyright
-> > * Drop unnecesary data assignment in of match table entries
-> > * Derive the slot from the SDHCI offset
-> > 
-> >  drivers/mmc/host/Kconfig           |  12 ++
-> >  drivers/mmc/host/Makefile          |   1 +
-> >  drivers/mmc/host/sdhci-of-aspeed.c | 326 +++++++++++++++++++++++++++++
-> >  3 files changed, 339 insertions(+)
-> >  create mode 100644 drivers/mmc/host/sdhci-of-aspeed.c
-> > 
-> > diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> > index 931770f17087..2bb5e1264b3d 100644
-> > --- a/drivers/mmc/host/Kconfig
-> > +++ b/drivers/mmc/host/Kconfig
-> > @@ -154,6 +154,18 @@ config MMC_SDHCI_OF_ARASAN
-> >  
-> >  	  If unsure, say N.
-> >  
-> > +config MMC_SDHCI_OF_ASPEED
-> > +	tristate "SDHCI OF support for the ASPEED SDHCI controller"
-> > +	depends on MMC_SDHCI_PLTFM
-> > +	depends on OF
-> > +	help
-> > +	  This selects the ASPEED Secure Digital Host Controller Interface.
-> > +
-> > +	  If you have a controller with this interface, say Y or M here. You
-> > +	  also need to enable an appropriate bus interface.
-> > +
-> > +	  If unsure, say N.
-> > +
-> >  config MMC_SDHCI_OF_AT91
-> >  	tristate "SDHCI OF support for the Atmel SDMMC controller"
-> >  	depends on MMC_SDHCI_PLTFM
-> > diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> > index 73578718f119..390ee162fe71 100644
-> > --- a/drivers/mmc/host/Makefile
-> > +++ b/drivers/mmc/host/Makefile
-> > @@ -84,6 +84,7 @@ obj-$(CONFIG_MMC_SDHCI_ESDHC_IMX)	+= sdhci-esdhc-imx.o
-> >  obj-$(CONFIG_MMC_SDHCI_DOVE)		+= sdhci-dove.o
-> >  obj-$(CONFIG_MMC_SDHCI_TEGRA)		+= sdhci-tegra.o
-> >  obj-$(CONFIG_MMC_SDHCI_OF_ARASAN)	+= sdhci-of-arasan.o
-> > +obj-$(CONFIG_MMC_SDHCI_OF_ASPEED)	+= sdhci-of-aspeed.o
-> >  obj-$(CONFIG_MMC_SDHCI_OF_AT91)		+= sdhci-of-at91.o
-> >  obj-$(CONFIG_MMC_SDHCI_OF_ESDHC)	+= sdhci-of-esdhc.o
-> >  obj-$(CONFIG_MMC_SDHCI_OF_HLWD)		+= sdhci-of-hlwd.o
-> > diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
-> > new file mode 100644
-> > index 000000000000..9528e43c257d
-> > --- /dev/null
-> > +++ b/drivers/mmc/host/sdhci-of-aspeed.c
-> > @@ -0,0 +1,326 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/* Copyright (C) 2019 ASPEED Technology Inc. */
-> > +/* Copyright (C) 2019 IBM Corp. */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/device.h>
-> > +#include <linux/io.h>
-> > +#include <linux/mmc/host.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/spinlock.h>
-> > +
-> > +#include "sdhci-pltfm.h"
-> > +
-> > +#define ASPEED_SDC_INFO		0x00
-> > +#define   ASPEED_SDC_S1MMC8	BIT(25)
-> > +#define   ASPEED_SDC_S0MMC8	BIT(24)
-> > +
-> > +struct aspeed_sdc {
-> > +	struct clk *clk;
-> > +	struct resource *res;
-> > +
-> > +	spinlock_t lock;
-> > +	void __iomem *regs;
-> > +};
-> > +
-> > +struct aspeed_sdhci {
-> > +	struct aspeed_sdc *parent;
-> > +	u32 width_mask;
-> > +};
-> > +
-> > +static void aspeed_sdc_bus_width(struct aspeed_sdc *sdc,
-> > +				 struct aspeed_sdhci *sdhci, bool bus8)
+> Do you want me to send v5 with patch 5 squashed in patch 3 ?
+
+Yes. In result, it made two functions same by this patch
+So, I think that can combine them without separate patch.
+
+>  
+>>>> On 19. 7. 20. 오전 12:05, k.konieczny@partner.samsung.com wrote:
+>>>>> Reuse opp core code for setting bus clock and voltage. As a side
+>>>>> effect this allow useage of coupled regulators feature (required
+>>>>
+>>>> s/useage/usage ?
+>>>
+>>> Good catch, I will change it.
+>>>
+>>>>> for boards using Exynos5422/5800 SoCs) because dev_pm_opp_set_rate()
+>>>>> uses regulator_set_voltage_triplet() for setting regulator voltage
+>>>>> while the old code used regulator_set_voltage_tol() with fixed
+>>>>> tolerance. This patch also removes no longer needed parsing of DT
+>>>>> property "exynos,voltage-tolerance" (no Exynos devfreq DT node uses
+>>>>> it).
+>>>>>
+>>>>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>>>>> ---
+>>>>>  drivers/devfreq/exynos-bus.c | 143 +++++++++--------------------------
+>>>>>  1 file changed, 37 insertions(+), 106 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+>>>>> index f391044aa39d..c2147b0912a0 100644
+>>>>> --- a/drivers/devfreq/exynos-bus.c
+>>>>> +++ b/drivers/devfreq/exynos-bus.c
+>>>>> @@ -25,7 +25,6 @@
+>>>>>  #include <linux/slab.h>
+>>>>>
+>>>>>  #define DEFAULT_SATURATION_RATIO    40
+>>>>> -#define DEFAULT_VOLTAGE_TOLERANCE   2
+>>>>>
+>>>>>  struct exynos_bus {
+>>>>>      struct device *dev;
+>>>>> @@ -37,9 +36,9 @@ struct exynos_bus {
+>>>>>
+>>>>>      unsigned long curr_freq;
+>>>>>
+>>>>> -    struct regulator *regulator;
+>>>>> +    struct opp_table *opp_table;
+>>>>> +
+>>>>>      struct clk *clk;
+>>>>> -    unsigned int voltage_tolerance;
+>>>>>      unsigned int ratio;
+>>>>>  };
+>>>>>
+>>>>> @@ -99,56 +98,23 @@ static int exynos_bus_target(struct device *dev, unsigned long *freq, u32 flags)
+>>>>>  {
+>>>>>      struct exynos_bus *bus = dev_get_drvdata(dev);
+>>>>>      struct dev_pm_opp *new_opp;
+>>>>> -    unsigned long old_freq, new_freq, new_volt, tol;
+>>>>>      int ret = 0;
+>>>>>
+>>>>> -    /* Get new opp-bus instance according to new bus clock */
+>>>>> +    /* Get correct frequency for bus. */
+>>>>>      new_opp = devfreq_recommended_opp(dev, freq, flags);
+>>>>>      if (IS_ERR(new_opp)) {
+>>>>>              dev_err(dev, "failed to get recommended opp instance\n");
+>>>>>              return PTR_ERR(new_opp);
+>>>>>      }
+>>>>>
+>>>>> -    new_freq = dev_pm_opp_get_freq(new_opp);
+>>>>> -    new_volt = dev_pm_opp_get_voltage(new_opp);
+>>>>>      dev_pm_opp_put(new_opp);
+>>>>>
+>>>>> -    old_freq = bus->curr_freq;
+>>>>> -
+>>>>> -    if (old_freq == new_freq)
+>>>>> -            return 0;
+>>>>> -    tol = new_volt * bus->voltage_tolerance / 100;
+>>>>> -
+>>>>>      /* Change voltage and frequency according to new OPP level */
+>>>>>      mutex_lock(&bus->lock);
+>>>>> +    ret = dev_pm_opp_set_rate(dev, *freq);
+>>>>> +    if (!ret)
+>>>>> +            bus->curr_freq = *freq;
+>>>>>
+>>>>> -    if (old_freq < new_freq) {
+>>>>> -            ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
+>>>>> -            if (ret < 0) {
+>>>>> -                    dev_err(bus->dev, "failed to set voltage\n");
+>>>>> -                    goto out;
+>>>>> -            }
+>>>>> -    }
+>>>>> -
+>>>>> -    ret = clk_set_rate(bus->clk, new_freq);
+>>>>> -    if (ret < 0) {
+>>>>> -            dev_err(dev, "failed to change clock of bus\n");
+>>>>> -            clk_set_rate(bus->clk, old_freq);
+>>>>> -            goto out;
+>>>>> -    }
+>>>>> -
+>>>>> -    if (old_freq > new_freq) {
+>>>>> -            ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
+>>>>> -            if (ret < 0) {
+>>>>> -                    dev_err(bus->dev, "failed to set voltage\n");
+>>>>> -                    goto out;
+>>>>> -            }
+>>>>> -    }
+>>>>> -    bus->curr_freq = new_freq;
+>>>>> -
+>>>>> -    dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n",
+>>>>> -                    old_freq, new_freq, clk_get_rate(bus->clk));
+>>>>> -out:
+>>>>>      mutex_unlock(&bus->lock);
+>>>>>
+>>>>>      return ret;
+>>>>> @@ -195,8 +161,8 @@ static void exynos_bus_exit(struct device *dev)
+>>>>>              dev_warn(dev, "failed to disable the devfreq-event devices\n");
+>>>>>
+>>>>>      clk_disable_unprepare(bus->clk);
+>>>>> -    if (bus->regulator)
+>>>>> -            regulator_disable(bus->regulator);
+>>>>> +    if (bus->opp_table)
+>>>>> +            dev_pm_opp_put_regulators(bus->opp_table);
+>>>>>
+>>>>>      dev_pm_opp_of_remove_table(dev);
+>>>>>  }
+>>>>> @@ -209,39 +175,23 @@ static int exynos_bus_passive_target(struct device *dev, unsigned long *freq,
+>>>>>  {
+>>>>>      struct exynos_bus *bus = dev_get_drvdata(dev);
+>>>>>      struct dev_pm_opp *new_opp;
+>>>>> -    unsigned long old_freq, new_freq;
+>>>>> -    int ret = 0;
+>>>>> +    int ret;
+>>>>>
+>>>>> -    /* Get new opp-bus instance according to new bus clock */
+>>>>> +    /* Get correct frequency for bus. */
+>>>>>      new_opp = devfreq_recommended_opp(dev, freq, flags);
+>>>>>      if (IS_ERR(new_opp)) {
+>>>>>              dev_err(dev, "failed to get recommended opp instance\n");
+>>>>>              return PTR_ERR(new_opp);
+>>>>>      }
+>>>>>
+>>>>> -    new_freq = dev_pm_opp_get_freq(new_opp);
+>>>>>      dev_pm_opp_put(new_opp);
+>>>>>
+>>>>> -    old_freq = bus->curr_freq;
+>>>>> -
+>>>>> -    if (old_freq == new_freq)
+>>>>> -            return 0;
+>>>>> -
+>>>>>      /* Change the frequency according to new OPP level */
+>>>>>      mutex_lock(&bus->lock);
+>>>>> +    ret = dev_pm_opp_set_rate(dev, *freq);
+>>>>> +    if (!ret)
+>>>>> +            bus->curr_freq = *freq;
+>>>>>
+>>>>> -    ret = clk_set_rate(bus->clk, new_freq);
+>>>>> -    if (ret < 0) {
+>>>>> -            dev_err(dev, "failed to set the clock of bus\n");
+>>>>> -            goto out;
+>>>>> -    }
+>>>>> -
+>>>>> -    *freq = new_freq;
+>>>>> -    bus->curr_freq = new_freq;
+>>>>> -
+>>>>> -    dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n",
+>>>>> -                    old_freq, new_freq, clk_get_rate(bus->clk));
+>>>>> -out:
+>>>>>      mutex_unlock(&bus->lock);
+>>>>>
+>>>>>      return ret;
+>>>>> @@ -259,20 +209,9 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>>>>>                                      struct exynos_bus *bus)
+>>>>>  {
+>>>>>      struct device *dev = bus->dev;
+>>>>> -    int i, ret, count, size;
+>>>>> -
+>>>>> -    /* Get the regulator to provide each bus with the power */
+>>>>> -    bus->regulator = devm_regulator_get(dev, "vdd");
+>>>>> -    if (IS_ERR(bus->regulator)) {
+>>>>> -            dev_err(dev, "failed to get VDD regulator\n");
+>>>>> -            return PTR_ERR(bus->regulator);
+>>>>> -    }
+>>>>> -
+>>>>> -    ret = regulator_enable(bus->regulator);
+>>>>> -    if (ret < 0) {
+>>>>> -            dev_err(dev, "failed to enable VDD regulator\n");
+>>>>> -            return ret;
+>>>>> -    }
+>>>>> +    struct opp_table *opp_table;
+>>>>> +    const char *vdd = "vdd";
+>>>>> +    int i, count, size;
+>>>>>
+>>>>>      /*
+>>>>>       * Get the devfreq-event devices to get the current utilization of
+>>>>> @@ -281,26 +220,29 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>>>>>      count = devfreq_event_get_edev_count(dev);
+>>>>>      if (count < 0) {
+>>>>>              dev_err(dev, "failed to get the count of devfreq-event dev\n");
+>>>>> -            ret = count;
+>>>>> -            goto err_regulator;
+>>>>> +            return count;
+>>>>>      }
+>>>>> -    bus->edev_count = count;
+>>>>>
+>>>>> +    bus->edev_count = count;
+>>>>>      size = sizeof(*bus->edev) * count;
+>>>>>      bus->edev = devm_kzalloc(dev, size, GFP_KERNEL);
+>>>>> -    if (!bus->edev) {
+>>>>> -            ret = -ENOMEM;
+>>>>> -            goto err_regulator;
+>>>>> -    }
+>>>>> +    if (!bus->edev)
+>>>>> +            return -ENOMEM;
+>>>>>
+>>>>>      for (i = 0; i < count; i++) {
+>>>>>              bus->edev[i] = devfreq_event_get_edev_by_phandle(dev, i);
+>>>>> -            if (IS_ERR(bus->edev[i])) {
+>>>>> -                    ret = -EPROBE_DEFER;
+>>>>> -                    goto err_regulator;
+>>>>> -            }
+>>>>> +            if (IS_ERR(bus->edev[i]))
+>>>>> +                    return -EPROBE_DEFER;
+>>>>> +    }
+>>>>> +
+>>>>> +    opp_table = dev_pm_opp_set_regulators(dev, &vdd, 1);
+>>>>> +    if (IS_ERR(opp_table)) {
+>>>>> +            i = PTR_ERR(opp_table);
+>>>>> +            dev_err(dev, "failed to set regulators %d\n", i);
+>>>>> +            return i;
+>>>>
+>>>> Maybe, you just used the 'i' defined variable instead of adding
+>>>> new variable. But, I think that you better to add new variable
+>>>> like 'err' for the readability. Or, jut use the 'PTR_ERR(opp_table)'
+>>>> directly without any additional variable.
+>>>
+>>> I will remove not related changes, so here I will reuse 'ret' variable.
+>>>
+>>>>>      }
+>>>>>
+>>>>> +    bus->opp_table = opp_table;
+>>>>
+>>>> Add blank line.
+>>>
+>>> OK
+>>>
+>>>>>      /*
+>>>>>       * Optionally, Get the saturation ratio according to Exynos SoC
+>>>>>       * When measuring the utilization of each AXI bus with devfreq-event
+>>>>> @@ -314,16 +256,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+>>>>>      if (of_property_read_u32(np, "exynos,saturation-ratio", &bus->ratio))
+>>>>>              bus->ratio = DEFAULT_SATURATION_RATIO;
+>>>>>
+>>>>> -    if (of_property_read_u32(np, "exynos,voltage-tolerance",
+>>>>> -                                    &bus->voltage_tolerance))
+>>>>> -            bus->voltage_tolerance = DEFAULT_VOLTAGE_TOLERANCE;
+>>>>> -
+>>>>>      return 0;
+>>>>> -
+>>>>> -err_regulator:
+>>>>> -    regulator_disable(bus->regulator);
+>>>>> -
+>>>>> -    return ret;
+>>>>>  }
+>>>>>
+>>>>>  static int exynos_bus_parse_of(struct exynos_bus *bus)
+>>>>> @@ -414,12 +347,8 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>>>>>
+>>>>>      /* Parse the device-tree to get the resource information */
+>>>>>      ret = exynos_bus_parse_of(bus);
+>>>>> -    if (ret < 0) {
+>>>>> -            if (!passive)
+>>>>> -                    regulator_disable(bus->regulator);
+>>>>> -
+>>>>> -            return ret;
+>>>>> -    }
+>>>>> +    if (ret < 0)
+>>>>> +            goto err_reg;
+>>>>>
+>>>>>      if (passive)
+>>>>>              goto passive;
+>>>>> @@ -512,10 +441,12 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>>>>>
+>>>>>  err:
+>>>>>      clk_disable_unprepare(bus->clk);
+>>>>> -    if (!passive)
+>>>>> -            regulator_disable(bus->regulator);
+>>>>> -
+>>>>>      dev_pm_opp_of_remove_table(dev);
+>>>>
+>>>> This function removes the 'opp_table'. But, the below code
+>>>> uses the 'opp_table' variable by dev_pm_opp_put_regulators().
+>>>>
+>>>> To disable the regulator, you have to call dev_pm_opp_of_remove_table(dev)
+>>>> after dev_pm_opp_put_regulators(bus->opp_table).
+>>>
+>>> Regulators should be set before dev_pm_opp_add_table(), so exit sequence
+>>> should be in reverse order,
+>>>
+>>> init order:
+>>>
+>>> exynos_bus_parent_parse_of()
+>>>         dev_pm_opp_set_regulators()
+>>> exynos_bus_parse_of()
+>>>         clk_prepare_enable()
+>>>         dev_pm_opp_of_add_table()
+>>>
+>>> exit or error order:
+>>>
+>>> dev_pm_opp_of_remove_table()
+>>> clk_disable_unprepare()
+>>> if (bus->opp_table)
+>>>         dev_pm_opp_put_regulators(bus->opp_table);
+>>
+>> dev_pm_opp_of_remove_table() have to be called at the end of exit sequence
+>> after disabling clock and put regulators. Because dev_pm_opp_of_remove_table()
+>> frees the 'opp_table' pointer of device.
+>>
+>> clk_disable_unprepare()
+>> if (bus->opp_table)
+>>           dev_pm_opp_put_regulators(bus->opp_table);
+>> dev_pm_opp_of_remove_table()
 > 
-> The function name threw me at first.  I suggest:
-> 
-> static void aspeed_sdhci_set_clr_8_bit_mode(struct aspeed_sdhci *aspeed_sdhci,
-> 					    bool bus8)
+> The table is reference counted so it will be freed after count go to zero.
 
-I wasn't real happy with the name I picked, so was hoping to some degree to be
-bike-shedded on it. I'll fix it up.
-
-> {
-> 	struct aspeed_sdc *aspeed_sdc = aspeed_sdhci->parent;
-> 
-> > +{
-> > +	u32 info;
-> > +
-> > +	/* Set/clear 8 bit mode */
-> > +	spin_lock(&sdc->lock);
-> > +	info = readl(sdc->regs + ASPEED_SDC_INFO);
-> > +	if (bus8)
-> > +		info |= sdhci->width_mask;
-> > +	else
-> > +		info &= ~sdhci->width_mask;
-> > +	writel(info, sdc->regs + ASPEED_SDC_INFO);
-> > +	spin_unlock(&sdc->lock);
-> > +}
-> > +
-> > +static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
-> > +{
-> > +	unsigned long timeout;
-> > +	int div;
-> > +	u16 clk;
-> > +
-> > +	if (clock == host->clock)
-> > +		return;
-> > +
-> > +	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
-> > +
-> > +	if (clock == 0)
-> > +		goto out;
-> > +
-> > +	for (div = 1; div < 256; div *= 2) {
-> > +		if ((host->max_clk / div) <= clock)
-> > +			break;
-> > +	}
-> > +	div >>= 1;
-> > +
-> > +	clk = div << SDHCI_DIVIDER_SHIFT;
-> 
-> Could call sdhci_enable_clk() here.
-
-I'll look into it.
-
-> 
-> > +	clk |= SDHCI_CLOCK_INT_EN;
-> > +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-> > +
-> > +	/* Wait max 20 ms */
-> > +	timeout = 20;
-> > +	while (!((clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL))
-> > +		 & SDHCI_CLOCK_INT_STABLE)) {
-> > +		if (timeout == 0) {
-> > +			pr_err("%s: Internal clock never stabilised.\n",
-> > +			       mmc_hostname(host->mmc));
-> > +			return;
-> > +		}
-> > +		timeout--;
-> > +		mdelay(1);
-> > +	}
-> > +
-> > +	clk |= SDHCI_CLOCK_CARD_EN;
-> > +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-> > +
-> > +out:
-> > +	host->clock = clock;
-> > +}
-> > +
-> > +static void aspeed_sdhci_set_bus_width(struct sdhci_host *host, int width)
-> > +{
-> > +	struct sdhci_pltfm_host *pltfm_priv;
-> > +	struct aspeed_sdhci *aspeed_sdhci;
-> > +	struct aspeed_sdc *aspeed_sdc;
-> > +	u8 ctrl;
-> > +
-> > +	pltfm_priv = sdhci_priv(host);
-> > +	aspeed_sdhci = sdhci_pltfm_priv(pltfm_priv);
-> > +	aspeed_sdc = aspeed_sdhci->parent;
-> > +
-> > +	/* Set/clear 8-bit mode */
-> > +	aspeed_sdc_bus_width(aspeed_sdc, aspeed_sdhci,
-> > +			     width == MMC_BUS_WIDTH_8);
-> > +
-> > +	/* Set/clear 1 or 4 bit mode */
-> > +	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-> > +	if (width == MMC_BUS_WIDTH_4)
-> > +		ctrl |= SDHCI_CTRL_4BITBUS;
-> > +	else
-> > +		ctrl &= ~SDHCI_CTRL_4BITBUS;
-> > +	sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> > +}
-> > +
-> > +static const struct sdhci_ops aspeed_sdhci_ops = {
-> > +	.set_clock = aspeed_sdhci_set_clock,
-> > +	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
-> > +	.set_bus_width = aspeed_sdhci_set_bus_width,
-> > +	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
-> > +	.reset = sdhci_reset,
-> > +	.set_uhs_signaling = sdhci_set_uhs_signaling,
-> > +};
-> > +
-> > +static const struct sdhci_pltfm_data aspeed_sdc_pdata = {
-> 
-> Up to you, but this is for the aspeed_sdhci driver, so I would
-> have expected it to be called aspeed_sdhci_pdata
-
-Uh, yeah. Good catch.
-
-> 
-> > +	.ops = &aspeed_sdhci_ops,
-> > +	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
-> > +	.quirks2 = SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
-> 
-> You don't use sdhci_set_clock() or sdhci_calc_clk(), so it doesn't
-> look like SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN is needed.
-
-I did look at that and was a bit suspicious about it, good to have my suspicion
-confirmed.
-
-> 
-> > +};
-> > +
-> > +static inline int aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
-> > +					      struct resource *res)
-> > +{
-> > +	resource_size_t delta;
-> > +
-> > +	if (!res || resource_type(res) != IORESOURCE_MEM)
-> > +		return -EINVAL;
-> > +
-> > +	if (res->start < dev->parent->res->start)
-> > +		return -EINVAL;
-> > +
-> > +	delta = res->start - dev->parent->res->start;
-> > +	if (delta & (0x100 - 1))
-> > +		return -EINVAL;
-> > +
-> > +	return (delta / 0x100) - 1;
-> > +}
-> > +
-> > +static int aspeed_sdhci_probe(struct platform_device *pdev)
-> > +{
-> > +	struct sdhci_pltfm_host *pltfm_host;
-> > +	struct aspeed_sdhci *dev;
-> > +	struct sdhci_host *host;
-> > +	struct resource *res;
-> > +	int slot;
-> > +	int ret;
-> > +
-> > +	host = sdhci_pltfm_init(pdev, &aspeed_sdc_pdata, sizeof(*dev));
-> > +	if (IS_ERR(host))
-> > +		return PTR_ERR(host);
-> > +
-> > +	pltfm_host = sdhci_priv(host);
-> > +	dev = sdhci_pltfm_priv(pltfm_host);
-> > +	dev->parent = dev_get_drvdata(pdev->dev.parent);
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	slot = aspeed_sdhci_calculate_slot(dev, res);
-> > +	if (slot < 0)
-> > +		return slot;
-> > +	dev_info(&pdev->dev, "Configuring for slot %d\n", slot);
-> > +	dev->width_mask = !slot ? ASPEED_SDC_S0MMC8 : ASPEED_SDC_S1MMC8;
-> 
-> That implies that you only support 2 slots which begs the question why
-> you don't validate slot.
-
-I'm not sure what you mean here, but I'll dig into it.
-
-> 
-> > +
-> > +	sdhci_get_of_property(pdev);
-> > +
-> > +	pltfm_host->clk = devm_clk_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(pltfm_host->clk))
-> > +		return PTR_ERR(pltfm_host->clk);
-> > +
-> > +	ret = clk_prepare_enable(pltfm_host->clk);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "Unable to enable SDIO clock\n");
-> > +		goto err_pltfm_free;
-> > +	}
-> > +
-> > +	ret = mmc_of_parse(host->mmc);
-> > +	if (ret)
-> > +		goto err_sdhci_add;
-> > +
-> > +	ret = sdhci_add_host(host);
-> > +	if (ret)
-> > +		goto err_sdhci_add;
-> > +
-> > +	return 0;
-> > +
-> > +err_sdhci_add:
-> > +	clk_disable_unprepare(pltfm_host->clk);
-> > +err_pltfm_free:
-> > +	sdhci_pltfm_free(pdev);
-> > +	return ret;
-> > +}
-> > +
-> > +static int aspeed_sdhci_remove(struct platform_device *pdev)
-> > +{
-> > +	struct sdhci_pltfm_host *pltfm_host;
-> > +	struct sdhci_host *host;
-> > +	int dead;
-> > +
-> > +	host = platform_get_drvdata(pdev);
-> > +	pltfm_host = sdhci_priv(host);
-> > +
-> > +	dead = readl(host->ioaddr + SDHCI_INT_STATUS) == 0xffffffff;
-> 
-> 'dead' only makes sense for PCI. Just set it to zero.
-
-Ack.
-
-Thanks for the feedback, I'll send a v3.
-
-Andrew
+You're right. I checked it with OPP code.
 
 > 
-> > +
-> > +	sdhci_remove_host(host, dead);
-> > +
-> > +	clk_disable_unprepare(pltfm_host->clk);
-> > +
-> > +	sdhci_pltfm_free(pdev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id aspeed_sdhci_of_match[] = {
-> > +	{ .compatible = "aspeed,ast2400-sdhci", },
-> > +	{ .compatible = "aspeed,ast2500-sdhci", },
-> > +	{ }
-> > +};
-> > +
-> > +static struct platform_driver aspeed_sdhci_driver = {
-> > +	.driver		= {
-> > +		.name	= "sdhci-aspeed",
-> > +		.of_match_table = aspeed_sdhci_of_match,
-> > +	},
-> > +	.probe		= aspeed_sdhci_probe,
-> > +	.remove		= aspeed_sdhci_remove,
-> > +};
-> > +
-> > +module_platform_driver(aspeed_sdhci_driver);
-> > +
-> > +static int aspeed_sdc_probe(struct platform_device *pdev)
-> > +
-> > +{
-> > +	struct device_node *parent, *child;
-> > +	struct aspeed_sdc *sdc;
-> > +	int ret;
-> > +
-> > +	sdc = devm_kzalloc(&pdev->dev, sizeof(*sdc), GFP_KERNEL);
-> > +	if (!sdc)
-> > +		return -ENOMEM;
-> > +
-> > +	spin_lock_init(&sdc->lock);
-> > +
-> > +	sdc->clk = devm_clk_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(sdc->clk))
-> > +		return PTR_ERR(sdc->clk);
-> > +
-> > +	ret = clk_prepare_enable(sdc->clk);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "Unable to enable SDCLK\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	sdc->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	sdc->regs = devm_ioremap_resource(&pdev->dev, sdc->res);
-> > +	if (IS_ERR(sdc->regs)) {
-> > +		ret = PTR_ERR(sdc->regs);
-> > +		goto err_clk;
-> > +	}
-> > +
-> > +	dev_set_drvdata(&pdev->dev, sdc);
-> > +
-> > +	parent = pdev->dev.of_node;
-> > +	for_each_available_child_of_node(parent, child) {
-> > +		struct platform_device *cpdev;
-> > +
-> > +		cpdev = of_platform_device_create(child, NULL, &pdev->dev);
-> > +		if (IS_ERR(cpdev)) {
-> > +			of_node_put(child);
-> > +			ret = PTR_ERR(pdev);
-> > +			goto err_clk;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +
-> > +err_clk:
-> > +	clk_disable_unprepare(sdc->clk);
-> > +	return ret;
-> > +}
-> > +
-> > +static int aspeed_sdc_remove(struct platform_device *pdev)
-> > +{
-> > +	struct aspeed_sdc *sdc = dev_get_drvdata(&pdev->dev);
-> > +
-> > +	clk_disable_unprepare(sdc->clk);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id aspeed_sdc_of_match[] = {
-> > +	{ .compatible = "aspeed,ast2400-sd-controller", },
-> > +	{ .compatible = "aspeed,ast2500-sd-controller", },
-> > +	{ }
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(of, aspeed_sdc_of_match);
-> > +
-> > +static struct platform_driver aspeed_sdc_driver = {
-> > +	.driver		= {
-> > +		.name	= "sd-controller-aspeed",
-> > +		.pm	= &sdhci_pltfm_pmops,
-> > +		.of_match_table = aspeed_sdc_of_match,
-> > +	},
-> > +	.probe		= aspeed_sdc_probe,
-> > +	.remove		= aspeed_sdc_remove,
-> > +};
-> > +
-> > +module_platform_driver(aspeed_sdc_driver);
-> > +
-> > +MODULE_DESCRIPTION("Driver for the ASPEED SD/SDIO/SDHCI Controllers");
-> > +MODULE_AUTHOR("Ryan Chen <ryan_chen@aspeedtech.com>");
-> > +MODULE_AUTHOR("Andrew Jeffery <andrew@aj.id.au>");
-> > +MODULE_LICENSE("GPL v2");
-> > 
+>>> I will send v4 soon.
+>>>
+>>>>> +err_reg:
+>>>>> +    if (bus->opp_table) {
+>>>>> +            dev_pm_opp_put_regulators(bus->opp_table);
+>>>>> +            bus->opp_table = NULL;
+>>>>> +    }
+>>>>>
+>>>>>      return ret;
+>>>>>  }
 > 
->
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
