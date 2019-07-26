@@ -1,107 +1,145 @@
-From: Jungo Lin <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC, v3 9/9] media: platform: Add Mediatek ISP P1 shared
-	memory device
-Date: Fri, 26 Jul 2019 19:59:46 +0800
-Message-ID: <1564142386.1212.621.camel@mtksdccf07>
-References: <jungo.lin@mediatek.com>
-	<20190611035344.29814-1-jungo.lin@mediatek.com>
-	<20190611035344.29814-10-jungo.lin@mediatek.com>
-	<20190701072532.GB137710@chromium.org>
-	<1562297618.1212.46.camel@mtksdccf07>
-	<CAAFQd5BaTQ-Q7gsE0X+d4_81OZq9WHaCYkmALt7_4A1JFo=_8g@mail.gmail.com>
-	<1562313579.1212.73.camel@mtksdccf07>
-	<CAAFQd5AaNFpMGCVJREY85n8UetEwd99TOka8-ECoLzMbMkos_g@mail.gmail.com>
-	<1563870117.1212.455.camel@mtksdccf07>
-	<CAAFQd5Bh80N+cMhz=eyHUGJLaE5uuypOawQvHrTgGSMDvmcpLA@mail.gmail.com>
-	<20190726074116.GA19745@infradead.org>
-	<CAAFQd5CXwRm-3jD+rfNNDNLH=gT_i0QYSAG3XBo3SJnPTY56_w@mail.gmail.com>
-	<4460bc91-352a-7f3a-cbed-1b95e743ca8c@arm.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [RFC PATCH 08/11] arm: dts: exynos: Add parents and
+ #interconnect-cells to Exynos4412
+Date: Fri, 26 Jul 2019 14:02:34 +0200
+Message-ID: <cc4c48c3-06a5-c58f-20de-0aa18ae8667e@samsung.com>
+References: <CGME20190723122027eucas1p24b1d76e3139f7cc52614d7613ff9ba98@eucas1p2.samsung.com>
+        <20190723122016.30279-1-a.swigon@partner.samsung.com>
+        <20190723122016.30279-9-a.swigon@partner.samsung.com>
+        <CAGTfZH1_Qk+vNa_AJW_8OA8MJbnZa3yCTLLRs2w23bNTm72gyQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <4460bc91-352a-7f3a-cbed-1b95e743ca8c-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <sean.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Frederic Chen =?UTF-8?Q?=28=E9=99=B3=E4=BF=8A=E5=85=83=29?= <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <rynn.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ryan Yu =?UTF-8?Q?=28=E4=BD=99=E5=AD=9F=E4=BF=AE=29?= <ryan.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Frankie Chiu =?UTF-8?Q?=28=E9=82=B1=E6=96=87=E5=87=B1=29?= <frankie.chiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, ddavenport-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Mauro
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGTfZH1_Qk+vNa_AJW_8OA8MJbnZa3yCTLLRs2w23bNTm72gyQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: cwchoi00@gmail.com, =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com, Seung-Woo Kim <sw0312.kim@samsung.com>, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin:
+Hi
 
-On Fri, 2019-07-26 at 12:04 +0100, Robin Murphy wrote:
-> On 26/07/2019 08:42, Tomasz Figa wrote:
-> > On Fri, Jul 26, 2019 at 4:41 PM Christoph Hellwig <hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
-> >>
-> >> On Fri, Jul 26, 2019 at 02:15:14PM +0900, Tomasz Figa wrote:
-> >>> Could you try dma_get_sgtable() with the SCP struct device and then
-> >>> dma_map_sg() with the P1 struct device?
-> >>
-> >> Please don't do that.  dma_get_sgtable is a pretty broken API (see
-> >> the common near the arm implementation) and we should not add more
-> >> users of it.  If you want a piece of memory that can be mapped to
-> >> multiple devices allocate it using alloc_pages and then just map
-> >> it to each device.
-> > 
-> > Thanks for taking a look at this thread.
-> > 
-> > Unfortunately that wouldn't work. We have a specific reserved memory
-> > pool that is the only memory area accessible to one of the devices.
-> > Any idea how to handle this?
-> 
-> If it's reserved in the sense of being outside struct-page-backed 
-> "kernel memory", then provided you have a consistent CPU physical 
-> address it might be reasonable for other devices to access it via 
-> dma_map_resource().
-> 
-> Robin.
+On 2019-07-25 15:13, Chanwoo Choi wrote:
+> 2019년 7월 24일 (수) 오전 8:07, Artur Świgoń <a.swigon@partner.samsung.com>님이 작성:
+>> This patch adds two fields tp the Exynos4412 DTS:
+>>    - parent: to declare connections between nodes that are not in a
+>>      parent-child relation in devfreq;
+>>    - #interconnect-cells: required by the interconnect framework.
+>>
+>> Please note that #interconnect-cells is always zero and node IDs are not
+>> hardcoded anywhere.
+>>
+>> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 1 +
+>>   arch/arm/boot/dts/exynos4412.dtsi               | 9 +++++++++
+>>   2 files changed, 10 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+>> index ea55f377d17c..bdd61ae86103 100644
+>> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+>> @@ -106,6 +106,7 @@
+>>   &bus_leftbus {
+>>          devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
+>>          vdd-supply = <&buck3_reg>;
+>> +       parent = <&bus_dmc>;
+> It is wrong. 'bus_leftbus' has not any h/w dependency of 'bus_dmc'
+> and 'bus_leftbus' is not child of 'bus_dmc'.
+>
+> Even it there are some PMQoS requirement between them,
+> it it not proper to tie both 'bus_leftbus' and 'bus_dmc'.
 
-Thank you for your suggestion.
+There is strict dependency between them. DMC bus running at frequency 
+lower than left (or right) bus really doesn't make much sense, because 
+it will limit the left bus performance. This dependency should be 
+modeled somehow.
 
-After revising to use dma_map_resource(), it is worked. Below is the
-current implementation. Pleas kindly help us to check if there is any
-misunderstanding.
-
-#define MTK_ISP_COMPOSER_MEM_SIZE		0x200000
-
-	/*
-	 * Allocate coherent reserved memory for SCP firmware usage.
-	 * The size of SCP composer's memory is fixed to 0x200000
-	 * for the requirement of firmware.
-	 */
-	ptr = dma_alloc_coherent(p1_dev->cam_dev.smem_dev,
-				 MTK_ISP_COMPOSER_MEM_SIZE, &addr, GFP_KERNEL);
-	if (!ptr) {
-		dev_err(dev, "failed to allocate compose memory\n");
-		return -ENOMEM;
-	}
-	p1_dev->composer_scp_addr = addr;
-	p1_dev->composer_virt_addr = ptr;
-	dev_dbg(dev, "scp addr:%pad va:%pK\n", &addr, ptr);
-
-	/*
-	 * This reserved memory is also be used by ISP P1 HW.
-	 * Need to get iova address for ISP P1 DMA.
-	 */
-	addr = dma_map_resource(dev, addr, MTK_ISP_COMPOSER_MEM_SIZE,
-				DMA_BIDIRECTIONAL, DMA_ATTR_SKIP_CPU_SYNC);
-	if (dma_mapping_error(dev, addr)) {
-		dev_err(dev, "Failed to map scp iova\n");
-		ret = -ENOMEM;
-		goto fail_free_mem;
-	}
-	p1_dev->composer_iova = addr;
-	dev_info(dev, "scp iova addr:%pad\n", &addr);
-
-Moreover, appropriate Tomasz & Christoph's help on this issue.
-
-Best regards,
-
-Jungo
+>>          status = "okay";
+>>   };
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+>> index d20db2dfe8e2..a70a671acacd 100644
+>> --- a/arch/arm/boot/dts/exynos4412.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4412.dtsi
+>> @@ -390,6 +390,7 @@
+>>                          clocks = <&clock CLK_DIV_DMC>;
+>>                          clock-names = "bus";
+>>                          operating-points-v2 = <&bus_dmc_opp_table>;
+>> +                       #interconnect-cells = <0>;
+>>                          status = "disabled";
+>>                  };
+>>
+>> @@ -398,6 +399,7 @@
+>>                          clocks = <&clock CLK_DIV_ACP>;
+>>                          clock-names = "bus";
+>>                          operating-points-v2 = <&bus_acp_opp_table>;
+>> +                       #interconnect-cells = <0>;
+>>                          status = "disabled";
+>>                  };
+>>
+>> @@ -406,6 +408,7 @@
+>>                          clocks = <&clock CLK_DIV_C2C>;
+>>                          clock-names = "bus";
+>>                          operating-points-v2 = <&bus_dmc_opp_table>;
+>> +                       #interconnect-cells = <0>;
+>>                          status = "disabled";
+>>                  };
+>>
+>> @@ -459,6 +462,7 @@
+>>                          clocks = <&clock CLK_DIV_GDL>;
+>>                          clock-names = "bus";
+>>                          operating-points-v2 = <&bus_leftbus_opp_table>;
+>> +                       #interconnect-cells = <0>;
+>>                          status = "disabled";
+>>                  };
+>>
+>> @@ -467,6 +471,7 @@
+>>                          clocks = <&clock CLK_DIV_GDR>;
+>>                          clock-names = "bus";
+>>                          operating-points-v2 = <&bus_leftbus_opp_table>;
+>> +                       #interconnect-cells = <0>;
+>>                          status = "disabled";
+>>                  };
+>>
+>> @@ -475,6 +480,7 @@
+>>                          clocks = <&clock CLK_ACLK160>;
+>>                          clock-names = "bus";
+>>                          operating-points-v2 = <&bus_display_opp_table>;
+>> +                       #interconnect-cells = <0>;
+>>                          status = "disabled";
+>>                  };
+>>
+>> @@ -483,6 +489,7 @@
+>>                          clocks = <&clock CLK_ACLK133>;
+>>                          clock-names = "bus";
+>>                          operating-points-v2 = <&bus_fsys_opp_table>;
+>> +                       #interconnect-cells = <0>;
+>>                          status = "disabled";
+>>                  };
+>>
+>> @@ -491,6 +498,7 @@
+>>                          clocks = <&clock CLK_ACLK100>;
+>>                          clock-names = "bus";
+>>                          operating-points-v2 = <&bus_peri_opp_table>;
+>> +                       #interconnect-cells = <0>;
+>>                          status = "disabled";
+>>                  };
+>>
+>> @@ -499,6 +507,7 @@
+>>                          clocks = <&clock CLK_SCLK_MFC>;
+>>                          clock-names = "bus";
+>>                          operating-points-v2 = <&bus_leftbus_opp_table>;
+>> +                       #interconnect-cells = <0>;
+>>                          status = "disabled";
+>>                  };
+>>
+>> --
+>> 2.17.1
+>>
+>
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
