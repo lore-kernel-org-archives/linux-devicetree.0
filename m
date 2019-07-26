@@ -1,42 +1,60 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 02/14] dt-bindings: cpufreq: Re-organise kryo cpufreq
- to use it for other nvmem based qcom socs
-Date: Fri, 26 Jul 2019 13:34:17 +0530
-Message-ID: <20190726080417.ohsgedbtyxbxfyj7@vireshk-i7>
-References: <20190725104144.22924-1-niklas.cassel@linaro.org>
- <20190725104144.22924-3-niklas.cassel@linaro.org>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
+ functionality to exynos-bus
+Date: Fri, 26 Jul 2019 11:05:18 +0300
+Message-ID: <6e8b2081-2fb3-9ab8-37d1-8b5fe5fd8e11@linaro.org>
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+ <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
+ <20190723122016.30279-10-a.swigon@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190725104144.22924-3-niklas.cassel@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Sricharan R <sricharan@codeaurora.org>, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190723122016.30279-10-a.swigon@partner.samsung.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: sw0312.kim@samsung.com, krzk@kernel.org, inki.dae@samsung.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-$subject of this and few more binding patches updated to:
-
-"dt-bindings: opp: XXX"
-
-On 25-07-19, 12:41, Niklas Cassel wrote:
-> From: Sricharan R <sricharan@codeaurora.org>
-> 
-> The kryo cpufreq driver reads the nvmem cell and uses that data to
-> populate the opps. There are other qcom cpufreq socs like krait which
-> does similar thing. Except for the interpretation of the read data,
-> rest of the driver is same for both the cases. So pull the common things
-> out for reuse.
-> 
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> [niklas.cassel@linaro.org: split dt-binding into a separate patch and
-> do not rename the compatible string.]
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Reviewed-by: Ilia Lin <ilia.lin@kernel.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes since V1:
-> -Picked up tags.
-
--- 
-viresh
+SGkgQXJ0dXIsCgpPbiA3LzIzLzE5IDE1OjIwLCBBcnR1ciDFmndpZ2/FhCB3cm90ZToKPiBUaGlz
+IHBhdGNoIGFkZHMgaW50ZXJjb25uZWN0IGZ1bmN0aW9uYWxpdHkgdG8gdGhlIGV4eW5vcy1idXMg
+ZGV2ZnJlcQo+IGRyaXZlci4KPiAKPiBUaGUgU29DIHRvcG9sb2d5IGlzIGEgZ3JhcGggKG9yLCBt
+b3JlIHNwZWNpZmljYWxseSwgYSB0cmVlKSBhbmQgbW9zdCBvZiBpdHMKPiBlZGdlcyBhcmUgdGFr
+ZW4gZnJvbSB0aGUgZGV2ZnJlcSBwYXJlbnQtY2hpbGQgaGllcmFyY2h5IChjZi4KPiBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGV2ZnJlcS9leHlub3MtYnVzLnR4dCkuIFRoZSBw
+cmV2aW91cwo+IHBhdGNoIGFkZHMgbWlzc2luZyBlZGdlcyB0byB0aGUgRFQgKHVuZGVyIHRoZSBu
+YW1lICdwYXJlbnQnKS4gRHVlIHRvCj4gdW5zcGVjaWZpZWQgcmVsYXRpdmUgcHJvYmluZyBvcmRl
+ciwgLUVQUk9CRV9ERUZFUiBtYXkgYmUgcHJvcGFnYXRlZCB0bwo+IGd1YXJhbnRlZSB0aGF0IGEg
+Y2hpbGQgaXMgcHJvYmVkIGJlZm9yZSBpdHMgcGFyZW50Lgo+IAo+IEVhY2ggYnVzIGlzIG5vdyBh
+biBpbnRlcmNvbm5lY3QgcHJvdmlkZXIgYW5kIGFuIGludGVyY29ubmVjdCBub2RlIGFzIHdlbGwK
+PiAoY2YuIERvY3VtZW50YXRpb24vaW50ZXJjb25uZWN0L2ludGVyY29ubmVjdC5yc3QpLCBpLmUu
+IGV2ZXJ5IGJ1cyByZWdpc3RlcnMKPiBpdHNlbGYgYXMgYSBub2RlLiBOb2RlIElEcyBhcmUgbm90
+IGhhcmRjb2RlZCBidXQgcmF0aGVyIGFzc2lnbmVkIGF0Cj4gcnVudGltZSwgaW4gcHJvYmluZyBv
+cmRlciAoc3ViamVjdCB0byB0aGUgYWJvdmUtbWVudGlvbmVkIGV4Y2VwdGlvbgo+IHJlZ2FyZGlu
+ZyByZWxhdGl2ZSBvcmRlcikuIFRoaXMgYXBwcm9hY2ggYWxsb3dzIGZvciB1c2luZyB0aGlzIGRy
+aXZlciB3aXRoCj4gdmFyaW91cyBFeHlub3MgU29Dcy4KCkkgYW0gbm90IGZhbWlsaWFyIHdpdGgg
+dGhlIEV4eW5vcyBidXMgdG9wb2xvZ3ksIGJ1dCBpdCBzZWVtcyB0byBtZSB0aGF0IGl0J3Mgbm90
+CnJlcHJlc2VudGVkIGNvcnJlY3RseS4gQW4gaW50ZXJjb25uZWN0IHByb3ZpZGVyIHdpdGgganVz
+dCBhIHNpbmdsZSBub2RlIChwb3J0KQppcyBvZGQuIEkgd291bGQgZXhwZWN0IHRoYXQgZWFjaCBw
+cm92aWRlciBjb25zaXN0cyBvZiBtdWx0aXBsZSBtYXN0ZXIgYW5kIHNsYXZlCm5vZGVzLiBUaGlz
+IGRhdGEgd291bGQgYmUgdXNlZCBieSBhIGZyYW1ld29yayB0byB1bmRlcnN0YW5kIHdoYXQgYXJl
+IHRoZSBsaW5rcwphbmQgaG93IHRoZSB0cmFmZmljIGZsb3dzIGJldHdlZW4gdGhlIElQIGJsb2Nr
+cyBhbmQgdGhyb3VnaCB3aGljaCBidXNlcy4KCj4gVGhlIGRldmZyZXEgdGFyZ2V0KCkgY2FsbGJh
+Y2sgcHJvdmlkZWQgYnkgZXh5bm9zLWJ1cyBub3cgc2VsZWN0cyBlaXRoZXIgdGhlCj4gZnJlcXVl
+bmN5IGNhbGN1bGF0ZWQgYnkgdGhlIGRldmZyZXEgZ292ZXJub3Igb3IgdGhlIGZyZXF1ZW5jeSBy
+ZXF1ZXN0ZWQgdmlhCj4gdGhlIGludGVyY29ubmVjdCBBUEkgZm9yIHRoZSBnaXZlbiBub2RlLCB3
+aGljaGV2ZXIgaXMgaGlnaGVyLgoKVGhpcyBjb21wbGV0ZWx5IG1ha2VzIHNlbnNlLiBXZSBqdXN0
+IG5lZWQgdG8gYmUgc3VyZSB0aGF0IHRoZSBpbnRlcmNvbm5lY3QKZnJhbWV3b3JrIGlzIHVzZWQg
+Y29ycmVjdGx5LgoKVGhhbmtzLApHZW9yZ2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
