@@ -1,76 +1,139 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 6a/7] dt-bindings: Add ANX6345 DP/eDP transmitter
- binding
-Date: Fri, 26 Jul 2019 18:36:01 +0200
-Message-ID: <20190726163601.o32bxqew5xavjgyi@flea>
-References: <20190722150414.9F97668B20@verein.lst.de>
- <20190725151829.DC20968B02@verein.lst.de>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH v3 2/4] edac: Add support for Amazon's Annapurna Labs L1
+ EDAC
+Date: Fri, 26 Jul 2019 17:49:31 +0100
+Message-ID: <a2dc6760-50e2-6e98-5b61-002836d92dd2@arm.com>
+References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
+ <1563197049-12679-3-git-send-email-hhhawa@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190725151829.DC20968B02@verein.lst.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Torsten Duwe <duwe@lst.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1563197049-12679-3-git-send-email-hhhawa@amazon.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hanna Hawa <hhhawa@amazon.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUaHUsIEp1bCAyNSwgMjAxOSBhdCAwNToxODoyOVBNICswMjAwLCBUb3JzdGVuIER1
-d2Ugd3JvdGU6Cj4gVGhlIGFueDYzNDUgaXMgYW4gdWx0cmEtbG93IHBvd2VyIERpc3BsYXlQb3J0
-L2VEUCB0cmFuc21pdHRlciBkZXNpZ25lZAo+IGZvciBwb3J0YWJsZSBkZXZpY2VzLgo+Cj4gQWRk
-IGEgYmluZGluZyBkb2N1bWVudCBmb3IgaXQuCj4KPiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpo
-ZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4gU2lnbmVkLW9mZi1ieTogVmFzaWx5IEtob3J1emhpY2sg
-PGFuYXJzb3VsQGdtYWlsLmNvbT4KPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
-bmVsLm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBUb3JzdGVuIER1d2UgPGR1d2VAc3VzZS5kZT4KPiBS
-ZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9h
-cmQuY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9h
-bng2MzQ1LnlhbWwgfCAgIDkwICsrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDkwIGluc2Vy
-dGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9hbng2MzQ1LnlhbWwKPgo+IGRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvYW54NjM0NS55YW1s
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FueDYz
-NDUueWFtbAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi4wYWYw
-OTJkMTAxYzUKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FueDYzNDUueWFtbAo+IEBAIC0wLDAgKzEsOTAgQEAK
-PiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+ICslWUFNTCAxLjIKPiArLS0t
-Cj4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvZGlzcGxheS9icmlkZ2UvYW54
-NjM0NS55YW1sIwo+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFz
-L2NvcmUueWFtbCMKPiArCj4gK3RpdGxlOiBBbmFsb2dpeCBBTlg2MzQ1IGVEUCBUcmFuc21pdHRl
-ciBEZXZpY2UgVHJlZSBCaW5kaW5ncwo+ICsKPiArbWFpbnRhaW5lcnM6Cj4gKyAgLSBUb3JzdGVu
-IER1d2UgPGR1d2VAbHN0LmRlPgo+ICsKPiArZGVzY3JpcHRpb246IHwKPiArICBUaGUgQU5YNjM0
-NSBpcyBhbiB1bHRyYS1sb3cgcG93ZXIgRnVsbC1IRCBlRFAgdHJhbnNtaXR0ZXIgZGVzaWduZWQg
-Zm9yCj4gKyAgcG9ydGFibGUgZGV2aWNlcy4KPiArCj4gK3Byb3BlcnRpZXM6Cj4gKyAgY29tcGF0
-aWJsZToKPiArICAgIGNvbnN0OiBhbmFsb2dpeCxhbng2MzQ1Cj4gKwo+ICsgIHJlZzoKPiArICAg
-IG1heEl0ZW1zOiAxCj4gKyAgICBkZXNjcmlwdGlvbjogSTJDIGFkZHJlc3Mgb2YgdGhlIGRldmlj
-ZQo+ICsKPiArICByZXNldC1ncGlvczoKPiArICAgIG1heEl0ZW1zOiAxCj4gKyAgICBkZXNjcmlw
-dGlvbjogYWN0aXZlIGxvdyBHUElPIHRvIHVzZSBmb3IgcmVzZXQKPiArCj4gKyAgZHZkZDEyLXN1
-cHBseToKPiArICAgIG1heEl0ZW1zOiAxCj4gKyAgICBkZXNjcmlwdGlvbjogUmVndWxhdG9yIGZv
-ciAxLjJWIGRpZ2l0YWwgY29yZSBwb3dlci4KPiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlh
-bWwjL2RlZmluaXRpb25zL3BoYW5kbGUKPiArCj4gKyAgZHZkZDI1LXN1cHBseToKPiArICAgIG1h
-eEl0ZW1zOiAxCj4gKyAgICBkZXNjcmlwdGlvbjogUmVndWxhdG9yIGZvciAyLjVWIGRpZ2l0YWwg
-Y29yZSBwb3dlci4KPiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25z
-L3BoYW5kbGUKClRoZXJlJ3Mgbm8gbmVlZCB0byBzcGVjaWZ5IHRoZSB0eXBlIGhlcmUsIGFsbCB0
-aGUgcHJvcGVydGllcyBlbmRpbmcgaW4KLXN1cHBseSBhcmUgYWxyZWFkeSBjaGVja2VkIGZvciB0
-aGF0IHR5cGUKCj4gKyAgcG9ydHM6Cj4gKyAgICB0eXBlOiBvYmplY3QKPiArICAgIG1pbkl0ZW1z
-OiAxCj4gKyAgICBtYXhJdGVtczogMgo+ICsgICAgZGVzY3JpcHRpb246IHwKPiArICAgICAgVmlk
-ZW8gcG9ydCAwIGZvciBMVlRUTCBpbnB1dCwKPiArICAgICAgVmlkZW8gcG9ydCAxIGZvciBlRFAg
-b3V0cHV0IChwYW5lbCBvciBjb25uZWN0b3IpCj4gKyAgICAgIHVzaW5nIHRoZSBEVCBiaW5kaW5n
-cyBkZWZpbmVkIGluCj4gKyAgICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
-ZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAoKWW91IHNob3VsZCBwcm9iYWJseSBkZXNjcmliZSB0
-aGUgcG9ydEAwIGFuZCBwb3J0QDEgbm9kZXMgaGVyZSBhcwp3ZWxsLiBJdCB3b3VsZCBhbGxvdyB5
-b3UgdG8gZXhwcmVzcyB0aGF0IHRoZSBwb3J0IDAgaXMgbWFuZGF0b3J5IGFuZAp0aGUgcG9ydCAx
-IG9wdGlvbmFsLCB3aGljaCBnb3QgZHJvcHBlZCBpbiB0aGUgY29udmVyc2lvbi4KCk1heGltZQoK
-LS0KTWF4aW1lIFJpcGFyZCwgQm9vdGxpbgpFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2lu
-ZWVyaW5nCmh0dHBzOi8vYm9vdGxpbi5jb20KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVs
+Hi Hanna,
+
+On 15/07/2019 14:24, Hanna Hawa wrote:
+> Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
+> report L1 errors.
+
+> diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
+> new file mode 100644
+> index 0000000..70510ea
+> --- /dev/null
+> +++ b/drivers/edac/al_l1_edac.c
+> @@ -0,0 +1,156 @@
+
+> +#include <linux/bitfield.h>
+
+You need <linux/smp.h> for on-each_cpu().
+
+> +#include "edac_device.h"
+> +#include "edac_module.h"
+
+You need <asm/sysreg.h> for the sys_reg() macro. The ARCH_ALPINE dependency doesn't stop
+this from being built on 32bit arm, where this sys_reg() won't work/exist.
+
+[...]
+
+> +static void al_l1_edac_cpumerrsr(void *arg)
+> +{
+> +	struct edac_device_ctl_info *edac_dev = arg;
+> +	int cpu, i;
+> +	u32 ramid, repeat, other, fatal;
+> +	u64 val = read_sysreg_s(ARM_CA57_CPUMERRSR_EL1);
+> +	char msg[AL_L1_EDAC_MSG_MAX];
+> +	int space, count;
+> +	char *p;
+> +	if (!(FIELD_GET(ARM_CA57_CPUMERRSR_VALID, val)))
+> +		return;
+> +	space = sizeof(msg);
+> +	p = msg;
+> +	count = snprintf(p, space, "CPU%d L1 %serror detected", cpu,
+> +			 (fatal) ? "Fatal " : "");
+> +	p += count;
+> +	space -= count;
+
+snprintf() will return the number of characters it would have generated, even if that is
+more than space. If this happen, space becomes negative, p points outside msg[] and msg[]
+isn't NULL terminated...
+
+It looks like you want scnprintf(), which returns the number of characters written to buf
+instead. (I don't see how 256 characters would be printed by this code)
+
+
+> +	switch (ramid) {
+> +	case ARM_CA57_L1_I_TAG_RAM:
+> +		count = snprintf(p, space, " RAMID='L1-I Tag RAM'");
+> +		break;
+> +	case ARM_CA57_L1_I_DATA_RAM:
+> +		count = snprintf(p, space, " RAMID='L1-I Data RAM'");
+> +		break;
+> +	case ARM_CA57_L1_D_TAG_RAM:
+> +		count = snprintf(p, space, " RAMID='L1-D Tag RAM'");
+> +		break;
+> +	case ARM_CA57_L1_D_DATA_RAM:
+> +		count = snprintf(p, space, " RAMID='L1-D Data RAM'");
+> +		break;
+> +	case ARM_CA57_L2_TLB_RAM:
+> +		count = snprintf(p, space, " RAMID='L2 TLB RAM'");
+> +		break;
+> +	default:
+> +		count = snprintf(p, space, " RAMID='unknown'");
+> +		break;
+> +	}
+> +
+> +	p += count;
+> +	space -= count;
+> +	count = snprintf(p, space,
+> +			 " repeat=%d, other=%d (CPUMERRSR_EL1=0x%llx)",
+> +			 repeat, other, val);
+> +
+> +	for (i = 0; i < repeat; i++) {
+> +		if (fatal)
+> +			edac_device_handle_ue(edac_dev, 0, 0, msg);
+> +		else
+> +			edac_device_handle_ce(edac_dev, 0, 0, msg);
+> +	}
+> +
+> +	write_sysreg_s(0, ARM_CA57_CPUMERRSR_EL1);
+
+Writing 0 just after you've read the value would minimise the window where repeat could
+have increased behind your back, or another error was counted as other, when it could have
+been reported more accurately.
+
+
+> +}
+
+
+> +static int al_l1_edac_probe(struct platform_device *pdev)
+> +{
+> +	struct edac_device_ctl_info *edac_dev;
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	edac_dev = edac_device_alloc_ctl_info(0, (char *)dev_name(dev), 1, "L",
+> +					      1, 1, NULL, 0,
+> +					      edac_device_alloc_index());
+> +	if (IS_ERR(edac_dev))
+
+edac_device_alloc_ctl_info() returns NULL, or dev_ctl, which comes from kzalloc(). I think
+you need to check for NULL here, IS_ERR() only catches the -errno range. (there is an
+IS_ERR_OR_NULL() if you really needed both)
+
+
+> +		return -ENOMEM;
+
+
+With the header-includes and edac_device_alloc_ctl_info() NULL check:
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
+Thanks,
+
+James
