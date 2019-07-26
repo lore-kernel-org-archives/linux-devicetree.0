@@ -1,99 +1,78 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v4 0/3] Introduce Bandwidth OPPs for interconnects
-Date: Fri, 26 Jul 2019 16:15:54 -0700
-Message-ID: <20190726231558.175130-1-saravanak@google.com>
+Subject: [PATCH v4 1/3] dt-bindings: opp: Introduce opp-peak-KBps and
+ opp-avg-KBps bindings
+Date: Fri, 26 Jul 2019 16:15:55 -0700
+Message-ID: <20190726231558.175130-2-saravanak@google.com>
+References: <20190726231558.175130-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190726231558.175130-1-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Cc: Saravana Kannan <saravanak@google.com>, Georgi Djakov <georgi.djakov@linaro.org>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Interconnects and interconnect paths quantify their performance levels in
-terms of bandwidth and not in terms of frequency. So similar to how we have
-frequency based OPP tables in DT and in the OPP framework, we need
-bandwidth OPP table support in DT and in the OPP framework.
+Interconnects often quantify their performance points in terms of
+bandwidth. So, add opp-peak-KBps (required) and opp-avg-KBps (optional) to
+allow specifying Bandwidth OPP tables in DT.
 
-So with the DT bindings added in this patch series, the DT for a GPU
-that does bandwidth voting from GPU to Cache and GPU to DDR would look
-something like this:
+opp-peak-KBps is a required property that replace opp-hz for Bandwidth OPP
+tables.
 
-gpu_cache_opp_table: gpu_cache_opp_table {
-	compatible = "operating-points-v2";
+opp-avg-KBps is an optional property that can be used in Bandwidth OPP
+tables.
 
-	gpu_cache_3000: opp-3000 {
-		opp-peak-KBps = <3000000>;
-		opp-avg-KBps = <1000000>;
-	};
-	gpu_cache_6000: opp-6000 {
-		opp-peak-KBps = <6000000>;
-		opp-avg-KBps = <2000000>;
-	};
-	gpu_cache_9000: opp-9000 {
-		opp-peak-KBps = <9000000>;
-		opp-avg-KBps = <9000000>;
-	};
-};
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ Documentation/devicetree/bindings/opp/opp.txt     | 15 ++++++++++++---
+ .../devicetree/bindings/property-units.txt        |  4 ++++
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-gpu_ddr_opp_table: gpu_ddr_opp_table {
-	compatible = "operating-points-v2";
-
-	gpu_ddr_1525: opp-1525 {
-		opp-peak-KBps = <1525000>;
-		opp-avg-KBps = <452000>;
-	};
-	gpu_ddr_3051: opp-3051 {
-		opp-peak-KBps = <3051000>;
-		opp-avg-KBps = <915000>;
-	};
-	gpu_ddr_7500: opp-7500 {
-		opp-peak-KBps = <7500000>;
-		opp-avg-KBps = <3000000>;
-	};
-};
-
-gpu_opp_table: gpu_opp_table {
-	compatible = "operating-points-v2";
-	opp-shared;
-
-	opp-200000000 {
-		opp-hz = /bits/ 64 <200000000>;
-	};
-	opp-400000000 {
-		opp-hz = /bits/ 64 <400000000>;
-	};
-};
-
-gpu@7864000 {
-	...
-	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
-	...
-};
-
-v1 -> v3:
-- Lots of patch additions that were later dropped
-v3 -> v4:
-- Fixed typo bugs pointed out by Sibi.
-- Fixed bug that incorrectly reset rate to 0 all the time
-- Added units documentation
-- Dropped interconnect-opp-table property and related changes
-
-Cheers,
-Saravana
-
-Saravana Kannan (3):
-  dt-bindings: opp: Introduce opp-peak-KBps and opp-avg-KBps bindings
-  OPP: Add support for bandwidth OPP tables
-  OPP: Add helper function for bandwidth OPP tables
-
- Documentation/devicetree/bindings/opp/opp.txt | 15 ++++--
- .../devicetree/bindings/property-units.txt    |  4 ++
- drivers/opp/core.c                            | 51 +++++++++++++++++++
- drivers/opp/of.c                              | 41 +++++++++++----
- drivers/opp/opp.h                             |  4 +-
- include/linux/pm_opp.h                        | 19 +++++++
- 6 files changed, 121 insertions(+), 13 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+index 76b6c79604a5..b1eb49d6eab0 100644
+--- a/Documentation/devicetree/bindings/opp/opp.txt
++++ b/Documentation/devicetree/bindings/opp/opp.txt
+@@ -83,9 +83,14 @@ properties.
+ 
+ Required properties:
+ - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
+-  required property for all device nodes but devices like power domains. The
+-  power domain nodes must have another (implementation dependent) property which
+-  uniquely identifies the OPP nodes.
++  required property for all device nodes but for devices like power domains or
++  bandwidth opp tables. The power domain nodes must have another (implementation
++  dependent) property which uniquely identifies the OPP nodes. The interconnect
++  opps are required to have the opp-peak-KBps property.
++
++- opp-peak-KBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
++  big-endian integer. This is a required property for all devices that don't
++  have opp-hz. For example, bandwidth OPP tables for interconnect paths.
+ 
+ Optional properties:
+ - opp-microvolt: voltage in micro Volts.
+@@ -132,6 +137,10 @@ Optional properties:
+ - opp-level: A value representing the performance level of the device,
+   expressed as a 32-bit integer.
+ 
++- opp-avg-KBps: Average bandwidth in kilobytes per second, expressed as a
++  32-bit big-endian integer. This property is only meaningful in OPP tables
++  where opp-peak-KBps is present.
++
+ - clock-latency-ns: Specifies the maximum possible transition latency (in
+   nanoseconds) for switching to this OPP from any other OPP.
+ 
+diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
+index e9b8360b3288..ef4c4a199efa 100644
+--- a/Documentation/devicetree/bindings/property-units.txt
++++ b/Documentation/devicetree/bindings/property-units.txt
+@@ -41,3 +41,7 @@ Temperature
+ Pressure
+ ----------------------------------------
+ -kpascal	: kilopascal
++
++Throughput
++----------------------------------------
++-KBps		: kilobytes per second
 -- 
 2.22.0.709.g102302147b-goog
