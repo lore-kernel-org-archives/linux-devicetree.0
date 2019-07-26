@@ -1,79 +1,114 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: Controllers with several interface options - one or more drivers?
-Date: Fri, 26 Jul 2019 17:06:03 +0200
-Message-ID: <CAKMK7uESP5D4e_Qx6W7amURqxJ=5Y4JHduZYCtkyVQY9jKJQeA@mail.gmail.com>
-References: <20190304125033.28841-1-josef@lusticky.cz>
- <20190708145618.26031-1-josef@lusticky.cz>
- <20190726122510.GA14341@ravnborg.org>
- <20190726145513.GK15868@phenom.ffwll.local>
+From: =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+Subject: Re: [PATCH net-next 3/3] dt-bindings: net: ethernet: Update mt7622
+ docs and dts to reflect the new phylink API
+Date: Fri, 26 Jul 2019 15:16:22 +0000
+Message-ID: <20190726151622.Horde.1AA717IbQrC7_YJcSBe4M-0@www.vdorst.com>
+References: <20190724192411.20639-1-opensource@vdorst.com>
+ <20190725193123.GA32542@lunn.ch>
+ <20190726071956.Horde.s4rfuzovwXB-d3LnV0PLRc8@www.vdorst.com>
+ <20190726131604.GA18223@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190726145513.GK15868@phenom.ffwll.local>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <a.hajda@samsung.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Dave Airlie <airlied@linux.ie>, Josef Lusticky <josef@lusticky.cz>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190726131604.GA18223@lunn.ch>
+Content-Disposition: inline
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, frank-w@public-files.de, sean.wang@mediatek.com, f.fainelli@gmail.com, linux@armlinux.org.uk, davem@davemloft.net, matthias.bgg@gmail.com, vivien.didelot@gmail.com, john@phrozen.org, linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWxzbyBwcm9iYWJseSBzaG91bGQgYWRkIGEgZmV3IG1vcmUgKGRybV9icmlkZ2UpIHBlb3BsZSwg
-SSB0aGluawp0aGF0J3MgYWxzbyBzb21ld2hhdCByZWxldmFudCBoZXJlLgotRGFuaWVsCgpPbiBG
-cmksIEp1bCAyNiwgMjAxOSBhdCA0OjU1IFBNIERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5j
-aD4gd3JvdGU6Cj4KPiBPbiBGcmksIEp1bCAyNiwgMjAxOSBhdCAwMjoyNToxMFBNICswMjAwLCBT
-YW0gUmF2bmJvcmcgd3JvdGU6Cj4gPiBIaSBKb3NlZiwgRGFuaWVsIGV0IGFsLgo+ID4KPiA+IFRo
-ZSBkcml2ZXIgdGhhdCB0cmlnZ2VyZWQgdGhpcyByZXBseSBpcyBhIGRyaXZlciB0aGF0IGFkZHMg
-cGFyYWxsZWwKPiA+IHN1cHBvcnQgdG8gaWxpOTM0MSBpbiBhIGRlZGljYXRlZCBwYW5lbCBkcml2
-ZXIuCj4gPiBUaGUgaXNzdWUgaGVyZSBpcyB0aGF0IHdlIGFscmVhZHkgaGF2ZSBhIHRpbnkgZHJp
-dmVyIHRoYXQgc3VwcG9ydHMgdGhlCj4gPiBpbGk5MzQxIGNvbnRyb2xsZXIgLSBidXQgd2l0aCBh
-IHNsaWdodGx5IGRpZmZlcmVudCBjb25maWd1cmF0aW9uLgo+ID4KPiA+IFRoZSBpbGk5MzQxIHN1
-cHBvcnRzIHNldmVyYWwgaW50ZXJmYWNlcyAtIGZyb20gdGhlIGRhdGFzaGVldDoKPiA+ICAgICAi
-SUxJOTM0MSBzdXBwb3J0cyBwYXJhbGxlbCA4LS85LS8xNi0vMTgtYml0IGRhdGEgYnVzCj4gPiAg
-ICAgIE1DVSBpbnRlcmZhY2UsIDYtLzE2LS8xOC1iaXQgZGF0YSBidXMgUkdCIGludGVyZmFjZSBh
-bmQKPiA+ICAgICAgMy0vNC1saW5lIHNlcmlhbCBwZXJpcGhlcmFsIGludGVyZmFjZSAoU1BJKSIK
-PiA+Cj4gPiBOb3JhbGYgLSBpbiBhbm90aGVyIG1haWwgZXhwbGFpbmVkOgo+ID4gIgo+ID4gVGhl
-IE1JUEkgQWxsaWFuY2UgaGFzIGxvdHMgb2Ygc3RhbmRhcmRzIHNvbWUgd3J0LiBkaXNwbGF5IGNv
-bnRyb2xsZXIKPiA+IGludGVyZmFjZXM6Cj4gPiAtIE1JUEkgREJJIC0gRGlzcGxheSBCdXMgSW50
-ZXJmYWNlICh1c2VkIGZvciBjb21tYW5kcyBhbmQgb3B0aW9uYWxseSBwaXhlbHMpCj4gPiAtIE1J
-UEkgRFBJIC0gRGlzcGxheSBQaXhlbCBJbnRlcmZhY2UgKGFsc28gY2FsbGVkIFJHQiBpbnRlcmZh
-Y2Ugb3IKPiA+IERPVENMSyBpbnRlcmZhY2UpCj4gPiAtIE1JUEkgRFNJIC0gRGlzcGxheSBTZXJp
-YWwgSW50ZXJmYWNlIChjb21tYW5kcyBhbmQgcGl4ZWxzKQo+ID4KPiA+IFRoZSBpbGk5MzQxIHN1
-cHBvcnRzIGJvdGggTUlQSSBEQkkgYW5kIERQSS4KPiA+ICIKPiA+Cj4gPiBNSVBJIERQSSAtIGlz
-IGEgZ29vZCBmaXQgZm9yIGEgZHJtX3BhbmVsIGRyaXZlci4KPiA+IE1JUEkgREJJIC0gcmVxdWly
-ZXMgYSBmdWxsIGRpc3BsYXkgY29udHJvbGxlciBkcml2ZXIuCj4gPgo+ID4gVGhlcmUgYXJlIG1h
-bnkgb3RoZXIgZXhhbXBsZXMgb2YgZHJpdmVyIFNvQyB0aGF0IGluIHRoZSBzYW1lIHdheQo+ID4g
-Y2FuIGJlIHNlZW4gb25seSBhcyBhIHBhbmVsIG9yIGFzIGEgZnVsbCBkaXNwbGF5IGNvbnRyb2xs
-ZXIgZHJpdmVyLgo+ID4KPiA+IFRoZSBvcGVuIHF1ZXN0aW9uIGhlcmUgaXMgaWYgd2Ugc2hvdWxk
-IHRyeSB0byBzdXBwb3J0IGJvdGggY2FzZXMgaW4gdGhlCj4gPiBzYW1lIGRyaXZlciAvIGZpbGUu
-IE9yIHNoYWxsIHdlIGltcGxtZW50IHR3byBkaWZmZXJlbnQgZHJpdmVycy4KPiA+IE9uZSBmb3Ig
-dGhlIHBhbmVsIHVzZS1jYXNlLiBBbmQgb25lIGZvciB0aGUgZGlzcGxheSBjb250cm9sbGVyIHVz
-ZWNhc2U/Cj4gPgo+ID4gTm90IHN1cmUgLSBzbyBhc2tpbmcgZm9yIGZlZWRiYWNrLgo+Cj4gSSdt
-IG5vdCBzdXJlLiBDdXJyZW50bHkgd2UgZG8gaGF2ZSBEU0kgYW5kIGR1bWIgUkdCIHBhbmVscyBh
-bGwgaW4KPiBkcm0vcGFuZWwuIEkgZG9uJ3QgdGhpbmsgd2UgaGF2ZSBEQkkgcGFuZWxzIGluIHRo
-ZXJlIHlldCwgYnV0IHRoZW4KPiBkcm0vdGlueSBpcyB0aGUgb25seSBvbmUgc3VwcG9ydGluZyB0
-aGVzZS4KPgo+IEkgZ3Vlc3Mgd2UgY291bGQgbG9vayBpbnRvIG1vdmUgc29tZSBvZiB0aGUgREJJ
-IHBhbmVsIGRyaXZlcnMgaW50byBwYW5lbAo+IGRyaXZlcnMsIGJ1dCB0aGF0IG5lZWRzIGEgYml0
-IG1vcmUgZ2x1ZSBhbGwgYXJvdW5kLiBJJ20gaG9uZXN0bHkgbm90IHN1cmUKPiBob3cgdGhlIGN1
-cnJlbnQgRFNJIGRyaXZlcnMgaW4gZHJtX3BhbmVsIHdvcmsgZXhhY3RseSwgZXNwZWNpYWxseSBm
-b3IKPiBjb21tYW5kIG1vZGUuCj4KPiBPciBtYXliZSB3ZSBuZWVkIGEgbmV3IGludGVyZmFjZSBm
-b3IgY29tbWFuZCBtb2RlLgo+Cj4gV3J0IHNoYXJpbmcgY29kZSBiZXR3ZWVuIGRyaXZlcnMgZm9y
-IHRoZSBzYW1lIGNoaXAsIGJ1dCBkaWZmZXJlbnQKPiBpbnRlcmZhY2VzOiBJIHdvdWxkbid0IHdv
-cnJ5IHRvbyBtdWNoIGFib3V0IHRoYXQuIE1heWJlIHRyeSB0byBoYXZlIGEKPiBzaGFyZWQgaGVh
-ZGVyIGZpbGUgYXQgbGVhc3QgZm9yIHJlZ2lzdGVycy4gTG9uZyB0ZXJtIHdlIGNvdWxkIGVuZCB1
-cCB3aXRoCj4gb25lIGRyaXZlciBtb2R1bGUgd2hpY2ggZXhwb3NlcyBkaWZmZXJlbnQgZmxhdm91
-cnMgb2YgdGhlIHNhbWUgY2hpcCwgc28KPiBtdWx0aXBsZSBkcm1fcGFuZWwgZHJpdmVycywgb3Ig
-bWF5YmUgd2UnbGwgZ2V0IHNvbWV0aGluZyBtb3JlIHNwZWNpZmljIGZvcgo+IGRzaS9kYmkuCj4g
-LURhbmllbAo+IC0tCj4gRGFuaWVsIFZldHRlcgo+IFNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBD
-b3Jwb3JhdGlvbgo+IGh0dHA6Ly9ibG9nLmZmd2xsLmNoCgoKCi0tIApEYW5pZWwgVmV0dGVyClNv
-ZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgorNDEgKDApIDc5IDM2NSA1NyA0OCAt
-IGh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbA==
+Quoting Andrew Lunn <andrew@lunn.ch>:
+
+> On Fri, Jul 26, 2019 at 07:19:56AM +0000, René van Dorst wrote:
+>> Quoting Andrew Lunn <andrew@lunn.ch>:
+>>
+>> >>+	gmac0: mac@0 {
+>> >>+		compatible = "mediatek,eth-mac";
+>> >>+		reg = <0>;
+>> >>+		phy-mode = "sgmii";
+>> >>+
+>> >>+		fixed-link {
+>> >>+			speed = <2500>;
+>> >>+			full-duplex;
+>> >>+			pause;
+>> >>+		};
+>> >>+	};
+>> >
+>> >Hi René
+>> >
+>>
+>> Hi Andrew,
+>>
+>> >SGMII and fixed-link is rather odd. Why do you need this combination?
+>>
+>> BananaPi R64 has a RTL8367S 5+2-port switch, switch interfaces with the SOC
+>> by a
+>> (H)SGMII and/or RGMII interface. SGMII is mainly used for the LAN ports and
+>> RGMII for the WAN port.
+>>
+>> I mimic the SDK software which puts SGMII interface in 2.5GBit fixed-link
+>> mode.
+>> The RTL8367S switch code also put switch mac in forge 2.5GBit mode.
+>>
+>> So this is the reason why I put a fixed-link mode here.
+>
+> Are you sure it is using SGMII and not 2500BaseX? Can you get access
+> to the signalling word? SGMII is supposed to indicate to the MAC what
+> speed it is using, via inband signalling. So there should not be any
+> need for a fixed-link. 2500BaseX however does not have such
+> signalling, so there would need to be a fixed link.
+
+I am not sure.
+
+I just converted the current mainline code to support phylink and  
+mimic the DTS
+of the SDK. But the SDK seems to be incorrect.
+
+Realtek[0] calls these modes:
+* SGMII (1.25GHz) Interface
+* High SGMII (3.125GHz) Interface
+Also the datasheet that I have doesn't talk about base-x modes.
+
+But MT7622 Reference manual[1] page 1960 says:
+  The core leverages the 1000Base-X PCS and Auto-Negotiation from IEEE 802.3
+  specification (clause 36/37). This IP can support up to 3.125G baud  
+for 2.5Gbps
+  (proprietary 2500Base-X) data rate of MAC by overclocking.
+
+So I think it phy-mode should be 2500Base-X in this case.
+
+SGMII part is a bit hard for me to support, I don't have the hardware,
+MediaTek datasheets are mostly incomplete and also I am a not familiar  
+with it.
+
+But I think I know what I have to change.
+Based on your explanation above.
+
+I think this more correct implementation:
+
+* 1000base-x and 2500base-x always force the link.
+* SGMII is always inband but I need in phylink_mac_link_status() to readout
+   "PCS_SPEED_ABILITY Clause 45 3.5" register to see the inband status?
+   Or is it just the GMAC PSMR register? For me it is a bit confusing.
+   SGMII block has a register to set the link speed and etc. But tests on the
+   bananapi R64 board shows that I also need to set the GMAC register else it
+   didn't work. Also it is not easy to debug if you don't have the board.
+
+> Maybe we should really consider what phy-mode = "sgmii"; means. Should
+> this include the overclocked 2.5G speed, or should we add a 2500sgmii
+> link mode?
+
+No.
+
+>
+>      Andrew
+
+Greats,
+
+René
+
+[0]:  
+https://www.realtek.com/en/products/communications-network-ics/item/rtl8367s-cg
+[1]:  
+https://drive.google.com/file/d/1cW8KQmmVpwDGmBd48KNQes9CRn7FEgBb/view?usp=sharing
