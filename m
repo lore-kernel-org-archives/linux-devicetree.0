@@ -1,145 +1,71 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [RFC PATCH 08/11] arm: dts: exynos: Add parents and
- #interconnect-cells to Exynos4412
-Date: Fri, 26 Jul 2019 14:02:34 +0200
-Message-ID: <cc4c48c3-06a5-c58f-20de-0aa18ae8667e@samsung.com>
-References: <CGME20190723122027eucas1p24b1d76e3139f7cc52614d7613ff9ba98@eucas1p2.samsung.com>
-        <20190723122016.30279-1-a.swigon@partner.samsung.com>
-        <20190723122016.30279-9-a.swigon@partner.samsung.com>
-        <CAGTfZH1_Qk+vNa_AJW_8OA8MJbnZa3yCTLLRs2w23bNTm72gyQ@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 7/7] docs: dt: fix a sound binding broken reference
+Date: Fri, 26 Jul 2019 13:08:41 +0100
+Message-ID: <20190726120841.GA55803@sirena.org.uk>
+References: <cover.1564140865.git.mchehab+samsung@kernel.org>
+ <9932608f32030c886d906ea656eda8408c544776.1564140865.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGTfZH1_Qk+vNa_AJW_8OA8MJbnZa3yCTLLRs2w23bNTm72gyQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: cwchoi00@gmail.com, =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com, Seung-Woo Kim <sw0312.kim@samsung.com>, georgi.djakov@linaro.org
+Content-Type: multipart/mixed; boundary="===============0710924350089899933=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <9932608f32030c886d906ea656eda8408c544776.1564140865.git.mchehab+samsung@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Maxime Ripard <maxime.ripard@bootlin.com>, Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
 
-On 2019-07-25 15:13, Chanwoo Choi wrote:
-> 2019년 7월 24일 (수) 오전 8:07, Artur Świgoń <a.swigon@partner.samsung.com>님이 작성:
->> This patch adds two fields tp the Exynos4412 DTS:
->>    - parent: to declare connections between nodes that are not in a
->>      parent-child relation in devfreq;
->>    - #interconnect-cells: required by the interconnect framework.
->>
->> Please note that #interconnect-cells is always zero and node IDs are not
->> hardcoded anywhere.
->>
->> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 1 +
->>   arch/arm/boot/dts/exynos4412.dtsi               | 9 +++++++++
->>   2 files changed, 10 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
->> index ea55f377d17c..bdd61ae86103 100644
->> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
->> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
->> @@ -106,6 +106,7 @@
->>   &bus_leftbus {
->>          devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
->>          vdd-supply = <&buck3_reg>;
->> +       parent = <&bus_dmc>;
-> It is wrong. 'bus_leftbus' has not any h/w dependency of 'bus_dmc'
-> and 'bus_leftbus' is not child of 'bus_dmc'.
->
-> Even it there are some PMQoS requirement between them,
-> it it not proper to tie both 'bus_leftbus' and 'bus_dmc'.
+--===============0710924350089899933==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Disposition: inline
 
-There is strict dependency between them. DMC bus running at frequency 
-lower than left (or right) bus really doesn't make much sense, because 
-it will limit the left bus performance. This dependency should be 
-modeled somehow.
 
->>          status = "okay";
->>   };
->>
->> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
->> index d20db2dfe8e2..a70a671acacd 100644
->> --- a/arch/arm/boot/dts/exynos4412.dtsi
->> +++ b/arch/arm/boot/dts/exynos4412.dtsi
->> @@ -390,6 +390,7 @@
->>                          clocks = <&clock CLK_DIV_DMC>;
->>                          clock-names = "bus";
->>                          operating-points-v2 = <&bus_dmc_opp_table>;
->> +                       #interconnect-cells = <0>;
->>                          status = "disabled";
->>                  };
->>
->> @@ -398,6 +399,7 @@
->>                          clocks = <&clock CLK_DIV_ACP>;
->>                          clock-names = "bus";
->>                          operating-points-v2 = <&bus_acp_opp_table>;
->> +                       #interconnect-cells = <0>;
->>                          status = "disabled";
->>                  };
->>
->> @@ -406,6 +408,7 @@
->>                          clocks = <&clock CLK_DIV_C2C>;
->>                          clock-names = "bus";
->>                          operating-points-v2 = <&bus_dmc_opp_table>;
->> +                       #interconnect-cells = <0>;
->>                          status = "disabled";
->>                  };
->>
->> @@ -459,6 +462,7 @@
->>                          clocks = <&clock CLK_DIV_GDL>;
->>                          clock-names = "bus";
->>                          operating-points-v2 = <&bus_leftbus_opp_table>;
->> +                       #interconnect-cells = <0>;
->>                          status = "disabled";
->>                  };
->>
->> @@ -467,6 +471,7 @@
->>                          clocks = <&clock CLK_DIV_GDR>;
->>                          clock-names = "bus";
->>                          operating-points-v2 = <&bus_leftbus_opp_table>;
->> +                       #interconnect-cells = <0>;
->>                          status = "disabled";
->>                  };
->>
->> @@ -475,6 +480,7 @@
->>                          clocks = <&clock CLK_ACLK160>;
->>                          clock-names = "bus";
->>                          operating-points-v2 = <&bus_display_opp_table>;
->> +                       #interconnect-cells = <0>;
->>                          status = "disabled";
->>                  };
->>
->> @@ -483,6 +489,7 @@
->>                          clocks = <&clock CLK_ACLK133>;
->>                          clock-names = "bus";
->>                          operating-points-v2 = <&bus_fsys_opp_table>;
->> +                       #interconnect-cells = <0>;
->>                          status = "disabled";
->>                  };
->>
->> @@ -491,6 +498,7 @@
->>                          clocks = <&clock CLK_ACLK100>;
->>                          clock-names = "bus";
->>                          operating-points-v2 = <&bus_peri_opp_table>;
->> +                       #interconnect-cells = <0>;
->>                          status = "disabled";
->>                  };
->>
->> @@ -499,6 +507,7 @@
->>                          clocks = <&clock CLK_SCLK_MFC>;
->>                          clock-names = "bus";
->>                          operating-points-v2 = <&bus_leftbus_opp_table>;
->> +                       #interconnect-cells = <0>;
->>                          status = "disabled";
->>                  };
->>
->> --
->> 2.17.1
->>
->
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Jul 26, 2019 at 08:47:27AM -0300, Mauro Carvalho Chehab wrote:
+> Address this rename:
+> 	Documentation/devicetree/bindings/sound/{sun4i-i2s.txt -> allwinner,sun4i-a10-i2s.yaml}
+
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
+
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl067UgACgkQJNaLcl1U
+h9DZ3gf/XVyELAxpK+iOsyrIIgOtkynK4H9wknGxpl2rZE0a6qJHb4tUp+EVM5k7
+BP3tcLa5QVeuWG3k2rqMwoL86wXC7QLc+So1k5s612+LqO7tkgHRPQv0fFZFYFU+
+iQ7E6+MUeBW4LoqA4pSOQvpeU7oNy4amI/X639LTk7qjrTwnmwcH5aagkPRGOvPL
+KC+Hf/saAF5T9eue6updywRGYPWffVpQkoCO6NpwfWMk5UV071OneiL3SKXf/y+2
+7ZgIh2qwDFvkrpgmTUowa8D+iODO0/P6YP3m7Q8WZXS3YBSrnp0c9pDUUG38QVVG
+jB89EPyDbXAjR7L2WTMO1GCnC/j9Dg==
+=gcDY
+-----END PGP SIGNATURE-----
+
+--SLDf9lqlvOQaIe6s--
+
+
+--===============0710924350089899933==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0710924350089899933==--
