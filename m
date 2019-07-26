@@ -1,54 +1,76 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: fix -Wall W=1 compilation warnings for
- can1_sleep pinctrl
-Date: Fri, 26 Jul 2019 18:27:01 +0200
-Message-ID: <8cb628b9-dbbf-98d6-e09a-2ecc082315d4@st.com>
-References: <1561972686-23281-1-git-send-email-erwan.leray@st.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 6a/7] dt-bindings: Add ANX6345 DP/eDP transmitter
+ binding
+Date: Fri, 26 Jul 2019 18:36:01 +0200
+Message-ID: <20190726163601.o32bxqew5xavjgyi@flea>
+References: <20190722150414.9F97668B20@verein.lst.de>
+ <20190725151829.DC20968B02@verein.lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1561972686-23281-1-git-send-email-erwan.leray@st.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Erwan Le Ray <erwan.leray@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, bich.hemon@st.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190725151829.DC20968B02@verein.lst.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Torsten Duwe <duwe@lst.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Harald Geyer <harald@ccbib.org>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Hi Erwan		
-
-On 7/1/19 11:18 AM, Erwan Le Ray wrote:
-> Fix compilations warnings detected by -Wall W=1 compilation option:
-> - node has a unit name, but no reg property
-> 
-> Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-> index 140a983..ce98fd8 100644
-> --- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-> @@ -427,7 +427,7 @@
->   				};
->   			};
->   
-> -			m_can1_sleep_pins_a: m_can1-sleep@0 {
-> +			m_can1_sleep_pins_a: m_can1-sleep-0 {
->   				pins {
->   					pinmux = <STM32_PINMUX('H', 13, ANALOG)>, /* CAN1_TX */
->   						 <STM32_PINMUX('I', 9, ANALOG)>; /* CAN1_RX */
-> 
-
-Thanks for cleaning the STM32 DT. Applied on stm32-next. Note that I 
-changed commit title to indicate which STM32 platform is targeted by 
-this patch.
-
-Regards
-Alex
+SGksCgpPbiBUaHUsIEp1bCAyNSwgMjAxOSBhdCAwNToxODoyOVBNICswMjAwLCBUb3JzdGVuIER1
+d2Ugd3JvdGU6Cj4gVGhlIGFueDYzNDUgaXMgYW4gdWx0cmEtbG93IHBvd2VyIERpc3BsYXlQb3J0
+L2VEUCB0cmFuc21pdHRlciBkZXNpZ25lZAo+IGZvciBwb3J0YWJsZSBkZXZpY2VzLgo+Cj4gQWRk
+IGEgYmluZGluZyBkb2N1bWVudCBmb3IgaXQuCj4KPiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpo
+ZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4gU2lnbmVkLW9mZi1ieTogVmFzaWx5IEtob3J1emhpY2sg
+PGFuYXJzb3VsQGdtYWlsLmNvbT4KPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
+bmVsLm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBUb3JzdGVuIER1d2UgPGR1d2VAc3VzZS5kZT4KPiBS
+ZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9h
+cmQuY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9h
+bng2MzQ1LnlhbWwgfCAgIDkwICsrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDkwIGluc2Vy
+dGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9hbng2MzQ1LnlhbWwKPgo+IGRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvYW54NjM0NS55YW1s
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FueDYz
+NDUueWFtbAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi4wYWYw
+OTJkMTAxYzUKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FueDYzNDUueWFtbAo+IEBAIC0wLDAgKzEsOTAgQEAK
+PiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+ICslWUFNTCAxLjIKPiArLS0t
+Cj4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvZGlzcGxheS9icmlkZ2UvYW54
+NjM0NS55YW1sIwo+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFz
+L2NvcmUueWFtbCMKPiArCj4gK3RpdGxlOiBBbmFsb2dpeCBBTlg2MzQ1IGVEUCBUcmFuc21pdHRl
+ciBEZXZpY2UgVHJlZSBCaW5kaW5ncwo+ICsKPiArbWFpbnRhaW5lcnM6Cj4gKyAgLSBUb3JzdGVu
+IER1d2UgPGR1d2VAbHN0LmRlPgo+ICsKPiArZGVzY3JpcHRpb246IHwKPiArICBUaGUgQU5YNjM0
+NSBpcyBhbiB1bHRyYS1sb3cgcG93ZXIgRnVsbC1IRCBlRFAgdHJhbnNtaXR0ZXIgZGVzaWduZWQg
+Zm9yCj4gKyAgcG9ydGFibGUgZGV2aWNlcy4KPiArCj4gK3Byb3BlcnRpZXM6Cj4gKyAgY29tcGF0
+aWJsZToKPiArICAgIGNvbnN0OiBhbmFsb2dpeCxhbng2MzQ1Cj4gKwo+ICsgIHJlZzoKPiArICAg
+IG1heEl0ZW1zOiAxCj4gKyAgICBkZXNjcmlwdGlvbjogSTJDIGFkZHJlc3Mgb2YgdGhlIGRldmlj
+ZQo+ICsKPiArICByZXNldC1ncGlvczoKPiArICAgIG1heEl0ZW1zOiAxCj4gKyAgICBkZXNjcmlw
+dGlvbjogYWN0aXZlIGxvdyBHUElPIHRvIHVzZSBmb3IgcmVzZXQKPiArCj4gKyAgZHZkZDEyLXN1
+cHBseToKPiArICAgIG1heEl0ZW1zOiAxCj4gKyAgICBkZXNjcmlwdGlvbjogUmVndWxhdG9yIGZv
+ciAxLjJWIGRpZ2l0YWwgY29yZSBwb3dlci4KPiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlh
+bWwjL2RlZmluaXRpb25zL3BoYW5kbGUKPiArCj4gKyAgZHZkZDI1LXN1cHBseToKPiArICAgIG1h
+eEl0ZW1zOiAxCj4gKyAgICBkZXNjcmlwdGlvbjogUmVndWxhdG9yIGZvciAyLjVWIGRpZ2l0YWwg
+Y29yZSBwb3dlci4KPiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25z
+L3BoYW5kbGUKClRoZXJlJ3Mgbm8gbmVlZCB0byBzcGVjaWZ5IHRoZSB0eXBlIGhlcmUsIGFsbCB0
+aGUgcHJvcGVydGllcyBlbmRpbmcgaW4KLXN1cHBseSBhcmUgYWxyZWFkeSBjaGVja2VkIGZvciB0
+aGF0IHR5cGUKCj4gKyAgcG9ydHM6Cj4gKyAgICB0eXBlOiBvYmplY3QKPiArICAgIG1pbkl0ZW1z
+OiAxCj4gKyAgICBtYXhJdGVtczogMgo+ICsgICAgZGVzY3JpcHRpb246IHwKPiArICAgICAgVmlk
+ZW8gcG9ydCAwIGZvciBMVlRUTCBpbnB1dCwKPiArICAgICAgVmlkZW8gcG9ydCAxIGZvciBlRFAg
+b3V0cHV0IChwYW5lbCBvciBjb25uZWN0b3IpCj4gKyAgICAgIHVzaW5nIHRoZSBEVCBiaW5kaW5n
+cyBkZWZpbmVkIGluCj4gKyAgICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+ZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAoKWW91IHNob3VsZCBwcm9iYWJseSBkZXNjcmliZSB0
+aGUgcG9ydEAwIGFuZCBwb3J0QDEgbm9kZXMgaGVyZSBhcwp3ZWxsLiBJdCB3b3VsZCBhbGxvdyB5
+b3UgdG8gZXhwcmVzcyB0aGF0IHRoZSBwb3J0IDAgaXMgbWFuZGF0b3J5IGFuZAp0aGUgcG9ydCAx
+IG9wdGlvbmFsLCB3aGljaCBnb3QgZHJvcHBlZCBpbiB0aGUgY29udmVyc2lvbi4KCk1heGltZQoK
+LS0KTWF4aW1lIFJpcGFyZCwgQm9vdGxpbgpFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2lu
+ZWVyaW5nCmh0dHBzOi8vYm9vdGxpbi5jb20KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVs
