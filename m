@@ -1,75 +1,109 @@
-Return-Path: <SRS0=d0Jw=VU=linaro.org=georgi.djakov@kernel.org>
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v5 0/5] Add QCS404 interconnect provider driver
-Date: Tue, 23 Jul 2019 17:23:34 +0300
-Message-Id: <20190723142339.27772-1-georgi.djakov@linaro.org>
+Return-Path: <SRS0=qReI=VX=us.ibm.com=anoo@kernel.org>
+In-Reply-To: <20190726053959.2003-7-andrew@aj.id.au>
+From: "Adriana Kobylak" <anoo@us.ibm.com>
+Date: Fri, 26 Jul 2019 12:53:29 -0500
+References: <20190726053959.2003-1-andrew@aj.id.au>
+ <20190726053959.2003-7-andrew@aj.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, georgi.djakov@linaro.org
-Cc: vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: multipart/alternative; boundary="=_alternative 006246DF86258443_="
+Message-Id: <OF8D1EDAE6.971111FC-ON86258443.0062157C-86258443.00624798@notes.na.collabserv.com>
+Subject: Re:  [PATCH 06/17] ARM: dts: swift: Cleanup gpio-keys-polled properties
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: devicetree@vger.kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add drivers to support scaling of the on-chip interconnects on QCS404-based
-platforms. Also add the necessary device-tree nodes, so that the driver for
-each NoC can probe and register as interconnect-provider.
 
-The plan is to get patches 2,5 through the Qcom/ARM tree and the rest
-through the interconnect tree.
+--=_alternative 006246DF86258443_=
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
 
-v5:
-- Make reg and clocks DT properties required. (Bjorn)
-- Remove _clk suffix from clock names. (Bjorn)
-- Use the more succinct return !!icc_smd_rpm; (Bjorn)
+Andrew Jeffery <andrew@aj.id.au> wrote on 07/26/2019 12:39:48 AM:
 
-v4: https://lore.kernel.org/lkml/20190613151323.10850-1-georgi.djakov@linaro.org/
-- Move DT headers into the dt-bindings patch (Bjorn)
-- Pick Bjorn's r-b on some patches.
-- Return error if platform_device_register_data() fails (Bjorn)
-- Use platform_set_drvdata() only in the child device. (Bjorn)
-- Hide the smd-rpm proxy driver from config menu. (Bjorn)
-- Add remove() function to zero out the rpm handle. (Bjorn)
-- Move move the qcs404 driver patch later in the serie. (Bjorn)
-- Insert the DT nodes after rng to keep the list sorted by address. (Bjorn)
+> From: Andrew Jeffery <andrew@aj.id.au>
+> To: linux-aspeed@lists.ozlabs.org
+> Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org,=20
+> mark.rutland@arm.com, joel@jms.id.au, devicetree@vger.kernel.org,=20
+> linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,=20
+> Adriana Kobylak <anoo@us.ibm.com>
+> Date: 07/26/2019 12:40 AM
+> Subject: [EXTERNAL] [PATCH 06/17] ARM: dts: swift: Cleanup gpio-
+> keys-polled properties
+>=20
+> dtbs=5Fcheck gave the following warning:
+>=20
+>     Warning (avoid=5Funnecessary=5Faddr=5Fsize): /gpio-keys-polled:=20
+> unnecessary #address-cells/#size-cells without "ranges" or child=20
+> "reg" property
+>=20
+> Cc: Adriana Kobylak <anoo@us.ibm.com>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-v3: https://lore.kernel.org/lkml/20190611164157.24656-1-georgi.djakov@linaro.org/
-- Drop the patch introducing the qcom,qos DT property.
-- Add two new patches to create an interconnect proxy device. This device is
-  part of the RPM hardware and handles the communication of the bus bandwidth
-  requests.
-- Add a DT reg property and move the interconnect nodes under the "soc" node.
+Reviewed-by: Adriana Kobylak <anoo@us.ibm.com>
+Tested-by: Adriana Kobylak <anoo@us.ibm.com>
 
-v2: https://lore.kernel.org/lkml/20190415104357.5305-1-georgi.djakov@linaro.org/
-- Use the clk_bulk API. (Bjorn)
-- Move the port IDs into the provider file. (Bjorn)
-- Use ARRAY_SIZE in the macro to automagically count the num_links. (Bjorn)
-- Improve code readability. (Bjorn)
-- Add patch [4/4] introducing a qcom,qos DT property to represent the link to
-  the MMIO QoS registers HW block.
+> ---
+>  arch/arm/boot/dts/aspeed-bmc-opp-swift.dts | 2 --
+>  1 file changed, 2 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts b/arch/arm/
+> boot/dts/aspeed-bmc-opp-swift.dts
+> index 2077e8d0e096..9f934509ca1b 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
+> @@ -82,8 +82,6 @@
+>=20
+>     gpio-keys-polled {
+>        compatible =3D "gpio-keys-polled";
+> -      #address-cells =3D <1>;
+> -      #size-cells =3D <0>;
+>        poll-interval =3D <1000>;
+>=20
+>        scm0-presence {
+> --=20
+> 2.20.1
+>=20
 
-v1: https://lore.kernel.org/lkml/20190405035446.31886-1-georgi.djakov@linaro.org/
 
 
-Bjorn Andersson (1):
-  interconnect: qcom: Add QCS404 interconnect provider driver
+--=_alternative 006246DF86258443_=
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset="US-ASCII"
 
-Georgi Djakov (4):
-  dt-bindings: interconnect: Add Qualcomm QCS404 DT bindings
-  soc: qcom: smd-rpm: Create RPM interconnect proxy child device
-  interconnect: qcom: Add interconnect SMD over SMD driver
-  arm64: dts: qcs404: Add interconnect provider DT nodes
 
- .../bindings/interconnect/qcom,qcs404.txt     |  45 ++
- arch/arm64/boot/dts/qcom/qcs404.dtsi          |  28 +
- drivers/interconnect/qcom/Kconfig             |  12 +
- drivers/interconnect/qcom/Makefile            |   4 +
- drivers/interconnect/qcom/qcs404.c            | 539 ++++++++++++++++++
- drivers/interconnect/qcom/smd-rpm.c           |  77 +++
- drivers/interconnect/qcom/smd-rpm.h           |  15 +
- drivers/soc/qcom/smd-rpm.c                    |  17 +-
- .../dt-bindings/interconnect/qcom,qcs404.h    |  88 +++
- 9 files changed, 824 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
- create mode 100644 drivers/interconnect/qcom/qcs404.c
- create mode 100644 drivers/interconnect/qcom/smd-rpm.c
- create mode 100644 drivers/interconnect/qcom/smd-rpm.h
- create mode 100644 include/dt-bindings/interconnect/qcom,qcs404.h
+<br><tt><span style=3D" font-size:10pt">Andrew Jeffery &lt;andrew@aj.id.au&=
+gt;
+wrote on 07/26/2019 12:39:48 AM:<br><br>&gt; From: Andrew Jeffery &lt;andre=
+w@aj.id.au&gt;</span></tt><br><tt><span style=3D" font-size:10pt">&gt; To: =
+linux-aspeed@lists.ozlabs.org</span></tt><br><tt><span style=3D" font-size:=
+10pt">&gt; Cc: Andrew Jeffery &lt;andrew@aj.id.au&gt;,
+robh+dt@kernel.org, <br>&gt; mark.rutland@arm.com, joel@jms.id.au, devicetr=
+ee@vger.kernel.org,
+<br>&gt; linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+<br>&gt; Adriana Kobylak &lt;anoo@us.ibm.com&gt;</span></tt><br><tt><span s=
+tyle=3D" font-size:10pt">&gt; Date: 07/26/2019 12:40 AM</span></tt><br><tt>=
+<span style=3D" font-size:10pt">&gt; Subject: [EXTERNAL] [PATCH 06/17]
+ARM: dts: swift: Cleanup gpio-<br>&gt; keys-polled properties</span></tt><b=
+r><tt><span style=3D" font-size:10pt">&gt; <br>&gt; dtbs=5Fcheck gave the f=
+ollowing warning:<br>&gt; <br>&gt; &nbsp; &nbsp; Warning (avoid=5Funnecessa=
+ry=5Faddr=5Fsize): /gpio-keys-polled:
+<br>&gt; unnecessary #address-cells/#size-cells without &quot;ranges&quot;
+or child <br>&gt; &quot;reg&quot; property<br>&gt; <br>&gt; Cc: Adriana Kob=
+ylak &lt;anoo@us.ibm.com&gt;<br>&gt; Signed-off-by: Andrew Jeffery &lt;andr=
+ew@aj.id.au&gt;</span></tt><br><br><tt><span style=3D" font-size:10pt">Revi=
+ewed-by: Adriana Kobylak &lt;anoo@us.ibm.com&gt;</span></tt><br><tt><span s=
+tyle=3D" font-size:10pt">Tested-by: Adriana Kobylak &lt;anoo@us.ibm.com&gt;=
+</span></tt><br><tt><span style=3D" font-size:10pt"><br>&gt; ---<br>&gt; &n=
+bsp;arch/arm/boot/dts/aspeed-bmc-opp-swift.dts | 2 --<br>&gt; &nbsp;1 file =
+changed, 2 deletions(-)<br>&gt; <br>&gt; diff --git a/arch/arm/boot/dts/asp=
+eed-bmc-opp-swift.dts b/arch/arm/<br>&gt; boot/dts/aspeed-bmc-opp-swift.dts=
+<br>&gt; index 2077e8d0e096..9f934509ca1b 100644<br>&gt; --- a/arch/arm/boo=
+t/dts/aspeed-bmc-opp-swift.dts<br>&gt; +++ b/arch/arm/boot/dts/aspeed-bmc-o=
+pp-swift.dts<br>&gt; @@ -82,8 +82,6 @@<br>&gt; &nbsp;<br>&gt; &nbsp; &nbsp;=
+ gpio-keys-polled {<br>&gt; &nbsp; &nbsp; &nbsp; &nbsp;compatible =3D &quot=
+;gpio-keys-polled&quot;;<br>&gt; - &nbsp; &nbsp; &nbsp;#address-cells =3D &=
+lt;1&gt;;<br>&gt; - &nbsp; &nbsp; &nbsp;#size-cells =3D &lt;0&gt;;<br>&gt; =
+&nbsp; &nbsp; &nbsp; &nbsp;poll-interval =3D &lt;1000&gt;;<br>&gt; &nbsp;<b=
+r>&gt; &nbsp; &nbsp; &nbsp; &nbsp;scm0-presence {<br>&gt; -- <br>&gt; 2.20.=
+1<br>&gt; <br></span></tt><BR>
+
+--=_alternative 006246DF86258443_=--
