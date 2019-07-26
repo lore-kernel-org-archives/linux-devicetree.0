@@ -1,57 +1,54 @@
-Return-Path: <SRS0=dsAE=VX=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:59446 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfGZJYH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2019 05:24:07 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v5 7/7] remoteproc: qcom: wcss: explicitly request exclusive reset control
-Date: Fri, 26 Jul 2019 14:53:32 +0530
-Message-Id: <20190726092332.25202-8-govinds@codeaurora.org>
-In-Reply-To: <20190726092332.25202-1-govinds@codeaurora.org>
-References: <20190726092332.25202-1-govinds@codeaurora.org>
+Return-Path: <SRS0=jc2i=VX=intel.com=adrian.hunter@kernel.org>
+Subject: Re: [PATCH v2 2/2] mmc: Add support for the ASPEED SD controller
+References: <20190712033214.24713-1-andrew@aj.id.au>
+ <20190712033214.24713-3-andrew@aj.id.au>
+ <d6f7fdf2-07ed-354a-ca29-f3175623679c@intel.com>
+ <7cd30f3d-43fd-42da-9301-091eb2625c65@www.fastmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Message-ID: <8a7bfe52-83ca-7601-7d75-e5615da7b5de@intel.com>
+Date: Fri, 26 Jul 2019 08:56:08 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: andy.gross@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+In-Reply-To: <7cd30f3d-43fd-42da-9301-091eb2625c65@www.fastmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Andrew Jeffery <andrew@aj.id.au>, linux-mmc <linux-mmc@vger.kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Ryan Chen <ryanchen.aspeed@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Use request exclusive reset control for wcss reset controls.
+On 26/07/19 3:52 AM, Andrew Jeffery wrote:
+> On Thu, 25 Jul 2019, at 22:49, Adrian Hunter wrote:
+>> On 12/07/19 6:32 AM, Andrew Jeffery wrote:
+>>> +static int aspeed_sdhci_probe(struct platform_device *pdev)
+>>> +{
+>>> +	struct sdhci_pltfm_host *pltfm_host;
+>>> +	struct aspeed_sdhci *dev;
+>>> +	struct sdhci_host *host;
+>>> +	struct resource *res;
+>>> +	int slot;
+>>> +	int ret;
+>>> +
+>>> +	host = sdhci_pltfm_init(pdev, &aspeed_sdc_pdata, sizeof(*dev));
+>>> +	if (IS_ERR(host))
+>>> +		return PTR_ERR(host);
+>>> +
+>>> +	pltfm_host = sdhci_priv(host);
+>>> +	dev = sdhci_pltfm_priv(pltfm_host);
+>>> +	dev->parent = dev_get_drvdata(pdev->dev.parent);
+>>> +
+>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> +	slot = aspeed_sdhci_calculate_slot(dev, res);
+>>> +	if (slot < 0)
+>>> +		return slot;
+>>> +	dev_info(&pdev->dev, "Configuring for slot %d\n", slot);
+>>> +	dev->width_mask = !slot ? ASPEED_SDC_S0MMC8 : ASPEED_SDC_S1MMC8;
+>>
+>> That implies that you only support 2 slots which begs the question why
+>> you don't validate slot.
+> 
+> I'm not sure what you mean here, but I'll dig into it.
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_wcss.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I just meant, if you only support 2 slots:
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index c2e75f5b5737..a2671a19f2d0 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -781,21 +781,21 @@ static int q6v5_wcss_init_reset(struct q6v5_wcss *wcss,
- 	struct device *dev = wcss->dev;
- 
- 	if (desc->aon_reset_required) {
--		wcss->wcss_aon_reset = devm_reset_control_get(dev, "wcss_aon_reset");;
-+		wcss->wcss_aon_reset = devm_reset_control_get_exclusive(dev, "wcss_aon_reset");;
- 		if (IS_ERR(wcss->wcss_aon_reset)) {
- 			dev_err(wcss->dev, "fail to acquire wcss_aon_reset\n");
- 			return PTR_ERR(wcss->wcss_aon_reset);
- 		}
- 	}
- 
--	wcss->wcss_reset = devm_reset_control_get(dev, "wcss_reset");
-+	wcss->wcss_reset = devm_reset_control_get_exclusive(dev, "wcss_reset");
- 	if (IS_ERR(wcss->wcss_reset)) {
- 		dev_err(wcss->dev, "unable to acquire wcss_reset\n");
- 		return PTR_ERR(wcss->wcss_reset);
- 	}
- 
- 	if (desc->wcss_q6_reset_required) {
--		wcss->wcss_q6_reset = devm_reset_control_get(dev, "wcss_q6_reset");
-+		wcss->wcss_q6_reset = devm_reset_control_get_exclusive(dev, "wcss_q6_reset");
- 		if (IS_ERR(wcss->wcss_q6_reset)) {
- 			dev_err(wcss->dev, "unable to acquire wcss_q6_reset\n");
- 			return PTR_ERR(wcss->wcss_q6_reset);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+	if (slot > 1)
+		return -EINVAL;
