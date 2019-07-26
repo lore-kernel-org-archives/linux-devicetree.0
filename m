@@ -1,55 +1,119 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 17/85] arm64: qcom: qcs404: Add reset-cells to GCC node
-Date: Fri, 26 Jul 2019 09:38:27 -0400
-Message-ID: <20190726133936.11177-17-sashal@kernel.org>
-References: <20190726133936.11177-1-sashal@kernel.org>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC,
+	v3 9/9] media: platform: Add Mediatek ISP P1 shared memory device
+Date: Fri, 26 Jul 2019 23:04:42 +0900
+Message-ID: <CAAFQd5BE1hAgYG-0OY_SEOcz2g4WLeCxP=6G=5xhLb++vewspw@mail.gmail.com>
+References: <jungo.lin@mediatek.com>
+	<20190611035344.29814-1-jungo.lin@mediatek.com>
+	<20190611035344.29814-10-jungo.lin@mediatek.com>
+	<20190701072532.GB137710@chromium.org>
+	<1562297618.1212.46.camel@mtksdccf07>
+	<CAAFQd5BaTQ-Q7gsE0X+d4_81OZq9WHaCYkmALt7_4A1JFo=_8g@mail.gmail.com>
+	<1562313579.1212.73.camel@mtksdccf07>
+	<CAAFQd5AaNFpMGCVJREY85n8UetEwd99TOka8-ECoLzMbMkos_g@mail.gmail.com>
+	<1563870117.1212.455.camel@mtksdccf07>
+	<CAAFQd5Bh80N+cMhz=eyHUGJLaE5uuypOawQvHrTgGSMDvmcpLA@mail.gmail.com>
+	<20190726074116.GA19745@infradead.org>
+	<CAAFQd5CXwRm-3jD+rfNNDNLH=gT_i0QYSAG3XBo3SJnPTY56_w@mail.gmail.com>
+	<4460bc91-352a-7f3a-cbed-1b95e743ca8c@arm.com>
+	<1564142386.1212.621.camel@mtksdccf07>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Andy Gross <agross@kernel.org>, Niklas Cassel <niklas.cassel@linaro.org>, Vinod Koul <vkoul@kernel.org>, Olof Johansson <olof@lixom.net>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1564142386.1212.621.camel@mtksdccf07>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jungo Lin <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <sean.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <rynn.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UnlhbiBZdSAo5L2Z5a2f5L+uKQ==?= <ryan.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?RnJhbmtpZSBDaGl1ICjpgrHmloflh7Ep?= <frankie.chiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, ddavenport-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu@lists
 List-Id: devicetree@vger.kernel.org
 
-From: Andy Gross <agross@kernel.org>
+On Fri, Jul 26, 2019 at 8:59 PM Jungo Lin <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>
+> Hi Robin:
+>
+> On Fri, 2019-07-26 at 12:04 +0100, Robin Murphy wrote:
+> > On 26/07/2019 08:42, Tomasz Figa wrote:
+> > > On Fri, Jul 26, 2019 at 4:41 PM Christoph Hellwig <hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
+> > >>
+> > >> On Fri, Jul 26, 2019 at 02:15:14PM +0900, Tomasz Figa wrote:
+> > >>> Could you try dma_get_sgtable() with the SCP struct device and then
+> > >>> dma_map_sg() with the P1 struct device?
+> > >>
+> > >> Please don't do that.  dma_get_sgtable is a pretty broken API (see
+> > >> the common near the arm implementation) and we should not add more
+> > >> users of it.  If you want a piece of memory that can be mapped to
+> > >> multiple devices allocate it using alloc_pages and then just map
+> > >> it to each device.
+> > >
+> > > Thanks for taking a look at this thread.
+> > >
+> > > Unfortunately that wouldn't work. We have a specific reserved memory
+> > > pool that is the only memory area accessible to one of the devices.
+> > > Any idea how to handle this?
+> >
+> > If it's reserved in the sense of being outside struct-page-backed
+> > "kernel memory", then provided you have a consistent CPU physical
+> > address it might be reasonable for other devices to access it via
+> > dma_map_resource().
+> >
+> > Robin.
+>
+> Thank you for your suggestion.
+>
+> After revising to use dma_map_resource(), it is worked. Below is the
+> current implementation. Pleas kindly help us to check if there is any
+> misunderstanding.
+>
+> #define MTK_ISP_COMPOSER_MEM_SIZE               0x200000
+>
+>         /*
+>          * Allocate coherent reserved memory for SCP firmware usage.
+>          * The size of SCP composer's memory is fixed to 0x200000
+>          * for the requirement of firmware.
+>          */
+>         ptr = dma_alloc_coherent(p1_dev->cam_dev.smem_dev,
+>                                  MTK_ISP_COMPOSER_MEM_SIZE, &addr, GFP_KERNEL);
+>         if (!ptr) {
+>                 dev_err(dev, "failed to allocate compose memory\n");
+>                 return -ENOMEM;
+>         }
+>         p1_dev->composer_scp_addr = addr;
+>         p1_dev->composer_virt_addr = ptr;
+>         dev_dbg(dev, "scp addr:%pad va:%pK\n", &addr, ptr);
+>
+>         /*
+>          * This reserved memory is also be used by ISP P1 HW.
+>          * Need to get iova address for ISP P1 DMA.
+>          */
+>         addr = dma_map_resource(dev, addr, MTK_ISP_COMPOSER_MEM_SIZE,
+>                                 DMA_BIDIRECTIONAL, DMA_ATTR_SKIP_CPU_SYNC);
 
-[ Upstream commit 0763d0c2273a3c72247d325c48fbac3d918d6b87 ]
+This is still incorrect, because addr is a DMA address, but the second
+argument to dma_map_resource() is a physical address.
 
-This patch adds a reset-cells property to the gcc controller on the QCS404.
-Without this in place, we get warnings like the following if nodes reference
-a gcc reset:
+>         if (dma_mapping_error(dev, addr)) {
+>                 dev_err(dev, "Failed to map scp iova\n");
+>                 ret = -ENOMEM;
+>                 goto fail_free_mem;
+>         }
+>         p1_dev->composer_iova = addr;
+>         dev_info(dev, "scp iova addr:%pad\n", &addr);
+>
+> Moreover, appropriate Tomasz & Christoph's help on this issue.
 
-arch/arm64/boot/dts/qcom/qcs404.dtsi:261.38-310.5: Warning (resets_property):
-/soc@0/remoteproc@b00000: Missing property '#reset-cells' in node
-/soc@0/clock-controller@1800000 or bad phandle (referred from resets[0])
-  also defined at arch/arm64/boot/dts/qcom/qcs404-evb.dtsi:82.18-84.3
-  DTC     arch/arm64/boot/dts/qcom/qcs404-evb-4000.dtb
-arch/arm64/boot/dts/qcom/qcs404.dtsi:261.38-310.5: Warning (resets_property):
-/soc@0/remoteproc@b00000: Missing property '#reset-cells' in node
-/soc@0/clock-controller@1800000 or bad phandle (referred from resets[0])
-  also defined at arch/arm64/boot/dts/qcom/qcs404-evb.dtsi:82.18-84.3
+Robin, the memory is specified using the reserved-memory DT binding
+and managed by the coherent DMA pool framework. We can allocate from
+it using dma_alloc_coherent(), which gives us a DMA address, not CPU
+physial address (although in practice on this platform they are equal
+numerically).
 
-Signed-off-by: Andy Gross <agross@kernel.org>
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index ffedf9640af7..65a2cbeb28be 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -383,6 +383,7 @@
- 			compatible = "qcom,gcc-qcs404";
- 			reg = <0x01800000 0x80000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 
- 			assigned-clocks = <&gcc GCC_APSS_AHB_CLK_SRC>;
- 			assigned-clock-rates = <19200000>;
--- 
-2.20.1
+Best regards,
+Tomasz
