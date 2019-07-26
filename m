@@ -1,76 +1,33 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH 2/2] dt-bindings: leds: document new "power-supply"
- property
-Date: Fri, 26 Jul 2019 11:06:07 +0100
-Message-ID: <20190726100607.j5bdmuuk33zpwa2r@holly.lan>
-References: <20190708103547.23528-1-jjhiblot@ti.com>
- <20190708103547.23528-3-jjhiblot@ti.com>
- <20190724164757.GA3723@bogus>
- <753b2c8d-e8fc-ec6e-f372-a84d4452fd33@ti.com>
+From: Schrempf Frieder <frieder.schrempf@kontron.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: vendor-prefixes: Add Admatec AG
+Date: Fri, 26 Jul 2019 10:07:02 +0000
+Message-ID: <5a61b9f1-86d5-438e-204b-0db3ef0796e3@kontron.de>
+References: <20190726061705.14764-1-krzk@kernel.org>
+ <963ba555-dde0-9c3c-1e15-740ca200853f@kontron.de>
+ <CAJKOXPdbBXEy0zzjZ1ytts0y5STQ5x9xQVBmU1vn46tmu8uCGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <753b2c8d-e8fc-ec6e-f372-a84d4452fd33@ti.com>
+In-Reply-To: <CAJKOXPdbBXEy0zzjZ1ytts0y5STQ5x9xQVBmU1vn46tmu8uCGg@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <F58E547739A13444B5B7088FBEE0A607@snt-world.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc: Rob Herring <robh@kernel.org>, jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, dmurphy@ti.com, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 01:08:46PM +0200, Jean-Jacques Hiblot wrote:
-> Hi Rob,
-> 
-> On 24/07/2019 18:47, Rob Herring wrote:
-> > On Mon, Jul 08, 2019 at 12:35:47PM +0200, Jean-Jacques Hiblot wrote:
-> > > Most of the LEDs are powered by a voltage/current regulator. describing in
-> > > the device-tree makes it possible for the LED core to enable/disable it
-> > > when needed.
-> > > 
-> > > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> > > ---
-> > >   Documentation/devicetree/bindings/leds/common.txt | 5 +++++
-> > >   1 file changed, 5 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> > > index 70876ac11367..e093a2b7eb90 100644
-> > > --- a/Documentation/devicetree/bindings/leds/common.txt
-> > > +++ b/Documentation/devicetree/bindings/leds/common.txt
-> > > @@ -61,6 +61,11 @@ Optional properties for child nodes:
-> > >   - panic-indicator : This property specifies that the LED should be used,
-> > >   		    if at all possible, as a panic indicator.
-> > > +- power-supply : A voltage/current regulator used to to power the LED. When a
-> > > +		 LED is turned off, the LED core disable its regulator. The
-> > > +		 same regulator can power many LED (or other) devices. It is
-> > > +		 turned off only when all of its users disabled it.
-> > Not sure this should be common. It wouldn't apply to cases where we have
-> > an LED controller parent nor gpio and pwm LEDs and those are most cases.
-> 
-> It does make sense for GPIO and PWM bindings if the anode of LED is tied to
-> a regulated voltage and the cathod to the control line.
-> 
-> The same is true for a certain class of true LED controller that do not
-> deliver power but act like current sinks.
-> 
-> JJ
-> 
-> > 
-> > Perhaps what makes sense here is an regulator-led binding.
-
-You didn't comment on this alternative... and I confess I'm not quite
-sure what Rob means by a regulator-led binding so I can't really comment
-either.
-
-Rob, is there any analogous example for a regulator-<something-else> binding
-to compare with?
-
-
-Daniel.
-
-> > 
-> > > +
-> > >   - trigger-sources : List of devices which should be used as a source triggering
-> > >   		    this LED activity. Some LEDs can be related to a specific
-> > >   		    device and should somehow indicate its state. E.g. USB 2.0
-> > > -- 
-> > > 2.17.1
-> > > 
+T24gMjYuMDcuMTkgMTI6MDIsIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+IE9uIEZyaSwg
+MjYgSnVsIDIwMTkgYXQgMTE6NDgsIFNjaHJlbXBmIEZyaWVkZXINCj4gPGZyaWVkZXIuc2NocmVt
+cGZAa29udHJvbi5kZT4gd3JvdGU6DQo+Pg0KPj4gT24gMjYuMDcuMTkgMDg6MTcsIEtyenlzenRv
+ZiBLb3psb3dza2kgd3JvdGU6DQo+Pj4gQWRkIHZlbmRvciBwcmVmaXggZm9yIEFkbWF0ZWMgQUcu
+DQo+Pg0KPj4gV2UgZ2V0IHRoZSBkaXNwbGF5cyB1c2VkIHdpdGggdGhlIEtvbnRyb24gZXZhbCBr
+aXRzIGZyb20gImFkbWF0ZWMgR21iSCINCj4+IGluIEhhbWJ1cmcsIG5vdCAiQWRtYXRlYyBBRyIg
+aW4gU3dpdHplcmxhbmQuIEkgdGhpbmsgd2UgaGF2ZSB0bw0KPj4gZGlmZmVyZW50aWF0ZSBoZXJl
+Lg0KPj4NCj4+IEkgd2lsbCByZXZpZXcgcGF0Y2ggMi8yIHNvb24uLi4NCj4gDQo+IFdoYXQgYSBj
+b2luY2lkZW5jZS4uLiB0aGV5IGhhdmUgc28gc2ltaWxhciBwb3J0Zm9saW8uIEFmdGVyIGxvb2tp
+bmcgYXQNCj4gdmVuZG9yIHByZWZpeGVzIHRoYXQgd291bGQgYmUgdGhlIGZpcnN0IGR1cGxpY2F0
+aW9uIG9mIG5hbWUuDQoNCkkgaGF2ZSBubyBpZGVhLCB3aGV0aGVyIHRoZXkgYXJlIHJlbGF0ZWQg
+c29tZWhvdyBvciBoYXZlIGEgY29tbW9uIGhpc3RvcnkuLi4NCg0KPiANCj4gVG8gYXZvaWQgY29u
+ZmxpY3QsIGhvdyBhYm91dDogImFkbWF0ZWNkZSI/DQoNCldvdWxkIGJlIG9rLCBJIGd1ZXNzLg0K
+DQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IEtyenlzenRvZg0KPiA=
