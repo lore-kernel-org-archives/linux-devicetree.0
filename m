@@ -1,48 +1,86 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/7] docs: fix broken doc references due to renames
-Date: Fri, 26 Jul 2019 07:41:35 -0600
-Message-ID: <CAL_JsqK_rfHehrKW_NS89BOV0=dYoao0H=zOzG=D-724vKduKw@mail.gmail.com>
-References: <cover.1564140865.git.mchehab+samsung@kernel.org>
- <430ed96cb234805d1deb216e8c8559da22cc6bac.1564140865.git.mchehab+samsung@kernel.org>
+From: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH AUTOSEL 4.19 03/47] ARM: dts: rockchip: Make
+ rk3288-veyron-mickey's emmc work again
+Date: Fri, 26 Jul 2019 09:41:26 -0400
+Message-ID: <20190726134210.12156-3-sashal@kernel.org>
+References: <20190726134210.12156-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <430ed96cb234805d1deb216e8c8559da22cc6bac.1564140865.git.mchehab+samsung@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrea Parri <andrea.parri@amarulasolutions.com>, Ajay Gupta <ajayg@nvidia.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Akira Yokosawa <akiyks@gmail.com>, Lai Jiangshan <jiangshanlai@gmail.com>, Jerry Hoemann <jerry.hoemann@hpe.com>, dri-devel <dri-devel@lists.freedesktop.org>, David Howells <dhowells@redhat.com>, Linux I2C <linux-i2c@vger.kernel.org>, Joel Fernandes <joel@joelfernandes.org>, "Paul E. McKenney" <paulmck@linux.ibm.com>, Will Deacon <will@kernel.org>, "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>, SCSI <linux-scsi@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Wolfram Sang <wsa@the-dreams.de>, esc.storagedev@microsemi.com, Maxime Ripard <maxime.ripard@bootlin.com>, Ingo Molnar <mingo@redhat.com>, Alan Stern <stern@rowland.harvard.edu>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190726134210.12156-1-sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdWwgMjYsIDIwMTkgYXQgNTo0NyBBTSBNYXVybyBDYXJ2YWxobyBDaGVoYWIKPG1j
-aGVoYWIrc2Ftc3VuZ0BrZXJuZWwub3JnPiB3cm90ZToKPgo+IFNvbWUgZmlsZXMgZ290IHJlbmFt
-ZWQgYnV0IHByb2JhYmx5IGR1ZSB0byBzb21lIG1lcmdlIGNvbmZsaWN0cywKPiBhIGZldyByZWZl
-cmVuY2VzIHN0aWxsIHBvaW50IHRvIHRoZSBvbGQgbG9jYXRpb25zLgo+Cj4gU2lnbmVkLW9mZi1i
-eTogTWF1cm8gQ2FydmFsaG8gQ2hlaGFiIDxtY2hlaGFiK3NhbXN1bmdAa2VybmVsLm9yZz4KPiBB
-Y2tlZC1ieTogV29sZnJhbSBTYW5nIDx3c2FAdGhlLWRyZWFtcy5kZT4gIyBJMkMgcGFydAo+IFJl
-dmlld2VkLWJ5OiBKZXJyeSBIb2VtYW5uIDxqZXJyeS5ob2VtYW5uQGhwZS5jb20+ICMgaHB3ZHQu
-cnN0Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vUkNVL3JjdWxpc3RfbnVsbHMudHh0ICAgICAgICAg
-ICAgICAgICAgIHwgIDIgKy0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Fy
-bS9pZGxlLXN0YXRlcy50eHQgfCAgMiArLQo+ICBEb2N1bWVudGF0aW9uL2xvY2tpbmcvc3Bpbmxv
-Y2tzLnJzdCAgICAgICAgICAgICAgICAgICB8ICA0ICsrLS0KPiAgRG9jdW1lbnRhdGlvbi9tZW1v
-cnktYmFycmllcnMudHh0ICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQo+ICBEb2N1bWVudGF0
-aW9uL3RyYW5zbGF0aW9ucy9rb19LUi9tZW1vcnktYmFycmllcnMudHh0ICB8ICAyICstCj4gIERv
-Y3VtZW50YXRpb24vd2F0Y2hkb2cvaHB3ZHQucnN0ICAgICAgICAgICAgICAgICAgICAgIHwgIDIg
-Ky0KPiAgTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfCAxMCArKysrKy0tLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9kcm1fbW9kZXMuYyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KPiAgZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1udmlk
-aWEtZ3B1LmMgICAgICAgICAgICAgICAgICAgfCAgMiArLQo+ICBkcml2ZXJzL3Njc2kvaHBzYS5j
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA0ICsrLS0KPiAgMTAgZmlsZXMg
-Y2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygrKSwgMTYgZGVsZXRpb25zKC0pCgpBY2tlZC1ieTogUm9i
-IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVs
+From: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+[ Upstream commit 99fa066710f75f18f4d9a5bc5f6a711968a581d5 ]
+
+When I try to boot rk3288-veyron-mickey I totally fail to make the
+eMMC work.  Specifically my logs (on Chrome OS 4.19):
+
+  mmc_host mmc1: card is non-removable.
+  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+  mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
+  mmc1: switch to bus width 8 failed
+  mmc1: switch to bus width 4 failed
+  mmc1: new high speed MMC card at address 0001
+  mmcblk1: mmc1:0001 HAG2e 14.7 GiB
+  mmcblk1boot0: mmc1:0001 HAG2e partition 1 4.00 MiB
+  mmcblk1boot1: mmc1:0001 HAG2e partition 2 4.00 MiB
+  mmcblk1rpmb: mmc1:0001 HAG2e partition 3 4.00 MiB, chardev (243:0)
+  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+  mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
+  mmc1: switch to bus width 8 failed
+  mmc1: switch to bus width 4 failed
+  mmc1: tried to HW reset card, got error -110
+  mmcblk1: error -110 requesting status
+  mmcblk1: recovery failed!
+  print_req_error: I/O error, dev mmcblk1, sector 0
+  ...
+
+When I remove the '/delete-property/mmc-hs200-1_8v' then everything is
+hunky dory.
+
+That line comes from the original submission of the mickey dts
+upstream, so presumably at the time the HS200 was failing and just
+enumerating things as a high speed device was fine.  ...or maybe it's
+just that some mickey devices work when enumerating at "high speed",
+just not mine?
+
+In any case, hs200 seems good now.  Let's turn it on.
+
+Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3288-veyron-mickey.dts | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+index 1e0158acf895..a593d0a998fc 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+@@ -124,10 +124,6 @@
+ 	};
+ };
+ 
+-&emmc {
+-	/delete-property/mmc-hs200-1_8v;
+-};
+-
+ &i2c2 {
+ 	status = "disabled";
+ };
+-- 
+2.20.1
