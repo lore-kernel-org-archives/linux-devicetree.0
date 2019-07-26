@@ -1,94 +1,110 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH 00/15] thermal: qcom: tsens: Add interrupt support
-Date: Fri, 26 Jul 2019 16:40:16 +0530
-Message-ID: <CAHLCerOs3cMQrWrYk7F_bnxr_nxJ-nsRL8oOGALU63ySqmLaig@mail.gmail.com>
-References: <cover.1564091601.git.amit.kucheria@linaro.org> <20190726103605.GB3327@onstation.org>
+From: <Eugen.Hristev@microchip.com>
+Subject: Re: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
+ Host
+Date: Fri, 26 Jul 2019 11:13:27 +0000
+Message-ID: <4380ca66-efbe-3e89-6f4c-6e3f0617fbc9@microchip.com>
+References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+ <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
+ <20190628141326.swgl3kg4fj5pmlqx@valkosipuli.retiisi.org.uk>
+ <MN2PR12MB37109D7AADCE4823CB458CB9CBF60@MN2PR12MB3710.namprd12.prod.outlook.com>
+ <20190709182500.3x544axnrgy72aje@valkosipuli.retiisi.org.uk>
+ <MN2PR12MB371026A6547B449EEC0439B1CBF00@MN2PR12MB3710.namprd12.prod.outlook.com>
+ <20190725200211.GK1263@valkosipuli.retiisi.org.uk>
+ <BY5PR12MB3699CA09F7CDB0827434F786CBC00@BY5PR12MB3699.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190726103605.GB3327@onstation.org>
+In-Reply-To: <BY5PR12MB3699CA09F7CDB0827434F786CBC00@BY5PR12MB3699.namprd12.prod.outlook.com>
+Content-Language: en-US
+Content-ID: <F8742809330D3F429CE30E2A58008F9F@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Andy Gross <agross@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
+To: Luis.Oliveira@synopsys.com, sakari.ailus@iki.fi
+Cc: mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, robh@kernel.org, Nicolas.Ferre@microchip.com, paulmck@linux.ibm.com, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Joao.Pinto@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-(Resending from a desktop client because mobile gmail apparently sends
-html that gets rejected by all lists)
-
-On Fri, Jul 26, 2019 at 4:06 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> Hi Amit,
->
-> On Fri, Jul 26, 2019 at 03:48:35AM +0530, Amit Kucheria wrote:
-> > Add interrupt support to TSENS. The first 6 patches are general fixes and
-> > cleanups to the driver before interrupt support is introduced.
-> >
-> > This series has been developed against qcs404 and sdm845 and then tested on
-> > msm8916. Testing on msm8998 and msm8974 would be appreciated since I don't
-> > have hardware handy. Further, I plan to test on msm8996 and also submit to
-> > kernelci.
-> >
-> > I'm sending this out for more review to get help with testing.
->
-> I can test this on msm8974 for you using a Nexus 5. Here's what I've
-> done so far:
-
-Thanks. I was hoping that would be the case given all your effort
-getting Nexus 5 supported. :-)
-
-> The device tree nodes appear in sysfs:
->
-> / # ls -1 /sys/class/thermal/
-> cooling_device0
-> cooling_device1
-> thermal_zone0
-> thermal_zone1
-> thermal_zone2
-> thermal_zone3
-> thermal_zone4
-> thermal_zone5
-> thermal_zone6
-> thermal_zone7
-> thermal_zone8
-> thermal_zone9
-
-Looks good. What are the contents of the files inside the two
-cooling_device directories? The output of the following command would
-be nice:
-
-$ grep "" cooling_device?/*
-
-> The various temperatures were in the upper 40s and I threw some work at
-> all four CPU cores to warm up the phone and watched the various
-> temperatures rise:
->
-> / # for i in $(seq 0 9) ; do
-> > TYPE=$(cat /sys/class/thermal/thermal_zone$i/type)
-> > TEMP=$(cat /sys/class/thermal/thermal_zone$i/temp)
-> > echo "$TYPE = $TEMP"
-> > done
-> cpu-thermal0 = 66000
-> cpu-thermal1 = 66000
-> cpu-thermal2 = 66000
-> cpu-thermal3 = 66000
-> q6-dsp-thermal = 60000
-> modemtx-thermal = 57000
-> video-thermal = 61000
-> wlan-thermal = 65000
-> gpu-thermal-top = 61000
-> gpu-thermal-bottom = 59000
->
-> To test the interrupt support, I lowered all of the temperature trips to
-> 51C but I'm not sure where to read that notification. I assume one of
-> the cooling devices or a governor should be started? Sorry but I haven't
-> done any work in the thermal subsystem yet and I'm short on time this
-> morning to investigate right now.
-
-For now, just checking if the tsens interrupt in /proc/interrupts
-fires should be fine. I have another patch to add some information to
-debugs that I'll send at some point.
-
-How well does cpufreq work on 8974? I haven't looked at it yet but
-we'll need it for thermal throttling.
-
-> Brian
+DQoNCk9uIDI2LjA3LjIwMTkgMTI6NTAsIEx1aXMgZGUgT2xpdmVpcmEgd3JvdGU6DQo+IEhpIFNh
+a2FyaSwNCj4gDQo+IFRoYW5rIHlvdSBmb3IgdGhlIHJldmlldywgbXkgYW5zd2VycyBpbmxpbmUu
+DQo+IA0KPj4gRnJvbTogU2FrYXJpIEFpbHVzIDxzYWthcmkuYWlsdXNAaWtpLmZpPg0KPj4gRGF0
+ZTogVGh1LCBKdWwgMjUsIDIwMTkgYXQgMjE6MDI6MTENCj4+DQo+PiBIaSBMdWlzLA0KPj4NCj4+
+IE9uIFdlZCwgSnVsIDEwLCAyMDE5IGF0IDEwOjIwOjU1QU0gKzAwMDAsIEx1aXMgZGUgT2xpdmVp
+cmEgd3JvdGU6DQo+Pj4gSGkgU2FrYXJpLA0KPj4+DQo+Pj4gRnJvbTogU2FrYXJpIEFpbHVzIDxz
+YWthcmkuYWlsdXNAaWtpLmZpPg0KPj4+IERhdGU6IFR1ZSwgSnVsIDA5LCAyMDE5IGF0IDE5OjI1
+OjAwDQo+Pj4NCj4+Pj4gSGkgTHVpcywNCj4+Pj4NCj4+Pj4gT24gTW9uLCBKdWwgMDgsIDIwMTkg
+YXQgMDM6MjE6NTBQTSArMDAwMCwgTHVpcyBkZSBPbGl2ZWlyYSB3cm90ZToNCj4+Pj4+IEhpIFNh
+a2FyaSwNCj4+Pj4+DQo+Pj4+PiBUaGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2suDQo+Pj4+PiBJ
+IGhhdmUgbXkgY29tbWVudHMgaW5saW5lLg0KPj4+Pj4NCj4+Pj4+IEZyb206IFNha2FyaSBBaWx1
+cyA8c2FrYXJpLmFpbHVzQGlraS5maT4NCj4+Pj4+IERhdGU6IEZyaSwgSnVuIDI4LCAyMDE5IGF0
+IDE1OjEzOjI2DQo+Pj4+Pg0KPj4+Pj4+IEhpIEx1aXMsDQo+Pj4+Pj4NCj4+Pj4+PiBUaGFuayB5
+b3UgZm9yIHRoZSBwYXRjaHNldC4NCj4+Pj4+Pg0KPj4+Pj4+IE9uIFR1ZSwgSnVuIDExLCAyMDE5
+IGF0IDA5OjIwOjUwUE0gKzAyMDAsIEx1aXMgT2xpdmVpcmEgd3JvdGU6DQo+Pj4+Pj4+IEZyb206
+IEx1aXMgT2xpdmVpcmEgPGxvbGl2ZWlAc3lub3BzeXMuY29tPg0KPj4+Pj4+Pg0KPj4+Pj4+PiBB
+ZGQgYmluZGluZ3MgZm9yIFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSSBDU0ktMiBob3N0Lg0KPj4+
+Pj4+Pg0KPj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBMdWlzIE9saXZlaXJhIDxsb2xpdmVpQHN5bm9w
+c3lzLmNvbT4NCj4+Pj4+Pj4gLS0tDQo+Pj4+Pj4+IENoYW5nZWxvZw0KPj4+Pj4+PiB2My12NA0K
+Pj4+Pj4+PiAtIHJlbW92ZSAicGxhdCIgZnJvbSB0aGUgYmxvY2sgbmFtZSBAcm9iIEBsYXVyZW50
+DQo+Pj4+Pj4+IC0gcmVtb3ZlICJwaHktbmFtZXMiIHdoZW4gc2luZ2xlLWVudHJ5IEByb2INCj4+
+Pj4+Pj4gLSByZW1vdmUgInNucHMsb3V0cHV0LXR5cGUiIC0+IHdlbnQgdG8gdGhlIGRyaXZlciBj
+b25maWcgQGxhdXJlbnQNCj4+Pj4+Pj4NCj4+Pj4+Pj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tZWRpYS9zbnBzLGR3LWNzaS50eHQgICAgICB8IDQxICsrKysrKysrKysrKysrKysrKysrKysN
+Cj4+Pj4+Pj4gICAxIGZpbGUgY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygrKQ0KPj4+Pj4+PiAgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEv
+c25wcyxkdy1jc2kudHh0DQo+Pj4+Pj4+DQo+Pj4+Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvc25wcyxkdy1jc2kudHh0IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3NucHMsZHctY3NpLnR4dA0KPj4+Pj4+PiBu
+ZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4+Pj4+PiBpbmRleCAwMDAwMDAwLi42MTNiN2Y5DQo+Pj4+
+Pj4+IC0tLSAvZGV2L251bGwNCj4+Pj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21lZGlhL3NucHMsZHctY3NpLnR4dA0KPj4+Pj4+PiBAQCAtMCwwICsxLDQxIEBA
+DQo+Pj4+Pj4+ICtTeW5vcHN5cyBEZXNpZ25XYXJlIENTSS0yIEhvc3QgY29udHJvbGxlcg0KPj4+
+Pj4+PiArDQo+Pj4+Pj4+ICtEZXNjcmlwdGlvbg0KPj4+Pj4+PiArLS0tLS0tLS0tLS0NCj4+Pj4+
+Pj4gKw0KPj4+Pj4+PiArVGhpcyBIVyBibG9jayBpcyB1c2VkIHRvIHJlY2VpdmUgaW1hZ2UgY29t
+aW5nIGZyb20gYW4gTUlQSSBDU0ktMiBjb21wYXRpYmxlDQo+Pj4+Pj4+ICtjYW1lcmEuDQo+Pj4+
+Pj4+ICsNCj4+Pj4+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+Pj4+Pj4+ICstIGNvbXBhdGli
+bGUJCTogc2hhbGwgYmUgInNucHMsZHctY3NpIg0KPj4+Pj4+PiArLSByZWcJCQk6IHBoeXNpY2Fs
+IGJhc2UgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgZGV2aWNlIG1lbW9yeQ0KPj4+Pj4+PiArCQkJ
+ICBtYXBwZWQgcmVnaXN0ZXJzOw0KPj4+Pj4+PiArLSBpbnRlcnJ1cHRzCQk6IERXIENTSS0yIEhv
+c3QgaW50ZXJydXB0cw0KPj4+Pj4+PiArLSBwaHlzCQkJOiBMaXN0IG9mIG9uZSBQSFkgc3BlY2lm
+aWVyIChhcyBkZWZpbmVkIGluDQo+Pj4+Pj4+ICsJCQkgIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9waHkvcGh5LWJpbmRpbmdzLnR4dCkuDQo+Pj4+Pj4+ICsJCQkgIFRoaXMgUEhZ
+IGlzIGEgTUlQSSBEUEhZIHdvcmtpbmcgaW4gUlggbW9kZS4NCj4+Pj4+Pj4gKy0gcmVzZXRzCQk6
+IFJlZmVyZW5jZSB0byBhIHJlc2V0IGNvbnRyb2xsZXIgKG9wdGlvbmFsKQ0KPj4+Pj4+PiArDQo+
+Pj4+Pj4+ICtUaGUgcGVyLWJvYXJkIHNldHRpbmdzOg0KPj4+Pj4+PiArIC0gcG9ydCBzdWItbm9k
+ZSBkZXNjcmliaW5nIGEgc2luZ2xlIGVuZHBvaW50IGNvbm5lY3RlZCB0byB0aGUgY2FtZXJhIGFz
+DQo+Pj4+Pj4+ICsgICBkZXNjcmliZWQgaW4gdmlkZW8taW50ZXJmYWNlcy50eHRbMV0uDQo+Pj4+
+Pj4NCj4+Pj4+PiBXaGljaCBlbmRwb2ludCBwcm9wZXJ0aWVzIGluIHZpZGVvLWludGVyZmFjZXMu
+dHh0IGFyZSByZWxldmFudCBmb3IgdGhlDQo+Pj4+Pj4gaGFyZHdhcmU/IFdoaWNoIHZhbHVlcyBt
+YXkgdGhleSBoYXZlPw0KPj4+Pj4+DQo+Pj4+Pg0KPj4+Pj4gQ3VycmVudGx5IEknbSB1c2luZyBv
+bmx5IHR3byBwcm9wZXJ0aWVzICJkYXRhLWxhbmVzIiBhbmQgImJ1cy13aWR0aCIsIGJ1dA0KPj4+
+Pj4gSSBoYXZlIHBsYW5zIHRvIGFkZCBibGFua2luZyBpbmZvIGFsc28uDQo+Pj4+PiBJIHdpbGwg
+YWRkIG1vcmUgaW5mby4NCj4+Pj4NCj4+Pj4gSXNuJ3QgYmxhbmtpbmcgZGVmaW5lZCBieSB3aGF0
+IHRoZSB0cmFuc21pdHRlciBzZW5lZHM/IE9yIGRvIHlvdSBoYXZlDQo+Pj4+IGhhcmR3YXJlIGxp
+bWl0YXRpb25zIG9uIHRoZSByZWNlaXZlciBzaWRlPw0KPj4+Pg0KPj4+DQo+Pj4gV2hlbiB3ZSB1
+c2UgdGhpcyBJUCBpbiBwcm90b3R5cGluZyB3ZSBjb25maWd1cmUgYmxhbmtpbmcgYXQgdGhlIHJl
+Y2VpdmVyDQo+Pj4gc2lkZS4NCj4+PiBTb21lIGNhbWVyYXMgZG9uJ3QgaGF2ZSBibGFua2luZyBj
+b25maWd1cmF0aW9uIGNhcGFiaWxpdGllcyBzbyB3ZQ0KPj4+IGNvbmZpZ3VyZSBpdCBvbiB0aGUg
+Ulggc2lkZS4NCj4+DQo+PiBJIGhhdmVuJ3QgY29tZSBhY3Jvc3MgYSBDU0ktMiBjb25uZWN0ZWQg
+Y2FtZXJhIHdpdGhvdXQgc29tZSBraW5kIG9mDQo+PiBibGFua2luZyBjb25maWd1cmF0aW9uIGNh
+cGFiaWxpdGllcy4gRXZlbiBpZiB0aGVyZSB3YXMgb25lLCB5b3UgY291bGRuJ3QNCj4+IGNvbmZp
+Z3VyZSBibGFua2luZyBmcm9tIHRoZSByZWNlaXZlciBzaWRlLg0KPj4NCj4+IFBsZWFzZSBkb2N1
+bWVudCB0aGF0IHRoZSBkYXRhLWxhbmVzIHByb3BlcnR5IGlzIHJlcXVpcmVkLCBhbmQgd2hpY2gg
+dmFsdWVzDQo+PiBhcmUgcG9zc2libGUuDQo+Pg0KPiANCj4gT2ssIEkgd2lsbCBhZGQgdGhlIGRh
+dGEtbGFuZXMgcHJvcGVydHkgdG8gdGhlIERvY3VtZW50YXRpb24uDQo+IA0KPj4+DQo+Pj4+IEkn
+dmUgb25seSBoZWFyZCBvZiBvbmUgc3VjaCBjYXNlIGJlZm9yZSwgYW5kIGl0IHdhcyBhIHZlcnkg
+b2xkIHBhcmFsbGVsDQo+Pj4+IHJlY2VpdmVyLg0KPj4+Pg0KPj4+PiBJZiB5b3UgaGF2ZSBhIENT
+SS0yIHJlY2VpdmVyLCBidXMtd2lkdGggaXNuJ3QgcmVsZXZhbnQgLS0tIGl0J3MgZm9yIHBhcmFs
+bGUNCj4+Pj4gaW50ZXJmYWNlcyBvbmx5LiBQbGVhc2UgYWRkIGRhdGEtbGFuZXMgdG8gcmVxdWly
+ZWQgZW5kcG9pbnQgcHJvcGVydGllcy4NCj4+Pj4NCj4+Pg0KPj4+IEkgdXNlZCBidXMtd2lkdGgg
+cHJvcGVydHkgaW4gdGhlIFN5bm9wc3lzIElQSSAoSW1hZ2UgUGl4ZWwgSW50ZXJmYWNlKQ0KPj4+
+IHRoYXQgZW5hYmxlcyBkaXJlY3QgdmlkZW8gc3RyZWFtIGFjY2Vzcy4NCj4+PiBUaGlzIGludGVy
+ZmFjZSBpcyBhbiBvdXRwdXQgdGhhdCBjYW4gYmUgMTYtYml0IG9yIDQ4LWJpdCwgdGhhdCdzIHdo
+eSBJDQo+Pj4gdXNlZCBidXMtd2lkdGggcHJvcGVydHkuDQo+Pg0KPj4gRG9lcyB0aGlzIGRldmlj
+ZSB3cml0ZSB0aGUgaW1hZ2UgZGF0YSB0byBzeXN0ZW0gbWVtb3J5LCBvciBpcyBpdCBhbm90aGVy
+DQo+PiBkZXZpY2U/IElmIHRoZXJlJ3MgYW5vdGhlciBvbmUsIHRoZW4geW91IHNob3VsZCBwcm9i
+YWJseSBoYXZlIGFub3RoZXIgcG9ydA0KPj4gdG8gZGVzY3JpYmUgdGhhdCBjb25uZWN0aW9uLg0K
+Pj4NCj4gDQo+IFllcywgaXQgaXMgYW5vdGhlci4gSSBjYW4gYWRkIHRoYXQgY29ubmVjdGlvbiBw
+b3J0IGFsc28uDQoNClllcyBwbGVhc2UuIEl0IGlzIGludGVyZXN0aW5nIGZvciBtZSB0byBzZWUg
+aG93IHRvIGNvbm5lY3QgdGhlIG91dHB1dCBvZiANCnRoaXMgZGV2aWNlIHRvIGFub3RoZXIgbWVk
+aWEgZGV2aWNlLCBhbmQgaG93IHRvIHNwZWNpZnkgdGhlIGJ1cyBpbiB0aGlzIA0Kc2l0dWF0aW9u
+Lg0KDQpUaGFua3MsDQpFdWdlbg0KDQo+IA0KPiANCj4+IC0tIA0KPj4gS2luZCByZWdhcmRzLA0K
+Pj4NCj4+IFNha2FyaSBBaWx1cw0KPiANCj4gVGhhbmsgeW91LA0KPiANCj4gTHVpcw0KPiANCj4g
+DQo=
