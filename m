@@ -1,119 +1,156 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RFC,
-	v3 9/9] media: platform: Add Mediatek ISP P1 shared memory device
-Date: Fri, 26 Jul 2019 23:04:42 +0900
-Message-ID: <CAAFQd5BE1hAgYG-0OY_SEOcz2g4WLeCxP=6G=5xhLb++vewspw@mail.gmail.com>
-References: <jungo.lin@mediatek.com>
-	<20190611035344.29814-1-jungo.lin@mediatek.com>
-	<20190611035344.29814-10-jungo.lin@mediatek.com>
-	<20190701072532.GB137710@chromium.org>
-	<1562297618.1212.46.camel@mtksdccf07>
-	<CAAFQd5BaTQ-Q7gsE0X+d4_81OZq9WHaCYkmALt7_4A1JFo=_8g@mail.gmail.com>
-	<1562313579.1212.73.camel@mtksdccf07>
-	<CAAFQd5AaNFpMGCVJREY85n8UetEwd99TOka8-ECoLzMbMkos_g@mail.gmail.com>
-	<1563870117.1212.455.camel@mtksdccf07>
-	<CAAFQd5Bh80N+cMhz=eyHUGJLaE5uuypOawQvHrTgGSMDvmcpLA@mail.gmail.com>
-	<20190726074116.GA19745@infradead.org>
-	<CAAFQd5CXwRm-3jD+rfNNDNLH=gT_i0QYSAG3XBo3SJnPTY56_w@mail.gmail.com>
-	<4460bc91-352a-7f3a-cbed-1b95e743ca8c@arm.com>
-	<1564142386.1212.621.camel@mtksdccf07>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH v2 2/3] usb: exynos: add support for getting PHYs from
+ the standard dt array
+Date: Fri, 26 Jul 2019 10:17:23 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1907261016440.1569-100000@iolanthe.rowland.org>
+References: <20190726081453.9456-3-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1564142386.1212.621.camel@mtksdccf07>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jungo Lin <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <sean.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <rynn.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UnlhbiBZdSAo5L2Z5a2f5L+uKQ==?= <ryan.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?RnJhbmtpZSBDaGl1ICjpgrHmloflh7Ep?= <frankie.chiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, ddavenport-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu@lists
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190726081453.9456-3-m.szyprowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, =?UTF-8?q?M=C3=A5ns=20Rullg=C3=A5rd?= <mans@mansr.com>, Krzysztof Kozlowski <krzk@kernel.org>, Peter Chen <peter.chen@nxp.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 8:59 PM Jungo Lin <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->
-> Hi Robin:
->
-> On Fri, 2019-07-26 at 12:04 +0100, Robin Murphy wrote:
-> > On 26/07/2019 08:42, Tomasz Figa wrote:
-> > > On Fri, Jul 26, 2019 at 4:41 PM Christoph Hellwig <hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
-> > >>
-> > >> On Fri, Jul 26, 2019 at 02:15:14PM +0900, Tomasz Figa wrote:
-> > >>> Could you try dma_get_sgtable() with the SCP struct device and then
-> > >>> dma_map_sg() with the P1 struct device?
-> > >>
-> > >> Please don't do that.  dma_get_sgtable is a pretty broken API (see
-> > >> the common near the arm implementation) and we should not add more
-> > >> users of it.  If you want a piece of memory that can be mapped to
-> > >> multiple devices allocate it using alloc_pages and then just map
-> > >> it to each device.
-> > >
-> > > Thanks for taking a look at this thread.
-> > >
-> > > Unfortunately that wouldn't work. We have a specific reserved memory
-> > > pool that is the only memory area accessible to one of the devices.
-> > > Any idea how to handle this?
-> >
-> > If it's reserved in the sense of being outside struct-page-backed
-> > "kernel memory", then provided you have a consistent CPU physical
-> > address it might be reasonable for other devices to access it via
-> > dma_map_resource().
-> >
-> > Robin.
->
-> Thank you for your suggestion.
->
-> After revising to use dma_map_resource(), it is worked. Below is the
-> current implementation. Pleas kindly help us to check if there is any
-> misunderstanding.
->
-> #define MTK_ISP_COMPOSER_MEM_SIZE               0x200000
->
->         /*
->          * Allocate coherent reserved memory for SCP firmware usage.
->          * The size of SCP composer's memory is fixed to 0x200000
->          * for the requirement of firmware.
->          */
->         ptr = dma_alloc_coherent(p1_dev->cam_dev.smem_dev,
->                                  MTK_ISP_COMPOSER_MEM_SIZE, &addr, GFP_KERNEL);
->         if (!ptr) {
->                 dev_err(dev, "failed to allocate compose memory\n");
->                 return -ENOMEM;
->         }
->         p1_dev->composer_scp_addr = addr;
->         p1_dev->composer_virt_addr = ptr;
->         dev_dbg(dev, "scp addr:%pad va:%pK\n", &addr, ptr);
->
->         /*
->          * This reserved memory is also be used by ISP P1 HW.
->          * Need to get iova address for ISP P1 DMA.
->          */
->         addr = dma_map_resource(dev, addr, MTK_ISP_COMPOSER_MEM_SIZE,
->                                 DMA_BIDIRECTIONAL, DMA_ATTR_SKIP_CPU_SYNC);
+On Fri, 26 Jul 2019, Marek Szyprowski wrote:
 
-This is still incorrect, because addr is a DMA address, but the second
-argument to dma_map_resource() is a physical address.
+> Add the code for getting generic PHYs from standard device tree array
+> from the main controller device node. This is a first step in resolving
+> the conflict between Exynos EHCI/OHCI sub-nodes and generic USB device
+> bindings. Later the sub-nodes currently used for assigning PHYs to root
+> ports of the controller will be removed making a place for the generic
+> USB device bindings nodes.
+> 
+> Suggested-by: Måns Rullgård <mans@mansr.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
 
->         if (dma_mapping_error(dev, addr)) {
->                 dev_err(dev, "Failed to map scp iova\n");
->                 ret = -ENOMEM;
->                 goto fail_free_mem;
->         }
->         p1_dev->composer_iova = addr;
->         dev_info(dev, "scp iova addr:%pad\n", &addr);
->
-> Moreover, appropriate Tomasz & Christoph's help on this issue.
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
-Robin, the memory is specified using the reserved-memory DT binding
-and managed by the coherent DMA pool framework. We can allocate from
-it using dma_alloc_coherent(), which gives us a DMA address, not CPU
-physial address (although in practice on this platform they are equal
-numerically).
-
-Best regards,
-Tomasz
+>  drivers/usb/host/ehci-exynos.c | 23 +++++++++++++++++++----
+>  drivers/usb/host/ohci-exynos.c | 23 +++++++++++++++++++----
+>  2 files changed, 38 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
+> index 3a29a1a8519c..01debfd03d4a 100644
+> --- a/drivers/usb/host/ehci-exynos.c
+> +++ b/drivers/usb/host/ehci-exynos.c
+> @@ -41,6 +41,7 @@ struct exynos_ehci_hcd {
+>  	struct clk *clk;
+>  	struct device_node *of_node;
+>  	struct phy *phy[PHY_NUMBER];
+> +	bool legacy_phy;
+>  };
+>  
+>  #define to_exynos_ehci(hcd) (struct exynos_ehci_hcd *)(hcd_to_ehci(hcd)->priv)
+> @@ -50,10 +51,22 @@ static int exynos_ehci_get_phy(struct device *dev,
+>  {
+>  	struct device_node *child;
+>  	struct phy *phy;
+> -	int phy_number;
+> +	int phy_number, num_phys;
+>  	int ret;
+>  
+>  	/* Get PHYs for the controller */
+> +	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
+> +					      "#phy-cells");
+> +	for (phy_number = 0; phy_number < num_phys; phy_number++) {
+> +		phy = devm_of_phy_get_by_index(dev, dev->of_node, phy_number);
+> +		if (IS_ERR(phy))
+> +			return PTR_ERR(phy);
+> +		exynos_ehci->phy[phy_number] = phy;
+> +	}
+> +	if (num_phys > 0)
+> +		return 0;
+> +
+> +	/* Get PHYs using legacy bindings */
+>  	for_each_available_child_of_node(dev->of_node, child) {
+>  		ret = of_property_read_u32(child, "reg", &phy_number);
+>  		if (ret) {
+> @@ -84,6 +97,7 @@ static int exynos_ehci_get_phy(struct device *dev,
+>  		}
+>  	}
+>  
+> +	exynos_ehci->legacy_phy = true;
+>  	return 0;
+>  }
+>  
+> @@ -205,11 +219,12 @@ static int exynos_ehci_probe(struct platform_device *pdev)
+>  	ehci->caps = hcd->regs;
+>  
+>  	/*
+> -	 * Workaround: reset of_node pointer to avoid conflict between Exynos
+> -	 * EHCI port subnodes and generic USB device bindings
+> +	 * Workaround: reset of_node pointer to avoid conflict between legacy
+> +	 * Exynos EHCI port subnodes and generic USB device bindings
+>  	 */
+>  	exynos_ehci->of_node = pdev->dev.of_node;
+> -	pdev->dev.of_node = NULL;
+> +	if (exynos_ehci->legacy_phy)
+> +		pdev->dev.of_node = NULL;
+>  
+>  	/* DMA burst Enable */
+>  	writel(EHCI_INSNREG00_ENABLE_DMA_BURST, EHCI_INSNREG00(hcd->regs));
+> diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
+> index 905c6317e0c3..d5ce98e205c7 100644
+> --- a/drivers/usb/host/ohci-exynos.c
+> +++ b/drivers/usb/host/ohci-exynos.c
+> @@ -32,6 +32,7 @@ struct exynos_ohci_hcd {
+>  	struct clk *clk;
+>  	struct device_node *of_node;
+>  	struct phy *phy[PHY_NUMBER];
+> +	bool legacy_phy;
+>  };
+>  
+>  static int exynos_ohci_get_phy(struct device *dev,
+> @@ -39,10 +40,22 @@ static int exynos_ohci_get_phy(struct device *dev,
+>  {
+>  	struct device_node *child;
+>  	struct phy *phy;
+> -	int phy_number;
+> +	int phy_number, num_phys;
+>  	int ret;
+>  
+>  	/* Get PHYs for the controller */
+> +	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
+> +					      "#phy-cells");
+> +	for (phy_number = 0; phy_number < num_phys; phy_number++) {
+> +		phy = devm_of_phy_get_by_index(dev, dev->of_node, phy_number);
+> +		if (IS_ERR(phy))
+> +			return PTR_ERR(phy);
+> +		exynos_ohci->phy[phy_number] = phy;
+> +	}
+> +	if (num_phys > 0)
+> +		return 0;
+> +
+> +	/* Get PHYs using legacy bindings */
+>  	for_each_available_child_of_node(dev->of_node, child) {
+>  		ret = of_property_read_u32(child, "reg", &phy_number);
+>  		if (ret) {
+> @@ -73,6 +86,7 @@ static int exynos_ohci_get_phy(struct device *dev,
+>  		}
+>  	}
+>  
+> +	exynos_ohci->legacy_phy = true;
+>  	return 0;
+>  }
+>  
+> @@ -172,11 +186,12 @@ static int exynos_ohci_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	/*
+> -	 * Workaround: reset of_node pointer to avoid conflict between Exynos
+> -	 * OHCI port subnodes and generic USB device bindings
+> +	 * Workaround: reset of_node pointer to avoid conflict between legacy
+> +	 * Exynos OHCI port subnodes and generic USB device bindings
+>  	 */
+>  	exynos_ohci->of_node = pdev->dev.of_node;
+> -	pdev->dev.of_node = NULL;
+> +	if (exynos_ohci->legacy_phy)
+> +		pdev->dev.of_node = NULL;
+>  
+>  	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+>  	if (err) {
+> 
