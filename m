@@ -1,49 +1,46 @@
 From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v9 8/8] EDAC: armada_xp: Add support for more SoCs
-Date: Fri, 26 Jul 2019 15:51:15 +0100
-Message-ID: <128016c1-380f-70c4-3a89-2d3b0edf9f88@arm.com>
+Subject: Re: [PATCH v9 0/8] EDAC drivers for Armada XP L2 and DDR
+Date: Fri, 26 Jul 2019 15:53:11 +0100
+Message-ID: <d1dfe8ec-66e8-e2c8-5421-a18d7e7fc8fc@arm.com>
 References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
- <20190712034904.5747-9-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190712034904.5747-9-chris.packham@alliedtelesis.co.nz>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
 Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: bp@alien8.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, patches@armlinux.org.uk, mchehab@kernel.org, jlu@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jlu@pengutronix.de, linux-edac@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bp@alien8.de, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, patches@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
 Hi Chris,
 
-On 12/07/2019 04:49, Chris Packham wrote:
-> The Armada 38x and other integrated SoCs use a reduced pin count so the
-> width of the SDRAM interface is smaller than the Armada XP SoCs. This
-> means that the definition of "full" and "half" width is reduced from
-> 64/32 to 32/16.
+On 12/07/2019 04:48, Chris Packham wrote:
+> I still seem to be struggling to get this on anyone's radar.
 
-> diff --git a/drivers/edac/armada_xp_edac.c b/drivers/edac/armada_xp_edac.c
-> index 3759a4fbbdee..7f227bdcbc84 100644
-> --- a/drivers/edac/armada_xp_edac.c
-> +++ b/drivers/edac/armada_xp_edac.c
-> @@ -332,6 +332,11 @@ static int axp_mc_probe(struct platform_device *pdev)
->  
->  	axp_mc_read_config(mci);
->  
-> +	/* These SoCs have a reduced width bus */
-> +	if (of_machine_is_compatible("marvell,armada380") ||
-> +	    of_machine_is_compatible("marvell,armadaxp-98dx3236"))
-> +		drvdata->width /= 2;
+Whose radar does it need to cross?
 
-So the hardware's SDRAM_CONFIG_BUS_WIDTH value is wrong? Yuck.
 
-Is it too late for the DTs on these two systems to provide a DT version of the 'bus_width'
-to override the hardware's mis-advertised value?
+> The Reviews/Acks have been given so this should be good to go in via the ARM
+> tree as planned.
+> 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2017-August/525561.html
 
-This way you don't need to grow this list.
+For your v8 I took this to mean this series was done!
 
-Acked-by: James Morse <james.morse@arm.com>
+If nothing has changed with Boris and Russell's decision (it was two years ago....),
+details of the patch system are here:
+
+https://lore.kernel.org/linux-arm-kernel/20190624142346.pxljv3m4npatdiyk@shell.armlinux.org.uk/
 
 
 Thanks,
