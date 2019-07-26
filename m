@@ -1,42 +1,63 @@
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH v2 00/26] ReST conversion of text files without .txt
- extension
-Date: Fri, 26 Jul 2019 10:05:33 -0300
-Message-ID: <20190726100521.5d379300@coco.lan>
-References: <cover.1564145354.git.mchehab+samsung@kernel.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 3/3] dt-bindings: net: ethernet: Update mt7622
+ docs and dts to reflect the new phylink API
+Date: Fri, 26 Jul 2019 15:16:04 +0200
+Message-ID: <20190726131604.GA18223@lunn.ch>
+References: <20190724192411.20639-1-opensource@vdorst.com>
+ <20190725193123.GA32542@lunn.ch>
+ <20190726071956.Horde.s4rfuzovwXB-d3LnV0PLRc8@www.vdorst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <cover.1564145354.git.mchehab+samsung@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190726071956.Horde.s4rfuzovwXB-d3LnV0PLRc8@www.vdorst.com>
 Sender: netdev-owner@vger.kernel.org
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-spi@vger.kernel.org, linux-iio@vger.kernel.org, linux-rtc@vger.kernel.org, netdev@vger.kernel.org, linux-parisc@vger.kernel.org, openrisc@lists.librecores.org, devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, devel@lists.orangefs.org, dmaengine@vger.kernel.org, alsa-devel@alsa-project.org, linux-mips@vger.kernel.org, linux-wireless@vger.kernel.org, rcu@vger.kernel.org
+To: =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>
+Cc: netdev@vger.kernel.org, frank-w@public-files.de, sean.wang@mediatek.com, f.fainelli@gmail.com, linux@armlinux.org.uk, davem@davemloft.net, matthias.bgg@gmail.com, vivien.didelot@gmail.com, john@phrozen.org, linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Em Fri, 26 Jul 2019 09:51:10 -0300
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
+On Fri, Jul 26, 2019 at 07:19:56AM +0000, René van Dorst wrote:
+> Quoting Andrew Lunn <andrew@lunn.ch>:
+> 
+> >>+	gmac0: mac@0 {
+> >>+		compatible = "mediatek,eth-mac";
+> >>+		reg = <0>;
+> >>+		phy-mode = "sgmii";
+> >>+
+> >>+		fixed-link {
+> >>+			speed = <2500>;
+> >>+			full-duplex;
+> >>+			pause;
+> >>+		};
+> >>+	};
+> >
+> >Hi René
+> >
+> 
+> Hi Andrew,
+> 
+> >SGMII and fixed-link is rather odd. Why do you need this combination?
+> 
+> BananaPi R64 has a RTL8367S 5+2-port switch, switch interfaces with the SOC
+> by a
+> (H)SGMII and/or RGMII interface. SGMII is mainly used for the LAN ports and
+> RGMII for the WAN port.
+> 
+> I mimic the SDK software which puts SGMII interface in 2.5GBit fixed-link
+> mode.
+> The RTL8367S switch code also put switch mac in forge 2.5GBit mode.
+> 
+> So this is the reason why I put a fixed-link mode here.
 
-> This series converts the text files under Documentation with doesn't end
-> neither .txt or .rst and are not part of ABI or features.
-> 
-> This series is at:
-> 	https://git.linuxtv.org/mchehab/experimental.git/log/?h=rst_for_5_4_v3
-> 
-> And it is based on yesterday's upstream tree.
-> 
-> After this series, we have ~320 files left to be converted to ReST.
-> 
-> v2:
->   - Added 3 files submitted for v5.3 that weren't merged yet;
->   - markdown patch broken into two, per Rob's request;
->   - rebased on the top of upstream master branch
-> 
-> Mauro Carvalho Chehab (26):
+Are you sure it is using SGMII and not 2500BaseX? Can you get access
+to the signalling word? SGMII is supposed to indicate to the MAC what
+speed it is using, via inband signalling. So there should not be any
+need for a fixed-link. 2500BaseX however does not have such
+signalling, so there would need to be a fixed link.
 
->   docs: ABI: remove extension from sysfs-class-mic.txt
+Maybe we should really consider what phy-mode = "sgmii"; means. Should
+this include the overclocked 2.5G speed, or should we add a 2500sgmii
+link mode?
 
-    ^ In time: this one was already merged.
-
-Thanks,
-Mauro
+     Andrew
