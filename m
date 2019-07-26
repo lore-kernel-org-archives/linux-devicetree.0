@@ -1,43 +1,57 @@
-Return-Path: <SRS0=cIVi=VA=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH] dt-bindings: nvmem: SID: Fix the examples node names
-Date: Wed,  3 Jul 2019 11:54:21 +0200
-Message-Id: <20190703095421.11798-1-maxime.ripard@bootlin.com>
+Return-Path: <SRS0=dsAE=VX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.codeaurora.org ([198.145.29.96]:59446 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfGZJYH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2019 05:24:07 -0400
+From: Govind Singh <govinds@codeaurora.org>
+Subject: [PATCH v5 7/7] remoteproc: qcom: wcss: explicitly request exclusive reset control
+Date: Fri, 26 Jul 2019 14:53:32 +0530
+Message-Id: <20190726092332.25202-8-govinds@codeaurora.org>
+In-Reply-To: <20190726092332.25202-1-govinds@codeaurora.org>
+References: <20190726092332.25202-1-govinds@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
+Sender: devicetree-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: andy.gross@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Now that the examples are validated, the examples in the SID binding
-generates an error since the node names aren't one of the valid ones.
+Use request exclusive reset control for wcss reset controls.
 
-Let's switch for one that is ok.
-
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Govind Singh <govinds@codeaurora.org>
 ---
- .../devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml    | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/remoteproc/qcom_q6v5_wcss.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-index c9efd6e2c134..1084e9d2917d 100644
---- a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-@@ -37,13 +37,13 @@ required:
+diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+index c2e75f5b5737..a2671a19f2d0 100644
+--- a/drivers/remoteproc/qcom_q6v5_wcss.c
++++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+@@ -781,21 +781,21 @@ static int q6v5_wcss_init_reset(struct q6v5_wcss *wcss,
+ 	struct device *dev = wcss->dev;
  
- examples:
-   - |
--    sid@1c23800 {
-+    efuse@1c23800 {
-         compatible = "allwinner,sun4i-a10-sid";
-         reg = <0x01c23800 0x10>;
-     };
+ 	if (desc->aon_reset_required) {
+-		wcss->wcss_aon_reset = devm_reset_control_get(dev, "wcss_aon_reset");;
++		wcss->wcss_aon_reset = devm_reset_control_get_exclusive(dev, "wcss_aon_reset");;
+ 		if (IS_ERR(wcss->wcss_aon_reset)) {
+ 			dev_err(wcss->dev, "fail to acquire wcss_aon_reset\n");
+ 			return PTR_ERR(wcss->wcss_aon_reset);
+ 		}
+ 	}
  
-   - |
--    sid@1c23800 {
-+    efuse@1c23800 {
-         compatible = "allwinner,sun7i-a20-sid";
-         reg = <0x01c23800 0x200>;
-     };
+-	wcss->wcss_reset = devm_reset_control_get(dev, "wcss_reset");
++	wcss->wcss_reset = devm_reset_control_get_exclusive(dev, "wcss_reset");
+ 	if (IS_ERR(wcss->wcss_reset)) {
+ 		dev_err(wcss->dev, "unable to acquire wcss_reset\n");
+ 		return PTR_ERR(wcss->wcss_reset);
+ 	}
+ 
+ 	if (desc->wcss_q6_reset_required) {
+-		wcss->wcss_q6_reset = devm_reset_control_get(dev, "wcss_q6_reset");
++		wcss->wcss_q6_reset = devm_reset_control_get_exclusive(dev, "wcss_q6_reset");
+ 		if (IS_ERR(wcss->wcss_q6_reset)) {
+ 			dev_err(wcss->dev, "unable to acquire wcss_q6_reset\n");
+ 			return PTR_ERR(wcss->wcss_q6_reset);
 -- 
-2.21.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
