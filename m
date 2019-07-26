@@ -1,69 +1,52 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 2/7] drivers: Introduce device lookup variants by
- of_node
-Date: Fri, 26 Jul 2019 18:18:02 +0100
-Message-ID: <20190726171802.GD55803@sirena.org.uk>
-References: <20190723221838.12024-1-suzuki.poulose@arm.com>
- <20190723221838.12024-3-suzuki.poulose@arm.com>
+From: "Wang, Haiyue" <haiyue.wang@linux.intel.com>
+Subject: Re: [RFC PATCH 14/17] ipmi: kcs: Finish configuring ASPEED KCS device
+ before enable
+Date: Sat, 27 Jul 2019 01:24:43 +0800
+Message-ID: <b4d60d12-0a1f-906a-1f3a-da0cfdd06be3@linux.intel.com>
+References: <20190726053959.2003-1-andrew@aj.id.au>
+ <20190726053959.2003-15-andrew@aj.id.au>
+ <29a2d999-23bd-8e95-a1b8-f00e25a11df5@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0854465654=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190723221838.12024-3-suzuki.poulose@arm.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Thor Thayer <thor.thayer@linux.intel.com>, rafael@kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-fpga@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-i2c@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rockchip@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, David Airlie <airlied@linux.ie>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org, Alan Tull <atull@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Moritz Fischer <mdf@kernel.org>, linux-arm-kernel@lists.infradead.org, Mathieu Poirier <mathieu.poirier@linaro.org>, gregkh@linuxfoundation.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <29a2d999-23bd-8e95-a1b8-f00e25a11df5@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, openipmi-developer@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
 
---===============0854465654==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fOHHtNG4YXGJ0yqR"
-Content-Disposition: inline
-
-
---fOHHtNG4YXGJ0yqR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jul 23, 2019 at 11:18:33PM +0100, Suzuki K Poulose wrote:
-> Introduce wrappers for {bus/driver/class}_find_device() to
-> locate devices by its of_node.
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---fOHHtNG4YXGJ0yqR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl07NckACgkQJNaLcl1U
-h9A0GAf/Qv4GC1ywijdMO9/GL0PzTuBBqL46oM94b0OCt9PYllKoQ2MkrwSN+eAS
-DGfHngyqVnoUtqjC/RksDFvWLJ7/Hg6BRJf0zkPspIu7s/DC2tW4x7C8CTIvfbF3
-LbDl5DdTKcj/+2cS7yypDLGUkmUVs0pmfQJ5e9gk0l8qX8UUIoycnIQCKtctvUlr
-LZgOv6gh5nuo2Vh8vuJIMi9rUHfe8zeSvMhnDhM/cU4ufM81bxjTeRw/9wdv1KOO
-WLCRZm1nIAYCZajxTVgQdYhI/c7w6Dl9ZSc9/dJmzVp5RZyoV7KYT6IcjRwPVnRt
-UZpTwC9oSD2mXZB30cpoNy7JmGFAKw==
-=+DYp
------END PGP SIGNATURE-----
-
---fOHHtNG4YXGJ0yqR--
-
---===============0854465654==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-
---===============0854465654==--
+在 2019-07-27 01:04, Wang, Haiyue 写道:
+> 在 2019-07-26 13:39, Andrew Jeffery 写道:
+>> The currently interrupts are configured after the channel was enabled.
+>>
+>> Cc: Haiyue Wang<haiyue.wang@linux.intel.com>
+>> Cc: Corey Minyard<minyard@acm.org>
+>> Cc: Arnd Bergmann<arnd@arndb.de>
+>> Cc: Greg Kroah-Hartman<gregkh@linuxfoundation.org>
+>> Cc:openipmi-developer@lists.sourceforge.net
+>> Signed-off-by: Andrew Jeffery<andrew@aj.id.au>
+>> ---
+>>   drivers/char/ipmi/kcs_bmc_aspeed.c | 7 ++++---
+>>   1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/char/ipmi/kcs_bmc_aspeed.c 
+>> b/drivers/char/ipmi/kcs_bmc_aspeed.c
+>> index 3c955946e647..e3dd09022589 100644
+>> --- a/drivers/char/ipmi/kcs_bmc_aspeed.c
+>> +++ b/drivers/char/ipmi/kcs_bmc_aspeed.c
+>> @@ -268,13 +268,14 @@ static int aspeed_kcs_probe(struct 
+>> platform_device *pdev)
+>>       kcs_bmc->io_inputb = aspeed_kcs_inb;
+>>       kcs_bmc->io_outputb = aspeed_kcs_outb;
+>>   +    rc = aspeed_kcs_config_irq(kcs_bmc, pdev);
+>> +    if (rc)
+>> +        return rc;
+>> +
+>>       dev_set_drvdata(dev, kcs_bmc);
+>
+>
+> Thanks for catching this, for not miss the data.
+>
+Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
