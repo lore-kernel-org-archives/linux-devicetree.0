@@ -1,56 +1,52 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: How to add multiple example with conflicting includes
-Date: Fri, 26 Jul 2019 20:11:08 +0200
-Message-ID: <20190726181108.GA17767@Red>
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [PATCH 0/6] pwm: sun4i: Add support for Allwinner H6
+Date: Fri, 26 Jul 2019 20:40:39 +0200
+Message-ID: <20190726184045.14669-1-jernej.skrabec@siol.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBN4S5XUQKGQETBQS5QA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello
+Allwinner H6 SoC has PWM core which is basically the same as that found
+in A20, it's just depends on additional bus clock and reset line.
 
-When I try to check the following examples of a devicetree schema:
-examples:                                                                       
-  - |                                                                           
-    #include <dt-bindings/interrupt-controller/arm-gic.h>                       
-    #include <dt-bindings/clock/sun50i-a64-ccu.h>                               
-    #include <dt-bindings/reset/sun50i-a64-ccu.h>                               
-                                                                                
-    crypto: crypto@1c15000 {                                                    
-      compatible = "allwinner,sun8i-h3-crypto";                                 
-      reg = <0x01c15000 0x1000>;                                                
-      interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;                            
-      clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;                                
-      clock-names = "ahb", "mod";                                               
-      resets = <&ccu RST_BUS_CE>;                                               
-      reset-names = "ahb";                                                      
-    };                                                                          
-                                                                                
-  - |                                                                           
-    #include <dt-bindings/interrupt-controller/arm-gic.h>                       
-    #include <dt-bindings/clock/sun50i-h6-ccu.h>                                
-    #include <dt-bindings/reset/sun50i-h6-ccu.h>                                
-                                                                                
-    crypto: crypto@1904000 {                                                    
-      compatible = "allwinner,sun50i-h6-crypto";                                
-      reg = <0x01904000 0x1000>;                                                
-      interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;                            
-      clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>, <&ccu CLK_MBUS_CE>;            
-      clock-names = "ahb", "mod", "mbus";                                       
-      resets = <&ccu RST_BUS_CE>;                                               
-      reset-names = "ahb";                                                      
-    };
+This series adds support for it and extends PWM driver functionality in
+a way that it's now possible to bypass whole core and output PWM source
+clock directly as a PWM signal. This functionality is needed by AC200
+chip, which is bundled in same physical package as H6 SoC, to serve as a
+clock source of 24 MHz. AC200 clock input pin is bonded internally to
+the second PWM channel.
 
-I get:
-In file included from Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.example.dts:42:
-/linux-next/scripts/dtc/include-prefixes/dt-bindings/clock/sun50i-h6-ccu.h:9: warning: "CLK_PLL_PERIPH0" redefined
- #define CLK_PLL_PERIPH0  3
-[...]
+I would be grateful if anyone can test this patch series for any kind of
+regression on other SoCs.
 
-So how can I add multiple examples which need somes conflicting #include to be validated.
+Please take a look.
 
-Thanks
-Regards
+Best regards,
+Jernej
+
+Jernej Skrabec (6):
+  dt-bindings: pwm: allwinner: Add H6 PWM description
+  pwm: sun4i: Add a quirk for reset line
+  pwm: sun4i: Add a quirk for bus clock
+  pwm: sun4i: Add support for H6 PWM
+  pwm: sun4i: Add support to output source clock directly
+  arm64: dts: allwinner: h6: Add PWM node
+
+ .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 36 +++++++-
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 10 +++
+ drivers/pwm/pwm-sun4i.c                       | 83 ++++++++++++++++++-
+ 3 files changed, 125 insertions(+), 4 deletions(-)
+
+-- 
+2.22.0
