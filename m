@@ -1,21 +1,34 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: sprd: Change the hwlock support to be optional" to the spi tree
-Date: Fri, 26 Jul 2019 13:12:23 +0100 (BST)
-Message-ID: <20190726121223.99EF52742B63@ypsilon.sirena.org.uk>
-References: <23d51f5d9c9cc647ad0c5a1fb950d3d9fb9c1303.1564125131.git.baolin.wang@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <23d51f5d9c9cc647ad0c5a1fb950d3d9fb9c1303.1564125131.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: baolin.wang@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, orsonzhai@gmail.com, robh+dt@kernel.org, sherry.zong@unisoc.com, vincent.guittot@linaro.org, weicx@spreadst.com, zhang.lyra@gmail.com
+Subject: Applied "ASoC: sunxi: fix a sound binding broken reference" to the
+ asoc tree
+Date: Fri, 26 Jul 2019 13:12:17 +0100 (BST)
+Message-ID: <20190726121217.9EDDC2742B63@ypsilon.sirena.org.uk>
+References: <9932608f32030c886d906ea656eda8408c544776.1564140865.git.mchehab+samsung@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <9932608f32030c886d906ea656eda8408c544776.1564140865.git.mchehab+samsung@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Maxime Ripard <maxime.ripard@bootlin.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Cc:"@sirena.org.uk, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   spi: sprd: Change the hwlock support to be optional
+   ASoC: sunxi: fix a sound binding broken reference
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -36,51 +49,34 @@ to this mail.
 Thanks,
 Mark
 
->From 70f69f481b87da0614360e57e05a3ba962d60439 Mon Sep 17 00:00:00 2001
-From: Baolin Wang <baolin.wang@linaro.org>
-Date: Fri, 26 Jul 2019 15:20:53 +0800
-Subject: [PATCH] spi: sprd: Change the hwlock support to be optional
+>From d8481155a3219ef427c6384022931758fbbe8ebe Mon Sep 17 00:00:00 2001
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Date: Fri, 26 Jul 2019 08:47:27 -0300
+Subject: [PATCH] ASoC: sunxi: fix a sound binding broken reference
 
-No need to add hardware spinlock proctection due to add multiple
-msater channel, so change it to be optional in documentation.
+Address this rename:
+	Documentation/devicetree/bindings/sound/{sun4i-i2s.txt -> allwinner,sun4i-a10-i2s.yaml}
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Link: https://lore.kernel.org/r/23d51f5d9c9cc647ad0c5a1fb950d3d9fb9c1303.1564125131.git.baolin.wang@linaro.org
+Fixes: 0a0ca8e94ca3 ("dt-bindings: sound: Convert Allwinner I2S binding to YAML")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Link: https://lore.kernel.org/r/9932608f32030c886d906ea656eda8408c544776.1564140865.git.mchehab+samsung@kernel.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/spi/spi-sprd-adi.txt          | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-sprd-adi.txt b/Documentation/devicetree/bindings/spi/spi-sprd-adi.txt
-index 8de589b376ce..2567c829e2dc 100644
---- a/Documentation/devicetree/bindings/spi/spi-sprd-adi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-sprd-adi.txt
-@@ -25,18 +25,23 @@ data by ADI software channels at the same time, or two parallel routine of setti
- ADI registers will make ADI controller registers chaos to lead incorrect results.
- Then we need one hardware spinlock to synchronize between the multiple subsystems.
- 
-+The new version ADI controller supplies multiple master channels for different
-+subsystem accessing, that means no need to add hardware spinlock to synchronize,
-+thus change the hardware spinlock support to be optional to keep backward
-+compatibility.
-+
- Required properties:
- - compatible: Should be "sprd,sc9860-adi".
- - reg: Offset and length of ADI-SPI controller register space.
--- hwlocks: Reference to a phandle of a hwlock provider node.
--- hwlock-names: Reference to hwlock name strings defined in the same order
--	as the hwlocks, should be "adi".
- - #address-cells: Number of cells required to define a chip select address
- 	on the ADI-SPI bus. Should be set to 1.
- - #size-cells: Size of cells required to define a chip select address size
- 	on the ADI-SPI bus. Should be set to 0.
- 
- Optional properties:
-+- hwlocks: Reference to a phandle of a hwlock provider node.
-+- hwlock-names: Reference to hwlock name strings defined in the same order
-+	as the hwlocks, should be "adi".
- - sprd,hw-channels: This is an array of channel values up to 49 channels.
- 	The first value specifies the hardware channel id which is used to
- 	transfer data triggered by hardware automatically, and the second
+diff --git a/Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt b/Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt
+index 2ca3d138528e..7ecf6bd60d27 100644
+--- a/Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt
++++ b/Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt
+@@ -4,7 +4,7 @@ Allwinner SUN8I audio codec
+ On Sun8i-A33 SoCs, the audio is separated in different parts:
+ 	  - A DAI driver. It uses the "sun4i-i2s" driver which is
+ 	  documented here:
+-	  Documentation/devicetree/bindings/sound/sun4i-i2s.txt
++	  Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
+ 	  - An analog part of the codec which is handled as PRCM registers.
+ 	  See Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+ 	  - An digital part of the codec which is documented in this current
 -- 
 2.20.1
