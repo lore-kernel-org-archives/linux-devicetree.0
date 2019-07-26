@@ -1,156 +1,54 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH v2 2/3] usb: exynos: add support for getting PHYs from
- the standard dt array
-Date: Fri, 26 Jul 2019 10:17:23 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1907261016440.1569-100000@iolanthe.rowland.org>
-References: <20190726081453.9456-3-m.szyprowski@samsung.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 1/7] docs: fix broken doc references due to renames
+Date: Fri, 26 Jul 2019 16:24:50 +0200
+Message-ID: <20190726142450.GJ15868@phenom.ffwll.local>
+References: <cover.1564140865.git.mchehab+samsung@kernel.org>
+ <430ed96cb234805d1deb216e8c8559da22cc6bac.1564140865.git.mchehab+samsung@kernel.org>
+ <CAL_JsqK_rfHehrKW_NS89BOV0=dYoao0H=zOzG=D-724vKduKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190726081453.9456-3-m.szyprowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, =?UTF-8?q?M=C3=A5ns=20Rullg=C3=A5rd?= <mans@mansr.com>, Krzysztof Kozlowski <krzk@kernel.org>, Peter Chen <peter.chen@nxp.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK_rfHehrKW_NS89BOV0=dYoao0H=zOzG=D-724vKduKw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrea Parri <andrea.parri@amarulasolutions.com>, Ajay Gupta <ajayg@nvidia.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Akira Yokosawa <akiyks@gmail.com>, Lai Jiangshan <jiangshanlai@gmail.com>, Jerry Hoemann <jerry.hoemann@hpe.com>, dri-devel <dri-devel@lists.freedesktop.org>, David Howells <dhowells@redhat.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Joel Fernandes <joel@joelfernandes.org>, "Paul E. McKenney" <paulmck@linux.ibm.com>, Will Deacon <will@kernel.org>, "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>, SCSI <linux-scsi@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Wolfram Sang <wsa@the-dreams.de>, esc.storagedev@microsemi.com, Maxime Ripard <maxime.ripard@bootlin.com>, Ingo Molnar <mingo@>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Jul 2019, Marek Szyprowski wrote:
-
-> Add the code for getting generic PHYs from standard device tree array
-> from the main controller device node. This is a first step in resolving
-> the conflict between Exynos EHCI/OHCI sub-nodes and generic USB device
-> bindings. Later the sub-nodes currently used for assigning PHYs to root
-> ports of the controller will be removed making a place for the generic
-> USB device bindings nodes.
-> 
-> Suggested-by: Måns Rullgård <mans@mansr.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
-
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-
->  drivers/usb/host/ehci-exynos.c | 23 +++++++++++++++++++----
->  drivers/usb/host/ohci-exynos.c | 23 +++++++++++++++++++----
->  2 files changed, 38 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
-> index 3a29a1a8519c..01debfd03d4a 100644
-> --- a/drivers/usb/host/ehci-exynos.c
-> +++ b/drivers/usb/host/ehci-exynos.c
-> @@ -41,6 +41,7 @@ struct exynos_ehci_hcd {
->  	struct clk *clk;
->  	struct device_node *of_node;
->  	struct phy *phy[PHY_NUMBER];
-> +	bool legacy_phy;
->  };
->  
->  #define to_exynos_ehci(hcd) (struct exynos_ehci_hcd *)(hcd_to_ehci(hcd)->priv)
-> @@ -50,10 +51,22 @@ static int exynos_ehci_get_phy(struct device *dev,
->  {
->  	struct device_node *child;
->  	struct phy *phy;
-> -	int phy_number;
-> +	int phy_number, num_phys;
->  	int ret;
->  
->  	/* Get PHYs for the controller */
-> +	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
-> +					      "#phy-cells");
-> +	for (phy_number = 0; phy_number < num_phys; phy_number++) {
-> +		phy = devm_of_phy_get_by_index(dev, dev->of_node, phy_number);
-> +		if (IS_ERR(phy))
-> +			return PTR_ERR(phy);
-> +		exynos_ehci->phy[phy_number] = phy;
-> +	}
-> +	if (num_phys > 0)
-> +		return 0;
-> +
-> +	/* Get PHYs using legacy bindings */
->  	for_each_available_child_of_node(dev->of_node, child) {
->  		ret = of_property_read_u32(child, "reg", &phy_number);
->  		if (ret) {
-> @@ -84,6 +97,7 @@ static int exynos_ehci_get_phy(struct device *dev,
->  		}
->  	}
->  
-> +	exynos_ehci->legacy_phy = true;
->  	return 0;
->  }
->  
-> @@ -205,11 +219,12 @@ static int exynos_ehci_probe(struct platform_device *pdev)
->  	ehci->caps = hcd->regs;
->  
->  	/*
-> -	 * Workaround: reset of_node pointer to avoid conflict between Exynos
-> -	 * EHCI port subnodes and generic USB device bindings
-> +	 * Workaround: reset of_node pointer to avoid conflict between legacy
-> +	 * Exynos EHCI port subnodes and generic USB device bindings
->  	 */
->  	exynos_ehci->of_node = pdev->dev.of_node;
-> -	pdev->dev.of_node = NULL;
-> +	if (exynos_ehci->legacy_phy)
-> +		pdev->dev.of_node = NULL;
->  
->  	/* DMA burst Enable */
->  	writel(EHCI_INSNREG00_ENABLE_DMA_BURST, EHCI_INSNREG00(hcd->regs));
-> diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-> index 905c6317e0c3..d5ce98e205c7 100644
-> --- a/drivers/usb/host/ohci-exynos.c
-> +++ b/drivers/usb/host/ohci-exynos.c
-> @@ -32,6 +32,7 @@ struct exynos_ohci_hcd {
->  	struct clk *clk;
->  	struct device_node *of_node;
->  	struct phy *phy[PHY_NUMBER];
-> +	bool legacy_phy;
->  };
->  
->  static int exynos_ohci_get_phy(struct device *dev,
-> @@ -39,10 +40,22 @@ static int exynos_ohci_get_phy(struct device *dev,
->  {
->  	struct device_node *child;
->  	struct phy *phy;
-> -	int phy_number;
-> +	int phy_number, num_phys;
->  	int ret;
->  
->  	/* Get PHYs for the controller */
-> +	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
-> +					      "#phy-cells");
-> +	for (phy_number = 0; phy_number < num_phys; phy_number++) {
-> +		phy = devm_of_phy_get_by_index(dev, dev->of_node, phy_number);
-> +		if (IS_ERR(phy))
-> +			return PTR_ERR(phy);
-> +		exynos_ohci->phy[phy_number] = phy;
-> +	}
-> +	if (num_phys > 0)
-> +		return 0;
-> +
-> +	/* Get PHYs using legacy bindings */
->  	for_each_available_child_of_node(dev->of_node, child) {
->  		ret = of_property_read_u32(child, "reg", &phy_number);
->  		if (ret) {
-> @@ -73,6 +86,7 @@ static int exynos_ohci_get_phy(struct device *dev,
->  		}
->  	}
->  
-> +	exynos_ohci->legacy_phy = true;
->  	return 0;
->  }
->  
-> @@ -172,11 +186,12 @@ static int exynos_ohci_probe(struct platform_device *pdev)
->  	}
->  
->  	/*
-> -	 * Workaround: reset of_node pointer to avoid conflict between Exynos
-> -	 * OHCI port subnodes and generic USB device bindings
-> +	 * Workaround: reset of_node pointer to avoid conflict between legacy
-> +	 * Exynos OHCI port subnodes and generic USB device bindings
->  	 */
->  	exynos_ohci->of_node = pdev->dev.of_node;
-> -	pdev->dev.of_node = NULL;
-> +	if (exynos_ohci->legacy_phy)
-> +		pdev->dev.of_node = NULL;
->  
->  	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
->  	if (err) {
-> 
+T24gRnJpLCBKdWwgMjYsIDIwMTkgYXQgMDc6NDE6MzVBTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gT24gRnJpLCBKdWwgMjYsIDIwMTkgYXQgNTo0NyBBTSBNYXVybyBDYXJ2YWxobyBDaGVo
+YWIKPiA8bWNoZWhhYitzYW1zdW5nQGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4KPiA+IFNvbWUgZmls
+ZXMgZ290IHJlbmFtZWQgYnV0IHByb2JhYmx5IGR1ZSB0byBzb21lIG1lcmdlIGNvbmZsaWN0cywK
+PiA+IGEgZmV3IHJlZmVyZW5jZXMgc3RpbGwgcG9pbnQgdG8gdGhlIG9sZCBsb2NhdGlvbnMuCj4g
+Pgo+ID4gU2lnbmVkLW9mZi1ieTogTWF1cm8gQ2FydmFsaG8gQ2hlaGFiIDxtY2hlaGFiK3NhbXN1
+bmdAa2VybmVsLm9yZz4KPiA+IEFja2VkLWJ5OiBXb2xmcmFtIFNhbmcgPHdzYUB0aGUtZHJlYW1z
+LmRlPiAjIEkyQyBwYXJ0Cj4gPiBSZXZpZXdlZC1ieTogSmVycnkgSG9lbWFubiA8amVycnkuaG9l
+bWFubkBocGUuY29tPiAjIGhwd2R0LnJzdAo+ID4gLS0tCj4gPiAgRG9jdW1lbnRhdGlvbi9SQ1Uv
+cmN1bGlzdF9udWxscy50eHQgICAgICAgICAgICAgICAgICAgfCAgMiArLQo+ID4gIERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vaWRsZS1zdGF0ZXMudHh0IHwgIDIgKy0KPiA+
+ICBEb2N1bWVudGF0aW9uL2xvY2tpbmcvc3BpbmxvY2tzLnJzdCAgICAgICAgICAgICAgICAgICB8
+ICA0ICsrLS0KPiA+ICBEb2N1bWVudGF0aW9uL21lbW9yeS1iYXJyaWVycy50eHQgICAgICAgICAg
+ICAgICAgICAgICB8ICAyICstCj4gPiAgRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMva29fS1Iv
+bWVtb3J5LWJhcnJpZXJzLnR4dCAgfCAgMiArLQo+ID4gIERvY3VtZW50YXRpb24vd2F0Y2hkb2cv
+aHB3ZHQucnN0ICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KPiA+ICBNQUlOVEFJTkVSUyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDEwICsrKysrLS0tLS0K
+PiA+ICBkcml2ZXJzL2dwdS9kcm0vZHJtX21vZGVzLmMgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAyICstCgpmb3IgdGhlIGRybSBwYXJ0OgoKQWNrZWQtYnk6IERhbmllbCBWZXR0ZXIgPGRh
+bmllbC52ZXR0ZXJAZmZ3bGwuY2g+Cgo+ID4gIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbnZpZGlh
+LWdwdS5jICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KPiA+ICBkcml2ZXJzL3Njc2kvaHBzYS5j
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA0ICsrLS0KPiA+ICAxMCBmaWxl
+cyBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlvbnMoLSkKPiAKPiBBY2tlZC1i
+eTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3
+YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
