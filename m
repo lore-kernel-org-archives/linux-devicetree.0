@@ -1,252 +1,61 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [RFC PATCH 04/11] devfreq: exynos-bus: Clean up code
-Date: Fri, 26 Jul 2019 20:04:24 +0900
-Message-ID: <2871b90b-f8e6-13c0-0e0b-66ce70e3ec86@samsung.com>
-References: <CGME20190723122024eucas1p25a480ccddaa69ee1d0f1a07960ca3f22@eucas1p2.samsung.com>
-        <20190723122016.30279-1-a.swigon@partner.samsung.com>
-        <20190723122016.30279-5-a.swigon@partner.samsung.com>
-        <CAGTfZH3Z334D3OKpBOGSfS9RoHkOX-s_2M858z1Ye2NoMtVh4g@mail.gmail.com>
-        <CAJKOXPfsD0XFs2hM64Kf0eG2G+xhWef3QZKjk9NU2ECzgQeqsA@mail.gmail.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC, v3 9/9] media: platform: Add Mediatek ISP P1 shared memory
+	device
+Date: Fri, 26 Jul 2019 12:04:23 +0100
+Message-ID: <4460bc91-352a-7f3a-cbed-1b95e743ca8c@arm.com>
+References: <jungo.lin@mediatek.com>
+	<20190611035344.29814-1-jungo.lin@mediatek.com>
+	<20190611035344.29814-10-jungo.lin@mediatek.com>
+	<20190701072532.GB137710@chromium.org>
+	<1562297618.1212.46.camel@mtksdccf07>
+	<CAAFQd5BaTQ-Q7gsE0X+d4_81OZq9WHaCYkmALt7_4A1JFo=_8g@mail.gmail.com>
+	<1562313579.1212.73.camel@mtksdccf07>
+	<CAAFQd5AaNFpMGCVJREY85n8UetEwd99TOka8-ECoLzMbMkos_g@mail.gmail.com>
+	<1563870117.1212.455.camel@mtksdccf07>
+	<CAAFQd5Bh80N+cMhz=eyHUGJLaE5uuypOawQvHrTgGSMDvmcpLA@mail.gmail.com>
+	<20190726074116.GA19745@infradead.org>
+	<CAAFQd5CXwRm-3jD+rfNNDNLH=gT_i0QYSAG3XBo3SJnPTY56_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPfsD0XFs2hM64Kf0eG2G+xhWef3QZKjk9NU2ECzgQeqsA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, cwchoi00@gmail.com
-Cc: =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Inki Dae <inki.dae@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, georgi.djakov@linaro.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAAFQd5CXwRm-3jD+rfNNDNLH=gT_i0QYSAG3XBo3SJnPTY56_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Christoph Hellwig <hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <sean.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <rynn.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UnlhbiBZdSAo5L2Z5a2f5L+uKQ==?= <ryan.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?RnJhbmtpZSBDaGl1ICjpgrHmloflh7Ep?= <frankie.chiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Jungo Lin <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, ddavenport-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>linu
 List-Id: devicetree@vger.kernel.org
 
-On 19. 7. 26. 오후 7:45, Krzysztof Kozlowski wrote:
-> On Thu, 25 Jul 2019 at 14:51, Chanwoo Choi <cwchoi00@gmail.com> wrote:
+On 26/07/2019 08:42, Tomasz Figa wrote:
+> On Fri, Jul 26, 2019 at 4:41 PM Christoph Hellwig <hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
 >>
->> 2019년 7월 24일 (수) 오전 8:07, Artur Świgoń <a.swigon@partner.samsung.com>님이 작성:
->>>
->>> This patch adds minor improvements to the exynos-bus driver.
->>>
->>> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
->>> ---
->>>  drivers/devfreq/exynos-bus.c | 49 ++++++++++++++++--------------------
->>>  1 file changed, 22 insertions(+), 27 deletions(-)
->>>
->>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
->>> index 4bb83b945bf7..412511ca7703 100644
->>> --- a/drivers/devfreq/exynos-bus.c
->>> +++ b/drivers/devfreq/exynos-bus.c
->>> @@ -15,11 +15,10 @@
->>>  #include <linux/device.h>
->>>  #include <linux/export.h>
->>>  #include <linux/module.h>
->>> -#include <linux/of_device.h>
->>> +#include <linux/of.h>
->>>  #include <linux/pm_opp.h>
->>>  #include <linux/platform_device.h>
->>>  #include <linux/regulator/consumer.h>
->>> -#include <linux/slab.h>
->>>
->>>  #define DEFAULT_SATURATION_RATIO       40
->>>  #define DEFAULT_VOLTAGE_TOLERANCE      2
->>> @@ -256,7 +255,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
->>>                                         struct exynos_bus *bus)
->>>  {
->>>         struct device *dev = bus->dev;
->>> -       int i, ret, count, size;
->>> +       int i, ret, count;
->>>
->>>         /* Get the regulator to provide each bus with the power */
->>>         bus->regulator = devm_regulator_get(dev, "vdd");
->>> @@ -283,8 +282,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
->>>         }
->>>         bus->edev_count = count;
->>>
->>> -       size = sizeof(*bus->edev) * count;
->>> -       bus->edev = devm_kzalloc(dev, size, GFP_KERNEL);
->>> +       bus->edev = devm_kcalloc(dev, count, sizeof(*bus->edev), GFP_KERNEL);
->>>         if (!bus->edev) {
->>>                 ret = -ENOMEM;
->>>                 goto err_regulator;
->>> @@ -388,7 +386,7 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
->>>         ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
->>>         if (!ondemand_data) {
->>>                 ret = -ENOMEM;
->>> -               goto err;
->>> +               goto out;
->>>         }
->>>         ondemand_data->upthreshold = 40;
->>>         ondemand_data->downdifferential = 5;
->>> @@ -400,14 +398,14 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
->>>         if (IS_ERR(bus->devfreq)) {
->>>                 dev_err(dev, "failed to add devfreq device\n");
->>>                 ret = PTR_ERR(bus->devfreq);
->>> -               goto err;
->>> +               goto out;
->>>         }
->>>
->>>         /* Register opp_notifier to catch the change of OPP  */
->>>         ret = devm_devfreq_register_opp_notifier(dev, bus->devfreq);
->>>         if (ret < 0) {
->>>                 dev_err(dev, "failed to register opp notifier\n");
->>> -               goto err;
->>> +               goto out;
->>>         }
->>>
->>>         /*
->>> @@ -417,16 +415,16 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
->>>         ret = exynos_bus_enable_edev(bus);
->>>         if (ret < 0) {
->>>                 dev_err(dev, "failed to enable devfreq-event devices\n");
->>> -               goto err;
->>> +               goto out;
->>>         }
->>>
->>>         ret = exynos_bus_set_event(bus);
->>>         if (ret < 0) {
->>>                 dev_err(dev, "failed to set event to devfreq-event devices\n");
->>> -               goto err;
->>> +               goto out;
->>>         }
->>>
->>> -err:
->>> +out:
->>>         return ret;
->>>  }
->>>
->>> @@ -446,27 +444,28 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
->>>         parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
->>>         if (IS_ERR(parent_devfreq)) {
->>>                 ret = -EPROBE_DEFER;
->>> -               goto err;
->>> +               goto out;
->>>         }
->>>
->>>         passive_data = devm_kzalloc(dev, sizeof(*passive_data), GFP_KERNEL);
->>>         if (!passive_data) {
->>>                 ret = -ENOMEM;
->>> -               goto err;
->>> +               goto out;
->>>         }
->>>         passive_data->parent = parent_devfreq;
->>>
->>>         /* Add devfreq device for exynos bus with passive governor */
->>> -       bus->devfreq = devm_devfreq_add_device(dev, profile, DEVFREQ_GOV_PASSIVE,
->>> +       bus->devfreq = devm_devfreq_add_device(dev, profile,
->>> +                                               DEVFREQ_GOV_PASSIVE,
->>>                                                 passive_data);
->>>         if (IS_ERR(bus->devfreq)) {
->>>                 dev_err(dev,
->>>                         "failed to add devfreq dev with passive governor\n");
->>>                 ret = PTR_ERR(bus->devfreq);
->>> -               goto err;
->>> +               goto out;
->>>         }
->>>
->>> -err:
->>> +out:
->>>         return ret;
->>>  }
->>>
->>> @@ -484,11 +483,11 @@ static int exynos_bus_probe(struct platform_device *pdev)
->>>                 return -EINVAL;
->>>         }
->>>
->>> -       bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
->>> +       bus = devm_kzalloc(dev, sizeof(*bus), GFP_KERNEL);
->>>         if (!bus)
->>>                 return -ENOMEM;
->>>         mutex_init(&bus->lock);
->>> -       bus->dev = &pdev->dev;
->>> +       bus->dev = dev;
->>>         platform_set_drvdata(pdev, bus);
->>>
->>>         /* Parse the device-tree to get the resource information */
->>> @@ -502,7 +501,7 @@ static int exynos_bus_probe(struct platform_device *pdev)
->>>                 goto err;
->>>         }
->>>
->>> -       node = of_parse_phandle(dev->of_node, "devfreq", 0);
->>> +       node = of_parse_phandle(np, "devfreq", 0);
->>>         if (node) {
->>>                 of_node_put(node);
->>>                 ret = exynos_bus_profile_init_passive(bus, profile);
->>> @@ -547,12 +546,10 @@ static int exynos_bus_resume(struct device *dev)
->>>         int ret;
->>>
->>>         ret = exynos_bus_enable_edev(bus);
->>> -       if (ret < 0) {
->>> +       if (ret < 0)
->>>                 dev_err(dev, "failed to enable the devfreq-event devices\n");
->>> -               return ret;
->>> -       }
->>>
->>> -       return 0;
->>> +       return ret;
->>>  }
->>>
->>>  static int exynos_bus_suspend(struct device *dev)
->>> @@ -561,12 +558,10 @@ static int exynos_bus_suspend(struct device *dev)
->>>         int ret;
->>>
+>> On Fri, Jul 26, 2019 at 02:15:14PM +0900, Tomasz Figa wrote:
+>>> Could you try dma_get_sgtable() with the SCP struct device and then
+>>> dma_map_sg() with the P1 struct device?
 >>
->> NACK.
+>> Please don't do that.  dma_get_sgtable is a pretty broken API (see
+>> the common near the arm implementation) and we should not add more
+>> users of it.  If you want a piece of memory that can be mapped to
+>> multiple devices allocate it using alloc_pages and then just map
+>> it to each device.
 > 
-> Instead of simple nack you should explain what is wrong with proposed
-> approach. The existing code could be improved and this patch clearly
-> improves the readability. "err" label is confusing if it is used for
-> correct exit path. The last "if() return" block is subjective - but
-> then explain exactly why you prefer one over another. No just "nack"
-> for peoples contributions.
-
-OK. Sorry for my lack comment.
-
-Actually, I prefer 'err' instead of 'out' because jump to 'err'
-statement point when failed to call some functions. In my case,
-'err' is proper without any problem.
-
-
+> Thanks for taking a look at this thread.
 > 
->>>         ret = exynos_bus_disable_edev(bus);
->>> -       if (ret < 0) {
->>> +       if (ret < 0)
->>>                 dev_err(dev, "failed to disable the devfreq-event devices\n");
->>> -               return ret;
->>> -       }
+> Unfortunately that wouldn't work. We have a specific reserved memory
+> pool that is the only memory area accessible to one of the devices.
+> Any idea how to handle this?
 
-When happen error by function call, I think that have to print
-the error log, just return or jump some point like 'err'
-for restoring the previous state.
+If it's reserved in the sense of being outside struct-page-backed 
+"kernel memory", then provided you have a consistent CPU physical 
+address it might be reasonable for other devices to access it via 
+dma_map_resource().
 
-But, in this case, even if happen the error, the exception handling
-of exynos_bus_disable_edev() just prints the error log without return.
-
-I knew that this it is possible because the exynos_bus_disable_edev(bus)
-was called at the end of function. But, I want to keep the same style
-for exception handling if there are no any critical benefits.
-
->>>
->>> -       return 0;
->>> +       return ret;
->>>  }
->>>  #endif
->>>
->>> --
->>> 2.17.1
->>>
->>
->> NACK.
->>
->> As I already commented, It has never any benefit.
->> I think that it is not usful. Please drop it.
-> 
-> The benefit for me is clear - makes the code easier to understand.
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Robin.
