@@ -1,418 +1,441 @@
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH v2 00/26] ReST conversion of text files without .txt extension
-Date: Fri, 26 Jul 2019 09:51:10 -0300
-Message-ID: <cover.1564145354.git.mchehab+samsung@kernel.org>
+From: LABBE Corentin <clabbe@baylibre.com>
+Subject: Re: [PATCH 1/4] dt-bindings: crypto: Add DT bindings documentation
+ for amlogic-crypto
+Date: Fri, 26 Jul 2019 14:54:24 +0200
+Message-ID: <20190726125424.GA20366@Red>
+References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
+ <1564083776-20540-2-git-send-email-clabbe@baylibre.com>
+ <CAL_JsqLbYwRpNWHGkYbomWLMpum_DXW4OjNNRrwTRM=w86dONw@mail.gmail.com>
+ <15B4F061F360B2F0.8182@groups.io>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-spi@vger.kernel.org, linux-iio@vger.kernel.org, linux-rtc@vger.kernel.org, netdev@vger.kernel.org, linux-parisc@vger.kernel.org, openrisc@lists.librecores.org, devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, devel@lists.orangefs.org, dmaengine@vger.kernel.org, alsa-devel@alsa-project.org, linux-mips@vger.kernel.org, linux-wireless@vger.kernel.org, rcu@vger.kernel.o
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <15B4F061F360B2F0.8182@groups.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: baylibre-upstreaming@groups.io
+Cc: Rob Herring <robh+dt@kernel.org>, David Miller <davem@davemloft.net>, Herbert Xu <herbert@gondor.apana.org.au>, Kevin Hilman <khilman@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This series converts the text files under Documentation with doesn't end
-neither .txt or .rst and are not part of ABI or features.
+On Fri, Jul 26, 2019 at 01:07:47PM +0200, Corentin Labbe via Groups.Io wrote:
+> On Thu, Jul 25, 2019 at 04:55:30PM -0600, Rob Herring wrote:
+> > On Thu, Jul 25, 2019 at 1:43 PM Corentin Labbe <clabbe@baylibre.com> wrote:
+> > >
+> > > This patch adds documentation for Device-Tree bindings for the
+> > > Amlogic GXL cryptographic offloader driver.
+> > >
+> > > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> > > ---
+> > >  .../bindings/crypto/amlogic-gxl-crypto.yaml   | 45 +++++++++++++++++++
+> > 
+> > Follow the compatible string for the filename: amlogic,gxl-crypto.yaml
+> > 
+> > >  1 file changed, 45 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml b/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+> > > new file mode 100644
+> > > index 000000000000..41265e57c00b
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/crypto/amlogic-gxl-crypto.yaml
+> > > @@ -0,0 +1,45 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > 
+> > Dual (GPL-2.0 OR BSD-2-Clause) is preferred for new bindings. Not a
+> > requirement though.
+> > 
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/crypto/amlogic-gxl-crypto.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Amlogic GXL Cryptographic Offloader
+> > > +
+> > > +maintainers:
+> > > +  - Corentin Labbe <clabbe@baylibre.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> > 
+> > Don't need 'oneOf' when there is only 1.
+> > 
+> > > +      - const: amlogic,gxl-crypto
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +
+> > > +  clock-names:
+> > > +    const: blkmv
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - interrupts
+> > > +  - clocks
+> > > +  - clock-names
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    crypto: crypto@c883e000 {
+> > > +        compatible = "amlogic,gxl-crypto";
+> > > +        reg = <0x0 0xc883e000 0x0 0x36>;
+> > 
+> > This should throw errors because the default size on examples are 1
+> > cell. But validating the examples with the schema only just landed in
+> > 5.3-rc1.
+> > 
+> > > +        interrupts = <GIC_SPI 188 IRQ_TYPE_EDGE_RISING>,
+> > > +            <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
+> > 
+> > This doesn't match the schema.
+> > 
+> > > +        clocks = <&clkc CLKID_BLKMV>;
+> > > +        clock-names = "blkmv";
+> > > +    };
+> > > --
+> > > 2.21.0
+> > >
+> 
+> Hello
+> 
+> I will fix all your remarks.
+> I have tried to valide them but fail to do it:
+> make ARCH=arm64 CROSS_COMPILE=aarch64-unknown-linux-gnu- KBUILD_OUTPUT=~/crossbuild/next/arm64/default/defconfig/ dt_binding_check
+> make[1] : on entre dans le répertoire « /usr/src/crossbuild/next/arm64/default/defconfig »
+> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built
+>   GEN     Makefile
+> scripts/kconfig/conf  --syncconfig Kconfig
+> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/atmel-at91.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/axxia.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/axxia.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/amlogic.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/amlogic.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/renesas.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/renesas.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/sirf.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/sirf.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/spear.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/spear.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/qcom.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/qcom.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/pmu.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/pmu.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/digicolor.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/digicolor.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/sunxi.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/sunxi.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/zte.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/zte.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/cpus.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/cpus.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/rda.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/rda.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/psci.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/psci.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/calxeda.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/calxeda.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/ti/nspire.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/ti/nspire.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/fsl.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/fsl.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/xilinx.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/xilinx.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/altera.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/altera.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/rockchip.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/rockchip.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/mediatek.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/mediatek.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/vt8500.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/vt8500.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/al,alpine.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/al,alpine.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/l2c2x0.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/l2c2x0.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/moxart.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/moxart.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/sti.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/sti.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/primecell.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/primecell.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/bitmain.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/bitmain.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/stm32/stm32.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
+> /linux-next/Documentation/devicetree/bindings/arm/tegra.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/arm/tegra.yaml
+> /linux-next/Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml
+> /linux-next/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.yaml
+> /linux-next/Documentation/devicetree/bindings/clock/milbeaut-clock.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/clock/milbeaut-clock.yaml
+> /linux-next/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml
+> /linux-next/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
+> /linux-next/Documentation/devicetree/bindings/clock/fixed-factor-clock.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/clock/fixed-factor-clock.yaml
+> /linux-next/Documentation/devicetree/bindings/clock/fixed-clock.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/clock/fixed-clock.yaml
+> /linux-next/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> /linux-next/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
+> /linux-next/Documentation/devicetree/bindings/display/simple-framebuffer.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+> /linux-next/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/pda,91-00156-a0.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/pda,91-00156-a0.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/lvds.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/lvds.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/panel-common.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr-01b.yaml
+> /linux-next/Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.yaml
+> /linux-next/Documentation/devicetree/bindings/example-schema.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/example-schema.yaml
+> /linux-next/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
+> /linux-next/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
+> /linux-next/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
+> /linux-next/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+> /linux-next/Documentation/devicetree/bindings/i2c/i2c-gpio.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/i2c/i2c-gpio.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/light/tsl2583.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/light/tsl2583.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/light/isl29018.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/light/isl29018.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/light/tsl2772.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/light/tsl2772.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+> /linux-next/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+> /linux-next/Documentation/devicetree/bindings/input/gpio-vibrator.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> /linux-next/Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml
+> /linux-next/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
+> /linux-next/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+> /linux-next/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/interrupt-controller/intel,ixp4xx-interrupt.yaml
+> /linux-next/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> /linux-next/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/misc/intel,ixp4xx-queue-manager.yaml
+> /linux-next/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml
+> /linux-next/Documentation/devicetree/bindings/mmc/mmc-controller.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> /linux-next/Documentation/devicetree/bindings/mtd/nand-controller.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> /linux-next/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml
+> /linux-next/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+> /linux-next/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-emac.yaml
+> /linux-next/Documentation/devicetree/bindings/net/snps,dwmac.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> /linux-next/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+> /linux-next/Documentation/devicetree/bindings/net/ethernet-phy.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> /linux-next/Documentation/devicetree/bindings/net/mdio.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/mdio.yaml
+> /linux-next/Documentation/devicetree/bindings/net/ethernet-controller.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> /linux-next/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/net/allwinner,sun4i-a10-mdio.yaml
+> /linux-next/Documentation/devicetree/bindings/nvmem/nvmem.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/nvmem/nvmem.yaml
+> /linux-next/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+> /linux-next/Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml
+> /linux-next/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
+> /linux-next/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+> /linux-next/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+> /linux-next/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> /linux-next/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> /linux-next/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
+> /linux-next/Documentation/devicetree/bindings/regulator/max8660.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/regulator/max8660.yaml
+> /linux-next/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+> /linux-next/Documentation/devicetree/bindings/regulator/regulator.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/regulator/regulator.yaml
+> /linux-next/Documentation/devicetree/bindings/riscv/cpus.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/riscv/cpus.yaml
+> /linux-next/Documentation/devicetree/bindings/riscv/sifive.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/riscv/sifive.yaml
+> /linux-next/Documentation/devicetree/bindings/rtc/rtc.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/rtc/rtc.yaml
+> /linux-next/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+> /linux-next/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+> /linux-next/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
+> /linux-next/Documentation/devicetree/bindings/serial/pl011.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/serial/pl011.yaml
+> /linux-next/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
+> /linux-next/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
+> /linux-next/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
+> /linux-next/Documentation/devicetree/bindings/spi/spi-pl022.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/spi/spi-pl022.yaml
+> /linux-next/Documentation/devicetree/bindings/spi/spi-controller.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> /linux-next/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml
+> /linux-next/Documentation/devicetree/bindings/spi/spi-gpio.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/spi/spi-gpio.yaml
+> /linux-next/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
+> /linux-next/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml
+> /linux-next/Documentation/devicetree/bindings/timer/arm,global_timer.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/timer/arm,global_timer.yaml
+> /linux-next/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
+> /linux-next/Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/timer/intel,ixp4xx-timer.yaml
+> /linux-next/Documentation/devicetree/bindings/trivial-devices.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/trivial-devices.yaml
+> /linux-next/Documentation/devicetree/bindings/usb/generic-ohci.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/usb/generic-ohci.yaml
+> /linux-next/Documentation/devicetree/bindings/usb/usb-hcd.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/usb/usb-hcd.yaml
+> /linux-next/Documentation/devicetree/bindings/usb/generic-ehci.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/usb/generic-ehci.yaml
+> /linux-next/Documentation/devicetree/bindings/vendor-prefixes.yaml: ignoring, error parsing file
+> warning: no schema found in file: /linux-next/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> /usr/lib64/python3.6/site-packages/dtschema/schemas/serial.yaml: ignoring, error parsing file
+> Traceback (most recent call last):
+>   File "/usr/lib64/python3.6/site-packages/jsonschema/validators.py", line 739, in resolve_from_url
+>     document = self.store[url]
+>   File "/usr/lib64/python3.6/site-packages/jsonschema/_utils.py", line 23, in __getitem__
+>     return self.store[self.normalize(uri)]
+> KeyError: 'http://devicetree.org/meta-schemas/base.yaml'
+> 
+> During handling of the above exception, another exception occurred:
+> 
+> Traceback (most recent call last):
+>   File "/usr/lib64/python3.6/site-packages/jsonschema/validators.py", line 742, in resolve_from_url
+>     document = self.resolve_remote(url)
+>   File "/usr/lib64/python3.6/site-packages/jsonschema/validators.py", line 821, in resolve_remote
+>     result = self.handlers[scheme](uri)
+>   File "/usr/lib64/python3.6/site-packages/dtschema/lib.py", line 523, in http_handler
+>     return load_schema(uri.replace(schema_base_url, ''))
+>   File "/usr/lib64/python3.6/site-packages/dtschema/lib.py", line 102, in load_schema
+>     return yaml.load(f.read())
+>   File "/usr/lib64/python3.6/site-packages/ruamel/yaml/main.py", line 266, in load
+>     return constructor.get_single_data()
+>   File "/usr/lib64/python3.6/site-packages/ruamel/yaml/constructor.py", line 102, in get_single_data
+>     node = self.composer.get_single_node()
+>   File "_ruamel_yaml.pyx", line 703, in _ruamel_yaml.CParser.get_single_node (ext/_ruamel_yaml.c:9583)
+>   File "_ruamel_yaml.pyx", line 904, in _ruamel_yaml.CParser._parse_next_event (ext/_ruamel_yaml.c:12818)
+> ruamel.yaml.parser.ParserError: found incompatible YAML document
+>   in "<unicode string>", line 4, column 1
+> 
+> During handling of the above exception, another exception occurred:
+> 
+> Traceback (most recent call last):
+>   File "/usr/lib/python-exec/python3.6/dt-mk-schema", line 32, in <module>
+>     schemas = dtschema.process_schemas(args.schemas, core_schema=(not args.useronly))
+>   File "/usr/lib64/python3.6/site-packages/dtschema/lib.py", line 487, in process_schemas
+>     sch = process_schema(os.path.abspath(filename))
+>   File "/usr/lib64/python3.6/site-packages/dtschema/lib.py", line 428, in process_schema
+>     DTValidator.check_schema(schema)
+>   File "/usr/lib64/python3.6/site-packages/dtschema/lib.py", line 572, in check_schema
+>     meta_schema = cls.resolver.resolve_from_url(schema['$schema'])
+>   File "/usr/lib64/python3.6/site-packages/jsonschema/validators.py", line 744, in resolve_from_url
+>     raise exceptions.RefResolutionError(exc)
+> jsonschema.exceptions.RefResolutionError: found incompatible YAML document
+>   in "<unicode string>", line 4, column 1
+> make[2]: *** [/linux-next/Documentation/devicetree/bindings/Makefile:31: Documentation/devicetree/bindings/processed-schema.yaml] Error 1
+> make[1]: *** [/linux-next/Makefile:1278: dt_binding_check] Error 2
+> make[1] : on quitte le répertoire « /usr/src/crossbuild/next/arm64/default/defconfig »
+> make: *** [Makefile:179: sub-make] Error 2
+> 
+> Do you know what happens ?
+> 
 
-This series is at:
-	https://git.linuxtv.org/mchehab/experimental.git/log/?h=rst_for_5_4_v3
+Just found the problem
 
-And it is based on yesterday's upstream tree.
+Sorry for the noise.
 
-After this series, we have ~320 files left to be converted to ReST.
-
-v2:
-  - Added 3 files submitted for v5.3 that weren't merged yet;
-  - markdown patch broken into two, per Rob's request;
-  - rebased on the top of upstream master branch
-
-Mauro Carvalho Chehab (26):
-  docs: power: add it to to the main documentation index
-  docs: thermal: add it to the driver API
-  docs: powerpc: convert docs to ReST and rename to *.rst
-  docs: ubifs-authentication.md: convert to ReST
-  docs: writing-schema.md: convert from markdown to ReST
-  docs: i2c: convert to ReST and add to driver-api bookset
-  docs: w1: convert to ReST and add to the kAPI group of docs
-  spi: docs: convert to ReST and add it to the kABI bookset
-  docs: ipmb: place it at driver-api and convert to ReST
-  docs: packing: move it to core-api book and adjust markups
-  docs: admin-guide: add auxdisplay files to it after conversion to ReST
-  docs: README.buddha: convert to ReST and add to m68k book
-  docs: parisc: convert to ReST and add to documentation body
-  docs: openrisc: convert to ReST and add to documentation body
-  docs: isdn: convert to ReST and add to kAPI bookset
-  docs: fs: cifs: convert to ReST and add to admin-guide book
-  docs: fs: convert docs without extension to ReST
-  docs: fs: convert porting to ReST
-  docs: index.rst: don't use genindex for pdf output
-  docs: wimax: convert to ReST and add to admin-guide
-  docs: mips: add to the documentation body as ReST
-  docs: hwmon: pxe1610: convert to ReST format and add to the index
-  docs: nios2: add it to the main Documentation body
-  docs: net: convert two README files to ReST format
-  docs: rcu: convert some articles from html to ReST
-  docs: ABI: remove extension from sysfs-class-mic.txt
-
- Documentation/ABI/stable/sysfs-bus-w1         |    2 +-
- .../ABI/stable/sysfs-driver-w1_ds28e04        |    4 +-
- .../ABI/stable/sysfs-driver-w1_ds28ea00       |    2 +-
- .../{sysfs-class-mic.txt => sysfs-class-mic}  |    0
- Documentation/PCI/pci-error-recovery.rst      |    2 +-
- .../Data-Structures/Data-Structures.html      | 1391 -------
- .../Data-Structures/Data-Structures.rst       | 1163 ++++++
- ...riods.html => Expedited-Grace-Periods.rst} |  949 ++---
- .../Memory-Ordering/Tree-RCU-Diagram.html     |    9 -
- ...ring.html => Tree-RCU-Memory-Ordering.rst} | 1181 +++---
- .../RCU/Design/Requirements/Requirements.html | 3330 -----------------
- .../RCU/Design/Requirements/Requirements.rst  | 2662 +++++++++++++
- Documentation/RCU/index.rst                   |    5 +
- Documentation/RCU/whatisRCU.txt               |    4 +-
- .../auxdisplay/cfag12864b.rst}                |  115 +-
- .../admin-guide/auxdisplay/index.rst          |   16 +
- .../auxdisplay/ks0108.rst}                    |   53 +-
- .../AUTHORS => admin-guide/cifs/authors.rst}  |   64 +-
- .../CHANGES => admin-guide/cifs/changes.rst}  |    4 +
- Documentation/admin-guide/cifs/index.rst      |   21 +
- .../cifs/introduction.rst}                    |    8 +
- .../cifs/TODO => admin-guide/cifs/todo.rst}   |   87 +-
- .../README => admin-guide/cifs/usage.rst}     |  560 +--
- .../cifs/winucase_convert.pl                  |    0
- Documentation/admin-guide/index.rst           |    3 +
- .../wimax/i2400m.rst}                         |  145 +-
- Documentation/admin-guide/wimax/index.rst     |   19 +
- .../wimax/wimax.rst}                          |   36 +-
- Documentation/core-api/index.rst              |    3 +-
- .../{packing.txt => core-api/packing.rst}     |   81 +-
- .../devicetree/bindings/i2c/i2c-mux-gpmux.txt |    2 +-
- .../{writing-schema.md => writing-schema.rst} |  137 +-
- Documentation/driver-api/dmaengine/index.rst  |    2 +-
- Documentation/driver-api/index.rst            |    2 +
- Documentation/driver-api/ipmb.rst             |    2 +-
- Documentation/driver-api/soundwire/index.rst  |    2 +-
- .../thermal/cpu-cooling-api.rst               |    0
- .../thermal/exynos_thermal.rst                |    0
- .../thermal/exynos_thermal_emulation.rst      |    0
- .../{ => driver-api}/thermal/index.rst        |    2 +-
- .../thermal/intel_powerclamp.rst              |    0
- .../thermal/nouveau_thermal.rst               |    0
- .../thermal/power_allocator.rst               |    0
- .../{ => driver-api}/thermal/sysfs-api.rst    |   12 +-
- .../thermal/x86_pkg_temperature_thermal.rst   |    2 +-
- ...irectory-locking => directory-locking.rst} |   40 +-
- Documentation/filesystems/index.rst           |    4 +
- .../filesystems/{Locking => locking.rst}      |  257 +-
- .../nfs/{Exporting => exporting.rst}          |   31 +-
- .../filesystems/{porting => porting.rst}      |  824 ++--
- ...entication.md => ubifs-authentication.rst} |   70 +-
- Documentation/filesystems/vfs.rst             |    2 +-
- Documentation/hwmon/adm1021.rst               |    2 +-
- Documentation/hwmon/adm1275.rst               |    2 +-
- Documentation/hwmon/hih6130.rst               |    2 +-
- Documentation/hwmon/ibm-cffps.rst             |    2 +-
- Documentation/hwmon/index.rst                 |    1 +
- Documentation/hwmon/lm25066.rst               |    2 +-
- Documentation/hwmon/max16064.rst              |    2 +-
- Documentation/hwmon/max16065.rst              |    2 +-
- Documentation/hwmon/max20751.rst              |    2 +-
- Documentation/hwmon/max34440.rst              |    2 +-
- Documentation/hwmon/max6650.rst               |    2 +-
- Documentation/hwmon/max8688.rst               |    2 +-
- Documentation/hwmon/menf21bmc.rst             |    2 +-
- Documentation/hwmon/pcf8591.rst               |    2 +-
- Documentation/hwmon/{pxe1610 => pxe1610.rst}  |   33 +-
- Documentation/hwmon/sht3x.rst                 |    2 +-
- Documentation/hwmon/shtc1.rst                 |    2 +-
- Documentation/hwmon/tmp103.rst                |    2 +-
- Documentation/hwmon/tps40422.rst              |    2 +-
- Documentation/hwmon/ucd9000.rst               |    2 +-
- Documentation/hwmon/ucd9200.rst               |    2 +-
- Documentation/hwmon/via686a.rst               |    2 +-
- Documentation/hwmon/zl6100.rst                |    2 +-
- .../busses/{i2c-ali1535 => i2c-ali1535.rst}   |   13 +-
- .../busses/{i2c-ali1563 => i2c-ali1563.rst}   |    3 +
- .../busses/{i2c-ali15x3 => i2c-ali15x3.rst}   |   64 +-
- .../busses/{i2c-amd-mp2 => i2c-amd-mp2.rst}   |   14 +-
- .../i2c/busses/{i2c-amd756 => i2c-amd756.rst} |    8 +-
- .../busses/{i2c-amd8111 => i2c-amd8111.rst}   |   14 +-
- .../{i2c-diolan-u2c => i2c-diolan-u2c.rst}    |    3 +
- .../i2c/busses/{i2c-i801 => i2c-i801.rst}     |   33 +-
- .../i2c/busses/{i2c-ismt => i2c-ismt.rst}     |   20 +-
- .../busses/{i2c-mlxcpld => i2c-mlxcpld.rst}   |    6 +
- .../busses/{i2c-nforce2 => i2c-nforce2.rst}   |   33 +-
- .../{i2c-nvidia-gpu => i2c-nvidia-gpu.rst}    |    6 +-
- .../i2c/busses/{i2c-ocores => i2c-ocores.rst} |   22 +-
- ...2c-parport-light => i2c-parport-light.rst} |    8 +-
- .../busses/{i2c-parport => i2c-parport.rst}   |  164 +-
- .../busses/{i2c-pca-isa => i2c-pca-isa.rst}   |    9 +-
- .../i2c/busses/{i2c-piix4 => i2c-piix4.rst}   |   18 +-
- .../busses/{i2c-sis5595 => i2c-sis5595.rst}   |   19 +-
- .../i2c/busses/{i2c-sis630 => i2c-sis630.rst} |   39 +-
- .../i2c/busses/{i2c-sis96x => i2c-sis96x.rst} |   31 +-
- .../busses/{i2c-taos-evm => i2c-taos-evm.rst} |    8 +-
- .../i2c/busses/{i2c-via => i2c-via.rst}       |   28 +-
- .../i2c/busses/{i2c-viapro => i2c-viapro.rst} |   12 +-
- Documentation/i2c/busses/index.rst            |   33 +
- .../i2c/busses/{scx200_acb => scx200_acb.rst} |    9 +-
- .../i2c/{dev-interface => dev-interface.rst}  |   94 +-
- ...-considerations => dma-considerations.rst} |    0
- .../i2c/{fault-codes => fault-codes.rst}      |    5 +-
- .../i2c/{functionality => functionality.rst}  |   22 +-
- ...ult-injection => gpio-fault-injection.rst} |   12 +-
- .../i2c/{i2c-protocol => i2c-protocol.rst}    |   28 +-
- Documentation/i2c/{i2c-stub => i2c-stub.rst}  |   20 +-
- .../i2c/{i2c-topology => i2c-topology.rst}    |   68 +-
- Documentation/i2c/index.rst                   |   37 +
- ...ting-devices => instantiating-devices.rst} |   45 +-
- .../muxes/{i2c-mux-gpio => i2c-mux-gpio.rst}  |   26 +-
- ...e-parameters => old-module-parameters.rst} |   27 +-
- ...eprom-backend => slave-eeprom-backend.rst} |    4 +-
- .../{slave-interface => slave-interface.rst}  |   33 +-
- .../{smbus-protocol => smbus-protocol.rst}    |   86 +-
- Documentation/i2c/{summary => summary.rst}    |    6 +-
- ...en-bit-addresses => ten-bit-addresses.rst} |    5 +
- ...pgrading-clients => upgrading-clients.rst} |  204 +-
- .../{writing-clients => writing-clients.rst}  |   94 +-
- Documentation/index.rst                       |   10 +
- .../isdn/{README.avmb1 => avmb1.rst}          |  231 +-
- Documentation/isdn/{CREDITS => credits.rst}   |    7 +-
- .../isdn/{README.gigaset => gigaset.rst}      |  290 +-
- .../isdn/{README.hysdn => hysdn.rst}          |  125 +-
- Documentation/isdn/index.rst                  |   24 +
- .../{INTERFACE.CAPI => interface_capi.rst}    |  182 +-
- .../isdn/{README.mISDN => m_isdn.rst}         |    5 +-
- .../m68k/{README.buddha => buddha-driver.rst} |   95 +-
- Documentation/m68k/index.rst                  |    1 +
- .../{AU1xxx_IDE.README => au1xxx_ide.rst}     |   89 +-
- Documentation/mips/index.rst                  |   17 +
- .../networking/caif/{README => caif.rst}      |   88 +-
- .../networking/device_drivers/index.rst       |    2 +-
- Documentation/networking/index.rst            |    2 +-
- .../{README => mac80211_hwsim.rst}            |   28 +-
- Documentation/nios2/{README => nios2.rst}     |    1 +
- Documentation/openrisc/index.rst              |   18 +
- .../openrisc/{README => openrisc_port.rst}    |   25 +-
- Documentation/openrisc/{TODO => todo.rst}     |    9 +-
- .../parisc/{debugging => debugging.rst}       |    7 +
- Documentation/parisc/index.rst                |   18 +
- .../parisc/{registers => registers.rst}       |   59 +-
- Documentation/power/index.rst                 |    2 +-
- .../{bootwrapper.txt => bootwrapper.rst}      |   28 +-
- .../{cpu_families.txt => cpu_families.rst}    |   23 +-
- .../{cpu_features.txt => cpu_features.rst}    |    6 +-
- Documentation/powerpc/{cxl.txt => cxl.rst}    |   46 +-
- .../powerpc/{cxlflash.txt => cxlflash.rst}    |   10 +-
- .../{DAWR-POWER9.txt => dawr-power9.rst}      |   15 +-
- Documentation/powerpc/{dscr.txt => dscr.rst}  |   18 +-
- ...ecovery.txt => eeh-pci-error-recovery.rst} |  108 +-
- ...ed-dump.txt => firmware-assisted-dump.rst} |  117 +-
- Documentation/powerpc/{hvcs.txt => hvcs.rst}  |  108 +-
- Documentation/powerpc/index.rst               |   34 +
- Documentation/powerpc/isa-versions.rst        |   15 +-
- .../powerpc/{mpc52xx.txt => mpc52xx.rst}      |   12 +-
- ...nv.txt => pci_iov_resource_on_powernv.rst} |   15 +-
- .../powerpc/{pmu-ebb.txt => pmu-ebb.rst}      |    1 +
- .../powerpc/{ptrace.txt => ptrace.rst}        |  169 +-
- .../{qe_firmware.txt => qe_firmware.rst}      |   37 +-
- .../{syscall64-abi.txt => syscall64-abi.rst}  |   29 +-
- ...al_memory.txt => transactional_memory.rst} |   45 +-
- Documentation/sound/index.rst                 |    2 +-
- .../spi/{butterfly => butterfly.rst}          |   44 +-
- Documentation/spi/index.rst                   |   22 +
- Documentation/spi/{pxa2xx => pxa2xx.rst}      |   95 +-
- .../spi/{spi-lm70llp => spi-lm70llp.rst}      |   17 +-
- .../spi/{spi-sc18is602 => spi-sc18is602.rst}  |    5 +-
- .../spi/{spi-summary => spi-summary.rst}      |  105 +-
- Documentation/spi/{spidev => spidev.rst}      |   30 +-
- Documentation/w1/index.rst                    |   21 +
- .../w1/masters/{ds2482 => ds2482.rst}         |   16 +-
- .../w1/masters/{ds2490 => ds2490.rst}         |    6 +-
- Documentation/w1/masters/index.rst            |   14 +
- .../w1/masters/{mxc-w1 => mxc-w1.rst}         |   13 +-
- .../w1/masters/{omap-hdq => omap-hdq.rst}     |   12 +-
- .../w1/masters/{w1-gpio => w1-gpio.rst}       |   21 +-
- Documentation/w1/slaves/index.rst             |   16 +
- .../w1/slaves/{w1_ds2406 => w1_ds2406.rst}    |    4 +-
- .../w1/slaves/{w1_ds2413 => w1_ds2413.rst}    |    9 +
- .../w1/slaves/{w1_ds2423 => w1_ds2423.rst}    |   27 +-
- .../w1/slaves/{w1_ds2438 => w1_ds2438.rst}    |   10 +-
- .../w1/slaves/{w1_ds28e04 => w1_ds28e04.rst}  |    5 +
- .../w1/slaves/{w1_ds28e17 => w1_ds28e17.rst}  |   16 +-
- .../w1/slaves/{w1_therm => w1_therm.rst}      |   11 +-
- .../w1/{w1.generic => w1-generic.rst}         |   88 +-
- .../w1/{w1.netlink => w1-netlink.rst}         |   89 +-
- MAINTAINERS                                   |   68 +-
- arch/powerpc/kernel/exceptions-64s.S          |    2 +-
- drivers/auxdisplay/Kconfig                    |    2 +-
- drivers/hwmon/atxp1.c                         |    2 +-
- drivers/hwmon/smm665.c                        |    2 +-
- drivers/i2c/Kconfig                           |    4 +-
- drivers/i2c/busses/Kconfig                    |    2 +-
- drivers/i2c/busses/i2c-i801.c                 |    2 +-
- drivers/i2c/busses/i2c-taos-evm.c             |    2 +-
- drivers/i2c/i2c-core-base.c                   |    4 +-
- drivers/iio/dummy/iio_simple_dummy.c          |    4 +-
- drivers/rtc/rtc-ds1374.c                      |    2 +-
- drivers/soc/fsl/qe/qe.c                       |    2 +-
- drivers/spi/Kconfig                           |    2 +-
- drivers/spi/spi-butterfly.c                   |    2 +-
- drivers/spi/spi-lm70llp.c                     |    2 +-
- drivers/staging/isdn/hysdn/Kconfig            |    2 +-
- drivers/tty/hvc/hvcs.c                        |    2 +-
- fs/cifs/export.c                              |    2 +-
- fs/exportfs/expfs.c                           |    2 +-
- fs/isofs/export.c                             |    2 +-
- fs/orangefs/file.c                            |    2 +-
- fs/orangefs/orangefs-kernel.h                 |    2 +-
- include/linux/dcache.h                        |    2 +-
- include/linux/exportfs.h                      |    2 +-
- include/linux/i2c.h                           |    2 +-
- include/linux/platform_data/sc18is602.h       |    2 +-
- include/linux/thermal.h                       |    4 +-
- include/soc/fsl/qe/qe.h                       |    2 +-
- 216 files changed, 9148 insertions(+), 8672 deletions(-)
- rename Documentation/ABI/testing/{sysfs-class-mic.txt => sysfs-class-mic} (100%)
- delete mode 100644 Documentation/RCU/Design/Data-Structures/Data-Structures.html
- create mode 100644 Documentation/RCU/Design/Data-Structures/Data-Structures.rst
- rename Documentation/RCU/Design/Expedited-Grace-Periods/{Expedited-Grace-Periods.html => Expedited-Grace-Periods.rst} (15%)
- delete mode 100644 Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Diagram.html
- rename Documentation/RCU/Design/Memory-Ordering/{Tree-RCU-Memory-Ordering.html => Tree-RCU-Memory-Ordering.rst} (10%)
- delete mode 100644 Documentation/RCU/Design/Requirements/Requirements.html
- create mode 100644 Documentation/RCU/Design/Requirements/Requirements.rst
- rename Documentation/{auxdisplay/cfag12864b => admin-guide/auxdisplay/cfag12864b.rst} (26%)
- create mode 100644 Documentation/admin-guide/auxdisplay/index.rst
- rename Documentation/{auxdisplay/ks0108 => admin-guide/auxdisplay/ks0108.rst} (32%)
- rename Documentation/{filesystems/cifs/AUTHORS => admin-guide/cifs/authors.rst} (60%)
- rename Documentation/{filesystems/cifs/CHANGES => admin-guide/cifs/changes.rst} (91%)
- create mode 100644 Documentation/admin-guide/cifs/index.rst
- rename Documentation/{filesystems/cifs/cifs.txt => admin-guide/cifs/introduction.rst} (98%)
- rename Documentation/{filesystems/cifs/TODO => admin-guide/cifs/todo.rst} (58%)
- rename Documentation/{filesystems/cifs/README => admin-guide/cifs/usage.rst} (72%)
- rename Documentation/{filesystems => admin-guide}/cifs/winucase_convert.pl (100%)
- rename Documentation/{wimax/README.i2400m => admin-guide/wimax/i2400m.rst} (69%)
- create mode 100644 Documentation/admin-guide/wimax/index.rst
- rename Documentation/{wimax/README.wimax => admin-guide/wimax/wimax.rst} (74%)
- rename Documentation/{packing.txt => core-api/packing.rst} (61%)
- rename Documentation/devicetree/{writing-schema.md => writing-schema.rst} (48%)
- rename Documentation/{ => driver-api}/thermal/cpu-cooling-api.rst (100%)
- rename Documentation/{ => driver-api}/thermal/exynos_thermal.rst (100%)
- rename Documentation/{ => driver-api}/thermal/exynos_thermal_emulation.rst (100%)
- rename Documentation/{ => driver-api}/thermal/index.rst (86%)
- rename Documentation/{ => driver-api}/thermal/intel_powerclamp.rst (100%)
- rename Documentation/{ => driver-api}/thermal/nouveau_thermal.rst (100%)
- rename Documentation/{ => driver-api}/thermal/power_allocator.rst (100%)
- rename Documentation/{ => driver-api}/thermal/sysfs-api.rst (98%)
- rename Documentation/{ => driver-api}/thermal/x86_pkg_temperature_thermal.rst (94%)
- rename Documentation/filesystems/{directory-locking => directory-locking.rst} (86%)
- rename Documentation/filesystems/{Locking => locking.rst} (79%)
- rename Documentation/filesystems/nfs/{Exporting => exporting.rst} (91%)
- rename Documentation/filesystems/{porting => porting.rst} (49%)
- rename Documentation/filesystems/{ubifs-authentication.md => ubifs-authentication.rst} (95%)
- rename Documentation/hwmon/{pxe1610 => pxe1610.rst} (82%)
- rename Documentation/i2c/busses/{i2c-ali1535 => i2c-ali1535.rst} (82%)
- rename Documentation/i2c/busses/{i2c-ali1563 => i2c-ali1563.rst} (93%)
- rename Documentation/i2c/busses/{i2c-ali15x3 => i2c-ali15x3.rst} (72%)
- rename Documentation/i2c/busses/{i2c-amd-mp2 => i2c-amd-mp2.rst} (42%)
- rename Documentation/i2c/busses/{i2c-amd756 => i2c-amd756.rst} (79%)
- rename Documentation/i2c/busses/{i2c-amd8111 => i2c-amd8111.rst} (66%)
- rename Documentation/i2c/busses/{i2c-diolan-u2c => i2c-diolan-u2c.rst} (91%)
- rename Documentation/i2c/busses/{i2c-i801 => i2c-i801.rst} (89%)
- rename Documentation/i2c/busses/{i2c-ismt => i2c-ismt.rst} (81%)
- rename Documentation/i2c/busses/{i2c-mlxcpld => i2c-mlxcpld.rst} (88%)
- rename Documentation/i2c/busses/{i2c-nforce2 => i2c-nforce2.rst} (58%)
- rename Documentation/i2c/busses/{i2c-nvidia-gpu => i2c-nvidia-gpu.rst} (63%)
- rename Documentation/i2c/busses/{i2c-ocores => i2c-ocores.rst} (82%)
- rename Documentation/i2c/busses/{i2c-parport-light => i2c-parport-light.rst} (91%)
- rename Documentation/i2c/busses/{i2c-parport => i2c-parport.rst} (49%)
- rename Documentation/i2c/busses/{i2c-pca-isa => i2c-pca-isa.rst} (72%)
- rename Documentation/i2c/busses/{i2c-piix4 => i2c-piix4.rst} (92%)
- rename Documentation/i2c/busses/{i2c-sis5595 => i2c-sis5595.rst} (74%)
- rename Documentation/i2c/busses/{i2c-sis630 => i2c-sis630.rst} (37%)
- rename Documentation/i2c/busses/{i2c-sis96x => i2c-sis96x.rst} (74%)
- rename Documentation/i2c/busses/{i2c-taos-evm => i2c-taos-evm.rst} (91%)
- rename Documentation/i2c/busses/{i2c-via => i2c-via.rst} (54%)
- rename Documentation/i2c/busses/{i2c-viapro => i2c-viapro.rst} (87%)
- create mode 100644 Documentation/i2c/busses/index.rst
- rename Documentation/i2c/busses/{scx200_acb => scx200_acb.rst} (86%)
- rename Documentation/i2c/{dev-interface => dev-interface.rst} (71%)
- rename Documentation/i2c/{DMA-considerations => dma-considerations.rst} (100%)
- rename Documentation/i2c/{fault-codes => fault-codes.rst} (98%)
- rename Documentation/i2c/{functionality => functionality.rst} (91%)
- rename Documentation/i2c/{gpio-fault-injection => gpio-fault-injection.rst} (97%)
- rename Documentation/i2c/{i2c-protocol => i2c-protocol.rst} (83%)
- rename Documentation/i2c/{i2c-stub => i2c-stub.rst} (93%)
- rename Documentation/i2c/{i2c-topology => i2c-topology.rst} (89%)
- create mode 100644 Documentation/i2c/index.rst
- rename Documentation/i2c/{instantiating-devices => instantiating-devices.rst} (93%)
- rename Documentation/i2c/muxes/{i2c-mux-gpio => i2c-mux-gpio.rst} (85%)
- rename Documentation/i2c/{old-module-parameters => old-module-parameters.rst} (75%)
- rename Documentation/i2c/{slave-eeprom-backend => slave-eeprom-backend.rst} (90%)
- rename Documentation/i2c/{slave-interface => slave-interface.rst} (94%)
- rename Documentation/i2c/{smbus-protocol => smbus-protocol.rst} (82%)
- rename Documentation/i2c/{summary => summary.rst} (96%)
- rename Documentation/i2c/{ten-bit-addresses => ten-bit-addresses.rst} (95%)
- rename Documentation/i2c/{upgrading-clients => upgrading-clients.rst} (54%)
- rename Documentation/i2c/{writing-clients => writing-clients.rst} (91%)
- rename Documentation/isdn/{README.avmb1 => avmb1.rst} (50%)
- rename Documentation/isdn/{CREDITS => credits.rst} (96%)
- rename Documentation/isdn/{README.gigaset => gigaset.rst} (74%)
- rename Documentation/isdn/{README.hysdn => hysdn.rst} (80%)
- create mode 100644 Documentation/isdn/index.rst
- rename Documentation/isdn/{INTERFACE.CAPI => interface_capi.rst} (75%)
- rename Documentation/isdn/{README.mISDN => m_isdn.rst} (89%)
- rename Documentation/m68k/{README.buddha => buddha-driver.rst} (73%)
- rename Documentation/mips/{AU1xxx_IDE.README => au1xxx_ide.rst} (67%)
- create mode 100644 Documentation/mips/index.rst
- rename Documentation/networking/caif/{README => caif.rst} (70%)
- rename Documentation/networking/mac80211_hwsim/{README => mac80211_hwsim.rst} (81%)
- rename Documentation/nios2/{README => nios2.rst} (96%)
- create mode 100644 Documentation/openrisc/index.rst
- rename Documentation/openrisc/{README => openrisc_port.rst} (80%)
- rename Documentation/openrisc/{TODO => todo.rst} (78%)
- rename Documentation/parisc/{debugging => debugging.rst} (94%)
- create mode 100644 Documentation/parisc/index.rst
- rename Documentation/parisc/{registers => registers.rst} (70%)
- rename Documentation/powerpc/{bootwrapper.txt => bootwrapper.rst} (93%)
- rename Documentation/powerpc/{cpu_families.txt => cpu_families.rst} (95%)
- rename Documentation/powerpc/{cpu_features.txt => cpu_features.rst} (97%)
- rename Documentation/powerpc/{cxl.txt => cxl.rst} (95%)
- rename Documentation/powerpc/{cxlflash.txt => cxlflash.rst} (98%)
- rename Documentation/powerpc/{DAWR-POWER9.txt => dawr-power9.rst} (95%)
- rename Documentation/powerpc/{dscr.txt => dscr.rst} (91%)
- rename Documentation/powerpc/{eeh-pci-error-recovery.txt => eeh-pci-error-recovery.rst} (82%)
- rename Documentation/powerpc/{firmware-assisted-dump.txt => firmware-assisted-dump.rst} (80%)
- rename Documentation/powerpc/{hvcs.txt => hvcs.rst} (91%)
- create mode 100644 Documentation/powerpc/index.rst
- rename Documentation/powerpc/{mpc52xx.txt => mpc52xx.rst} (91%)
- rename Documentation/powerpc/{pci_iov_resource_on_powernv.txt => pci_iov_resource_on_powernv.rst} (97%)
- rename Documentation/powerpc/{pmu-ebb.txt => pmu-ebb.rst} (99%)
- rename Documentation/powerpc/{ptrace.txt => ptrace.rst} (48%)
- rename Documentation/powerpc/{qe_firmware.txt => qe_firmware.rst} (95%)
- rename Documentation/powerpc/{syscall64-abi.txt => syscall64-abi.rst} (82%)
- rename Documentation/powerpc/{transactional_memory.txt => transactional_memory.rst} (93%)
- rename Documentation/spi/{butterfly => butterfly.rst} (71%)
- create mode 100644 Documentation/spi/index.rst
- rename Documentation/spi/{pxa2xx => pxa2xx.rst} (83%)
- rename Documentation/spi/{spi-lm70llp => spi-lm70llp.rst} (88%)
- rename Documentation/spi/{spi-sc18is602 => spi-sc18is602.rst} (92%)
- rename Documentation/spi/{spi-summary => spi-summary.rst} (93%)
- rename Documentation/spi/{spidev => spidev.rst} (90%)
- create mode 100644 Documentation/w1/index.rst
- rename Documentation/w1/masters/{ds2482 => ds2482.rst} (71%)
- rename Documentation/w1/masters/{ds2490 => ds2490.rst} (98%)
- create mode 100644 Documentation/w1/masters/index.rst
- rename Documentation/w1/masters/{mxc-w1 => mxc-w1.rst} (33%)
- rename Documentation/w1/masters/{omap-hdq => omap-hdq.rst} (90%)
- rename Documentation/w1/masters/{w1-gpio => w1-gpio.rst} (75%)
- create mode 100644 Documentation/w1/slaves/index.rst
- rename Documentation/w1/slaves/{w1_ds2406 => w1_ds2406.rst} (96%)
- rename Documentation/w1/slaves/{w1_ds2413 => w1_ds2413.rst} (81%)
- rename Documentation/w1/slaves/{w1_ds2423 => w1_ds2423.rst} (48%)
- rename Documentation/w1/slaves/{w1_ds2438 => w1_ds2438.rst} (93%)
- rename Documentation/w1/slaves/{w1_ds28e04 => w1_ds28e04.rst} (93%)
- rename Documentation/w1/slaves/{w1_ds28e17 => w1_ds28e17.rst} (88%)
- rename Documentation/w1/slaves/{w1_therm => w1_therm.rst} (95%)
- rename Documentation/w1/{w1.generic => w1-generic.rst} (59%)
- rename Documentation/w1/{w1.netlink => w1-netlink.rst} (77%)
-
--- 
-2.21.0
+Regards
