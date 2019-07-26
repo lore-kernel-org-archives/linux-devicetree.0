@@ -1,63 +1,37 @@
-From: Andrew Lunn <andrew@lunn.ch>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
 Subject: Re: [PATCH net-next 3/3] dt-bindings: net: ethernet: Update mt7622
  docs and dts to reflect the new phylink API
-Date: Fri, 26 Jul 2019 15:16:04 +0200
-Message-ID: <20190726131604.GA18223@lunn.ch>
+Date: Fri, 26 Jul 2019 14:19:05 +0100
+Message-ID: <20190726131905.GP1330@shell.armlinux.org.uk>
 References: <20190724192411.20639-1-opensource@vdorst.com>
  <20190725193123.GA32542@lunn.ch>
  <20190726071956.Horde.s4rfuzovwXB-d3LnV0PLRc8@www.vdorst.com>
+ <20190726131604.GA18223@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190726071956.Horde.s4rfuzovwXB-d3LnV0PLRc8@www.vdorst.com>
+In-Reply-To: <20190726131604.GA18223@lunn.ch>
 Sender: netdev-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>
-Cc: netdev@vger.kernel.org, frank-w@public-files.de, sean.wang@mediatek.com, f.fainelli@gmail.com, linux@armlinux.org.uk, davem@davemloft.net, matthias.bgg@gmail.com, vivien.didelot@gmail.com, john@phrozen.org, linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>, netdev@vger.kernel.org, frank-w@public-files.de, sean.wang@mediatek.com, f.fainelli@gmail.com, davem@davemloft.net, matthias.bgg@gmail.com, vivien.didelot@gmail.com, john@phrozen.org, linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 07:19:56AM +0000, René van Dorst wrote:
-> Quoting Andrew Lunn <andrew@lunn.ch>:
+On Fri, Jul 26, 2019 at 03:16:04PM +0200, Andrew Lunn wrote:
+> Are you sure it is using SGMII and not 2500BaseX? Can you get access
+> to the signalling word? SGMII is supposed to indicate to the MAC what
+> speed it is using, via inband signalling. So there should not be any
+> need for a fixed-link. 2500BaseX however does not have such
+> signalling, so there would need to be a fixed link.
 > 
-> >>+	gmac0: mac@0 {
-> >>+		compatible = "mediatek,eth-mac";
-> >>+		reg = <0>;
-> >>+		phy-mode = "sgmii";
-> >>+
-> >>+		fixed-link {
-> >>+			speed = <2500>;
-> >>+			full-duplex;
-> >>+			pause;
-> >>+		};
-> >>+	};
-> >
-> >Hi René
-> >
-> 
-> Hi Andrew,
-> 
-> >SGMII and fixed-link is rather odd. Why do you need this combination?
-> 
-> BananaPi R64 has a RTL8367S 5+2-port switch, switch interfaces with the SOC
-> by a
-> (H)SGMII and/or RGMII interface. SGMII is mainly used for the LAN ports and
-> RGMII for the WAN port.
-> 
-> I mimic the SDK software which puts SGMII interface in 2.5GBit fixed-link
-> mode.
-> The RTL8367S switch code also put switch mac in forge 2.5GBit mode.
-> 
-> So this is the reason why I put a fixed-link mode here.
+> Maybe we should really consider what phy-mode = "sgmii"; means. Should
+> this include the overclocked 2.5G speed, or should we add a 2500sgmii
+> link mode?
 
-Are you sure it is using SGMII and not 2500BaseX? Can you get access
-to the signalling word? SGMII is supposed to indicate to the MAC what
-speed it is using, via inband signalling. So there should not be any
-need for a fixed-link. 2500BaseX however does not have such
-signalling, so there would need to be a fixed link.
+Note that Documentation/networking/phy.rst now contains definitions
+for SGMII, 1000BASE-X and 2500BASE-X.
 
-Maybe we should really consider what phy-mode = "sgmii"; means. Should
-this include the overclocked 2.5G speed, or should we add a 2500sgmii
-link mode?
-
-     Andrew
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
