@@ -1,8 +1,8 @@
 From: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH AUTOSEL 5.2 12/85] arm64: dts: rockchip: fix isp iommu clocks
- and power domain
-Date: Fri, 26 Jul 2019 09:38:22 -0400
-Message-ID: <20190726133936.11177-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 25/85] arm64: dts: rockchip: Fix USB3 Type-C on
+ rk3399-sapphire
+Date: Fri, 26 Jul 2019 09:38:35 -0400
+Message-ID: <20190726133936.11177-25-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,65 +19,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
 Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Helen Koike <helen.koike-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Vicente Bergas <vicencb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Helen Koike <helen.koike-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+From: Vicente Bergas <vicencb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-[ Upstream commit c432a29d3fc9ee928caeca2f5cf68b3aebfa6817 ]
+[ Upstream commit e1d9149e8389f1690cdd4e4056766dd26488a0fe ]
 
-isp iommu requires wrapper variants of the clocks.
-noc variants are always on and using the wrapper variants will activate
-{A,H}CLK_ISP{0,1} due to the hierarchy.
+Before this patch, the Type-C port on the Sapphire board is dead.
+If setting the 'regulator-always-on' property to 'vcc5v0_typec0'
+then the port works for about 4 seconds at start-up. This is a
+sample trace with a memory stick plugged in:
+1.- The memory stick LED lights on and kernel reports:
+[    4.782999] scsi 0:0:0:0: Direct-Access USB DISK PMAP PQ: 0 ANSI: 4
+[    5.904580] sd 0:0:0:0: [sdb] 3913344 512-byte logical blocks: (2.00 GB/1.87 GiB)
+[    5.906860] sd 0:0:0:0: [sdb] Write Protect is off
+[    5.908973] sd 0:0:0:0: [sdb] Mode Sense: 23 00 00 00
+[    5.909122] sd 0:0:0:0: [sdb] No Caching mode page found
+[    5.911214] sd 0:0:0:0: [sdb] Assuming drive cache: write through
+[    5.951585]  sdb: sdb1
+[    5.954816] sd 0:0:0:0: [sdb] Attached SCSI removable disk
+2.- 4 seconds later the memory stick LED lights off and kernel reports:
+[    9.082822] phy phy-ff770000.syscon:usb2-phy@e450.2: charger = USB_DCP_CHARGER
+3.- After a minute the kernel reports:
+[   71.666761] usb 5-1: USB disconnect, device number 2
+It has been checked that, although the LED is off, VBUS is present.
 
-Tested using the pending isp patch set (which is not upstream
-yet). Without this patch, streaming from the isp stalls.
+If, instead, the dr_mode is changed to host and the phy-supply changed
+accordingly, then it works. It has only been tested in host mode.
 
-Also add the respective power domain and remove the "disabled" status.
-
-Refer:
- RK3399 TRM v1.4 Fig. 2-4 RK3399 Clock Architecture Diagram
- RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
-
-Signed-off-by: Helen Koike <helen.koike-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Vicente Bergas <vicencb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Signed-off-by: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 196ac9b78076..89594a7276f4 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1706,11 +1706,11 @@
- 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
- 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "isp0_mmu";
--		clocks = <&cru ACLK_ISP0_NOC>, <&cru HCLK_ISP0_NOC>;
-+		clocks = <&cru ACLK_ISP0_WRAPPER>, <&cru HCLK_ISP0_WRAPPER>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
-+		power-domains = <&power RK3399_PD_ISP0>;
- 		rockchip,disable-mmu-reset;
--		status = "disabled";
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+index 04623e52ac5d..1bc1579674e5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+@@ -565,12 +565,11 @@
+ 	status = "okay";
+ 
+ 	u2phy0_otg: otg-port {
+-		phy-supply = <&vcc5v0_typec0>;
+ 		status = "okay";
  	};
  
- 	isp1_mmu: iommu@ff924000 {
-@@ -1718,11 +1718,11 @@
- 		reg = <0x0 0xff924000 0x0 0x100>, <0x0 0xff925000 0x0 0x100>;
- 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "isp1_mmu";
--		clocks = <&cru ACLK_ISP1_NOC>, <&cru HCLK_ISP1_NOC>;
-+		clocks = <&cru ACLK_ISP1_WRAPPER>, <&cru HCLK_ISP1_WRAPPER>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
-+		power-domains = <&power RK3399_PD_ISP1>;
- 		rockchip,disable-mmu-reset;
--		status = "disabled";
+ 	u2phy0_host: host-port {
+-		phy-supply = <&vcc5v0_host>;
++		phy-supply = <&vcc5v0_typec0>;
+ 		status = "okay";
  	};
+ };
+@@ -620,7 +619,7 @@
  
- 	hdmi_sound: hdmi-sound {
+ &usbdrd_dwc3_0 {
+ 	status = "okay";
+-	dr_mode = "otg";
++	dr_mode = "host";
+ };
+ 
+ &usbdrd3_1 {
 -- 
 2.20.1
