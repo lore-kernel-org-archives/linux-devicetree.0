@@ -1,89 +1,48 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: Controllers with several interface options - one or more drivers?
-Date: Fri, 26 Jul 2019 18:14:03 +0200
-Message-ID: <20190726161403.GA25593@ravnborg.org>
-References: <20190304125033.28841-1-josef@lusticky.cz>
- <20190708145618.26031-1-josef@lusticky.cz>
- <20190726122510.GA14341@ravnborg.org>
- <20190726145513.GK15868@phenom.ffwll.local>
- <CAKMK7uESP5D4e_Qx6W7amURqxJ=5Y4JHduZYCtkyVQY9jKJQeA@mail.gmail.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v4 0/8] stm32 m4 remoteproc on STM32MP157c
+Date: Fri, 26 Jul 2019 18:18:37 +0200
+Message-ID: <334f2829-fa5e-3f81-5872-730b2aa8b757@st.com>
+References: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uESP5D4e_Qx6W7amURqxJ=5Y4JHduZYCtkyVQY9jKJQeA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Dave Airlie <airlied@linux.ie>, Josef Lusticky <josef@lusticky.cz>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabien Dessenne <fabien.dessenne@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Cc: Arnaud Pouliquen <arnaud.pouliquen@st.com>, Ludovic Barre <ludovic.barre@st.com>, Loic Pallardy <loic.pallardy@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGFuaWVsLgoKQWRkZWQgTm9yYWxmIC0gc29tZWhvdyBJIG1pc3NlZCBoaW0gb24gdGhlIG9y
-aWdpbmFsIG1haWwuCgpPbiBGcmksIEp1bCAyNiwgMjAxOSBhdCAwNTowNjowM1BNICswMjAwLCBE
-YW5pZWwgVmV0dGVyIHdyb3RlOgo+IEFsc28gcHJvYmFibHkgc2hvdWxkIGFkZCBhIGZldyBtb3Jl
-IChkcm1fYnJpZGdlKSBwZW9wbGUsIEkgdGhpbmsKPiB0aGF0J3MgYWxzbyBzb21ld2hhdCByZWxl
-dmFudCBoZXJlLgo+IC1EYW5pZWwKPiAKPiBPbiBGcmksIEp1bCAyNiwgMjAxOSBhdCA0OjU1IFBN
-IERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD4gd3JvdGU6Cj4gPgo+ID4gT24gRnJpLCBK
-dWwgMjYsIDIwMTkgYXQgMDI6MjU6MTBQTSArMDIwMCwgU2FtIFJhdm5ib3JnIHdyb3RlOgo+ID4g
-PiBIaSBKb3NlZiwgRGFuaWVsIGV0IGFsLgo+ID4gPgo+ID4gPiBUaGUgZHJpdmVyIHRoYXQgdHJp
-Z2dlcmVkIHRoaXMgcmVwbHkgaXMgYSBkcml2ZXIgdGhhdCBhZGRzIHBhcmFsbGVsCj4gPiA+IHN1
-cHBvcnQgdG8gaWxpOTM0MSBpbiBhIGRlZGljYXRlZCBwYW5lbCBkcml2ZXIuCj4gPiA+IFRoZSBp
-c3N1ZSBoZXJlIGlzIHRoYXQgd2UgYWxyZWFkeSBoYXZlIGEgdGlueSBkcml2ZXIgdGhhdCBzdXBw
-b3J0cyB0aGUKPiA+ID4gaWxpOTM0MSBjb250cm9sbGVyIC0gYnV0IHdpdGggYSBzbGlnaHRseSBk
-aWZmZXJlbnQgY29uZmlndXJhdGlvbi4KPiA+ID4KPiA+ID4gVGhlIGlsaTkzNDEgc3VwcG9ydHMg
-c2V2ZXJhbCBpbnRlcmZhY2VzIC0gZnJvbSB0aGUgZGF0YXNoZWV0Ogo+ID4gPiAgICAgIklMSTkz
-NDEgc3VwcG9ydHMgcGFyYWxsZWwgOC0vOS0vMTYtLzE4LWJpdCBkYXRhIGJ1cwo+ID4gPiAgICAg
-IE1DVSBpbnRlcmZhY2UsIDYtLzE2LS8xOC1iaXQgZGF0YSBidXMgUkdCIGludGVyZmFjZSBhbmQK
-PiA+ID4gICAgICAzLS80LWxpbmUgc2VyaWFsIHBlcmlwaGVyYWwgaW50ZXJmYWNlIChTUEkpIgo+
-ID4gPgo+ID4gPiBOb3JhbGYgLSBpbiBhbm90aGVyIG1haWwgZXhwbGFpbmVkOgo+ID4gPiAiCj4g
-PiA+IFRoZSBNSVBJIEFsbGlhbmNlIGhhcyBsb3RzIG9mIHN0YW5kYXJkcyBzb21lIHdydC4gZGlz
-cGxheSBjb250cm9sbGVyCj4gPiA+IGludGVyZmFjZXM6Cj4gPiA+IC0gTUlQSSBEQkkgLSBEaXNw
-bGF5IEJ1cyBJbnRlcmZhY2UgKHVzZWQgZm9yIGNvbW1hbmRzIGFuZCBvcHRpb25hbGx5IHBpeGVs
-cykKPiA+ID4gLSBNSVBJIERQSSAtIERpc3BsYXkgUGl4ZWwgSW50ZXJmYWNlIChhbHNvIGNhbGxl
-ZCBSR0IgaW50ZXJmYWNlIG9yCj4gPiA+IERPVENMSyBpbnRlcmZhY2UpCj4gPiA+IC0gTUlQSSBE
-U0kgLSBEaXNwbGF5IFNlcmlhbCBJbnRlcmZhY2UgKGNvbW1hbmRzIGFuZCBwaXhlbHMpCj4gPiA+
-Cj4gPiA+IFRoZSBpbGk5MzQxIHN1cHBvcnRzIGJvdGggTUlQSSBEQkkgYW5kIERQSS4KPiA+ID4g
-Igo+ID4gPgo+ID4gPiBNSVBJIERQSSAtIGlzIGEgZ29vZCBmaXQgZm9yIGEgZHJtX3BhbmVsIGRy
-aXZlci4KPiA+ID4gTUlQSSBEQkkgLSByZXF1aXJlcyBhIGZ1bGwgZGlzcGxheSBjb250cm9sbGVy
-IGRyaXZlci4KPiA+ID4KPiA+ID4gVGhlcmUgYXJlIG1hbnkgb3RoZXIgZXhhbXBsZXMgb2YgZHJp
-dmVyIFNvQyB0aGF0IGluIHRoZSBzYW1lIHdheQo+ID4gPiBjYW4gYmUgc2VlbiBvbmx5IGFzIGEg
-cGFuZWwgb3IgYXMgYSBmdWxsIGRpc3BsYXkgY29udHJvbGxlciBkcml2ZXIuCj4gPiA+Cj4gPiA+
-IFRoZSBvcGVuIHF1ZXN0aW9uIGhlcmUgaXMgaWYgd2Ugc2hvdWxkIHRyeSB0byBzdXBwb3J0IGJv
-dGggY2FzZXMgaW4gdGhlCj4gPiA+IHNhbWUgZHJpdmVyIC8gZmlsZS4gT3Igc2hhbGwgd2UgaW1w
-bG1lbnQgdHdvIGRpZmZlcmVudCBkcml2ZXJzLgo+ID4gPiBPbmUgZm9yIHRoZSBwYW5lbCB1c2Ut
-Y2FzZS4gQW5kIG9uZSBmb3IgdGhlIGRpc3BsYXkgY29udHJvbGxlciB1c2VjYXNlPwo+ID4gPgo+
-ID4gPiBOb3Qgc3VyZSAtIHNvIGFza2luZyBmb3IgZmVlZGJhY2suCj4gPgo+ID4gSSdtIG5vdCBz
-dXJlLiBDdXJyZW50bHkgd2UgZG8gaGF2ZSBEU0kgYW5kIGR1bWIgUkdCIHBhbmVscyBhbGwgaW4K
-PiA+IGRybS9wYW5lbC4gSSBkb24ndCB0aGluayB3ZSBoYXZlIERCSSBwYW5lbHMgaW4gdGhlcmUg
-eWV0LCBidXQgdGhlbgo+ID4gZHJtL3RpbnkgaXMgdGhlIG9ubHkgb25lIHN1cHBvcnRpbmcgdGhl
-c2UuCj4gPgo+ID4gSSBndWVzcyB3ZSBjb3VsZCBsb29rIGludG8gbW92ZSBzb21lIG9mIHRoZSBE
-QkkgcGFuZWwgZHJpdmVycyBpbnRvIHBhbmVsCj4gPiBkcml2ZXJzLCBidXQgdGhhdCBuZWVkcyBh
-IGJpdCBtb3JlIGdsdWUgYWxsIGFyb3VuZC4gSSdtIGhvbmVzdGx5IG5vdCBzdXJlCj4gPiBob3cg
-dGhlIGN1cnJlbnQgRFNJIGRyaXZlcnMgaW4gZHJtX3BhbmVsIHdvcmsgZXhhY3RseSwgZXNwZWNp
-YWxseSBmb3IKPiA+IGNvbW1hbmQgbW9kZS4KPiA+Cj4gPiBPciBtYXliZSB3ZSBuZWVkIGEgbmV3
-IGludGVyZmFjZSBmb3IgY29tbWFuZCBtb2RlLgpJZiBJIGdldCBhcm91bmQgdG8gZG8gYSBkcml2
-ZXIgZm9yIHRoZSBzc2QxMzA2IHRoZW4gSSB3aWxsIHRyeSB0byBzZXdoYXQKbWFrZXMgc2Vuc2Ug
-dGhlbi4gRm9yIG5vdyB3ZSBzaGFsbCBub3Qgc3RhbGwgdGhlIGlsaTkzNDEgZHJpdmVyLgo+ID4K
-PiA+IFdydCBzaGFyaW5nIGNvZGUgYmV0d2VlbiBkcml2ZXJzIGZvciB0aGUgc2FtZSBjaGlwLCBi
-dXQgZGlmZmVyZW50Cj4gPiBpbnRlcmZhY2VzOiBJIHdvdWxkbid0IHdvcnJ5IHRvbyBtdWNoIGFi
-b3V0IHRoYXQuIE1heWJlIHRyeSB0byBoYXZlIGEKPiA+IHNoYXJlZCBoZWFkZXIgZmlsZSBhdCBs
-ZWFzdCBmb3IgcmVnaXN0ZXJzLgpUaGlzIHBhcnQgc2hvdWxkIGJlIHRoZSBtaW5pbXVtLiBTb210
-aGluZyBsaWtlIGluY2x1ZGUvZHJtL21pcGkvPwoKCVNhbQoKPiA+IExvbmcgdGVybSB3ZSBjb3Vs
-ZCBlbmQgdXAgd2l0aAo+ID4gb25lIGRyaXZlciBtb2R1bGUgd2hpY2ggZXhwb3NlcyBkaWZmZXJl
-bnQgZmxhdm91cnMgb2YgdGhlIHNhbWUgY2hpcCwgc28KPiA+IG11bHRpcGxlIGRybV9wYW5lbCBk
-cml2ZXJzLCBvciBtYXliZSB3ZSdsbCBnZXQgc29tZXRoaW5nIG1vcmUgc3BlY2lmaWMgZm9yCj4g
-PiBkc2kvZGJpLgo+ID4gLURhbmllbAo+ID4gLS0KPiA+IERhbmllbCBWZXR0ZXIKPiA+IFNvZnR3
-YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgo+ID4gaHR0cDovL2Jsb2cuZmZ3bGwuY2gK
-PiAKPiAKPiAKPiAtLSAKPiBEYW5pZWwgVmV0dGVyCj4gU29mdHdhcmUgRW5naW5lZXIsIEludGVs
-IENvcnBvcmF0aW9uCj4gKzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8vYmxvZy5mZndsbC5j
-aApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hi Fabien
+
+On 5/14/19 10:26 AM, Fabien Dessenne wrote:
+> STMicrolectronics STM32MP157 MPU are based on a Dual Arm Cortex-A7 core and a
+> Cortex-M4.
+> This patchset adds the support of the stm32_rproc driver allowing to control
+> the M4 remote processor.
+> 
+
+...
+
+>      driver
+>    remoteproc: stm32: add an ST stm32_rproc driver
+>    ARM: dts: stm32: add m4 remoteproc support on STM32MP157c
+>    ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
+>    ARM: dts: stm32: enable m4 coprocessor support on STM32MP157c-ed1
+>    ARM: dts: stm32: declare copro reserved memories on STM32MP157a-dk1
+>    ARM: dts: stm32: enable m4 coprocessor support on STM32MP157a-dk1
+> 
+
+DT patches applied on stm32-next.
+
+Regards
+Alexandre
