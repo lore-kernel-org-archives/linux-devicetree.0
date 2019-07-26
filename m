@@ -1,17 +1,19 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-Date: Fri, 26 Jul 2019 11:05:18 +0300
-Message-ID: <6e8b2081-2fb3-9ab8-37d1-8b5fe5fd8e11@linaro.org>
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
- <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
- <20190723122016.30279-10-a.swigon@partner.samsung.com>
+From: Jungo Lin <jungo.lin@mediatek.com>
+Subject: Re: [RFC,v3 8/9] media: platform: Add Mediatek ISP P1 SCP
+ communication
+Date: Fri, 26 Jul 2019 16:07:17 +0800
+Message-ID: <1564128437.1212.615.camel@mtksdccf07>
+References: <jungo.lin@mediatek.com>
+ <20190611035344.29814-1-jungo.lin@mediatek.com>
+ <20190611035344.29814-9-jungo.lin@mediatek.com>
+ <20190710095827.GC181405@chromium.org>
+ <1563675513.1212.444.camel@mtksdccf07>
+ <CAAFQd5BT7M425AbFicYuX+wr-twgS_cxQ937+Rgxo6Y2fA6_gA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190723122016.30279-10-a.swigon@partner.samsung.com>
-Content-Language: en-US
+In-Reply-To: <CAAFQd5BT7M425AbFicYuX+wr-twgS_cxQ937+Rgxo6Y2fA6_gA@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,40 +23,156 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: sw0312.kim@samsung.com, krzk@kernel.org, inki.dae@samsung.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, m.szyprowski@samsung.com
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: devicetree@vger.kernel.org, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <sean.cheng@mediatek.com>, Frederic Chen =?UTF-8?Q?=28=E9=99=B3=E4=BF=8A=E5=85=83=29?= <frederic.chen@mediatek.com>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <rynn.wu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Rob Herring <robh@kernel.org>, Ryan Yu =?UTF-8?Q?=28=E4=BD=99=E5=AD=9F=E4=BF=AE=29?= <ryan.yu@mediatek.com>, Frankie Chiu =?UTF-8?Q?=28=E9=82=B1=E6=96=87=E5=87=B1=29?= <frankie.chiu@mediatek.com>, Hans Verkuil <hverkuil@xs4all.nl>, ddavenport@chromium.org, Sj Huang <sj.huang@mediatek.com>, "moderated
+ list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, list@263.net:IOMMU DRIVERS <iommu@lists.li
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJ0dXIsCgpPbiA3LzIzLzE5IDE1OjIwLCBBcnR1ciDFmndpZ2/FhCB3cm90ZToKPiBUaGlz
-IHBhdGNoIGFkZHMgaW50ZXJjb25uZWN0IGZ1bmN0aW9uYWxpdHkgdG8gdGhlIGV4eW5vcy1idXMg
-ZGV2ZnJlcQo+IGRyaXZlci4KPiAKPiBUaGUgU29DIHRvcG9sb2d5IGlzIGEgZ3JhcGggKG9yLCBt
-b3JlIHNwZWNpZmljYWxseSwgYSB0cmVlKSBhbmQgbW9zdCBvZiBpdHMKPiBlZGdlcyBhcmUgdGFr
-ZW4gZnJvbSB0aGUgZGV2ZnJlcSBwYXJlbnQtY2hpbGQgaGllcmFyY2h5IChjZi4KPiBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGV2ZnJlcS9leHlub3MtYnVzLnR4dCkuIFRoZSBw
-cmV2aW91cwo+IHBhdGNoIGFkZHMgbWlzc2luZyBlZGdlcyB0byB0aGUgRFQgKHVuZGVyIHRoZSBu
-YW1lICdwYXJlbnQnKS4gRHVlIHRvCj4gdW5zcGVjaWZpZWQgcmVsYXRpdmUgcHJvYmluZyBvcmRl
-ciwgLUVQUk9CRV9ERUZFUiBtYXkgYmUgcHJvcGFnYXRlZCB0bwo+IGd1YXJhbnRlZSB0aGF0IGEg
-Y2hpbGQgaXMgcHJvYmVkIGJlZm9yZSBpdHMgcGFyZW50Lgo+IAo+IEVhY2ggYnVzIGlzIG5vdyBh
-biBpbnRlcmNvbm5lY3QgcHJvdmlkZXIgYW5kIGFuIGludGVyY29ubmVjdCBub2RlIGFzIHdlbGwK
-PiAoY2YuIERvY3VtZW50YXRpb24vaW50ZXJjb25uZWN0L2ludGVyY29ubmVjdC5yc3QpLCBpLmUu
-IGV2ZXJ5IGJ1cyByZWdpc3RlcnMKPiBpdHNlbGYgYXMgYSBub2RlLiBOb2RlIElEcyBhcmUgbm90
-IGhhcmRjb2RlZCBidXQgcmF0aGVyIGFzc2lnbmVkIGF0Cj4gcnVudGltZSwgaW4gcHJvYmluZyBv
-cmRlciAoc3ViamVjdCB0byB0aGUgYWJvdmUtbWVudGlvbmVkIGV4Y2VwdGlvbgo+IHJlZ2FyZGlu
-ZyByZWxhdGl2ZSBvcmRlcikuIFRoaXMgYXBwcm9hY2ggYWxsb3dzIGZvciB1c2luZyB0aGlzIGRy
-aXZlciB3aXRoCj4gdmFyaW91cyBFeHlub3MgU29Dcy4KCkkgYW0gbm90IGZhbWlsaWFyIHdpdGgg
-dGhlIEV4eW5vcyBidXMgdG9wb2xvZ3ksIGJ1dCBpdCBzZWVtcyB0byBtZSB0aGF0IGl0J3Mgbm90
-CnJlcHJlc2VudGVkIGNvcnJlY3RseS4gQW4gaW50ZXJjb25uZWN0IHByb3ZpZGVyIHdpdGgganVz
-dCBhIHNpbmdsZSBub2RlIChwb3J0KQppcyBvZGQuIEkgd291bGQgZXhwZWN0IHRoYXQgZWFjaCBw
-cm92aWRlciBjb25zaXN0cyBvZiBtdWx0aXBsZSBtYXN0ZXIgYW5kIHNsYXZlCm5vZGVzLiBUaGlz
-IGRhdGEgd291bGQgYmUgdXNlZCBieSBhIGZyYW1ld29yayB0byB1bmRlcnN0YW5kIHdoYXQgYXJl
-IHRoZSBsaW5rcwphbmQgaG93IHRoZSB0cmFmZmljIGZsb3dzIGJldHdlZW4gdGhlIElQIGJsb2Nr
-cyBhbmQgdGhyb3VnaCB3aGljaCBidXNlcy4KCj4gVGhlIGRldmZyZXEgdGFyZ2V0KCkgY2FsbGJh
-Y2sgcHJvdmlkZWQgYnkgZXh5bm9zLWJ1cyBub3cgc2VsZWN0cyBlaXRoZXIgdGhlCj4gZnJlcXVl
-bmN5IGNhbGN1bGF0ZWQgYnkgdGhlIGRldmZyZXEgZ292ZXJub3Igb3IgdGhlIGZyZXF1ZW5jeSBy
-ZXF1ZXN0ZWQgdmlhCj4gdGhlIGludGVyY29ubmVjdCBBUEkgZm9yIHRoZSBnaXZlbiBub2RlLCB3
-aGljaGV2ZXIgaXMgaGlnaGVyLgoKVGhpcyBjb21wbGV0ZWx5IG1ha2VzIHNlbnNlLiBXZSBqdXN0
-IG5lZWQgdG8gYmUgc3VyZSB0aGF0IHRoZSBpbnRlcmNvbm5lY3QKZnJhbWV3b3JrIGlzIHVzZWQg
-Y29ycmVjdGx5LgoKVGhhbmtzLApHZW9yZ2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi, Tomasz:
+
+On Thu, 2019-07-25 at 19:56 +0900, Tomasz Figa wrote:
+> Hi Jungo,
+> 
+> On Sun, Jul 21, 2019 at 11:18 AM Jungo Lin <jungo.lin@mediatek.com> wrote:
+> [snip]
+> > > > +           wake_up_interruptible(&isp_ctx->composer_tx_thread.wq);
+> > > > +           isp_ctx->composer_tx_thread.thread = NULL;
+> > > > +   }
+> > > > +
+> > > > +   if (isp_ctx->composer_deinit_thread.thread) {
+> > > > +           wake_up(&isp_ctx->composer_deinit_thread.wq);
+> > > > +           isp_ctx->composer_deinit_thread.thread = NULL;
+> > > > +   }
+> > > > +   mutex_unlock(&isp_ctx->lock);
+> > > > +
+> > > > +   pm_runtime_put_sync(&p1_dev->pdev->dev);
+> > >
+> > > No need to use the sync variant.
+> > >
+> >
+> > We don't get this point. If we will call pm_runtime_get_sync in
+> > mtk_isp_hw_init function, will we need to call
+> > pm_runtime_put_sync_autosuspend in mtk_isp_hw_release in next patch?
+> > As we know, we should call runtime pm functions in pair.
+> >
+> 
+> My point is that pm_runtime_put_sync() is only needed if one wants the
+> runtime count to be decremented after the function returns. Normally
+> there is no need to do so and one would call pm_runtime_put(), or if
+> autosuspend is used, pm_runtime_put_autosuspend() (note there is no
+> "sync" in the name).
+> 
+> [snip]
+
+Ok, got your point.
+We will change to use pm_runtime_put_autosuspend() which has ASYNC flag.
+
+> > > +static void isp_composer_handler(void *data, unsigned int len, void *priv)
+> > > > +{
+> > > > +   struct mtk_isp_p1_ctx *isp_ctx = (struct mtk_isp_p1_ctx *)priv;
+> > > > +   struct isp_p1_device *p1_dev = p1_ctx_to_dev(isp_ctx);
+> > > > +   struct device *dev = &p1_dev->pdev->dev;
+> > > > +   struct mtk_isp_scp_p1_cmd *ipi_msg;
+> > > > +
+> > > > +   ipi_msg = (struct mtk_isp_scp_p1_cmd *)data;
+> > >
+> > > Should we check that len == sizeof(*ipi_msg)? (Or at least >=, if data could
+> > > contain some extra bytes at the end.)
+> > >
+> >
+> > The len parameter is the actual sending bytes from SCP to kernel.
+> > In the runtime, it is only 6 bytes for isp_ack_info command
+> > However, sizeof(*ipi_msg) is large due to struct mtk_isp_scp_p1_cmd is
+> > union structure.
+> >
+> 
+> That said we still should check if len is enough to cover the data
+> we're accessing below.
+> 
+
+Ok, we will add the len checking before accessing the data.
+
+> > > > +
+> > > > +   if (ipi_msg->cmd_id != ISP_CMD_ACK)
+> > > > +           return;
+> > > > +
+> > > > +   if (ipi_msg->ack_info.cmd_id == ISP_CMD_FRAME_ACK) {
+> > > > +           dev_dbg(dev, "ack frame_num:%d",
+> > > > +                   ipi_msg->ack_info.frame_seq_no);
+> > > > +           atomic_set(&isp_ctx->composed_frame_id,
+> > > > +                      ipi_msg->ack_info.frame_seq_no);
+> > >
+> > > I suppose we are expecting here that ipi_msg->ack_info.frame_seq_no would be
+> > > just isp_ctx->composed_frame_id + 1, right? If not, we probably dropped some
+> > > frames and we should handle that somehow.
+> > >
+> >
+> > No, we use isp_ctx->composed_frame_id to save which frame sequence
+> > number are composed done in SCP. In new design, we will move this from
+> > isp_ctx to p1_dev.
+> 
+> But we compose the frames in order, don't we? Wouldn't every composed
+> frame would be just previous frame ID + 1?
+> 
+> [snip]
+
+Yes, we compose the frames in order.
+At the same time, we already increased "frame ID + 1" in
+mtk_isp_req_enqueue() for each new request before sending to SCP for
+composing. After receiving the ACK from SCP, we think the frame ID is
+composed done and save by isp_ctx->composed_frame_id(v3).
+
+[RFC v3]
+void mtk_isp_req_enqueue(struct device *dev, struct media_request *req)
+{
+	...
+	frameparams.frame_seq_no = isp_ctx->frame_seq_no++;
+
+[RFC v4]
+void mtk_isp_req_enqueue(struct mtk_cam_dev *cam,
+			 struct mtk_cam_dev_request *req)
+{
+	struct mtk_isp_p1_device *p1_dev = dev_get_drvdata(cam->dev);
+
+	/* Accumulated frame sequence number */
+	req->frame_params.frame_seq_no = ++p1_dev->enqueue_frame_seq_no;
+
+ 
+
+> > > > +void isp_composer_hw_init(struct device *dev)
+> > > > +{
+> > > > +   struct mtk_isp_scp_p1_cmd composer_tx_cmd;
+> > > > +   struct isp_p1_device *p1_dev = get_p1_device(dev);
+> > > > +   struct mtk_isp_p1_ctx *isp_ctx = &p1_dev->isp_ctx;
+> > > > +
+> > > > +   memset(&composer_tx_cmd, 0, sizeof(composer_tx_cmd));
+> > > > +   composer_tx_cmd.cmd_id = ISP_CMD_INIT;
+> > > > +   composer_tx_cmd.frameparam.hw_module = isp_ctx->isp_hw_module;
+> > > > +   composer_tx_cmd.frameparam.cq_addr.iova = isp_ctx->scp_mem_iova;
+> > > > +   composer_tx_cmd.frameparam.cq_addr.scp_addr = isp_ctx->scp_mem_pa;
+> > >
+> > > Should we also specify the size of the buffer? Otherwise we could end up
+> > > with some undetectable overruns.
+> > >
+> >
+> > The size of SCP composer's memory is fixed to 0x200000.
+> > Is it necessary to specify the size of this buffer?
+> >
+> > #define MTK_ISP_COMPOSER_MEM_SIZE 0x200000
+> >
+> > ptr = dma_alloc_coherent(p1_dev->cam_dev.smem_dev,
+> >                         MTK_ISP_COMPOSER_MEM_SIZE, &addr, GFP_KERNEL);
+> >
+> 
+> Okay, but please add a comment saying that this is an implicit
+> requirement of the firmware.
+> 
+> Best regards,
+> Tomasz
+
+Ok, we will add comments.
+
+Best regards,
+
+
+Jungo
