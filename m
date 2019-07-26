@@ -1,69 +1,53 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: sprd: adi: Remove redundant address bits setting" to the spi tree
-Date: Fri, 26 Jul 2019 13:12:24 +0100 (BST)
-Message-ID: <20190726121224.BD6AA2742B66@ypsilon.sirena.org.uk>
-References: <3cb57b8aadb7747a9f833e9b4fe8596ba738d9f6.1564125131.git.baolin.wang@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3cb57b8aadb7747a9f833e9b4fe8596ba738d9f6.1564125131.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: baolin.wang@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, orsonzhai@gmail.com, robh+dt@kernel.org, sherry.zong@unisoc.com, vincent.guittot@linaro.org, weicx@spreadst.com, zhang.lyra@gmail.com
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Controllers with several interface options - one or more drivers?
+Date: Fri, 26 Jul 2019 14:25:10 +0200
+Message-ID: <20190726122510.GA14341@ravnborg.org>
+References: <20190304125033.28841-1-josef@lusticky.cz>
+ <20190708145618.26031-1-josef@lusticky.cz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190708145618.26031-1-josef@lusticky.cz>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Josef Lusticky <josef@lusticky.cz>, Daniel Vetter <daniel@ffwll.ch>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   spi: sprd: adi: Remove redundant address bits setting
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From c627c58acdc48055a9e4d40d6f9f1b434222a68d Mon Sep 17 00:00:00 2001
-From: Baolin Wang <baolin.wang@linaro.org>
-Date: Fri, 26 Jul 2019 15:20:48 +0800
-Subject: [PATCH] spi: sprd: adi: Remove redundant address bits setting
-
-The ADI default transfer address bits is 12bit on Spreadtrum SC9860
-platform, thus there is no need to set again, remove it.
-
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Link: https://lore.kernel.org/r/3cb57b8aadb7747a9f833e9b4fe8596ba738d9f6.1564125131.git.baolin.wang@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-sprd-adi.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
-index df5960bddfe6..11880db08ce9 100644
---- a/drivers/spi/spi-sprd-adi.c
-+++ b/drivers/spi/spi-sprd-adi.c
-@@ -380,9 +380,6 @@ static void sprd_adi_hw_init(struct sprd_adi *sadi)
- 	const __be32 *list;
- 	u32 tmp;
- 
--	/* Address bits select default 12 bits */
--	writel_relaxed(0, sadi->base + REG_ADI_CTRL0);
--
- 	/* Set all channels as default priority */
- 	writel_relaxed(0, sadi->base + REG_ADI_CHN_PRIL);
- 	writel_relaxed(0, sadi->base + REG_ADI_CHN_PRIH);
--- 
-2.20.1
+SGkgSm9zZWYsIERhbmllbCBldCBhbC4KClRoZSBkcml2ZXIgdGhhdCB0cmlnZ2VyZWQgdGhpcyBy
+ZXBseSBpcyBhIGRyaXZlciB0aGF0IGFkZHMgcGFyYWxsZWwKc3VwcG9ydCB0byBpbGk5MzQxIGlu
+IGEgZGVkaWNhdGVkIHBhbmVsIGRyaXZlci4KVGhlIGlzc3VlIGhlcmUgaXMgdGhhdCB3ZSBhbHJl
+YWR5IGhhdmUgYSB0aW55IGRyaXZlciB0aGF0IHN1cHBvcnRzIHRoZQppbGk5MzQxIGNvbnRyb2xs
+ZXIgLSBidXQgd2l0aCBhIHNsaWdodGx5IGRpZmZlcmVudCBjb25maWd1cmF0aW9uLgoKVGhlIGls
+aTkzNDEgc3VwcG9ydHMgc2V2ZXJhbCBpbnRlcmZhY2VzIC0gZnJvbSB0aGUgZGF0YXNoZWV0Ogog
+ICAgIklMSTkzNDEgc3VwcG9ydHMgcGFyYWxsZWwgOC0vOS0vMTYtLzE4LWJpdCBkYXRhIGJ1cwog
+ICAgIE1DVSBpbnRlcmZhY2UsIDYtLzE2LS8xOC1iaXQgZGF0YSBidXMgUkdCIGludGVyZmFjZSBh
+bmQKICAgICAzLS80LWxpbmUgc2VyaWFsIHBlcmlwaGVyYWwgaW50ZXJmYWNlIChTUEkpIgoKTm9y
+YWxmIC0gaW4gYW5vdGhlciBtYWlsIGV4cGxhaW5lZDoKIgpUaGUgTUlQSSBBbGxpYW5jZSBoYXMg
+bG90cyBvZiBzdGFuZGFyZHMgc29tZSB3cnQuIGRpc3BsYXkgY29udHJvbGxlcgppbnRlcmZhY2Vz
+OgotIE1JUEkgREJJIC0gRGlzcGxheSBCdXMgSW50ZXJmYWNlICh1c2VkIGZvciBjb21tYW5kcyBh
+bmQgb3B0aW9uYWxseSBwaXhlbHMpCi0gTUlQSSBEUEkgLSBEaXNwbGF5IFBpeGVsIEludGVyZmFj
+ZSAoYWxzbyBjYWxsZWQgUkdCIGludGVyZmFjZSBvcgpET1RDTEsgaW50ZXJmYWNlKQotIE1JUEkg
+RFNJIC0gRGlzcGxheSBTZXJpYWwgSW50ZXJmYWNlIChjb21tYW5kcyBhbmQgcGl4ZWxzKQoKVGhl
+IGlsaTkzNDEgc3VwcG9ydHMgYm90aCBNSVBJIERCSSBhbmQgRFBJLgoiCgpNSVBJIERQSSAtIGlz
+IGEgZ29vZCBmaXQgZm9yIGEgZHJtX3BhbmVsIGRyaXZlci4KTUlQSSBEQkkgLSByZXF1aXJlcyBh
+IGZ1bGwgZGlzcGxheSBjb250cm9sbGVyIGRyaXZlci4KClRoZXJlIGFyZSBtYW55IG90aGVyIGV4
+YW1wbGVzIG9mIGRyaXZlciBTb0MgdGhhdCBpbiB0aGUgc2FtZSB3YXkKY2FuIGJlIHNlZW4gb25s
+eSBhcyBhIHBhbmVsIG9yIGFzIGEgZnVsbCBkaXNwbGF5IGNvbnRyb2xsZXIgZHJpdmVyLgoKVGhl
+IG9wZW4gcXVlc3Rpb24gaGVyZSBpcyBpZiB3ZSBzaG91bGQgdHJ5IHRvIHN1cHBvcnQgYm90aCBj
+YXNlcyBpbiB0aGUKc2FtZSBkcml2ZXIgLyBmaWxlLiBPciBzaGFsbCB3ZSBpbXBsbWVudCB0d28g
+ZGlmZmVyZW50IGRyaXZlcnMuCk9uZSBmb3IgdGhlIHBhbmVsIHVzZS1jYXNlLiBBbmQgb25lIGZv
+ciB0aGUgZGlzcGxheSBjb250cm9sbGVyIHVzZWNhc2U/CgpOb3Qgc3VyZSAtIHNvIGFza2luZyBm
+b3IgZmVlZGJhY2suCgoJU2FtCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbA==
