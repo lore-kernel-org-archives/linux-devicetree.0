@@ -1,103 +1,79 @@
-From: Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v15 0/2] spi: Add Renesas R-Car Gen3 RPC-IF SPI driver
-Date: Fri, 26 Jul 2019 10:42:53 +0800
-Message-ID: <1564108975-27423-1-git-send-email-masonccyang@mxic.com.tw>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH V2 1/2] usb: dwc3: Add node to update cache type setting
+Date: Fri, 26 Jul 2019 03:29:57 +0000
+Message-ID: <DB8PR04MB68263E97EAF455751DB8506BF1C00@DB8PR04MB6826.eurprd04.prod.outlook.com>
+References: <20190712064206.48249-1-ran.wang_1@nxp.com>
+ <20190724204222.GA1234@bogus>
+ <DB8PR04MB6826B4479A5A67A66025E89CF1C10@DB8PR04MB6826.eurprd04.prod.outlook.com>
+ <CAL_JsqKd=+0kXyUJkTZezMfcv-SQznzefi_0J0VjdsXcP8qZ5w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKd=+0kXyUJkTZezMfcv-SQznzefi_0J0VjdsXcP8qZ5w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
-Cc: juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>, lee.jones@linaro.org, sergei.shtylyov@cogentembedded.com, Mason Yang <masonccyang@mxic.com.tw>, marek.vasut@gmail.com, miquel.raynal@bootlin.com
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Leo Li <leoyang.li@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-v15 patch including:
-1) A typo in dt-bindings and add flash subnode description
-2) v14 dt-binding file has reviewed by Rob Herring.
-
-v14 patch including:
-1) Patch RPC-IF back to SPI mode only instead of MFD & SPI 
-   by MFD maintainer, Lee Jones comments.
-2) Patch pm_runtime control in spi transfer.
-
-v13 patch including:
-1) rename mfd to ddata for SPI driver.
-2) Patch RPC-IF devicetree for SPI and HyperFlash.
-
-v12 patch including:
-1) add back "wbuf" in dts example.
-2) RPC-IF replace rpc-if in dts.
-
-v11 patch including:
-1) Patch mfd include header file.
-2) mfd coding style.
-3) add back wbuf description in dts.
-
-v10 patch including:
-1) Address range for > 64M byte flash.
-2) Removed dirmap_write due to WBUF 256 bytes transfer issue.
-3) Dummy bytes setting according to spi-nor.c layer.
-
-v9 patch is for RPC MFD driver and RPC SPI driver.
-
-v8 patch including:
-1) Supported SoC-specific values in DTS.
-2) Rename device node name as flash.
-
-v7 patch is according to Geert and Sergei's comments:
-1) Add all R-Car Gen3 model in dts.
-2) patch rpc-if child node search.
-3) minror coding style.
-
-v6 patch is accroding to Geert, Marek and Sergei's comments:
-1) spi_controller for new code.
-2) "renesas,rcar-gen3-rpc" instead of "renesas,r8a77995-rpc."
-3) patch external address read mode w/o u64 readq().
-4) patch dts for write buffer & drop "renesas,rpc-mode".
-5) coding style and so on.
-
-v5 patch is accroding to Sergei's comments:
-1) Read 6 bytes ID from Sergei's patch.
-2) regmap_update_bits().
-3) C++ style comment.
-
-v4 patch is according to Sergei's comments including:
-1) Drop soc_device_match().
-2) Drop unused RPC registers.
-3) Use ilog2() instead of fls().
-4) Patch read 6 bytes ID w/ one command.
-5) Coding style and so on.
-
-v3 patch is according to Marek and Geert's comments including:
-1) soc_device_mach() to set up RPC_PHYCNT_STRTIM.
-2) get_unaligned().
-3) rpc-mode for rpi-spi-flash or rpc-hyperflash.
-4) coding style and so on.
-
-v2 patch including:
-1) remove RPC clock enable/dis-able control,
-2) patch run time PM.
-3) add RPC module software reset,
-4) add regmap.
-5) other coding style and so on.
-
-thanks for your review.
-
-best regards,
-Mason
-
-
-Mason Yang (2):
-  spi: Add Renesas R-Car Gen3 RPC-IF SPI controller driver
-  dt-bindings: spi: Document Renesas R-Car Gen3 RPC-IF controller
-    bindings
-
- .../devicetree/bindings/spi/spi-renesas-rpc.txt    |  46 ++
- drivers/spi/Kconfig                                |   6 +
- drivers/spi/Makefile                               |   1 +
- drivers/spi/spi-renesas-rpc.c                      | 754 +++++++++++++++++++++
- 4 files changed, 807 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
- create mode 100644 drivers/spi/spi-renesas-rpc.c
-
--- 
-1.9.1
+SGkgRmVsaXBlLA0KDQpPbiBGcmlkYXksIEp1bHkgMjYsIDIwMTkgMDU6NTYsIFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlOg0KPiANCj4gT24gV2VkLCBKdWwgMjQsIDIwMTkgYXQg
+ODoyOSBQTSBSYW4gV2FuZyA8cmFuLndhbmdfMUBueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IEhp
+IFJvYiwNCj4gPg0KPiA+IE9uIFRodXJzZGF5LCBKdWx5IDI1LCAyMDE5IDA0OjQyIFJvYiBIZXJy
+aW5nIDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlOg0KPiA+ID4NCj4gPiA+IE9uIEZyaSwgSnVsIDEy
+LCAyMDE5IGF0IDAyOjQyOjA1UE0gKzA4MDAsIFJhbiBXYW5nIHdyb3RlOg0KPiA+ID4gPiBTb21l
+IExheWVyc2NhcGUgcGFsdGZvcm1zIChzdWNoIGFzIExTMTA4OEEsIExTMjA4OEEsIGV0YykNCj4g
+PiA+ID4gZW5jb3VudGVyIFVTQiBkZXRlY3QgZmFpbHVlcyB3aGVuIGFkZGluZyBkbWEtY29oZXJl
+bnQgdG8gRFdDMw0KPiA+ID4gPiBub2RlLiBUaGlzIGlzIGJlY2F1c2UgdGhlIEhXIGRlZmF1bHQg
+Y2FjaGUgdHlwZSBjb25maWd1cmF0aW9uIG9mDQo+ID4gPiA+IHRob3NlIFNvQyBhcmUgbm90IHJp
+Z2h0LCBuZWVkIHRvIGJlIHVwZGF0ZWQgaW4gRFRTLg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQt
+b2ZmLWJ5OiBSYW4gV2FuZyA8cmFuLndhbmdfMUBueHAuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+
+ID4gQ2hhbmdlIGluIHYyOg0KPiA+ID4gPiAgICAgLSBOZXcgZmlsZS4NCj4gPiA+ID4NCj4gPiA+
+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQgfCA0Mw0K
+PiA+ID4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gPiAgMSBmaWxlIGNoYW5n
+ZWQsIDQzIGluc2VydGlvbnMoKykNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQNCj4gPiA+ID4gYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0DQo+ID4gPiA+IGluZGV4
+IDhlNTI2NWUuLjdiYzFjZWYgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQNCj4gPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+ID4gPiBAQCAtMTEwLDYgKzEx
+MCw0MyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiAgIC0gaW4gYWRkaXRpb24gYWxs
+IHByb3BlcnRpZXMgZnJvbSB1c2IteGhjaS50eHQgZnJvbSB0aGUgY3VycmVudCBkaXJlY3Rvcnkg
+YXJlDQo+ID4gPiA+ICAgICBzdXBwb3J0ZWQgYXMgd2VsbA0KPiA+ID4gPg0KPiA+ID4gPiArKiBD
+YWNoZSB0eXBlIG5vZGVzIChvcHRpb25hbCkNCj4gPiA+ID4gKw0KPiA+ID4gPiArVGhlIENhY2hl
+IHR5cGUgbm9kZSBpcyB1c2VkIHRvIHRlbGwgaG93IHRvIGNvbmZpZ3VyZSBjYWNoZSB0eXBlDQo+
+ID4gPiA+ICtvbiA0IGRpZmZlcmVudCB0cmFuc2ZlciB0eXBlczogRGF0YSBSZWFkLCBEZXNjIFJl
+YWQsIERhdGEgV3JpdGUNCj4gPiA+ID4gK2FuZCBEZXNjIHdyaXRlLiBGb3IgZWFjaCB0cmVhc2Zl
+ciB0eXBlLCBjb250cm9sbGVyIGhhcyBhIDQtYml0DQo+ID4gPiA+ICtyZWdpc3RlciBmaWVsZCB0
+byBlbmFibGUgZGlmZmVyZW50IGNhY2hlIHR5cGUuIFF1b3RlZCBmcm9tIERXQzMNCj4gPiA+ID4g
+K2RhdGEgYm9vayBUYWJsZSA2LTUNCj4gPiA+IENhY2hlIFR5cGUgQml0IEFzc2lnbm1lbnRzOg0K
+PiA+ID4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gPiArTUJVU19UWVBFfCBiaXRbM10gICAgICAgfGJpdFsy
+XSAgICAgICB8Yml0WzFdICAgICB8Yml0WzBdDQo+ID4gPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gPiA+ICtB
+SEIgICAgICB8Q2FjaGVhYmxlICAgICB8QnVmZmVyYWJsZSAgIHxQcml2aWxlZ2dlIHxEYXRhDQo+
+ID4gPiA+ICtBWEkzICAgICB8V3JpdGUgQWxsb2NhdGV8UmVhZCBBbGxvY2F0ZXxDYWNoZWFibGUg
+IHxCdWZmZXJhYmxlDQo+ID4gPiA+ICtBWEk0ICAgICB8QWxsb2NhdGUgT3RoZXJ8QWxsb2NhdGUg
+ICAgIHxNb2RpZmlhYmxlIHxCdWZmZXJhYmxlDQo+ID4gPiA+ICtBWEk0ICAgICB8T3RoZXIgQWxs
+b2NhdGV8QWxsb2NhdGUgICAgIHxNb2RpZmlhYmxlIHxCdWZmZXJhYmxlDQo+ID4gPiA+ICtOYXRp
+dmUgICB8U2FtZSBhcyBBWEkgICB8U2FtZSBhcyBBWEkgIHxTYW1lIGFzIEFYSXxTYW1lIGFzIEFY
+SQ0KPiA+ID4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gPiArTm90ZTogVGhlIEFIQiwgQVhJMywgQVhJNCwg
+YW5kIFBDSWUgYnVzc2VzIHVzZSBkaWZmZXJlbnQgbmFtZXMNCj4gPiA+ID4gK2ZvciBjZXJ0YWlu
+IHNpZ25hbHMsIHdoaWNoIGhhdmUgdGhlIHNhbWUgbWVhbmluZzoNCj4gPiA+ID4gKyAgQnVmZmVy
+YWJsZSA9IFBvc3RlZA0KPiA+ID4gPiArICBDYWNoZWFibGUgPSBNb2RpZmlhYmxlID0gU25vb3Ag
+KG5lZ2F0aW9uIG9mIE5vIFNub29wKQ0KPiA+ID4NCj4gPiA+IFRoaXMgc2hvdWxkIGFsbCBiZSBp
+bXBsaWVkIGZyb20gdGhlIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxlIHN0cmluZ3MuDQo+ID4NCj4g
+PiBEaWQgeW91IG1lYW4gSSBjb3VsZCBpbXBsZW1lbnQgYSBzb2MgZHJpdmVyIHdoaWNoIGNhbiBi
+ZSBtYXRjaGVkIGJ5DQo+IGNvbXBhdGlibGUgb2YgJ2ZzbCxsczEwODhhLWR3YzMnIHdoaWNoIHdp
+bGwgcGFzcyBrbm93biBidXMgdHlwZSB0byBEV0MzIGRyaXZlcj8NCj4gSWYgeWVzLCBob3cgdG8g
+cGFzcz8NCj4gDQo+IFllcy4gVGhlIERUIG1hdGNoIHRhYmxlIGNhbiBoYXZlIGRhdGEgYXNzb2Np
+YXRlZCB3aXRoIHRoYXQgY29tcGF0aWJsZSBzdHJpbmcuDQo+IEJleW9uZCB0aGF0LCBJJ20gbm90
+IHJlYWxseSBmYW1pbGlhciB3aXRoIHRoZSBEV0MzIGRyaXZlci4NCg0KRG8geW91IGhhdmUgYW55
+IHN1Z2dlc3Rpb24gaGVyZT8NCklmIEkgYWRkIGEgZ2x1ZSBkcml2ZXIgb24gRFdDMyBjb3JlIGRy
+aXZlciAoSSBrbm93IHlvdSBhcmUgbm90IGhhcHB5IG9uIHRoaXMgd2F5KSwgSSBkb24ndA0Ka25v
+dyBob3cgdG8gcGFzcyB0aGUgTUJVU19UWVBFIGluZm8uIGZyb20gbXkgZ2x1ZSBkcml2ZXIgdG8g
+RFdDMyBjb3JlIGRyaXZlciAoSSB0aGluayBjYWNoZQ0KdHlwZSByZWxhdGVkIHByb2dyYW1taW5n
+IHNob3VsZCBiZSBkb25lIGJ5IERXQzMgY29yZSBkcml2ZXIsIGFtIEkgcmlnaHQ/KQ0KDQpUaGFu
+a3MNClJhbg0K
