@@ -1,153 +1,138 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v2 2/3] usb: exynos: add support for getting PHYs from the
- standard dt array
-Date: Fri, 26 Jul 2019 10:14:52 +0200
-Message-ID: <20190726081453.9456-3-m.szyprowski@samsung.com>
-References: <20190726081453.9456-1-m.szyprowski@samsung.com>
-        <CGME20190726081505eucas1p146c14eed320c57050aa968b7c97b227b@eucas1p1.samsung.com>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream
+ like logger
+Date: Fri, 26 Jul 2019 10:31:48 +0200
+Message-ID: <20190726083148.d4gf57w2nt5k7t6n@pathway.suse.cz>
+References: <20190716175021.9CA412173C@mail.kernel.org>
+ <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
+ <20190718175024.C3EC421019@mail.kernel.org>
+ <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com>
+ <20190719000834.GA3228@google.com>
+ <20190722200347.261D3218C9@mail.kernel.org>
+ <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
+ <20190722235411.06C1320840@mail.kernel.org>
+ <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
+ <CAFd5g47v3Mr4GEGOjqyYy9Jwwm+ow7ypbu9j88rxEN06QCzdxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190726081453.9456-1-m.szyprowski@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <CAFd5g47v3Mr4GEGOjqyYy9Jwwm+ow7ypbu9j88rxEN06QCzdxQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Markus Reichl <m.reichl@fivetechno.de>, =?UTF-8?q?M=C3=A5ns=20Rullg=C3=A5rd?= <mans@mansr.com>, Krzysztof Kozlowski <krzk@kernel.org>, Peter Chen <peter.chen@nxp.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Jeff Dike <jdike@addtoit.com>, Kevin Hilman <khilman@baylibre.com>, Logan Gunthorpe <logang@deltatee.com>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Vetter <daniel@ffwll.ch>, Amir Goldstein <amir73il@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Kees Cook <keescook@google.com>, David Rientjes <rientjes@google.com>, kunit-dev@googlegroups.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, Peter Zijlstra <peterz@infradead.org>, Randy Dunlap <rdunlap@infradead.org>, Joel Stanley <joel@jms.id.au>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah <shuah@kernel.org>, wfg@linux.intel.com, Greg KH <gregkh@linuxfoundation.org>Julia Lawall <j>
 List-Id: devicetree@vger.kernel.org
 
-Add the code for getting generic PHYs from standard device tree array
-from the main controller device node. This is a first step in resolving
-the conflict between Exynos EHCI/OHCI sub-nodes and generic USB device
-bindings. Later the sub-nodes currently used for assigning PHYs to root
-ports of the controller will be removed making a place for the generic
-USB device bindings nodes.
+On Thu 2019-07-25 13:21:12, Brendan Higgins wrote:
+> On Wed, Jul 24, 2019 at 12:31 AM Petr Mladek <pmladek@suse.com> wrote:
+> >
+> > On Mon 2019-07-22 16:54:10, Stephen Boyd wrote:
+> > > Quoting Brendan Higgins (2019-07-22 15:30:49)
+> > > > On Mon, Jul 22, 2019 at 1:03 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > > > >
+> > > > >
+> > > > > What's the calling context of the assertions and expectations? I still
+> > > > > don't like the fact that string stream needs to allocate buffers and
+> > > > > throw them into a list somewhere because the calling context matters
+> > > > > there.
+> > > >
+> > > > The calling context is the same as before, which is anywhere.
+> > >
+> > > Ok. That's concerning then.
+> > >
+> > > >
+> > > > > I'd prefer we just wrote directly to the console/log via printk
+> > > > > instead. That way things are simple because we use the existing
+> > > > > buffering path of printk, but maybe there's some benefit to the string
+> > > > > stream that I don't see? Right now it looks like it builds a string and
+> > > > > then dumps it to printk so I'm sort of lost what the benefit is over
+> > > > > just writing directly with printk.
+> > > >
+> > > > It's just buffering it so the whole string gets printed uninterrupted.
+> > > > If we were to print out piecemeal to printk, couldn't we have another
+> > > > call to printk come in causing it to garble the KUnit message we are
+> > > > in the middle of printing?
+> > >
+> > > Yes, printing piecemeal by calling printk many times could lead to
+> > > interleaving of messages if something else comes in such as an interrupt
+> > > printing something. Printk has some support to hold "records" but I'm
+> > > not sure how that would work here because KERN_CONT talks about only
+> > > being used early on in boot code. I haven't looked at printk in detail
+> > > though so maybe I'm all wrong and KERN_CONT just works?
+> >
+> > KERN_CONT does not guarantee that the message will get printed
+> > together. The pieces get interleaved with messages printed in
+> > parallel.
+> >
+> > Note that KERN_CONT was originally really meant to be used only during
+> > boot. It was later used more widely and ended in the best effort category.
+> >
+> > There were several attempts to make it more reliable. But it was
+> > always either too complicated or error prone or both.
+> >
+> > You need to use your own buffering if you rely want perfect output.
+> > The question is if it is really worth the complexity. Also note that
+> > any buffering reduces the chance that the messages will reach
+> > the console.
+> 
+> Seems like that settles it then. Thanks!
+> 
+> > BTW: There is a work in progress on a lockless printk ring buffer.
+> > It will make printk() more secure regarding deadlocks. But it might
+> > make transparent handling of continuous lines even more tricky.
+> >
+> > I guess that local buffering, before calling printk(), will be
+> > even more important then. Well, it might really force us to create
+> > an API for it.
+> 
+> Cool! Can you CC me on that discussion?
 
-Suggested-by: Måns Rullgård <mans@mansr.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/usb/host/ehci-exynos.c | 23 +++++++++++++++++++----
- drivers/usb/host/ohci-exynos.c | 23 +++++++++++++++++++----
- 2 files changed, 38 insertions(+), 8 deletions(-)
+Adding John Oggness into CC.
 
-diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
-index 3a29a1a8519c..01debfd03d4a 100644
---- a/drivers/usb/host/ehci-exynos.c
-+++ b/drivers/usb/host/ehci-exynos.c
-@@ -41,6 +41,7 @@ struct exynos_ehci_hcd {
- 	struct clk *clk;
- 	struct device_node *of_node;
- 	struct phy *phy[PHY_NUMBER];
-+	bool legacy_phy;
- };
- 
- #define to_exynos_ehci(hcd) (struct exynos_ehci_hcd *)(hcd_to_ehci(hcd)->priv)
-@@ -50,10 +51,22 @@ static int exynos_ehci_get_phy(struct device *dev,
- {
- 	struct device_node *child;
- 	struct phy *phy;
--	int phy_number;
-+	int phy_number, num_phys;
- 	int ret;
- 
- 	/* Get PHYs for the controller */
-+	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
-+					      "#phy-cells");
-+	for (phy_number = 0; phy_number < num_phys; phy_number++) {
-+		phy = devm_of_phy_get_by_index(dev, dev->of_node, phy_number);
-+		if (IS_ERR(phy))
-+			return PTR_ERR(phy);
-+		exynos_ehci->phy[phy_number] = phy;
-+	}
-+	if (num_phys > 0)
-+		return 0;
-+
-+	/* Get PHYs using legacy bindings */
- 	for_each_available_child_of_node(dev->of_node, child) {
- 		ret = of_property_read_u32(child, "reg", &phy_number);
- 		if (ret) {
-@@ -84,6 +97,7 @@ static int exynos_ehci_get_phy(struct device *dev,
- 		}
- 	}
- 
-+	exynos_ehci->legacy_phy = true;
- 	return 0;
- }
- 
-@@ -205,11 +219,12 @@ static int exynos_ehci_probe(struct platform_device *pdev)
- 	ehci->caps = hcd->regs;
- 
- 	/*
--	 * Workaround: reset of_node pointer to avoid conflict between Exynos
--	 * EHCI port subnodes and generic USB device bindings
-+	 * Workaround: reset of_node pointer to avoid conflict between legacy
-+	 * Exynos EHCI port subnodes and generic USB device bindings
- 	 */
- 	exynos_ehci->of_node = pdev->dev.of_node;
--	pdev->dev.of_node = NULL;
-+	if (exynos_ehci->legacy_phy)
-+		pdev->dev.of_node = NULL;
- 
- 	/* DMA burst Enable */
- 	writel(EHCI_INSNREG00_ENABLE_DMA_BURST, EHCI_INSNREG00(hcd->regs));
-diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-index 905c6317e0c3..d5ce98e205c7 100644
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -32,6 +32,7 @@ struct exynos_ohci_hcd {
- 	struct clk *clk;
- 	struct device_node *of_node;
- 	struct phy *phy[PHY_NUMBER];
-+	bool legacy_phy;
- };
- 
- static int exynos_ohci_get_phy(struct device *dev,
-@@ -39,10 +40,22 @@ static int exynos_ohci_get_phy(struct device *dev,
- {
- 	struct device_node *child;
- 	struct phy *phy;
--	int phy_number;
-+	int phy_number, num_phys;
- 	int ret;
- 
- 	/* Get PHYs for the controller */
-+	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
-+					      "#phy-cells");
-+	for (phy_number = 0; phy_number < num_phys; phy_number++) {
-+		phy = devm_of_phy_get_by_index(dev, dev->of_node, phy_number);
-+		if (IS_ERR(phy))
-+			return PTR_ERR(phy);
-+		exynos_ohci->phy[phy_number] = phy;
-+	}
-+	if (num_phys > 0)
-+		return 0;
-+
-+	/* Get PHYs using legacy bindings */
- 	for_each_available_child_of_node(dev->of_node, child) {
- 		ret = of_property_read_u32(child, "reg", &phy_number);
- 		if (ret) {
-@@ -73,6 +86,7 @@ static int exynos_ohci_get_phy(struct device *dev,
- 		}
- 	}
- 
-+	exynos_ohci->legacy_phy = true;
- 	return 0;
- }
- 
-@@ -172,11 +186,12 @@ static int exynos_ohci_probe(struct platform_device *pdev)
- 	}
- 
- 	/*
--	 * Workaround: reset of_node pointer to avoid conflict between Exynos
--	 * OHCI port subnodes and generic USB device bindings
-+	 * Workaround: reset of_node pointer to avoid conflict between legacy
-+	 * Exynos OHCI port subnodes and generic USB device bindings
- 	 */
- 	exynos_ohci->of_node = pdev->dev.of_node;
--	pdev->dev.of_node = NULL;
-+	if (exynos_ohci->legacy_phy)
-+		pdev->dev.of_node = NULL;
- 
- 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (err) {
--- 
-2.17.1
+John, please CC Brendan Higgins on the patchsets eventually switching
+printk() into the lockless buffer. The test framework is going to
+do its own buffering to keep the related messages together.
+
+The lockless ringbuffer might make handling of related (partial)
+lines worse or better. It might justify KUnit's extra buffering
+or it might allow to get rid of it.
+
+> > Note that stroring the messages into the printk log is basically safe in any
+> > context. It uses temporary per-CPU buffers for recursive messages and
+> > in NMI. The only problem is panic() when some CPU gets stuck with the
+> > lock taken. This will get solved by the lockless ringbuffer. Also
+> > the temporary buffers will not be necessary any longer.
+> 
+> Sure, I think Stephen's concern is all the supporting code that is
+> involved. Not printk specifically. It just means a lot more of KUnit
+> has to be IRQ safe.
+
+I see.
+
+BTW: I wonder if KUnit could reuse the existing seq_buf implementation
+for buffering messages.
+
+I am sorry if it has already been proposed and rejected for some
+reason. I might have missed it. Feel free to just point me to
+same older mail.
+
+> > Much bigger problems are with consoles. There are many of them. It
+> > means a lot of code and more locks involved, including scheduler
+> > locks. Note that console lock is a semaphore.
+> 
+> That shouldn't affect us though, right? As long as we continue to use
+> the printk interface?
+
+I guess that it should not affect KUnit.
+
+The only problem might be if the testing framework calls printk()
+inside scheduler or console code. And only when the tested code
+uses the same locks that will be used by the called printk().
+
+To be honest I do not fully understand KUnit design. I am not
+completely sure how the tested code is isolated from the running
+system. Namely, I do not know if the tested code shares
+the same locks with the system running the test.
+
+Best Regards,
+Petr
