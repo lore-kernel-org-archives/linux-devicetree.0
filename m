@@ -1,53 +1,89 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/5] Add missing vdda-supply to STM32 ADC
-Date: Fri, 26 Jul 2019 18:00:06 +0200
-Message-ID: <b91163f5-ad6f-0a22-eb8a-ceb0b0c056c6@st.com>
-References: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: Controllers with several interface options - one or more drivers?
+Date: Fri, 26 Jul 2019 18:14:03 +0200
+Message-ID: <20190726161403.GA25593@ravnborg.org>
+References: <20190304125033.28841-1-josef@lusticky.cz>
+ <20190708145618.26031-1-josef@lusticky.cz>
+ <20190726122510.GA14341@ravnborg.org>
+ <20190726145513.GK15868@phenom.ffwll.local>
+ <CAKMK7uESP5D4e_Qx6W7amURqxJ=5Y4JHduZYCtkyVQY9jKJQeA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>, jic23@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uESP5D4e_Qx6W7amURqxJ=5Y4JHduZYCtkyVQY9jKJQeA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Dave Airlie <airlied@linux.ie>, Josef Lusticky <josef@lusticky.cz>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrice
-
-On 6/19/19 2:29 PM, Fabrice Gasnier wrote:
-> Add missing vdda-supply, analog power supply, to STM32 ADC. When vdda is
-> an independent supply, it needs to be properly turned on or off to supply
-> the ADC.
-> This series proposes fixes for the dt-bindings, IIO driver and relevant
-> device tree files.
-> 
-> Fabrice Gasnier (5):
->    dt-bindings: iio: adc: stm32: add missing vdda supply
->    iio: adc: stm32-adc: add missing vdda-supply
->    ARM: dts: stm32: remove fixed regulator unit address on stm32429i-eval
->    ARM: dts: stm32: add missing vdda-supply to adc on stm32429i-eval
->    ARM: dts: stm32: add missing vdda-supply to adc on stm32h743i-eval
-> 
->   .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |  1 +
->   arch/arm/boot/dts/stm32429i-eval.dts               | 25 +++++++++++-----------
->   arch/arm/boot/dts/stm32h743i-eval.dts              |  1 +
->   drivers/iio/adc/stm32-adc-core.c                   | 21 +++++++++++++++++-
->   4 files changed, 35 insertions(+), 13 deletions(-)
-> 
-
-DT patches applied on stm32-next. I plan to add them in my PR for v5.4.
-However those patches are marked as "fixes", do you see an issue to only 
-send it for v5.4 ?
-
-Regards
-alex
+SGkgRGFuaWVsLgoKQWRkZWQgTm9yYWxmIC0gc29tZWhvdyBJIG1pc3NlZCBoaW0gb24gdGhlIG9y
+aWdpbmFsIG1haWwuCgpPbiBGcmksIEp1bCAyNiwgMjAxOSBhdCAwNTowNjowM1BNICswMjAwLCBE
+YW5pZWwgVmV0dGVyIHdyb3RlOgo+IEFsc28gcHJvYmFibHkgc2hvdWxkIGFkZCBhIGZldyBtb3Jl
+IChkcm1fYnJpZGdlKSBwZW9wbGUsIEkgdGhpbmsKPiB0aGF0J3MgYWxzbyBzb21ld2hhdCByZWxl
+dmFudCBoZXJlLgo+IC1EYW5pZWwKPiAKPiBPbiBGcmksIEp1bCAyNiwgMjAxOSBhdCA0OjU1IFBN
+IERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD4gd3JvdGU6Cj4gPgo+ID4gT24gRnJpLCBK
+dWwgMjYsIDIwMTkgYXQgMDI6MjU6MTBQTSArMDIwMCwgU2FtIFJhdm5ib3JnIHdyb3RlOgo+ID4g
+PiBIaSBKb3NlZiwgRGFuaWVsIGV0IGFsLgo+ID4gPgo+ID4gPiBUaGUgZHJpdmVyIHRoYXQgdHJp
+Z2dlcmVkIHRoaXMgcmVwbHkgaXMgYSBkcml2ZXIgdGhhdCBhZGRzIHBhcmFsbGVsCj4gPiA+IHN1
+cHBvcnQgdG8gaWxpOTM0MSBpbiBhIGRlZGljYXRlZCBwYW5lbCBkcml2ZXIuCj4gPiA+IFRoZSBp
+c3N1ZSBoZXJlIGlzIHRoYXQgd2UgYWxyZWFkeSBoYXZlIGEgdGlueSBkcml2ZXIgdGhhdCBzdXBw
+b3J0cyB0aGUKPiA+ID4gaWxpOTM0MSBjb250cm9sbGVyIC0gYnV0IHdpdGggYSBzbGlnaHRseSBk
+aWZmZXJlbnQgY29uZmlndXJhdGlvbi4KPiA+ID4KPiA+ID4gVGhlIGlsaTkzNDEgc3VwcG9ydHMg
+c2V2ZXJhbCBpbnRlcmZhY2VzIC0gZnJvbSB0aGUgZGF0YXNoZWV0Ogo+ID4gPiAgICAgIklMSTkz
+NDEgc3VwcG9ydHMgcGFyYWxsZWwgOC0vOS0vMTYtLzE4LWJpdCBkYXRhIGJ1cwo+ID4gPiAgICAg
+IE1DVSBpbnRlcmZhY2UsIDYtLzE2LS8xOC1iaXQgZGF0YSBidXMgUkdCIGludGVyZmFjZSBhbmQK
+PiA+ID4gICAgICAzLS80LWxpbmUgc2VyaWFsIHBlcmlwaGVyYWwgaW50ZXJmYWNlIChTUEkpIgo+
+ID4gPgo+ID4gPiBOb3JhbGYgLSBpbiBhbm90aGVyIG1haWwgZXhwbGFpbmVkOgo+ID4gPiAiCj4g
+PiA+IFRoZSBNSVBJIEFsbGlhbmNlIGhhcyBsb3RzIG9mIHN0YW5kYXJkcyBzb21lIHdydC4gZGlz
+cGxheSBjb250cm9sbGVyCj4gPiA+IGludGVyZmFjZXM6Cj4gPiA+IC0gTUlQSSBEQkkgLSBEaXNw
+bGF5IEJ1cyBJbnRlcmZhY2UgKHVzZWQgZm9yIGNvbW1hbmRzIGFuZCBvcHRpb25hbGx5IHBpeGVs
+cykKPiA+ID4gLSBNSVBJIERQSSAtIERpc3BsYXkgUGl4ZWwgSW50ZXJmYWNlIChhbHNvIGNhbGxl
+ZCBSR0IgaW50ZXJmYWNlIG9yCj4gPiA+IERPVENMSyBpbnRlcmZhY2UpCj4gPiA+IC0gTUlQSSBE
+U0kgLSBEaXNwbGF5IFNlcmlhbCBJbnRlcmZhY2UgKGNvbW1hbmRzIGFuZCBwaXhlbHMpCj4gPiA+
+Cj4gPiA+IFRoZSBpbGk5MzQxIHN1cHBvcnRzIGJvdGggTUlQSSBEQkkgYW5kIERQSS4KPiA+ID4g
+Igo+ID4gPgo+ID4gPiBNSVBJIERQSSAtIGlzIGEgZ29vZCBmaXQgZm9yIGEgZHJtX3BhbmVsIGRy
+aXZlci4KPiA+ID4gTUlQSSBEQkkgLSByZXF1aXJlcyBhIGZ1bGwgZGlzcGxheSBjb250cm9sbGVy
+IGRyaXZlci4KPiA+ID4KPiA+ID4gVGhlcmUgYXJlIG1hbnkgb3RoZXIgZXhhbXBsZXMgb2YgZHJp
+dmVyIFNvQyB0aGF0IGluIHRoZSBzYW1lIHdheQo+ID4gPiBjYW4gYmUgc2VlbiBvbmx5IGFzIGEg
+cGFuZWwgb3IgYXMgYSBmdWxsIGRpc3BsYXkgY29udHJvbGxlciBkcml2ZXIuCj4gPiA+Cj4gPiA+
+IFRoZSBvcGVuIHF1ZXN0aW9uIGhlcmUgaXMgaWYgd2Ugc2hvdWxkIHRyeSB0byBzdXBwb3J0IGJv
+dGggY2FzZXMgaW4gdGhlCj4gPiA+IHNhbWUgZHJpdmVyIC8gZmlsZS4gT3Igc2hhbGwgd2UgaW1w
+bG1lbnQgdHdvIGRpZmZlcmVudCBkcml2ZXJzLgo+ID4gPiBPbmUgZm9yIHRoZSBwYW5lbCB1c2Ut
+Y2FzZS4gQW5kIG9uZSBmb3IgdGhlIGRpc3BsYXkgY29udHJvbGxlciB1c2VjYXNlPwo+ID4gPgo+
+ID4gPiBOb3Qgc3VyZSAtIHNvIGFza2luZyBmb3IgZmVlZGJhY2suCj4gPgo+ID4gSSdtIG5vdCBz
+dXJlLiBDdXJyZW50bHkgd2UgZG8gaGF2ZSBEU0kgYW5kIGR1bWIgUkdCIHBhbmVscyBhbGwgaW4K
+PiA+IGRybS9wYW5lbC4gSSBkb24ndCB0aGluayB3ZSBoYXZlIERCSSBwYW5lbHMgaW4gdGhlcmUg
+eWV0LCBidXQgdGhlbgo+ID4gZHJtL3RpbnkgaXMgdGhlIG9ubHkgb25lIHN1cHBvcnRpbmcgdGhl
+c2UuCj4gPgo+ID4gSSBndWVzcyB3ZSBjb3VsZCBsb29rIGludG8gbW92ZSBzb21lIG9mIHRoZSBE
+QkkgcGFuZWwgZHJpdmVycyBpbnRvIHBhbmVsCj4gPiBkcml2ZXJzLCBidXQgdGhhdCBuZWVkcyBh
+IGJpdCBtb3JlIGdsdWUgYWxsIGFyb3VuZC4gSSdtIGhvbmVzdGx5IG5vdCBzdXJlCj4gPiBob3cg
+dGhlIGN1cnJlbnQgRFNJIGRyaXZlcnMgaW4gZHJtX3BhbmVsIHdvcmsgZXhhY3RseSwgZXNwZWNp
+YWxseSBmb3IKPiA+IGNvbW1hbmQgbW9kZS4KPiA+Cj4gPiBPciBtYXliZSB3ZSBuZWVkIGEgbmV3
+IGludGVyZmFjZSBmb3IgY29tbWFuZCBtb2RlLgpJZiBJIGdldCBhcm91bmQgdG8gZG8gYSBkcml2
+ZXIgZm9yIHRoZSBzc2QxMzA2IHRoZW4gSSB3aWxsIHRyeSB0byBzZXdoYXQKbWFrZXMgc2Vuc2Ug
+dGhlbi4gRm9yIG5vdyB3ZSBzaGFsbCBub3Qgc3RhbGwgdGhlIGlsaTkzNDEgZHJpdmVyLgo+ID4K
+PiA+IFdydCBzaGFyaW5nIGNvZGUgYmV0d2VlbiBkcml2ZXJzIGZvciB0aGUgc2FtZSBjaGlwLCBi
+dXQgZGlmZmVyZW50Cj4gPiBpbnRlcmZhY2VzOiBJIHdvdWxkbid0IHdvcnJ5IHRvbyBtdWNoIGFi
+b3V0IHRoYXQuIE1heWJlIHRyeSB0byBoYXZlIGEKPiA+IHNoYXJlZCBoZWFkZXIgZmlsZSBhdCBs
+ZWFzdCBmb3IgcmVnaXN0ZXJzLgpUaGlzIHBhcnQgc2hvdWxkIGJlIHRoZSBtaW5pbXVtLiBTb210
+aGluZyBsaWtlIGluY2x1ZGUvZHJtL21pcGkvPwoKCVNhbQoKPiA+IExvbmcgdGVybSB3ZSBjb3Vs
+ZCBlbmQgdXAgd2l0aAo+ID4gb25lIGRyaXZlciBtb2R1bGUgd2hpY2ggZXhwb3NlcyBkaWZmZXJl
+bnQgZmxhdm91cnMgb2YgdGhlIHNhbWUgY2hpcCwgc28KPiA+IG11bHRpcGxlIGRybV9wYW5lbCBk
+cml2ZXJzLCBvciBtYXliZSB3ZSdsbCBnZXQgc29tZXRoaW5nIG1vcmUgc3BlY2lmaWMgZm9yCj4g
+PiBkc2kvZGJpLgo+ID4gLURhbmllbAo+ID4gLS0KPiA+IERhbmllbCBWZXR0ZXIKPiA+IFNvZnR3
+YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgo+ID4gaHR0cDovL2Jsb2cuZmZ3bGwuY2gK
+PiAKPiAKPiAKPiAtLSAKPiBEYW5pZWwgVmV0dGVyCj4gU29mdHdhcmUgRW5naW5lZXIsIEludGVs
+IENvcnBvcmF0aW9uCj4gKzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8vYmxvZy5mZndsbC5j
+aApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
