@@ -1,57 +1,83 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 09/85] arm64: dts: marvell: mcbin: enlarge PCI memory window
-Date: Fri, 26 Jul 2019 09:38:19 -0400
-Message-ID: <20190726133936.11177-9-sashal@kernel.org>
+From: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH AUTOSEL 5.2 12/85] arm64: dts: rockchip: fix isp iommu clocks
+ and power domain
+Date: Fri, 26 Jul 2019 09:38:22 -0400
+Message-ID: <20190726133936.11177-12-sashal@kernel.org>
 References: <20190726133936.11177-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>, Gregory CLEMENT <gregory.clement@bootlin.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190726133936.11177-1-sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Helen Koike <helen.koike-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+From: Helen Koike <helen.koike-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 
-[ Upstream commit d3446b266a8c72a7bbc94b65f5fc6d206be77d24 ]
+[ Upstream commit c432a29d3fc9ee928caeca2f5cf68b3aebfa6817 ]
 
-Running a graphics adapter on the MACCHIATObin fails due to an
-insufficiently sized memory window.
+isp iommu requires wrapper variants of the clocks.
+noc variants are always on and using the wrapper variants will activate
+{A,H}CLK_ISP{0,1} due to the hierarchy.
 
-Enlarge the memory window for the PCIe slot to 512 MiB.
+Tested using the pending isp patch set (which is not upstream
+yet). Without this patch, streaming from the isp stalls.
 
-With the patch I am able to use a GT710 graphics adapter with 1 GB onboard
-memory.
+Also add the respective power domain and remove the "disabled" status.
 
-These are the mapped memory areas that the graphics adapter is actually
-using:
+Refer:
+ RK3399 TRM v1.4 Fig. 2-4 RK3399 Clock Architecture Diagram
+ RK3399 TRM v1.4 Fig. 8-1 RK3399 Power Domain Partition
 
-Region 0: Memory at cc000000 (32-bit, non-prefetchable) [size=16M]
-Region 1: Memory at c0000000 (64-bit, prefetchable) [size=128M]
-Region 3: Memory at c8000000 (64-bit, prefetchable) [size=32M]
-Region 5: I/O ports at 1000 [size=128]
-Expansion ROM at ca000000 [disabled] [size=512K]
-
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Helen Koike <helen.koike-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-index 329f8ceeebea..205071b45a32 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-@@ -184,6 +184,8 @@
- 	num-lanes = <4>;
- 	num-viewport = <8>;
- 	reset-gpios = <&cp0_gpio2 20 GPIO_ACTIVE_LOW>;
-+	ranges = <0x81000000 0x0 0xf9010000 0x0 0xf9010000 0x0 0x10000
-+		  0x82000000 0x0 0xc0000000 0x0 0xc0000000 0x0 0x20000000>;
- 	status = "okay";
- };
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 196ac9b78076..89594a7276f4 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1706,11 +1706,11 @@
+ 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
+ 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		interrupt-names = "isp0_mmu";
+-		clocks = <&cru ACLK_ISP0_NOC>, <&cru HCLK_ISP0_NOC>;
++		clocks = <&cru ACLK_ISP0_WRAPPER>, <&cru HCLK_ISP0_WRAPPER>;
+ 		clock-names = "aclk", "iface";
+ 		#iommu-cells = <0>;
++		power-domains = <&power RK3399_PD_ISP0>;
+ 		rockchip,disable-mmu-reset;
+-		status = "disabled";
+ 	};
  
+ 	isp1_mmu: iommu@ff924000 {
+@@ -1718,11 +1718,11 @@
+ 		reg = <0x0 0xff924000 0x0 0x100>, <0x0 0xff925000 0x0 0x100>;
+ 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		interrupt-names = "isp1_mmu";
+-		clocks = <&cru ACLK_ISP1_NOC>, <&cru HCLK_ISP1_NOC>;
++		clocks = <&cru ACLK_ISP1_WRAPPER>, <&cru HCLK_ISP1_WRAPPER>;
+ 		clock-names = "aclk", "iface";
+ 		#iommu-cells = <0>;
++		power-domains = <&power RK3399_PD_ISP1>;
+ 		rockchip,disable-mmu-reset;
+-		status = "disabled";
+ 	};
+ 
+ 	hdmi_sound: hdmi-sound {
 -- 
 2.20.1
