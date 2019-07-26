@@ -1,48 +1,33 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2] arm64: dts: fast models: Remove clcd's
- max-memory-bandwidth
-Date: Fri, 26 Jul 2019 10:50:25 +0100
-Message-ID: <20190726095025.GB11177@e107155-lin>
-References: <20190725171215.71801-1-kevin.brodsky@arm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: vendor-prefixes: Add Admatec AG
+Date: Fri, 26 Jul 2019 12:02:25 +0200
+Message-ID: <CAJKOXPdbBXEy0zzjZ1ytts0y5STQ5x9xQVBmU1vn46tmu8uCGg@mail.gmail.com>
+References: <20190726061705.14764-1-krzk@kernel.org> <963ba555-dde0-9c3c-1e15-740ca200853f@kontron.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190725171215.71801-1-kevin.brodsky@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ruben Ayrapetyan <ruben.ayrapetyan@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, dri-devel@lists.freedesktop.org, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>, Brian Starkey <brian.starkey@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <963ba555-dde0-9c3c-1e15-740ca200853f@kontron.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 06:12:14PM +0100, Kevin Brodsky wrote:
-> It is unclear why max-memory-bandwidth should be set for CLCD on the
-> fast model. Removing that property allows allocating and using 32bpp
-> buffers, which may be desirable on certain platforms such as
-> Android.
-> 
-> Reported-by: Ruben Ayrapetyan <ruben.ayrapetyan@arm.com>
-> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
-> ---
-> 
-> Changes in v2:
-> - Remove the attribute completely instead of increasing its value. It is
->   optional and there is no clear reason why it should be set at all.
-> 
->  arch/arm64/boot/dts/arm/fvp-base-revc.dts        | 8 --------
->  arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi | 2 --
+On Fri, 26 Jul 2019 at 11:48, Schrempf Frieder
+<frieder.schrempf@kontron.de> wrote:
+>
+> On 26.07.19 08:17, Krzysztof Kozlowski wrote:
+> > Add vendor prefix for Admatec AG.
+>
+> We get the displays used with the Kontron eval kits from "admatec GmbH"
+> in Hamburg, not "Admatec AG" in Switzerland. I think we have to
+> differentiate here.
+>
+> I will review patch 2/2 soon...
 
-I was about to ask about the above file in v1, and then saw v2.
-I will take this for v5.4. Thanks
+What a coincidence... they have so similar portfolio. After looking at
+vendor prefixes that would be the first duplication of name.
 
---
-Regards,
-Sudeep
+To avoid conflict, how about: "admatecde"?
+
+Best regards,
+Krzysztof
