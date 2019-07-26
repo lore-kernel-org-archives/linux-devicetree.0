@@ -1,210 +1,218 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-Date: Fri, 26 Jul 2019 07:48:11 +0300
-Message-ID: <20190726074811.39e0e6cb@dimatab>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
-        <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
-        <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
-        <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
-        <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
-        <a2ecc3ad-b7e9-9398-d59b-c7d3fbbd10bb@nvidia.com>
-        <20190722193838.0d7cd2ad@why>
-        <8e9f821c-3717-510d-c64f-8a1cc2452c25@gmail.com>
-        <78d5af07-2556-b60d-01d7-3684ebe7040b@nvidia.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [RFC,
+ v3 9/9] media: platform: Add Mediatek ISP P1 shared memory device
+Date: Fri, 26 Jul 2019 14:15:14 +0900
+Message-ID: <CAAFQd5Bh80N+cMhz=eyHUGJLaE5uuypOawQvHrTgGSMDvmcpLA@mail.gmail.com>
+References: <jungo.lin@mediatek.com>
+ <20190611035344.29814-1-jungo.lin@mediatek.com>
+ <20190611035344.29814-10-jungo.lin@mediatek.com>
+ <20190701072532.GB137710@chromium.org>
+ <1562297618.1212.46.camel@mtksdccf07>
+ <CAAFQd5BaTQ-Q7gsE0X+d4_81OZq9WHaCYkmALt7_4A1JFo=_8g@mail.gmail.com>
+ <1562313579.1212.73.camel@mtksdccf07>
+ <CAAFQd5AaNFpMGCVJREY85n8UetEwd99TOka8-ECoLzMbMkos_g@mail.gmail.com>
+ <1563870117.1212.455.camel@mtksdccf07>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <78d5af07-2556-b60d-01d7-3684ebe7040b@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1563870117.1212.455.camel@mtksdccf07>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jungo Lin <jungo.lin@mediatek.com>
+Cc: devicetree@vger.kernel.org, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <sean.cheng@mediatek.com>, =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= <frederic.chen@mediatek.com>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <rynn.wu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Rob Herring <robh@kernel.org>, =?UTF-8?B?UnlhbiBZdSAo5L2Z5a2f5L+uKQ==?= <ryan.yu@mediatek.com>, =?UTF-8?B?RnJhbmtpZSBDaGl1ICjpgrHmloflh7Ep?= <frankie.chiu@mediatek.com>, Hans Verkuil <hverkuil@xs4all.nl>, ddavenport@chromium.org, Sj Huang <sj.huang@mediatek.com>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>,
+ Joerg Roedel <joro@8bytes.org>, " <linux-ar>
 List-Id: devicetree@vger.kernel.org
 
-=D0=92 Wed, 24 Jul 2019 16:09:53 -0700
-Sowjanya Komatineni <skomatineni@nvidia.com> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-
-> On 7/22/19 4:35 PM, Dmitry Osipenko wrote:
-> > 22.07.2019 21:38, Marc Zyngier =D0=BF=D0=B8=D1=88=D0=B5=D1=82: =20
-> >> On Mon, 22 Jul 2019 09:21:21 -0700
-> >> Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
-> >> =20
-> >>> On 7/22/19 3:57 AM, Dmitry Osipenko wrote: =20
-> >>>> 22.07.2019 13:13, Marc Zyngier =D0=BF=D0=B8=D1=88=D0=B5=D1=82: =20
-> >>>>> On 22/07/2019 10:54, Dmitry Osipenko wrote: =20
-> >>>>>> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82: =20
-> >>>>>>> Tegra210 platforms use sc7 entry firmware to program Tegra
-> >>>>>>> LP0/SC7 entry sequence and sc7 entry firmware is run from
-> >>>>>>> COP/BPMP-Lite.
-> >>>>>>>
-> >>>>>>> So, COP/BPMP-Lite still need IRQ function to finish SC7
-> >>>>>>> suspend sequence for Tegra210.
-> >>>>>>>
-> >>>>>>> This patch has fix for leaving the COP IRQ enabled for
-> >>>>>>> Tegra210 during interrupt controller suspend operation.
-> >>>>>>>
-> >>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
-> >>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> >>>>>>> ---
-> >>>>>>>    drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
-> >>>>>>>    1 file changed, 18 insertions(+), 2 deletions(-)
-> >>>>>>>
-> >>>>>>> diff --git a/drivers/irqchip/irq-tegra.c
-> >>>>>>> b/drivers/irqchip/irq-tegra.c index
-> >>>>>>> e1f771c72fc4..851f88cef508 100644 ---
-> >>>>>>> a/drivers/irqchip/irq-tegra.c +++
-> >>>>>>> b/drivers/irqchip/irq-tegra.c @@ -44,6 +44,7 @@ static
-> >>>>>>> unsigned int num_ictlrs;=20
-> >>>>>>>    struct tegra_ictlr_soc {
-> >>>>>>>    	unsigned int num_ictlrs;
-> >>>>>>> +	bool supports_sc7;
-> >>>>>>>    };
-> >>>>>>>   =20
-> >>>>>>>    static const struct tegra_ictlr_soc tegra20_ictlr_soc =3D {
-> >>>>>>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc
-> >>>>>>> tegra30_ictlr_soc =3D {=20
-> >>>>>>>    static const struct tegra_ictlr_soc tegra210_ictlr_soc =3D {
-> >>>>>>>    	.num_ictlrs =3D 6,
-> >>>>>>> +	.supports_sc7 =3D true,
-> >>>>>>>    };
-> >>>>>>>   =20
-> >>>>>>>    static const struct of_device_id ictlr_matches[] =3D {
-> >>>>>>> @@ -67,6 +69,7 @@ static const struct of_device_id
-> >>>>>>> ictlr_matches[] =3D {=20
-> >>>>>>>    struct tegra_ictlr_info {
-> >>>>>>>    	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
-> >>>>>>> +	const struct tegra_ictlr_soc *soc;
-> >>>>>>>    #ifdef CONFIG_PM_SLEEP
-> >>>>>>>    	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
-> >>>>>>>    	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
-> >>>>>>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
-> >>>>>>>    		lic->cop_ier[i] =3D readl_relaxed(ictlr +
-> >>>>>>> ICTLR_COP_IER); lic->cop_iep[i] =3D readl_relaxed(ictlr +
-> >>>>>>> ICTLR_COP_IEP_CLASS);=20
-> >>>>>>> -		/* Disable COP interrupts */
-> >>>>>>> -		writel_relaxed(~0ul, ictlr +
-> >>>>>>> ICTLR_COP_IER_CLR);
-> >>>>>>> +		/*
-> >>>>>>> +		 * AVP/COP/BPMP-Lite is the Tegra boot
-> >>>>>>> processor.
-> >>>>>>> +		 *
-> >>>>>>> +		 * Tegra210 system suspend flow uses
-> >>>>>>> sc7entry firmware which
-> >>>>>>> +		 * is executed by COP/BPMP and it includes
-> >>>>>>> disabling COP IRQ,
-> >>>>>>> +		 * clamping CPU rail, turning off VDD_CPU,
-> >>>>>>> and preparing the
-> >>>>>>> +		 * system to go to SC7/LP0.
-> >>>>>>> +		 *
-> >>>>>>> +		 * COP/BPMP wakes up when COP IRQ is
-> >>>>>>> triggered and runs
-> >>>>>>> +		 * sc7entry-firmware. So need to keep COP
-> >>>>>>> interrupt enabled.
-> >>>>>>> +		 */
-> >>>>>>> +		if (!lic->soc->supports_sc7)
-> >>>>>>> +			/* Disable COP interrupts if SC7 is
-> >>>>>>> not supported */ =20
-> >>>>>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the
-> >>>>>> comment doesn't sound correct to me. Something like
-> >>>>>> 'firmware_sc7' should suit better here. =20
-> >>>>> If what you're saying is true, then the whole patch is wrong,
-> >>>>> and the SC7 property should come from DT. =20
-> >>>> It should be safe to assume that all of existing Tegra210
-> >>>> devices use the firmware for SC7, hence I wouldn't say that the
-> >>>> patch is entirely wrong. To me it's not entirely correct. =20
-> >>> Yes, all existing Tegra210 platforms uses sc7 entry firmware for
-> >>> SC7 and AVP/COP IRQ need to be kept enabled as during suspend ATF
-> >>> triggers IRQ to COP for SC7 entry fw execution. =20
-> > Okay, as I already wrote before, it looks to me that a more proper
-> > solution should be to just remove everything related to COP from
-> > this driver instead of adding custom quirks for T210.
+On Tue, Jul 23, 2019 at 5:22 PM Jungo Lin <jungo.lin@mediatek.com> wrote:
+>
+> Hi, Tomasz:
+>
+> On Tue, 2019-07-23 at 16:20 +0900, Tomasz Figa wrote:
+> > Hi Jungo,
 > >
-> > The disabling / restoring of COP interrupts should be relevant only
-> > for the multimedia firmware on older Tegra SoCs. That firmware
-> > won't be ever supported in the upstream simply because NVIDIA
-> > abandoned the support for older hardware in the downstream and
-> > because it is not possible due to some legal weirdness (IIUC). The
-> > only variant for upstream is reverse-engineering of hardware (not
-> > the firmware BLOB) and writing proper opensource drivers for the
-> > upstream kernel, which we're already doing and have success to a
-> > some extent.=20
-> >> That's not the question. Dmitry says that the SC7 support is not a
-> >> property of the SoC, but mostly a platform decision on whether the
-> >> firmware supports SC7 or not.
-> >>
-> >> To me, that's a clear indication that this should not be hardcoded
-> >> in the driver, but instead obtained dynamically, via DT or
-> >> otherwise. =20
-> > We already have an nvidia,suspend-mode property in the device-tree
-> > of the Power Management Controller node (all Tegra SoCs) which
-> > defines what suspending type is supported by a particular board.
-> > =20
-> >>>>>>> +			writel_relaxed(~0ul, ictlr +
-> >>>>>>> ICTLR_COP_IER_CLR); =20
-> >>>>>> Secondly, I'm also not sure why COP interrupts need to be
-> >>>>>> disabled for pre-T210 at all, since COP is unused. This looks
-> >>>>>> to me like it was cut-n-pasted from downstream kernel without
-> >>>>>> a good reason and could be simply removed. =20
-> >>>>> Please verify that this is actually the case. Tegra-2
-> >>>>> definitely needed some level of poking, and I'm not keen on
-> >>>>> changing anything there until you (or someone else) has
-> >>>>> verified it on actual HW (see e307cc8941fc). =20
-> >>>> Tested on Tegra20 and Tegra30, LP1 suspend-resume works
-> >>>> perfectly fine with all COP bits removed from the driver.
-> >>>>
-> >>>> AFAIK, the reason why downstream needed that disabling is that
-> >>>> it uses proprietary firmware which is running on the COP and
-> >>>> that firmware is usually a BLOB audio/video DEC-ENC driver which
-> >>>> doesn't cleanup interrupts after itself. That firmware is not
-> >>>> applicable for the upstream kernel, hence there is no need to
-> >>>> care about it.=20
-> >>>>> Joseph, can you please shed some light here? =20
-> >>> SC7 entry flow uses 3rd party ATF (arm-trusted FW) blob which is
-> >>> the one that actually loads SC7 entry firmware and triggers IRQ to
-> >>> AVP/COP which causes COP to wakeup and run SC7 entry FW.
-> >>>
-> >>> So when SC7 support is enabled, IRQ need to be kept enabled and
-> >>> when SC7 FW starts execution, it will disable COP IRQ. =20
-> >> This looks like a lot of undocumented assumptions on what firmware
-> >> does, as well as what firmware *is*. What I gather from this
-> >> thread is that there is at least two versions of firmware (a
-> >> "proprietary firmware" for "downstream kernels", and another one
-> >> for mainline), and that they do different things.
-> >>
-> >> Given that we cannot know what people actually run, I don't think
-> >> we can safely remove anything unless this gets tested on the full
-> >> spectrum of HW/FW combination. =20
-> > I'm not sure whether multiple firmware variations exist in the wild
-> > for Tegra210. Maybe Sowjanya or somebody else from NVIDIA could
-> > clarify. I think there should be some efforts in regards to a fully
-> > opensource firmware on Tegra210, but I'm not following it and have
-> > no idea about the status.
+> > On Fri, Jul 5, 2019 at 4:59 PM Jungo Lin <jungo.lin@mediatek.com> wrote:
+> > >
+> > > Hi Tomasz:
+> > >
+> > > On Fri, 2019-07-05 at 13:22 +0900, Tomasz Figa wrote:
+> > > > Hi Jungo,
+> > > >
+> > > > On Fri, Jul 5, 2019 at 12:33 PM Jungo Lin <jungo.lin@mediatek.com> wrote:
+> > > > >
+> > > > > Hi Tomasz,
+> > >
+> > > [snip]
+> > >
+> > > > > After applying your suggestion in SCP device driver, we could remove
+> > > > > mtk_cam-smem.h/c. Currently, we use dma_alloc_coherent with SCP device
+> > > > > to get SCP address. We could touch the buffer with this SCP address in
+> > > > > SCP processor.
+> > > > >
+> > > > > After that, we use dma_map_page_attrs with P1 device which supports
+> > > > > IOMMU domain to get IOVA address. For this address, we will assign
+> > > > > it to our ISP HW device to proceed.
+> > > > >
+> > > > > Below is the snippet for ISP P1 compose buffer initialization.
+> > > > >
+> > > > >         ptr = dma_alloc_coherent(p1_dev->cam_dev.smem_dev,
+> > > > >                                  MAX_COMPOSER_SIZE, &addr, GFP_KERNEL);
+> > > > >         if (!ptr) {
+> > > > >                 dev_err(dev, "failed to allocate compose memory\n");
+> > > > >                 return -ENOMEM;
+> > > > >         }
+> > > > >         isp_ctx->scp_mem_pa = addr;
+> > > >
+> > > > addr contains a DMA address, not a physical address. Could we call it
+> > > > scp_mem_dma instead?
+> > > >
+> > > > >         dev_dbg(dev, "scp addr:%pad\n", &addr);
+> > > > >
+> > > > >         /* get iova address */
+> > > > >         addr = dma_map_page_attrs(dev, phys_to_page(addr), 0,
+> > > >
+> > > > addr is a DMA address, so phys_to_page() can't be called on it. The
+> > > > simplest thing here would be to use dma_map_single() with ptr as the
+> > > > CPU address expected.
+> > > >
+> > >
+> > > We have changed to use ma_map_single() with ptr, but encounter IOMMU
+> > > error. From the debug log of iommu_dma_map_page[3], we got
+> > > 0x0000000054800000 instead of expected address: 0x0000000050800000[2].
+> > > There is a address offset(0x4000000). If we change to use
+> > > dma_map_page_attrs with phys_to_page(addr), the address is correct as we
+> > > expected[2]. Do you have any suggestion on this issue? Do we miss
+> > > something?
 > >
-> > You're right that there are multiple variants of suspend-resuming
-> > flow on Tegra SoCs. The older 32bit Tegra SoC generations have a
-> > variety of options in regards to suspend-resuming, including
-> > firmware-less variants on platforms that are having kernel running
-> > in secure mode (dev boards, most of Tegra20 consumer devices) and
-> > Trusted-Foundations firmware variant for insecure platforms
-> > (consumer devices). And yes, vendor firmware creates a lot of
-> > headache in regards to bringing support into upstream because it
-> > usually does a lot of odd undocumented things which may also vary
-> > depending on a firmware version (bootloader, etc) and it also
-> > usually difficult to replace it with an opensource alternative due
-> > to a crypto signing. =20
->=20
-> Tried without this patch which keeps COP IRQ disabled and I see SC7=20
-> entry FW execution happens still.
->=20
-> Digging through the ATF FW code, I see on SC7 entry firmware loading=20
-> into IRAM, COP processor is reset with RESET VECTOR set to SC7 entry=20
-> firmware location in IRAM and on reset de-assert & unhalt COP, SC7=20
-> firmware starts execution.
->=20
-> Will remove this patch in next version...
->=20
+> > Sorry for the late reply. Could you show me the code changes you made
+> > to use dma_map_single()? It would sound like the virtual address
+> > passed to dma_map_single() isn't correct.
+> >
+> > Best regards,
+> > Tomasz
+> >
+>
+>
+> Please check the below code snippet in today's testing.
+>
+>         p1_dev->cam_dev.smem_dev = &p1_dev->scp_pdev->dev;
+>         ptr = dma_alloc_coherent(p1_dev->cam_dev.smem_dev,
+>                                  MTK_ISP_COMPOSER_MEM_SIZE, &addr, GFP_KERNEL);
+>         if (!ptr) {
+>                 dev_err(dev, "failed to allocate compose memory\n");
+>                 return -ENOMEM;
+>         }
+>         p1_dev->composer_scp_addr = addr;
+>         p1_dev->composer_virt_addr = ptr;
+>         dev_info(dev, "scp addr:%pad va:%pK\n", &addr, ptr);
+>
+>         /* get iova address */
+>         addr = dma_map_single(dev, ptr, MTK_ISP_COMPOSER_MEM_SIZE,
+> DMA_BIDIRECTIONAL);
+>         if (dma_mapping_error(dev, addr)) {
+>                 dma_free_coherent(p1_dev->cam_dev.smem_dev,
+>                                   MTK_ISP_COMPOSER_MEM_SIZE,
+>                                   ptr, p1_dev->composer_scp_addr);
+>                 dev_err(dev, "Failed to map scp iova\n");
+>                 ret = -ENOMEM;
+>                 goto fail_free_mem;
+>         }
+>         p1_dev->composer_iova = addr;
+>         dev_info(dev, "scp iova addr:%pad\n", &addr);
+>
+> Moreover, below is extracted log[2].
+>
+> We guess the virtual address which is returned by dma_alloc_coherent
+> function is not valid kernel logical address. It is actually returned by
+> memremap() in dma_init_coherent_memory(). Moreover, dma_map_single()
+> will call virt_to_page() function. For virt_to_page function, it
+> requires a logical address[1].
+>
+> [1]https://www.oreilly.com/library/view/linux-device-drivers/0596005903/ch15.html
+>
 
-Good, sounds like you also verified that SC7 COP firmware doesn't use
-interrupts.
+Indeed virt_to_page() works only with kernel LOWMEM addresses. Whether
+virt_to_page() is the right thing to do in dma_map_single() is a good
+question, but let's assume it was implemented like this for a reason.
+
+However, you also can't call phys_to_page() on the DMA addresses
+returned by dma_alloc_*() either. It works just by luck, because SCP
+DMA addresses and CPU physical addresses are numerically the same.
+
+Could you try dma_get_sgtable() with the SCP struct device and then
+dma_map_sg() with the P1 struct device?
+
+Best regards,
+Tomasz
+
+> [2]
+>   322 [    1.238269] mtk-cam-p1 1a006000.camisp: scp
+> addr:0x0000000052000000 va:00000000a3adc471
+>   323 [    1.239582] mtk-cam-p1 1a006000.camisp: scp iova
+> addr:0x00000000fde00000
+>  7716 [    1.238963] mtk-cam-p1 1a006000.camisp: scp
+> addr:0x0000000052000000 va:0000000042ec580f
+>  7717 [    1.240276] mtk-cam-p1 1a006000.camisp: scp iova
+> addr:0x00000000fde00000
+> 15088 [    1.239309] mtk-cam-p1 1a006000.camisp: scp
+> addr:0x0000000052000000 va:000000005e5b3462
+> 15089 [    1.240626] mtk-cam-p1 1a006000.camisp: scp iova
+> addr:0x00000000fde00000
+>
+> Best regards,
+>
+> Jungo
+>
+> > >
+> > > [1]
+> > > [    1.344786] __dma_alloc_from_coherent: 0x800000 PAGE_SHIFT:12
+> > > device_base:0x0000000050000000 dma:0x0000000050800000
+> > > virt_base:ffffff8014000000 va:ffffff8014800000
+> > >
+> > > [    1.346890] mtk-cam 1a000000.camisp: scp addr:0x0000000050800000
+> > > va:ffffff8014800000
+> > >
+> > > [    1.347864] iommu_dma_map_page:0x0000000054800000 offset:0
+> > > [    1.348562] mtk-cam 1a000000.camisp: iova addr:0x00000000fde00000
+> > >
+> > > [2]
+> > > [    1.346738] __dma_alloc_from_coherent: 0x800000 PAGE_SHIFT:12
+> > > device_base:0x0000000050000000 dma:0x0000000050800000
+> > > virt_base:ffffff8014000000 va:ffffff8014800000
+> > > [    1.348841] mtk-cam 1a000000.camisp: scp addr:0x0000000050800000
+> > > va:ffffff8014800000
+> > > [    1.349816] iommu_dma_map_page:0x0000000050800000 offset:0
+> > > [    1.350514] mtk-cam 1a000000.camisp: iova addr:0x00000000fde00000
+> > >
+> > >
+> > > [3]
+> > > dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
+> > >                 unsigned long offset, size_t size, int prot)
+> > > {
+> > >         phys_addr_t phys = page_to_phys(page);
+> > >         pr_err("iommu_dma_map_page:%pa offset:%lu\n", &phys, offset);
+> > >
+> > >         return __iommu_dma_map(dev, page_to_phys(page) + offset, size, prot,
+> > >                         iommu_get_dma_domain(dev));
+> > > }
+> > >
+> > > [snip]
+> > >
+> > > Best regards,
+> > >
+> > > Jungo
+> > >
+> >
+> > _______________________________________________
+> > Linux-mediatek mailing list
+> > Linux-mediatek@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>
+>
