@@ -1,53 +1,46 @@
 From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Controllers with several interface options - one or more drivers?
-Date: Fri, 26 Jul 2019 14:25:10 +0200
-Message-ID: <20190726122510.GA14341@ravnborg.org>
-References: <20190304125033.28841-1-josef@lusticky.cz>
- <20190708145618.26031-1-josef@lusticky.cz>
+Subject: Re: [PATCH v2 0/2] Add Sharp panel option for Lenovo Miix 630
+Date: Fri, 26 Jul 2019 14:36:25 +0200
+Message-ID: <20190726123625.GA17037@ravnborg.org>
+References: <20190708165647.46224-1-jeffrey.l.hugo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190708145618.26031-1-josef@lusticky.cz>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Josef Lusticky <josef@lusticky.cz>, Daniel Vetter <daniel@ffwll.ch>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, thierry.reding@gmail.com
+In-Reply-To: <20190708165647.46224-1-jeffrey.l.hugo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch, bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9zZWYsIERhbmllbCBldCBhbC4KClRoZSBkcml2ZXIgdGhhdCB0cmlnZ2VyZWQgdGhpcyBy
-ZXBseSBpcyBhIGRyaXZlciB0aGF0IGFkZHMgcGFyYWxsZWwKc3VwcG9ydCB0byBpbGk5MzQxIGlu
-IGEgZGVkaWNhdGVkIHBhbmVsIGRyaXZlci4KVGhlIGlzc3VlIGhlcmUgaXMgdGhhdCB3ZSBhbHJl
-YWR5IGhhdmUgYSB0aW55IGRyaXZlciB0aGF0IHN1cHBvcnRzIHRoZQppbGk5MzQxIGNvbnRyb2xs
-ZXIgLSBidXQgd2l0aCBhIHNsaWdodGx5IGRpZmZlcmVudCBjb25maWd1cmF0aW9uLgoKVGhlIGls
-aTkzNDEgc3VwcG9ydHMgc2V2ZXJhbCBpbnRlcmZhY2VzIC0gZnJvbSB0aGUgZGF0YXNoZWV0Ogog
-ICAgIklMSTkzNDEgc3VwcG9ydHMgcGFyYWxsZWwgOC0vOS0vMTYtLzE4LWJpdCBkYXRhIGJ1cwog
-ICAgIE1DVSBpbnRlcmZhY2UsIDYtLzE2LS8xOC1iaXQgZGF0YSBidXMgUkdCIGludGVyZmFjZSBh
-bmQKICAgICAzLS80LWxpbmUgc2VyaWFsIHBlcmlwaGVyYWwgaW50ZXJmYWNlIChTUEkpIgoKTm9y
-YWxmIC0gaW4gYW5vdGhlciBtYWlsIGV4cGxhaW5lZDoKIgpUaGUgTUlQSSBBbGxpYW5jZSBoYXMg
-bG90cyBvZiBzdGFuZGFyZHMgc29tZSB3cnQuIGRpc3BsYXkgY29udHJvbGxlcgppbnRlcmZhY2Vz
-OgotIE1JUEkgREJJIC0gRGlzcGxheSBCdXMgSW50ZXJmYWNlICh1c2VkIGZvciBjb21tYW5kcyBh
-bmQgb3B0aW9uYWxseSBwaXhlbHMpCi0gTUlQSSBEUEkgLSBEaXNwbGF5IFBpeGVsIEludGVyZmFj
-ZSAoYWxzbyBjYWxsZWQgUkdCIGludGVyZmFjZSBvcgpET1RDTEsgaW50ZXJmYWNlKQotIE1JUEkg
-RFNJIC0gRGlzcGxheSBTZXJpYWwgSW50ZXJmYWNlIChjb21tYW5kcyBhbmQgcGl4ZWxzKQoKVGhl
-IGlsaTkzNDEgc3VwcG9ydHMgYm90aCBNSVBJIERCSSBhbmQgRFBJLgoiCgpNSVBJIERQSSAtIGlz
-IGEgZ29vZCBmaXQgZm9yIGEgZHJtX3BhbmVsIGRyaXZlci4KTUlQSSBEQkkgLSByZXF1aXJlcyBh
-IGZ1bGwgZGlzcGxheSBjb250cm9sbGVyIGRyaXZlci4KClRoZXJlIGFyZSBtYW55IG90aGVyIGV4
-YW1wbGVzIG9mIGRyaXZlciBTb0MgdGhhdCBpbiB0aGUgc2FtZSB3YXkKY2FuIGJlIHNlZW4gb25s
-eSBhcyBhIHBhbmVsIG9yIGFzIGEgZnVsbCBkaXNwbGF5IGNvbnRyb2xsZXIgZHJpdmVyLgoKVGhl
-IG9wZW4gcXVlc3Rpb24gaGVyZSBpcyBpZiB3ZSBzaG91bGQgdHJ5IHRvIHN1cHBvcnQgYm90aCBj
-YXNlcyBpbiB0aGUKc2FtZSBkcml2ZXIgLyBmaWxlLiBPciBzaGFsbCB3ZSBpbXBsbWVudCB0d28g
-ZGlmZmVyZW50IGRyaXZlcnMuCk9uZSBmb3IgdGhlIHBhbmVsIHVzZS1jYXNlLiBBbmQgb25lIGZv
-ciB0aGUgZGlzcGxheSBjb250cm9sbGVyIHVzZWNhc2U/CgpOb3Qgc3VyZSAtIHNvIGFza2luZyBm
-b3IgZmVlZGJhY2suCgoJU2FtCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbA==
+Hi Jeffrey.
+
+On Mon, Jul 08, 2019 at 09:56:47AM -0700, Jeffrey Hugo wrote:
+> The Lenovo Miix 630 laptop can be found with one of two panels - a BOE
+> or Sharp option.  This likely provides options during manufacturing.
+> 
+> These panels connect via eDP, however they sit behind a DSI to eDP
+> bridge on the laptop, so they can easily be handled by the existing
+> simple panel code.
+> 
+> This series adds support for the Sharp option.
+> 
+> v2:
+> -removed no-hpd from dt example
+> -added .bus_format and .bus_flags fields based on reviews
+> -added .flags after Bjorn pointed me to something I missed
+> -added Sam's reviewed-by tags
+> 
+> Jeffrey Hugo (2):
+>   dt-bindings: panel: Add Sharp LD-D5116Z01B
+>   drm/panel: simple: Add support for Sharp LD-D5116Z01B panel
+
+Thanks.
+Both patches applied and pushed to drm-misc-next.
+
+Are you up to a little janitorial work?
+Today the preferred format for bindings files are the new yaml format.
+Could you update 'your' file, and maybe the other sharp files too?
+It would be good to have some progress in this.
+
+	Sam
