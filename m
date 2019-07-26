@@ -1,55 +1,42 @@
-From: "Alexander A. Filippov" <a.filippov@yadro.com>
-Subject: Re: [PATCH 04/17] ARM: dts: vesnin: Add unit address for memory node
-Date: Fri, 26 Jul 2019 10:56:53 +0300
-Message-ID: <20190726075653.GA10397@bbwork.lan>
-References: <20190726053959.2003-1-andrew@aj.id.au>
- <20190726053959.2003-5-andrew@aj.id.au>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 02/14] dt-bindings: cpufreq: Re-organise kryo cpufreq
+ to use it for other nvmem based qcom socs
+Date: Fri, 26 Jul 2019 13:34:17 +0530
+Message-ID: <20190726080417.ohsgedbtyxbxfyj7@vireshk-i7>
+References: <20190725104144.22924-1-niklas.cassel@linaro.org>
+ <20190725104144.22924-3-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190726053959.2003-5-andrew@aj.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexander Filippov <a.filippov@yadro.com>, robh+dt@kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190725104144.22924-3-niklas.cassel@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Sricharan R <sricharan@codeaurora.org>, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 03:09:46PM +0930, Andrew Jeffery wrote:
-> Fixes the following warnings:
-> 
->     arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dt.yaml: /: memory: False schema does not allow {'reg': [[1073741824, 536870912]]}
->     arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dt.yaml: memory: 'device_type' is a required property
-> 
-> Cc: Alexander Filippov <a.filippov@yadro.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-> index 0b9e29c3212e..81d9dcb752a0 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-> @@ -14,7 +14,7 @@
->  		bootargs = "console=ttyS4,115200 earlyprintk";
->  	};
->  
-> -	memory {
-> +	memory@40000000 {
->  		reg = <0x40000000 0x20000000>;
->  	};
->  
-> -- 
-> 2.20.1
-> 
+$subject of this and few more binding patches updated to:
 
-Tested-by: Alexander Filippov <a.filippov@yadro.com>
+"dt-bindings: opp: XXX"
+
+On 25-07-19, 12:41, Niklas Cassel wrote:
+> From: Sricharan R <sricharan@codeaurora.org>
+> 
+> The kryo cpufreq driver reads the nvmem cell and uses that data to
+> populate the opps. There are other qcom cpufreq socs like krait which
+> does similar thing. Except for the interpretation of the read data,
+> rest of the driver is same for both the cases. So pull the common things
+> out for reuse.
+> 
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> [niklas.cassel@linaro.org: split dt-binding into a separate patch and
+> do not rename the compatible string.]
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Reviewed-by: Ilia Lin <ilia.lin@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since V1:
+> -Picked up tags.
+
+-- 
+viresh
