@@ -1,68 +1,60 @@
-From: <gtk_ruiwang@mediatek.com>
-Subject: media: mtk-vcodec: Handle H264 error bitstreams
-Date: Fri, 26 Jul 2019 16:54:33 +0800
-Message-ID: <20190726085433.15612-1-gtk_ruiwang@mediatek.com>
+From: Justin Swartz <justin.swartz-4mSLLtuPuFdOJuVFMUvaKw@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: add device tree for Mecer Xtreme Mini S6
+Date: Fri, 26 Jul 2019 11:14:44 +0200
+Message-ID: <509782f4ece936f5ac7d0abffbd555fc@risingedge.co.za>
+References: <20190616204746.21001-1-justin.swartz@risingedge.co.za>
+ <1618985.EOrKlNyPW4@phil>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, Tomasz Figa <tfiga@chromium.org>, Tiffany Lin <tiffany.lin@mediatek.com>
-Cc: Longfei Wang <longfei.wang@mediatek.com>, Yunfei Dong <yunfei.dong@mediatek.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, gtk_ruiwang <gtk_ruiwang@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1618985.EOrKlNyPW4@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: gtk_ruiwang <gtk_ruiwang@mediatek.com>
+Hi Heiko,
 
-Error h264 bitstreams which picture info are out range of
-decoder hardware specification, and no nal start code at the
-beginning of the buffer, stop decoding and exit.
+On 2019-07-26 00:19, Heiko Stuebner wrote:
 
-Signed-off-by: gtk_ruiwang <gtk_ruiwang@mediatek.com>
----
- .../platform/mtk-vcodec/vdec/vdec_h264_if.c      | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+> please add an entry to 
+> Documentation/devicetree/bindings/arm/rockchip.yaml
+> for your board and if necessary also a vendor-prefix to
+> Documentation/devicetree/bindings/vendor-prefixes.(yaml?)
 
-diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-index c5f8f1fca44c..49aa85a9bb5a 100644
---- a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-+++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-@@ -29,6 +29,9 @@
- #define H264_MAX_FB_NUM				17
- #define HDR_PARSING_BUF_SZ			1024
- 
-+#define DEC_ERR_RET(ret)			((ret) >> 16)
-+#define H264_ERR_NOT_VALID			3
-+
- /**
-  * struct h264_fb - h264 decode frame buffer information
-  * @vdec_fb_va  : virtual address of struct vdec_fb
-@@ -357,8 +360,11 @@ static int vdec_h264_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
- 	buf = (unsigned char *)bs->va;
- 	buf_sz = bs->size;
- 	nal_start_idx = find_start_code(buf, buf_sz);
--	if (nal_start_idx < 0)
-+	if (nal_start_idx < 0) {
-+		mtk_vcodec_err(inst, "invalid nal start code");
-+		err = -EIO;
- 		goto err_free_fb_out;
-+	}
- 
- 	nal_start = buf[nal_start_idx];
- 	nal_type = NAL_TYPE(buf[nal_start_idx]);
-@@ -382,8 +388,14 @@ static int vdec_h264_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
- 	data[0] = buf_sz;
- 	data[1] = nal_start;
- 	err = vpu_dec_start(vpu, data, 2);
--	if (err)
-+	if (err) {
-+		if (err > 0 && (DEC_ERR_RET(err) == H264_ERR_NOT_VALID)) {
-+			mtk_vcodec_err(inst, "- error bitstream - err = %d -",
-+				       err);
-+			err = -EIO;
-+		}
- 		goto err_free_fb_out;
-+	}
- 
- 	*res_chg = inst->vsi->dec.resolution_changed;
- 	if (*res_chg) {
--- 
-2.18.0
+OK
+
+> please sort the &node-references alphabetically.
+
+OK
+
+>> +&cpu0 {
+>> +    clock-frequency = <1464000000>;
+> 
+> not sure I understand the reasoning here.
+> There seems to be a regulator defined, so the cpu cores should
+> have operating points defined to allow them to switch between
+> different frequencies as needed.
+
+I added the clock-frequency property to quell the following messages:
+
+[ 0.003273] /cpus/cpu@f00 missing clock-frequency property
+[ 0.003323] /cpus/cpu@f01 missing clock-frequency property
+[ 0.003352] /cpus/cpu@f02 missing clock-frequency property
+[ 0.003382] /cpus/cpu@f03 missing clock-frequency property
+
+I think they are from parse_dt_topology() in arch/arm/kernel/topology.c
+
+What do you suggest?
+
+Regards
+Justin
