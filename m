@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 5/5] MIPS: dts: lantiq: danube: easy50712: route the PCI_INTA IRQ through EBU
-Date: Sat, 27 Jul 2019 19:53:15 +0200
-Message-ID: <20190727175315.28834-6-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 4/5] MIPS: dts: lantiq: danube: mark the ebu0 node as interrupt-controller
+Date: Sat, 27 Jul 2019 19:53:14 +0200
+Message-ID: <20190727175315.28834-5-martin.blumenstingl@googlemail.com>
 References: <20190727175315.28834-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,37 +12,28 @@ To: tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, ralf@linux-mips.or
 Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, john@phrozen.org, hauke@hauke-m.de, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-EBU provides an interrupt line for the PCI_INTA interrupt. Route
-easy50712's PCI interrupt to EBU so the interrupt line is configured
-correctly (using IRQ_TYPE_LEVEL_LOW, this was previously hardcoded in
-the PCI driver) and ACKed properly.
+The EBU IP block provides one interrupt line for PCI_INTA. Mark the ebu0
+node as interrupt-controller and pass the parent interrupt from ICU so
+the PCI_INTA interrupt from EBU can be used.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/mips/boot/dts/lantiq/easy50712.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/mips/boot/dts/lantiq/danube.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/mips/boot/dts/lantiq/easy50712.dts b/arch/mips/boot/dts/lantiq/easy50712.dts
-index 1ce20b7d05cb..33c26b93cfc9 100644
---- a/arch/mips/boot/dts/lantiq/easy50712.dts
-+++ b/arch/mips/boot/dts/lantiq/easy50712.dts
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- /dts-v1/;
+diff --git a/arch/mips/boot/dts/lantiq/danube.dtsi b/arch/mips/boot/dts/lantiq/danube.dtsi
+index 510be63c8bdf..0208174b53c8 100644
+--- a/arch/mips/boot/dts/lantiq/danube.dtsi
++++ b/arch/mips/boot/dts/lantiq/danube.dtsi
+@@ -89,6 +89,9 @@
+ 		ebu0: ebu@e105300 {
+ 			compatible = "lantiq,ebu-xway";
+ 			reg = <0xe105300 0x100>;
++			interrupt-parent = <&icu0>;
++			interrupts = <30>;
++			#interrupt-cells = <2>;
+ 		};
  
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
- /include/ "danube.dtsi"
- 
- / {
-@@ -105,7 +107,7 @@
- 			lantiq,bus-clock = <33333333>;
- 			interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
- 			interrupt-map = <
--				0x7000 0 0 1 &icu0 29 1 // slot 14, irq 29
-+				0x7000 0 0 1 &ebu0 0 IRQ_TYPE_LEVEL_LOW // slot 14
- 			>;
- 			gpios-reset = <&gpio 21 0>;
- 			req-mask = <0x1>;		/* GNT1 */
+ 		pci0: pci@e105400 {
 -- 
 2.22.0
