@@ -1,29 +1,79 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 2/5] MIPS: lantiq: use a generic "EBU" driver for Falcon
- and XWAY SoCs
-Date: Sat, 27 Jul 2019 20:37:22 +0200
-Message-ID: <CAFBinCCrjUuw=+1FThnxCR7m0a1rHo=A+fdge2VrV4+AYSpkBw@mail.gmail.com>
-References: <20190727175315.28834-1-martin.blumenstingl@googlemail.com>
- <20190727175315.28834-3-martin.blumenstingl@googlemail.com> <d0ef8f73-3555-b53a-eb2b-40066827b6d9@phrozen.org>
+From: =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+Subject: Re: [PATCH net-next 3/3] net: dsa: mt7530: Add support for port 5
+Date: Sat, 27 Jul 2019 18:38:36 +0000
+Message-ID: <20190727183836.Horde.B4Y-dcWu5sojGbybcU-O1Qc@www.vdorst.com>
+References: <20190724192549.24615-1-opensource@vdorst.com>
+ <20190724192549.24615-4-opensource@vdorst.com>
+ <f4a9e219-cd03-1512-874d-925c43e3c44f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d0ef8f73-3555-b53a-eb2b-40066827b6d9@phrozen.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Crispin <john@phrozen.org>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, Hauke Mehrtens <hauke@hauke-m.de>
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <f4a9e219-cd03-1512-874d-925c43e3c44f@gmail.com>
+Content-Disposition: inline
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev@vger.kernel.org, frank-w@public-files.de, sean.wang@mediatek.com, linux@armlinux.org.uk, davem@davemloft.net, matthias.bgg@gmail.com, andrew@lunn.ch, vivien.didelot@gmail.com, john@phrozen.org, linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
+Quoting Florian Fainelli <f.fainelli@gmail.com>:
 
-On Sat, Jul 27, 2019 at 8:35 PM John Crispin <john@phrozen.org> wrote:
+> On 7/24/2019 9:25 PM, René van Dorst wrote:
+>> Adding support for port 5.
+>>
+>> Port 5 can muxed/interface to:
+>> - internal 5th GMAC of the switch; can be used as 2nd CPU port or as
+>>   extra port with an external phy for a 6th ethernet port.
+>> - internal PHY of port 0 or 4; Used in most applications so that port 0
+>>   or 4 is the WAN port and interfaces with the 2nd GMAC of the SOC.
+>>
+>> Signed-off-by: René van Dorst <opensource@vdorst.com>
 >
+> [snip]
 >
-> On 27/07/2019 19:53, Martin Blumenstingl wrote:
-> > + *  Copyright (C) 2011-2012 John Crispin<blogic@openwrt.org>
+>> +	/* Setup port 5 */
+>> +	priv->p5_intf_sel = P5_DISABLED;
+>> +	interface = PHY_INTERFACE_MODE_NA;
+>> +
+>> +	if (!dsa_is_unused_port(ds, 5)) {
+>> +		priv->p5_intf_sel = P5_INTF_SEL_GMAC5;
+>> +		interface = of_get_phy_mode(ds->ports[5].dn);
+>> +	} else {
+>> +		/* Scan the ethernet nodes. Look for GMAC1, Lookup used phy */
+>> +		for_each_child_of_node(dn, mac_np) {
+>> +			if (!of_device_is_compatible(mac_np,
+>> +						     "mediatek,eth-mac"))
+>> +				continue;
+>> +			_id = of_get_property(mac_np, "reg", NULL);
+>> +			if (be32_to_cpup(_id)  != 1)
+>> +				continue;
+>> +
+>> +			interface = of_get_phy_mode(mac_np);
+>> +			phy_node = of_parse_phandle(mac_np, "phy-handle", 0);
+>> +
+>> +			if (phy_node->parent == priv->dev->of_node->parent) {
+>> +				_id = of_get_property(phy_node, "reg", NULL);
+>> +				id = be32_to_cpup(_id);
+>> +				if (id == 0)
+>> +					priv->p5_intf_sel = P5_INTF_SEL_PHY_P0;
+>> +				if (id == 4)
+>> +					priv->p5_intf_sel = P5_INTF_SEL_PHY_P4;
 >
-> could you change that to john@phrozen.org please
-sure, I'll update it when I have to re-send this series
 
+Hi Florian,
 
-Martin
+> Can you use of_mdio_parse_addr() here?
+
+Yes that function be used.
+
+Thanks for mention this function.
+
+I see that I can refactor this scan routine a bit more.
+Also I missing a of_node_put(phy_node) at the end.
+
+> --
+> Florian
+
+Greats,
+
+René
