@@ -1,45 +1,117 @@
-From: =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
-Subject: Re: [PATCH net-next 3/3] net: dsa: mt7530: Add support for port 5
-Date: Sat, 27 Jul 2019 18:43:05 +0000
-Message-ID: <20190727184305.Horde.vkqh7I-8IM_ifnVhhIU9l2c@www.vdorst.com>
-References: <20190724192549.24615-1-opensource@vdorst.com>
- <20190724192549.24615-4-opensource@vdorst.com>
- <20190726.140420.688330328284393964.davem@davemloft.net>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/3][V4] iio: imu: adis: Add support for SPI transfer
+ cs_change_delay
+Date: Sat, 27 Jul 2019 19:48:05 +0100
+Message-ID: <20190727194805.455f9159@archlinux>
+References: <20190723073641.27801-1-alexandru.ardelean@analog.com>
+        <20190723073641.27801-2-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190726.140420.688330328284393964.davem@davemloft.net>
-Content-Disposition: inline
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, frank-w@public-files.de, sean.wang@mediatek.com, f.fainelli@gmail.com, linux@armlinux.org.uk, matthias.bgg@gmail.com, andrew@lunn.ch, vivien.didelot@gmail.com, john@phrozen.org, linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190723073641.27801-2-alexandru.ardelean@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: linux-iio@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, Michael Hennerich <michael.hennerich@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting David Miller <davem@davemloft.net>:
+On Tue, 23 Jul 2019 10:36:38 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-> From: René van Dorst <opensource@vdorst.com>
-> Date: Wed, 24 Jul 2019 21:25:49 +0200
->
->> @@ -1167,6 +1236,10 @@ mt7530_setup(struct dsa_switch *ds)
->>  	u32 id, val;
->>  	struct device_node *dn;
->>  	struct mt7530_dummy_poll p;
->> +	phy_interface_t interface;
->> +	struct device_node *mac_np;
->> +	struct device_node *phy_node;
->> +	const __be32 *_id;
->
+> The ADIS16460 requires a higher delay before the next transfer. Since the
+> SPI framework supports configuring the delay before the next transfer, this
+> driver will become the first user of it.
+> 
+> The support for this functionality in ADIS16460 requires an addition to the
+> ADIS lib to support the `cs_change_delay` functionality from the SPI
+> subsystem.
+> 
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-Hi David,
+Thanks,
 
-> Reverse christmas tree here please.
->
-> Thank you.
+Jonathan
 
-OK, I shall change that.
-I spin a new version.
-
-Greats,
-
-René
+> ---
+>  drivers/iio/imu/adis.c       | 12 ++++++++++++
+>  include/linux/iio/imu/adis.h |  2 ++
+>  2 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+> index 30281e91dbf9..1631c255deab 100644
+> --- a/drivers/iio/imu/adis.c
+> +++ b/drivers/iio/imu/adis.c
+> @@ -39,18 +39,24 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+>  			.len = 2,
+>  			.cs_change = 1,
+>  			.delay_usecs = adis->data->write_delay,
+> +			.cs_change_delay = adis->data->cs_change_delay,
+> +			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
+>  		}, {
+>  			.tx_buf = adis->tx + 2,
+>  			.bits_per_word = 8,
+>  			.len = 2,
+>  			.cs_change = 1,
+>  			.delay_usecs = adis->data->write_delay,
+> +			.cs_change_delay = adis->data->cs_change_delay,
+> +			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
+>  		}, {
+>  			.tx_buf = adis->tx + 4,
+>  			.bits_per_word = 8,
+>  			.len = 2,
+>  			.cs_change = 1,
+>  			.delay_usecs = adis->data->write_delay,
+> +			.cs_change_delay = adis->data->cs_change_delay,
+> +			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
+>  		}, {
+>  			.tx_buf = adis->tx + 6,
+>  			.bits_per_word = 8,
+> @@ -133,12 +139,16 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+>  			.len = 2,
+>  			.cs_change = 1,
+>  			.delay_usecs = adis->data->write_delay,
+> +			.cs_change_delay = adis->data->cs_change_delay,
+> +			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
+>  		}, {
+>  			.tx_buf = adis->tx + 2,
+>  			.bits_per_word = 8,
+>  			.len = 2,
+>  			.cs_change = 1,
+>  			.delay_usecs = adis->data->read_delay,
+> +			.cs_change_delay = adis->data->cs_change_delay,
+> +			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
+>  		}, {
+>  			.tx_buf = adis->tx + 4,
+>  			.rx_buf = adis->rx,
+> @@ -146,6 +156,8 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+>  			.len = 2,
+>  			.cs_change = 1,
+>  			.delay_usecs = adis->data->read_delay,
+> +			.cs_change_delay = adis->data->cs_change_delay,
+> +			.cs_change_delay_unit = SPI_DELAY_UNIT_USECS,
+>  		}, {
+>  			.rx_buf = adis->rx + 2,
+>  			.bits_per_word = 8,
+> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+> index 3428d06b2f44..4c53815bb729 100644
+> --- a/include/linux/iio/imu/adis.h
+> +++ b/include/linux/iio/imu/adis.h
+> @@ -26,6 +26,7 @@ struct adis_burst;
+>   * struct adis_data - ADIS chip variant specific data
+>   * @read_delay: SPI delay for read operations in us
+>   * @write_delay: SPI delay for write operations in us
+> + * @cs_change_delay: SPI delay between CS changes in us
+>   * @glob_cmd_reg: Register address of the GLOB_CMD register
+>   * @msc_ctrl_reg: Register address of the MSC_CTRL register
+>   * @diag_stat_reg: Register address of the DIAG_STAT register
+> @@ -35,6 +36,7 @@ struct adis_burst;
+>  struct adis_data {
+>  	unsigned int read_delay;
+>  	unsigned int write_delay;
+> +	unsigned int cs_change_delay;
+>  
+>  	unsigned int glob_cmd_reg;
+>  	unsigned int msc_ctrl_reg;
