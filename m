@@ -1,61 +1,79 @@
-Return-Path: <SRS0=mZ85=VW=outlook.com=leiwang_git@kernel.org>
-From: Lei Wang <leiwang_git@outlook.com>
-Subject: [PATCH v5 1/2] dt-bindings: edac: arm-dmc520.txt
-Date: Thu, 25 Jul 2019 00:48:41 +0000
-Message-ID: 
- <BN6PR04MB1107FB24B17C9A77BC90A4A886C10@BN6PR04MB1107.namprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=qM/3=VY=gmail.com=daniel.baluta@kernel.org>
 MIME-Version: 1.0
-To: "bp@alien8.de" <bp@alien8.de>, "james.morse@arm.com" <james.morse@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, "ruizhao@microsoft.com" <ruizhao@microsoft.com>, Lei Wang <leiwang_git@outlook.com>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com> <20190705045612.27665-5-Anson.Huang@nxp.com>
+ <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com> <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Sat, 27 Jul 2019 09:33:10 +0300
+Message-ID: <CAEnQRZCrZybzcy__u4p_Eq4zSVc2ESyfKLk5sPf1JYba1JSOiA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT
+Content-Type: text/plain; charset="UTF-8"
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Carlo Caione <ccaione@baylibre.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Leonard Crestez <leonard.crestez@nxp.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This is the device tree bindings for new EDAC driver dmc520_edac.c.
+On Sat, Jul 27, 2019 at 9:19 AM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Hi, Daniel
+>
+> > Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+> > IMX8MQ_CLK_TMU_ROOT
+> >
+> > Hi all,
+> >
+> > latest linux-next hangs at boot.
+> >
+> > commit fde50b96be821ac9673a7e00847cc4605bd88f34 (HEAD -> master, tag:
+> > next-20190726, origin/master, origin/HEAD)
+> > Author: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date:   Fri Jul 26 15:18:02 2019 +1000
+> >
+> >     Add linux-next specific files for 20190726
+> >
+> >     Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> >
+> >
+> > I know this is crazy but reverting commit:
+> >
+> > commit 431bdd1df48ee2896ea9980d9153e3aeaf0c81ef (refs/bisect/bad)
+> > Author: Anson Huang <Anson.Huang@nxp.com>
+> > Date:   Fri Jul 5 12:56:11 2019 +0800
+> >
+> >     clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT
+> >
+> >     IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
+> >     should manage this clock, so no need to have CLK_IS_CRITICAL flag
+> >     set.
+> >
+> >
+> >
+> > makes the boot work again.
+> >
+> > Any idea?
+>
+> I just found if disabling SDMA1, then kernel can boot up, it does NOT make sense
+> TMU clock is related to SDMA1, I will check with design and get back to you soon.
+>
 
-Signed-off-by: Lei Wang <leiwang_git@outlook.com>
-Reviewed-by: James Morse <james.morse@arm.com>
+Hi Anson,
 
----
-    No change in v5.
----
- .../devicetree/bindings/edac/arm-dmc520.txt   | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+Applying Abel's patch:
 
-diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Docume=
-ntation/devicetree/bindings/edac/arm-dmc520.txt
-new file mode 100644
-index 000000000000..71e7aa32971a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-@@ -0,0 +1,26 @@
-+* ARM DMC-520 EDAC node
-+
-+Required properties:
-+- compatible		: "brcm,dmc-520", "arm,dmc-520".
-+- reg			: Address range of the DMC-520 registers.
-+- interrupts		: DMC-520 interrupt numbers. The example below specifies
-+			  two interrupt lines for dram_ecc_errc_int and
-+			  dram_ecc_errd_int.
-+- interrupt-config	: This is an array of interrupt masks. For each of the
-+			  above interrupt line, add one interrupt mask element to
-+			  it. That is, there is a 1:1 mapping from each interrupt
-+			  line to an interrupt mask. An interrupt mask can represent
-+			  multiple interrupts being enabled. Refer to interrupt_control
-+			  register in DMC-520 TRM for interrupt mapping. In the example
-+			  below, the interrupt configuration enables dram_ecc_errc_int
-+			  and dram_ecc_errd_int. And each interrupt is connected to
-+			  a separate interrupt line.
-+
-+Example:
-+
-+dmc0: dmc@200000 {
-+	compatible =3D "brcm,dmc-520", "arm,dmc-520";
-+	reg =3D <0x200000 0x80000>;
-+	interrupts =3D <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
-+	interrupt-config =3D <0x4>, <0x8>;
-+};
---=20
-2.17.1
+commit 8816c47db6a82f55bb4d64f62fd9dd3af680f0e4 (HEAD -> master)
+Author: Abel Vesa <abel.vesa@nxp.com>
+Date:   Tue Jun 25 12:01:56 2019 +0300
+
+    clk: imx8mq: Mark AHB clock as critical
+
+    Keep the AHB clock always on since there is no driver to control it and
+    all the other clocks that use it as parent rely on it being always enabled.
+
+
+
+The kernel boots up again.
+
+It make some sense. I don't understand though why having
+IMX8MQ_CLK_TMU_ROOT as critical also "unhangs" the kernel.
+
+thanks,
+Daniel.
