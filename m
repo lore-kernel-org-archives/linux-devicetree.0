@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/5] dt-bindings: MIPS: lantiq: Add documentation for the External Bus Unit
-Date: Sat, 27 Jul 2019 19:53:11 +0200
-Message-ID: <20190727175315.28834-2-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 5/5] MIPS: dts: lantiq: danube: easy50712: route the PCI_INTA IRQ through EBU
+Date: Sat, 27 Jul 2019 19:53:15 +0200
+Message-ID: <20190727175315.28834-6-martin.blumenstingl@googlemail.com>
 References: <20190727175315.28834-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,75 +12,37 @@ To: tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, ralf@linux-mips.or
 Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, john@phrozen.org, hauke@hauke-m.de, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Lantiq SoCs contain a so-called External Bus Unit.
-
-It attaches PCI memory as well as NAND and NOR flash. Additioanlly it
-contains an interrupt-controller for the PCI_INTA interrupt line.
+EBU provides an interrupt line for the PCI_INTA interrupt. Route
+easy50712's PCI interrupt to EBU so the interrupt line is configured
+correctly (using IRQ_TYPE_LEVEL_LOW, this was previously hardcoded in
+the PCI driver) and ACKed properly.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../bindings/mips/lantiq/lantiq,ebu.yaml      | 53 +++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/lantiq/lantiq,ebu.yaml
+ arch/mips/boot/dts/lantiq/easy50712.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mips/lantiq/lantiq,ebu.yaml b/Documentation/devicetree/bindings/mips/lantiq/lantiq,ebu.yaml
-new file mode 100644
-index 000000000000..0b0b27d0b64b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/lantiq/lantiq,ebu.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/lantiq/lantiq,ebu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/mips/boot/dts/lantiq/easy50712.dts b/arch/mips/boot/dts/lantiq/easy50712.dts
+index 1ce20b7d05cb..33c26b93cfc9 100644
+--- a/arch/mips/boot/dts/lantiq/easy50712.dts
++++ b/arch/mips/boot/dts/lantiq/easy50712.dts
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
++#include <dt-bindings/interrupt-controller/irq.h>
 +
-+title: Lantiq External Bus Unit (EBU) bindings
-+
-+maintainers:
-+  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - lantiq,falcon-ebu
-+      - lantiq,xway-ebu
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: The EBU module clock
-+
-+  interrupt-controller:
-+    type: boolean
-+
-+  interrupt-cells:
-+    const: 2
-+
-+  interrupts:
-+    items:
-+      - description: The EBU module interrupt line
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    memory-controller@e105300 {
-+        compatible = "lantiq,xway-ebu";
-+        reg = <0xe105300 0x100>;
-+        clocks = <&pmu 10>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+        interrupt-parent = <&icu0>;
-+        interrupts = <30>;
-+    };
-+...
+ /include/ "danube.dtsi"
+ 
+ / {
+@@ -105,7 +107,7 @@
+ 			lantiq,bus-clock = <33333333>;
+ 			interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
+ 			interrupt-map = <
+-				0x7000 0 0 1 &icu0 29 1 // slot 14, irq 29
++				0x7000 0 0 1 &ebu0 0 IRQ_TYPE_LEVEL_LOW // slot 14
+ 			>;
+ 			gpios-reset = <&gpio 21 0>;
+ 			req-mask = <0x1>;		/* GNT1 */
 -- 
 2.22.0
