@@ -1,105 +1,154 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Subject: Re: [PATCH 2/3] dt-bindings: display/bridge: Add binding for IMX NWL
  mipi dsi host controller
-Date: Sat, 27 Jul 2019 04:57:16 +0300
-Message-ID: <20190727015716.GA4902@pendragon.ideasonboard.com>
+Date: Sat, 27 Jul 2019 04:59:25 +0300
+Message-ID: <20190727015925.GB4902@pendragon.ideasonboard.com>
 References: <cover.1563983037.git.agx@sigxcpu.org>
  <70a5c6617936a4a095e7608b96e3f9fae5ddfbb1.1563983037.git.agx@sigxcpu.org>
+ <20190726092315.GA9754@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <70a5c6617936a4a095e7608b96e3f9fae5ddfbb1.1563983037.git.agx@sigxcpu.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, Pengutronix Kernel Team <kernel@pengutronix.de>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Robert Chiras <robert.chiras@nxp.com>, Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190726092315.GA9754@ravnborg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3VpZG8sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFdlZCwgSnVsIDI0LCAyMDE5
-IGF0IDA1OjUyOjI1UE0gKzAyMDAsIEd1aWRvIEfDvG50aGVyIHdyb3RlOgo+IFRoZSBOb3J0aHdl
-c3QgTG9naWMgTUlQSSBEU0kgSVAgY29yZSBjYW4gYmUgZm91bmQgaW4gTlhQcyBpLk1YOCBTb0Nz
-Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEd1aWRvIEfDvG50aGVyIDxhZ3hAc2lneGNwdS5vcmc+Cj4g
-LS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9pbXgtbndsLWRzaS50eHQgICB8IDg5
-ICsrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDg5IGluc2VydGlvbnMoKykK
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS9pbXgtbndsLWRzaS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2lteC1ud2wtZHNpLnR4dCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9pbXgtbnds
-LWRzaS50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uMjg4
-ZmRiNzI2ZDVhCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9pbXgtbndsLWRzaS50eHQKPiBAQCAtMCwwICsxLDg5
-IEBACj4gK05vcnRod2VzdCBMb2dpYyBNSVBJLURTSSBvbiBpbXggU29Dcwo+ICs9PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09CgpUaGVyZSdzIG9uZSB0b28gbWFueSA9LgoKPiAr
-Cj4gK05XTCBNSVBJLURTSSBob3N0IGNvbnRyb2xsZXIgZm91bmQgb24gaS5NWDggcGxhdGZvcm1z
-LiBUaGlzIGlzIGEKPiArZHNpIGJyaWRnZSBmb3IgdGhlIGZvciB0aGUgTldMIE1JUEktRFNJIGhv
-c3QuCgpzL2RzaS9EU0kvCnMvZm9yIHRoZSBmb3IgdGhlIC9mb3IgdGhlIC8KCj4gKwo+ICtSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IAkJImZzbCw8Y2hpcD4tbndsLWRzaSIK
-PiArCVRoZSBmb2xsb3dpbmcgc3RyaW5ncyBhcmUgZXhwZWN0ZWQ6Cj4gKwkJCSJmc2wsaW14OG1x
-LW53bC1kc2kiCj4gKy0gcmVnOiAJCQl0aGUgcmVnaXN0ZXIgcmFuZ2Ugb2YgdGhlIE1JUEktRFNJ
-IGNvbnRyb2xsZXIKPiArLSBpbnRlcnJ1cHRzOiAJCXRoZSBpbnRlcnJ1cHQgbnVtYmVyIGZvciB0
-aGlzIG1vZHVsZQoKSXQncyBub3QganVzdCBhIG51bWJlciBidXQgYSBzcGVjaWZpZXIgKHdpdGgg
-ZmxhZ3MpLgoKPiArLSBjbG9jaywgY2xvY2stbmFtZXM6IAlwaGFuZGxlcyB0byB0aGUgTUlQSS1E
-U0kgY2xvY2tzCgpUaGF0IHNob3VsZCBiZSBwaGFuZGxlcyBhbmQgbmFtZXMuCgo+ICsJVGhlIGZv
-bGxvd2luZyBjbG9ja3MgYXJlIGV4cGVjdGVkIG9uIGFsbCBwbGF0Zm9ybXM6CgpFeHBlY3RlZCBv
-ciByZXF1aXJlZCA/CgpzLyBvbiBhbGwgcGxhdGZvcm1zLy8gYXMgeW91IG9ubHkgc3VwcG9ydCBh
-IHNpbmdsZSBwbGF0Zm9ybS4KCj4gKwkJImNvcmUiICAgIC0gRFNJIGNvcmUgY2xvY2sKPiArCQki
-dHhfZXNjIiAgLSBUWF9FU0MgY2xvY2sgKHVzZWQgaW4gZXNjYXBlIG1vZGUpCj4gKwkJInJ4X2Vz
-YyIgIC0gUlhfRVNDIGNsb2NrICh1c2VkIGluIGVzY2FwZSBtb2RlKQo+ICsJCSJwaHlfcmVmIiAt
-IFBIWV9SRUYgY2xvY2suIENsb2NrIGlzIG1hbmFnZWQgYnkgdGhlIHBoeS4gT25seQo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgdXNlZCB0byByZWFkIHRoZSBjbG9jayByYXRlLgo+ICst
-IGFzc2lnbmVkLWNsb2NrczoJcGhhbmRsZXMgdG8gY2xvY2tzIHRoYXQgcmVxdWlyZSBpbml0aWFs
-IGNvbmZpZ3VyYXRpb24KPiArLSBhc3NpZ25lZC1jbG9jay1yYXRlczoJcmF0ZXMgb2YgdGhlIGNs
-b2NrcyB0aGF0IHJlcXVpcmUgaW5pdGlhbCBjb25maWd1cmF0aW9uCj4gKwlUaGUgZm9sbG93aW5n
-IGNsb2NrcyBuZWVkIHRvIGhhdmUgYW4gaW5pdGlhbCBjb25maWd1cmF0aW9uOgo+ICsJInR4X2Vz
-YyIgKDIwIE1IeikgYW5kICJyeF9lc2MiICg4MCBNaHopLgoKSSB0aGluayB0aG9zZSB0d28gcHJv
-cGVydGllcyBhcmUgb3V0IG9mIHNjb3BlIGZvciB0aGVzZSBiaW5kaW5ncy4KCj4gKy0gcGh5czog
-CQlwaGFuZGxlIHRvIHRoZSBwaHkgbW9kdWxlIHJlcHJlc2VudGluZyB0aGUgRFBIWQo+ICsJCQlp
-bnNpZGUgdGhlIE1JUEktRFNJIElQIGJsb2NrCj4gKy0gcGh5LW5hbWVzOiAJCXNob3VsZCBiZSAi
-ZHBoeSIKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gcG93ZXItZG9tYWlucyAJcGhh
-bmRsZSB0byB0aGUgcG93ZXIgZG9tYWluCj4gKy0gc3JjCQkJcGhhbmRsZSB0byB0aGUgc3lzdGVt
-IHJlc2V0IGNvbnRyb2xsZXIgKHJlcXVpcmVkIG9uCj4gKwkJCWkuTVg4TVEpCgpTaG91bGQgdGhp
-cyB1c2UgdGhlIHN0YW5kYXJkIHJlc2V0cyBwcm9wZXJ0eSA/Cgo+ICstIG11eC1zZWwJCXBoYW5k
-bGUgdG8gdGhlIE1VWCByZWdpc3RlciBzZXQgKHJlcXVpcmVkIG9uIGkuTVg4TVEpCj4gKy0gYXNz
-aWduZWQtY2xvY2stcGFyZW50cyBwaGFuZGxlcyB0byBwYXJlbnQgY2xvY2tzIHRoYXQgbmVlZHMg
-dG8gYmUgYXNzaWduZWQgYXMKPiArCQkJcGFyZW50cyB0byBjbG9ja3MgZGVmaW5lZCBpbiBhc3Np
-Z25lZC1jbG9ja3MKClRoaXMgcHJvcGVydHkgaXMgYWxzbyBvdXQgb2Ygc2NvcGUuCgo+ICsKPiAr
-RXhhbXBsZToKPiArCW1pcGlfZHNpOiBtaXBpX2RzaUAzMGEwMDAwMCB7Cj4gKwkJI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47Cj4gKwkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwkJY29tcGF0aWJsZSA9ICJm
-c2wsaW14OG1xLW53bC1kc2kiOwo+ICsJCXJlZyA9IDwweDMwQTAwMDAwIDB4MzAwPjsKPiArCQlj
-bG9ja3MgPSA8JmNsayBJTVg4TVFfQ0xLX0RTSV9DT1JFPiwKPiArCQkJIDwmY2xrIElNWDhNUV9D
-TEtfRFNJX0FIQj4sCj4gKwkJCSA8JmNsayBJTVg4TVFfQ0xLX0RTSV9JUEdfRElWPiwKPiArCQkJ
-IDwmY2xrIElNWDhNUV9DTEtfRFNJX1BIWV9SRUY+Owo+ICsJCWNsb2NrLW5hbWVzID0gImNvcmUi
-LCAicnhfZXNjIiwgInR4X2VzYyIsICJwaHlfcmVmIjsKPiArCQlhc3NpZ25lZC1jbG9ja3MgPSA8
-JmNsayBJTVg4TVFfQ0xLX0RTSV9BSEI+LAo+ICsJCQkJICA8JmNsayBJTVg4TVFfQ0xLX0RTSV9D
-T1JFPiwKPiArCQkJCSAgPCZjbGsgSU1YOE1RX0NMS19EU0lfSVBHX0RJVj47Cj4gKwkJYXNzaWdu
-ZWQtY2xvY2stcGFyZW50cyA9IDwmY2xrIElNWDhNUV9TWVMxX1BMTF84ME0+LAo+ICsJCQkJCSA8
-JmNsayBJTVg4TVFfU1lTMV9QTExfMjY2TT47Cj4gKwkJYXNzaWduZWQtY2xvY2stcmF0ZXMgPSA8
-ODAwMDAwMDA+LAo+ICsJCQkJICAgICAgIDwyNjYwMDAwMDA+LAo+ICsJCQkJICAgICAgIDwyMDAw
-MDAwMD47Cj4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDM0IElSUV9UWVBFX0xFVkVMX0hJR0g+
-Owo+ICsJCXBvd2VyLWRvbWFpbnMgPSA8JnBnY19taXBpPjsKPiArCQlzcmMgPSA8JnNyYz47Cj4g
-KwkJbXV4LXNlbCA9IDwmaW9tdXhjX2dwcj47Cj4gKwkJcGh5cyA9IDwmZHBoeT47Cj4gKwkJcGh5
-LW5hbWVzID0gImRwaHkiOwo+ICsJCXN0YXR1cyA9ICJva2F5IjsKPiArCj4gKwkJcGFuZWxAMCB7
-Cj4gKwkJCWNvbXBhdGlibGUgPSAiLi4uIjsKPiArCQkJcG9ydCB7Cj4gKwkJCSAgICAgcGFuZWxf
-aW46IGVuZHBvaW50IHsKPiArCQkJCSAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfZHNp
-X291dD47Cj4gKwkJCSAgICAgfTsKPiArCQkJfTsKPiArCQl9Owo+ICsKPiArCQlwb3J0cyB7Cj4g
-KwkJICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJICAgICAgI3NpemUtY2VsbHMgPSA8
-MD47Cj4gKwo+ICsJCSAgICAgIHBvcnRAMCB7Cj4gKwkJCSAgICAgcmVnID0gPDA+Owo+ICsJCQkg
-ICAgIG1pcGlfZHNpX2luOiBlbmRwb2ludCB7Cj4gKwkJCQkJICByZW1vdGUtZW5kcG9pbnQgPSA8
-JmRjc3NfZGlzcDBfbWlwaV9kc2k+Owo+ICsJCQkgICAgIH07Cj4gKwkJICAgICAgfTsKPiArCQkg
-ICAgICBwb3J0QDEgewo+ICsJCQkgICAgIHJlZyA9IDwxPjsKPiArCQkJICAgICBtaXBpX2RzaV9v
-dXQ6IGVuZHBvaW50IHsKPiArCQkJCQkgICByZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luPjsK
-PiArCQkJICAgICB9Owo+ICsJCSAgICAgIH07Cj4gKwkJfTsKClRoZSBwb3J0cyBzaG91bGQgYmUg
-ZG9jdW1lbnRlZCB0b28uIFRoZXJlIGFyZSBtdWx0aXBsZSBleGFtcGxlIGJpbmRpbmdzCmF2YWls
-YWJsZS4KCj4gKwl9OwoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Hello,
+
+On Fri, Jul 26, 2019 at 11:23:15AM +0200, Sam Ravnborg wrote:
+> On Wed, Jul 24, 2019 at 05:52:25PM +0200, Guido Günther wrote:
+> > The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
+> > 
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > ---
+> >  .../bindings/display/bridge/imx-nwl-dsi.txt   | 89 +++++++++++++++++++
+> 
+> New binding. Any chance we can get this in yaml format?
+> This is the way forward and we have to convert the file anyway.
+> 
+> None of the other bridges use yaml format, but someone has to be the
+> first.
+> 
+> >  1 file changed, 89 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt b/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
+> > new file mode 100644
+> > index 000000000000..288fdb726d5a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
+> > @@ -0,0 +1,89 @@
+> > +Northwest Logic MIPI-DSI on imx SoCs
+> > +=====================================
+> > +
+> > +NWL MIPI-DSI host controller found on i.MX8 platforms. This is a
+> > +dsi bridge for the for the NWL MIPI-DSI host.
+> 
+> To my best understanding a bridge is something that converts from one
+> format to another format.
+> Something that in the drm world are connected to an encoder.
+> 
+> I do not know the HW here - but from this very brif description this
+> sounds more like a display controller and not a bridge?
+
+I would call it an encoder, that's the term usually employed for such
+devices (similar to HDMI encoder).
+
+> > +
+> > +Required properties:
+> > +- compatible: 		"fsl,<chip>-nwl-dsi"
+> > +	The following strings are expected:
+> > +			"fsl,imx8mq-nwl-dsi"
+> > +- reg: 			the register range of the MIPI-DSI controller
+> > +- interrupts: 		the interrupt number for this module
+> > +- clock, clock-names: 	phandles to the MIPI-DSI clocks
+> > +	The following clocks are expected on all platforms:
+> > +		"core"    - DSI core clock
+> > +		"tx_esc"  - TX_ESC clock (used in escape mode)
+> > +		"rx_esc"  - RX_ESC clock (used in escape mode)
+> > +		"phy_ref" - PHY_REF clock. Clock is managed by the phy. Only
+> > +                            used to read the clock rate.
+> > +- assigned-clocks:	phandles to clocks that require initial configuration
+> > +- assigned-clock-rates:	rates of the clocks that require initial configuration
+> > +	The following clocks need to have an initial configuration:
+> > +	"tx_esc" (20 MHz) and "rx_esc" (80 Mhz).
+> > +- phys: 		phandle to the phy module representing the DPHY
+> > +			inside the MIPI-DSI IP block
+> > +- phy-names: 		should be "dphy"
+> > +
+> > +Optional properties:
+> > +- power-domains 	phandle to the power domain
+> > +- src			phandle to the system reset controller (required on
+> > +			i.MX8MQ)
+> Name is not very descriptive.
+> Other bindings seems to use "resets" here?
+> 
+> > +- mux-sel		phandle to the MUX register set (required on i.MX8MQ)
+> > +- assigned-clock-parents phandles to parent clocks that needs to be assigned as
+> > +			parents to clocks defined in assigned-clocks
+> > +
+> > +Example:
+> > +	mipi_dsi: mipi_dsi@30a00000 {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		compatible = "fsl,imx8mq-nwl-dsi";
+> > +		reg = <0x30A00000 0x300>;
+> > +		clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
+> > +			 <&clk IMX8MQ_CLK_DSI_AHB>,
+> > +			 <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
+> > +			 <&clk IMX8MQ_CLK_DSI_PHY_REF>;
+> > +		clock-names = "core", "rx_esc", "tx_esc", "phy_ref";
+> > +		assigned-clocks = <&clk IMX8MQ_CLK_DSI_AHB>,
+> > +				  <&clk IMX8MQ_CLK_DSI_CORE>,
+> > +				  <&clk IMX8MQ_CLK_DSI_IPG_DIV>;
+> > +		assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_80M>,
+> > +					 <&clk IMX8MQ_SYS1_PLL_266M>;
+> > +		assigned-clock-rates = <80000000>,
+> > +				       <266000000>,
+> > +				       <20000000>;
+> > +		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> > +		power-domains = <&pgc_mipi>;
+> > +		src = <&src>;
+> > +		mux-sel = <&iomuxc_gpr>;
+> > +		phys = <&dphy>;
+> > +		phy-names = "dphy";
+> > +		status = "okay";
+> I recall status should not be included in examples.
+> 
+> > +
+> > +		panel@0 {
+> > +			compatible = "...";
+> > +			port {
+> > +			     panel_in: endpoint {
+> > +				       remote-endpoint = <&mipi_dsi_out>;
+> > +			     };
+> > +			};
+> > +		};
+> > +
+> > +		ports {
+> > +		      #address-cells = <1>;
+> > +		      #size-cells = <0>;
+> > +
+> > +		      port@0 {
+> > +			     reg = <0>;
+> > +			     mipi_dsi_in: endpoint {
+> > +					  remote-endpoint = <&dcss_disp0_mipi_dsi>;
+> > +			     };
+> > +		      };
+> > +		      port@1 {
+> > +			     reg = <1>;
+> > +			     mipi_dsi_out: endpoint {
+> > +					   remote-endpoint = <&panel_in>;
+> > +			     };
+> > +		      };
+> > +		};
+> > +	};
+
+-- 
+Regards,
+
+Laurent Pinchart
