@@ -1,89 +1,68 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 00/11] JZ4740 SoC cleanup
-Date: Fri, 26 Jul 2019 23:19:45 -0400
-Message-ID: <1564197585.6472.0@crapouillou.net>
-References: <20190725220215.460-1-paul@crapouillou.net>
-        <20190726184649.GC14981@ravnborg.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+ IMX8MQ_CLK_TMU_ROOT
+Date: Sat, 27 Jul 2019 06:19:07 +0000
+Message-ID: <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+ <20190705045612.27665-5-Anson.Huang@nxp.com>
+ <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190726184649.GC14981@ravnborg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vinod Koul <vkoul@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee.jones@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Sebastian Reichel <sre@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org, linux-pm@vger.kernel.org, linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Baluta <daniel.baluta@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Carlo Caione <ccaione@baylibre.com>, =?utf-8?B?R3VpZG8gR8O8bnRoZXI=?= <agx@sigxcpu.org>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Leonard Crestez <leonard.crestez@nxp.com>, Fabio Estevam <festevam@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, dl-linux-imx <linux-imx@nxp.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, Michael Turquette <mturquette@baylibre.com>, Devicetree List <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "edubezval@gmail.com" <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@kernel.org>, Linux
 List-Id: devicetree@vger.kernel.org
 
+Hi, Daniel
 
+> Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+> IMX8MQ_CLK_TMU_ROOT
+> 
+> Hi all,
+> 
+> latest linux-next hangs at boot.
+> 
+> commit fde50b96be821ac9673a7e00847cc4605bd88f34 (HEAD -> master, tag:
+> next-20190726, origin/master, origin/HEAD)
+> Author: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date:   Fri Jul 26 15:18:02 2019 +1000
+> 
+>     Add linux-next specific files for 20190726
+> 
+>     Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> 
+> 
+> I know this is crazy but reverting commit:
+> 
+> commit 431bdd1df48ee2896ea9980d9153e3aeaf0c81ef (refs/bisect/bad)
+> Author: Anson Huang <Anson.Huang@nxp.com>
+> Date:   Fri Jul 5 12:56:11 2019 +0800
+> 
+>     clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT
+> 
+>     IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
+>     should manage this clock, so no need to have CLK_IS_CRITICAL flag
+>     set.
+> 
+> 
+> 
+> makes the boot work again.
+> 
+> Any idea?
 
-Le ven. 26 juil. 2019 =E0 14:46, Sam Ravnborg <sam@ravnborg.org> a=20
-=E9crit :
-> Hi Paul.
->=20
-> On Thu, Jul 25, 2019 at 06:02:04PM -0400, Paul Cercueil wrote:
->>  Hi,
->>=20
->>  This patchset converts the Qi LB60 MIPS board to devicetree and=20
->> makes it
->>  use all the shiny new drivers that have been developed or updated
->>  recently.
->>=20
->>  All the crappy old drivers and custom code can be dropped since they
->>  have been replaced by better alternatives.
->=20
-> The overall diffstat is missing.
-> Just for curiosity it would be nice to see what was dropped with this
-> patch.
->=20
-> 	Sam
+I just found if disabling SDMA1, then kernel can boot up, it does NOT make sense
+TMU clock is related to SDMA1, I will check with design and get back to you soon.
 
-Diffstat:
-
- arch/mips/boot/dts/ingenic/jz4740.dtsi         |  84 ++++++++++++
- arch/mips/boot/dts/ingenic/qi_lb60.dts         | 295=20
-++++++++++++++++++++++++++++++++++++++++-
- arch/mips/configs/qi_lb60_defconfig            |  44 +++---
- arch/mips/include/asm/mach-jz4740/gpio.h       |  15 ---
- arch/mips/include/asm/mach-jz4740/jz4740_fb.h  |  58 --------
- arch/mips/include/asm/mach-jz4740/jz4740_mmc.h |  12 --
- arch/mips/include/asm/mach-jz4740/platform.h   |  26 ----
- arch/mips/jz4740/Makefile                      |   7 +-
- arch/mips/jz4740/board-qi_lb60.c               | 491=20
--------------------------------------------------------------------
- arch/mips/jz4740/platform.c                    | 250=20
------------------------------------
- arch/mips/jz4740/prom.c                        |   5 -
- arch/mips/jz4740/setup.c                       |   3 +-
- drivers/dma/Kconfig                            |   6 -
- drivers/dma/Makefile                           |   1 -
- drivers/dma/dma-jz4740.c                       | 623=20
----------------------------------------------------------------------------=
-----------
- drivers/hwmon/Kconfig                          |  10 --
- drivers/hwmon/Makefile                         |   1 -
- drivers/hwmon/jz4740-hwmon.c                   | 135=20
--------------------
- drivers/mfd/Kconfig                            |   9 --
- drivers/mfd/Makefile                           |   1 -
- drivers/mfd/jz4740-adc.c                       | 324=20
----------------------------------------------
- drivers/mtd/nand/raw/ingenic/Kconfig           |   7 -
- drivers/mtd/nand/raw/ingenic/Makefile          |   1 -
- drivers/mtd/nand/raw/ingenic/jz4740_nand.c     | 536=20
---------------------------------------------------------------------------
- drivers/power/supply/Kconfig                   |  11 --
- drivers/power/supply/Makefile                  |   1 -
- drivers/power/supply/jz4740-battery.c          | 421=20
-----------------------------------------------------------
- drivers/video/fbdev/Kconfig                    |   9 --
- drivers/video/fbdev/Makefile                   |   1 -
- drivers/video/fbdev/jz4740_fb.c                | 690=20
----------------------------------------------------------------------------=
---------------------
- sound/soc/jz4740/Kconfig                       |  25 +---
- sound/soc/jz4740/Makefile                      |   5 -
- sound/soc/jz4740/qi_lb60.c                     | 106 ---------------
- 33 files changed, 404 insertions(+), 3809 deletions(-)
-
-
-=
+Anson
