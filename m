@@ -1,102 +1,105 @@
-From: Qii Wang <qii.wang@mediatek.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: i3c: Document MediaTek I3C master
- bindings
-Date: Sat, 27 Jul 2019 09:23:33 +0800
-Message-ID: <1564190613.24702.11.camel@mhfsdcap03>
-References: <1562677762-24067-1-git-send-email-qii.wang@mediatek.com>
- <1562677762-24067-2-git-send-email-qii.wang@mediatek.com>
- <20190724202119.GA26566@bogus>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/3] dt-bindings: display/bridge: Add binding for IMX NWL
+ mipi dsi host controller
+Date: Sat, 27 Jul 2019 04:57:16 +0300
+Message-ID: <20190727015716.GA4902@pendragon.ideasonboard.com>
+References: <cover.1563983037.git.agx@sigxcpu.org>
+ <70a5c6617936a4a095e7608b96e3f9fae5ddfbb1.1563983037.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190724202119.GA26566@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, bbrezillon@kernel.org, leilk.liu@mediatek.com, linux-kernel@vger.kernel.org, liguo.zhang@mediatek.com, linux-mediatek@lists.infradead.org, xinping.qian@mediatek.com, matthias.bgg@gmail.com, linux-i3c@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <70a5c6617936a4a095e7608b96e3f9fae5ddfbb1.1563983037.git.agx@sigxcpu.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, Pengutronix Kernel Team <kernel@pengutronix.de>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Robert Chiras <robert.chiras@nxp.com>, Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-07-24 at 14:21 -0600, Rob Herring wrote:
-> On Tue, Jul 09, 2019 at 09:09:21PM +0800, Qii Wang wrote:
-> > Document MediaTek I3C master DT bindings.
-> > 
-> > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   48 ++++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
-> > new file mode 100644
-> > index 0000000..d32eda6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
-> > @@ -0,0 +1,48 @@
-> > +Bindings for MediaTek I3C master block
-> > +=====================================
-> > +
-> > +Required properties:
-> > +--------------------
-> > +- compatible: shall be "mediatek,i3c-master"
-> 
-> Needs to be SoC specific.
-> 
-
-We hope that the SOCs will use the same driver and try to avoid big
-changes. If there are inevitable changes in the future, then we will
-modify the compatible to be SoC specific. cdns,i3c-master.txt is not SoC
-specific either.
-
-> > +- reg: physical base address of the controller and apdma base, length of
-> > +  memory mapped region.
-> > +- reg-names: shall be "main" for master controller and "dma" for apdma.
-> > +- interrupts: the interrupt line connected to this I3C master.
-> > +- clocks: shall reference the i3c and apdma clocks.
-> > +- clock-names: shall include "main" and "dma".
-> > +
-> > +Mandatory properties defined by the generic binding (see
-> > +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-> > +
-> > +- #address-cells: shall be set to 3
-> > +- #size-cells: shall be set to 0
-> > +
-> > +Optional properties defined by the generic binding (see
-> > +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-> > +
-> > +- i2c-scl-hz
-> > +- i3c-scl-hz
-> > +
-> > +I3C device connected on the bus follow the generic description (see
-> > +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
-> > +
-> > +Example:
-> > +
-> > +	i3c0: i3c@1100d000 {
-> > +		compatible = "mediatek,i3c-master";
-> > +		reg = <0x1100d000 0x1000>,
-> > +		      <0x11000300 0x80>;
-> > +		reg-names = "main", "dma";
-> > +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&infracfg CLK_INFRA_I3C0>,
-> > +			 <&infracfg CLK_INFRA_AP_DMA>;
-> > +		clock-names = "main", "dma";
-> > +		#address-cells = <3>;
-> > +		#size-cells = <0>;
-> > +		i2c-scl-hz = <100000>;
-> > +
-> > +		nunchuk: nunchuk@52 {
-> > +			compatible = "nintendo,nunchuk";
-> > +			reg = <0x52 0x0 0x10>;
-> > +		};
-> > +	};
-> > -- 
-> > 1.7.9.5
-> > 
+SGkgR3VpZG8sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFdlZCwgSnVsIDI0LCAyMDE5
+IGF0IDA1OjUyOjI1UE0gKzAyMDAsIEd1aWRvIEfDvG50aGVyIHdyb3RlOgo+IFRoZSBOb3J0aHdl
+c3QgTG9naWMgTUlQSSBEU0kgSVAgY29yZSBjYW4gYmUgZm91bmQgaW4gTlhQcyBpLk1YOCBTb0Nz
+Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEd1aWRvIEfDvG50aGVyIDxhZ3hAc2lneGNwdS5vcmc+Cj4g
+LS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9pbXgtbndsLWRzaS50eHQgICB8IDg5
+ICsrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDg5IGluc2VydGlvbnMoKykK
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2JyaWRnZS9pbXgtbndsLWRzaS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2lteC1ud2wtZHNpLnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9pbXgtbnds
+LWRzaS50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uMjg4
+ZmRiNzI2ZDVhCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9pbXgtbndsLWRzaS50eHQKPiBAQCAtMCwwICsxLDg5
+IEBACj4gK05vcnRod2VzdCBMb2dpYyBNSVBJLURTSSBvbiBpbXggU29Dcwo+ICs9PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09CgpUaGVyZSdzIG9uZSB0b28gbWFueSA9LgoKPiAr
+Cj4gK05XTCBNSVBJLURTSSBob3N0IGNvbnRyb2xsZXIgZm91bmQgb24gaS5NWDggcGxhdGZvcm1z
+LiBUaGlzIGlzIGEKPiArZHNpIGJyaWRnZSBmb3IgdGhlIGZvciB0aGUgTldMIE1JUEktRFNJIGhv
+c3QuCgpzL2RzaS9EU0kvCnMvZm9yIHRoZSBmb3IgdGhlIC9mb3IgdGhlIC8KCj4gKwo+ICtSZXF1
+aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IAkJImZzbCw8Y2hpcD4tbndsLWRzaSIK
+PiArCVRoZSBmb2xsb3dpbmcgc3RyaW5ncyBhcmUgZXhwZWN0ZWQ6Cj4gKwkJCSJmc2wsaW14OG1x
+LW53bC1kc2kiCj4gKy0gcmVnOiAJCQl0aGUgcmVnaXN0ZXIgcmFuZ2Ugb2YgdGhlIE1JUEktRFNJ
+IGNvbnRyb2xsZXIKPiArLSBpbnRlcnJ1cHRzOiAJCXRoZSBpbnRlcnJ1cHQgbnVtYmVyIGZvciB0
+aGlzIG1vZHVsZQoKSXQncyBub3QganVzdCBhIG51bWJlciBidXQgYSBzcGVjaWZpZXIgKHdpdGgg
+ZmxhZ3MpLgoKPiArLSBjbG9jaywgY2xvY2stbmFtZXM6IAlwaGFuZGxlcyB0byB0aGUgTUlQSS1E
+U0kgY2xvY2tzCgpUaGF0IHNob3VsZCBiZSBwaGFuZGxlcyBhbmQgbmFtZXMuCgo+ICsJVGhlIGZv
+bGxvd2luZyBjbG9ja3MgYXJlIGV4cGVjdGVkIG9uIGFsbCBwbGF0Zm9ybXM6CgpFeHBlY3RlZCBv
+ciByZXF1aXJlZCA/CgpzLyBvbiBhbGwgcGxhdGZvcm1zLy8gYXMgeW91IG9ubHkgc3VwcG9ydCBh
+IHNpbmdsZSBwbGF0Zm9ybS4KCj4gKwkJImNvcmUiICAgIC0gRFNJIGNvcmUgY2xvY2sKPiArCQki
+dHhfZXNjIiAgLSBUWF9FU0MgY2xvY2sgKHVzZWQgaW4gZXNjYXBlIG1vZGUpCj4gKwkJInJ4X2Vz
+YyIgIC0gUlhfRVNDIGNsb2NrICh1c2VkIGluIGVzY2FwZSBtb2RlKQo+ICsJCSJwaHlfcmVmIiAt
+IFBIWV9SRUYgY2xvY2suIENsb2NrIGlzIG1hbmFnZWQgYnkgdGhlIHBoeS4gT25seQo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgdXNlZCB0byByZWFkIHRoZSBjbG9jayByYXRlLgo+ICst
+IGFzc2lnbmVkLWNsb2NrczoJcGhhbmRsZXMgdG8gY2xvY2tzIHRoYXQgcmVxdWlyZSBpbml0aWFs
+IGNvbmZpZ3VyYXRpb24KPiArLSBhc3NpZ25lZC1jbG9jay1yYXRlczoJcmF0ZXMgb2YgdGhlIGNs
+b2NrcyB0aGF0IHJlcXVpcmUgaW5pdGlhbCBjb25maWd1cmF0aW9uCj4gKwlUaGUgZm9sbG93aW5n
+IGNsb2NrcyBuZWVkIHRvIGhhdmUgYW4gaW5pdGlhbCBjb25maWd1cmF0aW9uOgo+ICsJInR4X2Vz
+YyIgKDIwIE1IeikgYW5kICJyeF9lc2MiICg4MCBNaHopLgoKSSB0aGluayB0aG9zZSB0d28gcHJv
+cGVydGllcyBhcmUgb3V0IG9mIHNjb3BlIGZvciB0aGVzZSBiaW5kaW5ncy4KCj4gKy0gcGh5czog
+CQlwaGFuZGxlIHRvIHRoZSBwaHkgbW9kdWxlIHJlcHJlc2VudGluZyB0aGUgRFBIWQo+ICsJCQlp
+bnNpZGUgdGhlIE1JUEktRFNJIElQIGJsb2NrCj4gKy0gcGh5LW5hbWVzOiAJCXNob3VsZCBiZSAi
+ZHBoeSIKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gcG93ZXItZG9tYWlucyAJcGhh
+bmRsZSB0byB0aGUgcG93ZXIgZG9tYWluCj4gKy0gc3JjCQkJcGhhbmRsZSB0byB0aGUgc3lzdGVt
+IHJlc2V0IGNvbnRyb2xsZXIgKHJlcXVpcmVkIG9uCj4gKwkJCWkuTVg4TVEpCgpTaG91bGQgdGhp
+cyB1c2UgdGhlIHN0YW5kYXJkIHJlc2V0cyBwcm9wZXJ0eSA/Cgo+ICstIG11eC1zZWwJCXBoYW5k
+bGUgdG8gdGhlIE1VWCByZWdpc3RlciBzZXQgKHJlcXVpcmVkIG9uIGkuTVg4TVEpCj4gKy0gYXNz
+aWduZWQtY2xvY2stcGFyZW50cyBwaGFuZGxlcyB0byBwYXJlbnQgY2xvY2tzIHRoYXQgbmVlZHMg
+dG8gYmUgYXNzaWduZWQgYXMKPiArCQkJcGFyZW50cyB0byBjbG9ja3MgZGVmaW5lZCBpbiBhc3Np
+Z25lZC1jbG9ja3MKClRoaXMgcHJvcGVydHkgaXMgYWxzbyBvdXQgb2Ygc2NvcGUuCgo+ICsKPiAr
+RXhhbXBsZToKPiArCW1pcGlfZHNpOiBtaXBpX2RzaUAzMGEwMDAwMCB7Cj4gKwkJI2FkZHJlc3Mt
+Y2VsbHMgPSA8MT47Cj4gKwkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwkJY29tcGF0aWJsZSA9ICJm
+c2wsaW14OG1xLW53bC1kc2kiOwo+ICsJCXJlZyA9IDwweDMwQTAwMDAwIDB4MzAwPjsKPiArCQlj
+bG9ja3MgPSA8JmNsayBJTVg4TVFfQ0xLX0RTSV9DT1JFPiwKPiArCQkJIDwmY2xrIElNWDhNUV9D
+TEtfRFNJX0FIQj4sCj4gKwkJCSA8JmNsayBJTVg4TVFfQ0xLX0RTSV9JUEdfRElWPiwKPiArCQkJ
+IDwmY2xrIElNWDhNUV9DTEtfRFNJX1BIWV9SRUY+Owo+ICsJCWNsb2NrLW5hbWVzID0gImNvcmUi
+LCAicnhfZXNjIiwgInR4X2VzYyIsICJwaHlfcmVmIjsKPiArCQlhc3NpZ25lZC1jbG9ja3MgPSA8
+JmNsayBJTVg4TVFfQ0xLX0RTSV9BSEI+LAo+ICsJCQkJICA8JmNsayBJTVg4TVFfQ0xLX0RTSV9D
+T1JFPiwKPiArCQkJCSAgPCZjbGsgSU1YOE1RX0NMS19EU0lfSVBHX0RJVj47Cj4gKwkJYXNzaWdu
+ZWQtY2xvY2stcGFyZW50cyA9IDwmY2xrIElNWDhNUV9TWVMxX1BMTF84ME0+LAo+ICsJCQkJCSA8
+JmNsayBJTVg4TVFfU1lTMV9QTExfMjY2TT47Cj4gKwkJYXNzaWduZWQtY2xvY2stcmF0ZXMgPSA8
+ODAwMDAwMDA+LAo+ICsJCQkJICAgICAgIDwyNjYwMDAwMDA+LAo+ICsJCQkJICAgICAgIDwyMDAw
+MDAwMD47Cj4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDM0IElSUV9UWVBFX0xFVkVMX0hJR0g+
+Owo+ICsJCXBvd2VyLWRvbWFpbnMgPSA8JnBnY19taXBpPjsKPiArCQlzcmMgPSA8JnNyYz47Cj4g
+KwkJbXV4LXNlbCA9IDwmaW9tdXhjX2dwcj47Cj4gKwkJcGh5cyA9IDwmZHBoeT47Cj4gKwkJcGh5
+LW5hbWVzID0gImRwaHkiOwo+ICsJCXN0YXR1cyA9ICJva2F5IjsKPiArCj4gKwkJcGFuZWxAMCB7
+Cj4gKwkJCWNvbXBhdGlibGUgPSAiLi4uIjsKPiArCQkJcG9ydCB7Cj4gKwkJCSAgICAgcGFuZWxf
+aW46IGVuZHBvaW50IHsKPiArCQkJCSAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfZHNp
+X291dD47Cj4gKwkJCSAgICAgfTsKPiArCQkJfTsKPiArCQl9Owo+ICsKPiArCQlwb3J0cyB7Cj4g
+KwkJICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJICAgICAgI3NpemUtY2VsbHMgPSA8
+MD47Cj4gKwo+ICsJCSAgICAgIHBvcnRAMCB7Cj4gKwkJCSAgICAgcmVnID0gPDA+Owo+ICsJCQkg
+ICAgIG1pcGlfZHNpX2luOiBlbmRwb2ludCB7Cj4gKwkJCQkJICByZW1vdGUtZW5kcG9pbnQgPSA8
+JmRjc3NfZGlzcDBfbWlwaV9kc2k+Owo+ICsJCQkgICAgIH07Cj4gKwkJICAgICAgfTsKPiArCQkg
+ICAgICBwb3J0QDEgewo+ICsJCQkgICAgIHJlZyA9IDwxPjsKPiArCQkJICAgICBtaXBpX2RzaV9v
+dXQ6IGVuZHBvaW50IHsKPiArCQkJCQkgICByZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luPjsK
+PiArCQkJICAgICB9Owo+ICsJCSAgICAgIH07Cj4gKwkJfTsKClRoZSBwb3J0cyBzaG91bGQgYmUg
+ZG9jdW1lbnRlZCB0b28uIFRoZXJlIGFyZSBtdWx0aXBsZSBleGFtcGxlIGJpbmRpbmdzCmF2YWls
+YWJsZS4KCj4gKwl9OwoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
