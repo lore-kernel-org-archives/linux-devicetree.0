@@ -1,37 +1,33 @@
-From: LABBE Corentin <clabbe@baylibre.com>
-Subject: Re: [PATCH 0/4] crypto: add amlogic crypto offloader driver
-Date: Sun, 28 Jul 2019 21:42:11 +0200
-Message-ID: <20190728194211.GA29444@Red>
-References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
- <20190728184803.GA14920@sol.localdomain>
+From: Ronen Krupnik <ronenk@amazon.com>
+Subject: [PATCH 0/2] Amazon Annapurna Labs Alpine v3 device-tree
+Date: Sun, 28 Jul 2019 22:51:33 +0300
+Message-ID: <20190728195135.12661-1-ronenk@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190728184803.GA14920@sol.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, herbert@gondor.apana.org.au, khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, baylibre-upstreaming@groups.io
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, barakw@amazon.com, dwmw@amazon.co.uk, benh@amazon.com, jonnyc@amazon.com, talel@amazon.com, hhhawa@amazon.com, hanochu@amazon.com, Ronen Krupnik <ronenk@amazon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 11:48:03AM -0700, Eric Biggers wrote:
-> Hi Corentin,
-> 
-> On Thu, Jul 25, 2019 at 07:42:52PM +0000, Corentin Labbe wrote:
-> > Hello
-> > 
-> > This serie adds support for the crypto offloader present on amlogic GXL
-> > SoCs.
-> > 
-> > Tested on meson-gxl-s905x-khadas-vim and meson-gxl-s905x-libretech-cc
-> > 
-> > Regards
-> > 
-> 
-> Does this new driver pass all the crypto self-tests?
-> Including with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y?
-> 
+This series introduces the device tree for Amazon Annapurna Labs Alpine v3
+SoC and Evaluation Board.
 
-Yes it pass all extra self-tests.
-I forgot to write it in the cover letter.
+Ronen Krupnik (2):
+  dt-bindings: amazon: add Amazon Annapurna Labs Alpine support
+  arm64: dts: amazon: add Amazon Annapurna Labs Alpine v3 support
 
-Regards
+ .../devicetree/bindings/arm/amazon,alpine.txt |  23 ++
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/amazon/Makefile           |   1 +
+ arch/arm64/boot/dts/amazon/alpine-v3-evp.dts  |  23 ++
+ arch/arm64/boot/dts/amazon/alpine-v3.dtsi     | 371 ++++++++++++++++++
+ 5 files changed, 419 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/amazon,alpine.txt
+ create mode 100644 arch/arm64/boot/dts/amazon/Makefile
+ create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3-evp.dts
+ create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3.dtsi
+
+-- 
+2.21.0
