@@ -1,13 +1,11 @@
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Subject: [PATCH 1/2] dts: add vendor prefix "acme" for "Acme Systems srl"
-Date: Sun, 28 Jul 2019 23:04:02 +0200
-Message-ID: <20190728210403.2730-2-uwe@kleine-koenig.org>
-References: <20190728210403.2730-1-uwe@kleine-koenig.org>
+Subject: [PATCH 0/2] at91: add support for Arietta G25
+Date: Sun, 28 Jul 2019 23:04:01 +0200
+Message-ID: <20190728210403.2730-1-uwe@kleine-koenig.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190728210403.2730-1-uwe@kleine-koenig.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,19 +19,18 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicol
 Cc: devicetree@vger.kernel.org, info@acmesystems.it, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHV3ZUBrbGVpbmUta29lbmlnLm9yZz4K
-LS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnlh
-bWwgfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy55YW1sIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy55YW1sCmlu
-ZGV4IDY5OTJiYmJiZmZhYi4uODU5NjVlMzQ0NmJmIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnlhbWwKKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy55YW1sCkBAIC0yNyw2ICsy
-Nyw4IEBAIHBhdHRlcm5Qcm9wZXJ0aWVzOgogICAgIGRlc2NyaXB0aW9uOiBBYmlsaXMgU3lzdGVt
-cwogICAiXmFicmFjb24sLioiOgogICAgIGRlc2NyaXB0aW9uOiBBYnJhY29uIENvcnBvcmF0aW9u
-CisgICJeYWNtZSwuKiI6CisgICAgZGVzY3JpcHRpb246IEFjbWUgU3lzdGVtcyBzcmwKICAgIl5h
-Y3Rpb25zLC4qIjoKICAgICBkZXNjcmlwdGlvbjogQWN0aW9ucyBTZW1pY29uZHVjdG9yIENvLiwg
-THRkLgogICAiXmFjdGl2ZS1zZW1pLC4qIjoKLS0gCjIuMjAuMQoKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+SGVsbG8sCgpJIG5vdyB0b29rIHRoZSB0aW1lIHRvIHdvcmsgb24gbWFpbmxpbmUgc3VwcG9ydCBm
+b3IgdGhlIEFyaWV0dGEgRzI1LgoKSXQgYm9vdHMgZmluZSBvbiB2NS4zLXJjMSBhcGFydCBmcm9t
+IHRoZSBpc3N1ZSBJIHJlcG9ydGVkIG9uIHRoZSBMaW51eApBUk0gbGlzdCB5ZXN0ZXJkYXlbMV0u
+CgpCZXN0IHJlZ2FyZHMKVXdlCgpbMV0gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJt
+YWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxOS1KdWx5LzY2OTE2Ny5odG1sCgpVd2UgS2xlaW5lLUvD
+tm5pZyAoMik6CiAgZHRzOiBhZGQgdmVuZG9yIHByZWZpeCAiYWNtZSIgZm9yICJBY21lIFN5c3Rl
+bXMgc3JsIgogIEFSTTogZHRzOiBhdDkxOiBhZGQgc3VwcG9ydCBmb3IgQXJpZXR0YSBHMjUKCiAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMueWFtbCAgfCAgMiArCiBhcmNo
+L2FybS9ib290L2R0cy9hdDkxc2FtOWcyNS1hcmlldHRhLmR0cyAgICAgfCA4NiArKysrKysrKysr
+KysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDg4IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9hdDkxc2FtOWcyNS1hcmlldHRhLmR0cwoKLS0gCjIu
+MjAuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
