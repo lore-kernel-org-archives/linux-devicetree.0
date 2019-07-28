@@ -1,52 +1,32 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v9 8/8] EDAC: armada_xp: Add support for more SoCs
-Date: Sun, 28 Jul 2019 20:52:09 +0000
-Message-ID: <1564347129.9737.19.camel@alliedtelesis.co.nz>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
-         <20190712034904.5747-9-chris.packham@alliedtelesis.co.nz>
-         <128016c1-380f-70c4-3a89-2d3b0edf9f88@arm.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Add missing unit address to memory node on rk3288-veyron
+Date: Sun, 28 Jul 2019 22:55:56 +0200
+Message-ID: <8373672.S8ITYX37Bm@phil>
+References: <20190727142736.23188-1-krzk@kernel.org> <86910491.m50tbimVMv@phil> <CAJKOXPcHB9969bqw+aqRh1HYHKDazhhpKy_+uKKcA=5Gkg6+EA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <128016c1-380f-70c4-3a89-2d3b0edf9f88@arm.com>
-Content-Language: en-US
-Content-ID: <5B786D49858CCE48BDD511B9984E1BFD@atlnz.lc>
+In-Reply-To: <CAJKOXPcHB9969bqw+aqRh1HYHKDazhhpKy_+uKKcA=5Gkg6+EA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "james.morse@arm.com" <james.morse@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jlu@pengutronix.de" <jlu@pengutronix.de>, "bp@alien8.de" <bp@alien8.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "patches@armlinux.org.uk" <patches@armlinux.org.uk>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA3LTI2IGF0IDE1OjUxICswMTAwLCBKYW1lcyBNb3JzZSB3cm90ZToNCj4g
-SGkgQ2hyaXMsDQo+IA0KPiBPbiAxMi8wNy8yMDE5IDA0OjQ5LCBDaHJpcyBQYWNraGFtIHdyb3Rl
-Og0KPiA+IA0KPiA+IFRoZSBBcm1hZGEgMzh4IGFuZCBvdGhlciBpbnRlZ3JhdGVkIFNvQ3MgdXNl
-IGEgcmVkdWNlZCBwaW4gY291bnQgc28NCj4gPiB0aGUNCj4gPiB3aWR0aCBvZiB0aGUgU0RSQU0g
-aW50ZXJmYWNlIGlzIHNtYWxsZXIgdGhhbiB0aGUgQXJtYWRhIFhQIFNvQ3MuDQo+ID4gVGhpcw0K
-PiA+IG1lYW5zIHRoYXQgdGhlIGRlZmluaXRpb24gb2YgImZ1bGwiIGFuZCAiaGFsZiIgd2lkdGgg
-aXMgcmVkdWNlZA0KPiA+IGZyb20NCj4gPiA2NC8zMiB0byAzMi8xNi4NCj4gPiANCj4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9lZGFjL2FybWFkYV94cF9lZGFjLmMNCj4gPiBiL2RyaXZlcnMvZWRh
-Yy9hcm1hZGFfeHBfZWRhYy5jDQo+ID4gaW5kZXggMzc1OWE0ZmJiZGVlLi43ZjIyN2JkY2JjODQg
-MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9lZGFjL2FybWFkYV94cF9lZGFjLmMNCj4gPiArKysg
-Yi9kcml2ZXJzL2VkYWMvYXJtYWRhX3hwX2VkYWMuYw0KPiA+IEBAIC0zMzIsNiArMzMyLDExIEBA
-IHN0YXRpYyBpbnQgYXhwX21jX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gPiAqcGRl
-dikNCj4gPiDCoA0KPiA+IMKgCWF4cF9tY19yZWFkX2NvbmZpZyhtY2kpOw0KPiA+IMKgDQo+ID4g
-KwkvKiBUaGVzZSBTb0NzIGhhdmUgYSByZWR1Y2VkIHdpZHRoIGJ1cyAqLw0KPiA+ICsJaWYgKG9m
-X21hY2hpbmVfaXNfY29tcGF0aWJsZSgibWFydmVsbCxhcm1hZGEzODAiKSB8fA0KPiA+ICsJwqDC
-oMKgwqBvZl9tYWNoaW5lX2lzX2NvbXBhdGlibGUoIm1hcnZlbGwsYXJtYWRheHAtOThkeDMyMzYi
-KSkNCj4gPiArCQlkcnZkYXRhLT53aWR0aCAvPSAyOw0KPiBTbyB0aGUgaGFyZHdhcmUncyBTRFJB
-TV9DT05GSUdfQlVTX1dJRFRIIHZhbHVlIGlzIHdyb25nPyBZdWNrLg0KPiANCg0KVGhlIG1heGlt
-dW0gd2lkdGggZGlmZmVycyBiZXR3ZWVuIEFybWFkYS1YUCAoNjQtYml0KSBhbmQgQXJtYWRhLTM4
-eA0KKDMyLWJpdCkuIFRoZXJlIGlzIHN0aWxsIHN0cmFwcGluZyB0byBjb250cm9sIGhhbGYtd2lk
-dGggdnMgZnVsbC13aWR0aC4NCg0KPiBJcyBpdCB0b28gbGF0ZSBmb3IgdGhlIERUcyBvbiB0aGVz
-ZSB0d28gc3lzdGVtcyB0byBwcm92aWRlIGEgRFQNCj4gdmVyc2lvbiBvZiB0aGUgJ2J1c193aWR0
-aCcNCj4gdG8gb3ZlcnJpZGUgdGhlIGhhcmR3YXJlJ3MgbWlzLWFkdmVydGlzZWQgdmFsdWU/DQoN
-CkluIGFuIGVhcmxpZXIgaXRlcmF0aW9uIEkgZGlkIGhhdmUgYSBEVCBwcm9wZXJ0eSBhcyB5b3Ug
-c3VnZ2VzdC4gVGhlDQpwcm9ibGVtIGlzIHRoYXQgc29tZXRoaW5nIGxpa2UgImJ1cy13aWR0aCA9
-IDwzMj4iIGlzIGFtYmlndW91cy4gT24NCkFybWFkYS1YUCB0aGlzIG1lYW5zIHRoZSBzdHJhcHBp
-bmcgaXMgZm9yIGhhbGYtd2lkdGggYnV0IG9uIEFybWFkYS0zOHgNCnlvdSdkIG5lZWQgdG8gc3Ry
-YXAgdG8gZnVsbC13aWR0aC4gVGhhdCdzIHdoeSB3ZSBzZXR0bGVkIG9uIHRoZSBtb2RlDQppbnRl
-cnByZXRpbmcgdGhlIHN0cmFwcGluZyBhZ2FpbnN0IFNvQ1sxXS4NCg0KWzFdwqBodHRwczovL2xv
-cmUua2VybmVsLm9yZy9saW51eC1hcm0ta2VybmVsLzE1MDI0NDQwNjcuMTMzMy43LmNhbWVsQHBl
-DQpuZ3V0cm9uaXguZGUvDQoNCj4gDQo+IFRoaXMgd2F5IHlvdSBkb24ndCBuZWVkIHRvIGdyb3cg
-dGhpcyBsaXN0Lg0KPiANCj4gQWNrZWQtYnk6IEphbWVzIE1vcnNlIDxqYW1lcy5tb3JzZUBhcm0u
-Y29tPg0KPiANCj4gDQo+IFRoYW5rcywNCj4gDQo+IEphbWVz
+Am Sonntag, 28. Juli 2019, 13:38:43 CEST schrieb Krzysztof Kozlowski:
+> On Sat, 27 Jul 2019 at 17:33, Heiko Stuebner <heiko@sntech.de> wrote:
+> >
+> > Hi Krzysztof,
+> >
+> > Am Samstag, 27. Juli 2019, 16:27:36 CEST schrieb Krzysztof Kozlowski:
+> > > Fix DTC warning:
+> > >
+> > >     arch/arm/boot/dts/rk3288-veyron.dtsi:21.9-24.4:
+> > >     Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
+> >
+> > please see the comment directly above the memory node on why that needs
+> > to stay that way. So no, we'll keep the veyron memory node as is.
+> 
+> Damn it, I missed it.
+
+no worries :-)
