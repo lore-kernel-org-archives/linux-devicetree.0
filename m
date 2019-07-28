@@ -1,33 +1,42 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 02/10] iio: document bindings for mounting matrices
-Date: Sun, 28 Jul 2019 12:07:44 +0200
-Message-ID: <CACRpkdb1-d3mzJAs2AVdz3n8vWGy-cgajiTP4k=cJSqTsbgpeQ@mail.gmail.com>
-References: <cover.1550768574.git.hns@goldelico.com> <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
- <CACRpkdZ5Z9VY457Fywt6X=K5XONgiPVcwbwSkwL_U+GCqZ+u5g@mail.gmail.com>
- <4C901747-1657-47AD-A9D7-10E41AFB35CB@goldelico.com> <20190728085010.36040cb2@archlinux>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Add missing unit address to
+ memory node on rk3288-veyron
+Date: Sun, 28 Jul 2019 13:38:43 +0200
+Message-ID: <CAJKOXPcHB9969bqw+aqRh1HYHKDazhhpKy_+uKKcA=5Gkg6+EA@mail.gmail.com>
+References: <20190727142736.23188-1-krzk@kernel.org>
+ <20190727142736.23188-2-krzk@kernel.org> <86910491.m50tbimVMv@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190728085010.36040cb2@archlinux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, Song Qiang <songqiang1304521@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Martin Kelly <mkelly@xevo.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Stephan Gerhold <stephan@gerhold.net>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <86910491.m50tbimVMv@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 9:50 AM Jonathan Cameron <jic23@kernel.org> wrote:
+On Sat, 27 Jul 2019 at 17:33, Heiko Stuebner <heiko@sntech.de> wrote:
+>
+> Hi Krzysztof,
+>
+> Am Samstag, 27. Juli 2019, 16:27:36 CEST schrieb Krzysztof Kozlowski:
+> > Fix DTC warning:
+> >
+> >     arch/arm/boot/dts/rk3288-veyron.dtsi:21.9-24.4:
+> >     Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
+>
+> please see the comment directly above the memory node on why that needs
+> to stay that way. So no, we'll keep the veyron memory node as is.
 
-> Given the comments that 'need' any response are fairly minor, I've just
-> taken the view that the perfect is the enemy of the good and applied
-> it to the togreg branch of iio.git with some really small tweaks.
+Damn it, I missed it.
 
-Oh that works, too :) whoever is most annoyed will get to fix any
-remaining offenders.
-
-The quality of documentation really depends on perspective.
-This weekend I read some old UNIX System V manuals
-and this was "extremly professional" documentation at one
-point. It wasn't very good. I think we're pretty well off with what
-we have here.
-
-Yours,
-Linus Walleij
+Best regards,
+Krzysztof
