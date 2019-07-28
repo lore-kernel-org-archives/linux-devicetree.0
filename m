@@ -1,83 +1,59 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 4/5] iio: imu: st_lsm6dsx: add support for accel/gyro
- unit of lsm9sd1
-Date: Sun, 28 Jul 2019 09:34:14 +0100
-Message-ID: <20190728093414.5d3ca94d@archlinux>
-References: <20190725053132.9589-1-martin.kepplinger@puri.sm>
-        <20190725053132.9589-5-martin.kepplinger@puri.sm>
-        <20190727184844.307255a2@archlinux>
-        <a2f6d5fe-04c6-f5d8-ad38-56b8fa033295@puri.sm>
+Subject: Re: [PATCH v2 1/3] dt-bindings: iio/adc: Add a compatible string
+ for JZ4770 SoC ADC
+Date: Sun, 28 Jul 2019 09:45:23 +0100
+Message-ID: <20190728094523.2a161231@archlinux>
+References: <20190727195940.14010-1-contact@artur-rojek.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a2f6d5fe-04c6-f5d8-ad38-56b8fa033295@puri.sm>
+In-Reply-To: <20190727195940.14010-1-contact@artur-rojek.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc: lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Artur Rojek <contact@artur-rojek.eu>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Cercueil <paul@crapouillou.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 28 Jul 2019 08:04:51 +0200
-Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
+On Sat, 27 Jul 2019 21:59:38 +0200
+Artur Rojek <contact@artur-rojek.eu> wrote:
 
-> On 27.07.19 19:48, Jonathan Cameron wrote:
-> > On Thu, 25 Jul 2019 07:31:31 +0200
-> > Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
-> >   
-> >> The LSM9DS1's accelerometer / gyroscope unit and it's magnetometer (separately
-> >> supported in iio/magnetometer/st_magn*) are located on a separate i2c addresses
-> >> on the bus.
-> >>
-> >> For the datasheet, see https://www.st.com/resource/en/datasheet/lsm9ds1.pdf
-> >>
-> >> Treat it just like the LSM6* devices and, despite it's name, hook it up
-> >> to the st_lsm6dsx driver, using it's basic functionality.
-> >>
-> >> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>  
-> > I'm a little confused on this hardware.
-> > 
-> > How does buffered output work if these are independently clocked?
-> > 
-> > I took a quick look at the datasheet, and 'suspect' the answer is that
-> > it runs at the gyro frequencies if both are enable. Is that right?
-> >   
+> Add a compatible string for the ADC controller present on
+> Ingenic JZ4770 SoC.
 > 
-> Thanks for reviewing, Jonathan,
-> 
-> Correct. It says so in chapter 7.12. But that's a "problem" with all
-> these imu devices, not specific to this addition right?
-It's not a problem as such, but there is a related difference in this
-device to the others supported by this driver.
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-The other parts seem to allow for independent data rate setting, with
-streaming to the buffer that isn't in 'lock step'.  I.e you can get
+Hi Artur,
 
-Ax_1, Ay_1, Az_1, Gx_1, Gy_1, Gz_1, Gx_2, Gy_2, Gz_2, Ax_2, Ay_2, Az_2, Gy_3...
+I'll have to hold this series for a few weeks as the fix for the
+clock rate divider isn't in my upstream for the togreg branch yet
+(as I haven't sent a pull request since the merge window).
 
-That required us to split them up into two devices and means that, to fuse
-data from these two source, userspace has to do the harder job of
-aligning the two datasets.
+Give me a poke if I seem to have forgotten these in a few weeks
+time.
 
-For this device, things are simpler in that you always a 'scan' that goes
-across both accelerometer and gyroscope channels.  That allows us to
-represent it as a single IIO device with a single buffer.
-
-I'm not seeing any reference in the lsm9ds1 to the pattern registers
-that are used to handle difference in frequency for the other
-parts by letting us know what is actually present in each data set
-in the fifo.
-
-Now, that doesn't meant we can't still handle them separately given
-we already do that for other parts.
-
-Anyhow, is my understanding correct?
+Thanks,
 
 Jonathan
 
+> ---
 > 
-> Sidenote: I thought about renaming things to "lsm6ds0" here just because
-> of the name and because the registers are (almost) the same as for my
-> lsm9ds1. But I'm not a fan of blindly doing that without being able to
-> test. When the current patchset looks good to you, let's keep it that way.
+> Changes:
 > 
->                             martin
+> v2: no change
+> 
+>  Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> index f01159f20d87..cd9048cf9dcf 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> @@ -5,6 +5,7 @@ Required properties:
+>  - compatible: Should be one of:
+>    * ingenic,jz4725b-adc
+>    * ingenic,jz4740-adc
+> +  * ingenic,jz4770-adc
+>  - reg: ADC controller registers location and length.
+>  - clocks: phandle to the SoC's ADC clock.
+>  - clock-names: Must be set to "adc".
