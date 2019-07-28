@@ -1,59 +1,32 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: iio/adc: Add a compatible string
- for JZ4770 SoC ADC
-Date: Sun, 28 Jul 2019 09:45:23 +0100
-Message-ID: <20190728094523.2a161231@archlinux>
-References: <20190727195940.14010-1-contact@artur-rojek.eu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Bin Meng <bmeng.cn@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: interrupt-controller: msi: Correct msi-controller@c's reg
+Date: Sun, 28 Jul 2019 02:30:18 -0700
+Message-ID: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190727195940.14010-1-contact@artur-rojek.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Artur Rojek <contact@artur-rojek.eu>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Cercueil <paul@crapouillou.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 27 Jul 2019 21:59:38 +0200
-Artur Rojek <contact@artur-rojek.eu> wrote:
+The base address of msi-controller@c should be set to c.
 
-> Add a compatible string for the ADC controller present on
-> Ingenic JZ4770 SoC.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
+---
 
-Hi Artur,
+ Documentation/devicetree/bindings/interrupt-controller/msi.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'll have to hold this series for a few weeks as the fix for the
-clock rate divider isn't in my upstream for the togreg branch yet
-(as I haven't sent a pull request since the merge window).
-
-Give me a poke if I seem to have forgotten these in a few weeks
-time.
-
-Thanks,
-
-Jonathan
-
-> ---
-> 
-> Changes:
-> 
-> v2: no change
-> 
->  Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
-> index f01159f20d87..cd9048cf9dcf 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
-> @@ -5,6 +5,7 @@ Required properties:
->  - compatible: Should be one of:
->    * ingenic,jz4725b-adc
->    * ingenic,jz4740-adc
-> +  * ingenic,jz4770-adc
->  - reg: ADC controller registers location and length.
->  - clocks: phandle to the SoC's ADC clock.
->  - clock-names: Must be set to "adc".
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/msi.txt b/Documentation/devicetree/bindings/interrupt-controller/msi.txt
+index c60c034..c20b51d 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/msi.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/msi.txt
+@@ -98,7 +98,7 @@ Example
+ 	};
+ 
+ 	msi_c: msi-controller@c {
+-		reg = <0xb 0xf00>;
++		reg = <0xc 0xf00>;
+ 		compatible = "vendor-b,another-controller";
+ 		msi-controller;
+ 		/* Each device has some unique ID */
+-- 
+2.7.4
