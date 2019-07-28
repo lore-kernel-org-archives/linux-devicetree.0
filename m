@@ -1,7 +1,7 @@
 From: Zhou Yanjie <zhouyanjie@zoho.com>
-Subject: [PATCH 2/4 v4] irqchip: Ingenic: Unify the function name prefix to "ingenic_intc_".
-Date: Mon, 29 Jul 2019 01:34:31 +0800
-Message-ID: <1564335273-22931-3-git-send-email-zhouyanjie@zoho.com>
+Subject: [PATCH 3/4 v4] dt-bindings: interrupt-controller: Add new Ingenic Socs bindings.
+Date: Mon, 29 Jul 2019 01:34:32 +0800
+Message-ID: <1564335273-22931-4-git-send-email-zhouyanjie@zoho.com>
 References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
  <1564335273-22931-1-git-send-email-zhouyanjie@zoho.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,43 +11,32 @@ To: linux-mips@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, paul.burton@mips.com, tglx@linutronix.de, mark.rutland@arm.com, jason@lakedaemon.net, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-For the sake of uniform style, function "intc_irq_set_mask" is
-changed to "ingenic_intc_intc_irq_set_mask".
+Add the interrupt-controller bindings for the JZ4760/JZ4760B and
+the X1000/X1000E and the X1500 Socs from Ingenic.
 
 Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 ---
- drivers/irqchip/irq-ingenic.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/interrupt-controller/ingenic,intc.txt        | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index 49f7685..8430f5a 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -63,7 +63,8 @@ static void ingenic_chained_handle_irq(struct irq_desc *desc)
- 	chained_irq_exit(chip, desc);
- }
- 
--static void intc_irq_set_mask(struct irq_chip_generic *gc, uint32_t mask)
-+static void ingenic_intc_irq_set_mask(struct irq_chip_generic *gc,
-+						uint32_t mask)
- {
- 	struct irq_chip_regs *regs = &gc->chip_types->regs;
- 
-@@ -74,13 +75,13 @@ static void intc_irq_set_mask(struct irq_chip_generic *gc, uint32_t mask)
- void ingenic_intc_irq_suspend(struct irq_data *data)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
--	intc_irq_set_mask(gc, gc->wake_active);
-+	ingenic_intc_irq_set_mask(gc, gc->wake_active);
- }
- 
- void ingenic_intc_irq_resume(struct irq_data *data)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
--	intc_irq_set_mask(gc, gc->mask_cache);
-+	ingenic_intc_irq_set_mask(gc, gc->mask_cache);
- }
- 
- static int __init ingenic_intc_of_init(struct device_node *node,
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+index d4373d0..a96e120 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+@@ -5,9 +5,14 @@ Required properties:
+ - compatible : should be "ingenic,<socname>-intc". Valid strings are:
+     ingenic,jz4740-intc
+     ingenic,jz4725b-intc
++    ingenic,jz4760-intc
++    ingenic,jz4760b-intc
+     ingenic,jz4770-intc
+     ingenic,jz4775-intc
+     ingenic,jz4780-intc
++    ingenic,x1000-intc
++    ingenic,x1000e-intc
++    ingenic,x1500-intc
+ - reg : Specifies base physical address and size of the registers.
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode an
 -- 
 2.7.4
