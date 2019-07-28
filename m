@@ -1,79 +1,45 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v4] arm64: dts: imx8mq: Init rates and parents configs for clocks
-Date: Sun, 28 Jul 2019 18:20:40 +0300
-Message-ID: <20190728152040.15323-1-daniel.baluta@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, l.stach@pengutronix.de, ccaione@baylibre.com, abel.vesa@nxp.com, baruch@tkos.co.il, andrew.smirnov@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shengjiu.wang@nxp.com, angus@akkea.ca, agx@sigxcpu.org, Anson.Huang@nxp.com, Daniel Baluta <daniel.baluta@nxp.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: imx8mq: Init rates and parents configs for
+ clocks
+Date: Sun, 28 Jul 2019 18:24:05 +0300
+Message-ID: <CAEnQRZDrTZ-KFs0fCYorpiRHJFud9twoe-B4fRjekd6DJiODhw@mail.gmail.com>
+References: <1562155311-24696-1-git-send-email-abel.vesa@nxp.com>
+ <CAEnQRZBK7EYVhbGpFeC79HxU=h0OcXU_SSeaMWbp+Qk=rf=14g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAEnQRZBK7EYVhbGpFeC79HxU=h0OcXU_SSeaMWbp+Qk=rf=14g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Abel Vesa <abel.vesa@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Abel Vesa <abel.vesa@nxp.com>
+On Wed, Jul 3, 2019 at 4:05 PM Daniel Baluta <daniel.baluta@gmail.com> wrote:
+>
+> On Wed, Jul 3, 2019 at 3:03 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+> >
+> > Add the initial configuration for clocks that need default parent and rate
+> > setting. This is based on the vendor tree clock provider parents and rates
+> > configuration except this is doing the setup in dts rather then using clock
+> > consumer API in a clock provider driver.
+> >
+> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+>
+> For audio related clock:
+> Acked-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-Add the initial configuration for clocks that need default parent and rate
-setting. This is based on the vendor tree clock provider parents and rates
-configuration except this is doing the setup in dts rather then using clock
-consumer API in a clock provider driver.
+Shawn,
 
-Note that by adding the initial rate setting for audio_pll1/audio_pll
-setting we need to remove it from imx8mq-librem5-devkit.dts
+Please ignore this patch. I've added some improvements.
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Tested-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
-Changes since v3:
-	- fix extra new lines
-
- .../dts/freescale/imx8mq-librem5-devkit.dts   |  5 -----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 19 +++++++++++++++++++
- 2 files changed, 19 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 683a11035643..c702ccc82867 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -169,11 +169,6 @@
- 	};
- };
- 
--&clk {
--	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL2>;
--	assigned-clock-rates = <786432000>, <722534400>;
--};
--
- &dphy {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 02fbd0625318..a55d72ba2e05 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -494,6 +494,25 @@
- 				clock-names = "ckil", "osc_25m", "osc_27m",
- 				              "clk_ext1", "clk_ext2",
- 				              "clk_ext3", "clk_ext4";
-+				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1>,
-+					<&clk IMX8MQ_AUDIO_PLL1>,
-+					<&clk IMX8MQ_AUDIO_PLL2>,
-+					<&clk IMX8MQ_CLK_AHB>,
-+					<&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
-+					<&clk IMX8MQ_CLK_AUDIO_AHB>,
-+					<&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
-+					<&clk IMX8MQ_CLK_NOC>;
-+				assigned-clock-parents = <0>,
-+						<0>,
-+						<0>,
-+						<&clk IMX8MQ_SYS1_PLL_133M>,
-+						<&clk IMX8MQ_SYS1_PLL_266M>,
-+						<&clk IMX8MQ_SYS2_PLL_500M>,
-+						<&clk IMX8MQ_CLK_27M>,
-+						<&clk IMX8MQ_SYS1_PLL_800M>;
-+				assigned-clock-rates = <593999999>,
-+						<786432000>,
-+						<722534400>;
- 			};
- 
- 			src: reset-controller@30390000 {
--- 
-2.17.1
+New patch is:
+[PATCH v4] arm64: dts: imx8mq: Init rates and parents configs for clocks
