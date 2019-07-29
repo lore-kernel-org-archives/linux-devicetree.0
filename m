@@ -1,116 +1,64 @@
-From: Jianjun Wang <jianjun.wang@mediatek.com>
-Subject: Re: [v2,2/2] PCI: mediatek: Add controller support for MT7629
-Date: Mon, 29 Jul 2019 15:38:38 +0800
-Message-ID: <1564385918.17211.6.camel@mhfsdcap03>
-References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
- <20190628073425.25165-3-jianjun.wang@mediatek.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+ IMX8MQ_CLK_TMU_ROOT
+Date: Mon, 29 Jul 2019 07:49:43 +0000
+Message-ID: <DB3PR0402MB3916F32F03E542AEFBD39A43F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+ <20190705045612.27665-5-Anson.Huang@nxp.com>
+ <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
+ <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAEnQRZCrZybzcy__u4p_Eq4zSVc2ESyfKLk5sPf1JYba1JSOiA@mail.gmail.com>
+ <20190727161736.4dkfqgwftre67v56@fsr-ub1664-175>
+ <DB3PR0402MB391600891BA75DFFA9674058F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAEnQRZB6tmYFA8wwh0Fm49LTTDuCLq-SWVfrcUkRWWBo=0U13w@mail.gmail.com>
+ <DB3PR0402MB391627F725AA7237BCACBE87F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAEnQRZBrmikenTvnh7syhy=PDPcTL3fn2TJ+ya=ToZ+SFmH5tw@mail.gmail.com>
+ <CAEnQRZDSjmcU8Q7+kMeFf12tx0NuMNjrcsgnXayvHpu4ChwHGA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190628073425.25165-3-jianjun.wang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ryder Lee <ryder.lee@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, jianjun.wang@mediatek.com, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAEnQRZDSjmcU8Q7+kMeFf12tx0NuMNjrcsgnXayvHpu4ChwHGA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@gmail.com>
+Cc: Abel Vesa <abel.vesa@nxp.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Andrey Smirnov <andrew.smirnov@gmail.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Carlo Caione <ccaione@baylibre.com>, =?utf-8?B?R3VpZG8gR8O8bnRoZXI=?= <agx@sigxcpu.org>, Leonard Crestez <leonard.crestez@nxp.com>, linux-pm@vg
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-06-28 at 15:34 +0800, Jianjun Wang wrote:
-> MT7629 is an ARM platform SoC which has the same PCIe IP with MT7622.
-> 
-> The HW default value of its Device ID is invalid, fix its Device ID to
-> match the hardware implementation.
-> 
-> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> ---
->  drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
->  include/linux/pci_ids.h                |  1 +
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index 80601e1b939e..e5e6740b635d 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -73,6 +73,7 @@
->  #define PCIE_MSI_VECTOR		0x0c0
->  
->  #define PCIE_CONF_VEND_ID	0x100
-> +#define PCIE_CONF_DEVICE_ID	0x102
->  #define PCIE_CONF_CLASS_ID	0x106
->  
->  #define PCIE_INT_MASK		0x420
-> @@ -141,12 +142,16 @@ struct mtk_pcie_port;
->  /**
->   * struct mtk_pcie_soc - differentiate between host generations
->   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-> + * @need_fix_device_id: whether this host's Device ID needed to be fixed or not
-> + * @device_id: Device ID which this host need to be fixed
->   * @ops: pointer to configuration access functions
->   * @startup: pointer to controller setting functions
->   * @setup_irq: pointer to initialize IRQ functions
->   */
->  struct mtk_pcie_soc {
->  	bool need_fix_class_id;
-> +	bool need_fix_device_id;
-> +	unsigned int device_id;
->  	struct pci_ops *ops;
->  	int (*startup)(struct mtk_pcie_port *port);
->  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-> @@ -696,6 +701,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
->  		writew(val, port->base + PCIE_CONF_CLASS_ID);
->  	}
->  
-> +	if (soc->need_fix_device_id)
-> +		writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
-> +
->  	/* 100ms timeout value should be enough for Gen1/2 training */
->  	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
->  				 !!(val & PCIE_PORT_LINKUP_V2), 20,
-> @@ -1216,11 +1224,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
->  	.setup_irq = mtk_pcie_setup_irq,
->  };
->  
-> +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
-> +	.need_fix_class_id = true,
-> +	.need_fix_device_id = true,
-> +	.device_id = PCI_DEVICE_ID_MEDIATEK_7629,
-> +	.ops = &mtk_pcie_ops_v2,
-> +	.startup = mtk_pcie_startup_port_v2,
-> +	.setup_irq = mtk_pcie_setup_irq,
-> +};
-> +
->  static const struct of_device_id mtk_pcie_ids[] = {
->  	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
->  	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
->  	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
->  	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
-> +	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
->  	{},
->  };
->  
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 70e86148cb1e..aa32962759b2 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2131,6 +2131,7 @@
->  #define PCI_VENDOR_ID_MYRICOM		0x14c1
->  
->  #define PCI_VENDOR_ID_MEDIATEK		0x14c3
-> +#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
->  
->  #define PCI_VENDOR_ID_TITAN		0x14D2
->  #define PCI_DEVICE_ID_TITAN_010L	0x8001
-
-Hi Bjorn & Lorenzo,
-
-Is this patch ok or is there anything I need to fixed?
-
-Thanks.
+SGksIERhbmllbA0KDQo+IE9uIE1vbiwgSnVsIDI5LCAyMDE5IGF0IDEwOjIwIEFNIERhbmllbCBC
+YWx1dGEgPGRhbmllbC5iYWx1dGFAZ21haWwuY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IDxzbmlw
+Pg0KPiA+ID4gPiBZb3VyIGV4cGxhbmF0aW9uIG1ha2VzIGEgbG90IG9mIHNlbnNlLiBXZSB3aWxs
+IHRha2UgY2FyZSB0b2RheSBvZg0KPiA+ID4gPiBBYmVsJ3MgcGF0Y2guDQo+ID4gPiA+IFdoYXQg
+ZG8geW91IHRoaW5rIGFib3V0IEZhYmlvJ3MgcGF0Y2g/IEkgYWxzbyB0aGluayB0aGlzIGlzIGEg
+dmFsaWQgcGF0Y2g6DQo+ID4gPiA+DQo+ID4gPHNuaXA+DQo+ID4NCj4gPiA+DQo+ID4gPiBIbW0s
+IHdoZW4gZGlkIEZhYmlvIHNlbnQgb3V0IHRoaXMgcGF0Y2g/IEkgY2FuIE5PVCBmaW5kIGl0Li4u
+DQo+ID4gPiBJIGFsc28gaGF2ZSBhIHBhdGNoIGluIHRoaXMgc2VyaWVzICgjNC82KSBkb2luZyBz
+YW1lIHRoaW5nIG9uIEp1bHkgNXRoLi4uDQo+ID4gPg0KPiA+ID4gaHR0cHM6Ly9ldXIwMS5zYWZl
+bGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGcGENCj4gPiA+
+DQo+IHRjaHdvcmsua2VybmVsLm9yZyUyRnBhdGNoJTJGMTEwMzI3ODMlMkYmYW1wO2RhdGE9MDIl
+N0MwMSU3Q2Fuc28NCj4gbi5odQ0KPiA+ID4NCj4gYW5nJTQwbnhwLmNvbSU3QzA0OGQ4Njk1YjNk
+YzRjZWVmNmJkMDhkNzEzZjU1ZThhJTdDNjg2ZWExZDNiYzINCj4gYjRjNmZhDQo+ID4gPg0KPiA5
+MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjk5OTgxNjg4MDExODY3NCZhbXA7c2RhdGE9MUhJ
+TVEwbA0KPiBpS3BFRlMNCj4gPiA+IDZQMldTRyUyRkg5ZXZzcHhJZHhBdkZtYWtsSDF3b0RrJTNE
+JmFtcDtyZXNlcnZlZD0wDQo+ID4NCj4gPiBIZSBkaWRuJ3Qgc2VuZCB0aGUgcGF0Y2ggeWV0LiBJ
+dCB3YXMganVzdCBhIHJlcXVlc3QgZm9yIHRlc3QgaGVyZToNCj4gPg0KPiA+IGh0dHBzOi8vZXVy
+MDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGY29k
+ZS4NCj4gPiBidWxpeC5vcmclMkZwZDg4anAtDQo+IDgxMjM4MSZhbXA7ZGF0YT0wMiU3QzAxJTdD
+YW5zb24uaHVhbmclNDBueHAuY29tJTdDMA0KPiA+DQo+IDQ4ZDg2OTViM2RjNGNlZWY2YmQwOGQ3
+MTNmNTVlOGElN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzDQo+IDUlN0MwDQo+ID4g
+JTdDMCU3QzYzNjk5OTgxNjg4MDExODY3NCZhbXA7c2RhdGE9cDcwbWdDRHVjQ2dMSjhUVFJNbjNh
+JTINCj4gRms2OEZYR1FlaVINCj4gPiBGUjBmVlNWN0psbyUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiA+
+DQo+ID4gQnV0LCBub3cgSSBzZWUgaXMgZXhhY3RseSBsaWtlIHlvdXIgcGF0Y2ggaGVyZToNCj4g
+DQo+IC4uLiBwcmVzc2VkIHNlbmQgdG8gZWFybHkuDQo+IA0KPiBodHRwczovL2V1cjAxLnNhZmVs
+aW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZsa21sLm8NCj4g
+cmclMkZsa21sJTJGMjAxOSUyRjclMkY1JTJGMTkmYW1wO2RhdGE9MDIlN0MwMSU3Q2Fuc29uLmh1
+YW5nJQ0KPiA0MG54cC5jb20lN0MwNDhkODY5NWIzZGM0Y2VlZjZiZDA4ZDcxM2Y1NWU4YSU3QzY4
+NmVhMWQzYmMyYjRjNmYNCj4gYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2OTk5ODE2ODgw
+MTE4Njc0JmFtcDtzZGF0YT1jaVdqOHkNCj4gV1B2a0laNW5pJTJCb2hadWFxQVhmOVBiMkZDV2hw
+OUdRaHBNd0FZJTNEJmFtcDtyZXNlcnZlZD0wDQo+IA0KPiBXZSBhcmUgYWxsIHNldCB0aGVuLiBU
+aGFua3MgQW5zb24gZm9yIGNsYXJpZmljYXRpb25zIQ0KDQpUaGFua3MsIHNvIHdlIGFyZSBhbGwg
+Y2xlYXIgYWJvdXQgdGhpcyBpc3N1ZSwgbmVlZCB0byB3YWl0IHRoZXJtYWwgbWFpbnRhaW5lciB0
+byByZXZpZXcNCnRoZSByZXN0IHBhdGNoIGluIHRoaXMgc2VyaWVzLCBidXQgSSBkaWQgTk9UIHJl
+Y2VpdmUgYW55IHJlc3BvbnNlIGZyb20gdGhlcm1hbCBzdWItc3lzdGVtDQptYWludGFpbmVyIGZv
+ciByZWFsbHkgbG9uZyB0aW1lLCBOT1Qgc3VyZSB3aGVuIHRoZSB0aGVybWFsIHBhdGNoZXMgY2Fu
+IGJlIGFjY2VwdGVkLg0KDQpBbnNvbg0KDQo=
