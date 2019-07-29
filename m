@@ -1,112 +1,151 @@
-From: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v11 10/12] soc: mediatek: cmdq: add polling function
-Date: Mon, 29 Jul 2019 15:01:04 +0800
-Message-ID: <20190729070106.9332-11-bibby.hsieh@mediatek.com>
-References: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 5/6] pwm: sun4i: Add support to output
+ source clock directly
+Date: Mon, 29 Jul 2019 09:06:05 +0200
+Message-ID: <20190729070605.vlu7kgzn362ph2q3@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <20190726184045.14669-6-jernej.skrabec@siol.net>
+Reply-To: u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190729070106.9332-1-bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Houlong Wei <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ginny.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCX3TTWUQMPRB2FV7LUQKGQEENWV4MA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190726184045.14669-6-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-add polling function in cmdq helper functions
+On Fri, Jul 26, 2019 at 08:40:44PM +0200, Jernej Skrabec wrote:
+> PWM core has an option to bypass whole logic and output unchanged source
+> clock as PWM output. This is achieved by enabling bypass bit.
+>=20
+> Note that when bypass is enabled, no other setting has any meaning, not
+> even enable bit.
+>=20
+> This mode of operation is needed to achieve high enough frequency to
+> serve as clock source for AC200 chip, which is integrated into same
+> package as H6 SoC.
+>=20
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> ---
+>  drivers/pwm/pwm-sun4i.c | 31 ++++++++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index 9e0eca79ff88..848cff26f385 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -120,6 +120,19 @@ static void sun4i_pwm_get_state(struct pwm_chip *chi=
+p,
+> =20
+>  	val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> =20
+> +	/*
+> +	 * PWM chapter in H6 manual has a diagram which explains that if bypass
+> +	 * bit is set, no other setting has any meaning. Even more, experiment
+> +	 * proved that also enable bit is ignored in this case.
+> +	 */
+> +	if (val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) {
+> +		state->period =3D DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, clk_rate);
+> +		state->duty_cycle =3D state->period / 2;
+> +		state->polarity =3D PWM_POLARITY_NORMAL;
+> +		state->enabled =3D true;
+> +		return;
+> +	}
+> +
+>  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK) &&
+>  	    sun4i_pwm->data->has_prescaler_bypass)
+>  		prescaler =3D 1;
+> @@ -211,7 +224,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, str=
+uct pwm_device *pwm,
+>  {
+>  	struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
+>  	struct pwm_state cstate;
+> -	u32 ctrl;
+> +	u32 ctrl, clk_rate;
+> +	bool bypass;
+>  	int ret;
+>  	unsigned int delay_us;
+>  	unsigned long now;
+> @@ -226,6 +240,16 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+>  		}
+>  	}
+> =20
+> +	/*
+> +	 * Although it would make much more sense to check for bypass in
+> +	 * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled"=
+.
+> +	 * Period is allowed to be rounded up or down.
+> +	 */
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Reviewed-by: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/soc/mediatek/mtk-cmdq-helper.c   | 28 ++++++++++++++++++++++++
- include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
- include/linux/soc/mediatek/mtk-cmdq.h    | 15 +++++++++++++
- 3 files changed, 44 insertions(+)
+Every driver seems to implement rounding the way its driver considers it
+sensible. @Thierry: This is another patch where it would be good to have
+a global directive about how rounding is supposed to work to provide the
+users an reliable and uniform way to work with PWMs.
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 0886c4967ca4..70ad4d806fac 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -220,6 +220,34 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
- }
- EXPORT_SYMBOL(cmdq_pkt_clear_event);
- 
-+int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
-+		  u16 offset, u32 value, u32 mask)
-+{
-+	struct cmdq_instruction *inst;
-+
-+	if (mask != 0xffffffff) {
-+		inst = cmdq_pkt_append_command(pkt);
-+		if (!inst)
-+			return -ENOMEM;
-+
-+		inst->op = CMDQ_CODE_MASK;
-+		inst->value = ~mask;
-+		offset = offset | 0x1;
-+	}
-+
-+	inst = cmdq_pkt_append_command(pkt);
-+	if (!inst)
-+		return -ENOMEM;
-+
-+	inst->op = CMDQ_CODE_POLL;
-+	inst->value = value;
-+	inst->offset = offset;
-+	inst->subsys = subsys;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(cmdq_pkt_poll);
-+
- static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
- {
- 	struct cmdq_instruction *inst;
-diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-index c8adedefaf42..9e3502945bc1 100644
---- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-+++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-@@ -46,6 +46,7 @@
- enum cmdq_code {
- 	CMDQ_CODE_MASK = 0x02,
- 	CMDQ_CODE_WRITE = 0x04,
-+	CMDQ_CODE_POLL = 0x08,
- 	CMDQ_CODE_JUMP = 0x10,
- 	CMDQ_CODE_WFE = 0x20,
- 	CMDQ_CODE_EOC = 0x40,
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 9618debb9ceb..a345870a6d10 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -99,6 +99,21 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
-  */
- int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
- 
-+/**
-+ * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
-+ *		     execute an instruction that wait for a specified hardware
-+ *		     register to check for the value. All GCE hardware
-+ *		     threads will be blocked by this instruction.
-+ * @pkt:	the CMDQ packet
-+ * @subsys:	the CMDQ sub system code
-+ * @offset:	register offset from CMDQ sub system
-+ * @value:	the specified target register value
-+ * @mask:	the specified target register mask
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ */
-+int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
-+		  u16 offset, u32 value, u32 mask);
- /**
-  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
-  *                          packet and call back at the end of done packet
--- 
-2.18.0
+> +	clk_rate =3D clk_get_rate(sun4i_pwm->clk);
+> +	bypass =3D (state->period =3D=3D NSEC_PER_SEC / clk_rate ||
+> +		 state->period =3D=3D DIV_ROUND_UP(NSEC_PER_SEC, clk_rate)) &&
+> +		 state->enabled;
+
+Not sure if the compiler is clever enough to notice the obvious
+optimisation with this code construct, but you can write this test in a
+more clever way which has zero instead of up to two divisions. Something
+like:
+
+bypass =3D ((state->period * clk_rate >=3D NSEC_PER_SEC &&
+	   state->period * clk_rate < NSEC_PER_SEC + clk_rate) &&
+	  state->enabled);
+
+In the commit log you write the motivation for using bypass is that it
+allows to implement higher frequency then with the "normal" operation.
+As you don't skip calculating the normal parameters requesting such a
+high-frequency setting either errors out or doesn't catch the impossible
+request. In both cases there is something to fix.
+
+> +
+>  	spin_lock(&sun4i_pwm->ctrl_lock);
+>  	ctrl =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> =20
+> @@ -273,6 +297,11 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+>  		ctrl &=3D ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+>  	}
+> =20
+> +	if (bypass)
+> +		ctrl |=3D BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> +	else
+> +		ctrl &=3D ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> +
+
+Does switching on (or off) the bypass bit complete the currently running
+period?
+
+>  	sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
+> =20
+>  	spin_unlock(&sun4i_pwm->ctrl_lock);
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190729070605.vlu7kgzn362ph2q3%40pengutronix.de.
