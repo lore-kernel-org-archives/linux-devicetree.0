@@ -1,32 +1,31 @@
-From: Richard Weinberger <richard@nod.at>
-Subject: Re: [PATCH 00/11] JZ4740 SoC cleanup
-Date: Mon, 29 Jul 2019 20:08:37 +0200 (CEST)
-Message-ID: <339409106.53616.1564423717793.JavaMail.zimbra@nod.at>
-References: <20190725220215.460-1-paul@crapouillou.net> <CAFLxGvyi0+0E3M12A7cRoHfEKd8-7Yr8EMG9J=2XcjCxPWY5pA@mail.gmail.com> <1564419921.1759.1@crapouillou.net>
+From: Frank Wunderlich <frank@fw-web.de>
+Subject: Re: [PATCH v3 00/10] implement poweroff for mt6323 / bpi-r2
+Date: Mon, 29 Jul 2019 20:16:13 +0200
+Message-ID: <e1274024-b67c-3d04-50d3-f6fcd3b3cbe6@fw-web.de>
+References: <20190729174154.4335-1-frank-w@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564419921.1759.1@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Richard Weinberger <richard.weinberger@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vinod Koul <vkoul@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee.jones@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Sebastian Reichel <sre@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, alsa-devel <alsa-devel@alsa-project.org>, linux-pm@vger.kernel.org, linux-mips@vger.kernel.org, DRI
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190729174154.4335-1-frank-w@public-files.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Allison Randal <allison@lohutok.net>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kate Stewart <kstewart@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Fontana <rfontana@redhat.com>, Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre>
 List-Id: devicetree@vger.kernel.org
 
------ Ursprüngliche Mail -----
->> Was this series tested with the Ben Nanonote device?
->> I have one of these and from time to time I upgrade the kernel on it.
-> 
-> Yes! Artur (Cc'd) tested it.
-> 
-> You can test it yourself, after merging this patchset with:
-> https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/slave-dma.git
-> branch next,
-> git://git.freedesktop.org/git/drm-misc branch drm-misc-next.
-> 
-> These will be in 5.4-rc1.
+Hi,
 
-Awesome! Thanks a lot for cleaning this up.
+sorry about missing part 9+10, my mail-provider blocks the mails, 
+currently i cannot send with this account
 
-Thanks,
-//richard
+i try sending with another
+
+regards Frank
