@@ -1,245 +1,34 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v8 4/7] driver core: Add sync_state driver/bus callback
-Date: Mon, 29 Jul 2019 15:10:58 -0700
-Message-ID: <20190729221101.228240-5-saravanak@google.com>
-References: <20190729221101.228240-1-saravanak@google.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] dts: add vendor prefix "acme" for "Acme Systems srl"
+Date: Mon, 29 Jul 2019 16:34:00 -0600
+Message-ID: <CAL_Jsq+G-kk3_UHC=nAEJFXQ22-gBL0AFUrCXv=CZNy-GXHH3Q@mail.gmail.com>
+References: <20190728210403.2730-1-uwe@kleine-koenig.org>
+ <20190728210403.2730-2-uwe@kleine-koenig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190729221101.228240-1-saravanak@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190728210403.2730-2-uwe@kleine-koenig.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, info@acmesystems.it, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This sync_state driver/bus callback is called once all the consumers
-of a supplier have probed successfully.
-
-This allows the supplier device's driver/bus to sync the supplier
-device's state to the software state with the guarantee that all the
-consumers are actively managing the resources provided by the supplier
-device.
-
-To maintain backwards compatibility and ease transition from existing
-frameworks and resource cleanup schemes, late_initcall_sync is the
-earliest when the sync_state callback might be called.
-
-There is no upper bound on the time by which the sync_state callback
-has to be called. This is because if a consumer device never probes,
-the supplier has to maintain its resources in the state left by the
-bootloader. For example, if the bootloader leaves the display
-backlight at a fixed voltage and the backlight driver is never probed,
-you don't want the backlight to ever be turned off after boot up.
-
-Also, when multiple devices are added after kernel init, some
-suppliers could be added before their consumer devices get added. In
-these instances, the supplier devices could get their sync_state
-callback called right after they probe because the consumers devices
-haven't had a chance to create device links to the suppliers.
-
-To handle this correctly, this change also provides APIs to
-pause/resume sync state callbacks so that when multiple devices are
-added, their sync_state callback evaluation can be postponed to happen
-after all of them are added.
-
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/base/core.c    | 65 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/device.h | 23 +++++++++++++++
- 2 files changed, 88 insertions(+)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index fec2e8ae75fe..8528b5298e14 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -46,6 +46,8 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
- /* Device links support. */
- static LIST_HEAD(wait_for_suppliers);
- static DEFINE_MUTEX(wfs_lock);
-+static LIST_HEAD(deferred_sync);
-+static unsigned int supplier_sync_state_disabled;
- 
- #ifdef CONFIG_SRCU
- static DEFINE_MUTEX(device_links_lock);
-@@ -649,6 +651,62 @@ int device_links_check_suppliers(struct device *dev)
- 	return ret;
- }
- 
-+static void __device_links_supplier_sync_state(struct device *dev)
-+{
-+	struct device_link *link;
-+
-+	if (dev->state_synced)
-+		return;
-+
-+	list_for_each_entry(link, &dev->links.consumers, s_node) {
-+		if (!(link->flags & DL_FLAG_MANAGED))
-+			continue;
-+		if (link->status != DL_STATE_ACTIVE)
-+			return;
-+	}
-+
-+	if (dev->bus->sync_state)
-+		dev->bus->sync_state(dev);
-+	else if (dev->driver && dev->driver->sync_state)
-+		dev->driver->sync_state(dev);
-+
-+	dev->state_synced = true;
-+}
-+
-+void device_links_supplier_sync_state_pause(void)
-+{
-+	device_links_write_lock();
-+	supplier_sync_state_disabled++;
-+	device_links_write_unlock();
-+}
-+
-+void device_links_supplier_sync_state_resume(void)
-+{
-+	struct device *dev, *tmp;
-+
-+	device_links_write_lock();
-+	if (!supplier_sync_state_disabled) {
-+		WARN(true, "Unmatched sync_state pause/resume!");
-+		goto out;
-+	}
-+	supplier_sync_state_disabled--;
-+	if (supplier_sync_state_disabled)
-+		goto out;
-+
-+	list_for_each_entry_safe(dev, tmp, &deferred_sync, links.defer_sync) {
-+		__device_links_supplier_sync_state(dev);
-+		list_del_init(&dev->links.defer_sync);
-+	}
-+out:
-+	device_links_write_unlock();
-+}
-+
-+static void __device_links_supplier_defer_sync(struct device *sup)
-+{
-+	if (list_empty(&sup->links.defer_sync))
-+		list_add_tail(&sup->links.defer_sync, &deferred_sync);
-+}
-+
- /**
-  * device_links_driver_bound - Update device links after probing its driver.
-  * @dev: Device to update the links for.
-@@ -693,6 +751,11 @@ void device_links_driver_bound(struct device *dev)
- 
- 		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
- 		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
-+
-+		if (supplier_sync_state_disabled)
-+			__device_links_supplier_defer_sync(link->supplier);
-+		else
-+			__device_links_supplier_sync_state(link->supplier);
- 	}
- 
- 	dev->links.status = DL_DEV_DRIVER_BOUND;
-@@ -809,6 +872,7 @@ void device_links_driver_cleanup(struct device *dev)
- 		WRITE_ONCE(link->status, DL_STATE_DORMANT);
- 	}
- 
-+	list_del_init(&dev->links.defer_sync);
- 	__device_links_no_driver(dev);
- 
- 	device_links_write_unlock();
-@@ -1783,6 +1847,7 @@ void device_initialize(struct device *dev)
- 	INIT_LIST_HEAD(&dev->links.consumers);
- 	INIT_LIST_HEAD(&dev->links.suppliers);
- 	INIT_LIST_HEAD(&dev->links.needs_suppliers);
-+	INIT_LIST_HEAD(&dev->links.defer_sync);
- 	dev->links.status = DL_DEV_NO_DRIVER;
- }
- EXPORT_SYMBOL_GPL(device_initialize);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 65ac1fa40939..224d0126badc 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -84,6 +84,8 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
-  *		available at the time this function is called.  As in, the
-  *		function should NOT stop at the first failed device link if
-  *		other unlinked supplier devices are present in the system.
-+ *		This is necessary for the sync_state() callback to work
-+ *		correctly.
-  *
-  *		Return 0 if device links have been successfully created to all
-  *		the suppliers of this device.  Return an error if some of the
-@@ -91,6 +93,13 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
-  *		reattempted in the future.
-  * @probe:	Called when a new device or driver add to this bus, and callback
-  *		the specific driver's probe to initial the matched device.
-+ * @sync_state:	Called to sync device state to software state after all the
-+ *		state tracking consumers linked to this device (present at
-+ *		the time of late_initcall) have successfully bound to a
-+ *		driver. If the device has no consumers, this function will
-+ *		be called at late_initcall_sync level. If the device has
-+ *		consumers that are never bound to a driver, this function
-+ *		will never get called until they do.
-  * @remove:	Called when a device removed from this bus.
-  * @shutdown:	Called at shut-down time to quiesce the device.
-  *
-@@ -135,6 +144,7 @@ struct bus_type {
- 	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
- 	int (*add_links)(struct device *dev);
- 	int (*probe)(struct device *dev);
-+	void (*sync_state)(struct device *dev);
- 	int (*remove)(struct device *dev);
- 	void (*shutdown)(struct device *dev);
- 
-@@ -280,6 +290,13 @@ enum probe_type {
-  * @probe:	Called to query the existence of a specific device,
-  *		whether this driver can work with it, and bind the driver
-  *		to a specific device.
-+ * @sync_state:	Called to sync device state to software state after all the
-+ *		state tracking consumers linked to this device (present at
-+ *		the time of late_initcall) have successfully bound to a
-+ *		driver. If the device has no consumers, this function will
-+ *		be called at late_initcall_sync level. If the device has
-+ *		consumers that are never bound to a driver, this function
-+ *		will never get called until they do.
-  * @remove:	Called when the device is removed from the system to
-  *		unbind a device from this driver.
-  * @shutdown:	Called at shut-down time to quiesce the device.
-@@ -318,6 +335,7 @@ struct device_driver {
- 
- 	int (*edit_links)(struct device *dev);
- 	int (*probe) (struct device *dev);
-+	void (*sync_state)(struct device *dev);
- 	int (*remove) (struct device *dev);
- 	void (*shutdown) (struct device *dev);
- 	int (*suspend) (struct device *dev, pm_message_t state);
-@@ -923,12 +941,14 @@ enum dl_dev_state {
-  * @suppliers: List of links to supplier devices.
-  * @consumers: List of links to consumer devices.
-  * @needs_suppliers: Hook to global list of devices waiting for suppliers.
-+ * @defer_sync: Hook to global list of devices that have deferred sync_state.
-  * @status: Driver status information.
-  */
- struct dev_links_info {
- 	struct list_head suppliers;
- 	struct list_head consumers;
- 	struct list_head needs_suppliers;
-+	struct list_head defer_sync;
- 	enum dl_dev_state status;
- };
- 
-@@ -1101,6 +1121,7 @@ struct device {
- 	bool			offline:1;
- 	bool			of_node_reused:1;
- 	bool			has_edit_links:1;
-+	bool			state_synced:1;
- #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
-@@ -1445,6 +1466,8 @@ struct device_link *device_link_add(struct device *consumer,
- void device_link_del(struct device_link *link);
- void device_link_remove(void *consumer, struct device *supplier);
- void device_link_remove_from_wfs(struct device *consumer);
-+void device_links_supplier_sync_state_pause(void);
-+void device_links_supplier_sync_state_resume(void);
- 
- #ifndef dev_fmt
- #define dev_fmt(fmt) fmt
--- 
-2.22.0.709.g102302147b-goog
+T24gU3VuLCBKdWwgMjgsIDIwMTkgYXQgMzowNCBQTSBVd2UgS2xlaW5lLUvDtm5pZyA8dXdlQGts
+ZWluZS1rb2VuaWcub3JnPiB3cm90ZToKPgo+IFNpZ25lZC1vZmYtYnk6IFV3ZSBLbGVpbmUtS8O2
+bmlnIDx1d2VAa2xlaW5lLWtvZW5pZy5vcmc+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMueWFtbCB8IDIgKysKPiAgMSBmaWxlIGNoYW5n
+ZWQsIDIgaW5zZXJ0aW9ucygrKQoKSXQncyBub3QgQXByIDFzdCwgc28gSSBndWVzcyB0aGlzIGlz
+IGEgcmVhbCBjb21wYW55IGFuZCBub3QgdGhlIGNveW90ZSdzLiA6KQoKQWNrZWQtYnk6IFJvYiBI
+ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
