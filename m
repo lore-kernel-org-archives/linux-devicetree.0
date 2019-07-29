@@ -1,32 +1,66 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 2/2] arm64: dts: amazon: add Amazon Annapurna Labs Alpine
- v3 support
-Date: Mon, 29 Jul 2019 11:12:50 +0100
-Message-ID: <20190729101250.GA831@e107155-lin>
-References: <20190728195135.12661-1-ronenk@amazon.com>
- <20190728195135.12661-3-ronenk@amazon.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 2/6] pwm: sun4i: Add a quirk for reset line
+Date: Mon, 29 Jul 2019 12:18:58 +0200
+Message-ID: <1564395538.7633.7.camel@pengutronix.de>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+         <20190726184045.14669-3-jernej.skrabec@siol.net>
+         <20190729063630.rn325whatfnc3m7n@pengutronix.de>
+         <CAGb2v65KOpivHQNkg+R2=D=ejCJYnPdVcyHJZW-GJCR8j0Yk0g@mail.gmail.com>
+         <20190729071218.bukw7vxilqy523k3@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190728195135.12661-3-ronenk@amazon.com>
+In-Reply-To: <20190729071218.bukw7vxilqy523k3@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ronen Krupnik <ronenk@amazon.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, barakw@amazon.com, dwmw@amazon.co.uk, benh@amazon.com, jonnyc@amazon.com, talel@amazon.com, hhhawa@amazon.com, hanochu@amazon.com, Sudeep Holla <sudeep.holla@arm.com>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Chen-Yu Tsai <wens@csie.org>
+Cc: Jernej Skrabec <jernej.skrabec@siol.net>, Thierry Reding <thierry.reding@gmail.com>, Maxime Ripard <mripard@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 10:51:35PM +0300, Ronen Krupnik wrote:
-> This patch adds the initial support for the Amazon Annapurna Labs Alpine v3
-> Soc and Evaluation Platform (EVP).
+Hi,
 
-[...]
+On Mon, 2019-07-29 at 09:12 +0200, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Mon, Jul 29, 2019 at 02:43:23PM +0800, Chen-Yu Tsai wrote:
+> > On Mon, Jul 29, 2019 at 2:36 PM Uwe Kleine-König
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Fri, Jul 26, 2019 at 08:40:41PM +0200, Jernej Skrabec wrote:
+> > > > @@ -371,6 +374,14 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+> > > >       if (IS_ERR(pwm->clk))
+> > > >               return PTR_ERR(pwm->clk);
+> > > > 
+> > > > +     if (pwm->data->has_reset) {
+> > > > +             pwm->rst = devm_reset_control_get(&pdev->dev, NULL);
+> > > > +             if (IS_ERR(pwm->rst))
+> > > > +                     return PTR_ERR(pwm->rst);
+> > > > +
+> > > > +             reset_control_deassert(pwm->rst);
+> > > > +     }
+> > > > +
+> > > 
+> > > I wonder why there is a need to track if a given chip needs a reset
+> > > line. I'd just use devm_reset_control_get_optional() and drop the
+> > > .has_reset member in struct sun4i_pwm_data.
+> > 
+> > Because it's not optional for this platform, i.e. it won't work if
+> > the reset control (or clk, in the next patch) is somehow missing from
+> > the device tree.
+> 
+> If the device tree is wrong it is considered ok that the driver doesn't
+> behave correctly. So this is not a problem you need (or should) care
+> about.
 
-> +
-> +		pmu {
-> +			compatible = "arm,armv8-pmuv3";
+I agree with this. Catching missing DT properties and other device tree
+validation is not the job of device drivers. The _optional request
+variants were introduced to simplify drivers that require the reset line
+on some platforms and not on others.
 
-Please use "arm,cortex-a72-pmu" as we know it's Cortex-A72 cores
+I would ask to explicitly state whether the driver needs full control
+over the moment of (de)assertion of the reset signal, or whether the
+only requirement is that the reset signal stays deasserted while the PWM
+driver is active, by using devm_reset_control_get_optional_exclusive or
+devm_reset_control_get_optional_shared to request the reset control.
 
---
-Regards,
-Sudeep
+regards
+Philipp
