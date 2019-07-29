@@ -1,34 +1,140 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: dma: Add YAML schemas for the
- generic DMA bindings
-Date: Mon, 29 Jul 2019 12:19:39 +0530
-Message-ID: <20190729064939.GH12733@vkoul-mobl.Dlink>
-References: <20190720092607.31095-1-maxime.ripard@bootlin.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT
+Date: Mon, 29 Jul 2019 09:51:21 +0300
+Message-ID: <CAEnQRZB6tmYFA8wwh0Fm49LTTDuCLq-SWVfrcUkRWWBo=0U13w@mail.gmail.com>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com> <20190705045612.27665-5-Anson.Huang@nxp.com>
+ <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
+ <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAEnQRZCrZybzcy__u4p_Eq4zSVc2ESyfKLk5sPf1JYba1JSOiA@mail.gmail.com>
+ <20190727161736.4dkfqgwftre67v56@fsr-ub1664-175> <DB3PR0402MB391600891BA75DFFA9674058F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190720092607.31095-1-maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DB3PR0402MB391600891BA75DFFA9674058F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: Abel Vesa <abel.vesa@nxp.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Andrey Smirnov <andrew.smirnov@gmail.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Carlo Caione <ccaione@baylibre.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Leonard Crestez <leonard.crestez@nxp.com>, linux-pm@vger
 List-Id: devicetree@vger.kernel.org
 
-On 20-07-19, 11:26, Maxime Ripard wrote:
-> The DMA controllers and consumers have a bunch of generic properties that
-> are needed in a device tree. Add a YAML schemas for those.
+On Mon, Jul 29, 2019 at 4:29 AM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Hi, Abel/Daniel
+>
+> > On 19-07-27 09:33:10, Daniel Baluta wrote:
+> > > On Sat, Jul 27, 2019 at 9:19 AM Anson Huang <anson.huang@nxp.com>
+> > wrote:
+> > > >
+> > > > Hi, Daniel
+> > > >
+> > > > > Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag
+> > > > > for IMX8MQ_CLK_TMU_ROOT
+> > > > >
+> > > > > Hi all,
+> > > > >
+> > > > > latest linux-next hangs at boot.
+> > > > >
+> > > > > commit fde50b96be821ac9673a7e00847cc4605bd88f34 (HEAD ->
+> > master, tag:
+> > > > > next-20190726, origin/master, origin/HEAD)
+> > > > > Author: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > > > Date:   Fri Jul 26 15:18:02 2019 +1000
+> > > > >
+> > > > >     Add linux-next specific files for 20190726
+> > > > >
+> > > > >     Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > > >
+> > > > >
+> > > > > I know this is crazy but reverting commit:
+> > > > >
+> > > > > commit 431bdd1df48ee2896ea9980d9153e3aeaf0c81ef
+> > (refs/bisect/bad)
+> > > > > Author: Anson Huang <Anson.Huang@nxp.com>
+> > > > > Date:   Fri Jul 5 12:56:11 2019 +0800
+> > > > >
+> > > > >     clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+> > > > > IMX8MQ_CLK_TMU_ROOT
+> > > > >
+> > > > >     IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the
+> > driver
+> > > > >     should manage this clock, so no need to have CLK_IS_CRITICAL =
+flag
+> > > > >     set.
+> > > > >
+> > > > >
+> > > > >
+> > > > > makes the boot work again.
+> > > > >
+> > > > > Any idea?
+> > > >
+> > > > I just found if disabling SDMA1, then kernel can boot up, it does
+> > > > NOT make sense TMU clock is related to SDMA1, I will check with des=
+ign
+> > and get back to you soon.
+> > > >
+> > >
+> > > Hi Anson,
+> > >
+> > > Applying Abel's patch:
+> > >
+> > > commit 8816c47db6a82f55bb4d64f62fd9dd3af680f0e4 (HEAD -> master)
+> > > Author: Abel Vesa <abel.vesa@nxp.com>
+> > > Date:   Tue Jun 25 12:01:56 2019 +0300
+> > >
+> > >     clk: imx8mq: Mark AHB clock as critical
+> > >
+> > >     Keep the AHB clock always on since there is no driver to control =
+it and
+> > >     all the other clocks that use it as parent rely on it being alway=
+s enabled.
+> > >
+> > >
+> > >
+> > > The kernel boots up again.
+> > >
+> > > It make some sense. I don't understand though why having
+> > > IMX8MQ_CLK_TMU_ROOT as critical also "unhangs" the kernel.
+> > >
+> >
+> > OK, so this is how it works.
+> >
+> > By removing the critical flag from TMU, the AHB doesn't stay always on.
+> > With my patch the AHB is marked as critical and therefore stays on.
+> >
+> > The sdma1_clk has as parent the ipg_root which in turn has as parent th=
+e
+> > ahb clock. And I think what happens is some read from the sdma register=
+s
+> > hangs because, for whatever reason, enabling the sdma1_clk doesn't
+> > propagate to enable the ahb clock. I might be wrong though.
+> >
+>
+> I can explain why Abel's patch can fix this issue, the AHB clock is a MUS=
+T
+> always ON for system bus, while it does NOT have CLK_IS_CRITICAL flag set=
+ for now,
+> when SDMA1 is probed, it will enable its clock, and the clk path is sdma1=
+_clk->ipg_root->ahb,
+> after SDMA1 probed done, it will disable its clock since no one use it, a=
+nd it will trigger
+> the ahb clock to be OFF, as its usecount is added by 1 when probe and dec=
+reased by 1 after
+> SDMA1 probe done, so usecount=3D0 will trigger AHB clock to be OFF.
+>
+> So I think the best solution should be applying Abel's patch as you menti=
+oned upper, the TMU
+> clock patch is NOT the root cause, it just triggers this issue accidently=
+=E2=98=B9
+>
+> But I saw Abel's AHB patch is still under discussion, so I think we need =
+to speed it up and make
+> kernel boot up work for development. AHB/IPG are always critical for i.MX=
+ SoCs.
 
-Applied after changinge subsystem name to dmaengine in patch title
+Thanks Anson,
 
-thanks
--- 
-~Vinod
+Your explanation makes a lot of sense. We will take care today of Abel's pa=
+tch.
+What do you think about Fabio's patch? I also think this is a valid patch:
+
+http://code.bulix.org/pd88jp-812381
