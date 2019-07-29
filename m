@@ -1,86 +1,55 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 0/3] Introduce Bandwidth OPPs for interconnects
-Date: Mon, 29 Jul 2019 15:05:45 +0530
-Message-ID: <20190729093545.kvnqxjkyx4nogddk@vireshk-i7>
-References: <20190726231558.175130-1-saravanak@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v15 2/2] dt-bindings: spi: Document Renesas R-Car Gen3
+ RPC-IF controller bindings
+Date: Mon, 29 Jul 2019 11:36:20 +0200
+Message-ID: <CAMuHMdXDJFWHaXk3KHQqhOqVhEGc3PL33f+HO2Ld8nYbvSpq7Q@mail.gmail.com>
+References: <1564108975-27423-1-git-send-email-masonccyang@mxic.com.tw>
+ <1564108975-27423-3-git-send-email-masonccyang@mxic.com.tw>
+ <CAMuHMdWVuQa1LLXPqrdSw6wdRzwQapAkk6Est=XrjESPF9zQwg@mail.gmail.com> <OFFF9D8385.D8395BBD-ON48258446.0033FD62-48258446.00349608@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190726231558.175130-1-saravanak@google.com>
+In-Reply-To: <OFFF9D8385.D8395BBD-ON48258446.0033FD62-48258446.00349608@mxic.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Georgi Djakov <georgi.djakov@linaro.org>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mason Yang <masonccyang@mxic.com.tw>
+Cc: Mark Brown <broonie@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, Lee Jones <lee.jones@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26-07-19, 16:15, Saravana Kannan wrote:
-> Interconnects and interconnect paths quantify their performance levels in
-> terms of bandwidth and not in terms of frequency. So similar to how we have
-> frequency based OPP tables in DT and in the OPP framework, we need
-> bandwidth OPP table support in DT and in the OPP framework.
-> 
-> So with the DT bindings added in this patch series, the DT for a GPU
-> that does bandwidth voting from GPU to Cache and GPU to DDR would look
-> something like this:
-> 
-> gpu_cache_opp_table: gpu_cache_opp_table {
-> 	compatible = "operating-points-v2";
-> 
-> 	gpu_cache_3000: opp-3000 {
-> 		opp-peak-KBps = <3000000>;
-> 		opp-avg-KBps = <1000000>;
-> 	};
-> 	gpu_cache_6000: opp-6000 {
-> 		opp-peak-KBps = <6000000>;
-> 		opp-avg-KBps = <2000000>;
-> 	};
-> 	gpu_cache_9000: opp-9000 {
-> 		opp-peak-KBps = <9000000>;
-> 		opp-avg-KBps = <9000000>;
-> 	};
-> };
-> 
-> gpu_ddr_opp_table: gpu_ddr_opp_table {
-> 	compatible = "operating-points-v2";
-> 
-> 	gpu_ddr_1525: opp-1525 {
-> 		opp-peak-KBps = <1525000>;
-> 		opp-avg-KBps = <452000>;
-> 	};
-> 	gpu_ddr_3051: opp-3051 {
-> 		opp-peak-KBps = <3051000>;
-> 		opp-avg-KBps = <915000>;
-> 	};
-> 	gpu_ddr_7500: opp-7500 {
-> 		opp-peak-KBps = <7500000>;
-> 		opp-avg-KBps = <3000000>;
-> 	};
-> };
-> 
-> gpu_opp_table: gpu_opp_table {
-> 	compatible = "operating-points-v2";
-> 	opp-shared;
-> 
-> 	opp-200000000 {
-> 		opp-hz = /bits/ 64 <200000000>;
-> 	};
-> 	opp-400000000 {
-> 		opp-hz = /bits/ 64 <400000000>;
-> 	};
-> };
-> 
-> gpu@7864000 {
-> 	...
-> 	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
-> 	...
-> };
+Hi Mason,
 
-One feedback I missed giving earlier. Will it be possible to get some
-user code merged along with this ? I want to make sure anything we add
-ends up getting used.
+On Mon, Jul 29, 2019 at 11:34 AM <masonccyang@mxic.com.tw> wrote:
+> > On Fri, Jul 26, 2019 at 4:19 AM Mason Yang <masonccyang@mxic.com.tw>
+> wrote:
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
+> > > @@ -0,0 +1,46 @@
+> >
+> > [...]
+> >
+> > > +- flash: should be represented by a subnode of the RPC-IF node,
+> > > +        which "compatible" property contains "jedec,spi-nor", it
+> presents
+> > > +        SPI is used.
+> >
+> > Sorry, I failed to parse the last subsentence.
+>
+>
+> Fix it to:
+> - flash: should be represented by a subnode of the RPC-IF node,
+>          its "compatible" property contains "jedec,spi-nor" presents
+>          SPI is used.
+>
+> OK?
 
-That also helps understanding the problems you are facing in a better
-way, i.e. with real examples.
+s/presents/if/?
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-viresh
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
