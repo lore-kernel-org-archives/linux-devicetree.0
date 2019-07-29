@@ -1,66 +1,187 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/3] dt-bindings: media: amlogic,vdec: add default
- compatible
-Date: Mon, 29 Jul 2019 15:06:02 +0200
-Message-ID: <b82bd2b5-9192-5ce8-eb97-8bde44c2d363@baylibre.com>
-References: <20190726124639.7713-1-mjourdan@baylibre.com>
- <20190726124639.7713-2-mjourdan@baylibre.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 2/4] net: phy: Add mdio-aspeed
+Date: Mon, 29 Jul 2019 15:32:50 +0200
+Message-ID: <20190729133250.GB4110@lunn.ch>
+References: <20190729043926.32679-1-andrew@aj.id.au>
+ <20190729043926.32679-3-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190726124639.7713-2-mjourdan@baylibre.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Jourdan <mjourdan@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190729043926.32679-3-andrew@aj.id.au>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, f.fainelli@gmail.com, hkallweit1@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/07/2019 14:46, Maxime Jourdan wrote:
-> The first version of the bindings is missing a generic compatible that
-> is used by the base node (GX), and then extended by the SoC device trees
-> (GXBB, GXL, GXM)
+On Mon, Jul 29, 2019 at 02:09:24PM +0930, Andrew Jeffery wrote:
+> The AST2600 design separates the MDIO controllers from the MAC, which is
+> where they were placed in the AST2400 and AST2500. Further, the register
+> interface is reworked again, so now we have three possible different
+> interface implementations, however this driver only supports the
+> interface provided by the AST2600. The AST2400 and AST2500 will continue
+> to be supported by the MDIO support embedded in the FTGMAC100 driver.
 > 
-> Also change the example to use "video-codec" instead of "video-decoder",
-> as the former is the one used in almost all cases when it comes to video
-> decode/encode accelerators.
-> 
-> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 > ---
->  Documentation/devicetree/bindings/media/amlogic,vdec.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/net/phy/Kconfig       |  13 +++
+>  drivers/net/phy/Makefile      |   1 +
+>  drivers/net/phy/mdio-aspeed.c | 159 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 173 insertions(+)
+>  create mode 100644 drivers/net/phy/mdio-aspeed.c
 > 
-> diff --git a/Documentation/devicetree/bindings/media/amlogic,vdec.txt b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
-> index aabdd01bcf32..9b6aace86ca7 100644
-> --- a/Documentation/devicetree/bindings/media/amlogic,vdec.txt
-> +++ b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
-> @@ -26,6 +26,7 @@ Required properties:
->  	- GXBB (S905) : "amlogic,gxbb-vdec"
->  	- GXL (S905X, S905D) : "amlogic,gxl-vdec"
->  	- GXM (S912) : "amlogic,gxm-vdec"
-> +	followed by the common "amlogic,gx-vdec"
->  - reg: base address and size of he following memory-mapped regions :
->  	- dos
->  	- esparser
-> @@ -47,8 +48,8 @@ Required properties:
+> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> index 20f14c5fbb7e..206d8650ee7f 100644
+> --- a/drivers/net/phy/Kconfig
+> +++ b/drivers/net/phy/Kconfig
+> @@ -21,6 +21,19 @@ config MDIO_BUS
 >  
->  Example:
+>  if MDIO_BUS
 >  
-> -vdec: video-decoder@c8820000 {
-> -	compatible = "amlogic,gxbb-vdec";
-> +vdec: video-codec@c8820000 {
-> +	compatible = "amlogic,gxbb-vdec", "amlogic,gx-vdec";
->  	reg = <0x0 0xc8820000 0x0 0x10000>,
->  	      <0x0 0xc110a580 0x0 0xe4>;
->  	reg-names = "dos", "esparser";
-> 
+> +config MDIO_ASPEED
+> +	tristate "ASPEED MDIO bus controller"
+> +	depends on ARCH_ASPEED || COMPILE_TEST
+> +	depends on OF_MDIO && HAS_IOMEM
+> +	help
+> +	  This module provides a driver for the independent MDIO bus
+> +	  controllers found in the ASPEED AST2600 SoC. This is a driver for the
+> +	  third revision of the ASPEED MDIO register interface - the first two
+> +	  revisions are the "old" and "new" interfaces found in the AST2400 and
+> +	  AST2500, embedded in the MAC. For legacy reasons, FTGMAC100 driver
+> +	  continues to drive the embedded MDIO controller for the AST2400 and
+> +	  AST2500 SoCs, so say N if AST2600 support is not required.
+> +
+>  config MDIO_BCM_IPROC
+>  	tristate "Broadcom iProc MDIO bus controller"
+>  	depends on ARCH_BCM_IPROC || COMPILE_TEST
+> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> index 839acb292c38..ba07c27e4208 100644
+> --- a/drivers/net/phy/Makefile
+> +++ b/drivers/net/phy/Makefile
+> @@ -22,6 +22,7 @@ libphy-$(CONFIG_LED_TRIGGER_PHY)	+= phy_led_triggers.o
+>  obj-$(CONFIG_PHYLINK)		+= phylink.o
+>  obj-$(CONFIG_PHYLIB)		+= libphy.o
+>  
+> +obj-$(CONFIG_MDIO_ASPEED)	+= mdio-aspeed.o
+>  obj-$(CONFIG_MDIO_BCM_IPROC)	+= mdio-bcm-iproc.o
+>  obj-$(CONFIG_MDIO_BCM_UNIMAC)	+= mdio-bcm-unimac.o
+>  obj-$(CONFIG_MDIO_BITBANG)	+= mdio-bitbang.o
+> diff --git a/drivers/net/phy/mdio-aspeed.c b/drivers/net/phy/mdio-aspeed.c
+> new file mode 100644
+> index 000000000000..71496a9ff54a
+> --- /dev/null
+> +++ b/drivers/net/phy/mdio-aspeed.c
+> @@ -0,0 +1,159 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/* Copyright (C) 2019 IBM Corp. */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/delay.h>
+> +#include <linux/mdio.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_mdio.h>
+> +#include <linux/phy.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define DRV_NAME "mdio-aspeed"
+> +
+> +#define ASPEED_MDIO_CTRL		0x0
+> +#define   ASPEED_MDIO_CTRL_FIRE		BIT(31)
+> +#define   ASPEED_MDIO_CTRL_ST		BIT(28)
+> +#define     ASPEED_MDIO_CTRL_ST_C45	0
+> +#define     ASPEED_MDIO_CTRL_ST_C22	1
+> +#define   ASPEED_MDIO_CTRL_OP		GENMASK(27, 26)
+> +#define     MDIO_C22_OP_WRITE		0b01
+> +#define     MDIO_C22_OP_READ		0b10
+> +#define   ASPEED_MDIO_CTRL_PHYAD	GENMASK(25, 21)
+> +#define   ASPEED_MDIO_CTRL_REGAD	GENMASK(20, 16)
+> +#define   ASPEED_MDIO_CTRL_MIIWDATA	GENMASK(15, 0)
+> +
+> +#define ASPEED_MDIO_DATA		0x4
+> +#define   ASPEED_MDIO_DATA_MDC_THRES	GENMASK(31, 24)
+> +#define   ASPEED_MDIO_DATA_MDIO_EDGE	BIT(23)
+> +#define   ASPEED_MDIO_DATA_MDIO_LATCH	GENMASK(22, 20)
+> +#define   ASPEED_MDIO_DATA_IDLE		BIT(16)
+> +#define   ASPEED_MDIO_DATA_MIIRDATA	GENMASK(15, 0)
+> +
+> +#define ASPEED_MDIO_RETRIES		10
+> +
+> +struct aspeed_mdio {
+> +	void __iomem *base;
+> +};
+> +
+> +static int aspeed_mdio_read(struct mii_bus *bus, int addr, int regnum)
+> +{
+> +	struct aspeed_mdio *ctx = bus->priv;
+> +	u32 ctrl;
+> +	int i;
+> +
+> +	dev_dbg(&bus->dev, "%s: addr: %d, regnum: %d\n", __func__, addr,
+> +		regnum);
+> +
+> +	/* Just clause 22 for the moment */
+> +	ctrl = ASPEED_MDIO_CTRL_FIRE
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Hi Andrew
+
+In the binding, you say C45 is supported. Here you don't. It would be
+nice to be consistent.
+
+
+> +		| FIELD_PREP(ASPEED_MDIO_CTRL_ST, ASPEED_MDIO_CTRL_ST_C22)
+> +		| FIELD_PREP(ASPEED_MDIO_CTRL_OP, MDIO_C22_OP_READ)
+> +		| FIELD_PREP(ASPEED_MDIO_CTRL_PHYAD, addr)
+> +		| FIELD_PREP(ASPEED_MDIO_CTRL_REGAD, regnum);
+> +
+> +	iowrite32(ctrl, ctx->base + ASPEED_MDIO_CTRL);
+> +
+> +	for (i = 0; i < ASPEED_MDIO_RETRIES; i++) {
+> +		u32 data;
+> +
+> +		data = ioread32(ctx->base + ASPEED_MDIO_DATA);
+> +		if (data & ASPEED_MDIO_DATA_IDLE)
+> +			return FIELD_GET(ASPEED_MDIO_DATA_MIIRDATA, data);
+> +
+> +		udelay(100);
+> +	}
+
+One of the readx_poll_timeout functions could be used.
+
+> +
+> +	dev_err(&bus->dev, "MDIO read failed\n");
+> +	return -EIO;
+> +}
+> +
+> +static int aspeed_mdio_write(struct mii_bus *bus, int addr, int regnum, u16 val)
+> +{
+> +	struct aspeed_mdio *ctx = bus->priv;
+> +	u32 ctrl;
+> +	int i;
+> +
+> +	dev_dbg(&bus->dev, "%s: addr: %d, regnum: %d, val: 0x%x\n",
+> +		__func__, addr, regnum, val);
+> +
+> +	/* Just clause 22 for the moment */
+> +	ctrl = ASPEED_MDIO_CTRL_FIRE
+> +		| FIELD_PREP(ASPEED_MDIO_CTRL_ST, ASPEED_MDIO_CTRL_ST_C22)
+> +		| FIELD_PREP(ASPEED_MDIO_CTRL_OP, MDIO_C22_OP_WRITE)
+> +		| FIELD_PREP(ASPEED_MDIO_CTRL_PHYAD, addr)
+> +		| FIELD_PREP(ASPEED_MDIO_CTRL_REGAD, regnum)
+> +		| FIELD_PREP(ASPEED_MDIO_CTRL_MIIWDATA, val);
+> +
+> +	iowrite32(ctrl, ctx->base + ASPEED_MDIO_CTRL);
+> +
+> +	for (i = 0; i < ASPEED_MDIO_RETRIES; i++) {
+> +		ctrl = ioread32(ctx->base + ASPEED_MDIO_CTRL);
+> +		if (!(ctrl & ASPEED_MDIO_CTRL_FIRE))
+> +			return 0;
+> +
+> +		udelay(100);
+> +	}
+
+readx_poll_timeout() here as well.
+
+Otherwise this looks good.
+
+	  Andrew
