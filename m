@@ -1,70 +1,77 @@
-From: Ashish Kumar <ashish.kumar@nxp.com>
-Subject: RE: [EXT] Re: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi: Add
- ls2080a compatibility string to bindings
-Date: Mon, 29 Jul 2019 09:11:27 +0000
-Message-ID: <VI1PR04MB4015B154965BA4BEF402890B95DD0@VI1PR04MB4015.eurprd04.prod.outlook.com>
-References: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
- <1560942714-13330-2-git-send-email-Ashish.Kumar@nxp.com>
- <20190709200837.GA7806@bogus>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v15 2/2] dt-bindings: spi: Document Renesas R-Car Gen3
+ RPC-IF controller bindings
+Date: Mon, 29 Jul 2019 11:15:40 +0200
+Message-ID: <CAMuHMdWVuQa1LLXPqrdSw6wdRzwQapAkk6Est=XrjESPF9zQwg@mail.gmail.com>
+References: <1564108975-27423-1-git-send-email-masonccyang@mxic.com.tw> <1564108975-27423-3-git-send-email-masonccyang@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190709200837.GA7806@bogus>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Leo Li <leoyang.li@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1564108975-27423-3-git-send-email-masonccyang@mxic.com.tw>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mason Yang <masonccyang@mxic.com.tw>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>, Lee Jones <lee.jones@linaro.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mason,
 
+Thanks for the update!
 
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Wednesday, July 10, 2019 1:39 AM
-> To: Ashish Kumar <ashish.kumar@nxp.com>
-> Cc: devicetree@vger.kernel.org; bbrezillon@kernel.org; broonie@kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-mtd@lists.infradead.org; Ashish
-> Kumar <ashish.kumar@nxp.com>; Kuldeep Singh <kuldeep.singh@nxp.com>;
-> Ashish Kumar <ashish.kumar@nxp.com>
-> Subject: [EXT] Re: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi: Add ls2080a
-> compatibility string to bindings
-> 
-> Caution: EXT Email
-> 
-> On Wed, 19 Jun 2019 16:41:53 +0530, Ashish Kumar wrote:
-> > There are 2 version of QSPI-IP, according to which controller
-> > registers sets can be big endian or little endian.There are some other
-> > minor changes like RX fifo depth etc.
-> >
-> > The big endian version uses driver compatible "fsl,ls1021a-qspi" and
-> > little endian version uses driver compatible "fsl,ls2080a-qspi"
-> >
-> > Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
-> > Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
-> > ---
-> > v3:
-> > Rebase to top
-> > v2:
-> > Convert to patch series and rebasing done on top of tree
-> >
-> >  Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> 
+On Fri, Jul 26, 2019 at 4:19 AM Mason Yang <masonccyang@mxic.com.tw> wrote:
+> Dcument the bindings used by the Renesas R-Car Gen3 RPC-IF controller.
+
+Document
+
+>
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
 > Reviewed-by: Rob Herring <robh@kernel.org>
 
-Hi Leo,
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
+> @@ -0,0 +1,46 @@
 
-I think Rob, is waiting for you ack.
+[...]
 
-Regards 
-Ashish 
+> +- flash: should be represented by a subnode of the RPC-IF node,
+> +        which "compatible" property contains "jedec,spi-nor", it presents
+> +        SPI is used.
+
+Sorry, I failed to parse the last subsentence.
+
+> +
+> +Example:
+> +
+> +       rpc: spi@ee200000 {
+> +               compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
+> +               reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>,
+> +                     <0 0xee208000 0 0x100>;
+> +               reg-names = "regs", "dirmap", "wbuf";
+> +               clocks = <&cpg CPG_MOD 917>;
+> +               clock-names = "rpc";
+> +               power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+> +               resets = <&cpg 917>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               flash@0 {
+> +                       compatible = "jedec,spi-nor";
+> +                       reg = <0>;
+> +                       spi-max-frequency = <40000000>;
+> +                       spi-tx-bus-width = <1>;
+> +                       spi-rx-bus-width = <1>;
+
+Shouldn't those <1> be <4>, as this is QSPI?
+
+> +               };
+> +       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
