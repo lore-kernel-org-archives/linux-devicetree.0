@@ -1,179 +1,122 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
-Date: Mon, 29 Jul 2019 20:40:41 +0200
-Message-ID: <20190729184041.vlvfz3vz3ykhufdk@pengutronix.de>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <CAGb2v66C=ghjck6rxTg6Vt4xN2DcXntzVOa=KJWh98KRjkhnHQ@mail.gmail.com>
- <20190729162428.bxuzgxg5sjqptlbp@pengutronix.de>
- <2346193.MplWYqIveT@jernej-laptop>
-Reply-To: u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Carlo Caione <ccaione@baylibre.com>
+Subject: [PATCH 1/5] nvmem: meson-efuse: Move data to a container struct
+Date: Mon, 29 Jul 2019 19:39:37 +0100
+Message-ID: <20190729183941.18164-2-ccaione@baylibre.com>
+References: <20190729183941.18164-1-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCX3TTWUQMPRBLP37TUQKGQECIS6THY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <2346193.MplWYqIveT@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190729183941.18164-1-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: srinivas.kandagatla@linaro.org, khilman@baylibre.com, narmstrong@baylibre.com, robh+dt@kernel.org, tglx@linutronix.de, jbrunet@baylibre.com, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 06:40:15PM +0200, Jernej =C5=A0krabec wrote:
-> Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-K=C3=B6nig=
-=20
-> napisal(a):
-> > Hello,
-> >=20
-> > On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
-> > > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-K=C3=B6nig
-> > >=20
-> > > <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej =C5=A0krabec wrote=
-:
-> > > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe Kleine-K=
-=C3=B6nig
-> > > > >=20
-> > > > > napisal(a):
-> > > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec wrote:
-> > > > > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
-> > > > > > > sun4i_pwm_single_bypass =3D {>
-> > > > > > >=20
-> > > > > > >   .npwm =3D 1,
-> > > > > > > =20
-> > > > > > >  };
-> > > > > > >=20
-> > > > > > > +static const struct sun4i_pwm_data sun50i_pwm_dual_bypass_cl=
-k_rst
-> > > > > > > =3D {
-> > > > > > > + .has_bus_clock =3D true,
-> > > > > > > + .has_prescaler_bypass =3D true,
-> > > > > > > + .has_reset =3D true,
-> > > > > > > + .npwm =3D 2,
-> > > > > > > +};
-> > > > > > > +
-> > > > > > >=20
-> > > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] =3D {
-> > > > > > > =20
-> > > > > > >   {
-> > > > > > >  =20
-> > > > > > >           .compatible =3D "allwinner,sun4i-a10-pwm",
-> > > > > > >=20
-> > > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
-> > > > > > > sun4i_pwm_dt_ids[] =3D
-> > > > > > > {
-> > > > > > >=20
-> > > > > > >   }, {
-> > > > > > >  =20
-> > > > > > >           .compatible =3D "allwinner,sun8i-h3-pwm",
-> > > > > > >           .data =3D &sun4i_pwm_single_bypass,
-> > > > > > >=20
-> > > > > > > + }, {
-> > > > > > > +         .compatible =3D "allwinner,sun50i-h6-pwm",
-> > > > > > > +         .data =3D &sun50i_pwm_dual_bypass_clk_rst,
-> > > > > >=20
-> > > > > > If you follow my suggestion for the two previous patches, you c=
-an
-> > > > > > just
-> > > > > >=20
-> > > > > > use:
-> > > > > >     compatible =3D "allwinner,sun50i-h6-pwm",
-> > > > > >     "allwinner,sun5i-a10s-pwm";
-> > > > > >=20
-> > > > > > and drop this patch.
-> > > > >=20
-> > > > > Maxime found out that it's not compatible with A10s due to differ=
-ence
-> > > > > in bypass bit, but yes, I know what you mean.
-> > > > >=20
-> > > > > Since H6 requires reset line and bus clock to be specified, it's =
-not
-> > > > > compatible from DT binding side. New yaml based binding must some=
-how
-> > > > > know that in order to be able to validate DT node, so it needs
-> > > > > standalone compatible. However, depending on conclusions of other
-> > > > > discussions, this new compatible can be associated with already
-> > > > > available quirks structure or have it's own.> >=20
-> > > > I cannot follow. You should be able to specify in the binding that =
-the
-> > > > reset line and bus clock is optional. Then allwinner,sun50i-h6-pwm
-> > > > without a reset line and bus clock also verifies, but this doesn't
-> > > > really hurt (and who knows, maybe the next allwinner chip needs exa=
-ctly
-> > > > this).
-> > >=20
-> > > It is not optional. It will not work if either the clocks or reset
-> > > controls
-> > > are missing. How would these be optional anyway? Either it's connecte=
-d and
-> > > thus required, or it's not and therefore should be omitted from the
-> > > description.
-> >=20
-> > [Just arguing about the clock here, the argumentation is analogous for
-> > the reset control.]
-> >=20
-> > From the driver's perspective it's optional: There are devices with and
-> > without a bus clock. This doesn't mean that you can just ignore this
-> > clock if it's specified. It's optional in the sense "If dt doesn't
-> > specify it, then assume this is a device that doesn't have it and so yo=
-u
-> > don't need to handle it." but not in the sense "it doesn't matter if
-> > you handle it or not.".
-> >=20
-> > Other than that I'm on your side. So for example I think it's not
-> > optimal that gpiod_get_optional returns NULL if GPIOLIB=3Dn or that
-> > devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=3Dn
-> > because this hides exactly the kind of problem you point out here.
-> >
->=20
-> I think there's misunderstanding. I only argued that we can't use
->=20
-> compatible =3D "allwinner,sun50i-h6-pwm",
-> 	 "allwinner,sun5i-a10s-pwm";
->=20
-> as you suggested and only=20
->=20
-> compatible =3D "allwinner,sun50i-h6-pwm";=20
->=20
-> will work. Not because of driver itself (it can still use _optional()=20
-> variants), but because of DT binding, which should be able to validate H6=
- PWM=20
-> node - reset and bus clock references are required in this case.
+No functional changes, just a cleanup commit to tidy up a bit. Move the
+nvmem_* and clk structures in a container struct.
 
-I think I understood. In my eyes there is no need to let validation of
-the DT bindings catch a missing "optional" property that is needed on
-H6.
+Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+---
+ drivers/nvmem/meson-efuse.c | 47 ++++++++++++++++++++-----------------
+ 1 file changed, 26 insertions(+), 21 deletions(-)
 
-You have to draw the line somewhere which information the driver has
-hard-coded and what is only provided by the device tree and just assumed
-to be correct by the driver. You argue the driver should know that if it
-cares for a "allwinner,sun50i-h6-pwm" device it should know (and check)
-that there is a clock named "bus" and a resets property that links to a
-reset controller. How is that different from checking that the base
-address is 0x0300a000 or that the "pwm" clock is the osc24M clock
-running at 24 MHz? This isn't checked in the driver or the dt schema.
-Still if the device tree got one of them wrong this yields an
-non-working pwm device that isn't catched in the driver.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190729184041.vlvfz3vz3ykhufdk%40pengutronix.de.
+diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
+index 39bd76306033..9924b98db772 100644
+--- a/drivers/nvmem/meson-efuse.c
++++ b/drivers/nvmem/meson-efuse.c
+@@ -14,6 +14,12 @@
+ 
+ #include <linux/firmware/meson/meson_sm.h>
+ 
++struct meson_efuse {
++	struct nvmem_device *nvmem;
++	struct nvmem_config config;
++	struct clk *clk;
++};
++
+ static int meson_efuse_read(void *context, unsigned int offset,
+ 			    void *val, size_t bytes)
+ {
+@@ -37,21 +43,23 @@ MODULE_DEVICE_TABLE(of, meson_efuse_match);
+ static int meson_efuse_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct nvmem_device *nvmem;
+-	struct nvmem_config *econfig;
+-	struct clk *clk;
++	struct meson_efuse *efuse;
+ 	unsigned int size;
+ 	int ret;
+ 
+-	clk = devm_clk_get(dev, NULL);
+-	if (IS_ERR(clk)) {
+-		ret = PTR_ERR(clk);
++	efuse = devm_kzalloc(&pdev->dev, sizeof(*efuse), GFP_KERNEL);
++	if (!efuse)
++		return -ENOMEM;
++
++	efuse->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(efuse->clk)) {
++		ret = PTR_ERR(efuse->clk);
+ 		if (ret != -EPROBE_DEFER)
+ 			dev_err(dev, "failed to get efuse gate");
+ 		return ret;
+ 	}
+ 
+-	ret = clk_prepare_enable(clk);
++	ret = clk_prepare_enable(efuse->clk);
+ 	if (ret) {
+ 		dev_err(dev, "failed to enable gate");
+ 		return ret;
+@@ -59,7 +67,7 @@ static int meson_efuse_probe(struct platform_device *pdev)
+ 
+ 	ret = devm_add_action_or_reset(dev,
+ 				       (void(*)(void *))clk_disable_unprepare,
+-				       clk);
++				       efuse->clk);
+ 	if (ret) {
+ 		dev_err(dev, "failed to add disable callback");
+ 		return ret;
+@@ -70,21 +78,18 @@ static int meson_efuse_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
+-	econfig = devm_kzalloc(dev, sizeof(*econfig), GFP_KERNEL);
+-	if (!econfig)
+-		return -ENOMEM;
+-
+-	econfig->dev = dev;
+-	econfig->name = dev_name(dev);
+-	econfig->stride = 1;
+-	econfig->word_size = 1;
+-	econfig->reg_read = meson_efuse_read;
+-	econfig->reg_write = meson_efuse_write;
+-	econfig->size = size;
++	efuse->config.dev = dev;
++	efuse->config.name = dev_name(dev);
++	efuse->config.stride = 1;
++	efuse->config.word_size = 1;
++	efuse->config.reg_read = meson_efuse_read;
++	efuse->config.reg_write = meson_efuse_write;
++	efuse->config.size = size;
++	efuse->config.priv = efuse;
+ 
+-	nvmem = devm_nvmem_register(&pdev->dev, econfig);
++	efuse->nvmem = devm_nvmem_register(&pdev->dev, &efuse->config);
+ 
+-	return PTR_ERR_OR_ZERO(nvmem);
++	return PTR_ERR_OR_ZERO(efuse->nvmem);
+ }
+ 
+ static struct platform_driver meson_efuse_driver = {
+-- 
+2.20.1
