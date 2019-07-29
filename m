@@ -1,37 +1,49 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v3 3/4] dt-bindings: net: fsl: enetc: Add
- bindings for the central MDIO PCIe endpoint
-Date: Mon, 29 Jul 2019 17:36:32 +0200
-Message-ID: <20190729153632.GH4110@lunn.ch>
-References: <1564394627-3810-1-git-send-email-claudiu.manoil@nxp.com>
- <1564394627-3810-4-git-send-email-claudiu.manoil@nxp.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 0/6] Add support for Qualcomm SM8150 and SC7180 SoCs
+Date: Mon, 29 Jul 2019 08:38:26 -0700
+Message-ID: <20190729153826.GT7234@tuxbook-pro>
+References: <20190729120633.20451-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1564394627-3810-4-git-send-email-claudiu.manoil@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, alexandru.marginean@nxp.com, linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190729120633.20451-1-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: robh+dt@kernel.org, vkoul@kernel.org, aneela@codeaurora.org, mark.rutland@arm.com, agross@kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 01:03:46PM +0300, Claudiu Manoil wrote:
-> The on-chip PCIe root complex that integrates the ENETC ethernet
-> controllers also integrates a PCIe endpoint for the MDIO controller
-> providing for centralized control of the ENETC mdio bus.
-> Add bindings for this "central" MDIO Integrated PCIe Endpoint.
+On Mon 29 Jul 05:06 PDT 2019, Sibi Sankar wrote:
+
+> This patch series adds SCM, APSS shared mailbox and QMP AOSS PD/clock
+> support on SM8150 and SC7180 SoCs.
 > 
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Thanks Sibi, this looks good.
 
-    Andrew
+Could you please update the last 5 patches to ensure/maintain sort order
+of the lists they affect.
+
+Regards,
+Bjorn
+
+> Sibi Sankar (6):
+>   soc: qcom: smem: Update max processor count
+>   dt-bindings: firmware: scm: Add SM8150 and SC7180 support
+>   dt-bindings: mailbox: Add APSS shared for SM8150 and SC7180 SoCs
+>   mailbox: qcom: Add support for Qualcomm SM8150 and SC7180 SoCs
+>   dt-bindings: soc: qcom: aoss: Add SM8150 and SC7180 support
+>   soc: qcom: aoss: Add AOSS QMP support
+> 
+>  Documentation/devicetree/bindings/firmware/qcom,scm.txt      | 2 ++
+>  .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt    | 2 ++
+>  Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt | 5 ++++-
+>  drivers/mailbox/qcom-apcs-ipc-mailbox.c                      | 2 ++
+>  drivers/soc/qcom/qcom_aoss.c                                 | 2 ++
+>  drivers/soc/qcom/smem.c                                      | 2 +-
+>  6 files changed, 13 insertions(+), 2 deletions(-)
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
