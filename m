@@ -1,45 +1,117 @@
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: RE: [PATCH net-next v3 2/4] enetc: Add mdio bus driver for the PCIe
- MDIO endpoint
-Date: Mon, 29 Jul 2019 15:46:17 +0000
-Message-ID: <VI1PR04MB488060D95CFD31CB904CDF6796DD0@VI1PR04MB4880.eurprd04.prod.outlook.com>
-References: <1564394627-3810-1-git-send-email-claudiu.manoil@nxp.com>
- <1564394627-3810-3-git-send-email-claudiu.manoil@nxp.com>
- <20190729153524.GG4110@lunn.ch>
- <VI1PR04MB48806AF2F6CEDE105B78086696DD0@VI1PR04MB4880.eurprd04.prod.outlook.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 3/6] pwm: sun4i: Add a quirk for bus clock
+Date: Mon, 29 Jul 2019 17:48:36 +0200
+Message-ID: <4022372.WfP88Fa4Lu@jernej-laptop>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net> <20190726184045.14669-4-jernej.skrabec@siol.net> <20190729063825.wxfky6nswcru26g7@pengutronix.de>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB48806AF2F6CEDE105B78086696DD0@VI1PR04MB4880.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Manoil <claudiu.manoil@nxp.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Leo Li <leoyang.li@nxp.com>, Alexandru Marginean <alexandru.marginean@nxp.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBWFK7TUQKGQE7CEEPHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190729063825.wxfky6nswcru26g7-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogbmV0ZGV2LW93bmVyQHZnZXIua2Vy
-bmVsLm9yZyA8bmV0ZGV2LW93bmVyQHZnZXIua2VybmVsLm9yZz4gT24NCj5CZWhhbGYgT2YgQ2xh
-dWRpdSBNYW5vaWwNCj5TZW50OiBNb25kYXksIEp1bHkgMjksIDIwMTkgNjo0MCBQTQ0KPlRvOiBB
-bmRyZXcgTHVubiA8YW5kcmV3QGx1bm4uY2g+DQo+Q2M6IERhdmlkIFMgLiBNaWxsZXIgPGRhdmVt
-QGRhdmVtbG9mdC5uZXQ+OyBSb2IgSGVycmluZw0KPjxyb2JoK2R0QGtlcm5lbC5vcmc+OyBMZW8g
-TGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IEFsZXhhbmRydSBNYXJnaW5lYW4NCj48YWxleGFuZHJ1
-Lm1hcmdpbmVhbkBueHAuY29tPjsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsNCj5kZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
-aW51eC0NCj5rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+U3ViamVjdDogUkU6IFtQQVRDSCBuZXQt
-bmV4dCB2MyAyLzRdIGVuZXRjOiBBZGQgbWRpbyBidXMgZHJpdmVyIGZvciB0aGUgUENJZQ0KPk1E
-SU8gZW5kcG9pbnQNCj4NCj4+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4+RnJvbTogQW5k
-cmV3IEx1bm4gPGFuZHJld0BsdW5uLmNoPg0KPj5TZW50OiBNb25kYXksIEp1bHkgMjksIDIwMTkg
-NjozNSBQTQ0KPj5UbzogQ2xhdWRpdSBNYW5vaWwgPGNsYXVkaXUubWFub2lsQG54cC5jb20+DQo+
-PkNjOiBEYXZpZCBTIC4gTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0PjsgUm9iIEhlcnJpbmcN
-Cj4+PHJvYmgrZHRAa2VybmVsLm9yZz47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgQWxl
-eGFuZHJ1IE1hcmdpbmVhbg0KPj48YWxleGFuZHJ1Lm1hcmdpbmVhbkBueHAuY29tPjsgbmV0ZGV2
-QHZnZXIua2VybmVsLm9yZzsNCj4+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4+bGludXgtIGtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmcNCj4+U3ViamVjdDogUmU6IFtQQVRDSCBuZXQtbmV4dCB2MyAyLzRdIGVuZXRjOiBBZGQg
-bWRpbyBidXMgZHJpdmVyIGZvciB0aGUNCj4+UENJZSBNRElPIGVuZHBvaW50DQo+Pg0KPj4+ICsJ
-aHctPnBvcnQgPSBwY2lfaW9tYXAocGRldiwgMCwgMCk7DQo+Pj4gKwlpZiAoIWJ1cy0+cHJpdikg
-ew0KPj4NCj4+aHctPnBvcnQgPz8NCj4+DQo+DQo+WWVhaCwgYmV0dGVyIGlnbm9yZSB0aGlzIGZv
-ciBub3cg8J+Yig0KPkl0J3MgZm9yIHRoZSBlbmV0YyBhY2Nlc3NvcnMsIGVuZXRjX3BvcnRfLi4o
-KS4NCg0KT2ggSSBzZWUsIGl0J3MgYSBtaXN0YWtlLiAgSSdtIGNoZWNraW5nIHRoZSB3cm9uZyB0
-aGluZy4NClNvcnJ5LiAgVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0K
+Hi Uwe,
+
+Dne ponedeljek, 29. julij 2019 ob 08:38:25 CEST je Uwe Kleine-K=C3=B6nig=20
+napisal(a):
+> Hello,
+>=20
+> On Fri, Jul 26, 2019 at 08:40:42PM +0200, Jernej Skrabec wrote:
+> > H6 PWM core needs bus clock to be enabled in order to work.
+> >=20
+> > Add a quirk for it.
+> >=20
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > ---
+> >=20
+> >  drivers/pwm/pwm-sun4i.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >=20
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index 1b7be8fbde86..7d3ac3f2dc3f 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -72,6 +72,7 @@ static const u32 prescaler_table[] =3D {
+> >=20
+> >  };
+> > =20
+> >  struct sun4i_pwm_data {
+> >=20
+> > +	bool has_bus_clock;
+> >=20
+> >  	bool has_prescaler_bypass;
+> >  	bool has_reset;
+> >  	unsigned int npwm;
+> >=20
+> > @@ -79,6 +80,7 @@ struct sun4i_pwm_data {
+> >=20
+> >  struct sun4i_pwm_chip {
+> > =20
+> >  	struct pwm_chip chip;
+> >=20
+> > +	struct clk *bus_clk;
+> >=20
+> >  	struct clk *clk;
+> >  	struct reset_control *rst;
+> >  	void __iomem *base;
+> >=20
+> > @@ -382,6 +384,16 @@ static int sun4i_pwm_probe(struct platform_device
+> > *pdev)>=20
+> >  		reset_control_deassert(pwm->rst);
+> >  =09
+> >  	}
+> >=20
+> > +	if (pwm->data->has_bus_clock) {
+> > +		pwm->bus_clk =3D devm_clk_get(&pdev->dev, "bus");
+>=20
+> Similar to my suggestion in patch 2: I'd use devm_clk_get_optional() and
+> drop struct sun4i_pwm_data::has_bus_clock.
+
+This one is not so simple. This patch has incorrect logic. Correct logic wo=
+uld=20
+be to use "devm_clk_get(&pdev->dev, NULL)" for variants without bus clock a=
+s=20
+it is done already and "devm_clk_get(&pdev->dev, "bus")" and=20
+"devm_clk_get(&pdev->dev, "mod")" for variants with bus clock.
+
+You see, DT nodes for other variants don't have clock-names property at all=
+.=20
+If it would be specified, it would be "mod". So, DT nodes for other variant=
+s=20
+have "mod" clock specified on first place (the only one), while H6 DT node =
+will=20
+have "mod" clock specified on second place (see one of e-mails from Maxime)=
+, so=20
+"NULL" can't be used instead of "mod" in both cases.
+
+So I would say quirk is beneficial to know if you have to look up clocks by=
+=20
+name or you just take first clock specified.
+
+Best regards,
+Jernej
+
+>=20
+> Best regards
+> Uwe
+
+
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/4022372.WfP88Fa4Lu%40jernej-laptop.
