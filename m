@@ -1,7 +1,7 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v11 05/12] mailbox: mediatek: cmdq: support mt8183 gce function
-Date: Mon, 29 Jul 2019 15:00:59 +0800
-Message-ID: <20190729070106.9332-6-bibby.hsieh@mediatek.com>
+Subject: [PATCH v11 08/12] soc: mediatek: cmdq: change the type of input parameter
+Date: Mon, 29 Jul 2019 15:01:02 +0800
+Message-ID: <20190729070106.9332-9-bibby.hsieh@mediatek.com>
 References: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,25 +12,101 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.
 Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-add mt8183 compatible name for supporting gce function
+According to the cmdq hardware design, the subsys is u8,
+the offset is u16 and the event id is u16.
+This patch changes the type of subsys, offset and event id
+to the correct type.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/mailbox/mtk-cmdq-mailbox.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/mediatek/mtk-cmdq-helper.c | 10 +++++-----
+ include/linux/soc/mediatek/mtk-cmdq.h  | 10 +++++-----
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 8fddd26288e8..69daaadc3a5f 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -539,6 +539,7 @@ static const struct dev_pm_ops cmdq_pm_ops = {
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index 082b8978651e..7aa0517ff2f3 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -136,7 +136,7 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+ 	return 0;
+ }
  
- static const struct of_device_id cmdq_of_ids[] = {
- 	{.compatible = "mediatek,mt8173-gce", .data = (void *)16},
-+	{.compatible = "mediatek,mt8183-gce", .data = (void *)24},
- 	{}
- };
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+ {
+ 	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+ 		    (subsys << CMDQ_SUBSYS_SHIFT);
+@@ -145,8 +145,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write);
  
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+-			u32 offset, u32 value, u32 mask)
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
++			u16 offset, u32 value, u32 mask)
+ {
+ 	u32 offset_mask = offset;
+ 	int err = 0;
+@@ -161,7 +161,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write_mask);
+ 
+-int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
++int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+ {
+ 	u32 arg_b;
+ 
+@@ -181,7 +181,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_wfe);
+ 
+-int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
++int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+ {
+ 	if (event >= CMDQ_MAX_EVENT)
+ 		return -EINVAL;
+diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+index 39d813dde4b4..9618debb9ceb 100644
+--- a/include/linux/soc/mediatek/mtk-cmdq.h
++++ b/include/linux/soc/mediatek/mtk-cmdq.h
+@@ -66,7 +66,7 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
+ 
+ /**
+  * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
+@@ -78,8 +78,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+-			u32 offset, u32 value, u32 mask);
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
++			u16 offset, u32 value, u32 mask);
+ 
+ /**
+  * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+@@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
++int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+ 
+ /**
+  * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
+@@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
++int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+ 
+ /**
+  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
 -- 
 2.18.0
