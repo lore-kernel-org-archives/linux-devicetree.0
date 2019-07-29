@@ -1,100 +1,102 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v11 00/12] support gce on mt8183 platform
-Date: Mon, 29 Jul 2019 15:00:54 +0800
-Message-ID: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
+Subject: [PATCH v11 11/12] soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
+Date: Mon, 29 Jul 2019 15:01:05 +0800
+Message-ID: <20190729070106.9332-12-bibby.hsieh@mediatek.com>
+References: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
 Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Changes since v10:
- - remove subsys-cell from gce device node
- - use of_parse_phandle_with_fixed_args instead of
-   of_parse_phandle_with_args
+GCE cannot know the register base address, this function
+can help cmdq client to get the cmdq_client_reg structure.
 
-Changes since v8 and v9:
- - change the error return code in cmdq_dev_get_client_reg()
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+---
+ drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
+ include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-Changes since v7:
- - remove the memory allocation out of cmdq_dev_get_client_reg()
- - rebase onto 5.2-rc1
-
-Changes since v6:
- - remove cmdq_dev_get_event function and gce event property
- - separate some changes to indepentent patch
- - change the binding document related to gce-client-reg property
-
-Changes since v5:
- - fix typo
- - remove gce-event-name form the dt-binding
- - add reasons in commit message
-
-Changes since v4:
- - refine the architecture of the packet encoder function
- - refine the gce enevt property
- - change the patch's title
-
-Changes since v3:
- - fix a typo in dt-binding and dtsi
- - cast the return value to right format
-
-Changes since v2:
- - according to CK's review comment, change the property name and
-   refine the parameter
- - change the patch's title
- - remove unused property from dt-binding and dts
-
-Changes since v1:
- - add prefix "cmdq" in the commit subject
- - add dt-binding document for get event and subsys function
- - add fix up tag in fixup patch
- - fix up some coding style (alignment)
-
-MTK will support gce function on mt8183 platform.
-  dt-binding: gce: add gce header file for mt8183
-  mailbox: mediatek: cmdq: support mt8183 gce function
-  arm64: dts: add gce node for mt8183
-
-Besides above patches, we refine gce driver on those patches.
-  soc: mediatek: cmdq: reorder the parameter
-  soc: mediatek: cmdq: change the type of input parameter
-  mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
-  soc: mediatek: cmdq: clear the event in cmdq initial flow
-
-In order to enhance the convenience of gce usage, we add new
-helper functions and refine the method of instruction combining.
-  dt-binding: gce: remove thread-num property
-  dt-binding: gce: add binding for gce client reg property
-  soc: mediatek: cmdq: define the instruction struct
-  soc: mediatek: cmdq: add polling function
-  soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
-
-Bibby Hsieh (12):
-  dt-binding: gce: remove thread-num property
-  dt-binding: gce: add gce header file for mt8183
-  dt-binding: gce: add binding for gce client reg property
-  mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
-  mailbox: mediatek: cmdq: support mt8183 gce function
-  soc: mediatek: cmdq: clear the event in cmdq initial flow
-  soc: mediatek: cmdq: reorder the parameter
-  soc: mediatek: cmdq: change the type of input parameter
-  soc: mediatek: cmdq: define the instruction struct
-  soc: mediatek: cmdq: add polling function
-  soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
-  arm64: dts: add gce node for mt8183
-
- .../devicetree/bindings/mailbox/mtk-gce.txt   |  23 ++-
- arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  10 +
- drivers/mailbox/mtk-cmdq-mailbox.c            |  18 +-
- drivers/soc/mediatek/mtk-cmdq-helper.c        | 170 +++++++++++++----
- include/dt-bindings/gce/mt8183-gce.h          | 177 ++++++++++++++++++
- include/linux/mailbox/mtk-cmdq-mailbox.h      |   5 +
- include/linux/soc/mediatek/mtk-cmdq.h         |  53 +++++-
- 7 files changed, 395 insertions(+), 61 deletions(-)
- create mode 100644 include/dt-bindings/gce/mt8183-gce.h
-
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index 70ad4d806fac..9695b75cfc89 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -27,6 +27,35 @@ struct cmdq_instruction {
+ 	u8 op;
+ };
+ 
++int cmdq_dev_get_client_reg(struct device *dev,
++			    struct cmdq_client_reg *client_reg, int idx)
++{
++	struct of_phandle_args spec;
++	int err;
++
++	if (!client_reg)
++		return -ENOENT;
++
++	err = of_parse_phandle_with_fixed_args(dev->of_node,
++					       "mediatek,gce-client-reg",
++					       3, idx, &spec);
++	if (err < 0) {
++		dev_err(dev,
++			"error %d can't parse gce-client-reg property (%d)",
++			err, idx);
++
++		return err;
++	}
++
++	client_reg->subsys = spec.args[0];
++	client_reg->offset = spec.args[1];
++	client_reg->size = spec.args[2];
++	of_node_put(spec.np);
++
++	return 0;
++}
++EXPORT_SYMBOL(cmdq_dev_get_client_reg);
++
+ static void cmdq_client_timeout(struct timer_list *t)
+ {
+ 	struct cmdq_client *client = from_timer(client, t, timer);
+diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+index a345870a6d10..be402c4c740e 100644
+--- a/include/linux/soc/mediatek/mtk-cmdq.h
++++ b/include/linux/soc/mediatek/mtk-cmdq.h
+@@ -15,6 +15,12 @@
+ 
+ struct cmdq_pkt;
+ 
++struct cmdq_client_reg {
++	u8 subsys;
++	u16 offset;
++	u16 size;
++};
++
+ struct cmdq_client {
+ 	spinlock_t lock;
+ 	u32 pkt_cnt;
+@@ -142,4 +148,19 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+  */
+ int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+ 
++/**
++ * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
++ *			       node of CMDQ client
++ * @dev:	device of CMDQ mailbox clienti
++ * @client_reg: CMDQ client reg pointer
++ * @idx:	the index of desired reg
++ *
++ * Return: 0 for success; else the error code is returned
++ *
++ * Help CMDQ client pasing the cmdq client reg
++ * from the device node of CMDQ client.
++ */
++int cmdq_dev_get_client_reg(struct device *dev,
++			    struct cmdq_client_reg *client_reg, int idx);
++
+ #endif	/* __MTK_CMDQ_H__ */
 -- 
 2.18.0
