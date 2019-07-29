@@ -1,7 +1,7 @@
 From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v3 01/10] dt-bindings: add powercontroller
-Date: Mon, 29 Jul 2019 19:41:45 +0200
-Message-ID: <20190729174154.4335-2-frank-w@public-files.de>
+Subject: [PATCH v3 06/10] mfd: mt6323: some improvements of mt6397-core
+Date: Mon, 29 Jul 2019 19:41:50 +0200
+Message-ID: <20190729174154.4335-7-frank-w@public-files.de>
 References: <20190729174154.4335-1-frank-w@public-files.de>
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -13,89 +13,51 @@ List-Id: devicetree@vger.kernel.org
 
 From: Josef Friedl <josef.friedl@speed.at>
 
-add mt6323-rtc and mt6323-pwrc to mt6397 mfd DT bindings
-an example is shown in mt6323-poweroff.txt
+simplyfications (resource definitions my DEFINE_RES_* macros)
 
-changes since v2: separated rtc-mt6397.txt to part 2
+changes since v2: splitted v2 part 4 into 6+7
 
-Suggested-by: Frank Wunderlich <frank-w@public-files.de>
 Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 =2D--
- .../devicetree/bindings/mfd/mt6397.txt        | 10 +++++++++-
- .../bindings/power/reset/mt6323-poweroff.txt  | 20 +++++++++++++++++++
- 2 files changed, 29 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-p=
-oweroff.txt
+ drivers/mfd/mt6397-core.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentat=
-ion/devicetree/bindings/mfd/mt6397.txt
-index 0ebd08af777d..44acb9827716 100644
-=2D-- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-+++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-@@ -8,6 +8,7 @@ MT6397/MT6323 is a multifunction device with the following=
- sub modules:
- - Clock
- - LED
- - Keys
-+- Power controller
+diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+index 337bcccdb914..5f7070267c9a 100644
+=2D-- a/drivers/mfd/mt6397-core.c
++++ b/drivers/mfd/mt6397-core.c
+@@ -1,10 +1,11 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (c) 2014 MediaTek Inc.
++ * Copyright (c) 2014-2018 MediaTek Inc.
+  * Author: Flora Fu, MediaTek
+  */
 
- It is interfaced to host controller using SPI interface by a proprietary =
-hardware
- called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwra=
-p.
-@@ -22,8 +23,10 @@ compatible: "mediatek,mt6397" or "mediatek,mt6323"
- Optional subnodes:
+ #include <linux/interrupt.h>
++#include <linux/ioport.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/of_irq.h>
+@@ -23,16 +24,8 @@
+ #define MT6397_CID_CODE		0x97
 
- - rtc
--	Required properties:
-+	Required properties: Should be one of follows
-+		- compatible: "mediatek,mt6323-rtc"
- 		- compatible: "mediatek,mt6397-rtc"
-+	For details, see Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
- - regulators
- 	Required properties:
- 		- compatible: "mediatek,mt6397-regulator"
-@@ -46,6 +49,11 @@ Optional subnodes:
- 		- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
- 	see Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+ static const struct resource mt6397_rtc_resources[] =3D {
+-	{
+-		.start =3D MT6397_RTC_BASE,
+-		.end   =3D MT6397_RTC_BASE + MT6397_RTC_SIZE,
+-		.flags =3D IORESOURCE_MEM,
+-	},
+-	{
+-		.start =3D MT6397_IRQ_RTC,
+-		.end   =3D MT6397_IRQ_RTC,
+-		.flags =3D IORESOURCE_IRQ,
+-	},
++	DEFINE_RES_MEM(MT6397_RTC_BASE, MT6397_RTC_SIZE),
++	DEFINE_RES_IRQ(MT6397_IRQ_RTC),
+ };
 
-+- power-controller
-+	Required properties:
-+		- compatible: "mediatek,mt6323-pwrc"
-+	For details, see Documentation/devicetree/bindings/power/reset/mt6323-po=
-weroff.txt
-+
- Example:
- 	pwrap: pwrap@1000f000 {
- 		compatible =3D "mediatek,mt8135-pwrap";
-diff --git a/Documentation/devicetree/bindings/power/reset/mt6323-poweroff=
-.txt b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-new file mode 100644
-index 000000000000..933f0c48e887
-=2D-- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-@@ -0,0 +1,20 @@
-+Device Tree Bindings for Power Controller on MediaTek PMIC
-+
-+The power controller which could be found on PMIC is responsible for exte=
-rnally
-+powering off or on the remote MediaTek SoC through the circuit BBPU.
-+
-+Required properties:
-+- compatible: Should be one of follows
-+       "mediatek,mt6323-pwrc": for MT6323 PMIC
-+
-+Example:
-+
-+       pmic {
-+               compatible =3D "mediatek,mt6323";
-+
-+               ...
-+
-+               power-controller {
-+                       compatible =3D "mediatek,mt6323-pwrc";
-+               };
-+       }
+ static const struct resource mt6323_keys_resources[] =3D {
 =2D-
 2.17.1
