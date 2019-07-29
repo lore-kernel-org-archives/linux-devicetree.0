@@ -1,7 +1,7 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 5/6] dt-bindings: soc: qcom: aoss: Add SM8150 and SC7180 support
-Date: Mon, 29 Jul 2019 17:36:32 +0530
-Message-ID: <20190729120633.20451-6-sibis@codeaurora.org>
+Subject: [PATCH 6/6] soc: qcom: aoss: Add AOSS QMP support
+Date: Mon, 29 Jul 2019 17:36:33 +0530
+Message-ID: <20190729120633.20451-7-sibis@codeaurora.org>
 References: <20190729120633.20451-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,29 +12,26 @@ To: bjorn.andersson@linaro.org, robh+dt@kernel.org, vkoul@kernel.org, aneela@cod
 Cc: mark.rutland@arm.com, agross@kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, clew@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add SM8150 and SC7180 AOSS QMP to the list of possible bindings.
+Add AOSS QMP support for SM8150 and SC7180 SoCs.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/soc/qcom/qcom_aoss.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-index 954ffee0a9c45..91b972c1fee57 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-@@ -15,7 +15,10 @@ power-domains.
- - compatible:
- 	Usage: required
- 	Value type: <string>
--	Definition: must be "qcom,sdm845-aoss-qmp"
-+	Definition: must be one of:
-+		    "qcom,sdm845-aoss-qmp"
-+		    "qcom,sm8150-aoss-qmp"
-+		    "qcom,sc7180-aoss-qmp"
+diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
+index 5f885196f4d0f..e2f8c7c9a5a0a 100644
+--- a/drivers/soc/qcom/qcom_aoss.c
++++ b/drivers/soc/qcom/qcom_aoss.c
+@@ -462,6 +462,8 @@ static int qmp_remove(struct platform_device *pdev)
  
- - reg:
- 	Usage: required
+ static const struct of_device_id qmp_dt_match[] = {
+ 	{ .compatible = "qcom,sdm845-aoss-qmp", },
++	{ .compatible = "qcom,sm8150-aoss-qmp", },
++	{ .compatible = "qcom,sc7180-aoss-qmp", },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, qmp_dt_match);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
