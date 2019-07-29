@@ -1,63 +1,63 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH 00/15] thermal: qcom: tsens: Add interrupt support
-Date: Mon, 29 Jul 2019 05:07:35 -0400
-Message-ID: <20190729090735.GA897@onstation.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
- <20190726103605.GB3327@onstation.org>
- <CAHLCerOs3cMQrWrYk7F_bnxr_nxJ-nsRL8oOGALU63ySqmLaig@mail.gmail.com>
- <20190726112954.GA3984@onstation.org>
- <CAHLCerNay31+RNQvQZyxMMVyb1mLLfN5BoZbz-M+bMqbmbYwtA@mail.gmail.com>
+From: Ashish Kumar <ashish.kumar@nxp.com>
+Subject: RE: [EXT] Re: [Patch v3 2/2] dt-bindings: spi: spi-fsl-qspi: Add
+ bindings of ls1088a and ls1012a
+Date: Mon, 29 Jul 2019 09:08:58 +0000
+Message-ID: <VI1PR04MB4015206CD4AAA1E54C5978DA95DD0@VI1PR04MB4015.eurprd04.prod.outlook.com>
+References: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
+ <1560942714-13330-3-git-send-email-Ashish.Kumar@nxp.com>
+ <20190709200857.GA8477@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHLCerNay31+RNQvQZyxMMVyb1mLLfN5BoZbz-M+bMqbmbYwtA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Andy Gross <agross@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190709200857.GA8477@bogus>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Leo Li <leoyang.li@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 12:58:54PM +0530, Amit Kucheria wrote:
-> On Fri, Jul 26, 2019 at 4:59 PM Brian Masney <masneyb@onstation.org> wrote:
-> > On Fri, Jul 26, 2019 at 04:40:16PM +0530, Amit Kucheria wrote:
-> > > How well does cpufreq work on 8974? I haven't looked at it yet but
-> > > we'll need it for thermal throttling.
+
+
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Wednesday, July 10, 2019 1:39 AM
+> To: Ashish Kumar <ashish.kumar@nxp.com>
+> Cc: devicetree@vger.kernel.org; bbrezillon@kernel.org; broonie@kernel.org;
+> linux-arm-kernel@lists.infradead.org; linux-mtd@lists.infradead.org; Ashish
+> Kumar <ashish.kumar@nxp.com>; Kuldeep Singh <kuldeep.singh@nxp.com>;
+> Ashish Kumar <ashish.kumar@nxp.com>
+> Subject: [EXT] Re: [Patch v3 2/2] dt-bindings: spi: spi-fsl-qspi: Add bindings of
+> ls1088a and ls1012a
+> 
+> Caution: EXT Email
+> 
+> On Wed, 19 Jun 2019 16:41:54 +0530, Ashish Kumar wrote:
+> > Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+> > Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
+> > ---
+> > v3:
+> > Rebase to top
+> > v2:
+> > Convert to patch series and rebasing done on top of tree
 > >
-> > I'm not sure how to tell if the frequency is dynamically changed during
-> > runtime on arm. x86-64 shows this information in /proc/cpuinfo. Here's
-> > the /proc/cpuinfo on the Nexus 5:
+> >  Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
 > 
-> Nah. /proc/cpuinfo won't show what we need.
-> 
-> Try the following:
-> 
-> $ grep "" /sys/devices/system/cpu/cpufreq/policy?/*
-> 
-> More specifically, the following files have the information you need.
-> Run watch -n1 on them.
-> 
-> $ grep "" /sys/devices/system/cpu/cpufreq/policy?/scaling_*_freq
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-There's no cpufreq directory on msm8974:
+Hi Leo,
 
-    # ls -1 /sys/devices/system/cpu/
-    cpu0
-    cpu1
-    cpu2
-    cpu3
-    cpuidle
-    hotplug
-    isolated
-    kernel_max
-    modalias
-    offline
-    online
-    possible
-    power
-    present
-    smt
-    uevent
+I think Rob, is waiting for you ack.
 
-I'm using qcom_defconfig.
-
-Brian
+Regards
+Ashish 
