@@ -1,35 +1,38 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH RFC 4/7] dt-bindings: pwm: rcar: Add specific gpios property to output duty zero
-Date: Mon,  8 Jul 2019 18:07:45 +0900
-Message-Id: <1562576868-8124-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-To: linus.walleij@linaro.org, geert+renesas@glider.be, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=MEFD=V2=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <20190724121559.19079-1-horms+renesas@verge.net.au> <20190724121559.19079-3-horms+renesas@verge.net.au>
+In-Reply-To: <20190724121559.19079-3-horms+renesas@verge.net.au>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 29 Jul 2019 13:42:57 +0200
+Message-ID: <CAMuHMdUYTo1_zz4sCv5=PRL90EyFSU_b5WgUJoc4Oii08F_tww@mail.gmail.com>
+Subject: Re: [PATCH 2/4] dt-bindings: i2c: rcar: Rename bindings documentation file
+Content-Type: text/plain; charset="UTF-8"
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The R-Car SoCs PWM Timer cannot output duty zero. So, this patch
-adds a specific gpio property to output it.
+On Wed, Jul 24, 2019 at 3:25 PM Simon Horman <horms+renesas@verge.net.au> wrote:
+> Rename the bindings documentation file for R-Car I2C controller
+> from i2c-rcar.txt to renesas,rcar.txt.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 3 +++
- 1 file changed, 3 insertions(+)
+renesas,i2c.txt
 
-diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-index fbd6a4f..6acaaeb 100644
---- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-+++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-@@ -26,6 +26,9 @@ Required Properties:
- - pinctrl-0: phandle, referring to a default pin configuration node.
- - pinctrl-names: Set to "default".
- 
-+Optional properties:
-+- renesas,duty-zero-gpios: Specify GPIO for outputting duty zero.
-+
- Example: R8A7743 (RZ/G1M) PWM Timer node
- 
- 	pwm0: pwm@e6e30000 {
--- 
-2.7.4
+> This is part of an ongoing effort to name bindings documentation files for
+> Renesas IP blocks consistently, in line with the compat strings they
+> document.
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
