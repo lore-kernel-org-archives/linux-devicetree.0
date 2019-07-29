@@ -1,83 +1,73 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/6] pwm: sun4i: Add a quirk for bus clock
-Date: Mon, 29 Jul 2019 21:04:04 +0200
-Message-ID: <20190729190404.rnxw2aihmciafy6c@pengutronix.de>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <20190726184045.14669-4-jernej.skrabec@siol.net>
- <20190729063825.wxfky6nswcru26g7@pengutronix.de>
- <4022372.WfP88Fa4Lu@jernej-laptop>
- <20190729161435.5bnj3ikocsyep4dd@pengutronix.de>
- <20190729164516.yxfgj2zd3d5ii4c4@flea.home>
-Reply-To: u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v2 1/7] ASoC: fsl_sai: Add registers
+ definition for multiple datalines
+Date: Mon, 29 Jul 2019 12:42:15 -0700
+Message-ID: <20190729194214.GA20594@Asurada-Nvidia.nvidia.com>
+References: <20190728192429.1514-1-daniel.baluta@nxp.com>
+ <20190728192429.1514-2-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCX3TTWUQMPRBKEG7XUQKGQEISGHJWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20190729164516.yxfgj2zd3d5ii4c4-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20190728192429.1514-2-daniel.baluta@nxp.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@pengutronix.de, timur@kernel.org, robh@kernel.org, shengjiu.wang@nxp.com, angus@akkea.ca, tiwai@suse.com, linux-kernel@vger.kernel.org, broonie@kernel.org, linux-imx@nxp.com, viorel.suman@nxp.com, festevam@gmail.com, mihai.serban@gmail.com, l.stach@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hello Maxime,
+On Sun, Jul 28, 2019 at 10:24:23PM +0300, Daniel Baluta wrote:
+> SAI IP supports up to 8 data lines. The configuration of
+> supported number of data lines is decided at SoC integration
+> time.
+> 
+> This patch adds definitions for all related data TX/RX registers:
+> 	* TDR0..7, Transmit data register
+> 	* TFR0..7, Transmit FIFO register
+> 	* RDR0..7, Receive data register
+> 	* RFR0..7, Receive FIFO register
+> 
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  sound/soc/fsl/fsl_sai.c | 76 +++++++++++++++++++++++++++++++++++------
+>  sound/soc/fsl/fsl_sai.h | 36 ++++++++++++++++---
+>  2 files changed, 98 insertions(+), 14 deletions(-)
+> 
+> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+> index 6d3c6c8d50ce..17b0aff4ee8b 100644
+> --- a/sound/soc/fsl/fsl_sai.c
+> +++ b/sound/soc/fsl/fsl_sai.c
 
-On Mon, Jul 29, 2019 at 06:45:16PM +0200, Maxime Ripard wrote:
-> On Mon, Jul 29, 2019 at 06:14:35PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > Then maybe something like the following?:
-> >
-> > 	busclk =3D devm_clk_get_optional(..., "bus");
-> > 	modclk =3D devm_clk_get_optional(..., "mod");
-> >
-> > 	/*
-> > 	 * old dtbs might have a single clock but no clock names. Fall
-> > 	 * back to this for compatibility reasons.
-> > 	 */
-> > 	if (!modclk) {
-> > 		modclk =3D devm_clk_get(..., NULL);
-> > 	}
->=20
-> Again, there's nothing optional about these clocks. You need a
-> particular set of clocks for a given generation, and a separate set of
-> them on another generation of SoCs.
+> @@ -704,7 +711,14 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
+>  	case FSL_SAI_TCR3:
+>  	case FSL_SAI_TCR4:
+>  	case FSL_SAI_TCR5:
+> -	case FSL_SAI_TFR:
+> +	case FSL_SAI_TFR0:
+> +	case FSL_SAI_TFR1:
+> +	case FSL_SAI_TFR2:
+> +	case FSL_SAI_TFR3:
+> +	case FSL_SAI_TFR4:
+> +	case FSL_SAI_TFR5:
+> +	case FSL_SAI_TFR6:
+> +	case FSL_SAI_TFR7:
+>  	case FSL_SAI_TMR:
+>  	case FSL_SAI_RCSR:
+>  	case FSL_SAI_RCR1:
 
-It depends on the way how "optional" is understood. The semantic of
-"optional" as it is used and implemented by devm_clk_get_optional (and
-gpiod_get_optional and devm_reset_control_get_optional) is different
-than yours when saying "on H6 the clock is not optional". If it was
-about the "it doesn't matter if it's taken care of or not" semantic you
-seem to mean the function would be useless and no driver would need to
-actually use it. In the sense of the functions listed above "optional"
-means: Some devices need it, others don't. Using this semantic the "bus"
-clock is optional.
+A tricky thing here is that those SAI instances on older SoC don't
+support multi data lines physically, while seemly having registers
+pre-defined. So your change doesn't sound doing anything wrong to
+them at all, I am still wondering if it is necessary to apply them
+to newer compatible only though, as for older compatibles of SAI,
+these registers would be useless and confusing if being exposed.
 
-> It really isn't about DT validation. We're really making sure that the
-> device can be operational. It's as much of a validation step than
-> making sure we have mapped registers (reg), or an interrupt if we had
-> any.
-
-Do you agree with Jernej in the other end of this thread? If so I don't
-think that repeating the same arguments here is sensible. Please read
-what I wrote there.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190729190404.rnxw2aihmciafy6c%40pengutronix.de.
+What do you think?
