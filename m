@@ -1,69 +1,53 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [alsa-devel] [PATCH v2 1/7] ASoC: fsl_sai: Add registers
- definition for multiple datalines
-Date: Mon, 29 Jul 2019 22:57:43 +0300
-Message-ID: <CAEnQRZDmnAmgUkRGv3V5S7b5EnYTd2BO5NFuME2CfGb1=nAHzQ@mail.gmail.com>
-References: <20190728192429.1514-1-daniel.baluta@nxp.com> <20190728192429.1514-2-daniel.baluta@nxp.com>
- <20190729194214.GA20594@Asurada-Nvidia.nvidia.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
+Date: Mon, 29 Jul 2019 13:12:08 -0700
+Message-ID: <CAGETcx_7fK20VZ6Zn07Z+Ran1_O7gSPohck_tg-aEr5oONQ5iA@mail.gmail.com>
+References: <20190703011020.151615-1-saravanak@google.com> <20190717103220.f7cys267hq23fbsb@vireshk-i7>
+ <CAGETcx-tbjVzRKW8D-564zgNOhrA_z-NC1q5U70bhoUDBhp6VA@mail.gmail.com>
+ <20190718053746.64drmonk72vwnt4s@vireshk-i7> <CAGETcx_-=b3An9YdxLUnZap=0iaeczvWTEnw65FMLU8BwA3HfQ@mail.gmail.com>
+ <20190729092454.6lfqzmhkvrhpimsp@vireshk-i7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190729194214.GA20594@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <20190729092454.6lfqzmhkvrhpimsp@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Timur Tabi <timur@kernel.org>, Rob Herring <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Takashi Iwai <tiwai@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@nxp.com>, Fabio Estevam <festevam@gmail.com>, Mihai Serban <mihai.serban@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, David Dai <daidavid1@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:42 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+On Mon, Jul 29, 2019 at 2:24 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> On Sun, Jul 28, 2019 at 10:24:23PM +0300, Daniel Baluta wrote:
-> > SAI IP supports up to 8 data lines. The configuration of
-> > supported number of data lines is decided at SoC integration
-> > time.
+> On 18-07-19, 21:12, Saravana Kannan wrote:
+> > On Wed, Jul 17, 2019 at 10:37 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > I would like
+> > > to put this data in the GPU OPP table only. What about putting a
+> > > range in the GPU OPP table for the Bandwidth if it can change so much
+> > > for the same frequency.
 > >
-> > This patch adds definitions for all related data TX/RX registers:
-> >       * TDR0..7, Transmit data register
-> >       * TFR0..7, Transmit FIFO register
-> >       * RDR0..7, Receive data register
-> >       * RFR0..7, Receive FIFO register
-> >
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> >  sound/soc/fsl/fsl_sai.c | 76 +++++++++++++++++++++++++++++++++++------
-> >  sound/soc/fsl/fsl_sai.h | 36 ++++++++++++++++---
-> >  2 files changed, 98 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> > index 6d3c6c8d50ce..17b0aff4ee8b 100644
-> > --- a/sound/soc/fsl/fsl_sai.c
-> > +++ b/sound/soc/fsl/fsl_sai.c
+> > I don't think the range is going to work.
 >
-> > @@ -704,7 +711,14 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
-> >       case FSL_SAI_TCR3:
-> >       case FSL_SAI_TCR4:
-> >       case FSL_SAI_TCR5:
-> > -     case FSL_SAI_TFR:
-> > +     case FSL_SAI_TFR0:
-> > +     case FSL_SAI_TFR1:
-> > +     case FSL_SAI_TFR2:
-> > +     case FSL_SAI_TFR3:
-> > +     case FSL_SAI_TFR4:
-> > +     case FSL_SAI_TFR5:
-> > +     case FSL_SAI_TFR6:
-> > +     case FSL_SAI_TFR7:
-> >       case FSL_SAI_TMR:
-> >       case FSL_SAI_RCSR:
-> >       case FSL_SAI_RCR1:
->
-> A tricky thing here is that those SAI instances on older SoC don't
-> support multi data lines physically, while seemly having registers
-> pre-defined. So your change doesn't sound doing anything wrong to
-> them at all, I am still wondering if it is necessary to apply them
-> to newer compatible only though, as for older compatibles of SAI,
-> these registers would be useless and confusing if being exposed.
->
-> What do you think?
+> Any specific reason for that ?
 
-Yes, I thought about this too. But, I tried to keep the code as short
-as possible and technically it is not wrong. When 1 data line is supported
-for example application will only care about TDR0, TFR0, etc.
+The next sentence was literally explaining this :) Fine to debate
+that, but ignoring that and asking this question is kinda funny.
+
+> > If a GPU is doing purely
+> > computational work, it's not unreasonable for it to vote for the
+> > lowest bandwidth for any GPU frequency.
+>
+> I think that is fine, but if the GPU is able to find how much
+> bandwidth it needs why can't it just pass that value without needing
+> to have another OPP table for the path ?
+
+You were asking this question in the context of "can the GPU OPP just
+list all the range of bandwidth it might use per GPU frequency". My point
+is that the range would be useless because it would the entire
+available bandwidth range (because purely compute work might not need
+any bandwidth).
+
+Whereas, what the GPU's algorithm actually needs might be the list of
+"useful" bandwidth levels to use.
+
+Also, as we add more ICC request properties, this range idea will not scale.
+
+-Saravana
