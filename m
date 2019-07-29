@@ -1,80 +1,101 @@
-From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: Re: [PATCH v2 01/19] phy: mvebu-cp110-comphy: Add clocks support
-Date: Mon, 29 Jul 2019 10:10:46 +0200
-Message-ID: <CAH76GKO9Z3Z7YcNSHgCkvHjrKpRs22=U8GcsL2AfN8RCTXsKuw@mail.gmail.com>
-References: <20190627095104.22529-1-miquel.raynal@bootlin.com>
- <20190627095104.22529-2-miquel.raynal@bootlin.com>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: Re: [PATCH v3] arm64: dts: imx8mq: Init rates and parents configs
+ for clocks
+Date: Mon, 29 Jul 2019 10:31:31 +0200
+Message-ID: <20190729083130.GA3904@bogon.m.sigxcpu.org>
+References: <20190728141218.12702-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190627095104.22529-2-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190728141218.12702-1-daniel.baluta@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, l.stach@pengutronix.de, ccaione@baylibre.com, abel.vesa@nxp.com, baruch@tkos.co.il, andrew.smirnov@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shengjiu.wang@nxp.com, angus@akkea.ca, Anson.Huang@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWlxdWVsCgpjencuLCAyNyBjemUgMjAxOSBvIDExOjUxIE1pcXVlbCBSYXluYWwgPG1pcXVl
-bC5yYXluYWxAYm9vdGxpbi5jb20+IG5hcGlzYcWCKGEpOgo+ICtzdGF0aWMgaW50IG12ZWJ1X2Nv
-bXBoeV9pbml0X2Nsa3Moc3RydWN0IG12ZWJ1X2NvbXBoeV9wcml2ICpwcml2KQo+ICt7Cj4gKyAg
-ICAgICBpbnQgcmV0Owo+ICsKPiArICAgICAgIHByaXYtPm1nX2RvbWFpbl9jbGsgPSBkZXZtX2Ns
-a19nZXQocHJpdi0+ZGV2LCAibWdfY2xrIik7Cj4gKyAgICAgICBpZiAoSVNfRVJSKHByaXYtPm1n
-X2RvbWFpbl9jbGspKQo+ICsgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihwcml2LT5tZ19k
-b21haW5fY2xrKTsKPiArCj4gKyAgICAgICByZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUocHJpdi0+
-bWdfZG9tYWluX2Nsayk7Cj4gKyAgICAgICBpZiAocmV0IDwgMCkKPiArICAgICAgICAgICAgICAg
-cmV0dXJuIHJldDsKPiArCj4gKyAgICAgICBwcml2LT5tZ19jb3JlX2NsayA9IGRldm1fY2xrX2dl
-dChwcml2LT5kZXYsICJtZ19jb3JlX2NsayIpOwo+ICsgICAgICAgaWYgKElTX0VSUihwcml2LT5t
-Z19jb3JlX2NsaykpIHsKPiArICAgICAgICAgICAgICAgcmV0ID0gUFRSX0VSUihwcml2LT5tZ19j
-b3JlX2Nsayk7Cj4gKyAgICAgICAgICAgICAgIGdvdG8gZGlzX21nX2RvbWFpbl9jbGs7Cj4gKyAg
-ICAgICB9Cj4gKwo+ICsgICAgICAgcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHByaXYtPm1nX2Nv
-cmVfY2xrKTsKPiArICAgICAgIGlmIChyZXQgPCAwKQo+ICsgICAgICAgICAgICAgICBnb3RvIGRp
-c19tZ19kb21haW5fY2xrOwo+ICsKPiArICAgICAgIHByaXYtPmF4aV9jbGsgPSBkZXZtX2Nsa19n
-ZXQocHJpdi0+ZGV2LCAiYXhpX2NsayIpOwo+ICsgICAgICAgaWYgKElTX0VSUihwcml2LT5heGlf
-Y2xrKSkgewo+ICsgICAgICAgICAgICAgICByZXQgPSBQVFJfRVJSKHByaXYtPmF4aV9jbGspOwo+
-ICsgICAgICAgICAgICAgICBnb3RvIGRpc19tZ19jb3JlX2NsazsKPiArICAgICAgIH0KPiArCj4g
-KyAgICAgICByZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUocHJpdi0+YXhpX2Nsayk7Cj4gKyAgICAg
-ICBpZiAocmV0IDwgMCkKPiArICAgICAgICAgICAgICAgZ290byBkaXNfbWdfY29yZV9jbGs7Cj4g
-Kwo+ICsgICAgICAgcmV0dXJuIDA7Cj4gKwo+ICtkaXNfbWdfY29yZV9jbGs6Cj4gKyAgICAgICBj
-bGtfZGlzYWJsZV91bnByZXBhcmUocHJpdi0+bWdfY29yZV9jbGspOwo+ICsKPiArZGlzX21nX2Rv
-bWFpbl9jbGs6Cj4gKyAgICAgICBjbGtfZGlzYWJsZV91bnByZXBhcmUocHJpdi0+bWdfZG9tYWlu
-X2Nsayk7Cj4gKwo+ICsgICAgICAgcHJpdi0+bWdfZG9tYWluX2NsayA9IE5VTEw7Cj4gKyAgICAg
-ICBwcml2LT5tZ19jb3JlX2NsayA9IE5VTEw7Cj4gKyAgICAgICBwcml2LT5heGlfY2xrID0gTlVM
-TDsKPiArCj4gKyAgICAgICByZXR1cm4gcmV0Owo+ICt9Owo+ICsKPiArc3RhdGljIHZvaWQgbXZl
-YnVfY29tcGh5X2Rpc2FibGVfdW5wcmVwYXJlX2Nsa3Moc3RydWN0IG12ZWJ1X2NvbXBoeV9wcml2
-ICpwcml2KQo+ICt7Cj4gKyAgICAgICBpZiAocHJpdi0+YXhpX2NsaykKPiArICAgICAgICAgICAg
-ICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHByaXYtPmF4aV9jbGspOwo+ICsKPiArICAgICAgIGlm
-IChwcml2LT5tZ19jb3JlX2NsaykKPiArICAgICAgICAgICAgICAgY2xrX2Rpc2FibGVfdW5wcmVw
-YXJlKHByaXYtPm1nX2NvcmVfY2xrKTsKPiArCj4gKyAgICAgICBpZiAocHJpdi0+bWdfZG9tYWlu
-X2NsaykKPiArICAgICAgICAgICAgICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHByaXYtPm1nX2Rv
-bWFpbl9jbGspOwo+ICt9Cj4gKwo+ICBzdGF0aWMgaW50IG12ZWJ1X2NvbXBoeV9wcm9iZShzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICB7Cj4gICAgICAgICBzdHJ1Y3QgbXZlYnVfY29t
-cGh5X3ByaXYgKnByaXY7Cj4gICAgICAgICBzdHJ1Y3QgcGh5X3Byb3ZpZGVyICpwcm92aWRlcjsK
-PiAgICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqY2hpbGQ7Cj4gICAgICAgICBzdHJ1Y3QgcmVz
-b3VyY2UgKnJlczsKPiArICAgICAgIGludCByZXQ7Cj4KPiAgICAgICAgIHByaXYgPSBkZXZtX2t6
-YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpwcml2KSwgR0ZQX0tFUk5FTCk7Cj4gICAgICAgICBp
-ZiAoIXByaXYpCj4gQEAgLTYwNywxMCArNjcxLDE3IEBAIHN0YXRpYyBpbnQgbXZlYnVfY29tcGh5
-X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gICAgICAgICBpZiAoSVNfRVJS
-KHByaXYtPmJhc2UpKQo+ICAgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihwcml2LT5iYXNl
-KTsKPgo+ICsgICAgICAgLyoKPiArICAgICAgICAqIElnbm9yZSBlcnJvciBpZiBjbG9ja3MgaGF2
-ZSBub3QgYmVlbiBpbml0aWFsaXplZCBwcm9wZXJseSBmb3IgRFQKPiArICAgICAgICAqIGNvbXBh
-dGliaWxpdHkgcmVhc29ucy4KPiArICAgICAgICAqLwo+ICsgICAgICAgcmV0ID0gbXZlYnVfY29t
-cGh5X2luaXRfY2xrcyhwcml2KTsKPiArICAgICAgIGlmIChyZXQpCj4gKyAgICAgICAgICAgICAg
-IGRldl93YXJuKCZwZGV2LT5kZXYsICJjYW5ub3QgaW5pdGlhbGl6ZSBjbG9ja3NcbiIpOwo+ICsK
-ClBsZWFzZSByZXF1ZXN0IHByb2JlIHJldHJ5IHdoZW4gY2xvY2tzIGFyZSBub3QgcmVhZHksIGUu
-Zy46Ci0gICAgICAgaWYgKHJldCkKKyAgICAgICBpZiAocmV0KSB7CisgICAgICAgICAgICAgICBp
-ZiAocmV0ID09IC1FUFJPQkVfREVGRVIpCisgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBy
-ZXQ7CiAgICAgICAgICAgICAgICAgZGV2X3dhcm4oJnBkZXYtPmRldiwgImNhbm5vdCBpbml0aWFs
-aXplIGNsb2Nrc1xuIik7CisgICAgICAgfQoKQWZ0ZXIgdGhhdCB5b3UgY2FuIHB1dDoKVGVzdGVk
-LWJ5OiBHcnplZ29yeiBKYXN6Y3p5ayA8amF6QHNlbWloYWxmLmNvbT4KCnJlZ2FyZHMsCkdyemVn
-b3J6CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+Hi,
+On Sun, Jul 28, 2019 at 05:12:18PM +0300, Daniel Baluta wrote:
+> From: Abel Vesa <abel.vesa@nxp.com>
+> 
+> Add the initial configuration for clocks that need default parent and rate
+> setting. This is based on the vendor tree clock provider parents and rates
+> configuration except this is doing the setup in dts rather then using clock
+> consumer API in a clock provider driver.
+> 
+> Note that by adding the initial rate setting for audio_pll1/audio_pll
+> setting we need to remove it from imx8mq-librem5-devkit.dts
+> imx8mq-librem5-devkit.dts
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+> Changes since v2:
+> 	- set rate for audio_pll1/audio_pll2  in the dtsi file and
+> 	remove the setting from imx8mq-librem5-devkit.dts
+> 
+>  .../dts/freescale/imx8mq-librem5-devkit.dts   |  5 -----
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 21 +++++++++++++++++++
+>  2 files changed, 21 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> index 683a11035643..c702ccc82867 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> @@ -169,11 +169,6 @@
+>  	};
+>  };
+>  
+> -&clk {
+> -	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL2>;
+> -	assigned-clock-rates = <786432000>, <722534400>;
+> -};
+> -
+>  &dphy {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 02fbd0625318..c67625a881a4 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -494,6 +494,27 @@
+>  				clock-names = "ckil", "osc_25m", "osc_27m",
+>  				              "clk_ext1", "clk_ext2",
+>  				              "clk_ext3", "clk_ext4";
+> +				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1>,
+> +					<&clk IMX8MQ_AUDIO_PLL1>,
+> +					<&clk IMX8MQ_AUDIO_PLL2>,
+> +					<&clk IMX8MQ_CLK_AHB>,
+> +					<&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
+> +					<&clk IMX8MQ_CLK_AUDIO_AHB>,
+> +					<&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
+> +					<&clk IMX8MQ_CLK_NOC>;
+> +				assigned-clock-parents = <0>,
+> +						<0>,
+> +						<0>,
+> +						<&clk IMX8MQ_SYS1_PLL_133M>,
+> +						<&clk IMX8MQ_SYS1_PLL_266M>,
+> +						<&clk IMX8MQ_SYS2_PLL_500M>,
+> +						<&clk IMX8MQ_CLK_27M>,
+> +						<&clk IMX8MQ_SYS1_PLL_800M>;
+> +				assigned-clock-rates = <593999999>,
+> +						<786432000>,
+> +						<722534400>;
+> +
+> +
+>  			};
+>  
+>  			src: reset-controller@30390000 {
+
+togethe with http://code.bulix.org/pd88jp-812381?raw tested on
+linux-20190725 (plus mipi dsi):
+
+Tested-by: Guido Günther <agx@sigxcpu.org>
+
+Cheers,
+ -- Guido
+
+> -- 
+> 2.17.1
+> 
