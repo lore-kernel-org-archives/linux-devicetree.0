@@ -1,36 +1,227 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [v5 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
-Date: Mon, 29 Jul 2019 23:57:16 +0200
-Message-ID: <CACRpkdZcLNe+oM1jWPpva0LECc-P48ab3H-kG7eabMmSvmvioA@mail.gmail.com>
-References: <1563564291-9692-1-git-send-email-hongweiz@ami.com>
- <1563564291-9692-2-git-send-email-hongweiz@ami.com> <CACRpkdYhVoP75ZDfASW+DH5yf-a5diitiXsh7eLsJx5hsTC9sQ@mail.gmail.com>
- <ef9d9c17-6e2d-4a4e-ac44-f8da4bb3b8eb@www.fastmail.com> <CACRpkdZxsF9gQj0VicVLsPKXg6rKA1mLwbywmazOf0w8PLnOfA@mail.gmail.com>
- <f2875111-9ba9-43b7-b2a4-d00c8725f5a0@www.fastmail.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: Re: [PATCH 4/6] pwm: sun4i: Add support for H6 PWM
+Date: Tue, 30 Jul 2019 00:04:47 +0200
+Message-ID: <2452836.v7ux4bnEjb@jernej-laptop>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net> <173825848.1FZsmuHfpq@jernej-laptop> <20190729185108.tpilwoooxvi2z72e@pengutronix.de>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f2875111-9ba9-43b7-b2a4-d00c8725f5a0@www.fastmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Hongwei Zhang <hongweiz@ami.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Joel Stanley <joel@jms.id.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBAW37XUQKGQEOT743BA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190729185108.tpilwoooxvi2z72e-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 2:19 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+Dne ponedeljek, 29. julij 2019 ob 20:51:08 CEST je Uwe Kleine-K=C3=B6nig=20
+napisal(a):
+> On Mon, Jul 29, 2019 at 08:46:25PM +0200, Jernej =C5=A0krabec wrote:
+> > Dne ponedeljek, 29. julij 2019 ob 20:40:41 CEST je Uwe Kleine-K=C3=B6ni=
+g
+> >=20
+> > napisal(a):
+> > > On Mon, Jul 29, 2019 at 06:40:15PM +0200, Jernej =C5=A0krabec wrote:
+> > > > Dne ponedeljek, 29. julij 2019 ob 18:24:28 CEST je Uwe Kleine-K=C3=
+=B6nig
+> > > >=20
+> > > > napisal(a):
+> > > > > Hello,
+> > > > >=20
+> > > > > On Tue, Jul 30, 2019 at 12:09:40AM +0800, Chen-Yu Tsai wrote:
+> > > > > > On Tue, Jul 30, 2019 at 12:07 AM Uwe Kleine-K=C3=B6nig
+> > > > > >=20
+> > > > > > <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > > > > > > On Mon, Jul 29, 2019 at 05:55:52PM +0200, Jernej =C5=A0krabec=
+ wrote:
+> > > > > > > > Dne ponedeljek, 29. julij 2019 ob 08:40:30 CEST je Uwe
+> > > > > > > > Kleine-K=C3=B6nig
+> > > > > > > >=20
+> > > > > > > > napisal(a):
+> > > > > > > > > On Fri, Jul 26, 2019 at 08:40:43PM +0200, Jernej Skrabec=
+=20
+wrote:
+> > > > > > > > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > > > > > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > > > > > > > @@ -331,6 +331,13 @@ static const struct sun4i_pwm_data
+> > > > > > > > > > sun4i_pwm_single_bypass =3D {>
+> > > > > > > > > >=20
+> > > > > > > > > >   .npwm =3D 1,
+> > > > > > > > > > =20
+> > > > > > > > > >  };
+> > > > > > > > > >=20
+> > > > > > > > > > +static const struct sun4i_pwm_data
+> > > > > > > > > > sun50i_pwm_dual_bypass_clk_rst
+> > > > > > > > > > =3D {
+> > > > > > > > > > + .has_bus_clock =3D true,
+> > > > > > > > > > + .has_prescaler_bypass =3D true,
+> > > > > > > > > > + .has_reset =3D true,
+> > > > > > > > > > + .npwm =3D 2,
+> > > > > > > > > > +};
+> > > > > > > > > > +
+> > > > > > > > > >=20
+> > > > > > > > > >  static const struct of_device_id sun4i_pwm_dt_ids[] =
+=3D {
+> > > > > > > > > > =20
+> > > > > > > > > >   {
+> > > > > > > > > >  =20
+> > > > > > > > > >           .compatible =3D "allwinner,sun4i-a10-pwm",
+> > > > > > > > > >=20
+> > > > > > > > > > @@ -347,6 +354,9 @@ static const struct of_device_id
+> > > > > > > > > > sun4i_pwm_dt_ids[] =3D
+> > > > > > > > > > {
+> > > > > > > > > >=20
+> > > > > > > > > >   }, {
+> > > > > > > > > >  =20
+> > > > > > > > > >           .compatible =3D "allwinner,sun8i-h3-pwm",
+> > > > > > > > > >           .data =3D &sun4i_pwm_single_bypass,
+> > > > > > > > > >=20
+> > > > > > > > > > + }, {
+> > > > > > > > > > +         .compatible =3D "allwinner,sun50i-h6-pwm",
+> > > > > > > > > > +         .data =3D &sun50i_pwm_dual_bypass_clk_rst,
+> > > > > > > > >=20
+> > > > > > > > > If you follow my suggestion for the two previous patches,
+> > > > > > > > > you
+> > > > > > > > > can
+> > > > > > > > > just
+> > > > > > > > >=20
+> > > > > > > > > use:
+> > > > > > > > >     compatible =3D "allwinner,sun50i-h6-pwm",
+> > > > > > > > >     "allwinner,sun5i-a10s-pwm";
+> > > > > > > > >=20
+> > > > > > > > > and drop this patch.
+> > > > > > > >=20
+> > > > > > > > Maxime found out that it's not compatible with A10s due to
+> > > > > > > > difference
+> > > > > > > > in bypass bit, but yes, I know what you mean.
+> > > > > > > >=20
+> > > > > > > > Since H6 requires reset line and bus clock to be specified,
+> > > > > > > > it's
+> > > > > > > > not
+> > > > > > > > compatible from DT binding side. New yaml based binding mus=
+t
+> > > > > > > > somehow
+> > > > > > > > know that in order to be able to validate DT node, so it ne=
+eds
+> > > > > > > > standalone compatible. However, depending on conclusions of
+> > > > > > > > other
+> > > > > > > > discussions, this new compatible can be associated with
+> > > > > > > > already
+> > > > > > > > available quirks structure or have it's own.> >
+> > > > > > >=20
+> > > > > > > I cannot follow. You should be able to specify in the binding
+> > > > > > > that
+> > > > > > > the
+> > > > > > > reset line and bus clock is optional. Then
+> > > > > > > allwinner,sun50i-h6-pwm
+> > > > > > > without a reset line and bus clock also verifies, but this
+> > > > > > > doesn't
+> > > > > > > really hurt (and who knows, maybe the next allwinner chip nee=
+ds
+> > > > > > > exactly
+> > > > > > > this).
+> > > > > >=20
+> > > > > > It is not optional. It will not work if either the clocks or re=
+set
+> > > > > > controls
+> > > > > > are missing. How would these be optional anyway? Either it's
+> > > > > > connected
+> > > > > > and
+> > > > > > thus required, or it's not and therefore should be omitted from
+> > > > > > the
+> > > > > > description.
+> > > > >=20
+> > > > > [Just arguing about the clock here, the argumentation is analogou=
+s
+> > > > > for
+> > > > > the reset control.]
+> > > > >=20
+> > > > > From the driver's perspective it's optional: There are devices wi=
+th
+> > > > > and
+> > > > > without a bus clock. This doesn't mean that you can just ignore t=
+his
+> > > > > clock if it's specified. It's optional in the sense "If dt doesn'=
+t
+> > > > > specify it, then assume this is a device that doesn't have it and=
+ so
+> > > > > you
+> > > > > don't need to handle it." but not in the sense "it doesn't matter=
+ if
+> > > > > you handle it or not.".
+> > > > >=20
+> > > > > Other than that I'm on your side. So for example I think it's not
+> > > > > optimal that gpiod_get_optional returns NULL if GPIOLIB=3Dn or th=
+at
+> > > > > devm_reset_control_get_optional returns NULL if RESET_CONTROLLER=
+=3Dn
+> > > > > because this hides exactly the kind of problem you point out here=
+.
+> > > >=20
+> > > > I think there's misunderstanding. I only argued that we can't use
+> > > >=20
+> > > > compatible =3D "allwinner,sun50i-h6-pwm",
+> > > >=20
+> > > > 	 "allwinner,sun5i-a10s-pwm";
+> > > >=20
+> > > > as you suggested and only
+> > > >=20
+> > > > compatible =3D "allwinner,sun50i-h6-pwm";
+> > > >=20
+> > > > will work. Not because of driver itself (it can still use _optional=
+()
+> > > > variants), but because of DT binding, which should be able to valid=
+ate
+> > > > H6
+> > > > PWM node - reset and bus clock references are required in this case=
+.
+> > >=20
+> > > I think I understood. In my eyes there is no need to let validation o=
+f
+> > > the DT bindings catch a missing "optional" property that is needed on
+> > > H6.
+> > >=20
+> > > You have to draw the line somewhere which information the driver has
+> > > hard-coded and what is only provided by the device tree and just assu=
+med
+> > > to be correct by the driver. You argue the driver should know that
+> >=20
+> > No, in this thread I argue that DT validation tool, executed by
+> >=20
+> > make ARCH=3Darm64 dtbs_check
+> >=20
+> > should catch that. This is not a driver, but DT binding described in YA=
+ML.
+>=20
+> The argumentation is the same. dtbs_check doesn't notice if the base
+> address of your "allwinner,sun50i-h6-pwm" device is wrong. So why should
+> it catch a missing reset controller phandle?
 
-> The behaviour is to periodically emit the state of all enabled GPIOs
-> (i.e. the ngpios value), one per bus clock cycle. There's no explicit
-> addressing scheme, the protocol encodes the value for a given GPIO
-> by its position in the data stream relative to a pulse on the "load data"
-> (LD) line, whose envelope covers the clock cycle for the last GPIO in
-> the sequence. Similar to SPI the bus has both out and in lines, which
-> cater to output/input GPIOs.
->
-> A rough timing diagram for a 16-GPIO configuration looks like what
-> I've pasted here:
->
-> https://gist.github.com/amboar/c9543af1957854474b8c05ab357f0675
+Of course checking actual values of node properties doesn't make sense in=
+=20
+dtbs_check, otherwise we would have million DT bindings. If you have 10 cop=
+ies=20
+of the same IP core, of course you would use same compatible, but actual=20
+register ranges, interrupts, etc. would be different in DT nodes.
 
-OK that is complex. I agree we need to keep this driver together.
+At this point I would make same argument as were made before, but there is =
+no=20
+point going in circles. I'm interested what have DT maintainers to say.
 
-Yours,
-Linus Walleij
+Best regards,
+Jernej
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/2452836.v7ux4bnEjb%40jernej-laptop.
