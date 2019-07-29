@@ -1,33 +1,34 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 06/11] dma: Drop JZ4740 driver
-Date: Mon, 29 Jul 2019 12:14:02 +0530
-Message-ID: <20190729064402.GG12733@vkoul-mobl.Dlink>
-References: <20190725220215.460-1-paul@crapouillou.net>
- <20190725220215.460-7-paul@crapouillou.net>
+Subject: Re: [PATCH v3 1/3] dt-bindings: dma: Add YAML schemas for the
+ generic DMA bindings
+Date: Mon, 29 Jul 2019 12:19:39 +0530
+Message-ID: <20190729064939.GH12733@vkoul-mobl.Dlink>
+References: <20190720092607.31095-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190725220215.460-7-paul@crapouillou.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-fbdev@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, James Hogan <jhogan@kernel.org>, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, Sebastian Reichel <sre@kernel.org>, od@zcrc.me, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Lee Jones <lee.jones@linaro.org>, Artur Rojek <contact@artur-rojek.eu>, Richard Weinberger <richard@nod.at>, linux-pm@vger.kernel.org, linux-mips@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org
+In-Reply-To: <20190720092607.31095-1-maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjUtMDctMTksIDE4OjAyLCBQYXVsIENlcmN1ZWlsIHdyb3RlOgo+IFRoZSBuZXdlciBhbmQg
-YmV0dGVyIEpaNDc4MCBkcml2ZXIgaXMgbm93IHVzZWQgdG8gcHJvdmlkZSBETUEKPiBmdW5jdGlv
-bmFsaXR5IG9uIHRoZSBKWjQ3NDAuCgpQbGVhc2UgY2hhbmdlIHN1YmpldGMgdG8gZG1hZW5naW5l
-OiB4eHgKCkFmdGVyIHRoYXQKCkFja2VkLWJ5OiBWaW5vZCBLb3VsIDx2a291bEBrZXJuZWwub3Jn
-PgoKLS0gCn5WaW5vZApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWw=
+On 20-07-19, 11:26, Maxime Ripard wrote:
+> The DMA controllers and consumers have a bunch of generic properties that
+> are needed in a device tree. Add a YAML schemas for those.
+
+Applied after changinge subsystem name to dmaengine in patch title
+
+thanks
+-- 
+~Vinod
