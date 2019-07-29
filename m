@@ -1,114 +1,88 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v5 3/3] soc: ti: ti_sci_pm_domains: Add support for exclusive
- and shared access
-Date: Mon, 29 Jul 2019 17:54:53 +0530
-Message-ID: <20190729122453.32252-4-lokeshvutla@ti.com>
-References: <20190729122453.32252-1-lokeshvutla@ti.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V2 4/4] thermal: qoriq: Add clock operations
+Date: Mon, 29 Jul 2019 09:30:36 -0300
+Message-ID: <CAOMZO5AgP0BrHyFKz78rsEz1XQMgSNzMmtTV6Q+GYtCGBiFMEQ@mail.gmail.com>
+References: <20190729083915.4855-1-Anson.Huang@nxp.com> <20190729083915.4855-4-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190729122453.32252-1-lokeshvutla@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190729083915.4855-4-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yongcai Huang <Anson.Huang@nxp.com>
+Cc: "rui.zhang" <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <Linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-TISCI protocol supports for enabling the device either with exclusive
-permissions for the requesting host or with sharing across the hosts.
-There are certain devices which are exclusive to Linux context and
-there are certain devices that are shared across different host contexts.
-So add support for getting this information from DT by increasing
-the power-domain cells to 2.
+Hi Anson,
 
-For keeping the DT backward compatibility intact, defaulting the
-device permissions to set the exclusive flag set. In this case the
-power-domain-cells is 1.
+On Mon, Jul 29, 2019 at 6:04 AM <Anson.Huang@nxp.com> wrote:
+>
+> From: Anson Huang <Anson.Huang@nxp.com>
+>
+> Some platforms like i.MX8MQ has clock control for this module,
+> need to add clock operations to make sure the driver is working
+> properly.
 
-Reviewed-by: Nishanth Menon <nm@ti.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
- drivers/soc/ti/ti_sci_pm_domains.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+I haven't seen this series earlier, and I have sent a similar patch
+for Guido to test.
 
-diff --git a/drivers/soc/ti/ti_sci_pm_domains.c b/drivers/soc/ti/ti_sci_pm_domains.c
-index 97817dd7ba24..8c2a2f23982c 100644
---- a/drivers/soc/ti/ti_sci_pm_domains.c
-+++ b/drivers/soc/ti/ti_sci_pm_domains.c
-@@ -15,15 +15,19 @@
- #include <linux/pm_domain.h>
- #include <linux/slab.h>
- #include <linux/soc/ti/ti_sci_protocol.h>
-+#include <dt-bindings/soc/ti,sci_pm_domain.h>
- 
- /**
-  * struct ti_sci_genpd_dev_data: holds data needed for every device attached
-  *				 to this genpd
-  * @idx: index of the device that identifies it with the system
-  *	 control processor.
-+ * @exclusive: Permissions for exclusive request or shared request of the
-+ *	       device.
-  */
- struct ti_sci_genpd_dev_data {
- 	int idx;
-+	u8 exclusive;
- };
- 
- /**
-@@ -55,6 +59,14 @@ static int ti_sci_dev_id(struct device *dev)
- 	return sci_dev_data->idx;
- }
- 
-+static u8 is_ti_sci_dev_exclusive(struct device *dev)
-+{
-+	struct generic_pm_domain_data *genpd_data = dev_gpd_data(dev);
-+	struct ti_sci_genpd_dev_data *sci_dev_data = genpd_data->data;
-+
-+	return sci_dev_data->exclusive;
-+}
-+
- /**
-  * ti_sci_dev_to_sci_handle(): get pointer to ti_sci_handle
-  * @dev: pointer to device associated with this genpd
-@@ -79,7 +91,10 @@ static int ti_sci_dev_start(struct device *dev)
- 	const struct ti_sci_handle *ti_sci = ti_sci_dev_to_sci_handle(dev);
- 	int idx = ti_sci_dev_id(dev);
- 
--	return ti_sci->ops.dev_ops.get_device(ti_sci, idx);
-+	if (is_ti_sci_dev_exclusive(dev))
-+		return ti_sci->ops.dev_ops.get_device_exclusive(ti_sci, idx);
-+	else
-+		return ti_sci->ops.dev_ops.get_device(ti_sci, idx);
- }
- 
- /**
-@@ -110,7 +125,7 @@ static int ti_sci_pd_attach_dev(struct generic_pm_domain *domain,
- 	if (ret < 0)
- 		return ret;
- 
--	if (pd_args.args_count != 1)
-+	if (pd_args.args_count != 1 && pd_args.args_count != 2)
- 		return -EINVAL;
- 
- 	idx = pd_args.args[0];
-@@ -128,6 +143,10 @@ static int ti_sci_pd_attach_dev(struct generic_pm_domain *domain,
- 		return -ENOMEM;
- 
- 	sci_dev_data->idx = idx;
-+	/* Enable the exclusive permissions by default */
-+	sci_dev_data->exclusive = TI_SCI_PD_EXCLUSIVE;
-+	if (pd_args.args_count == 2)
-+		sci_dev_data->exclusive = pd_args.args[1] & 0x1;
- 
- 	genpd_data = dev_gpd_data(dev);
- 	genpd_data->data = sci_dev_data;
--- 
-2.21.0
+Since this patch solves a hang problem, I would suggest that this one
+becomes the first of the series.
+
+Also, the "clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+IMX8MQ_CLK_TMU_ROOT" should only be applied after this one in order to
+avoid the hang.
+
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+> ---
+> Changes since V1:
+>         - use devm_clk_get_optional() instead of devm_clk_get().
+> ---
+>  drivers/thermal/qoriq_thermal.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>
+> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_ther=
+mal.c
+> index 2b2f79b..0ae45c0 100644
+> --- a/drivers/thermal/qoriq_thermal.c
+> +++ b/drivers/thermal/qoriq_thermal.c
+> @@ -2,6 +2,7 @@
+>  //
+>  // Copyright 2016 Freescale Semiconductor, Inc.
+>
+> +#include <linux/clk.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/err.h>
+> @@ -72,6 +73,7 @@ struct qoriq_sensor {
+>
+>  struct qoriq_tmu_data {
+>         struct qoriq_tmu_regs __iomem *regs;
+> +       struct clk *clk;
+>         bool little_endian;
+>         struct qoriq_sensor     *sensor[SITES_MAX];
+>  };
+> @@ -208,6 +210,16 @@ static int qoriq_tmu_probe(struct platform_device *p=
+dev)
+>                 return PTR_ERR(data->regs);
+>         }
+>
+> +       data->clk =3D devm_clk_get_optional(&pdev->dev, NULL);
+> +       if (IS_ERR(data->clk))
+> +               return PTR_ERR(data->clk);
+> +
+> +       ret =3D clk_prepare_enable(data->clk);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to enable clock\n");
+> +               return ret;
+> +       }
+> +
+>         qoriq_tmu_init_device(data);    /* TMU initialization */
+>
+>         ret =3D qoriq_tmu_calibration(pdev);      /* TMU calibration */
+
+In case of failure the TMU clock should be disabled in the error path.
+
+Thanks
