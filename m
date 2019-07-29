@@ -1,64 +1,96 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
- IMX8MQ_CLK_TMU_ROOT
-Date: Mon, 29 Jul 2019 07:49:43 +0000
-Message-ID: <DB3PR0402MB3916F32F03E542AEFBD39A43F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190705045612.27665-1-Anson.Huang@nxp.com>
- <20190705045612.27665-5-Anson.Huang@nxp.com>
- <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
- <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAEnQRZCrZybzcy__u4p_Eq4zSVc2ESyfKLk5sPf1JYba1JSOiA@mail.gmail.com>
- <20190727161736.4dkfqgwftre67v56@fsr-ub1664-175>
- <DB3PR0402MB391600891BA75DFFA9674058F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAEnQRZB6tmYFA8wwh0Fm49LTTDuCLq-SWVfrcUkRWWBo=0U13w@mail.gmail.com>
- <DB3PR0402MB391627F725AA7237BCACBE87F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAEnQRZBrmikenTvnh7syhy=PDPcTL3fn2TJ+ya=ToZ+SFmH5tw@mail.gmail.com>
- <CAEnQRZDSjmcU8Q7+kMeFf12tx0NuMNjrcsgnXayvHpu4ChwHGA@mail.gmail.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] ASoC: meson: g12a-tohdmitx: override codec2codec params
+Date: Mon, 29 Jul 2019 10:01:39 +0200
+Message-ID: <20190729080139.32068-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEnQRZDSjmcU8Q7+kMeFf12tx0NuMNjrcsgnXayvHpu4ChwHGA@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@gmail.com>
-Cc: Abel Vesa <abel.vesa@nxp.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Andrey Smirnov <andrew.smirnov@gmail.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Carlo Caione <ccaione@baylibre.com>, =?utf-8?B?R3VpZG8gR8O8bnRoZXI=?= <agx@sigxcpu.org>, Leonard Crestez <leonard.crestez@nxp.com>, linux-pm@vg
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIERhbmllbA0KDQo+IE9uIE1vbiwgSnVsIDI5LCAyMDE5IGF0IDEwOjIwIEFNIERhbmllbCBC
-YWx1dGEgPGRhbmllbC5iYWx1dGFAZ21haWwuY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IDxzbmlw
-Pg0KPiA+ID4gPiBZb3VyIGV4cGxhbmF0aW9uIG1ha2VzIGEgbG90IG9mIHNlbnNlLiBXZSB3aWxs
-IHRha2UgY2FyZSB0b2RheSBvZg0KPiA+ID4gPiBBYmVsJ3MgcGF0Y2guDQo+ID4gPiA+IFdoYXQg
-ZG8geW91IHRoaW5rIGFib3V0IEZhYmlvJ3MgcGF0Y2g/IEkgYWxzbyB0aGluayB0aGlzIGlzIGEg
-dmFsaWQgcGF0Y2g6DQo+ID4gPiA+DQo+ID4gPHNuaXA+DQo+ID4NCj4gPiA+DQo+ID4gPiBIbW0s
-IHdoZW4gZGlkIEZhYmlvIHNlbnQgb3V0IHRoaXMgcGF0Y2g/IEkgY2FuIE5PVCBmaW5kIGl0Li4u
-DQo+ID4gPiBJIGFsc28gaGF2ZSBhIHBhdGNoIGluIHRoaXMgc2VyaWVzICgjNC82KSBkb2luZyBz
-YW1lIHRoaW5nIG9uIEp1bHkgNXRoLi4uDQo+ID4gPg0KPiA+ID4gaHR0cHM6Ly9ldXIwMS5zYWZl
-bGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGcGENCj4gPiA+
-DQo+IHRjaHdvcmsua2VybmVsLm9yZyUyRnBhdGNoJTJGMTEwMzI3ODMlMkYmYW1wO2RhdGE9MDIl
-N0MwMSU3Q2Fuc28NCj4gbi5odQ0KPiA+ID4NCj4gYW5nJTQwbnhwLmNvbSU3QzA0OGQ4Njk1YjNk
-YzRjZWVmNmJkMDhkNzEzZjU1ZThhJTdDNjg2ZWExZDNiYzINCj4gYjRjNmZhDQo+ID4gPg0KPiA5
-MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjk5OTgxNjg4MDExODY3NCZhbXA7c2RhdGE9MUhJ
-TVEwbA0KPiBpS3BFRlMNCj4gPiA+IDZQMldTRyUyRkg5ZXZzcHhJZHhBdkZtYWtsSDF3b0RrJTNE
-JmFtcDtyZXNlcnZlZD0wDQo+ID4NCj4gPiBIZSBkaWRuJ3Qgc2VuZCB0aGUgcGF0Y2ggeWV0LiBJ
-dCB3YXMganVzdCBhIHJlcXVlc3QgZm9yIHRlc3QgaGVyZToNCj4gPg0KPiA+IGh0dHBzOi8vZXVy
-MDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGY29k
-ZS4NCj4gPiBidWxpeC5vcmclMkZwZDg4anAtDQo+IDgxMjM4MSZhbXA7ZGF0YT0wMiU3QzAxJTdD
-YW5zb24uaHVhbmclNDBueHAuY29tJTdDMA0KPiA+DQo+IDQ4ZDg2OTViM2RjNGNlZWY2YmQwOGQ3
-MTNmNTVlOGElN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzDQo+IDUlN0MwDQo+ID4g
-JTdDMCU3QzYzNjk5OTgxNjg4MDExODY3NCZhbXA7c2RhdGE9cDcwbWdDRHVjQ2dMSjhUVFJNbjNh
-JTINCj4gRms2OEZYR1FlaVINCj4gPiBGUjBmVlNWN0psbyUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiA+
-DQo+ID4gQnV0LCBub3cgSSBzZWUgaXMgZXhhY3RseSBsaWtlIHlvdXIgcGF0Y2ggaGVyZToNCj4g
-DQo+IC4uLiBwcmVzc2VkIHNlbmQgdG8gZWFybHkuDQo+IA0KPiBodHRwczovL2V1cjAxLnNhZmVs
-aW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZsa21sLm8NCj4g
-cmclMkZsa21sJTJGMjAxOSUyRjclMkY1JTJGMTkmYW1wO2RhdGE9MDIlN0MwMSU3Q2Fuc29uLmh1
-YW5nJQ0KPiA0MG54cC5jb20lN0MwNDhkODY5NWIzZGM0Y2VlZjZiZDA4ZDcxM2Y1NWU4YSU3QzY4
-NmVhMWQzYmMyYjRjNmYNCj4gYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2OTk5ODE2ODgw
-MTE4Njc0JmFtcDtzZGF0YT1jaVdqOHkNCj4gV1B2a0laNW5pJTJCb2hadWFxQVhmOVBiMkZDV2hw
-OUdRaHBNd0FZJTNEJmFtcDtyZXNlcnZlZD0wDQo+IA0KPiBXZSBhcmUgYWxsIHNldCB0aGVuLiBU
-aGFua3MgQW5zb24gZm9yIGNsYXJpZmljYXRpb25zIQ0KDQpUaGFua3MsIHNvIHdlIGFyZSBhbGwg
-Y2xlYXIgYWJvdXQgdGhpcyBpc3N1ZSwgbmVlZCB0byB3YWl0IHRoZXJtYWwgbWFpbnRhaW5lciB0
-byByZXZpZXcNCnRoZSByZXN0IHBhdGNoIGluIHRoaXMgc2VyaWVzLCBidXQgSSBkaWQgTk9UIHJl
-Y2VpdmUgYW55IHJlc3BvbnNlIGZyb20gdGhlcm1hbCBzdWItc3lzdGVtDQptYWludGFpbmVyIGZv
-ciByZWFsbHkgbG9uZyB0aW1lLCBOT1Qgc3VyZSB3aGVuIHRoZSB0aGVybWFsIHBhdGNoZXMgY2Fu
-IGJlIGFjY2VwdGVkLg0KDQpBbnNvbg0KDQo=
+So far, forwarding the hw_params of the input to output relied on the
+.hw_params() callback of the cpu side of the codec2codec link to be called
+first. This is a bit weak.
+
+Instead, override the stream params of the codec2codec to link to set it up
+correctly.
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ sound/soc/meson/g12a-tohdmitx.c | 34 ++++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
+
+diff --git a/sound/soc/meson/g12a-tohdmitx.c b/sound/soc/meson/g12a-tohdmitx.c
+index 707ccb192e4c..9943c807ec5d 100644
+--- a/sound/soc/meson/g12a-tohdmitx.c
++++ b/sound/soc/meson/g12a-tohdmitx.c
+@@ -28,7 +28,7 @@
+ #define  CTRL0_SPDIF_CLK_SEL		BIT(0)
+ 
+ struct g12a_tohdmitx_input {
+-	struct snd_pcm_hw_params params;
++	struct snd_soc_pcm_stream params;
+ 	unsigned int fmt;
+ };
+ 
+@@ -225,26 +225,17 @@ static int g12a_tohdmitx_input_hw_params(struct snd_pcm_substream *substream,
+ {
+ 	struct g12a_tohdmitx_input *data = dai->playback_dma_data;
+ 
+-	/* Save the stream params for the downstream link */
+-	memcpy(&data->params, params, sizeof(*params));
++	data->params.rates = snd_pcm_rate_to_rate_bit(params_rate(params));
++	data->params.rate_min = params_rate(params);
++	data->params.rate_max = params_rate(params);
++	data->params.formats = 1 << params_format(params);
++	data->params.channels_min = params_channels(params);
++	data->params.channels_max = params_channels(params);
++	data->params.sig_bits = dai->driver->playback.sig_bits;
+ 
+ 	return 0;
+ }
+ 
+-static int g12a_tohdmitx_output_hw_params(struct snd_pcm_substream *substream,
+-					  struct snd_pcm_hw_params *params,
+-					  struct snd_soc_dai *dai)
+-{
+-	struct g12a_tohdmitx_input *in_data =
+-		g12a_tohdmitx_get_input_data(dai->capture_widget);
+-
+-	if (!in_data)
+-		return -ENODEV;
+-
+-	memcpy(params, &in_data->params, sizeof(*params));
+-
+-	return 0;
+-}
+ 
+ static int g12a_tohdmitx_input_set_fmt(struct snd_soc_dai *dai,
+ 				       unsigned int fmt)
+@@ -266,6 +257,14 @@ static int g12a_tohdmitx_output_startup(struct snd_pcm_substream *substream,
+ 	if (!in_data)
+ 		return -ENODEV;
+ 
++	if (WARN_ON(!rtd->dai_link->params)) {
++		dev_warn(dai->dev, "codec2codec link expected\n");
++		return -EINVAL;
++	}
++
++	/* Replace link params with the input params */
++	rtd->dai_link->params = &in_data->params;
++
+ 	if (!in_data->fmt)
+ 		return 0;
+ 
+@@ -278,7 +277,6 @@ static const struct snd_soc_dai_ops g12a_tohdmitx_input_ops = {
+ };
+ 
+ static const struct snd_soc_dai_ops g12a_tohdmitx_output_ops = {
+-	.hw_params	= g12a_tohdmitx_output_hw_params,
+ 	.startup	= g12a_tohdmitx_output_startup,
+ };
+ 
+-- 
+2.21.0
