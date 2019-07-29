@@ -1,85 +1,335 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
- IMX8MQ_CLK_TMU_ROOT
-Date: Mon, 29 Jul 2019 01:29:01 +0000
-Message-ID: <DB3PR0402MB391600891BA75DFFA9674058F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190705045612.27665-1-Anson.Huang@nxp.com>
- <20190705045612.27665-5-Anson.Huang@nxp.com>
- <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
- <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAEnQRZCrZybzcy__u4p_Eq4zSVc2ESyfKLk5sPf1JYba1JSOiA@mail.gmail.com>
- <20190727161736.4dkfqgwftre67v56@fsr-ub1664-175>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
+ functionality to exynos-bus
+Date: Mon, 29 Jul 2019 10:52:28 +0900
+Message-ID: <5a82bf8a-d925-ba54-a26f-98b64bedc6e1@samsung.com>
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+        <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
+        <20190723122016.30279-10-a.swigon@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190727161736.4dkfqgwftre67v56@fsr-ub1664-175>
+In-Reply-To: <20190723122016.30279-10-a.swigon@partner.samsung.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>, Daniel Baluta <daniel.baluta@gmail.com>
-Cc: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Andrey Smirnov <andrew.smirnov@gmail.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Carlo Caione <ccaione@baylibre.com>, =?utf-8?B?R3VpZG8gR8O8bnRoZXI=?= <agx@sigxcpu.org>, Leonard Crestez <leonard.crestez@nxp.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.or>
+To: =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: krzk@kernel.org, myungjoo.ham@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, georgi.djakov@linaro.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-SGksIEFiZWwvRGFuaWVsDQoNCj4gT24gMTktMDctMjcgMDk6MzM6MTAsIERhbmllbCBCYWx1dGEg
-d3JvdGU6DQo+ID4gT24gU2F0LCBKdWwgMjcsIDIwMTkgYXQgOToxOSBBTSBBbnNvbiBIdWFuZyA8
-YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gSGksIERhbmllbA0K
-PiA+ID4NCj4gPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCA1LzZdIGNsazogaW14OG1xOiBSZW1v
-dmUgQ0xLX0lTX0NSSVRJQ0FMIGZsYWcNCj4gPiA+ID4gZm9yIElNWDhNUV9DTEtfVE1VX1JPT1QN
-Cj4gPiA+ID4NCj4gPiA+ID4gSGkgYWxsLA0KPiA+ID4gPg0KPiA+ID4gPiBsYXRlc3QgbGludXgt
-bmV4dCBoYW5ncyBhdCBib290Lg0KPiA+ID4gPg0KPiA+ID4gPiBjb21taXQgZmRlNTBiOTZiZTgy
-MWFjOTY3M2E3ZTAwODQ3Y2M0NjA1YmQ4OGYzNCAoSEVBRCAtPg0KPiBtYXN0ZXIsIHRhZzoNCj4g
-PiA+ID4gbmV4dC0yMDE5MDcyNiwgb3JpZ2luL21hc3Rlciwgb3JpZ2luL0hFQUQpDQo+ID4gPiA+
-IEF1dGhvcjogU3RlcGhlbiBSb3Rod2VsbCA8c2ZyQGNhbmIuYXV1Zy5vcmcuYXU+DQo+ID4gPiA+
-IERhdGU6ICAgRnJpIEp1bCAyNiAxNToxODowMiAyMDE5ICsxMDAwDQo+ID4gPiA+DQo+ID4gPiA+
-ICAgICBBZGQgbGludXgtbmV4dCBzcGVjaWZpYyBmaWxlcyBmb3IgMjAxOTA3MjYNCj4gPiA+ID4N
-Cj4gPiA+ID4gICAgIFNpZ25lZC1vZmYtYnk6IFN0ZXBoZW4gUm90aHdlbGwgPHNmckBjYW5iLmF1
-dWcub3JnLmF1Pg0KPiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiBJIGtub3cgdGhpcyBpcyBjcmF6
-eSBidXQgcmV2ZXJ0aW5nIGNvbW1pdDoNCj4gPiA+ID4NCj4gPiA+ID4gY29tbWl0IDQzMWJkZDFk
-ZjQ4ZWUyODk2ZWE5OTgwZDkxNTNlM2FlYWYwYzgxZWYNCj4gKHJlZnMvYmlzZWN0L2JhZCkNCj4g
-PiA+ID4gQXV0aG9yOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiA+ID4g
-RGF0ZTogICBGcmkgSnVsIDUgMTI6NTY6MTEgMjAxOSArMDgwMA0KPiA+ID4gPg0KPiA+ID4gPiAg
-ICAgY2xrOiBpbXg4bXE6IFJlbW92ZSBDTEtfSVNfQ1JJVElDQUwgZmxhZyBmb3INCj4gPiA+ID4g
-SU1YOE1RX0NMS19UTVVfUk9PVA0KPiA+ID4gPg0KPiA+ID4gPiAgICAgSU1YOE1RX0NMS19UTVVf
-Uk9PVCBpcyBPTkxZIHVzZWQgZm9yIHRoZXJtYWwgbW9kdWxlLCB0aGUNCj4gZHJpdmVyDQo+ID4g
-PiA+ICAgICBzaG91bGQgbWFuYWdlIHRoaXMgY2xvY2ssIHNvIG5vIG5lZWQgdG8gaGF2ZSBDTEtf
-SVNfQ1JJVElDQUwgZmxhZw0KPiA+ID4gPiAgICAgc2V0Lg0KPiA+ID4gPg0KPiA+ID4gPg0KPiA+
-ID4gPg0KPiA+ID4gPiBtYWtlcyB0aGUgYm9vdCB3b3JrIGFnYWluLg0KPiA+ID4gPg0KPiA+ID4g
-PiBBbnkgaWRlYT8NCj4gPiA+DQo+ID4gPiBJIGp1c3QgZm91bmQgaWYgZGlzYWJsaW5nIFNETUEx
-LCB0aGVuIGtlcm5lbCBjYW4gYm9vdCB1cCwgaXQgZG9lcw0KPiA+ID4gTk9UIG1ha2Ugc2Vuc2Ug
-VE1VIGNsb2NrIGlzIHJlbGF0ZWQgdG8gU0RNQTEsIEkgd2lsbCBjaGVjayB3aXRoIGRlc2lnbg0K
-PiBhbmQgZ2V0IGJhY2sgdG8geW91IHNvb24uDQo+ID4gPg0KPiA+DQo+ID4gSGkgQW5zb24sDQo+
-ID4NCj4gPiBBcHBseWluZyBBYmVsJ3MgcGF0Y2g6DQo+ID4NCj4gPiBjb21taXQgODgxNmM0N2Ri
-NmE4MmY1NWJiNGQ2NGY2MmZkOWRkM2FmNjgwZjBlNCAoSEVBRCAtPiBtYXN0ZXIpDQo+ID4gQXV0
-aG9yOiBBYmVsIFZlc2EgPGFiZWwudmVzYUBueHAuY29tPg0KPiA+IERhdGU6ICAgVHVlIEp1biAy
-NSAxMjowMTo1NiAyMDE5ICswMzAwDQo+ID4NCj4gPiAgICAgY2xrOiBpbXg4bXE6IE1hcmsgQUhC
-IGNsb2NrIGFzIGNyaXRpY2FsDQo+ID4NCj4gPiAgICAgS2VlcCB0aGUgQUhCIGNsb2NrIGFsd2F5
-cyBvbiBzaW5jZSB0aGVyZSBpcyBubyBkcml2ZXIgdG8gY29udHJvbCBpdCBhbmQNCj4gPiAgICAg
-YWxsIHRoZSBvdGhlciBjbG9ja3MgdGhhdCB1c2UgaXQgYXMgcGFyZW50IHJlbHkgb24gaXQgYmVp
-bmcgYWx3YXlzIGVuYWJsZWQuDQo+ID4NCj4gPg0KPiA+DQo+ID4gVGhlIGtlcm5lbCBib290cyB1
-cCBhZ2Fpbi4NCj4gPg0KPiA+IEl0IG1ha2Ugc29tZSBzZW5zZS4gSSBkb24ndCB1bmRlcnN0YW5k
-IHRob3VnaCB3aHkgaGF2aW5nDQo+ID4gSU1YOE1RX0NMS19UTVVfUk9PVCBhcyBjcml0aWNhbCBh
-bHNvICJ1bmhhbmdzIiB0aGUga2VybmVsLg0KPiA+DQo+IA0KPiBPSywgc28gdGhpcyBpcyBob3cg
-aXQgd29ya3MuDQo+IA0KPiBCeSByZW1vdmluZyB0aGUgY3JpdGljYWwgZmxhZyBmcm9tIFRNVSwg
-dGhlIEFIQiBkb2Vzbid0IHN0YXkgYWx3YXlzIG9uLg0KPiBXaXRoIG15IHBhdGNoIHRoZSBBSEIg
-aXMgbWFya2VkIGFzIGNyaXRpY2FsIGFuZCB0aGVyZWZvcmUgc3RheXMgb24uDQo+IA0KPiBUaGUg
-c2RtYTFfY2xrIGhhcyBhcyBwYXJlbnQgdGhlIGlwZ19yb290IHdoaWNoIGluIHR1cm4gaGFzIGFz
-IHBhcmVudCB0aGUNCj4gYWhiIGNsb2NrLiBBbmQgSSB0aGluayB3aGF0IGhhcHBlbnMgaXMgc29t
-ZSByZWFkIGZyb20gdGhlIHNkbWEgcmVnaXN0ZXJzDQo+IGhhbmdzIGJlY2F1c2UsIGZvciB3aGF0
-ZXZlciByZWFzb24sIGVuYWJsaW5nIHRoZSBzZG1hMV9jbGsgZG9lc24ndA0KPiBwcm9wYWdhdGUg
-dG8gZW5hYmxlIHRoZSBhaGIgY2xvY2suIEkgbWlnaHQgYmUgd3JvbmcgdGhvdWdoLg0KPiANCg0K
-SSBjYW4gZXhwbGFpbiB3aHkgQWJlbCdzIHBhdGNoIGNhbiBmaXggdGhpcyBpc3N1ZSwgdGhlIEFI
-QiBjbG9jayBpcyBhIE1VU1QNCmFsd2F5cyBPTiBmb3Igc3lzdGVtIGJ1cywgd2hpbGUgaXQgZG9l
-cyBOT1QgaGF2ZSBDTEtfSVNfQ1JJVElDQUwgZmxhZyBzZXQgZm9yIG5vdywNCndoZW4gU0RNQTEg
-aXMgcHJvYmVkLCBpdCB3aWxsIGVuYWJsZSBpdHMgY2xvY2ssIGFuZCB0aGUgY2xrIHBhdGggaXMg
-c2RtYTFfY2xrLT5pcGdfcm9vdC0+YWhiLA0KYWZ0ZXIgU0RNQTEgcHJvYmVkIGRvbmUsIGl0IHdp
-bGwgZGlzYWJsZSBpdHMgY2xvY2sgc2luY2Ugbm8gb25lIHVzZSBpdCwgYW5kIGl0IHdpbGwgdHJp
-Z2dlcg0KdGhlIGFoYiBjbG9jayB0byBiZSBPRkYsIGFzIGl0cyB1c2Vjb3VudCBpcyBhZGRlZCBi
-eSAxIHdoZW4gcHJvYmUgYW5kIGRlY3JlYXNlZCBieSAxIGFmdGVyDQpTRE1BMSBwcm9iZSBkb25l
-LCBzbyB1c2Vjb3VudD0wIHdpbGwgdHJpZ2dlciBBSEIgY2xvY2sgdG8gYmUgT0ZGLg0KDQpTbyBJ
-IHRoaW5rIHRoZSBiZXN0IHNvbHV0aW9uIHNob3VsZCBiZSBhcHBseWluZyBBYmVsJ3MgcGF0Y2gg
-YXMgeW91IG1lbnRpb25lZCB1cHBlciwgdGhlIFRNVQ0KY2xvY2sgcGF0Y2ggaXMgTk9UIHRoZSBy
-b290IGNhdXNlLCBpdCBqdXN0IHRyaWdnZXJzIHRoaXMgaXNzdWUgYWNjaWRlbnRseeKYuQ0KDQpC
-dXQgSSBzYXcgQWJlbCdzIEFIQiBwYXRjaCBpcyBzdGlsbCB1bmRlciBkaXNjdXNzaW9uLCBzbyBJ
-IHRoaW5rIHdlIG5lZWQgdG8gc3BlZWQgaXQgdXAgYW5kIG1ha2UgDQprZXJuZWwgYm9vdCB1cCB3
-b3JrIGZvciBkZXZlbG9wbWVudC4gQUhCL0lQRyBhcmUgYWx3YXlzIGNyaXRpY2FsIGZvciBpLk1Y
-IFNvQ3MuDQoNClRoYW5rcywNCkFuc29uLg0K
+Hi,
+
+On 19. 7. 23. 오후 9:20, Artur Świgoń wrote:
+> This patch adds interconnect functionality to the exynos-bus devfreq
+> driver.
+> 
+> The SoC topology is a graph (or, more specifically, a tree) and most of its
+> edges are taken from the devfreq parent-child hierarchy (cf.
+> Documentation/devicetree/bindings/devfreq/exynos-bus.txt). The previous
+> patch adds missing edges to the DT (under the name 'parent'). Due to
+> unspecified relative probing order, -EPROBE_DEFER may be propagated to
+> guarantee that a child is probed before its parent.
+> 
+> Each bus is now an interconnect provider and an interconnect node as well
+> (cf. Documentation/interconnect/interconnect.rst), i.e. every bus registers
+> itself as a node. Node IDs are not hardcoded but rather assigned at
+> runtime, in probing order (subject to the above-mentioned exception
+> regarding relative order). This approach allows for using this driver with
+> various Exynos SoCs.
+> 
+> The devfreq target() callback provided by exynos-bus now selects either the
+> frequency calculated by the devfreq governor or the frequency requested via
+> the interconnect API for the given node, whichever is higher.
+
+Basically, I agree to support the QoS requirement between devices.
+But, I think that need to consider the multiple cases.
+
+
+1. When changing the devfreq governor by user,
+For example of the connection between bus_dmc/leftbus/display on patch8,
+there are possible multiple cases with various devfreq governor
+which is changed on the runtime by user through sysfs interface.
+
+If users changes the devfreq governor as following:
+Before,
+- bus_dmc (simple_ondemand, available frequency 100/200/300/400 MHz)
+--> bus_leftbus(simple_ondemand, available frequency 100/200/300/400 MHz)
+----> bus_display(passive)
+
+After changed governor of bus_dmc,
+if the min_freq by interconnect requirement is 400Mhz,
+- bus_dmc (powersave) : min_freq and max_freq and cur_freq is 100MHz
+--> bus_leftbus(simple_ondemand) : cur_freq is 400Mhz
+----> bus_display(passive)
+
+The final frequency is 400MHz of bus_dmc
+even if the min_freq/max_freq/cur_freq is 100MHz.
+It cannot show the correct min_freq/max_freq through
+devfreq sysfs interface.
+
+
+2. When disabling the some frequency by devfreq-thermal throttling,
+This patch checks the min_freq of interconnect requirement
+in the exynos_bus_target() and exynos_bus_passive_target().
+Also, it cannot show the correct min_freq/max_freq through
+devfreq sysfs interface.
+
+For example of bus_dmc bus,
+- The available frequencies are 100MHz, 200MHz, 300MHz, 400MHz
+- Disable 400MHz by devfreq-thermal throttling 
+- min_freq is 100MHz
+- max_freq is 300MHz
+- min_freq of interconnect is 400MHz
+
+In result, the final frequency is 400MHz by exynos_bus_target()
+There are no problem for working. But, the user cannot know
+reason why cur_freq is 400MHz even if max_freq is 300MHz.
+
+Basically, update_devfreq() considers the all constraints
+of min_freq/max_freq to decide the proper target frequency.
+
+
+3.
+I think that the exynos_bus_passive_target() is used for devfreq device
+using 'passive' governor. The frequency already depends on the parent device.
+
+If already the parent devfreq device like bus_leftbus consider
+the minimum frequency of QoS requirement like interconnect,
+it is not necessary. The next frequency of devfreq device
+with 'passive' governor, it will apply the QoS requirement
+without any additional code.
+
+> 
+> Please note that it is not an error when CONFIG_INTERCONNECT is 'n', in
+> which case all interconnect API functions are no-op.
+> 
+> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+> ---
+>  drivers/devfreq/exynos-bus.c | 145 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 145 insertions(+)
+> 
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> index 412511ca7703..12fb7c84ae50 100644
+> --- a/drivers/devfreq/exynos-bus.c
+> +++ b/drivers/devfreq/exynos-bus.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/devfreq-event.h>
+>  #include <linux/device.h>
+>  #include <linux/export.h>
+> +#include <linux/interconnect-provider.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/pm_opp.h>
+> @@ -23,6 +24,8 @@
+>  #define DEFAULT_SATURATION_RATIO	40
+>  #define DEFAULT_VOLTAGE_TOLERANCE	2
+>  
+> +#define icc_units_to_hz(x) ((x) * 1000UL / 8)
+> +
+>  struct exynos_bus {
+>  	struct device *dev;
+>  
+> @@ -31,12 +34,17 @@ struct exynos_bus {
+>  	unsigned int edev_count;
+>  	struct mutex lock;
+>  
+> +	unsigned long min_freq;
+>  	unsigned long curr_freq;
+>  
+>  	struct regulator *regulator;
+>  	struct clk *clk;
+>  	unsigned int voltage_tolerance;
+>  	unsigned int ratio;
+> +
+> +	/* One provider per bus, one node per provider */
+> +	struct icc_provider provider;
+> +	struct icc_node *node;
+>  };
+>  
+>  /*
+> @@ -61,6 +69,13 @@ exynos_bus_ops_edev(enable_edev);
+>  exynos_bus_ops_edev(disable_edev);
+>  exynos_bus_ops_edev(set_event);
+>  
+> +static int exynos_bus_next_id(void)
+> +{
+> +	static int exynos_bus_node_id;
+> +
+> +	return exynos_bus_node_id++;
+> +}
+> +
+>  static int exynos_bus_get_event(struct exynos_bus *bus,
+>  				struct devfreq_event_data *edata)
+>  {
+> @@ -98,6 +113,8 @@ static int exynos_bus_target(struct device *dev, unsigned long *freq, u32 flags)
+>  	unsigned long old_freq, new_freq, new_volt, tol;
+>  	int ret = 0;
+>  
+> +	*freq = max(*freq, bus->min_freq);
+> +
+>  	/* Get new opp-bus instance according to new bus clock */
+>  	new_opp = devfreq_recommended_opp(dev, freq, flags);
+>  	if (IS_ERR(new_opp)) {
+> @@ -208,6 +225,8 @@ static int exynos_bus_passive_target(struct device *dev, unsigned long *freq,
+>  	unsigned long old_freq, new_freq;
+>  	int ret = 0;
+>  
+> +	*freq = max(*freq, bus->min_freq);
+> +
+>  	/* Get new opp-bus instance according to new bus clock */
+>  	new_opp = devfreq_recommended_opp(dev, freq, flags);
+>  	if (IS_ERR(new_opp)) {
+> @@ -251,6 +270,35 @@ static void exynos_bus_passive_exit(struct device *dev)
+>  	clk_disable_unprepare(bus->clk);
+>  }
+>  
+> +static int exynos_bus_icc_set(struct icc_node *src, struct icc_node *dst)
+> +{
+> +	struct exynos_bus *src_bus = src->data, *dst_bus = dst->data;
+> +
+> +	src_bus->min_freq = icc_units_to_hz(src->peak_bw);
+> +	dst_bus->min_freq = icc_units_to_hz(dst->peak_bw);
+> +
+> +	return 0;
+> +}
+> +
+> +static int exynos_bus_icc_aggregate(struct icc_node *node, u32 avg_bw,
+> +				    u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
+> +{
+> +	*agg_peak = *agg_avg = peak_bw;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct icc_node *exynos_bus_icc_xlate(struct of_phandle_args *spec,
+> +					     void *data)
+> +{
+> +	struct exynos_bus *bus = data;
+> +
+> +	if (spec->np != bus->dev->of_node)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	return bus->node;
+> +}
+> +
+>  static int exynos_bus_parent_parse_of(struct device_node *np,
+>  					struct exynos_bus *bus)
+>  {
+> @@ -469,6 +517,95 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+>  	return ret;
+>  }
+>  
+> +static int exynos_bus_icc_connect(struct exynos_bus *bus)
+> +{
+> +	struct device_node *np = bus->dev->of_node;
+> +	struct devfreq *parent_devfreq;
+> +	struct icc_node *parent_node = NULL;
+> +	struct of_phandle_args args;
+> +	int ret = 0;
+> +
+> +	parent_devfreq = devfreq_get_devfreq_by_phandle(bus->dev, 0);
+> +	if (!IS_ERR(parent_devfreq)) {
+> +		struct exynos_bus *parent_bus;
+> +
+> +		parent_bus = dev_get_drvdata(parent_devfreq->dev.parent);
+> +		parent_node = parent_bus->node;
+> +	} else {
+> +		/* Look for parent in DT */
+> +		int num = of_count_phandle_with_args(np, "parent",
+> +						     "#interconnect-cells");
+> +		if (num != 1)
+> +			goto out;
+> +
+> +		ret = of_parse_phandle_with_args(np, "parent",
+> +						 "#interconnect-cells",
+> +						 0, &args);
+> +		if (ret < 0)
+> +			goto out;
+> +
+> +		of_node_put(args.np);
+> +
+> +		parent_node = of_icc_get_from_provider(&args);
+> +		if (IS_ERR(parent_node)) {
+> +			/* May be -EPROBE_DEFER */
+> +			ret = PTR_ERR(parent_node);
+> +			goto out;
+> +		}
+> +	}
+> +
+> +	ret = icc_link_create(bus->node, parent_node->id);
+> +
+> +out:
+> +	return ret;
+> +}
+> +
+> +static int exynos_bus_icc_init(struct exynos_bus *bus)
+> +{
+> +	struct device *dev = bus->dev;
+> +	struct icc_provider *provider = &bus->provider;
+> +	struct icc_node *node;
+> +	int id, ret;
+> +
+> +	/* Initialize the interconnect provider */
+> +	provider->set = exynos_bus_icc_set;
+> +	provider->aggregate = exynos_bus_icc_aggregate;
+> +	provider->xlate = exynos_bus_icc_xlate;
+> +	provider->dev = dev;
+> +	provider->data = bus;
+> +
+> +	ret = icc_provider_add(provider);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	id = exynos_bus_next_id();
+> +	node = icc_node_create(id);
+> +	if (IS_ERR(node)) {
+> +		ret = PTR_ERR(node);
+> +		goto err_node;
+> +	}
+> +
+> +	bus->node = node;
+> +	node->name = dev->of_node->name;
+> +	node->data = bus;
+> +	icc_node_add(node, provider);
+> +
+> +	ret = exynos_bus_icc_connect(bus);
+> +	if (ret < 0)
+> +		goto err_connect;
+> +
+> +out:
+> +	return ret;
+> +
+> +err_connect:
+> +	icc_node_del(node);
+> +	icc_node_destroy(id);
+> +err_node:
+> +	icc_provider_del(provider);
+> +
+> +	return ret;
+> +}
+> +
+>  static int exynos_bus_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -517,6 +654,14 @@ static int exynos_bus_probe(struct platform_device *pdev)
+>  			goto err;
+>  	}
+>  
+> +	/*
+> +	 * Initialize interconnect provider. A return value of -ENOTSUPP means
+> +	 * that CONFIG_INTERCONNECT is disabled.
+> +	 */
+> +	ret = exynos_bus_icc_init(bus);
+> +	if (ret < 0 && ret != -ENOTSUPP)
+> +		goto err;
+> +
+>  	max_state = bus->devfreq->profile->max_state;
+>  	min_freq = (bus->devfreq->profile->freq_table[0] / 1000);
+>  	max_freq = (bus->devfreq->profile->freq_table[max_state - 1] / 1000);
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
