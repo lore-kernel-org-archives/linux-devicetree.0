@@ -1,39 +1,75 @@
-From: "Stefan Schaeckeler (sschaeck)" <sschaeck@cisco.com>
-Subject: Re: [PATCH 02/17] ARM: dts: aspeed-g5: Use recommended generic node
- name for SDMC
-Date: Mon, 29 Jul 2019 17:29:01 +0000
-Message-ID: <EF113919-7590-442F-A1EE-12143FA4D960@cisco.com>
-References: <20190726053959.2003-1-andrew@aj.id.au>
- <20190726053959.2003-3-andrew@aj.id.au>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding
+ documentation
+Date: Mon, 29 Jul 2019 17:33:09 +0000
+Message-ID: <20190729173307.ex2mf5hikzxl534v@pburton-laptop>
+References: <20190724022310.28010-1-gch981213@gmail.com>
+ <20190724022310.28010-5-gch981213@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190726053959.2003-3-andrew@aj.id.au>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190724022310.28010-5-gch981213@gmail.com>
 Content-Language: en-US
-Content-ID: <CAA3C299B7A78046AC880CC515AC5AC9@namprd11.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Jeffery <andrew@aj.id.au>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-ID: <C26CC762CCD7CF42A8FC0CCA4047FDE4@namprd22.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chuanhong Guo <gch981213@gmail.com>
+Cc: "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, John Crispin <john@phrozen.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 25, 2019 at 10:40 PM, Andrew Jeffery wrote:
+Hi Chuanhong,
 
-> The EDAC is a sub-function of the SDRAM Memory Controller. Rename the
-> node to the appropriate generic node name.
->
-> Cc: Stefan M Schaeckeler <sschaeck@cisco.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+On Wed, Jul 24, 2019 at 10:23:08AM +0800, Chuanhong Guo wrote:
+> This commit adds device tree binding documentation for MT7621
+> PLL controller.
+>=20
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
 > ---
->  arch/arm/boot/dts/aspeed-g5.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-    
-Reviewed-by: Stefan Schaeckeler <sschaeck@cisco.com>    
+>=20
+> Change since v1:
+> drop useless syscon in compatible string
+>=20
+>  .../bindings/clock/mediatek,mt7621-pll.txt     | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt76=
+21-pll.txt
+
+This binding needs review from DT maintainers before I apply it, but as
+a general note it's typical to add the binding *before* its use in the
+series. That is, this patch should come before patch 3.
+
+Personally I'd squash it with patch 1 so the binding & the header file
+needed to use the binding are added in one patch, then a later patch
+actually makes use of them.
+
+Thanks,
+    Paul
+
+> diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.=
+txt b/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
+> new file mode 100644
+> index 000000000000..7dcfbd5283e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
+> @@ -0,0 +1,18 @@
+> +Binding for Mediatek MT7621 PLL controller
+> +
+> +The PLL controller provides the 2 main clocks of the SoC: CPU and BUS.
+> +
+> +Required Properties:
+> +- compatible: has to be "mediatek,mt7621-pll"
+> +- #clock-cells: has to be one
+> +
+> +Optional properties:
+> +- clock-output-names: should be "cpu", "bus"
+> +
+> +Example:
+> +	pll {
+> +		compatible =3D "mediatek,mt7621-pll";
+> +
+> +		#clock-cells =3D <1>;
+> +		clock-output-names =3D "cpu", "bus";
+> +	};
+> --=20
+> 2.21.0
+>=20
