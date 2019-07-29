@@ -1,7 +1,7 @@
 From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: [PATCH net-next v3 4/4] arm64: dts: fsl: ls1028a: Enable eth port1 on the ls1028a QDS board
-Date: Mon, 29 Jul 2019 13:03:47 +0300
-Message-ID: <1564394627-3810-5-git-send-email-claudiu.manoil@nxp.com>
+Subject: [PATCH net-next v3 1/4] enetc: Clean up local mdio bus allocation
+Date: Mon, 29 Jul 2019 13:03:44 +0300
+Message-ID: <1564394627-3810-2-git-send-email-claudiu.manoil@nxp.com>
 References: <1564394627-3810-1-git-send-email-claudiu.manoil@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1564394627-3810-1-git-send-email-claudiu.manoil@nxp.com>
@@ -10,105 +10,249 @@ To: "David S . Miller" <davem@davemloft.net>
 Cc: andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-LS1028a has one Ethernet management interface. On the QDS board, the
-MDIO signals are multiplexed to either on-board AR8035 PHY device or
-to 4 PCIe slots allowing for SGMII cards.
-To enable the Ethernet ENETC Port 1, which can only be connected to a
-RGMII PHY, the multiplexer needs to be configured to route the MDIO to
-the AR8035 PHY.  The MDIO/MDC routing is controlled by bits 7:4 of FPGA
-board config register 0x54, and value 0 selects the on-board RGMII PHY.
-The FPGA board config registers are accessible on the i2c bus, at address
-0x66.
+What's needed is basically a pointer to the mdio registers.
+This is one way to store it inside bus->priv allocated space,
+without upsetting sparse.
+Reworked accessors to avoid __iomem casting.
+Used devm_* variant to further clean up the init error /
+remove paths.
 
-The PF3 MDIO PCIe integrated endpoint device allows for centralized access
-to the MDIO bus.  Add the corresponding devicetree node and set it to be
-the MDIO bus parent.
+Fixes following sparse warning:
+ warning: incorrect type in assignment (different address spaces)
+    expected void *priv
+    got struct enetc_mdio_regs [noderef] <asn:2>*[assigned] regs
 
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+Fixes: ebfcb23d62ab ("enetc: Add ENETC PF level external MDIO support")
+
 Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 ---
-v1 - none
-v2 - none
-v3 - none
+v1 - added this patch
+v2 - reworked accessors as per Andrew Lunn's request
+v3 - cleaned up commit message
 
- .../boot/dts/freescale/fsl-ls1028a-qds.dts    | 40 +++++++++++++++++++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
- 2 files changed, 46 insertions(+)
+ .../net/ethernet/freescale/enetc/enetc_mdio.c | 94 +++++++++----------
+ 1 file changed, 46 insertions(+), 48 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index de6ef39f3118..663c4b728c07 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -85,6 +85,26 @@
- 			system-clock-frequency = <25000000>;
- 		};
- 	};
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+index 77b9cd10ba2b..05094601ece8 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+@@ -8,16 +8,22 @@
+ 
+ #include "enetc_pf.h"
+ 
+-struct enetc_mdio_regs {
+-	u32	mdio_cfg;	/* MDIO configuration and status */
+-	u32	mdio_ctl;	/* MDIO control */
+-	u32	mdio_data;	/* MDIO data */
+-	u32	mdio_addr;	/* MDIO address */
++#define	ENETC_MDIO_REG_OFFSET	0x1c00
++#define	ENETC_MDIO_CFG	0x0	/* MDIO configuration and status */
++#define	ENETC_MDIO_CTL	0x4	/* MDIO control */
++#define	ENETC_MDIO_DATA	0x8	/* MDIO data */
++#define	ENETC_MDIO_ADDR	0xc	/* MDIO address */
 +
-+	mdio-mux {
-+		compatible = "mdio-mux-multiplexer";
-+		mux-controls = <&mux 0>;
-+		mdio-parent-bus = <&enetc_mdio_pf3>;
-+		#address-cells=<1>;
-+		#size-cells = <0>;
++#define enetc_mdio_rd(hw, off) \
++	enetc_port_rd(hw, ENETC_##off + ENETC_MDIO_REG_OFFSET)
++#define enetc_mdio_wr(hw, off, val) \
++	enetc_port_wr(hw, ENETC_##off + ENETC_MDIO_REG_OFFSET, val)
++#define enetc_mdio_rd_reg(off)	enetc_mdio_rd(hw, off)
 +
-+		/* on-board RGMII PHY */
-+		mdio@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			qds_phy1: ethernet-phy@5 {
-+				/* Atheros 8035 */
-+				reg = <5>;
-+			};
-+		};
-+	};
++struct enetc_mdio_priv {
++	struct enetc_hw *hw;
  };
  
- &duart0 {
-@@ -164,6 +184,26 @@
- 			};
- 		};
- 	};
-+
-+	fpga@66 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "fsl,ls1028aqds-fpga", "fsl,fpga-qixis-i2c",
-+			     "simple-mfd";
-+		reg = <0x66>;
-+
-+		mux: mux-controller {
-+			compatible = "reg-mux";
-+			#mux-control-cells = <1>;
-+			mux-reg-masks = <0x54 0xf0>; /* 0: reg 0x54, bits 7:4 */
-+		};
-+	};
-+
-+};
-+
-+&enetc_port1 {
-+	phy-handle = <&qds_phy1>;
-+	phy-connection-type = "rgmii-id";
- };
+-#define bus_to_enetc_regs(bus)	(struct enetc_mdio_regs __iomem *)((bus)->priv)
+-
+-#define ENETC_MDIO_REG_OFFSET	0x1c00
+ #define ENETC_MDC_DIV		258
  
- &sai1 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 7975519b4f56..de71153fda00 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -536,6 +536,12 @@
- 				compatible = "fsl,enetc";
- 				reg = <0x000100 0 0 0 0>;
- 			};
-+			enetc_mdio_pf3: mdio@0,3 {
-+				compatible = "fsl,enetc-mdio";
-+				reg = <0x000300 0 0 0 0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 			ethernet@0,4 {
- 				compatible = "fsl,enetc-ptp";
- 				reg = <0x000400 0 0 0 0>;
+ #define MDIO_CFG_CLKDIV(x)	((((x) >> 1) & 0xff) << 8)
+@@ -33,18 +39,19 @@ struct enetc_mdio_regs {
+ #define MDIO_DATA(x)		((x) & 0xffff)
+ 
+ #define TIMEOUT	1000
+-static int enetc_mdio_wait_complete(struct enetc_mdio_regs __iomem *regs)
++static int enetc_mdio_wait_complete(struct enetc_hw *hw)
+ {
+ 	u32 val;
+ 
+-	return readx_poll_timeout(enetc_rd_reg, &regs->mdio_cfg, val,
++	return readx_poll_timeout(enetc_mdio_rd_reg, MDIO_CFG, val,
+ 				  !(val & MDIO_CFG_BSY), 10, 10 * TIMEOUT);
+ }
+ 
+ static int enetc_mdio_write(struct mii_bus *bus, int phy_id, int regnum,
+ 			    u16 value)
+ {
+-	struct enetc_mdio_regs __iomem *regs = bus_to_enetc_regs(bus);
++	struct enetc_mdio_priv *mdio_priv = bus->priv;
++	struct enetc_hw *hw = mdio_priv->hw;
+ 	u32 mdio_ctl, mdio_cfg;
+ 	u16 dev_addr;
+ 	int ret;
+@@ -59,29 +66,29 @@ static int enetc_mdio_write(struct mii_bus *bus, int phy_id, int regnum,
+ 		mdio_cfg &= ~MDIO_CFG_ENC45;
+ 	}
+ 
+-	enetc_wr_reg(&regs->mdio_cfg, mdio_cfg);
++	enetc_mdio_wr(hw, MDIO_CFG, mdio_cfg);
+ 
+-	ret = enetc_mdio_wait_complete(regs);
++	ret = enetc_mdio_wait_complete(hw);
+ 	if (ret)
+ 		return ret;
+ 
+ 	/* set port and dev addr */
+ 	mdio_ctl = MDIO_CTL_PORT_ADDR(phy_id) | MDIO_CTL_DEV_ADDR(dev_addr);
+-	enetc_wr_reg(&regs->mdio_ctl, mdio_ctl);
++	enetc_mdio_wr(hw, MDIO_CTL, mdio_ctl);
+ 
+ 	/* set the register address */
+ 	if (regnum & MII_ADDR_C45) {
+-		enetc_wr_reg(&regs->mdio_addr, regnum & 0xffff);
++		enetc_mdio_wr(hw, MDIO_ADDR, regnum & 0xffff);
+ 
+-		ret = enetc_mdio_wait_complete(regs);
++		ret = enetc_mdio_wait_complete(hw);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
+ 	/* write the value */
+-	enetc_wr_reg(&regs->mdio_data, MDIO_DATA(value));
++	enetc_mdio_wr(hw, MDIO_DATA, MDIO_DATA(value));
+ 
+-	ret = enetc_mdio_wait_complete(regs);
++	ret = enetc_mdio_wait_complete(hw);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -90,7 +97,8 @@ static int enetc_mdio_write(struct mii_bus *bus, int phy_id, int regnum,
+ 
+ static int enetc_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
+ {
+-	struct enetc_mdio_regs __iomem *regs = bus_to_enetc_regs(bus);
++	struct enetc_mdio_priv *mdio_priv = bus->priv;
++	struct enetc_hw *hw = mdio_priv->hw;
+ 	u32 mdio_ctl, mdio_cfg;
+ 	u16 dev_addr, value;
+ 	int ret;
+@@ -104,41 +112,41 @@ static int enetc_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
+ 		mdio_cfg &= ~MDIO_CFG_ENC45;
+ 	}
+ 
+-	enetc_wr_reg(&regs->mdio_cfg, mdio_cfg);
++	enetc_mdio_wr(hw, MDIO_CFG, mdio_cfg);
+ 
+-	ret = enetc_mdio_wait_complete(regs);
++	ret = enetc_mdio_wait_complete(hw);
+ 	if (ret)
+ 		return ret;
+ 
+ 	/* set port and device addr */
+ 	mdio_ctl = MDIO_CTL_PORT_ADDR(phy_id) | MDIO_CTL_DEV_ADDR(dev_addr);
+-	enetc_wr_reg(&regs->mdio_ctl, mdio_ctl);
++	enetc_mdio_wr(hw, MDIO_CTL, mdio_ctl);
+ 
+ 	/* set the register address */
+ 	if (regnum & MII_ADDR_C45) {
+-		enetc_wr_reg(&regs->mdio_addr, regnum & 0xffff);
++		enetc_mdio_wr(hw, MDIO_ADDR, regnum & 0xffff);
+ 
+-		ret = enetc_mdio_wait_complete(regs);
++		ret = enetc_mdio_wait_complete(hw);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
+ 	/* initiate the read */
+-	enetc_wr_reg(&regs->mdio_ctl, mdio_ctl | MDIO_CTL_READ);
++	enetc_mdio_wr(hw, MDIO_CTL, mdio_ctl | MDIO_CTL_READ);
+ 
+-	ret = enetc_mdio_wait_complete(regs);
++	ret = enetc_mdio_wait_complete(hw);
+ 	if (ret)
+ 		return ret;
+ 
+ 	/* return all Fs if nothing was there */
+-	if (enetc_rd_reg(&regs->mdio_cfg) & MDIO_CFG_RD_ER) {
++	if (enetc_mdio_rd(hw, MDIO_CFG) & MDIO_CFG_RD_ER) {
+ 		dev_dbg(&bus->dev,
+ 			"Error while reading PHY%d reg at %d.%hhu\n",
+ 			phy_id, dev_addr, regnum);
+ 		return 0xffff;
+ 	}
+ 
+-	value = enetc_rd_reg(&regs->mdio_data) & 0xffff;
++	value = enetc_mdio_rd(hw, MDIO_DATA) & 0xffff;
+ 
+ 	return value;
+ }
+@@ -146,12 +154,12 @@ static int enetc_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
+ int enetc_mdio_probe(struct enetc_pf *pf)
+ {
+ 	struct device *dev = &pf->si->pdev->dev;
+-	struct enetc_mdio_regs __iomem *regs;
++	struct enetc_mdio_priv *mdio_priv;
+ 	struct device_node *np;
+ 	struct mii_bus *bus;
+-	int ret;
++	int err;
+ 
+-	bus = mdiobus_alloc_size(sizeof(regs));
++	bus = devm_mdiobus_alloc_size(dev, sizeof(*mdio_priv));
+ 	if (!bus)
+ 		return -ENOMEM;
+ 
+@@ -159,41 +167,31 @@ int enetc_mdio_probe(struct enetc_pf *pf)
+ 	bus->read = enetc_mdio_read;
+ 	bus->write = enetc_mdio_write;
+ 	bus->parent = dev;
++	mdio_priv = bus->priv;
++	mdio_priv->hw = &pf->si->hw;
+ 	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
+ 
+-	/* store the enetc mdio base address for this bus */
+-	regs = pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
+-	bus->priv = regs;
+-
+ 	np = of_get_child_by_name(dev->of_node, "mdio");
+ 	if (!np) {
+ 		dev_err(dev, "MDIO node missing\n");
+-		ret = -EINVAL;
+-		goto err_registration;
++		return -EINVAL;
+ 	}
+ 
+-	ret = of_mdiobus_register(bus, np);
+-	if (ret) {
++	err = of_mdiobus_register(bus, np);
++	if (err) {
+ 		of_node_put(np);
+ 		dev_err(dev, "cannot register MDIO bus\n");
+-		goto err_registration;
++		return err;
+ 	}
+ 
+ 	of_node_put(np);
+ 	pf->mdio = bus;
+ 
+ 	return 0;
+-
+-err_registration:
+-	mdiobus_free(bus);
+-
+-	return ret;
+ }
+ 
+ void enetc_mdio_remove(struct enetc_pf *pf)
+ {
+-	if (pf->mdio) {
++	if (pf->mdio)
+ 		mdiobus_unregister(pf->mdio);
+-		mdiobus_free(pf->mdio);
+-	}
+ }
 -- 
 2.17.1
