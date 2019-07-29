@@ -1,198 +1,92 @@
-From: Thara Gopinath <thara.gopinath@linaro.org>
-Subject: [PATCH 1/2] soc: qcom: Extend AOSS QMP driver to support resources that are used to wake up the SoC.
-Date: Mon, 29 Jul 2019 12:33:20 -0400
-Message-ID: <1564418001-24940-2-git-send-email-thara.gopinath@linaro.org>
-References: <1564418001-24940-1-git-send-email-thara.gopinath@linaro.org>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH 2/6] pwm: sun4i: Add a quirk for reset line
+Date: Mon, 29 Jul 2019 18:37:15 +0200
+Message-ID: <20190729163715.vtv7lkrywewomxga@flea.home>
+References: <20190726184045.14669-1-jernej.skrabec@siol.net>
+ <20190726184045.14669-3-jernej.skrabec@siol.net>
+ <20190729063630.rn325whatfnc3m7n@pengutronix.de>
+ <CAGb2v65KOpivHQNkg+R2=D=ejCJYnPdVcyHJZW-GJCR8j0Yk0g@mail.gmail.com>
+ <20190729071218.bukw7vxilqy523k3@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="c27mc7zieuu4am73"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564418001-24940-1-git-send-email-thara.gopinath@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20190729071218.bukw7vxilqy523k3@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-The AOSS QMP driver is extended to communicate with the additional
-resources. These resources are then registered as cooling devices
-with the thermal framework.
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
----
- drivers/soc/qcom/qcom_aoss.c | 129 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 129 insertions(+)
+--c27mc7zieuu4am73
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
-index 5f88519..010877e 100644
---- a/drivers/soc/qcom/qcom_aoss.c
-+++ b/drivers/soc/qcom/qcom_aoss.c
-@@ -10,6 +10,8 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/pm_domain.h>
-+#include <linux/thermal.h>
-+#include <linux/slab.h>
- 
- #define QMP_DESC_MAGIC			0x0
- #define QMP_DESC_VERSION		0x4
-@@ -40,6 +42,16 @@
- /* 64 bytes is enough to store the requests and provides padding to 4 bytes */
- #define QMP_MSG_LEN			64
- 
-+#define QMP_NUM_COOLING_RESOURCES	2
-+
-+static bool qmp_cdev_init_state = 1;
-+
-+struct qmp_cooling_device {
-+	struct thermal_cooling_device *cdev;
-+	struct qmp *qmp;
-+	bool state;
-+};
-+
- /**
-  * struct qmp - driver state for QMP implementation
-  * @msgram: iomem referencing the message RAM used for communication
-@@ -69,6 +81,7 @@ struct qmp {
- 
- 	struct clk_hw qdss_clk;
- 	struct genpd_onecell_data pd_data;
-+	struct qmp_cooling_device *cooling_devs;
- };
- 
- struct qmp_pd {
-@@ -385,6 +398,117 @@ static void qmp_pd_remove(struct qmp *qmp)
- 		pm_genpd_remove(data->domains[i]);
- }
- 
-+static int qmp_cdev_get_max_state(struct thermal_cooling_device *cdev,
-+				  unsigned long *state)
-+{
-+	*state = qmp_cdev_init_state;
-+	return 0;
-+}
-+
-+static int qmp_cdev_get_cur_state(struct thermal_cooling_device *cdev,
-+				  unsigned long *state)
-+{
-+	struct qmp_cooling_device *qmp_cdev = cdev->devdata;
-+
-+	*state = qmp_cdev->state;
-+	return 0;
-+}
-+
-+static int qmp_cdev_set_cur_state(struct thermal_cooling_device *cdev,
-+				  unsigned long state)
-+{
-+	struct qmp_cooling_device *qmp_cdev = cdev->devdata;
-+	char buf[QMP_MSG_LEN] = {};
-+	bool cdev_state;
-+	int ret;
-+
-+	/* Normalize state */
-+	cdev_state = !!state;
-+
-+	if (qmp_cdev->state == state)
-+		return 0;
-+
-+	snprintf(buf, sizeof(buf),
-+		 "{class: volt_flr, event:zero_temp, res:%s, value:%s}",
-+			qmp_cdev->name,
-+			cdev_state ? "off" : "on");
-+
-+	ret = qmp_send(qmp_cdev->qmp, buf, sizeof(buf));
-+
-+	if (!ret)
-+		qmp_cdev->state = cdev_state;
-+
-+	return ret;
-+}
-+
-+static struct thermal_cooling_device_ops qmp_cooling_device_ops = {
-+	.get_max_state = qmp_cdev_get_max_state,
-+	.get_cur_state = qmp_cdev_get_cur_state,
-+	.set_cur_state = qmp_cdev_set_cur_state,
-+};
-+
-+static int qmp_cooling_device_add(struct qmp *qmp,
-+				  struct qmp_cooling_device *qmp_cdev,
-+				  struct device_node *node)
-+{
-+	char *cdev_name = (char *)node->name;
-+
-+	qmp_cdev->qmp = qmp;
-+	qmp_cdev->state = qmp_cdev_init_state;
-+	qmp_cdev->cdev = devm_thermal_of_cooling_device_register
-+				(qmp->dev, node,
-+				cdev_name,
-+				qmp_cdev, &qmp_cooling_device_ops);
-+
-+	if (IS_ERR(qmp_cdev->cdev))
-+		dev_err(qmp->dev, "unable to register %s cooling device\n",
-+			cdev_name);
-+
-+	return PTR_ERR_OR_ZERO(qmp_cdev->cdev);
-+}
-+
-+static int qmp_cooling_devices_register(struct qmp *qmp)
-+{
-+	struct device_node *np, *child;
-+	int count = QMP_NUM_COOLING_RESOURCES;
-+	int ret;
-+
-+	np = qmp->dev->of_node;
-+
-+	qmp->cooling_devs = devm_kcalloc(qmp->dev, count,
-+					 sizeof(*qmp->cooling_devs),
-+					 GFP_KERNEL);
-+
-+	if (!qmp->cooling_devs)
-+		return -ENOMEM;
-+
-+	for_each_available_child_of_node(np, child) {
-+		if (!of_find_property(child, "#cooling-cells", NULL))
-+			continue;
-+		ret = qmp_cooling_device_add(qmp, &qmp->cooling_devs[count++],
-+					     child);
-+		if (ret)
-+			goto uroll_cooling_devices;
-+	}
-+
-+	return 0;
-+
-+uroll_cooling_devices:
-+	while (--count >= 0)
-+		thermal_cooling_device_unregister
-+			(qmp->cooling_devs[count].cdev);
-+
-+	return ret;
-+}
-+
-+static void qmp_cooling_devices_remove(struct qmp *qmp)
-+{
-+	int i;
-+
-+	for (i = 0; i < QMP_NUM_COOLING_RESOURCES; i++)
-+		thermal_cooling_device_unregister(qmp->cooling_devs[i].cdev);
-+}
-+
- static int qmp_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-@@ -433,6 +557,10 @@ static int qmp_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_remove_qdss_clk;
- 
-+	ret = qmp_cooling_devices_register(qmp);
-+	if (ret)
-+		dev_err(&pdev->dev, "failed to register aoss cooling devices\n");
-+
- 	platform_set_drvdata(pdev, qmp);
- 
- 	return 0;
-@@ -453,6 +581,7 @@ static int qmp_remove(struct platform_device *pdev)
- 
- 	qmp_qdss_clk_remove(qmp);
- 	qmp_pd_remove(qmp);
-+	qmp_cooling_devices_remove(qmp);
- 
- 	qmp_close(qmp);
- 	mbox_free_channel(qmp->mbox_chan);
--- 
-2.1.4
+On Mon, Jul 29, 2019 at 09:12:18AM +0200, Uwe Kleine-K=F6nig wrote:
+> Hello,
+>
+> On Mon, Jul 29, 2019 at 02:43:23PM +0800, Chen-Yu Tsai wrote:
+> > On Mon, Jul 29, 2019 at 2:36 PM Uwe Kleine-K=F6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Fri, Jul 26, 2019 at 08:40:41PM +0200, Jernej Skrabec wrote:
+> > > > @@ -371,6 +374,14 @@ static int sun4i_pwm_probe(struct platform_dev=
+ice *pdev)
+> > > >       if (IS_ERR(pwm->clk))
+> > > >               return PTR_ERR(pwm->clk);
+> > > >
+> > > > +     if (pwm->data->has_reset) {
+> > > > +             pwm->rst =3D devm_reset_control_get(&pdev->dev, NULL);
+> > > > +             if (IS_ERR(pwm->rst))
+> > > > +                     return PTR_ERR(pwm->rst);
+> > > > +
+> > > > +             reset_control_deassert(pwm->rst);
+> > > > +     }
+> > > > +
+> > >
+> > > I wonder why there is a need to track if a given chip needs a reset
+> > > line. I'd just use devm_reset_control_get_optional() and drop the
+> > > .has_reset member in struct sun4i_pwm_data.
+> >
+> > Because it's not optional for this platform, i.e. it won't work if
+> > the reset control (or clk, in the next patch) is somehow missing from
+> > the device tree.
+>
+> If the device tree is wrong it is considered ok that the driver doesn't
+> behave correctly. So this is not a problem you need (or should) care
+> about.
+
+To some extent that's true, but if we can make the life easier for
+everyone by reporting an error and bailing out instead of silently
+ignoring that, continuing to probe and just ending up with a
+completely broken system for no apparent reason, then why not just do
+that?
+
+I mean, all it takes is three lines of code.
+
+It's no different than just calling clk_get, and testing the return
+code to see if it's there or not. I wouldn't call that check when you
+depend on a clock "validating the DT". It's just making sure that all
+the resources needed for you to operate properly are there, which is a
+pretty common thing to do.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--c27mc7zieuu4am73
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXT8guwAKCRDj7w1vZxhR
+xUcMAP48/d4gHWLB2ieD8luRNO7UdNKhBxkKVaYQSUwwNhdNhgEA6GotfwgqiOLI
+FehMWvNcDSv607KLMFEsu5CWk9sxRwQ=
+=W5NU
+-----END PGP SIGNATURE-----
+
+--c27mc7zieuu4am73--
