@@ -1,7 +1,7 @@
 From: Carlo Caione <ccaione@baylibre.com>
-Subject: [PATCH 2/5] firmware: meson_sm: Mark chip struct as static const
-Date: Mon, 29 Jul 2019 19:39:38 +0100
-Message-ID: <20190729183941.18164-3-ccaione@baylibre.com>
+Subject: [PATCH 3/5] nvmem: meson-efuse: bindings: Add secure-monitor phandle
+Date: Mon, 29 Jul 2019 19:39:39 +0100
+Message-ID: <20190729183941.18164-4-ccaione@baylibre.com>
 References: <20190729183941.18164-1-ccaione@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,25 +21,45 @@ To: srinivas.kandagatla@linaro.org, khilman@baylibre.com, narmstrong@baylibre.co
 Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-No need to be a global struct.
+Add a new property to link the nvmem driver to the secure-monitor. The
+nvmem driver needs to access the secure-monitor to be able to access the
+fuses.
 
 Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 ---
- drivers/firmware/meson/meson_sm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meson/meson_sm.c
-index 8d908a8e0d20..772ca6726e7b 100644
---- a/drivers/firmware/meson/meson_sm.c
-+++ b/drivers/firmware/meson/meson_sm.c
-@@ -35,7 +35,7 @@ struct meson_sm_chip {
- 	struct meson_sm_cmd cmd[];
- };
+diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+index 2e0723ab3384..f7b3ed74db54 100644
+--- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
++++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+@@ -4,6 +4,7 @@ Required properties:
+ - compatible: should be "amlogic,meson-gxbb-efuse"
+ - clocks: phandle to the efuse peripheral clock provided by the
+ 	  clock controller.
++- secure-monitor: phandle to the secure-monitor node
  
--struct meson_sm_chip gxbb_chip = {
-+static const struct meson_sm_chip gxbb_chip = {
- 	.shmem_size		= SZ_4K,
- 	.cmd_shmem_in_base	= 0x82000020,
- 	.cmd_shmem_out_base	= 0x82000021,
+ = Data cells =
+ Are child nodes of eFuse, bindings of which as described in
+@@ -16,6 +17,7 @@ Example:
+ 		clocks = <&clkc CLKID_EFUSE>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
++		secure-monitor = <&sm>;
+ 
+ 		sn: sn@14 {
+ 			reg = <0x14 0x10>;
+@@ -30,6 +32,10 @@ Example:
+ 		};
+ 	};
+ 
++	sm: secure-monitor {
++		compatible = "amlogic,meson-gxbb-sm";
++	};
++
+ = Data consumers =
+ Are device nodes which consume nvmem data cells.
+ 
 -- 
 2.20.1
