@@ -1,428 +1,191 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v3 2/2] mmc: Add support for the ASPEED SD controller
-Date: Tue, 30 Jul 2019 15:53:16 +0930
-Message-ID: <20190730062316.32037-3-andrew@aj.id.au>
-References: <20190730062316.32037-1-andrew@aj.id.au>
+From: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH 1/7] docs: fix broken doc references due to renames
+Date: Mon, 29 Jul 2019 16:17:24 -0700
+Message-ID: <20190729231724.GH14271@linux.ibm.com>
+References: <cover.1564140865.git.mchehab+samsung@kernel.org>
+ <430ed96cb234805d1deb216e8c8559da22cc6bac.1564140865.git.mchehab+samsung@kernel.org>
+Reply-To: paulmck@linux.ibm.com
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190730062316.32037-1-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: Andrew Jeffery <andrew@aj.id.au>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, adrian.hunter@intel.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, ryanchen.aspeed@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <430ed96cb234805d1deb216e8c8559da22cc6bac.1564140865.git.mchehab+samsung@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrea Parri <andrea.parri@amarulasolutions.com>, Ajay Gupta <ajayg@nvidia.com>, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Akira Yokosawa <akiyks@gmail.com>, Lai Jiangshan <jiangshanlai@gmail.com>, Jerry Hoemann <jerry.hoemann@hpe.com>, dri-devel@lists.freedesktop.org, David Howells <dhowells@redhat.com>, linux-i2c@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>, Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org, linux-scsi@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Wolfram Sang <wsa@the-dreams.de>, esc.storagedev@microsemi.com, Maxime Ripard <maxime.ripard@bootlin.com>, Ingo Molnar <mingo@redhat.com>, Alan Stern <stern@rowland.harvard.edu>, Jade Alglave <j.alglave@ucl.ac.uk>, Boqun Feng <boqun.feng@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Don Brace <don.brace@microsemi.com>dev
 List-Id: devicetree@vger.kernel.org
 
-Add a minimal driver for ASPEED's SD controller, which exposes two
-SDHCIs.
-
-The ASPEED design implements a common register set for the SDHCIs, and
-moves some of the standard configuration elements out to this common
-area (e.g. 8-bit mode, and card detect configuration which is not
-currently supported).
-
-The SD controller has a dedicated hardware interrupt that is shared
-between the slots. The common register set exposes information on which
-slot triggered the interrupt; early revisions of the patch introduced an
-irqchip for the register, but reality is it doesn't behave as an
-irqchip, and the result fits awkwardly into the irqchip APIs. Instead
-I've taken the simple approach of using the IRQ as a shared IRQ with
-some minor performance impact for the second slot.
-
-Ryan was the original author of the patch - I've taken his work and
-massaged it to drop the irqchip support and rework the devicetree
-integration. The driver has been smoke tested under qemu against a
-minimal SD controller model and lightly tested on an ast2500-evb.
-
-Signed-off-by: Ryan Chen <ryanchen.aspeed@gmail.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-
----
-v3:
-* Add AST2600 compatible
-* Drop SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
-* Ensure slot number is valid
-* Fix build with CONFIG_MODULES
-* Fix module license string
-* Non-PCI devices won't die
-* Rename aspeed_sdc_configure_8bit_mode()
-* Rename aspeed_sdhci_pdata
-* Switch to sdhci_enable_clk()
-* Use PTR_ERR() on the right `struct platform_device *`
----
- drivers/mmc/host/Kconfig           |  12 ++
- drivers/mmc/host/Makefile          |   1 +
- drivers/mmc/host/sdhci-of-aspeed.c | 328 +++++++++++++++++++++++++++++
- 3 files changed, 341 insertions(+)
- create mode 100644 drivers/mmc/host/sdhci-of-aspeed.c
-
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 14d89a108edd..0f8a230de2f3 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -154,6 +154,18 @@ config MMC_SDHCI_OF_ARASAN
- 
- 	  If unsure, say N.
- 
-+config MMC_SDHCI_OF_ASPEED
-+	tristate "SDHCI OF support for the ASPEED SDHCI controller"
-+	depends on MMC_SDHCI_PLTFM
-+	depends on OF
-+	help
-+	  This selects the ASPEED Secure Digital Host Controller Interface.
-+
-+	  If you have a controller with this interface, say Y or M here. You
-+	  also need to enable an appropriate bus interface.
-+
-+	  If unsure, say N.
-+
- config MMC_SDHCI_OF_AT91
- 	tristate "SDHCI OF support for the Atmel SDMMC controller"
- 	depends on MMC_SDHCI_PLTFM
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index 73578718f119..390ee162fe71 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -84,6 +84,7 @@ obj-$(CONFIG_MMC_SDHCI_ESDHC_IMX)	+= sdhci-esdhc-imx.o
- obj-$(CONFIG_MMC_SDHCI_DOVE)		+= sdhci-dove.o
- obj-$(CONFIG_MMC_SDHCI_TEGRA)		+= sdhci-tegra.o
- obj-$(CONFIG_MMC_SDHCI_OF_ARASAN)	+= sdhci-of-arasan.o
-+obj-$(CONFIG_MMC_SDHCI_OF_ASPEED)	+= sdhci-of-aspeed.o
- obj-$(CONFIG_MMC_SDHCI_OF_AT91)		+= sdhci-of-at91.o
- obj-$(CONFIG_MMC_SDHCI_OF_ESDHC)	+= sdhci-of-esdhc.o
- obj-$(CONFIG_MMC_SDHCI_OF_HLWD)		+= sdhci-of-hlwd.o
-diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
-new file mode 100644
-index 000000000000..d31785ec90d7
---- /dev/null
-+++ b/drivers/mmc/host/sdhci-of-aspeed.c
-@@ -0,0 +1,328 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* Copyright (C) 2019 ASPEED Technology Inc. */
-+/* Copyright (C) 2019 IBM Corp. */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/io.h>
-+#include <linux/mmc/host.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+
-+#include "sdhci-pltfm.h"
-+
-+#define ASPEED_SDC_INFO		0x00
-+#define   ASPEED_SDC_S1MMC8	BIT(25)
-+#define   ASPEED_SDC_S0MMC8	BIT(24)
-+
-+struct aspeed_sdc {
-+	struct clk *clk;
-+	struct resource *res;
-+
-+	spinlock_t lock;
-+	void __iomem *regs;
-+};
-+
-+struct aspeed_sdhci {
-+	struct aspeed_sdc *parent;
-+	u32 width_mask;
-+};
-+
-+static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
-+					   struct aspeed_sdhci *sdhci,
-+					   bool bus8)
-+{
-+	u32 info;
-+
-+	/* Set/clear 8 bit mode */
-+	spin_lock(&sdc->lock);
-+	info = readl(sdc->regs + ASPEED_SDC_INFO);
-+	if (bus8)
-+		info |= sdhci->width_mask;
-+	else
-+		info &= ~sdhci->width_mask;
-+	writel(info, sdc->regs + ASPEED_SDC_INFO);
-+	spin_unlock(&sdc->lock);
-+}
-+
-+static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
-+{
-+	int div;
-+	u16 clk;
-+
-+	if (clock == host->clock)
-+		return;
-+
-+	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
-+
-+	if (clock == 0)
-+		goto out;
-+
-+	for (div = 1; div < 256; div *= 2) {
-+		if ((host->max_clk / div) <= clock)
-+			break;
-+	}
-+	div >>= 1;
-+
-+	clk = div << SDHCI_DIVIDER_SHIFT;
-+
-+	sdhci_enable_clk(host, clk);
-+
-+out:
-+	host->clock = clock;
-+}
-+
-+static void aspeed_sdhci_set_bus_width(struct sdhci_host *host, int width)
-+{
-+	struct sdhci_pltfm_host *pltfm_priv;
-+	struct aspeed_sdhci *aspeed_sdhci;
-+	struct aspeed_sdc *aspeed_sdc;
-+	u8 ctrl;
-+
-+	pltfm_priv = sdhci_priv(host);
-+	aspeed_sdhci = sdhci_pltfm_priv(pltfm_priv);
-+	aspeed_sdc = aspeed_sdhci->parent;
-+
-+	/* Set/clear 8-bit mode */
-+	aspeed_sdc_configure_8bit_mode(aspeed_sdc, aspeed_sdhci,
-+				       width == MMC_BUS_WIDTH_8);
-+
-+	/* Set/clear 1 or 4 bit mode */
-+	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-+	if (width == MMC_BUS_WIDTH_4)
-+		ctrl |= SDHCI_CTRL_4BITBUS;
-+	else
-+		ctrl &= ~SDHCI_CTRL_4BITBUS;
-+	sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-+}
-+
-+static const struct sdhci_ops aspeed_sdhci_ops = {
-+	.set_clock = aspeed_sdhci_set_clock,
-+	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
-+	.set_bus_width = aspeed_sdhci_set_bus_width,
-+	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
-+	.reset = sdhci_reset,
-+	.set_uhs_signaling = sdhci_set_uhs_signaling,
-+};
-+
-+static const struct sdhci_pltfm_data aspeed_sdhci_pdata = {
-+	.ops = &aspeed_sdhci_ops,
-+	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
-+};
-+
-+static inline int aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
-+					      struct resource *res)
-+{
-+	resource_size_t delta;
-+
-+	if (!res || resource_type(res) != IORESOURCE_MEM)
-+		return -EINVAL;
-+
-+	if (res->start < dev->parent->res->start)
-+		return -EINVAL;
-+
-+	delta = res->start - dev->parent->res->start;
-+	if (delta & (0x100 - 1))
-+		return -EINVAL;
-+
-+	return (delta / 0x100) - 1;
-+}
-+
-+static int aspeed_sdhci_probe(struct platform_device *pdev)
-+{
-+	struct sdhci_pltfm_host *pltfm_host;
-+	struct aspeed_sdhci *dev;
-+	struct sdhci_host *host;
-+	struct resource *res;
-+	int slot;
-+	int ret;
-+
-+	host = sdhci_pltfm_init(pdev, &aspeed_sdhci_pdata, sizeof(*dev));
-+	if (IS_ERR(host))
-+		return PTR_ERR(host);
-+
-+	pltfm_host = sdhci_priv(host);
-+	dev = sdhci_pltfm_priv(pltfm_host);
-+	dev->parent = dev_get_drvdata(pdev->dev.parent);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	slot = aspeed_sdhci_calculate_slot(dev, res);
-+
-+	if (slot < 0)
-+		return slot;
-+	else if (slot >= 2)
-+		return -EINVAL;
-+
-+	dev_info(&pdev->dev, "Configuring for slot %d\n", slot);
-+	dev->width_mask = !slot ? ASPEED_SDC_S0MMC8 : ASPEED_SDC_S1MMC8;
-+
-+	sdhci_get_of_property(pdev);
-+
-+	pltfm_host->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(pltfm_host->clk))
-+		return PTR_ERR(pltfm_host->clk);
-+
-+	ret = clk_prepare_enable(pltfm_host->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to enable SDIO clock\n");
-+		goto err_pltfm_free;
-+	}
-+
-+	ret = mmc_of_parse(host->mmc);
-+	if (ret)
-+		goto err_sdhci_add;
-+
-+	ret = sdhci_add_host(host);
-+	if (ret)
-+		goto err_sdhci_add;
-+
-+	return 0;
-+
-+err_sdhci_add:
-+	clk_disable_unprepare(pltfm_host->clk);
-+err_pltfm_free:
-+	sdhci_pltfm_free(pdev);
-+	return ret;
-+}
-+
-+static int aspeed_sdhci_remove(struct platform_device *pdev)
-+{
-+	struct sdhci_pltfm_host *pltfm_host;
-+	struct sdhci_host *host;
-+	int dead = 0;
-+
-+	host = platform_get_drvdata(pdev);
-+	pltfm_host = sdhci_priv(host);
-+
-+	sdhci_remove_host(host, dead);
-+
-+	clk_disable_unprepare(pltfm_host->clk);
-+
-+	sdhci_pltfm_free(pdev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id aspeed_sdhci_of_match[] = {
-+	{ .compatible = "aspeed,ast2400-sdhci", },
-+	{ .compatible = "aspeed,ast2500-sdhci", },
-+	{ .compatible = "aspeed,ast2600-sdhci", },
-+	{ }
-+};
-+
-+static struct platform_driver aspeed_sdhci_driver = {
-+	.driver		= {
-+		.name	= "sdhci-aspeed",
-+		.of_match_table = aspeed_sdhci_of_match,
-+	},
-+	.probe		= aspeed_sdhci_probe,
-+	.remove		= aspeed_sdhci_remove,
-+};
-+
-+static int aspeed_sdc_probe(struct platform_device *pdev)
-+
-+{
-+	struct device_node *parent, *child;
-+	struct aspeed_sdc *sdc;
-+	int ret;
-+
-+	sdc = devm_kzalloc(&pdev->dev, sizeof(*sdc), GFP_KERNEL);
-+	if (!sdc)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&sdc->lock);
-+
-+	sdc->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(sdc->clk))
-+		return PTR_ERR(sdc->clk);
-+
-+	ret = clk_prepare_enable(sdc->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to enable SDCLK\n");
-+		return ret;
-+	}
-+
-+	sdc->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	sdc->regs = devm_ioremap_resource(&pdev->dev, sdc->res);
-+	if (IS_ERR(sdc->regs)) {
-+		ret = PTR_ERR(sdc->regs);
-+		goto err_clk;
-+	}
-+
-+	dev_set_drvdata(&pdev->dev, sdc);
-+
-+	parent = pdev->dev.of_node;
-+	for_each_available_child_of_node(parent, child) {
-+		struct platform_device *cpdev;
-+
-+		cpdev = of_platform_device_create(child, NULL, &pdev->dev);
-+		if (IS_ERR(cpdev)) {
-+			of_node_put(child);
-+			ret = PTR_ERR(cpdev);
-+			goto err_clk;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_clk:
-+	clk_disable_unprepare(sdc->clk);
-+	return ret;
-+}
-+
-+static int aspeed_sdc_remove(struct platform_device *pdev)
-+{
-+	struct aspeed_sdc *sdc = dev_get_drvdata(&pdev->dev);
-+
-+	clk_disable_unprepare(sdc->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id aspeed_sdc_of_match[] = {
-+	{ .compatible = "aspeed,ast2400-sd-controller", },
-+	{ .compatible = "aspeed,ast2500-sd-controller", },
-+	{ .compatible = "aspeed,ast2600-sd-controller", },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, aspeed_sdc_of_match);
-+
-+static struct platform_driver aspeed_sdc_driver = {
-+	.driver		= {
-+		.name	= "sd-controller-aspeed",
-+		.pm	= &sdhci_pltfm_pmops,
-+		.of_match_table = aspeed_sdc_of_match,
-+	},
-+	.probe		= aspeed_sdc_probe,
-+	.remove		= aspeed_sdc_remove,
-+};
-+
-+static int __init aspeed_sdc_init(void)
-+{
-+	int rc;
-+
-+	rc = platform_driver_register(&aspeed_sdhci_driver);
-+	if (rc < 0)
-+		return rc;
-+
-+	return platform_driver_register(&aspeed_sdc_driver);
-+}
-+module_init(aspeed_sdc_init);
-+
-+static void __exit aspeed_sdc_exit(void)
-+{
-+	platform_driver_unregister(&aspeed_sdc_driver);
-+	platform_driver_unregister(&aspeed_sdhci_driver);
-+}
-+module_exit(aspeed_sdc_exit);
-+
-+MODULE_DESCRIPTION("Driver for the ASPEED SD/SDIO/SDHCI Controllers");
-+MODULE_AUTHOR("Ryan Chen <ryan_chen@aspeedtech.com>");
-+MODULE_AUTHOR("Andrew Jeffery <andrew@aj.id.au>");
-+MODULE_LICENSE("GPL");
--- 
-2.20.1
+T24gRnJpLCBKdWwgMjYsIDIwMTkgYXQgMDg6NDc6MjFBTSAtMDMwMCwgTWF1cm8gQ2FydmFsaG8g
+Q2hlaGFiIHdyb3RlOgo+IFNvbWUgZmlsZXMgZ290IHJlbmFtZWQgYnV0IHByb2JhYmx5IGR1ZSB0
+byBzb21lIG1lcmdlIGNvbmZsaWN0cywKPiBhIGZldyByZWZlcmVuY2VzIHN0aWxsIHBvaW50IHRv
+IHRoZSBvbGQgbG9jYXRpb25zLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE1hdXJvIENhcnZhbGhvIENo
+ZWhhYiA8bWNoZWhhYitzYW1zdW5nQGtlcm5lbC5vcmc+Cj4gQWNrZWQtYnk6IFdvbGZyYW0gU2Fu
+ZyA8d3NhQHRoZS1kcmVhbXMuZGU+ICMgSTJDIHBhcnQKPiBSZXZpZXdlZC1ieTogSmVycnkgSG9l
+bWFubiA8amVycnkuaG9lbWFubkBocGUuY29tPiAjIGhwd2R0LnJzdAoKQWNrZWQtYnk6IFBhdWwg
+RS4gTWNLZW5uZXkgPHBhdWxtY2tAbGludXguaWJtLmNvbT4KCj4gLS0tCj4gIERvY3VtZW50YXRp
+b24vUkNVL3JjdWxpc3RfbnVsbHMudHh0ICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KPiAgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9pZGxlLXN0YXRlcy50eHQgfCAgMiAr
+LQo+ICBEb2N1bWVudGF0aW9uL2xvY2tpbmcvc3BpbmxvY2tzLnJzdCAgICAgICAgICAgICAgICAg
+ICB8ICA0ICsrLS0KPiAgRG9jdW1lbnRhdGlvbi9tZW1vcnktYmFycmllcnMudHh0ICAgICAgICAg
+ICAgICAgICAgICAgfCAgMiArLQo+ICBEb2N1bWVudGF0aW9uL3RyYW5zbGF0aW9ucy9rb19LUi9t
+ZW1vcnktYmFycmllcnMudHh0ICB8ICAyICstCj4gIERvY3VtZW50YXRpb24vd2F0Y2hkb2cvaHB3
+ZHQucnN0ICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KPiAgTUFJTlRBSU5FUlMgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxMCArKysrKy0tLS0tCj4gIGRy
+aXZlcnMvZ3B1L2RybS9kcm1fbW9kZXMuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIg
+Ky0KPiAgZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1udmlkaWEtZ3B1LmMgICAgICAgICAgICAgICAg
+ICAgfCAgMiArLQo+ICBkcml2ZXJzL3Njc2kvaHBzYS5jICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8ICA0ICsrLS0KPiAgMTAgZmlsZXMgY2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygr
+KSwgMTYgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vUkNVL3Jj
+dWxpc3RfbnVsbHMudHh0IGIvRG9jdW1lbnRhdGlvbi9SQ1UvcmN1bGlzdF9udWxscy50eHQKPiBp
+bmRleCA4MTUxZjAxOTVmNzYuLjIzZjExNWRjODdjZiAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0
+aW9uL1JDVS9yY3VsaXN0X251bGxzLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vUkNVL3JjdWxp
+c3RfbnVsbHMudHh0Cj4gQEAgLTEsNyArMSw3IEBACj4gIFVzaW5nIGhsaXN0X251bGxzIHRvIHBy
+b3RlY3QgcmVhZC1tb3N0bHkgbGlua2VkIGxpc3RzIGFuZAo+ICBvYmplY3RzIHVzaW5nIFNMQUJf
+VFlQRVNBRkVfQllfUkNVIGFsbG9jYXRpb25zLgo+ICAKPiAtUGxlYXNlIHJlYWQgdGhlIGJhc2lj
+cyBpbiBEb2N1bWVudGF0aW9uL1JDVS9saXN0UkNVLnR4dAo+ICtQbGVhc2UgcmVhZCB0aGUgYmFz
+aWNzIGluIERvY3VtZW50YXRpb24vUkNVL2xpc3RSQ1UucnN0Cj4gIAo+ICBVc2luZyBzcGVjaWFs
+IG1ha2VycyAoY2FsbGVkICdudWxscycpIGlzIGEgY29udmVuaWVudCB3YXkKPiAgdG8gc29sdmUg
+Zm9sbG93aW5nIHByb2JsZW0gOgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvYXJtL2lkbGUtc3RhdGVzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9hcm0vaWRsZS1zdGF0ZXMudHh0Cj4gaW5kZXggMzI2ZjI5YjI3MGFkLi4yZDMy
+NWJlZDM3ZTUgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2FybS9pZGxlLXN0YXRlcy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvYXJtL2lkbGUtc3RhdGVzLnR4dAo+IEBAIC03MDMsNCArNzAzLDQgQEAgY3B1cyB7Cj4g
+ICAgICBodHRwczovL3d3dy5kZXZpY2V0cmVlLm9yZy9zcGVjaWZpY2F0aW9ucy8KPiAgCj4gIFs2
+XSBBUk0gTGludXggS2VybmVsIGRvY3VtZW50YXRpb24gLSBCb290aW5nIEFBcmNoNjQgTGludXgK
+PiAtICAgIERvY3VtZW50YXRpb24vYXJtNjQvYm9vdGluZy50eHQKPiArICAgIERvY3VtZW50YXRp
+b24vYXJtNjQvYm9vdGluZy5yc3QKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9sb2NraW5n
+L3NwaW5sb2Nrcy5yc3QgYi9Eb2N1bWVudGF0aW9uL2xvY2tpbmcvc3BpbmxvY2tzLnJzdAo+IGlu
+ZGV4IDA5ODEwN2ZiN2Q4Ni4uZTkzZWM2NjQ1MjM4IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRp
+b24vbG9ja2luZy9zcGlubG9ja3MucnN0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9sb2NraW5nL3Nw
+aW5sb2Nrcy5yc3QKPiBAQCAtODIsNyArODIsNyBAQCBpdHNlbGYuICBUaGUgcmVhZCBsb2NrIGFs
+bG93cyBtYW55IGNvbmN1cnJlbnQgcmVhZGVycy4gIEFueXRoaW5nIHRoYXQKPiAgKipjaGFuZ2Vz
+KiogdGhlIGxpc3Qgd2lsbCBoYXZlIHRvIGdldCB0aGUgd3JpdGUgbG9jay4KPiAgCj4gICAgIE5P
+VEUhIFJDVSBpcyBiZXR0ZXIgZm9yIGxpc3QgdHJhdmVyc2FsLCBidXQgcmVxdWlyZXMgY2FyZWZ1
+bAo+IC0gICBhdHRlbnRpb24gdG8gZGVzaWduIGRldGFpbCAoc2VlIERvY3VtZW50YXRpb24vUkNV
+L2xpc3RSQ1UudHh0KS4KPiArICAgYXR0ZW50aW9uIHRvIGRlc2lnbiBkZXRhaWwgKHNlZSBEb2N1
+bWVudGF0aW9uL1JDVS9saXN0UkNVLnJzdCkuCj4gIAo+ICBBbHNvLCB5b3UgY2Fubm90ICJ1cGdy
+YWRlIiBhIHJlYWQtbG9jayB0byBhIHdyaXRlLWxvY2ssIHNvIGlmIHlvdSBhdCBfYW55Xwo+ICB0
+aW1lIG5lZWQgdG8gZG8gYW55IGNoYW5nZXMgKGV2ZW4gaWYgeW91IGRvbid0IGRvIGl0IGV2ZXJ5
+IHRpbWUpLCB5b3UgaGF2ZQo+IEBAIC05MCw3ICs5MCw3IEBAIHRvIGdldCB0aGUgd3JpdGUtbG9j
+ayBhdCB0aGUgdmVyeSBiZWdpbm5pbmcuCj4gIAo+ICAgICBOT1RFISBXZSBhcmUgd29ya2luZyBo
+YXJkIHRvIHJlbW92ZSByZWFkZXItd3JpdGVyIHNwaW5sb2NrcyBpbiBtb3N0Cj4gICAgIGNhc2Vz
+LCBzbyBwbGVhc2UgZG9uJ3QgYWRkIGEgbmV3IG9uZSB3aXRob3V0IGNvbnNlbnN1cy4gIChJbnN0
+ZWFkLCBzZWUKPiAtICAgRG9jdW1lbnRhdGlvbi9SQ1UvcmN1LnR4dCBmb3IgY29tcGxldGUgaW5m
+b3JtYXRpb24uKQo+ICsgICBEb2N1bWVudGF0aW9uL1JDVS9yY3UucnN0IGZvciBjb21wbGV0ZSBp
+bmZvcm1hdGlvbi4pCj4gIAo+ICAtLS0tCj4gIAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L21lbW9yeS1iYXJyaWVycy50eHQgYi9Eb2N1bWVudGF0aW9uL21lbW9yeS1iYXJyaWVycy50eHQK
+PiBpbmRleCAwNDViYjgxNDhmZTkuLjFhZGJiOGEzNzFjNyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL21lbW9yeS1iYXJyaWVycy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL21lbW9yeS1i
+YXJyaWVycy50eHQKPiBAQCAtNTQ4LDcgKzU0OCw3IEBAIFRoZXJlIGFyZSBjZXJ0YWluIHRoaW5n
+cyB0aGF0IHRoZSBMaW51eCBrZXJuZWwgbWVtb3J5IGJhcnJpZXJzIGRvIG5vdCBndWFyYW50ZWU6
+Cj4gIAo+ICAJWypdIEZvciBpbmZvcm1hdGlvbiBvbiBidXMgbWFzdGVyaW5nIERNQSBhbmQgY29o
+ZXJlbmN5IHBsZWFzZSByZWFkOgo+ICAKPiAtCSAgICBEb2N1bWVudGF0aW9uL1BDSS9wY2kucnN0
+Cj4gKwkgICAgRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3BjaS9wY2kucnN0Cj4gIAkgICAgRG9j
+dW1lbnRhdGlvbi9ETUEtQVBJLUhPV1RPLnR4dAo+ICAJICAgIERvY3VtZW50YXRpb24vRE1BLUFQ
+SS50eHQKPiAgCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vdHJhbnNsYXRpb25zL2tvX0tS
+L21lbW9yeS1iYXJyaWVycy50eHQgYi9Eb2N1bWVudGF0aW9uL3RyYW5zbGF0aW9ucy9rb19LUi9t
+ZW1vcnktYmFycmllcnMudHh0Cj4gaW5kZXggYTMzYzJhNTM2NTQyLi4yNzc0NjI0ZWU4NDMgMTAw
+NjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMva29fS1IvbWVtb3J5LWJhcnJp
+ZXJzLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vdHJhbnNsYXRpb25zL2tvX0tSL21lbW9yeS1i
+YXJyaWVycy50eHQKPiBAQCAtNTY5LDcgKzU2OSw3IEBAIEFDUVVJUkUg64qUIO2VtOuLuSDsmKTt
+jbzroIjsnbTshZjsnZgg66Gc65OcIOu2gOu2hOyXkOunjCDsoIHsmqnrkJjqs6AgUkVMRUFTRSAK
+PiAgCj4gIAlbKl0g67KE7IqkIOuniOyKpO2EsOungSBETUEg7JmAIOydvOq0gOyEseyXkCDrjIDt
+lbTshJzripQg64uk7J2M7J2EIOywuOqzoO2VmOyLnOq4sCDrsJTrno3ri4jri6Q6Cj4gIAo+IC0J
+ICAgIERvY3VtZW50YXRpb24vUENJL3BjaS5yc3QKPiArCSAgICBEb2N1bWVudGF0aW9uL2RyaXZl
+ci1hcGkvcGNpL3BjaS5yc3QKPiAgCSAgICBEb2N1bWVudGF0aW9uL0RNQS1BUEktSE9XVE8udHh0
+Cj4gIAkgICAgRG9jdW1lbnRhdGlvbi9ETUEtQVBJLnR4dAo+ICAKPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi93YXRjaGRvZy9ocHdkdC5yc3QgYi9Eb2N1bWVudGF0aW9uL3dhdGNoZG9nL2hw
+d2R0LnJzdAo+IGluZGV4IGMxNjVkOTJjZmQxMi4uYzgyNGNkN2Y2ZTMyIDEwMDY0NAo+IC0tLSBh
+L0RvY3VtZW50YXRpb24vd2F0Y2hkb2cvaHB3ZHQucnN0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi93
+YXRjaGRvZy9ocHdkdC5yc3QKPiBAQCAtNjMsNyArNjMsNyBAQCBMYXN0IHJldmlld2VkOiAwOC8y
+MC8yMDE4Cj4gICBhbmQgbG9vcCBmb3JldmVyLiAgVGhpcyBpcyBnZW5lcmFsbHkgbm90IHdoYXQg
+YSB3YXRjaGRvZyB1c2VyIHdhbnRzLgo+ICAKPiAgIEZvciB0aG9zZSB3aXNoaW5nIHRvIGxlYXJu
+IG1vcmUgcGxlYXNlIHNlZToKPiAtCURvY3VtZW50YXRpb24va2R1bXAva2R1bXAucnN0Cj4gKwlE
+b2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tkdW1wL2tkdW1wLnJzdAo+ICAJRG9jdW1lbnRhdGlv
+bi9hZG1pbi1ndWlkZS9rZXJuZWwtcGFyYW1ldGVycy50eHQgKHBhbmljPSkKPiAgCVlvdXIgTGlu
+dXggRGlzdHJpYnV0aW9uIHNwZWNpZmljIGRvY3VtZW50YXRpb24uCj4gIAo+IGRpZmYgLS1naXQg
+YS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCj4gaW5kZXggNGUyYTUyNWUyMmMwLi41MWJkYmQy
+MzAxNzQgMTAwNjQ0Cj4gLS0tIGEvTUFJTlRBSU5FUlMKPiArKysgYi9NQUlOVEFJTkVSUwo+IEBA
+IC04OTksNyArODk5LDcgQEAgTDoJbGludXgtaWlvQHZnZXIua2VybmVsLm9yZwo+ICBXOglodHRw
+Oi8vZXouYW5hbG9nLmNvbS9jb21tdW5pdHkvbGludXgtZGV2aWNlLWRyaXZlcnMKPiAgUzoJU3Vw
+cG9ydGVkCj4gIEY6CWRyaXZlcnMvaWlvL2FkYy9hZDcxMjQuYwo+IC1GOglEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FkYy9hZGksYWQ3MTI0LnR4dAo+ICtGOglEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FkYy9hZGksYWQ3MTI0LnlhbWwKPiAgCj4g
+IEFOQUxPRyBERVZJQ0VTIElOQyBBRDc2MDYgRFJJVkVSCj4gIE06CVN0ZWZhbiBQb3BhIDxzdGVm
+YW4ucG9wYUBhbmFsb2cuY29tPgo+IEBAIC00MTkwLDcgKzQxOTAsNyBAQCBNOglKZW5zIEF4Ym9l
+IDxheGJvZUBrZXJuZWwuZGs+Cj4gIEw6CWNncm91cHNAdmdlci5rZXJuZWwub3JnCj4gIEw6CWxp
+bnV4LWJsb2NrQHZnZXIua2VybmVsLm9yZwo+ICBUOglnaXQgZ2l0Oi8vZ2l0Lmtlcm5lbC5kay9s
+aW51eC1ibG9jawo+IC1GOglEb2N1bWVudGF0aW9uL2Nncm91cC12MS9ibGtpby1jb250cm9sbGVy
+LnJzdAo+ICtGOglEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2Nncm91cC12MS9ibGtpby1jb250
+cm9sbGVyLnJzdAo+ICBGOglibG9jay9ibGstY2dyb3VwLmMKPiAgRjoJaW5jbHVkZS9saW51eC9i
+bGstY2dyb3VwLmgKPiAgRjoJYmxvY2svYmxrLXRocm90dGxlLmMKPiBAQCAtNjMxNyw3ICs2MzE3
+LDcgQEAgRkxFWFRJTUVSIEZUTS1RVUFEREVDIERSSVZFUgo+ICBNOglQYXRyaWNrIEhhdmVsYW5n
+ZSA8cGF0cmljay5oYXZlbGFuZ2VAZXNzZW5zaXVtLmNvbT4KPiAgTDoJbGludXgtaWlvQHZnZXIu
+a2VybmVsLm9yZwo+ICBTOglNYWludGFpbmVkCj4gLUY6CURvY3VtZW50YXRpb24vQUJJL3Rlc3Rp
+bmcvc3lzZnMtYnVzLWNvdW50ZXItZnRtLXF1YWRkZGVjCj4gK0Y6CURvY3VtZW50YXRpb24vQUJJ
+L3Rlc3Rpbmcvc3lzZnMtYnVzLWNvdW50ZXItZnRtLXF1YWRkZWMKPiAgRjoJRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NvdW50ZXIvZnRtLXF1YWRkZWMudHh0Cj4gIEY6CWRyaXZl
+cnMvY291bnRlci9mdG0tcXVhZGRlYy5jCj4gIAo+IEBAIC02ODU2LDcgKzY4NTYsNyBAQCBSOglT
+YWdpIFNoYWhhciA8c2FnaXNAZ29vZ2xlLmNvbT4KPiAgUjoJSm9uIE9sc29uIDxqb25vbHNvbkBn
+b29nbGUuY29tPgo+ICBMOgluZXRkZXZAdmdlci5rZXJuZWwub3JnCj4gIFM6CVN1cHBvcnRlZAo+
+IC1GOglEb2N1bWVudGF0aW9uL25ldHdvcmtpbmcvZGV2aWNlX2RyaXZlcnMvZ29vZ2xlL2d2ZS50
+eHQKPiArRjoJRG9jdW1lbnRhdGlvbi9uZXR3b3JraW5nL2RldmljZV9kcml2ZXJzL2dvb2dsZS9n
+dmUucnN0Cj4gIEY6CWRyaXZlcnMvbmV0L2V0aGVybmV0L2dvb2dsZQo+ICAKPiAgR1BEIFBPQ0tF
+VCBGQU4gRFJJVkVSCj4gQEAgLTEyMTM3LDcgKzEyMTM3LDcgQEAgTToJVGhvbWFzIEhlbGxzdHJv
+bSA8dGhlbGxzdHJvbUB2bXdhcmUuY29tPgo+ICBNOgkiVk13YXJlLCBJbmMuIiA8cHYtZHJpdmVy
+c0B2bXdhcmUuY29tPgo+ICBMOgl2aXJ0dWFsaXphdGlvbkBsaXN0cy5saW51eC1mb3VuZGF0aW9u
+Lm9yZwo+ICBTOglTdXBwb3J0ZWQKPiAtRjoJRG9jdW1lbnRhdGlvbi92aXJ0L3BhcmF2aXJ0X29w
+cy50eHQKPiArRjoJRG9jdW1lbnRhdGlvbi92aXJ0L3BhcmF2aXJ0X29wcy5yc3QKPiAgRjoJYXJj
+aC8qL2tlcm5lbC9wYXJhdmlydCoKPiAgRjoJYXJjaC8qL2luY2x1ZGUvYXNtL3BhcmF2aXJ0Ki5o
+Cj4gIEY6CWluY2x1ZGUvbGludXgvaHlwZXJ2aXNvci5oCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9kcm1fbW9kZXMuYyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fbW9kZXMuYwo+IGluZGV4
+IDc0YTU3MzlkZjUwNi4uODBmY2Q1ZGMxNTU4IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9kcm1fbW9kZXMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fbW9kZXMuYwo+IEBAIC0x
+Njg2LDcgKzE2ODYsNyBAQCBzdGF0aWMgaW50IGRybV9tb2RlX3BhcnNlX2NtZGxpbmVfb3B0aW9u
+cyhjaGFyICpzdHIsIHNpemVfdCBsZW4sCj4gICAqCj4gICAqIEFkZGl0aW9uYWxzIG9wdGlvbnMg
+Y2FuIGJlIHByb3ZpZGVkIGZvbGxvd2luZyB0aGUgbW9kZSwgdXNpbmcgYSBjb21tYSB0bwo+ICAg
+KiBzZXBhcmF0ZSBlYWNoIG9wdGlvbi4gVmFsaWQgb3B0aW9ucyBjYW4gYmUgZm91bmQgaW4KPiAt
+ICogRG9jdW1lbnRhdGlvbi9mYi9tb2RlZGIudHh0Lgo+ICsgKiBEb2N1bWVudGF0aW9uL2ZiL21v
+ZGVkYi5yc3QuCj4gICAqCj4gICAqIFRoZSBpbnRlcm1lZGlhdGUgZHJtX2NtZGxpbmVfbW9kZSBz
+dHJ1Y3R1cmUgaXMgcmVxdWlyZWQgdG8gc3RvcmUgYWRkaXRpb25hbAo+ICAgKiBvcHRpb25zIGZy
+b20gdGhlIGNvbW1hbmQgbGluZSBtb2RsaW5lIGxpa2UgdGhlIGZvcmNlLWVuYWJsZS9kaXNhYmxl
+IGZsYWcuCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbnZpZGlhLWdwdS5j
+IGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1udmlkaWEtZ3B1LmMKPiBpbmRleCBjZmM3NmI1ZGU3
+MjYuLjVhMTIzNWZkODZiYiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW52
+aWRpYS1ncHUuYwo+ICsrKyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbnZpZGlhLWdwdS5jCj4g
+QEAgLTM2NCw3ICszNjQsNyBAQCBzdGF0aWMgdm9pZCBncHVfaTJjX3JlbW92ZShzdHJ1Y3QgcGNp
+X2RldiAqcGRldikKPiAgLyoKPiAgICogV2UgbmVlZCBncHVfaTJjX3N1c3BlbmQoKSBldmVuIGlm
+IGl0IGlzIHN0dWIsIGZvciBydW50aW1lIHBtIHRvIHdvcmsKPiAgICogY29ycmVjdGx5LiBXaXRo
+b3V0IGl0LCBsc3BjaSBzaG93cyBydW50aW1lIHBtIHN0YXR1cyBhcyAiRDAiIGZvciB0aGUgY2Fy
+ZC4KPiAtICogRG9jdW1lbnRhdGlvbi9wb3dlci9wY2kudHh0IGFsc28gaW5zaXN0cyBmb3IgZHJp
+dmVyIHRvIHByb3ZpZGUgdGhpcy4KPiArICogRG9jdW1lbnRhdGlvbi9wb3dlci9wY2kucnN0IGFs
+c28gaW5zaXN0cyBmb3IgZHJpdmVyIHRvIHByb3ZpZGUgdGhpcy4KPiAgICovCj4gIHN0YXRpYyBf
+X21heWJlX3VudXNlZCBpbnQgZ3B1X2kyY19zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikKPiAg
+ewo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvaHBzYS5jIGIvZHJpdmVycy9zY3NpL2hwc2Eu
+Ywo+IGluZGV4IDQzYTZiNTM1MDc3NS4uZWFmNjE3N2FjOWVlIDEwMDY0NAo+IC0tLSBhL2RyaXZl
+cnMvc2NzaS9ocHNhLmMKPiArKysgYi9kcml2ZXJzL3Njc2kvaHBzYS5jCj4gQEAgLTc3OTgsNyAr
+Nzc5OCw3IEBAIHN0YXRpYyB2b2lkIGhwc2FfZnJlZV9wY2lfaW5pdChzdHJ1Y3QgY3Rscl9pbmZv
+ICpoKQo+ICAJaHBzYV9kaXNhYmxlX2ludGVycnVwdF9tb2RlKGgpOwkJLyogcGNpX2luaXQgMiAq
+Lwo+ICAJLyoKPiAgCSAqIGNhbGwgcGNpX2Rpc2FibGVfZGV2aWNlIGJlZm9yZSBwY2lfcmVsZWFz
+ZV9yZWdpb25zIHBlcgo+IC0JICogRG9jdW1lbnRhdGlvbi9QQ0kvcGNpLnJzdAo+ICsJICogRG9j
+dW1lbnRhdGlvbi9kcml2ZXItYXBpL3BjaS9wY2kucnN0Cj4gIAkgKi8KPiAgCXBjaV9kaXNhYmxl
+X2RldmljZShoLT5wZGV2KTsJCS8qIHBjaV9pbml0IDEgKi8KPiAgCXBjaV9yZWxlYXNlX3JlZ2lv
+bnMoaC0+cGRldik7CQkvKiBwY2lfaW5pdCAyICovCj4gQEAgLTc4ODEsNyArNzg4MSw3IEBAIHN0
+YXRpYyBpbnQgaHBzYV9wY2lfaW5pdChzdHJ1Y3QgY3Rscl9pbmZvICpoKQo+ICBjbGVhbjE6Cj4g
+IAkvKgo+ICAJICogY2FsbCBwY2lfZGlzYWJsZV9kZXZpY2UgYmVmb3JlIHBjaV9yZWxlYXNlX3Jl
+Z2lvbnMgcGVyCj4gLQkgKiBEb2N1bWVudGF0aW9uL1BDSS9wY2kucnN0Cj4gKwkgKiBEb2N1bWVu
+dGF0aW9uL2RyaXZlci1hcGkvcGNpL3BjaS5yc3QKPiAgCSAqLwo+ICAJcGNpX2Rpc2FibGVfZGV2
+aWNlKGgtPnBkZXYpOwo+ICAJcGNpX3JlbGVhc2VfcmVnaW9ucyhoLT5wZGV2KTsKPiAtLSAKPiAy
+LjIxLjAKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
