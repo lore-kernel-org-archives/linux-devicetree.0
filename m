@@ -1,79 +1,57 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 4/6] thermal: qoriq: Add clock operations
-Date: Mon, 29 Jul 2019 08:40:39 +0000
-Message-ID: <DB3PR0402MB391682A6263D084198E12DB6F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190705045612.27665-1-Anson.Huang@nxp.com>
- <20190705045612.27665-4-Anson.Huang@nxp.com>
- <20190729081221.GA2523@bogon.m.sigxcpu.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Anson.Huang@nxp.com
+Subject: [PATCH V2 2/4] thermal: qoriq: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
+Date: Mon, 29 Jul 2019 16:39:13 +0800
+Message-ID: <20190729083915.4855-2-Anson.Huang@nxp.com>
+References: <20190729083915.4855-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190729081221.GA2523@bogon.m.sigxcpu.org>
-Content-Language: en-US
+In-Reply-To: <20190729083915.4855-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?R3VpZG8gR8O8bnRoZXI=?= <agx@sigxcpu.org>
-Cc: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "angus@akkea.ca" <angus@akkea.ca>, "ccaione@baylibre.com" <ccaione@baylibre.com>, Leonard Crestez <leonard.crestez>
+To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-SGksIEd1aWRvDQoNCj4gT24gRnJpLCBKdWwgMDUsIDIwMTkgYXQgMTI6NTY6MTBQTSArMDgwMCwg
-QW5zb24uSHVhbmdAbnhwLmNvbSB3cm90ZToNCj4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24u
-SHVhbmdAbnhwLmNvbT4NCj4gPg0KPiA+IFNvbWUgcGxhdGZvcm1zIGxpa2UgaS5NWDhNUSBoYXMg
-Y2xvY2sgY29udHJvbCBmb3IgdGhpcyBtb2R1bGUsIG5lZWQgdG8NCj4gPiBhZGQgY2xvY2sgb3Bl
-cmF0aW9ucyB0byBtYWtlIHN1cmUgdGhlIGRyaXZlciBpcyB3b3JraW5nIHByb3Blcmx5Lg0KPiA+
-DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+
-ID4gLS0tDQo+ID4gIGRyaXZlcnMvdGhlcm1hbC9xb3JpcV90aGVybWFsLmMgfCAyNCArKysrKysr
-KysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKykN
-Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3RoZXJtYWwvcW9yaXFfdGhlcm1hbC5jDQo+
-ID4gYi9kcml2ZXJzL3RoZXJtYWwvcW9yaXFfdGhlcm1hbC5jIGluZGV4IDJiMmY3OWIuLjA4MTNj
-MWIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy90aGVybWFsL3FvcmlxX3RoZXJtYWwuYw0KPiA+
-ICsrKyBiL2RyaXZlcnMvdGhlcm1hbC9xb3JpcV90aGVybWFsLmMNCj4gPiBAQCAtMiw2ICsyLDcg
-QEANCj4gPiAgLy8NCj4gPiAgLy8gQ29weXJpZ2h0IDIwMTYgRnJlZXNjYWxlIFNlbWljb25kdWN0
-b3IsIEluYy4NCj4gPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvY2xrLmg+DQo+ID4gICNpbmNsdWRl
-IDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5o
-Pg0KPiA+ICAjaW5jbHVkZSA8bGludXgvZXJyLmg+DQo+ID4gQEAgLTcyLDYgKzczLDcgQEAgc3Ry
-dWN0IHFvcmlxX3NlbnNvciB7DQo+ID4NCj4gPiAgc3RydWN0IHFvcmlxX3RtdV9kYXRhIHsNCj4g
-PiAgCXN0cnVjdCBxb3JpcV90bXVfcmVncyBfX2lvbWVtICpyZWdzOw0KPiA+ICsJc3RydWN0IGNs
-ayAqY2xrOw0KPiA+ICAJYm9vbCBsaXR0bGVfZW5kaWFuOw0KPiA+ICAJc3RydWN0IHFvcmlxX3Nl
-bnNvcgkqc2Vuc29yW1NJVEVTX01BWF07DQo+ID4gIH07DQo+ID4gQEAgLTIwOCw2ICsyMTAsMTkg
-QEAgc3RhdGljIGludCBxb3JpcV90bXVfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAq
-cGRldikNCj4gPiAgCQlyZXR1cm4gUFRSX0VSUihkYXRhLT5yZWdzKTsNCj4gPiAgCX0NCj4gPg0K
-PiA+ICsJZGF0YS0+Y2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsIE5VTEwpOw0KPiA+ICsJ
-aWYgKElTX0VSUihkYXRhLT5jbGspKSB7DQo+ID4gKwkJaWYgKFBUUl9FUlIoZGF0YS0+Y2xrKSA9
-PSAtRVBST0JFX0RFRkVSKQ0KPiA+ICsJCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsNCj4gPiArCQlk
-YXRhLT5jbGsgPSBOVUxMOw0KPiA+ICsJfQ0KPiANCj4gV291bGRuJ3QgZGV2bV9jbGtfZ2V0X29w
-dGlvbmFsIG1ha2UgbW9yZSBzZW5zZT8NCg0KWWVzLCBsb29rcyBsaWtlIGl0IGlzIGJldHRlciwg
-d2lsbCBmaXggaXQgaW4gVjIuDQoNCj4gDQo+ID4gKw0KPiA+ICsJcmV0ID0gY2xrX3ByZXBhcmVf
-ZW5hYmxlKGRhdGEtPmNsayk7DQo+ID4gKwlpZiAocmV0KSB7DQo+ID4gKwkJZGV2X2VycigmcGRl
-di0+ZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSBjbG9ja1xuIik7DQo+ID4gKwkJcmV0dXJuIHJldDsN
-Cj4gPiArCX0NCj4gPiArDQo+ID4gIAlxb3JpcV90bXVfaW5pdF9kZXZpY2UoZGF0YSk7CS8qIFRN
-VSBpbml0aWFsaXphdGlvbiAqLw0KPiA+DQo+ID4gIAlyZXQgPSBxb3JpcV90bXVfY2FsaWJyYXRp
-b24ocGRldik7CS8qIFRNVSBjYWxpYnJhdGlvbiAqLw0KPiA+IEBAIC0yMzUsNiArMjUwLDggQEAg
-c3RhdGljIGludCBxb3JpcV90bXVfcmVtb3ZlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXYpDQo+ID4gIAkvKiBEaXNhYmxlIG1vbml0b3JpbmcgKi8NCj4gPiAgCXRtdV93cml0ZShkYXRh
-LCBUTVJfRElTQUJMRSwgJmRhdGEtPnJlZ3MtPnRtcik7DQo+ID4NCj4gPiArCWNsa19kaXNhYmxl
-X3VucHJlcGFyZShkYXRhLT5jbGspOw0KPiA+ICsNCj4gPiAgCXBsYXRmb3JtX3NldF9kcnZkYXRh
-KHBkZXYsIE5VTEwpOw0KPiA+DQo+ID4gIAlyZXR1cm4gMDsNCj4gPiBAQCAtMjUwLDE0ICsyNjcs
-MjEgQEAgc3RhdGljIGludCBfX21heWJlX3VudXNlZA0KPiBxb3JpcV90bXVfc3VzcGVuZChzdHJ1
-Y3QgZGV2aWNlICpkZXYpDQo+ID4gIAl0bXIgJj0gflRNUl9NRTsNCj4gPiAgCXRtdV93cml0ZShk
-YXRhLCB0bXIsICZkYXRhLT5yZWdzLT50bXIpOw0KPiA+DQo+ID4gKwljbGtfZGlzYWJsZV91bnBy
-ZXBhcmUoZGF0YS0+Y2xrKTsNCj4gPiArDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+DQo+
-ID4gIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgcW9yaXFfdG11X3Jlc3VtZShzdHJ1Y3QgZGV2
-aWNlICpkZXYpICB7DQo+ID4gIAl1MzIgdG1yOw0KPiA+ICsJaW50IHJldDsNCj4gPiAgCXN0cnVj
-dCBxb3JpcV90bXVfZGF0YSAqZGF0YSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiA+DQo+ID4g
-KwlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZGF0YS0+Y2xrKTsNCj4gPiArCWlmIChyZXQpDQo+
-ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArDQo+ID4gIAkvKiBFbmFibGUgbW9uaXRvcmluZyAqLw0K
-PiA+ICAJdG1yID0gdG11X3JlYWQoZGF0YSwgJmRhdGEtPnJlZ3MtPnRtcik7DQo+ID4gIAl0bXIg
-fD0gVE1SX01FOw0KPiANCj4gQXBhcnQgZnJvbSB0aGF0IGl0IGxvb2tzIGxpa2Ugd2hhdCBGYWJp
-byBzZW50IGFuZCB3aGF0IGkgdGVzdGVkIHNvDQo+IA0KPiBSZXZpZXdlZC1ieTogR3VpZG8gR8O8
-bnRoZXIgPGFneEBzaWd4Y3B1Lm9yZz4NCg0KVGhhbmtzLA0KQW5zb24NCg0KPiANCj4gQ2hlZXJz
-LA0KPiAgLS0gR3VpZG8NCj4gDQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo+ID4NCj4gPiBfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+IGxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnDQo+ID4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNv
-bS8/dXJsPWh0dHAlM0ElMkYlMkZsaXN0cw0KPiA+IC5pbmZyYWRlYWQub3JnJTJGbWFpbG1hbiUy
-Rmxpc3RpbmZvJTJGbGludXgtYXJtLQ0KPiBrZXJuZWwmYW1wO2RhdGE9MDIlN0MwDQo+ID4NCj4g
-MSU3Q2Fuc29uLmh1YW5nJTQwbnhwLmNvbSU3QzkyNjNjMjQwZGE4MjQ4MmFmNTc5MDhkNzEzZmM3
-ZDBiJTcNCj4gQzY4NmVhMWQNCj4gPg0KPiAzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3
-QzAlN0M2MzY5OTk4NDc0NzI4OTQ2MjQmYW1wO3NkYXQNCj4gYT0wWUFsSw0KPiA+IFY4WlMzN3ZI
-RnozMTFuT2RCUDhxQmJxaXN2akZCdGFTUzFQVjlrJTNEJmFtcDtyZXNlcnZlZD0wDQo+ID4NCg==
+From: Anson Huang <Anson.Huang@nxp.com>
+
+Use __maybe_unused for power management related functions
+instead of #if CONFIG_PM_SLEEP to simply the code.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No changes.
+---
+ drivers/thermal/qoriq_thermal.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+index c7c7de2..2b2f79b 100644
+--- a/drivers/thermal/qoriq_thermal.c
++++ b/drivers/thermal/qoriq_thermal.c
+@@ -240,8 +240,7 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM_SLEEP
+-static int qoriq_tmu_suspend(struct device *dev)
++static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
+ {
+ 	u32 tmr;
+ 	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
+@@ -254,7 +253,7 @@ static int qoriq_tmu_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int qoriq_tmu_resume(struct device *dev)
++static int __maybe_unused qoriq_tmu_resume(struct device *dev)
+ {
+ 	u32 tmr;
+ 	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
+@@ -266,7 +265,6 @@ static int qoriq_tmu_resume(struct device *dev)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ static SIMPLE_DEV_PM_OPS(qoriq_tmu_pm_ops,
+ 			 qoriq_tmu_suspend, qoriq_tmu_resume);
+-- 
+2.7.4
