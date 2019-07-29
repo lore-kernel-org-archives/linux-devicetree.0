@@ -1,119 +1,36 @@
-From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: Re: [PATCH 5/5] MIPS: dts: lantiq: danube: easy50712: route the
- PCI_INTA IRQ through EBU
-Date: Mon, 29 Jul 2019 23:55:21 +0200
-Message-ID: <ac4418f3-a77d-f450-f99b-1f789ff6b42d@hauke-m.de>
-References: <20190727175315.28834-1-martin.blumenstingl@googlemail.com>
- <20190727175315.28834-6-martin.blumenstingl@googlemail.com>
- <86wog2mq6k.wl-marc.zyngier@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [v5 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
+Date: Mon, 29 Jul 2019 23:57:16 +0200
+Message-ID: <CACRpkdZcLNe+oM1jWPpva0LECc-P48ab3H-kG7eabMmSvmvioA@mail.gmail.com>
+References: <1563564291-9692-1-git-send-email-hongweiz@ami.com>
+ <1563564291-9692-2-git-send-email-hongweiz@ami.com> <CACRpkdYhVoP75ZDfASW+DH5yf-a5diitiXsh7eLsJx5hsTC9sQ@mail.gmail.com>
+ <ef9d9c17-6e2d-4a4e-ac44-f8da4bb3b8eb@www.fastmail.com> <CACRpkdZxsF9gQj0VicVLsPKXg6rKA1mLwbywmazOf0w8PLnOfA@mail.gmail.com>
+ <f2875111-9ba9-43b7-b2a4-d00c8725f5a0@www.fastmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="GhTQbiR8HPIsGB7nOslHAJNUom91Snh2O"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <86wog2mq6k.wl-marc.zyngier@arm.com>
+In-Reply-To: <f2875111-9ba9-43b7-b2a4-d00c8725f5a0@www.fastmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, john@phrozen.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Hongwei Zhang <hongweiz@ami.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Joel Stanley <joel@jms.id.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---GhTQbiR8HPIsGB7nOslHAJNUom91Snh2O
-Content-Type: multipart/mixed; boundary="htERSnPkQ3DxdowN4hcOQtazMTOdElH98";
- protected-headers="v1"
-From: Hauke Mehrtens <hauke@hauke-m.de>
-To: Marc Zyngier <marc.zyngier@arm.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org,
- paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org,
- linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, mark.rutland@arm.com, john@phrozen.org
-Message-ID: <ac4418f3-a77d-f450-f99b-1f789ff6b42d@hauke-m.de>
-Subject: Re: [PATCH 5/5] MIPS: dts: lantiq: danube: easy50712: route the
- PCI_INTA IRQ through EBU
-References: <20190727175315.28834-1-martin.blumenstingl@googlemail.com>
- <20190727175315.28834-6-martin.blumenstingl@googlemail.com>
- <86wog2mq6k.wl-marc.zyngier@arm.com>
-In-Reply-To: <86wog2mq6k.wl-marc.zyngier@arm.com>
+On Mon, Jul 29, 2019 at 2:19 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 
---htERSnPkQ3DxdowN4hcOQtazMTOdElH98
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-On 7/28/19 12:03 PM, Marc Zyngier wrote:
-> On Sat, 27 Jul 2019 18:53:15 +0100,
-> Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
->>
->> EBU provides an interrupt line for the PCI_INTA interrupt. Route
->> easy50712's PCI interrupt to EBU so the interrupt line is configured
->> correctly (using IRQ_TYPE_LEVEL_LOW, this was previously hardcoded in
->> the PCI driver) and ACKed properly.
->>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com=
+> The behaviour is to periodically emit the state of all enabled GPIOs
+> (i.e. the ngpios value), one per bus clock cycle. There's no explicit
+> addressing scheme, the protocol encodes the value for a given GPIO
+> by its position in the data stream relative to a pulse on the "load data"
+> (LD) line, whose envelope covers the clock cycle for the last GPIO in
+> the sequence. Similar to SPI the bus has both out and in lines, which
+> cater to output/input GPIOs.
 >
+> A rough timing diagram for a 16-GPIO configuration looks like what
+> I've pasted here:
+>
+> https://gist.github.com/amboar/c9543af1957854474b8c05ab357f0675
 
-Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
+OK that is complex. I agree we need to keep this driver together.
 
->> ---
->>  arch/mips/boot/dts/lantiq/easy50712.dts | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/mips/boot/dts/lantiq/easy50712.dts b/arch/mips/boot/=
-dts/lantiq/easy50712.dts
->> index 1ce20b7d05cb..33c26b93cfc9 100644
->> --- a/arch/mips/boot/dts/lantiq/easy50712.dts
->> +++ b/arch/mips/boot/dts/lantiq/easy50712.dts
->> @@ -1,6 +1,8 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  /dts-v1/;
->> =20
->> +#include <dt-bindings/interrupt-controller/irq.h>
->> +
->>  /include/ "danube.dtsi"
->> =20
->>  / {
->> @@ -105,7 +107,7 @@
->>  			lantiq,bus-clock =3D <33333333>;
->>  			interrupt-map-mask =3D <0xf800 0x0 0x0 0x7>;
->>  			interrupt-map =3D <
->> -				0x7000 0 0 1 &icu0 29 1 // slot 14, irq 29
->> +				0x7000 0 0 1 &ebu0 0 IRQ_TYPE_LEVEL_LOW // slot 14
->>  			>;
->>  			gpios-reset =3D <&gpio 21 0>;
->>  			req-mask =3D <0x1>;		/* GNT1 */
->> --=20
->> 2.22.0
->>
->=20
-> Are you OK with breaking compatibility between kernel and DT? It
-> usually isn't very nice for users...
-
-I am fine with such changes. I am not aware of any board using this SoC
-which ships the kernel and the device tree file as different binaries,
-it is always either attached or patched into the kernel and never in the
-boot loader.
-
-Hauke
-
-
---htERSnPkQ3DxdowN4hcOQtazMTOdElH98--
-
---GhTQbiR8HPIsGB7nOslHAJNUom91Snh2O
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEyz0/uAcd+JwXmwtD8bdnhZyy68cFAl0/a0kACgkQ8bdnhZyy
-68e1NggAgRDL6+YwQE+/JLxd/uSBbb2lO/H8N8osnESY6PFBNa31k2aSFiJuFrcQ
-/jSKs3U/Af2J7B/ctdWWGh/mEPgKvBFIwZKgynYRDy6NYhRmYN+WZO5Zg2k1mr7C
-retwFDYdads6oPDM07v7ERUQDL/s9WlW39PR1m3XSKTmZlb26uf048kV8lGVM25S
-MXS7j+xFrZ/1ZbH62iqJ8b1+eoQCV1Rt8QlF9pmeTAHTjoo2Vr1XRWaPciPv+l5o
-ULzRhq5qzCdlV8rsG7FPOs/M4cABG3CsfVjMsWS/S/Oh0JGsS3a86s8wRdcBgiS7
-R8ZnF93K8jE5gZ2yHG4TexUxyV0PJQ==
-=AG2t
------END PGP SIGNATURE-----
-
---GhTQbiR8HPIsGB7nOslHAJNUom91Snh2O--
+Yours,
+Linus Walleij
