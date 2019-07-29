@@ -1,135 +1,66 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH 3/6] pwm: sun4i: Add a quirk for bus clock
-Date: Mon, 29 Jul 2019 18:45:16 +0200
-Message-ID: <20190729164516.yxfgj2zd3d5ii4c4@flea.home>
-References: <20190726184045.14669-1-jernej.skrabec@siol.net>
- <20190726184045.14669-4-jernej.skrabec@siol.net>
- <20190729063825.wxfky6nswcru26g7@pengutronix.de>
- <4022372.WfP88Fa4Lu@jernej-laptop>
- <20190729161435.5bnj3ikocsyep4dd@pengutronix.de>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH 0/6] Add support for Qualcomm SM8150 and SC7180 SoCs
+Date: Mon, 29 Jul 2019 22:16:16 +0530
+Message-ID: <e7a6a873c47f96a1ca326a50f544d35a@codeaurora.org>
+References: <20190729120633.20451-1-sibis@codeaurora.org>
+ <20190729153826.GT7234@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="szfghxy2ac5dvf2h"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190729161435.5bnj3ikocsyep4dd@pengutronix.de>
+In-Reply-To: <20190729153826.GT7234@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, thierry.reding@gmail.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: robh+dt@kernel.org, vkoul@kernel.org, aneela@codeaurora.org, mark.rutland@arm.com, agross@kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+Hey Bjorn,
+Thanks for the review!
 
---szfghxy2ac5dvf2h
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2019-07-29 21:08, Bjorn Andersson wrote:
+> On Mon 29 Jul 05:06 PDT 2019, Sibi Sankar wrote:
+> 
+>> This patch series adds SCM, APSS shared mailbox and QMP AOSS PD/clock
+>> support on SM8150 and SC7180 SoCs.
+>> 
+> 
+> Thanks Sibi, this looks good.
+> 
+> Could you please update the last 5 patches to ensure/maintain sort 
+> order
+> of the lists they affect.
 
-On Mon, Jul 29, 2019 at 06:14:35PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Jernej,
->
-> On Mon, Jul 29, 2019 at 05:48:36PM +0200, Jernej =C5=A0krabec wrote:
-> > Dne ponedeljek, 29. julij 2019 ob 08:38:25 CEST je Uwe Kleine-K=C3=B6nig
-> > napisal(a):
-> > > Hello,
-> > >
-> > > On Fri, Jul 26, 2019 at 08:40:42PM +0200, Jernej Skrabec wrote:
-> > > > H6 PWM core needs bus clock to be enabled in order to work.
-> > > >
-> > > > Add a quirk for it.
-> > > >
-> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > ---
-> > > >
-> > > >  drivers/pwm/pwm-sun4i.c | 15 +++++++++++++++
-> > > >  1 file changed, 15 insertions(+)
-> > > >
-> > > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > > > index 1b7be8fbde86..7d3ac3f2dc3f 100644
-> > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > @@ -72,6 +72,7 @@ static const u32 prescaler_table[] =3D {
-> > > >
-> > > >  };
-> > > >
-> > > >  struct sun4i_pwm_data {
-> > > >
-> > > > +	bool has_bus_clock;
-> > > >
-> > > >  	bool has_prescaler_bypass;
-> > > >  	bool has_reset;
-> > > >  	unsigned int npwm;
-> > > >
-> > > > @@ -79,6 +80,7 @@ struct sun4i_pwm_data {
-> > > >
-> > > >  struct sun4i_pwm_chip {
-> > > >
-> > > >  	struct pwm_chip chip;
-> > > >
-> > > > +	struct clk *bus_clk;
-> > > >
-> > > >  	struct clk *clk;
-> > > >  	struct reset_control *rst;
-> > > >  	void __iomem *base;
-> > > >
-> > > > @@ -382,6 +384,16 @@ static int sun4i_pwm_probe(struct platform_dev=
-ice
-> > > > *pdev)>
-> > > >  		reset_control_deassert(pwm->rst);
-> > > >
-> > > >  	}
-> > > >
-> > > > +	if (pwm->data->has_bus_clock) {
-> > > > +		pwm->bus_clk =3D devm_clk_get(&pdev->dev, "bus");
-> > >
-> > > Similar to my suggestion in patch 2: I'd use devm_clk_get_optional() =
-and
-> > > drop struct sun4i_pwm_data::has_bus_clock.
-> >
-> > This one is not so simple. This patch has incorrect logic. Correct logi=
-c would
-> > be to use "devm_clk_get(&pdev->dev, NULL)" for variants without bus clo=
-ck as
-> > it is done already and "devm_clk_get(&pdev->dev, "bus")" and
-> > "devm_clk_get(&pdev->dev, "mod")" for variants with bus clock.
->
-> Then maybe something like the following?:
->
-> 	busclk =3D devm_clk_get_optional(..., "bus");
-> 	modclk =3D devm_clk_get_optional(..., "mod");
->
-> 	/*
-> 	 * old dtbs might have a single clock but no clock names. Fall
-> 	 * back to this for compatibility reasons.
-> 	 */
-> 	if (!modclk) {
-> 		modclk =3D devm_clk_get(..., NULL);
-> 	}
+yes I'll do that
 
-Again, there's nothing optional about these clocks. You need a
-particular set of clocks for a given generation, and a separate set of
-them on another generation of SoCs.
+> 
+> Regards,
+> Bjorn
+> 
+>> Sibi Sankar (6):
+>>   soc: qcom: smem: Update max processor count
+>>   dt-bindings: firmware: scm: Add SM8150 and SC7180 support
+>>   dt-bindings: mailbox: Add APSS shared for SM8150 and SC7180 SoCs
+>>   mailbox: qcom: Add support for Qualcomm SM8150 and SC7180 SoCs
+>>   dt-bindings: soc: qcom: aoss: Add SM8150 and SC7180 support
+>>   soc: qcom: aoss: Add AOSS QMP support
+>> 
+>>  Documentation/devicetree/bindings/firmware/qcom,scm.txt      | 2 ++
+>>  .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt    | 2 ++
+>>  Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt | 5 
+>> ++++-
+>>  drivers/mailbox/qcom-apcs-ipc-mailbox.c                      | 2 ++
+>>  drivers/soc/qcom/qcom_aoss.c                                 | 2 ++
+>>  drivers/soc/qcom/smem.c                                      | 2 +-
+>>  6 files changed, 13 insertions(+), 2 deletions(-)
+>> 
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
 
-It really isn't about DT validation. We're really making sure that the
-device can be operational. It's as much of a validation step than
-making sure we have mapped registers (reg), or an interrupt if we had
-any.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---szfghxy2ac5dvf2h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXT8inAAKCRDj7w1vZxhR
-xfAvAQDPD/W10siMsbxXt0TnODSzxIn/7DF49wiKOuWZz6OwFwEAnwlydOCmRVBw
-8J0s2aXuCVfbyJpDqk/FcreSk6jcPQE=
-=dYSs
------END PGP SIGNATURE-----
-
---szfghxy2ac5dvf2h--
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
