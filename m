@@ -1,87 +1,89 @@
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v11 07/12] soc: mediatek: cmdq: reorder the parameter
-Date: Mon, 29 Jul 2019 15:01:01 +0800
-Message-ID: <20190729070106.9332-8-bibby.hsieh@mediatek.com>
+From: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v11 04/12] mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK
+ into cmdq driver data
+Date: Mon, 29 Jul 2019 15:00:58 +0800
+Message-ID: <20190729070106.9332-5-bibby.hsieh@mediatek.com>
 References: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190729070106.9332-1-bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Houlong Wei <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ginny.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The order of gce instructions is [subsys offset value]
-so reorder the parameter of cmdq_pkt_write_mask
-and cmdq_pkt_write function.
+The interrupt mask and thread number has positive correlation,
+so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
+it by thread number.
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Reviewed-by: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/soc/mediatek/mtk-cmdq-helper.c |  6 +++---
- include/linux/soc/mediatek/mtk-cmdq.h  | 10 +++++-----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index ff9fef5a032b..082b8978651e 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -136,7 +136,7 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
- 	return 0;
- }
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index 00d5219094e5..8fddd26288e8 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -18,7 +18,6 @@
+ #include <linux/of_device.h>
  
--int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
-+int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
- {
- 	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
- 		    (subsys << CMDQ_SUBSYS_SHIFT);
-@@ -145,8 +145,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
- }
- EXPORT_SYMBOL(cmdq_pkt_write);
+ #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
+-#define CMDQ_IRQ_MASK			0xffff
+ #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
  
--int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
--			u32 subsys, u32 offset, u32 mask)
-+int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
-+			u32 offset, u32 value, u32 mask)
- {
- 	u32 offset_mask = offset;
- 	int err = 0;
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 4e8899972db4..39d813dde4b4 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -60,26 +60,26 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
- /**
-  * cmdq_pkt_write() - append write command to the CMDQ packet
-  * @pkt:	the CMDQ packet
-- * @value:	the specified target register value
-  * @subsys:	the CMDQ sub system code
-  * @offset:	register offset from CMDQ sub system
-+ * @value:	the specified target register value
-  *
-  * Return: 0 for success; else the error code is returned
-  */
--int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset);
-+int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
+ #define CMDQ_CURR_IRQ_STATUS		0x10
+@@ -72,6 +71,7 @@ struct cmdq {
+ 	void __iomem		*base;
+ 	u32			irq;
+ 	u32			thread_nr;
++	u32			irq_mask;
+ 	struct cmdq_thread	*thread;
+ 	struct clk		*clock;
+ 	bool			suspended;
+@@ -285,11 +285,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
+ 	unsigned long irq_status, flags = 0L;
+ 	int bit;
  
- /**
-  * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
-  * @pkt:	the CMDQ packet
-- * @value:	the specified target register value
-  * @subsys:	the CMDQ sub system code
-  * @offset:	register offset from CMDQ sub system
-+ * @value:	the specified target register value
-  * @mask:	the specified target register mask
-  *
-  * Return: 0 for success; else the error code is returned
-  */
--int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
--			u32 subsys, u32 offset, u32 mask);
-+int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
-+			u32 offset, u32 value, u32 mask);
+-	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
+-	if (!(irq_status ^ CMDQ_IRQ_MASK))
++	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
++	if (!(irq_status ^ cmdq->irq_mask))
+ 		return IRQ_NONE;
  
- /**
-  * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+-	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
++	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
+ 		struct cmdq_thread *thread = &cmdq->thread[bit];
+ 
+ 		spin_lock_irqsave(&thread->chan->lock, flags);
+@@ -473,6 +473,9 @@ static int cmdq_probe(struct platform_device *pdev)
+ 		dev_err(dev, "failed to get irq\n");
+ 		return -EINVAL;
+ 	}
++
++	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
++	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
+ 	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
+ 			       "mtk_cmdq", cmdq);
+ 	if (err < 0) {
+@@ -489,7 +492,6 @@ static int cmdq_probe(struct platform_device *pdev)
+ 		return PTR_ERR(cmdq->clock);
+ 	}
+ 
+-	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
+ 	cmdq->mbox.dev = dev;
+ 	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
+ 					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
 -- 
 2.18.0
