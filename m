@@ -1,140 +1,265 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT
-Date: Mon, 29 Jul 2019 09:51:21 +0300
-Message-ID: <CAEnQRZB6tmYFA8wwh0Fm49LTTDuCLq-SWVfrcUkRWWBo=0U13w@mail.gmail.com>
-References: <20190705045612.27665-1-Anson.Huang@nxp.com> <20190705045612.27665-5-Anson.Huang@nxp.com>
- <CAEnQRZAZNMBx3ApVmRP8hYPw0XY_QgR-saE6WLcT8oZmHPCxSA@mail.gmail.com>
- <DB3PR0402MB3916233A56CF5DF778115716F5C30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAEnQRZCrZybzcy__u4p_Eq4zSVc2ESyfKLk5sPf1JYba1JSOiA@mail.gmail.com>
- <20190727161736.4dkfqgwftre67v56@fsr-ub1664-175> <DB3PR0402MB391600891BA75DFFA9674058F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Subject: Re: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum rate for PLL_MIPI
+Date: Mon, 29 Jul 2019 08:59:04 +0200
+Message-ID: <CAOf5uwkvCs62zHcUoFuJwau_ZZFdnVf8ua6JY_wzUb9m8rLTTw@mail.gmail.com>
+References: <20190625144930.5hegt6bkzqzykjid@flea> <CAMty3ZCmj0Rz7MMhLqihsvLQi+1CHf0fAoJQ4QN65xB-bwxaJw@mail.gmail.com>
+ <20190703114933.u3x4ej3v7ocewvif@flea> <CAOf5uw=ZEvMV1hFQE986rNG_ctpReGbjbZzv0m=OzKPdBh57uQ@mail.gmail.com>
+ <20190711100100.cty3s6rs3w27low6@flea> <CAOf5uw=3fiMuhcj3kDtCaGNTsxHKRrYb79MXZ+yUZtmf0jU10A@mail.gmail.com>
+ <20190720065830.zn3txpyduakywcva@flea> <CAMty3ZDE1xiNgHVLihH378dY5szzkr14V-fwLZdvPs12tY+G1A@mail.gmail.com>
+ <20190720093202.6fn6xmhvsgawscnu@flea> <CAMty3ZDpOA1mD77t3RB6hEG7o3+ws8y64m1DU8=3HdZ4zy4AUw@mail.gmail.com>
+ <20190724090513.vqnlmya3nqkl6pmu@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB391600891BA75DFFA9674058F5DD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <20190724090513.vqnlmya3nqkl6pmu@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: Abel Vesa <abel.vesa@nxp.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Andrey Smirnov <andrew.smirnov@gmail.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Carlo Caione <ccaione@baylibre.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Leonard Crestez <leonard.crestez@nxp.com>, linux-pm@vger
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Jagan Teki <jagan@amarulasolutions.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-amarula <linux-amarula@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 4:29 AM Anson Huang <anson.huang@nxp.com> wrote:
->
-> Hi, Abel/Daniel
->
-> > On 19-07-27 09:33:10, Daniel Baluta wrote:
-> > > On Sat, Jul 27, 2019 at 9:19 AM Anson Huang <anson.huang@nxp.com>
-> > wrote:
-> > > >
-> > > > Hi, Daniel
-> > > >
-> > > > > Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag
-> > > > > for IMX8MQ_CLK_TMU_ROOT
-> > > > >
-> > > > > Hi all,
-> > > > >
-> > > > > latest linux-next hangs at boot.
-> > > > >
-> > > > > commit fde50b96be821ac9673a7e00847cc4605bd88f34 (HEAD ->
-> > master, tag:
-> > > > > next-20190726, origin/master, origin/HEAD)
-> > > > > Author: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > > > Date:   Fri Jul 26 15:18:02 2019 +1000
-> > > > >
-> > > > >     Add linux-next specific files for 20190726
-> > > > >
-> > > > >     Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > > >
-> > > > >
-> > > > > I know this is crazy but reverting commit:
-> > > > >
-> > > > > commit 431bdd1df48ee2896ea9980d9153e3aeaf0c81ef
-> > (refs/bisect/bad)
-> > > > > Author: Anson Huang <Anson.Huang@nxp.com>
-> > > > > Date:   Fri Jul 5 12:56:11 2019 +0800
-> > > > >
-> > > > >     clk: imx8mq: Remove CLK_IS_CRITICAL flag for
-> > > > > IMX8MQ_CLK_TMU_ROOT
-> > > > >
-> > > > >     IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the
-> > driver
-> > > > >     should manage this clock, so no need to have CLK_IS_CRITICAL =
-flag
-> > > > >     set.
-> > > > >
-> > > > >
-> > > > >
-> > > > > makes the boot work again.
-> > > > >
-> > > > > Any idea?
-> > > >
-> > > > I just found if disabling SDMA1, then kernel can boot up, it does
-> > > > NOT make sense TMU clock is related to SDMA1, I will check with des=
-ign
-> > and get back to you soon.
-> > > >
-> > >
-> > > Hi Anson,
-> > >
-> > > Applying Abel's patch:
-> > >
-> > > commit 8816c47db6a82f55bb4d64f62fd9dd3af680f0e4 (HEAD -> master)
-> > > Author: Abel Vesa <abel.vesa@nxp.com>
-> > > Date:   Tue Jun 25 12:01:56 2019 +0300
-> > >
-> > >     clk: imx8mq: Mark AHB clock as critical
-> > >
-> > >     Keep the AHB clock always on since there is no driver to control =
-it and
-> > >     all the other clocks that use it as parent rely on it being alway=
-s enabled.
-> > >
-> > >
-> > >
-> > > The kernel boots up again.
-> > >
-> > > It make some sense. I don't understand though why having
-> > > IMX8MQ_CLK_TMU_ROOT as critical also "unhangs" the kernel.
-> > >
-> >
-> > OK, so this is how it works.
-> >
-> > By removing the critical flag from TMU, the AHB doesn't stay always on.
-> > With my patch the AHB is marked as critical and therefore stays on.
-> >
-> > The sdma1_clk has as parent the ipg_root which in turn has as parent th=
-e
-> > ahb clock. And I think what happens is some read from the sdma register=
-s
-> > hangs because, for whatever reason, enabling the sdma1_clk doesn't
-> > propagate to enable the ahb clock. I might be wrong though.
-> >
->
-> I can explain why Abel's patch can fix this issue, the AHB clock is a MUS=
-T
-> always ON for system bus, while it does NOT have CLK_IS_CRITICAL flag set=
- for now,
-> when SDMA1 is probed, it will enable its clock, and the clk path is sdma1=
-_clk->ipg_root->ahb,
-> after SDMA1 probed done, it will disable its clock since no one use it, a=
-nd it will trigger
-> the ahb clock to be OFF, as its usecount is added by 1 when probe and dec=
-reased by 1 after
-> SDMA1 probe done, so usecount=3D0 will trigger AHB clock to be OFF.
->
-> So I think the best solution should be applying Abel's patch as you menti=
-oned upper, the TMU
-> clock patch is NOT the root cause, it just triggers this issue accidently=
-=E2=98=B9
->
-> But I saw Abel's AHB patch is still under discussion, so I think we need =
-to speed it up and make
-> kernel boot up work for development. AHB/IPG are always critical for i.MX=
- SoCs.
+Hi
 
-Thanks Anson,
+On Wed, Jul 24, 2019 at 11:05 AM Maxime Ripard
+<maxime.ripard@bootlin.com> wrote:
+>
+> On Mon, Jul 22, 2019 at 03:51:04PM +0530, Jagan Teki wrote:
+> > Hi Maxime,
+> >
+> > On Sat, Jul 20, 2019 at 3:02 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Sat, Jul 20, 2019 at 12:46:27PM +0530, Jagan Teki wrote:
+> > > > On Sat, Jul 20, 2019 at 12:28 PM Maxime Ripard
+> > > > <maxime.ripard@bootlin.com> wrote:
+> > > > >
+> > > > > On Thu, Jul 11, 2019 at 07:43:16PM +0200, Michael Nazzareno Trimarchi wrote:
+> > > > > > > > tcon-pixel clock is the rate that you want to achive on display side
+> > > > > > > > and if you have 4 lanes 32bit or lanes and different bit number that
+> > > > > > > > you need to have a clock that is able to put outside bits and speed
+> > > > > > > > equal to pixel-clock * bits / lanes. so If you want a pixel-clock of
+> > > > > > > > 40 mhz and you have 32bits and 4 lanes you need to have a clock of
+> > > > > > > > 40 * 32 / 4 in no-burst mode. I think that this is done but most of
+> > > > > > > > the display.
+> > > > > > >
+> > > > > > > So this is what the issue is then?
+> > > > > > >
+> > > > > > > This one does make sense, and you should just change the rate in the
+> > > > > > > call to clk_set_rate in sun4i_tcon0_mode_set_cpu.
+> > > > > > >
+> > > > > > > I'm still wondering why that hasn't been brought up in either the
+> > > > > > > discussion or the commit log before though.
+> > > > > > >
+> > > > > > Something like this?
+> > > > > >
+> > > > > > drivers/gpu/drm/sun4i/sun4i_tcon.c     | 20 +++++++++++---------
+> > > > > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  2 --
+> > > > > >  2 files changed, 11 insertions(+), 11 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > > b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > > index 64c43ee6bd92..42560d5c327c 100644
+> > > > > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > > @@ -263,10 +263,11 @@ static int sun4i_tcon_get_clk_delay(const struct
+> > > > > > drm_display_mode *mode,
+> > > > > >  }
+> > > > > >
+> > > > > >  static void sun4i_tcon0_mode_set_common(struct sun4i_tcon *tcon,
+> > > > > > -                                       const struct drm_display_mode *mode)
+> > > > > > +                                       const struct drm_display_mode *mode,
+> > > > > > +                                       u32 tcon_mul)
+> > > > > >  {
+> > > > > >         /* Configure the dot clock */
+> > > > > > -       clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
+> > > > > > +       clk_set_rate(tcon->dclk, mode->crtc_clock * tcon_mul * 1000);
+> > > > > >
+> > > > > >         /* Set the resolution */
+> > > > > >         regmap_write(tcon->regs, SUN4I_TCON0_BASIC0_REG,
+> > > > > > @@ -335,12 +336,13 @@ static void sun4i_tcon0_mode_set_cpu(struct
+> > > > > > sun4i_tcon *tcon,
+> > > > > >         u8 bpp = mipi_dsi_pixel_format_to_bpp(device->format);
+> > > > > >         u8 lanes = device->lanes;
+> > > > > >         u32 block_space, start_delay;
+> > > > > > -       u32 tcon_div;
+> > > > > > +       u32 tcon_div, tcon_mul;
+> > > > > >
+> > > > > > -       tcon->dclk_min_div = SUN6I_DSI_TCON_DIV;
+> > > > > > -       tcon->dclk_max_div = SUN6I_DSI_TCON_DIV;
+> > > > > > +       tcon->dclk_min_div = 4;
+> > > > > > +       tcon->dclk_max_div = 127;
+> > > > > >
+> > > > > > -       sun4i_tcon0_mode_set_common(tcon, mode);
+> > > > > > +       tcon_mul = bpp / lanes;
+> > > > > > +       sun4i_tcon0_mode_set_common(tcon, mode, tcon_mul);
+> > > > > >
+> > > > > >         /* Set dithering if needed */
+> > > > > >         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
+> > > > > > @@ -366,7 +368,7 @@ static void sun4i_tcon0_mode_set_cpu(struct
+> > > > > > sun4i_tcon *tcon,
+> > > > > >          */
+> > > > > >         regmap_read(tcon->regs, SUN4I_TCON0_DCLK_REG, &tcon_div);
+> > > > > >         tcon_div &= GENMASK(6, 0);
+> > > > > > -       block_space = mode->htotal * bpp / (tcon_div * lanes);
+> > > > > > +       block_space = mode->htotal * tcon_div * tcon_mul;
+> > > > > >         block_space -= mode->hdisplay + 40;
+> > > > > >
+> > > > > >         regmap_write(tcon->regs, SUN4I_TCON0_CPU_TRI0_REG,
+> > > > > > @@ -408,7 +410,7 @@ static void sun4i_tcon0_mode_set_lvds(struct
+> > > > > > sun4i_tcon *tcon,
+> > > > > >
+> > > > > >         tcon->dclk_min_div = 7;
+> > > > > >         tcon->dclk_max_div = 7;
+> > > > > > -       sun4i_tcon0_mode_set_common(tcon, mode);
+> > > > > > +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
+> > > > > >
+> > > > > >         /* Set dithering if needed */
+> > > > > >         sun4i_tcon0_mode_set_dithering(tcon, sun4i_tcon_get_connector(encoder));
+> > > > > > @@ -487,7 +489,7 @@ static void sun4i_tcon0_mode_set_rgb(struct
+> > > > > > sun4i_tcon *tcon,
+> > > > > >
+> > > > > >         tcon->dclk_min_div = 6;
+> > > > > >         tcon->dclk_max_div = 127;
+> > > > > > -       sun4i_tcon0_mode_set_common(tcon, mode);
+> > > > > > +       sun4i_tcon0_mode_set_common(tcon, mode, 1);
+> > > > > >
+> > > > > >         /* Set dithering if needed */
+> > > > > >         sun4i_tcon0_mode_set_dithering(tcon, connector);
+> > > > > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > > > > b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > > > > index 5c3ad5be0690..a07090579f84 100644
+> > > > > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > > > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+> > > > > > @@ -13,8 +13,6 @@
+> > > > > >  #include <drm/drm_encoder.h>
+> > > > > >  #include <drm/drm_mipi_dsi.h>
+> > > > > >
+> > > > > > -#define SUN6I_DSI_TCON_DIV     4
+> > > > > > -
+> > > > > >  struct sun6i_dsi {
+> > > > > >         struct drm_connector    connector;
+> > > > > >         struct drm_encoder      encoder;
+> > > > >
+> > > > > I had more something like this in mind:
+> > > > > http://code.bulix.org/nlp5a4-803511
+> > > >
+> > > > Worth to look at it. was it working on your panel? meanwhile I will check it.
+> > >
+> > > I haven't tested it.
+> > >
+> > > > We have updated with below change [1], seems working on but is
+> > > > actually checking the each divider as before start with 4... till 127.
+> > > >
+> > > > This new approach, is start looking the best divider from 4.. based on
+> > > > the idea vs rounded it will ended up best divider like [2]
+> > >
+> > > But why?
+> > >
+> > > I mean, it's not like it's the first time I'm asking this...
+> > >
+> > > If the issue is what Micheal described, then the divider has nothing
+> > > to do with it. We've had that discussion over and over again.
+> >
+> > This is what Michael is mentioned in above mail "tcon-pixel clock is
+> > the rate that you want to achive on display side and if you have 4
+> > lanes 32bit or lanes and different bit number that you need to have
+> > a clock that is able to put outside bits and speed equal to
+> > pixel-clock * bits / lanes. so If you want a pixel-clock of 40 mhz
+> > and you have 32bits and 4 lanes you need to have a clock of 40 * 32
+> > / 4 in no-burst mode. "
+>
+> Yeah, so we need to change the clock rate.
+>
+> > He is trying to manage the bpp/lanes into dclk_mul (in last mail)
+> > and it can multiply with pixel clock which is rate argument in
+> > sun4i_dclk_round_rate.
+> >
+> > The solution I have mentioned in dclk_min, max is bpp/lanes also
+> > multiple rate in dotclock sun4i_dclk_round_rate.
+> >
+> > In both cases the overall pll_rate depends on dividers, the one that I
+> > have on this patch is based on BSP and the Michael one is more generic
+> > way so-that it can not to touch other functionalities and looping
+> > dividers to find the best one.
+> >
+> > If dclk_min/max is bpp/lanes then dotclock directly using divider 6
+> > (assuming 24-bit and 4 lanes) and return the pll_rate and divider 6
+> > associated.
+> >
+> > if dclk_mul is bpp/lanes, on Michael new change, the dividers start
+> > with 4 and end with 127 but the constant ideal rate which rate *
+> > bpp/lanes but the loop from sun4i_dclk_round_rate computed the divider
+> > as 6 only, ie what I'm mentioned on the above mail.
+>
+> We've been over this a couple of times already.
+>
+> The clock is generated like this:
+>
+> PLL -> TCON Module Clock -> TCON DCLK
+>
+> You want the TCON DCLK to be at the pixel clock rate * bpp /
+> lanes. Fine, that makes sense.
+>
+> Except that the patch you've sent, instead of changing the rate
+> itself, changes the ratio between the module clock and DCLK.
+>
+> And this is where the issue lies. First, from a logical viewpoint, it
+> doesn't make sense. If you want to change the clock rate, then just do
+> it. Don't hack around the multipliers trying to fall back to something
+> that works for you.
+>
+> Then, the ratio itself needs to be set to 4. This is the part that
+> we've discussed way too many times already, but in the Allwinner BSP,
+> that ratio is hardcoded to 4, and we've had panels that need it at
+> that value.
+>
+> So, what you want to do is to have:
+>
+> TCON DCLK = pixel clock * bpp / lanes
+> TCON Module Clock = DCLK * 4
+> PLL = Module Clock * Module Clock Divider (which I believe is 1 in most cases)
 
-Your explanation makes a lot of sense. We will take care today of Abel's pa=
-tch.
-What do you think about Fabio's patch? I also think this is a valid patch:
+  pll-mipi                       1        1        1   178200000
+   0     0  50000
+          tcon0                       2        2        1   178200000
+        0     0  50000
+             tcon-pixel-clock         1        1        1    29700000
+        0     0  50000
 
-http://code.bulix.org/pd88jp-812381
+This is an english problem from my side:
+tcon-pixel-clock is DCLK
+tcon0 must be tcon-pixel-clock * bpp / lanes because the logic need to
+put a bit every cycle.
+
+One solution can be:
+- set_rate_exclusive to tcon0 and calculate as display pixel clock *
+bpp  / lanes
+- calculate the tcon-pixel-clock using all divider
+
+Problem is that the function that calculate tcon-pixel-clock does not
+have any constrain on the ideal value. What you are
+suggesting is not correct in my opinion or I'm not following your
+suggesstion. What I know is that if we have a pixel-clock
+of dvi display of 50Mhz and we have 4 lanes 32bit we need a clock in
+the logic of 400Mhz (this is the ideal throughtput).
+So tcon-pixel-clock is 50mhz and tcon0 is 400Mhz.
+
+Michael
+
+
+>
+> So you want to increase the PLL. Fortunately for use, this is exactly
+> what a call to clk_set_rate will end up doing.
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+
+
+-- 
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+| COO  -  Founder                                      Cruquiuskade 47 |
+| +31(0)851119172                                 Amsterdam 1018 AM NL |
+|                  [`as] http://www.amarulasolutions.com               |
