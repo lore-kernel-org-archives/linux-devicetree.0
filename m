@@ -1,8 +1,8 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v5 1/3] firmware: ti_sci: Allow for device shared and
- exclusive requests
-Date: Mon, 29 Jul 2019 17:54:51 +0530
-Message-ID: <20190729122453.32252-2-lokeshvutla@ti.com>
+Subject: [PATCH v5 3/3] soc: ti: ti_sci_pm_domains: Add support for exclusive
+ and shared access
+Date: Mon, 29 Jul 2019 17:54:53 +0530
+Message-ID: <20190729122453.32252-4-lokeshvutla@ti.com>
 References: <20190729122453.32252-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,117 +22,93 @@ To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar
 Cc: Lokesh Vutla <lokeshvutla@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Sysfw provides an option for requesting exclusive access for a
-device using the flags MSG_FLAG_DEVICE_EXCLUSIVE. If this flag is
-not used, the device is meant to be shared across hosts. Once a device
-is requested from a host with this flag set, any request to this
-device from a different host will be nacked by sysfw. Current tisci
-driver enables this flag for every device requests. But this may not
-be true for all the devices. So provide a separate commands in driver
-for exclusive and shared device requests.
+TISCI protocol supports for enabling the device either with exclusive
+permissions for the requesting host or with sharing across the hosts.
+There are certain devices which are exclusive to Linux context and
+there are certain devices that are shared across different host contexts.
+So add support for getting this information from DT by increasing
+the power-domain cells to 2.
+
+For keeping the DT backward compatibility intact, defaulting the
+device permissions to set the exclusive flag set. In this case the
+power-domain-cells is 1.
 
 Reviewed-by: Nishanth Menon <nm@ti.com>
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
- drivers/firmware/ti_sci.c              | 45 ++++++++++++++++++++++++--
- include/linux/soc/ti/ti_sci_protocol.h |  3 ++
- 2 files changed, 46 insertions(+), 2 deletions(-)
+ drivers/soc/ti/ti_sci_pm_domains.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index cdee0b45943d..4126be9e3216 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -635,6 +635,7 @@ static int ti_sci_get_device_state(const struct ti_sci_handle *handle,
+diff --git a/drivers/soc/ti/ti_sci_pm_domains.c b/drivers/soc/ti/ti_sci_pm_domains.c
+index 97817dd7ba24..8c2a2f23982c 100644
+--- a/drivers/soc/ti/ti_sci_pm_domains.c
++++ b/drivers/soc/ti/ti_sci_pm_domains.c
+@@ -15,15 +15,19 @@
+ #include <linux/pm_domain.h>
+ #include <linux/slab.h>
+ #include <linux/soc/ti/ti_sci_protocol.h>
++#include <dt-bindings/soc/ti,sci_pm_domain.h>
  
  /**
-  * ti_sci_cmd_get_device() - command to request for device managed by TISCI
-+ *			     that can be shared with other hosts.
-  * @handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
-  * @id:		Device Identifier
-  *
-@@ -642,11 +643,29 @@ static int ti_sci_get_device_state(const struct ti_sci_handle *handle,
-  * usage count by balancing get_device with put_device. No refcounting is
-  * managed by driver for that purpose.
-  *
-- * NOTE: The request is for exclusive access for the processor.
-- *
-  * Return: 0 if all went fine, else return appropriate error.
+  * struct ti_sci_genpd_dev_data: holds data needed for every device attached
+  *				 to this genpd
+  * @idx: index of the device that identifies it with the system
+  *	 control processor.
++ * @exclusive: Permissions for exclusive request or shared request of the
++ *	       device.
   */
- static int ti_sci_cmd_get_device(const struct ti_sci_handle *handle, u32 id)
+ struct ti_sci_genpd_dev_data {
+ 	int idx;
++	u8 exclusive;
+ };
+ 
+ /**
+@@ -55,6 +59,14 @@ static int ti_sci_dev_id(struct device *dev)
+ 	return sci_dev_data->idx;
+ }
+ 
++static u8 is_ti_sci_dev_exclusive(struct device *dev)
 +{
-+	return ti_sci_set_device_state(handle, id, 0,
-+				       MSG_DEVICE_SW_STATE_ON);
++	struct generic_pm_domain_data *genpd_data = dev_gpd_data(dev);
++	struct ti_sci_genpd_dev_data *sci_dev_data = genpd_data->data;
++
++	return sci_dev_data->exclusive;
 +}
 +
-+/**
-+ * ti_sci_cmd_get_device_exclusive() - command to request for device managed by
-+ *				       TISCI that is exclusively owned by the
-+ *				       requesting host.
-+ * @handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
-+ * @id:		Device Identifier
-+ *
-+ * Request for the device - NOTE: the client MUST maintain integrity of
-+ * usage count by balancing get_device with put_device. No refcounting is
-+ * managed by driver for that purpose.
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
-+ */
-+static int ti_sci_cmd_get_device_exclusive(const struct ti_sci_handle *handle,
-+					   u32 id)
- {
- 	return ti_sci_set_device_state(handle, id,
- 				       MSG_FLAG_DEVICE_EXCLUSIVE,
-@@ -665,6 +684,26 @@ static int ti_sci_cmd_get_device(const struct ti_sci_handle *handle, u32 id)
-  * Return: 0 if all went fine, else return appropriate error.
-  */
- static int ti_sci_cmd_idle_device(const struct ti_sci_handle *handle, u32 id)
-+{
-+	return ti_sci_set_device_state(handle, id, 0,
-+				       MSG_DEVICE_SW_STATE_RETENTION);
-+}
-+
-+/**
-+ * ti_sci_cmd_idle_device_exclusive() - Command to idle a device managed by
-+ *					TISCI that is exclusively owned by
-+ *					requesting host.
-+ * @handle:	Pointer to TISCI handle as retrieved by *ti_sci_get_handle
-+ * @id:		Device Identifier
-+ *
-+ * Request for the device - NOTE: the client MUST maintain integrity of
-+ * usage count by balancing get_device with put_device. No refcounting is
-+ * managed by driver for that purpose.
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
-+ */
-+static int ti_sci_cmd_idle_device_exclusive(const struct ti_sci_handle *handle,
-+					    u32 id)
- {
- 	return ti_sci_set_device_state(handle, id,
- 				       MSG_FLAG_DEVICE_EXCLUSIVE,
-@@ -2894,7 +2933,9 @@ static void ti_sci_setup_ops(struct ti_sci_info *info)
- 	core_ops->reboot_device = ti_sci_cmd_core_reboot;
+ /**
+  * ti_sci_dev_to_sci_handle(): get pointer to ti_sci_handle
+  * @dev: pointer to device associated with this genpd
+@@ -79,7 +91,10 @@ static int ti_sci_dev_start(struct device *dev)
+ 	const struct ti_sci_handle *ti_sci = ti_sci_dev_to_sci_handle(dev);
+ 	int idx = ti_sci_dev_id(dev);
  
- 	dops->get_device = ti_sci_cmd_get_device;
-+	dops->get_device_exclusive = ti_sci_cmd_get_device_exclusive;
- 	dops->idle_device = ti_sci_cmd_idle_device;
-+	dops->idle_device_exclusive = ti_sci_cmd_idle_device_exclusive;
- 	dops->put_device = ti_sci_cmd_put_device;
+-	return ti_sci->ops.dev_ops.get_device(ti_sci, idx);
++	if (is_ti_sci_dev_exclusive(dev))
++		return ti_sci->ops.dev_ops.get_device_exclusive(ti_sci, idx);
++	else
++		return ti_sci->ops.dev_ops.get_device(ti_sci, idx);
+ }
  
- 	dops->is_valid = ti_sci_cmd_dev_is_valid;
-diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-index 6c610e188a44..9531ec823298 100644
---- a/include/linux/soc/ti/ti_sci_protocol.h
-+++ b/include/linux/soc/ti/ti_sci_protocol.h
-@@ -97,7 +97,10 @@ struct ti_sci_core_ops {
-  */
- struct ti_sci_dev_ops {
- 	int (*get_device)(const struct ti_sci_handle *handle, u32 id);
-+	int (*get_device_exclusive)(const struct ti_sci_handle *handle, u32 id);
- 	int (*idle_device)(const struct ti_sci_handle *handle, u32 id);
-+	int (*idle_device_exclusive)(const struct ti_sci_handle *handle,
-+				     u32 id);
- 	int (*put_device)(const struct ti_sci_handle *handle, u32 id);
- 	int (*is_valid)(const struct ti_sci_handle *handle, u32 id);
- 	int (*get_context_loss_count)(const struct ti_sci_handle *handle,
+ /**
+@@ -110,7 +125,7 @@ static int ti_sci_pd_attach_dev(struct generic_pm_domain *domain,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (pd_args.args_count != 1)
++	if (pd_args.args_count != 1 && pd_args.args_count != 2)
+ 		return -EINVAL;
+ 
+ 	idx = pd_args.args[0];
+@@ -128,6 +143,10 @@ static int ti_sci_pd_attach_dev(struct generic_pm_domain *domain,
+ 		return -ENOMEM;
+ 
+ 	sci_dev_data->idx = idx;
++	/* Enable the exclusive permissions by default */
++	sci_dev_data->exclusive = TI_SCI_PD_EXCLUSIVE;
++	if (pd_args.args_count == 2)
++		sci_dev_data->exclusive = pd_args.args[1] & 0x1;
+ 
+ 	genpd_data = dev_gpd_data(dev);
+ 	genpd_data->data = sci_dev_data;
 -- 
 2.21.0
