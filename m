@@ -1,96 +1,121 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] ASoC: meson: g12a-tohdmitx: override codec2codec params
-Date: Mon, 29 Jul 2019 10:01:39 +0200
-Message-ID: <20190729080139.32068-1-jbrunet@baylibre.com>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: Re: [PATCH 4/6] thermal: qoriq: Add clock operations
+Date: Mon, 29 Jul 2019 10:12:21 +0200
+Message-ID: <20190729081221.GA2523@bogon.m.sigxcpu.org>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+ <20190705045612.27665-4-Anson.Huang@nxp.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190705045612.27665-4-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+To: Anson.Huang@nxp.com
+Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com, leonard.crestez@nxp.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-So far, forwarding the hw_params of the input to output relied on the
-.hw_params() callback of the cpu side of the codec2codec link to be called
-first. This is a bit weak.
+Hi Anson,
+On Fri, Jul 05, 2019 at 12:56:10PM +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> Some platforms like i.MX8MQ has clock control for this module,
+> need to add clock operations to make sure the driver is working
+> properly.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/thermal/qoriq_thermal.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+> index 2b2f79b..0813c1b 100644
+> --- a/drivers/thermal/qoriq_thermal.c
+> +++ b/drivers/thermal/qoriq_thermal.c
+> @@ -2,6 +2,7 @@
+>  //
+>  // Copyright 2016 Freescale Semiconductor, Inc.
+>  
+> +#include <linux/clk.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/err.h>
+> @@ -72,6 +73,7 @@ struct qoriq_sensor {
+>  
+>  struct qoriq_tmu_data {
+>  	struct qoriq_tmu_regs __iomem *regs;
+> +	struct clk *clk;
+>  	bool little_endian;
+>  	struct qoriq_sensor	*sensor[SITES_MAX];
+>  };
+> @@ -208,6 +210,19 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+>  		return PTR_ERR(data->regs);
+>  	}
+>  
+> +	data->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(data->clk)) {
+> +		if (PTR_ERR(data->clk) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +		data->clk = NULL;
+> +	}
 
-Instead, override the stream params of the codec2codec to link to set it up
-correctly.
+Wouldn't devm_clk_get_optional make more sense?
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/meson/g12a-tohdmitx.c | 34 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+> +
+> +	ret = clk_prepare_enable(data->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to enable clock\n");
+> +		return ret;
+> +	}
+> +
+>  	qoriq_tmu_init_device(data);	/* TMU initialization */
+>  
+>  	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
+> @@ -235,6 +250,8 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
+>  	/* Disable monitoring */
+>  	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
+>  
+> +	clk_disable_unprepare(data->clk);
+> +
+>  	platform_set_drvdata(pdev, NULL);
+>  
+>  	return 0;
+> @@ -250,14 +267,21 @@ static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
+>  	tmr &= ~TMR_ME;
+>  	tmu_write(data, tmr, &data->regs->tmr);
+>  
+> +	clk_disable_unprepare(data->clk);
+> +
+>  	return 0;
+>  }
+>  
+>  static int __maybe_unused qoriq_tmu_resume(struct device *dev)
+>  {
+>  	u32 tmr;
+> +	int ret;
+>  	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
+>  
+> +	ret = clk_prepare_enable(data->clk);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Enable monitoring */
+>  	tmr = tmu_read(data, &data->regs->tmr);
+>  	tmr |= TMR_ME;
 
-diff --git a/sound/soc/meson/g12a-tohdmitx.c b/sound/soc/meson/g12a-tohdmitx.c
-index 707ccb192e4c..9943c807ec5d 100644
---- a/sound/soc/meson/g12a-tohdmitx.c
-+++ b/sound/soc/meson/g12a-tohdmitx.c
-@@ -28,7 +28,7 @@
- #define  CTRL0_SPDIF_CLK_SEL		BIT(0)
- 
- struct g12a_tohdmitx_input {
--	struct snd_pcm_hw_params params;
-+	struct snd_soc_pcm_stream params;
- 	unsigned int fmt;
- };
- 
-@@ -225,26 +225,17 @@ static int g12a_tohdmitx_input_hw_params(struct snd_pcm_substream *substream,
- {
- 	struct g12a_tohdmitx_input *data = dai->playback_dma_data;
- 
--	/* Save the stream params for the downstream link */
--	memcpy(&data->params, params, sizeof(*params));
-+	data->params.rates = snd_pcm_rate_to_rate_bit(params_rate(params));
-+	data->params.rate_min = params_rate(params);
-+	data->params.rate_max = params_rate(params);
-+	data->params.formats = 1 << params_format(params);
-+	data->params.channels_min = params_channels(params);
-+	data->params.channels_max = params_channels(params);
-+	data->params.sig_bits = dai->driver->playback.sig_bits;
- 
- 	return 0;
- }
- 
--static int g12a_tohdmitx_output_hw_params(struct snd_pcm_substream *substream,
--					  struct snd_pcm_hw_params *params,
--					  struct snd_soc_dai *dai)
--{
--	struct g12a_tohdmitx_input *in_data =
--		g12a_tohdmitx_get_input_data(dai->capture_widget);
--
--	if (!in_data)
--		return -ENODEV;
--
--	memcpy(params, &in_data->params, sizeof(*params));
--
--	return 0;
--}
- 
- static int g12a_tohdmitx_input_set_fmt(struct snd_soc_dai *dai,
- 				       unsigned int fmt)
-@@ -266,6 +257,14 @@ static int g12a_tohdmitx_output_startup(struct snd_pcm_substream *substream,
- 	if (!in_data)
- 		return -ENODEV;
- 
-+	if (WARN_ON(!rtd->dai_link->params)) {
-+		dev_warn(dai->dev, "codec2codec link expected\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Replace link params with the input params */
-+	rtd->dai_link->params = &in_data->params;
-+
- 	if (!in_data->fmt)
- 		return 0;
- 
-@@ -278,7 +277,6 @@ static const struct snd_soc_dai_ops g12a_tohdmitx_input_ops = {
- };
- 
- static const struct snd_soc_dai_ops g12a_tohdmitx_output_ops = {
--	.hw_params	= g12a_tohdmitx_output_hw_params,
- 	.startup	= g12a_tohdmitx_output_startup,
- };
- 
--- 
-2.21.0
+Apart from that it looks like what Fabio sent and what i tested so
+
+Reviewed-by: Guido Günther <agx@sigxcpu.org>
+
+Cheers,
+ -- Guido
+
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
