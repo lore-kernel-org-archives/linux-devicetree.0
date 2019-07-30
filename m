@@ -1,41 +1,92 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v4 2/4] enetc: Add mdio bus driver for the PCIe
- MDIO endpoint
-Date: Tue, 30 Jul 2019 15:22:57 +0200
-Message-ID: <20190730132257.GB28552@lunn.ch>
-References: <1564479919-18835-1-git-send-email-claudiu.manoil@nxp.com>
- <1564479919-18835-3-git-send-email-claudiu.manoil@nxp.com>
+From: Thomas Preston <thomas.preston@codethink.co.uk>
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: TDA7802: Add turn-on diagnostic
+ routine
+Date: Tue, 30 Jul 2019 15:04:19 +0100
+Message-ID: <e7a879d3-36c2-2df8-97c0-3c4bbd2e7ea2@codethink.co.uk>
+References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
+ <20190730120937.16271-4-thomas.preston@codethink.co.uk>
+ <20190730124158.GH54126@ediswmail.ad.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1564479919-18835-3-git-send-email-claudiu.manoil@nxp.com>
+In-Reply-To: <20190730124158.GH54126@ediswmail.ad.cirrus.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Marco Felsch <m.felsch@pengutronix.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Kirill Marinushkin <kmarinushkin@birdec.tech>, Cheng-Yi Chiang <cychiang@chromium.org>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Paul Cercueil <paul@crapouillou.net>, Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Annaliese McDermond <nh6z@nh6z.net>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 12:45:17PM +0300, Claudiu Manoil wrote:
-> ENETC ports can manage the MDIO bus via local register
-> interface.  However there's also a centralized way
-> to manage the MDIO bus, via the MDIO PCIe endpoint
-> device integrated by the same root complex that also
-> integrates the ENETC ports (eth controllers).
-> 
-> Depending on board design and use case, centralized
-> access to MDIO may be better than using local ENETC
-> port registers.  For instance, on the LS1028A QDS board
-> where MDIO muxing is required.  Also, the LS1028A on-chip
-> switch doesn't have a local MDIO register interface.
-> 
-> The current patch registers the above PCIe endpoint as a
-> separate MDIO bus and provides a driver for it by re-using
-> the code used for local MDIO access.  It also allows the
-> ENETC port PHYs to be managed by this driver if the local
-> "mdio" node is missing from the ENETC port node.
-> 
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Hi,
+Thanks for getting back to me so quickly.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+On 30/07/2019 13:41, Charles Keepax wrote:
+> On Tue, Jul 30, 2019 at 01:09:37PM +0100, Thomas Preston wrote:
+>> Add a debugfs device node which initiates the turn-on diagnostic routine
+>> feature of the TDA7802 amplifier. The four status registers (one per
+>> channel) are returned.
+>>
+>> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+>> ---
+>> Changes since v1:
+>> - Rename speaker-test to (turn-on) diagnostics
+>> - Move turn-on diagnostic to debugfs as there is no standard ALSA
+>>   interface for this kind of routine.
+>>
+>>  sound/soc/codecs/tda7802.c | 186 ++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 185 insertions(+), 1 deletion(-)
+>>
+>> +static int tda7802_bulk_update(struct regmap *map, struct reg_update *update,
+>> +		size_t update_count)
+>> +{
+>> +	int i, err;
+>> +
+>> +	for (i = 0; i < update_count; i++) {
+>> +		err = regmap_update_bits(map, update[i].reg, update[i].mask,
+>> +				update[i].val);
+>> +		if (err < 0)
+>> +			return err;
+>> +	}
+>> +
+>> +	return i;
+>> +}
+> 
+> This could probably be removed using regmap_multi_reg_write.
+> 
 
-    Andrew
+The problem is that I want to retain the state of the other bits in those
+registers. Maybe I should make a copy of the backed up state, set the bits
+I want to off-device, then either:
+
+1. Write the changes with regmap_multi_reg_write
+2. Write all six regs again (if my device doesn't support the multi_reg)
+
+>> +static int tda7802_probe(struct snd_soc_component *component)
+>> +{
+>> +	struct tda7802_priv *tda7802 = snd_soc_component_get_drvdata(component);
+>> +	struct device *dev = &tda7802->i2c->dev;
+>> +	int err;
+>> +
+>> +	tda7802->debugfs = debugfs_create_dir(dev_name(dev), NULL);
+>> +	if (IS_ERR_OR_NULL(tda7802->debugfs)) {
+>> +		dev_info(dev,
+>> +			"Failed to create debugfs node, err %ld\n",
+>> +			PTR_ERR(tda7802->debugfs));
+>> +		return 0;
+>> +	}
+>> +
+>> +	mutex_init(&tda7802->diagnostic_mutex);
+>> +	err = debugfs_create_file("diagnostic", 0444, tda7802->debugfs, tda7802,
+>> +			&tda7802_diagnostic_fops);
+>> +	if (err < 0) {
+>> +		dev_err(dev,
+>> +			"debugfs: Failed to create diagnostic node, err %d\n",
+>> +			err);
+>> +		goto cleanup_diagnostic;
+>> +	}
+> 
+> You shouldn't be failing the driver probe if debugfs fails, it
+> should be purely optional.
+> 
+
+Got it, thanks.
