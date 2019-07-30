@@ -1,57 +1,54 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH] ARM: DTS: vybrid: Update qspi node description for VF610 BK4 board
-Date: Tue, 30 Jul 2019 17:05:52 +0200
-Message-ID: <20190730150552.24927-1-lukma@denx.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: DTS: vybrid: Update qspi node description for VF610
+ BK4 board
+Date: Tue, 30 Jul 2019 12:19:57 -0300
+Message-ID: <CAOMZO5AxPHHobQQhq30fjLVeSroLdvdT0+GqCWi8it1ejhDONA@mail.gmail.com>
+References: <20190730150552.24927-1-lukma@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190730150552.24927-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Before this change the device tree description of qspi node for
-second memory on BK4 board was wrong (applicable to old, in-house
-tunned fsl-quadspi.c driver).
+Hi Lukasz,
 
-As a result this memory was not recognized correctly when used
-with the new spi-fsl-qspi.c driver.
+Subject line could be improved:
 
->From the dt-bindings:
+ARM: dts: vf610-bk4: Fix qspi node description
 
-"Required SPI slave node properties:
-  - reg: There are two buses (A and B) with two chip selects each.
-This encodes to which bus and CS the flash is connected:
-<0>: Bus A, CS 0
-<1>: Bus A, CS 1
-<2>: Bus B, CS 0
-<3>: Bus B, CS 1"
+On Tue, Jul 30, 2019 at 12:06 PM Lukasz Majewski <lukma@denx.de> wrote:
+>
+> Before this change the device tree description of qspi node for
+> second memory on BK4 board was wrong (applicable to old, in-house
+> tunned fsl-quadspi.c driver).
+>
+> As a result this memory was not recognized correctly when used
+> with the new spi-fsl-qspi.c driver.
+>
+> From the dt-bindings:
+>
+> "Required SPI slave node properties:
+>   - reg: There are two buses (A and B) with two chip selects each.
+> This encodes to which bus and CS the flash is connected:
+> <0>: Bus A, CS 0
+> <1>: Bus A, CS 1
+> <2>: Bus B, CS 0
+> <3>: Bus B, CS 1"
+>
+> According to above with new driver the second SPI-NOR memory shall
+> have reg=<2> as it is connected to Bus B, CS 0.
 
-According to above with new driver the second SPI-NOR memory shall
-have reg=<2> as it is connected to Bus B, CS 0.
+I am glad you got it working!
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
----
- arch/arm/boot/dts/vf610-bk4.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This looks very familiar with the suggestion I sent yesterday:
+http://lists.infradead.org/pipermail/linux-mtd/2019-July/090655.html
 
-diff --git a/arch/arm/boot/dts/vf610-bk4.dts b/arch/arm/boot/dts/vf610-bk4.dts
-index 3fa0cbe456db..0f3870d3b099 100644
---- a/arch/arm/boot/dts/vf610-bk4.dts
-+++ b/arch/arm/boot/dts/vf610-bk4.dts
-@@ -246,13 +246,13 @@
- 		reg = <0>;
- 	};
- 
--	n25q128a13_2: flash@1 {
-+	n25q128a13_2: flash@2 {
- 		compatible = "n25q128a13", "jedec,spi-nor";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		spi-max-frequency = <66000000>;
- 		spi-rx-bus-width = <2>;
--		reg = <1>;
-+		reg = <2>;
- 	};
- };
- 
--- 
-2.11.0
+It is a good practice to give some credit to someone who has helped in
+finding the solution of your problem.
+
+Adding a Suggested-by: Fabio Estevam <festevam@gmail.com> would be nice here.
+
+This also needs a Fixes tag.
