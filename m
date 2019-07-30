@@ -1,63 +1,967 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v4 0/3] Introduce Bandwidth OPPs for interconnects
-Date: Mon, 29 Jul 2019 22:53:12 -0700
-Message-ID: <CAGETcx_BpJswxA4AGARogZ1xRJPqm=_zTOZq1xJ2vgx+DUYsqQ@mail.gmail.com>
-References: <20190726231558.175130-1-saravanak@google.com> <20190729093545.kvnqxjkyx4nogddk@vireshk-i7>
- <CAGETcx8OBFGgP1-hj717Sk-_N95-kacVsz0yb288n3pej12n1Q@mail.gmail.com>
- <20190730024640.xk27jgdfl2j6ucx7@vireshk-i7> <361effba-4433-24d9-243c-201af39214cc@codeaurora.org>
+From: Ben Pai <Ben_Pai@wistron.com>
+Subject: [PATCH] ARM: dts: aspeed: Add Mihawk BMC platform
+Date: Tue, 30 Jul 2019 14:00:29 +0800
+Message-ID: <20190730060029.25268-1-Ben_Pai@wistron.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <361effba-4433-24d9-243c-201af39214cc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kerne>
+To: robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: wangat@tw.ibm.com, Ben Pai <Ben_Pai@wistron.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 10:28 PM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> Hey Viresh,
->
-> On 7/30/19 8:16 AM, Viresh Kumar wrote:
-> > On 29-07-19, 13:16, Saravana Kannan wrote:
-> >> Sibi might be working on doing that for the SDM845 CPUfreq driver.
-> >> Georgi could also change his GPU driver use case to use this BW OPP
-> >> table and required-opps.
-> >>
-> >> The problem is that people don't want to start using this until we
-> >> decide on the DT representation. So it's like a chicken and egg
-> >> situation.
-> >
-> > Yeah, I agree to that.
-> >
-> > @Georgi and @Sibi: This is your chance to speak up about the proposal
-> > from Saravana and if you find anything wrong with them. And specially
-> > that it is mostly about interconnects here, I would like to have an
-> > explicit Ack from Georgi on this.
-> >
-> > And if you guys are all okay about this then please at least commit
-> > that you will convert your stuff based on this in coming days.
->
-> I've been using both Saravana's and Georgi's series for a while
-> now to scale DDR and L3 on SDM845. There is currently no consensus
-> as to where the votes are to be actuated from, hence couldn't post
-> anything out.
->
-> DCVS based on Saravana's series + passive governor:
-> https://github.com/QuinAsura/linux/tree/lnext-072619-SK-series
+The Mihawk BMC is an ASPEED ast2500 based BMC that is part of an
+OpenPower Power9 server.
 
-Thanks Sibi! You might want to convert your patches so that until the
-passive governor is ready, you just look up the required opps and vote
-for BW directly from the cpufreq driver. Once devfreq governor is
-ready, you can switch to it.
+This adds the device tree description for most upstream components. It
+is a squashed commit from the OpenBMC kernel tree.
 
--Saravana
+Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
+---
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts | 922 ++++++++++++++++++++
+ 2 files changed, 923 insertions(+)
+ create mode 100755 arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
 
->
-> DCVS based on Georgi's series: (I had already posted this out)
-> https://github.com/QuinAsura/linux/tree/lnext-072619-GJ-series
->
-> --
-> Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index eb6de52c1936..262345544359 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1281,5 +1281,6 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-opp-vesnin.dtb \
+ 	aspeed-bmc-opp-witherspoon.dtb \
+ 	aspeed-bmc-opp-zaius.dtb \
++	aspeed-bmc-opp-mihawk.dtb \
+ 	aspeed-bmc-portwell-neptune.dtb \
+ 	aspeed-bmc-quanta-q71l.dtb
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+new file mode 100755
+index 000000000000..cfa20e0b2939
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+@@ -0,0 +1,922 @@
++/dts-v1/;
++
++#include "aspeed-g5.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++#include <dt-bindings/leds/leds-pca955x.h>
++
++/ {
++	model = "Mihawk BMC";
++	compatible = "ibm,mihawk-bmc", "aspeed,ast2500";
++
++
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=ttyS4,115200 earlyprintk";
++	};
++
++	memory@80000000 {
++		reg = <0x80000000 0x20000000>; /* address and size of RAM(512MB) */
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		flash_memory: region@98000000 {
++			no-map;
++			reg = <0x98000000 0x04000000>; /* 64M */
++		};
++
++		gfx_memory: framebuffer {
++			size = <0x01000000>;
++			alignment = <0x01000000>;
++			compatible = "shared-dma-pool";
++			reusable;
++		};
++
++		video_engine_memory: jpegbuffer {
++			size = <0x02000000>;	/* 32MM */
++			alignment = <0x01000000>;
++			compatible = "shared-dma-pool";
++			reusable;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		air-water {
++			label = "air-water";
++			gpios = <&gpio ASPEED_GPIO(F, 6) GPIO_ACTIVE_LOW>;
++			linux,code = <ASPEED_GPIO(F, 6)>;
++		};
++
++		checkstop {
++			label = "checkstop";
++			gpios = <&gpio ASPEED_GPIO(J, 2) GPIO_ACTIVE_LOW>;
++			linux,code = <ASPEED_GPIO(J, 2)>;
++		};
++
++		ps0-presence {
++			label = "ps0-presence";
++			gpios = <&gpio ASPEED_GPIO(Z, 2) GPIO_ACTIVE_LOW>;
++			linux,code = <ASPEED_GPIO(Z, 2)>;
++		};
++
++		ps1-presence {
++			label = "ps1-presence";
++			gpios = <&gpio ASPEED_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
++			linux,code = <ASPEED_GPIO(Z, 0)>;
++		};
++		id-button {
++			label = "id-button";
++			gpios = <&gpio ASPEED_GPIO(F, 1) GPIO_ACTIVE_LOW>;
++			linux,code = <ASPEED_GPIO(F, 1)>;
++		};
++	};
++
++	gpio-keys-polled {
++		compatible = "gpio-keys-polled";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		poll-interval = <1000>;
++
++		fan0-presence {
++			label = "fan0-presence";
++			gpios = <&pca9552 9 GPIO_ACTIVE_LOW>;
++			linux,code = <9>;
++		};
++
++		fan1-presence {
++			label = "fan1-presence";
++			gpios = <&pca9552 10 GPIO_ACTIVE_LOW>;
++			linux,code = <10>;
++		};
++
++		fan2-presence {
++			label = "fan2-presence";
++			gpios = <&pca9552 11 GPIO_ACTIVE_LOW>;
++			linux,code = <11>;
++		};
++
++		fan3-presence {
++			label = "fan3-presence";
++			gpios = <&pca9552 12 GPIO_ACTIVE_LOW>;
++			linux,code = <12>;
++		};
++
++		fan4-presence {
++			label = "fan4-presence";
++			gpios = <&pca9552 13 GPIO_ACTIVE_LOW>;
++			linux,code = <13>;
++		};
++
++		fan5-presence {
++			label = "fan5-presence";
++			gpios = <&pca9552 14 GPIO_ACTIVE_LOW>;
++			linux,code = <14>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		fault {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_LOW>;
++		};
++
++		power {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&gpio ASPEED_GPIO(AA, 1) GPIO_ACTIVE_LOW>;
++		};
++
++		rear-id {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_LOW>;
++		};
++
++		rear-g {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&gpio ASPEED_GPIO(AA, 4) GPIO_ACTIVE_LOW>;
++		};
++
++		rear-ok {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&gpio ASPEED_GPIO(Y, 0) GPIO_ACTIVE_LOW>;
++		};
++
++		fan0 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca9552 0 GPIO_ACTIVE_LOW>;
++		};
++
++		fan1 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca9552 1 GPIO_ACTIVE_LOW>;
++		};
++
++		fan2 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca9552 2 GPIO_ACTIVE_LOW>;
++		};
++
++		fan3 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca9552 3 GPIO_ACTIVE_LOW>;
++		};
++
++		fan4 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca9552 4 GPIO_ACTIVE_LOW>;
++		};
++
++		fan5 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca9552 5 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	fsi: gpio-fsi {
++		compatible = "fsi-master-gpio", "fsi-master";
++		#address-cells = <2>;
++		#size-cells = <0>;
++		no-gpio-delays;
++
++		clock-gpios = <&gpio ASPEED_GPIO(E, 6) GPIO_ACTIVE_HIGH>;
++		data-gpios = <&gpio ASPEED_GPIO(E, 7) GPIO_ACTIVE_HIGH>;
++		mux-gpios = <&gpio ASPEED_GPIO(E, 5) GPIO_ACTIVE_HIGH>;
++		enable-gpios = <&gpio ASPEED_GPIO(D, 0) GPIO_ACTIVE_HIGH>;
++		trans-gpios = <&gpio ASPEED_GPIO(R, 2) GPIO_ACTIVE_HIGH>;
++	};
++	iio-hwmon-12v {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 0>;
++	};
++	
++	iio-hwmon-5v {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 1>;
++	};
++	
++	iio-hwmon-3v {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 2>;
++	};
++		
++	iio-hwmon-vdd0 {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 3>;
++	};
++	
++	iio-hwmon-vdd1 {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 4>;
++	};
++	
++	iio-hwmon-vcs0 {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 5>;
++	};
++	
++	iio-hwmon-vcs1 {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 6>;
++	};
++
++	iio-hwmon-vdn0 {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 7>;
++	};
++	
++	iio-hwmon-vdn1 {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 8>;
++	};
++	
++	iio-hwmon-vio0 {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 9>;
++	};
++	
++	iio-hwmon-vio1 {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 10>;
++	};
++	
++	iio-hwmon-vddra {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 11>;
++	};
++	
++	iio-hwmon-vddrb {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 13>;
++	};
++	
++	iio-hwmon-vddrc {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 14>;
++	};
++	
++	iio-hwmon-vddrd {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 15>;
++	};
++	
++	iio-hwmon-battery {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 12>;
++	};
++};
++
++&pwm_tacho {
++	status = "okay";
++	/*compatible = "aspeed,ast2500-pwm-tacho";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	reg = <0x1e786000 0x1000>;
++	clocks = <&pwm_tacho_fixed_clk>;*/
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default
++		&pinctrl_pwm2_default &pinctrl_pwm3_default
++		&pinctrl_pwm4_default &pinctrl_pwm5_default>;
++
++	fan@0 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++	};
++
++	fan@1 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
++	};
++
++	fan@2 {
++		reg = <0x02>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
++	};
++
++	fan@3 {
++		reg = <0x03>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x03>;
++	};
++
++	fan@4 {
++		reg = <0x04>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
++	};
++
++	fan@5 {
++		reg = <0x05>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x05>;
++	};
++
++	fan@6 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x06>;
++	};
++
++	fan@7 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x07>;
++	};
++
++	fan@8 {
++		reg = <0x02>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x08>;
++	};
++
++	fan@9 {
++		reg = <0x03>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x09>;
++	};
++
++	fan@10 {
++		reg = <0x04>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0a>;
++	};
++
++	fan@11 {
++		reg = <0x05>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0b>;
++	};
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		label = "bmc";
++		m25p,fast-read;
++		spi-max-frequency = <50000000>;
++		partitions {
++			#address-cells = < 1 >;
++			#size-cells = < 1 >;
++			compatible = "fixed-partitions";
++			u-boot@0 {
++				reg = < 0 0x60000 >;
++				label = "u-boot";
++			};
++			u-boot-env@60000 {
++				reg = < 0x60000 0x20000 >;
++				label = "u-boot-env";
++			};
++			obmc-ubi@80000 {
++				reg = < 0x80000 0x1F80000 >;
++				label = "obmc-ubi";
++			};
++		};
++	};
++	flash@1 {
++		status = "okay";
++		label = "alt-bmc";
++		m25p,fast-read;
++		spi-max-frequency = <50000000>;
++		partitions {
++			#address-cells = < 1 >;
++			#size-cells = < 1 >;
++			compatible = "fixed-partitions";
++			u-boot@0 {
++				reg = < 0 0x60000 >;
++				label = "alt-u-boot";
++			};
++			u-boot-env@60000 {
++				reg = < 0x60000 0x20000 >;
++				label = "alt-u-boot-env";
++			};
++			obmc-ubi@80000 {
++				reg = < 0x80000 0x1F80000 >;
++				label = "alt-obmc-ubi";
++			};
++		};
++	};
++};
++
++&spi1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi1_default>;
++
++	flash@0 {
++		status = "okay";
++		label = "pnor";
++		m25p,fast-read;
++		spi-max-frequency = <100000000>;
++	};
++};
++
++&lpc_ctrl {
++	status = "okay";
++	memory-region = <&flash_memory>;
++	flash = <&spi1>;
++};
++
++&uart1 {
++	/* Rear RS-232 connector */
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd1_default
++			&pinctrl_rxd1_default
++			&pinctrl_nrts1_default
++			&pinctrl_ndtr1_default
++			&pinctrl_ndsr1_default
++			&pinctrl_ncts1_default
++			&pinctrl_ndcd1_default
++			&pinctrl_nri1_default>;
++};
++
++&uart2 {
++	/* APSS */
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd2_default &pinctrl_rxd2_default>;
++};
++
++&uart5 {
++	status = "okay";
++};
++
++&mac0 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++	use-ncsi;
++};
++
++&mac1 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
++};
++
++&i2c0 {
++	status = "disabled";
++};
++
++&i2c1 {
++	status = "disabled";
++};
++
++&i2c2 {
++	status = "okay";
++
++	/* SAMTEC P0 */
++	/* SAMTEC P1 */
++	
++};
++
++&i2c3 {
++	status = "okay";
++
++	/* APSS */
++	/* CPLD */
++
++	/* PCA9516 (repeater) ->
++	 *    CLK Buffer 9FGS9092
++	 *    CLK Buffer 9DBL0651BKILFT
++	 *    CLK Buffer 9DBL0651BKILFT
++	 *    Power Supply 0
++	 *    Power Supply 1
++	 *    PCA 9552 LED
++	 */
++	 
++	power-supply@58 {
++		compatible = "ibm,cffps1";
++		reg = <0x58>;
++	};
++
++	power-supply@5b {
++		compatible = "ibm,cffps1";
++		reg = <0x5b>;
++	};
++
++	pca9552: pca9552@60 {
++		compatible = "nxp,pca9552";
++		reg = <0x60>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		gpio@0 {
++			reg = <0>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@1 {
++			reg = <1>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@2 {
++			reg = <2>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@3 {
++			reg = <3>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@4 {
++			reg = <4>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@5 {
++			reg = <5>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@6 {
++			reg = <6>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@7 {
++			reg = <7>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@8 {
++			reg = <8>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@9 {
++			reg = <9>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@10 {
++			reg = <10>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@11 {
++			reg = <11>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@12 {
++			reg = <12>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@13 {
++			reg = <13>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@14 {
++			reg = <14>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++		gpio@15 {
++			reg = <15>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++	};
++
++};
++
++&i2c4 {
++	status = "okay";
++
++	/* CP0 VDD & VCS : IR35221 */
++	/* CP0 VDN : IR35221 */
++	/* CP0 VIO : IR38064 */
++        /* CP0 VDDR : PXM1330 */
++
++	ir35221@70 {
++		compatible = "infineon,ir35221";
++		reg = <0x70>;
++	};
++
++	ir35221@72 {
++		compatible = "infineon,ir35221";
++		reg = <0x72>;
++	};
++
++};
++
++&i2c5 {
++	status = "okay";
++	
++	/* CP0 VDD & VCS : IR35221 */
++	/* CP0 VDN : IR35221 */
++	/* CP0 VIO : IR38064 */
++        /* CP0 VDDR : PXM1330 */
++
++	ir35221@70 {
++		compatible = "infineon,ir35221";
++		reg = <0x70>;
++	};
++
++	ir35221@72 {
++		compatible = "infineon,ir35221";
++		reg = <0x72>;
++	};
++	
++};
++
++&i2c6 {
++	status = "okay";
++	
++	/* pca9548 -> NVMe1 to 8 */
++	
++	pca9548@70 {
++		compatible = "nxp,pca9548";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x70>;
++	};
++	
++};
++
++&i2c7 {
++	status = "okay";
++	
++	/* pca9548 -> NVMe9 to 16 */
++	
++	pca9548@70 {
++		compatible = "nxp,pca9548";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x70>;
++	};
++	
++};
++
++&i2c8 {
++	status = "okay";
++
++	/* FSI CLK/DAT */
++	eeprom@50 {
++		compatible = "atmel,24c64";
++		reg = <0x50>;
++	};
++};
++
++&i2c9 {
++	status = "okay";
++	
++	/* pca9545 Riser -> 
++	* 	PCIe x8  Slot3 
++	* 	PCIe x16 slot4 
++	* 	PCIe x8  slot5 
++	* 	I2C BMC RISER PCA9554
++	* 	BMC SCL/SDA PCA9554 
++	* 	PCA9554
++	*/
++	
++	/* pca9545 -> 
++	* 	PCIe x16 Slot1 
++	* 	PCIe x8  slot2 
++	* 	PEX8748 
++	*/
++
++	pca9545riser@70 {
++		compatible = "nxp,pca9545";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x70>;
++
++		/*interrupt-parent = <&ipic>;*/
++		/*interrupts = <17 IRQ_TYPE_LEVEL_LOW>;*/
++		i2c-mux-idle-disconnect;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++	
++	pca9545@71 {
++		compatible = "nxp,pca9545";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x71>;
++
++		/*interrupt-parent = <&ipic>;*/
++		/*interrupts = <17 IRQ_TYPE_LEVEL_LOW>;*/
++		i2c-mux-idle-disconnect;
++		interrupt-controller;
++		#interrupt-cells = <2>;	
++	};
++};
++
++&i2c10 {
++	status = "okay";
++	
++	/* pca9545 Riser -> 
++	* 	PCIe x8  Slot8 
++	* 	PCIe x16 slot9 
++	* 	PCIe x8  slot10 
++	* 	I2C BMC RISER PCA9554
++	* 	BMC SCL/SDA PCA9554 
++	* 	PCA9554
++	*/
++	
++	/* pca9545 -> 
++	* 	PCIe x16 Slot1 
++	* 	PCIe x8  slot2 
++	* 	PEX8748 
++	*/
++	
++	pca9545riser@70 {
++		compatible = "nxp,pca9545";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x70>;
++
++		/*interrupt-parent = <&ipic>;*/
++		/*interrupts = <17 IRQ_TYPE_LEVEL_LOW>;*/
++		i2c-mux-idle-disconnect;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++	
++	pca9545@71 {
++		compatible = "nxp,pca9545";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x71>;
++
++		/*interrupt-parent = <&ipic>;*/
++		/*interrupts = <17 IRQ_TYPE_LEVEL_LOW>;*/
++		i2c-mux-idle-disconnect;
++		interrupt-controller;
++		#interrupt-cells = <2>;	
++	};
++};
++
++&i2c11 {
++	status = "okay";
++	
++	/* TPM */
++	/* RTC RX8900CE */
++	/* FPGA for power sequence */
++	/* TMP275A */
++	/* TMP275A */
++	/* EMC1462 */
++
++	tpm@57 {
++		compatible = "infineon,slb9645tt";
++		reg = <0x57>;
++	};
++	
++	rtc@32 {
++		compatible = "epson,rx8900";
++		reg = <0x32>;
++	};
++	
++	tmp275@48 {
++		compatible = "ti,tmp275";
++		reg = <0x48>;
++	};
++	
++	tmp275@49 {
++		compatible = "ti,tmp275";
++		reg = <0x49>;
++	};
++
++    /* chip emc1462 use emc1403 driver */
++    emc1403@4c {
++        compatible = "smsc,emc1403";
++        reg = <0x4c>;
++    };
++
++};
++
++&i2c12 {
++	status = "okay";
++
++	/* pca9545 ->
++	*	SAS BP1
++	*	SAS BP2
++	*	NVMe BP
++	*	M.2 riser
++	*/
++	
++	pca9545@70 {
++		compatible = "nxp,pca9545";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x70>;
++
++		/*interrupt-parent = <&ipic>;*/
++		/*interrupts = <17 IRQ_TYPE_LEVEL_LOW>;*/
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		
++		i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++			
++			eeprom@50 {
++				compatible = "atmel,24c64";
++				reg = <0x50>;
++			};
++		};
++		
++		i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++			
++			eeprom@50 {
++				compatible = "atmel,24c64";
++				reg = <0x50>;
++			};
++		};
++		
++		i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++			
++			eeprom@50 {
++				compatible = "atmel,24c64";
++				reg = <0x50>;
++			};
++		};
++		
++		i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++			
++			tmp275@48 {
++				compatible = "ti,tmp275";
++				reg = <0x48>;
++			};
++		};
++		
++	};
++	
++};
++
++&i2c13 {
++	status = "okay";
++	
++	/* pca9548 ->
++	*	NVMe BP
++	*	NVMe HDD17 to 24
++	*/
++	
++	pca9548@70 {
++		compatible = "nxp,pca9548";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x70>;
++	};	
++};
++
++&vuart {
++	status = "okay";
++};
++
++&gfx {
++	status = "okay";
++	memory-region = <&gfx_memory>;
++};
++
++&pinctrl {
++	aspeed,external-nodes = <&gfx &lhc>;
++};
++
++&adc {
++	status = "okay";
++};
++
++&wdt1 {
++	aspeed,reset-type = "none";
++	aspeed,external-signal;
++	aspeed,ext-push-pull;
++	aspeed,ext-active-high;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdtrst1_default>;
++};
++
++&wdt2 {
++	aspeed,alt-boot;
++};
++
++&ibt {
++	status = "okay";
++};
++
++&vhub {
++	status = "okay";
++};
++
++&video {
++	status = "okay";
++	memory-region = <&video_engine_memory>;
++};
++
++#include "ibm-power9-dual.dtsi"
+\ No newline at end of file
+-- 
+2.17.1
