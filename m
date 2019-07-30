@@ -1,193 +1,201 @@
-From: Jungo Lin <jungo.lin@mediatek.com>
-Subject: Re: [RFC,v3 6/9] media: platform: Add Mediatek ISP P1 V4L2 functions
-Date: Tue, 30 Jul 2019 09:44:49 +0800
-Message-ID: <1564451089.1212.649.camel@mtksdccf07>
-References: <jungo.lin@mediatek.com>
- <20190611035344.29814-1-jungo.lin@mediatek.com>
- <20190611035344.29814-7-jungo.lin@mediatek.com>
- <20190710095429.GA181405@chromium.org>
- <1563424741.1212.212.camel@mtksdccf07>
- <CAAFQd5CXeQv74RtqDxYYLVEpsnFbsm0m-kUBDpY_AFmCBO0PyA@mail.gmail.com>
- <1563942689.1212.494.camel@mtksdccf07>
- <CAAFQd5A8zW9s8cewmHnr9HFmrkxDnEqjrTiwLF2m8sKp0619hA@mail.gmail.com>
- <1564363089.1212.636.camel@mtksdccf07>
- <CAAFQd5D4Roc05H1NnXSp=W+L1RN7LEPHY0EA0mRhpHAcZ3wvMg@mail.gmail.com>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH 2/4] net: phy: Add mdio-aspeed
+Date: Tue, 30 Jul 2019 11:53:32 +0930
+Message-ID: <19074ccb-5356-469b-8d1e-8076be135a21@www.fastmail.com>
+References: <20190729043926.32679-1-andrew@aj.id.au>
+ <20190729043926.32679-3-andrew@aj.id.au> <20190729133250.GB4110@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAAFQd5D4Roc05H1NnXSp=W+L1RN7LEPHY0EA0mRhpHAcZ3wvMg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: devicetree@vger.kernel.org, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <sean.cheng@mediatek.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <rynn.wu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Rob Herring <robh@kernel.org>, Ryan Yu =?UTF-8?Q?=28=E4=BD=99=E5=AD=9F=E4=BF=AE=29?= <ryan.yu@mediatek.com>, Frankie Chiu =?UTF-8?Q?=28=E9=82=B1=E6=96=87=E5=87=B1=29?= <frankie.chiu@mediatek.com>, Hans Verkuil <hverkuil@xs4all.nl>, Matthias Brugger <matthias.bgg@gmail.com>, Sj Huang <sj.huang@mediatek.com>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ddavenport@chromium.org, Frederic Chen =?UTF-8?Q?=28=E9=99=B3=E4=BF=8A=E5=85=83=29?= <frederic.chen@mediatek.com>, list@263.net:IOMMU DRIVERS <iommu@lists.linu
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190729133250.GB4110@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, Joel Stanley <joel@jms.id.au>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-07-29 at 19:04 +0900, Tomasz Figa wrote:
-> On Mon, Jul 29, 2019 at 10:18 AM Jungo Lin <jungo.lin@mediatek.com> wrote:
-> > On Fri, 2019-07-26 at 14:49 +0900, Tomasz Figa wrote:
-> > > On Wed, Jul 24, 2019 at 1:31 PM Jungo Lin <jungo.lin@mediatek.com> wrote:
-> > > > On Tue, 2019-07-23 at 19:21 +0900, Tomasz Figa wrote:
-> > > > > On Thu, Jul 18, 2019 at 1:39 PM Jungo Lin <jungo.lin@mediatek.com> wrote:
-> > > > > > On Wed, 2019-07-10 at 18:54 +0900, Tomasz Figa wrote:
-> > > > > > > On Tue, Jun 11, 2019 at 11:53:41AM +0800, Jungo Lin wrote:
-> [snip]
-> > > >                 dev_dbg(cam->dev, "jobs are full\n");
-> > > >                 spin_unlock_irqrestore(&cam->pending_job_lock, flags);
-> > > >                 return;
-> > > >         }
-> > > >         list_for_each_entry_safe(req, req_prev, &cam->pending_job_list, list) {
-> > >
-> > > Could we instead check the counter here and break if it's >=
-> > > MTK_ISP_MAX_RUNNING_JOBS?
-> > > Then we could increment it here too to simplify the code.
-> > >
-> >
-> > Thanks for your advice.
-> > We simplified this function as below:
-> >
-> > void mtk_cam_dev_req_try_queue(struct mtk_cam_dev *cam)
-> > {
-> >         struct mtk_cam_dev_request *req, *req_prev;
-> >         unsigned long flags;
-> >
-> >         if (!cam->streaming) {
-> >                 dev_dbg(cam->dev, "stream is off\n");
-> >                 return;
-> >         }
-> >
-> >         spin_lock_irq(&cam->pending_job_lock);
-> >         spin_lock_irqsave(&cam->running_job_lock, flags);
+
+
+On Mon, 29 Jul 2019, at 23:03, Andrew Lunn wrote:
+> On Mon, Jul 29, 2019 at 02:09:24PM +0930, Andrew Jeffery wrote:
+> > The AST2600 design separates the MDIO controllers from the MAC, which is
+> > where they were placed in the AST2400 and AST2500. Further, the register
+> > interface is reworked again, so now we have three possible different
+> > interface implementations, however this driver only supports the
+> > interface provided by the AST2600. The AST2400 and AST2500 will continue
+> > to be supported by the MDIO support embedded in the FTGMAC100 driver.
+> > 
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > ---
+> >  drivers/net/phy/Kconfig       |  13 +++
+> >  drivers/net/phy/Makefile      |   1 +
+> >  drivers/net/phy/mdio-aspeed.c | 159 ++++++++++++++++++++++++++++++++++
+> >  3 files changed, 173 insertions(+)
+> >  create mode 100644 drivers/net/phy/mdio-aspeed.c
+> > 
+> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> > index 20f14c5fbb7e..206d8650ee7f 100644
+> > --- a/drivers/net/phy/Kconfig
+> > +++ b/drivers/net/phy/Kconfig
+> > @@ -21,6 +21,19 @@ config MDIO_BUS
+> >  
+> >  if MDIO_BUS
+> >  
+> > +config MDIO_ASPEED
+> > +	tristate "ASPEED MDIO bus controller"
+> > +	depends on ARCH_ASPEED || COMPILE_TEST
+> > +	depends on OF_MDIO && HAS_IOMEM
+> > +	help
+> > +	  This module provides a driver for the independent MDIO bus
+> > +	  controllers found in the ASPEED AST2600 SoC. This is a driver for the
+> > +	  third revision of the ASPEED MDIO register interface - the first two
+> > +	  revisions are the "old" and "new" interfaces found in the AST2400 and
+> > +	  AST2500, embedded in the MAC. For legacy reasons, FTGMAC100 driver
+> > +	  continues to drive the embedded MDIO controller for the AST2400 and
+> > +	  AST2500 SoCs, so say N if AST2600 support is not required.
+> > +
+> >  config MDIO_BCM_IPROC
+> >  	tristate "Broadcom iProc MDIO bus controller"
+> >  	depends on ARCH_BCM_IPROC || COMPILE_TEST
+> > diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> > index 839acb292c38..ba07c27e4208 100644
+> > --- a/drivers/net/phy/Makefile
+> > +++ b/drivers/net/phy/Makefile
+> > @@ -22,6 +22,7 @@ libphy-$(CONFIG_LED_TRIGGER_PHY)	+= phy_led_triggers.o
+> >  obj-$(CONFIG_PHYLINK)		+= phylink.o
+> >  obj-$(CONFIG_PHYLIB)		+= libphy.o
+> >  
+> > +obj-$(CONFIG_MDIO_ASPEED)	+= mdio-aspeed.o
+> >  obj-$(CONFIG_MDIO_BCM_IPROC)	+= mdio-bcm-iproc.o
+> >  obj-$(CONFIG_MDIO_BCM_UNIMAC)	+= mdio-bcm-unimac.o
+> >  obj-$(CONFIG_MDIO_BITBANG)	+= mdio-bitbang.o
+> > diff --git a/drivers/net/phy/mdio-aspeed.c b/drivers/net/phy/mdio-aspeed.c
+> > new file mode 100644
+> > index 000000000000..71496a9ff54a
+> > --- /dev/null
+> > +++ b/drivers/net/phy/mdio-aspeed.c
+> > @@ -0,0 +1,159 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/* Copyright (C) 2019 IBM Corp. */
+> > +
+> > +#include <linux/bitfield.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/mdio.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_mdio.h>
+> > +#include <linux/phy.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#define DRV_NAME "mdio-aspeed"
+> > +
+> > +#define ASPEED_MDIO_CTRL		0x0
+> > +#define   ASPEED_MDIO_CTRL_FIRE		BIT(31)
+> > +#define   ASPEED_MDIO_CTRL_ST		BIT(28)
+> > +#define     ASPEED_MDIO_CTRL_ST_C45	0
+> > +#define     ASPEED_MDIO_CTRL_ST_C22	1
+> > +#define   ASPEED_MDIO_CTRL_OP		GENMASK(27, 26)
+> > +#define     MDIO_C22_OP_WRITE		0b01
+> > +#define     MDIO_C22_OP_READ		0b10
+> > +#define   ASPEED_MDIO_CTRL_PHYAD	GENMASK(25, 21)
+> > +#define   ASPEED_MDIO_CTRL_REGAD	GENMASK(20, 16)
+> > +#define   ASPEED_MDIO_CTRL_MIIWDATA	GENMASK(15, 0)
+> > +
+> > +#define ASPEED_MDIO_DATA		0x4
+> > +#define   ASPEED_MDIO_DATA_MDC_THRES	GENMASK(31, 24)
+> > +#define   ASPEED_MDIO_DATA_MDIO_EDGE	BIT(23)
+> > +#define   ASPEED_MDIO_DATA_MDIO_LATCH	GENMASK(22, 20)
+> > +#define   ASPEED_MDIO_DATA_IDLE		BIT(16)
+> > +#define   ASPEED_MDIO_DATA_MIIRDATA	GENMASK(15, 0)
+> > +
+> > +#define ASPEED_MDIO_RETRIES		10
+> > +
+> > +struct aspeed_mdio {
+> > +	void __iomem *base;
+> > +};
+> > +
+> > +static int aspeed_mdio_read(struct mii_bus *bus, int addr, int regnum)
+> > +{
+> > +	struct aspeed_mdio *ctx = bus->priv;
+> > +	u32 ctrl;
+> > +	int i;
+> > +
+> > +	dev_dbg(&bus->dev, "%s: addr: %d, regnum: %d\n", __func__, addr,
+> > +		regnum);
+> > +
+> > +	/* Just clause 22 for the moment */
+> > +	ctrl = ASPEED_MDIO_CTRL_FIRE
 > 
-> Having the inner call spin_lock_irqsave() doesn't really do anything
-> useful, because the outer spin_lock_irq() disables the IRQs and flags
-> would always have the IRQ disabled state. Please use irqsave for the
-> outer call.
+> Hi Andrew
 > 
-> [snip]
+> In the binding, you say C45 is supported. Here you don't. It would be
+> nice to be consistent.
 
-Thanks for your comment.
-This is a bug which triggers one kernel warning about wrong ISR state as
-you said. We have fixed it.
+Right - but the bindings describe the hardware, and the hardware is capable.
+Just that the driver as it stands can't drive it that way.
 
-> > > > > > > > +
-> > > > > > > > +static struct v4l2_subdev *
-> > > > > > > > +mtk_cam_cio_get_active_sensor(struct mtk_cam_dev *cam_dev)
-> > > > > > > > +{
-> > > > > > > > +   struct media_device *mdev = cam_dev->seninf->entity.graph_obj.mdev;
-> > > > > > > > +   struct media_entity *entity;
-> > > > > > > > +   struct device *dev = &cam_dev->pdev->dev;
-> > > > > > > > +   struct v4l2_subdev *sensor;
-> > > > > > >
-> > > > > > > This variable would be unitialized if there is no streaming sensor. Was
-> > > > > > > there no compiler warning generated for this?
-> > > > > > >
-> > > > > >
-> > > > > > No, there is no compiler warning.
-> > > > > > But, we will assign sensor to NULL to avoid unnecessary compiler warning
-> > > > > > with different compiler options.
-> > > > > >
-> > > > >
-> > > > > Thanks. It would be useful if you could check why the compiler you're
-> > > > > using doesn't show a warning here. We might be missing other
-> > > > > uninitialized variables.
-> > > > >
-> > > >
-> > > > We will feedback to your project team to check the possible reason about
-> > > > compiler warning issue.
-> > > >
-> > >
-> > > Do you mean that it was the Clang toolchain used on Chromium OS (e.g.
-> > > emerge chromeos-kernel-4_19)?
-> >
-> > > [snip]
-> >
-> > Yes, I checked this comment in the Chromium OS build environment.
-> > But, I think I have made the mistake here. I need to check the build
-> > status in the Mediatek's kernel upstream environment. I will pay
-> > attention in next path set upstream.
-> >
+Having said that I do need to do more digging to understand how to cater to
+C45 PHYs wrt the read/write calls.
+
 > 
-> Thanks a lot. I will recheck this in the Chromium OS toolchain too.
 > 
-
-For these complier warnings, we have fixed them in Mediatek upstream
-environment[1]. In this build environment, we could observe some
-comelier warnings which are not generated by Chromium OS toolchain.
-
-[1]
-toolchain/aarch64/usr/bin/aarch64-poky-linux
-
-> > > > > > > > +
-> > > > > > > > +   dev_dbg(dev, "%s: node:%d fd:%d idx:%d\n",
-> > > > > > > > +           __func__,
-> > > > > > > > +           node->id,
-> > > > > > > > +           buf->vbb.request_fd,
-> > > > > > > > +           buf->vbb.vb2_buf.index);
-> > > > > > > > +
-> > > > > > > > +   /* For request buffers en-queue, handled in mtk_cam_req_try_queue */
-> > > > > > > > +   if (vb->vb2_queue->uses_requests)
-> > > > > > > > +           return;
-> > > > > > >
-> > > > > > > I'd suggest removing non-request support from this driver. Even if we end up
-> > > > > > > with a need to provide compatibility for non-request mode, then it should be
-> > > > > > > built on top of the requests mode, so that the driver itself doesn't have to
-> > > > > > > deal with two modes.
-> > > > > > >
-> > > > > >
-> > > > > > The purpose of non-request function in this driver is needed by
-> > > > > > our camera middle-ware design. It needs 3A statistics buffers before
-> > > > > > image buffers en-queue. So we need to en-queue 3A statistics with
-> > > > > > non-request mode in this driver. After MW got the 3A statistics data, it
-> > > > > > will en-queue the images, tuning buffer and other meta buffers with
-> > > > > > request mode. Based on this requirement, do you have any suggestion?
-> > > > > > For upstream driver, should we only consider request mode?
-> > > > > >
-> > > > >
-> > > > > Where does that requirement come from? Why the timing of queuing of
-> > > > > the buffers to the driver is important?
-> > > > >
-> > > > > [snip]
-> > > >
-> > > > Basically, this requirement comes from our internal camera
-> > > > middle-ware/3A hal in user space. Since this is not generic requirement,
-> > > > we will follow your original suggestion to keep the request mode only
-> > > > and remove other non-request design in other files. For upstream driver,
-> > > > it should support request mode only.
-> > > >
-> > >
-> > > Note that Chromium OS will use the "upstream driver" and we don't want
-> > > to diverge, so please make the userspace also use only requests. I
-> > > don't see a reason why there would be any need to submit any buffers
-> > > outside of a request.
-> > >
-> > > [snip]
-> >
-> > Ok, I have raised your concern to our colleagues and let him to discuss
-> > with you in another communication channel.
-> >
+> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_ST, ASPEED_MDIO_CTRL_ST_C22)
+> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_OP, MDIO_C22_OP_READ)
+> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_PHYAD, addr)
+> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_REGAD, regnum);
+> > +
+> > +	iowrite32(ctrl, ctx->base + ASPEED_MDIO_CTRL);
+> > +
+> > +	for (i = 0; i < ASPEED_MDIO_RETRIES; i++) {
+> > +		u32 data;
+> > +
+> > +		data = ioread32(ctx->base + ASPEED_MDIO_DATA);
+> > +		if (data & ASPEED_MDIO_DATA_IDLE)
+> > +			return FIELD_GET(ASPEED_MDIO_DATA_MIIRDATA, data);
+> > +
+> > +		udelay(100);
+> > +	}
 > 
-> Thanks!
+> One of the readx_poll_timeout functions could be used.
+
+Thanks, I'll take a look.
+
 > 
-> Best regards,
-> Tomasz
+> > +
+> > +	dev_err(&bus->dev, "MDIO read failed\n");
+> > +	return -EIO;
+> > +}
+> > +
+> > +static int aspeed_mdio_write(struct mii_bus *bus, int addr, int regnum, u16 val)
+> > +{
+> > +	struct aspeed_mdio *ctx = bus->priv;
+> > +	u32 ctrl;
+> > +	int i;
+> > +
+> > +	dev_dbg(&bus->dev, "%s: addr: %d, regnum: %d, val: 0x%x\n",
+> > +		__func__, addr, regnum, val);
+> > +
+> > +	/* Just clause 22 for the moment */
+> > +	ctrl = ASPEED_MDIO_CTRL_FIRE
+> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_ST, ASPEED_MDIO_CTRL_ST_C22)
+> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_OP, MDIO_C22_OP_WRITE)
+> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_PHYAD, addr)
+> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_REGAD, regnum)
+> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_MIIWDATA, val);
+> > +
+> > +	iowrite32(ctrl, ctx->base + ASPEED_MDIO_CTRL);
+> > +
+> > +	for (i = 0; i < ASPEED_MDIO_RETRIES; i++) {
+> > +		ctrl = ioread32(ctx->base + ASPEED_MDIO_CTRL);
+> > +		if (!(ctrl & ASPEED_MDIO_CTRL_FIRE))
+> > +			return 0;
+> > +
+> > +		udelay(100);
+> > +	}
+> 
+> readx_poll_timeout() here as well.
+> 
+> Otherwise this looks good.
 
-Our colleague is preparing material to explain the our 3A/MW design. If
-he is ready, he will discuss this with you.
+Thanks for the review!
 
-In the original plan, we will deliver P1 v4 patch set tomorrow (31th
-Jul.). But, there are some comments waiting for other experts' input.
-Do you suggest it is better to resolve all comments before v4 patch set
-submitting or continue to discuss these comments on v4?
-
-Thanks,
-
-
-Jungo
+Andrew
