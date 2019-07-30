@@ -1,82 +1,141 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 2/2] ARM: dts: imx6ul-kontron-n6310: Add Kontron
- i.MX6UL N6310 SoM and boards
-Date: Mon, 29 Jul 2019 17:57:28 -0600
-Message-ID: <CAL_JsqKzsWQoc_xYXxkWa2eUdVwvCvxH-8g-2F90-_YmfU5_fg@mail.gmail.com>
-References: <20190729172007.3275-1-krzk@kernel.org> <20190729172007.3275-2-krzk@kernel.org>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH 1/4] dt-bindings: net: Add aspeed,ast2600-mdio binding
+Date: Tue, 30 Jul 2019 10:17:54 +0930
+Message-ID: <097bdf8e-4409-4c23-8c4c-d50e16d952dc@www.fastmail.com>
+References: <20190729043926.32679-1-andrew@aj.id.au>
+ <20190729043926.32679-2-andrew@aj.id.au>
+ <CAL_JsqLytwfsoyS6TSnpPgTjRTOR0TeQwroX21AHqj3A1mPJ5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190729172007.3275-2-krzk@kernel.org>
+In-Reply-To: <CAL_JsqLytwfsoyS6TSnpPgTjRTOR0TeQwroX21AHqj3A1mPJ5Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Schrempf Frieder <frieder.schrempf@kontron.de>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 11:20 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Add support for i.MX6UL modules from Kontron Electronics GmbH (before
-> acquisition: Exceet Electronics) and evalkit boards based on it:
->
-> 1. N6310 SOM: i.MX6 UL System-on-Module, a 25x25 mm solderable module
->    (LGA pads and pin castellations) with 256 MB RAM, 1 MB NOR-Flash,
->    256 MB NAND and other interfaces,
-> 2. N6310 S: evalkit, w/wo eMMC, without display,
-> 3. N6310 S 43: evalkit with 4.3" display,
-> 4. N6310 S 50: evalkit with 5.0" display.
->
-> This includes device nodes for unsupported displays (Admatec
-> T043C004800272T2A and T070P133T0S301).
->
-> The work is based on Exceet/Kontron source code (GPLv2) with numerous
-> changes:
-> 1. Reorganize files,
-> 2. Rename Exceet -> Kontron,
-> 3. Rename models/compatibles to match newest Kontron product naming,
-> 4. Fix coding style errors and adjust to device tree coding guidelines,
-> 5. Fix DTC warnings,
-> 6. Extend compatibles so eval boards inherit the SoM compatible,
-> 7. Use defines instead of GPIO and interrupt flag values,
-> 8. Use proper vendor compatible for Macronix SPI NOR,
-> 9. Sort nodes alphabetically.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
->
-> Changes since v2, after Fabio's review:
-> 1. Add "imx6ul" compatible to board name (that's what I understood from
->    review),
-> 2. Add vendor/device prefix to eeprom and document the compatible,
-> 3. Use "admatecde" as vendor compatible to avoid confusion with Admatec
->    AG in Switzerland (also making LCD panels),
-> 4. Use generic names for nodes,
-> 5. Use IRQ_TYPE_LEVEL_LOW,
-> 6. Move iomux to the end of files,
-> 7. Remove regulators node (include regulators in top level),
-> 8. Remove cpu clock-frequency,
-> 9. Other minor fixes pointed by Fabio.
->
-> Changes since v1, after Frieder's review:
-> 1. Remove unneeded license notes,
-> 2. Add Kontron copyright (2018),
-> 3. Rename the files/models/compatibles to new naming - N6310,
-> 4. Remove unneeded CPU operating points override,
-> 5. Switch regulator nodes into simple children nodes without addresses
->    (so not simple bus),
-> 6. Use proper vendor compatible for Macronix SPI NOR.
-> ---
->  .../devicetree/bindings/arm/fsl.yaml          |   4 +
->  .../devicetree/bindings/eeprom/at25.txt       |   1 +
->  arch/arm/boot/dts/Makefile                    |   3 +
->  .../boot/dts/imx6ul-kontron-n6310-s-43.dts    | 119 +++++
->  .../boot/dts/imx6ul-kontron-n6310-s-50.dts    | 119 +++++
->  arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts  | 420 ++++++++++++++++++
->  .../boot/dts/imx6ul-kontron-n6310-som.dtsi    | 134 ++++++
->  7 files changed, 800 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
->  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-s-50.dts
->  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
->  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+On Tue, 30 Jul 2019, at 09:07, Rob Herring wrote:
+> On Sun, Jul 28, 2019 at 10:39 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+> >
+> > The AST2600 splits out the MDIO bus controller from the MAC into its own
+> > IP block and rearranges the register layout. Add a new binding to
+> > describe the new hardware.
+> >
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > ---
+> >  .../bindings/net/aspeed,ast2600-mdio.yaml     | 61 +++++++++++++++++++
+> >  1 file changed, 61 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml b/Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
+> > new file mode 100644
+> > index 000000000000..fa86f6438473
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
+> > @@ -0,0 +1,61 @@
+> > +# SPDX-License-Identifier: GPL-2.0-or-later
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/net/aspeed,ast2600-mdio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: ASPEED AST2600 MDIO Controller
+> > +
+> > +maintainers:
+> > +  - Andrew Jeffery <andrew@aj.id.au>
+> > +
+> > +description: |+
+> > +  The ASPEED AST2600 MDIO controller is the third iteration of ASPEED's MDIO
+> > +  bus register interface, this time also separating out the controller from the
+> > +  MAC.
+> > +
+> 
+> Should have a:
+> 
+> allOf:
+>   - $ref: "mdio.yaml#"
+
+Ack.
+
+> 
+> > +properties:
+> > +  compatible:
+> > +    const: aspeed,ast2600-mdio
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: The register range of the MDIO controller instance
+> 
+> > +  "#address-cells":
+> > +    const: 1
+> > +  "#size-cells":
+> > +    const: 0
+> 
+> Then you can drop these 2.
+
+Great.
+
+> 
+> > +
+> > +patternProperties:
+> > +  "^ethernet-phy@[a-f0-9]$":
+> > +    properties:
+> > +      reg:
+> > +        description:
+> > +          The MDIO bus index of the PHY
+> 
+> And this.
+> 
+> > +      compatible:
+> > +        enum:
+> > +          - ethernet-phy-ieee802.3-c22
+> > +          - ethernet-phy-ieee802.3-c45
+> 
+> This isn't specific to ASpeed either and is already covered by
+> ethernet-phy.yaml.
+> 
+> So that means none of the child node schema is needed here.
+
+Bah, I'd developed the patches on v5.2 while waiting for v5.3-rc1 to come
+out.
+
+> 
+> > +    required:
+> > +      - reg
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +
+> > +examples:
+> > +  - |
+> > +    mdio0: mdio@1e650000 {
+> > +            compatible = "aspeed,ast2600-mdio";
+> > +            reg = <0x1e650000 0x8>;
+> > +            #address-cells = <1>;
+> > +            #size-cells = <0>;
+> > +
+> > +            status = "okay";
+> 
+> Don't show status in examples.
+
+Sorry, copy/paste at fault.
+
+Thanks for the feedback.
+
+Andrew
+
+> 
+> > +
+> > +            ethphy0: ethernet-phy@0 {
+> > +                    compatible = "ethernet-phy-ieee802.3-c22";
+> > +                    reg = <0>;
+> > +            };
+> > +    };
+> > --
+> > 2.20.1
+> >
+>
