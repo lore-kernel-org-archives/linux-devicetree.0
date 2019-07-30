@@ -1,7 +1,7 @@
 From: Philippe Schenker <dev@pschenker.ch>
-Subject: [PATCH 09/22] ARM: dts: imx6qdl-colibri: add phy to fec
-Date: Tue, 30 Jul 2019 16:46:36 +0200
-Message-ID: <20190730144649.19022-10-dev@pschenker.ch>
+Subject: [PATCH 08/22] ARM: dts: imx7-colibri: Add touch controllers
+Date: Tue, 30 Jul 2019 16:46:35 +0200
+Message-ID: <20190730144649.19022-9-dev@pschenker.ch>
 References: <20190730144649.19022-1-dev@pschenker.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,39 +23,66 @@ List-Id: devicetree@vger.kernel.org
 
 From: Philippe Schenker <philippe.schenker@toradex.com>
 
-Add the phy-node and mdio bus to the fec-node, represented as is on
-hardware.
-This commit includes micrel,led-mode that is set to the default
-value, prepared for someone who wants to change this.
+Add atmel mxt multitouch controller and TouchRevolution multitouch
+controller which are connected over an I2C bus.
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 ---
 
- arch/arm/boot/dts/imx6qdl-colibri.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 37 +++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-index 1beac22266ed..019dda6b88ad 100644
---- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-@@ -140,7 +140,18 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rmii";
-+	phy-handle = <&ethphy>;
+diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+index d4dbc4fc1adf..f6cbbe876532 100644
+--- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+@@ -145,6 +145,34 @@
+ &i2c4 {
  	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy: ethernet-phy@0 {
-+			reg = <0>;
-+			micrel,led-mode = <0>;
-+		};
-+	};
- };
  
- &hdmi {
++	/*
++	 * the PCAPs use SODIMM 28/30, also used for PWM<B>, PWM<C>, aka pwm2,
++	 * pwm3. so if you enable one of the PCAP controllers disable the pwms
++	 */
++	atmel_mxt_ts: atmel_mxt_ts@4a {
++		compatible = "atmel,maxtouch";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpiotouch>;
++		reg = <0x4a>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <9 IRQ_TYPE_EDGE_FALLING>; /* SODIMM 28 */
++		reset-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>; /* SODIMM 30 */
++		status = "disabled";
++	};
++
++	touch: touchrevf0710a@10 {
++		compatible = "touchrevolution,fusion-f0710a";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpiotouch>;
++		reg = <0x10>;
++			/* SODIMM 28, Pen down interrupt */
++		gpios = <&gpio1 9 GPIO_ACTIVE_HIGH
++			/* SODIMM 30, Reset interrupt */
++			 &gpio1 10 GPIO_ACTIVE_LOW
++			>;
++		status = "disabled";
++	};
++
+ 	/* M41T0M6 real time clock on carrier board */
+ 	rtc: m41t0m6@68 {
+ 		compatible = "st,m41t0";
+@@ -200,3 +228,12 @@
+ 	vmmc-supply = <&reg_3v3>;
+ 	status = "okay";
+ };
++
++&iomuxc {
++	pinctrl_gpiotouch: touchgpios {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO09__GPIO1_IO9		0x74
++			MX7D_PAD_GPIO1_IO10__GPIO1_IO10		0x14
++		>;
++	};
++};
 -- 
 2.22.0
