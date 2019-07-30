@@ -1,85 +1,54 @@
-Return-Path: <SRS0=OQoQ=VQ=pengutronix.de=l.stach@kernel.org>
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 3/3] usb: usb251xb: Reallow swap-dx-lanes to apply to the upstream port
-Date: Fri, 19 Jul 2019 10:44:07 +0200
-Message-Id: <20190719084407.28041-3-l.stach@pengutronix.de>
-In-Reply-To: <20190719084407.28041-1-l.stach@pengutronix.de>
-References: <20190719084407.28041-1-l.stach@pengutronix.de>
+Return-Path: <SRS0=Gmaq=V3=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V2 4/4] thermal: qoriq: Add clock operations
+Date: Tue, 30 Jul 2019 04:33:27 +0000
+Message-ID: 
+ <DB3PR0402MB39169F3E70E928590C98C6A8F5DC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190729083915.4855-1-Anson.Huang@nxp.com>
+ <20190729083915.4855-4-Anson.Huang@nxp.com>
+ <CAOMZO5AgP0BrHyFKz78rsEz1XQMgSNzMmtTV6Q+GYtCGBiFMEQ@mail.gmail.com>
+ <DB3PR0402MB39161F938C25012015B9739CF5DC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAOMZO5D33zPEu8zkq-KYvDv4Xzd8OoshSbzOCrBw1hwwJr-qNg@mail.gmail.com>
+In-Reply-To: 
+ <CAOMZO5D33zPEu8zkq-KYvDv4Xzd8OoshSbzOCrBw1hwwJr-qNg@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Richard Leitner <richard.leitner@skidata.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Serge Semin <fancer.lancer@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, patchwork-lst@pengutronix.de
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "rui.zhang" <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, linux-kernel" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This is a partial revert of 73d31def1aab "usb: usb251xb: Create a ports
-field collector method", which broke a existing devicetree
-(arch/arm64/boot/dts/freescale/imx8mq.dtsi).
-
-There is no reason why the swap-dx-lanes property should not apply to
-the upstream port. The reason given in the breaking commit was that it's
-inconsitent with respect to other port properties, but in fact it is not.
-All other properties which only apply to the downstream ports explicitly
-reject port 0, so there is pretty strong precedence that the driver
-referred to the upstream port as port 0. So there is no inconsistency in
-this property at all, other than the swapping being also applicable to
-the upstream port.
-
-CC: stable@vger.kernel.org #5.2
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
----
- drivers/usb/misc/usb251xb.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index 119aeb658c81..6ca9111d150a 100644
---- a/drivers/usb/misc/usb251xb.c
-+++ b/drivers/usb/misc/usb251xb.c
-@@ -375,7 +375,8 @@ static int usb251xb_connect(struct usb251xb *hub)
- 
- #ifdef CONFIG_OF
- static void usb251xb_get_ports_field(struct usb251xb *hub,
--				    const char *prop_name, u8 port_cnt, u8 *fld)
-+				    const char *prop_name, u8 port_cnt,
-+				    bool ds_only, u8 *fld)
- {
- 	struct device *dev = hub->dev;
- 	struct property *prop;
-@@ -383,7 +384,7 @@ static void usb251xb_get_ports_field(struct usb251xb *hub,
- 	u32 port;
- 
- 	of_property_for_each_u32(dev->of_node, prop_name, prop, p, port) {
--		if ((port >= 1) && (port <= port_cnt))
-+		if ((port >= ds_only ? 1 : 0) && (port <= port_cnt))
- 			*fld |= BIT(port);
- 		else
- 			dev_warn(dev, "port %u doesn't exist\n", port);
-@@ -501,15 +502,15 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 
- 	hub->non_rem_dev = USB251XB_DEF_NON_REMOVABLE_DEVICES;
- 	usb251xb_get_ports_field(hub, "non-removable-ports", data->port_cnt,
--				 &hub->non_rem_dev);
-+				 true, &hub->non_rem_dev);
- 
- 	hub->port_disable_sp = USB251XB_DEF_PORT_DISABLE_SELF;
- 	usb251xb_get_ports_field(hub, "sp-disabled-ports", data->port_cnt,
--				 &hub->port_disable_sp);
-+				 true, &hub->port_disable_sp);
- 
- 	hub->port_disable_bp = USB251XB_DEF_PORT_DISABLE_BUS;
- 	usb251xb_get_ports_field(hub, "bp-disabled-ports", data->port_cnt,
--				 &hub->port_disable_bp);
-+				 true, &hub->port_disable_bp);
- 
- 	hub->max_power_sp = USB251XB_DEF_MAX_POWER_SELF;
- 	if (!of_property_read_u32(np, "sp-max-total-current-microamp",
-@@ -573,7 +574,7 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 	 */
- 	hub->port_swap = USB251XB_DEF_PORT_SWAP;
- 	usb251xb_get_ports_field(hub, "swap-dx-lanes", data->port_cnt,
--				 &hub->port_swap);
-+				 false, &hub->port_swap);
- 
- 	/* The following parameters are currently not exposed to devicetree, but
- 	 * may be as soon as needed.
--- 
-2.20.1
+SGksIEZhYmlvDQoNCj4gT24gVHVlLCBKdWwgMzAsIDIwMTkgYXQgMTI6MDAgQU0gQW5zb24gSHVh
+bmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IHdyb3RlOg0KPiANCj4gPiBTaGF3biBhbHJlYWR5
+IGFwcGxpZWQgdGhlIHBhdGNoLCBhbmQgQWJlbCBoYXMgdGhlIEFIQiBjbG9jayBwYXRjaCB0bw0K
+PiA+IGZpeCB0aGF0LCBzbyBqdXN0IHdhaXQgZm9yIHRoZSBBSEIgY2xvY2sgcGF0Y2ggaW4gaW5z
+dGVhZCBvZiByZXZlcnQgdGhlIFRNVQ0KPiBjbG9jayBwYXRjaD8NCj4gDQo+IFNvcnJ5LCBJIGRv
+bid0IHVuZGVyc3RhbmQgQWJlbCdzIHBhdGNoIGFzIHRoZXJlIGlzIG5vdCBhIHByb3BlciBkZXNj
+cmlwdGlvbiBvZg0KPiB3aGF0IGl0IHRyaWVzIHRvIGZpeC4NCj4gDQo+IElmIEkgdW5kZXJzdGFu
+ZCBjb3JyZWN0bHkgQWJlbCdzIHBhdGNoIGlzIG5vdCB0aGUgcHJvcGVyIGZpeCBhbmQgdGhlIHJl
+YWwgZml4IGZvcg0KPiB0aGUga2VybmVsIFRNVSBoYW5nIGluIGxpbnV4LW5leHQgaXMgdG8gbWFu
+YWdlIHRoZSBUTVUgY2xvY2sgaW5zaWRlIHRoZQ0KPiBUTVUgZHJpdmVyLCBsaWtlIHlvdSBkaWQg
+aW4gdGhpcyBwYXRjaC4NCj4gDQo+IFRvIGF2b2lkIGEgcmV2ZXJ0IG9uZSBwb3NzaWJsZSBzb2x1
+dGlvbiB3b3VsZCBiZSB0byBzZW5kIG9ubHkgdGhpcyBvbmUgYXMgYQ0KPiBmaXggZm9yIDUuMy4g
+WW91IGNhbiBwb2ludCB0aGF0IGl0IEZpeGVzIHRoZSBjb21taXQgdGhhdCBhZGRzIGkuTVg4TSBz
+dXBwb3J0DQo+IGZvciB0aGUgVE1VIGRyaXZlci4NCg0KSSByZXBsaWVkIGluIHRoZSBwYXRjaCBo
+dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMDMyNzgxLyAsIEkgcGFzdGVkIGl0
+IGFzIGJlbG93LA0KVGhlIFRNVSBjbG9jayBpcyBOT1QgdGhlIHJvb3QgY2F1c2UsIGJ1dCBpdCBq
+dXN0IGFjY2lkZW50bHkgdHJpZ2dlciB0aGlzIGlzc3VlOg0KDQpJIGNhbiBleHBsYWluIHdoeSBB
+YmVsJ3MgcGF0Y2ggY2FuIGZpeCB0aGlzIGlzc3VlLCB0aGUgQUhCIGNsb2NrIGlzIGEgTVVTVCBh
+bHdheXMgT04gZm9yIHN5c3RlbSBidXMsIHdoaWxlIGl0IGRvZXMgTk9UIGhhdmUgQ0xLX0lTX0NS
+SVRJQ0FMIGZsYWcgc2V0IGZvciBub3csIHdoZW4gU0RNQTEgaXMgcHJvYmVkLCBpdCB3aWxsIGVu
+YWJsZSBpdHMgY2xvY2ssIGFuZCB0aGUgY2xrIHBhdGggaXMgc2RtYTFfY2xrLT5pcGdfcm9vdC0+
+YWhiLCBhZnRlciBTRE1BMSBwcm9iZWQgZG9uZSwgaXQgd2lsbCBkaXNhYmxlIGl0cyBjbG9jayBz
+aW5jZSBubyBvbmUgdXNlIGl0LCBhbmQgaXQgd2lsbCB0cmlnZ2VyIHRoZSBhaGIgY2xvY2sgdG8g
+YmUgT0ZGLCBhcyBpdHMgdXNlY291bnQgaXMgYWRkZWQgYnkgMSB3aGVuIHByb2JlIGFuZCBkZWNy
+ZWFzZWQgYnkgMSBhZnRlcg0KU0RNQTEgcHJvYmUgZG9uZSwgc28gdXNlY291bnQ9MCB3aWxsIHRy
+aWdnZXIgQUhCIGNsb2NrIHRvIGJlIE9GRi4NCg0KU28gSSB0aGluayB0aGUgYmVzdCBzb2x1dGlv
+biBzaG91bGQgYmUgYXBwbHlpbmcgQWJlbCdzIHBhdGNoIGFzIHlvdSBtZW50aW9uZWQgdXBwZXIs
+IHRoZSBUTVUgY2xvY2sgcGF0Y2ggaXMgTk9UIHRoZSByb290IGNhdXNlLCBpdCBqdXN0IHRyaWdn
+ZXJzIHRoaXMgaXNzdWUgYWNjaWRlbnRseeKYuQ0KDQpCdXQgSSBzYXcgQWJlbCdzIEFIQiBwYXRj
+aCBpcyBzdGlsbCB1bmRlciBkaXNjdXNzaW9uLCBzbyBJIHRoaW5rIHdlIG5lZWQgdG8gc3BlZWQg
+aXQgdXAgYW5kIG1ha2Uga2VybmVsIGJvb3QgdXAgd29yayBmb3IgZGV2ZWxvcG1lbnQuIEFIQi9J
+UEcgYXJlIGFsd2F5cyBjcml0aWNhbCBmb3IgaS5NWCBTb0NzLg0KDQpUaGFua3MsDQpBbnNvbi4N
+Cg0K
