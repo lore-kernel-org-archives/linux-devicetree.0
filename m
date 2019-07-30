@@ -1,13 +1,12 @@
 From: Philippe Schenker <dev@pschenker.ch>
-Subject: [PATCH 08/22] ARM: dts: imx7-colibri: Add touch controllers
-Date: Tue, 30 Jul 2019 16:46:35 +0200
-Message-ID: <20190730144649.19022-9-dev@pschenker.ch>
-References: <20190730144649.19022-1-dev@pschenker.ch>
+Subject: [PATCH 00/22] This patchset holds some common changes that were never
+ upstreamed.
+Date: Tue, 30 Jul 2019 16:46:27 +0200
+Message-ID: <20190730144649.19022-1-dev@pschenker.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190730144649.19022-1-dev@pschenker.ch>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,66 +22,60 @@ List-Id: devicetree@vger.kernel.org
 
 From: Philippe Schenker <philippe.schenker@toradex.com>
 
-Add atmel mxt multitouch controller and TouchRevolution multitouch
-controller which are connected over an I2C bus.
+With latest downstream kernel upgrade, I took the aproach to select
+mainline devicetrees and atomically add missing stuff for downstream.
 
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
----
+These patches I send here are separated out with changes that also
+have a benfit for mainline.
 
- arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 37 +++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+Philippe
 
-diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-index d4dbc4fc1adf..f6cbbe876532 100644
---- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-@@ -145,6 +145,34 @@
- &i2c4 {
- 	status = "okay";
- 
-+	/*
-+	 * the PCAPs use SODIMM 28/30, also used for PWM<B>, PWM<C>, aka pwm2,
-+	 * pwm3. so if you enable one of the PCAP controllers disable the pwms
-+	 */
-+	atmel_mxt_ts: atmel_mxt_ts@4a {
-+		compatible = "atmel,maxtouch";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpiotouch>;
-+		reg = <0x4a>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <9 IRQ_TYPE_EDGE_FALLING>; /* SODIMM 28 */
-+		reset-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>; /* SODIMM 30 */
-+		status = "disabled";
-+	};
-+
-+	touch: touchrevf0710a@10 {
-+		compatible = "touchrevolution,fusion-f0710a";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpiotouch>;
-+		reg = <0x10>;
-+			/* SODIMM 28, Pen down interrupt */
-+		gpios = <&gpio1 9 GPIO_ACTIVE_HIGH
-+			/* SODIMM 30, Reset interrupt */
-+			 &gpio1 10 GPIO_ACTIVE_LOW
-+			>;
-+		status = "disabled";
-+	};
-+
- 	/* M41T0M6 real time clock on carrier board */
- 	rtc: m41t0m6@68 {
- 		compatible = "st,m41t0";
-@@ -200,3 +228,12 @@
- 	vmmc-supply = <&reg_3v3>;
- 	status = "okay";
- };
-+
-+&iomuxc {
-+	pinctrl_gpiotouch: touchgpios {
-+		fsl,pins = <
-+			MX7D_PAD_GPIO1_IO09__GPIO1_IO9		0x74
-+			MX7D_PAD_GPIO1_IO10__GPIO1_IO10		0x14
-+		>;
-+	};
-+};
+
+Marcel Ziswiler (1):
+  ARM: dts: imx7-colibri: make sure module supplies are always on
+
+Max Krummenacher (2):
+  ARM: dts: imx6ull-colibri: reduce v_batt current in power off
+  ARM: dts: imx6ull: improve can templates
+
+Oleksandr Suvorov (1):
+  ARM: dts: add recovery for I2C for iMX7
+
+Philippe Schenker (15):
+  ARM: dts: imx7-colibri: prepare module device tree for FlexCAN
+  ARM: dts: imx7-colibri: Add sleep mode to ethernet
+  ARM: dts: imx7-colibri: Add touch controllers
+  ARM: dts: imx6qdl-colibri: add phy to fec
+  ARM: dts: imx6qdl-colibri: Add missing pin declaration in iomuxc
+  ARM: dts: imx6: Add sleep state to can interfaces
+  ARM: dts: imx6: Add touchscreens used on Toradex eval boards
+  ARM: dts: colibri-imx6: Add missing pinmuxing to Toradex eval board
+  ARM: dts: apalis-imx6: Add some example I2C devices
+  ARM: dts: apalis-imx6: Add some optional I2C devices
+  ARM: dts: imx6ull-colibri: Add sleep mode to fec
+  ARM: dts: imx6ull-colibri: Add watchdog
+  ARM: dts: imx6ull-colibri: Add general wakeup key used on Colibri
+  ARM: dts: imx6/7-colibri: switch dr_mode to otg
+  ARM: dts: imx6ull-colibri: Add touchscreens used with Eval Board
+
+Stefan Agner (3):
+  ARM: dts: imx7-colibri: disable HS400
+  ARM: dts: imx7-colibri: add GPIO wakeup key
+  ARM: dts: imx7-colibri: fix 1.8V/UHS support
+
+ arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts  |  52 ++++++++
+ arch/arm/boot/dts/imx6q-apalis-eval.dts       | 122 ++++++++++++++++++
+ arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts |  19 +++
+ arch/arm/boot/dts/imx6q-apalis-ixora.dts      |  19 +++
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi         |  27 +++-
+ arch/arm/boot/dts/imx6qdl-colibri.dtsi        |  27 +++-
+ .../arm/boot/dts/imx6ull-colibri-eval-v3.dtsi |  63 +++++++++
+ .../arm/boot/dts/imx6ull-colibri-nonwifi.dtsi |   2 +-
+ arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi   |   2 +-
+ arch/arm/boot/dts/imx6ull-colibri.dtsi        |  52 +++++++-
+ arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi   |  51 ++++++++
+ arch/arm/boot/dts/imx7-colibri.dtsi           | 114 ++++++++++++++--
+ 12 files changed, 524 insertions(+), 26 deletions(-)
+
 -- 
 2.22.0
