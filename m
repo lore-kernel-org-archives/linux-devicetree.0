@@ -1,7 +1,7 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 05/14] dmaengine: Add support for reporting DMA cached data amount
-Date: Tue, 30 Jul 2019 12:34:41 +0300
-Message-ID: <20190730093450.12664-6-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 01/14] bindings: soc: ti: add documentation for k3 ringacc
+Date: Tue, 30 Jul 2019 12:34:37 +0300
+Message-ID: <20190730093450.12664-2-peter.ujfalusi@ti.com>
 References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,62 +13,87 @@ To: vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
 Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-A DMA hardware can have big cache or FIFO and the amount of data sitting in
-the DMA fabric can be an interest for the clients.
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-For example in audio we want to know the delay in the data flow and in case
-the DMA have significantly large FIFO/cache, it can affect the latenc/delay
+The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
+enable straightforward passing of work between a producer and a consumer.
+There is one RINGACC module per NAVSS on TI AM65x and j721e.
 
+This patch introduces RINGACC device tree bindings.
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/dma/dmaengine.h   | 8 ++++++++
- include/linux/dmaengine.h | 2 ++
- 2 files changed, 10 insertions(+)
+ .../devicetree/bindings/soc/ti/k3-ringacc.txt | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
 
-diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
-index 501c0b063f85..b0b97475707a 100644
---- a/drivers/dma/dmaengine.h
-+++ b/drivers/dma/dmaengine.h
-@@ -77,6 +77,7 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
- 		state->last = complete;
- 		state->used = used;
- 		state->residue = 0;
-+		state->in_flight_bytes = 0;
- 	}
- 	return dma_async_is_complete(cookie, complete, used);
- }
-@@ -87,6 +88,13 @@ static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
- 		state->residue = residue;
- }
- 
-+static inline void dma_set_in_flight_bytes(struct dma_tx_state *state,
-+					   u32 in_flight_bytes)
-+{
-+	if (state)
-+		state->in_flight_bytes = in_flight_bytes;
-+}
+diff --git a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+new file mode 100644
+index 000000000000..86954cf4fa99
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+@@ -0,0 +1,59 @@
++* Texas Instruments K3 NavigatorSS Ring Accelerator
 +
- struct dmaengine_desc_callback {
- 	dma_async_tx_callback callback;
- 	dma_async_tx_callback_result callback_result;
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 40d062c3b359..02ceef95340a 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -682,11 +682,13 @@ static inline struct dma_async_tx_descriptor *txd_next(struct dma_async_tx_descr
-  * @residue: the remaining number of bytes left to transmit
-  *	on the selected transfer for states DMA_IN_PROGRESS and
-  *	DMA_PAUSED if this is implemented in the driver, else 0
-+ * @in_flight_bytes: amount of data in bytes cached by the DMA.
-  */
- struct dma_tx_state {
- 	dma_cookie_t last;
- 	dma_cookie_t used;
- 	u32 residue;
-+	u32 in_flight_bytes;
- };
- 
- /**
++The Ring Accelerator (RA) is a machine which converts read/write accesses
++from/to a constant address into corresponding read/write accesses from/to a
++circular data structure in memory. The RA eliminates the need for each DMA
++controller which needs to access ring elements from having to know the current
++state of the ring (base address, current offset). The DMA controller
++performs a read or write access to a specific address range (which maps to the
++source interface on the RA) and the RA replaces the address for the transaction
++with a new address which corresponds to the head or tail element of the ring
++(head for reads, tail for writes).
++
++The Ring Accelerator is a hardware module that is responsible for accelerating
++management of the packet queues. The K3 SoCs can have more than one RA instances
++
++Required properties:
++- compatible	: Must be "ti,am654-navss-ringacc";
++- reg		: Should contain register location and length of the following
++		  named register regions.
++- reg-names	: should be
++		  "rt" - The RA Ring Real-time Control/Status Registers
++		  "fifos" - The RA Queues Registers
++		  "proxy_gcfg" - The RA Proxy Global Config Registers
++		  "proxy_target" - The RA Proxy Datapath Registers
++- ti,num-rings	: Number of rings supported by RA
++- ti,sci-rm-range-gp-rings : TI-SCI RM subtype for GP ring range
++- ti,sci	: phandle on TI-SCI compatible System controller node
++- ti,sci-dev-id	: TI-SCI device id
++- msi-parent	: phandle for "ti,sci-inta" interrupt controller
++
++Optional properties:
++ -- ti,dma-ring-reset-quirk : enable ringacc / udma ring state interoperability
++		  issue software w/a
++
++Example:
++
++ringacc: ringacc@3c000000 {
++	compatible = "ti,am654-navss-ringacc";
++	reg =	<0x0 0x3c000000 0x0 0x400000>,
++		<0x0 0x38000000 0x0 0x400000>,
++		<0x0 0x31120000 0x0 0x100>,
++		<0x0 0x33000000 0x0 0x40000>;
++	reg-names = "rt", "fifos",
++		    "proxy_gcfg", "proxy_target";
++	ti,num-rings = <818>;
++	ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
++	ti,dma-ring-reset-quirk;
++	ti,sci = <&dmsc>;
++	ti,sci-dev-id = <187>;
++	msi-parent = <&inta_main_udmass>;
++};
++
++client:
++
++dma_ipx: dma_ipx@<addr> {
++	...
++	ti,ringacc = <&ringacc>;
++	...
++}
 -- 
 Peter
 
