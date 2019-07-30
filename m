@@ -1,41 +1,35 @@
 From: Thara Gopinath <thara.gopinath@linaro.org>
-Subject: [Patch v2 2/2] arm64: dts: qcom: Extend AOSS QMP node
-Date: Tue, 30 Jul 2019 11:24:43 -0400
-Message-ID: <1564500283-16038-3-git-send-email-thara.gopinath@linaro.org>
-References: <1564500283-16038-1-git-send-email-thara.gopinath@linaro.org>
+Subject: [Patch v2 0/2] Add support for AOSS resources that are used to warm up the SoC
+Date: Tue, 30 Jul 2019 11:24:41 -0400
+Message-ID: <1564500283-16038-1-git-send-email-thara.gopinath@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564500283-16038-1-git-send-email-thara.gopinath@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-msm@vger.kernel.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, vinod.koul@linaro.org
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-AOSS hosts resources that can be used to warm up the SoC.
-Add nodes for these resources.
+The Always On Sub System (AOSS) hosts certain resources
+that are used to warm up the soc if the temperature falls
+below certain threshold. These resources are
+added can be considered as thermal warming devices
+(opposite of thermal cooling devices).
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+These resources are controlled via AOSS QMP protocol
+In kernel, these devices can be treated the same way as any other
+thermal cooling device and hence are registered with the thermal
+cooling framework.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 4babff5..d0c0d4f 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2411,6 +2411,14 @@
- 
- 			#clock-cells = <0>;
- 			#power-domain-cells = <1>;
-+
-+			cx_cdev: cx {
-+				#cooling-cells = <2>;
-+			};
-+
-+			ebi_cdev: ebi {
-+				#cooling-cells = <2>;
-+			};
- 		};
- 
- 		spmi_bus: spmi@c440000 {
+To use these resources as warming devices require further tweaks in
+the thermal framework which are out of scope of this patch series.
+
+Thara Gopinath (2):
+  soc: qcom: Extend AOSS QMP driver to support resources that are used
+    to wake up the SoC.
+  arm64: dts: qcom: Extend AOSS QMP node
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi |   8 +++
+ drivers/soc/qcom/qcom_aoss.c         | 131 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 139 insertions(+)
+
 -- 
 2.1.4
