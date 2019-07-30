@@ -1,36 +1,32 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v4 13/13] ARM: dts: sunxi: Switch from phy to phy-handle
-Date: Tue, 30 Jul 2019 11:51:02 +0800
-Message-ID: <CAGb2v67u3pvS1veHTHVPySK1YGJYwGzPF7-iziefsbWRNZNyrg@mail.gmail.com>
-References: <cover.e80da8845680a45c2e07d5f17280fdba84555b8a.1561649505.git-series.maxime.ripard@bootlin.com>
- <a1a33392c64c71099021fb49cc811a30790d40a8.1561649505.git-series.maxime.ripard@bootlin.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V2 4/4] thermal: qoriq: Add clock operations
+Date: Tue, 30 Jul 2019 00:56:33 -0300
+Message-ID: <CAOMZO5D33zPEu8zkq-KYvDv4Xzd8OoshSbzOCrBw1hwwJr-qNg@mail.gmail.com>
+References: <20190729083915.4855-1-Anson.Huang@nxp.com> <20190729083915.4855-4-Anson.Huang@nxp.com>
+ <CAOMZO5AgP0BrHyFKz78rsEz1XQMgSNzMmtTV6Q+GYtCGBiFMEQ@mail.gmail.com> <DB3PR0402MB39161F938C25012015B9739CF5DC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <a1a33392c64c71099021fb49cc811a30790d40a8.1561649505.git-series.maxime.ripard@bootlin.com>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "David S . Miller" <davem@davemloft.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, netdev <netdev@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Maxime Chevallier <maxime.chevallier@bootlin.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DB3PR0402MB39161F938C25012015B9739CF5DC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "rui.zhang" <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 11:32 PM Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
->
-> The phy device tree property has been deprecated in favor of phy-handle,
-> let's replace it.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Hi Anson,
 
-This patch breaks Ethernet on all my dwmac-sunxi, i.e. old GMAC, boards, with
-the following error messages:
+On Tue, Jul 30, 2019 at 12:00 AM Anson Huang <anson.huang@nxp.com> wrote:
 
-    sun7i-dwmac 1c50000.ethernet eth0: no phy at addr -1
-    sun7i-dwmac 1c50000.ethernet eth0: stmmac_open: Cannot attach to
-PHY (error: -19)
+> Shawn already applied the patch, and Abel has the AHB clock patch to fix that,
+> so just wait for the AHB clock patch in instead of revert the TMU clock patch?
 
-Reverting this patch fixes it.
+Sorry, I don't understand Abel's patch as there is not a proper
+description of what it tries to fix.
 
-It also breaks the A10/A10s, but that's probably because the sun4i-emac
-driver doesn't recognize the "phy-handle" property.
+If I understand correctly Abel's patch is not the proper fix and the
+real fix for the kernel TMU hang in linux-next is to manage the TMU
+clock inside the TMU driver, like you did in this patch.
 
-ChenYu
+To avoid a revert one possible solution would be to send only this one
+as a fix for 5.3. You can point that it Fixes the commit that adds
+i.MX8M support for the TMU driver.
