@@ -1,7 +1,7 @@
 From: Philippe Schenker <dev@pschenker.ch>
-Subject: [PATCH 16/22] ARM: dts: imx6ull-colibri: Add sleep mode to fec
-Date: Tue, 30 Jul 2019 16:46:43 +0200
-Message-ID: <20190730144649.19022-17-dev@pschenker.ch>
+Subject: [PATCH 20/22] ARM: dts: imx6ull-colibri: Add general wakeup key used on Colibri
+Date: Tue, 30 Jul 2019 16:46:47 +0200
+Message-ID: <20190730144649.19022-21-dev@pschenker.ch>
 References: <20190730144649.19022-1-dev@pschenker.ch>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,51 +14,39 @@ List-Id: devicetree@vger.kernel.org
 
 From: Philippe Schenker <philippe.schenker@toradex.com>
 
-Do not change the clock as the power for this phy is switched
-with that clock.
+This adds the possibility to wake the module with an external signal
+as defined in the Colibri standard
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 ---
 
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-index d56728f03c35..1019ce69a242 100644
---- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -62,8 +62,9 @@
- };
- 
- &fec2 {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&pinctrl_enet2>;
-+	pinctrl-1 = <&pinctrl_enet2_sleep>;
- 	phy-mode = "rmii";
- 	phy-handle = <&ethphy1>;
- 	status = "okay";
-@@ -220,6 +221,21 @@
- 		>;
+diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+index 3bee37c75aa6..d3c4809f140e 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+@@ -8,6 +8,20 @@
+ 		stdout-path = "serial0:115200n8";
  	};
  
-+	pinctrl_enet2_sleep: enet2sleepgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO06__GPIO1_IO06	0x0
-+			MX6UL_PAD_GPIO1_IO07__GPIO1_IO07	0x0
-+			MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08	0x0
-+			MX6UL_PAD_ENET2_RX_DATA1__GPIO2_IO09	0x0
-+			MX6UL_PAD_ENET2_RX_EN__GPIO2_IO10	0x0
-+			MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15	0x0
-+			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
-+			MX6UL_PAD_ENET2_TX_DATA0__GPIO2_IO11	0x0
-+			MX6UL_PAD_ENET2_TX_DATA1__GPIO2_IO12	0x0
-+			MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13	0x0
-+		>;
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_snvs_gpiokeys>;
++
++		power {
++			label = "Wake-Up";
++			gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
++			linux,code = <KEY_WAKEUP>;
++			debounce-interval = <10>;
++			wakeup-source;
++		};
 +	};
 +
- 	pinctrl_ecspi1_cs: ecspi1-cs-grp {
- 		fsl,pins = <
- 			MX6UL_PAD_LCD_DATA21__GPIO3_IO26	0x000a0
+ 	/* fixed crystal dedicated to mcp2515 */
+ 	clk16m: clk16m {
+ 		compatible = "fixed-clock";
 -- 
 2.22.0
