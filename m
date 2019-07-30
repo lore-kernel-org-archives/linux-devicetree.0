@@ -1,39 +1,38 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH V3 2/5] thermal: qoriq: Fix error path of calling qoriq_tmu_register_tmu_zone fail
-Date: Tue, 30 Jul 2019 10:21:23 +0800
-Message-ID: <20190730022126.17883-2-Anson.Huang@nxp.com>
-References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v4 0/3] Introduce Bandwidth OPPs for interconnects
+Date: Tue, 30 Jul 2019 08:16:40 +0530
+Message-ID: <20190730024640.xk27jgdfl2j6ucx7@vireshk-i7>
+References: <20190726231558.175130-1-saravanak@google.com>
+ <20190729093545.kvnqxjkyx4nogddk@vireshk-i7>
+ <CAGETcx8OBFGgP1-hj717Sk-_N95-kacVsz0yb288n3pej12n1Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190730022126.17883-1-Anson.Huang@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <CAGETcx8OBFGgP1-hj717Sk-_N95-kacVsz0yb288n3pej12n1Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Saravana Kannan <saravanak@google.com>, Georgi Djakov <georgi.djakov@linaro.org>, Sibi Sankar <sibis@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On 29-07-19, 13:16, Saravana Kannan wrote:
+> Sibi might be working on doing that for the SDM845 CPUfreq driver.
+> Georgi could also change his GPU driver use case to use this BW OPP
+> table and required-opps.
+> 
+> The problem is that people don't want to start using this until we
+> decide on the DT representation. So it's like a chicken and egg
+> situation.
 
-When registering tmu zone failed, the error path should be err_tmu
-instead of err_iomap, as iounmap() needs to be called.
+Yeah, I agree to that.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-New patch.
----
- drivers/thermal/qoriq_thermal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+@Georgi and @Sibi: This is your chance to speak up about the proposal
+from Saravana and if you find anything wrong with them. And specially
+that it is mostly about interconnects here, I would like to have an
+explicit Ack from Georgi on this.
 
-diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 2893947..5755a11 100644
---- a/drivers/thermal/qoriq_thermal.c
-+++ b/drivers/thermal/qoriq_thermal.c
-@@ -231,7 +231,7 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to register sensors\n");
- 		ret = -ENODEV;
--		goto err_iomap;
-+		goto err_tmu;
- 	}
- 
- 	return 0;
+And if you guys are all okay about this then please at least commit
+that you will convert your stuff based on this in coming days.
+
 -- 
-2.7.4
+viresh
