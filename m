@@ -1,190 +1,372 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: [PATCH 2/3] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa: add ftm_alarm0 node
-Date: Tue, 30 Jul 2019 17:06:33 +0800
-Message-ID: <20190730090634.25070-2-biwen.li@nxp.com>
-References: <20190730090634.25070-1-biwen.li@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190730090634.25070-1-biwen.li@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 4/5] firmware: meson_sm: Rework driver as a proper
+ platform driver
+Date: Tue, 30 Jul 2019 11:18:58 +0200
+Message-ID: <1jsgqn283h.fsf@starbuckisacylon.baylibre.com>
+References: <20190729183941.18164-1-ccaione@baylibre.com>
+ <20190729183941.18164-5-ccaione@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190729183941.18164-5-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: srinivas.kandagatla@linaro.org, khilman@baylibre.com, narmstrong@baylibre.com, robh+dt@kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch adds ftm_alarm0 DT node
-	- add new rcpm node
-	- add ftm_alarm0 node
-	- aliases ftm_alarm0 as rtc1
+On Mon 29 Jul 2019 at 19:39, Carlo Caione <ccaione@baylibre.com> wrote:
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 14 ++++++++++++++
- 5 files changed, 72 insertions(+)
+> The secure monitor driver is currently a frankenstein driver which is
+> registered as a platform driver but its functionality goes through a
+> global struct accessed by the consumer drivers using exported helper
+> functions.
+>
+> Try to tidy up the driver moving the firmware struct into the driver
+> data and make the consumer drivers referencing the secure-monitor using
+> a new property in the DT.
+>
+> Currently only the nvmem driver is using this API so we can fix it in
+> the same commit.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index ec6257a5b251..401210e3afd2 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -22,6 +22,7 @@
- 		rtic-c = &rtic_c;
- 		rtic-d = &rtic_d;
- 		sec-mon = &sec_mon;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -500,6 +501,20 @@
- 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
-+
-+		rcpm: rcpm@1ee2140 {
-+			compatible = "fsl,ls1012a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1012a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <0 86 0x4>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 71d9ed9ff985..9ff5dd32e87d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -27,6 +27,7 @@
- 		ethernet4 = &enet4;
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -767,6 +768,19 @@
- 			big-endian;
- 		};
- 
-+		rcpm: rcpm@1ee2140 {
-+			compatible = "fsl,ls1043a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1043a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <0 86 0x4>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index b0ef08b090dd..d216375b174f 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -28,6 +28,7 @@
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
- 		ethernet7 = &enet7;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -771,6 +772,20 @@
- 			queue-sizes = <64 64>;
- 			big-endian;
- 		};
-+
-+		rcpm: rcpm@1ee208c {
-+			compatible = "fsl,ls1046a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee208c 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1046a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	reserved-memory {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index dacd8cf03a7f..61cb897b940a 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -18,6 +18,7 @@
- 
- 	aliases {
- 		crypto = &crypto;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -745,6 +746,19 @@
- 				};
- 			};
- 		};
-+
-+		rcpm: rcpm@1e34040 {
-+			compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls1088a-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <0 44 4>;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index 3ace91945b72..908386042c5b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -24,6 +24,7 @@
- 		serial1 = &serial1;
- 		serial2 = &serial2;
- 		serial3 = &serial3;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpu: cpus {
-@@ -758,6 +759,19 @@
- 			reg = <0x0 0x04000000 0x0 0x01000000>;
- 			interrupts = <0 12 4>;
- 		};
-+
-+		rcpm: rcpm@1e34040 {
-+			compatible = "fsl,ls208xa-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls208xa-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <0 44 4>;
-+		};
- 	};
- 
- 	ddr1: memory-controller@1080000 {
--- 
-2.17.1
+Indeed, I don't have another idea to deal with it without breaking bisect
+
+Thanks for this !
+
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+
+>
+> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+> ---
+>  drivers/firmware/meson/meson_sm.c       | 94 +++++++++++++++++--------
+>  drivers/nvmem/meson-efuse.c             | 23 +++++-
+>  include/linux/firmware/meson/meson_sm.h | 15 ++--
+>  3 files changed, 93 insertions(+), 39 deletions(-)
+>
+> diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meson/meson_sm.c
+> index 772ca6726e7b..2e36a2aa274c 100644
+> --- a/drivers/firmware/meson/meson_sm.c
+> +++ b/drivers/firmware/meson/meson_sm.c
+> @@ -54,8 +54,6 @@ struct meson_sm_firmware {
+>  	void __iomem *sm_shmem_out_base;
+>  };
+>  
+> -static struct meson_sm_firmware fw;
+> -
+>  static u32 meson_sm_get_cmd(const struct meson_sm_chip *chip,
+>  			    unsigned int cmd_index)
+>  {
+> @@ -90,6 +88,7 @@ static void __iomem *meson_sm_map_shmem(u32 cmd_shmem, unsigned int size)
+>  /**
+>   * meson_sm_call - generic SMC32 call to the secure-monitor
+>   *
+> + * @fw:		Pointer to secure-monitor firmware
+>   * @cmd_index:	Index of the SMC32 function ID
+>   * @ret:	Returned value
+>   * @arg0:	SMC32 Argument 0
+> @@ -100,15 +99,15 @@ static void __iomem *meson_sm_map_shmem(u32 cmd_shmem, unsigned int size)
+>   *
+>   * Return:	0 on success, a negative value on error
+>   */
+> -int meson_sm_call(unsigned int cmd_index, u32 *ret, u32 arg0,
+> -		  u32 arg1, u32 arg2, u32 arg3, u32 arg4)
+> +int meson_sm_call(struct meson_sm_firmware *fw, unsigned int cmd_index,
+> +		  u32 *ret, u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
+>  {
+>  	u32 cmd, lret;
+>  
+> -	if (!fw.chip)
+> +	if (!fw->chip)
+>  		return -ENOENT;
+>  
+> -	cmd = meson_sm_get_cmd(fw.chip, cmd_index);
+> +	cmd = meson_sm_get_cmd(fw->chip, cmd_index);
+>  	if (!cmd)
+>  		return -EINVAL;
+>  
+> @@ -124,6 +123,7 @@ EXPORT_SYMBOL(meson_sm_call);
+>  /**
+>   * meson_sm_call_read - retrieve data from secure-monitor
+>   *
+> + * @fw:		Pointer to secure-monitor firmware
+>   * @buffer:	Buffer to store the retrieved data
+>   * @bsize:	Size of the buffer
+>   * @cmd_index:	Index of the SMC32 function ID
+> @@ -137,22 +137,23 @@ EXPORT_SYMBOL(meson_sm_call);
+>   *		When 0 is returned there is no guarantee about the amount of
+>   *		data read and bsize bytes are copied in buffer.
+>   */
+> -int meson_sm_call_read(void *buffer, unsigned int bsize, unsigned int cmd_index,
+> -		       u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
+> +int meson_sm_call_read(struct meson_sm_firmware *fw, void *buffer,
+> +		       unsigned int bsize, unsigned int cmd_index, u32 arg0,
+> +		       u32 arg1, u32 arg2, u32 arg3, u32 arg4)
+>  {
+>  	u32 size;
+>  	int ret;
+>  
+> -	if (!fw.chip)
+> +	if (!fw->chip)
+>  		return -ENOENT;
+>  
+> -	if (!fw.chip->cmd_shmem_out_base)
+> +	if (!fw->chip->cmd_shmem_out_base)
+>  		return -EINVAL;
+>  
+> -	if (bsize > fw.chip->shmem_size)
+> +	if (bsize > fw->chip->shmem_size)
+>  		return -EINVAL;
+>  
+> -	if (meson_sm_call(cmd_index, &size, arg0, arg1, arg2, arg3, arg4) < 0)
+> +	if (meson_sm_call(fw, cmd_index, &size, arg0, arg1, arg2, arg3, arg4) < 0)
+>  		return -EINVAL;
+>  
+>  	if (size > bsize)
+> @@ -164,7 +165,7 @@ int meson_sm_call_read(void *buffer, unsigned int bsize, unsigned int cmd_index,
+>  		size = bsize;
+>  
+>  	if (buffer)
+> -		memcpy(buffer, fw.sm_shmem_out_base, size);
+> +		memcpy(buffer, fw->sm_shmem_out_base, size);
+>  
+>  	return ret;
+>  }
+> @@ -173,6 +174,7 @@ EXPORT_SYMBOL(meson_sm_call_read);
+>  /**
+>   * meson_sm_call_write - send data to secure-monitor
+>   *
+> + * @fw:		Pointer to secure-monitor firmware
+>   * @buffer:	Buffer containing data to send
+>   * @size:	Size of the data to send
+>   * @cmd_index:	Index of the SMC32 function ID
+> @@ -184,23 +186,24 @@ EXPORT_SYMBOL(meson_sm_call_read);
+>   *
+>   * Return:	size of sent data on success, a negative value on error
+>   */
+> -int meson_sm_call_write(void *buffer, unsigned int size, unsigned int cmd_index,
+> -			u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
+> +int meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,
+> +			unsigned int size, unsigned int cmd_index, u32 arg0,
+> +			u32 arg1, u32 arg2, u32 arg3, u32 arg4)
+>  {
+>  	u32 written;
+>  
+> -	if (!fw.chip)
+> +	if (!fw->chip)
+>  		return -ENOENT;
+>  
+> -	if (size > fw.chip->shmem_size)
+> +	if (size > fw->chip->shmem_size)
+>  		return -EINVAL;
+>  
+> -	if (!fw.chip->cmd_shmem_in_base)
+> +	if (!fw->chip->cmd_shmem_in_base)
+>  		return -EINVAL;
+>  
+> -	memcpy(fw.sm_shmem_in_base, buffer, size);
+> +	memcpy(fw->sm_shmem_in_base, buffer, size);
+>  
+> -	if (meson_sm_call(cmd_index, &written, arg0, arg1, arg2, arg3, arg4) < 0)
+> +	if (meson_sm_call(fw, cmd_index, &written, arg0, arg1, arg2, arg3, arg4) < 0)
+>  		return -EINVAL;
+>  
+>  	if (!written)
+> @@ -210,6 +213,24 @@ int meson_sm_call_write(void *buffer, unsigned int size, unsigned int cmd_index,
+>  }
+>  EXPORT_SYMBOL(meson_sm_call_write);
+>  
+> +/**
+> + * meson_sm_get - get pointer to meson_sm_firmware structure.
+> + *
+> + * @sm_node:		Pointer to the secure-monitor Device Tree node.
+> + *
+> + * Return:		NULL is the secure-monitor device is not ready.
+> + */
+> +struct meson_sm_firmware *meson_sm_get(struct device_node *sm_node)
+> +{
+> +	struct platform_device *pdev = of_find_device_by_node(sm_node);
+> +
+> +	if (!pdev)
+> +		return NULL;
+> +
+> +	return platform_get_drvdata(pdev);
+> +}
+> +EXPORT_SYMBOL_GPL(meson_sm_get);
+> +
+>  #define SM_CHIP_ID_LENGTH	119
+>  #define SM_CHIP_ID_OFFSET	4
+>  #define SM_CHIP_ID_SIZE		12
+> @@ -217,14 +238,18 @@ EXPORT_SYMBOL(meson_sm_call_write);
+>  static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
+>  			 char *buf)
+>  {
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct meson_sm_firmware *fw;
+>  	uint8_t *id_buf;
+>  	int ret;
+>  
+> +	fw = platform_get_drvdata(pdev);
+> +
+>  	id_buf = kmalloc(SM_CHIP_ID_LENGTH, GFP_KERNEL);
+>  	if (!id_buf)
+>  		return -ENOMEM;
+>  
+> -	ret = meson_sm_call_read(id_buf, SM_CHIP_ID_LENGTH, SM_GET_CHIP_ID,
+> +	ret = meson_sm_call_read(fw, id_buf, SM_CHIP_ID_LENGTH, SM_GET_CHIP_ID,
+>  				 0, 0, 0, 0, 0);
+>  	if (ret < 0) {
+>  		kfree(id_buf);
+> @@ -268,25 +293,34 @@ static const struct of_device_id meson_sm_ids[] = {
+>  
+>  static int __init meson_sm_probe(struct platform_device *pdev)
+>  {
+> +	struct device *dev = &pdev->dev;
+>  	const struct meson_sm_chip *chip;
+> +	struct meson_sm_firmware *fw;
+> +
+> +	fw = devm_kzalloc(dev, sizeof(*fw), GFP_KERNEL);
+> +	if (!fw)
+> +		return -ENOMEM;
+>  
+> -	chip = of_match_device(meson_sm_ids, &pdev->dev)->data;
+> +	chip = of_match_device(meson_sm_ids, dev)->data;
+>  
+>  	if (chip->cmd_shmem_in_base) {
+> -		fw.sm_shmem_in_base = meson_sm_map_shmem(chip->cmd_shmem_in_base,
+> -							 chip->shmem_size);
+> -		if (WARN_ON(!fw.sm_shmem_in_base))
+> +		fw->sm_shmem_in_base = meson_sm_map_shmem(chip->cmd_shmem_in_base,
+> +							  chip->shmem_size);
+> +		if (WARN_ON(!fw->sm_shmem_in_base))
+>  			goto out;
+>  	}
+>  
+>  	if (chip->cmd_shmem_out_base) {
+> -		fw.sm_shmem_out_base = meson_sm_map_shmem(chip->cmd_shmem_out_base,
+> -							  chip->shmem_size);
+> -		if (WARN_ON(!fw.sm_shmem_out_base))
+> +		fw->sm_shmem_out_base = meson_sm_map_shmem(chip->cmd_shmem_out_base,
+> +							   chip->shmem_size);
+> +		if (WARN_ON(!fw->sm_shmem_out_base))
+>  			goto out_in_base;
+>  	}
+>  
+> -	fw.chip = chip;
+> +	fw->chip = chip;
+> +
+> +	platform_set_drvdata(pdev, fw);
+> +
+>  	pr_info("secure-monitor enabled\n");
+>  
+>  	if (sysfs_create_group(&pdev->dev.kobj, &meson_sm_sysfs_attr_group))
+> @@ -295,7 +329,7 @@ static int __init meson_sm_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  out_in_base:
+> -	iounmap(fw.sm_shmem_in_base);
+> +	iounmap(fw->sm_shmem_in_base);
+>  out:
+>  	return -EINVAL;
+>  }
+> diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
+> index 9924b98db772..669d20d73877 100644
+> --- a/drivers/nvmem/meson-efuse.c
+> +++ b/drivers/nvmem/meson-efuse.c
+> @@ -17,20 +17,25 @@
+>  struct meson_efuse {
+>  	struct nvmem_device *nvmem;
+>  	struct nvmem_config config;
+> +	struct meson_sm_firmware *fw;
+>  	struct clk *clk;
+>  };
+>  
+>  static int meson_efuse_read(void *context, unsigned int offset,
+>  			    void *val, size_t bytes)
+>  {
+> -	return meson_sm_call_read((u8 *)val, bytes, SM_EFUSE_READ, offset,
+> +	struct meson_efuse *efuse = context;
+> +
+> +	return meson_sm_call_read(efuse->fw, (u8 *)val, bytes, SM_EFUSE_READ, offset,
+>  				  bytes, 0, 0, 0);
+>  }
+>  
+>  static int meson_efuse_write(void *context, unsigned int offset,
+>  			     void *val, size_t bytes)
+>  {
+> -	return meson_sm_call_write((u8 *)val, bytes, SM_EFUSE_WRITE, offset,
+> +	struct meson_efuse *efuse = context;
+> +
+> +	return meson_sm_call_write(efuse->fw, (u8 *)val, bytes, SM_EFUSE_WRITE, offset,
+>  				   bytes, 0, 0, 0);
+>  }
+>  
+> @@ -43,6 +48,7 @@ MODULE_DEVICE_TABLE(of, meson_efuse_match);
+>  static int meson_efuse_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> +	struct device_node *sm_np;
+>  	struct meson_efuse *efuse;
+>  	unsigned int size;
+>  	int ret;
+> @@ -51,6 +57,17 @@ static int meson_efuse_probe(struct platform_device *pdev)
+>  	if (!efuse)
+>  		return -ENOMEM;
+>  
+> +	sm_np = of_parse_phandle(pdev->dev.of_node, "secure-monitor", 0);
+> +	if (!sm_np) {
+> +		dev_err(&pdev->dev, "no secure-monitor node\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	efuse->fw = meson_sm_get(sm_np);
+> +	of_node_put(sm_np);
+> +	if (!efuse->fw)
+> +		return -EPROBE_DEFER;
+> +
+>  	efuse->clk = devm_clk_get(dev, NULL);
+>  	if (IS_ERR(efuse->clk)) {
+>  		ret = PTR_ERR(efuse->clk);
+> @@ -73,7 +90,7 @@ static int meson_efuse_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	if (meson_sm_call(SM_EFUSE_USER_MAX, &size, 0, 0, 0, 0, 0) < 0) {
+> +	if (meson_sm_call(efuse->fw, SM_EFUSE_USER_MAX, &size, 0, 0, 0, 0, 0) < 0) {
+>  		dev_err(dev, "failed to get max user");
+>  		return -EINVAL;
+>  	}
+> diff --git a/include/linux/firmware/meson/meson_sm.h b/include/linux/firmware/meson/meson_sm.h
+> index 7613bf7c9442..6669e2a1d5fd 100644
+> --- a/include/linux/firmware/meson/meson_sm.h
+> +++ b/include/linux/firmware/meson/meson_sm.h
+> @@ -16,11 +16,14 @@ enum {
+>  
+>  struct meson_sm_firmware;
+>  
+> -int meson_sm_call(unsigned int cmd_index, u32 *ret, u32 arg0, u32 arg1,
+> -		  u32 arg2, u32 arg3, u32 arg4);
+> -int meson_sm_call_write(void *buffer, unsigned int b_size, unsigned int cmd_index,
+> -			u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
+> -int meson_sm_call_read(void *buffer, unsigned int bsize, unsigned int cmd_index,
+> -		       u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
+> +int meson_sm_call(struct meson_sm_firmware *fw, unsigned int cmd_index,
+> +		  u32 *ret, u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
+> +int meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,
+> +			unsigned int b_size, unsigned int cmd_index, u32 arg0,
+> +			u32 arg1, u32 arg2, u32 arg3, u32 arg4);
+> +int meson_sm_call_read(struct meson_sm_firmware *fw, void *buffer,
+> +		       unsigned int bsize, unsigned int cmd_index, u32 arg0,
+> +		       u32 arg1, u32 arg2, u32 arg3, u32 arg4);
+> +struct meson_sm_firmware *meson_sm_get(struct device_node *firmware_node);
+>  
+>  #endif /* _MESON_SM_FW_H_ */
+> -- 
+> 2.20.1
