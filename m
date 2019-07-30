@@ -1,179 +1,224 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 00/14] dmaengine/soc: Add Texas Instruments UDMA support
-Date: Tue, 30 Jul 2019 12:34:36 +0300
-Message-ID: <20190730093450.12664-1-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 07/14] dt-bindings: dma: ti: Add document for K3 UDMA
+Date: Tue, 30 Jul 2019 12:34:43 +0300
+Message-ID: <20190730093450.12664-8-peter.ujfalusi@ti.com>
+References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190730093450.12664-1-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
 Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Changes since v1
-(https://patchwork.kernel.org/project/linux-dmaengine/list/?series=114105&state=*)
-- Added support for j721e
-- Based on 5.3-rc2
-- dropped ti_sci API patch for RM management as it is already upstream
-- dropped dmadev_get_slave_channel() patch, using __dma_request_channel()
-- Added Rob's Reviewed-by to ringacc DT binding document patch
-- DT bindings changes:
- - linux,udma-mode is gone, I have a simple lookup table in the driver to flag
-   TR channels.
- - Support for j721e
-- Fix bug in of_node_put() handling in xlate function
+New binding document for
+Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
 
-Changes since RFC (https://patchwork.kernel.org/cover/10612465/):
-- Based on linux-next (20190506) which now have the ti_sci interrupt support
-- The series can be applied and the UDMA via DMAengine API will be functional
-- Included in the series: ti_sci Resource management API, cppi5 header and
-  driver for the ring accelerator.
-- The DMAengine core patches have been updated as per the review comments for
-  earlier submittion.
-- The DMAengine driver patch is artificially split up to 6 smaller patches
+UDMA-P is introduced as part of the K3 architecture and can be found on
+AM654 and j721e.
 
-The k3-udma driver implements the Data Movement Architecture described in
-AM65x TRM (http://www.ti.com/lit/pdf/spruid7) and
-j721e TRM (http://www.ti.com/lit/pdf/spruil1)
-
-This DMA architecture is a big departure from 'traditional' architecture where
-we had either EDMA or sDMA as system DMA.
-
-Packet DMAs were used as dedicated DMAs to service only networking (Kesytone2)
-or USB (am335x) while other peripherals were serviced by EDMA.
-
-In AM65x/j721e the UDMA (Unified DMA) is used for all data movment within the
-SoC, tasked to service all peripherals (UART, McSPI, McASP, networking, etc). 
-
-The NAVSS/UDMA is built around CPPI5 (Communications Port Programming Interface)
-and it supports Packet mode (similar to CPPI4.1 in Keystone2 for networking) and
-TR mode (similar to EDMA descriptor).
-The data movement is done within a PSI-L fabric, peripherals (including the
-UDMA-P) are not addressed by their I/O register as with traditional DMAs but
-with their PSI-L thread ID.
-
-In AM65x/j721e we have two main type of peripherals:
-Legacy: McASP, McSPI, UART, etc.
- to provide connectivity they are serviced by PDMA (Peripheral DMA)
- PDMA threads are locked to service a given peripheral, for example PSI-L thread
- 0x4400/0xc400 is to service McASP0 rx/tx.
- The PDMa configuration can be done via the UDMA Real Time Peer registers.
-Native: Networking, security accelerator
- these peripherals have native support for PSI-L.
-
-To be able to use the DMA the following generic steps need to be taken:
-- configure a DMA channel (tchan for TX, rchan for RX)
- - channel mode: Packet or TR mode
- - for memcpy a tchan and rchan pair is used.
- - for packet mode RX we also need to configure a receive flow to configure the
-   packet receiption
-- the source and destination threads must be paired
-- at minimum one pair of rings need to be configured:
- - tx: transfer ring and transfer completion ring
- - rx: free descriptor ring and receive ring
-- two interrupts: UDMA-P channel interrupt and ring interrupt for tc_ring/r_ring
- - If the channel is in packet mode or configured to memcpy then we only need
-   one interrupt from the ring, events from UDMAP is not used.
-
-When the channel setup is completed we only interract with the rings:
-- TX: push a descriptor to t_ring and wait for it to be pushed to the tc_ring by
-  the UDMA-P
-- RX: push a descriptor to the fd_ring and waith for UDMA-P to push it back to
-  the r_ring.
-
-Since we have FIFOs in the DMA fabric (UDMA-P, PSI-L and PDMA) which was not the
-case in previous DMAs we need to report the amount of data held in these FIFOs
-to clients (delay calculation for ALSA, UART FIFO flush support).
-
-Metadata support:
-DMAengine user driver was posted upstream based/tested on the v1 of the UDMA
-series: https://lkml.org/lkml/2019/6/28/20
-SA2UL is using the metadata DMAengine API.
-
-Note on the last patch:
-In Keystone2 the networking had dedicated DMA (packet DMA) which is not the case
-anymore and the DMAengine API currently missing support for the features we
-would need to support networking, things like
-- support for receive descriptor 'classification'
- - we need to support several receive queues for a channel.
- - the queues are used for packet priority handling for example, but they can be
-   used to have pools of descriptors for different sizes.
-- out of order completion of descriptors on a channel
- - when we have several queues to handle different priority packets the
-   descriptors will be completed 'out-of-order'
-- NAPI type of operation (polling instead of interrupt driven transfer)
- - without this we can not sustain gigabit speeds and we need to support NAPI
- - not to limit this to networking, but other high performance operations
-
-It is my intention to work on these to be able to remove the 'glue' layer and
-switch to DMAengine API - or have an API aside of DMAengine to have generic way
-to support networking, but given how controversial and not trivial these changes
-are we need something to support networking.
-
-The series (+DT patch to enabled UDMA/PDMA on AM65x) on top of 5.3-rc2 is
-available:
-https://github.com/omap-audio/linux-audio.git peter/udma/series_v2-5.3-rc2
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Grygorii Strashko (3):
-  bindings: soc: ti: add documentation for k3 ringacc
-  soc: ti: k3: add navss ringacc driver
-  dmaengine: ti: k3-udma: Add glue layer for non DMAengine users
-
-Peter Ujfalusi (11):
-  dmaengine: doc: Add sections for per descriptor metadata support
-  dmaengine: Add metadata_ops for dma_async_tx_descriptor
-  dmaengine: Add support for reporting DMA cached data amount
-  dmaengine: ti: Add cppi5 header for UDMA
-  dt-bindings: dma: ti: Add document for K3 UDMA
-  dmaengine: ti: New driver for K3 UDMA - split#1: defines, structs, io
-    func
-  dmaengine: ti: New driver for K3 UDMA - split#2: probe/remove, xlate
-    and filter_fn
-  dmaengine: ti: New driver for K3 UDMA - split#3: alloc/free
-    chan_resources
-  dmaengine: ti: New driver for K3 UDMA - split#4: dma_device callbacks
-    1
-  dmaengine: ti: New driver for K3 UDMA - split#5: dma_device callbacks
-    2
-  dmaengine: ti: New driver for K3 UDMA - split#6: Kconfig and Makefile
-
- .../devicetree/bindings/dma/ti/k3-udma.txt    |  170 +
- .../devicetree/bindings/soc/ti/k3-ringacc.txt |   59 +
- Documentation/driver-api/dmaengine/client.rst |   75 +
- .../driver-api/dmaengine/provider.rst         |   46 +
- drivers/dma/dmaengine.c                       |   73 +
- drivers/dma/dmaengine.h                       |    8 +
- drivers/dma/ti/Kconfig                        |   22 +
- drivers/dma/ti/Makefile                       |    2 +
- drivers/dma/ti/k3-udma-glue.c                 | 1039 +++++
- drivers/dma/ti/k3-udma-private.c              |  124 +
- drivers/dma/ti/k3-udma.c                      | 3479 +++++++++++++++++
- drivers/dma/ti/k3-udma.h                      |  160 +
- drivers/soc/ti/Kconfig                        |   17 +
- drivers/soc/ti/Makefile                       |    1 +
- drivers/soc/ti/k3-ringacc.c                   | 1191 ++++++
- include/dt-bindings/dma/k3-udma.h             |   10 +
- include/linux/dma/k3-udma-glue.h              |  125 +
- include/linux/dma/ti-cppi5.h                  |  996 +++++
- include/linux/dmaengine.h                     |  110 +
- include/linux/soc/ti/k3-ringacc.h             |  262 ++
- 20 files changed, 7969 insertions(+)
+ .../devicetree/bindings/dma/ti/k3-udma.txt    | 170 ++++++++++++++++++
+ include/dt-bindings/dma/k3-udma.h             |  10 ++
+ 2 files changed, 180 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.txt
- create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
- create mode 100644 drivers/dma/ti/k3-udma-glue.c
- create mode 100644 drivers/dma/ti/k3-udma-private.c
- create mode 100644 drivers/dma/ti/k3-udma.c
- create mode 100644 drivers/dma/ti/k3-udma.h
- create mode 100644 drivers/soc/ti/k3-ringacc.c
  create mode 100644 include/dt-bindings/dma/k3-udma.h
- create mode 100644 include/linux/dma/k3-udma-glue.h
- create mode 100644 include/linux/dma/ti-cppi5.h
- create mode 100644 include/linux/soc/ti/k3-ringacc.h
 
+diff --git a/Documentation/devicetree/bindings/dma/ti/k3-udma.txt b/Documentation/devicetree/bindings/dma/ti/k3-udma.txt
+new file mode 100644
+index 000000000000..7f30fe583ade
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/ti/k3-udma.txt
+@@ -0,0 +1,170 @@
++* Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
++
++The UDMA-P is intended to perform similar (but significantly upgraded) functions
++as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
++supports the transmission and reception of various packet types. The UDMA-P is
++architected to facilitate the segmentation and reassembly of SoC DMA data
++structure compliant packets to/from smaller data blocks that are natively
++compatible with the specific requirements of each connected peripheral. Multiple
++Tx and Rx channels are provided within the DMA which allow multiple segmentation
++or reassembly operations to be ongoing. The DMA controller maintains state
++information for each of the channels which allows packet segmentation and
++reassembly operations to be time division multiplexed between channels in order
++to share the underlying DMA hardware. An external DMA scheduler is used to
++control the ordering and rate at which this multiplexing occurs for Transmit
++operations. The ordering and rate of Receive operations is indirectly controlled
++by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
++
++The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
++channels. Channels in the UDMA-P can be configured to be either Packet-Based or
++Third-Party channels on a channel by channel basis.
++
++Required properties:
++--------------------
++- compatible:		Should be
++			"ti,am654-navss-main-udmap" for am654 main NAVSS UDMAP
++			"ti,am654-navss-mcu-udmap" for am654 mcu NAVSS UDMAP
++			"ti,j721e-navss-main-udmap" for j721e main NAVSS UDMAP
++			"ti,j721e-navss-mcu-udmap" for j721e mcu NAVSS UDMAP
++- #dma-cells:		Should be set to <3>.
++			- The first parameter is a phandle to the remote PSI-L
++			  endpoint
++			- The second parameter is the thread offset within the
++			  remote thread ID range
++			- The third parameter is the channel direction.
++- reg:			Memory map of UDMAP
++- reg-names:		"gcfg", "rchanrt", "tchanrt"
++- msi-parent:		phandle for "ti,sci-inta" interrupt controller
++- ti,ringacc:		phandle for the ring accelerator node
++- ti,psil-base:		PSI-L thread ID base of the UDMAP channels
++- ti,sci:		phandle on TI-SCI compatible System controller node
++- ti,sci-dev-id:	TI-SCI device id
++- ti,sci-rm-range-tchan: UDMA tchan resource list in pairs of type and subtype
++- ti,sci-rm-range-rchan: UDMA rchan resource list in pairs of type and subtype
++- ti,sci-rm-range-rflow: UDMA rflow resource list in pairs of type and subtype
++
++For PSI-L thread management the parent NAVSS node must have:
++- ti,sci:		phandle on TI-SCI compatible System controller node
++- ti,sci-dev-id:	TI-SCI device id of the NAVSS instance
++
++Remote PSI-L endpoint
++
++Required properties:
++--------------------
++- ti,psil-base:		PSI-L thread ID base of the endpoint
++
++Within the PSI-L endpoint node thread configuration subnodes must present with:
++psil-configX naming convention, where X is the thread ID offset.
++
++Configuration node Optional properties:
++--------------------
++- pdma,statictr-type:	In case the remote endpoint (PDMAs) requires StaticTR
++			configuration:
++			- PSIL_STATIC_TR_XY (1): XY type of StaticTR
++			For endpoints without StaticTR the property is not
++			needed or to be set PSIL_STATIC_TR_NONE (0).
++- pdma,enable-acc32:	Force 32 bit access on peripheral port. Only valid for
++			XY type StaticTR, not supported on am654.
++			Must be enabled for threads servicing McASP with AFIFO
++			bypass mode.
++- pdma,enable-burst:	Enable burst access on peripheral port. Only valid for
++			XY type StaticTR, not supported on am654.
++- ti,channel-tpl:	Channel Throughput level:
++			0 / or not present - normal channel
++			1 - High Throughput channel
++			2 - Ultra High Throughput channel (j721e only)
++- ti,needs-epib:	If the endpoint require EPIB to be present in the
++			descriptor.
++- ti,psd-size:		Size of the Protocol Specific Data section of the
++			descriptor.
++
++Example:
++
++main_navss: main_navss {
++	compatible = "simple-bus";
++	#address-cells = <2>;
++	#size-cells = <2>;
++	dma-coherent;
++	dma-ranges;
++	ranges;
++
++	ti,sci = <&dmsc>;
++	ti,sci-dev-id = <118>;
++
++	main_udmap: dma-controller@31150000 {
++		compatible = "ti,am654-navss-main-udmap";
++		reg =	<0x0 0x31150000 0x0 0x100>,
++			<0x0 0x34000000 0x0 0x100000>,
++			<0x0 0x35000000 0x0 0x100000>;
++		reg-names = "gcfg", "rchanrt", "tchanrt";
++		#dma-cells = <3>;
++
++		ti,ringacc = <&ringacc>;
++		ti,psil-base = <0x1000>;
++
++		interrupt-parent = <&main_udmass_inta>;
++
++		ti,sci = <&dmsc>;
++		ti,sci-dev-id = <188>;
++
++		ti,sci-rm-range-tchan = <0x6 0x1>, /* TX_HCHAN */
++					<0x6 0x2>; /* TX_CHAN */
++		ti,sci-rm-range-rchan = <0x6 0x4>, /* RX_HCHAN */
++					<0x6 0x5>; /* RX_CHAN */
++		ti,sci-rm-range-rflow = <0x6 0x6>; /* GP RFLOW */
++	};
++};
++
++psilss@340c000 {
++	/* PSILSS1 AASRC */
++	compatible = "ti,j721e-psilss";
++	reg = <0x0 0x0340c000 0x0 0x1000>;
++	reg-names = "config";
++
++	pdma_main_mcasp_g0: pdma_main_mcasp_g0 {
++		/* PDMA6 (PDMA_MCASP_G0) */
++		ti,psil-base = <0x4400>;
++
++		/* psil-config0 */
++		psil-config0 {
++			pdma,statictr-type = <PSIL_STATIC_TR_XY>;
++			pdma,enable-acc32;
++			pdma,enable-burst;
++		};
++	};
++};
++
++mcasp0: mcasp@02B00000 {
++...
++	/* tx: PDMA_MAIN_MCASP_G0-0, rx: PDMA_MAIN_MCASP_G0-0 */
++	dmas = <&main_udmap &pdma_main_mcasp_g0 0 UDMA_DIR_TX>,
++	       <&main_udmap &pdma_main_mcasp_g0 0 UDMA_DIR_RX>;
++	dma-names = "tx", "rx";
++...
++};
++
++crypto: crypto@4E00000 {
++	compatible = "ti,sa2ul-crypto";
++...
++
++	/* tx: crypto_pnp-1, rx: crypto_pnp-1 */
++	dmas = <&main_udmap &crypto 0 UDMA_DIR_TX>,
++	       <&main_udmap &crypto 0 UDMA_DIR_RX>,
++	       <&main_udmap &crypto 1 UDMA_DIR_RX>;
++	dma-names = "tx", "rx1", "rx2";
++...
++	psil-config0 {
++		ti,needs-epib;
++		ti,psd-size = <64>;
++	};
++
++	psil-config1 {
++		ti,needs-epib;
++		ti,psd-size = <64>;
++	};
++
++	psil-config2 {
++		ti,needs-epib;
++		ti,psd-size = <64>;
++	};
++};
+diff --git a/include/dt-bindings/dma/k3-udma.h b/include/dt-bindings/dma/k3-udma.h
+new file mode 100644
+index 000000000000..f5c8f5d50491
+--- /dev/null
++++ b/include/dt-bindings/dma/k3-udma.h
+@@ -0,0 +1,10 @@
++#ifndef __DT_TI_UDMA_H
++#define __DT_TI_UDMA_H
++
++#define UDMA_DIR_TX		0
++#define UDMA_DIR_RX		1
++
++#define PSIL_STATIC_TR_NONE	0
++#define PSIL_STATIC_TR_XY	1
++
++#endif /* __DT_TI_UDMA_H */
 -- 
 Peter
 
