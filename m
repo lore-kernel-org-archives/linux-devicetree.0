@@ -1,67 +1,56 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 5/5] arm64: dts: meson: Link nvmem and secure-monitor nodes
-Date: Tue, 30 Jul 2019 11:23:25 +0200
-Message-ID: <1jpnlr27w2.fsf@starbuckisacylon.baylibre.com>
-References: <20190729183941.18164-1-ccaione@baylibre.com>
- <20190729183941.18164-6-ccaione@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190729183941.18164-6-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: srinivas.kandagatla@linaro.org, khilman@baylibre.com, narmstrong@baylibre.com, robh+dt@kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Carlo Caione <ccaione@baylibre.com>
+From: Biwen Li <biwen.li@nxp.com>
+Subject: [3/3] arm: dts: ls1021a: add ftm_alarm0 DT node
+Date: Tue, 30 Jul 2019 17:13:47 +0800
+Message-ID: <20190730091347.25593-3-biwen.li@nxp.com>
+References: <20190730091347.25593-1-biwen.li@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190730091347.25593-1-biwen.li@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 29 Jul 2019 at 19:39, Carlo Caione <ccaione@baylibre.com> wrote:
+The patch add ftm_alarm0 DT node
+	- add rcpm node
+	- add ftm_alarm0 node
+	- aliases ftm_alarm0 as rtc1
 
-> The former is going to use the latter to retrieve the efuses data.
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+ arch/arm/boot/dts/ls1021a.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Actually, if you really want to not break bisect, this change must be
-merged before the driver change (patch 4).
-
-I'm a bit surpised to see only the axg and g12a here ?
-Doesn't it apply to gxbb/gxl as well ?
-
->
-> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 1 +
->  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 1 +
->  2 files changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> index 6219337033a0..b8244efb85fa 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> @@ -117,6 +117,7 @@
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		read-only;
-> +		secure-monitor = <&sm>;
->  	};
->  
->  	psci {
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> index f8d43e3dcf20..2b07752e034f 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> @@ -100,6 +100,7 @@
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		read-only;
-> +		secure-monitor = <&sm>;
->  	};
->  
->  	psci {
-> -- 
-> 2.20.1
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 464df4290ffc..2a14a1fdd2da 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -66,6 +66,7 @@
+ 		serial4 = &lpuart4;
+ 		serial5 = &lpuart5;
+ 		sysclk = &sysclk;
++		rtc1 = &ftm_alarm0;
+ 	};
+ 
+ 	cpus {
+@@ -985,5 +986,19 @@
+ 			big-endian;
+ 		};
+ 
++		rcpm: rcpm@1ee2140 {
++			compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
++			reg = <0x0 0x1ee2140 0x0 0x8>;
++			#fsl,rcpm-wakeup-cells = <2>;
++		};
++
++		ftm_alarm0: timer0@29d0000 {
++			compatible = "fsl,ls1021a-ftm-alarm";
++			reg = <0x0 0x29d0000 0x0 0x10000>;
++			reg-names = "ftm";
++			fsl,rcpm-wakeup = <&rcpm 0x20000 0x0>;
++			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++			big-endian;
++		};
+ 	};
+ };
+-- 
+2.17.1
