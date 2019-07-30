@@ -1,114 +1,110 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: Re: [RFC-ish PATCH 00/17] Clean up ASPEED devicetree warnings
-Date: Tue, 30 Jul 2019 10:39:50 +0930
-Message-ID: <fd8e57f0-aee2-403e-b6fb-76d0c18fe306@www.fastmail.com>
-References: <20190726053959.2003-1-andrew@aj.id.au>
- <CAL_JsqJ+sFDG8eKbV3gvmqVHx+otWbki4dY213apzXgfhbXXEw@mail.gmail.com>
+From: Qii Wang <qii.wang@mediatek.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: i3c: Document MediaTek I3C master
+ bindings
+Date: Tue, 30 Jul 2019 09:34:13 +0800
+Message-ID: <1564450453.24702.14.camel@mhfsdcap03>
+References: <1562677762-24067-1-git-send-email-qii.wang@mediatek.com>
+         <1562677762-24067-2-git-send-email-qii.wang@mediatek.com>
+         <20190724202119.GA26566@bogus> <1564190613.24702.11.camel@mhfsdcap03>
+         <20190727111859.315994c3@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqJ+sFDG8eKbV3gvmqVHx+otWbki4dY213apzXgfhbXXEw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-aspeed@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Corey Minyard <minyard@acm.org>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, Xo Wang <xow@google.com>, Arnd Bergmann <arnd@arndb.de>, Ken Chen <chen.kenyy@inventec.com>, Adriana Kobylak <anoo@us.ibm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, =?UTF-8?Q?YangBrianC=2EW_=E6=A5=8A=E5=98=89=E5=81=89_TAO?= <yang.brianc.w@inventec.com>, openipmi-developer@lists.sourceforge.net, "Alexander A. Filippov" <a.filippov@yadro.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Tao Ren <taoren@fb.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yao.yuan@linaro.org, Patrick Venture <venture@google.com>, John Wang <wangzqbj@inspur.com>, Greg Kroah-Hartman <gregkh@linuxfounda>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190727111859.315994c3@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, bbrezillon@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, liguo.zhang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Tue, 30 Jul 2019, at 10:23, Rob Herring wrote:
-> On Thu, Jul 25, 2019 at 11:40 PM Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> > Hello,
-> >
-> > The aim of this series is to minimise/eliminate all the warnings from the
-> > ASPEED devicetrees. It mostly achieves its goal, as outlined below.
-> >
-> > Using `aspeed_g5_defconfig` we started with the follow warning count:
-> >
-> >     $ make dtbs 2>&1 >/dev/null | wc -l
-> >     218
-> >
-> > and after the full series is applied we have:
-> >
-> >     $ make dtbs 2>&1 >/dev/null | wc -l
-> >     2
-> >
-> > for a 100x reduction.
-> >
-> > Getting there though isn't without some potential controversy, which I've saved
-> > for the last half of the series. The following patches I think are in pretty
-> > good shape:
-> >
-> >   ARM: dts: aspeed-g5: Move EDAC node to APB
-> >   ARM: dts: aspeed-g5: Use recommended generic node name for SDMC
-> >   ARM: dts: aspeed-g5: Fix aspeed,external-nodes description
-> >   ARM: dts: vesnin: Add unit address for memory node
-> >   ARM: dts: fp5280g2: Cleanup gpio-keys-polled properties
-> >   ARM: dts: swift: Cleanup gpio-keys-polled properties
-> >   ARM: dts: witherspoon: Cleanup gpio-keys-polled properties
-> >   ARM: dts: aspeed: Cleanup lpc-ctrl and snoop regs
-> >   ARM: dts: ibm-power9-dual: Add a unit address for OCC nodes
-> >
-> > With these patches applied we get to:
-> >
-> >     $ make dtbs 2>&1 >/dev/null | wc -l
-> >     144
-> >
-> > So they make a dent, but fail to clean up the bulk of the issues. From here
-> > I've mixed in some binding and driver changes with subsequent updates to the
-> > devicetrees:
-> >
-> >   dt-bindings: pinctrl: aspeed: Add reg property as a hint
-> >   dt-bindings: misc: Document reg for aspeed,p2a-ctrl nodes
-> >   ARM: dts: aspeed: Add reg hints to syscon children
-> >   dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS
-> >   ipmi: kcs: Finish configuring ASPEED KCS device before enable
-> >   ipmi: kcs: aspeed: Implement v2 bindings
-> >   ARM: dts: aspeed-g5: Change KCS nodes to v2 binding
-> >   ARM: dts: aspeed-g5: Sort LPC child nodes by unit address
-> >
-> > By `dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS` the warnings are
-> > reduced to:
-> >
-> >     $ make dtbs 2>&1 >/dev/null | wc -l
-> >     125
-> >
-> > The bang-for-buck is in fixing up the KCS bindings which removes all-but-two of
-> > the remaining warnings (which we can't feasibly remove), but doing so forces
-> > code changes (which I'd avoided up until this point).
-> >
-> > Reflecting broadly on the fixes, I think I've made a mistake way back by using
-> > syscon/simple-mfds to expose the innards of the SCU and LPC controllers in the
-> > devicetree. This series cleans up what's currently there, but I have half a
-> > mind to rev the SCU and LPC bindings to not use simple-mfd and instead have a
-> > driver implementation that uses `platform_device_register_full()` or similar to
-> > deal with the mess.
-> >
-> > Rob - I'm looking for your thoughts here and on the series, I've never felt
-> > entirely comfortable with what I cooked up. Your advice would be appreciated.
+On Sat, 2019-07-27 at 11:18 +0200, Boris Brezillon wrote:
+> On Sat, 27 Jul 2019 09:23:33 +0800
+> Qii Wang <qii.wang@mediatek.com> wrote:
 > 
-> The series generally looks fine to me from a quick scan. As far as
-> dropping 'simple-mfd', having less fine grained description in DT is
-> generally my preference. It comes down to whether what you have
-> defined is maintainable. As most of it is just additions, I think what
-> you have is fine. Maybe keep all this in mind for the next chip
-> depending how the SCU and LPC change.
+> > On Wed, 2019-07-24 at 14:21 -0600, Rob Herring wrote:
+> > > On Tue, Jul 09, 2019 at 09:09:21PM +0800, Qii Wang wrote:  
+> > > > Document MediaTek I3C master DT bindings.
+> > > > 
+> > > > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> > > > ---
+> > > >  .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   48 ++++++++++++++++++++
+> > > >  1 file changed, 48 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> > > > new file mode 100644
+> > > > index 0000000..d32eda6
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> > > > @@ -0,0 +1,48 @@
+> > > > +Bindings for MediaTek I3C master block
+> > > > +=====================================
+> > > > +
+> > > > +Required properties:
+> > > > +--------------------
+> > > > +- compatible: shall be "mediatek,i3c-master"  
+> > > 
+> > > Needs to be SoC specific.
+> > >   
+> > 
+> > We hope that the SOCs will use the same driver and try to avoid big
+> > changes. If there are inevitable changes in the future, then we will
+> > modify the compatible to be SoC specific. cdns,i3c-master.txt is not SoC
+> > specific either.
+> 
+> The cadence case is a bit different I think. When the driver was
+> developed there was no SoC integrating this IP. I guess Mediatek knows
+> already which SoC(s) will embed the I3C master block.
+> 
 
-Okay, I think the timing of that suggestion is good given where things are with
-the AST2600. I'll keep that in mind.
+ok, I will modify it as "mediatek,mt8183-i3c".
 
-Consensus so far seems to be that the series is fine. I'll split it up and send out
-the sub-series to the relevant lists with the acks accumulated here.
-
-Thanks all for taking a look.
-
-Andrew
+> > 
+> > > > +- reg: physical base address of the controller and apdma base, length of
+> > > > +  memory mapped region.
+> > > > +- reg-names: shall be "main" for master controller and "dma" for apdma.
+> > > > +- interrupts: the interrupt line connected to this I3C master.
+> > > > +- clocks: shall reference the i3c and apdma clocks.
+> > > > +- clock-names: shall include "main" and "dma".
+> > > > +
+> > > > +Mandatory properties defined by the generic binding (see
+> > > > +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> > > > +
+> > > > +- #address-cells: shall be set to 3
+> > > > +- #size-cells: shall be set to 0
+> > > > +
+> > > > +Optional properties defined by the generic binding (see
+> > > > +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> > > > +
+> > > > +- i2c-scl-hz
+> > > > +- i3c-scl-hz
+> > > > +
+> > > > +I3C device connected on the bus follow the generic description (see
+> > > > +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
+> > > > +
+> > > > +Example:
+> > > > +
+> > > > +	i3c0: i3c@1100d000 {
+> > > > +		compatible = "mediatek,i3c-master";
+> > > > +		reg = <0x1100d000 0x1000>,
+> > > > +		      <0x11000300 0x80>;
+> > > > +		reg-names = "main", "dma";
+> > > > +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
+> > > > +		clocks = <&infracfg CLK_INFRA_I3C0>,
+> > > > +			 <&infracfg CLK_INFRA_AP_DMA>;
+> > > > +		clock-names = "main", "dma";
+> > > > +		#address-cells = <3>;
+> > > > +		#size-cells = <0>;
+> > > > +		i2c-scl-hz = <100000>;
+> > > > +
+> > > > +		nunchuk: nunchuk@52 {
+> > > > +			compatible = "nintendo,nunchuk";
+> > > > +			reg = <0x52 0x0 0x10>;
+> > > > +		};
+> > > > +	};
+> > > > -- 
+> > > > 1.7.9.5
+> > > >   
+> > 
+> > 
+> 
