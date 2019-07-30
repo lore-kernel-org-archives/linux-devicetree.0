@@ -1,66 +1,111 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH v2 1/3] dt-bindings: ASoC: Add TDA7802
- amplifier
-Date: Tue, 30 Jul 2019 15:33:39 +0100
-Message-ID: <20190730143339.GH4264@sirena.org.uk>
-References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
- <20190730120937.16271-2-thomas.preston@codethink.co.uk>
- <20190730122748.GF54126@ediswmail.ad.cirrus.com>
- <20190730131209.rdv2kdlrpfeouh66@pengutronix.de>
- <16a99e45-fd5a-2878-acf9-63518f9ca527@codethink.co.uk>
+From: Philippe Schenker <dev@pschenker.ch>
+Subject: [PATCH 03/22] ARM: dts: imx7-colibri: prepare module device tree for
+ FlexCAN
+Date: Tue, 30 Jul 2019 16:46:30 +0200
+Message-ID: <20190730144649.19022-4-dev@pschenker.ch>
+References: <20190730144649.19022-1-dev@pschenker.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+QwZB9vYiNIzNXIj"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <16a99e45-fd5a-2878-acf9-63518f9ca527@codethink.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Preston <thomas.preston@codethink.co.uk>
-Cc: Marco Felsch <m.felsch@pengutronix.de>, Charles Keepax <ckeepax@opensource.cirrus.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Rob Duncan <rduncan@tesla.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Kirill Marinushkin <kmarinushkin@birdec.tech>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Annaliese McDermond <nh6z@nh6z.net>, Paul Cercueil <paul@crapouillou.net>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Nate Case <ncase@tesla.com>, Cheng-Yi Chiang <cychiang@chromium.org>, Patrick Glaser <pglaser@tesla.com>, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190730144649.19022-1-dev@pschenker.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, stefan@agner.ch, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Philippe Schenker <philippe.schenker@toradex.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+From: Philippe Schenker <philippe.schenker@toradex.com>
 
---+QwZB9vYiNIzNXIj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Prepare FlexCAN use on SODIMM 55/63 178/188. Those SODIMM pins are
+compatible for CAN bus use with several modules from the Colibri
+family.
+Add Better drivestrength and also add flexcan2.
 
-On Tue, Jul 30, 2019 at 03:12:21PM +0100, Thomas Preston wrote:
-> On 30/07/2019 14:12, Marco Felsch wrote:
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+---
 
-> >>> +- compatible : "st,tda7802"
-> >>> +- reg : the I2C address of the device
-> >>> +- enable-supply : a regulator spec for the PLLen pin
+ arch/arm/boot/dts/imx7-colibri.dtsi | 35 ++++++++++++++++++++++++-----
+ 1 file changed, 30 insertions(+), 5 deletions(-)
 
-> > Shouldn't that be a pin called 'pllen-gpios'? IMHO I would not use a
-> > regulator for that.
-
-> Hi Marco,
-> We have multiple amplifiers hooked up in a chain, and all the PLLens
-> are connected to one GPIO. So we need to use a regulator so that
-> i2c-TDA7802:00 doesn't turn off the PLLen which i2c-TDA7802:01 still
-> requires.
-
-> This is why we use a regulator. Is there GPIO support for this?
-
-If it's a GPIO not a regulator then it should be a GPIO not a regulator
-in the device tree.  The device tree describes the hardware.  There was
-some work on helping share GPIOs in the GPIO framework to accomodate
-GPIOs for regulator enables, you should be able to do something similar
-to what the regulator framework does.
-
---+QwZB9vYiNIzNXIj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1AVUMACgkQJNaLcl1U
-h9Cu4Qf+OOSeubUr69q1X65qxycxElWJauRAa8zN5ZCS6Corf1z/+hgxkei5GI7D
-p242D+7O5/QHuGlsws3pHfiD3BUJbV+/D05v8DDX1GOEf54+8wv+dnX/1AZKtYzS
-IU/5aki3+oYGj76dQKpAhuTJFnJGGmkMg+O5SWXocr3KZO5P740PKZG0+wVX+yQp
-OdZbJOEfztfQ8AfQQ4vtSjun2grcmxeEyxPo7LiL+iNs2ifAOZW6TWNIl7Y/Xftg
-UNGdYVAtOL9s9G364+UmdAbLbQtKDtLLnotRd98S8NGElOoOGoLss6/pwrW2BHd4
-CgdgNotIdcr1q2Me8acJM2d8pxjKWA==
-=aDlD
------END PGP SIGNATURE-----
-
---+QwZB9vYiNIzNXIj--
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+index f7c9ce5bed47..52046085ce6f 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -117,6 +117,18 @@
+ 	fsl,magic-packet;
+ };
+ 
++&flexcan1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan1>;
++	status = "disabled";
++};
++
++&flexcan2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan2>;
++	status = "disabled";
++};
++
+ &gpmi {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_gpmi_nand>;
+@@ -330,12 +342,11 @@
+ 
+ &iomuxc {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4>;
++	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4
++		     &pinctrl_gpio7>;
+ 
+ 	pinctrl_gpio1: gpio1-grp {
+ 		fsl,pins = <
+-			MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3	0x74 /* SODIMM 55 */
+-			MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2	0x74 /* SODIMM 63 */
+ 			MX7D_PAD_SAI1_RX_SYNC__GPIO6_IO16	0x14 /* SODIMM 77 */
+ 			MX7D_PAD_EPDC_DATA09__GPIO2_IO9		0x14 /* SODIMM 89 */
+ 			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x74 /* SODIMM 91 */
+@@ -416,6 +427,13 @@
+ 		>;
+ 	};
+ 
++	pinctrl_gpio7: gpio7-grp { /* Alternatively CAN1 */
++		fsl,pins = <
++			MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3	0x14 /* SODIMM 55 */
++			MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2	0x14 /* SODIMM 63 */
++		>;
++	};
++
+ 	pinctrl_i2c1_int: i2c1-int-grp { /* PMIC / TOUCH */
+ 		fsl,pins = <
+ 			MX7D_PAD_GPIO1_IO13__GPIO1_IO13	0x79
+@@ -459,10 +477,17 @@
+ 		>;
+ 	};
+ 
++	pinctrl_flexcan1: flexcan1-grp {
++		fsl,pins = <
++			MX7D_PAD_ENET1_RGMII_RD3__FLEXCAN1_TX	0x79 /* SODIMM 55 */
++			MX7D_PAD_ENET1_RGMII_RD2__FLEXCAN1_RX	0x79 /* SODIMM 63 */
++		>;
++	};
++
+ 	pinctrl_flexcan2: flexcan2-grp {
+ 		fsl,pins = <
+-			MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x59
+-			MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX	0x59
++			MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x79 /* SODIMM 188 */
++			MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX	0x79 /* SODIMM 178 */
+ 		>;
+ 	};
+ 
+-- 
+2.22.0
